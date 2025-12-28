@@ -39,7 +39,7 @@ import com.fanglin.utils.WXApi;
 public class MessageServiceImpl implements MessageService {
 
 	@Autowired
-	private MessageTemplateDao messageTemplateDao;
+	private WeChatMessageTemplateDao messageTemplateDao;
 
 	@Autowired
 	private WXOpenUnionDao wxOpenUnionDao;
@@ -57,10 +57,10 @@ public class MessageServiceImpl implements MessageService {
 		WAccessTokenPO wAccessTokenPO = wAccessTokenDao.queryWAccessTokenForNew(0);
 		IsvConfigPO wapi = isvConfigDao.queryIsvConfig("wapi");
 
-		WXOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWxOpenUnion(serviceSchedule.getUnionId(), MessageTemplatePO.TYPE_PUBLIC_INT, 1);
-		final MessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate("ServiceSchedule", MessageTemplatePO.TYPE_PUBLIC_INT);
+		WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWxOpenUnion(serviceSchedule.getUnionId(), WeChatMessageTemplatePO.TYPE_PUBLIC_INT, 1);
+		final WeChatMessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate("ServiceSchedule", WeChatMessageTemplatePO.TYPE_PUBLIC_INT);
 
-		IsvConfigPO publicAppid = isvConfigDao.queryIsvConfig("appid", MessageTemplatePO.TYPE_PUBLIC_INT, 0);
+		IsvConfigPO publicAppid = isvConfigDao.queryIsvConfig("appid", WeChatMessageTemplatePO.TYPE_PUBLIC_INT, 0);
 
 		if (wxOpenUnionPO == null) return 0;
 
@@ -83,7 +83,7 @@ public class MessageServiceImpl implements MessageService {
 
 		if (miniprogrom != null && !"".equals(miniprogrom)) {
 
-			final IsvConfigPO server = isvConfigDao.queryIsvConfig("appid", MessageTemplatePO.TYPE_APPLET_INT, 5);
+			final IsvConfigPO server = isvConfigDao.queryIsvConfig("appid", WeChatMessageTemplatePO.TYPE_APPLET_INT, 5);
 
 			params.put("miniprogram", new HashMap<String, String>() {
 				{
@@ -146,8 +146,8 @@ public class MessageServiceImpl implements MessageService {
 	@SuppressWarnings("serial")
 	public int sendPayment(final Payment payment) throws FLException {
 
-		WXOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWxOpenUnion(payment.getUnionId(), WXOpenUnionPO.TYPE_PUBLIC_INT);
-		final MessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate("Payment", MessageTemplatePO.TYPE_PUBLIC_INT, 1);
+		WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWxOpenUnion(payment.getUnionId(), WeChatOpenUnionPO.TYPE_PUBLIC_INT);
+		final WeChatMessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate("Payment", WeChatMessageTemplatePO.TYPE_PUBLIC_INT, 1);
 
 		if (wxOpenUnionPO == null || messageTemplatePO == null) return 0;
 
@@ -214,8 +214,8 @@ public class MessageServiceImpl implements MessageService {
 		WAccessTokenPO wAccessTokenPO = wAccessTokenDao.queryWAccessTokenForNew(0);
 		IsvConfigPO wapi = isvConfigDao.queryIsvConfig("wapi");
 
-		WXOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWxOpenUnion(notice.getUnionId(), MessageTemplatePO.TYPE_PUBLIC_INT);
-		final MessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate("Notice", MessageTemplatePO.TYPE_PUBLIC_INT);
+		WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWxOpenUnion(notice.getUnionId(), WeChatMessageTemplatePO.TYPE_PUBLIC_INT);
+		final WeChatMessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate("Notice", WeChatMessageTemplatePO.TYPE_PUBLIC_INT);
 
 		if (wxOpenUnionPO == null || messageTemplatePO == null) return 0;
 

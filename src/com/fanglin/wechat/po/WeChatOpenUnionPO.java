@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.po;
+package com.fanglin.wechat.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -20,38 +20,38 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "wxopenunion", catalog = "hades")
-public class WXOpenUnionPO implements java.io.Serializable {
+@Table(name = "wechatopenunion", catalog = "hades")
+public class WeChatOpenUnionPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -1509245053817804190L;
-	
+
 	public static final String COLUMN_UNIONID_STR = "unionId";
-	
+
 	public static final String COLUMN_OPENID_STR = "openId";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final short TYPE_PUBLIC_INT = 0;
-	
+
 	public static final short TYPE_APPLET_INT = 1;
-	
+
 	private long wouId;
-	
+
 	private String unionId;
-	
+
 	private String openId;
-	
+
 	private short type;
-	
+
 	private int company;
 
-	public WXOpenUnionPO() {
+	public WeChatOpenUnionPO() {
 		super();
 	}
 
-	public WXOpenUnionPO(String unionId, String openId, short type, int company) {
+	public WeChatOpenUnionPO(String unionId, String openId, short type, int company) {
 		super();
 		this.unionId = unionId;
 		this.openId = openId;
@@ -105,7 +105,5 @@ public class WXOpenUnionPO implements java.io.Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
-	
 
 }

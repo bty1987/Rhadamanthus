@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "accesstoken", catalog = "wechat")
+@Table(name = "wechataccesstoken", catalog = "wechat")
 public class WeChatAccessTokenPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5253002651815597375L;

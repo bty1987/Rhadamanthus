@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int addDDUser(User usera, List<Long> dids, Integer company) throws FLException {
+	public int addDingTalkUser(User usera, List<Long> dids, Integer company) throws FLException {
 
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int updateDDUser(User usera, List<Long> dids, Integer company) throws FLException {
+	public int updateDingTalkUser(User usera, List<Long> dids, Integer company) throws FLException {
 
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int deleteDDUser(User user, Integer company) throws FLException {
+	public int deleteDingTalkUser(User user, Integer company) throws FLException {
 
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 

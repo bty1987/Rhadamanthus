@@ -1,7 +1,15 @@
 package com.fanglin.dingding.service.impl;
 
-import com.fanglin.dingding.po.DingTalkAccessTokenPO;
-import com.fanglin.dingding.po.DingTalkJsapiTicketPO;
+import java.net.URLDecoder;
+import java.security.MessageDigest;
+import java.util.Formatter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.dingding.service.AuthService;
 import com.fanglin.dingding.service.DingTalkAccessTokenService;
 import com.fanglin.dingding.service.DingTalkJsapiTicketService;
@@ -11,15 +19,6 @@ import com.fanglin.dingding.vo.DingTalkJsapiTicketVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.net.URLDecoder;
-import java.security.MessageDigest;
-import java.util.Formatter;
 
 @Service("authDDService")
 @Transactional(readOnly = true)

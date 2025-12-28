@@ -39,12 +39,14 @@ public class DingTalkUserAction extends BaseListAction {
 
 	private List<Long> dids;
 
+	private String code;
+
 	private int errcode;
 
 	/**
 	 * 查询钉钉用户
 	 */
-	@Action(value = "queryDDUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "queryDingTalkUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUser() throws FLException {
 
 		user = userService.getUser(user.getUserid(), queryCompany());
@@ -55,10 +57,10 @@ public class DingTalkUserAction extends BaseListAction {
 	/**
 	 * 添加钉钉用户
 	 */
-	@Action(value = "addDDUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addDDUser() throws FLException {
+	@Action(value = "addDingTalkUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDingTalkUser() throws FLException {
 
-		errcode = userService.addDDUser(user, dids, queryCompany());
+		errcode = userService.addDingTalkUser(user, dids, queryCompany());
 
 		return SUCCESS;
 	}
@@ -66,10 +68,10 @@ public class DingTalkUserAction extends BaseListAction {
 	/**
 	 * 更新钉钉用户
 	 */
-	@Action(value = "updateDDUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "updateDingTalkUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateUser() throws FLException {
 
-		errcode = userService.updateDDUser(user, dids, queryCompany());
+		errcode = userService.updateDingTalkUser(user, dids, queryCompany());
 
 		return SUCCESS;
 	}
@@ -77,10 +79,10 @@ public class DingTalkUserAction extends BaseListAction {
 	/**
 	 * 删除钉钉用户
 	 */
-	@Action(value = "deleteDDUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "deleteDingTalkUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteUser() throws FLException {
 
-		errcode = userService.deleteDDUser(user, queryCompany());
+		errcode = userService.deleteDingTalkUser(user, queryCompany());
 
 		return SUCCESS;
 	}
@@ -96,13 +98,11 @@ public class DingTalkUserAction extends BaseListAction {
 	}
 
 	public String getCode() {
-		return user != null ? user.getCode() : null;
+		return code;
 	}
 
 	public void setCode(String code) {
-		if (user != null) {
-			user.setCode(code);
-		}
+		this.code = code;
 	}
 
 	public List<Long> getDids() {

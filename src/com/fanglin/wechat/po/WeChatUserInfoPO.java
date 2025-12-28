@@ -1,34 +1,35 @@
-package com.fanglin.common.po;
+package com.fanglin.wechat.po;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "wxuserinfo", catalog = "hades")
-public class WXUserInfoPO implements java.io.Serializable {
+@Table(name = "wechatuserinfo", catalog = "hades")
+public class WeChatUserInfoPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -5843127834142096154L;
-	
+
 	public static final String COLUMN_UNIONID_STR = "unionid";
-	
+
 	private Long wxuiid;
-	
+
 	private String unionid;
-	
+
 	private String nickname;
-	
+
 	private Short sex;
-	
+
 	private String city;
-	
+
 	private String province;
-	
+
 	private String country;
-	
+
 	private long createTime;
 
 	@Id

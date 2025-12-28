@@ -11,9 +11,6 @@
 
 package com.fanglin.wechat.service.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,18 +21,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.security.AES;
-import com.fanglin.core.security.WxPKCS7Encoder;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.wechat.service.WeChatAccessTokenService;
 import com.fanglin.wechat.service.WeChatAppService;
+import com.fanglin.wechat.utils.WeChatApi;
 import com.fanglin.wechat.vo.WeChatGroupInfoVO;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 import com.fanglin.wechat.vo.WeChatUserInfoVO;
-import com.fanglin.wechat.utils.WeChatApi;
 
 /**
  * 微信小程序服务实现
@@ -61,7 +56,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 		// TODO: 检查 session 是否已存在（需要创建 WeChatAppSessionDao）
 		// WXAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWxAppSessionByCode(code);
 		// if (wxAppSessionPO != null) {
-		//     throw new FLException(910116, "Session信息已存在");
+		// throw new FLException(910116, "Session信息已存在");
 		// }
 
 		// 获取小程序配置（type=1 表示小程序）
@@ -69,8 +64,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 		SystemConfigPO appid = systemConfigDao.querySystemConfig("WECHAT_APPID_1", $company);
 		SystemConfigPO appsecret = systemConfigDao.querySystemConfig("WECHAT_SECRET_1", $company);
 
-		String url = String.format(WeChatApi.WAAPI_GET_SESSION_STR,
-			wapi.getValue(), appid.getValue(), appsecret.getValue(), code);
+		String url = String.format(WeChatApi.WAAPI_GET_SESSION_STR, wapi.getValue(), appid.getValue(), appsecret.getValue(), code);
 
 		JSONObject response = HttpHelper.httpGet(url);
 
@@ -91,9 +85,9 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 			// TODO: 保存 OpenID 与 UnionID 的关联关系（需要创建 WeChatOpenUnionDao）
 			// WXOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWxOpenUnion(openId);
 			// if (wxOpenUnionPO == null || wxOpenUnionPO.getCompany() != $company) {
-			//     wxOpenUnionPO = new WXOpenUnionPO(unionId, openId,
-			//         WXOpenUnionPO.TYPE_APPLET_INT, $company);
-			//     wxOpenUnionDao.save(wxOpenUnionPO);
+			// wxOpenUnionPO = new WXOpenUnionPO(unionId, openId,
+			// WXOpenUnionPO.TYPE_APPLET_INT, $company);
+			// wxOpenUnionDao.save(wxOpenUnionPO);
 			// }
 		} else {
 			System.out.println(url);
@@ -113,8 +107,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 		SystemConfigPO appid = systemConfigDao.querySystemConfig("WECHAT_APPID_1", $company);
 		SystemConfigPO appsecret = systemConfigDao.querySystemConfig("WECHAT_SECRET_1", $company);
 
-		String url = String.format(WeChatApi.WAAPI_GET_SESSION_STR,
-			wapi.getValue(), appid.getValue(), appsecret.getValue(), code);
+		String url = String.format(WeChatApi.WAAPI_GET_SESSION_STR, wapi.getValue(), appid.getValue(), appsecret.getValue(), code);
 
 		JSONObject response = HttpHelper.httpGet(url);
 
@@ -127,8 +120,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 		AES aes = new AES();
 
 		try {
-			byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData),
-				Base64.decodeBase64(sessionKey), Base64.decodeBase64(iv));
+			byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData), Base64.decodeBase64(sessionKey), Base64.decodeBase64(iv));
 
 			if (null != resultByte && resultByte.length > 0) {
 				String userInfo = new String(WxPKCS7Encoder.decode(resultByte));
@@ -149,20 +141,20 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 		// TODO: 从数据库查询 session 信息（需要创建 WeChatAppSessionDao）
 		// WXAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWxAppSessionByCode(code);
 		// if (wxAppSessionPO == null) {
-		//     throw new FLException(910118, "Session信息不存在");
+		// throw new FLException(910118, "Session信息不存在");
 		// }
 
 		// TODO: 使用缓存的 sessionKey 解密
 		// AES aes = new AES();
 		// try {
-		//     byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData),
-		//         Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
-		//     if (null != resultByte && resultByte.length > 0) {
-		//         String userInfo = new String(WxPKCS7Encoder.decode(resultByte));
-		//         userInfoVO = JSONObject.parseObject(userInfo, WeChatUserInfoVO.class);
-		//     }
+		// byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData),
+		// Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
+		// if (null != resultByte && resultByte.length > 0) {
+		// String userInfo = new String(WxPKCS7Encoder.decode(resultByte));
+		// userInfoVO = JSONObject.parseObject(userInfo, WeChatUserInfoVO.class);
+		// }
 		// } catch (Exception e) {
-		//     throw new FLException(910117, "获取用户信息失败");
+		// throw new FLException(910117, "获取用户信息失败");
 		// }
 
 		throw new FLException(910118, "Session信息不存在（功能待实现）");
@@ -176,20 +168,20 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 		// TODO: 从数据库查询 session 信息（需要创建 WeChatAppSessionDao）
 		// WXAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWxAppSessionByCode(code);
 		// if (wxAppSessionPO == null) {
-		//     throw new FLException(910118, "Session信息不存在");
+		// throw new FLException(910118, "Session信息不存在");
 		// }
 
 		// TODO: 使用缓存的 sessionKey 解密
 		// AES aes = new AES();
 		// try {
-		//     byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData),
-		//         Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
-		//     if (null != resultByte && resultByte.length > 0) {
-		//         String groupInfo = new String(WxPKCS7Encoder.decode(resultByte));
-		//         groupInfoVO = JSONObject.parseObject(groupInfo, WeChatGroupInfoVO.class);
-		//     }
+		// byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData),
+		// Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
+		// if (null != resultByte && resultByte.length > 0) {
+		// String groupInfo = new String(WxPKCS7Encoder.decode(resultByte));
+		// groupInfoVO = JSONObject.parseObject(groupInfo, WeChatGroupInfoVO.class);
+		// }
 		// } catch (Exception e) {
-		//     throw new FLException(910131, "获取群信息失败");
+		// throw new FLException(910131, "获取群信息失败");
 		// }
 
 		throw new FLException(910118, "Session信息不存在（功能待实现）");
@@ -206,8 +198,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 		// 获取微信 API 配置
 		SystemConfigPO wapi = systemConfigDao.querySystemConfig("WECHAT_WXAPI_PATH_STR");
 
-		String url = String.format(WeChatApi.WXAPI_GET_PHONE_INFO_STR,
-			wapi.getValue(), accessToken);
+		String url = String.format(WeChatApi.WXAPI_GET_PHONE_INFO_STR, wapi.getValue(), accessToken);
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("code", code);
