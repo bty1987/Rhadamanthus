@@ -49,4 +49,28 @@ public interface WeChatMessageService {
 	 */
 	public int sendServiceSchedule(String unionId, String name, String orderId, String content, String path);
 
+	/**
+	 * 发送支付通知消息（直接调用微信 API）
+	 * @param unionId 微信用户 UnionID
+	 * @param name 业务名称
+	 * @param orderId 订单ID
+	 * @param money 金额字符串
+	 * @param comment 备注信息
+	 * @return 处理结果码
+	 */
+	public int sendPayment(String unionId, String name, String orderId, String money, String comment);
+
+	/**
+	 * 发送通知消息（直接调用微信 API）
+	 * @param unionId 微信用户 UnionID
+	 * @param name 联系人姓名
+	 * @param phone 联系电话
+	 * @param content 通知内容
+	 * @param url 跳转 URL（可选）
+	 * @param miniprogram 小程序路径（可选）
+	 * @return 处理结果码
+	 */
+	public int sendNotice(String unionId, String name, String phone, String content, String url, String miniprogram);
+
+
 }
