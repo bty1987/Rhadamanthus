@@ -38,11 +38,16 @@ import com.fanglin.swiftpass.exception.SdkExType;
 import com.fanglin.swiftpass.exception.SdkException;
 import com.fanglin.swiftpass.service.AbstractTransService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 使用URLConnection的通讯器
- * 
+ *
  */
 public class HttpsPostRequest extends AbstractTransService {
+
+	private static final Logger logger = LoggerFactory.getLogger(HttpsPostRequest.class);
 
 	private static final int BUFFER_SIZE = 2048;
 
@@ -162,7 +167,7 @@ public class HttpsPostRequest extends AbstractTransService {
 			}
 		}
 
-		System.out.println(Configure.getCertPath());
+		logger.debug("证书路径: {}", Configure.getCertPath());
 
 		// 设置HEAD信息
 		if (keyConfigure.getEnterpriseBearer() != null) {
@@ -205,7 +210,7 @@ public class HttpsPostRequest extends AbstractTransService {
 					case POST:
 						conn.setRequestMethod(ReqMethodEnum.POST.toString());
 						conn.setDoOutput(true);
-						System.out.println(conn);
+						logger.debug("POST请求: conn={}", conn);
 						outStream = conn.getOutputStream();
 						outStream.write(bodyParamString.getBytes(Const.CHARSET));
 						outStream.flush();

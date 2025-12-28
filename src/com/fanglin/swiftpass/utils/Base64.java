@@ -1,10 +1,15 @@
 package com.fanglin.swiftpass.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Base64工具类
- * 
+ *
  */
 public final class Base64 {
+
+	private static final Logger logger = LoggerFactory.getLogger(Base64.class);
 
 	static private final int BASELENGTH = 128;
 	static private final int LOOKUPLENGTH = 64;
@@ -93,7 +98,7 @@ public final class Base64 {
 		int encodedIndex = 0;
 		int dataIndex = 0;
 		if (F_DEBUG) {
-			System.out.println("number of triplets = " + numberTriplets);
+			logger.debug("number of triplets = {}", numberTriplets);
 		}
 
 		for (int i = 0; i < numberTriplets; i++) {
@@ -102,7 +107,7 @@ public final class Base64 {
 			b3 = binaryData[dataIndex++];
 
 			if (F_DEBUG) {
-				System.out.println("b1= " + b1 + ", b2= " + b2 + ", b3= " + b3);
+				logger.debug("b1= {}, b2= {}, b3= {}", b1, b2, b3);
 			}
 
 			l = (byte) (b2 & 0x0f);
@@ -113,9 +118,9 @@ public final class Base64 {
 			byte val3 = ((b3 & SIGN) == 0) ? (byte) (b3 >> 6) : (byte) ((b3) >> 6 ^ 0xfc);
 
 			if (F_DEBUG) {
-				System.out.println("val2 = " + val2);
-				System.out.println("k4   = " + (k << 4));
-				System.out.println("vak  = " + (val2 | (k << 4)));
+				logger.debug("val2 = {}", val2);
+				logger.debug("k4   = {}", (k << 4));
+				logger.debug("vak  = {}", (val2 | (k << 4)));
 			}
 
 			encodedData[encodedIndex++] = LOOKUP_BASE64_ALPHABET[val1];
@@ -129,8 +134,8 @@ public final class Base64 {
 			b1 = binaryData[dataIndex];
 			k = (byte) (b1 & 0x03);
 			if (F_DEBUG) {
-				System.out.println("b1=" + b1);
-				System.out.println("b1<<2 = " + (b1 >> 2));
+				logger.debug("b1={}", b1);
+				logger.debug("b1<<2 = {}", (b1 >> 2));
 			}
 			byte val1 = ((b1 & SIGN) == 0) ? (byte) (b1 >> 2) : (byte) ((b1) >> 2 ^ 0xc0);
 			encodedData[encodedIndex++] = LOOKUP_BASE64_ALPHABET[val1];

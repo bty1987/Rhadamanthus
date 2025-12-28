@@ -23,7 +23,12 @@ import com.fanglin.yspay.utils.HttpUtil;
 import com.fanglin.yspay.utils.RSAUtil;
 import com.fanglin.yspay.utils.SignUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Base implements Serializable {
+
+	private static final Logger logger = LoggerFactory.getLogger(Base.class);
 
 	private static final long serialVersionUID = -6133566416044112954L;
 
@@ -104,7 +109,7 @@ public class Base implements Serializable {
 		try {
 			result = new String(RSAUtil.base64Decode(StringUtils.getBytesUtf8(result)));
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("支付平台响应解码失败", e);
 			throw new FLException(150053, String.format("支付平台异常,%s", e.getMessage()));
 		}
 
@@ -131,7 +136,7 @@ public class Base implements Serializable {
 		try {
 			response = JSONObject.parseObject(new String(SignUtil.decryptMessage(CERTID, CRTPATH, valueMap, key)));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("解密支付平台响应失败", e);
 			throw new FLException(150053, String.format("支付平台异常,%s", e.getMessage()));
 		}
 

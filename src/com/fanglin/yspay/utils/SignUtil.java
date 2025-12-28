@@ -29,10 +29,15 @@ import com.fanglin.yspay.config.Config;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 签名工具类
  */
 public class SignUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(SignUtil.class);
 
 	public static final String ALLCHAR = "0123456789ABCDEF";
 
@@ -125,7 +130,7 @@ public class SignUtil {
 		try {
 			flag = rsaCheckContent(inputStream, content, sign, charset);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("验证签名失败", e);
 		}
 		return flag;
 	}
@@ -171,11 +176,11 @@ public class SignUtil {
 			FileInputStream pfxCertFileInputStream = new FileInputStream(new File(pfxCertfilename));
 			sign = rsaSign(content, charset, pfxCertFileInputStream);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error("获取签名失败", e);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("获取签名失败", e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("获取签名失败", e);
 		}
 		return sign;
 	}
@@ -249,7 +254,7 @@ public class SignUtil {
 			bte = AESUtil.encrypt(msgStr.getBytes("UTF-8"), ByteUtil.hexStringToBytes(key));
 			msg = Base64.encodeBase64String(bte);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error("加密消息失败", e);
 		}
 		return msg;
 	}
@@ -264,7 +269,7 @@ public class SignUtil {
 			check = Base64.encodeBase64String(byte1);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("加密密钥失败", e);
 		}
 		return check;
 	}

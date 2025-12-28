@@ -20,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -39,6 +42,8 @@ import com.fanglin.utils.Arith;
 @Service("decorationExportService")
 @Transactional(readOnly = true)
 public class DecorationExportServiceImpl implements DecorationExportService {
+
+	private static final Logger logger = LoggerFactory.getLogger(DecorationExportServiceImpl.class);
 
 	@Autowired
 	private DecorationDao decorationDao;
@@ -170,7 +175,7 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 
 				decorationExportVOs.add(decorationExportVO);
 			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
+				logger.error("克隆对象失败", e);
 			}
 		}
 

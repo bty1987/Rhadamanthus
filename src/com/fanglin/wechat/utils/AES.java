@@ -17,6 +17,9 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @File Name		: AES.java
  * @Package   	: com.fanglin.wechat.utils
@@ -36,6 +39,8 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AES {
 
+	private static final Logger logger = LoggerFactory.getLogger(AES.class);
+
     /**
      * AES 解密
      *
@@ -53,7 +58,7 @@ public class AES {
             byte[] result = cipher.doFinal(content);
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("AES解密失败", e);
         }
         return null;
     }

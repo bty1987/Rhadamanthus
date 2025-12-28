@@ -136,7 +136,7 @@ public class CertUtil {
 			PrivateKey privateKey = (PrivateKey) keyStoreMap.get(certPath).getKey(keyAlias, certPwd.toCharArray());
 			return privateKey;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("获取签名证书私钥失败", e);
 			return null;
 		}
 	}
@@ -180,7 +180,7 @@ public class CertUtil {
 			RSAPublicKeySpec keySpec = new RSAPublicKeySpec(b1, b2);
 			return keyFactory.generatePublic(keySpec);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("获取公钥失败", e);
 			return null;
 		}
 	}
@@ -247,13 +247,13 @@ public class CertUtil {
 			// 打印证书加载信息,供测试阶段调试
 			logger.info("[" + path + "][CertId=" + encryptCertTemp.getSerialNumber().toString() + "]");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("初始化证书失败", e);
 		} finally {
 			if (null != in) {
 				try {
 					in.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("关闭输入流失败", e);
 				}
 			}
 		}
@@ -292,7 +292,7 @@ public class CertUtil {
 			X509Certificate cert = (X509Certificate) keyStore.getCertificate(keyAlias);
 			return cert.getSerialNumber().toString();
 		} catch (KeyStoreException e) {
-			e.printStackTrace();
+			logger.error("获取证书ID失败", e);
 			return null;
 		}
 	}
@@ -310,7 +310,7 @@ public class CertUtil {
 			keyStoreMap.put(certFilePath, keyStore);
 			logger.info("LoadRsaCert Successful");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("加载签名证书失败", e);
 		}
 	}
 

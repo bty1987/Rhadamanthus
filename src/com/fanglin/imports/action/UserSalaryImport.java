@@ -22,10 +22,15 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseImportAction;
 import com.fanglin.utils.PoiExcelUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @ParentPackage("base")
 @Namespace("/")
 @Controller
 public class UserSalaryImport extends BaseImportAction{
+
+	private static final Logger logger = LoggerFactory.getLogger(UserSalaryImport.class);
 
 	private static final long serialVersionUID = -4713659178659383560L;
 	
@@ -41,10 +46,10 @@ public class UserSalaryImport extends BaseImportAction{
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("导入用户薪资数据失败", e);
 		}
-		
+
 		return SUCCESS;
 	}
-	
+
 }

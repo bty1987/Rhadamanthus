@@ -29,8 +29,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @SuppressWarnings("deprecation")
 public class HttpUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
 	private static final CloseableHttpClient HTTPCLIENT = HttpClients.createDefault();
 	private static final String USERAGENT = "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.87 Safari/537.36";
@@ -160,7 +165,7 @@ public class HttpUtil {
 			fos.write(bos.toByteArray());
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("获取文件失败", e);
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
@@ -170,7 +175,7 @@ public class HttpUtil {
 				try {
 					is.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("关闭输入流失败", e);
 				}
 			}
 
@@ -178,7 +183,7 @@ public class HttpUtil {
 				try {
 					bos.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("关闭输入流失败", e);
 				}
 			}
 
@@ -186,7 +191,7 @@ public class HttpUtil {
 				try {
 					fos.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("关闭输入流失败", e);
 				}
 			}
 		}

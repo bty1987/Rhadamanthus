@@ -19,13 +19,18 @@ import com.fanglin.swiftpass.utils.Const;
 import com.fanglin.swiftpass.utils.SdkUtil;
 import com.fanglin.swiftpass.utils.Signature;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 通用请求器接口
  * <p>
  * 如果需要使用自己的HTTP通讯库，请继承自该接口
- * 
+ *
  */
 public abstract class AbstractTransService {
+
+	private static final Logger logger = LoggerFactory.getLogger(AbstractTransService.class);
 
 	/**
 	 * 发送请求
@@ -78,7 +83,7 @@ public abstract class AbstractTransService {
 			AbstractTransService transService = AbstractTransService.getInstance();
 			resp = transService.send(url, method, authInfo, headParams, bodyParamString, filePath, bodyParamMap, keyConfigure, bodyJson);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			logger.error("通讯请求失败", e);
 			if (e instanceof IOException) {
 				throw new SdkException(SdkExType.CONN_ERR);
 			} else if (e instanceof SdkException) {
@@ -207,8 +212,7 @@ public abstract class AbstractTransService {
 			response = txn(urlBuilder.toString(), reqMethod, authInfo, headParams, bodyParamString, filePath, bodyParamMap, keyConfigure, bodyJson);
 		} catch (SdkException ex) {
 
-			System.out.println(ex.getMessage());
-			System.out.println(ex.getCode());
+			logger.error("通讯请求异常: code={}, message={}", ex.getCode(), ex.getMessage());
 
 			if (SdkExType.CONN_ERR.getCode().equals(ex.getCode())) {
 				String url = Configure.isDevEnv() ? Configure.getDevUrl() : Configure.PROD_URL;

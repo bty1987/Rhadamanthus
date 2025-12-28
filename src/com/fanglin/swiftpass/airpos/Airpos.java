@@ -21,6 +21,8 @@ import java.util.Properties;
 import java.util.TreeMap;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
@@ -39,6 +41,8 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.SystemConfig;
 
 public class Airpos {
+
+	private static final Logger logger = LoggerFactory.getLogger(Airpos.class);
 
 	// private static String respPubKey; // 公钥
 
@@ -124,8 +128,7 @@ public class Airpos {
 
 		if (response == null) {
 
-			System.out.println(swiftpass_wxpay_url);
-			System.out.println(paramsData);
+			logger.error("支付平台无响应: url={}, params={}", swiftpass_wxpay_url, paramsData);
 
 			throw new FLException(150053, "支付平台异常");
 		}
@@ -135,9 +138,7 @@ public class Airpos {
 
 		if (!code.equals("0000")) {
 
-			System.out.println(swiftpass_wxpay_url);
-			System.out.println(paramsData);
-			System.out.println(response);
+			logger.error("支付平台返回错误: url={}, params={}, response={}", swiftpass_wxpay_url, paramsData, response);
 
 			throw new FLException(150053, String.format("支付平台异常,%s:%s", result.getString("code"), result.getString("msg")));
 		}
@@ -188,8 +189,7 @@ public class Airpos {
 
 		if (response == null) {
 
-			System.out.println(swiftpass_wxpay_url);
-			System.out.println(paramsData);
+			logger.error("支付平台无响应: url={}, params={}", swiftpass_wxpay_url, paramsData);
 
 			throw new FLException(150053, "支付平台异常");
 		}
@@ -199,9 +199,7 @@ public class Airpos {
 
 		if (!code.equals("0000")) {
 
-			System.out.println(swiftpass_wxpay_url);
-			System.out.println(paramsData);
-			System.out.println(response);
+			logger.error("支付平台返回错误: url={}, params={}, response={}", swiftpass_wxpay_url, paramsData, response);
 
 			throw new FLException(150053, String.format("支付平台异常,%s:%s", result.getString("code"), result.getString("msg")));
 		}
@@ -228,8 +226,7 @@ public class Airpos {
 
 		if (response == null) {
 
-			System.out.println(swiftpass_query_url);
-			System.out.println(JSONObject.toJSONString(params));
+			logger.error("支付平台无响应: url={}, params={}", swiftpass_query_url, JSONObject.toJSONString(params));
 
 			throw new FLException(150053, "支付平台异常");
 		}
@@ -244,9 +241,7 @@ public class Airpos {
 		if (status.equals("SUCCESS")) {
 			if (data.isEmpty()) {
 
-				System.out.println(swiftpass_query_url);
-				System.out.println(JSONObject.toJSONString(params));
-				System.out.println(response);
+				logger.error("支付查询返回空数据: url={}, params={}, response={}", swiftpass_query_url, JSONObject.toJSONString(params), response);
 
 				paytranPO.setStatus(PaytranPO.STATUS_FAIL_INT);
 				paytranPO.setRstcode(code);
@@ -257,9 +252,7 @@ public class Airpos {
 			}
 		} else {
 
-			System.out.println(swiftpass_query_url);
-			System.out.println(JSONObject.toJSONString(params));
-			System.out.println(response);
+			logger.error("支付查询失败: url={}, params={}, response={}", swiftpass_query_url, JSONObject.toJSONString(params), response);
 
 			paytranPO.setStatus(PaytranPO.STATUS_FAIL_INT);
 			paytranPO.setRstcode(code);
@@ -283,8 +276,7 @@ public class Airpos {
 
 		if (response == null) {
 
-			System.out.println(swiftpass_updateKey_url);
-			System.out.println(params);
+			logger.error("更新密钥失败: url={}, params={}", swiftpass_updateKey_url, params);
 
 			throw new FLException(150053, "支付平台异常");
 		}
@@ -310,7 +302,7 @@ public class Airpos {
 
 			return signature.verify(Base64.decode(sign));
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			logger.error("解密签名失败", e);
 			return false;
 		}
 
@@ -326,8 +318,7 @@ public class Airpos {
 			KeyFactory keyFactory = KeyFactory.getInstance("EC", bouncyCastleProvider);
 			publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(Base64.decode(publicKeyStr)));
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.getStackTrace();
+			logger.error("生成公钥失败: publicKeyStr={}", publicKeyStr, e);
 		}
 
 		return publicKey;
@@ -352,7 +343,7 @@ public class Airpos {
 			return flag;
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			logger.error("解密签名失败", e);
 			return false;
 		}
 

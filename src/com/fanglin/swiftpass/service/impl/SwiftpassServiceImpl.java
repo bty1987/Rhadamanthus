@@ -29,9 +29,14 @@ import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.DateUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service("swiftpassService")
 @Transactional(readOnly = true)
 public class SwiftpassServiceImpl implements SwiftpassService {
+
+	private static final Logger logger = LoggerFactory.getLogger(SwiftpassServiceImpl.class);
 
 	@Autowired
 	private PaytranServiceImpl paytranService;
@@ -100,7 +105,7 @@ public class SwiftpassServiceImpl implements SwiftpassService {
 		}
 
 		if (!Airpos.decryptSign(params, sign, config.getValue())) {
-			System.out.println(args);
+			logger.error("签名验证失败: args={}", args);
 			throw new FLException(110008, "验证信息错误");
 		}
 
@@ -141,11 +146,11 @@ public class SwiftpassServiceImpl implements SwiftpassService {
 		params.put("privateKey", prikey); // 签名私钥
 		params.put("publicKey", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnmpxXjTJVhVXr2rPs9uBfWhAH9cLhBT+KJ5UiLUd0uxrPVec8WCQyZPQnnL0JOgQSBr0rWLcGVxGAdQUt748DfDGn6G/fhdFGJaHwCRfqxM7ymJ/xPm3UQNJeCF1qjDffdRilYwP4FSyiI+T8eAIeSABUTBDx7kkwvkbVi14znZMmDpLx6QNZlAclAZdHemqB/sSSsgfB7yCBJ4K0Fv4uK4qU3EQeOxhXLkitkhPm3uL5O3jgf89B1ZFpiCpI5qyysmPzJuZbvIBfa9OkVeHqINTPCWYCdx3ZD+k9+H5hoXKFDXddvxHptXrPU3APiBcDkgViYbfnFxWjYwaDQDkYQIDAQAB"); // 平台公钥
 
-		System.out.println(params);
+		logger.info("注册威富通商户: params={}", params);
 
 		String response = OpenSdk.gateway("/api/openbill/updateMerchantChannelKey", ReqMethodEnum.POST, null, null, params);
 
-		System.out.println(response);
+		logger.info("注册威富通商户响应: response={}", response);
 
 	}
 }
