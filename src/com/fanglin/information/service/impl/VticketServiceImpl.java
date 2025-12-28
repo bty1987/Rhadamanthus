@@ -16,7 +16,6 @@ import com.fanglin.customer.dao.EmemberDao;
 import com.fanglin.customer.po.EmemberPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.dingding.service.MessageService;
 import com.fanglin.information.dao.VticketDao;
 import com.fanglin.information.po.VticketPO;
 import com.fanglin.information.service.VticketService;
@@ -26,6 +25,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.wechat.service.WeChatMessageService;
 
 @Service("vticketService")
 @Transactional(readOnly = true)
@@ -44,7 +44,7 @@ public class VticketServiceImpl implements VticketService {
 	private EmemberDao ememberDao;
 
 	@Autowired
-	private MessageService messageService;
+	private WeChatMessageService messageService;
 
 	@Override
 	public void pageVticket(Paging paging, List<Filter> filters) {
@@ -171,7 +171,7 @@ public class VticketServiceImpl implements VticketService {
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(no);
 
 		if (ememberPO != null) {
-			messageService.sendMessage(ememberPO.getUnionId(), "活动", no, "已到场");
+			messageService.sendServiceSchedule(ememberPO.getUnionId(), "活动", no, "已到场");
 		}
 	}
 

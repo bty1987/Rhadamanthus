@@ -18,7 +18,7 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.dingding.bean.Group;
-import com.fanglin.dingding.service.GroupService;
+import com.fanglin.dingding.service.DingTalkGroupService;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -33,7 +33,7 @@ public class DroupServiceImpl implements DroupService {
 	private DecorationDao decorationDao;
 
 	@Autowired
-	private GroupService groupService;
+	private DingTalkGroupService groupService;
 
 	@Override
 	public void pageDroup(Paging paging, List<Filter> filters) {

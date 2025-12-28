@@ -37,6 +37,7 @@ import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
@@ -133,7 +134,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	private SystemConfigDao systemConfigDao;
 
 	@Autowired
-	private com.fanglin.dingding.service.MessageService messageDDService;
+	private DingTalkMessageService messageDDService;
 
 	@Override
 	public void pageDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO, Integer company) throws FLException {

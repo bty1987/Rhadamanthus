@@ -25,6 +25,7 @@ import com.fanglin.customer.vo.ConsultionVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -61,7 +62,7 @@ public class AepairServiceImpl implements AepairService {
 	private CountingService countingService;
 
 	@Autowired
-	private MessageService messageService;
+	private DingTalkMessageService messageService;
 
 	@Override
 	public void pageAepair(Paging paging, List<Filter> filters, int company) {

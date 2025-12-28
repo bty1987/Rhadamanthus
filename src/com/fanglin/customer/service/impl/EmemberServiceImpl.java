@@ -21,7 +21,9 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
-ce("ememberService")
+import com.fanglin.wechat.service.WeChatMessageService;
+
+@Service("ememberService")
 @Transactional(readOnly = true)
 public class EmemberServiceImpl implements EmemberService {
 
@@ -32,7 +34,7 @@ public class EmemberServiceImpl implements EmemberService {
 	private VticketDao vticketDao;
 
 	@Autowired
-	private MessageService messageService;
+	private WeChatMessageService messageService;
 
 	@Override
 	public void pageEmember(Paging paging, List<Filter> filters) {
@@ -120,7 +122,7 @@ public class EmemberServiceImpl implements EmemberService {
 
 		vticketDao.update(vticketPO);
 
-		messageService.sendMessage(unionId, "活动票", no, String.format("活动票: %s, 注册成功", no));
+		messageService.sendServiceSchedule(unionId, "活动票", no, String.format("活动票: %s, 注册成功", no));
 
 		return 0;
 	}

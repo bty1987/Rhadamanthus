@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.information.dao.AwardPurchaseDao;
 import com.fanglin.information.dao.AwardRecordDao;
 import com.fanglin.information.dao.AwardStockDao;
@@ -55,7 +56,7 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 	private SystemConfigDao systemConfigDao;
 
 	@Autowired
-	private MessageService messageDDService;
+	private DingTalkMessageService messageDDService;
 
 	@Override
 	public void pageAwardPurchase(Paging paging, List<Filter> filters, AwardPurchaseVO awardPurchase, int company) {

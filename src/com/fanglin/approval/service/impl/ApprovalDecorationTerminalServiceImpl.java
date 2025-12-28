@@ -24,7 +24,7 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.dingding.service.ApprovalService;
+import com.fanglin.dingding.service.DingTalkApprovalService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
@@ -59,7 +59,7 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 	private MessageService messageService;
 
 	@Autowired
-	private ApprovalService approvalService;
+	private DingTalkApprovalService approvalService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

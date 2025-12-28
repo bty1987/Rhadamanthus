@@ -22,7 +22,7 @@ import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalCommonService;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.dingding.service.ApprovalService;
+import com.fanglin.dingding.service.DingTalkApprovalService;
 
 @ParentPackage("common")
 @Service("approvalCommonService")
@@ -32,7 +32,7 @@ public class ApprovalCommonServiceImpl implements ApprovalCommonService {
 	private ApprovalDao approvalDao;
 
 	@Autowired
-	private ApprovalService approvalDDService;
+	private DingTalkApprovalService approvalDDService;
 
 	@Override
 	public int submitApprovalForDing(String code, String forms, String userId, int company) throws FLException {

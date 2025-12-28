@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.EmemberDao;
 import com.fanglin.customer.po.EmemberPO;
-import com.fanglin.dingding.service.MessageService;
 import com.fanglin.information.dao.VawardDao;
 import com.fanglin.information.dao.VprizeDao;
 import com.fanglin.information.dao.VticketDao;
@@ -32,6 +31,7 @@ import com.fanglin.information.service.VawardService;
 import com.fanglin.information.vo.VawardVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.wechat.service.WeChatMessageService;
 
 @Service("vawardService")
 @Transactional(readOnly = true)
@@ -50,7 +50,7 @@ public class VawardServiceImpl implements VawardService {
 	private EmemberDao ememberDao;
 
 	@Autowired
-	private MessageService messageService;
+	private WeChatMessageService messageService;
 
 	@Override
 	public List<VawardVO> queryVawardByNo(VawardVO vawardVO) {
@@ -110,7 +110,7 @@ public class VawardServiceImpl implements VawardService {
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(no);
 
 		if (ememberPO != null) {
-			messageService.sendMessage(ememberPO.getUnionId(), "活动奖品", no, String.format("活动奖品: %s, 数量: %.3f, 领取成功", vprizePO.getName(), Arith.div(vawardVO.getNum(), 1000.0)));
+			messageService.sendServiceSchedule(ememberPO.getUnionId(), "活动奖品", no, String.format("活动奖品: %s, 数量: %.3f, 领取成功", vprizePO.getName(), Arith.div(vawardVO.getNum(), 1000.0)));
 		}
 
 		return 0;

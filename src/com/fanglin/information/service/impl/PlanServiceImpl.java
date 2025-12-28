@@ -16,7 +16,7 @@ import com.fanglin.communion.vo.TaskVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.dingding.service.MessageService;
+import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.information.dao.PlanDao;
 import com.fanglin.information.dao.PlanParamDao;
 import com.fanglin.information.po.PlanPO;
@@ -51,7 +51,7 @@ public class PlanServiceImpl implements PlanService {
 	private UserDao userDao;
 
 	@Autowired
-	private MessageService messageService;
+	private DingTalkMessageService messageService;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;

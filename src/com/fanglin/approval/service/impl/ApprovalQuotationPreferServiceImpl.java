@@ -18,7 +18,7 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.dingding.service.ApprovalService;
+import com.fanglin.dingding.service.DingTalkApprovalService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
@@ -50,7 +50,7 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 	private DecorationDao decorationDao;
 
 	@Autowired
-	private ApprovalService approvalService;
+	private DingTalkApprovalService approvalService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

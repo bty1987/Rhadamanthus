@@ -23,7 +23,7 @@ import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationContractPO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.dingding.service.ApprovalService;
+import com.fanglin.dingding.service.DingTalkApprovalService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
@@ -52,7 +52,7 @@ public class ApprovalDecorationContractServiceImpl implements ApprovalDecoration
 	private UserDao userDao;
 
 	@Autowired
-	private ApprovalService approvalService;
+	private DingTalkApprovalService approvalService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
