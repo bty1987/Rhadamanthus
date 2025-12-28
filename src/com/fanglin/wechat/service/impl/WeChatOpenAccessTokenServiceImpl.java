@@ -11,12 +11,6 @@
 
 package com.fanglin.wechat.service.impl;
 
-import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.utils.HttpHelper;
@@ -28,6 +22,11 @@ import com.fanglin.wechat.po.WeChatOpenAccessTokenPO;
 import com.fanglin.wechat.service.WeChatOpenAccessTokenService;
 import com.fanglin.wechat.utils.WeChatApi;
 import com.fanglin.wechat.vo.WeChatConfigVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Service("weChatOpenAccessTokenService")
 @Transactional(readOnly = true)

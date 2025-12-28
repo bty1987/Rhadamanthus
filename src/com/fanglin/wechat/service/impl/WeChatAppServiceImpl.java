@@ -11,26 +11,27 @@
 
 package com.fanglin.wechat.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.WxPKCS7Encoder;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.wechat.service.WeChatAccessTokenService;
 import com.fanglin.wechat.service.WeChatAppService;
+import com.fanglin.wechat.utils.AES;
 import com.fanglin.wechat.utils.WeChatApi;
 import com.fanglin.wechat.vo.WeChatGroupInfoVO;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 import com.fanglin.wechat.vo.WeChatUserInfoVO;
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 微信小程序服务实现
