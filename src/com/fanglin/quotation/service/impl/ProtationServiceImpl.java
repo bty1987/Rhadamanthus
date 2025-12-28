@@ -206,10 +206,12 @@ public class ProtationServiceImpl implements ProtationService {
 			protationPO.setQuotePrice(presignPricePO.getPrice());
 			protationPO.setCostPrice(presignPricePO.getCostPrice());
 			protationPO.setMostPrice(presignPricePO.getMostPrice());
+			protationPO.setActivityPrice(presignPricePO.getActivityPrice());
 		} else {
 			protationPO.setQuotePrice(presignProducePO.getQuotePrice());
 			protationPO.setCostPrice(presignProducePO.getCostPrice());
 			protationPO.setMostPrice(presignProducePO.getMostPrice());
+			protationPO.setActivityPrice(presignProducePO.getActivityPrice());
 		}
 
 		ProtationPO defaultProtationPO = protationDao.queryProtationForDefaultByOrderId(orderId);

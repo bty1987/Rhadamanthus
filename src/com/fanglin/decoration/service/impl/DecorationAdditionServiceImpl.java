@@ -215,9 +215,6 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		decorationPO.setSaleScale((short) (saleScale > 100 ? 100 : saleScale));
 
 		decorationDao.update(decorationPO);
-	}
 
-	public static void main(String[] args) {
-		System.out.println(Arith.div(0, 10000));
 	}
 }
