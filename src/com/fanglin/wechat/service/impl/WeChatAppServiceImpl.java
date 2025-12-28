@@ -18,6 +18,10 @@ import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.wechat.dao.WeChatOpenUnionDao;
+import com.fanglin.wechat.dao.impl.WeChatAppSessionDao;
+import com.fanglin.wechat.po.WeChatAppSessionPO;
+import com.fanglin.wechat.po.WeChatOpenUnionPO;
 import com.fanglin.wechat.service.WeChatAccessTokenService;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.utils.AES;
@@ -30,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +51,12 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
+	@Autowired
+	private WeChatAppSessionDao wxAppSessionDao;
+
+	@Autowired
+	private WeChatOpenUnionDao wxOpenUnionDao;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public WeChatUserInfoVO makeSession(String code, String company) throws FLException {
@@ -54,11 +65,11 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 
 		WeChatUserInfoVO userInfoVO = null;
 
-		// TODO: 检查 session 是否已存在（需要创建 WeChatAppSessionDao）
-		// WXAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWxAppSessionByCode(code);
-		// if (wxAppSessionPO != null) {
-		// throw new FLException(910116, "Session信息已存在");
-		// }
+		// 检查 session 是否已存在
+		WeChatAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWeChatAppSessionByCode(code);
+		if (wxAppSessionPO != null) {
+			throw new FLException(910116, "Session信息已存在");
+		}
 
 		// 获取小程序配置（type=1 表示小程序）
 		SystemConfigPO wapi = systemConfigDao.querySystemConfig("WECHAT_WXAPI_PATH_STR");
@@ -77,19 +88,22 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 
 			if (openId == null || unionId == null) return userInfoVO;
 
-			// TODO: 保存 session 信息（需要创建 WeChatAppSessionDao）
-			// wxAppSessionPO = new WXAppSessionPO(code, sessionKey, openId, new Date().getTime());
-			// wxAppSessionDao.save(wxAppSessionPO);
+			// 保存 session 信息
+			wxAppSessionPO = new WeChatAppSessionPO(code, sessionKey, openId, new Date().getTime());
+			wxAppSessionDao.save(wxAppSessionPO);
 
 			userInfoVO = new WeChatUserInfoVO(openId, unionId);
 
-			// TODO: 保存 OpenID 与 UnionID 的关联关系（需要创建 WeChatOpenUnionDao）
-			// WXOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWxOpenUnion(openId);
-			// if (wxOpenUnionPO == null || wxOpenUnionPO.getCompany() != $company) {
-			// wxOpenUnionPO = new WXOpenUnionPO(unionId, openId,
-			// WXOpenUnionPO.TYPE_APPLET_INT, $company);
-			// wxOpenUnionDao.save(wxOpenUnionPO);
-			// }
+			// 保存 OpenID 与 UnionID 的关联关系
+			WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWeChatOpenUnion(openId);
+			if (wxOpenUnionPO == null || wxOpenUnionPO.getCompany() != $company) {
+				wxOpenUnionPO = new WeChatOpenUnionPO();
+				wxOpenUnionPO.setUnionId(unionId);
+				wxOpenUnionPO.setOpenId(openId);
+				wxOpenUnionPO.setType(WeChatOpenUnionPO.TYPE_APPLET_INT);
+				wxOpenUnionPO.setCompany($company);
+				wxOpenUnionDao.save(wxOpenUnionPO);
+			}
 		} else {
 			System.out.println(url);
 			System.out.println(response.toJSONString());
@@ -137,55 +151,53 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 	@Override
 	public WeChatUserInfoVO queryUserInfo(String code, String encryptedData, String iv) throws FLException {
 
+		// 从数据库查询 session 信息
+		WeChatAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWeChatAppSessionByCode(code);
+		if (wxAppSessionPO == null) {
+			throw new FLException(910118, "Session信息不存在");
+		}
+
+		// 使用缓存的 sessionKey 解密
 		WeChatUserInfoVO userInfoVO = null;
+		AES aes = new AES();
+		try {
+			byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData),
+					Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
+			if (null != resultByte && resultByte.length > 0) {
+				String userInfo = new String(WxPKCS7Encoder.decode(resultByte));
+				userInfoVO = JSONObject.parseObject(userInfo, WeChatUserInfoVO.class);
+			}
+		} catch (Exception e) {
+			throw new FLException(910117, "获取用户信息失败");
+		}
 
-		// TODO: 从数据库查询 session 信息（需要创建 WeChatAppSessionDao）
-		// WXAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWxAppSessionByCode(code);
-		// if (wxAppSessionPO == null) {
-		// throw new FLException(910118, "Session信息不存在");
-		// }
-
-		// TODO: 使用缓存的 sessionKey 解密
-		// AES aes = new AES();
-		// try {
-		// byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData),
-		// Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
-		// if (null != resultByte && resultByte.length > 0) {
-		// String userInfo = new String(WxPKCS7Encoder.decode(resultByte));
-		// userInfoVO = JSONObject.parseObject(userInfo, WeChatUserInfoVO.class);
-		// }
-		// } catch (Exception e) {
-		// throw new FLException(910117, "获取用户信息失败");
-		// }
-
-		throw new FLException(910118, "Session信息不存在（功能待实现）");
+		return userInfoVO;
 	}
 
 	@Override
 	public WeChatGroupInfoVO queryGroupInfo(String code, String encryptedData, String iv) throws FLException {
 
+		// 从数据库查询 session 信息
+		WeChatAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWeChatAppSessionByCode(code);
+		if (wxAppSessionPO == null) {
+			throw new FLException(910118, "Session信息不存在");
+		}
+
+		// 使用缓存的 sessionKey 解密
 		WeChatGroupInfoVO groupInfoVO = null;
+		AES aes = new AES();
+		try {
+			byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData),
+					Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
+			if (null != resultByte && resultByte.length > 0) {
+				String groupInfo = new String(WxPKCS7Encoder.decode(resultByte));
+				groupInfoVO = JSONObject.parseObject(groupInfo, WeChatGroupInfoVO.class);
+			}
+		} catch (Exception e) {
+			throw new FLException(910131, "获取群信息失败");
+		}
 
-		// TODO: 从数据库查询 session 信息（需要创建 WeChatAppSessionDao）
-		// WXAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWxAppSessionByCode(code);
-		// if (wxAppSessionPO == null) {
-		// throw new FLException(910118, "Session信息不存在");
-		// }
-
-		// TODO: 使用缓存的 sessionKey 解密
-		// AES aes = new AES();
-		// try {
-		// byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData),
-		// Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
-		// if (null != resultByte && resultByte.length > 0) {
-		// String groupInfo = new String(WxPKCS7Encoder.decode(resultByte));
-		// groupInfoVO = JSONObject.parseObject(groupInfo, WeChatGroupInfoVO.class);
-		// }
-		// } catch (Exception e) {
-		// throw new FLException(910131, "获取群信息失败");
-		// }
-
-		throw new FLException(910118, "Session信息不存在（功能待实现）");
+		return groupInfoVO;
 	}
 
 	@Override
@@ -224,11 +236,9 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 
 	@Override
 	public int deleteSession() {
-
-		// TODO: 删除过期的 session（需要创建 WeChatAppSessionDao）
-		// wxAppSessionDao.deleteWxAppSession(new Date().getTime());
-
-		return 0;
+		// 删除过期的 session（超过 24 小时的）
+		long expireTime = new Date().getTime() - (24 * 60 * 60 * 1000);
+		return wxAppSessionDao.deleteWeChatAppSession(expireTime);
 	}
 
 }
