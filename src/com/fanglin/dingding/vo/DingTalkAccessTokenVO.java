@@ -1,6 +1,6 @@
 package com.fanglin.dingding.vo;
 
-public class AccessTokenVO implements java.io.Serializable {
+public class DingTalkAccessTokenVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -859413617235576784L;
 

@@ -6,157 +6,66 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.dingding.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.bean.User;
-import com.fanglin.dingding.utils.DDApi;
-import com.fanglin.dingding.utils.HttpHelper;
-import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
-import com.fanglin.utils.FormatUtil;
 
-@Service("userDDService")
-@Transactional(readOnly = true)
-public class UserService {
+/**
+ * 钉钉用户服务接口
+ */
+public interface UserService {
 
-	@Autowired
-	private AuthService authDDService;
+	/**
+	 * 获取用户信息
+	 * @param code 临时授权码
+	 * @param company 公司代码
+	 * @return 用户信息
+	 * @throws FLException 异常
+	 */
+	public User getUserInfo(String code, String company) throws FLException;
 
-	@Autowired
-	private SystemConfigDao systemConfigDao;
+	/**
+	 * 获取用户
+	 * @param userid 用户ID
+	 * @param company 公司ID
+	 * @return 用户信息
+	 * @throws FLException 异常
+	 */
+	public User getUser(String userid, Integer company) throws FLException;
 
-	public User getUserInfo(String code, String company) throws FLException {
+	/**
+	 * 添加钉钉用户
+	 * @param usera 用户信息
+	 * @param dids 部门ID列表
+	 * @param company 公司ID
+	 * @return 错误代码
+	 * @throws FLException 异常
+	 */
+	public int addDDUser(User usera, List<Long> dids, Integer company) throws FLException;
 
-		String accessToken = authDDService.getAccessToken(company);
+	/**
+	 * 更新钉钉用户
+	 * @param usera 用户信息
+	 * @param dids 部门ID列表
+	 * @param company 公司ID
+	 * @return 错误代码
+	 * @throws FLException 异常
+	 */
+	public int updateDDUser(User usera, List<Long> dids, Integer company) throws FLException;
 
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-
-		String url = String.format(DDApi.DDAPI_GET_USER_INFO_STR, oapiHost.getValue(), accessToken, code);
-
-		JSONObject json = HttpHelper.httpGet(url);
-
-		if (json == null) {
-			throw new FLException(270003, "获取人员信息失败");
-		} else if (json.getInteger("errcode") != 0) {
-			System.out.println(url);
-			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
-		}
-
-		return JSON.parseObject(json.toJSONString(), User.class);
-	}
-
-	public User getUser(String userid, Integer company) throws FLException {
-
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
-
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-
-		String url = String.format(DDApi.DDAPI_GET_USER_STR, oapiHost.getValue(), accessToken, userid);
-
-		JSONObject json = HttpHelper.httpGet(url);
-
-		if (json == null) {
-			throw new FLException(270003, "获取人员信息失败");
-		} else if (json.getInteger("errcode") != 0) {
-
-			System.out.println(url);
-			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
-		}
-
-		return JSON.parseObject(json.toJSONString(), User.class);
-	}
-
-	public int addDDUser(User usera, List<Long> dids, Integer company) throws FLException {
-
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
-
-		User user = new User();
-		user.setMobile(usera.getMobile());
-		user.setName(usera.getName());
-		user.setUserid(usera.getUserid());
-		user.setPosition(usera.getPosition());
-		user.setDepartment(dids);
-		user.setJobnumber(usera.getUserid());
-
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-
-		String url = String.format(DDApi.DDAPI_ADD_USER_STR, oapiHost.getValue(), accessToken);
-
-		JSONObject json = HttpHelper.httpPost(url, JSONObject.parseObject(JSONObject.toJSONString(user)));
-
-		if (json == null) {
-			throw new FLException(270004, "添加人员信息失败");
-		} else if (json.getInteger("errcode") != 0) {
-			System.out.println(url);
-			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
-		}
-
-		int errcode = json.getInteger("errcode");
-
-		return errcode;
-	}
-
-	public int updateDDUser(User usera, List<Long> dids, Integer company) throws FLException {
-
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
-
-		User user = getUser(usera.getUserid(), company);
-		user.setMobile(usera.getMobile());
-		user.setName(usera.getName());
-		user.setPosition(usera.getPosition());
-		user.setDepartment(dids);
-		user.setJobnumber(usera.getUserid());
-
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-
-		String url = String.format(DDApi.DDAPI_UPDATE_USER_STR, oapiHost.getValue(), accessToken);
-
-		JSONObject json = HttpHelper.httpPost(url, JSONObject.parseObject(JSONObject.toJSONString(user)));
-
-		if (json == null) {
-			throw new FLException(270005, "更新人员信息失败");
-		} else if (json.getInteger("errcode") != 0) {
-			System.out.println(url);
-			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
-		}
-
-		int errcode = json.getInteger("errcode");
-
-		return errcode;
-	}
-
-	public int deleteDDUser(User user, Integer company) throws FLException {
-
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
-
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-
-		String url = String.format(DDApi.DDAPI_DELETE_USER_STR, oapiHost.getValue(), accessToken, user.getUserid());
-
-		JSONObject json = HttpHelper.httpGet(url);
-
-		if (json == null) {
-			throw new FLException(270006, "删除人员信息失败");
-		} else if (json.getInteger("errcode") != 0) {
-			System.out.println(url);
-			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
-		}
-
-		int errcode = json.getInteger("errcode");
-
-		return errcode;
-	}
+	/**
+	 * 删除钉钉用户
+	 * @param user 用户信息
+	 * @param company 公司ID
+	 * @return 错误代码
+	 * @throws FLException 异常
+	 */
+	public int deleteDDUser(User user, Integer company) throws FLException;
 
 }

@@ -1,121 +1,49 @@
 package com.fanglin.dingding.service;
 
-import java.net.URLDecoder;
-import java.security.MessageDigest;
-import java.util.Formatter;
+/**
+ * 钉钉认证服务接口
+ * 提供钉钉 AccessToken、JsapiTicket 获取和签名功能
+ */
+public interface AuthService {
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+	/**
+	 * 获取钉钉 AccessToken
+	 * @param company 公司标识
+	 * @return AccessToken
+	 */
+	public String getAccessToken(String company);
 
-import com.alibaba.fastjson.JSONObject;
-import com.fanglin.dingding.po.AccessTokenPO;
-import com.fanglin.dingding.po.JsapiTicketPO;
-import com.fanglin.dingding.utils.DDApi;
-import com.fanglin.dingding.utils.HttpHelper;
-import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
-import com.fanglin.utils.FormatUtil;
+	/**
+	 * 获取钉钉 JsapiTicket
+	 * @param company 公司标识
+	 * @return JsapiTicket
+	 */
+	public String getJsapiTicket(String company);
 
-@Service("authDDService")
-@Transactional(readOnly = true)
-public class AuthService {
+	/**
+	 * 生成签名
+	 * @param ticket JsapiTicket
+	 * @param nonceStr 随机字符串
+	 * @param timeStamp 时间戳
+	 * @param url 签名URL
+	 * @return 签名字符串
+	 */
+	public String sign(String ticket, String nonceStr, long timeStamp, String url);
 
-	public static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+	/**
+	 * 字节数组转十六进制字符串
+	 * @param hash 字节数组
+	 * @return 十六进制字符串
+	 */
+	public String bytesToHex(byte[] hash);
 
-	@Autowired
-	private SystemConfigDao systemConfigDao;
-
-	public String getAccessToken(String company) {
-
-		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
-
-		String url = String.format(DDApi.DDAPI_GET_TOKEN_STR, isv.getValue(), company);
-
-		JSONObject response = HttpHelper.httpGet(url);
-
-		if (response == null) {
-			return "";
-		} else {
-			AccessTokenPO dAccessTokenPO = response.getObject("dAccessToken", AccessTokenPO.class);
-
-			return dAccessTokenPO.getAccesstoken();
-		}
-	}
-
-	public String getJsapiTicket(String company) {
-
-		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
-
-		String url = String.format(DDApi.DDAPI_GET_JSAPI_TICKET_STR, isv.getValue(), company);
-
-		JSONObject response = HttpHelper.httpGet(url);
-
-		JsapiTicketPO dJsapiTicketPO = response.getObject("dJsapiTicket", JsapiTicketPO.class);
-
-		return dJsapiTicketPO.getJsapi();
-	}
-
-	public String sign(String ticket, String nonceStr, long timeStamp, String url) {
-
-		String signInfo = "";
-		String plain = String.format(DDApi.DDAPI_SIGN_STR, ticket, nonceStr, String.valueOf(timeStamp), url);
-
-		try {
-			MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
-
-			sha1.reset();
-			sha1.update(plain.getBytes("UTF-8"));
-
-			signInfo = bytesToHex(sha1.digest());
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-
-		return signInfo;
-	}
-
-	public String bytesToHex(byte[] hash) {
-		Formatter formatter = new Formatter();
-		for (byte b : hash) {
-			formatter.format("%02x", b);
-		}
-		String result = formatter.toString();
-		formatter.close();
-		return result;
-	}
-
-	@SuppressWarnings("deprecation")
-	public String getConfig(String urlString, String queryString, String company) {
-
-		String url;
-		String queryStringEncode = null;
-
-		if (queryString != null) {
-			queryStringEncode = URLDecoder.decode(queryString);
-			url = urlString + "?" + queryStringEncode;
-		} else {
-			url = urlString;
-		}
-
-		String nonceStr = "abcdefg";
-		long timeStamp = System.currentTimeMillis() / 1000;
-		String signedUrl = url;
-		String ticket = null;
-		String signature = null;
-
-		try {
-			ticket = getJsapiTicket(company);
-			signature = sign(ticket, nonceStr, timeStamp, signedUrl);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-
-		SystemConfigPO corpId = systemConfigDao.querySystemConfig("corpId", FormatUtil.decodeCompany(company));
-
-		return "({signature:'" + signature + "',nonceStr:'" + nonceStr + "',timeStamp:'" + timeStamp + "',corpId:'" + corpId.getValue() + "'})";
-	}
+	/**
+	 * 获取钉钉 JS-SDK 配置信息
+	 * @param urlString URL地址
+	 * @param queryString 查询字符串
+	 * @param company 公司标识
+	 * @return 配置信息JSON字符串
+	 */
+	public String getConfig(String urlString, String queryString, String company);
 
 }

@@ -6,7 +6,7 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.dingding.action;
@@ -19,27 +19,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.dingding.service.AccessTokenService;
-import com.fanglin.dingding.service.JsapiTicketService;
-import com.fanglin.dingding.vo.AccessTokenVO;
-import com.fanglin.dingding.vo.JsapiTicketVO;
+import com.fanglin.dingding.service.DingTalkAccessTokenService;
+import com.fanglin.dingding.service.DingTalkJsapiTicketService;
+import com.fanglin.dingding.vo.DingTalkAccessTokenVO;
+import com.fanglin.dingding.vo.DingTalkJsapiTicketVO;
 
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class AccessTokenAction extends BaseListAction {
+public class DingTalkAccessTokenAction extends BaseListAction {
 
 	private static final long serialVersionUID = -5578448150732101710L;
 
 	@Autowired
-	private AccessTokenService accessTokenService;
+	private DingTalkAccessTokenService accessTokenService;
 
 	@Autowired
-	private JsapiTicketService dJsapiTicketService;
+	private DingTalkJsapiTicketService dJsapiTicketService;
 
-	private AccessTokenVO accessToken;
+	private DingTalkAccessTokenVO accessToken;
 
-	private JsapiTicketVO jsapiTicket;
+	private DingTalkJsapiTicketVO jsapiTicket;
 
 	private Short type;
 
@@ -85,19 +85,19 @@ public class AccessTokenAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public AccessTokenVO getaccessToken() {
+	public DingTalkAccessTokenVO getaccessToken() {
 		return accessToken;
 	}
 
-	public void setaccessToken(AccessTokenVO accessToken) {
+	public void setaccessToken(DingTalkAccessTokenVO accessToken) {
 		this.accessToken = accessToken;
 	}
 
-	public JsapiTicketVO getJsapiTicket() {
+	public DingTalkJsapiTicketVO getJsapiTicket() {
 		return jsapiTicket;
 	}
 
-	public void setJsapiTicket(JsapiTicketVO jsapiTicket) {
+	public void setJsapiTicket(DingTalkJsapiTicketVO jsapiTicket) {
 		this.jsapiTicket = jsapiTicket;
 	}
 

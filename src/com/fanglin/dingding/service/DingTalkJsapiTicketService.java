@@ -6,15 +6,15 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.dingding.service;
 
-import com.fanglin.dingding.vo.JsapiTicketVO;
+import com.fanglin.dingding.vo.DingTalkJsapiTicketVO;
 
-public interface JsapiTicketService {
+public interface DingTalkJsapiTicketService {
 
-	public JsapiTicketVO queryJsapiTicket(String company);
+	public DingTalkJsapiTicketVO queryJsapiTicket(String company);
 
 }

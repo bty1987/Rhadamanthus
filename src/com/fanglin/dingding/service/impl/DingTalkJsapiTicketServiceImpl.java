@@ -6,7 +6,7 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.dingding.service.impl;
@@ -15,25 +15,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.dingding.dao.JsapiTicketDao;
-import com.fanglin.dingding.po.JsapiTicketPO;
-import com.fanglin.dingding.service.JsapiTicketService;
-import com.fanglin.dingding.vo.JsapiTicketVO;
+import com.fanglin.dingding.dao.DingTalkJsapiTicketDao;
+import com.fanglin.dingding.po.DingTalkJsapiTicketPO;
+import com.fanglin.dingding.service.DingTalkJsapiTicketService;
+import com.fanglin.dingding.vo.DingTalkJsapiTicketVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 
-@Service("jsapiTicketService")
+@Service("dingTalkJsapiTicketService")
 @Transactional(readOnly = true)
-public class JsapiTicketServiceImpl implements JsapiTicketService {
+public class DingTalkJsapiTicketServiceImpl implements DingTalkJsapiTicketService {
 
 	@Autowired
-	private JsapiTicketDao jsapiTicketDao;
+	private DingTalkJsapiTicketDao jsapiTicketDao;
 
 	@Override
-	public JsapiTicketVO queryJsapiTicket(String company) {
+	public DingTalkJsapiTicketVO queryJsapiTicket(String company) {
 
-		JsapiTicketPO jsapiTicketPO = jsapiTicketDao.queryJsapiTicket(FormatUtil.decodeCompany(company));
-		JsapiTicketVO jsapiTicketVO = new JsapiTicketVO();
+		DingTalkJsapiTicketPO jsapiTicketPO = jsapiTicketDao.queryJsapiTicket(FormatUtil.decodeCompany(company));
+		DingTalkJsapiTicketVO jsapiTicketVO = new DingTalkJsapiTicketVO();
 
 		BeanUtil.copyProperties(jsapiTicketPO, jsapiTicketVO);
 

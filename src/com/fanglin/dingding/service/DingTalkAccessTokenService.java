@@ -6,16 +6,16 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.dingding.service;
 
-import com.fanglin.dingding.vo.AccessTokenVO;
+import com.fanglin.dingding.vo.DingTalkAccessTokenVO;
 
-public interface AccessTokenService {
+public interface DingTalkAccessTokenService {
 
-	public AccessTokenVO queryAccessToken(String company);
+	public DingTalkAccessTokenVO queryAccessToken(String company);
 
 	public int makeAccessToken(String company);
 

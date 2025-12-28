@@ -1,6 +1,6 @@
 package com.fanglin.dingding.vo;
 
-public class JsapiTicketVO implements java.io.Serializable {
+public class DingTalkJsapiTicketVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -8780310391096195927L;
 
