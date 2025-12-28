@@ -6,17 +6,17 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.dingding.dao;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.dingding.po.AccessTokenPO;
+import com.fanglin.dingding.po.DingTalkAccessTokenPO;
 
-public interface AccessTokenDao extends Dao<AccessTokenPO> {
+public interface DingTalkAccessTokenDao extends Dao<DingTalkAccessTokenPO> {
 
-	public AccessTokenPO queryAccessToken(int company);
+	public DingTalkAccessTokenPO queryAccessToken(int company);
 
 	public int deleteAccessToken(long operateTime);
 

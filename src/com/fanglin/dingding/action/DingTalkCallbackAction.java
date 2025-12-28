@@ -6,7 +6,7 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.dingding.action;
@@ -25,17 +25,17 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.dingding.service.CallbackService;
+import com.fanglin.dingding.service.DingTalkCallbackService;
 
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class DTalkCallback extends BaseListAction {
+public class DingTalkCallbackAction extends BaseListAction {
 
 	private static final long serialVersionUID = -6593413211279089778L;
 
 	@Autowired
-	private CallbackService ddCallbackService;
+	private DingTalkCallbackService ddCallbackService;
 
 	private String signature;
 

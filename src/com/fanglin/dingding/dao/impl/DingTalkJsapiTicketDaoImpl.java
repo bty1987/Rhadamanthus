@@ -6,7 +6,7 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.dingding.dao.impl;
@@ -16,19 +16,19 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.dingding.dao.JsapiTicketDao;
-import com.fanglin.dingding.po.JsapiTicketPO;
+import com.fanglin.dingding.dao.DingTalkJsapiTicketDao;
+import com.fanglin.dingding.po.DingTalkJsapiTicketPO;
 
-@Repository("jsapiTicketDao")
-public class JsapiTicketDaoImpl extends DaoImpl<JsapiTicketPO> implements JsapiTicketDao {
+@Repository("dingTalkJsapiTicketDao")
+public class DingTalkJsapiTicketDaoImpl extends DaoImpl<DingTalkJsapiTicketPO> implements DingTalkJsapiTicketDao {
 
-	public JsapiTicketDaoImpl() {
-		super(JsapiTicketPO.class);
+	public DingTalkJsapiTicketDaoImpl() {
+		super(DingTalkJsapiTicketPO.class);
 	}
 
 	@Override
-	public JsapiTicketPO queryJsapiTicket(int company) {
-		return (JsapiTicketPO) session().createCriteria(JsapiTicketPO.class).add(Restrictions.eq(JsapiTicketPO.COLUMN_COMPANY_STR, company)).addOrder(Order.desc(JsapiTicketPO.COLUMN_OPERATETIME_STR)).setMaxResults(1).uniqueResult();
+	public DingTalkJsapiTicketPO queryJsapiTicket(int company) {
+		return (DingTalkJsapiTicketPO) session().createCriteria(DingTalkJsapiTicketPO.class).add(Restrictions.eq(DingTalkJsapiTicketPO.COLUMN_COMPANY_STR, company)).addOrder(Order.desc(DingTalkJsapiTicketPO.COLUMN_OPERATETIME_STR)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

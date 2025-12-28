@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "accesstoken", catalog = "dingtalk")
-public class AccessTokenPO implements java.io.Serializable {
+public class DingTalkAccessTokenPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -5569847205831077308L;
 
@@ -26,17 +26,17 @@ public class AccessTokenPO implements java.io.Serializable {
 
 	private int company;
 
-	public AccessTokenPO() {
+	public DingTalkAccessTokenPO() {
 		super();
 	}
 
-	public AccessTokenPO(String accesstoken, long operateTime) {
+	public DingTalkAccessTokenPO(String accesstoken, long operateTime) {
 		super();
 		this.accesstoken = accesstoken;
 		this.operateTime = operateTime;
 	}
 
-	public AccessTokenPO(String accesstoken, long operateTime, int company) {
+	public DingTalkAccessTokenPO(String accesstoken, long operateTime, int company) {
 		super();
 		this.accesstoken = accesstoken;
 		this.operateTime = operateTime;

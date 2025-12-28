@@ -6,7 +6,7 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.dingding.service.impl;
@@ -18,37 +18,37 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fanglin.dingding.dao.AccessTokenDao;
-import com.fanglin.dingding.dao.JsapiTicketDao;
-import com.fanglin.dingding.po.AccessTokenPO;
-import com.fanglin.dingding.po.JsapiTicketPO;
-import com.fanglin.dingding.service.AccessTokenService;
+import com.fanglin.dingding.dao.DingTalkAccessTokenDao;
+import com.fanglin.dingding.dao.DingTalkJsapiTicketDao;
+import com.fanglin.dingding.po.DingTalkAccessTokenPO;
+import com.fanglin.dingding.po.DingTalkJsapiTicketPO;
+import com.fanglin.dingding.service.DingTalkAccessTokenService;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
-import com.fanglin.dingding.vo.AccessTokenVO;
+import com.fanglin.dingding.vo.DingTalkAccessTokenVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 
-@Service("accessTokenService")
+@Service("dingTalkAccessTokenService")
 @Transactional(readOnly = true)
-public class AccessTokenServiceImpl implements AccessTokenService {
+public class DingTalkAccessTokenServiceImpl implements DingTalkAccessTokenService {
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
 	@Autowired
-	private AccessTokenDao accessTokenDao;
+	private DingTalkAccessTokenDao accessTokenDao;
 
 	@Autowired
-	private JsapiTicketDao jsapiTicketDao;
+	private DingTalkJsapiTicketDao jsapiTicketDao;
 
 	@Override
-	public AccessTokenVO queryAccessToken(String company) {
+	public DingTalkAccessTokenVO queryAccessToken(String company) {
 
-		AccessTokenPO accessTokenPO = accessTokenDao.queryAccessToken(FormatUtil.decodeCompany(company));
-		AccessTokenVO accessTokenVO = new AccessTokenVO();
+		DingTalkAccessTokenPO accessTokenPO = accessTokenDao.queryAccessToken(FormatUtil.decodeCompany(company));
+		DingTalkAccessTokenVO accessTokenVO = new DingTalkAccessTokenVO();
 
 		BeanUtil.copyProperties(accessTokenPO, accessTokenVO);
 
@@ -74,7 +74,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
 		if (response != null && response.containsKey("access_token")) {
 
-			AccessTokenPO accessTokenPO = new AccessTokenPO(response.getString("access_token"), new Date().getTime(), FormatUtil.decodeCompany(company));
+			DingTalkAccessTokenPO accessTokenPO = new DingTalkAccessTokenPO(response.getString("access_token"), new Date().getTime(), FormatUtil.decodeCompany(company));
 
 			accessTokenDao.save(accessTokenPO);
 
@@ -84,7 +84,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
 			if (response != null && response.containsKey("ticket")) {
 
-				JsapiTicketPO jsapiTicketPO = new JsapiTicketPO(response.getString("ticket"), new Date().getTime(), FormatUtil.decodeCompany(company));
+				DingTalkJsapiTicketPO jsapiTicketPO = new DingTalkJsapiTicketPO(response.getString("ticket"), new Date().getTime(), FormatUtil.decodeCompany(company));
 
 				jsapiTicketDao.save(jsapiTicketPO);
 			}
