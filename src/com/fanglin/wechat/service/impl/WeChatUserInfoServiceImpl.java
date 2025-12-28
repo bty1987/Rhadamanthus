@@ -11,6 +11,8 @@
 
 package com.fanglin.wechat.service.impl;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +22,11 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.wechat.dao.WeChatOpenUnionDao;
 import com.fanglin.wechat.dao.impl.WeChatUserInfoDao;
+import com.fanglin.wechat.po.WeChatOpenUnionPO;
 import com.fanglin.wechat.po.WeChatUserInfoPO;
 import com.fanglin.wechat.service.WeChatAccessTokenService;
 import com.fanglin.wechat.service.WeChatUserInfoService;
@@ -43,7 +48,10 @@ public class WeChatUserInfoServiceImpl implements WeChatUserInfoService {
 	private SystemConfigDao systemConfigDao;
 
 	@Autowired
-	private WeChatUserInfoDao weChatUserInfoDao;
+	private WeChatUserInfoDao wxUserInfoDao;
+
+	@Autowired
+	private WeChatOpenUnionDao wxOpenUnionDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -73,22 +81,25 @@ public class WeChatUserInfoServiceImpl implements WeChatUserInfoService {
 
 			userInfoVO = JSONObject.parseObject(response.toJSONString(), WeChatUserInfoVO.class);
 
-			// TODO: 保存用户信息到数据库（需要创建对应的 DAO）
+			// 保存用户信息到数据库
 			WeChatUserInfoPO wxUserInfoPO = wxUserInfoDao.queryWxUserInfoByUnionId(userInfoVO.getUnionid());
 			if (wxUserInfoPO == null) {
-				wxUserInfoPO = new WXUserInfoPO();
+				wxUserInfoPO = new WeChatUserInfoPO();
 				BeanUtil.copyProperties(userInfoVO, wxUserInfoPO);
 				wxUserInfoPO.setCreateTime(new Date().getTime());
 				wxUserInfoDao.save(wxUserInfoPO);
 			}
 
-			// TODO: 保存 OpenID 与 UnionID 的关联关系（需要创建对应的 DAO）
-			// WXOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWxOpenUnion(openId);
-			// if (wxOpenUnionPO == null) {
-			// wxOpenUnionPO = new WXOpenUnionPO(userInfoVO.getUnionid(), openId,
-			// WXOpenUnionPO.TYPE_PUBLIC_INT, 1);
-			// wxOpenUnionDao.save(wxOpenUnionPO);
-			// }
+			// 保存 OpenID 与 UnionID 的关联关系
+			WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWeChatOpenUnion(openId);
+			if (wxOpenUnionPO == null) {
+				wxOpenUnionPO = new WeChatOpenUnionPO();
+				wxOpenUnionPO.setUnionId(userInfoVO.getUnionid());
+				wxOpenUnionPO.setOpenId(openId);
+				wxOpenUnionPO.setType(WeChatOpenUnionPO.TYPE_PUBLIC_INT);
+				wxOpenUnionPO.setCompany(1);
+				wxOpenUnionDao.save(wxOpenUnionPO);
+			}
 		} else {
 			throw new FLException(910119, "获取用户信息失败");
 		}
