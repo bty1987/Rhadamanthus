@@ -1,17 +1,27 @@
 package com.fanglin.seiya.service;
 
+import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.construction.vo.ConstructerVO;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.vo.UserInfoVO;
+import com.fanglin.personel.vo.UserVO;
 
 public interface A20251208Service {
 
-	public void saveOrUpdateUserForPlatforPm(UserInfoVO userInfo, int queryCompany, String queryUserId) throws FLException;
+	public void saveOrUpdateUserForPlatforPm(UserInfoVO userInfo, String queryUserId) throws FLException;
+
+	public void addUser(UserInfoVO userInfo, int company, String queryUserId) throws FLException;
+
+	public void updateUser(UserInfoVO userInfo, int company, String queryUserId) throws FLException;
+
+	public void tranUserForPlatforPm(UserVO userVO, String userId) throws FLException;
+
+	public void quitUserForPlatforPm(UserVO userVO, String userId) throws FLException;
 
 	public int beginConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException;
-	
+
 	public int finishConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException;
 
 	public void addConstructerForPlatforPm(ConstructerVO constructer, String createrId) throws FLException;
@@ -19,4 +29,6 @@ public interface A20251208Service {
 	public void deleteConstructerForPlatforPm(ConstructerVO constructer) throws FLException;
 
 	public int beginConstructionForPlatforPm(ConstructionVO construction, String queryUserId, int queryCompany) throws FLException;
+
+	public int updateAcceptanceForPlatforPm(AcceptanceVO acceptanceVO) throws FLException;
 }

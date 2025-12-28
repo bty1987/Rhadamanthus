@@ -93,6 +93,10 @@ public class ProtationDO implements Serializable {
 
 	private long taxPrice;
 
+	private long activityPrice;
+
+	private long activityProfit;
+
 	private long totalPrice;
 
 	private short status;
@@ -378,6 +382,24 @@ public class ProtationDO implements Serializable {
 
 	public void setTaxPrice(long taxPrice) {
 		this.taxPrice = taxPrice;
+	}
+
+	@Column(name = "activityPrice")
+	public long getActivityPrice() {
+		return activityPrice;
+	}
+
+	public void setActivityPrice(long activityPrice) {
+		this.activityPrice = activityPrice;
+	}
+
+	@Column(name = "activityProfit")
+	public long getActivityProfit() {
+		return activityProfit;
+	}
+
+	public void setActivityProfit(long activityProfit) {
+		this.activityProfit = activityProfit;
 	}
 
 	@Column(name = "totalPrice")

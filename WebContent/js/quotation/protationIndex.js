@@ -114,11 +114,12 @@ $(function() {
         var preferPrice = protation.items.preferPrices.val();
         var preferManage = protation.items.preferManage.val();
         var preferAdvance = protation.items.preferAdvance.val();
-        var discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(_protation.quotePrice, preferPrice), _protation.quotePrice));
+        var _quotePrice = utils.accAdd(_protation.quotePrice, _protation.activityPrice);
+        var discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(_quotePrice, preferPrice), _quotePrice));
 
         discout = discout < 0 ? 0 : discout > 1 ? 1 : discout;
-        
-        if (preferPrice > _protation.quotePrice) {
+
+        if (preferPrice > _quotePrice) {
             com.showAlert(com.warning, "优惠金额不合理");
             return false;
         }
@@ -137,7 +138,7 @@ $(function() {
 
         if (manageFormula.indexOf("{") != -1 || manageFormula.indexOf("}") != -1) {
             manageFormula = com.format(manageFormula, {
-                "a": _protation.quotePrice,
+                "a": _quotePrice,
                 "b": preferPrice,
                 "c": _protation.basicPrice,
                 "d": utils.accAdd(_protation.adddPrice, _protation.addmPrice),
@@ -153,7 +154,7 @@ $(function() {
 
         if (taxFormula.indexOf("{") != -1 || taxFormula.indexOf("}") != -1) {
             taxFormula = com.format(taxFormula, {
-                "a": _protation.quotePrice,
+                "a": _quotePrice,
                 "b": preferPrice,
                 "c": _protation.basicPrice,
                 "d": utils.accAdd(_protation.adddPrice, _protation.addmPrice),
@@ -168,7 +169,7 @@ $(function() {
         var _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, preferManage), _managePrice));
 
         _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
-        
+
         if (preferManage > _managePrice) {
             com.showAlert(com.warning, "管理费优惠金额不合理");
             return false;
@@ -181,7 +182,7 @@ $(function() {
 
         var _taxPrice = utils.changeThrDecimal(isNaN(eval(taxFormula)) ? 0 : eval(taxFormula));
 
-        var total = utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_protation.quotePrice, _managePrice), _taxPrice), preferPrice), preferManage), preferAdvance);
+        var total = utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_quotePrice, _managePrice), _taxPrice), preferPrice), preferManage), preferAdvance), _protation.activityProfit);
         total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(_protation.basicPrice, utils.accAdd(_protation.adddPrice, utils.accSub(_protation.addmPrice, utils.accAdd(utils.accAdd(_protation.subdPrice, _protation.submPrice), _protation.subcPrice)))), utils.accAdd(_protation.accmPrice, _protation.accdPrice))));
 
         if (_protation.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
@@ -253,7 +254,9 @@ $(function() {
                 com.post(api.data.updateHouse, {
                     "house.innerArea": protationData.quoteArea,
                     "house.hid": protation.decoration.house.hid
-                }, function(res) {});
+                }, function(res) {
+
+                });
             }
         } else {
 
@@ -302,7 +305,7 @@ $(function() {
                 "approvalProtationPrefer.taxPrice": options["protation.taxPrice"],
                 "approvalProtationPrefer.totalPrice": options["protation.totalPrice"],
             }, options);
-            
+
             params["protation.advanceProfit"] = null;
             params["protation.totalPrice"] = null;
 
@@ -489,7 +492,9 @@ $(function() {
                     com.post(api.data.updateHouse, {
                         "house.innerArea": protationData.quoteArea,
                         "house.hid": protation.decoration.house.hid
-                    }, function(res) {});
+                    }, function(res) {
+
+                    });
                 }
             }
         },
@@ -857,7 +862,10 @@ $(function() {
         }, {
             field: "quotePrice",
             name: "起报价",
-            prop: "quotePrice",
+            prop: function(v) {
+
+                return utils.accAdd(v.quotePrice, v.activityPrice);
+            },
             clazz: "blue",
             show: function(v) {
 
@@ -1069,6 +1077,24 @@ $(function() {
             show: function(v) {
 
                 return protation.pageConfig.propertyArr.contains("preferPrice");
+            }
+        }, {
+            field: "activityPrice",
+            name: "浮动额",
+            prop: "activityPrice",
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("activityPrice");
+            }
+        }, {
+            field: "activityProfit",
+            name: "活动优惠",
+            prop: "activityProfit",
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("activityProfit");
             }
         }, {
             field: "comment",

@@ -19,6 +19,7 @@ jQuery(function($) {
             price: com.focusPage("#price", "#createPresignPriceModal"),
             costPrice: com.focusPage("#costPrice", "#createPresignPriceModal"),
             mostPrice: com.focusPage("#mostPrice", "#createPresignPriceModal"),
+            activityPrice: com.focusPage("#activityPrice", "#createPresignPriceModal"),
         },
 
         status: {},
@@ -80,6 +81,11 @@ jQuery(function($) {
         name: "主材成本",
         prop: "mostPrice",
         clazz: "blue"
+    }, {
+        fieId: "activityPrice",
+        name: "浮动额",
+        prop: "activityPrice",
+        clazz: "blue"
     }];
 
     var linebtns = [{
@@ -95,6 +101,7 @@ jQuery(function($) {
             presignPrice.items.price.val(v.price);
             presignPrice.items.costPrice.val(v.costPrice);
             presignPrice.items.mostPrice.val(v.mostPrice);
+            presignPrice.items.activityPrice.val(v.activityPrice);
 
             presignPrice.modals.createPresignPriceModal.modal("show");
 
@@ -156,6 +163,7 @@ jQuery(function($) {
             "presignPrice.price": presignPrice.items.price.val(),
             "presignPrice.costPrice": presignPrice.items.costPrice.val(),
             "presignPrice.mostPrice": presignPrice.items.mostPrice.val(),
+            "presignPrice.activityPrice": presignPrice.items.activityPrice.val(),
         };
 
         if (presignPrice.pspid) {

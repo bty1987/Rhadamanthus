@@ -42,6 +42,8 @@ public class ExtensionPO implements Serializable {
 
 	public static final short ATTTYPE_QUOTATION_INT = 3;
 
+	public static final short ATTTYPE_ACTIVITY_INT = 4;
+
 	public static final short MANAGE_DISCOUNT_NONE_INT = 0;
 
 	public static final short MANAGE_DISCOUNT_MANAGE_INT = 1;

@@ -31,6 +31,7 @@ jQuery(function($) {
             manageDiscountt: com.focusPage("#manageDiscountt", "#createPresignProduceModal"),
             taxRate: com.focusPage("#taxRate", "#createPresignProduceModal"),
             taxFormula: com.focusPage("#taxFormula", "#createPresignProduceModal"),
+            activityPrice: com.focusPage("#activityPrice", "#createPresignProduceModal"),
         },
 
         status: {},
@@ -159,6 +160,11 @@ jQuery(function($) {
         prop: "mostRate",
         clazz: "blue"
     }, {
+        fieId: "activityPrice",
+        name: "浮动额",
+        prop: "activityPrice",
+        clazz: "blue"
+    }, {
         fieId: "status",
         name: "状态",
         prop: "status",
@@ -188,6 +194,7 @@ jQuery(function($) {
             presignProduce.items.manageDiscountt.val(v.manageDiscountt);
             presignProduce.items.taxRate.val(v.taxRate);
             presignProduce.items.taxFormula.val(v.taxFormula ? paramToFormula(v.taxFormula) : "");
+            presignProduce.items.activityPrice.val(v.activityPrice);
 
             if (v.version && v.version.qvId) {
                 presignProduce.items.version.val(v.version.qvId);
@@ -314,6 +321,7 @@ jQuery(function($) {
             "presignProduce.manageDiscountt": presignProduce.items.manageDiscountt.val(),
             "presignProduce.taxRate": presignProduce.items.taxRate.val(),
             "presignProduce.taxFormula": formulaToParam(taxFormula),
+            "presignProduce.activityPrice": presignProduce.items.activityPrice.val(),
         };
 
         if (presignProduce.items.version.val()) {

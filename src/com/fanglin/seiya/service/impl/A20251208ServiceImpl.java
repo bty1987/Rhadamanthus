@@ -25,15 +25,19 @@ import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.dao.DutyDao;
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.communion.po.DutyPO;
+import com.fanglin.construction.dao.AcceptanceDao;
 import com.fanglin.construction.dao.ConstructerDao;
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
+import com.fanglin.construction.po.AcceptancePO;
 import com.fanglin.construction.po.ConstructerPO;
 import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.construction.service.ConstructionScheduleService;
+import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.construction.vo.ConstructerVO;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionVO;
@@ -49,9 +53,12 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.DutmentDao;
+import com.fanglin.personel.dao.UserCompanyDao;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserInfoDao;
+import com.fanglin.personel.dao.UserRoleDao;
 import com.fanglin.personel.po.DutmentPO;
+import com.fanglin.personel.po.UserExperiencePO;
 import com.fanglin.personel.po.UserInfoPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserInfoVO;
@@ -59,6 +66,7 @@ import com.fanglin.personel.vo.UserVO;
 import com.fanglin.salary.dao.WorkerSalaryDao;
 import com.fanglin.seiya.service.A20251208Service;
 import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.dao.RoleDao;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.RolePO;
@@ -131,131 +139,438 @@ public class A20251208ServiceImpl implements A20251208Service {
 	@Autowired
 	private WorkerSalaryDao workerSalaryDao;
 
+	@Autowired
+	private UserInfoDao userExperienceDao;
+
+	@Autowired
+	private UserRoleDao userRoleDao;
+
+	@Autowired
+	private UserCompanyDao userCompanyDao;
+
+	@Autowired
+	private AcceptanceDao acceptanceDao;
+
+	@Autowired
+	private RoleDao roleDao;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void saveOrUpdateUserForPlatforPm(UserInfoVO userInfoVO, int company, String userId) throws FLException {
+	public void saveOrUpdateUserForPlatforPm(UserInfoVO userInfoVO, String userId) throws FLException {
+
 		UserVO userVO = userInfoVO.getUser();
 
 		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
 
-		UserPO userPO = null;
+		int company = 73;
 
 		if (userInfoPO == null) {
-
-			CompanyPO companyPO = companyDao.get(company);
-
-			if (companyPO == null) {
-				throw new FLException(230015, "公司不存在");
-			}
-
-			SystemConfigPO userlimit = systemConfigDao.querySystemConfig("userlimit", company);
-
-			if (userDao.countUserByCompany(company) >= (userlimit == null ? 100 : Integer.valueOf(userlimit.getValue()))) {
-				throw new FLException(190008, "人员数已达上限, 公司上限");
-			}
-
-			List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(userVO.getPhone(), userVO.getIdentity());
-
-			if (userPOs.size() > 0) {
-				throw new FLException(190006, "人员已存在");
-			}
-
-			userPO = userDao.queryUserByLoginId(userVO.getLoginId());
-
-			if (userPO != null) {
-				throw new FLException(190013, "登录名已存在");
-			}
-
-			DepartmentPO departmentPO = departmentDao.get(userVO.getDept().getDid());
-
-			if (departmentPO == null) {
-				throw new FLException(310002, "部门不可添加人员");
-			}
-
-			if (departmentPO.getFatherDept() == null) {
-				throw new FLException(310002, "部门不可添加人员");
-			}
-
-			if (departmentPO.getIsdet() == DepartmentPO.ISDET_DETMENT_INT && departmentPO.getLimit() < userDao.countUserByDeptId(departmentPO.getDid())) {
-				throw new FLException(190011, "人员数量已达上限, 部门上限");
-			}
-
-			DutmentPO dutmentPO = dutmentDao.queryDutmentByDids(userInfoVO.getUser().getDept().getDid(), userInfoVO.getUser().getDuty().getDid());
-
-			if (departmentPO.getIsdet() == DepartmentPO.ISDET_DETMENT_INT && dutmentPO != null) {
-
-				if (dutmentPO.getNum() >= dutmentPO.getLimit()) {
-					throw new FLException(190011, "人员数量已达上限, 定岗上限");
-				}
-
-				dutmentPO.setNum(dutmentPO.getNum() + 1);
-
-				dutmentDao.update(dutmentPO);
-			}
-
-			SystemConfigPO visitor = systemConfigDao.querySystemConfig("visitor"); // 游客角色ID
-
-			if (visitor == null) {
-				throw new FLException(230010, "角色不存在");
-			}
-
-			userPO = new UserPO();
-
-			SystemConfigPO password = systemConfigDao.querySystemConfig("password", company);
-
-			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_USER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
-
-			StringBuffer _userId = new StringBuffer();
-			_userId.append(SystemConfig.getInt("multicompany", 0) != 0 ? String.format("%sU-", companyPO.getShortname()) : "FL-");
-			_userId.append(FormatUtil.fillZero(count, "00000"));
-
-			userPO.setUserId(_userId.toString());
-
-			userPO.setGender(String.valueOf(userInfoVO.getGender()).equals("0") ? "女" : "男");
-			userPO.setPassword(MD5Helper.MD5(password == null ? "helloworld" : password.getValue()));
-			userPO.setLoginId(userVO.getLoginId());
-
-			RolePO rolePO = new RolePO(Integer.valueOf(visitor.getValue()));
-			userPO.setRole(rolePO);
-
-			userPO.setIsLogin(UserPO.ISLOGIN_NOT_INT);
-			userPO.setExtranet((short) (UserPO.EXTRANET_QCODE_INT + UserPO.EXTRANET_WEB_INT + UserPO.EXTRANET_PC_INT));
-			userPO.setType(UserPO.TYPE_USER_INT);
-			userPO.setCompany(company);
-
-			userPO.setDept(departmentPO);
-
-			userPO.setDuty(dutyDao.get(userVO.getDuty().getDid()));
-
-			userPO.setPinYin(PinYin4Util.getPinyin(userVO.getCurrentName()).get(0));
-
-			userPO.setIsUpdate(UserPO.ISUPDATE_ADD_INT);
-
-			userInfoPO = new UserInfoPO();
+			addUser(userInfoVO, company, userId);
 		} else {
-			userPO = userInfoPO.getUser();
-
-			DepartmentPO departmentPO = departmentDao.get(userVO.getDept().getDid());
-
-			if (departmentPO.getFatherDept() == null) {
-				throw new FLException(310002, "部门不可添加人员");
-			}
+			updateUser(userInfoVO, company, userId);
 		}
+
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void addUser(UserInfoVO userInfoVO, int company, String userId) throws FLException {
+
+		CompanyPO companyPO = companyDao.get(company);
+
+		if (companyPO == null) {
+			throw new FLException(230015, "公司不存在");
+		}
+
+		SystemConfigPO userlimit = systemConfigDao.querySystemConfig("userlimit", company);
+
+		if (userDao.countUserByCompany(company) >= (userlimit == null ? 100 : Integer.valueOf(userlimit.getValue()))) {
+			throw new FLException(190008, "人员数已达上限, 公司上限");
+		}
+
+		UserVO userVO = userInfoVO.getUser();
+
+		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(userVO.getPhone(), userVO.getIdentity());
+
+		if (userPOs.size() > 0) {
+			throw new FLException(190006, "人员已存在");
+		}
+
+		UserPO userPO = userDao.queryUserByLoginId(userVO.getLoginId());
+
+		if (userPO != null) {
+			throw new FLException(190013, "登录名已存在");
+		}
+
+		DepartmentPO departmentPO = departmentDao.get(userVO.getDept().getDid());
+
+		if (departmentPO == null) {
+			throw new FLException(310002, "部门不可添加人员");
+		}
+
+		if (departmentPO.getFatherDept() == null) {
+			throw new FLException(310002, "部门不可添加人员");
+		}
+
+		if (departmentPO.getIsdet() == DepartmentPO.ISDET_DETMENT_INT && departmentPO.getLimit() < userDao.countUserByDeptId(departmentPO.getDid())) {
+			throw new FLException(190011, "人员数量已达上限, 部门上限");
+		}
+
+		DutmentPO dutmentPO = dutmentDao.queryDutmentByDids(userInfoVO.getUser().getDept().getDid(), userInfoVO.getUser().getDuty().getDid());
+
+		if (departmentPO.getIsdet() == DepartmentPO.ISDET_DETMENT_INT && dutmentPO != null) {
+
+			if (dutmentPO.getNum() >= dutmentPO.getLimit()) {
+				throw new FLException(190011, "人员数量已达上限, 定岗上限");
+			}
+
+			dutmentPO.setNum(dutmentPO.getNum() + 1);
+
+			dutmentDao.update(dutmentPO);
+		}
+
+		SystemConfigPO visitor = systemConfigDao.querySystemConfig("visitor"); // 游客角色ID
+
+		if (visitor == null) {
+			throw new FLException(230010, "角色不存在");
+		}
+
+		userPO = new UserPO();
+
+		SystemConfigPO password = systemConfigDao.querySystemConfig("password", company);
+
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_USER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
+
+		StringBuffer _userId = new StringBuffer();
+		_userId.append(SystemConfig.getInt("multicompany", 0) != 0 ? String.format("%sU-", companyPO.getShortname()) : "FL-");
+		_userId.append(FormatUtil.fillZero(count, "00000"));
+
+		userPO.setUserId(_userId.toString());
+
+		userPO.setGender(String.valueOf(userInfoVO.getGender()).equals("0") ? "女" : "男");
+		userPO.setPassword(MD5Helper.MD5(password == null ? "helloworld" : password.getValue()));
+		userPO.setLoginId(userVO.getLoginId());
+
+		RolePO rolePO = new RolePO(Integer.valueOf(visitor.getValue()));
+		userPO.setRole(rolePO);
+
+		userPO.setIsLogin(UserPO.ISLOGIN_NOT_INT);
+		userPO.setExtranet((short) (UserPO.EXTRANET_QCODE_INT + UserPO.EXTRANET_WEB_INT + UserPO.EXTRANET_PC_INT));
+		userPO.setType(UserPO.TYPE_USER_INT);
+		userPO.setCompany(company);
 
 		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "duty", "uId", "userId", "loginId", "password", "role", "isLogin", "company", "extranet"));
 
-		userDao.saveOrUpdate(userPO);
+		userPO.setDept(departmentPO);
+
+		userPO.setDuty(dutyDao.get(userVO.getDuty().getDid()));
+
+		userPO.setPinYin(PinYin4Util.getPinyin(userVO.getCurrentName()).get(0));
+
+		userPO.setIsUpdate(UserPO.ISUPDATE_ADD_INT);
+
+		userDao.save(userPO);
+
+		userVO.setUid(userPO.getUid());
+
+		UserInfoPO userInfoPO = new UserInfoPO();
+
+		BeanUtil.copyProperties(userInfoVO, userInfoPO, Arrays.asList("user", "fangliner"));
+
+		if (userInfoVO.getFangliner().getUserId() != null) {
+			UserPO fangliner = userDao.queryUserByUserId(userInfoVO.getFangliner().getUserId());
+			userInfoPO.setFangliner(fangliner);
+		}
+
+		userInfoPO.setUser(userPO);
+		userInfoPO.setHireTime(DateUtil.getDateToTimestamp(new Date()));
+
+		userInfoDao.save(userInfoPO);
+
+		UserExperiencePO userExperiencePO = new UserExperiencePO();
+
+		userExperiencePO.setUid(userPO.getUid());
+		userExperiencePO.setType("入职");
+		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		userExperiencePO.setOperateTime(userVO.getOperateTime() != null ? userVO.getOperateTime() : DateUtil.getDateToTimestamp(new Date()));
+		userExperiencePO.setComment(String.format("公司:%s, 部门:%s, 职位:%s. ", companyPO.getName(), userPO.getDept().getName(), dutyDao.get(userPO.getDuty().getDid()).getName()));
+
+		userExperiencePO.setTcid(companyPO.getCid());
+		userExperiencePO.setTdid(userPO.getDept().getDid());
+		userExperiencePO.setTrid(rolePO.getRid());
+
+		userExperienceDao.save(userExperiencePO);
+
+		userInfoVO.getUser().ptv(userInfoPO.getUser());
+
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateUser(UserInfoVO userInfoVO, int company, String userId) throws FLException {
+
+		UserVO userVO = userInfoVO.getUser();
+
+		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
+
+		if (userInfoPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		UserPO userPO = userInfoPO.getUser();
+
+		DepartmentPO departmentPO = departmentDao.get(userVO.getDept().getDid());
+
+		if (departmentPO == null) {
+			throw new FLException(310002, "部门不可添加人员");
+		}
+
+		if (departmentPO.getFatherDept() == null) {
+			throw new FLException(310002, "部门不可添加人员");
+		}
+
+		CompanyPO companyPO = companyDao.get(userPO.getCompany());
+		RolePO rolePO = null;
+		if (userPO.getRole() != null) {
+			rolePO = roleDao.get(userPO.getRole().getRid());
+		}
+
+		short newstatus = userInfoVO.getUser().getStatus();
+		short oldstatus = userPO.getStatus();
+
+		DepartmentPO newdept = departmentPO;
+		DepartmentPO olddept = userPO.getDept();
+
+		DutyPO newduty = dutyDao.get(userVO.getDuty().getDid());
+		DutyPO oldduty = userPO.getDuty();
 
 		userVO.setUid(userPO.getUid());
 
 		BeanUtil.copyProperties(userInfoVO, userInfoPO, Arrays.asList("user", "fangliner"));
 
-		userInfoPO.setUser(userPO);
-		userInfoPO.setHireTime(DateUtil.getDateToTimestamp(new Date()));
+		if (userInfoVO.getFangliner().getUserId() != null) {
+			UserPO fangliner = userDao.queryUserByUserId(userInfoVO.getFangliner().getUserId());
+			userInfoPO.setFangliner(fangliner);
+		}
 
-		userInfoDao.saveOrUpdate(userInfoPO);
+		userInfoDao.update(userInfoPO);
+
+		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "duty", "uId", "userId", "loginId", "password", "role", "isLogin", "company", "extranet"));
+
+		userPO.setDept(departmentPO);
+
+		userPO.setDuty(dutyDao.get(userVO.getDuty().getDid()));
+
+		List<String> pinyins = PinYin4Util.getPinyin(userVO.getCurrentName());
+
+		userPO.setPinYin(pinyins.get(0));
+
+		if (userPO.getIsUpdate() == UserPO.ISUPDATE_INIT_INT) {
+			userPO.setIsUpdate(UserPO.ISUPDATE_UPDATE_INT);
+		}
+
+		userDao.update(userPO);
+
+		userDao.flush();
+
+		if (newstatus != oldstatus || newdept.getDid() != olddept.getDid() || oldduty.getDid() != newduty.getDid()) {
+
+			if (newstatus == UserPO.STATUS_ONJOB_INT) {
+				userPO.setExtranet((short) (UserPO.EXTRANET_QCODE_INT + UserPO.EXTRANET_WEB_INT + UserPO.EXTRANET_PC_INT));
+			} else {
+				userPO.setIsLogin(UserPO.ISLOGIN_NOT_INT);
+				userPO.setExtranet(UserPO.EXTRANET_NONE_INT);
+
+				userRoleDao.deleteUserRole(userPO.getUid());
+				userCompanyDao.deleteUserCompany(userPO.getUid());
+			}
+
+			DutmentPO olddutment = dutmentDao.queryDutmentByDids(olddept.getDid(), oldduty.getDid());
+			DutmentPO newdutment = dutmentDao.queryDutmentByDids(newdept.getDid(), newduty.getDid());
+
+			int oldCount = userDao.countUserByDid(olddept.getDid(), oldduty.getDid(), company);
+			int newCount = userDao.countUserByDid(newdept.getDid(), newduty.getDid(), company);
+
+			if (olddutment != null) {
+				if (newstatus != oldstatus && newstatus == 0) {
+					if (olddutment.getNum() >= olddutment.getLimit()) {
+						throw new FLException(190011, "人员数量已达上限");
+					}
+				}
+
+				olddutment.setNum(oldCount);
+				dutmentDao.update(olddutment);
+			}
+
+			if (newdutment != null && olddutment != newdutment) {
+				if (newdutment.getNum() >= newdutment.getLimit()) {
+					throw new FLException(190011, "人员数量已达上限");
+				}
+
+				newdutment.setNum(newCount);
+				dutmentDao.update(newdutment);
+			}
+
+			UserExperiencePO userExperiencePO = new UserExperiencePO();
+
+			UserPO operator = userDao.queryUserByUserId(userId);
+
+			userExperiencePO.setUid(userPO.getUid());
+			userExperiencePO.setType((newstatus == oldstatus) ? "调职" : newstatus == UserPO.STATUS_ONJOB_INT ? "入职" : "离职");
+			userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			userExperiencePO.setOperateTime(userVO.getOperateTime() != null ? userVO.getOperateTime() : DateUtil.getDateToTimestamp(new Date()));
+
+			userExperiencePO.setComment(String.format("原部:%s,原职:%s,现部:%s,现职:%s", olddept.getName(), oldduty.getName(), newdept.getName(), newduty.getName()));
+			userExperiencePO.setOperator(operator);
+			if (companyPO != null) {
+				userExperiencePO.setOcid(companyPO.getCid());
+				userExperiencePO.setTcid(companyPO.getCid());
+			}
+			userExperiencePO.setOdid(olddept.getDid());
+			userExperiencePO.setTdid(newdept.getDid());
+			if (rolePO != null) {
+				userExperiencePO.setOrid(rolePO.getRid());
+				userExperiencePO.setTrid(rolePO.getRid());
+			}
+
+			userExperienceDao.save(userExperiencePO);
+		}
 
 		userInfoVO.getUser().ptv(userInfoPO.getUser());
+
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void tranUserForPlatforPm(UserVO userVO, String userId) throws FLException {
+
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		UserPO operator = userDao.queryUserByUserId(userId);
+
+		StringBuffer comment = new StringBuffer();
+
+		DepartmentPO newdept = null;
+		DepartmentPO olddept = userPO.getDept();
+
+		if (userVO.getDept() != null && userVO.getDept().getDid() != null) {
+
+			newdept = departmentDao.get(userVO.getDept().getDid());
+
+			if (newdept == null) {
+				throw new FLException(310001, "部门不存在");
+			}
+
+			if (newdept.getFatherDept() == null) {
+				throw new FLException(310002, "部门不可添加人员");
+			}
+		}
+
+		if (newdept != null && olddept.getDid() != newdept.getDid()) {
+
+			userPO.setDept(newdept);
+
+			comment.append(String.format("原部: %s, 现部: %s. ", olddept.getName(), newdept.getName()));
+		}
+
+		UserExperiencePO userExperiencePO = new UserExperiencePO();
+
+		userExperiencePO.setUid(userPO.getUid());
+		userExperiencePO.setType("调职");
+		userExperiencePO.setIsPrefor(userVO.getIsPrefor());
+		userExperiencePO.setOperator(operator);
+		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		userExperiencePO.setOperateTime(userVO.getOperateTime() != null ? userVO.getOperateTime() : DateUtil.getDateToTimestamp(new Date()));
+
+		userExperiencePO.setComment(comment.toString());
+
+		if (olddept != null) {
+			userExperiencePO.setOdid(olddept.getDid());
+		}
+		if (newdept != null) {
+			userExperiencePO.setTdid(newdept.getDid());
+		}
+
+		userExperienceDao.save(userExperiencePO);
+
+		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
+
+		userInfoPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
+
+		userInfoDao.update(userInfoPO);
+
+		userDao.update(userPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void quitUserForPlatforPm(UserVO userVO, String userId) throws FLException {
+
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		if (userPO.getStatus() == UserPO.STATUS_OFFJOB_INT) {
+			return;
+		}
+
+		SystemConfigPO visitor = systemConfigDao.querySystemConfig("visitor");
+
+		if (visitor == null) {
+			throw new FLException(230010, "角色不存在");
+		}
+
+		UserExperiencePO userExperiencePO = new UserExperiencePO();
+		CompanyPO companyPO = companyDao.get(userPO.getCompany());
+		if (companyPO != null) {
+			userExperiencePO.setOcid(companyPO.getCid());
+			userExperiencePO.setTcid(companyPO.getCid());
+		}
+		DepartmentPO deptPO = userPO.getDept();
+		if (deptPO != null) {
+			userExperiencePO.setOdid(deptPO.getDid());
+			userExperiencePO.setTdid(deptPO.getDid());
+		}
+		RolePO rolePO = userPO.getRole();
+		if (rolePO != null) {
+			userExperiencePO.setOrid(rolePO.getRid());
+		}
+		RolePO newRolePO = new RolePO(Integer.valueOf(visitor.getValue()));
+		userExperiencePO.setTrid(newRolePO.getRid());
+
+		userPO.setStatus(UserPO.STATUS_OFFJOB_INT);
+		userPO.setRole(newRolePO);
+
+		userRoleDao.deleteUserRole(userPO.getUid());
+		userCompanyDao.deleteUserCompany(userPO.getUid());
+
+		userPO.setIsLogin(UserPO.ISLOGIN_NOT_INT);
+		userPO.setExtranet(UserPO.EXTRANET_NONE_INT);
+
+		UserPO operator = userDao.queryUserByUserId(userId);
+
+		userExperiencePO.setUid(userPO.getUid());
+		userExperiencePO.setType("离职");
+		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		userExperiencePO.setOperateTime(userVO.getOperateTime() != null ? userVO.getOperateTime() : DateUtil.getDateToTimestamp(new Date()));
+		userExperiencePO.setOperator(operator);
+		userExperiencePO.setComment(String.format("原司: %s, 原部: %s, 原职: %s", companyPO.getName(), userPO.getDept().getName(), userPO.getDuty().getName()));
+
+		userExperienceDao.save(userExperiencePO);
+
+		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
+
+		userInfoPO.setFireTime(DateUtil.getDateToTimestamp(new Date()));
+
+		userInfoDao.update(userInfoPO);
+
+		userDao.update(userPO);
 	}
 
 	@Override
@@ -601,6 +916,63 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 			decorationDao.update(decorationPO);
 		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateAcceptanceForPlatforPm(AcceptanceVO acceptanceVO) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(acceptanceVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		SystemConfigPO limit = systemConfigDao.querySystemConfig("CONSTRUCTION_ACCEPTANCE_LIMIT_INT", decorationPO.getCompany());
+
+		if (decorationPO.getPaySacle() < (limit != null ? Integer.parseInt(limit.getValue()) : 80)) {
+			throw new FLException(120018, "装修款比例不足");
+		}
+
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(acceptanceVO.getOrderId());
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		AcceptancePO acceptancePO = acceptanceDao.queryAcceptanceByOrderId(acceptanceVO.getOrderId());
+
+		if (acceptancePO == null) {
+			acceptancePO = new AcceptancePO();
+			acceptancePO.setAcceptanceTime(DateUtil.current(AcceptancePO.CURRENT_TIME_FORMAT_STR));
+		}
+
+		if (acceptancePO.getAcceptanceTime() == null) {
+			acceptancePO.setAcceptanceTime(DateUtil.current(AcceptancePO.CURRENT_TIME_FORMAT_STR));
+		}
+
+		BeanUtil.copyProperties(acceptanceVO, acceptancePO);
+
+		acceptanceDao.saveOrUpdate(acceptancePO);
+
+		decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_FINISH_INT);
+
+		decorationDao.update(decorationPO);
+
+		if (constructionPO.getEndTime() == null) {
+			constructionPO.setEndTime(DateUtil.getDateToTimestamp(new Date()));
+		}
+
+		constructionPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+
+		if (constructionPO.getProcess() == ConstructionPO.PROCESS_INIT_INT) {
+			constructionPO.setProcess(ConstructionPO.PROCESS_FINISH_INT);
+			constructionPO.setProcessTime(DateUtil.getDateToTimestamp(new Date()));
+		}
+
+		constructionDao.update(constructionPO);
 
 		return 0;
 	}

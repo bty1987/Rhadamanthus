@@ -72,6 +72,10 @@ public class ProtationVO implements Serializable {
 
 	private Long taxPrice;
 
+	private Long activityPrice;
+
+	private Long activityProfit;
+
 	private Integer discount;
 
 	private Long basicPrice;
@@ -355,6 +359,22 @@ public class ProtationVO implements Serializable {
 
 	public void setTaxPrice(Long taxPrice) {
 		this.taxPrice = taxPrice;
+	}
+
+	public Long getActivityPrice() {
+		return activityPrice;
+	}
+
+	public void setActivityPrice(Long activityPrice) {
+		this.activityPrice = activityPrice;
+	}
+
+	public Long getActivityProfit() {
+		return activityProfit;
+	}
+
+	public void setActivityProfit(Long activityProfit) {
+		this.activityProfit = activityProfit;
 	}
 
 	public Long getTotalPrice() {
