@@ -305,6 +305,14 @@ jQuery(function($) {
     searcher.param(extraParams);
 
     var lineprops = [{
+        field: "orderId",
+        name: "预派单号",
+        prop: "orderId",
+        clazz: "blue",
+        show: function(v){
+            return !!v.orderId;
+        }
+    }, {
         field: "source",
         name: "客户姓名",
         prop: "source.name",

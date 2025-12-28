@@ -14,7 +14,8 @@ var protationPart = (function() {
             manageProfit: 0,
             advanceProfit: 0,
             discount: 0,
-            manageDiscount: 0
+            manageDiscount: 0,
+            activityProfit: 0
         },
 
         // 定义左下角按钮重定义及指定弹窗显示
@@ -66,29 +67,35 @@ var protationPart = (function() {
                 }),
                 // 优惠价格修改
                 $preferPriceBlueButton: com.focusPage('#preferPriceBlueButton').click(function() {
-                    
+
                     quo.oldProtation.preferPrice = quo.basicParams["protation.preferPrice"];
                     quo.oldProtation.manageProfit = quo.basicParams["protation.manageProfit"];
                     quo.oldProtation.advanceProfit = quo.basicParams["protation.advanceProfit"];
                     quo.oldProtation.discount = quo.basicParams["protation.discount"];
                     quo.oldProtation.manageDiscount = quo.basicParams["protation.manageDiscount"];
+                    quo.oldProtation.activityProfit = quo.basicParams["protation.activityProfit"];
 
                     com.focusPage('#functionAreaPreferPrice').modal("show");
 
                     com.focusPage('#preferPrices').val(quo.basicParams["protation.preferPrice"]);
                     com.focusPage('#preferManage').val(quo.basicParams["protation.manageProfit"]);
                     com.focusPage('#preferAdvance').val(quo.basicParams["protation.advanceProfit"]);
+                    com.focusPage('#activityProfit').val(quo.basicParams["protation.activityProfit"]);
                 }),
                 $preferPriceClose: com.focusPage('#closeBtn', '#functionAreaPreferPrice').click(function() {
+
                     quote.oldProtationData();
                 }),
                 $preferPriceX: com.focusPage('.close', '#functionAreaPreferPrice').click(function() {
+
                     quote.oldProtationData();
                 }),
                 $approveClose: com.focusPage('#closeApproveBtn', '#approveModal').click(function() {
+
                     quote.oldProtationData();
                 }),
                 $approveX: com.focusPage('.close', '#approveModal').click(function() {
+
                     quote.oldProtationData();
                 }),
             };
@@ -190,11 +197,13 @@ var protationPart = (function() {
 
             });
 
-            var _discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.quotePrice"]));
+            var _quotePrice = utils.accAdd(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.activityPrice"]);
+
+            var _discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(_quotePrice, quo.basicParams["protation.preferPrice"]), _quotePrice));
 
             _discout = _discout < 0 ? 0 : _discout > 1 ? 1 : _discout;
-            
-            if (quo.basicParams["protation.preferPrice"] > quo.protation.quotePrice) {
+
+            if (quo.basicParams["protation.preferPrice"] > _quotePrice) {
                 com.showAlert(com.warning, "优惠金额不合理");
                 return false;
             }
@@ -208,7 +217,7 @@ var protationPart = (function() {
 
             if (manageFormula.indexOf("{") != -1 || manageFormula.indexOf("}") != -1) {
                 manageFormula = com.format(manageFormula, {
-                    "a": quo.basicParams["protation.quotePrice"],
+                    "a": _quotePrice,
                     "b": quo.basicParams["protation.preferPrice"],
                     "c": basic,
                     "d": utils.accAdd(addd, addm),
@@ -224,7 +233,7 @@ var protationPart = (function() {
 
             if (taxFormula.indexOf("{") != -1 || taxFormula.indexOf("}") != -1) {
                 taxFormula = com.format(taxFormula, {
-                    "a": quo.basicParams["protation.quotePrice"],
+                    "a": _quotePrice,
                     "b": quo.basicParams["protation.preferPrice"],
                     "c": basic,
                     "d": utils.accAdd(addd, addm),
@@ -239,7 +248,7 @@ var protationPart = (function() {
             var _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, quo.basicParams["protation.manageProfit"]), _managePrice));
 
             _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
-            
+
             if (quo.basicParams["protation.manageProfit"] > _managePrice) {
                 com.showAlert(com.warning, "管理费优惠金额不合理");
                 return false;
@@ -251,13 +260,14 @@ var protationPart = (function() {
             }
 
             var _taxPrice = utils.changeThrDecimal(isNaN(eval(taxFormula)) ? 0 : eval(taxFormula));
+            var _quotePrice = utils.accAdd(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.activityPrice"]);
 
-            total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(quo.basicParams["protation.quotePrice"], _managePrice), _taxPrice), quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.manageProfit"]), quo.basicParams["protation.advanceProfit"]));
+            total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_quotePrice, _managePrice), _taxPrice), quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.manageProfit"]), quo.basicParams["protation.advanceProfit"]), quo.basicParams["protation.activityProfit"]));
             total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(utils.accAdd(subd, subm), subc)))), utils.accAdd(accm, accd))));
 
             _discout = utils.changeThrDecimal(utils.accMul(_discout, 10));
 
-            if(quo.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT){
+            if (quo.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
                 total = Math.round(total);
             }
 
@@ -295,6 +305,7 @@ var protationPart = (function() {
             com.focusPage('#quoteArea').text(quo.basicParams["protation.quoteArea"]);
             com.focusPage('#manageProfit').text(quo.basicParams["protation.manageProfit"]);
             com.focusPage('#advanceProfit').text(quo.basicParams["protation.advanceProfit"]);
+            com.focusPage('#activityProfitPrice').text(quo.basicParams["protation.activityProfit"]);
 
             profit = utils.changeThrDecimal(utils.accSub(1.0, utils.accDiv(cost, utils.accSub(total, quo.basicParams["protation.activityAmount"]))));
 
@@ -797,8 +808,7 @@ var protationPart = (function() {
                 quo.oldProtation.advanceProfit = quo.basicParams["protation.advanceProfit"];
                 quo.oldProtation.discount = quo.basicParams["protation.discount"];
                 quo.oldProtation.manageDiscount = quo.basicParams["protation.manageDiscount"];
-                
-                console.log(quo.oldProtation);
+                quo.oldProtation.activityProfit = quo.basicParams["protation.activityProfit"];
 
                 var subd = quo.basicParams["protation.subdPrice"];
                 var subm = quo.basicParams["protation.submPrice"];
@@ -806,9 +816,15 @@ var protationPart = (function() {
                 quo.basicParams["protation.preferPrice"] = com.focusPage('#preferPrices').val();
                 quo.basicParams["protation.manageProfit"] = com.focusPage('#preferManage').val();
                 quo.basicParams["protation.advanceProfit"] = com.focusPage('#preferAdvance').val();
-                
+                quo.basicParams["protation.activityProfit"] = com.focusPage('#activityProfit').val();
+
                 if (quo.basicParams["protation.manageProfit"] > quo.basicParams["protation.managePrice"]) {
                     com.showAlert(com.warning, "管理优惠不能大于管理费");
+                    return false;
+                }
+
+                if (quo.basicParams["protation.activityProfit"] > quo.basicParams["protation.activityPrice"]) {
+                    com.showAlert(com.warning, "活动优惠不能大于浮动额");
                     return false;
                 }
 
@@ -819,7 +835,7 @@ var protationPart = (function() {
                     return false;
                 }
 
-                if(quo.basicParams["protation.advanceProfit"] > quo.oldProtation.advanceProfit){
+                if (quo.basicParams["protation.advanceProfit"] > quo.oldProtation.advanceProfit) {
                     com.focusPage("#approveModal").modal("show");
                     return false;
                 }
@@ -860,12 +876,12 @@ var protationPart = (function() {
                     "approvalProtationPrefer.taxPrice": quo.basicParams["protation.taxPrice"],
                     "approvalProtationPrefer.totalPrice": quo.basicParams["protation.totalPrice"],
                 }, quo.basicParams);
-                
+
                 params["protation.advanceProfit"] = null;
                 params["protation.totalPrice"] = null;
 
                 com.post(api.approval.submitApprovalForProtationPrefer, params, function(res) {
-                    
+
                     quote.oldProtationData();
 
                     com.showAlert(com.info, "操作成功");
@@ -877,9 +893,11 @@ var protationPart = (function() {
 
         // 还原优惠价格
         oldProtationData: function() {
+
             quo.basicParams["protation.preferPrice"] = quo.oldProtation.preferPrice;
             quo.basicParams["protation.manageProfit"] = quo.oldProtation.manageProfit;
             quo.basicParams["protation.advanceProfit"] = quo.oldProtation.advanceProfit;
+            quo.basicParams["protation.activityProfit"] = quo.oldProtation.activityProfit;
 
             quo.calculateQuoFees();
         },
@@ -1267,6 +1285,8 @@ var protationPart = (function() {
                 // 左上角显示预签名称
                 com.focusPage('#protationName').text(data.protation.name);
 
+                com.focusPage('#activityPrice').text(data.protation.activityPrice);
+
                 // 将预签数据获取到全局变量中
                 quo.basicParams = {
                     "protation.pid": data.protation.pid,// 预签Id
@@ -1299,6 +1319,8 @@ var protationPart = (function() {
                     "protation.manageProfit": data.protation.manageProfit, // 管理优惠
                     "protation.manageDiscount": data.protation.manageDiscount, // 管理费折扣
                     "protation.advanceProfit": data.protation.advanceProfit, // 特殊优惠
+                    "protation.activityPrice": data.protation.activityPrice, // 浮动额(活动额)
+                    "protation.activityProfit": data.protation.activityProfit, // 活动优惠
                     "protation.taxRate": data.protation.taxRate, // 税金比例
                     "protation.taxFormula": data.protation.taxFormula, // 税金公式
                     "protation.taxPrice": data.protation.taxPrice, // 税金
@@ -1478,7 +1500,9 @@ var protationPart = (function() {
             quo.basicParams["protation.mostCost"] = mostCost;
             quo.basicParams["protation.houseCost"] = cost;
 
-            var _discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.quotePrice"]));
+            var _quotePrice = utils.accAdd(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.activityPrice"]);
+
+            var _discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(_quotePrice, quo.basicParams["protation.preferPrice"]), _quotePrice));
 
             _discout = _discout < 0 ? 0 : _discout > 1 ? 1 : _discout;
 
@@ -1486,7 +1510,7 @@ var protationPart = (function() {
 
             if (manageFormula.indexOf("{") != -1 || manageFormula.indexOf("}") != -1) {
                 manageFormula = com.format(manageFormula, {
-                    "a": quo.basicParams["protation.quotePrice"],
+                    "a": _quotePrice,
                     "b": quo.basicParams["protation.preferPrice"],
                     "c": basic,
                     "d": utils.accAdd(addd, addm),
@@ -1502,7 +1526,7 @@ var protationPart = (function() {
 
             if (taxFormula.indexOf("{") != -1 || taxFormula.indexOf("}") != -1) {
                 taxFormula = com.format(taxFormula, {
-                    "a": quo.basicParams["protation.quotePrice"],
+                    "a": _quotePrice,
                     "b": quo.basicParams["protation.preferPrice"],
                     "c": basic,
                     "d": utils.accAdd(addd, addm),
@@ -1516,12 +1540,12 @@ var protationPart = (function() {
 
             var _taxPrice = utils.changeThrDecimal(isNaN(eval(taxFormula)) ? 0 : eval(taxFormula));
 
-            total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(quo.basicParams["protation.quotePrice"], _managePrice), _taxPrice), quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.manageProfit"]), quo.basicParams["protation.advanceProfit"]));
+            total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_quotePrice, _managePrice), _taxPrice), quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.manageProfit"]), quo.basicParams["protation.advanceProfit"]), quo.basicParams["protation.activityProfit"]));
             total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(utils.accAdd(subd, subm), subc)))), utils.accAdd(accm, accd))));
 
             _discout = utils.changeThrDecimal(utils.accMul(_discout, 10));
 
-            if(quo.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT){
+            if (quo.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
                 total = Math.round(total);
             }
 
@@ -1543,7 +1567,7 @@ var protationPart = (function() {
 
             quo.basicParams["protation.totalCost"] = cost;
 
-            com.focusPage('#quotePrice').text(quo.basicParams["protation.quotePrice"]);
+            com.focusPage('#quotePrice').text(_quotePrice);
             com.focusPage('#quoteArea').text(quo.basicParams["protation.quoteArea"]);
             com.focusPage('#cacelArea').text(quo.basicParams["protation.cacelArea"]);
             com.focusPage('#preferPrice').text(quo.basicParams["protation.preferPrice"]);
@@ -1553,6 +1577,7 @@ var protationPart = (function() {
             com.focusPage('#quoteArea').text(quo.basicParams["protation.quoteArea"]);
             com.focusPage('#manageProfit').text(quo.basicParams["protation.manageProfit"]);
             com.focusPage('#advanceProfit').text(quo.basicParams["protation.advanceProfit"]);
+            com.focusPage('#activityProfitPrice').text(quo.basicParams["protation.activityProfit"]);
 
             com.focusPage('#sumquoSumMoney').text(total);
 

@@ -6,13 +6,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import com.fanglin.common.po.CountingPO;
-import com.fanglin.common.service.CountingService;
-import com.fanglin.system.dao.CompanyDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.common.po.CountingPO;
+import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.dao.HouseDao;
@@ -54,6 +53,7 @@ import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.SystemConfigPO;
@@ -98,8 +98,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	@Autowired
 	private com.fanglin.dingding.service.MessageService messageDDService;
 
-    @Autowired
-    private CountingService countingService;
+	@Autowired
+	private CountingService countingService;
 
 	@Autowired
 	private UserDao userDao;
@@ -119,8 +119,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
-    @Autowired
-    private CompanyDao companyDao;
+	@Autowired
+	private CompanyDao companyDao;
 
 	@Override
 	public void pageCustomerSource(Paging paging, List<Filter> filters, CustomerSourceVO customerSource, int company) {
@@ -451,6 +451,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			throw new FLException(330074, "客户资源不可操作");
 		}
 
+		CompanyPO companyPO = companyDao.get(company);
+
 		short atttype = CustomerChancePO.ATTTYPE_USER_INT;
 
 		DecorationBusitypePO busitype = customerSourcePO.getBusitype();
@@ -565,16 +567,14 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_AUTO_INT);
 			customerChancePO.setBusitype(busitype);
 
-            CompanyPO companyPO = companyDao.get(company);
+			String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
 
-            String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
-            int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
+			String orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 
-            String orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+			customerChancePO.setOrderId(orderId);
 
-            customerChancePO.setOrderId(orderId);
-
-            customerChanceDao.save(customerChancePO);
+			customerChanceDao.save(customerChancePO);
 
 			if (customerConfigRulePO != null) {
 				customerConfigRuleDao.update(customerConfigRulePO.setSurplus(customerConfigRulePO.getSurplus() - 1000));
@@ -612,6 +612,13 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 				customerChancePO.setBelonger(region.getManager());
 			}
 
+			String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
+
+			String orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+
+			customerChancePO.setOrderId(orderId);
+
 			customerChanceDao.save(customerChancePO);
 
 			customerChanceVO.setCcid(customerChancePO.getCcid());
@@ -643,6 +650,13 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			if (dept.getManager() != null) {
 				customerChancePO.setBelonger(dept.getManager());
 			}
+
+			String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
+
+			String orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+
+			customerChancePO.setOrderId(orderId);
 
 			customerChanceDao.save(customerChancePO);
 
@@ -679,6 +693,13 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			if (belonger.getDept().getFatherDept() == null) {
 				customerChancePO.setRegion(belonger.getDept());
 			}
+
+			String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
+
+			String orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+
+			customerChancePO.setOrderId(orderId);
 
 			customerChanceDao.save(customerChancePO);
 

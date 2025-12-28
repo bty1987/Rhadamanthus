@@ -250,10 +250,6 @@ jQuery(function($) {
 
             viewContract(v.dcid);
         },
-        show: function(v) {
-
-            return v.status == 0;
-        }
     }, {
         name: "生成",
         clazz: "btn-yellow",

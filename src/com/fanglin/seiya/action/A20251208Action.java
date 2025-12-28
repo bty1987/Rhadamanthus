@@ -18,12 +18,14 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.construction.vo.ConstructerVO;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.vo.UserInfoVO;
+import com.fanglin.personel.vo.UserVO;
 import com.fanglin.seiya.service.A20251208Service;
 import com.fanglin.utils.SystemConfig;
 
@@ -37,6 +39,8 @@ public class A20251208Action extends BaseListAction {
 	@Autowired
 	private A20251208Service a20251208Service;
 
+	private UserVO user;
+
 	private UserInfoVO userInfo;
 
 	private ConstructerVO constructer;
@@ -45,6 +49,12 @@ public class A20251208Action extends BaseListAction {
 
 	private ConstructionScheduleVO constructionSchedule;
 
+	private String approve;
+
+	private String userId;
+
+	private AcceptanceVO acceptance;
+
 	@Action(value = "saveOrUpdateUserForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String saveOrUpdateUserForPlatforPm() throws FLException {
 
@@ -52,7 +62,31 @@ public class A20251208Action extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		a20251208Service.saveOrUpdateUserForPlatforPm(userInfo, queryCompany(), queryUserId());
+		a20251208Service.saveOrUpdateUserForPlatforPm(userInfo, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "tranUserForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String tranUserForPlatforPm() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		if ("agree".equals(approve)) a20251208Service.tranUserForPlatforPm(user, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "quitUserForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String quitUserForPlatforPm() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		if ("agree".equals(approve)) a20251208Service.quitUserForPlatforPm(new UserVO(userId), queryUserId());
 
 		return SUCCESS;
 	}
@@ -97,6 +131,14 @@ public class A20251208Action extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateAcceptanceForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateAcceptanceForPlatforPm() throws FLException {
+
+		a20251208Service.updateAcceptanceForPlatforPm(acceptance);
+
+		return SUCCESS;
+	}
+
 	public UserInfoVO getUserInfo() {
 		return userInfo;
 	}
@@ -128,5 +170,37 @@ public class A20251208Action extends BaseListAction {
 	public void setConstructionSchedule(ConstructionScheduleVO constructionSchedule) {
 		this.constructionSchedule = constructionSchedule;
 	}
-	
+
+	public UserVO getUser() {
+		return user;
+	}
+
+	public void setUser(UserVO user) {
+		this.user = user;
+	}
+
+	public String getApprove() {
+		return approve;
+	}
+
+	public void setApprove(String approve) {
+		this.approve = approve;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public AcceptanceVO getAcceptance() {
+		return acceptance;
+	}
+
+	public void setAcceptance(AcceptanceVO acceptance) {
+		this.acceptance = acceptance;
+	}
+
 }

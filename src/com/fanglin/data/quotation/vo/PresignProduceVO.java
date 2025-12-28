@@ -52,6 +52,8 @@ public class PresignProduceVO implements Serializable {
 
 	private Integer mostRate;
 
+	private Long activityPrice;
+
 	public PresignProduceVO() {
 		super();
 	}
@@ -243,6 +245,14 @@ public class PresignProduceVO implements Serializable {
 
 	public void setTaxFormula(String taxFormula) {
 		this.taxFormula = taxFormula;
+	}
+
+	public Long getActivityPrice() {
+		return activityPrice;
+	}
+
+	public void setActivityPrice(Long activityPrice) {
+		this.activityPrice = activityPrice;
 	}
 
 }

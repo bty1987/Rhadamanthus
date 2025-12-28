@@ -92,6 +92,10 @@ public class ProtationPO implements Serializable {
 
 	private long taxPrice;
 
+	private long activityPrice;
+
+	private long activityProfit;
+
 	private int discount;
 
 	private long basicPrice;
@@ -388,6 +392,24 @@ public class ProtationPO implements Serializable {
 		this.taxPrice = taxPrice;
 	}
 
+	@Column(name = "activityPrice")
+	public long getActivityPrice() {
+		return activityPrice;
+	}
+
+	public void setActivityPrice(long activityPrice) {
+		this.activityPrice = activityPrice;
+	}
+
+	@Column(name = "activityProfit")
+	public long getActivityProfit() {
+		return activityProfit;
+	}
+
+	public void setActivityProfit(long activityProfit) {
+		this.activityProfit = activityProfit;
+	}
+
 	@Column(name = "totalPrice")
 	public long getTotalPrice() {
 		return totalPrice;
@@ -553,6 +575,8 @@ public class ProtationPO implements Serializable {
 		if (protationVO.getPreferPrice() != null) setPreferPrice(protationVO.getPreferPrice());
 		if (protationVO.getManageProfit() != null) setManageProfit(protationVO.getManageProfit());
 		if (protationVO.getAdvanceProfit() != null) setAdvanceProfit(protationVO.getAdvanceProfit());
+		if (protationVO.getActivityPrice() != null) setActivityPrice(protationVO.getActivityPrice());
+		if (protationVO.getActivityProfit() != null) setActivityProfit(protationVO.getActivityProfit());
 	}
 
 }

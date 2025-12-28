@@ -282,7 +282,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<Integer> designDepartmentIds = null;
 		List<Short> statuses = null;
 
-		List<DecorationDesignDepartmentRightPO> decorationDesignDepartmentRightPOs = decorationDesignDepartmentRightDao.queryDecorationDesignDepartmentRightByUId(userPO.getUid(), company);
+		List<DecorationDesignDepartmentRightPO> decorationDesignDepartmentRightPOs = decorationDesignDepartmentRightDao.queryDecorationDesignDepartmentRight(userPO.getUid(), company);
 
 		designDepartmentIds = new ArrayList<Integer>();
 
@@ -290,7 +290,7 @@ public class DecorationServiceImpl implements DecorationService {
 			designDepartmentIds.add(decorationDesignDepartmentRightPO.getDid());
 		}
 
-		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRightByUId(userPO.getUid(), company);
+		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRight(userPO.getUid(), company);
 
 		statuses = new ArrayList<Short>();
 
@@ -523,7 +523,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<Integer> designDepartmentIds = null;
 		List<Short> statuses = null;
 
-		List<DecorationDesignDepartmentRightPO> decorationDesignDepartmentRightPOs = decorationDesignDepartmentRightDao.queryDecorationDesignDepartmentRightByUId(userPO.getUid(), company);
+		List<DecorationDesignDepartmentRightPO> decorationDesignDepartmentRightPOs = decorationDesignDepartmentRightDao.queryDecorationDesignDepartmentRight(userPO.getUid(), company);
 
 		designDepartmentIds = new ArrayList<Integer>();
 
@@ -531,7 +531,7 @@ public class DecorationServiceImpl implements DecorationService {
 			designDepartmentIds.add(decorationDesignDepartmentRightPO.getDid());
 		}
 
-		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRightByUId(userPO.getUid(), company);
+		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRight(userPO.getUid(), company);
 
 		statuses = new ArrayList<Short>();
 
@@ -668,7 +668,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<Integer> salesmanDepartmentIds = null;
 		List<Short> statuses = null;
 
-		List<DecorationSalesmanDepartmentRightPO> decoratoinOrderSalesmanDepartmentRightPOs = decorationSalesmanDepartmentRightDao.queryDecorationSalesmanDepartmentRightByUId(userPO.getUid(), company);
+		List<DecorationSalesmanDepartmentRightPO> decoratoinOrderSalesmanDepartmentRightPOs = decorationSalesmanDepartmentRightDao.queryDecorationSalesmanDepartmentRight(userPO.getUid(), company);
 
 		if (decoratoinOrderSalesmanDepartmentRightPOs.isEmpty()) return;
 
@@ -678,7 +678,7 @@ public class DecorationServiceImpl implements DecorationService {
 			salesmanDepartmentIds.add(decorationSalesmanDepartmentRightPO.getDid());
 		}
 
-		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRightByUId(userPO.getUid(), company);
+		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRight(userPO.getUid(), company);
 
 		statuses = new ArrayList<Short>();
 
@@ -1033,16 +1033,16 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationPO.setVersion(quotationVersionPO);
 
-        String orderId = null;
+		String orderId = null;
 
-        if(decorationVO.getOrderId() != null){
-            orderId = decorationVO.getOrderId();
-        }else{
-            String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
-            int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
+		if (decorationVO.getOrderId() != null) {
+			orderId = decorationVO.getOrderId();
+		} else {
+			String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
 
-            orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
-        }
+			orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		}
 
 		decorationPO.setOrderId(orderId);
 		decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
