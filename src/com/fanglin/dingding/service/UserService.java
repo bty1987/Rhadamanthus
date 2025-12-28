@@ -23,6 +23,7 @@ public interface UserService {
 
 	/**
 	 * 获取用户信息
+	 * 
 	 * @param code 临时授权码
 	 * @param company 公司代码
 	 * @return 用户信息
@@ -32,6 +33,7 @@ public interface UserService {
 
 	/**
 	 * 获取用户
+	 * 
 	 * @param userid 用户ID
 	 * @param company 公司ID
 	 * @return 用户信息
@@ -41,31 +43,34 @@ public interface UserService {
 
 	/**
 	 * 添加钉钉用户
+	 * 
 	 * @param usera 用户信息
 	 * @param dids 部门ID列表
 	 * @param company 公司ID
 	 * @return 错误代码
 	 * @throws FLException 异常
 	 */
-	public int addDDUser(User usera, List<Long> dids, Integer company) throws FLException;
+	public int addDingTalkUser(User usera, List<Long> dids, Integer company) throws FLException;
 
 	/**
 	 * 更新钉钉用户
+	 * 
 	 * @param usera 用户信息
 	 * @param dids 部门ID列表
 	 * @param company 公司ID
 	 * @return 错误代码
 	 * @throws FLException 异常
 	 */
-	public int updateDDUser(User usera, List<Long> dids, Integer company) throws FLException;
+	public int updateDingTalkUser(User usera, List<Long> dids, Integer company) throws FLException;
 
 	/**
 	 * 删除钉钉用户
+	 * 
 	 * @param user 用户信息
 	 * @param company 公司ID
 	 * @return 错误代码
 	 * @throws FLException 异常
 	 */
-	public int deleteDDUser(User user, Integer company) throws FLException;
+	public int deleteDingTalkUser(User user, Integer company) throws FLException;
 
 }

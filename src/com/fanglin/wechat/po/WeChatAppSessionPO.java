@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.po;
+package com.fanglin.wechat.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -20,30 +20,30 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "wxappsession", catalog = "hades")
-public class WXAppSessionPO implements java.io.Serializable {
+@Table(name = "wechatappsession", catalog = "hades")
+public class WeChatAppSessionPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7283855201379329855L;
-	
+
 	public static final String COLUMN_CODE_STR = "code";
-	
+
 	public static final String COLUMN_OPENID_STR = "openId";
-	
+
 	private Long wxasId;
-	
+
 	private String code;
-	
+
 	private String sessionKey;
-	
+
 	private String openId;
-	
+
 	private Long operateTime;
 
-	public WXAppSessionPO() {
+	public WeChatAppSessionPO() {
 		super();
 	}
 
-	public WXAppSessionPO(String code, String sessionKey, String openId, Long operateTime) {
+	public WeChatAppSessionPO(String code, String sessionKey, String openId, Long operateTime) {
 		super();
 		this.code = code;
 		this.sessionKey = sessionKey;
@@ -97,5 +97,5 @@ public class WXAppSessionPO implements java.io.Serializable {
 	public void setOperateTime(Long operateTime) {
 		this.operateTime = operateTime;
 	}
-	
+
 }

@@ -26,7 +26,6 @@ import com.fanglin.data.po.TalkingPO;
 import com.fanglin.decoration.dao.DecorationUserDao;
 import com.fanglin.decoration.po.DecorationUserPO;
 import com.fanglin.decoration.vo.DecorationUserVO;
-import com.fanglin.dingding.service.MessageService;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.SystemConfigDao;

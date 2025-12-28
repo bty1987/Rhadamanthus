@@ -11,25 +11,23 @@
 
 package com.fanglin.wechat.service.impl;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fanglin.common.po.WXUserInfoPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.wechat.dao.impl.WeChatUserInfoDao;
+import com.fanglin.wechat.po.WeChatUserInfoPO;
 import com.fanglin.wechat.service.WeChatAccessTokenService;
 import com.fanglin.wechat.service.WeChatUserInfoService;
+import com.fanglin.wechat.utils.WeChatApi;
 import com.fanglin.wechat.vo.WeChatAccessTokenVO;
 import com.fanglin.wechat.vo.WeChatUserInfoVO;
-import com.fanglin.wechat.utils.WeChatApi;
 
 /**
  * 微信公众号用户信息服务实现
@@ -43,6 +41,9 @@ public class WeChatUserInfoServiceImpl implements WeChatUserInfoService {
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
+
+	@Autowired
+	private WeChatUserInfoDao weChatUserInfoDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -59,8 +60,7 @@ public class WeChatUserInfoServiceImpl implements WeChatUserInfoService {
 		SystemConfigPO wapi = systemConfigDao.querySystemConfig("WECHAT_WXAPI_PATH_STR");
 
 		// 构建获取用户信息的 URL
-		String url = String.format(WeChatApi.WXAPI_GET_USER_INFO_STR,
-			wapi.getValue(), accessTokenVO.getAccesstoken(), openId);
+		String url = String.format(WeChatApi.WXAPI_GET_USER_INFO_STR, wapi.getValue(), accessTokenVO.getAccesstoken(), openId);
 
 		JSONObject response = HttpHelper.httpGet(url);
 
@@ -74,20 +74,20 @@ public class WeChatUserInfoServiceImpl implements WeChatUserInfoService {
 			userInfoVO = JSONObject.parseObject(response.toJSONString(), WeChatUserInfoVO.class);
 
 			// TODO: 保存用户信息到数据库（需要创建对应的 DAO）
-			// WXUserInfoPO wxUserInfoPO = wxUserInfoDao.queryWxUserInfoByUnionId(userInfoVO.getUnionid());
-			// if (wxUserInfoPO == null) {
-			//     wxUserInfoPO = new WXUserInfoPO();
-			//     BeanUtil.copyProperties(userInfoVO, wxUserInfoPO);
-			//     wxUserInfoPO.setCreateTime(new Date().getTime());
-			//     wxUserInfoDao.save(wxUserInfoPO);
-			// }
+			WeChatUserInfoPO wxUserInfoPO = wxUserInfoDao.queryWxUserInfoByUnionId(userInfoVO.getUnionid());
+			if (wxUserInfoPO == null) {
+				wxUserInfoPO = new WXUserInfoPO();
+				BeanUtil.copyProperties(userInfoVO, wxUserInfoPO);
+				wxUserInfoPO.setCreateTime(new Date().getTime());
+				wxUserInfoDao.save(wxUserInfoPO);
+			}
 
 			// TODO: 保存 OpenID 与 UnionID 的关联关系（需要创建对应的 DAO）
 			// WXOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWxOpenUnion(openId);
 			// if (wxOpenUnionPO == null) {
-			//     wxOpenUnionPO = new WXOpenUnionPO(userInfoVO.getUnionid(), openId,
-			//         WXOpenUnionPO.TYPE_PUBLIC_INT, 1);
-			//     wxOpenUnionDao.save(wxOpenUnionPO);
+			// wxOpenUnionPO = new WXOpenUnionPO(userInfoVO.getUnionid(), openId,
+			// WXOpenUnionPO.TYPE_PUBLIC_INT, 1);
+			// wxOpenUnionDao.save(wxOpenUnionPO);
 			// }
 		} else {
 			throw new FLException(910119, "获取用户信息失败");

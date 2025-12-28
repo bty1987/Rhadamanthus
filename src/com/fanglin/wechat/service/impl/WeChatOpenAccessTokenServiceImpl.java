@@ -19,14 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.utils.HttpHelper;
-import com.fanglin.utils.WeChatApi;
 import com.fanglin.wechat.dao.WeChatOpenAccessTokenDao;
 import com.fanglin.wechat.po.WeChatOpenAccessTokenPO;
 import com.fanglin.wechat.service.WeChatOpenAccessTokenService;
+import com.fanglin.wechat.utils.WeChatApi;
 import com.fanglin.wechat.vo.WeChatConfigVO;
 
 @Service("weChatOpenAccessTokenService")

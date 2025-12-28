@@ -21,11 +21,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * 微信用户绑定持久化对象
- * 存储微信用户与系统用户的绑定关系
+ * 微信用户绑定持久化对象 存储微信用户与系统用户的绑定关系
  */
 @Entity
-@Table(name = "user_bind", catalog = "wechat")
+@Table(name = "wechatuserbind", catalog = "wechat")
 public class WeChatUserBindPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -70,6 +69,7 @@ public class WeChatUserBindPO implements Serializable {
 
 	/**
 	 * 构造函数
+	 * 
 	 * @param unionId 微信用户唯一标识
 	 * @param userId 系统用户ID
 	 */
@@ -81,6 +81,7 @@ public class WeChatUserBindPO implements Serializable {
 
 	/**
 	 * 构造函数
+	 * 
 	 * @param unionId 微信用户唯一标识
 	 * @param userId 系统用户ID
 	 * @param bindTime 绑定时间

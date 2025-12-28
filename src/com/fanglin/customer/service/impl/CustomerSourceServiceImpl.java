@@ -48,6 +48,7 @@ import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.dao.DecorationBusitypeDao;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.data.po.DecorationBusitypePO;
+import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -96,7 +97,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	private MessageService messageService;
 
 	@Autowired
-	private com.fanglin.dingding.service.MessageService messageDDService;
+	private MessageService dingTalkMessageService;
 
 	@Autowired
 	private CountingService countingService;
@@ -591,7 +592,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
-			messageDDService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
+			dingTalkMessageService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
 
 			return;
 		}
@@ -708,7 +709,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动人员分配,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
-			messageDDService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
+			dingTalkMessageService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
 
 			String message = String.format("设计:%s(%s),新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId(), customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), customerSourcePO.getHouseNumber());
 

@@ -15,15 +15,13 @@ import com.fanglin.customer.dao.EmemberDao;
 import com.fanglin.customer.po.EmemberPO;
 import com.fanglin.customer.service.EmemberService;
 import com.fanglin.customer.vo.EmemberVO;
-import com.fanglin.dingding.service.MessageService;
 import com.fanglin.information.dao.VticketDao;
 import com.fanglin.information.po.VticketPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
-
-@Service("ememberService")
+ce("ememberService")
 @Transactional(readOnly = true)
 public class EmemberServiceImpl implements EmemberService {
 
