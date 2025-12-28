@@ -15,15 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.wechat.dao.WeChatUserBindDao;
 import com.fanglin.wechat.po.WeChatUserBindPO;
 import com.fanglin.wechat.service.WeChatUserBindService;
 import com.fanglin.wechat.vo.WeChatUserBindVO;
 
 /**
- * 微信用户绑定服务实现
- * 用于管理微信用户与系统用户的绑定关系
+ * 微信用户绑定服务实现 用于管理微信用户与系统用户的绑定关系
  */
 @Service("weChatUserBindService")
 @Transactional(readOnly = true)
@@ -54,10 +52,7 @@ public class WeChatUserBindServiceImpl implements WeChatUserBindService {
 		weChatUserBindDao.deleteUserBind(userBindVO.getUserId());
 
 		// 保存新的绑定关系
-		weChatUserBindDao.save(new WeChatUserBindPO(
-			userBindVO.getUnionId(),
-			userBindVO.getUserId()
-		));
+		weChatUserBindDao.save(new WeChatUserBindPO(userBindVO.getUnionId(), userBindVO.getUserId()));
 
 		return 0;
 	}
