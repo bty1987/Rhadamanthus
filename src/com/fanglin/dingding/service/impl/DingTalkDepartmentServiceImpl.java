@@ -21,8 +21,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.bean.Department;
-import com.fanglin.dingding.service.AuthService;
-import com.fanglin.dingding.service.DepartmentService;
+import com.fanglin.dingding.service.DingTalkAuthService;
+import com.fanglin.dingding.service.DingTalkDepartmentService;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.CompanyDao;
@@ -31,12 +31,12 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
 
-@Service("departmentDDService")
+@Service("dingTalkDepartmentService")
 @Transactional(readOnly = true)
-public class DepartmentServiceImpl implements DepartmentService {
+public class DingTalkDepartmentServiceImpl implements DingTalkDepartmentService {
 
 	@Autowired
-	private AuthService authDDService;
+	private DingTalkAuthService dingTalkAuthService;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
@@ -47,7 +47,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<Department> queryDepartment(Integer company) throws FLException {
 
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+		String accessToken = dingTalkAuthService.getAccessToken(FormatUtil.encodeCompany(company));
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 

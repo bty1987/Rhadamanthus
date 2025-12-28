@@ -49,7 +49,7 @@ public class DingTalkCallbackAction extends BaseListAction {
 
 	private String encrypt;
 
-	@Action(value = "dtalkCallback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "dingTalkCallback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String dtalkCallback() throws FLException {
 
 		JSONObject params = JSONObject.parseObject(getRequestPostData(request));

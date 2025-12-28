@@ -6,7 +6,7 @@ import com.fanglin.dingding.bean.DingMessage;
 import com.fanglin.dingding.bean.LinkMessage;
 import com.fanglin.dingding.bean.OAMessage;
 import com.fanglin.dingding.bean.TextMessage;
-import com.fanglin.dingding.service.AuthService;
+import com.fanglin.dingding.service.DingTalkAuthService;
 import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
@@ -31,7 +31,7 @@ public class DingTalkMessageServiceImpl implements DingTalkMessageService {
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private AuthService authDDService;
+	private DingTalkAuthService dingTalkAuthService;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
@@ -46,7 +46,7 @@ public class DingTalkMessageServiceImpl implements DingTalkMessageService {
 			return -1;
 		}
 
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+		String accessToken = dingTalkAuthService.getAccessToken(FormatUtil.encodeCompany(company));
 
 		if (accessToken == null) {
 			return -1;
@@ -95,7 +95,7 @@ public class DingTalkMessageServiceImpl implements DingTalkMessageService {
 			return -1;
 		}
 
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+		String accessToken = dingTalkAuthService.getAccessToken(FormatUtil.encodeCompany(company));
 
 		if (accessToken == null) {
 			return -1;

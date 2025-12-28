@@ -45,7 +45,7 @@ public class DingTalkAccessTokenAction extends BaseListAction {
 
 	private String company;
 
-	@Action(value = "queryAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "queryDingTalkAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAccessToken() {
 
 		accessToken = accessTokenService.queryAccessToken(company);
@@ -53,7 +53,7 @@ public class DingTalkAccessTokenAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryJsapiTicket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "queryDingTalkJsapiTicket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryJsapiTicket() {
 
 		jsapiTicket = dJsapiTicketService.queryJsapiTicket(company);
@@ -61,7 +61,7 @@ public class DingTalkAccessTokenAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "makeAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "makeDingTalkAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeAccessToken() {
 
 		accessTokenService.makeAccessToken(company);
@@ -69,7 +69,7 @@ public class DingTalkAccessTokenAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "batchmakeAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "batchMakeDingTalkAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String batchmakeAccessToken() {
 
 		accessTokenService.batchmakeAccessToken(company);
@@ -77,7 +77,7 @@ public class DingTalkAccessTokenAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "deleteAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "deleteDingTalkAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteAccessToken() {
 
 		accessTokenService.deleteAccessTokenByOperateTime();

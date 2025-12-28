@@ -45,7 +45,7 @@ public class WeChatAccessTokenAction extends BaseListAction {
 
 	private String company;
 
-	@Action(value = "queryAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "queryWeChatAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAccessTokenForNew() {
 
 		accessToken = accessTokenService.queryAccessToken(company);
@@ -53,7 +53,7 @@ public class WeChatAccessTokenAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryJsapiTicket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "queryWeChatJsapiTicket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryWJsapiTicketForNew() {
 
 		jsapiTicket = accessTokenService.queryJsapiTicketForNew(company);
@@ -61,7 +61,7 @@ public class WeChatAccessTokenAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "makeAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "makeWeChatAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeAccessToken() {
 
 		accessTokenService.makeAccessToken(type, company);
@@ -69,7 +69,7 @@ public class WeChatAccessTokenAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "deleteAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "deleteWeChatAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteAccessToken() {
 
 		accessTokenService.deleteAccessToken();
@@ -77,7 +77,7 @@ public class WeChatAccessTokenAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "deleteOpenAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "deleteWeChatOpenAccessToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteWOpenAccessToken() {
 
 		openAccessTokenService.deleteOpenAccessTokenByOperateTime();

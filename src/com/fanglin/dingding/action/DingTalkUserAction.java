@@ -23,7 +23,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.bean.User;
-import com.fanglin.dingding.service.UserService;
+import com.fanglin.dingding.service.DingTalkUserService;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -33,7 +33,7 @@ public class DingTalkUserAction extends BaseListAction {
 	private static final long serialVersionUID = -6593413211279089778L;
 
 	@Autowired
-	private UserService userService;
+	private DingTalkUserService dingTalkUserService;
 
 	private User user;
 
@@ -49,7 +49,7 @@ public class DingTalkUserAction extends BaseListAction {
 	@Action(value = "queryDingTalkUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUser() throws FLException {
 
-		user = userService.getUser(user.getUserid(), queryCompany());
+		user = dingTalkUserService.getUser(user.getUserid(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -60,7 +60,7 @@ public class DingTalkUserAction extends BaseListAction {
 	@Action(value = "addDingTalkUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDingTalkUser() throws FLException {
 
-		errcode = userService.addDingTalkUser(user, dids, queryCompany());
+		errcode = dingTalkUserService.addDingTalkUser(user, dids, queryCompany());
 
 		return SUCCESS;
 	}
@@ -71,7 +71,7 @@ public class DingTalkUserAction extends BaseListAction {
 	@Action(value = "updateDingTalkUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateUser() throws FLException {
 
-		errcode = userService.updateDingTalkUser(user, dids, queryCompany());
+		errcode = dingTalkUserService.updateDingTalkUser(user, dids, queryCompany());
 
 		return SUCCESS;
 	}
@@ -82,7 +82,7 @@ public class DingTalkUserAction extends BaseListAction {
 	@Action(value = "deleteDingTalkUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteUser() throws FLException {
 
-		errcode = userService.deleteDingTalkUser(user, queryCompany());
+		errcode = dingTalkUserService.deleteDingTalkUser(user, queryCompany());
 
 		return SUCCESS;
 	}

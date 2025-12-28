@@ -56,7 +56,7 @@ public class WeChatUserInfoAction extends BaseListAction {
 	 * 查询微信公众号用户信息
 	 * @return 成功
 	 */
-	@Action(value = "queryWxUserInfo", results = {
+	@Action(value = "queryWeChatUserInfo", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String queryUserInfo() throws FLException {

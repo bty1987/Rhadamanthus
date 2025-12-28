@@ -20,8 +20,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.bean.AppMessage;
 import com.fanglin.dingding.bean.Group;
-import com.fanglin.dingding.service.AuthService;
-import com.fanglin.dingding.service.GroupService;
+import com.fanglin.dingding.service.DingTalkAuthService;
+import com.fanglin.dingding.service.DingTalkGroupService;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.CompanyDao;
@@ -30,12 +30,12 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
 
-@Service("groupDDService")
+@Service("dingTalkGroupService")
 @Transactional(readOnly = true)
-public class GroupServiceImpl implements GroupService {
+public class DingTalkGroupServiceImpl implements DingTalkGroupService {
 
 	@Autowired
-	private AuthService authDDService;
+	private DingTalkAuthService dingTalkAuthService;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
@@ -46,7 +46,7 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public Group query(Group group, int company) throws FLException {
 
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+		String accessToken = dingTalkAuthService.getAccessToken(FormatUtil.encodeCompany(company));
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 
@@ -75,7 +75,7 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public int create(Group group, int company) throws FLException {
 
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+		String accessToken = dingTalkAuthService.getAccessToken(FormatUtil.encodeCompany(company));
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 
@@ -109,7 +109,7 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public int update(Group group, int company) throws FLException {
 
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+		String accessToken = dingTalkAuthService.getAccessToken(FormatUtil.encodeCompany(company));
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 
@@ -140,7 +140,7 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public int template(Group group, int company) throws FLException {
 
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+		String accessToken = dingTalkAuthService.getAccessToken(FormatUtil.encodeCompany(company));
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 
@@ -171,7 +171,7 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public int send(Group group, JSONObject message, int company) throws FLException {
 
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+		String accessToken = dingTalkAuthService.getAccessToken(FormatUtil.encodeCompany(company));
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 

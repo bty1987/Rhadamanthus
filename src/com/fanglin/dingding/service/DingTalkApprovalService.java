@@ -10,7 +10,7 @@ import com.fanglin.core.interceptor.FLException;
 /**
  * 钉钉审批服务接口
  */
-public interface ApprovalService {
+public interface DingTalkApprovalService {
 
 	/**
 	 * 获取审批信息

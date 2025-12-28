@@ -28,7 +28,7 @@ import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.dingding.service.ApprovalService;
+import com.fanglin.dingding.service.DingTalkApprovalService;
 import com.fanglin.dingding.service.DingTalkCallbackService;
 import com.fanglin.decoration.service.DecorationAccountService;
 import com.fanglin.decoration.service.DecorationContractService;
@@ -56,7 +56,7 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 	private DecorationContractService decorationContractService;
 
 	@Autowired
-	private ApprovalService dpprovalService;
+	private DingTalkApprovalService dingTalkApprovalService;
 
 	@Autowired
 	private com.fanglin.approval.service.ApprovalService approvalService;
@@ -115,7 +115,7 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 
 			if ("PROC-EEA1011C-8ABD-47F1-983F-68F3D5EA1D4A".equals(code) && "finish".equals(type) && "agree".equals(result)) {
 
-				String orderId = dpprovalService.getApproval(no, "TextField-IG4N9OD3");
+				String orderId = dingTalkApprovalService.getApproval(no, "TextField-IG4N9OD3");
 
 				System.out.println(response.toJSONString());
 				System.out.println(orderId);
@@ -125,7 +125,7 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 
 			if ("PROC-94A6270F-10A1-45E4-B9A3-86EB39ED0D6E".equals(code) && "finish".equals(type) && "agree".equals(result)) {
 
-				String orderId = dpprovalService.getApproval(no, "TextField-IG4UCGW1");
+				String orderId = dingTalkApprovalService.getApproval(no, "TextField-IG4UCGW1");
 
 				System.out.println(response.toJSONString());
 				System.out.println(orderId);
@@ -135,7 +135,7 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 
 			if ("PROC-B852629C-D4F7-44E1-A9E2-6E1F830E38CB".equals(code) && "finish".equals(type) && "agree".equals(result)) {
 
-				String orderId = dpprovalService.getApproval(no, "TextField-K2AD4O5B");
+				String orderId = dingTalkApprovalService.getApproval(no, "TextField-K2AD4O5B");
 
 				System.out.println(response.toJSONString());
 				System.out.println(orderId);

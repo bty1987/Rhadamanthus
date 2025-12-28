@@ -23,7 +23,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.bean.Department;
-import com.fanglin.dingding.service.DepartmentService;
+import com.fanglin.dingding.service.DingTalkDepartmentService;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -33,7 +33,7 @@ public class DingTalkDepartmentAction extends BaseListAction {
 	private static final long serialVersionUID = -6593413211279089779L;
 
 	@Autowired
-	private DepartmentService departmentService;
+	private DingTalkDepartmentService dingTalkDepartmentService;
 
 	private List<Department> departments;
 
@@ -42,10 +42,10 @@ public class DingTalkDepartmentAction extends BaseListAction {
 	/**
 	 * 查询钉钉部门列表
 	 */
-	@Action(value = "queryDDDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "queryDingTalkDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDDDepartment() throws FLException {
 
-		departments = departmentService.queryDepartment(queryCompany());
+		departments = dingTalkDepartmentService.queryDepartment(queryCompany());
 
 		return SUCCESS;
 	}

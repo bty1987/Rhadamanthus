@@ -18,7 +18,7 @@ import com.fanglin.dingding.bean.Group;
 /**
  * 钉钉群服务接口
  */
-public interface GroupService {
+public interface DingTalkGroupService {
 
 	/**
 	 * 查询群信息
