@@ -11,6 +11,7 @@ var ExtensionDetail = (function() {
         quotaxRate: 0,
         quotaxPrice: 0,
         quotation: null,
+        protation: null,
 
         quotationItemId: null,
 
@@ -43,6 +44,7 @@ var ExtensionDetail = (function() {
         managePrice: com.focusPage("#managePrice"),
         taxRate: com.focusPage("#taxRate"),
         taxPrice: com.focusPage("#taxPrice"),
+        activityBalance: com.focusPage("#activityBalance"),
 
         isCountManage: com.focusPage("#isCountManage"),
         isCountManageDiscount: com.focusPage("#isCountManageDiscount"),
@@ -215,7 +217,7 @@ var ExtensionDetail = (function() {
         calculateArFees: function() {
 
             var $arr = $('.fl-quo-item:not([data-del-flag="1"])', '#addReduceItemDiv');
-            var undisPrice = 0, disPrice = 0, total = 0, consPrice = 0, comsPrice = 0 , managePrice = 0, managediscount = 0, taxPrice = 0, taxdiscount = 0;
+            var undisPrice = 0, disPrice = 0, total = 0, consPrice = 0, comsPrice = 0, managePrice = 0, managediscount = 0, taxPrice = 0, taxdiscount = 0;
 
             if ($arr.length) {
                 $arr.each(function(i, e) {
@@ -248,15 +250,15 @@ var ExtensionDetail = (function() {
             } else {
                 managePrice = 0;
             }
-            
-            if(extensionDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT){
+
+            if (extensionDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) {
                 taxPrice = utils.changeThrDecimal(utils.accMul(total, extensionDetail.quoTaxRate));
             }
 
-            if(extensionDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT){
+            if (extensionDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
                 taxPrice = utils.changeThrDecimal(utils.accMul(utils.accAdd(total, managePrice), extensionDetail.quoTaxRate));
             }
-            
+
             if (extensionDetail.isCountTax.prop("checked")) {
                 taxPrice = taxPrice;
             } else {
@@ -271,14 +273,27 @@ var ExtensionDetail = (function() {
                 managediscount = managePrice;
                 taxdiscount = taxPrice;
             }
-            
+
             total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(managediscount, taxdiscount)));
+
+            var protation = extensionDetail.protation;
+
+            protation.activityPrice = protation.pid ? protation.activityPrice : 0;
+            protation.activityProfit = protation.pid ? protation.activityProfit : 0;
+
+            var activityBalance = utils.changeTwoDecimal(utils.accSub(protation.activityPrice, protation.activityProfit));
+
+            if (protation.pid && extensionDetail.basicParams["extension.atttype"] == constant.quotation().extension.ATTTYPE_ACTIVITY_INT && total > activityBalance) {
+                com.showAlert(com.warning, "总额不能大于活动额");
+                return false;
+            }
 
             extensionDetail.undisPrice.text(undisPrice);
             extensionDetail.disPrice.text(disPrice);
             extensionDetail.sumLabSumMoney.text(total);
             extensionDetail.managePrice.text(managediscount);
             extensionDetail.taxPrice.text(taxdiscount);
+            extensionDetail.activityBalance.text(activityBalance);
 
             extensionDetail.basicParams['extension.undisPrice'] = undisPrice;
             extensionDetail.basicParams['extension.disPrice'] = disPrice;
@@ -409,7 +424,13 @@ var ExtensionDetail = (function() {
 
             extensionDetail.isCountManage.on("click", function(e) {
 
-                arCalculator.calculateArFees();
+                var calculate = arCalculator.calculateArFees();
+
+                if (calculate == false) {
+
+                    extensionDetail.isCountManage.prop("checked", false);
+                    return false;
+                }
 
                 var options = $.extend({}, extensionDetail.basicParams);
 
@@ -425,7 +446,13 @@ var ExtensionDetail = (function() {
 
             extensionDetail.isCountTax.on("click", function(e) {
 
-                arCalculator.calculateArFees();
+                var calculate = arCalculator.calculateArFees();
+
+                if (calculate == false) {
+
+                    extensionDetail.isCountTax.prop("checked", false);
+                    return false;
+                }
 
                 var options = $.extend({}, extensionDetail.basicParams);
 
@@ -509,7 +536,7 @@ var ExtensionDetail = (function() {
 
             var atttype = extensionDetail.basicParams["extension.atttype"];
             var type = extensionDetail.type == constant.quotation().extension.TYPE_ADD_INT ? constant.quotation().extensionItem.TYPE_QUOTATIONINADD_INT : constant.quotation().extensionItem.TYPE_QUOTATIONINSUB_INT;
-            
+
             var discount = v.discount;
             var unitPrice = v.unitPrice;
             var subPrice = v.subPrice;
@@ -704,9 +731,20 @@ var ExtensionDetail = (function() {
                 }
 
                 arCalculator.changeQuoFee(that.$nowLine);
-                arCalculator.calculateArFees();
+                var calculate = arCalculator.calculateArFees();
 
                 com.clearValidator();
+
+                if (calculate == false) {
+                    that.$nowLine.find('.cell.num .cell-wrap').text(oldmum);
+
+                    arCalculator.changeQuoFee(that.$nowLine);
+                    arCalculator.calculateArFees();
+
+                    that.hideInputWrap();
+
+                    return false;
+                }
 
                 var _params = $.extend(true, {}, extensionDetail.basicParams, args);
                 com.post(api.quotation.updateExtensionItem, _params, function(res) {
@@ -954,9 +992,9 @@ var ExtensionDetail = (function() {
             $btnSelect.click(function() {
 
                 extensionDetail.$modals.addQuotaionItemModal.modal('hide');
-                
+
                 extensionDetail.quotationItemId = v.qfaiId;
-                
+
                 if (extensionDetail.basicParams["extension.type"] == constant.quotation().extension.TYPE_ADD_INT) {
                     extensionDetail.$modals.addNormalItemModal.modal('show');
                 } else {
@@ -1166,7 +1204,14 @@ var ExtensionDetail = (function() {
 
                 com.focusPage('#orderId').text(res.decoration.orderId)
                 com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
-            });
+            })
+
+            com.post(api.quotation.queryProtationForDefaultByOrderId, {
+                "protation.orderId": extensionDetail.orderId
+            }, function(res) {
+
+                extensionDetail.protation = res.protation;
+            }, null, false);
 
             if (extensionDetail.quoManagePrice != 0 && extensionDetail.quoManageRate != 0) {
                 extensionDetail.isCountManage.attr("checked", "checked");

@@ -49,7 +49,8 @@ jQuery(function($) {
     }
 
     var extraParams = {
-        "extension.orderId": extension.orderId
+        "extension.orderId": extension.orderId,
+        "extension.atttype": -1
     };
 
     function initQuotationList() {
@@ -228,7 +229,11 @@ jQuery(function($) {
             field: "total",
             name: "总价",
             prop: "total",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return v.atttype == constant.quotation().extension.ATTTYPE_ACTIVITY_INT ? false : true;
+            }
         }, {
             field: "createTime",
             name: "创建时间",
@@ -460,7 +465,11 @@ jQuery(function($) {
             clazz: "blue",
             show: function(v) {
 
-                return extension.pageConfig.propertyArr.contains("total");
+                if (v.atttype == constant.quotation().extension.ATTTYPE_ACTIVITY_INT) {
+                    return false;
+                } else {
+                    return extension.pageConfig.propertyArr.contains("total");
+                }
             }
         }, {
             field: "createTime",

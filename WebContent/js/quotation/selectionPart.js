@@ -99,6 +99,8 @@ var selectionDetail = (function() {
                         if (selection.basicParams['selection.sendTime'] != null && selection.basicParams['selection.affirmTime'] != null) {
                             com.focusPage('#isAffirm').text('已变更');
                         }
+                    }, function(res){
+                        com.showAlert(com.error, res.errorMsg);
                     });
                 });
 
