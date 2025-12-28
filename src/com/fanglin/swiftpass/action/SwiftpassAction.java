@@ -19,10 +19,15 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.swiftpass.service.SwiftpassService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @ParentPackage("base")
 @Namespace("/")
 @Controller
 public class SwiftpassAction extends BaseListAction {
+
+	private static final Logger logger = LoggerFactory.getLogger(SwiftpassAction.class);
 
 	private static final long serialVersionUID = 2198804538629937340L;
 

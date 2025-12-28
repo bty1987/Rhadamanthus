@@ -24,11 +24,16 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import Decoder.BASE64Decoder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class RsaUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(RsaUtil.class);
 
 	public static String encrypt(String publicKey, String plainText) {
 
@@ -57,13 +62,13 @@ public class RsaUtil {
 			}
 			return Base64Util.encode(write.toByteArray());
 		} catch (InvalidKeyException e) {
-			e.printStackTrace();
+			logger.error("RSA加密失败: 密钥无效", e);
 		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
+			logger.error("RSA加密失败: 块大小非法", e);
 		} catch (BadPaddingException e) {
-			e.printStackTrace();
+			logger.error("RSA加密失败: 填充错误", e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("RSA加密失败", e);
 		}
 		return null;
 	}
@@ -95,7 +100,7 @@ public class RsaUtil {
 		} catch (NoSuchAlgorithmException e) {
 			throw new Exception("无此解密算法");
 		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
+			logger.error("RSA解密失败: 无此填充", e);
 			return null;
 		} catch (InvalidKeyException e) {
 			throw new Exception("解密公钥非法,请检查");

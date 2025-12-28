@@ -13,7 +13,12 @@ package com.fanglin.core.security;
 
 import java.security.MessageDigest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MD5Helper {
+
+	private static final Logger logger = LoggerFactory.getLogger(MD5Helper.class);
 
 	/**
 	 * MD5加密函数
@@ -47,7 +52,7 @@ public class MD5Helper {
 
 			return new String(str);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("MD5加密失败", e);
 			return null;
 		}
 	}

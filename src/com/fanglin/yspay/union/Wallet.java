@@ -19,7 +19,12 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.fanglin.core.interceptor.FLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Wallet implements Serializable {
+
+	private static final Logger logger = LoggerFactory.getLogger(Wallet.class);
 
 	private static final long serialVersionUID = 8131620932676462140L;
 
@@ -387,7 +392,7 @@ public class Wallet implements Serializable {
 		try {
 			System.out.println(new Wallet().query("baitianyu"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("钱包查询失败", e);
 		}
 
 	}

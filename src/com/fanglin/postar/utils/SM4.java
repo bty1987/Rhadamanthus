@@ -4,7 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SM4 {
+
+	private static final Logger logger = LoggerFactory.getLogger(SM4.class);
 
 	public static final int SM4_ENCRYPT = 1;
 	public static final int SM4_DECRYPT = 0;
@@ -155,13 +160,13 @@ public class SM4 {
 			try {
 				ret = PKCS5Padding(input);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("PKCS5填充失败", e);
 			}
 		} else {
 			try {
 				ret = PKCS7PaddingRestore(input);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("PKCS7填充恢复失败", e);
 			}
 		}
 		return ret;

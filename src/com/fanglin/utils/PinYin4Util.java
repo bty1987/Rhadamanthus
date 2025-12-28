@@ -30,6 +30,8 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 
 public class PinYin4Util {
 
+	private static final Logger logger = LoggerFactory.getLogger(PinYin4Util.class);
+
 	/**
 	 * 获得汉语串的全拼
 	 * 
@@ -57,9 +59,7 @@ public class PinYin4Util {
 				try {
 					charPinyinTem = Arrays.asList(PinyinHelper.toHanyuPinyinStringArray(in.charAt(i), outputFormat));
 				} catch (BadHanyuPinyinOutputFormatCombination e){
-					Logger log = LoggerFactory.getLogger("PinYin4Util");
-					log.debug(e.getStackTrace().toString());
-					e.printStackTrace();
+					logger.debug("拼音转换失败", e);
 				}
 			} else {
 				charPinyinTem = new ArrayList<String>();
@@ -108,9 +108,7 @@ public class PinYin4Util {
 				try {
 					charPinyinTem = Arrays.asList(PinyinHelper.toHanyuPinyinStringArray(in.charAt(i), outputFormat));
 				} catch (BadHanyuPinyinOutputFormatCombination e){
-					Logger log = LoggerFactory.getLogger("PinYin4Util");
-					log.debug(e.getStackTrace().toString());
-					e.printStackTrace();
+					logger.debug("拼音转换失败", e);
 				}
 			} else {
 				charPinyinTem = new ArrayList<String>();

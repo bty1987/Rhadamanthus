@@ -2,7 +2,12 @@ package com.fanglin.yspay.utils;
 
 import java.io.ByteArrayOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ByteUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(ByteUtil.class);
 
 	private static String hexStr = "0123456789ABCDEF";
 
@@ -299,13 +304,13 @@ public class ByteUtil {
 			try {
 				baKeyword[i] = (byte) (0xff & Integer.parseInt(s.substring(i * 2, i * 2 + 2), 16));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("十六进制转换失败", e);
 			}
 		}
 		try {
 			s = new String(baKeyword, "utf-8");// UTF-16le:Not
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error("字符串编码转换失败", e1);
 		}
 		return s;
 	}
@@ -319,13 +324,13 @@ public class ByteUtil {
 			try {
 				baKeyword[i] = (byte) (0xff & Integer.parseInt(s.substring(i * 2, i * 2 + 2), 16));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("十六进制转换失败", e);
 			}
 		}
 		try {
 			s = new String(baKeyword, charset);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error("字符串编码转换失败", e1);
 		}
 		return s;
 	}

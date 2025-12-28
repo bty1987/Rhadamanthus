@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ReUtil;
@@ -32,6 +34,8 @@ import com.google.gson.JsonParser;
  * 签名工具类
  */
 public class SignUtils {
+
+	private static final Logger logger = LoggerFactory.getLogger(SignUtils.class);
 
 	private static Map<String, Object> certMap = new ConcurrentHashMap<String, Object>();
 
@@ -122,7 +126,7 @@ public class SignUtils {
 		try {
 			flag = rsaCheckContent(inputStream, content, sign, charset);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("验证签名失败", e);
 		}
 		return flag;
 	}
@@ -169,11 +173,11 @@ public class SignUtils {
 			FileInputStream pfxCertFileInputStream = new FileInputStream(new File(pfxCertfilename));
 			sign = rsaSign(content, charset, pfxCertFileInputStream);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error("编码异常", e);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("证书文件未找到", e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("签名异常", e);
 		}
 		return sign;
 	}

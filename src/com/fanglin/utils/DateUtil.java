@@ -162,7 +162,7 @@ public class DateUtil {
 
 			return (integerHour >= 0 && integerHour <= 12);
 		} catch (NumberFormatException nfe) {
-			nfe.getStackTrace();
+			// 格式异常，忽略并返回默认值
 		}
 
 		return isTrue;

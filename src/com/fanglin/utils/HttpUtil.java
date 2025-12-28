@@ -368,7 +368,7 @@ public class HttpUtil {
 				outputStream.write(bs, 0, len);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("文件下载失败", e);
 		} finally {
 			try {
 				outputStream.close();

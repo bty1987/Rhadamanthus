@@ -22,7 +22,12 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SecurityImageHelper {
+
+	private static final Logger logger = LoggerFactory.getLogger(SecurityImageHelper.class);
     
     /**
      * 生成验证码图片
@@ -93,9 +98,9 @@ public class SecurityImageHelper {
 			byte[] bts = bos.toByteArray();
 	        inputStream = new ByteArrayInputStream(bts);
 		} catch (IOException e){
-			e.printStackTrace();
+			logger.error("图片转换失败", e);
 		}
-        
+
         return inputStream;
     }
     

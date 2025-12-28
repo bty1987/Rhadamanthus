@@ -23,6 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
@@ -38,6 +41,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service("A20251113Service")
 @Transactional(readOnly = true)
 public class A20251113ServiceImpl implements A20251113Service {
+
+	private static final Logger logger = LoggerFactory.getLogger(A20251113ServiceImpl.class);
 
 	private String OSS_URL_STR = "https://daily-gateway.fanglin.vip";
 	private String OSS_SECRET_STR = "RjNSNHJWWVViYmpvMjVOLzZHSDltcjRNQ0I5VnZQNkU";
@@ -60,7 +65,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 
 			return url;
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error("注册授权码失败", e);
 			throw new FLException(110000, "系统处理问题");
 		}
 	}
@@ -93,7 +98,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 		} catch (FLException e) {
 			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("交换授权码失败", e);
 			throw new FLException(110000, "系统处理问题");
 		}
 	}
@@ -193,7 +198,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 			System.out.println(com.fanglin.utils.HttpUtil.httpPost(logoutUrl, params));
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("登出授权码失败", e);
 			throw new FLException(110000, "系统处理问题");
 		}
 

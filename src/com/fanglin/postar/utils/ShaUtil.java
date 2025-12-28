@@ -15,7 +15,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ShaUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(ShaUtil.class);
 
 	public static String getSHA256(String str) {
 
@@ -27,7 +32,7 @@ public class ShaUtil {
 			messageDigest.update(str.getBytes(StandardCharsets.UTF_8));
 			encodestr = byte2Hex(messageDigest.digest());
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.error("SHA-256加密失败", e);
 		}
 
 		return encodestr;
