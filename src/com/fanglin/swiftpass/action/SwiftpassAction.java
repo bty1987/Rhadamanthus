@@ -11,6 +11,8 @@ import org.apache.struts2.convention.annotation.Result;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -18,9 +20,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.swiftpass.service.SwiftpassService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -88,6 +87,9 @@ public class SwiftpassAction extends BaseListAction {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+
+			logger.error("解密失败", e);
+
 			return new JSONObject();
 		}
 	}

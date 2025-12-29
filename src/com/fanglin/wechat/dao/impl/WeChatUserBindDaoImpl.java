@@ -29,17 +29,14 @@ public class WeChatUserBindDaoImpl extends DaoImpl<WeChatUserBindPO> implements 
 	}
 
 	@Override
-	public WeChatUserBindPO queryUserBind(String unionId) {
-		return (WeChatUserBindPO) session()
-				.createCriteria(WeChatUserBindPO.class)
-				.add(Restrictions.eq(WeChatUserBindPO.COLUMN_UNIONID_STR, unionId))
-				.uniqueResult();
+	public WeChatUserBindPO queryWeChatUserBind(String unionId) {
+		return (WeChatUserBindPO) session().createCriteria(WeChatUserBindPO.class).add(Restrictions.eq(WeChatUserBindPO.COLUMN_UNIONID_STR, unionId)).uniqueResult();
 	}
 
 	@Override
-	public void deleteUserBind(Long userId) {
-		String sql = "delete from wechat.user_bind where userId = :userId";
-		session().createSQLQuery(sql).setLong("userId", userId).executeUpdate();
+	public void deleteWeChatUserBind(String userId) {
+		String sql = "delete from hades.puser where userId = :userId";
+		session().createSQLQuery(sql).setString("userId", userId).executeUpdate();
 	}
 
 }

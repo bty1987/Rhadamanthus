@@ -24,8 +24,7 @@ import com.fanglin.wechat.service.WeChatUserInfoService;
 import com.fanglin.wechat.vo.WeChatUserInfoVO;
 
 /**
- * 微信公众号用户信息控制器
- * 用于获取微信公众号用户信息
+ * 微信公众号用户信息控制器 用于获取微信公众号用户信息
  */
 @ParentPackage("base")
 @Namespace("/")
@@ -54,11 +53,10 @@ public class WeChatUserInfoAction extends BaseListAction {
 
 	/**
 	 * 查询微信公众号用户信息
+	 * 
 	 * @return 成功
 	 */
-	@Action(value = "queryWeChatUserInfo", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
-			params = { "contentType", "text/html" })
+	@Action(value = "queryWeChatUserInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserInfo() throws FLException {
 
 		userInfo = weChatUserInfoService.queryUserInfo(openId, company);

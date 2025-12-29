@@ -9,7 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "accesstoken", catalog = "dingtalk")
+// @Table(name = "accesstoken", catalog = "dingtalk")
+@Table(name = "daccesstoken", catalog = "hades")
 public class DingTalkAccessTokenPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -5569847205831077308L;
