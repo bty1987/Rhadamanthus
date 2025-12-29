@@ -9,14 +9,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "wechatuserinfo", catalog = "hades")
+// @Table(name = "wechatuserinfo", catalog = "hades")
+@Table(name = "wxuserinfo", catalog = "hades")
 public class WeChatUserInfoPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -5843127834142096154L;
 
 	public static final String COLUMN_UNIONID_STR = "unionid";
 
-	private Long wxuiid;
+	private long wxuiid;
 
 	private String unionid;
 
@@ -35,11 +36,11 @@ public class WeChatUserInfoPO implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "wxuiid")
-	public Long getWxuiid() {
+	public long getWxuiid() {
 		return this.wxuiid;
 	}
 
-	public void setWxuiid(Long wxuiid) {
+	public void setWxuiid(long wxuiid) {
 		this.wxuiid = wxuiid;
 	}
 

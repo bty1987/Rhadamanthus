@@ -12,97 +12,49 @@
 package com.fanglin.wechat.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
-/**
- * 微信用户信息值对象
- * 用于传输微信用户信息
- */
 public class WeChatUserInfoVO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -937213460681555447L;
 
-	/**
-	 * 用户是否订阅该公众号（0-未关注，1-已关注）
-	 */
 	private Integer subscribe;
 
-	/**
-	 * 用户的 OpenID
-	 */
 	private String openid;
 
-	/**
-	 * 用户的昵称
-	 */
 	private String nickname;
 
-	/**
-	 * 用户的性别（0-未知，1-男，2-女）
-	 */
-	private Integer sex;
+	private Short sex;
 
-	/**
-	 * 用户所在城市
-	 */
-	private String city;
-
-	/**
-	 * 用户所在省份
-	 */
-	private String province;
-
-	/**
-	 * 用户所在国家
-	 */
-	private String country;
-
-	/**
-	 * 用户头像 URL
-	 */
-	private String headimgurl;
-
-	/**
-	 * 用户统一标识（UnionID）
-	 */
-	private String unionid;
-
-	/**
-	 * 语言
-	 */
 	private String language;
 
-	/**
-	 * 订阅时间
-	 */
+	private String city;
+
+	private String province;
+
+	private String country;
+
+	private String headimgurl;
+
 	private Long subscribe_time;
 
-	/**
-	 * 备注
-	 */
+	private String unionid;
+
 	private String remark;
 
-	/**
-	 * 用户所在的分组ID
-	 */
 	private Integer groupid;
 
-	/**
-	 * 构造函数
-	 */
+	private List<Integer> tagid_list;
+
 	public WeChatUserInfoVO() {
+		super();
 	}
 
-	/**
-	 * 构造函数
-	 * @param openId OpenID
-	 * @param unionId UnionID
-	 */
-	public WeChatUserInfoVO(String openId, String unionId) {
-		this.openid = openId;
-		this.unionid = unionId;
+	public WeChatUserInfoVO(String openid, String unionid) {
+		super();
+		this.openid = openid;
+		this.unionid = unionid;
 	}
-
-	// Getters and Setters
 
 	public Integer getSubscribe() {
 		return subscribe;
@@ -128,12 +80,20 @@ public class WeChatUserInfoVO implements Serializable {
 		this.nickname = nickname;
 	}
 
-	public Integer getSex() {
+	public Short getSex() {
 		return sex;
 	}
 
-	public void setSex(Integer sex) {
+	public void setSex(Short sex) {
 		this.sex = sex;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	public String getCity() {
@@ -168,28 +128,20 @@ public class WeChatUserInfoVO implements Serializable {
 		this.headimgurl = headimgurl;
 	}
 
-	public String getUnionid() {
-		return unionid;
-	}
-
-	public void setUnionid(String unionid) {
-		this.unionid = unionid;
-	}
-
-	public String getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-
 	public Long getSubscribe_time() {
 		return subscribe_time;
 	}
 
 	public void setSubscribe_time(Long subscribe_time) {
 		this.subscribe_time = subscribe_time;
+	}
+
+	public String getUnionid() {
+		return unionid;
+	}
+
+	public void setUnionid(String unionid) {
+		this.unionid = unionid;
 	}
 
 	public String getRemark() {
@@ -206,6 +158,14 @@ public class WeChatUserInfoVO implements Serializable {
 
 	public void setGroupid(Integer groupid) {
 		this.groupid = groupid;
+	}
+
+	public List<Integer> getTagid_list() {
+		return tagid_list;
+	}
+
+	public void setTagid_list(List<Integer> tagid_list) {
+		this.tagid_list = tagid_list;
 	}
 
 }

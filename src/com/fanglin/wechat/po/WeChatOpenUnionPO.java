@@ -20,7 +20,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "wechatopenunion", catalog = "hades")
+// @Table(name = "wechatopenunion", catalog = "hades")
+@Table(name = "wxopenunion", catalog = "hades")
 public class WeChatOpenUnionPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -1509245053817804190L;

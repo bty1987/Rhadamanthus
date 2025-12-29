@@ -31,27 +31,23 @@ public class WeChatUserBindServiceImpl implements WeChatUserBindService {
 	private WeChatUserBindDao weChatUserBindDao;
 
 	@Override
-	public WeChatUserBindVO queryUserBind(WeChatUserBindVO userBindVO) {
+	public WeChatUserBindVO queryUserBind(WeChatUserBindVO weChatUserBindVO) {
 
-		WeChatUserBindPO userBindPO = weChatUserBindDao.queryUserBind(userBindVO.getUnionId());
+		WeChatUserBindPO weChatUserBindPO = weChatUserBindDao.queryWeChatUserBind(weChatUserBindVO.getUnionId());
 
-		if (userBindPO != null) {
-			userBindVO.setUserId(userBindPO.getUserId());
-			userBindVO.setBindId(userBindPO.getBindId());
-			userBindVO.setBindTime(userBindPO.getBindTime());
+		if (weChatUserBindPO != null) {
+			weChatUserBindVO.setUserId(weChatUserBindPO.getUserId());
 		}
 
-		return userBindVO;
+		return weChatUserBindVO;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addUserBind(WeChatUserBindVO userBindVO) {
 
-		// 先删除该用户的旧绑定关系
-		weChatUserBindDao.deleteUserBind(userBindVO.getUserId());
+		weChatUserBindDao.deleteWeChatUserBind(userBindVO.getUserId());
 
-		// 保存新的绑定关系
 		weChatUserBindDao.save(new WeChatUserBindPO(userBindVO.getUnionId(), userBindVO.getUserId()));
 
 		return 0;
@@ -59,15 +55,15 @@ public class WeChatUserBindServiceImpl implements WeChatUserBindService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteUserBind(WeChatUserBindVO userBindVO) {
+	public int deleteUserBind(WeChatUserBindVO weChatUserBindVO) {
 
-		if (userBindVO.getUnionId() == null) return 0;
+		if (weChatUserBindVO.getUnionId() == null) return 0;
 
-		WeChatUserBindPO userBindPO = weChatUserBindDao.queryUserBind(userBindVO.getUnionId());
+		WeChatUserBindPO weChatUserBindPO = weChatUserBindDao.queryWeChatUserBind(weChatUserBindVO.getUnionId());
 
-		if (userBindPO == null) return 0;
+		if (weChatUserBindPO == null) return 0;
 
-		weChatUserBindDao.delete(userBindPO);
+		weChatUserBindDao.delete(weChatUserBindPO);
 
 		return 0;
 	}

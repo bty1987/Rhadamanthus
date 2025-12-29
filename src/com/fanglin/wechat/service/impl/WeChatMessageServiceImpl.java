@@ -56,14 +56,6 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 	private SystemConfigDao systemConfigDao;
 
 	@Override
-	public int sendPaymentMessage(int type, String name, String orderId, float money, String comment) {
-		// 注意：此方法通过 ISV 服务发送，不直接调用微信 API
-		// 如需直接调用微信 API，需要提供 unionId 参数来获取用户的 OpenID
-		logger.warn("sendPaymentMessage 方法通过 ISV 服务发送，未直接调用微信 API");
-		return 0;
-	}
-
-	@Override
 	public int sendServiceSchedule(String unionId, String name, String orderId, String content) {
 		return sendServiceSchedule(unionId, name, orderId, content, null);
 	}

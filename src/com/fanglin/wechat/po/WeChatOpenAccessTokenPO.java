@@ -9,14 +9,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "wechatopenaccesstoken", catalog = "wechat")
+// @Table(name = "wechatopenaccesstoken", catalog = "wechat")
+@Table(name = "wopenaccesstoken", catalog = "hades")
 public class WeChatOpenAccessTokenPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5715334057548940175L;
 
 	public static final String COLUMN_CODE_STR = "code";
 
-	private Long oatid;
+	private long woatId;
 
 	private String code;
 
@@ -24,7 +25,7 @@ public class WeChatOpenAccessTokenPO implements java.io.Serializable {
 
 	private String openId;
 
-	private Long operateTime;
+	private long operateTime;
 
 	public WeChatOpenAccessTokenPO() {
 		super();
@@ -40,13 +41,13 @@ public class WeChatOpenAccessTokenPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "oatid")
-	public Long getOatid() {
-		return oatid;
+	@Column(name = "woatId")
+	public long getWoatId() {
+		return woatId;
 	}
 
-	public void setOatid(Long oatid) {
-		this.oatid = oatid;
+	public void setWoatId(long woatId) {
+		this.woatId = woatId;
 	}
 
 	@Column(name = "code")
@@ -77,11 +78,11 @@ public class WeChatOpenAccessTokenPO implements java.io.Serializable {
 	}
 
 	@Column(name = "operateTime")
-	public Long getOperateTime() {
+	public long getOperateTime() {
 		return this.operateTime;
 	}
 
-	public void setOperateTime(Long operateTime) {
+	public void setOperateTime(long operateTime) {
 		this.operateTime = operateTime;
 	}
 

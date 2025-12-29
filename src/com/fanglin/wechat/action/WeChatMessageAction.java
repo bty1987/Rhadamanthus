@@ -22,8 +22,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.wechat.service.WeChatMessageService;
 
 /**
- * 微信消息推送控制器
- * 用于发送微信模板消息（支付通知、服务进度通知等）
+ * 微信消息推送控制器 用于发送微信模板消息（支付通知、服务进度通知等）
  */
 @ParentPackage("base")
 @Namespace("/")
@@ -58,7 +57,7 @@ public class WeChatMessageAction extends BaseListAction {
 	/**
 	 * 金额
 	 */
-	private Float money;
+	private String money;
 
 	/**
 	 * 备注信息
@@ -77,47 +76,29 @@ public class WeChatMessageAction extends BaseListAction {
 
 	/**
 	 * 发送支付通知消息
+	 * 
 	 * @return 成功
 	 */
-	@Action(value = "sendWeChatPaymentMessage", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
-			params = { "contentType", "text/html" })
+	@Action(value = "sendWeChatPaymentMessage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendPaymentMessage() {
 
-		weChatMessageService.sendPaymentMessage(type, name, orderId, money, comment);
-
-		return SUCCESS;
-	}
-
-	/**
-	 * 发送服务进度通知消息（不含路径）
-	 * @return 成功
-	 */
-	@Action(value = "sendWeChatServiceSchedule", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
-			params = { "contentType", "text/html" })
-	public String sendServiceSchedule() {
-
-		weChatMessageService.sendServiceSchedule(unionId, name, orderId, content);
+		weChatMessageService.sendPayment(unionId, name, orderId, money, comment);
 
 		return SUCCESS;
 	}
 
 	/**
 	 * 发送服务进度通知消息（含路径）
+	 * 
 	 * @return 成功
 	 */
-	@Action(value = "sendWeChatServiceScheduleWithUrl", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
-			params = { "contentType", "text/html" })
+	@Action(value = "sendWeChatServiceSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendServiceScheduleWithUrl() {
 
 		weChatMessageService.sendServiceSchedule(unionId, name, orderId, content, path);
 
 		return SUCCESS;
 	}
-
-	// Getters and Setters
 
 	public Integer getType() {
 		return type;
@@ -151,11 +132,11 @@ public class WeChatMessageAction extends BaseListAction {
 		this.orderId = orderId;
 	}
 
-	public Float getMoney() {
+	public String getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(String money) {
 		this.money = money;
 	}
 

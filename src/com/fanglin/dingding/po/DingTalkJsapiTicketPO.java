@@ -9,7 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "jsapiticket", catalog = "dingtalk")
+// @Table(name = "jsapiticket", catalog = "dingtalk")
+@Table(name = "djsapiticket", catalog = "hades")
 public class DingTalkJsapiTicketPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6747423090505493697L;

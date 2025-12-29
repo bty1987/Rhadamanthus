@@ -13,40 +13,24 @@ package com.fanglin.wechat.vo;
 
 import java.io.Serializable;
 
-/**
- * 微信用户绑定值对象
- * 用于传输微信用户与系统用户的绑定关系
- */
 public class WeChatUserBindVO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2210671005271377190L;
 
-	/**
-	 * 绑定ID（主键）
-	 */
-	private Long bindId;
+	private Long puid;
 
-	/**
-	 * 微信用户唯一标识（UnionID）
-	 */
 	private String unionId;
 
-	/**
-	 * 系统用户ID
-	 */
-	private Long userId;
+	private String userId;
 
-	/**
-	 * 绑定时间
-	 */
-	private Long bindTime;
+	private Short status;
 
-	public Long getBindId() {
-		return bindId;
+	public Long getPuid() {
+		return puid;
 	}
 
-	public void setBindId(Long bindId) {
-		this.bindId = bindId;
+	public void setPuid(Long puid) {
+		this.puid = puid;
 	}
 
 	public String getUnionId() {
@@ -57,20 +41,20 @@ public class WeChatUserBindVO implements Serializable {
 		this.unionId = unionId;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
-	public Long getBindTime() {
-		return bindTime;
+	public Short getStatus() {
+		return status;
 	}
 
-	public void setBindTime(Long bindTime) {
-		this.bindTime = bindTime;
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 }

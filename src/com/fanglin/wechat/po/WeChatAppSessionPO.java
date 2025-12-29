@@ -20,7 +20,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "wechatappsession", catalog = "hades")
+// @Table(name = "wechatappsession", catalog = "hades")
+@Table(name = "wxappsession", catalog = "hades")
 public class WeChatAppSessionPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7283855201379329855L;
@@ -29,7 +30,7 @@ public class WeChatAppSessionPO implements java.io.Serializable {
 
 	public static final String COLUMN_OPENID_STR = "openId";
 
-	private Long wxasId;
+	private long wxasId;
 
 	private String code;
 
@@ -37,13 +38,13 @@ public class WeChatAppSessionPO implements java.io.Serializable {
 
 	private String openId;
 
-	private Long operateTime;
+	private long operateTime;
 
 	public WeChatAppSessionPO() {
 		super();
 	}
 
-	public WeChatAppSessionPO(String code, String sessionKey, String openId, Long operateTime) {
+	public WeChatAppSessionPO(String code, String sessionKey, String openId, long operateTime) {
 		super();
 		this.code = code;
 		this.sessionKey = sessionKey;
@@ -54,11 +55,11 @@ public class WeChatAppSessionPO implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "wxasId")
-	public Long getWxasId() {
+	public long getWxasId() {
 		return wxasId;
 	}
 
-	public void setWxasId(Long wxasId) {
+	public void setWxasId(long wxasId) {
 		this.wxasId = wxasId;
 	}
 
@@ -90,11 +91,11 @@ public class WeChatAppSessionPO implements java.io.Serializable {
 	}
 
 	@Column(name = "operateTime")
-	public Long getOperateTime() {
+	public long getOperateTime() {
 		return operateTime;
 	}
 
-	public void setOperateTime(Long operateTime) {
+	public void setOperateTime(long operateTime) {
 		this.operateTime = operateTime;
 	}
 

@@ -21,15 +21,17 @@ public interface WeChatUserBindDao extends Dao<WeChatUserBindPO> {
 
 	/**
 	 * 根据 unionId 查询用户绑定
+	 * 
 	 * @param unionId 微信用户唯一标识
 	 * @return 用户绑定持久化对象
 	 */
-	public WeChatUserBindPO queryUserBind(String unionId);
+	public WeChatUserBindPO queryWeChatUserBind(String unionId);
 
 	/**
 	 * 根据 userId 删除用户绑定
+	 * 
 	 * @param userId 系统用户ID
 	 */
-	public void deleteUserBind(Long userId);
+	public void deleteWeChatUserBind(String userId);
 
 }

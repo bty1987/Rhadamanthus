@@ -1,40 +1,42 @@
 package com.fanglin.wechat.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
+// @Table(name = "wechatmessagetemplate", catalog = "wechat")
 @Table(name = "messagetemplate", catalog = "hades")
 public class WeChatMessageTemplatePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 32712878136020542L;
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final short TYPE_PUBLIC_INT = 0;
-	
+
 	public static final short TYPE_APPLET_INT = 1;
 
 	private long mtid;
-	
+
 	private String name;
-	
+
 	private String no;
-	
+
 	private String url;
-	
+
 	private String remark;
-	
+
 	private short type;
-	
+
 	private int company;
 
 	@Id

@@ -12,24 +12,13 @@
 package com.fanglin.wechat.service;
 
 /**
- * 微信消息服务接口
- * 用于发送微信模板消息（支付通知、服务进度通知等）
+ * 微信消息服务接口 用于发送微信模板消息（支付通知、服务进度通知等）
  */
 public interface WeChatMessageService {
 
 	/**
-	 * 发送支付通知消息
-	 * @param type 消息类型
-	 * @param name 业务名称
-	 * @param orderId 订单ID
-	 * @param money 金额
-	 * @param comment 备注信息
-	 * @return 处理结果码
-	 */
-	public int sendPaymentMessage(int type, String name, String orderId, float money, String comment);
-
-	/**
 	 * 发送服务进度通知消息（不含路径）
+	 * 
 	 * @param unionId 微信用户 UnionID
 	 * @param name 业务名称
 	 * @param orderId 订单ID
@@ -40,6 +29,7 @@ public interface WeChatMessageService {
 
 	/**
 	 * 发送服务进度通知消息（含路径）
+	 * 
 	 * @param unionId 微信用户 UnionID
 	 * @param name 业务名称
 	 * @param orderId 订单ID
@@ -51,6 +41,7 @@ public interface WeChatMessageService {
 
 	/**
 	 * 发送支付通知消息（直接调用微信 API）
+	 * 
 	 * @param unionId 微信用户 UnionID
 	 * @param name 业务名称
 	 * @param orderId 订单ID
@@ -62,6 +53,7 @@ public interface WeChatMessageService {
 
 	/**
 	 * 发送通知消息（直接调用微信 API）
+	 * 
 	 * @param unionId 微信用户 UnionID
 	 * @param name 联系人姓名
 	 * @param phone 联系电话
@@ -71,6 +63,5 @@ public interface WeChatMessageService {
 	 * @return 处理结果码
 	 */
 	public int sendNotice(String unionId, String name, String phone, String content, String url, String miniprogram);
-
 
 }

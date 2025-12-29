@@ -11,12 +11,13 @@
 
 package com.fanglin.wechat.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -24,82 +25,48 @@ import javax.persistence.Table;
  * 微信用户绑定持久化对象 存储微信用户与系统用户的绑定关系
  */
 @Entity
-@Table(name = "wechatuserbind", catalog = "wechat")
+// @Table(name = "wechatuserbind", catalog = "wechat")
+@Table(name = "puser", catalog = "hades")
 public class WeChatUserBindPO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
-	public static final String COLUMN_BINDID_STR = "bindId";
+	private static final long serialVersionUID = 2294962304096517553L;
 
 	public static final String COLUMN_UNIONID_STR = "unionId";
 
-	public static final String COLUMN_USERID_STR = "userId";
+	public static final short STATUS_ENABLED_INT = 0;
 
-	/**
-	 * 主键ID
-	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "bindId")
-	private Long bindId;
+	public static final short STATUS_DISABLED_INT = 1;
 
-	/**
-	 * 微信用户唯一标识（UnionID）
-	 */
-	@Column(name = "unionId", length = 100)
+	private long puid;
+
 	private String unionId;
 
-	/**
-	 * 系统用户ID
-	 */
-	@Column(name = "userId")
-	private Long userId;
+	private String userId;
 
-	/**
-	 * 绑定时间
-	 */
-	@Column(name = "bindTime")
-	private Long bindTime;
+	private short status;
 
-	/**
-	 * 默认构造函数
-	 */
 	public WeChatUserBindPO() {
+		super();
 	}
 
-	/**
-	 * 构造函数
-	 * 
-	 * @param unionId 微信用户唯一标识
-	 * @param userId 系统用户ID
-	 */
-	public WeChatUserBindPO(String unionId, Long userId) {
+	public WeChatUserBindPO(String unionId, String userId) {
+		super();
 		this.unionId = unionId;
 		this.userId = userId;
-		this.bindTime = System.currentTimeMillis();
 	}
 
-	/**
-	 * 构造函数
-	 * 
-	 * @param unionId 微信用户唯一标识
-	 * @param userId 系统用户ID
-	 * @param bindTime 绑定时间
-	 */
-	public WeChatUserBindPO(String unionId, Long userId, Long bindTime) {
-		this.unionId = unionId;
-		this.userId = userId;
-		this.bindTime = bindTime;
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "puid")
+	public long getPuid() {
+		return puid;
 	}
 
-	public Long getBindId() {
-		return bindId;
+	public void setPuid(long puid) {
+		this.puid = puid;
 	}
 
-	public void setBindId(Long bindId) {
-		this.bindId = bindId;
-	}
-
+	@Column(name = "unionId")
 	public String getUnionId() {
 		return unionId;
 	}
@@ -108,20 +75,21 @@ public class WeChatUserBindPO implements Serializable {
 		this.unionId = unionId;
 	}
 
-	public Long getUserId() {
+	@Column(name = "userId")
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
-	public Long getBindTime() {
-		return bindTime;
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
 	}
 
-	public void setBindTime(Long bindTime) {
-		this.bindTime = bindTime;
+	public void setStatus(short status) {
+		this.status = status;
 	}
-
 }
