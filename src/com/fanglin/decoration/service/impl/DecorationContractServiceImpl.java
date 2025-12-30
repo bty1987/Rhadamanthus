@@ -248,6 +248,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationContractPO.setCreater(creater);
 		decorationContractPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationContractPO.setStatus(DecorationContractPO.STATUS_VALID_INT);
+		decorationContractPO.setNoticeStatus(DecorationContractPO.NOTICE_STATUS_UNCONFIRMED_INT);
 
 		decorationContractDao.save(decorationContractPO);
 
@@ -291,6 +292,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationContractPO.setCreater(creater);
 		decorationContractPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationContractPO.setStatus(DecorationContractPO.STATUS_VALID_INT);
+		decorationContractPO.setNoticeStatus(DecorationContractPO.NOTICE_STATUS_UNCONFIRMED_INT);
 
 		decorationContractDao.save(decorationContractPO);
 

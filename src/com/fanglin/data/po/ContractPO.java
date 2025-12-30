@@ -113,6 +113,17 @@ public class ContractPO implements Serializable {
 		this.videopath = videopath;
 	}
 
+	private String noticePath;
+
+	@Column(name = "noticePath")
+	public String getNoticePath() {
+		return noticePath;
+	}
+
+	public void setNoticePath(String noticePath) {
+		this.noticePath = noticePath;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;

@@ -13,6 +13,7 @@ jQuery(function($) {
             page: com.focusPage("#page"),
             path: com.focusPage("#path"),
             videopath: com.focusPage("#videopath"),
+            noticePath: com.focusPage("#noticePath"),
             atttype: com.focusPage("#atttype")
         },
 
@@ -39,6 +40,13 @@ jQuery(function($) {
     }, 1, function(data) {
 
         contract.items.videopath.val(data.resUrl);
+    });
+
+    com.uploadify("#noticeUpload", "上传客户需求文件", api.common.uploadOther, 'btn btn-info', '*.*', {
+        'uploadType': 2
+    }, 1, function(data) {
+
+        contract.items.noticePath.val(data.resUrl);
     });
 
     contract.btns.saveBtn.click(saveData);
@@ -164,6 +172,7 @@ jQuery(function($) {
         contract.items.page.val(v.page);
         contract.items.path.val(v.path);
         contract.items.videopath.val(v.videopath);
+        contract.items.noticePath.val(v.noticePath);
         contract.items.atttype.val(v.atttype);
     }
 
@@ -180,6 +189,7 @@ jQuery(function($) {
             "contract.page": contract.items.page.val(),
             "contract.path": contract.items.path.val(),
             "contract.videopath": contract.items.videopath.val(),
+            "contract.noticePath": contract.items.noticePath.val(),
             "contract.url": config.server + contract.items.path.val(),
             "contract.atttype": contract.items.atttype.val()
         };
