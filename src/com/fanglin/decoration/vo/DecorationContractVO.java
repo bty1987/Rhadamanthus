@@ -53,6 +53,8 @@ public class DecorationContractVO implements Serializable {
 
 	private Integer filesize;
 
+	private Short noticeStatus;// 客户需求确认状态
+
 	private List<DecorationPaymentVO> payments;
 
 	private List<Integer> paymentRates;
@@ -251,6 +253,14 @@ public class DecorationContractVO implements Serializable {
 
 	public void setFilesize(Integer filesize) {
 		this.filesize = filesize;
+	}
+
+	public Short getNoticeStatus() {
+		return noticeStatus;
+	}
+
+	public void setNoticeStatus(Short noticeStatus) {
+		this.noticeStatus = noticeStatus;
 	}
 
 }

@@ -53,6 +53,10 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	public static final short TYPE_DOWNLOAD_INT = 4;// 下载
 
+	public static final short NOTICE_STATUS_CONFIRMED_INT = 0;// 已确认
+
+	public static final short NOTICE_STATUS_UNCONFIRMED_INT = 1;// 未确认
+
 	private long dcid;
 
 	private String orderId;
@@ -90,6 +94,8 @@ public class DecorationContractPO implements Serializable, Contract {
 	private short ishow;
 
 	private int filesize;
+
+	private short noticeStatus;// 客户需求确认状态
 
 	public DecorationContractPO() {
 		super();
@@ -313,6 +319,15 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	public void setFilesize(int filesize) {
 		this.filesize = filesize;
+	}
+
+	@Column(name = "noticeStatus")
+	public short getNoticeStatus() {
+		return noticeStatus;
+	}
+
+	public void setNoticeStatus(short noticeStatus) {
+		this.noticeStatus = noticeStatus;
 	}
 
 	public DecorationContractVO ptv(DecorationContractVO decorationContractVO) {
