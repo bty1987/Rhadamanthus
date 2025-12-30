@@ -1292,40 +1292,6 @@ $(function() {
         }, function(res) {
             accountCalculatorData.busitypes = res.decorationBusitypes || [];
 
-            // 调试：输出完整的 busitype 数据结构
-            console.log('=== queryDecorationBusitype 返回的数据 ===');
-            console.log('返回的 busitypes 数量:', accountCalculatorData.busitypes.length);
-            $.each(accountCalculatorData.busitypes, function(i, busitype) {
-                console.log('=== Busitype[' + i + '] ===');
-                console.log('完整对象:', JSON.stringify(busitype, null, 2));
-                console.log('所有字段:', Object.keys(busitype));
-
-                // 输出关键字段
-                console.log('dmid:', busitype.dmid);
-                console.log('dbid:', busitype.dbid);
-                console.log('name:', busitype.name);
-                console.log('alias:', busitype.alias);
-                console.log('discount:', busitype.discount);
-                console.log('base:', busitype.base);
-                console.log('matching:', busitype.matching);
-                console.log('serviceRate:', busitype.serviceRate);
-                console.log('type:', busitype.type);
-                console.log('typeness:', busitype.typeness);
-
-                // 输出 cascade 对象（可能包含配置信息）
-                if (busitype.cascade) {
-                    console.log('cascade 对象:', JSON.stringify(busitype.cascade, null, 2));
-                }
-            });
-
-            // 同时输出 machingType 数据进行对比
-            console.log('=== accountBasic.machingType 数据 ===');
-            console.log('machingType 数量:', accountBasic.machingType.length);
-            $.each(accountBasic.machingType, function(i, matching) {
-                console.log('=== Matching[' + i + '] (dmid=' + matching.dmid + ') ===');
-                console.log('完整对象:', JSON.stringify(matching, null, 2));
-            });
-
             // 生成计算方案（每个业务类型生成两条：配比/非配比）
             generateAccountSchemes();
         });
@@ -1386,11 +1352,6 @@ $(function() {
         var flag = scheme.calcType;  // 1 = 算配比, 0 = 不算配比
 
         var contartval = 0, service = 0, sub = 0, direct = 0, beforeTotal = 0, management = 0, taxment = 0;
-
-        // 调试：输出 busitype 数据
-        console.log('=== 计算方案调试信息 ===');
-        console.log('busitype:', busitype);
-        console.log('accountBasic:', accountBasic);
 
         // 使用业务类型的配置，添加默认值保护
         var discount = busitype.discount || accountBasic.discount || 10;
@@ -1629,8 +1590,6 @@ $(function() {
             config = accountBasic.machingType[0];
             matchedBy = 'first';
         }
-
-        console.log('匹配结果:', matchedBy, 'config.dmid:', config ? config.dmid : 'null', 'config.name:', config ? config.name : 'null');
 
         if (!config || !config.dmid) {
             com.showAlert(com.warning, '未找到有效的配置信息');
