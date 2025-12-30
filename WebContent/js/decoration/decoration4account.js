@@ -122,6 +122,7 @@ $(function() {
             updateBtn: com.focusPage("#updateBtn", "#decorationAccountContent"),
             submission: com.focusPage("#submission", "#decorationAccountContent"),
             btnBack: com.focusPage('#btnBack', "#decorationAccountContent"),
+            accountCalculatorBtn: com.focusPage("#accountCalculatorBtn", "#decorationAccountContent"),
             calculateBtn: com.focusPage("#calculateBtn", "#decorationAccountContent"),
             noticeQRCodeBtn: com.focusPage("#noticeQRCodeBtn", "#decorationAccountContent"),
             addReduceItemsBtn: com.focusPage("#addReduceItemsBtn", "#decorationAccountContent"),
@@ -131,7 +132,8 @@ $(function() {
 
         },
         modal: {
-            QRcodeModal: com.focusPage("#QRcodeModal")
+            QRcodeModal: com.focusPage("#QRcodeModal"),
+            accountCalculatorModal: com.focusPage("#accountCalculatorModal")
         }
     };
 
@@ -752,7 +754,7 @@ $(function() {
 
         $.extend(accountBasic, config);
 
-        if (config.typeness == decoration.typeness) {
+        if (config.typeness == decorationDetail.orderTypeness) {
             decorationDetail.items.calDiscountPrice.val(quotation.discount);
             accountBasic.discount = quotation.discount;
         } else {
@@ -1245,5 +1247,451 @@ $(function() {
         decorationDetail.accountItems.directC.html(accountBasic.directC);
         decorationDetail.accountItems.fullPayment.html(accountBasic.fullPayment);
     }
+
+    // ==================== 决算计算器功能 ====================
+
+    // 打开决算计算器弹窗
+    decorationDetail.btns.accountCalculatorBtn.on("click", function() {
+        openAccountCalculator();
+    });
+
+    // 决算计算器相关变量
+    var accountCalculatorData = {
+        selectedScheme: null,  // 选中的方案
+        busitypes: [],          // 业务类型列表
+        schemes: []            // 计算方案列表
+    };
+
+    /**
+     * 打开决算计算器弹窗
+     */
+    function openAccountCalculator() {
+        // 初始化顶部字段值
+        $('#calcMaterialAccount').val(decorationDetail.items.preferences.val() || 0);
+        $('#calcPreferences').val(decorationDetail.items.preferences.val() || 0);
+        $('#calcInternalCoupon').val(decorationDetail.items.internalCoupon.val() || 0);
+        $('#calcFulldel').val(decorationDetail.items.fulldel.val() || 0);
+        $('#calcCashback').val(decorationDetail.items.cashback.val() || 0);
+
+        // 清空方案列表
+        $('#accountSchemesList').empty();
+
+        // 加载业务类型数据
+        loadBusitypesAndCalculate();
+
+        // 显示弹窗
+        decorationDetail.modal.accountCalculatorModal.modal('show');
+    }
+
+    /**
+     * 加载业务类型数据并计算方案
+     */
+    function loadBusitypesAndCalculate() {
+        com.post(api.data.queryDecorationBusitype, {
+            typeness: decorationDetail.orderTypeness
+        }, function(res) {
+            accountCalculatorData.busitypes = res.decorationBusitypes || [];
+
+            // 调试：输出完整的 busitype 数据结构
+            console.log('=== queryDecorationBusitype 返回的数据 ===');
+            console.log('返回的 busitypes 数量:', accountCalculatorData.busitypes.length);
+            $.each(accountCalculatorData.busitypes, function(i, busitype) {
+                console.log('=== Busitype[' + i + '] ===');
+                console.log('完整对象:', JSON.stringify(busitype, null, 2));
+                console.log('所有字段:', Object.keys(busitype));
+
+                // 输出关键字段
+                console.log('dmid:', busitype.dmid);
+                console.log('dbid:', busitype.dbid);
+                console.log('name:', busitype.name);
+                console.log('alias:', busitype.alias);
+                console.log('discount:', busitype.discount);
+                console.log('base:', busitype.base);
+                console.log('matching:', busitype.matching);
+                console.log('serviceRate:', busitype.serviceRate);
+                console.log('type:', busitype.type);
+                console.log('typeness:', busitype.typeness);
+
+                // 输出 cascade 对象（可能包含配置信息）
+                if (busitype.cascade) {
+                    console.log('cascade 对象:', JSON.stringify(busitype.cascade, null, 2));
+                }
+            });
+
+            // 同时输出 machingType 数据进行对比
+            console.log('=== accountBasic.machingType 数据 ===');
+            console.log('machingType 数量:', accountBasic.machingType.length);
+            $.each(accountBasic.machingType, function(i, matching) {
+                console.log('=== Matching[' + i + '] (dmid=' + matching.dmid + ') ===');
+                console.log('完整对象:', JSON.stringify(matching, null, 2));
+            });
+
+            // 生成计算方案（每个业务类型生成两条：配比/非配比）
+            generateAccountSchemes();
+        });
+    }
+
+    /**
+     * 生成决算计算方案
+     */
+    function generateAccountSchemes() {
+        accountCalculatorData.schemes = [];
+
+        $.each(accountCalculatorData.busitypes, function(i, busitype) {
+            // 为每个业务类型生成两个方案：配比计算和非配比计算
+            accountCalculatorData.schemes.push({
+                schemeId: 'scheme_' + i + '_1',
+                busitype: busitype,
+                calcType: 1,  // 1 = 算配比
+                calcTypeName: '算配比',
+                results: {}
+            });
+
+            accountCalculatorData.schemes.push({
+                schemeId: 'scheme_' + i + '_0',
+                busitype: busitype,
+                calcType: 0,  // 0 = 不算配比
+                calcTypeName: '不算配比',
+                results: {}
+            });
+        });
+
+        // 计算所有方案的结果
+        calculateAllSchemes();
+
+        // 渲染方案列表
+        renderSchemeList();
+    }
+
+    /**
+     * 计算所有方案的结果
+     */
+    function calculateAllSchemes() {
+        var materialAccount = parseFloat($('#calcMaterialAccount').val()) || 0;
+        var preferences = parseFloat($('#calcPreferences').val()) || 0;
+        var internalCoupon = parseFloat($('#calcInternalCoupon').val()) || 0;
+        var fulldel = parseFloat($('#calcFulldel').val()) || 0;
+        var cashback = parseFloat($('#calcCashback').val()) || 0;
+
+        $.each(accountCalculatorData.schemes, function(i, scheme) {
+            scheme.results = calculateSchemeResult(scheme, materialAccount, preferences, internalCoupon, fulldel, cashback);
+        });
+    }
+
+    /**
+     * 计算单个方案的结果（参考 accountSuper 函数逻辑）
+     */
+    function calculateSchemeResult(scheme, materialAccount, preferences, internalCoupon, fulldel, cashback) {
+        var busitype = scheme.busitype;
+        var flag = scheme.calcType;  // 1 = 算配比, 0 = 不算配比
+
+        var contartval = 0, service = 0, sub = 0, direct = 0, beforeTotal = 0, management = 0, taxment = 0;
+
+        // 调试：输出 busitype 数据
+        console.log('=== 计算方案调试信息 ===');
+        console.log('busitype:', busitype);
+        console.log('accountBasic:', accountBasic);
+
+        // 使用业务类型的配置，添加默认值保护
+        var discount = busitype.discount || accountBasic.discount || 10;
+        var base = busitype.base || accountBasic.base || 1;
+        var material = busitype.matching || accountBasic.material || 0;
+        var serviceRate = busitype.serviceRate || accountBasic.service || 0;
+        var managePrice = accountBasic.managePrice || 0;
+        var taxPrice = accountBasic.taxPrice || 0;
+
+        console.log('初始值 - discount:', discount, 'base:', base, 'material:', material, 'serviceRate:', serviceRate);
+
+        // 确保数值是数字类型
+        discount = parseFloat(discount) || 10;
+        base = parseFloat(base) || 1;
+        material = parseFloat(material) || 0;
+        serviceRate = parseFloat(serviceRate) || 0;
+        managePrice = parseFloat(managePrice) || 0;
+        taxPrice = parseFloat(taxPrice) || 0;
+
+        console.log('转换后 - discount:', discount, 'base:', base, 'material:', material, 'serviceRate:', serviceRate);
+
+        var _managePrice = managePrice * (busitype.manageDiscount == 1 ? discount / 10 : 1);
+        var _taxPrice = taxPrice;
+
+        if (busitype.taxDiscount == 1) {
+            _taxPrice = taxPrice * (busitype.manageDiscount == 1 ? discount / 10 : 1);
+        }
+
+        beforeTotal = (accountBasic.undisPrice || 0) + (accountBasic.disPrice || 0) + (accountBasic.trafficPrice || 0) + (accountBasic.addCalPrice || 0) * flag - (accountBasic.reduceCalPrice || 0) * flag;
+
+        // 根据类型计算合同额
+        if ([0, 1].indexOf(busitype.type) != -1) {
+            contartval = (accountBasic.disPrice + (accountBasic.addDisCalPrice || 0) * flag - (accountBasic.reduceDisCalPrice || 0) * flag) * discount / 10
+                       + (accountBasic.undisPrice + (accountBasic.addUndisCalPrice || 0) * flag - (accountBasic.reduceUndisCalPrice || 0) * flag)
+                       + accountBasic.trafficPrice + _managePrice + (accountBasic.addManagePrice || 0) * flag - (accountBasic.reduceManagePrice || 0) * flag
+                       + _taxPrice + (accountBasic.addTaxPrice || 0) * flag - (accountBasic.reduceTaxPrice || 0) * flag;
+        }
+
+        if (busitype.type == 2) {
+            contartval = (beforeTotal - beforeTotal % base) * (discount / 10) + beforeTotal % base + _managePrice
+                       + (accountBasic.addManagePrice || 0) * flag - (accountBasic.reduceManagePrice || 0) * flag
+                       + _taxPrice + (accountBasic.addTaxPrice || 0) * flag - (accountBasic.reduceTaxPrice || 0) * flag;
+        }
+
+        service = (beforeTotal + managePrice + (accountBasic.addPredisManagePrice || 0) * flag - (accountBasic.reducePredisManagePrice || 0) * flag + taxPrice + (accountBasic.addPredisTaxPrice || 0) * flag - (accountBasic.reducePredisTaxPrice || 0) * flag) * material * serviceRate;
+
+        direct = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice + (accountBasic.addCalPrice || 0) * flag - (accountBasic.reduceCalPrice || 0) * flag
+               + managePrice + (accountBasic.addPredisManagePrice || 0) * flag - (accountBasic.reducePredisManagePrice || 0) * flag
+               + taxPrice + (accountBasic.addPredisTaxPrice || 0) * flag - (accountBasic.reducePredisTaxPrice || 0) * flag;
+
+        management = _managePrice + (accountBasic.addManagePrice || 0) * flag - (accountBasic.reduceManagePrice || 0) * flag;
+        taxment = Math.round(_taxPrice + (accountBasic.addTaxPrice || 0) * flag - (accountBasic.reduceTaxPrice || 0) * flag);
+
+        sub = contartval + service - (accountBasic.factPrice || 0) - (accountBasic.servicePaidup || 0) - (accountBasic.addTotalPrice || 0) * flag + (accountBasic.reduceTotalPrice || 0) * flag + (accountBasic.addUncalPrice || 0) * flag - preferences - internalCoupon - fulldel - cashback;
+
+        console.log('计算结果 - contartval:', contartval, 'service:', service, 'direct:', direct, 'sub:', sub);
+
+        var accountForehead = Math.round(contartval);
+        var accountServicePrice = Math.round(service);
+        var balanceSum = Math.round(sub);
+        var flowerRatio = 0;
+        if (direct > 0) {
+            flowerRatio = utils.changeThrDecimal((accountBasic.materialTotal || 0) / direct);
+        }
+        var difference = Math.round((accountBasic.materialFactPrice || 0) - materialAccount);
+        var superRatio = 0;
+        if (materialAccount > 0) {
+            superRatio = utils.changeThrDecimal(difference / materialAccount);
+        }
+
+        return {
+            discount: discount || 0,  // 添加折扣字段
+            direct: Math.round(direct) || 0,
+            beforeTotal: Math.round(beforeTotal) || 0,
+            management: Math.round(management) || 0,
+            taxPrice: Math.round(taxment) || 0,
+            accountForehead: accountForehead || 0,
+            accountServicePrice: accountServicePrice || 0,
+            balanceSum: balanceSum || 0,
+            flowerRatio: flowerRatio || 0,
+            difference: difference || 0,
+            superRatio: superRatio || 0,
+            fullPayment: Math.round((accountBasic.signFactOwing || 0) + (accountBasic.addOwing || 0) - (accountBasic.reduceOwing || 0)) || 0
+        };
+    }
+
+    /**
+     * 渲染方案列表（使用独立样式类）
+     */
+    function renderSchemeList() {
+        if (accountCalculatorData.schemes.length === 0) {
+            $('#accountSchemesList').html('<div class="col-md-12 text-center">暂无方案数据</div>');
+            return;
+        }
+
+        // 定义要显示的字段及其列类型
+        var fields = [
+            { key: 'discount', label: '折扣', type: 'normal' },
+            { key: 'direct', label: '决算折前总额', type: 'normal' },
+            { key: 'beforeTotal', label: '决算直接费', type: 'normal' },
+            { key: 'management', label: '决算管理费', type: 'normal' },
+            { key: 'taxPrice', label: '税金', type: 'normal' },
+            { key: 'accountForehead', label: '决算合同额', type: 'normal' },
+            { key: 'accountServicePrice', label: '决算服务费', type: 'normal' },
+            { key: 'balanceSum', label: '差额', type: 'normal' },
+            { key: 'flowerRatio', label: '决算实花配比', type: 'normal' },
+            { key: 'superRatio', label: '超配比', type: 'normal' },
+            { key: 'fullPayment', label: '应补款', type: 'normal' }
+        ];
+
+        var container = $('<div></div>').addClass('col-md-12');
+        var calculator = $('<div></div>').addClass('account-calc-container').appendTo(container);
+
+        // 第一行：表头（字段名称）
+        var headerRow = $('<div></div>').addClass('account-calc-row account-calc-header');
+        headerRow.append(createCalculatorCell('业务类型', 'wide', true));
+        headerRow.append(createCalculatorCell('是否计入配比', 'small', true));
+        $.each(fields, function(i, field) {
+            headerRow.append(createCalculatorCell(field.label, field.type, true));
+        });
+        headerRow.append(createCalculatorCell('操作', 'action', true));
+        headerRow.appendTo(calculator);
+
+        // 每个方案一行
+        $.each(accountCalculatorData.schemes, function(i, scheme) {
+            var r = scheme.results;
+            var busitype = scheme.busitype;
+
+            var dataRow = $('<div></div>').addClass('account-calc-row');
+
+            // 业务类型列
+            dataRow.append(createCalculatorCell(busitype.name, 'wide', false));
+
+            // 是否计入配比列
+            var matchingText = scheme.calcType == 1 ? '是' : '否';
+            dataRow.append(createCalculatorCell(matchingText, 'small', false));
+
+            // 各字段数据列
+            $.each(fields, function(j, field) {
+                dataRow.append(createCalculatorCell(r[field.key], field.type, false));
+            });
+
+            // 操作按钮列
+            var actionCell = $('<div></div>').addClass('account-calc-cell action');
+            var btn = $('<button></button>').addClass('btn btn-xs btn-primary selectSchemeBtn')
+                .attr('data-scheme-id', scheme.schemeId)
+                .text('确认');
+            actionCell.append(btn);
+            dataRow.append(actionCell);
+
+            dataRow.appendTo(calculator);
+        });
+
+        $('#accountSchemesList').html(container);
+
+        // 绑定确认按钮事件
+        $('.selectSchemeBtn').on('click', function() {
+            var schemeId = $(this).data('scheme-id');
+            selectScheme(schemeId);
+        });
+    }
+
+    /**
+     * 创建计算器单元格（使用独立样式类）
+     */
+    function createCalculatorCell(text, type, isHeader) {
+        var cell = $('<div></div>').addClass('account-calc-cell ' + type);
+
+        if (isHeader) {
+            // 表头：居中对齐
+            cell.html(text);
+        } else {
+            // 数据行
+            if (type === 'normal') {
+                // 数值列：右对齐，蓝色
+                cell.html('<span class="blue">' + text + '</span>').css('text-align', 'right');
+            } else if (type === 'wide') {
+                // 业务类型：左对齐
+                cell.html(text);
+            } else {
+                // 其他列：居中对齐
+                cell.html(text);
+            }
+        }
+
+        return cell;
+    }
+
+    /**
+     * 选中方案
+     */
+    function selectScheme(schemeId) {
+        var scheme = null;
+        $.each(accountCalculatorData.schemes, function(i, s) {
+            if (s.schemeId === schemeId) {
+                scheme = s;
+                return false;
+            }
+        });
+
+        if (!scheme) return;
+
+        accountCalculatorData.selectedScheme = scheme;
+
+        // 回填数据到功能模块
+        var busitype = scheme.busitype;
+
+        // 简化匹配逻辑：直接遍历所有 machingType 找到第一个
+        var config = null;
+        var matchedBy = '';
+
+        // 优先通过 dbid 匹配
+        if (busitype.dbid) {
+            $.each(accountBasic.machingType, function(i, v) {
+                if (busitype.dbid == v.dmid) {
+                    config = v;
+                    matchedBy = 'dbid';
+                    return false;
+                }
+            });
+        }
+
+        // 如果没找到，通过 type 匹配 typeness
+        if (!config && busitype.type !== undefined) {
+            $.each(accountBasic.machingType, function(i, v) {
+                if (busitype.type == v.typeness) {
+                    config = v;
+                    matchedBy = 'type';
+                    return false;
+                }
+            });
+        }
+
+        // 如果还是没找到，使用第一个 machingType
+        if (!config && accountBasic.machingType.length > 0) {
+            config = accountBasic.machingType[0];
+            matchedBy = 'first';
+        }
+
+        console.log('匹配结果:', matchedBy, 'config.dmid:', config ? config.dmid : 'null', 'config.name:', config ? config.name : 'null');
+
+        if (!config || !config.dmid) {
+            com.showAlert(com.warning, '未找到有效的配置信息');
+            return;
+        }
+
+        // 设置下拉框并触发 change 事件
+        decorationDetail.items.otherPaymentType.val(config.dmid);
+        decorationDetail.items.otherPaymentType.trigger('change');
+
+        // 更新增减配比状态
+        if (scheme.calcType == 1) {
+            decorationDetail.items.matching.prop('checked', true);
+        } else {
+            decorationDetail.items.matching.prop('checked', false);
+        }
+        accountBasic.cal = scheme.calcType == 1;
+
+        // 填充只读字段
+        if (busitype.name) {
+            decorationDetail.items.discountName.val(busitype.name);
+            accountBasic.name = busitype.name;
+        }
+
+        if (busitype.typeness !== undefined) {
+            var accountTypeText = decorationDetail.orderType[busitype.typeness] || '';
+            decorationDetail.items.accountType.val(accountTypeText);
+        }
+
+        // 更新优惠字段
+        decorationDetail.items.preferences.val($('#calcPreferences').val() || 0);
+        decorationDetail.items.internalCoupon.val($('#calcInternalCoupon').val() || 0);
+        decorationDetail.items.fulldel.val($('#calcFulldel').val() || 0);
+        decorationDetail.items.cashback.val($('#calcCashback').val() || 0);
+
+        // 重新计算
+        accountSuper();
+
+        // 启用按钮
+        decorationDetail.btns.updateBtn.removeAttr("disabled");
+        decorationDetail.btns.submission.removeAttr("disabled");
+
+        // 关闭弹窗
+        decorationDetail.modal.accountCalculatorModal.modal('hide');
+
+        com.showAlert(com.info, '已选择方案：' + busitype.name + ' - ' + scheme.calcTypeName);
+    }
+
+    // 重新计算全部按钮事件
+    $('#recalculateAllBtn').on('click', function() {
+        calculateAllSchemes();
+        renderSchemeList();
+    });
+
+    // 确认选择按钮事件（底部按钮）
+    $('#selectSchemeBtn').on('click', function() {
+        if (accountCalculatorData.selectedScheme) {
+            selectScheme(accountCalculatorData.selectedScheme.schemeId);
+        } else {
+            com.showAlert(com.warning, '请先选择一个方案');
+        }
+    });
 
 });

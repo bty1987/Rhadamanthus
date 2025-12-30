@@ -1,3 +1,56 @@
+<style>
+/* 决算计算器独立样式 - 不依赖系统样式 */
+.account-calc-container {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.account-calc-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    border: 1px solid #E1E1E1;
+    margin-top: -1px;
+}
+
+.account-calc-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 4px;
+    font-size: 12px;
+    border-right: 1px solid #E1E1E1;
+    min-height: 40px;
+    word-break: break-all;
+}
+
+.account-calc-cell:last-child {
+    border-right: none;
+}
+
+.account-calc-cell.wide {
+    flex: 0 0 120px;
+}
+
+.account-calc-cell.small {
+    flex: 0 0 60px;
+}
+
+.account-calc-cell.normal {
+    flex: 1 1 0;
+    min-width: 50px;
+}
+
+.account-calc-cell.action {
+    flex: 0 0 70px;
+}
+
+.account-calc-header {
+    background-color: #d9edf7;
+    font-weight: bold;
+    text-align: center;
+}
+</style>
 
 <div id="decorationAccountContent">
     <div class="row">
@@ -707,14 +760,14 @@
 		                                                                    <select class="col-sm-9 v_required" id="otherPaymentType"></select>
 		                                                                </div>
 		                                                            </div>
-		                                                            
+
                                                                     <div class="form-group">
 		                                                                <label class="col-sm-3 control-label no-padding-right">输入折扣:</label>
 		                                                                <div class="col-md-9">
 		                                                                    <input type="text" readonly="readonly" class="cell col-sm-9 v_required" id="calDiscountPrice" maxlength="4" style="text-align: center">
 		                                                                </div>
 		                                                            </div>
-		                                                            
+
 		                                                            <div class="form-group">
 		                                                                <label class="col-sm-3 control-label no-padding-right">增减配比:</label>
 		                                                                <div class="col-md-9">
@@ -755,10 +808,6 @@
 			                                                                <input type="text" class="cell col-sm-9 v_afloat_3" id="cashback" maxlength="11" style="text-align: center" value="0">
 			                                                            </div>
 			                                                        </div>
-			                                                        
-			                                                        <div class="form-group">
-                                                                        <button type="button" id="calculateBtn" class="btn btn-xs btn-info col-sm-12" style="margin-top: 10px">计算</button>
-                                                                    </div>
                                                                 </form>
                                                             </div>
                                                             <div class="col-md-2" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
@@ -783,6 +832,8 @@
                                 <hr/>
                                 
                                 <div class="row-fluid wizard-actions">
+                                    <button type="button" id="accountCalculatorBtn" class="btn btn-success"><i class="icon-calculator bigger-120"></i>决算</button>
+                                    <button type="button" id="calculateBtn" class="btn btn-success"><i class="icon-cog bigger-120"></i>计算</button>
                                     <button type="button" id="printBtn" class="btn btn-info" ><i class="icon-print bigger-120"></i>打印</button>
                                     <button type="button" id="sendBtn" class="btn btn-info" ><i class="icon-comments-alt bigger-120"></i>推送</button>
                                     <button type="button" id="noticeQRCodeBtn" class="btn btn-info" style="padding: 6px 0px;"><i class="icon-qrcode bigger-120"></i></button>
@@ -816,6 +867,64 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 决算计算器弹窗 -->
+<div class="modal fade" id="accountCalculatorModal" tabindex="-1">
+    <div class="modal-dialog" style="width: 90%;">
+        <div class="modal-content col-md-12">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+                <h4 class="modal-title">决算计算器</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- 顶部动态计算字段 -->
+                    <div class="col-md-12" style="margin-bottom: 10px; border-bottom: 1px solid #e3e3e3; padding-bottom: 10px;">
+                        <div class="form-horizontal">
+                            <div class="col-md-2">
+                                <label class="control-label no-padding-right">决算主材额</label>
+                                <input type="text" id="calcMaterialAccount" class="col-xs-12 v_afloat_3" maxlength="11" style="text-align: center" value="0">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label no-padding-right">优惠券</label>
+                                <input type="text" id="calcPreferences" class="col-xs-12 v_afloat_3" maxlength="11" style="text-align: center" value="0">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label no-padding-right">内部优惠券</label>
+                                <input type="text" id="calcInternalCoupon" class="col-xs-12 v_afloat_3" maxlength="11" style="text-align: center" value="0">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label no-padding-right">满送</label>
+                                <input type="text" id="calcFulldel" class="col-xs-12 v_afloat_3" maxlength="11" style="text-align: center" value="0">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label no-padding-right">返现</label>
+                                <input type="text" id="calcCashback" class="col-xs-12 v_afloat_3" maxlength="11" style="text-align: center" value="0">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label no-padding-right">&nbsp;</label>
+                                <button id="recalculateAllBtn" class="btn btn-xs btn-primary col-xs-12">重新计算全部</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 决算方案列表 -->
+                    <div class="col-md-12" id="accountSchemesContainer">
+                        <div class="row" id="accountSchemesList">
+                            <!-- 动态加载的决算方案将显示在这里 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="selectSchemeBtn" class="btn btn-primary">确认选择</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
