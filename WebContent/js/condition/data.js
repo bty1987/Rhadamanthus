@@ -52,8 +52,6 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-
-    // ========== 新增楼盘查询条件 ==========
     "village-developer": {
         label: "开发商",
         type: "text",

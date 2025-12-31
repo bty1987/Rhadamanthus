@@ -42,7 +42,7 @@ jQuery(function($) {
         contract.items.videopath.val(data.resUrl);
     });
 
-    com.uploadify("#noticeUpload", "上传客户需求文件", api.common.uploadOther, 'btn btn-info', '*.*', {
+    com.uploadify("#noticeUpload", "上传客户须知文件", api.common.uploadOther, 'btn btn-info', '*.*', {
         'uploadType': 2
     }, 1, function(data) {
 
