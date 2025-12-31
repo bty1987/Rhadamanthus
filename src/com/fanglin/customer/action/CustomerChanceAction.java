@@ -38,6 +38,8 @@ public class CustomerChanceAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private String phoneCode;
+
 	@Action(value = "pageCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomerChance() throws FLException {
 
@@ -113,7 +115,7 @@ public class CustomerChanceAction extends BaseListAction {
 	@Action(value = "confirmCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmCustomerChance() throws FLException {
 
-		customerChanceService.confirmCustomerChance(customerChance, securityCode, verifyCode);
+		customerChanceService.confirmCustomerChance(customerChance, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -121,7 +123,7 @@ public class CustomerChanceAction extends BaseListAction {
 	@Action(value = "affirmCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmCustomerChance() throws FLException {
 
-		customerChanceService.affirmCustomerChance(customerChance, securityCode, verifyCode);
+		customerChanceService.affirmCustomerChance(customerChance, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -212,6 +214,14 @@ public class CustomerChanceAction extends BaseListAction {
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
 	}
 
 }

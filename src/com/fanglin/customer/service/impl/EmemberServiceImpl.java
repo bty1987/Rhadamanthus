@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.EmemberDao;
 import com.fanglin.customer.po.EmemberPO;
@@ -19,10 +18,11 @@ import com.fanglin.information.dao.VticketDao;
 import com.fanglin.information.po.VticketPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.service.WeChatMessageService;
+import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
 @Service("ememberService")
 @Transactional(readOnly = true)
@@ -83,20 +83,18 @@ public class EmemberServiceImpl implements EmemberService {
 		String no = ememberVO.getNo();
 		String unionId = ememberVO.getUnionId();
 
-		// 处理微信电话号码
-		if (phoneCode != null) {
-			com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
-			if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
-				ememberVO.setPhone(weChatPhoneInfoVO.getPhoneNumber());
-			}
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
+			throw new FLException(330012, "验证失败,请重新验证");
 		}
 
-		try {
-			if (!verifyCode.equals(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
-				throw new FLException(330012, "验证失败,重新验证");
-			}
-		} catch (Exception e) {
-			throw new FLException(330012, "验证失败,重新验证");
+		WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			ememberVO.setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
 		EmemberPO ememberPO = ememberDao.queryEmenber(unionId);

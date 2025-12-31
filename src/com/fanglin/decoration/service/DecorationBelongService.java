@@ -23,7 +23,7 @@ public interface DecorationBelongService {
 
 	public int sendDecorationBelong(DecorationBelongVO decorationBelongVO) throws FLException;
 
-	public int confirmDecorationBelong(DecorationVO decorationVO, DecorationBelongVO decorationBelongVO, String securityCode, String verifyCode) throws FLException;
+	public int confirmDecorationBelong(DecorationVO decorationVO, DecorationBelongVO decorationBelongVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
 	public int tranDecorationBelong(DecorationBelongVO decorationBelongVO, List<DecorationBelongVO> decorationBelongVOs) throws FLException;
 

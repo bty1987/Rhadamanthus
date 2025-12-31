@@ -45,6 +45,7 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
+import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
 @Service("customerOriginService")
 @Transactional(readOnly = true)
@@ -409,8 +410,8 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			throw new FLException(330014, "客源状态不可操作");
 		}
 
-		// 处理微信电话号码
-		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+
 		if (phoneCode != null) {
 			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
 		}

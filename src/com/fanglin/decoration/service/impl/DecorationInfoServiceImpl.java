@@ -36,6 +36,7 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.wechat.service.WeChatAppService;
+import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
 @Service("decorationInfoService")
 @Transactional(readOnly = true)
@@ -141,16 +142,13 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			throw new FLException(130002, "客户不存在");
 		}
 
-		// 处理微信电话号码
-		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+
 		if (phoneCode != null) {
 			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
 		}
 
 		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
-			if (decorationVO.getCustomer() == null) {
-				decorationVO.setCustomer(new com.fanglin.communion.vo.CustomerVO());
-			}
 			decorationVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 

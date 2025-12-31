@@ -26,8 +26,7 @@ import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 import com.fanglin.wechat.vo.WeChatUserInfoVO;
 
 /**
- * 微信小程序控制器
- * 处理微信小程序登录、用户信息获取、手机号获取等功能
+ * 微信小程序控制器 处理微信小程序登录、用户信息获取、手机号获取等功能
  */
 @ParentPackage("base")
 @Namespace("/")
@@ -76,11 +75,10 @@ public class WeChatAppAction extends BaseListAction {
 
 	/**
 	 * 创建小程序 Session
+	 * 
 	 * @return 成功
 	 */
-	@Action(value = "makeWeChatAppSession", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
-			params = { "contentType", "text/html" })
+	@Action(value = "makeWeChatAppSession", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeSession() throws FLException {
 
 		userInfo = weChatAppService.makeSession(code, company);
@@ -90,11 +88,10 @@ public class WeChatAppAction extends BaseListAction {
 
 	/**
 	 * 获取用户信息（重新获取 session_key）
+	 * 
 	 * @return 成功
 	 */
-	@Action(value = "queryWeChatAppUserInfo", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
-			params = { "contentType", "text/html" })
+	@Action(value = "queryWeChatAppUserInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserInfoWithCompany() throws FLException {
 
 		userInfo = weChatAppService.queryUserInfo(code, encryptedData, iv, company);
@@ -104,11 +101,10 @@ public class WeChatAppAction extends BaseListAction {
 
 	/**
 	 * 获取用户信息（使用缓存的 session_key）
+	 * 
 	 * @return 成功
 	 */
-	@Action(value = "queryWeChatAppUserInfoByCache", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
-			params = { "contentType", "text/html" })
+	@Action(value = "queryWeChatAppUserInfoByCache", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserInfoByCache() throws FLException {
 
 		userInfo = weChatAppService.queryUserInfo(code, encryptedData, iv);
@@ -118,11 +114,10 @@ public class WeChatAppAction extends BaseListAction {
 
 	/**
 	 * 获取群组信息
+	 * 
 	 * @return 成功
 	 */
-	@Action(value = "queryWeChatAppGroupInfo", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
-			params = { "contentType", "text/html" })
+	@Action(value = "queryWeChatAppGroupInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryGroupInfo() throws FLException {
 
 		groupInfo = weChatAppService.queryGroupInfo(code, encryptedData, iv);
@@ -132,25 +127,23 @@ public class WeChatAppAction extends BaseListAction {
 
 	/**
 	 * 获取手机号信息
+	 * 
 	 * @return 成功
 	 */
-	@Action(value = "queryWeChatAppPhoneInfo", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
-			params = { "contentType", "text/html" })
+	@Action(value = "queryWeChatAppPhoneInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPhoneInfo() throws FLException {
 
-		phoneInfo = weChatAppService.queryPhoneInfo(code, encryptedData, iv, company);
+		phoneInfo = weChatAppService.queryPhoneInfo(code, company);
 
 		return SUCCESS;
 	}
 
 	/**
 	 * 删除过期的 Session
+	 * 
 	 * @return 成功
 	 */
-	@Action(value = "deleteWeChatAppSession", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
-			params = { "contentType", "text/html" })
+	@Action(value = "deleteWeChatAppSession", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteSession() {
 
 		weChatAppService.deleteSession();

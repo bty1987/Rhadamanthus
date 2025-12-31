@@ -31,6 +31,10 @@ public class SelectionAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private String phoneCode;
+
+	private String company;
+
 	@Action(value = "pageSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSelection() throws FLException {
 
@@ -90,7 +94,7 @@ public class SelectionAction extends BaseListAction {
 	@Action(value = "affirmSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmSelection() throws FLException {
 
-		selectionService.affirmSelection(decoration, selection, securityCode, verifyCode);
+		selectionService.affirmSelection(decoration, selection, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -149,6 +153,22 @@ public class SelectionAction extends BaseListAction {
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

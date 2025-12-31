@@ -50,11 +50,12 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.Arith;
-import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.wechat.service.WeChatAppService;
+import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
 @Service("salesPaymentService")
 @Transactional(readOnly = true)
@@ -829,16 +830,13 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(130002, "客户不存在");
 		}
 
-		// 处理微信电话号码
-		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+
 		if (phoneCode != null) {
 			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
 		}
 
 		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
-			if (salesPayment.getSales().getCustomer() == null) {
-				salesPayment.getSales().setCustomer(new com.fanglin.communion.vo.CustomerVO());
-			}
 			salesPayment.getSales().getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
