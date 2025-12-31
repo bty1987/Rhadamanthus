@@ -1650,7 +1650,7 @@ var QuotationDetail = (function() {
 
                                     if (!cpitem.length && rt.type == constant.data().quotationRtem.TYPE_CMPREH_INT) {
                                         rtem["quotationFunctionAreaId"] = cpWidget.attr("data-qfaid");
-                                        rtem["type"] = quote.quoItemType(rt.target.type, $domain.attr('data-areaType'));
+                                        rtem["type"] = quote.quoItemType(rt.target.type, cpWidget.attr('data-areaType'));
                                         rtem["areaType"] = constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT;
                                         rtem["index"] = cpIndex + 1;
                                         painter.createQuote(rtem.index, rtem).appendTo(cpList);
@@ -2010,7 +2010,7 @@ var QuotationDetail = (function() {
                 extraParams["quotationPrice.updateTime"] = quo.precontractTime;
             }
 
-            if (parseInt(domain.nowEditDomain.attr("data-areatype")) == constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT) {
+            if (parseInt(domain.nowEditDomain.attr("data-dlevel")) == "9998") {
                 extraParams["quotationItem.type"] = constant.data().quotationItem.TYPE_CMPREH_INT;
                 postData = "quotationDetailCmprehItemPostData"
             } else {
@@ -3242,7 +3242,7 @@ var QuotationDetail = (function() {
 
                     if (v.type == constant.data().quotationRtem.TYPE_CMPREH_INT && cpWidget.length) {
                         _quortval["quotationFunctionAreaId"] = cpWidget.attr("data-qfaid");
-                        _quortval["type"] = quote.quoItemType(v.target.type, widget.attr('data-areaType'));
+                        _quortval["type"] = quote.quoItemType(v.target.type, cpWidget.attr('data-areaType'));
                         _quortval["areaType"] = constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT;
 
                         quote.addQuoteRtem(_quortval);
@@ -3360,15 +3360,15 @@ var QuotationDetail = (function() {
                 type = constant.quotation().quotationFunctionAreaItem.TYPE_HIDE_INT;
             }
 
-            if (areaType == constant.quotation().quotationFunctionArea.TYPE_PROJECT_NUM_INT && itemType == constant.data().quotationItem.TYPE_COST_INT) { // 工程量 && 成本
+            if ([constant.quotation().quotationFunctionArea.TYPE_PROJECT_NUM_INT, constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT].indexOf(parseInt(areaType)) != -1 && itemType == constant.data().quotationItem.TYPE_COST_INT) { // 工程量 && 成本
                 type = constant.quotation().quotationFunctionAreaItem.TYPE_COST_INT;
             }
 
-            if (areaType == constant.quotation().quotationFunctionArea.TYPE_PROJECT_NUM_INT && itemType == constant.data().quotationItem.TYPE_UNACHE_INT) { // 工程量 && 非业绩
+            if ([constant.quotation().quotationFunctionArea.TYPE_PROJECT_NUM_INT, constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT].indexOf(parseInt(areaType)) != -1 && itemType == constant.data().quotationItem.TYPE_UNACHE_INT) { // 工程量 && 非业绩
                 type = constant.quotation().quotationFunctionAreaItem.TYPE_UNACHE_INT;
             }
 
-            if (areaType == constant.quotation().quotationFunctionArea.TYPE_PROJECT_NUM_INT && itemType == constant.data().quotationItem.TYPE_HIDE_INT) { // 工程量 && 隐藏
+            if ([constant.quotation().quotationFunctionArea.TYPE_PROJECT_NUM_INT, constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT].indexOf(parseInt(areaType)) != -1 && itemType == constant.data().quotationItem.TYPE_HIDE_INT) { // 工程量 && 隐藏
                 type = constant.quotation().quotationFunctionAreaItem.TYPE_HIDE_INT;
             }
 
@@ -3786,6 +3786,9 @@ var QuotationDetail = (function() {
 
             var btnShow = [constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT, constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT].indexOf(dv.type) == -1;
 
+            if (dv.functionAreaOrder == "9998") {
+                btnShow = false;
+            }
             var _btnSet = {
                 "$btnSort": ["根据工种排序", '<i class="bigger-125 icon-sort orange"></i>', dv.type != constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT],
                 "$btnEdit": ["编辑功能区", '<i class="bigger-125 icon-pencil blue"></i>', btnShow],
@@ -3817,7 +3820,7 @@ var QuotationDetail = (function() {
             }
 
             $dhead = $('<div></div>').addClass('widget-header');
-            $dname = $('<h5></h5>').append($('<em></em>').text(dv.type == constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT || dv.type == constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT ? '' : dv.functionAreaOrder)).append('  ').append($('<strong></strong>').html(dv.functionAreaName));
+            $dname = $('<h5></h5>').append($('<em></em>').text(dv.type == constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT || dv.functionAreaOrder == "9998" ? '' : dv.functionAreaOrder)).append('  ').append($('<strong></strong>').html(dv.functionAreaName));
             $dtoolbar = $('<div></div>').addClass('widget-toolbar no-border');
 
             $.each(_btnSet, function(k, v) {
@@ -4017,7 +4020,7 @@ var QuotationDetail = (function() {
                 });
             }
 
-            if (dv.type != constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT && dv.type != constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT) { // 管理区类型之外
+            if (dv.type != constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT && dv.functionAreaOrder != "9998") { // 管理区类型之外
 
                 $btns.$btnEdit.click(function() {// 编辑功能区
 
