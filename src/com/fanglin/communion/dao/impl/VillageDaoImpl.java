@@ -109,12 +109,36 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 
 				if (StringUtils.isNotEmpty(filter.getData())) {
 					if ("villageName".equals(filter.getField())) {
-						query.add(Restrictions.or(Restrictions.ilike("name", filter.getData(), MatchMode.ANYWHERE), Restrictions.or(Restrictions.ilike("pinyinAB", filter.getData(), MatchMode.ANYWHERE), Restrictions.ilike("pinyinAll", filter.getData(), MatchMode.ANYWHERE))));
+						// 楼盘名称：支持名称、拼音首字母、拼音全拼模糊搜索
+						query.add(Restrictions.or(
+							Restrictions.ilike("name", filter.getData(), MatchMode.ANYWHERE),
+							Restrictions.or(
+								Restrictions.ilike("pinyinAB", filter.getData(), MatchMode.ANYWHERE),
+								Restrictions.ilike("pinyinAll", filter.getData(), MatchMode.ANYWHERE)
+							)
+						));
 					} else if ("cityProperId".equals(filter.getField())) {
+						// 城区ID：精确匹配
 						query.add(query.getCriterion("cityProper.cpid", filter));
 					} else if ("cityId".equals(filter.getField())) {
+						// 城市ID：精确匹配
 						query.alias("cityProper.city", "city");
 						query.add(Restrictions.eq("city.cid", Integer.valueOf(filter.getData())));
+					} else if ("developer".equals(filter.getField())) {
+						// 开发商：模糊搜索
+						query.add(Restrictions.ilike("developer", filter.getData(), MatchMode.ANYWHERE));
+					} else if ("status".equals(filter.getField())) {
+						// 状态：精确匹配（0=启用, 1=禁用）
+						query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+					} else if ("deliveryTimeStart".equals(filter.getField())) {
+						// 交付时间起始：大于等于
+						query.add(Restrictions.ge("deliveryTime", filter.getData()));
+					} else if ("deliveryTimeEnd".equals(filter.getField())) {
+						// 交付时间结束：小于等于
+						query.add(Restrictions.le("deliveryTime", filter.getData()));
+					} else if ("parentVillageId".equals(filter.getField())) {
+						// 父楼盘ID：精确匹配
+						query.add(Restrictions.eq("parentVillage.vid", Long.valueOf(filter.getData())));
 					}
 				}
 			}

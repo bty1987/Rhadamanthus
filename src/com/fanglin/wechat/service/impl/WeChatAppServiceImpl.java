@@ -11,15 +11,6 @@
 
 package com.fanglin.wechat.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.utils.HttpHelper;
@@ -38,6 +29,16 @@ import com.fanglin.wechat.utils.WxPKCS7Encoder;
 import com.fanglin.wechat.vo.WeChatGroupInfoVO;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 import com.fanglin.wechat.vo.WeChatUserInfoVO;
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 微信小程序服务实现
@@ -45,6 +46,8 @@ import com.fanglin.wechat.vo.WeChatUserInfoVO;
 @Service("weChatAppService")
 @Transactional(readOnly = true)
 public class WeChatAppServiceImpl implements WeChatAppService {
+
+	private static final Logger log = LoggerFactory.getLogger(WeChatAppServiceImpl.class);
 
 	@Autowired
 	private WeChatAccessTokenService accessTokenService;
@@ -110,8 +113,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 				weChatOpenUnionDao.save(wxOpenUnionPO);
 			}
 		} else {
-			System.out.println(url);
-			System.out.println(response.toJSONString());
+			log.warn("WeChat API failed, url: {}, response: {}", url, response.toJSONString());
 		}
 
 		return userInfoVO;
@@ -226,7 +228,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 		}
 
 		if (response.containsKey("errcode") && response.getInteger("errcode") != 0) {
-			System.out.println(response.toJSONString());
+			log.warn("Get user info failed, response: {}", response.toJSONString());
 			throw new FLException(910117, "获取用户信息失败");
 		}
 

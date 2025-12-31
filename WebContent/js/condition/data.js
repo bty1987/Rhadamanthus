@@ -53,6 +53,63 @@ Condition.addupRule("data", {
         }
     },
 
+    // ========== 新增楼盘查询条件 ==========
+    "village-developer": {
+        label: "开发商",
+        type: "text",
+        submitConfig: {
+            name: "developer",
+            op: "cn",
+            validate: null
+        }
+    },
+
+    "village-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "全部"
+            }, {
+                key: "0",
+                value: "启用"
+            }, {
+                key: "1",
+                value: "禁用"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "village-deliveryStart": {
+        label: "交付时间起始",
+        type: "datePicker",
+        submitConfig: {
+            name: "deliveryTimeStart",
+            op: "ge",
+            validate: null
+        }
+    },
+
+    "village-deliveryEnd": {
+        label: "交付时间结束",
+        type: "datePicker",
+        submitConfig: {
+            name: "deliveryTimeEnd",
+            op: "le",
+            validate: null
+        }
+    },
+
     "houseLa-name": {
         label: "户型名称",
         type: "text",
