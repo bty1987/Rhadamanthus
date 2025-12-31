@@ -38,10 +38,14 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("orderBelongInfoService")
 @Transactional(readOnly = true)
 public class DecorationBelongServiceImpl implements DecorationBelongService {
+
+	private static final Logger log = LoggerFactory.getLogger(DecorationBelongServiceImpl.class);
 
 	@Autowired
 	private DecorationBelongDao decorationBelongDao;
@@ -83,7 +87,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		System.out.println(String.format("pages/decoration/belong/confirm?orderId=%s", orderId));
+		log.info(String.format("pages/decoration/belong/confirm?orderId=%s", orderId));
 
 		decorationService.sendMessage(orderId, "装修单", "装修单归属变更确认.", String.format("pages/decoration/belong/confirm?orderId=%s", orderId));
 

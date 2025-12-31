@@ -9,10 +9,15 @@ import java.util.List;
 
 import org.springframework.beans.FatalBeanException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 public class ExcelWorkSheet<T> {
+
+	private static final Logger logger = LoggerFactory.getLogger(ExcelWorkSheet.class);
 	
 	private String sheetName;
 	
@@ -80,11 +85,11 @@ public class ExcelWorkSheet<T> {
 				Date date = (Date) value;
 				valueString = DateUtil.getDateToDateString(date, "yyyy-MM-dd HH:mm:ss");
 			}else{
-				valueString = value == null ? "" : value.toString();  
+				valueString = value == null ? "" : value.toString();
 			}
 
 		}catch(Throwable ex){
-			ex.printStackTrace();
+			logger.error("获取属性值失败", ex);
 			throw new FatalBeanException("get property value fail", ex);
 		}
 

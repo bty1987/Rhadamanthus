@@ -73,10 +73,14 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("paytranService")
 @Transactional(readOnly = true)
 public class PaytranServiceImpl implements PaytranService {
+
+	private static final Logger log = LoggerFactory.getLogger(PaytranServiceImpl.class);
 
 	@Autowired
 	private PaytranDao paytranDao;
@@ -370,7 +374,7 @@ public class PaytranServiceImpl implements PaytranService {
 			if (e.getTargetException().getClass() == FLException.class) {
 				throw (FLException) e.getTargetException();
 			} else {
-				System.out.println(e.getMessage());
+				log.error(e.getMessage(), e);
 				throw new FLException(150073, "不支持其他支付平台");
 			}
 		} catch (Exception e) {
@@ -481,7 +485,7 @@ public class PaytranServiceImpl implements PaytranService {
 			if (e.getTargetException().getClass() == FLException.class) {
 				throw (FLException) e.getTargetException();
 			} else {
-				System.out.println(e.getMessage());
+				log.error(e.getMessage(), e);
 				throw new FLException(150073, "不支持其他支付平台");
 			}
 		} catch (Exception e) {
@@ -734,7 +738,7 @@ public class PaytranServiceImpl implements PaytranService {
 			if (e.getTargetException().getClass() == FLException.class) {
 				throw (FLException) e.getTargetException();
 			} else {
-				System.out.println(e.getMessage());
+				log.error(e.getMessage(), e);
 				throw new FLException(150073, "不支持其他支付平台");
 			}
 		} catch (Exception e) {
@@ -807,7 +811,7 @@ public class PaytranServiceImpl implements PaytranService {
 			if (e.getTargetException().getClass() == FLException.class) {
 				throw (FLException) e.getTargetException();
 			} else {
-				System.out.println(e.getMessage());
+				log.error(e.getMessage(), e);
 				throw new FLException(150073, "不支持其他支付平台");
 			}
 		} catch (Exception e) {
@@ -884,7 +888,7 @@ public class PaytranServiceImpl implements PaytranService {
 			if (e.getTargetException().getClass() == FLException.class) {
 				throw (FLException) e.getTargetException();
 			} else {
-				System.out.println(e.getMessage());
+				log.error(e.getMessage(), e);
 				throw new FLException(150073, "不支持其他支付平台");
 			}
 		} catch (Exception e) {
@@ -1103,7 +1107,7 @@ public class PaytranServiceImpl implements PaytranService {
 			if (e.getTargetException().getClass() == FLException.class) {
 				throw (FLException) e.getTargetException();
 			} else {
-				System.out.println(e.getMessage());
+				log.error(e.getMessage(), e);
 				throw new FLException(150073, "不支持其他支付平台");
 			}
 		} catch (Exception e) {

@@ -33,10 +33,14 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("customerProfileService")
 @Transactional(readOnly = true)
 public class CustomerProfileServiceImpl implements CustomerProfileService {
+
+	private static final Logger log = LoggerFactory.getLogger(CustomerProfileServiceImpl.class);
 
 	@Autowired
 	private CustomerProfileDao customerProfileDao;
@@ -223,7 +227,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 		if (surveyTemplatePO.getIsSend() == SurveyTemplatePO.ISSEND_AUTOMATIC_INT) {
 			customerProfilePO.setStatus(SurveyPO.STATUS_SEND_INT);
 
-			System.out.println(String.format("pages/customer/survery/survery?sid=%s", customerProfilePO.getTid()));
+			log.info(String.format("pages/customer/survery/survery?sid=%s", customerProfilePO.getTid()));
 
 		} else {
 			customerProfilePO.setStatus(CustomerProfilePO.STATUS_INIT_INT);

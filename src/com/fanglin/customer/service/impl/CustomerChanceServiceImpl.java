@@ -55,10 +55,14 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("CustomerChanceService")
 @Transactional(readOnly = true)
 public class CustomerChanceServiceImpl implements CustomerChanceService {
+
+	private static final Logger log = LoggerFactory.getLogger(CustomerChanceServiceImpl.class);
 
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
@@ -327,8 +331,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		if (json == null || json.getInteger("errorCode") == null || json.getInteger("errorCode") != 0) {
-			System.out.println(url);
-			System.out.println(json);
+			log.warn("queryVode failed, url: {}, response: {}", url, json);
 		}
 
 		return null;
@@ -409,7 +412,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		JSONObject res = HttpUtil.httpPost(fullUrl, args);
 
-		System.out.println(res);
+		log.info("Update status response: {}", res);
 	}
 
 	@Override

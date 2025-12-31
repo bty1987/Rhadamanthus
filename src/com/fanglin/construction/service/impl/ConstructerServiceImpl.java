@@ -27,10 +27,14 @@ import com.fanglin.personel.vo.UserVO;
 import com.fanglin.salary.dao.WorkerSalaryDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("constructerService")
 @Transactional(readOnly = true)
 public class ConstructerServiceImpl implements ConstructerService {
+
+	private static final Logger log = LoggerFactory.getLogger(ConstructerServiceImpl.class);
 
 	@Autowired
 	private ConstructerDao constructerDao;
@@ -249,7 +253,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 
 		String orderId = constructerPO.getOrderId();
 
-		System.out.println(String.format("pages/construction/constructer/valuation/valuation?orderId=%s&csid=%s&crid=%s", orderId, constructerPO.getCsid(), constructerPO.getCrid()));
+		log.info(String.format("pages/construction/constructer/valuation/valuation?orderId=%s&csid=%s&crid=%s", orderId, constructerPO.getCsid(), constructerPO.getCrid()));
 		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 工人评分", orderId), String.format("pages/construction/constructer/valuation/valuation?orderId=%s&csid=%s&crid=%s", orderId, constructerPO.getCsid(), constructerPO.getCrid()));
 
 		constructerPO.setSendTime(DateUtil.getDateToTimestamp(new Date()));

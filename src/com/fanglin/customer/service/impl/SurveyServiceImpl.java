@@ -32,10 +32,14 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("surveyService")
 @Transactional(readOnly = true)
 public class SurveyServiceImpl implements SurveyService {
+
+	private static final Logger log = LoggerFactory.getLogger(SurveyServiceImpl.class);
 
 	@Autowired
 	private SurveyDao surveyDao;
@@ -158,7 +162,7 @@ public class SurveyServiceImpl implements SurveyService {
 			surveyPO.setSender(creater);
 			surveyPO.setSendTime(DateUtil.getDateToTimestamp(new Date()));
 
-			System.out.println(String.format("pages/customer/survery/survery?sid=%s", surveyPO.getSid()));
+			log.info(String.format("pages/customer/survery/survery?sid=%s", surveyPO.getSid()));
 
 			decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, %s", orderId, surveyPO.getName()), String.format("pages/customer/survey/survey?sid=%s", surveyPO.getSid()));
 		} else {
