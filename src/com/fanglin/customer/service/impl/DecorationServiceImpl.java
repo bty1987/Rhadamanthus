@@ -1,5 +1,15 @@
 package com.fanglin.customer.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerPO;
@@ -28,15 +38,7 @@ import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.service.WeChatMessageService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
 @Service("decorationServiceC")
 @Transactional(readOnly = true)
@@ -237,15 +239,25 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(330010, "绑定订单失败,验证码错误");
 		}
 
-		// 处理微信电话号码
+		String phone = null;
+		WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+
 		if (phoneCode != null) {
-			com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
-			if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
-				decorationVO.setCustomerPhone(weChatPhoneInfoVO.getPhoneNumber());
-			}
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+
 		}
 
-		String phone = decorationVO.getCustomerPhone() != null ? FormatUtil.encodePhone(decorationVO.getCustomerPhone()) : "";
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			phone = weChatPhoneInfoVO.getPhoneNumber();
+		}
+
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (decorationVO.getCustomerPhone() != null) {
+			phone = FormatUtil.encodePhone(decorationVO.getCustomerPhone());
+		}
 
 		List<CustomerPO> customerPOs = customerDao.queryCustomer(phone);
 

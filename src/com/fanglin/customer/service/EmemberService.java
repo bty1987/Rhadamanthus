@@ -13,7 +13,7 @@ public interface EmemberService {
 
 	public EmemberVO queryEmember(EmemberVO ememberVO);
 
-	public int addEmember(EmemberVO ememberVO, String securityCode, String verifyCode) throws FLException;
+	public int addEmember(EmemberVO ememberVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
 	public void deleteEmember(EmemberVO emember) throws FLException;
 

@@ -29,7 +29,7 @@ public interface CustomerOriginService {
 
 	public void commitCustomerOrigin(CustomerOriginVO customerOrigin) throws FLException;
 
-	public void confirmCustomerOrigin(CustomerOriginVO customerOrigin, String securityCode, String verifyCode) throws FLException;
+	public void confirmCustomerOrigin(CustomerOriginVO customerOrigin, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
 	public void cancelCustomerOrigin(CustomerOriginVO customerOrigin) throws FLException;
 

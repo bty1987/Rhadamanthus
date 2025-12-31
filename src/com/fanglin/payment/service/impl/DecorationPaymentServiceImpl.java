@@ -28,7 +28,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.dao.PaymentScaleItemDao;
-import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.data.common.dao.PaymentTypeDao;
 import com.fanglin.data.po.PaymentScaleItemPO;
 import com.fanglin.data.po.PaymentTypePO;
@@ -72,6 +71,8 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.wechat.service.WeChatAppService;
+import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
 @Service("decorationPaymentService")
 @Transactional(readOnly = true)
@@ -852,16 +853,13 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			throw new FLException(130002, "客户不存在");
 		}
 
-		// 处理微信电话号码
-		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+
 		if (phoneCode != null) {
 			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
 		}
 
 		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
-			if (decorationPaymentVO.getDecoration().getCustomer() == null) {
-				decorationPaymentVO.getDecoration().setCustomer(new com.fanglin.communion.vo.CustomerVO());
-			}
 			decorationPaymentVO.getDecoration().getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 

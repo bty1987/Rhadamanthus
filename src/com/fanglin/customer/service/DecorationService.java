@@ -23,7 +23,7 @@ public interface DecorationService {
 
 	public String vodeCusDecoration(DecorationVO decorationVO) throws FLException;
 
-	public int bindingCusDecoration(DecorationVO decorationVO, String unionId, String securityCode, String verifyCode) throws FLException;
+	public int bindingCusDecoration(DecorationVO decorationVO, String unionId, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
 	public int updateCusDecorationForDefault(DecorationVO decorationVO, String unionId) throws FLException;
 

@@ -3,6 +3,8 @@ package com.fanglin.decoration.service.impl;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +13,6 @@ import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
-import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.impl.DecorationAccountDaoImpl;
 import com.fanglin.decoration.po.DecorationAccountPO;
@@ -27,8 +28,8 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fanglin.wechat.service.WeChatAppService;
+import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
 @Service("decorationAccountService")
 @Transactional(readOnly = true)
@@ -173,16 +174,13 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		// 处理微信电话号码
-		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+
 		if (phoneCode != null) {
 			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
 		}
 
 		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
-			if (decorationVO.getCustomer() == null) {
-				decorationVO.setCustomer(new com.fanglin.communion.vo.CustomerVO());
-			}
 			decorationVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 

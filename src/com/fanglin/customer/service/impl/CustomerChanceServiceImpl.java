@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,8 +57,8 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fanglin.wechat.service.WeChatAppService;
+import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
 @Service("CustomerChanceService")
 @Transactional(readOnly = true)
@@ -99,6 +101,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Autowired
 	private CustomerSourceService customerSourceService;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Override
 	public void pageCustomerChance(Paging paging, List<Filter> filters, CustomerChanceVO customerChanceVO, String userId, Integer company) {
@@ -357,16 +362,13 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(130002, "客户不存在");
 		}
 
-		// 处理微信电话号码
-		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+
 		if (phoneCode != null) {
 			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
 		}
 
 		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
-			if (customerChanceVO.getCustomer() == null) {
-				customerChanceVO.setCustomer(new com.fanglin.communion.vo.CustomerVO());
-			}
 			customerChanceVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
@@ -560,7 +562,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		BeanUtil.copyPropertie(customerSourcePO, decorationVO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
 
-        decorationVO.setOrderId(customerChancePO.getOrderId());
+		decorationVO.setOrderId(customerChancePO.getOrderId());
 		decorationVO.setCreater(new UserBaseVO(userId));
 		decorationVO.setHouse(new HouseVO(customerChancePO.getHouse().getHid()));
 		decorationVO.setCustomer(new CustomerVO(customerChancePO.getCustomer().getCid()));
