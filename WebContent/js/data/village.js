@@ -239,7 +239,15 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.init(['data-village-name', 'system-city'], "condList", api.data.pageVillage, function(data) {
+    // 扩展查询条件：楼盘名称、城市、开发商、状态、交付时间范围
+    searcher.init([
+        'data-village-name',
+        'system-city',
+        'data-village-developer',
+        'data-village-status',
+        'data-village-delivery-start',
+        'data-village-delivery-end'
+    ], "condList", api.data.pageVillage, function(data) {
 
         displayFunc.init('resultList', data);
     }, "pagenation", "villagePostData", null, false, null, function() {

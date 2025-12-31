@@ -4,7 +4,14 @@ $(function() {
 
     searcher.base("villageConditionCondList", "villageConditionPagenation", "villageConditionResultList", api.data.pageVillage);
 
-    searcher.condition(['data-village-name']);
+    // 扩展查询条件：增加开发商、状态、交付时间、父楼盘
+    searcher.condition([
+        'data-village-name',           // 楼盘名称（支持拼音）
+        'data-village-developer',      // 开发商
+        'data-village-status',          // 状态
+        'data-village-delivery-start',  // 交付时间起始
+        'data-village-delivery-end'    // 交付时间结束
+    ]);
 
     var lineprops = [{
         field: "no",
@@ -22,7 +29,7 @@ $(function() {
         prop: "cityProper.name",
         clazz: "grey"
     }, {
-        field: "developer ",
+        field: "developer",
         name: "开发商",
         prop: "developer",
         clazz: "grey"
@@ -36,6 +43,20 @@ $(function() {
         name: "交房时间",
         prop: "deliveryTime",
         clazz: "green"
+    }, {
+        field: "status",
+        name: "状态",
+        prop: "status",
+        clazz: "grey",
+        formatter: function(value) {
+            // 状态格式化：0=启用, 1=禁用
+            return value == 0 ? '<span class="label label-success">启用</span>' : '<span class="label label-default">禁用</span>';
+        }
+    }, {
+        field: "parentVillage",
+        name: "上级楼盘",
+        prop: "parentVillage.name",
+        clazz: "grey"
     }, {
         field: "rule",
         name: "说明",

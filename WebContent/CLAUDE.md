@@ -745,7 +745,7 @@ decoration/
 │   ├── decorationContract.js          # 合同管理页
 │   ├── decorationContract2create.js   # 创建合同页
 │   ├── decorationPicture.js           # 图片管理页
-│   ├── decorationService.js           # 服务管理页
+│   ├── decoration4service.js          # 服务管理页
 │   ├── decorationMeasure.js           # 测量管理页
 │   ├── backVisit.js                   # 回访记录页
 │   └── ...（共24个JS文件）

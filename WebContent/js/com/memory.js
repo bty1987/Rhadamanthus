@@ -228,10 +228,11 @@
                         if (currentRequest) {
                             self.globalResources.ajaxRequests.delete(currentRequest);
                         }
-                        console.log(response)
-                        console.log(failCallback)
-                        if (failCallback) failCallback(response);
-                        else{com.showAlert(com.error, response.errorMsg);}
+                        if (failCallback) {
+                            failCallback(response);
+                        } else {
+                            com.showAlert(com.error, response.errorMsg || '请求失败');
+                        }
                     };
 
                     var currentRequest = originalComPost.call(this, api, options, wrappedCallback, wrappedFailCallback, asyncFlag);
