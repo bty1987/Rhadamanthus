@@ -35,7 +35,7 @@ public interface SalesPaymentService {
 
 	public int confirmSalesPayment(List<Long> spids, String userId) throws FLException;
 
-	public int affirmSalesPayment(SalesPaymentVO salesPayment, String securityCode, String verifyCode) throws FLException;
+	public int affirmSalesPayment(SalesPaymentVO salesPayment, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
 	public int cancelSalesPaymentForDeposit(SalesPaymentVO salesPaymentVO) throws FLException;
 

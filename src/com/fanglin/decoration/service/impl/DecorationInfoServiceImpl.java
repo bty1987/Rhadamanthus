@@ -35,6 +35,7 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.wechat.service.WeChatAppService;
 
 @Service("decorationInfoService")
 @Transactional(readOnly = true)
@@ -69,6 +70,9 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Override
 	public DecorationInfoVO queryDecorationInfoByOrderId(DecorationInfoVO decorationInfoVO) {
@@ -119,7 +123,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void confirmDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String securityCode, String verifyCode) throws FLException {
+	public void confirmDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -135,6 +139,19 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 		if (decorationVO.getCustomer() == null) {
 			throw new FLException(130002, "客户不存在");
+		}
+
+		// 处理微信电话号码
+		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			if (decorationVO.getCustomer() == null) {
+				decorationVO.setCustomer(new com.fanglin.communion.vo.CustomerVO());
+			}
+			decorationVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
 		if (decorationVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(decorationVO.getCustomer().getPhone()))) {

@@ -339,7 +339,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void confirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode) throws FLException {
+	public void confirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -355,6 +355,19 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (customerPO == null) {
 			throw new FLException(130002, "客户不存在");
+		}
+
+		// 处理微信电话号码
+		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			if (customerChanceVO.getCustomer() == null) {
+				customerChanceVO.setCustomer(new com.fanglin.communion.vo.CustomerVO());
+			}
+			customerChanceVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
 		HousePO housePO = customerChancePO.getHouse();
@@ -417,8 +430,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void affirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode) throws FLException {
-		confirmCustomerChance(customerChanceVO, securityCode, verifyCode);
+	public void affirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
+		confirmCustomerChance(customerChanceVO, securityCode, verifyCode, phoneCode, company);
 	}
 
 	@Override

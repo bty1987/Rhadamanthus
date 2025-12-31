@@ -30,6 +30,7 @@ import com.fanglin.sales.vo.SalesActivityItemVO;
 import com.fanglin.sales.vo.SalesActivityVO;
 import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.utils.Arith;
+import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -61,6 +62,9 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 	@Autowired
 	private DecorationService decorationService;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Override
 	public List<SalesActivityItemVO> querySalesActivityItem(String orderId) {
@@ -387,7 +391,7 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmSalesActivityItem(SalesVO salesVO, List<SalesActivityItemVO> salesActivityItems, String securityCode, String verifyCode) throws FLException {
+	public int affirmSalesActivityItem(SalesVO salesVO, List<SalesActivityItemVO> salesActivityItems, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -403,6 +407,19 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 		if (salesVO.getCustomer() == null) {
 			throw new FLException(130002, "客户不存在");
+		}
+
+		// 处理微信电话号码
+		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			if (salesVO.getCustomer() == null) {
+				salesVO.setCustomer(new com.fanglin.communion.vo.CustomerVO());
+			}
+			salesVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
 		if (salesVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(salesVO.getCustomer().getPhone()))) {

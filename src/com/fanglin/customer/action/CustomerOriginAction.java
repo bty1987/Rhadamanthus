@@ -30,6 +30,10 @@ public class CustomerOriginAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private String phoneCode;
+
+	private String company;
+
 	@Action(value = "pageCustomerOrigin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomerOrigin() throws FLException {
 
@@ -121,7 +125,7 @@ public class CustomerOriginAction extends BaseListAction {
 	@Action(value = "confirmCustomerOrigin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmCustomerOrigin() throws FLException {
 
-		customerOriginService.confirmCustomerOrigin(customerOrigin, securityCode, verifyCode);
+		customerOriginService.confirmCustomerOrigin(customerOrigin, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -156,6 +160,22 @@ public class CustomerOriginAction extends BaseListAction {
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

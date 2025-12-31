@@ -37,6 +37,10 @@ public class SalesCommonAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private String phoneCode;
+
+	private String company;
+
 	@Action(value = "querySalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesActivityItem() throws FLException {
 
@@ -56,7 +60,7 @@ public class SalesCommonAction extends BaseListAction {
 	@Action(value = "affirmSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmSalesActivityItem() throws FLException {
 
-		salesActivityItemService.affirmSalesActivityItem(sales, salesActivityItems, securityCode, verifyCode);
+		salesActivityItemService.affirmSalesActivityItem(sales, salesActivityItems, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -107,6 +111,22 @@ public class SalesCommonAction extends BaseListAction {
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

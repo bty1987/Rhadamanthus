@@ -26,6 +26,10 @@ public class EmemberAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private String phoneCode;
+
+	private String company;
+
 	private EmemberVO emember;
 
 	@Action(value = "queryEmember", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -39,7 +43,7 @@ public class EmemberAction extends BaseListAction {
 	@Action(value = "addEmember", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addEmember() throws FLException {
 
-		ememberService.addEmember(emember, securityCode, verifyCode);
+		ememberService.addEmember(emember, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -66,6 +70,22 @@ public class EmemberAction extends BaseListAction {
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 	public EmemberVO getEmember() {

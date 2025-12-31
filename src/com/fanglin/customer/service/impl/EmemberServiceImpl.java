@@ -21,6 +21,7 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
+import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.service.WeChatMessageService;
 
 @Service("ememberService")
@@ -35,6 +36,9 @@ public class EmemberServiceImpl implements EmemberService {
 
 	@Autowired
 	private WeChatMessageService messageService;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Override
 	public void pageEmember(Paging paging, List<Filter> filters) {
@@ -74,10 +78,18 @@ public class EmemberServiceImpl implements EmemberService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addEmember(EmemberVO ememberVO, String securityCode, String verifyCode) throws FLException {
+	public int addEmember(EmemberVO ememberVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		String no = ememberVO.getNo();
 		String unionId = ememberVO.getUnionId();
+
+		// 处理微信电话号码
+		if (phoneCode != null) {
+			com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+			if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+				ememberVO.setPhone(weChatPhoneInfoVO.getPhoneNumber());
+			}
+		}
 
 		try {
 			if (!verifyCode.equals(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {

@@ -50,6 +50,7 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.Arith;
+import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -100,6 +101,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Autowired
 	private SalesActivityService salesActivityService;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Override
 	public void pageSalesPayment(Paging paging, List<Filter> filters, SalesPaymentVO salesPayment, int company, String companyType) throws FLException {
@@ -807,7 +811,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmSalesPayment(SalesPaymentVO salesPayment, String securityCode, String verifyCode) throws FLException {
+	public int affirmSalesPayment(SalesPaymentVO salesPayment, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -823,6 +827,19 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		if (salesPayment.getSales().getCustomer() == null) {
 			throw new FLException(130002, "客户不存在");
+		}
+
+		// 处理微信电话号码
+		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			if (salesPayment.getSales().getCustomer() == null) {
+				salesPayment.getSales().setCustomer(new com.fanglin.communion.vo.CustomerVO());
+			}
+			salesPayment.getSales().getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
 		if (salesPayment.getSales().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(salesPayment.getSales().getCustomer().getPhone()))) {

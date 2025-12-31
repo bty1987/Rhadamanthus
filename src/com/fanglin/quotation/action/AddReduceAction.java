@@ -48,6 +48,10 @@ public class AddReduceAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private String phoneCode;
+
+	private String company;
+
 	@Action(value = "pageAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAddReduce() throws FLException {
 
@@ -171,7 +175,7 @@ public class AddReduceAction extends BaseListAction {
 	@Action(value = "affirmAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmAddReduce() throws FLException {
 
-		addReduceService.affirmAddReduce(decoration, addReduces, securityCode, verifyCode);
+		addReduceService.affirmAddReduce(decoration, addReduces, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -230,6 +234,22 @@ public class AddReduceAction extends BaseListAction {
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

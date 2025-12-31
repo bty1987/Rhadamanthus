@@ -47,6 +47,10 @@ public class SalesPaymentAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private String phoneCode;
+
+	private String company;
+
 	@Action(value = "pageSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesPayment() throws FLException {
 
@@ -198,7 +202,7 @@ public class SalesPaymentAction extends BaseListAction {
 	@Action(value = "affirmSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmSalesPayment() throws FLException, Exception {
 
-		salesPaymentService.affirmSalesPayment(salesPayment, securityCode, verifyCode);
+		salesPaymentService.affirmSalesPayment(salesPayment, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -265,6 +269,38 @@ public class SalesPaymentAction extends BaseListAction {
 
 	public void setAmount(Long amount) {
 		this.amount = amount;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

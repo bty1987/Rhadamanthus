@@ -26,6 +26,7 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.service.WeChatMessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private TalkingDao talkingDao;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Override
 	public void queryCusDecorationUser(Paging paging, List<Filter> filters, DecorationVO decorationVO) {
@@ -225,12 +229,20 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int bindingCusDecoration(DecorationVO decorationVO, String unionId, String securityCode, String verifyCode) throws FLException {
+	public int bindingCusDecoration(DecorationVO decorationVO, String unionId, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		log.info(String.format("Binding Decoration UnionId: %s, OrderId: %s.", unionId, decorationVO.getOrderId()));
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330010, "绑定订单失败,验证码错误");
+		}
+
+		// 处理微信电话号码
+		if (phoneCode != null) {
+			com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+			if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+				decorationVO.setCustomerPhone(weChatPhoneInfoVO.getPhoneNumber());
+			}
 		}
 
 		String phone = decorationVO.getCustomerPhone() != null ? FormatUtil.encodePhone(decorationVO.getCustomerPhone()) : "";

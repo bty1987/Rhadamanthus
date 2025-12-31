@@ -11,6 +11,7 @@ import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.impl.DecorationAccountDaoImpl;
 import com.fanglin.decoration.po.DecorationAccountPO;
@@ -55,6 +56,9 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 	@Autowired
 	private DecorationService decorationService;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Override
 	public DecorationAccountVO queryDecorationAccount(DecorationAccountVO decorationAccountVO) {
@@ -155,7 +159,7 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmDecorationAccount(DecorationVO decorationVO, DecorationAccountVO decorationAccountVO, String securityCode, String verifyCode) throws FLException {
+	public int affirmDecorationAccount(DecorationVO decorationVO, DecorationAccountVO decorationAccountVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -169,14 +173,27 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		com.fanglin.customer.vo.DecorationVO cecorationVO = new com.fanglin.customer.vo.DecorationVO();
+		// 处理微信电话号码
+		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
 
-		cecorationVO.setOrderId(orderId);
-		cecorationVO.setUnionId(decorationVO.getCustomer().getNo());
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			if (decorationVO.getCustomer() == null) {
+				decorationVO.setCustomer(new com.fanglin.communion.vo.CustomerVO());
+			}
+			decorationVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
+		}
 
 		if (decorationVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(decorationVO.getCustomer().getPhone()))) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
+
+		com.fanglin.customer.vo.DecorationVO cecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cecorationVO.setOrderId(orderId);
+		cecorationVO.setUnionId(decorationVO.getCustomer().getNo());
 
 		if (decorationVO.getCustomer().getNo() != null && decorationService.queryDecoration(cecorationVO) == null) {
 			throw new FLException(130115, "装修单未绑定");
