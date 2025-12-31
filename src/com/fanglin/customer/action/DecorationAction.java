@@ -51,6 +51,10 @@ public class DecorationAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private String phoneCode;
+
+	private String company;
+
 	private TalkingVO talking;
 
 	private List<TalkingVO> talkings;
@@ -122,7 +126,7 @@ public class DecorationAction extends BaseListAction {
 	@Action(value = "bindingCusDecoration", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String bindingCusDecoration() throws FLException {
 
-		decorationOrderService.bindingCusDecoration(decoration, unionId, securityCode, verifyCode);
+		decorationOrderService.bindingCusDecoration(decoration, unionId, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -173,6 +177,22 @@ public class DecorationAction extends BaseListAction {
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 	public Object getDecorationObject() {

@@ -28,6 +28,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.dao.PaymentScaleItemDao;
+import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.data.common.dao.PaymentTypeDao;
 import com.fanglin.data.po.PaymentScaleItemPO;
 import com.fanglin.data.po.PaymentTypePO;
@@ -135,6 +136,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Autowired
 	private DingTalkMessageService messageDDService;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Override
 	public void pageDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO, Integer company) throws FLException {
@@ -830,7 +834,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmDecorationPayment(DecorationPaymentVO decorationPaymentVO, String securityCode, String verifyCode) throws FLException {
+	public int affirmDecorationPayment(DecorationPaymentVO decorationPaymentVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -846,6 +850,19 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		if (decorationPaymentVO.getDecoration().getCustomer() == null) {
 			throw new FLException(130002, "客户不存在");
+		}
+
+		// 处理微信电话号码
+		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			if (decorationPaymentVO.getDecoration().getCustomer() == null) {
+				decorationPaymentVO.getDecoration().setCustomer(new com.fanglin.communion.vo.CustomerVO());
+			}
+			decorationPaymentVO.getDecoration().getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
 		if (decorationPaymentVO.getDecoration().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(decorationPaymentVO.getDecoration().getCustomer().getPhone()))) {

@@ -13,6 +13,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
@@ -30,10 +31,14 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("selectionService")
 @Transactional(readOnly = true)
 public class SelectionServiceImpl implements SelectionService {
+
+	private static final Logger log = LoggerFactory.getLogger(SelectionServiceImpl.class);
 
 	@Autowired
 	private SelectionDao selectionDao;
@@ -52,6 +57,9 @@ public class SelectionServiceImpl implements SelectionService {
 
 	@Autowired
 	private DecorationService decorationService;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Override
 	public void pageSelection(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -182,7 +190,7 @@ public class SelectionServiceImpl implements SelectionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmSelection(DecorationVO decorationVO, SelectionVO selectionVO, String securityCode, String verifyCode) throws FLException {
+	public int affirmSelection(DecorationVO decorationVO, SelectionVO selectionVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -198,6 +206,19 @@ public class SelectionServiceImpl implements SelectionService {
 
 		if (decorationVO.getCustomer() == null) {
 			throw new FLException(130002, "客户不存在");
+		}
+
+		// 处理微信电话号码
+		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			if (decorationVO.getCustomer() == null) {
+				decorationVO.setCustomer(new com.fanglin.communion.vo.CustomerVO());
+			}
+			decorationVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
 		if (decorationVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(decorationVO.getCustomer().getPhone()))) {
@@ -297,7 +318,7 @@ public class SelectionServiceImpl implements SelectionService {
 
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		System.out.println(String.format("pages/quotation/selection/selection?orderId=%s", orderId));
+		log.info(String.format("pages/quotation/selection/selection?orderId=%s", orderId));
 
 		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认选材信息。", String.format("pages/quotation/selection/selection?orderId=%s", orderId), sender);
 

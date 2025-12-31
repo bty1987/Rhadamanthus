@@ -44,6 +44,7 @@ import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.wechat.service.WeChatAppService;
 
 @Service("customerOriginService")
 @Transactional(readOnly = true)
@@ -78,6 +79,9 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 	@Autowired
 	private DecorationServiceImpl decorationService;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Override
 	public void pageCustomerOrigin(Paging paging, List<Filter> filters, String userId, String user) {
@@ -389,7 +393,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void confirmCustomerOrigin(CustomerOriginVO customerOriginVO, String securityCode, String verifyCode) throws FLException {
+	public void confirmCustomerOrigin(CustomerOriginVO customerOriginVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -403,6 +407,16 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		if (customerOriginPO.getStatus() != CustomerOriginPO.STATUS_COMMIT_INT) {
 			throw new FLException(330014, "客源状态不可操作");
+		}
+
+		// 处理微信电话号码
+		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			customerOriginVO.setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
 		if (customerOriginVO.getPhone() != null && !customerOriginVO.getPhone().equals(customerOriginPO.getPhone())) {

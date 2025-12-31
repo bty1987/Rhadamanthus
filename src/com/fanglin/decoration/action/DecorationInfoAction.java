@@ -33,6 +33,10 @@ public class DecorationInfoAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private String phoneCode;
+
+	private String company;
+
 	@Action(value = "queryDecorationInfoByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationInfoByOrderId() throws FLException {
 
@@ -63,7 +67,7 @@ public class DecorationInfoAction extends BaseListAction {
 	@Action(value = "confirmDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmDecorationInfo() throws FLException {
 
-		decorationInfoService.confirmDecorationInfo(decoration, decorationInfo, securityCode, verifyCode);
+		decorationInfoService.confirmDecorationInfo(decoration, decorationInfo, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -122,6 +126,22 @@ public class DecorationInfoAction extends BaseListAction {
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

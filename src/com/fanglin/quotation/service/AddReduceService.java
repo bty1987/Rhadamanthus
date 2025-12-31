@@ -51,7 +51,7 @@ public interface AddReduceService {
 
 	public int confirmAddReduce(AddReduceVO addReduceVO) throws FLException;
 
-	public int affirmAddReduce(DecorationVO decorationVO, List<AddReduceVO> addReduceVOs, String securityCode, String verifyCode) throws FLException;
+	public int affirmAddReduce(DecorationVO decorationVO, List<AddReduceVO> addReduceVOs, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
 	public int deleteAddReduceByArId(AddReduceVO addReduceVO) throws FLException;
 

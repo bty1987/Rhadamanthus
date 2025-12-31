@@ -26,7 +26,7 @@ public interface SelectionService {
 
 	public int sendSelection(SelectionVO selectionVO, String userId) throws FLException;
 
-	public int affirmSelection(DecorationVO decorationVO, SelectionVO selectionVO, String securityCode, String verifyCode) throws FLException;
+	public int affirmSelection(DecorationVO decorationVO, SelectionVO selectionVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
 	public int lockSelection(SelectionVO selectionVO) throws FLException;
 

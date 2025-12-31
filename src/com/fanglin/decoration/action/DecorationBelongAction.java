@@ -46,6 +46,10 @@ public class DecorationBelongAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private String phoneCode;
+
+	private String company;
+
 	@Action(value = "queryDecorationBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationBelong() {
 
@@ -65,7 +69,7 @@ public class DecorationBelongAction extends BaseListAction {
 	@Action(value = "confirmDecorationBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmDecorationBelong() throws FLException {
 
-		decorationBelongService.confirmDecorationBelong(decoration, decorationBelong, securityCode, verifyCode);
+		decorationBelongService.confirmDecorationBelong(decoration, decorationBelong, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -116,6 +120,22 @@ public class DecorationBelongAction extends BaseListAction {
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

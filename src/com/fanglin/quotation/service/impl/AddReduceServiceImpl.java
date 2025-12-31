@@ -57,6 +57,7 @@ import com.fanglin.quotation.vo.AddReduceItemVO;
 import com.fanglin.quotation.vo.AddReduceVO;
 import com.fanglin.quotation.vo.NormtionVO;
 import com.fanglin.utils.Arith;
+import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -107,6 +108,9 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Autowired
 	private DecorationService decorationService;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
@@ -576,7 +580,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmAddReduce(DecorationVO decorationVO, List<AddReduceVO> addReduceVOs, String securityCode, String verifyCode) throws FLException {
+	public int affirmAddReduce(DecorationVO decorationVO, List<AddReduceVO> addReduceVOs, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -592,6 +596,19 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		if (decorationVO.getCustomer() == null) {
 			throw new FLException(130002, "客户不存在");
+		}
+
+		// 处理微信电话号码
+		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			if (decorationVO.getCustomer() == null) {
+				decorationVO.setCustomer(new com.fanglin.communion.vo.CustomerVO());
+			}
+			decorationVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
 		if (decorationVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(decorationVO.getCustomer().getPhone()))) {

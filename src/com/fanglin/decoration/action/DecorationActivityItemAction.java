@@ -35,6 +35,10 @@ public class DecorationActivityItemAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private String phoneCode;
+
+	private String company;
+
 	private Long amount;
 
 	@Action(value = "queryDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -128,7 +132,7 @@ public class DecorationActivityItemAction extends BaseListAction {
 	@Action(value = "affirmDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmAddReduce() throws FLException {
 
-		decorationActivityItemService.affirmDecorationActivityItem(decoration, decorationActivityItems, securityCode, verifyCode);
+		decorationActivityItemService.affirmDecorationActivityItem(decoration, decorationActivityItems, securityCode, verifyCode, phoneCode, company);
 
 		return SUCCESS;
 	}
@@ -187,6 +191,22 @@ public class DecorationActivityItemAction extends BaseListAction {
 
 	public void setAmount(Long amount) {
 		this.amount = amount;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

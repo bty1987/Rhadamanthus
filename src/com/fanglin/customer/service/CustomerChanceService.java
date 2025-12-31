@@ -26,9 +26,9 @@ public interface CustomerChanceService {
 
 	public String vodeCustomerChance(CustomerChanceVO customerChanceVO, String userId) throws FLException;
 
-	public void confirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode) throws FLException;
+	public void confirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
-	public void affirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode) throws FLException;
+	public void affirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
 	public void issueCustomerChance(CustomerChanceVO customerChangeVO, String userId) throws FLException;
 

@@ -53,7 +53,7 @@ public interface DecorationPaymentService {
 
 	public int confirmDecorationPayment(List<Long> paymentIds, String userId) throws FLException;
 
-	public int affirmDecorationPayment(DecorationPaymentVO decorationPaymentVO, String securityCode, String verifyCode) throws FLException;
+	public int affirmDecorationPayment(DecorationPaymentVO decorationPaymentVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
 	public int updateDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
 

@@ -152,7 +152,7 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmSalesRefunds(SalesRefundsVO refundsVO, String securityCode, String verifyCode) throws FLException {
+	public int affirmSalesRefunds(SalesRefundsVO refundsVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -178,6 +178,19 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 
 		if (refundsVO.getSales() == null && refundsVO.getSales().getCustomer() == null) {
 			throw new FLException(130002, "客户不存在");
+		}
+
+		// 处理微信电话号码
+		com.fanglin.wechat.vo.WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			if (refundsVO.getSales().getCustomer() == null) {
+				refundsVO.getSales().setCustomer(new com.fanglin.communion.vo.CustomerVO());
+			}
+			refundsVO.getSales().getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
 		if (refundsVO.getSales().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(refundsVO.getSales().getCustomer().getPhone()))) {
