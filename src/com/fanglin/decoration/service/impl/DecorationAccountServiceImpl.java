@@ -26,10 +26,14 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("decorationAccountService")
 @Transactional(readOnly = true)
 public class DecorationAccountServiceImpl implements DecorationAccountService {
+
+	private static final Logger log = LoggerFactory.getLogger(DecorationAccountServiceImpl.class);
 
 	@Autowired
 	private DecorationAccountDaoImpl decorationAccountDao;
@@ -144,7 +148,7 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		System.out.println(String.format("pages/decoration/account/account?orderId=%s&daid=%s", orderId, decorationAccountPO.getDaid()));
+		log.info(String.format("pages/decoration/account/account?orderId=%s&daid=%s", orderId, decorationAccountPO.getDaid()));
 
 		decorationService.sendMessage(orderId, "装修单", "请您及时确认决算信息.", String.format("pages/decoration/account/account?orderId=%s&daid=%s", orderId, decorationAccountPO.getDaid()), creater);
 	}

@@ -44,10 +44,14 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("decorationActivityItemService")
 @Transactional(readOnly = true)
 public class DecorationActivityItemServiceImpl implements DecorationActivityItemService {
+
+	private static final Logger log = LoggerFactory.getLogger(DecorationActivityItemServiceImpl.class);
 
 	@Autowired
 	private DecorationActivityItemDao decorationActivityItemDao;
@@ -513,7 +517,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		System.out.println(String.format("pages/decoration/activityItem/activityItem?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
+		log.info(String.format("pages/decoration/activityItem/activityItem?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
 
 		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认礼品领取信息.", String.format("pages/decoration/activityItem/activityItem?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()), creater);
 	}

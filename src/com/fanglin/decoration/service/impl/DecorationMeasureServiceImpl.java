@@ -39,10 +39,14 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("decorationMeasureService")
 @Transactional(readOnly = true)
 public class DecorationMeasureServiceImpl implements DecorationMeasureService {
+
+	private static final Logger log = LoggerFactory.getLogger(DecorationMeasureServiceImpl.class);
 
 	@Autowired
 	private DecorationMeasureDao decorationMeasureDao;
@@ -117,7 +121,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 			throw new FLException(140081, "装修量尺信息不存在");
 		}
 
-		System.out.println(String.format("pages/decoration/measure/measure?orderId=%s", orderId));
+		log.info(String.format("pages/decoration/measure/measure?orderId=%s", orderId));
 
 		decorationService.sendMessage(orderId, "装修单", "请您及时确认量尺信息", String.format("pages/decoration/measure/measure?orderId=%s", orderId));
 	}

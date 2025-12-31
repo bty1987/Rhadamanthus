@@ -1,13 +1,5 @@
 package com.fanglin.customer.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerPO;
@@ -35,10 +27,21 @@ import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatMessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service("decorationServiceC")
 @Transactional(readOnly = true)
 public class DecorationServiceImpl implements DecorationService {
+
+	private static final Logger log = LoggerFactory.getLogger(DecorationServiceImpl.class);
 
 	@Autowired
 	private DecorationDao cecorationDao;
@@ -224,7 +227,7 @@ public class DecorationServiceImpl implements DecorationService {
 	@Transactional(rollbackFor = Exception.class)
 	public int bindingCusDecoration(DecorationVO decorationVO, String unionId, String securityCode, String verifyCode) throws FLException {
 
-		System.out.println(String.format("Binding Decoration UnionId: %s, OrderId: %s.", unionId, decorationVO.getOrderId()));
+		log.info(String.format("Binding Decoration UnionId: %s, OrderId: %s.", unionId, decorationVO.getOrderId()));
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330010, "绑定订单失败,验证码错误");
@@ -234,7 +237,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		List<CustomerPO> customerPOs = customerDao.queryCustomer(phone);
 
-		if (customerPOs == null || customerPOs.size() == 0) {
+		if (customerPOs == null || customerPOs.isEmpty()) {
 			throw new FLException(330009, "无可绑定订单");
 		}
 
