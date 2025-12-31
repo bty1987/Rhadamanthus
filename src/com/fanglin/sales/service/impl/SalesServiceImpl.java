@@ -61,6 +61,8 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.wechat.service.WeChatAppService;
+import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
 @Service("salesService")
 @Transactional(readOnly = true)
@@ -110,6 +112,9 @@ public class SalesServiceImpl implements SalesService {
 
 	@Autowired
 	private DecorationService decorationService;
+
+	@Autowired
+	private WeChatAppService weChatAppService;
 
 	@Override
 	public List<SalesVO> pageSales(List<SalesPO> salesPOs) {
@@ -387,8 +392,6 @@ public class SalesServiceImpl implements SalesService {
 
 			salesItemDao.save(salesItemPO);
 
-			System.out.println(salesItemVO.getTotal());
-
 			total = Arith.add(total, salesItemVO.getTotal());
 
 			if (goodsPO == null || goodsPO.getType() != GoodsPO.TYPE_SUIT_INT) continue;
@@ -428,9 +431,6 @@ public class SalesServiceImpl implements SalesService {
 				salesItemDao.save(salesItemGP);
 			}
 		}
-
-		System.out.println(total);
-		System.out.println(salesPO.getTotal());
 
 		if (total != salesPO.getTotal()) {
 			throw new FLException(260059, "销售单总额不匹配");
@@ -677,7 +677,7 @@ public class SalesServiceImpl implements SalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmSales(SalesVO salesVO, String securityCode, String verifyCode) throws FLException {
+	public int affirmSales(SalesVO salesVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -697,6 +697,16 @@ public class SalesServiceImpl implements SalesService {
 
 		if (salesVO.getCustomer() == null) {
 			throw new FLException(130002, "客户不存在");
+		}
+
+		WeChatPhoneInfoVO weChatPhoneInfoVO = null;
+
+		if (phoneCode != null) {
+			weChatPhoneInfoVO = weChatAppService.queryPhoneInfo(phoneCode, company);
+		}
+
+		if (weChatPhoneInfoVO != null && weChatPhoneInfoVO.getPhoneNumber() != null) {
+			salesVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
 		if (salesVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(salesVO.getCustomer().getPhone()))) {

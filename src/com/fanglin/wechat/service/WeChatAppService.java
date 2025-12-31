@@ -17,13 +17,13 @@ import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 import com.fanglin.wechat.vo.WeChatUserInfoVO;
 
 /**
- * 微信小程序服务
- * 用于处理微信小程序相关功能（登录、解密用户信息、获取手机号等）
+ * 微信小程序服务 用于处理微信小程序相关功能（登录、解密用户信息、获取手机号等）
  */
 public interface WeChatAppService {
 
 	/**
 	 * 创建小程序 Session
+	 * 
 	 * @param code 微信登录 code
 	 * @param company 公司标识
 	 * @return 微信用户信息（包含 openId 和 unionId）
@@ -33,6 +33,7 @@ public interface WeChatAppService {
 
 	/**
 	 * 获取用户信息（需要重新获取 session_key）
+	 * 
 	 * @param code 微信登录 code
 	 * @param encryptedData 加密数据
 	 * @param iv 加密向量
@@ -44,6 +45,7 @@ public interface WeChatAppService {
 
 	/**
 	 * 获取用户信息（使用缓存的 session_key）
+	 * 
 	 * @param code 微信登录 code（用于查找 session）
 	 * @param encryptedData 加密数据
 	 * @param iv 加密向量
@@ -54,6 +56,7 @@ public interface WeChatAppService {
 
 	/**
 	 * 获取群组信息
+	 * 
 	 * @param code 微信登录 code（用于查找 session）
 	 * @param encryptedData 加密数据
 	 * @param iv 加密向量
@@ -64,6 +67,7 @@ public interface WeChatAppService {
 
 	/**
 	 * 获取手机号信息
+	 * 
 	 * @param code 微信登录 code
 	 * @param encryptedData 加密数据
 	 * @param iv 加密向量
@@ -71,10 +75,11 @@ public interface WeChatAppService {
 	 * @return 手机号信息
 	 * @throws FLException 业务异常
 	 */
-	public WeChatPhoneInfoVO queryPhoneInfo(String code, String encryptedData, String iv, String company) throws FLException;
+	public WeChatPhoneInfoVO queryPhoneInfo(String code, String company) throws FLException;
 
 	/**
 	 * 删除过期的 Session
+	 * 
 	 * @return 处理结果码
 	 */
 	public int deleteSession();

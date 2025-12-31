@@ -204,7 +204,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 	}
 
 	@Override
-	public WeChatPhoneInfoVO queryPhoneInfo(String code, String encryptedData, String iv, String company) throws FLException {
+	public WeChatPhoneInfoVO queryPhoneInfo(String code, String company) throws FLException {
 
 		// 获取 AccessToken
 		String accessToken = accessTokenService.queryAccessToken(company).getAccesstoken();
