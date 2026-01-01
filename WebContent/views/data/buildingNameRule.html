@@ -8,7 +8,7 @@
 	</div>
 
 	<div class="modal fade" id="buildingNameRuleModal" tabindex="-1">
-		<div class="modal-dialog" style="width: 800px;">
+		<div class="modal-dialog" style="width: 900px;">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
@@ -17,6 +17,7 @@
 				<div class="modal-body">
 					<form class="form-horizontal">
 
+						<!-- 规则编号 -->
 						<div class="form-group default">
 							<label class="col-sm-3 control-label no-padding-right" for="buildingNameRuleId">规则编号<span class="required">*</span></label>
 							<div class="col-sm-9">
@@ -25,34 +26,99 @@
 						</div>
 						<div class="space-4"></div>
 
+						<!-- 规则说明 -->
 						<div class="form-group default">
-							<label class="col-sm-3 control-label no-padding-right" for="rule">规则<span class="required">*</span></label>
+							<label class="col-sm-3 control-label no-padding-right" for="ruleContent">规则说明<span class="required">*</span></label>
 							<div class="col-sm-9">
-								<input type="text" id="rule" class="col-xs-10 col-sm-5 v_required" maxlength="100" data-toggle="popover" data-trigger='manual' placeholder="请输入规则"/>
+								<input type="text" id="ruleContent" class="col-xs-10 col-sm-8 v_required" maxlength="200" data-toggle="popover" data-trigger='manual' placeholder="请输入规则说明"/>
 							</div>
 						</div>
 						<div class="space-4"></div>
 
+						<!-- 分隔线 -->
+						<div class="hr hr-18 hr-double dotted"></div>
+						<h5 class="header lighter blue">
+							<i class="icon-cog"></i>
+							规则构成（输入与连接符交替）
+						</h5>
+
+						<!-- 第一组：输入1 + 连接符1 -->
 						<div class="form-group default">
-							<label class="col-sm-3 control-label no-padding-right" for="ruleExample">规则示例</label>
+							<label class="col-sm-3 control-label no-padding-right">第1组</label>
 							<div class="col-sm-9">
-								<input type="text" id="ruleExample" class="col-xs-10 col-sm-5" maxlength="100" data-toggle="popover" data-trigger='manual' placeholder="请输入规则示例"/>
+								<label class="col-sm-2 control-label" style="text-align: left; padding-right: 5px;">输入1:</label>
+								<select id="input1" class="col-sm-2 rule-input v_required" style="display: inline-block;"></select>
+
+								<label class="col-sm-2 control-label" style="text-align: left; padding-right: 5px; padding-left: 15px;">连接符1:</label>
+								<select id="separator1" class="col-sm-2 rule-separator" style="display: inline-block;"></select>
+							</div>
+						</div>
+
+						<!-- 第二组：输入2 + 连接符2 -->
+						<div class="form-group default">
+							<label class="col-sm-3 control-label no-padding-right">第2组</label>
+							<div class="col-sm-9">
+								<label class="col-sm-2 control-label" style="text-align: left; padding-right: 5px;">输入2:</label>
+								<select id="input2" class="col-sm-2 rule-input v_required" style="display: inline-block;"></select>
+
+								<label class="col-sm-2 control-label" style="text-align: left; padding-right: 5px; padding-left: 15px;">连接符2:</label>
+								<select id="separator2" class="col-sm-2 rule-separator" style="display: inline-block;"></select>
+							</div>
+						</div>
+
+						<!-- 第三组：输入3 + 连接符3 -->
+						<div class="form-group default">
+							<label class="col-sm-3 control-label no-padding-right">第3组</label>
+							<div class="col-sm-9">
+								<label class="col-sm-2 control-label" style="text-align: left; padding-right: 5px;">输入3:</label>
+								<select id="input3" class="col-sm-2 rule-input v_required" style="display: inline-block;"></select>
+
+								<label class="col-sm-2 control-label" style="text-align: left; padding-right: 5px; padding-left: 15px;">连接符3:</label>
+								<select id="separator3" class="col-sm-2 rule-separator" style="display: inline-block;"></select>
+							</div>
+						</div>
+
+						<!-- 第四组：输入4 + 连接符4 -->
+						<div class="form-group default">
+							<label class="col-sm-3 control-label no-padding-right">第4组</label>
+							<div class="col-sm-9">
+								<label class="col-sm-2 control-label" style="text-align: left; padding-right: 5px;">输入4:</label>
+								<select id="input4" class="col-sm-2 rule-input v_required" style="display: inline-block;"></select>
+
+								<label class="col-sm-2 control-label" style="text-align: left; padding-right: 5px; padding-left: 15px;">连接符4:</label>
+								<select id="separator4" class="col-sm-2 rule-separator" style="display: inline-block;"></select>
+							</div>
+						</div>
+
+						<!-- 第五组：输入5 + 连接符5 -->
+						<div class="form-group default">
+							<label class="col-sm-3 control-label no-padding-right">第5组</label>
+							<div class="col-sm-9">
+								<label class="col-sm-2 control-label" style="text-align: left; padding-right: 5px;">输入5:</label>
+								<select id="input5" class="col-sm-2 rule-input v_required" style="display: inline-block;"></select>
+
+								<label class="col-sm-2 control-label" style="text-align: left; padding-right: 5px; padding-left: 15px;">连接符5:</label>
+								<select id="separator5" class="col-sm-2 rule-separator" style="display: inline-block;"></select>
 							</div>
 						</div>
 						<div class="space-4"></div>
 
+						<!-- 正则表达式（自动生成） -->
 						<div class="form-group default">
-							<label class="col-sm-3 control-label no-padding-right" for="ruleContent">规则内容<span class="required">*</span></label>
+							<label class="col-sm-3 control-label no-padding-right" for="ruleRegex">正则表达式</label>
 							<div class="col-sm-9">
-								<input type="text" id="ruleContent" class="col-xs-10 col-sm-5 v_required" maxlength="200" data-toggle="popover" data-trigger='manual' placeholder="请输入规则内容"/>
+								<input type="text" id="ruleRegex" class="col-xs-10 col-sm-8" maxlength="500" data-toggle="popover" data-trigger='manual' placeholder="正则表达式自动生成" readonly style="background-color: #f5f5f5; font-family: monospace;"/>
+								<span class="help-inline col-sm-3" style="margin-left: 10px; color: #999;">自动生成</span>
 							</div>
 						</div>
 						<div class="space-4"></div>
 
+						<!-- 规则示例（人类可读） -->
 						<div class="form-group default">
-							<label class="col-sm-3 control-label no-padding-right" for="rulefill">规则填充</label>
+							<label class="col-sm-3 control-label no-padding-right" for="ruleExample">示例说明</label>
 							<div class="col-sm-9">
-								<input type="text" id="rulefill" class="col-xs-10 col-sm-5" maxlength="200" data-toggle="popover" data-trigger='manual' placeholder="请输入规则填充"/>
+								<input type="text" id="ruleExample" class="col-xs-10 col-sm-8" maxlength="200" data-toggle="popover" data-trigger='manual' placeholder="例如：1A-门2座-3甲" readonly style="background-color: #f5f5f5;"/>
+								<span class="help-inline col-sm-3" style="margin-left: 10px; color: #999;">人类可读</span>
 							</div>
 						</div>
 						<div class="space-4"></div>
