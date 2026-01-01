@@ -115,14 +115,11 @@ jQuery(function($) {
             var $input = com.focusPage("#input" + i, "#buildingNameRuleModal");
             buildingNameRule.items.inputs.push($input);
 
-            var html = '<option value="">请选择</option>';
-            $.each(buildingNameRule.inputOptions, function(idx, opt) {
-                html += '<option value="' + opt.value + '">' + opt.text + '</option>';
+            // 使用框架提供的 bindData 方法填充下拉框
+            $input.bindData(buildingNameRule.inputOptions, 'value', 'text', '输入', function() {
+                // 绑定change事件，自动更新规则示例
+                $input.on("change", updateRuleExample);
             });
-            $input.html(html);
-
-            // 绑定change事件，自动更新规则示例
-            $input.on("change", updateRuleExample);
         }
 
         // 初始化5个连接符下拉框
@@ -130,14 +127,11 @@ jQuery(function($) {
             var $separator = com.focusPage("#separator" + i, "#buildingNameRuleModal");
             buildingNameRule.items.separators.push($separator);
 
-            var html = '<option value="">请选择</option>';
-            $.each(buildingNameRule.separatorOptions, function(idx, opt) {
-                html += '<option value="' + opt.value + '">' + opt.text + '</option>';
+            // 使用框架提供的 bindData 方法填充下拉框
+            $separator.bindData(buildingNameRule.separatorOptions, 'value', 'text', '连接符', function() {
+                // 绑定change事件，自动更新规则示例
+                $separator.on("change", updateRuleExample);
             });
-            $separator.html(html);
-
-            // 绑定change事件，自动更新规则示例
-            $separator.on("change", updateRuleExample);
         }
 
         // 初始化其他字段
