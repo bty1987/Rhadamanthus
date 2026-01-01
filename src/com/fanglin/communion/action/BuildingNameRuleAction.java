@@ -40,6 +40,9 @@ public class BuildingNameRuleAction extends BaseListAction {
 
 	@Action(value = "pageBuildingNameRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageBuildingNameRule() {
+
+		buildingNameRuleService.queryBuildNameRulePage(getPaging(), getFilters());
+
 		return SUCCESS;
 	}
 
@@ -47,6 +50,30 @@ public class BuildingNameRuleAction extends BaseListAction {
 	public String queryBuildingNameRule() {
 
 		buildingNameRules = buildingNameRuleService.queryBuildNameRule();
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addBuildingNameRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addBuildingNameRule() {
+
+		buildingNameRuleService.saveOrUpdateBuildNameRule(buildingNameRule);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateBuildingNameRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateBuildingNameRule() {
+
+		buildingNameRuleService.saveOrUpdateBuildNameRule(buildingNameRule);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteBuildingNameRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteBuildingNameRule() {
+
+		buildingNameRuleService.deleteBuildingNameRule(buildingNameRule);
 
 		return SUCCESS;
 	}
