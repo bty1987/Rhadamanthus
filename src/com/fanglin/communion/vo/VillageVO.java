@@ -17,6 +17,8 @@ public class VillageVO implements Serializable {
 
 	private CityProperVO cityProper;
 
+	private Integer cid;
+
 	private VillageVO parentVillage;
 
 	private String developer;
@@ -95,6 +97,14 @@ public class VillageVO implements Serializable {
 
 	public void setCityProper(CityProperVO cityProper) {
 		this.cityProper = cityProper;
+	}
+
+	public Integer getCid() {
+		return cid;
+	}
+
+	public void setCid(Integer cid) {
+		this.cid = cid;
 	}
 
 	public VillageVO getParentVillage() {

@@ -44,6 +44,8 @@ public class VillagePO implements Serializable {
 
 	private CityProperPO cityProper;
 
+	private int cid;
+
 	private VillagePO parentVillage;
 
 	private String developer;
@@ -147,6 +149,15 @@ public class VillagePO implements Serializable {
 
 	public void setCityProper(CityProperPO cityProper) {
 		this.cityProper = cityProper;
+	}
+
+	@Column(name = "cid")
+	public int getCid() {
+		return cid;
+	}
+
+	public void setCid(int cid) {
+		this.cid = cid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

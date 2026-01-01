@@ -1,20 +1,19 @@
 package com.fanglin.communion.dao.impl;
 
-import java.math.BigInteger;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.SQLQuery;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-
 import com.fanglin.communion.dao.VillageDao;
 import com.fanglin.communion.po.VillagePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.SQLQuery;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import java.math.BigInteger;
+import java.util.List;
 
 @Repository("villageDao")
 public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
@@ -120,7 +119,7 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 				query.add(query.getCriterion("cityProper.cpid", filter));
 			} else if ("cityId".equals(field)) {
 				// 城市ID：精确匹配
-				query.alias("cityProper.city", "city").add(Restrictions.eq("city.cid", Integer.valueOf(data)));
+				query.alias("cityProper", "cityProper").alias("cityProper.city", "city").add(Restrictions.eq("city.cid", Integer.valueOf(data)));
 			} else if ("developer".equals(field)) {
 				// 开发商：模糊搜索
 				query.add(Restrictions.ilike("developer", data, MatchMode.ANYWHERE));
