@@ -21,7 +21,7 @@ jQuery(function($) {
 
         // 输入选项（正则表达式）
         inputOptions: [
-            { value: '', text: '空字符串', regex: '' },
+            { value: '', text: '空', regex: '' },
             { value: '[0-9]+[A-Za-z]+', text: '数字字母' },
             { value: '[A-Za-z]+[0-9]+', text: '字母数字' },
             { value: '[0-9]+', text: '数字' },
@@ -30,7 +30,7 @@ jQuery(function($) {
 
         // 连接符选项（字面值）
         separatorOptions: [
-            { value: '', text: '空字符串' },
+            { value: '', text: '空' },
             { value: '-', text: '-' },
             { value: '/', text: '/' },
             { value: '门', text: '门' },
