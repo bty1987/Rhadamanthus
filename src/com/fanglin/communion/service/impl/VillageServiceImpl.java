@@ -18,6 +18,7 @@ import com.fanglin.communion.service.VillageService;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.system.dao.CityProperDao;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CityProperPO;
 import com.fanglin.system.po.CompanyPO;
@@ -38,6 +39,9 @@ public class VillageServiceImpl implements VillageService {
 
 	@Autowired
 	private VillageDao villageDao;
+
+	@Autowired
+	private CityProperDao cityProperDao;
 
 	@Autowired
 	private CountingService countingService;
@@ -114,6 +118,12 @@ public class VillageServiceImpl implements VillageService {
 
 		villagePO.setCityProper(new CityProperPO(villageVO.getCityProper().getCpid()));
 
+		// 设置城市ID (从 cityProper 关联的 city 对象中获取)
+		CityProperPO cityProperPO = cityProperDao.get(villageVO.getCityProper().getCpid());
+		if (cityProperPO != null && cityProperPO.getCity() != null) {
+			villagePO.setCid(cityProperPO.getCity().getCid());
+		}
+
 		villagePO.setPinyinAB((String) PinYin4Util.getPinYinHeadChar(villageVO.getName()).get(0));
 		villagePO.setPinyinAll((String) PinYin4Util.getPinyin(villageVO.getName()).get(0));
 
@@ -154,6 +164,13 @@ public class VillageServiceImpl implements VillageService {
 		BeanUtil.copyProperties(villageVO, villagePO, Arrays.asList("no", "x", "y", "cityProper", "parentVillage", "company"));
 
 		villagePO.setCityProper(new CityProperPO(villageVO.getCityProper().getCpid()));
+
+		// 设置城市ID (从 cityProper 关联的 city 对象中获取)
+		CityProperPO cityProperPO = cityProperDao.get(villageVO.getCityProper().getCpid());
+		if (cityProperPO != null && cityProperPO.getCity() != null) {
+			villagePO.setCid(cityProperPO.getCity().getCid());
+		}
+
 		villagePO.setPinyinAB((String) PinYin4Util.getPinYinHeadChar(villageVO.getName()).get(0));
 		villagePO.setPinyinAll((String) PinYin4Util.getPinyin(villageVO.getName()).get(0));
 		villagePO.setMileage(villageVO.getMileage());
