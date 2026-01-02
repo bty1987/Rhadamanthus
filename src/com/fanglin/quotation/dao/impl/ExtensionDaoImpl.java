@@ -50,19 +50,13 @@ public class ExtensionDaoImpl extends DaoImpl<ExtensionPO> implements ExtensionD
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ExtensionPO> queryExtensionByOrderId(String orderId) {
-		return session().createCriteria(ExtensionPO.class).add(Restrictions.eq(ExtensionPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.ne("atttype", ExtensionPO.ATTTYPE_ACTIVITY_INT)).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<ExtensionPO> queryAllExtensionByOrderId(String orderId) {
 		return session().createCriteria(ExtensionPO.class).add(Restrictions.eq(ExtensionPO.COLUMN_ORDERID_STR, orderId)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ExtensionPO> queryExtensionForTypeByOrderId(String orderId, Short type) {
-		return session().createCriteria(ExtensionPO.class).add(Restrictions.eq(ExtensionPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(ExtensionPO.COLUMN_TYPE_STR, type)).add(Restrictions.ne("atttype", ExtensionPO.ATTTYPE_ACTIVITY_INT)).list();
+		return session().createCriteria(ExtensionPO.class).add(Restrictions.eq(ExtensionPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(ExtensionPO.COLUMN_TYPE_STR, type)).list();
 	}
 
 	@Override

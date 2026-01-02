@@ -795,7 +795,10 @@
             }, function(res) {
 
                 $.each(res.extensions, function(i, v) {
-
+                    
+                    if (v.atttype == constant.quotation().extension.ATTTYPE_ACTIVITY_INT)
+                        return true;
+                    
                     managePrice = utils.accAdd(managePrice, v.type == constant.quotation().extension.TYPE_ADD_INT ? v.managePrice : -v.managePrice);
                 });
 

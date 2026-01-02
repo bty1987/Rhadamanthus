@@ -95,8 +95,6 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 		if (extensionVO.getType() != null) {
 			extensionPOs = extensionDao.queryExtensionForTypeByOrderId(extensionVO.getOrderId(), extensionVO.getType());
-		} else if (extensionVO.getAtttype() != null) {
-			extensionPOs = extensionDao.queryAllExtensionByOrderId(extensionVO.getOrderId());
 		} else {
 			extensionPOs = extensionDao.queryExtensionByOrderId(extensionVO.getOrderId());
 		}
