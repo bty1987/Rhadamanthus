@@ -1,27 +1,6 @@
 package com.fanglin.fadada.signature;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Transparency;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import javax.imageio.ImageIO;
-
-import org.apache.commons.codec.binary.Base64;
-
 import Decoder.BASE64Decoder;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fadada.sdk.base.client.FddBaseClient;
@@ -56,8 +35,25 @@ import com.fanglin.fadada.bean.Contract;
 import com.fanglin.fadada.tools.FddEncryptTool;
 import com.fanglin.fadada.vo.SignatureVO;
 import com.fanglin.utils.SystemConfig;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 public class Signature {
+
+	private static final Logger logger = Logger.getLogger(Signature.class);
 
 	private static String APPID = "402616";
 	private static String APPSECRET = "krdhPR4a4Hb8ET1oJm9WxFAQ";
@@ -111,7 +107,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("印章信息获取失败: " + result);
 			throw new FLException(130066, String.format("印章信息获取失败, %s", response.getString("msg")));
 		}
 
@@ -148,14 +144,11 @@ public class Signature {
 
 			// 下面章图片base64、签章图片、图片公网地址三选一
 
-			// params.setSignatureImgBase64(FddEncryptTool.ImageToBase64(signatureVO.getPath())); // 签章图片base64
+			params.setSignatureImgBase64(FddEncryptTool.ImageToBase64(signatureVO.getPath())); // 签章图片base64
 			// params.setFile(new File(signatureVO.getPath())); // 签章图片
-			params.setImgUrl(signatureVO.getPath()); // 签章图片公网地址
+			// params.setImgUrl(signatureVO.getPath()); // 签章图片公网地址
 		} catch (Exception e) {
-
-			System.out.println(signatureVO.getPath());
-			System.out.println(e.getMessage());
-
+			logger.error("图片获取失败, path=" + signatureVO.getPath() + ", error=" + e.getMessage(), e);
 			throw new FLException(130074, "图片获取失败");
 		}
 
@@ -168,7 +161,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("印章添加失败: " + result);
 			throw new FLException(130067, String.format("印章添加失败, %s", response.getString("msg")));
 		}
 
@@ -197,7 +190,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("印章默认失败: " + result);
 			throw new FLException(130068, String.format("印章默认失败, %s", response.getString("msg")));
 		}
 	}
@@ -220,7 +213,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("印章删除失败: " + result);
 			throw new FLException(130069, String.format("印章删除失败, %s", response.getString("msg")));
 		}
 	}
@@ -243,7 +236,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("企业客户注册失败: " + result);
 			throw new FLException(130027, response.getString("msg"));
 		}
 
@@ -292,7 +285,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("企业认证URL获取失败: " + result);
 			throw new FLException(130059, response.getString("msg"));
 		}
 
@@ -323,7 +316,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("企业认证查询失败: " + result);
 			throw new FLException(130059, response.getString("msg"));
 		}
 
@@ -331,7 +324,7 @@ public class Signature {
 		JSONObject company = data.getJSONObject("company");
 
 		if (!"4".equals(company.getString("status"))) {
-			System.out.println(result);
+			logger.error("企业认证状态异常: " + result);
 			throw new FLException(130059, String.format("公司认证失败,%s", company.getString("status")));
 		}
 	}
@@ -372,7 +365,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("个人客户注册失败: " + result);
 			throw new FLException(130027, response.getString("msg"));
 		}
 
@@ -419,7 +412,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("个人认证URL获取失败: " + result);
 			throw new FLException(130027, response.getString("msg"));
 		}
 
@@ -445,7 +438,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("个人认证查询失败: " + result);
 			throw new FLException(130027, response.getString("msg"));
 		}
 
@@ -453,7 +446,7 @@ public class Signature {
 		JSONObject person = data.getJSONObject("person");
 
 		if (!"2".equals(person.getString("status"))) {
-			System.out.println(result);
+			logger.error("个人认证状态异常: " + result);
 			throw new FLException(130027, String.format("客户认证失败,%s", person.getString("auditFailReason")));
 		}
 
@@ -478,7 +471,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("证书申请失败: " + result);
 			throw new FLException(130027, response.getString("msg"));
 		}
 	}
@@ -507,14 +500,11 @@ public class Signature {
 			}
 
 			if (response.getInteger("code") != 1) {
-				System.out.println(result);
+				logger.error("签章添加失败: " + result);
 				throw new FLException(130027, response.getString("msg"));
 			}
 		} catch (Exception e) {
-
-			System.out.println(path);
-			System.out.println(e.getMessage());
-
+			logger.error("签章处理失败, path=" + path + ", error=" + e.getMessage(), e);
 			throw new FLException(130027, "客户认证失败,获取签章失败");
 		}
 
@@ -556,7 +546,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
-			System.out.println(result);
+			logger.error("合同模版上传失败: " + result);
 			throw new FLException(130030, String.format("合同模版上传失败,%s", response.getString("msg")));
 		}
 	}
@@ -589,7 +579,7 @@ public class Signature {
 		}
 
 		if (!"1000".equals(response.getString("code"))) {
-			System.out.println(result);
+			logger.error("合同生成失败: " + result);
 			throw new FLException(130027, response.getString("msg"));
 		}
 
@@ -611,7 +601,7 @@ public class Signature {
 
 		String result = client.invokeUploadDocs(params);
 
-		System.out.println(result);
+		logger.info("合同文档上传结果: " + result);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -620,7 +610,7 @@ public class Signature {
 		}
 
 		if (!"1000".equals(response.getString("code"))) {
-			System.out.println(result);
+			logger.error("合同文档上传失败: " + result);
 			throw new FLException(130027, response.getString("msg"));
 		}
 
@@ -666,7 +656,7 @@ public class Signature {
 		}
 
 		if (!"1000".equals(response.getString("code"))) {
-			System.out.println(result);
+			logger.error("自动签署失败(关键字): " + result);
 			throw new FLException(130027, response.getString("msg"));
 		}
 	}
@@ -700,7 +690,7 @@ public class Signature {
 		}
 
 		if (!"1000".equals(response.getString("code"))) {
-			System.out.println(result);
+			logger.error("自动签署失败(坐标): " + result);
 			throw new FLException(130027, response.getString("msg"));
 		}
 	}
@@ -761,7 +751,7 @@ public class Signature {
 		}
 
 		if ("1000".equals(response.getInteger("code"))) {
-			System.out.println(result);
+			logger.error("合同归档失败: " + result);
 			throw new FLException(130027, response.getString("msg"));
 		}
 
