@@ -11,6 +11,16 @@
 
 package com.fanglin.decoration.service.impl;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.po.ServiceRecordPO;
@@ -90,15 +100,6 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 @Service("decorationServiceO")
 @Transactional(readOnly = true)
@@ -1662,7 +1663,7 @@ public class DecorationServiceImpl implements DecorationService {
 	@Transactional(rollbackFor = Exception.class)
 	public void tranDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, int company) throws FLException {
 
-        //checkOverDecoration(decorationVO.getCustomer().getCid(), decorationVO.getHouse().getHid());
+		// checkOverDecoration(decorationVO.getCustomer().getCid(), decorationVO.getHouse().getHid());
 		checkOverDecoration(decorationVO.getCustomer().getCid(), decorationVO.getHouse().getHid(), company);
 
 		makeDecoration(decorationVO, decorationInfoVO, decorationVO.getCreater().getUserId(), company);
@@ -1752,6 +1753,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationAdditionService.updateDecorationForSaleScale(decorationVO);
 	}
 
+	@Override
 	public void checkOverDecoration(long cid, long hid) throws FLException {
 
 		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByHid(hid);
@@ -1773,6 +1775,7 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 	}
 
+	@Override
 	public void checkOverDecoration(long cid, long hid, int company) throws FLException {
 
 		List<Integer> companys = new ArrayList<Integer>(Arrays.asList(company));

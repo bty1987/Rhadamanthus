@@ -68,6 +68,10 @@ public interface DecorationService {
 
 	public void checkDecorationForExist(DecorationVO decorationVO);
 
+	public void checkOverDecoration(long cid, long hid, int company) throws FLException;
+
+	public void checkOverDecoration(long cid, long hid) throws FLException;
+
 	public void createDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId, int company) throws FLException;
 
 	public void createDecorationForAdvance(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId, int company) throws FLException;
