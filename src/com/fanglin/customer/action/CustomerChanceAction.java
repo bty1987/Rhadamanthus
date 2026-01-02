@@ -168,6 +168,14 @@ public class CustomerChanceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "uncheckCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String uncheckCustomerChance() throws FLException {
+
+		customerChanceService.uncheckCustomerChance(customerChance);
+
+		return SUCCESS;
+	}
+
 	public List<CustomerChanceVO> getCustomerChances() {
 		return customerChances;
 	}

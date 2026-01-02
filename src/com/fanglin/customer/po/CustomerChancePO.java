@@ -51,6 +51,10 @@ public class CustomerChancePO implements Serializable {
 
 	public static final short ISMEET_MEET_INT = 2;
 
+	public static final short ISCHECK_CHECK_INT = 0; // 验证
+
+	public static final short ISCHECK_IGNORE_INT = 1; // 忽略
+
 	private long ccid;
 
 	private String orderId;
@@ -105,6 +109,8 @@ public class CustomerChancePO implements Serializable {
 
 	private short isFine;
 
+	private short isCheck;
+
 	private String comment;
 
 	private String annotate;
@@ -115,6 +121,7 @@ public class CustomerChancePO implements Serializable {
 
 	public CustomerChancePO() {
 		super();
+		this.isCheck = ISCHECK_CHECK_INT; // 默认为验证状态
 	}
 
 	public CustomerChancePO(CustomerPO customer, HousePO house, CustomerSourcePO source, DecorationBusitypePO busitype, UserPO creater, UserPO issuer, UserPO belonger, DepartmentPO department, DepartmentPO region) {
@@ -130,6 +137,7 @@ public class CustomerChancePO implements Serializable {
 		this.belonger = belonger;
 		this.department = department;
 		this.region = region;
+		this.isCheck = ISCHECK_CHECK_INT; // 默认为验证状态
 	}
 
 	@Id
@@ -376,6 +384,15 @@ public class CustomerChancePO implements Serializable {
 
 	public void setIsFine(short isFine) {
 		this.isFine = isFine;
+	}
+
+	@Column(name = "isCheck")
+	public short getIsCheck() {
+		return isCheck;
+	}
+
+	public void setIsCheck(short isCheck) {
+		this.isCheck = isCheck;
 	}
 
 	@Column(name = "fineTime")

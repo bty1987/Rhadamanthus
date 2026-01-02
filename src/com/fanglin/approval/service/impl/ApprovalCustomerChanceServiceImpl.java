@@ -11,13 +11,6 @@
 
 package com.fanglin.approval.service.impl;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fanglin.approval.dao.ApprovalCustomerChanceDao;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalCustomerChancePO;
@@ -49,6 +42,12 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service("approvalCustomerChanceService")
 @Transactional(readOnly = true)
@@ -133,7 +132,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 			throw new FLException(330074, "客户资源不可操作");
 		}
 
-		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
+		if(customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
 		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid(), company);
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());

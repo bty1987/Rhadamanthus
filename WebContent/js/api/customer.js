@@ -443,6 +443,9 @@ $.extend(api, {
         finishCustomerChance: {
             url: "finishCustomerChance.do"
         },
+        uncheckCustomerChance: {
+            url: "uncheckCustomerChance.do"
+        },
 
         pageCustomerProfile: {
             url: "pageCustomerProfile.do"

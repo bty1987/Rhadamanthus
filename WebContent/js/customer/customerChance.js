@@ -469,6 +469,16 @@ jQuery(function($) {
         clazz: "red",
         dataset: constant.customer().customerChance.isFine.keys,
     }, {
+        field: "isCheck",
+        name: "是否校验",
+        prop: "isCheck",
+        clazz: "red",
+        dataset: constant.customer().customerChance.isCheck.keys,
+        show: function(v) {
+
+            return customerChance.depage == null;
+        }
+    }, {
         field: "fineTime",
         name: "罚款时间",
         prop: "fineTime",
@@ -651,6 +661,17 @@ jQuery(function($) {
         show: function(v) {
 
             return customerChance.depage == "manage" && v.isFine == constant.customer().customerChance.ISFINE_UNFINE_INT && customerChance.detype == null;
+        }
+    }, {
+        name: "不校验",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            uncheckCustomerChance(v.ccid);
+        },
+        show: function(v) {
+
+            return customerChance.depage == null && v.isCheck == constant.customer().customerChance.ISCHECK_CHECK_INT && customerChance.detype == null;
         }
     }, {
         name: "不匹配",
@@ -1389,6 +1410,22 @@ jQuery(function($) {
         com.showConfirm("确认要罚款吗", function() {
 
             com.post(api.customer.fineCustomerChance, options, function(res) {
+
+                searcher.doSearch();
+                com.showAlert(com.info, "操作成功!");
+            });
+        });
+    }
+
+    function uncheckCustomerChance(ccid) {
+
+        var options = {
+            'customerChance.ccid': ccid
+        };
+
+        com.showConfirm("确认要设置为不校验状态吗？", function() {
+
+            com.post(api.customer.uncheckCustomerChance, options, function(res) {
 
                 searcher.doSearch();
                 com.showAlert(com.info, "操作成功!");
