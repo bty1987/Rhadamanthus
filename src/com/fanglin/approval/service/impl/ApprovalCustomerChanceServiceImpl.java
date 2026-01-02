@@ -11,6 +11,13 @@
 
 package com.fanglin.approval.service.impl;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.approval.dao.ApprovalCustomerChanceDao;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalCustomerChancePO;
@@ -33,7 +40,7 @@ import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
-import com.fanglin.decoration.service.impl.DecorationServiceImpl;
+import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
@@ -42,12 +49,6 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Service("approvalCustomerChanceService")
 @Transactional(readOnly = true)
@@ -72,7 +73,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 	private CustomerProfileDao customerProfileDao;
 
 	@Autowired
-	private DecorationServiceImpl decorationService;
+	private DecorationService decorationService;
 
 	@Autowired
 	private MessageService messageService;
@@ -132,7 +133,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 			throw new FLException(330074, "客户资源不可操作");
 		}
 
-		if(customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
+		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
 		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid(), company);
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
