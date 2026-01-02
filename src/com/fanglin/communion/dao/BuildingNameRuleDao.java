@@ -9,6 +9,6 @@ import com.fanglin.utils.Paging;
 
 public interface BuildingNameRuleDao extends Dao<BuildingNameRulePO> {
 
-	public List<BuildingNameRulePO> queryPageBuildingNameRule(Paging paging, List<Filter> filters);
+	public List<BuildingNameRulePO> pageBuildingNameRule(Paging paging, List<Filter> filters);
 
 }

@@ -184,6 +184,15 @@ $(function() {
 
             tools.personel.info(btn, v.selectionItem.decoration.designer.userId);
         }
+    }, {
+        fieId: "selectionItem.decoration.supervisor.currentName",
+        name: "监理",
+        prop: "selectionItem.decoration.supervisor.currentName",
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.selectionItem.decoration.supervisor.userId);
+        }
     }];
 
     var linebtus = [{
@@ -260,7 +269,7 @@ $(function() {
 
         exports();
     });
-    
+
     com.focusPage('#export1', '#pagenation').on("click", function() {
 
         exports1();

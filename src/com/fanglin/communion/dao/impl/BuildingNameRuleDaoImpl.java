@@ -29,17 +29,22 @@ public class BuildingNameRuleDaoImpl extends DaoImpl<BuildingNameRulePO> impleme
 	}
 
 	@Override
-	public List<BuildingNameRulePO> queryPageBuildingNameRule(Paging paging, List<Filter> filters) {
+	public List<BuildingNameRulePO> pageBuildingNameRule(Paging paging, List<Filter> filters) {
 
 		PagingQuery<BuildingNameRulePO> query = pagingQuery(paging, BuildingNameRulePO.class);
 
-		if (filters != null) {
-			for (Filter filter : filters) {
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
+		queryFilterExcute(query, filters);
 
 		return query.list();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+			query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
+		}
 	}
 
 }

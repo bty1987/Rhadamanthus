@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-// @Table(name = "wechatuserinfo", catalog = "hades")
+// @Table(name = "wechatuserinfo", catalog = "wechat")
 @Table(name = "wxuserinfo", catalog = "hades")
 public class WeChatUserInfoPO implements java.io.Serializable {
 

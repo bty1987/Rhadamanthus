@@ -11,6 +11,12 @@
 
 package com.fanglin.wechat.service.impl;
 
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -25,11 +31,6 @@ import com.fanglin.wechat.service.WeChatAccessTokenService;
 import com.fanglin.wechat.utils.WeChatApi;
 import com.fanglin.wechat.vo.WeChatAccessTokenVO;
 import com.fanglin.wechat.vo.WeChatJsapiTicketVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 @Service("weChatAccessTokenService")
 @Transactional(readOnly = true)
@@ -74,8 +75,8 @@ public class WeChatAccessTokenServiceImpl implements WeChatAccessTokenService {
 		// 根据 type 参数动态构建配置 key，支持不同类型的微信应用
 		// type=0: 公众号, type=1: 小程序, type=2: 企业微信等
 		SystemConfigPO wapi = systemConfigDao.querySystemConfig("WECHAT_WXAPI_PATH_STR");
-		SystemConfigPO appid = systemConfigDao.querySystemConfig("WECHAT_APPID_" + type, $company);
-		SystemConfigPO secret = systemConfigDao.querySystemConfig("WECHAT_SECRET_" + type, $company);
+		SystemConfigPO appid = systemConfigDao.querySystemConfig(String.format("WECHAT_APPID_%s_%s", type, $company));
+		SystemConfigPO secret = systemConfigDao.querySystemConfig(String.format("WECHAT_SECRET_%s_%s", type, $company));
 
 		String url = String.format(WeChatApi.WXAPI_GET_TOKEN_STR, wapi.getValue(), appid.getValue(), secret.getValue());
 
