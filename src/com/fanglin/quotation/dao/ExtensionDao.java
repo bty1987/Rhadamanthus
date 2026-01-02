@@ -16,8 +16,6 @@ public interface ExtensionDao extends Dao<ExtensionPO> {
 
 	public List<ExtensionPO> queryExtensionByOrderId(String orderId);
 
-	public List<ExtensionPO> queryAllExtensionByOrderId(String orderId);
-
 	public List<ExtensionPO> queryExtensionForTypeByOrderId(String orderId, Short type);
 
 	public ExtensionPO queryExtension(long qid, short type, short atttype);

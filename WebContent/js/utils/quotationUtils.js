@@ -154,7 +154,7 @@ var quotationUtils = {
                 var extension = extensions[i];
                 var extensionItems = extension.extensionItems;
 
-                if (extensionItems == null || extensionItems.length == 0)
+                if (extensionItems == null || extensionItems.length == 0 || extension.atttype == constant.quotation().extension.ATTTYPE_ACTIVITY_INT)
                     continue;
 
                 for ( var j = 0; j < extensionItems.length; j++) {

@@ -322,11 +322,11 @@
             var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate)); // 获取到管理费
             var _taxPrice = 0;
 
-            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT){
+            if (addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) {
                 _taxPrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.taxRate)); // 获取管理税金
             }
 
-            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT){
+            if (addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
                 _taxPrice = utils.changeThrDecimal(utils.accMul(utils.accAdd(_sum, _managePrice), addReduceDetail.taxRate)); // 获取总额税金
             }
 
@@ -421,19 +421,19 @@
             comsprice = utils.changeTwoDecimal(comsprice);
             manageprice = utils.changeTwoDecimal(manageprice);
             taxprice = utils.changeTwoDecimal(taxprice);
-            
+
             if (!addReduceDetail.isCountManage.prop("checked")) {
                 manageprice = 0;
             }
-            
-            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT){
+
+            if (addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) {
                 taxprice = utils.changeThrDecimal(utils.accMul(sum, addReduceDetail.taxRate)); // 获取管理税金
             }
 
-            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT){
+            if (addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
                 taxprice = utils.changeThrDecimal(utils.accMul(utils.accAdd(sum, manageprice), addReduceDetail.taxRate)); // 获取总额税金
             }
-            
+
             if (!addReduceDetail.isCountTax.prop("checked")) {
                 taxprice = 0;
             }
@@ -552,37 +552,38 @@
                     }, null, false);
 
                 } else if (that.showingModalName == 'extensionItemModal') {
-                    var index = 0;
-                    var eids = {};
+
+                    var $tableWrap = com.focusPage('#extensionItemList', addReduceDetail.$modals.extensionItemModal).empty();
+                    var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
                     com.post(api.quotation.queryExtensionByOrderId, {
                         "extension.orderId": addReduceDetail.orderid,
                         "extension.type": 0
-                    }, function(res) {
+                    }, function(data) {
 
-                        $.each(res.extensions, function(i, v) {
+                        $.each(data.extensions, function(i, res) {
 
-                            eids['extensionIds[' + index + ']'] = v.eid;
-                            index++;
+                            if (res.extensionItems && res.extensionItems.length) {
+                                $.each(res.extensionItems, function(index, v) {
+
+                                    if (v.quotationFunctionAreaId == funcid) {
+                                        v.quotationItemDes = v.content;
+                                        v.discount = constant.quotation().extensionItem.DISCOUMNT_NODISCOUMNT_INT;
+
+                                        if (res.atttype == constant.quotation().extension.ATTTYPE_ACTIVITY_INT) {
+                                            v.subPrice = 0;
+                                            v.unitPrice = 0;
+                                            v.addPrice = 0;
+                                        }
+
+                                        var $liLine = painter.createQuoteModalItem(v, "eiid", "itemName");
+                                        $liLine.appendTo($ul);
+                                    }
+                                });
+                                $ul.appendTo($tableWrap);
+                            }
+
                         });
-                    }, null, false);
-
-                    com.post(api.quotation.queryExtensionItemByEids, eids, function(res) {
-
-                        var $tableWrap = com.focusPage('#extensionItemList', addReduceDetail.$modals.extensionItemModal).empty();
-                        var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-                        if (res.extensionItems && res.extensionItems.length) {
-                            $.each(res.extensionItems, function(i, v) {
-
-                                if (v.quotationFunctionAreaId == funcid) {
-                                    v.quotationItemDes = v.content;
-                                    v.discount = constant.quotation().extensionItem.DISCOUMNT_NODISCOUMNT_INT;
-                                    var $liLine = painter.createQuoteModalItem(v, "eiid", "itemName");
-                                    $liLine.appendTo($ul);
-                                }
-                            });
-                            $ul.appendTo($tableWrap);
-                        }
                     }, null, false);
                 }
 
@@ -1179,7 +1180,7 @@
             params["addReduceItems[" + 0 + "].index"] = upline;
             params["addReduceItems[" + 1 + "].ariId"] = $movequote.attr('data-ariid');
             params["addReduceItems[" + 1 + "].index"] = nowline;
- 
+
             com.post(api.addReduce.updateAddReduceItemForIndex, params);
         },
 
@@ -1303,12 +1304,12 @@
             var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate));
             var _taxPrice = 0;
 
-            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT){
+            if (addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) {
                 _taxPrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.taxRate));
             }
 
-            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT){
-                _taxPrice = utils.changeThrDecimal(utils.accMul(utils.accAdd(_sum,_managePrice), addReduceDetail.taxRate));
+            if (addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
+                _taxPrice = utils.changeThrDecimal(utils.accMul(utils.accAdd(_sum, _managePrice), addReduceDetail.taxRate));
             }
 
             var _class = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT].indexOf(qv.discount) != -1 ? "blue" : "green";
@@ -1574,7 +1575,7 @@
 
             }
 
-            if (addReduceDetail.artype == constant.quotation().addreduce.TYPE_ADD_INT && addReduceDetail.customFlag){
+            if (addReduceDetail.artype == constant.quotation().addreduce.TYPE_ADD_INT && addReduceDetail.customFlag) {
 
                 com.focusPage('#addNewItemBtn').removeClass('hide');
             }
@@ -1634,6 +1635,7 @@
             if (addReduceDetail.addReduceItems && addReduceDetail.addReduceItems.length) {
 
                 addReduceDetail.addReduceItems.sort(function(a, b) {
+
                     if (a.index == null || b.index == null) {
                         return b.index - a.index;
                     } else {
