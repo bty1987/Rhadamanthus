@@ -67,6 +67,8 @@ public class CustomerChanceVO implements Serializable {
 
 	private Short isFine;
 
+	private Short isCheck;
+
 	private Timestamp fineTime;
 
 	private String comment;
@@ -308,6 +310,14 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setIsFine(Short isFine) {
 		this.isFine = isFine;
+	}
+
+	public Short getIsCheck() {
+		return isCheck;
+	}
+
+	public void setIsCheck(Short isCheck) {
+		this.isCheck = isCheck;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")

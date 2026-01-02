@@ -42,4 +42,6 @@ public interface CustomerChanceService {
 
 	public void finishCustomerChance(DecorationVO decorationVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException;
 
+	public void uncheckCustomerChance(CustomerChanceVO customerChanceVO) throws FLException;
+
 }

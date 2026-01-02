@@ -577,6 +577,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
 		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
 
+        if(customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
+
 		decorationService.tranDecoration(decorationVO, decorationInfoVO, company);
 
 		customerChancePO.setOrderId(decorationVO.getOrderId());
@@ -689,5 +691,23 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("客户机会完成,装修单号:%s,归属:%s(%s),部门:%s(%s),分区:%s(%s)", decorationPO.getOrderId(), customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, operater));
 
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void uncheckCustomerChance(CustomerChanceVO customerChanceVO) throws FLException {
+
+		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());
+
+		if (customerChancePO == null) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		// 设置 isCheck 为 1（忽略状态）
+		customerChancePO.setIsCheck(CustomerChancePO.ISCHECK_IGNORE_INT);
+
+		customerChanceDao.update(customerChancePO);
+
+		log.info("客户机会设置为忽略状态, ccid={}, isCheck={}", customerChancePO.getCcid(), customerChancePO.getIsCheck());
 	}
 }
