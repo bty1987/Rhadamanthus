@@ -321,7 +321,11 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			if (busitype != null) customerSourcePO.setBusitype(busitype);
 		}
 
-		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman", "busitype"));
+		if (customerSourceVO.getPhone() != null) {
+			customerSourcePO.setPhone(FormatUtil.encodePhone(customerSourceVO.getPhone()));
+		}
+
+		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman", "busitype", "phone"));
 
 		customerSourceDao.save(customerSourcePO);
 
