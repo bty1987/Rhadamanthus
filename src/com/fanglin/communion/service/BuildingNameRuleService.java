@@ -19,11 +19,11 @@ import com.fanglin.utils.Paging;
 
 public interface BuildingNameRuleService {
 
-	public void saveOrUpdateBuildNameRule(BuildingNameRuleVO buildingNameRuleVO);
-
-	public void queryBuildNameRulePage(Paging paging, List<Filter> filters);
+	public void pageBuildingNameRule(Paging paging, List<Filter> filters);
 
 	public List<BuildingNameRuleVO> queryBuildNameRule();
+
+	public void saveOrUpdateBuildNameRule(BuildingNameRuleVO buildingNameRuleVO);
 
 	public void deleteBuildingNameRule(BuildingNameRuleVO buildingNameRuleVO);
 

@@ -17,6 +17,8 @@ public class CustomerChanceVO implements Serializable {
 
 	private Long ccid;
 
+	private String orderId;
+
 	private CustomerVO customer;
 
 	private HouseVO house;
@@ -101,6 +103,14 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setCcid(Long ccid) {
 		this.ccid = ccid;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	public CustomerVO getCustomer() {

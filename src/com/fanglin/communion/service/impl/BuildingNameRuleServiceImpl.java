@@ -34,18 +34,9 @@ public class BuildingNameRuleServiceImpl implements BuildingNameRuleService {
 	private BuildingNameRuleDao buildingNameRuleDao;
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void saveOrUpdateBuildNameRule(BuildingNameRuleVO buildingNameRuleVO) {
+	public void pageBuildingNameRule(Paging paging, List<Filter> filters) {
 
-		BuildingNameRulePO buildingNameRulePO = new BuildingNameRulePO();
-		BeanUtil.copyProperties(buildingNameRuleVO, buildingNameRulePO);
-		buildingNameRuleDao.save(buildingNameRulePO);
-	}
-
-	@Override
-	public void queryBuildNameRulePage(Paging paging, List<Filter> filters) {
-
-		List<BuildingNameRulePO> buildingNameRulePOs = buildingNameRuleDao.queryPageBuildingNameRule(paging, filters);
+		List<BuildingNameRulePO> buildingNameRulePOs = buildingNameRuleDao.pageBuildingNameRule(paging, filters);
 		List<BuildingNameRuleVO> buildingNameRuleVOs = new ArrayList<BuildingNameRuleVO>();
 
 		for (BuildingNameRulePO buildingNameRulePO : buildingNameRulePOs) {
@@ -71,6 +62,15 @@ public class BuildingNameRuleServiceImpl implements BuildingNameRuleService {
 		}
 
 		return buildingNameRuleVOs;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void saveOrUpdateBuildNameRule(BuildingNameRuleVO buildingNameRuleVO) {
+
+		BuildingNameRulePO buildingNameRulePO = new BuildingNameRulePO();
+		BeanUtil.copyProperties(buildingNameRuleVO, buildingNameRulePO);
+		buildingNameRuleDao.save(buildingNameRulePO);
 	}
 
 	@Override

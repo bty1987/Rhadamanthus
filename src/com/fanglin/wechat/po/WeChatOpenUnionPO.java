@@ -20,7 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-// @Table(name = "wechatopenunion", catalog = "hades")
+// @Table(name = "wechatopenunion", catalog = "wechat")
 @Table(name = "wxopenunion", catalog = "hades")
 public class WeChatOpenUnionPO implements java.io.Serializable {
 

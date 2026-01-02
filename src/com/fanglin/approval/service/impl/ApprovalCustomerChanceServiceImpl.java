@@ -133,6 +133,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 			throw new FLException(330074, "客户资源不可操作");
 		}
 
+		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
 		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid(), company);
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());

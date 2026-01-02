@@ -41,7 +41,7 @@ public class BuildingNameRuleAction extends BaseListAction {
 	@Action(value = "pageBuildingNameRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageBuildingNameRule() {
 
-		buildingNameRuleService.queryBuildNameRulePage(getPaging(), getFilters());
+		buildingNameRuleService.pageBuildingNameRule(getPaging(), getFilters());
 
 		return SUCCESS;
 	}

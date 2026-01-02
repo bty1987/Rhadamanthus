@@ -21,9 +21,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * 微信用户绑定持久化对象 存储微信用户与系统用户的绑定关系
- */
 @Entity
 // @Table(name = "wechatuserbind", catalog = "wechat")
 @Table(name = "puser", catalog = "hades")
