@@ -239,7 +239,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int existCustomer(CustomerVO customerVO, Integer company) {
 
-		String phone = FormatUtil.encodePhone(customerVO.getPhone());
+		String phone = customerVO.getPhone() != null && customerVO.getPhone().length() == 11 ? FormatUtil.encodePhone(customerVO.getPhone()) : customerVO.getPhone();
 
 		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhoneForDefault(phone, company);
 
