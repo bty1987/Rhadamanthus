@@ -38,6 +38,9 @@ $.extend(api.index, {
     village4rule: {
         url: "/views/data/village4rule.html"
     },
+    buildingNameRuleIndex: {
+        url: "/views/data/buildingNameRule.html"
+    },
     inspectItem: {
         url: "/views/data/inspectItem.html"
     },
@@ -374,6 +377,28 @@ $.extend(api, {
         },
         deleteVillageRule: {
             url: "deleteVillageRule.do",
+            server: "communion"
+        },
+
+        // 楼盘命名规则管理
+        pageBuildingNameRule: {
+            url: "pageBuildingNameRule.do",
+            type: "query"
+        },
+        queryBuildingNameRule: {
+            url: "queryBuildingNameRule.do",
+            type: "query"
+        },
+        addBuildingNameRule: {
+            url: "addBuildingNameRule.do",
+            server: "communion"
+        },
+        updateBuildingNameRule: {
+            url: "updateBuildingNameRule.do",
+            server: "communion"
+        },
+        deleteBuildingNameRule: {
+            url: "deleteBuildingNameRule.do",
             server: "communion"
         },
 

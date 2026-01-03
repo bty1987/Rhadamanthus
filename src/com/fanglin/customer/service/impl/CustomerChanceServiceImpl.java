@@ -59,6 +59,8 @@ import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
+import com.fanglin.communion.service.CustomerService;
+import com.fanglin.building.service.HouseService;
 
 @Service("CustomerChanceService")
 @Transactional(readOnly = true)
@@ -104,6 +106,12 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Autowired
 	private WeChatAppService weChatAppService;
+
+	@Autowired
+	private CustomerService customerService;
+
+	@Autowired
+	private HouseService houseService;
 
 	@Override
 	public void pageCustomerChance(Paging paging, List<Filter> filters, CustomerChanceVO customerChanceVO, String userId, Integer company) {
@@ -204,6 +212,37 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		if (customerChanceDao.queryCustomerChanceByCno(customerChanceVO.getCno()) != null) {
 			throw new FLException(330076, "客户机会已存在");
 		}
+
+		// ========== 自动处理客户和房产 ==========
+		// 1. 处理客户信息
+		CustomerVO customerVO = new CustomerVO();
+		customerVO.setName(customerChanceVO.getSource().getName());
+		customerVO.setPhone(customerChanceVO.getSource().getPhone());
+		if (customerChanceVO.getSource().getGender() != null) {
+			customerVO.setGender(customerChanceVO.getSource().getGender());
+		}
+
+		// 调用 existCustomer：自动判断客户是否存在，不存在则创建
+		customerService.existCustomer(customerVO, company);
+		Long cid = customerVO.getCid();
+
+		// 2. 处理房产信息
+		HouseVO houseVO = new HouseVO();
+		houseVO.setVillage(customerChanceVO.getSource().getVillage());
+		houseVO.setHouseNumber(customerChanceVO.getSource().getHouse().getHouseNumber());
+		if (customerChanceVO.getSource().getHouse() != null
+				&& customerChanceVO.getSource().getHouse().getArea() != null) {
+			houseVO.setArea(customerChanceVO.getSource().getHouse().getArea());
+		}
+
+		// 调用 existHouse：自动判断房产是否存在，不存在则创建
+		houseService.existHouse(houseVO, company);
+		Long hid = houseVO.getHid();
+
+		// 设置CID和HID到source对象
+		customerChanceVO.getSource().getCustomer().setCid(cid);
+		customerChanceVO.getSource().getHouse().setHid(hid);
+		// ==========================================
 
 		String phone = customerChanceVO.getSource().getPhone();
 
