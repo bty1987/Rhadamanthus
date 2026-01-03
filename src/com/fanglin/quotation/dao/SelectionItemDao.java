@@ -26,6 +26,8 @@ public interface SelectionItemDao extends Dao<SelectionItemPO> {
 
 	public SelectionItemPO pickSelectionItem(String orderId, Long qiid);
 
+	public int checkSelectionItem(long quotationFunctionAreaId, short index);
+
 	public int checkSelectionItem(String orderId);
 
 	public int countSelectionItem(String orderId, Long quoteId);

@@ -332,7 +332,31 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
 		customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
 
-		if (customerVO.getPhone() != null) customerPO.setPhone(FormatUtil.encodePhone(customerVO.getPhone()));
+		if (customerVO.getPhone() != null) {
+			customerPO.setPhone(FormatUtil.encodePhone(customerVO.getPhone()));
+
+			customerPhoneDao.clearCustomerPhoneForDefault(customerPO.getCid());
+
+			CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhone(customerPO.getCid(), customerPO.getPhone());
+
+			if (customerPhonePO == null) {
+
+				customerPhonePO = new CustomerPhonePO();
+
+				customerPhonePO.setCid(customerPO.getCid());
+				customerPhonePO.setStatus(CustomerPhonePO.STATUS_ENABLE_INT);
+				customerPhonePO.setDefaults(CustomerPhonePO.DEFAULTS_ENABLE_INT);
+
+				customerPhonePO.setPhone(customerPO.getPhone());
+
+				customerPhoneDao.save(customerPhonePO);
+			} else {
+				customerPhonePO.setStatus(CustomerPhonePO.STATUS_ENABLE_INT);
+				customerPhonePO.setDefaults(CustomerPhonePO.DEFAULTS_ENABLE_INT);
+
+				customerPhoneDao.update(customerPhonePO);
+			}
+		}
 
 		customerDao.update(customerPO);
 

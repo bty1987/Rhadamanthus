@@ -181,10 +181,11 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		// 注释：客户手机号码验证已在 addCustomerChance 中通过 existCustomer 处理
-		// if (customerSourceDao.queryCustomerSource(creater.getUid(), customerSourceVO.getPhone(), company) != null) {
-		//     throw new FLException(330071, "客户手机号码存在");
-		// }
+		String phone = FormatUtil.encodePhone(customerSourceVO.getPhone());
+
+		if (customerSourceDao.queryCustomerSource(creater.getUid(), phone, company) != null) {
+			throw new FLException(330071, "客户手机号码存在");
+		}
 
 		if (customerSourceVO.getBusitype() == null || customerSourceVO.getBusitype().getDbid() == null) {
 			throw new FLException(130061, "业务类型不存在");
@@ -225,10 +226,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			housePO = houseDao.get(customerSourceVO.getHouse().getHid());
 		}
 
-		// 注释：楼盘楼号验证已在 addCustomerChance 中通过 existHouse 处理
-		// if (housePO != null && customerSourceDao.queryCustomerSource(creater.getUid(), housePO.getHouseNumber(), housePO.getVillage().getVid(), company) != null) {
-		//     throw new FLException(330071, "客户楼盘楼号存在");
-		// }
+		if (housePO != null && customerSourceDao.queryCustomerSource(creater.getUid(), housePO.getHouseNumber(), housePO.getVillage().getVid(), company) != null) {
+			throw new FLException(330071, "客户楼盘楼号存在");
+		}
 
 		if (housePO != null) {
 
@@ -240,7 +240,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman", "busitype", "phone"));
 
 		if (customerSourceVO.getPhone() != null) {
-			customerSourcePO.setPhone(FormatUtil.encodePhone(customerSourceVO.getPhone()));
+			customerSourcePO.setPhone(phone);
 		}
 
 		customerSourcePO.setCreater(creater);

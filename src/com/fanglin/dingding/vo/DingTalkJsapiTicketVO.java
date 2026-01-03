@@ -4,7 +4,7 @@ public class DingTalkJsapiTicketVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -8780310391096195927L;
 
-	private Long jtid;
+	private Long djtid;
 
 	private String jsapi;
 
@@ -12,12 +12,12 @@ public class DingTalkJsapiTicketVO implements java.io.Serializable {
 
 	private Integer company;
 
-	public Long getJtid() {
-		return jtid;
+	public Long getDjtid() {
+		return djtid;
 	}
 
-	public void setJtid(Long jtid) {
-		this.jtid = jtid;
+	public void setDjtid(Long djtid) {
+		this.djtid = djtid;
 	}
 
 	public String getJsapi() {

@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.CustomerPhoneDao;
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.CppointDao;
@@ -69,6 +71,9 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private AdvancePaymentDao advancePaymentDao;
+
+	@Autowired
+	private CustomerDao customerDao;
 
 	@Autowired
 	private CustomerPhoneDao customerPhoneDao;
@@ -130,22 +135,31 @@ public class MemberServiceImpl implements MemberService {
 		List<String> phoneList = new ArrayList<String>();
 
 		for (MemberVO member : members) {
-			if (member.getPhone() != null) {
-				phoneList.add(FormatUtil.encodePhone(member.getPhone()));
-				resultMap.put(member.getPhone(), new ArrayList<MemberVO>());
-			} else {
-				throw new FLException(130021, "客户电话不存在");
+			if (member.getPhone() == null) continue;
+
+			phoneList.add(FormatUtil.encodePhone(member.getPhone()));
+			resultMap.put(member.getPhone(), new ArrayList<MemberVO>());
+		}
+
+		List<CustomerPO> customers = customerDao.queryCustomer(phoneList);
+
+		for (CustomerPO customerPO : customers) {
+
+			List<Long> customerIdList = phoneToCustomerMap.get(customerPO.getPhone());
+
+			if (customerIdList == null) {
+				customerIdList = new ArrayList<Long>();
+				phoneToCustomerMap.put(customerPO.getPhone(), customerIdList);
 			}
+			customerIdList.add(customerPO.getCid());
 		}
 
 		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhone(phoneList, CustomerPhonePO.STATUS_ENABLE_INT, null, null);
 
-		if (customerPhones == null || customerPhones.size() == 0) {
-			throw new FLException(130006, "客户电话不存在");
-		}
-
 		for (CustomerPhonePO customerPhone : customerPhones) {
+
 			List<Long> customerIdList = phoneToCustomerMap.get(customerPhone.getPhone());
+
 			if (customerIdList == null) {
 				customerIdList = new ArrayList<Long>();
 				phoneToCustomerMap.put(customerPhone.getPhone(), customerIdList);

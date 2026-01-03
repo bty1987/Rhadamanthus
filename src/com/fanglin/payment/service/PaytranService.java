@@ -36,4 +36,6 @@ public interface PaytranService {
 
 	public void alipay(Wxpay wxpay) throws FLException;
 
+	public void updateKey(String mchNo, String bsCheckoutPublickey, String bsPrivateKey) throws FLException;
+
 }

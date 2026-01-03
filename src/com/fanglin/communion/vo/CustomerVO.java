@@ -68,6 +68,12 @@ public class CustomerVO implements Serializable {
 		super();
 	}
 
+	public CustomerVO(String name, String phone) {
+		super();
+		this.name = name;
+		this.phone = phone;
+	}
+
 	public CustomerVO(Long cid) {
 		super();
 		this.cid = cid;

@@ -93,5 +93,7 @@ public class FormatUtil {
 		System.out.println(decodeCompany(AESHelper.decrypt("TAcmaH4kBDO1Njy/48Bg4Q==", "b4d617b336124c63", "b4d1a58a416957a5")));
 
 		System.out.println(FormatUtil.decodeCompany(FormatUtil.decodePhone("TAcmaH4kBDO1Njy/48Bg4Q==")));
+
+		System.out.println(FormatUtil.encodePhone(null));
 	}
 }

@@ -48,39 +48,18 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 			return new ArrayList<CustomerPhonePO>();
 		}
 
-		StringBuffer sql = new StringBuffer();
-		sql.append("select cp.* ");
-		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
-		sql.append("where (cp.phone in (:cphones) or c.phone in (:phones))");
-
-		if (defaults != null) {
-			sql.append(" and cp.defaults = :defaults");
-		}
-
-		if (status != null) {
-			sql.append(" and cp.status = :status");
-		} else {
-			sql.append(" and cp.status = 0");
-		}
+		Criteria query = session().createCriteria(CustomerPhonePO.class).add(Restrictions.in("phone", phones));
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
-			sql.append(" and c.company = :company ");
-		}
-
-		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerPhonePO.class);
-
-		query.setParameterList("cphones", phones).setParameterList("phones", phones);
-
-		if (SystemConfig.getInt("multicompany", 0) != 0) {
-			query.setInteger("company", company);
+			query.add(Restrictions.eq("company", company));
 		}
 
 		if (defaults != null) {
-			query.setShort("defaults", defaults);
+			query.add(Restrictions.eq("defaults", defaults));
 		}
 
 		if (status != null) {
-			query.setShort("status", status);
+			query.add(Restrictions.eq("status", status));
 		}
 
 		return query.list();

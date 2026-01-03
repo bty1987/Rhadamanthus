@@ -19,7 +19,7 @@ public class DingTalkAccessTokenPO implements java.io.Serializable {
 
 	public static final String COLUMN_COMPANY_STR = "company";
 
-	private long atid;
+	private long datid;
 
 	private String accesstoken;
 
@@ -46,13 +46,13 @@ public class DingTalkAccessTokenPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "atid")
-	public long getAtid() {
-		return atid;
+	@Column(name = "datid")
+	public long getDatid() {
+		return datid;
 	}
 
-	public void setAtid(long atid) {
-		this.atid = atid;
+	public void setDatid(long datid) {
+		this.datid = datid;
 	}
 
 	@Column(name = "accesstoken")

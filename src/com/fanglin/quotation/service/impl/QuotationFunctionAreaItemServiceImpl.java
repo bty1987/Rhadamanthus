@@ -15,12 +15,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.quotation.dao.ExtensionItemDao;
@@ -111,35 +109,31 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 				throw new FLException(200013, "报价项不存在");
 			}
 
-			if (extensionItemDao.countExtensionItem(quotationFunctionAreaPO.getQfaId(), qfaiId) == 0) {
+			if (extensionItemDao.countExtensionItem(quotationFunctionAreaPO.getQfaId(), qfaiId) > 0) {
+				throw new FLException(200043, "存在关联扩展项");
+			}
 
-				quotationFunctionAreaItemPO.setFormula(quotationFunctionAreaItemVO.getFormula());
-				quotationFunctionAreaItemPO.setNum(quotationFunctionAreaItemVO.getNum());
-				quotationFunctionAreaItemPO.setInitNum(quotationFunctionAreaItemVO.getInitNum());
+			quotationFunctionAreaItemPO.setFormula(quotationFunctionAreaItemVO.getFormula());
+			quotationFunctionAreaItemPO.setNum(quotationFunctionAreaItemVO.getNum());
+			quotationFunctionAreaItemPO.setInitNum(quotationFunctionAreaItemVO.getInitNum());
 
-				try {
-					quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
-				} catch (DataException e) {
-					System.out.println(JSON.toJSON(quotationFunctionAreaItemPO));
-					throw e;
-				}
+			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 
-				if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
+			if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
 
-					long qfaiid = quotationFunctionAreaItemPO.getQfaiId();
+				long qfaiid = quotationFunctionAreaItemPO.getQfaiId();
 
-					SelectionItemPO selectionItemPO = selectionItemDao.querySelectionItem(orderId, areaId, qfaiid, SelectionItemPO.TYPE_QUOTATION_SHORT);
+				SelectionItemPO selectionItemPO = selectionItemDao.querySelectionItem(orderId, areaId, qfaiid, SelectionItemPO.TYPE_QUOTATION_SHORT);
 
-					if (selectionItemPO != null) {
+				if (selectionItemPO != null) {
 
-						selectionItemPO.setInitNum(quotationFunctionAreaItemPO.getInitNum());
+					selectionItemPO.setInitNum(quotationFunctionAreaItemPO.getInitNum());
 
-						if (SelectionItemPO.STATUS_INIT_SHORT != selectionItemPO.getStatus()) {
-							selectionItemPO.setNum(quotationFunctionAreaItemPO.getNum());
-						}
-
-						selectionItemDao.update(selectionItemPO);
+					if (SelectionItemPO.STATUS_INIT_SHORT != selectionItemPO.getStatus()) {
+						selectionItemPO.setNum(quotationFunctionAreaItemPO.getNum());
 					}
+
+					selectionItemDao.update(selectionItemPO);
 				}
 			}
 

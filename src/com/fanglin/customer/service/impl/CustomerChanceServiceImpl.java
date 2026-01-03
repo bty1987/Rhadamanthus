@@ -17,6 +17,8 @@ import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
+import com.fanglin.communion.service.CustomerService;
+import com.fanglin.communion.service.HouseService;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
@@ -59,8 +61,6 @@ import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
-import com.fanglin.communion.service.CustomerService;
-import com.fanglin.building.service.HouseService;
 
 @Service("CustomerChanceService")
 @Transactional(readOnly = true)
@@ -210,14 +210,16 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		if (customerChanceDao.queryCustomerChanceByCno(customerChanceVO.getCno()) != null) {
-			throw new FLException(330076, "客户机会已存在");
+
+			customerSourceService.issueCustomerSource(customerChanceVO.getSource(), customerChanceVO, userId, company);
+
+			return;
 		}
 
 		// ========== 自动处理客户和房产 ==========
 		// 1. 处理客户信息
-		CustomerVO customerVO = new CustomerVO();
-		customerVO.setName(customerChanceVO.getSource().getName());
-		customerVO.setPhone(customerChanceVO.getSource().getPhone());
+		CustomerVO customerVO = new CustomerVO(customerChanceVO.getSource().getName(), customerChanceVO.getSource().getPhone());
+
 		if (customerChanceVO.getSource().getGender() != null) {
 			customerVO.setGender(customerChanceVO.getSource().getGender());
 		}
@@ -228,11 +230,12 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		// 2. 处理房产信息
 		HouseVO houseVO = new HouseVO();
+
 		houseVO.setVillage(customerChanceVO.getSource().getVillage());
 		houseVO.setHouseNumber(customerChanceVO.getSource().getHouse().getHouseNumber());
-		if (customerChanceVO.getSource().getHouse() != null
-				&& customerChanceVO.getSource().getHouse().getArea() != null) {
-			houseVO.setArea(customerChanceVO.getSource().getHouse().getArea());
+
+		if (customerChanceVO.getSource().getHouse() != null && customerChanceVO.getSource().getHouse().getBuildArea() != null) {
+			houseVO.setBuildArea(customerChanceVO.getSource().getHouse().getBuildArea());
 		}
 
 		// 调用 existHouse：自动判断房产是否存在，不存在则创建
@@ -244,10 +247,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChanceVO.getSource().getHouse().setHid(hid);
 		// ==========================================
 
-		String phone = customerChanceVO.getSource().getPhone();
-
 		customerChanceVO.getSource().setBusitype(customerChanceVO.getBusitype());
-		customerChanceVO.getSource().setPhone(phone.substring(0, 3) + "****" + phone.substring(7));
 
 		customerSourceService.addCustomerSource(customerChanceVO.getSource(), userId, company);
 
@@ -284,9 +284,6 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChanceVO.getSource().setCsid(customerChancePO.getSource().getCsid());
 		customerChanceVO.getSource().setName(customerChancePO.getSource().getCustomer().getName());
 
-		String phone = FormatUtil.decodePhone(customerChancePO.getSource().getCustomer().getPhone());
-
-		customerChanceVO.getSource().setPhone(phone.substring(0, 3) + "****" + phone.substring(7));
 		customerChanceVO.getSource().setGender(customerChancePO.getSource().getCustomer().getGender());
 		customerChanceVO.getSource().getHouse().setHouseNumber(customerChancePO.getSource().getHouse().getHouseNumber());
 		customerChanceVO.getSource().getVillage().setVid(customerChancePO.getHouse().getVillage().getVid());
