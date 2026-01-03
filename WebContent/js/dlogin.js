@@ -86,11 +86,6 @@ jQuery(function (a) {
 
     if (parent.window.isPC) {
         pcBody();
-    } else if (!location.hostname.startsWith('192.168')){
-        $("#unamePwdContainer").remove();
-        $("#QRLogin").remove();
-        $("#WXLogin").remove();
-        $("#WWLogin").remove();
     }
 
     config.demo && (config.server = 'result/', config.communion = 'result/', config.media = 'result/', QRCode = '/QRCode.json', queryVode = '/queryVode.json');
@@ -488,45 +483,38 @@ jQuery(function (a) {
         require('nw.gui').Window.get().close();
     }
 
+    
     function pcBody() {
+        var span = $('<img class="" src="" id="Verify" alt="看不清,换一张"/>').css({'float': 'right', 'height': '34px'});
         $('#winTop').css('display', "");
         $("div.main-container > div:first-child").remove();
         $("div.main-content").css('padding', '0xp 30px');
         $("div.main-content > div:first-child").removeClass('row');
-        $("div.main-content > div:first-child > div:first-child").removeClass('col-sm-10').removeAttr('style');
+        $("div.main-content > div:first-child > div:first-child").removeClass('col-sm-12').removeAttr('style');
         $('#login-box').css('overflow', 'hidden');
-        $("#loginFrom > div:first-child").css('margin-top', '10%');
-
-        // 移除图标和标题
+        $("#loginFrom > div:first-child").css('padding', '10px');
+        $('div.input-icon.input-icon-right.no-padding-right').css({"padding": "0px", "margin-top": "30px", "width": "100%"});
+        $('#nowCode').css({'width': '70%', 'float': 'left'});
+        $('#Verify').parent().remove();
+        $('#newCodeIcon').remove();
+        $('#nowCode').after(span);
+        $('#loginBtn').parent().removeClass('col-md-2');
+        $('.btn-toolbar button').css({'float': 'left','width': '32%'});
+        $('#changetoqrcode').css({'float': 'left', 'padding': '3px', 'width': '48%'});
         $('#icon').remove();
         $('#name').parent().remove();
         $('#ename').parent().remove();
-
-        // 调整登录容器样式
-        $("#unamePwdContainer > div:first-child").css({
-            'margin': '0 auto',
-            'max-width': '360px'
-        });
-
-        // 隐藏背景动画
+        $("#unamePwdContainer").css('margin-top', '14%');
+        $("#unamePwdContainer > div:first-child").removeClass('clearfix').removeAttr("style");
+        $("#unamePwdContainer > div:first-child > div:first-child").css({'padding': '0px', 'margin-top': '30px'});
+        $("#unamePwdContainer").find(".col-xs-8").removeClass('col-xs-8');
+        $('#dloginContainer').removeClass('clearfix').css({'margin': '', 'text-align': 'center'});
+        $('#dloginContainer div:first-child').removeClass('login_content');
         $('.slide').css('display', 'none');
         $('body').css('display', 'block');
         $('.login-layout').css('background-color', 'white');
-
-        // 企微登录区域 PC 端样式调整
-        $('#WWLogin .login_wwcode_text').css({
-            'padding': '30px 20px',
-            'text-align': 'center'
-        });
-        $('#wwLoginBtn').css({
-            'margin': '15px 0',
-            'font-size': '16px',
-            'padding': '12px 30px'
-        });
-        $('#WWLogin .login_wwcode_refresh').css({
-            'padding': '15px',
-            'text-align': 'center'
-        });
+        $('.main-content #login-box .login_content').css({'width': '100%', 'border': '0px'});
+        $('.main-content #login-box .clearfix').css('overflow', 'hidden');
 
     }
 

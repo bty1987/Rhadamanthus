@@ -368,7 +368,7 @@
                         com.focusPage("#tree3").unbind('click');
                         var deptList = null;
 
-                        com.post(api.dd.queryDDDepartment, {}, function(res) {
+                        com.post(api.dd.queryDingTalkDepartment, {}, function(res) {
 
                             deptList = res.departments;
                         }, null, false);
@@ -474,12 +474,12 @@
                                 }
                             }
 
-                            com.post(api.dd.queryDDUser, {
+                            com.post(api.dd.queryDingTalkUser, {
                                 "user.userid": v.userId
                             }, function(res) {
 
                                 if (res.user && res.user.userid != null) {
-                                    com.post(api.dd.updateDDUser, params, function(data) {
+                                    com.post(api.dd.updateDingTalkUser, params, function(data) {
 
                                         if ($.trim(data.errcode) == $.trim(0)) {
                                             com.showAlert(com.info, "更新成功");
@@ -488,7 +488,7 @@
                                         }
                                     });
                                 } else {
-                                    com.post(api.dd.addDDUser, params, function(data) {
+                                    com.post(api.dd.addDingTalkUser, params, function(data) {
 
                                         if ($.trim(data.errcode) == $.trim(0)) {
                                             com.showAlert(com.info, "创建成功");
@@ -523,7 +523,7 @@
 
                             var selectedDepts = [];
                             var phone;
-                            com.post(api.dd.queryDDUser, {
+                            com.post(api.dd.queryDingTalkUser, {
                                 "user.userid": v.userId
                             }, function(res) {
 
@@ -542,7 +542,7 @@
                                     "dids": selectedDepts
                                 };
 
-                                com.post(api.dd.updateDDUser, params, function(data) {
+                                com.post(api.dd.updateDingTalkUser, params, function(data) {
 
                                     if ($.trim(data.errcode) == $.trim(0)) {
                                         com.showAlert(com.info, "更新成功");
@@ -649,12 +649,12 @@
                         var message = "<p>确定要删除该员工吗?</p>";
                         com.showConfirm(message, function(result) {
 
-                            com.post(api.dd.queryDDUser, {
+                            com.post(api.dd.queryDingTalkUser, {
                                 "user.userid": v.userId
                             }, function(res) {
 
                                 if (res.user.name != null) {
-                                    com.post(api.dd.deleteDDUser, {
+                                    com.post(api.dd.deleteDingTalkUser, {
                                         "user.userid": v.userId
                                     }, function(data) {
 

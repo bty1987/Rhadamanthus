@@ -18,6 +18,8 @@ public interface SelectionService {
 
 	public SelectionVO addSelection(SelectionVO selectionVO, String userId) throws FLException;
 
+	public int checkSelection(SelectionVO selectionVO) throws FLException;
+
 	public int addSelection(Long qid, String userId) throws FLException;
 
 	public int updateSelection(SelectionVO selectionVO) throws FLException;

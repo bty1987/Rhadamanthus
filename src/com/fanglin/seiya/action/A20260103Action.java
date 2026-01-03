@@ -33,7 +33,10 @@ import com.fanglin.data.common.vo.DecorationBusitypeVO;
 @Controller
 public class A20260103Action extends BaseListAction {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8282907716768305249L;
 
 	@Autowired
 	private CustomerChanceService customerChanceService;
@@ -81,7 +84,7 @@ public class A20260103Action extends BaseListAction {
 	/**
 	 * 业务类型 - 对应 busitype.dbid
 	 */
-	private Integer busitype;
+	private Long busitype;
 
 	/**
 	 * 公司标识 - AES加密后的公司ID
@@ -90,15 +93,13 @@ public class A20260103Action extends BaseListAction {
 
 	/**
 	 * 添加客户线索接口
-	 *
+	 * 
 	 * 接收外部系统传入的客户线索信息，转换为 ERP 客户机会并创建
-	 *
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "addCustomerLead", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-		}, params = { "contentType", "text/html" })
+	@Action(value = "addCustomerLead", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCustomerLead() throws FLException {
 
 		CustomerChanceVO customerChanceVO = new CustomerChanceVO();
@@ -107,9 +108,7 @@ public class A20260103Action extends BaseListAction {
 		customerChanceVO.setCno(leadCode);
 
 		// 2. 业务类型
-		DecorationBusitypeVO busitype = new DecorationBusitypeVO();
-		busitype.setDbid(this.busitype);
-		customerChanceVO.setBusitype(busitype);
+		customerChanceVO.setBusitype(new DecorationBusitypeVO(this.busitype));
 
 		// 3. 客户资源
 		CustomerSourceVO source = new CustomerSourceVO();
@@ -130,14 +129,14 @@ public class A20260103Action extends BaseListAction {
 		// 房产信息
 		HouseVO houseVO = new HouseVO();
 		houseVO.setHouseNumber(houseNumber);
-		houseVO.setArea(buildArea);
+		houseVO.setBuildArea(buildArea);
 		source.setHouse(houseVO);
 
 		// 客户对象
 		source.setCustomer(new CustomerVO());
 
 		// 业务类型
-		source.setBusitype(busitype);
+		source.setBusitype(customerChanceVO.getBusitype());
 
 		customerChanceVO.setSource(source);
 
@@ -213,11 +212,11 @@ public class A20260103Action extends BaseListAction {
 		this.buildArea = buildArea;
 	}
 
-	public Integer getBusitype() {
+	public Long getBusitype() {
 		return busitype;
 	}
 
-	public void setBusitype(Integer busitype) {
+	public void setBusitype(Long busitype) {
 		this.busitype = busitype;
 	}
 

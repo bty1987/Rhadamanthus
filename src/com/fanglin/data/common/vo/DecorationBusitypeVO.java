@@ -34,6 +34,11 @@ public class DecorationBusitypeVO implements Serializable {
 		super();
 	}
 
+	public DecorationBusitypeVO(Long dbid) {
+		super();
+		this.dbid = dbid;
+	}
+
 	public DecorationBusitypeVO(DecorationBusitypeVO cascade) {
 		super();
 		this.cascade = cascade;

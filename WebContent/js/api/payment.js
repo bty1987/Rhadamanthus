@@ -1106,6 +1106,9 @@ $.extend(api, {
             tranargs: {
                 args: ["wxpay.paymentMoney"]
             }
+        },
+        updateKey: {
+            url: "updateKey.do"
         }
     }
 });

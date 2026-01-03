@@ -455,6 +455,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 			// 按品牌分组销售项
 			Map<Long, List<SalesItemPO>> brandItemsMap = new HashMap<Long, List<SalesItemPO>>();
+
 			for (SalesItemPO salesItemPO : salesItemPOs) {
 
 				if (salesItemPO.getPsiid() == 0 && salesItemPO.getType() == SalesItemPO.TYPE_PACKAGE_INT) continue;
@@ -523,8 +524,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 				}
 
 				// 设置结算单的金额信息
-				salesBalancePO.setTotal(Arith.round(brandTotal, 0, Arith.ROUND_CEILING));
-				salesBalancePO.setBalance(Arith.round(brandBalance, 0, Arith.ROUND_CEILING));
+				salesBalancePO.setTotal(brandTotal);
+				salesBalancePO.setBalance(Arith.round(brandBalance, 0, Arith.ROUND_HALF_UP));
 				salesBalancePO.setAllowance(brandAllowance);
 
 				// 检查是否需要设置为多结算类型
@@ -545,7 +546,9 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 				// 为该品牌的每个销售项创建结算项
 				for (SalesItemPO salesItemPO : brandItems) {
+
 					SalesBalanceItemPO salesBalanceItemPO = new SalesBalanceItemPO();
+
 					salesBalanceItemPO.setSbid(salesBalancePO.getSbid());
 					salesBalanceItemPO.setSalesItem(salesItemPO);
 					salesBalanceItemPO.setRawCtype(salesItemPO.getRawCtype());
@@ -561,6 +564,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 			// 更新销售单状态
 			salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT);
+
 			salesDao.update(salesPO);
 		}
 

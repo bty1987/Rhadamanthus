@@ -21,8 +21,10 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
+import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.SelectionDO;
 import com.fanglin.quotation.po.SelectionPO;
@@ -49,6 +51,9 @@ public class SelectionServiceImpl implements SelectionService {
 
 	@Autowired
 	private QuotationDao quotationDao;
+
+	@Autowired
+	private QuotationFunctionAreaDao quotationFunctionAreaDao;
 
 	@Autowired
 	private DecorationDao decorationDao;
@@ -122,6 +127,26 @@ public class SelectionServiceImpl implements SelectionService {
 		BeanUtil.copyProperties(selectionPO, selectionVO, Arrays.asList("creater", "splitter", "traner"));
 
 		return selectionVO;
+	}
+
+	@Override
+	public int checkSelection(SelectionVO selectionVO) throws FLException {
+
+		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
+
+		if (selectionPO == null) {
+			throw new FLException(200035, "选材单不存在");
+		}
+
+		List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(selectionPO.getQid());
+
+		for (QuotationFunctionAreaPO quotationFunctionAreaPO : quotationFunctionAreaPOs) {
+			if (selectionItemDao.checkSelectionItem(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()) != 0) throw new FLException(200041, "存在未关联选材项");
+		}
+
+		if (selectionItemDao.checkSelectionItem(selectionPO.getOrderId()) != 0) throw new FLException(200041, "存在未关联选材项");
+
+		return 0;
 	}
 
 	@Override
@@ -309,7 +334,7 @@ public class SelectionServiceImpl implements SelectionService {
 		}
 
 		if (selectionItemDao.checkSelectionItem(selectionPO.getOrderId()) != 0) {
-			throw new FLException(200041, "存在未关联选材项");
+			// throw new FLException(200041, "存在未关联选材项");
 		}
 
 		String orderId = selectionPO.getOrderId();

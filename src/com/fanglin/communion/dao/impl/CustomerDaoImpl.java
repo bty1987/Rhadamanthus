@@ -88,6 +88,12 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 		return session().createCriteria(CustomerPO.class).add(Restrictions.eq("phone", phone)).list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CustomerPO> queryCustomer(List<String> phones) {
+		return session().createCriteria(CustomerPO.class).add(Restrictions.in("phone", phones)).list();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

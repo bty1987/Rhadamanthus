@@ -19,7 +19,7 @@ public class DingTalkJsapiTicketPO implements java.io.Serializable {
 
 	public static final String COLUMN_COMPANY_STR = "company";
 
-	private long jtid;
+	private long djtid;
 
 	private String jsapi;
 
@@ -46,13 +46,13 @@ public class DingTalkJsapiTicketPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "jtid")
-	public long getJtid() {
-		return jtid;
+	@Column(name = "djtid")
+	public long getDjtid() {
+		return djtid;
 	}
 
-	public void setJtid(long jtid) {
-		this.jtid = jtid;
+	public void setDjtid(long djtid) {
+		this.djtid = djtid;
 	}
 
 	@Column(name = "jsapi")

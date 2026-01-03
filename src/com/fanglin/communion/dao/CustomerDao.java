@@ -24,4 +24,6 @@ public interface CustomerDao extends Dao<CustomerPO> {
 
 	public List<CustomerPO> queryCustomer(String phone);
 
+	public List<CustomerPO> queryCustomer(List<String> phones);
+
 }

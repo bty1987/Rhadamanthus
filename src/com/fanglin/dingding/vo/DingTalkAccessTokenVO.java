@@ -4,7 +4,7 @@ public class DingTalkAccessTokenVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -859413617235576784L;
 
-	private Long atid;
+	private Long datid;
 
 	private String accesstoken;
 
@@ -12,12 +12,12 @@ public class DingTalkAccessTokenVO implements java.io.Serializable {
 
 	private Integer company;
 
-	public Long getAtid() {
-		return atid;
+	public Long getDatid() {
+		return datid;
 	}
 
-	public void setAtid(Long atid) {
-		this.atid = atid;
+	public void setDatid(Long datid) {
+		this.datid = datid;
 	}
 
 	public String getAccesstoken() {

@@ -515,14 +515,14 @@ $.extend(api, {
             url: "updateConstructionInfo.do",
             type: "update",
             tranargs: {
-                args: ["constructionInfo.timeLimit", "constructionInfo.designPeriod"]
+                args: ["constructionInfo.timeLimit", "constructionInfo.designPeriod", "constructionInfo.decoration.house.quoteArea"]
             }
         },
         updateConstructionInfoByOrderId: {
             url: "updateConstructionInfoByOrderId.do",
             type: "update",
             tranargs: {
-                args: ["constructionInfo.timeLimit", "constructionInfo.designPeriod"]
+                args: ["constructionInfo.timeLimit", "constructionInfo.designPeriod", "constructionInfo.decoration.house.quoteArea"]
             }
         },
 

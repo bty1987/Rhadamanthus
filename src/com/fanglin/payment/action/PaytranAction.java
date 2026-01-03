@@ -29,6 +29,12 @@ public class PaytranAction extends BaseListAction {
 
 	private PaytranVO paytran;
 
+	private String mchNo;
+
+	private String bsCheckoutPublickey;
+
+	private String bsPrivateKey;
+
 	@Action(value = "pagePaytran", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pagePaytran() throws FLException {
 
@@ -117,6 +123,14 @@ public class PaytranAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateKey", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateKey() throws FLException {
+
+		paytranService.updateKey(mchNo, bsCheckoutPublickey, bsPrivateKey);
+
+		return SUCCESS;
+	}
+
 	public List<PaytranVO> getPaytrans() {
 		return paytrans;
 	}
@@ -131,6 +145,30 @@ public class PaytranAction extends BaseListAction {
 
 	public void setPaytran(PaytranVO paytran) {
 		this.paytran = paytran;
+	}
+
+	public String getMchNo() {
+		return mchNo;
+	}
+
+	public void setMchNo(String mchNo) {
+		this.mchNo = mchNo;
+	}
+
+	public String getBsCheckoutPublickey() {
+		return bsCheckoutPublickey;
+	}
+
+	public void setBsCheckoutPublickey(String bsCheckoutPublickey) {
+		this.bsCheckoutPublickey = bsCheckoutPublickey;
+	}
+
+	public String getBsPrivateKey() {
+		return bsPrivateKey;
+	}
+
+	public void setBsPrivateKey(String bsPrivateKey) {
+		this.bsPrivateKey = bsPrivateKey;
 	}
 
 }

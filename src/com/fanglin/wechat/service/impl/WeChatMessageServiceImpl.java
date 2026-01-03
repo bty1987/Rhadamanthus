@@ -67,13 +67,13 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 		try {
 			// 获取 AccessToken
 			WeChatAccessTokenPO wAccessTokenPO = weChatAccessTokenDao.queryAccessToken(0);
-			SystemConfigPO wapi = systemConfigDao.querySystemConfig("wapi");
+			SystemConfigPO wapi = systemConfigDao.querySystemConfig("WECHAT_WXAPI_PATH_STR");
 
 			// 查询用户的 OpenID
 			WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWeChatOpenUnion(unionId, WeChatMessageTemplatePO.TYPE_PUBLIC_INT, 1);
 			final WeChatMessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate("ServiceSchedule", WeChatMessageTemplatePO.TYPE_PUBLIC_INT);
 
-			SystemConfigPO publicAppid = systemConfigDao.querySystemConfig("WECHAT_APPID_PUBLIC_INT", 0);
+			SystemConfigPO publicAppid = systemConfigDao.querySystemConfig("WECHAT_APPID_0_0");
 
 			if (wxOpenUnionPO == null) {
 				logger.warn("未找到用户信息: unionId={}", unionId);
@@ -97,7 +97,7 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 			// 设置小程序路径
 			final String miniprogram = path != null && !path.startsWith("http") ? path : null;
 			if (miniprogram != null && !"".equals(miniprogram)) {
-				final SystemConfigPO server = systemConfigDao.querySystemConfig("WECHAT_APPID_APPLET_INT", 5);
+				final SystemConfigPO server = systemConfigDao.querySystemConfig("WECHAT_APPID_1_5");
 				params.put("miniprogram", new HashMap<String, String>() {
 					{
 						put("appid", server.getValue());
@@ -173,7 +173,7 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 			}
 
 			// 获取微信 API 配置
-			SystemConfigPO wapi = systemConfigDao.querySystemConfig("wapi");
+			SystemConfigPO wapi = systemConfigDao.querySystemConfig("WECHAT_WXAPI_PATH_STR");
 			WeChatAccessTokenPO wAccessTokenPO = weChatAccessTokenDao.queryAccessToken(0);
 
 			// 构建微信模板消息参数
@@ -241,7 +241,7 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 		try {
 			// 获取 AccessToken
 			WeChatAccessTokenPO wAccessTokenPO = weChatAccessTokenDao.queryAccessToken(0);
-			SystemConfigPO wapi = systemConfigDao.querySystemConfig("wapi");
+			SystemConfigPO wapi = systemConfigDao.querySystemConfig("WECHAT_WXAPI_PATH_STR");
 
 			// 查询用户的 OpenID
 			WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWeChatOpenUnion(unionId, WeChatMessageTemplatePO.TYPE_PUBLIC_INT);

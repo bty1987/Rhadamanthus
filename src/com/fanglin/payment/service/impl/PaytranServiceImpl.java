@@ -1130,6 +1130,31 @@ public class PaytranServiceImpl implements PaytranService {
 
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateKey(String mchNo, String bsCheckoutPublickey, String bsPrivateKey) throws FLException {
+
+		if (mchNo == null || "".equals(mchNo.trim())) {
+			throw new FLException(150001, "商户号不能为空");
+		}
+
+		if (bsCheckoutPublickey == null || "".equals(bsCheckoutPublickey.trim())) {
+			throw new FLException(150002, "收银台秘钥不能为空");
+		}
+
+		if (bsPrivateKey == null || "".equals(bsPrivateKey.trim())) {
+			throw new FLException(150003, "商户私钥不能为空");
+		}
+
+		try {
+			com.fanglin.swiftpass.airpos.Airpos.updateKey(mchNo, bsCheckoutPublickey, bsPrivateKey);
+		} catch (Exception e) {
+			log.error("更新兴业支付通道秘钥失败: mchNo={}", mchNo, e);
+			throw new FLException(150054, "更新支付通道秘钥失败: " + e.getMessage());
+		}
+
+	}
+
 	public void makePayment(Wxpay wxpay, String userId) throws FLException {
 
 		long ptid = wxpay.getPaymentptid();

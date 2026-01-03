@@ -46,9 +46,9 @@ public class Airpos {
 
 	// private static String respPubKey; // 公钥
 
-	private static String bsPrivateKey; // 更新支付通道密钥-兴E付商户私钥
+	// private static String bsPrivateKey; // 更新支付通道密钥-兴E付商户私钥
 
-	private static String bsCheckoutPublickey; // 更新支付通道密钥-收银台商户公钥&支付通知验签公钥
+	// private static String bsCheckoutPublickey; // 更新支付通道密钥-收银台商户公钥&支付通知验签公钥
 
 	private static String xingEpayPublickey; // 更新支付通道密钥-兴E付平台公钥
 
@@ -70,8 +70,8 @@ public class Airpos {
 			prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
 
 			// respPubKey = prop.getProperty("RESPPUBKEY");
-			bsPrivateKey = prop.getProperty("BSPRIVATEKEY");
-			bsCheckoutPublickey = prop.getProperty("BSCHECKOUTPUBLICKEY");
+			// bsPrivateKey = prop.getProperty("BSPRIVATEKEY");
+			// bsCheckoutPublickey = prop.getProperty("BSCHECKOUTPUBLICKEY");
 			xingEpayPublickey = prop.getProperty("XINGEPAYPUBLICKEY");
 
 			swiftpass_query_url = "/api/openbill/queryBillInfo";
@@ -261,14 +261,14 @@ public class Airpos {
 
 	}
 
-	public static void updateKey(CustypePO custypePO) throws Exception {
+	public static void updateKey(String mchNo, String bsCheckoutPublickey, String bsPrivateKey) throws Exception {
 
 		TreeMap<String, String> params = new TreeMap<String, String>();
 
-		params.put("mchNo", custypePO.getNo()); // 商户号
+		params.put("mchNo", mchNo); // 商户号
 		params.put("channelType", "SWIFT_PASS"); // 渠道类型
 		params.put("signType", "RSA_1_256"); // 签名类型
-		String prikey = SmUtil.sm2(null, bsCheckoutPublickey).encryptHex(bsPrivateKey, KeyType.PublicKey);
+		String prikey = SmUtil.sm2(null, bsCheckoutPublickey).encryptHex(bsPrivateKey, KeyType.PublicKey); // 收银台公钥+商户私钥
 		params.put("privateKey", prikey); // 签名私钥
 		params.put("publicKey", xingEpayPublickey); // 平台公钥
 

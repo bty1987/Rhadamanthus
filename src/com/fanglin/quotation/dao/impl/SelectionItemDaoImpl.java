@@ -116,16 +116,28 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	}
 
 	@Override
-	public int checkSelectionItem(String orderId) {
+	public int checkSelectionItem(long quotationFunctionAreaId, short index) {
 
 		StringBuffer sql = new StringBuffer("SELECT count(*) FROM quotation.quotation q ");
 
 		sql.append("INNER JOIN quotation.quotationfunctionarea qfa ON q.qid = qfa.quotationId ");
-		sql.append("INNER JOIN quotation.quotationfunctionareaitem2 qfai ON qfa.qfaid = qfai.quotationFunctionAreaId ");
+		sql.append(String.format("INNER JOIN quotation.quotationfunctionareaitem%s qfai ON qfa.qfaid = qfai.quotationFunctionAreaId ", index));
 		sql.append("LEFT JOIN quotation.selectionitem si on si.orderId = q.orderId AND qfai.qfaiId = si.quoteid AND si.type = 0 ");
-		sql.append("LEFT JOIN quotation.extension e ON e.orderId = q.orderId ");
-		sql.append("LEFT JOIN quotation.extensionitem ei ON ei.eid = e.eid AND qfai.qfaiid = ei.quoteItemId AND ei.type = 0 ");
-		sql.append("where q.orderId = :orderId AND q.defaults = 1 AND si.siid is null AND ei.eiid is null;");
+		sql.append("WHERE qfa.qfaid = :qfaid AND q.defaults = 1 AND si.siid is null;");
+
+		BigInteger count = (BigInteger) session().createSQLQuery(sql.toString()).setLong("qfaid", quotationFunctionAreaId).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
+	}
+
+	@Override
+	public int checkSelectionItem(String orderId) {
+
+		StringBuffer sql = new StringBuffer("SELECT * FROM quotation.extension e ");
+
+		sql.append("LEFT JOIN quotation.extensionitem ei ON ei.eid = e.eid AND ei.subtype not in (0, 1) ");
+		sql.append("LEFT JOIN quotation.selectionitem si on si.orderId = e.orderId AND ei.eiid = si.quoteid AND si.type in (1, 2) ");
+		sql.append("WHERE e.orderId = :orderId AND si.siid is null and ei.eiid is not null");
 
 		BigInteger count = (BigInteger) session().createSQLQuery(sql.toString()).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).uniqueResult();
 

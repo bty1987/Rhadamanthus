@@ -20,6 +20,8 @@ public class Arith {
 	public static final int ROUND_DOWN = BigDecimal.ROUND_DOWN;
 	public static final int ROUND_CEILING = BigDecimal.ROUND_CEILING;
 	public static final int ROUND_FLOOR = BigDecimal.ROUND_FLOOR;
+	public static final int ROUND_HALF_UP = BigDecimal.ROUND_HALF_UP;
+	public static final int ROUND_HALF_DOWN = BigDecimal.ROUND_HALF_DOWN;
 
 	private static final int DEF_SCALE = 3;
 
@@ -287,5 +289,7 @@ public class Arith {
 		System.out.println(Arith.mul(Arith.div(1111, 1000000), 1000000));
 
 		System.out.println(Arith.round(13134, 0, BigDecimal.ROUND_FLOOR));
+
+		System.out.println(Arith.round(-4400l, 0, BigDecimal.ROUND_HALF_UP));
 	}
 };
