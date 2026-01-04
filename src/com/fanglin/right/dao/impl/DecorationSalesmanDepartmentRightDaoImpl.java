@@ -48,7 +48,7 @@ public class DecorationSalesmanDepartmentRightDaoImpl extends DaoImpl<Decoration
 	@Override
 	public int deleteDecorationSalesmanDepartmentRight(int uid, int company) {
 
-		String sql = "delete from platform.decorationsalesmandepartmentright where uId = :uId and company = :company";
+		String sql = "delete from platform.decorationsalesmandepartmentright where uid = :uid and company = :company";
 		session().createSQLQuery(sql).setLong("uid", uid).setInteger("company", company).executeUpdate();
 
 		return 0;

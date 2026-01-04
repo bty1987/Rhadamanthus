@@ -242,7 +242,7 @@ jQuery(function (a) {
                 method: 'GET',
                 timeout: 15000,
                 data: {
-                    "domain": "https://test-erp.fanglin.vip/xlogin.html",
+                    "domain": "https://platform-erp.fanglin.vip/xlogin.html",
                 },
                 success: function(response) {
                     console.log('获取企业微信登录URL响应:', response);
