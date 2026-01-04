@@ -66,8 +66,27 @@ jQuery(function($) {
         // 检查登录回调
         checkLoginCallback();
 
+        // 预加载验证码图片（确保缓存失效）
+        preloadVerifyCode();
+
         // 默认初始化扫码登录
         initQRCodeLogin();
+    }
+
+    /**
+     * 预加载验证码
+     */
+    function preloadVerifyCode() {
+        var $verifyImg = $('#Verify');
+        if ($verifyImg.length > 0) {
+            // 确保验证码图片有唯一的时间戳
+            var currentSrc = $verifyImg.attr('src');
+            if (currentSrc && !currentSrc.includes('?')) {
+                // 如果没有参数，添加初始时间戳
+                $verifyImg.attr('src', currentSrc + '?t=' + new Date().getTime());
+            }
+            console.log('验证码预加载完成:', $verifyImg.attr('src'));
+        }
     }
 
     /**
@@ -125,11 +144,13 @@ jQuery(function($) {
                 passwordPanel.style.opacity = '1';
                 $(passwordPanel).addClass('active');
 
-                // 刷新验证码
-                refreshVerifyCode();
-
                 // 重置密码表单状态
                 resetPasswordForm();
+
+                // 延迟刷新验证码（确保DOM已经渲染完成）
+                setTimeout(function() {
+                    refreshVerifyCode();
+                }, 50);
             }
         });
     }
@@ -273,7 +294,17 @@ jQuery(function($) {
     function refreshVerifyCode() {
         var $verifyImg = $('#Verify');
         if ($verifyImg.length > 0) {
-            $verifyImg.attr('src', 'images/verifyCode.jpg?t=' + new Date().getTime());
+            // 添加随机参数确保每次都重新加载
+            var timestamp = new Date().getTime();
+            var random = Math.floor(Math.random() * 10000);
+            $verifyImg.attr('src', 'images/verifyCode.jpg?t=' + timestamp + '&r=' + random);
+
+            // 监听图片加载完成事件
+            $verifyImg.off('load').on('load', function() {
+                console.log('验证码加载完成');
+            }).off('error').on('error', function() {
+                console.error('验证码加载失败');
+            });
         }
     }
 
