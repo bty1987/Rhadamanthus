@@ -43,6 +43,12 @@ public class CityVO implements Serializable {
 		this.region = region;
 	}
 
+	public CityVO(String name, String province) {
+		super();
+		this.name = name;
+		this.province = province;
+	}
+
 	public Integer getCid() {
 		return cid;
 	}

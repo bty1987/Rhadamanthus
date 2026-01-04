@@ -17,11 +17,13 @@ import com.fanglin.system.po.CityPO;
 import com.fanglin.utils.Paging;
 
 public interface CityDao extends Dao<CityPO> {
-	
+
 	public List<CityPO> pageCity(Paging paging, List<Filter> filters);
-	
+
 	public List<CityPO> pageCityByName(Paging paging, String name);
 
 	public List<CityPO> queryCityByRid(Integer rid);
-	
+
+	public CityPO queryCityByNameAndProvince(String name, String province);
+
 }

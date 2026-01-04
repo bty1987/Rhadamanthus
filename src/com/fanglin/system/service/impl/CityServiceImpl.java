@@ -118,14 +118,15 @@ public class CityServiceImpl implements CityService {
 	@Transactional
 	public void addCity(CityVO cityVO) throws FLException {
 
-		if (cityVO.getRegion() == null) {
-			throw new FLException(230020, "大区不存在");
-		}
+		RegionPO regionPO = null;
 
-		RegionPO regionPO = regionDao.get(cityVO.getRegion().getRid());
+		// 如果提供了region信息,则验证region是否存在
+		if (cityVO.getRegion() != null) {
+			regionPO = regionDao.get(cityVO.getRegion().getRid());
 
-		if (regionPO == null) {
-			throw new FLException(230020, "大区不存在");
+			if (regionPO == null) {
+				throw new FLException(230020, "大区不存在");
+			}
 		}
 
 		CityPO cityPO = new CityPO();
@@ -141,6 +142,7 @@ public class CityServiceImpl implements CityService {
 		cityPO.setName(cityVO.getName());
 		cityPO.setProvince(cityVO.getProvince());
 
+		// region可以为空
 		cityPO.setRegion(regionPO);
 
 		cityPO.setPinyin((String) PinYin4Util.getPinyin(cityVO.getName()).get(0));
@@ -158,18 +160,20 @@ public class CityServiceImpl implements CityService {
 			throw new FLException(230019, "城市不存在");
 		}
 
-		if (cityVO.getRegion() == null) {
-			throw new FLException(230020, "大区不存在");
-		}
+		RegionPO regionPO = null;
 
-		RegionPO regionPO = regionDao.get(cityVO.getRegion().getRid());
+		// 如果提供了region信息,则验证region是否存在
+		if (cityVO.getRegion() != null) {
+			regionPO = regionDao.get(cityVO.getRegion().getRid());
 
-		if (regionPO == null) {
-			throw new FLException(230020, "大区不存在");
+			if (regionPO == null) {
+				throw new FLException(230020, "大区不存在");
+			}
 		}
 
 		BeanUtil.copyProperties(cityVO, cityPO, Arrays.asList("no", "region"));
 
+		// region可以为空
 		cityPO.setRegion(regionPO);
 
 		cityPO.setPinyin((String) PinYin4Util.getPinyin(cityVO.getName()).get(0));
@@ -213,5 +217,44 @@ public class CityServiceImpl implements CityService {
 		}
 
 		return 0;
+	}
+
+	@Override
+	@Transactional
+	public CityVO existCity(CityVO cityVO) throws FLException {
+		// 参数验证
+		if (cityVO == null || cityVO.getName() == null || cityVO.getProvince() == null) {
+			throw new FLException(230021, "城市名称和省份不能为空");
+		}
+
+		// 通过名称和省份查询城市是否存在
+		CityPO cityPO = cityDao.queryCityByNameAndProvince(cityVO.getName(), cityVO.getProvince());
+
+		// 如果城市不存在,则创建
+		if (cityPO == null) {
+			cityPO = new CityPO();
+
+			// 生成城市编号
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CITY_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
+
+			StringBuffer no = new StringBuffer();
+			no.append(SystemConfig.getString("companyIdent", ""));
+			no.append(SystemConfig.getString("cityIdent", "C_"));
+			no.append(FormatUtil.fillZero(count, "00"));
+
+			cityPO.setNo(no.toString());
+			cityPO.setName(cityVO.getName());
+			cityPO.setProvince(cityVO.getProvince());
+			cityPO.setRegion(null); // region可以为空
+
+			// 生成拼音
+			cityPO.setPinyin((String) PinYin4Util.getPinyin(cityVO.getName()).get(0));
+
+			// 保存新城市
+			cityDao.save(cityPO);
+		}
+
+		// 返回城市信息
+		return cityPO.ptv(new CityVO(new RegionVO()));
 	}
 }
