@@ -35,4 +35,12 @@ public interface RegionService {
 
 	public void deleteRegionByRid(Integer rid);
 
+	/**
+	 * 省份存在验证方法 - 通过名称进行验证
+	 * 不存在则创建,存在则返回省份信息
+	 * @param name 省份名称
+	 * @return 省份信息VO
+	 */
+	public RegionVO existRegion(String name);
+
 }

@@ -172,7 +172,43 @@ public class RegionServiceImpl implements RegionService {
 	@Override
 	@Transactional
 	public void deleteRegionByRid(Integer rid){
-		
+
 		regionDao.deleteById(rid);
+	}
+
+	@Override
+	@Transactional
+	public RegionVO existRegion(String name) {
+		// 通过名称查询省份
+		List<RegionPO> regionPOs = regionDao.pageRegionByName(new Paging(0, 1), name);
+
+		RegionPO regionPO;
+		RegionVO regionVO = new RegionVO();
+
+		// 如果不存在则创建
+		if (regionPOs == null || regionPOs.isEmpty()) {
+			regionPO = new RegionPO();
+
+			// 生成编号
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_REGION_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
+			StringBuffer no = new StringBuffer();
+			no.append(SystemConfig.getString("regionIdent", "A_"));
+			no.append(FormatUtil.fillZero(count, "00"));
+			regionPO.setNo(no.toString());
+
+			// 设置名称和拼音
+			regionPO.setName(name);
+			regionPO.setPinyin((String) PinYin4Util.getPinyin(name).get(0));
+
+			// 保存到数据库
+			regionDao.save(regionPO);
+		} else {
+			// 如果存在则使用第一条记录
+			regionPO = regionPOs.get(0);
+		}
+
+		// 转换为VO并返回
+		BeanUtil.copyProperties(regionPO, regionVO);
+		return regionVO;
 	}
 }
