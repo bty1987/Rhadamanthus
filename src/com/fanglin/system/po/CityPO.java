@@ -69,7 +69,7 @@ public class CityPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(nullable = false, name = "rid", referencedColumnName = "rid")
+	@JoinColumn(nullable = true, name = "rid", referencedColumnName = "rid")
 	public RegionPO getRegion() {
 		return region;
 	}

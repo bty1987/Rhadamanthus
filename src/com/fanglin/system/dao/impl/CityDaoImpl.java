@@ -53,7 +53,15 @@ public class CityDaoImpl extends DaoImpl<CityPO> implements CityDao {
 	public List<CityPO> queryCityByRid(Integer rid) {
 		return session().createCriteria(CityPO.class).add(Restrictions.eq("region.rid",rid)).list();
 	}
-	
+
+	@Override
+	public CityPO queryCityByNameAndProvince(String name, String province) {
+		return (CityPO) session().createCriteria(CityPO.class)
+				.add(Restrictions.eq("name", name))
+				.add(Restrictions.eq("province", province))
+				.uniqueResult();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){

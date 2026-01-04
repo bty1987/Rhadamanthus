@@ -37,4 +37,15 @@ public interface CityService {
 
 	public int deleteCity(List<Integer> cids) throws FLException;
 
+	/**
+	 * 验证城市是否存在
+	 * 如果城市存在,返回城市信息
+	 * 如果城市不存在,则自动创建并返回新创建的城市信息
+	 *
+	 * @param cityVO 城市信息(必须包含name和province)
+	 * @return 城市信息
+	 * @throws FLException
+	 */
+	public CityVO existCity(CityVO cityVO) throws FLException;
+
 }
