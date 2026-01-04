@@ -14,9 +14,11 @@ import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.communion.dao.DepartmentDao;
+import com.fanglin.communion.dao.VillageDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
+import com.fanglin.communion.po.VillagePO;
 import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.service.HouseService;
 import com.fanglin.communion.vo.CustomerVO;
@@ -112,6 +114,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Autowired
 	private HouseService houseService;
+
+	@Autowired
+	private VillageDao villageDao;
 
 	@Override
 	public void pageCustomerChance(Paging paging, List<Filter> filters, CustomerChanceVO customerChanceVO, String userId, Integer company) {
@@ -230,6 +235,17 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		// 2. 处理房产信息
 		HouseVO houseVO = new HouseVO();
+
+		// 验证楼盘是否存在
+		String villageNo = customerChanceVO.getSource().getVillage().getNo();
+		if (StringUtils.isEmpty(villageNo)) {
+			throw new FLException(130018, "楼盘编号不能为空");
+		}
+
+		VillagePO villagePO = villageDao.get(villageNo);
+		if (villagePO == null) {
+			throw new FLException(130018, "楼盘不存在");
+		}
 
 		houseVO.setVillage(customerChanceVO.getSource().getVillage());
 		houseVO.setHouseNumber(customerChanceVO.getSource().getHouse().getHouseNumber());
