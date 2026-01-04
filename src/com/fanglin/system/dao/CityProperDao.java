@@ -17,6 +17,8 @@ public interface CityProperDao extends Dao<CityProperPO> {
 	public List<CityProperPO> queryCityProperByCid(Integer cid);
 	
 	public List<CityProperPO> queryCityProperByCids(List<Integer> cids);
-	
+
 	public int countCityProperByCid(Integer cid);
+
+	public CityProperPO queryCityProperByNameAndCid(String name, Integer cid);
 }

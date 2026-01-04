@@ -60,6 +60,16 @@ public class CityProperDaoImpl extends DaoImpl<CityProperPO> implements CityProp
 		return count.intValue();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public CityProperPO queryCityProperByNameAndCid(String name, Integer cid) {
+		List<CityProperPO> list = session().createCriteria(CityProperPO.class)
+			.add(Restrictions.eq("name", name))
+			.add(Restrictions.eq("city.cid", cid))
+			.list();
+		return list.isEmpty() ? null : list.get(0);
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

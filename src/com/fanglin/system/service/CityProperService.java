@@ -40,4 +40,12 @@ public interface CityProperService {
 
 	public String deleteCityProper(List<Integer> cpids);
 
+	/**
+	 * 验证城区是否存在，不存在则创建，存在则返回城区信息
+	 * @param cityProperVO 包含城区名称和所属城市的VO对象
+	 * @return 返回城区信息（已存在或新建的）
+	 * @throws FLException
+	 */
+	public CityProperVO existCity(CityProperVO cityProperVO) throws FLException;
+
 }
