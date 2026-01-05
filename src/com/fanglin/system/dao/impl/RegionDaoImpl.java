@@ -25,12 +25,12 @@ import com.fanglin.utils.Paging;
 @Repository("regionDaoImpl")
 public class RegionDaoImpl extends DaoImpl<RegionPO> implements RegionDao {
 
-	public RegionDaoImpl(){
+	public RegionDaoImpl() {
 		super(RegionPO.class);
 	}
 
 	@Override
-	public List<RegionPO> pageRegion(Paging paging, List<Filter> filters){
+	public List<RegionPO> pageRegion(Paging paging, List<Filter> filters) {
 
 		PagingQuery<RegionPO> query = pagingQuery(paging, RegionPO.class);
 
@@ -38,38 +38,42 @@ public class RegionDaoImpl extends DaoImpl<RegionPO> implements RegionDao {
 
 		return query.list();
 	}
-	
+
 	@Override
 	public List<RegionPO> pageRegionByName(Paging paging, String name) {
-		
+
 		PagingQuery<RegionPO> query = pagingQuery(paging, RegionPO.class);
-		
+
 		query.add(Restrictions.or(Restrictions.ilike(RegionPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(RegionPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
-		
+
 		return query.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<RegionPO> queryRegion(){
+	public List<RegionPO> queryRegion() {
 		return session().createCriteria(RegionPO.class).list();
 	}
-	
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null){
-			for(Filter filter: filters){
-					
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
 
-				if(RegionPO.COLUMN_NAME_STR.equals(field)){
-					query.add(query.getCriterion(field, data, op));
-				}
+	@Override
+	public RegionPO queryRegion(String name) {
+		return (RegionPO) session().createCriteria(RegionPO.class).add(Restrictions.eq("name", name)).setMaxResults(1).uniqueResult();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (RegionPO.COLUMN_NAME_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
 			}
 		}
 	}
-
 
 }

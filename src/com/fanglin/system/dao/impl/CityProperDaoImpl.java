@@ -31,7 +31,7 @@ public class CityProperDaoImpl extends DaoImpl<CityProperPO> implements CityProp
 	}
 
 	@Override
-	public List<CityProperPO> pageCityProperByName(Paging paging, String name) {
+	public List<CityProperPO> pageCityProper(Paging paging, String name) {
 
 		PagingQuery<CityProperPO> query = pagingQuery(paging, CityProperPO.class);
 
@@ -42,18 +42,18 @@ public class CityProperDaoImpl extends DaoImpl<CityProperPO> implements CityProp
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CityProperPO> queryCityProperByCid(Integer cid) {
+	public List<CityProperPO> queryCityProper(Integer cid) {
 		return session().createCriteria(CityProperPO.class).add(Restrictions.eq("city.cid", cid)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CityProperPO> queryCityProperByCids(List<Integer> cids) {
+	public List<CityProperPO> queryCityProper(List<Integer> cids) {
 		return session().createCriteria(CityProperPO.class).add(Restrictions.in("city.cid", cids)).list();
 	}
 
 	@Override
-	public int countCityProperByCid(Integer cid) {
+	public int countCityProper(Integer cid) {
 		String sql = "select count(*) from communion.cityProper where cid = :cid";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("cid", cid.intValue()).uniqueResult();
 
@@ -61,13 +61,8 @@ public class CityProperDaoImpl extends DaoImpl<CityProperPO> implements CityProp
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public CityProperPO queryCityProperByNameAndCid(String name, Integer cid) {
-		List<CityProperPO> list = session().createCriteria(CityProperPO.class)
-			.add(Restrictions.eq("name", name))
-			.add(Restrictions.eq("city.cid", cid))
-			.list();
-		return list.isEmpty() ? null : list.get(0);
+	public CityProperPO queryCityProper(String name) {
+		return (CityProperPO) session().createCriteria(CityProperPO.class).add(Restrictions.eq("name", name)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

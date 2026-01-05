@@ -24,63 +24,58 @@ import com.fanglin.utils.Paging;
 @Repository("cityDaoImpl")
 public class CityDaoImpl extends DaoImpl<CityPO> implements CityDao {
 
-	public CityDaoImpl(){
+	public CityDaoImpl() {
 		super(CityPO.class);
 	}
-	
+
 	@Override
-	public List<CityPO> pageCity(Paging paging, List<Filter> filters){
+	public List<CityPO> pageCity(Paging paging, List<Filter> filters) {
 
 		PagingQuery<CityPO> query = pagingQuery(paging, CityPO.class);
-		
+
 		queryFilterExcute(query, filters);
-		
+
 		return query.list();
 	}
-	
+
 	@Override
-	public List<CityPO> pageCityByName(Paging paging, String name) {
-		
+	public List<CityPO> pageCity(Paging paging, String name) {
+
 		PagingQuery<CityPO> query = pagingQuery(paging, CityPO.class);
-		
+
 		query.add(Restrictions.or(Restrictions.ilike(CityPO.COLUMN_NO_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(CityPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
-		
+
 		return query.list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CityPO> queryCityByRid(Integer rid) {
-		return session().createCriteria(CityPO.class).add(Restrictions.eq("region.rid",rid)).list();
+	public List<CityPO> queryCity(Integer rid) {
+		return session().createCriteria(CityPO.class).add(Restrictions.eq("region.rid", rid)).list();
 	}
 
 	@Override
-	public CityPO queryCityByNameAndProvince(String name, String province) {
-		return (CityPO) session().createCriteria(CityPO.class)
-				.add(Restrictions.eq("name", name))
-				.add(Restrictions.eq("province", province))
-				.uniqueResult();
+	public CityPO queryCity(String name) {
+		return (CityPO) session().createCriteria(CityPO.class).add(Restrictions.eq("name", name)).setMaxResults(1).uniqueResult();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null){
-			for(Filter filter: filters){
-					
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters != null) {
+			for (Filter filter : filters) {
+
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				
-				if(CityPO.COLUMN_NAME_STR.equals(field)){
+
+				if (CityPO.COLUMN_NAME_STR.equals(field)) {
 					query.add(query.getCriterion(field, data, op));
-				}else if("regionId".equals(field)){
-					query.alias("region","region");
+				} else if ("regionId".equals(field)) {
+					query.alias("region", "region");
 					query.add(query.getCriterion("region.rid", Integer.valueOf(data), op));
 				}
 			}
 		}
 	}
 
-	
-	
 }

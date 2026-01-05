@@ -27,6 +27,7 @@ import com.fanglin.customer.service.CustomerChanceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -86,6 +87,8 @@ public class A20260103Action extends BaseListAction {
 	 */
 	private Long busitype;
 
+	private String userId;
+
 	/**
 	 * 公司标识 - AES加密后的公司ID
 	 */
@@ -122,9 +125,7 @@ public class A20260103Action extends BaseListAction {
 		source.setGender(gender);
 
 		// 楼盘信息
-		VillageVO villageVO = new VillageVO();
-		villageVO.setName(village);
-		source.setVillage(villageVO);
+		source.setVillage(new VillageVO(village));
 
 		// 房产信息
 		HouseVO houseVO = new HouseVO();
@@ -141,7 +142,7 @@ public class A20260103Action extends BaseListAction {
 		customerChanceVO.setSource(source);
 
 		// 4. 调用 CustomerChanceService
-		customerChanceService.addCustomerChance(customerChanceVO, queryUserId(), queryCompany());
+		customerChanceService.addCustomerChance(customerChanceVO, userId, CompanyServiceImpl.decode(orgId));
 
 		return SUCCESS;
 	}
@@ -218,6 +219,14 @@ public class A20260103Action extends BaseListAction {
 
 	public void setBusitype(Long busitype) {
 		this.busitype = busitype;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getOrgId() {

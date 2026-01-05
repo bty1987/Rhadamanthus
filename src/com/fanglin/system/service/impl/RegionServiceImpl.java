@@ -40,51 +40,51 @@ public class RegionServiceImpl implements RegionService {
 
 	@Autowired
 	private RegionDao regionDao;
-	
+
 	@Autowired
 	private CityDao cityDao;
-	
+
 	@Autowired
 	private CountingService countingService;
-	
+
 	@Override
-	public void pageRegion(Paging paging, List<Filter> filters){
+	public void pageRegion(Paging paging, List<Filter> filters) {
 
 		List<RegionPO> regionPOs = regionDao.pageRegion(paging, filters);
 		List<RegionVO> regionVOs = new ArrayList<RegionVO>();
-		
-		for(RegionPO regionPO: regionPOs){
+
+		for (RegionPO regionPO : regionPOs) {
 			RegionVO regionVO = new RegionVO();
 			BeanUtil.copyProperties(regionPO, regionVO);
-			
+
 			regionVOs.add(regionVO);
 		}
 
 		paging.setData(regionVOs);
 	}
-	
+
 	@Override
-	public List<RegionVO> queryRegion(){
+	public List<RegionVO> queryRegion() {
 
 		List<RegionPO> regionPOs = regionDao.queryRegion();
 		List<RegionVO> regionVOs = new ArrayList<RegionVO>();
-		
-		for(RegionPO regionPO: regionPOs){
+
+		for (RegionPO regionPO : regionPOs) {
 			RegionVO regionVO = new RegionVO();
 			BeanUtil.copyProperties(regionPO, regionVO);
-			
+
 			regionVOs.add(regionVO);
 		}
 
 		return regionVOs;
 	}
-	
+
 	@Override
-	public RegionVO queryRegionByRid(RegionVO regionVO){
+	public RegionVO queryRegionByRid(RegionVO regionVO) {
 
 		RegionPO regionPO = regionDao.get(regionVO.getRid());
-		
-		if(regionPO != null){
+
+		if (regionPO != null) {
 			regionVO = new RegionVO();
 			BeanUtil.copyProperties(regionPO, regionVO);
 		}
@@ -94,14 +94,14 @@ public class RegionServiceImpl implements RegionService {
 
 	@Override
 	public List<RegionVO> queryRegionByName(RegionVO regionVO) {
-		
+
 		List<RegionPO> regionPOs = regionDao.pageRegionByName(new Paging(0, 50), regionVO.getName());
 		List<RegionVO> regionVOs = new ArrayList<RegionVO>();
-		
-		for(RegionPO regionPO: regionPOs){
+
+		for (RegionPO regionPO : regionPOs) {
 			regionVO = new RegionVO();
 			BeanUtil.copyProperties(regionPO, regionVO);
-			
+
 			regionVOs.add(regionVO);
 		}
 
@@ -110,105 +110,87 @@ public class RegionServiceImpl implements RegionService {
 
 	@Override
 	@Transactional
-	public void addRegion(RegionVO regionVO){
+	public RegionVO existRegion(RegionVO regionVO) {
+
+		RegionPO regionPO = regionDao.queryRegion(regionVO.getName());
+
+		// 如果不存在则创建
+		if (regionPO == null) {
+
+			addRegion(regionVO);
+		}
+
+		// 转换为VO并返回
+		BeanUtil.copyProperties(regionPO, regionVO);
+
+		return regionVO;
+	}
+
+	@Override
+	@Transactional
+	public void addRegion(RegionVO regionVO) {
 
 		RegionPO regionPO = new RegionPO();
-		
+
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_REGION_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
-		
+
 		StringBuffer no = new StringBuffer();
 		no.append(SystemConfig.getString("regionIdent", "A_"));
 		no.append(FormatUtil.fillZero(count, "00"));
-		
+
 		regionPO.setNo(no.toString());
-		
+
 		BeanUtil.copyProperties(regionVO, regionPO, Arrays.asList("no", "x", "y"));
-		
-		regionPO.setPinyin((String)PinYin4Util.getPinyin(regionVO.getName()).get(0));
-		
+
+		regionPO.setPinyin((String) PinYin4Util.getPinyin(regionVO.getName()).get(0));
+
 		regionDao.save(regionPO);
 	}
 
 	@Override
 	@Transactional
-	public void updateRegion(RegionVO regionVO) throws FLException{
+	public void updateRegion(RegionVO regionVO) throws FLException {
 
 		RegionPO regionPO = regionDao.get(regionVO.getRid());
-		
-		if(regionPO == null){
+
+		if (regionPO == null) {
 			throw new FLException(230020, "大区不存在");
 		}
-		
+
 		BeanUtil.copyProperties(regionVO, regionPO, Arrays.asList("rid", "no"));
-		
-		regionPO.setPinyin((String)PinYin4Util.getPinyin(regionVO.getName()).get(0));
-		
+
+		regionPO.setPinyin((String) PinYin4Util.getPinyin(regionVO.getName()).get(0));
+
 		regionDao.update(regionPO);
 	}
 
 	@Override
 	@Transactional
-	public String deleteRegion(List<Integer> rids){
+	public String deleteRegion(List<Integer> rids) {
 
 		String quotedRegion = "";
-		
-		for(Integer rid: rids){
-			List<CityPO> cityPOs = cityDao.queryCityByRid(rid);
-			
-			if(cityPOs.size() != 0)
-				quotedRegion += rid + ",";
+
+		for (Integer rid : rids) {
+			List<CityPO> cityPOs = cityDao.queryCity(rid);
+
+			if (cityPOs.size() != 0) quotedRegion += rid + ",";
 		}
-		
-		if(quotedRegion.equals("")){
-			for(Integer rid: rids)
+
+		if (quotedRegion.equals("")) {
+			for (Integer rid : rids)
 				deleteRegionByRid(rid);
-		}else{
+		} else {
 			quotedRegion = quotedRegion.substring(0, quotedRegion.length() - 1);
 		}
-		
+
 		return quotedRegion;
 	}
 
 	@Override
 	@Transactional
-	public void deleteRegionByRid(Integer rid){
+	public void deleteRegionByRid(Integer rid) {
 
 		regionDao.deleteById(rid);
 	}
 
-	@Override
-	@Transactional
-	public RegionVO existRegion(String name) {
-		// 通过名称查询省份
-		List<RegionPO> regionPOs = regionDao.pageRegionByName(new Paging(0, 1), name);
-
-		RegionPO regionPO;
-		RegionVO regionVO = new RegionVO();
-
-		// 如果不存在则创建
-		if (regionPOs == null || regionPOs.isEmpty()) {
-			regionPO = new RegionPO();
-
-			// 生成编号
-			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_REGION_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
-			StringBuffer no = new StringBuffer();
-			no.append(SystemConfig.getString("regionIdent", "A_"));
-			no.append(FormatUtil.fillZero(count, "00"));
-			regionPO.setNo(no.toString());
-
-			// 设置名称和拼音
-			regionPO.setName(name);
-			regionPO.setPinyin((String) PinYin4Util.getPinyin(name).get(0));
-
-			// 保存到数据库
-			regionDao.save(regionPO);
-		} else {
-			// 如果存在则使用第一条记录
-			regionPO = regionPOs.get(0);
-		}
-
-		// 转换为VO并返回
-		BeanUtil.copyProperties(regionPO, regionVO);
-		return regionVO;
-	}
 }

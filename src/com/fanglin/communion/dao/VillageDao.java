@@ -22,7 +22,9 @@ public interface VillageDao extends Dao<VillagePO> {
 
 	public List<VillagePO> queryVillageByPinyin(Paging paging, String name, Long pvid, Integer company);
 
-	public List<VillagePO> queryVillageByCityProperId(Integer cityProperId);
+	public List<VillagePO> queryVillage(Integer cityProperId);
+
+	public VillagePO queryVillage(String name);
 
 	public int countVillageByCpid(Integer cpid);
 
