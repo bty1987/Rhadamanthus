@@ -91,7 +91,7 @@ public class CityServiceImpl implements CityService {
 
 	public List<CityVO> queryCityByRid(CityVO cityVO) {
 
-		List<CityPO> cityPOs = cityDao.queryCityByRid(cityVO.getRegion().getRid());
+		List<CityPO> cityPOs = cityDao.queryCity(cityVO.getRegion().getRid());
 		List<CityVO> cityVOs = new ArrayList<CityVO>();
 
 		for (CityPO cityPO : cityPOs) {
@@ -104,7 +104,7 @@ public class CityServiceImpl implements CityService {
 	@Override
 	public List<CityVO> queryCityByName(CityVO cityVO) {
 
-		List<CityPO> cityPOs = cityDao.pageCityByName(new Paging(0, 50), cityVO.getName());
+		List<CityPO> cityPOs = cityDao.pageCity(new Paging(0, 50), cityVO.getName());
 		List<CityVO> cityVOs = new ArrayList<CityVO>();
 
 		for (CityPO cityPO : cityPOs) {
@@ -112,6 +112,21 @@ public class CityServiceImpl implements CityService {
 		}
 
 		return cityVOs;
+	}
+
+	@Override
+	@Transactional
+	public CityVO existCity(CityVO cityVO) throws FLException {
+
+		CityPO cityPO = cityDao.queryCity(cityVO.getName());
+
+		if (cityPO == null) {
+
+			addCity(cityVO);
+		}
+
+		// 返回城市信息
+		return cityPO.ptv(new CityVO(new RegionVO()));
 	}
 
 	@Override
@@ -209,7 +224,7 @@ public class CityServiceImpl implements CityService {
 
 			if (cityPO == null) continue;
 
-			if (cityProperDao.countCityProperByCid(cid) > 0) {
+			if (cityProperDao.countCityProper(cid) > 0) {
 				throw new FLException(230006, String.format("城市[%s]已被引用, 不能被删除", cid));
 			}
 
@@ -219,42 +234,4 @@ public class CityServiceImpl implements CityService {
 		return 0;
 	}
 
-	@Override
-	@Transactional
-	public CityVO existCity(CityVO cityVO) throws FLException {
-		// 参数验证
-		if (cityVO == null || cityVO.getName() == null || cityVO.getProvince() == null) {
-			throw new FLException(230021, "城市名称和省份不能为空");
-		}
-
-		// 通过名称和省份查询城市是否存在
-		CityPO cityPO = cityDao.queryCityByNameAndProvince(cityVO.getName(), cityVO.getProvince());
-
-		// 如果城市不存在,则创建
-		if (cityPO == null) {
-			cityPO = new CityPO();
-
-			// 生成城市编号
-			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CITY_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
-
-			StringBuffer no = new StringBuffer();
-			no.append(SystemConfig.getString("companyIdent", ""));
-			no.append(SystemConfig.getString("cityIdent", "C_"));
-			no.append(FormatUtil.fillZero(count, "00"));
-
-			cityPO.setNo(no.toString());
-			cityPO.setName(cityVO.getName());
-			cityPO.setProvince(cityVO.getProvince());
-			cityPO.setRegion(null); // region可以为空
-
-			// 生成拼音
-			cityPO.setPinyin((String) PinYin4Util.getPinyin(cityVO.getName()).get(0));
-
-			// 保存新城市
-			cityDao.save(cityPO);
-		}
-
-		// 返回城市信息
-		return cityPO.ptv(new CityVO(new RegionVO()));
-	}
 }

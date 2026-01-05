@@ -333,9 +333,7 @@ public class SelectionServiceImpl implements SelectionService {
 			throw new FLException(200035, "选材单不存在");
 		}
 
-		if (selectionItemDao.checkSelectionItem(selectionPO.getOrderId()) != 0) {
-			// throw new FLException(200041, "存在未关联选材项");
-		}
+		checkSelection(selectionVO);
 
 		String orderId = selectionPO.getOrderId();
 

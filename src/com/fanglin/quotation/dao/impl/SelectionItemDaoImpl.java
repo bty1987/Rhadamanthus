@@ -133,7 +133,7 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	@Override
 	public int checkSelectionItem(String orderId) {
 
-		StringBuffer sql = new StringBuffer("SELECT * FROM quotation.extension e ");
+		StringBuffer sql = new StringBuffer("SELECT count(*) FROM quotation.extension e ");
 
 		sql.append("LEFT JOIN quotation.extensionitem ei ON ei.eid = e.eid AND ei.subtype not in (0, 1) ");
 		sql.append("LEFT JOIN quotation.selectionitem si on si.orderId = e.orderId AND ei.eiid = si.quoteid AND si.type in (1, 2) ");
