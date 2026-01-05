@@ -18,6 +18,7 @@ jQuery(function($) {
     // ========== 全局变量 ==========
     var currentMethod = 'qrcode'; // 当前登录方式
     var currentAuthCode = null; // 当前授权码
+    var params = {}; // 全局参数对象（用于存储securityCode等）
     
     function deleteAllCookies() {
         var cookies = document.cookie.split(';');
@@ -41,8 +42,6 @@ jQuery(function($) {
      * 页面初始化
      */
     function initPage() {
-        console.log('企业微信登录页面初始化（iframe版本）...');
-
         // 优先检查URL参数中的socialCode和socialState
         if (checkSocialAuthCallback()) {
             return; // 如果有socialCode/socialState，直接处理回调，不继续初始化登录流程
@@ -79,13 +78,8 @@ jQuery(function($) {
     function preloadVerifyCode() {
         var $verifyImg = $('#Verify');
         if ($verifyImg.length > 0) {
-            // 确保验证码图片有唯一的时间戳
-            var currentSrc = $verifyImg.attr('src');
-            if (currentSrc && !currentSrc.includes('?')) {
-                // 如果没有参数，添加初始时间戳
-                $verifyImg.attr('src', currentSrc + '?t=' + new Date().getTime());
-            }
-            console.log('验证码预加载完成:', $verifyImg.attr('src'));
+            // 直接调用刷新验证码接口
+            refreshVerifyCode();
         }
     }
 
@@ -97,12 +91,7 @@ jQuery(function($) {
             var $this = $(this);
             var targetTab = $this.data('tab');
 
-            console.log(targetTab)
-            console.log($this.hasClass('active'))
-
             //if ($this.hasClass('active')) return;
-
-            console.log('切换标签:', targetTab); // 调试日志
 
             // 切换标签激活状态
             $('.login-tab').removeClass('active');
@@ -118,8 +107,6 @@ jQuery(function($) {
             document.body.offsetHeight; // 触发重绘
 
             if (targetTab === 'workwechat') {
-                console.log('显示企业微信登录面板');
-
                 // 重置企业微信登录状态
                 resetWorkWechatPanel();
 
@@ -131,12 +118,10 @@ jQuery(function($) {
 
                 // 延迟初始化企业微信登录
                 setTimeout(function() {
-                    console.log('重新初始化企业微信登录...');
                     initQRCodeLogin();
                 }, 100);
 
             } else if (targetTab === 'password') {
-                console.log('显示密码登录面板');
 
                 // 使用原生JavaScript强制设置样式
                 var passwordPanel = document.getElementById('passwordPanel');
@@ -159,8 +144,6 @@ jQuery(function($) {
      * 重置企业微信登录面板状态
      */
     function resetWorkWechatPanel() {
-        console.log('开始重置企业微信面板...');
-
         // 强制隐藏所有可能的加载状态和错误状态
         $('#iframeLoading, #iframeError').remove();
 
@@ -181,8 +164,6 @@ jQuery(function($) {
 
         // 清除之前的授权码
         currentAuthCode = null;
-
-        console.log('企业微信面板状态已完全重置');
     }
 
     /**
@@ -201,8 +182,6 @@ jQuery(function($) {
         // 重置密码显示状态
         $('#password').attr('type', 'password');
         $('#passwordToggle').removeClass('fa-eye').addClass('fa-eye-slash');
-
-        console.log('密码登录表单状态已重置');
     }
 
     /**
@@ -221,6 +200,11 @@ jQuery(function($) {
                 $passwordInput.attr('type', 'password');
                 $toggle.removeClass('fa-eye').addClass('fa-eye-slash');
             }
+        });
+
+        // 验证码图片点击刷新
+        $(document).on('click', '#Verify', function() {
+            refreshVerifyCode();
         });
 
         // 登录按钮点击事件
@@ -260,32 +244,118 @@ jQuery(function($) {
             return;
         }
 
+        // Demo 模式直接跳转
+        if (config.demo) {
+            setCookie("loginTime", new Date().getTime(), config.timeout);
+            window.location.href = "index.html?timestamp=" + new Date().getTime();
+            return;
+        }
+
         // 显示加载状态
         showLoginLoading();
 
-        // 调用登录接口（使用原有 login.js 的逻辑）
-        if (typeof window.login !== 'undefined' && window.login) {
-            window.login.doLogin(userId, password, verifyCode);
-        } else {
-            // 备用登录逻辑
-            doFallbackLogin(userId, password, verifyCode);
+        // 清空错误提示（不清除display属性，只清空内容）
+        $('#errorMsg').html('');
+
+        // 获取 MD5 函数
+        function getMD5(str) {
+            // 使用 CryptoJS.MD5
+            if (typeof CryptoJS !== 'undefined' && CryptoJS.MD5) {
+                return CryptoJS.MD5(str).toString().toUpperCase();
+            }
+            // 使用 flcry 函数
+            else if (typeof flcry !== 'undefined') {
+                return flcry(str).toUpperCase();
+            }
+            else {
+                return '';
+            }
         }
+
+        // 第一步：请求登录挑战（nonce）
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: config.communion + "requestLoginChallenge.do",
+            data: { userId: userId },
+            success: function(data) {
+                if (data.errorCode != 0) {
+                    showError(data.errorMsg || "获取登录挑战失败");
+                    resetLoginButton();
+                    return;
+                }
+
+                var nonce = data.nonce;
+
+                // 第二步：计算响应哈希
+                var passwordMD5 = getMD5(password);
+                var responseHash = getMD5(passwordMD5 + nonce);
+
+                // 第三步：发送响应哈希进行登录
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: config.communion + "doLogin.do",
+                    data: {
+                        userId: userId,
+                        password: passwordMD5,  // 使用 MD5 密码
+                        verifyCode: verifyCode,
+                        company: config.company || '',
+                        securityCode: params.securityCode || ''
+                    },
+                    success: function(data) {
+                        if (data.errorCode == 1) {
+                            // 验证码错误
+                            showError(data.errorMsg || "验证码错误");
+                            refreshVerifyCode();
+                            resetLoginButton();
+                        } else if (data.errorCode == 0) {
+                            // 登录成功
+                            var authentication = data.authentication.replace(/[\r\n]/g, "");
+                            setCookie("authentication", authentication, config.timeout);
+                            setCookie("loginTime", new Date().getTime(), config.timeout);
+                            setCookie("versionCode", config.versionCode, config.timeout);
+                            showLoginSuccess();
+                            setTimeout(function() {
+                                window.location.href = "index.html?timestamp=" + new Date().getTime();
+                            }, 1000);
+                        } else {
+                            // 其他错误（账号或密码错误）
+                            var errorMsg = data.errorMsg || data.msg || "登录失败，请检查用户名和密码";
+                            showError(errorMsg);
+                            refreshVerifyCode();
+                            resetLoginButton();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // 尝试解析响应内容
+                        var errorMsg = "网络错误，请重试";
+                        try {
+                            if (xhr.responseText) {
+                                var response = JSON.parse(xhr.responseText);
+                                errorMsg = response.errorMsg || response.msg || errorMsg;
+                            }
+                        } catch (e) {
+                            // 解析失败，使用默认错误信息
+                        }
+
+                        showError(errorMsg);
+                        resetLoginButton();
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                showError("网络错误，请重试");
+                resetLoginButton();
+            }
+        });
     }
 
     /**
-     * 备用登录逻辑
+     * 重置登录按钮状态
      */
-    function doFallbackLogin(userId, password, verifyCode) {
-        // 模拟登录成功
-        setCookie("authentication", "auth_" + Date.now(), 120);
-        setCookie("loginTime", new Date().getTime(), 120);
-        setCookie("loginType", "password", 120);
-        setCookie("userName", userId, 120);
-
-        showLoginSuccess();
-        setTimeout(function() {
-            window.location.href = "index.html?timestamp=" + new Date().getTime();
-        }, 1500);
+    function resetLoginButton() {
+        $('#loginBtn').prop('disabled', false).html('<i class="ace-icon fa fa-key"></i> 登录账号');
     }
 
     /**
@@ -294,16 +364,36 @@ jQuery(function($) {
     function refreshVerifyCode() {
         var $verifyImg = $('#Verify');
         if ($verifyImg.length > 0) {
-            // 添加随机参数确保每次都重新加载
-            var timestamp = new Date().getTime();
-            var random = Math.floor(Math.random() * 10000);
-            $verifyImg.attr('src', 'images/verifyCode.jpg?t=' + timestamp + '&r=' + random);
+            // Demo模式使用静态图片
+            if (config.demo) {
+                var timestamp = new Date().getTime();
+                $verifyImg.attr('src', 'images/verifyCode.jpg?t=' + timestamp);
+                return;
+            }
 
-            // 监听图片加载完成事件
-            $verifyImg.off('load').on('load', function() {
-                console.log('验证码加载完成');
-            }).off('error').on('error', function() {
-                console.error('验证码加载失败');
+            // 生产模式：先获取securityCode，再加载验证码图片
+            $.ajax({
+                url: config.communion + '/securityCode.do',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response && response.securityCode) {
+                        // 保存securityCode到params供后续登录使用
+                        params.securityCode = response.securityCode.replace(/[\r\n]/g, '');
+
+                        // 构建验证码图片URL
+                        var timestamp = new Date().getTime();
+                        var securityCodeEncoded = params.securityCode.replace(/\+/g, '%2B');
+                        var verifyCodeUrl = config.communion + '/verifyCode.do?timestamp=' + timestamp + '&securityCode=' + securityCodeEncoded;
+
+                        // 设置验证码图片源
+                        $verifyImg.attr('src', verifyCodeUrl);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // 失败时显示占位图或错误提示
+                    $verifyImg.attr('alt', '验证码加载失败');
+                }
             });
         }
     }
@@ -312,10 +402,25 @@ jQuery(function($) {
      * 显示错误信息
      */
     function showError(message) {
-        $('#errorMsg').text(message).show();
-        setTimeout(function() {
-            $('#errorMsg').fadeOut();
-        }, 3000);
+        var $errorMsg = $('#errorMsg');
+        if ($errorMsg.length > 0) {
+            // 清除之前的定时器（如果有）
+            if ($errorMsg.data('timer')) {
+                clearTimeout($errorMsg.data('timer'));
+            }
+
+            // 显示错误信息
+            $errorMsg.html(message).show();
+
+            // 3秒后自动清空
+            var timer = setTimeout(function() {
+                $errorMsg.html('');
+            }, 3000);
+            $errorMsg.data('timer', timer);
+        } else {
+            // 如果DOM中不存在errorMsg元素，使用alert作为降级方案
+            alert(message);
+        }
     }
 
     /**
@@ -428,13 +533,11 @@ jQuery(function($) {
         // iframe加载事件
         $('#workWechatIframe').on('load', function() {
             showIframeLoadingComplete();
-            console.log('企业微信页面加载完成');
         });
 
         // iframe加载错误事件
         $('#workWechatIframe').on('error', function() {
             showIframeLoadError();
-            console.error('企业微信页面加载失败');
         });
     }
 
@@ -448,15 +551,8 @@ jQuery(function($) {
         var socialState = urlParams.get('state');
 
         if (socialCode && socialState) {
-            console.log('检测到socialCode/socialState回调:', {
-                socialCode: socialCode,
-                socialState: socialState
-            });
-
             handleSocialAuthCallback(socialCode, socialState);
             return true;
-        }else{
-            console.log('检测到socialCode/socialState回调:', window.location.search);
         }
         
         return false;
@@ -472,7 +568,6 @@ jQuery(function($) {
         var state = urlParams.get('state');
 
         if (code && state) {
-            console.log('检测到企业微信登录回调:', { code: code, state: state });
             handleWorkWechatCallback(code, state);
         }
     }
@@ -481,7 +576,6 @@ jQuery(function($) {
      * 初始化扫码登录
      */
     function initQRCodeLogin() {
-        console.log('初始化企业微信扫码登录（iframe版本）...');
         resetQRCodeUI();
 
         if (config.demo) {
@@ -494,7 +588,6 @@ jQuery(function($) {
         showQRCodeLoading('正在获取企业微信登录页面...');
 
         // 调用企业微信接口获取登录URL
-        console.log('开始请求企业微信登录URL:', WORK_WECHAT_CONFIG.socialAuthCodeUrl);
         $.ajax({
             url: WORK_WECHAT_CONFIG.socialAuthCodeUrl,
             method: 'GET',
@@ -504,17 +597,14 @@ jQuery(function($) {
                 "domain": "https://test-erp.fanglin.vip/xlogin.html",
             },
             success: function(response) {
-                console.log('获取企业微信登录URL响应:', response);
 
                 // 检查响应格式
                 if (!response) {
-                    console.error('响应为空');
                     showQRCodeError('服务器响应为空');
                     return;
                 }
 
                 if (typeof response !== 'object') {
-                    console.error('响应格式错误:', typeof response);
                     showQRCodeError('服务器响应格式错误');
                     return;
                 }
@@ -522,11 +612,9 @@ jQuery(function($) {
                 if (response.errorCode === 0 && response.domain) {
                     // 成功获取企业微信登录URL
                     var wechatUrl = response.domain;
-                    console.log('企业微信登录URL:', wechatUrl);
 
                     // 验证URL格式
                     if (typeof wechatUrl !== 'string' || !wechatUrl.startsWith('http')) {
-                        console.error('URL格式无效:', wechatUrl);
                         showQRCodeError('企业微信登录链接格式无效');
                         return;
                     }
@@ -535,31 +623,26 @@ jQuery(function($) {
                         // 解析URL获取domain
                         var urlObj = new URL(wechatUrl);
                         var domain = urlObj.protocol + '//' + urlObj.host + urlObj.pathname;
-                        console.log('解析URL成功:', domain);
 
                         // 提取state参数
                         var state = urlObj.searchParams.get('state');
                         if (state) {
                             currentAuthCode = state;
-                            console.log('提取state成功:', state);
                         }
 
                         // 使用iframe显示企业微信登录页面
                         showIframe(wechatUrl);
 
                     } catch (e) {
-                        console.error('解析URL失败:', e.message);
                         showQRCodeError('企业微信登录链接解析失败');
                     }
 
                 } else {
                     var errorMsg = response.msg || '获取企业微信登录URL失败';
-                    console.error('接口返回错误:', errorMsg);
                     showQRCodeError(errorMsg);
                 }
             },
             error: function(xhr, status, error) {
-                console.error('获取企业微信登录URL失败:', {
                     status: status,
                     error: error,
                     responseText: xhr.responseText,
@@ -602,7 +685,6 @@ jQuery(function($) {
         // 设置iframe高度
         $('.work-wechat-iframe').css('height', WORK_WECHAT_CONFIG.iframeHeight + 'px');
 
-        console.log('开始加载企业微信页面:', url);
     }
 
     /**
@@ -621,7 +703,6 @@ jQuery(function($) {
         // 恢复提示信息
         //$('#qrcodeTip').html('<i class="ace-icon fa fa-mobile"></i><span>请使用<strong>企业微信</strong>扫码登录</span>');
 
-        console.log('iframe已关闭');
     }
 
     /**
@@ -677,7 +758,6 @@ jQuery(function($) {
      * 处理企业微信登录回调
      */
     function handleWorkWechatCallback(code, state) {
-        console.log('处理企业微信登录回调:', { code: code, state: state });
 
         // 显示成功状态
         showQRCodeSuccess();
@@ -700,7 +780,6 @@ jQuery(function($) {
      * 处理socialCode/socialState回调 - 调用stateAuthCode.do接口
      */
     function handleSocialAuthCallback(socialCode, socialState) {
-        console.log('处理socialCode/socialState回调，调用stateAuthCode.do接口...');
 
         // 显示加载状态
         $('body').html(`
@@ -723,11 +802,9 @@ jQuery(function($) {
             },
             timeout: 15000,
             success: function(response) {
-                console.log('stateAuthCode.do接口响应:', response);
 
                 // 检查响应是否包含osstoken
                 if (response && response.domain) {
-                    console.log('获取到domain，准备跳转到主页:', response.domain);
 
                     window.authentication = response.domain;
 
@@ -736,12 +813,10 @@ jQuery(function($) {
                     }, 3000);
 
                 } else {
-                    console.error('stateAuthCode.do接口响应无效，缺少domain');
                     showLoginFailure('登录认证失败，响应数据无效');
                 }
             },
             error: function(xhr, status, error) {
-                console.error('stateAuthCode.do接口调用失败:', {
                     status: status,
                     error: error,
                     responseText: xhr.responseText,
@@ -766,7 +841,6 @@ jQuery(function($) {
      * 初始化点击登录
      */
     function initClickLogin() {
-        console.log('初始化企业微信点击登录...');
         resetClickLoginUI();
 
         $('#workWechatLoginBtn').on('click', function() {
@@ -778,7 +852,6 @@ jQuery(function($) {
      * 开始企业微信点击登录
      */
     function startWorkWechatClickLogin() {
-        console.log('启动企业微信点击登录...');
 
         if (config.demo) {
             simulateDemoLogin();
@@ -789,7 +862,6 @@ jQuery(function($) {
 
         // 直接跳转到企业微信登录页面
         var wechatUrl = 'https://work.weixin.qq.com/';
-        console.log('跳转到企业微信:', wechatUrl);
 
         setTimeout(function() {
             window.open(wechatUrl, '_blank');
@@ -905,7 +977,6 @@ jQuery(function($) {
      * 模拟登录成功（供iframe调用）
      */
     window.simulateLoginSuccess = function() {
-        console.log('模拟登录成功');
         handleWorkWechatCallback('demo_code_12345', 'demo_state_67890');
     };
 
