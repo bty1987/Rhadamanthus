@@ -594,7 +594,7 @@ jQuery(function($) {
             timeout: WORK_WECHAT_CONFIG.loadTimeout,
             data:{
                 //"domain": "https://daily-zq.fanglin.vip/organization/employee",
-                "domain": "https://test-erp.fanglin.vip/xlogin.html",
+                "domain": "https://platform-erp.fanglin.vip/xlogin.html",
             },
             success: function(response) {
 
@@ -643,11 +643,6 @@ jQuery(function($) {
                 }
             },
             error: function(xhr, status, error) {
-                    status: status,
-                    error: error,
-                    responseText: xhr.responseText,
-                    statusCode: xhr.status
-                });
 
                 var errorMsg = '网络错误，请检查连接';
                 if (xhr.status === 0) {
@@ -817,11 +812,6 @@ jQuery(function($) {
                 }
             },
             error: function(xhr, status, error) {
-                    status: status,
-                    error: error,
-                    responseText: xhr.responseText,
-                    statusCode: xhr.status
-                });
 
                 var errorMsg = '登录认证失败，请重试';
                 if (xhr.status === 0) {
