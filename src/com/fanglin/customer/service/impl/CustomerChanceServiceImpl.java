@@ -211,13 +211,11 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		if (customerSourceDao.queryCustomerSourceByNo(customerChanceVO.getSource().getNo()) != null) {
-			throw new FLException(330072, "客户资源已存在");
+			// throw new FLException(330072, "客户资源已存在");
 		}
 
 		if (customerChanceDao.queryCustomerChanceByCno(customerChanceVO.getCno()) != null) {
-
 			customerSourceService.issueCustomerSource(customerChanceVO.getSource(), customerChanceVO, userId, company);
-
 			return;
 		}
 
@@ -237,25 +235,26 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		HouseVO houseVO = new HouseVO();
 
 		// 验证楼盘是否存在
-		String villageNo = customerChanceVO.getSource().getVillage().getNo();
-		if (StringUtils.isEmpty(villageNo)) {
-			throw new FLException(130018, "楼盘编号不能为空");
+		if (customerChanceVO.getSource().getVillage() == null || customerChanceVO.getSource().getVillage().getNo() == null) {
+			throw new FLException(130018, "楼盘不存在");
 		}
 
-		VillagePO villagePO = villageDao.get(villageNo);
+		VillagePO villagePO = villageDao.get(customerChanceVO.getSource().getVillage().getNo());
 		if (villagePO == null) {
 			throw new FLException(130018, "楼盘不存在");
 		}
 
-		houseVO.setVillage(customerChanceVO.getSource().getVillage());
+		houseVO.setVillage(new VillageVO(villagePO.getNo()));
 		houseVO.setHouseNumber(customerChanceVO.getSource().getHouse().getHouseNumber());
 
 		if (customerChanceVO.getSource().getHouse() != null && customerChanceVO.getSource().getHouse().getBuildArea() != null) {
 			houseVO.setBuildArea(customerChanceVO.getSource().getHouse().getBuildArea());
+			houseVO.setInnerArea(customerChanceVO.getSource().getHouse().getBuildArea());
 		}
 
 		// 调用 existHouse：自动判断房产是否存在，不存在则创建
 		houseService.existHouse(houseVO, company);
+
 		Long hid = houseVO.getHid();
 
 		// 设置CID和HID到source对象

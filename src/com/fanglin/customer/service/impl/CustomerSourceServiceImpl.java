@@ -253,6 +253,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源创建,楼盘:%s,楼号:%s,电话:%s", villagePO != null ? villagePO.getName() : "", customerSourcePO.getHouseNumber(), customerSourcePO.getPhone()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, customerSourcePO.getCreater()));
 
+		customerSourceDao.flush();
+
 		customerSourceVO.setCsid(customerSourcePO.getCsid());
 	}
 
