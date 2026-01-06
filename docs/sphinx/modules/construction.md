@@ -1,14 +1,13 @@
-# construction {#construction}
-
-# 工程
+# construction 工程
 ## 放线
 
 放线信息管理
 
 ## api.drawline.DrawLineAction
 
-        |DataType:|
-        #### drawLine
+**数据类型**:
+
+#### drawLine
 
     - **dlid**: 放线信息ID
       - 类型: *Long*
@@ -36,7 +35,7 @@
       - 类型: *Object*
     - **company**: 公司ID
       - 类型: *Long*
-    
+
         |Filters:|
         - **orderId**: 装修单号
       - 类型: *String*
@@ -64,20 +63,19 @@
       - 类型: *String*
     - **actualDate**: 放线时间 , 例: 2016-01-01
       - 类型: *String*
-    
-    ### <I> pageDrawLine
+
+    ### `pageDrawLine` <span style="color:gray">[内部]</span>
 
         分页方式获取放线信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 放线信息列表 , 每条数据类型 *drawLine*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  放线信息列表 , 每条数据类型 *drawLine*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -132,7 +130,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部",
@@ -165,18 +163,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryDrawLine
+
+    ### `queryDrawLine` <span style="color:gray">[内部]</span>
 
         获取放线信息 , 条件参数传递方式参照 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **drawLines**: 放线信息列表 , 每条数据类型 *drawLine*
+
+**返回参数**:
+
+- **drawLines**: 放线信息列表 , 每条数据类型 *drawLine*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "drawLines": [
                     {
@@ -230,7 +227,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部",
@@ -262,31 +259,29 @@
                 ],
                 ...
             }
-            
-    ### <I> countDrawLine
+
+    ### `countDrawLine` <span style="color:gray">[内部]</span>
 
         通过时间范围获取放线信息数量
-        
-                |Requests:|
-                :param drawLine.startTime: 开始时间
-        :type drawLine.startTime: String
-        :param drawLine.endTime: 结束时间
-        :type drawLine.endTime: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **drawLine.startTime**:
+  开始时间
+        - **drawLine.endTime**:
+  结束时间
+
+        **示例**:{
                 "drawLine.startTime": "2016-01-01 00:00:00",
                 "drawLine.endTime": "2016-01-01 23:59:59"
             }
-            
-                |Returns:|
-                - **drawLines**: 放线数量信息列表 , 每条数据类型 Map<String, Integer>
+
+**返回参数**:
+
+- **drawLines**: 放线数量信息列表 , 每条数据类型 Map<String, Integer>
           - 类型: *Map*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "drawLineDateCount": {
                     "2016-07-09": {
@@ -299,75 +294,72 @@
                 },
                 ...
             }
-            
-    ### <I> applayDrawLine
+
+    ### `applayDrawLine` <span style="color:gray">[内部]</span>
 
         申请放线 , 同时生成工程信息 , 更新房产信息
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修单关联放线是否存在 , 如果存在 , 错误信息 **120013 已经在队列中,不可重复提交**
-        
+
         判断工程单是否存在 , 不存在生成工程单信息
-        
+
         利用装修单中面积信息 , 获取工程成本 , 同时更新工程单工费和辅料上限
-        
+
         获取辅料项需要控制项目 , 生成工程辅料相关信息
-        
-                |Requests:|
-                :param drawLine.decoration.orderId: 装修单号
-        :type drawLine.decoration.orderId: String
-        :param drawLine.decoration.conpany: 工程公司
-        :type drawLine.decoration.conpany: Integer
-        :param drawLine.applayTime: 申请时间
-        :type drawLine.applayTime: String
-        :param drawLine.comment: 说明信息
-        :type drawLine.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **drawLine.decoration.orderId**:
+  装修单号
+        - **drawLine.decoration.conpany**:
+  工程公司
+        - **drawLine.applayTime**:
+  申请时间
+        - **drawLine.comment**:
+  说明信息
+
+        **示例**:{
                 "drawLine.decoration.orderId": "1601010001",
                 "drawLine.decoration.conpany": 1,
                 "drawLine.applayTime": "2016-01-01 23:59:59",
                 "drawLine.comment": "说明"
             }
 
-    ### <I> updateDrawLine
+    ### `updateDrawLine` <span style="color:gray">[内部]</span>
 
         更新放线信息
-        
+
         判断放线信息是否存在 , 不存在 , 错误信息 **120014 不存在该放线信息**
-        
-                |Requests:|
-                :param drawLine.dlid: 放线信息ID
-        :type drawLine.dlid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **drawLine.dlid**:
+  放线信息ID
+
+        **示例**:{
                 "drawLine.dlid": 1
             }
 
-    ### <I> resetDrawLine
+    ### `resetDrawLine` <span style="color:gray">[内部]</span>
 
         重置放线 , 重新设置相关信息
-        
-                |Requests:|
-                :param drawLine.dlid: 放线信息ID
-        :type drawLine.dlid: Long
-        :param drawLine.actualDate: 放线日期
-        :type drawLine.actualDate: String
-        :param drawLine.startTime: 开始时间
-        :type drawLine.startTime: String
-        :param drawLine.endTime: 结束时间
-        :type drawLine.endTime: String
-        :param drawLine.drawLineGroup.dgid: 放线小组ID
-        :type drawLine.drawLineGroup.dgid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **drawLine.dlid**:
+  放线信息ID
+        - **drawLine.actualDate**:
+  放线日期
+        - **drawLine.startTime**:
+  开始时间
+        - **drawLine.endTime**:
+  结束时间
+        - **drawLine.drawLineGroup.dgid**:
+  放线小组ID
+
+        **示例**:{
                 "drawLine.dlid": 1,
                 "drawLine.actualDate": "2016-01-01"
                 "drawLine.startTime": "00:00:00",
@@ -375,48 +367,46 @@
                 "drawLine.comment": "说明",
                 "drawLine.drawLineGroup.dgid": 1,
             }
-            
-    ### <I> successDrawLine
+
+    ### `successDrawLine` <span style="color:gray">[内部]</span>
 
         放线成功
-        
+
         判断放线信息是否存在 , 不存在 , 错误信息 **120017 订单放线状态错误**
-        
+
         判断放线信息状态为1(申请) , 其他状态 , 错误信息 **120017 订单放线状态错误**
-        
+
         判断工程信息是否存在 , 不存在 , 错误信息 **120020 工程信息不存在**
-        
-                |Requests:|
-                :param drawLine.dlid: 放线信息ID
-        :type drawLine.dlid: Long
-        
-        :param constructionNodes[n].sort: 排序
-        :type constructionNodes[n].sort: Short
-        :param constructionNodes[n].timeLimit: 工期
-        :type constructionNode[n].timeLimit: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **drawLine.dlid**:
+  放线信息ID
+
+        - **constructionNodes[n].sort**:
+  排序
+        - **constructionNodes[n].timeLimit**:
+  工期
+
+        **示例**:{
                 "drawLine.dlid": 1,
-                
+
                 "constructionNode[0].sort": 3,
                 "constructionNode[0].timeLimit": 10
             }
-        
-    ### <I> failureDrawLine
+
+    ### `failureDrawLine` <span style="color:gray">[内部]</span>
 
         放线失败
-        
+
         判断放线信息是否存在 , 不存在 , 错误信息 **120017 订单放线状态错误**
-        
-                |Requests:|
-                :param drawLine.dlid: 放线信息ID
-        :type drawLine.dlid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **drawLine.dlid**:
+  放线信息ID
+
+        **示例**:{
                 "drawLine.dlid": 1,
             }
 
@@ -426,8 +416,9 @@
 
 ## api.construction.ConstructionAction
 
-        |DataType:|
-        #### construction
+**数据类型**:
+
+#### construction
 
     - **cid**: 工程单ID
       - 类型: *Integer*
@@ -455,7 +446,7 @@
       - 类型: *Long*
     - **salaryTotal**: 工费总额
       - 类型: *Long*
-    
+
         |Filters:|
         - **orderId**: 装修单号
       - 类型: *String*
@@ -481,20 +472,19 @@
       - 类型: *Short*
     - **projectStatus**: 工程状态 , 包括: 未完工 , 已完工
       - 类型: *String*
-    
-    ### <I> pageConstruction
+
+    ### `pageConstruction` <span style="color:gray">[内部]</span>
 
         分页方式获取工程对应装修单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 `decoration <./decoration.html#api.decoration.decorationAction.decoration>`_
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 `decoration <./decoration.html#api.decoration.decorationAction.decoration>`_
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -524,25 +514,25 @@
                             "houseType": "期房",
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
-                            
+
                             "notSalesmanRate": 0.03,
                             "orderTotalPrice": 100,
                             "discount": 10,
-                            
+
                             "createTime": "2016-07-11",
                             "measureTime": null,
                             "depositTime": null,
                             "contractTime": null,
-                            
+
                             "status": "初始",
                             "projectStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "FL-02381",
@@ -571,7 +561,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -588,20 +578,19 @@
                 },
                 ...
             }
-            
-    ### <I> pageConstructionForBase
+
+    ### `pageConstructionForBase` <span style="color:gray">[内部]</span>
 
         分页方式获取工程对应装修单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 `decoration <./decoration.html#api.decoration.decorationAction.decoration>`_
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 `decoration <./decoration.html#api.decoration.decorationAction.decoration>`_
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -631,25 +620,25 @@
                             "houseType": "期房",
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
-                            
+
                             "notSalesmanRate": 0.03,
                             "orderTotalPrice": 100,
                             "discount": 10,
-                            
+
                             "createTime": "2016-07-11",
                             "measureTime": null,
                             "depositTime": null,
                             "contractTime": null,
-                            
+
                             "status": "初始",
                             "projectStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "FL-02381",
@@ -678,7 +667,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -716,21 +705,20 @@
                 ...
             }
 
-    ### <I> pageConstructionForSupervision
+    ### `pageConstructionForSupervision` <span style="color:gray">[内部]</span>
 
         分页方式获取工程对应装修单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         针对监理职位对返回装修单信息进行控制
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 `decoration <./decoration.html#api.decoration.decorationAction.decoration>`_
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 `decoration <./decoration.html#api.decoration.decorationAction.decoration>`_
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -760,25 +748,25 @@
                             "houseType": "期房",
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
-                            
+
                             "notSalesmanRate": 0.03,
                             "orderTotalPrice": 100,
                             "discount": 10,
-                            
+
                             "createTime": "2016-07-11",
                             "measureTime": null,
                             "depositTime": null,
                             "contractTime": null,
-                            
+
                             "status": "初始",
                             "projectStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "FL-02381",
@@ -807,7 +795,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -825,19 +813,18 @@
                 ...
             }
 
-    ### <I> pageConstructionForQualiter
+    ### `pageConstructionForQualiter` <span style="color:gray">[内部]</span>
 
         分页方式获取质检对应装修单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 `decoration <./decoration.html#api.decoration.decorationAction.decoration>`_
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 `decoration <./decoration.html#api.decoration.decorationAction.decoration>`_
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -867,25 +854,25 @@
                             "houseType": "期房",
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
-                            
+
                             "notSalesmanRate": 0.03,
                             "orderTotalPrice": 100,
                             "discount": 10,
-                            
+
                             "createTime": "2016-07-11",
                             "measureTime": null,
                             "depositTime": null,
                             "contractTime": null,
-                            
+
                             "status": "初始",
                             "projectStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "FL-02381",
@@ -914,7 +901,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -931,22 +918,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageConstructionForAcceptance
+
+    ### `pageConstructionForAcceptance` <span style="color:gray">[内部]</span>
 
         分页方式获取工程对应装修单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         返回所有需要进行验收状态的装修单信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 `decoration <./decoration.html#api.decoration.decorationAction.decoration>`_
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 `decoration <./decoration.html#api.decoration.decorationAction.decoration>`_
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -976,25 +962,25 @@
                             "houseType": "期房",
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
-                            
+
                             "notSalesmanRate": 0.03,
                             "orderTotalPrice": 100,
                             "discount": 10,
-                            
+
                             "createTime": "2016-07-11",
                             "measureTime": null,
                             "depositTime": null,
                             "contractTime": null,
-                            
+
                             "status": "初始",
                             "projectStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "FL-02381",
@@ -1023,7 +1009,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -1040,28 +1026,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryConstructionByOrderId
+
+    ### `queryConstructionByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取工程信息
-        
-                |Requests:|
-                :param construction.orderId: 装修单号
-        :type construction.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **construction.orderId**:
+  装修单号
+
+        **示例**:{
                 "construction.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **construction**: 工程信息 , 类型 *construction*
+
+**返回参数**:
+
+- **construction**: 工程信息 , 类型 *construction*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "construction":{
                     "cid": 4,
@@ -1078,96 +1062,93 @@
                  },
                 ...
             }
-            
-    ### <I> updateConstructionByOrderId
+
+    ### `updateConstructionByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号更新工程单
-        
+
         判断工程单是否存在 , 不存在添加失败 , 错误信息 **120020 工程单不存在**
-        
-                |Requests:|
-                :param construction.orderId: 装修单号
-        :type construction.orderId: String
-        :param construction.supervisor.userId: 监理编号
-        :type construction.supervisor.userId: String
-        :param construction.decoration.conpany: 工程公司
-        :type construction.decoration.conpany: Integer
-        
-        :param qualiters[n].uid: 质检id
-        :type qualiters[n].uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **construction.orderId**:
+  装修单号
+        - **construction.supervisor.userId**:
+  监理编号
+        - **construction.decoration.conpany**:
+  工程公司
+
+        - **qualiters[n].uid**:
+  质检id
+
+        **示例**:{
                 "construction.orderId": "1601010001",
                 "construction.supervisor.userId": "U0479",
                 "construction.decoration.conpany": 1,
-                
+
                 "qualiters[0].uid": 1
             }
-            
-    ### <I> updateConstructionForAdvance
+
+    ### `updateConstructionForAdvance` <span style="color:gray">[内部]</span>
 
         更新工程单信息 , 包括: 辅料额上限和工费额上限
-        
+
         判断工程单是否存在 , 不存在添加失败 , 错误信息 **120020 工程单不存在**
-        
-                |Requests:|
-                :param construction.cid: 工程单ID
-        :type construction.cid: Long
-        :param construction.accessoryLimit: 辅料额上限
-        :type construction.accessoryLimit: Long
-        :param construction.salaryLimit: 工费额上限
-        :type construction.salaryLimit: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **construction.cid**:
+  工程单ID
+        - **construction.accessoryLimit**:
+  辅料额上限
+        - **construction.salaryLimit**:
+  工费额上限
+
+        **示例**:{
                 "construction.cid": 1,
                 "construction.accessoryLimit": 10000000,
                 "construction.salaryLimit": 10000000,
             }
-    
-    ### <I> openAccessory
+
+    ### `openAccessory` <span style="color:gray">[内部]</span>
 
         开放辅料单
-        
+
         判断工程单是否存在 , 不存在添加失败 , 错误信息 **120020 工程单不存在**
-        
-                |Requests:|
-                :param construction.cid: 工程单ID
-        :type construction.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **construction.cid**:
+  工程单ID
+
+        **示例**:{
                 "construction.cid": 1
             }
-    
-    ### <I> lockAccessory
+
+    ### `lockAccessory` <span style="color:gray">[内部]</span>
 
         锁定辅料单
-        
+
         判断工程单是否存在 , 不存在添加失败 , 错误信息 **120020 工程单不存在**
-        
-                |Requests:|
-                :param construction.cid: 工程单ID
-        :type construction.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **construction.cid**:
+  工程单ID
+
+        **示例**:{
                 "construction.cid": 1
             }
-        
+
 ## 工程环节
 
 工程阶段相关信息管理
 
 ## api.construction.ConstructionScheduleAction
 
-        |DataType:|
-        #### constructionSchedule
+**数据类型**:
+
+#### constructionSchedule
 
     - **csid**: 工程环节ID
       - 类型: *Long*
@@ -1193,20 +1174,19 @@
       - 类型: *Short*
     - **node**: 工程节点 , 类型 [constructionNode](./data.html#api.data.ConstructionNodeAction.constructionNode)
       - 类型: *Object*
-    
-    ### <I> pageConstructionSchedule
+
+    ### `pageConstructionSchedule` <span style="color:gray">[内部]</span>
 
         分页方式获施工节点信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 施工节点信息列表 , 每条数据类型 *constructionSchedule*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  施工节点信息列表 , 每条数据类型 *constructionSchedule*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1278,28 +1258,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryConstructionScheduleByOrderId
+
+    ### `queryConstructionScheduleByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取工程环节信息
-        
-                |Requests:|
-                :param constructionSchedule.orderId: 装修单号
-        :type constructionSchedule.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionSchedule.orderId**:
+  装修单号
+
+        **示例**:{
                 "constructionSchedule.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **constructionSchedules**: 工程环节信息列表 , 每条数据类型 *constructionSchedule*
+
+**返回参数**:
+
+- **constructionSchedules**: 工程环节信息列表 , 每条数据类型 *constructionSchedule*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionSchedules": [
                     {
@@ -1319,28 +1297,26 @@
                 ]
                 ...
             }
-            
-    ### <I> queryConstructionScheduleByCid
+
+    ### `queryConstructionScheduleByCid` <span style="color:gray">[内部]</span>
 
         通过工程单ID获取工程环节信息
-        
-                |Requests:|
-                :param constructionSchedule.cid: 工程单ID
-        :type constructionSchedule.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionSchedule.cid**:
+  工程单ID
+
+        **示例**:{
                 "constructionSchedule.cid": 1
             }
-            
-                |Returns:|
-                - **constructionSchedules**: 工程环节信息列表 , 每条数据类型 *constructionSchedule*
+
+**返回参数**:
+
+- **constructionSchedules**: 工程环节信息列表 , 每条数据类型 *constructionSchedule*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionSchedules": [
                     {
@@ -1361,30 +1337,28 @@
                 ...
             }
 
-    ### <I> queryConstructionScheduleByOrderIdASchedule
+    ### `queryConstructionScheduleByOrderIdASchedule` <span style="color:gray">[内部]</span>
 
         通过装修单号获取工程环节信息
-        
-                |Requests:|
-                :param constructionSchedule.orderId: 装修单号
-        :type constructionSchedule.orderId: String
-        :param constructionSchedule.schedule: 进度
-        :type constructionSchedule.schedule: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionSchedule.orderId**:
+  装修单号
+        - **constructionSchedule.schedule**:
+  进度
+
+        **示例**:{
                 "constructionSchedule.orderId": "1601010001",
                 "constructionSchedule.schedule": 3
             }
-            
-                |Returns:|
-                - **constructionSchedule**: 工程环节 , 类型 *constructionSchedule*
+
+**返回参数**:
+
+- **constructionSchedule**: 工程环节 , 类型 *constructionSchedule*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionSchedule": {
                     "csid": 3,
@@ -1398,115 +1372,111 @@
                 ...
             }
 
-    ### <I> enterConstructionSchedule
+    ### `enterConstructionSchedule` <span style="color:gray">[内部]</span>
 
         进场
-        
+
         判断工程环节是否存在 , 不存在 , 错误信息 **120024 工程环节不存在**
-        
+
         工程环节工作状态更新为1(进场) , 进场时间更新为当前时间
-    
-                |Requests:|
-                :param constructionSchedule.csid: 工程环节ID
-        :type constructionSchedule.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionSchedule.csid**:
+  工程环节ID
+
+        **示例**:{
                 "constructionSchedule.csid": 1
             }
 
-    ### <I> leaveConstructionSchedule
+    ### `leaveConstructionSchedule` <span style="color:gray">[内部]</span>
 
         出场
-        
+
         判断工程环节是否存在 , 不存在 , 错误信息 **120024 工程环节不存在**
-        
+
         工程环节工作状态更新为2(出场) , 出场时间更新为当前时间
-    
-                |Requests:|
-                :param constructionSchedule.csid: 工程环节ID
-        :type constructionSchedule.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionSchedule.csid**:
+  工程环节ID
+
+        **示例**:{
                 "constructionSchedule.csid": 1
             }
 
-    ### <I> beginConstructionSchedule
+    ### `beginConstructionSchedule` <span style="color:gray">[内部]</span>
 
         开工
-        
+
         判断工程环节是否存在 , 不存在 , 错误信息 **120024 工程环节不存在**
-        
+
         判断工程环节状态为0(初始) , 其他状态不可操作 , 错误信息 **120025 工程环节不可操作**
-        
+
         判断工程环节是否验证款项 , 如果需要验证款项 , 分为两个部分验证装修款比例和主材款比例
-        
+
         利用关联工程环节比例配置以及装修单对应的比例数据 , 完成验证动作 , 错误信息 **120018 装修款比例不足** 和 **120033 销售比例不足**
-        
+
         工程环节状态更新为1(开工) , 开工时间更新为当前时间
-    
-                |Requests:|
-                :param constructionSchedule.csid: 工程环节ID
-        :type constructionSchedule.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionSchedule.csid**:
+  工程环节ID
+
+        **示例**:{
                 "constructionSchedule.csid": 1
             }
-    
-    ### <I> finishConstructionSchedule
+
+    ### `finishConstructionSchedule` <span style="color:gray">[内部]</span>
 
         完工
-        
+
         判断工程环节是否存在 , 不存在 , 错误信息 **120024 工程环节不存在**
-        
+
         判断工程环节状态为1(开工) , 其他状态不可操作 , 错误信息 **120025 工程环节不可操作**
-        
+
         判断工程环节是否验证款项 , 如果需要验证款项 , 分为两个部分验证装修款比例和主材款比例
-        
+
         利用关联工程环节比例配置以及装修单对应的比例数据 , 完成验证动作 , 错误信息 **120018 装修款比例不足** 和 **120033 销售比例不足**
-        
+
         工程环节状态更新为2(完工) , 完工时间更新为当前时间
-        
-                |Requests:|
-                :param constructionSchedule.csid: 工程环节ID
-        :type constructionSchedule.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionSchedule.csid**:
+  工程环节ID
+
+        **示例**:{
                 "constructionSchedule.csid": 1
             }
-            
-    ### <I> checkoutConstructionSchedule
+
+    ### `checkoutConstructionSchedule` <span style="color:gray">[内部]</span>
 
         更新工程环节验证款项
-        
+
         判断工程环节是否存在 , 不存在 , 错误信息 **120024 工程环节不存在**
-        
-                |Requests:|
-                :param constructionSchedule.csid: 工程环节ID
-        :type constructionSchedule.csid: Long
-        :param constructionSchedule.checkout: 验证款项
-        :type constructionSchedule.checkout: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionSchedule.csid**:
+  工程环节ID
+        - **constructionSchedule.checkout**:
+  验证款项
+
+        **示例**:{
                 "constructionSchedule.csid": 1,
                 "constructionSchedule.startTime": 0
             }
-            
+
 ## 工程信息
 
 ## api.construction.ConstructionInfoAction
 
-        |DataType:|
-        #### constructionInfo
+**数据类型**:
+
+#### constructionInfo
 
     - **ciid**: 信息ID
       - 类型: *Long*
@@ -1532,20 +1502,19 @@
       - 类型: *Timestamp*
     - **comment**: 备注说明
       - 类型: *String*
-    
-    ### <I> pageConstructionInfo
+
+    ### `pageConstructionInfo` <span style="color:gray">[内部]</span>
 
         分页方式获取工程信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 工程信息列表 , 每条数据类型 *constructionInfo*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  工程信息列表 , 每条数据类型 *constructionInfo*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1600,7 +1569,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部",
@@ -1621,28 +1590,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryConstructionInfo
+
+    ### `queryConstructionInfo` <span style="color:gray">[内部]</span>
 
         通过工程单ID获取工程信息
-        
-                |Requests:|
-                :param constructionInfo.cid: 工程单ID
-        :type constructionInfo.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionInfo.cid**:
+  工程单ID
+
+        **示例**:{
                 "constructionInfo.cid": 1
             }
-            
-                |Returns:|
-                - **constructionInfo**: 工程信息 , 类型 *constructionInfo*
+
+**返回参数**:
+
+- **constructionInfo**: 工程信息 , 类型 *constructionInfo*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionInfo": [
                     {
@@ -1662,28 +1629,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryConstructionInfoByOrderId
+
+    ### `queryConstructionInfoByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取工程信息
-        
-                |Requests:|
-                :param constructionInfo.orderId: 装修单号
-        :type constructionInfo.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionInfo.orderId**:
+  装修单号
+
+        **示例**:{
                 "constructionInfo.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **constructionInfo**: 工程信息 , 类型 *constructionInfo*
+
+**返回参数**:
+
+- **constructionInfo**: 工程信息 , 类型 *constructionInfo*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionInfo": [
                     {
@@ -1703,39 +1668,38 @@
                 ],
                 ...
             }
-            
-    ### <I> updateConstructionInfo
+
+    ### `updateConstructionInfo` <span style="color:gray">[内部]</span>
 
         更新工程信息
-        
-                |Requests:|
-                :param constructionInfo.cid: 工程单ID
-        :type constructionInfo.cid: Long
-        :param constructionInfo.timeLimit: 工期
-        :type constructionInfo.timeLimit: Integer
-        :param constructionInfo.ishovel: 铲大白
-        :type constructionInfo.ishovel: Short
-        :param constructionInfo.iskey: 钥匙
-        :type constructionInfo.iskey: Short
-        :param constructionInfo.isCeremony: 工程仪式
-        :type constructionInfo.isCeremony: Short
-        :param constructionInfo.finishTime: 预计完工时间
-        :type constructionInfo.finishTime: Timestamp
-        :param constructionInfo.keyTime: 预计领钥匙时间
-        :type constructionInfo.keyTime: Timestamp
-        :param constructionInfo.drawlineTime: 预计放线时间
-        :type constructionInfo.drawlineTime: Timestamp
-        :param constructionInfo.designTime: 预计设计时间
-        :type constructionInfo.designTime: Timestamp
-        :param constructionInfo.comment: 说明
-        :type constructionInfo.comment: String
-        
-        :param constructionInfo.decoration.house.quoteArea: 预算面积
-        :type constructionInfo.decoration.house.quoteArea: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionInfo.cid**:
+  工程单ID
+        - **constructionInfo.timeLimit**:
+  工期
+        - **constructionInfo.ishovel**:
+  铲大白
+        - **constructionInfo.iskey**:
+  钥匙
+        - **constructionInfo.isCeremony**:
+  工程仪式
+        - **constructionInfo.finishTime**:
+  预计完工时间
+        - **constructionInfo.keyTime**:
+  预计领钥匙时间
+        - **constructionInfo.drawlineTime**:
+  预计放线时间
+        - **constructionInfo.designTime**:
+  预计设计时间
+        - **constructionInfo.comment**:
+  说明
+
+        - **constructionInfo.decoration.house.quoteArea**:
+  预算面积
+
+        **示例**:{
                 "constructionInfo.cid": 1,
                 "constructionInfo.timeLimit": 90000,
                 "constructionInfo.ishovel": 0,
@@ -1746,39 +1710,38 @@
                 "constructionInfo.drawlineTime": "2016-01-01 00:00:00",
                 "constructionInfo.designTime": "2016-01-01 00:00:00",
                 "constructionInfo.comment": "说明",
-                
+
                 "constructionInfo.decoration.house.quoteArea": 0
             }
-            
-    ### <I> updateConstructionInfoByOrderId
+
+    ### `updateConstructionInfoByOrderId` <span style="color:gray">[内部]</span>
 
         更新工程信息
-        
+
         通过装修单号获取对应工程信息 , 存在更新工程信息 , 不存在 , 添加工程信息
-        
-                |Requests:|
-                :param constructionInfo.orderId: 装修单号
-        :type constructionInfo.orderId: String
-        :param constructionInfo.ishovel: 铲大白
-        :type constructionInfo.ishovel: Short
-        :param constructionInfo.iskey: 钥匙
-        :type constructionInfo.iskey: Short
-        :param constructionInfo.isCeremony: 工程仪式
-        :type constructionInfo.isCeremony: Short
-        :param constructionInfo.finishTime: 预计完工时间
-        :type constructionInfo.finishTime: Timestamp
-        :param constructionInfo.keyTime: 预计领钥匙时间
-        :type constructionInfo.keyTime: Timestamp
-        :param constructionInfo.drawlineTime: 预计放线时间
-        :type constructionInfo.drawlineTime: Timestamp
-        :param constructionInfo.designTime: 预计设计时间
-        :type constructionInfo.designTime: Timestamp
-        :param constructionInfo.comment: 说明
-        :type constructionInfo.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionInfo.orderId**:
+  装修单号
+        - **constructionInfo.ishovel**:
+  铲大白
+        - **constructionInfo.iskey**:
+  钥匙
+        - **constructionInfo.isCeremony**:
+  工程仪式
+        - **constructionInfo.finishTime**:
+  预计完工时间
+        - **constructionInfo.keyTime**:
+  预计领钥匙时间
+        - **constructionInfo.drawlineTime**:
+  预计放线时间
+        - **constructionInfo.designTime**:
+  预计设计时间
+        - **constructionInfo.comment**:
+  说明
+
+        **示例**:{
                 "constructionInfo.orderId": "1601010001",
                 "constructionInfo.timeLimit": 90000,
                 "constructionInfo.ishovel": 0,
@@ -1795,8 +1758,9 @@
 
 ## api.construction.ConstructionPlanction
 
-        |DataType:|
-        #### constructionPlan
+**数据类型**:
+
+#### constructionPlan
 
     - **cpid**: 计划ID
       - 类型: *Long*
@@ -1814,28 +1778,26 @@
       - 类型: *Timestamp*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> queryConstructionPlanByOrderId
+
+    ### `queryConstructionPlanByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取工程计划
-        
-                |Requests:|
-                :param constructionPlan.orderId: 装修单号
-        :type constructionPlan.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionPlan.orderId**:
+  装修单号
+
+        **示例**:{
                 "constructionPlan.orderId": 1
             }
-            
-                |Returns:|
-                - **constructionPlans**: 工程计划信息列表 , 类型 *constructionInfo*
+
+**返回参数**:
+
+- **constructionPlans**: 工程计划信息列表 , 类型 *constructionInfo*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionPlans": [
                     {
@@ -1852,25 +1814,24 @@
                 ...
             }
 
-    ### <I> addConstructionPlan
+    ### `addConstructionPlan` <span style="color:gray">[内部]</span>
 
         添加工程计划
-        
-                |Requests:|
-                :param constructionPlan.orderId: 装修单号
-        :type constructionPlan.orderId: String
-        :param constructionPlan.name: 装修单号
-        :type constructionPlan.name: String
-        :param constructionPlan.startTime: 装修单号
-        :type constructionPlan.startTime: String
-        :param constructionPlan.endTime: 装修单号
-        :type constructionPlan.endTime: String
-        :param constructionPlan.comment: 装修单号
-        :type constructionPlan.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionPlan.orderId**:
+  装修单号
+        - **constructionPlan.name**:
+  装修单号
+        - **constructionPlan.startTime**:
+  装修单号
+        - **constructionPlan.endTime**:
+  装修单号
+        - **constructionPlan.comment**:
+  装修单号
+
+        **示例**:{
                 "constructionPlan.orderId": "1601010001",
                 "constructionPlan.name": "计划",
                 "constructionPlan.startTime": "2016-01-01 00:00:00",
@@ -1878,17 +1839,16 @@
                 "constructionPlan.comment": "说明",
             }
 
-    ### <I> deleteConstructionPlan
+    ### `deleteConstructionPlan` <span style="color:gray">[内部]</span>
 
         删除工程计划
-        
-                |Requests:|
-                :param constructionPlan.cpid: 计划ID
-        :type constructionPlan.cpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionPlan.cpid**:
+  计划ID
+
+        **示例**:{
                 "constructionPlan.cpid": 1
             }
 
@@ -1898,8 +1858,9 @@
 
 ## api.construction.ConstructionDrawingAction
 
-        |DataType:|
-        #### constructionDrawing
+**数据类型**:
+
+#### constructionDrawing
 
     - **cdid**: 图片ID
       - 类型: *Long*
@@ -1917,33 +1878,31 @@
       - 类型: *Short*
     - **schedule**: 施工进度
       - 类型: *Short*
-    
-    ### <I> queryConstructionDrawingByOrderId
+
+    ### `queryConstructionDrawingByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取工程图片信息
-        
+
         可以同过工程单ID以及施工进度获取图片信息
-        
-                |Requests:|
-                :param construction.orderId: 装修单号
-        :type construction.orderId: String
-        :param constructionDrawing.schedule: 施工进度 , <选填>
-        :type constructionDrawing.schedule: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **construction.orderId**:
+  装修单号
+        - **constructionDrawing.schedule**:
+  施工进度 , <选填>
+
+        **示例**:{
                 "construction.orderId": "1601010001",
                 "constructionDrawing.schedule": 1,
             }
-            
-                |Returns:|
-                - **constructionDrawings**: 工程图片信息列表 , 每条数据类型 *constructionDrawing*
+
+**返回参数**:
+
+- **constructionDrawings**: 工程图片信息列表 , 每条数据类型 *constructionDrawing*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionDrawings": [
                     {
@@ -1959,33 +1918,31 @@
                 ],
                 ...
             }
-    
-    ### <I> queryConstructionDrawingByCid
+
+    ### `queryConstructionDrawingByCid` <span style="color:gray">[内部]</span>
 
         获取工程图片信息
-        
+
         可以同过工程单ID以及施工进度获取图片信息
-        
-                |Requests:|
-                :param constructionDrawing.cid: 工程单ID
-        :type constructionDrawing.cid: Long
-        :param constructionDrawing.schedule: 施工进度 , <选填>
-        :type constructionDrawing.schedule: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionDrawing.cid**:
+  工程单ID
+        - **constructionDrawing.schedule**:
+  施工进度 , <选填>
+
+        **示例**:{
                 "constructionDrawing.cid": 1,
                 "constructionDrawing.schedule": 1,
             }
-            
-                |Returns:|
-                - **constructionDrawings**: 工程图片信息列表 , 每条数据类型 *constructionDrawing*
+
+**返回参数**:
+
+- **constructionDrawings**: 工程图片信息列表 , 每条数据类型 *constructionDrawing*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionDrawings": [
                     {
@@ -2001,30 +1958,29 @@
                 ],
                 ...
             }
-            
-    ### <I> addConstructionDrawing
+
+    ### `addConstructionDrawing` <span style="color:gray">[内部]</span>
 
         添加工程图片信息
-        
-                |Requests:|
-                :param constructionDrawing.cid: 工程单ID
-        :type constructionDrawing.cid: Long
-        :param constructionDrawing.name: 名称
-        :type constructionDrawing.name: String
-        :param constructionDrawing.url: 图片路径
-        :type constructionDrawing.url: String
-        :param constructionDrawing.invurl: 图片路径 , 保留
-        :type constructionDrawing.invurl: String
-        :param constructionDrawing.filesize: 文件大小
-        :type constructionDrawing.filesize: Integer
-        :param constructionDrawing.type: 类型
-        :type constructionDrawing.type: Short
-        :param constructionDrawing.schedule: 施工进度
-        :type constructionDrawing.schedule: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionDrawing.cid**:
+  工程单ID
+        - **constructionDrawing.name**:
+  名称
+        - **constructionDrawing.url**:
+  图片路径
+        - **constructionDrawing.invurl**:
+  图片路径 , 保留
+        - **constructionDrawing.filesize**:
+  文件大小
+        - **constructionDrawing.type**:
+  类型
+        - **constructionDrawing.schedule**:
+  施工进度
+
+        **示例**:{
                 "constructionDrawing.cid": 1,
                 "constructionDrawing.name": "",
                 "constructionDrawing.invurl": "",
@@ -2033,30 +1989,29 @@
                 "constructionDrawing.type": 0,
                 "constructionDrawing.schedule": 1
             }
-            
-    ### <I> addConstructionDrawings
+
+    ### `addConstructionDrawings` <span style="color:gray">[内部]</span>
 
         批量工程图片信息
-        
-                |Requests:|
-                :param constructionDrawing[n].cid: 工程单ID
-        :type constructionDrawing[n].cid: Long
-        :param constructionDrawing[n].name: 名称
-        :type constructionDrawing[n].name: String
-        :param constructionDrawing[n].url: 图片路径
-        :type constructionDrawing[n].url: String
-        :param constructionDrawing[n].invurl: 图片路径 , 保留
-        :type constructionDrawing[n].invurl: String
-        :param constructionDrawing[n].filesize: 文件大小
-        :type constructionDrawing[n].filesize: Integer
-        :param constructionDrawing[n].type: 类型
-        :type constructionDrawing[n].type: Short
-        :param constructionDrawing[n].schedule: 施工进度
-        :type constructionDrawing[n].schedule: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionDrawing[n].cid**:
+  工程单ID
+        - **constructionDrawing[n].name**:
+  名称
+        - **constructionDrawing[n].url**:
+  图片路径
+        - **constructionDrawing[n].invurl**:
+  图片路径 , 保留
+        - **constructionDrawing[n].filesize**:
+  文件大小
+        - **constructionDrawing[n].type**:
+  类型
+        - **constructionDrawing[n].schedule**:
+  施工进度
+
+        **示例**:{
                 "constructionDrawing[n].cid": 1,
                 "constructionDrawing[n].name": "",
                 "constructionDrawing[n].invurl": "",
@@ -2065,18 +2020,17 @@
                 "constructionDrawing[n].type": 0,
                 "constructionDrawing[n].schedule": 1
             }
-            
-    ### <I> deleteConstructionDrawing
+
+    ### `deleteConstructionDrawing` <span style="color:gray">[内部]</span>
 
         删除工程图片信息
-        
-                |Requests:|
-                :param constructionDrawing.cdid: 图片ID
-        :type constructionDrawing.cdid: Long
-        
-        Example::
 
-            {
+**请求参数**:
+
+- **constructionDrawing.cdid**:
+  图片ID
+
+        **示例**:{
                 "chanDrawing.cdid": 1
             }
 
@@ -2084,8 +2038,9 @@
 
 ## api.construction.QualiterAction
 
-        |DataType:|
-        #### qualiter
+**数据类型**:
+
+#### qualiter
 
     - **qid**: 质检ID
       - 类型: *Long*
@@ -2107,28 +2062,26 @@
       - 类型: *Timestamp*
     - **status**: 状态 , 0: 初始
       - 类型: *Short*
-    
-    ### <I> queryQualiter
+
+    ### `queryQualiter` <span style="color:gray">[内部]</span>
 
         通过装修单号获取质检信息
-        
-                |Requests:|
-                :param qualiter.orderId: 装修单号
-        :type qualiter.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **qualiter.orderId**:
+  装修单号
+
+        **示例**:{
                 "qualiter.orderId: "1601010001"
             }
-        
-                |Returns:|
-                - **qualiters**: 质检信息列表 , 每条数据类型 *qualiter*
+
+**返回参数**:
+
+- **qualiters**: 质检信息列表 , 每条数据类型 *qualiter*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "qualiters": [
                     {
@@ -2182,7 +2135,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -2220,38 +2173,36 @@
                 ...
             }
 
-    ### <I> addQualiter
+    ### `addQualiter` <span style="color:gray">[内部]</span>
 
         添加质检
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断工人对应人员信息是否存在 , 不存在 , 错误信息 **220005 员工不存在**
-        
-                |Requests:|
-                :param qualiter.decoration.orderId: 装修单号
-        :type qualiter.decoration.orderId: String
-        :param qualiter.user.uid: 质检ID
-        :type qualiter.user.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **qualiter.decoration.orderId**:
+  装修单号
+        - **qualiter.user.uid**:
+  质检ID
+
+        **示例**:{
                 "qualiter.decoration.orderId: "1601010001",
                 "qualiter.user.uid": 1
             }
 
-    ### <I> deleteQualiter
+    ### `deleteQualiter` <span style="color:gray">[内部]</span>
 
         删除质检
 
-                |Requests:|
-                :param qualiter.qid: 质检ID
-        :type qualiter.qid: Long
+**请求参数**:
 
-        Example::
+- **qualiter.qid**:
+  质检ID
 
-        {
+        **示例**:{
             "qualiter.qid: 1
         }
 
@@ -2261,8 +2212,9 @@
 
 ## api.construction.ConstructerAction
 
-        |DataType:|
-        #### constructer
+**数据类型**:
+
+#### constructer
 
     - **crid**: 施工人员ID
       - 类型: *Long*
@@ -2295,37 +2247,35 @@
     - **status**: 状态 , 0: 初始, 1: 失效 , 2: 推送 , 3: 完成
       - 类型: *Short*
 
-    ### <I> queryConstructerByOrderId
+    ### `queryConstructerByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取施工人员信息 , 同时可以利用schedule获取具体工程环节人员信息
-        
+
         如果schedule没有传值将返回装修单号对应的所有施工人员信息
-        
+
         施工人员状态为初始(0)
-        
-                |Requests:|
-                :param constructer.orderId: 装修单号
-        :type constructer.orderId: String
-        :param constructer.schedule: 施工进度
-        :type constructer.schedule: Short
-        :param constructer.csid: 施工进度ID
-        :type constructer.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructer.orderId**:
+  装修单号
+        - **constructer.schedule**:
+  施工进度
+        - **constructer.csid**:
+  施工进度ID
+
+        **示例**:{
                 "constructer.orderId": "1601010001",
                 "constructer.schedule": 1,
                 "constructer.csid": 1
             }
-            
-                |Returns:|
-                - **constructers**: 施工人员信息列表 , 每条数据类型 *constructer*
+
+**返回参数**:
+
+- **constructers**: 施工人员信息列表 , 每条数据类型 *constructer*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "data": [
                     {
@@ -2366,38 +2316,36 @@
                 ],
                 ...
             }
-            
-    ### <I> queryConstructerByCid
+
+    ### `queryConstructerByCid` <span style="color:gray">[内部]</span>
 
         通过工程单ID获取施工人员信息 , 同时可以利用schedule获取具体工程环节人员信息
-        
+
         如果schedule没有传值将返回装修单号对应的所有施工人员信息
-        
+
         施工人员状态为初始(0)
-        
-                |Requests:|
-                :param constructer.cid: 工程单ID
-        :type constructer.cid: Long
-        :param constructer.schedule: 施工进度
-        :type constructer.schedule: Short
-        :param constructer.csid: 施工进度ID
-        :type constructer.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructer.cid**:
+  工程单ID
+        - **constructer.schedule**:
+  施工进度
+        - **constructer.csid**:
+  施工进度ID
+
+        **示例**:{
                 "constructer.cid:1,
                 "constructer.schedule": 1,
                 "constructer.csid": 1
             }
-        
-                |Returns:|
-                - **constructers**: 施工人员信息列表 , 每条数据类型 *constructer*
+
+**返回参数**:
+
+- **constructers**: 施工人员信息列表 , 每条数据类型 *constructer*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "data": [
                     {
@@ -2439,27 +2387,25 @@
                 ...
             }
 
-    ### <I> queryConstructerByCrid
+    ### `queryConstructerByCrid` <span style="color:gray">[内部]</span>
 
         通过施工人员ID获取信息
-        
-                |Requests:|
-                :param constructer.crid: 施工人员ID
-        :type constructer.crid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructer.crid**:
+  施工人员ID
+
+        **示例**:{
                 "constructer.crid: 1
             }
-        
-                |Returns:|
-                - **constructer**: 施工人员信息 , 类型 *constructer*
+
+**返回参数**:
+
+- **constructer**: 施工人员信息 , 类型 *constructer*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructer": {
                     "crid": 1,
@@ -2498,58 +2444,56 @@
                 },
                 ...
             }
-            
-    ### <I> addConstructer
+
+    ### `addConstructer` <span style="color:gray">[内部]</span>
 
         添加施工人员信息
-        
+
         判断工程单是否存在 , 不存在添加失败 , 错误信息 **120020 工程单不存在**
-        
+
         判断施工环节是否存在 , 不存在 , 错误信息 **120024 工程环节不存在**
-        
+
         判断施工环节状态是否为0(初始) , 错误信息 **120026 工程环节未开工**
-        
+
         判断工人对应人员信息是否存在 , 不存在 , 错误信息 **220005 员工不存在**
-        
+
         判断同一工程和同一施工进度中 , 被添加的施工人员是否已经存在 , 存在添加失败 , 错误信息 **当前工人已经添加,不能重复添加同一工人**
-        
-                |Requests:|
-                :param constructer.cid: 工程单ID
-        :type constructer.cid: Long
-        :param constructer.schedule: 施工进度
-        :type constructer.schedule: Short
-        :param constructer.user.userId: 施工人员编号
-        :type constructer.user.userId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructer.cid**:
+  工程单ID
+        - **constructer.schedule**:
+  施工进度
+        - **constructer.user.userId**:
+  施工人员编号
+
+        **示例**:{
                 "constructer.cid:1,
                 "constructer.schedule": 1,
                 "constructer.user.userId": "U0001"
             }
-            
-    ### <I> updateConstructerForRate
+
+    ### `updateConstructerForRate` <span style="color:gray">[内部]</span>
 
         更新施工人员信息
-        
+
         判断施工人员是否存在 , 不存在更新失败 , 错误信息 **120021 施工人员不存在**
-        
-                |Requests:|
-                :param constructer.crid: 施工人员ID
-        :type constructer.crid: Long
-        :param constructer.rate: 评级
-        :type constructer.rate: Short
-        :param constructer.rate1: 评级
-        :type constructer.rate1: Short
-        :param constructer.rate2: 评级
-        :type constructer.rate2: Short
-        :param constructer.assessment: 评价
-        :type constructer.assessment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructer.crid**:
+  施工人员ID
+        - **constructer.rate**:
+  评级
+        - **constructer.rate1**:
+  评级
+        - **constructer.rate2**:
+  评级
+        - **constructer.assessment**:
+  评价
+
+        **示例**:{
                 "constructer.cid:1,
                 "constructer.rate": 5,
                 "constructer.rate1": 5,
@@ -2557,31 +2501,30 @@
                 "constructer.assessment": "评价信息"
             }
 
-    ### <I> rateConstructer
+    ### `rateConstructer` <span style="color:gray">[内部]</span>
 
         评级
-        
+
         判断施工人员是否存在 , 不存在更新失败 , 错误信息 **120021 施工人员不存在**
-        
+
         判断状态是否为2(推送) , 其他状态 , 错误信息 **120022 施工人员状态不可操作**
-        
+
         更新状态为3(完成) , 更新完成时间
-        
-                |Requests:|
-                :param constructer.crid: 施工人员ID
-        :type constructer.crid: Long
-        :param constructer.rate: 评级
-        :type constructer.rate: Short
-        :param constructer.rate1: 评级
-        :type constructer.rate1: Short
-        :param constructer.rate2: 评级
-        :type constructer.rate2: Short
-        :param constructer.assessment: 评价
-        :type constructer.assessment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructer.crid**:
+  施工人员ID
+        - **constructer.rate**:
+  评级
+        - **constructer.rate1**:
+  评级
+        - **constructer.rate2**:
+  评级
+        - **constructer.assessment**:
+  评价
+
+        **示例**:{
                 "constructer.cid:1,
                 "constructer.rate": 5,
                 "constructer.rate1": 5,
@@ -2589,39 +2532,37 @@
                 "constructer.assessment": "评价信息"
             }
 
-    ### <I> sendConstructer
+    ### `sendConstructer` <span style="color:gray">[内部]</span>
 
         推送
-        
+
         判断施工人员是否存在 , 不存在更新失败 , 错误信息 **120021 施工人员不存在**
-        
+
         判断状态是否为0(初始) , 其他状态 , 错误信息 **120022 施工人员状态不可操作**
-        
+
         更新状态为1(推送) , 更新推送时间
-        
-                |Requests:|
-                :param constructer.crid: 施工人员ID
-        :type constructer.crid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructer.crid**:
+  施工人员ID
+
+        **示例**:{
                 "constructer.cid:1
             }
-            
-    ### <I> deleteConstructer
+
+    ### `deleteConstructer` <span style="color:gray">[内部]</span>
 
         删除施工人员信息 , 更新施工人员状态为失效(1)
-        
+
         判断删除施工人员存在工费信息 , 存在不能删除 , 错误信息 **120023 施工人员存在工费,不可删除**
-        
-                |Requests:|
-                :param constructer.crid: 施工人员ID
-        :type constructer.crid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructer.crid**:
+  施工人员ID
+
+        **示例**:{
                 "constructer.crid:1
             }
 
@@ -2629,8 +2570,9 @@
 
 ## api.construction.ConstructionAccessoryAction
 
-        |DataType:|
-        #### constructionAccessory
+**数据类型**:
+
+#### constructionAccessory
 
     - **caid**: 工程辅料ID
       - 类型: *Long*
@@ -2646,20 +2588,19 @@
       - 类型: *Integer*
     - **total**: 总额
       - 类型: *Long*
-    
-    ### <I> pageConstructionAccessory
+
+    ### `pageConstructionAccessory` <span style="color:gray">[内部]</span>
 
         分页方式获取工程辅料信息 , 根据工程单ID获取 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 工程辅料信息列表 , 每条数据类型 *constructionAccessory*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  工程辅料信息列表 , 每条数据类型 *constructionAccessory*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2704,47 +2645,45 @@
                 },
                 ...
             }
-            
-    ### <I> addConstructionAccessory
+
+    ### `addConstructionAccessory` <span style="color:gray">[内部]</span>
 
         添加工程辅料信息
-        
+
         判断工程单是否存在 , 不存在 , 错误信息 **120020 工程单不存在**
-        
-                |Requests:|
-                :param constructionAccessory.cid: 工程单ID
-        :type constructionAccessory.cid: Long
-        :param constructionAccessory.aoods.aid: 辅材ID
-        :type constructionAccessory.aoods.aid: Long
-        :param constructionAccessory.checkup: 验证标识
-        :type constructionAccessory.checkup: Short
-        :param constructionAccessory.numLimit: 数量上限
-        :type constructionAccessory.numLimit: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionAccessory.cid**:
+  工程单ID
+        - **constructionAccessory.aoods.aid**:
+  辅材ID
+        - **constructionAccessory.checkup**:
+  验证标识
+        - **constructionAccessory.numLimit**:
+  数量上限
+
+        **示例**:{
                 "constructionAccessory.cid": 1,
                 "constructionAccessory.aoods.aid": 1,
                 "constructionAccessory.checkup": 0,
                 "constructionAccessory.numLimit": 1000000
             }
-            
-    ### <I> updateConstructionAccessory
+
+    ### `updateConstructionAccessory` <span style="color:gray">[内部]</span>
 
         更新工程辅料信息
-        
-                |Requests:|
-                :param constructionAccessory.caid: 工程辅料ID
-        :type constructionAccessory.caid: Long
-        :param constructionAccessory.checkup: 验证标识
-        :type constructionAccessory.checkup: Short
-        :param constructionAccessory.numLimit: 数量上限
-        :type constructionAccessory.numLimit: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionAccessory.caid**:
+  工程辅料ID
+        - **constructionAccessory.checkup**:
+  验证标识
+        - **constructionAccessory.numLimit**:
+  数量上限
+
+        **示例**:{
                 "constructionAccessory.caid": 1,
                 "constructionAccessory.checkup": 0,
                 "constructionAccessory.numLimit": 1000000
@@ -2756,11 +2695,12 @@
 
 ## api.construction.ReworkAction
 
-        |DataType:|
-        #### rework
+**数据类型**:
+
+#### rework
 
     工程返工信息
-    
+
     - **rwId**: 返工信息ID
       - 类型: *Long*
     - **orderId**: 装修单号
@@ -2773,7 +2713,7 @@
       - 类型: *String*
     - **reworkDes**: 说明
       - 类型: *String*
-    
+
     #### reworkDrawing
 
     返工图片信息
@@ -2788,20 +2728,19 @@
       - 类型: *String*
     - **rwdAddUrl**: 路径 , 保留字段
       - 类型: *String*
-    
-    ### <I> pageReworkByOrderId
+
+    ### `pageReworkByOrderId` <span style="color:gray">[内部]</span>
 
         分页方式通过装修单号获取返工信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 返工信息列表 , 每条数据类型 *rework*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  返工信息列表 , 每条数据类型 *rework*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2819,83 +2758,78 @@
                 },
                 ...
             }
-            
-    ### <I> addRework
+
+    ### `addRework` <span style="color:gray">[内部]</span>
 
         添加返工信息
-        
-                |Requests:|
-                :param rework.orderId: 装修单号
-        :type rework.orderId: String
-        :param rework.createTime: 返工时间
-        :type rework.createTime: String
-        :param rework.reworkDes: 说明
-        :type rework.reworkDes: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **rework.orderId**:
+  装修单号
+        - **rework.createTime**:
+  返工时间
+        - **rework.reworkDes**:
+  说明
+
+        **示例**:{
                 "rework.orderId": "1601010001",
                 "rework.createTime": "2016-01-01",
                 "rework.reworkDes": "说明"
             }
-            
-    ### <I> updateRework
+
+    ### `updateRework` <span style="color:gray">[内部]</span>
 
         更新返工信息
-        
-                |Requests:|
-                :param rework.rwId: 返工信息ID
-        :type rework.rwId: Integer
-        :param rework.createTime: 返工时间
-        :type rework.createTime: String
-        :param rework.reworkDes: 说明
-        :type rework.reworkDes: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **rework.rwId**:
+  返工信息ID
+        - **rework.createTime**:
+  返工时间
+        - **rework.reworkDes**:
+  说明
+
+        **示例**:{
                 "rework.rwId": 3,
                 "rework.createTime": "2016-01-01",
                 "rework.reworkDes": "说明"
             }
-            
-    ### <I> deleteRework
+
+    ### `deleteRework` <span style="color:gray">[内部]</span>
 
         批量删除返工信息
-        
-                |Requests:|
-                :param rwIds[n]: 返工信息ID列表 , 每条数据类型 Integer
-        :type rwIds[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **rwIds[n]**:
+  返工信息ID列表 , 每条数据类型 Integer
+
+        **示例**:{
                 "rwIds[0]": 3,
                 "rwIds[1]": 4
             }
-            
-    ### <I> queryReworkDrawingByReworkId
+
+    ### `queryReworkDrawingByReworkId` <span style="color:gray">[内部]</span>
 
         通过返工信息ID查询返工信息图片
-        
-                |Requests:|
-                :param reworkDrawing.rwId: 返工信息ID
-        :type reworkDrawing.rwId: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **reworkDrawing.rwId**:
+  返工信息ID
+
+        **示例**:{
                 "reworkDrawing.rwId": 3,
             }
-            
-                |Returns:|
-                - **reworkDrawings**: 图片信息列表 , 每条数据类型 *reworkDrawing*
+
+**返回参数**:
+
+- **reworkDrawings**: 图片信息列表 , 每条数据类型 *reworkDrawing*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "reworkDrawings": [
                     {
@@ -2908,41 +2842,39 @@
                 ],
                 ...
             }
-            
-    ### <I> addReworkDrawing
+
+    ### `addReworkDrawing` <span style="color:gray">[内部]</span>
 
         添加返工图片信息
-        
-                |Requests:|
-                :param reworkDrawing.rwId: 返工信息ID
-        :type reworkDrawing.rwId: Integer
-        :param reworkDrawing.rwdName: 名称
-        :type reworkDrawing.rwdName: String
-        :param reworkDrawing.rwdUrl: 路径
-        :type reworkDrawing.rwdUrl: String
-        :param reworkDrawing.rwdAddUrl: 路径 , 保留字段
-        :type reworkDrawing.rwdAddUrl: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **reworkDrawing.rwId**:
+  返工信息ID
+        - **reworkDrawing.rwdName**:
+  名称
+        - **reworkDrawing.rwdUrl**:
+  路径
+        - **reworkDrawing.rwdAddUrl**:
+  路径 , 保留字段
+
+        **示例**:{
                 "reworkDrawing.rwId": 3,
                 "reworkDrawing.rwdName": "",
                 "reworkDrawing.rwdUrl": "/upload/Imag/6/5/9/6/e11e94473baaa4887a0877569.jpg",
                 "reworkDrawing.rwdAddUrl": "",
             }
-            
-    ### <I> deleteReworkDrawingById
+
+    ### `deleteReworkDrawingById` <span style="color:gray">[内部]</span>
 
         删除返工图片信息
-        
-                |Requests:|
-                :param reworkDrawing.rwdId: 图片信息
-        :type reworkDrawing.rwdId: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **reworkDrawing.rwdId**:
+  图片信息
+
+        **示例**:{
                 "reworkDrawing.rwdId": 3,
             }
 
@@ -2952,8 +2884,9 @@
 
 ## api.construction.InspectionRecordAction
 
-        |DataType:|
-        #### inspectionRecord
+**数据类型**:
+
+#### inspectionRecord
 
     - **irId**: 记录信息ID
       - 类型: *Long*
@@ -2973,20 +2906,19 @@
       - 类型: *String*
     - **recordDes**: 说明
       - 类型: *String*
-    
-    ### <I> pageInspectionRecordByOrderId
+
+    ### `pageInspectionRecordByOrderId` <span style="color:gray">[内部]</span>
 
         分页方式通过装修单号获取巡检记录信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 巡检记录信息列表 , 每条数据类型 *inspectionRecord*
-        :type paging.data: List
-    
-        Example::
-        
-            {
+        - **paging.data**:
+  巡检记录信息列表 , 每条数据类型 *inspectionRecord*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3006,71 +2938,68 @@
                 },
                 ...
             }
-            
-    ### <I> addInspectionRecord
+
+    ### `addInspectionRecord` <span style="color:gray">[内部]</span>
 
         添加巡检记录信息
-        
-                |Requests:|
-                :param inspectionRecord.orderId: 装修单号
-        :type inspectionRecord.orderId: String
-        :param inspectionRecord.orderAddr: 订单地址
-        :type inspectionRecord.orderAddr: String
-        :param inspectionRecord.startTime: 开始时间
-        :type inspectionRecord.startTime: String
-        :param inspectionRecord.endTime: 结束时间
-        :type inspectionRecord.endTime: String
-        :param inspectionRecord.recordDes: 说明
-        :type inspectionRecord.recordDes: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **inspectionRecord.orderId**:
+  装修单号
+        - **inspectionRecord.orderAddr**:
+  订单地址
+        - **inspectionRecord.startTime**:
+  开始时间
+        - **inspectionRecord.endTime**:
+  结束时间
+        - **inspectionRecord.recordDes**:
+  说明
+
+        **示例**:{
                 "inspectionRecord.orderId": "1601010001",
                 "inspectionRecord.orderAddr": "楼盘",
                 "inspectionRecord.startTime": "2016-01-01 15:30:30",
                 "inspectionRecord.endTime": "2016-01-01 19:32:30",
                 "inspectionRecord.recordDes": "说明"
             }
-            
-    ### <I> updateInspectionRecord
+
+    ### `updateInspectionRecord` <span style="color:gray">[内部]</span>
 
         更新巡检记录信息
-        
-                |Requests:|
-                :param inspectionRecord.irId: 巡检信息ID
-        :type inspectionRecord.irId: Integer
-        :param inspectionRecord.startTime: 开始时间
-        :type inspectionRecord.startTime: String
-        :param inspectionRecord.endTime: 结束时间
-        :type inspectionRecord.endTime: String
-        :param inspectionRecord.recordDes: 说明
-        :type inspectionRecord.recordDes: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **inspectionRecord.irId**:
+  巡检信息ID
+        - **inspectionRecord.startTime**:
+  开始时间
+        - **inspectionRecord.endTime**:
+  结束时间
+        - **inspectionRecord.recordDes**:
+  说明
+
+        **示例**:{
                 "inspectionRecord.irId": 1,
                 "inspectionRecord.startTime": "2016-01-01 15:30:30",
                 "inspectionRecord.endTime": "2016-01-01 19:32:30",
                 "inspectionRecord.recordDes": "说明"
             }
-            
-    ### <I> deleteInspectionRecord
+
+    ### `deleteInspectionRecord` <span style="color:gray">[内部]</span>
 
         批量删除巡检记录信息
-        
-                |Requests:|
-                :param irIds[0]: 巡检信息ID列表 , 每条数据类型 Integer
-        :type irIds[0]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **irIds[0]**:
+  巡检信息ID列表 , 每条数据类型 Integer
+
+        **示例**:{
                 "irIds[0]": 3,
                 "irIds[1]": 4
             }
-            
+
 ## 客服
 
 ### 投诉
@@ -3079,8 +3008,9 @@
 
 ## api.construction.InspectionRecordAction
 
-        |DataType:|
-        #### customerServiceComplaint
+**数据类型**:
+
+#### customerServiceComplaint
 
     - **cscId**: 投诉信息ID
       - 类型: *Long*
@@ -3110,20 +3040,19 @@
       - 类型: *String*
     - **des**: 说明
       - 类型: *String*
-    
-    ### <I> pageCustomerServiceComplaint
+
+    ### `pageCustomerServiceComplaint` <span style="color:gray">[内部]</span>
 
         分页方式通过装修单号获取投诉信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 投诉信息列表 , 每条数据类型 *customerServiceComplaint*
-        :type paging.data: List
-    
-        Example::
-        
-            {
+        - **paging.data**:
+  投诉信息列表 , 每条数据类型 *customerServiceComplaint*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3149,54 +3078,52 @@
                 },
                 ...
             }
-    
-    ### <I> addCustomerServiceComplaint
+
+    ### `addCustomerServiceComplaint` <span style="color:gray">[内部]</span>
 
         添加投诉信息
-        
-                |Requests:|
-                :param customerServiceComplaint.orderId: 装修单号
-        :type customerServiceComplaint.orderId: String
-        :param customerServiceComplaint.level: 等级 , 包括: 0:标准 , 1:重要
-        :type customerServiceComplaint.level: Integer
-        :param customerServiceComplaint.createTime: 创建时间
-        :type customerServiceComplaint.createTime: String
-        :param customerServiceComplaint.customerName: 客户名
-        :type customerServiceComplaint.customerName: String
-        :param customerServiceComplaint.des: 说明
-        :type customerServiceComplaint.des: String
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerServiceComplaint.orderId**:
+  装修单号
+        - **customerServiceComplaint.level**:
+  等级 , 包括: 0:标准 , 1:重要
+        - **customerServiceComplaint.createTime**:
+  创建时间
+        - **customerServiceComplaint.customerName**:
+  客户名
+        - **customerServiceComplaint.des**:
+  说明
+
+        **示例**:{
                 "customerServiceComplaint.orderId": "1601010001",
                 "customerServiceComplaint.level": 0,
                 "customerServiceComplaint.createTime": "2016-01-01 15:30:30",
                 "customerServiceComplaint.customerName": "王先生",
                 "customerServiceComplaint.des": "说明"
             }
-            
-    ### <I> updateCustomerServiceComplaint
+
+    ### `updateCustomerServiceComplaint` <span style="color:gray">[内部]</span>
 
         更新投诉信息
-        
-                |Requests:|
-                :param customerServiceComplaint.cscId: 投诉信息ID
-        :type customerServiceComplaint.cscId: Integer
-        :param customerServiceComplaint.orderId: 装修单号
-        :type customerServiceComplaint.orderId: String
-        :param customerServiceComplaint.level: 等级 , 包括: 0:标准 , 1:重要
-        :type customerServiceComplaint.level: Integer
-        :param customerServiceComplaint.createTime: 创建时间
-        :type customerServiceComplaint.createTime: String
-        :param customerServiceComplaint.customerName: 客户名
-        :type customerServiceComplaint.customerName: String
-        :param customerServiceComplaint.des: 说明
-        :type customerServiceComplaint.des: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerServiceComplaint.cscId**:
+  投诉信息ID
+        - **customerServiceComplaint.orderId**:
+  装修单号
+        - **customerServiceComplaint.level**:
+  等级 , 包括: 0:标准 , 1:重要
+        - **customerServiceComplaint.createTime**:
+  创建时间
+        - **customerServiceComplaint.customerName**:
+  客户名
+        - **customerServiceComplaint.des**:
+  说明
+
+        **示例**:{
                 "customerServiceComplaint.cscId": 1,
                 "customerServiceComplaint.orderId": "1601010001",
                 "customerServiceComplaint.level": 0,
@@ -3204,47 +3131,46 @@
                 "customerServiceComplaint.customerName": "王先生",
                 "customerServiceComplaint.des": "说明"
             }
-            
-    ### <I> handleCustomerServiceComplaint
+
+    ### `handleCustomerServiceComplaint` <span style="color:gray">[内部]</span>
 
         处理投诉信息
-        
-                |Requests:|
-                :param customerServiceComplaint.cscId: 投诉信息ID
-        :type customerServiceComplaint.cscId: String
-        :param customerServiceComplaint.handle: 处理信息
-        :type customerServiceComplaint.handle: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerServiceComplaint.cscId**:
+  投诉信息ID
+        - **customerServiceComplaint.handle**:
+  处理信息
+
+        **示例**:{
                 "customerServiceComplaint.cscId": 1,
                 "customerServiceComplaint.handle": "处理说明"
             }
-            
-    ### <I> deleteCustomerServiceComplaint
+
+    ### `deleteCustomerServiceComplaint` <span style="color:gray">[内部]</span>
 
         批量删除投诉信息
-        
-                |Requests:|
-                :param cscIds[n]: 投诉信息ID列表 , 每条数据类型 Long
-        :type cscIds[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **cscIds[n]**:
+  投诉信息ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "cscIds[0]": 1,
                 "cscIds[1]": 2
             }
-            
+
 ### 保修
 
 保修记录信息管理
 
 ## api.construction.CustomerServiceGuaranteeAction
 
-        |DataType:|
-        #### customerServiceGuarantee
+**数据类型**:
+
+#### customerServiceGuarantee
 
     - **csgId**: 保修信息ID
       - 类型: *Long*
@@ -3256,20 +3182,19 @@
       - 类型: *String*
     - **guaranteeDes**: 说明
       - 类型: *String*
-    
-    ### <I> pageCustomerServiceGuarantee
+
+    ### `pageCustomerServiceGuarantee` <span style="color:gray">[内部]</span>
 
         分页方式通过装修单号获取保修信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 保修信息列表 , 每条数据类型 *customerServiceGuarantee*
-        :type paging.data: List
-    
-        Example::
-        
-            {
+        - **paging.data**:
+  保修信息列表 , 每条数据类型 *customerServiceGuarantee*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3286,71 +3211,69 @@
                 },
                 ...
             }
-    
-    ### <I> addCustomerServiceGuarantee
+
+    ### `addCustomerServiceGuarantee` <span style="color:gray">[内部]</span>
 
         添加保修信息
-        
-                |Requests:|
-                :param customerServiceGuarantee.orderId: 装修单号
-        :type customerServiceGuarantee.orderId: String
-        :param customerServiceGuarantee.customerName: 客户名
-        :type customerServiceGuarantee.customerName: String
-        :param customerServiceGuarantee.guaranteeTime: 保修时间
-        :type customerServiceGuarantee.guaranteeTime: String
-        :param customerServiceGuarantee.guaranteeDes: 说明
-        :type customerServiceGuarantee.guaranteeDes: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerServiceGuarantee.orderId**:
+  装修单号
+        - **customerServiceGuarantee.customerName**:
+  客户名
+        - **customerServiceGuarantee.guaranteeTime**:
+  保修时间
+        - **customerServiceGuarantee.guaranteeDes**:
+  说明
+
+        **示例**:{
                 "customerServiceGuarantee.csgId": 1,
                 "customerServiceGuarantee.orderId": "1601010001",
                 "customerServiceGuarantee.customerName": "王先生",
                 "customerServiceGuarantee.guaranteeTime": "2016-01-01 15:30:30",
                 "customerServiceGuarantee.guaranteeDes": "说明"
             }
-            
-    ### <I> updateCustomerServiceGuarantee
+
+    ### `updateCustomerServiceGuarantee` <span style="color:gray">[内部]</span>
 
         更新保修信息
-        
-                |Requests:|
-                :param customerServiceGuarantee.csgId: 保修信息ID
-        :type customerServiceGuarantee.csgId: Integer
-        :param customerServiceGuarantee.guaranteeDes: 说明
-        :type customerServiceGuarantee.guaranteeDes: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerServiceGuarantee.csgId**:
+  保修信息ID
+        - **customerServiceGuarantee.guaranteeDes**:
+  说明
+
+        **示例**:{
                 "customerServiceGuarantee.csgId": 1,
                 "customerServiceGuarantee.guaranteeDes": "说明"
             }
-            
-    ### <I> deleteCustomerServiceGuarantee
+
+    ### `deleteCustomerServiceGuarantee` <span style="color:gray">[内部]</span>
 
         删除保修信息
-        
-                |Requests:|
-                :param csgIds[n]: 保修信息ID列表 , 每条数据类型 Long
-        :type csgIds[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **csgIds[n]**:
+  保修信息ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "csgIds[0]": 1,
                 "csgIds[1]": 2
             }
-            
+
 ### 回访
 
 回访记录信息管理
 
 ## api.construction.CustomerServiceBackVisitAction
 
-        |DataType:|
-        #### customerServiceBackVisit
+**数据类型**:
+
+#### customerServiceBackVisit
 
     - **csbvId**: 回访信息ID
       - 类型: *Integer*
@@ -3366,20 +3289,19 @@
       - 类型: *String*
     - **backVisitDes**: 说明
       - 类型: *String*
-    
-    ### <I> pageCustomerServiceBackVisit
+
+    ### `pageCustomerServiceBackVisit` <span style="color:gray">[内部]</span>
 
         分页方式通过装修单号获取回访信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
-          - 类型: *Object*
-        :param paging.data: 回访信息列表 , 每条数据类型 *customerServiceBackVisit*
-        :type paging.data: List
 
-        Example::
-        
-            {
+**返回参数**:
+
+- **paging**: 分页信息
+          - 类型: *Object*
+        - **paging.data**:
+  回访信息列表 , 每条数据类型 *customerServiceBackVisit*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3398,26 +3320,25 @@
                 },
                 ...
             }
-            
-    ### <I> addCustomerServiceBackVisit
+
+    ### `addCustomerServiceBackVisit` <span style="color:gray">[内部]</span>
 
         添加回访信息
-        
-                |Requests:|
-                :param customerServiceBackVisit.orderId: 装修单号
-        :type customerServiceBackVisit.orderId: String
-        :param customerServiceBackVisit.orderAddr: 订单地址
-        :type customerServiceBackVisit.orderAddr: String
-        :param customerServiceBackVisit.customerName: 客户名
-        :type customerServiceBackVisit.customerName: String
-        :param customerServiceBackVisit.backVisitTime: 保修时间
-        :type customerServiceBackVisit.backVisitTime: String
-        :param customerServiceBackVisit.backVisitDes: 说明
-        :type customerServiceBackVisit.backVisitDes: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerServiceBackVisit.orderId**:
+  装修单号
+        - **customerServiceBackVisit.orderAddr**:
+  订单地址
+        - **customerServiceBackVisit.customerName**:
+  客户名
+        - **customerServiceBackVisit.backVisitTime**:
+  保修时间
+        - **customerServiceBackVisit.backVisitDes**:
+  说明
+
+        **示例**:{
                 "customerServiceBackVisit.csgId": 1,
                 "customerServiceBackVisit.orderId": "1601010001",
                 "customerServiceBackVisit.orderAddr": "楼盘",
@@ -3426,57 +3347,56 @@
                 "customerServiceBackVisit.backVisitType": 1,
                 "customerServiceBackVisit.backVisitDes": "说明"
             }
-            
-    ### <I> updateCustomerServiceBackVisit
+
+    ### `updateCustomerServiceBackVisit` <span style="color:gray">[内部]</span>
 
         更新回访信息
-        
-                |Requests:|
-                :param customerServiceBackVisit.csbvId: 回访信息ID
-        :type customerServiceBackVisit.csbvId: String
-        :param customerServiceBackVisit.orderId: 装修单号
-        :type customerServiceBackVisit.orderId: String
-        :param customerServiceBackVisit.orderAddr: 订单地址
-        :type customerServiceBackVisit.orderAddr: String
-        :param customerServiceBackVisit.customerName: 客户名
-        :type customerServiceBackVisit.customerName: String
-        :param customerServiceBackVisit.backVisitTime: 保修时间
-        :type customerServiceBackVisit.backVisitTime: String
-        :param customerServiceBackVisit.backVisitDes: 说明
-        :type customerServiceBackVisit.backVisitDes: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerServiceBackVisit.csbvId**:
+  回访信息ID
+        - **customerServiceBackVisit.orderId**:
+  装修单号
+        - **customerServiceBackVisit.orderAddr**:
+  订单地址
+        - **customerServiceBackVisit.customerName**:
+  客户名
+        - **customerServiceBackVisit.backVisitTime**:
+  保修时间
+        - **customerServiceBackVisit.backVisitDes**:
+  说明
+
+        **示例**:{
                 "customerServiceBackVisit.csbvId": 1,
                 "customerServiceBackVisit.backVisitTime": "2016-01-01 15:30:30",
                 "customerServiceBackVisit.backVisitType": 1,
                 "customerServiceBackVisit.backVisitDes": "说明"
             }
-            
-    ### <I> deleteCustomerServiceBackVisit
+
+    ### `deleteCustomerServiceBackVisit` <span style="color:gray">[内部]</span>
 
         删除回访信息
-        
-                |Requests:|
-                :param csbvIds[n]: 回访信息ID列表 , 每条数据类型 Integer
-        :type csbvIds[n]: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **csbvIds[n]**:
+  回访信息ID列表 , 每条数据类型 Integer
+
+        **示例**:{
                 "csbvIds[0]": 1,
                 "csbvIds[1]": 2
             }
-            
+
 ## 验收
 
 工程信息验收过程 , 可以针对工程过程中的监理和质检进行评分和评价 , 以及针对整体订单施工情况进行评分
 
 ## api.construction.AcceptanceAction
 
-        |DataType:|
-        #### acceptance
+**数据类型**:
+
+#### acceptance
 
     - **actId**: 验收信息ID
       - 类型: *Integer*
@@ -3575,27 +3495,25 @@
     - **multiple**: 评级
       - 类型: *Integer*
 
-    ### <I> queryAcceptance
+    ### `queryAcceptance` <span style="color:gray">[内部]</span>
 
         通过装修单号获取验收信息
-        
-                |Requests:|
-                :param acceptance.orderId: 装修单号
-        :type acceptance.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **acceptance.orderId**:
+  装修单号
+
+        **示例**:{
                 "acceptance.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **acceptance**: 验收信息 , 每条数据类型 *acceptance*
+
+**返回参数**:
+
+- **acceptance**: 验收信息 , 每条数据类型 *acceptance*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "acceptance": {
                     "actId": 5,
@@ -3650,79 +3568,77 @@
                 },
                 ...
             }
-            
-    ### <I> updateAcceptance
+
+    ### `updateAcceptance` <span style="color:gray">[内部]</span>
 
         保存验收信息
-        
-        :param acceptance.orderId: 装修单号
-        :type acceptance.orderId: String
-        :param acceptance.acceptanceTime: 验收时间
-        :type acceptance.acceptanceTime: String
-        :param acceptance.waterwayQuality: 水路工程质量评价
-        :type acceptance.waterwayQuality: Integer
-        :param acceptance.waterwayServer: 水路服务质量评价
-        :type acceptance.waterwayServer: Integer
-        :param acceptance.waterwayHygiene: 水路卫生质量评价
-        :type acceptance.waterwayHygiene: Integer
-        :param acceptance.waterwayDes: 水路评价
-        :type acceptance.waterwayDes: String
-        :param acceptance.circuitQuality: 电路工程质量评价
-        :type acceptance.circuitQuality: Integer
-        :param acceptance.circuitServer: 电路服务质量评价
-        :type acceptance.circuitServer: Integer
-        :param acceptance.circuitHygiene: 电路卫生质量评价
-        :type acceptance.circuitHygiene: Integer
-        :param acceptance.circuitDes: 电路评价
-        :type acceptance.circuitDes: String
-        :param acceptance.bricklayQuality: 瓦工程质量评价
-        :type acceptance.bricklayQuality: Integer
-        :param acceptance.bricklayServer: 瓦工服务质量评价
-        :type acceptance.bricklayServer: Integer
-        :param acceptance.bricklayHygiene: 瓦工卫生质量评价
-        :type acceptance.bricklayHygiene: Integer
-        :param acceptance.bricklayDes: 瓦工评价
-        :type acceptance.bricklayDes: String
-        :param acceptance.carpentQuality: 木工程质量评价
-        :type acceptance.carpentQuality: Integer
-        :param acceptance.carpentServer: 木工服务质量评价
-        :type acceptance.carpentServer: Integer
-        :param acceptance.carpentHygiene: 木工卫生质量评价
-        :type acceptance.carpentHygiene: Integer
-        :param acceptance.carpentDes: 木工评价
-        :type acceptance.carpentDes: String
-        :param acceptance.oilQuality: 油工工程质量评价
-        :type acceptance.oilQuality: Integer
-        :param acceptance.oilServer: 油工服务质量评价
-        :type acceptance.oilServer: Integer
-        :param acceptance.oilHygiene: 油工卫生质量评价
-        :type acceptance.oilHygiene: Integer
-        :param acceptance.oilDes: 油工评价
-        :type acceptance.oilDes: String
-        :param acceptance.supervisQuality: 监理工程质量评价
-        :type acceptance.supervisQuality: Integer
-        :param acceptance.supervisServer: 监理服务质量评价
-        :type acceptance.supervisServer: Integer
-        :param acceptance.supervisHygiene: 监理卫生质量评价
-        :type acceptance.supervisHygiene: Integer
-        :param acceptance.supervisDes: 监理评价
-        :type acceptance.supervisDes: String
-        :param acceptance.materialQuality: 主材工程质量评价
-        :type acceptance.materialQuality: Integer
-        :param acceptance.materialServer: 主材服务质量评价
-        :type acceptance.materialServer: Integer
-        :param acceptance.materialDes: 主材评价
-        :type acceptance.materialDes: String
-        :param acceptance.question: 问题
-        :type acceptance.question: String
-        :param acceptance.propose: 建议
-        :type acceptance.propose: String
-        :param acceptance.multiple: 评级
-        :type acceptance.multiple: Integer
-        
-        Example::
-        
-            {
+
+        - **acceptance.orderId**:
+  装修单号
+        - **acceptance.acceptanceTime**:
+  验收时间
+        - **acceptance.waterwayQuality**:
+  水路工程质量评价
+        - **acceptance.waterwayServer**:
+  水路服务质量评价
+        - **acceptance.waterwayHygiene**:
+  水路卫生质量评价
+        - **acceptance.waterwayDes**:
+  水路评价
+        - **acceptance.circuitQuality**:
+  电路工程质量评价
+        - **acceptance.circuitServer**:
+  电路服务质量评价
+        - **acceptance.circuitHygiene**:
+  电路卫生质量评价
+        - **acceptance.circuitDes**:
+  电路评价
+        - **acceptance.bricklayQuality**:
+  瓦工程质量评价
+        - **acceptance.bricklayServer**:
+  瓦工服务质量评价
+        - **acceptance.bricklayHygiene**:
+  瓦工卫生质量评价
+        - **acceptance.bricklayDes**:
+  瓦工评价
+        - **acceptance.carpentQuality**:
+  木工程质量评价
+        - **acceptance.carpentServer**:
+  木工服务质量评价
+        - **acceptance.carpentHygiene**:
+  木工卫生质量评价
+        - **acceptance.carpentDes**:
+  木工评价
+        - **acceptance.oilQuality**:
+  油工工程质量评价
+        - **acceptance.oilServer**:
+  油工服务质量评价
+        - **acceptance.oilHygiene**:
+  油工卫生质量评价
+        - **acceptance.oilDes**:
+  油工评价
+        - **acceptance.supervisQuality**:
+  监理工程质量评价
+        - **acceptance.supervisServer**:
+  监理服务质量评价
+        - **acceptance.supervisHygiene**:
+  监理卫生质量评价
+        - **acceptance.supervisDes**:
+  监理评价
+        - **acceptance.materialQuality**:
+  主材工程质量评价
+        - **acceptance.materialServer**:
+  主材服务质量评价
+        - **acceptance.materialDes**:
+  主材评价
+        - **acceptance.question**:
+  问题
+        - **acceptance.propose**:
+  建议
+        - **acceptance.multiple**:
+  评级
+
+        **示例**:{
                 "acceptance.actId": 5,
                 "acceptance.acceptanceTime": "2016-01-01",
                 "acceptance.bricklayDes": "",

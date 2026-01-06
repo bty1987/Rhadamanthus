@@ -1,12 +1,11 @@
-# report {#report}
-
-# 报表
+# report 报表
 ## 装修业绩排名
 
 ## api.report.DecorationRankAction
 
-        |DataType:|
-        #### decorationRank
+**数据类型**:
+
+#### decorationRank
 
     - **drid**: ID
       - 类型: *Integer*
@@ -26,7 +25,7 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
+
     #### decorationDepartmentRank
 
     - **ddrid**: ID
@@ -45,7 +44,7 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
+
     #### decorationRegionRank
 
     - **drrid**: ID
@@ -63,27 +62,25 @@
     - **company**: 公司
       - 类型: *Integer*
 
-    ### <I> queryDecorationRank
+    ### `queryDecorationRank` <span style="color:gray">[内部]</span>
 
         装修业绩排名信息
-        
-                |Requests:|
-                :param decorationRank.type: 类型
-        :type decorationRank.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationRank.type**:
+  类型
+
+        **示例**:{
                 "decorationRank.type": 0
             }
 
-                |Returns:|
-                - **ranks**: 排名信息列表 , 每条数据类型 *decorationRank*
+**返回参数**:
+
+- **ranks**: 排名信息列表 , 每条数据类型 *decorationRank*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "ranks": [
                     {
@@ -114,32 +111,30 @@
                 ],
                 ...
             }
-			
-	### <I> queryDecorationDepartmentRank
+
+    ### `queryDecorationDepartmentRank` <span style="color:gray">[内部]</span>
 
         部门装修业绩排名信息
-        
-                |Requests:|
-                :param decorationDepartmentRank.type: 类型
-        :type decorationDepartmentRank.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationDepartmentRank.type**:
+  类型
+
+        **示例**:{
                 "decorationDepartmentRank.type": 0
             }
 
-                |Returns:|
-                - **ranks**: 排名信息列表 , 每条数据类型 *decorationDepartmentRank*
+**返回参数**:
+
+- **ranks**: 排名信息列表 , 每条数据类型 *decorationDepartmentRank*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "ranks": [
                     {
-                    
+
                         "ddrid": 1,
                         "depte": {
                             "did": 1,
@@ -154,29 +149,27 @@
                     }
                 ],
                 ...
-            }	
-			
-	### <I> queryDecorationRegionRank
+            }
+
+    ### `queryDecorationRegionRank` <span style="color:gray">[内部]</span>
 
         设计分区装修业绩排名信息
-        
-                |Requests:|
-                :param decorationRegionRank.type: 类型
-        :type decorationRegionRank.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationRegionRank.type**:
+  类型
+
+        **示例**:{
                 "decorationRegionRank.type": 0
             }
-		
-                |Returns:|
-                - **ranks**: 排名信息列表 , 每条数据类型 *decorationRegionRank*
+
+**返回参数**:
+
+- **ranks**: 排名信息列表 , 每条数据类型 *decorationRegionRank*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "ranks": [
                     {
@@ -195,7 +188,7 @@
                 ],
                 ...
             }
-            
+
 ## 主材业绩排名
 
 ## api.report.MaterialRankAction
@@ -216,7 +209,7 @@
       - 类型: *Double*
     - **status**: 状态 , 包括: 0: 初始 , 1: 失效
       - 类型: *Short*
-    
+
     #### materialDesignerDepartmentRank
 
     - **mddrid**: ID
@@ -233,7 +226,7 @@
       - 类型: *Double*
     - **status**: 状态 , 包括: 0: 初始 , 1: 失效
       - 类型: *Short*
-    
+
     #### materialDesignerRegionRank
 
     - **mdrrid**: ID
@@ -250,18 +243,17 @@
       - 类型: *Double*
     - **status**: 状态 , 包括: 0: 初始 , 1: 失效
       - 类型: *Short*
-         
-    ### <I> queryMaterialDesignerRank
+
+    ### `queryMaterialDesignerRank` <span style="color:gray">[内部]</span>
 
         设计师主材业绩排名
 
-                |Returns:|
-                - **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerRank*
+**返回参数**:
+
+- **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerRank*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "ranks": [
                     {
@@ -276,22 +268,21 @@
                 ],
                 ...
             }
-			
-	### <I> queryMaterialDesignerDepartmentRank
+
+    ### `queryMaterialDesignerDepartmentRank` <span style="color:gray">[内部]</span>
 
         设计部主材业绩排名
 
-                |Returns:|
-                - **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerDepartmentRank*
+**返回参数**:
+
+- **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerDepartmentRank*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "ranks": [
                     {
-                    
+
                         "mddrId": 1
                         "designerDeptId": "FL_DD_01",
                         "designerDeptName": "设计一部",
@@ -303,18 +294,17 @@
                 ],
                 ...
             }
-			
-	### <I> queryMaterialDesignerRegionRank
+
+    ### `queryMaterialDesignerRegionRank` <span style="color:gray">[内部]</span>
 
         设计分区主材业绩排名
 
-                |Returns:|
-                - **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerRegionRank*
+**返回参数**:
+
+- **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerRegionRank*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "ranks": [
                     {
@@ -329,18 +319,17 @@
                 ],
                 ...
             }
-			
-	### <I> materialDesignerRank
+
+    ### `materialDesignerRank` <span style="color:gray">[内部]</span>
 
         设计师主材业绩排名TOP10
 
-                |Returns:|
-                - **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerRank*
+**返回参数**:
+
+- **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerRank*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "ranks": [
                     {
@@ -355,22 +344,21 @@
                 ],
                 ...
             }
-			
-	### <I> materialDesignerDepartmentRank
+
+    ### `materialDesignerDepartmentRank` <span style="color:gray">[内部]</span>
 
         设计主材业绩排名TOP10
 
-                |Returns:|
-                - **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerDepartmentRank*
+**返回参数**:
+
+- **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerDepartmentRank*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "ranks": [
                     {
-                    
+
                         "mddrId": 1
                         "designerDeptId": "FL_DD_01",
                         "designerDeptName": "设计一部",
@@ -382,18 +370,17 @@
                 ],
                 ...
             }
-			
-	### <I> materialDesignerRegionRank
+
+    ### `materialDesignerRegionRank` <span style="color:gray">[内部]</span>
 
         设计分区主材业绩排名TOP10
 
-                |Returns:|
-                - **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerRegionRank*
+**返回参数**:
+
+- **ranks**: 排名信息列表 , 每条数据类型 *materialDesignerRegionRank*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "ranks": [
                     {
@@ -408,7 +395,7 @@
                 ],
                 ...
             }
-			
+
 ## 主材业绩统计
 
 ## api.report.MaterialReportAction
@@ -423,7 +410,7 @@
       - 类型: *String*
     - **total**: 统计值
       - 类型: *Float*
-    
+
     #### materialDesignerCount
 
     - **mdcId**: ID
@@ -444,7 +431,7 @@
       - 类型: *String*
     - **total**: 统计值
       - 类型: *Float*
-    
+
     #### materialDesignerDepartmentCount
 
     - **mddcId**: ID
@@ -461,7 +448,7 @@
       - 类型: *String*
     - **total**: 统计值
       - 类型: *Float*
-    
+
     #### materialDesignerRegionCount
 
     - **mdrcId**: ID
@@ -475,50 +462,47 @@
     - **total**: 统计值
       - 类型: *Float*
 
-    ### <I> materialDepartmentReport
+    ### `materialDepartmentReport` <span style="color:gray">[内部]</span>
 
-        查询全部主材部门业绩统计信息		
-        
-                |Returns:|
-                - **ranks**: 排名信息列表 , 每条数据类型 *materialDepartmentCount*
+        查询全部主材部门业绩统计信息
+
+**返回参数**:
+
+- **ranks**: 排名信息列表 , 每条数据类型 *materialDepartmentCount*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialDepartmentCounts": [
                     {
                         "mdcId": 1,
                         "materialDept": "FL_MD_01",
-						"createTime":"2015-03-11",
-						"total": 283736
+                        "createTime":"2015-03-11",
+                        "total": 283736
                     }
                 ],
                 ...
             }
-			
-	### <I> designerReport
+
+    ### `designerReport` <span style="color:gray">[内部]</span>
 
         设计师主材业绩统计信息
 
-                |Requests:|
-                - **reportType**: 报表类型
+**请求参数**:
+
+- **reportType**: 报表类型
           - 类型: *Integer*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 reportType: 1
             }
-        
-                |Returns:|
-                - **designers**: 排名信息列表 , 每条数据类型 *materialDesignerCount*
+
+**返回参数**:
+
+- **designers**: 排名信息列表 , 每条数据类型 *materialDesignerCount*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "designers": [
                     {
@@ -529,34 +513,32 @@
                         "designerDepartmentName": "大东分公司",
                         "designerRegionId": "FL_DR_01",
                         "designerRegionName": "设计一分区"
-						"createTime": "2015-05-25"
-						"total": 2360
+                        "createTime": "2015-05-25"
+                        "total": 2360
                     }
                 ],
                 ...
             }
-			
-	### <I> designerDeportmentReport
+
+    ### `designerDeportmentReport` <span style="color:gray">[内部]</span>
 
         设计部主材业绩统计信息
 
-                |Requests:|
-                - **reportType**: 报表类型
+**请求参数**:
+
+- **reportType**: 报表类型
           - 类型: *Integer*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 reportType: 1
             }
-        
-                |Returns:|
-                - **designerDepartments**: 排名信息列表 , 每条数据类型 *materialDesignerDepartmentCount*
+
+**返回参数**:
+
+- **designerDepartments**: 排名信息列表 , 每条数据类型 *materialDesignerDepartmentCount*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "designerDepartments": [
                     {
@@ -565,106 +547,100 @@
                         "designerDepartmentName": "大东分公司",
                         "designerRegionId": "FL_DR_01",
                         "designerRegionName": "设计一分区"
-						"createTime": "2015-05-25"
-						"total": 2360
+                        "createTime": "2015-05-25"
+                        "total": 2360
                     }
                 ],
                 ...
             }
-			
-	### <I> designerRegionReport
+
+    ### `designerRegionReport` <span style="color:gray">[内部]</span>
 
         设计分区主材业绩统计信息
 
-                |Requests:|
-                - **reportType**: 报表类型
-          - 类型: *Integer	*
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **reportType**: 报表类型
+          - 类型: *Integer    *
+
+        **示例**:{
                 reportType: 1
-            }        
-        
-                |Returns:|
-                - **designerRegions**: 排名信息列表 , 每条数据类型 *materialDesignerRegionCount*
+            }
+
+**返回参数**:
+
+- **designerRegions**: 排名信息列表 , 每条数据类型 *materialDesignerRegionCount*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "designerRegions": [
                     {
                         "mdrcId": 1,
                         "designerRegionId": "FL_DR_01",
                         "designerRegionName": "设计一分区"
-						"createTime": "2015-05-25"
-						"total": 2360
+                        "createTime": "2015-05-25"
+                        "total": 2360
                     }
                 ],
                 ...
             }
 
-	### <I> countDesigner
+    ### `countDesigner` <span style="color:gray">[内部]</span>
 
-        统计设计师主材业绩信息	
-        
-                |Requests:|
-                - **reportType**: 报表类型
+        统计设计师主材业绩信息
+
+**请求参数**:
+
+- **reportType**: 报表类型
           - 类型: *Integer*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 reportType: 1
             }
-        
-                |Returns:|
-                - **designers**: 排名信息列表 , 每条数据类型 *materialDesignerCount*
+
+**返回参数**:
+
+- **designers**: 排名信息列表 , 每条数据类型 *materialDesignerCount*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "designers": [
                     {
-						"mdcId": 1,
+                        "mdcId": 1,
                         "designerId": "U_00001",
                         "designerName": "12",
                         "designerDepartmentId": "FL_DD_01",
                         "designerDepartmentName": "大东分公司",
                         "designerRegionId": "FL_DR_01",
                         "designerRegionName": "设计一分区"
-						"createTime": "2015-05-25"
-						"total": 2360
-					}
+                        "createTime": "2015-05-25"
+                        "total": 2360
+                    }
                 ],
                 ...
             }
-			
-	### <I> countDesignerDepartment
+
+    ### `countDesignerDepartment` <span style="color:gray">[内部]</span>
 
         统计设计部门主材绩信息
 
-                |Requests:|
-                - **reportType**: 报表类型
+**请求参数**:
+
+- **reportType**: 报表类型
           - 类型: *Integer*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 reportType: 1
             }
-        
-                |Returns:|
-                - **designerDepartments**: 排名信息列表 , 每条数据类型 *materialDesignerDepartmentCount*
+
+**返回参数**:
+
+- **designerDepartments**: 排名信息列表 , 每条数据类型 *materialDesignerDepartmentCount*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "designerDepartments": [
                     {
@@ -673,53 +649,52 @@
                         "designerDepartmentName": "大东分公司",
                         "designerRegionId": "FL_DR_01",
                         "designerRegionName": "设计一分区"
-						"createTime": "2015-05-25"
-						"total": 2360
+                        "createTime": "2015-05-25"
+                        "total": 2360
                     }
                 ],
                 ...
             }
-			
-	### <I> countDesignerRegion
+
+    ### `countDesignerRegion` <span style="color:gray">[内部]</span>
 
         统计设计分区主材业绩信息
 
-                |Requests:|
-                - **reportType**: 报表类型
-          - 类型: *Integer	*
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **reportType**: 报表类型
+          - 类型: *Integer    *
+
+        **示例**:{
                 reportType: 1
-            }        
-        
-                |Returns:|
-                - **designerRegions**: 排名信息列表 , 每条数据类型 *materialDesignerRegionCount*
+            }
+
+**返回参数**:
+
+- **designerRegions**: 排名信息列表 , 每条数据类型 *materialDesignerRegionCount*
           - 类型: *List*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "designerRegions": [
                     {
                         "mdrcId": 1,
                         "designerRegionId": "FL_DR_01",
                         "designerRegionName": "设计一分区"
-						"createTime": "2015-05-25"
-						"total": 2360
+                        "createTime": "2015-05-25"
+                        "total": 2360
                     }
                 ],
                 ...
             }
-			
-	### <I> queryRankForPlace
+
+    ### `queryRankForPlace` <span style="color:gray">[内部]</span>
 
         查询设计师排名信息 , 分为装修和主材 , 统计方式为汇总业绩以及排名信息
-			       
-                |Returns:|
-                - **decorationRank**: 装修业绩
+
+**返回参数**:
+
+- **decorationRank**: 装修业绩
           - 类型: *String*
         - **decorationPlace**: 装修排名
           - 类型: *String*
@@ -727,25 +702,24 @@
           - 类型: *String*
         - **materialPlace**: 主材排名
           - 类型: *String*
-		
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
-                
+
                 "decorationPlace": "2"
                 "decorationRank": "151249.0"
                 "materialPlace": "2"
                 "materialRank": "1655621.139974594"
                 ...
             }
-            
+
 ## 装修工程进度统计
 
 ## api.report.DecorationReportAction
 
-        |DataType:|
-        #### decoration7Construction
+**数据类型**:
+
+#### decoration7Construction
 
     - **dcid**: ID
       - 类型: *Long*
@@ -781,21 +755,19 @@
       - 类型: *Integer*
     - **cs14**: 保洁
       - 类型: *Integer*
-    
-    ### <I> queryDecoration7Construction
+
+    ### `queryDecoration7Construction` <span style="color:gray">[内部]</span>
 
         查询装修工程进度统计信息
-        
-        
-                |Returns:|
-                - **decoration7Constructions**: 装修工程状态信息列表 , 每条数据类型 *decoration7Construction*
+
+**返回参数**:
+
+- **decoration7Constructions**: 装修工程状态信息列表 , 每条数据类型 *decoration7Construction*
           - 类型: *String*
 
-        Example::
-        
-            {
+        **示例**:{
                 ...
-                
+
                 "decoration7Constructions": [
                     {
                         "company": "公司",
@@ -819,14 +791,15 @@
                 ...
             }
 
-    ### <I> updateDecoration7Construction
+    ### `updateDecoration7Construction` <span style="color:gray">[内部]</span>
 
 ## 装修业绩统计
 
 ## api.report.DecorationReportAction
 
-        |DataType:|
-        #### decoration7Achievement
+**数据类型**:
+
+#### decoration7Achievement
 
     - **daid**: ID
       - 类型: *Long*
@@ -850,20 +823,19 @@
       - 类型: *Long*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> queryDecoration7Achievement
+
+    ### `queryDecoration7Achievement` <span style="color:gray">[内部]</span>
 
         查询装修业绩进度统计信息
-        
-                |Returns:|
-                - **decoration7Achievements**: 装修业绩信息列表 , 每条数据类型 *decoration7Achievement*
+
+**返回参数**:
+
+- **decoration7Achievements**: 装修业绩信息列表 , 每条数据类型 *decoration7Achievement*
           - 类型: *List*
 
-        Example::
-        
-            {
+        **示例**:{
                 ...
-                
+
                 "decoration7Achievements": [
                     {
                         "daid": 1,
@@ -883,14 +855,15 @@
                 ...
             }
 
-    ### <I> updateDecoration7Achievement
+    ### `updateDecoration7Achievement` <span style="color:gray">[内部]</span>
 
 ## 销售业绩统计
 
 ## api.report.SalesReportAction
 
-        |DataType:|
-        #### sales7Achievement
+**数据类型**:
+
+#### sales7Achievement
 
     - **said**: ID
       - 类型: *Long*
@@ -918,20 +891,19 @@
       - 类型: *Long*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> querySales7Achievement
+
+    ### `querySales7Achievement` <span style="color:gray">[内部]</span>
 
         查询销售业绩进度统计信息
-        
-                |Returns:|
-                - **sales7Achievements**: 销售业绩信息列表 , 每条数据类型 *sales7Achievement*
+
+**返回参数**:
+
+- **sales7Achievements**: 销售业绩信息列表 , 每条数据类型 *sales7Achievement*
           - 类型: *List*
 
-        Example::
-        
-            {
+        **示例**:{
                 ...
-                
+
                 "sales7Achievements": [
                     {
                         "said": 1,
@@ -952,13 +924,14 @@
                 ]
                 ...
             }
-            
+
 ## 工程状态统计
 
 ## api.report.ConstructionReportAction
 
-        |DataType:|
-        #### construction7Achievement
+**数据类型**:
+
+#### construction7Achievement
 
     - **caid**: ID
       - 类型: *Long*
@@ -996,20 +969,19 @@
       - 类型: *Integer*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> queryConstruction7Achievement
+
+    ### `queryConstruction7Achievement` <span style="color:gray">[内部]</span>
 
         查询工程状态进度统计信息
-        
-                |Returns:|
-                - **construction7Achievements**: 工程状态信息列表 , 每条数据类型 *construction7Achievement*
+
+**返回参数**:
+
+- **construction7Achievements**: 工程状态信息列表 , 每条数据类型 *construction7Achievement*
           - 类型: *List*
 
-        Example::
-        
-            {
+        **示例**:{
                 ...
-                
+
                 "construction7Achievements": [
                     {
                         "said": 1,
@@ -1036,11 +1008,12 @@
 
 ## api.report.UserReportAction
 
-        |DataType:|
-        #### user7Achievement
+**数据类型**:
+
+#### user7Achievement
 
     在职总数/离职总数/入职人数/离职人数/调职人数/
-    
+
     - **uaid**: ID
       - 类型: *Long*
     - **year**: 年份
@@ -1061,20 +1034,19 @@
       - 类型: *Long*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> queryUser7Achievement
+
+    ### `queryUser7Achievement` <span style="color:gray">[内部]</span>
 
         查询人资状态统计信息
-        
-                |Returns:|
-                - **user7Achievements**: 人资状态信息列表 , 每条数据类型 *user7Achievement*
+
+**返回参数**:
+
+- **user7Achievements**: 人资状态信息列表 , 每条数据类型 *user7Achievement*
           - 类型: *List*
 
-        Example::
-        
-            {
+        **示例**:{
                 ...
-                
+
                 "user7Achievements": [
                     {
                         "uaid": 1,
@@ -1093,11 +1065,12 @@
 
 ## api.report.ApprovalReportAction
 
-        |DataType:|
-        #### approval7Achievement
+**数据类型**:
+
+#### approval7Achievement
 
     总数/创建数量/未处理数量/通过数量/驳回数量
-    
+
     - **aaid**: ID
       - 类型: *Long*
     - **year**: 年份
@@ -1118,20 +1091,19 @@
       - 类型: *Long*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> queryApproval7Achievement
+
+    ### `queryApproval7Achievement` <span style="color:gray">[内部]</span>
 
         查询审批状态进度统计信息
-        
-                |Returns:|
-                - **approval7Achievements**: 审批状态信息列表 , 每条数据类型 *approval7Achievement*
+
+**返回参数**:
+
+- **approval7Achievements**: 审批状态信息列表 , 每条数据类型 *approval7Achievement*
           - 类型: *List*
 
-        Example::
-        
-            {
+        **示例**:{
                 ...
-                
+
                 "approval7Achievements": [
                     {
                         "said": 1,

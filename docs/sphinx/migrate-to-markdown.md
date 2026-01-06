@@ -15,7 +15,6 @@
 - 需要保留 RST 的高级特性（如自定义指令）
 - 团队成员对 Markdown 更熟悉
 
----
 
 ## 安装步骤
 
@@ -55,7 +54,6 @@ myst_enable_extensions = [
 myst_heading_anchors = 3  # 为标题生成锚点
 ```
 
----
 
 ## 迁移流程
 
@@ -89,47 +87,37 @@ pandoc tools.rst -o tools.md --wrap=none
 <!-- tools.rst 原始格式 -->
 .. _tools:
 
-***************
-工具
-***************
-
-开发环境
-================
+# 工具
+## 开发环境
 
 <!-- tools.md 转换后格式 -->
-# 工具 {#tools}
-
-## 开发环境
+# 工具开发环境
 ```
 
 ### 阶段 3：RST → Markdown 语法映射
 
 | RST 语法 | Markdown 等价语法 | 说明 |
-|----------|-------------------|------|
-| `.. _label:` | `# Heading {#label}` | 锚点定义 |
-| `.. class:: name` | `:::{class} name` 或注释 | 类定义 |
-| `.. method:: name` | `### method:: name` | 方法定义 |
-| `.. data:: name` | `### data:: name` | 数据定义 |
-| `:param name:` | `- **name**` | 参数说明 |
-| `:type name:` | `- *type*` | 类型说明 |
+| `.. _label:` | `# Heading` | 锚点定义 |
+| `## name` | `:::{class} name` 或注释 | 类定义 |
+| `### name` | `### method:: name` | 方法定义 |
+| `#### name` | `### data:: name` | 数据定义 |
+| `- **name**:` | `- **name**` | 参数说明 |
+| `  - 类型: `` | `- *type*` | 类型说明 |
 | `::` （代码块） | ` ``` ` | 代码块 |
 | `.. note::` | `:::{note}` 或 `> **Note:**` | 注释块 |
-| `:ref:`label`` | `[](#label)` | 交叉引用 |
+| `[label](#label)` | `[](#label)` | 交叉引用 |
 
 **示例对比**：
 
 **RST 格式**（`common.rst`）：
 ```rst
-.. class:: api.common.LoginAction
+## api.common.LoginAction
 
-    +---------+
-    |DataType:|
-    +---------+
+**数据类型**:
 
-    .. data:: role
-
-    :param rid: 角色ID
-    :type rid: Integer
+#### role
+    - **rid**:角色ID
+      - 类型: `Integer
 ```
 
 **Markdown 格式**（`common.md`）：
@@ -199,7 +187,6 @@ if __name__ == '__main__':
     main()
 ```
 
----
 
 ## 验证构建
 
@@ -207,20 +194,15 @@ if __name__ == '__main__':
 # 构建包含 Markdown 的文档
 sphinx-build -b html . _build/html
 
-# 检查是否有警告或错误
 # 注意观察输出中的 "WARNING" 信息
 ```
 
----
 
 ## 更新 index.rst
 
 将 `.rst` 引用改为 `.md`：
 
 ```rst
-.. toctree::
-    :maxdepth: 3
-    :numbered:
 
     log.md      # 改为 .md
     format.md
@@ -234,14 +216,13 @@ sphinx-build -b html . _build/html
     # ...
 ```
 
----
 
 ## 注意事项
 
 ### ⚠️ 语法差异
 
 1. **交叉引用**：
-   - RST: `:ref:`common``
+   - RST: `[common](#common)`
    - MD: `[](#common)` 或 `[common](common.md)`
 
 2. **表格语法**：
@@ -249,7 +230,7 @@ sphinx-build -b html . _build/html
    - MD: 使用 pipe 表格（功能有限）
 
 3. **代码块**：
-   - RST: `.. code-block:: java`
+   - RST: ````java`
    - MD: ` ```java `
 
 ### 🔧 需要手动调整的部分
@@ -263,13 +244,11 @@ sphinx-build -b html . _build/html
 2. **参数表格**需要手动格式化：
    ```markdown
    | 参数 | 类型 | 说明 |
-   |------|------|------|
-   | rid | Integer | 角色ID |
+      | rid | Integer | 角色ID |
    ```
 
 3. **包含指令**（`.. include::`）在 Markdown 中不支持，需要改用 MyST 的包含语法。
 
----
 
 ## 回退方案
 
@@ -287,7 +266,6 @@ source_suffix = {
 # Sphinx 会优先使用 .rst 文件
 ```
 
----
 
 ## 推荐迁移顺序
 
@@ -305,7 +283,6 @@ source_suffix = {
    - `modules/system.rst` → `modules/system.md`
    - 其他模块文件...
 
----
 
 ## 资源链接
 

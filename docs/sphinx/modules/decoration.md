@@ -1,14 +1,13 @@
-# decoration {#decoration}
-
-# 装修
+# decoration 装修
 ## 订单
 
 装修单信息管理以及相关业务功能
 
 ## api.decoration.DecorationAction
 
-        |DataType:|
-        #### decoration
+**数据类型**:
+
+#### decoration
 
     - **doid**: 装修单ID
       - 类型: *Long*
@@ -18,7 +17,7 @@
       - 类型: *Object*
     - **house**: 房产 , 类型 [house](./data.html#api.data.HouseAction.house)
       - 类型: *Object*
-    
+
     - **grade**: 等级 , A/B/C
       - 类型: *String*
     - **type**: 类型 , 0: 半包 , 装修单 , 不包括主材单 , 1: 整装 , 装修+主材单 , 2: 满减 , 主材配比 , 装修打折
@@ -31,15 +30,15 @@
       - 类型: *String*
     - **resourceType**: 资源类型 , 0: 咨询 , 1: 量房
       - 类型: *Short*
-    
+
     - **busitype**: 业务类型ID
       - 类型: *Long*
-    
+
     - **ddid**: 部门ID
       - 类型: *Long*
     - **sdid**: 部门ID
       - 类型: *Long*
-    
+
     - **creater**: 创建人 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
     - **designer**: 设计师 , 类型 [user](./user.html#api.personel.UserAction.user)
@@ -63,7 +62,7 @@
       - 类型: *Integer*
     - **saleScale**: 销售比例
       - 类型: *Integer*
-    
+
     - **presignPrice**: 预签额
       - 类型: *Long*
     - **signPrice**: 合同额
@@ -76,7 +75,7 @@
       - 类型: *Long*
     - **notSalesmanRate**: 非业务人员提点
       - 类型: *Integer*
-    
+
     - **createTime**: 创建时间
       - 类型: *Timestamp*
     - **measureTime**: 量尺时间
@@ -95,7 +94,7 @@
       - 类型: *Timestamp*
     - **accountTime**: 决算时间
       - 类型: *Timestamp*
-    
+
     - **status**: 状态 , 包括: 0(初始) , 1(定金) , 2(预签) , 3(签约) , 4(重签), 5(废单) , 6(终止) , 7(决算) , 8(完结)
       - 类型: *Short*
     - **designStatus**: 设计状态 , 包括: 0(待设计), 1(设计中), 2(完成)
@@ -110,15 +109,15 @@
       - 类型: *Short*
     - **otherStatus**: 其他状态 , 包括: 1(合尺) , 2(设计费)
       - 类型: *Short*
-    
+
     - **addition**: 附加信息 , 类型 [decorationAddition](./decoration.html#api.decoration.DecorationAdditionAction.decorationAddition)
       - 类型: *Obejct*
-    
+
     - **company**: 装修公司
       - 类型: *Integer*
     - **conpany**: 工程公司
       - 类型: *Integer*
-    
+
         |Filters:|
         - **orderId**: 装修单号
       - 类型: *String*
@@ -153,26 +152,25 @@
       - 类型: *String*
     - **createTimeDateRange**: 创建时间 , 例: 2016/01/01-2016/01/02
       - 类型: *String*
-    
-    ### <I> pageDecoration
 
-        分页方式获取装修单 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter) 
-        
+    ### `pageDecoration` <span style="color:gray">[内部]</span>
+
+        分页方式获取装修单 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
+
         该方法获取的信息是标准方式获取 , 返回装修单中基础信息 , 无人员职位/部门权限/公司等条件控制
-        
+
         该方法只提供基本信息 , 部分重要信息不可显示 , 显示信息包括: 装修单号, 楼盘, 设计师/部门, 业务员/部门, 面积, 状态
-        
+
         该方法可以提供装修单状态作为条件
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -194,9 +192,9 @@
                             "grade": "B",
                             "type": 0,
                             "status": 0,
-                            
+
                             "createTime": "2016-01-01",
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -213,24 +211,23 @@
                 },
                 ...
             }
-    
-    ### <I> pageDecorationForGeneral
 
-        分页方式获取装修单 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter) 
-        
-        该方法获取的信息是标准方式获取 , 返回装修单中基础信息 , 无人员职位 , 部门权限控制 
-        
+    ### `pageDecorationForGeneral` <span style="color:gray">[内部]</span>
+
+        分页方式获取装修单 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
+
+        该方法获取的信息是标准方式获取 , 返回装修单中基础信息 , 无人员职位 , 部门权限控制
+
         该方法查询范围为当前操作公司 , 状态为5(废单)和5(废单)之外状态的装修单
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -261,21 +258,21 @@
                             "houseType": 0,
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "notSalesmanRate": 30,
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -285,7 +282,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -293,7 +290,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -322,7 +319,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -340,23 +337,22 @@
                 ...
             }
 
-    ### <I> pageDecorationForCommon
+    ### `pageDecorationForCommon` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         该方法获取的信息是通用方式获取 , 在标准获取方式的基础上增加了归属信息 , 客户预付款信息
-        
+
         该方法根据操作人设计部门权限限制 , 装修单状态权限限制 , 当前操作公司限制
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -387,21 +383,21 @@
                             "houseType": 0,
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "notSalesmanRate": 30,
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -411,7 +407,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -419,7 +415,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -448,7 +444,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -466,23 +462,22 @@
                 ...
             }
 
-    ### <I> pageDecorationForCompany
+    ### `pageDecorationForCompany` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         该方法获取的信息是通用方式获取 , 在标准获取方式的基础上增加了归属信息 , 客户预付款信息
-        
+
         当前操作公司限制
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -513,21 +508,21 @@
                             "houseType": 0,
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "notSalesmanRate": 30,
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -537,7 +532,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -545,7 +540,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -574,7 +569,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -591,22 +586,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageDecorationForGrade
+
+    ### `pageDecorationForGrade` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         默认条件为公司和等级
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -637,21 +631,21 @@
                             "houseType": 0,
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "notSalesmanRate": 30,
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -661,7 +655,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -669,7 +663,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -698,7 +692,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -716,31 +710,29 @@
                 ...
             }
 
-    ### <I> pageDecorationForCustomer
+    ### `pageDecorationForCustomer` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         支持电话作为条件查询客户拥有的装修单信息
-        
-                |Requests:|
-                - **customerPhone**: 客户电话
+
+**请求参数**:
+
+- **customerPhone**: 客户电话
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "customerPhone": "13000000000"
             }
 
-                |Returns:|
-                - **paging**: 分页信息
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -771,21 +763,21 @@
                             "houseType": 0,
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "notSalesmanRate": 30,
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -795,7 +787,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -803,7 +795,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -832,7 +824,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -850,21 +842,20 @@
                 ...
             }
 
-    ### <I> pageDecorationForDesigner
+    ### `pageDecorationForDesigner` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
 
         根据当前操作人员 , 当前操作公司限制 , 返回对应设计师归属的装修单基本信息
 
-                |Returns:|
-                - **paging**: 分页信息
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -895,21 +886,21 @@
                             "houseType": 0,
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "notSalesmanRate": 30,
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -919,7 +910,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -927,7 +918,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -956,7 +947,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -974,21 +965,20 @@
                 ...
             }
 
-    ### <I> pageDecorationForDesignerDept
+    ### `pageDecorationForDesignerDept` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         该方法根据操作人归属部门 , 返回装修单基本信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1019,21 +1009,21 @@
                             "houseType": 0,
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
                             "notSalesmanRate": 30,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -1043,7 +1033,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -1051,7 +1041,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -1086,22 +1076,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageDecorationForDesignerManager
+
+    ### `pageDecorationForDesignerManager` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         该方法根据操作人设计部门权限限制 , 装修单状态权限限制 , 当前操作公司限制 , 返回装修单基本信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1132,21 +1121,21 @@
                             "houseType": 0,
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
                             "notSalesmanRate": 30,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -1156,7 +1145,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -1164,7 +1153,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -1199,22 +1188,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageDecorationForSalesman
+
+    ### `pageDecorationForSalesman` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         根据当前操作人员 , 当前操作公司限制 , 返回对应业务员归属的装修单基本信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1245,21 +1233,21 @@
                             "houseType": 0,
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
                             "notSalesmanRate": 30,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -1269,7 +1257,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -1277,7 +1265,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -1306,7 +1294,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -1324,21 +1312,20 @@
                 ...
             }
 
-    ### <I> pageDecorationForSalesmanDept
+    ### `pageDecorationForSalesmanDept` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         该方法根据操作人归属部门 , 装修单状态权限限制 , 当前操作公司限制 , 返回装修单基本信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1371,21 +1358,21 @@
                             "resourceType": 0,
                             "houseArea": 111,
                             "freeArea": 11,
-                            
+
                             "notSalesmanRate": 30,
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -1395,7 +1382,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -1403,7 +1390,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -1432,7 +1419,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -1449,22 +1436,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageDecorationForSalesmanManager
+
+    ### `pageDecorationForSalesmanManager` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         该方法根据操作人业务部门权限限制 , 装修单状态权限限制 , 当前操作公司限制 , 返回装修单基本信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1497,21 +1483,21 @@
                             "resourceType": 0,
                             "houseArea": 111,
                             "freeArea": 11,
-                            
+
                             "notSalesmanRate": 30,
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -1521,7 +1507,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -1529,7 +1515,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -1558,7 +1544,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -1575,22 +1561,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageDecorationForQuoter
+
+    ### `pageDecorationForQuoter` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         根据当前操作人员 , 当前操作公司限制 , 返回对应报价员归属的装修单基本信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1623,21 +1608,21 @@
                             "resourceType": 0,
                             "houseArea": 111,
                             "freeArea": 11,
-                            
+
                             "notSalesmanRate": 30,
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -1647,7 +1632,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -1655,7 +1640,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -1684,7 +1669,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -1701,22 +1686,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageDecorationForEscorter
+
+    ### `pageDecorationForEscorter` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         根据当前操作人员 , 当前操作公司限制 , 返回对应跟单员归属的装修单基本信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1747,21 +1731,21 @@
                             "houseType": 0,
                             "houseClass": "二手",
                             "resourceType": 0,
-                            
+
                             "notSalesmanRate": 30,
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -1771,7 +1755,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -1779,7 +1763,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -1808,7 +1792,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -1825,26 +1809,25 @@
                 },
                 ...
             }
-            
-    ### <I> pageDecorationForBelong
+
+    ### `pageDecorationForBelong` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
+
         该方法提供归属相关功能装修单查询 , 状态范围作为限制修改归属的条件
-        
-        该方法获取的信息是标准方式获取 , 返回装修单中基础信息 , 无人员职位 , 部门权限控制 
-        
+
+        该方法获取的信息是标准方式获取 , 返回装修单中基础信息 , 无人员职位 , 部门权限控制
+
         该方法查询范围为当前操作公司 , 状态为0(初始)/1(定金)/2(预签)/4(重签)的装修单
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1877,21 +1860,21 @@
                             "resourceType": 0,
                             "houseArea": 111,
                             "freeArea": 11,
-                            
+
                             "notSalesmanRate": 30,
                             "version": {
                                 "qvid": 1,
                                 "versionId": "QV001",
                             },
                             "discount": 10,
-                            
+
                             "presignPrice": 50,
                             "signPrice": 10000,
                             "quotationPrice": 10000,
                             "factPrice": 10000,
                             "payScale": 0,
                             "saleScale" 0,
-                            
+
                             "createTime": "2016-01-01",
                             "measureTime": null,
                             "depositTime": null,
@@ -1901,7 +1884,7 @@
                             "edesignTime": null,
                             "accountTime": null,
                             "balanceTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -1909,7 +1892,7 @@
                             "repairStatus": 0,
                             "balanceStatus": 0,
                             "otherStatus": 0,
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "U0203",
@@ -1938,7 +1921,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "addition": {
                                 "diid": 1,
                                 "orderId": "1601010001",
@@ -1955,30 +1938,28 @@
                 },
                 ...
             }
-            
-    ### <I> queryDecorationByCustomerId
+
+    ### `queryDecorationByCustomerId` <span style="color:gray">[内部]</span>
 
         通过客户ID或客户编号获取装修单 , 返回装修单中基础信息
-        
-                |Requests:|
-                :param decoration.customer.cid: 客户ID
-        :type decoration.customer.cid: Long
-        :param decoration.customer.no: 客户编号
-        :type decoration.customer.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.customer.cid**:
+  客户ID
+        - **decoration.customer.no**:
+  客户编号
+
+        **示例**:{
                 "decoration.customer.cid": 1
             }
-            
-                |Returns:|
-                - **decorations**: 装修单列表 , 每条数据类型 *decoration*
+
+**返回参数**:
+
+- **decorations**: 装修单列表 , 每条数据类型 *decoration*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorations": [
                     {
@@ -2007,21 +1988,21 @@
                         "houseType": 0,
                         "houseClass": "二手",
                         "resourceType": 0,
-                        
+
                         "notSalesmanRate": 30,
                         "version": {
                             "qvid": 1,
                             "versionId": "QV001",
                         },
                         "discount": 10,
-                        
+
                         "presignPrice": 50,
                         "signPrice": 10000,
                         "quotationPrice": 10000,
                         "factPrice": 10000,
                         "payScale": 0,
                         "saleScale" 0,
-                        
+
                         "createTime": "2016-01-01",
                         "measureTime": null,
                         "depositTime": null,
@@ -2031,7 +2012,7 @@
                         "edesignTime": null,
                         "accountTime": null,
                         "balanceTime": null,
-                        
+
                         "status": 0,
                         "designStatus": 0,
                         "projectStatus": 0,
@@ -2039,7 +2020,7 @@
                         "repairStatus": 0,
                         "balanceStatus": 0,
                         "otherStatus": 0,
-                        
+
                         "creater": {
                             "uid": 1,
                             "userId": "U0203",
@@ -2069,36 +2050,34 @@
                         "supervisor": null,
                         "contracter": null
                     }
-                    
+
                 ],
                 ...
             }
-            
-    ### <I> queryDecorationByOrderId
+
+    ### `queryDecorationByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取装修单信息 , 返回装修单中基础信息
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         该方法增加显示装修单归属公司编号 , 该编号利用加密方式进行处理 , 加密过程出现错误 , 错误信息 **230015 公司不存在**
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decoration.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decoration**: 装修单信息 , 类型 *decoration*
+
+**返回参数**:
+
+- **decoration**: 装修单信息 , 类型 *decoration*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decoration":{
                     "doid": 1,
@@ -2128,21 +2107,21 @@
                     "resourceType": 0,
                     "houseArea": 111,
                     "freeArea": 11,
-                    
+
                     "notSalesmanRate": 30,
                     "version": {
                         "qvid": 1,
                         "versionId": "QV001",
                     },
                     "discount": 10,
-                    
+
                     "presignPrice": 50,
                     "signPrice": 10000,
                     "quotationPrice": 10000,
                     "factPrice": 10000,
                     "payScale": 0,
                     "saleScale" 0,
-                    
+
                     "createTime": "2016-01-01",
                     "measureTime": null,
                     "depositTime": null,
@@ -2152,7 +2131,7 @@
                     "edesignTime": null,
                     "accountTime": null,
                     "balanceTime": null,
-                    
+
                     "status": 0,
                     "designStatus": 0,
                     "designStatus": 0,
@@ -2161,7 +2140,7 @@
                     "repairStatus": 0,
                     "balanceStatus": 0,
                     "otherStatus": 0,
-                    
+
                     "creater": {
                         "uid": 1,
                         "userId": "U0203",
@@ -2193,30 +2172,28 @@
                 },
                 ...
             }
-            
-    ### <I> queryDecorationForCommonByOrderId
+
+    ### `queryDecorationForCommonByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取装修单 , 根据操作人员信息控制客户敏感信息是否显示 , 返回装修单中基础信息
-        
+
         该方法增加显示装修单归属公司编号 , 该编号利用加密方式进行处理 , 加密过程出现错误 , 错误信息 **230015 公司不存在**
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decoration.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decoration**: 装修单信息 , 类型 *decoration*
+
+**返回参数**:
+
+- **decoration**: 装修单信息 , 类型 *decoration*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decoration":{
                     "doid": 1,
@@ -2236,30 +2213,30 @@
                         ...
                     },
 
-                    
+
                     "grade": "B",
                     "type": 0,
                     "typeness": 0,
                     "houseType": 0,
                     "houseClass": "二手",
                     "resourceType": 0,
-                    
+
                     "busitype": 1,
-                    
+
                     "notSalesmanRate": 30,
                     "version": {
                         "qvid": 1,
                         "versionId": "QV001",
                     },
                     "discount": 10,
-                    
+
                     "presignPrice": 50,
                     "signPrice": 10000,
                     "quotationPrice": 10000,
                     "factPrice": 10000,
                     "payScale": 0,
                     "saleScale" 0,
-                    
+
                     "createTime": "2016-01-01",
                     "measureTime": null,
                     "depositTime": null,
@@ -2269,7 +2246,7 @@
                     "edesignTime": null,
                     "accountTime": null,
                     "balanceTime": null,
-                    
+
                     "status": 0,
                     "designStatus": 0,
                     "projectStatus": 0,
@@ -2277,7 +2254,7 @@
                     "repairStatus": 0,
                     "balanceStatus": 0,
                     "otherStatus": 0,
-                    
+
                     "creater": {
                         "uid": 1,
                         "userId": "U0203",
@@ -2309,20 +2286,19 @@
                 },
                 ...
             }
-            
-    ### <I> checkDecoration
+
+    ### `checkDecoration` <span style="color:gray">[内部]</span>
 
         通过指定条件验证装修单是否存在
 
         条件参数传递方式参照 [filter](../check_rule.html#filter)
 
-                |Returns:|
-                - **decorations**: 装修单信息 , 类型 *decorations*
+**返回参数**:
+
+- **decorations**: 装修单信息 , 类型 *decorations*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorations": [
                     {
@@ -2347,7 +2323,7 @@
                         "grade": "B",
                         "type": 0,
                         "typeness": 0,
-                        
+
                         "status": 0,
                         "designStatus": 0,
                         "projectStatus": 0,
@@ -2355,7 +2331,7 @@
                         "repairStatus": 0,
                         "balanceStatus": 0,
                         "otherStatus": 0,
-                        
+
                         "creater": {
                             "uid": 1,
                             "userId": "U0203",
@@ -2384,91 +2360,90 @@
                 ]
                 ...
             }
-            
-    ### <I> createDecoration
+
+    ### `createDecoration` <span style="color:gray">[内部]</span>
 
         创建装修单 , 客户与装修单一一绑定 , 不能同时拥有多个装修单 , 楼盘号不能重复
-        
+
         判断楼盘楼号是否已经绑定装修单 , 装修单状态为5(废单)和6(终止)除外 , 错误信息 **140034 订单楼盘,楼号已存在**
-        
+
         创建的装修单绑定当前归属公司的默认报价版本
-        
+
         根据装修单基本信息生成装修单信息
-        
+
         根据设计师和业务员生成装修单归属信息 , 包括归属设计/业务对应的人员/部门/分区 , 以及相应的比例等信息
-        
+
         根据设计师和业务员生成附加信息 , 包括设计/业务人员/部门/分区名称 , 保护期等信息
-        
+
         根据当前服务节点信息 , 生成装修单对应的服务信息
-        
+
         生成装修单对应的预算审核信息
-        
-                |Requests:|
-                :param decoration.customer.cid: 客户Id
-        :type decoration.customer.cid: Long
-        :param decoration.house.hid: 房产ID
-        :type decoration.house.hid: Long
-        :param decoration.designer.userId: 设计师编号
-        :type decoration.designer.userId: String
-        :param decoration.salesman.userId: 业务员编号
-        :type decoration.salesman.userId: String
-        :param decoration.quoter.userId: 报价员编号
-        :type decoration.quoter.userId: String
-        :param decoration.escorter.userId: 跟单员编号
-        :type decoration.escorter.userId: String
-        
-        :param decoration.grade: 等级
-        :type decoration.grade: String
-        :param decoration.type: 类型
-        :type decoration.type: Short
-        :param decoration.typeness: 类型
-        :type decoration.typeness: Short
-        :param decoration.resourceType: 资源类型
-        :type decoration.resourceType: Short
-        :param decoration.houseType:  房屋类别 , 包括: 期房 , 现房
-        :type decoration.houseType: String
-        :param decoration.houseClass: 房屋类型 , 包括: 清水 , 二手 , 别墅 , 阁楼 , 地下等
-        :type decoration.houseClass: String
-        :param decoration.houseArea: 建筑面积
-        :type decoration.houseArea: Integer
-        :param decoration.notSalesmanRate: 非业务人员比例
-        :type decoration.notSalesmanRate: Integer
-        
-        :param decoration.busitype: 业务类型ID
-        :type decoration.busitype: Long
-        
-        :param decorationInfo.notSalesmanName: 非业务员名
-        :type decorationInfo.notSalesmanName: String
-        :param decorationInfo.notSalesmanPhone: 非业务员电话
-        :type decorationInfo.notSalesmanPhone: String
-        :param decorationInfo.notSalesmanContent: 非业务员备注
-        :type decorationInfo.notSalesmanContent: String
-        :param decorationInfo.backOrderName: 返单人员名
-        :type decorationInfo.backOrderName: String
-        :param decorationInfo.backOrderPhone: 返单人员电话
-        :type decorationInfo.backOrderPhone: String
-        :param decorationInfo.backOrderContent: 返单人员备注
-        :type decorationInfo.backOrderContent: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.customer.cid**:
+  客户Id
+        - **decoration.house.hid**:
+  房产ID
+        - **decoration.designer.userId**:
+  设计师编号
+        - **decoration.salesman.userId**:
+  业务员编号
+        - **decoration.quoter.userId**:
+  报价员编号
+        - **decoration.escorter.userId**:
+  跟单员编号
+
+        - **decoration.grade**:
+  等级
+        - **decoration.type**:
+  类型
+        - **decoration.typeness**:
+  类型
+        - **decoration.resourceType**:
+  资源类型
+        - **decoration.houseType**:
+  房屋类别 , 包括: 期房 , 现房
+        - **decoration.houseClass**:
+  房屋类型 , 包括: 清水 , 二手 , 别墅 , 阁楼 , 地下等
+        - **decoration.houseArea**:
+  建筑面积
+        - **decoration.notSalesmanRate**:
+  非业务人员比例
+
+        - **decoration.busitype**:
+  业务类型ID
+
+        - **decorationInfo.notSalesmanName**:
+  非业务员名
+        - **decorationInfo.notSalesmanPhone**:
+  非业务员电话
+        - **decorationInfo.notSalesmanContent**:
+  非业务员备注
+        - **decorationInfo.backOrderName**:
+  返单人员名
+        - **decorationInfo.backOrderPhone**:
+  返单人员电话
+        - **decorationInfo.backOrderContent**:
+  返单人员备注
+
+        **示例**:{
                 "decoration.customer.cid": 1,
                 "deocrationOrder.house.hid": 1,
                 "decoration.designer.userId": "U001",
                 "decoration.salesman.userId": "U002",
                 "decoration.quoter.userId": "U003",
                 "decoration.escorter.userId": "U004",
-                
+
                 "decoration.type": 0,
                 "decoration.typeness": 0,
                 "decoration.houseArea": 111,
                 "decoration.houseClass": "二手",
                 "decoration.houseType": "期房",
                 "decoration.notSalesmanRate": 30,
-                
+
                 "decoration.busitype": 1,
-                
+
                 "decorationInfo.notSalesmanContent": "",
                 "decorationInfo.notSalesmanName": "",
                 "decorationInfo.notSalesmanPhone": "",
@@ -2477,90 +2452,89 @@
                 "decorationInfo.backOrderPhone": ""
             }
 
-    ### <I> createDecorationForAdvance
+    ### `createDecorationForAdvance` <span style="color:gray">[内部]</span>
 
         创建装修单 , 楼盘号不能重复 , 不针对客户多单进行校验
-        
+
         判断楼盘楼号是否已经绑定装修单 , 装修单状态为5(废单)和6(终止)除外 , 错误信息 **140034 订单楼盘,楼号已存在**
-        
+
         创建的装修单绑定当前归属公司的默认报价版本
-        
+
         根据装修单基本信息生成装修单信息
-        
+
         根据设计师和业务员生成装修单归属信息 , 包括归属设计/业务对应的人员/部门/分区 , 以及相应的比例等信息
-        
+
         根据设计师和业务员生成附加信息 , 包括设计/业务人员/部门/分区名称 , 保护期等信息
-        
+
         根据当前服务节点信息 , 生成装修单对应的服务信息
-        
+
         生成装修单对应的预算审核信息
-        
-                |Requests:|
-                :param decoration.customer.cid: 客户Id
-        :type decoration.customer.cid: Long
-        :param decoration.house.hid: 房产ID
-        :type decoration.house.hid: Long
-        :param decoration.designer.userId: 设计师编号
-        :type decoration.designer.userId: String
-        :param decoration.salesman.userId: 业务员编号
-        :type decoration.salesman.userId: String
-        :param decoration.quoter.userId: 报价员编号
-        :type decoration.quoter.userId: String
-        :param decoration.escorter.userId: 跟单员编号
-        :type decoration.escorter.userId: String
-        
-        :param decoration.grade: 等级
-        :type decoration.grade: String
-        :param decoration.type: 类型
-        :type decoration.type: Short
-        :param decoration.typeness: 类型
-        :type decoration.typeness: Short
-        :param decoration.resourceType: 资源类型
-        :type decoration.resourceType: Short
-        :param decoration.houseType:  房屋类别 , 包括: 期房 , 现房
-        :type decoration.houseType: String
-        :param decoration.houseClass: 房屋类型 , 包括: 清水 , 二手 , 别墅 , 阁楼 , 地下等
-        :type decoration.houseClass: String
-        :param decoration.houseArea: 建筑面积
-        :type decoration.houseArea: Integer
-        :param decoration.notSalesmanRate: 非业务人员比例
-        :type decoration.notSalesmanRate: Integer
-        
-        :param decoration.busitype: 业务类型ID
-        :type decoration.busitype: Long
-        
-        :param decorationInfo.notSalesmanName: 非业务员名
-        :type decorationInfo.notSalesmanName: String
-        :param decorationInfo.notSalesmanPhone: 非业务员电话
-        :type decorationInfo.notSalesmanPhone: String
-        :param decorationInfo.notSalesmanContent: 非业务员备注
-        :type decorationInfo.notSalesmanContent: String
-        :param decorationInfo.backOrderName: 返单人员名
-        :type decorationInfo.backOrderName: String
-        :param decorationInfo.backOrderPhone: 返单人员电话
-        :type decorationInfo.backOrderPhone: String
-        :param decorationInfo.backOrderContent: 返单人员备注
-        :type decorationInfo.backOrderContent: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.customer.cid**:
+  客户Id
+        - **decoration.house.hid**:
+  房产ID
+        - **decoration.designer.userId**:
+  设计师编号
+        - **decoration.salesman.userId**:
+  业务员编号
+        - **decoration.quoter.userId**:
+  报价员编号
+        - **decoration.escorter.userId**:
+  跟单员编号
+
+        - **decoration.grade**:
+  等级
+        - **decoration.type**:
+  类型
+        - **decoration.typeness**:
+  类型
+        - **decoration.resourceType**:
+  资源类型
+        - **decoration.houseType**:
+  房屋类别 , 包括: 期房 , 现房
+        - **decoration.houseClass**:
+  房屋类型 , 包括: 清水 , 二手 , 别墅 , 阁楼 , 地下等
+        - **decoration.houseArea**:
+  建筑面积
+        - **decoration.notSalesmanRate**:
+  非业务人员比例
+
+        - **decoration.busitype**:
+  业务类型ID
+
+        - **decorationInfo.notSalesmanName**:
+  非业务员名
+        - **decorationInfo.notSalesmanPhone**:
+  非业务员电话
+        - **decorationInfo.notSalesmanContent**:
+  非业务员备注
+        - **decorationInfo.backOrderName**:
+  返单人员名
+        - **decorationInfo.backOrderPhone**:
+  返单人员电话
+        - **decorationInfo.backOrderContent**:
+  返单人员备注
+
+        **示例**:{
                 "decoration.customer.cid": 1,
                 "deocrationOrder.house.hid": 1,
                 "decoration.designer.userId": "U001",
                 "decoration.salesman.userId": "U002",
                 "decoration.quoter.userId": "U003",
                 "decoration.escorter.userId": "U004",
-                
+
                 "decoration.type": 0,
                 "decoration.typeness": 0,
                 "decoration.houseArea": 111,
                 "decoration.houseClass": "二手",
                 "decoration.houseType": "期房",
                 "decoration.notSalesmanRate": 30,
-                
+
                 "decoration.busitype": 1,
-                
+
                 "decorationInfo.notSalesmanContent": "",
                 "decorationInfo.notSalesmanName": "",
                 "decorationInfo.notSalesmanPhone": "",
@@ -2569,51 +2543,50 @@
                 "decorationInfo.backOrderPhone": ""
             }
 
-    ### <I> changeDecorationForAdvance
+    ### `changeDecorationForAdvance` <span style="color:gray">[内部]</span>
 
         更改装修单高级信息
-        
-        判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-        修改装修单高级信息 , 装修单状态为: 0(初始)/1(定金)/2(预签)/4(重签) , 其他状态不可修改
-        
-        修改信息包括业务员信息 , 房屋类别 , 房屋类型 , 类型 , 报价员以及跟单员 , 等级
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        :param decoration.house.buildArea: 建筑面积
-        :type decoration.house.buildArea: Integer
-        :param decoration.house.quoteArea: 计价面积
-        :type decoration.house.quoteArea: Integer
-        :param decoration.quoter.userId: 报价员编号
-        :type decoration.quoter.userId: String
-        :param decoration.escorter.userId: 跟单员Id
-        :type decoration.escorter.userId: String
-        
-        :param decoration.grade: 等级
-        :type decoration.grade: String
-        :param decoration.houseType: 房屋类别 , 包括: 期房 , 现房
-        :type decoration.houseType: String
-        :param decoration.houseClass: 房屋类型 , 包括: 清水 , 二手 , 别墅 , 阁楼 , 地下等
-        :type decoration.houseClass: String
-        :param decoration.notSalesmanRate: 非业务人员比例
-        :type decoration.notSalesmanRate: Integer
-        
-        :param decoration.busitype: 业务类型ID
-        :type decoration.busitype: Long
-        
-        :param decorationInfo.notSalesmanName: 非业务员名
-        :type decorationInfo.notSalesmanName: String
-        :param decorationInfo.notSalesmanPhone: 非业务员电话
-        :type decorationInfo.notSalesmanPhone: String
-        :param decorationInfo.notSalesmanContent: 非业务员备注
-        :type decorationInfo.notSalesmanContent: String
 
-    
-        Example::
-        
-            {
+        判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
+
+        修改装修单高级信息 , 装修单状态为: 0(初始)/1(定金)/2(预签)/4(重签) , 其他状态不可修改
+
+        修改信息包括业务员信息 , 房屋类别 , 房屋类型 , 类型 , 报价员以及跟单员 , 等级
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+        - **decoration.house.buildArea**:
+  建筑面积
+        - **decoration.house.quoteArea**:
+  计价面积
+        - **decoration.quoter.userId**:
+  报价员编号
+        - **decoration.escorter.userId**:
+  跟单员Id
+
+        - **decoration.grade**:
+  等级
+        - **decoration.houseType**:
+  房屋类别 , 包括: 期房 , 现房
+        - **decoration.houseClass**:
+  房屋类型 , 包括: 清水 , 二手 , 别墅 , 阁楼 , 地下等
+        - **decoration.notSalesmanRate**:
+  非业务人员比例
+
+        - **decoration.busitype**:
+  业务类型ID
+
+        - **decorationInfo.notSalesmanName**:
+  非业务员名
+        - **decorationInfo.notSalesmanPhone**:
+  非业务员电话
+        - **decorationInfo.notSalesmanContent**:
+  非业务员备注
+
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decoration.house.buildArea": 1000,
                 "decoration.house.quoteArea": 1000,
@@ -2630,326 +2603,312 @@
                 "decorationInfo.notSalesmanContent": "",
             }
 
-    ### <I> changeDecorationForCustomer
+    ### `changeDecorationForCustomer` <span style="color:gray">[内部]</span>
 
         更改装修单归属客户
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断客户是否存在 , 不存在 , 错误信息 **130002 客户不存在**
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        :param decoration.customer.cid: 客户ID
-        :type decoration.customer.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+        - **decoration.customer.cid**:
+  客户ID
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decoration.customer.cid": 1
             }
 
-    ### <I> changeDecorationForHouse
+    ### `changeDecorationForHouse` <span style="color:gray">[内部]</span>
 
         更改装修单归属房产
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断房产是否存在 , 不存在 , 错误信息 **320002 房产不存在**
-        
+
         将修改前后的房产信息生成服务记录
-        
-                |Requests:|
-                :param decoration.orderId: 编号
-        :type decoration.orderId: String
-        :param decoration.house.hid: 修改房产ID
-        :type decoration.house.hid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  编号
+        - **decoration.house.hid**:
+  修改房产ID
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decoration.house.hid": 1
             }
-            
-    ### <I> changeDecorationForOrderId
+
+    ### `changeDecorationForOrderId` <span style="color:gray">[内部]</span>
 
         更改装修单编号
-        
+
         .. warning::
-        
+
             由于装修单号关联其他信息 , 所以不能轻易修改
-            
+
         判断修改装修单号是否存在 , 已经存在 , 错误信息 **140010 订单编号已经存在**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         根据修改装修单号信息生成服务记录
-        
-                |Requests:|
-                :param decoration.orderId: 原装修单号
-        :type decoration.orderId: String
+
+**请求参数**:
+
+- **decoration.orderId**:
+  原装修单号
         - **decorationId**: 新装修单号
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decorationId": "1601010002"
             }
-        
-    ### <I> changeDecorationForTime
+
+    ### `changeDecorationForTime` <span style="color:gray">[内部]</span>
 
         更改装修单相关时间 , 例: 创建时间 , 签单时间
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         根据修改的时间信息生成服务记录
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
         - **timeType**: 修改时间类型 , 1: 创建时间 , 2: 签单时间
           - 类型: *Integer*
         - **dateTime**: 修改时间
           - 类型: *Timestamp*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "timeType": 1,
                 "dateTime": "2016-01-01 00:00:00"
             }
-            
-    ### <I> changeDecorationForVersionId
+
+    ### `changeDecorationForVersionId` <span style="color:gray">[内部]</span>
 
         更改装修单报价版本
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修单状态 , 0(初始)/1(定金)/2(预签)/4(重签) , 其他状态不可更改 , 错误信息 **140004 装修单状态不可操作**
-        
+
         装修单更改报价版本之后 , 已经存在的报价相关内容将被删除 , 保证报价关联的版本信息一致
-        
+
         .. warning::
-        
+
             已经存在的报价相关内容将被删除 , 保证报价关联的版本信息一致
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        :param decoration.versionId: 报价版本
-        :type decoration.versionId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+        - **decoration.versionId**:
+  报价版本
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decoration.versionId": "QV001"
             }
 
-    ### <I> changeDecorationForPayScale
+    ### `changeDecorationForPayScale` <span style="color:gray">[内部]</span>
 
         修改装修单付款比例
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
 
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
+**请求参数**:
 
-        Example::
+- **decoration.orderId**:
+  装修单号
 
-            {
+        **示例**:{
                 "decoration.orderId": "1601010001"
             }
-            
-    ### <I> changeDecorationForStatus
+
+    ### `changeDecorationForStatus` <span style="color:gray">[内部]</span>
 
         修改装修单状态
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         .. warning::
-        
+
             由于装修单状态较多关联信息以及节点控制 , 更改之后可能引发数据问题
 
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        :param decoration.status: 状态
-        :type decoration.status: Short
+**请求参数**:
 
-        Example::
+- **decoration.orderId**:
+  装修单号
+        - **decoration.status**:
+  状态
 
-            {
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decoration.status": 1
             }
 
-    ### <I> changeDecorationForRepairStatus
+    ### `changeDecorationForRepairStatus` <span style="color:gray">[内部]</span>
 
         修改装修单保修状态
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        :param decoration.repairStatus: 保修状态
-        :type decoration.repairStatus: Short
 
-        Example::
+**请求参数**:
 
-            {
+- **decoration.orderId**:
+  装修单号
+        - **decoration.repairStatus**:
+  保修状态
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decoration.repairStatus": 0
             }
-            
-    ### <I> obsoleteDecoration
+
+    ### `obsoleteDecoration` <span style="color:gray">[内部]</span>
 
         废单
-        
+
         装修单状态为3(签约)/4(重签)/5(废单)/6(终止)/7(决算)/8(完结) , 不能完成废单操作 , 其他状态可以完成操作
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修单状态 , 废单状态 , 错误信息 **140021 订单已处于废单状态**
-        
+
         判断装修单状态 , 签约状态 , 错误信息 **140022 订单已签约,不可废单**
-        
+
         判断装修单状态 , 完工状态 , 错误信息 **140023 订单已完工,不可废单**
-        
+
         判断装修单状态 , 终止状态 , 错误信息 **140024 订单合同终止,不可废单**
-        
+
         判断装修单状态 , 重签状态 , 错误信息 **140026 订单重新签约,不能终止合同**
-        
+
         更新装修单状态为5(废单)
-        
+
         生成装修单操作记录
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decoration.orderId": "1601010001"
             }
-            
-    ### <I> terminalDecoration
+
+    ### `terminalDecoration` <span style="color:gray">[内部]</span>
 
         终止
-        
+
         装修单状态为2(预签) , 通过预付款完成扣款动作 , 同时验证预付款余额
-        
+
         装修单状态为3(签约) , 通过已交款项完成扣款动作
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断涉及款项总额与交款总额 , 如果超过 , 错误信息 **150025 款项金额不正确**
-        
+
         根据涉及款项信息 , 生成对应款项 , 交款总额如有结余 , 生成合同退款
-        
+
         更新装修单状态为6(终止) , 生成装修单操作记录
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        :param decorationPayments[n].paymentType: 款项类型
-        :type decorationPayments[n].paymentType: String
-        :param decorationPayments[n].referMoney: 应收款
-        :type decorationPayments[n].referMoney: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        - **decorationPayments[n].paymentType**:
+  款项类型
+        - **decorationPayments[n].referMoney**:
+  应收款
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
-                
+
                 "decorationPayments[0].paymentType": "合同退款",
                 "decorationPayments[0].referMoney": 100
             }
 
-    ### <I> subDecorationForQuotationTime
+    ### `subDecorationForQuotationTime` <span style="color:gray">[内部]</span>
 
         装修单拷贝报价限制次数减一
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decoration.orderId": "1601010001"
             }
 
-    ### <I> updateDecorationForAdvance
+    ### `updateDecorationForAdvance` <span style="color:gray">[内部]</span>
 
         更改装修单高级信息
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         修改装修单高级信息 , 装修单状态为: 0(初始)/1(定金)/2(预签)/4(重签) , 其他状态不可修改
-        
+
         修改信息包括类型, 业务类型, 非业务提点
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        :param decoration.type: 类型
-        :type decoration.type: Short
-        :param decoration.typeness: 类型
-        :type decoration.typeness: Short
-        :param decoration.notSalesmanRate: 非业务人员比例
-        :type decoration.notSalesmanRate: Integer
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+        - **decoration.type**:
+  类型
+        - **decoration.typeness**:
+  类型
+        - **decoration.notSalesmanRate**:
+  非业务人员比例
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decoration.type": 0,
                 "decoration.typeness": 0,
                 "decoration.notSalesmanRate": 0
             }
 
-    ### <I> updateDecorationForPayScale
+    ### `updateDecorationForPayScale` <span style="color:gray">[内部]</span>
 
         更新装修单付款比例
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decoration.orderId": "1601010001"
             }
 
-    ### <I> updateDecorationForSaleScale
+    ### `updateDecorationForSaleScale` <span style="color:gray">[内部]</span>
 
         更新装修单销售比例
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decoration.orderId": "1601010001"
             }
 
@@ -2959,8 +2918,9 @@
 
 ## api.decoration.DecorationInfoAction
 
-        |DataType:|
-        #### decorationInfo
+**数据类型**:
+
+#### decorationInfo
 
     - **diid**: 信息ID
       - 类型: *Long*
@@ -2982,29 +2942,27 @@
       - 类型: *Short*
     - **isConfirmDesign**: 确认设计 , 0: 已确认 , 1: 待确认
       - 类型: *Short*
-    
-    ### <I> queryDecorationInfoByOrderId
+
+    ### `queryDecorationInfoByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取装修单信息
-        
-                |Requests:|
-                :param decorationInfo.orderId: 装修单号
-        :type decorationInfo.orderId: String
-    
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationInfo.orderId**:
+  装修单号
+
+
+        **示例**:{
                 "decorationInfo.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationInfo**: 合同信息 , 类型 *decorationInfo*
+
+**返回参数**:
+
+- **decorationInfo**: 合同信息 , 类型 *decorationInfo*
           - 类型: *Object*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationInfo":{
                     "diid": 1,
@@ -3020,64 +2978,63 @@
                 },
                 ...
             }
-            
-    ### <I> sendDecorationInfoForConfirm
+
+    ### `sendDecorationInfoForConfirm` <span style="color:gray">[内部]</span>
 
         发送确认装修信息消息
-        
-                |Requests:|
-                :param decorationInfo.orderId: 装修单号
-        :type decorationInfo.orderId: String
-        :param decorationInfo.isConfirmPricture: 施工图确认
-        :type decorationInfo.isConfirmPricture: Short
-        :param decorationInfo.isConfirmDesign: 施工图确认
-        :type decorationInfo.isConfirmDesign: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationInfo.orderId**:
+  装修单号
+        - **decorationInfo.isConfirmPricture**:
+  施工图确认
+        - **decorationInfo.isConfirmDesign**:
+  施工图确认
+
+        **示例**:{
                 "decorationInfo.orderId": "1601010001",
                 "decorationInfo.isConfirmPricture": 1,
                 "decorationInfo.isConfirmDesign": 1
             }
-            
+
     ### <I-C> confirmDecorationInfo
 
         确认装修单信息 , 其中包括施工图确认
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **130014 订单不存在**
-        
+
         判断客户电话是否正确 , 不正确 , 错误信息 **客户电话不匹配**
-        
-                |Requests:|
-                :param decorationInfo.orderId: 信息ID
-        :type decorationInfo.orderId: Long
-        :param decoration.customer.phone: 电话
-        :type decoration.customer.phone: String
-        
-        :param decorationInfo.isConfirmPricture: 施工图确认
-        :type decorationInfo.isConfirmPricture: Short
-        :param decorationInfo.isConfirmDesign: 设计确认
-        :type decorationInfo.isConfirmDesign: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationInfo.orderId**:
+  信息ID
+        - **decoration.customer.phone**:
+  电话
+
+        - **decorationInfo.isConfirmPricture**:
+  施工图确认
+        - **decorationInfo.isConfirmDesign**:
+  设计确认
+
+        **示例**:{
                 "constructionInfo.orderId": 1,
                 "decoration.customer.phone": "138xxxx9283",
-                
+
                 "constructionInfo.isConfirmPricture": 1,
                 "constructionInfo.isConfirmDesign": 1
             }
-            
+
 ## 附加
 
 装修单附加信息
 
 ## api.decoration.DecorationAdditionAction
 
-        |DataType:|
-        #### decorationAddition
+**数据类型**:
+
+#### decorationAddition
 
     - **daid**: 附加信息ID
       - 类型: *Long*
@@ -3095,29 +3052,27 @@
       - 类型: *String*
     - **salesRegion**: 业务大区
       - 类型: *String*
-    
-    ### <I> queryDecorationAdditionByOrderId
+
+    ### `queryDecorationAdditionByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取附加信息
-        
-                |Requests:|
-                :param decorationAddition.orderId: 装修单号
-        :type decorationAddition.orderId: String
-    
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationAddition.orderId**:
+  装修单号
+
+
+        **示例**:{
                 "decorationAddition.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationAddition**: 合同信息 , 类型 *decorationAddition*
+
+**返回参数**:
+
+- **decorationAddition**: 合同信息 , 类型 *decorationAddition*
           - 类型: *Object*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationAddition":{
                     "diid": 1,
@@ -3131,32 +3086,30 @@
                 },
                 ...
             }
-            
-    ### <I> queryDecorationConfig
+
+    ### `queryDecorationConfig` <span style="color:gray">[内部]</span>
 
         获取装修单配置信息 , 例如半价配置等
-        
+
         满减配比 , 字段说明 , id(编号)/n(名称)/mm(主材配比)/dd(折扣-十进制)/db(折扣基数)/dt(装修单类型)/sr(服务费比例)/v(显示标识)
-        
-                |Requests:|
-                - **typeness**: 类型列表 , 每条数据类型 Short , 半包/半价/...
+
+**请求参数**:
+
+- **typeness**: 类型列表 , 每条数据类型 Short , 半包/半价/...
           - 类型: *List*
-    
-    
-        Example::
-        
-            {
+
+
+        **示例**:{
                 "typeness[0]": 0
                 "typeness[1]": 1
             }
-            
-                |Returns:|
-                - **config**: 配置信息 , 类型 Map <String, Object>
+
+**返回参数**:
+
+- **config**: 配置信息 , 类型 Map <String, Object>
           - 类型: *Object*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "config":{
                     machingType: [
@@ -3174,29 +3127,28 @@
                 },
                 ...
             }
-            
+
     ### <I-C> queryDecorationSchedule
 
-        获取装修单对应的进度信息 , 进度包括: 
-        
-        0(订单生成) , 1(预算) , 2(合同签单) , 3(签单设计方案完成) , 4(开工设计方案完成) , 
-        
-        5(铲大白) , 6(放线) , 7(力工) , 8(水暖) , 9(电工) , 10(瓦工) , 11(地面找平) , 
-        
+        获取装修单对应的进度信息 , 进度包括:
+
+        0(订单生成) , 1(预算) , 2(合同签单) , 3(签单设计方案完成) , 4(开工设计方案完成) ,
+
+        5(铲大白) , 6(放线) , 7(力工) , 8(水暖) , 9(电工) , 10(瓦工) , 11(地面找平) ,
+
         12(木工) , 13(油工) , 14(决算) , 15(保洁)
-        
+
         根据装修单的状态/设计状态/工程状态 , 报价 , 装修信息的效果图完成进度的确认
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-    
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+
+        **示例**:{
                 "decoration.orderId": "1601010001"
             }
 
@@ -3206,8 +3158,9 @@
 
 ## api.decoration.DecorationMeasureAction
 
-        |DataType:|
-        #### decorationMeasure
+**数据类型**:
+
+#### decorationMeasure
 
     - **dmid**: 量房ID
       - 类型: *Long*
@@ -3233,20 +3186,20 @@
       - 类型: *Object*
     - **company**: 公司ID
       - 类型: *Long*
-    
-    ### <I> pageDecorationMeasure
 
-    ### <I> queryDecorationMeasure
+    ### `pageDecorationMeasure` <span style="color:gray">[内部]</span>
 
-    ### <I> applayDecorationMeasure
+    ### `queryDecorationMeasure` <span style="color:gray">[内部]</span>
 
-    ### <I> sendDecorationMeasure
+    ### `applayDecorationMeasure` <span style="color:gray">[内部]</span>
 
-    ### <I> confirmDecorationMeasure
+    ### `sendDecorationMeasure` <span style="color:gray">[内部]</span>
 
-    ### <I> successDecorationMeasure
+    ### `confirmDecorationMeasure` <span style="color:gray">[内部]</span>
 
-    ### <I> failureDecorationMeasure
+    ### `successDecorationMeasure` <span style="color:gray">[内部]</span>
+
+    ### `failureDecorationMeasure` <span style="color:gray">[内部]</span>
 
 ## 合同
 
@@ -3254,8 +3207,9 @@
 
 ## api.decoration.DecorationContractAction
 
-        |DataType:|
-        #### decorationContract
+**数据类型**:
+
+#### decorationContract
 
     - **dcid**: 合同ID
       - 类型: *Long*
@@ -3289,29 +3243,27 @@
       - 类型: *Short*
     - **ishow**: 显示标识
       - 类型: *Short*
-    
-    ### <I> queryDecorationContractByOrderId
+
+    ### `queryDecorationContractByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取合同信息
-        
-                |Requests:|
-                :param decorationContract.orderId: 装修单号
-        :type decorationContract.orderId: String
-    
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.orderId**:
+  装修单号
+
+
+        **示例**:{
                 "decorationContract.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationContracts**: 合同信息列表 , 类型 *decorationContract*
+
+**返回参数**:
+
+- **decorationContracts**: 合同信息列表 , 类型 *decorationContract*
           - 类型: *List*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationContract":[
                     {
@@ -3346,25 +3298,23 @@
     ### <I-C> queryDecorationContract
 
         通过装修单号获取合同信息
-        
-                |Requests:|
-                :param decorationContract.orderId: 装修单号
-        :type decorationContract.orderId: String
-    
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.orderId**:
+  装修单号
+
+
+        **示例**:{
                 "decorationContract.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationContracts**: 合同信息列表 , 类型 *decorationContract*
+
+**返回参数**:
+
+- **decorationContracts**: 合同信息列表 , 类型 *decorationContract*
           - 类型: *List*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationContract":[
                     {
@@ -3396,393 +3346,375 @@
                 ...
             }
 
-    ### <I> sendDecorationContractForAuth
+    ### `sendDecorationContractForAuth` <span style="color:gray">[内部]</span>
 
         发送认证通知
-        
-                |Requests:|
-                :param decorationContract.orderId: 装修单号
-        :type decorationContract.orderId: String
-    
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.orderId**:
+  装修单号
+
+
+        **示例**:{
                 "decorationContract.orderId": "1601010001"
             }
 
-    ### <I> sendDecorationContract
+    ### `sendDecorationContract` <span style="color:gray">[内部]</span>
 
         发送合同通知
-        
+
         通过不同类型的控制 , 统一的跳转页面来判断当前通知合同的状态是否符合操作
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **140067 合同不存在**
-        
-                |Requests:|
-                :param decorationContract.dcid: 合同ID
-        :type decorationContract.dcid: Long
-        :param decorationContract.type: 类型 , 1: 签章, 2: 签订, 3: 查看 , 4: 下载
-        :type decorationContract.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.dcid**:
+  合同ID
+        - **decorationContract.type**:
+  类型 , 1: 签章, 2: 签订, 3: 查看 , 4: 下载
+
+        **示例**:{
                 "decorationContract.dcid": 1,
                 "decorationContract.type": 1
             }
 
-    ### <I> redirectDecorationContract
+    ### `redirectDecorationContract` <span style="color:gray">[内部]</span>
 
         跳转合同操作 , 根据发送合同通知的类型 , 响应对应功能的页面地址
-        
+
         类型包括1(签章)/2(签订)/3(查看)/4(下载)
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **140067 合同不存在**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param decorationContract.dcid: 合同ID
-        :type decorationContract.dcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.dcid**:
+  合同ID
+
+        **示例**:{
                 "decorationContract.dcid": 1
             }
-            
-                |Returns:|
-                - **redirect**: 跳转地址
+
+**返回参数**:
+
+- **redirect**: 跳转地址
           - 类型: *String*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "redirect": "http://redirect.com/redirect.html?type=view",
                 ...
             }
 
-    ### <I> viewDecorationContract
+    ### `viewDecorationContract` <span style="color:gray">[内部]</span>
 
         查看合同
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **140067 合同不存在**
-        
-                |Requests:|
-                :param decorationContract.dcid: 合同ID
-        :type decorationContract.dcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.dcid**:
+  合同ID
+
+        **示例**:{
                 "decorationContract.dcid": 1
             }
-            
-                |Returns:|
-                - **redirect**: 跳转地址
+
+**返回参数**:
+
+- **redirect**: 跳转地址
           - 类型: *String*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "redirect": "http://redirect.com/redirect.html?type=view",
                 ...
             }
-            
-    ### <I> signDecorationContractForCompany
+
+    ### `signDecorationContractForCompany` <span style="color:gray">[内部]</span>
 
         签订合同 , 针对公司信息
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **140067 合同不存在**
-        
+
         判断签章是否存在 , 不存在 , 错误信息 **130045 签章不存在**
-        
+
         判断合同状态是否为0(初始) , 其他状态不可操作 , 错误信息 **140068 合同不可操作**
-        
-                |Requests:|
-                :param decorationContract.dcid: 合同ID
-        :type decorationContract.dcid: Long
-        :param signet.sid: 签章ID
-        :type signet.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.dcid**:
+  合同ID
+        - **signet.sid**:
+  签章ID
+
+        **示例**:{
                 "decorationContract.dcid": 1,
                 "signet.sid": 1
             }
-            
-    ### <I> signDecorationContractForCustomer
+
+    ### `signDecorationContractForCustomer` <span style="color:gray">[内部]</span>
 
         签订合同 , 针对客户信息
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **140067 合同不存在**
-        
+
         判断合同状态是否为0(初始) , 其他状态不可操作 , 错误信息 **140068 合同不可操作**
-        
-                |Requests:|
-                :param decorationContract.dcid: 合同ID
-        :type decorationContract.dcid: Long
-        :param customer.cid: 客户ID
-        :type customer.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.dcid**:
+  合同ID
+        - **customer.cid**:
+  客户ID
+
+        **示例**:{
                 "decorationContract.dcid": 1,
                 "customer.cid": 1
             }
-            
-                |Returns:|
-                - **redirect**: 跳转地址
+
+**返回参数**:
+
+- **redirect**: 跳转地址
           - 类型: *String*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "redirect": "http://redirect.com/redirect.html?type=sign",
                 ...
             }
 
-    ### <I> addDecorationContract
+    ### `addDecorationContract` <span style="color:gray">[内部]</span>
 
         创建合同
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断合同模版是否存在 , 不存在 , 错误信息 **130044 合同模版不存在**
-        
-                |Requests:|
-                :param decorationContract.orderId: 装修单号
-        :type decorationContract.orderId: String
-        :param contract.cid: 合同模版ID
-        :type contract.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.orderId**:
+  装修单号
+        - **contract.cid**:
+  合同模版ID
+
+        **示例**:{
                 "decorationContract.orderId": "1601010001",
                 "contract.cid": 1,
             }
 
-    ### <I> makeDecorationContract
+    ### `makeDecorationContract` <span style="color:gray">[内部]</span>
 
         生成合同
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断合同模版是否存在 , 不存在 , 错误信息 **130044 合同模版不存在**
-        
+
         判断装修合同是否存在 , 不存在 , 错误信息 **140067 合同不存在**
-        
-                |Requests:|
-                :param decorationContract.dcid: 装修合同ID
-        :type decorationContract.dcid: Long
-        :type decorationContract.orderId: String
-        :param decorationContract.orderId: 装修单号
-        :type decorationContract.orderId: String
-        :param contract.cid: 合同模版ID
-        :type contract.cid: Long
+
+**请求参数**:
+
+- **decorationContract.dcid**:
+  装修合同ID
+          - 类型: `String`
+        - **decorationContract.orderId**:
+  装修单号
+        - **contract.cid**:
+  合同模版ID
         - **data**: 模版参数 , 字符串类型的JSON格式对象
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "decorationContract.dcid": 1,
                 "contract.cid": 1,
                 "data": "{"data": "数据内容格式"}"
             }
 
-    ### <I> affixDecorationContract
+    ### `affixDecorationContract` <span style="color:gray">[内部]</span>
 
         签订合同
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **140067 合同不存在**
-        
+
         判断合同状态是否为0(初始) , 其他状态不可操作 , 错误信息 **140068 合同不可操作**
-        
+
         更新装修合同为1(已签)
-        
-                |Requests:|
-                :param decorationContract.dcid: 合同ID
-        :type decorationContract.dcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.dcid**:
+  合同ID
+
+        **示例**:{
                 "decorationContract.dcid": 1
             }
 
-    ### <I> expireDecorationContract
+    ### `expireDecorationContract` <span style="color:gray">[内部]</span>
 
         失效合同
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **140067 合同不存在**
-        
+
         判断合同状态是否为0(初始) , 其他状态不可操作 , 错误信息 **140068 合同不可操作**
-        
+
         更新装修合同为2(失效)
-        
-                |Requests:|
-                :param decorationContract.dcid: 合同ID
-        :type decorationContract.dcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.dcid**:
+  合同ID
+
+        **示例**:{
                 "decorationContract.dcid": 1
             }
 
-            
-    ### <I> filingDecorationContract
+
+    ### `filingDecorationContract` <span style="color:gray">[内部]</span>
 
         归档合同
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **140067 合同不存在**
-        
+
         判断合同状态是否为1(已签) , 其他状态不可操作 , 错误信息 **140068 合同不可操作**
-        
-                |Requests:|
-                :param decorationContract.dcid: 合同ID
-        :type decorationContract.dcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.dcid**:
+  合同ID
+
+        **示例**:{
                 "decorationContract.dcid": 1
             }
 
-    ### <I> showDecorationContract
+    ### `showDecorationContract` <span style="color:gray">[内部]</span>
 
         合同显示控制
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **140067 合同不存在**
-        
-                |Requests:|
-                :param decorationContract.dcid: 合同ID
-        :type decorationContract.dcid: Long
-        :param decorationContract.ishow: 显示标识
-        :type decorationContract.ishow: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.dcid**:
+  合同ID
+        - **decorationContract.ishow**:
+  显示标识
+
+        **示例**:{
                 "decorationContract.dcid": 1,
                 "decorationContract.ishow": 0
             }
-            
-    ### <I> presignDecorationContract
+
+    ### `presignDecorationContract` <span style="color:gray">[内部]</span>
 
         预签合同
-        
+
         装修单状态需要为: 0(初始)/1(定金)
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修单状态 , 0(初始)/1(定金)之外的其他状态不能预签 , 错误信息 **140005 订单合同不能修改**
-        
+
         判断预签项是否存在 , 不存在 , 错误信息 **200052 预签项不存在**
-        
+
         判断预签报价状态是否为0(启用) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
+
         装修款中 , 一类为0(收款), 二类为1(合同)的款项 , 至少存在一个款项状态为已付款/已确认
-        
+
         更新装修单状态为2(预签)
-        
+
         生成装修单操作记录
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decoration.presignPrice": 100
             }
 
-    ### <I> signDecorationContract
+    ### `signDecorationContract` <span style="color:gray">[内部]</span>
 
         签订合同
-        
+
         装修单状态需要为: 0(初始)/1(定金)/2(预签)/4(重签)
-        
+
         装修款中 , 一类为0(收款), 二类为1(合同)的款项 , 至少存在一个款项状态为已付款/已确认
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修单状态 , 3(签约)/5(废单)/6(终止)/7(决算)/8(完结)不能签约 , 错误信息 **140005 订单合同不能修改**
-        
+
         判断装修单对应款项 , 一状态为0(收款) , 二状态为1(合同) , 款项状态为已付款或已确认的款项是否存在 , 不存在 , 错误信息 **140006 订单没有进行款项交付,不能签订合同**
-        
+
         判断装修单是否有未处理审批 , 存在未处理审批不能重签 , 错误信息 **140037 订单存在未处理审批项**
-        
+
         判断装修单是否存在默认报价 , 不存在 , 错误信息 **140008 订单没有报价信息**
-        
+
         判断工程信息是否存在 , 不存在 , 错误信息 **120020 工程信息不存在**
-        
+
         判断工程信息中预计领钥匙时间是否配置 , 没有配置预计领钥匙时间 , 错误信息 **120031 未配置预计领取钥匙时间**
-        
+
         判断工程信息中预计放线时间是否配置 , 没有配置预计领钥匙时间 , 错误信息 **120032 未配置预计放线时间**
-        
+
         更新装修单状态为3(签约) , 签约操作人
-        
+
         装修单状态为非重签状态 , 按照归属信息中的设计师和业务员更新设计部/分区和业务部/分区 , 更新签约时间
-        
+
         生成装修单操作记录
-        
+
         根据装修单默认报价 , 更新净业绩和复合业绩
-        
+
         净业绩 = 合同额 - 券优惠额 - 奖品优惠额 - ((∑打折项 + ∑非打折项 + 车运费) * 非业务提点
-        
+
         复合业绩 = ((∑打折项 * 0.88 + ∑非打折项 + 车运费 + 管理费 - (∑打折项 + ∑非打折项 + 车运费) * 非业务提点) * 0.38 - 券优惠额 - 奖品优惠额 + (签单额 - (∑打折项 * 0.88 + ∑非打折项 + 车运费 + 管理费))) / 0.38
-        
+
         复合业绩 = ((88折合同额 - 非业务提成) * 0.38 - 优惠额 + (合同额 - 88折合同额)) / 0.38 , 简版说明
-        
-                |Requests:|
-                :param decorationContract.orderId: 装修单号
-        :type decorationContract.orderId: String
-    
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.orderId**:
+  装修单号
+
+
+        **示例**:{
                 "decorationContract.orderId": "1601010001"
             }
-            
-    ### <I> resignDecorationContract
+
+    ### `resignDecorationContract` <span style="color:gray">[内部]</span>
 
         重签合同
-        
+
         装修单状态需要为: 重签
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修单状态为4(重签) , 其他状态不能重签 , 错误信息 **140027 订单状态不能重签合同**
-        
+
         判断装修单是否有未处理审批 , 存在未处理审批不能重签 , 错误信息 **140037 订单存在未处理审批项**
-        
+
         判断装修单是否存在增减项 , 存在增减项不能重签 , 错误信息 **140041 订单存在增减项,不能重新签单**
-        
+
         判断装修活动 , 存在状态0(初始)/2(接收)的物品/券 , 错误信息 **140058 订单活动奖品未处理**
-        
+
         更新装修单状态为4(重签)
-        
+
         生成装修单操作记录
-    
-                |Requests:|
-                :param decorationContract.orderId: 装修单号
-        :type decorationContract.orderId: String
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationContract.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationContract.orderId": "1601010001"
             }
 
@@ -3792,8 +3724,9 @@
 
 ## api.decoration.DecorationMidpackAction
 
-        |DataType:|
-        #### decorationMidpack
+**数据类型**:
+
+#### decorationMidpack
 
     - **dmid**: 半包ID
       - 类型: *Long*
@@ -3828,28 +3761,26 @@
       - 类型: *Long*
     - **status**: 状态 , 包括: 0(初始)
       - 类型: *Short*
-    
-    ### <I> queryDecorationMidpack
+
+    ### `queryDecorationMidpack` <span style="color:gray">[内部]</span>
 
         获取装修单对应的半包信息
-        
-                |Requests:|
-                :param decorationMidpack.orderId: 装修单号
-        :type decorationMidpack.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationMidpack.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationMidpack.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationMidpack**: 半包信息 , 每条数据类型 *decorationMidpack*
+
+**返回参数**:
+
+- **decorationMidpack**: 半包信息 , 每条数据类型 *decorationMidpack*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationMidpack": {
                     "dmid": 1,
@@ -3880,23 +3811,23 @@
                         "resourceType": 0,
                         "houseArea": 111,
                         "freeArea": 11,
-                        
+
                         "notSalesmanRate": 30,
                         "versionId": null,
                         "versionName": null,
                         "discount": 10,
-                        
+
                         "presignPrice": 50,
                         "signPrice": 10000,
                         "quotationPrice": 10000,
                         "factPrice": 10000,
-                        
+
                         "createTime": "2016-01-01",
                         "measureTime": null,
                         "depositTime": null,
                         "signTime": null,
                         "presignTime": null,
-                        
+
                         "status": 0,
                         "designStatus": 0,
                         "projectStatus": 0,
@@ -3904,7 +3835,7 @@
                         "repairStatus": 0,
                         "balanceStatus": 0,
                         "otherStatus": 0,
-                        
+
                         "creater": {
                             "uid": 1,
                             "userId": "U0203",
@@ -3933,7 +3864,7 @@
                         "escorter": null,
                         "supervisor": null,
                         "contracter": null,
-                        
+
                         "designDepartment": "设计中心一部",
                         "designRegion": "设计一分区",
                         "businessDepartment": "市场营销一部"
@@ -3955,68 +3886,66 @@
                 }
                 ...
             }
-            
-    ### <I> makeDecorationMidpack
+
+    ### `makeDecorationMidpack` <span style="color:gray">[内部]</span>
 
         生成装修单对应半包信息 , 通过款项比例对应的比例项信息生成装修款信息
-        
-        如果装修单没有生成半包信息 , 创建信息
-        
-        判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-        判断装修单状态是否为0(初始)/1(定金)/2(预签)/4(重签) , 其他状态 , 错误信息 **140004 装修单状态不可操作**
-        
-        判断装修单默认报价是否存在 , 不存在 , 错误信息 **200003 报价不存在**
-        
-        判断装修单对应默认报价状态是否为1(锁定) , 其他状态 , 错误信息 **200031 报价未锁定**
-        
-        判断装修单归属活动是否存在状态为0(初始) , 存在该状态活动 , 错误信息 **140060 活动未锁定**
-        
-        获取装修单对应装修款信息 , 类型onetype为0(收款) , twotype为1(合同) ,状态为初始可以更新 , 其他状态不能更新 , 错误信息 **150001 款项已付,不可修改**
-        
-        利用默认报价总额作为生成款项金额
-        
-        装修款更新款项信息
-        
-                |Requests:|
-                :param decorationMidpack.orderId: 装修单号
-        :type decorationMidpack.orderId: String
-        :param decorationMidpack.psid: 款项比例ID
-        :type decorationMidpack.psid: Long
-        
-        :param decorationMidpack.materialRate: 主材配比
-        :type decorationMidpack.materialPrice: Integer
-        :param decorationMidpack.serviceRate: 服务配比
-        :type decorationMidpack.serviceRate: Integer
-        
-        :param decorationMidpack.materialPrice: 主材金额
-        :type decorationMidpack.materialPrice: Integer
 
-        Example::
-        
-            {
+        如果装修单没有生成半包信息 , 创建信息
+
+        判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
+
+        判断装修单状态是否为0(初始)/1(定金)/2(预签)/4(重签) , 其他状态 , 错误信息 **140004 装修单状态不可操作**
+
+        判断装修单默认报价是否存在 , 不存在 , 错误信息 **200003 报价不存在**
+
+        判断装修单对应默认报价状态是否为1(锁定) , 其他状态 , 错误信息 **200031 报价未锁定**
+
+        判断装修单归属活动是否存在状态为0(初始) , 存在该状态活动 , 错误信息 **140060 活动未锁定**
+
+        获取装修单对应装修款信息 , 类型onetype为0(收款) , twotype为1(合同) ,状态为初始可以更新 , 其他状态不能更新 , 错误信息 **150001 款项已付,不可修改**
+
+        利用默认报价总额作为生成款项金额
+
+        装修款更新款项信息
+
+**请求参数**:
+
+- **decorationMidpack.orderId**:
+  装修单号
+        - **decorationMidpack.psid**:
+  款项比例ID
+
+        - **decorationMidpack.materialRate**:
+  主材配比
+        - **decorationMidpack.serviceRate**:
+  服务配比
+
+        - **decorationMidpack.materialPrice**:
+  主材金额
+
+        **示例**:{
                 "decorationMidpack.orderId": "1601010001",
                 "decorationMidpack.psid": 1,
-                
+
                 "decorationMidpack.materialRate": 100000,
                 "decorationMidpack.serviceRate": 100000,
-                
+
                 "decorationMidpack.materialPrice": 100000
             }
 
-    ### <I> updateDecorationMidpack
+    ### `updateDecorationMidpack` <span style="color:gray">[内部]</span>
 
         更新半包信息
-    
-                |Requests:|
-                :param decorationMidpack.orderId: 装修单号
-        :type decorationMidpack.orderId: String
-        :param decorationMidpack.materialPrice: 主材金额
-        :type decorationMidpack.materialPrice: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationMidpack.orderId**:
+  装修单号
+        - **decorationMidpack.materialPrice**:
+  主材金额
+
+        **示例**:{
                 "decorationMidpack.orderId": "1601010001",
                 "decorationMidpack.materialPrice": 0
             }
@@ -4035,16 +3964,11 @@
 
 合同额 = (基础造价 - 基础造价 % 基数) * 折扣 + 基础造价 % 基数 + 管理费
 
-+-----------------------------| 主材配比                    | 装修单折扣                                                                   |
-+=============================+==============================================================================+
 | 120%                        | 7.2                                                                          |
-+-----------------------------| 150%                        | 6.5                                                                          |
-+-----------------------------| 180%                        | 5.6                                                                          |
-+-----------------------------| 200%                        | 5                                                                            |
-+-----------------------------## api.decoration.DecorationHolonomyAction
 
-        |DataType:|
-        #### decorationHolonomy
+**数据类型**:
+
+#### decorationHolonomy
 
     - **dhid**: 半价ID
       - 类型: *Long*
@@ -4090,20 +4014,19 @@
       - 类型: *Long*
     - **status**: 状态 , 包括: 0(初始) , 1(决算)
       - 类型: *Short*
-    
-    ### <I> pageDecorationHolonomy
+
+    ### `pageDecorationHolonomy` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单满减信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 装修单满减信息列表 , 每条数据类型 *decorationHolonomy*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单满减信息列表 , 每条数据类型 *decorationHolonomy*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4147,23 +4070,23 @@
                                 "houseType": 0,
                                 "houseClass": "二手",
                                 "resourceType": 0,
-                                
+
                                 "notSalesmanRate": 30,
                                 "versionId": null,
                                 "versionName": null,
                                 "discount": 10,
-                                
+
                                 "presignPrice": 50,
                                 "signPrice": 10000,
                                 "quotationPrice": 10000,
                                 "factPrice": 10000,
-                                
+
                                 "createTime": "2016-01-01",
                                 "measureTime": null,
                                 "depositTime": null,
                                 "signTime": null,
                                 "presignTime": null,
-                                
+
                                 "status": 0,
                                 "designStatus": 0,
                                 "projectStatus": 0,
@@ -4171,7 +4094,7 @@
                                 "repairStatus": 0,
                                 "balanceStatus": 0,
                                 "otherStatus": 0,
-                                
+
                                 "creater": {
                                     "uid": 1,
                                     "userId": "U0203",
@@ -4200,7 +4123,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部"
@@ -4231,27 +4154,25 @@
                 ...
             }
 
-    ### <I> queryDecorationHolonomy
+    ### `queryDecorationHolonomy` <span style="color:gray">[内部]</span>
 
         获取装修单对应的满减信息
-        
-                |Requests:|
-                :param decorationHolonomy.orderId: 装修单号
-        :type decorationHolonomy.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationHolonomy.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationHolonomy.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationHolonomy**: 满减信息 , 每条数据类型 *decorationHolonomy*
+
+**返回参数**:
+
+- **decorationHolonomy**: 满减信息 , 每条数据类型 *decorationHolonomy*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationHolonomy": {
                     "dhid": 1,
@@ -4282,23 +4203,23 @@
                         "resourceType": 0,
                         "houseArea": 111,
                         "freeArea": 11,
-                        
+
                         "notSalesmanRate": 30,
                         "versionId": null,
                         "versionName": null,
                         "discount": 10,
-                        
+
                         "presignPrice": 50,
                         "signPrice": 10000,
                         "quotationPrice": 10000,
                         "factPrice": 10000,
-                        
+
                         "createTime": "2016-01-01",
                         "measureTime": null,
                         "depositTime": null,
                         "signTime": null,
                         "presignTime": null,
-                        
+
                         "status": 0,
                         "designStatus": 0,
                         "projectStatus": 0,
@@ -4306,7 +4227,7 @@
                         "repairStatus": 0,
                         "balanceStatus": 0,
                         "otherStatus": 0,
-                        
+
                         "creater": {
                             "uid": 1,
                             "userId": "U0203",
@@ -4335,7 +4256,7 @@
                         "escorter": null,
                         "supervisor": null,
                         "contracter": null,
-                        
+
                         "designDepartment": "设计中心一部",
                         "designRegion": "设计一分区",
                         "businessDepartment": "市场营销一部"
@@ -4365,46 +4286,45 @@
                 }
                 ...
             }
-            
-    ### <I> makeDecorationHolonomy
+
+    ### `makeDecorationHolonomy` <span style="color:gray">[内部]</span>
 
         生成装修单对应满减信息
-        
-        如果装修单没有生成满减信息 , 创建信息
-        
-        如果装修单满减信息已存在 , 更新满减信息 , 其中实收主材款不能更新
-        
-        判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-        判断装修单状态是否为0(初始)/1(定金)/2(预签)/4(重签) , 其他状态 , 错误信息 **140004 装修单状态不可操作**
-        
-        判断装修单默认报价是否存在 , 不存在 , 错误信息 **200003 报价不存在**
-        
-        判断装修单对应默认报价状态是否为1(锁定) , 其他状态 , 错误信息 **200031 报价未锁定**
-        
-        判断装修单归属活动是否存在状态为0(初始) , 存在该状态活动 , 错误信息 **140060 活动未锁定**
-        
-        获取装修单对应装修款信息 , 类型onetype为0(收款) , twotype为1(合同) ,状态为初始可以更新 , 其他状态不能更新 , 错误信息 **150001 款项已付,不可修改**
-        
-        装修单满减信息中服务费实收为0 , 否则更新失败 , 错误信息 **140043 订单满减信息不可更新**
-        
-        装修款更新款项信息
-        
-                |Requests:|
-                :param decorationHolonomy.orderId: 装修单号
-        :type decorationHolonomy.orderId: String
-        :param decorationHolonomy.psid: 款项比例ID
-        :type decorationHolonomy.psid: Long
-        :param decorationHolonomy.maching: 主材配比
-        :type decorationHolonomy.maching: Long
-        :param decorationHolonomy.discount: 折扣
-        :type decorationHolonomy.discount: Long
-        :param decorationHolonomy.serviceRate: 服务费配比
-        :type decorationHolonomy.serviceRate: Integer
 
-        Example::
-        
-            {
+        如果装修单没有生成满减信息 , 创建信息
+
+        如果装修单满减信息已存在 , 更新满减信息 , 其中实收主材款不能更新
+
+        判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
+
+        判断装修单状态是否为0(初始)/1(定金)/2(预签)/4(重签) , 其他状态 , 错误信息 **140004 装修单状态不可操作**
+
+        判断装修单默认报价是否存在 , 不存在 , 错误信息 **200003 报价不存在**
+
+        判断装修单对应默认报价状态是否为1(锁定) , 其他状态 , 错误信息 **200031 报价未锁定**
+
+        判断装修单归属活动是否存在状态为0(初始) , 存在该状态活动 , 错误信息 **140060 活动未锁定**
+
+        获取装修单对应装修款信息 , 类型onetype为0(收款) , twotype为1(合同) ,状态为初始可以更新 , 其他状态不能更新 , 错误信息 **150001 款项已付,不可修改**
+
+        装修单满减信息中服务费实收为0 , 否则更新失败 , 错误信息 **140043 订单满减信息不可更新**
+
+        装修款更新款项信息
+
+**请求参数**:
+
+- **decorationHolonomy.orderId**:
+  装修单号
+        - **decorationHolonomy.psid**:
+  款项比例ID
+        - **decorationHolonomy.maching**:
+  主材配比
+        - **decorationHolonomy.discount**:
+  折扣
+        - **decorationHolonomy.serviceRate**:
+  服务费配比
+
+        **示例**:{
                 "decorationHolonomy.orderId": "1601010001",
                 "decorationHolonomy.psid": 1,
                 "decorationHolonomy.manageRate": 1006,
@@ -4413,36 +4333,36 @@
                 "decorationHolonomy.discountBase": 1,
                 "decorationHolonomy.serviceRate": 100
             }
-            
-    ### <I> updateDecorationHolonomy
+
+    ### `updateDecorationHolonomy` <span style="color:gray">[内部]</span>
 
         更新装修满减信息
-        
-        判断满减信息是否存在 , 不存在 , 错误信息 **140042 满减信息不存在**
-        
-        更细内容主要为 , 主材总额
-        
-                |Requests:|
-                :param decorationHolonomy.orderId: 装修单号
-        :type decorationHolonomy.orderId: String
-        :param decorationHolonomy.materialPrice: 主材总额
-        :type decorationHolonomy.materialPrice: Long
 
-        Example::
-        
-            {
+        判断满减信息是否存在 , 不存在 , 错误信息 **140042 满减信息不存在**
+
+        更细内容主要为 , 主材总额
+
+**请求参数**:
+
+- **decorationHolonomy.orderId**:
+  装修单号
+        - **decorationHolonomy.materialPrice**:
+  主材总额
+
+        **示例**:{
                 "decorationHolonomy.orderId": "1601010001",
                 "decorationHolonomy.materialPrice": 10010000
             }
-            
+
 ## 整装
 
 装修单整装类型相关信息
 
 ## api.decoration.DecorationInclusiveAction
 
-        |DataType:|
-        #### decorationInclusive
+**数据类型**:
+
+#### decorationInclusive
 
     - **diid**: 整装ID
       - 类型: *Long*
@@ -4469,20 +4389,19 @@
       - 类型: *Short*
     - **materialPaidup**: 实收主材额
       - 类型: *Long*
-    
-    ### <I> pageDecorationInclusive
+
+    ### `pageDecorationInclusive` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单整装信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 装修单套餐信息列表 , 每条数据类型 *decorationInclusive*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单套餐信息列表 , 每条数据类型 *decorationInclusive*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4514,23 +4433,23 @@
                                 "houseType": 0,
                                 "houseClass": "二手",
                                 "resourceType": 0,
-                                
+
                                 "notSalesmanRate": 30,
                                 "versionId": null,
                                 "versionName": null,
                                 "discount": 10,
-                                
+
                                 "presignPrice": 50,
                                 "signPrice": 10000,
                                 "quotationPrice": 10000,
                                 "factPrice": 10000,
-                                
+
                                 "createTime": "2016-01-01",
                                 "measureTime": null,
                                 "depositTime": null,
                                 "signTime": null,
                                 "presignTime": null,
-                                
+
                                 "status": 0,
                                 "designStatus": 0,
                                 "projectStatus": 0,
@@ -4538,7 +4457,7 @@
                                 "repairStatus": 0,
                                 "balanceStatus": 0,
                                 "otherStatus": 0,
-                                
+
                                 "creater": {
                                     "uid": 1,
                                     "userId": "U0203",
@@ -4567,7 +4486,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部"
@@ -4590,27 +4509,25 @@
                 ...
             }
 
-    ### <I> queryDecorationInclusive
+    ### `queryDecorationInclusive` <span style="color:gray">[内部]</span>
 
         获取装修单对应的套餐信息
-        
-                |Requests:|
-                :param decorationInclusive.orderId: 装修单号
-        :type decorationInclusive.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationInclusive.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationInclusive.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationInclusive**: 满减信息 , 类型 *decorationInclusive*
+
+**返回参数**:
+
+- **decorationInclusive**: 满减信息 , 类型 *decorationInclusive*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationInclusive": {
                     "dhid": 1,
@@ -4641,23 +4558,23 @@
                         "resourceType": 0,
                         "houseArea": 111,
                         "freeArea": 11,
-                        
+
                         "notSalesmanRate": 30,
                         "versionId": null,
                         "versionName": null,
                         "discount": 10,
-                        
+
                         "presignPrice": 50,
                         "signPrice": 10000,
                         "quotationPrice": 10000,
                         "factPrice": 10000,
-                        
+
                         "createTime": "2016-01-01",
                         "measureTime": null,
                         "depositTime": null,
                         "signTime": null,
                         "presignTime": null,
-                        
+
                         "status": 0,
                         "designStatus": 0,
                         "projectStatus": 0,
@@ -4665,7 +4582,7 @@
                         "repairStatus": 0,
                         "balanceStatus": 0,
                         "otherStatus": 0,
-                        
+
                         "creater": {
                             "uid": 1,
                             "userId": "U0203",
@@ -4694,7 +4611,7 @@
                         "escorter": null,
                         "supervisor": null,
                         "contracter": null,
-                        
+
                         "designDepartment": "设计中心一部",
                         "designRegion": "设计一分区",
                         "businessDepartment": "市场营销一部"
@@ -4713,42 +4630,41 @@
                 }
                 ...
             }
-            
-    ### <I> makeDecorationInclusive
+
+    ### `makeDecorationInclusive` <span style="color:gray">[内部]</span>
 
         生成装修单对套餐信息
-        
-        如果装修单没有生成套餐信息 , 创建信息
-        
-        如果装修单套餐信息已存在 , 更新套餐信息
-        
-        判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-        判断装修单状态是否为0(初始)/1(定金)/2(预签)/4(重签) , 其他状态 , 错误信息 **140004 装修单状态不可操作**
-        
-        判断装修单默认报价是否存在 , 不存在 , 错误信息 **200003 报价不存在**
-        
-        判断装修单对应默认报价状态是否为1(锁定) , 其他状态 , 错误信息 **200031 报价未锁定**
-        
-        判断装修单归属活动是否存在状态为0(初始) , 存在该状态活动 , 错误信息 **140060 活动未锁定**
-        
-        获取装修单对应装修款信息 , 类型onetype为0(收款) , twotype为1(合同) ,状态为初始可以更新 , 其他状态不能更新 , 错误信息 **150001 款项已付,不可修改**
-        
-        装修款更新款项信息
-        
-                |Requests:|
-                :param decorationInclusive.orderId: 装修单号
-        :type decorationInclusive.orderId: String
-        :param decorationInclusive.contractPrice: 合同总额
-        :type decorationInclusive.contractPrice: Long
 
-        Example::
-        
-            {
+        如果装修单没有生成套餐信息 , 创建信息
+
+        如果装修单套餐信息已存在 , 更新套餐信息
+
+        判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
+
+        判断装修单状态是否为0(初始)/1(定金)/2(预签)/4(重签) , 其他状态 , 错误信息 **140004 装修单状态不可操作**
+
+        判断装修单默认报价是否存在 , 不存在 , 错误信息 **200003 报价不存在**
+
+        判断装修单对应默认报价状态是否为1(锁定) , 其他状态 , 错误信息 **200031 报价未锁定**
+
+        判断装修单归属活动是否存在状态为0(初始) , 存在该状态活动 , 错误信息 **140060 活动未锁定**
+
+        获取装修单对应装修款信息 , 类型onetype为0(收款) , twotype为1(合同) ,状态为初始可以更新 , 其他状态不能更新 , 错误信息 **150001 款项已付,不可修改**
+
+        装修款更新款项信息
+
+**请求参数**:
+
+- **decorationInclusive.orderId**:
+  装修单号
+        - **decorationInclusive.contractPrice**:
+  合同总额
+
+        **示例**:{
                 "decorationInclusive.orderId": "1601010001",
                 "decorationInclusive.contractPrice": 50000
             }
-            
+
 ## 决算
 
 ************************************ 半包/整装 , 决算计算公式 ************************************
@@ -4823,8 +4739,9 @@
 
 ## api.decoration.DecorationAccountAction
 
-        |DataType:|
-        #### decorationAccount
+**数据类型**:
+
+#### decorationAccount
 
     - **daid**: 决算ID
       - 类型: *Long*
@@ -4862,28 +4779,26 @@
       - 类型: *Short*
     - **affirmTime**: 确认时间
       - 类型: *Timestamp*
-    
-    ### <I> queryDecorationAccount
+
+    ### `queryDecorationAccount` <span style="color:gray">[内部]</span>
 
         获取装修单对应的决算信息
-        
-                |Requests:|
-                :param decorationAccount.orderId: 装修单号
-        :type decorationAccount.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationAccount.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationAccount.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationAccount**: 决算信息 , 每条数据类型 *decorationAccount*
+
+**返回参数**:
+
+- **decorationAccount**: 决算信息 , 每条数据类型 *decorationAccount*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationAccount": {
                     "daid": 1,
@@ -4905,48 +4820,47 @@
                 }
                 ...
             }
-            
-    ### <I> updateDecorationAccount
+
+    ### `updateDecorationAccount` <span style="color:gray">[内部]</span>
 
         更新装修决算信息
-        
-        判断装修单是否存在 , 不存在 , 错误信息 **130014 订单不存在**
-        
-        装修单状态为3(签约)能够生成决算信息 , 错误信息 **140004 装修单状态不可操作**
-        
-                |Requests:|
-                :param decorationAccount.orderId: 装修单号
-        :type decorationAccount.orderId: String
-        :param decorationAccount.type: 类型
-        :type decorationAccount.type: Short
-        :param decorationAccount.arcal: 增减配比计算
-        :type decorationAccount.arcal: Short
-        :param decorationAccount.maching: 主材配比
-        :type decorationAccount.maching: Integer
-        :param decorationAccount.discount: 折扣
-        :type decorationAccount.discount: Long
-        :param decorationAccount.serviceRate: 服务费配比
-        :type decorationAccount.serviceRate: Long
-        :param decorationAccount.materialPrice: 主材总额
-        :type decorationAccount.materialPrice: Long
-        :param decorationAccount.servicePrice: 服务费
-        :type decorationAccount.servicePrice: Long
-        :param decorationAccount.paidupMatching: 实话配比
-        :type decorationAccount.paidupMatching: Integer
-        :param decorationAccount.difference: 差额
-        :type decorationAccount.difference: Long
-        :param decorationAccount.coupon: 券优惠
-        :type decorationAccount.coupon: Long
-        :param decorationAccount.fulldel: 满减
-        :type decorationAccount.fulldel: Long
-        :param decorationAccount.cashback: 返现
-        :type decorationAccount.cashback: Long
-        :param decorationAccount.internal: 内部优惠
-        :type decorationAccount.internal: Long
 
-        Example::
-        
-            {
+        判断装修单是否存在 , 不存在 , 错误信息 **130014 订单不存在**
+
+        装修单状态为3(签约)能够生成决算信息 , 错误信息 **140004 装修单状态不可操作**
+
+**请求参数**:
+
+- **decorationAccount.orderId**:
+  装修单号
+        - **decorationAccount.type**:
+  类型
+        - **decorationAccount.arcal**:
+  增减配比计算
+        - **decorationAccount.maching**:
+  主材配比
+        - **decorationAccount.discount**:
+  折扣
+        - **decorationAccount.serviceRate**:
+  服务费配比
+        - **decorationAccount.materialPrice**:
+  主材总额
+        - **decorationAccount.servicePrice**:
+  服务费
+        - **decorationAccount.paidupMatching**:
+  实话配比
+        - **decorationAccount.difference**:
+  差额
+        - **decorationAccount.coupon**:
+  券优惠
+        - **decorationAccount.fulldel**:
+  满减
+        - **decorationAccount.cashback**:
+  返现
+        - **decorationAccount.internal**:
+  内部优惠
+
+        **示例**:{
                 "decorationAccount.orderId": "1601010001",
                 "decorationAccount.type": 0,
                 "decorationAccount.arcal": 0,
@@ -4963,76 +4877,74 @@
                 "decorationAccount.cashback": 0,
                 "decorationAccount.internal": 0
             }
-            
-    ### <I> makeDecorationAccount
+
+    ### `makeDecorationAccount` <span style="color:gray">[内部]</span>
 
         决算
-        
-        判断装修单是否存在 , 不存在 , 错误信息 **130014 订单不存在**
-        
-        装修单状态为3(签约)能够生成决算信息 , 错误信息 **140004 装修单状态不可操作**
-        
-        装修款状态更新为7(决算)
-        
-        生成装修单操作记录
-        
-                |Requests:|
-                :param decorationAccount.orderId: 装修单号
-        :type decorationAccount.orderId: String
 
-        Example::
-        
-            {
+        判断装修单是否存在 , 不存在 , 错误信息 **130014 订单不存在**
+
+        装修单状态为3(签约)能够生成决算信息 , 错误信息 **140004 装修单状态不可操作**
+
+        装修款状态更新为7(决算)
+
+        生成装修单操作记录
+
+**请求参数**:
+
+- **decorationAccount.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationAccount.orderId": "1601010001"
             }
 
-    ### <I> sendDecorationAccount
+    ### `sendDecorationAccount` <span style="color:gray">[内部]</span>
 
         推送决算信息
-        
-        判断决算信息是否存在 , 不存在 , 错误信息 **140081 决算信息不存在**
-        
-                |Requests:|
-                :param decorationAccount.orderId: 装修单号
-        :type decorationAccount.orderId: String
 
-        Example::
-        
-            {
+        判断决算信息是否存在 , 不存在 , 错误信息 **140081 决算信息不存在**
+
+**请求参数**:
+
+- **decorationAccount.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationAccount.orderId": "1601010001"
             }
 
-    ### <I> affirmDecorationAccount
+    ### `affirmDecorationAccount` <span style="color:gray">[内部]</span>
 
         确认决算信息
-        
-        判断装修单是否存在 , 不存在 , 错误信息 **130014 订单不存在**
-        
-        判断客户编号是否绑定 , 未绑定 , 错误信息 **330017 装修单未绑定**
-        
-        判断决算信息是否存在 , 不存在 , 错误信息 **140081 决算信息不存在**
-        
-                |Requests:|
-                :param decorationAccount.orderId: 装修单号
-        :type decorationAccount.orderId: String
-        :param decoration.customer.no: 编号
-        :type decoration.customer.no: String
 
-        Example::
-        
-            {
+        判断装修单是否存在 , 不存在 , 错误信息 **130014 订单不存在**
+
+        判断客户编号是否绑定 , 未绑定 , 错误信息 **330017 装修单未绑定**
+
+        判断决算信息是否存在 , 不存在 , 错误信息 **140081 决算信息不存在**
+
+**请求参数**:
+
+- **decorationAccount.orderId**:
+  装修单号
+        - **decoration.customer.no**:
+  编号
+
+        **示例**:{
                 "decorationAccount.orderId": "1601010001",
                 "decoration.customer.no": ""
             }
-    
+
 ## 归属
 
 装修单归属信息 , 包括设计师和业务员归属管理
 
 ## api.decoration.DecorationBelongAction
 
-        |DataType:|
-        #### decorationBelong
+**数据类型**:
+
+#### decorationBelong
 
     - **dbid**: 归属ID
       - 类型: *Long*
@@ -5056,34 +4968,32 @@
       - 类型: *Short*
     - **status**: 状态 , 0: 有效 , 1: 无效 , 2: 确认 , 3: 审批
       - 类型: *Short*
-    
-    ### <I> queryDecorationBelong
+
+    ### `queryDecorationBelong` <span style="color:gray">[内部]</span>
 
         获取所有类型为设计的归属信息 , 不区分状态是否有效
-        
-                |Requests:|
-                :param decorationBelong.orderId: 装修单号
-        :type decorationBelong.orderId: String
-        :param decorationBelong.type: 类型
-        :type decorationBelong.type: Short
-        :param decorationBelong.status: 状态
-        :type decorationBelong.status: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationBelong.orderId**:
+  装修单号
+        - **decorationBelong.type**:
+  类型
+        - **decorationBelong.status**:
+  状态
+
+        **示例**:{
                 "decorationBelong.orderId": "1601010001",
                 "decorationBelong.type": 1,
                 "decorationBelong.status": 0
             }
-            
-                |Returns:|
-                - **decorationBelongs**: 归属信息列表 , 每条数据类型 *decorationBelong*
+
+**返回参数**:
+
+- **decorationBelongs**: 归属信息列表 , 每条数据类型 *decorationBelong*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationBelongs": [
                     {
@@ -5135,8 +5045,9 @@
 
 ## api.decoration.DecorationActivityAction
 
-        |DataType:|
-        #### decorationActivity
+**数据类型**:
+
+#### decorationActivity
 
     - **daid**: 活动ID
       - 类型: *Long*
@@ -5148,7 +5059,7 @@
       - 类型: *Long*
     - **status**: 状态 , 0: 初始 , 1: 锁定
       - 类型: *Short*
-    
+
     #### decorationActivityItem
 
     - **daiid**: 活动项ID
@@ -5163,19 +5074,19 @@
       - 类型: *String*
     - **name**: 活动项名
       - 类型: *String*
-    
+
     - **num**: 数量
       - 类型: *Integer*
     - **money**: 价格
       - 类型: *Integer*
-    
+
     - **creater**: 创建人 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
     - **operater**: 操作人 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
     - **refunder**: 退货人 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
-    
+
     - **createTime**: 创建时间
       - 类型: *Timestamp*
     - **operateTime**: 操作时间
@@ -5186,7 +5097,7 @@
       - 类型: *Timestamp*
     - **checkTime**: 核对时间
       - 类型: *Timestamp*
-    
+
     - **type**: 类型 , 0: 券 , 1: 物品 , 2: 红包
       - 类型: *Short*
     - **state**: 状态 , 0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 消耗 , 8: 折现
@@ -5201,33 +5112,31 @@
       - 类型: *Short*
     - **isAffirm**: 是否确认 , 0: 初始 , 1: 确认 , 2: 核对
       - 类型: *Short*
-    
+
     - **content**: 备注
       - 类型: *String*
     - **comment**: 说明
       - 类型: *String*
 
-    ### <I> queryDecorationActivityByOrderId
+    ### `queryDecorationActivityByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取活动信息
-        
-                |Requests:|
-                :param decorationActivity.orderId: 装修单号
-        :type decorationActivity.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivity.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationActivity.orderId": "1601010001"
             }
-    
-                |Returns:|
-                - **decorationActivitys**: 活动信息列表 , 每条数据类型 *decorationActivity*
+
+**返回参数**:
+
+- **decorationActivitys**: 活动信息列表 , 每条数据类型 *decorationActivity*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationActivitys": [
                     {
@@ -5243,37 +5152,35 @@
                 ...
             }
 
-    ### <I> amountDecorationActivity
+    ### `amountDecorationActivity` <span style="color:gray">[内部]</span>
 
         汇总活动总额
-        
-                |Requests:|
-                :param decorationActivity.orderId: 装修单号
-        :type decorationActivity.orderId: String
-        
-        :param decorationActivityItem.type: 类型
-        :type decorationActivityItem.type: Short
-        :param decorationActivityItem.isPrefor: 是否计入业绩
-        :type decorationActivityItem.isPrefor: Short
-        :param decorationActivityItem.isPayment: 是否计入金额
-        :type decorationActivityItem.isPayment: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivity.orderId**:
+  装修单号
+
+        - **decorationActivityItem.type**:
+  类型
+        - **decorationActivityItem.isPrefor**:
+  是否计入业绩
+        - **decorationActivityItem.isPayment**:
+  是否计入金额
+
+        **示例**:{
                 "decorationActivity.orderId": "1601010001",
                 "decorationActivityItem.type": 0,
                 "decorationActivityItem.isPrefor": 0,
                 "decorationActivityItem.isPayment": 0
             }
 
-                |Returns:|
-                - **decorationActivity**: 装修活动信息 , 类型 *decorationActivity*
+**返回参数**:
+
+- **decorationActivity**: 装修活动信息 , 类型 *decorationActivity*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationActivity": {
                         "orderId": "1601010001"
@@ -5282,27 +5189,25 @@
                 ...
             }
 
-    ### <I> queryDecorationActivityItem
+    ### `queryDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         通过装修单号获取装修单拥有活动项信息
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decoration.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationActivityItems**: 活动项信息列表 , 每条数据类型 *decorationActivityItem*
+
+**返回参数**:
+
+- **decorationActivityItems**: 活动项信息列表 , 每条数据类型 *decorationActivityItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationActivityItems": [
                     {
@@ -5312,10 +5217,10 @@
                         "asid": 1,
                         "activity": "测试",
                         "name": "测试项",
-                        
+
                         "money": 10000,
                         "num": 1,
-                        
+
                         "creater": {
                             "uid": 1,
                             "userId": "U0479",
@@ -5324,22 +5229,22 @@
                         },
                         "operater": null,
                         "refunder": null,
-                        
+
                         "createTime": "2016-01-01",
                         "operateTime": "2016-01-01",
                         "refundTime": "2016-01-01",
                         "affirmTime": "2016-01-01",
                         "checkTime": "2016-01-01",
-                        
+
                         "stateType": 0,
                         "state": 0,
                         "type": 0,
-                        
+
                         "isStock": 0,
                         "isPrefor": 0,
                         "isPayment": 0,
                         "isAffirm": 0,
-                        
+
                         "content": "",
                         "comment": ""
                     }
@@ -5347,124 +5252,119 @@
                 ...
             }
 
-    ### <I> addDecorationActivity
+    ### `addDecorationActivity` <span style="color:gray">[内部]</span>
 
         添加装修单参与活动信息
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修单状态 , 0(初始)/1(定金)/2(预签)/4(重签)之外的其他状态 , 错误信息 **140003 装修单已签约**
-        
+
         判断操作活动是否存在 , 不存在 , 错误信息 **160011 活动信息不存在**
-        
+
         判断操作活动有效时间 , 结束时间小于当前时间 , 错误信息 **140032 活动已过期**
-        
-                |Requests:|
-                :param decorationActivity.orderId: 装修单号
-        :type decorationActivity.orderId: String
-        :param decorationActivity.activity.aid: 活动ID
-        :type decorationActivity.activity.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivity.orderId**:
+  装修单号
+        - **decorationActivity.activity.aid**:
+  活动ID
+
+        **示例**:{
                 "decorationActivity.orderId": "1601010001",
                 "decorationActivity.activity.aid": 1
             }
-            
-    ### <I> deleteDecorationActivity
+
+    ### `deleteDecorationActivity` <span style="color:gray">[内部]</span>
 
         删除装修单参与活动信息
-        
+
         判断装修单活动是否存在 , 不存在 , 错误信息 **140033 订单活动信息不存在**
-        
+
         判断装修活动状态是否为0(初始) , 其他状态 , 错误信息 **140059 订单活动状态不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修单状态 , 0(初始)/1(定金)/2(预签)/4(重签)之外的其他状态 , 错误信息 **140003 装修单已签约**
-        
+
         更新对应装修单的券优惠额/奖品优惠额
-        
-                |Requests:|
-                :param decorationActivity.daid: 活动ID
-        :type decorationActivity.daid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivity.daid**:
+  活动ID
+
+        **示例**:{
                 "decorationActivity.daid": 1
             }
 
-    ### <I> lockDecorationActivity
+    ### `lockDecorationActivity` <span style="color:gray">[内部]</span>
 
         锁定装修活动
-        
+
         判断装修单活动是否存在 , 不存在 , 错误信息 **140033 订单活动信息不存在**
-        
+
         判断装修活动状态是否为0(初始) , 其他状态 , 错误信息 **140059 订单活动状态不可操作**
-        
+
         装修活动状态更新为1(锁定)
-        
-                |Requests:|
-                :param decorationActivity.daid: 活动ID
-        :type decorationActivity.daid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivity.daid**:
+  活动ID
+
+        **示例**:{
                 "decorationActivity.daid": 1
             }
-            
-    ### <I> unlockDecorationActivity
+
+    ### `unlockDecorationActivity` <span style="color:gray">[内部]</span>
 
         解锁装修活动
-        
+
         判断装修单活动是否存在 , 不存在 , 错误信息 **140033 订单活动信息不存在**
-        
+
         判断装修活动状态是否为1(锁定) , 其他状态 , 错误信息 **140059 订单活动不可操作**
-        
+
         装修活动状态更新为0(初始)
-        
-                |Requests:|
-                :param decorationActivity.daid: 活动ID
-        :type decorationActivity.daid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivity.daid**:
+  活动ID
+
+        **示例**:{
                 "decorationActivity.daid": 1
             }
-            
-    ### <I> addDecorationActivityItem
+
+    ### `addDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         添加装修活动项
-        
+
         判断奖品是否存在 , 不存在 , 错误信息 **240003 奖品不存在**
-        
-                |Requests:|
-                :param decorationActivityItem.orderId: 装修单号
-        :type decorationActivityItem.orderId: String
-        :param decorationActivityItem.asid: 奖品ID
-        :type decorationActivityItem.asid: Long
-        :param decorationActivityItem.aid: 活动ID
-        :type decorationActivityItem.aid: Long
-        :param decorationActivityItem.activityName: 活动名
-        :type decorationActivityItem.activityName: String
-        :param decorationActivityItem.type: 类型
-        :type decorationActivityItem.type: Short
-        :param decorationActivityItem.stateType: 状态类型
-        :type decorationActivityItem.stateType: Short
-        :param decorationActivityItem.money: 价格
-        :type decorationActivityItem.money: Integer
-        :param decorationActivityItem.num: 数量
-        :type decorationActivityItem.num: Integer
-        :param decorationActivityItem.content: 说明
-        :type decorationActivityItem.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivityItem.orderId**:
+  装修单号
+        - **decorationActivityItem.asid**:
+  奖品ID
+        - **decorationActivityItem.aid**:
+  活动ID
+        - **decorationActivityItem.activityName**:
+  活动名
+        - **decorationActivityItem.type**:
+  类型
+        - **decorationActivityItem.stateType**:
+  状态类型
+        - **decorationActivityItem.money**:
+  价格
+        - **decorationActivityItem.num**:
+  数量
+        - **decorationActivityItem.content**:
+  说明
+
+        **示例**:{
                 "decorationActivityItem.orderId": "1601010001",
                 "decorationActivityItem.asid": 1,
                 "decorationActivityItem.aid": 1,
@@ -5475,262 +5375,253 @@
                 "decorationActivityItem.num": 100,
                 "decorationActivityItem.content": "说明"
             }
-            
-    ### <I> receiveDecorationActivityItem
+
+    ### `receiveDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         领取装修活动项
-        
+
         判断装修活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断奖品信息是否存在 , 不存在 , 错误信息 **160043 物品不存在**
-        
+
         判断奖品数量是否满足出库数量 , 不满足 , 错误信息 **160038 库存不足**
-        
+
         判断装修活动项中是否计入库存标识 , 更新关联奖品对应的库存数量 , 同时生成奖品记录以及装修单号
-        
-                |Requests:|
-                :param decorationActivityItem.daiid: 活动项ID
-        :type decorationActivityItem.daiid: Long
-        :param decorationActivityItem.content: 备注
-        :type decorationActivityItem.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivityItem.daiid**:
+  活动项ID
+        - **decorationActivityItem.content**:
+  备注
+
+        **示例**:{
                 "decorationActivityItem.daiid": 1,
                 "decorationActivityItem.content": "备注"
             }
-            
-    ### <I> abateDecorationActivityItem
+
+    ### `abateDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         失效装修活动项
-        
+
         判断装修活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断装修活动项状态为0(初始) , 其他状态不可操作 , 错误信息 **140057 订单活动奖品不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         装修活动项状态更新为1(失效)
-        
+
         重新计算归属装修单中券优惠和物品优惠 , 实收额 , 原有金额基础上减少消耗活动项
-        
-                |Requests:|
-                :param decorationActivityItem.daiid: 活动项ID
-        :type decorationActivityItem.daiid: Long
-        :param decorationActivityItem.content: 备注
-        :type decorationActivityItem.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivityItem.daiid**:
+  活动项ID
+        - **decorationActivityItem.content**:
+  备注
+
+        **示例**:{
                 "decorationActivityItem.daiid": 1,
                 "decorationActivityItem.content": "备注"
             }
-            
-    ### <I> deliveDecorationActivityItem
+
+    ### `deliveDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         配送装修活动项
-        
+
         判断装修活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断装修活动项状态为0(初始) , 其他状态不可操作 , 错误信息 **140057 订单活动奖品不可操作**
-        
+
         装修活动项状态更新为4(配送)
-        
-                |Requests:|
-                :param decorationActivityItem.daiid: 活动项ID
-        :type decorationActivityItem.daiid: Long
-        :param decorationActivityItem.content: 备注
-        :type decorationActivityItem.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivityItem.daiid**:
+  活动项ID
+        - **decorationActivityItem.content**:
+  备注
+
+        **示例**:{
                 "decorationActivityItem.daiid": 1,
                 "decorationActivityItem.content": "备注"
             }
-            
-    ### <I> unrefundDecorationActivityItem
+
+    ### `unrefundDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         未退装修活动 , 已审批未退货
-        
+
         判断装修活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断装修活动项状态为2(已领) , 其他状态不可操作 , 错误信息 **140057 订单活动奖品不可操作**
-        
+
         装修活动项状态更新为5(未退)
-        
-                |Requests:|
-                :param decorationActivityItem.daiid: 活动项ID
-        :type decorationActivityItem.daiid: Long
-        :param decorationActivityItem.comment: 说明
-        :type decorationActivityItem.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivityItem.daiid**:
+  活动项ID
+        - **decorationActivityItem.comment**:
+  说明
+
+        **示例**:{
                 "decorationActivityItem.daiid": 1,
                 "decorationActivityItem.comment": "说明"
             }
-            
-    ### <I> refundDecorationActivityItem
+
+    ### `refundDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         退货装修活动项
-        
+
         判断装修活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断装修活动项状态为2(已领)/5(未退) , 其他状态不可操作 , 错误信息 **140057 订单活动奖品不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         装修活动项状态更新为3(退货)
-        
+
         判断装修活动项中是否计入库存标识 , 更新关联奖品对应的库存数量 , 同时生成奖品记录以及装修单号
-        
+
         重新计算归属装修单中券优惠和物品优惠 , 实收额 , 原有金额基础上减少消耗活动项
-        
-                |Requests:|
-                :param decorationActivityItem.daiid: 活动项ID
-        :type decorationActivityItem.daiid: Long
-        :param decorationActivityItem.comment: 说明
-        :type decorationActivityItem.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivityItem.daiid**:
+  活动项ID
+        - **decorationActivityItem.comment**:
+  说明
+
+        **示例**:{
                 "decorationActivityItem.daiid": 1,
                 "decorationActivityItem.comment": "说明"
             }
-        
-    ### <I> expendDecorationActivityItem
+
+    ### `expendDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         消耗装修活动项
-        
+
         判断装修活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断装修活动项状态为2(已领) , 其他状态不可操作 , 错误信息 **140057 订单活动奖品不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         装修活动项状态更新为7(消耗)
-        
+
         重新计算归属装修单中券优惠和物品优惠 , 实收额 , 原有金额基础上减少消耗活动项
-        
-                |Requests:|
-                :param decorationActivityItem.daiid: 活动项ID
-        :type decorationActivityItem.daiid: Long
-        :param decorationActivityItem.comment: 说明
-        :type decorationActivityItem.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivityItem.daiid**:
+  活动项ID
+        - **decorationActivityItem.comment**:
+  说明
+
+        **示例**:{
                 "decorationActivityItem.daiid": 1,
                 "decorationActivityItem.comment": "说明"
             }
 
-    ### <I> discountDecorationActivityItem
+    ### `discountDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         折现装修活动项
-        
+
         判断装修活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断装修活动项状态为0(初始) , 其他状态不可操作 , 错误信息 **140057 订单活动奖品不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         装修活动项状态更新为8(折现)
-        
+
         重新计算归属装修单中券优惠和物品优惠 , 实收额 , 原有金额基础上减少消耗活动项
-        
-                |Requests:|
-                :param decorationActivityItem.daiid: 活动项ID
-        :type decorationActivityItem.daiid: Long
-        :param decorationActivityItem.content: 说明
-        :type decorationActivityItem.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivityItem.daiid**:
+  活动项ID
+        - **decorationActivityItem.content**:
+  说明
+
+        **示例**:{
                 "decorationActivityItem.daiid": 1,
                 "decorationActivityItem.content": "说明"
             }
-            
-    ### <I> amountDecorationActivityItem
+
+    ### `amountDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         统计装修活动项
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修单状态 , 3(签单)/7(决算)其他状态不可操作 , 错误信息 **140004 装修单状态不可操作**
-        
+
         装修活动项状态更新为7(消耗)
-        
+
         重新计算归属装修单中券优惠和物品优惠 , 实收额 , 统计所有装修活动项进行统计
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationActivityItem.daiid": 1
             }
 
-    ### <I> sendDecorationActivityItem
+    ### `sendDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         发送装修活动项
-        
-                |Requests:|
-                :param decorationActivityItem.orderId: 装修单号
-        :type decorationActivityItem.orderId: Long
-        :param decorationActivityItem.content: 备注
-        :type decorationActivityItem.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivityItem.orderId**:
+  装修单号
+        - **decorationActivityItem.content**:
+  备注
+
+        **示例**:{
                 "decorationActivityItem.orderId": "1601010001",
                 "decorationActivityItem.content": ""
             }
 
-    ### <I> affirmDecorationActivityItem
+    ### `affirmDecorationActivityItem` <span style="color:gray">[内部]</span>
 
         确认装修活动项
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **130014 订单不存在**
-        
+
         判断客户电话是否正确 , 不正确 , 错误信息 **客户电话不匹配**
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        :param decoration.customer.no: 编号
-        :type decoration.customer.no: String
-        
-        :param decorationActivityItem[n].daiid: 活动项ID
-        :type decorationActivityItem[n].daiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+        - **decoration.customer.no**:
+  编号
+
+        - **decorationActivityItem[n].daiid**:
+  活动项ID
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decoration.customer.no": "",
-                
+
                 "decorationActivityItem[0].daiid": 1
-                
+
             }
-    
+
 ## 回访
 
 装修单回访信息管理
 
 ## api.decoration.BackVisitAction
 
-        |DataType:|
-        #### backVisit
+**数据类型**:
+
+#### backVisit
 
     - **bvid**: 回访ID
       - 类型: *Integer*
@@ -5748,34 +5639,32 @@
       - 类型: *String*
     - **receivers**: 接收者名称列表 , 每条数据类型 String
       - 类型: *List*
-    
+
         |Filters:|
         - **orderId**: 装修单号
       - 类型: *String*
-    
-    ### <I> pageBackVisitByOrderId
+
+    ### `pageBackVisitByOrderId` <span style="color:gray">[内部]</span>
 
         分页方式通过装修单号获取回访信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
-                |Requests:|
-                :param backVisit.orderId: 装修单号
-        :type backVisit.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **backVisit.orderId**:
+  装修单号
+
+        **示例**:{
                 "backVisit.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 回访信息列表 , 每条数据类型 *backVisit*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  回访信息列表 , 每条数据类型 *backVisit*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5795,28 +5684,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryBackVisitByOrderId
+
+    ### `queryBackVisitByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取回访信息
-        
-                |Requests:|
-                :param backVisit.orderId: 装修单号
-        :type backVisit.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **backVisit.orderId**:
+  装修单号
+
+        **示例**:{
                 "backVisit.orderId": "1601010001"
             }
-    
-                |Returns:|
-                - **backVisits**: 回访信息列表 , 每条数据类型 *backVisit*
+
+**返回参数**:
+
+- **backVisits**: 回访信息列表 , 每条数据类型 *backVisit*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "backVisits": [
                     {
@@ -5832,51 +5719,50 @@
                 ],
                 ...
             }
-            
-    ### <I> addBackVisit
+
+    ### `addBackVisit` <span style="color:gray">[内部]</span>
 
         添加回访信息
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param backVisit.orderId: 装修单号
-        :type backVisit.orderId: String
-        :param backVisit.content: 内容
-        :type backVisit.content: String
-        :param backVisit.receivers: 接收人编号列表 , 每条数据类型 String
-        :type backVisit.receivers: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **backVisit.orderId**:
+  装修单号
+        - **backVisit.content**:
+  内容
+        - **backVisit.receivers**:
+  接收人编号列表 , 每条数据类型 String
+
+        **示例**:{
                 "backVisit.orderId": "1601010001",
                 "backVisit.receivers[0]": "U001",
                 "backVisit.receivers[1]": "U002"
             }
-            
-    ### <I> deleteBackVisitById
+
+    ### `deleteBackVisitById` <span style="color:gray">[内部]</span>
 
         通过回访ID删除回访信息
-        
-                |Requests:|
-                :param backVisit.bvid: 回访ID
-        :type backVisit.bvid: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **backVisit.bvid**:
+  回访ID
+
+        **示例**:{
                 "backVisit.bvid": 1
             }
-        
+
 ## 图纸
 
 装修单图纸信息管理
 
 ## api.decoration.DecorationPictureAction
 
-        |DataType:|
-        #### decorationPicture
+**数据类型**:
+
+#### decorationPicture
 
     - **dpid**: 图纸ID
       - 类型: *Long*
@@ -5896,7 +5782,7 @@
       - 类型: *Short*
     - **status**: 状态 , 0: 初始, 1: 失效
       - 类型: *Short*
-    
+
     #### decorationPictureRecord
 
     - **dprid**: 记录ID
@@ -5905,33 +5791,31 @@
       - 类型: *Long*
     - **orderId**: 装修单号
       - 类型: *String*
-    
+
     - **operater**: 操作人 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
     - **operateTime**: 上传时间
       - 类型: *Timestamp*
-    
-    ### <I> queryDecorationPictureByOrderId
+
+    ### `queryDecorationPictureByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取图纸信息
-        
-                |Requests:|
-                :param decorationPricture.orderId: 装修单号
-        :type decorationPricture.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPricture.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationPricture.orderId": "1601010001"
             }
-    
-                |Returns:|
-                - **decorationPictures**: 图纸信息列表 , 每条数据类型 *decorationPicture*
+
+**返回参数**:
+
+- **decorationPictures**: 图纸信息列表 , 每条数据类型 *decorationPicture*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationPictures": [
                     {
@@ -5957,27 +5841,25 @@
                 ...
             }
 
-    ### <I> downloadDecorationPicture
+    ### `downloadDecorationPicture` <span style="color:gray">[内部]</span>
 
         下载
-    
-                |Requests:|
-                :param decorationPricture.dpid: 图纸ID
-        :type decorationPricture.dpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPricture.dpid**:
+  图纸ID
+
+        **示例**:{
                 "decorationPricture.dpid": 1
             }
 
-                |Returns:|
-                - **decorationPicture**: 图纸信息 , 每条数据类型 *decorationPicture*
+**返回参数**:
+
+- **decorationPicture**: 图纸信息 , 每条数据类型 *decorationPicture*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationPicture": {
                     "dpid": 1,
@@ -6000,53 +5882,52 @@
                 },
                 ...
             }
-    
-    ### <I> addDecorationPicture
+
+    ### `addDecorationPicture` <span style="color:gray">[内部]</span>
 
         添加图纸信息
-        
-                |Requests:|
-                :param decorationPricture.orderId: 装修单号
-        :type decorationPricture.orderId: String
-        :param decorationPricture.name: 名称
-        :type decorationPricture.name: String
-        :param decorationPricture.content: 说明
-        :type decorationPricture.content: String
-        :param decorationPricture.path: 路径
-        :type decorationPricture.path: String
-        :param decorationPricture.type: 类型 , 0: CAD , 1: 图片 , 2: 合同
-        :type decorationPricture.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPricture.orderId**:
+  装修单号
+        - **decorationPricture.name**:
+  名称
+        - **decorationPricture.content**:
+  说明
+        - **decorationPricture.path**:
+  路径
+        - **decorationPricture.type**:
+  类型 , 0: CAD , 1: 图片 , 2: 合同
+
+        **示例**:{
                 "decorationPricture.orderId": "1601010001"
                 "decorationPricture.name": "picture.jpg"
                 "decorationPricture.content": ""
                 "decorationPricture.path": "/upload/Imag/26/8/1/2/1d7184baf670d0370658.png"
                 "decorationPricture.type": 1
             }
-            
-    ### <I> deleteDecorationPicture
+
+    ### `deleteDecorationPicture` <span style="color:gray">[内部]</span>
 
         删除图纸系你想
-        
-                |Requests:|
-                :param decorationPricture.dpid: 图纸ID
-        :type decorationPricture.dpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPricture.dpid**:
+  图纸ID
+
+        **示例**:{
                 "decorationPricture.dpid": 1
             }
-            
+
 ## 服务
 
 ## api.decoration.DecorationServiceAction
 
-        |DataType:|
-        #### decorationService
+**数据类型**:
+
+#### decorationService
 
     - **dsid**: 服务ID
       - 类型: *Long*
@@ -6064,26 +5945,24 @@
       - 类型: *Short*
     - **comment**: 备注
       - 类型: *String*
-    
-    ### <I> queryDecorationServiceByOrderId
 
-                |Requests:|
-                :param decorationService.orderId: 装修单编号
-        :type decorationService.orderId: String
-        
-        Example::
-        
-            {
+    ### `queryDecorationServiceByOrderId` <span style="color:gray">[内部]</span>
+
+**请求参数**:
+
+- **decorationService.orderId**:
+  装修单编号
+
+        **示例**:{
                 "decorationService.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationServices**: 服务信息列表 , 每条数据类型 *decorationService*
+
+**返回参数**:
+
+- **decorationServices**: 服务信息列表 , 每条数据类型 *decorationService*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationServices": [
                     {
@@ -6095,7 +5974,7 @@
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "operateTime": "2016-01-01 00:00:00",
                         "status": 0,
@@ -6104,54 +5983,53 @@
                 ],
                 ...
             }
-            
-    ### <I> addDecorationService
+
+    ### `addDecorationService` <span style="color:gray">[内部]</span>
 
         添加装修服务信息
-        
-                |Requests:|
-                :param decorationService.orderId: 装修单号
-        :type decorationService.orderId: String
-        :param decorationService.name: 名称
-        :type decorationService.name: String
-        :param decorationService.detail: 详述
-        :type decorationService.detail: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationService.orderId**:
+  装修单号
+        - **decorationService.name**:
+  名称
+        - **decorationService.detail**:
+  详述
+
+        **示例**:{
                 "decorationService.orderId": "1601010001",
                 "decorationService.name": "报价",
                 "decorationService.detail": "报价详情"
             }
-            
-    ### <I> completeDecorationService
+
+    ### `completeDecorationService` <span style="color:gray">[内部]</span>
 
         提交完成装修服务
-        
+
         判断装修服务信息是否存在 , 不存在 , 错误信息 **140055 装修服务不存在**
-        
+
         判断装修服务信息状态是否为0(初始) , 错误信息 **140056 装修服务不可操作**
-    
-                |Requests:|
-                :param decorationService.dsid: 服务ID
-        :type decorationService.dsid: Long
-        :param decorationService.comment: 说明
-        :type decorationService.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationService.dsid**:
+  服务ID
+        - **decorationService.comment**:
+  说明
+
+        **示例**:{
                 "decorationService.dsid": 1,
                 "decorationService.comment": "说明"
             }
-            
+
 ## 人员
 
 ## api.decoration.DecorationUserAction
 
-        |DataType:|
-        #### decorationUser
+**数据类型**:
+
+#### decorationUser
 
     - **duid**: ID
       - 类型: *Long*
@@ -6165,21 +6043,20 @@
       - 类型: *Short*
     - **content**: 说明
       - 类型: *String*
-    
-    
-    ### <I> pageDecorationForUser
+
+
+    ### `pageDecorationForUser` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单信息 , 通过装修人员关联 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6230,7 +6107,7 @@
                             "depositTime": null,
                             "signTime": null,
                             "presignTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -6252,19 +6129,18 @@
                 }
             }
 
-    ### <I> queryDecorationUser
+    ### `queryDecorationUser` <span style="color:gray">[内部]</span>
 
         分页方式获取装修单信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 人员信息列表 , 每条数据类型 *decorationUser*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  人员信息列表 , 每条数据类型 *decorationUser*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6276,7 +6152,7 @@
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                                 "userPhoto": "1d7184baf670d0370658.png"
                             },
                             "isShow": 0,
@@ -6288,62 +6164,62 @@
                 },
                 ...
             }
-            
-    ### <I> addDecorationUser
+
+    ### `addDecorationUser` <span style="color:gray">[内部]</span>
 
         添加装修单相关人员信息
-        
-                |Requests:|
-                :param decorationUser.orderId: 装修单号
-        :type decorationUser.orderId: Long
-        :param decorationUser.user.uid: 人员ID
-        :type decorationUser.user.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationUser.orderId**:
+  装修单号
+        - **decorationUser.user.uid**:
+  人员ID
+
+        **示例**:{
                 "decorationUser.orderId": "1601010001",
                 "decorationUser.user.uid": 1
             }
 
-    ### <I> updateDecorationUser
+    ### `updateDecorationUser` <span style="color:gray">[内部]</span>
 
         更新
-        
+
         判断人员信息是否存在 , 不存在 , 错误信息 **140077 人员不存在**
-        
-                |Requests:|
-                :param decorationUser.duid: 人员ID
-        :type decorationUser.duid: Long
-        :param decorationUser.isShow: 显示标识
-        :type decorationUser.isShow: Short
-        :param decorationUser.isPay: 薪资标识
-        :type decorationUser.isPay: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationUser.duid**:
+  人员ID
+        - **decorationUser.isShow**:
+  显示标识
+        - **decorationUser.isPay**:
+  薪资标识
+
+        **示例**:{
                 "decorationUser.orderId": "1601010001",
                 "decorationUser.isShow": 1,
                 "decorationUser.isPay": 1
             }
-            
-    ### <I> deleteDecorationUser
+
+    ### `deleteDecorationUser` <span style="color:gray">[内部]</span>
 
         删除装修单相关人员信息
-        
-                |Requests:|
-                :param decorationUser.duid: ID
-        :type decorationUser.duid: Long
-    
+
+**请求参数**:
+
+- **decorationUser.duid**:
+  ID
+
 ## 审核
 
 预算审核相关处理过程
 
 ## api.decoration.AuditAction
 
-        |DataType:|
-        #### audit
+**数据类型**:
+
+#### audit
 
     - **aid**: 审核ID
       - 类型: *Long*
@@ -6353,7 +6229,7 @@
       - 类型: *Object*
     - **auditTime**: 审核时间
       - 类型: *Timestamp*
-    
+
     #### auditRecord
 
     - **arid**: ID
@@ -6374,7 +6250,7 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-    
+
     #### auditScale
 
     - **asid**: ID
@@ -6395,20 +6271,19 @@
       - 类型: *Short*
     - **status**: 状态 , 0: 初始 , 1: 已付款 , 2: 退款
       - 类型: *Short*
-    
-    ### <I> pageAudit
+
+    ### `pageAudit` <span style="color:gray">[内部]</span>
 
         分页方式通过装修单号获取审批信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 审批信息列表 , 每条数据类型 *backVisit*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  审批信息列表 , 每条数据类型 *backVisit*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6457,23 +6332,23 @@
                                 "houseType": 0,
                                 "houseClass": "二手",
                                 "resourceType": 0,
-                                
+
                                 "notSalesmanRate": 30,
                                 "versionId": null,
                                 "versionName": null,
                                 "discount": 10,
-                                
+
                                 "presignPrice": 50,
                                 "signPrice": 10000,
                                 "quotationPrice": 10000,
                                 "factPrice": 10000,
-                                
+
                                 "createTime": "2016-01-01",
                                 "measureTime": null,
                                 "depositTime": null,
                                 "signTime": null,
                                 "presignTime": null,
-                                
+
                                 "status": 0,
                                 "designStatus": 0,
                                 "projectStatus": 0,
@@ -6481,7 +6356,7 @@
                                 "repairStatus": 0,
                                 "balanceStatus": 0,
                                 "otherStatus": 0,
-                                
+
                                 "creater": {
                                     "uid": 1,
                                     "userId": "U0203",
@@ -6510,7 +6385,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部"
@@ -6529,32 +6404,30 @@
                 },
                 ...
             }
-            
-    ### <I> applyAudit
+
+    ### `applyAudit` <span style="color:gray">[内部]</span>
 
         申请审批 , 审批记录没有审批人归属 , 进行审批人分配
-        
+
         判断审批信息是否存在 , 不存在 , 错误信息 **140044 审批记录不存在**
-        
+
         审批信息归属审批人已经存在 , 错误信息 **140048 审核人已存在**
-        
-                |Requests:|
-                :param audit.aid: ID
-        :type audit.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **audit.aid**:
+  ID
+
+        **示例**:{
                 "audit.aid": 1
             }
-            
-                |Returns:|
-                - **auditRecords**: 审核记录信息列表 , 每条数据类型 *auditRecord*
+
+**返回参数**:
+
+- **auditRecords**: 审核记录信息列表 , 每条数据类型 *auditRecord*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "auditRecords": [
                     {
@@ -6576,28 +6449,26 @@
                 ],
                 ...
             }
-    
-    ### <I> queryAuditRecordByOrderId
+
+    ### `queryAuditRecordByOrderId` <span style="color:gray">[内部]</span>
 
         通过审核信息ID获取审核信息
-        
-                |Requests:|
-                :param audit.decoration.orderId: 装修单号
-        :type audit.decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **audit.decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "audit.decoration.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **auditRecords**: 审核记录信息列表 , 每条数据类型 *auditRecord*
+
+**返回参数**:
+
+- **auditRecords**: 审核记录信息列表 , 每条数据类型 *auditRecord*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "auditRecords": [
                     {
@@ -6619,88 +6490,84 @@
                 ],
                 ...
             }
-            
-    ### <I> addAuditRecord
+
+    ### `addAuditRecord` <span style="color:gray">[内部]</span>
 
         添加审批记录信息
-        
+
         判断审批信息是否存在 , 不存在 , 错误信息 **140044 审批记录不存在**
-    
-                |Requests:|
-                :param auditRecord.aid: ID
-        :type auditRecord.aid: Long
-        :param auditRecord.unitprice: 单价
-        :type auditRecord.unitprice: Integer
-        :param auditRecord.num: 数量
-        :type auditRecord.num: Integer
-        :param auditRecord.discount: 折扣
-        :type auditRecord.discount: Integer
-        :param auditRecord.comment: 说明
-        :type auditRecord.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **auditRecord.aid**:
+  ID
+        - **auditRecord.unitprice**:
+  单价
+        - **auditRecord.num**:
+  数量
+        - **auditRecord.discount**:
+  折扣
+        - **auditRecord.comment**:
+  说明
+
+        **示例**:{
                 "auditRecord.aid": 1,
                 "auditRecord.unitprice":10000,
                 "auditRecord.num": 10,
                 "auditRecord.discount": 0.9,
                 "auditRecord.comment": "说明"
             }
-                
-    ### <I> updateAuditRecord
+
+    ### `updateAuditRecord` <span style="color:gray">[内部]</span>
 
         更新审批记录信息
-        
+
         操作审批记录信息不存在 , 错误信息 **140044 审批记录不存在**
-        
+
         判断审批信息状态 , 0(初始)之外的其他状态不可修改 , 错误信息 **140045 审批记录状态不可操作**
-        
+
         判断操作审批信息是否拥有审批比例信息 , 存在不可更新 , 错误信息 **140045 审批记录状态不可操作**
-        
-                |Requests:|
-                :param auditRecord.arid: ID
-        :type auditRecord.arid: Long
-        :param auditRecord.unitprice: 单价
-        :type auditRecord.unitprice: Integer
-        :param auditRecord.num: 数量
-        :type auditRecord.num: Integer
-        :param auditRecord.discount: 折扣
-        :type auditRecord.discount: Integer
-        :param auditRecord.comment: 说明
-        :type auditRecord.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **auditRecord.arid**:
+  ID
+        - **auditRecord.unitprice**:
+  单价
+        - **auditRecord.num**:
+  数量
+        - **auditRecord.discount**:
+  折扣
+        - **auditRecord.comment**:
+  说明
+
+        **示例**:{
                 "auditRecord.arid": 1,
                 "auditRecord.unitprice":10000,
                 "auditRecord.num": 10,
                 "auditRecord.discount": 0.9,
                 "auditRecord.comment": "说明"
             }
-            
-    ### <I> queryAuditScaleByArid
+
+    ### `queryAuditScaleByArid` <span style="color:gray">[内部]</span>
 
         通过审批信息ID获取审批比例信息
-        
-                |Requests:|
-                :param auditRecord.arid: ID
-        :type auditRecord.arid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **auditRecord.arid**:
+  ID
+
+        **示例**:{
                 "auditRecord.arid": 1
             }
-        
-                |Returns:|
-                - **auditScales**: 审核比例信息列表 , 每条数据类型 *auditScale*
+
+**返回参数**:
+
+- **auditScales**: 审核比例信息列表 , 每条数据类型 *auditScale*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "auditScales": [
                     {
@@ -6741,91 +6608,88 @@
                 ],
                 ...
             }
-        
-    ### <I> makeAuditScale
+
+    ### `makeAuditScale` <span style="color:gray">[内部]</span>
 
         按照规则生成审批比例信息
-        
+
         生成规则为归属装修单中的默认设计师以及设计师所在部门经理 , 比例为9:1方式才分审批信息中的金额
-        
+
         判断归属审批信息状态 , 0(初始)之外的其他状态不可修改 , 错误信息 **140046 审批比例生成失败**
-        
-                |Requests:|
-                :param auditRecord.arid: ID
-        :type auditRecord.arid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **auditRecord.arid**:
+  ID
+
+        **示例**:{
                 "auditRecord.arid": 1
             }
-            
-    ### <I> addAuditScale
+
+    ### `addAuditScale` <span style="color:gray">[内部]</span>
 
         添加审核比例信息
-        
+
         判断审批记录是否存在 , 不存在 , 错误信息 **140044 审核记录不存在**
-        
-                |Requests:|
-                :param auditScale.arid: ID
-        :type auditScale.arid: Long
-        :param auditScale.belonger.userId: 归属人编号
-        :type auditScale.belonger.userId: String
-        :param auditScale.money: 金额
-        :type auditScale.money: Long
-        :param auditScale.type: 类型
-        :type auditScale.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **auditScale.arid**:
+  ID
+        - **auditScale.belonger.userId**:
+  归属人编号
+        - **auditScale.money**:
+  金额
+        - **auditScale.type**:
+  类型
+
+        **示例**:{
                 "auditScale.arid": 1,
                 "auditScale.belonger.userId": "U001",
                 "auditScale.money": 10000,
                 "auditScale.type": 0,
             }
-            
-    ### <I> updateAuditScaleForStatus
+
+    ### `updateAuditScaleForStatus` <span style="color:gray">[内部]</span>
 
         更新审核比例信息状态
-        
+
         判断审核比例信息状态 , 0(初始)之外的其他状态不可修改 , 错误信息 **140047 审批比例信息状态不可操作**
-        
-                |Requests:|
-                :param auditScale.asid: ID
-        :type auditScale.asid: Long
-        :param auditScale.status: 状态
-        :type auditScale.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **auditScale.asid**:
+  ID
+        - **auditScale.status**:
+  状态
+
+        **示例**:{
                 "auditScale.asid": 1,
                 "auditScale.status": 0,
             }
-            
-    ### <I> deleteAuditScale
+
+    ### `deleteAuditScale` <span style="color:gray">[内部]</span>
 
         删除审核比例信息
-        
+
         判断审核比例信息状态 , 0(初始)之外的其他状态不可修改 , 错误信息 **140047 审批比例信息状态不可操作**
-        
-                |Requests:|
-                :param auditScale.asid: ID
-        :type auditScale.asid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **auditScale.asid**:
+  ID
+
+        **示例**:{
                 "auditScale.asid": 1
             }
-            
+
 ## 结算
 
 ## api.decoration.decorationBalanceAction
 
-        |DataType:|
-        #### decorationBalance
+**数据类型**:
+
+#### decorationBalance
 
     - **dbid**: 结算ID
       - 类型: *Long*
@@ -6837,20 +6701,19 @@
       - 类型: *Object*
     - **balanceTime**: 结算时间
       - 类型: *Timestamp*
-    
-    ### <I> pageDecorationForBalance
+
+    ### `pageDecorationForBalance` <span style="color:gray">[内部]</span>
 
         分页方式获取装修结算信息 , 通过装修结算信息关联 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 装修单信息列表 , 每条数据类型 *decoration*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修单信息列表 , 每条数据类型 *decoration*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6901,7 +6764,7 @@
                             "depositTime": null,
                             "signTime": null,
                             "presignTime": null,
-                            
+
                             "status": 0,
                             "designStatus": 0,
                             "projectStatus": 0,
@@ -6922,28 +6785,26 @@
                     ]
                 }
             }
-    
-    ### <I> queryDecorationBalance
+
+    ### `queryDecorationBalance` <span style="color:gray">[内部]</span>
 
         通过装修单号查询结算信息
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decoration.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationBalance**: 结算信息 , 类型 *decorationBalance*
+
+**返回参数**:
+
+- **decorationBalance**: 结算信息 , 类型 *decorationBalance*
           - 类型: *Object*
-            
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationBalance": {
                     "dbid": 1,
@@ -6993,7 +6854,7 @@
                         "depositTime": null,
                         "signTime": null,
                         "presignTime": null,
-                        
+
                         "status": 0,
                         "designStatus": 0,
                         "projectStatus": 0,
@@ -7013,34 +6874,34 @@
                     }
                 }
             }
-            
-    ### <I> makeDecorationBalance
+
+    ### `makeDecorationBalance` <span style="color:gray">[内部]</span>
 
         生成结算信息
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修结算信息是否存在 , 存在更新结算值 , 不存在创建结算信息
-        
-                |Requests:|
-                :param decorationBalance.decoration.orderId: 装修单号
-        :type decorationBalance.decoration.orderId: String
-        :param decorationBalance.balance: 结算额
-        :type decorationBalance.balance: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationBalance.decoration.orderId**:
+  装修单号
+        - **decorationBalance.balance**:
+  结算额
+
+        **示例**:{
                 "decorationBalance.decoration.orderId": "1601010001",
                 "decorationBalance.balance": 10000
             }
-            
+
 ## 功能
 
 ## api.decoration.DecorationFunctionAction
 
-        |DataType:|
-        #### decorationFunction
+**数据类型**:
+
+#### decorationFunction
 
     - **dfid**: 功能ID
       - 类型: *Long*
@@ -7061,27 +6922,25 @@
     - **sort**: 排序
       - 类型: *Short*
 
-    ### <I> queryDecorationFunction
+    ### `queryDecorationFunction` <span style="color:gray">[内部]</span>
 
         获取装修功能信息
-    
-                |Requests:|
-                :param decorationFunction.type: 类型
-        :type decorationFunction.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationFunction.type**:
+  类型
+
+        **示例**:{
                 "decorationFunction.type": 0
             }
-            
-                |Returns:|
-                - **decorationFunctions**: 功能信息列表 , 类型 *decorationFunction*
+
+**返回参数**:
+
+- **decorationFunctions**: 功能信息列表 , 类型 *decorationFunction*
           - 类型: *List*
-            
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationFunctions": [
                     {
@@ -7097,28 +6956,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryDecorationFunctionByName
+
+    ### `queryDecorationFunctionByName` <span style="color:gray">[内部]</span>
 
         通过名称获取装修功能信息
-    
-                |Requests:|
-                :param decorationFunction.name: 名称
-        :type decorationFunction.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationFunction.name**:
+  名称
+
+        **示例**:{
                 "decorationFunction.name": "designer"
             }
-            
-                |Returns:|
-                - **decorationFunctions**: 结算信息 , 类型 *decorationFunction*
+
+**返回参数**:
+
+- **decorationFunctions**: 结算信息 , 类型 *decorationFunction*
           - 类型: *Object*
-            
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationFunctions": [
                     {

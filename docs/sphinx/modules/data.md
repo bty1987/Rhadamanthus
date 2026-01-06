@@ -1,14 +1,13 @@
-# data {#data}
-
-# 数据
+# data 数据
 ## 楼盘
 
 楼盘信息管理
 
 ## api.communion.VillageAction
 
-        |DataType:|
-        #### village
+**数据类型**:
+
+#### village
 
     - **vid**: 楼盘ID
       - 类型: *Long*
@@ -38,27 +37,26 @@
       - 类型: *String*
     - **status**: 状态 , 0: 禁用 , 1: 启用
       - 类型: *Short*
-    
+
     #### keyValue
 
     - **key**: 键
       - 类型: *String*
     - **value**: 值
       - 类型: *String*
-    
-    ### <I> pageVillage
+
+    ### `pageVillage` <span style="color:gray">[内部]</span>
 
         分页方式获取楼盘信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-    
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 楼盘信息列表 , 每条数据类型 *village*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  楼盘信息列表 , 每条数据类型 *village*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -97,28 +95,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryVillageByVid
+
+    ### `queryVillageByVid` <span style="color:gray">[内部]</span>
 
         通过楼盘ID获取楼盘信息
-        
-                |Requests:|
-                :param village.vid: 楼盘ID
-        :type village.vid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **village.vid**:
+  楼盘ID
+
+        **示例**:{
                 "village.vid": 1
             }
-            
-                |Returns:|
-                - **vilalge**: 楼盘信息 , 类型 *village*
+
+**返回参数**:
+
+- **vilalge**: 楼盘信息 , 类型 *village*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "village": {
                     "vid": 6,
@@ -145,30 +141,28 @@
                 }
                 ...
             }
-            
-    ### <I> queryVillageForNameByPinyin
+
+    ### `queryVillageForNameByPinyin` <span style="color:gray">[内部]</span>
 
         通过拼音信息获取楼盘名称信息
-        
-                |Requests:|
-                - **pinyinName**: 楼盘名拼音
+
+**请求参数**:
+
+- **pinyinName**: 楼盘名拼音
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "pinyinName": "wd"
             }
-            
-                |Returns:|
-                - **autoFillKeyValue**: 键值列表 , 每条数据类型 *keyValue* , 键为楼盘编号 , 值为楼盘名
+
+**返回参数**:
+
+- **autoFillKeyValue**: 键值列表 , 每条数据类型 *keyValue* , 键为楼盘编号 , 值为楼盘名
           - 类型: *List*
         - **autoFillList**: 楼盘名列表 , 每条数据类型String
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "autoFillKeyValue": [
                     {
@@ -181,34 +175,33 @@
                 ],
                 ...
             }
-            
-    ### <C> addVillage
+
+    ### `addVillage` <span style="color:blue">[自定义]</span>
 
         添加楼盘信息
-        
+
         根据楼盘名以及所在城区判断是否已经存在 , 已存在 , 错误信息 **130020 楼盘已存在**
-        
-                |Requests:|
-                :param village.name: 楼盘名称
-        :type village.name: String
-        :param village.no: 城区编号
-        :type village.no: String
-        :param village.developer: 开发商
-        :type village.developer: String
-        :param village.salesPhone: 销售电话
-        :type village.salesPhone: String
-        :param village.deliveryTime: 开盘时间
-        :type village.deliveryTime: String
-        :param village.content: 说明
-        :type village.content: String
-        :param village.x: 经度
-        :type village.x: Integer
-        :param village.y: 纬度
-        :type village.y: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **village.name**:
+  楼盘名称
+        - **village.no**:
+  城区编号
+        - **village.developer**:
+  开发商
+        - **village.salesPhone**:
+  销售电话
+        - **village.deliveryTime**:
+  开盘时间
+        - **village.content**:
+  说明
+        - **village.x**:
+  经度
+        - **village.y**:
+  纬度
+
+        **示例**:{
                 "village.name": "广场一期",
                 "village.no": "CP001",
                 "village.developer": "222",
@@ -218,38 +211,37 @@
                 "village.y": 0,
                 "village.content": "",
             }
-            
-    ### <C> updateVillage
+
+    ### `updateVillage` <span style="color:blue">[自定义]</span>
 
         更新楼盘信息
-        
+
         判断楼盘信息是否存在 , 不存在 , 错误信息 **130003 楼盘信息不存在**
-        
+
         根据楼盘名以及所在城区判断是否已经存在 , 已存在 , 错误信息 **130020 楼盘已存在**
-        
-                |Requests:|
-                :param village.vid: 楼盘ID
-        :type village.vid: String
-        :param village.name: 楼盘名称
-        :type village.name: String
-        :param village.cityProper.cpid: 城区ID
-        :type village.cityProper.cpid: String
-        :param village.developer: 开发商
-        :type village.developer: String
-        :param village.salesPhone: 销售电话
-        :type village.salesPhone: String
-        :param village.deliveryTime: 开盘时间
-        :type village.deliveryTime: String
-        :param village.content: 说明
-        :type village.content: String
-        :param village.x: 经度
-        :type village.x: Integer
-        :param village.y: 纬度
-        :type village.y: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **village.vid**:
+  楼盘ID
+        - **village.name**:
+  楼盘名称
+        - **village.cityProper.cpid**:
+  城区ID
+        - **village.developer**:
+  开发商
+        - **village.salesPhone**:
+  销售电话
+        - **village.deliveryTime**:
+  开盘时间
+        - **village.content**:
+  说明
+        - **village.x**:
+  经度
+        - **village.y**:
+  纬度
+
+        **示例**:{
                 "village.vid": 1,
                 "village.name": "广场一期",
                 "village.cityProper.cpid": 1,
@@ -260,74 +252,72 @@
                 "village.y": 0,
                 "village.content": "",
             }
-            
-    ### <C> updateVillageForStatus
+
+    ### `updateVillageForStatus` <span style="color:blue">[自定义]</span>
 
         更新楼盘状态 , 启用禁用
-        
+
         判断楼盘信息是否存在 , 不存在 , 错误信息 **130003 楼盘信息不存在**
-    
-                |Requests:|
-                :param village.vid: 楼盘ID
-        :type village.vid: Long
-        :param village.status: 状态 , 0: 禁用 , 1: 启用
-        :type village.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **village.vid**:
+  楼盘ID
+        - **village.status**:
+  状态 , 0: 禁用 , 1: 启用
+
+        **示例**:{
                 "village.vid": 1,
                 "village.status": 0
             }
-            
-    ### <C> updateVillageForPosition
+
+    ### `updateVillageForPosition` <span style="color:blue">[自定义]</span>
 
         更新楼盘位置信息
-        
+
         判断楼盘信息是否存在 , 不存在 , 错误信息 **130003 楼盘信息不存在**
-        
-                |Requests:|
-                :param village.vid: 楼盘ID
-        :type village.vid: Long
-        :param village.x: 横坐标
-        :type village.x: Integer
-        :param village.y: 纵坐标
-        :type village.y: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **village.vid**:
+  楼盘ID
+        - **village.x**:
+  横坐标
+        - **village.y**:
+  纵坐标
+
+        **示例**:{
                 "village.vid": 1,
                 "village.x": 0,
                 "village.y": 0
             }
-    
-    ### <C> updateVillageForUrl
+
+    ### `updateVillageForUrl` <span style="color:blue">[自定义]</span>
 
         更新楼盘默认图片
-        
+
         判断楼盘信息是否存在 , 不存在 , 错误信息 **130003 楼盘信息不存在**
-        
-                |Requests:|
-                :param village.vid: 楼盘ID
-        :type village.vid: Long
-        :param village.url: 默认图片
-        :type village.url: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **village.vid**:
+  楼盘ID
+        - **village.url**:
+  默认图片
+
+        **示例**:{
                 "village.vid": 1,
                 "village.url": "/JSIODFNSNDF.JPG"
             }
 
-            
+
 ## 规则
 
 ## api.communion.VillageRuleAction
 
-        |DataType:|
-        #### villageRule
+**数据类型**:
+
+#### villageRule
 
     - **vrid**: 规则ID
       - 类型: *Long*
@@ -335,19 +325,20 @@
       - 类型: *Long*
     - **rule**: 规则 , [buildingNameRule](./data.html#api.data.BuildingNameRuleAction.buildingNameRule)
       - 类型: *Object*
-    
-    ### <I> queryVillageRule
 
-    ### <I> addVillageRule
+    ### `queryVillageRule` <span style="color:gray">[内部]</span>
 
-    ### <I> deleteVillageRule
+    ### `addVillageRule` <span style="color:gray">[内部]</span>
+
+    ### `deleteVillageRule` <span style="color:gray">[内部]</span>
 
 ## 户型
 
 ## api.communion.HouseLayoutAction
 
-        |DataType:|
-        #### houseLayout
+**数据类型**:
+
+#### houseLayout
 
     - **hlid**: 户型ID
       - 类型: *Long*
@@ -363,20 +354,19 @@
       - 类型: *String*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pageHouseLayout
+
+    ### `pageHouseLayout` <span style="color:gray">[内部]</span>
 
         分页方式获取户型信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-    
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 户型信息列表 , 每条数据类型 *houseLayout*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  户型信息列表 , 每条数据类型 *houseLayout*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -399,28 +389,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryHouseLayout
+
+    ### `queryHouseLayout` <span style="color:gray">[内部]</span>
 
         根据楼盘ID获取户型信息
-        
-                |Requests:|
-                :param houseLayout.vid: 楼盘ID
-        :type houseLayout.vid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **houseLayout.vid**:
+  楼盘ID
+
+        **示例**:{
                 "houseLayout.vid": 1
             }
-        
-                |Returns:|
-                - **houseLayouts**: 户型信息列表 , 每条数据类型 *houseLayout*
+
+**返回参数**:
+
+- **houseLayouts**: 户型信息列表 , 每条数据类型 *houseLayout*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "houseLayouts": [
                     {
@@ -439,28 +427,27 @@
                 ],
                 ...
             }
-            
-    ### <I> addHouseLayout
+
+    ### `addHouseLayout` <span style="color:gray">[内部]</span>
 
         添加户型信息
-        
-                |Requests:|
-                :param houseLayout.name: 名称
-        :type houseLayout.name: String
-        :param houseLayout.village.vid: 楼盘ID
+
+**请求参数**:
+
+- **houseLayout.name**:
+  名称
+        - **houseLayout.village.vid**:楼盘ID
         :tyoe houseLayout.village.vid: Long
-        :param houseLayout.layout: 房型
-        :type houseLayout.layout: String
-        :param houseLayout.area: 面积
-        :type houseLayout.area: Long
-        :param houseLayout.houseType: 类型
-        :type houseLayout.houseType: Long
-        :param houseLayout.comment: 备注
-        :type houseLayout.comment: String
-        
-        Example::
-        
-            {
+        - **houseLayout.layout**:
+  房型
+        - **houseLayout.area**:
+  面积
+        - **houseLayout.houseType**:
+  类型
+        - **houseLayout.comment**:
+  备注
+
+        **示例**:{
                 "houseLayout.name": "名称",
                 "houseLayout.village.vid": 1,
                 "houseLayout.layout": "",
@@ -468,18 +455,17 @@
                 "houseLayout.houseType": "",
                 "houseLayout.comment": "说明",
             }
-            
-    ### <C> deleteHouseLayout
+
+    ### `deleteHouseLayout` <span style="color:blue">[自定义]</span>
 
         删除户型信息
-        
-                |Requests:|
-                :param houseLayout.hlid: 户型ID
-        :type houseLayout.hlid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **houseLayout.hlid**:
+  户型ID
+
+        **示例**:{
                 "houseLayout.hlid": 1
             }
 
@@ -487,8 +473,9 @@
 
 ## api.communion.HouseAction
 
-        |DataType:|
-        #### house
+**数据类型**:
+
+#### house
 
     - **hid**: 房产ID
       - 类型: *Long*
@@ -536,20 +523,19 @@
       - 类型: *Short*
     - **status**: 状态 , 包括: 0(初始)
       - 类型: *Short*
-    
-    ### <I> pageHouse
+
+    ### `pageHouse` <span style="color:gray">[内部]</span>
 
         分页方式获取房产信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 房产信息列表 , 每条数据类型 *house*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  房产信息列表 , 每条数据类型 *house*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -587,28 +573,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryHouseByHid
+
+    ### `queryHouseByHid` <span style="color:gray">[内部]</span>
 
         根据房产ID获取房产信息
-        
-                |Requests:|
-                :param house.hid: 房产ID
-        :type house.hid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **house.hid**:
+  房产ID
+
+        **示例**:{
                 "house.hid": 1
             }
-        
-                |Returns:|
-                - **houses**: 房产信息列表 , 每条数据类型 *house*
+
+**返回参数**:
+
+- **houses**: 房产信息列表 , 每条数据类型 *house*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "data": [
                     {
@@ -642,31 +626,29 @@
                 ],
                 ...
             }
-            
-    ### <I> queryHouseByNoAHnum
+
+    ### `queryHouseByNoAHnum` <span style="color:gray">[内部]</span>
 
         通过楼盘编号以及楼牌号查询房产信息
-        
-                |Requests:|
-                :param house.village.no: 楼盘编号
-        :type house.village.no: String
-        :param house.houseNumber: 楼牌号
-        :type house.houseNumber: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **house.village.no**:
+  楼盘编号
+        - **house.houseNumber**:
+  楼牌号
+
+        **示例**:{
                 "house.village.no": "P001",
                 "house.houseNumber": "1#1-1-1"
             }
-            
-                |Returns:|
-                - **houses**: 房产信息列表 , 每条数据类型 *house*
+
+**返回参数**:
+
+- **houses**: 房产信息列表 , 每条数据类型 *house*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "data": [
                     {
@@ -700,58 +682,57 @@
                 ],
                 ...
             }
-            
-    ### <C> addHouse
+
+    ### `addHouse` <span style="color:blue">[自定义]</span>
 
         添加房产信息
-        
+
         判断楼盘号是否存在 , 错误信息 **320001 楼牌号已存在**
-        
-                |Requests:|
-                :param house.village.vid: 楼盘ID
-        :type house.village.vid: Long
-        :param house.houseNumber: 楼牌号
-        :type house.houseNumber: String
-        :param house.built: 楼号
-        :type house.built: Integer
-        :param house.unit: 单元
-        :type house.unit: Integer
-        :param house.floor: 楼层
-        :type house.floor: Integer
-        :param house.door: 门号
-        :type house.door: Integer
-        :param house.type: 房产类型
-        :type house.type: Short
-        :param house.buildArea: 建筑面积
-        :type house.buildArea: Integer
-        :param house.freeArea: 赠送面积
-        :type house.freeArea: Integer
-        :param house.innerArea: 套内面积
-        :type house.innerArea: Integer
-        :param house.totalArea: 总面积
-        :type house.totalArea: Integer
-        :param house.maxFloor: 最高楼层
-        :type house.maxFloor: Short
-        :param house.through: 是否越层
-        :type house.through: Short
-        :param house.roomNum: 房间数量
-        :type house.roomNum: Integer
-        :param house.houseType: 户型
-        :type house.houseType: String
-        :param house.orientation: 房屋朝向
-        :type house.orientation: Short
-        :param house.feature: 三不
-        :type house.feature: String
-        :param house.waterVapour: 水气设施
-        :type house.waterVapour: Short
-        :param house.parlourType: 客厅类型
-        :type house.parlourType: Short
-        :param house.heatingType: 供暖类型
-        :type house.heatingType: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **house.village.vid**:
+  楼盘ID
+        - **house.houseNumber**:
+  楼牌号
+        - **house.built**:
+  楼号
+        - **house.unit**:
+  单元
+        - **house.floor**:
+  楼层
+        - **house.door**:
+  门号
+        - **house.type**:
+  房产类型
+        - **house.buildArea**:
+  建筑面积
+        - **house.freeArea**:
+  赠送面积
+        - **house.innerArea**:
+  套内面积
+        - **house.totalArea**:
+  总面积
+        - **house.maxFloor**:
+  最高楼层
+        - **house.through**:
+  是否越层
+        - **house.roomNum**:
+  房间数量
+        - **house.houseType**:
+  户型
+        - **house.orientation**:
+  房屋朝向
+        - **house.feature**:
+  三不
+        - **house.waterVapour**:
+  水气设施
+        - **house.parlourType**:
+  客厅类型
+        - **house.heatingType**:
+  供暖类型
+
+        **示例**:{
                 "house.village.vid": 2,
                 "house.houseNumber": "1#1-1-1",
                 "house.built": 1,
@@ -774,35 +755,34 @@
                 "house.heatingType": 0
             }
 
-    ### <I> existHouse
+    ### `existHouse` <span style="color:gray">[内部]</span>
 
         通过楼盘ID和楼号判断房产信息 , 不存在创建 , 存在返回房产信息
-        
-                |Requests:|
-                :param house.village.vid: 楼盘ID
-        :type house.village.vid: Long
-        :param house.houseNumber: 楼牌号
-        :type house.houseNumber: String
-        :param house.buildArea: 建筑面积
-        :type house.buildArea: Integer
-        :param house.freeArea: 赠送面积
-        :type house.freeArea: Integer
-        :param house.innerArea: 套内面积
-        :type house.innerArea: Integer
-        :param house.totalArea: 总面积
-        :type house.totalArea: Integer
-        :param house.built: 楼号
-        :type house.built: Integer
-        :param house.unit: 单元
-        :type house.unit: Integer
-        :param house.floor: 楼层
-        :type house.floor: Integer
-        :param house.door: 门号
-        :type house.door: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **house.village.vid**:
+  楼盘ID
+        - **house.houseNumber**:
+  楼牌号
+        - **house.buildArea**:
+  建筑面积
+        - **house.freeArea**:
+  赠送面积
+        - **house.innerArea**:
+  套内面积
+        - **house.totalArea**:
+  总面积
+        - **house.built**:
+  楼号
+        - **house.unit**:
+  单元
+        - **house.floor**:
+  楼层
+        - **house.door**:
+  门号
+
+        **示例**:{
                 "house.village.vid": 2,
                 "house.houseNumber": "1#1-1-1",
                 "house.buildArea": 100000,
@@ -815,47 +795,46 @@
                 "house.door": 1
             }
 
-    ### <C> updateHouse
+    ### `updateHouse` <span style="color:blue">[自定义]</span>
 
         更新房产信息
-        
+
         判断房产是否存在 , 错误信息 **320002 房产不存在**
-        
+
         判断房产状态是否为已出售 , 已出售房产状态不可操作 , 错误信息 **320003 房产状态不可操作**
-		
-                |Requests:|
-                :param house.hid: 房产ID
-        :type house.hid: 1
-        :param house.buildArea: 建筑面积
-        :type house.buildArea: Integer
-        :param house.freeArea: 赠送面积
-        :type house.freeArea: Integer
-        :param house.innerArea: 套内面积
-        :type house.innerArea: Integer
-        :param house.totalArea: 总面积
-        :type house.totalArea: Integer
-        :param house.maxFloor: 最高楼层
-        :type house.maxFloor: Short
-        :param house.through: 是否越层
-        :type house.through: Short
-        :param house.roomNum: 房间数量
-        :type house.roomNum: Integer
-        :param house.houseType: 户型
-        :type house.houseType: String
-        :param house.orientation: 房屋朝向
-        :type house.orientation: Short
-        :param house.feature: 三不
-        :type house.feature: String
-        :param house.waterVapour: 水气设施
-        :type house.waterVapour: Short
-        :param house.parlourType: 客厅类型
-        :type house.parlourType: Short
-        :param house.heatingType: 供暖类型
-        :type house.heatingType: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **house.hid**:
+  房产ID
+        - **house.buildArea**:
+  建筑面积
+        - **house.freeArea**:
+  赠送面积
+        - **house.innerArea**:
+  套内面积
+        - **house.totalArea**:
+  总面积
+        - **house.maxFloor**:
+  最高楼层
+        - **house.through**:
+  是否越层
+        - **house.roomNum**:
+  房间数量
+        - **house.houseType**:
+  户型
+        - **house.orientation**:
+  房屋朝向
+        - **house.feature**:
+  三不
+        - **house.waterVapour**:
+  水气设施
+        - **house.parlourType**:
+  客厅类型
+        - **house.heatingType**:
+  供暖类型
+
+        **示例**:{
                 "house.hid": 1,
                 "house.buildArea": 88.6,
                 "house.freeArea": 0,
@@ -871,32 +850,32 @@
                 "house.parlourType": 0,
                 "house.heatingType": 0
             }
-            
-    ### <C> updateHouseForStatus
+
+    ### `updateHouseForStatus` <span style="color:blue">[自定义]</span>
 
         更新房产信息状态
-        
-                |Requests:|
-                :param house.hid: 房产ID
-        :type house.hid: Long
-        :param house.status: 状态
-        :type house.status: 1
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **house.hid**:
+  房产ID
+        - **house.status**:
+  状态
+
+        **示例**:{
                 "house.hid": 1
                 "house.status": 1
             }
-            
+
 ## 基础
 
 ### 常量
 
 ## api.communion.ConstantAction
 
-        |DataType:|
-        #### constant
+**数据类型**:
+
+#### constant
 
     - **cid**: 常量ID
       - 类型: *Long*
@@ -916,20 +895,19 @@
       - 类型: *String*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
-    ### <C> pageConstant
+
+    ### `pageConstant` <span style="color:blue">[自定义]</span>
 
         分页方式获取常量信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 常量信息列表 , 每条数据类型 *constant*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  常量信息列表 , 每条数据类型 *constant*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -949,18 +927,17 @@
                 },
                 ...
             }
-    
-    ### <C> queryConstant
+
+    ### `queryConstant` <span style="color:blue">[自定义]</span>
 
         获取常量信息
-        
-                |Returns:|
-                - **constants**: 常量信息列表 , 每条数据类型 *constant*
+
+**返回参数**:
+
+- **constants**: 常量信息列表 , 每条数据类型 *constant*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constants": [
                     {
@@ -977,13 +954,13 @@
                 ...
             }
 
-    ### <C> addConstant
+    ### `addConstant` <span style="color:blue">[自定义]</span>
 
-    ### <C> updateConstant
+    ### `updateConstant` <span style="color:blue">[自定义]</span>
 
-    ### <C> updateConstantForStatus
+    ### `updateConstantForStatus` <span style="color:blue">[自定义]</span>
 
-    ### <C> deleteConstant
+    ### `deleteConstant` <span style="color:blue">[自定义]</span>
 
 ### 工种
 
@@ -991,25 +968,25 @@
 
 ## api.communion.WorkTypeAction
 
-        |DataType:|
-        #### workType
+**数据类型**:
+
+#### workType
 
     - **wtid**: 工种ID
       - 类型: *Long*
     - **name**: 工种名称
       - 类型: *String*
-    
-    ### <I> queryWorkType
+
+    ### `queryWorkType` <span style="color:gray">[内部]</span>
 
         获取所有工种信息
-        
-                |Returns:|
-                - **workTypes**: 工种信息列表 , 每条数据类型 *workType*
+
+**返回参数**:
+
+- **workTypes**: 工种信息列表 , 每条数据类型 *workType*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "workTypes": [
                     {
@@ -1026,27 +1003,27 @@
 
 ## api.communion.MeasurementUnitAction
 
-        |DataType:|
-        #### measurementUnit
+**数据类型**:
+
+#### measurementUnit
 
     - **muid**: 单位ID
       - 类型: *Long*
     - **name**: 单位名称
       - 类型: *String*
-    
-    ### <I> pageMeasurementUnit
+
+    ### `pageMeasurementUnit` <span style="color:gray">[内部]</span>
 
         分页方式获取单位信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 单位信息列表 , 每条数据类型 *measurementUnit*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  单位信息列表 , 每条数据类型 *measurementUnit*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1060,18 +1037,17 @@
                 },
                 ...
             }
-    
-    ### <I> queryMeasurementUnit
+
+    ### `queryMeasurementUnit` <span style="color:gray">[内部]</span>
 
         获取所有单位信息
-        
-                |Returns:|
-                - **measurementUnits**: 单位信息列表 , 每条数据类型 *measurementUnit*
+
+**返回参数**:
+
+- **measurementUnits**: 单位信息列表 , 每条数据类型 *measurementUnit*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "measurementUnits": [
                     {
@@ -1081,50 +1057,49 @@
                 ],
                 ...
             }
-            
-    ### <C> addMeasurementUnit
+
+    ### `addMeasurementUnit` <span style="color:blue">[自定义]</span>
 
         添加单位信息
-        
+
         判断单位名称是否存在,已经存在,错误信息 **130010 单位已存在**
-        
-                |Requests:|
-                :param measurementUnit.name: 名称
-        :type measurementUnit.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **measurementUnit.name**:
+  名称
+
+        **示例**:{
                 "measurementUnit.name": '个'
             }
-            
-    ### <C> updateMeasurementUnit
+
+    ### `updateMeasurementUnit` <span style="color:blue">[自定义]</span>
 
         编辑单位信息
-        
+
         判断单位名称是否存在,不存在,错误信息 **130011 单位不存在**
-        
-                |Requests:|
-                :param measurementUnit.muid: 单位ID
-        :type measurementUnit.muid: Long
-        :param measurementUnit.name: 名称
-        :type measurementUnit.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **measurementUnit.muid**:
+  单位ID
+        - **measurementUnit.name**:
+  名称
+
+        **示例**:{
                 "measurementUnit.muid": 1,
                 "measurementUnit.name": '个'
             }
-            
+
 ### 职位
 
 职位信息管理
 
 ## api.communion.DutyAction
 
-        |DataType:|
-        #### duty
+**数据类型**:
+
+#### duty
 
     - **did**: 职位ID
       - 类型: *Long*
@@ -1140,20 +1115,19 @@
       - 类型: *Short*
     - **lead**: 领导标识 , 0: 标准 , 1: 领导
       - 类型: *Short*
-    
-    ### <I> pageDuty
+
+    ### `pageDuty` <span style="color:gray">[内部]</span>
 
         分页方式获取职位信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 职位信息列表 , 每条数据类型 *duty*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  职位信息列表 , 每条数据类型 *duty*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1174,18 +1148,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryDuty
+
+    ### `queryDuty` <span style="color:gray">[内部]</span>
 
         获取职位信息 , 职位状态为启用
-        
-                |Returns:|
-                - **dutys**: 职位列表 , 每条数据类型 *duty*
+
+**返回参数**:
+
+- **dutys**: 职位列表 , 每条数据类型 *duty*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "dutys": [
                     {
@@ -1202,30 +1175,28 @@
                 ...
             }
 
-    ### <I> queryDutyByName
+    ### `queryDutyByName` <span style="color:gray">[内部]</span>
 
         获取职位信息 , 通过拼音/名称作为条件匹配
-        
-                |Requests:|
-                - **pinyinName**: 拼音
+
+**请求参数**:
+
+- **pinyinName**: 拼音
           - 类型: *String*
-        :param duty.departmentType.dtid: 部门类型ID
-        :type duty.departmentType.dtid: Long
-        
-        Example::
-        
-            {
+        - **duty.departmentType.dtid**:
+  部门类型ID
+
+        **示例**:{
                 "pinyinName": "pinyin",
                 "duty.departmentType.dtid": 1
             }
-        
-                |Returns:|
-                - **dutys**: 职位列表 , 每条数据类型 *duty*
+
+**返回参数**:
+
+- **dutys**: 职位列表 , 每条数据类型 *duty*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "dutys": [
                     {
@@ -1241,28 +1212,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryDutyByDtid
+
+    ### `queryDutyByDtid` <span style="color:gray">[内部]</span>
 
         通过部门类型ID获取职位信息
-        
-                |Requests:|
-                :param duty.departmentType.dtid: 部门类型ID
-        :type duty.departmentType.dtid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **duty.departmentType.dtid**:
+  部门类型ID
+
+        **示例**:{
                 "duty.departmentType.dtid": 1
             }
-            
-                |Returns:|
-                - **dutys**: 职位列表 , 每条数据类型 *duty*
+
+**返回参数**:
+
+- **dutys**: 职位列表 , 每条数据类型 *duty*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "dutys": [
                     {
@@ -1278,71 +1247,68 @@
                 ],
                 ...
             }
-            
-    ### <C> addDuty
+
+    ### `addDuty` <span style="color:blue">[自定义]</span>
 
         添加职位信息
-        
-                |Requests:|
-                :param duty.name: 名称
-        :type duty.name: String
-        :param duty.lead: 领导标识
-        :type duty.lead: Short
-        :param duty.departmentType.dtid: 部门类型ID
-        :type duty.departmentType.dtid: Long
-        :param duty.type: 类型
-        :type duty.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **duty.name**:
+  名称
+        - **duty.lead**:
+  领导标识
+        - **duty.departmentType.dtid**:
+  部门类型ID
+        - **duty.type**:
+  类型
+
+        **示例**:{
                 "duty.name": "设计师",
                 "duty.lead": 0,
                 "duty.departmentType.dtid": 1,
                 "duty.type": 1
             }
-            
-    ### <C> updateDuty
+
+    ### `updateDuty` <span style="color:blue">[自定义]</span>
 
         更新职位信息
-        
+
         职位信息不存在 , 更新失败 , 错误信息 **130015 职位不存在**
-        
-                |Requests:|
-                :param duty.did: 职位ID
-        :type duty.did: Long
-        :param duty.name: 名称
-        :type duty.name: String
-        :param duty.lead: 领导标识
-        :type duty.lead: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **duty.did**:
+  职位ID
+        - **duty.name**:
+  名称
+        - **duty.lead**:
+  领导标识
+
+        **示例**:{
                 "duty.did": 1,
                 "duty.name": "设计师",
                 "duty.lead": 0,
                 "duty.departmentType.dtid": 1,
                 "duty.type": 1
             }
-            
-    ### <C> updateDutyForStatus
+
+    ### `updateDutyForStatus` <span style="color:blue">[自定义]</span>
 
         更新职位状态
-        
+
         职位信息不存在 , 更新失败 , 错误信息 **130015 职位不存在**
-        
-                |Requests:|
-                :param duty.did: 职位ID
-        :type duty.did: Long
-        :param duty.status: 状态
-        :type duty.status: Short
-        :param duty.lead: 领导标识
-        :type duty.lead: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **duty.did**:
+  职位ID
+        - **duty.status**:
+  状态
+        - **duty.lead**:
+  领导标识
+
+        **示例**:{
                 "duty.did": 1,
                 "duty.status": 0
             }
@@ -1353,8 +1319,9 @@
 
 ## api.communion.BuildingNameRuleAction
 
-        |DataType:|
-        #### buildingNameRule
+**数据类型**:
+
+#### buildingNameRule
 
     - **bnrid**: 规则ID
       - 类型: *Long*
@@ -1368,20 +1335,19 @@
       - 类型: *String*
     - **filling**: 填充方式
       - 类型: *String*
-    
-    ### <I> pageBuildingNameRule
+
+    ### `pageBuildingNameRule` <span style="color:gray">[内部]</span>
 
         分页方式获取楼号规则信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 楼号规则信息列表 , 每条数据类型 *buildingNameRule*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  楼号规则信息列表 , 每条数据类型 *buildingNameRule*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1399,18 +1365,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryBuildingNameRule
+
+    ### `queryBuildingNameRule` <span style="color:gray">[内部]</span>
 
         获取所有楼号规则信息
-    
-                |Returns:|
-                - **buildingNameRules**: 楼号规则列表 , 每条数据类型 *buildingNameRule*
+
+**返回参数**:
+
+- **buildingNameRules**: 楼号规则列表 , 每条数据类型 *buildingNameRule*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "buildingNameRules": [
                     {
@@ -1424,15 +1389,16 @@
                 ],
                 ...
             }
-            
+
 ### 外链
 
 外链页面信息管理
 
 ## api.data.ChainPageAction
 
-        |DataType:|
-        #### chainPage
+**数据类型**:
+
+#### chainPage
 
     - **cpid**: ID
       - 类型: *Long*
@@ -1445,17 +1411,16 @@
     - **comment**: 说明
       - 类型: *String*
 
-    ### <I> queryChainPage
+    ### `queryChainPage` <span style="color:gray">[内部]</span>
 
         获取外链页面信息
-        
-                |Returns:|
-                - **chainPages**: 外链信息列表 , 每条数据类型 *chainPage*
+
+**返回参数**:
+
+- **chainPages**: 外链信息列表 , 每条数据类型 *chainPage*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "chainPages": [
                     {
@@ -1468,64 +1433,61 @@
                 ],
                 ...
             }
-            
-    ### <I> queryChainPageForSelf
+
+    ### `queryChainPageForSelf` <span style="color:gray">[内部]</span>
 
         获取当前登录用户拥有外链
-        
-                |Requests:|
-                :param chainPage.name: 名称
-        :type chainPage.name: String
-        :param chainPage.url: 地址
-        :type chainPage.url: String
-        :param chainPage.comment: 说明
-        :type chainPage.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **chainPage.name**:
+  名称
+        - **chainPage.url**:
+  地址
+        - **chainPage.comment**:
+  说明
+
+        **示例**:{
                 "chainPage.name": "页面",
                 "chainPage.url": "http://api.com",
                 "chainPage.companymark": 1,
                 "chainPage.comment": "说明"
             }
-            
-    ### <I> addChainPage
+
+    ### `addChainPage` <span style="color:gray">[内部]</span>
 
         添加外链信息
-        
-                |Requests:|
-                :param chainPage.name: 名称
-        :type chainPage.name: String
-        :param chainPage.url: 地址
-        :type chainPage.url: String
-        :param chainPage.companymark: 公司标识
-        :type chainPage.companymark: Short
-        :param chainPage.comment: 说明
-        :type chainPage.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **chainPage.name**:
+  名称
+        - **chainPage.url**:
+  地址
+        - **chainPage.companymark**:
+  公司标识
+        - **chainPage.comment**:
+  说明
+
+        **示例**:{
                 "chainPage.name": "页面",
                 "chainPage.url": "http://api.com",
                 "chainPage.companymark": 1,
                 "chainPage.comment": "说明"
             }
-            
-    ### <I> deleteChainPage
+
+    ### `deleteChainPage` <span style="color:gray">[内部]</span>
 
         删除外链信息
-        
+
         外链已经被使用 , 删除失败 , 错误信息 **130013 外链已使用**
-        
-                |Requests:|
-                :param chainPage.cpid: ID
-        :type chainPage.cpid: Long
-         
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **chainPage.cpid**:
+  ID
+
+        **示例**:{
                 "chainPage.cpid": 1
             }
 
@@ -1533,8 +1495,9 @@
 
 ## api.communion.ServiceNodeAction
 
-        |DataType:|
-        #### serviceNode
+**数据类型**:
+
+#### serviceNode
 
     - **snid**: 服务节点ID
       - 类型: *Long*
@@ -1562,20 +1525,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageServiceNode
+
+    ### `pageServiceNode` <span style="color:gray">[内部]</span>
 
         分页方式获取服务节点信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 服务节点信息列表 , 每条数据类型 *serviceNode*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  服务节点信息列表 , 每条数据类型 *serviceNode*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1593,77 +1555,75 @@
                 },
                 ...
             }
-            
-    ### <C> addServiceNode
+
+    ### `addServiceNode` <span style="color:blue">[自定义]</span>
 
         添加服务节点信息
-        
-                |Requests:|
-                :param serviceNode.name: 名称
-        :type serviceNode.name: String
-        :param serviceNode.detail: 详述
-        :type serviceNode.detail: String
-        :param serviceNode.type: 类型
-        :type serviceNode.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **serviceNode.name**:
+  名称
+        - **serviceNode.detail**:
+  详述
+        - **serviceNode.type**:
+  类型
+
+        **示例**:{
                 "serviceNode.name": "报价",
                 "serviceNode.detail": "报价详述",
                 "serviceNode.type": 0
             }
-            
-    ### <C> updateServiceNode
+
+    ### `updateServiceNode` <span style="color:blue">[自定义]</span>
 
         更新服务节点信息
-        
+
         服务节点信息不存在 , 更新失败 , 错误信息 ** 服务节点不存在**
-        
-                |Requests:|
-                :param serviceNode.snid: 服务节点ID
-        :type serviceNode.snid: Long
-        :param serviceNode.name: 名称
-        :type serviceNode.name: String
-        :param serviceNode.detail: 详述
-        :type serviceNode.detail: String
-        :param serviceNode.type: 领导标识
-        :type serviceNode.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **serviceNode.snid**:
+  服务节点ID
+        - **serviceNode.name**:
+  名称
+        - **serviceNode.detail**:
+  详述
+        - **serviceNode.type**:
+  领导标识
+
+        **示例**:{
                 "serviceNode.snid": 1,
                 "serviceNode.name": "报价",
                 "serviceNode.detail": "报价详述",
                 "serviceNode.type": 1
             }
-            
-    ### <C> updateServiceNodeForStatus
+
+    ### `updateServiceNodeForStatus` <span style="color:blue">[自定义]</span>
 
         更新服务节点状态
-        
+
         服务节点信息不存在 , 更新失败 , 错误信息 ** 服务节点不存在**
-        
-                |Requests:|
-                :param serviceNode.snid: 职位ID
-        :type serviceNode.snid: Long
-        :param serviceNode.status: 状态
-        :type serviceNode.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **serviceNode.snid**:
+  职位ID
+        - **serviceNode.status**:
+  状态
+
+        **示例**:{
                 "serviceNode.snid": 1,
                 "serviceNode.status": 0
             }
-            
+
 ### 图表
 
 ## api.communion.ChartAction
 
-        |DataType:|
-        #### chart
+**数据类型**:
+
+#### chart
 
     - **cid**: 图表ID
       - 类型: *Long*
@@ -1689,20 +1649,19 @@
       - 类型: *Integer*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pageChart
+
+    ### `pageChart` <span style="color:gray">[内部]</span>
 
         分页方式获取图表信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 图表信息列表 , 每条数据类型 *chart*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  图表信息列表 , 每条数据类型 *chart*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1726,30 +1685,28 @@
                 },
                 ...
             }
-            
-    ### <I> queryChart
+
+    ### `queryChart` <span style="color:gray">[内部]</span>
 
         获取图表信息
-        
-                |Requests:|
-                :param chart.type: 类型
-        :type chart.type: Short
-        :param chart.level: 等级
-        :type chart.level: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **chart.type**:
+  类型
+        - **chart.level**:
+  等级
+
+        **示例**:{
                 "chart.type": 1
             }
-        
-                |Returns:|
-                - **charts**: 图表信息列表 , 每条数据类型 *chart*
+
+**返回参数**:
+
+- **charts**: 图表信息列表 , 每条数据类型 *chart*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "charts": [
                     {
                         "cid": 1,
@@ -1767,18 +1724,17 @@
                     }
                 ]
             }
-            
-    ### <I> queryChartForLogin
+
+    ### `queryChartForLogin` <span style="color:gray">[内部]</span>
 
         获取当前用户所属角色拥有的图表信息
-        
-                |Returns:|
-                - **charts**: 图表信息列表 , 每条数据类型 *chart*
+
+**返回参数**:
+
+- **charts**: 图表信息列表 , 每条数据类型 *chart*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "charts": [
                     {
@@ -1799,27 +1755,25 @@
                 ...
             }
 
-    ### <I> queryChartByRid
+    ### `queryChartByRid` <span style="color:gray">[内部]</span>
 
         通过角色ID获取图表信息
-        
-                |Requests:|
-                :param role.rid: 角色ID
-        :type role.rid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **role.rid**:
+  角色ID
+
+        **示例**:{
                 "role.rid": 1
             }
-            
-                |Returns:|
-                - **charts**: 图表信息列表 , 每条数据类型 *chart*
+
+**返回参数**:
+
+- **charts**: 图表信息列表 , 每条数据类型 *chart*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "charts": [
                     {
@@ -1839,24 +1793,23 @@
                 ],
                 ...
             }
-            
-    ### <C> updateRoleChartByRid
+
+    ### `updateRoleChartByRid` <span style="color:blue">[自定义]</span>
 
         通过角色ID更新角色拥有图表信息
-        
+
         判断角色是否存在 , 不存在 , 错误信息 **230010 角色不存在**
-        
+
         判断更新角色与操作人员对应角色等级 , 如果后者小于前者 , 错误信息 **-1 误操作权限**
-        
-                |Requests:|
-                :param cids[n]: 图表ID列表 , 每条数据类型 Long
-        :type cids[n]: List
-        :param role.rid: 角色编号
-        :type role.rid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **cids[n]**:
+  图表ID列表 , 每条数据类型 Long
+        - **role.rid**:
+  角色编号
+
+        **示例**:{
                 "role.rid": 1,
                 "cids[0]": 1,
             }
@@ -1865,8 +1818,9 @@
 
 ## api.data.LabelAction
 
-        |DataType:|
-        #### label
+**数据类型**:
+
+#### label
 
     - **lid**: 标签ID
       - 类型: *Long*
@@ -1881,19 +1835,18 @@
     - **status**: 状态 , 0: 启用, 1: 禁用
       - 类型: *Short*
 
-    ### <I> pageLabel
+    ### `pageLabel` <span style="color:gray">[内部]</span>
 
         分页方式获取标签消息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 标签信息列表 , 每条数据类型 *label*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  标签信息列表 , 每条数据类型 *label*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1911,18 +1864,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryLabel
+
+    ### `queryLabel` <span style="color:gray">[内部]</span>
 
         获取标签信息 , 状态0(启用)
-        
-                |Returns:|
-                - **labels**: 标签信息列表 , 每条数据类型 *label*
+
+**返回参数**:
+
+- **labels**: 标签信息列表 , 每条数据类型 *label*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "labels": [
                     {
@@ -1934,67 +1886,64 @@
                 ],
                 ...
             }
-            
-    ### <I> addLabel
+
+    ### `addLabel` <span style="color:gray">[内部]</span>
 
         添加标签
-        
-                |Requests:|
-                :param label.name: 名称
-        :type label.name: String
-        :param label.scale: 比例
-        :type label.scale: Short
-        :param label.type: 类型
-        :type label.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **label.name**:
+  名称
+        - **label.scale**:
+  比例
+        - **label.type**:
+  类型
+
+        **示例**:{
                 "label.name": "中式",
                 "label.scale": 15,
                 "label.type": 0
             }
-            
-    ### <I> updateLabel
+
+    ### `updateLabel` <span style="color:gray">[内部]</span>
 
         更新标签
-        
+
         判断标签是否存在 , 不存在 , 错误信息 **130024 标签不存在**
-        
-                |Requests:|
-                :param label.lid: 标签ID
-        :type label.lid: Long
-        :param label.name: 名称
-        :type label.name: String
-        :param label.scale: 比例
-        :type label.scale: Short
-        :param label.type: 类型
-        :type label.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **label.lid**:
+  标签ID
+        - **label.name**:
+  名称
+        - **label.scale**:
+  比例
+        - **label.type**:
+  类型
+
+        **示例**:{
                 "label.lid": 1,
                 "label.name": "中式",
                 "label.scale": 15,
                 "label.type": 0
             }
-            
-    ### <I> updateLabelForStatus
+
+    ### `updateLabelForStatus` <span style="color:gray">[内部]</span>
 
         更新标签状态
-        
-        判断标签是否存在 , 不存在 , 错误信息 **130024 标签不存在**
-        
-                |Requests:|
-                :param label.lid: 标签ID
-        :type label.lid: Long
-        :param label.status: 状态
-        :type label.status: Short
 
-        Example::
-        
-            {
+        判断标签是否存在 , 不存在 , 错误信息 **130024 标签不存在**
+
+**请求参数**:
+
+- **label.lid**:
+  标签ID
+        - **label.status**:
+  状态
+
+        **示例**:{
                 "label.lid": 1,
                 "label.status": 1
             }
@@ -2003,8 +1952,9 @@
 
 ## api.data.FlowpathAction
 
-        |DataType:|
-        #### flowpath
+**数据类型**:
+
+#### flowpath
 
     - **fpid**: 流程ID
       - 类型: *Long*
@@ -2018,20 +1968,19 @@
       - 类型: *Short*
     - **status**: 状态 , 0: 启用, 1: 禁用
       - 类型: *Short*
-    
-    ### <I> pageFlowpath
+
+    ### `pageFlowpath` <span style="color:gray">[内部]</span>
 
         分页方式获取流程信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 流程信息列表 , 每条数据类型 *flowpath*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  流程信息列表 , 每条数据类型 *flowpath*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2048,31 +1997,29 @@
                 },
                 ...
             }
-    
-    ### <I> queryFlowpath
+
+    ### `queryFlowpath` <span style="color:gray">[内部]</span>
 
         获取流程信息
-        
-                |Requests:|
-                :param flowpath.fpid: 流程ID
-        :type flowpath.fpid: Long
-        :param flowpath.keyword: 关键字
-        :type flowpath.keyword: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **flowpath.fpid**:
+  流程ID
+        - **flowpath.keyword**:
+  关键字
+
+        **示例**:{
                 "flowpath.fpid": 1,
                 "flowpath.keyword": "",
             }
 
-                |Returns:|
-                - **flowpaths**: 流程信息列表 , 每条数据类型 *flowpath*
+**返回参数**:
+
+- **flowpaths**: 流程信息列表 , 每条数据类型 *flowpath*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "flowpaths": [
                     {
@@ -2085,71 +2032,68 @@
                 ]
                 ...
             }
-    
-    ### <I> addFlowpath
+
+    ### `addFlowpath` <span style="color:gray">[内部]</span>
 
         创建流程
-        
-                |Requests:|
-                :param flowpath.name: 名称
-        :type flowpath.name: Long
-        :param flowpath.no: 编号
-        :type flowpath.no: String
-        :param flowpath.keyword: 关键字
-        :type flowpath.keyword: Long
-        :param flowpath.type: 类型
-        :type flowpath.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **flowpath.name**:
+  名称
+        - **flowpath.no**:
+  编号
+        - **flowpath.keyword**:
+  关键字
+        - **flowpath.type**:
+  类型
+
+        **示例**:{
                 "flowpath.name": "流程信息",
                 "flowpath.no": "FP0001",
                 "flowpath.keyword": "FlowInfo",
                 "flowpath.type": 0
             }
-    
-    ### <I> updateFlowpath
+
+    ### `updateFlowpath` <span style="color:gray">[内部]</span>
 
         更新流程
-        
+
         判断流程信息是否存在 , 不存在 , 错误信息 **130111 流程不存在**
-        
-                |Requests:|
-                :param flowpath.fpid: 流程ID
-        :type flowpath.fpid: Long
-        :param flowpath.name: 名称
-        :type flowpath.name: Long
-        :param flowpath.no: 编号
-        :type flowpath.no: String
-        :param flowpath.keyword: 关键字
-        :type flowpath.keyword: Long
-        :param flowpath.type: 类型
-        :type flowpath.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **flowpath.fpid**:
+  流程ID
+        - **flowpath.name**:
+  名称
+        - **flowpath.no**:
+  编号
+        - **flowpath.keyword**:
+  关键字
+        - **flowpath.type**:
+  类型
+
+        **示例**:{
                 "flowpath.fpid": 1,
                 "flowpath.name": "流程信息",
                 "flowpath.no": "FP0001",
                 "flowpath.keyword": "FlowInfo",
                 "flowpath.type": 0
             }
-    
-    ### <I> deleteFlowpath
+
+    ### `deleteFlowpath` <span style="color:gray">[内部]</span>
 
         删除流程
-        
+
         判断流程信息是否存在 , 不存在 , 错误信息 **130111 流程不存在**
-        
-                |Requests:|
-                :param flowpath.fpid: 流程ID
-        :type flowpath.fpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **flowpath.fpid**:
+  流程ID
+
+        **示例**:{
                 "flowpath.fpid": 1
             }
 
@@ -2175,28 +2119,26 @@
       - 类型: *Long*
     - **nfiid**: 下级节点ID
       - 类型: *Long*
-    
-    ### <I> queryFlowitem
+
+    ### `queryFlowitem` <span style="color:gray">[内部]</span>
 
         获取流程节点
-        
-                |Requests:|
-                :param flowitem.fpid: 流程ID
-        :type flowitem.fpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **flowitem.fpid**:
+  流程ID
+
+        **示例**:{
                 "flowitem.fpid": 1
             }
 
-                |Returns:|
-                - **flowitems**: 流程节点信息列表 , 每条数据类型 *flowitem*
+**返回参数**:
+
+- **flowitems**: 流程节点信息列表 , 每条数据类型 *flowitem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "flowitems": [
                     {
@@ -2213,35 +2155,34 @@
                 ]
                 ...
             }
-    
-    ### <I> addFlowitem
+
+    ### `addFlowitem` <span style="color:gray">[内部]</span>
 
         添加流程节点
-        
+
         判断流程信息是否存在 , 不存在 , 错误信息 **130111 流程不存在**
-        
-                |Requests:|
-                :param flowpath.fpid: 流程ID
-        :type flowpath.fpid: Long
-        
-        :param flowitems[n].name: 名称
-        :type flowitems[n].name: Long
-        :param flowitems[n].content: 内容
-        :type flowitems[n].content: String
-        :param flowitems[n].type: 类型
-        :type flowitems[n].type: Short
-        :param flowitems[n].x: x坐标
-        :type flowitems[n].x: Integer
-        :param flowitems[n].y: y坐标
-        :type flowitems[n].y: Integer
-        :param flowitems[n].pfiid: 上级节点ID
-        :type flowitems[n].pfiid: Long
-        :param flowitems[n].nfiid: 下级节点ID
-        :type flowitems[n].nfiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **flowpath.fpid**:
+  流程ID
+
+        - **flowitems[n].name**:
+  名称
+        - **flowitems[n].content**:
+  内容
+        - **flowitems[n].type**:
+  类型
+        - **flowitems[n].x**:
+  x坐标
+        - **flowitems[n].y**:
+  y坐标
+        - **flowitems[n].pfiid**:
+  上级节点ID
+        - **flowitems[n].nfiid**:
+  下级节点ID
+
+        **示例**:{
                 "flowitems[0].fpid": 1,
                 "flowitems[0].name": "流程信息",
                 "flowitems[0].content": "",
@@ -2251,18 +2192,17 @@
                 "flowitems[0].pfiid": 0,
                 "flowitems[0].nfiid": 0,
             }
-    
-    ### <I> deleteFlowItem
+
+    ### `deleteFlowItem` <span style="color:gray">[内部]</span>
 
         删除流程节点
-        
-                |Requests:|
-                :param flowitem.fpid: 流程ID
-        :type flowitem.fpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **flowitem.fpid**:
+  流程ID
+
+        **示例**:{
                 "flowitem.fpid": 1
             }
 
@@ -2270,8 +2210,9 @@
 
 ## api.data.AssistanceAction
 
-        |DataType:|
-        #### assistance
+**数据类型**:
+
+#### assistance
 
     - **aid**: 帮助ID
       - 类型: *Long*
@@ -2287,7 +2228,7 @@
       - 类型: *Object*
     - **createTime**: 创建时间
       - 类型: *Timestamp*
-    
+
     #### assistanceItem
 
     - **aiid**: 项目ID
@@ -2300,23 +2241,22 @@
       - 类型: *String*
     - **sort**: 排序
       - 类型: *Integer*
-    
+
     - **drawings**: 图片
       - 类型: *List*
-    
-    ### <I> pageAssistance
+
+    ### `pageAssistance` <span style="color:gray">[内部]</span>
 
         分页方式获取客户信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 帮助信息列表 , 每条数据类型 *assistance*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  帮助信息列表 , 每条数据类型 *assistance*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2336,7 +2276,7 @@
                                 "userPhoto": ""
                             },
                             "createTime": "2016-01-01 00:00:00"
-                            
+
                         }
                     ],
                     ...
@@ -2344,23 +2284,23 @@
                 ...
             }
 
-    ### <C> queryAssistance
+    ### `queryAssistance` <span style="color:blue">[自定义]</span>
 
-    ### <C> queryAssistanceByAid
+    ### `queryAssistanceByAid` <span style="color:blue">[自定义]</span>
 
-    ### <C> queryAssistanceByKeyword
+    ### `queryAssistanceByKeyword` <span style="color:blue">[自定义]</span>
 
-    ### <C> addAssistance
+    ### `addAssistance` <span style="color:blue">[自定义]</span>
 
-    ### <C> updateAssistance
+    ### `updateAssistance` <span style="color:blue">[自定义]</span>
 
-    ### <C> updateAssistanceForStatus
+    ### `updateAssistanceForStatus` <span style="color:blue">[自定义]</span>
 
-    ### <C> queryAssistanceItem
+    ### `queryAssistanceItem` <span style="color:blue">[自定义]</span>
 
-    ### <C> addAssistanceItem
+    ### `addAssistanceItem` <span style="color:blue">[自定义]</span>
 
-    ### <C> updateAssistanceItem
+    ### `updateAssistanceItem` <span style="color:blue">[自定义]</span>
 
 ## 客户
 
@@ -2368,8 +2308,9 @@
 
 ## api.customer.ComplasonAction
 
-        |DataType:|
-        #### complason
+**数据类型**:
+
+#### complason
 
     - **csid**: 投诉理由ID
       - 类型: *Long*
@@ -2381,20 +2322,19 @@
       - 类型: *String*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageComplason
+
+    ### `pageComplason` <span style="color:gray">[内部]</span>
 
         分页方式获取投诉原因信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 投诉原因信息列表 , 每条数据类型 *complason*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  投诉原因信息列表 , 每条数据类型 *complason*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2410,51 +2350,48 @@
                 },
                 ...
             }
-    
-    ### <I> queryComplason
+
+    ### `queryComplason` <span style="color:gray">[内部]</span>
 
         通过类型查询投诉原因
-        
-                |Requests:|
-                :param complason.type: 类型
-        :type complason.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complason.type**:
+  类型
+
+        **示例**:{
                 "complason.type": 1
             }
-    
-    ### <I> addComplason
+
+    ### `addComplason` <span style="color:gray">[内部]</span>
 
         添加投诉原因信息
-        
-                |Requests:|
-                :param complason.type: 类型
-        :type complason.type: Short
-        :param complason.content: 类型
-        :type complason.content: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complason.type**:
+  类型
+        - **complason.content**:
+  类型
+
+        **示例**:{
                 "complason.type": 1,
                 "complason.content": "内容"
             }
-    
-    ### <I> updateComplasonForStatus
+
+    ### `updateComplasonForStatus` <span style="color:gray">[内部]</span>
 
         更新投诉原因状态
-        
-                |Requests:|
-                :param complason.csid: 原因ID
-        :type complason.csid: Long
-        :param complason.status: 类型
-        :type complason.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complason.csid**:
+  原因ID
+        - **complason.status**:
+  类型
+
+        **示例**:{
                 "complason.csid": 1,
                 "complason.status": 0
             }
@@ -2463,8 +2400,9 @@
 
 ## api.data.SurveyTemplateAction
 
-        |DataType:|
-        #### surveyTemplate
+**数据类型**:
+
+#### surveyTemplate
 
     - **stid**: 模版ID
       - 类型: *Long*
@@ -2476,10 +2414,10 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
+
     - **items**: 项目列表 , 每条数据类型 [surveyTemplateItem](./data.html#api.data.SurveyTemplateAction.surveyTemplateItem)
       - 类型: *List*
-    
+
     #### surveyTemplateItem
 
     - **stiid**: 项目ID
@@ -2492,10 +2430,10 @@
       - 类型: *Short*
     - **content**: 内容
       - 类型: *String*
-    
+
     - **options**: 选项列表 , 每条数据类型 [surveyTemplateItem](./data.html#api.data.SurveyTemplateAction.surveyTemplateItem)
       - 类型: *List*
-    
+
     #### surveyTemplateOption
 
     - **stoid**: 选项ID
@@ -2507,19 +2445,18 @@
     - **title**: 标题
       - 类型: *String*
 
-    ### <I> pageSurveyTemplate
+    ### `pageSurveyTemplate` <span style="color:gray">[内部]</span>
 
         分页方式获取调研模版信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 调研模版列表 , 每条数据类型 *surveyTemplate*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  调研模版列表 , 每条数据类型 *surveyTemplate*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2535,18 +2472,17 @@
                 },
                 ...
             }
-    
-    ### <I> querySurveyTemplate
+
+    ### `querySurveyTemplate` <span style="color:gray">[内部]</span>
 
         获取调研模版
-        
-                |Returns:|
-                - **surveyTemplates**: 调研模版列表 , 每条数据类型类型 *surveyTemplate*
+
+**返回参数**:
+
+- **surveyTemplates**: 调研模版列表 , 每条数据类型类型 *surveyTemplate*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "surveyTemplates": [
                     {
@@ -2559,27 +2495,25 @@
                 ...
             }
 
-    ### <I> querySurveyTemplateByStid
+    ### `querySurveyTemplateByStid` <span style="color:gray">[内部]</span>
 
         获取调研模版
-        
-                |Requests:|
-                :param surveyTemplate.stid: 模版ID
-        :type surveyTemplate.stid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **surveyTemplate.stid**:
+  模版ID
+
+        **示例**:{
                 "surveyTemplate.stid": 1
             }
 
-                |Returns:|
-                - **surveyTemplate**: 调研模版 , 数据类型 *surveyTemplate*
+**返回参数**:
+
+- **surveyTemplate**: 调研模版 , 数据类型 *surveyTemplate*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "surveyTemplate": {
                     "stid": 1,
@@ -2613,111 +2547,107 @@
                 },
                 ...
             }
-    
-    ### <I> addSurveyTemplate
+
+    ### `addSurveyTemplate` <span style="color:gray">[内部]</span>
 
         创建调研模版
-        
-                |Requests:|
-                :param surveyTemplate.name: 名称
-        :type surveyTemplate.name: String
-        :param surveyTemplate.isSend: 推送标识
-        :type surveyTemplate.isSend: Short
-        
-        :param surveyTemplate.items[n].name: 名称
-        :type surveyTemplate.items[n].name: String
-        :param surveyTemplate.items[n].type: 类型
-        :type surveyTemplate.items[n].type: Short
-        :param surveyTemplate.items[n].content: 内容
-        :type surveyTemplate.items[n].content: String
-        
-        :param surveyTemplate.items[n].options[n].title: 标题
-        :type surveyTemplate.items[n].options[n].title: String
-        
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **surveyTemplate.name**:
+  名称
+        - **surveyTemplate.isSend**:
+  推送标识
+
+        - **surveyTemplate.items[n].name**:
+  名称
+        - **surveyTemplate.items[n].type**:
+  类型
+        - **surveyTemplate.items[n].content**:
+  内容
+
+        - **surveyTemplate.items[n].options[n].title**:
+  标题
+
+
+        **示例**:{
                 "surveyTemplate.name": "模版",
                 "surveyTemplate.isSend": 0,
-                
+
                 "surveyTemplate.items[0].name": "项目",
                 "surveyTemplate.items[0].type": 0,
                 "surveyTemplate.items[0].content": "内容",
-                
+
                 "surveyTemplate.items[0].options[0].title": "标题"
             }
-    
-    ### <I> updateSurveyTemplate
+
+    ### `updateSurveyTemplate` <span style="color:gray">[内部]</span>
 
         更新调研模版
-        
+
         判断调研模版是否存在 , 不存在 , **130096 调研模版不存在**
-        
-                |Requests:|
-                :param surveyTemplate.stid: 模版ID
-        :type surveyTemplate.stid: Long
-        :param surveyTemplate.name: 名称
-        :type surveyTemplate.name: String
-        
-        :param surveyTemplate.items[n].name: 名称
-        :type surveyTemplate.items[n].name: String
-        :param surveyTemplate.items[n].type: 类型
-        :type surveyTemplate.items[n].type: Short
-        :param surveyTemplate.items[n].content: 内容
-        :type surveyTemplate.items[n].content: String
-        
-        :param surveyTemplate.items[n].options[n].title: 标题
-        :type surveyTemplate.items[n].options[n].title: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **surveyTemplate.stid**:
+  模版ID
+        - **surveyTemplate.name**:
+  名称
+
+        - **surveyTemplate.items[n].name**:
+  名称
+        - **surveyTemplate.items[n].type**:
+  类型
+        - **surveyTemplate.items[n].content**:
+  内容
+
+        - **surveyTemplate.items[n].options[n].title**:
+  标题
+
+        **示例**:{
                 "surveyTemplate.stid": 1,
                 "surveyTemplate.name": "模版",
-                
+
                 "surveyTemplate.items[0].name": "项目",
                 "surveyTemplate.items[0].type": 0,
                 "surveyTemplate.items[0].content": "内容",
-                
+
                 "surveyTemplate.items[0].options[0].title": "标题"
             }
 
-    ### <I> updateSurveyTemplateForStatus
+    ### `updateSurveyTemplateForStatus` <span style="color:gray">[内部]</span>
 
         更新调研模版状态
-        
+
         判断调研模版是否存在 , 不存在 , **130096 调研模版不存在**
-        
-                |Requests:|
-                :param surveyTemplate.stid: 模版ID
-        :type surveyTemplate.stid: Long
-        :param surveyTemplate.isSend: 推送标识
-        :type surveyTemplate.isSend: Short
-        :param surveyTemplate.status: 状态
-        :type surveyTemplate.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **surveyTemplate.stid**:
+  模版ID
+        - **surveyTemplate.isSend**:
+  推送标识
+        - **surveyTemplate.status**:
+  状态
+
+        **示例**:{
                 "surveyTemplate.stid": 1,
                 "surveyTemplate.isSend": 0,
                 "surveyTemplate.status": 0
             }
-    
-    ### <I> deleteSurveyTemplate
+
+    ### `deleteSurveyTemplate` <span style="color:gray">[内部]</span>
 
         删除调研模版
-        
+
         判断调研模版是否存在 , 不存在 , **130096 调研模版不存在**
-        
-                |Requests:|
-                :param surveyTemplate.stid: 模版ID
-        :type surveyTemplate.stid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **surveyTemplate.stid**:
+  模版ID
+
+        **示例**:{
                 "surveyTemplate.stid": 1
             }
 
@@ -2725,8 +2655,9 @@
 
 ## api.data.ChatingAction
 
-        |DataType:|
-        #### chating
+**数据类型**:
+
+#### chating
 
     - **cid**: 话术ID
       - 类型: *Long*
@@ -2744,20 +2675,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageChating
+
+    ### `pageChating` <span style="color:gray">[内部]</span>
 
         分页方式获取话术信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 话术列表 , 每条数据类型 *chating*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  话术列表 , 每条数据类型 *chating*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2776,18 +2706,17 @@
                 },
                 ...
             }
-    
-    ### <I> queryChating
+
+    ### `queryChating` <span style="color:gray">[内部]</span>
 
         获取话术信息
-        
-                |Returns:|
-                - **chatings**: 话术列表 , 每条数据类型 *chating*
+
+**返回参数**:
+
+- **chatings**: 话术列表 , 每条数据类型 *chating*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "chatings": [
                     {
@@ -2802,56 +2731,54 @@
                 ],
                 ...
             }
-    
-    ### <I> addChating
+
+    ### `addChating` <span style="color:gray">[内部]</span>
 
         添加话术
-        
-                |Requests:|
-                :param chating.title: 标题
-        :type chating.title: String
-        :param chating.content: 内容
-        :type chating.content: String
-        :param chating.type: 类型
-        :type chating.type: Short
-        :param chating.atttype: 业务类型
-        :type chating.atttype: Short
-        :param chating.path: 路径
-        :type chating.path: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **chating.title**:
+  标题
+        - **chating.content**:
+  内容
+        - **chating.type**:
+  类型
+        - **chating.atttype**:
+  业务类型
+        - **chating.path**:
+  路径
+
+        **示例**:{
                 "chating.title": "标题",
                 "chating.content": "内容",
                 "chating.type": 0,
                 "chating.atttype": 0,
                 "chating.path": ""
             }
-    
-    ### <I> updateChating
+
+    ### `updateChating` <span style="color:gray">[内部]</span>
 
         更新话术
-        
+
         判断话术信息是否存在 , 不存在 , 错误信息 **130101 话术不存在**
-        
-                |Requests:|
-                :param chating.cid: 话术ID
-        :type chating.cid: Long
-        :param chating.title: 标题
-        :type chating.title: String
-        :param chating.content: 内容
-        :type chating.content: String
-        :param chating.type: 类型
-        :type chating.type: Short
-        :param chating.atttype: 业务类型
-        :type chating.atttype: Short
-        :param chating.path: 路径
-        :type chating.path: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **chating.cid**:
+  话术ID
+        - **chating.title**:
+  标题
+        - **chating.content**:
+  内容
+        - **chating.type**:
+  类型
+        - **chating.atttype**:
+  业务类型
+        - **chating.path**:
+  路径
+
+        **示例**:{
                 "chating.cid": 1,
                 "chating.title": "标题",
                 "chating.content": "内容",
@@ -2860,49 +2787,48 @@
                 "chating.path": ""
             }
 
-    ### <I> updateChatingForStatus
+    ### `updateChatingForStatus` <span style="color:gray">[内部]</span>
 
         更新话术状态
-        
+
         判断话术信息是否存在 , 不存在 , 错误信息 **130101 话术不存在**
-    
-                |Requests:|
-                :param chating.cid: 话术ID
-        :type chating.cid: Long
-        :param chating.status: 状态
-        :type chating.status: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **chating.cid**:
+  话术ID
+        - **chating.status**:
+  状态
+
+        **示例**:{
                 "chating.cid": 1,
                 "chating.status": 0
             }
-    
-    ### <I> deleteChating
+
+    ### `deleteChating` <span style="color:gray">[内部]</span>
 
         删除话术
-        
+
         判断话术信息是否存在 , 不存在 , 错误信息 **130101 话术不存在**
-    
-                |Requests:|
-                :param chating.cid: 话术ID
-        :type chating.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **chating.cid**:
+  话术ID
+
+        **示例**:{
                 "chating.cid": 1
             }
-            
+
 ## 装修
 
 ### 业务类型
 
 ## api.data.DecorationBusitype
 
-        |DataType:|
-        #### decorationBusitype
+**数据类型**:
+
+#### decorationBusitype
 
     - **dbid**: 类型ID
       - 类型: *Long*
@@ -2914,20 +2840,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageDecorationBusitype
+
+    ### `pageDecorationBusitype` <span style="color:gray">[内部]</span>
 
         分页方式获取业务类型信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 客户信息列表 , 每条数据类型 *decorationBusitype*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客户信息列表 , 每条数据类型 *decorationBusitype*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2937,25 +2862,24 @@
                             "name": "名称",
                             "outside": 0,
                             "status": 1
-                            
+
                         }
                     ],
                     ...
                 },
                 ...
             }
-    
-    ### <I> queryDecorationBusitype
+
+    ### `queryDecorationBusitype` <span style="color:gray">[内部]</span>
 
         获取业务类型信息
-        
-                |Returns:|
-                - **decorationBusitypes**: 业务类型信息 , 类型 *decorationBusitype*
+
+**返回参数**:
+
+- **decorationBusitypes**: 业务类型信息 , 类型 *decorationBusitype*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationBusitypes": [{
                     "dbid": 1,
@@ -2965,63 +2889,60 @@
                 }],
                 ...
             }
-    
-    ### <I> addDecorationBusitype
+
+    ### `addDecorationBusitype` <span style="color:gray">[内部]</span>
 
         添加业务类型
-        
-                |Requests:|
-                :param decorationBusitype.name: 名称
-        :type decorationBusitype.name: String
-        :param decorationBusitype.outside: 三方
-        :type decorationBusitype.outside: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationBusitype.name**:
+  名称
+        - **decorationBusitype.outside**:
+  三方
+
+        **示例**:{
                 "decorationBusitype.name": "业务类型",
                 "decorationBusitype.outside": 0
             }
-            
-    ### <I> updateDecorationBusitype
+
+    ### `updateDecorationBusitype` <span style="color:gray">[内部]</span>
 
         更新业务类型
-        
+
         判断业务类型是否存在 , 不存在 , 错误信息 **130061 业务类型不存在**
-    
-                |Requests:|
-                :param decorationBusitype.dbid: 业务类型ID
-        :type decorationBusitype.dbid: Long
-        :param decorationBusitype.name: 名称
-        :type decorationBusitype.name: String
-        :param decorationBusitype.outside: 三方
-        :type decorationBusitype.outside: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationBusitype.dbid**:
+  业务类型ID
+        - **decorationBusitype.name**:
+  名称
+        - **decorationBusitype.outside**:
+  三方
+
+        **示例**:{
                 "decorationBusitype.dbid": 1,
                 "decorationBusitype.name": "业务类型",
                 "decorationBusitype.outside": 0
             }
-    
-    ### <I> updateDecorationBusitypeForStatus
+
+    ### `updateDecorationBusitypeForStatus` <span style="color:gray">[内部]</span>
 
         更新业务类型状态
-        
+
         判断业务类型是否存在 , 不存在 , 错误信息 **130061 业务类型不存在**
-        
-                |Requests:|
-                :param decorationBusitype.dbid: 业务类型ID
-        :type decorationBusitype.dbid: Long
-        :param decorationBusitype.status: 状态
-        :type decorationBusitype.status: Short
-        :param decorationBusitype.outside: 三方
-        :type decorationBusitype.outside: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationBusitype.dbid**:
+  业务类型ID
+        - **decorationBusitype.status**:
+  状态
+        - **decorationBusitype.outside**:
+  三方
+
+        **示例**:{
                 "decorationBusitype.dbid": 1,
                 "decorationBusitype.status": 1,
                 "decorationBusitype.outside": 0
@@ -3031,8 +2952,9 @@
 
 ## api.data.DecorationAtttype
 
-        |DataType:|
-        #### decorationAtttype
+**数据类型**:
+
+#### decorationAtttype
 
     - **daid**: 业务ID
       - 类型: *Long*
@@ -3046,20 +2968,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageDecorationAtttype
+
+    ### `pageDecorationAtttype` <span style="color:gray">[内部]</span>
 
         分页方式获取装修业务信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 装修业务信息列表 , 每条数据类型 *decorationAtttype*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修业务信息列表 , 每条数据类型 *decorationAtttype*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3077,17 +2998,16 @@
                 ...
             }
 
-    ### <I> queryDecorationAtttype
+    ### `queryDecorationAtttype` <span style="color:gray">[内部]</span>
 
         获取装修业务信息
-        
-                |Returns:|
-                - **decorationAtttypes**: 装修业务类型信息 , 类型 *decorationAtttype*
+
+**返回参数**:
+
+- **decorationAtttypes**: 装修业务类型信息 , 类型 *decorationAtttype*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationAtttypes": [
                     {
@@ -3105,8 +3025,9 @@
 
 ## api.data.DecorationMatchingAction
 
-        |DataType:|
-        #### decorationMatching
+**数据类型**:
+
+#### decorationMatching
 
     - **dmid**: 配比ID
       - 类型: *Long*
@@ -3138,21 +3059,22 @@
       - 类型: *String*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageDecorationMatching
 
-    ### <I> queryDecorationMatching
+    ### `pageDecorationMatching` <span style="color:gray">[内部]</span>
 
-    ### <I> addDecorationMatching
+    ### `queryDecorationMatching` <span style="color:gray">[内部]</span>
 
-    ### <I> updateDecorationMatching
+    ### `addDecorationMatching` <span style="color:gray">[内部]</span>
+
+    ### `updateDecorationMatching` <span style="color:gray">[内部]</span>
 
 ### 量尺规则
 
 ## api.data.DecorationMeasure
 
-        |DataType:|
-        #### decorationMeasure
+**数据类型**:
+
+#### decorationMeasure
 
     - **dmid**: 规则ID
       - 类型: *Long*
@@ -3162,7 +3084,7 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-    
+
     #### decorationMeasureItem
 
     - **dmiid**: 项目ID
@@ -3171,8 +3093,8 @@
       - 类型: *Long*
     - **company**: 公司ID
       - 类型: *Integer*
-    
-    ### <I> queryDecorationMeasure
+
+    ### `queryDecorationMeasure` <span style="color:gray">[内部]</span>
 
 ## 款项
 
@@ -3182,31 +3104,7 @@
 
 ## api.data.PaymentTypeAction
 
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | type             | paytype                  | bustype                          | atttype                          | name                             | index            |
-    +==================+==========================+==================================+==================================+==================================+==================+
     | 0 预付款         | 0 收款                   | 0 合同                           | 0 预付                           | 装修预付款                       |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 0 预付款         | 1 提现                   | 1 主材                           | 0 预付                           | 主材预付款                       |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    |                  |                          |                                  |                                  |                                  |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 1 装修款         | 0 收款                   | 0 装修                           | 0 基础                           | 设计费                           |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 1 装修款         | 0 收款                   | 0 装修                           | 1 合同                           | 首付款                           |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 1 装修款         | 0 收款                   | 0 装修                           | 2 增减                           | 增项款                           |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 1 装修款         | 1 退款                   | 0 装修                           | 2 增减                           | 减项款                           |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 1 装修款         | 0 收款                   | 1 主材                           | 4 终止                           | 违约金                           |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 1 装修款         | 0 收款                   | 1 装修                           | 3 其他                           | 手续费                           |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    |                  |                          |                                  |                                  |                                  |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 2 主材款         | 0 收款                   | 1 主材                           | 0 基础                           | 定金                             | 2                |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 2 主材款         | 0 收款                   | 1 主材                           | 0 基础                           | 补款                             | 3                |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    |                  |                          |                                  |                                  |                                  |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 3 销售款         | 0 收款                   | 1 主材                           | 0 基础                           | 定金                             | 2                |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 3 销售款         | 0 收款                   | 1 主材                           | 0 基础                           | 补款                             | 3                |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 3 销售款         | 1 退款                   | 1 主材                           | 1 退款                           | 退款                             | 4                |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 3 销售款         | 1 退款                   | 1 主材                           | 1 退款                           | 补款退款                         | 5                |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 3 销售款         | 1 退款                   | 1 主材                           | 1 退款                           | 券退款                           | 6                |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 3 销售款         | 1 退款                   | 1 主材                           | 1 退款                           | 定金退款                         | 7                |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 3 销售款         | 0 收款                   | 1 主材                           | 2 其他                           | 不退定金                         | 8                |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    |                  |                          |                                  |                                  |                                  |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------    | 4 服务款         |                          |                                  |                                  |                                  |                  |
-    +------------------+--------------------------+----------------------------------+----------------------------------+----------------------------------        |DataType:|
         #### paymentType
 
     - **ptid**: 款项类型ID
@@ -3217,42 +3115,41 @@
       - 类型: *Short*
     - **paytype**: 付款类型 , 0: 收款 , 1: 出款
       - 类型: *Short*
-    
+
     - **bustype**: 业务类型 , 0: 装修 , 1: 主材
       - 类型: *Short*
     - **atttype**: 属性类型 , 装修: 0(基础) , 1(合同) , 2(增减) , 3(其他)
       - 类型: *Short*
-    
+
     - **payScale**: 付款比例
       - 类型: *Integer*
     - **saleScale**: 销售比例
       - 类型: *Integer*
     - **index**: 索引
       - 类型: *Integer*
-    
+
     - **kino**: 金蝶编号
       - 类型: *String*
     - **kiname**: 金蝶名称
       - 类型: *String*
     - **kibalance**: 结算方式
       - 类型: *String*
-    
+
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
-    ### <I> pagePaymentType
+
+    ### `pagePaymentType` <span style="color:gray">[内部]</span>
 
         分页方式获取款项类型信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 收据类型信息列表 , 每条数据类型 *paymentType*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  收据类型信息列表 , 每条数据类型 *paymentType*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3278,36 +3175,34 @@
                 ...
             }
 
-    ### <I> queryPaymentType
+    ### `queryPaymentType` <span style="color:gray">[内部]</span>
 
         查询款项类型
-        
-                |Requests:|
-                :param paymentType.type: 类型
-        :type paymentType.type: Short
-        :param paymentType.paytype: 付款类型
-        :type paymentType.paytype: Short
-        :param paymentType.bustype: 业务类型
-        :type paymentType.bustype: Short
-        :param paymentType.atttype: 属性类型
-        :type paymentType.atttype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentType.type**:
+  类型
+        - **paymentType.paytype**:
+  付款类型
+        - **paymentType.bustype**:
+  业务类型
+        - **paymentType.atttype**:
+  属性类型
+
+        **示例**:{
                 "paymentType.type": 1,
                 "paymentType.paytype": 1,
                 "paymentType.bustype": 1,
                 "paymentType.atttype": 1
             }
-            
-                |Returns:|
-                - **paymentTypes**: 款项类型信息列表 , 每条信息类型 *paymentType*
+
+**返回参数**:
+
+- **paymentTypes**: 款项类型信息列表 , 每条信息类型 *paymentType*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "paymentTypes": [
                     {
@@ -3329,29 +3224,27 @@
                 ...
             }
 
-    ### <I> queryPaymentTypeByName
+    ### `queryPaymentTypeByName` <span style="color:gray">[内部]</span>
 
-    ### <C> queryPaymentTypeByPtid
+    ### `queryPaymentTypeByPtid` <span style="color:blue">[自定义]</span>
 
         通过ID查询款项类型信息
-        
-                |Requests:|
-                :param paymentType.ptid: 款项类型ID
-        :type paymentType.ptid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentType.ptid**:
+  款项类型ID
+
+        **示例**:{
                 "paymentType.ptid": 1
             }
 
-                |Returns:|
-                - **paymentType**: 款项类型 , 类型 *paymentType*
+**返回参数**:
+
+- **paymentType**: 款项类型 , 类型 *paymentType*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "paymentType": {
                     "ptid": 1,
@@ -3371,39 +3264,38 @@
                 ...
             }
 
-    ### <C> addPaymentType
+    ### `addPaymentType` <span style="color:blue">[自定义]</span>
 
         添加款项类型
-        
+
         判断款项类型名称是否存在有效数据 , 已存在 , 错误信息 **130093 款项类型已存在**
-        
-                |Requests:|
-                :param paymentType.name: 名称
-        :type paymentType.name: String
-        :param paymentType.type: 类型
-        :type paymentType.type: Short
-        :param paymentType.paytype: 付款类型
-        :type paymentType.paytype: Short
-        :param paymentType.bustype: 业务类型
-        :type paymentType.bustype: Short
-        :param paymentType.atttype: 属性类型
-        :type paymentType.atttype: Short
-        :param paymentType.payScale: 付款比例
-        :type paymentType.payScale: Integer
-        :param paymentType.salesScale: 索引
-        :type paymentType.salesScale: Integer
-        :param paymentType.index: 索引
-        :type paymentType.index: Integer
-        :param paymentType.kino: 金蝶编号
-        :type paymentType.kino: String
-        :param paymentType.kiname: 金蝶名称
-        :type paymentType.kiname: String
-        :param paymentType.kibalance: 金蝶结算
-        :type paymentType.kibalance: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentType.name**:
+  名称
+        - **paymentType.type**:
+  类型
+        - **paymentType.paytype**:
+  付款类型
+        - **paymentType.bustype**:
+  业务类型
+        - **paymentType.atttype**:
+  属性类型
+        - **paymentType.payScale**:
+  付款比例
+        - **paymentType.salesScale**:
+  索引
+        - **paymentType.index**:
+  索引
+        - **paymentType.kino**:
+  金蝶编号
+        - **paymentType.kiname**:
+  金蝶名称
+        - **paymentType.kibalance**:
+  金蝶结算
+
+        **示例**:{
                 "paymentType.name": "首付款",
                 "paymentType.type": 1,
                 "paymentType.paytype": 1,
@@ -3416,47 +3308,45 @@
                 "paymentType.kiname": "现金",
                 "paymentType.kibalance": "JSU2J3-SYS",
             }
-            
-    ### <C> updatePaymentType
+
+    ### `updatePaymentType` <span style="color:blue">[自定义]</span>
 
         添加款项类型
-        
+
         判断款项类型是否存在 , 不存在 , 错误信息 **130091 款项类型不存在**
-        
-                |Requests:|
-                :param paymentType.ptid: 款项类型ID
-        :type paymentType.ptid: Long
-        :param paymentType.kino: 金蝶编号
-        :type paymentType.kino: String
-        :param paymentType.kiname: 金蝶名称
-        :type paymentType.kiname: String
-        :param paymentType.kibalance: 金蝶结算
-        :type paymentType.kibalance: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentType.ptid**:
+  款项类型ID
+        - **paymentType.kino**:
+  金蝶编号
+        - **paymentType.kiname**:
+  金蝶名称
+        - **paymentType.kibalance**:
+  金蝶结算
+
+        **示例**:{
                 "paymentType.ptid": 1
                 "paymentType.kino": "1010001001",
                 "paymentType.kiname": "现金",
                 "paymentType.kibalance": "JSU2J3-SYS",
             }
 
-    ### <C> updatePaymentTypeForStatus
+    ### `updatePaymentTypeForStatus` <span style="color:blue">[自定义]</span>
 
         更新款项类型状态
-        
+
         判断款项类型是否存在 , 不存在 , 错误信息 **130091 款项类型不存在**
-        
-                |Requests:|
-                :param paymentType.ptid: 款项类型ID
-        :type paymentType.ptid: Long
-        :param paymentType.status: 状态
-        :type paymentType.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentType.ptid**:
+  款项类型ID
+        - **paymentType.status**:
+  状态
+
+        **示例**:{
                 "paymentType.ptid": 1
                 "paymentType.status": 1
             }
@@ -3467,8 +3357,9 @@
 
 ## api.data.ReceiptTypeAction
 
-        |DataType:|
-        #### receiptType
+**数据类型**:
+
+#### receiptType
 
     - **rtid**: 收据类型ID
       - 类型: *Long*
@@ -3496,20 +3387,19 @@
       - 类型: *String*
     - **company**: 公司ID
       - 类型: *Integer*
-    
-    ### <I> pageReceiptType
+
+    ### `pageReceiptType` <span style="color:gray">[内部]</span>
 
         分页方式获取收据类型信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 收据类型信息列表 , 每条数据类型 *receiptType*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  收据类型信息列表 , 每条数据类型 *receiptType*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3532,18 +3422,17 @@
                 },
                 ...
             }
-    
-    ### <I> queryReceiptType
+
+    ### `queryReceiptType` <span style="color:gray">[内部]</span>
 
         获取所有收据类型信息
-        
-                |Returns:|
-                - **receiptTypes**: 收据类型信息列表 , 每条信息类型 *receiptType*
+
+**返回参数**:
+
+- **receiptTypes**: 收据类型信息列表 , 每条信息类型 *receiptType*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "receiptTypes": [
                     {
@@ -3563,31 +3452,29 @@
                 ...
             }
 
-    ### <I> queryReceiptTypeByNo
+    ### `queryReceiptTypeByNo` <span style="color:gray">[内部]</span>
 
-    ### <I> queryReceiptTypeByType
+    ### `queryReceiptTypeByType` <span style="color:gray">[内部]</span>
 
         通过类型获取收据类型信息
-        
-                |Requests:|
-                :param receiptType.type: 类型
-        :type receiptType.type: Short
-        :param receiptType.grade: 等级
-        :type receiptType.grade: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **receiptType.type**:
+  类型
+        - **receiptType.grade**:
+  等级
+
+        **示例**:{
                 "receiptType.type": 1
             }
-        
-                |Returns:|
-                - **receiptTypes**: 收据类型信息列表 , 每条信息类型 *receiptType*
+
+**返回参数**:
+
+- **receiptTypes**: 收据类型信息列表 , 每条信息类型 *receiptType*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "receiptTypes": [
                     {
@@ -3606,34 +3493,33 @@
                 ],
                 ...
             }
-            
-    ### <C> addReceiptType
+
+    ### `addReceiptType` <span style="color:blue">[自定义]</span>
 
         添加收据类型信息
-        
-                |Requests:|
-                :param receiptType.no: 键值
-        :type receiptType.no: String
-        :param receiptType.name: 名称
-        :type receiptType.name: String
-        :param receiptType.grade: 等级
-        :type receiptType.grade: String
-        :param receiptType.kino: 金蝶编号
-        :type receiptType.kino: String
-        :param receiptType.kiname: 金蝶名称
-        :type receiptType.kiname: String
-        :param receiptType.kibalance: 结算方式
-        :type receiptType.kibalance: String
-        :param receiptType.assistant: 辅助核算项
-        :type receiptType.assistant: String
-        :param receiptType.type: 类型
-        :type receiptType.type: Short
-        :param receiptType.fund: 资金类型
-        :type receiptType.fund: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **receiptType.no**:
+  键值
+        - **receiptType.name**:
+  名称
+        - **receiptType.grade**:
+  等级
+        - **receiptType.kino**:
+  金蝶编号
+        - **receiptType.kiname**:
+  金蝶名称
+        - **receiptType.kibalance**:
+  结算方式
+        - **receiptType.assistant**:
+  辅助核算项
+        - **receiptType.type**:
+  类型
+        - **receiptType.fund**:
+  资金类型
+
+        **示例**:{
                 "receiptType.no": "157",
                 "receiptType.name": '总公司',
                 "receiptType.grade": "",
@@ -3643,38 +3529,37 @@
                 "receiptType.type": 1,
                 "receiptType.fund": 0
             }
-            
-    ### <I> updateReceiptType
+
+    ### `updateReceiptType` <span style="color:gray">[内部]</span>
 
         更新收据类型信息
-        
+
         收据类型信息不存在 , 错误信息 **130005 收据类型不存在**
-        
-                |Requests:|
-                :param receiptType.rtid: ID
-        :type receiptType.rtid: Long
-        :param receiptType.no: 键值
-        :type receiptType.no: String
-        :param receiptType.name: 名称
-        :type receiptType.name: String
-        :param receiptType.grade: 等级
-        :type receiptType.grade: String
-        :param receiptType.kino: 金蝶编号
-        :type receiptType.kino: String
-        :param receiptType.kiname: 金蝶名称
-        :type receiptType.kiname: String
-        :param receiptType.kibalance: 结算方式
-        :type receiptType.kibalance: String
-        :param receiptType.assistant: 辅助核算项
-        :type receiptType.assistant: String
-        :param receiptType.type: 类型
-        :type receiptType.type: Short
-        :param receiptType.fund: 资金类型
-        :type receiptType.fund: Short
 
-        Example::
+**请求参数**:
 
-            {
+- **receiptType.rtid**:
+  ID
+        - **receiptType.no**:
+  键值
+        - **receiptType.name**:
+  名称
+        - **receiptType.grade**:
+  等级
+        - **receiptType.kino**:
+  金蝶编号
+        - **receiptType.kiname**:
+  金蝶名称
+        - **receiptType.kibalance**:
+  结算方式
+        - **receiptType.assistant**:
+  辅助核算项
+        - **receiptType.type**:
+  类型
+        - **receiptType.fund**:
+  资金类型
+
+        **示例**:{
                 "receiptType.rtid": 1,
                 "receiptType.no": "157",
                 "receiptType.name": "总公司",
@@ -3685,28 +3570,28 @@
                 "receiptType.type": 1,
                 "receiptType.fund": 0
             }
-            
-    ### <I> updateReceiptTypeForStatus
+
+    ### `updateReceiptTypeForStatus` <span style="color:gray">[内部]</span>
 
         更新收据类型信息状态
-        
+
         收据类型信息不存在 , 错误信息 **130005 收据类型不存在**
 
-                |Requests:|
-                :param receiptType.rtid: ID
-        :type receiptType.rtid: Long
-        :param receiptType.status: 状态
-        :type receiptType.status: Short
+**请求参数**:
 
-        Example::
+- **receiptType.rtid**:
+  ID
+        - **receiptType.status**:
+  状态
 
-            {
+        **示例**:{
                 "receiptType.rtid": 1,
                 "receiptType.status": 1
             }
 
-        |DataType:|
-        #### receiptTypeItem
+**数据类型**:
+
+#### receiptTypeItem
 
     - **rtiid**: 单据ID
       - 类型: *Long*
@@ -3720,28 +3605,26 @@
       - 类型: *Short*
     - **paytype**: 款项类型 , 0: 收款 , 1: 退款
       - 类型: *Short*
-    
-    ### <I> queryReceiptTypeItem
+
+    ### `queryReceiptTypeItem` <span style="color:gray">[内部]</span>
 
         查询单据信息
-        
-                |Requests:|
-                :param receiptTypeItem.rtid: ID
-        :type receiptTypeItem.rtid: Long
 
-        Example::
+**请求参数**:
 
-            {
+- **receiptTypeItem.rtid**:
+  ID
+
+        **示例**:{
                 "receiptTypeItem.rtid": 1
             }
 
-                |Returns:|
-                - **receiptTypeItems**: 单据信息列表 , 每条信息类型 *receiptTypeItem*
+**返回参数**:
+
+- **receiptTypeItems**: 单据信息列表 , 每条信息类型 *receiptTypeItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "receiptTypeItems": [
                     {
@@ -3755,51 +3638,50 @@
                 ...
             }
 
-    ### <C> addReceiptTypeItem
+    ### `addReceiptTypeItem` <span style="color:blue">[自定义]</span>
 
         添加单据信息
-        
-                |Requests:|
-                :param receiptTypeItem.rtid: ID
-        :type receiptTypeItem.rtid: Long
-        :param receiptTypeItem.no: 编号
-        :type receiptTypeItem.no: Long
-        :param receiptTypeItem.name: 名称
-        :type receiptTypeItem.name: Long
-        :param receiptTypeItem.type: 类型
-        :type receiptTypeItem.type: Long
 
-        Example::
+**请求参数**:
 
-            {
+- **receiptTypeItem.rtid**:
+  ID
+        - **receiptTypeItem.no**:
+  编号
+        - **receiptTypeItem.name**:
+  名称
+        - **receiptTypeItem.type**:
+  类型
+
+        **示例**:{
                 "receiptTypeItem.rtid": 1,
                 "receiptTypeItem.no": "DJFIJ3I2J23HJ",
                 "receiptTypeItem.name": "单据名称",
                 "receiptTypeItem.rtid": 1,
             }
 
-    ### <C> deleteReceiptTypeItem
+    ### `deleteReceiptTypeItem` <span style="color:blue">[自定义]</span>
 
         删除单据信息
-        
-                |Requests:|
-                :param receiptTypeItem.rtiid: ID
-        :type receiptTypeItem.rtid: Long
-        
-        Example::
 
-            {
+**请求参数**:
+
+- **receiptTypeItem.rtiid**:
+  ID
+
+        **示例**:{
                 "receiptTypeItem.rtiid": 1
             }
-            
+
 ### 款项比例
 
 款项比例信息 , 生成装修款按照该比例进行
 
 ## api.data.PaymentScaleAction
 
-        |DataType:|
-        #### paymentScale
+**数据类型**:
+
+#### paymentScale
 
     - **psid**: ID
       - 类型: *Long*
@@ -3817,7 +3699,7 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-    
+
     #### paymentScaleItem
 
     - **psiid**: ID
@@ -3833,27 +3715,25 @@
     - **sort**: 排序
       - 类型: *Short*
 
-    ### <I> queryPaymentScale
+    ### `queryPaymentScale` <span style="color:gray">[内部]</span>
 
         通过公司ID获取款项比例信息
-        
-                |Requests:|
-                :param paymentScale.cid: 公司ID
-        :type paymentScale.cid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentScale.cid**:
+  公司ID
+
+        **示例**:{
                 "paymentScale.cid": 1
             }
-            
-                |Returns:|
-                - **paymentScales**: 款项比例列表 , 每条数据类型 *paymentScale*
+
+**返回参数**:
+
+- **paymentScales**: 款项比例列表 , 每条数据类型 *paymentScale*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "paymentScales": [
                     {
@@ -3866,28 +3746,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryPaymentScaleItemByPsid
+
+    ### `queryPaymentScaleItemByPsid` <span style="color:gray">[内部]</span>
 
         通过款项比例ID获取款项比例项信息
-        
-                |Requests:|
-                :param paymentScaleItem.psid: 公司ID
-        :type paymentScaleItem.psid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentScaleItem.psid**:
+  公司ID
+
+        **示例**:{
                 "paymentScaleItem.psid": 1
             }
-            
-                |Returns:|
-                - **paymentScaleItems**: 款项比例项列表 , 每条数据类型 *paymentScaleItem*
+
+**返回参数**:
+
+- **paymentScaleItems**: 款项比例项列表 , 每条数据类型 *paymentScaleItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "paymentScaleItems": [
                     {
@@ -3901,45 +3779,43 @@
                 ],
                 ...
             }
-            
-    ### <I> addPaymentScale
+
+    ### `addPaymentScale` <span style="color:gray">[内部]</span>
 
         添加款项比例, 关联公司
-        
-                |Requests:|
-                :param paymentScale.cid: 公司ID
-        :type paymentScale.cid: String
-        :param paymentScale.name: 名称
-        :type paymentScale.name: String
-        :param paymentScale.comment: 说明
-        :type paymentScale.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentScale.cid**:
+  公司ID
+        - **paymentScale.name**:
+  名称
+        - **paymentScale.comment**:
+  说明
+
+        **示例**:{
                 "paymentScale.name": "半包",
                 "paymentScale.comment": 0.4
             }
-            
-    ### <I> addPaymentScaleItem
+
+    ### `addPaymentScaleItem` <span style="color:gray">[内部]</span>
 
         添加款项比例项信息
-        
-                |Requests:|
-                :param paymentScaleitem.psid: 款项比例ID
-        :type paymentScaleitem.psid: Long
-        :param paymentScaleitem.ptid: 款项类型ID
-        :type paymentScaleitem.ptid: Long
-        :param paymentScaleitem.name: 名称
-        :type paymentScaleitem.name: String
-        :param paymentScaleitem.scale: 比例
-        :type paymentScaleitem.scale: Short
-        :param paymentScaleItem.sort: 排序
-        :type paymentScaleItem.sort: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentScaleitem.psid**:
+  款项比例ID
+        - **paymentScaleitem.ptid**:
+  款项类型ID
+        - **paymentScaleitem.name**:
+  名称
+        - **paymentScaleitem.scale**:
+  比例
+        - **paymentScaleItem.sort**:
+  排序
+
+        **示例**:{
                 "paymentScaleitem.psid": 1,
                 "paymentScaleitem.ptid": 1,
                 "paymentScaleitem.name": "半包",
@@ -3947,50 +3823,47 @@
                 "paymentScaleitem.sort": 1
             }
 
-    ### <I> updatePaymentScaleForStatus
+    ### `updatePaymentScaleForStatus` <span style="color:gray">[内部]</span>
 
         更新款项比例状态
-        
-                |Requests:|
-                :param paymentScale.psid: 款项比例ID
-        :type paymentScale.psid: Long
-        :param paymentScale.status: 状态
-        :type paymentScale.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentScale.psid**:
+  款项比例ID
+        - **paymentScale.status**:
+  状态
+
+        **示例**:{
                 "paymentScale.psid": 1,
                 "paymentScale.status": 1
             }
 
-    ### <I> deletePaymentScale
+    ### `deletePaymentScale` <span style="color:gray">[内部]</span>
 
         删除款项比例信息
-        
+
         删除款项比例关联的款项比例项信息
-        
-                |Requests:|
-                :param paymentScale.psid: 款项比例ID
-        :type paymentScale.psid: Long
-         
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentScale.psid**:
+  款项比例ID
+
+        **示例**:{
                 "paymentScale.psid": 1
             }
-            
-    ### <I> deletePaymentScaleItem
+
+    ### `deletePaymentScaleItem` <span style="color:gray">[内部]</span>
 
         删除款项比例项
-        
-                |Requests:|
-                :param paymentScaleItem.psiid: 款项比例项ID
-        :type paymentScaleItem.psiid: Long
-         
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentScaleItem.psiid**:
+  款项比例项ID
+
+        **示例**:{
                 "paymentScaleItem.psiid": 1
             }
 
@@ -3998,8 +3871,9 @@
 
 ## api.data.CustypeAction
 
-        |DataType:|
-        #### custype
+**数据类型**:
+
+#### custype
 
     - **ctid**: ID
       - 类型: *Long*
@@ -4027,20 +3901,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageCustype
+
+    ### `pageCustype` <span style="color:gray">[内部]</span>
 
         分页方式获取商户类型信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 商户类型信息列表 , 每条数据类型 *custype*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  商户类型信息列表 , 每条数据类型 *custype*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4076,33 +3949,31 @@
                 ...
             }
 
-    ### <I> queryCustype
+    ### `queryCustype` <span style="color:gray">[内部]</span>
 
         查询商户类型
-    
-                |Requests:|
-                :param custype.attype: 业务类型
-        :type custype.attype: Short
-        :param custype.dgrade: 装修等级
-        :type custype.dgrade: String
-        :param custype.sgrade: 销售等级
-        :type custype.sgrade: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **custype.attype**:
+  业务类型
+        - **custype.dgrade**:
+  装修等级
+        - **custype.sgrade**:
+  销售等级
+
+        **示例**:{
                 "custype.atttype": 0,
                 "custype.dgrade": ""
                 "custype.sgrade": ""
             }
 
-                |Returns:|
-                - **custypes**: 商户类型信息列表 , 每条数据类型 *custype*
+**返回参数**:
+
+- **custypes**: 商户类型信息列表 , 每条数据类型 *custype*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "custypes": [
                     {
@@ -4133,34 +4004,33 @@
                 ],
                 ...
             }
-            
-    ### <C> addCustype
+
+    ### `addCustype` <span style="color:blue">[自定义]</span>
 
         添加商户类型
-        
-                |Requests:|
-                :param custype.name: 名称
-        :type custype.name: String
-        :param custype.no: 商户号
-        :type custype.no: String
-        :param custype.agent: 机构号
-        :type custype.agent: String
-        :param custype.wxapp: 微信APPID
-        :type custype.wxapp: String
-        :param custype.platform: 支付平台
-        :type custype.platform: Short
-        :param custype.attype: 业务类型
-        :type custype.attype: Short
-        :param custype.dgrade: 装修等级
-        :type custype.dgrade: String
-        :param custype.sgrade: 销售等级
-        :type custype.sgrade: String
-        :param custype.receiptType.rtid: 收据类型ID
-        :type custype.receiptType.rtid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **custype.name**:
+  名称
+        - **custype.no**:
+  商户号
+        - **custype.agent**:
+  机构号
+        - **custype.wxapp**:
+  微信APPID
+        - **custype.platform**:
+  支付平台
+        - **custype.attype**:
+  业务类型
+        - **custype.dgrade**:
+  装修等级
+        - **custype.sgrade**:
+  销售等级
+        - **custype.receiptType.rtid**:
+  收据类型ID
+
+        **示例**:{
                 "custype.name": "test",
                 "custype.no": "",
                 "custype.agent": "",
@@ -4172,39 +4042,38 @@
                 "custype.receiptType.rtid": 1
             }
 
-    ### <C> updateCustype
+    ### `updateCustype` <span style="color:blue">[自定义]</span>
 
         更新商户类型
-        
+
         判断商户类型是否存在 , 不存在 , 错误信息 **130105 商户不存在**
-        
-                |Requests:|
-                :param custype.ctid: ID
-        :type custype.ctid: Long
-        :param custype.name: 名称
-        :type custype.name: String
-        :param custype.no: 商户号
-        :type custype.no: String
-        :param custype.agent: 机构号
-        :type custype.agent: String
-        :param custype.wxapp: 微信APPID
-        :type custype.wxapp: String
-        :param custype.platform: 支付平台
-        :type custype.platform: Short
-        :param custype.attype: 业务类型
-        :type custype.attype: Short
-        :param custype.dgrade: 装修等级
-        :type custype.dgrade: String
-        :param custype.sgrade: 销售等级
-        :type custype.sgrade: String
-        :param custype.status: 状态
-        :type custype.status: Short
-        :param custype.receiptType.rtid: 收据类型ID
-        :type custype.receiptType.rtid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **custype.ctid**:
+  ID
+        - **custype.name**:
+  名称
+        - **custype.no**:
+  商户号
+        - **custype.agent**:
+  机构号
+        - **custype.wxapp**:
+  微信APPID
+        - **custype.platform**:
+  支付平台
+        - **custype.attype**:
+  业务类型
+        - **custype.dgrade**:
+  装修等级
+        - **custype.sgrade**:
+  销售等级
+        - **custype.status**:
+  状态
+        - **custype.receiptType.rtid**:
+  收据类型ID
+
+        **示例**:{
                 "custype.ctid": 1,
                 "custype.name": "test",
                 "custype.no": "",
@@ -4217,7 +4086,7 @@
                 "custype.status": 0,
                 "custype.receiptType.rtid": 1
             }
-    
+
 ## 报价
 
 ### 类型
@@ -4225,27 +4094,27 @@
 
 ## api.data.QuotationTypeAction
 
-        |DataType:|
-        #### quotationType
+**数据类型**:
+
+#### quotationType
 
     - **qtid**: 类型ID
       - 类型: *Long*
     - **name**: 名称
       - 类型: *String*
-    
-    ### <I> pageQuotationType
+
+    ### `pageQuotationType` <span style="color:gray">[内部]</span>
 
         分页方式获取报价类型信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 报价类型信息列表 , 每条数据类型 *quotationType*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价类型信息列表 , 每条数据类型 *quotationType*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4259,18 +4128,17 @@
                 },
                 ...
             }
-    
-    ### <I> queryQuotationType
+
+    ### `queryQuotationType` <span style="color:gray">[内部]</span>
 
         获取所有报价类型信息
-        
-                |Returns:|
-                - **quotationTypes**: 报价类型信息列表 , 每条数据类型 *quotationType*
+
+**返回参数**:
+
+- **quotationTypes**: 报价类型信息列表 , 每条数据类型 *quotationType*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationTypes": [
                     {
@@ -4283,33 +4151,33 @@
                 ],
                 ...
             }
-            
+
 ### 分类
 报价分类信息管理
 
 ## api.data.QuotationClassificationAction
 
-        |DataType:|
-        #### quotationClassification
+**数据类型**:
+
+#### quotationClassification
 
     - **id**: ID
       - 类型: *Long*
     - **name**: 名称
       - 类型: *String*
-    
-    ### <I> pageQuotationClassification
+
+    ### `pageQuotationClassification` <span style="color:gray">[内部]</span>
 
         分页方式获取报分类信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 报价分类信息列表 , 每条数据类型 *quotationClassification*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价分类信息列表 , 每条数据类型 *quotationClassification*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4323,18 +4191,17 @@
                 },
                 ...
             }
-    
-    ### <I> queryQuotationClassification
+
+    ### `queryQuotationClassification` <span style="color:gray">[内部]</span>
 
         获取所有报价分类信息
-        
-                |Returns:|
-                - **quotationClassifications**: 报价分类信息列表 , 每条数据类型 *quotationClassification*
+
+**返回参数**:
+
+- **quotationClassifications**: 报价分类信息列表 , 每条数据类型 *quotationClassification*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationClassifications": [
                     {
@@ -4353,8 +4220,9 @@
 
 ## api.data.QuotationBigCategoryAction
 
-        |DataType:|
-        #### quotationBigCategory
+**数据类型**:
+
+#### quotationBigCategory
 
     - **id**: ID
       - 类型: *Long*
@@ -4362,20 +4230,19 @@
       - 类型: *String*
     - **qtid**: 类型ID
       - 类型: *Long*
-    
-    ### <I> pageQuotationBigCategory
+
+    ### `pageQuotationBigCategory` <span style="color:gray">[内部]</span>
 
         分页方式获取报大类信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 报价分类信息列表 , 每条数据类型 *quotationBigCategory*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价分类信息列表 , 每条数据类型 *quotationBigCategory*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4390,28 +4257,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryQuotationBigCategory
+
+    ### `queryQuotationBigCategory` <span style="color:gray">[内部]</span>
 
         获取所有报价大类信息
-        
-                |Requests:|
-                :param quotationBigCategory.qtid: 类型
-        :type quotationBigCategory.qtid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationBigCategory.qtid**:
+  类型
+
+        **示例**:{
                 "quotationBigCategory.qtid": 1
             }
-        
-                |Returns:|
-                - **quotationBigCategorys**: 报价大类信息列表 , 每条数据类型 *quotationBigCategory*
+
+**返回参数**:
+
+- **quotationBigCategorys**: 报价大类信息列表 , 每条数据类型 *quotationBigCategory*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationBigCategorys": [
                     {
@@ -4426,14 +4291,15 @@
                 ],
                 ...
             }
-            
+
 ### 小类
 报价小类信息管理
 
 ## api.data.QuotationSmallCategoryAction
 
-        |DataType:|
-        #### quotationSmallCategory
+**数据类型**:
+
+#### quotationSmallCategory
 
     - **id**: ID
       - 类型: *Long*
@@ -4441,20 +4307,19 @@
       - 类型: *String*
     - **qtid**: 类型ID
       - 类型: *Long*
-    
-    ### <I> pageQuotationSmallCategory
+
+    ### `pageQuotationSmallCategory` <span style="color:gray">[内部]</span>
 
         分页方式获取报小类信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 报价小类信息列表 , 每条数据类型 *quotationSmallCategory*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价小类信息列表 , 每条数据类型 *quotationSmallCategory*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4469,28 +4334,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryQuotationSmallCategory
+
+    ### `queryQuotationSmallCategory` <span style="color:gray">[内部]</span>
 
         获取所有报价小类信息
-        
-                |Requests:|
-                :param quotationSmallCategory.qtid: 类型
-        :type quotationSmallCategory.qtid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationSmallCategory.qtid**:
+  类型
+
+        **示例**:{
                 "quotationSmallCategory.qtid": 1
             }
-        
-                |Returns:|
-                - **quotationSmallCategorys**: 报价小类信息列表 , 每条数据类型 *quotationSmallCategory*
+
+**返回参数**:
+
+- **quotationSmallCategorys**: 报价小类信息列表 , 每条数据类型 *quotationSmallCategory*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationSmallCategorys": [
                     {
@@ -4505,14 +4368,15 @@
                 ],
                 ...
             }
-            
+
 ### 版本
 报价版本信息管理
 
 ## api.data.QuotationVersionAction
 
-        |DataType:|
-        #### quotationVersion
+**数据类型**:
+
+#### quotationVersion
 
     - **qvid**: 报价版本ID
       - 类型: *Long*
@@ -4546,24 +4410,23 @@
       - 类型: *String*
     - **company**: 公司ID
       - 类型: *Integer*
-    
+
         |Filters:|
         - **name**: 版本名称
       - 类型: *String*
-    
-    ### <I> pageQuotationVersion
+
+    ### `pageQuotationVersion` <span style="color:gray">[内部]</span>
 
         分页方式获取报价爱版本信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 大区信息列表 , 每条数据类型 *region*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  大区信息列表 , 每条数据类型 *region*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4590,18 +4453,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryQuotationVersion
+
+    ### `queryQuotationVersion` <span style="color:gray">[内部]</span>
 
         获取所有报价版本信息
-        
-                |Returns:|
-                - **quotationVersions**: 报价版本信息列表 , 每条数据类型 *quotationVersion*
+
+**返回参数**:
+
+- **quotationVersions**: 报价版本信息列表 , 每条数据类型 *quotationVersion*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationVersions": [
                     {
@@ -4624,28 +4486,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryQuotationVersionByVersionId
+
+    ### `queryQuotationVersionByVersionId` <span style="color:gray">[内部]</span>
 
         通过报价版本编号查询版本信息
-        
-                |Requests:|
-                :param quotationVersion.no: 版本编号
-        :type quotationVersion.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationVersion.no**:
+  版本编号
+
+        **示例**:{
                 "quotationVersion.no": "QV002"
             }
-            
-                |Returns:|
-                - **quotationVersion**: 报价版本信息 , 类型 *quotationVersion*
+
+**返回参数**:
+
+- **quotationVersion**: 报价版本信息 , 类型 *quotationVersion*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationVersion":{
                     "qvid": 1,
@@ -4665,36 +4525,35 @@
                 },
                 ...
             }
-            
-    ### <I> addQuotationVersion
 
-        添加报价版本信息 
-        
-                |Requests:|
-                :param quotationVersion.name: 版本名称
-        :type quotationVersion.name: String
-        :param quotationVersion.undisDiscount: 不打折折扣
-        :type qotationVersion.undisDiscount: Short
-        :param quotationVersion.trafficRate: 车运费比例
-        :type quotationVersion.trafficRate: Integer
-        :param quotationVersion.trafficDiscount: 车运费折扣
-        :type quotationVersion.trafficDiscount: Short
-        :param quotationVersion.manageRate: 管理费比例
-        :type quotationVersion.manageRate: Integer
-        :param quotationVersion.manageDiscount: 管理费折扣
-        :type quotationVersion.manageDiscount: Short
-        :param quotationVersion.taxRate: 税金比例
-        :type quotationVersion.taxRate: Integer
-        :param quotationVersion.taxDiscount: 税金折扣
-        :type quotationVersion.taxDiscount: Short
-        :param quotationVersion.type: 类型
-        :type quotationVersion.type: Short
-        :param quotationVersion.comment: 说明
-        :type quotationVersion.comment: String
-        
-        Example::
-        
-            {
+    ### `addQuotationVersion` <span style="color:gray">[内部]</span>
+
+        添加报价版本信息
+
+**请求参数**:
+
+- **quotationVersion.name**:
+  版本名称
+        - **quotationVersion.undisDiscount**:
+  不打折折扣
+        - **quotationVersion.trafficRate**:
+  车运费比例
+        - **quotationVersion.trafficDiscount**:
+  车运费折扣
+        - **quotationVersion.manageRate**:
+  管理费比例
+        - **quotationVersion.manageDiscount**:
+  管理费折扣
+        - **quotationVersion.taxRate**:
+  税金比例
+        - **quotationVersion.taxDiscount**:
+  税金折扣
+        - **quotationVersion.type**:
+  类型
+        - **quotationVersion.comment**:
+  说明
+
+        **示例**:{
                 "quotationVersion.name": "test",
                 "quotationVersion.defaultFlag": 0,
                 "quotationVersion.undisDiscount": 0,
@@ -4708,42 +4567,41 @@
                 "quotationVersion.type": 0,
                 "quotationVersion.comment": "test"
             }
-            
-    ### <I> updateQuotationVersion
+
+    ### `updateQuotationVersion` <span style="color:gray">[内部]</span>
 
         更新报价版本信息
-        
+
         判断报价版本是否存在 , 不存在 , 错误信息 **200022 报价版本不存在**
-        
-                |Requests:|
-                :param quotationVersion.no: 版本编号
-        :type quotationVersion.no: String
-        :param quotationVersion.name: 版本名称
-        :type quotationVersion.name: String
-        :param quotationVersion.undisDiscount: 不打折折扣
-        :type qotationVersion.undisDiscount: Short
-        :param quotationVersion.trafficRate: 车运费比例
-        :type quotationVersion.trafficRate: Integer
-        :param quotationVersion.trafficDiscount: 车运费折扣
-        :type quotationVersion.trafficDiscount: Short
-        :param quotationVersion.manageRate: 管理费比例
-        :type quotationVersion.manageRate: Integer
-        :param quotationVersion.manageDiscount: 车运费折扣
-        :type quotationVersion.manageDiscount: Short
-        :param quotationVersion.taxRate: 税金比例
-        :type quotationVersion.taxRate: Integer
-        :param quotationVersion.taxDiscount: 税金折扣
-        :type quotationVersion.taxDiscount: Short
-        :param quotationVersion.offset: 偏移量
-        :type quotationVersion.offset: Integer
-        :param quotationVersion.type: 类型
-        :type quotationVersion.type: Short
-        :param quotationVersion.comment: 说明
-        :type quotationVersion.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationVersion.no**:
+  版本编号
+        - **quotationVersion.name**:
+  版本名称
+        - **quotationVersion.undisDiscount**:
+  不打折折扣
+        - **quotationVersion.trafficRate**:
+  车运费比例
+        - **quotationVersion.trafficDiscount**:
+  车运费折扣
+        - **quotationVersion.manageRate**:
+  管理费比例
+        - **quotationVersion.manageDiscount**:
+  车运费折扣
+        - **quotationVersion.taxRate**:
+  税金比例
+        - **quotationVersion.taxDiscount**:
+  税金折扣
+        - **quotationVersion.offset**:
+  偏移量
+        - **quotationVersion.type**:
+  类型
+        - **quotationVersion.comment**:
+  说明
+
+        **示例**:{
                 "quotationVersion.no": "QV001",
                 "quotationVersion.name": "test",
                 "quotationVersion.undisDiscount": 0,
@@ -4758,40 +4616,38 @@
                 "quotationVersion.comment": "test",
             }
 
-    ### <I> updateQuotationVersionForDefault
+    ### `updateQuotationVersionForDefault` <span style="color:gray">[内部]</span>
 
         更新默认报价
-        
+
         判断报价版本是否存在 , 不存在 , 错误信息 **200022 报价版本不存在**
-        
-                |Requests:|
-                :param quotationVersion.qvid: 版本ID
-        :type quotationVersion.qvid: Long
-        :param quotationVersion.defaultFlag: 默认标识
-        :type quotationVersion.defaultFlag: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationVersion.qvid**:
+  版本ID
+        - **quotationVersion.defaultFlag**:
+  默认标识
+
+        **示例**:{
                 "qvid": 1,
                 "defaultFlag": 0
             }
 
-    ### <I> updateQuotationVersionForStatus
+    ### `updateQuotationVersionForStatus` <span style="color:gray">[内部]</span>
 
         更新状态
-        
+
         判断报价版本是否存在 , 不存在 , 错误信息 **200022 报价版本不存在**
-        
-                |Requests:|
-                :param quotationVersion.qvid: 版本ID
-        :type quotationVersion.qvid: Long
-        :param quotationVersion.status: 状态
-        :type quotationVersion.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationVersion.qvid**:
+  版本ID
+        - **quotationVersion.status**:
+  状态
+
+        **示例**:{
                 "qvid": 1,
                 "status": 0
             }
@@ -4800,8 +4656,9 @@
 
 ## api.data.QuotationCtemAction
 
-        |DataType:|
-        #### quotationCtem
+**数据类型**:
+
+#### quotationCtem
 
     - **qcid**: 项目ID
       - 类型: *Long*
@@ -4825,20 +4682,19 @@
       - 类型: *String*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
-    ### <I> pageQuotationCtem
+
+    ### `pageQuotationCtem` <span style="color:gray">[内部]</span>
 
         分页方式获取报价项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 报价项信息列表 , 每条数据类型 *quotationCtem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价项信息列表 , 每条数据类型 *quotationCtem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4878,28 +4734,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryQuotationCtem
+
+    ### `queryQuotationCtem` <span style="color:gray">[内部]</span>
 
         查询共享项信息
-    
-                |Requests:|
-                :param quotationCtem.pinyin: 拼音
-        :type quotationCtem.pinyin: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationCtem.pinyin**:
+  拼音
+
+        **示例**:{
                 "quotationCtem.pinyin": "pinyin",
             }
 
-                |Returns:|
-                :param paging.data: 报价项信息列表 , 每条数据类型 *quotationCtem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+**返回参数**:
+
+- **paging.data**:
+  报价项信息列表 , 每条数据类型 *quotationCtem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4914,28 +4768,27 @@
                 },
                 ...
             }
-    
-    ### <I> addQuotationCtem
+
+    ### `addQuotationCtem` <span style="color:gray">[内部]</span>
 
         添加共享项
-    
-                |Requests:|
-                :param quotationCtem.name: 名称
-        :type quotationCtem.name: String
-        :param quotationCtem.type: 类型
-        :type quotationCtem.type: Short
-        :param quotationCtem.category.qtid: 报价类型ID
-        :type quotationCtem.category.qtid: Long
-        :param quotationCtem.classification.qcid: 报价类别ID
-        :type quotationCtem.classification.qcid: Long
-        :param quotationCtem.bigCategory.qbcid: 报价大类ID
-        :type quotationCtem.bigCategory.qbcid: Long
-        :param quotationCtem.smallCategory.qscid: 报价小类ID
-        :type quotationCtem.smallCategory.qscid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationCtem.name**:
+  名称
+        - **quotationCtem.type**:
+  类型
+        - **quotationCtem.category.qtid**:
+  报价类型ID
+        - **quotationCtem.classification.qcid**:
+  报价类别ID
+        - **quotationCtem.bigCategory.qbcid**:
+  报价大类ID
+        - **quotationCtem.smallCategory.qscid**:
+  报价小类ID
+
+        **示例**:{
                 "quotationCtem.name": "名称",
                 "quotationCtem.type": 1,
                 "quotationCtem.category.qtid": 1,
@@ -4943,30 +4796,29 @@
                 "quotationCtem.bigCategory.qbcid": 1,
                 "quotationCtem.smallCategory.qscid": 11
             }
-    
-    ### <I> updateQuotationCtem
+
+    ### `updateQuotationCtem` <span style="color:gray">[内部]</span>
 
         更新共享项
-        
-                |Requests:|
-                :param quotationCtem.qcid: 共享项ID
-        :type quotationCtem.qcid: Long
-        :param quotationCtem.name: 名称
-        :type quotationCtem.name: String
-        :param quotationCtem.type: 类型
-        :type quotationCtem.type: Short
-        :param quotationCtem.category.qtid: 报价类型ID
-        :type quotationCtem.category.qtid: Long
-        :param quotationCtem.classification.qcid: 报价类别ID
-        :type quotationCtem.classification.qcid: Long
-        :param quotationCtem.bigCategory.qbcid: 报价大类ID
-        :type quotationCtem.bigCategory.qbcid: Long
-        :param quotationCtem.smallCategory.qscid: 报价小类ID
-        :type quotationCtem.smallCategory.qscid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationCtem.qcid**:
+  共享项ID
+        - **quotationCtem.name**:
+  名称
+        - **quotationCtem.type**:
+  类型
+        - **quotationCtem.category.qtid**:
+  报价类型ID
+        - **quotationCtem.classification.qcid**:
+  报价类别ID
+        - **quotationCtem.bigCategory.qbcid**:
+  报价大类ID
+        - **quotationCtem.smallCategory.qscid**:
+  报价小类ID
+
+        **示例**:{
                 "quotationCtem.qcid": 1,
                 "quotationCtem.name": "名称",
                 "quotationCtem.type": 1,
@@ -4975,28 +4827,28 @@
                 "quotationCtem.bigCategory.qbcid": 1,
                 "quotationCtem.smallCategory.qscid": 11
             }
-    
-    ### <I> updateQuotationCtemForStatus
+
+    ### `updateQuotationCtemForStatus` <span style="color:gray">[内部]</span>
 
         更新共享项状态
-        
-                |Requests:|
-                :param quotationCtem.qcid: 项目ID
-        :type quotationCtem.qcid: Long
-        :param quotationCtem.status: 状态
-        :type quotationCtem.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationCtem.qcid**:
+  项目ID
+        - **quotationCtem.status**:
+  状态
+
+        **示例**:{
                 "quotationCtem.qcid": 1,
                 "quotationCtem.status": 1
             }
 
 ## api.data.QuotationFormatAction
 
-        |DataType:|
-        #### quotationFormat
+**数据类型**:
+
+#### quotationFormat
 
     - **qfid**: 规格ID
       - 类型: *Long*
@@ -5012,28 +4864,26 @@
       - 类型: *Integer*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
-    ### <I> queryQuotationFormat
+
+    ### `queryQuotationFormat` <span style="color:gray">[内部]</span>
 
         通过名称/拼音获取规格信息
-    
-                |Requests:|
-                :param quotationFormat.name: 项目ID
-        :type quotationFormat.name: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationFormat.name**:
+  项目ID
+
+        **示例**:{
                 "quotationFormat.name": 1,
             }
 
-                |Returns:|
-                - **quotationFormats**: 规格信息列表 , 每条数据类型 *quotationFormat*
+**返回参数**:
+
+- **quotationFormats**: 规格信息列表 , 每条数据类型 *quotationFormat*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationFormats": [
                     {
@@ -5048,27 +4898,25 @@
                 ...
             }
 
-    ### <I> queryQuotationFormatByQcid
+    ### `queryQuotationFormatByQcid` <span style="color:gray">[内部]</span>
 
         通过项目获取规格信息
-    
-                |Requests:|
-                :param quotationFormat.qcid: 项目ID
-        :type quotationFormat.qcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationFormat.qcid**:
+  项目ID
+
+        **示例**:{
                 "quotationFormat.qcid": 1,
             }
 
-                |Returns:|
-                - **quotationFormats**: 规格信息列表 , 每条数据类型 *quotationFormat*
+**返回参数**:
+
+- **quotationFormats**: 规格信息列表 , 每条数据类型 *quotationFormat*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationFormats": [
                     {
@@ -5083,78 +4931,75 @@
                 ...
             }
 
-    ### <I> addQuotationFormat
+    ### `addQuotationFormat` <span style="color:gray">[内部]</span>
 
         添加规格
-        
-                |Requests:|
-                :param quotationFormat.qcid: 项目ID
-        :type quotationFormat.qcid: Long
-        :param quotationFormat.format: 规格
-        :type quotationFormat.format: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationFormat.qcid**:
+  项目ID
+        - **quotationFormat.format**:
+  规格
+
+        **示例**:{
                 "quotationFormat.qcid": 1,
                 "quotationFormat.format": "规格"
             }
-    
-    ### <I> updateQuotationFormat
+
+    ### `updateQuotationFormat` <span style="color:gray">[内部]</span>
 
         更新规格
-        
-                |Requests:|
-                :param quotationFormat.qfid: 规格ID
-        :type quotationFormat.qfid: Long
-        :param quotationFormat.format: 规格
-        :type quotationFormat.format: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationFormat.qfid**:
+  规格ID
+        - **quotationFormat.format**:
+  规格
+
+        **示例**:{
                 "quotationFormat.qfid": 1,
                 "quotationFormat.format": "规格"
             }
-    
-    ### <I> updateQuotationFormatForStatus
+
+    ### `updateQuotationFormatForStatus` <span style="color:gray">[内部]</span>
 
         更新规格状态
-    
-                |Requests:|
-                :param quotationFormat.qfid: 规格ID
-        :type quotationFormat.qfid: Long
-        :param quotationFormat.status: 状态
-        :type quotationFormat.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationFormat.qfid**:
+  规格ID
+        - **quotationFormat.status**:
+  状态
+
+        **示例**:{
                 "quotationFormat.qfid": 1,
                 "quotationFormat.status": 1
             }
-    
-    ### <I> deleteQuotationFormat
+
+    ### `deleteQuotationFormat` <span style="color:gray">[内部]</span>
 
         删除规格
-    
-                |Requests:|
-                :param quotationFormat.qfid: 规格ID
-        :type quotationFormat.qfid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationFormat.qfid**:
+  规格ID
+
+        **示例**:{
                 "quotationFormat.qfid": 1
             }
-            
+
 ### 报价项
-报价项信息管理 , 报价项归属于一个报价版本 , 通过报价版本的控制来完成报价项的使用 . 
+报价项信息管理 , 报价项归属于一个报价版本 , 通过报价版本的控制来完成报价项的使用 .
 
 ## api.data.QuotationItemAction
 
-        |DataType:|
-        #### quotationItem
+**数据类型**:
+
+#### quotationItem
 
     - **qiid**: 报价项ID
       - 类型: *Long*
@@ -5200,7 +5045,7 @@
       - 类型: *Integer*
     - **comment**: 说明
       - 类型: *String*
-    
+
         |Filters:|
         - **quotationTypeId**: 报价类型ID
       - 类型: *Long*
@@ -5216,20 +5061,19 @@
       - 类型: *String*
     - **status**: 状态
       - 类型: *Short*
-    
-    ### <I> pageQuotationItem
+
+    ### `pageQuotationItem` <span style="color:gray">[内部]</span>
 
         分页方式获取报价项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 报价项信息列表 , 每条数据类型 *quotationItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价项信息列表 , 每条数据类型 *quotationItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5284,30 +5128,28 @@
                 },
                 ...
             }
-            
-    ### <I> pageQuotationItemByVersionId
+
+    ### `pageQuotationItemByVersionId` <span style="color:gray">[内部]</span>
 
         分页方式获取报价项信息 , 同时通过报价版本编号获取报价项信息 , 报价项状态为启用
-        
-                |Requests:|
-                :param quotationItem.version.no: 报价版本编号
-        :type quotationItem.version.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationItem.version.no**:
+  报价版本编号
+
+        **示例**:{
                 "quotationItem.version.no": "QV001",
             }
-            
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 报价项信息列表 , 每条数据类型 *quotationItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价项信息列表 , 每条数据类型 *quotationItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5362,31 +5204,29 @@
                 },
                 ...
             }
-            
-    ### <I> queryQuotationItemByItemIdAVersionId
+
+    ### `queryQuotationItemByItemIdAVersionId` <span style="color:gray">[内部]</span>
 
         通过版本编号以及报价项编号查询报价项信息
-        
-                |Requests:|
-                :param quotationItem.version.no: 报价版本编号
-        :type quotationItem.version.no: String
-        :param quotationItem.no: 报价项编号
-        :type quotationItem.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationItem.version.no**:
+  报价版本编号
+        - **quotationItem.no**:
+  报价项编号
+
+        **示例**:{
                 "quotationItem.version.no": "QV001",
                 "quotationItem.no": "QI00100"
             }
-            
-                |Returns:|
-                - **quotationItem**: 报价项信息 , 类型 *quotationItem*
+
+**返回参数**:
+
+- **quotationItem**: 报价项信息 , 类型 *quotationItem*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationItem":{
                     "qiid": 1,
@@ -5436,32 +5276,30 @@
                 ...
             }
 
-    ### <I> pageQuotationItemForPrice
+    ### `pageQuotationItemForPrice` <span style="color:gray">[内部]</span>
 
         分页方式获取报价项信息 , 同时通过报价版本编号获取报价项信息 , 报价项状态为启用
-        
-                |Requests:|
-                :param quotationItem.version.no: 报价版本编号
-        :type quotationItem.version.no: String
-        :param quotationPrice.updateTime: 更新时间
-        :type quotationPrice.updateTime: Timestamp
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationItem.version.no**:
+  报价版本编号
+        - **quotationPrice.updateTime**:
+  更新时间
+
+        **示例**:{
                 "quotationItem.version.no": "QV001",
                 "quotationItem.updateTime": "2016-01-01 00:00:00",
             }
-            
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 报价项信息列表 , 每条数据类型 *quotationItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价项信息列表 , 每条数据类型 *quotationItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5517,27 +5355,25 @@
                 ...
             }
 
-    ### <I> queryQuotationItemByQiid
+    ### `queryQuotationItemByQiid` <span style="color:gray">[内部]</span>
 
         通过报价项ID查询信息
-        
-                |Requests:|
-                :param quotationItem.qiid: 报价项ID
-        :type quotationItem.qiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationItem.qiid**:
+  报价项ID
+
+        **示例**:{
                 "quotationItem.qiid": 1
             }
-            
-                |Returns:|
-                - **quotationItem**: 报价项信息 , 类型 *quotationItem*
+
+**返回参数**:
+
+- **quotationItem**: 报价项信息 , 类型 *quotationItem*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationItem":{
                     "qiid": 1,
@@ -5586,42 +5422,41 @@
                 },
                 ...
             }
-            
-    ### <I> addQuotationItem
+
+    ### `addQuotationItem` <span style="color:gray">[内部]</span>
 
         添加报价项信息
-        
-                |Requests:|
-                :param quotationItem.no: 编号
-        :type quotationItem.no: String
-        :param quotationItem.name: 名称
-        :type quotationItem.name: String
-        :param quotationItem.addPrice: 增补价
-        :type quotationItem.addPrice: Integer
-        :param quotationItem.unitPrice: 单价
-        :type quotationItem.unitPrice: Integer
-        :param quotationItem.subPrice: 退减价
-        :type quotationItem.subPrice: Integer
-        :param quotationItem.version.no: 报价版本编号
-        :type quotationItem.version.no: String
-        :param quotationItem.category.qtid: 报价类型ID
-        :type quotationItem.category.qtid: Long
-        :param quotationItem.classification.qcid: 报价类别ID
-        :type quotationItem.classification.qcid: Long
-        :param quotationItem.bigCategory.qbcid: 报价大类ID
-        :type quotationItem.bigCategory.qbcid: Long
-        :param quotationItem.smallCategory.qscid: 报价小类ID
-        :type quotationItem.smallCategory.qscid: Long
-        :param quotationItem.unit.muid: 单位ID
-        :type quotationItem.unit.muid: Long
-        :param quotationItem.workType.wtid: 工种ID
-        :type quotationItem.workType.wtid: Long
-        :param quotationItem.comment: 说明
-        :type quotationItem.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationItem.no**:
+  编号
+        - **quotationItem.name**:
+  名称
+        - **quotationItem.addPrice**:
+  增补价
+        - **quotationItem.unitPrice**:
+  单价
+        - **quotationItem.subPrice**:
+  退减价
+        - **quotationItem.version.no**:
+  报价版本编号
+        - **quotationItem.category.qtid**:
+  报价类型ID
+        - **quotationItem.classification.qcid**:
+  报价类别ID
+        - **quotationItem.bigCategory.qbcid**:
+  报价大类ID
+        - **quotationItem.smallCategory.qscid**:
+  报价小类ID
+        - **quotationItem.unit.muid**:
+  单位ID
+        - **quotationItem.workType.wtid**:
+  工种ID
+        - **quotationItem.comment**:
+  说明
+
+        **示例**:{
                 "quotationItem.no": "QI00100",
                 "quotationItem.name": "原墙体建筑大白铲除",
                 "quotationItem.addPrice": 100,
@@ -5636,42 +5471,41 @@
                 "quotationItem.workType.wtid": 1,
                 "quotationItem.comment": "说明"
             }
-            
-    ### <I> updateQuotationItem
+
+    ### `updateQuotationItem` <span style="color:gray">[内部]</span>
 
         更新报价项信息
-        
+
         判断报价项是否存在 , 不存在 , 错误信息 **200013 报价项不存在**
-        
-                |Requests:|
-                :param quotationItem.qiid: 报价项ID
-        :type quotationItem.qiid: Long
-        :param quotationItem.name: 名称
-        :type quotationItem.name: String
-        :param quotationItem.addPrice: 增补价
-        :type quotationItem.addPrice: Integer
-        :param quotationItem.unitPrice: 单价
-        :type quotationItem.unitPrice: Integer
-        :param quotationItem.subPrice: 退减价
-        :type quotationItem.subPrice: Integer
-        :param quotationItem.category.qtid: 报价类型ID
-        :type quotationItem.category.qtid: Long
-        :param quotationItem.classification.qcid: 报价类别ID
-        :type quotationItem.classification.qcid: Long
-        :param quotationItem.bigCategory.qbcid: 报价大类ID
-        :type quotationItem.bigCategory.qbcid: Long
-        :param quotationItem.smallCategory.qscid: 报价小类ID
-        :type quotationItem.smallCategory.qscid: Long
-        :param quotationItem.unit.muid: 单位ID
-        :type quotationItem.unit.muid: Long
-        :param quotationItem.workType.wtid: 工种ID
-        :type quotationItem.workType.wtid: Long
-        :param quotationItem.comment: 说明
-        :type quotationItem.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationItem.qiid**:
+  报价项ID
+        - **quotationItem.name**:
+  名称
+        - **quotationItem.addPrice**:
+  增补价
+        - **quotationItem.unitPrice**:
+  单价
+        - **quotationItem.subPrice**:
+  退减价
+        - **quotationItem.category.qtid**:
+  报价类型ID
+        - **quotationItem.classification.qcid**:
+  报价类别ID
+        - **quotationItem.bigCategory.qbcid**:
+  报价大类ID
+        - **quotationItem.smallCategory.qscid**:
+  报价小类ID
+        - **quotationItem.unit.muid**:
+  单位ID
+        - **quotationItem.workType.wtid**:
+  工种ID
+        - **quotationItem.comment**:
+  说明
+
+        **示例**:{
                 "quotationItem.no": "QI00100",
                 "quotationItem.name": "原墙体建筑大白铲除",
                 "quotationItem.alias": "",
@@ -5686,83 +5520,79 @@
                 "quotationItem.workType.wtid": 1,
                 "quotationItem.comment": "说明",
             }
-            
-    ### <I> updateQuotationItemForStatus
+
+    ### `updateQuotationItemForStatus` <span style="color:gray">[内部]</span>
 
         更新报价项中状态信息 , 控制报价项启用禁用状态
-        
+
         判断报价项是否存在 , 不存在 , 错误信息 **200013 报价项不存在**
-        
-                |Requests:|
-                :param quotationItem.qiid: 报价项ID
-        :type quotationItem.qiid: Long
-        :param quotationItem.status: 状态 , 0: 禁用 , 1: 启用
-        :type quotationItem.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationItem.qiid**:
+  报价项ID
+        - **quotationItem.status**:
+  状态 , 0: 禁用 , 1: 启用
+
+        **示例**:{
                 "quotationItem.qiid": 1,
                 "quotationItem.status": 1,
             }
-            
-    ### <I> updateQuotationItemForDiscount
+
+    ### `updateQuotationItemForDiscount` <span style="color:gray">[内部]</span>
 
         更新报价项中折扣标识 , 控制报价项是否打折状态
-        
+
         判断报价项是否存在 , 不存在 , 错误信息 **200013 报价项不存在**
-        
-                |Requests:|
-                :param quotationItem.qiid: 报价项ID
-        :type quotationItem.qiid: Long
-        :param quotationItem.discount: 折扣标识 , 0: 不打折 , 1: 打折
-        :type quotationItem.discount: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationItem.qiid**:
+  报价项ID
+        - **quotationItem.discount**:
+  折扣标识 , 0: 不打折 , 1: 打折
+
+        **示例**:{
                 "quotationItem.qiid": 1,
                 "quotationItem.discount": 1
             }
 
-    ### <I> updateQuotationItemForFormula
+    ### `updateQuotationItemForFormula` <span style="color:gray">[内部]</span>
 
         更新报价项中公式信息
-        
+
         判断报价项是否存在 , 不存在 , 错误信息 **200013 报价项不存在**
-        
-                |Requests:|
-                :param quotationItem.qiid: 报价项ID
-        :type quotationItem.qiid: Long
-        :param quotationItem.formula: 公式
-        :type quotationItem.formula: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationItem.qiid**:
+  报价项ID
+        - **quotationItem.formula**:
+  公式
+
+        **示例**:{
                 "quotationItem.qiid": 1,
                 "quotationItem.formula": ""
             }
 
-    ### <I> updateQuotationItemForCost
+    ### `updateQuotationItemForCost` <span style="color:gray">[内部]</span>
 
         更新报价项中成本金额
-        
+
         判断报价项是否存在 , 不存在 , 错误信息 **200013 报价项不存在**
-        
-                |Requests:|
-                :param quotationItem.qiid: 报价项ID
-        :type quotationItem.qiid: Long
-        :param quotationItem.alias: 别名
-        :type quotationItem.alias: String
-        :param quotationItem.cost: 成本
-        :type quotationItem.cost: Integer
-        :param quotationItem.achePrice: 业绩额
-        :type quotationItem.achePrice: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationItem.qiid**:
+  报价项ID
+        - **quotationItem.alias**:
+  别名
+        - **quotationItem.cost**:
+  成本
+        - **quotationItem.achePrice**:
+  业绩额
+
+        **示例**:{
                 "quotationItem.qiid": 1,
                 "quotationItem.alias": "",
                 "quotationItem.cost": 0,
@@ -5774,8 +5604,9 @@
 
 ## api.data.SystemDefineItemAction
 
-        |DataType:|
-        #### systemDefineItem
+**数据类型**:
+
+#### systemDefineItem
 
     - **sdiid**: 定义项目ID
       - 类型: *Long*
@@ -5805,7 +5636,7 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Long*
-    
+
         |Filters:|
         - **itemName**: 项目名称
       - 类型: *String*
@@ -5813,20 +5644,19 @@
       - 类型: *Long*
     - **quotationWorkTypeId**: 工种ID
       - 类型: *Long*
-    
-    ### <I> pageSystemDefineItem
+
+    ### `pageSystemDefineItem` <span style="color:gray">[内部]</span>
 
         分页方式获取定义项目信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 定义项目信息列表 , 每条数据类型 *systemDefineItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  定义项目信息列表 , 每条数据类型 *systemDefineItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5851,20 +5681,19 @@
                 },
                 ...
             }
-            
-    ### <I> pageSystemDefineItemForEnable
+
+    ### `pageSystemDefineItemForEnable` <span style="color:gray">[内部]</span>
 
         分页方式获取开启状态的定义项目信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 定义项目信息列表 , 每条数据类型 *systemDefineItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  定义项目信息列表 , 每条数据类型 *systemDefineItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5889,28 +5718,26 @@
                 },
                 ...
             }
-    
-    ### <I> querySystemDefineItemByItemId
+
+    ### `querySystemDefineItemByItemId` <span style="color:gray">[内部]</span>
 
         通过定义项目编号获取定义项目信息
-        
-                |Requests:|
-                :param systemDefineItem.itemId: 项目编号
-        :type systemDefineItem.itemId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **systemDefineItem.itemId**:
+  项目编号
+
+        **示例**:{
                 "systemDefineItem.itemId": "SI00001"
             }
-        
-                |Returns:|
-                - **systemDefineItem**: 定义项目信息 , 类型 *systemDefineItem*
+
+**返回参数**:
+
+- **systemDefineItem**: 定义项目信息 , 类型 *systemDefineItem*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "systemDefineItem":{
                     "sdiid": 1,
@@ -5929,30 +5756,29 @@
                 },
                 ...
             }
-        
-    ### <I> addSystemDefineItem
+
+    ### `addSystemDefineItem` <span style="color:gray">[内部]</span>
 
         添加定义项目信息
-        
-                |Requests:|
-                :param systemDefineItem.itemId: 项目编号
-        :type systemDefineItem.itemId: String
-        :param systemDefineItem.itemName: 项目名称
-        :type systemDefineItem.itemName: String
-        :param systemDefineItem.unitPrice: 单价
-        :type systemDefineItem.unitPrice: String
-        :param systemDefineItem.quotationItemDes: 项目说明
-        :type systemDefineItem.quotationItemDes: String
-        :param systemDefineItem.itemWorkTypeId: 工种ID
-        :type systemDefineItem.itemWorkTypeId: Long
-        :param systemDefineItem.measurementUnitId: 单位ID
-        :type systemDefineItem.measurementUnitId: Long
-        :param systemDefineItem.quotationBigno: 报价大类ID
-        :type systemDefineItem.quotationBigno: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **systemDefineItem.itemId**:
+  项目编号
+        - **systemDefineItem.itemName**:
+  项目名称
+        - **systemDefineItem.unitPrice**:
+  单价
+        - **systemDefineItem.quotationItemDes**:
+  项目说明
+        - **systemDefineItem.itemWorkTypeId**:
+  工种ID
+        - **systemDefineItem.measurementUnitId**:
+  单位ID
+        - **systemDefineItem.quotationBigno**:
+  报价大类ID
+
+        **示例**:{
                 "systemDefineItem.itemId": "SI_00002",
                 "systemDefineItem.itemName": "test",
                 "systemDefineItem.unitPrice": 100,
@@ -5961,30 +5787,29 @@
                 "systemDefineItem.measurementUnitId": 1,
                 "systemDefineItem.quotationBigno": 1
             }
-        
-    ### <I> updateSystemDefineItem
+
+    ### `updateSystemDefineItem` <span style="color:gray">[内部]</span>
 
         更新定义项目信息
-        
-                |Requests:|
-                :param systemDefineItem.sdiid: 定义项目ID
-        :type systemDefineItem.sdiid: Long
-        :param systemDefineItem.itemName: 项目名称
-        :type systemDefineItem.itemName: String
-        :param systemDefineItem.unitPrice: 单价
-        :type systemDefineItem.unitPrice: String
-        :param systemDefineItem.quotationItemDes: 项目说明
-        :type systemDefineItem.quotationItemDes: String
-        :param systemDefineItem.itemWorkTypeId: 工种ID
-        :type systemDefineItem.itemWorkTypeId: Long
-        :param systemDefineItem.measurementUnitId: 单位ID
-        :type systemDefineItem.measurementUnitId: Long
-        :param systemDefineItem.quotationBigno: 报价大类ID
-        :type systemDefineItem.quotationBigno: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **systemDefineItem.sdiid**:
+  定义项目ID
+        - **systemDefineItem.itemName**:
+  项目名称
+        - **systemDefineItem.unitPrice**:
+  单价
+        - **systemDefineItem.quotationItemDes**:
+  项目说明
+        - **systemDefineItem.itemWorkTypeId**:
+  工种ID
+        - **systemDefineItem.measurementUnitId**:
+  单位ID
+        - **systemDefineItem.quotationBigno**:
+  报价大类ID
+
+        **示例**:{
                 "systemDefineItem.sdiid": 1,
                 "systemDefineItem.itemName": "test",
                 "systemDefineItem.unitPrice": 100,
@@ -5993,52 +5818,49 @@
                 "systemDefineItem.measurementUnitId": 1,
                 "systemDefineItem.quotationBigno": 1
             }
-            
-    ### <I> updateSystemDefineItemForStatus
+
+    ### `updateSystemDefineItemForStatus` <span style="color:gray">[内部]</span>
 
         更新定义项目中状态信息 , 控制定义项目启用禁用状态
-        
-                |Requests:|
-                :param systemDefineItem.sdiid: 定义项目ID
-        :type systemDefineItem.sdiid: Long
-        :param systemDefineItem.status: 状态 , 0: 禁用 , 1: 启用
-        :type systemDefineItem.sdiid: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **systemDefineItem.sdiid**:
+  定义项目ID
+        - **systemDefineItem.status**:
+  状态 , 0: 禁用 , 1: 启用
+
+        **示例**:{
                 "systemDefineItem.sdiid": 1,
                 "systemDefineItem.status": 1
             }
-            
-    ### <I> updateSystemDefineItemForDiscount
+
+    ### `updateSystemDefineItemForDiscount` <span style="color:gray">[内部]</span>
 
         更新定义项目中折扣标识信息 , 控制定义项目是否可以打折
-        
-                |Requests:|
-                :param systemDefineItem.sdiid: 定义项目ID
-        :type systemDefineItem.sdiid: Long
-        :param systemDefineItem.discount: 折扣标识 , 0: 不打折 , 1: 打折
-        :type systemDefineItem.discount: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **systemDefineItem.sdiid**:
+  定义项目ID
+        - **systemDefineItem.discount**:
+  折扣标识 , 0: 不打折 , 1: 打折
+
+        **示例**:{
                 "systemDefineItem.sdiid": 1,
                 "systemDefineItem.discount": 1
             }
-            
-    ### <I> deleteSystemDefineItem
+
+    ### `deleteSystemDefineItem` <span style="color:gray">[内部]</span>
 
         通过定义项目ID列表信息批量删除定义项目信息
-        
-                |Requests:|
-                :param systemDefineItem.sdiid: 定义项目ID
-        :type systemDefineItem.sdiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **systemDefineItem.sdiid**:
+  定义项目ID
+
+        **示例**:{
                 "systemDefineItem.sdiid": 1
             }
 
@@ -6047,8 +5869,9 @@
 
 ## api.data.FunctionAreaAction
 
-        |DataType:|
-        #### functionArea
+**数据类型**:
+
+#### functionArea
 
     - **faId**: 功能区ID
       - 类型: *Long*
@@ -6072,24 +5895,23 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Long*
-    
+
         |Filters:|
         - **no**: 报价版本编号
       - 类型: *String*
-    
-    ### <I> pageFunctionArea
+
+    ### `pageFunctionArea` <span style="color:gray">[内部]</span>
 
         分页方式获取功能区信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 功能区信息列表 , 每条数据类型 *functionArea*
-        :type paging.data: List
-    
-        Example::
-        
-            {
+        - **paging.data**:
+  功能区信息列表 , 每条数据类型 *functionArea*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6110,31 +5932,29 @@
                 },
                 ...
             }
-    
-    ### <I> queryFunctionAreaByIdAVersionId
+
+    ### `queryFunctionAreaByIdAVersionId` <span style="color:gray">[内部]</span>
 
         通过功能区编号以及报价版本获取功能区信息
-    
-                |Requests:|
-                :param functionArea.functionAreaId: 功能区编号
-        :type functionArea.functionAreaId: String
-        :param functionArea.no: 版本编号
-        :type functionArea.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **functionArea.functionAreaId**:
+  功能区编号
+        - **functionArea.no**:
+  版本编号
+
+        **示例**:{
                 "functionArea.functionAreaId": "D001",
                 "functionArea.no": "QV001"
             }
-    
-                |Returns:|
-                - **functionArea**: 功能区信息 , 类型 *functionArea*
+
+**返回参数**:
+
+- **functionArea**: 功能区信息 , 类型 *functionArea*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "region":{
                     "faId": 1,
@@ -6149,28 +5969,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryFunctionAreaByVersionId
+
+    ### `queryFunctionAreaByVersionId` <span style="color:gray">[内部]</span>
 
         通过报价版本获取功能区信息
-        
-                |Requests:|
-                :param functionArea.no: 版本编号
-        :type functionArea.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **functionArea.no**:
+  版本编号
+
+        **示例**:{
                 "functionArea.no": "QV001"
             }
-            
-                |Returns:|
-                - **functionAreas**: 功能区信息列表 , 每条数据类型 *functionArea*
+
+**返回参数**:
+
+- **functionAreas**: 功能区信息列表 , 每条数据类型 *functionArea*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "functionAreas": [
                     {
@@ -6187,28 +6005,27 @@
                 ],
                 ...
             }
-            
-    ### <I> addFunctionArea
+
+    ### `addFunctionArea` <span style="color:gray">[内部]</span>
 
         添加功能区信息
-        
-                |Requests:|
-                :param functionArea.functionAreaName: 功能区名称
-        :type functionArea.functionAreaName: String
-        :param functionArea.functionAreaOrder: 排序
-        :type functionArea.functionAreaOrder: Integer
-        :param functionArea.functionAreaType: 类型 , 分为: 标准 , 一次性包死 , 综合项目
-        :type functionArea.functionAreaType: String
-        :param functionArea.no: 报价版本编号
-        :type functionArea.no: String
-        :param functionArea.type: 类型
-        :type functionArea.type: Short
-        :param functionArea.total: 总额
-        :type functionArea.total: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **functionArea.functionAreaName**:
+  功能区名称
+        - **functionArea.functionAreaOrder**:
+  排序
+        - **functionArea.functionAreaType**:
+  类型 , 分为: 标准 , 一次性包死 , 综合项目
+        - **functionArea.no**:
+  报价版本编号
+        - **functionArea.type**:
+  类型
+        - **functionArea.total**:
+  总额
+
+        **示例**:{
                 "functionArea.functionAreaName": "标准",
                 "functionArea.functionAreaOrder": 1,
                 "functionArea.functionAreaType": "标准",
@@ -6216,28 +6033,27 @@
                 "functionArea.type": 1,
                 "functionArea.total": 0
             }
-            
-    ### <I> updateFunctionArea
+
+    ### `updateFunctionArea` <span style="color:gray">[内部]</span>
 
         更新功能区信息
-        
-                |Requests:|
-                :param functionArea.faId: 功能区ID
-        :type functionArea.faId: Integer
-        :param functionArea.functionAreaName: 功能区名称
-        :type functionArea.functionAreaName: String
-        :param functionArea.functionAreaOrder: 排序
-        :type functionArea.functionAreaOrder: Integer
-        :param functionArea.functionAreaType: 类型 , 分为: 标准 , 一次性包死 , 综合项目
-        :type functionArea.functionAreaType: String,
-        :param functionArea.type: 类型 , 分为: 0(管理), 1(工程量), 2(功能区总额), 3(不计算)
-        :type functionArea.type: Short
-        :param functionArea.total: 总额
-        :type functionArea.total: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **functionArea.faId**:
+  功能区ID
+        - **functionArea.functionAreaName**:
+  功能区名称
+        - **functionArea.functionAreaOrder**:
+  排序
+        - **functionArea.functionAreaType**:
+  类型 , 分为: 标准 , 一次性包死 , 综合项目
+        - **functionArea.type**:
+  类型 , 分为: 0(管理), 1(工程量), 2(功能区总额), 3(不计算)
+        - **functionArea.total**:
+  总额
+
+        **示例**:{
                 "functionArea.faId": 1,
                 "functionArea.functionAreaName": "标准",
                 "functionArea.functionAreaOrder": 1,
@@ -6245,18 +6061,17 @@
                 "functionArea.type": 1,
                 "functionArea.total": 0
             }
-            
-    ### <I> deleteFunctionArea
+
+    ### `deleteFunctionArea` <span style="color:gray">[内部]</span>
 
         通过功能区ID批量删除功能区信息
-        
-                |Requests:|
-                - **ids**: 功能区ID列表 , 每条数据类型 Integer
+
+**请求参数**:
+
+- **ids**: 功能区ID列表 , 每条数据类型 Integer
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "ids[0]": 1,
                 "ids[1]": 2
             }
@@ -6266,8 +6081,9 @@
 
 ## api.data.FunctionAreaItemAction
 
-        |DataType:|
-        #### functionAreaItem
+**数据类型**:
+
+#### functionAreaItem
 
     - **faiId**: 所属报价项ID
       - 类型: *Long*
@@ -6279,28 +6095,26 @@
       - 类型: *String*
     - **sort**: 排序
       - 类型: *Integer*
-    
-    ### <I> queryFunctionAreaItemByFunctionAreaId
+
+    ### `queryFunctionAreaItemByFunctionAreaId` <span style="color:gray">[内部]</span>
 
         通过功能区ID获取功能区包含的报价项信息
-        
-                |Requests:|
-                :param functionAreaItem.faId: 功能区ID
-        :type functionAreaItem.faId: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **functionAreaItem.faId**:
+  功能区ID
+
+        **示例**:{
                 "functionAreaItem.faId": 1
             }
-            
-                |Returns:|
-                - **functionAreaItems**: 报价项信息列表 , 每条数据类型 `quotationItem <./data.html#api.data.QuotationItemAction.quotationItem>`_
+
+**返回参数**:
+
+- **functionAreaItems**: 报价项信息列表 , 每条数据类型 `quotationItem <./data.html#api.data.QuotationItemAction.quotationItem>`_
           - 类型: *List*
 
-        Example::
-        
-            {
+        **示例**:{
                 ...
                 "functionAreas": [
                     {
@@ -6345,24 +6159,23 @@
                 ],
                 ...
             }
-            
-    ### <I> addFunctionAreaItem
+
+    ### `addFunctionAreaItem` <span style="color:gray">[内部]</span>
 
         向功能区中添加报价项信息
-        
-                |Requests:|
-                :param functionAreaItems[n].functionArea.faId: 功能区ID
-        :type functionAreaItems[n].functionArea.faId: Long
-        :param functionAreaItems[n].quotationItem.qiid: 报价项ID
-        :type functionAreaItems[n].quotationItem.qiid: Long
-        :param functionAreaItems[n].quotationItem.quotationClassification: 功能区类别
-        :type functionAreaItems[n].quotationItem.quotationClassification: String
-        :param functionAreaItems[n].sort: 排序
-        :type functionAreaItems[n].sort: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **functionAreaItems[n].functionArea.faId**:
+  功能区ID
+        - **functionAreaItems[n].quotationItem.qiid**:
+  报价项ID
+        - **functionAreaItems[n].quotationItem.quotationClassification**:
+  功能区类别
+        - **functionAreaItems[n].sort**:
+  排序
+
+        **示例**:{
                 "functionAreaItems[0].functionArea.faId": 1,
                 "functionAreaItems[0].quotationItem.qiid": 1,
                 "functionAreaItems[0].quotationItem.quotationClassification": "标准",
@@ -6372,54 +6185,51 @@
                 "functionAreaItems[1].quotationItem.quotationClassification": "标准",
                 "functionAreaItems[1].sort": 1
             }
-            
-    ### <I> updateFunctionAreaItem
+
+    ### `updateFunctionAreaItem` <span style="color:gray">[内部]</span>
 
         更新功能区中报价项
-        
-                |Requests:|
-                :param functionAreaItem.faiId: ID
-        :type functionAreaItem.faiId: Long
-        :param functionAreaItem.formula: 公式
-        :type functionAreaItem.formula: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **functionAreaItem.faiId**:
+  ID
+        - **functionAreaItem.formula**:
+  公式
+
+        **示例**:{
                 "functionAreaItem.faiId": 1,
                 "functionAreaItem.formula": "a*b+c"
             }
 
-    ### <I> updateFunctionAreaItemForSort
+    ### `updateFunctionAreaItemForSort` <span style="color:gray">[内部]</span>
 
         更新功能区中报价项排序
-        
-                |Requests:|
-                :param functionAreaItems[n].faiid: 项目ID
-        :type functionAreaItems[n].faiid: Long
-        :param functionAreaItems[n].sort: 排序
-        :type functionAreaItems[n].sort: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **functionAreaItems[n].faiid**:
+  项目ID
+        - **functionAreaItems[n].sort**:
+  排序
+
+        **示例**:{
                 "functionAreaItems[0].faiid": 1,
                 "functionAreaItems[0].sort": 0,
                 "functionAreaItems[1].faiid": 1,
                 "functionAreaItems[1].sort": 1
             }
-            
-    ### <I> deleteFunctionAreaItemByIds
+
+    ### `deleteFunctionAreaItemByIds` <span style="color:gray">[内部]</span>
 
         通过功能区包含报价项ID删除报价项信息
-        
-                |Requests:|
-                - **ids**: 功能区包含报价项ID列表 , 每条数据类型 Long
+
+**请求参数**:
+
+- **ids**: 功能区包含报价项ID列表 , 每条数据类型 Long
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "ids[0]": 1,
                 "ids[1]": 2
             }
@@ -6428,8 +6238,9 @@
 
 ## api.data.QuotationPriceAction
 
-        |DataType:|
-        #### quotationPrice
+**数据类型**:
+
+#### quotationPrice
 
     - **qpid**: 价格ID
       - 类型: *Long*
@@ -6447,20 +6258,19 @@
       - 类型: *Timestamp*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
-    ### <I> pageQuotationPrice
+
+    ### `pageQuotationPrice` <span style="color:gray">[内部]</span>
 
         分页方式获取报价价格信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 报价价格信息列表 , 每条数据类型 *quotationPrice*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价价格信息列表 , 每条数据类型 *quotationPrice*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6501,23 +6311,23 @@
                 ...
             }
 
-    ### <I> queryQuotationPrice
+    ### `queryQuotationPrice` <span style="color:gray">[内部]</span>
 
         通过报价项获取价格信息
-        
-                |Requests:|
-                :param quotationPrice.quotationItem.qiid: 报价项ID
-        :type quotationPrice.quotationItem.qiid: Long
-        :param quotationPrice.updateTime: 更新时间
-        :type quotationPrice.updateTime: Timestamp
-        
-                |Returns:|
-                - **quotationPrices**: 报价价格信息 , 类型 *quotationPrice*
+
+**请求参数**:
+
+- **quotationPrice.quotationItem.qiid**:
+  报价项ID
+        - **quotationPrice.updateTime**:
+  更新时间
+
+**返回参数**:
+
+- **quotationPrices**: 报价价格信息 , 类型 *quotationPrice*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationPrices": [
                     {
@@ -6533,25 +6343,24 @@
                 ...
             }
 
-    ### <I> addQuotationPrice
+    ### `addQuotationPrice` <span style="color:gray">[内部]</span>
 
         添加报价价格
-        
-                |Requests:|
-                :param quotationPrice.quotationItem.qiid: 报价项ID
-        :type quotationPrice.quotationItem.qiid: Long
-        :param quotationPrice.addPrice: 增补价
-        :type quotationPrice.addPrice: Timestamp
-        :param quotationPrice.unitPrice: 增补价
-        :type quotationPrice.unitPrice: Timestamp
-        :param quotationPrice.subPrice: 退减价
-        :type quotationPrice.subPrice: Timestamp
-        :param quotationPrice.updateTime: 更新时间
-        :type quotationPrice.updateTime: Timestamp
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationPrice.quotationItem.qiid**:
+  报价项ID
+        - **quotationPrice.addPrice**:
+  增补价
+        - **quotationPrice.unitPrice**:
+  增补价
+        - **quotationPrice.subPrice**:
+  退减价
+        - **quotationPrice.updateTime**:
+  更新时间
+
+        **示例**:{
                 "quotationPrice.quotationItem.qiid": 1,
                 "quotationPrice.addPrice": 10000000,
                 "quotationPrice.unitPrice": 100000,
@@ -6559,25 +6368,24 @@
                 "quotationPrice.updateTime": "2016-01-01 00:00:00"
             }
 
-    ### <I> updateQuotationPrice
+    ### `updateQuotationPrice` <span style="color:gray">[内部]</span>
 
         更新报价价格
-        
-                |Requests:|
-                :param quotationPrice.qpid: 价格ID
-        :type quotationPrice.qpid: Long
-        :param quotationPrice.addPrice: 增补价
-        :type quotationPrice.addPrice: Timestamp
-        :param quotationPrice.unitPrice: 增补价
-        :type quotationPrice.unitPrice: Timestamp
-        :param quotationPrice.subPrice: 退减价
-        :type quotationPrice.subPrice: Timestamp
-        :param quotationPrice.updateTime: 更新时间
-        :type quotationPrice.updateTime: Timestamp
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationPrice.qpid**:
+  价格ID
+        - **quotationPrice.addPrice**:
+  增补价
+        - **quotationPrice.unitPrice**:
+  增补价
+        - **quotationPrice.subPrice**:
+  退减价
+        - **quotationPrice.updateTime**:
+  更新时间
+
+        **示例**:{
                 "quotationPrice.qpid": 1,
                 "quotationPrice.addPrice": 10000000,
                 "quotationPrice.unitPrice": 100000,
@@ -6585,17 +6393,16 @@
                 "quotationPrice.updateTime": "2016-01-01 00:00:00"
             }
 
-    ### <I> deleteQuotationPrice
+    ### `deleteQuotationPrice` <span style="color:gray">[内部]</span>
 
         删除报价价格
-        
-                |Requests:|
-                :param quotationPrice.qpid: 价格ID
-        :type quotationPrice.qpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationPrice.qpid**:
+  价格ID
+
+        **示例**:{
                 "quotationPrice.qpid": 1
             }
 
@@ -6605,8 +6412,9 @@
 
 ## api.data.PresignProduceAction
 
-        |DataType:|
-        #### presignProduce
+**数据类型**:
+
+#### presignProduce
 
     - **ppid**: 预签产品ID
       - 类型: *Long*
@@ -6650,20 +6458,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pagePresignProduce
+
+    ### `pagePresignProduce` <span style="color:gray">[内部]</span>
 
         分页方式获取预签产品信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 预签产品信息列表 , 每条数据类型 *presignProduce*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  预签产品信息列表 , 每条数据类型 *presignProduce*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6697,18 +6504,17 @@
                 },
                 ...
             }
-    
-    ### <I> queryPresignProduce
+
+    ### `queryPresignProduce` <span style="color:gray">[内部]</span>
 
         获取预签产品信息 , 状态为1(发布)
-        
-                |Returns:|
-                - **presignProduces**: 预签产品列表 , 每条数据类型 *presignProduce*
+
+**返回参数**:
+
+- **presignProduces**: 预签产品列表 , 每条数据类型 *presignProduce*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "tasks": [
                     {
@@ -6739,17 +6545,16 @@
                 ...
             }
 
-    ### <I> queryPresignProduceByPpid
+    ### `queryPresignProduceByPpid` <span style="color:gray">[内部]</span>
 
         通过预签产品ID获取信息
-        
-                |Returns:|
-                - **presignProduce**: 预签产品信息 , 类型 *presignProduce*
+
+**返回参数**:
+
+- **presignProduce**: 预签产品信息 , 类型 *presignProduce*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "tasks": {
                     "ppid": 1,
@@ -6778,45 +6583,44 @@
                 ...
             }
 
-    ### <I> addPresignProduce
+    ### `addPresignProduce` <span style="color:gray">[内部]</span>
 
         添加预签产品
-        
-                |Requests:|
-                :param presignProduce.name: 名称
-        :type presignProduce.name: String
-        :param presignProduce.version.qvid: 报价版本ID
-        :type presignProduce.version.qvid: Long
-        :param presignProduce.quotePrice: 起报价
-        :type presignProduce.quotePrice: Long
-        :param presignProduce.quoteArea: 起报面积
-        :type presignProduce.quoteArea: Integer
-        :param presignProduce.unitPrice: 计价单价
-        :type presignProduce.unitPrice: Long
-        :param presignProduce.discount: 折扣
-        :type presignProduce.discount: Integer
-        :param presignProduce.manageRate: 管理费比例
-        :type presignProduce.manageRate: Integer
-        :param presignProduce.manageFormula: 管理费公式
-        :type presignProduce.manageFormula: String
-        :param presignProduce.preferPrice: 优惠额
-        :type presignProduce.preferPrice: Long
-        :param presignProduce.costPrice: 成本单价
-        :type presignProduce.costPrice: Long
-        :param presignProduce.mostPrice: 主材成本
-        :type presignProduce.mostPrice: Long
-        :param presignProduce.profitRate: 利润率
-        :type presignProduce.profitRate: Integer
-        :param presignProduce.costRate: 工程增项成本比例
-        :type presignProduce.costRate: Integer
-        :param presignProduce.mostRate: 主材增项成本比例
-        :type presignProduce.mostRate: Integer
-        :param presignProduce.offset: 偏移量
-        :type presignProduce.offset: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignProduce.name**:
+  名称
+        - **presignProduce.version.qvid**:
+  报价版本ID
+        - **presignProduce.quotePrice**:
+  起报价
+        - **presignProduce.quoteArea**:
+  起报面积
+        - **presignProduce.unitPrice**:
+  计价单价
+        - **presignProduce.discount**:
+  折扣
+        - **presignProduce.manageRate**:
+  管理费比例
+        - **presignProduce.manageFormula**:
+  管理费公式
+        - **presignProduce.preferPrice**:
+  优惠额
+        - **presignProduce.costPrice**:
+  成本单价
+        - **presignProduce.mostPrice**:
+  主材成本
+        - **presignProduce.profitRate**:
+  利润率
+        - **presignProduce.costRate**:
+  工程增项成本比例
+        - **presignProduce.mostRate**:
+  主材增项成本比例
+        - **presignProduce.offset**:
+  偏移量
+
+        **示例**:{
                 "presignProduce.name": "预签产品",
                 "presignProduce.version.qvid": 1,
                 "presignProduce.quotePrice": 10000000,
@@ -6833,52 +6637,51 @@
                 "presignProduce.mostRate": 100,
                 "presignProduce.offset": 1765
             }
-    
-    ### <I> updatePresignProduce
+
+    ### `updatePresignProduce` <span style="color:gray">[内部]</span>
 
         更新预签产品
-        
+
         判断预签产品是否存在 , 不存在 , 错误信息 **130080 预签产品不存在**
-        
+
         判断预签产品状态为0(初始) , 其他状态 , 错误信息 **130081 预签产品不可操作**
-        
-                |Requests:|
-                :param presignProduce.ppid: 预签产品ID
-        :type presignProduce.ppid: Long
-        :param presignProduce.name: 名称
-        :type presignProduce.name: String
-        :param presignProduce.version.qvid: 报价版本ID
-        :type presignProduce.version.qvid: Long
-        :param presignProduce.quotePrice: 起报价
-        :type presignProduce.quotePrice: Long
-        :param presignProduce.quoteArea: 起报面积
-        :type presignProduce.quoteArea: Integer
-        :param presignProduce.unitPrice: 计价单价
-        :type presignProduce.unitPrice: Long
-        :param presignProduce.discount: 折扣
-        :type presignProduce.discount: Integer
-        :param presignProduce.manageRate: 管理费比例
-        :type presignProduce.manageRate: Integer
-        :param presignProduce.manageFormula: 管理费公式
-        :type presignProduce.manageFormula: String
-        :param presignProduce.preferPrice: 优惠额
-        :type presignProduce.preferPrice: Long
-        :param presignProduce.costPrice: 成本单价
-        :type presignProduce.costPrice: Long
-        :param presignProduce.mostPrice: 主材成本
-        :type presignProduce.mostPrice: Long
-        :param presignProduce.profitRate: 利润率
-        :type presignProduce.profitRate: Integer
-        :param presignProduce.costRate: 工程增项成本比例
-        :type presignProduce.costRate: Integer
-        :param presignProduce.mostRate: 主材增项成本比例
-        :type presignProduce.mostRate: Integer
-        :param presignProduce.offset: 偏移量
-        :type presignProduce.offset: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignProduce.ppid**:
+  预签产品ID
+        - **presignProduce.name**:
+  名称
+        - **presignProduce.version.qvid**:
+  报价版本ID
+        - **presignProduce.quotePrice**:
+  起报价
+        - **presignProduce.quoteArea**:
+  起报面积
+        - **presignProduce.unitPrice**:
+  计价单价
+        - **presignProduce.discount**:
+  折扣
+        - **presignProduce.manageRate**:
+  管理费比例
+        - **presignProduce.manageFormula**:
+  管理费公式
+        - **presignProduce.preferPrice**:
+  优惠额
+        - **presignProduce.costPrice**:
+  成本单价
+        - **presignProduce.mostPrice**:
+  主材成本
+        - **presignProduce.profitRate**:
+  利润率
+        - **presignProduce.costRate**:
+  工程增项成本比例
+        - **presignProduce.mostRate**:
+  主材增项成本比例
+        - **presignProduce.offset**:
+  偏移量
+
+        **示例**:{
                 "presignProduce.ppid": 1,
                 "presignProduce.name": "预签产品",
                 "presignProduce.version.qvid": 1,
@@ -6896,41 +6699,39 @@
                 "presignProduce.mostRate": 790,
                 "presignProduce.offset": 1765
             }
-    
-    ### <I> updatePresignProduceForStatus
+
+    ### `updatePresignProduceForStatus` <span style="color:gray">[内部]</span>
 
         更新预签产品状态
-        
+
         判断预签产品是否存在 , 不存在 , 错误信息 **130080 预签产品不存在**
-        
-                |Requests:|
-                :param presignProduce.ppid: 预签产品ID
-        :type presignProduce.ppid: Long
-        :param presignProduce.status: 状态
-        :type presignProduce.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignProduce.ppid**:
+  预签产品ID
+        - **presignProduce.status**:
+  状态
+
+        **示例**:{
                 "presignProduce.ppid": 1,
                 "presignProduce.status": 0
             }
-    
-    ### <I> copyPresignProduce
+
+    ### `copyPresignProduce` <span style="color:gray">[内部]</span>
 
         复制预签产品
-        
+
         判断预签产品是否存在 , 不存在 , 错误信息 **130080 预签产品不存在**
-        
-                |Requests:|
-                :param presignProduce.ppid: 预签产品ID
-        :type presignProduce.ppid: Long
-        :param presignProduce.name: 产品名称
-        :type presignProduce.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignProduce.ppid**:
+  预签产品ID
+        - **presignProduce.name**:
+  产品名称
+
+        **示例**:{
                 "presignProduce.ppid": 1,
                 "presignProduce.name": "产品名称"
             }
@@ -6939,8 +6740,9 @@
 
 ## api.data.PresignPriceAction
 
-        |DataType:|
-        #### presignPrice
+**数据类型**:
+
+#### presignPrice
 
     - **pspid**: 价格ID
       - 类型: *Long*
@@ -6960,20 +6762,19 @@
       - 类型: *Integer*
     - **status**: 状态
       - 类型: *Short*
-    
-    ### <I> pagePresignPrice
+
+    ### `pagePresignPrice` <span style="color:gray">[内部]</span>
 
         分页方式获取预签价格信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 预签价格信息列表 , 每条数据类型 *presignPrice*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  预签价格信息列表 , 每条数据类型 *presignPrice*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6995,29 +6796,28 @@
                 ...
             }
 
-    ### <I> addPresignPrice
+    ### `addPresignPrice` <span style="color:gray">[内部]</span>
 
         添加预签价格
-        
-                |Requests:|
-                :param presignPrice.ppid: 预签产品ID
-        :type presignPrice.ppid: Long
-        :param presignPrice.name: 名称
-        :type presignPrice.name: String
-        :param presignProduce.upperArea: 起报价
-        :type presignProduce.upperArea: Long
-        :param presignProduce.lowerArea: 起报面积
-        :type presignProduce.lowerArea: Integer
-        :param presignProduce.price: 计价单价
-        :type presignProduce.price: Long
-        :param presignProduce.costPrice: 工程成本
-        :type presignProduce.costPrice: Long
-        :param presignProduce.mostPrice: 主材成本
-        :type presignProduce.mostPrice: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignPrice.ppid**:
+  预签产品ID
+        - **presignPrice.name**:
+  名称
+        - **presignProduce.upperArea**:
+  起报价
+        - **presignProduce.lowerArea**:
+  起报面积
+        - **presignProduce.price**:
+  计价单价
+        - **presignProduce.costPrice**:
+  工程成本
+        - **presignProduce.mostPrice**:
+  主材成本
+
+        **示例**:{
                 "presignProduce.ppid": 1,
                 "presignProduce.name": "名称",
                 "presignProduce.upperArea": 10000000,
@@ -7027,29 +6827,28 @@
                 "presignProduce.mostPrice": 0
             }
 
-    ### <I> updatePresignPrice
+    ### `updatePresignPrice` <span style="color:gray">[内部]</span>
 
         更新预签价格
-        
-                |Requests:|
-                :param presignPrice.pspid: 预签价格ID
-        :type presignPrice.pspid: Long
-        :param presignPrice.name: 名称
-        :type presignPrice.name: String
-        :param presignProduce.upperArea: 起报价
-        :type presignProduce.upperArea: Long
-        :param presignProduce.lowerArea: 起报面积
-        :type presignProduce.lowerArea: Integer
-        :param presignProduce.price: 计价单价
-        :type presignProduce.price: Long
-        :param presignProduce.costPrice: 工程成本
-        :type presignProduce.costPrice: Long
-        :param presignProduce.mostPrice: 主材成本
-        :type presignProduce.mostPrice: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignPrice.pspid**:
+  预签价格ID
+        - **presignPrice.name**:
+  名称
+        - **presignProduce.upperArea**:
+  起报价
+        - **presignProduce.lowerArea**:
+  起报面积
+        - **presignProduce.price**:
+  计价单价
+        - **presignProduce.costPrice**:
+  工程成本
+        - **presignProduce.mostPrice**:
+  主材成本
+
+        **示例**:{
                 "presignProduce.pspid": 1,
                 "presignProduce.name": "名称",
                 "presignProduce.upperArea": 10000000,
@@ -7059,47 +6858,46 @@
                 "presignProduce.mostPrice": 0
             }
 
-    ### <I> updatePresignPriceForStatus
+    ### `updatePresignPriceForStatus` <span style="color:gray">[内部]</span>
 
         更新预签价格
-        
+
         判断预签价格是否存在 , 不存在 , 错误信息 **130083 预签价格不存在**
-        
-                |Requests:|
-                :param presignPrice.pspid: 预签价格ID
-        :type presignPrice.pspid: Long
-        :param presignPrice.status: 状态
-        :type presignPrice.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignPrice.pspid**:
+  预签价格ID
+        - **presignPrice.status**:
+  状态
+
+        **示例**:{
                 "presignProduce.pspid": 1,
                 "presignProduce.status": 0
             }
 
-    ### <I> deletePresignPrice
+    ### `deletePresignPrice` <span style="color:gray">[内部]</span>
 
         删除预签价格
-        
+
         判断预签价格是否存在 , 不存在 , 错误信息 **130083 预签价格不存在**
-        
-                |Requests:|
-                :param presignPrice.pspid: 预签价格ID
-        :type presignPrice.pspid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignPrice.pspid**:
+  预签价格ID
+
+        **示例**:{
                 "presignProduce.pspid": 1
             }
-    
+
 ### 项目
 
 ## api.data.PresignItemAction
 
-        |DataType:|
-        #### presignItem
+**数据类型**:
+
+#### presignItem
 
     - **piid**: 预签项ID
       - 类型: *Long*
@@ -7131,39 +6929,37 @@
       - 类型: *Short*
     - **content**: 说明
       - 类型: *String*
-    
-    ### <I> pagePresignItem
+
+    ### `pagePresignItem` <span style="color:gray">[内部]</span>
 
         分页方式获取预签项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param presignItem.ppid: 预签产品ID
-        :type presignItem.ppid: Long
-        :param presignItem.status: 状态
-        :type presignItem.status: Short
-        
+
+**请求参数**:
+
+- **presignItem.ppid**:
+  预签产品ID
+        - **presignItem.status**:
+  状态
+
         - **types**: 类型
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "presignItem.ppid": 1,
                 "presignItem.status": 1,
-                
+
                 "types[0]": 0,
                 "types[1]": 1
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 预签项列表 , 每条数据类型 *presignItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  预签项列表 , 每条数据类型 *presignItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7190,28 +6986,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryPresignItemByPiid
+
+    ### `queryPresignItemByPiid` <span style="color:gray">[内部]</span>
 
         通过预签项ID获取预签项信息
-    
-                |Requests:|
-                :param presignItem.piid: 预签项ID
-        :type presignItem.piid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignItem.piid**:
+  预签项ID
+
+        **示例**:{
                 "presignItem.piid": 1
             }
-        
-                |Returns:|
-                - **presignItem**: 预签项 , 类型 *presignItem*
+
+**返回参数**:
+
+- **presignItem**: 预签项 , 类型 *presignItem*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "presignItem": {
                     "piid": 1,
@@ -7232,42 +7026,41 @@
                 }
                 ...
             }
-    
-    ### <I> addPresignItem
+
+    ### `addPresignItem` <span style="color:gray">[内部]</span>
 
         添加预签项
-        
-                |Requests:|
-                :param presignItem.ppid: 预签产品ID
-        :type presignItem.ppid: Long
-        :param presignItem.name: 名称
-        :type presignItem.name: String
-        :param presignItem.basicNum: 基础量
-        :type presignItem.basicNum: Integer
-        :param presignItem.addPrice: 增补价
-        :type presignItem.addPrice: Integer
-        :param presignItem.price: 价格
-        :type presignItem.price: Integer
-        :param presignItem.subPrice: 退减价
-        :type presignItem.subPrice: Integer
-        :param presignItem.cost: 成本
-        :type presignItem.cost: Integer
-        :param presignItem.ache: 业绩
-        :type presignItem.ache: Integer
-        :param presignItem.areaCale: 面积规则
-        :type presignItem.areaCale: Short
-        :param presignItem.type: 类型
-        :type presignItem.type: Short
-        :param presignItem.onetype: 一类
-        :type presignItem.onetype: Short
-        :param presignItem.atttype: 业务类型
-        :type presignItem.atttype: Short
-        :param presignItem.content: 说明
-        :type presignItem.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignItem.ppid**:
+  预签产品ID
+        - **presignItem.name**:
+  名称
+        - **presignItem.basicNum**:
+  基础量
+        - **presignItem.addPrice**:
+  增补价
+        - **presignItem.price**:
+  价格
+        - **presignItem.subPrice**:
+  退减价
+        - **presignItem.cost**:
+  成本
+        - **presignItem.ache**:
+  业绩
+        - **presignItem.areaCale**:
+  面积规则
+        - **presignItem.type**:
+  类型
+        - **presignItem.onetype**:
+  一类
+        - **presignItem.atttype**:
+  业务类型
+        - **presignItem.content**:
+  说明
+
+        **示例**:{
                 "presignItem.ppid": 1,
                 "presignItem.name": "预签产品",
                 "presignItem.basicNum": 100000,
@@ -7282,46 +7075,45 @@
                 "presignItem.atttype": 0,
                 "presignItem.content": "说明"
             }
-    
-    ### <I> updatePresignItem
+
+    ### `updatePresignItem` <span style="color:gray">[内部]</span>
 
         更新预签项
-        
+
         判断预签项是否存在 , 不存在 , 错误信息 **130086 预签项不存在**
-        
+
         判断预签项状态为0(启用) , 其他状态 , 错误信息 **130087 预签项不可操作**
-        
-                |Requests:|
-                :param presignItem.piid: 预签项ID
-        :type presignItem.piid: Long
-        :param presignItem.name: 名称
-        :type presignItem.name: String
-        :param presignItem.basicNum: 基础量
-        :type presignItem.basicNum: Integer
-        :param presignItem.addPrice: 增补价
-        :type presignItem.addPrice: Integer
-        :param presignItem.price: 价格
-        :type presignItem.price: Integer
-        :param presignItem.subPrice: 退减价
-        :type presignItem.subPrice: Integer
-        :param presignItem.cost: 成本
-        :type presignItem.cost: Integer
-        :param presignItem.ache: 业绩
-        :type presignItem.ache: Integer
-        :param presignItem.areaCale: 面积规则
-        :type presignItem.areaCale: Short
-        :param presignItem.type: 类型
-        :type presignItem.type: Short
-        :param presignItem.onetype: 一类
-        :type presignItem.onetype: Short
-        :param presignItem.atttype: 业务类型
-        :type presignItem.atttype: Short
-        :param presignItem.content: 说明
-        :type presignItem.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignItem.piid**:
+  预签项ID
+        - **presignItem.name**:
+  名称
+        - **presignItem.basicNum**:
+  基础量
+        - **presignItem.addPrice**:
+  增补价
+        - **presignItem.price**:
+  价格
+        - **presignItem.subPrice**:
+  退减价
+        - **presignItem.cost**:
+  成本
+        - **presignItem.ache**:
+  业绩
+        - **presignItem.areaCale**:
+  面积规则
+        - **presignItem.type**:
+  类型
+        - **presignItem.onetype**:
+  一类
+        - **presignItem.atttype**:
+  业务类型
+        - **presignItem.content**:
+  说明
+
+        **示例**:{
                 "presignItem.piid": 1,
                 "presignItem.name": "预签产品",
                 "presignItem.basicNum": 100000,
@@ -7336,37 +7128,35 @@
                 "presignItem.atttype": 0,
                 "presignItem.content": "说明"
             }
-    
-    ### <I> updatePresignItemForStatus
+
+    ### `updatePresignItemForStatus` <span style="color:gray">[内部]</span>
 
         更新预签项状态
-        
+
         判断预签项是否存在 , 不存在 , 错误信息 **130086 预签项不存在**
-        
-                |Requests:|
-                :param presignItem.piid: 预签项ID
-        :type presignItem.piid: Long
-        :param presignItem.status: 状态
-        :type presignItem.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignItem.piid**:
+  预签项ID
+        - **presignItem.status**:
+  状态
+
+        **示例**:{
                 "presignItem.piid": 1,
                 "presignItem.status": 0
             }
-    
-    ### <I> deletePresignItem
+
+    ### `deletePresignItem` <span style="color:gray">[内部]</span>
 
         删除预签项
-        
-                |Requests:|
-                :param presignItem.piid: 预签项ID
-        :type presignItem.piid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignItem.piid**:
+  预签项ID
+
+        **示例**:{
                 "presignItem.piid": 1
             }
 
@@ -7374,8 +7164,9 @@
 
 ## api.quotation.PresignCostAction
 
-        |DataType:|
-        #### presignCost
+**数据类型**:
+
+#### presignCost
 
     - **pcid**: 成本ID
       - 类型: *Long*
@@ -7388,27 +7179,25 @@
     - **costPrice**: 成本单价
       - 类型: *Integer*
 
-    ### <I> queryPresignCost
+    ### `queryPresignCost` <span style="color:gray">[内部]</span>
 
         通过预签产品获取成本信息
-        
-                |Requests:|
-                :param presignCost.ppid: 预签产品ID
-        :type presignCost.ppid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignCost.ppid**:
+  预签产品ID
+
+        **示例**:{
                 "presignCost.ppid": 1
             }
 
-                |Returns:|
-                - **presignCosts**: 预签成本列表 , 类型 *presignCost*
+**返回参数**:
+
+- **presignCosts**: 预签成本列表 , 类型 *presignCost*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "presignCosts":[
                     {
@@ -7422,37 +7211,35 @@
                 ...
             }
 
-    ### <I> addPresignCost
+    ### `addPresignCost` <span style="color:gray">[内部]</span>
 
         添加预签成本
-        
-                |Requests:|
-                :param presignCost.ppid: 预签产品ID
-        :type presignCost.ppid: Long
-        :param presignCost.toplimit: 上限面积
-        :type presignCost.toplimit: Integer
-        :param presignCost.lowlimit: 下限面积
-        :type presignCost.lowlimit: Integer
-        :param presignCost.costPrice: 成本单价
-        :type presignCost.costPrice: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignCost.ppid**:
+  预签产品ID
+        - **presignCost.toplimit**:
+  上限面积
+        - **presignCost.lowlimit**:
+  下限面积
+        - **presignCost.costPrice**:
+  成本单价
+
+        **示例**:{
                 "presignCost.ppid": 1
             }
 
-    ### <I> deletePresignCost
+    ### `deletePresignCost` <span style="color:gray">[内部]</span>
 
         删除预签成本
-        
-                |Requests:|
-                :param presignCost.pcid: 成本ID
-        :type presignCost.pcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **presignCost.pcid**:
+  成本ID
+
+        **示例**:{
                 "presignCost.pcid": 1
             }
 
@@ -7462,8 +7249,9 @@
 
 ## api.data.NormriceAction
 
-        |DataType:|
-        #### cormrice
+**数据类型**:
+
+#### cormrice
 
     - **cpid**: 定额工费ID
       - 类型: *Long*
@@ -7479,20 +7267,19 @@
       - 类型: *Integer*
     - **status**: 状态 , 0: 有效 , 1: 无效
       - 类型: *Short*
-    
-    ### <I> pageCormrice
+
+    ### `pageCormrice` <span style="color:gray">[内部]</span>
 
         分页方式获取定额工费信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 定额工费信息列表 , 每条数据类型 *cormrice*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  定额工费信息列表 , 每条数据类型 *cormrice*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7531,27 +7318,25 @@
                 ...
             }
 
-    ### <I> queryCormriceByQcid
+    ### `queryCormriceByQcid` <span style="color:gray">[内部]</span>
 
         通过共享项ID获取定额工费信息
-        
-                |Requests:|
-                :param cormrice.quotationCtem.qcid: 共享项ID
-        :type cormrice.quotationCtem.qcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **cormrice.quotationCtem.qcid**:
+  共享项ID
+
+        **示例**:{
                 "cormrice.quotationCtem.qcid": 1
             }
-        
-                |Returns:|
-                - **cormrices**: 定额工费信息列表 , 每条数据类型 *cormrice*
+
+**返回参数**:
+
+- **cormrices**: 定额工费信息列表 , 每条数据类型 *cormrice*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "cormrices": [
                     {
@@ -7585,38 +7370,36 @@
                 ],
                 ...
             }
-            
-    ### <I> addCormrice
+
+    ### `addCormrice` <span style="color:gray">[内部]</span>
 
         添加定额工费信息
-    
-                |Requests:|
-                :param cormrice.constructionNode.cnid: 施工节点ID
-        :type cormrice.constructionNode.cnid: Long
-        :param cormrice.quotationCtem.qcid: 报价项ID
-        :type cormrice.quotationCtem.qcid: Long
-        :param cormrice.salary: 薪资
-        :type cormrice.salary: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **cormrice.constructionNode.cnid**:
+  施工节点ID
+        - **cormrice.quotationCtem.qcid**:
+  报价项ID
+        - **cormrice.salary**:
+  薪资
+
+        **示例**:{
                 "cormrice.constructionNode.cnid": 1,
                 "cormrice.quotationCtem.qcid": 1,
                 "cormrice.salary": 1000
             }
-            
-    ### <I> deleteCormrice
+
+    ### `deleteCormrice` <span style="color:gray">[内部]</span>
 
         删除定额工费信息
-        
-                |Requests:|
-                :param cormrice.cpid: 定额工费ID
-        :type cormrice.cpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **cormrice.cpid**:
+  定额工费ID
+
+        **示例**:{
                 "cormrice.cpid": 1
             }
 
@@ -7624,8 +7407,9 @@
 
 ## api.data.NormoodAction
 
-        |DataType:|
-        #### normood
+**数据类型**:
+
+#### normood
 
     - **ngid**: 定额商品ID
       - 类型: *Long*
@@ -7647,20 +7431,19 @@
       - 类型: *Integer*
     - **status**: 状态 , 0: 有效 , 1: 无效
       - 类型: *Short*
-    
-    ### <I> pageNormood
+
+    ### `pageNormood` <span style="color:gray">[内部]</span>
 
         分页方式获取定额材料信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 定额材料信息列表 , 每条数据类型 *normood*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  定额材料信息列表 , 每条数据类型 *normood*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7710,22 +7493,22 @@
                 },
                 ...
             }
-    
-    ### <I> queryNormoodByQiid
+
+    ### `queryNormoodByQiid` <span style="color:gray">[内部]</span>
 
         通过报价项ID获取定额商品
-        
-                |Requests:|
-                :param normood.quotationItem.qiid: 报价项ID
-        :type normood.quotationItem.qiid: Long
-        
-                |Returns:|
-                - **normoods**: 定额商品信息列表 , 每条数据类型 *normood*
+
+**请求参数**:
+
+- **normood.quotationItem.qiid**:
+  报价项ID
+
+**返回参数**:
+
+- **normoods**: 定额商品信息列表 , 每条数据类型 *normood*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "normoods": [
                     {
@@ -7771,32 +7554,31 @@
                 ],
                 ...
             }
-            
-    ### <I> addNormood
+
+    ### `addNormood` <span style="color:gray">[内部]</span>
 
         添加定额材料
-    
-                |Requests:|
-                :param normood.name: 名称
-        :type normood.name: String
-        :param normood.noods.nid: 定材ID
-        :type normood.noods.nid: Long
-        :param normood.quotationItem.qiid: 报价项ID
-        :type normood.quotationItem.qiid: Long
-        :param normood.normunit: 定额单位
-        :type normood.normunit: String
-        :param normood.normnum: 定额数量
-        :type normood.normnum: Integer
-        :param normood.storeunit: 库房单位
-        :type normood.storeunit: String
-        :param normood.storenum: 库房数量
-        :type normood.storenum: Integer
-        :param normood.price: 价格
-        :type normood.price: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normood.name**:
+  名称
+        - **normood.noods.nid**:
+  定材ID
+        - **normood.quotationItem.qiid**:
+  报价项ID
+        - **normood.normunit**:
+  定额单位
+        - **normood.normnum**:
+  定额数量
+        - **normood.storeunit**:
+  库房单位
+        - **normood.storenum**:
+  库房数量
+        - **normood.price**:
+  价格
+
+        **示例**:{
                 "normood.name": "名称",
                 "normood.noods.nid": 1,
                 "normood.quotationItem.qiid": 1,
@@ -7806,18 +7588,17 @@
                 "normood.storenum": 1000,
                 "normood.price": 1000
             }
-            
-    ### <I> deleteNormood
+
+    ### `deleteNormood` <span style="color:gray">[内部]</span>
 
         删除定额材料
-        
-                |Requests:|
-                :param normood.ngid: 定额材料ID
-        :type normood.ngid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normood.ngid**:
+  定额材料ID
+
+        **示例**:{
                 "normood.ngid": 1
             }
 
@@ -7825,8 +7606,9 @@
 
 ## api.data.NormriceAction
 
-        |DataType:|
-        #### normrice
+**数据类型**:
+
+#### normrice
 
     - **npid**: 定额工费ID
       - 类型: *Long*
@@ -7844,20 +7626,19 @@
       - 类型: *Integer*
     - **status**: 状态 , 0: 有效 , 1: 无效
       - 类型: *Short*
-    
-    ### <I> pageNormrice
+
+    ### `pageNormrice` <span style="color:gray">[内部]</span>
 
         分页方式获取定额工费信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 定额工费信息列表 , 每条数据类型 *normrice*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  定额工费信息列表 , 每条数据类型 *normrice*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7903,27 +7684,25 @@
                 ...
             }
 
-    ### <I> queryNormriceByQiid
+    ### `queryNormriceByQiid` <span style="color:gray">[内部]</span>
 
         通过报价项ID获取定额工费
-        
-                |Requests:|
-                :param normrice.quotationItem.qiid: 报价项ID
-        :type normrice.quotationItem.qiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normrice.quotationItem.qiid**:
+  报价项ID
+
+        **示例**:{
                 "normrice.quotationItem.qiid": 1
             }
-        
-                |Returns:|
-                - **normrices**: 定额商品信息列表 , 每条数据类型 *normrice*
+
+**返回参数**:
+
+- **normrices**: 定额商品信息列表 , 每条数据类型 *normrice*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "normrices": [
                     {
@@ -7964,44 +7743,42 @@
                 ],
                 ...
             }
-            
-    ### <I> addNormrice
+
+    ### `addNormrice` <span style="color:gray">[内部]</span>
 
         添加定额薪资
-    
-                |Requests:|
-                :param normrice.constructionNode.cnid: 施工节点ID
-        :type normrice.constructionNode.cnid: Long
-        :param normrice.quotationItem.qiid: 报价项ID
-        :type normrice.quotationItem.qiid: Long
-        :param normrice.trannum: 转换量
-        :type normrice.trannum: Integer
-        :param normrice.salary: 薪资
-        :type normrice.salary: Integer
-        :param normrice.stuff: 材料费
-        :type normrice.stuff: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normrice.constructionNode.cnid**:
+  施工节点ID
+        - **normrice.quotationItem.qiid**:
+  报价项ID
+        - **normrice.trannum**:
+  转换量
+        - **normrice.salary**:
+  薪资
+        - **normrice.stuff**:
+  材料费
+
+        **示例**:{
                 "normrice.constructionNode.cnid": 1,
                 "normrice.quotationItem.qiid": 1,
                 "normrice.trannum": 1000,
                 "normrice.salary": 1000,
                 "normrice.stuff": 1000
             }
-            
-    ### <I> deleteNormrice
+
+    ### `deleteNormrice` <span style="color:gray">[内部]</span>
 
         删除定额薪资
-        
-                |Requests:|
-                :param normrice.npid: 定额薪资ID
-        :type normrice.npid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normrice.npid**:
+  定额薪资ID
+
+        **示例**:{
                 "normrice.npid": 1
             }
 
@@ -8011,8 +7788,9 @@
 
 ## api.data.NormaddAction
 
-        |DataType:|
-        #### normadd
+**数据类型**:
+
+#### normadd
 
     - **naid**: 附加项ID
       - 类型: *Long*
@@ -8028,20 +7806,19 @@
       - 类型: *Integer*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
-    ### <I> pageNormadd
+
+    ### `pageNormadd` <span style="color:gray">[内部]</span>
 
         分页方式获取附加项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 附加项信息列表 , 每条数据类型 *normadd*
-        :type paging.data: List
-    
-        Example::
-        
-            {
+        - **paging.data**:
+  附加项信息列表 , 每条数据类型 *normadd*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -8063,27 +7840,25 @@
                 ...
             }
 
-    ### <I> queryNormadd
+    ### `queryNormadd` <span style="color:gray">[内部]</span>
 
         获取附加项信息 , 可通过施工节点进行控制
-        
-                |Requests:|
-                :param normadd.constructionNode.cnid: 节点ID
-        :type normadd.constructionNode.cnid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normadd.constructionNode.cnid**:
+  节点ID
+
+        **示例**:{
                 "normadd.constructionNode.cnid": 1
             }
 
-                |Returns:|
-                - **normadds**: 附加项信息列表 , 每条数据类型 *normadd*
+**返回参数**:
+
+- **normadds**: 附加项信息列表 , 每条数据类型 *normadd*
           - 类型: *List*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "normadds": [
                     {
@@ -8101,25 +7876,24 @@
                 ...
             }
 
-    ### <I> addNormadd
+    ### `addNormadd` <span style="color:gray">[内部]</span>
 
         添加附加项
-        
-                |Requests:|
-                :param normadd.name: 名称
-        :type normadd.name: String
-        :param normadd.constructionNode.cnid: 节点ID
-        :type normadd.constructionNode.cnid: Long
-        :param normadd.unit: 单位
-        :type normadd.unit: String
-        :param normadd.price: 单价
-        :type normadd.price: Integer
-        :param normadd.stuff: 材料费
-        :type normadd.stuff: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normadd.name**:
+  名称
+        - **normadd.constructionNode.cnid**:
+  节点ID
+        - **normadd.unit**:
+  单位
+        - **normadd.price**:
+  单价
+        - **normadd.stuff**:
+  材料费
+
+        **示例**:{
                 "normadd.name": "名称",
                 "normadd.constructionNode.cnid": 1,
                 "normadd.unit": "米",
@@ -8127,34 +7901,32 @@
                 "normadd.stuff": 0
             }
 
-    ### <I> updateNormaddForStatus
+    ### `updateNormaddForStatus` <span style="color:gray">[内部]</span>
 
         更新附加项状态
-        
-                |Requests:|
-                :param normadd.aiid: 附加项ID
-        :type normadd.aiid: Long
-        :param normadd.status: 状态
-        :type normadd.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normadd.aiid**:
+  附加项ID
+        - **normadd.status**:
+  状态
+
+        **示例**:{
                 "normadd.aiid": 1,
                 "normadd.status": 0
             }
-            
+
     ### deleteNormadd
 
         删除附加项
-        
-                |Requests:|
-                :param normadd.aiid: 附加项ID
-        :type normadd.aiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normadd.aiid**:
+  附加项ID
+
+        **示例**:{
                 "normadd.aiid": 1
             }
 
@@ -8164,8 +7936,9 @@
 
 ## api.data.NormpackAction
 
-        |DataType:|
-        #### normpack
+**数据类型**:
+
+#### normpack
 
     - **npid**: 打包项ID
       - 类型: *Long*
@@ -8175,7 +7948,7 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
+
     #### normpackItem
 
     - **npiid**: 打包项ID
@@ -8194,20 +7967,19 @@
       - 类型: *Integer*
     - **price**: 价格
       - 类型: *Integer*
-    
-    ### <I> pageNormpack
+
+    ### `pageNormpack` <span style="color:gray">[内部]</span>
 
         分页方式获取打包项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 打包项信息列表 , 每条数据类型 *normpack*
-        :type paging.data: List
-    
-        Example::
-        
-            {
+        - **paging.data**:
+  打包项信息列表 , 每条数据类型 *normpack*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -8223,17 +7995,16 @@
                 ...
             }
 
-    ### <I> queryNormpack
+    ### `queryNormpack` <span style="color:gray">[内部]</span>
 
         获取打包项信息 , 可通过施工节点进行控制
 
-                |Returns:|
-                - **normpacks**: 打包项信息列表 , 每条数据类型 *normpack*
+**返回参数**:
+
+- **normpacks**: 打包项信息列表 , 每条数据类型 *normpack*
           - 类型: *List*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "normpacks": [
                     {
@@ -8245,27 +8016,25 @@
                 ...
             }
 
-    ### <I> queryNormpackItem
+    ### `queryNormpackItem` <span style="color:gray">[内部]</span>
 
         获取打包项信息
-        
-                |Requests:|
-                :param normpack.npid: 打包项ID
-        :type normpack.npid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normpack.npid**:
+  打包项ID
+
+        **示例**:{
                 "normpack.npid": 1
             }
 
-                |Returns:|
-                - **normpackItems**: 打包项信息列表 , 每条数据类型 *normpackItem*
+**返回参数**:
+
+- **normpackItems**: 打包项信息列表 , 每条数据类型 *normpackItem*
           - 类型: *List*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "normpackItems": [
                     {
@@ -8287,43 +8056,41 @@
                 ...
             }
 
-    ### <I> addNormpack
+    ### `addNormpack` <span style="color:gray">[内部]</span>
 
         添加打包项
-        
-                |Requests:|
-                :param normpack.name: 名称
-        :type normpack.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normpack.name**:
+  名称
+
+        **示例**:{
                 "normpack.name": "名称"
             }
 
-    ### <I> addNormpackItem
+    ### `addNormpackItem` <span style="color:gray">[内部]</span>
 
         添加打包项
-        
-                |Requests:|
-                :param normpackItem.npid: 打包项ID
-        :type normpackItem.npid: Long
-        :param normpackItem.noods.nid: 定材ID
-        :type normpackItem.noods.nid: Long
-        :param normpackItem.normunit: 定额单位
-        :type normpackItem.normunit: String
-        :param normpackItem.normnum: 定额数量
-        :type normpackItem.normnum: Integer
-        :param normpackItem.storeunit: 库房单位
-        :type normpackItem.storeunit: String
-        :param normpackItem.storenum: 数量
-        :type normpackItem.storenum: Integer
-        :param normpackItem.price: 价格
-        :type normpackItem.price: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normpackItem.npid**:
+  打包项ID
+        - **normpackItem.noods.nid**:
+  定材ID
+        - **normpackItem.normunit**:
+  定额单位
+        - **normpackItem.normnum**:
+  定额数量
+        - **normpackItem.storeunit**:
+  库房单位
+        - **normpackItem.storenum**:
+  数量
+        - **normpackItem.price**:
+  价格
+
+        **示例**:{
                 "normpackItem.npid": 1,
                 "normpackItem.noods.nid": 1,
                 "normpackItem.normunit": 10000,
@@ -8333,48 +8100,45 @@
                 "normpackItem.price": 1000
             }
 
-    ### <I> updateNormpackForStatus
+    ### `updateNormpackForStatus` <span style="color:gray">[内部]</span>
 
         更新打包项状态
-        
-                |Requests:|
-                :param normpack.npid: 打包项ID
-        :type normpack.npid: Long
-        :param normpack.status: 状态
-        :type normpack.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normpack.npid**:
+  打包项ID
+        - **normpack.status**:
+  状态
+
+        **示例**:{
                 "normpack.npid": 1,
                 "normpack.status": 0
             }
-            
+
     ### deleteNormpack
 
         删除打包项
-        
-                |Requests:|
-                :param normpack.npid: 打包项ID
-        :type normpack.npid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normpack.npid**:
+  打包项ID
+
+        **示例**:{
                 "normpack.npid": 1
             }
 
     ### deleteNormpackItem
 
         删除打包项
-        
-                |Requests:|
-                :param normpackItem.npiid: 打包项ID
-        :type normpackItem.npiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normpackItem.npiid**:
+  打包项ID
+
+        **示例**:{
                 "normpackItem.npiid": 1
             }
 
@@ -8384,8 +8148,9 @@
 
 ## api.communion.TaskAction
 
-        |DataType:|
-        #### task
+**数据类型**:
+
+#### task
 
     - **tid**: 任务ID
       - 类型: *Long*
@@ -8417,7 +8182,7 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-    
+
     #### taskParam
 
     - **tpid**: 字段ID
@@ -8446,20 +8211,19 @@
       - 类型: *Integer*
     - **comment**: 备注
       - 类型: *String*
-    
-    ### <I> pageTask
+
+    ### `pageTask` <span style="color:gray">[内部]</span>
 
         分页方式获取任务信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 任务信息列表 , 每条数据类型 *task*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  任务信息列表 , 每条数据类型 *task*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -8485,18 +8249,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryTask
+
+    ### `queryTask` <span style="color:gray">[内部]</span>
 
         获取当前任务信息 , 状态为0(启用) , 显示标识为0(显示)
-        
-                |Returns:|
-                - **tasks**: 任务信息列表 , 每条数据类型 *task*
+
+**返回参数**:
+
+- **tasks**: 任务信息列表 , 每条数据类型 *task*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "tasks": [
                     {
@@ -8518,17 +8281,16 @@
                 ...
             }
 
-    ### <I> queryTaskForSelf
+    ### `queryTaskForSelf` <span style="color:gray">[内部]</span>
 
         获取当前操作系统用户任务信息
-        
-                |Returns:|
-                - **tasks**: 任务信息列表 , 每条数据类型 *task*
+
+**返回参数**:
+
+- **tasks**: 任务信息列表 , 每条数据类型 *task*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "tasks": [
                     {
@@ -8550,27 +8312,25 @@
                 ...
             }
 
-    ### <I> queryTaskByRid
+    ### `queryTaskByRid` <span style="color:gray">[内部]</span>
 
         通过角色ID获取任务信息
-        
-                |Requests:|
-                :param role.rid: 角色ID
-        :type role.rid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **role.rid**:
+  角色ID
+
+        **示例**:{
                 "role.rid": 1
             }
-        
-                |Returns:|
-                - **tasks**: 任务信息列表 , 每条数据类型 *task*
+
+**返回参数**:
+
+- **tasks**: 任务信息列表 , 每条数据类型 *task*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "tasks": [
                     {
@@ -8591,32 +8351,31 @@
                 ],
                 ...
             }
-            
-    ### <C> addTask
+
+    ### `addTask` <span style="color:blue">[自定义]</span>
 
         添加任务
-        
-                |Requests:|
-                :param task.name: 名称
-        :type task.name: String
-        :param task.filepath: 文件路径 , 绝对路径
-        :type task.filepath: String
-        :param task.level: 级别
-        :type task.level: Short
-        :param task.type: 类型
-        :type task.type: Short
-        :param task.handle: 操作
-        :type task.handle: Short
-        :param task.plugins: 控件
-        :type task.plugins: String
-        :param task.keyword: 关键字
-        :type task.keyword: String
-        :param task.comment: 关键字
-        :type task.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **task.name**:
+  名称
+        - **task.filepath**:
+  文件路径 , 绝对路径
+        - **task.level**:
+  级别
+        - **task.type**:
+  类型
+        - **task.handle**:
+  操作
+        - **task.plugins**:
+  控件
+        - **task.keyword**:
+  关键字
+        - **task.comment**:
+  关键字
+
+        **示例**:{
                 "task.name": "1601010001",
                 "task.filepath": "/fanglin/task/execution.py",
                 "task.level": 0,
@@ -8626,94 +8385,89 @@
                 "task.keyword": "Exports",
                 "task.comment": ""
             }
-            
-    ### <C> updateTaskForStatus
+
+    ### `updateTaskForStatus` <span style="color:blue">[自定义]</span>
 
         更新任务状态
-        
+
         判断任务是否存在 , 不存在 , 错误信息 **160027 任务不存在**
-        
-                |Requests:|
-                :param task.tid: 任务ID
-        :type task.tid: Long
-        :param task.status: 状态
-        :type task.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **task.tid**:
+  任务ID
+        - **task.status**:
+  状态
+
+        **示例**:{
                 "task.tid": 1,
                 "task.status": 0
             }
 
-    ### <C> updateTaskForIsShow
+    ### `updateTaskForIsShow` <span style="color:blue">[自定义]</span>
 
         更新任务可见
-        
+
         判断任务是否存在 , 不存在 , 错误信息 **160027 任务不存在**
-        
-                |Requests:|
-                :param task.tid: 任务ID
-        :type task.tid: Long
-        :param task.isShow: 可见
-        :type task.isShow: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **task.tid**:
+  任务ID
+        - **task.isShow**:
+  可见
+
+        **示例**:{
                 "task.tid": 1,
                 "task.isShow": 0
             }
 
-    ### <C> updateRoleTask
+    ### `updateRoleTask` <span style="color:blue">[自定义]</span>
 
         更新角色对应任务信息
-        
+
         判断角色是否存在 , 不存在 , 错误信息 **230010 角色不存在**
-        
-                |Requests:|
-                :param role.rid: 角色ID
-        :type role.rid: Long
-        :param task.tid: 任务ID
-        :type task.tid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **role.rid**:
+  角色ID
+        - **task.tid**:
+  任务ID
+
+        **示例**:{
                 "role.rid": 1,
                 "task.tid": 1
             }
 
-    ### <C> deleteRoleTask
+    ### `deleteRoleTask` <span style="color:blue">[自定义]</span>
 
         删除角色对应任务信息
-        
-                |Requests:|
-                :param role.rid: 角色ID
-        :type role.rid: Long
-        :param task.tid: 任务ID
-        :type task.tid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **role.rid**:
+  角色ID
+        - **task.tid**:
+  任务ID
+
+        **示例**:{
                 "role.rid": 1,
                 "task.tid": 1
             }
 
-    ### <C> pageTaskParam
+    ### `pageTaskParam` <span style="color:blue">[自定义]</span>
 
         分页方式获取任务字段信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 任务字段信息列表 , 每条数据类型 *taskParam*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  任务字段信息列表 , 每条数据类型 *taskParam*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -8739,27 +8493,25 @@
                 ...
             }
 
-    ### <C> queryTaskParam
+    ### `queryTaskParam` <span style="color:blue">[自定义]</span>
 
         获取任务字段
-        
-                |Requests:|
-                :param task.tid: 任务ID
-        :type task.tid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **task.tid**:
+  任务ID
+
+        **示例**:{
                 "task.tid": 1
             }
 
-                |Returns:|
-                - **taskParams**: 任务字段信息列表 , 每条数据类型 *taskParam*
+**返回参数**:
+
+- **taskParams**: 任务字段信息列表 , 每条数据类型 *taskParam*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "taskParams": [
                     {
@@ -8781,37 +8533,36 @@
                 ...
             }
 
-    ### <C> addTaskParam
+    ### `addTaskParam` <span style="color:blue">[自定义]</span>
 
         添加任务字段
-        
-                |Requests:|
-                :param taskParam.tid: 任务ID
-        :type taskParam.tid: Long
-        :param taskParam.no: 编号
-        :type taskParam.no: Integer
-        :param taskParam.name: 名称
-        :type taskParam.name: String
-        :param taskParam.table: 表名
-        :type taskParam.table: String
-        :param taskParam.union: 关联
-        :type taskParam.union: String
-        :param taskParam.param: 字段
-        :type taskParam.param: String
-        :param taskParam.alias: 别名
-        :type taskParam.alias: String
-        :param taskParam.type: 类型
-        :type taskParam.type: Short
-        :param taskParam.handle: 处理过程
-        :type taskParam.handle: String
-        :param taskParam.sort: 排序
-        :type taskParam.sort: Integer
-        :param taskParam.comment: 说明
-        :type taskParam.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **taskParam.tid**:
+  任务ID
+        - **taskParam.no**:
+  编号
+        - **taskParam.name**:
+  名称
+        - **taskParam.table**:
+  表名
+        - **taskParam.union**:
+  关联
+        - **taskParam.param**:
+  字段
+        - **taskParam.alias**:
+  别名
+        - **taskParam.type**:
+  类型
+        - **taskParam.handle**:
+  处理过程
+        - **taskParam.sort**:
+  排序
+        - **taskParam.comment**:
+  说明
+
+        **示例**:{
                 "taskParam.tid": 1,
                 "taskParam.no": 1,
                 "taskParam.name": "名称",
@@ -8824,40 +8575,39 @@
                 "taskParam.sort": 1,
                 "taskParam.comment": "说明",
             }
-            
-    ### <C> updateTaskParam
+
+    ### `updateTaskParam` <span style="color:blue">[自定义]</span>
 
         更新任务字段
-        
-                |Requests:|
-                :param taskParam.tpid: 任务字段ID
-        :type taskParam.tpid: Long
-        :param taskParam.tid: 任务ID
-        :type taskParam.tid: Long
-        :param taskParam.no: 编号
-        :type taskParam.no: Integer
-        :param taskParam.name: 名称
-        :type taskParam.name: String
-        :param taskParam.table: 表名
-        :type taskParam.table: String
-        :param taskParam.union: 关联
-        :type taskParam.union: String
-        :param taskParam.param: 字段
-        :type taskParam.param: String
-        :param taskParam.alias: 别名
-        :type taskParam.alias: String
-        :param taskParam.type: 类型
-        :type taskParam.type: Short
-        :param taskParam.handle: 处理过程
-        :type taskParam.handle: String
-        :param taskParam.sort: 排序
-        :type taskParam.sort: Integer
-        :param taskParam.comment: 说明
-        :type taskParam.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **taskParam.tpid**:
+  任务字段ID
+        - **taskParam.tid**:
+  任务ID
+        - **taskParam.no**:
+  编号
+        - **taskParam.name**:
+  名称
+        - **taskParam.table**:
+  表名
+        - **taskParam.union**:
+  关联
+        - **taskParam.param**:
+  字段
+        - **taskParam.alias**:
+  别名
+        - **taskParam.type**:
+  类型
+        - **taskParam.handle**:
+  处理过程
+        - **taskParam.sort**:
+  排序
+        - **taskParam.comment**:
+  说明
+
+        **示例**:{
                 "taskParam.tpid": 1,
                 "taskParam.tid": 1,
                 "taskParam.no": 1,
@@ -8871,35 +8621,33 @@
                 "taskParam.sort": 1,
                 "taskParam.comment": "说明",
             }
-            
-    ### <C> updateTaskParamForStatus
+
+    ### `updateTaskParamForStatus` <span style="color:blue">[自定义]</span>
 
         更新任务字段状态
-        
-                |Requests:|
-                :param taskParam.tpid: 任务字段ID
-        :type taskParam.tpid: Long
-        :param taskParam.status: 状态
-        :type taskParam.status: Short
 
-        Example::
-        
-            {
+**请求参数**:
+
+- **taskParam.tpid**:
+  任务字段ID
+        - **taskParam.status**:
+  状态
+
+        **示例**:{
                 "taskParam.tpid": 1,
                 "taskParam.status": 1
             }
-            
-    ### <C> deleteTaskParam
+
+    ### `deleteTaskParam` <span style="color:blue">[自定义]</span>
 
         删除任务字段
-        
-                |Requests:|
-                :param taskParam.tpid: 任务字段ID
-        :type taskParam.tpid: Long
 
-        Example::
-        
-            {
+**请求参数**:
+
+- **taskParam.tpid**:
+  任务字段ID
+
+        **示例**:{
                 "taskParam.tpid": 1
             }
 
@@ -8909,8 +8657,9 @@
 
 ## api.data.ConstructionNodeAction
 
-        |DataType:|
-        #### constructionNode
+**数据类型**:
+
+#### constructionNode
 
     - **cnid**: 节点ID
       - 类型: *Long*
@@ -8942,20 +8691,19 @@
       - 类型: *String*
     - **kiname**: 金蝶名称
       - 类型: *String*
-    
-    ### <I> pageConstructionNode
+
+    ### `pageConstructionNode` <span style="color:gray">[内部]</span>
 
         分页方式获取工程节点信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 工程节点信息列表 , 每条数据类型 *constructionNode*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  工程节点信息列表 , 每条数据类型 *constructionNode*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -8989,18 +8737,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryConstructionNode
+
+    ### `queryConstructionNode` <span style="color:gray">[内部]</span>
 
         获取工程节点信息
-        
-                |Returns:|
-                - **constructionNodes**: 工程节点信息列表 , 每条数据类型 *constructionNode*
+
+**返回参数**:
+
+- **constructionNodes**: 工程节点信息列表 , 每条数据类型 *constructionNode*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionNodes": [
                     {
@@ -9031,27 +8778,25 @@
                 ...
             }
 
-    ### <I> queryConstructionNodeByCnid
+    ### `queryConstructionNodeByCnid` <span style="color:gray">[内部]</span>
 
         通过工程节点ID获取信息
-        
-                |Requests:|
-                :param constructionNode.cnid: 工程节点ID
-        :type constructionNode.cnid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionNode.cnid**:
+  工程节点ID
+
+        **示例**:{
                 "constructionNode.cnid": 1
             }
-        
-                |Returns:|
-                - **constructionNode**: 工程节点信息 , 类型 *constructionNode*
+
+**返回参数**:
+
+- **constructionNode**: 工程节点信息 , 类型 *constructionNode*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionNode": {
                     "cnid": 2,
@@ -9079,28 +8824,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryConstructionNodeByOrderId
+
+    ### `queryConstructionNodeByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单归属公司 , 获取对应的工程节点信息
-    
-                |Requests:|
-                - **orderId**: 装修单号
+
+**请求参数**:
+
+- **orderId**: 装修单号
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **constructionNodes**: 工程节点信息列表 , 每条数据类型 *constructionNode*
+
+**返回参数**:
+
+- **constructionNodes**: 工程节点信息列表 , 每条数据类型 *constructionNode*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionNodes": [
                     {
@@ -9130,40 +8873,39 @@
                 ],
                 ...
             }
-            
-    ### <I> addConstructionNode
+
+    ### `addConstructionNode` <span style="color:gray">[内部]</span>
 
         添加工程节点信息
-    
-                |Requests:|
-                :param constructionNode.name: 名称
-        :type constructionNode.name: String
-        :param constructionNode.precheck: 开工验证付款比例
-        :type constructionNode.precheck: Integer
-        :param constructionNode.postcheck: 开工验证付款比例
-        :type constructionNode.postcheck: Integer
-        :param constructionNode.stacheck: 开工验证销售比例
-        :type constructionNode.stacheck: Integer
-        :param constructionNode.fincheck: 完工验证销售比例
-        :type constructionNode.fincheck: Integer
-        :param constructionNode.startalk: 开工话术
-        :type constructionNode.startalk: String
-        :param constructionNode.endtalk: 完工话术
-        :type constructionNode.endtalk: String
-        :param constructionNode.timeLimit: 工期
-        :type constructionNode.timeLimit: Integer
-        :param constructionNode.startSurvey.stid: 开工调研模版ID
-        :type constructionNode.startSurvey.stid: Long
-        :param constructionNode.endSurvey.stid: 完工调研模版ID
-        :type constructionNode.endSurvey.stid: Long
-        :param constructionNode.kino: 金蝶编号
-        :type constructionNode.kino: String
-        :param constructionNode.kiname: 金蝶名称
-        :type constructionNode.kiname: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionNode.name**:
+  名称
+        - **constructionNode.precheck**:
+  开工验证付款比例
+        - **constructionNode.postcheck**:
+  开工验证付款比例
+        - **constructionNode.stacheck**:
+  开工验证销售比例
+        - **constructionNode.fincheck**:
+  完工验证销售比例
+        - **constructionNode.startalk**:
+  开工话术
+        - **constructionNode.endtalk**:
+  完工话术
+        - **constructionNode.timeLimit**:
+  工期
+        - **constructionNode.startSurvey.stid**:
+  开工调研模版ID
+        - **constructionNode.endSurvey.stid**:
+  完工调研模版ID
+        - **constructionNode.kino**:
+  金蝶编号
+        - **constructionNode.kiname**:
+  金蝶名称
+
+        **示例**:{
                 "constructionNode.name": "节点名称",
                 "constructionNode.precheck": 0,
                 "constructionNode.postcheck": 100,
@@ -9177,40 +8919,39 @@
                 "constructionNode.kino": "",
                 "constructionNode.kiname": ""
             }
-            
-    ### <I> updateConstructionNode
+
+    ### `updateConstructionNode` <span style="color:gray">[内部]</span>
 
         更新工程节点信息
-        
-                |Requests:|
-                :param constructionNode.cnid: 节点ID
-        :type constructionNode.cnid: Long
-        :param constructionNode.precheck: 开工验证款比例
-        :type constructionNode.precheck: Integer
-        :param constructionNode.postcheck: 完工验证款比例
-        :type constructionNode.postcheck: Integer
-        :param constructionNode.stacheck: 开工验证销售比例
-        :type constructionNode.stacheck: Integer
-        :param constructionNode.fincheck: 完工验证销售比例
-        :type constructionNode.fincheck: Integer
-        :param constructionNode.startalk: 开工话术
-        :type constructionNode.startalk: String
-        :param constructionNode.endtalk: 完工话术
-        :type constructionNode.endtalk: String
-        :param constructionNode.timeLimit: 工期
-        :type constructionNode.timeLimit: Integer
-        :param constructionNode.startSurvey.stid: 开工调研模版ID
-        :type constructionNode.startSurvey.stid: Long
-        :param constructionNode.endSurvey.stid: 完工调研模版ID
-        :type constructionNode.endSurvey.stid: Long
-        :param constructionNode.kino: 金蝶编号
-        :type constructionNode.kino: String
-        :param constructionNode.kiname: 金蝶名称
-        :type constructionNode.kiname: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionNode.cnid**:
+  节点ID
+        - **constructionNode.precheck**:
+  开工验证款比例
+        - **constructionNode.postcheck**:
+  完工验证款比例
+        - **constructionNode.stacheck**:
+  开工验证销售比例
+        - **constructionNode.fincheck**:
+  完工验证销售比例
+        - **constructionNode.startalk**:
+  开工话术
+        - **constructionNode.endtalk**:
+  完工话术
+        - **constructionNode.timeLimit**:
+  工期
+        - **constructionNode.startSurvey.stid**:
+  开工调研模版ID
+        - **constructionNode.endSurvey.stid**:
+  完工调研模版ID
+        - **constructionNode.kino**:
+  金蝶编号
+        - **constructionNode.kiname**:
+  金蝶名称
+
+        **示例**:{
                 "constructionNode.cnid": 1,
                 "constructionNode.precheck": 0,
                 "constructionNode.postcheck": 200,
@@ -9225,19 +8966,18 @@
                 "constructionNode.kiname": ""
             }
 
-    ### <I> updateConstructionNodeForStatus
+    ### `updateConstructionNodeForStatus` <span style="color:gray">[内部]</span>
 
         更新工程节点状态
-        
-                |Requests:|
-                :param constructionNode.cnid: 节点ID
-        :type constructionNode.cnid: Long
-        :param constructionNode.status: 状态
-        :type constructionNode.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionNode.cnid**:
+  节点ID
+        - **constructionNode.status**:
+  状态
+
+        **示例**:{
                 "constructionNode.cnid": 1,
                 "constructionNode.status": 0
             }
@@ -9246,8 +8986,9 @@
 
 ## api.data.ConstructionPaceAction
 
-        |DataType:|
-        #### constructionPace
+**数据类型**:
+
+#### constructionPace
 
     - **cpid**: 计划ID
       - 类型: *Long*
@@ -9257,20 +8998,19 @@
       - 类型: *Short*
     - **content**: 说明
       - 类型: *String*
-    
-    ### <I> pageConstructionPace
 
-        分页方式获取施工计划信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Returns:|
-                - **paging**: 分页信息
+    ### `pageConstructionPace` <span style="color:gray">[内部]</span>
+
+        分页方式获取施工计划信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 施工计划信息列表 , 每条数据类型 *constructionPace*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  施工计划信息列表 , 每条数据类型 *constructionPace*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -9286,17 +9026,16 @@
                 ...
             }
 
-    ### <I> queryConstructionPace
+    ### `queryConstructionPace` <span style="color:gray">[内部]</span>
 
         获取工程计划信息
-        
-                |Returns:|
-                - **constructionPaces**: 施工计划信息列表 , 每条数据类型 *constructionPace*
+
+**返回参数**:
+
+- **constructionPaces**: 施工计划信息列表 , 每条数据类型 *constructionPace*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionPaces": [
                     {
@@ -9308,60 +9047,57 @@
                 ...
             }
 
-    ### <I> addConstructionPace
+    ### `addConstructionPace` <span style="color:gray">[内部]</span>
 
         添加工程计划
-        
-                |Requests:|
-                :param constructionPace.name: 名称
-        :type constructionPace.name: String
-        :param constructionPace.content: 说明
-        :type constructionPace.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionPace.name**:
+  名称
+        - **constructionPace.content**:
+  说明
+
+        **示例**:{
                 "constructionPace.name": "计划",
                 "constructionPace.content": "说明"
             }
 
-    ### <I> updateConstructionPace
+    ### `updateConstructionPace` <span style="color:gray">[内部]</span>
 
         更新工程计划
-        
+
         判断工程计划是否存在 , 不存在 , 错误信息 **130123 工程计划不存在**
-        
-                |Requests:|
-                :param constructionPace.cpid: 计划ID
-        :type constructionPace.cpid: Long
-        :param constructionPace.name: 名称
-        :type constructionPace.name: String
-        :param constructionPace.content: 说明
-        :type constructionPace.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionPace.cpid**:
+  计划ID
+        - **constructionPace.name**:
+  名称
+        - **constructionPace.content**:
+  说明
+
+        **示例**:{
                 "constructionPace.cpid": 1,
                 "constructionPace.name": "计划",
                 "constructionPace.content": "说明"
             }
 
-    ### <I> updateConstructionPaceForStatus
+    ### `updateConstructionPaceForStatus` <span style="color:gray">[内部]</span>
 
         更新工程计划状态
-        
+
         判断工程计划是否存在 , 不存在 , 错误信息 **130123 工程计划不存在**
-        
-                |Requests:|
-                :param constructionPace.cpid: 计划ID
-        :type constructionPace.cpid: Long
-        :param constructionPace.status: 状态
-        :type constructionPace.status: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionPace.cpid**:
+  计划ID
+        - **constructionPace.status**:
+  状态
+
+        **示例**:{
                 "constructionPace.cpid": 1,
                 "constructionPace.status": 0
             }
@@ -9370,8 +9106,9 @@
 
 ## api.data.DrawlineGroup
 
-        |DataType:|
-        #### drawlineGroup
+**数据类型**:
+
+#### drawlineGroup
 
     - **dgid**: ID
       - 类型: *Long*
@@ -9383,24 +9120,23 @@
       - 类型: *String*
     - **company**: 公司ID
       - 类型: *Long*
-    
+
         |Filters:|
         - **groupName**: 名称
       - 类型: *String*
-    
+
     ### <C/I> pageDrawlineGroup
 
-        分页方式获取放线小组信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Returns:|
-                - **paging**: 分页信息
+        分页方式获取放线小组信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 放线信息列表 , 每条数据类型 *drawlineGroup*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  放线信息列表 , 每条数据类型 *drawlineGroup*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -9415,18 +9151,17 @@
                 },
                 ...
             }
-            
+
     ### <C/I> queryDrawlineGroup
 
         获取状态为启用的放线小组信息
-        
-                |Returns:|
-                - **drawlineGroups**: 放线信息列表 , 每条数据类型 *drawlineGroup*
+
+**返回参数**:
+
+- **drawlineGroups**: 放线信息列表 , 每条数据类型 *drawlineGroup*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "drawlineGroups": [
                     {
@@ -9437,63 +9172,60 @@
                 ],
                 ...
             }
-            
-    ### <C> addDrawlineGroup
+
+    ### `addDrawlineGroup` <span style="color:blue">[自定义]</span>
 
         添加放线小组信息
-        
+
         判断放线小组名称是否存在 , 已经存在 , 错误信息 **130009 防线小组已存在**
-        
-                |Requests:|
-                :param drawline.name: 名称
-        :type drawline.name: String
-        :param drawline.content: 说明
-        :type drawline.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **drawline.name**:
+  名称
+        - **drawline.content**:
+  说明
+
+        **示例**:{
                 "drawline.name": "放线一组",
                 "drawline.content": "说明"
             }
-            
-    ### <C> updateDrawlineGroup
+
+    ### `updateDrawlineGroup` <span style="color:blue">[自定义]</span>
 
         更新放线小组信息
-        
+
         判断放线小组是否存在 , 不存存在 , 错误信息 **130008 防线小组不存在**
-        
-                |Requests:|
-                :param drawline.dgid: ID
-        :type drawline.dgid: Long
-        :param drawline.name: 名称
-        :type drawline.name: String
-        :param drawline.content: 说明
-        :type drawline.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **drawline.dgid**:
+  ID
+        - **drawline.name**:
+  名称
+        - **drawline.content**:
+  说明
+
+        **示例**:{
                 "drawline.dgid": 1,
                 "drawline.name": "放线一组",
                 "drawline.content": "说明"
             }
-            
-    ### <C> updateDrawlineGroupForStatus
+
+    ### `updateDrawlineGroupForStatus` <span style="color:blue">[自定义]</span>
 
         更新放线小组状态 , 实现于启用/禁用
-        
+
         判断放线小组是否存在 , 不存存在 , 错误信息 **130008 防线小组不存在**
-        
-                |Requests:|
-                :param drawline.dgid: ID
-        :type drawline.dgid: Long
-        :param drawline.status: 状态
-        :type drawline.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **drawline.dgid**:
+  ID
+        - **drawline.status**:
+  状态
+
+        **示例**:{
                 "drawline.dgid": 1,
                 "drawline.status": 1
             }
@@ -9502,8 +9234,9 @@
 
 ## api.data.ConstructionCostAction
 
-        |DataType:|
-        #### constructionCost
+**数据类型**:
+
+#### constructionCost
 
     - **ccid**: 成本ID
       - 类型: *Long*
@@ -9523,20 +9256,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageConstructionCost
+
+    ### `pageConstructionCost` <span style="color:gray">[内部]</span>
 
         分页方式获取工程成本信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 工程成本信息列表 , 每条数据类型 *constructionCost*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  工程成本信息列表 , 每条数据类型 *constructionCost*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -9555,18 +9287,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryConstructionCost
+
+    ### `queryConstructionCost` <span style="color:gray">[内部]</span>
 
         获取工程成本信息
-        
-                |Returns:|
-                - **constructionCosts**: 工程成本信息列表 , 每条数据类型 *constructionCost*
+
+**返回参数**:
+
+- **constructionCosts**: 工程成本信息列表 , 每条数据类型 *constructionCost*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionCosts": [
                     {
@@ -9582,55 +9313,53 @@
                 ...
             }
 
-    ### <I> addConstructionCost
+    ### `addConstructionCost` <span style="color:gray">[内部]</span>
 
         添加工程成本信息
-    
-                |Requests:|
-                :param constructionCost.name: 名称
-        :type constructionCost.name: String
-        :param constructionCost.areaLeft: 开工验证款比例
-        :type constructionCost.areaLeft: Integer
-        :param constructionCost.areaRight: 完工验证款比例
-        :type constructionCost.areaRight: Integer
-        :param constructionCost.accessory: 辅料额
-        :type constructionCost.accessory: Long
-        :param constructionCost.salary: 工费额
-        :type constructionCost.salary: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionCost.name**:
+  名称
+        - **constructionCost.areaLeft**:
+  开工验证款比例
+        - **constructionCost.areaRight**:
+  完工验证款比例
+        - **constructionCost.accessory**:
+  辅料额
+        - **constructionCost.salary**:
+  工费额
+
+        **示例**:{
                 "constructionCost.name": "节点名称",
                 "constructionCost.areaLeft": 60000,
                 "constructionCost.areaRight": 69000,
                 "constructionCost.accessory": 12000000,
                 "constructionCost.salary": 60000000,
             }
-            
-    ### <I> updateConstructionCost
+
+    ### `updateConstructionCost` <span style="color:gray">[内部]</span>
 
         更新工程成本信息
-        
+
         判断工程成本是否存在 , 不存在 , 错误信息 **120029 工程成本不存在**
-        
-                |Requests:|
-                :param constructionCost.cnid: 成本ID
-        :type constructionCost.cnid: Long
-        :param constructionCost.name: 名称
-        :type constructionCost.name: String
-        :param constructionCost.areaLeft: 起始面积
-        :type constructionCost.areaLeft: Integer
-        :param constructionCost.areaRight: 终止面积
-        :type constructionCost.areaRight: Integer
-        :param constructionCost.accessory: 辅料额
-        :type constructionCost.accessory: Long
-        :param constructionCost.salary: 工费额
-        :type constructionCost.salary: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionCost.cnid**:
+  成本ID
+        - **constructionCost.name**:
+  名称
+        - **constructionCost.areaLeft**:
+  起始面积
+        - **constructionCost.areaRight**:
+  终止面积
+        - **constructionCost.accessory**:
+  辅料额
+        - **constructionCost.salary**:
+  工费额
+
+        **示例**:{
                 "constructionCost.ccid": 1,
                 "constructionCost.name": "节点名称",
                 "constructionCost.areaLeft": 60000,
@@ -9639,23 +9368,22 @@
                 "constructionCost.salary": 60000000,
             }
 
-    ### <I> updateConstructionCostForStatus
+    ### `updateConstructionCostForStatus` <span style="color:gray">[内部]</span>
 
         更新工程成本状态
-        
-                |Requests:|
-                :param constructionCost.ccid: 成本ID
-        :type constructionCost.ccid: Long
-        :param constructionCost.status: 状态
-        :type constructionCost.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionCost.ccid**:
+  成本ID
+        - **constructionCost.status**:
+  状态
+
+        **示例**:{
                 "constructionCost.ccid": 1,
                 "constructionCost.status": 0
             }
-            
+
 ### 辅材成本
 
 ## api.data.AoodsCostAction
@@ -9670,20 +9398,19 @@
       - 类型: *Object*
     - **numLimit**: 数量上限
       - 类型: *Integer*
-    
-    ### <I> pageAoodsCost
+
+    ### `pageAoodsCost` <span style="color:gray">[内部]</span>
 
         分页方式获取辅材成本信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 辅材成本信息列表 , 每条数据类型 *aoodsCost*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  辅材成本信息列表 , 每条数据类型 *aoodsCost*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -9731,38 +9458,36 @@
                 },
                 ...
             }
-            
-    ### <I> addAoodsCost
+
+    ### `addAoodsCost` <span style="color:gray">[内部]</span>
 
         添加辅材成本
-        
-                |Requests:|
-                :param aoodsCost.aoods.aid: 辅材ID
-        :type aoodsCost.aoods.aid: Long
-        :param aoodsCost.constructionCost.ccid: 工程成本ID
-        :type aoodsCost.constructionCost.ccid: Long
-        :param aoodsCost.numLimit: 数量限制
-        :type aoodsCost.numLimit: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aoodsCost.aoods.aid**:
+  辅材ID
+        - **aoodsCost.constructionCost.ccid**:
+  工程成本ID
+        - **aoodsCost.numLimit**:
+  数量限制
+
+        **示例**:{
                 "aoodsCost.aoods.aid": 1,
                 "aoodsCost.constructionCost.ccid": 1,
                 "aoodsCost.numLimit": 1
             }
-    
-    ### <I> deleteAoodsCost
+
+    ### `deleteAoodsCost` <span style="color:gray">[内部]</span>
 
         删除辅材成本
-        
-                |Requests:|
-                :param aoodsCost.acid: 辅材成本ID
-        :type aoodsCost.acid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aoodsCost.acid**:
+  辅材成本ID
+
+        **示例**:{
                 "aoodsCost.acid": 1
             }
 
@@ -9770,8 +9495,9 @@
 
 ## api.data.ConstructionPeriodAction
 
-        |DataType:|
-        #### constructionPeriod
+**数据类型**:
+
+#### constructionPeriod
 
     - **cpid**: 工期ID
       - 类型: *Long*
@@ -9787,20 +9513,19 @@
       - 类型: *Integer*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageConstructionPeriod
+
+    ### `pageConstructionPeriod` <span style="color:gray">[内部]</span>
 
         分页方式获取工程工期信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 工程工期信息列表 , 每条数据类型 *constructionPeriod*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  工程工期信息列表 , 每条数据类型 *constructionPeriod*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -9819,51 +9544,45 @@
                 ...
             }
 
-    ### <C> addConstructionPeriod
+    ### `addConstructionPeriod` <span style="color:blue">[自定义]</span>
 
         添加品类信息
-        
-        :param constructionPeriod.name: 名称
-        :type constructionPeriod.name: String
-        :param constructionPeriod.typeness: 业务类型
-        :type constructionPeriod.typeness: Short
+
+        - **constructionPeriod.name**:
+  名称
+        - **constructionPeriod.typeness**:
+  业务类型
         :params constructionPeriod.upperArea: 起始面积
-        :type constructionPeriod.upperArea: Integer
+          - 类型: `Integer`
         :params constructionPeriod.lowerArea: 起始面积
-        :type constructionPeriod.lowerArea: Integer
+          - 类型: `Integer`
         :params constructionPeriod.period: 工期
-        :type constructionPeriod.period: Integer
-        
-        Example::
-        
-            {
+          - 类型: `Integer`
+        **示例**:{
                 "constructionPeriod.name": "地板",
                 "constructionPeriod.typeness": -1,
                 "constructionPeriod.upperArea": 10000,
                 "constructionPeriod.lowerArea": 0
                 "constructionPeriod.period": 10000
             }
-            
-    ### <C> updateConstructionPeriod
+
+    ### `updateConstructionPeriod` <span style="color:blue">[自定义]</span>
 
         更新工程工期
-        
-        :param constructionPeriod.cpid: 工期ID
-        :type constructionPeriod.cpid: Long
-        :param constructionPeriod.name: 名称
-        :type constructionPeriod.name: String
-        :param constructionPeriod.typeness: 业务类型
-        :type constructionPeriod.typeness: Short
+
+        - **constructionPeriod.cpid**:
+  工期ID
+        - **constructionPeriod.name**:
+  名称
+        - **constructionPeriod.typeness**:
+  业务类型
         :params constructionPeriod.upperArea: 起始面积
-        :type constructionPeriod.upperArea: Integer
+          - 类型: `Integer`
         :params constructionPeriod.lowerArea: 起始面积
-        :type constructionPeriod.lowerArea: Integer
+          - 类型: `Integer`
         :params constructionPeriod.period: 工期
-        :type constructionPeriod.period: Integer
-        
-        Example::
-        
-            {
+          - 类型: `Integer`
+        **示例**:{
                 "constructionPeriod.cpid": 1,
                 "constructionPeriod.name": "地板",
                 "constructionPeriod.typeness": -1,
@@ -9871,18 +9590,17 @@
                 "constructionPeriod.lowerArea": 0
                 "constructionPeriod.period": 10000
             }
-            
-    ### <C> deleteConstructionPeriod
+
+    ### `deleteConstructionPeriod` <span style="color:blue">[自定义]</span>
 
         删除工程工期
-        
-                |Requests:|
-                :param constructionPeriod.cpid: 工期ID
-        :type constructionPeriod.cpid: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **constructionPeriod.cpid**:
+  工期ID
+
+        **示例**:{
                 "constructionPeriod.cpid": 1
             }
 
@@ -9894,8 +9612,9 @@
 
 ## api.communion.CategoryAction
 
-        |DataType:|
-        #### category
+**数据类型**:
+
+#### category
 
     - **cid**: 品类ID
       - 类型: *Long*
@@ -9913,24 +9632,23 @@
       - 类型: *String*
     - **kiname**: 金蝶名称
       - 类型: *String*
-    
+
         |Filters:|
         - **name**: 品类名称
       - 类型: *String*
-    
-    ### <I> pageCategory
+
+    ### `pageCategory` <span style="color:gray">[内部]</span>
 
         分页方式获取品类信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 品类信息列表 , 每条数据类型 *category*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  品类信息列表 , 每条数据类型 *category*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -9950,18 +9668,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryCategory
+
+    ### `queryCategory` <span style="color:gray">[内部]</span>
 
         获取所有品类信息
-        
-                |Returns:|
-                - **categorys**: 品类信息列表 , 每条数据类型 *category*
+
+**返回参数**:
+
+- **categorys**: 品类信息列表 , 每条数据类型 *category*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "categorys": [
                     {
@@ -9977,28 +9694,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryCategoryByCId
+
+    ### `queryCategoryByCId` <span style="color:gray">[内部]</span>
 
         通过品类ID获取品类信息
-        
-                |Requests:|
-                :param category.cid: 品类ID
-        :type category.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **category.cid**:
+  品类ID
+
+        **示例**:{
                 "category.cid": 1
             }
-            
-                |Returns:|
-                - **category**: 品类信息 , 类型 *category*
+
+**返回参数**:
+
+- **category**: 品类信息 , 类型 *category*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "category":{
                     "cid": 1,
@@ -10013,47 +9728,41 @@
                 ...
             }
 
-    ### <C> addCategory
+    ### `addCategory` <span style="color:blue">[自定义]</span>
 
         添加品类信息
-        
-        :param category.name: 品类名称
-        :type category.name: String
-        :param category.kino: 金蝶编号
-        :type category.kino: String
+
+        - **category.name**:
+  品类名称
+        - **category.kino**:
+  金蝶编号
         :params category.kiname: 金蝶名称
-        :type category.kiname: String
-        
-        Example::
-        
-            {
+          - 类型: `String`
+        **示例**:{
                 "category.name": "地板",
                 "category.kino": "01",
                 "category.kiname": "地板"
             }
-            
-    ### <C> updateCategory
+
+    ### `updateCategory` <span style="color:blue">[自定义]</span>
 
         更新品类信息
-        
-        :param category.cid: 品类ID
-        :type category.cid: Long
-        :param category.name: 品类名称
-        :type category.name: String
-        :param category.type: 类型
-        :type category.type: Short
-        :param category.isCoupon: 券标识
-        :type category.isCoupon: Short
-        :param category.isCount: 统计标识
-        :type category.isCount: Short
-        :param category.kino: 金蝶编号
-        :type category.kino: String
+
+        - **category.cid**:
+  品类ID
+        - **category.name**:
+  品类名称
+        - **category.type**:
+  类型
+        - **category.isCoupon**:
+  券标识
+        - **category.isCount**:
+  统计标识
+        - **category.kino**:
+  金蝶编号
         :params category.kiname: 金蝶名称
-        :type category.kiname: String
-        
-        Example::
-        
-            {
+          - 类型: `String`
+        **示例**:{
                 "category.cid": 1,
                 "category.name": "地板",
                 "category.type": 0,
@@ -10062,18 +9771,17 @@
                 "category.kino": "01",
                 "category.kiname": "地板"
             }
-            
-    ### <C> deleteCategoryByCIds
+
+    ### `deleteCategoryByCIds` <span style="color:blue">[自定义]</span>
 
         通过品类ID批量删除品类信息
-        
-                |Requests:|
-                - **cids**: 品类ID列表 , 每条数据类型 Long
+
+**请求参数**:
+
+- **cids**: 品类ID列表 , 每条数据类型 Long
           - 类型: *cids*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "cids[0]": 1,
                 "cids[1]": 2
             }
@@ -10084,8 +9792,9 @@
 
 ## api.communion.BrandAction
 
-        |DataType:|
-        #### brand
+**数据类型**:
+
+#### brand
 
     - **bid**: 品牌ID
       - 类型: *Long*
@@ -10111,31 +9820,30 @@
       - 类型: *String*
     - **company**: 公司ID
       - 类型: *Long*
-    
+
     - **kino**: 金蝶编号
       - 类型: *String*
     - **kiname**: 金蝶名称
       - 类型: *String*
-    
+
         |Filters:|
         - **no**: 品类ID
       - 类型: *Long*
     - **name**: 品牌名称
       - 类型: *String*
-    
-    ### <I> pageBrand
+
+    ### `pageBrand` <span style="color:gray">[内部]</span>
 
         分页方式获取品牌信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 品牌信息列表 , 每条数据类型 *brand*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  品牌信息列表 , 每条数据类型 *brand*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -10162,25 +9870,24 @@
                             "kino": "01.02",
                             "kiname": "品牌",
                             "comment": ""
-                            
+
                         }
                     ],
                     ...
                 },
                 ...
             }
-            
-    ### <I> queryBrand
+
+    ### `queryBrand` <span style="color:gray">[内部]</span>
 
         获取所有品牌信息
-        
-                |Returns:|
-                - **brands**: 品牌信息列表 , 每条数据类型 *brand*
+
+**返回参数**:
+
+- **brands**: 品牌信息列表 , 每条数据类型 *brand*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "brands": [
                     {
@@ -10209,28 +9916,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryBrandByBid
+
+    ### `queryBrandByBid` <span style="color:gray">[内部]</span>
 
         通过品牌ID获取品牌信息
-        
-                |Requests:|
-                :param brand.bid: 品牌ID
-        :type brand.bid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brand.bid**:
+  品牌ID
+
+        **示例**:{
                 "brand.bid": 1
             }
-            
-                |Returns:|
-                - **brand**: 品牌信息 , 类型 *brand*
+
+**返回参数**:
+
+- **brand**: 品牌信息 , 类型 *brand*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "brand": {
                     "bid": 1,
@@ -10257,28 +9962,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryBrandByNo
+
+    ### `queryBrandByNo` <span style="color:gray">[内部]</span>
 
         通过品牌编号获取品牌信息
-        
-                |Requests:|
-                :param brand.no: 品牌编号
-        :type brand.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brand.no**:
+  品牌编号
+
+        **示例**:{
                 "brand.no": "B001"
             }
-            
-                |Returns:|
-                - **brand**: 品牌信息 , 类型 *brand*
+
+**返回参数**:
+
+- **brand**: 品牌信息 , 类型 *brand*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "brand": {
                     "bid": 1,
@@ -10305,28 +10008,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryBrandByCid
+
+    ### `queryBrandByCid` <span style="color:gray">[内部]</span>
 
         通过品类ID获取品牌信息
-        
-                |Requests:|
-                :param brand.cid: 品类ID
-        :type brand.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brand.cid**:
+  品类ID
+
+        **示例**:{
                 "brand.cid": 1
             }
-        
-                |Returns:|
-                - **brands**: 品牌信息列表 , 每条数据类型 *brand*
+
+**返回参数**:
+
+- **brands**: 品牌信息列表 , 每条数据类型 *brand*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "brands": [
                     {
@@ -10355,33 +10056,31 @@
                 ],
                 ...
             }
-            
-    ### <I> queryBrandByPinyin
+
+    ### `queryBrandByPinyin` <span style="color:gray">[内部]</span>
 
         通过品牌名拼音获取品牌编号和品牌名称信息 , 公司限制
-        
-                |Requests:|
-                :param brand.pinyin: 拼音
-        :type brand.pinyin: String
-        :param brand.atttype: 业务类型
-        :type brand.atttype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brand.pinyin**:
+  拼音
+        - **brand.atttype**:
+  业务类型
+
+        **示例**:{
                 "brand.pinyin": "pinpai",
                 "brand.attype": 0
             }
-            
-                |Returns:|
-                - **autoFillKeyValue**: 键值列表 , 每条数据类型 *keyValue* , 键为品牌编号 , 值为品牌名
+
+**返回参数**:
+
+- **autoFillKeyValue**: 键值列表 , 每条数据类型 *keyValue* , 键为品牌编号 , 值为品牌名
           - 类型: *List*
         - **autoFillList**: 品牌名列表 , 每条数据类型String
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "autoFillKeyValue": [
                     {
@@ -10394,33 +10093,31 @@
                 ],
                 ...
             }
-            
-    ### <I> queryBrandByPinyinForAll
+
+    ### `queryBrandByPinyinForAll` <span style="color:gray">[内部]</span>
 
         通过品牌名拼音获取品牌编号和品牌名称信息 , 无公司限制
-        
-                |Requests:|
-                :param brand.pinyin: 品牌名拼音
-        :type brand.pinyin: String
-        :param brand.atttype: 业务类型
-        :type brand.atttype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brand.pinyin**:
+  品牌名拼音
+        - **brand.atttype**:
+  业务类型
+
+        **示例**:{
                 "brand.pinyin": "pinpai",
                 "brand.atttype": 0
             }
-            
-                |Returns:|
-                - **autoFillKeyValue**: 键值列表 , 每条数据类型 *keyValue* , 键为品牌编号 , 值为品牌名 - 品类名
+
+**返回参数**:
+
+- **autoFillKeyValue**: 键值列表 , 每条数据类型 *keyValue* , 键为品牌编号 , 值为品牌名 - 品类名
           - 类型: *List*
         - **autoFillList**: 品牌名 - 品类名列表 , 每条数据类型String
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "autoFillKeyValue": [
                     {
@@ -10433,35 +10130,34 @@
                 ],
                 ...
             }
-            
-    ### <C> addBrand
+
+    ### `addBrand` <span style="color:blue">[自定义]</span>
 
         添加品牌信息
-        
-                |Requests:|
-                :param brand.name: 品牌名称
-        :type brand.name: String
-        :param brand.cid: 品类ID
-        :type brand.cid: Long
-        :param brand.supplier.uid: 厂商ID
-        :type brand.supplier.uid: Long
-        :param brand.atttype: 业务类型
-        :type brand.atttype: Short
+
+**请求参数**:
+
+- **brand.name**:
+  品牌名称
+        - **brand.cid**:
+  品类ID
+        - **brand.supplier.uid**:
+  厂商ID
+        - **brand.atttype**:
+  业务类型
         - **agentName**: 代理
           - 类型: *String*
         - **agentPhone**: 代理电话
           - 类型: *String*
-        :param brand.comment: 说明
-        :type brand.comment: String
-        
-        :param brand.kino: 金蝶编号
-        :type brand.kino: String
-        :param brand.kiname: 金蝶名称
-        :type brand.kiname: String
-        
-        Example::
-        
-            {
+        - **brand.comment**:
+  说明
+
+        - **brand.kino**:
+  金蝶编号
+        - **brand.kiname**:
+  金蝶名称
+
+        **示例**:{
                 "brand.name": "品牌",
                 "brand.cid": 1,
                 "brand.supplier.uid": 1000,
@@ -10469,41 +10165,40 @@
                 "brand.agentName": "",
                 "brand.agentPhone": "",
                 "brand.comment": "",
-                
+
                 "brand.kino": "01.02",
                 "brand.kiname": "品牌"
             }
-        
-    ### <C> updateBrand
+
+    ### `updateBrand` <span style="color:blue">[自定义]</span>
 
         更新品牌信息
-        
-                |Requests:|
-                :param brand.bid: 品牌ID
-        :type brand.bid: Long
-        :param brand.name: 品牌名称
-        :type brand.name: String
-        :param brand.cid: 品类ID
-        :type brand.cid: Long
-        :param brand.supplier.uid: 厂商ID
-        :type brand.supplier.uid: Long
-        :param brand.atttype: 业务类型
-        :type brand.atttype: Short
+
+**请求参数**:
+
+- **brand.bid**:
+  品牌ID
+        - **brand.name**:
+  品牌名称
+        - **brand.cid**:
+  品类ID
+        - **brand.supplier.uid**:
+  厂商ID
+        - **brand.atttype**:
+  业务类型
         - **agentName**: 代理
           - 类型: *String*
         - **agentPhone**: 代理电话
           - 类型: *String*
-        :param brand.comment: 说明
-        :type brand.comment: String
-        
-        :param brand.kino: 金蝶编号
-        :type brand.kino: String
-        :param brand.kiname: 金蝶名称
-        :type brand.kiname: String
-        
-        Example::
-        
-            {
+        - **brand.comment**:
+  说明
+
+        - **brand.kino**:
+  金蝶编号
+        - **brand.kiname**:
+  金蝶名称
+
+        **示例**:{
                 "brand.bid": 1,
                 "brand.name": "品牌",
                 "brand.cid": 1,
@@ -10512,37 +10207,35 @@
                 "brand.agentName": "",
                 "brand.agentPhone": "",
                 "brand.comment": "",
-                
+
                 "brand.kino": "01.02",
                 "brand.kiname": "品牌"
             }
 
-    ### <C> updateBrandForStatus
+    ### `updateBrandForStatus` <span style="color:blue">[自定义]</span>
 
-                |Requests:|
-                :param brand.bid: 品牌ID
-        :type brand.bid: Long
-        :param brand.status: 状态
-        :type brand.status: Short
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **brand.bid**:
+  品牌ID
+        - **brand.status**:
+  状态
+
+        **示例**:{
                 "brand.bid": 1,
                 "brand.status": 0
             }
-            
-    ### <C> deleteBrand
+
+    ### `deleteBrand` <span style="color:blue">[自定义]</span>
 
         通过品牌ID批量删除品牌信息
-        
-                |Requests:|
-                :param brands[n].bid: 品牌ID列表, 每条数据类型 Long
-        :type brands[n].bid: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brands[n].bid**:
+  品牌ID列表, 每条数据类型 Long
+
+        **示例**:{
                 "brands[0].bid": 1,
                 "brands[1].bid": 2,
             }
@@ -10551,8 +10244,9 @@
 
 ## api.data.BrandSupplierAction
 
-        |DataType:|
-        #### brandSupplier
+**数据类型**:
+
+#### brandSupplier
 
     - **buid**: 厂商ID
       - 类型: *Long*
@@ -10560,18 +10254,17 @@
       - 类型: *Object*
     - **brand**: 品牌 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
-    
-    ### <I> queryBrandSupplier
+
+    ### `queryBrandSupplier` <span style="color:gray">[内部]</span>
 
         查询品牌厂商信息
-    
-                |Returns:|
-                - **brandSuppliers**: 品牌厂商信息列表 , 每条数据类型 *brandSupplier*
+
+**返回参数**:
+
+- **brandSuppliers**: 品牌厂商信息列表 , 每条数据类型 *brandSupplier*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "brandSuppliers": [
                     {
@@ -10582,7 +10275,7 @@
                             "userName": "员工",
                             "currentName": "员工",
                             "phone": "138xxxx3874",
-                            
+
                             ...
                         },
                         "brand": {
@@ -10594,35 +10287,33 @@
                 ],
                 ...
             }
-    
-    ### <I> addBrandSupplier
+
+    ### `addBrandSupplier` <span style="color:gray">[内部]</span>
 
         添加品牌厂商信息
-        
-                |Requests:|
-                :param brandSupplier.supplier.uid: 厂商ID
-        :type brandSupplier.supplier.uid: Long
-        :param brandSupplier.brand.bid: 品牌ID
-        :type brandSupplier.brand.bid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brandSupplier.supplier.uid**:
+  厂商ID
+        - **brandSupplier.brand.bid**:
+  品牌ID
+
+        **示例**:{
                 "brandSupplier.supplier.uid": 1,
                 "brandSupplier.brand.uid": 1
             }
-    
-    ### <I> deleteBrandSupplier
+
+    ### `deleteBrandSupplier` <span style="color:gray">[内部]</span>
 
         删除品牌厂商信息
-        
-                |Requests:|
-                :param brandSupplier.buid: 厂商ID
-        :type brandSupplier.buid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brandSupplier.buid**:
+  厂商ID
+
+        **示例**:{
                 "brandSupplier.buid": 1
             }
 
@@ -10630,8 +10321,9 @@
 
 ## api.data.BrandInstorerAction
 
-        |DataType:|
-        #### brandInstorer
+**数据类型**:
+
+#### brandInstorer
 
     - **biid**: 驻店ID
       - 类型: *Long*
@@ -10643,18 +10335,17 @@
       - 类型: *String*
     - **agentPhone**: 电话
       - 类型: *String*
-    
-    ### <I> queryBrandInstorer
+
+    ### `queryBrandInstorer` <span style="color:gray">[内部]</span>
 
         查询品牌驻店信息
-    
-                |Returns:|
-                - **brandInstorers**: 品牌厂商信息列表 , 每条数据类型 *brandInstorer*
+
+**返回参数**:
+
+- **brandInstorers**: 品牌厂商信息列表 , 每条数据类型 *brandInstorer*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "brandInstorers": [
                     {
@@ -10665,7 +10356,7 @@
                             "userName": "员工",
                             "currentName": "员工",
                             "phone": "138xxxx3874",
-                            
+
                             ...
                         },
                         "brand": {
@@ -10679,41 +10370,39 @@
                 ],
                 ...
             }
-    
-    ### <I> addBrandInstorer
+
+    ### `addBrandInstorer` <span style="color:gray">[内部]</span>
 
         添加品牌驻店信息
-        
-                |Requests:|
-                :param brandInstorer.instorer.uid: 厂商ID
-        :type brandInstorer.instorer.uid: Long
-        :param brandInstorer.brand.bid: 品牌ID
-        :type brandInstorer.brand.bid: Long
-        :param brandInstorer.agentName: 代理
-        :type brandInstorer.agentName: String
-        :param brandInstorer.agentPhone: 电话
-        :type brandInstorer.agentPhone: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brandInstorer.instorer.uid**:
+  厂商ID
+        - **brandInstorer.brand.bid**:
+  品牌ID
+        - **brandInstorer.agentName**:
+  代理
+        - **brandInstorer.agentPhone**:
+  电话
+
+        **示例**:{
                 "brandInstorer.instorer.uid": 1,
                 "brandInstorer.brand.uid": 1,
                 "brandInstorer.agentName": "",
                 "brandInstorer.agentPhone": ""
             }
-    
-    ### <I> deleteBrandInstorer
+
+    ### `deleteBrandInstorer` <span style="color:gray">[内部]</span>
 
         删除品牌驻店信息
-        
-                |Requests:|
-                :param brandInstorer.buid: 厂商ID
-        :type brandInstorer.buid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brandInstorer.buid**:
+  厂商ID
+
+        **示例**:{
                 "brandInstorer.buid": 1
             }
 
@@ -10721,8 +10410,9 @@
 
 ## api.data.BrandBalanceAction
 
-        |DataType:|
-        #### brandBalance
+**数据类型**:
+
+#### brandBalance
 
     - **bbid**: 结算ID
       - 类型: *Long*
@@ -10737,27 +10427,25 @@
     - **comment**: 说明
       - 类型: *String*
 
-    ### <I> queryBrandBalance
+    ### `queryBrandBalance` <span style="color:gray">[内部]</span>
 
         获取品牌结算信息
-        
-                |Requests:|
-                :param brandBalance.bid: 品牌ID
-        :type brandBalance.bid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brandBalance.bid**:
+  品牌ID
+
+        **示例**:{
                 "brandBalance.bid": 1
             }
-            
-                |Returns:|
-                - **brandBalances**: 结算信息列表 , 每条数据类型 *brandBalance*
+
+**返回参数**:
+
+- **brandBalances**: 结算信息列表 , 每条数据类型 *brandBalance*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "brandBalances": [
                     {
@@ -10772,25 +10460,24 @@
                 ]
             }
 
-    ### <I> addBrandBalance
+    ### `addBrandBalance` <span style="color:gray">[内部]</span>
 
         添加结算信息
-        
-                |Requests:|
-                :param brandBalance.bid: 品牌ID
-        :type brandBalance.bid: Long
-        :param brandBalance.name: 名称
-        :type brandBalance.name: String
-        :param brandBalance.ctype: 类型
-        :type brandBalance.ctype: Short
-        :param brandBalance.cvalue: 结算值
-        :type brandBalance.cvalue: Integer
-        :param brandBalance.comment: 说明
-        :type brandBalance.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brandBalance.bid**:
+  品牌ID
+        - **brandBalance.name**:
+  名称
+        - **brandBalance.ctype**:
+  类型
+        - **brandBalance.cvalue**:
+  结算值
+        - **brandBalance.comment**:
+  说明
+
+        **示例**:{
                 "brandBalance.bid": 1,
                 "brandBalance.name": "名称",
                 "brandBalance.ctype": 0,
@@ -10798,17 +10485,16 @@
                 "brandBalance..comment": "说明"
             }
 
-    ### <I> deleteBrandBalance
+    ### `deleteBrandBalance` <span style="color:gray">[内部]</span>
 
         删除结算信息
-        
-                |Requests:|
-                :param brandBalance.bbid: 结算ID
-        :type brandBalance.bbid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **brandBalance.bbid**:
+  结算ID
+
+        **示例**:{
                 "brandBalance.bbid": 1
             }
 
@@ -10816,8 +10502,9 @@
 
 ## api.data.BrandProductAction
 
-        |DataType:|
-        #### brandProduct
+**数据类型**:
+
+#### brandProduct
 
     - **bpid**: 生产ID
       - 类型: *Long*
@@ -10833,21 +10520,22 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> queryBrandProduct
 
-    ### <I> addBrandProduct
+    ### `queryBrandProduct` <span style="color:gray">[内部]</span>
 
-    ### <I> updateBrandProduct
+    ### `addBrandProduct` <span style="color:gray">[内部]</span>
 
-    ### <I> deleteBrandProduct
+    ### `updateBrandProduct` <span style="color:gray">[内部]</span>
+
+    ### `deleteBrandProduct` <span style="color:gray">[内部]</span>
 
 ### 回尺
 
 ## api.data.RemeasureFormatAction
 
-        |DataType:|
-        #### remeasureTemplate
+**数据类型**:
+
+#### remeasureTemplate
 
     - **rtid**: 模板ID
       - 类型: *Long*
@@ -10859,7 +10547,7 @@
       - 类型: *Long*
     - **company**: 公司ID
       - 类型: *Integer*
-    
+
     #### remeasureFormat
 
     - **rfid**: 指标ID
@@ -10880,16 +10568,16 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Integer*
-    
-    ### <I> queryRemeasureFormatByBid
 
-    ### <I> queryRemeasureFormatByRfid
+    ### `queryRemeasureFormatByBid` <span style="color:gray">[内部]</span>
 
-    ### <I> addRemeasureFormat
+    ### `queryRemeasureFormatByRfid` <span style="color:gray">[内部]</span>
 
-    ### <I> updateRemeasureFormat
+    ### `addRemeasureFormat` <span style="color:gray">[内部]</span>
 
-    ### <I> updateRemeasureFormatForStatus
+    ### `updateRemeasureFormat` <span style="color:gray">[内部]</span>
+
+    ### `updateRemeasureFormatForStatus` <span style="color:gray">[内部]</span>
 
 ## 主材
 
@@ -10897,8 +10585,9 @@
 
 ## api.data.MaterialModelAction
 
-        |DataType:|
-        #### materialModel
+**数据类型**:
+
+#### materialModel
 
     - **mmid**: 型号ID
       - 类型: *Long*
@@ -10932,7 +10621,7 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Long*
-    
+
         |Filters:|
         - **category**: 品类ID
       - 类型: *Long*
@@ -10942,62 +10631,21 @@
       - 类型: *String*
     - **name**: 型号名称
       - 类型: *String*
-    
-    ### <I> pageMaterialModel
 
-        分页方式获取型号信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
+    ### `pageMaterialModel` <span style="color:gray">[内部]</span>
+
+        分页方式获取型号信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
         查询过程根据当前操作人员获取对应的品牌权限 , 返回有权限获取的品牌信息
-        
-                |Returns:|
-                - **paging**: 分页信息
-          - 类型: *object*
-        :param paging.data: 型号信息列表 , 每条数据类型 *materialModel*
-        :type paging.data: List
-        
-        Example::
-        
-            {
-                ...
-                "paging": {
-                    ...
-                    "data": [
-                        {
-                            "mmid": 1,
-                            "no": "PW0001",
-                            "name": "卫浴A12208C",
-                            "bid": 2,
-                            "brand": "卫浴",
-                            "category": "洁具",
-                            "measurementUnit": "个",
-                            "purchasePrice": 1,
-                            "unitPrice": 100,
-                            "discount": 1,
-                            "calcType": 0,
-                            "calcValue": 0,
-                            "base": 1,
-                            "point": 0,
-                            "status": 0
-                        }
-                    ],
-                    ...
-                },
-                ...
-            }
-            
-    ### <I> pageMaterialModelForAdvance
 
-        分页方式获取型号信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Returns:|
-                - **paging**: 分页信息
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 型号信息列表 , 每条数据类型 *materialModel*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  型号信息列表 , 每条数据类型 *materialModel*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -11024,18 +10672,56 @@
                 },
                 ...
             }
-    
-    ### <I> queryMaterialModel
+
+    ### `pageMaterialModelForAdvance` <span style="color:gray">[内部]</span>
+
+        分页方式获取型号信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**返回参数**:
+
+- **paging**: 分页信息
+          - 类型: *object*
+        - **paging.data**:
+  型号信息列表 , 每条数据类型 *materialModel*
+
+        **示例**:{
+                ...
+                "paging": {
+                    ...
+                    "data": [
+                        {
+                            "mmid": 1,
+                            "no": "PW0001",
+                            "name": "卫浴A12208C",
+                            "bid": 2,
+                            "brand": "卫浴",
+                            "category": "洁具",
+                            "measurementUnit": "个",
+                            "purchasePrice": 1,
+                            "unitPrice": 100,
+                            "discount": 1,
+                            "calcType": 0,
+                            "calcValue": 0,
+                            "base": 1,
+                            "point": 0,
+                            "status": 0
+                        }
+                    ],
+                    ...
+                },
+                ...
+            }
+
+    ### `queryMaterialModel` <span style="color:gray">[内部]</span>
 
         获取所有型号信息
-        
-                |Returns:|
-                - **materialModels**: 型号信息列表 , 每条数据类型 *materialModel*
+
+**返回参数**:
+
+- **materialModels**: 型号信息列表 , 每条数据类型 *materialModel*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialModels": [
                     {
@@ -11058,28 +10744,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryMaterialModelById
+
+    ### `queryMaterialModelById` <span style="color:gray">[内部]</span>
 
         通过型号ID获取型号信息
-        
-                |Requests:|
-                :param materialModel.mmid: 型号ID
-        :type materialModel.mmid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialModel.mmid**:
+  型号ID
+
+        **示例**:{
                 "materialModel.mmid": 1
             }
-            
-                |Returns:|
-                - **materialModel**: 型号信息 , 类型 *materialModel*
+
+**返回参数**:
+
+- **materialModel**: 型号信息 , 类型 *materialModel*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialModel":{
                     "mmid": 1,
@@ -11100,28 +10784,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryMaterialModelByNo
+
+    ### `queryMaterialModelByNo` <span style="color:gray">[内部]</span>
 
         通过型号编号获取型号信息
-        
-                |Requests:|
-                :param materialModel.no: 型号编号
-        :type materialModel.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialModel.no**:
+  型号编号
+
+        **示例**:{
                 "materialModel.no": "PW0001"
             }
-            
-                |Returns:|
-                - **materialModel**: 型号信息 , 类型 *materialModel*
+
+**返回参数**:
+
+- **materialModel**: 型号信息 , 类型 *materialModel*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialModel":{
                     "mmid": 1,
@@ -11142,28 +10824,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryMaterialModelForAllByName
+
+    ### `queryMaterialModelForAllByName` <span style="color:gray">[内部]</span>
 
         通过型号名称查询型号信息列表
-        
-                |Requests:|
-                :param materialModel.name: 型号名称
-        :type materialModel.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialModel.name**:
+  型号名称
+
+        **示例**:{
                 "materialModel.name": "卫浴A12"
             }
-        
-                |Returns:|
-                - **materialModels**: 型号信息列表 , 每条数据类型 *materialModel*
+
+**返回参数**:
+
+- **materialModels**: 型号信息列表 , 每条数据类型 *materialModel*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialModels": [
                     {
@@ -11186,28 +10866,26 @@
                 ],
                 ...
             }
-    
-    ### <I> queryMaterialModelForAllByNo
+
+    ### `queryMaterialModelForAllByNo` <span style="color:gray">[内部]</span>
 
         通过型号编号查询型号信息列表
-        
-                |Requests:|
-                :param materialModel.no: 型号编号
-        :type materialModel.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialModel.no**:
+  型号编号
+
+        **示例**:{
                 "materialModel.no": "PW0001"
             }
-        
-                |Returns:|
-                - **materialModels**: 型号信息列表 , 每条数据类型 *materialModel*
+
+**返回参数**:
+
+- **materialModels**: 型号信息列表 , 每条数据类型 *materialModel*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialModels": [
                     {
@@ -11230,30 +10908,29 @@
                 ],
                 ...
             }
-            
-    ### <I> addMaterialModel
+
+    ### `addMaterialModel` <span style="color:gray">[内部]</span>
 
         添加型号信息
-        
-                |Requests:|
-                :param materialModel.no: 编号
-        :type materialModel.no: String
-        :param materialModel.name: 名称
-        :type materialModel.name: String
-        :param materialModel.bid: 品牌ID
-        :type materialModel.bid: Long
-        :param materialModel.measurementUnit: 单位
-        :type materialModel.measurementUnit: String
-        :param materialModel.unitPrice: 单价
-        :type materialModel.unitPrice: Integer
-        :param materialModel.purchasePrice: 售价
-        :type materialModel.purchasePrice: Integer
-        :param materialModel.discount: 折扣
-        :type materialModel.discount: Integer
 
-        Example::
-        
-            {
+**请求参数**:
+
+- **materialModel.no**:
+  编号
+        - **materialModel.name**:
+  名称
+        - **materialModel.bid**:
+  品牌ID
+        - **materialModel.measurementUnit**:
+  单位
+        - **materialModel.unitPrice**:
+  单价
+        - **materialModel.purchasePrice**:
+  售价
+        - **materialModel.discount**:
+  折扣
+
+        **示例**:{
                 "materialModel.no": "PW0001",
                 "materialModel.name": "卫浴A12208C",
                 "materialModel.bid": 2,
@@ -11262,32 +10939,31 @@
                 "materialModel.unitPrice": 100,
                 "materialModel.discount": 1
             }
-            
-    ### <I> updateMaterialModel
+
+    ### `updateMaterialModel` <span style="color:gray">[内部]</span>
 
         更新型号信息
-        
-                |Requests:|
-                :param materialModel.mmid: 型号ID
-        :type materialModel.mmid: Long
-        :param materialModel.no: 编号
-        :type materialModel.no: String
-        :param materialModel.name: 名称
-        :type materialModel.name: String
-        :param materialModel.bid: 品牌ID
-        :type materialModel.bid: Long
-        :param materialModel.measurementUnit: 单位
-        :type materialModel.measurementUnit: String
-        :param materialModel.unitPrice: 单价
-        :type materialModel.unitPrice: Integer
-        :param materialModel.purchasePrice: 售价
-        :type materialModel.purchasePrice: Integer
-        :param materialModel.discount: 折扣
-        :type materialModel.discount: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialModel.mmid**:
+  型号ID
+        - **materialModel.no**:
+  编号
+        - **materialModel.name**:
+  名称
+        - **materialModel.bid**:
+  品牌ID
+        - **materialModel.measurementUnit**:
+  单位
+        - **materialModel.unitPrice**:
+  单价
+        - **materialModel.purchasePrice**:
+  售价
+        - **materialModel.discount**:
+  折扣
+
+        **示例**:{
                 "materialModel.mmid": 1,
                 "materialModel.no": "PW0001",
                 "materialModel.name": "卫浴A12208C",
@@ -11297,62 +10973,59 @@
                 "materialModel.unitPrice": 100,
                 "materialModel.discount": 1
             }
-            
-    ### <I> updateMaterialModelForStatus
+
+    ### `updateMaterialModelForStatus` <span style="color:gray">[内部]</span>
 
         更新型号状态信息 , 控制型号启用禁用状态
-        
-                |Requests:|
-                :param materialModel.mmid: 型号ID
-        :type materialModel.mmid: Long
-        :param materialModel.status: 状态 , 0: 禁用 , 1: 启用
-        :type materialModel.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialModel.mmid**:
+  型号ID
+        - **materialModel.status**:
+  状态 , 0: 禁用 , 1: 启用
+
+        **示例**:{
                 "materialModel.mmid": 1,
                 "materialModel.status": 1
             }
-            
-    ### <I> updateMaterialModelForAdvance
+
+    ### `updateMaterialModelForAdvance` <span style="color:gray">[内部]</span>
 
         更新型号高级信息 , 比如计算方式 , 点位 , 底价计算值
-        
-                |Requests:|
-                :param materialModel.mmid: 型号ID
-        :type materialModel.mmid: Long
-        :param materialModel.calcType: 计算类型 , 0: 底价 , 1: 点位
-        :type materialModel.calcType: Short
-        :param materialModel.base: 底价计算值
-        :type materialModel.base: Integer
-        :param materialModel.point: 点位计算值
-        :type materialModel.point: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialModel.mmid**:
+  型号ID
+        - **materialModel.calcType**:
+  计算类型 , 0: 底价 , 1: 点位
+        - **materialModel.base**:
+  底价计算值
+        - **materialModel.point**:
+  点位计算值
+
+        **示例**:{
                 "materialModel.mmid": 1,
                 "materialModel.calcType": 1,
                 "materialModel.base": 10,
                 "materialModel.point": 0.1
             }
-            
-    ### <I> deleteMaterialModelByIds
+
+    ### `deleteMaterialModelByIds` <span style="color:gray">[内部]</span>
 
         通过型号ID批量删除型号信息
-        
-                |Requests:|
-                - **dis**: 型号ID列表 , 每条数据类型 Long
+
+**请求参数**:
+
+- **dis**: 型号ID列表 , 每条数据类型 Long
           - 类型: *dis*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "dis[0]": 1,
                 "dis[1]": 2
             }
-            
+
 ## 材料
 
 ### 类别
@@ -11361,8 +11034,9 @@
 
 ## api.data.GoodsKindAction
 
-        |DataType:|
-        #### goodsKind
+**数据类型**:
+
+#### goodsKind
 
     - **gkid**: 类别ID
       - 类型: *Long*
@@ -11374,23 +11048,24 @@
       - 类型: *Short*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
-    ### <I> pageGoodsKind
 
-    ### <I> queryGoodsKind
+    ### `pageGoodsKind` <span style="color:gray">[内部]</span>
 
-    ### <I> addGoodsKind
+    ### `queryGoodsKind` <span style="color:gray">[内部]</span>
 
-    ### <I> updateGoodsKind
+    ### `addGoodsKind` <span style="color:gray">[内部]</span>
 
-    ### <I> updateGoodsKindForStauts
+    ### `updateGoodsKind` <span style="color:gray">[内部]</span>
+
+    ### `updateGoodsKindForStauts` <span style="color:gray">[内部]</span>
 
 ### 辅类
 
 ## api.data.AccessoriesTypeAction
 
-        |DataType:|
-        #### accessoriesType
+**数据类型**:
+
+#### accessoriesType
 
     - **atid**: 辅类ID
       - 类型: *Long*
@@ -11402,20 +11077,19 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pageAccessoriesType
+
+    ### `pageAccessoriesType` <span style="color:gray">[内部]</span>
 
         分页方式获取辅类信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 辅类信息列表 , 每条数据类型 *accessoriesType*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  辅类信息列表 , 每条数据类型 *accessoriesType*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -11435,18 +11109,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryAccessoriesType
+
+    ### `queryAccessoriesType` <span style="color:gray">[内部]</span>
 
         获取辅类信息
-        
-                |Returns:|
-                - **accessoriesTypes**: 辅类信息列表 , 每条数据类型 *accessoriesType*
+
+**返回参数**:
+
+- **accessoriesTypes**: 辅类信息列表 , 每条数据类型 *accessoriesType*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "accessoriesTypes": [
                     {
@@ -11462,28 +11135,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryAccessoriesTypeByWtid
+
+    ### `queryAccessoriesTypeByWtid` <span style="color:gray">[内部]</span>
 
         通过工种ID获取对应的辅类信息
-        
-                |Requests:|
-                :param accessoriesType.workType.id: 工种ID
-        :type accessoriesType.workType.id: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessoriesType.workType.id**:
+  工种ID
+
+        **示例**:{
                 "accessoriesType.workType.id": 1
             }
-    
-                |Returns:|
-                - **accessoriesTypes**: 辅类信息列表 , 每条数据类型 *accessoriesType*
+
+**返回参数**:
+
+- **accessoriesTypes**: 辅类信息列表 , 每条数据类型 *accessoriesType*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "accessoriesTypes": [
                     {
@@ -11499,67 +11170,64 @@
                 ],
                 ...
             }
-            
-    ### <I> addAccessoriesType
+
+    ### `addAccessoriesType` <span style="color:gray">[内部]</span>
 
         添加辅类信息
-        
-                |Requests:|
-                :param accessoriesType.name: 名称
-        :type accessoriesType.name: String
-        :param accessoriesType.comment: 说明
-        :type accessoriesType.comment: String
-        :param accessoriesType.workType.id: 工种ID
-        :type accessoriesType.workType.id: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessoriesType.name**:
+  名称
+        - **accessoriesType.comment**:
+  说明
+        - **accessoriesType.workType.id**:
+  工种ID
+
+        **示例**:{
                 "accessoriesType.name": "墙面",
                 "accessoriesType.comment": "",
                 "accessoriesType.workType.id": 1
             }
-            
-    ### <I> updateAccessoriesType
+
+    ### `updateAccessoriesType` <span style="color:gray">[内部]</span>
 
         更新辅类信息
-        
+
         辅类信息不存在 , 更新失败 , 错误信息 **260020 辅类不存在**
-        
-                |Requests:|
-                :param accessoriesType.atid: 辅类ID
-        :type accessoriesType.atid: Long
-        :param accessoriesType.name: 名称
-        :type accessoriesType.name: String
-        :param accessoriesType.comment: 说明
-        :type accessoriesType.comment: String
-        :param accessoriesType.workType.id: 工种ID
-        :type accessoriesType.workType.id: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessoriesType.atid**:
+  辅类ID
+        - **accessoriesType.name**:
+  名称
+        - **accessoriesType.comment**:
+  说明
+        - **accessoriesType.workType.id**:
+  工种ID
+
+        **示例**:{
                 "accessoriesType.atid": 1,
                 "accessoriesType.name": "墙面",
                 "accessoriesType.comment": "",
                 "accessoriesType.workType.id": 1
             }
-            
-    ### <I> updateAccessoriesTypeForStatus
+
+    ### `updateAccessoriesTypeForStatus` <span style="color:gray">[内部]</span>
 
         更新辅类状态
-        
+
         辅类信息不存在 , 更新失败 , 错误信息 **260020 辅类不存在**
-        
-                |Requests:|
-                :param accessoriesType.atid: 辅类ID
-        :type accessoriesType.atid: Long
-        :param accessoriesType.status: 状态
-        :type accessoriesType.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessoriesType.atid**:
+  辅类ID
+        - **accessoriesType.status**:
+  状态
+
+        **示例**:{
                 "accessoriesType.atid": 1,
                 "accessoriesType.status": 0
             }
@@ -11568,8 +11236,9 @@
 
 ## api.data.GoodsAction
 
-        |DataType:|
-        #### goods
+**数据类型**:
+
+#### goods
 
     - **gid**: 商品ID
       - 类型: *Long*
@@ -11613,7 +11282,7 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Long*
-    
+
     #### goodsPackage
 
     - **gpid**: 套餐ID
@@ -11628,7 +11297,7 @@
       - 类型: *Object*
     - **num**: 数量
       - 类型: *Integer*
-    
+
         |Filters:|
         - **name**: 大区名称
       - 类型: *String*
@@ -11637,21 +11306,20 @@
     - **brand**: 大区名称
       - 类型: *String*
 
-    ### <I> pageGoods
+    ### `pageGoods` <span style="color:gray">[内部]</span>
 
         分页方式获取商品信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         查询过程根据当前操作人员获取对应的品牌权限 , 返回有权限获取的品牌信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 商品信息列表 , 每条数据类型 *goods*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  商品信息列表 , 每条数据类型 *goods*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -11678,20 +11346,19 @@
                 },
                 ...
             }
-            
-    ### <I> pageGoodsForAdvance
+
+    ### `pageGoodsForAdvance` <span style="color:gray">[内部]</span>
 
         分页方式获取商品信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 商品信息列表 , 每条数据类型 *goods*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  商品信息列表 , 每条数据类型 *goods*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -11719,18 +11386,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryGoods
+
+    ### `queryGoods` <span style="color:gray">[内部]</span>
 
         获取商品信息
-        
-                |Returns:|
-                - **goodes**: 商品信息列表 , 每条数据类型 *goods*
+
+**返回参数**:
+
+- **goodes**: 商品信息列表 , 每条数据类型 *goods*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "goodes": [
                     {
@@ -11754,28 +11420,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryGoodsByAtid
+
+    ### `queryGoodsByAtid` <span style="color:gray">[内部]</span>
 
         通过辅类ID获取商品信息
-        
-                |Requests:|
-                :param goods.accessoriesType.atid: 辅类ID
-        :type goods.accessoriesType.atid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goods.accessoriesType.atid**:
+  辅类ID
+
+        **示例**:{
                 "goods.accessoriesType.atid": 1
             }
-        
-                |Returns:|
-                - **goodes**: 商品信息列表 , 每条数据类型 *goods*
+
+**返回参数**:
+
+- **goodes**: 商品信息列表 , 每条数据类型 *goods*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "goodes": [
                     {
@@ -11799,28 +11463,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryGoodsByNo
+
+    ### `queryGoodsByNo` <span style="color:gray">[内部]</span>
 
         通过编号获取商品信息
-        
-                |Requests:|
-                :param goods.no: 商品编号
-        :type goods.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goods.no**:
+  商品编号
+
+        **示例**:{
                 "goods.no": "JGIDNEHDUIN5SD"
             }
-            
-                |Returns:|
-                - **goodes**: 商品信息列表 , 每条数据类型 *goods*
+
+**返回参数**:
+
+- **goodes**: 商品信息列表 , 每条数据类型 *goods*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "goodes": [
                     {
@@ -11844,28 +11506,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryGoodsByName
+
+    ### `queryGoodsByName` <span style="color:gray">[内部]</span>
 
         通过名称或拼音获取商品信息
-        
-                |Requests:|
-                :param goods.name: 商品名称
-        :type goods.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goods.name**:
+  商品名称
+
+        **示例**:{
                 "goods.name": "瓷砖"
             }
-            
-                |Returns:|
-                - **goodes**: 商品信息列表 , 每条数据类型 *goods*
+
+**返回参数**:
+
+- **goodes**: 商品信息列表 , 每条数据类型 *goods*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "goodes": [
                     {
@@ -11889,28 +11549,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryGoodsByBarcode
+
+    ### `queryGoodsByBarcode` <span style="color:gray">[内部]</span>
 
         通过条型号获取商品信息
-        
-                |Requests:|
-                :param goods.barcode: 条形码
-        :type goods.barcode: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goods.barcode**:
+  条形码
+
+        **示例**:{
                 "goods.barcode": "254125212521251"
             }
-            
-                |Returns:|
-                - **goods**: 商品信息 , 类型 *goods*
+
+**返回参数**:
+
+- **goods**: 商品信息 , 类型 *goods*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "goods":{
                     "gid": 1,
@@ -11932,28 +11590,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryGoodsByGId
+
+    ### `queryGoodsByGId` <span style="color:gray">[内部]</span>
 
         通过商品ID获取商品信息
-        
-                |Requests:|
-                :param goods.gid: 商品ID
-        :type goods.gid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goods.gid**:
+  商品ID
+
+        **示例**:{
                 "goods.gid": 2
             }
-            
-                |Returns:|
-                - **goods**: 商品信息 , 类型 *goods*
+
+**返回参数**:
+
+- **goods**: 商品信息 , 类型 *goods*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "goods":{
                     "gid": 1,
@@ -11975,28 +11631,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryPackage
+
+    ### `queryPackage` <span style="color:gray">[内部]</span>
 
         获取套餐信息
-        
-                |Requests:|
-                :param goodsPackage.pid: 商品ID
-        :type goodsPackage.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goodsPackage.pid**:
+  商品ID
+
+        **示例**:{
                 "goodsPackage.pid": 1
             }
-            
-                |Returns:|
-                - **goodsPackages**: 商品信息列表 , 每条数据类型 *goodsPackages*
+
+**返回参数**:
+
+- **goodsPackages**: 商品信息列表 , 每条数据类型 *goodsPackages*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "goodsPackages": [
                     "goods": {
@@ -12030,38 +11684,37 @@
                 ],
                 ...
             }
-        
-    ### <I> addGoods
+
+    ### `addGoods` <span style="color:gray">[内部]</span>
 
         添加商品
-        
+
         通过商品名称判断状态为0(启用)的商品是否存在 , 错误信息 **260046 商品已存在**
-        
-                |Requests:|
-                :param goods.no: 商品编号
-        :type goods.no: String
-        :param goods.name: 名称
-        :type goods.name: String
-        :param goods.alias: 别名
-        :type goods.alias: String
-        :param goods.barcode: 条形码
-        :type goods.barcode: String
-        :param goods.category: 品类
-        :type goods.category: String
-        :param goods.brand: 品牌
-        :type goods.brand: String
-        :param goods.measurementUnit: 单位
-        :type goods.measurementUnit: String
-        :param goods.purchase: 进价
-        :type goods.purchase: Integer
-        :param goods.selling: 售价
-        :type goods.selling: Integer
-        :param goods.pieceNum: 件数
-        :type goods.pieceNum: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goods.no**:
+  商品编号
+        - **goods.name**:
+  名称
+        - **goods.alias**:
+  别名
+        - **goods.barcode**:
+  条形码
+        - **goods.category**:
+  品类
+        - **goods.brand**:
+  品牌
+        - **goods.measurementUnit**:
+  单位
+        - **goods.purchase**:
+  进价
+        - **goods.selling**:
+  售价
+        - **goods.pieceNum**:
+  件数
+
+        **示例**:{
                 "goods.no": "JGIDNEHDUIN5SD",
                 "goods.name": "瓷砖",
                 "goods.alias": "别名",
@@ -12073,56 +11726,55 @@
                 "goods.selling": 50000,
                 "goods.pieceNum": 1
             }
-            
-    ### <I> addPackage
+
+    ### `addPackage` <span style="color:gray">[内部]</span>
 
         添加套餐
-        
+
         绑定商品到指定商品 , 被绑定商品形成套餐商品
-        
+
         被绑商品信息不存在 , 添加失败 , 错误信息 **260004 商品不存在**
-        
+
         被绑商品不能为套餐 , 添加失败 , 错误信息 **260043 套餐归属商品不可为套餐**
-        
+
         套餐与绑定商品的品牌需要爱一致 , 不一致添加失败 , 错误信息 **260044 品牌不一致**
-        
+
         更新被绑商品类型为1(套餐)
-        
-                |Requests:|
-                :param goods.no: 商品编号
-        :type goods.no: String
-        :param goods.name: 名称
-        :type goods.name: String
-        :param goods.alias: 别名
-        :type goods.alias: String
-        :param goods.barcode: 条形码
-        :type goods.barcode: String
-        :param goods.category: 品类
-        :type goods.category: String
-        :param goods.brand: 品牌
-        :type goods.brand: String
-        :param goods.measurementUnit: 单位
-        :type goods.measurementUnit: String
-        :param goods.purchase: 进价
-        :type goods.purchase: Integer
-        :param goods.selling: 售价
-        :type goods.selling: Integer
-        :param goods.pieceNum: 件数
-        :type goods.pieceNum: Integer
-        :param goodsPackage[n].pid: 被绑商品ID
-        :type goodsPackage[n].pid: Long
-        :param goodsPackage[n].goods.gid: 商品ID
-        :type goodsPackage[n].goods.gid: Long
-        :param goodsPackage[n].color.cid: 颜色ID
-        :type goodsPackage[n].color.cid: Long
-        :param goodsPackage[n].format.fid: 规格ID
-        :type goodsPackage[n].format.fid: Long
-        :param goodsPackage[n].num: 数量
-        :type goodsPackage[n].num: Floa
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goods.no**:
+  商品编号
+        - **goods.name**:
+  名称
+        - **goods.alias**:
+  别名
+        - **goods.barcode**:
+  条形码
+        - **goods.category**:
+  品类
+        - **goods.brand**:
+  品牌
+        - **goods.measurementUnit**:
+  单位
+        - **goods.purchase**:
+  进价
+        - **goods.selling**:
+  售价
+        - **goods.pieceNum**:
+  件数
+        - **goodsPackage[n].pid**:
+  被绑商品ID
+        - **goodsPackage[n].goods.gid**:
+  商品ID
+        - **goodsPackage[n].color.cid**:
+  颜色ID
+        - **goodsPackage[n].format.fid**:
+  规格ID
+        - **goodsPackage[n].num**:
+  数量
+
+        **示例**:{
                 "goods.no": "JGIDNEHDUIN5SD",
                 "goods.name": "瓷砖",
                 "goods.alias": "",
@@ -12139,68 +11791,65 @@
                 "goodsPackage[0].format.fid": 2,
                 "goodsPackage[0].num": 1
             }
-            
-    ### <I> updateGoods
+
+    ### `updateGoods` <span style="color:gray">[内部]</span>
 
         更新商品
-        
+
         可更新的字段信息包括进价和售价
-        
+
         商品是否存在 , 不存在 , 错误信息 **260004 商品不存在**
-        
-                |Requests:|
-                :param goods.gid: 商品ID
-        :type goods.gid: Long
-        :param goods.path: 图片路径
-        :type goods.path: String
-        :param goods.purchase: 进价
-        :type goods.purchase: Integer
-        :param goods.selling: 售价
-        :type goods.selling: Integer
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goods.gid**:
+  商品ID
+        - **goods.path**:
+  图片路径
+        - **goods.purchase**:
+  进价
+        - **goods.selling**:
+  售价
+
+        **示例**:{
                 "goods.gid": 1,
                 "goods.path": "",
                 "goods.purchase": 1000,
                 "goods.selling": 100000
             }
 
-    ### <I> updateGoodsForStatus
+    ### `updateGoodsForStatus` <span style="color:gray">[内部]</span>
 
         更新商品状态
-        
+
         商品信息不存在 , 更新失败 , 错误信息 **260004 商品不存在**
-        
-                |Requests:|
-                :param goods.gid: 商品ID
-        :type goods.gid: Long
-        :param goods.status: 状态
-        :type goods.status: Short
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goods.gid**:
+  商品ID
+        - **goods.status**:
+  状态
+
+        **示例**:{
                 "goods.gid": 1,
                 "goods.status": 0
             }
 
-    ### <I> showGoods
+    ### `showGoods` <span style="color:gray">[内部]</span>
 
         出样商品
-        
+
         商品信息不存在 , 更新失败 , 错误信息 **260004 商品不存在**
-        
-                |Requests:|
-                :param goods.gid: 商品ID
-        :type goods.gid: Long
-        :param goods.isShow: 是否出样
-        :type goods.isShow: Short
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goods.gid**:
+  商品ID
+        - **goods.isShow**:
+  是否出样
+
+        **示例**:{
                 "goods.gid": 1,
                 "goods.isShow": 0
             }
@@ -12209,8 +11858,9 @@
 
 ## api.data.AoodsAction
 
-        |DataType:|
-        #### aoods
+**数据类型**:
+
+#### aoods
 
     - **aid**: 辅材ID
       - 类型: *Long*
@@ -12234,32 +11884,30 @@
       - 类型: *Integer*
     - **bompany**: 归属公司
       - 类型: *Integer*
-    
-    ### <I> pageAoods
+
+    ### `pageAoods` <span style="color:gray">[内部]</span>
 
         分页方式获取辅材信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         查询过程根据当前操作公司查询辅材公司或归属公司作为条件
-        
-                |Requests:|
-                - **companyType**: 公司类型
+
+**请求参数**:
+
+- **companyType**: 公司类型
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "companyType": "company"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 辅材信息列表 , 每条数据类型 *aoods*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  辅材信息列表 , 每条数据类型 *aoods*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -12308,30 +11956,28 @@
                 },
                 ...
             }
-    ### <I> queryAoods
+    ### `queryAoods` <span style="color:gray">[内部]</span>
 
         获取辅材信息
-        
-                |Requests:|
-                :param aoods.type.atid: 辅类ID
-        :type aoods.type.atid: Long
-        :param aoods.atttype: 业务类型
-        :type aoods.atttype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aoods.type.atid**:
+  辅类ID
+        - **aoods.atttype**:
+  业务类型
+
+        **示例**:{
                 "aoods.type.atid": 2,
                 "aoods.atttype": 0
             }
-            
-                |Returns:|
-                - **aoodes**: 辅材信息 , 类型 *aoods*
+
+**返回参数**:
+
+- **aoodes**: 辅材信息 , 类型 *aoods*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "aoodes": {
                     "aid": 1,
@@ -12375,30 +12021,28 @@
                 ...
             }
 
-    ### <I> queryAoodsByAtid
+    ### `queryAoodsByAtid` <span style="color:gray">[内部]</span>
 
         通过辅类ID获取辅材信息
-        
-                |Requests:|
-                :param aoods.type.atid: 辅类ID
-        :type aoods.type.atid: Long
-        :param aoods.atttype: 业务类型
-        :type aoods.atttype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aoods.type.atid**:
+  辅类ID
+        - **aoods.atttype**:
+  业务类型
+
+        **示例**:{
                 "aoods.type.atid": 2,
                 "aoods.atttype": 0
             }
-            
-                |Returns:|
-                - **aoodes**: 辅材信息 , 类型 *aoods*
+
+**返回参数**:
+
+- **aoodes**: 辅材信息 , 类型 *aoods*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "aoodes": {
                     "aid": 1,
@@ -12441,28 +12085,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryAoodsByName
+
+    ### `queryAoodsByName` <span style="color:gray">[内部]</span>
 
         通过商品名称获取辅材信息
-        
-                |Requests:|
-                :param aoods.goods.name: 商品名
-        :type aoods.goods.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aoods.goods.name**:
+  商品名
+
+        **示例**:{
                 "aoods.goods.name": "名称"
             }
-            
-                |Returns:|
-                - **aoodes**: 辅材信息 , 类型 *aoods*
+
+**返回参数**:
+
+- **aoodes**: 辅材信息 , 类型 *aoods*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "aoodes": {
                     "aid": 1,
@@ -12504,145 +12146,141 @@
                 },
                 ...
             }
-            
-    ### <I> addAoods
+
+    ### `addAoods` <span style="color:gray">[内部]</span>
 
         添加辅材
-        
-                |Requests:|
-                :param aoods.name: 名称
-        :type aoods.name: String
-        :param aoods.goods.gid: 商品ID
-        :type aoods.goods.gid: Long
-        :param aoods.noods.nid: 定材ID
-        :type aoods.noods.nid: Long
-        :param aoods.constructionNode.cnid: 施工节点ID
-        :type aoods.constructionNode.cnid: Long
-        
-        :param aoods.type.atid: 辅类ID
-        :type aoods.type.atid: Long
-        :param aoods.atttype: 业务类型
-        :type aoods.atttype: Short
-        :param aoods.balance: 结算价
-        :type aoods.balance: Integer
-        :param aoods.bompany: 归属公司
-        :type aoods.bompany: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aoods.name**:
+  名称
+        - **aoods.goods.gid**:
+  商品ID
+        - **aoods.noods.nid**:
+  定材ID
+        - **aoods.constructionNode.cnid**:
+  施工节点ID
+
+        - **aoods.type.atid**:
+  辅类ID
+        - **aoods.atttype**:
+  业务类型
+        - **aoods.balance**:
+  结算价
+        - **aoods.bompany**:
+  归属公司
+
+        **示例**:{
                 "aoods.name": "名称",
                 "aoods.goods.gid": 1,
                 "aoods.noods.nid": 1,
                 "aoods.constructionNode.cnid": 1,
-                
+
                 "aoods.type.atid": 1,
                 "aoods.atttype": 0,
                 "aoods.balance": 0,
                 "aoods.bompany": 1
             }
-            
-    ### <I> updateAoods
+
+    ### `updateAoods` <span style="color:gray">[内部]</span>
 
         更新辅材信息
-        
+
         判断辅材是否存在 , 不存在 , 错误信息 **260056 辅材不存在**
-        
-                |Requests:|
-                :param aoods.aid: 商品ID
-        :type aoods.aid: String
-        
-        :param aoods.name: 名称
-        :type aoods.name: String
-        :param aoods.noods.nid: 定材ID
-        :type aoods.noods.nid: Long
-        :param aoods.constructionNode.cnid: 施工节点ID
-        :type aoods.constructionNode.cnid: Long
-        :param aoods.type.atid: 辅类ID
-        :type aoods.type.atid: Long
-        :param aoods.atttype: 业务类型
-        :type aoods.atttype: Short
-        :param aoods.balance: 结算价
-        :type aoods.balance: Integer
-        :param aoods.bompany: 归属公司
-        :type aoods.bompany: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aoods.aid**:
+  商品ID
+
+        - **aoods.name**:
+  名称
+        - **aoods.noods.nid**:
+  定材ID
+        - **aoods.constructionNode.cnid**:
+  施工节点ID
+        - **aoods.type.atid**:
+  辅类ID
+        - **aoods.atttype**:
+  业务类型
+        - **aoods.balance**:
+  结算价
+        - **aoods.bompany**:
+  归属公司
+
+        **示例**:{
                 "aoods.aid": 1,
-                
+
                 "aoods.name": "名称",
                 "aoods.normood.ngid": 1,
                 "aoods.constructionNode.cnid": 1,
-                
+
                 "aoods.type.atid": 1,
                 "aoods.atttype": 0,
                 "aoods.balance": 0
             }
 
-    ### <I> updateAoodsForNorm
+    ### `updateAoodsForNorm` <span style="color:gray">[内部]</span>
 
         更新辅材关联定额信息
-        
+
         判断辅材是否存在 , 不存在 , 错误信息 **260056 辅材不存在**
-        
-                |Requests:|
-                :param aoods.aid: 商品ID
-        :type aoods.aid: String
-        
-        :param aoods.noods.nid: 定材ID
-        :type aoods.noods.nid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aoods.aid**:
+  商品ID
+
+        - **aoods.noods.nid**:
+  定材ID
+
+        **示例**:{
                 "aoods.aid": 1,
-                
+
                 "aoods.noods.nid": 1
             }
-            
-    ### <I> updateAoodsForStatus
+
+    ### `updateAoodsForStatus` <span style="color:gray">[内部]</span>
 
         更新辅材状态
-        
+
         判断辅材是否存在 , 不存在 , 错误信息 **260056 辅材不存在**
-        
+
         更新关联商品状态
-        
-                |Requests:|
-                :param aoods.aid: 辅材ID
-        :type aoods.aid: Long
-        :param aoods.status: 状态
-        :type aoods.status: Short
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aoods.aid**:
+  辅材ID
+        - **aoods.status**:
+  状态
+
+        **示例**:{
                 "aoods.aid": 1,
                 "aoods.status": 0
             }
-            
-    ### <I> copyAoods
+
+    ### `copyAoods` <span style="color:gray">[内部]</span>
 
         拷贝辅材
-        
-                |Requests:|
-                :param aoods.bompany: 拷贝公司
-        :type aoods.bompany: String
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aoods.bompany**:
+  拷贝公司
+
+        **示例**:{
                 "aoods.bompany": "AD2FOENN1SJILJ12I3JSODLJ3O"
             }
-            
+
 ### 选材
 
 ## api.data.SoodsAction
 
-        |DataType:|
-        #### soods
+**数据类型**:
+
+#### soods
 
     - **sid**: 选材ID
       - 类型: *Long*
@@ -12666,20 +12304,19 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Integer*
-    
-    ### <I> pageSoods
+
+    ### `pageSoods` <span style="color:gray">[内部]</span>
 
         分页方式获取选材信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 选材信息列表 , 每条数据类型 *soods*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  选材信息列表 , 每条数据类型 *soods*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -12716,27 +12353,25 @@
                 ...
             }
 
-    ### <I> querySoods
+    ### `querySoods` <span style="color:gray">[内部]</span>
 
         通过选材ID查询选材信息
-        
-                |Requests:|
-                :param soods.sid: 选材ID
-        :type soods.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soods.sid**:
+  选材ID
+
+        **示例**:{
                 "soods.sid": 1
             }
-        
-                |Returns:|
-                - **soodes**: 选材信息列表 , 每条数据类型 *soods*
+
+**返回参数**:
+
+- **soodes**: 选材信息列表 , 每条数据类型 *soods*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "soodes": [
                     {
@@ -12769,27 +12404,25 @@
                 ...
             }
 
-    ### <I> querySoodsByName
+    ### `querySoodsByName` <span style="color:gray">[内部]</span>
 
         通过商品名称查询选材
-        
-                |Requests:|
-                :param soods.goods.name: 商品名
-        :type soods.goods.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soods.goods.name**:
+  商品名
+
+        **示例**:{
                 "soods.goods.name": "商品名"
             }
-        
-                |Returns:|
-                - **soodes**: 选材信息列表 , 每条数据类型 *soods*
+
+**返回参数**:
+
+- **soodes**: 选材信息列表 , 每条数据类型 *soods*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "soodes": [
                     {
@@ -12821,30 +12454,29 @@
                 ],
                 ...
             }
-            
-    ### <I> addSoods
+
+    ### `addSoods` <span style="color:gray">[内部]</span>
 
         添加选材
-    
-                |Requests:|
-                :param soods.name: 名称
-        :type soods.name: String
-        :param soods.goods.gid: 商品ID
-        :type soods.goods.gid: Long
-        :param soods.format: 售价
-        :type soods.format: Long
-        :param soods.selling: 售价
-        :type soods.selling: Long
-        :param soods.cost: 成本
-        :type soods.cost: Long
-        :param soods.balance: 结算价
-        :type soods.balance: Long
-        :param soods.num: 数量
-        :type soods.num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soods.name**:
+  名称
+        - **soods.goods.gid**:
+  商品ID
+        - **soods.format**:
+  售价
+        - **soods.selling**:
+  售价
+        - **soods.cost**:
+  成本
+        - **soods.balance**:
+  结算价
+        - **soods.num**:
+  数量
+
+        **示例**:{
                 "soods.name": "选材",
                 "soods.goods.gid": 1,
                 "soods.format": "",
@@ -12854,50 +12486,48 @@
                 "soods.num": 1
             }
 
-    ### <I> copySoods
+    ### `copySoods` <span style="color:gray">[内部]</span>
 
         复制选材
-        
-                |Requests:|
-                :param soods.qiid: 报价项ID
-        :type soods.qiid: Long
-        :param soods.quotationItem.qiid: 报价项ID
-        :type soods.quotationItem.qiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soods.qiid**:
+  报价项ID
+        - **soods.quotationItem.qiid**:
+  报价项ID
+
+        **示例**:{
                 "soods.qiid": 1,
                 "soods.quotationItem.qiid": 1
             }
-            
-    ### <I> updateSoods
+
+    ### `updateSoods` <span style="color:gray">[内部]</span>
 
         更新选材项
-        
+
         选材项更新内容包括结算价
-        
+
         判断选材是否存在 , 不存在 , 错误信息 **130033 选材不存在**
-        
-                |Requests:|
-                :param soods.sid: 选材项ID
-        :type soods.sid: Long
-        :param soods.name: 名称
-        :type soods.name: String
-        :param soods.format: 规格
-        :type soods.format: String
-        :param soods.selling: 结算价
-        :type soods.selling: Integer
-        :param soods.cost: 结算价
-        :type soods.cost: Integer
-        :param soods.balance: 结算价
-        :type soods.balance: Integer
-        :param soods.path: 路径
-        :type soods.path: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soods.sid**:
+  选材项ID
+        - **soods.name**:
+  名称
+        - **soods.format**:
+  规格
+        - **soods.selling**:
+  结算价
+        - **soods.cost**:
+  结算价
+        - **soods.balance**:
+  结算价
+        - **soods.path**:
+  路径
+
+        **示例**:{
                 "soods.sid": 1,
                 "soods.name": "选材",
                 "soods.format": "规格",
@@ -12906,40 +12536,38 @@
                 "soods.balance": 10000,
                 "soods.path": ""
             }
-            
-    ### <I> updateSoodsForStatus
+
+    ### `updateSoodsForStatus` <span style="color:gray">[内部]</span>
 
         更新选材项状态
-        
+
         判断选材是否存在 , 不存在 , 错误信息 **130033 选材不存在**
-        
-                |Requests:|
-                :param soodes[n].sid: 选材项ID
-        :type soodes[n].sid: Long
-        :param soodes[n].status: 状态
-        :type soodes[n].status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soodes[n].sid**:
+  选材项ID
+        - **soodes[n].status**:
+  状态
+
+        **示例**:{
                 "soodes[0].sid": 1,
                 "soodes[0].status": 10000,
             }
-            
-    ### <I> deleteSoods
+
+    ### `deleteSoods` <span style="color:gray">[内部]</span>
 
         删除选材
-        
-                |Requests:|
-                :param soods.sid: 选材ID
-        :type soods.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soods.sid**:
+  选材ID
+
+        **示例**:{
                 "soods.sid": 1
-            }    
-            
+            }
+
     #### soodsItem
 
     - **siid**: 选材项ID
@@ -12948,32 +12576,30 @@
       - 类型: *Object*
     - **quotationItem**: 报价项 , 类型 [quotationItem](./data.html#api.data.QuotationItemAction.quotationItem)
       - 类型: *Object*
-    
-    ### <I> pageSoodsItemByQiid
+
+    ### `pageSoodsItemByQiid` <span style="color:gray">[内部]</span>
 
         分页方式获取选材信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         默认条件为选材归属的报价项ID
-        
-                |Requests:|
-                :param soodsItem.quotationItem.qiid: 报价项ID
-        :type soodsItem.quotationItem.qiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soodsItem.quotationItem.qiid**:
+  报价项ID
+
+        **示例**:{
                 "soodsItem.quotationItem.qiid": 1
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 选材信息列表 , 每条数据类型 *soodsItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  选材信息列表 , 每条数据类型 *soodsItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -13032,31 +12658,29 @@
                 ...
             }
 
-    ### <I> pageSoodsItemBySid
+    ### `pageSoodsItemBySid` <span style="color:gray">[内部]</span>
 
         分页方式获取选材信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         默认条件为选材ID
-        
-                |Requests:|
-                :param soodsItem.sid: 选材ID
-        :type soodsItem.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soodsItem.sid**:
+  选材ID
+
+        **示例**:{
                 "soodsItem.sid": 1
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 选材信息列表 , 每条数据类型 *soodsItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  选材信息列表 , 每条数据类型 *soodsItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -13116,27 +12740,25 @@
                 ...
             }
 
-    ### <I> querySoodsItemByQiid
+    ### `querySoodsItemByQiid` <span style="color:gray">[内部]</span>
 
         通过报价项ID获取选材信息
-        
-                |Requests:|
-                :param soodsItem.quotationItem.qiid: 报价项ID
-        :type soodsItem.quotationItem.qiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soodsItem.quotationItem.qiid**:
+  报价项ID
+
+        **示例**:{
                 "soodsItem.quotationItem.qiid": 1
             }
-        
-                |Returns:|
-                - **soodsItems**: 选材信息列表 , 每条数据类型 *soodsItem*
+
+**返回参数**:
+
+- **soodsItems**: 选材信息列表 , 每条数据类型 *soodsItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "soodsItems": [
                     {
@@ -13191,21 +12813,21 @@
                 ...
             }
 
-    ### <I> querySoodsItemBySid
+    ### `querySoodsItemBySid` <span style="color:gray">[内部]</span>
 
         通过选材ID获取选材信息
-        
-                |Requests:|
-                :param soodsItem.sid: 报价项ID
-        :type soodsItem.sid: Long
-        
-                |Returns:|
-                - **soodsItems**: 选材信息列表 , 每条数据类型 *soodsItem*
+
+**请求参数**:
+
+- **soodsItem.sid**:
+  报价项ID
+
+**返回参数**:
+
+- **soodsItems**: 选材信息列表 , 每条数据类型 *soodsItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "soodsItems": [
                     {
@@ -13259,35 +12881,33 @@
                 ],
                 ...
             }
-    
-    ### <I> addSoodsItem
+
+    ### `addSoodsItem` <span style="color:gray">[内部]</span>
 
         添加选材项
-        
-                |Requests:|
-                :param soodsItem.sid: 选材ID
-        :type soodsItem.sid: Long
-        :param soodsItem.quotationItem.qiid: 报价项ID
-        :type soodsItem.quotationItem.qiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soodsItem.sid**:
+  选材ID
+        - **soodsItem.quotationItem.qiid**:
+  报价项ID
+
+        **示例**:{
                 "soodsItem.sid": 1,
                 "soodsItem.quotationItem.qiid": 1
             }
-    
-    ### <I> deleteSoodsItem
+
+    ### `deleteSoodsItem` <span style="color:gray">[内部]</span>
 
         删除选材项
-        
-                |Requests:|
-                :param soodsItem.siid: 选材项ID
-        :type soodsItem.siid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **soodsItem.siid**:
+  选材项ID
+
+        **示例**:{
                 "soodsItem.siid": 1
             }
 
@@ -13295,8 +12915,9 @@
 
 ## api.data.NoodsAction
 
-        |DataType:|
-        #### noods
+**数据类型**:
+
+#### noods
 
     - **nid**: 选材ID
       - 类型: *Long*
@@ -13310,20 +12931,19 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Integer*
-    
-    ### <I> pageNoods
+
+    ### `pageNoods` <span style="color:gray">[内部]</span>
 
         分页方式获取定材信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 定材信息列表 , 每条数据类型 *noods*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  定材信息列表 , 每条数据类型 *noods*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -13341,27 +12961,25 @@
                 ...
             }
 
-    ### <I> queryNoods
+    ### `queryNoods` <span style="color:gray">[内部]</span>
 
         通过定材ID查询定材信息
-        
-                |Requests:|
-                :param noods.sid: 定材ID
-        :type noods.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **noods.sid**:
+  定材ID
+
+        **示例**:{
                 "noods.sid": 1
             }
-        
-                |Returns:|
-                - **soodes**: 定材信息列表 , 每条数据类型 *noods*
+
+**返回参数**:
+
+- **soodes**: 定材信息列表 , 每条数据类型 *noods*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "soodes": [
                     {
@@ -13375,27 +12993,25 @@
                 ...
             }
 
-    ### <I> queryNoodsByName
+    ### `queryNoodsByName` <span style="color:gray">[内部]</span>
 
         通过商品名称查询定材
-        
-                |Requests:|
-                :param noods.name: 名称
-        :type noods.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **noods.name**:
+  名称
+
+        **示例**:{
                 "noods.name": "名称"
             }
-        
-                |Returns:|
-                - **soodes**: 定材信息列表 , 每条数据类型 *noods*
+
+**返回参数**:
+
+- **soodes**: 定材信息列表 , 每条数据类型 *noods*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "soodes": [
                     {
@@ -13408,79 +13024,77 @@
                 ],
                 ...
             }
-            
-    ### <I> addNoods
+
+    ### `addNoods` <span style="color:gray">[内部]</span>
 
         添加定材
-    
-                |Requests:|
-                :param noods.name: 名称
-        :type noods.name: String
-        :param noods.selling: 售价
-        :type noods.selling: Integer
-        :param noods.balance: 结算价
-        :type noods.balance: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **noods.name**:
+  名称
+        - **noods.selling**:
+  售价
+        - **noods.balance**:
+  结算价
+
+        **示例**:{
                 "noods.name": 1,
                 "noods.selling": 1000,
                 "noods.balance": 1000
             }
-            
-    ### <I> updateNoods
+
+    ### `updateNoods` <span style="color:gray">[内部]</span>
 
         更新定材
-        
+
         判断定材是否存在 , 不存在 , 错误信息 **130118 定材不存在**
-        
-                |Requests:|
-                :param noods.nid: 定材项ID
-        :type noods.nid: Long
-        :param noods.name: 名称
-        :type noods.name: String
-        :param noods.selling: 售价
-        :type noods.selling: Integer
-        :param noods.balance: 结算价
-        :type noods.balance: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **noods.nid**:
+  定材项ID
+        - **noods.name**:
+  名称
+        - **noods.selling**:
+  售价
+        - **noods.balance**:
+  结算价
+
+        **示例**:{
                 "noods.nid": 1,
                 "noods.name": 1,
                 "noods.selling": 1000,
                 "noods.balance": 1000
             }
-            
-    ### <I> updateNoodsForStatus
+
+    ### `updateNoodsForStatus` <span style="color:gray">[内部]</span>
 
         更新定材项状态
-        
+
         判断定材是否存在 , 不存在 , 错误信息 **130118 定材不存在**
-        
-                |Requests:|
-                :param noods.sid: 定材项ID
-        :type noods.sid: Long
-        :param noods.status: 状态
-        :type noods.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **noods.sid**:
+  定材项ID
+        - **noods.status**:
+  状态
+
+        **示例**:{
                 "noods.sid": 1,
                 "noods.status": 10000,
             }
-    
+
 ### 颜色
 
 颜色信息管理 , 商品属性之一
 
 ## api.data.ColorAction
 
-        |DataType:|
-        #### color
+**数据类型**:
+
+#### color
 
     - **cid**: 颜色ID
       - 类型: *Long*
@@ -13492,20 +13106,19 @@
       - 类型: *String*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
-    ### <I> pageColor
+
+    ### `pageColor` <span style="color:gray">[内部]</span>
 
         分页方式获取颜色信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 颜色信息列表 , 每条数据类型 *color*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  颜色信息列表 , 每条数据类型 *color*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -13532,27 +13145,25 @@
                 ...
             }
 
-    ### <I> queryColorByGid
+    ### `queryColorByGid` <span style="color:gray">[内部]</span>
 
         通过商品ID获取对应的颜色信息
-        
-                |Requests:|
-                :param color.gid: 商品ID
-        :type color.gid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **color.gid**:
+  商品ID
+
+        **示例**:{
                 "color.gid": 1
             }
-            
-                |Returns:|
-                - **colors**: 颜色信息列表 , 每条数据类型 *color*
+
+**返回参数**:
+
+- **colors**: 颜色信息列表 , 每条数据类型 *color*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "colors": [
                     {
@@ -13564,28 +13175,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryColorForEnableByGid
+
+    ### `queryColorForEnableByGid` <span style="color:gray">[内部]</span>
 
         通过商品ID获取对应的颜色信息 , 状态为启用
-        
-                |Requests:|
-                :param color.gid: 商品ID
-        :type color.gid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **color.gid**:
+  商品ID
+
+        **示例**:{
                 "color.gid": 1
             }
-            
-                |Returns:|
-                - **colors**: 颜色信息列表 , 每条数据类型 *color*
+
+**返回参数**:
+
+- **colors**: 颜色信息列表 , 每条数据类型 *color*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "colors": [
                     {
@@ -13597,39 +13206,37 @@
                 ],
                 ...
             }
-            
-    ### <I> addColor
+
+    ### `addColor` <span style="color:gray">[内部]</span>
 
         添加商品颜色信息
-        
-                |Requests:|
-                :param color.gid: 商品ID
-        :type color.gid: Long
-        :param color.name: 颜色名
-        :type color.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **color.gid**:
+  商品ID
+        - **color.name**:
+  颜色名
+
+        **示例**:{
                 "color.gid": 1,
                 "color.name": "白色"
             }
-            
-    ### <I> updateColorForStatus
+
+    ### `updateColorForStatus` <span style="color:gray">[内部]</span>
 
         更新颜色状态
-        
+
         颜色信息不存在 , 更新失败 , 错误信息 **260014 颜色不存在**
-    
-                |Requests:|
-                :param color.cid: 颜色ID
-        :type color.cid: Long
-        :param color.status: 状态 , 0: 启用 , 1: 禁用
-        :type color.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **color.cid**:
+  颜色ID
+        - **color.status**:
+  状态 , 0: 启用 , 1: 禁用
+
+        **示例**:{
                 "color.cid": 1,
                 "color.status":1
             }
@@ -13640,8 +13247,9 @@
 
 ## api.inventory.FormatAction
 
-        |DataType:|
-        #### format
+**数据类型**:
+
+#### format
 
     - **fid**: 规格ID
       - 类型: *Long*
@@ -13653,20 +13261,19 @@
       - 类型: *String*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
-    ### <I> pageFormat
+
+    ### `pageFormat` <span style="color:gray">[内部]</span>
 
         分页方式获取规格信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 规格信息列表 , 每条数据类型 *format*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  规格信息列表 , 每条数据类型 *format*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -13692,28 +13299,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryFormatByGid
+
+    ### `queryFormatByGid` <span style="color:gray">[内部]</span>
 
         通过商品ID获取对应的规格信息
-        
-                |Requests:|
-                :param format.gid: 商品ID
-        :type format.gid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **format.gid**:
+  商品ID
+
+        **示例**:{
                 "format.gid": 1
             }
-            
-                |Returns:|
-                - **formats**: 颜色信息列表 , 每条数据类型 *format*
+
+**返回参数**:
+
+- **formats**: 颜色信息列表 , 每条数据类型 *format*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "formats": [
                     {
@@ -13725,28 +13330,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryFormatForEnableByGid
+
+    ### `queryFormatForEnableByGid` <span style="color:gray">[内部]</span>
 
         通过商品ID获取对应的规格信息 , 状态为启用
-        
-                |Requests:|
-                :param format.gid: 商品ID
-        :type format.gid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **format.gid**:
+  商品ID
+
+        **示例**:{
                 "format.gid": 1
             }
-            
-                |Returns:|
-                - **formats**: 规格信息列表 , 每条数据类型 *format*
+
+**返回参数**:
+
+- **formats**: 规格信息列表 , 每条数据类型 *format*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "formats": [
                     {
@@ -13758,51 +13361,50 @@
                 ],
                 ...
             }
-            
-    ### <I> addFormat
+
+    ### `addFormat` <span style="color:gray">[内部]</span>
 
         添加商品规格信息
-        
-                |Requests:|
-                :param format.gid: 商品ID
-        :type format.gid: Long
-        :param format.info: 规格信息
-        :type format.info: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **format.gid**:
+  商品ID
+        - **format.info**:
+  规格信息
+
+        **示例**:{
                 "format.gid": 1,
                 "format.info": "300*300"
             }
-            
-    ### <I> updateFormatForStatus
+
+    ### `updateFormatForStatus` <span style="color:gray">[内部]</span>
 
         更新规格状态
-        
+
         规格信息不存在 , 更新失败 , 错误信息 **260015 规格不存在**
-    
-                |Requests:|
-                :param format.fid: 规格ID
-        :type format.fid: Long
-        :param format.status: 状态 , 0: 启用 , 1: 禁用
-        :type format.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **format.fid**:
+  规格ID
+        - **format.status**:
+  状态 , 0: 启用 , 1: 禁用
+
+        **示例**:{
                 "format.fid": 1,
                 "format.status":1
             }
-    
+
 ### 价格
 
 价格信息管理 , 商品属性之一
 
 ## api.inventory.PriceAction
 
-        |DataType:|
-        #### price
+**数据类型**:
+
+#### price
 
     - **pid**: 价格ID
       - 类型: *Long*
@@ -13824,20 +13426,19 @@
       - 类型: *Integer*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
-    ### <I> pagePrice
+
+    ### `pagePrice` <span style="color:gray">[内部]</span>
 
         分页方式获取价格信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 价格信息列表 , 每条数据类型 *price*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  价格信息列表 , 每条数据类型 *price*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -13866,31 +13467,29 @@
                 },
                 ...
             }
-    
-    ### <I> queryPriceByGid
+
+    ### `queryPriceByGid` <span style="color:gray">[内部]</span>
 
         通过商品ID获取对应价格信息
-        
-                |Requests:|
-                :param price.gid: 商品ID
-        :type price.gid: Long
-        :param price.status: 状态
-        :type price.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **price.gid**:
+  商品ID
+        - **price.status**:
+  状态
+
+        **示例**:{
                 "price.gid": 1,
                 "price.status": 0
             }
-            
-                |Returns:|
-                - **prices**: 价格信息列表 , 每条数据类型 *price*
+
+**返回参数**:
+
+- **prices**: 价格信息列表 , 每条数据类型 *price*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "prices": [
                     {
@@ -13905,28 +13504,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryPriceByPid
+
+    ### `queryPriceByPid` <span style="color:gray">[内部]</span>
 
         通过ID获取对应价格信息
-        
-                |Requests:|
-                :param price.pid: 价格ID
-        :type price.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **price.pid**:
+  价格ID
+
+        **示例**:{
                 "price.pid": 1
             }
-            
-                |Returns:|
-                - **price**: 价格信息 , 类型 *price*
+
+**返回参数**:
+
+- **price**: 价格信息 , 类型 *price*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "price": {
                     "pid": 1,
@@ -13939,28 +13536,27 @@
                 }
                 ...
             }
-    
-    ### <I> addPrice
+
+    ### `addPrice` <span style="color:gray">[内部]</span>
 
         添加商品价格信息
-        
-                |Requests:|
-                :param price.gid: 商品ID
-        :type price.gid: Long
-        :param price.name: 名称
-        :type price.name: String
-        :param price.purchase: 进价
-        :type price.purchase: Integer
-        :param price.selling: 售价
-        :type price.selling: Integer
-        :param price.ctype: 结算类型
-        :type price.ctype: Short
-        :param price.cvalue: 结算值
-        :type price.cvalue: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **price.gid**:
+  商品ID
+        - **price.name**:
+  名称
+        - **price.purchase**:
+  进价
+        - **price.selling**:
+  售价
+        - **price.ctype**:
+  结算类型
+        - **price.cvalue**:
+  结算值
+
+        **示例**:{
                 "price.gid": 1,
                 "price.name": "价格说明",
                 "price.purchase": 100000,
@@ -13968,37 +13564,35 @@
                 "price.ctype": 0,
                 "price.cvalue": 90
             }
-    
-    ### <I> updatePriceForStatus
+
+    ### `updatePriceForStatus` <span style="color:gray">[内部]</span>
 
         更新价格状态
-    
-                |Requests:|
-                :param price.pid: 价格ID
-        :type price.pid: Long
-        :param price.status: 状态
-        :type price.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **price.pid**:
+  价格ID
+        - **price.status**:
+  状态
+
+        **示例**:{
                 "price.pid": 1,
                 "price.status": 0
             }
 
-    ### <I> deletePrice
+    ### `deletePrice` <span style="color:gray">[内部]</span>
 
         删除商品价格信息
-        
+
         价格信息不存在 , 更新失败 , 错误信息 **260016 价格不存在**
-        
-                |Requests:|
-                :param price.pid: 价格ID
-        :type price.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **price.pid**:
+  价格ID
+
+        **示例**:{
                 "price.pid": 1
             }
 
@@ -14006,8 +13600,9 @@
 
 ## api.data.GoodsRecordAction
 
-        |DataType:|
-        #### goodsRecord
+**数据类型**:
+
+#### goodsRecord
 
     - **grid**: 记录ID
       - 类型: *Long*
@@ -14023,17 +13618,18 @@
       - 类型: *Timestamp*
     - **comment**: 说明
       - 类型: *String*
-    
+
     .. pageGoodsRecord
-    
+
 ## 仓储
 
 ### 仓库
 
 ## api.inventory.StorehouseAction
 
-        |DataType:|
-        #### storehouse
+**数据类型**:
+
+#### storehouse
 
     - **shid**: 仓库ID
       - 类型: *Long*
@@ -14043,20 +13639,19 @@
       - 类型: *String*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *String*
-    
-    ### <I> pageStorehouse
+
+    ### `pageStorehouse` <span style="color:gray">[内部]</span>
 
         分页方式获取仓库信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 仓库信息列表 , 每条数据类型 *storehouse*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  仓库信息列表 , 每条数据类型 *storehouse*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -14071,18 +13666,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryStorehouse
+
+    ### `queryStorehouse` <span style="color:gray">[内部]</span>
 
         获取全部仓库信息
-        
-                |Returns:|
-                - **storehouses**: 仓库信息列表 , 每条数据类型 *storehouse*
+
+**返回参数**:
+
+- **storehouses**: 仓库信息列表 , 每条数据类型 *storehouse*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "storehouses": [
                     {
@@ -14093,18 +13687,17 @@
                 ],
                 ...
             }
-            
-    ### <I> queryStorehouseForSelf
+
+    ### `queryStorehouseForSelf` <span style="color:gray">[内部]</span>
 
         获取当前登陆用户有权操作仓库信息
-        
-                |Returns:|
-                - **storehouses**: 仓库信息列表 , 每条数据类型 *storehouse*
+
+**返回参数**:
+
+- **storehouses**: 仓库信息列表 , 每条数据类型 *storehouse*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "storehouses": [
                     {
@@ -14115,53 +13708,52 @@
                 ],
                 ...
             }
-            
-    ### <I> addStorehouse
+
+    ### `addStorehouse` <span style="color:gray">[内部]</span>
 
         添加仓库信息
-        
+
         仓库编号已经存在 , 添加失败 , 错误信息: **260012 仓库编号已存在**
-        
-                |Requests:|
-                :param storehouse.code: 编号
-        :type storehouse.code: String
-        :param storehouse.name: 名称
-        :type storehouse.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **storehouse.code**:
+  编号
+        - **storehouse.name**:
+  名称
+
+        **示例**:{
                 "storehouse.code": "SDJ4SDF5",
                 "storehouse.name": "仓库",
             }
-            
-    ### <I> updateStorehouseForStatus
+
+    ### `updateStorehouseForStatus` <span style="color:gray">[内部]</span>
 
         更新仓库状态
-        
+
         通过仓库ID获取的仓库信息不存在 , 更新失败 , 错误信息 **260005 仓库不存在**
-        
-                |Requests:|
-                :param storehouse.shid: 仓库ID
-        :type storehouse.shid: Long
-        :param storehouse.status: 状态
-        :type storehouse.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **storehouse.shid**:
+  仓库ID
+        - **storehouse.status**:
+  状态
+
+        **示例**:{
                 "storehouse.shid": 1,
                 "storehouse.status": 0,
             }
-            
+
 ### 仓库权限
 
 ## api.inventory.StorehouseUserAction
 
     仓库权限信息管理 , 主要维护人员与仓库间的关联关系
 
-        |DataType:|
-        #### storehouseUser
+**数据类型**:
+
+#### storehouseUser
 
     - **shuid**: 仓库权限ID
       - 类型: *Long*
@@ -14169,28 +13761,26 @@
       - 类型: *String*
     - **storehouse**: 仓库 , 类型 [storehouse](./inventory.html#api.inventory.StorehouseAction.storehouse)
       - 类型: *String*
-    
-    ### <I> queryStorehouseUserByUserId
+
+    ### `queryStorehouseUserByUserId` <span style="color:gray">[内部]</span>
 
         获取指定人员的仓库权限信息
-        
-                |Requests:|
-                :param user.userId: 员工编号
-        :type user.userId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **user.userId**:
+  员工编号
+
+        **示例**:{
                 "user.userId": "U001"
             }
-            
-                |Returns:|
-                - **storehouseUsers**: 权限信息列表 , 每条数据类型 *storehouseUser*
+
+**返回参数**:
+
+- **storehouseUsers**: 权限信息列表 , 每条数据类型 *storehouseUser*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "storehouseUsers":[
                     {
@@ -14211,20 +13801,19 @@
                 ]
                 ...
             }
-            
-    ### <I> updateStorehouseUser
+
+    ### `updateStorehouseUser` <span style="color:gray">[内部]</span>
 
         更新仓库人员权限信息
-        
-                |Requests:|
-                :param user.userId: 员工编号
-        :type user.userId: String
-        :param shIds[n]: 仓库ID列表 , 每条数据类型: Long
-        :type shIds[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **user.userId**:
+  员工编号
+        - **shIds[n]**:
+  仓库ID列表 , 每条数据类型: Long
+
+        **示例**:{
                 "user.userId": "U001",
                 "shIds[0]": 1
             }
@@ -14235,8 +13824,9 @@
 
 ## api.inventory.ManifestTemplateAction
 
-        |DataType:|
-        #### manifestTemplate
+**数据类型**:
+
+#### manifestTemplate
 
     - **mtid**: 商品模版ID
       - 类型: *Long*
@@ -14248,7 +13838,7 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Long*
-    
+
     #### manifestTemplateItem
 
     - **mtiid**: 商品模版项ID
@@ -14257,20 +13847,19 @@
       - 类型: *Object*
     - **goods**: 商品 , 类型 [goods](./inventory.html#api.data.GoodsAction.goods)
       - 类型: *Object*
-    
-    ### <I> pageManifestTemplate
+
+    ### `pageManifestTemplate` <span style="color:gray">[内部]</span>
 
         分页方式获取商品模版信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 商品模版信息列表 , 每条数据类型 *manifestTemplate*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  商品模版信息列表 , 每条数据类型 *manifestTemplate*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -14287,18 +13876,17 @@
                 },
                 ...
             }
-            
-    ### <I> queryManifestTemplate
+
+    ### `queryManifestTemplate` <span style="color:gray">[内部]</span>
 
         获取全部商品模版
-        
-                |Returns:|
-                - **manifestTemplates**: 商品模版信息列表 , 每条数据类型 *manifestTemplate*
+
+**返回参数**:
+
+- **manifestTemplates**: 商品模版信息列表 , 每条数据类型 *manifestTemplate*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "manifestTemplates": [
                     {
@@ -14311,28 +13899,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryManifestTemplateItemByMtid
+
+    ### `queryManifestTemplateItemByMtid` <span style="color:gray">[内部]</span>
 
         通过商品模版ID获取商品模版项信息
-        
-                |Requests:|
-                :param manifestTemplate.mtid: 商品模版ID
-        :type manifestTemplate.mtid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifestTemplate.mtid**:
+  商品模版ID
+
+        **示例**:{
                 "manifestTemplate.mtid": 1
             }
-            
-                |Returns:|
-                - **manifestTemplates**: 商品模版信息列表 , 每条数据类型 *manifestTemplate*
+
+**返回参数**:
+
+- **manifestTemplates**: 商品模版信息列表 , 每条数据类型 *manifestTemplate*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "manifestTemplateItems": [
                     {
@@ -14358,28 +13944,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryManifestItemByMtid
+
+    ### `queryManifestItemByMtid` <span style="color:gray">[内部]</span>
 
         通过商品模版ID获取上包含的商品信息
-        
-                |Requests:|
-                :param manifestTemplate.mtid: 商品模版ID
-        :type manifestTemplate.mtid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifestTemplate.mtid**:
+  商品模版ID
+
+        **示例**:{
                 "manifestTemplate.mtid": 1
             }
-            
-                |Returns:|
-                - **manifestItems**: 商品信息列表 , 每条数据类型 *manifestItem*
+
+**返回参数**:
+
+- **manifestItems**: 商品信息列表 , 每条数据类型 *manifestItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "manifestItems": [
                     {
@@ -14405,28 +13989,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryManifestItemBySiids
+
+    ### `queryManifestItemBySiids` <span style="color:gray">[内部]</span>
 
         通过销售项列表获取对应的货单项信息
-        
-                |Requests:|
-                :param siids[n]: 销售项ID列表 , 每条数据类型 Long
-        :type siids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **siids[n]**:
+  销售项ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "siids[0]": 1
             }
-            
-                |Returns:|
-                - **manifestItems**: 商品信息列表 , 每条数据类型 *manifestItem*
+
+**返回参数**:
+
+- **manifestItems**: 商品信息列表 , 每条数据类型 *manifestItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "manifestItems": [
                     {
@@ -14452,123 +14034,118 @@
                 ],
                 ...
             }
-            
-    ### <I> addManifestTemplate
+
+    ### `addManifestTemplate` <span style="color:gray">[内部]</span>
 
         添加商品模版
-        
-                |Requests:|
-                :param manifestTemplate.name: 模版名
-        :type manifestTemplate.name: String
-        :param manifestTemplate.comment: 说明
-        :type manifestTemplate.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifestTemplate.name**:
+  模版名
+        - **manifestTemplate.comment**:
+  说明
+
+        **示例**:{
                 "manifestTemplate.name": "模版",
                 "manifestTemplate.comment": ""
             }
-            
-    ### <I> addManifestTemplateItem
+
+    ### `addManifestTemplateItem` <span style="color:gray">[内部]</span>
 
         添加商品模版项
-        
-                |Requests:|
-                :param manifestTemplate.mtid: 商品模版ID
-        :type manifestTemplate.mtid: Long
-        :param miIds[n]: 商品ID列表 , 每条数据类型 Long
-        :type miIds[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifestTemplate.mtid**:
+  商品模版ID
+        - **miIds[n]**:
+  商品ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "manifestTemplate.mtid": 1,
                 "miIds[0]": 1
             }
-            
-    ### <I> updateManifestTemplate
+
+    ### `updateManifestTemplate` <span style="color:gray">[内部]</span>
 
         更新商品模版
-        
+
         商品模版信息不存在 , 更新失败 , 错误信息 **260001 商品模版不存在**
-        
-                |Requests:|
-                :param manifestTemplate.mtid: 商品模版ID
-        :type manifestTemplate.mtid: Long
-        :param manifestTemplate.name: 模版名
-        :type manifestTemplate.name: String
-        :param manifestTemplate.comment: 说明
-        :type manifestTemplate.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifestTemplate.mtid**:
+  商品模版ID
+        - **manifestTemplate.name**:
+  模版名
+        - **manifestTemplate.comment**:
+  说明
+
+        **示例**:{
                 "manifestTemplate.mtid": 1,
                 "manifestTemplate.name": "模版",
                 "manifestTemplate.comment": ""
             }
-            
-    ### <I> updateManifestTemplateForStatus
+
+    ### `updateManifestTemplateForStatus` <span style="color:gray">[内部]</span>
 
         更新商品模版状态
-        
+
         商品模版信息不存在 , 更新失败 , 错误信息 **260001 商品模版不存在**
-    
-                |Requests:|
-                :param manifestTemplate.mtid: 商品模版ID
-        :type manifestTemplate.mtid: Long
-        :param manifestTemplate.status: 状态
-        :type manifestTemplate.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifestTemplate.mtid**:
+  商品模版ID
+        - **manifestTemplate.status**:
+  状态
+
+        **示例**:{
                 "manifestTemplate.mtid": 1,
                 "manifestTemplate.status": 0
             }
-        
-    ### <I> deleteManifestTemplate
+
+    ### `deleteManifestTemplate` <span style="color:gray">[内部]</span>
 
         删除商品模版
-        
+
         商品模版信息不存在 , 更新失败 , 错误信息 **260001 商品模版不存在**
-        
-                |Requests:|
-                :param manifestTemplate.mtid: 商品模版ID
-        :type manifestTemplate.mtid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifestTemplate.mtid**:
+  商品模版ID
+
+        **示例**:{
                 "manifestTemplate.mtid": 1
             }
-            
-    ### <I> deleteManifestTemplateItem
+
+    ### `deleteManifestTemplateItem` <span style="color:gray">[内部]</span>
 
         删除商品模版项
-        
-                |Requests:|
-                :param manifestTemplate.mtid: 商品模版ID
-        :type manifestTemplate.mtid: Long
-        :param mtiIds[n]: 商品ID列表 , 每条数据类型 Long
-        :type mtiIds[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifestTemplate.mtid**:
+  商品模版ID
+        - **mtiIds[n]**:
+  商品ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "manifestTemplate.mtid": 1,
                 "mtiIds[0]": 1
             }
-            
+
 ## 合同
 
 ### 模版
 
 ## api.communion.ContractAction
 
-        |DataType:|
-        #### contract
+**数据类型**:
+
+#### contract
 
     - **cid**: 模版ID
       - 类型: *Long*
@@ -14590,20 +14167,19 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Integer*
-    
-    ### <I> pageContract
+
+    ### `pageContract` <span style="color:gray">[内部]</span>
 
         分页方式获取合同模版信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 合同模版列表 , 每条数据类型 *contract*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  合同模版列表 , 每条数据类型 *contract*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -14625,27 +14201,25 @@
                 ...
             }
 
-    ### <I> queryContract
+    ### `queryContract` <span style="color:gray">[内部]</span>
 
         查询合同信息 , 状态为0(启用)
-        
-                |Requests:|
-                :param contract.atttype: 业务类型
-        :type contract.atttype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **contract.atttype**:
+  业务类型
+
+        **示例**:{
                 "contract.atttype": 0
             }
-    
-                |Returns:|
-                - **constracts**: 合同模版列表 , 每条数据类型 *contract*
+
+**返回参数**:
+
+- **constracts**: 合同模版列表 , 每条数据类型 *contract*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constracts": [
                     {
@@ -14663,47 +14237,45 @@
                 ...
             }
 
-    ### <I> countContract
+    ### `countContract` <span style="color:gray">[内部]</span>
 
         统计合同
-        
-                |Returns:|
-                - **count**: 总数
+
+**返回参数**:
+
+- **count**: 总数
           - 类型: *Integer*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "count": 0
                 ...
             }
 
-    ### <I> addContract
+    ### `addContract` <span style="color:gray">[内部]</span>
 
         添加合同
-        
+
         判断合同编号是否存在 , 已经存在 , 错误信息 **130043 合同模版已存在**
-        
-                |Requests:|
-                :param contract.no: 编号
-        :type contract.no: String
-        :param contract.name: 名称
-        :type contract.name: String
-        :param contract.title: 标题
-        :type contract.title: String
-        :param contract.page: 页面
-        :type contract.page: String
-        :param contract.path: 文件路径
-        :type contract.path: String
-        :param contract.videopath: 文件路径
-        :type contract.videopath: String
-        :param contract.atttype: 业务类型
-        :type contract.atttype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **contract.no**:
+  编号
+        - **contract.name**:
+  名称
+        - **contract.title**:
+  标题
+        - **contract.page**:
+  页面
+        - **contract.path**:
+  文件路径
+        - **contract.videopath**:
+  文件路径
+        - **contract.atttype**:
+  业务类型
+
+        **示例**:{
                 "contract.no": "74HENIDH121H",
                 "contract.name": "合同模版",
                 "contract.title": "合同标题",
@@ -14713,47 +14285,46 @@
                 "contract.atttype": 0
             }
 
-    ### <I> updateContract
+    ### `updateContract` <span style="color:gray">[内部]</span>
 
         更新合同
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **130044 合同模版不存在**
-        
-                |Requests:|
-                :param contract.cid: 模版ID
-        :type contract.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **contract.cid**:
+  模版ID
+
+        **示例**:{
                 "contract.cid": 1
             }
 
-    ### <I> updateContractForStatus
+    ### `updateContractForStatus` <span style="color:gray">[内部]</span>
 
         更新合同状态
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **130044 合同模版不存在**
-        
-                |Requests:|
-                :param contract.cid: 模版ID
-        :type contract.cid: Long
-        :param contract.status: 状态
-        :type contract.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **contract.cid**:
+  模版ID
+        - **contract.status**:
+  状态
+
+        **示例**:{
                 "contract.cid": 1,
                 "contract.status": 0
             }
-            
+
 ### 签章
 
 ## api.communion.SignetAction
 
-        |DataType:|
-        #### signet
+**数据类型**:
+
+#### signet
 
     - **sid**: 签章ID
       - 类型: *Long*
@@ -14777,20 +14348,19 @@
       - 类型: *String*
     - **authurl**: 认证路径
       - 类型: *String*
-    
-    ### <I> pageSignet
+
+    ### `pageSignet` <span style="color:gray">[内部]</span>
 
         分页方式获取签章信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 签章列表 , 每条数据类型 *signet*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  签章列表 , 每条数据类型 *signet*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -14813,27 +14383,25 @@
                 ...
             }
 
-    ### <I> querySignet
+    ### `querySignet` <span style="color:gray">[内部]</span>
 
         查询签章信息 , 状态为0(初始)/1(注册)/2(认证)
-        
-                |Requests:|
-                :param signet.type: 类型
-        :type signet.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.type**:
+  类型
+
+        **示例**:{
                 "signet.type": 0
             }
-    
-                |Returns:|
-                - **signets**: 签章列表 , 每条数据类型 *signet*
+
+**返回参数**:
+
+- **signets**: 签章列表 , 每条数据类型 *signet*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "signets": [
                     {
@@ -14852,27 +14420,25 @@
                 ...
             }
 
-    ### <I> querySignetBySid
+    ### `querySignetBySid` <span style="color:gray">[内部]</span>
 
         通过印章ID查询签章信息
-        
-                |Requests:|
-                :param signet.sid: 印章ID
-        :type signet.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.sid**:
+  印章ID
+
+        **示例**:{
                 "signet.sid": 1
             }
-    
-                |Returns:|
-                - **signet**: 签章信息 , 类型 *signet*
+
+**返回参数**:
+
+- **signet**: 签章信息 , 类型 *signet*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "signet": {
                     "sid": 1,
@@ -14889,27 +14455,26 @@
                 ...
             }
 
-    ### <I> addSignet
+    ### `addSignet` <span style="color:gray">[内部]</span>
 
         添加签章
-        
+
         判断签章编号是否存在 , 存在编号 , 错误信息 **130046 签章已存在**
-        
-                |Requests:|
-                :param signet.no: 编号
-        :type signet.no: String
-        :param signet.name: 名称
-        :type signet.name: String
-        :param signet.keyword: 关键字
-        :type signet.keyword: String
-        :param signet.path: 文件路径
-        :type signet.path: String
-        :param signet.type: 类型
-        :type signet.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.no**:
+  编号
+        - **signet.name**:
+  名称
+        - **signet.keyword**:
+  关键字
+        - **signet.path**:
+  文件路径
+        - **signet.type**:
+  类型
+
+        **示例**:{
                 "signet.no": "IN31HJOS",
                 "signet.name": "签章名称",
                 "signet.keyword": "关键字",
@@ -14917,25 +14482,24 @@
                 "signet.type": 0
             }
 
-    ### <I> copySignet
+    ### `copySignet` <span style="color:gray">[内部]</span>
 
         赋值签章
-        
+
         判断签章编号是否存在 , 存在编号 , 错误信息 **130046 签章已存在**
-        
-                |Requests:|
-                :param signet.sid: 签章ID
-        :type signet.sid: String
-        :param signet.no: 编号
-        :type signet.no: String
-        :param signet.name: 名称
-        :type signet.name: String
-        :param signet.keyword: 关键字
-        :type signet.keyword: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.sid**:
+  签章ID
+        - **signet.no**:
+  编号
+        - **signet.name**:
+  名称
+        - **signet.keyword**:
+  关键字
+
+        **示例**:{
                 "signet.sid": 1,
                 "signet.no": "IN31HJOS",
                 "signet.name": "签章名称",
@@ -14943,29 +14507,28 @@
                 "signet.path": "/ASDLFKJDSJFSADFLKJ"
             }
 
-    ### <I> moveSignet
+    ### `moveSignet` <span style="color:gray">[内部]</span>
 
-    ### <I> updateSignet
+    ### `updateSignet` <span style="color:gray">[内部]</span>
 
         更新签章
-        
+
         判断签章信息是否存在 , 不存在 , 错误信息 **130045 签章不存在**
-        
-                |Requests:|
-                :param signet.sid: 签章ID
-        :type signet.sid: Long
-        :param signet.no: 编号
-        :type signet.no: String
-        :param signet.name: 名称
-        :type signet.name: String
-        :param signet.keyword: 关键字
-        :type signet.keyword: String
-        :param signet.path: 文件路径
-        :type signet.path: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.sid**:
+  签章ID
+        - **signet.no**:
+  编号
+        - **signet.name**:
+  名称
+        - **signet.keyword**:
+  关键字
+        - **signet.path**:
+  文件路径
+
+        **示例**:{
                 "signet.sid": 1,
                 "signet.no": "IN31HJOS",
                 "signet.name": "签章名称",
@@ -14973,112 +14536,106 @@
                 "signet.path": "/ASDLFKJDSJFSADFLKJ"
             }
 
-    ### <I> registSignet
+    ### `registSignet` <span style="color:gray">[内部]</span>
 
         注册签章
-        
+
         判断签章信息是否存在 , 不存在 , 错误信息 **130045 签章不存在**
-        
+
         判断签章状态是否为0(初始) , 其他状态 , 错误信息 **130047 签章状态不可操作**
-        
+
         更新签章状态为1(注册)
-        
-                |Requests:|
-                :param signet.sid: 签章ID
-        :type signet.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.sid**:
+  签章ID
+
+        **示例**:{
                 "signet.sid": 1
             }
 
-    ### <I> authSignet
+    ### `authSignet` <span style="color:gray">[内部]</span>
 
         认证签章
-        
+
         判断签章信息是否存在 , 不存在 , 错误信息 **130045 签章不存在**
-        
+
         判断签章状态是否为1(注册) , 其他状态 , 错误信息 **130047 签章状态不可操作**
-        
+
         更新签章状态为2(认证)
-        
-                |Requests:|
-                :param signet.sid: 签章ID
-        :type signet.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.sid**:
+  签章ID
+
+        **示例**:{
                 "signet.sid": 1
             }
 
-    ### <I> confirmSignet
+    ### `confirmSignet` <span style="color:gray">[内部]</span>
 
         确认签章
-        
+
         判断签章信息是否存在 , 不存在 , 错误信息 **130045 签章不存在**
-        
+
         判断签章状态是否为2(认证) , 其他状态 , 错误信息 **130047 签章状态不可操作**
-        
+
         更新签章状态为3(确认)
-        
-                |Requests:|
-                :param signet.sid: 签章ID
-        :type signet.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.sid**:
+  签章ID
+
+        **示例**:{
                 "signet.sid": 1
             }
 
-    ### <I> signateSignet
+    ### `signateSignet` <span style="color:gray">[内部]</span>
 
         上传签章
-        
+
         判断签章信息是否存在 , 不存在 , 错误信息 **130045 签章不存在**
-        
+
         判断签章状态是否为3(确认) , 其他状态 , 错误信息 **130047 签章状态不可操作**
-        
-                |Requests:|
-                :param signet.sid: 签章ID
-        :type signet.sid: Long
-        :param signet.path: 文件路径
-        :type signet.path: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.sid**:
+  签章ID
+        - **signet.path**:
+  文件路径
+
+        **示例**:{
                 "signet.sid": 1,
                 "signet.path": "/ASDLFKJDSJFSADFLKJ"
             }
-            
-    ### <I> autoSignet
+
+    ### `autoSignet` <span style="color:gray">[内部]</span>
 
         自动签章
-        
+
         判断签章信息是否存在 , 不存在 , 错误信息 **130045 签章不存在**
-        
+
         判断签章状态是否为3(确认) , 其他状态 , 错误信息 **130047 签章状态不可操作**
-        
-                |Requests:|
-                :param signet.sid: 签章ID
-        :type signet.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.sid**:
+  签章ID
+
+        **示例**:{
                 "signet.sid": 1
             }
-            
-                |Returns:|
-                :param signet.path: 自动签章地址
-        :type signet.path: String
-        
-        Example::
-        
-            {
+
+**返回参数**:
+
+- **signet.path**:
+  自动签章地址
+
+        **示例**:{
                 ...
                 "signet": {
                     "path": "ASDLFKJDSJFSADFLKJ"
@@ -15086,46 +14643,45 @@
                 ...
             }
 
-    ### <I> selectSignet
+    ### `selectSignet` <span style="color:gray">[内部]</span>
 
         选择签章 , 配置签章所使用印章信息
-        
+
         判断签章信息是否存在 , 不存在 , 错误信息 **130045 签章不存在**
-        
+
         判断签章状态是否为3(确认) , 其他状态 , 错误信息 **130047 签章状态不可操作**
-    
-                |Requests:|
-                :param signet.sid: 签章ID
-        :type signet.sid: Long
-        :param signet.signid: 印章编号
-        :type signet.signid: String
-        
-                |Requests:|
-                :param signet.sid: 签章ID
-        :type signet.sid: Long
-        :param signet.signid: 印章编号
-        :type signet.signid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.sid**:
+  签章ID
+        - **signet.signid**:
+  印章编号
+
+**请求参数**:
+
+- **signet.sid**:
+  签章ID
+        - **signet.signid**:
+  印章编号
+
+        **示例**:{
                 "signet.sid": 1,
                 "signet.signid": "IN31HJOS"
             }
 
-    ### <I> cancelSignet
+    ### `cancelSignet` <span style="color:gray">[内部]</span>
 
         作废签章
-        
+
         判断签章信息是否存在 , 不存在 , 错误信息 **130045 签章不存在**
-        
-                |Requests:|
-                :param signet.sid: 签章ID
-        :type signet.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signet.sid**:
+  签章ID
+
+        **示例**:{
                 "signet.sid": 1
             }
 
@@ -15133,8 +14689,9 @@
 
 ## api.communion.FadadaAction
 
-        |DataType:|
-        #### signature
+**数据类型**:
+
+#### signature
 
     - **customerId**: 客户编号
       - 类型: *String*
@@ -15148,28 +14705,26 @@
       - 类型: *Short*
     - **type**: 类型 , 0: 个人 , 1: 公司
       - 类型: *Short*
-    
-    ### <I> pollingSignature
+
+    ### `pollingSignature` <span style="color:gray">[内部]</span>
 
         查询印章信息
-        
-                |Requests:|
-                :param signature.customerId: 客户编号
-        :type signature.customerId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signature.customerId**:
+  客户编号
+
+        **示例**:{
                 "signature.customerId": 1
             }
-    
-                |Returns:|
-                - **signatures**: 印章列表 , 每条数据类型 *signature*
+
+**返回参数**:
+
+- **signatures**: 印章列表 , 每条数据类型 *signature*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "signatures": [
                     {
@@ -15184,30 +14739,28 @@
                 ...
             }
 
-    ### <I> addSignature
+    ### `addSignature` <span style="color:gray">[内部]</span>
 
         添加印章信息
-        
-                |Requests:|
-                :param signature.customerId: 客户编号
-        :type signature.customerId: String
-        :param signature.path: 客户编号
-        :type signature.path: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signature.customerId**:
+  客户编号
+        - **signature.path**:
+  客户编号
+
+        **示例**:{
                 "signature.customerId": 1,
                 "signature.path": "/ASDLFKJDSJFSADFLKJ",
             }
-    
-                |Returns:|
-                - **signature**: 印章信息 , 类型 *signature*
+
+**返回参数**:
+
+- **signature**: 印章信息 , 类型 *signature*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "signature": {
                     "customerId": "DA20D4",
@@ -15219,36 +14772,34 @@
                 ...
             }
 
-    ### <I> defaultSignature
+    ### `defaultSignature` <span style="color:gray">[内部]</span>
 
         默认印章
-        
-                |Requests:|
-                :param signature.customerId: 客户编号
-        :type signature.customerId: String
-        :param signature.signatureId: 印章编号
-        :type signature.signatureId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signature.customerId**:
+  客户编号
+        - **signature.signatureId**:
+  印章编号
+
+        **示例**:{
                 "signature.customerId": 1,
                 "signature.signatureId": "IN31HJOS"
             }
 
-    ### <I> deleteSignature
+    ### `deleteSignature` <span style="color:gray">[内部]</span>
 
         删除印章
-        
-                |Requests:|
-                :param signature.customerId: 客户编号
-        :type signature.customerId: String
-        :param signature.signatureId: 印章编号
-        :type signature.signatureId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **signature.customerId**:
+  客户编号
+        - **signature.signatureId**:
+  印章编号
+
+        **示例**:{
                 "signature.customerId": 1,
                 "signature.signatureId": "IN31HJOS"
             }
@@ -15257,8 +14808,9 @@
 
 ## api.communion.TalkingAction
 
-        |DataType:|
-        #### talking
+**数据类型**:
+
+#### talking
 
     - **tid**: 话术ID
       - 类型: *Long*
@@ -15272,20 +14824,19 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Integer*
-    
-    ### <I> pageTalking
+
+    ### `pageTalking` <span style="color:gray">[内部]</span>
 
         分页方式获取话术信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 签章列表 , 每条数据类型 *talking*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  签章列表 , 每条数据类型 *talking*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -15301,27 +14852,25 @@
                 ...
             }
 
-    ### <I> queryTalking
+    ### `queryTalking` <span style="color:gray">[内部]</span>
 
         根据类型查询话术 , 状态为0(有效)
-    
-                |Requests:|
-                :param talking.type: 类型
-        :type talking.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **talking.type**:
+  类型
+
+        **示例**:{
                 "talking.type": 0
             }
-            
-                |Returns:|
-                - **talkings**: 话术列表 , 每条数据类型 *talking*
+
+**返回参数**:
+
+- **talkings**: 话术列表 , 每条数据类型 *talking*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "talkings": [
                     {
@@ -15332,82 +14881,78 @@
                 ],
                 ...
             }
-            
-    ### <I> addTalking
+
+    ### `addTalking` <span style="color:gray">[内部]</span>
 
         添加话术
-        
-                |Requests:|
-                :param talking.name: 名称
-        :type talking.name: String
-        :param talking.type: 类型
-        :type talking.type: Short
-        :param talking.content: 内容
-        :type talking.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **talking.name**:
+  名称
+        - **talking.type**:
+  类型
+        - **talking.content**:
+  内容
+
+        **示例**:{
                 "talking.name": "名称",
                 "talking.type": 0,
                 "talking.content": "内容"
             }
-            
-    ### <I> updateTalking
+
+    ### `updateTalking` <span style="color:gray">[内部]</span>
 
         更新话术
-        
+
         判断话术是否存在 , 不存在 , 错误信息 **130040 话术不存在**
-        
-                |Requests:|
-                :param talking.tid: 话术ID
-        :type talking.tid: Long
-        :param talking.name: 名称
-        :type talking.name: String
-        :param talking.type: 类型
-        :type talking.type: Short
-        :param talking.content: 内容
-        :type talking.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **talking.tid**:
+  话术ID
+        - **talking.name**:
+  名称
+        - **talking.type**:
+  类型
+        - **talking.content**:
+  内容
+
+        **示例**:{
                 "talking.tid": 1,
                 "talking.name": "名称",
                 "talking.type": 0,
                 "talking.content": "内容"
             }
-            
-    ### <I> updateTalkingForStatus
+
+    ### `updateTalkingForStatus` <span style="color:gray">[内部]</span>
 
         更新话术状态
-        
+
         判断话术是否存在 , 不存在 , 错误信息 **130040 话术不存在**
-        
-                |Requests:|
-                :param talking.tid: 话术ID
-        :type talking.tid: Long
-        :param talking.status: 状态
-        :type talking.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **talking.tid**:
+  话术ID
+        - **talking.status**:
+  状态
+
+        **示例**:{
                 "talking.tid": 1,
                 "talking.status": 0
             }
-            
-    ### <I> deleteTalking
+
+    ### `deleteTalking` <span style="color:gray">[内部]</span>
 
         删除话术
-        
-                |Requests:|
-                :param talking.tid: 话术ID
-        :type talking.tid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **talking.tid**:
+  话术ID
+
+        **示例**:{
                 "talking.tid": 1
             }
 
@@ -15417,8 +14962,9 @@
 
 ## api.communion.DataDrawingAction
 
-        |DataType:|
-        #### dataDrawing
+**数据类型**:
+
+#### dataDrawing
 
     - **ddid**: 图片ID
       - 类型: *Long*
@@ -15438,31 +14984,29 @@
       - 类型: *Timestamp*
     - **status**: 状态 , 0: 有效 , 1: 无效
       - 类型: *Short*
-    
-    ### <I> queryDataDrawing
+
+    ### `queryDataDrawing` <span style="color:gray">[内部]</span>
 
         通过关联ID以及类型获取图片信息
-        
-                |Requests:|
-                :param dataDrawing.sid: 关联ID
-        :type dataDrawing.sid: Long
-        :param dataDrawing.type: 类型
-        :type dataDrawing.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **dataDrawing.sid**:
+  关联ID
+        - **dataDrawing.type**:
+  类型
+
+        **示例**:{
                 "dataDrawing.sid": 1,
                 "dataDrawing.type": 0
             }
-            
-                |Returns:|
-                - **dataDrawings**: 图片信息列表 , 每条数据类型 *dataDrawing*
+
+**返回参数**:
+
+- **dataDrawings**: 图片信息列表 , 每条数据类型 *dataDrawing*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "dataDrawings": [
                     {
@@ -15476,33 +15020,32 @@
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "createTime": "2016-01-01"
                     }
                 ],
                 ...
             }
-            
-    ### <C> addDataDrawing
+
+    ### `addDataDrawing` <span style="color:blue">[自定义]</span>
 
         添加图片信息
-        
-                |Requests:|
-                :param dataDrawing.sid: 关联ID
-        :type dataDrawing.sid: Long
-        :param dataDrawing.name: 名称
-        :type dataDrawing.name: String
-        :param dataDrawing.drawingUrl: 路径
-        :type dataDrawing.drawingUrl: String
-        :param dataDrawing.drawingType: 图片类型
-        :type dataDrawing.drawingType: Short
-        :param dataDrawing.type: 类型
-        :type dataDrawing.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **dataDrawing.sid**:
+  关联ID
+        - **dataDrawing.name**:
+  名称
+        - **dataDrawing.drawingUrl**:
+  路径
+        - **dataDrawing.drawingType**:
+  图片类型
+        - **dataDrawing.type**:
+  类型
+
+        **示例**:{
                 "dataDrawing.sid": 1,
                 "dataDrawing.name": "name.jpg",
                 "dataDrawing.drawingUrl": "2016/08/02/2/c7ec4da2429a4debbc3cca21eb5035b9.png",
@@ -15510,17 +15053,16 @@
                 "dataDrawing.type": 0
             }
 
-    ### <C> deleteDataDrawing
+    ### `deleteDataDrawing` <span style="color:blue">[自定义]</span>
 
         删除图片信息
-        
-                |Requests:|
-                :param dataDrawing.ddid: 图片ID
-        :type dataDrawing.ddid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **dataDrawing.ddid**:
+  图片ID
+
+        **示例**:{
                 "dataDrawing.ddid": 1
             }
 
@@ -15528,8 +15070,9 @@
 
 ## api.data.InspectAction
 
-        |DataType:|
-        #### inspect
+**数据类型**:
+
+#### inspect
 
     - **iid**: 自检ID
       - 类型: *Long*
@@ -15545,7 +15088,7 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Integer*
-    
+
     #### inspectItem
 
     - **iiid**: 项目ID
@@ -15558,21 +15101,21 @@
       - 类型: *Short*
     - **isRequire**: 必填标识
       - 类型: *Short*
-    
-    ### <I> pageInspect
 
-    ### <I> queryInspect
+    ### `pageInspect` <span style="color:gray">[内部]</span>
 
-    ### <I> queryInspectItem
+    ### `queryInspect` <span style="color:gray">[内部]</span>
 
-    ### <I> addInspect
+    ### `queryInspectItem` <span style="color:gray">[内部]</span>
 
-    ### <I> addInspectItem
+    ### `addInspect` <span style="color:gray">[内部]</span>
 
-    ### <I> updateInspect
+    ### `addInspectItem` <span style="color:gray">[内部]</span>
 
-    ### <I> updateInspectForStatus
+    ### `updateInspect` <span style="color:gray">[内部]</span>
 
-    ### <I> updateInspectItem
+    ### `updateInspectForStatus` <span style="color:gray">[内部]</span>
 
-    ### <I> deleteInspectItem
+    ### `updateInspectItem` <span style="color:gray">[内部]</span>
+
+    ###

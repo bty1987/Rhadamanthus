@@ -1,12 +1,11 @@
-# payment {#payment}
-
-# 款项
+# payment 款项
 ## 合同
 
 ## api.payment.PaymentContractAction
 
-        |DataType:|
-        #### paymentContract
+**数据类型**:
+
+#### paymentContract
 
     - **pcid**: 合同ID
       - 类型: *Long*
@@ -32,20 +31,19 @@
       - 类型: *Timestamp*
     - **status**: 状态 , 0: 初始 , 1: 已签 , 2: 失效 , 3: 归档 , 4: 归档(本地)
       - 类型: *Short*
-    
-    ### <I> pagePaymentContract
+
+    ### `pagePaymentContract` <span style="color:gray">[内部]</span>
 
         分页方式获取款项合同信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 款项合同信息列表 , 每条数据类型 *paymentContract*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  款项合同信息列表 , 每条数据类型 *paymentContract*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -77,19 +75,18 @@
                 ...
             }
 
-    ### <C> pollingPaymentContract
+    ### `pollingPaymentContract` <span style="color:blue">[自定义]</span>
 
         分页方式获取款项合同信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 款项合同信息列表 , 每条数据类型 *paymentContract*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  款项合同信息列表 , 每条数据类型 *paymentContract*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -120,32 +117,30 @@
                 },
                 ...
             }
-    
-    ### <I> queryPaymentContract
+
+    ### `queryPaymentContract` <span style="color:gray">[内部]</span>
 
         通过装修单号获取合同信息
-        
-                |Requests:|
-                :param paymentContract.rtid: 收据ID
-        :type paymentContract.rtid: Long
-        :param paymentContract.paymentType: 款项类型
-        :type paymentContract.paymentType: Short
-    
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentContract.rtid**:
+  收据ID
+        - **paymentContract.paymentType**:
+  款项类型
+
+
+        **示例**:{
                 "paymentContract.rtid": 1,
                 "paymentContract.paymentType": 1
             }
-            
-                |Returns:|
-                - **paymentContract**: 合同信息 , 类型 *paymentContract*
+
+**返回参数**:
+
+- **paymentContract**: 合同信息 , 类型 *paymentContract*
           - 类型: *List*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "paymentContract": {
                     "pcid": 1,
@@ -171,236 +166,223 @@
                 ...
             }
 
-    ### <I> sendPaymentContractForAuth
+    ### `sendPaymentContractForAuth` <span style="color:gray">[内部]</span>
 
         发送认证通知
-        
-                |Requests:|
-                :param paymentContract.pcid: 装修单号
-        :type paymentContract.pcid: String
-    
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentContract.pcid**:
+  装修单号
+
+
+        **示例**:{
                 "paymentContract.pcid": 1
             }
 
-    ### <I> sendPaymentContract
+    ### `sendPaymentContract` <span style="color:gray">[内部]</span>
 
         发送合同通知
-        
+
         通过不同类型的控制 , 统一的跳转页面来判断当前通知合同的状态是否符合操作
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **150065 合同不存在**
-        
-                |Requests:|
-                :param paymentContract.pcid: 合同ID
-        :type paymentContract.pcid: Long
-        :param paymentContract.type: 类型 , 1: 签章, 2: 签订, 3: 查看 , 4: 下载
-        :type paymentContract.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentContract.pcid**:
+  合同ID
+        - **paymentContract.type**:
+  类型 , 1: 签章, 2: 签订, 3: 查看 , 4: 下载
+
+        **示例**:{
                 "paymentContract.pcid": 1,
                 "paymentContract.type": 1
             }
 
-    ### <I> redirectPaymentContract
+    ### `redirectPaymentContract` <span style="color:gray">[内部]</span>
 
         跳转合同操作 , 根据发送合同通知的类型 , 响应对应功能的页面地址
-        
+
         类型包括1(签章)/2(签订)/3(查看)/4(下载)
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **150065 合同不存在**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param paymentContract.pcid: 合同ID
-        :type paymentContract.pcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentContract.pcid**:
+  合同ID
+
+        **示例**:{
                 "paymentContract.pcid": 1
             }
-            
-                |Returns:|
-                - **redirect**: 跳转地址
+
+**返回参数**:
+
+- **redirect**: 跳转地址
           - 类型: *String*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "redirect": "http://redirect.com/redirect.html?type=view",
                 ...
             }
 
-    ### <I> viewPaymentContract
+    ### `viewPaymentContract` <span style="color:gray">[内部]</span>
 
         查看合同
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **150065 合同不存在**
-        
-                |Requests:|
-                :param paymentContract.pcid: 合同ID
-        :type paymentContract.pcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentContract.pcid**:
+  合同ID
+
+        **示例**:{
                 "paymentContract.pcid": 1
             }
-            
-                |Returns:|
-                - **redirect**: 跳转地址
+
+**返回参数**:
+
+- **redirect**: 跳转地址
           - 类型: *String*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "redirect": "http://redirect.com/redirect.html?type=view",
                 ...
             }
-            
-    ### <I> signPaymentContractForCustomer
+
+    ### `signPaymentContractForCustomer` <span style="color:gray">[内部]</span>
 
         签订合同 , 针对客户信息
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **150065 合同不存在**
-        
+
         判断合同状态是否为0(初始) , 其他状态不可操作 , 错误信息 **150066 合同不可操作**
-        
-                |Requests:|
-                :param paymentContract.pcid: 合同ID
-        :type paymentContract.pcid: Long
-        :param customer.cid: 客户ID
-        :type customer.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentContract.pcid**:
+  合同ID
+        - **customer.cid**:
+  客户ID
+
+        **示例**:{
                 "paymentContract.pcid": 1,
                 "customer.cid": 1
             }
-            
-                |Returns:|
-                - **redirect**: 跳转地址
+
+**返回参数**:
+
+- **redirect**: 跳转地址
           - 类型: *String*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "redirect": "http://redirect.com/redirect.html?type=sign",
                 ...
             }
 
-    ### <I> signPaymentContractForCompany
+    ### `signPaymentContractForCompany` <span style="color:gray">[内部]</span>
 
         签订合同 , 针对公司信息
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **150065 合同不存在**
-        
+
         判断签章是否存在 , 不存在 , 错误信息 **130045 签章不存在**
-        
+
         判断合同状态是否为0(初始) , 其他状态不可操作 , 错误信息 **150066 合同不可操作**
-        
-                |Requests:|
-                :param paymentContract.pcid: 合同ID
-        :type paymentContract.pcid: Long
-        :param signet.sid: 签章ID
-        :type signet.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentContract.pcid**:
+  合同ID
+        - **signet.sid**:
+  签章ID
+
+        **示例**:{
                 "paymentContract.pcid": 1,
                 "signet.sid": 1
             }
 
-    ### <I> addPaymentContract
+    ### `addPaymentContract` <span style="color:gray">[内部]</span>
 
         创建合同
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param paymentContract.orderId: 装修单号
-        :type paymentContract.orderId: String
-        :param paymentContract.paymentType: 款项类型
-        :type paymentContract.paymentType: Short
-        :param paymentContract.path: 文件路径
-        :type paymentContract.path: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentContract.orderId**:
+  装修单号
+        - **paymentContract.paymentType**:
+  款项类型
+        - **paymentContract.path**:
+  文件路径
+
+        **示例**:{
                 "paymentContract.orderId": "1601010001",
                 "paymentContract.paymentType": 1,
                 "paymentContract.path": 1
             }
 
-    ### <I> affixPaymentContract
+    ### `affixPaymentContract` <span style="color:gray">[内部]</span>
 
         签订合同
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **150065 合同不存在**
-        
+
         判断合同状态是否为0(初始) , 其他状态不可操作 , 错误信息 **150066 合同不可操作**
-        
+
         更新装修合同为1(已签)
-        
-                |Requests:|
-                :param paymentContract.pcid: 合同ID
-        :type paymentContract.pcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentContract.pcid**:
+  合同ID
+
+        **示例**:{
                 "paymentContract.pcid": 1
             }
 
-    ### <I> expirePaymentContract
+    ### `expirePaymentContract` <span style="color:gray">[内部]</span>
 
         失效合同
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **150065 合同不存在**
-        
+
         判断合同状态是否为0(初始) , 其他状态不可操作 , 错误信息 **150066 合同不可操作**
-        
+
         更新装修合同为2(失效)
-        
-                |Requests:|
-                :param paymentContract.pcid: 合同ID
-        :type paymentContract.pcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentContract.pcid**:
+  合同ID
+
+        **示例**:{
                 "paymentContract.pcid": 1
             }
 
-            
-    ### <I> filingPaymentContract
+
+    ### `filingPaymentContract` <span style="color:gray">[内部]</span>
 
         归档合同
-        
+
         判断合同是否存在 , 不存在 , 错误信息 **150065 合同不存在**
-        
+
         判断合同状态是否为1(已签) , 其他状态不可操作 , 错误信息 **150066 合同不可操作**
-        
-                |Requests:|
-                :param paymentContract.pcid: 合同ID
-        :type paymentContract.pcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentContract.pcid**:
+  合同ID
+
+        **示例**:{
                 "paymentContract.pcid": 1
             }
 
@@ -408,8 +390,9 @@
 
 ## api.payment.ReceiptAction
 
-        |DataType:|
-        #### receipt
+**数据类型**:
+
+#### receipt
 
     - **rid**: 收据ID
       - 类型: *Long*
@@ -437,14 +420,16 @@
       - 类型: *Timestamp*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageReceipt
 
-        分页方式获取收据信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Returns:|
-                Example::
-        
+    ### `pageReceipt` <span style="color:gray">[内部]</span>
+
+        分页方式获取收据信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**返回参数**:
+
+
+**示例**:
+
             {
                 ...
                 "paging": {
@@ -474,9 +459,10 @@
 
 ## api.payment.StatementAction
 
-        |DataType:|
-        商户号/订单号/金额/费率/费用/时间
-    
+**数据类型**:
+
+商户号/订单号/金额/费率/费用/时间
+
     #### statement
 
     - **sid**: 流水ID
@@ -499,14 +485,16 @@
       - 类型: *Short*
     - **status**: 状态
       - 类型: *Short*
-    
-    ### <I> pageStatement
 
-        分页方式获取流水信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Returns:|
-                Example::
-        
+    ### `pageStatement` <span style="color:gray">[内部]</span>
+
+        分页方式获取流水信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**返回参数**:
+
+
+**示例**:
+
             {
                 ...
                 "paging": {
@@ -533,8 +521,9 @@
 
 ## api.payment.PaymentActivityAction
 
-        |DataType:|
-        #### paymentActivity
+**数据类型**:
+
+#### paymentActivity
 
     - **paid**: 活动ID
       - 类型: *Long*
@@ -556,20 +545,19 @@
       - 类型: *Timestamp*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pagePaymentActivity
+
+    ### `pagePaymentActivity` <span style="color:gray">[内部]</span>
 
         分页方式获取款项活动 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 款项活动信息列表 , 每条数据类型 *paymentActivity*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  款项活动信息列表 , 每条数据类型 *paymentActivity*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -595,64 +583,60 @@
                 },
                 ...
             }
-    
-    ### <I> amountPaymentActivity
+
+    ### `amountPaymentActivity` <span style="color:gray">[内部]</span>
 
         获取款项活动总额
-    
-                |Requests:|
-                :param paymentActivity.orderId: 装修单号
-        :type paymentActivity.orderId: String
-        :param paymentActivity.type: 类型
-        :type paymentActivity.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentActivity.orderId**:
+  装修单号
+        - **paymentActivity.type**:
+  类型
+
+        **示例**:{
                 "paymentActivity.orderId": "1601010001",
                 "paymentActivity.type": 0
             }
 
-                |Returns:|
-                - **amount**: 款项活动总额
+**返回参数**:
+
+- **amount**: 款项活动总额
           - 类型: *Long*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "amount": 1000000,
                 ...
             }
-    
-    ### <I> updatePaymentActivity
+
+    ### `updatePaymentActivity` <span style="color:gray">[内部]</span>
 
         更新款项活动
-    
-                |Requests:|
-                :param paymentActivity.activity.aid: 活动ID
-        :type paymentActivity.activity.aid: Long
-        :param paymentActivity.comment: 说明
-        :type paymentActivity.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentActivity.activity.aid**:
+  活动ID
+        - **paymentActivity.comment**:
+  说明
+
+        **示例**:{
                 "paymentActivity.activity.aid": 1,
                 "paymentActivity.comment": "说明"
             }
-    
-    ### <I> deletePaymentActivity
+
+    ### `deletePaymentActivity` <span style="color:gray">[内部]</span>
 
         更新款项活动
-    
-                |Requests:|
-                :param paymentActivity.paid: 活动ID
-        :type paymentActivity.paid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentActivity.paid**:
+  活动ID
+
+        **示例**:{
                 "paymentActivity.paid": 1
             }
 
@@ -662,8 +646,9 @@
 
 ## api.payment.AdvancePaymentAction
 
-        |DataType:|
-        #### advancePayment
+**数据类型**:
+
+#### advancePayment
 
     - **apid**: 预付款ID
       - 类型: *Long*
@@ -679,20 +664,19 @@
       - 类型: *Long*
     - **zhenglinBalance**: 正林预付款金额
       - 类型: *Long*
-    
-    ### <I> pageAdvancePayment
+
+    ### `pageAdvancePayment` <span style="color:gray">[内部]</span>
 
         分页方式获取预付款 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 预付款信息列表 , 每条数据类型 *advancePayment*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  预付款信息列表 , 每条数据类型 *advancePayment*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -746,22 +730,22 @@
                 ...
             }
 
-    ### <I> queryAdvancePaymentByOrderId
+    ### `queryAdvancePaymentByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取预付款金额
-        
-                |Requests:|
-                :param advancePayment.orderId: 装修单号
-        :type advancePayment.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **advancePayment.orderId**:
+  装修单号
+
+        **示例**:{
                 "advancePayment.orderId": "1601010001"
             }
-    
-                |Returns:|
-                - **balanceAdvance**: 合同预付款
+
+**返回参数**:
+
+- **balanceAdvance**: 合同预付款
           - 类型: *Long*
         - **projectAdvance**: 工程预付款
           - 类型: *Long*
@@ -769,36 +753,34 @@
           - 类型: *Long*
         - **zaterialAdvance**: 正林预付款
           - 类型: *Long*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "balanceAdvance": 0,
                 "projectAdvance" 0,
                 "materialAdvance" 0,
                 "zaterialAdvance" 0
             }
-            
-    ### <I> addAdvancePayment
+
+    ### `addAdvancePayment` <span style="color:gray">[内部]</span>
 
         添加预付款
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param advancePayment.orderId: 装修单号
-        :type advancePayment.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **advancePayment.orderId**:
+  装修单号
+
+        **示例**:{
                 "advancePayment.orderId": "1601010001"
             }
-        
+
 ## api.payment.PaymentAction
 
-        |DataType:|
-        #### payment
+**数据类型**:
+
+#### payment
 
     - **pid**: 款项ID
       - 类型: *Long*
@@ -828,7 +810,7 @@
       - 类型: *Timestamp*
     - **status**: 状态, 包括: 0: 初始 , 1: 已付款, 2: 已确认, 3: 已撤销
       - 类型: *Short*
-    
+
     - **transfer**: 转款
       - 类型: *Long*
     - **cash**: 现金
@@ -855,7 +837,7 @@
       - 类型: *Integer*
     - **comment**: 说明
       - 类型: *String*
-    
+
     #### advanceReceipt
 
     - **arid**: 收据ID
@@ -870,7 +852,7 @@
       - 类型: *Timestamp*
     - **realMoney**: 实收金额
       - 类型: *Long*
-    
+
     - **transfer**: 转款
       - 类型: *Long*
     - **cash**: 现金
@@ -895,32 +877,33 @@
       - 类型: *String*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pagePayment
 
-        分页方式获取已付款预付款信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
+    ### `pagePayment` <span style="color:gray">[内部]</span>
+
+        分页方式获取已付款预付款信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
         根据当前操作公司作为条件查询对应公司的预付款
-        
-                |Requests:|
-                :param payment.status: 状态
-        :type payment.status: Short
-        :param payment.type: 类型
-        :type payment.type: Short
-        :param payment.company: 公司
-        :type payment.company: String
-                
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **payment.status**:
+  状态
+        - **payment.type**:
+  类型
+        - **payment.company**:
+  公司
+
+        **示例**:{
                 "payment.status": 1,
                 "payment.type": 0,
                 "payment.company": "company"
             }
-        
-                |Returns:|
-                Example::
-        
+
+**返回参数**:
+
+
+**示例**:
+
             {
                 ...
                 "paging": {
@@ -961,7 +944,7 @@
                             },
                             "confirmTime": null,
                             "status": 1,
-                            
+
                             "transfer": 0,
                             "cash": 1000,
                             "cashInfo": "157",
@@ -981,27 +964,25 @@
                 ...
             }
 
-    ### <I> queryPaymentByOrderId
+    ### `queryPaymentByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取预付款信息
-        
-                |Requests:|
-                :param payment.orderId: 装修单号
-        :type payment.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **payment.orderId**:
+  装修单号
+
+        **示例**:{
                 "payment.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **payments**: 预付款信息列表 , 每条数据类型 *payment*
+
+**返回参数**:
+
+- **payments**: 预付款信息列表 , 每条数据类型 *payment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "data": [
                     {
@@ -1040,7 +1021,7 @@
                         },
                         "confirmTime": null,
                         "status": 1,
-                        
+
                         "transfer": 0,
                         "cash": 1000,
                         "cashInfo": "157",
@@ -1057,30 +1038,28 @@
                 ],
                 ...
             }
-            
+
     ### <I-C> queryPaymentByPaymentId
 
         通过预付款ID获取预付款信息
-        
+
         判断预付款款项信息是否存在 , 不存在 , 错误信息 **150026 款项不存在**
-        
-                |Requests:|
-                :param payment.paymentId: 预付款ID
-        :type payment.paymentId: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **payment.paymentId**:
+  预付款ID
+
+        **示例**:{
                 "payment.paymentId": 1
             }
-            
-                |Returns:|
-                - **payment**: 预付款信息 , 数据类型 *payment*
+
+**返回参数**:
+
+- **payment**: 预付款信息 , 数据类型 *payment*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "payment": {
                     "pid": 1,
@@ -1118,7 +1097,7 @@
                     },
                     "confirmTime": null,
                     "status": 1,
-                    
+
                     "transfer": 0,
                     "cash": 1000,
                     "cashInfo": "157",
@@ -1135,95 +1114,92 @@
                 ...
             }
 
-    ### <I> sendPayment
+    ### `sendPayment` <span style="color:gray">[内部]</span>
 
         推送预付款
-        
+
         验证预付款信息是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
-                |Requests:|
-                :param payment.pid: 预付款ID
-        :type payment.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **payment.pid**:
+  预付款ID
+
+        **示例**:{
                 "payment.pid": 1
             }
 
-    ### <I> addPayment
+    ### `addPayment` <span style="color:gray">[内部]</span>
 
         创建预付款
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param payment.orderId: 装修单号
-        :type payment.orderId: String
-        :param payment.recharge: 操作金额
-        :type payment.recharge: Long
-        :param payment.paymentType: 类型
-        :type payment.paymentType: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **payment.orderId**:
+  装修单号
+        - **payment.recharge**:
+  操作金额
+        - **payment.paymentType**:
+  类型
+
+        **示例**:{
                 "payment.orderId": "1601010001",
                 "payment.recharge": 100,
                 "payment.paymentType": 0
             }
-            
-    ### <I> collectPayment
+
+    ### `collectPayment` <span style="color:gray">[内部]</span>
 
         预付款收款 , 同时生成预付款款项和收据信息
-        
+
         判断客户信息是否存在 , 不存在 , 错误信息 **230001 客户信息不存在**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断预付款类型 , 0(合同)/2(主材)之外的其他类型 , 错误信息 **150028 预付款类型错误**
-        
+
         判断操作类型是否为1(收款) , 其他操作类型 , 错误信息 **150016 预付款操作不正确**
-        
+
         判断预付款类型为2(主材) , 更新归属装修单
-        
+
         如果预付款类型为2(主材) , 更新装修单中的销售比例 , 包括预付款(主材)/销售款
-        
-                |Requests:|
-                :param payment.orderId: 装修单号
-        :type payment.orderId: String
-        :param payment.customer.cid: 客户ID
-        :type payment.customer.cid: Long
-        :param payment.recharge: 操作金额
-        :type payment.recharge: Long
-        :param payment.realMoney: 实收金额
-        :type payment.realMoney: Long
-        :param payment.cash: 现金
-        :type payment.cash: Long
-        :param payment.cashInfo: 现金信息
-        :type payment.cashInfo: String
-        :param payment.bank: 刷卡
-        :type payment.bank: Long
-        :param payment.bankInfo: 刷卡信息
-        :type payment.bankInfo: String
-        :param payment.checkv: 转账
-        :type payment.checkv: Long
-        :param payment.checkvBank: 转账银行
-        :type payment.checkvBank: String
-        :param payment.installment: 分期
-        :type payment.installment: Long
-        :param payment.installmentBank: 分期银行
-        :type payment.installmentBank: String
-        :param payment.accounts: 对公
-        :type payment.accounts: Long
-        :param payment.accountsBank: 对公银行
-        :type payment.accountsBank: String
-        :param payment.comment: 说明
-        :type payment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **payment.orderId**:
+  装修单号
+        - **payment.customer.cid**:
+  客户ID
+        - **payment.recharge**:
+  操作金额
+        - **payment.realMoney**:
+  实收金额
+        - **payment.cash**:
+  现金
+        - **payment.cashInfo**:
+  现金信息
+        - **payment.bank**:
+  刷卡
+        - **payment.bankInfo**:
+  刷卡信息
+        - **payment.checkv**:
+  转账
+        - **payment.checkvBank**:
+  转账银行
+        - **payment.installment**:
+  分期
+        - **payment.installmentBank**:
+  分期银行
+        - **payment.accounts**:
+  对公
+        - **payment.accountsBank**:
+  对公银行
+        - **payment.comment**:
+  说明
+
+        **示例**:{
                 "payment.orderId": "1601010001",
                 "payment.customer.cid": 1,
                 "payment.recharge": 100,
@@ -1240,56 +1216,54 @@
                 "payment.accountsBank": "201",
                 "payment.comment": "说明",
             }
-            
-    ### <I> confirmPayment
+
+    ### `confirmPayment` <span style="color:gray">[内部]</span>
 
         预付款确认
-        
-                |Requests:|
-                :param pids[n]: 预付款ID列表 , 每条数据类型 Long
-        :type pids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **pids[n]**:
+  预付款ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "pids[0]": 1
             }
-            
-    ### <I> withdrawPayment
+
+    ### `withdrawPayment` <span style="color:gray">[内部]</span>
 
         预付款提现
-        
+
         判断客户信息是否存在 , 不存在 , 错误信息 **客户信息不存在**
-        
+
         判断客户预付款信息是否存在 , 不存在 , 错误信息 **150010 预付款余额不足**
-        
+
         判断预付款余额是否可供提现金额 , 余额不足 , 错误信息 **150010 预付款余额不足**
-        
+
         如果预付款类型为2(主材) , 更新装修单中的销售比例 , 包括预付款(主材)/销售款
-        
-                |Requests:|
-                :param payment.orderId: 装修单号
-        :type payment.orderId: String
-        :param payment.customer.cid: 客户ID
-        :type payment.customer.cid: Long
-        :param payment.cash: 现金
-        :type payment.cash: Long
-        :param payment.cashInfo: 现金说明
-        :type payment.cashInfo: String
-        :param payment.bank: 刷卡
-        :type payment.bank: Long
-        :param payment.bankInfo: 刷卡说明
-        :type payment.bankInfo: String
-        :param payment.paymentType: 款项类型
-        :type payment.paymentType: String
-        :param payment.type: 类型
-        :type payment.type: String
-        :param payment.comment: 说明
-        :type payment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **payment.orderId**:
+  装修单号
+        - **payment.customer.cid**:
+  客户ID
+        - **payment.cash**:
+  现金
+        - **payment.cashInfo**:
+  现金说明
+        - **payment.bank**:
+  刷卡
+        - **payment.bankInfo**:
+  刷卡说明
+        - **payment.paymentType**:
+  款项类型
+        - **payment.type**:
+  类型
+        - **payment.comment**:
+  说明
+
+        **示例**:{
                 "payment.orderId": "1601010001",
                 "payment.customer.cid": 1,
                 "payment.cash": 100,
@@ -1298,75 +1272,73 @@
                 "payment.type": "提现",
                 "payment.comment": "说明"
             }
-            
-    ### <I> payPayment
+
+    ### `payPayment` <span style="color:gray">[内部]</span>
 
         预付款付款，更新预付款余额，新增预付款支付明细
-        
+
         判断客户信息是否存在 , 不存在 , 错误信息 **客户信息不存在**
-        
+
         判断客户预付款信息是否存在 , 不存在 , 错误信息 **150010 预付款余额不足**
-        
+
         判断预付款余额是否可供提现金额 , 余额不足 , 错误信息 **150010 预付款余额不足**
 
-                |Requests:|
-                :param payment.orderId: 装修单号
-        :type payment.orderId: String
-        :param payment.paymentType: 款项类型
-        :type payment.paymentType: String
-        :param payment.comment: 说明
-        :type payment.comment: String
-        :param payment.transfer: 转款
-        :type payment.transfer: Long
+**请求参数**:
 
-        Example::
+- **payment.orderId**:
+  装修单号
+        - **payment.paymentType**:
+  款项类型
+        - **payment.comment**:
+  说明
+        - **payment.transfer**:
+  转款
 
-            {
+        **示例**:{
                 "payment.orderId": "1601010001",
                 "payment.paymentType": "合同预付款",
                 "payment.comment": "",
                 "payment.transfer": 1000
             }
-            
-    ### <I> updatePayment
+
+    ### `updatePayment` <span style="color:gray">[内部]</span>
 
         更新预付款收款方式信息
-        
+
         判断预付款是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         预付款状态1(已付款) , 其他状态不可更新 , 错误信息 **150036 款项状态不可操作**
-        
+
         预付款修改之后金额与应收额不等 , 不可更新 , 错误信息 **150025 款项金额不正确**
-        
-                |Requests:|
-                :param payment.pid: 预付款ID
-        :type payment.pid: Long
-        :param payment.cash: 现金
-        :type payment.cash: Long
-        :param payment.cashInfo: 现金信息
-        :type payment.cashInfo: String
-        :param payment.bank: 刷卡
-        :type payment.bank: Long
-        :param payment.bankInfo: 刷卡信息
-        :type payment.bankInfo: String
-        :param payment.checkv: 转账
-        :type payment.checkv: Long
-        :param payment.checkvBank: 转账银行
-        :type payment.checkvBank: String
-        :param payment.installment: 分期
-        :type payment.installment: Long
-        :param payment.installmentBank: 分期银行
-        :type payment.installmentBank: String
-        :param payment.accounts: 对公
-        :type payment.accounts: Long
-        :param payment.accountsBank: 对公银行
-        :type payment.accountsBank: String
-        :param payment.comment: 说明
-        :type payment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **payment.pid**:
+  预付款ID
+        - **payment.cash**:
+  现金
+        - **payment.cashInfo**:
+  现金信息
+        - **payment.bank**:
+  刷卡
+        - **payment.bankInfo**:
+  刷卡信息
+        - **payment.checkv**:
+  转账
+        - **payment.checkvBank**:
+  转账银行
+        - **payment.installment**:
+  分期
+        - **payment.installmentBank**:
+  分期银行
+        - **payment.accounts**:
+  对公
+        - **payment.accountsBank**:
+  对公银行
+        - **payment.comment**:
+  说明
+
+        **示例**:{
                 "payment.pid": 1,
                 "payment.cash": 10000,
                 "payment.cashInfo": "175",
@@ -1380,15 +1352,16 @@
                 "payment.accountsBank": "201",
                 "payment.comment": "说明",
             }
-            
+
 ## 装修款
 
 装修款款项信息管理以及相关业务功能
 
 ## api.payment.DecorationPaymentAction
 
-        |DataType:|
-        #### decorationPayment
+**数据类型**:
+
+#### decorationPayment
 
     - **dpid**: 款项ID
       - 类型: *Long*
@@ -1426,7 +1399,7 @@
       - 类型: *Long*
     - **sort**: 排序
       - 类型: *Short*
-    
+
     - **cash**: 现金
       - 类型: *Long*
     - **cashInfo**: 现金信息
@@ -1459,7 +1432,7 @@
       - 类型: *Integer*
     - **comment**: 说明
       - 类型: *String*
-    
+
     #### decorationReceipt
 
     - **drid**: 收据ID
@@ -1504,36 +1477,34 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pageDecorationPayment
+
+    ### `pageDecorationPayment` <span style="color:gray">[内部]</span>
 
         分页方式获取装修收款信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param decorationPayment.paymentStatus: 状态
-        :type decorationPayment.paymentStatus: Short
-        :param decorationPayment.oneType: 类型
-        :type decorationPayment.oneType: Short
-        :param decorationPayment.twoType: 类型
-        :type decorationPayment.twoType: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPayment.paymentStatus**:
+  状态
+        - **decorationPayment.oneType**:
+  类型
+        - **decorationPayment.twoType**:
+  类型
+
+        **示例**:{
                 "decorationPayment.paymentStatus": 1,
                 "decorationPayment.oneType": 0,
                 "decorationPayment.twoType": 0
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 装修收款信息列表 , 每条数据类型 *decorationPayment*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  装修收款信息列表 , 每条数据类型 *decorationPayment*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1586,7 +1557,7 @@
                                     "phone": "156xxxx9283",
                                     ...
                                 },
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部",
@@ -1644,28 +1615,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryDecorationPaymentByOrderId
+
+    ### `queryDecorationPaymentByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取装修款项信息
-        
-                |Requests:|
-                :param decorationPayment.orderId: 装修单号
-        :type decorationPayment.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPayment.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationPayment.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationPayments**: 装修款项信息列表 , 每条数据类型 *decorationPayment*
+
+**返回参数**:
+
+- **decorationPayments**: 装修款项信息列表 , 每条数据类型 *decorationPayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationPayments": [
                     {
@@ -1716,7 +1685,7 @@
                                 "phone": "156xxxx9283",
                                 ...
                             },
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -1772,28 +1741,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryDecorationPaymentForContractByOrderId
+
+    ### `queryDecorationPaymentForContractByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取装修款项信息 , 款项一类为0(收款) , 二类1(合同)
-        
-                |Requests:|
-                :param decorationPayment.orderId: 装修单号
-        :type decorationPayment.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPayment.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationPayment.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationPayments**: 装修款项信息列表 , 每条数据类型 *decorationPayment*
+
+**返回参数**:
+
+- **decorationPayments**: 装修款项信息列表 , 每条数据类型 *decorationPayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationPayments": [
                     {
@@ -1844,7 +1811,7 @@
                                 "phone": "156xxxx9283",
                                 ...
                             },
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -1900,28 +1867,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryDecorationPaymentForNotInitByDrId
+
+    ### `queryDecorationPaymentForNotInitByDrId` <span style="color:gray">[内部]</span>
 
         通过装修收据ID获取状态为未付款的装修款项
-        
-                |Requests:|
-                :param decorationReceipt.drid: 收据ID
-        :type decorationReceipt.drid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationReceipt.drid**:
+  收据ID
+
+        **示例**:{
                 "decorationReceipt.drid": 1
             }
-            
-                |Returns:|
-                - **decorationPayments**: 装修款项信息列表 , 每条数据类型 *decorationPayment*
+
+**返回参数**:
+
+- **decorationPayments**: 装修款项信息列表 , 每条数据类型 *decorationPayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationPayments": [
                     {
@@ -1972,7 +1937,7 @@
                                 "phone": "156xxxx9283",
                                 ...
                             },
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -2032,24 +1997,22 @@
     ### <I-C> queryDecorationPaymentByDpid
 
         通过款项ID获取装修收据信息
-        
-                |Requests:|
-                :param decorationPayment.dpid: 装修款ID
-        :type decorationPayment.dpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPayment.dpid**:
+  装修款ID
+
+        **示例**:{
                 "decorationPayment.dpid": 1
             }
-            
-                |Returns:|
-                - **decorationPayment**: 装修款信息 , 类型 *decorationPayment*
+
+**返回参数**:
+
+- **decorationPayment**: 装修款信息 , 类型 *decorationPayment*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationPayment": {
                     "dpid": 1,
@@ -2099,7 +2062,7 @@
                             "phone": "156xxxx9283",
                             ...
                         },
-                        
+
                         "designDepartment": "设计中心一部",
                         "designRegion": "设计一分区",
                         "businessDepartment": "市场营销一部",
@@ -2154,28 +2117,26 @@
                 }
                 ...
             }
-            
-    ### <I> queryDecoraionReceiptByDrId
+
+    ### `queryDecoraionReceiptByDrId` <span style="color:gray">[内部]</span>
 
         通过收据ID获取装修收据信息
-        
-                |Requests:|
-                :param decorationReceipt.drid: 收据ID
-        :type decorationReceipt.drid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationReceipt.drid**:
+  收据ID
+
+        **示例**:{
                 "decorationReceipt.drid": 1
             }
-            
-                |Returns:|
-                - **decorationReceipt**: 装修收据信息 , 类型 *decorationReceipt*
+
+**返回参数**:
+
+- **decorationReceipt**: 装修收据信息 , 类型 *decorationReceipt*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationReceipt": {
                     "drid": 24,
@@ -2215,139 +2176,134 @@
                 ...
             }
 
-    ### <I> sendDecorationPayment
+    ### `sendDecorationPayment` <span style="color:gray">[内部]</span>
 
         推送装修款
-        
-        判断装修款信息是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
-                |Requests:|
-                :param decorationPayment.dpid: 装修款ID
-        :type decorationPayment.dpid: Long
 
-        Example::
-        
-            {
+        判断装修款信息是否存在 , 不存在 , 错误信息 **150003 款项不存在**
+
+**请求参数**:
+
+- **decorationPayment.dpid**:
+  装修款ID
+
+        **示例**:{
                 "decorationPayment.dpid": 1
             }
-            
-    ### <I> checkDecorationPayment
+
+    ### `checkDecorationPayment` <span style="color:gray">[内部]</span>
 
         判断装修款是否可以进行收款
-        
+
         判断当前款项状态是否为0(初始) , 错误信息 **150008 款项不能进行收款**
-        
-                |Requests:|
-                :param decorationPayment.dpid: 款项ID
-        :type decorationPayment.dpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPayment.dpid**:
+  款项ID
+
+        **示例**:{
                 "decorationPayment.dpid": 1
             }
-            
-    ### <I> addDecorationPayment
+
+    ### `addDecorationPayment` <span style="color:gray">[内部]</span>
 
         添加装修收款信息
-        
+
         判断装修单是否存在 , 不存在添加失败 , 错误信息 **140013 订单不存在**
-        
+
         判断装修款类型 , 增项款/减项款/合同退款/违约金 , 其他类型 , 错误信息 **150034 款项类型不可用**
-        
-                |Requests:|
-                :param decorationPayment.orderId: 装修单号
-        :type decorationPayment.orderId: String
-        :param decorationPayment.ptid: 款项类型ID
-        :type decorationPayment.ptid: Long
-        :param decorationPayment.referMoney: 生成金额
-        :type decorationPayment.referMoney: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPayment.orderId**:
+  装修单号
+        - **decorationPayment.ptid**:
+  款项类型ID
+        - **decorationPayment.referMoney**:
+  生成金额
+
+        **示例**:{
                 "decorationPayment.orderId": "1601010001",
                 "decorationPayment.ptid": 1,
                 "decorationPayment.referMoney": 600000
             }
-            
-    ### <I> changeDecorationPaymentForTime
+
+    ### `changeDecorationPaymentForTime` <span style="color:gray">[内部]</span>
 
         修改装修款项收款和确认时间
-        
-                |Requests:|
-                :param decorationPayment.orderId: 装修单号
-        :type decorationPayment.orderId: String
-        :param decorationPayment.paymentType: 款项类型
-        :type decorationPayment.paymentType: String
+
+**请求参数**:
+
+- **decorationPayment.orderId**:
+  装修单号
+        - **decorationPayment.paymentType**:
+  款项类型
         - **dateTime**: 修改时间
           - 类型: *Timestamp*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "decorationPayment.orderId": "1601010001",
                 "decorationPayment.paymentType": "首付款",
                 "dateTime": "2016-01-01 00:00:00"
             }
-            
-    ### <I> collectDecorationPayment
+
+    ### `collectDecorationPayment` <span style="color:gray">[内部]</span>
 
         装修款项收款
-        
+
         判断装修单信息是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         判断装修款状态是否为0(初始) , 其它状态不可收款 , 错误信息 **150036 款项状态不可操作**
-        
+
         根据操作款项中排序判断前置款项是否已经收款或确认 , 如果未收款或确认 , 错误信息 **150009 前置款项未处理**
-        
+
         判断提交款项方式汇总金额与装修款应付金额是否相等 , 不相等 , 错误信息 **150008 款项不能进行收款**
-        
+
         收款方式包括预付款 , 判断操作金额是否满足预付款余额 , 余额不足 , 错误信息 **150010 预付款余额不足**
-        
+
         装修款公司信息根据收款人操作公司进行更新
-        
+
         更新归属装修单的付款比例
-        
-                |Requests:|
-                :param decorationPayment.dpid: 款项ID
-        :type decorationPayment.dpid: Long
-        :param decorationPayment.realMoney: 实收金额
-        :type decorationPayment.realMoney: Long
-        :param decorationPayment.cash: 现金
-        :type decorationPayment.cash: Long
-        :param decorationPayment.cashInfo: 现金信息
-        :type decorationPayment.cashInfo: String
-        :param decorationPayment.bank: 刷卡
-        :type decorationPayment.bank: Long
-        :param decorationPayment.bankInfo: 刷卡信息
-        :type decorationPayment.bankInfo: String
-        :param decorationPayment.checkv: 转账
-        :type decorationPayment.checkv: Long
-        :param decorationPayment.checkvBank: 转账银行
-        :type decorationPayment.checkvBank: String
-        :param decorationPayment.installment: 分期
-        :type decorationPayment.installment: Long
-        :param decorationPayment.installmentBank: 分期银行
-        :type decorationPayment.installmentBank: String
-        :param decorationPayment.accounts: 对公
-        :type decorationPayment.accounts: Long
-        :param decorationPayment.accountsBank: 对公银行
-        :type decorationPayment.accountsBank: String
-        :param decorationPayment.coupon: 券值
-        :type decorationPayment.coupon: Long
-        :param decorationPayment.couponInfo: 券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
-        :type decorationPayment.couponInfo: String
-        :param decorationPayment.advance: 预付款
-        :type decorationPayment.advance: Long
-        :param decorationPayment.advanceType: 预付款类型 , 1: 合同预付款 , 2: 工程预付款
-        :type decorationPayment.advanceType: Short
-        :param decorationPayment.comment: 说明
-        :type decorationPayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPayment.dpid**:
+  款项ID
+        - **decorationPayment.realMoney**:
+  实收金额
+        - **decorationPayment.cash**:
+  现金
+        - **decorationPayment.cashInfo**:
+  现金信息
+        - **decorationPayment.bank**:
+  刷卡
+        - **decorationPayment.bankInfo**:
+  刷卡信息
+        - **decorationPayment.checkv**:
+  转账
+        - **decorationPayment.checkvBank**:
+  转账银行
+        - **decorationPayment.installment**:
+  分期
+        - **decorationPayment.installmentBank**:
+  分期银行
+        - **decorationPayment.accounts**:
+  对公
+        - **decorationPayment.accountsBank**:
+  对公银行
+        - **decorationPayment.coupon**:
+  券值
+        - **decorationPayment.couponInfo**:
+  券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
+        - **decorationPayment.advance**:
+  预付款
+        - **decorationPayment.advanceType**:
+  预付款类型 , 1: 合同预付款 , 2: 工程预付款
+        - **decorationPayment.comment**:
+  说明
+
+        **示例**:{
                 "decorationPayment.dpid": 1,
                 "decorationPayment.realMoney": 50000,
                 "decorationPayment.cash": 10000,
@@ -2366,58 +2322,57 @@
                 "decorationPayment.advanceType": 0,
                 "decorationPayment.comment": "说明",
             }
-        
-    ### <I> refundDecorationPayment
+
+    ### `refundDecorationPayment` <span style="color:gray">[内部]</span>
 
         装修款项中退款类型款项收款
-        
+
         判断装修单信息是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         判断装修款状态是否为0(初始) , 其它状态不可收款 , 错误信息 **150036 款项状态不可操作**
-        
+
         判断提交款项方式汇总金额与装修款应付金额是否相等 , 不相等 , 错误信息 **150013 款项实收金额不等于应收金额**
-        
+
         装修款公司信息根据收款人操作公司进行更新
-        
-                |Requests:|
-                :param decorationPayment.dpid: 款项ID
-        :type decorationPayment.dpid: Long
-        :param decorationPayment.realMoney: 实收金额
-        :type decorationPayment.realMoney: Long
-        :param decorationPayment.cash: 现金
-        :type decorationPayment.cash: Long
-        :param decorationPayment.cashInfo: 现金信息
-        :type decorationPayment.cashInfo: String
-        :param decorationPayment.bank: 刷卡
-        :type decorationPayment.bank: Long
-        :param decorationPayment.bankInfo: 刷卡信息
-        :type decorationPayment.bankInfo: String
-        :param decorationPayment.checkv: 转账
-        :type decorationPayment.checkv: Long
-        :param decorationPayment.checkvBank: 转账银行
-        :type decorationPayment.checkvBank: String
-        :param decorationPayment.installment: 分期
-        :type decorationPayment.installment: Long
-        :param decorationPayment.installmentBank: 分期银行
-        :type decorationPayment.installmentBank: String
-        :param decorationPayment.accounts: 对公
-        :type decorationPayment.accounts: Long
-        :param decorationPayment.accountsBank: 对公银行
-        :type decorationPayment.accountsBank: String
-        :param decorationPayment.coupon: 券值
-        :type decorationPayment.coupon: Long
-        :param decorationPayment.couponInfo: 券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
-        :type decorationPayment.couponInfo: String
-        :param decorationPayment.advance: 预付款
-        :type decorationPayment.advance: Long
-        :param decorationPayment.advanceType: 预付款类型 , 1: 合同预付款 , 2: 工程预付款
-        :type decorationPayment.advanceType: Short
-        :param decorationPayment.comment: 说明
-        :type decorationPayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPayment.dpid**:
+  款项ID
+        - **decorationPayment.realMoney**:
+  实收金额
+        - **decorationPayment.cash**:
+  现金
+        - **decorationPayment.cashInfo**:
+  现金信息
+        - **decorationPayment.bank**:
+  刷卡
+        - **decorationPayment.bankInfo**:
+  刷卡信息
+        - **decorationPayment.checkv**:
+  转账
+        - **decorationPayment.checkvBank**:
+  转账银行
+        - **decorationPayment.installment**:
+  分期
+        - **decorationPayment.installmentBank**:
+  分期银行
+        - **decorationPayment.accounts**:
+  对公
+        - **decorationPayment.accountsBank**:
+  对公银行
+        - **decorationPayment.coupon**:
+  券值
+        - **decorationPayment.couponInfo**:
+  券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
+        - **decorationPayment.advance**:
+  预付款
+        - **decorationPayment.advanceType**:
+  预付款类型 , 1: 合同预付款 , 2: 工程预付款
+        - **decorationPayment.comment**:
+  说明
+
+        **示例**:{
                 "decorationPayment.dpid": 1,
                 "decorationPayment.realMoney": 50000,
                 "decorationPayment.cash": 10000,
@@ -2436,62 +2391,60 @@
                 "decorationPayment.advanceType": 0,
                 "decorationPayment.comment": "说明",
             }
-            
-    ### <I> confirmDecorationPayment
+
+    ### `confirmDecorationPayment` <span style="color:gray">[内部]</span>
 
         装修款项确认 , 更新款项状态为已确认
-        
-                |Requests:|
-                :param dpids[n]: 款项ID列表 , 每条数据类型 Long
-        :type dpids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **dpids[n]**:
+  款项ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "dpids[0]": 1
             }
-            
-    ### <I> updateDecorationPayment
+
+    ### `updateDecorationPayment` <span style="color:gray">[内部]</span>
 
         更新装修款收款方式信息
-        
+
         判断款项是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         款项状态1(已付款) , 其他状态不可更新 , 错误信息 **150036 款项状态不可操作**
-        
+
         款项修改之后金额与应收额不等 , 不可更新 , 错误信息 **150025 款项金额不正确**
-        
+
         装修款收款方式更新 , 只能够针对现金/刷卡进行更新 , 优惠/预付不可更新
-    
-                |Requests:|
-                :param decorationPayment.dpid: 款项ID
-        :type decorationPayment.dpid: Long
-        :param decorationPayment.cash: 现金
-        :type decorationPayment.cash: Long
-        :param decorationPayment.cashInfo: 现金信息
-        :type decorationPayment.cashInfo: String
-        :param decorationPayment.bank: 刷卡
-        :type decorationPayment.bank: Long
-        :param decorationPayment.bankInfo: 刷卡信息
-        :type decorationPayment.bankInfo: String
-        :param decorationPayment.checkv: 转账
-        :type decorationPayment.checkv: Long
-        :param decorationPayment.checkvBank: 转账银行
-        :type decorationPayment.checkvBank: String
-        :param decorationPayment.installment: 分期
-        :type decorationPayment.installment: Long
-        :param decorationPayment.installmentBank: 分期银行
-        :type decorationPayment.installmentBank: String
-        :param decorationPayment.accounts: 对公
-        :type decorationPayment.accounts: Long
-        :param decorationPayment.accountsBank: 对公银行
-        :type decorationPayment.accountsBank: String
-        :param decorationPayment.comment: 说明
-        :type decorationPayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPayment.dpid**:
+  款项ID
+        - **decorationPayment.cash**:
+  现金
+        - **decorationPayment.cashInfo**:
+  现金信息
+        - **decorationPayment.bank**:
+  刷卡
+        - **decorationPayment.bankInfo**:
+  刷卡信息
+        - **decorationPayment.checkv**:
+  转账
+        - **decorationPayment.checkvBank**:
+  转账银行
+        - **decorationPayment.installment**:
+  分期
+        - **decorationPayment.installmentBank**:
+  分期银行
+        - **decorationPayment.accounts**:
+  对公
+        - **decorationPayment.accountsBank**:
+  对公银行
+        - **decorationPayment.comment**:
+  说明
+
+        **示例**:{
                 "decorationPayment.dpid": 1,
                 "decorationPayment.cash": 10000,
                 "decorationPayment.cashInfo": "175",
@@ -2506,32 +2459,32 @@
                 "decorationPayment.comment": "说明",
             }
 
-    ### <I> deleteDecorationPayment
+    ### `deleteDecorationPayment` <span style="color:gray">[内部]</span>
 
         删除装修款
-        
+
         判断款项是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         款项状态非0(未付款) , 其他状态不可更新 , 错误信息 **150036 款项状态不可操作**
-        
-                |Requests:|
-                :param decorationPayment.dpid: 款项ID
-        :type decorationPayment.dpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationPayment.dpid**:
+  款项ID
+
+        **示例**:{
                 "decorationPayment.dpid": 1
             }
-            
+
 ## 主材款
 
 主材款款项信息管理以及相关业务功能
 
 ## api.payment.MaterialPaymentAction
 
-        |DataType:|
-        #### materialPayment
+**数据类型**:
+
+#### materialPayment
 
     - **mpid**: 款项ID
       - 类型: *Long*
@@ -2561,7 +2514,7 @@
       - 类型: *Long*
     - **realMoney**: 实收金额
       - 类型: *Long*
-    
+
     - **cash**: 现金
       - 类型: *Long*
     - **cashInfo**: 现金信息
@@ -2594,7 +2547,7 @@
       - 类型: *Integer*
     - **comment**: 说明
       - 类型: *String*
-    
+
     #### materialReceipt
 
     - **mrid**: 收据ID
@@ -2639,33 +2592,31 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pageMaterialPayment
+
+    ### `pageMaterialPayment` <span style="color:gray">[内部]</span>
 
         分页方式获取主材收款信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param materialPayment.paymentStatus: 状态
-        :type materialPayment.paymentStatus: Short
-        :param materialPayment.paymentType: 类型
-        :type materialPayment.paymentType: Short
-                
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.paymentStatus**:
+  状态
+        - **materialPayment.paymentType**:
+  类型
+
+        **示例**:{
                 "materialPayment.paymentStatus": 1,
                 "materialPayment.paymentType": 0
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 主材收款信息列表 , 每条数据类型 *materialPayment*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  主材收款信息列表 , 每条数据类型 *materialPayment*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2711,14 +2662,14 @@
                                     "phone": "138xxxx2837",
                                     ...
                                 },
-                                
+
                                 "category": "洁具",
                                 "brand": "卫浴",
-                                
+
                                 "designRegion": "设计一分区",
                                 "designDepartment": "设计一部",
                                 "materialDepartment": "主材二组",
-                                
+
                                 "coupon": 100,
                                 "couponInfo": "",
                                 ...
@@ -2776,27 +2727,25 @@
                 ...
             }
 
-    ### <I> queryMaterialPaymentByOrderId
+    ### `queryMaterialPaymentByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取装修单下所有主材装修单的款项信息
-        
-                |Requests:|
-                :param materialPayment.orderId: 装修单号
-        :type materialPayment.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.orderId**:
+  装修单号
+
+        **示例**:{
                 "materialPayment.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **materialPayments**: 主材收款信息列表 , 每条数据类型 *materialPayment*
+
+**返回参数**:
+
+- **materialPayments**: 主材收款信息列表 , 每条数据类型 *materialPayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialPayments": [
                     {
@@ -2840,14 +2789,14 @@
                                 "phone": "138xxxx2837",
                                 ...
                             },
-                            
+
                             "category": "洁具",
                             "brand": "卫浴",
-                            
+
                             "designRegion": "设计一分区",
                             "designDepartment": "设计一部",
                             "materialDepartment": "主材二组",
-                            
+
                             "coupon": 100,
                             "couponInfo": "",
                             ...
@@ -2902,28 +2851,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryMaterialPaymentByMid
+
+    ### `queryMaterialPaymentByMid` <span style="color:gray">[内部]</span>
 
         通过主材单ID获取主材收款信息
-        
-                |Requests:|
-                :param materialPayment.material.mid: 主材单ID
-        :type materialPayment.material.mid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.material.mid**:
+  主材单ID
+
+        **示例**:{
                 "materialPayment.material.mid": 1
             }
-            
-                |Returns:|
-                - **materialPayments**: 主材收款信息列表 , 每条数据类型 *materialPayment*
+
+**返回参数**:
+
+- **materialPayments**: 主材收款信息列表 , 每条数据类型 *materialPayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialPayments": [
                     {
@@ -2967,14 +2914,14 @@
                                 "phone": "138xxxx2837",
                                 ...
                             },
-                            
+
                             "category": "洁具",
                             "brand": "卫浴",
-                            
+
                             "designRegion": "设计一分区",
                             "designDepartment": "设计一部",
                             "materialDepartment": "主材二组",
-                            
+
                             "coupon": 100,
                             "couponInfo": "",
                             ...
@@ -3029,28 +2976,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryMaterialPaymentForNotInitByMrId
+
+    ### `queryMaterialPaymentForNotInitByMrId` <span style="color:gray">[内部]</span>
 
         通过收据ID获取主材款项信息 , 状态为非初始
-        
-                |Requests:|
-                :param materialReceipt.mrid: 收据ID
-        :type materialReceipt.mrid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialReceipt.mrid**:
+  收据ID
+
+        **示例**:{
                 "materialReceipt.mrid": 1
             }
-        
-                |Returns:|
-                - **materialPayments**: 主材收款信息列表 , 每条数据类型 *materialPayment*
+
+**返回参数**:
+
+- **materialPayments**: 主材收款信息列表 , 每条数据类型 *materialPayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialPayments": [
                     {
@@ -3094,14 +3039,14 @@
                                 "phone": "138xxxx2837",
                                 ...
                             },
-                            
+
                             "category": "洁具",
                             "brand": "卫浴",
-                            
+
                             "designRegion": "设计一分区",
                             "designDepartment": "设计一部",
                             "materialDepartment": "主材二组",
-                            
+
                             "coupon": 100,
                             "couponInfo": "",
                             ...
@@ -3156,28 +3101,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryMaterialReceiptByMrId
+
+    ### `queryMaterialReceiptByMrId` <span style="color:gray">[内部]</span>
 
         通过收据ID获取主材收据信息
-        
-                |Requests:|
-                :param materialReceipt.mrid: 收据ID
-        :type materialReceipt.mrid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialReceipt.mrid**:
+  收据ID
+
+        **示例**:{
                 "materialReceipt.mrid": 1
             }
-            
-                |Returns:|
-                - **materialReceipt**: 主材收据信息 , 类型 *materialReceipt*
+
+**返回参数**:
+
+- **materialReceipt**: 主材收据信息 , 类型 *materialReceipt*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialReceipt": {
                     "mrid": 1,
@@ -3216,185 +3159,179 @@
                 }
                 ...
             }
-            
-    ### <I> checkMaterialPayment
+
+    ### `checkMaterialPayment` <span style="color:gray">[内部]</span>
 
         判断主材款项是否可以进行收款
-        
+
         判断主材款项状态是否为0(初始) , 其他状态 , 错误信息 **150008 款项不能进行收款**
-        
-                |Requests:|
-                :param materialPayment.mpid: 款项ID
-        :type materialPayment.mpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.mpid**:
+  款项ID
+
+        **示例**:{
                 "materialPayment.mpid": 1
             }
-            
-    ### <I> addMaterialPaymentForDeposit
+
+    ### `addMaterialPaymentForDeposit` <span style="color:gray">[内部]</span>
 
         生成定金主材款
-        
+
         主材单是否存在 , 不存在 , 错误信息 **180001 主材订单不存在**
-        
+
         应收款金额大于零 , 小于零 , 错误信息 **150025 款项金额不正确**
-        
+
         不可存在主材单对应的其他款项 , 如果存在 , 错误信息 **150029 款项不可提交**
-        
+
         判断提交主材款类型是否已经存在 , 已存在 , 错误信息 **150029 款项不可提交**
-        
+
         主材单更新定金额为提交项金额 , 定金状态为1(未付款)
-        
-                |Requests:|
-                :param materialPayment.material.mid: 主材单ID
-        :type materialPayment.material.mid: Long
-        :param materialPayment.referMoney: 应收金额
-        :type materialPayment.referMoney: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.material.mid**:
+  主材单ID
+        - **materialPayment.referMoney**:
+  应收金额
+
+        **示例**:{
                 "materialPayment.material.mid": 1,
                 "materialPayment.paymentType": 1,
                 "materialPayment.referMoney": 1000
             }
-        
-    ### <I> addMaterialPaymentForFullpay
+
+    ### `addMaterialPaymentForFullpay` <span style="color:gray">[内部]</span>
 
         生成补款主材款
-        
+
         获取主材款类型为3(补款)的款项 , 如果存在 , 错误信息 **150040 补款已存在**
-        
+
         定金主材款存在 , 判断款项状态是否为1(已收款)或2(已确认) , 状态为0(初始) , 错误信息 **150041 定金状态不可操作**
-        
+
         判断主材项总额与定金+补款总额是否一致 , 不一致 , 错误信息 **150017 项目总额与款项额不符**
-        
+
         生成款项金额为正数 , 款项类型为3(补款) , 生成金额为负数 , 款项类型为5(补款退款)
-        
+
         主材单更新补款额为提交款项金额 , 补款状态为1(未付款)
-        
+
         生成补款退款类型款项信息 , 其作用等同于补款
-        
-                |Requests:|
-                :param materialPayment.material.mid: 主材单ID
-        :type materialPayment.material.mid: Long
-        :param materialPayment.referMoney: 金额
-        :type materialPayment.referMoney: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.material.mid**:
+  主材单ID
+        - **materialPayment.referMoney**:
+  金额
+
+        **示例**:{
                 "materialPayment.material.mid": 1,
                 "materialPayment.referMoney": 1000
             }
-            
-    ### <I> cancelMaterialPaymentForDeposit
+
+    ### `cancelMaterialPaymentForDeposit` <span style="color:gray">[内部]</span>
 
         撤销定金主材款
-        
+
         获取主材款类型为3(补款)的款项 , 如果存在 , 错误信息 **150040 补款已存在**
-        
+
         获取主材款类型为2(定金)的款项 , 如果不存在 , 错误信息 **150037 定金不存在**
-        
+
         判断定金主材款状态是否为0(初始) , 其他状态 , 错误信息 **150036 款项状态不可操作**
-        
+
         删除定金主材款信息
-        
+
         更新主材单中定金额为0 , 定金状态为0(初始)
-        
-                |Requests:|
-                :param materialPayment.material.mid: 主材单ID
-        :type materialPayment.material.mid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.material.mid**:
+  主材单ID
+
+        **示例**:{
                 "materialPayment.material.mid": 1,
                 "materialPayment.paymentType": 1
             }
-            
-    ### <I> cancelMaterialPaymentForFullpay
+
+    ### `cancelMaterialPaymentForFullpay` <span style="color:gray">[内部]</span>
 
         撤销补款主材款
-        
+
         获取主材款类型为3(补款)/5(补款退款)的款项 , 如果不存在 , 错误信息 **150038 补款不存在**
-        
+
         判断补款/补款退款主材款状态是否为0(初始) , 其他状态 , 错误信息 **150036 款项状态不可操作**
-        
+
         删除补款主材款信息
-        
+
         更新主材单中补款额为0, 补款状态为0(初始)
-        
-                |Requests:|
-                :param materialPayment.material.mid: 主材单ID
-        :type materialPayment.material.mid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.material.mid**:
+  主材单ID
+
+        **示例**:{
                 "materialPayment.material.mid": 1,
                 "materialPayment.paymentType": 1
             }
-            
-    ### <I> collectMaterialPayment
+
+    ### `collectMaterialPayment` <span style="color:gray">[内部]</span>
 
         主材款项收款
-        
+
         判断主材款是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         判断主材款状态是否为0(初始) , 其它状态不可收款 , 错误信息 **150036 款项状态不可操作**
-        
+
         判断提交款项方式汇总金额与装修款应付金额是否相等 , 不相等 , 错误信息 **150008 款项不能进行收款**
-        
+
         收款方式包括预付款 , 判断操作金额是否满足预付款余额 , 余额不足 , 错误信息 **150010 预付款余额不足**
-        
+
         主材款公司信息根据收款人操作公司进行更新
-        
+
         更新主材单对应收款类型的状态信息 , 定金/补款状态为1(已付款)
-        
+
         款项类型为补款(3) , 更新销售单中补款时间
-        
-                |Requests:|
-                :param materialPayment.mpid: 款项ID
-        :type materialPayment.mpid: Long
-        :param materialPayment.realMoney: 实收金额
-        :type materialPayment.realMoney: Long
-        :param materialPayment.cash: 现金
-        :type materialPayment.cash: Long
-        :param materialPayment.cashInfo: 现金信息
-        :type materialPayment.cashInfo: String
-        :param materialPayment.bank: 刷卡
-        :type materialPayment.bank: Long
-        :param materialPayment.bankInfo: 刷卡信息
-        :type materialPayment.bankInfo: String
-        :param materialPayment.checkv: 转账
-        :type materialPayment.checkv: Long
-        :param materialPayment.checkvBank: 转账银行
-        :type materialPayment.checkvBank: String
-        :param materialPayment.installment: 分期
-        :type materialPayment.installment: Long
-        :param materialPayment.installmentBank: 分期银行
-        :type materialPayment.installmentBank: String
-        :param materialPayment.accounts: 对公
-        :type materialPayment.accounts: Long
-        :param materialPayment.accountsBank: 对公银行
-        :type materialPayment.accountsBank: String
-        :param materialPayment.coupon: 券值
-        :type materialPayment.coupon: Long
-        :param materialPayment.couponInfo: 券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
-        :type materialPayment.couponInfo: String
-        :param materialPayment.advance: 预付款
-        :type materialPayment.advance: Long
-        :param materialPayment.advanceType: 预付款类型 , 1: 合同预付款 , 2: 工程预付款
-        :type materialPayment.advanceType: Short
-        :param materialPayment.comment: 说明
-        :type materialPayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.mpid**:
+  款项ID
+        - **materialPayment.realMoney**:
+  实收金额
+        - **materialPayment.cash**:
+  现金
+        - **materialPayment.cashInfo**:
+  现金信息
+        - **materialPayment.bank**:
+  刷卡
+        - **materialPayment.bankInfo**:
+  刷卡信息
+        - **materialPayment.checkv**:
+  转账
+        - **materialPayment.checkvBank**:
+  转账银行
+        - **materialPayment.installment**:
+  分期
+        - **materialPayment.installmentBank**:
+  分期银行
+        - **materialPayment.accounts**:
+  对公
+        - **materialPayment.accountsBank**:
+  对公银行
+        - **materialPayment.coupon**:
+  券值
+        - **materialPayment.couponInfo**:
+  券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
+        - **materialPayment.advance**:
+  预付款
+        - **materialPayment.advanceType**:
+  预付款类型 , 1: 合同预付款 , 2: 工程预付款
+        - **materialPayment.comment**:
+  说明
+
+        **示例**:{
                 "materialPayment.mpid": 1,
                 "materialPayment.realMoney": 10000,
                 "materialPayment.cash": 10000,
@@ -3413,66 +3350,65 @@
                 "materialPayment.advanceType": 0,
                 "materialPayment.comment": "说明",
             }
-            
-    ### <I> collectMaterialPayments
+
+    ### `collectMaterialPayments` <span style="color:gray">[内部]</span>
 
         主材款项批量收款
-        
+
         判断主材款状态是否为0(初始) , 其它状态不可收款 , 错误信息 **150036 款项状态不可操作**
-        
+
         判断主材款状态是否为0(初始) , 其它状态不可收款 , 错误信息 **150036 款项状态不可操作**
-        
+
         判断提交款项方式汇总金额与装修款应付金额是否相等 , 不相等 , 错误信息 **150008 款项不能进行收款**
-        
+
         收款方式包括预付款 , 判断操作金额是否满足预付款余额 , 余额不足 , 错误信息 **150010 预付款余额不足**
-        
+
         主材款公司信息根据收款人操作公司进行更新
-        
+
         更新主材单对应收款类型的状态信息 , 定金/补款状态为2(已付款)
-        
+
         款项类型为补款(3) , 更新销售单中补款时间
-        
-                |Requests:|
-                :param material.orderId: 装修单号
-        :type material.orderId: String
-        :param materialPayments[n].mpid: 款项ID列表 , 每条数据类型 Long
-        :type materialPayments[n].mpid: List
-        :param materialReceipt.realMoney: 实收金额
-        :type materialReceipt.realMoney: Long
-        :param materialReceipt.cash: 现金
-        :type materialReceipt.cash: Long
-        :param materialReceipt.cashInfo: 现金信息
-        :type materialReceipt.cashInfo: String
-        :param materialReceipt.bank: 刷卡
-        :type materialReceipt.bank: Long
-        :param materialReceipt.bankInfo: 刷卡信息
-        :type materialReceipt.bankInfo: String
-        :param materialReceipt.checkv: 转账
-        :type materialReceipt.checkv: Long
-        :param materialReceipt.checkvBank: 转账银行
-        :type materialReceipt.checkvBank: String
-        :param materialReceipt.installment: 分期
-        :type materialReceipt.installment: Long
-        :param materialReceipt.installmentBank: 分期银行
-        :type materialReceipt.installmentBank: String
-        :param materialReceipt.accounts: 对公
-        :type materialReceipt.accounts: Long
-        :param materialReceipt.accountsBank: 对公银行
-        :type materialReceipt.accountsBank: String
-        :param materialReceipt.coupon: 券值
-        :type materialReceipt.coupon: Long
-        :param materialReceipt.couponInfo: 券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
-        :type materialReceipt.couponInfo: String
-        :param materialReceipt.advance: 预付款
-        :type materialReceipt.advance: Long
-        :param materialReceipt.advanceType: 预付款类型 , 1: 合同预付款 , 2: 工程预付款
-        :type materialReceipt.advanceType: Short
-        :param materialReceipt.comment: 说明
-        :type materialReceipt.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.orderId**:
+  装修单号
+        - **materialPayments[n].mpid**:
+  款项ID列表 , 每条数据类型 Long
+        - **materialReceipt.realMoney**:
+  实收金额
+        - **materialReceipt.cash**:
+  现金
+        - **materialReceipt.cashInfo**:
+  现金信息
+        - **materialReceipt.bank**:
+  刷卡
+        - **materialReceipt.bankInfo**:
+  刷卡信息
+        - **materialReceipt.checkv**:
+  转账
+        - **materialReceipt.checkvBank**:
+  转账银行
+        - **materialReceipt.installment**:
+  分期
+        - **materialReceipt.installmentBank**:
+  分期银行
+        - **materialReceipt.accounts**:
+  对公
+        - **materialReceipt.accountsBank**:
+  对公银行
+        - **materialReceipt.coupon**:
+  券值
+        - **materialReceipt.couponInfo**:
+  券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
+        - **materialReceipt.advance**:
+  预付款
+        - **materialReceipt.advanceType**:
+  预付款类型 , 1: 合同预付款 , 2: 工程预付款
+        - **materialReceipt.comment**:
+  说明
+
+        **示例**:{
                 "material.orderId": "1601010001",
                 "materialPayment[0].mpid": 1,
                 "materialReceipt.realMoney": 10000,
@@ -3492,62 +3428,61 @@
                 "materialReceipt.advanceType": 0,
                 "materialReceipt.comment": "说明"
             }
-            
-    ### <I> refundMaterialPayment
+
+    ### `refundMaterialPayment` <span style="color:gray">[内部]</span>
 
         主材退款
-        
+
         判断主材款是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         判断主材款状态是否为0(初始) , 其它状态不可收款 , 错误信息 **150036 款项状态不可操作**
-        
+
         如果主材款类型为7(定金退款) , 更新主材单中定金额为0 , 定金状态为0(初始)
-        
+
         如果主材款类型为5(补款退款) , 更新主材单中补款状态为2(已付款) , 补款时间为操作时间
-        
+
         如果主材款类型为4(退款) , 更新退款主材项状态为2(已付款)
-        
+
         主材款公司信息根据收款人操作公司进行更新
-        
+
         更新款项状态以及生成对应收据相关信息
-        
-                |Requests:|
-                :param materialPayment.mpid: 款项ID
-        :type materialPayment.mpid: Long
-        :param materialPayment.cash: 现金
-        :type materialPayment.cash: Long
-        :param materialPayment.cashInfo: 现金信息
-        :type materialPayment.cashInfo: String
-        :param materialPayment.bank: 刷卡
-        :type materialPayment.bank: Long
-        :param materialPayment.bankInfo: 刷卡信息
-        :type materialPayment.bankInfo: String
-        :param materialPayment.checkv: 转账
-        :type materialPayment.checkv: Long
-        :param materialPayment.checkvBank: 转账银行
-        :type materialPayment.checkvBank: String
-        :param materialPayment.installment: 分期
-        :type materialPayment.installment: Long
-        :param materialPayment.installmentBank: 分期银行
-        :type materialPayment.installmentBank: String
-        :param materialPayment.accounts: 对公
-        :type materialPayment.accounts: Long
-        :param materialPayment.accountsBank: 对公银行
-        :type materialPayment.accountsBank: String
-        :param materialPayment.coupon: 券值
-        :type materialPayment.coupon: Long
-        :param materialPayment.couponInfo: 券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
-        :type materialPayment.couponInfo: String
-        :param materialPayment.advance: 预付款
-        :type materialPayment.advance: Long
-        :param materialPayment.advanceType: 预付款类型 , 1: 合同预付款 , 2: 工程预付款
-        :type materialPayment.advanceType: Short
-        :param materialPayment.comment: 说明
-        :type materialPayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.mpid**:
+  款项ID
+        - **materialPayment.cash**:
+  现金
+        - **materialPayment.cashInfo**:
+  现金信息
+        - **materialPayment.bank**:
+  刷卡
+        - **materialPayment.bankInfo**:
+  刷卡信息
+        - **materialPayment.checkv**:
+  转账
+        - **materialPayment.checkvBank**:
+  转账银行
+        - **materialPayment.installment**:
+  分期
+        - **materialPayment.installmentBank**:
+  分期银行
+        - **materialPayment.accounts**:
+  对公
+        - **materialPayment.accountsBank**:
+  对公银行
+        - **materialPayment.coupon**:
+  券值
+        - **materialPayment.couponInfo**:
+  券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
+        - **materialPayment.advance**:
+  预付款
+        - **materialPayment.advanceType**:
+  预付款类型 , 1: 合同预付款 , 2: 工程预付款
+        - **materialPayment.comment**:
+  说明
+
+        **示例**:{
                 "materialPayment.mpid": 1,
                 "materialPayment.cash": 10000,
                 "materialPayment.cashInfo": "175",
@@ -3565,98 +3500,95 @@
                 "materialPayment.advanceType": 0,
                 "materialPayment.comment": "说明"
             }
-            
-    ### <I> refundMaterialPaymentForDeposit
+
+    ### `refundMaterialPaymentForDeposit` <span style="color:gray">[内部]</span>
 
         生成主材款中定金退款
-        
+
         获取主材款类型为3(补款)的款项 , 如果存在 , 错误信息 **150040 补款已存在**
-        
+
         获取主材款类型为2(定金)的款项 , 如果不存在 , 错误信息 **150037 定金不存在**
-        
+
         判断定金主材款状态是否为2(已确认) , 其他状态 , 错误信息 **150012 款项不能进行退款**
-        
+
         主材单更新定金额为0 , 定金状态为0(初始)
-        
+
         主材单状态更新为8(废单)
-        
-                |Requests:|
-                :param materialPayment.material.mid: 主材单ID
-        :type materialPayment.material.mid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.material.mid**:
+  主材单ID
+
+        **示例**:{
                 "materialPayment.material.mid": 1
             }
-        
-    ### <I> refundMaterialPaymentForCoupon
+
+    ### `refundMaterialPaymentForCoupon` <span style="color:gray">[内部]</span>
 
         生成主材款项中券退款
-        
+
         获取主材款类型为2(定金)的款项 , 如果不存在 , 错误信息 **150037 定金不存在**
-        
+
         判断定金主材款状态是否为1(已收款)或2(已确认) , 状态为0(初始) , 错误信息 **150041 定金状态不可操作**
-        
+
         生成券退款类型款项信息 , 同时更新主材单中券值和券信息
-        
-                |Requests:|
-                :param material.mid: 主材单ID
-        :type material.mid: Long
-        :param material.coupon: 券值
-        :type material.coupon: Long
-        :param material.couponInfo: 券信息
-        :type material.couponInfo: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.mid**:
+  主材单ID
+        - **material.coupon**:
+  券值
+        - **material.couponInfo**:
+  券信息
+
+        **示例**:{
                 "material.mid": 1,
                 "material.coupon": 100000,
                 "material.couponInfo": #瓷砖券:100#
             }
 
-    ### <I> updateMaterialPayment
+    ### `updateMaterialPayment` <span style="color:gray">[内部]</span>
 
         更新主材款收款方式
-        
+
         判断款项是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         主材款状态1(已付款) , 其他状态不可更新 , 错误信息 **150036 款项状态不可操作**
-        
+
         主材款修改之后金额与应收额不等 , 不可更新 , 错误信息 **150025 款项金额不正确**
-        
+
         预付款和优惠券不可修改
-    
-                |Requests:|
-                :param materialPayment.mpid: 款项ID
-        :type materialPayment.mpid: Long
-        :param materialPayment.cash: 现金
-        :type materialPayment.cash: Long
-        :param materialPayment.cashInfo: 现金信息
-        :type materialPayment.cashInfo: String
-        :param materialPayment.bank: 刷卡
-        :type materialPayment.bank: Long
-        :param materialPayment.bankInfo: 刷卡信息
-        :type materialPayment.bankInfo: String
-        :param materialPayment.checkv: 转账
-        :type materialPayment.checkv: Long
-        :param materialPayment.checkvBank: 转账银行
-        :type materialPayment.checkvBank: String
-        :param materialPayment.installment: 分期
-        :type materialPayment.installment: Long
-        :param materialPayment.installmentBank: 分期银行
-        :type materialPayment.installmentBank: String
-        :param materialPayment.accounts: 对公
-        :type materialPayment.accounts: Long
-        :param materialPayment.accountsBank: 对公银行
-        :type materialPayment.accountsBank: String
-        :param materialPayment.comment: 说明
-        :type materialPayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.mpid**:
+  款项ID
+        - **materialPayment.cash**:
+  现金
+        - **materialPayment.cashInfo**:
+  现金信息
+        - **materialPayment.bank**:
+  刷卡
+        - **materialPayment.bankInfo**:
+  刷卡信息
+        - **materialPayment.checkv**:
+  转账
+        - **materialPayment.checkvBank**:
+  转账银行
+        - **materialPayment.installment**:
+  分期
+        - **materialPayment.installmentBank**:
+  分期银行
+        - **materialPayment.accounts**:
+  对公
+        - **materialPayment.accountsBank**:
+  对公银行
+        - **materialPayment.comment**:
+  说明
+
+        **示例**:{
                 "materialPayment.mpid": 1,
                 "materialPayment.cash": 10000,
                 "materialPayment.cashInfo": "175",
@@ -3670,51 +3602,49 @@
                 "materialPayment.accountsBank": "201",
                 "materialPayment.comment": "说明"
             }
-            
-    ### <I> confirmMaterialPayment
+
+    ### `confirmMaterialPayment` <span style="color:gray">[内部]</span>
 
         主材款项确认
-        
+
         判断款项是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         主材款类型为2(定金) , 更新主材单定金状态为3(已确认)
-        
+
         主材款类型为3(补款)/5(补款退款) , 更新主材单补款状态为3(已确认)
-        
+
         已经确认的主材款项忽略处理
-        
-                |Requests:|
-                :param mpids[n]: 款项ID列表 , 每条数据类型 Long
-        :type mpids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **mpids[n]**:
+  款项ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "mpids[0]": 1
             }
 
-    ### <I> changeMaterialPaymentForTime
+    ### `changeMaterialPaymentForTime` <span style="color:gray">[内部]</span>
 
         修改主材款项收款和确认时间
-        
+
         判断主材款是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
-                |Requests:|
-                :param materialPayment.no: 主材单编号
-        :type materialPayment.no: String
-        :param materialPayment.paymentType: 款项类型
-        :type materialPayment.paymentType: Integer
+
+**请求参数**:
+
+- **materialPayment.no**:
+  主材单编号
+        - **materialPayment.paymentType**:
+  款项类型
         - **dateTime**: 修改时间
           - 类型: *Timestamp*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "materialPayment.no": "M1601010001",
                 "materialPayment.paymentType": 1,
                 "dateTime": "2016-01-01 00:00:00"
             }
-            
+
 ## 服务款
 
 服务款项信息管理以及相关业务功能
@@ -3723,8 +3653,9 @@
 
 ## api.payment.ServicePaymentAction
 
-        |DataType:|
-        #### servicePayment
+**数据类型**:
+
+#### servicePayment
 
     - **spid**: 款项ID
       - 类型: *Long*
@@ -3760,7 +3691,7 @@
       - 类型: *Long*
     - **realMoney**: 实收金额
       - 类型: *Long*
-    
+
     - **cash**: 现金
       - 类型: *Long*
     - **cashInfo**: 现金信息
@@ -3785,7 +3716,7 @@
       - 类型: *Integer*
     - **comment**: 说明
       - 类型: *String*
-    
+
     #### serviceReceipt
 
     - **srid**: 收据ID
@@ -3822,32 +3753,30 @@
       - 类型: *String*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pageServicePayment
+
+    ### `pageServicePayment` <span style="color:gray">[内部]</span>
 
         页方式获服务款收款信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         根据当前操作公司作为条件查询对应公司的服务款
-        
-                |Requests:|
-                :param servicePayment.status: 状态
-        :type servicePayment.status: Short
-                
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **servicePayment.status**:
+  状态
+
+        **示例**:{
                 "servicePayment.status": 1
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 销售收款信息列表 , 每条数据类型 *servicePayment*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  销售收款信息列表 , 每条数据类型 *servicePayment*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3902,7 +3831,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部",
@@ -3937,7 +3866,7 @@
                             "confirmTime": "2016-01-01 00:00:00",
                             "serviceMoney": 500,
                             "advanceMoney": 500,
-                            
+
                             "cash": 500,
                             "cashInfo": "157",
                             "bank": 0,
@@ -3956,27 +3885,25 @@
                 ...
             }
 
-    ### <I> queryServicePaymentByOrderId
+    ### `queryServicePaymentByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取服务款项
-        
-                |Requests:|
-                :param servicePayment.decoration.orderId: 装修单号
-        :type servicePayment.decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **servicePayment.decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "servicePayment.decoration.orderId": 1
             }
-            
-                |Returns:|
-                - **servicePayments**: 服务款信息列表 , 每条数据类型 *servicePayment*
+
+**返回参数**:
+
+- **servicePayments**: 服务款信息列表 , 每条数据类型 *servicePayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "servicePayments": [
                     {
@@ -4029,7 +3956,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部",
@@ -4079,28 +4006,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryServicePaymentForNotInitBySrId
+
+    ### `queryServicePaymentForNotInitBySrId` <span style="color:gray">[内部]</span>
 
         通过服务款收据ID获取非初始状态的服务款项
-        
-                |Requests:|
-                :param serviceReceipt.srid: 收据ID
-        :type serviceReceipt.srid: Long
 
-        Example::
-        
-            {
+**请求参数**:
+
+- **serviceReceipt.srid**:
+  收据ID
+
+        **示例**:{
                 "serviceReceipt.srid": 1
             }
 
-                |Returns:|
-                - **servicePayments**: 服务款信息列表 , 每条数据类型 *servicePayment*
+**返回参数**:
+
+- **servicePayments**: 服务款信息列表 , 每条数据类型 *servicePayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "servicePayments": [
                     {
@@ -4153,7 +4078,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -4203,26 +4128,24 @@
                 ],
                 ...
             }
-            
-    ### <I> queryServiceReceiptBySrId
 
-                |Requests:|
-                :param serviceReceipt.srid: 收据ID
-        :type serviceReceipt.srid: Long
+    ### `queryServiceReceiptBySrId` <span style="color:gray">[内部]</span>
 
-        Example::
-        
-            {
+**请求参数**:
+
+- **serviceReceipt.srid**:
+  收据ID
+
+        **示例**:{
                 "serviceReceipt.srid": 1
             }
-            
-                |Returns:|
-                - **servicePayment**: 服务款信息 ,数据类型 *servicePayment*
+
+**返回参数**:
+
+- **servicePayment**: 服务款信息 ,数据类型 *servicePayment*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "servicePayment": {
                     "srid": 1,
@@ -4259,82 +4182,80 @@
                 ...
             }
 
-    ### <I> makeServicePayment
+    ### `makeServicePayment` <span style="color:gray">[内部]</span>
 
         生成服务款
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修单对应的半价信息是否存在 , 不存在 , 错误信息 **260021 半价信息不存在**
-        
+
         判断服务款剩余金额 , 如果大于交款金额 , 错误信息 **150025 款项金额不正确**
-        
-                |Requests:|
-                :param servicePayment.decoration.orderId: 装修单号
-        :type servicePayment.decoration.orderId: String
-        :param servicePayment.referMoney: 收款金额
-        :type servicePayment.referMoney: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **servicePayment.decoration.orderId**:
+  装修单号
+        - **servicePayment.referMoney**:
+  收款金额
+
+        **示例**:{
                 "servicePayment.decoration.orderId": "1601010001",
                 "servicePayment.referMoney": 10000
             }
-            
-    ### <I> collectServicePayment
+
+    ### `collectServicePayment` <span style="color:gray">[内部]</span>
 
         服务款项收款 , 正常收款 , 需要拆分金额为预付款和服务款两个部分
-        
+
         判断装修单对应的半价信息是否存在 , 不存在 , 错误信息 **260021 半价信息不存在**
-        
-        服务费收款款项拆分两部分 , 一是预付款 , 二是服务费 . 
-        
+
+        服务费收款款项拆分两部分 , 一是预付款 , 二是服务费 .
+
         拆分计算方式为 , 收款金额 / 1.1 = 主材预付款金额 , 收款金额 - 主材预付款金额 = 服务费
-        
+
         拆分之后的服务费需要与装修单半价信息中服务费和实收服务费 , 如果拆分后服务费大于服务费与实收服务费差值 , 那么多余部分交款服务费转入主材预付款 .
-        
+
         生成服务款款项以及收据信息 , 服务款状态为1(已付款) , 补全相关收据信息
-        
+
         生成预付款款项以及收据信息 , 预付款状态为1(已付款) , 补全相关收据信息 , 收据使用转款字段存储
-        
+
         更新装修单半价中的服务费以及主材额
-        
+
         服务款公司信息根据收款人操作公司进行更新
-        
-                |Requests:|
-                :param servicePayment.decoration.orderId: 装修单号
-        :type servicePayment.decoration.orderId: String
-        :param servicePayment.referMoney: 收款金额
-        :type servicePayment.referMoney: Long
-        :param servicePayment.realMoney: 实收金额
-        :type servicePayment.realMoney: Long
-        :param servicePayment.cash: 现金
-        :type servicePayment.cash: Long
-        :param servicePayment.cashInfo: 现金信息
-        :type servicePayment.cashInfo: String
-        :param servicePayment.bank: 刷卡
-        :type servicePayment.bank: Long
-        :param servicePayment.bankInfo: 刷卡信息
-        :type servicePayment.bankInfo: String
-        :param servicePayment.checkv: 转账
-        :type servicePayment.checkv: Long
-        :param servicePayment.checkvBank: 转账银行
-        :type servicePayment.checkvBank: String
-        :param servicePayment.installment: 分期
-        :type servicePayment.installment: Long
-        :param servicePayment.installmentBank: 分期银行
-        :type servicePayment.installmentBank: String
-        :param servicePayment.accounts: 对公
-        :type servicePayment.accounts: Long
-        :param servicePayment.accountsBank: 对公银行
-        :type servicePayment.accountsBank: String
-        :param servicePayment.comment: 说明
-        :type servicePayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **servicePayment.decoration.orderId**:
+  装修单号
+        - **servicePayment.referMoney**:
+  收款金额
+        - **servicePayment.realMoney**:
+  实收金额
+        - **servicePayment.cash**:
+  现金
+        - **servicePayment.cashInfo**:
+  现金信息
+        - **servicePayment.bank**:
+  刷卡
+        - **servicePayment.bankInfo**:
+  刷卡信息
+        - **servicePayment.checkv**:
+  转账
+        - **servicePayment.checkvBank**:
+  转账银行
+        - **servicePayment.installment**:
+  分期
+        - **servicePayment.installmentBank**:
+  分期银行
+        - **servicePayment.accounts**:
+  对公
+        - **servicePayment.accountsBank**:
+  对公银行
+        - **servicePayment.comment**:
+  说明
+
+        **示例**:{
                 "servicePayment.decoration.orderId": "1601010001",
                 "servicePayment.referMoney": 10000,
                 "servicePayment.realMoney": 10000,
@@ -4352,52 +4273,51 @@
                 "servicePayment.couponInfo": "",
                 "servicePayment.comment": "说明",
             }
-            
-    ### <I> collectServicePaymentForService
+
+    ### `collectServicePaymentForService` <span style="color:gray">[内部]</span>
 
         服务款项收款 , 主要针对服务费收款
-        
+
         判断装修单对应的半价信息是否存在 , 不存在 , 错误信息 **260021 半价信息不存在**
-        
+
         收款金额作为服务费金额 , 不转入预付款 , 收款金额可以小于等于当前服务费剩余金额
-        
+
         生成服务款款项以及收据信息
-        
+
         更新装修单半价中的服务费信息
-        
+
         服务款公司信息根据收款人操作公司进行更新
-        
-                |Requests:|
-                :param servicePayment.decoration.orderId: 装修单号
-        :type servicePayment.decoration.orderId: String
-        :param servicePayment.realMoney: 实收金额
-        :type servicePayment.realMoney: Long
-        :param servicePayment.cash: 现金
-        :type servicePayment.cash: Long
-        :param servicePayment.cashInfo: 现金信息
-        :type servicePayment.cashInfo: String
-        :param servicePayment.bank: 刷卡
-        :type servicePayment.bank: Long
-        :param servicePayment.bankInfo: 刷卡信息
-        :type servicePayment.bankInfo: String
-        :param servicePayment.checkv: 转账
-        :type servicePayment.checkv: Long
-        :param servicePayment.checkvBank: 转账银行
-        :type servicePayment.checkvBank: String
-        :param servicePayment.installment: 分期
-        :type servicePayment.installment: Long
-        :param servicePayment.installmentBank: 分期银行
-        :type servicePayment.installmentBank: String
-        :param servicePayment.accounts: 对公
-        :type servicePayment.accounts: Long
-        :param servicePayment.accountsBank: 对公银行
-        :type servicePayment.accountsBank: String
-        :param servicePayment.comment: 说明
-        :type servicePayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **servicePayment.decoration.orderId**:
+  装修单号
+        - **servicePayment.realMoney**:
+  实收金额
+        - **servicePayment.cash**:
+  现金
+        - **servicePayment.cashInfo**:
+  现金信息
+        - **servicePayment.bank**:
+  刷卡
+        - **servicePayment.bankInfo**:
+  刷卡信息
+        - **servicePayment.checkv**:
+  转账
+        - **servicePayment.checkvBank**:
+  转账银行
+        - **servicePayment.installment**:
+  分期
+        - **servicePayment.installmentBank**:
+  分期银行
+        - **servicePayment.accounts**:
+  对公
+        - **servicePayment.accountsBank**:
+  对公银行
+        - **servicePayment.comment**:
+  说明
+
+        **示例**:{
                 "servicePayment.decoration.orderId": "1601010001",
                 "servicePayment.realMoney": 10000,
                 "servicePayment.cash": 10000,
@@ -4414,48 +4334,47 @@
                 "servicePayment.couponInfo": "",
                 "servicePayment.comment": "说明",
             }
-            
-    ### <I> refundServicePaymentForService
+
+    ### `refundServicePaymentForService` <span style="color:gray">[内部]</span>
 
         服务费退款 , 根据装修单半价信息中实收服务费金额进行退款
-        
+
         判断装修单对应的半价信息是否存在 , 不存在 , 错误信息 **260021 半价信息不存在**
-        
+
         生成服务款款项以及收据信息
-        
+
         更新装修单半价中的服务费信息
-        
+
         服务款公司信息根据收款人操作公司进行更新
-        
-                |Requests:|
-                :param servicePayment.decoration.orderId: 装修单号
-        :type servicePayment.decoration.orderId: String
-        :param servicePayment.cash: 现金
-        :type servicePayment.cash: Long
-        :param servicePayment.cashInfo: 现金信息
-        :type servicePayment.cashInfo: String
-        :param servicePayment.bank: 刷卡
-        :type servicePayment.bank: Long
-        :param servicePayment.bankInfo: 刷卡信息
-        :type servicePayment.bankInfo: String
-        :param servicePayment.checkv: 转账
-        :type servicePayment.checkv: Long
-        :param servicePayment.checkvBank: 转账银行
-        :type servicePayment.checkvBank: String
-        :param servicePayment.installment: 分期
-        :type servicePayment.installment: Long
-        :param servicePayment.installmentBank: 分期银行
-        :type servicePayment.installmentBank: String
-        :param servicePayment.accounts: 对公
-        :type servicePayment.accounts: Long
-        :param servicePayment.accountsBank: 对公银行
-        :type servicePayment.accountsBank: String
-        :param servicePayment.comment: 说明
-        :type servicePayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **servicePayment.decoration.orderId**:
+  装修单号
+        - **servicePayment.cash**:
+  现金
+        - **servicePayment.cashInfo**:
+  现金信息
+        - **servicePayment.bank**:
+  刷卡
+        - **servicePayment.bankInfo**:
+  刷卡信息
+        - **servicePayment.checkv**:
+  转账
+        - **servicePayment.checkvBank**:
+  转账银行
+        - **servicePayment.installment**:
+  分期
+        - **servicePayment.installmentBank**:
+  分期银行
+        - **servicePayment.accounts**:
+  对公
+        - **servicePayment.accountsBank**:
+  对公银行
+        - **servicePayment.comment**:
+  说明
+
+        **示例**:{
                 "servicePayment.decoration.orderId": "1601010001",
                 "servicePayment.cash": 10000,
                 "servicePayment.cashInfo": "175",
@@ -4471,58 +4390,56 @@
                 "servicePayment.couponInfo": "",
                 "servicePayment.comment": "说明",
             }
-            
-    ### <I>  confirmServicePayment
+
+    ### `confirmServicePayment` <span style="color:gray">[内部]</span>
 
         服务款项确认
-        
+
         已经确认的服务款项忽略处理
-        
+
         更新款项状态为2(已确认)
-        
+
         关联更新预付款状态为2(已确认)
-        
-                |Requests:|
-                :param spids[n]: 款项ID列表  ,  每条数据类型  Long
-        :type spids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **spids[n]**:
+  款项ID列表  ,  每条数据类型  Long
+
+        **示例**:{
                 "spids[0]": 1
             }
-            
-    ### <I> updateServicePayment
+
+    ### `updateServicePayment` <span style="color:gray">[内部]</span>
 
         更新服务款收款方式
-        
+
         判断款项是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         款项状态1(已付款) , 其他状态不可更新 , 错误信息 **150036 款项状态不可操作**
-        
+
         款项修改之后金额与应收额不等 , 不可更新 , 错误信息 **150025 款项金额不正确**
-        
-                |Requests:|
-                :param servicePayment.spid: 款项ID
-        :type servicePayment.spid: Long
-        :param servicePayment.cash: 现金
-        :type servicePayment.cash: Long
-        :param servicePayment.cashInfo: 现金信息
-        :type servicePayment.cashInfo: String
-        :param servicePayment.bank: 刷卡
-        :type servicePayment.bank: Long
-        :param servicePayment.bankInfo: 刷卡信息
-        :type servicePayment.bankInfo: String
-        :param servicePayment.checkv: 转账
-        :type servicePayment.checkv: Long
-        :param servicePayment.checkvBank: 转账银行
-        :type servicePayment.checkvBank: String
-        :param servicePayment.comment: 说明
-        :type servicePayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **servicePayment.spid**:
+  款项ID
+        - **servicePayment.cash**:
+  现金
+        - **servicePayment.cashInfo**:
+  现金信息
+        - **servicePayment.bank**:
+  刷卡
+        - **servicePayment.bankInfo**:
+  刷卡信息
+        - **servicePayment.checkv**:
+  转账
+        - **servicePayment.checkvBank**:
+  转账银行
+        - **servicePayment.comment**:
+  说明
+
+        **示例**:{
                 "servicePayment.spid": 1,
                 "servicePayment.cash": 10000,
                 "servicePayment.cashInfo": "175",
@@ -4532,15 +4449,16 @@
                 "servicePayment.checkvBank": "#187|10|2016-03-23 14:25:15#",
                 "servicePayment.comment": "说明",
             }
-    
+
 ## 销售款
 
 销售款信息管理以及相关业务功能
 
 ## api.payment.SalesPaymentAction
 
-        |DataType:|
-        #### salesPayment
+**数据类型**:
+
+#### salesPayment
 
     - **spid**: 款项ID
       - 类型: *Long*
@@ -4570,7 +4488,7 @@
       - 类型: *Long*
     - **realMoney**: 实收金额
       - 类型: *Long*
-    
+
     - **cash**: 现金
       - 类型: *Long*
     - **cashInfo**: 现金信息
@@ -4603,7 +4521,7 @@
       - 类型: *Integer*
     - **comment**: 说明
       - 类型: *String*
-    
+
     #### salesReceipt
 
     - **srid**: 收据ID
@@ -4648,43 +4566,40 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pageSalesPayment
+
+    ### `pageSalesPayment` <span style="color:gray">[内部]</span>
 
         分页方式获取销售收款信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param salesPayment.status: 状态
-        :type salesPayment.status: Short
-        :param salesPayment.type: 类型
-        :type salesPayment.type: Short
-                
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesPayment.status**:
+  状态
+        - **salesPayment.type**:
+  类型
+
+        **示例**:{
                 "salesPayment.status": 1,
                 "salesPayment.type": 1
             }
-        
-                |Requests:|
-                - **companyType**: 公司类型 , 包括 company , dompany , pompany
+
+**请求参数**:
+
+- **companyType**: 公司类型 , 包括 company , dompany , pompany
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "companyType": "company"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 销售收款信息列表 , 每条数据类型 *salesPayment*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  销售收款信息列表 , 每条数据类型 *salesPayment*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4812,27 +4727,25 @@
                 ...
             }
 
-    ### <I> querySalesPaymentByOrderId
+    ### `querySalesPaymentByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取销售单所属的销售款信息
-        
-                |Requests:|
-                :param sales.orderId: 装修单号
-        :type sales.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **sales.orderId**:
+  装修单号
+
+        **示例**:{
                 "sales.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **salesPayments**: 销售收款信息列表 , 每条数据类型 *salesPayment*
+
+**返回参数**:
+
+- **salesPayments**: 销售收款信息列表 , 每条数据类型 *salesPayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "salesPayments": [
                     {
@@ -4956,26 +4869,24 @@
                 ...
             }
 
-    ### <I> querySalesPaymentBySid
+    ### `querySalesPaymentBySid` <span style="color:gray">[内部]</span>
 
         通过销售单ID，查询销售单对应的款项信息
 
-                |Requests:|
-                :param salesPayment.sales.sid: 销售单ID
-        :type salesPayment.sales.sid: Long
+**请求参数**:
 
-        Example::
+- **salesPayment.sales.sid**:
+  销售单ID
 
-            {
+        **示例**:{
                 "salesPayment.sales.sid": 1
             }
 
-                |Returns:|
-                Parameters:	salesPayments (List) – 销售款信息列表 , 每条数据类型 salesPayment
+**返回参数**:
 
-        Example::
+Parameters: salesPayments (List) – 销售款信息列表 , 每条数据类型 salesPayment
 
-            {
+        **示例**:{
                 ...
                 "salesPayments": [
                     {
@@ -5085,27 +4996,25 @@
                 ...
             }
 
-    ### <I> querySalesPaymentForNotInitBySrid
+    ### `querySalesPaymentForNotInitBySrid` <span style="color:gray">[内部]</span>
 
         通过收据ID获取销售款信息 , 状态为非初始
-        
-                |Requests:|
-                :param salesReceipt.srid: 收据ID
-        :type salesReceipt.srid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesReceipt.srid**:
+  收据ID
+
+        **示例**:{
                 "salesReceipt.srid": 1
             }
-        
-                |Returns:|
-                - **salesPayments**: 销售收款信息列表 , 每条数据类型 *salesPayment*
+
+**返回参数**:
+
+- **salesPayments**: 销售收款信息列表 , 每条数据类型 *salesPayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "salesPayments": [
                     {
@@ -5231,23 +5140,21 @@
 
     ### <I-C> querySalesPaymentBySpid
 
-                |Requests:|
-                :param salesPayment.spid: 销售款ID
-        :type salesPayment.spid: Long
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **salesPayment.spid**:
+  销售款ID
+
+        **示例**:{
                 "salesPayment.srid": 1
             }
 
-                |Returns:|
-                - **salesPayment**: 销售收款信息 , 类型 *salesPayment*
+**返回参数**:
+
+- **salesPayment**: 销售收款信息 , 类型 *salesPayment*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "salesPayment": {
                     "spid": 1,
@@ -5368,28 +5275,26 @@
                 },
                 ...
             }
-            
-    ### <I> querySalesReceiptBySrId
+
+    ### `querySalesReceiptBySrId` <span style="color:gray">[内部]</span>
 
         通过收据ID获取销售收据信息
-        
-                |Requests:|
-                :param salesReceipt.srid: 收据ID
-        :type salesReceipt.srid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesReceipt.srid**:
+  收据ID
+
+        **示例**:{
                 "salesReceipt.srid": 1
             }
-            
-                |Returns:|
-                - **salesReceipt**: 销售收据信息 , 类型 *salesReceipt*
+
+**返回参数**:
+
+- **salesReceipt**: 销售收据信息 , 类型 *salesReceipt*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialReceipt": {
                     "srid": 1,
@@ -5430,246 +5335,237 @@
                 ...
             }
 
-    ### <I> amountSalesPayment
+    ### `amountSalesPayment` <span style="color:gray">[内部]</span>
 
         获取装修单归属的销售款总额
-    
-                |Requests:|
-                :param salesPayment.sales.orderId: 装修单号
-        :type salesPayment.sales.orderId: String
-        :param salesPayment.sales.sid: 销售单ID
-        :type salesPayment.sales.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesPayment.sales.orderId**:
+  装修单号
+        - **salesPayment.sales.sid**:
+  销售单ID
+
+        **示例**:{
                 "salesPayment.sales.orderId": "1601010001",
                 "salesPayment.sales.sid": 1
             }
 
-                |Returns:|
-                - **amount**: 销售款总额
+**返回参数**:
+
+- **amount**: 销售款总额
           - 类型: *Long*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "amount": 1000000,
                 ...
             }
 
-    ### <I> sendSalesPayment
+    ### `sendSalesPayment` <span style="color:gray">[内部]</span>
 
         推送销售款
-        
-        验证销售款信息是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
-                |Requests:|
-                :param salesPayment.spid: 销售款ID
-        :type salesPayment.spid: Long
 
-        Example::
-        
-            {
+        验证销售款信息是否存在 , 不存在 , 错误信息 **150003 款项不存在**
+
+**请求参数**:
+
+- **salesPayment.spid**:
+  销售款ID
+
+        **示例**:{
                 "salesPayment.spid": 1
             }
-            
-    ### <I> addSalesPaymentForDeposit
+
+    ### `addSalesPaymentForDeposit` <span style="color:gray">[内部]</span>
 
         添加定金销售款 , 支持不退类型
-        
+
         判断销售单是否存在 , 不存在 , 错误信息 **260021 销售单不存在**
-        
+
         应收款金额大于零 , 小于零 , 错误信息 **150025 款项金额不正确**
-        
+
         不可存在销售单对应的其他款项 , 如果存在 , 错误信息 **150029 款项不可提交**
-        
+
         判断提交销售款类型是否已经存在 , 已存在 , 错误信息 **150029 款项不可提交**
-        
+
         销售单更新定金额为提交项金额 , 定金状态为0(未付款)
-        
-                |Requests:|
-                :param salesPayment.sales.sid: 销售单ID
-        :type salesPayment.sales.sid: Long
-        :param salesPayment.sales.ctype: 结算类型
-        :type salesPayment.sales.ctype: Short
-        :param salesPayment.sales.cvalue: 结算值
-        :type salesPayment.sales.cvalue: Long
-        
-        :param salesPayment.type: 类型 , 支持1(定金)和8(不退定金)
-        :type salesPayment.type: Short
-        :param salesPayment.referMoney: 应收金额
-        :type salesPayment.referMoney: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesPayment.sales.sid**:
+  销售单ID
+        - **salesPayment.sales.ctype**:
+  结算类型
+        - **salesPayment.sales.cvalue**:
+  结算值
+
+        - **salesPayment.type**:
+  类型 , 支持1(定金)和8(不退定金)
+        - **salesPayment.referMoney**:
+  应收金额
+
+        **示例**:{
                 "salesPayment.sales.sid": 1,
                 "salesPayment.sales.ctype": 1,
                 "salesPayment.sales.cvalue": 1000,
                 "salesPayment.type": 1,
                 "salesPayment.referMoney": 1000
             }
-            
-    ### <I> addSalesPaymentForFullpay
+
+    ### `addSalesPaymentForFullpay` <span style="color:gray">[内部]</span>
 
         添加补款销售款
-        
+
         获取销售款类型为3(补款)的款项 , 如果存在 , 错误信息 **150040 补款已存在**
-        
+
         定金销售款存在 , 判断款项状态是否为1(已收款)或2(已确认) , 状态为0(初始) , 错误信息 **150041 定金状态不可操作**
-        
+
         判断销售项数量是否为0 , 如果不存在项目 , 错误信息 **260060 销售项数量不足**
-        
+
         判断销售项总额与定金+补款总额是否一致 , 不一致 , 错误信息 **150017 项目总额与款项额不符**
-        
+
         生成款项金额为正数 , 款项类型为3(补款) , 生成金额为负数 , 款项类型为5(补款退款)
-        
+
         款项类型为5(补款退款) , 判断销售单款项积分以及领取活动物品积分 , 款项积分不足 , 错误信息 **160037 积分不足**
-        
+
         销售单更新补款额为提交款项金额 , 补款状态为0(未付款)
-        
+
         生成补款退款类型款项信息 , 其作用等同于补款
-        
-                |Requests:|
-                :param salesPayment.sid: 销售单ID
-        :type salesPayment.sid: Long
-        :param salesPayment.referMoney: 应收金额
-        :type salesPayment.referMoney: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesPayment.sid**:
+  销售单ID
+        - **salesPayment.referMoney**:
+  应收金额
+
+        **示例**:{
                 "salesPayment.sid": 1,
                 "salesPayment.referMoney": 1000
             }
 
-    ### <I> cancelSalesPayment
+    ### `cancelSalesPayment` <span style="color:gray">[内部]</span>
 
         销售款撤销
-        
+
         款项状态为初始才能够完成撤销 , 其他状态撤销失败 , 错误信息 **150019 款项不能撤销**
-        
+
         根据款项类型更新销售单中款项状态 , 定金(2)更新定金金额为0 , 状态为无款项(-1) ; 补款(3)/补款退款(5)更新补款金额为0 , 状态为无款项(-1)
-        
-                |Requests:|
-                :param salesPayment.spid: 款项ID
-        :type salesPayment.spid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesPayment.spid**:
+  款项ID
+
+        **示例**:{
                 "salesPayment.spid": 1
             }
 
-    ### <I> cancelSalesPaymentForDeposit
+    ### `cancelSalesPaymentForDeposit` <span style="color:gray">[内部]</span>
 
         撤销定金销售款
-        
+
         获取销售款类型为3(补款)的款项 , 如果存在 , 错误信息 **150040 补款已存在**
-        
+
         获取销售款类型为2(定金)的款项 , 如果不存在 , 错误信息 **150037 定金不存在**
-        
+
         判断定金销售款状态是否为0(初始) , 其他状态 , 错误信息 **150036 款项状态不可操作**
-        
+
         删除定金销售款信息
-        
+
         更新销售单中定金额为0 , 定金状态为-1(初始)
-        
-                |Requests:|
-                :param salesPayment.sid: 销售单ID
-        :type salesPayment.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesPayment.sid**:
+  销售单ID
+
+        **示例**:{
                 "salesPayment.sid": 1
             }
-            
-    ### <I> cancelSalesPaymentForFullpay
+
+    ### `cancelSalesPaymentForFullpay` <span style="color:gray">[内部]</span>
 
         撤销补款销售款
-        
+
         获取销售款类型为3(补款)的款项 , 如果不存在 , 错误信息 **150038 补款不存在**
-        
+
         判断补款销售款状态是否为0(初始) , 其他状态 , 错误信息 **150036 款项状态不可操作**
-        
+
         删除补款销售款信息
-        
+
         更新销售单中补款额为0, 补款状态为-1(初始)
-        
-                |Requests:|
-                :param salesPayment.sid: 销售单ID
-        :type salesPayment.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesPayment.sid**:
+  销售单ID
+
+        **示例**:{
                 "salesPayment.sid": 1
             }
 
-    ### <I> collectSalesPayment
+    ### `collectSalesPayment` <span style="color:gray">[内部]</span>
 
         销售款收款
-        
+
         判断销售款是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         判断销售款状态是否为0(初始) , 其它状态不可收款 , 错误信息 **150036 款项状态不可操作**
-        
+
         判断券值与券信息中各项券值之和是否相等 , 不相等收款失败 , **150024 券总金额与券统计金额不等**
-        
+
         判断应收金额与各类型收款方式金额之和是否相等 , 不相等收款失败 , **150025 款项金额不正确**
-        
+
         收款方式包括预付款 , 判断操作金额是否满足预付款余额 , 余额不足 , 错误信息 **150010 预付款余额不足**
-        
+
         销售款公司信息根据收款人操作公司进行更新
-        
+
         更新销售单对应收款类型的状态信息 , 定金/补款状态为1(已付款)
-        
+
         款项类型为补款(3) , 更新销售单中补款时间
-        
+
         更新归属装修单中的销售比例 , 包括预付款(主材)/销售款
-        
-                |Requests:|
-                :param salesPayment.spid: 款项ID
-        :type salesPayment.spid: Long
-        :param salesPayment.realMoney: 实收金额
-        :type salesPayment.realMoney: Long
-        :param salesPayment.cash: 现金
-        :type salesPayment.cash: Long
-        :param salesPayment.cashInfo: 现金信息
-        :type salesPayment.cashInfo: String
-        :param salesPayment.bank: 刷卡
-        :type salesPayment.bank: Long
-        :param salesPayment.bankInfo: 刷卡信息
-        :type salesPayment.bankInfo: String
-        :param salesPayment.checkv: 转账
-        :type salesPayment.checkv: Long
-        :param salesPayment.checkvBank: 转账银行
-        :type salesPayment.checkvBank: String
-        :param salesPayment.installment: 分期
-        :type salesPayment.installment: Long
-        :param salesPayment.installmentBank: 分期银行
-        :type salesPayment.installmentBank: String
-        :param salesPayment.accounts: 对公
-        :type salesPayment.accounts: Long
-        :param salesPayment.accountsBank: 对公银行
-        :type salesPayment.accountsBank: String
-        :param salesPayment.coupon: 券值
-        :type salesPayment.coupon: Long
-        :param salesPayment.couponInfo: 券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
-        :type salesPayment.couponInfo: String
-        :param salesPayment.advance: 预付款
-        :type salesPayment.advance: Long
-        :param salesPayment.advanceType: 预付款类型 , 1: 合同预付款 , 2: 工程预付款
-        :type salesPayment.advanceType: Short
-        :param salesPayment.comment: 说明
-        :type salesPayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesPayment.spid**:
+  款项ID
+        - **salesPayment.realMoney**:
+  实收金额
+        - **salesPayment.cash**:
+  现金
+        - **salesPayment.cashInfo**:
+  现金信息
+        - **salesPayment.bank**:
+  刷卡
+        - **salesPayment.bankInfo**:
+  刷卡信息
+        - **salesPayment.checkv**:
+  转账
+        - **salesPayment.checkvBank**:
+  转账银行
+        - **salesPayment.installment**:
+  分期
+        - **salesPayment.installmentBank**:
+  分期银行
+        - **salesPayment.accounts**:
+  对公
+        - **salesPayment.accountsBank**:
+  对公银行
+        - **salesPayment.coupon**:
+  券值
+        - **salesPayment.couponInfo**:
+  券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
+        - **salesPayment.advance**:
+  预付款
+        - **salesPayment.advanceType**:
+  预付款类型 , 1: 合同预付款 , 2: 工程预付款
+        - **salesPayment.comment**:
+  说明
+
+        **示例**:{
                 "salesPayment.spid": 1,
                 "salesPayment.realMoney": 10000,
                 "salesPayment.cash": 10000,
@@ -5688,68 +5584,67 @@
                 "salesPayment.advanceType": 0,
                 "salesPayment.comment": "说明",
             }
-            
-    ### <I> collectSalesPayments
+
+    ### `collectSalesPayments` <span style="color:gray">[内部]</span>
 
         销售款批量收款
-        
+
         判断销售款是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         判断销售款状态是否为0(初始) , 其它状态不可收款 , 错误信息 **150036 款项状态不可操作**
-        
+
         判断应收金额与各类型收款方式金额之和是否相等 , 不相等收款失败 , **150025 款项金额不正确**
-        
+
         收款方式包括预付款 , 判断操作金额是否满足预付款余额 , 余额不足 , 错误信息 **150010 预付款余额不足**
-        
+
         销售款公司信息根据收款人操作公司进行更新
-        
+
         更新销售单对应收款类型的状态信息 , 定金/补款状态为1(已付款)
-        
+
         款项类型为补款(3) , 更新销售单中补款时间
-        
+
         更新归属装修单中的销售比例 , 包括预付款(主材)/销售款
-        
-                |Requests:|
-                :param sales.sid: 销售单ID
-        :type sales.sid: String
-        :param salesPayment[n].spid: 款项ID列表 , 每条数据类型 Long
-        :type salesPayment[n].spid: List
-        :param salesReceipt.realMoney: 实收金额
-        :type salesReceipt.realMoney: Long
-        :param salesReceipt.cash: 现金
-        :type salesReceipt.cash: Long
-        :param salesReceipt.cashInfo: 现金信息
-        :type salesReceipt.cashInfo: String
-        :param salesReceipt.bank: 刷卡
-        :type salesReceipt.bank: Long
-        :param salesReceipt.bankInfo: 刷卡信息
-        :type salesReceipt.bankInfo: String
-        :param salesReceipt.checkv: 转账
-        :type salesReceipt.checkv: Long
-        :param salesReceipt.checkvBank: 转账银行
-        :type salesReceipt.checkvBank: String
-        :param salesReceipt.installment: 分期
-        :type salesReceipt.installment: Long
-        :param salesReceipt.installmentBank: 分期银行
-        :type salesReceipt.installmentBank: String
-        :param salesReceipt.accounts: 对公
-        :type salesReceipt.accounts: Long
-        :param salesReceipt.accountsBank: 对公银行
-        :type salesReceipt.accountsBank: String
-        :param salesReceipt.coupon: 券值
-        :type salesReceipt.coupon: Long
-        :param salesReceipt.couponInfo: 券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
-        :type salesReceipt.couponInfo: String
-        :param salesReceipt.advance: 预付款
-        :type salesReceipt.advance: Long
-        :param salesReceipt.advanceType: 预付款类型 , 1: 合同预付款 , 2: 工程预付款
-        :type salesReceipt.advanceType: Short
-        :param salesReceipt.comment: 说明
-        :type salesReceipt.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **sales.sid**:
+  销售单ID
+        - **salesPayment[n].spid**:
+  款项ID列表 , 每条数据类型 Long
+        - **salesReceipt.realMoney**:
+  实收金额
+        - **salesReceipt.cash**:
+  现金
+        - **salesReceipt.cashInfo**:
+  现金信息
+        - **salesReceipt.bank**:
+  刷卡
+        - **salesReceipt.bankInfo**:
+  刷卡信息
+        - **salesReceipt.checkv**:
+  转账
+        - **salesReceipt.checkvBank**:
+  转账银行
+        - **salesReceipt.installment**:
+  分期
+        - **salesReceipt.installmentBank**:
+  分期银行
+        - **salesReceipt.accounts**:
+  对公
+        - **salesReceipt.accountsBank**:
+  对公银行
+        - **salesReceipt.coupon**:
+  券值
+        - **salesReceipt.couponInfo**:
+  券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
+        - **salesReceipt.advance**:
+  预付款
+        - **salesReceipt.advanceType**:
+  预付款类型 , 1: 合同预付款 , 2: 工程预付款
+        - **salesReceipt.comment**:
+  说明
+
+        **示例**:{
                 "sales.sid": 1,
                 "salesPayment[0].spid": 1,
                 "salesReceipt.realMoney": 10000,
@@ -5769,60 +5664,59 @@
                 "salesReceipt.advanceType": 0,
                 "salesReceipt.comment": "说明"
             }
-            
-    ### <I> refundSalesPayment
+
+    ### `refundSalesPayment` <span style="color:gray">[内部]</span>
 
         销售退款
-        
+
         判断销售款是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         判断销售款状态是否为0(初始) , 其它状态不可收款 , 错误信息 **150036 款项状态不可操作**
-        
+
         如果销售款类型为7(定金退款) , 更新主材单中定金额为0 , 定金状态为0(初始)
-        
+
         如果主材款类型为5(补款退款) , 更新主材单中补款状态为1(已付款) , 补款时间为操作时间
-        
+
         如果主材款类型为4(退款) , 更新退货单状态为1(已付款)
-        
+
         销售款公司信息根据收款人操作公司进行更新
-        
+
         更新款项状态以及生成对应收据相关信息
 
-                |Requests:|
-                :param salesPayment.spid: 款项ID
-        :type salesPayment.spid: Long
-        :param salesPayment.cash: 现金
-        :type salesPayment.cash: Long
-        :param salesPayment.cashInfo: 现金信息
-        :type salesPayment.cashInfo: String
-        :param salesPayment.bank: 刷卡
-        :type salesPayment.bank: Long
-        :param salesPayment.bankInfo: 刷卡信息
-        :type salesPayment.bankInfo: String
-        :param salesPayment.checkv: 转账
-        :type salesPayment.checkv: Long
-        :param salesPayment.checkvBank: 转账银行
-        :type salesPayment.checkvBank: String
-        :param salesPayment.installment: 分期
-        :type salesPayment.installment: Long
-        :param salesPayment.installmentBank: 分期银行
-        :type salesPayment.installmentBank: String
-        :param salesPayment.accounts: 对公
-        :type salesPayment.accounts: Long
-        :param salesPayment.accountsBank: 对公银行
-        :type salesPayment.accountsBank: String
-        :param salesPayment.coupon: 券值
-        :type salesPayment.coupon: Long
-        :param salesPayment.couponInfo: 券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
-        :type salesPayment.couponInfo: String
-        :param salesPayment.advance: 预付款
-        :type salesPayment.advance: Long
-        :param salesPayment.comment: 说明
-        :type salesPayment.comment: String
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **salesPayment.spid**:
+  款项ID
+        - **salesPayment.cash**:
+  现金
+        - **salesPayment.cashInfo**:
+  现金信息
+        - **salesPayment.bank**:
+  刷卡
+        - **salesPayment.bankInfo**:
+  刷卡信息
+        - **salesPayment.checkv**:
+  转账
+        - **salesPayment.checkvBank**:
+  转账银行
+        - **salesPayment.installment**:
+  分期
+        - **salesPayment.installmentBank**:
+  分期银行
+        - **salesPayment.accounts**:
+  对公
+        - **salesPayment.accountsBank**:
+  对公银行
+        - **salesPayment.coupon**:
+  券值
+        - **salesPayment.couponInfo**:
+  券信息 , **#** 分隔多条刷卡信息, **:** 分隔信息中不同字段 , 由 **券类别:金额** 组成, 例如: **#通用券:1000#**
+        - **salesPayment.advance**:
+  预付款
+        - **salesPayment.comment**:
+  说明
+
+        **示例**:{
                 "salesPayment.spid": 1,
                 "salesPayment.cash": 10000,
                 "salesPayment.cashInfo": "175",
@@ -5841,93 +5735,90 @@
                 "salesPayment.comment": "说明",
             }
 
-    ### <I> refundSalesPaymentForDeposit
+    ### `refundSalesPaymentForDeposit` <span style="color:gray">[内部]</span>
 
         生成销售款中定金退款
-        
+
         获取销售款类型为3(补款)的款项 , 如果存在 , 错误信息 **150040 补款已存在**
-        
+
         获取销售款类型为2(定金)的款项 , 如果不存在 , 错误信息 **150037 定金不存在**
-        
+
         判断定金销售款状态是否为2(已确认) , 其他状态 , 错误信息 **150012 款项不能进行退款**
-        
+
         判断销售单款项积分以及领取活动物品积分 , 款项积分不足 , 错误信息 **160037 积分不足**
-        
+
         销售单更新定金额为0 , 定金状态为-1(初始)
-        
+
         主材单状态更新为4(废单)
-        
-                |Requests:|
-                :param salesPayment.sales.sid: 销售单ID
-        :type salesPayment.sales.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesPayment.sales.sid**:
+  销售单ID
+
+        **示例**:{
                 "salesPayment.sales.sid": 1
             }
 
-    ### <I> refundSalesPaymentForCoupon
+    ### `refundSalesPaymentForCoupon` <span style="color:gray">[内部]</span>
 
         生成销售款中券退款
-        
+
         获取销售款类型为2(定金)的款项 , 如果不存在 , 错误信息 **150037 定金不存在**
-        
+
         判断定金销售款状态是否为1(已收款)或2(已确认) , 状态为0(初始) , 错误信息 **150041 定金状态不可操作**
-        
+
         判断销售单款项积分以及领取活动物品积分 , 款项积分不足 , 错误信息 **160037 积分不足**
-        
+
         生成券退款类型款项信息 , 同时更新销售单中券值和券信息
 
-                |Requests:|
-                :param sales.sid: 销售单ID
-        :type sales.sid: Long
-        :param sales.coupon: 券值
-        :type sales.coupon: Long
-        :param sales.couponInfo: 券信息
-        :type sales.couponInfo: String
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **sales.sid**:
+  销售单ID
+        - **sales.coupon**:
+  券值
+        - **sales.couponInfo**:
+  券信息
+
+        **示例**:{
                 "sales.sid": 1,
                 "sales.coupon": 100000,
                 "sales.couponInfo": #瓷砖券:100#
             }
 
-    ### <I> updateSalesPayment
+    ### `updateSalesPayment` <span style="color:gray">[内部]</span>
 
         更新销售款收款方式
-        
+
         判断款项是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         款项状态1(已付款) , 其他状态不可更新 , 错误信息 **150036 款项状态不可操作**
-        
+
         款项修改之后金额与应收额不等 , 不可更新 , 错误信息 **150025 款项金额不正确**
-        
+
         预付款和优惠券不可修改
 
-                |Requests:|
-                :param salesPayment.spid: 款项ID
-        :type salesPayment.spid: Long
-        :param salesPayment.cash: 现金
-        :type salesPayment.cash: Long
-        :param salesPayment.cashInfo: 现金信息
-        :type salesPayment.cashInfo: String
-        :param salesPayment.bank: 刷卡
-        :type salesPayment.bank: Long
-        :param salesPayment.bankInfo: 刷卡信息
-        :type salesPayment.bankInfo: String
-        :param salesPayment.checkv: 转账
-        :type salesPayment.checkv: Long
-        :param salesPayment.checkvBank: 转账银行
-        :type salesPayment.checkvBank: String
-        :param salesPayment.comment: 说明
-        :type salesPayment.comment: String
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **salesPayment.spid**:
+  款项ID
+        - **salesPayment.cash**:
+  现金
+        - **salesPayment.cashInfo**:
+  现金信息
+        - **salesPayment.bank**:
+  刷卡
+        - **salesPayment.bankInfo**:
+  刷卡信息
+        - **salesPayment.checkv**:
+  转账
+        - **salesPayment.checkvBank**:
+  转账银行
+        - **salesPayment.comment**:
+  说明
+
+        **示例**:{
                 "salesPayment.spid": 1,
                 "salesPayment.cash": 10000,
                 "salesPayment.cashInfo": "175",
@@ -5938,34 +5829,34 @@
                 "salesPayment.comment": "说明",
             }
 
-    ### <I> confirmSalesPayment
+    ### `confirmSalesPayment` <span style="color:gray">[内部]</span>
 
         销售款确认
-        
+
         判断款项是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         销售款类型为2(定金) , 更新销售单定金状态为2(已确认)
-        
+
         销售款类型为3(补款)/5(补款退款) , 更新销售单单补款状态为2(已确认)
-        
+
         已经确认的销售款忽略处理
-        
-                |Requests:|
-                :param spids[n]: 款项ID列表 , 每条数据类型 Long
-        :type spids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **spids[n]**:
+  款项ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "spids[0]": 1
             }
-            
+
 ## 活动款
 
 ## api.payment.ActivityPaymentAction
 
-        |DataType:|
-        #### activityPayment
+**数据类型**:
+
+#### activityPayment
 
     - **apid**: 活动款ID
       - 类型: *Long*
@@ -6001,7 +5892,7 @@
       - 类型: *String*
     - **comment**: 说明
       - 类型: *String*
-    
+
     #### activityReceipt
 
     - **arid**: 活动收据ID
@@ -6020,20 +5911,19 @@
       - 类型: *String*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pageActivityPayment
+
+    ### `pageActivityPayment` <span style="color:gray">[内部]</span>
 
         分页方式获取活动款信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 活动款信息列表 , 每条数据类型 *activityPayment*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  活动款信息列表 , 每条数据类型 *activityPayment*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6072,28 +5962,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryActivityPaymentByArid
+
+    ### `queryActivityPaymentByArid` <span style="color:gray">[内部]</span>
 
         通过活动收据ID获取活动款信息
-        
-                |Requests:|
-                :param activityPayment.arid: 活动收据ID
-        :type activityPayment.arid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **activityPayment.arid**:
+  活动收据ID
+
+        **示例**:{
                 "activityPayment.arid": 1
             }
-            
-                |Returns:|
-                - **activityPayments**: 活动款信息列表 , 每条数据类型 *activityPayment*
+
+**返回参数**:
+
+- **activityPayments**: 活动款信息列表 , 每条数据类型 *activityPayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "activityPayments": [
                     {
@@ -6127,28 +6015,26 @@
                 ],
                 ...
             }
-            
+
     ### <I-C> queryActivityPaymentByNo
 
         通过活动票号获取活动款信息
-        
-                |Requests:|
-                :param activityPayment.mno: 活动票号
-        :type activityPayment.mno: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **activityPayment.mno**:
+  活动票号
+
+        **示例**:{
                 "activityPayment.mno": "000000000000000000"
             }
-            
-                |Returns:|
-                - **activityPayments**: 活动款信息列表 , 每条数据类型 *activityPayment*
+
+**返回参数**:
+
+- **activityPayments**: 活动款信息列表 , 每条数据类型 *activityPayment*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "activityPayments": [
                     {
@@ -6182,28 +6068,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryActivityReceiptByArid
+
+    ### `queryActivityReceiptByArid` <span style="color:gray">[内部]</span>
 
         通过活动收据ID获取活动收据信息
-        
-                |Requests:|
-                :param activityReceipt.arid: 活动收据ID
-        :type activityReceipt.arid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **activityReceipt.arid**:
+  活动收据ID
+
+        **示例**:{
                 "activityReceipt.arid": 1
             }
-            
-                |Returns:|
-                - **activityReceipt**: 活动收据
+
+**返回参数**:
+
+- **activityReceipt**: 活动收据
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "activityReceipt": {
                     "arid": 1,
@@ -6221,18 +6105,17 @@
                 }
                 ...
             }
-            
-    ### <I> countActivityPayment
+
+    ### `countActivityPayment` <span style="color:gray">[内部]</span>
 
         根据活动款主材类型 , 汇总统计不同品牌金额总数
-        
-                |Returns:|
-                - **counts**: 统计信息信息 , 类型 List <List <String>>
+
+**返回参数**:
+
+- **counts**: 统计信息信息 , 类型 List <List <String>>
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "counts":[
                     ["品牌1", "2000"],
@@ -6240,28 +6123,27 @@
                 ],
                 ...
             }
-            
-    ### <I> createActivityPayment
+
+    ### `createActivityPayment` <span style="color:gray">[内部]</span>
 
         创建活动款信息
-        
-                |Requests:|
-                :param activityPayment.mno: 活动票号
-        :type activityPayment.mno: String
-        :param activityPayment.type: 类型
-        :type activityPayment.type: Short
-        :param activityPayment.category: 品类
-        :type activityPayment.category: String
-        :param activityPayment.brand: 品牌
-        :type activityPayment.brand: String
-        :param activityPayment.money: 金额
-        :type activityPayment.money: Integer
-        :param activityPayment.comment: 备注
-        :type activityPayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **activityPayment.mno**:
+  活动票号
+        - **activityPayment.type**:
+  类型
+        - **activityPayment.category**:
+  品类
+        - **activityPayment.brand**:
+  品牌
+        - **activityPayment.money**:
+  金额
+        - **activityPayment.comment**:
+  备注
+
+        **示例**:{
                 "activityPayment.mno": "000000000000000000",
                 "activityPayment.type": 1,
                 "activityPayment.category": "品类",
@@ -6270,38 +6152,37 @@
                 "activityPayment.comment": "说明"
             }
 
-    ### <I> collectActivityPayment
+    ### `collectActivityPayment` <span style="color:gray">[内部]</span>
 
         活动款收款 , 同时支持批量收款
-        
+
         判断活动票是否存在 , 不存在 , 错误信息 **160044 活动票不存在**
-        
+
         判断活动票是否已经注册 , 未注册 , 错误信息 **160045 活动票未注册**
-        
+
         判断活动款总额是否与收款总额相同
-        
+
         批量收款时 , 判断多个款项对应人会员号是否唯一
-        
+
         创建收款数据 , 更新款项状态
-        
-                |Requests:|
-                :param activityPayment[n].apid: 活动款ID
-        :type activityPayment[n].apid: Long
-        
-        :param activityReceipt.orderId: 装修单号
-        :type activityReceipt.orderId: String
-        :param activityReceipt.cash: 现金
-        :type activityReceipt.cash: Integer
-        :param activityReceipt.bank: 刷卡
-        :type activityReceipt.bank: Integer
-        :param activityReceipt.bankInfo: 刷卡信息
-        :type activityReceipt.bankInfo: String
-        :param activityReceipt.comment: 说明
-        :type activityReceipt.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **activityPayment[n].apid**:
+  活动款ID
+
+        - **activityReceipt.orderId**:
+  装修单号
+        - **activityReceipt.cash**:
+  现金
+        - **activityReceipt.bank**:
+  刷卡
+        - **activityReceipt.bankInfo**:
+  刷卡信息
+        - **activityReceipt.comment**:
+  说明
+
+        **示例**:{
                 "activityPayment[0].apid": 1,
                 "activityPayment[1].apid": 2,
                 "activityReceipt.orderId": "1601010001",
@@ -6315,8 +6196,9 @@
 
 ## api.payment.ProxyPaymentAction
 
-        |DataType:|
-        #### proxyPayment
+**数据类型**:
+
+#### proxyPayment
 
     - **ppid**: 代付款ID
       - 类型: *Long*
@@ -6354,7 +6236,7 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
+
     #### proxyReceipt
 
     - **prid**: 收据ID
@@ -6383,20 +6265,19 @@
       - 类型: *String*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pageProxyPayment
+
+    ### `pageProxyPayment` <span style="color:gray">[内部]</span>
 
         分页方式获取代付款信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 代付款信息列表 , 每条数据类型 *proxyPayment*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  代付款信息列表 , 每条数据类型 *proxyPayment*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6442,27 +6323,25 @@
                 ...
             }
 
-    ### <I> queryProxyPayment
+    ### `queryProxyPayment` <span style="color:gray">[内部]</span>
 
         通过代付款ID获取信息
-        
-                |Requests:|
-                :param proxyPayment.ppid: 代付款ID
-        :type proxyPayment.ppid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **proxyPayment.ppid**:
+  代付款ID
+
+        **示例**:{
                 "proxyPayment.ppid": 1
             }
-            
-                |Returns:|
-                - **proxyPayment**: 代付款 , 类型 *proxyPayment*
+
+**返回参数**:
+
+- **proxyPayment**: 代付款 , 类型 *proxyPayment*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "proxyPayment": {
                     "ppid": 1,
@@ -6502,27 +6381,25 @@
                 ...
             }
 
-    ### <I> queryProxyPaymentForUnionId
+    ### `queryProxyPaymentForUnionId` <span style="color:gray">[内部]</span>
 
         通过代付款ID获取信息
-        
-                |Requests:|
-                :param proxyPayment.unionId: 代付款ID
-        :type proxyPayment.unionId: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **proxyPayment.unionId**:
+  代付款ID
+
+        **示例**:{
                 "proxyPayment.unionId": 1
             }
-            
-                |Returns:|
-                - **proxyPayments**: 代付款 , 类型 *proxyPayment*
+
+**返回参数**:
+
+- **proxyPayments**: 代付款 , 类型 *proxyPayment*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "proxyPayment": {
                     "ppid": 1,
@@ -6562,27 +6439,26 @@
                 ...
             }
 
-    ### <I> addProxyPayment
+    ### `addProxyPayment` <span style="color:gray">[内部]</span>
 
         添加代付款信息
-        
-                |Requests:|
-                :param proxyPayment.title: 标题
-        :type proxyPayment.title: String
-        :param proxyPayment.name: 名称
-        :type proxyPayment.name: String
-        :param proxyPayment.phone: 电话
-        :type proxyPayment.phone: String
-        :param proxyPayment.address: 地址
-        :type proxyPayment.address: String
-        :param proxyPayment.referMoney: 生成金额
-        :type proxyPayment.referMoney: Long
-        :param proxyPayment.creater.userId: 创建人编号
-        :type proxyPayment.creater.userId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **proxyPayment.title**:
+  标题
+        - **proxyPayment.name**:
+  名称
+        - **proxyPayment.phone**:
+  电话
+        - **proxyPayment.address**:
+  地址
+        - **proxyPayment.referMoney**:
+  生成金额
+        - **proxyPayment.creater.userId**:
+  创建人编号
+
+        **示例**:{
                 "proxyPayment.title": "",
                 "proxyPayment.name": "",
                 "proxyPayment.phone": "",
@@ -6591,37 +6467,36 @@
                 "proxyPayment.creater.userId": "FL-02381"
             }
 
-    ### <I> collectProxyPayment
+    ### `collectProxyPayment` <span style="color:gray">[内部]</span>
 
         代付款收款
-        
+
         判断代付款是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         判断款收款状态是否为0(初始) , 其它状态不可收款 , 错误信息 **150036 款项状态不可操作**
-        
-                |Requests:|
-                :param proxyPayment.ppid: 款项ID
-        :type proxyPayment.ppid: Long
-        :param proxyPayment.realMoney: 实收金额
-        :type proxyPayment.realMoney: Long
-        :param proxyPayment.cash: 现金
-        :type proxyPayment.cash: Long
-        :param proxyPayment.cashInfo: 现金信息
-        :type proxyPayment.cashInfo: String
-        :param proxyPayment.bank: 刷卡
-        :type proxyPayment.bank: Long
-        :param proxyPayment.bankInfo: 刷卡信息
-        :type proxyPayment.bankInfo: String
-        :param proxyPayment.checkv: 转账
-        :type proxyPayment.checkv: Long
-        :param proxyPayment.checkvBank: 转账银行
-        :type proxyPayment.checkvBank: String
-        :param proxyPayment.comment: 说明
-        :type proxyPayment.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **proxyPayment.ppid**:
+  款项ID
+        - **proxyPayment.realMoney**:
+  实收金额
+        - **proxyPayment.cash**:
+  现金
+        - **proxyPayment.cashInfo**:
+  现金信息
+        - **proxyPayment.bank**:
+  刷卡
+        - **proxyPayment.bankInfo**:
+  刷卡信息
+        - **proxyPayment.checkv**:
+  转账
+        - **proxyPayment.checkvBank**:
+  转账银行
+        - **proxyPayment.comment**:
+  说明
+
+        **示例**:{
                 "proxyPayment.ppid": 1,
                 "proxyPayment.realMoney": 10000,
                 "proxyPayment.cash": 10000,
@@ -6633,30 +6508,30 @@
                 "proxyPayment.comment": "说明",
             }
 
-    ### <I> refundProxyPayment
+    ### `refundProxyPayment` <span style="color:gray">[内部]</span>
 
-    ### <I> confirmProxyPayment
+    ### `confirmProxyPayment` <span style="color:gray">[内部]</span>
 
         代付款确认 , 更新款项状态为已确认
-        
-                |Requests:|
-                :param ppids[n]: 款项ID列表 , 每条数据类型 Long
-        :type ppids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **ppids[n]**:
+  款项ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "ppids[0]": 1
             }
 
-    ### <I> cancelProxyPayment
+    ### `cancelProxyPayment` <span style="color:gray">[内部]</span>
 
 ## 转换款
 
 ## api.payment.PaytranAction
 
-        |DataType:|
-        #### paytran
+**数据类型**:
+
+#### paytran
 
     - **ptid**: 转换款ID
       - 类型: *Long*
@@ -6696,20 +6571,19 @@
       - 类型: *String*
     - **way**: 支付方式 , 包括: 0: pospay(刷卡), 1: wxpay(微信), 2: alipay(支付宝), 3: codepay(pos扫码)
       - 类型: *Short*
-    
-    ### <I> pagePaytran
 
-        分页方式获取转换款信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter) 
-        
-                |Returns:|
-                - **paging**: 分页信息
+    ### `pagePaytran` <span style="color:gray">[内部]</span>
+
+        分页方式获取转换款信息 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter)
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 转换款信息列表 , 每条数据类型 *paytran*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  转换款信息列表 , 每条数据类型 *paytran*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6744,37 +6618,35 @@
                 },
                 ...
             }
-    
-    ### <I> queryPaytran
+
+    ### `queryPaytran` <span style="color:gray">[内部]</span>
 
         根据款项ID以及类型获取转换款信息
-        
-                |Requests:|
-                :param paytran.pid: 款项ID
-        :type paytran.pid: Long
-        :param paytran.rid: 收据ID
-        :type paytran.rid: Long
-        :param paytran.type: 类型
-        :type paytran.type: Short
-        :param paytran.atttype: 业务类型
-        :type paytran.atttype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paytran.pid**:
+  款项ID
+        - **paytran.rid**:
+  收据ID
+        - **paytran.type**:
+  类型
+        - **paytran.atttype**:
+  业务类型
+
+        **示例**:{
                 "paytran.pid": 1,
                 "paytran.rid": 1,
                 "paytran.type": 1,
                 "paytran.atttype": 0
             }
-            
-                |Returns:|
-                - **paytrans**: 转换款信息列表 , 类型 *paytran*
+
+**返回参数**:
+
+- **paytrans**: 转换款信息列表 , 类型 *paytran*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "paytrans": [
                     {
@@ -6809,26 +6681,24 @@
     ### <I-C> queryPaytranByPtid
 
         通过转换款ID获取转换款信息
-        
-                |Requests:|
-                :param paytran.ptid: 转换款ID
-        :type paytran.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paytran.ptid**:
+  转换款ID
+
+        **示例**:{
                 "paytran.pid": 1,
                 "paytran.rid": 1,
                 "paytran.type": 1
             }
 
-                |Returns:|
-                - **paytran**: 转换款信息 , 类型 *paytran*
+**返回参数**:
+
+- **paytran**: 转换款信息 , 类型 *paytran*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "paytran": {
                     "ptid": 1,
@@ -6858,51 +6728,49 @@
                 ...
             }
 
-    ### <I> sendPaytran
+    ### `sendPaytran` <span style="color:gray">[内部]</span>
 
         推送转换款
-        
-        验证转款款信息是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
-                |Requests:|
-                :param paytran.pid: 转换款ID
-        :type paytran.pid: Long
 
-        Example::
-        
-            {
+        验证转款款信息是否存在 , 不存在 , 错误信息 **150003 款项不存在**
+
+**请求参数**:
+
+- **paytran.pid**:
+  转换款ID
+
+        **示例**:{
                 "paytran.pid": 1
             }
-            
-    ### <I> addPaytran
+
+    ### `addPaytran` <span style="color:gray">[内部]</span>
 
         添加转换款信息 , 发起收款
-        
+
         金额精度处理 , 支持两位小数 , 分
-        
+
         判断金额处理之后 , 不能为0 , 错误信息 **150025 款项金额不正确**
-        
+
         判断当前pid对应是否存在状态处于(0)初始的转换款信息 , 如果存在 , 错误信息 **150048 转换款支付未完成**
-        
+
         调用第三方支付工具 , 完成发起转换款信息过程 , 更新第三方支付信息
-        
-                |Requests:|
-                :param paytran.pid: 款项ID
-        :type paytran.pid: Long
-        :param paytran.type: 类型
-        :type paytran.type: Short
-        :param paytran.no: 收据编号
-        :type paytran.no: String
-        :param paytran.sn: 机器编号
-        :type paytran.sn: String
-        :param paytran.money: 收据编号
-        :type paytran.money: String
-        :param paytran.way: 交易方式
-        :type paytran.way: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paytran.pid**:
+  款项ID
+        - **paytran.type**:
+  类型
+        - **paytran.no**:
+  收据编号
+        - **paytran.sn**:
+  机器编号
+        - **paytran.money**:
+  收据编号
+        - **paytran.way**:
+  交易方式
+
+        **示例**:{
                 "paytran.pid": 1,
                 "paytran.type": 1,
                 "paytran.no": "157",
@@ -6910,14 +6778,13 @@
                 "paytran.money": 1,
                 "paytran.way": "wxpay"
             }
-            
-                |Returns:|
-                - **paytran**: 转换款 , 类型 *paytran*
+
+**返回参数**:
+
+- **paytran**: 转换款 , 类型 *paytran*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "paytran": {
                     "ptid": 1,
@@ -6942,34 +6809,32 @@
                 }
                 ...
             }
-            
-    ### <I> checkPaytran
+
+    ### `checkPaytran` <span style="color:gray">[内部]</span>
 
         验证转换款信息 , 收款成功或者失败 , 更新状态
-        
-        判断转换款信息是否存在 , 不存在 , 错误信息 **150043 转换款不存在**
-        
-        判断转换款信息状态是否为0(初始) , 其他状态 , 错误信息 **150047 转换款支付不可操作**
-        
-        调用第三方支付工具 , 完成转换款信息验证过程 , 同时更新转换款状态以及结果信息
-        
-                |Requests:|
-                :param paytran.ptid: 转换款ID
-        :type paytran.ptid: Long
 
-        Example::
-        
-            {
+        判断转换款信息是否存在 , 不存在 , 错误信息 **150043 转换款不存在**
+
+        判断转换款信息状态是否为0(初始) , 其他状态 , 错误信息 **150047 转换款支付不可操作**
+
+        调用第三方支付工具 , 完成转换款信息验证过程 , 同时更新转换款状态以及结果信息
+
+**请求参数**:
+
+- **paytran.ptid**:
+  转换款ID
+
+        **示例**:{
                 "paytran.pid": 1,
             }
-            
-                |Returns:|
-                - **paytran**: 转换款 , 类型 *paytran*
+
+**返回参数**:
+
+- **paytran**: 转换款 , 类型 *paytran*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "paytran": {
                     "ptid": 1,
@@ -6988,39 +6853,37 @@
                 ...
             }
 
-    ### <I> cancelPaytran
+    ### `cancelPaytran` <span style="color:gray">[内部]</span>
 
         撤销转换款
-        
-        判断转换款信息是否存在 , 不存在 , 错误信息 **150043 转换款不存在**
-        
-        判断转换款信息状态不为1(成功) , 成功状态 , 错误信息 **150047 转换款支付不可操作**
-        
-                |Requests:|
-                :param paytran.ptid: 转换款ID
-        :type paytran.ptid: Long
 
-        Example::
-        
-            {
+        判断转换款信息是否存在 , 不存在 , 错误信息 **150043 转换款不存在**
+
+        判断转换款信息状态不为1(成功) , 成功状态 , 错误信息 **150047 转换款支付不可操作**
+
+**请求参数**:
+
+- **paytran.ptid**:
+  转换款ID
+
+        **示例**:{
                 "paytran.pid": 1,
             }
 
-    ### <I> deletePaytran
+    ### `deletePaytran` <span style="color:gray">[内部]</span>
 
         删除转换款
-        
-        判断转换款信息是否存在 , 不存在 , 错误信息 **150043 转换款不存在**
-        
-        判断转换款信息状态不为0(初始) , 成功状态 , 错误信息 **150047 转换款支付不可操作**
-        
-                |Requests:|
-                :param paytran.ptid: 转换款ID
-        :type paytran.ptid: Long
 
-        Example::
-        
-            {
+        判断转换款信息是否存在 , 不存在 , 错误信息 **150043 转换款不存在**
+
+        判断转换款信息状态不为0(初始) , 成功状态 , 错误信息 **150047 转换款支付不可操作**
+
+**请求参数**:
+
+- **paytran.ptid**:
+  转换款ID
+
+        **示例**:{
                 "paytran.pid": 1,
             }
 
@@ -7028,8 +6891,9 @@
 
 ## api.payment.BillAction
 
-        |DataType:|
-        #### bill
+**数据类型**:
+
+#### bill
 
     - **bid**: 收款单ID
       - 类型: *Long*
@@ -7041,7 +6905,7 @@
       - 类型: *Long*
     - **status**: 状态 , 0: 初始 , 1: 提交 , 2: 已付 , 3: 拒绝 , 4: 超时 , 5: 失效
       - 类型: *Short*
-    
+
     #### billItem
 
     - **biid**: 收款项ID
@@ -7052,20 +6916,19 @@
       - 类型: *Short*
     - **pid**: 款项ID
       - 类型: *Long*
-    
-    ### <I> pageBill
+
+    ### `pageBill` <span style="color:gray">[内部]</span>
 
         分页方式获取收款单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 钱包信息列表 , 每条数据类型 *wallet*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  钱包信息列表 , 每条数据类型 *wallet*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7082,69 +6945,65 @@
                 ...
             }
 
-    ### <I> queryBill
+    ### `queryBill` <span style="color:gray">[内部]</span>
 
         获取收款单信息
-        
-                |Requests:|
-                :param bill.bid: 收款单ID
-        :type bill.bid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **bill.bid**:
+  收款单ID
+
+        **示例**:{
                 "bill.bid": 1
             }
-            
-                |Returns:|
-                - **bill**: 收款单信息 , 数据类型 *bill*
+
+**返回参数**:
+
+- **bill**: 收款单信息 , 数据类型 *bill*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "bid": 1,
                 "orderId": "1601010001",
                 "money": 1000000,
                 "status": 1
             }
 
-    ### <I> makeBill
+    ### `makeBill` <span style="color:gray">[内部]</span>
 
         创建收款单
-        
-                |Requests:|
-                :param bill.orderId: 装修单号
-        :type bill.orderId: String
-        :param bill.money: 收款额
-        :type bill.money: Long
-        
-        :param billItems[n].pid: 款项ID
-        :type billItems[n].pid: Long
-        :param billItems[n].type: 款项类型
-        :type billItems[n].type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **bill.orderId**:
+  装修单号
+        - **bill.money**:
+  收款额
+
+        - **billItems[n].pid**:
+  款项ID
+        - **billItems[n].type**:
+  款项类型
+
+        **示例**:{
                 "bill.orderId": "1601010001",
                 "bill.money": 100000,
-                
+
                 "billItems[0].pid": 1,
                 "billItems[0].type": 1
             }
 
-    ### <I> cancelBill
+    ### `cancelBill` <span style="color:gray">[内部]</span>
 
         取消收款单
-        
-                |Requests:|
-                :param bill.bid: 装修单号
-        :type bill.bid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **bill.bid**:
+  装修单号
+
+        **示例**:{
                 "bill.bid": 1
             }
 
@@ -7154,8 +7013,9 @@
 
 ## api.payment.WalletAction
 
-        |DataType:|
-        #### wallet
+**数据类型**:
+
+#### wallet
 
     - **wid**: 钱包ID
       - 类型: *Long*
@@ -7173,27 +7033,26 @@
       - 类型: *Short*
     - **status**: 状态 , 0: 初始 , 1: 正常 , 2: 冻结 , 3: 注销
       - 类型: *Short*
-    
+
     - **amount**: 金额
       - 类型: *Long*
     - **validCode**: 验证码
       - 类型: *String*
     - **sn**: 流水号
       - 类型: *String*
-    
-    ### <I> pageWallet
+
+    ### `pageWallet` <span style="color:gray">[内部]</span>
 
         分页方式获取钱包信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 钱包信息列表 , 每条数据类型 *wallet*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  钱包信息列表 , 每条数据类型 *wallet*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7213,28 +7072,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryWallet
+
+    ### `queryWallet` <span style="color:gray">[内部]</span>
 
         查询钱包信息
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+
+        **示例**:{
                 "wallet.wid": 1
             }
-            
-                |Returns:|
-                - **wallet**: 钱包信息 , 数据类型 *wallet*
+
+**返回参数**:
+
+- **wallet**: 钱包信息 , 数据类型 *wallet*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "wallet": {
                     "wid": 1,
@@ -7248,54 +7105,51 @@
                 }
                 ...
             }
-    
-    ### <I> applyWallet
+
+    ### `applyWallet` <span style="color:gray">[内部]</span>
 
         开户
-        
-                |Requests:|
-                :param wallet.buid: 归属人ID
-        :type wallet.buid: Long
-        :param wallet.phone: 电话
-        :type wallet.phone: String
-        :param wallet.identity: 身份证
-        :type wallet.identity: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.buid**:
+  归属人ID
+        - **wallet.phone**:
+  电话
+        - **wallet.identity**:
+  身份证
+
+        **示例**:{
                 "wallet.buid": 1,
                 "wallet.phone": "13848584582",
                 "wallet.identity": ""
             }
-    
-    ### <I> bindWallet
+
+    ### `bindWallet` <span style="color:gray">[内部]</span>
 
         绑定
-        
+
         判断钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
+
         判断钱包状态为0(初始) , 其他状态 , 错误信息 **150055 钱包状态不可操作**
-        
+
         更新钱包状态为1(绑定)
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+
+        **示例**:{
                 "wallet.wid": 1
             }
-        
-                |Returns:|
-                - **wallet**: 钱包 , 数据类型 *wallet*
+
+**返回参数**:
+
+- **wallet**: 钱包 , 数据类型 *wallet*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "wallet": {
                     "sn": 1,
@@ -7303,35 +7157,33 @@
                 }
                 ...
             }
-    
-    ### <I> updateWallet
+
+    ### `updateWallet` <span style="color:gray">[内部]</span>
 
         更新
-        
+
         判断钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
+
         判断钱包状态为1(绑定) , 其他状态 , 错误信息 **150055 钱包状态不可操作**
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        :param wallet.phone: 电话
-        :type wallet.phone: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+        - **wallet.phone**:
+  电话
+
+        **示例**:{
                 "wallet.wid": 1,
                 "wallet.phone": "13848548541"
             }
 
-                |Returns:|
-                - **wallet**: 钱包 , 数据类型 *wallet*
+**返回参数**:
+
+- **wallet**: 钱包 , 数据类型 *wallet*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "wallet": {
                     "sn": "",
@@ -7339,92 +7191,87 @@
                 }
                 ...
             }
-    
-    ### <I> confirmWallet
+
+    ### `confirmWallet` <span style="color:gray">[内部]</span>
 
         确认
-        
+
         判断钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        :param wallet.sn: 流水号
-        :type wallet.sn: String
-        :param wallet.validCode: 验证码
-        :type wallet.validCode: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+        - **wallet.sn**:
+  流水号
+        - **wallet.validCode**:
+  验证码
+
+        **示例**:{
                 "wallet.wid": 1,
                 "wallet.sn": "",
                 "wallet.validCode": "1585"
             }
-    
-    ### <I> freezeWallet
+
+    ### `freezeWallet` <span style="color:gray">[内部]</span>
 
         冻结
-        
+
         判断钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+
+        **示例**:{
                 "wallet.wid": 1
             }
-    
-    ### <I> unfreezeWallet
+
+    ### `unfreezeWallet` <span style="color:gray">[内部]</span>
 
         解冻
-        
+
         判断钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+
+        **示例**:{
                 "wallet.wid": 1
             }
-    
-    ### <I> consumeWallet
+
+    ### `consumeWallet` <span style="color:gray">[内部]</span>
 
         消费
-        
+
         判断操作钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
+
         判断操作钱包状态为1(正常) , 其他状态 , 错误信息 **150055 钱包状态不可操作**
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        :param wallet.amount: 金额
-        :type wallet.amount: Long
-        :param tallet.wid: 钱包ID
-        :type tallet.wid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+        - **wallet.amount**:
+  金额
+        - **tallet.wid**:
+  钱包ID
+
+        **示例**:{
                 "wallet.wid": 1,
                 "wallet.amount": 10000,
                 "tallet.wid": 2
             }
-        
-                |Returns:|
-                - **wallet**: 钱包 , 数据类型 *wallet*
+
+**返回参数**:
+
+- **wallet**: 钱包 , 数据类型 *wallet*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "wallet": {
                     "sn": "",
@@ -7432,35 +7279,33 @@
                 }
                 ...
             }
-    
-    ### <I> rechargeWallet
+
+    ### `rechargeWallet` <span style="color:gray">[内部]</span>
 
         充值
-        
+
         判断操作钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
+
         判断操作钱包状态为1(正常) , 其他状态 , 错误信息 **150055 钱包状态不可操作**
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        :param wallet.amount: 金额
-        :type wallet.amount: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+        - **wallet.amount**:
+  金额
+
+        **示例**:{
                 "wallet.wid": 1,
                 "wallet.amount": 10000
             }
-        
-                |Returns:|
-                - **wallet**: 钱包 , 数据类型 *wallet*
+
+**返回参数**:
+
+- **wallet**: 钱包 , 数据类型 *wallet*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "wallet": {
                     "sn": "",
@@ -7468,35 +7313,33 @@
                 }
                 ...
             }
-    
-    ### <I> withdrawWallet
+
+    ### `withdrawWallet` <span style="color:gray">[内部]</span>
 
         提现
-        
+
         判断操作钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
+
         判断操作钱包状态为1(正常) , 其他状态 , 错误信息 **150055 钱包状态不可操作**
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        :param wallet.amount: 金额
-        :type wallet.amount: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+        - **wallet.amount**:
+  金额
+
+        **示例**:{
                 "wallet.wid": 1,
                 "wallet.amount": 10000
             }
-        
-                |Returns:|
-                - **wallet**: 钱包 , 数据类型 *wallet*
+
+**返回参数**:
+
+- **wallet**: 钱包 , 数据类型 *wallet*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "wallet": {
                     "sn": "",
@@ -7504,58 +7347,55 @@
                 }
                 ...
             }
-    
-    ### <I> consentWallet
+
+    ### `consentWallet` <span style="color:gray">[内部]</span>
 
         交易确认
-        
+
         判断钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        :param wallet.sn: 流水号
-        :type wallet.sn: String
-        :param wallet.validCode: 验证码
-        :type wallet.validCode: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+        - **wallet.sn**:
+  流水号
+        - **wallet.validCode**:
+  验证码
+
+        **示例**:{
                 "wallet.wid": 1,
                 "wallet.sn": "",
                 "wallet.validCode": "1585"
             }
-    
-    ### <I> transferWallet
+
+    ### `transferWallet` <span style="color:gray">[内部]</span>
 
         判断操作钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
+
         判断操作钱包状态为1(正常) , 其他状态 , 错误信息 **150055 钱包状态不可操作**
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        :param wallet.amount: 金额
-        :type wallet.amount: Long
-        :param tallet.wid: 钱包ID
-        :type tallet.wid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+        - **wallet.amount**:
+  金额
+        - **tallet.wid**:
+  钱包ID
+
+        **示例**:{
                 "wallet.wid": 1,
                 "wallet.amount": 10000,
                 "tallet.wid": 2
             }
-        
-                |Returns:|
-                - **wallet**: 钱包 , 数据类型 *wallet*
+
+**返回参数**:
+
+- **wallet**: 钱包 , 数据类型 *wallet*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "wallet": {
                     "sn": "",
@@ -7563,24 +7403,23 @@
                 }
                 ...
             }
-    
-    ### <I> approveWallet
+
+    ### `approveWallet` <span style="color:gray">[内部]</span>
 
         转账确认
-        
+
         判断钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
-                |Requests:|
-                :param wallet.wid: 钱包ID
-        :type wallet.wid: Long
-        :param wallet.sn: 流水号
-        :type wallet.sn: String
-        :param wallet.validCode: 验证码
-        :type wallet.validCode: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **wallet.wid**:
+  钱包ID
+        - **wallet.sn**:
+  流水号
+        - **wallet.validCode**:
+  验证码
+
+        **示例**:{
                 "wallet.wid": 1,
                 "wallet.sn": "",
                 "wallet.validCode": "1585"
@@ -7590,8 +7429,9 @@
 
 ## api.payment.WalletardAction
 
-        |DataType:|
-        #### walletard
+**数据类型**:
+
+#### walletard
 
     - **wcid**: 银行卡ID
       - 类型: *Long*
@@ -7615,33 +7455,31 @@
       - 类型: *Timestamp*
     - **token**: 令牌
       - 类型: *String*
-    
+
     - **validCode**: 验证码
       - 类型: *String*
     - **sn**: 流水号
       - 类型: *流水号*
-    
-    ### <I> queryWalletard
+
+    ### `queryWalletard` <span style="color:gray">[内部]</span>
 
         获取银行卡信息
-        
-                |Requests:|
-                :param walletard.wid: 钱包ID
-        :type walletard.wid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **walletard.wid**:
+  钱包ID
+
+        **示例**:{
                 "walletard.wid": 1
             }
 
-                |Returns:|
-                - **walletards**: 银行卡信息列表 , 每条数据类型 *walletard*
+**返回参数**:
+
+- **walletards**: 银行卡信息列表 , 每条数据类型 *walletard*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "walletards": [
                     {
@@ -7661,31 +7499,30 @@
                 ...
             }
 
-    ### <I> bindWalletard
+    ### `bindWalletard` <span style="color:gray">[内部]</span>
 
         绑定银行卡
-        
+
         判断钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
-                |Requests:|
-                :param walletard.wtid: 钱包ID
-        :type walletard.wtid: Long
-        :param walletard.wid: 钱包ID
-        :type walletard.wid: Long
-        :param walletard.bankNo: 银行卡号
-        :type walletard.bankNo: String
-        :param walletard.validTime: 有效期
-        :type walletard.validTime: String
-        :param walletard.cvv: 安全码
-        :type walletard.cvv: String
-        :param walletard.type: 类型
-        :type walletard.type: Short
-        :param walletard.mobile: 电话
-        :type walletard.mobile: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **walletard.wtid**:
+  钱包ID
+        - **walletard.wid**:
+  钱包ID
+        - **walletard.bankNo**:
+  银行卡号
+        - **walletard.validTime**:
+  有效期
+        - **walletard.cvv**:
+  安全码
+        - **walletard.type**:
+  类型
+        - **walletard.mobile**:
+  电话
+
+        **示例**:{
                 "walletard.wtid": 1,
                 "walletard.wid": 1,
                 "walletard.bankNo": "",
@@ -7694,14 +7531,13 @@
                 "walletard.type": 0,
                 "walletard.mobile": 13840585484,
             }
-        
-                |Returns:|
-                - **walletard**: 银行卡信息
+
+**返回参数**:
+
+- **walletard**: 银行卡信息
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "walletard": {
                     "sn": 1,
@@ -7709,64 +7545,61 @@
                 }
                 ...
             }
-    
-    ### <I> confirmWalletard
+
+    ### `confirmWalletard` <span style="color:gray">[内部]</span>
 
         确认银行卡
-        
+
         判断银行卡是否存在 , 不存在 , 错误信息 **150058 银行卡不存在**
-        
+
         判断银行卡状态为0(初始)/5(解绑) , 其他状态 , 错误信息 **150059 银行卡状态不可操作**
-        
-                |Requests:|
-                :param walletard.wtid: 钱包ID
-        :type walletard.wtid: Long
-        :param walletard.sn: 流水号
-        :type walletard.sn: String
-        :param walletard.validCode: 验证码
-        :type walletard.validCode: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **walletard.wtid**:
+  钱包ID
+        - **walletard.sn**:
+  流水号
+        - **walletard.validCode**:
+  验证码
+
+        **示例**:{
                 "walletard.wtid": 1,
                 "walletard.sn": 1,
                 "walletard.validCode": "6585"
             }
-    
-    ### <I> unbindWalletard
+
+    ### `unbindWalletard` <span style="color:gray">[内部]</span>
 
         解绑银行卡
-    
+
         判断银行卡是否存在 , 不存在 , 错误信息 **150058 银行卡不存在**
-        
+
         判断银行卡状态为1(有效) , 其他状态 , 错误信息 **150059 银行卡状态不可操作**
-        
-                |Requests:|
-                :param walletard.wtid: 钱包ID
-        :type walletard.wtid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **walletard.wtid**:
+  钱包ID
+
+        **示例**:{
                 "walletard.wtid": 1
             }
-    
-    ### <I> deleteWalletard
+
+    ### `deleteWalletard` <span style="color:gray">[内部]</span>
 
         删除银行卡
-        
+
         判断银行卡是否存在 , 不存在 , 错误信息 **150058 银行卡不存在**
-        
+
         判断银行卡状态为0(初始)/5(解绑) , 其他状态 , 错误信息 **150059 银行卡状态不可操作**
-        
-                |Requests:|
-                :param walletard.wtid: 钱包ID
-        :type walletard.wtid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **walletard.wtid**:
+  钱包ID
+
+        **示例**:{
                 "walletard.wtid": 1
             }
 
@@ -7774,8 +7607,9 @@
 
 ## api.payment.WalletranAction
 
-        |DataType:|
-        #### walletran
+**数据类型**:
+
+#### walletran
 
     - **wtid**: 交易ID
       - 类型: *Long*
@@ -7793,20 +7627,19 @@
       - 类型: *Short*
     - **comment**: 备注
       - 类型: *String*
-    
-    ### <I> pageWalletran
+
+    ### `pageWalletran` <span style="color:gray">[内部]</span>
 
         分页方式获取交易信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 交易信息列表 , 每条数据类型 *walletran*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  交易信息列表 , 每条数据类型 *walletran*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7844,28 +7677,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryWalletran
+
+    ### `queryWalletran` <span style="color:gray">[内部]</span>
 
         获取交易信息
-        
-                |Requests:|
-                :param walletran.wid: 钱包ID
-        :type walletran.wid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **walletran.wid**:
+  钱包ID
+
+        **示例**:{
                 "walletran.wid": 1
             }
 
-                |Returns:|
-                - **walletrans**: 交易信息列表 , 每条数据类型 *walletran*
+**返回参数**:
+
+- **walletrans**: 交易信息列表 , 每条数据类型 *walletran*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "walletrans": [
                     {
@@ -7904,8 +7735,9 @@
 
 ## api.payment.WalletresAction
 
-        |DataType:|
-        #### walletres
+**数据类型**:
+
+#### walletres
 
     - **wrid**: 资源ID
       - 类型: *Long*
@@ -7921,45 +7753,25 @@
       - 类型: *String*
     - **commnet**: 备注
       - 类型: *String*
-    
-    
-    +----------------+--------------------------------------------------------------    | Type           | 类型                                                         |               |
-    +================+==============================================================+===============+
-    | 00             | 公民身份证正面                                               |               |
-    +----------------+--------------------------------------------------------------    | 19             | 营业执照                                                     |               |
-    +----------------+--------------------------------------------------------------    | 20             | 税务登记证                                                   |               |
-    +----------------+--------------------------------------------------------------    | 30             | 公民身份证反面                                               |               |
-    +----------------+--------------------------------------------------------------    | 31             | 互联网业务商户协议                                           |               |
-    +----------------+--------------------------------------------------------------    | 32             | 授权书                                                       |               |
-    +----------------+--------------------------------------------------------------    | 33             | 手持身份证正扫面照                                           |               |
-    +----------------+--------------------------------------------------------------    | 34             | 门头照                                                       |               |
-    +----------------+--------------------------------------------------------------    | 35             | 结算银行卡正面照                                             |               |
-    +----------------+--------------------------------------------------------------    | 36             | 结算银行卡反面照                                             |               |
-    +----------------+--------------------------------------------------------------    | 37             | 开户许可证                                                   |               |
-    +----------------+--------------------------------------------------------------    | 38             | 收单业务商户协议                                             |               |
-    +----------------+--------------------------------------------------------------    | 50             | 经营场所图1                                                  |               |
-    +----------------+--------------------------------------------------------------    | 51             | 经营场所                                                     |               |
-    +----------------+--------------------------------------------------------------    ### <I> queryWalletres
+
 
         获取钱包归属资源
-        
-                |Requests:|
-                :param walletres.wid: 钱包ID
-        :type walletres.wid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **walletres.wid**:
+  钱包ID
+
+        **示例**:{
                 "walletres.wid": 1
             }
-        
-                |Returns:|
-                - **walletreses**: 资源信息列表 , 每条数据类型 *walletres*
+
+**返回参数**:
+
+- **walletreses**: 资源信息列表 , 每条数据类型 *walletres*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "walletreses": [
                     {
@@ -7974,46 +7786,44 @@
                 ],
                 ...
             }
-    
-    ### <I> uploadWalletres
+
+    ### `uploadWalletres` <span style="color:gray">[内部]</span>
 
         上传资源
-        
+
         判断钱包是否存在 , 不存在 , 错误信息 **150054 钱包不存在**
-        
-                |Requests:|
-                :param walletres.wid: 钱包ID
-        :type walletres.wid: Long
-        :param walletres.name: 名称
-        :type walletres.name: String
-        :param walletres.path: 路径
-        :type walletres.path: String
-        :param walletres.type: 类型
-        :type walletres.type: String
-        :param walletres.comment: 备注
-        :type walletres.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **walletres.wid**:
+  钱包ID
+        - **walletres.name**:
+  名称
+        - **walletres.path**:
+  路径
+        - **walletres.type**:
+  类型
+        - **walletres.comment**:
+  备注
+
+        **示例**:{
                 "walletres.wid": 1,
                 "walletres.name": "名称",
                 "walletres.path": "",
                 "walletres.type": "00",
                 "walletres.comment": "备注"
             }
-    
-    ### <I> deleteWalletres
+
+    ### `deleteWalletres` <span style="color:gray">[内部]</span>
 
         删除资源
-        
-                |Requests:|
-                :param walletres.wtid: 资源ID
-        :type walletres.wtid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **walletres.wtid**:
+  资源ID
+
+        **示例**:{
                 "walletres.wtid": 1
             }
 
@@ -8021,8 +7831,9 @@
 
 ## api.sales.PaymentFunctionAction
 
-        |DataType:|
-        #### paymentFunction
+**数据类型**:
+
+#### paymentFunction
 
     - **pfid**: 功能ID
       - 类型: *Long*
@@ -8044,28 +7855,26 @@
       - 类型: *Short*
     - **sort**: 排序
       - 类型: *Short*
-    
-    ### <I> queryPaymentFunction
+
+    ### `queryPaymentFunction` <span style="color:gray">[内部]</span>
 
         获取款项功能信息
-    
-                |Requests:|
-                :param paymentFunction.type: 类型
-        :type paymentFunction.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **paymentFunction.type**:
+  类型
+
+        **示例**:{
                 "paymentFunction.type": 0
             }
-            
-                |Returns:|
-                - **paymentFunctions**: 功能信息 , 类型 *paymentFunction*
+
+**返回参数**:
+
+- **paymentFunctions**: 功能信息 , 类型 *paymentFunction*
           - 类型: *Object*
-            
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "paymentFunctions": [
                     {

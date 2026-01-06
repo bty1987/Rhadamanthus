@@ -5,8 +5,9 @@
 
 ## api.production.WorkshopAction
 
-        |DataType:|
-        #### workshop
+**数据类型**:
+
+#### workshop
 
     - **wsid**: 车间ID
       - 类型: *Long*
@@ -16,20 +17,19 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Long*
-    
-    ### <I> pageWorkshop
+
+    ### `pageWorkshop` <span style="color:gray">[内部]</span>
 
         分页方式获取车间信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 车间信息列表 , 每条数据类型 *workshop*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  车间信息列表 , 每条数据类型 *workshop*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -43,87 +43,84 @@
                 },
                 ...
             }
-            
-    ### <I> queryWorkshop
+
+    ### `queryWorkshop` <span style="color:gray">[内部]</span>
 
         获取车间信息
-        
+
         按照公司作为默认条件查询
-        
-                |Returns:|
-                - **workshops**: 车间信息列表 , 每条数据类型 *workshop*
+
+**返回参数**:
+
+- **workshops**: 车间信息列表 , 每条数据类型 *workshop*
           - 类型: *List*
-        
-        Example::
-        
-            {
-                "workshop": 
+
+        **示例**:{
+                "workshop":
                     {
                         "wsid": 1,
                         "name": "油漆车间"
                     },
                 ...
             }
-    
-    ### <I> addWorkshop
+
+    ### `addWorkshop` <span style="color:gray">[内部]</span>
 
         添加车间信息
-        
-                |Requests:|
-                :param workshop.name: 车间名称
-        :type workshop.name: String
-        
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workshop.name**:
+  车间名称
+
+
+        **示例**:{
                 "workshop.name": "油漆车间",
             }
-        
-    ### <I> updateWorkshop
+
+    ### `updateWorkshop` <span style="color:gray">[内部]</span>
 
         更新车间信息
-        
+
         判断车间信息是否存在 , 不存在更新失败 , 错误信息 **220016 车间不存在**
-        
-                |Requests:|
-                :param workshop.wsid: 车间ID
-        :type workshop.wsid: Long
-        :param workshop.name: 名称
-        :type workshop.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workshop.wsid**:
+  车间ID
+        - **workshop.name**:
+  名称
+
+        **示例**:{
                 "wsid": 1,
                 "name": "新油漆车间",
             }
-            
-    ### <I> updateWorkshopForStatus
+
+    ### `updateWorkshopForStatus` <span style="color:gray">[内部]</span>
 
         更新车间状态
-        
+
         判断车间信息是否存在 , 不存在更新失败 , 错误信息 **220016 车间不存在**
-        
-                |Requests:|
-                :param workshop.wsid: 车间ID
-        :type workshop.wsid: Long
-        :param workshop.status: 状态
-        :type workshop.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workshop.wsid**:
+  车间ID
+        - **workshop.status**:
+  状态
+
+        **示例**:{
                 "wsid": 1,
                 "status": 0
             }
-            
+
 ## 工序
 
 ## api.production.WorkflowAction
 
-        |DataType:|
-        #### workflow
+**数据类型**:
+
+#### workflow
 
     - **wfid**: 工序ID
       - 类型: *Long*
@@ -133,24 +130,23 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Long*
-    
+
         |Filters:|
         - **name**: 名称
       - 类型: *String*
 
-    ### <I> pageWorkflow
+    ### `pageWorkflow` <span style="color:gray">[内部]</span>
 
         分页方式获取工序信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 工序信息列表 , 每条数据类型 *workflow*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  工序信息列表 , 每条数据类型 *workflow*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -164,20 +160,19 @@
                 },
                 ...
             }
-            
-    ### <I> queryWorkflow
+
+    ### `queryWorkflow` <span style="color:gray">[内部]</span>
 
         获取工序信息
-        
+
         按照公司作为默认条件查询
-        
-                |Returns:|
-                - **workflows**: 工序信息项 , 数据类型 *workflow*
+
+**返回参数**:
+
+- **workflows**: 工序信息项 , 数据类型 *workflow*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "workflows": [
                     {
                         "wfid": 1,
@@ -186,67 +181,65 @@
                 ]
                 ...
             }
-    
-    ### <I> addWorkflow
+
+    ### `addWorkflow` <span style="color:gray">[内部]</span>
 
         添加工序信息
-        
+
         工序归属公司跟随操作人变化
-        
-                |Requests:|
-                :param workflow.name: 工序名称
-        :type workflow.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workflow.name**:
+  工序名称
+
+        **示例**:{
                 "workflow.name": "裁边",
             }
-        
-    ### <I> updateWorkflow
+
+    ### `updateWorkflow` <span style="color:gray">[内部]</span>
 
         更新工序信息
-        
+
         判断工序是否存在 , 不存在更新失败 , 错误信息 **210017 工序不存在**
-        
-                |Requests:|
-                :param workflow.wfid: 工序ID
-        :type workflow.wfid: Long
-        :param workflow.name: 名称
-        :type workflow.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workflow.wfid**:
+  工序ID
+        - **workflow.name**:
+  名称
+
+        **示例**:{
                 "wfid": 1,
                 "name": "裁边",
             }
-            
-    ### <I> updateWorkflowForStatus
+
+    ### `updateWorkflowForStatus` <span style="color:gray">[内部]</span>
 
         更新工序状态
-        
+
         判断工序是否存在 , 不存在更新失败 , 错误信息 **210017 工序不存在**
-        
-                |Requests:|
-                :param workflow.wfid: 工序ID
-        :type workflow.wfid: Long
-        :param workflow.status: 状态
-        :type workflow.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workflow.wfid**:
+  工序ID
+        - **workflow.status**:
+  状态
+
+        **示例**:{
                 "wfid": 1,
                 "status": 0
             }
-    
+
 ## 工序组
 
 ## api.production.WorkplanAction
 
-        |DataType:|
-        #### workplan
+**数据类型**:
+
+#### workplan
 
     - **wpid**: 工序组ID
       - 类型: *Long*
@@ -260,24 +253,23 @@
       - 类型: *Object*
     - **company**: 公司ID
       - 类型: *Long*
-    
+
         |Filters:|
         - **name**: 工序组名称
       - 类型: *String*
 
-    ### <I> pageWorkplan
+    ### `pageWorkplan` <span style="color:gray">[内部]</span>
 
         分页方式获取车间信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 工序组信息列表 , 每条数据类型 :data: workplan
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  工序组信息列表 , 每条数据类型 :data: workplan
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -297,20 +289,19 @@
                 },
                 ...
             }
-            
-    ### <I> queryWorkplan
+
+    ### `queryWorkplan` <span style="color:gray">[内部]</span>
 
         获取工序组信息
-        
+
         按照公司作为默认条件查询
-        
-                |Returns:|
-                - **workplans**: 工序组信息列表 , 每条数据类型 *workplan*
+
+**返回参数**:
+
+- **workplans**: 工序组信息列表 , 每条数据类型 *workplan*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "workplans": [
                     {
@@ -326,30 +317,28 @@
                 ],
                 ...
             }
-            
-    ### <I> queryWorkplanByWsid
+
+    ### `queryWorkplanByWsid` <span style="color:gray">[内部]</span>
 
         通过车间ID查询工序组信息
-        
+
         按照公司作为默认条件查询
-        
-                |Requests:|
-                :param workplan.workshop.wsid: 车间ID
-        :type workplan.workshop.wsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workplan.workshop.wsid**:
+  车间ID
+
+        **示例**:{
                 "workplan.workshop.wsid": "1"
             }
-        
-                |Returns:|
-                - **workplans**: 工序组信息列表 , 每条数据类型 *workplan*
+
+**返回参数**:
+
+- **workplans**: 工序组信息列表 , 每条数据类型 *workplan*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "workplans": [
                     {
@@ -365,79 +354,77 @@
                 ],
                 ...
             }
-            
-    ### <I> addWorkplan
+
+    ### `addWorkplan` <span style="color:gray">[内部]</span>
 
         添加工序组信息
-        
+
         工序归属公司跟随操作人变化
-        
-                |Requests:|
-                :param workplan.name: 工序组名称
-        :type workplan.name: String
-        :param workplan.comment: 备注
-        :type workplan.comment: String
-        :param workplan.workshop.wsid: 车间ID
-        :type workplan.workshop.wsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workplan.name**:
+  工序组名称
+        - **workplan.comment**:
+  备注
+        - **workplan.workshop.wsid**:
+  车间ID
+
+        **示例**:{
                 "workplan.name": "第一工序组",
                 "workplan.comment": "",
                 "workplan.workshop.wsid": 1,
             }
-        
-    ### <I> updateWorkplan
+
+    ### `updateWorkplan` <span style="color:gray">[内部]</span>
 
         更新工序组信息
-        
+
         判断工序组是否存在 , 不存在更新失败 , 错误信息 **220018 工序组不存在**
-        
-                |Requests:|
-                :param workplan.wpid: 工序组ID
-        :type workplan.wpid: Long
-        :param workplan.name: 工序组名称
-        :type workplan.name: String
-        :param workplan.comment: 备注信息
-        :type workplan.comment: String
-        :param workplan.workshop.wsid: 车间ID 
-        :type workplan.workshop.wsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workplan.wpid**:
+  工序组ID
+        - **workplan.name**:
+  工序组名称
+        - **workplan.comment**:
+  备注信息
+        - **workplan.workshop.wsid**:
+  车间ID
+
+        **示例**:{
                 "workplan.wpid": 1,
                 "workplan.name": "第一工序组",
                 "workplan.comment": "",
                 "workplan.workShop.wsid": 1
             }
-    
-    ### <I> updateWorkplanForStatus
+
+    ### `updateWorkplanForStatus` <span style="color:gray">[内部]</span>
 
         更新工序组状态
-        
+
         判断工序组是否存在 , 不存在更新失败 , 错误信息 **220018 工序组不存在**
-        
-                |Requests:|
-                :param workplan.wpid: 工序组ID
-        :type workplan.wpid: Long
-        :param workplan.status: 状态 , 0: 启用 , 1: 禁用
-        :type workplan.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workplan.wpid**:
+  工序组ID
+        - **workplan.status**:
+  状态 , 0: 启用 , 1: 禁用
+
+        **示例**:{
                 "workplan.wsid": 1,
                 "workplan.status": 1
             }
-            
+
 ## 工序组-工序
 
 ## api.production.WorkFlowPlanAction
 
-        |DataType:|
-        #### workflowPlan
+**数据类型**:
+
+#### workflowPlan
 
     - **wfpid**: ID
       - 类型: *Long*
@@ -446,27 +433,25 @@
     - **workplan**: 工序组 , 类型[workplan](./production.html#api.production.WorkplanAction.workplan)
       - 类型: *Object*
 
-    ### <I> queryWorkflowPlanByWfid
+    ### `queryWorkflowPlanByWfid` <span style="color:gray">[内部]</span>
 
         通过工序ID查询与之相关工序组
-        
-                |Requests:|
-                :param workflowPlan.workflow.wfid: 工序ID
-        :type workflowPlan.workflow.wfid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workflowPlan.workflow.wfid**:
+  工序ID
+
+        **示例**:{
                 "workflowPlan.workflow.wfid": 1,
             }
-        
-                |Returns:|
-                - **workflowPlans**: 工序组-工序信息列表, 每条数据类型 *workflowPlan*
+
+**返回参数**:
+
+- **workflowPlans**: 工序组-工序信息列表, 每条数据类型 *workflowPlan*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "workflowPlans": [
                     {
@@ -488,28 +473,26 @@
                 ],
                 ...
             }
-    
-    ### <I> queryWorkflowPlanByWpid
+
+    ### `queryWorkflowPlanByWpid` <span style="color:gray">[内部]</span>
 
         通过工序组ID查询与之相关工序
-        
-                |Requests:|
-                :param workflowPlan.workflow.wpid: 工序组ID
-        :type workflowPlan.workflow.wpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workflowPlan.workflow.wpid**:
+  工序组ID
+
+        **示例**:{
                 "workflowPlan.workplan.wpid": 1,
             }
-        
-                |Returns:|
-                - **workflowPlans**: 工序组与工序关系列表, 每条数据类型 :data: workflowPlan
+
+**返回参数**:
+
+- **workflowPlans**: 工序组与工序关系列表, 每条数据类型 :data: workflowPlan
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "workflowPlans": [
                     {
@@ -532,23 +515,22 @@
                 ...
             }
 
-    ### <I> updateWorkflowPlan
+    ### `updateWorkflowPlan` <span style="color:gray">[内部]</span>
 
         更新工序到工序组
-        
+
         判断工序组是否存在 , 不存在更新失败 , 错误信息 **220018 工序组不存在**
-        
+
         删除工序组原关联工序信息 , 之后更新工序组对应的工序信息
-        
-                |Requests:|
-                :param workflowPlan.workplan.wfpid: 工序组ID
-        :type workflowPlan.workplan.wfpid: Long
-        :param wfids[n]: 工序ID列表 , 每条数据类型 Long
-        :type wfids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workflowPlan.workplan.wfpid**:
+  工序组ID
+        - **wfids[n]**:
+  工序ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "workFlowPlan.workplan.wfpid": 1,
                 "wfids[0]": 1
             }
@@ -557,8 +539,9 @@
 
 ## api.production.UserWorkflowAction
 
-        |DataType:|
-        #### userWorkflow
+**数据类型**:
+
+#### userWorkflow
 
     - **uwid**: 工序组ID
       - 类型: *Long*
@@ -566,28 +549,26 @@
       - 类型: *Long*
     - **workflow**: 工序,类型[workflow](./production.html#api.production.WorkflowAction.workflow)
       - 类型: *Object*
-    
-    ### <I> queryUserWorkflowByUid
+
+    ### `queryUserWorkflowByUid` <span style="color:gray">[内部]</span>
 
         通过员工ID查询与之相关工序
-        
-                |Requests:|
-                :param userWorkFlow.uid: 员工ID
-        :type userWorkFlow.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **userWorkFlow.uid**:
+  员工ID
+
+        **示例**:{
                 "userWorkFlow.uid": 34,
             }
-        
-                |Returns:|
-                - **userWorkflows**: 员工与工序关系列表, 每条数据类型 *userWorkflow*
+
+**返回参数**:
+
+- **userWorkflows**: 员工与工序关系列表, 每条数据类型 *userWorkflow*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "userWorkflows": [
                     {
@@ -601,34 +582,34 @@
                 ],
                 ...
             }
-            
-    ### <I> updateUserWorkflow
+
+    ### `updateUserWorkflow` <span style="color:gray">[内部]</span>
 
         更新员工对应的工序
-        
+
         判断员工是否存在 , 不存在更新失败 , 错误信息 **190005 人员不存在**
-        
+
         删除员工原关联工序信息 , 之后更新人员对应的工序信息
-        
-                |Requests:|
-                :param userWorkflow.uid: 员工ID
-        :type userWorkflow.uid: Long
-        :param wfids[n]: 工序ID列表 , 每条数据类型 Long
-        :type wfids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **userWorkflow.uid**:
+  员工ID
+        - **wfids[n]**:
+  工序ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "userWorkflow.uid": 1,
                 "wfids[0]": 1
             }
-            
+
 ## 报价类型
 
 ## api.production.QuoteTypeAction
 
-        |DataType:|
-        #### quoteType
+**数据类型**:
+
+#### quoteType
 
     - **qtid**: 报价类型ID
       - 类型: *Long*
@@ -636,24 +617,23 @@
       - 类型: *String*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
+
         |Filters:|
         - **name**: 报价类型名称
       - 类型: *String*
-  
-    ### <I> pageQuoteType
+
+    ### `pageQuoteType` <span style="color:gray">[内部]</span>
 
         分页方式获取报价类型信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 报价类型信息列表 , 每条数据类型 *quoteType*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价类型信息列表 , 每条数据类型 *quoteType*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -668,18 +648,17 @@
                 },
                 ...
             }
-    
-    ### <I> queryQuoteType
+
+    ### `queryQuoteType` <span style="color:gray">[内部]</span>
 
         通过品类名称查询报价类型
-        
-                |Returns:|
-                - **quoteTypes**: 报价类型信息 , 类型 :data: `quoteType`
+
+**返回参数**:
+
+- **quoteTypes**: 报价类型信息 , 类型 :data: `quoteType`
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quoteType": [
                     {
@@ -690,65 +669,63 @@
                 ]
                 ...
             }
-            
-    ### <I> addQuoteType
+
+    ### `addQuoteType` <span style="color:gray">[内部]</span>
 
         添加报价类型
-        
-                |Requests:|
-                :param quoteType.name:名称
-        :type quoteType.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quoteType.name**:
+  名称
+
+        **示例**:{
                "quoteType.name": "板式家具"
             }
-        
-    ### <I> updateQuoteType
+
+    ### `updateQuoteType` <span style="color:gray">[内部]</span>
 
         更新报价类型
-        
+
         判断报价类型是否存在 , 不存在更新失败 , 错误信息 **220020 报价类型不存在**
 
-                |Requests:|
-                :param quoteType.qtid: 报价类型ID
-        :type quoteType.qtid: Long
-        :param quoteType.name: 名称
-        :type quoteType.name: String
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **quoteType.qtid**:
+  报价类型ID
+        - **quoteType.name**:
+  名称
+
+        **示例**:{
                 "quoteType.qtid": 1,
                 "quoteType.name": "板式家具"
             }
-            
-    ### <I> updateQuoteTypeForStatus
+
+    ### `updateQuoteTypeForStatus` <span style="color:gray">[内部]</span>
 
         更新报价类型状态
-        
+
         判断报价类型是否存在 , 不存在更新失败 , 错误信息 **220020 报价类型不存在**
 
-                |Requests:|
-                :param quoteType.qtid: 报价类型ID
-        :type quoteType.qtid: Long
-        :param quoteType.status: 状态
-        :type quoteType.status: Short
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **quoteType.qtid**:
+  报价类型ID
+        - **quoteType.status**:
+  状态
+
+        **示例**:{
                 "quoteType.qtid": 1,
                 "quoteType.status": 1
             }
-            
+
 ## 报价项
 
 ## api.production.QuoteItemAction
 
-        |DataType:|
-        #### quoteItem
+**数据类型**:
+
+#### quoteItem
 
     - **qiid**: 报价项ID
       - 类型: *Long*
@@ -768,26 +745,25 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Long*
-    
+
         |Filters:|
         - **name**: 名称
       - 类型: *String*
     - **type**: 类型
       - 类型: *Long*
 
-    ### <I> pageQuoteItem
+    ### `pageQuoteItem` <span style="color:gray">[内部]</span>
 
         分页方式获取报价项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 报价项信息列表 , 每条数据类型 *quoteItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价项信息列表 , 每条数据类型 *quoteItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -811,30 +787,28 @@
                 },
                 ...
             }
-            
-    ### <I> queryQuoteItemByPinyin
+
+    ### `queryQuoteItemByPinyin` <span style="color:gray">[内部]</span>
 
         通过拼音查询报价项数据
-        
+
         按照公司作为默认条件查询
-        
-                |Requests:|
-                :param quoteItem.pinyin: 拼音
-        :type quoteItem.pinyin: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quoteItem.pinyin**:
+  拼音
+
+        **示例**:{
                 "quoteItem.pinyin": "dingban"
             }
-        
-                |Returns:|
-                - **quoteItems**: 报价项信息 , 类型 *quoteItem*
+
+**返回参数**:
+
+- **quoteItems**: 报价项信息 , 类型 *quoteItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quoteItem": [
                     {
@@ -854,30 +828,29 @@
                 ],
                 ...
             }
-            
-    ### <I> addQuoteItem
+
+    ### `addQuoteItem` <span style="color:gray">[内部]</span>
 
         添加报价项数据
-        
+
         工序归属公司跟随操作人变化
-        
-                |Requests:|
-                :param quoteItem.name: 报价项名称
-        :type quoteItem.name: String
-        :param quoteItem.pinyin: 拼音
-        :type quoteItem.pinyin: String
-        :param quoteItem.format: 型号
-        :type quoteItem.format: String
-        :param quoteItem.measurementunit: 单位
-        :type quoteItem.measurementunit: String
-        :param quoteItem.unitprice: 单价
-        :type quoteItem.unitprice: Integer
-        :param quoteItem.quoteType.qtid: 品类ID
-        :type quoteItem.quoteType.qtid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quoteItem.name**:
+  报价项名称
+        - **quoteItem.pinyin**:
+  拼音
+        - **quoteItem.format**:
+  型号
+        - **quoteItem.measurementunit**:
+  单位
+        - **quoteItem.unitprice**:
+  单价
+        - **quoteItem.quoteType.qtid**:
+  品类ID
+
+        **示例**:{
                 "quoteItem.name": "顶板",
                 "quoteItem.pinyin": "dingban",
                 "quoteItem.format": "zx-1",
@@ -885,32 +858,31 @@
                 "quoteItem.unitprice": 10000,
                 "quoteItem.quoteType.qtid": 1,
             }
-        
-    ### <I> updateQuoteItem
+
+    ### `updateQuoteItem` <span style="color:gray">[内部]</span>
 
         更新报价项信息
-        
+
         判断报价项是否存在 , 不存在更新失败 , 错误信息 **220019 报价项不存在**
-        
-                |Requests:|
-                :param quoteItem.qiid: 报价项ID
-        :type quoteItem.qiid: Long
-        :param quoteItem.name: 报价项名称
-        :type quoteItem.name: String
-        :param quoteItem.pinyin: 拼音
-        :type quoteItem.pinyin: String
-        :param quoteItem.format: 型号
-        :type quoteItem.format: String
-        :param quoteItem.measurementunit: 单位
-        :type quoteItem.measurementunit: String
-        :param quoteItem.unitprice: 单价
-        :type quoteItem.unitprice: Integer
-        :param quoteItem.quoteType.qtid: 品类ID
-        :type quoteItem.quoteType.qtid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quoteItem.qiid**:
+  报价项ID
+        - **quoteItem.name**:
+  报价项名称
+        - **quoteItem.pinyin**:
+  拼音
+        - **quoteItem.format**:
+  型号
+        - **quoteItem.measurementunit**:
+  单位
+        - **quoteItem.unitprice**:
+  单价
+        - **quoteItem.quoteType.qtid**:
+  品类ID
+
+        **示例**:{
                 "quoteItem.qiid": "1",
                 "quoteItem.name": "顶板",
                 "quoteItem.pinyin": "dingban",
@@ -919,32 +891,32 @@
                 "quoteItem.unitprice": 10000,
                 "quoteItem.quoteType.qtid": 1,
             }
-    
-    ### <I> updateQuoteItemForStatus
+
+    ### `updateQuoteItemForStatus` <span style="color:gray">[内部]</span>
 
         更新报价项状态
-        
+
         判断报价项是否存在 , 不存在更新失败 , 错误信息 **220019 报价项不存在**
-        
-                |Requests:|
-                :param quoteItem.qiid: 报价项ID
-        :type quoteItem.qiid: Long
-        :param quoteItem.status: 报价项状态
-        :type quoteItem.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quoteItem.qiid**:
+  报价项ID
+        - **quoteItem.status**:
+  报价项状态
+
+        **示例**:{
                 "quoteItem.qiid": 1,
                 "quoteItem.status": 0
             }
-        
+
 ## 生产单
 
 ## api.production.ProductionAction
 
-        |DataType:|
-        #### production
+**数据类型**:
+
+#### production
 
     - **pid**: 生产单ID
       - 类型: *Long    *
@@ -954,7 +926,7 @@
       - 类型: *Object*
     - **total**: 总价
       - 类型: *Long*
-    
+
     - **creater**: 创建人 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
     - **designer**: 设计师 , 类型 [user](./user.html#api.personel.UserAction.user)
@@ -963,10 +935,10 @@
       - 类型: *Object*
     - **spliter**: 拆单员 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
-    
+
     - **status**: 状态 , 0: 初始 , 1: 设计 , 2: 生产 , 3: 仓库 , 4: 物流 , 5: 运输 , 6: 安装 , 7: 完成 , 8: 售后, 9: 完结 , 10: 废单
       - 类型: *Short*
-    
+
     - **createTime**: 创建时间
       - 类型: *Timestamp*
     - **designTime**: 设计时间
@@ -981,7 +953,7 @@
       - 类型: *Timestamp*
     - **updateTime**: 更新时间 , 最近完成工作时间
       - 类型: *Timestamp*
-    
+
     - **timeLimit**: 工期
       - 类型: *Integer*
     - **spid**: 父级生产单ID
@@ -990,22 +962,21 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Long*
-    
-    ### <I> pageProduction
+
+    ### `pageProduction` <span style="color:gray">[内部]</span>
 
         分页方式获取生产单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         按照公司作为默认条件查询
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 生产单信息列表 , 每条数据类型 *production*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  生产单信息列表 , 每条数据类型 *production*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1057,7 +1028,7 @@
                                 "duty": "设计师"
                             },
                             "status": 0,
-                            
+
                             "createTime": "2016-01-01 00:00:00",
                             "designTime": null,
                             "divideTime": null,
@@ -1065,7 +1036,7 @@
                             "planTime": null,
                             "mountTime": null,
                             "updateTime": "2016-01-01 00:00:00",
-                            
+
                             "timeLimit": 92400,
                             "spid": 0,
                             "type": 0
@@ -1075,32 +1046,31 @@
                 },
                 ...
             }
-            
-    ### <I> addProduction
+
+    ### `addProduction` <span style="color:gray">[内部]</span>
 
         添加生产单
-        
+
         工序归属公司跟随操作人变化
-        
-                |Requests:|
-                :param production.orderId: 装修单号
-        :type production.orderId: String
-        :param production.house.hid: 房产ID
-        :type production.house.hid: Long
-        :param production.total: 总价
-        :type production.total: Long
-        :param production.designer.uid: 设计师ID
-        :type production.designer.uid: Long
-        :param production.salesman.uid: 销售员ID
-        :type production.salesman.uid: Long
-        :param production.spliter.uid: 拆单员ID
-        :type production.spliter.uid: Long
-        :param production.timeLimit: 工期
-        :type production.timeLimit: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.orderId**:
+  装修单号
+        - **production.house.hid**:
+  房产ID
+        - **production.total**:
+  总价
+        - **production.designer.uid**:
+  设计师ID
+        - **production.salesman.uid**:
+  销售员ID
+        - **production.spliter.uid**:
+  拆单员ID
+        - **production.timeLimit**:
+  工期
+
+        **示例**:{
                 "production.orderId": "1608010000",
                 "production.house.hid": 1,
                 "production.total" 12000000,
@@ -1109,241 +1079,230 @@
                 "production.spliter.uid": 2,
                 "production.timeLimit": 90000
             }
-            
-    ### <I> updateProduction
+
+    ### `updateProduction` <span style="color:gray">[内部]</span>
 
         更新生产单
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断生产单状态 , 0(初始)之外的其他状态 , 不可修改设计师 ; 0(初始)和1(设计)之外的其他状态 , 不可修改拆单员
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        :param production.designer.uid: 设计师ID
-        :type production.designer.uid: Long
-        :param production.salesman.uid: 销售员ID
-        :type production.salesman.uid: Long
-        :param production.spliter.uid: 拆单员ID
-        :type production.spliter.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+        - **production.designer.uid**:
+  设计师ID
+        - **production.salesman.uid**:
+  销售员ID
+        - **production.spliter.uid**:
+  拆单员ID
+
+        **示例**:{
                 "production.pid": 1,
                 "production.designer.uid": 2,
                 "production.salesman.uid": 2,
                 "production.spliter.uid": 2
             }
-            
-    ### <I> updateProductionForAdvance
+
+    ### `updateProductionForAdvance` <span style="color:gray">[内部]</span>
 
         更新生产单 , 高级操作
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        :param production.designer.uid: 设计师ID
-        :type production.designer.uid: Long
-        :param production.salesman.uid: 销售员ID
-        :type production.salesman.uid: Long
-        :param production.spliter.uid: 拆单员ID
-        :type production.spliter.uid: Long
-        :param production.timeLimit: 工期
-        :type production.timeLimit: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+        - **production.designer.uid**:
+  设计师ID
+        - **production.salesman.uid**:
+  销售员ID
+        - **production.spliter.uid**:
+  拆单员ID
+        - **production.timeLimit**:
+  工期
+
+        **示例**:{
                 "production.pid": 1,
                 "production.designer.uid": 2,
                 "production.salesman.uid": 2,
                 "production.spliter.uid": 2,
                 "production.timeLimit": 10000
             }
-            
-    ### <I> designProduction
+
+    ### `designProduction` <span style="color:gray">[内部]</span>
 
         生产单进入设计阶段
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断生产单状态0(初始) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新生产单状态为1(设计) , 更新设计时间 , 更新生产单更新时间
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+
+        **示例**:{
                 "production.pid": 1
             }
-    
-    ### <I> splitProduction
+
+    ### `splitProduction` <span style="color:gray">[内部]</span>
 
         生产单进入生产(拆单)阶段
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断生产单状态1(设计) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新生产单状态为2(生产) , 更新拆单时间 , 更新生产单更新时间
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+
+        **示例**:{
                 "production.pid": 1
             }
-    
-    ### <I> instoreProduction
+
+    ### `instoreProduction` <span style="color:gray">[内部]</span>
 
         生产单进入仓储阶段
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断生产单状态2(生产) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新生产单状态为3(仓库) , 更新仓储时间 , 更新生产单更新时间
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+
+        **示例**:{
                 "production.pid": 1
             }
-            
-    ### <I> planProduction
+
+    ### `planProduction` <span style="color:gray">[内部]</span>
 
         生产单进入物流阶段
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断生产单状态3(仓库) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新生产单状态为4(物流) , 更新物流时间 , 更新生产单更新时间
-        
+
         更新生产单关联的物流包状态为2(物流) , 同时需要判断物流包状态是否存在0(初始) , 错误信息 220025 物流包状态不可操作
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+
+        **示例**:{
                 "production.pid": 1
             }
-            
-    ### <I> tranProduction
+
+    ### `tranProduction` <span style="color:gray">[内部]</span>
 
         生产单进入运输阶段
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断生产单状态4(物流) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新生产单状态为5(运输) , 更新安装时间 , 更新生产单更新时间
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+
+        **示例**:{
                 "production.pid": 1
             }
-    
-    ### <I> mountProduction
+
+    ### `mountProduction` <span style="color:gray">[内部]</span>
 
         生产单进入物流阶段
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断生产单状态5(运输) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新生产单状态为6(安装) , 更新安装时间 , 更新生产单更新时间
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+
+        **示例**:{
                 "production.pid": 1
             }
-    
-    ### <I> finishProduction
+
+    ### `finishProduction` <span style="color:gray">[内部]</span>
 
         完结生产单
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断生产单状态6(安装)/8(售后) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新生产单状态为7(完成) , 更新生产单更新时间
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+
+        **示例**:{
                 "production.pid": 1
             }
-            
-    ### <I> upholdProduction
+
+    ### `upholdProduction` <span style="color:gray">[内部]</span>
 
         售后生产单
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断生产单状态7(完成) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新生产单状态为8(售后) , 更新生产单更新时间
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+
+        **示例**:{
                 "production.pid": 1
             }
-    
-    ### <I> terminalProduction
+
+    ### `terminalProduction` <span style="color:gray">[内部]</span>
 
         生产单废单
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断生产单状态为0(初始)/1(设计) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新生产单状态为10(废单) , 更新完结时间 , 更新生产单更新时间
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+
+        **示例**:{
                 "production.pid": 1
             }
 
@@ -1353,8 +1312,9 @@
 
 ## api.production.ProductionSalesAction
 
-        |DataType:|
-        #### productionSales
+**数据类型**:
+
+#### productionSales
 
     - **psid**: 生产销售ID
       - 类型: *Long*
@@ -1363,27 +1323,25 @@
     - **sid**: 销售单ID
       - 类型: *Long*
 
-    ### <I> queryProductionSalesByPid
+    ### `queryProductionSalesByPid` <span style="color:gray">[内部]</span>
 
         查询生产单中所有的生产销售单
-        
-                |Requests:|
-                :param production.pid: 生产单ID
-        :type production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **production.pid**:
+  生产单ID
+
+        **示例**:{
                 "production.pid": 1,
             }
-            
-                |Returns:|
-                - **productionSales**: 生产销售单 , 每条数据类型 *productionSales*
+
+**返回参数**:
+
+- **productionSales**: 生产销售单 , 每条数据类型 *productionSales*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "productionSales": [
                     {
@@ -1395,36 +1353,36 @@
                 ]
                 ...
             }
-    
-    ### <I> bindProductionSales
+
+    ### `bindProductionSales` <span style="color:gray">[内部]</span>
 
         绑定生产单与销售单关联关系
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断关联生产单状态0(初始) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param productionSales.pid: 生产单ID
-        :type productionSales.pid: Long
-        :param productionSales.sid: 销售单ID
-        :type productionSales.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionSales.pid**:
+  生产单ID
+        - **productionSales.sid**:
+  销售单ID
+
+        **示例**:{
                 "productionSales.pid": 1,
                 "productionSales.sid": 1
             }
-            
+
 ## 报价
 
 ## api.production.PuotationAction
 
-        |DataType:|
-        #### puotation
+**数据类型**:
+
+#### puotation
 
     - **qid**: 报价ID
       - 类型: *Long*
@@ -1444,7 +1402,7 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-        
+
     #### puotationItem
 
     - **qiid**: 报价项ID
@@ -1475,28 +1433,26 @@
       - 类型: *String*
     - **quoteType**: 类型
       - 类型: *String*
-    
-    ### <I> queryPuotationByPid
+
+    ### `queryPuotationByPid` <span style="color:gray">[内部]</span>
 
         通过生产单ID查询报价
-        
-                |Requests:|
-                :param puotation.pid: 生产单ID
-        :type puotation.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **puotation.pid**:
+  生产单ID
+
+        **示例**:{
                 "puotation.pid": 1,
             }
-            
-                |Returns:|
-                - **puotations**: 报价信息列表, 数据类型 *puotation*
+
+**返回参数**:
+
+- **puotations**: 报价信息列表, 数据类型 *puotation*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "puotations": [
                     {
@@ -1518,28 +1474,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryPuotationItemByQid
+
+    ### `queryPuotationItemByQid` <span style="color:gray">[内部]</span>
 
         通过报价ID获取报价项
-        
-                |Requests:|
-                :param puotation.qid: 报价ID
-        :type puotation.qid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **puotation.qid**:
+  报价ID
+
+        **示例**:{
                 "puotation.qid": 1,
             }
-            
-                |Returns:|
-                - **puotationItems**: 报价项列表, 数据类型 *puotationItem*
+
+**返回参数**:
+
+- **puotationItems**: 报价项列表, 数据类型 *puotationItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "puotationItems": [
                     {
@@ -1561,71 +1515,69 @@
                 ],
                 ...
             }
-    
-    ### <I> addPuotation
+
+    ### `addPuotation` <span style="color:gray">[内部]</span>
 
         创建报价信息
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断关联生产单状态0(初始) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param puotation.pid: 生产单ID
-        :type puotation.pid: Long
-        :param puotation.name: 报价名称
-        :type puotation.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **puotation.pid**:
+  生产单ID
+        - **puotation.name**:
+  报价名称
+
+        **示例**:{
                 "production.pid": 1,
                 "puotation.name": "一号报价"
             }
-            
-    ### <I> addPuotationItem
+
+    ### `addPuotationItem` <span style="color:gray">[内部]</span>
 
         添加报价项
-        
+
         判断报价是否存在 , 不存在更新失败 , 错误信息 **220014 报价不存在**
-        
+
         判断关联生产单状态0(初始) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param puotationItem.qid: 报价ID
-        :type puotationItem.qid: Long
-        :param puotationItem.name: 报价项名称
-        :type puotationItem.name: String
-        :param puotationItem.format: 规格
-        :type puotationItem.format: String
-        :param puotationItem.height: 高度
-        :type puotationItem.height: Integer
-        :param puotationItem.width: 宽度
-        :type puotationItem.width: Integer
-        :param puotationItem.thick: 厚度
-        :type puotationItem.thick: Integer
-        :param puotationItem.num: 数量
-        :type puotationItem.num: Integer
-        :param puotationItem.unitPrice: 单价
-        :type puotationItem.unitPrice: Integer
-        :param puotationItem.measurementUnit: 单位
-        :type puotationItem.measurementUnit: String
-        :param puotationItem.total: 总价
-        :type puotationItem.total: Long
-        :param puotationItem.comment: 备注
-        :type puotationItem.comment: String
-        :param puotationItem.specil: 特型
-        :type puotationItem.specil: String
-        :param puotationItem.quoteType: 报价类型
-        :type puotationItem.quoteType: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **puotationItem.qid**:
+  报价ID
+        - **puotationItem.name**:
+  报价项名称
+        - **puotationItem.format**:
+  规格
+        - **puotationItem.height**:
+  高度
+        - **puotationItem.width**:
+  宽度
+        - **puotationItem.thick**:
+  厚度
+        - **puotationItem.num**:
+  数量
+        - **puotationItem.unitPrice**:
+  单价
+        - **puotationItem.measurementUnit**:
+  单位
+        - **puotationItem.total**:
+  总价
+        - **puotationItem.comment**:
+  备注
+        - **puotationItem.specil**:
+  特型
+        - **puotationItem.quoteType**:
+  报价类型
+
+        **示例**:{
                 "puotationItem.qid": 1,
                 "puotationItem.name": "侧板",
                 "puotationItem.format": "zx-1",
@@ -1640,121 +1592,117 @@
                 "puotationItem.specil": "",
                 "puotationItem.quoteType": "板式",
             }
-            
-    ### <I> updatePuotation
+
+    ### `updatePuotation` <span style="color:gray">[内部]</span>
 
         更新报价信息
-        
+
         判断报价是否存在 , 不存在更新失败 , 错误信息 **220014 报价不存在**
-        
+
         判断关联生产单状态0(初始) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
-                |Requests:|
-                :param puotation.qid: 报价ID
-        :type puotation.qid: Long
-        :param puotation.name: 名称
-        :type puotation.name: String
-        :param puotation.comment: 说明
-        :type puotation.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **puotation.qid**:
+  报价ID
+        - **puotation.name**:
+  名称
+        - **puotation.comment**:
+  说明
+
+        **示例**:{
                 "puotation.qid": 1,
                 "puotation.name": "名字",
                 "puotation.comment": "说明"
             }
-            
-    ### <I> updatePuotationForAdvance
+
+    ### `updatePuotationForAdvance` <span style="color:gray">[内部]</span>
 
         更新报价信息
-        
+
         判断报价是否存在 , 不存在更新失败 , 错误信息 **220014 报价不存在**
-        
+
         判断关联生产单状态0(初始) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
-                |Requests:|
-                :param puotation.qid: 报价ID
-        :type puotation.qid: Long
-        :param puotation.discount: 折扣
-        :type puotation.discount: Integer
-        :param puotation.total: 总价
-        :type puotation.total: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **puotation.qid**:
+  报价ID
+        - **puotation.discount**:
+  折扣
+        - **puotation.total**:
+  总价
+
+        **示例**:{
                 "puotation.qid": 1,
                 "puotation.total": 100000,
                 "puotation.discount": 10000
             }
-            
-    ### <I> updatePuotationForDefault
+
+    ### `updatePuotationForDefault` <span style="color:gray">[内部]</span>
 
         更新默认报价
-        
+
         判断报价是否存在 , 不存在更新失败 , 错误信息 **220014 报价不存在**
-        
+
         判断关联生产单状态0(初始) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         遍历所有报价 , 更换默认报价信息
-        
-                |Requests:|
-                :param puotation.qid: 报价ID
-        :type puotation.qid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **puotation.qid**:
+  报价ID
+
+        **示例**:{
                 "puotation.qid": 1
             }
-    
-    ### <I> deletePuotation
+
+    ### `deletePuotation` <span style="color:gray">[内部]</span>
 
         删除报价
-        
+
         判断报价是否存在 , 不存在更新失败 , 错误信息 **220014 报价不存在**
-        
+
         判断关联生产单状态0(初始) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         删除报价信息同时 , 删除归属报价的报价项信息
-        
-                |Requests:|
-                :param puotation.qid: 报价ID
-        :type puotation.qid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **puotation.qid**:
+  报价ID
+
+        **示例**:{
                 "puotation.qid": 1
             }
- 
-    ### <I> deletePuotationItem
+
+    ### `deletePuotationItem` <span style="color:gray">[内部]</span>
 
         删除报价项
-        
+
         判断报价项是否存在 , 不存在删除失败 , 错误信息 **220015 报价中报价项不存在**
-        
+
         判断关联生产单状态0(初始) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
-                |Requests:|
-                :param puotationItem.qiid: 报价项ID
-        :type puotationItem.qiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **puotationItem.qiid**:
+  报价项ID
+
+        **示例**:{
                 "puotationItem.qiid": 1
             }
-            
+
 ## 图纸
 
 图纸信息管理
 
 ## api.production.ProductionPictureAction
 
-        |DataType:|
-        #### productionPicture
+**数据类型**:
+
+#### productionPicture
 
     - **ppid**: 图纸ID
       - 类型: *Long*
@@ -1774,28 +1722,26 @@
       - 类型: *Short*
     - **comment**: 备注
       - 类型: *String*
-      
-    ### <I> queryProductionPictureByPid
+
+    ### `queryProductionPictureByPid` <span style="color:gray">[内部]</span>
 
         查询生产单下的图纸
-        
-                |Requests:|
-                :param productionPicture.pid: 生产单ID
-        :type productionPicture.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionPicture.pid**:
+  生产单ID
+
+        **示例**:{
                 "productionPicture.pid": 1,
             }
-            
-                |Returns:|
-                - **productionPictures**: 图纸列表 , 每条数据类型 *productionPicture*
+
+**返回参数**:
+
+- **productionPictures**: 图纸列表 , 每条数据类型 *productionPicture*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "productionPictures":[
                     {
@@ -1814,59 +1760,57 @@
                         "type": 0,
                         "status": 0,
                         "comment": "说明"
-                        
+
                     }
                 ]
                 ...
             }
-            
-    ### <I> addProductionPicture
+
+    ### `addProductionPicture` <span style="color:gray">[内部]</span>
 
         新增图纸信息
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断关联生产单状态1(设计) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param productionPicture.pid: 生产单ID
-        :type productionPicture.pid: Long
-        :param productionPicture.name: 名称
-        :type productionPicture.name: String
-        :param productionPicture.path: 路径
-        :type productionPicture.path: String
-        :param productionPicture.type: 类型
-        :type productionPicture.type: Short
-        :param productionPicture.comment: 备注
-        :type productionPicture.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionPicture.pid**:
+  生产单ID
+        - **productionPicture.name**:
+  名称
+        - **productionPicture.path**:
+  路径
+        - **productionPicture.type**:
+  类型
+        - **productionPicture.comment**:
+  备注
+
+        **示例**:{
                 "productionPicture.pid": 1,
                 "productionPicture.name": "橱柜CAD图",
                 "productionPicture.path": "00/00/OIJASDF7ASDLFKJASD7FSDFJKL.xls",
                 "productionPicture.type": 0,
                 "productionPicture.comment": ""
             }
-        
-    ### <I> deleteProductionPicture
+
+    ### `deleteProductionPicture` <span style="color:gray">[内部]</span>
 
         删除图纸信息
-        
+
         判断图纸是否存在 , 不存在 , 错误信息 **220003 图纸不存在**
-        
+
         判断关联生产单状态1(设计) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
-                |Requests:|
-                :param productionPicture.ppid: 图纸ID
-        :type productionPicture.ppid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionPicture.ppid**:
+  图纸ID
+
+        **示例**:{
                 "productionPicture.pid": 1
             }
 
@@ -1874,8 +1818,9 @@
 
 ## api.production.OutsourceAction
 
-        |DataType:|
-        #### outsource
+**数据类型**:
+
+#### outsource
 
     - **oid**: 外协单ID
       - 类型: *Long*
@@ -1901,7 +1846,7 @@
       - 类型: *String*
     - **company**: 公司
       - 类型: *Long*
-    
+
     #### outsourceItem
 
     - **oiid**: 外协项ID
@@ -1924,20 +1869,19 @@
       - 类型: *Long*
     - **comment**: 备注
       - 类型: *String*
-    
-    ### <I> pageOutsource
+
+    ### `pageOutsource` <span style="color:gray">[内部]</span>
 
         分页方式获取外协单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 外协单信息列表 , 每条数据类型 *outsource*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  外协单信息列表 , 每条数据类型 *outsource*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2015,22 +1959,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageOutsourceForSupplier
+
+    ### `pageOutsourceForSupplier` <span style="color:gray">[内部]</span>
 
         分页方式获取外协单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         厂商信息限定为当前操作人员相关信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 外协单信息列表 , 每条数据类型 *outsource*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  外协单信息列表 , 每条数据类型 *outsource*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2108,22 +2051,22 @@
                 },
                 ...
             }
-            
-    ### <I> queryOutsourceByPid
+
+    ### `queryOutsourceByPid` <span style="color:gray">[内部]</span>
 
         通过生产单ID获取外协单
-        
-                |Requests:|
-                :param outsource.production.pid: 生产单ID
-        :type outsource.production.pid: Long
-        
-                |Returns:|
-                - **outsources**: 外协单信息列表 , 每条数据类型 *outsource*
+
+**请求参数**:
+
+- **outsource.production.pid**:
+  生产单ID
+
+**返回参数**:
+
+- **outsources**: 外协单信息列表 , 每条数据类型 *outsource*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "outsources": [
                     {
@@ -2197,163 +2140,155 @@
                 ],
                 ...
             }
-            
-    ### <I> addOutsource
+
+    ### `addOutsource` <span style="color:gray">[内部]</span>
 
         创建外协单
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断关联生产单状态2(生产) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
-                |Requests:|
-                :param outsource.production.pid: 生产单ID
-        :type outsource.production.pid: Long
-        :param outsource.supplier.uid: 厂商ID
-        :type outsource.supplier.uid: Long
-        :param outsource.comment: 备注
-        :type outsource.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **outsource.production.pid**:
+  生产单ID
+        - **outsource.supplier.uid**:
+  厂商ID
+        - **outsource.comment**:
+  备注
+
+        **示例**:{
                 "outsource.production.pid": 1,
                 "outsource.comment": "说明"
             }
-    ### <I> updateOutsource
+    ### `updateOutsource` <span style="color:gray">[内部]</span>
 
         更新外协单
-        
+
         判断外协单是否存在 , 不存在 , 错误信息 **220006 外协单不存在**
-        
-                |Requests:|
-                :param outsource.oid: 外协单ID
-        :type outsource.oid: Long
-        :param outsource.path: 路径
-        :type outsource.path: String
-        :param outsource.comment: 说明
-        :type outsource.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **outsource.oid**:
+  外协单ID
+        - **outsource.path**:
+  路径
+        - **outsource.comment**:
+  说明
+
+        **示例**:{
                 "outsource.osid": 1,
                 "outsource.path": "00/00/OIJASDF7ASDLFKJASD7FSDFJKL.xls",
                 "outsource.comment": "说明"
             }
 
-    ### <I> receiptOutsource
+    ### `receiptOutsource` <span style="color:gray">[内部]</span>
 
         接收外协单
-        
+
         判断外协单是否存在 , 不存在 , 错误信息 **220006 外协单不存在**
-        
+
         判断外协单状态是否为0(初始) , 其他状态 , 错误信息 **220021 外协单状态不可操作**
-        
+
         外协单状态更新为1(接收)
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param outsource.oid: 外协单ID
-        :type outsource.oid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **outsource.oid**:
+  外协单ID
+
+        **示例**:{
                 "outsource.osid": 1
             }
-            
-    ### <I> confirmOutsource
+
+    ### `confirmOutsource` <span style="color:gray">[内部]</span>
 
         确认外协单
-        
+
         判断外协单是否存在 , 不存在 , 错误信息 **220006 外协单不存在**
-        
+
         判断外协单状态是否为1(接收) , 其他状态 , 错误信息 **220021 外协单状态不可操作**
-        
+
         外协单状态更新为2(确认)
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param outsource.oid: 外协单ID
-        :type outsource.oid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **outsource.oid**:
+  外协单ID
+
+        **示例**:{
                 "outsource.osid": 1
             }
 
-    ### <I> finishOutsource
+    ### `finishOutsource` <span style="color:gray">[内部]</span>
 
         完结外协单
-        
+
         判断外协单是否存在 , 不存在 , 错误信息 **220006 外协单不存在**
-        
+
         判断外协单状态是否为2(确认) , 其他状态 , 错误信息 **220021 外协单状态不可操作**
-        
+
         外协单状态更新为3(完结)
-        
+
         关联生成对应数量的物流包信息
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param outsource.oid: 外协单ID
-        :type outsource.oid: Long
-        :param outsource.num: 物流包数量
-        :type outsource.num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **outsource.oid**:
+  外协单ID
+        - **outsource.num**:
+  物流包数量
+
+        **示例**:{
                 "outsource.oid": 1,
                 "outsource.num": 1
             }
-            
-    ### <I> deleteOutsource
+
+    ### `deleteOutsource` <span style="color:gray">[内部]</span>
 
         删除外协单
-        
+
         判断外协单是否存在 , 不存在 , 错误信息 **220006 外协单不存在**
-        
+
         判断外协单状态是否为0(初始) , 其他状态 , 错误信息 **220021 外协单状态不可操作**
-        
+
         外协单状态更新为3(失效)
-        
-                |Requests:|
-                :param outsource.oid: 外协单ID
-        :type outsource.oid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **outsource.oid**:
+  外协单ID
+
+        **示例**:{
                 "outsource.oid": 1
             }
 
-    ### <I> pageOutsourceItemByOid
+    ### `pageOutsourceItemByOid` <span style="color:gray">[内部]</span>
 
         通过外协单ID分页方式获取外协项信息
-        
-                |Requests:|
-                :param outsourceItem.oid: 外协单ID
-        :type outsourceItem.oid: Long
-        
-        Example::
-        
-            {
-                "outsourceItem.oid": 1    
+
+**请求参数**:
+
+- **outsourceItem.oid**:
+  外协单ID
+
+        **示例**:{
+                "outsourceItem.oid": 1
             }
-            
-                |Returns:|
-                - **outsourceItems**: 外协项列表 , 每条数据类型 *outsourceItem*
+
+**返回参数**:
+
+- **outsourceItems**: 外协项列表 , 每条数据类型 *outsourceItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2376,35 +2311,34 @@
                 ...
             }
 
-    ### <I> addOutsourceItem
+    ### `addOutsourceItem` <span style="color:gray">[内部]</span>
 
         添加外协项信息
-        
+
         判断外协单是否存在 , 不存在 , 错误信息 **220006 外协单不存在**
-        
-                |Requests:|
-                :param outsource.oid: 外协项ID
-        :type outsource.oid: Long
-        :param outsourceItem.height: 高
-        :type outsourceItem.height: Integer
-        :param outsourceItem.width: 宽
-        :type outsourceItem.width: Integer
-        :param outsourceItem.thick: 厚
-        :type outsourceItem.thick: thick
-        :param outsourceItem.modelling: 造型
-        :type outsourceItem.modelling: String
-        :param outsourceItem.unitprice: 单价
-        :type outsourceItem.unitprice: Integer
-        :param outsourceItem.num: 数量
-        :type outsourceItem.num: Integer
-        :param outsourceItem.total: 总价
-        :type outsourceItem.total: Long
-        :param outsourceItem.comment: 备注
-        :type outsourceItem.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **outsource.oid**:
+  外协项ID
+        - **outsourceItem.height**:
+  高
+        - **outsourceItem.width**:
+  宽
+        - **outsourceItem.thick**:
+  厚
+        - **outsourceItem.modelling**:
+  造型
+        - **outsourceItem.unitprice**:
+  单价
+        - **outsourceItem.num**:
+  数量
+        - **outsourceItem.total**:
+  总价
+        - **outsourceItem.comment**:
+  备注
+
+        **示例**:{
                 "outsource.oid": 1,
                 "outsourceItem.height": 20000,
                 "outsourceItem.width": 20000,
@@ -2416,19 +2350,18 @@
                 "outsourceItem.comment": "说明"
             }
 
-    ### <I> deleteOutsourceItem
+    ### `deleteOutsourceItem` <span style="color:gray">[内部]</span>
 
         删除外协项信息
-        
+
         判断外协项是否存在  ,不存在删除失败 , 错误信息 **220007 外协项不存在**
-        
-                |Requests:|
-                :param outsourceItem.oiid: 外协项ID
-        :type outsourceItem.oiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **outsourceItem.oiid**:
+  外协项ID
+
+        **示例**:{
                 "outsourceItem.oiid": 1,
             }
 
@@ -2436,8 +2369,9 @@
 
 ## api.production.HardwareAction
 
-        |DataType:|
-        #### hardware
+**数据类型**:
+
+#### hardware
 
     - **hid**: 五金单ID
       - 类型: *Long*
@@ -2461,7 +2395,7 @@
       - 类型: *String*
     - **company**: 公司
       - 类型: *Long*
-  
+
     #### hardwareItem
 
     - **hiid**: 五金项ID
@@ -2480,20 +2414,19 @@
       - 类型: *String*
     - **total**: 总价
       - 类型: *Long*
-    
-    ### <I> pageHardware
+
+    ### `pageHardware` <span style="color:gray">[内部]</span>
 
         分页方式获取五金单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 五金单信息列表 , 每条数据类型 *hardware*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  五金单信息列表 , 每条数据类型 *hardware*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2564,28 +2497,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryHardwareByPid
+
+    ### `queryHardwareByPid` <span style="color:gray">[内部]</span>
 
         通过生产单ID获取五金单
-        
-                |Requests:|
-                :param hardware.production.pid: 生产单ID
-        :type hardware.production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **hardware.production.pid**:
+  生产单ID
+
+        **示例**:{
                 "hardware.production.pid": 1
             }
-            
-                |Returns:|
-                - **hardwares**: 五金单信息列表 , 每条数据类型 *hardware*
+
+**返回参数**:
+
+- **hardwares**: 五金单信息列表 , 每条数据类型 *hardware*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "hardwares": [
                     {
@@ -2652,145 +2583,138 @@
                 ],
                 ...
             }
-            
-    ### <I> addHardware
+
+    ### `addHardware` <span style="color:gray">[内部]</span>
 
         创建五金单
-        
+
         判断生产单是否存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断关联生产单状态2(生产) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param hardware.production.pid: 生产单ID
-        :type hardware.production.pid: Long
-        :param hardware.status: 状态
-        :type hardware.status: Short
-        :param hardware.comment: 说明
-        :type hardware.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **hardware.production.pid**:
+  生产单ID
+        - **hardware.status**:
+  状态
+        - **hardware.comment**:
+  说明
+
+        **示例**:{
                 "hardware.production.pid": 1,
                 "hardware.status": 1,
                 "hardware.comment": "说明"
             }
-            
-    ### <I> updateHardware
+
+    ### `updateHardware` <span style="color:gray">[内部]</span>
 
         更新五金单信息
-        
+
         判断五金单是否存在 , 错误信息 **220004 五金单不存在**
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param hardware.hid: 五金单ID
-        :type hardware.hid: Long
-        :param hardware.comment: 说明
-        :type hardware.comment: String
-        :param hardware.path: 路径
-        :type hardware.path: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **hardware.hid**:
+  五金单ID
+        - **hardware.comment**:
+  说明
+        - **hardware.path**:
+  路径
+
+        **示例**:{
                 "hardware.hid": 1,
                 "hardware.comment": 1,
                 "hardware.path": 1
             }
-            
-    ### <I> instoreHardware
+
+    ### `instoreHardware` <span style="color:gray">[内部]</span>
 
         五金单进入仓储阶段
-        
+
         判断五金单是否存在 , 错误信息 **220004 五金单不存在**
-        
+
         判断五金单状态为1(采购) , 其他状态 , 错误信息 **220022 五金单状态不可操作**
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param hardware.hid: 五金单ID
-        :type hardware.hid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **hardware.hid**:
+  五金单ID
+
+        **示例**:{
                 "hardware.hid": 1
             }
-            
-    ### <I> finishHardware
+
+    ### `finishHardware` <span style="color:gray">[内部]</span>
 
         完结五金单
-        
+
         判断五金单是否存在 , 错误信息 **220004 五金单不存在**
-        
+
         判断五金单状态是否为2(仓库) , 其他状态 , 错误信息 **220021 外协单状态不可操作**
-        
+
         外协单状态更新为3(完结)
-        
+
         关联生成对应数量的物流包信息
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param hardware.hid: 五金单ID
-        :type hardware.hid: Long
-        :param hardware.num: 物流包数量
-        :type hardware.num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **hardware.hid**:
+  五金单ID
+        - **hardware.num**:
+  物流包数量
+
+        **示例**:{
                 "hardware.hid": 1,
                 "hardware.num": 1
             }
-            
-    ### <I> deleteHardware
+
+    ### `deleteHardware` <span style="color:gray">[内部]</span>
 
         删除五金单
-        
+
         判断五金单是否存在 , 不存在更新失败 , 错误信息 **220004 五金单不存在**
-        
+
         判断五金单状态是0(初始)/1(采购) , 其他状态 , 错误信息 **220022 五金单状态不可操作**
-        
-                |Requests:|
-                :param hardware.hid: 五金单ID
-        :type hardware.hid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **hardware.hid**:
+  五金单ID
+
+        **示例**:{
                 "hardware.hid": 1
             }
-            
-    ### <I> pageHardwareItemByHid
+
+    ### `pageHardwareItemByHid` <span style="color:gray">[内部]</span>
 
         分页方式获取五金项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param hardwareItem.hid: 生产单ID
-        :type hardwareItem.hid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **hardwareItem.hid**:
+  生产单ID
+
+        **示例**:{
                 "hardwareItem.hid": 1
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 五金项信息列表 , 每条数据类型 *hardwareItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  五金项信息列表 , 每条数据类型 *hardwareItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2810,32 +2734,31 @@
                 },
                 ...
             }
-            
-    ### <I> addHardwareItem
+
+    ### `addHardwareItem` <span style="color:gray">[内部]</span>
 
         添加五金项到五金单
-        
+
         判断五金单是否存在 , 不存在更新失败 , 错误信息 **220004 五金单不存在**
-        
-                |Requests:|
-                :param hardwareItem.hid: 五金单ID
-        :type hardwareItem.hid: Long
-        :param hardwareItem.name: 说明
-        :type hardwareItem.name: String
-        :param hardwareItem.num: 数量
-        :type hardwareItem.num: Integer
-        :param hardwareItem.unitprice: 单价
-        :type hardwareItem.unitprice: Integer
-        :param hardwareItem.total: 总价
-        :type hardwareItem.total: Long
-        :param hardwareItem.measurementunit: 单位
-        :type hardwareItem.measurementunit: String
-        :param hardwareItem.comment: 说明
-        :type hardwareItem.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **hardwareItem.hid**:
+  五金单ID
+        - **hardwareItem.name**:
+  说明
+        - **hardwareItem.num**:
+  数量
+        - **hardwareItem.unitprice**:
+  单价
+        - **hardwareItem.total**:
+  总价
+        - **hardwareItem.measurementunit**:
+  单位
+        - **hardwareItem.comment**:
+  说明
+
+        **示例**:{
                 "hardwareItem.hid": 1,
                 "hardwareItem.name": "名称",
                 "hardwareItem.num": 1,
@@ -2844,20 +2767,19 @@
                 "hardwareItem.nameasurementunitme": "个",
                 "hardwareItem.comment": "说明"
             }
-            
-    ### <I> deleteHardwareItem
+
+    ### `deleteHardwareItem` <span style="color:gray">[内部]</span>
 
         删除五金项信息
-        
+
         判断五金项是否存在 , 不存在删除失败 , 错误信息 **220005 五金项不存在**
-        
-                |Requests:|
-                :param hardwareItem.hiid: 五金项ID
-        :type hardwareItem.hiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **hardwareItem.hiid**:
+  五金项ID
+
+        **示例**:{
                 "hardwareItem.hiid": 1,
             }
 
@@ -2867,8 +2789,9 @@
 
 ## api.production.ProductionPlanAction
 
-        |DataType:|
-        #### productionPlan
+**数据类型**:
+
+#### productionPlan
 
     - **ppid**: 计划ID
       - 类型: *Long*
@@ -2890,7 +2813,7 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Long*
-            
+
     #### productionPlanItem
 
     - **ppiid**: 计划项ID
@@ -2917,20 +2840,19 @@
       - 类型: *Long*
     - **comment**: 备注
       - 类型: *String*
-    
-    ### <I> pageProductionPlan
+
+    ### `pageProductionPlan` <span style="color:gray">[内部]</span>
 
         分页方式获取计划信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 计划信息列表 , 每条数据类型 *productionPlan*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  计划信息列表 , 每条数据类型 *productionPlan*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3002,28 +2924,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryProductionPlanByPid
+
+    ### `queryProductionPlanByPid` <span style="color:gray">[内部]</span>
 
         通过生产单ID获取生产计划
-        
-                |Requests:|
-                :param productionPlan.production.pid: 生产单ID
-        :type productionPlan.production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionPlan.production.pid**:
+  生产单ID
+
+        **示例**:{
                 "productionPlan.production.pid": 1,
             }
-        
-                |Returns:|
-                - **productionPlans**: 计划表 , 每条数据类型 *productionPlan*
+
+**返回参数**:
+
+- **productionPlans**: 计划表 , 每条数据类型 *productionPlan*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "productionPlans": [
                     {
@@ -3046,99 +2966,94 @@
                 ]
                 ...
             }
-    
-    ### <I> addProductionPlan
+
+    ### `addProductionPlan` <span style="color:gray">[内部]</span>
 
         创建生产计划
-        
+
         判断生产单是否存在 , 不存在 , 错误信息 **220001 生产单不存在**
-        
+
         判断关联生产单状态2(生产) , 其他状态 , 错误信息 **220002 生产单状态不可操作**
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param productionPlan.production.pid: 生产单ID
-        :type productionPlan.production.pid: Long
-        :param productionPlan.timeLimit: 工期
-        :type productionPlan.timeLimit: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionPlan.production.pid**:
+  生产单ID
+        - **productionPlan.timeLimit**:
+  工期
+
+        **示例**:{
                 "productionPlan.production.pid": 1,
                 "productionPlan.timeLimit": 10000
             }
-            
-    ### <I> updateProductionPlan
+
+    ### `updateProductionPlan` <span style="color:gray">[内部]</span>
 
         更新计划
-        
+
         判断计划是否存在 , 不存在更新失败 , 错误信息 **220008 计划不存在**
 
-                |Requests:|
-                :param productionPlan.ppid: 生产计划ID
-        :type productionPlan.ppid: Long
-        :param productionPlan.path: 路径
-        :type productionPlan.path: String
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **productionPlan.ppid**:
+  生产计划ID
+        - **productionPlan.path**:
+  路径
+
+        **示例**:{
                 "productionPlan.ppid": 1,
                 "productionPlan.path": "00/00/OIJASDF7ASDLFKJASD7FSDFJKL.xls",
             }
-            
-    ### <I> finishProductionPlan
+
+    ### `finishProductionPlan` <span style="color:gray">[内部]</span>
 
         完结五金单
-        
+
         判断计划是否存在 , 不存在更新失败 , 错误信息 **220008 计划不存在**
-        
+
         判断计划状态是否为0(初始) , 其他状态 , 错误信息 **220021 外协单状态不可操作**
-        
+
         生产计划状态更新为1(完结)
-        
+
         关联生成对应数量的物流包信息
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param productionPlan.ppid: 五金单ID
-        :type productionPlan.ppid: Long
-        :param productionPlan.num: 物流包数量
-        :type productionPlan.num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionPlan.ppid**:
+  五金单ID
+        - **productionPlan.num**:
+  物流包数量
+
+        **示例**:{
                 "productionPlan.ppid": 1,
                 "productionPlan.num": 1
             }
-            
-    ### <I> pageProductionPlanItemByPpid
+
+    ### `pageProductionPlanItemByPpid` <span style="color:gray">[内部]</span>
 
         分页方式获取计划项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param productionPlanItem.ppid: 计划ID
-        :type productionPlanItem.ppid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionPlanItem.ppid**:
+  计划ID
+
+        **示例**:{
                 "productionPlanItem.ppid": 1
             }
-            
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 计划项信息列表 , 每条数据类型 *productionPlanItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  计划项信息列表 , 每条数据类型 *productionPlanItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3162,40 +3077,39 @@
                 },
                 ...
             }
-        
-    ### <I> addProductionPlanItem
+
+    ### `addProductionPlanItem` <span style="color:gray">[内部]</span>
 
         添加计划项信息
-        
+
         判断计划是否存在 , 不存在更新失败 , 错误信息 **220008 计划不存在**
-    
-                |Requests:|
-                :param productionPlanItem.ppid: 计划ID
-        :type productionPlanItem.ppid: Long
-        :param productionPlanItem.typeno: 类型编号
-        :type productionPlanItem.typeNo: String
-        :param productionPlanItem.name: 名称
-        :type productionPlanItem.name: String
-        :param productionPlanItem.height: 高
-        :type productionPlanItem.height: Integer
-        :param productionPlanItem.width: 宽
-        :type productionPlanItem.width: Integer
-        :param productionPlanItem.thick: 厚
-        :type productionPlanItem.thick: Integer
-        :param productionPlanItem.color: 颜色
-        :type productionPlanItem.color: String
-        :param productionPlanItem.unitprice: 单价
-        :type productionPlanItem.unitprice: Integer
-        :param productionPlanItem.num: 数量
-        :type productionPlanItem.num: Integer
-        :param productionPlanItem.total: 总价
-        :type productionPlanItem.total: Long
-        :param productionPlanItem.comment: 备注
-        :type productionPlanItem.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionPlanItem.ppid**:
+  计划ID
+        - **productionPlanItem.typeno**:
+  类型编号
+        - **productionPlanItem.name**:
+  名称
+        - **productionPlanItem.height**:
+  高
+        - **productionPlanItem.width**:
+  宽
+        - **productionPlanItem.thick**:
+  厚
+        - **productionPlanItem.color**:
+  颜色
+        - **productionPlanItem.unitprice**:
+  单价
+        - **productionPlanItem.num**:
+  数量
+        - **productionPlanItem.total**:
+  总价
+        - **productionPlanItem.comment**:
+  备注
+
+        **示例**:{
                 "productionPlanItem.pid": 1,
                 "productionPlanItem.typeNo": "木门",
                 "productionPlanItem.name": "木门门板",
@@ -3209,28 +3123,28 @@
                 "productionPlanItem.comment": "",
             }
 
-    ### <I> deleteProductionPlanItem
+    ### `deleteProductionPlanItem` <span style="color:gray">[内部]</span>
 
         删除生产单项信息
-        
+
         判断计划项是否存在 , 不存在更新失败 , 错误信息 **220009 计划项不存在**
-        
-                |Requests:|
-                :param productionPlanItem.ppiid: 计划项ID
-        :type productionPlanItem.ppiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionPlanItem.ppiid**:
+  计划项ID
+
+        **示例**:{
                 "productionPlanItem.ppiid": 1,
             }
-            
+
 ### 计划工序组
 
 ## api.production.ProductionWorkPlanAction
 
-        |DataType:|
-        #### productionWorkPlan
+**数据类型**:
+
+#### productionWorkPlan
 
     - **pwpid**: 工序组ID
       - 类型: *Long*
@@ -3246,26 +3160,24 @@
       - 类型: *Short*
     - **sort**: 排序
       - 类型: *Short*
-    
-    ### <I> queryProductionWorkPlanByPpid
 
-                |Requests:|
-                :param productionWorkPlan.ppid: 计划ID
-        :type productionWorkPlan.ppid: Long
-        
-        Example::
-        
-            {
+    ### `queryProductionWorkPlanByPpid` <span style="color:gray">[内部]</span>
+
+**请求参数**:
+
+- **productionWorkPlan.ppid**:
+  计划ID
+
+        **示例**:{
                 "productionWorkPlan.ppid": 1,
             }
-        
-                |Returns:|
-                - **productionWorkPlans**: 计划项列表 , 每条数据类型 *productionworkplan*
+
+**返回参数**:
+
+- **productionWorkPlans**: 计划项列表 , 每条数据类型 *productionworkplan*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "productionWorkPlans": [
                     {
@@ -3293,76 +3205,74 @@
                 ],
                 ...
             }
-    
-    ### <I> addProductionWorkPlan
+
+    ### `addProductionWorkPlan` <span style="color:gray">[内部]</span>
 
         添加计划工序组
-        
+
         判断计划是否存在 , 不存在更新失败 , 错误信息 **220008 计划不存在**
-        
+
         判断计划中是否已经存在工序组 , 存在不能添加 , 错误信息 **220010 计划工序已存在**
-        
+
         添加计划工序组同时 , 利用工序组中拥有工序完成计划工序数据的生成
-    
-                |Requests:|
-                :param productionWorkPlan.ppid: 计划ID
-        :type productionWorkPlan.ppid: Long
-        :param productionWorkPlan.wpid: 工序组ID
-        :type productionWorkPlan.wpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionWorkPlan.ppid**:
+  计划ID
+        - **productionWorkPlan.wpid**:
+  工序组ID
+
+        **示例**:{
                 "productionWorkPlan.ppid": 1,
                 "productionWorkPlan.wpid": 1
             }
-            
-    ### <I> finishProductionWorkPlan
+
+    ### `finishProductionWorkPlan` <span style="color:gray">[内部]</span>
 
         完结计划工序组
-        
+
         判断计划是否存在 , 不存在更新失败 , 错误信息 **220008 计划不存在**
-        
+
         判断计划工序组是否存在 , 不存在 , 错误信息 **220026 计划工序组不存在**
-        
+
         判断计划工序组状态是否为1(执行) , 其他状态 , 错误信息 **220011 生产计划工序组状态不可操作**
-        
+
         判断计划工序组排序 , 非顺序完成计划组 , 错误信息 **220027 计划工序组执行顺序异常**
-        
+
         更新计划工序组状态为2(完成)
-        
-                |Requests:|
-                :param productionWorkPlan.wpid: 工序组ID
-        :type productionWorkPlan.wpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionWorkPlan.wpid**:
+  工序组ID
+
+        **示例**:{
                 "productionWorkPlan.wpid": 1
             }
-    
-    ### <I> deleteProductionWorkPlan
+
+    ### `deleteProductionWorkPlan` <span style="color:gray">[内部]</span>
 
         删计划工序组
-        
+
         判断计划工序组状态 , 非初始不能删除 , 错误信息 **220011 计划工序组状态不可操作**
-    
-                |Requests:|
-                :param productionWorkPlan.pwpid: ID
-        :type productionWorkPlan.pwpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionWorkPlan.pwpid**:
+  ID
+
+        **示例**:{
                 "productionWorkPlan.pwpid": 1
             }
-            
+
 ### 计划工序
 
 ## api.production.ProductionWorkFlowAction
 
-        |DataType:|
-        #### productionWorkFlow
+**数据类型**:
+
+#### productionWorkFlow
 
     - **pwfid**: 计划工序ID
       - 类型: *Long*
@@ -3376,28 +3286,26 @@
       - 类型: *Timestamp*
     - **status**: 状态 , 0: 初始 , 1: 执行
       - 类型: *Short*
-    
-    ### <I> queryProductionWorkFlowByPwpidAWfid
+
+    ### `queryProductionWorkFlowByPwpidAWfid` <span style="color:gray">[内部]</span>
 
         通过计划涉工序组ID获取计划工序
-        
-                |Requests:|
-                :param productionWorkFlow.pwpid: 计划工序组ID
-        :type productionWorkFlow.pwpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionWorkFlow.pwpid**:
+  计划工序组ID
+
+        **示例**:{
                 "productionWorkFlow.pwpid": 1
             }
-            
-                |Returns:|
-                - **productionWorkFlows**: 计划工序, 数据类型 *productionWorkFlow*
+
+**返回参数**:
+
+- **productionWorkFlows**: 计划工序, 数据类型 *productionWorkFlow*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "productionWorkFlows": [
                     {
@@ -3419,28 +3327,26 @@
                 ],
                 ...
             }
-            
+
     ### queryProductionWorkFlowByPwpid
 
         通过计划工序组ID获取计划工序
 
-                |Requests:|
-                :param productionWorkFlow.pwpid: 计划工序组ID
-        :type productionWorkFlow.pwpid: Long
+**请求参数**:
 
-        Example::
+- **productionWorkFlow.pwpid**:
+  计划工序组ID
 
-            {
+        **示例**:{
                 "productionWorkFlow.pwpid": 1
             }
-            
-                |Returns:|
-                - **productionWorkFlows**: 单位信息列表 , 每条数据类型 *productionWorkFlows*
+
+**返回参数**:
+
+- **productionWorkFlows**: 单位信息列表 , 每条数据类型 *productionWorkFlows*
           - 类型: *List*
 
-        Example::
-
-            {
+        **示例**:{
                 ...
                 "productionWorkFlows": [
                     {
@@ -3462,26 +3368,25 @@
                 ],
                 ...
             }
-    
-    ### <I> operateProductionWorkFlow
+
+    ### `operateProductionWorkFlow` <span style="color:gray">[内部]</span>
 
         操作计划工序信息
-        
+
         判断计划工序是否存在 , 不存在操作失败 , 错误信息 **220012 计划工序不存在**
-        
+
         判断计划工序是否已经操作 , 已经操作不可再次操作 , 错误信息 **220013 计划工序不可操作**
-        
+
         更新计划工序操作人以及操作时间
-        
+
         判断归属工序组内工序全部完结 , 更新计划工序组状态为已操作1(已执行)
-        
-                |Requests:|
-                :param productionWorkFlow.pwfid: 操作工人ID
-        :type productionWorkFlow.pwfid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionWorkFlow.pwfid**:
+  操作工人ID
+
+        **示例**:{
                 "productionWorkFlow.pwfid": 1
             }
 
@@ -3489,8 +3394,9 @@
 
 ## api.production.ProductionUserWorkflowAction
 
-        |DataType:|
-        #### productionUserWorkflow
+**数据类型**:
+
+#### productionUserWorkflow
 
     - **puwfid**: ID
       - 类型: *Long*
@@ -3500,28 +3406,26 @@
       - 类型: *Object*
     - **operateTime**: 操作时间
       - 类型: *Timestamp*
-    
-    ### <I> queryProductionUserWorkFlowByPwfid
+
+    ### `queryProductionUserWorkFlowByPwfid` <span style="color:gray">[内部]</span>
 
         通过计划工序ID获取计划工序-人员
-        
-                |Requests:|
-                :param productionUserWorkFlow.pwfid: 计划工序ID
-        :type productionUserWorkFlow.pwfid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **productionUserWorkFlow.pwfid**:
+  计划工序ID
+
+        **示例**:{
                 "productionUserWorkFlow.pwfid": 1
             }
-            
-                |Returns:|
-                - **productionUserWorkFlows**: 计划工序-人员, 数据类型 *productionUserWorkFlow*
+
+**返回参数**:
+
+- **productionUserWorkFlows**: 计划工序-人员, 数据类型 *productionUserWorkFlow*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "productionUserWorkFlows": [
                     {
@@ -3539,13 +3443,14 @@
                 ],
                 ...
             }
-            
+
 ## 物流包
 
 ## api.production.TranpackAction
 
-        |DataType:|
-        #### tranpack
+**数据类型**:
+
+#### tranpack
 
     - **tid**: 物流包ID
       - 类型: *Long*
@@ -3573,20 +3478,19 @@
       - 类型: *Timestamp*
     - **status**: 状态 , 0: 初始 , 1: 仓库 , 2: 物流 , 3: 运输 , 4: 安装 , 5: 完成 , 6: 丢失 , 7: 失效
       - 类型: *Short*
-    
-    ### <I> pageTranpack
+
+    ### `pageTranpack` <span style="color:gray">[内部]</span>
 
         分页方式获取物流包 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 计划信息列表 , 每条数据类型 *productionPlan*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  计划信息列表 , 每条数据类型 *productionPlan*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3646,22 +3550,22 @@
                 },
                 ...
             }
-            
-    ### <I> queryTranpackByPid
+
+    ### `queryTranpackByPid` <span style="color:gray">[内部]</span>
 
         通过生产单ID获取物流包
-        
-                |Requests:|
-                :param tranpack.production.pid: 生产单ID
-        :type tranpack.production.pid: Long
-        
-                |Returns:|
-                - **tranpacks**: 物流包信息列表 , 每条数据类型 *tranpack*
+
+**请求参数**:
+
+- **tranpack.production.pid**:
+  生产单ID
+
+**返回参数**:
+
+- **tranpacks**: 物流包信息列表 , 每条数据类型 *tranpack*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "tranpacks": [
                     {
@@ -3718,202 +3622,192 @@
                 ...
             }
 
-    ### <I> packTranpack
+    ### `packTranpack` <span style="color:gray">[内部]</span>
 
         打包物流包
-        
+
         根据关联单号以及类型获取对应的订单 , 外协/五金/生产计划
-        
+
         根据物流包类型以及关联ID , 判断关联单是否存在
-        
+
         更新关联生产单更新时间
-        
-                |Requests:|
-                :param tranpack.no: 关联单号
-        :type tranpack.no: Long
-        :param tranpack.type: 关联单号
-        :type tranpack.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **tranpack.no**:
+  关联单号
+        - **tranpack.type**:
+  关联单号
+
+        **示例**:{
                 "tranpack.no": 1,
                 "tranpack.type": 0
-            }            
-    
-    ### <I> packTranpackForOutsource
+            }
+
+    ### `packTranpackForOutsource` <span style="color:gray">[内部]</span>
 
         打包物流包
-        
-                |Requests:|
-                :param tranpack.production.pid: 生产单ID
-        :type tranpack.production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **tranpack.production.pid**:
+  生产单ID
+
+        **示例**:{
                 "tranpack.production.pid": 1,
                 "tranpack.rid": 1,
                 "tranpack.type": 1
             }
-        
-    ### <I> packTranpackForHardware
+
+    ### `packTranpackForHardware` <span style="color:gray">[内部]</span>
 
         打包物流包
-        
-                |Requests:|
-                :param tranpack.production.pid: 生产单ID
-        :type tranpack.production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **tranpack.production.pid**:
+  生产单ID
+
+        **示例**:{
                 "tranpack.production.pid": 1,
                 "tranpack.rid": 1,
                 "tranpack.type": 1
             }
-        
-    ### <I> packTranpackForPlan
+
+    ### `packTranpackForPlan` <span style="color:gray">[内部]</span>
 
         打包物流包
-        
-                |Requests:|
-                :param tranpack.production.pid: 生产单ID
-        :type tranpack.production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **tranpack.production.pid**:
+  生产单ID
+
+        **示例**:{
                 "tranpack.production.pid": 1,
                 "tranpack.rid": 1,
                 "tranpack.type": 2
             }
-            
-    ### <I> instoreTranpack
+
+    ### `instoreTranpack` <span style="color:gray">[内部]</span>
 
         物流包进仓储阶段
-        
+
         判断物流包是否存在 , 不存在 , 错误信息 **220023 物流包不存在**
-        
+
         判断物流包状态0(初始) , 其他状态 , 错误信息 **220025 物流包状态不可操作**
-        
+
         更新物流包状态为1(仓储) , 更新关联生产单更新时间
-        
+
         判断关联生产单归属外协单状态是否为3(完结) , 存在其他状态外协单 , 关联生产单状态不可更新
-        
+
         判断关联生产单归属五金单状态是否为3(完结) , 存在其他状态五金单 , 关联生产单状态不可更新
-        
+
         判断关联生产单归属计划单状态是否为1(完结) , 存在其他状态计划单 , 关联生产单状态不可更新
-        
+
         判断关联生产单归属物流包状态是否为0(初始) , 存在该状态物流包 , 关联生产单状态不可更新
-        
+
         满足以上条件之后 , 更新关联生产单状态为3(仓库) , 更新入库时间
 
-                |Requests:|
-                :param tranpack.production.pid: 生产单ID
-        :type tranpack.production.pid: Long
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **tranpack.production.pid**:
+  生产单ID
+
+        **示例**:{
                 "tranpack.production.pid:": 1
             }
 
-    ### <I> planTranPack
+    ### `planTranPack` <span style="color:gray">[内部]</span>
 
         物流包进入物流阶段
-        
+
         判断物流包是否存在 , 不存在 , 错误信息 **220023 物流包不存在**
-        
+
         判断物流包状态1(仓储) , 其他状态 , 错误信息 **220025 物流包状态不可操作**
-        
+
         更新物流包状态为2(物流) , 更新物流时间 , 更新关联生产单更新时间
-        
-                |Requests:|
-                :param tranpack.production.pid: 生产单ID
-        :type tranpack.production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **tranpack.production.pid**:
+  生产单ID
+
+        **示例**:{
                 "tranpack.production.pid:": 1
             }
-    
-    ### <I> tranTranpack
+
+    ### `tranTranpack` <span style="color:gray">[内部]</span>
 
         物流包进入运输阶段
-        
+
         判断物流包是否存在 , 不存在 , 错误信息 **220023 物流包不存在**
-        
+
         判断物流包状态2(物流) , 其他状态 , 错误信息 **220025 物流包状态不可操作**
-        
+
         更新物流包状态为3(运输) , 更新送货时间 , 更新关联生产单更新时间
-        
-                |Requests:|
-                :param tranpack.production.pid: 生产单ID
-        :type tranpack.production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **tranpack.production.pid**:
+  生产单ID
+
+        **示例**:{
                 "tranpack.production.pid:": 1
             }
-    
-    ### <I> mountTranpack
+
+    ### `mountTranpack` <span style="color:gray">[内部]</span>
 
         物流包进入安装阶段
-        
+
         判断物流包是否存在 , 不存在 , 错误信息 **220023 物流包不存在**
-        
+
         判断物流包状态3(运输) , 其他状态 , 错误信息 **220025 物流包状态不可操作**
-        
+
         更新物流包状态为4(安装) , 更新安装时间 , 更新关联生产单更新时间
-        
-                |Requests:|
-                :param tranpack.production.pid: 生产单ID
-        :type tranpack.production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **tranpack.production.pid**:
+  生产单ID
+
+        **示例**:{
                 "tranpack.production.pid:": 1
             }
-            
-    ### <I> completeTranpack
+
+    ### `completeTranpack` <span style="color:gray">[内部]</span>
 
         完成物流包
-        
+
         判断物流包是否存在 , 不存在 , 错误信息 **220023 物流包不存在**
-        
+
         判断物流包状态4(安装) , 其他状态 , 错误信息 **220025 物流包状态不可操作**
-        
+
         更新物流包状态为5(完成) , 更新安装时间 , 更新关联生产单更新时间
-        
-                |Requests:|
-                :param tranpack.production.pid: 生产单ID
-        :type tranpack.production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **tranpack.production.pid**:
+  生产单ID
+
+        **示例**:{
                 "tranpack.production.pid:": 1
             }
-            
-    ### <I> lossTranpack
+
+    ### `lossTranpack` <span style="color:gray">[内部]</span>
 
         物流包丢失
-        
+
         判断物流包是否存在 , 不存在 , 错误信息 **220023 物流包不存在**
-        
+
         更新物流包状态为6(丢失)
-        
-                |Requests:|
-                :param tranpack.production.pid: 生产单ID
-        :type tranpack.production.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **tranpack.production.pid**:
+  生产单ID
+
+        **示例**:{
                 "tranpack.production.pid:": 1
             }
 
@@ -3921,8 +3815,9 @@
 
 ## api.production.ProductionFunctionAction
 
-        |DataType:|
-        #### productionFunction
+**数据类型**:
+
+#### productionFunction
 
     - **pfid**: 功能ID
       - 类型: *Long*
@@ -3942,11 +3837,11 @@
       - 类型: *Short*
     - **sort**: 排序
       - 类型: *Short*
-    
-    ### <I> queryProductionFunction
+
+    ### `queryProductionFunction` <span style="color:gray">[内部]</span>
 
         获取生产功能信息
-    
-    ### <I> queryProductionFunctionByName
+
+    ### `queryProductionFunctionByName` <span style="color:gray">[内部]</span>
 
         通过名称获取生产功能信息

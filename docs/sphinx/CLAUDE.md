@@ -14,7 +14,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - 文档格式：reStructuredText (RST)
 - 输出格式：HTML（在线文档）、PDF（离线文档）
 
----
 
 ## 快速开始
 
@@ -60,7 +59,6 @@ start _build/html/index.html
 open _build/html/index.html
 ```
 
----
 
 ## 文档架构
 
@@ -106,7 +104,6 @@ docs/sphinx/
     └── latex/           # LaTeX/PDF 格式输出
 ```
 
----
 
 ## 文档编写规范
 
@@ -115,53 +112,41 @@ docs/sphinx/
 #### 1. 类定义（数据类型）
 
 ```rst
-.. class:: api.common.LoginAction
+## api.common.LoginAction
 
-    +---------+
-    |DataType:|
-    +---------+
+**数据类型**:
 
-    .. data:: role
-
-    :param rid: 角色ID
-    :type rid: Integer
-    :param name: 角色名
-    :type name: String
+#### role
+    - **rid**:角色ID
+      - 类型: `Integer
+    - **name**:角色名
+      - 类型: `String
 ```
 
 #### 2. 方法定义（API 接口）
 
 ```rst
-.. method:: <I> doLogin
-
+### `doLogin` <span style="color:gray">[内部]</span>
     登陆，同时获取登陆结果信息。
 
-    +---------+
-    |Requests:|
-    +---------+
+**请求参数**:
 
-    :param userId: 登陆用户编号
-    :type userId: String
-    :param password: 登陆密码
-    :type password: String
+- **userId**:登陆用户编号
+      - 类型: `String
+    - **password**:登陆密码
+      - 类型: `String
 
-    Example::
-
-        {
+    **示例**:{
             userId: "U001",
             password: "password"
         }
 
-    +--------+
-    |Returns:|
-    +--------+
+**返回参数**:
 
-    :param authentication: 权限码
-    :type authentication: String
+- **authentication**:权限码
+      - 类型: `String
 
-    Example::
-
-        {
+    **示例**:{
             "authentication": "FCA5C7A2DA9EDA010A7ECD3DCE2"
         }
 ```
@@ -176,13 +161,12 @@ docs/sphinx/
 
 ```rst
 # 引用数据类型
-:param role: 用户角色对象，类型 :data:`role`
+- **role**:用户角色对象，类型 `role`
 
 # 引用其他文档
-参见 :ref:`common` 通用模块
+参见 [common](#common) 通用模块
 ```
 
----
 
 ## 核心规范速查
 
@@ -260,7 +244,6 @@ docs/sphinx/
 - `150xxx` - 主材模块错误
 - `160xxx` - 财务模块错误
 
----
 
 ## 编码规范要点
 
@@ -294,7 +277,6 @@ docs/sphinx/
    - 不使用行内脚本 `<script>`
    - 不使用表象元素（`<b>`、`<u>`、`<center>`）
 
----
 
 ## 开发工作流
 
@@ -318,7 +300,6 @@ docs/sphinx/
 - **变更记录**：所有 API 变更必须在 `log.rst` 中记录日期和内容
 - **错误码管理**：新增错误码需在 `error.rst` 中登记
 
----
 
 ## 常用命令
 
@@ -339,7 +320,6 @@ pip install sphinx-autobuild
 sphinx-autobuild . _build/html
 ```
 
----
 
 ## 注意事项
 
@@ -349,11 +329,10 @@ sphinx-autobuild . _build/html
 4. **示例代码**：所有 JSON 示例必须格式化，便于阅读
 5. **参数验证**：参考 `check_rule.rst` 确保参数定义符合校验规则
 
----
 
 ## 参考资料
 
 - [Sphinx 官方文档](https://www.sphinx-doc.org/)
 - [reStructuredText 语法](http://docutils.sourceforge.net/rst.html)
 - 项目根文档：`../../CLAUDE.md`（Rhadamanthus 系统架构）
-- API 接口文档：`../API.md`（前后端接口规范）
+- API 接口文档：
