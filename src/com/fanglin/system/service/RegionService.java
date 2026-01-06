@@ -18,15 +18,17 @@ import com.fanglin.system.vo.RegionVO;
 import com.fanglin.utils.Paging;
 
 public interface RegionService {
-	
+
 	public void pageRegion(Paging paging, List<Filter> filters);
-	
+
 	public List<RegionVO> queryRegion();
-	
+
 	public RegionVO queryRegionByRid(RegionVO regionVO);
-	
+
 	public List<RegionVO> queryRegionByName(RegionVO regionVO);
-	
+
+	public RegionVO existRegion(RegionVO regionVO);
+
 	public void addRegion(RegionVO regionVO);
 
 	public void updateRegion(RegionVO regionVO) throws FLException;
@@ -34,13 +36,5 @@ public interface RegionService {
 	public String deleteRegion(List<Integer> rids);
 
 	public void deleteRegionByRid(Integer rid);
-
-	/**
-	 * 省份存在验证方法 - 通过名称进行验证
-	 * 不存在则创建,存在则返回省份信息
-	 * @param name 省份名称
-	 * @return 省份信息VO
-	 */
-	public RegionVO existRegion(String name);
 
 }

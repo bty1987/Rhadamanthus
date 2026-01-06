@@ -1,19 +1,20 @@
 package com.fanglin.communion.dao.impl;
 
-import com.fanglin.communion.dao.VillageDao;
-import com.fanglin.communion.po.VillagePO;
-import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.Filter;
-import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
+import java.math.BigInteger;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
-import java.util.List;
+import com.fanglin.communion.dao.VillageDao;
+import com.fanglin.communion.po.VillagePO;
+import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Repository("villageDao")
 public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
@@ -62,8 +63,13 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<VillagePO> queryVillageByCityProperId(Integer cityProperId) {
+	public List<VillagePO> queryVillage(Integer cityProperId) {
 		return session().createCriteria(VillagePO.class).add(Restrictions.eq("cityProper.cpid", cityProperId)).list();
+	}
+
+	@Override
+	public VillagePO queryVillage(String name) {
+		return (VillagePO) session().createCriteria(VillagePO.class).add(Restrictions.eq("name", name)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

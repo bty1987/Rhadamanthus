@@ -51,6 +51,16 @@ public class VillageVO implements Serializable {
 		super();
 	}
 
+	public VillageVO(Long vid) {
+		super();
+		this.vid = vid;
+	}
+
+	public VillageVO(String no) {
+		super();
+		this.no = no;
+	}
+
 	public VillageVO(CityProperVO cityProper) {
 		super();
 		this.cityProper = cityProper;

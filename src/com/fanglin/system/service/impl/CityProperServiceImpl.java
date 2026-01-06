@@ -93,7 +93,7 @@ public class CityProperServiceImpl implements CityProperService {
 	@Override
 	public List<CityProperVO> queryCityProperByCid(CityProperVO cityProperVO) {
 
-		List<CityProperPO> cityProperPOs = cityProperDao.queryCityProperByCid(cityProperVO.getCity().getCid());
+		List<CityProperPO> cityProperPOs = cityProperDao.queryCityProper(cityProperVO.getCity().getCid());
 		List<CityProperVO> cityProperVOs = new ArrayList<CityProperVO>();
 
 		for (CityProperPO cityProperPO : cityProperPOs) {
@@ -106,7 +106,7 @@ public class CityProperServiceImpl implements CityProperService {
 	@Override
 	public List<CityProperVO> queryCityProperByName(CityProperVO cityProperVO) {
 
-		List<CityProperPO> cityProperPOs = cityProperDao.pageCityProperByName(new Paging(0, 50), cityProperVO.getName());
+		List<CityProperPO> cityProperPOs = cityProperDao.pageCityProper(new Paging(0, 50), cityProperVO.getName());
 		List<CityProperVO> cityProperVOs = new ArrayList<CityProperVO>();
 
 		for (CityProperPO cityProperPO : cityProperPOs) {
@@ -114,6 +114,21 @@ public class CityProperServiceImpl implements CityProperService {
 		}
 
 		return cityProperVOs;
+	}
+
+	@Override
+	@Transactional
+	public CityProperVO existCity(CityProperVO cityProperVO) throws FLException {
+
+		if (cityProperVO == null || cityProperVO.getName() == null) return cityProperVO;
+
+		CityProperPO cityProper = cityProperDao.queryCityProper(cityProperVO.getName().trim());
+
+		if (cityProper == null) {
+			addCityProper(cityProperVO);
+		}
+
+		return cityProper.ptv(new CityProperVO(new CityVO(new RegionVO())));
 	}
 
 	@Override
@@ -225,59 +240,6 @@ public class CityProperServiceImpl implements CityProperService {
 	@Transactional
 	public void deleteCityProperByCpid(Integer cpid) {
 		cityProperDao.deleteById(cpid);
-	}
-
-	@Override
-	@Transactional
-	public CityProperVO existCity(CityProperVO cityProperVO) throws FLException {
-		// 验证参数
-		if (cityProperVO == null || cityProperVO.getName() == null || cityProperVO.getName().trim().isEmpty()) {
-			throw new FLException(230020, "城区名称不能为空");
-		}
-
-		if (cityProperVO.getCity() == null || cityProperVO.getCity().getCid() == null) {
-			throw new FLException(230019, "城市不存在");
-		}
-
-		// 通过名称和城市ID精确查询城区
-		CityProperPO existingCityProper = cityProperDao.queryCityProperByNameAndCid(
-			cityProperVO.getName().trim(),
-			cityProperVO.getCity().getCid()
-		);
-
-		// 如果城区已存在，直接返回
-		if (existingCityProper != null) {
-			return existingCityProper.ptv(new CityProperVO(new CityVO(new RegionVO())));
-		}
-
-		// 城区不存在，验证城市是否存在
-		CityPO cityPO = cityDao.get(cityProperVO.getCity().getCid());
-		if (cityPO == null) {
-			throw new FLException(230019, "城市不存在");
-		}
-
-		// 创建新的城区
-		CityProperPO newCityProperPO = new CityProperPO();
-
-		// 生成城区编号
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CITY_PROPER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
-		StringBuffer no = new StringBuffer();
-		no.append(SystemConfig.getString("regionIdent", "R_"));
-		no.append(FormatUtil.fillZero(count, "000"));
-		newCityProperPO.setNo(no.toString());
-
-		// 设置城区名称和拼音
-		newCityProperPO.setName(cityProperVO.getName().trim());
-		newCityProperPO.setPinyin((String) PinYin4Util.getPinyin(cityProperVO.getName()).get(0));
-
-		// 设置所属城市
-		newCityProperPO.setCity(cityPO);
-
-		// 保存到数据库
-		cityProperDao.save(newCityProperPO);
-
-		// 返回新建的城区信息
-		return newCityProperPO.ptv(new CityProperVO(new CityVO(new RegionVO())));
 	}
 
 }
