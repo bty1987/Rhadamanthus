@@ -1,12 +1,11 @@
-# balance {#balance}
-
-# 结算
+# balance 结算
 ## 帐户
 
 ## api.balance.BalanceAccountAction
 
-        |DataType:|
-        #### balanceAccount
+**数据类型**:
+
+#### balanceAccount
 
     - **baid**: 帐户ID
       - 类型: *Long*
@@ -32,20 +31,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageBalanceAccount
+
+    ### `pageBalanceAccount` <span style="color:gray">[内部]</span>
 
         分页方式获取帐户信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 帐户信息列表 , 每条数据类型 *balanceAccount*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  帐户信息列表 , 每条数据类型 *balanceAccount*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -76,28 +74,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryBalanceAccount
+
+    ### `queryBalanceAccount` <span style="color:gray">[内部]</span>
 
         通过归属人ID获取帐户信息 , 帐户类型为结算
-        
-                |Requests:|
-                :param balanceAccount.belonger.uid: 归属人ID
-        :type balanceAccount.belonger.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceAccount.belonger.uid**:
+  归属人ID
+
+        **示例**:{
                 "balanceAccount.belonger.uid": 1
             }
-            
-                |Returns:|
-                - **balanceAccounts**: 帐户列表 , 每条数据类型 *balanceAccount*
+
+**返回参数**:
+
+- **balanceAccounts**: 帐户列表 , 每条数据类型 *balanceAccount*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceAccounts": [
                     {
@@ -124,18 +120,17 @@
                 ],
                 ...
             }
-            
-    ### <I> queryBalanceAccountForTeller
+
+    ### `queryBalanceAccountForTeller` <span style="color:gray">[内部]</span>
 
         通过公司ID获取帐户信息 , 类型为出纳
-        
-                |Returns:|
-                - **balanceAccounts**: 帐户列表 , 每条数据类型 *balanceAccount*
+
+**返回参数**:
+
+- **balanceAccounts**: 帐户列表 , 每条数据类型 *balanceAccount*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceAccounts": [
                     {
@@ -162,61 +157,58 @@
                 ],
                 ...
             }
-            
-    ### <I> addBalanceAccount
+
+    ### `addBalanceAccount` <span style="color:gray">[内部]</span>
 
         添加帐户
-        
-                |Requests:|
-                :param balanceAccount.name: 名称
-        :type balanceAccount.name: String
-        :param balanceAccount.belonger.uid: 归属人ID
-        :type balanceAccount.belonger.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceAccount.name**:
+  名称
+        - **balanceAccount.belonger.uid**:
+  归属人ID
+
+        **示例**:{
                 "balanceAccount.name": "帐户",
                 "balanceAccount.belonger.uid": 1
             }
-            
-    ### <I> updateBalanceAccountForStatus
+
+    ### `updateBalanceAccountForStatus` <span style="color:gray">[内部]</span>
 
         更新帐户状态
-        
+
         判断帐户是否存在 , 不存在 , 错误信息 **350001 帐户不存在**
-        
-                |Requests:|
-                :param balanceAccount.aid: 帐户ID
-        :type balanceAccount.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceAccount.aid**:
+  帐户ID
+
+        **示例**:{
                 "balanceAccount.aid": 1
             }
-            
-    ### <I> withdrawBalanceAccount
+
+    ### `withdrawBalanceAccount` <span style="color:gray">[内部]</span>
 
         提款
-        
+
         判断帐户是否存在 , 不存在 , 错误信息 **350001 帐户不存在**
-        
+
         判断帐户余额是否满足操作额度 , 不满足 , 错误信息 **350003 帐户金额不足**
-        
+
         根据 帐户余额 = 应付额 - 实付额 公式 , 对应更新实付额以及余额
-        
+
         生成类型为2(提)的结算单
-        
-                |Requests:|
-                :param balanceAccount.aid: 帐户ID
-        :type balanceAccount.aid: Long
-        :param balanceAccount.money: 操作额
-        :type balanceAccount.money: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceAccount.aid**:
+  帐户ID
+        - **balanceAccount.money**:
+  操作额
+
+        **示例**:{
                 "balanceAccount.aid": 1,
                 "balanceAccount.money": 10000
             }
@@ -225,8 +217,9 @@
 
 ## api.balance.BalanceDccountAction
 
-        |DataType:|
-        #### balanceDccount
+**数据类型**:
+
+#### balanceDccount
 
     - **bdid**: 扣款ID
       - 类型: *Long*
@@ -253,20 +246,19 @@
       - 类型: *String*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageBalanceDccount
+
+    ### `pageBalanceDccount` <span style="color:gray">[内部]</span>
 
         分页方式获取扣款信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 扣款信息列表 , 每条数据类型 *balanceDccount*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  扣款信息列表 , 每条数据类型 *balanceDccount*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -300,27 +292,24 @@
                 },
                 ...
             }
-    
-    ### <I> queryBalanceDccount
+
+    ### `queryBalanceDccount` <span style="color:gray">[内部]</span>
 
         获取扣款信息
-        
-                |Requests:|
-                :param balanceDccount.belonger.uid: 归属人ID
-        :type balanceDccount.belonger.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceDccount.belonger.uid**:
+  归属人ID
+
+        **示例**:{
                 "balanceDccount.belonger.uid": 1
             }
-        
+
         - **balanceDccounts**: 扣款信息列表 , 每条数据类型 *balanceDccount*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceDccounts": [
                     {
@@ -350,28 +339,27 @@
                 ],
                 ...
             }
-    
-    ### <I> addBalanceDccount
+
+    ### `addBalanceDccount` <span style="color:gray">[内部]</span>
 
         创建扣款信息
-        
-                |Requests:|
-                :param balanceDccount.name: 名称
-        :type balanceDccount.name: String
-        :param balanceDccount.belonger.uid: 归属人ID
-        :type balanceDccount.belonger.uid: Long
-        :param balanceDccount.startTime: 开始时间
-        :type balanceDccount.startTime: Timestamp
-        :param balanceDccount.endTime: 结束时间
-        :type balanceDccount.endTime: Timetamp
-        :param balanceDccount.cutpay: 扣款
-        :type balanceDccount.cutpay: Long
-        :param balanceDccount.comment: 说明
-        :type balanceDccount.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceDccount.name**:
+  名称
+        - **balanceDccount.belonger.uid**:
+  归属人ID
+        - **balanceDccount.startTime**:
+  开始时间
+        - **balanceDccount.endTime**:
+  结束时间
+        - **balanceDccount.cutpay**:
+  扣款
+        - **balanceDccount.comment**:
+  说明
+
+        **示例**:{
                 "balanceDccount.name": "name",
                 "balanceDccount.belonger.uid": 1,
                 "balanceDccount.startTime": "2016-01-01",
@@ -379,28 +367,27 @@
                 "balanceDccount.cutpay": 100000,
                 "balanceDccount.comment": "说明"
             }
-    
-    ### <I> updateBalanceDccount
+
+    ### `updateBalanceDccount` <span style="color:gray">[内部]</span>
 
         更新扣款信息
-        
-                |Requests:|
-                :param balanceDccount.bdid: 扣款ID
-        :type balanceDccount.bdid: String
-        :param balanceDccount.name: 名称
-        :type balanceDccount.name: String
-        :param balanceDccount.startTime: 开始时间
-        :type balanceDccount.startTime: Timestamp
-        :param balanceDccount.endTime: 结束时间
-        :type balanceDccount.endTime: Timetamp
-        :param balanceDccount.cutpay: 扣款
-        :type balanceDccount.cutpay: Long
-        :param balanceDccount.comment: 说明
-        :type balanceDccount.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceDccount.bdid**:
+  扣款ID
+        - **balanceDccount.name**:
+  名称
+        - **balanceDccount.startTime**:
+  开始时间
+        - **balanceDccount.endTime**:
+  结束时间
+        - **balanceDccount.cutpay**:
+  扣款
+        - **balanceDccount.comment**:
+  说明
+
+        **示例**:{
                 "balanceDccount.bdid": 1,
                 "balanceDccount.name": "name",
                 "balanceDccount.startTime": "2016-01-01",
@@ -408,20 +395,19 @@
                 "balanceDccount.cutpay": 100000,
                 "balanceDccount.comment": "说明"
             }
-    
-    ### <I> updateBalanceDccountForStatus
+
+    ### `updateBalanceDccountForStatus` <span style="color:gray">[内部]</span>
 
         更新扣款信息状态
-        
-                |Requests:|
-                :param balanceDccount.bdid: 扣款ID
-        :type balanceDccount.bdid: String
-        :param balanceDccount.status: 状态
-        :type balanceDccount.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceDccount.bdid**:
+  扣款ID
+        - **balanceDccount.status**:
+  状态
+
+        **示例**:{
                 "balanceDccount.bdid": 1,
                 "balanceDccount.status": 0
             }
@@ -430,8 +416,9 @@
 
 ## api.balance.BalanceAction
 
-        |DataType:|
-        #### balance
+**数据类型**:
+
+#### balance
 
     - **bid**: 结算单ID
       - 类型: *Long*
@@ -461,20 +448,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageBalance
+
+    ### `pageBalance` <span style="color:gray">[内部]</span>
 
         分页方式获取结算单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 结算单信息列表 , 每条数据类型 *balance*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算单信息列表 , 每条数据类型 *balance*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -509,29 +495,26 @@
                 ...
             }
 
-    ### <I> queryBalance
+    ### `queryBalance` <span style="color:gray">[内部]</span>
 
         获取结算单信息
-        
-                |Requests:|
-                :param balance.belonger.uid: 归属人ID
-        :type balance.belonger.uid: Long
-        :param balance.status: 状态
-        :type balance.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balance.belonger.uid**:
+  归属人ID
+        - **balance.status**:
+  状态
+
+        **示例**:{
                 "balance.belonger.uid": 1,
                 "balance.status": 0
             }
-        
+
         - **balances**: 结算单信息列表 , 每条数据类型 *balance*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balances": [
                     {
@@ -562,120 +545,117 @@
                 ...
             }
 
-    ### <I> addBalance
+    ### `addBalance` <span style="color:gray">[内部]</span>
 
         添加结算单
-        
-                |Requests:|
-                :param balance.belonger.uid: 归属人ID
-        :type balance.belonger.uid: Long
-        :param balance.startTime: 开始时间
-        :type balance.startTime: Timestamp
-        :param balance.endTime: 结束时间
-        :type balance.endTime: Timestamp
-        :param balance.amount: 金额
-        :type balance.amount: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balance.belonger.uid**:
+  归属人ID
+        - **balance.startTime**:
+  开始时间
+        - **balance.endTime**:
+  结束时间
+        - **balance.amount**:
+  金额
+
+        **示例**:{
                 "balance.belonger.uid": 1,
                 "balance.startTime": "2016-01-01",
                 "balance.endTime": "2016-01-01",
                 "balance.amount": 1000
             }
-            
-    ### <I> balanceBalance
+
+    ### `balanceBalance` <span style="color:gray">[内部]</span>
 
         结算
-        
+
         判断结算单是否存在 , 不存在 , 错误信息 **350006 结算单不存在**
-        
+
         判断帐户是否存在 , 不存在 , 错误信息 **350001 帐户不存在**
-        
+
         判断帐户和结算单是否为统一归属人 , 存在不一致 , 错误信息 **350007 结算归属不一致**
-        
+
         判断帐户余额是否满足操作额度 , 不满足 , 错误信息 **350003 帐户金额不足**
-        
+
         结算过程 , 操作帐户类型为0(结算)
-        
+
         结算过程中 , 结算单类型与帐户应付款/实付款/余额之间的关系
-        
+
         收类型结算单对应的操作额 , 增加帐户中的应付款额度
-        
+
         支类型结算单对应的操作额 , 增加帐户中的实付款额度
-        
+
         帐户中余额 = 应付款 - 实付款
-        
-                |Requests:|
-                :param balance.bid: 结算单ID
-        :type balance.bid: Long
-        
-        :param account[n].aid: 帐户ID
-        :type account[n].aid: Long
-        :param account[n].money: 操作额
-        :type account[n].money: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balance.bid**:
+  结算单ID
+
+        - **account[n].aid**:
+  帐户ID
+        - **account[n].money**:
+  操作额
+
+        **示例**:{
                 "balance.belonger.uid": 1,
                 "balance.amount": 1000
             }
-            
-    ### <I> payBalance
+
+    ### `payBalance` <span style="color:gray">[内部]</span>
 
         出纳
-        
+
         判断结算单是否存在 , 不存在 , 错误信息 **350006 结算单不存在**
-        
+
         判断帐户是否存在 , 不存在 , 错误信息 **350001 帐户不存在**
-        
+
         结算过程 , 操作帐户类型为1(出纳)
-        
+
         出纳过程 , 不更新帐户中的应付额/实付额/余额 , 记录操作过程金额 , 生成结算明细
-        
-                |Requests:|
-                :param balance.bid: 结算单ID
-        :type balance.bid: Long
-        
-        :param account[n].aid: 帐户ID
-        :type account[n].aid: Long
-        :param account[n].money: 金额
-        :type account[n].money: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balance.bid**:
+  结算单ID
+
+        - **account[n].aid**:
+  帐户ID
+        - **account[n].money**:
+  金额
+
+        **示例**:{
                 "balance.bid": 1,
                 "balance.amount": 1000
-                
+
                 "account[0].aid": 1,
                 "account[0].money": 1000,
             }
 
-    ### <I> payedBalance
+    ### `payedBalance` <span style="color:gray">[内部]</span>
 
         付款
-        
+
         判断结算单是否存在 , 不存在 , 错误信息 **350006 结算单不存在**
-        
-                |Requests:|
-                :param balances[n].bid: 结算单ID
-        :type balances[n].bid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balances[n].bid**:
+  结算单ID
+
+        **示例**:{
                 "balances[0].bid": 1,
             }
-    
+
 ## 结算明细
 
 ## api.balance.BalanceDetailAction
 
-        |DataType:|
-        #### balanceDetail
+**数据类型**:
+
+#### balanceDetail
 
     - **bdid**: 结算明细ID
       - 类型: *Long*
@@ -689,28 +669,26 @@
       - 类型: *Timestamp*
     - **money**: 金额
       - 类型: *Long*
-    
-    ### <I> queryBalanceDetailForBalance
+
+    ### `queryBalanceDetailForBalance` <span style="color:gray">[内部]</span>
 
         根据结算单ID获取结算明细
-        
-                |Requests:|
-                :param balanceDetail.balance.bid: 结算单ID
-        :type balanceDetail.balance.bid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceDetail.balance.bid**:
+  结算单ID
+
+        **示例**:{
                 "balanceDetail.balance.bid": 1
             }
-    
-                |Returns:|
-                - **balanceDetails**: 帐户明细列表 , 每条数据类型 *balanceDetail*
+
+**返回参数**:
+
+- **balanceDetails**: 帐户明细列表 , 每条数据类型 *balanceDetail*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceDetails": [
                     {
@@ -748,8 +726,9 @@
 
 ## api.balance.BalanceCutpayAction
 
-        |DataType:|
-        #### balanceCutpay
+**数据类型**:
+
+#### balanceCutpay
 
     - **bcid**: 扣款ID
       - 类型: *Long*
@@ -773,33 +752,31 @@
       - 类型: *Long*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pageBalanceCutpay
+
+    ### `pageBalanceCutpay` <span style="color:gray">[内部]</span>
 
         分页方式获取结算扣款信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param balanceCutpay.balance.bid: 结算单ID
-        :type balanceCutpay.balance.bid: Long
-        :param balanceCutpay.dccount.bdid: 结算扣款
-        :type balanceCutpay.dccount.bdid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceCutpay.balance.bid**:
+  结算单ID
+        - **balanceCutpay.dccount.bdid**:
+  结算扣款
+
+        **示例**:{
                 "balanceCutpay.balance.bid": 1,
                 "balanceCutpay.dccount.bdid": 1
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 结算扣款信息列表 , 每条数据类型 *balanceCutpay*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算扣款信息列表 , 每条数据类型 *balanceCutpay*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -830,31 +807,29 @@
                 },
                 ...
             }
-    
-    ### <I> queryBalanceCutpay
+
+    ### `queryBalanceCutpay` <span style="color:gray">[内部]</span>
 
         通过结算单主键查询扣款信息
-        
-                |Requests:|
-                :param balanceCutpay.balance.bid: 结算单ID
-        :type balanceCutpay.balance.bid: Long
-        :param balanceCutpay.dccount.bdid: 结算扣款
-        :type balanceCutpay.dccount.bdid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceCutpay.balance.bid**:
+  结算单ID
+        - **balanceCutpay.dccount.bdid**:
+  结算扣款
+
+        **示例**:{
                 "balanceCutpay.balance.bid": 1,
                 "balanceCutpay.dccount.bdid": 1
             }
 
-                |Returns:|
-                - **balanceCutpays**: 结算扣款列表 , 每条数据类型 *balanceCutpay*
+**返回参数**:
+
+- **balanceCutpays**: 结算扣款列表 , 每条数据类型 *balanceCutpay*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceCutpays": [
                     {
@@ -882,25 +857,24 @@
                 ...
             }
 
-    ### <I> addBalanceCutpay
+    ### `addBalanceCutpay` <span style="color:gray">[内部]</span>
 
         添加扣款信息
-        
-                |Requests:|
-                :param balanceCutpay.balance.bid: 结算单ID
-        :type balanceCutpay.balance.bid: Long
-        :param blanaceCutpay.dccount.bdid: 关联扣款ID
-        :type balanceCutpay.dccount.bdid: Long
-        :param balanceCutpay.type: 类型
-        :type balanceCutpay.type: Short
-        :param balanceCutpay.money: 金额
-        :type balanceCutpay.money: Integer
-        :param balanceCutpay.comment: 说明
-        :type balanceCutpay.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceCutpay.balance.bid**:
+  结算单ID
+        - **blanaceCutpay.dccount.bdid**:
+  关联扣款ID
+        - **balanceCutpay.type**:
+  类型
+        - **balanceCutpay.money**:
+  金额
+        - **balanceCutpay.comment**:
+  说明
+
+        **示例**:{
                 "balanceCutpay.balance.bid": 1,
                 "balanceCutpay.dccount.bdid": 1,
                 "balanceCutpay.type": 0,
@@ -908,23 +882,22 @@
                 "balanceCutpay.comment": "说明"
             }
 
-    ### <I> deductBalanceCutpay
+    ### `deductBalanceCutpay` <span style="color:gray">[内部]</span>
 
         抵扣
-        
-                |Requests:|
-                :param balanceCutpay.balance.bid: 结算单ID
-        :type balanceCutpay.balance.bid: Long
-        :param balanceCutpay.cutpay.bcid: 关联扣款ID
-        :type balanceCutpay.cutpay.bcid: Long
-        :param balanceCutpay.money: 金额
-        :type balanceCutpay.money: Integer
-        :param balanceCutpay.comment: 说明
-        :type balanceCutpay.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceCutpay.balance.bid**:
+  结算单ID
+        - **balanceCutpay.cutpay.bcid**:
+  关联扣款ID
+        - **balanceCutpay.money**:
+  金额
+        - **balanceCutpay.comment**:
+  说明
+
+        **示例**:{
                 "balanceCutpay.balance.bid": 1,
                 "balanceCutpay.cutpay.bcid": 1,
                 "balanceCutpay.type": 0,
@@ -936,8 +909,9 @@
 
 ## api.balance.ApportDetailAction
 
-        |DataType:|
-        #### apportDetail
+**数据类型**:
+
+#### apportDetail
 
     - **adid**: 分摊明细ID
       - 类型: *Long*
@@ -951,28 +925,26 @@
       - 类型: *Long*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> queryApportDetailForBalance
+
+    ### `queryApportDetailForBalance` <span style="color:gray">[内部]</span>
 
         通过结算单ID获取分摊明细
-        
-                |Requests:|
-                :param apportDetail.bid: 结算单ID
-        :type apportDetail.bid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **apportDetail.bid**:
+  结算单ID
+
+        **示例**:{
                 "apportDetail.bid": 1
             }
-    
-                |Returns:|
-                - **apportDetails**: 分摊明细列表 , 每条数据类型 *apportDetail*
+
+**返回参数**:
+
+- **apportDetails**: 分摊明细列表 , 每条数据类型 *apportDetail*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "apportDetails": [
                     {
@@ -990,37 +962,37 @@
                 ],
                 ...
             }
-    
-    ### <I> addApportDetail
+
+    ### `addApportDetail` <span style="color:gray">[内部]</span>
 
         添加分摊明细
-        
+
         判断结算单是否存在 , 不存在 , 错误信息 **350006 结算单不存在**
-        
-                |Requests:|
-                :param apportDetail.bid: 结算单ID
-        :type apportDetail.bid: Long
-        :param apportDetail.money: 分摊额
-        :type apportDetail.money: Long
-        :param apportDetail.comment: 说明
-        :type apportDetail.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **apportDetail.bid**:
+  结算单ID
+        - **apportDetail.money**:
+  分摊额
+        - **apportDetail.comment**:
+  说明
+
+        **示例**:{
                 "apportDetail.bid": 1,
                 "apportDetail.money": 10000,
                 "apportDetail.comment": "说明",
             }
-            
+
 ## 结算销售
 
 ### 结算
 
 ## api.balance.BalanceSalesAction
 
-        |DataType:|
-        #### balanceSales
+**数据类型**:
+
+#### balanceSales
 
     - **bsid**: 结算销售ID
       - 类型: *Long*
@@ -1056,20 +1028,19 @@
       - 类型: *Timestamp*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageBalanceSales
+
+    ### `pageBalanceSales` <span style="color:gray">[内部]</span>
 
         分页方式获取结算销售信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 结算销售信息列表 , 每条数据类型 *balanceSales*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算销售信息列表 , 每条数据类型 *balanceSales*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1104,13 +1075,13 @@
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "balancer": {
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "createTime": "2016-01-01",
                             "lockTime": "2016-01-01",
@@ -1122,19 +1093,18 @@
                 ...
             }
 
-    ### <I> pageBalanceSalesForBalance
+    ### `pageBalanceSalesForBalance` <span style="color:gray">[内部]</span>
 
         分页方式获取结算销售信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 结算销售信息列表 , 每条数据类型 *balanceSales*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算销售信息列表 , 每条数据类型 *balanceSales*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1192,13 +1162,13 @@
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "balancer": {
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "createTime": "2016-01-01",
                             "lockTime": "2016-01-01",
@@ -1210,27 +1180,25 @@
                 ...
             }
 
-    ### <I> queryBalanceSales
+    ### `queryBalanceSales` <span style="color:gray">[内部]</span>
 
         查询结算销售 , 状态为0(初始)
-        
-                |Requests:|
-                :param balanceSales.name: 名称
-        :type balanceSales.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.name**:
+  名称
+
+        **示例**:{
                 "balanceSales.name:": "结算销售"
             }
-        
-                |Returns:|
-                - **balanceSaleses**: 结算销售信息列表 , 每条数据类型 *balanceSales*
+
+**返回参数**:
+
+- **balanceSaleses**: 结算销售信息列表 , 每条数据类型 *balanceSales*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceSaleses": [
                     {
@@ -1263,13 +1231,13 @@
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "balancer": {
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "createTime": "2016-01-01",
                         "lockTime": "2016-01-01",
@@ -1278,28 +1246,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryBalanceSalesByBsid
+
+    ### `queryBalanceSalesByBsid` <span style="color:gray">[内部]</span>
 
         通过结算单ID查询结算销售
-        
-                |Requests:|
-                :param balanceSales.bsid: 结算销售ID
-        :type balanceSales.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.bsid**:
+  结算销售ID
+
+        **示例**:{
                 "balanceSales.bsid:": 1
             }
-        
-                |Returns:|
-                - **balanceSales**: 结算销售信息 , 类型 *balanceSales*
+
+**返回参数**:
+
+- **balanceSales**: 结算销售信息 , 类型 *balanceSales*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceSales": {
                     "bsid": 1,
@@ -1331,13 +1297,13 @@
                         "uid": 1,
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "balancer": {
                         "uid": 1,
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "createTime": "2016-01-01",
                     "lockTime": "2016-01-01",
@@ -1345,28 +1311,26 @@
                 }
                 ...
             }
-            
-    ### <I> queryBalanceSalesByBid
+
+    ### `queryBalanceSalesByBid` <span style="color:gray">[内部]</span>
 
         通过结算单ID查询结算销售
-        
-                |Requests:|
-                :param balanceSales.bid: 结算单ID
-        :type balanceSales.bid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.bid**:
+  结算单ID
+
+        **示例**:{
                 "balanceSales.bid:": 1
             }
-        
-                |Returns:|
-                - **balanceSales**: 结算销售信息 , 类型 *balanceSales*
+
+**返回参数**:
+
+- **balanceSales**: 结算销售信息 , 类型 *balanceSales*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceSales": {
                     "bsid": 1,
@@ -1398,13 +1362,13 @@
                         "uid": 1,
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "balancer": {
                         "uid": 1,
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "createTime": "2016-01-01",
                     "lockTime": "2016-01-01",
@@ -1413,176 +1377,168 @@
                 ...
             }
 
-    ### <I> amountBalanceSales
+    ### `amountBalanceSales` <span style="color:gray">[内部]</span>
 
         汇总结算销售
-        
-                |Requests:|
-                :param balanceSales.bsid: 结算销售ID
-        :type balanceSales.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.bsid**:
+  结算销售ID
+
+        **示例**:{
                 "balanceSales.bsid": 1
             }
 
-    ### <I> createBalanceSales
+    ### `createBalanceSales` <span style="color:gray">[内部]</span>
 
         创建结算销售
-        
-                |Requests:|
-                :param balanceSales.name: 名称
-        :type balanceSales.name: String
-        :param balanceSales.brand.bid: 品牌ID
-        :type balanceSales.brand.bid: Long
-        :param balanceSales.grade: 等级
-        :type balanceSales.grade: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.name**:
+  名称
+        - **balanceSales.brand.bid**:
+  品牌ID
+        - **balanceSales.grade**:
+  等级
+
+        **示例**:{
                 "balanceSales.name": "结算销售",
                 "balanceSales.brand.bid": 1,
                 "balanceSales.grade": "A"
             }
-            
-    ### <I> updateBalanceSales
+
+    ### `updateBalanceSales` <span style="color:gray">[内部]</span>
 
         更新结算销售
-        
+
         判断结算销售是否存在 , 不存在 , 错误信息 **350017 结算销售不存在**
-        
+
         判断结算销售状态为0(初始) , 其他状态 , 错误信息 **350018 结算销售不可操作**
-        
-                |Requests:|
-                :param balanceSales.bsid: 结算销售ID
-        :type balanceSales.bsid: Long
-        :param balanceSales.name: 名称
-        :type balanceSales.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.bsid**:
+  结算销售ID
+        - **balanceSales.name**:
+  名称
+
+        **示例**:{
                 "balanceSales.bsid": 1,
                 "balanceSales.name": "结算销售"
             }
 
-    ### <I> submitBalanceSales
+    ### `submitBalanceSales` <span style="color:gray">[内部]</span>
 
         提交结算销售
-        
+
         判断结算销售是否存在 , 不存在 , 错误信息 **350017 结算销售不存在**
-        
+
         判断结算销售状态为0(初始) , 其他状态 , 错误信息 **350018 结算销售不可操作**
-    
-                |Requests:|
-                :param balanceSales.bsid: 结算销售ID
-        :type balanceSales.bsid: Long
-        :param balanceSales.income: 收入
-        :type balanceSales.income: Long
-        :param balanceSales.cost: 成本
-        :type balanceSales.cost: Long
-        :param balanceSales.payment: 应付
-        :type balanceSales.payment: Long
-        :param balanceSales.profit: 利润
-        :type balanceSales.profit: Long
-        
-        :param balanceSalesBalances[n].salesBalance.sbid: 销售结算ID
-        :type balanceSalesBalances[n].salesBalance.sbid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.bsid**:
+  结算销售ID
+        - **balanceSales.income**:
+  收入
+        - **balanceSales.cost**:
+  成本
+        - **balanceSales.payment**:
+  应付
+        - **balanceSales.profit**:
+  利润
+
+        - **balanceSalesBalances[n].salesBalance.sbid**:
+  销售结算ID
+
+        **示例**:{
                 "balanceSales.bsid": 1,
                 "balanceSales.income": 0,
                 "balanceSales.cost": 0,
                 "balanceSales.payment": 0,
                 "balanceSales.profit": 0,
-                
+
                 "balanceSalesBalances[0].salesBalance.sbid": 1,
                 "balanceSalesBalances[1].salesBalance.sbid": 2
             }
 
-    ### <I> lockBalanceSales
+    ### `lockBalanceSales` <span style="color:gray">[内部]</span>
 
         锁定结算销售
-        
+
         判断结算销售是否存在 , 不存在 , 错误信息 **350017 结算销售不存在**
-        
+
         判断结算销售状态为0(初始) , 其他状态 , 错误信息 **350018 结算销售不可操作**
-        
+
         结算销售状态更新为1(锁定) , 更新锁定时间
-        
-                |Requests:|
-                :param balanceSales.bsid: 结算销售ID
-        :type balanceSales.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.bsid**:
+  结算销售ID
+
+        **示例**:{
                 "balanceSales.bsid": 1
             }
 
-    ### <I> unlockBalanceSales
+    ### `unlockBalanceSales` <span style="color:gray">[内部]</span>
 
         锁定结算销售
-        
+
         判断结算销售是否存在 , 不存在 , 错误信息 **350017 结算销售不存在**
-        
+
         判断结算销售状态为1(锁定) , 其他状态 , 错误信息 **350018 结算销售不可操作**
-        
+
         结算销售状态更新为0(初始)
-        
-                |Requests:|
-                :param balanceSales.bsid: 结算销售ID
-        :type balanceSales.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.bsid**:
+  结算销售ID
+
+        **示例**:{
                 "balanceSales.bsid": 1
             }
 
-    ### <I> balanceBalanceSales
+    ### `balanceBalanceSales` <span style="color:gray">[内部]</span>
 
         结算
-        
+
         判断结算销售是否存在 , 不存在 , 错误信息 **350017 结算销售不存在**
-        
+
         判断结算销售状态为1(锁定) , 其他状态 , 错误信息 **350018 结算销售不可操作**
-        
+
         结算销售状态更新为2(结算) , 更新结算人和结算时间
-        
+
         生成对应结算单
-        
-                |Requests:|
-                :param balanceSales.bsid: 结算销售ID
-        :type balanceSales.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.bsid**:
+  结算销售ID
+
+        **示例**:{
                 "balanceSales.bsid": 1
             }
 
-    ### <I> deleteBalanceSales
+    ### `deleteBalanceSales` <span style="color:gray">[内部]</span>
 
         删除
-        
+
         判断结算销售是否存在 , 不存在 , 错误信息 **350017 结算销售不存在**
-        
+
         判断结算销售状态为0(初始) , 其他状态 , 错误信息 **350018 结算销售不可操作**
-        
+
         判断结算销售明细 , 存在明细数据 , 错误信息 **350021 销售明细存在**
-        
-                |Requests:|
-                :param balanceSales.bsid: 结算销售ID
-        :type balanceSales.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.bsid**:
+  结算销售ID
+
+        **示例**:{
                 "balanceSales.bsid": 1
             }
 
@@ -1590,8 +1546,9 @@
 
 ## api.balance.BalanceSalesAction
 
-        |DataType:|
-        #### balanceSalesBalance
+**数据类型**:
+
+#### balanceSalesBalance
 
     - **bsbid**: 销售结算ID
       - 类型: *Long*
@@ -1600,29 +1557,27 @@
     - **salesBalance**: 销售结算 , 类型 [salesBalance](./sales.html#api.sales.SalesBalanceAction.salesBalance)
       - 类型: *Object*
 
-    ### <I> pageBalanceSalesBalance
+    ### `pageBalanceSalesBalance` <span style="color:gray">[内部]</span>
 
         分页方式获取结算销售明细信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param balanceSales.bsid: 结算销售ID
-        :type balanceSales.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.bsid**:
+  结算销售ID
+
+        **示例**:{
                 "balanceSales.bsid:": 1
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 结算销售明细信息列表 , 每条数据类型 *balanceSalesBalance*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算销售明细信息列表 , 每条数据类型 *balanceSalesBalance*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1734,27 +1689,25 @@
                 ...
             }
 
-    ### <I> queryBalanceSalesBalance
+    ### `queryBalanceSalesBalance` <span style="color:gray">[内部]</span>
 
         通过结算销售ID获取销售结算明细信息
-        
-                |Requests:|
-                :param balanceSalesBalance.bsid: 结算销售ID
-        :type balanceSalesBalance.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSalesBalance.bsid**:
+  结算销售ID
+
+        **示例**:{
                 "balanceSalesBalance.bsid": 1
             }
-        
-                |Returns:|
-                - **balanceSalesBalances**: 结算销售信息列表 , 类型 *balanceSalesBalance*
+
+**返回参数**:
+
+- **balanceSalesBalances**: 结算销售信息列表 , 类型 *balanceSalesBalance*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceSalesBalances": [
                     {
@@ -1862,64 +1815,61 @@
                 ...
             }
 
-    ### <I> countBalanceSalesBalance
+    ### `countBalanceSalesBalance` <span style="color:gray">[内部]</span>
 
         统计结算销售
-        
-                |Requests:|
-                :param balanceSalesBalance.bsid: 结算销售ID
-        :type balanceSalesBalance.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSalesBalance.bsid**:
+  结算销售ID
+
+        **示例**:{
                 "balanceSalesBalance.bsid": 1
             }
-            
-                |Returns:|
-                - **count**: 统计结果
+
+**返回参数**:
+
+- **count**: 统计结果
           - 类型: *Long*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "count": 0,
                 ...
             }
-            
-    ### <I> unbindBalanceSales
+
+    ### `unbindBalanceSales` <span style="color:gray">[内部]</span>
 
         解绑结算销售
-        
+
         判断结算销售是否存在 , 不存在 , 错误信息 **350017 结算销售不存在**
-        
+
         判断结算销售状态为0(初始) , 其他状态 , 错误信息 **350018 结算销售不可操作**
-    
-                |Requests:|
-                :param balanceSales.bsid: 结算销售ID
-        :type balanceSales.bsid: Long
-        :param balanceSales.income: 收入
-        :type balanceSales.income: Long
-        :param balanceSales.cost: 成本
-        :type balanceSales.cost: Long
-        :param balanceSales.payment: 应付
-        :type balanceSales.payment: Long
-        :param balanceSales.profit: 利润
-        :type balanceSales.profit: Long
-        
-        :param balanceSalesBalances[n].bsbid: 销售结算ID
-        :type balanceSalesBalances[n].bsbid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSales.bsid**:
+  结算销售ID
+        - **balanceSales.income**:
+  收入
+        - **balanceSales.cost**:
+  成本
+        - **balanceSales.payment**:
+  应付
+        - **balanceSales.profit**:
+  利润
+
+        - **balanceSalesBalances[n].bsbid**:
+  销售结算ID
+
+        **示例**:{
                 "balanceSales.bsid": 1,
                 "balanceSales.income": 0,
                 "balanceSales.cost": 0,
                 "balanceSales.payment": 0,
                 "balanceSales.profit": 0,
-                
+
                 "balanceSalesBalances[0].bsbid": 1,
                 "balanceSalesBalances[1].bsbid": 2
             }
@@ -1930,8 +1880,9 @@
 
 ## api.balance.BalanceOalesAction
 
-        |DataType:|
-        #### balanceOales
+**数据类型**:
+
+#### balanceOales
 
     - **boid**: 结算外销ID
       - 类型: *Long*
@@ -1959,20 +1910,19 @@
       - 类型: *Timestamp*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageBalanceOales
+
+    ### `pageBalanceOales` <span style="color:gray">[内部]</span>
 
         分页方式获取结算外销信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 结算外销信息列表 , 每条数据类型 *balanceOales*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算外销信息列表 , 每条数据类型 *balanceOales*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1987,13 +1937,13 @@
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "balancer": {
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "createTime": "2016-01-01",
                             "lockTime": "2016-01-01",
@@ -2005,19 +1955,18 @@
                 ...
             }
 
-    ### <I> pageBalanceOalesForBalance
+    ### `pageBalanceOalesForBalance` <span style="color:gray">[内部]</span>
 
         分页方式获取结算外销信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 结算外销信息列表 , 每条数据类型 *balanceOales*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算外销信息列表 , 每条数据类型 *balanceOales*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2055,13 +2004,13 @@
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "balancer": {
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "createTime": "2016-01-01",
                             "lockTime": "2016-01-01",
@@ -2073,27 +2022,25 @@
                 ...
             }
 
-    ### <I> queryBalanceOales
+    ### `queryBalanceOales` <span style="color:gray">[内部]</span>
 
         查询结算外销 , 状态为0(初始)
-        
-                |Requests:|
-                :param balanceOales.name: 名称
-        :type balanceOales.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.name**:
+  名称
+
+        **示例**:{
                 "balanceOales.name:": "结算外销"
             }
-        
-                |Returns:|
-                - **balanceOaleses**: 结算外销信息列表 , 每条数据类型 *balanceOales*
+
+**返回参数**:
+
+- **balanceOaleses**: 结算外销信息列表 , 每条数据类型 *balanceOales*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceOaleses": [
                     {
@@ -2106,13 +2053,13 @@
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "balancer": {
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "createTime": "2016-01-01",
                         "lockTime": "2016-01-01",
@@ -2121,28 +2068,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryBalanceOalesByBoid
+
+    ### `queryBalanceOalesByBoid` <span style="color:gray">[内部]</span>
 
         通过结算外销ID查询
-        
-                |Requests:|
-                :param balanceOales.boid: 结算外销ID
-        :type balanceOales.boid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.boid**:
+  结算外销ID
+
+        **示例**:{
                 "balanceOales.boid:": 1
             }
-        
-                |Returns:|
-                - **balanceOales**: 结算外销信息 , 类型 *balanceOales*
+
+**返回参数**:
+
+- **balanceOales**: 结算外销信息 , 类型 *balanceOales*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceOales": {
                     "boid": 1,
@@ -2154,13 +2099,13 @@
                         "uid": 1,
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "balancer": {
                         "uid": 1,
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "createTime": "2016-01-01",
                     "lockTime": "2016-01-01",
@@ -2168,28 +2113,26 @@
                 }
                 ...
             }
-            
-    ### <I> queryBalanceOalesByBid
+
+    ### `queryBalanceOalesByBid` <span style="color:gray">[内部]</span>
 
         通过结算单ID查询结算外销
-        
-                |Requests:|
-                :param balanceOales.bid: 结算单ID
-        :type balanceOales.bid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.bid**:
+  结算单ID
+
+        **示例**:{
                 "balanceOales.bid:": 1
             }
-        
-                |Returns:|
-                - **balanceOales**: 结算外销信息 , 类型 *balanceOales*
+
+**返回参数**:
+
+- **balanceOales**: 结算外销信息 , 类型 *balanceOales*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceOales": {
                     "boid": 1,
@@ -2201,13 +2144,13 @@
                         "uid": 1,
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "balancer": {
                         "uid": 1,
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "createTime": "2016-01-01",
                     "lockTime": "2016-01-01",
@@ -2216,165 +2159,157 @@
                 ...
             }
 
-    ### <I> amountBalanceOales
+    ### `amountBalanceOales` <span style="color:gray">[内部]</span>
 
         汇总结算外销
-        
-                |Requests:|
-                :param balanceOales.boid: 结算外销ID
-        :type balanceOales.boid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.boid**:
+  结算外销ID
+
+        **示例**:{
                 "balanceOales.boid": 1
             }
 
-    ### <I> createBalanceOales
+    ### `createBalanceOales` <span style="color:gray">[内部]</span>
 
         创建结算外销
-        
-                |Requests:|
-                :param balanceOales.name: 名称
-        :type balanceOales.name: String
-        :param balanceOales.grade: 等级
-        :type balanceOales.grade: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.name**:
+  名称
+        - **balanceOales.grade**:
+  等级
+
+        **示例**:{
                 "balanceOales.name": "结算外销",
                 "balanceOales.brand.bid": 1,
                 "balanceOales.grade": "A"
             }
-            
-    ### <I> updateBalanceOales
+
+    ### `updateBalanceOales` <span style="color:gray">[内部]</span>
 
         更新结算外销
-        
+
         判断结算外销是否存在 , 不存在 , 错误信息 **350023 结算外销不存在**
-        
+
         判断结算外销状态为0(初始) , 其他状态 , 错误信息 **350024 结算外销不可操作**
-        
-                |Requests:|
-                :param balanceOales.boid: 结算外销ID
-        :type balanceOales.boid: Long
-        :param balanceOales.name: 名称
-        :type balanceOales.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.boid**:
+  结算外销ID
+        - **balanceOales.name**:
+  名称
+
+        **示例**:{
                 "balanceOales.boid": 1,
                 "balanceOales.name": "结算外销"
             }
 
-    ### <I> submitBalanceOales
+    ### `submitBalanceOales` <span style="color:gray">[内部]</span>
 
         提交结算外销
-        
+
         判断结算外销是否存在 , 不存在 , 错误信息 **350023 结算外销不存在**
-        
+
         判断结算外销状态为0(初始) , 其他状态 , 错误信息 **350024 结算外销不可操作**
-    
-                |Requests:|
-                :param balanceOales.boid: 结算外销ID
-        :type balanceOales.boid: Long
-        :param balanceOales.profit: 利润
-        :type balanceSales.profit: Long
-        
-        :param balanceOalesBalances[n].oales.oid: 外销单ID
-        :type balanceOalesBalances[n].oales.oid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.boid**:
+  结算外销ID
+        - **balanceOales.profit**:
+  利润
+
+        - **balanceOalesBalances[n].oales.oid**:
+  外销单ID
+
+        **示例**:{
                 "balanceOales.boid": 1,
                 "balanceOales.profit": 0,
-                
+
                 "balanceOalesBalances[0].oales.oid": 1,
                 "balanceOalesBalances[1].oales.oid": 2
             }
 
-    ### <I> lockBalanceOales
+    ### `lockBalanceOales` <span style="color:gray">[内部]</span>
 
         锁定结算外销
-        
+
         判断结算外销是否存在 , 不存在 , 错误信息 **350023 结算外销不存在**
-        
+
         判断结算外销状态为0(初始) , 其他状态 , 错误信息 **350024 结算外销不可操作**
-        
+
         结算外销状态更新为1(锁定) , 更新锁定时间
-        
-                |Requests:|
-                :param balanceOales.boid: 结算外销ID
-        :type balanceOales.boid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.boid**:
+  结算外销ID
+
+        **示例**:{
                 "balanceOales.boid": 1
             }
 
-    ### <I> unlockBalanceOales
+    ### `unlockBalanceOales` <span style="color:gray">[内部]</span>
 
         锁定结算外销
-        
+
         判断结算外销是否存在 , 不存在 , 错误信息 **350023 结算外销不存在**
-        
+
         判断结算外销状态为1(锁定) , 其他状态 , 错误信息 **350024 结算外销不可操作**
-        
+
         结算外销状态更新为0(初始)
-        
-                |Requests:|
-                :param balanceOales.boid: 结算外销ID
-        :type balanceOales.boid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.boid**:
+  结算外销ID
+
+        **示例**:{
                 "balanceOales.boid": 1
             }
 
-    ### <I> balanceBalanceOales
+    ### `balanceBalanceOales` <span style="color:gray">[内部]</span>
 
         结算
-        
+
         判断结算外销是否存在 , 不存在 , 错误信息 **350023 结算外销不存在**
-        
+
         判断结算外销状态为1(锁定) , 其他状态 , 错误信息 **350024 结算外销不可操作**
-        
+
         结算外销状态更新为2(结算) , 更新结算人和结算时间
-        
+
         生成对应结算单
-        
-                |Requests:|
-                :param balanceOales.boid: 结算外销ID
-        :type balanceOales.boid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.boid**:
+  结算外销ID
+
+        **示例**:{
                 "balanceOales.boid": 1
             }
 
-    ### <I> deleteBalanceOales
+    ### `deleteBalanceOales` <span style="color:gray">[内部]</span>
 
         删除
-        
+
         判断结算外销是否存在 , 不存在 , 错误信息 **350023 结算外销不存在**
-        
+
         判断结算外销状态为0(初始) , 其他状态 , 错误信息 **350024 结算外销不可操作**
-        
+
         判断结算外销明细 , 存在明细数据 , 错误信息 **350025 销售明细存在**
-        
-                |Requests:|
-                :param balanceOales.boid: 结算外销ID
-        :type balanceOales.boid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.boid**:
+  结算外销ID
+
+        **示例**:{
                 "balanceOales.boid": 1
             }
 
@@ -2382,8 +2317,9 @@
 
 ## api.balance.BalanceOalesBalanceAction
 
-        |DataType:|
-        #### balanceOalesBalance
+**数据类型**:
+
+#### balanceOalesBalance
 
     - **bobid**: 结算明细ID
       - 类型: *Long*
@@ -2392,29 +2328,27 @@
     - **oales**: 外销单 , 类型 [oales](./sales.html#api.sales.OalesAction.oales)
       - 类型: *Object*
 
-    ### <I> pageBalanceOalesBalance
+    ### `pageBalanceOalesBalance` <span style="color:gray">[内部]</span>
 
         分页方式获取结算外销明细信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param balanceOales.boid: 结算外销ID
-        :type balanceOales.boid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.boid**:
+  结算外销ID
+
+        **示例**:{
                 "balanceOales.boid:": 1
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 结算外销明细信息列表 , 每条数据类型 *balanceOalesBalance*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算外销明细信息列表 , 每条数据类型 *balanceOalesBalance*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2454,7 +2388,7 @@
                                         ...
                                     }
                                 },
-                                
+
                                 "creater": {
                                     "uid": 1,
                                     "userId": "FL-02381",
@@ -2473,7 +2407,7 @@
                                 },
                                 "materialer": null,
                                 "channer": null,
-                                
+
                                 dept: {
                                     "did": 1,
                                     "no": "D001",
@@ -2486,22 +2420,22 @@
                                     "name": "设计一分区",
                                     "type": "设计大区",
                                 },
-                                
+
                                 "createTime": "2016-01-01 00:00:00",
                                 "confirmTime": "2016-01-01 00:00:00",
                                 "checkTime": "2016-01-01 00:00:00",
                                 "finishTime": "2016-01-01 00:00:00",
-                                
+
                                 "category": "瓷砖",
                                 "brand": "瓷砖",
-                                
+
                                 "atttype": 0,
                                 "awardType": 0,
-                                
+
                                 "total": 100000,
                                 "profit": 0,
                                 "award": 0,
-                                
+
                                 "status": 0,
                                 "comment": ""
                             }
@@ -2512,27 +2446,25 @@
                 ...
             }
 
-    ### <I> queryBalanceOalesBalance
+    ### `queryBalanceOalesBalance` <span style="color:gray">[内部]</span>
 
         通过结算外销ID获取外销单明细信息
-        
-                |Requests:|
-                :param balanceOalesBalance.boid: 结算外销ID
-        :type balanceOalesBalance.boid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOalesBalance.boid**:
+  结算外销ID
+
+        **示例**:{
                 "balanceOalesBalance.boid": 1
             }
-        
-                |Returns:|
-                - **balanceOalesBalances**: 结算外销信息列表 , 类型 *balanceOalesBalance*
+
+**返回参数**:
+
+- **balanceOalesBalances**: 结算外销信息列表 , 类型 *balanceOalesBalance*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceOalesBalances": [
                     {
@@ -2570,7 +2502,7 @@
                                     ...
                                 }
                             },
-                            
+
                             "creater": {
                                 "uid": 1,
                                 "userId": "FL-02381",
@@ -2589,7 +2521,7 @@
                             },
                             "materialer": null,
                             "channer": null,
-                            
+
                             dept: {
                                 "did": 1,
                                 "no": "D001",
@@ -2602,22 +2534,22 @@
                                 "name": "设计一分区",
                                 "type": "设计大区",
                             },
-                            
+
                             "createTime": "2016-01-01 00:00:00",
                             "confirmTime": "2016-01-01 00:00:00",
                             "checkTime": "2016-01-01 00:00:00",
                             "finishTime": "2016-01-01 00:00:00",
-                            
+
                             "category": "瓷砖",
                             "brand": "瓷砖",
-                            
+
                             "atttype": 0,
                             "awardType": 0,
-                            
+
                             "total": 100000,
                             "profit": 0,
                             "award": 0,
-                            
+
                             "status": 0,
                             "comment": ""
                         }
@@ -2626,58 +2558,55 @@
                 ...
             }
 
-    ### <I> countBalanceOalesBalance
+    ### `countBalanceOalesBalance` <span style="color:gray">[内部]</span>
 
         统计结算外销
-        
-                |Requests:|
-                :param balanceOalesBalance.boid: 结算外销ID
-        :type balanceOalesBalance.boid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOalesBalance.boid**:
+  结算外销ID
+
+        **示例**:{
                 "balanceOalesBalance.boid": 1
             }
-            
-                |Returns:|
-                - **count**: 统计结果
+
+**返回参数**:
+
+- **count**: 统计结果
           - 类型: *Long*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "count": 0,
                 ...
             }
-            
-    ### <I> unbindBalanceOales
+
+    ### `unbindBalanceOales` <span style="color:gray">[内部]</span>
 
         解绑结算外销
-        
+
         判断结算外销是否存在 , 不存在 , 错误信息 **350023 结算外销不存在**
-        
+
         判断结算外销状态为0(初始) , 其他状态 , 错误信息 **350024 结算外销不可操作**
-    
-                |Requests:|
-                :param balanceOales.boid: 结算外销ID
-        :type balanceOales.boid: Long
-        :param balanceOales.profit: 利润
-        :type balanceOales.profit: Long
-        
-        :param balanceOalesBalances[n].bobid: 销售结算ID
-        :type balanceOalesBalances[n].bobid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceOales.boid**:
+  结算外销ID
+        - **balanceOales.profit**:
+  利润
+
+        - **balanceOalesBalances[n].bobid**:
+  销售结算ID
+
+        **示例**:{
                 "balanceOales.boid": 1,
                 "balanceOales.income": 0,
                 "balanceOales.cost": 0,
                 "balanceOales.payment": 0,
                 "balanceOales.profit": 0,
-                
+
                 "balanceOalesBalances[0].bobid": 1,
                 "balanceOalesBalances[1].bobid": 2
             }
@@ -2688,8 +2617,9 @@
 
 ## api.balance.BalanceSelectionAction
 
-        |DataType:|
-        #### balanceSelection
+**数据类型**:
+
+#### balanceSelection
 
     - **bsid**: 结算选材ID
       - 类型: *Long*
@@ -2726,19 +2656,18 @@
     - **company**: 公司
       - 类型: *Integer*
 
-    ### <I> pageBalanceSelection
+    ### `pageBalanceSelection` <span style="color:gray">[内部]</span>
 
         分页方式获取结算选材信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 结算选材信息列表 , 每条数据类型 *balanceSelection*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算选材信息列表 , 每条数据类型 *balanceSelection*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2773,13 +2702,13 @@
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "balancer": {
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "createTime": "2016-01-01",
                             "lockTime": "2016-01-01",
@@ -2791,19 +2720,18 @@
                 ...
             }
 
-    ### <I> pageBalanceSelectionForBalance
+    ### `pageBalanceSelectionForBalance` <span style="color:gray">[内部]</span>
 
         分页方式获取结算选材信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 结算选材信息列表 , 每条数据类型 *balanceSelection*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算选材信息列表 , 每条数据类型 *balanceSelection*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2838,13 +2766,13 @@
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "balancer": {
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "createTime": "2016-01-01",
                             "lockTime": "2016-01-01",
@@ -2856,29 +2784,27 @@
                 ...
             }
 
-    ### <I> pageBalanceSelectionItem
+    ### `pageBalanceSelectionItem` <span style="color:gray">[内部]</span>
 
         分页方式获取结算选材项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param balanceSelection.bsid: 结算选材ID
-        :type balanceSelection.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.bsid**:
+  结算选材ID
+
+        **示例**:{
                 "balanceSelection.bsid:": 1
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 结算选材项信息列表 , 每条数据类型 *balanceSelectionItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算选材项信息列表 , 每条数据类型 *balanceSelectionItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2962,27 +2888,25 @@
                 ...
             }
 
-    ### <I> queryBalanceSelection
+    ### `queryBalanceSelection` <span style="color:gray">[内部]</span>
 
         查询结算选材 , 状态为0(初始)
-        
-                |Requests:|
-                :param balanceSelection.name: 名称
-        :type balanceSelection.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.name**:
+  名称
+
+        **示例**:{
                 "balanceSelection.name:": "结算选材"
             }
-        
-                |Returns:|
-                - **balanceSelections**: 结算选材信息列表 , 每条数据类型 *balanceSelection*
+
+**返回参数**:
+
+- **balanceSelections**: 结算选材信息列表 , 每条数据类型 *balanceSelection*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceSelections": [
                     {
@@ -3015,13 +2939,13 @@
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "balancer": {
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "createTime": "2016-01-01",
                         "lockTime": "2016-01-01",
@@ -3031,27 +2955,25 @@
                 ...
             }
 
-    ### <I> queryBalanceSelectionByBsid
+    ### `queryBalanceSelectionByBsid` <span style="color:gray">[内部]</span>
 
         查询结算选材
-        
-                |Requests:|
-                :param balanceSelection.bsid: 结算选材ID
-        :type balanceSelection.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.bsid**:
+  结算选材ID
+
+        **示例**:{
                 "balanceSelection.bsid:": 1
             }
-        
-                |Returns:|
-                - **balanceSelections**: 结算选材信息列表 , 每条数据类型 *balanceSelection*
+
+**返回参数**:
+
+- **balanceSelections**: 结算选材信息列表 , 每条数据类型 *balanceSelection*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceSelections": [
                     {
@@ -3084,13 +3006,13 @@
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "balancer": {
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "createTime": "2016-01-01",
                         "lockTime": "2016-01-01",
@@ -3100,176 +3022,168 @@
                 ...
             }
 
-    ### <I> amountBalanceSelection
+    ### `amountBalanceSelection` <span style="color:gray">[内部]</span>
 
         汇总结算选材
-        
-                |Requests:|
-                :param balanceSelection.bsid: 结算选材ID
-        :type balanceSelection.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.bsid**:
+  结算选材ID
+
+        **示例**:{
                 "balanceSelection.bsid": 1
             }
 
-    ### <I> createBalanceSelection
+    ### `createBalanceSelection` <span style="color:gray">[内部]</span>
 
         创建结算选材
-        
-                |Requests:|
-                :param balanceSelection.name: 名称
-        :type balanceSelection.name: String
-        :param balanceSelection.brand.bid: 品牌ID
-        :type balanceSelection.brand.bid: Long
-        :param balanceSelection.grade: 等级
-        :type balanceSelection.grade: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.name**:
+  名称
+        - **balanceSelection.brand.bid**:
+  品牌ID
+        - **balanceSelection.grade**:
+  等级
+
+        **示例**:{
                 "balanceSelection.name": "结算选材",
                 "balanceSelection.brand.bid": 1,
                 "balanceSelection.grade": "A"
             }
 
-    ### <I> updateBalanceSelection
+    ### `updateBalanceSelection` <span style="color:gray">[内部]</span>
 
         更新结算选材
-        
+
         判断结算选材是否存在 , 不存在 , 错误信息 **350027 结算选材不存在**
-        
+
         判断结算选材状态为0(初始) , 其他状态 , 错误信息 **350028 结算选材不可操作**
-        
-                |Requests:|
-                :param balanceSelection.bsid: 结算选材ID
-        :type balanceSelection.bsid: Long
-        :param balanceSelection.name: 名称
-        :type balanceSelection.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.bsid**:
+  结算选材ID
+        - **balanceSelection.name**:
+  名称
+
+        **示例**:{
                 "balanceSelection.bsid": 1,
                 "balanceSelection.name": "结算选材"
             }
 
-    ### <I> submitBalanceSelection
+    ### `submitBalanceSelection` <span style="color:gray">[内部]</span>
 
         提交结算选材
-        
+
         判断结算选材是否存在 , 不存在 , 错误信息 **350027 结算选材不存在**
-        
+
         判断结算选材状态为0(初始) , 其他状态 , 错误信息 **350028 结算选材不可操作**
-    
-                |Requests:|
-                :param balanceSelection.bsid: 结算选材ID
-        :type balanceSelection.bsid: Long
-        :param balanceSelection.income: 收入
-        :type balanceSelection.income: Long
-        :param balanceSelection.cost: 成本
-        :type balanceSelection.cost: Long
-        :param balanceSelection.payment: 应付
-        :type balanceSelection.payment: Long
-        :param balanceSelection.profit: 利润
-        :type balanceSelection.profit: Long
-        
-        :param balanceSelectionItems[n].selectionItem.siid: 选材项ID
-        :type balanceSelectionItems[n].selectionItem.siid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.bsid**:
+  结算选材ID
+        - **balanceSelection.income**:
+  收入
+        - **balanceSelection.cost**:
+  成本
+        - **balanceSelection.payment**:
+  应付
+        - **balanceSelection.profit**:
+  利润
+
+        - **balanceSelectionItems[n].selectionItem.siid**:
+  选材项ID
+
+        **示例**:{
                 "balanceSelection.bsid": 1,
                 "balanceSelection.income": 0,
                 "balanceSelection.cost": 0,
                 "balanceSelection.payment": 0,
                 "balanceSelection.profit": 0,
-                
+
                 "balanceSelectionItems[0].selectionItem.siid": 1,
                 "balanceSelectionItems[1].selectionItem.siid": 2
             }
 
-    ### <I> lockBalanceSelection
+    ### `lockBalanceSelection` <span style="color:gray">[内部]</span>
 
         锁定结算选材
-        
+
         判断结算选材是否存在 , 不存在 , 错误信息 **350027 结算选材不存在**
-        
+
         判断结算选材状态为0(初始) , 其他状态 , 错误信息 **350028 结算选材不可操作**
-        
+
         结算选材状态更新为1(锁定) , 更新锁定时间
-        
-                |Requests:|
-                :param balanceSelection.bsid: 结算选材ID
-        :type balanceSelection.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.bsid**:
+  结算选材ID
+
+        **示例**:{
                 "balanceSelection.bsid": 1
             }
 
-    ### <I> unlockBalanceSelection
+    ### `unlockBalanceSelection` <span style="color:gray">[内部]</span>
 
         锁定结算选材
-        
+
         判断结算选材是否存在 , 不存在 , 错误信息 **350027 结算选材不存在**
-        
+
         判断结算选材状态为1(锁定) , 其他状态 , 错误信息 **350028 结算选材不可操作**
-        
+
         结算选材状态更新为0(初始)
-        
-                |Requests:|
-                :param balanceSelection.bsid: 结算选材ID
-        :type balanceSelection.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.bsid**:
+  结算选材ID
+
+        **示例**:{
                 "balanceSelection.bsid": 1
             }
 
-    ### <I> balanceBalanceSelection
+    ### `balanceBalanceSelection` <span style="color:gray">[内部]</span>
 
         结算
-        
+
         判断结算选材是否存在 , 不存在 , 错误信息 **350027 结算选材不存在**
-        
+
         判断结算选材状态为1(锁定) , 其他状态 , 错误信息 **350028 结算选材不可操作**
-        
+
         结算选材更新为2(结算) , 更新结算人和结算时间
-        
+
         生成对应结算单
-        
-                |Requests:|
-                :param balanceSelection.bsid: 结算选材ID
-        :type balanceSelection.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.bsid**:
+  结算选材ID
+
+        **示例**:{
                 "balanceSelection.bsid": 1
             }
 
-    ### <I> deleteBalanceSelection
+    ### `deleteBalanceSelection` <span style="color:gray">[内部]</span>
 
         删除
-        
+
         判断结算选材是否存在 , 不存在 , 错误信息 **350027 结算选材不存在**
-        
+
         判断结算选材状态为0(初始) , 其他状态 , 错误信息 **350028 结算选材不可操作**
-        
+
         判断结算选材明细存在 , 存在明细数据 , 错误信息 **350029 结算选材明细存在**
-        
-                |Requests:|
-                :param balanceSelection.bsid: 结算选材ID
-        :type balanceSelection.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.bsid**:
+  结算选材ID
+
+        **示例**:{
                 "balanceSelection.bsid": 1
             }
 
@@ -3277,8 +3191,9 @@
 
 ## api.balance.BalanceSelectionAction
 
-        |DataType:|
-        #### balanceSelectionItem
+**数据类型**:
+
+#### balanceSelectionItem
 
     - **bsiid**: 结算选材ID
       - 类型: *Long*
@@ -3287,29 +3202,27 @@
     - **selectionItem**: 选材项 , 类型 [selectionItem](./quotation.html#api.quotation.SelectionItemAction.selectionItem)
       - 类型: *Object*
 
-    ### <I> pageBalanceSelectionItem
+    ### `pageBalanceSelectionItem` <span style="color:gray">[内部]</span>
 
         分页方式获取结算选材项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param balanceSelection.bsid: 结算选材ID
-        :type balanceSelection.bsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.bsid**:
+  结算选材ID
+
+        **示例**:{
                 "balanceSelection.bsid:": 1
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 结算选材项信息列表 , 每条数据类型 *balanceSelectionItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  结算选材项信息列表 , 每条数据类型 *balanceSelectionItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3393,27 +3306,25 @@
                 ...
             }
 
-    ### <I> queryBalanceSelectionItem
+    ### `queryBalanceSelectionItem` <span style="color:gray">[内部]</span>
 
         获取结算选材项
-        
-                |Requests:|
-                :param balanceSelectionItem.bsid: 结算选材ID
-        :type balanceSelectionItem.bsid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelectionItem.bsid**:
+  结算选材ID
+
+        **示例**:{
                 "balanceSelectionItem.bsid:": 1
             }
 
-                |Returns:|
-                - **balanceSelectionItems**: 结算选材项信息列表 , 每条数据类型 *balanceSelectionItem*
+**返回参数**:
+
+- **balanceSelectionItems**: 结算选材项信息列表 , 每条数据类型 *balanceSelectionItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "balanceSelectionItems": [
                     {
@@ -3493,64 +3404,61 @@
                 ...
             }
 
-    ### <I> countBalanceSelectionItem
+    ### `countBalanceSelectionItem` <span style="color:gray">[内部]</span>
 
         统计结算选材项数量
-        
-                |Requests:|
-                :param balanceSelectionItem.bsid: 结算选材ID
-        :type balanceSelectionItem.bsid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelectionItem.bsid**:
+  结算选材ID
+
+        **示例**:{
                 "balanceSelectionItem.bsid:": 1
             }
 
-                |Returns:|
-                - **count**: 结算选材项数量
+**返回参数**:
+
+- **count**: 结算选材项数量
           - 类型: *Integer*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "count": 100
                 ...
             }
-            
-    ### <I> unbindBalanceSelection
+
+    ### `unbindBalanceSelection` <span style="color:gray">[内部]</span>
 
         解绑结算选材
-        
+
         判断结算选材是否存在 , 不存在 , 错误信息 **350027 结算选材不存在**
-        
+
         判断结算选材状态为0(初始) , 其他状态 , 错误信息 **350028 结算选材不可操作**
-    
-                |Requests:|
-                :param balanceSelection.bsid: 结算选材ID
-        :type balanceSelection.bsid: Long
-        :param balanceSelection.income: 收入
-        :type balanceSelection.income: Long
-        :param balanceSelection.cost: 成本
-        :type balanceSelection.cost: Long
-        :param balanceSelection.payment: 应付
-        :type balanceSelection.payment: Long
-        :param balanceSelection.profit: 利润
-        :type balanceSelection.profit: Long
-        
-        :param balanceSelectionItems[n].bsiid: 销售选材项ID
-        :type balanceSelectionItems[n].bsiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **balanceSelection.bsid**:
+  结算选材ID
+        - **balanceSelection.income**:
+  收入
+        - **balanceSelection.cost**:
+  成本
+        - **balanceSelection.payment**:
+  应付
+        - **balanceSelection.profit**:
+  利润
+
+        - **balanceSelectionItems[n].bsiid**:
+  销售选材项ID
+
+        **示例**:{
                 "balanceSelection.bsid": 1,
                 "balanceSelection.income": 0,
                 "balanceSelection.cost": 0,
                 "balanceSelection.payment": 0,
                 "balanceSelection.profit": 0,
-                
+
                 "balanceSelectionItems[0].bsiid": 1,
                 "balanceSelectionItems[1].bsiid": 2
             }
@@ -3559,8 +3467,9 @@
 
 ## api.balance.ComcostAction
 
-        |DataType:|
-        #### comcost
+**数据类型**:
+
+#### comcost
 
     - **cid**: 成本ID
       - 类型: *Long*
@@ -3582,20 +3491,19 @@
       - 类型: *String*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageComcost
+
+    ### `pageComcost` <span style="color:gray">[内部]</span>
 
         分页方式获取成本信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
 
-                |Returns:|
-                - **paging**: 分页信息
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 扣款信息列表 , 每条数据类型 *comcost*
-        :type paging.data: List
+        - **paging.data**:
+  扣款信息列表 , 每条数据类型 *comcost*
 
-        Example::
-
-            {
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3621,30 +3529,27 @@
                 ...
             }
 
-    ### <I> queryComcost
+    ### `queryComcost` <span style="color:gray">[内部]</span>
 
         获取成本信息
-        
+
                 |Request:|
-                :param comcost.ident: 引用ID
-        :type comcost.ident: Long
-        :param comcost.type: 类型
-        :type comcost.type: Short
+                - **comcost.ident**:
+  引用ID
+        - **comcost.type**:
+  类型
 
-        Example::
-
-            {
+        **示例**:{
                 "comcost.ident": 1,
                 "comcost.type": 1
             }
-        
-                |Returns:|
-                - **comcosts**: 成本信息列表 , 每条数据类型 *comcost*
+
+**返回参数**:
+
+- **comcosts**: 成本信息列表 , 每条数据类型 *comcost*
           - 类型: *List*
 
-        Example::
-
-            {
+        **示例**:{
                 ...
                 "comcosts": [
                     {
@@ -3666,27 +3571,25 @@
                 ...
             }
 
-    ### <I> addComcost
+    ### `addComcost` <span style="color:gray">[内部]</span>
 
         添加成本信息
-        
+
                 |Request:|
-                :param comcost.orderId: 装修单号
-        :type comcost.orderId: String
-        :param comcost.ident: 引用ID
-        :type comcost.ident: Long
-        :param comcost.type: 类型
-        :type comcost.type: Short
-        :param comcost.money: 金额
-        :type comcost.money: Long
-        :param comcost.comment: 说明
-        :type comcost.comment: String
-        :param comcost.company: 公司ID
-        :type comcost.company: Integer
+                - **comcost.orderId**:
+  装修单号
+        - **comcost.ident**:
+  引用ID
+        - **comcost.type**:
+  类型
+        - **comcost.money**:
+  金额
+        - **comcost.comment**:
+  说明
+        - **comcost.company**:
+  公司ID
 
-        Example::
-
-            {
+        **示例**:{
                 "comcost.orderId": "1601010001",
                 "comcost.ident": 1,
                 "comcost.type": 1,
@@ -3694,22 +3597,20 @@
                 "comcost.comment": "说明",
                 "comcost.company": 1
             }
-            
-    ### <I> updateComcostForStatus
+
+    ### `updateComcostForStatus` <span style="color:gray">[内部]</span>
 
         更新成本状态
-        
+
         判断成本信息是否存在 , 不存在 , 错误信息 **350011 成本不存在**
-        
+
                 |Request:|
-                :param comcost.cid: 成本ID
-        :type comcost.cid: Long
-        :param comcost.status: 状态
-        :type comcost.status: Short
+                - **comcost.cid**:
+  成本ID
+        - **comcost.status**:
+  状态
 
-        Example::
-
-            {
+        **示例**:{
                 "comcost.cid": 1,
                 "comcost.status": 0
             }

@@ -1,6 +1,4 @@
-# quotation {#quotation}
-
-# 报价
+# quotation 报价
 ## 预报
 
 ### 预报
@@ -19,8 +17,9 @@
 
 ## api.quotetion.QuotetionAction
 
-        |DataType:|
-        #### quotetion
+**数据类型**:
+
+#### quotetion
 
     - **qid**: 报价ID
       - 类型: *Long*
@@ -70,21 +69,20 @@
       - 类型: *Long*
     - **content**: 说明
       - 类型: *String*
-    
+
     - **totalPrice**: 报价总额
       - 类型: *Long*
-    
-    ### <I> queryQuotetion
+
+    ### `queryQuotetion` <span style="color:gray">[内部]</span>
 
         通过创建人ID查询归属的报价信息
-        
-                |Returns:|
-                - **quotetions**: 报价信息列表 , 类型 *quotetion*
+
+**返回参数**:
+
+- **quotetions**: 报价信息列表 , 类型 *quotetion*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotetions":[
                     {
@@ -116,28 +114,26 @@
                 ],
                 ...
             }
-    
-    ### <I> queryQuotetionByQid
+
+    ### `queryQuotetionByQid` <span style="color:gray">[内部]</span>
 
         通过报价ID获取报价信息
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+
+        **示例**:{
                 "quotetion.qid": 1
             }
-            
-                |Returns:|
-                - **quotetion**: 报价信息 , 类型 *quotetion*
+
+**返回参数**:
+
+- **quotetion**: 报价信息 , 类型 *quotetion*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotetion": {
                     "qid": 1,
@@ -167,28 +163,26 @@
                 }
                 ...
             }
-            
-    ### <I> queryQuotetionByNo
+
+    ### `queryQuotetionByNo` <span style="color:gray">[内部]</span>
 
         通过报价编号获取报价信息
-        
-                |Requests:|
-                :param quotetion.no: 报价编号
-        :type quotetion.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.no**:
+  报价编号
+
+        **示例**:{
                 "quotetion.no": "JIN123IN4JKHJH"
             }
-            
-                |Returns:|
-                - **quotetion**: 报价信息 , 类型 *quotetion*
+
+**返回参数**:
+
+- **quotetion**: 报价信息 , 类型 *quotetion*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotetion": {
                     "qid": 1,
@@ -218,108 +212,105 @@
                 }
                 ...
             }
-            
-    ### <I> addQuotetion
+
+    ### `addQuotetion` <span style="color:gray">[内部]</span>
 
         添加报价信息
-        
+
         判断当前操作人员创建报价数量 , 大于阀值 , 错误信息 **200001 报价已经达到数量上限**
-        
+
         创建名称为"生成项目"功能区 , 排序号为9999 , 类型为0(管理)
-        
+
         "生成项目"功能区创建两个项目
-        
+
         名称: "车运费" , 单位: "" , 工种: "其他" , 类型: 2(车运费) , 子类: 0(工程)
-        
+
         名称: "管理费" , 单位: "" , 工种: "其他" , 类型: 3(管理费) , 子类: 0(工程)
-        
+
         车运费和管理费的比例根据报价版本信息获取
-        
-                |Requests:|
-                :param quotetion.name: 报价名
-        :type quotetion.name: String
-        :param quotetion.version: 报价版本编号
-        :type quotetion.version: String
-        :param quotetion.content: 说明
-        :type quotetion.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.name**:
+  报价名
+        - **quotetion.version**:
+  报价版本编号
+        - **quotetion.content**:
+  说明
+
+        **示例**:{
                 "quotetion.name": "测试",
                 "quotetion.version": "QV001",
                 "quotetion.content": ""
             }
-            
-    ### <I> updateQuotetion
+
+    ### `updateQuotetion` <span style="color:gray">[内部]</span>
 
         更新报价基础信息
-        
+
         判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-        :param quotetion.name: 报价名
-        :type quotetion.name: String
-        :param quotetion.content: 说明
-        :type quotetion.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+        - **quotetion.name**:
+  报价名
+        - **quotetion.content**:
+  说明
+
+        **示例**:{
                 "quotetion.qid": 1,
                 "quotetion.name": "测试",
                 "quotetion.content": ""
             }
-            
-    ### <I> updateQuotetionForAdvance
+
+    ### `updateQuotetionForAdvance` <span style="color:gray">[内部]</span>
 
         更新报价高级信息 , 同时按照报价的类型分别更新对应的信息
-        
+
         判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-        :param quotetion.basePrice: 基数
-        :type quotation.basePrice: Long
-        :param quotetion.undisPrice: 不打折项总额
-        :type quotetion.undisPrice: Long
-        :param quotetion.disPrice: 打折项总额
-        :type quotetion.disPrice: Long
-        :param quotetion.consPrice: 工程总额
-        :type quotetion.consPrice: Long
-        :param quotetion.comsPrice: 主材总额
-        :type quotetion.comsPrice: Long
-        :param quotetion.discount: 折扣
-        :type quotetion.discount: Long
-        :param quotetion.trafficPrice: 车运费
-        :type quotetion.trafficPrice: Long
-        :param quotetion.trafficRate: 车运费比例
-        :type quotetion.trafficRate: Integer
-        :param quotetion.trafficDiscount: 车运费折扣
-        :type quotetion.trafficDiscount: Short
-        :param quotetion.managePrice: 管理费
-        :type quotetion.managePrice: Long
-        :param quotetion.manageRate: 管理费比例
-        :type quotetion.manageRate: Integer
-        :param quotetion.manageDiscount: 管理费折扣
-        :type quotetion.manageDiscount: Short
-        :param quotetion.taxPrice: 税金
-        :type quotetion.taxPrice: Long
-        :param quotetion.taxRate: 税金比例
-        :type quotetion.taxRate: Integer
-        :param quotetion.taxDiscount: 税金折扣
-        :type quotetion.taxDiscount: Short
-        :param quotetion.costPrice: 成本金额
-        :type quotetion.costPrice: Long
-        :param quotetion.totalPrice: 报价总额
-        :type quotetion.totalPrice: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+        - **quotetion.basePrice**:
+  基数
+        - **quotetion.undisPrice**:
+  不打折项总额
+        - **quotetion.disPrice**:
+  打折项总额
+        - **quotetion.consPrice**:
+  工程总额
+        - **quotetion.comsPrice**:
+  主材总额
+        - **quotetion.discount**:
+  折扣
+        - **quotetion.trafficPrice**:
+  车运费
+        - **quotetion.trafficRate**:
+  车运费比例
+        - **quotetion.trafficDiscount**:
+  车运费折扣
+        - **quotetion.managePrice**:
+  管理费
+        - **quotetion.manageRate**:
+  管理费比例
+        - **quotetion.manageDiscount**:
+  管理费折扣
+        - **quotetion.taxPrice**:
+  税金
+        - **quotetion.taxRate**:
+  税金比例
+        - **quotetion.taxDiscount**:
+  税金折扣
+        - **quotetion.costPrice**:
+  成本金额
+        - **quotetion.totalPrice**:
+  报价总额
+
+        **示例**:{
                 "quotetion.qid": 1,
                 "quotetion.basePrice": 0,
                 "quotetion.undisPrice": 10000,
@@ -339,79 +330,76 @@
                 "quotetion.costPrice": 0,
                 "quotetion.totalPrice": 10000
             }
-            
-    ### <I> replicaQuotetion
+
+    ### `replicaQuotetion` <span style="color:gray">[内部]</span>
 
         拷贝报价 , 将报价(quotation)拷贝到报价(quotetion)
-        
+
         判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+
+        **示例**:{
                 "quotetion.no": 1
             }
-            
-    ### <I> copyQuotetion
+
+    ### `copyQuotetion` <span style="color:gray">[内部]</span>
 
         复制报价到报价中
-        
+
         判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
-        
-                |Requests:|
-                :param quotetion.qid: 拷贝报价ID
-        :type quotetion.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.qid**:
+  拷贝报价ID
+
+        **示例**:{
                 "quotetion.qid": 1
             }
-            
-    ### <I> cloneQuotetion
+
+    ### `cloneQuotetion` <span style="color:gray">[内部]</span>
 
         克隆报价 , 通过报价编号进行拷贝
-        
+
         判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
-        
-                |Requests:|
-                :param quotetion.no: 报价编号
-        :type quotetion.no: String
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.no**:
+  报价编号
+
+        **示例**:{
                 "quotetion.no": "JIN123IN4JKHJH"
             }
 
-    ### <I> deleteQuotetion
+    ### `deleteQuotetion` <span style="color:gray">[内部]</span>
 
         通过报价ID删除报价信息 , 默认报价不能删除
-        
+
         判断删除报价是否归属操作人 , 不归属 , 错误信息 **200030 报价不可操作**
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+
+        **示例**:{
                 "quotetion.qid": 1,
             }
-            
+
 ### 预报-功能区
 
 报价中功能区信息管理
 
 ## api.quotetion.QuotetionFunctionAreaAction
 
-        |DataType:|
-        #### quotetionFunctionArea
+**数据类型**:
+
+#### quotetionFunctionArea
 
     - **qfaid**: 功能区ID
       - 类型: *Long*
@@ -425,28 +413,26 @@
       - 类型: *Short*
     - **quotetionFunctionAreaItems**: 功能区包含报价项信息列表 , 每条数据类型 [quotetionFunctionAreaItem](./quotation.html#api.quotetion.QuotetionFunctionAreaItemAction.quotetionFunctionAreaItem)
       - 类型: *List*
-            
-    ### <I> queryQuotetionFunctionAreaByQid
+
+    ### `queryQuotetionFunctionAreaByQid` <span style="color:gray">[内部]</span>
 
         通过报价ID查询功能区信息 , 包含功能区中报价项信息
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+
+        **示例**:{
                 "quotetion.qid": 1,
             }
-            
-                |Returns:|
-                - **quotetionFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotetionFunctionArea*
+
+**返回参数**:
+
+- **quotetionFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotetionFunctionArea*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotetionFunctionAreas": [
                     {
@@ -474,55 +460,54 @@
                 ],
                 ...
             }
-            
-    ### <I> addQuotetionFuctionArea
+
+    ### `addQuotetionFuctionArea` <span style="color:gray">[内部]</span>
 
         报价中添加功能区信息
-        
+
         判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
-        
+
         返回功能区 , 同时返回功能区中包含的报价项
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-        :param quotetion.basePrice: 基数
-        :type quotetion.basePrice: Long
-        :param quotetion.undisPrice: 不打折项总额
-        :type quotetion.undisPrice: Long
-        :param quotetion.disPrice: 打折项总额
-        :type quotetion.disPrice: Long
-        :param quotetion.discount: 折扣
-        :type quotetion.discount: Long
-        :param quotetion.trafficPrice: 车运费
-        :type quotetion.trafficPrice: Long
-        :param quotetion.trafficRate: 车运费比例
-        :type quotetion.trafficRate: Integer
-        :param quotetion.trafficDiscount: 车运费折扣
-        :type quotetion.trafficDiscount: Short
-        :param quotetion.managePrice: 管理费
-        :type quotetion.managePrice: Long
-        :param quotetion.manageRate: 管理费比例
-        :type quotetion.manageRate: Integer
-        :param quotetion.manageDiscount: 管理费折扣
-        :type quotetion.manageDiscount: Short
-        :param quotetion.taxPrice: 税金
-        :type quotetion.taxPrice: Long
-        :param quotetion.taxRate: 税金比例
-        :type quotetion.taxRate: Integer
-        :param quotetion.taxDiscount: 税金折扣
-        :type quotetion.taxDiscount: Short
-        :param quotetion.costPrice: 成本金额
-        :type quotetion.costPrice: Long
-        :param quotetion.totalPrice: 报价总额
-        :type quotetion.totalPrice: Long
-        
-        :param functionAreaIds[n]: 功能区ID列表 , 每条数据类型 Long
-        :type functionAreaIds[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+        - **quotetion.basePrice**:
+  基数
+        - **quotetion.undisPrice**:
+  不打折项总额
+        - **quotetion.disPrice**:
+  打折项总额
+        - **quotetion.discount**:
+  折扣
+        - **quotetion.trafficPrice**:
+  车运费
+        - **quotetion.trafficRate**:
+  车运费比例
+        - **quotetion.trafficDiscount**:
+  车运费折扣
+        - **quotetion.managePrice**:
+  管理费
+        - **quotetion.manageRate**:
+  管理费比例
+        - **quotetion.manageDiscount**:
+  管理费折扣
+        - **quotetion.taxPrice**:
+  税金
+        - **quotetion.taxRate**:
+  税金比例
+        - **quotetion.taxDiscount**:
+  税金折扣
+        - **quotetion.costPrice**:
+  成本金额
+        - **quotetion.totalPrice**:
+  报价总额
+
+        - **functionAreaIds[n]**:
+  功能区ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "quotetion.qid": 1,
                 "quotetion.basePrice": 0,
                 "quotetion.undisPrice": 10000,
@@ -539,18 +524,17 @@
                 "quotetion.taxDiscount": 0,
                 "quotetion.costPrice": 0,
                 "quotetion.totalPrice": 10000,
-                
+
                 "functionAreaIds[0]": 1,
                 "functionAreaIds[1]": 2,
             }
-            
-                |Returns:|
-                - **quotetionFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotetionFunctionArea*
+
+**返回参数**:
+
+- **quotetionFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotetionFunctionArea*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotetionFunctionAreas": [
                     {
@@ -578,57 +562,56 @@
                 ],
                 ...
             }
-            
-    ### <I> updateQuotetionFunctionArea
+
+    ### `updateQuotetionFunctionArea` <span style="color:gray">[内部]</span>
 
         更新功能区信息
-        
+
         判断功能区是否存在 , 不存在 , 错误信息 **200010 功能区不存在**
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-        :param quotetion.basePrice: 基数
-        :type quotetion.basePrice: Long
-        :param quotetion.undisPrice: 不打折项总额
-        :type quotetion.undisPrice: Long
-        :param quotetion.disPrice: 打折项总额
-        :type quotetion.disPrice: Long
-        :param quotetion.discount: 折扣
-        :type quotetion.discount: Long
-        :param quotetion.trafficPrice: 车运费
-        :type quotetion.trafficPrice: Long
-        :param quotetion.trafficRate: 车运费比例
-        :type quotetion.trafficRate: Integer
-        :param quotetion.trafficDiscount: 车运费折扣
-        :type quotetion.trafficDiscount: Short
-        :param quotetion.managePrice: 管理费
-        :type quotetion.managePrice: Long
-        :param quotetion.manageRate: 管理费比例
-        :type quotetion.manageRate: Integer
-        :param quotetion.manageDiscount: 管理费折扣
-        :type quotetion.manageDiscount: Short
-        :param quotetion.taxPrice: 税金
-        :type quotetion.taxPrice: Long
-        :param quotetion.taxRate: 税金比例
-        :type quotetion.taxRate: Integer
-        :param quotetion.taxDiscount: 税金折扣
-        :type quotetion.taxDiscount: Short
-        :param quotetion.costPrice: 成本总额
-        :type quotetion.costPrice: Long
-        :param quotetion.totalPrice: 报价总额
-        :type quotetion.totalPrice: Long
-        
-        :param quotetionFunctionArea.qfaid: 功能区ID
-        :type quotetionFunctionArea.qfaid: Long
-        :param quotetionFunctionArea.name: 功能区名称
-        :type quotetionFunctionArea.name: String
-        :param quotetionFunctionArea.sort: 功能区排序
-        :type quotetionFunctionArea.sort: Integer
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+        - **quotetion.basePrice**:
+  基数
+        - **quotetion.undisPrice**:
+  不打折项总额
+        - **quotetion.disPrice**:
+  打折项总额
+        - **quotetion.discount**:
+  折扣
+        - **quotetion.trafficPrice**:
+  车运费
+        - **quotetion.trafficRate**:
+  车运费比例
+        - **quotetion.trafficDiscount**:
+  车运费折扣
+        - **quotetion.managePrice**:
+  管理费
+        - **quotetion.manageRate**:
+  管理费比例
+        - **quotetion.manageDiscount**:
+  管理费折扣
+        - **quotetion.taxPrice**:
+  税金
+        - **quotetion.taxRate**:
+  税金比例
+        - **quotetion.taxDiscount**:
+  税金折扣
+        - **quotetion.costPrice**:
+  成本总额
+        - **quotetion.totalPrice**:
+  报价总额
+
+        - **quotetionFunctionArea.qfaid**:
+  功能区ID
+        - **quotetionFunctionArea.name**:
+  功能区名称
+        - **quotetionFunctionArea.sort**:
+  功能区排序
+
+        **示例**:{
                 "quotetion.qid": 1,
                 "quotetion.basePrice": 0,
                 "quotetion.undisPrice": 10000,
@@ -645,57 +628,56 @@
                 "quotetion.taxDiscount": 0,
                 "quotetion.costPrice": 0,
                 "quotetion.totalPrice": 10000,
-                
+
                 "quotetionFunctionArea.qfaid": 2,
                 "quotetionFunctionArea.name": "门厅",
                 "quotetionFunctionArea.sort": 2,
             }
-            
-    ### <I> deleteQuotetionFunctionArea
+
+    ### `deleteQuotetionFunctionArea` <span style="color:gray">[内部]</span>
 
         删除功能区信息 , 功能区中包含的报价项信息一同删除
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-        :param quotetion.basePrice: 基数
-        :type quotetion.basePrice: Long
-        :param quotetion.undisPrice: 不打折项总额
-        :type quotetion.undisPrice: Long
-        :param quotetion.disPrice: 打折项总额
-        :type quotetion.disPrice: Long
-        :param quotetion.discount: 折扣
-        :type quotetion.discount: Long
-        :param quotetion.trafficPrice: 车运费
-        :type quotetion.trafficPrice: Long
-        :param quotetion.trafficRate: 车运费比例
-        :type quotetion.trafficRate: Integer
-        :param quotetion.trafficDiscount: 车运费折扣
-        :type quotetion.trafficDiscount: Short
-        :param quotetion.managePrice: 管理费
-        :type quotetion.managePrice: Long
-        :param quotetion.manageRate: 管理费比例
-        :type quotetion.manageRate: Integer
-        :param quotetion.manageDiscount: 管理费折扣
-        :type quotetion.manageDiscount: Short
-        :param quotetion.taxPrice: 税金
-        :type quotetion.taxPrice: Long
-        :param quotetion.taxRate: 税金比例
-        :type quotetion.taxRate: Integer
-        :param quotetion.taxDiscount: 税金折扣
-        :type quotetion.taxDiscount: Short
-        :param quotetion.costPrice: 成本总额
-        :type quotetion.costPrice: Long
-        :param quotetion.totalPrice: 报价总额
-        :type quotetion.totalPrice: Long
-        
-        :param quotetionFunctionArea.qfaid: 功能区ID
-        :type quotetionFunctionArea.qfaid: Long
-        
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+        - **quotetion.basePrice**:
+  基数
+        - **quotetion.undisPrice**:
+  不打折项总额
+        - **quotetion.disPrice**:
+  打折项总额
+        - **quotetion.discount**:
+  折扣
+        - **quotetion.trafficPrice**:
+  车运费
+        - **quotetion.trafficRate**:
+  车运费比例
+        - **quotetion.trafficDiscount**:
+  车运费折扣
+        - **quotetion.managePrice**:
+  管理费
+        - **quotetion.manageRate**:
+  管理费比例
+        - **quotetion.manageDiscount**:
+  管理费折扣
+        - **quotetion.taxPrice**:
+  税金
+        - **quotetion.taxRate**:
+  税金比例
+        - **quotetion.taxDiscount**:
+  税金折扣
+        - **quotetion.costPrice**:
+  成本总额
+        - **quotetion.totalPrice**:
+  报价总额
+
+        - **quotetionFunctionArea.qfaid**:
+  功能区ID
+
+
+        **示例**:{
                 "quotetion.qid": 1,
                 "quotetion.basePrice": 0,
                 "quotetion.undisPrice": 10000,
@@ -712,18 +694,19 @@
                 "quotetion.taxDiscount": 0,
                 "quotetion.costPrice": 0,
                 "quotetion.totalPrice": 10000,
-                
+
                 "quotetionFunctionArea.qfaid": 2
             }
-            
+
 ### 功能区-预报项
 
 功能区中报价项信息管理
 
 ## api.quotetion.QuotetionFunctionAreaItemAction
 
-        |DataType:|
-        #### quotetionFunctionAreaItem
+**数据类型**:
+
+#### quotetionFunctionAreaItem
 
     - **qfaiId**: 报价项ID
       - 类型: *Long*
@@ -753,86 +736,85 @@
       - 类型: *Short*
     - **content**: 说明
       - 类型: *String*
-    
-    ### <I> updateQuotetionFunctionAreaItem
+
+    ### `updateQuotetionFunctionAreaItem` <span style="color:gray">[内部]</span>
 
         更新报价项信息 , 若无信息则为创建报价项信息
-        
-        标准报价项 , 需要引用报价项ID信息 , 其他信息直接赋值
-        
-        自定义报价项 , 引用报价项ID为NULL , 其他信息直接赋值
-        
-        判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
-        
-        判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-        :param quotetion.basePrice: 基数
-        :type quotetion.basePrice: Long
-        :param quotetion.undisPrice: 不打折项总额
-        :type quotetion.undisPrice: Long
-        :param quotetion.disPrice: 打折项总额
-        :type quotetion.disPrice: Long
-        :param quotetion.discount: 折扣
-        :type quotetion.discount: Long
-        :param quotetion.trafficPrice: 车运费
-        :type quotetion.trafficPrice: Long
-        :param quotetion.trafficRate: 车运费比例
-        :type quotetion.trafficRate: Integer
-        :param quotetion.trafficDiscount: 车运费折扣
-        :type quotetion.trafficDiscount: Short
-        :param quotetion.managePrice: 管理费
-        :type quotetion.managePrice: Long
-        :param quotetion.manageRate: 管理费比例
-        :type quotetion.manageRate: Integer
-        :param quotetion.manageDiscount: 管理费折扣
-        :type quotetion.manageDiscount: Short
-        :param quotetion.taxPrice: 税金
-        :type quotetion.taxPrice: Long
-        :param quotetion.taxRate: 税金比例
-        :type quotetion.taxRate: Integer
-        :param quotetion.taxDiscount: 税金折扣
-        :type quotetion.taxDiscount: Short
-        :param quotetion.costPrice: 成本总额
-        :type quotetion.costPrice: Long
-        :param quotetion.totalPrice: 报价总额
-        :type quotetion.totalPrice: Long
-        
-        :param quotetionFunctionAreaItem.qfaiId: 报价项ID
-        :type quotetionFunctionAreaItem.qfaiId: Long
-        :param quotetionFunctionAreaItem.qfaid: 所属功能区ID
-        :type quotetionFunctionAreaItem.qfaid: Long
-        :param quotetionFunctionAreaItem.qiid: 引用报价项ID
-        :type quotetionFunctionAreaItem.qiid: Long
-        
-        :param quotetionFunctionAreaItem.name: 报价项名
-        :type quotetionFunctionAreaItem.name: String
-        :param quotetionFunctionAreaItem.unitPrice: 单价
-        :type quotetionFunctionAreaItem.unitPrice: Integer
-        :param quotetionFunctionAreaItem.index: 索引
-        :type quotetionFunctionAreaItem.index: Integer
-        :param quotetionFunctionAreaItem.formula: 公式
-        :type quotetionFunctionAreaItem.formula: String
-        :param quotetionFunctionAreaItem.num: 工程量
-        :type quotetionFunctionAreaItem.num: Integer
-        :param quotetionFunctionAreaItem.type: 类型 , 0: 标准报价项 , 1: 自定义报价项
-        :type quotetionFunctionAreaItem.type: Short
-        :param quotetionFunctionAreaItem.subtype: 子类
-        :type quotetionFunctionAreaItem.subtype: Short
-        :param quotetionFunctionAreaItem.measurementUnit: 单位
-        :type quotetionFunctionAreaItem.measurementUnit: String
-        :param quotetionFunctionAreaItem.workType: 工种
-        :type quotetionFunctionAreaItem.workType: String
-        :param quotetionFunctionAreaItem.discount: 折扣标识 , 0: 不打折 , 1: 打折
-        :type quotetionFunctionAreaItem.discount: Short
-        :param quotetionFunctionAreaItem.content: 说明
-        :type quotetionFunctionAreaItem.content: String
 
-        Example::
-        
-            {
+        标准报价项 , 需要引用报价项ID信息 , 其他信息直接赋值
+
+        自定义报价项 , 引用报价项ID为NULL , 其他信息直接赋值
+
+        判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
+
+        判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+        - **quotetion.basePrice**:
+  基数
+        - **quotetion.undisPrice**:
+  不打折项总额
+        - **quotetion.disPrice**:
+  打折项总额
+        - **quotetion.discount**:
+  折扣
+        - **quotetion.trafficPrice**:
+  车运费
+        - **quotetion.trafficRate**:
+  车运费比例
+        - **quotetion.trafficDiscount**:
+  车运费折扣
+        - **quotetion.managePrice**:
+  管理费
+        - **quotetion.manageRate**:
+  管理费比例
+        - **quotetion.manageDiscount**:
+  管理费折扣
+        - **quotetion.taxPrice**:
+  税金
+        - **quotetion.taxRate**:
+  税金比例
+        - **quotetion.taxDiscount**:
+  税金折扣
+        - **quotetion.costPrice**:
+  成本总额
+        - **quotetion.totalPrice**:
+  报价总额
+
+        - **quotetionFunctionAreaItem.qfaiId**:
+  报价项ID
+        - **quotetionFunctionAreaItem.qfaid**:
+  所属功能区ID
+        - **quotetionFunctionAreaItem.qiid**:
+  引用报价项ID
+
+        - **quotetionFunctionAreaItem.name**:
+  报价项名
+        - **quotetionFunctionAreaItem.unitPrice**:
+  单价
+        - **quotetionFunctionAreaItem.index**:
+  索引
+        - **quotetionFunctionAreaItem.formula**:
+  公式
+        - **quotetionFunctionAreaItem.num**:
+  工程量
+        - **quotetionFunctionAreaItem.type**:
+  类型 , 0: 标准报价项 , 1: 自定义报价项
+        - **quotetionFunctionAreaItem.subtype**:
+  子类
+        - **quotetionFunctionAreaItem.measurementUnit**:
+  单位
+        - **quotetionFunctionAreaItem.workType**:
+  工种
+        - **quotetionFunctionAreaItem.discount**:
+  折扣标识 , 0: 不打折 , 1: 打折
+        - **quotetionFunctionAreaItem.content**:
+  说明
+
+        **示例**:{
                 "quotetion.qid": 1,
                 "quotetion.basePrice": 0,
                 "quotetion.undisPrice": 10000,
@@ -849,7 +831,7 @@
                 "quotetion.taxDiscount": 0,
                 "quotetion.costPrice": 0,
                 "quotetion.totalPrice": 10000,
-                
+
                 "quotetionFunctionAreaItem.qfaid": 1,
                 "quotetionFunctionAreaItem.qiid": null,
                 "quotetionFunctionAreaItem.name": "整体墙棚面砂纸打磨处理",
@@ -865,13 +847,12 @@
                 "quotetionFunctionAreaItem.content": ""
             }
 
-                |Returns:|
-                - **quotetionFunctionAreaItem**: 报价项信息 , 类型 *quotetionFunctionAreaItem*
+**返回参数**:
+
+- **quotetionFunctionAreaItem**: 报价项信息 , 类型 *quotetionFunctionAreaItem*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotetionFunctionAreaItem": {
                     "qfaiid": 1,
@@ -892,29 +873,28 @@
                 ...
             }
 
-    ### <I> updateQuotetionFunctionAreaItemForIndex
+    ### `updateQuotetionFunctionAreaItemForIndex` <span style="color:gray">[内部]</span>
 
         更新报价项排序索引
-        
+
         更新过程只能够在同一个功能区中的两个索引之间完成
-        
+
         利用功能区定位报价项归属表
-        
+
         报价项获取失败或无报价项 , 不进行更新动作
-        
+
         判断功能区是否存在 , 不存在 , 错误信息 **200012 功能区不存在**
-        
-                |Requests:|
-                :param quotetionFunctionArea.qfaid: 功能区ID
-        :type quotetionFunctionArea.qfaid: Long
-        :param quotetionFunctionAreaItems[n].qfaiId: 报价项ID
-        :type quotetionFunctionAreaItems[n].qfaiId: Long
-        :param quotetionFunctionAreaItems[n].index: 索引
-        :type quotetionFunctionAreaItems[n].index: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotetionFunctionArea.qfaid**:
+  功能区ID
+        - **quotetionFunctionAreaItems[n].qfaiId**:
+  报价项ID
+        - **quotetionFunctionAreaItems[n].index**:
+  索引
+
+        **示例**:{
                 "quotetionFunctionArea.qfaid": 1,
                 "quotetionFunctionAreaItems[0].qfaiId": 1,
                 "quotetionFunctionAreaItems[0].index": 1,
@@ -922,54 +902,53 @@
                 "quotetionFunctionAreaItems[1].index": 2
             }
 
-    ### <I> updateQuotetionFunctionAreaItemForSpec
+    ### `updateQuotetionFunctionAreaItemForSpec` <span style="color:gray">[内部]</span>
 
         通过报价ID以及报价项类型更新报价项单价信息 , 只能适用类型为2:车运费和3:管理费的项目
-        
-        判断报价是否存在 , 不存在 , 错误信息 **200013 报价项不存在**
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-        :param quotetion.basePrice: 基数
-        :type quotetion.basePrice: Long
-        :param quotetion.undisPrice: 不打折项总额
-        :type quotetion.undisPrice: Long
-        :param quotetion.disPrice: 打折项总额
-        :type quotetion.disPrice: Long
-        :param quotetion.discount: 折扣
-        :type quotetion.discount: Long
-        :param quotetion.trafficPrice: 车运费
-        :type quotetion.trafficPrice: Long
-        :param quotetion.trafficRate: 车运费比例
-        :type quotetion.trafficRate: Integer
-        :param quotetion.trafficDiscount: 车运费折扣
-        :type quotetion.trafficDiscount: Short
-        :param quotetion.managePrice: 管理费
-        :type quotetion.managePrice: Long
-        :param quotetion.manageRate: 管理费比例
-        :type quotetion.manageRate: Integer
-        :param quotetion.manageDiscount: 管理费折扣
-        :type quotetion.manageDiscount: Short
-        :param quotetion.taxPrice: 税金
-        :type quotetion.taxPrice: Long
-        :param quotetion.taxRate: 税金比例
-        :type quotetion.taxRate: Integer
-        :param quotetion.taxDiscount: 税金折扣
-        :type quotetion.taxDiscount: Short
-        :param quotetion.costPrice: 成本总额
-        :type quotetion.costPrice: Long
-        :param quotetion.totalPrice: 报价总额
-        :type quotetion.totalPrice: Long
-        
-        :param quotetionFunctionAreaItem.qfaiid: 报价项ID
-        :type quotetionFunctionAreaItem.qfaiid: Long
-        :param quotetionFunctionAreaItem.unitPrice: 单价
-        :type quotetionFunctionAreaItem.unitPrice: Integer
 
-        Example::
-        
-            {
+        判断报价是否存在 , 不存在 , 错误信息 **200013 报价项不存在**
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+        - **quotetion.basePrice**:
+  基数
+        - **quotetion.undisPrice**:
+  不打折项总额
+        - **quotetion.disPrice**:
+  打折项总额
+        - **quotetion.discount**:
+  折扣
+        - **quotetion.trafficPrice**:
+  车运费
+        - **quotetion.trafficRate**:
+  车运费比例
+        - **quotetion.trafficDiscount**:
+  车运费折扣
+        - **quotetion.managePrice**:
+  管理费
+        - **quotetion.manageRate**:
+  管理费比例
+        - **quotetion.manageDiscount**:
+  管理费折扣
+        - **quotetion.taxPrice**:
+  税金
+        - **quotetion.taxRate**:
+  税金比例
+        - **quotetion.taxDiscount**:
+  税金折扣
+        - **quotetion.costPrice**:
+  成本总额
+        - **quotetion.totalPrice**:
+  报价总额
+
+        - **quotetionFunctionAreaItem.qfaiid**:
+  报价项ID
+        - **quotetionFunctionAreaItem.unitPrice**:
+  单价
+
+        **示例**:{
                 "quotetion.qid": 1,
                 "quotetion.basePrice": 0,
                 "quotetion.undisPrice": 10000,
@@ -986,63 +965,62 @@
                 "quotetion.taxDiscount": 0,
                 "quotetion.costPrice": 0,
                 "quotetion.totalPrice": 10000,
-                
+
                 "quotetionFunctionAreaItem.qfaiid": 1,
                 "quotetionFunctionAreaItem.unitPrice": 200
             }
-            
-    ### <I> deleteQuotetionFunctionAreaItem
+
+    ### `deleteQuotetionFunctionAreaItem` <span style="color:gray">[内部]</span>
 
         删除报价项信息
-        
+
         利用功能区定位报价项归属表
-        
+
         判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
-        
+
         判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
-        
-                |Requests:|
-                :param quotetion.qid: 报价ID
-        :type quotetion.qid: Long
-        :param quotetion.basePrice: 基数
-        :type quotetion.basePrice: Long
-        :param quotetion.undisPrice: 不打折项总额
-        :type quotetion.undisPrice: Long
-        :param quotetion.disPrice: 打折项总额
-        :type quotetion.disPrice: Long
-        :param quotetion.discount: 折扣
-        :type quotetion.discount: Long
-        :param quotetion.trafficPrice: 车运费
-        :type quotetion.trafficPrice: Long
-        :param quotetion.trafficRate: 车运费比例
-        :type quotetion.trafficRate: Integer
-        :param quotetion.trafficDiscount: 车运费折扣
-        :type quotetion.trafficDiscount: Short
-        :param quotetion.managePrice: 管理费
-        :type quotetion.managePrice: Long
-        :param quotetion.manageRate: 管理费比例
-        :type quotetion.manageRate: Integer
-        :param quotetion.manageDiscount: 管理费折扣
-        :type quotetion.manageDiscount: Short
-        :param quotetion.taxPrice: 税金
-        :type quotetion.taxPrice: Long
-        :param quotetion.taxRate: 税金比例
-        :type quotetion.taxRate: Integer
-        :param quotetion.taxDiscount: 税金折扣
-        :type quotetion.taxDiscount: Short
-        :param quotetion.costPrice: 成本总额
-        :type quotetion.costPrice: Long
-        :param quotetion.totalPrice: 报价总额
-        :type quotetion.totalPrice: Long
-        
-        :param quotetionFunctionArea.qfaid: 功能区ID
-        :type quotetionFunctionArea.qfaid: Long
+
+**请求参数**:
+
+- **quotetion.qid**:
+  报价ID
+        - **quotetion.basePrice**:
+  基数
+        - **quotetion.undisPrice**:
+  不打折项总额
+        - **quotetion.disPrice**:
+  打折项总额
+        - **quotetion.discount**:
+  折扣
+        - **quotetion.trafficPrice**:
+  车运费
+        - **quotetion.trafficRate**:
+  车运费比例
+        - **quotetion.trafficDiscount**:
+  车运费折扣
+        - **quotetion.managePrice**:
+  管理费
+        - **quotetion.manageRate**:
+  管理费比例
+        - **quotetion.manageDiscount**:
+  管理费折扣
+        - **quotetion.taxPrice**:
+  税金
+        - **quotetion.taxRate**:
+  税金比例
+        - **quotetion.taxDiscount**:
+  税金折扣
+        - **quotetion.costPrice**:
+  成本总额
+        - **quotetion.totalPrice**:
+  报价总额
+
+        - **quotetionFunctionArea.qfaid**:
+  功能区ID
         - **qfaiIds**: 报价项ID列表 , 每条数据类型 Long
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "quotetion.qid": 1,
                 "quotetion.basePrice": 0,
                 "quotetion.undisPrice": 10000,
@@ -1059,16 +1037,16 @@
                 "quotetion.taxDiscount": 0,
                 "quotetion.costPrice": 10000,
                 "quotetion.totalPrice": 10000,
-                
+
                 "quotetionFunctionArea.qfaid": 1,
                 "qfaiIds[0]": 1,
                 "qfaiIds[1]": 2
             }
-            
+
 
 ## 预签
 
-折扣 = (起报价 - 优惠) / (起报价) 
+折扣 = (起报价 - 优惠) / (起报价)
 管理费 = (起报价 - 减项 - 优惠) * 管理费比例
 总价 = 起报价 + 管理费 + 额外功能区 - 减项 + 增项 + 赋能
 
@@ -1076,8 +1054,9 @@
 
 ## api.quotation.ProtationAction
 
-        |DataType:|
-        #### protation
+**数据类型**:
+
+#### protation
 
     - **pid**: 预签ID
       - 类型: *Long*
@@ -1155,20 +1134,19 @@
       - 类型: *Short*
     - **comment**: 备注
       - 类型: *String*
-    
-    ### <I> pageProtation
+
+    ### `pageProtation` <span style="color:gray">[内部]</span>
 
         分页方式获预签单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 预签单信息列表 , 每条数据类型 *protation*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  预签单信息列表 , 每条数据类型 *protation*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1220,7 +1198,7 @@
                                 "createrId": "U001",
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "createTime": "2016-01-01",
                             "quotePrice": 100000,
@@ -1258,28 +1236,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryProtationByOrderId
+
+    ### `queryProtationByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号查询预签信息
-    
-                |Requests:|
-                :param protation.orderId: 装修单号
-        :type protation.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.orderId**:
+  装修单号
+
+        **示例**:{
                 "protation.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **protations**: 预签信息列表 , 每条数据类型 *protation*
+
+**返回参数**:
+
+- **protations**: 预签信息列表 , 每条数据类型 *protation*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "protations": [
                     {
@@ -1298,7 +1274,7 @@
                             "createrId": "U001",
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "createTime": "2016-01-01",
                         "quotePrice": 100000,
@@ -1334,28 +1310,26 @@
                 ],
                 ...
             }
-    
-    ### <I> queryProtationForDefaultByOrderId
+
+    ### `queryProtationForDefaultByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取默认预签信息
-    
-                |Requests:|
-                :param protation.orderId: 装修单号
-        :type protation.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.orderId**:
+  装修单号
+
+        **示例**:{
                 "protation.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **protation**: 预签信息 , 类型 *protation*
+
+**返回参数**:
+
+- **protation**: 预签信息 , 类型 *protation*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "protation": {
                     "pid": 1,
@@ -1373,7 +1347,7 @@
                         "createrId": "U001",
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "createTime": "2016-01-01",
                     "quotePrice": 100000,
@@ -1408,28 +1382,26 @@
                 }
                 ...
             }
-    
-    ### <I> queryProtationByPid
+
+    ### `queryProtationByPid` <span style="color:gray">[内部]</span>
 
         通过预签ID获取预签信息
-    
-                |Requests:|
-                :param protation.pid: 预签ID
-        :type protation.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.pid**:
+  预签ID
+
+        **示例**:{
                 "protation.pid": 1
             }
-        
-                |Returns:|
-                - **protation**: 预签信息 , 类型 *protation*
+
+**返回参数**:
+
+- **protation**: 预签信息 , 类型 *protation*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "protation": {
                     "pid": 1,
@@ -1447,7 +1419,7 @@
                         "createrId": "U001",
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "createTime": "2016-01-01",
                     "quotePrice": 100000,
@@ -1482,120 +1454,117 @@
                 }
                 ...
             }
-    
-    ### <I> addProtation
+
+    ### `addProtation` <span style="color:gray">[内部]</span>
 
         创建预签信息
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
+
         判断装修单状态是否为0(初始)/1(定金) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
+
         判断预签数量是否已经达到上限 , 错误信息 **200048 预签数量达到上限**
-        
-                |Requests:|
-                :param protation.ppid: 预签产品ID
-        :type protation.ppid: String
-        :param protation.orderId: 装修单号
-        :type protation.orderId: String
-        :param protation.name: 名称
-        :type protation.name: String
-        :param protation.comment: 备注
-        :type protation.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.ppid**:
+  预签产品ID
+        - **protation.orderId**:
+  装修单号
+        - **protation.name**:
+  名称
+        - **protation.comment**:
+  备注
+
+        **示例**:{
                 "protation.ppid": 1,
                 "protation.orderId": "1601010001",
                 "protation.name": "预签信息",
                 "protation.comment": "备注"
             }
-    
-    ### <I> updateProtation
+
+    ### `updateProtation` <span style="color:gray">[内部]</span>
 
         更新预签信息
-        
+
         判断预签信息是否存在 , 不存在 , 错误信息 **200046 预签不存在**
-        
+
         判断预签信息状态是否为0(启用) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
+
         判断装修单状态是否为0(初始)/1(定金) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
-                |Requests:|
-                :param protation.pid: 预签ID
-        :type protation.pid: Long
-        :param protation.name: 名称
-        :type protation.name: String
-        :param protation.version.qvid: 报价版本ID
-        :type protation.version.qvid: Long
-        :param protation.comment: 备注
-        :type protation.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.pid**:
+  预签ID
+        - **protation.name**:
+  名称
+        - **protation.version.qvid**:
+  报价版本ID
+        - **protation.comment**:
+  备注
+
+        **示例**:{
                 "protation.pid": 1,
                 "protation.name": "预签信息",
                 "protation.version.qvid": 1,
                 "protation.comment": "备注"
             }
 
-    ### <I> updateProtationForAdvance
+    ### `updateProtationForAdvance` <span style="color:gray">[内部]</span>
 
         更新预签信息
-        
+
         判断预签信息是否存在 , 不存在 , 错误信息 **200046 预签不存在**
-        
+
         判断预签信息状态是否为0(启用) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
+
         判断装修单状态是否为0(初始)/1(定金) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
-                |Requests:|
-                :param protation.pid: 预签ID
-        :type protation.pid: Long
-        :param protation.basicPrice: 基础额
-        :type protation.basicPrice: Long
-        :param protation.profitPrice: 优惠额
-        :type protation.profitPrice: Long
-        :param protation.manageProfit: 管理优惠
-        :type protation.manageProfit: Long
-        :param protation.advanceProfit: 特殊优惠
-        :type protation.advanceProfit: Long
-        :param protation.managePrice: 管理费
-        :type protation.managePrice: Long
-        :param protation.comdPrice: 工程额
-        :type protation.comdPrice: Long
-        :param protation.commPrice: 主材额
-        :type protation.commPrice: Long
-        :param protation.adddPrice: 增工额
-        :type protation.adddPrice: Long
-        :param protation.addmPrice: 增主额
-        :type protation.addmPrice: Long
-        :param protation.subcPrice: 减通额
-        :type protation.subcPrice: Long
-        :param protation.subdPrice: 减工额
-        :type protation.subdPrice: Long
-        :param protation.submPrice: 减主额
-        :type protation.submPrice: Long
-        :param protation.accdPrice: 减工额
-        :type protation.accdPrice: Long
-        :param protation.accmPrice: 减主额
-        :type protation.accmPrice: Long
-        :param protation.totalPrice: 总额
-        :type protation.totalPrice: Long
-        :param protation.totalCost: 成本总额
-        :type protation.totalCost: Long
-        :param protation.totalProfit: 利润总额
-        :type protation.totalProfit: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.pid**:
+  预签ID
+        - **protation.basicPrice**:
+  基础额
+        - **protation.profitPrice**:
+  优惠额
+        - **protation.manageProfit**:
+  管理优惠
+        - **protation.advanceProfit**:
+  特殊优惠
+        - **protation.managePrice**:
+  管理费
+        - **protation.comdPrice**:
+  工程额
+        - **protation.commPrice**:
+  主材额
+        - **protation.adddPrice**:
+  增工额
+        - **protation.addmPrice**:
+  增主额
+        - **protation.subcPrice**:
+  减通额
+        - **protation.subdPrice**:
+  减工额
+        - **protation.submPrice**:
+  减主额
+        - **protation.accdPrice**:
+  减工额
+        - **protation.accmPrice**:
+  减主额
+        - **protation.totalPrice**:
+  总额
+        - **protation.totalCost**:
+  成本总额
+        - **protation.totalProfit**:
+  利润总额
+
+        **示例**:{
                 "protation.pid": 1,
                 "protation.basicPrice": 0,
                 "protation.profitPrice": 0,
@@ -1616,118 +1585,114 @@
                 "protation.totalProfit": 0
             }
 
-    ### <I> updateProtationForStatus
+    ### `updateProtationForStatus` <span style="color:gray">[内部]</span>
 
         更新预签状态
-        
+
         判断预签报价是否存在 , 不存在 , 错误信息 **200046 预签不存在**
-        
+
         判断预签报价状态是否为0(启用) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
+
         判断装修单状态是否为0(初始)/1(定金) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
-                |Requests:|
-                :param protation.pid: 预签ID
-        :type protation.pid: Long
-        :param protation.status: 名称
-        :type protation.status: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.pid**:
+  预签ID
+        - **protation.status**:
+  名称
+
+        **示例**:{
                 "protation.pid": 1,
                 "protation.status": "预签信息"
             }
-    
-    ### <I> changeProtationForDefault
+
+    ### `changeProtationForDefault` <span style="color:gray">[内部]</span>
 
         默认预签 , 其他默认重置
-        
+
         判断预签信息是否存在 , 不存在 , 错误信息 **200046 预签不存在**
-        
+
         判断预签报价状态是否为0(启用) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
+
         判断装修单状态是否为0(初始)/1(定金) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
-                |Requests:|
-                :param protation.pid: 预签ID
-        :type protation.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.pid**:
+  预签ID
+
+        **示例**:{
                 "protation.pid": 1
             }
 
-    ### <I> lockProtation
+    ### `lockProtation` <span style="color:gray">[内部]</span>
 
         锁定预签报价
-        
+
         判断预签信息是否存在 , 不存在 , 错误信息 **200046 预签不存在**
-        
+
         锁定状态的预签报价 , 可以进行打印功能 , 以及部分装修单操作限制 , 但不可以再进行编辑
-        
+
         更新预签报价状态为1(锁定)
-        
-                |Requests:|
-                :param protation.pid: 预签报价ID
-        :type protation.pid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.pid**:
+  预签报价ID
+
+        **示例**:{
                 "protation.pid": 1
             }
-            
-    ### <I> unlockProtation
+
+    ### `unlockProtation` <span style="color:gray">[内部]</span>
 
         解锁预签报价
-        
+
         判断预签报价是否存在 , 不存在 错误信息 **200003 报价不存在**
-        
+
         更新预签报价状态为0(启用)
-        
-                |Requests:|
-                :param protation.pid: 报价ID
-        :type protation.pid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.pid**:
+  报价ID
+
+        **示例**:{
                 "protation.pid": 1
             }
-    
-    ### <I> deleteProtation
+
+    ### `deleteProtation` <span style="color:gray">[内部]</span>
 
         删除预签
-        
+
         判断预签信息是否存在 , 不存在 , 错误信息 **200046 预签不存在**
-        
+
         判断预签报价状态是否为0(启用) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
+
         判断装修单状态是否为0(初始)/1(定金) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
-                |Requests:|
-                :param protation.pid: 预签ID
-        :type protation.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.pid**:
+  预签ID
+
+        **示例**:{
                 "protation.pid": 1
             }
 
 ### 项目
 ## api.quotation.ProtationItemAction
 
-        |DataType:|
-        #### protationItem
+**数据类型**:
+
+#### protationItem
 
     - **piid**: 预签项ID
       - 类型: *Long*
@@ -1761,28 +1726,26 @@
       - 类型: *Short*
     - **content**: 说明
       - 类型: *String*
-    
-    ### <I> queryProtationItemByPid
+
+    ### `queryProtationItemByPid` <span style="color:gray">[内部]</span>
 
         通过预签ID获取预签项
-    
-                |Requests:|
-                :param protationItem.pid: 预签ID
-        :type protationItem.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protationItem.pid**:
+  预签ID
+
+        **示例**:{
                 "protationItem.pid": 1
             }
-        
-                |Returns:|
-                - **protationItems**: 预签项信息列表 , 每条数据类型 *protationItem*
+
+**返回参数**:
+
+- **protationItems**: 预签项信息列表 , 每条数据类型 *protationItem*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "protationItems": [
                     {
@@ -1806,73 +1769,72 @@
                 ],
                 ...
             }
-    
-    ### <I> updateProtationItem
+
+    ### `updateProtationItem` <span style="color:gray">[内部]</span>
 
         创建/更新预签项
-        
+
         判断预签项是否存在 , 不存在 , 错误信息 **200052 预签项不存在**
-        
+
         判断预签报价状态是否为0(启用) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
+
         判断装修单状态是否为0(初始)/1(定金) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
-                |Requests:|
-                :param protation.pid: 预签ID
-        :type protation.pid: Long
-        :param protation.basicPrice: 基础额
-        :type protation.basicPrice: String
-        :param protation.comdPrice: 工程额
-        :type protation.comdPrice: String
-        :param protation.commPrice: 主材额
-        :type protation.commPrice: String
-        :param protation.adddPrice: 增工额
-        :type protation.adddPrice: String
-        :param protation.addmPrice: 增主额
-        :type protation.addmPrice: String
-        :param protation.subcPrice: 减通额
-        :type protation.subcPrice: String
-        :param protation.subdPrice: 减工额
-        :type protation.subdPrice: String
-        :param protation.submPrice: 减主额
-        :type protation.submPrice: String
-        :param protation.totalPrice: 总额
-        :type protation.totalPrice: String
-        
-        :param protationItem.piid: 预签项ID
-        :type protationItem.piid: Long
-        :param protationItem.ppiid: 产品项ID
-        :type protationItem.ppiid: Long
-        :param protationItem.name: 名称
-        :type protationItem.name: String
-        :param protationItem.basicNum: 基础量
-        :type protationItem.basicNum: Integer
-        :param protationItem.addPrice: 增补价
-        :type protationItem.addPrice: Integer
-        :param protationItem.price: 单价
-        :type protationItem.price: Integer
-        :param protationItem.subPrice: 退减价
-        :type protationItem.subPrice: Integer
-        :param protationItem.cost: 成本
-        :type protationItem.cost: Integer
-        :param protationItem.achePrice: 业绩价
-        :type protationItem.achePrice: Integer
-        :param protationItem.areaCale: 面积规则
-        :type protationItem.areaCale: Short
-        :param protationItem.num: 数量
-        :type protationItem.num: Integer
-        :param protationItem.type: 类型
-        :type protationItem.type: Short
-        :param protationItem.onetype: 一类
-        :type protationItem.onetype: Short
-        :param protationItem.atttype: 业务类型
-        :type protationItem.atttype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.pid**:
+  预签ID
+        - **protation.basicPrice**:
+  基础额
+        - **protation.comdPrice**:
+  工程额
+        - **protation.commPrice**:
+  主材额
+        - **protation.adddPrice**:
+  增工额
+        - **protation.addmPrice**:
+  增主额
+        - **protation.subcPrice**:
+  减通额
+        - **protation.subdPrice**:
+  减工额
+        - **protation.submPrice**:
+  减主额
+        - **protation.totalPrice**:
+  总额
+
+        - **protationItem.piid**:
+  预签项ID
+        - **protationItem.ppiid**:
+  产品项ID
+        - **protationItem.name**:
+  名称
+        - **protationItem.basicNum**:
+  基础量
+        - **protationItem.addPrice**:
+  增补价
+        - **protationItem.price**:
+  单价
+        - **protationItem.subPrice**:
+  退减价
+        - **protationItem.cost**:
+  成本
+        - **protationItem.achePrice**:
+  业绩价
+        - **protationItem.areaCale**:
+  面积规则
+        - **protationItem.num**:
+  数量
+        - **protationItem.type**:
+  类型
+        - **protationItem.onetype**:
+  一类
+        - **protationItem.atttype**:
+  业务类型
+
+        **示例**:{
                 "protation.pid": 1,
                 "protation.basicPrice": 0,
                 "protation.comdPrice": 0,
@@ -1883,7 +1845,7 @@
                 "protation.subdPrice": 0,
                 "protation.submPrice": 0,
                 "protation.totalPrice": 0,
-                
+
                 "protationItem.piid": 1,
                 "protationItem.ppiid": 1,
                 "protationItem.name": "预签项",
@@ -1899,47 +1861,46 @@
                 "protationItem.onetype": 0,
                 "protationItem.atttype": 1
             }
-    
-    ### <I> deleteProtationItem
+
+    ### `deleteProtationItem` <span style="color:gray">[内部]</span>
 
         删除预签项
-        
+
         判断预签项是否存在 , 不存在 , 错误信息 **200052 预签项不存在**
-        
+
         判断预签报价状态是否为0(启用) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
+
         判断装修单状态是否为0(初始)/1(定金) , 其他状态 , 错误信息 **200047 预签不可操作**
-        
-                |Requests:|
-                :param protation.pid: 预签ID
-        :type protation.pid: Long
-        :param protation.basicPrice: 基础额
-        :type protation.basicPrice: String
-        :param protation.comdPrice: 工程额
-        :type protation.comdPrice: String
-        :param protation.commPrice: 主材额
-        :type protation.commPrice: String
-        :param protation.adddPrice: 增工额
-        :type protation.adddPrice: String
-        :param protation.addmPrice: 增主额
-        :type protation.addmPrice: String
-        :param protation.subcPrice: 减通额
-        :type protation.subcPrice: String
-        :param protation.subdPrice: 减工额
-        :type protation.subdPrice: String
-        :param protation.submPrice: 减主额
-        :type protation.submPrice: String
-        :param protation.totalPrice: 总额
-        :type protation.totalPrice: String
-        
-        :param protationItem.piid: 预签项ID
-        :type protationItem.piid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protation.pid**:
+  预签ID
+        - **protation.basicPrice**:
+  基础额
+        - **protation.comdPrice**:
+  工程额
+        - **protation.commPrice**:
+  主材额
+        - **protation.adddPrice**:
+  增工额
+        - **protation.addmPrice**:
+  增主额
+        - **protation.subcPrice**:
+  减通额
+        - **protation.subdPrice**:
+  减工额
+        - **protation.submPrice**:
+  减主额
+        - **protation.totalPrice**:
+  总额
+
+        - **protationItem.piid**:
+  预签项ID
+
+        **示例**:{
                 "protation.pid": 1,
                 "protation.basicPrice": 0,
                 "protation.comdPrice": 0,
@@ -1950,7 +1911,7 @@
                 "protation.subdPrice": 0,
                 "protation.submPrice": 0,
                 "protation.totalPrice": 0,
-                
+
                 "protationItem.piid": 1
             }
 
@@ -1968,8 +1929,9 @@
 
 ## api.quotation.ProtationCostAction
 
-        |DataType:|
-        #### protationCost
+**数据类型**:
+
+#### protationCost
 
     - **pcid**: 成本ID
       - 类型: *Long*
@@ -1982,27 +1944,25 @@
     - **costPrice**: 成本单价
       - 类型: *Integer*
 
-    ### <I> queryProtationCost
+    ### `queryProtationCost` <span style="color:gray">[内部]</span>
 
         通过预签产品获取成本信息
-        
-                |Requests:|
-                :param protationCost.pid: 预签产品ID
-        :type protationCost.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **protationCost.pid**:
+  预签产品ID
+
+        **示例**:{
                 "protationCost.pid": 1
             }
 
-                |Returns:|
-                - **protationCosts**: 预签成本列表 , 类型 *protationCost*
+**返回参数**:
+
+- **protationCosts**: 预签成本列表 , 类型 *protationCost*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "protationCosts":[
                     {
@@ -2040,7 +2000,6 @@
 
 报价额 = 工程额 + 管理费
 
----------------------------------------------
 
 打折项总额 = ∑打折项 * 折扣
 
@@ -2070,8 +2029,9 @@
 
 ## api.quotation.QuotationAction
 
-        |DataType:|
-        #### quotation
+**数据类型**:
+
+#### quotation
 
     - **qid**: 报价ID
       - 类型: *Long*
@@ -2139,20 +2099,19 @@
       - 类型: *Short*
     - **content**: 说明
       - 类型: *String*
-    
-    ### <I> pageQuotation
+
+    ### `pageQuotation` <span style="color:gray">[内部]</span>
 
         分页方式获报价信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 报价单信息列表 , 每条数据类型 *quotation*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报价单信息列表 , 每条数据类型 *quotation*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2197,7 +2156,7 @@
                                 "createrId": "U001",
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "createTime": "2016-01-01",
                             "updateTime": "2016-01-01",
@@ -2231,28 +2190,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryQuotationByOrderId
+
+    ### `queryQuotationByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号查询报价信息
-        
-                |Requests:|
-                :param quotation.orderId: 装修单号
-        :type quotation.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.orderId**:
+  装修单号
+
+        **示例**:{
                 "quotation.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **quotations**: 报价信息列表 , 类型 *quotation*
+
+**返回参数**:
+
+- **quotations**: 报价信息列表 , 类型 *quotation*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotations":[
                     {
@@ -2264,7 +2221,7 @@
                             "createrId": "U001",
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "createTime": "2016-01-01",
                         "updateTime": "2016-01-01",
@@ -2296,31 +2253,29 @@
                 ],
                 ...
             }
-    
-    ### <I> queryQuotationForDefaultByOrderId
+
+    ### `queryQuotationForDefaultByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取默认报价信息
-        
-                |Requests:|
-                :param quotation.orderId: 装修单号
-        :type quotation.orderId: String
-        :param quotation.type: 类型
-        :type quotation.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.orderId**:
+  装修单号
+        - **quotation.type**:
+  类型
+
+        **示例**:{
                 "quotation.orderId": "1601010001",
                 "quotation.type": 0
             }
-            
-                |Returns:|
-                - **quotation**: 报价信息 , 类型 *quotation*
+
+**返回参数**:
+
+- **quotation**: 报价信息 , 类型 *quotation*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotation": {
                     "qid": 1,
@@ -2331,7 +2286,7 @@
                         "createrId": "U001",
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "createTime": "2016-01-01",
                     "updateTime": "2016-01-01",
@@ -2362,28 +2317,26 @@
                 }
                 ...
             }
-            
-    ### <I> queryQuotationById
+
+    ### `queryQuotationById` <span style="color:gray">[内部]</span>
 
         通过报价ID获取报价信息
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+
+        **示例**:{
                 "quotation.qid": 1
             }
-            
-                |Returns:|
-                - **quotation**: 报价信息 , 类型 *quotation*
+
+**返回参数**:
+
+- **quotation**: 报价信息 , 类型 *quotation*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotation": {
                     "qid": 1,
@@ -2394,7 +2347,7 @@
                         "createrId": "U001",
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "createTime": "2016-01-01",
                     "updateTime": "2016-01-01",
@@ -2425,18 +2378,17 @@
                 }
                 ...
             }
-            
-    ### <I> queryQuotationForConfig
+
+    ### `queryQuotationForConfig` <span style="color:gray">[内部]</span>
 
         获取报价相关配置信息
-        
-                |Returns:|
-                - **configs**: 报价信息 , 类型 Map <String, List<Sting>>
+
+**返回参数**:
+
+- **configs**: 报价信息 , 类型 Map <String, List<Sting>>
           - 类型: *Map*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "configs": {
                     "trafficRates": [
@@ -2451,52 +2403,50 @@
                 ...
             }
 
-    ### <I> addQuotation
+    ### `addQuotation` <span style="color:gray">[内部]</span>
 
         添加报价信息
-        
-                |Requests:|
-                :param quotation.orderId: 装修单号
-        :type quotation.orderId: String
-        :param quotation.name: 报价名
-        :type quotation.name: String
-        :param quotation.style: 风格
-        :type quotation.style: String
-        :param quotation.content: 说明
-        :type quotation.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.orderId**:
+  装修单号
+        - **quotation.name**:
+  报价名
+        - **quotation.style**:
+  风格
+        - **quotation.content**:
+  说明
+
+        **示例**:{
                 "quotation.orderId": "1601010001",
                 "quotation.name": "测试",
                 "quotation.style": "现代",
                 "quotation.content": ""
             }
-            
-    ### <I> updateQuotation
+
+    ### `updateQuotation` <span style="color:gray">[内部]</span>
 
         更新报价基础信息
-        
+
         判断报价是否存在 , 不存在 错误信息 **200003 报价不存在**
-        
+
         判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
-    
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        :param quotation.orderId: 装修单号
-        :type quotation.orderId: String
-        :param quotation.name: 报价名
-        :type quotation.name: String
-        :param quotation.style: 风格
-        :type quotation.style: String
-        :param quotation.content: 说明
-        :type quotation.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+        - **quotation.orderId**:
+  装修单号
+        - **quotation.name**:
+  报价名
+        - **quotation.style**:
+  风格
+        - **quotation.content**:
+  说明
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.orderId": "1601010001",
                 "quotation.name": "测试",
@@ -2504,71 +2454,69 @@
                 "quotation.content": ""
             }
 
-    ### <I> updateQuotationForPrice
+    ### `updateQuotationForPrice` <span style="color:gray">[内部]</span>
 
         更新报价价格信息
-        
+
         判断报价是否存在 , 不存在 错误信息 **200003 报价不存在**
-        
+
         判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
-    
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+
+        **示例**:{
                 "quotation.qid": 1
             }
-            
-    ### <I> updateQuotationForAdvance
+
+    ### `updateQuotationForAdvance` <span style="color:gray">[内部]</span>
 
         更新报价高级信息 , 同时按照报价的类型分别更新对应的信息
-        
+
         判断报价是否存在 , 不存在 错误信息 **200003 报价不存在**
-        
+
         判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        :param quotation.basePrice: 基数
-        :type quotation.basePrice: Long
-        :param quotation.undisPrice: 不打折项总额
-        :type quotation.undisPrice: Long
-        :param quotation.disPrice: 打折项总额
-        :type quotation.disPrice: Long
-        :param quotation.discount: 折扣
-        :type quotation.discount: Long
-        :param quotation.trafficPrice: 车运费
-        :type quotation.trafficPrice: Long
-        :param quotation.trafficRate: 车运费比例
-        :type quotation.trafficRate: Integer
-        :param quotation.trafficDiscount: 车运费折扣
-        :type quotation.trafficDiscount: Short
-        :param quotation.managePrice: 管理费
-        :type quotation.managePrice: Long
-        :param quotation.manageRate: 管理费比例
-        :type quotation.manageRate: Integer
-        :param quotation.manageDiscount: 管理费折扣
-        :type quotation.manageDiscount: Short
-        :param quotation.taxPrice: 税金
-        :type quotation.taxPrice: Long
-        :param quotation.taxRate: 税金比例
-        :type quotation.taxRate: Integer
-        :param quotation.taxDiscount: 税金折扣
-        :type quotation.taxDiscount: Short
-        :param quotation.unachePrice: 非业绩总额
-        :type quotation.unachePrice: Long
-        :param quotation.costPrice: 成本总额
-        :type quotation.costPrice: Long
-        :param quotation.totalPrice: 报价总额
-        :type quotation.totalPrice: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+        - **quotation.basePrice**:
+  基数
+        - **quotation.undisPrice**:
+  不打折项总额
+        - **quotation.disPrice**:
+  打折项总额
+        - **quotation.discount**:
+  折扣
+        - **quotation.trafficPrice**:
+  车运费
+        - **quotation.trafficRate**:
+  车运费比例
+        - **quotation.trafficDiscount**:
+  车运费折扣
+        - **quotation.managePrice**:
+  管理费
+        - **quotation.manageRate**:
+  管理费比例
+        - **quotation.manageDiscount**:
+  管理费折扣
+        - **quotation.taxPrice**:
+  税金
+        - **quotation.taxRate**:
+  税金比例
+        - **quotation.taxDiscount**:
+  税金折扣
+        - **quotation.unachePrice**:
+  非业绩总额
+        - **quotation.costPrice**:
+  成本总额
+        - **quotation.totalPrice**:
+  报价总额
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.basePrice": 0,
                 "quotation.undisPrice": 10000,
@@ -2588,195 +2536,187 @@
                 "quotation.totalPrice": 10000
             }
 
-    ### <I> updateQuotationForStatus
+    ### `updateQuotationForStatus` <span style="color:gray">[内部]</span>
 
         更新报价状态
-        
+
         判断报价是否存在 , 不存在 错误信息 **200003 报价不存在**
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        :param quotation.status: 状态
-        :type quotation.status: Short
-        :param quotation.attstatus: 状态
-        :type quotation.attstatus: Short
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+        - **quotation.status**:
+  状态
+        - **quotation.attstatus**:
+  状态
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.status": 1,
                 "quotation.attstatus": 1
             }
 
-    ### <I> updateQuotationForTime
+    ### `updateQuotationForTime` <span style="color:gray">[内部]</span>
 
         更新报价状态
-        
+
         判断报价是否存在 , 不存在 错误信息 **200003 报价不存在**
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        :param quotation.worktime: 制作及时
-        :type quotation.worktime: Integer
-        :param quotation.auditime: 审核计时
-        :type quotation.auditime: Integer
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+        - **quotation.worktime**:
+  制作及时
+        - **quotation.auditime**:
+  审核计时
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.worktime": 1,
                 "quotation.auditime": 1
             }
-            
-    ### <I> deleteQuotationById
+
+    ### `deleteQuotationById` <span style="color:gray">[内部]</span>
 
         通过报价ID删除报价信息 , 默认报价不能删除
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+
+        **示例**:{
                 "quotation.qid": 1,
             }
-            
-    ### <I> replicaQuotation
+
+    ### `replicaQuotation` <span style="color:gray">[内部]</span>
 
         装修单间拷贝报价 , 其中折扣不进行复制
-        
+
         判断报价是否存在 , 不存在 错误信息 **200003 报价不存在**
-        
+
         判断报价数量是否已经达到上限 , 错误信息 **200001 报价已经达到数量上限**
-        
+
         判断报价是否存在已锁定状态 , 错误信息 **200033 报价已锁定**
-        
-                |Requests:|
-                :param quotation.qid: 拷贝报价ID
-        :type quotation.qid: Long
-        :param quotation.orderId: 目的装修单号
-        :type quotation.orderId: String
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  拷贝报价ID
+        - **quotation.orderId**:
+  目的装修单号
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.orderId": "1601010002"
             }
-            
-    ### <I> copyQuotation
+
+    ### `copyQuotation` <span style="color:gray">[内部]</span>
 
         装修单内拷贝报价 , 折扣与原报价相同
-        
+
         判断报价是否存在 , 不存在 错误信息 **200003 报价不存在**
-        
+
         判断报价数量是否已经达到上限 , 错误信息 **200001 报价已经达到数量上限**
-        
+
         判断报价是否存在已锁定状态 , 错误信息 **200033 报价已锁定**
-        
-                |Requests:|
-                :param quotation.qid: 拷贝报价ID
-        :type quotation.qid: Long
-        :param quotation.orderId: 目的装修单号
-        :type quotation.orderId: String
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  拷贝报价ID
+        - **quotation.orderId**:
+  目的装修单号
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.orderId": "1601010002"
             }
-            
-    ### <I> cloneQuotation
+
+    ### `cloneQuotation` <span style="color:gray">[内部]</span>
 
         克隆报价 , 将报价(quotetion)拷贝到报价(quotation)
-        
+
         判断报价是否存在 , 不存在 错误信息 **200003 报价不存在**
-        
+
         判断报价数量是否已经达到上限 , 错误信息 **200001 报价已经达到数量上限**
-        
+
         判断报价是否存在已锁定状态 , 错误信息 **200033 报价已锁定**
-        
+
         判断拷贝报价与装修单报价版本是否一致 , 错误信息 **200002 复制报价与当前报价版本不同,不能拷贝**
-        
-                |Requests:|
-                :param quotation.no: 报价编号
-        :type quotation.no: String
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.no**:
+  报价编号
+
+        **示例**:{
                 "quotation.no": 1
             }
-            
-    ### <I> changeQuotationForDefault
+
+    ### `changeQuotationForDefault` <span style="color:gray">[内部]</span>
 
         更换默认报价 , 装修单内有且只有一份默认报价
-        
-                |Requests:|
-                :param quotation.qid: 拷贝报价ID
-        :type quotation.qid: Long
-        :param quotation.orderId: 目的装修单号
-        :type quotation.orderId: String
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  拷贝报价ID
+        - **quotation.orderId**:
+  目的装修单号
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.orderId": "1601010002"
             }
-            
-    ### <I> lockQuotation
+
+    ### `lockQuotation` <span style="color:gray">[内部]</span>
 
         锁定报价
-        
+
         判断报价是否存在 , 不存在 错误信息 **200003 报价不存在**
-        
+
         锁定状态的报价 , 可以进行打印功能 , 以及部分装修单操作限制 , 但不可以在进行编辑
-        
+
         更新报价状态为1(锁定)
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+
+        **示例**:{
                 "quotation.qid": 1
             }
-            
-    ### <I> unlockQuotation
+
+    ### `unlockQuotation` <span style="color:gray">[内部]</span>
 
         解锁报价
-        
+
         判断报价是否存在 , 不存在 错误信息 **200003 报价不存在**
-        
+
         更新报价状态为0(初始)
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+
+        **示例**:{
                 "quotation.qid": 1
             }
-            
+
 ### 报价-功能区
 
 报价中功能区信息管理
 
 ## api.quotation.QuotationFunctionAreaAction
 
-        |DataType:|
-        #### quotationFunctionArea
+**数据类型**:
+
+#### quotationFunctionArea
 
     - **qfaid**: 功能区ID
       - 类型: *Long*
@@ -2794,28 +2734,26 @@
       - 类型: *Long*
     - **quotationFunctionAreaItems**: 功能区包含报价项信息列表 , 每条数据类型 [quotationFunctionAreaItem](./quotation.html#api.quotation.QuotationFunctionAreaItemAction.quotationFunctionAreaItem)
       - 类型: *List*
-    
-    ### <I> queryQuotationFunctionAreaForCommonByQuotationId
+
+    ### `queryQuotationFunctionAreaForCommonByQuotationId` <span style="color:gray">[内部]</span>
 
         通过报价ID查询功能区信息 , 不包含功能区中报价项信息
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+
+        **示例**:{
                 "quotation.qid": 1
             }
-            
-                |Returns:|
-                - **quotationFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotationFunctionArea*
+
+**返回参数**:
+
+- **quotationFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotationFunctionArea*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationFunctionAreas": [
                     {
@@ -2831,28 +2769,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryQuotationFunctionAreaByQuotationId
+
+    ### `queryQuotationFunctionAreaByQuotationId` <span style="color:gray">[内部]</span>
 
         通过报价ID查询功能区信息 , 包含功能区中报价项信息
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+
+        **示例**:{
                 "quotation.qid": 1,
             }
-            
-                |Returns:|
-                - **quotationFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotationFunctionArea*
+
+**返回参数**:
+
+- **quotationFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotationFunctionArea*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationFunctionAreas": [
                     {
@@ -2882,97 +2818,94 @@
                 ],
                 ...
             }
-            
-    ### <I> addQuotationFunctionArea
+
+    ### `addQuotationFunctionArea` <span style="color:gray">[内部]</span>
 
         报价中添加功能区
-        
+
         根据装修单对应的默认报价完成功能区添加
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
+
         判断装修单默认报价是否存在 , 不存在 错误信息 **200017 默认报价不存在**
-        
-        :param quotation.orderId: 装修单号
-        :type quotation.orderId: String
-        :param functionAreaIds[0]: 功能区ID
-        :type functionAreaIds[0]: Long
-        
-        Example::
-        
-            {
+
+        - **quotation.orderId**:
+  装修单号
+        - **functionAreaIds[0]**:
+  功能区ID
+
+        **示例**:{
                 "quotation.orderId": "1601010001"
                 "functionAreaIds[0]": 1
             }
-            
-    ### <I> addQuotationFunctionAreaByFunctionAreaIds
+
+    ### `addQuotationFunctionAreaByFunctionAreaIds` <span style="color:gray">[内部]</span>
 
         报价中添加功能区信息
-        
+
         判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
-        
+
         判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        :param quotation.basePrice: 基数
-        :type quotation.basePrice: Long
-        :param quotation.undisPrice: 不打折项总额
-        :type quotation.undisPrice: Long
-        :param quotation.disPrice: 打折项总额
-        :type quotation.disPrice: Long
-        :param quotation.discount: 折扣
-        :type quotation.discount: Long
-        :param quotation.trafficPrice: 车运费
-        :type quotation.trafficPrice: Long
-        :param quotation.trafficRate: 车运费比例
-        :type quotation.trafficRate: Integer
-        :param quotation.trafficDiscount: 车运费折扣
-        :type quotation.trafficDiscount: Short
-        :param quotation.managePrice: 管理费
-        :type quotation.managePrice: Long
-        :param quotation.manageRate: 管理费比例
-        :type quotation.manageRate: Integer
-        :param quotation.manageDiscount: 管理费折扣
-        :type quotation.manageDiscount: Short
-        :param quotation.taxPrice: 税金
-        :type quotation.taxPrice: Long
-        :param quotation.taxRate: 税金比例
-        :type quotation.taxRate: Integer
-        :param quotation.taxDiscount: 税金折扣
-        :type quotation.taxDiscount: Short
-        :param quotation.unachePrice: 非业绩总额
-        :type quotation.unachePrice: Long
-        :param quotation.costPrice: 成本总额
-        :type quotation.costPrice: Long
-        :param quotation.totalPrice: 报价总额
-        :type quotation.totalPrice: Long
-        
-        :param quotationFunctionAreas[n].id: 功能区ID
-        :type quotationFunctionAreas[n].id: Long
-        :param quotationFunctionAreas[n].quotationFunctionAreaParam.girth: 周长
-        :type quotationFunctionAreas[n].quotationFunctionAreaParam.girth: Integer
-        :param quotationFunctionAreas[n].quotationFunctionAreaParam.area: 面积
-        :type quotationFunctionAreas[n].quotationFunctionAreaParam.area: Integer
-        :param quotationFunctionAreas[n].quotationFunctionAreaParam.height: 举架
-        :type quotationFunctionAreas[n].quotationFunctionAreaParam.height: Integer
-        :param quotationFunctionAreas[n].quotationFunctionAreaParam.holeLength: 洞长
-        :type quotationFunctionAreas[n].quotationFunctionAreaParam.holeLength: Integer
-        :param quotationFunctionAreas[n].quotationFunctionAreaParam.holeHeight: 洞高
-        :type quotationFunctionAreas[n].quotationFunctionAreaParam.holeHeight: Integer
-        :param quotationFunctionAreas[n].quotationFunctionAreaParam.windowLength: 窗长
-        :type quotationFunctionAreas[n].quotationFunctionAreaParam.windowLength: Integer
-        :param quotationFunctionAreas[n].quotationFunctionAreaParam.windowHeight: 窗高
-        :type quotationFunctionAreas[n].quotationFunctionAreaParam.windowHeight: Integer
-        :param quotationFunctionAreas[n].quotationFunctionAreaParam.beamLength: 梁长
-        :type quotationFunctionAreas[n].quotationFunctionAreaParam.beamLength: Integer
-        :param quotationFunctionAreas[n].quotationFunctionAreaParam.beamHeight: 梁高
-        :type quotationFunctionAreas[n].quotationFunctionAreaParam.beamHeight: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+        - **quotation.basePrice**:
+  基数
+        - **quotation.undisPrice**:
+  不打折项总额
+        - **quotation.disPrice**:
+  打折项总额
+        - **quotation.discount**:
+  折扣
+        - **quotation.trafficPrice**:
+  车运费
+        - **quotation.trafficRate**:
+  车运费比例
+        - **quotation.trafficDiscount**:
+  车运费折扣
+        - **quotation.managePrice**:
+  管理费
+        - **quotation.manageRate**:
+  管理费比例
+        - **quotation.manageDiscount**:
+  管理费折扣
+        - **quotation.taxPrice**:
+  税金
+        - **quotation.taxRate**:
+  税金比例
+        - **quotation.taxDiscount**:
+  税金折扣
+        - **quotation.unachePrice**:
+  非业绩总额
+        - **quotation.costPrice**:
+  成本总额
+        - **quotation.totalPrice**:
+  报价总额
+
+        - **quotationFunctionAreas[n].id**:
+  功能区ID
+        - **quotationFunctionAreas[n].quotationFunctionAreaParam.girth**:
+  周长
+        - **quotationFunctionAreas[n].quotationFunctionAreaParam.area**:
+  面积
+        - **quotationFunctionAreas[n].quotationFunctionAreaParam.height**:
+  举架
+        - **quotationFunctionAreas[n].quotationFunctionAreaParam.holeLength**:
+  洞长
+        - **quotationFunctionAreas[n].quotationFunctionAreaParam.holeHeight**:
+  洞高
+        - **quotationFunctionAreas[n].quotationFunctionAreaParam.windowLength**:
+  窗长
+        - **quotationFunctionAreas[n].quotationFunctionAreaParam.windowHeight**:
+  窗高
+        - **quotationFunctionAreas[n].quotationFunctionAreaParam.beamLength**:
+  梁长
+        - **quotationFunctionAreas[n].quotationFunctionAreaParam.beamHeight**:
+  梁高
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.basePrice": 0,
                 "quotation.undisPrice": 10000,
@@ -2990,20 +2923,19 @@
                 "quotation.unachePrice": 0,
                 "quotation.costPrice": 0,
                 "quotation.totalPrice": 10000,
-                
+
                 "quotationFunctionAreas[0].id": 1,
                 "quotationFunctionAreas[0].quotationFunctionAreaParam.girth": 1,
                 "quotationFunctionAreas[1].id": 2,
                 "quotationFunctionAreas[0].quotationFunctionAreaParam.area": 1,
             }
-            
-                |Returns:|
-                - **quotationFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotationFunctionArea*
+
+**返回参数**:
+
+- **quotationFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotationFunctionArea*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationFunctionAreas": [
                     {
@@ -3037,61 +2969,60 @@
                 ],
                 ...
             }
-            
-    ### <I> updateQuotationFunctionArea
+
+    ### `updateQuotationFunctionArea` <span style="color:gray">[内部]</span>
 
         更新功能区信息
-        
+
         判断功能区是否存在 , 不存在 , 错误信息 **200010 功能区不存在**
-        
+
         判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 200030 报价状态不可操作
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        :param quotation.basePrice: 基数
-        :type quotation.basePrice: Long
-        :param quotation.undisPrice: 不打折项总额
-        :type quotation.undisPrice: Long
-        :param quotation.disPrice: 打折项总额
-        :type quotation.disPrice: Long
-        :param quotation.discount: 折扣
-        :type quotation.discount: Long
-        :param quotation.trafficPrice: 车运费
-        :type quotation.trafficPrice: Long
-        :param quotation.trafficRate: 车运费比例
-        :type quotation.trafficRate: Integer
-        :param quotation.trafficDiscount: 车运费折扣
-        :type quotation.trafficDiscount: Short
-        :param quotation.managePrice: 管理费
-        :type quotation.managePrice: Long
-        :param quotation.manageRate: 管理费比例
-        :type quotation.manageRate: Integer
-        :param quotation.manageDiscount: 管理费折扣
-        :type quotation.manageDiscount: Short
-        :param quotation.taxPrice: 税金
-        :type quotation.taxPrice: Long
-        :param quotation.taxRate: 税金比例
-        :type quotation.taxRate: Integer
-        :param quotation.taxDiscount: 税金折扣
-        :type quotation.taxDiscount: Short
-        :param quotation.unachePrice: 非业绩总额
-        :type quotation.unachePrice: Long
-        :param quotation.costPrice: 成本总额
-        :type quotation.costPrice: Long
-        :param quotation.totalPrice: 报价总额
-        :type quotation.totalPrice: Long
-        
-        :param quotationFunctionArea.qfaid: 功能区ID
-        :type quotationFunctionArea.qfaid: Long
-        :param quotationFunctionArea.functionAreaName: 功能区名称
-        :type quotationFunctionArea.functionAreaName: String
-        :param quotationFunctionArea.functionAreaOrder: 功能区排序
-        :type quotationFunctionArea.functionAreaOrder: Integer
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+        - **quotation.basePrice**:
+  基数
+        - **quotation.undisPrice**:
+  不打折项总额
+        - **quotation.disPrice**:
+  打折项总额
+        - **quotation.discount**:
+  折扣
+        - **quotation.trafficPrice**:
+  车运费
+        - **quotation.trafficRate**:
+  车运费比例
+        - **quotation.trafficDiscount**:
+  车运费折扣
+        - **quotation.managePrice**:
+  管理费
+        - **quotation.manageRate**:
+  管理费比例
+        - **quotation.manageDiscount**:
+  管理费折扣
+        - **quotation.taxPrice**:
+  税金
+        - **quotation.taxRate**:
+  税金比例
+        - **quotation.taxDiscount**:
+  税金折扣
+        - **quotation.unachePrice**:
+  非业绩总额
+        - **quotation.costPrice**:
+  成本总额
+        - **quotation.totalPrice**:
+  报价总额
+
+        - **quotationFunctionArea.qfaid**:
+  功能区ID
+        - **quotationFunctionArea.functionAreaName**:
+  功能区名称
+        - **quotationFunctionArea.functionAreaOrder**:
+  功能区排序
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.basePrice": 0,
                 "quotation.undisPrice": 10000,
@@ -3109,63 +3040,62 @@
                 "quotation.unachePrice": 0,
                 "quotation.costPrice": 0,
                 "quotation.totalPrice": 10000,
-                
+
                 "quotationFunctionArea.qfaid": 2,
                 "quotationFunctionArea.functionAreaName": "门厅",
                 "quotationFunctionArea.functionAreaOrder": 2,
             }
-            
-    ### <I> deleteQuotationFunctionArea
+
+    ### `deleteQuotationFunctionArea` <span style="color:gray">[内部]</span>
 
         删除功能区信息 , 功能区中包含的报价项信息一同删除
-        
+
         判断是否存在关联选材项 , 如果存在 , 错误信息 **200037 存在关联选材项**
-        
+
         判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 200030 报价状态不可操作
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        :param quotation.basePrice: 基数
-        :type quotation.basePrice: Long
-        :param quotation.undisPrice: 不打折项总额
-        :type quotation.undisPrice: Long
-        :param quotation.disPrice: 打折项总额
-        :type quotation.disPrice: Long
-        :param quotation.discount: 折扣
-        :type quotation.discount: Long
-        :param quotation.trafficPrice: 车运费
-        :type quotation.trafficPrice: Long
-        :param quotation.trafficRate: 车运费比例
-        :type quotation.trafficRate: Integer
-        :param quotation.trafficDiscount: 车运费折扣
-        :type quotation.trafficDiscount: Short
-        :param quotation.managePrice: 管理费
-        :type quotation.managePrice: Long
-        :param quotation.manageRate: 管理费比例
-        :type quotation.manageRate: Integer
-        :param quotation.manageDiscount: 管理费折扣
-        :type quotation.manageDiscount: Short
-        :param quotation.taxPrice: 税金
-        :type quotation.taxPrice: Long
-        :param quotation.taxRate: 税金比例
-        :type quotation.taxRate: Integer
-        :param quotation.taxDiscount: 税金折扣
-        :type quotation.taxDiscount: Short
-        :param quotation.unachePrice: 非业绩总额
-        :type quotation.unachePrice: Long
-        :param quotation.costPrice: 成本总额
-        :type quotation.costPrice: Long
-        :param quotation.totalPrice: 报价总额
-        :type quotation.totalPrice: Long
-        
-        :param quotationFunctionArea.qfaid: 功能区ID
-        :type quotationFunctionArea.qfaid: Long
-        
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+        - **quotation.basePrice**:
+  基数
+        - **quotation.undisPrice**:
+  不打折项总额
+        - **quotation.disPrice**:
+  打折项总额
+        - **quotation.discount**:
+  折扣
+        - **quotation.trafficPrice**:
+  车运费
+        - **quotation.trafficRate**:
+  车运费比例
+        - **quotation.trafficDiscount**:
+  车运费折扣
+        - **quotation.managePrice**:
+  管理费
+        - **quotation.manageRate**:
+  管理费比例
+        - **quotation.manageDiscount**:
+  管理费折扣
+        - **quotation.taxPrice**:
+  税金
+        - **quotation.taxRate**:
+  税金比例
+        - **quotation.taxDiscount**:
+  税金折扣
+        - **quotation.unachePrice**:
+  非业绩总额
+        - **quotation.costPrice**:
+  成本总额
+        - **quotation.totalPrice**:
+  报价总额
+
+        - **quotationFunctionArea.qfaid**:
+  功能区ID
+
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.basePrice": 0,
                 "quotation.undisPrice": 10000,
@@ -3183,18 +3113,19 @@
                 "quotation.unachePrice": 0,
                 "quotation.costPrice": 0,
                 "quotation.totalPrice": 10000,
-                
+
                 "quotationFunctionArea.qfaid": 2
             }
-            
+
 ### 功能区-报价项
 
 功能区中报价项信息管理
 
 ## api.quotation.QuotationFunctionAreaItemAction
 
-        |DataType:|
-        #### quotationFunctionAreaItem
+**数据类型**:
+
+#### quotationFunctionAreaItem
 
     - **qfaiId**: 报价项ID
       - 类型: *Long*
@@ -3226,28 +3157,26 @@
       - 类型: *Long*
     - **content**: 说明
       - 类型: *String*
-    
-    ### <I> queryQuotationFunctionAreaItemByQuotationFunctionAreaId
+
+    ### `queryQuotationFunctionAreaItemByQuotationFunctionAreaId` <span style="color:gray">[内部]</span>
 
         通过归属功能区ID查询报价项信息
-        
-                |Requests:|
-                :param quotationFunctionArea.quotationFunctionAreaId: 功能区ID
-        :type quotationFunctionArea.quotationFunctionAreaId: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationFunctionArea.quotationFunctionAreaId**:
+  功能区ID
+
+        **示例**:{
                 "quotationFunctionArea.quotationFunctionAreaId": 1
             }
-        
-                |Returns:|
-                - **quotationFunctionAreaItems**: 报价项信息列表 , 每条数据类型 *quotationFunctionAreaItem*
+
+**返回参数**:
+
+- **quotationFunctionAreaItems**: 报价项信息列表 , 每条数据类型 *quotationFunctionAreaItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationFunctionAreaItems": [
                     {
@@ -3270,87 +3199,86 @@
                 ],
                 ...
             }
-            
-    ### <I> updateQuotationFunctionAreaItem
+
+    ### `updateQuotationFunctionAreaItem` <span style="color:gray">[内部]</span>
 
         更新报价项信息 , 若无信息则为创建报价项信息 , 标准报价项 , 需要引用报价项ID信息 , 其他信息直接赋值 ; 自定义报价项 , 引用报价项ID为NULL , 其他信息直接赋值
-        
-        判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
-        
-        判断是否存在关联选材项 , 如果存在 , 错误信息 **200037 存在关联选材项**
-        
-        判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        :param quotation.basePrice: 基数
-        :type quotation.basePrice: Long
-        :param quotation.undisPrice: 不打折项总额
-        :type quotation.undisPrice: Long
-        :param quotation.disPrice: 打折项总额
-        :type quotation.disPrice: Long
-        :param quotation.discount: 折扣
-        :type quotation.discount: Long
-        :param quotation.trafficPrice: 车运费
-        :type quotation.trafficPrice: Long
-        :param quotation.trafficRate: 车运费比例
-        :type quotation.trafficRate: Integer
-        :param quotation.trafficDiscount: 车运费折扣
-        :type quotation.trafficDiscount: Short
-        :param quotation.managePrice: 管理费
-        :type quotation.managePrice: Long
-        :param quotation.manageRate: 管理费比例
-        :type quotation.manageRate: Integer
-        :param quotation.manageDiscount: 管理费折扣
-        :type quotation.manageDiscount: Short
-        :param quotation.taxPrice: 税金
-        :type quotation.taxPrice: Long
-        :param quotation.taxRate: 税金比例
-        :type quotation.taxRate: Integer
-        :param quotation.taxDiscount: 税金折扣
-        :type quotation.taxDiscount: Short
-        :param quotation.unachePrice: 非业绩总额
-        :type quotation.unachePrice: Long
-        :param quotation.costPrice: 成本总额
-        :type quotation.costPrice: Long
-        :param quotation.totalPrice: 报价总额
-        :type quotation.totalPrice: Long
-        
-        :param quotationFunctionAreaItem.qfaiId: 报价项ID
-        :type quotationFunctionAreaItem.qfaiId: Long
-        :param quotationFunctionAreaItem.itemName: 报价项名
-        :type quotationFunctionAreaItem.itemName: String
-        :param quotationFunctionAreaItem.unitPrice: 单价
-        :type quotationFunctionAreaItem.unitPrice: Integer
-        :param quotationFunctionAreaItem.index: 索引
-        :type quotationFunctionAreaItem.index: Integer
-        :param quotationFunctionAreaItem.formula: 公式
-        :type quotationFunctionAreaItem.formula: String
-        :param quotationFunctionAreaItem.initnum: 初始工程量
-        :type quotationFunctionAreaItem.initnum: Integer
-        :param quotationFunctionAreaItem.num: 工程量
-        :type quotationFunctionAreaItem.num: Integer
-        :param quotationFunctionAreaItem.type: 类型 , 0: 标准报价项 , 1: 自定义报价项
-        :type quotationFunctionAreaItem.type: Short
-        :param quotationFunctionAreaItem.subtype: 子类
-        :type quotationFunctionAreaItem.subtype: Short
-        :param quotationFunctionAreaItem.measurementUnit: 单位
-        :type quotationFunctionAreaItem.measurementUnit: String
-        :param quotationFunctionAreaItem.workType: 工种
-        :type quotationFunctionAreaItem.workType: String
-        :param quotationFunctionAreaItem.discount: 折扣标识 , 0: 不打折 , 1: 打折
-        :type quotationFunctionAreaItem.discount: Short
-        :param quotationFunctionAreaItem.quotationFunctionAreaId: 所属功能区ID
-        :type quotationFunctionAreaItem.quotationFunctionAreaId: Long
-        :param quotationFunctionAreaItem.quotationItemId: 引用报价项ID
-        :type quotationFunctionAreaItem.quotationItemId: Long
-        :param quotationFunctionAreaItem.content: 说明
-        :type quotationFunctionAreaItem.content: String
 
-        Example::
-        
-            {
+        判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
+
+        判断是否存在关联选材项 , 如果存在 , 错误信息 **200037 存在关联选材项**
+
+        判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+        - **quotation.basePrice**:
+  基数
+        - **quotation.undisPrice**:
+  不打折项总额
+        - **quotation.disPrice**:
+  打折项总额
+        - **quotation.discount**:
+  折扣
+        - **quotation.trafficPrice**:
+  车运费
+        - **quotation.trafficRate**:
+  车运费比例
+        - **quotation.trafficDiscount**:
+  车运费折扣
+        - **quotation.managePrice**:
+  管理费
+        - **quotation.manageRate**:
+  管理费比例
+        - **quotation.manageDiscount**:
+  管理费折扣
+        - **quotation.taxPrice**:
+  税金
+        - **quotation.taxRate**:
+  税金比例
+        - **quotation.taxDiscount**:
+  税金折扣
+        - **quotation.unachePrice**:
+  非业绩总额
+        - **quotation.costPrice**:
+  成本总额
+        - **quotation.totalPrice**:
+  报价总额
+
+        - **quotationFunctionAreaItem.qfaiId**:
+  报价项ID
+        - **quotationFunctionAreaItem.itemName**:
+  报价项名
+        - **quotationFunctionAreaItem.unitPrice**:
+  单价
+        - **quotationFunctionAreaItem.index**:
+  索引
+        - **quotationFunctionAreaItem.formula**:
+  公式
+        - **quotationFunctionAreaItem.initnum**:
+  初始工程量
+        - **quotationFunctionAreaItem.num**:
+  工程量
+        - **quotationFunctionAreaItem.type**:
+  类型 , 0: 标准报价项 , 1: 自定义报价项
+        - **quotationFunctionAreaItem.subtype**:
+  子类
+        - **quotationFunctionAreaItem.measurementUnit**:
+  单位
+        - **quotationFunctionAreaItem.workType**:
+  工种
+        - **quotationFunctionAreaItem.discount**:
+  折扣标识 , 0: 不打折 , 1: 打折
+        - **quotationFunctionAreaItem.quotationFunctionAreaId**:
+  所属功能区ID
+        - **quotationFunctionAreaItem.quotationItemId**:
+  引用报价项ID
+        - **quotationFunctionAreaItem.content**:
+  说明
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.basePrice": 0,
                 "quotation.undisPrice": 10000,
@@ -3368,7 +3296,7 @@
                 "quotation.unachePrice": 0,
                 "quotation.costPrice": 0,
                 "quotation.totalPrice": 10000,
-                
+
                 "quotationFunctionAreaItem.itemName": "整体墙棚面砂纸打磨处理",
                 "quotationFunctionAreaItem.index": 1,
                 "quotationFunctionAreaItem.formula": "1+1",
@@ -3385,13 +3313,12 @@
                 "quotationFunctionAreaItem.content": ""
             }
 
-                |Returns:|
-                - **quotationFunctionAreaItem**: 报价项信息 , 类型 *quotationFunctionAreaItem*
+**返回参数**:
+
+- **quotationFunctionAreaItem**: 报价项信息 , 类型 *quotationFunctionAreaItem*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationFunctionAreaItem": {
                     "qfaiId": 1,
@@ -3413,57 +3340,55 @@
                 ...
             }
 
-    ### <I> updateQuotationFunctionAreaItemForSpec
+    ### `updateQuotationFunctionAreaItemForSpec` <span style="color:gray">[内部]</span>
 
         更新特殊报价项单价信息 , 直接更新报价项单价
-        
+
         利用功能区定位报价项归属表
-        
+
         判断报价是否存在 , 不存在 , 错误信息 **200013 报价项不存在**
-        
+
         判断功能区是否存在 , 不存在 , 错误信息 **200012 功能区不存在**
-        
+
         判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
-        
-                |Requests:|
-                :param quotationFunctionAreaItem.qfaiId: 报价项ID
-        :type quotationFunctionAreaItem.qfaiId: Long
-        :param quotationFunctionAreaItem.quotationFunctionAreaId: 功能区ID
-        :type quotationFunctionAreaItem.quotationFunctionAreaId: Long
-        :param quotationFunctionAreaItem.unitPrice: 单价
-        :type quotationFunctionAreaItem.unitPrice: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationFunctionAreaItem.qfaiId**:
+  报价项ID
+        - **quotationFunctionAreaItem.quotationFunctionAreaId**:
+  功能区ID
+        - **quotationFunctionAreaItem.unitPrice**:
+  单价
+
+        **示例**:{
                 "quotationFunctionAreaItem.qfaiId": 1,
                 "quotationFunctionAreaItem.quotationFunctionAreaId": 1,
                 "quotationFunctionAreaItem.unitPrice": 200
             }
-            
-    ### <I> updateQuotationFunctionAreaItemForIndex
+
+    ### `updateQuotationFunctionAreaItemForIndex` <span style="color:gray">[内部]</span>
 
         更新报价项排序索引
-        
+
         更新过程只能够在同一个功能区中的两个索引之间完成
-        
+
         利用功能区定位报价项归属表
-        
+
         报价项获取失败或无报价项 , 不进行更新动作
-        
+
         判断功能区是否存在 , 不存在 , 错误信息 **200012 功能区不存在**
-        
-                |Requests:|
-                :param quotationFunctionArea.qfaid: 功能区ID
-        :type quotationFunctionArea.qfaid: Long
-        :param quotationFunctionAreaItems[n].qfaiId: 报价项ID
-        :type quotationFunctionAreaItems[n].qfaiId: Long
-        :param quotationFunctionAreaItems[n].index: 索引
-        :type quotationFunctionAreaItems[n].index: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationFunctionArea.qfaid**:
+  功能区ID
+        - **quotationFunctionAreaItems[n].qfaiId**:
+  报价项ID
+        - **quotationFunctionAreaItems[n].index**:
+  索引
+
+        **示例**:{
                 "quotationFunctionArea.qfaid": 1,
                 "quotationFunctionAreaItems[0].qfaiId": 1,
                 "quotationFunctionAreaItems[0].index": 1,
@@ -3471,58 +3396,57 @@
                 "quotationFunctionAreaItems[1].index": 2
             }
 
-    ### <I> updateQuotationFunctionAreaItemByQuotationIdAType
+    ### `updateQuotationFunctionAreaItemByQuotationIdAType` <span style="color:gray">[内部]</span>
 
         通过报价ID以及报价项类型更新报价项单价信息 , 只能适用类型为2:车运费和3:管理费的项目
-        
-        判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
-        
-        判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        :param quotation.basePrice: 基数
-        :type quotation.basePrice: Long
-        :param quotation.undisPrice: 不打折项总额
-        :type quotation.undisPrice: Long
-        :param quotation.disPrice: 打折项总额
-        :type quotation.disPrice: Long
-        :param quotation.discount: 折扣
-        :type quotation.discount: Long
-        :param quotation.trafficPrice: 车运费
-        :type quotation.trafficPrice: Long
-        :param quotation.trafficRate: 车运费比例
-        :type quotation.trafficRate: Integer
-        :param quotation.trafficDiscount: 车运费折扣
-        :type quotation.trafficDiscount: Short
-        :param quotation.managePrice: 管理费
-        :type quotation.managePrice: Long
-        :param quotation.manageRate: 管理费比例
-        :type quotation.manageRate: Integer
-        :param quotation.manageDiscount: 管理费折扣
-        :type quotation.manageDiscount: Short
-        :param quotation.taxPrice: 税金
-        :type quotation.taxPrice: Long
-        :param quotation.taxRate: 税金比例
-        :type quotation.taxRate: Integer
-        :param quotation.taxDiscount: 税金折扣
-        :type quotation.taxDiscount: Short
-        :param quotation.unachePrice: 非业绩总额
-        :type quotation.unachePrice: Long
-        :param quotation.costPrice: 成本总额
-        :type quotation.costPrice: Long
-        :param quotation.totalPrice: 报价总额
-        :type quotation.totalPrice: Long
-        
-        :param quotationFunctionAreaItem.type: 报价项类型
-        :type quotationFunctionAreaItem.type: Short
-        :param quotationFunctionAreaItem.unitPrice: 单价
-        :type quotationFunctionAreaItem.unitPrice: Integer
 
-        Example::
-        
-            {
+        判断报价是否存在 , 不存在 错误信息 **200013 报价项不存在**
+
+        判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+        - **quotation.basePrice**:
+  基数
+        - **quotation.undisPrice**:
+  不打折项总额
+        - **quotation.disPrice**:
+  打折项总额
+        - **quotation.discount**:
+  折扣
+        - **quotation.trafficPrice**:
+  车运费
+        - **quotation.trafficRate**:
+  车运费比例
+        - **quotation.trafficDiscount**:
+  车运费折扣
+        - **quotation.managePrice**:
+  管理费
+        - **quotation.manageRate**:
+  管理费比例
+        - **quotation.manageDiscount**:
+  管理费折扣
+        - **quotation.taxPrice**:
+  税金
+        - **quotation.taxRate**:
+  税金比例
+        - **quotation.taxDiscount**:
+  税金折扣
+        - **quotation.unachePrice**:
+  非业绩总额
+        - **quotation.costPrice**:
+  成本总额
+        - **quotation.totalPrice**:
+  报价总额
+
+        - **quotationFunctionAreaItem.type**:
+  报价项类型
+        - **quotationFunctionAreaItem.unitPrice**:
+  单价
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.basePrice": 0,
                 "quotation.undisPrice": 10000,
@@ -3540,67 +3464,66 @@
                 "quotation.unachePrice": 0,
                 "quotation.costPrice": 0,
                 "quotation.totalPrice": 10000,
-                
+
                 "quotationFunctionAreaItem.type": 3,
                 "quotationFunctionAreaItem.unitPrice": 200
             }
-            
-    ### <I> deleteQuotationFunctionAreaItem
+
+    ### `deleteQuotationFunctionAreaItem` <span style="color:gray">[内部]</span>
 
         删除报价项信息
-        
+
         利用功能区定位报价项归属表
-        
+
         判断报价是否存在 , 不存在 , 错误信息 **200013 报价项不存在**
-        
+
         判断是否存在关联选材项 , 如果存在 , 错误信息 **200037 存在关联选材项**
-        
+
         判断报价状态为0(启用) , 其他状态不可操作 , 错误信息 **200030 报价状态不可操作**
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-        :param quotation.basePrice: 基数
-        :type quotation.basePrice: Long
-        :param quotation.undisPrice: 不打折项总额
-        :type quotation.undisPrice: Long
-        :param quotation.disPrice: 打折项总额
-        :type quotation.disPrice: Long
-        :param quotation.discount: 折扣
-        :type quotation.discount: Long
-        :param quotation.trafficPrice: 车运费
-        :type quotation.trafficPrice: Long
-        :param quotation.trafficRate: 车运费比例
-        :type quotation.trafficRate: Integer
-        :param quotation.trafficDiscount: 车运费折扣
-        :type quotation.trafficDiscount: Short
-        :param quotation.managePrice: 管理费
-        :type quotation.managePrice: Long
-        :param quotation.manageRate: 管理费比例
-        :type quotation.manageRate: Integer
-        :param quotation.manageDiscount: 管理费折扣
-        :type quotation.manageDiscount: Short
-        :param quotation.taxPrice: 税金
-        :type quotation.taxPrice: Long
-        :param quotation.taxRate: 税金比例
-        :type quotation.taxRate: Integer
-        :param quotation.taxDiscount: 税金折扣
-        :type quotation.taxDiscount: Short
-        :param quotation.unachePrice: 非业绩总额
-        :type quotation.unachePrice: Long
-        :param quotation.costPrice: 成本总额
-        :type quotation.costPrice: Long
-        :param quotation.totalPrice: 报价总额
-        :type quotation.totalPrice: Long
-        
-        :param quotationFunctionArea.qfaid: 功能区ID
-        :type quotationFunctionArea.qfaid: Long
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+        - **quotation.basePrice**:
+  基数
+        - **quotation.undisPrice**:
+  不打折项总额
+        - **quotation.disPrice**:
+  打折项总额
+        - **quotation.discount**:
+  折扣
+        - **quotation.trafficPrice**:
+  车运费
+        - **quotation.trafficRate**:
+  车运费比例
+        - **quotation.trafficDiscount**:
+  车运费折扣
+        - **quotation.managePrice**:
+  管理费
+        - **quotation.manageRate**:
+  管理费比例
+        - **quotation.manageDiscount**:
+  管理费折扣
+        - **quotation.taxPrice**:
+  税金
+        - **quotation.taxRate**:
+  税金比例
+        - **quotation.taxDiscount**:
+  税金折扣
+        - **quotation.unachePrice**:
+  非业绩总额
+        - **quotation.costPrice**:
+  成本总额
+        - **quotation.totalPrice**:
+  报价总额
+
+        - **quotationFunctionArea.qfaid**:
+  功能区ID
         - **qfaiIds**: 报价项ID列表 , 每条数据类型 Long
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "quotation.qid": 1,
                 "quotation.basePrice": 0,
                 "quotation.undisPrice": 10000,
@@ -3618,7 +3541,7 @@
                 "quotation.unachePrice": 0,
                 "quotation.costPrice": 0,
                 "quotation.totalPrice": 10000,
-                
+
                 "quotationFunctionArea.qfaid": 1,
                 "qfaiIds[0]": 1,
                 "qfaiIds[1]": 2
@@ -3628,8 +3551,9 @@
 
 ## api.quotation.QuotationPerferAction
 
-        |DataType:|
-        #### quotationPerfer
+**数据类型**:
+
+#### quotationPerfer
 
     - **qpid**: 优惠ID
       - 类型: *Long*
@@ -3643,28 +3567,26 @@
       - 类型: *Long*
     - **advancePerfer**: 特批优惠
       - 类型: *Long*
-    
-    ### <I> queryQuotationPerfer
+
+    ### `queryQuotationPerfer` <span style="color:gray">[内部]</span>
 
         通过报价ID获取优惠信息
-        
-                |Requests:|
-                :param quotationPerfer.qid: 报价单ID
-        :type quotationPerfer.qid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationPerfer.qid**:
+  报价单ID
+
+        **示例**:{
                 "quotationPerfer.qid": 1
             }
-            
-                |Returns:|
-                - **quotationPerfer**: 报价优惠信息 , 每条数据类型 *quotationPerfer*
+
+**返回参数**:
+
+- **quotationPerfer**: 报价优惠信息 , 每条数据类型 *quotationPerfer*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationPerfer": {
                     "qpid": 1,
@@ -3676,24 +3598,23 @@
                 }
                 ...
             }
-    
-    ### <I> updateQuotationPerfer
+
+    ### `updateQuotationPerfer` <span style="color:gray">[内部]</span>
 
         更新报价优惠信息
-        
-                |Requests:|
-                :param quotationPerfer.qid: 报价单ID
-        :type quotationPerfer.qid: Long
-        :param quotationPerfer.perferPrice: 通用优惠
-        :type quotationPerfer.perferPrice: Long
-        :param quotationPerfer.managePerfer: 管理优惠
-        :type quotationPerfer.managePerfer: Long
-        :param quotationPerfer.advancePerfer: 特批优惠
-        :type quotationPerfer.advancePerfer: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationPerfer.qid**:
+  报价单ID
+        - **quotationPerfer.perferPrice**:
+  通用优惠
+        - **quotationPerfer.managePerfer**:
+  管理优惠
+        - **quotationPerfer.advancePerfer**:
+  特批优惠
+
+        **示例**:{
                 "quotationPerfer.orderId": "1601010001",
                 "quotationPerfer.perferPrice": 0,
                 "quotationPerfer.managePerfer": 0,
@@ -3708,8 +3629,9 @@
 
 ## api.quotation.ExtensionAction
 
-        |DataType:|
-        #### extension
+**数据类型**:
+
+#### extension
 
     - **eid**: 拓展项ID
       - 类型: *Long*
@@ -3745,20 +3667,19 @@
       - 类型: *Timestamp*
     - **content**: 说明
       - 类型: *String*
-    
-    ### <I> pageExtension
+
+    ### `pageExtension` <span style="color:gray">[内部]</span>
 
         分页方式获取拓展单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 拓展单信息列表 , 每条数据类型 *extension*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  拓展单信息列表 , 每条数据类型 *extension*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3801,7 +3722,7 @@
                                 "createrId": "U001",
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "createTime": "2016-01-01",
                             "type": 0,
@@ -3823,29 +3744,27 @@
                 ...
             }
 
-    ### <I> pageExtensionByOrderId
+    ### `pageExtensionByOrderId` <span style="color:gray">[内部]</span>
 
         分页方式获取拓展项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param extension.orderId: 装修单号
-        :type extension.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **extension.orderId**:
+  装修单号
+
+        **示例**:{
                 "extension.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 拓展项信息列表 , 每条数据类型 *extension*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  拓展项信息列表 , 每条数据类型 *extension*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3858,7 +3777,7 @@
                                 "createrId": "U001",
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "createTime": "2016-01-01",
                             "type": 0,
@@ -3879,28 +3798,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryExtensionByEid
+
+    ### `queryExtensionByEid` <span style="color:gray">[内部]</span>
 
         通过拓展项ID获取拓展项信息
-        
-                |Requests:|
-                :param extension.eid: 拓展单ID
-        :type extension.eid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **extension.eid**:
+  拓展单ID
+
+        **示例**:{
                 "extension.eid": 1
             }
-            
-                |Returns:|
-                - **extensions**: 拓展项信息列表 , 每条数据类型 *extension*
+
+**返回参数**:
+
+- **extensions**: 拓展项信息列表 , 每条数据类型 *extension*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "extensions": [
                     {
@@ -3911,7 +3828,7 @@
                             "createrId": "U001",
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "createTime": "2016-01-01",
                         "type": 0,
@@ -3930,28 +3847,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryExtensionByOrderId
+
+    ### `queryExtensionByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取拓展项信息
-        
-                |Requests:|
-                :param extension.orderId: 装修单号
-        :type extension.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **extension.orderId**:
+  装修单号
+
+        **示例**:{
                 "extension.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **extensions**: 拓展项信息列表 , 每条数据类型 *extension*
+
+**返回参数**:
+
+- **extensions**: 拓展项信息列表 , 每条数据类型 *extension*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "extensions": [
                     {
@@ -3962,7 +3877,7 @@
                             "createrId": "U001",
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "createTime": "2016-01-01",
                         "type": 0,
@@ -3981,84 +3896,81 @@
                 ],
                 ...
             }
-            
-    ### <I> addExtension
+
+    ### `addExtension` <span style="color:gray">[内部]</span>
 
         添加拓展项信息
-        
+
         判断添加拓展项归属装修单状态 , 已签约 , 废单 , 已完工 , 合同终止 , 不能添加 , 错误信息 **140049 装修单状态,可操作**
-        
-                |Requests:|
-                :param extension.orderId: 装修单号
-        :type extension.orderId: String
-        :param extension.type: 类型 , 0: 增项 , 1: 减项
-        :type extension.type: Short
-        :param extension.atttype: 业务类型
-        :type extension.atttype: Short
-        :param extension.content: 说明
-        :type extension.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **extension.orderId**:
+  装修单号
+        - **extension.type**:
+  类型 , 0: 增项 , 1: 减项
+        - **extension.atttype**:
+  业务类型
+        - **extension.content**:
+  说明
+
+        **示例**:{
                 "extension.orderId": "1601010001",
                 "extension.type": 0,
                 "extension.atttype": 0,
                 "extension.content": ""
             }
-        
-    ### <I> updateExtension
+
+    ### `updateExtension` <span style="color:gray">[内部]</span>
 
         更新扩展信息
-        
+
         判断扩展信息是否存在 , 不存在 , 错误信息 **200026 扩展信息不存在**
-        
+
         判断添加拓展项归属装修单状态 , 已签约 , 重签合同 , 废单 , 已完工 , 合同终止 , 不能添加 , 错误信息 **140049 装修单状态,可操作**
-        
-                |Requests:|
-                :param extension.eid: 拓展单ID
-        :type extension.eid: Long
-        :param extension.content: 说明
-        :type extension.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **extension.eid**:
+  拓展单ID
+        - **extension.content**:
+  说明
+
+        **示例**:{
                 "extension.eid": 1,
                 "extension.content": ""
             }
-            
-    ### <I> updateExtensionForAdvance
+
+    ### `updateExtensionForAdvance` <span style="color:gray">[内部]</span>
 
         更新拓展项高级信息
-        
+
         判断扩展信息是否存在 , 不存在 , 错误信息 **200026 扩展信息不存在**
-        
+
         判断添加拓展项归属装修单状态 , 已签约 , 重签合同 , 废单 , 已完工 , 合同终止 , 不能添加 , 错误信息 **140049 装修单状态,可操作**
-        
-                |Requests:|
-                :param extension.eid: 拓展单ID
-        :type extension.eid: Long
-        :param extension.undisPrice: 非打折项总额
-        :type extension.undisPrice: Long
-        :param extension.disPrice: 打折项总额
-        :type extension.disPrice: Long
-        :param extension.consPrice: 工程总额
-        :type extension.consPrice: Long
-        :param extension.comsPrice: 主材总额
-        :type extension.comsPrice: Long
-        :param extension.manageDiscount: 管理费折扣
-        :type extension.manageDiscount: Short
-        :param extension.manageRate: 管理费比例
-        :type extension.manageRate: Integer
-        :param extension.managePrice: 管理费
-        :type extension.managePrice: Integer
-        :param extension.total: 总价
-        :type extension.total: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **extension.eid**:
+  拓展单ID
+        - **extension.undisPrice**:
+  非打折项总额
+        - **extension.disPrice**:
+  打折项总额
+        - **extension.consPrice**:
+  工程总额
+        - **extension.comsPrice**:
+  主材总额
+        - **extension.manageDiscount**:
+  管理费折扣
+        - **extension.manageRate**:
+  管理费比例
+        - **extension.managePrice**:
+  管理费
+        - **extension.total**:
+  总价
+
+        **示例**:{
                 "extension.eid": 1,
                 "extension.undisPrice": 100,
                 "extension.disPrice": 100,
@@ -4070,23 +3982,22 @@
                 "extension.total": 100
             }
 
-    ### <I> deleteExtension
+    ### `deleteExtension` <span style="color:gray">[内部]</span>
 
         删除拓展项信息
-        
-        判断扩展信息是否存在 , 不存在 , 错误信息 **200026 扩展信息不存在**
-        
-        判断是否存在关联选材项 , 如果存在 , 错误信息 **200037 存在关联选材项**
-        
-        判断添加拓展项归属装修单状态 , 已签约 , 重签合同 , 废单 , 已完工 , 合同终止 , 不能添加 , 错误信息 **140049 装修单状态,可操作**
-        
-                |Requests:|
-                :param extension.eid: 拓展单ID
-        :type extension.eid: Long
 
-        Example::
-        
-            {
+        判断扩展信息是否存在 , 不存在 , 错误信息 **200026 扩展信息不存在**
+
+        判断是否存在关联选材项 , 如果存在 , 错误信息 **200037 存在关联选材项**
+
+        判断添加拓展项归属装修单状态 , 已签约 , 重签合同 , 废单 , 已完工 , 合同终止 , 不能添加 , 错误信息 **140049 装修单状态,可操作**
+
+**请求参数**:
+
+- **extension.eid**:
+  拓展单ID
+
+        **示例**:{
                 "extension.eid": 1
             }
 
@@ -4094,8 +4005,9 @@
 
 ## api.quotation.ExtensionItemAction
 
-        |DataType:|
-        #### extensionItem
+**数据类型**:
+
+#### extensionItem
 
     - **eiid**: ID
       - 类型: *Long*
@@ -4133,28 +4045,26 @@
       - 类型: *Long*
     - **content**: 说明
       - 类型: *String*
-    
-    ### <I> queryExtensionItemByEid
+
+    ### `queryExtensionItemByEid` <span style="color:gray">[内部]</span>
 
         通过拓展项ID获取包含的报价项信息
-    
-                |Requests:|
-                :param extension.eid: 拓展项ID
-        :type extension.eid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **extension.eid**:
+  拓展项ID
+
+        **示例**:{
                 "extension.eid": 1
             }
-            
-                |Returns:|
-                - **extensionItems**: 拓展项中报价项信息列表 , 类型 *extensionItem*
+
+**返回参数**:
+
+- **extensionItems**: 拓展项中报价项信息列表 , 类型 *extensionItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "extensionItems": [
                     {
@@ -4178,27 +4088,25 @@
                 ...
             }
 
-    ### <I> queryExtensionItemByOrderId
+    ### `queryExtensionItemByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取扩展项信息
-        
-                |Requests:|
-                :param extension.orderId: 装修单号
-        :type extension.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **extension.orderId**:
+  装修单号
+
+        **示例**:{
                 "extension.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **extensionItems**: 拓展项中报价项信息列表 , 类型 *extensionItem*
+
+**返回参数**:
+
+- **extensionItems**: 拓展项中报价项信息列表 , 类型 *extensionItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "extensionItems": [
                     {
@@ -4221,29 +4129,27 @@
                 ]
                 ...
             }
-            
-    ### <I> queryExtensionItemByEids
+
+    ### `queryExtensionItemByEids` <span style="color:gray">[内部]</span>
 
         通过拓展项ID列表获取包含的报价项信息
-        
-                |Requests:|
-                :param extensionIds[n]: 拓展项ID列表 , 每条数据类型 Long
-        :type extensionIds[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **extensionIds[n]**:
+  拓展项ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "extensionIds[0]": 1,
                 "extensionIds[1]": 2
             }
-            
-                |Returns:|
-                - **extensionItems**: 拓展项中报价项信息列表 , 类型 *extensionItem*
+
+**返回参数**:
+
+- **extensionItems**: 拓展项中报价项信息列表 , 类型 *extensionItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "extensionItems": [
                     {
@@ -4266,65 +4172,64 @@
                 ]
                 ...
             }
-    
-    ### <I> updateExtensionItem
+
+    ### `updateExtensionItem` <span style="color:gray">[内部]</span>
 
         更新拓展项中报价项信息 , 如果无对应信息 , 创建新信息
-        
+
         判断添加拓展项归属装修单状态 , 已签约 , 重签合同 , 废单 , 已完工 , 合同终止 , 不能添加 , 错误信息 **140049 装修单状态,可操作**
-        
+
         判断是否存在关联选材项 , 如果存在 , 错误信息 **200037 存在关联选材项**
-        
+
         拓展项 , 增项类型 , 单价使用引用报价项的增补价 ; 减项类型 , 单价使用引用报价项的退减价
-        
-                |Requests:|
-                :param extension.eid: 拓展项ID
-        :type extension.eid: Long
-        :param extension.undisPrice: 非打折项总额
-        :type extension.undisPrice: Long
-        :param extension.disPrice: 打折项总额
-        :type extension.disPrice: Long
-        :param extension.consPrice: 工程总额
-        :type extension.consPrice: Long
-        :param extension.comsPrice: 主材总额
-        :type extension.comsPrice: Long
-        :param extension.manageDiscount: 管理费折扣
-        :type extension.manageDiscount: Short
-        :param extension.manageRate: 管理费比例
-        :type extension.manageRate: Integer
-        :param extension.managePrice: 管理费
-        :type extension.managePrice: Integer
-        :param extension.total: 总价
-        :type extension.total: Long
-        
-        :param extensionItem.eiid: 拓展项目ID
-        :type extensionItem.eiid: Long
-        :param extensionItem.eid: 增减项ID
-        :type extensionItem.eid: Long
-        :param extensionItem.measurementUnit: 单位
-        :type extensionItem.measurementUnit: String
-        :param extensionItem.workType: 工种
-        :type extensionItem.workType: String
-        :param extensionItem.discount: 打折标识
-        :type extensionItem.discount: Short
-        :param extensionItem.addPrice: 增补价
-        :type extensionItem.addPrice: Integer
-        :param extensionItem.unitPrice: 单价
-        :type extensionItem.unitPrice: Integer
-        :param extensionItem.subPrice: 退减价
-        :type extensionItem.subPrice: Integer
-        :param extensionItem.num: 工程量
-        :type extensionItem.num: Integer
-        :param extensionItem.quotationFunctionAreaId: 所属功能区ID
-        :type extensionItem.quotationFunctionAreaId: Long
-        :param extensionItem.quoteItemId: 引用项ID
-        :type extensionItem.quoteItemId: Long
-        :param extensionItem.content: 说明
-        :type extensionItem.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **extension.eid**:
+  拓展项ID
+        - **extension.undisPrice**:
+  非打折项总额
+        - **extension.disPrice**:
+  打折项总额
+        - **extension.consPrice**:
+  工程总额
+        - **extension.comsPrice**:
+  主材总额
+        - **extension.manageDiscount**:
+  管理费折扣
+        - **extension.manageRate**:
+  管理费比例
+        - **extension.managePrice**:
+  管理费
+        - **extension.total**:
+  总价
+
+        - **extensionItem.eiid**:
+  拓展项目ID
+        - **extensionItem.eid**:
+  增减项ID
+        - **extensionItem.measurementUnit**:
+  单位
+        - **extensionItem.workType**:
+  工种
+        - **extensionItem.discount**:
+  打折标识
+        - **extensionItem.addPrice**:
+  增补价
+        - **extensionItem.unitPrice**:
+  单价
+        - **extensionItem.subPrice**:
+  退减价
+        - **extensionItem.num**:
+  工程量
+        - **extensionItem.quotationFunctionAreaId**:
+  所属功能区ID
+        - **extensionItem.quoteItemId**:
+  引用项ID
+        - **extensionItem.content**:
+  说明
+
+        **示例**:{
                 "extension.eid": 1,
                 "extension.undisPrice": 10000,
                 "extension.disPrice": 1000,
@@ -4334,7 +4239,7 @@
                 "extension.manageRate": 0,
                 "extension.managePrice": 0,
                 "extension.total": 100,
-                
+
                 "extensionItem.eiid": 1,
                 "extensionItem.itemName": "原墙体建筑大白铲除",
                 "extensionItem.measurementUnit": "米",
@@ -4348,41 +4253,40 @@
                 "extensionItem.workType": "油",
                 "extensionItem.content": "信息"
             }
-            
-    ### <I> deleteExtensionItem
+
+    ### `deleteExtensionItem` <span style="color:gray">[内部]</span>
 
         删除增减项中报价项信息
-        
+
         判断添加拓展项归属装修单状态 , 已签约 , 重签合同 , 废单 , 已完工 , 合同终止 , 不能添加 , 错误信息 **140049 装修单状态,可操作**
-        
+
         判断是否存在关联选材项 , 如果存在 , 错误信息 **200037 存在关联选材项**
-        
-                |Requests:|
-                :param extension.eid: 增减项ID
-        :type extension.eid: Long
-        :param extension.undisPrice: 非打折项总额
-        :type extension.undisPrice: Long
-        :param extension.disPrice: 打折项总额
-        :type extension.disPrice: Long
-        :param extension.consPrice: 工程总额
-        :type extension.consPrice: Long
-        :param extension.comsPrice: 主材总额
-        :type extension.comsPrice: Long
-        :param extension.manageDiscount: 管理费折扣
-        :type extension.manageDiscount: Short
-        :param extension.manageRate: 管理费比例
-        :type extension.manageRate: Integer
-        :param extension.managePrice: 管理费
-        :type extension.managePrice: Integer
-        :param extension.total: 总价
-        :type extension.total: Long
-        
-        :param extensionItem.eiid: 拓展项目ID
-        :type extensionItem.eiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **extension.eid**:
+  增减项ID
+        - **extension.undisPrice**:
+  非打折项总额
+        - **extension.disPrice**:
+  打折项总额
+        - **extension.consPrice**:
+  工程总额
+        - **extension.comsPrice**:
+  主材总额
+        - **extension.manageDiscount**:
+  管理费折扣
+        - **extension.manageRate**:
+  管理费比例
+        - **extension.managePrice**:
+  管理费
+        - **extension.total**:
+  总价
+
+        - **extensionItem.eiid**:
+  拓展项目ID
+
+        **示例**:{
                 "extension.eid": 1,
                 "extension.undisPrice": 100,
                 "extension.disPrice": 100,
@@ -4392,7 +4296,7 @@
                 "extension.manageRate": 100,
                 "extension.managePrice": 100,
                 "extension.total": 100,
-                
+
                 "extensionItem.eiid": 1
             }
 
@@ -4401,15 +4305,16 @@
 装修单增减项信息管理
 
 增减项中的报价项 , 类型为2(自定义项)需要说明信息 , 其他类型说明信息以及打折依据引用项进行获取
-    
+
 增项类型为0(标准报价项) , 2(自定义项) , 减项类型为1(系统定义项) , 3(报价中报价项) , 4(增项中报价项)
 
 ### 增减
 
 ## api.quotation.AddReduceAction
 
-        |DataType:|
-        #### addReduce
+**数据类型**:
+
+#### addReduce
 
     - **arid**: 增减单ID
       - 类型: *Long*
@@ -4475,24 +4380,23 @@
       - 类型: *Timstamp*
     - **content**: 说明
       - 类型: *String*
-    
+
         |Filters:|
         - **status**: 状态
       - 类型: *String*
-    
-    ### <I> pageAddReduce
+
+    ### `pageAddReduce` <span style="color:gray">[内部]</span>
 
         分页方式获取增减单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 增减单信息列表 , 每条数据类型 *addReduce*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  增减单信息列表 , 每条数据类型 *addReduce*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4568,30 +4472,28 @@
                 },
                 ...
             }
-    
-    ### <I> pageAddReduceByOrderId
+
+    ### `pageAddReduceByOrderId` <span style="color:gray">[内部]</span>
 
         分页方式获取增减单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param addReduce.orderId: 装修单号
-        :type addReduce.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.orderId**:
+  装修单号
+
+        **示例**:{
                 "addReduce.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 增减单信息列表 , 每条数据类型 *addReduce*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  增减单信息列表 , 每条数据类型 *addReduce*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4636,28 +4538,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryAddReduceByOrderId
+
+    ### `queryAddReduceByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取增减单信息
-        
-                |Requests:|
-                :param addReduce.orderId: 装修单号
-        :type addReduce.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.orderId**:
+  装修单号
+
+        **示例**:{
                 "addReduce.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **addReduces**: 增减单信息列表 , 每条数据类型 *addReduce*
+
+**返回参数**:
+
+- **addReduces**: 增减单信息列表 , 每条数据类型 *addReduce*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "addReduces": [
                     {
@@ -4698,28 +4598,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryAddReduceForPayedByOrderId
+
+    ### `queryAddReduceForPayedByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取款项状态为已付款和已确认的增减单信息
-        
-                |Requests:|
-                :param addReduce.orderId: 装修单号
-        :type addReduce.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.orderId**:
+  装修单号
+
+        **示例**:{
                 "addReduce.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **addReduces**: 增减单信息列表 , 每条数据类型 *addReduce*
+
+**返回参数**:
+
+- **addReduces**: 增减单信息列表 , 每条数据类型 *addReduce*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "addReduces": [
                     {
@@ -4760,28 +4658,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryAddReduceByArid
+
+    ### `queryAddReduceByArid` <span style="color:gray">[内部]</span>
 
         通过增减单ID获取增减单信息
-        
-                |Requests:|
-                :param addReduce.arid: 增减单ID
-        :type addReduce.arid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.arid**:
+  增减单ID
+
+        **示例**:{
                 "addReduce.arid": 1
             }
-            
-                |Returns:|
-                - **addReduce**: 增减单信息 , 数据类型 *addReduce*
+
+**返回参数**:
+
+- **addReduce**: 增减单信息 , 数据类型 *addReduce*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "addReduce": {
                     "arid": 1,
@@ -4820,28 +4716,26 @@
                 }
                 ...
             }
-    
-    ### <I> queryAddReduceByDpid
+
+    ### `queryAddReduceByDpid` <span style="color:gray">[内部]</span>
 
         通过款项ID获取增减单信息
-        
-                |Requests:|
-                :param addReduce.dpid: 款项ID
-        :type addReduce.dpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.dpid**:
+  款项ID
+
+        **示例**:{
                 "addReduce.dpid": 2
             }
-            
-                |Returns:|
-                - **addReduces**: 增减单信息列表 , 每条数据类型 *addReduce*
+
+**返回参数**:
+
+- **addReduces**: 增减单信息列表 , 每条数据类型 *addReduce*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "addReduces": [
                     {
@@ -4883,58 +4777,56 @@
                 ...
             }
 
-    ### <I> addAddReduce
+    ### `addAddReduce` <span style="color:gray">[内部]</span>
 
         添加增减单
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
-                |Requests:|
-                :param addReduce.orderId: 装修单号
-        :type addReduce.orderId: String
-        :param addReduce.type: 类型 , 0: 增项 , 1: 减项
-        :type addReduce.type: Short
-        :param addReduce.atttype: 业务类型
-        :type addReduce.atttype: Short
-        :param addReduce.content: 说明
-        :type addReduce.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.orderId**:
+  装修单号
+        - **addReduce.type**:
+  类型 , 0: 增项 , 1: 减项
+        - **addReduce.atttype**:
+  业务类型
+        - **addReduce.content**:
+  说明
+
+        **示例**:{
                 "addReduce.orderId": "1601010001",
                 "addReduce.type": 0,
                 "addReduce.atttype": 0,
                 "addReduce.content": ""
             }
-        
-    ### <I> updateAddReduce
+
+    ### `updateAddReduce` <span style="color:gray">[内部]</span>
 
         更新增减单
-        
+
         判断增减单是否存在 , 不存在 , 错误信息 **200060 增减单不存在**
-        
+
         判断增减单状态是否为0(初始)/1(提交) , 其他状态 , 错误信息 **200061 增减单状态不可操作**
-        
-                |Requests:|
-                :param addReduce.arid: 增减单ID
-        :type addReduce.arid: Short
-        :param addReduce.undisPrice: 不打折总额
-        :type addReduce.undisPrice: Long
-        :param addReduce.disPrice: 打折总额
-        :type addReduce.disPrice: Long
-        :param addReduce.uncalPrice: 非配比总额
-        :type addReduce.uncalPrice: Long
-        :param addReduce.calPrice: 配比总额
-        :type addReduce.calPrice: Long
-        :param addReduce.consPrice: 工程总额
-        :type addReduce.consPrice: Long
-        :param addReduce.comsPrice: 主材总额
-        :type addReduce.comsPrice: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.arid**:
+  增减单ID
+        - **addReduce.undisPrice**:
+  不打折总额
+        - **addReduce.disPrice**:
+  打折总额
+        - **addReduce.uncalPrice**:
+  非配比总额
+        - **addReduce.calPrice**:
+  配比总额
+        - **addReduce.consPrice**:
+  工程总额
+        - **addReduce.comsPrice**:
+  主材总额
+
+        **示例**:{
                 "addReduce.arid": 1,
                 "addReduce.undisPrice": 1000000,
                 "addReduce.disPrice": 0,
@@ -4943,48 +4835,47 @@
                 "addReduce.consPrice": 0,
                 "addReduce.comsPrice": 0
             }
-            
-    ### <I> updateAddReduceForAdvance
+
+    ### `updateAddReduceForAdvance` <span style="color:gray">[内部]</span>
 
         更新增减单
-        
+
         判断增减单是否存在 , 不存在 , 错误信息 **200060 增减单不存在**
-        
+
         判断增减单状态是否为0(初始)/1(提交) , 其他状态 , 错误信息 **200061 增减单状态不可操作**
-        
-                |Requests:|
-                :param addReduce.arid: 增减单ID
-        :type addReduce.arid: Integer
-        :param addReduce.total: 总价
-        :type addReduce.total: Long
-        :param addReduce.manageRate: 管理费比例
-        :type addReduce.manageRate: Long
-        :param addReduce.manageDiscount: 管理费折扣
-        :type addReduce.manageDiscount: Short
-        :param addReduce.managePrice: 管理费
-        :type addReduce.managePrice: Long
-        :param addReduce.taxRate: 税金比例
-        :type addReduce.taxRate: Long
-        :param addReduce.taxDiscount: 税金折扣
-        :type addReduce.taxDiscount: Short
-        :param addReduce.taxPrice: 管理费
-        :type addReduce.taxPrice: Long
-        :param addReduce.undisPrice: 非打折项总额
-        :type addReduce.undisPrice: Long
-        :param addReduce.disPrice: 打折项总额
-        :type addReduce.disPrice: Long
-        :param addReduce.uncalPrice: 非配比总额
-        :type addReduce.uncalPrice: Long
-        :param addReduce.calPrice: 配比总额
-        :type addReduce.calPrice: Long
-        :param addReduce.consPrice: 工程总额
-        :type addReduce.consPrice: Long
-        :param addReduce.comsPrice: 主材总额
-        :type addReduce.comsPrice: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.arid**:
+  增减单ID
+        - **addReduce.total**:
+  总价
+        - **addReduce.manageRate**:
+  管理费比例
+        - **addReduce.manageDiscount**:
+  管理费折扣
+        - **addReduce.managePrice**:
+  管理费
+        - **addReduce.taxRate**:
+  税金比例
+        - **addReduce.taxDiscount**:
+  税金折扣
+        - **addReduce.taxPrice**:
+  管理费
+        - **addReduce.undisPrice**:
+  非打折项总额
+        - **addReduce.disPrice**:
+  打折项总额
+        - **addReduce.uncalPrice**:
+  非配比总额
+        - **addReduce.calPrice**:
+  配比总额
+        - **addReduce.consPrice**:
+  工程总额
+        - **addReduce.comsPrice**:
+  主材总额
+
+        **示例**:{
                 "addReduce.arid": 1,
                 "addReduce.total": 100,
                 "addReduce.manageRate": 1003
@@ -5001,161 +4892,154 @@
                 "addReduce.comsPrice": 0
             }
 
-    ### <I> unpayAddReduce
+    ### `unpayAddReduce` <span style="color:gray">[内部]</span>
 
         下拨
-        
+
         判断增减单是否存在 , 不存在 , 错误信息 **200060 增减单不存在**
-        
+
         判断增减单状态是否为0(初始)/1(提交) , 其他状态 , 错误信息 **200061 增减单状态不可操作**
-        
+
         判断增减单类型是否为0(增项) , 其他类型 , 错误信息 **200062 增减单类型不可操作**
-        
+
         判断增减单款项类型是否为0(付款) , 其他类型 , 错误信息 **200062 增减单类型不可操作**
-        
-                |Requests:|
-                :param addReduce.arid: 增减单ID
-        :type addReduce.arid: Long
-        :param addReduce.paytype: 款项类型
-        :type addReduce.paytype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.arid**:
+  增减单ID
+        - **addReduce.paytype**:
+  款项类型
+
+        **示例**:{
                 "addReduce.arid": 1,
                 "addReduce.paytype": 1
             }
-    
-    ### <I> confirmAddReduce
+
+    ### `confirmAddReduce` <span style="color:gray">[内部]</span>
 
         确认
-        
+
         判断增减单是否存在 , 不存在 , 错误信息 **200060 增减单不存在**
-        
+
         判断增减单状态是否为0(初始)/1(提交) , 其他状态 , 错误信息 **200061 增减单状态不可操作**
-        
+
         判断增减单款项类型是否为0(付款) , 类型匹配 , 错误信息 **200062 增减单类型不可操作**
-        
-                |Requests:|
-                :param addReduce.arid: 增减单ID
-        :type addReduce.arid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.arid**:
+  增减单ID
+
+        **示例**:{
                 "addReduce.arid": 1
             }
 
-    ### <I> sendAddReduce
+    ### `sendAddReduce` <span style="color:gray">[内部]</span>
 
         发送
-        
-                |Requests:|
-                :param addReduces[n].arid: 增减单ID
-        :type addReduces[n].arid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduces[n].arid**:
+  增减单ID
+
+        **示例**:{
                 "addReduces[0].arid": 1
             }
 
-    ### <C> affirmAddReduce
+    ### `affirmAddReduce` <span style="color:blue">[自定义]</span>
 
         确认
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
+
         判断客户电话是否正确 , 不正确 , 错误信息 **客户电话不匹配**
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoratoin.orderId: String
-        :param decoration.customer.no: 编号
-        :type decoration.customer.no: String
-        
-        :param addReduces[n].arid: 增减单ID
-        :type addReduces[n].arid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+        - **decoration.customer.no**:
+  编号
+
+        - **addReduces[n].arid**:
+  增减单ID
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decoration.customer.no": "",
                 "addReduces[0].arid": 1
             }
 
-    ### <I> submitAddReduce
+    ### `submitAddReduce` <span style="color:gray">[内部]</span>
 
         提交增减单
-        
+
         判断增减单是否存在 , 不存在 , 错误信息 **200060 增减单不存在**
-        
+
         判断增减单状态是否为0(初始) , 其他状态 , 错误信息 **200061 增减单状态不可操作**
-        
+
         判断增减单是否存在关联装修款 , 已存在 , 错误信息 **150002 款项已存在**
-        
+
         创建关联装修款 , 更新增减单状态为1(提交)
-        
-                |Requests:|
-                :param addReduces[n].arid: 增减单ID
-        :type addReduces[n].arid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduces[n].arid**:
+  增减单ID
+
+        **示例**:{
                 "addReduces[n].arid": 1
             }
 
-    ### <I> cancelAddReduce
+    ### `cancelAddReduce` <span style="color:gray">[内部]</span>
 
         撤销增减单
-        
+
         判断增减单是否存在 , 不存在 , 错误信息 **200060 增减单不存在**
-        
+
         判断增减单状态是否为1(提交) , 其他状态 , 错误信息 **200061 增减单状态不可操作**
-        
+
         判断关联装修款是否存在 , 不存在 , 错误信息 **150003 款项不存在**
-        
+
         判断关联装修款状态是否为0(未付款) , 其他状态 , 错误信息 **150019 款项不能撤销**
-        
+
         删除关联装修款 , 更新增减单状态为0(初始)
-        
-                |Requests:|
-                :param addReduce.dpid: 装修款ID
-        :type addReduce.dpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.dpid**:
+  装修款ID
+
+        **示例**:{
                 "addReduce.dpid": 1
             }
-            
-    ### <I> deleteAddReduce
+
+    ### `deleteAddReduce` <span style="color:gray">[内部]</span>
 
         删除增减单信息 , 只有初始和提交状态能够进行删除动作
-        
+
         判断增减单是否存在 , 不存在 , 错误信息 **200060 增减单不存在**
-        
+
         判断增减单状态是否为0(初始)/1(提交) , 其他状态 , 错误信息 **200061 增减单状态不可操作**
-        
+
         判断是否存在关联选材项 , 如果存在 , 错误信息 **200037 存在关联选材项**
-        
+
         判断是否存在关联报价项 , 获取失败 , 错误信息 **200013 报价项不存在**
-        
+
         判断是否存在关联增减项 , 获取失败 , 错误信息 **140036 增减项不存在**
-        
+
         判断是否存在关联扩展项 , 获取失败 , 错误信息 **200027 扩展项不存在**
-        
+
         删除动作需要判断增减单状态 , 状态为初始和提交能够完成删除动作 , 同时需要将删除引用的报价项的工程量增加回原引用项目
 
-                |Requests:|
-                :param addReduce.arid: 增减单ID
-        :type addReduce.arid: Long
+**请求参数**:
 
-        Example::
-        
-            {
+- **addReduce.arid**:
+  增减单ID
+
+        **示例**:{
                 "addReduce.arid": 1
             }
 
@@ -5163,8 +5047,9 @@
 
 ## api.quotation.AddReduceItemAction
 
-        |DataType:|
-        #### addReduceItem
+**数据类型**:
+
+#### addReduceItem
 
     - **ariid**: 报价项ID
       - 类型: *Long*
@@ -5205,27 +5090,25 @@
     - **content**: 说明
       - 类型: *String*
 
-    ### <I> queryAddReduceItemByAddReduceId
+    ### `queryAddReduceItemByAddReduceId` <span style="color:gray">[内部]</span>
 
         通过增减单ID获取增减项中包含的报价项信息
-    
-                |Requests:|
-                :param addReduce.arid: 增减单ID
-        :type addReduce.arid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.arid**:
+  增减单ID
+
+        **示例**:{
                 "addReduce.arid": 1
             }
-            
-                |Returns:|
-                - **addReduceItems**: 增减项信息列表 , 类型 *addReduceItem*
+
+**返回参数**:
+
+- **addReduceItems**: 增减项信息列表 , 类型 *addReduceItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "addReduceItems": [
                     {
@@ -5253,27 +5136,25 @@
                 ...
             }
 
-    ### <I> queryAddReduceItemByOrderId
+    ### `queryAddReduceItemByOrderId` <span style="color:gray">[内部]</span>
 
         通过增减单ID列表获取增减项中包含的报价项信息
-        
-                |Requests:|
-                :param addReduce.orderId: 装修单号
-        :type addReduce.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.orderId**:
+  装修单号
+
+        **示例**:{
                 "addReduce.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **addReduceItems**: 增减项信息列表 , 类型 *addReduceItem*
+
+**返回参数**:
+
+- **addReduceItems**: 增减项信息列表 , 类型 *addReduceItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "addReduceItems": [
                     {
@@ -5300,29 +5181,27 @@
                 ]
                 ...
             }
-            
-    ### <I> queryAddReduceItemByAddReduceIds
+
+    ### `queryAddReduceItemByAddReduceIds` <span style="color:gray">[内部]</span>
 
         通过增减单ID列表获取增减项中包含的报价项信息
-        
-                |Requests:|
-                :param addReduceIds[n]: 增减单ID列表 , 每条数据类型 Integer
-        :type addReduceIds[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduceIds[n]**:
+  增减单ID列表 , 每条数据类型 Integer
+
+        **示例**:{
                 "addReduceIds[0]": 1,
                 "addReduceIds[1]": 2
             }
-            
-                |Returns:|
-                - **addReduceItems**: 增减项信息列表 , 类型 *addReduceItem*
+
+**返回参数**:
+
+- **addReduceItems**: 增减项信息列表 , 类型 *addReduceItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "addReduceItems": [
                     {
@@ -5349,71 +5228,70 @@
                 ]
                 ...
             }
-            
-    ### <I> updateAddReduceItem
+
+    ### `updateAddReduceItem` <span style="color:gray">[内部]</span>
 
         更新增减项中报价项信息 , 如果无对应信息 , 创建新信息
-        
+
         判断是否存在关联选材项 , 如果存在 , 错误信息 **200037 存在关联选材项**
-        
+
         类型为3(报价中报价项)和4(增项中报价项) , 增减项类型为减项 , 需要减去引用的项目工程量 , 同时判断引用项工程量
-        
+
         增减项 , 增项类型 , 单价使用引用报价项的增补价 ; 减项类型 , 单价使用引用报价项的退减价
-        
-                |Requests:|
-                :param addReduce.arid: 增减单ID
-        :type addReduce.arid: Long
-        :param addReduce.total: 总价
-        :type addReduce.total: Long
-        :param addReduce.manageRate: 管理费比例
-        :type addReduce.manageRate: Long
-        :param addReduce.managePrice: 管理费
-        :type addReduce.managePrice: Long
-        :param addReduce.undisPrice: 非打折项总额
-        :type addReduce.undisPrice: Long
-        :param addReduce.disPrice: 打折项总额
-        :type addReduce.disPrice: Long
-        :param addReduce.uncalPrice: 非配比总额
-        :type addReduce.uncalPrice: Long
-        :param addReduce.calPrice: 配比总额
-        :type addReduce.calPrice: Long
-        :param addReduce.consPrice: 工程总额
-        :type addReduce.consPrice: Long
-        :param addReduce.comsPrice: 主材总额
-        :type addReduce.comsPrice: Long
-        
-        :param addReduceItem.ariid: 报价项ID
-        :type addReduceItem.ariid: Long
-        :param addReduceItem.arid: 增减项ID
-        :type addReduceItem.arid: Long
-        :param addReduceItem.type: 类型 , 0: 标准报价项 , 1: 系统定义项 , 2: 自定义项 , 3: 报价中报价项 , 4: 增项中报价项
-        :type addReduceItem.type: Short
-        :param addReduceItem.measurementUnit: 单位
-        :type addReduceItem.measurementUnit: String
-        :param addReduceItem.workType: 工种
-        :type addReduceItem.workType: String
-        :param addReduceItem.discount: 折扣
-        :type addReduceItem.discount: Short
-        :param addReduceItem.addPrice: 增补价
-        :type addReduceItem.addPrice: Integer
-        :param addReduceItem.unitPrice: 单价
-        :type addReduceItem.unitPrice: Integer
-        :param addReduceItem.subPrice: 退减价
-        :type addReduceItem.subPrice: Integer
-        :param addReduceItem.num: 工程量
-        :type addReduceItem.num: Integer
-        :param addReduceItem.quotationFunctionAreaId: 所属功能区ID
-        :type addReduceItem.quotationFunctionAreaId: Long
-        :param addReduceItem.quotationFunctionAreaName: 所属功能区
-        :type addReduceItem.quotationFunctionAreaName: String
-        :param addReduceItem.quoteItemId: 引用项ID
-        :type addReduceItem.quoteItemId: Long
-        :param addReduceItem.content: 说明
-        :type addReduceItem.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.arid**:
+  增减单ID
+        - **addReduce.total**:
+  总价
+        - **addReduce.manageRate**:
+  管理费比例
+        - **addReduce.managePrice**:
+  管理费
+        - **addReduce.undisPrice**:
+  非打折项总额
+        - **addReduce.disPrice**:
+  打折项总额
+        - **addReduce.uncalPrice**:
+  非配比总额
+        - **addReduce.calPrice**:
+  配比总额
+        - **addReduce.consPrice**:
+  工程总额
+        - **addReduce.comsPrice**:
+  主材总额
+
+        - **addReduceItem.ariid**:
+  报价项ID
+        - **addReduceItem.arid**:
+  增减项ID
+        - **addReduceItem.type**:
+  类型 , 0: 标准报价项 , 1: 系统定义项 , 2: 自定义项 , 3: 报价中报价项 , 4: 增项中报价项
+        - **addReduceItem.measurementUnit**:
+  单位
+        - **addReduceItem.workType**:
+  工种
+        - **addReduceItem.discount**:
+  折扣
+        - **addReduceItem.addPrice**:
+  增补价
+        - **addReduceItem.unitPrice**:
+  单价
+        - **addReduceItem.subPrice**:
+  退减价
+        - **addReduceItem.num**:
+  工程量
+        - **addReduceItem.quotationFunctionAreaId**:
+  所属功能区ID
+        - **addReduceItem.quotationFunctionAreaName**:
+  所属功能区
+        - **addReduceItem.quoteItemId**:
+  引用项ID
+        - **addReduceItem.content**:
+  说明
+
+        **示例**:{
                 "addReduce.arid": 1,
                 "addReduce.total": 100,
                 "addReduce.manageRate": 1003
@@ -5424,7 +5302,7 @@
                 "addReduce.calPrice": 10,
                 "addReduce.consPrice": 0,
                 "addReduce.comsPrice": 0,
-                
+
                 "addReduceItem.ariid": 1,
                 "addReduceItem.itemName": "原墙体建筑大白铲除",
                 "addReduceItem.type": 0,
@@ -5443,76 +5321,74 @@
                 "addReduceItem.content": "说明信息",
             }
 
-    ### <I> updateAddReduceItemForAdvance
+    ### `updateAddReduceItemForAdvance` <span style="color:gray">[内部]</span>
 
         更新增减项项目信息
-        
+
         根据打折标识更新增减项的配比计算值
-        
+
         判断增减单是否存在 , 不存在 , 错误信息 **140018 增减单不存在**
-        
+
         判断增减项是否存在 , 不存在 , 错误信息 **140036 增减项不存在**
-        
-                |Requests:|
-                :param addReduce.arid: 增减单ID
-        :type addReduce.arid: Long
-        :param addReduce.uncalPrice: 非配比总额
-        :type addReduce.uncalPrice: Long
-        :param addReduce.calPrice: 配比总额
-        :type addReduce.calPrice: Long
-        
-        :param addReduceItem.ariid: 报价项ID
-        :type addReduceItem.ariid: Long
-        :param addReduceItem.discount: 打折标识
-        :type addReduceItem.discount: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.arid**:
+  增减单ID
+        - **addReduce.uncalPrice**:
+  非配比总额
+        - **addReduce.calPrice**:
+  配比总额
+
+        - **addReduceItem.ariid**:
+  报价项ID
+        - **addReduceItem.discount**:
+  打折标识
+
+        **示例**:{
                 "addReduce.arid": 1,
                 "addReduce.uncalPrice": 0,
                 "addReduce.calPrice": 0,
-                
+
                 "addReduceItem.ariid": 1,
                 "addReduceItem.discount": 1
             }
 
-    ### <I> deleteAddReduceItem
+    ### `deleteAddReduceItem` <span style="color:gray">[内部]</span>
 
         删除增减项
-        
+
         判断是否存在关联选材项 , 如果存在 , 错误信息 **200037 存在关联选材项**
-        
+
         删除动作需要判断当前增减单的状态 , 状态为初始以及提交状态能够完成删除动作
-        
-                |Requests:|
-                :param addReduce.arid: 增减单ID
-        :type addReduce.arid: Long
-        :param addReduce.total: 总价
-        :type addReduce.total: Long
-        :param addReduce.manageRate: 管理费比例
-        :type addReduce.manageRate: Long
-        :param addReduce.managePrice: 管理费
-        :type addReduce.managePrice: Long
-        :param addReduce.undisPrice: 非打折项总额
-        :type addReduce.undisPrice: Long
-        :param addReduce.disPrice: 打折项总额
-        :type addReduce.disPrice: Long
-        :param addReduce.uncalPrice: 非配比总额
-        :type addReduce.uncalPrice: Long
-        :param addReduce.calPrice: 配比总额
-        :type addReduce.calPrice: Long
-        :param addReduce.consPrice: 工程总额
-        :type addReduce.consPrice: Long
-        :param addReduce.comsPrice: 主材总额
-        :type addReduce.comsPrice: Long
-        
-        :param addReduceItem.ariid: 报价项ID
-        :type addReduceItem.ariid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **addReduce.arid**:
+  增减单ID
+        - **addReduce.total**:
+  总价
+        - **addReduce.manageRate**:
+  管理费比例
+        - **addReduce.managePrice**:
+  管理费
+        - **addReduce.undisPrice**:
+  非打折项总额
+        - **addReduce.disPrice**:
+  打折项总额
+        - **addReduce.uncalPrice**:
+  非配比总额
+        - **addReduce.calPrice**:
+  配比总额
+        - **addReduce.consPrice**:
+  工程总额
+        - **addReduce.comsPrice**:
+  主材总额
+
+        - **addReduceItem.ariid**:
+  报价项ID
+
+        **示例**:{
                 "addReduce.arid": 1,
                 "addReduce.total": 100,
                 "addReduce.manageRate": 1003
@@ -5523,7 +5399,7 @@
                 "addReduce.calPrice": 10,
                 "addReduce.consPrice": 0,
                 "addReduce.comsPrice": 0,
-                
+
                 "addReduceItem.ariid": 1
             }
 
@@ -5535,8 +5411,9 @@
 
 ## api.quotation.SelectionAction
 
-        |DataType:|
-        #### selection
+**数据类型**:
+
+#### selection
 
     - **sid**: 选材单ID
       - 类型: *Long*
@@ -5574,20 +5451,19 @@
       - 类型: *Timestamp*
     - **company**: 公司ID
       - 类型: *Integer*
-    
-    ### <I> pageSelection
+
+    ### `pageSelection` <span style="color:gray">[内部]</span>
 
         分页方式获取选材单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 选材单信息列表 , 每条数据类型 *selection*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  选材单信息列表 , 每条数据类型 *selection*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5636,7 +5512,7 @@
                                 "createrId": "U001",
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "splitter": {
                                 "uid": 11,
@@ -5659,32 +5535,30 @@
                 },
                 ...
             }
-    
-    ### <I> querySelectionByOrderId
+
+    ### `querySelectionByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取选材单 , 关联查询默认报价以及对应的选材单
-        
+
         判断装修单的默认报价是否存在 , 不存在 , 错误信息 **200017 默认报价不存在**
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
-                |Requests:|
-                :param selection.orderId: 装修单号
-        :type selection.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selection.orderId**:
+  装修单号
+
+        **示例**:{
                 "selection.orderId": "1601010001"
             }
 
-                |Returns:|
-                - **selection**: 选材单
+**返回参数**:
+
+- **selection**: 选材单
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "selection": {
                     "sid": 1,
@@ -5699,7 +5573,7 @@
                         "createrId": "U001",
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "splitter": {
                         "uid": 11,
@@ -5719,30 +5593,28 @@
                 },
                 ...
             }
-            
-    ### <I> querySelectionByQid
+
+    ### `querySelectionByQid` <span style="color:gray">[内部]</span>
 
         通过报价ID获取选材单
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
-                |Requests:|
-                :param selection.qid: 报价ID
-        :type selection.qid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selection.qid**:
+  报价ID
+
+        **示例**:{
                 "selection.qid": 1
             }
 
-                |Returns:|
-                - **selection**: 选材单
+**返回参数**:
+
+- **selection**: 选材单
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "selection": {
                     "sid": 1,
@@ -5757,7 +5629,7 @@
                         "createrId": "U001",
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "splitter": {
                         "uid": 11,
@@ -5778,133 +5650,127 @@
                 ...
             }
 
-    ### <I> addSelection
+    ### `addSelection` <span style="color:gray">[内部]</span>
 
         创建选材单
-        
+
         判断报价是否存在 , 不存在 , 错误信息 **200003 报价不存在**
-        
-                |Requests:|
-                :param selection.qid: 报价ID
-        :type selection.qid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selection.qid**:
+  报价ID
+
+        **示例**:{
                 "selection.qid": 1
             }
-            
 
-    ### <I> updateSelection
+
+    ### `updateSelection` <span style="color:gray">[内部]</span>
 
         更新选材单
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
-                |Requests:|
-                :param selection.sid: 选材单ID
-        :type selection.sid: Long
-        :param selection.splitter.uid: 拆单员ID
-        :type selection.splitter.uid: Long
-        :param selection.traner.uid: 下单员ID
-        :type selection.traner.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selection.sid**:
+  选材单ID
+        - **selection.splitter.uid**:
+  拆单员ID
+        - **selection.traner.uid**:
+  下单员ID
+
+        **示例**:{
                 "selection.sid": 1,
                 "selection.splitter.uid": 1,
                 "selection.traner.uid": 1
             }
 
-    ### <I> updateSelectionForAdvance
+    ### `updateSelectionForAdvance` <span style="color:gray">[内部]</span>
 
         更新选材单 , 主要针对各类总额更新
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
+
         判断选材单状态为0(初始) , 其他状态 , 错误信息 **200036 选材单不可操作**
-        
-                |Requests:|
-                :param selection.sid: 选材单ID
-        :type selection.sid: Long
-        :param selection.total: 总额
-        :type selection.total: Long
-        :param selection.quotationTotal: 报价总额
-        :type selection.quotationTotal: Long
-        :param selection.extensionTotal: 拓展总额
-        :type selection.extensionTotal: Long
-        :param selection.addReductTotal: 增减总额
-        :type selection.addReductTotal: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selection.sid**:
+  选材单ID
+        - **selection.total**:
+  总额
+        - **selection.quotationTotal**:
+  报价总额
+        - **selection.extensionTotal**:
+  拓展总额
+        - **selection.addReductTotal**:
+  增减总额
+
+        **示例**:{
                 "selection.sid": 1,
                 "selection.total": 10000,
                 "selection.quotationTotal": 10000,
                 "selection.extensionTotal": 0,
                 "selection.addReductTotal": 0
             }
-            
-    ### <I> lockSelection
+
+    ### `lockSelection` <span style="color:gray">[内部]</span>
 
         锁定选材单
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
+
         判断选材单状态为0(初始) , 其他状态 , 错误信息 **200036 选材单不可操作**
-        
+
         更新选材单状态为1(锁定)
-        
-                |Requests:|
-                :param selection.sid: 选材单ID
-        :type selection.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selection.sid**:
+  选材单ID
+
+        **示例**:{
                 "selection.sid": 1
             }
 
-    ### <I> sendSelection
+    ### `sendSelection` <span style="color:gray">[内部]</span>
 
         推送
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
-                |Requests:|
-                :param selection.sid: 选材单ID
-        :type selection.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selection.sid**:
+  选材单ID
+
+        **示例**:{
                 "selection.sid": 1
             }
 
-    ### <C> affirmSelection
+    ### `affirmSelection` <span style="color:blue">[自定义]</span>
 
         确认
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 装修单不存在**
-        
+
         判断客户电话是否正确 , 不正确 , 错误信息 **客户电话不匹配**
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        :param decoration.customer.no: 编号
-        :type decoration.customer.no: String
-        
-        :param selection.sid: 选材单ID
-        :type selection.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+        - **decoration.customer.no**:
+  编号
+
+        - **selection.sid**:
+  选材单ID
+
+        **示例**:{
                 "decoration.orderId": "1601010001",
                 "decoration.customer.no": "",
                 "selection.sid": 1,
@@ -5914,8 +5780,9 @@
 
 ## api.quotation.SelectionItemAction
 
-        |DataType:|
-        #### selectionItem
+**数据类型**:
+
+#### selectionItem
 
     - **siid**: 选材项ID
       - 类型: *Long*
@@ -5979,20 +5846,19 @@
       - 类型: *String*
     - **company**: 公司ID
       - 类型: *Integer*
-    
-    ### <I> pageSelectionItem
+
+    ### `pageSelectionItem` <span style="color:gray">[内部]</span>
 
         分页方式获取选材项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 选材项信息列表 , 每条数据类型 *selectionItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  选材项信息列表 , 每条数据类型 *selectionItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6104,20 +5970,19 @@
                 },
                 ...
             }
-    
-    ### <I> pageSelectionItemForSupplier
+
+    ### `pageSelectionItemForSupplier` <span style="color:gray">[内部]</span>
 
         分页方式获取选材项信息 , 利用厂商作为条件 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 选材项信息列表 , 每条数据类型 *selectionItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  选材项信息列表 , 每条数据类型 *selectionItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6230,21 +6095,20 @@
                 ...
             }
 
-    ### <I> pageSelectionItemForEscorter
+    ### `pageSelectionItemForEscorter` <span style="color:gray">[内部]</span>
 
         分页方式获取选材项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         归属装修单的跟单员作为当前操作的默认条件
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 选材项信息列表 , 每条数据类型 *selectionItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  选材项信息列表 , 每条数据类型 *selectionItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6357,21 +6221,20 @@
                 ...
             }
 
-    ### <I> pageSelectionItemForAccount
+    ### `pageSelectionItemForAccount` <span style="color:gray">[内部]</span>
 
         分页方式获取选材项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         选材项对账状态为0(初始)作为默认条件
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 选材项信息列表 , 每条数据类型 *selectionItem*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  选材项信息列表 , 每条数据类型 *selectionItem*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6484,31 +6347,29 @@
                 ...
             }
 
-    ### <I> querySelectionItemByOrderId
+    ### `querySelectionItemByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取选材项 , 利用装修单对应的默认报价获取对应的选材信息
-        
+
         判断装修单的默认报价是否存在 , 不存在 , 错误信息 **200017 默认报价不存在**
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
-                |Requests:|
-                :param selectionItem.orderId: 装修单编号
-        :type selectionItem.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selectionItem.orderId**:
+  装修单编号
+
+        **示例**:{
                 "selectionItem.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **selectionItems**: 选材项列表 , 每条数据类型 *selectionItem*
+
+**返回参数**:
+
+- **selectionItems**: 选材项列表 , 每条数据类型 *selectionItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "selectionItems": [
                     {
@@ -6586,30 +6447,28 @@
                 ]
                 ...
             }
-    
-    ### <I> querySelectionItem
+
+    ### `querySelectionItem` <span style="color:gray">[内部]</span>
 
         通过报价ID获取选材项
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
-                |Requests:|
-                :param selectionItem.sid: 选材单ID
-        :type selectionItem.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selectionItem.sid**:
+  选材单ID
+
+        **示例**:{
                 "selectionItem.sid": 1
             }
-            
-                |Returns:|
-                - **selectionItems**: 选材项列表 , 每条数据类型 *selectionItem*
+
+**返回参数**:
+
+- **selectionItems**: 选材项列表 , 每条数据类型 *selectionItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "selectionItems": [
                     {
@@ -6688,66 +6547,64 @@
                 ...
             }
 
-    ### <I> collateSelectionItem
+    ### `collateSelectionItem` <span style="color:gray">[内部]</span>
 
         核对选材项
-        
+
         以装修单号为条件 , 判断状态非4(完结)的选材项 , 如果存在 , 错误信息 **200039 选材项状态不可操作**
-        
-                |Requests:|
-                :param selection.orderId: 装修单号
-        :type selection.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selection.orderId**:
+  装修单号
+
+        **示例**:{
                 "selection.orderId": "1601010001"
             }
-            
-    ### <I> addSelectionItem
+
+    ### `addSelectionItem` <span style="color:gray">[内部]</span>
 
         添加选材项
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
+
         判断选材单状态为0(初始) , 其他状态 , 错误信息 **200036 选材单不可操作**
-        
-                |Requests:|
-                :param selection.sid: 选材单ID
-        :type selection.sid: Long
-        :param selection.total: 总额
-        :type selection.total: Long
-        :param selection.quotationTotal: 报价总额
-        :type selection.quotationTotal: Long
-        :param selection.extensionTotal: 拓展总额
-        :type selection.extensionTotal: Long
-        :param selection.addReductTotal: 增减总额
-        :type selection.addReductTotal: Long
-        
-        :param selectionItem.areaId: 引用区ID
-        :type selectionItem.areaId: Long
-        :param selectionItem.quoteId: 引用项ID
-        :type selectionItem.quoteId: Long
-        :param selectionItem.goods.gid: 商品ID
-        :type selectionItem.goods.gid: Long
-        :param selectionItem.areaName: 功能区
-        :type selectionItem.areaName: String
-        :param selectionItem.preprice: 预算价格
-        :type selectionItem.preprice: Integer
-        :param selectionItem.initnum: 工程量
-        :type selectionItme.initnum: Integer
-        :param selectionItem.num: 数量
-        :type selectionItem.num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selection.sid**:
+  选材单ID
+        - **selection.total**:
+  总额
+        - **selection.quotationTotal**:
+  报价总额
+        - **selection.extensionTotal**:
+  拓展总额
+        - **selection.addReductTotal**:
+  增减总额
+
+        - **selectionItem.areaId**:
+  引用区ID
+        - **selectionItem.quoteId**:
+  引用项ID
+        - **selectionItem.goods.gid**:
+  商品ID
+        - **selectionItem.areaName**:
+  功能区
+        - **selectionItem.preprice**:
+  预算价格
+        - **selectionItem.initnum**:
+  工程量
+        - **selectionItem.num**:
+  数量
+
+        **示例**:{
                 "selection.sid": 1,
                 "selection.total": 10000,
                 "selection.quotationTotal": 10000,
                 "selection.extensionTotal": 0,
                 "selection.addReductTotal": 0,
-                
+
                 "selectionItem.areaId": 1,
                 "selectionItem.quoteId": 1,
                 "selectionItem.goods.gid": 1,
@@ -6756,255 +6613,244 @@
                 "selectionItem.initnum": 1000,
                 "selectionItem.num": 1000
             }
-            
-    ### <I> updateSelectionItem
+
+    ### `updateSelectionItem` <span style="color:gray">[内部]</span>
 
         更新选材项
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
+
         判断选材单状态为0(初始) , 其他状态 , 错误信息 **200036 选材单不可操作**
-        
-                |Requests:|
-                :param selection.sid: 选材单ID
-        :type selection.sid: Long
-        :param selection.total: 总额
-        :type selection.total: Long
-        :param selection.quotationTotal: 报价总额
-        :type selection.quotationTotal: Long
-        :param selection.extensionTotal: 拓展总额
-        :type selection.extensionTotal: Long
-        :param selection.addReductTotal: 增减总额
-        :type selection.addReductTotal: Long
-        
-        :param selectionItem.siid: 选材项ID
-        :type selectionItem.siid: Long
-        :param selectionItem.postprice: 结算价
-        :type selectionItem.postprice: Integer
-        :param selectionItem.num: 数量
-        :type selectionItem.num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selection.sid**:
+  选材单ID
+        - **selection.total**:
+  总额
+        - **selection.quotationTotal**:
+  报价总额
+        - **selection.extensionTotal**:
+  拓展总额
+        - **selection.addReductTotal**:
+  增减总额
+
+        - **selectionItem.siid**:
+  选材项ID
+        - **selectionItem.postprice**:
+  结算价
+        - **selectionItem.num**:
+  数量
+
+        **示例**:{
                 "selection.sid": 1,
                 "selection.total": 10000,
                 "selection.quotationTotal": 10000,
                 "selection.extensionTotal": 0,
                 "selection.addReductTotal": 0,
-                
+
                 "selectionItem.siid": 1,
                 "selectionItem.postprice": 10000,
                 "selectionItem.num": 10000
             }
 
-    ### <I> tranSelectionItem
+    ### `tranSelectionItem` <span style="color:gray">[内部]</span>
 
         配送选材项
-        
+
         判断选材项是否存在 , 不存在 , 错误信息 **200038 选材项不存在**
-        
+
         判断选材项状态为0(初始) , 其他状态 , 错误信息 **200039 选材项状态不可操作**
-        
-                |Requests:|
-                :param selectionItems[n].siid: 选材项ID
-        :type selectionItems[n].siid: Long
-        :param selectionItems[n].num: 数量
-        :type selectionItems[n].num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selectionItems[n].siid**:
+  选材项ID
+        - **selectionItems[n].num**:
+  数量
+
+        **示例**:{
                 "selectionItems[0].siid": 1,
                 "selectionItems[0].num": 1000
             }
 
-    ### <I> checkSelectionItem
+    ### `checkSelectionItem` <span style="color:gray">[内部]</span>
 
         审核选材项
-        
+
         判断选材项是否存在 , 不存在 , 错误信息 **200038 选材项不存在**
-        
+
         判断选材项状态为1(配送) , 其他状态 , 错误信息 **200039 选材项状态不可操作**
-        
-                |Requests:|
-                :param selectionItems[n].siid: 选材项ID
-        :type selectionItems[n].siid: Long
-        :param selectionItems[n].comment: 备注
-        :type selectionItems[n].comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selectionItems[n].siid**:
+  选材项ID
+        - **selectionItems[n].comment**:
+  备注
+
+        **示例**:{
                 "selectionItems[0].siid": 1,
                 "selectionItems[0].comment": "备注"
             }
-            
-    ### <I> confirmSelectionItem
+
+    ### `confirmSelectionItem` <span style="color:gray">[内部]</span>
 
         确认选材项
-        
+
         判断选材项是否存在 , 不存在 , 错误信息 **200038 选材项不存在**
-        
+
         判断选材项状态为2(审核) , 其他状态 , 错误信息 **200039 选材项状态不可操作**
-        
-                |Requests:|
-                :param selectionItems[n].siid: 选材项ID
-        :type selectionItems[n].siid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selectionItems[n].siid**:
+  选材项ID
+
+        **示例**:{
                 "selectionItems[0].siid": 1
             }
-            
-    ### <I> finishSelectionItem
+
+    ### `finishSelectionItem` <span style="color:gray">[内部]</span>
 
         完结选材项
-        
+
         判断选材项是否存在 , 不存在 , 错误信息 **200038 选材项不存在**
-        
+
         判断选材项状态为3(确认) , 其他状态 , 错误信息 **200039 选材项状态不可操作**
-        
-                |Requests:|
-                :param selectionItems[n].siid: 选材项ID
-        :type selectionItems[n].siid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selectionItems[n].siid**:
+  选材项ID
+
+        **示例**:{
                 "selectionItems[0].siid": 1
             }
 
-    ### <I> reviewSelectionItem
+    ### `reviewSelectionItem` <span style="color:gray">[内部]</span>
 
         核对选材项
-        
+
         判断选材项是否存在 , 不存在 , 错误信息 **200038 选材项不存在**
-        
+
         判断选材项状态为4(完结) , 其他状态 , 错误信息 **200039 选材项状态不可操作**
-        
-                |Requests:|
-                :param selectionItem[n].siid: 选材项ID
-        :type selectionItem[n].siid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selectionItem[n].siid**:
+  选材项ID
+
+        **示例**:{
                 "selectionItem[0].siid": 1
             }
-            
-    ### <I> balanceSelectionItem
+
+    ### `balanceSelectionItem` <span style="color:gray">[内部]</span>
 
         结算选材项
-        
+
         判断选材项是否存在 , 不存在 , 错误信息 **200038 选材项不存在**
-        
+
         判断选材项状态为5(核对) , 其他状态 , 错误信息 **200039 选材项状态不可操作**
-        
-                |Requests:|
-                :param selectionItem[n].siid: 选材项ID
-        :type selectionItem[n].siid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selectionItem[n].siid**:
+  选材项ID
+
+        **示例**:{
                 "selectionItem[0].siid": 1
             }
 
-    ### <I> refundSelectionItem
+    ### `refundSelectionItem` <span style="color:gray">[内部]</span>
 
         退货
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
+
         判断选材单状态为5(核对)/6(结算) , 其他状态 , 错误信息 **200036 选材单不可操作**
-        
-                |Requests:|
-                :param selectionItems[n].siid: 选材项ID
-        :type selectionItems[n].siid: Long
-        :param selectionItems[n].refnum: 退货量
-        :type selectionItems[n].refnum: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selectionItems[n].siid**:
+  选材项ID
+        - **selectionItems[n].refnum**:
+  退货量
+
+        **示例**:{
                 "selectionItems[0].siid": 1,
                 "selectionItems[0].refnum": 1
             }
 
-    ### <I> deleteSelectionItem
+    ### `deleteSelectionItem` <span style="color:gray">[内部]</span>
 
         删除选材项
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
+
         判断选材单状态非0(初始)/1(配送) , 其他状态 , 错误信息 **200036 选材单不可操作**
-        
-                |Requests:|
-                :param selection.sid: 选材单ID
-        :type selection.sid: Long
-        :param selection.total: 总额
-        :type selection.total: Long
-        :param selection.quotationTotal: 报价总额
-        :type selection.quotationTotal: Long
-        :param selection.extensionTotal: 拓展总额
-        :type selection.extensionTotal: Long
-        :param selection.addReductTotal: 增减总额
-        :type selection.addReductTotal: Long
-        
-        :param selectionItem.siid: 选材项ID
-        :type selectionItem.siid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selection.sid**:
+  选材单ID
+        - **selection.total**:
+  总额
+        - **selection.quotationTotal**:
+  报价总额
+        - **selection.extensionTotal**:
+  拓展总额
+        - **selection.addReductTotal**:
+  增减总额
+
+        - **selectionItem.siid**:
+  选材项ID
+
+        **示例**:{
                 "selection.sid": 1,
                 "selection.total": 10000,
                 "selection.quotationTotal": 10000,
                 "selection.extensionTotal": 0,
                 "selection.addReductTotal": 0,
-                
+
                 "selectionItem.siid": 1
             }
 
-    ### <I> cutoffSelectionItem
+    ### `cutoffSelectionItem` <span style="color:gray">[内部]</span>
 
         失效选材项
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
+
         判断选材单状态为5(核对)/6(结算) , 其他状态 , 错误信息 **200036 选材单不可操作**
-        
+
         选材项状态更新为7(失效)
-        
-                |Requests:|
-                :param selectionItems[n].siid: 选材项ID
-        :type selectionItems[n].siid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selectionItems[n].siid**:
+  选材项ID
+
+        **示例**:{
                 "selectionItems[0].siid": 1
             }
 
-    ### <I> rejectSelectionItem
+    ### `rejectSelectionItem` <span style="color:gray">[内部]</span>
 
         驳回选材项
-        
+
         判断选材单是否存在 , 不存在 , 错误信息 **200035 选材单不存在**
-        
+
         判断选材单状态非5(核对)/6(结算) , 其他状态 , 错误信息 **200036 选材单不可操作**
-        
+
         选材项状态更新为4(完结)
-        
-                |Requests:|
-                :param selectionItems[n].siid: 选材项ID
-        :type selectionItems[n].siid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **selectionItems[n].siid**:
+  选材项ID
+
+        **示例**:{
                 "selectionItems[0].siid": 1
             }
 
@@ -7012,8 +6858,9 @@
 
 ## api.quotation.QuotationRemeasureAction
 
-        |DataType:|
-        #### quotationRemeasure
+**数据类型**:
+
+#### quotationRemeasure
 
     - **qrid**: 回尺单ID
       - 类型: *Long*
@@ -7029,7 +6876,7 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Integer*
-    
+
     #### quotationRemeasureItem
 
     - **qriid**: 回尺项ID
@@ -7051,15 +6898,15 @@
     - **type**: 类型 , 0: 文本 , 1: 数值
       - 类型: *Short*
 
-    ### <I> pageQuotationRemeasure
+    ### `pageQuotationRemeasure` <span style="color:gray">[内部]</span>
 
-    ### <I> queryQuotationRemeasure
+    ### `queryQuotationRemeasure` <span style="color:gray">[内部]</span>
 
-    ### <I> queryQuotationRemeasureItem
+    ### `queryQuotationRemeasureItem` <span style="color:gray">[内部]</span>
 
-    ### <I> makeQuotationRemeasure
+    ### `makeQuotationRemeasure` <span style="color:gray">[内部]</span>
 
-    ### <I> updateQuotationRemeasureItem
+    ### `updateQuotationRemeasureItem` <span style="color:gray">[内部]</span>
 
 ## 定额
 
@@ -7067,8 +6914,9 @@
 
 ## api.quotation.NormtionAction
 
-        |DataType:|
-        #### normtion
+**数据类型**:
+
+#### normtion
 
     - **nid**: 报价定额ID
       - 类型: *Long*
@@ -7092,20 +6940,19 @@
       - 类型: *Object*
     - **createTime**: 创建时间
       - 类型: *Timestamp*
-    
-    ### <I> pageNormtion
+
+    ### `pageNormtion` <span style="color:gray">[内部]</span>
 
         分页方式获取定额单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 定额单信息列表 , 每条数据类型 *normtion*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  定额单信息列表 , 每条数据类型 *normtion*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7155,7 +7002,7 @@
                                 "createrId": "U001",
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                             },
                             "createTime": "2016-01-01"
                         }
@@ -7164,28 +7011,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryNormtion
+
+    ### `queryNormtion` <span style="color:gray">[内部]</span>
 
         查询定额信息
-    
-                |Requests:|
-                :param normtion.qid: 报价ID
-        :type normtion.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normtion.qid**:
+  报价ID
+
+        **示例**:{
                 "normtion.qid": 1
             }
-        
-                |Returns:|
-                - **normtion**: 定额信息列表 , 类型 *normtion*
+
+**返回参数**:
+
+- **normtion**: 定额信息列表 , 类型 *normtion*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "normtion": {
                     "nid": 1,
@@ -7200,100 +7045,93 @@
                         "createrId": "U001",
                         "userName": "白雪",
                         "currentName": "白雪",
-                        "duty": "设计师" 
+                        "duty": "设计师"
                     },
                     "createTime": "2016-01-01"
                 },
                 ...
             }
 
-    ### <I> makeNormtionForQuotation
+    ### `makeNormtionForQuotation` <span style="color:gray">[内部]</span>
 
         生成定额信息
-        
-                |Requests:|
-                :param normtion.nid: 定额ID
-        :type normtion.nid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normtion.nid**:
+  定额ID
+
+        **示例**:{
                 "normtion.nid": 1
             }
 
-    ### <I> makeNormtionForExtension
+    ### `makeNormtionForExtension` <span style="color:gray">[内部]</span>
 
         生成定额信息
-        
-                |Requests:|
-                :param normtion.orderId: 装修单号
-        :type normtion.orderId: String
-        :param extension.eid: 扩展单ID
-        :type extension.eid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normtion.orderId**:
+  装修单号
+        - **extension.eid**:
+  扩展单ID
+
+        **示例**:{
                 "normtion.orderId": 1,
                 "extension.eid": 1
             }
 
-    ### <I> makeNormtionForAddReduce
+    ### `makeNormtionForAddReduce` <span style="color:gray">[内部]</span>
 
         生成定额信息
-        
-                |Requests:|
-                :param normtion.orderId: 装修单号
-        :type normtion.orderId: String
-        :param addReduce.arid: 增减单ID
-        :type addReduce.arid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normtion.orderId**:
+  装修单号
+        - **addReduce.arid**:
+  增减单ID
+
+        **示例**:{
                 "normtion.orderId": 1,
                 "addReduce.arid": 1
             }
-            
-        Example::
-        
-            {
+
+        **示例**:{
                 "normtion.nid": 1
             }
 
-    ### <I> printNormtion
+    ### `printNormtion` <span style="color:gray">[内部]</span>
 
         打印定额信息
-        
-                |Requests:|
-                :param normtion.nid: 定额ID
-        :type normtion.nid: Long
-        :param normtion.noodPriceNum: 材料打印数量
-        :type normtion.noodPriceNum: Integer
-        :param normtion.mricePriceNum: 工费打印数量
-        :type normtion.mricePriceNum: Integer
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normtion.nid**:
+  定额ID
+        - **normtion.noodPriceNum**:
+  材料打印数量
+        - **normtion.mricePriceNum**:
+  工费打印数量
+
+        **示例**:{
                 "normtion.nid": 1,
                 "normtion.noodPriceNum": 1,
                 "normtion.mricePriceNum": 1
             }
 
-    ### <I> updateNormtionForStatus
+    ### `updateNormtionForStatus` <span style="color:gray">[内部]</span>
 
         更新定额单状态
-    
-                |Requests:|
-                :param normtion.nid: 定额ID
-        :type normtion.nid: Long
-        :param normtion.status: 状态
-        :type normtion.status: Short
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normtion.nid**:
+  定额ID
+        - **normtion.status**:
+  状态
+
+        **示例**:{
                 "normtion.nid": 1,
                 "normtion.status": 1
             }
@@ -7302,8 +7140,9 @@
 
 ## api.quotation.NormoodItemAction
 
-        |DataType:|
-        #### normoodItem
+**数据类型**:
+
+#### normoodItem
 
     - **ngiid**: 定额材料ID
       - 类型: *Long*
@@ -7329,28 +7168,26 @@
       - 类型: *String*
     - **num**: 数量
       - 类型: *Integer*
-    
-    ### <I> queryNormoodItem
+
+    ### `queryNormoodItem` <span style="color:gray">[内部]</span>
 
         查询报价定额材料项目
-        
-                |Requests:|
-                :param normoodItem.qid: 报价ID
-        :type normoodItem.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normoodItem.qid**:
+  报价ID
+
+        **示例**:{
                 "normoodItem.qid": 1
             }
-            
-                |Returns:|
-                - **normoodItems**: 定额材料信息列表 , 每条数据类型 *normoodItem*
+
+**返回参数**:
+
+- **normoodItems**: 定额材料信息列表 , 每条数据类型 *normoodItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "normoodItems": [
                     {
@@ -7375,27 +7212,25 @@
                 ...
             }
 
-    ### <I> queryQuotationNormood
+    ### `queryQuotationNormood` <span style="color:gray">[内部]</span>
 
         获取报价项关联的定额材料
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+
+        **示例**:{
                 "quotation.qid": 1
             }
-            
-                |Returns:|
-                - **quotationFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotationFunctionArea*
+
+**返回参数**:
+
+- **quotationFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotationFunctionArea*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationFunctionAreas": [
                     {
@@ -7432,31 +7267,29 @@
                 ...
             }
 
-    ### <I> queryExtensionNormood
+    ### `queryExtensionNormood` <span style="color:gray">[内部]</span>
 
-    ### <I> queryAddReduceNormood
+    ### `queryAddReduceNormood` <span style="color:gray">[内部]</span>
 
-    ### <I> amountQuotationNormood
+    ### `amountQuotationNormood` <span style="color:gray">[内部]</span>
 
         汇总报价关联的定额材料
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+
+        **示例**:{
                 "quotation.qid": 1
             }
-            
-                |Returns:|
-                - **normoods**: 定额信息列表 , 每条数据类型 [normood](./data.html#api.data.NormAction.normood)
+
+**返回参数**:
+
+- **normoods**: 定额信息列表 , 每条数据类型 [normood](./data.html#api.data.NormAction.normood)
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "normoods": [
                     {
@@ -7468,43 +7301,42 @@
                 ...
             }
 
-    ### <I> amountExtensionNormood
+    ### `amountExtensionNormood` <span style="color:gray">[内部]</span>
 
-    ### <I> amountAddReduceNormood
+    ### `amountAddReduceNormood` <span style="color:gray">[内部]</span>
 
-    ### <I> addNormoodItem
+    ### `addNormoodItem` <span style="color:gray">[内部]</span>
 
         添加报价定额材料
-        
-                |Requests:|
-                :param normoodItem.qid: 报价ID
-        :type normoodItem.qid: Long
-        :param normoodItem.sid: 引用ID
-        :type normoodItem.sid: Long
-        :param normoodItem.areaId: 功能区ID
-        :type normoodItem.areaId: Long
-        :param normoodItem.quoteId: 引用项ID
-        :type normoodItem.quoteId: Long
-        :param normoodItem.qiid: 报价项ID
-        :type normoodItem.qiid: Long
-        :param normoodItem.type: 类型
-        :type normoodItem.type: Short
-        :param normoodItem.normtype: 定额类型
-        :type normoodItem.normtype: Short
-        :param normoodItem.atttype: 业务类型
-        :type normoodItem.atttype: Short
-        :param normoodItem.goods.gid: 商品ID
-        :type normoodItem.goods.gid: Long
-        :param normoodItem.noods.nid: 定材ID
-        :type normoodItem.noods.nid: Long
-        :param normoodItem.unit: 单位
-        :type normoodItem.unit: String
-        :param normoodItem.num: 数量
-        :type normoodItem.num: Integer
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normoodItem.qid**:
+  报价ID
+        - **normoodItem.sid**:
+  引用ID
+        - **normoodItem.areaId**:
+  功能区ID
+        - **normoodItem.quoteId**:
+  引用项ID
+        - **normoodItem.qiid**:
+  报价项ID
+        - **normoodItem.type**:
+  类型
+        - **normoodItem.normtype**:
+  定额类型
+        - **normoodItem.atttype**:
+  业务类型
+        - **normoodItem.goods.gid**:
+  商品ID
+        - **normoodItem.noods.nid**:
+  定材ID
+        - **normoodItem.unit**:
+  单位
+        - **normoodItem.num**:
+  数量
+
+        **示例**:{
                 "normoodItem.qid": 1,
                 "normoodItem.sid": 1,
                 "normoodItem.areaId": 1,
@@ -7518,18 +7350,17 @@
                 "normoodItem.unit": "个",
                 "normoodItem.num": 1,
             }
-    
-    ### <I> deleteNormoodItem
+
+    ### `deleteNormoodItem` <span style="color:gray">[内部]</span>
 
         删除报价定额材料
-        
-                |Requests:|
-                :param normoodItem.ngiid: 报价定额材料ID
-        :type normoodItem.ngiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normoodItem.ngiid**:
+  报价定额材料ID
+
+        **示例**:{
                 "normoodItem.ngiid": 1
             }
 
@@ -7537,8 +7368,9 @@
 
 ## api.quotation.NormriceItemAction
 
-        |DataType:|
-        #### normriceItem
+**数据类型**:
+
+#### normriceItem
 
     - **npiid**: 定额工费ID
       - 类型: *Long*
@@ -7570,25 +7402,25 @@
       - 类型: *Integer*
     - **salary**: 薪资
       - 类型: *Integer*
-    
-    ### <I> queryNormriceItem
+
+    ### `queryNormriceItem` <span style="color:gray">[内部]</span>
 
         查询报价定额工费项目
-        
-                |Requests:|
-                :param normriceItem.qid: 报价ID
-        :type normriceItem.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normriceItem.qid**:
+  报价ID
+
+        **示例**:{
                 "normriceItem.qid": 1
             }
-            
-                |Returns:|
-                - **normriceItems**: 定额工费信息列表 , 每条数据类型 *normriceItem*
+
+**返回参数**:
+
+- **normriceItems**: 定额工费信息列表 , 每条数据类型 *normriceItem*
           - 类型: *List*
-        
+
         - **npiid**: 定额工费ID
           - 类型: *Long*
         - **qid**: 报价ID
@@ -7619,10 +7451,8 @@
           - 类型: *Integer*
         - **salary**: 薪资
           - 类型: *Integer*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "normriceItems": [
                     {
@@ -7647,28 +7477,26 @@
                 ],
                 ...
             }
-    
-    ### <I> queryQuotationNormrice
+
+    ### `queryQuotationNormrice` <span style="color:gray">[内部]</span>
 
         获取报价项关联的定额工费
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+
+        **示例**:{
                 "quotation.qid": 1
             }
-            
-                |Returns:|
-                - **quotationFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotationFunctionArea*
+
+**返回参数**:
+
+- **quotationFunctionAreas**: 功能区信息列表 , 每条数据类型 *quotationFunctionArea*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationFunctionAreas": [
                     {
@@ -7707,31 +7535,29 @@
                 ...
             }
 
-    ### <I> queryExtensionNormrice
+    ### `queryExtensionNormrice` <span style="color:gray">[内部]</span>
 
-    ### <I> queryAddReduceNormrice
+    ### `queryAddReduceNormrice` <span style="color:gray">[内部]</span>
 
-    ### <I> amountQuotationNormrice
+    ### `amountQuotationNormrice` <span style="color:gray">[内部]</span>
 
         汇总报价关联的定额工费
-        
-                |Requests:|
-                :param quotation.qid: 报价ID
-        :type quotation.qid: Long
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotation.qid**:
+  报价ID
+
+        **示例**:{
                 "quotation.qid": 1
             }
-            
-                |Returns:|
-                - **normrices**: 定额信息列表 , 每条数据类型 [normrice](./data.html#api.data.NormAction.normrice)
+
+**返回参数**:
+
+- **normrices**: 定额信息列表 , 每条数据类型 [normrice](./data.html#api.data.NormAction.normrice)
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "normrices": [
                     {
@@ -7747,47 +7573,46 @@
                 ...
             }
 
-    ### <I> amountExtensionNormrice
+    ### `amountExtensionNormrice` <span style="color:gray">[内部]</span>
 
-    ### <I> amountAddReduceNormrice
+    ### `amountAddReduceNormrice` <span style="color:gray">[内部]</span>
 
-    ### <I> addNormriceItem
+    ### `addNormriceItem` <span style="color:gray">[内部]</span>
 
         添加报价定额工费
-        
-                |Requests:|
-                :param normriceItem.qid: 报价ID
-        :type normriceItem.qid: Long
-        :param normriceItem.sid: 引用ID
-        :type normriceItem.sid: Long
-        :param normriceItem.areaId: 功能区ID
-        :type normriceItem.areaId: Long
-        :param normriceItem.quoteId: 引用项ID
-        :type normriceItem.quoteId: Long
-        :param normriceItem.qiid: 报价项ID
-        :type normriceItem.qiid: Long
-        :param normriceItem.type: 类型
-        :type normriceItem.type: Short
-        :param normriceItem.normtype: 定额类型
-        :type normriceItem.normtype: Short
-        :param normriceItem.atttype: 业务类型
-        :type normriceItem.atttype: Short
-        :param normriceItem.constructionNode.cnid: 施工节点ID
-        :type normriceItem.constructionNode.cnid: Long
-        :param normriceItem.name: 名称
-        :type normriceItem.name: String
-        :param normriceItem.unit: 单位
-        :type normriceItem.unit: String
-        :param normriceItem.trannum: 转换量
-        :type normriceItem.trannum: Integer
-        :param normriceItem.num: 数量
-        :type normriceItem.num: Integer
-        :param normriceItem.salary: 工费
-        :type normriceItem.salary: Integer
-            
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normriceItem.qid**:
+  报价ID
+        - **normriceItem.sid**:
+  引用ID
+        - **normriceItem.areaId**:
+  功能区ID
+        - **normriceItem.quoteId**:
+  引用项ID
+        - **normriceItem.qiid**:
+  报价项ID
+        - **normriceItem.type**:
+  类型
+        - **normriceItem.normtype**:
+  定额类型
+        - **normriceItem.atttype**:
+  业务类型
+        - **normriceItem.constructionNode.cnid**:
+  施工节点ID
+        - **normriceItem.name**:
+  名称
+        - **normriceItem.unit**:
+  单位
+        - **normriceItem.trannum**:
+  转换量
+        - **normriceItem.num**:
+  数量
+        - **normriceItem.salary**:
+  工费
+
+        **示例**:{
                 "normriceItem.qid": 1,
                 "normriceItem.sid": 1,
                 "normriceItem.areaId": 1,
@@ -7801,18 +7626,17 @@
                 "normriceItem.unit": "个",
                 "normriceItem.num": 1,
             }
-    
-    ### <I> deleteNormriceItem
+
+    ### `deleteNormriceItem` <span style="color:gray">[内部]</span>
 
         删除报价定额工费
-        
-                |Requests:|
-                :param normriceItem.npiid: 报价定额工费ID
-        :type normriceItem.npiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **normriceItem.npiid**:
+  报价定额工费ID
+
+        **示例**:{
                 "normriceItem.ngiid": 1
             }
 
@@ -7820,8 +7644,9 @@
 
 ## api.quotation.QuotationRecordAction
 
-        |DataType:|
-        #### quotationRecord
+**数据类型**:
+
+#### quotationRecord
 
     - **qrid**: 记录ID
       - 类型: *Long*
@@ -7837,31 +7662,29 @@
       - 类型: *Timestamp*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> queryQuotationRecord
+
+    ### `queryQuotationRecord` <span style="color:gray">[内部]</span>
 
         获取报价记录信息
-    
-                |Requests:|
-                :param quotationRecord.sid: ID
-        :type quotationRecord.sid: Short
-        :param quotationRecord.type: 类型
-        :type quotationRecord.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationRecord.sid**:
+  ID
+        - **quotationRecord.type**:
+  类型
+
+        **示例**:{
                 "quotationFunction.sid": 0,
                 "quotationFunction.type": 0
             }
-            
-                |Returns:|
-                - **quotationRecords**: 记录信息列表 , 类型 *quotationRecord*
+
+**返回参数**:
+
+- **quotationRecords**: 记录信息列表 , 类型 *quotationRecord*
           - 类型: *List*
-            
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationRecords": [
                     {
@@ -7874,13 +7697,14 @@
                 ],
                 ...
             }
-    
+
 ## 功能
 
 ## api.quotation.QuotationFunctionAction
 
-        |DataType:|
-        #### quotationFunction
+**数据类型**:
+
+#### quotationFunction
 
     - **qfid**: 功能ID
       - 类型: *Long*
@@ -7901,27 +7725,25 @@
     - **sort**: 排序
       - 类型: *Short*
 
-    ### <I> queryQuotationFunction
+    ### `queryQuotationFunction` <span style="color:gray">[内部]</span>
 
         获取报价功能信息
-    
-                |Requests:|
-                :param quotationFunction.type: 类型
-        :type quotationFunction.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **quotationFunction.type**:
+  类型
+
+        **示例**:{
                 "quotationFunction.type": 0
             }
-            
-                |Returns:|
-                - **quotationFunctions**: 功能信息列表 , 类型 *quotationFunction*
+
+**返回参数**:
+
+- **quotationFunctions**: 功能信息列表 , 类型 *quotationFunction*
           - 类型: *List*
-            
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "quotationFunctions": [
                     {

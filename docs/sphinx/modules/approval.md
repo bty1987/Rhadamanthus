@@ -1,6 +1,4 @@
-# approval {#approval}
-
-# 审批
+# approval 审批
 ## 审批
 
 审批整体信息管理
@@ -8,30 +6,9 @@
 ## api.approval.ApprovalAction
 
     审批类型包括:
-    
 
-    +----------------+--------------------------------------------------------------    | Type           | 审批类型                                                     |               |
-    +================+==============================================================+===============+
+
     | 1              | 客户信息修改                                                 | 保留          |
-    +----------------+--------------------------------------------------------------    | 2              | 楼盘信息修改                                                 | 保留          |
-    +----------------+--------------------------------------------------------------    | 3              | 装修归属修改                                                 |               |
-    +----------------+--------------------------------------------------------------    | 4              | 报价折扣修改                                                 |               |
-    +----------------+--------------------------------------------------------------    | 5              | 装修退款                                                     |               |
-    +----------------+--------------------------------------------------------------    | 6              | 主材退货                                                     |               |
-    +----------------+--------------------------------------------------------------    | 7              | 主材场外退款                                                 |               |
-    +----------------+--------------------------------------------------------------    | 8              | 装修活动申请                                                 |               |
-    +----------------+--------------------------------------------------------------    | 9              | 主材补款提交                                                 |               |
-    +----------------+--------------------------------------------------------------    | 10             | 销售退货                                                     |               |
-    +----------------+--------------------------------------------------------------    | 11             | 商品库存调拨                                                 |               |
-    +----------------+--------------------------------------------------------------    | 12             | 销售补款提交                                                 |               |
-    +----------------+--------------------------------------------------------------    | 13             | 人资                                                         |               |
-    +----------------+--------------------------------------------------------------    | 14             | 客源转装修单                                                 |               |
-    +----------------+--------------------------------------------------------------    | 16             | 装修满减修改                                                 |               |
-    +----------------+--------------------------------------------------------------    | 17             | 客源初审                                                     |               |
-    +----------------+--------------------------------------------------------------    | 18             | 销售不退定金                                                 |               |
-    +----------------+--------------------------------------------------------------    | 19             | 装修合同终止                                                 |               |
-    +----------------+--------------------------------------------------------------    | 20             | 报价特批优惠                                                 |               |
-    +----------------+--------------------------------------------------------------        |DataType:|
         #### approval
 
     - **aid**: 审批ID
@@ -60,20 +37,19 @@
       - 类型: *String*
     - **psid**: 钉钉审批编号
       - 类型: *String*
-    
-    ### <I> pageApproval
+
+    ### `pageApproval` <span style="color:gray">[内部]</span>
 
         分页方式获取审批信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 审批信息列表 , 每条数据类型 *approval*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  审批信息列表 , 每条数据类型 *approval*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -111,20 +87,19 @@
                 },
                 ...
             }
-    
-    ### <I> pageApprovalForReceive
+
+    ### `pageApprovalForReceive` <span style="color:gray">[内部]</span>
 
         分页方式获取指定接收人的审批信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 审批信息列表 , 每条数据类型 *approval*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  审批信息列表 , 每条数据类型 *approval*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -162,20 +137,19 @@
                 },
                 ...
             }
-            
-    ### <I> pageApprovalForSend
+
+    ### `pageApprovalForSend` <span style="color:gray">[内部]</span>
 
         分页方式获取指定发送人的审批信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 审批信息列表 , 每条数据类型 *approval*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  审批信息列表 , 每条数据类型 *approval*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -213,20 +187,19 @@
                 },
                 ...
             }
-            
-    ### <I> pageApprovalForReceive
+
+    ### `pageApprovalForReceive` <span style="color:gray">[内部]</span>
 
         分页方式获取指定接收人的审批信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 审批信息列表 , 每条数据类型 *approval*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  审批信息列表 , 每条数据类型 *approval*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -264,22 +237,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageApprovalForReceiveDept
+
+    ### `pageApprovalForReceiveDept` <span style="color:gray">[内部]</span>
 
         分页方式获取审批信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         获取方式为 , 根据当前操作人归属部门 , 查询审批信息中对应的审批部门
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 审批信息列表 , 每条数据类型 *approval*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  审批信息列表 , 每条数据类型 *approval*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -317,28 +289,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryApprovalByAId
+
+    ### `queryApprovalByAId` <span style="color:gray">[内部]</span>
 
         通过审批ID获取审批信息
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-            
-                |Returns:|
-                - **approval**: 审批信息 , 类型 *approval*
+
+**返回参数**:
+
+- **approval**: 审批信息 , 类型 *approval*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "approval":{
                     "aid": 1,
@@ -373,197 +343,190 @@
                 },
                 ...
             }
-            
-    ### <I> countApprovalForReceive
+
+    ### `countApprovalForReceive` <span style="color:gray">[内部]</span>
 
         利用当前操作人 , 统计接收未处理审批数量
-        
-                |Returns:|
-                - **count**: 总数
+
+**返回参数**:
+
+- **count**: 总数
           - 类型: *Integer*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "count": 1
                 ...
             }
-            
-    ### <I> countApprovalForSend
+
+    ### `countApprovalForSend` <span style="color:gray">[内部]</span>
 
         利用当前操作人 , 统计发送未处理审批数量
-        
-                |Returns:|
-                - **count**: 总数
+
+**返回参数**:
+
+- **count**: 总数
           - 类型: *Integer*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "count": 1
                 ...
             }
-            
-    ### <I> approveApproval
+
+    ### `approveApproval` <span style="color:gray">[内部]</span>
 
         通过审批
-        
+
         判断审批信息是否存在 , 不存在 , 错误信息 **240009 审批信息不存在**
-        
+
         判断审批状态是否为0(初始)/5(客户确认)/7(客户拒绝) , 其他状态不可操作 , 错误信息 **240009 审批状态不可操作**
-        
+
         装修归属审批 , 通过之后原有归属信息状态设置为1(失效) , 利用审批信息更新归属信息 , 更新装修单附加信息内容
-        
+
         报价折扣审批 , 通过之后修改报价折扣信息
-        
+
         装修退款审批 , 通过之后需要将退款款项标记为历史 , 生成一条对应类型的退款记录并提交
-        
+
         装修活动审批 , 通过之后将活动项更新到装修活动项 , 根据计算业绩标识计算净业绩和复合业绩 , 根据计算金额标识计算券优惠和物品优惠
-        
+
         主材退货审批 , 通过之后需要将主材退货型号生成退货记录 , 同时判断该主材单是否为预结算/结算状态生成结算数据
-        
+
         主材补款审批 , 通过之后生成补款款项信息
-        
+
         销售退货审批 , 通过之后需要生成退货单以及商品对应退货项 , 同时判断该销售单是否为预结算/结算状态生成结算数据
-        
+
         商品库存调拨审批 , 通过之后按照审批申请商品对应的出入库更新对应商品库存 , 同时生成调拨类型货单以及货单项
-        
+
         销售补款审批 , 通过之后生成补款款项信息
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        :param approval.annotate: 批注
-        :type approval.annotate: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+        - **approval.annotate**:
+  批注
+
+        **示例**:{
                 "approval.aid": 1,
                 "approval.annotate": 1
             }
-            
-    ### <I> refuseApproval
+
+    ### `refuseApproval` <span style="color:gray">[内部]</span>
 
         拒绝审批
-        
+
         判断审批信息是否存在 , 不存在 , 错误信息 **240009 审批信息不存在**
-        
+
         判断审批状态是否为0(初始)/5(客户确认)/7(客户拒绝) , 其他状态不可操作 , 错误信息 **240009 审批状态不可操作**
-        
+
         装修退款审批 , 拒绝处理过程需要将需要处理的款项状态还原为 **已确认**
-        
+
         主材退货审批 , 拒绝处理过程需要将申请退货的型号还原到主材单中对应商品
-        
+
         主材补款审批 , 拒绝处理过程需要将主材订单补款状态修改为 **初始**
-        
+
         销售退货审批 , 拒绝处理过程需要将申请退货的商品还原到销售单中对应商品
-        
+
         商品库存调拨审批 , 拒绝处理过程需要将申请个调拨商品还原到货单中对应商品
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        :param approval.annotate: 批注
-        :type approval.annotate: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+        - **approval.annotate**:
+  批注
+
+        **示例**:{
                 "approval.aid": 1,
                 "approval.annotate": 1
             }
-            
-    ### <I> affirmApproval
+
+    ### `affirmApproval` <span style="color:gray">[内部]</span>
 
         发起确认
-        
+
         判断审批信息是否存在 , 不存在 , 错误信息 **240009 审批信息不存在**
-        
+
         判断审批状态是否为0(初始) , 其他状态不可操作 , 错误信息 **240009 审批状态不可操作**
-        
+
         发送通知消息给客户 , 客户完成确认动作
-        
+
         审批状态更新为6(待确认)
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-            
+
     ### <I-C> confirmApproval
 
         客户确认
-        
+
         判断审批信息是否存在 , 不存在 , 错误信息 **240009 审批信息不存在**
-        
+
         判断审批状态是否为6(待确认) , 其他状态不可操作 , 错误信息 **240009 审批状态不可操作**
-        
+
         更新审批信息状态为5(客户确认)
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
 
     ### <I-C> rejectApproval
 
         客户拒绝
-        
+
         判断审批信息是否存在 , 不存在 , 错误信息 **240009 审批信息不存在**
-        
+
         判断审批状态是否为6(待确认) , 其他状态不可操作 , 错误信息 **240009 审批状态不可操作**
-        
+
         更新审批信息状态为7(客户拒绝)
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-            
+
     ### <I-C> approvalCallback
 
         审批回调
-        
+
         判断审批信息是否存在 , 不存在 , 错误信息 **240001 审批信息不存在**
-        
+
         通过回调接口参数 , 执行通过审批或者拒绝审批流程
-        
-                |Requests:|
-                :param approval.psid: 钉钉审批编号
-        :type approval.psid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.psid**:
+  钉钉审批编号
+
+        **示例**:{
                 "approval.psid": "SLKSDUD238N234FN7"
             }
-            
+
 ## 审批人员
 
 人员关于审批权限管理
 
 ## api.approval.ApproverAction
 
-        |DataType:|
-        #### approver
+**数据类型**:
+
+#### approver
 
     - **aid**: 审批人员ID
       - 类型: *Long*
@@ -573,20 +536,19 @@
       - 类型: *Short*
     - **comment**: 说明信息
       - 类型: *String*
-    
+
     ### <I/V> pageApprover
 
         分页方式获取审批人员信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 审批人员列表 , 每条数据类型 *approver*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  审批人员列表 , 每条数据类型 *approver*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -608,28 +570,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryApproverByType
+
+    ### `queryApproverByType` <span style="color:gray">[内部]</span>
 
         通过审批类型获取审批人员信息
-        
-                |Requests:|
-                :param approver.type: 审批类型
-        :type approver.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approver.type**:
+  审批类型
+
+        **示例**:{
                 "approver.type": 1
             }
-            
-                |Returns:|
-                - **approvers**: 审批人员列表 , 每条数据类型 *approver*
+
+**返回参数**:
+
+- **approvers**: 审批人员列表 , 每条数据类型 *approver*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "approvers": [
                     {
@@ -647,51 +607,50 @@
                 ]
                 ...
             }
-    
+
     ### <I/V> addApprover
 
         添加审批人员信息
-        
+
         判断当前添加信息 , 审批类型对应员工是否已经存在 , 如果存在 , 错误信息 **230008 审批人员已有该审批权限**
-        
-                |Requests:|
-                :param approver.userId: 员工编号
-        :type approver.userId: String
-        :param approver.type: 审批类型
-        :type approver.type: Short
-        :param approver.comment: 说明
-        :type approver.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approver.userId**:
+  员工编号
+        - **approver.type**:
+  审批类型
+        - **approver.comment**:
+  说明
+
+        **示例**:{
                 "approver.userId": "U001",
                 "approver.type": 1,
                 "approver.comment": "说明"
             }
-            
+
     ### <I/V> deleteApprover
 
         删除审批人员信息
-        
-                |Requests:|
-                :param approver.aid: 审批人员ID
-        :type approver.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approver.aid**:
+  审批人员ID
+
+        **示例**:{
                 "approver.aid": 1
             }
-    
+
 ## 装修单客户修改
 
 装修单客户修改审批过程
 
 ## api.approval.ApprovalDecorationCustomerAction
 
-        |DataType:|
-        #### approvalDecorationCustomer
+**数据类型**:
+
+#### approvalDecorationCustomer
 
     - **adcid**: ID
       - 类型: *Long*
@@ -703,42 +662,42 @@
       - 类型: *Long*
     - **tcid**: 现客户ID
       - 类型: *Long*
-    
-    ### <I> submitApprovalForDecorationCustomer
+
+    ### `submitApprovalForDecorationCustomer` <span style="color:gray">[内部]</span>
 
         提交客户信息修改审批
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalDecorationCustomer.orderId: 装修单号
-        :type approvalDecorationCustomer.orderId: String
-        :param approvalDecorationCustomer.scid: 原客户ID
-        :type approvalDecorationCustomer.scid: Long
-        :param approvalDecorationCustomer.tcid: 现客户ID
-        :type approvalDecorationCustomer.tcid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalDecorationCustomer.orderId**:
+  装修单号
+        - **approvalDecorationCustomer.scid**:
+  原客户ID
+        - **approvalDecorationCustomer.tcid**:
+  现客户ID
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalDecorationCustomer.orderId": "1601010001",
                 "approvalDecorationCustomer.scid": 1,
                 "approvalDecorationCustomer.tcid": 2
             }
-            
+
 ## 装修单房产修改
 
 装修单房产修改审批过程
 
 ## api.approval.ApprovalDecorationHouseAction
 
-        |DataType:|
-        #### approvalDecorationHouse
+**数据类型**:
+
+#### approvalDecorationHouse
 
     - **adhid**: ID
       - 类型: *Lonng*
@@ -750,42 +709,42 @@
       - 类型: *Long*
     - **thid**: 现房产ID
       - 类型: *Long*
-    
-    ### <I> submitApprovalForDecorationHouse
+
+    ### `submitApprovalForDecorationHouse` <span style="color:gray">[内部]</span>
 
         提交装修单楼盘信息修改
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalDecorationHouse.orderId: 装修单号
-        :type approvalDecorationHouse.orderId: String
-        :param approvalDecorationHouse.shid: 原房产ID
-        :type approvalDecorationHouse.shid: String
-        :param approvalDecorationHouse.thid: 现房产ID
-        :type approvalDecorationHouse.thid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalDecorationHouse.orderId**:
+  装修单号
+        - **approvalDecorationHouse.shid**:
+  原房产ID
+        - **approvalDecorationHouse.thid**:
+  现房产ID
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalDecorationHouse.orderId": "1601010001",
                 "approvalDecorationHouse.shid": 1,
                 "approvalDecorationHouse.thid": 2
             }
-            
+
 ## 装修归属修改
 
 装修单归属信息修改审批过程
 
 ## api.approval.ApprovalDecorationBelongAction
 
-        |DataType:|
-        #### approvalDecorationBelong
+**数据类型**:
+
+#### approvalDecorationBelong
 
     - **adbid**: 审批ID
       - 类型: *Long*
@@ -795,7 +754,7 @@
       - 类型: *String*
     - **belongType**: 类型 , 包括: 0: 设计 , 1: 业务
       - 类型: *Short*
-    
+
     #### approvalDecorationBelongItem
 
     - **adbiid**: 项目ID
@@ -814,35 +773,34 @@
       - 类型: *Integer*
     - **defaultFlag**: 默认标识 , 0: 否 , 1: 是
       - 类型: *Long*
-    
-    ### <I> submitApprovalForDecorationBelong
+
+    ### `submitApprovalForDecorationBelong` <span style="color:gray">[内部]</span>
 
         提交装修单归属信息修改
-        
-                |Requests:|
-                :param approval.receiver.userId: 接收人编号
-        :type approval.receiver.userId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalDecorationBelong.orderId: 装修单号
-        :type approvalDecorationBelong.orderId: String
-        :param approvalDecorationBelong.belongType: 归属类型
-        :type approvalDecorationBelong.belongType: Short
-        :param approvalDecorationBelongItem[n].buid: 归属人ID
-        :type approvalDecorationBelongItem[n].buid: Long
-        :param approvalDecorationBelongItem[n].bdid: 归属部门ID
-        :type approvalDecorationBelongItem[n].bdid: Long
-        :param approvalDecorationBelongItem[n].brid: 归属分区Id
-        :type approvalDecorationBelongItem[n].brid: Long
-        :param approvalDecorationBelongItem[n].rate: 归属人比例
-        :type approvalDecorationBelongItem[n].rate: String
-        :param approvalDecorationBelongItem[n].defaultFlag: 默认标识
-        :type approvalDecorationBelongItem[n].defaultFlag: Short
 
-        Example::
-        
-            {
+**请求参数**:
+
+- **approval.receiver.userId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalDecorationBelong.orderId**:
+  装修单号
+        - **approvalDecorationBelong.belongType**:
+  归属类型
+        - **approvalDecorationBelongItem[n].buid**:
+  归属人ID
+        - **approvalDecorationBelongItem[n].bdid**:
+  归属部门ID
+        - **approvalDecorationBelongItem[n].brid**:
+  归属分区Id
+        - **approvalDecorationBelongItem[n].rate**:
+  归属人比例
+        - **approvalDecorationBelongItem[n].defaultFlag**:
+  默认标识
+
+        **示例**:{
                 "approval.receiver.userId": "U0479",
                 "approval.comment": "说明",
                 "approvalDecorationBelong.orderId": "1601010001",
@@ -858,15 +816,16 @@
                 "approvalDecorationBelongItem[1].rate": 0.5,
                 "approvalDecorationBelongItem[1].defaultFlag": 0
             }
-            
+
 ## 报价折扣修改
 
 报价折扣修改审批过程
 
 ## api.approval.ApprovalQuotationDiscountAction
 
-        |DataType:|
-        #### approvalQuotationDiscount
+**数据类型**:
+
+#### approvalQuotationDiscount
 
     - **aqdId**: ID
       - 类型: *Long*
@@ -882,31 +841,30 @@
       - 类型: *Integer*
     - **basePrice**: 基数
       - 类型: *Integer*
-    
-    ### <I> submitApprovalForQuotationDiscount
+
+    ### `submitApprovalForQuotationDiscount` <span style="color:gray">[内部]</span>
 
         提交报价折扣修改
-    
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalQuotationDiscount.orderId: 装修单号
-        :type approvalQuotationDiscount.orderId: String
-        :param approvalQuotationDiscount.quotationId: 报价ID
-        :type approvalQuotationDiscount.quotationId: String
-        :param approvalQuotationDiscount.oldDiscount: 原折扣
-        :type approvalQuotationDiscount.oldDiscount: String
-        :param approvalQuotationDiscount.newDiscount: 新折扣
-        :type approvalQuotationDiscount.newDiscount: String
-        :param approvalQuotationDiscount.basePrice: 新折扣
-        :type approvalQuotationDiscount.basePrice: String
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalQuotationDiscount.orderId**:
+  装修单号
+        - **approvalQuotationDiscount.quotationId**:
+  报价ID
+        - **approvalQuotationDiscount.oldDiscount**:
+  原折扣
+        - **approvalQuotationDiscount.newDiscount**:
+  新折扣
+        - **approvalQuotationDiscount.basePrice**:
+  新折扣
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalOrderBelong.orderId": "1601010001",
@@ -915,15 +873,16 @@
                 "approvalOrderBelong.newDiscount": 9,
                 "approvalOrderBelong.basePrice": 1
             }
-            
+
 ## 装修款项退款
 
 装修款项退款审批过程
 
 ## api.approval.ApprovalDecorationRefundAction
 
-        |DataType:|
-        #### approvalDecorationRefund
+**数据类型**:
+
+#### approvalDecorationRefund
 
     - **adrId**: ID
       - 类型: *Long*
@@ -931,36 +890,36 @@
       - 类型: *Long*
     - **paymentId**: 装修款项ID
       - 类型: *Long*
-    
-    ### <I> submitApprovalForDecorationRefund
+
+    ### `submitApprovalForDecorationRefund` <span style="color:gray">[内部]</span>
 
         提交装修款项退款审批
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalDecorationRefund.paymentId: 装修款项ID
-        :type approvalDecorationRefund.paymentId: String
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalDecorationRefund.paymentId**:
+  装修款项ID
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalDecorationRefund.paymentId": 1
             }
-            
+
 ## 主材退货
 
 主材退货审批过程
 
 ## api.approval.ApprovalMaterialRefundAction
 
-        |DataType:|
-        #### approvalMaterialRefund
+**数据类型**:
+
+#### approvalMaterialRefund
 
     - **amrId**: ID
       - 类型: *Long*
@@ -972,7 +931,7 @@
       - 类型: *Long*
     - **type**: 类型 , 0: 退货 , 6: 全退 , 7: 倒单
       - 类型: *Short*
-    
+
     #### approvalMaterialRefundItem
 
     - **amriId**: SubID
@@ -991,28 +950,26 @@
       - 类型: *String*
     - **materialItem**: 型号 , 类型 [materialItem](./material.html#api.material.MaterialItemAction.materialItem)
       - 类型: *Object*
-    
-    ### <I> queryApprovalMaterialRefundItem
+
+    ### `queryApprovalMaterialRefundItem` <span style="color:gray">[内部]</span>
 
         获取主材退货审批项信息
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-            
-                |Returns:|
-                - **approvalMaterialRefundItems**: 主材退货型号信息列表 , 每条数据类型 *approvalMaterialRefundItem*
+
+**返回参数**:
+
+- **approvalMaterialRefundItems**: 主材退货型号信息列表 , 每条数据类型 *approvalMaterialRefundItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "approvalMaterialRefundItems": {
                     "mid": 1,
@@ -1033,35 +990,34 @@
                 }
                 ...
             }
-    
-    ### <I> submitApprovalForMaterialRefund
+
+    ### `submitApprovalForMaterialRefund` <span style="color:gray">[内部]</span>
 
         提交主材退货审批
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalMaterialRefund.mid: 主材订单ID
-        :type approvalMaterialRefund.mid: Long
-        :param approvalMaterialRefund.refund: 退款总金额
-        :type approvalMaterialRefund.refund: Long
-        :param approvalMateralRefundItem[n].mid: 主材订单ID
-        :type approvalMateralRefundItem[n].mid: Long
-        :param approvalMateralRefundItem[n].miid: 型号ID
-        :type approvalMateralRefundItem[n].miid: Long
-        :param approvalMateralRefundItem[n].num: 数量
-        :type approvalMateralRefundItem[n].num: Integer
-        :param approvalMateralRefundItem[n].total: 退货金额
-        :type approvalMateralRefundItem[n].total: Integer
-        :param approvalMateralRefundItem[n].packageName: 套餐名
-        :type approvalMateralRefundItem[n].packageName: String
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalMaterialRefund.mid**:
+  主材订单ID
+        - **approvalMaterialRefund.refund**:
+  退款总金额
+        - **approvalMateralRefundItem[n].mid**:
+  主材订单ID
+        - **approvalMateralRefundItem[n].miid**:
+  型号ID
+        - **approvalMateralRefundItem[n].num**:
+  数量
+        - **approvalMateralRefundItem[n].total**:
+  退货金额
+        - **approvalMateralRefundItem[n].packageName**:
+  套餐名
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalMaterialRefund.mid": 1,
@@ -1072,15 +1028,16 @@
                 "approvalMateralRefundItem[0].total": 100000,
                 "approvalMateralRefundItem[0].packageName": ""
             }
-            
+
 ## 装修活动申请
 
 装修活动以及活动物品申请审批过程
 
 ## api.approval.ApprovalDecorationActivityAction
 
-        |DataType:|
-        #### approvalDecorationActivity
+**数据类型**:
+
+#### approvalDecorationActivity
 
     - **adaid**: ID
       - 类型: *Long*
@@ -1092,7 +1049,7 @@
       - 类型: *String*
     - **activityName**: 活动名
       - 类型: *String*
-    
+
     #### approvalDecorationActivityItem
 
     - **adaiid**: SubID
@@ -1117,28 +1074,26 @@
       - 类型: *Integer*
     - **content**: 内容
       - 类型: *String*
-    
-    ### <I> queryApprovalDecorationActivity
+
+    ### `queryApprovalDecorationActivity` <span style="color:gray">[内部]</span>
 
         获取装修活动审批信息
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-            
-                |Returns:|
-                - **approvalDecorationActivityItems**: 装修活动项目列表 , 每条数据类型 *approvalDecorationActivityItem*
+
+**返回参数**:
+
+- **approvalDecorationActivityItems**: 装修活动项目列表 , 每条数据类型 *approvalDecorationActivityItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "approvalDecorationActivityItems": [
                     {
@@ -1158,40 +1113,39 @@
                 ...
             }
 
-    ### <I> submitApprovalForDecorationActivity
+    ### `submitApprovalForDecorationActivity` <span style="color:gray">[内部]</span>
 
         提交装修活动以及活动物品审批
-    
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalDecorationActivity.orderId: 装修单号
-        :type approvalDecorationActivity.orderId: String
-        :param approvalDecorationActivity.activityName: 活动名
-        :type approvalDecorationActivity.activityName: String
-        :param approvalDecorationActivityItem[n].orderId: 装修单号
-        :type approvalDecorationActivityItem[n].orderId: String
-        :param approvalDecorationActivityItem[n].activityName: 活动名
-        :type approvalDecorationActivityItem[n].activityName: Long
-        :param approvalDecorationActivityItem[n].activityItemName: 物品名
-        :type approvalDecorationActivityItem[n].activityItemName: String
-        :param approvalDecorationActivityItem[n].type: 类型
-        :type approvalDecorationActivityItem[n].type: Short
-        :param approvalDecorationActivityItem[n].stateType: 状态类型
-        :type approvalDecorationActivityItem[n].stateType: Short
-        :param approvalDecorationActivityItem[n].num: 数量
-        :type approvalDecorationActivityItem[n].num: String
-        :param approvalDecorationActivityItem[n].money: 金额
-        :type approvalDecorationActivityItem[n].money: String
-        :param approvalDecorationActivityItem[n].content: 内容
-        :type approvalDecorationActivityItem[n].content: String
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalDecorationActivity.orderId**:
+  装修单号
+        - **approvalDecorationActivity.activityName**:
+  活动名
+        - **approvalDecorationActivityItem[n].orderId**:
+  装修单号
+        - **approvalDecorationActivityItem[n].activityName**:
+  活动名
+        - **approvalDecorationActivityItem[n].activityItemName**:
+  物品名
+        - **approvalDecorationActivityItem[n].type**:
+  类型
+        - **approvalDecorationActivityItem[n].stateType**:
+  状态类型
+        - **approvalDecorationActivityItem[n].num**:
+  数量
+        - **approvalDecorationActivityItem[n].money**:
+  金额
+        - **approvalDecorationActivityItem[n].content**:
+  内容
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalDecorationActivity.orderId": "1601010001",
@@ -1204,15 +1158,16 @@
                 "approvalDecorationActivityItem[0].money": 100000,
                 "approvalDecorationActivityItem[0].content": ""
             }
-            
+
 ## 主材补款提交审批
 
 主材单所属型号存在折扣价和单价打折之后的价格不等 , 提交补款时需要进行审批
 
 ## api.approval.ApprovalMaterialFullPaymentAction
 
-        |DataType:|
-        #### approvalMaterialFullPayment
+**数据类型**:
+
+#### approvalMaterialFullPayment
 
     - **amfpid**: ID
       - 类型: *Long*
@@ -1222,43 +1177,43 @@
       - 类型: *Long*
     - **referMoney**: 补款金额
       - 类型: *Long*
-    
-    ### <I> submitApprovalForMaterialFullPayment
+
+    ### `submitApprovalForMaterialFullPayment` <span style="color:gray">[内部]</span>
 
         提交主材补款审批
-        
+
         审批通过增加主菜单对应的补款款项信息
-        
+
         判断操作主材单对应的补款是否已经存在 , 如果存在 , 错误信息 **150033 款项类型已存在**
-    
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalMaterialFullPayment.mid: 主材单ID
-        :type approvalMaterialFullPayment.mid: Long
-        :param approvalMaterialFullPayment.referMoney: 补款金额
-        :type approvalMaterialFullPayment.referMoney: Long
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalMaterialFullPayment.mid**:
+  主材单ID
+        - **approvalMaterialFullPayment.referMoney**:
+  补款金额
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalMaterialFullPayment.mid": 1,
                 "approvalMaterialFullPayment.referMoney": 100
             }
-    
+
 ## 销售退货
 
 销售退货审批过程
 
 ## api.approval.ApprovalSalesRefundAction
 
-        |DataType:|
-        #### approvalSalesRefund
+**数据类型**:
+
+#### approvalSalesRefund
 
     - **asrid**: ID
       - 类型: *Long*
@@ -1270,7 +1225,7 @@
       - 类型: *Long*
     - **type**: 类型 , 0: 退货 , 2: 全退 , 3: 倒单
       - 类型: *Short*
-    
+
     #### approvalSalesRefundItem
 
     - **asriid**: 退货项ID
@@ -1287,28 +1242,26 @@
       - 类型: *Integer*
     - **salesItem**: 销售项 , 类型 [salesItem](./inventory.html#api.inventory.SalesAction.salesItem)
       - 类型: *Object*
-    
+
     ### <V> queryApprovalSalesRefundItem
 
         获取主材退货审批项信息
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-            
-                |Returns:|
-                - **approvalSalesRefundItems**: 主材退货型号信息列表 , 每条数据类型 *approvalSalesRefundItem*
+
+**返回参数**:
+
+- **approvalSalesRefundItems**: 主材退货型号信息列表 , 每条数据类型 *approvalSalesRefundItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "approvalSalesRefundItems": [
                     {
@@ -1342,41 +1295,40 @@
                 ]
                 ...
             }
-    
+
     ### <V> submitApprovalForSalesRefund
 
         提交销售退货审批
-        
+
         销售单信息不存在 , 更新失败 , 错误信息 **260021 销售单不存在**
-        
+
         判断退货商品数据是否大于对应销售项数量 , 错误信息 **260030 销售项剩余数量不足**
-        
+
         判断退货商品对于货单项存在 , 数量是否满足退货数量 , 错误信息 **160031 退货商品未到达仓库**
-        
+
         更新退货所属销售项对应的销售货单项剩余数量
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalSalesRefund.sid: 销售单ID
-        :type approvalSalesRefund.sid: Long
-        :param approvalSalesRefund.refund: 退款总金额
-        :type approvalSalesRefund.refund: Long
-        :param approvalSalesRefundItem[n].sid: 销售单ID
-        :type approvalSalesRefundItem[n].sid: Long
-        :param approvalSalesRefundItem[n].siid: 销售项ID
-        :type approvalSalesRefundItem[n].siid: Long
-        :param approvalSalesRefundItem[n].num: 数量
-        :type approvalSalesRefundItem[n].num: Integer
-        :param approvalSalesRefundItem[n].total: 退货金额
-        :type approvalSalesRefundItem[n].total: Integer
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalSalesRefund.sid**:
+  销售单ID
+        - **approvalSalesRefund.refund**:
+  退款总金额
+        - **approvalSalesRefundItem[n].sid**:
+  销售单ID
+        - **approvalSalesRefundItem[n].siid**:
+  销售项ID
+        - **approvalSalesRefundItem[n].num**:
+  数量
+        - **approvalSalesRefundItem[n].total**:
+  退货金额
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalSalesRefund.sid": 1,
@@ -1393,8 +1345,9 @@
 
 ## api.approval.ApprovalManifestDBAction
 
-        |DataType:|
-        #### approvalManifestDB
+**数据类型**:
+
+#### approvalManifestDB
 
     - **amdbid**: ID
       - 类型: *Long*
@@ -1406,7 +1359,7 @@
       - 类型: *String*
     - **attachment**: 附件路径
       - 类型: *String*
-    
+
     #### approvalManifestDBItem
 
     - **amdbiid**: 调拨项ID
@@ -1427,28 +1380,26 @@
       - 类型: *Integer*
     - **comment**: 说明
       - 类型: *String*
-    
+
     ### <V> queryApprovalManifestDBItem
 
         获取主材退货审批项信息
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-            
-                |Returns:|
-                - **approvalManifestDBItems**: 调拨商品列表 , 每条数据类型 *approvalManifestDBItem*
+
+**返回参数**:
+
+- **approvalManifestDBItems**: 调拨商品列表 , 每条数据类型 *approvalManifestDBItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "approvalManifestDBItems": [
                     {
@@ -1489,48 +1440,47 @@
                 ]
                 ...
             }
-    
+
     ### <V> submitApprovalForManifestDB
 
         提交商品库存调拨审批
-        
+
         判断调拨项出库对应商品(颜色 , 规格)库存不存在 , 调拨失败 , 错误信息 260008 商品库存不足
 
         判断调拨项出库对应商品(颜色 , 规格)库存数量小于出库数量 , 调拨失败 , 错误信息 260008 商品库存不足
-        
+
         更新调拨项出库商品库存和入库商品数量
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalManifestDB.manifestTime: 货单时间
-        :type approvalManifestDB.manifestTime: Timestamp
-        :param approvalManifestDB.comment: 备注
-        :type approvalManifestDB.comment: String
-        :param approvalManifestDB.attachment: 附件路径
-        :type approvalManifestDB.attachment: String
-        
-        :param approvalManifestDBItem[n].goods.gid: 商品ID
-        :type approvalManifestDBItem[n].goods.gid: Long
-        :param approvalManifestDBItem[n].color.cid: 商品ID
-        :type approvalManifestDBItem[n].color.cid: Long
-        :param approvalManifestDBItem[n].format.fid: 商品ID
-        :type approvalManifestDBItem[n].format.fid: Long
-        :param approvalManifestDBItem[n].instorehouse.shid: 入库仓库ID
-        :type approvalManifestDBItem[n].instorehouse.shid: Long
-        :param approvalManifestDBItem[n].outstorehouse.shid: 出库仓库ID
-        :type approvalManifestDBItem[n].outstorehouse.shid: Long
-        :param approvalManifestDBItem[n].num: 数量
-        :type approvalManifestDBItem[n].num: Integer
-        :param approvalManifestDBItem[n].comment: 说明
-        :type approvalManifestDBItem[n].comment: String
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalManifestDB.manifestTime**:
+  货单时间
+        - **approvalManifestDB.comment**:
+  备注
+        - **approvalManifestDB.attachment**:
+  附件路径
+
+        - **approvalManifestDBItem[n].goods.gid**:
+  商品ID
+        - **approvalManifestDBItem[n].color.cid**:
+  商品ID
+        - **approvalManifestDBItem[n].format.fid**:
+  商品ID
+        - **approvalManifestDBItem[n].instorehouse.shid**:
+  入库仓库ID
+        - **approvalManifestDBItem[n].outstorehouse.shid**:
+  出库仓库ID
+        - **approvalManifestDBItem[n].num**:
+  数量
+        - **approvalManifestDBItem[n].comment**:
+  说明
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalManifestDB.manifestTime": "2016-01-01 00:00:00",
@@ -1544,15 +1494,16 @@
                 "approvalManifestDBItem[0].num": 1,
                 "approvalManifestDBItem[0].comment": "说明"
             }
-            
+
 ## 销售补款提交
- 
+
 销售单中销售项折扣价小于折让价 , 提交补款时需要进行审批
-          
+
 ## api.approval.ApprovalSalesDiscountAction
 
-        |DataType:|
-        #### approvalSalesDiscount
+**数据类型**:
+
+#### approvalSalesDiscount
 
     - **asdid**: ID
       - 类型: *Long*
@@ -1564,31 +1515,30 @@
       - 类型: *Long*
     - **paymentType**: 款项类型 , 支持类型包括: 3(补款) , 5(补款退款)
       - 类型: *Short*
-    
-    ### <I> submitApprovalForSalesDiscount
+
+    ### `submitApprovalForSalesDiscount` <span style="color:gray">[内部]</span>
 
         销售补款提交审批
-        
+
         审批通过增加销售款对应的补款款项信息
-        
+
         判断操作销售单对应的补款是否已经存在 , 如果存在 , 错误信息 **260012 销售订单当前状态不能提交补款**
-    
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalSalesDiscount.sid: 销售单ID
-        :type approvalSalesDiscount.sid: Long
-        :param approvalSalesDiscount.referMoney: 补款金额
-        :type approvalSalesDiscount.referMoney: Long
-        :param approvalSalesDiscount.paymentType: 款项类型
-        :type approvalSalesDiscount.paymentType: Short
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalSalesDiscount.sid**:
+  销售单ID
+        - **approvalSalesDiscount.referMoney**:
+  补款金额
+        - **approvalSalesDiscount.paymentType**:
+  款项类型
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalSalesDiscount.sid": 1,
@@ -1600,8 +1550,9 @@
 
 ## api.approval.ApprovalCustomerOriginAction
 
-        |DataType:|
-        #### approvalCustomerOrigin
+**数据类型**:
+
+#### approvalCustomerOrigin
 
     - **acoid**: ID
       - 类型: *Long*
@@ -1609,52 +1560,51 @@
       - 类型: *Long*
     - **csid**: 客源ID
       - 类型: *Long*
-    
-    ### <I> queryApprovalCustomerOrigin
+
+    ### `queryApprovalCustomerOrigin` <span style="color:gray">[内部]</span>
 
         查询审批客源信息
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-    
-    ### <I> submitApprovalForCustomerOrigin
+
+    ### `submitApprovalForCustomerOrigin` <span style="color:gray">[内部]</span>
 
         客源初审提交
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalCustomerOrigin.csid: 客源ID
-        :type approvalCustomerOrigin.csid: Long
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalCustomerOrigin.csid**:
+  客源ID
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalCustomerOrigin.csid": 1
             }
-            
+
 ## 客源转装修单
- 
+
 客源信息转成装修单
 
 客源关联房产以及客户信息 , 之后提交判断是否存在装修单 , 不存在直接创建装修单 ; 存在通过判断量尺时间以及设计/业务的保护期进行更改装修单归属
-          
+
 ## api.approval.ApprovalCustomerOriginTDecorationAction
 
-        |DataType:|
-        #### approvalCustomerOriginTDecoration
+**数据类型**:
+
+#### approvalCustomerOriginTDecoration
 
     - **acodid**: ID
       - 类型: *Long*
@@ -1676,33 +1626,31 @@
       - 类型: *Short*
     - **salesman**: 业务员 , 类型 [user](./user.html#api.data.UserAction.user)
       - 类型: *Object*
-    
+
     - **code**: 审批编号
       - 类型: *String*
     - **forms**: 表格信息
       - 类型: *String*
-    
-    ### <I> queryApprovalCustomerOriginTDecoration
+
+    ### `queryApprovalCustomerOriginTDecoration` <span style="color:gray">[内部]</span>
 
         提交客源转装修单审批
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-        
-                |Returns:|
-                - **approvalCustomerOriginTDecoration**: 客源信息 , 类型 *approvalCustomerOriginTDecoration*
+
+**返回参数**:
+
+- **approvalCustomerOriginTDecoration**: 客源信息 , 类型 *approvalCustomerOriginTDecoration*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "approvalCustomerOriginTDecoration": {
                     "customerOrigin": {
@@ -1744,40 +1692,39 @@
                 ...
             }
 
-    ### <I> submitApprovalForCustomerOriginTDecoration
+    ### `submitApprovalForCustomerOriginTDecoration` <span style="color:gray">[内部]</span>
 
         提交客源转装修单审批
-        
+
         判断客源是否存在 , 不存在 , 错误信息 **330001 客源不存在**
-        
+
         判断客源状态是否为3(确认)和6(拒绝) , 其他状态 , 错误信息 **330014 客源状态不可操作**
-        
+
         判断客源业务类型是否存在 , 不存在 , 错误信息 **240008 业务类型非空**
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalCustomerOriginTDecoration.customerOrigin.csid: 客源ID
-        :type approvalCustomerOriginTDecoration.customerOrigin.csid: Long
-        :param approvalCustomerOriginTDecoration.type: 装修单类型
-        :type approvalCustomerOriginTDecoration.type: Short
-        :param approvalCustomerOriginTDecoration.typeness: 装修单类型
-        :type approvalCustomerOriginTDecoration.typeness: Short
-        :param approvalCustomerOriginTDecoration.houseType: 房屋类别
-        :type approvalCustomerOriginTDecoration.houseType: Short
-        :param approvalCustomerOriginTDecoration.houseClass: 房屋类型
-        :type approvalCustomerOriginTDecoration.houseClass: String
-        :param approvalCustomerOriginTDecoration.resourceType: 资源类型
-        :type approvalCustomerOriginTDecoration.resourceType: Short
-        :param approvalCustomerOriginTDecoration.salesman.userId: 业务员ID
-        :type approvalCustomerOriginTDecoration.salesman.userId: Integer
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalCustomerOriginTDecoration.customerOrigin.csid**:
+  客源ID
+        - **approvalCustomerOriginTDecoration.type**:
+  装修单类型
+        - **approvalCustomerOriginTDecoration.typeness**:
+  装修单类型
+        - **approvalCustomerOriginTDecoration.houseType**:
+  房屋类别
+        - **approvalCustomerOriginTDecoration.houseClass**:
+  房屋类型
+        - **approvalCustomerOriginTDecoration.resourceType**:
+  资源类型
+        - **approvalCustomerOriginTDecoration.salesman.userId**:
+  业务员ID
+
+        **示例**:{
                 "approvalCustomerOriginTDecoration.customerOrigin.csid": 1,
                 "approvalCustomerOriginTDecoration.type": 0,
                 "approvalCustomerOriginTDecoration.typeness": 0,
@@ -1790,8 +1737,9 @@
 
 ## api.approval.ApprovalCustomerSourceAction
 
-        |DataType:|
-        #### approvalCustomerSource
+**数据类型**:
+
+#### approvalCustomerSource
 
     - **acsid**: ID
       - 类型: *Long*
@@ -1801,39 +1749,37 @@
       - 类型: *Long*
     - **hid**: 房产ID
       - 类型: *Long*
-    
-    ### <I> queryApprovalCustomerSource
+
+    ### `queryApprovalCustomerSource` <span style="color:gray">[内部]</span>
 
         查询审批客源信息
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-    
-    ### <I> submitApprovalForCustomerSource
+
+    ### `submitApprovalForCustomerSource` <span style="color:gray">[内部]</span>
 
         客源初审提交
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalCustomerSource.csid: 客源ID
-        :type approvalCustomerSource.csid: Long
-        :param approvalCustomerSource.hid: 房产ID
-        :type approvalCustomerSource.hid: Long
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalCustomerSource.csid**:
+  客源ID
+        - **approvalCustomerSource.hid**:
+  房产ID
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalCustomerSource.hid": 1,
@@ -1841,15 +1787,16 @@
             }
 
 ## 客户机会
- 
+
 机会信息转成装修单
 
 客源关联房产以及客户信息 , 之后提交判断是否存在装修单 , 不存在直接创建装修单 ; 存在通过判断量尺时间以及设计/业务的保护期进行更改装修单归属
-          
+
 ## api.approval.ApprovalCustomerChanceAction
 
-        |DataType:|
-        #### approvalCustomerChance
+**数据类型**:
+
+#### approvalCustomerChance
 
     - **accid**: ID
       - 类型: *Long*
@@ -1869,33 +1816,31 @@
       - 类型: *String*
     - **resourceType**: 资源类型 , 0: 咨询 , 1: 量房
       - 类型: *Short*
-    
+
     - **code**: 审批编号
       - 类型: *String*
     - **forms**: 表格信息
       - 类型: *String*
-    
-    ### <I> queryApprovalCustomerChance
+
+    ### `queryApprovalCustomerChance` <span style="color:gray">[内部]</span>
 
         提交客源转装修单审批
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-        
-                |Returns:|
-                - **approvalCustomerChance**: 客源信息 , 类型 *approvalCustomerChance*
+
+**返回参数**:
+
+- **approvalCustomerChance**: 客源信息 , 类型 *approvalCustomerChance*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "approvalCustomerChance": {
                     "chance": {
@@ -1928,40 +1873,39 @@
                 ...
             }
 
-    ### <I> submitApprovalForCustomerChance
+    ### `submitApprovalForCustomerChance` <span style="color:gray">[内部]</span>
 
         提交客户机会
-        
+
         判断客户机会是否存在 , 不存在 , 错误信息 **330075 客户机会不存在**
-        
+
         判断客户机会状态是否为3(确认) , 其他状态 , 错误信息 **330077 客户机会不可操作**
-        
+
         判断客户资源状态是否为3(确认) , 其他状态 , 错误信息 **330074 客户资源不可操作**
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalCustomerChance.chance.ccid: 机会ID
-        :type approvalCustomerChance.chance.ccid: Long
-        :param approvalCustomerChance.type: 装修单类型
-        :type approvalCustomerChance.type: Short
-        :param approvalCustomerChance.typeness: 装修单类型
-        :type approvalCustomerChance.typeness: Short
-        :param approvalCustomerChance.houseType: 房屋类别
-        :type approvalCustomerChance.houseType: Short
-        :param approvalCustomerChance.houseClass: 房屋类型
-        :type approvalCustomerChance.houseClass: String
-        :param approvalCustomerChance.resourceType: 资源类型
-        :type approvalCustomerChance.resourceType: Short
-        :param approvalCustomerChance.salesman.userId: 业务员ID
-        :type approvalCustomerChance.salesman.userId: Integer
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalCustomerChance.chance.ccid**:
+  机会ID
+        - **approvalCustomerChance.type**:
+  装修单类型
+        - **approvalCustomerChance.typeness**:
+  装修单类型
+        - **approvalCustomerChance.houseType**:
+  房屋类别
+        - **approvalCustomerChance.houseClass**:
+  房屋类型
+        - **approvalCustomerChance.resourceType**:
+  资源类型
+        - **approvalCustomerChance.salesman.userId**:
+  业务员ID
+
+        **示例**:{
                 "approvalCustomerChance.chance.ccid": 1,
                 "approvalCustomerChance.type": 0,
                 "approvalCustomerChance.typeness": 0,
@@ -1974,8 +1918,9 @@
 
 ## api.approval.ApprovalDecorationHolonomyAction
 
-        |DataType:|
-        #### approvalDecorationHolonomy
+**数据类型**:
+
+#### approvalDecorationHolonomy
 
     - **adhid**: ID
       - 类型: *Long*
@@ -1985,38 +1930,36 @@
       - 类型: *String*
     - **materialPrice**: 主材配比额
       - 类型: *Long*
-    
-    ### <I> submitApprovalForDecorationHolonomy
+
+    ### `submitApprovalForDecorationHolonomy` <span style="color:gray">[内部]</span>
 
         装修单满减修改
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalDecorationHolonomy.orderId: 装修单
-        :type approvalDecorationHolonomy.orderId: Long
-        :param approvalDecorationHolonomy.materialPrice: 补款金额
-        :type approvalDecorationHolonomy.materialPrice: Long
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalDecorationHolonomy.orderId**:
+  装修单
+        - **approvalDecorationHolonomy.materialPrice**:
+  补款金额
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalSalesDiscount.sid": 1,
                 "approvalSalesDiscount.referMoney": 100000
             }
 
-                |Returns:|
-                - **approvalCustomerOrigin**: 客源信息 , 类型 *approvalCustomerOrigin*
+**返回参数**:
+
+- **approvalCustomerOrigin**: 客源信息 , 类型 *approvalCustomerOrigin*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "approvalCustomerOrigin": {
                     "customerOrigin": {
@@ -2048,8 +1991,9 @@
 
 ## api.approval.ApprovalSalesDaymentAction
 
-        |DataType:|
-        #### approvalSalesDayment
+**数据类型**:
+
+#### approvalSalesDayment
 
     - **sadid**: ID
       - 类型: *Long*
@@ -2058,22 +2002,21 @@
     - **sid**: 销售单ID
       - 类型: *Long*
 
-    ### <I> submitApprovalForSalesDayment
+    ### `submitApprovalForSalesDayment` <span style="color:gray">[内部]</span>
 
         销售不退定金
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalSalesDayment.sid: 销售单ID
-        :type approvalSalesDayment.sid: Long
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalSalesDayment.sid**:
+  销售单ID
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalSalesDayment.sid": 1
@@ -2083,8 +2026,9 @@
 
 ## api.approval.ApprovalDecorationTerminalAction
 
-        |DataType:|
-        #### approvalDecorationTerminal
+**数据类型**:
+
+#### approvalDecorationTerminal
 
     - **adtid**: ID
       - 类型: *Long*
@@ -2092,7 +2036,7 @@
       - 类型: *Long*
     - **orderId**: 装修单号
       - 类型: *String*
-    
+
     #### approvalDecorationTerminalItem
 
     - **adtiid**: ID
@@ -2105,28 +2049,27 @@
       - 类型: *String*
     - **referMoney**: 金额
       - 类型: *Long*
-    
-    ### <I> submitApprovalForDecorationTerminal
+
+    ### `submitApprovalForDecorationTerminal` <span style="color:gray">[内部]</span>
 
         销售不退定金
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalDecorationTerminal.orderId: 装修单号
-        :type approvalDecorationTerminal.orderId: String
-        
-        :param approvalDecorationTerminalItem[n].paymentType: 款项类型
-        :type approvalDecorationTerminalItem[n].paymentType: String
-        :param approvalDecorationTerminalItem[n].referMoney: 金额
-        :type approvalDecorationTerminalItem[n].referMoney: Long
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalDecorationTerminal.orderId**:
+  装修单号
+
+        - **approvalDecorationTerminalItem[n].paymentType**:
+  款项类型
+        - **approvalDecorationTerminalItem[n].referMoney**:
+  金额
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
                 "approvalDecorationTerminal.orderId": "1601010001",
@@ -2138,8 +2081,9 @@
 
 ## api.approval.ApprovalQuotationPreferAction
 
-        |DataType:|
-        #### approvalQuotationPrefer
+**数据类型**:
+
+#### approvalQuotationPrefer
 
     - **aqpid**: ID
       - 类型: *Long*
@@ -2161,37 +2105,36 @@
       - 类型: *Long*
     - **totalPrice**: 报价总额
       - 类型: *Long*
-    
-    ### <I> submitApprovalForQuotationPreferAction
+
+    ### `submitApprovalForQuotationPreferAction` <span style="color:gray">[内部]</span>
 
         报价特批优惠
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalQuotationPrefer.qid: 报价ID
-        :type approvalQuotationPrefer.qid: Long
-        :param approvalQuotationPrefer.qpid: 报价优惠ID
-        :type approvalQuotationPrefer.qpid: Long
-        :param approvalQuotationPrefer.ppid: 预签产品ID
-        :type approvalQuotationPrefer.ppid: Long
-        :param approvalQuotationPrefer.preferPrice: 优惠额
-        :type approvalQuotationPrefer.preferPrice: Long
-        :param approvalQuotationPrefer.managePrefer: 管理优惠
-        :type approvalQuotationPrefer.managePrefer: Long
-        :param approvalQuotationPrefer.advancePrefer: 管理优惠
-        :type approvalQuotationPrefer.advancePrefer: Long
-        :param approvalQuotationPrefer.taxPrice: 管理优惠
-        :type approvalQuotationPrefer.taxPrice: Long
-        :param approvalQuotationPrefer.totalPrice: 报价总额
-        :type approvalQuotationPrefer.totalPrice: Long
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalQuotationPrefer.qid**:
+  报价ID
+        - **approvalQuotationPrefer.qpid**:
+  报价优惠ID
+        - **approvalQuotationPrefer.ppid**:
+  预签产品ID
+        - **approvalQuotationPrefer.preferPrice**:
+  优惠额
+        - **approvalQuotationPrefer.managePrefer**:
+  管理优惠
+        - **approvalQuotationPrefer.advancePrefer**:
+  管理优惠
+        - **approvalQuotationPrefer.taxPrice**:
+  管理优惠
+        - **approvalQuotationPrefer.totalPrice**:
+  报价总额
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
 
@@ -2209,8 +2152,9 @@
 
 ## api.approval.ApprovalDecorationContractAction
 
-        |DataType:|
-        #### approvalDecorationContract
+**数据类型**:
+
+#### approvalDecorationContract
 
     - **adcid**: ID
       - 类型: *Long*
@@ -2220,25 +2164,24 @@
       - 类型: *String*
     - **cid**: 合同模板ID
       - 类型: *Long*
-    
-    ### <I> submitApprovalDecorationContractAction
+
+    ### `submitApprovalDecorationContractAction` <span style="color:gray">[内部]</span>
 
         报价特批优惠
-        
-                |Requests:|
-                :param approval.receiverId: 接收人编号
-        :type approval.receiverId: String
-        :param approval.comment: 备注信息
-        :type approval.comment: String
-        
-        :param approvalDecorationContract.orderId: 装修单号
-        :type approvalDecorationContract.orderId: String
-        :param approvalDecorationContract.cid: 合同模板ID
-        :type approvalDecorationContract.cid: Long
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.receiverId**:
+  接收人编号
+        - **approval.comment**:
+  备注信息
+
+        - **approvalDecorationContract.orderId**:
+  装修单号
+        - **approvalDecorationContract.cid**:
+  合同模板ID
+
+        **示例**:{
                 "approval.receiverId": "U0479",
                 "approval.comment": "说明",
 
@@ -2250,8 +2193,9 @@
 
 ## api.approval.ProcessAction
 
-        |DataType:|
-        #### processRefer
+**数据类型**:
+
+#### processRefer
 
     - **prid**: 参考ID
       - 类型: *Long*
@@ -2261,7 +2205,7 @@
       - 类型: *String*
     - **type**: 类型 , 包括: query, filling, select, text, textarea, upload, datetime
       - 类型: *String*
-    
+
     #### process
 
     - **pid**: 审批ID
@@ -2299,18 +2243,17 @@
       - 类型: *String*
     - **sort**: 排序
       - 类型: *Short*
-    
-    ### <I> queryProcessRefer
+
+    ### `queryProcessRefer` <span style="color:gray">[内部]</span>
 
         获取审批参考信息
-        
-                |Returns:|
-                - **processRefers**: 审批参考列表 , 每条数据类型 *processRefer*
+
+**返回参数**:
+
+- **processRefers**: 审批参考列表 , 每条数据类型 *processRefer*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "processRefers": [
                     {
@@ -2323,19 +2266,18 @@
                 ...
             }
 
-    ### <I> pageProcess
+    ### `pageProcess` <span style="color:gray">[内部]</span>
 
         分页方式获取审批信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 审批信息列表 , 每条数据类型 *process*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  审批信息列表 , 每条数据类型 *process*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2352,17 +2294,16 @@
                 ...
             }
 
-    ### <I> queryProcess
+    ### `queryProcess` <span style="color:gray">[内部]</span>
 
         获取审批信息
-    
-                |Returns:|
-                - **processes**: 审批信息列表 , 每条数据类型 *process*
+
+**返回参数**:
+
+- **processes**: 审批信息列表 , 每条数据类型 *process*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "processes": [
                     {
@@ -2389,27 +2330,25 @@
                 ...
             }
 
-    ### <I> queryProcessByPid
+    ### `queryProcessByPid` <span style="color:gray">[内部]</span>
 
         获取审批信息
-    
-                |Requests:|
-                :param process.pid: 审批ID
-        :type process.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **process.pid**:
+  审批ID
+
+        **示例**:{
                 "process.pid": 1
             }
-            
-                |Returns:|
-                - **process**: 审批信息 , 类型 *process*
+
+**返回参数**:
+
+- **process**: 审批信息 , 类型 *process*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "process": {
                     "pid": 1,
@@ -2434,27 +2373,25 @@
                 ...
             }
 
-    ### <I> queryProcessItem
+    ### `queryProcessItem` <span style="color:gray">[内部]</span>
 
         获取审批项信息
-    
-                |Requests:|
-                :param process.pid: 审批ID
-        :type process.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **process.pid**:
+  审批ID
+
+        **示例**:{
                 "process.pid": 1
             }
-        
-                |Returns:|
-                - **processItems**: 审批项目信息列表 , 类型 *processItem*
+
+**返回参数**:
+
+- **processItems**: 审批项目信息列表 , 类型 *processItem*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "processItems": [
                     {
@@ -2473,42 +2410,41 @@
                 ...
             }
 
-    ### <I> addProcess
+    ### `addProcess` <span style="color:gray">[内部]</span>
 
         添加审批
-        
-                |Requests:|
-                :param process.name: 名称
-        :type process.name: Long
-        :param process.key: 键值
-        :type process.key: Long
-        :param process.code: 编号
-        :type process.code: String
-        
-        :param processItems[n].id: 标识
-        :type processItems[n].id: String
-        :param processItems[n].name: 名称
-        :type processItems[n].name: String
-        :param processItems[n].form: 类别
-        :type processItems[n].form: String
-        :param processItems[n].type: 类型
-        :type processItems[n].type: String
-        :param processItems[n].validate: 校验
-        :type processItems[n].validate: String
-        :param processItems[n].data: 数据
-        :type processItems[n].data: String
-        :param processItems[n].comment: 备注
-        :type processItems[n].comment: String
-        :param processItems[n].sort: 排序
-        :type processItems[n].sort: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **process.name**:
+  名称
+        - **process.key**:
+  键值
+        - **process.code**:
+  编号
+
+        - **processItems[n].id**:
+  标识
+        - **processItems[n].name**:
+  名称
+        - **processItems[n].form**:
+  类别
+        - **processItems[n].type**:
+  类型
+        - **processItems[n].validate**:
+  校验
+        - **processItems[n].data**:
+  数据
+        - **processItems[n].comment**:
+  备注
+        - **processItems[n].sort**:
+  排序
+
+        **示例**:{
                 "process.name": "名称",
                 "process.key": "A348",
                 "process.code": "JSD4H324JJ4JNjd43JNjdsjf",
-                
+
                 "processItems[0].id": "name",
                 "processItems[0].name": "名称",
                 "processItems[0].form": "field",
@@ -2519,45 +2455,44 @@
                 "processItems[0].sort": 1
             }
 
-    ### <I> updateProcess
+    ### `updateProcess` <span style="color:gray">[内部]</span>
 
         更新审批
-        
-                |Requests:|
-                :param process.pid: 审批ID
-        :type process.pid: Long
-        :param process.name: 名称
-        :type process.name: Long
-        :param process.key: 键值
-        :type process.key: Long
-        :param process.code: 编号
-        :type process.code: String
-        
-        :param processItems[n].id: 标识
-        :type processItems[n].id: String
-        :param processItems[n].name: 名称
-        :type processItems[n].name: String
-        :param processItems[n].form: 类别
-        :type processItems[n].form: String
-        :param processItems[n].type: 类型
-        :type processItems[n].type: String
-        :param processItems[n].validate: 校验
-        :type processItems[n].validate: String
-        :param processItems[n].data: 数据
-        :type processItems[n].data: String
-        :param processItems[n].comment: 备注
-        :type processItems[n].comment: String
-        :param processItems[n].sort: 排序
-        :type processItems[n].sort: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **process.pid**:
+  审批ID
+        - **process.name**:
+  名称
+        - **process.key**:
+  键值
+        - **process.code**:
+  编号
+
+        - **processItems[n].id**:
+  标识
+        - **processItems[n].name**:
+  名称
+        - **processItems[n].form**:
+  类别
+        - **processItems[n].type**:
+  类型
+        - **processItems[n].validate**:
+  校验
+        - **processItems[n].data**:
+  数据
+        - **processItems[n].comment**:
+  备注
+        - **processItems[n].sort**:
+  排序
+
+        **示例**:{
                 "process.pid": 1,
                 "process.name": "名称",
                 "process.key": "A348",
                 "process.code": "JSD4H324JJ4JNjd43JNjdsjf",
-                
+
                 "processItems[0].id": "name",
                 "processItems[0].name": "名称",
                 "processItems[0].form": "field",
@@ -2568,66 +2503,63 @@
                 "processItems[0].sort": 1
             }
 
-    ### <I> updateProcessForStatus
+    ### `updateProcessForStatus` <span style="color:gray">[内部]</span>
 
         更新审批状态
-        
-                |Requests:|
-                :param process.pid: 审批ID
-        :type process.pid: Long
-        :param process.status: 状态
-        :type process.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **process.pid**:
+  审批ID
+        - **process.status**:
+  状态
+
+        **示例**:{
                 "process.pid": 1,
                 "process.status": 1
             }
 
-    ### <I> deleteProcess
+    ### `deleteProcess` <span style="color:gray">[内部]</span>
 
         删除审批
-        
-                |Requests:|
-                :param process.pid: 审批ID
-        :type process.pid: Long
 
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **process.pid**:
+  审批ID
+
+
+        **示例**:{
                 "process.pid": 1,
                 "process.status": 1
             }
 
-    ### <I> updateProcessItem
+    ### `updateProcessItem` <span style="color:gray">[内部]</span>
 
         更新审批项
-        
-                |Requests:|
-                :param processItem.piid: 项目ID
-        :type processItem.piid: Long
-        :param processItem.id: 标识
-        :type processItem.id: String
-        :param processItem.name: 名称
-        :type processItem.name: String
-        :param processItem.form: 类别
-        :type processItem.form: String
-        :param processItem.type: 类型
-        :type processItem.type: String
-        :param processItem.validate: 校验
-        :type processItem.validate: String
-        :param processItem.data: 数据
-        :type processItem.data: String
-        :param processItem.comment: 备注
-        :type processItem.comment: String
-        :param processItem.sort: 排序
-        :type processItem.sort: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **processItem.piid**:
+  项目ID
+        - **processItem.id**:
+  标识
+        - **processItem.name**:
+  名称
+        - **processItem.form**:
+  类别
+        - **processItem.type**:
+  类型
+        - **processItem.validate**:
+  校验
+        - **processItem.data**:
+  数据
+        - **processItem.comment**:
+  备注
+        - **processItem.sort**:
+  排序
+
+        **示例**:{
                 "processItem.piid": 1,
                 "processItem.id": "name",
                 "processItem.name": "名称",
@@ -2639,16 +2571,15 @@
                 "processItem.sort": 1
             }
 
-    ### <I> deleteProcessItem
+    ### `deleteProcessItem` <span style="color:gray">[内部]</span>
 
         删除审批项
-        
-                |Requests:|
-                :param processItem.piid: 项目ID
-        :type processItem.piid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **processItem.piid**:
+  项目ID
+
+        **示例**:{
                 "processItem.piid": 1
             }

@@ -1,12 +1,11 @@
-# salary {#salary}
-
-# 薪资
+# salary 薪资
 ## 通用薪资
 
 ## api.salary.SalaryAction
 
-        |DataType:|
-        #### salary
+**数据类型**:
+
+#### salary
 
     - **sid**: 薪资ID
       - 类型: *Long*
@@ -33,19 +32,18 @@
     - **comment**: 说明
       - 类型: *String*
 
-	### <I> pageSalary
+    ### `pageSalary` <span style="color:gray">[内部]</span>
 
         分页方式获取薪资信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
 
-                |Returns:|
-                - **paging**: 分页信息
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 薪资信息列表 , 每条数据类型 *salary*
-        :type paging.data: List
+        - **paging.data**:
+  薪资信息列表 , 每条数据类型 *salary*
 
-        Example::
-
-            {
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -64,7 +62,7 @@
                             "money": 100000,
                             "status": 0,
                             "operater": null,
-							"operateTime": "2016-01-01",
+                            "operateTime": "2016-01-01",
                             "comment":"说明"
                         }
                     ],
@@ -72,82 +70,74 @@
                 },
                 ...
             }
-			
-    ### <I> addSalary
+
+    ### `addSalary` <span style="color:gray">[内部]</span>
 
         添加薪资
 
                 |Request:|
-                :param salary.user.uid: 员工ID
-        :type salary.user.uid: Long
-        :param salary.type: 类型
-        :type salary.type: Short
-        :param salary.onetype: 一类
-        :type salary.onetype: Short
-        :param salary.twotype: 二类
-        :type salary.twotype: Short
-        :param salary.thrtype: 三类
-        :type salary.thrtype: Short
-        :param salary.money: 操作金额
-        :type salary.money: Long
-        :param salary.comment: 说明
-        :type salary.comment: String
+                - **salary.user.uid**:
+  员工ID
+        - **salary.type**:
+  类型
+        - **salary.onetype**:
+  一类
+        - **salary.twotype**:
+  二类
+        - **salary.thrtype**:
+  三类
+        - **salary.money**:
+  操作金额
+        - **salary.comment**:
+  说明
 
-        Example::
-
-            {
+        **示例**:{
                 "salary.user.uid": 1,
                 "salary.type": 1,
                 "salary.money": 500000,
                 "salary.twotype": 1,
                 "salary.comment": ""
             }
-			
-    ### <I> passSalary
+
+    ### `passSalary` <span style="color:gray">[内部]</span>
 
         通过薪资信息
 
         判断薪资状态是否为0(初始) , 非初始不能通过 , 错误信息 **280002 薪资状态不可操作**
 
                 |Request:|
-                :param salary.sid: 薪资ID
-        :type salary.sid: Long
+                - **salary.sid**:
+  薪资ID
 
-        Example::
-
-            {
+        **示例**:{
                 "salary.sid": 1,
             }
-			
-    ### <I> rejectSalary
+
+    ### `rejectSalary` <span style="color:gray">[内部]</span>
 
         拒绝薪资信息
 
         判断薪资状态是否为0(初始) , 非初始不能通过 , 错误信息 **280002 薪资状态不可操作**
 
                 |Request:|
-                :param salary.sid: 薪资ID
-        :type salary.sid: Long
+                - **salary.sid**:
+  薪资ID
 
-        Example::
-
-            {
+        **示例**:{
                 "salary.sid": 1,
             }
-			
-    ### <I> cancelSalary
+
+    ### `cancelSalary` <span style="color:gray">[内部]</span>
 
         撤销薪资信息
 
         判断薪资状态是否为0(初始) , 非初始不能通过 , 错误信息 **280002 薪资状态不可操作**
 
                 |Request:|
-                :param salary.sid: 薪资ID
-        :type salary.sid: Long
+                - **salary.sid**:
+  薪资ID
 
-        Example::
-
-            {
+        **示例**:{
                 "salary.sid": 1,
             }
 
@@ -155,8 +145,9 @@
 
 ## api.salary.WithholdAction
 
-        |DataType:|
-        #### withhold
+**数据类型**:
+
+#### withhold
 
     - **wid**: 扣款ID
       - 类型: *Long*
@@ -181,19 +172,18 @@
     - **comment**: 说明
       - 类型: *String*
 
-	### <I> pageWithhold
+    ### `pageWithhold` <span style="color:gray">[内部]</span>
 
         分页方式获取扣款信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
 
-                |Returns:|
-                - **paging**: 分页信息
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 扣款信息列表 , 每条数据类型 *withhold*
-        :type paging.data: List
+        - **paging.data**:
+  扣款信息列表 , 每条数据类型 *withhold*
 
-        Example::
-
-            {
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -211,7 +201,7 @@
                             "money": 100000,
                             "status": 0,
                             "operater": null,
-							"operateTime": "2016-01-01",
+                            "operateTime": "2016-01-01",
                             "comment":"说明"
                         }
                     ],
@@ -219,31 +209,28 @@
                 },
                 ...
             }
-            
-    ### <I> queryWithhold
+
+    ### `queryWithhold` <span style="color:gray">[内部]</span>
 
         获取扣款信息
-        
+
                 |Request:|
-                :param withhold.ident: 引用ID
-        :type withhold.ident: Long
-        :param withhold.type: 类型
-        :type withhold.type: Short
+                - **withhold.ident**:
+  引用ID
+        - **withhold.type**:
+  类型
 
-        Example::
-
-            {
+        **示例**:{
                 "withhold.ident": 1,
                 "withhold.type": 1
             }
-        
-                |Returns:|
-                - **withholds**: 扣款信息列表 , 每条数据类型 *withhold*
+
+**返回参数**:
+
+- **withholds**: 扣款信息列表 , 每条数据类型 *withhold*
           - 类型: *List*
 
-        Example::
-
-            {
+        **示例**:{
                 ...
                 "withholds": [
                     {
@@ -265,28 +252,26 @@
                 ],
                 ...
             }
-            
-    ### <I> addWithhold
+
+    ### `addWithhold` <span style="color:gray">[内部]</span>
 
         添加扣款信息
-        
+
                 |Request:|
-                :param withhold.orderId: 装修单号
-        :type withhold.orderId: String
-        :param withhold.ident: 引用ID
-        :type withhold.ident: Long
-        :param withhold.type: 类型
-        :type withhold.type: Short
-        :param withhold.user.uid: 人员ID
-        :type withhold.user.uid: Long
-        :param withhold.money: 金额
-        :type withhold.money: Long
-        :param withhold.comment: 说明
-        :type withhold.comment: String
+                - **withhold.orderId**:
+  装修单号
+        - **withhold.ident**:
+  引用ID
+        - **withhold.type**:
+  类型
+        - **withhold.user.uid**:
+  人员ID
+        - **withhold.money**:
+  金额
+        - **withhold.comment**:
+  说明
 
-        Example::
-
-            {
+        **示例**:{
                 "withhold.orderId": "1601010001",
                 "withhold.ident": 1,
                 "withhold.type": 1,
@@ -294,22 +279,20 @@
                 "withhold.money": 1000000,
                 "withhold.comment": "说明",
             }
-            
-    ### <I> updateWithholdForStatus
+
+    ### `updateWithholdForStatus` <span style="color:gray">[内部]</span>
 
         更新扣款信息
-        
+
         判断扣款信息是否存在 , 不存在 , 错误信息 **280013 扣款信息不存在**
-        
+
                 |Request:|
-                :param withhold.wid: 扣款ID
-        :type withhold.wid: Long
-        :param withhold.status: 状态
-        :type withhold.status: Short
+                - **withhold.wid**:
+  扣款ID
+        - **withhold.status**:
+  状态
 
-        Example::
-
-            {
+        **示例**:{
                 "withhold.wid": 1,
                 "withhold.status": 0
             }
@@ -318,32 +301,35 @@
 
 ## api.salary.DecorationSalaryAction
 
-        |DataType:|
-        #### decorationSalary
+**数据类型**:
+
+#### decorationSalary
 
     - **dsid**: ID
       - 类型: *Long*
-    
-    ### <I> pageDecorationSalary
+
+    ### `pageDecorationSalary` <span style="color:gray">[内部]</span>
 
 ## 主材提成
 
 ## api.salary.MaterialSalaryAction
 
-        |DataType:|
-        #### materialSalary
+**数据类型**:
+
+#### materialSalary
 
     - **dsid**: ID
       - 类型: *Long*
-    
-    ### <I> pageMaterialSalary
+
+    ### `pageMaterialSalary` <span style="color:gray">[内部]</span>
 
 ## 工人帐户
 
 ## api.salary.WorkerBalanceAction
 
-        |DataType:|
-        #### workerBalance
+**数据类型**:
+
+#### workerBalance
 
     - **wbid**: 帐户ID
       - 类型: *Long*
@@ -359,20 +345,19 @@
       - 类型: *Short*
     - **company**: 公司ID
       - 类型: *Long*
-    
-    ### <I> pageWorkerBalance
+
+    ### `pageWorkerBalance` <span style="color:gray">[内部]</span>
 
         分页方式获取工费帐户信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 工人帐户信息列表 , 每条数据类型 *workerBalance*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  工人帐户信息列表 , 每条数据类型 *workerBalance*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -394,36 +379,34 @@
                 },
                 ...
             }
-            
-    ### <I> addWorkerBalance
+
+    ### `addWorkerBalance` <span style="color:gray">[内部]</span>
 
         添加工人帐户信息
-        
+
         判断工人帐户是否存在 , 已存在 , 错误信息 **280008 工人帐户已存在**
-        
-                |Requests:|
-                :param workerBalance.user.uid: 工人ID
-        :type workerBalance.user.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerBalance.user.uid**:
+  工人ID
+
+        **示例**:{
                 "workerBalance.user.uid": 1
             }
-            
-    ### <I> updateWorkerBalance
+
+    ### `updateWorkerBalance` <span style="color:gray">[内部]</span>
 
         更新工人帐户信息
-        
-                |Requests:|
-                :param workerBalance.wbid: 帐户ID
-        :type workerBalance.wbid: Long
-        :param workerBalance.toplimit: 质保金上限
-        :type workerBalance.toplimit: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerBalance.wbid**:
+  帐户ID
+        - **workerBalance.toplimit**:
+  质保金上限
+
+        **示例**:{
                 "workerBalance.wbid": 1,
                 "workerBalance.toplimit": 1000000
             }
@@ -432,8 +415,9 @@
 
 ## api.salary.WorkerSalaryAction
 
-        |DataType:|
-        #### workerSalary
+**数据类型**:
+
+#### workerSalary
 
     - **wsid**: 工费ID
       - 类型: *Long*
@@ -465,7 +449,7 @@
       - 类型: *Long*
     - **type**: 类型 , 包括: 0(加), 1(减)
       - 类型: *Short*
-    - **onetype**: 一类 , 0(工费), 1(扣/罚), 2(转额), 3(其他) 
+    - **onetype**: 一类 , 0(工费), 1(扣/罚), 2(转额), 3(其他)
       - 类型: *Short*
     - **twotype**: 类型 , 包括: 1(工费), 2(增项), 3(油工一级奖励), 4(维修款), 5(罚款), 6(工程质保金), 7(工具押金), 8(借款), 9(工人家属保险)
       - 类型: *Short*
@@ -481,40 +465,23 @@
       - 类型: *Short*
     - **comment**: 备注
       - 类型: *String*
-    
+
     > **Note**: 加类金额根据当前人员帐户中质保金和工费金额操作 , 根据质保金上限 , 如果未达到质保金上限 , 补充到质保金中 , 超出部分补充到工费中 .
-        
-        减类金额根据当前人员帐户中质保金和工费金额操作 , 扣掉工费金额 , 工费金额不足时 , 扣掉质保金金额 , 质保金不足 , 本次操作失败 . 
-    
-            +------------------+--------------------------            | twotype          | onetype                  | type                             |
-            +==================+==========================+==================================+
+
+        减类金额根据当前人员帐户中质保金和工费金额操作 , 扣掉工费金额 , 工费金额不足时 , 扣掉质保金金额 , 质保金不足 , 本次操作失败 .
+
             | 1 工费           | 0 工费                   | 0/1 加/减                        |
-            +------------------+--------------------------            | 2 增项           | 0 工费                   | 0 加                             |
-            +------------------+--------------------------            | 3 油工一级奖励   | 0 工费                   | 0 加                             |
-            +------------------+--------------------------            | 4 维修费         | 2 转额                   | 0/1 加/减                        |
-            +------------------+--------------------------            | 5 罚款           | 1 扣/罚                  | 1 减                             |
-            +------------------+--------------------------            | 6 工程质保金     | 3 其他                   | 0/1 加/减                        |
-            +------------------+--------------------------            | 7 工具押金       | 3 其他                   | 0/1 加/减                        |
-            +------------------+--------------------------            | 8 借款           | 3 其他                   | 0/1 加/减                        |
-            +------------------+--------------------------            | 9 工人家属保险   | 3 其他                   | 0/1 加/减                        |
-            +------------------+--------------------------            | 10 附加项        | 3 其他                   | 0/1 加/减                        |
-            +------------------+--------------------------            | 11 预支工费      | 3 其他                   | 0/1 加/减                        |
-            +------------------+--------------------------            | 12 运费          | 3 其他                   | 0/1 加/减                        |
-            +------------------+--------------------------            | 13 上楼费        | 3 其他                   | 0/1 加/减                        |
-            +------------------+--------------------------            | 14 工人维修款    | 3 其他                   | 0/1 加/减                        |
-            +------------------+--------------------------    ### <I> pageWorkerSalary
 
         分页方式获取工人工费信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 工费信息列表 , 每条数据类型 *workerSalary*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  工费信息列表 , 每条数据类型 *workerSalary*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -568,32 +535,30 @@
                 },
                 ...
             }
-            
-    ### <I> pageWorkerSalaryByUserId
+
+    ### `pageWorkerSalaryByUserId` <span style="color:gray">[内部]</span>
 
         分页方式获取工人工费信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         通过指定员工编号获取
-        
-                |Requests:|
-                :param workerSalary.user.userId: 员工编号
-        :type workerSalary.user.userId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.user.userId**:
+  员工编号
+
+        **示例**:{
                 "workerSalary.user.userId": "U0409"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 返工信息列表 , 每条数据类型 *workerSalary*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  返工信息列表 , 每条数据类型 *workerSalary*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -647,31 +612,29 @@
                 },
                 ...
             }
-    
-    ### <I> queryWorkerSalary
+
+    ### `queryWorkerSalary` <span style="color:gray">[内部]</span>
 
         获取工程对应工人的工费信息
-        
-                |Requests:|
-                :param workerSalary.csid: 工程ID
-        :type workerSalary.csid: Long
-        :param workerSalary.user.userId: 员工编号
-        :type workerSalary.user.userId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.csid**:
+  工程ID
+        - **workerSalary.user.userId**:
+  员工编号
+
+        **示例**:{
                 "workerSalary.csid": 1,
                 "workerSalary.user.userId": "U0409",
             }
-        
-                |Returns:|
-                - **workerSalarys**: 工人工费列表 , 每条数据类型 *workerSalary*
+
+**返回参数**:
+
+- **workerSalarys**: 工人工费列表 , 每条数据类型 *workerSalary*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "workerSalarys": [
                     {
@@ -722,27 +685,25 @@
                 ...
             }
 
-    ### <I> queryWorkerSalaryByWsid
+    ### `queryWorkerSalaryByWsid` <span style="color:gray">[内部]</span>
 
         通过工人工费ID获取工费信息
-        
-                |Requests:|
-                :param workerSalary.wsid: 工程ID
-        :type workerSalary.wsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.wsid**:
+  工程ID
+
+        **示例**:{
                 "workerSalary.wsid": 1
             }
-        
-                |Returns:|
-                - **workerSalary**: 工人工费 , 类型 *workerSalary*
+
+**返回参数**:
+
+- **workerSalary**: 工人工费 , 类型 *workerSalary*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "workerSalary": {
                     "wsid": 1,
@@ -790,90 +751,87 @@
                 },
                 ...
             }
-            
-    ### <I> collectWorkerDeposit
+
+    ### `collectWorkerDeposit` <span style="color:gray">[内部]</span>
 
         收取工人质保金
-        
+
         判断工人对应的帐户信息是否存在 , 不存在 , 错误信息 **280004 工人帐户不存在**
-        
+
         工费类型限定为: 类型为加类(0) , 一类为其他(3) , 二类为质保金(6)
-        
-                |Requests:|
-                :param workerSalary.user.userId: 员工编号
-        :type workerSalary.user.userId: String
-        :param workerSalary.money: 操作金额
-        :type workerSalary.money: Long
-        :param workerSalary.comment: 备注
-        :type workerSalary.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.user.userId**:
+  员工编号
+        - **workerSalary.money**:
+  操作金额
+        - **workerSalary.comment**:
+  备注
+
+        **示例**:{
                 "workerSalary.user.userId": "U0409",
                 "workerSalary.money": 500000,
                 "workerSalary.comment": ""
             }
-    
-    ### <I> drawWorkerDeposit
+
+    ### `drawWorkerDeposit` <span style="color:gray">[内部]</span>
 
         提现工人质保金
-        
+
         判断工人对应的帐户信息是否存在 , 不存在 , 错误信息 **280004 工人帐户不存在**
-        
+
         工人帐户中质保金金额不足 , 错误信息 **280005 质保金金额不足**
-        
+
         工费类型限定为: 类型为减类(1) , 一类为其他(3) , 二类为质保金(6)
-        
-                |Requests:|
-                :param workerSalary.user.userId: 员工编号
-        :type workerSalary.user.userId: String
-        :param workerSalary.money: 操作金额
-        :type workerSalary.money: Long
-        :param workerSalary.comment: 备注
-        :type workerSalary.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.user.userId**:
+  员工编号
+        - **workerSalary.money**:
+  操作金额
+        - **workerSalary.comment**:
+  备注
+
+        **示例**:{
                 "workerSalary.user.userId": "U0409",
                 "workerSalary.money": 500000,
                 "workerSalary.comment": ""
             }
-    
-    ### <I> addWorkerSalary
+
+    ### `addWorkerSalary` <span style="color:gray">[内部]</span>
 
         添加工人工费
-        
+
         判断工程环节是否存在 , 不存在 , 错误信息 **120024 工程环节不存在**
-        
+
         判断工程环节状态为1(开工) , 其他状态 , 错误信息 **120025 工程环节不可操作**
-        
+
         判断工程环节状态是否为2(完工) , 未完工不可添加 , 错误信息 **120027 工程环节未完工**
-        
+
         判断工人对应的帐户信息是否存在 , 不存在 , 错误信息 **280004 工人帐户不存在**
-        
+
         工费类型限定为: 类型为加类(0) , 一类为工费(0) , 二类为工费/增项/油工一级奖励(1/2/3)
 
         根据工人工费对应账户中质保金和工费更新工费中对应的金额
-        
-                |Requests:|
-                :param workerSalary.user.userId: 员工编号
-        :type workerSalary.user.userId: String
-        :param workerSalary.orderId: 装修单号
-        :type workerSalary.orderId: String
-        :param workerSalary.csid: 工程ID
-        :type workerSalary.csid: Long
-        :param workerSalary.money: 操作金额
-        :type workerSalary.money: Long
-        :param workerSalary.twotype: 二类
-        :type workerSalary.twotype: Short
-        :param workerSalary.comment: 备注
-        :type workerSalary.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.user.userId**:
+  员工编号
+        - **workerSalary.orderId**:
+  装修单号
+        - **workerSalary.csid**:
+  工程ID
+        - **workerSalary.money**:
+  操作金额
+        - **workerSalary.twotype**:
+  二类
+        - **workerSalary.comment**:
+  备注
+
+        **示例**:{
                 "workerSalary.user.userId": "U0409",
                 "workerSalary.orderId": 1601010001,
                 "workerSalary.csid": 1,
@@ -881,36 +839,35 @@
                 "workerSalary.twotype": 1,
                 "workerSalary.comment": ""
             }
-            
-    ### <I> cutWorkerSalary
+
+    ### `cutWorkerSalary` <span style="color:gray">[内部]</span>
 
         扣款工人工费
-        
+
         判断工人对应的帐户信息是否存在 , 不存在 , 错误信息 **280004 工人帐户不存在**
-        
+
         工人帐户中质保金金额不足 , 错误信息 **280005 质保金金额不足**
-        
+
         工费类型限定为: 类型为减类(0) , 一类为扣/罚(1) , 二类为罚款(5)
-        
+
         根据工人工费对应账户中质保金和工费更新工费中对应的金额
-        
-                |Requests:|
-                :param workerSalary.user.userId: 员工编号
-        :type workerSalary.user.userId: String
-        :param workerSalary.orderId: 装修单号
-        :type workerSalary.orderId: String
-        :param workerSalary.csid: 工程ID
-        :type workerSalary.csid: Long
-        :param workerSalary.money: 操作金额
-        :type workerSalary.money: Long
-        :param workerSalary.twotype: 二类
-        :type workerSalary.twotype: Short
-        :param workerSalary.comment: 备注
-        :type workerSalary.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.user.userId**:
+  员工编号
+        - **workerSalary.orderId**:
+  装修单号
+        - **workerSalary.csid**:
+  工程ID
+        - **workerSalary.money**:
+  操作金额
+        - **workerSalary.twotype**:
+  二类
+        - **workerSalary.comment**:
+  备注
+
+        **示例**:{
                 "workerSalary.user.userId": "U0409",
                 "workerSalary.orderId": 1601010001,
                 "workerSalary.csid": 1,
@@ -918,41 +875,40 @@
                 "workerSalary.twotype": 5,
                 "workerSalary.comment": ""
             }
-            
-    ### <I> tranWorkerSalary
+
+    ### `tranWorkerSalary` <span style="color:gray">[内部]</span>
 
         转款工人工费
-        
+
         判断工人对应的帐户信息是否存在 , 不存在 , 错误信息 **280004 工人帐户不存在**
-        
+
         工人帐户中质保金金额不足 , 错误信息 **280005 质保金金额不足**
-        
+
         工费类型限定为: 一类为转款(2) , 二类为维修金(4)
-        
+
         根据工人工费对应账户中质保金和工费更新工费中对应的金额
-        
+
         根据工人工费信息生成两条工费数据 , 同时进行关联操作
-        
-                |Requests:|
-                - **sourceId**: 员工编号
+
+**请求参数**:
+
+- **sourceId**: 员工编号
           - 类型: *String*
         - **targetId**: 员工编号
           - 类型: *String*
-        
-        :param workerSalary.orderId: 装修单号
-        :type workerSalary.orderId: String
-        :param workerSalary.csid: 工程ID
-        :type workerSalary.csid: Long
-        :param workerSalary.money: 操作金额
-        :type workerSalary.money: Long
-        :param workerSalary.twotype: 二类
-        :type workerSalary.twotype: Short
-        :param workerSalary.comment: 备注
-        :type workerSalary.comment: String
-        
-        Example::
-        
-            {
+
+        - **workerSalary.orderId**:
+  装修单号
+        - **workerSalary.csid**:
+  工程ID
+        - **workerSalary.money**:
+  操作金额
+        - **workerSalary.twotype**:
+  二类
+        - **workerSalary.comment**:
+  备注
+
+        **示例**:{
                 "workerSalary.user.userId": "U0409",
                 "workerSalary.orderId": 1601010001,
                 "workerSalary.csid": 1,
@@ -960,189 +916,182 @@
                 "workerSalary.twotype": 1,
                 "workerSalary.comment": ""
             }
-            
-    ### <I> payWorkerSalary
+
+    ### `payWorkerSalary` <span style="color:gray">[内部]</span>
 
         发放工人工费
-        
+
         判断工人对应的帐户信息是否存在 , 不存在 , 错误信息 **280004 工人帐户不存在**
-        
+
         工人帐户中工费金额不足 , 错误信息 **280006 工费金额不足**
-        
+
         工费类型限定为: 类型为减类(1) , 一类为工费(0) , 二类为维修金(1)
-        
-                |Requests:|
-                :param workerSalary.user.userId: 员工编号
-        :type workerSalary.user.userId: String
-        :param workerSalary.money: 操作金额
-        :type workerSalary.money: Long
-        :param workerSalary.comment: 备注
-        :type workerSalary.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.user.userId**:
+  员工编号
+        - **workerSalary.money**:
+  操作金额
+        - **workerSalary.comment**:
+  备注
+
+        **示例**:{
                 "workerSalary.user.userId": "U0409",
                 "workerSalary.money": 500000,
                 "workerSalary.comment": ""
             }
-    
-    ### <I> adoptWorkerSalary
+
+    ### `adoptWorkerSalary` <span style="color:gray">[内部]</span>
 
         通过工人工费
-        
+
         判断工费信息是否存在 , 不存在 , 错误信息 **280001 薪资信息不存在**
-        
+
         判断工费状态是否为0(初始) , 非初始不能通过 , 错误信息 **280002 工费状态不可操作**
-        
+
         如果通过的工人工费存在关联工费信息 , 需要一同处理
-        
-                |Requests:|
-                :param workerSalarys[n].wsid: 工费ID
-        :type workerSalarys[n].wsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalarys[n].wsid**:
+  工费ID
+
+        **示例**:{
                 "workerSalarys[n].wsid": 1
             }
-            
-    ### <I> rejectWorkerSalary
+
+    ### `rejectWorkerSalary` <span style="color:gray">[内部]</span>
 
         驳回
-        
+
         判断工费信息是否存在 , 不存在 , 错误信息 **280001 薪资信息不存在**
-        
+
         判断工费状态是否为1(通过) , 非初始不能驳回 , 错误信息 **280002 工费状态不可操作**
-        
+
         如果驳回的工人工费存在关联工费信息 , 需要一同处理 , 关联还原质保金
-        
-                |Requests:|
-                :param workerSalary.wsid: 工费ID
-        :type workerSalary.wsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.wsid**:
+  工费ID
+
+        **示例**:{
                 "workerSalary.wsid": 1
             }
 
-    ### <I> checkWsorkerSalary
+    ### `checkWsorkerSalary` <span style="color:gray">[内部]</span>
 
         质检
-        
+
         判断工费信息是否存在 , 不存在 , 错误信息 **280001 薪资信息不存在**
-        
+
         判断质检状态是否为0(初始) , 其他状态 , 错误信息 **280002 工费状态不可操作**
-        
-                |Requests:|
-                :param workerSalary.wsid: 工费ID
-        :type workerSalary.wsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.wsid**:
+  工费ID
+
+        **示例**:{
                 "workerSalary.wsid": 1
             }
 
-    ### <I> deleteWorkerSalary
+    ### `deleteWorkerSalary` <span style="color:gray">[内部]</span>
 
         删除工人工费信息
-        
+
         判断工费信息是否存在 , 不存在 , 错误信息 **280001 薪资信息不存在**
-        
+
         判断工费状态是否为0(初始) , 非初始不能删除 , 错误信息 **280002 工费状态不可操作**
-        
+
         操作工费状态置3(撤销)
-        
+
         如果通过的工人工费存在关联工费信息 , 需要一同处理
-        
-                |Requests:|
-                :param workerSalary.wsid: 工费ID
-        :type workerSalary.wsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.wsid**:
+  工费ID
+
+        **示例**:{
                 "workerSalary.wsid": 1
             }
 
-    ### <I> batchWorkerSalary
+    ### `batchWorkerSalary` <span style="color:gray">[内部]</span>
 
         批量发送工费
-        
+
         利用开始和结束时间作为范围 , 状态为1(通过) , 消息状态为0(初始)
-        
-                |Requests:|
-                :param workerSalary.createTime: 开始时间
-        :type workerSalary.createTime: Timestamp
-        :param workerSalary.endTime: 结束时间
-        :type workerSalary.endTime: Timestamp
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.createTime**:
+  开始时间
+        - **workerSalary.endTime**:
+  结束时间
+
+        **示例**:{
                 "workerSalary.createTime": "2016-01-01 00:00:00",
                 "workerSalary.endTime": "2016-01-01 23: 59:59"
             }
-            
-    ### <I> sendWorkerSalary
+
+    ### `sendWorkerSalary` <span style="color:gray">[内部]</span>
 
         发送工费
-        
+
         判断工费信息是否存在 , 不存在 , 错误信息 **280001 薪资信息不存在**
-        
+
         判断工费状态是否为0(初始) , 其他状态 , 错误信息 **280002 工费状态不可操作**
-        
-                |Requests:|
-                :param workerSalary.wsid: 工费Id
-        :type workerSalary.wsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.wsid**:
+  工费Id
+
+        **示例**:{
                 "workerSalary.wsid": 1
             }
-    
-    ### <I> cancelWorkerSalary
+
+    ### `cancelWorkerSalary` <span style="color:gray">[内部]</span>
 
         取消发送工费
-    
+
         判断工费信息是否存在 , 不存在 , 错误信息 **280001 薪资信息不存在**
-        
+
         判断工费状态是否为1(待发) , 其他状态 , 错误信息 **280002 工费状态不可操作**
-        
-                |Requests:|
-                :param workerSalary.wsid: 工费Id
-        :type workerSalary.wsid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **workerSalary.wsid**:
+  工费Id
+
+        **示例**:{
                 "workerSalary.wsid": 1
             }
-            
+
 ## 设计师薪资
 
 ## api.salary.DesignerSalaryAction
 
-        |DataType:|
-        #### designerSalary
+**数据类型**:
+
+#### designerSalary
 
     - **dsid**: ID
       - 类型: *Long*
-    
-    ### <I> pageDesignerSalary
 
-    ### <I> addDesignerSalary
+    ### `pageDesignerSalary` <span style="color:gray">[内部]</span>
 
-    ### <I> updateDesignerSalary
+    ### `addDesignerSalary` <span style="color:gray">[内部]</span>
 
-    ### <I> adoptDesignerSalary
+    ### `updateDesignerSalary` <span style="color:gray">[内部]</span>
 
-    ### <I> rejectDesignerSalary
+    ### `adoptDesignerSalary` <span style="color:gray">[内部]</span>
 
-    ### <I> deleteDesignerSalary
+    ### `rejectDesignerSalary` <span style="color:gray">[内部]</span>
+
+    ### `deleteDesignerSalary` <span style="color:gray">[内部]</span>
 
 ## 图片
 
@@ -1150,8 +1099,9 @@
 
 ## api.salary.SalaryDrawingAction
 
-        |DataType:|
-        #### salaryDrawing
+**数据类型**:
+
+#### salaryDrawing
 
     - **sdid**: 图片ID
       - 类型: *Long*
@@ -1171,31 +1121,29 @@
       - 类型: *Timestamp*
     - **status**: 状态 , 0: 有效 , 1: 无效
       - 类型: *Short*
-    
-    ### <I> querySalaryDrawing
+
+    ### `querySalaryDrawing` <span style="color:gray">[内部]</span>
 
         通过关联ID以及类型获取图片信息
-        
-                |Requests:|
-                :param salaryDrawing.sid: 关联ID
-        :type salaryDrawing.sid: Long
-        :param salaryDrawing.type: 类型
-        :type salaryDrawing.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salaryDrawing.sid**:
+  关联ID
+        - **salaryDrawing.type**:
+  类型
+
+        **示例**:{
                 "salaryDrawing.sid": 1,
                 "salaryDrawing.type": 0
             }
-            
-                |Returns:|
-                - **salaryDrawings**: 图片信息列表 , 每条数据类型 *salaryDrawing*
+
+**返回参数**:
+
+- **salaryDrawings**: 图片信息列表 , 每条数据类型 *salaryDrawing*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "salaryDrawings": [
                     {
@@ -1209,33 +1157,32 @@
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "createTime": "2016-01-01"
                     }
                 ],
                 ...
             }
-            
-    ### <C> addSalaryDrawing
+
+    ### `addSalaryDrawing` <span style="color:blue">[自定义]</span>
 
         添加图片信息
-        
-                |Requests:|
-                :param salaryDrawing.sid: 关联ID
-        :type salaryDrawing.sid: Long
-        :param salaryDrawing.name: 名称
-        :type salaryDrawing.name: String
-        :param salaryDrawing.drawingUrl: 路径
-        :type salaryDrawing.drawingUrl: String
-        :param salaryDrawing.drawingType: 图片类型
-        :type salaryDrawing.drawingType: Short
-        :param salaryDrawing.type: 类型
-        :type salaryDrawing.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salaryDrawing.sid**:
+  关联ID
+        - **salaryDrawing.name**:
+  名称
+        - **salaryDrawing.drawingUrl**:
+  路径
+        - **salaryDrawing.drawingType**:
+  图片类型
+        - **salaryDrawing.type**:
+  类型
+
+        **示例**:{
                 "salaryDrawing.sid": 1,
                 "salaryDrawing.name": "name.jpg",
                 "salaryDrawing.drawingUrl": "2016/08/02/2/c7ec4da2429a4debbc3cca21eb5035b9.png",
@@ -1243,16 +1190,15 @@
                 "salaryDrawing.type": 0
             }
 
-    ### <C> deleteSalaryDrawing
+    ### `deleteSalaryDrawing` <span style="color:blue">[自定义]</span>
 
         删除图片信息
-        
-                |Requests:|
-                :param salaryDrawing.sdid: 图片ID
-        :type salaryDrawing.sdid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salaryDrawing.sdid**:
+  图片ID
+
+        **示例**:{
                 "salaryDrawing.sdid": 1
             }

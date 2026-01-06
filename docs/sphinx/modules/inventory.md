@@ -1,14 +1,13 @@
-# inventory {#inventory}
-
-# 仓储
+# inventory 仓储
 ## 盘点
 
 商品库存盘点信息
 
 ## api.inventory.CheckListAction
 
-        |DataType:|
-        #### checkList
+**数据类型**:
+
+#### checkList
 
     - **clid**: 盘点信息ID
       - 类型: *Long*
@@ -28,26 +27,25 @@
       - 类型: *Timestamp*
     - **creater**: 创建人 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
-    
+
         |Filters:|
         - **goodsName**: 商品名
       - 类型: *String*
     - **storehouseName**: 仓库名
       - 类型: *String*
-    
-    ### <I> pageCheckList
+
+    ### `pageCheckList` <span style="color:gray">[内部]</span>
 
         分页方式获取盘点信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 盘点信息列表 , 每条数据类型 *checkList*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  盘点信息列表 , 每条数据类型 *checkList*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -100,16 +98,17 @@
 
 货单中类分为十二种 , 分别是: 进货 , 进退 , 出货 , 出返 , 调拨 , 采购(进货) , 辅料(出货) , 辅退(进货) , 套合 , 套拆 , 盘盈 , 盘亏
 
-其中 , 进退对应进货 , 出返对应出货 , 需要关联已经产生的货单完成操作 . 
+其中 , 进退对应进货 , 出返对应出货 , 需要关联已经产生的货单完成操作 .
 
 采购类型货单 , 需要关联采购单与货单 .
 
-辅料类型货单 , 需要关联辅料单和货单 . 
+辅料类型货单 , 需要关联辅料单和货单 .
 
 ## api.inventory.ManifestAction
 
-        |DataType:|
-        #### manifest
+**数据类型**:
+
+#### manifest
 
     - **mid**: 货单ID
       - 类型: *Long*
@@ -133,7 +132,7 @@
       - 类型: *Object*
     - **company**: 公司
       - 类型: *Long*
-    
+
     #### manifestItem
 
     - **miid**: 货单项ID
@@ -168,26 +167,25 @@
       - 类型: *String*
     - **qmiid**: 引用货单项ID
       - 类型: *Long*
-    
+
         |Filters:|
         - **orderId**: 装修单号
       - 类型: *String*
     - **manifestTime**: 货单时间 , 例: 2016/01/01-2016/01/02
       - 类型: *String*
-    
-    ### <I> pageManifest
+
+    ### `pageManifest` <span style="color:gray">[内部]</span>
 
         分页方式获取货单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 货单信息列表 , 每条数据类型 *manifest*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  货单信息列表 , 每条数据类型 *manifest*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -201,7 +199,7 @@
                                "uid": 1,
                                "userName": "白雪",
                                "currentName": "白雪",
-                               "duty": "设计师" 
+                               "duty": "设计师"
                             },
                             "type": 5,
                             "status": 0,
@@ -214,28 +212,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryManifestByMid
+
+    ### `queryManifestByMid` <span style="color:gray">[内部]</span>
 
         通过货单编号获取货单信息
-        
-                |Requests:|
-                :param manifest.mid: 货单ID
-        :type manifest.mid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifest.mid**:
+  货单ID
+
+        **示例**:{
                 "manifest.mid": 1
             }
-    
-                |Returns:|
-                - **manifest**: 货单信息 , 类型 *manifest*
+
+**返回参数**:
+
+- **manifest**: 货单信息 , 类型 *manifest*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "manifest":{
                     "mid": 1,
@@ -244,7 +240,7 @@
                        "uid": 1,
                        "userName": "白雪",
                        "currentName": "白雪",
-                       "duty": "设计师" 
+                       "duty": "设计师"
                     },
                     "creatTime": "2016-01-01 00:00:00",
                     "manifestTime": "2016-01-01 00:00:00",
@@ -256,29 +252,27 @@
                 },
                 ...
             }
-            
-    ### <I> queryManifestForPUByPids
+
+    ### `queryManifestForPUByPids` <span style="color:gray">[内部]</span>
 
         通过采购单ID信息以及采购销售关联信息获取货单信息
-        
-                |Requests:|
-                :param pids[n]: 采购单ID列表 , 每条数据类型 Long
-        :type pids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **pids[n]**:
+  采购单ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "pids[0]": 1,
                 "pids[1]": 2
             }
-            
-                |Returns:|
-                - **manifests**: 货单信息列表 , 每条数据类型 *manifest*
+
+**返回参数**:
+
+- **manifests**: 货单信息列表 , 每条数据类型 *manifest*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "manifests":[
                     {
@@ -288,7 +282,7 @@
                            "uid": 1,
                            "userName": "白雪",
                            "currentName": "白雪",
-                           "duty": "设计师" 
+                           "duty": "设计师"
                         },
                         "creatTime": "2016-01-01 00:00:00",
                         "manifestTime": "2016-01-01 00:00:00",
@@ -301,28 +295,26 @@
                 ]
                 ...
             }
-            
-    ### <I> queryManifestForXGBySid
+
+    ### `queryManifestForXGBySid` <span style="color:gray">[内部]</span>
 
         通过销售单ID以及销售货单关系获取货单信息
-        
-                |Requests:|
-                :param sales.sid: 销售单ID
-        :type sales.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **sales.sid**:
+  销售单ID
+
+        **示例**:{
                 "sales.sid": 1
             }
-            
-                |Returns:|
-                - **manifests**: 货单信息列表 , 每条数据类型 *manifest*
+
+**返回参数**:
+
+- **manifests**: 货单信息列表 , 每条数据类型 *manifest*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "manifests":[
                     {
@@ -332,7 +324,7 @@
                            "uid": 1,
                            "userName": "白雪",
                            "currentName": "白雪",
-                           "duty": "设计师" 
+                           "duty": "设计师"
                         },
                         "creatTime": "2016-01-01 00:00:00",
                         "manifestTime": "2016-01-01 00:00:00",
@@ -345,28 +337,26 @@
                 ]
                 ...
             }
-    
-    ### <I> queryManifestItemByMid
+
+    ### `queryManifestItemByMid` <span style="color:gray">[内部]</span>
 
         通过货单ID获取货单下拥有的货单项信息
-        
-                |Requests:|
-                :param manifest.mid: 货单ID
-        :type manifest.mid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifest.mid**:
+  货单ID
+
+        **示例**:{
                 "manifest.mid": 1
             }
-            
-                |Returns:|
-                - **manifestItems**: 货单项信息列表 , 每条数据类型 *manifestItem*
+
+**返回参数**:
+
+- **manifestItems**: 货单项信息列表 , 每条数据类型 *manifestItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "manifestItems": [
                     {
@@ -408,28 +398,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryManifestByAid
+
+    ### `queryManifestByAid` <span style="color:gray">[内部]</span>
 
         通过辅料单ID获取货单信息 , 利用辅料货单关联关系
-        
-                |Requests:|
-                :param accessoriesManifest.accessories.aid: 辅料单ID
-        :type accessoriesManifest.accessories.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessoriesManifest.accessories.aid**:
+  辅料单ID
+
+        **示例**:{
                 "accessoriesManifest.accessories.aid": 1
             }
-    
-                |Returns:|
-                - **manifests**: 货单信息列表 , 每条数据类型 *manifest*
+
+**返回参数**:
+
+- **manifests**: 货单信息列表 , 每条数据类型 *manifest*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "manifests":[
                     {
@@ -439,7 +427,7 @@
                            "uid": 1,
                            "userName": "白雪",
                            "currentName": "白雪",
-                           "duty": "设计师" 
+                           "duty": "设计师"
                         },
                         "creatTime": "2016-01-01 00:00:00",
                         "manifestTime": "2016-01-01 00:00:00",
@@ -452,39 +440,38 @@
                 ]
                 ...
             }
-            
-    ### <I> addManifestForCG
+
+    ### `addManifestForCG` <span style="color:gray">[内部]</span>
 
         添加进货类型货单
-        
+
         根据商品/颜色/规格/供应商生成商品库存信息
-        
-                |Requests:|
-                :param manifest.manifestTime: 货单时间
-        :type manifest.manifestTime: Timestamp
-        :param manifest.comment: 备注
-        :type manifest.comment: String
-        :param manifest.attachment: 附件路径
-        :type manifest.attachment: String
-        
-        :param manifestItems[n].goods.gid: 商品ID
-        :type manifestItems[n].goods.gid: Long
-        :param manifestItems[n].color.cid: 颜色ID
-        :type manifestItems[n].color.cid: Long
-        :param manifestItems[n].format.fid: 规格ID
-        :type manifestItems[n].format.fid: Long
-        :param manifestItems[n].instorehouse.shid: 仓库ID
-        :type manifestItems[n].instorehouse.shid: Long
-        :param manifestItems[n].inprice: 入库价
-        :type manifestItems[n].inprice: Integer
-        :param manifestItems[n].num: 数量
-        :type manifestItems[n].num: Integer
-        :param manifestItems[n].comment: 说明
-        :type manifestItems[n].comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifest.manifestTime**:
+  货单时间
+        - **manifest.comment**:
+  备注
+        - **manifest.attachment**:
+  附件路径
+
+        - **manifestItems[n].goods.gid**:
+  商品ID
+        - **manifestItems[n].color.cid**:
+  颜色ID
+        - **manifestItems[n].format.fid**:
+  规格ID
+        - **manifestItems[n].instorehouse.shid**:
+  仓库ID
+        - **manifestItems[n].inprice**:
+  入库价
+        - **manifestItems[n].num**:
+  数量
+        - **manifestItems[n].comment**:
+  说明
+
+        **示例**:{
                 "manifest.manifestTime": "2016-01-01 00:00:00",
                 "manifest.comment": "说明",
                 "manifest.attachment": "",
@@ -497,47 +484,46 @@
                 "manifestItems[0].num": 1,
                 "manifestItems[0].comment": "说明",
             }
-            
-    ### <I> addManifestForXG
+
+    ### `addManifestForXG` <span style="color:gray">[内部]</span>
 
         添加出货类型货单
-        
+
         判断商品库存不存在对应商品(颜色 , 规格) , 添加失败 , 错误信息 **260008 商品库存不足**
-        
+
         判断商品库存对应商品数量小于出货数量 , 添加失败 , 错误信息 **260008 商品库存不足**
-        
+
         判断销售项出库数量 , 数量不足 , 错误信息 **260055 销售项出库数量不足**
-        
+
         根据商品/颜色/规格/供应商获取商品库存信息 , 利用先入先出原则 , 减少商品库存数量
-        
+
         更新销售项出库剩余数量
-        
-                |Requests:|
-                :param manifest.manifestTime: 货单时间
-        :type manifest.manifestTime: Timestamp
-        :param manifest.comment: 备注
-        :type manifest.comment: String
-        :param manifest.attachment: 附件路径
-        :type manifest.attachment: String
-        
-        :param manifestItems[n].goods.gid: 商品ID
-        :type manifestItems[n].goods.gid: Long
-        :param manifestItems[n].color.cid: 颜色ID
-        :type manifestItems[n].color.cid: Long
-        :param manifestItems[n].format.fid: 规格ID
-        :type manifestItems[n].format.fid: Long
-        :param manifestItems[n].outstorehouse.shid: 仓库ID
-        :type manifestItems[n].outstorehouse.shid: Long
-        :param manifestItems[n].outprice: 出库价
-        :type manifestItems[n].outprice: Integer
-        :param manifestItems[n].num: 数量
-        :type manifestItems[n].num: Integer
-        :param manifestItems[n].comment: 说明
-        :type manifestItems[n].comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifest.manifestTime**:
+  货单时间
+        - **manifest.comment**:
+  备注
+        - **manifest.attachment**:
+  附件路径
+
+        - **manifestItems[n].goods.gid**:
+  商品ID
+        - **manifestItems[n].color.cid**:
+  颜色ID
+        - **manifestItems[n].format.fid**:
+  规格ID
+        - **manifestItems[n].outstorehouse.shid**:
+  仓库ID
+        - **manifestItems[n].outprice**:
+  出库价
+        - **manifestItems[n].num**:
+  数量
+        - **manifestItems[n].comment**:
+  说明
+
+        **示例**:{
                 "manifest.manifestTime": "2016-01-01 00:00:00",
                 "manifest.comment": "说明",
                 "manifest.attachment": "",
@@ -550,160 +536,156 @@
                 "manifestItems[0].num": 1,
                 "manifestItems[0].comment": "说明",
             }
-        
-    ### <I> addManifestForCR
+
+    ### `addManifestForCR` <span style="color:gray">[内部]</span>
 
         添加进退类型货单
-        
+
         判断操作货单是否存在 , 不存在 , 错误信息 **260009 货单不存在**
-        
+
         判断操作货单状态 , 非已确认进退失败 , 错误信息 **260027 货单状态不可操作**
-        
+
         判断操作货单中货单项数量与进退项数量 , 后者不能大于前者 , 错误信息 **260026 货单项数量不符**
-        
+
         进退项中仓库为出库
-        
+
         生成的进退类型货单状态为已确认 , 货单项进价和出价与操作货单项进价相同
-        
+
         根据操作货单项信息 , 减掉商品库存中对应商品库存数量
-        
-                |Requests:|
-                :param manifest.quoteManifest.mid: 操作货单ID
-        :type manifest.quoteManifest.mid: Long
-        
-        :param manifestItems[n].miid: 进退项ID
-        :type manifestItems[n].miid: Long
-        :param manifestItems[n].num: 数量
-        :type manifestItems[n].num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifest.quoteManifest.mid**:
+  操作货单ID
+
+        - **manifestItems[n].miid**:
+  进退项ID
+        - **manifestItems[n].num**:
+  数量
+
+        **示例**:{
                 "manifest.quoteManifest.mid": 1,
                 "manifestItems[0].miid": 1,
                 "manifestItems[0].num": 1
             }
-            
-    ### <I> addManifestForXB
+
+    ### `addManifestForXB` <span style="color:gray">[内部]</span>
 
         添加出返类型货单
-        
+
         判断操作货单是否存在 , 不存在 , 错误信息 **260009 货单不存在**
-        
+
         判断操作货单状态 , 非已确认出返失败 , 错误信息 **260027 货单状态不可操作**
-        
+
         判断操作货单中货单数量与出返项数量 , 后者不能大于前者 , 错误信息 **260026 货单项数量不符**
-        
+
         出返项中仓库为进库
-        
+
         生成的出返类型货单状态为已确认 , 货单项进价和出价与操作货单项出价相同
-        
+
         根据操作货单项信息 , 增加商品库存中对应商品库存信息
-        
-                |Requests:|
-                :param manifest.quoteManifest.mid: 操作货单ID
-        :type manifest.quoteManifest.mid: Long
-        
-        :param manifestItems[n].miid: 进退项ID
-        :type manifestItems[n].miid: Long
-        :param manifestItems[n].num: 数量
-        :type manifestItems[n].num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifest.quoteManifest.mid**:
+  操作货单ID
+
+        - **manifestItems[n].miid**:
+  进退项ID
+        - **manifestItems[n].num**:
+  数量
+
+        **示例**:{
                 "manifest.quoteManifest.mid": 1,
                 "manifestItems[0].miid": 1,
                 "manifestItems[0].num": 1
             }
-            
-    ### <I> addManifestForPU
+
+    ### `addManifestForPU` <span style="color:gray">[内部]</span>
 
         添加采购类型货单
-        
+
         采购单不存在 , 添加失败 , 错误信息 **260017 采购单不存在**
-        
+
         入库数量大于采购项剩余数量 , 添加失败 , 错误信息 **260028 采购项剩余数量不足**
-        
+
         判断商品库存有无对应商品(颜色 , 规格) , 不存在创建商品库存 , 存在更新库存数量
-        
+
         更新采购项剩余数量
-        
+
         判断采购单中采购项剩余数量 , 所有项目剩余数量为0 , 更新采购单状态为 **2(全部入库)** ; 部分剩余数量为0 , 更新采购单状态为 **1(部分入库)**
-        
+
         更新采购货单状态为 **1(已确认)**
-        
+
         采购单与生成货单进行关联 , 采购货单 [purchaseManifest](./inventory.html#api.inventory.PurchaseManifestAction.purchaseManifest)
-        
+
         根据商品/颜色/规格/供应商生成商品库存信息 , 采购项的采购价 = 货单项进价 = 商品库存进价
-        
-                |Requests:|
-                :param purchases[n].pid: 采购单ID
-        :type purchases[n].pid: Long
-        :param purchaseItems[n].piid: 采购项ID
-        :type purchaseItems[n].piid: Long
-        :param purchaseItems[n].storehouse.shid: 仓库ID
-        :type purchaseItems[n].storehouse.shid: Long
-        :param purchaseItems[n].inprice: 入库价
-        :type purchaseItems[n].inprice: Integer
-        :param purchaseItems[n].num: 入库数量
-        :type purchaseItems[n].num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **purchases[n].pid**:
+  采购单ID
+        - **purchaseItems[n].piid**:
+  采购项ID
+        - **purchaseItems[n].storehouse.shid**:
+  仓库ID
+        - **purchaseItems[n].inprice**:
+  入库价
+        - **purchaseItems[n].num**:
+  入库数量
+
+        **示例**:{
                 "purchases[0].pid": 1,
                 "purchaseItems[0].piid": 1,
                 "purchaseItems[0].storehouse.shid": 1,
                 "purchaseItems[0].inprice": 100000,
                 "purchaseItems[0].num": 10
             }
-            
-    ### <I> addManifestForAS
+
+    ### `addManifestForAS` <span style="color:gray">[内部]</span>
 
         添加辅料类型货单
-        
+
         辅料单不存在 , 添加失败 , 错误信息 **260023 辅料单不存在**
-        
+
         判断辅料单类型为0(普通), 状态为0(初始)/1(预出) , 其他状态不可操作 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         判断辅料单类型为1(售后), 状态为7(审核) , 其他状态不可操作 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         判断辅料项出库对应商品(颜色 , 规格)库存不存在 , 添加失败 , 错误信息 **260008 商品库存不足**
-        
-        判断辅料项出库对应商品(颜色 , 规格)库存数量小于出库数量 , 添加失败 , 错误信息 **260008 商品库存不足** 
-        
+
+        判断辅料项出库对应商品(颜色 , 规格)库存数量小于出库数量 , 添加失败 , 错误信息 **260008 商品库存不足**
+
         更新辅料单状态为 **1(出货)**
-        
+
         更新辅料货单状态为 **1(已确认)**
-        
+
         辅料单与生成货单进行关联 , 辅料货单 [accessoriesManifest](./inventory.html#api.inventory.AccessoriesManifestAction.accessoriesManifest)
-        
+
         根据商品/颜色/规格/供应商获取商品库存信息 , 采购项的采购价 = 货单项进价 = 商品库存进价
-        
+
         辅料项根据验证标识 , 关联工程辅料 , 验证总额上限 , 同时更新对应总额
-        
-                |Requests:|
-                :param accessories[n].aid: 辅料单ID
-        :type accessories[n].aid: Long
-        :param accessoriesItems[n].goods.gid: 商品ID
-        :type accessoriesItems[n].goods.gid: Long
-        :param accessoriesItems[n].color.cid: 颜色ID
-        :type accessoriesItems[n].color.cid: Long
-        :param accessoriesItems[n].format.fid: 规格ID
-        :type accessoriesItems[n].format.fid: Long
-        :param accessoriesItems[n].storehouse.shid: 仓库ID
-        :type accessoriesItems[n].storehouse.shid: Long
-        :param accessoriesItems[n].outprice: 出库价
-        :type accessoriesItems[n].outprice: Integer
-        :param accessoriesItems[n].num: 出库数量
-        :type accessoriesItems[n].num: Integer
-        :param accessoriesItems[n].checkup: 验证标识
-        :type accessoriesItems[n].checkup: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessories[n].aid**:
+  辅料单ID
+        - **accessoriesItems[n].goods.gid**:
+  商品ID
+        - **accessoriesItems[n].color.cid**:
+  颜色ID
+        - **accessoriesItems[n].format.fid**:
+  规格ID
+        - **accessoriesItems[n].storehouse.shid**:
+  仓库ID
+        - **accessoriesItems[n].outprice**:
+  出库价
+        - **accessoriesItems[n].num**:
+  出库数量
+        - **accessoriesItems[n].checkup**:
+  验证标识
+
+        **示例**:{
                 "accessories[0].aid": 1,
                 "accessoriesItems[0].goods.gid": 1,
                 "accessoriesItems[0].color.cid": 1,
@@ -713,43 +695,42 @@
                 "accessoriesItems[0].num": 10,
                 "accessoriesItems[0].checkup": 0
             }
-            
-    ### <I> addManifestForAR
+
+    ### `addManifestForAR` <span style="color:gray">[内部]</span>
 
         添加辅退类型货单
-        
+
         辅料单不存在 , 添加失败 , 错误信息 **260023 辅料单不存在**
-        
+
         判断辅料单状态为1(出库) , 其他状态不可操作 , 错误信息 **260024 辅料单状态不可操作**
         判断辅料单状态为1(出库) , 其他状态不可操作 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         判断辅料项剩余数量 , 退回数量大于剩余数量 , 错误信息 **260051 辅料项数量不足**
-        
+
         更新辅料货单状态为 **1(已确认)**
-        
+
         辅料单与生成货单进行关联 , 辅料货单 [accessoriesManifest](./inventory.html#api.inventory.AccessoriesManifestAction.accessoriesManifest)
-        
+
         根据商品/颜色/规格/供应商获取商品库存信息 , 采购项的采购价 = 货单项进价 = 商品库存进价
-        
-                |Requests:|
-                :param accessories[n].aid: 辅料单ID
-        :type accessories[n].aid: Long
-        :param accessoriesItems[n].goods.gid: 商品ID
-        :type accessoriesItems[n].goods.gid: Long
-        :param accessoriesItems[n].color.cid: 颜色ID
-        :type accessoriesItems[n].color.cid: Long
-        :param accessoriesItems[n].format.fid: 规格ID
-        :type accessoriesItems[n].format.fid: Long
-        :param accessoriesItems[n].storehouse.shid: 仓库ID
-        :type accessoriesItems[n].storehouse.shid: Long
-        :param accessoriesItems[n].outprice: 出库价
-        :type accessoriesItems[n].outprice: Integer
-        :param accessoriesItems[n].num: 出库数量
-        :type accessoriesItems[n].num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessories[n].aid**:
+  辅料单ID
+        - **accessoriesItems[n].goods.gid**:
+  商品ID
+        - **accessoriesItems[n].color.cid**:
+  颜色ID
+        - **accessoriesItems[n].format.fid**:
+  规格ID
+        - **accessoriesItems[n].storehouse.shid**:
+  仓库ID
+        - **accessoriesItems[n].outprice**:
+  出库价
+        - **accessoriesItems[n].num**:
+  出库数量
+
+        **示例**:{
                 "accessories[0].aid": 1,
                 "accessoriesItems[0].goods.gid": 1,
                 "accessoriesItems[0].color.cid": 1,
@@ -758,70 +739,68 @@
                 "accessoriesItems[0].outprice": 100000,
                 "accessoriesItems[0].num": 10
             }
-            
-    ### <I> updateManifest
+
+    ### `updateManifest` <span style="color:gray">[内部]</span>
 
         更新货单信息
-        
+
         货单信息不存在 , 更新失败 , 错误信息 **260009 货单不存在**
-        
+
         判断当前货单项状态 , 非初始删除失败 , 错误信息 **260027 货单状态不可操作**
-        
-                |Requests:|
-                :param manifest.mid: 货单ID
-        :type manifest.mid: Long
-        :param manifest.manifestTime: 货单时间
-        :type manifest.manifestTime: Timestamp
-        :param manifest.comment: 备注
-        :type manifest.comment: String
-        :param manifest.attachment: 附件路径
-        :type manifest.attachment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifest.mid**:
+  货单ID
+        - **manifest.manifestTime**:
+  货单时间
+        - **manifest.comment**:
+  备注
+        - **manifest.attachment**:
+  附件路径
+
+        **示例**:{
                 "manifest.mid": 1,
                 "manifest.manifestTime": "2016-01-01 00:00:00",
                 "manifest.comment": "说明",
                 "manifest.attachment": ""
             }
-            
-    ### <I> addManifestItem
+
+    ### `addManifestItem` <span style="color:gray">[内部]</span>
 
         添加货单项信息
-        
+
         货单项信息不存在 , 添加失败 , 错误信息 **260010 货单项不存在**
-        
+
         判断当前货单项状态 , 非初始添加失败 , 错误信息 **260027 货单状态不可操作**
-        
+
         根据货单类型 , 选着货单项中的出库/入库 , 同时更新商品库存信息
-        
-                |Requests:|
-                :param manifest.mid: 货单ID
-        :type manifest.mid: Long
-        
-        :param manifestItem.goods.gid: 商品ID
-        :type manifestItem.goods.gid: Long
-        :param manifestItem.color.cid: 颜色ID
-        :type manifestItem.color.cid: Long
-        :param manifestItem.format.fid: 规格ID
-        :type manifestItem.format.fid: Long
-        :param manifestItem.instorehouse.shid: 仓库ID
-        :type manifestItem.instorehouse.shid: Long
-        :param manifestItem.outstorehouse.shid: 仓库ID
-        :type manifestItem.outstorehouse.shid: Long
-        :param manifestItem.inprice: 进货价 , <可选>
-        :type manifestItem.inprice: Integer
-        :param manifestItem.outprice: 出库价 , <可选>
-        :type manifestItem.outprice: Integer
-        :param manifestItem.num: 数量
-        :type manifestItem.num: Integer
-        :param manifestItem.comment: 说明
-        :type manifestItem.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifest.mid**:
+  货单ID
+
+        - **manifestItem.goods.gid**:
+  商品ID
+        - **manifestItem.color.cid**:
+  颜色ID
+        - **manifestItem.format.fid**:
+  规格ID
+        - **manifestItem.instorehouse.shid**:
+  仓库ID
+        - **manifestItem.outstorehouse.shid**:
+  仓库ID
+        - **manifestItem.inprice**:
+  进货价 , <可选>
+        - **manifestItem.outprice**:
+  出库价 , <可选>
+        - **manifestItem.num**:
+  数量
+        - **manifestItem.comment**:
+  说明
+
+        **示例**:{
                 "manifest.mid": 1,
                 "manifestItem.goods.gid": 1,
                 "manifestItem.color.cid": 1,
@@ -833,33 +812,32 @@
                 "manifestItem.num": 1,
                 "manifestItem.comment": "说明"
             }
-            
-    ### <I> updateManifestItem
+
+    ### `updateManifestItem` <span style="color:gray">[内部]</span>
 
         更新货单项信息
-        
+
         货单项信息不存在 , 更新失败 , 错误信息 **260010 货单项不存在**
-        
+
         判断当前货单项状态 , 非初始更新失败 , 错误信息 **260027 货单状态不可操作**
-        
-                |Requests:|
-                :param manifest.mid: 货单ID
-        :type manifest.mid: Long
-        
-        :param manifestItem.miid: 货单项ID
-        :type manifestItem.miid: Long
-        :param manifestItem.instorehouse.shid: 仓库ID
-        :type manifestItem.instorehouse.shid: Long
-        :param manifestItem.outstorehouse.shid: 仓库ID
-        :type manifestItem.outstorehouse.shid: Long
-        :param manifestItem.num: 数量
-        :type manifestItem.num: Integer
-        :param manifestItem.comment: 说明
-        :type manifestItem.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifest.mid**:
+  货单ID
+
+        - **manifestItem.miid**:
+  货单项ID
+        - **manifestItem.instorehouse.shid**:
+  仓库ID
+        - **manifestItem.outstorehouse.shid**:
+  仓库ID
+        - **manifestItem.num**:
+  数量
+        - **manifestItem.comment**:
+  说明
+
+        **示例**:{
                 "manifest.mid": 1,
                 "manifestItem.miid": 1,
                 "manifestItem.instorehouse.shid": 1,
@@ -867,57 +845,56 @@
                 "manifestItem.num": 1,
                 "manifestItem.comment": "说明",
             }
-            
-    ### <I> confirmManifest
+
+    ### `confirmManifest` <span style="color:gray">[内部]</span>
 
         确认货单状态
-        
+
         货单信息不存在 , 确认失败 , 错误信息 **260009 货单不存在**
-        
+
         货单状态不为初始 , 确认失败 , 错误信息 **260027 货单状态不可操作**
-        
+
         更新货单状态为已确认
-        
-                |Requests:|
-                :param manifest.mid: 货单ID
-        :type manifest.mid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifest.mid**:
+  货单ID
+
+        **示例**:{
                 "manifest.mid": 1
             }
-            
-    ### <I> deleteManifestItem
+
+    ### `deleteManifestItem` <span style="color:gray">[内部]</span>
 
         删除货单项
-        
+
         货单项信息不存在 , 更新失败 , 错误信息 **260010 货单项不存在**
-        
+
         判断当前货单项状态 , 只有初始状态才能够完成删除货单项
-        
-                |Requests:|
-                :param manifest.mid: 货单ID
-        :type manifest.mid: Long
-        
-        :param manifestItem.miid: 货单项ID
-        :type manifestItem.miid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **manifest.mid**:
+  货单ID
+
+        - **manifestItem.miid**:
+  货单项ID
+
+        **示例**:{
                 "manifest.mid": 1,
                 "manifestItem.miid": 1,
             }
-            
+
 ## 销售
 
 ### 销售采购
 
 ## api.inventory.SalesPurchaseAction
 
-        |DataType:|
-        #### salesPurchase
+**数据类型**:
+
+#### salesPurchase
 
     - **pmid**: 销售货单Id
       - 类型: *Long*
@@ -930,8 +907,9 @@
 
 ## api.inventory.SalesManifestAction
 
-        |DataType:|
-        #### salesManifest
+**数据类型**:
+
+#### salesManifest
 
     - **pmid**: 销售货单Id
       - 类型: *Long*
@@ -939,15 +917,16 @@
       - 类型: *Object*
     - **manifest**: 货单 , 类型 [manifest](./inventory.html#api.inventory.ManifestAction.manifest)
       - 类型: *Object*
-            
+
 ## 采购
 
 ### 订单
 
 ## api.inventory.PurchaseAction
 
-        |DataType:|
-        #### purchase
+**数据类型**:
+
+#### purchase
 
     - **pid**: 采购单ID
       - 类型: *Long*
@@ -969,7 +948,7 @@
       - 类型: *String *
     - **company**: 公司
       - 类型: *Long*
-    
+
     #### purchaseItem
 
     - **piid**: 采购项ID
@@ -990,20 +969,19 @@
       - 类型: *Integer*
     - **surplus**: 剩余数量
       - 类型: *Integer*
-    
-    ### <I> pagePurchase
+
+    ### `pagePurchase` <span style="color:gray">[内部]</span>
 
         分页方式获取采购单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 采购单信息列表 , 每条数据类型 *purchase*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  采购单信息列表 , 每条数据类型 *purchase*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1030,22 +1008,22 @@
                 },
                 ...
             }
-            
-    ### <I> queryPurchaseByPid
+
+    ### `queryPurchaseByPid` <span style="color:gray">[内部]</span>
 
         通过采购单ID获取采购单信息
-        
-                |Requests:|
-                :param purchase.pid: 采购单ID
-        :type purchase.pid: Long
-        
-                |Returns:|
-                - **purchase**: 采购单 , 类型 *purchase*
+
+**请求参数**:
+
+- **purchase.pid**:
+  采购单ID
+
+**返回参数**:
+
+- **purchase**: 采购单 , 类型 *purchase*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "purchase": {
                     "pid": 1,
@@ -1066,22 +1044,22 @@
                 }
                 ...
             }
-            
-    ### <I> queryPurchaseBySid
+
+    ### `queryPurchaseBySid` <span style="color:gray">[内部]</span>
 
         通过销售单ID以及销售采购关系获取采购单信息
-        
-                |Requests:|
-                :param sales.sid: 销售单ID
-        :type sales.sid: Long
-        
-                |Returns:|
-                - **purchases**: 采购单列表 , 每条数据类型 *purchase*
+
+**请求参数**:
+
+- **sales.sid**:
+  销售单ID
+
+**返回参数**:
+
+- **purchases**: 采购单列表 , 每条数据类型 *purchase*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "purchases": [
                     {
@@ -1104,37 +1082,36 @@
                 ]
                 ...
             }
-            
-    ### <I> addPurchase
+
+    ### `addPurchase` <span style="color:gray">[内部]</span>
 
         添加采购单
-        
+
         判断销售项采购数量 , 数量不足 , 错误信息 **260054 销售项采购数量不足**
-        
+
         更新销售项采购剩余数量
-        
-                |Requests:|
-                :param purchase.deliveryTime: 交付时间
-        :type purchase.deliveryTime: Timestamp
-        :param purchase.comment: 说明
-        :type purchase.comment: String
-        
-        :param purchaseItems[n].siid: 销售项ID
-        :type purchaseItems[n].siid: Long
-        :param purchaseItems[n].goods.gid: 商品ID
-        :type purchaseItems[n].goods.gid: Long
-        :param purchaseItems[n].color.cid: 颜色ID
-        :type purchaseItems[n].color.cid: Long
-        :param purchaseItems[n].format.fid: 规格ID
-        :type purchaseItems[n].format.fid: Long
-        :param purchaseItems[n].inprice: 进价
-        :type purchaseItems[n].inprice: Integer
-        :param purchaseItems[n].num: 数量
-        :type purchaseItems[n].num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **purchase.deliveryTime**:
+  交付时间
+        - **purchase.comment**:
+  说明
+
+        - **purchaseItems[n].siid**:
+  销售项ID
+        - **purchaseItems[n].goods.gid**:
+  商品ID
+        - **purchaseItems[n].color.cid**:
+  颜色ID
+        - **purchaseItems[n].format.fid**:
+  规格ID
+        - **purchaseItems[n].inprice**:
+  进价
+        - **purchaseItems[n].num**:
+  数量
+
+        **示例**:{
                 "purchase.comment": "说明",
                 "purchase.deliveryTime": "2016-01-01 00:00:00",
                 "purchaseItem[0].goods.gid": 1,
@@ -1143,66 +1120,63 @@
                 "purchaseItem[0].inprice": 100000,
                 "purchaseItem[0].num": 10
             }
-        
-    ### <I> updatePurchase
+
+    ### `updatePurchase` <span style="color:gray">[内部]</span>
 
         更新采购单信息
-        
+
         采购单信息不存在 , 更新失败 , 错误信息 **260017 采购单不存在**
-        
+
         更新需要判断当前订单状态 , 初始状态能够完成更新动作 , 其他状态失败 , 错误信息 **260018 采购单状态不可操作**
-    
-                |Requests:|
-                :param purchase.pid: 采购单ID
-        :type purchase.pid: Long
-        :param purchase.deliveryTime: 交付时间
-        :type purchase.deliveryTime: Timestamp
-        :param purchase.comment: 说明
-        :type purchase.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **purchase.pid**:
+  采购单ID
+        - **purchase.deliveryTime**:
+  交付时间
+        - **purchase.comment**:
+  说明
+
+        **示例**:{
                 "purchase.pid": 1,
                 "purchase.deliveryTime": "2016-01-01 00:00:00",
                 "purchase.comment": "说明",
             }
-            
-    ### <I> updatePurchaseForStatus
+
+    ### `updatePurchaseForStatus` <span style="color:gray">[内部]</span>
 
         更新采购单信息
-        
+
         采购单信息不存在 , 更新失败 , 错误信息 **260017 采购单不存在**
-        
+
         采购单状态不能为全部入库 , 错误信息 **260018 采购单状态不可操作**
-        
+
         采购单状态更新为2(全部入库)
-        
-                |Requests:|
-                :param purchase.pid: 采购单ID
-        :type purchase.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **purchase.pid**:
+  采购单ID
+
+        **示例**:{
                 "purchase.pid": 1
             }
-        
-    ### <I> updatePurchaseForBalanceStatus
+
+    ### `updatePurchaseForBalanceStatus` <span style="color:gray">[内部]</span>
 
         更新采购单信息
-        
+
         采购单信息不存在 , 更新失败 , 错误信息 **260017 采购单不存在**
-        
+
         采购单结算状态更新为2(完结)
-        
-                |Requests:|
-                :param purchase.pid: 采购单ID
-        :type purchase.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **purchase.pid**:
+  采购单ID
+
+        **示例**:{
                 "purchase.pid": 1
             }
 
@@ -1210,8 +1184,9 @@
 
 ## api.inventory.PurchaseItemAction
 
-        |DataType:|
-        #### purchaseItem
+**数据类型**:
+
+#### purchaseItem
 
     - **piid**: 采购项ID
       - 类型: *Long*
@@ -1231,28 +1206,26 @@
       - 类型: *Integer*
     - **surplus**: 剩余数量
       - 类型: *Integer*
-    
-    ### <I> queryPurchaseItemByPid
+
+    ### `queryPurchaseItemByPid` <span style="color:gray">[内部]</span>
 
         通过采购单ID获取采购项
-        
-                |Requests:|
-                :param purchase.pid: 采购单ID
-        :type purchase.pid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **purchase.pid**:
+  采购单ID
+
+        **示例**:{
                 "purchase.pid": 1
             }
-            
-                |Returns:|
-                - **purchaseItems**: 采购项信息列表 , 每条数据类型 *purchaseItem*
+
+**返回参数**:
+
+- **purchaseItems**: 采购项信息列表 , 每条数据类型 *purchaseItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "purchaseItems": [
                     {
@@ -1286,28 +1259,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryPurchaseItemByPids
+
+    ### `queryPurchaseItemByPids` <span style="color:gray">[内部]</span>
 
         通过采购单ID获取采购项
-        
-                |Requests:|
-                :param pids[n]: 采购单ID列表 , 每条数据类型 Long
-        :type pids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **pids[n]**:
+  采购单ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "pids[0]": 1
             }
-            
-                |Returns:|
-                - **purchaseItems**: 采购项信息列表 , 每条数据类型 *purchaseItem*
+
+**返回参数**:
+
+- **purchaseItems**: 采购项信息列表 , 每条数据类型 *purchaseItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "purchaseItems": [
                     {
@@ -1341,30 +1312,29 @@
                 ],
                 ...
             }
-    
-    ### <I> addPurchaseItem
+
+    ### `addPurchaseItem` <span style="color:gray">[内部]</span>
 
         添加采购项
-        
+
         添加采购项需要判断对应采购单状态 , 初始状态能够完成项目更新动作 , 其他状态失败 , 错误信息 **260018 采购单状态不可操作**
-        
-                |Requests:|
-                :param purchase.pid: 采购单ID
-        :type purchase.pid: Long
-        :param purchaseItem.goods.gid: 商品ID
-        :type purchaseItem.goods.gid: Long
-        :param purchaseItem.color.cid: 颜色ID
-        :type purchaseItem.color.cid: Long
-        :param purchaseItem.format.fid: 规格ID
-        :type purchaseItem.format.fid: Long
-        :param purchaseItem.inprice: 单价
-        :type purchaseItem.inprice: Integer
-        :param purchaseItem.num: 数量
-        :type purchaseItem.num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **purchase.pid**:
+  采购单ID
+        - **purchaseItem.goods.gid**:
+  商品ID
+        - **purchaseItem.color.cid**:
+  颜色ID
+        - **purchaseItem.format.fid**:
+  规格ID
+        - **purchaseItem.inprice**:
+  单价
+        - **purchaseItem.num**:
+  数量
+
+        **示例**:{
                 "purchase.pid": 1,
                 "purchaseItem.goods.gid": 1,
                 "purchaseItem.color.cid": 1
@@ -1372,56 +1342,55 @@
                 "purchaseItem.inprice": 100000,
                 "purchaseItem.num": 10
             }
-            
-    ### <I> updatePurchaseItem
+
+    ### `updatePurchaseItem` <span style="color:gray">[内部]</span>
 
         更新采购项
-        
+
         更新采购项需要判断对应采购单状态 , 初始状态能够完成项目更新动作 , 其他状态失败 , 错误信息 **260018 采购单状态不可操作**
-        
+
         更新采购项信息不存在 , 更新失败 , 错误信息 **260019 采购项不存在**
-        
-                |Requests:|
-                :param purchaseItem.piid: 采购项ID
-        :type purchaseItem.piid: Long
-        :param purchaseItem.inprice: 单价
-        :type purchaseItem.inprice: Integer
-        :param purchaseItem.num: 数量
-        :type purchaseItem.num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **purchaseItem.piid**:
+  采购项ID
+        - **purchaseItem.inprice**:
+  单价
+        - **purchaseItem.num**:
+  数量
+
+        **示例**:{
                 "purchaseItem.piid": 1,
                 "purchaseItem.inprice": 100000,
                 "purchaseItem.num": "说明",
             }
-            
-    ### <I> deletePurchaseItem
+
+    ### `deletePurchaseItem` <span style="color:gray">[内部]</span>
 
         删除采购项
-        
+
         更新采购项需要判断对应采购单状态 , 初始状态能够完成项目更新动作 , 其他状态失败 , 错误信息 **260018 采购单状态不可操作**
-        
+
         更新采购项信息不存在 , 更新失败 , 错误信息 **260019 采购项不存在**
-        
-                |Requests:|
-                :param purchaseItem.piid: 采购项ID
-        :type purchaseItem.piid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **purchaseItem.piid**:
+  采购项ID
+
+        **示例**:{
                 "purchaseItem.piid": 1
             }
-            
+
 ### 货单
 采购单与货单关联
 
 ## api.inventory.PurchaseManifestAction
 
-        |DataType:|
-        #### purchaseManifest
+**数据类型**:
+
+#### purchaseManifest
 
     - **pmid**: 采购货单Id
       - 类型: *Long*
@@ -1429,13 +1398,14 @@
       - 类型: *Object*
     - **manifest**: 货单 , 类型 [manifest](./inventory.html#api.inventory.ManifestAction.manifest)
       - 类型: *Object*
-    
+
 ### 结算
 
 ## api.inventory.PurchaseBalanceAction
 
-        |DataType:|
-        #### purchaseBalance
+**数据类型**:
+
+#### purchaseBalance
 
     - **pbid**: 采购结算ID
       - 类型: *Long*
@@ -1452,17 +1422,16 @@
     - **comment**: 说明
       - 类型: *String*
 
-    ### <I> queryPurchaseBalanceByPid
+    ### `queryPurchaseBalanceByPid` <span style="color:gray">[内部]</span>
 
         通过采购单ID获取采购结算信息
-    
-                |Returns:|
-                - **purchaseBalances**: 采购结算信息列表 , 每条数据类型 *purchaseBalance*
+
+**返回参数**:
+
+- **purchaseBalances**: 采购结算信息列表 , 每条数据类型 *purchaseBalance*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "purchaseBalances": [
                     {
@@ -1483,76 +1452,72 @@
                 ],
                 ...
             }
-            
-    ### <I> addPurchaseBalance
+
+    ### `addPurchaseBalance` <span style="color:gray">[内部]</span>
 
         添加采购单对的结算信息
-        
+
         采购单信息不存在 , 添加失败 , 错误信息 **260017 采购单不存在**
-        
-                |Requests:|
-                :param purchaseBalance.pid: 采购单ID
-        :type purchaseBalance.pid: Long
-        :param purchaseBalance.balance: 结算值
-        :type purchaseBalance.balance: Long
-        :param purchaseBalance.comment: 说明
-        :type purchaseBalance.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **purchaseBalance.pid**:
+  采购单ID
+        - **purchaseBalance.balance**:
+  结算值
+        - **purchaseBalance.comment**:
+  说明
+
+        **示例**:{
                 "purchaseBalance.pid": 1,
                 "purchaseBalance.balance": 100000,
                 "purchaseBalance.comment": "说明",
             }
-            
-    ### <I> updatePurchaseBalance
+
+    ### `updatePurchaseBalance` <span style="color:gray">[内部]</span>
 
         更新采购结算信息
-        
+
         采购结算信息不存在 , 更新失败 , 错误信息 **260039 采购结算信息不存在**
-        
+
         采购结算状态不为0(初始) , 更新失败 , 错误信息 **260040 采购结算状态不可操作**
 
-                |Requests:|
-                :param purchaseBalance.pbid: 采购结算ID
-        :type purchaseBalance.pbid: Long
-        :param purchaseBalance.balance: 结算值
-        :type purchaseBalance.balance: Long
-        :param purchaseBalance.comment: 说明
-        :type purchaseBalance.comment: String
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **purchaseBalance.pbid**:
+  采购结算ID
+        - **purchaseBalance.balance**:
+  结算值
+        - **purchaseBalance.comment**:
+  说明
+
+        **示例**:{
                 "purchaseBalance.pbid": 1,
                 "purchaseBalance.balance": 100000,
                 "purchaseBalance.comment": "说明"
             }
-            
-    ### <I> updatePurchaseBalanceForStatus
+
+    ### `updatePurchaseBalanceForStatus` <span style="color:gray">[内部]</span>
 
         更新采购结算状态
-        
+
         采购结算信息不存在 , 更新失败 , 错误信息 **260039 采购结算信息不存在**
-        
+
         采购结算状态不为0(初始) , 更新失败 , 错误信息 **260040 采购结算状态不可操作**
 
-                |Requests:|
-                :param purchaseBalance.pbid: 采购结算ID
-        :type purchaseBalance.pbid: Long
-        :param purchaseBalance.status: 状态
-        :type purchaseBalance.status: Short
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **purchaseBalance.pbid**:
+  采购结算ID
+        - **purchaseBalance.status**:
+  状态
+
+        **示例**:{
                 "purchaseBalance.pbid": 1,
                 "purchaseBalance.status": 100.00
             }
-            
 
-    
+
 ## 辅料
 
 ### 订单
@@ -1599,20 +1564,19 @@
       - 类型: *String*
     - **company**: 公司
       - 类型: *Long*
-    
-    ### <I> pageAccessories
+
+    ### `pageAccessories` <span style="color:gray">[内部]</span>
 
         分页方式获取辅料单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 订单信息列表 , 每条数据类型 *accessories*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  订单信息列表 , 每条数据类型 *accessories*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1673,28 +1637,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryAccessoriesByOrderId
+
+    ### `queryAccessoriesByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号查询辅料单
-        
-                |Requests:|
-                :param accessories.orderId: 装修单号
-        :type accessories.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessories.orderId**:
+  装修单号
+
+        **示例**:{
                 "accessories.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **accessoriess**: 订单信息列表 , 每条数据类型 *accessories*
+
+**返回参数**:
+
+- **accessoriess**: 订单信息列表 , 每条数据类型 *accessories*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "accessoriess": [
                     {
@@ -1752,63 +1714,62 @@
                 ...
             }
 
-    ### <I> addAccessories
+    ### `addAccessories` <span style="color:gray">[内部]</span>
 
         创建辅料单
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断装修单状态 , 5(废单)/6(终止)/7(决算)/8(完工)不可添加 , 错误信息 **140004 装修单状态不可操作**
-        
+
         判断工程环节是否存在 , 不存在 , 错误信息 **120024 工程环节不存在**
-        
+
         判断工程环节状态为1(开工)或2(完工) , 0(初始)状态 , 错误信息 **120025 工程环节不可操作**
-        
+
         判断工程环节辅料控制 , 1(锁定状态) , 错误信息 **120028 辅料已禁用**
-        
+
         判断环节辅料总额 , 超过总额上限 , 错误信息 **260058 辅料总额已达上限**
-        
+
         判断辅料项对应的工程辅料数量 , 超过数量上限 , 错误信息 **辅料总数已达上限**
-        
+
         创建辅料单需要工程环节状态为1(开工)或2(完工)
-        
-                |Requests:|
-                :param accessories.orderId: 装修单号
-        :type accessories.orderId: String
-        :param accessories.csid: 工程环节ID
-        :type accessories.csid: Long
-        :param accessories.supervisor.userId: 监理编号
-        :type accessories.supervisor.userId: String
-        :param accessories.type: 类型
-        :type accessories.type: Short
-        :param accessories.total: 总额
-        :type accessories.total: Integer
-        :param accessories.comment: 备注
-        :type accessories.comment: String
-        
-        :param accessories.fetchTime: 领取时间
-        :type accessories.fetchTime: TimeStamp
-        :param accessoriesItems[n].goods.gid: 商品ID
-        :type accessoriesItems[n].goods.gid: Long
-        :param accessoriesItems[n].num: 数量
-        :type accessoriesItems[n].num: Integer
-        :param accessoriesItems[n].total: 总额
-        :type accessoriesItems[n].total: Integer
-        :param accessoriesItems[n].checkup: 验证标识
-        :type accessoriesItems[n].checkup: Short
-        :param accessoriesItems[n].caid: 工程辅料ID
-        :type accessoriesItems[n].caid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessories.orderId**:
+  装修单号
+        - **accessories.csid**:
+  工程环节ID
+        - **accessories.supervisor.userId**:
+  监理编号
+        - **accessories.type**:
+  类型
+        - **accessories.total**:
+  总额
+        - **accessories.comment**:
+  备注
+
+        - **accessories.fetchTime**:
+  领取时间
+        - **accessoriesItems[n].goods.gid**:
+  商品ID
+        - **accessoriesItems[n].num**:
+  数量
+        - **accessoriesItems[n].total**:
+  总额
+        - **accessoriesItems[n].checkup**:
+  验证标识
+        - **accessoriesItems[n].caid**:
+  工程辅料ID
+
+        **示例**:{
                 "accessories.orderId": "1601010001",
                 "accessories.csid": 1,
                 "accessories.fetchTime": "2016-01-01 00:00:00",
                 "accessories.type": 0,
                 "accessories.total": 100000,
                 "accessories.comment": "备注",
-                
+
                 "accessoriesItems[0].goods.gid": 1,
                 "accessoriesItems[0].num": 1000,
                 "accessoriesItems[0].total": 100000,
@@ -1816,124 +1777,115 @@
                 "accessoriesItems[0].caid": 1
             }
 
-    ### <I> updateAccessoriesForPrint
+    ### `updateAccessoriesForPrint` <span style="color:gray">[内部]</span>
 
         更新辅料单打印次数
-        
+
         辅料单信息不存在 , 添加失败 , 错误信息 **260023 辅料单不存在**
-        
+
         辅料单可打印对应的状态为1(预出)/2(出货)
-        
+
         计数并更新辅料单打印次数
-        
-                |Requests:|
-                :param accessories.aid: 辅料单ID
-        :type accessories.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessories.aid**:
+  辅料单ID
+
+        **示例**:{
                 "accessories.aid": 1
             }
-            
-    ### <I> preoutAccessories
+
+    ### `preoutAccessories` <span style="color:gray">[内部]</span>
 
         预出辅料单
-        
+
         辅料单不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         辅料单状态是否为0(初始) , 其他状态不可操作 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         更新辅料单状态为1(预出)
-        
-                |Requests:|
-                :param accessories.aid: 辅料单ID
-        :type accessories.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessories.aid**:
+  辅料单ID
+
+        **示例**:{
                 "accessories.aid": 1
             }
 
-    ### <I> auditAccessories
+    ### `auditAccessories` <span style="color:gray">[内部]</span>
 
         审核辅料单
-        
+
         辅料单不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         辅料单类型为1(售后) , 状态为1(预出) , 其他状态不可操作 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         更新辅料单状态为7(审核)
-        
-                |Requests:|
-                :param accessories.aid: 辅料单ID
-        :type accessories.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessories.aid**:
+  辅料单ID
+
+        **示例**:{
                 "accessories.aid": 1
             }
-            
-    ### <I> cancelAccessories
+
+    ### `cancelAccessories` <span style="color:gray">[内部]</span>
 
         撤销辅料单
-        
+
         辅料单不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         辅料单状态是否为0(初始) , 其他状态不可操作 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         更新辅料单状态为3(撤销)
-        
+
         根据工程辅料关联辅材信息 , 更新工程单中辅料总额以及总数
-        
-        :param accessories.aid: 辅料单ID
-        :type accessories.aid: Long
-        
-        Example::
-        
-            {
+
+        - **accessories.aid**:
+  辅料单ID
+
+        **示例**:{
                 "accessories.aid": 1
             }
-            
-    ### <I> refuseAccessories
+
+    ### `refuseAccessories` <span style="color:gray">[内部]</span>
 
         拒绝辅料单
-        
+
         辅料单不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         辅料单状态是否为0(初始) , 其他状态不可操作 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         更新辅料单状态为4(拒绝)
-        
+
         根据工程辅料关联辅材信息 , 更新工程单中辅料总额以及总数
-        
-        :param accessories.aid: 辅料单ID
-        :type accessories.aid: Long
-        
-        Example::
-        
-            {
+
+        - **accessories.aid**:
+  辅料单ID
+
+        **示例**:{
                 "accessories.aid": 1
             }
-            
-    ### <I> deliveAccessories
+
+    ### `deliveAccessories` <span style="color:gray">[内部]</span>
 
         送货辅料单
-        
+
         辅料单不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         辅料单状态是否为2(出库) , 其他状态不可操作 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         更新辅料单状态为6(到货) , 更新送货人以及送货时间
-        
-        :param accessories.aid: 辅料单ID
-        :type accessories.aid: Long
-        
-        Example::
-        
-            {
+
+        - **accessories.aid**:
+  辅料单ID
+
+        **示例**:{
                 "accessories.aid": 1
             }
 
@@ -1955,33 +1907,31 @@
       - 类型: *Integer*
     - **surplus**: 余数
       - 类型: *Integer*
-    
+
     - **checkup**: 验证标识
       - 类型: *Short*
     - **caid**: 工程辅料ID
       - 类型: *Long*
-    
-    ### <I> queryAccessoriesItemByOrderId
+
+    ### `queryAccessoriesItemByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取对应辅料项信息
-        
-                |Requests:|
-                :param accessories.orderId: 装修单号
-        :type accessories.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessories.orderId**:
+  装修单号
+
+        **示例**:{
                 "accessories.orderId": "1601010001"
             }
-    
-                |Returns:|
-                - **accessoriesItems**: 辅料单项信息列表 , 每条数据类型 *accessoriesItem*
+
+**返回参数**:
+
+- **accessoriesItems**: 辅料单项信息列表 , 每条数据类型 *accessoriesItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "accessoriesItems": [
                     {
@@ -2005,27 +1955,25 @@
                 ...
             }
 
-    ### <I> queryAccessoriesItemByAid
+    ### `queryAccessoriesItemByAid` <span style="color:gray">[内部]</span>
 
         通过辅料单ID获取对应辅料项信息
-        
-                |Requests:|
-                :param accessoriesItem.aid: 辅料单ID
-        :type accessoriesItem.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessoriesItem.aid**:
+  辅料单ID
+
+        **示例**:{
                 "accessoriesItem.aid": 1
             }
-    
-                |Returns:|
-                - **accessoriesItems**: 辅料单项信息列表 , 每条数据类型 *accessoriesItem*
+
+**返回参数**:
+
+- **accessoriesItems**: 辅料单项信息列表 , 每条数据类型 *accessoriesItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "accessoriesItems": [
                     {
@@ -2048,28 +1996,26 @@
                 ],
                 ...
             }
-            
-    ### <I> queryAccessoriesItemByAids
+
+    ### `queryAccessoriesItemByAids` <span style="color:gray">[内部]</span>
 
         通过辅料单ID获取对应辅料项信息
-        
-                |Requests:|
-                :param aids[n]: 辅料单ID
-        :type aids[n]: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aids[n]**:
+  辅料单ID
+
+        **示例**:{
                 "aids[0]": 1
             }
-    
-                |Returns:|
-                - **accessoriesItems**: 辅料单项信息列表 , 每条数据类型 *accessoriesItem*
+
+**返回参数**:
+
+- **accessoriesItems**: 辅料单项信息列表 , 每条数据类型 *accessoriesItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "accessoriesItems": [
                     {
@@ -2093,91 +2039,88 @@
                 ...
             }
 
-    ### <I> addAccessoriesItem
+    ### `addAccessoriesItem` <span style="color:gray">[内部]</span>
 
         添加辅料项到已存在辅料单
-        
+
         辅料单信息不存在 , 添加失败 , 错误信息 **260023 辅料单不存在**
-        
+
         辅料单状态不为0(初始) , 添加失败 , 错误信息 **260024 辅料单状态不可操作**
-        
-                |Requests:|
-                :param accessories.aid: 辅料单ID
-        :type accessories.aid: Long
-        :param accessories.total: 总价
-        :type accessories.total: Long
-        :param accessoriesItems[n].goods.gid: 商品ID
-        :type accessoriesItems[n].goods.gid: Long
-        :param accessoriesItems[n].num: 数量
-        :type accessoriesItems[n].num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessories.aid**:
+  辅料单ID
+        - **accessories.total**:
+  总价
+        - **accessoriesItems[n].goods.gid**:
+  商品ID
+        - **accessoriesItems[n].num**:
+  数量
+
+        **示例**:{
                 "accessories.aid": 1,
                 "accessories.total": 10000,
                 "accessoriesItems[0].goods.gid": 1,
                 "accessoriesItems[0].num": 1000
             }
 
-    ### <I> updateAccessoriesItem
+    ### `updateAccessoriesItem` <span style="color:gray">[内部]</span>
 
         更新辅料项信息
-        
+
         辅料单信息不存在 , 添加失败 , 错误信息 **260023 辅料单不存在**
-        
+
         辅料单状态是否为0(初始) , 其他状态不可操作 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         辅料项信息不存在 , 删除失败 , 错误信息 **260025 辅料项不存在**
-        
+
         辅料单状态不为0(初始) , 添加失败 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         根据工程辅料关联辅材信息 , 更新工程单中辅料总额以及总数
-        
-                |Requests:|
-                :param accessories.aid: 辅料单ID
-        :type accessories.aid: Long
-        :param accessories.total: 总价
-        :type accessories.total: Long
-        :param accessoriesItem.aiid: 辅料项ID
-        :type accessoriesItem.aiid: Long
-        :param accessoriesItem.num: 数量
-        :type accessoriesItem.num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessories.aid**:
+  辅料单ID
+        - **accessories.total**:
+  总价
+        - **accessoriesItem.aiid**:
+  辅料项ID
+        - **accessoriesItem.num**:
+  数量
+
+        **示例**:{
                 "accessories.aid": 1,
                 "accessories.total": 10000,
                 "accessoriesItem.aiid": 1,
                 "accessoriesItem.num": 100000
             }
 
-    ### <I> deleteAccessoriesItem
+    ### `deleteAccessoriesItem` <span style="color:gray">[内部]</span>
 
         删除辅料项信息
-        
+
         辅料单信息不存在 , 添加失败 , 错误信息 **260023 辅料单不存在**
-        
+
         辅料单状态是否为0(初始) , 其他状态不可操作 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         辅料项不存在 , 不能删除 , 错误信息 **260025 辅料项不存在**
-        
+
         辅料单状态不为0(初始) , 添加失败 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         根据工程辅料关联辅材信息 , 更新工程单中辅料总额以及总数
-        
-                |Requests:|
-                :param accessories.aid: 辅料单ID
-        :type accessories.aid: Long
-        :param accessories.total: 总价
-        :type accessories.total: Long
-        :param accessoriesItem.aiid: 辅料项ID
-        :type accessoriesItem.aiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessories.aid**:
+  辅料单ID
+        - **accessories.total**:
+  总价
+        - **accessoriesItem.aiid**:
+  辅料项ID
+
+        **示例**:{
                 "accessories.aid": 1,
                 "accessories.total": 10000,
                 "accessoriesItem.aiid": 1
@@ -2214,29 +2157,27 @@
     - **status**: 状态 , 0: 初始
       - 类型: *Short*
 
-    ### <I> queryAccessoriesCost
+    ### `queryAccessoriesCost` <span style="color:gray">[内部]</span>
 
         查询辅料成本
-        
+
         辅料单不存在 , 错误信息 **260023 辅料单不存在**
-        
-                |Requests:|
-                :param accessoriesCost.aid: 辅料单ID
-        :type accessoriesCost.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessoriesCost.aid**:
+  辅料单ID
+
+        **示例**:{
                 "accessoriesCost.aid": 1
             }
-            
-                |Returns:|
-                - **accessoriesCost**: 辅料成本
+
+**返回参数**:
+
+- **accessoriesCost**: 辅料成本
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "accessoriesCost": {
                     "acid": 1,
@@ -2252,36 +2193,35 @@
                 }
                 ...
             }
-            
-    ### <I> updateAccessoriesCost
+
+    ### `updateAccessoriesCost` <span style="color:gray">[内部]</span>
 
         更新辅料成本
-        
+
         辅料单不存在 , 错误信息 **260023 辅料单不存在**
-        
-                |Requests:|
-                :param accessoriesCost.aid: 辅料单ID
-        :type accessoriesCost.aid: Long
-        :param accessoriesCost.isAdded: 是否为补料
-        :type accessoriesCost.isAdded: Long
-        :param accessoriesCost.isEnter: 可进园区
-        :type accessoriesCost.isEnter: Long
-        :param accessoriesCost.isLift: 有无电梯
-        :type accessoriesCost.isLift: Long
-        :param accessoriesCost.isExceed: 有无超阶
-        :type accessoriesCost.isExceed: Long
-        :param accessoriesCost.isAttic: 有无阁楼
-        :type accessoriesCost.isAttic: Long
-        :param accessoriesCost.floorNum: 楼层数
-        :type accessoriesCost.floorNum: Long
-        :param accessoriesCost.baseNum: 地下室层数
-        :type accessoriesCost.baseNum: Long
-        :param accessoriesCost.cost: 成本
-        :type accessoriesCost.cost: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **accessoriesCost.aid**:
+  辅料单ID
+        - **accessoriesCost.isAdded**:
+  是否为补料
+        - **accessoriesCost.isEnter**:
+  可进园区
+        - **accessoriesCost.isLift**:
+  有无电梯
+        - **accessoriesCost.isExceed**:
+  有无超阶
+        - **accessoriesCost.isAttic**:
+  有无阁楼
+        - **accessoriesCost.floorNum**:
+  楼层数
+        - **accessoriesCost.baseNum**:
+  地下室层数
+        - **accessoriesCost.cost**:
+  成本
+
+        **示例**:{
                 "accessoriesCost.aid": 1,
                 "accessoriesCost.isAdded": 1,
                 "accessoriesCost.isEnter": 0,
@@ -2292,14 +2232,15 @@
                 "accessoriesCost.baseNum": 0,
                 "accessoriesCost.cost": 10000,
             }
-            
+
 ### 货单
 辅料单与货单关联
 
 ## api.inventory.AccessoriesManifestAction
 
-        |DataType:|
-        #### accessoriesManifest
+**数据类型**:
+
+#### accessoriesManifest
 
     - **amid**: 辅料货单Id
       - 类型: *Long*
@@ -2307,9 +2248,9 @@
       - 类型: *Object*
     - **manifest**: 货单 , 类型 [manifest](./inventory.html#api.inventory.ManifestAction.manifest)
       - 类型: *Object*
-    
+
 ## 外辅
-    
+
 ### 订单
 
 外购辅料单 , 简化版辅料单功能 , 提供给厂商使用的辅料管理
@@ -2366,20 +2307,19 @@
       - 类型: *String*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageOccessories
+
+    ### `pageOccessories` <span style="color:gray">[内部]</span>
 
         分页方式获取外辅单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 订单信息列表 , 每条数据类型 *occessories*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  订单信息列表 , 每条数据类型 *occessories*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2441,31 +2381,29 @@
                 ...
             }
 
-    ### <I> pageOccessoriesForSupplier
+    ### `pageOccessoriesForSupplier` <span style="color:gray">[内部]</span>
 
         分页方式获取外辅单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         厂商作为默认条件进行查询
-        
-                |Requests:|
-                :param occessories.supplier.uid: 厂商ID
-        :type occessories.supplier.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessories.supplier.uid**:
+  厂商ID
+
+        **示例**:{
                 "occessories.supplier.uid": 1
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 订单信息列表 , 每条数据类型 *occessories*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  订单信息列表 , 每条数据类型 *occessories*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2527,27 +2465,25 @@
                 ...
             }
 
-    ### <I> queryOccessoriesByOrderId
+    ### `queryOccessoriesByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取信息
 
-                |Requests:|
-                :param occessories.orderId: 装修单号
-        :type occessories.orderId: Long
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **occessories.orderId**:
+  装修单号
+
+        **示例**:{
                 "occessories.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **occessories**: 外辅单信息 , 类型 *occessories*
+
+**返回参数**:
+
+- **occessories**: 外辅单信息 , 类型 *occessories*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "occessories": {
                     "oid": 1,
@@ -2603,27 +2539,25 @@
                 ...
             }
 
-    ### <I> queryOccessoriesByOid
+    ### `queryOccessoriesByOid` <span style="color:gray">[内部]</span>
 
         通过外辅单ID获取信息
 
-                |Requests:|
-                :param occessories.oid: 外辅单ID
-        :type occessories.oid: Long
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **occessories.oid**:
+  外辅单ID
+
+        **示例**:{
                 "occessories.oid": 1
             }
-        
-                |Returns:|
-                - **occessories**: 外辅单信息 , 类型 *occessories*
+
+**返回参数**:
+
+- **occessories**: 外辅单信息 , 类型 *occessories*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "occessories": {
                     "oid": 1,
@@ -2678,213 +2612,205 @@
                 }
                 ...
             }
-        
-    ### <I> addOccessories
+
+    ### `addOccessories` <span style="color:gray">[内部]</span>
 
         创建外辅单
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param occessories.orderId: 装修单号
-        :type occessories.orderId: String
-        :param occessories.supervisor.uid: 监理编号
-        :type occessories.supervisor.uid: String
-        :param occessories.isEnter: 有无电梯
-        :type occessories.isEnter: Short
-        :param occessories.isExceed: 有无超阶
-        :type occessories.isExceed: Short
-        :param occessories.isAttic: 有无阁楼
-        :type occessories.isAttic: Short
-        :param occessories.comment: 说明
-        :type occessories.comment: String
-        
-        :param occessoriesItems[n].goods.gid: 商品ID
-        :type occessoriesItems[n].goods.gid: Long
-        :param occessoriesItems[n].num: 数量
-        :type occessoriesItems[n].num: Integer
-        :param occessoriesItems[n].rbalance: 结算金额
-        :type occessoriesItems[n].rbalance: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessories.orderId**:
+  装修单号
+        - **occessories.supervisor.uid**:
+  监理编号
+        - **occessories.isEnter**:
+  有无电梯
+        - **occessories.isExceed**:
+  有无超阶
+        - **occessories.isAttic**:
+  有无阁楼
+        - **occessories.comment**:
+  说明
+
+        - **occessoriesItems[n].goods.gid**:
+  商品ID
+        - **occessoriesItems[n].num**:
+  数量
+        - **occessoriesItems[n].rbalance**:
+  结算金额
+
+        **示例**:{
                 "occessories.orderId": "1601010001",
                 "occessories.supervisor.uid": 1,
                 "occessories.isLift": 0,
                 "occessories.isExceed": 0,
                 "occessories.isAttic": 0,
                 "occessories.comment": "",
-                
+
                 "occessoriesItems[0].goods.gid": 1,
                 "occessoriesItems[0].num": 1000,
                 "occessoriesItems[0].rbalance": 1000
             }
 
-    ### <I> bindOccessories
+    ### `bindOccessories` <span style="color:gray">[内部]</span>
 
         绑定外辅单
-        
+
         外辅单不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         判断外辅单状态是否为0(初始) , 其他状态 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         更新外辅单状态为1(分配)
-        
-                |Requests:|
-                :param occessories.oid: 外辅单ID
-        :type occessories.oid: Long
-        :param occessories.supplier.uid: 厂商ID
-        :type occessories.supplier.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessories.oid**:
+  外辅单ID
+        - **occessories.supplier.uid**:
+  厂商ID
+
+        **示例**:{
                 "occessories.oid": 1,
                 "occessories.supplier.uid": 1
             }
 
-    ### <I> deliveOccessories
+    ### `deliveOccessories` <span style="color:gray">[内部]</span>
 
         发货外辅单
-        
+
         判断外辅单是否存在 , 不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         判断外辅单状态是否为1(分配) , 其他状态 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         更新外辅单状态为2(发货) , 更新发货时间和发货人
-        
-                |Requests:|
-                :param occessories.oid: 外辅单ID
-        :type occessories.oid: Long
-        :param occessories.content: 内容
-        :type occessories.content: String
-        
-        :param occessoriesItems[n].sennum: 送货数量
-        :type occessoriesItems[n].sennum: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessories.oid**:
+  外辅单ID
+        - **occessories.content**:
+  内容
+
+        - **occessoriesItems[n].sennum**:
+  送货数量
+
+        **示例**:{
                 "occessories.oid": 1,
                 "occessories.content": "",
-                
+
                 "occessoriesItems[0].sennum": 0
             }
 
-    ### <I> receiveOccessories
+    ### `receiveOccessories` <span style="color:gray">[内部]</span>
 
         到货外辅单
-        
+
         判断外辅单是否存在 , 不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         判断外辅单状态是否为2(发货) , 其他状态 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         更新外辅单状态为3(到货) , 更新到货时间和接收人
-        
-                |Requests:|
-                :param occessories.oid: 外辅单ID
-        :type occessories.oid: Long
-        
-        :param occessoriesItems[n].oiid: 外辅项ID
-        :type occessoriesItems[n].oiid: Long
-        :param occessoriesItems[n].recnum: 到货数量
-        :type occessoriesItems[n].recnum: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessories.oid**:
+  外辅单ID
+
+        - **occessoriesItems[n].oiid**:
+  外辅项ID
+        - **occessoriesItems[n].recnum**:
+  到货数量
+
+        **示例**:{
                 "occessories.oid": 1,
-                
+
                 "occessoriesItems[0].oiid": 0,
                 "occessoriesItems[0].recnum": 0
             }
 
-    ### <I> balanceOccessories
+    ### `balanceOccessories` <span style="color:gray">[内部]</span>
 
         结算外辅单
-        
+
         判断外辅单是否存在 , 不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         判断外辅单状态是否为3(到货) , 其他状态 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         更新外辅单状态为4(结算) , 更新结算时间和结算人
-        
-                |Requests:|
-                :param occessories.oid: 外辅单ID
-        :type occessories.oid: Long
-        
-        :param occessoriesItems[n].oiid: 外辅项ID
-        :type occessoriesItems[n].oiid: Long
-        :param occessoriesItems[n].vbalance: 结算值
-        :type occessoriesItems[n].vbalance: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessories.oid**:
+  外辅单ID
+
+        - **occessoriesItems[n].oiid**:
+  外辅项ID
+        - **occessoriesItems[n].vbalance**:
+  结算值
+
+        **示例**:{
                 "occessories.oid": 1,
-                
+
                 "occessoriesItems[0].oiid": 0,
                 "occessoriesItems[0].vbalance": 0
             }
 
-    ### <I> finishOccessories
+    ### `finishOccessories` <span style="color:gray">[内部]</span>
 
         完成
-        
+
         判断外辅单是否存在 , 不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         判断外辅单状态是否为4(结算) , 其他状态 , 错误信息 **260024 辅料单状态不可操作**
-        
+
         更新外辅单状态为5(完成) , 更新完成时间
-        
-                |Requests:|
-                :param occessories.oid: 外辅单ID
-        :type occessories.oid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessories.oid**:
+  外辅单ID
+
+        **示例**:{
                 "occessories.oid": 1
             }
 
-    ### <I> rateOccessories
+    ### `rateOccessories` <span style="color:gray">[内部]</span>
 
         评分
-        
+
         判断外辅单是否存在 , 不存在 , 错误信息 **260023 辅料单不存在**
-        
-                |Requests:|
-                :param occessories.oid: 外辅单ID
-        :type occessories.oid: Long
-        :param occessories.rate: 外辅单ID
-        :type occessories.rate: Long
-        :param occessories.remake: 外辅单ID
-        :type occessories.remake: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessories.oid**:
+  外辅单ID
+        - **occessories.rate**:
+  外辅单ID
+        - **occessories.remake**:
+  外辅单ID
+
+        **示例**:{
                 "occessories.oid": 1,
                 "occessories.rate": 1,
                 "occessories.remake": ""
             }
 
-    ### <I> deleteOccessories
+    ### `deleteOccessories` <span style="color:gray">[内部]</span>
 
         删除外辅单
-        
+
         判断外辅单是否存在 , 不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         判断外辅单状态是否为0(初始) , 其他状态 , 错误信息 **260024 辅料单状态不可操作**
-        
-                |Requests:|
-                :param occessories.oid: 外辅单ID
-        :type occessories.oid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessories.oid**:
+  外辅单ID
+
+        **示例**:{
                 "occessories.oid": 1
             }
 
@@ -2911,27 +2837,25 @@
     - **vbalance**: 结算价
       - 类型: *Integer*
 
-    ### <I> queryOccessoriesItemByOid
+    ### `queryOccessoriesItemByOid` <span style="color:gray">[内部]</span>
 
         通过外辅单ID获取对应外辅项信息
-        
-                |Requests:|
-                :param occessoriesItem.oid: 外辅单ID
-        :type occessoriesItem.oid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessoriesItem.oid**:
+  外辅单ID
+
+        **示例**:{
                 "occessoriesItem.oid": 1
             }
-    
-                |Returns:|
-                - **occessoriesItems**: 外辅单项信息列表 , 每条数据类型 *occessoriesItem*
+
+**返回参数**:
+
+- **occessoriesItems**: 外辅单项信息列表 , 每条数据类型 *occessoriesItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "occessoriesItems": [
                     {
@@ -2957,69 +2881,66 @@
                 ...
             }
 
-    ### <I> addOccessoriesItem
+    ### `addOccessoriesItem` <span style="color:gray">[内部]</span>
 
         添加外辅项到已存在外辅单
-        
+
         判断外辅单是否存在 , 不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         外辅单状态不为0(初始) , 添加失败 , 错误信息 **260024 辅料单状态不可操作**
-        
-                |Requests:|
-                :param occessories.oid: 外辅单ID
-        :type occessories.oid: Long
-        :param occessoriesItems[n].goods.gid: 商品ID
-        :type occessoriesItems[n].goods.gid: Long
-        :param occessoriesItems[n].num: 数量
-        :type occessoriesItems[n].num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessories.oid**:
+  外辅单ID
+        - **occessoriesItems[n].goods.gid**:
+  商品ID
+        - **occessoriesItems[n].num**:
+  数量
+
+        **示例**:{
                 "occessories.oid": 1,
                 "occessoriesItems[0].goods.gid": 1,
                 "occessoriesItems[0].num": 1000
             }
-    
-    ### <I> updateOccessoriesItem
+
+    ### `updateOccessoriesItem` <span style="color:gray">[内部]</span>
 
         更新外辅项
-        
+
         外辅项信息不存在 , 删除失败 , 错误信息 **260025 辅料项不存在**
-        
+
         判断外辅单状态是否为4(结算) , 不可操作 , 错误信息 **260024 辅料单状态不可操作**
-        
-                |Requests:|
-                :param occessoriesItem.oiid: 外辅项ID
-        :type occessoriesItem.oiid: Long
-        :param occessoriesItem.recnum: 数量
-        :type occessoriesItem.recnum: Integer
-        :param occessoriesItem.vbalance: 结算价
-        :type occessoriesItem.vbalance: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessoriesItem.oiid**:
+  外辅项ID
+        - **occessoriesItem.recnum**:
+  数量
+        - **occessoriesItem.vbalance**:
+  结算价
+
+        **示例**:{
                 "occessoriesItem.oiid": 1,
                 "occessoriesItem.recnum": 100000,
                 "occessoriesItem.vbalance": 100000
             }
 
-    ### <I> deleteOccessoriesItem
+    ### `deleteOccessoriesItem` <span style="color:gray">[内部]</span>
 
         删除外辅项
-        
+
         判断外辅单是否存在 , 不存在 , 错误信息 **260023 辅料单不存在**
-        
+
         判断外辅单状态是否为0(初始) , 其他状态 , 错误信息 **260024 辅料单状态不可操作**
-        
-                |Requests:|
-                :param occessoriesItem.oiid: 外辅项ID
-        :type occessoriesItem.oiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessoriesItem.oiid**:
+  外辅项ID
+
+        **示例**:{
                 "occessoriesItem.oiid": 1
             }
 
@@ -3044,29 +2965,27 @@
     - **status**: 状态 , 0: 初始
       - 类型: *Short*
 
-    ### <I> queryOccessoriesCost
+    ### `queryOccessoriesCost` <span style="color:gray">[内部]</span>
 
         查询辅料成本
-        
+
         辅料单不存在 , 错误信息 **260023 辅料单不存在**
-        
-                |Requests:|
-                :param occessoriesCost.oid: 辅料单ID
-        :type occessoriesCost.oid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessoriesCost.oid**:
+  辅料单ID
+
+        **示例**:{
                 "occessoriesCost.oid": 1
             }
-            
-                |Returns:|
-                - **occessoriesCost**: 辅料成本
+
+**返回参数**:
+
+- **occessoriesCost**: 辅料成本
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "occessoriesCost": {
                     "ocid": 1,
@@ -3077,60 +2996,57 @@
                 }
                 ...
             }
-            
-    ### <I> addOccessoriesCost
+
+    ### `addOccessoriesCost` <span style="color:gray">[内部]</span>
 
         创建外辅费用
-        
+
         判断外辅单是否存在 , 不存在 , 错误信息 **260023 辅料单不存在**
-        
-                |Requests:|
-                :param occessoriesCost.oid: 外辅单ID
-        :type occessoriesCost.oid: Long
-        :param occessoriesCost.price: 金额
-        :type occessoriesCost.price: Long
-        :param occessoriesCost.cost: 成本
-        :type occessoriesCost.cost: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessoriesCost.oid**:
+  外辅单ID
+        - **occessoriesCost.price**:
+  金额
+        - **occessoriesCost.cost**:
+  成本
+
+        **示例**:{
                 "occessoriesCost.oid": 1,
                 "occessoriesCost.price": 10000,
                 "occessoriesCost.cost": 10000,
             }
 
-    ### <I> updateOccessoriesCost
+    ### `updateOccessoriesCost` <span style="color:gray">[内部]</span>
 
         更新外辅费用
-        
-                |Requests:|
-                :param occessoriesCost.oid: 外辅单ID
-        :type occessoriesCost.oid: Long
-        :param occessoriesCost.price: 金额
-        :type occessoriesCost.price: Long
-        :param occessoriesCost.cost: 成本
-        :type occessoriesCost.cost: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessoriesCost.oid**:
+  外辅单ID
+        - **occessoriesCost.price**:
+  金额
+        - **occessoriesCost.cost**:
+  成本
+
+        **示例**:{
                 "occessoriesCost.oid": 1,
                 "occessoriesCost.price": 10000,
                 "occessoriesCost.cost": 10000,
             }
 
-    ### <I> deleteOccessoriesCost
+    ### `deleteOccessoriesCost` <span style="color:gray">[内部]</span>
 
         删除外辅费用
-        
-                |Requests:|
-                :param occessoriesCost.ocid: 外辅费用ID
-        :type occessoriesCost.ocid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **occessoriesCost.ocid**:
+  外辅费用ID
+
+        **示例**:{
                 "occessoriesCost.ocid": 1
             }
 
@@ -3140,8 +3056,9 @@
 
 ## api.inventory.GoodsStorehouseStockAction
 
-        |DataType:|
-        #### goodsStorehouseStock
+**数据类型**:
+
+#### goodsStorehouseStock
 
     - **gshsid**: 库存信息ID
       - 类型: *Long*
@@ -3157,20 +3074,19 @@
       - 类型: *Object*
     - **num**: 库存量
       - 类型: *Long*
-    
-    ### <I> pageGoodsStorehouseStock
+
+    ### `pageGoodsStorehouseStock` <span style="color:gray">[内部]</span>
 
         分页方式获取库存信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 库存信息列表 , 每条数据类型 *goodsStorehouseStock*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  库存信息列表 , 每条数据类型 *goodsStorehouseStock*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3209,28 +3125,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryGoodsStorehouseStockByGid
+
+    ### `queryGoodsStorehouseStockByGid` <span style="color:gray">[内部]</span>
 
         通过商品ID获取商品库存
-        
-                |Requests:|
-                :param goodsStorehouseStock.goods.gid: 商品ID
-        :type goodsStorehouseStock.goods.gid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goodsStorehouseStock.goods.gid**:
+  商品ID
+
+        **示例**:{
                 "goodsStorehouseStock.goods.gid": 1
             }
-            
-                |Returns:|
-                - **goodsStorehouseStock**: 库存信息 , 其中num字段为汇总数值
+
+**返回参数**:
+
+- **goodsStorehouseStock**: 库存信息 , 其中num字段为汇总数值
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "goodsStorehouseStock": {
                     "gshsid": 1,
@@ -3263,31 +3177,29 @@
                 }
                 ...
             }
-            
-    ### <I> queryGoodsStorehouseStockByShidAGid
+
+    ### `queryGoodsStorehouseStockByShidAGid` <span style="color:gray">[内部]</span>
 
         通过商品ID和仓库ID获取商品库存
-        
-                |Requests:|
-                :param goodsStorehouseStock.goods.gid: 商品ID
-        :type goodsStorehouseStock.goods.gid: Long
-        :param goodsStorehouseStock.storehouse.shid: 仓库ID
-        :type goodsStorehouseStock.storehouse.shid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goodsStorehouseStock.goods.gid**:
+  商品ID
+        - **goodsStorehouseStock.storehouse.shid**:
+  仓库ID
+
+        **示例**:{
                 "goodsStorehouseStock.goods.gid": 1
                 "goodsStorehouseStock.storehouse.shid": 1
             }
-            
-                |Returns:|
-                - **goodsStorehouseStock**: 库存信息 , 其中num字段为汇总数值
+
+**返回参数**:
+
+- **goodsStorehouseStock**: 库存信息 , 其中num字段为汇总数值
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "goodsStorehouseStock": {
                     "gshsid": 1,
@@ -3320,57 +3232,55 @@
                 }
                 ...
             }
-            
-    ### <I> makeGoodsStorehouseStock
+
+    ### `makeGoodsStorehouseStock` <span style="color:gray">[内部]</span>
 
         生成商品库存 , 库存数量默认为0
-        
-                |Requests:|
-                :param goodsStorehouseStock.goods.gid: 商品ID
-        :type goodsStorehouseStock.goods.gid: Long
-        :param goodsStorehouseStock.color.cid: 颜色ID
-        :type gooesStorehouseStock.color.cid: Long
-        :param goodsStorehouseStock.format.fid: 规格ID
-        :type gooesStorehouseStock.format.fid: Long
-        :param goodsStorehouseStock.storehouse.shid: 仓库ID
-        :type gooesStorehouseStock.storehouse.shid: Long
 
-        Example::
-        
-            {
+**请求参数**:
+
+- **goodsStorehouseStock.goods.gid**:
+  商品ID
+        - **goodsStorehouseStock.color.cid**:
+  颜色ID
+        - **goodsStorehouseStock.format.fid**:
+  规格ID
+        - **goodsStorehouseStock.storehouse.shid**:
+  仓库ID
+
+        **示例**:{
                 "goodsStorehouseStock.goods.gid": 1,
                 "goodsStorehouseStock.color.cid": 1,
                 "goodsStorehouseStock.format.fid": 1,
                 "goodsStorehouseStock.storehouse.shid": 1
             }
 
-    ### <I> plusGoodsStorehouseStock
+    ### `plusGoodsStorehouseStock` <span style="color:gray">[内部]</span>
 
         盘盈
-        
+
         判断商品(供应商/颜色/规格)是否存在商品库存 , 不存在 , 错误信息 **260011 商品库存不存在**
-        
+
         生成对应货单以及货单项
-        
+
         生成对应商品(供应商/颜色/规格)库存信息
-        
-                |Requests:|
-                :param goodsStorehouseStock.goods.gid: 商品ID
-        :type goodsStorehouseStock.goods.gid: Long
-        :param goodsStorehouseStock.color.cid: 颜色ID
-        :type gooesStorehouseStock.color.cid: Long
-        :param goodsStorehouseStock.format.fid: 规格ID
-        :type gooesStorehouseStock.format.fid: Long
-        :param goodsStorehouseStock.storehouse.shid: 仓库ID
-        :type gooesStorehouseStock.storehouse.shid: Long
-        :param goodsStorehouseStock.num: 数量
-        :type goodsStorehouseStock.num: Long
-        :param goodsStorehouseStock.surplus: 采购价
-        :type goodsStorehouseStock.surplus: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goodsStorehouseStock.goods.gid**:
+  商品ID
+        - **goodsStorehouseStock.color.cid**:
+  颜色ID
+        - **goodsStorehouseStock.format.fid**:
+  规格ID
+        - **goodsStorehouseStock.storehouse.shid**:
+  仓库ID
+        - **goodsStorehouseStock.num**:
+  数量
+        - **goodsStorehouseStock.surplus**:
+  采购价
+
+        **示例**:{
                 "goodsStorehouseStock.goods.gid": 1,
                 "goodsStorehouseStock.color.cid": 1,
                 "goodsStorehouseStock.format.fid": 1,
@@ -3378,34 +3288,33 @@
                 "goodsStorehouseStock.num": 1000,
                 "goodsStorehouseStock.surplus": 10000
             }
-    
-    ### <I> loseGoodsStorehouseStock
+
+    ### `loseGoodsStorehouseStock` <span style="color:gray">[内部]</span>
 
         盘亏
-        
+
         判断商品(供应商/颜色/规格)是否存在商品库存 , 不存在 , 错误信息 **260011 商品库存不存在**
-        
+
         判断商品(供应商/颜色/规格)是否存在商品库存数量是否满足盘亏数量 , 错误信息 **260008 商品库存不足**
-        
+
         生成对应货单以及货单项
-        
+
         根据对应的商品(供应商/颜色/规格)库存 , 按照盘亏数量以及先入先出规则进行匹配 , 减少对应商品库存
-        
-                |Requests:|
-                :param goodsStorehouseStock.goods.gid: 商品ID
-        :type goodsStorehouseStock.goods.gid: Long
-        :param goodsStorehouseStock.color.cid: 颜色ID
-        :type gooesStorehouseStock.color.cid: Long
-        :param goodsStorehouseStock.format.fid: 规格ID
-        :type gooesStorehouseStock.format.fid: Long
-        :param goodsStorehouseStock.storehouse.shid: 仓库ID
-        :type gooesStorehouseStock.storehouse.shid: Long
-        :param goodsStorehouseStock.num: 数量
-        :type goodsStorehouseStock.num: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goodsStorehouseStock.goods.gid**:
+  商品ID
+        - **goodsStorehouseStock.color.cid**:
+  颜色ID
+        - **goodsStorehouseStock.format.fid**:
+  规格ID
+        - **goodsStorehouseStock.storehouse.shid**:
+  仓库ID
+        - **goodsStorehouseStock.num**:
+  数量
+
+        **示例**:{
                 "goodsStorehouseStock.goods.gid": 1,
                 "goodsStorehouseStock.color.cid": 1,
                 "goodsStorehouseStock.format.fid": 1,
@@ -3413,86 +3322,85 @@
                 "goodsStorehouseStock.num": 1000
             }
 
-    ### <I> mergePackage
+    ### `mergePackage` <span style="color:gray">[内部]</span>
 
         合并套餐库存
-        
+
         判断套餐是否存在 , 不存在 , 错误信息 **260041 套餐不存在**
-        
+
         判断套餐归属商品库存 , 库存量不足 , 错误信息 **260008 商品库存不足**
-        
+
         如果套餐库存不存在创建套餐对应的库存信息
-        
+
         更新套餐归属商品库存量
-        
+
         创建套合类型货单
-        
-                |Requests:|
-                :param goodsStorehouseStock.goods.gid: 套餐ID
-        :type goodsStorehouseStock.goods.gid: Long
-        :param goodsStorehouseStock.color.cid: 颜色ID
-        :type goodsStorehouseStock.color.cid: Long
-        :param goodsStorehouseStock.format.fid: 规格ID
-        :type goodsStorehouseStock.format.fid: Long
-        :param goodsStorehouseStock.storehouse.shid: 仓库ID
-        :type goodsStorehouseStock.storehouse.shid: Long
-        :param goodsStorehouseStock.num: 合并数量
-        :type goodsStorehouseStock.num: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goodsStorehouseStock.goods.gid**:
+  套餐ID
+        - **goodsStorehouseStock.color.cid**:
+  颜色ID
+        - **goodsStorehouseStock.format.fid**:
+  规格ID
+        - **goodsStorehouseStock.storehouse.shid**:
+  仓库ID
+        - **goodsStorehouseStock.num**:
+  合并数量
+
+        **示例**:{
                 "goodsStorehouseStock.goods.gid": 1,
                 "goodsStorehouseStock.color.cid": 1,
                 "goodsStorehouseStock.format.fid": 1,
                 "goodsStorehouseStock.storehouse.shid": 1,
                 "goodsStorehouseStock.num": 10000
             }
-            
-    ### <I> splitPackage
+
+    ### `splitPackage` <span style="color:gray">[内部]</span>
 
         拆分套餐库存
-        
+
         判断套餐是否存在 , 不存在 , 错误信息 **260041 套餐不存在**
-        
+
         判断套餐库存 , 库存量不足 , 错误信息 **260008 商品库存不足**
-        
+
         如果套餐归属商品库存不存在创建商品对应的库存信息
-        
+
         更新套餐归属商品库存量
-        
+
         创建拆类型货单
-        
-                |Requests:|
-                :param goodsStorehouseStock.goods.gid: 套餐ID
-        :type goodsStorehouseStock.goods.gid: Long
-        :param goodsStorehouseStock.color.cid: 颜色ID
-        :type goodsStorehouseStock.color.cid: Long
-        :param goodsStorehouseStock.format.fid: 规格ID
-        :type goodsStorehouseStock.format.fid: Long
-        :param goodsStorehouseStock.storehouse.shid: 仓库ID
-        :type goodsStorehouseStock.storehouse.shid: Long
-        :param goodsStorehouseStock.num: 合并数量
-        :type goodsStorehouseStock.num: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **goodsStorehouseStock.goods.gid**:
+  套餐ID
+        - **goodsStorehouseStock.color.cid**:
+  颜色ID
+        - **goodsStorehouseStock.format.fid**:
+  规格ID
+        - **goodsStorehouseStock.storehouse.shid**:
+  仓库ID
+        - **goodsStorehouseStock.num**:
+  合并数量
+
+        **示例**:{
                 "goodsStorehouseStock.goods.gid": 1,
                 "goodsStorehouseStock.color.cid": 1,
                 "goodsStorehouseStock.format.fid": 1,
                 "goodsStorehouseStock.storehouse.shid": 1,
                 "goodsStorehouseStock.num": 10000
             }
-    
+
 ## 库存
 
 库存信息 , 按照月份统计仓库存量
 
 ## api.inventory.StorehouseStockAction
 
-        |DataType:|
-        #### storehouseStock
+**数据类型**:
+
+#### storehouseStock
 
     - **shsid**: 库存ID
       - 类型: *Long*
@@ -3502,18 +3410,17 @@
       - 类型: *String*
     - **num**: 存量
       - 类型: *Long*
-    
-    ### <I> queryStorehouseStock
+
+    ### `queryStorehouseStock` <span style="color:gray">[内部]</span>
 
         获取仓库存量信息
-        
-                |Returns:|
-                - **storehouseStocks**: 库存信息列表 , 每条数据类型 *storehouseStock*
+
+**返回参数**:
+
+- **storehouseStocks**: 库存信息列表 , 每条数据类型 *storehouseStock*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "storehouseStocks": [
                     {
@@ -3536,8 +3443,9 @@
 
 ## api.inventory.InventoryDrawingAction
 
-        |DataType:|
-        #### inventoryDrawing
+**数据类型**:
+
+#### inventoryDrawing
 
     - **idid**: 图片ID
       - 类型: *Long*
@@ -3559,31 +3467,29 @@
       - 类型: *Timestamp*
     - **status**: 状态 , 0: 有效 , 1: 无效
       - 类型: *Short*
-    
-    ### <I> queryInventoryDrawing
+
+    ### `queryInventoryDrawing` <span style="color:gray">[内部]</span>
 
         通过关联ID以及类型获取图片信息
-        
-                |Requests:|
-                :param inventoryDrawing.sid: 关联ID
-        :type inventoryDrawing.sid: Long
-        :param inventoryDrawing.atttype: 业务类型
-        :type inventoryDrawing.atttype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **inventoryDrawing.sid**:
+  关联ID
+        - **inventoryDrawing.atttype**:
+  业务类型
+
+        **示例**:{
                 "inventoryDrawing.sid": 1,
                 "inventoryDrawing.atttype": 0
             }
-            
-                |Returns:|
-                - **inventoryDrawings**: 图片信息列表 , 每条数据类型 *inventoryDrawing*
+
+**返回参数**:
+
+- **inventoryDrawings**: 图片信息列表 , 每条数据类型 *inventoryDrawing*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "inventoryDrawings": [
                     {
@@ -3598,33 +3504,32 @@
                             "uid": 1,
                             "userName": "白雪",
                             "currentName": "白雪",
-                            "duty": "设计师" 
+                            "duty": "设计师"
                         },
                         "createTime": "2016-01-01"
                     }
                 ],
                 ...
             }
-            
-    ### <C> addInventoryDrawing
+
+    ### `addInventoryDrawing` <span style="color:blue">[自定义]</span>
 
         添加图片信息
-        
-                |Requests:|
-                :param inventoryDrawing.sid: 关联ID
-        :type inventoryDrawing.sid: Long
-        :param inventoryDrawing.name: 名称
-        :type inventoryDrawing.name: String
-        :param inventoryDrawing.path: 路径
-        :type inventoryDrawing.path: String
-        :param inventoryDrawing.type: 图片类型
-        :type inventoryDrawing.type: Short
-        :param inventoryDrawing.atttype: 业务类型
-        :type inventoryDrawing.atttype: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **inventoryDrawing.sid**:
+  关联ID
+        - **inventoryDrawing.name**:
+  名称
+        - **inventoryDrawing.path**:
+  路径
+        - **inventoryDrawing.type**:
+  图片类型
+        - **inventoryDrawing.atttype**:
+  业务类型
+
+        **示例**:{
                 "inventoryDrawing.sid": 1,
                 "inventoryDrawing.name": "name.jpg",
                 "inventoryDrawing.path": "2016/08/02/2/c7ec4da2429a4debbc3cca21eb5035b9.png",
@@ -3632,16 +3537,15 @@
                 "inventoryDrawing.atttype": 0
             }
 
-    ### <C> deleteInventoryDrawing
+    ### `deleteInventoryDrawing` <span style="color:blue">[自定义]</span>
 
         删除图片信息
-        
-                |Requests:|
-                :param inventoryDrawing.idid: 图片ID
-        :type inventoryDrawing.idid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **inventoryDrawing.idid**:
+  图片ID
+
+        **示例**:{
                 "inventoryDrawing.idid": 1
             }

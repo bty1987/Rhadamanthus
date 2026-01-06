@@ -1,14 +1,13 @@
-# customer {#customer}
-
-# 客户
+# customer 客户
 ## 客户
 
 客户信息管理
 
 ## api.communion.CustomerAction
 
-        |DataType:|
-        #### customer
+**数据类型**:
+
+#### customer
 
     - **cid**: 客户ID
       - 类型: *Long*
@@ -44,7 +43,7 @@
       - 类型: *String*
     - **type**: 类型 , 0: 个人 , 1: 公司
       - 类型: *Short*
-    
+
     - **photoPath**: 照片
       - 类型: *String*
     - **identityPathF**: 身份证正面
@@ -53,7 +52,7 @@
       - 类型: *String*
     - **status**: 状态 , 包括: 0(有效) , 1(认证) , 2(本地认证)
       - 类型: *Short*
-    
+
     - **companyNo**: 编号 , 统一社会信用代码
       - 类型: *String*
     - **companyName**: 公司名
@@ -66,10 +65,10 @@
       - 类型: *String*
     - **companyBankno**: 开户账号
       - 类型: *String*
-    
+
     - **phones**: 电话 , 每条数据 *customerPhone*
       - 类型: *List*
-    
+
     #### customerPhone
 
     - **cpid**: 客户电话ID
@@ -82,14 +81,14 @@
       - 类型: *Short*
     - **defaults**: 默认 , 0(非默认) , 1(默认)
       - 类型: *Short*
-    
+
     #### keyValue
 
     - **key**: 键
       - 类型: *String*
     - **value**: 值
       - 类型: *String*
-    
+
         |Filters:|
         - **name**: 客户名称
       - 类型: *String*
@@ -97,20 +96,19 @@
       - 类型: *String*
     - **relationshipType**: 客户关系
       - 类型: *String*
-    
-    ### <I> pageCustomer
+
+    ### `pageCustomer` <span style="color:gray">[内部]</span>
 
         分页方式获取客户信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 客户信息列表 , 每条数据类型 *customer*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客户信息列表 , 每条数据类型 *customer*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -150,28 +148,26 @@
                 },
                 ...
             }
-            
-    ### <I> queryCustomerById
+
+    ### `queryCustomerById` <span style="color:gray">[内部]</span>
 
         通过客户编号获取客户信息
-        
-                |Requests:|
-                :param customer.id: 客户ID
-        :type customer.id: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.id**:
+  客户ID
+
+        **示例**:{
                 "customer.id": 1
             }
-            
-                |Returns:|
-                - **customer**: 客户信息 , 类型 *customer*
+
+**返回参数**:
+
+- **customer**: 客户信息 , 类型 *customer*
           - 类型: *object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customer": {
                     "cid": 1,
@@ -205,30 +201,28 @@
                 },
                 ...
             }
-            
-    ### <I> queryCustomerForName
+
+    ### `queryCustomerForName` <span style="color:gray">[内部]</span>
 
         通过拼音获取客户名信息
-        
-                |Requests:|
-                - **pinyinName**: 楼盘名拼音
+
+**请求参数**:
+
+- **pinyinName**: 楼盘名拼音
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "pinyinName": "li"
             }
-            
-                |Returns:|
-                - **customers**: 客户信息列表 , 每条数据类型 *customer*
+
+**返回参数**:
+
+- **customers**: 客户信息列表 , 每条数据类型 *customer*
           - 类型: *List*
         - **autoFillList**: 客户名列表 , 每条数据类型String
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customers": [
                     {
@@ -269,27 +263,25 @@
                 ...
             }
 
-    ### <I> queryCustomerForPhone
+    ### `queryCustomerForPhone` <span style="color:gray">[内部]</span>
 
         通过电话信息查询客户
-        
-                |Requests:|
-                :param customerPhone.cid: 客户ID
-        :type customerPhone.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerPhone.cid**:
+  客户ID
+
+        **示例**:{
                 "customerPhone.cid": 1
             }
 
-                |Returns:|
-                - **customer**: 客户信息 , 类型 *customer*
+**返回参数**:
+
+- **customer**: 客户信息 , 类型 *customer*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customer": {
                     "cid": 1,
@@ -318,27 +310,25 @@
                 }
             }
 
-    ### <I> queryCustomerPhoneByCid
+    ### `queryCustomerPhoneByCid` <span style="color:gray">[内部]</span>
 
         通过客户ID获取对应的客户电话
-        
-                |Requests:|
-                :param customer.cid: 客户ID
-        :type customer.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.cid**:
+  客户ID
+
+        **示例**:{
                 "customer.cid": 1
             }
-            
-                |Returns:|
-                - **customerPhones**: 客户电话信息列表 , 每条数据类型 *customerPhone*
+
+**返回参数**:
+
+- **customerPhones**: 客户电话信息列表 , 每条数据类型 *customerPhone*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customerPhones": [
                     {
@@ -348,28 +338,26 @@
                     }
                 ],
                 ...
-            
-    ### <I> checkCustomerForPhone
+
+    ### `checkCustomerForPhone` <span style="color:gray">[内部]</span>
 
         检查客户电话信息
-        
-                |Requests:|
-                :param customer.phone: 客户电话
-        :type customer.phone: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.phone**:
+  客户电话
+
+        **示例**:{
                 "customer.phone": "136xxxx5452"
             }
-            
-                |Returns:|
-                - **customers**: 客户信息列表 , 每条数据类型 *customer*
+
+**返回参数**:
+
+- **customers**: 客户信息列表 , 每条数据类型 *customer*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customers": [
                     {
@@ -406,54 +394,53 @@
                 ],
                 ...
             }
-        
-    ### <C> addCustomer
+
+    ### `addCustomer` <span style="color:blue">[自定义]</span>
 
         添加客户信息
-        
-                |Requests:|
-                :param customer.name: 客户名称
-        :type customer.name: String
-        :param customer.gender: 性别
-        :type customer.gender: String
-        :param customer.identity: 身份证
-        :type customer.identity: String
-        :param customer.officer: 军官证
-        :type customer.officer: String
-        :param customer.passport: 护照
-        :type customer.passport: String
-        :param customer.passhkm: 港澳通行证
-        :type customer.passhkm: String
-        :param customer.qq: QQ
-        :type customer.qq: String
-        :param customer.wechat: 微信
-        :type customer.wechat: String
-        :param customer.email: 邮件
-        :type customer.email: String
-        :param customer.career: 职业
-        :type customer.career: String
-        :param customer.address: 地址
-        :type customer.address: String
-        :param customer.relationshipType: 客户关系
-        :type customer.relationshipType: String
-        :param customer.type: 类型
-        :type customer.type: Short
-        :param customer.companyNo: 公司编号
-        :type customer.companyNo: String
-        :param customer.companyName: 公司名
-        :type customer.companyName: String
-        :param customer.companyAddr: 公司地址
-        :type customer.companyAddr: String
-        :param customer.companyPhone: 公司电话
-        :type customer.companyPhone: String
-        :param customer.companyBank: 开户行
-        :type customer.companyBank: String
-        :param customer.companyBankno: 开户编号
-        :type customer.companyBankno: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.name**:
+  客户名称
+        - **customer.gender**:
+  性别
+        - **customer.identity**:
+  身份证
+        - **customer.officer**:
+  军官证
+        - **customer.passport**:
+  护照
+        - **customer.passhkm**:
+  港澳通行证
+        - **customer.qq**:
+  QQ
+        - **customer.wechat**:
+  微信
+        - **customer.email**:
+  邮件
+        - **customer.career**:
+  职业
+        - **customer.address**:
+  地址
+        - **customer.relationshipType**:
+  客户关系
+        - **customer.type**:
+  类型
+        - **customer.companyNo**:
+  公司编号
+        - **customer.companyName**:
+  公司名
+        - **customer.companyAddr**:
+  公司地址
+        - **customer.companyPhone**:
+  公司电话
+        - **customer.companyBank**:
+  开户行
+        - **customer.companyBankno**:
+  开户编号
+
+        **示例**:{
                 "customer.name": "李",
                 "customer.gender": "男",
                 "customer.identity": "",
@@ -475,25 +462,25 @@
                 "customer.companyBankno": ""
             }
 
-    ### <C> existCustomer
+    ### `existCustomer` <span style="color:blue">[自定义]</span>
 
         通过电话判断客户是否存在 , 不存在添加 , 存在返回客户信息
-        
-                |Requests:|
-                :param customer.name: 客户名称
-        :type customer.name: String
-        :param customer.gender: 性别
-        :type customer.gender: String
-        :param customer.phone: 电话
-        :type customer.phone: String
-        
-                |Returns:|
-                - **customer**: 客户信息 , 类型 *customer*
+
+**请求参数**:
+
+- **customer.name**:
+  客户名称
+        - **customer.gender**:
+  性别
+        - **customer.phone**:
+  电话
+
+**返回参数**:
+
+- **customer**: 客户信息 , 类型 *customer*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customer": {
                     "cid": 1,
@@ -513,72 +500,70 @@
                 ...
             }
 
-    ### <C> addCustomerPhone
+    ### `addCustomerPhone` <span style="color:blue">[自定义]</span>
 
         添加客户电话信息
-        
-                |Requests:|
-                :param customer.cid: 客户ID
-        :type customer.cid: Long
-        :param customerPhone.phone: 电话
-        :type customerPhone.phone: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.cid**:
+  客户ID
+        - **customerPhone.phone**:
+  电话
+
+        **示例**:{
                 "customer.cid": 1,
                 "customerPhone.phone": "153xxxx2938"
             }
 
-    ### <C> updateCustomer
+    ### `updateCustomer` <span style="color:blue">[自定义]</span>
 
         更新客户信息
-        
-                |Requests:|
-                :param customer.no: 客户编号
-        :type customer.no: String
-        :param customer.name: 客户名称
-        :type customer.name: String
-        :param customer.gender: 性别
-        :type customer.gender: String
-        :param customer.identity: 身份证
-        :type customer.identity: String
-        :param customer.officer: 军官证
-        :type customer.officer: String
-        :param customer.passport: 护照
-        :type customer.passport: String
-        :param customer.passhkm: 港澳通行证
-        :type customer.passhkm: String
-        :param customer.qq: QQ
-        :type customer.qq: String
-        :param customer.wechat: 微信
-        :type customer.wechat: String
-        :param customer.email: 邮件
-        :type customer.email: String
-        :param customer.career: 职业
-        :type customer.career: String
-        :param customer.address: 地址
-        :type customer.address: String
-        :param customer.relationshipType: 客户关系
-        :type customer.relationshipType: String
-        :param customer.type: 类型
-        :type customer.type: Short
-        :param customer.companyNo: 公司编号
-        :type customer.companyNo: String
-        :param customer.companyName: 公司名
-        :type customer.companyName: String
-        :param customer.companyAddr: 公司地址
-        :type customer.companyAddr: String
-        :param customer.companyPhone: 公司电话
-        :type customer.companyPhone: String
-        :param customer.companyBank: 开户行
-        :type customer.companyBank: String
-        :param customer.companyBankno: 开户编号
-        :type customer.companyBankno: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.no**:
+  客户编号
+        - **customer.name**:
+  客户名称
+        - **customer.gender**:
+  性别
+        - **customer.identity**:
+  身份证
+        - **customer.officer**:
+  军官证
+        - **customer.passport**:
+  护照
+        - **customer.passhkm**:
+  港澳通行证
+        - **customer.qq**:
+  QQ
+        - **customer.wechat**:
+  微信
+        - **customer.email**:
+  邮件
+        - **customer.career**:
+  职业
+        - **customer.address**:
+  地址
+        - **customer.relationshipType**:
+  客户关系
+        - **customer.type**:
+  类型
+        - **customer.companyNo**:
+  公司编号
+        - **customer.companyName**:
+  公司名
+        - **customer.companyAddr**:
+  公司地址
+        - **customer.companyPhone**:
+  公司电话
+        - **customer.companyBank**:
+  开户行
+        - **customer.companyBankno**:
+  开户编号
+
+        **示例**:{
                 "customer.no": "1501010001",
                 "customer.name": "李",
                 "customer.gender": "男",
@@ -601,29 +586,28 @@
                 "customer.companyBankno": ""
             }
 
-    ### <C> updateCustomerForBase
+    ### `updateCustomerForBase` <span style="color:blue">[自定义]</span>
 
         更新客户信息
-        
-                |Requests:|
-                :param customer.cid: 客户ID
-        :type customer.cid: String
-        :param customer.companyNo: 公司编号
-        :type customer.companyNo: String
-        :param customer.companyName: 公司名
-        :type customer.companyName: String
-        :param customer.companyAddr: 公司地址
-        :type customer.companyAddr: String
-        :param customer.companyPhone: 公司电话
-        :type customer.companyPhone: String
-        :param customer.companyBank: 开户行
-        :type customer.companyBank: String
-        :param customer.companyBankno: 开户编号
-        :type customer.companyBankno: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.cid**:
+  客户ID
+        - **customer.companyNo**:
+  公司编号
+        - **customer.companyName**:
+  公司名
+        - **customer.companyAddr**:
+  公司地址
+        - **customer.companyPhone**:
+  公司电话
+        - **customer.companyBank**:
+  开户行
+        - **customer.companyBankno**:
+  开户编号
+
+        **示例**:{
                 "customer.cid": "1501010001",
                 "customer.companyNo": "",
                 "customer.companyName": "",
@@ -632,146 +616,139 @@
                 "customer.companyBank": "",
                 "customer.companyBankno": ""
             }
-            
-    ### <C> updateCustomerPhoneForStatus
+
+    ### `updateCustomerPhoneForStatus` <span style="color:blue">[自定义]</span>
 
         更新客户电话状态
-        
+
         判断客户电话是否存在 , 不存在 , 错误信息 **130021 客户电话不存在**
-        
-                |Requests:|
-                :param customerPhone.cpid: 客户电话ID
-        :type customerPhone.cpid: Long
-        :param customerPhone.status: 状态
-        :type customerPhone.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerPhone.cpid**:
+  客户电话ID
+        - **customerPhone.status**:
+  状态
+
+        **示例**:{
                 "customerPhone.cpid": 1,
                 "customerPhone.status": 1
             }
-        
-    ### <C> updateCustomerPhoneForDefault
+
+    ### `updateCustomerPhoneForDefault` <span style="color:blue">[自定义]</span>
 
         更新客户电话默认状态
-        
+
         判断客户电话是否存在 , 不存在 , 错误信息 **130021 客户电话不存在**
-        
+
         判断更新客户电话是否已经存在同时标识为默认电话 , 错误信息 **130022 客户电话已使用**
-        
+
         判断客户电话状态 , 未启用不可设置为默认 , 错误信息 **130023 客户电话未启用**
-        
-                |Requests:|
-                :param customerPhone.cpid: 客户电话ID
-        :type customerPhone.cpid: Long
-        :param customerPhone.defaults: 默认
-        :type customerPhone.defaults: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerPhone.cpid**:
+  客户电话ID
+        - **customerPhone.defaults**:
+  默认
+
+        **示例**:{
                 "customerPhone.cpid": 1,
                 "customerPhone.defaults": 1
             }
-            
-    ### <C> registCustomer
+
+    ### `registCustomer` <span style="color:blue">[自定义]</span>
 
         注册客户
-        
+
         判断客户是否存在 , 不存在 , 错误信息 **130002 客户信息不存在**
-        
+
         判断客户状态是否为0(初始) , 其他状态 , 错误信息 **130028 客户状态不可操作**
-        
-                |Requests:|
-                :param customer.cid: 客户ID
-        :type customer.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.cid**:
+  客户ID
+
+        **示例**:{
                 "customer.cid": 1
             }
-            
-    ### <C> authCustomer
+
+    ### `authCustomer` <span style="color:blue">[自定义]</span>
 
         认证客户
-        
+
         通过第三方接口获取认证地址
-        
+
         客户存储认证地址 , 如果不存在 , 更新客户对应的认证地址
-        
+
         判断客户是否存在 , 不存在 , 错误信息 **130002 客户信息不存在**
-        
+
         判断客户状态是否为0(初始) , 其他状态 , 错误信息 **130028 客户状态不可操作**
-        
-                |Requests:|
-                :param customer.cid: 客户ID
-        :type customer.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.cid**:
+  客户ID
+
+        **示例**:{
                 "customer.cid": 1
             }
 
-    ### <C> confirmCustomer
+    ### `confirmCustomer` <span style="color:blue">[自定义]</span>
 
         确认客户
-        
+
         通过第三方接口更新客户的真实信息
-        
+
         判断客户是否存在 , 不存在 , 错误信息 **130002 客户信息不存在**
-        
+
         判断客户状态是否为0(初始) , 其他状态 , 错误信息 **130028 客户状态不可操作**
-        
+
         更新客户信息 , 包括姓名/电话/性别/地址等
-        
+
         更新客户状态为1(认证)
-        
-                |Requests:|
-                :param customer.cid: 客户ID
-        :type customer.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.cid**:
+  客户ID
+
+        **示例**:{
                 "customer.cid": 1
             }
-            
-    ### <C> signateCustomer
+
+    ### `signateCustomer` <span style="color:blue">[自定义]</span>
 
         客户签名
-        
+
         通过第三方接口更新客户签名信息
-        
+
         判断客户是否存在 , 不存在 , 错误信息 **130002 客户信息不存在**
-        
-                |Requests:|
-                :param customer.cid: 客户ID
-        :type customer.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.cid**:
+  客户ID
+
+        **示例**:{
                 "customer.cid": 1
             }
 
-    ### <C> resetCustomer
+    ### `resetCustomer` <span style="color:blue">[自定义]</span>
 
         客户重置
-        
+
         判断客户是否存在 , 不存在 , 错误信息 **130002 客户信息不存在**
-        
+
         判断客户状态是否为0(初始) , 其他状态 , 错误信息 **130028 客户状态不可操作**
-        
-                |Requests:|
-                :param customer.cid: 客户ID
-        :type customer.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customer.cid**:
+  客户ID
+
+        **示例**:{
                 "customer.cid": 1
             }
 
@@ -781,8 +758,9 @@
 
 ## api.communion.CustomerRecordAction
 
-        |DataType:|
-        #### customerRecord
+**数据类型**:
+
+#### customerRecord
 
     - **crid**: 记录ID
       - 类型: *Long*
@@ -796,20 +774,19 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> pageCustomerRecord
+
+    ### `pageCustomerRecord` <span style="color:gray">[内部]</span>
 
         分页方式获取客户记录信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 客户记录列表 , 每条数据类型 *customerRecord*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客户记录列表 , 每条数据类型 *customerRecord*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -827,28 +804,26 @@
                 },
                 ...
             }
-    
+
     ### <I-C> queryCustomerRecord
 
         通过客户ID查询记录信息
-        
-                |Requests:|
-                :param customerRecord.cid: 客户ID
-        :type customerRecord.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerRecord.cid**:
+  客户ID
+
+        **示例**:{
                 "customerRecord.cid": 1
             }
 
-                |Returns:|
-                - **customerRecords**: 客户记录信息列表 , 每条数据类型 *customerRecord*
+**返回参数**:
+
+- **customerRecords**: 客户记录信息列表 , 每条数据类型 *customerRecord*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "customerRecords": [
                     {
                         "crid": 1,
@@ -857,7 +832,7 @@
                         "operateTime": "2016-01-01 00:00:00",
                         "type": 0,
                         "comment": ""
-                    } 
+                    }
                 ]
             }
 
@@ -865,8 +840,9 @@
 
 ## api.customer.CppointAction
 
-        |DataType:|
-        #### cppoint
+**数据类型**:
+
+#### cppoint
 
     - **cpid**: 积分ID
       - 类型: *Long*
@@ -878,7 +854,7 @@
       - 类型: *Long*
     - **company**: 公司
       - 类型: *Integer*
-    
+
     #### cppointRecord
 
     - **cprid**: 记录ID
@@ -899,28 +875,26 @@
       - 类型: *Object*
     - **operateTime**: 操作时间
       - 类型: *Timestamp*
-    
-    ### <I> queryCppoint
+
+    ### `queryCppoint` <span style="color:gray">[内部]</span>
 
         获取客户积分信息
-        
-                |Requests:|
-                :param cppoint.cid: 客户ID
-        :type cppoint.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **cppoint.cid**:
+  客户ID
+
+        **示例**:{
                 "cppoint.cid": 1
             }
 
-                |Returns:|
-                - **cppoint**: 积分信息 , 类型 *cppoint*
+**返回参数**:
+
+- **cppoint**: 积分信息 , 类型 *cppoint*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "cppoint": {
                     "cpid": 1,
                     "cid": 1,
@@ -929,27 +903,25 @@
                 }
             }
 
-    ### <I> queryCppointRecord
+    ### `queryCppointRecord` <span style="color:gray">[内部]</span>
 
         获取客户积分记录
-        
-                |Requests:|
-                :param cppoint.cid: 客户ID
-        :type cppoint.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **cppoint.cid**:
+  客户ID
+
+        **示例**:{
                 "cppoint.cid": 1
             }
 
-                |Returns:|
-                - **cppointRecords**: 积分记录信息列表 , 每条数据类型 *cppointRecord*
+**返回参数**:
+
+- **cppointRecords**: 积分记录信息列表 , 每条数据类型 *cppointRecord*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "cppointRecords": [
                     {
                         "cprid": 1,
@@ -967,70 +939,67 @@
                             "duty": "设计师"
                         },
                         "operateTime": "2016-01-01 00:00:00"
-                    } 
+                    }
                 ]
             }
 
-    ### <I> createCppoint
+    ### `createCppoint` <span style="color:gray">[内部]</span>
 
         添加客户积分
-        
+
         判断客户积分是否存在 , 已存在 , 错误信息 **330048 积分已存在**
-        
-                |Requests:|
-                :param cppoint.cid: 客户ID
-        :type cppoint.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **cppoint.cid**:
+  客户ID
+
+        **示例**:{
                 "cppoint.cid": 1
             }
 
-    ### <I> addupCppoint
+    ### `addupCppoint` <span style="color:gray">[内部]</span>
 
         累计客户积分
-        
+
         判断客户积分是否存在 , 不存在 , 错误信息 **330047 积分不存在**
-        
+
         生成客户积分记录
-        
-                |Requests:|
-                :param cppoint.cid: 客户ID
-        :type cppoint.cid: Long
-        :param cppoint.dpoint: 装修积分
-        :type cppoint.dpoint: Long
-        :param cppoint.spoint: 销售积分
-        :type cppoint.spoint: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **cppoint.cid**:
+  客户ID
+        - **cppoint.dpoint**:
+  装修积分
+        - **cppoint.spoint**:
+  销售积分
+
+        **示例**:{
                 "cppoint.cid": 1,
                 "cppoint.spoint": 1000
             }
 
-    ### <I> useupCppoint
+    ### `useupCppoint` <span style="color:gray">[内部]</span>
 
         消耗客户积分
-        
+
         判断客户积分是否存在 , 不存在 , 错误信息 **330047 积分不存在**
-        
+
         判断客户积分是否满足操作积分 , 积分不足 , 错误信息 **330049 积分不足**
-        
+
         生成客户积分记录
-        
-                |Requests:|
-                :param cppoint.cid: 客户ID
-        :type cppoint.cid: Long
-        :param cppoint.dpoint: 装修积分
-        :type cppoint.dpoint: Long
-        :param cppoint.spoint: 销售积分
-        :type cppoint.spoint: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **cppoint.cid**:
+  客户ID
+        - **cppoint.dpoint**:
+  装修积分
+        - **cppoint.spoint**:
+  销售积分
+
+        **示例**:{
                 "cppoint.cid": 1,
                 "cppoint.dpoint": 1000
             }
@@ -1039,8 +1008,9 @@
 
 ## api.customer.CustomerProfileAction
 
-        |DataType:|
-        #### customerProfile
+**数据类型**:
+
+#### customerProfile
 
     - **cpid**: 画像ID
       - 类型: *Long*
@@ -1048,7 +1018,7 @@
       - 类型: *Long*
     - **cid**: 客户ID
       - 类型: *Long*
-    
+
     - **orderId**: 装修单号
       - 类型: *String*
     - **name**: 名称
@@ -1061,10 +1031,10 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
+
     - **items**: 项目列表 , 每条数据类型 [customerProfileItem](./customer.html#api.customer.CustomerProfileAction.customerProfileItem)
       - 类型: *List*
-    
+
     #### customerProfileItem
 
     - **cpiid**: 项目ID
@@ -1077,9 +1047,9 @@
       - 类型: *Short*
     - **content**: 内容
       - 类型: *String*
-    
+
     - **options**: 选项列表 , 每条数据类型 [customerProfileOption](./customer.html#api.customer.CustomerProfileAction.customerProfileOption)
-    
+
     #### customerProfileOption
 
     - **cpoid**: 选项ID
@@ -1092,20 +1062,19 @@
       - 类型: *String*
     - **checked**: 标识 , 0: 已选 , 1: 未选
       - 类型: *Short*
-    
-    ### <I> pageCustomerProfile
+
+    ### `pageCustomerProfile` <span style="color:gray">[内部]</span>
 
         分页方式获取客户画像信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 调研列表 , 每条数据类型 *customerProfile*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  调研列表 , 每条数据类型 *customerProfile*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1132,27 +1101,25 @@
                 ...
             }
 
-    ### <I> queryCustomerProfileByOrderId
+    ### `queryCustomerProfileByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取客户画像信息
-        
-                |Requests:|
-                :param customerProfile.orderId: 装修单号
-        :type customerProfile.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerProfile.orderId**:
+  装修单号
+
+        **示例**:{
                 "customerProfile.orderId": "1601010001"
             }
 
-                |Returns:|
-                - **customerProfile**: 客户画像 , 类型 *customerProfile*
+**返回参数**:
+
+- **customerProfile**: 客户画像 , 类型 *customerProfile*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "surveys": {
                     "cpid": 1,
@@ -1173,27 +1140,25 @@
                 ...
             }
 
-    ### <I> queryCustomerProfileByCpid
+    ### `queryCustomerProfileByCpid` <span style="color:gray">[内部]</span>
 
         通过客户画像ID获取信息
-        
-                |Requests:|
-                :param customerProfile.cpid: 调研ID
-        :type customerProfile.cpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerProfile.cpid**:
+  调研ID
+
+        **示例**:{
                 "customerProfile.cpid": 1
             }
 
-                |Returns:|
-                - **customerProfile**: 客户画像 , 数据类型 *customerProfile*
+**返回参数**:
+
+- **customerProfile**: 客户画像 , 数据类型 *customerProfile*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customerProfile": {
                     "cpid": 1,
@@ -1239,56 +1204,54 @@
                 ...
             }
 
-    ### <I> makeCustomerProfile
+    ### `makeCustomerProfile` <span style="color:gray">[内部]</span>
 
         生成客户画像
-        
+
         判断模版是否存在 , 不存在 , 错误信息 **130096 模版不存在**
-        
-                |Requests:|
-                :param customerProfile.cid: 客户ID
-        :type customerProfile.cid: Long
-        :param customerProfile.orderId: 装修单号
-        :type customerProfile.orderId: String
-        :param customerProfile.tid: 模版ID
-        :type customerProfile.tid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerProfile.cid**:
+  客户ID
+        - **customerProfile.orderId**:
+  装修单号
+        - **customerProfile.tid**:
+  模版ID
+
+        **示例**:{
                 "customerProfile.cid": 1,
                 "customerProfile.orderId": "1601010001",
                 "customerProfile.tid": 1
             }
 
-    ### <I> handleCustomerProfile
+    ### `handleCustomerProfile` <span style="color:gray">[内部]</span>
 
         更新客户画像
-        
+
         判断客户画像是否存在 , 不存在 , 错误信息 **330087 客户画像不存在**
-        
-                |Requests:|
-                :param customerProfile.cpid: 调研ID
-        :type customerProfile.cpid: Long
-        
-        :param customerProfile.items[n].cpiid: 项目ID
-        :type customerProfile.items[n].cpiid: Long
-        :param customerProfile.items[n].content: 内容
-        :type customerProfile.items[n].content: String
-        
-        :param customerProfile.items[n].options[n].cpoid: 选项ID
-        :type customerProfile.items[n].options[n].cpoid: Short
-        :param customerProfile.items[n].options[n].checked: 标识
-        :type customerProfile.items[n].options[n].checked: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerProfile.cpid**:
+  调研ID
+
+        - **customerProfile.items[n].cpiid**:
+  项目ID
+        - **customerProfile.items[n].content**:
+  内容
+
+        - **customerProfile.items[n].options[n].cpoid**:
+  选项ID
+        - **customerProfile.items[n].options[n].checked**:
+  标识
+
+        **示例**:{
                 "customerProfile.cpid": 1,
-                
+
                 "customerProfile.items[0].cpiid": 1,
                 "customerProfile.items[0].content": "内容",
-                
+
                 "customerProfile.items[0].options[0].cpoid": 1,
                 "customerProfile.items[0].options[0].checked": 1,
             }
@@ -1301,8 +1264,9 @@
 
 ## api.customer.CustomerDeptRuleAction
 
-        |DataType:|
-        #### customerDeptRule
+**数据类型**:
+
+#### customerDeptRule
 
     - **cdrid**: 规则ID
       - 类型: *Long*
@@ -1324,20 +1288,19 @@
       - 类型: *Timestamp*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageCustomerDeptRule
+
+    ### `pageCustomerDeptRule` <span style="color:gray">[内部]</span>
 
         分页方式获取客户部门规则信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 客户人员规则信息列表 , 每条数据类型 *customerDeptRule*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客户人员规则信息列表 , 每条数据类型 *customerDeptRule*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1364,31 +1327,29 @@
                 },
                 ...
             }
-    
-    ### <I> queryCustomerDeptRule
+
+    ### `queryCustomerDeptRule` <span style="color:gray">[内部]</span>
 
         通过部门ID获取部门规则
-        
-                |Requests:|
-                :param customerDeptRule.did: 部门ID
-        :type customerDeptRule.did: Long
-        :param customerDeptRule.type: 类型
-        :type customerDeptRule.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerDeptRule.did**:
+  部门ID
+        - **customerDeptRule.type**:
+  类型
+
+        **示例**:{
                 "customerDeptRule.did": 1,
                 "customerDeptRule.type": 1
             }
 
-                |Returns:|
-                - **customerDeptRules**: 客户人员规则信息列表 , 每条数据类型 *customerDeptRule*
+**返回参数**:
+
+- **customerDeptRules**: 客户人员规则信息列表 , 每条数据类型 *customerDeptRule*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customerDeptRules": [
                     {
@@ -1412,25 +1373,24 @@
                 ...
             }
 
-    ### <I> addCustomerDeptRule
+    ### `addCustomerDeptRule` <span style="color:gray">[内部]</span>
 
         添加客户部门规则
-        
-                |Requests:|
-                :param customerDeptRule.did: 部门ID
-        :type customerDeptRule.did: Long
-        :param customerDeptRule.type: 类型
-        :type customerDeptRule.type: Short
-        :param customerDeptRule.atttype: 业务类型
-        :type customerDeptRule.atttype: Short
-        :param customerDeptRule.busitype.bdid: 业务类型ID
-        :type customerDeptRule.busitype.bdid: Long
-        :param customerDeptRule.focus: 聚焦类型
-        :type customerDeptRule.focus: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerDeptRule.did**:
+  部门ID
+        - **customerDeptRule.type**:
+  类型
+        - **customerDeptRule.atttype**:
+  业务类型
+        - **customerDeptRule.busitype.bdid**:
+  业务类型ID
+        - **customerDeptRule.focus**:
+  聚焦类型
+
+        **示例**:{
                 "customerDeptRule.did": 1,
                 "customerDeptRule.type": 0,
                 "customerDeptRule.atttype": 0,
@@ -1438,17 +1398,16 @@
                 "customerDeptRule.focus": 0
             }
 
-    ### <I> deleteCustomerDeptRule
+    ### `deleteCustomerDeptRule` <span style="color:gray">[内部]</span>
 
         删除部门规则
-        
-                |Requests:|
-                :param customerDeptRule.cdrid: 部门ID
-        :type customerDeptRule.cdrid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerDeptRule.cdrid**:
+  部门ID
+
+        **示例**:{
                 "customerDeptRule.cdrid": 1
             }
 
@@ -1458,8 +1417,9 @@
 
 ## api.customer.CustomerUserRuleAction
 
-        |DataType:|
-        #### customerUserRule
+**数据类型**:
+
+#### customerUserRule
 
     - **curid**: 规则ID
       - 类型: *Long*
@@ -1499,7 +1459,7 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
+
     #### customerUserRuleItem
 
     - **curiid**: 规则项ID
@@ -1514,20 +1474,19 @@
       - 类型: *Integer*
     - **lowval**: 终止值
       - 类型: *Integer*
-    
-    ### <I> pageCustomerUserRule
+
+    ### `pageCustomerUserRule` <span style="color:gray">[内部]</span>
 
         分页方式获取客户人员规则信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 客户人员规则信息列表 , 每条数据类型 *customerUserRule*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客户人员规则信息列表 , 每条数据类型 *customerUserRule*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1570,27 +1529,25 @@
                 ...
             }
 
-    ### <I> queryCustomerUserRule
+    ### `queryCustomerUserRule` <span style="color:gray">[内部]</span>
 
         获取人员规则
-        
-                |Requests:|
-                :param customerUserRule.user.uid: 人员ID
-        :type customerUserRule.user.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerUserRule.user.uid**:
+  人员ID
+
+        **示例**:{
                 "customerUserRule.user.uid": 1
             }
-        
-                |Returns:|
-                - **customerUserRule**: 人员规则
+
+**返回参数**:
+
+- **customerUserRule**: 人员规则
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customerUserRule": {
                     "curid": 1,
@@ -1626,36 +1583,35 @@
                 },
                 ...
             }
-    
-    ### <I> addCustomerUserRule
+
+    ### `addCustomerUserRule` <span style="color:gray">[内部]</span>
 
         添加客户人员规则
-        
-                |Requests:|
-                :param customerUserRule.user.uid: 人员ID
-        :type customerUserRule.user.uid: Long
-        :param customerUserRule.period: 周期
-        :type customerUserRule.period: String
-        
-        :param customerUserRule.measureNum: 量尺数
-        :type customerUserRule.measureNum: Integer
-        :param customerUserRule.contractNum: 签单数
-        :type customerUserRule.contractNum: Integer
-        :param customerUserRule.contractPrice: 签单额
-        :type customerUserRule.contractPrice: Integer
-        :param customerUserRule.predisPrice: 折前额
-        :type customerUserRule.predisPrice: Integer
-        :param customerUserRule.materialPrice: 主材额
-        :type customerUserRule.materialPrice: Integer
-        :param customerUserRule.designPrice: 设计费
-        :type customerUserRule.designPrice: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerUserRule.user.uid**:
+  人员ID
+        - **customerUserRule.period**:
+  周期
+
+        - **customerUserRule.measureNum**:
+  量尺数
+        - **customerUserRule.contractNum**:
+  签单数
+        - **customerUserRule.contractPrice**:
+  签单额
+        - **customerUserRule.predisPrice**:
+  折前额
+        - **customerUserRule.materialPrice**:
+  主材额
+        - **customerUserRule.designPrice**:
+  设计费
+
+        **示例**:{
                 "customerUserRule.user.uid": 1,
                 "customerUserRule.period": "201601",
-                
+
                 "customerUserRule.measureNum": 0,
                 "customerUserRule.contractNum": 0,
                 "customerUserRule.predisPrice": 0,
@@ -1663,39 +1619,38 @@
                 "customerUserRule.materialPrice": 0,
                 "customerUserRule.designPrice": 0
             }
-    
-    ### <I> updateCustomerUserRule
+
+    ### `updateCustomerUserRule` <span style="color:gray">[内部]</span>
 
         更新客户人员规则
-        
-                |Requests:|
-                :param customerUserRule.curid: 规则ID
-        :type customerUserRule.curid: Long
-        :param customerUserRule.user.uid: 人员ID
-        :type customerUserRule.user.uid: Long
-        :param customerUserRule.period: 周期
-        :type customerUserRule.period: String
-        
-        :param customerUserRule.measureNum: 量尺数
-        :type customerUserRule.measureNum: Integer
-        :param customerUserRule.contractNum: 签单数
-        :type customerUserRule.contractNum: Integer
-        :param customerUserRule.contractPrice: 签单额
-        :type customerUserRule.contractPrice: Integer
-        :param customerUserRule.predisPrice: 折前额
-        :type customerUserRule.predisPrice: Integer
-        :param customerUserRule.materialPrice: 主材额
-        :type customerUserRule.materialPrice: Integer
-        :param customerUserRule.designPrice: 设计费
-        :type customerUserRule.designPrice: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerUserRule.curid**:
+  规则ID
+        - **customerUserRule.user.uid**:
+  人员ID
+        - **customerUserRule.period**:
+  周期
+
+        - **customerUserRule.measureNum**:
+  量尺数
+        - **customerUserRule.contractNum**:
+  签单数
+        - **customerUserRule.contractPrice**:
+  签单额
+        - **customerUserRule.predisPrice**:
+  折前额
+        - **customerUserRule.materialPrice**:
+  主材额
+        - **customerUserRule.designPrice**:
+  设计费
+
+        **示例**:{
                 "customerUserRule.curid": 1,
                 "customerUserRule.user.uid": 1,
                 "customerUserRule.period": "201601",
-                
+
                 "customerUserRule.measureNum": 0,
                 "customerUserRule.contractNum": 0,
                 "customerUserRule.contractPrice": 0,
@@ -1703,33 +1658,32 @@
                 "customerUserRule.materialPrice": 0,
                 "customerUserRule.designPrice": 0
             }
-    
-    ### <I> updateCustomerUserRuleForStatus
+
+    ### `updateCustomerUserRuleForStatus` <span style="color:gray">[内部]</span>
 
         更新客户人员规则状态
-        
-                |Requests:|
-                :param customerUserRule.curid: 规则ID
-        :type customerUserRule.curid: Long
-        :param customerUserRule.status: 状态
-        :type customerUserRule.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerUserRule.curid**:
+  规则ID
+        - **customerUserRule.status**:
+  状态
+
+        **示例**:{
                 "customerUserRule.curid": 1,
                 "customerUserRule.status": 0
             }
 
-    ### <I> disableCustomerUserRule
+    ### `disableCustomerUserRule` <span style="color:gray">[内部]</span>
 
         禁用人员规则
 
-    ### <I> queryCustomerUserRuleItem
+    ### `queryCustomerUserRuleItem` <span style="color:gray">[内部]</span>
 
-    ### <I> addCustomerUserRuleItem
+    ### `addCustomerUserRuleItem` <span style="color:gray">[内部]</span>
 
-    ### <I> deleteCustomerUserRuleItem
+    ### `deleteCustomerUserRuleItem` <span style="color:gray">[内部]</span>
 
 ### 保护规则
 
@@ -1737,8 +1691,9 @@
 
 ## api.customer.CustomerProtectRuleAction
 
-        |DataType:|
-        #### customerProtectRule
+**数据类型**:
+
+#### customerProtectRule
 
     - **cprid**: 规则ID
       - 类型: *Long*
@@ -1760,20 +1715,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageCustomerProtectRule
+
+    ### `pageCustomerProtectRule` <span style="color:gray">[内部]</span>
 
         分页方式获取客户保护规则信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 客户保护规则信息列表 , 每条数据类型 *customerProtectRule*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客户保护规则信息列表 , 每条数据类型 *customerProtectRule*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1800,37 +1754,35 @@
                 },
                 ...
             }
-    
-    ### <I> queryCustomerProtectRule
+
+    ### `queryCustomerProtectRule` <span style="color:gray">[内部]</span>
 
         获取客户保护规则
-        
-                |Requests:|
-                :param customerProtectRule.type: 类型
-        :type customerProtectRule.type: Short
-        :param customerProtectRule.uppval: 数值
-        :type customerProtectRule.uppval: Integer
-        :param customerProtectRule.lowval: 数值
-        :type customerProtectRule.lowval: Integer
-        :param customerProtectRule.days: 天数
-        :type customerProtectRule.days: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerProtectRule.type**:
+  类型
+        - **customerProtectRule.uppval**:
+  数值
+        - **customerProtectRule.lowval**:
+  数值
+        - **customerProtectRule.days**:
+  天数
+
+        **示例**:{
                 "customerProtectRule.type": 1,
                 "customerProtectRule.uppval": 1,
                 "customerProtectRule.lowval": 1,
                 "customerProtectRule.days": 1
             }
 
-                |Returns:|
-                - **customerProtectRules**: 客户保护规则信息列表 , 每条数据类型 *customerProtectRule*
+**返回参数**:
+
+- **customerProtectRules**: 客户保护规则信息列表 , 每条数据类型 *customerProtectRule*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customerProtectRules": [
                     {
@@ -1854,25 +1806,24 @@
                 ...
             }
 
-    ### <I> addCustomerProtectRule
+    ### `addCustomerProtectRule` <span style="color:gray">[内部]</span>
 
         添加客户保护规则
-        
-                |Requests:|
-                :param customerProtectRule.title: 标题
-        :type customerProtectRule.title: String
-        :param customerProtectRule.type: 类型
-        :type customerProtectRule.type: Short
-        :param customerProtectRule.uppval: 数值
-        :type customerProtectRule.uppval: Integer
-        :param customerProtectRule.lowval: 数值
-        :type customerProtectRule.lowval: Integer
-        :param customerProtectRule.days: 天数
-        :type customerProtectRule.days: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerProtectRule.title**:
+  标题
+        - **customerProtectRule.type**:
+  类型
+        - **customerProtectRule.uppval**:
+  数值
+        - **customerProtectRule.lowval**:
+  数值
+        - **customerProtectRule.days**:
+  天数
+
+        **示例**:{
                 "customerProtectRule.title": "标题",
                 "customerProtectRule.type": 0,
                 "customerProtectRule.uppval": 0,
@@ -1880,17 +1831,16 @@
                 "customerProtectRule.days": 0
             }
 
-    ### <I> deleteCustomerProtectRule
+    ### `deleteCustomerProtectRule` <span style="color:gray">[内部]</span>
 
         删除客户保护规则
-        
-                |Requests:|
-                :param customerProtectRule.cprid: ID
-        :type customerProtectRule.cprid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerProtectRule.cprid**:
+  ID
+
+        **示例**:{
                 "customerProtectRule.cprid": 1
             }
 
@@ -1900,8 +1850,9 @@
 
 ## api.customer.CustomerCompanyRuleAction
 
-        |DataType:|
-        #### customerCompanyRule
+**数据类型**:
+
+#### customerCompanyRule
 
     - **ccrid**: 规则ID
       - 类型: *Long*
@@ -1915,20 +1866,19 @@
       - 类型: *Integer*
     - **companys**: 公司ID
       - 类型: *Integer*
-    
-    ### <I> pageCustomerCompanytRule
+
+    ### `pageCustomerCompanytRule` <span style="color:gray">[内部]</span>
 
         分页方式获取客户公司规则信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 客户公司规则信息列表 , 每条数据类型 *customerCompanyRule*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客户公司规则信息列表 , 每条数据类型 *customerCompanyRule*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1948,30 +1898,28 @@
                 },
                 ...
             }
-    
-    ### <I> queryCustomerCompanyRule
+
+    ### `queryCustomerCompanyRule` <span style="color:gray">[内部]</span>
 
         获取客户保护规则
-        
-                |Requests:|
-                :param customerCompanyRule.uppval: 数值
-        :type customerCompanyRule.uppval: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerCompanyRule.uppval**:
+  数值
+
+        **示例**:{
                 "customerCompanyRule.type": 1,
                 "customerCompanyRule.value": 1,
                 "customerCompanyRule.days": 1
             }
 
-                |Returns:|
-                - **customerCompanyRules**: 客户公司规则信息列表 , 每条数据类型 *customerCompanyRule*
+**返回参数**:
+
+- **customerCompanyRules**: 客户公司规则信息列表 , 每条数据类型 *customerCompanyRule*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customerCompanyRules": [
                     {
@@ -1988,40 +1936,38 @@
                 ...
             }
 
-    ### <I> addCustomerCompanyRule
+    ### `addCustomerCompanyRule` <span style="color:gray">[内部]</span>
 
         添加客户公司规则
-        
-                |Requests:|
-                :param customerCompanyRule.company.no: 编号
-        :type customerCompanyRule.company.no: String
-        :param customerCompanyRule.type: 类型
-        :type customerCompanyRule.type: Short
-        :param customerCompanyRule.uppval: 起始值
-        :type customerCompanyRule.uppval: Integer
-        :param customerCompanyRule.lowval: 终止值
-        :type customerCompanyRule.lowval: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerCompanyRule.company.no**:
+  编号
+        - **customerCompanyRule.type**:
+  类型
+        - **customerCompanyRule.uppval**:
+  起始值
+        - **customerCompanyRule.lowval**:
+  终止值
+
+        **示例**:{
                 "customerProtectRule.company.no": "SUSDONE09FUSEFU09ES",
                 "customerProtectRule.type": 0,
                 "customerProtectRule.value": 0,
                 "customerProtectRule.days": 0
             }
 
-    ### <I> deleteCustomerCompanyRule
+    ### `deleteCustomerCompanyRule` <span style="color:gray">[内部]</span>
 
         删除客户公司规则
-        
-                |Requests:|
-                :param customerCompanyRule.ccrid: 规则ID
-        :type customerCompanyRule.ccrid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerCompanyRule.ccrid**:
+  规则ID
+
+        **示例**:{
                 "customerCompanyRule.ccrid": 1
             }
 
@@ -2029,8 +1975,9 @@
 
 ## api.customer.CustomerSourceAction
 
-        |DataType:|
-        #### customerSource
+**数据类型**:
+
+#### customerSource
 
     - **csid**: 客资ID
       - 类型: *Long*
@@ -2067,28 +2014,28 @@
       - 类型: *Integer*
     - **totalArea**: 总面积
       - 类型: *Integer*
-    
+
     - **creater**: 创建人 , 类型 [user](./user.html#api.data.UserAction.user)
       - 类型: *Object*
     - **createTime**: 创建时间
       - 类型: *Timestamp*
-    
+
     - **company**: 公司
       - 类型: *Integer*
-    
+
     - **status**: 状态 , 0: 初始 , 1: 失效 , 2: 审批 , 3: 确认 , 4: 审批 , 5: 转换
       - 类型: *Short*
-    
+
     - **referOrderId**: 推荐单号
       - 类型: *String*
     - **source**: 来源方
       - 类型: *String*
     - **contact**: 对接人
       - 类型: *String*
-    
+
     - **comment**: 备注
       - 类型: *String*
-    
+
     - **designer**: 设计师 , 类型 [user](./user.html#api.data.UserAction.user)
       - 类型: *Object*
     - **salesman**: 业务员 , 类型 [user](./user.html#api.data.UserAction.user)
@@ -2099,20 +2046,19 @@
       - 类型: *Object*
     - **orderId**: 装修单号
       - 类型: *String*
-    
-    ### <I> pageCustomerSource
+
+    ### `pageCustomerSource` <span style="color:gray">[内部]</span>
 
         分页方式获取客户资源信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 客户资源列表 , 每条数据类型 *customerSource*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客户资源列表 , 每条数据类型 *customerSource*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2151,7 +2097,7 @@
                             "contact": "",
                             "referOrderId": "",
                             "comment": "说明",
-                            
+
                             "designer": null,
                             "salesman": null,
                             "customer": null,
@@ -2164,29 +2110,27 @@
                 ...
             }
 
-    ### <I> queryCustomerSource
+    ### `queryCustomerSource` <span style="color:gray">[内部]</span>
 
         通过客户机会ID获取信息
-    
-                |Requests:|
-                :param customerSource.csid: 资源ID
-        :type customerSource.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerSource.csid**:
+  资源ID
+
+        **示例**:{
                 "customerSource.csid": 1
             }
-        
-                |Returns:|
-                - **customerSource**: 客户机会
+
+**返回参数**:
+
+- **customerSource**: 客户机会
           - 类型: *Object*
-        :param paging.data: 客户资源列表 , 每条数据类型 *customerSource*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客户资源列表 , 每条数据类型 *customerSource*
+
+        **示例**:{
                 ...
                 "customerSource": {
                     "csid": 1,
@@ -2222,7 +2166,7 @@
                     "contact": "",
                     "referOrderId": "",
                     "comment": "说明",
-                    
+
                     "designer": null,
                     "salesman": null,
                     "customer": null,
@@ -2233,52 +2177,51 @@
                 ...
             }
 
-    ### <I> addCustomerSource
+    ### `addCustomerSource` <span style="color:gray">[内部]</span>
 
         添加客户资源
-        
-                |Requests:|
-                :param customerSource.name: 姓名
-        :type customerSource.name: String
-        :param customerSource.gender: 性别
-        :type customerSource.gender: String
-        :param customerSource.phone: 电话
-        :type customerSource.phone: String
-        :param customerSource.purpose: 目的
-        :type customerSource.purpose: String
-        :param customerSource.intention: 意向
-        :type customerSource.intention: String
-        :param customerSource.price: 需求价格
-        :type customerSource.price: String
-        :param customerSource.grade: 客户等级
-        :type customerSource.grade: String
-        
-        :param customerSource.village.vid: 楼盘ID
-        :type customerSource.village.vid: Long
-        :param customerSource.houseNumber: 楼号
-        :type customerSource.houseNumber: String
-        :param customerSource.buildArea: 建筑面积
-        :type customerSource.buildArea: Float
-        :param customerSource.freeArea: 赠送面积
-        :type customerSource.freeArea: Float
-        :param customerSource.innerArea: 套内面积
-        :type customerSource.innerArea: Float
-        :param customerSource.totalArea: 总面积
-        :type customerSource.totalArea: Float
-        
-        :param customerSource.source: 来源方
-        :type customerSource.source: String
-        :param customerSource.contact: 对接方
-        :type customerSource.contact: String
-        :param customerSource.referOrderId: 推荐单号
-        :type customerSource.referOrderId: String
-        
-        :param customerSource.comment: 备注
-        :type customerSource.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerSource.name**:
+  姓名
+        - **customerSource.gender**:
+  性别
+        - **customerSource.phone**:
+  电话
+        - **customerSource.purpose**:
+  目的
+        - **customerSource.intention**:
+  意向
+        - **customerSource.price**:
+  需求价格
+        - **customerSource.grade**:
+  客户等级
+
+        - **customerSource.village.vid**:
+  楼盘ID
+        - **customerSource.houseNumber**:
+  楼号
+        - **customerSource.buildArea**:
+  建筑面积
+        - **customerSource.freeArea**:
+  赠送面积
+        - **customerSource.innerArea**:
+  套内面积
+        - **customerSource.totalArea**:
+  总面积
+
+        - **customerSource.source**:
+  来源方
+        - **customerSource.contact**:
+  对接方
+        - **customerSource.referOrderId**:
+  推荐单号
+
+        - **customerSource.comment**:
+  备注
+
+        **示例**:{
                 "customerSource.name": "李先生",
                 "customerSource.gender": "男",
                 "customerSource.purpose": "婚房",
@@ -2292,7 +2235,7 @@
                 "customerSource.freeArea": 0,
                 "customerSource.innerArea": 0,
                 "customerSource.totalArea": 0,
-                
+
                 "customerSource.source": "",
                 "customerSource.contact": "",
                 "customerSource.referOrderId": null,
@@ -2300,54 +2243,53 @@
                 "customerSource.comment": "备注",
             }
 
-    ### <I> updateCustomerSource
+    ### `updateCustomerSource` <span style="color:gray">[内部]</span>
 
         更新客户资源
-        
-                |Requests:|
-                :param customerSource.csid: 资源ID
-        :type customerSource.csid: Long
-        :param customerSource.name: 姓名
-        :type customerSource.name: String
-        :param customerSource.gender: 性别
-        :type customerSource.gender: String
-        :param customerSource.phone: 电话
-        :type customerSource.phone: String
-        :param customerSource.purpose: 目的
-        :type customerSource.purpose: String
-        :param customerSource.intention: 意向
-        :type customerSource.intention: String
-        :param customerSource.price: 需求价格
-        :type customerSource.price: String
-        :param customerSource.grade: 客户等级
-        :type customerSource.grade: String
-        
-        :param customerSource.village.vid: 楼盘ID
-        :type customerSource.village.vid: Long
-        :param customerSource.houseNumber: 楼号
-        :type customerSource.houseNumber: String
-        :param customerSource.buildArea: 建筑面积
-        :type customerSource.buildArea: Float
-        :param customerSource.freeArea: 赠送面积
-        :type customerSource.freeArea: Float
-        :param customerSource.innerArea: 套内面积
-        :type customerSource.innerArea: Float
-        :param customerSource.totalArea: 总面积
-        :type customerSource.totalArea: Float
-        
-        :param customerSource.source: 来源方
-        :type customerSource.source: String
-        :param customerSource.contact: 对接方
-        :type customerSource.contact: String
-        :param customerSource.referOrderId: 推荐单号
-        :type customerSource.referOrderId: String
-        
-        :param customerSource.comment: 备注
-        :type customerSource.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerSource.csid**:
+  资源ID
+        - **customerSource.name**:
+  姓名
+        - **customerSource.gender**:
+  性别
+        - **customerSource.phone**:
+  电话
+        - **customerSource.purpose**:
+  目的
+        - **customerSource.intention**:
+  意向
+        - **customerSource.price**:
+  需求价格
+        - **customerSource.grade**:
+  客户等级
+
+        - **customerSource.village.vid**:
+  楼盘ID
+        - **customerSource.houseNumber**:
+  楼号
+        - **customerSource.buildArea**:
+  建筑面积
+        - **customerSource.freeArea**:
+  赠送面积
+        - **customerSource.innerArea**:
+  套内面积
+        - **customerSource.totalArea**:
+  总面积
+
+        - **customerSource.source**:
+  来源方
+        - **customerSource.contact**:
+  对接方
+        - **customerSource.referOrderId**:
+  推荐单号
+
+        - **customerSource.comment**:
+  备注
+
+        **示例**:{
                 "customerSource.csid": 1,
                 "customerSource.name": "李先生",
                 "customerSource.gender": "男",
@@ -2362,7 +2304,7 @@
                 "customerSource.freeArea": 0,
                 "customerSource.innerArea": 0,
                 "customerSource.totalArea": 0,
-                
+
                 "customerSource.source": "",
                 "customerSource.contact": "",
                 "customerSource.referOrderId": null,
@@ -2370,41 +2312,39 @@
                 "customerSource.comment": "备注",
             }
 
-    ### <I> updateCustomerSourceForStatus
+    ### `updateCustomerSourceForStatus` <span style="color:gray">[内部]</span>
 
         更新客户资源状态
-        
-                |Requests:|
-                :param customerSource.csid: 资源ID
-        :type customerSource.csid: Long
-        :param customerSource.status: 状态
-        :type customerSource.status: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerSource.csid**:
+  资源ID
+        - **customerSource.status**:
+  状态
+
+        **示例**:{
                 "customerSource.csid": 1,
                 "customerSource.status": 0
             }
 
-    ### <I> issueCustomerSource
+    ### `issueCustomerSource` <span style="color:gray">[内部]</span>
 
         分配客户资源
-        
-                |Requests:|
-                :param customerSource.csid: 资源ID
-        :type customerSource.csid: Long
-        
-        :param customerChance.region.did: 部门ID
-        :type customerChance.region.did: Integer
-        :param customerChance.department.did: 部门ID
-        :type customerChance.department.did: Integer
-        :param customerChance.belonger.userId: 人员编号
-        :type customerChance.belonger.userId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerSource.csid**:
+  资源ID
+
+        - **customerChance.region.did**:
+  部门ID
+        - **customerChance.department.did**:
+  部门ID
+        - **customerChance.belonger.userId**:
+  人员编号
+
+        **示例**:{
                 "customerSource.csid": 1,
                 "customerChance.region.did": 1,
                 "customerChance.department.did": 1,
@@ -2415,22 +2355,23 @@
 
 ## api.customer.CustomerChanceAction
 
-        |DataType:|
-        #### customerChance
+**数据类型**:
+
+#### customerChance
 
     - **ccid**: 客机ID
       - 类型: *Long*
-    
+
     - **source**: 客户资源 , 类型 [customerSource](./customer.html#api.customer.CustomerSourceAction.customerSource)
       - 类型: *Object*
     - **busitype**: 业务类型 , 类型 [decorationBusitype](./data.html#api.data.DecorationBusitypeAction.decorationBusitype)
       - 类型: *Object*
-    
+
     - **creater**: 创建人 , 类型 [user](./user.html#api.data.UserAction.user)
       - 类型: *Object*
     - **issuer**: 分配人 , 类型 [user](./user.html#api.data.UserAction.user)
       - 类型: *Object*
-    
+
     - **createTime**: 创建时间
       - 类型: *Timestamp*
     - **issueTime**: 分配时间
@@ -2443,7 +2384,7 @@
       - 类型: *Timestamp*
     - **meetTime**: 见面时间
       - 类型: *Timestamp*
-    
+
     - **belonger**: 归属人 , 类型 [user](./user.html#api.data.UserAction.user)
       - 类型: *Object*
     - **department**: 归属部门 , 类型 [department](./department.html#api.communion.DepartmentAction.department)
@@ -2452,7 +2393,7 @@
       - 类型: *Object*
     - **company**: 归属公司
       - 类型: *Integer*
-    
+
     - **isRead**: 是否已读 , 0: 已读 , 1: 未读
       - 类型: *Short*
     - **isMeet**: 是否见面 , 0: 无 , 1: 未见 , 2: 已见
@@ -2463,28 +2404,27 @@
       - 类型: *Short*
     - **isFine**: 是否惩罚 , 0: 惩罚 , 1: 正常
       - 类型: *Short*
-    
-    
+
+
     - **type**: 类型 , 0: 自动 , 1: 人员 , 2: 部门 , 3: 分区
       - 类型: *Short*
     - **status**: 状态 , 0: 初始, 1: 失效, 2: 分配, 3: 确认, 4: 完成 , 5: 释放
       - 类型: *Short*
     - **comment**: 备注
       - 类型: *String*
-    
-    ### <I> pageCustomerChance
+
+    ### `pageCustomerChance` <span style="color:gray">[内部]</span>
 
         分页方式获取客户机会信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 客户机会列表 , 每条数据类型 *customerChance*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客户机会列表 , 每条数据类型 *customerChance*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2566,29 +2506,27 @@
                 ...
             }
 
-    ### <I> queryCustomerChance
+    ### `queryCustomerChance` <span style="color:gray">[内部]</span>
 
         获取客户机会
-        
-                |Requests:|
-                :param customerChance.source.csid: 资源ID
-        :type customerChance.source.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerChance.source.csid**:
+  资源ID
+
+        **示例**:{
                 "customerChance.source.csid": 1
             }
 
-                |Returns:|
-                - **paging**: 分页信息
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
         - **customerChances**: 客户机会列表 , 每条数据类型 *customerChance*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customerChances": [
                     {
@@ -2666,153 +2604,146 @@
                 ...
             }
 
-    ### <I> updateCustomerChance
+    ### `updateCustomerChance` <span style="color:gray">[内部]</span>
 
         分配客户机会
-        
+
         判断客户机会是否存在 , 已存在 , 错误信息 **330076 客户机会已存在**
-        
+
         判断客户机会状态为0(初始) , 其他状态 , 错误信息 **330077 客户机会不可操作**
-        
-                |Requests:|
-                :param customerChance.customer.cid: 客户ID
-        :type customerChance.customer.cid: Long
-        :param customerChance.house.hid: 楼盘ID
-        :type customerChance.house.hid: Long
-        :param customerChance.busitype.dbid: 业务类型ID
-        :type customerChance.busitype.dbid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerChance.customer.cid**:
+  客户ID
+        - **customerChance.house.hid**:
+  楼盘ID
+        - **customerChance.busitype.dbid**:
+  业务类型ID
+
+        **示例**:{
                 "customerChance.customer.cid": 1,
                 "customerChance.house.hid": 1,
                 "customerChance.busitype.dbid": 1
             }
 
-    ### <I> issueCustomerChance
+    ### `issueCustomerChance` <span style="color:gray">[内部]</span>
 
         分配客户机会
-        
+
         判断客户机会是否存在 , 已存在 , 错误信息 **330076 客户机会已存在**
-        
+
         判断客户机会状态为0(初始) , 其他状态 , 错误信息 **330077 客户机会不可操作**
-        
-                |Requests:|
-                :param customerChance.source.csid: 资源ID
-        :type customerChance.source.csid: Long
-        :param customerChance.belonger.uid: 归属人ID
-        :type customerChance.belonger.uid: Long
-        :param customerChance.department.did: 归属部门ID
-        :type customerChance.department.did: Long
-        :param customerChance.region.did: 归属分区ID
-        :type customerChance.region.did: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerChance.source.csid**:
+  资源ID
+        - **customerChance.belonger.uid**:
+  归属人ID
+        - **customerChance.department.did**:
+  归属部门ID
+        - **customerChance.region.did**:
+  归属分区ID
+
+        **示例**:{
                 "customerChance.source.csid": 1,
                 "customerChance.belonger.uid": 1,
                 "customerChance.department.did": 1,
                 "customerChance.region.did": 1
             }
-            
-    ### <I> changeCustomerChance
+
+    ### `changeCustomerChance` <span style="color:gray">[内部]</span>
 
         更改客户机会
-        
+
         判断客户机会是否存在 , 不存在 , 错误信息 **330075 客户机会不存在**
-        
+
         判断客户机会状态为0(初始) , 其他状态 , 错误信息 **330077 客户机会不可操作**
-        
-                |Requests:|
-                :param customerChance.source.csid: 资源ID
-        :type customerChance.source.csid: Long
-        :param customerChance.belonger.uid: 归属人ID
-        :type customerChance.belonger.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerChance.source.csid**:
+  资源ID
+        - **customerChance.belonger.uid**:
+  归属人ID
+
+        **示例**:{
                 "customerChance.source.csid": 1,
                 "customerChance.belonger.uid": 1
             }
 
-    ### <I> sendCustomerChance
+    ### `sendCustomerChance` <span style="color:gray">[内部]</span>
 
         推送客户机会
-        
+
         判断客户机会是否存在 , 不存在 , 错误信息 **330075 客户机会不存在**
-        
+
         判断客户机会状态为1(分配) , 其他状态 , 错误信息 **330077 客户机会不可操作**
-        
-                |Requests:|
-                :param customerChance.source.csid: 资源ID
-        :type customerChance.source.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerChance.source.csid**:
+  资源ID
+
+        **示例**:{
                 "customerChance.source.csid": 1
             }
 
-    ### <I> confirmCustomerChange
+    ### `confirmCustomerChange` <span style="color:gray">[内部]</span>
 
         确认客户机会
-    
+
         判断客户机会是否存在 , 不存在 , 错误信息 **330075 客户机会不存在**
 
         判断客户机会状态为1(分配) , 其他状态 , 错误信息 **330077 客户机会不可操作**
 
-                |Requests:|
-                :param customerOrigin.csid: 客源ID
-        :type customerOrigin.csid: Long
+**请求参数**:
+
+- **customerOrigin.csid**:
+  客源ID
         - **securityCode**: 验证码
           - 类型: *String*
         - **verifyCode**: 验证码
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "customerOrigin.csid": 2,
                 "securityCode": "",
                 "verifyCode": ""
             }
 
-    ### <I> freeCustomerChance
+    ### `freeCustomerChance` <span style="color:gray">[内部]</span>
 
         释放客户机会
-        
+
         判断客户机会是否存在 , 不存在 , 错误信息 **330075 客户机会不存在**
-        
+
         判断客户机会状态为0(初始) , 其他状态 , 错误信息 **330077 客户机会不可操作**
-        
-                |Requests:|
-                :param customerChance.source.csid: 资源ID
-        :type customerChance.source.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerChance.source.csid**:
+  资源ID
+
+        **示例**:{
                 "customerChance.source.csid": 1
             }
 
-    ### <I> disableCustomerChance
+    ### `disableCustomerChance` <span style="color:gray">[内部]</span>
 
         失效客户机会
-        
+
         判断客户机会是否存在 , 不存在 , 错误信息 **330075 客户机会不存在**
-        
+
         判断客户机会状态为0(初始) , 其他状态 , 错误信息 **330077 客户机会不可操作**
-        
-                |Requests:|
-                :param customerChance.source.csid: 资源ID
-        :type customerChance.source.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerChance.source.csid**:
+  资源ID
+
+        **示例**:{
                 "customerChance.source.csid": 1
             }
 
@@ -2820,8 +2751,9 @@
 
 ## api.customer.CustomerSourceAction
 
-        |DataType:|
-        #### customerSourceRecord
+**数据类型**:
+
+#### customerSourceRecord
 
     - **csrid**: 记录ID
       - 类型: *Long*
@@ -2838,29 +2770,27 @@
     - **comment**: 记录信息
       - 类型: *String*
 
-    ### <I> pageCustomerSourceRecord
+    ### `pageCustomerSourceRecord` <span style="color:gray">[内部]</span>
 
         分页方式获取资源记录信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                :param customerSourceRecord.csid: 资源ID
-        :type customerSourceRecord.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerSourceRecord.csid**:
+  资源ID
+
+        **示例**:{
                 "customerSourceRecord.csid": 2
             }
-            
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 资源记录列表 , 每条数据类型 *customerSourceRecord*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  资源记录列表 , 每条数据类型 *customerSourceRecord*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -2879,7 +2809,7 @@
                         },
                         "operatTime": "2016-01-01",
                         "comment": "创建资源信息",
-                        
+
                     }
                 ],
                 ...
@@ -2891,8 +2821,9 @@
 
 ## api.customer.CustomerOriginAction
 
-        |DataType:|
-        #### customerOrigin
+**数据类型**:
+
+#### customerOrigin
 
     - **csid**: 客源ID
       - 类型: *Long*
@@ -2927,7 +2858,7 @@
       - 类型: *Integer*
     - **totalArea**: 总面积
       - 类型: *Integer*
-    
+
     - **creater**: 创建人 , 类型 [user](./user.html#api.data.UserAction.user)
       - 类型: *Object*
     - **createTime**: 创建时间
@@ -2938,12 +2869,12 @@
       - 类型: *Object*
     - **region**: 归属分区 , 类型 [department](./department.html#api.communion.DepartmentAction.department)
       - 类型: *Object*
-    
+
     - **status**: 状态 , 0(初始) , 1(初审) , 2(提交) , 3(确认) , 4(审批) , 5(绑定) , 6(拒绝)
       - 类型: *Short*
     - **comment**: 备注
       - 类型: *String*
-    
+
     - **designer**: 设计师 , 类型 [user](./user.html#api.data.UserAction.user)
       - 类型: *Object*
     - **salesman**: 业务员 , 类型 [user](./user.html#api.data.UserAction.user)
@@ -2954,31 +2885,29 @@
       - 类型: *Object*
     - **orderId**: 装修单号
       - 类型: *String*
-    
-    
-    ### <I> pageCustomerOrigin
+
+
+    ### `pageCustomerOrigin` <span style="color:gray">[内部]</span>
 
         分页方式获取客源信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                - **type**: 类型 , 包括: 设计(designer) , 业务(salesman) , 归属(belonger) , 共享(share)
+
+**请求参数**:
+
+- **type**: 类型 , 包括: 设计(designer) , 业务(salesman) , 归属(belonger) , 共享(share)
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "type": "salesman"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 客源列表 , 每条数据类型 *customerOrigin*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客源列表 , 每条数据类型 *customerOrigin*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3063,21 +2992,20 @@
                 ...
             }
 
-    ### <I> pageCustomerOriginForAdvance
+    ### `pageCustomerOriginForAdvance` <span style="color:gray">[内部]</span>
 
         分页方式获取客源信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         利用客源-部门权限 , 查询当前人员拥有的部门权限下跟进人归属的客源信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 客源列表 , 每条数据类型 *customerOrigin*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客源列表 , 每条数据类型 *customerOrigin*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3161,30 +3089,28 @@
                 },
                 ...
             }
-            
-    ### <C> queryCustomerOriginByCsid
+
+    ### `queryCustomerOriginByCsid` <span style="color:blue">[自定义]</span>
 
         通过客源ID获取客源信息
-        
-                |Requests:|
-                :param customerOrigin.csid: 客源ID
-        :type customerOrigin.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOrigin.csid**:
+  客源ID
+
+        **示例**:{
                 "customerOrigin.csid": 1
             }
-            
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 客源列表 , 每条数据类型 *customerOrigin*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  客源列表 , 每条数据类型 *customerOrigin*
+
+        **示例**:{
                 ...
                 "customerOrigin": {
                     "csid": 1,
@@ -3262,54 +3188,53 @@
                 }
                 ...
             }
-            
-    ### <I> addCustomerOrigin
+
+    ### `addCustomerOrigin` <span style="color:gray">[内部]</span>
 
         添加客源信息
-        
+
         创建记录信息 , 新客源信息作为记录内容 , 信息包括: 电话, 目的, 意向, 价格, 等级
-        
-                |Requests:|
-                :param customerOrigin.name: 姓名
-        :type customerOrigin.name: String
-        :param customerOrigin.gender: 性别
-        :type customerOrigin.gender: String
-        :param customerOrigin.phone: 电话
-        :type customerOrigin.phone: String
-        :param customerOrigin.purpose: 目的
-        :type customerOrigin.purpose: String
-        :param customerOrigin.intention: 意向
-        :type customerOrigin.intention: String
-        :param customerOrigin.price: 需求价格
-        :type customerOrigin.price: String
-        :param customerOrigin.grade: 客户等级
-        :type customerOrigin.grade: String
-        :param customerOrigin.comment: 备注
-        :type customerOrigin.comment: String
-        
-        :param customerOrigin.busitype.dbid: 业务类型ID
-        :type customerOrigin.busitype.dbid: Long
-        :param customerOrigin.village.vid: 楼盘ID
-        :type customerOrigin.village.vid: Long
-        :param customerOrigin.houseNumber: 楼号
-        :type customerOrigin.houseNumber: String
-        :param customerOrigin.buildArea: 建筑面积
-        :type customerOrigin.buildArea: Float
-        :param customerOrigin.freeArea: 赠送面积
-        :type customerOrigin.freeArea: Float
-        :param customerOrigin.innerArea: 套内面积
-        :type customerOrigin.innerArea: Float
-        :param customerOrigin.totalArea: 总面积
-        :type customerOrigin.totalArea: Float
-        
-        :param customerOrigin.designer.uid: 设计师ID
-        :type customerOrigin.designer.uid: Long
-        :param customerOrigin.salesman.uid: 业务员ID
-        :type customerOrigin.salesman.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOrigin.name**:
+  姓名
+        - **customerOrigin.gender**:
+  性别
+        - **customerOrigin.phone**:
+  电话
+        - **customerOrigin.purpose**:
+  目的
+        - **customerOrigin.intention**:
+  意向
+        - **customerOrigin.price**:
+  需求价格
+        - **customerOrigin.grade**:
+  客户等级
+        - **customerOrigin.comment**:
+  备注
+
+        - **customerOrigin.busitype.dbid**:
+  业务类型ID
+        - **customerOrigin.village.vid**:
+  楼盘ID
+        - **customerOrigin.houseNumber**:
+  楼号
+        - **customerOrigin.buildArea**:
+  建筑面积
+        - **customerOrigin.freeArea**:
+  赠送面积
+        - **customerOrigin.innerArea**:
+  套内面积
+        - **customerOrigin.totalArea**:
+  总面积
+
+        - **customerOrigin.designer.uid**:
+  设计师ID
+        - **customerOrigin.salesman.uid**:
+  业务员ID
+
+        **示例**:{
                 "customerOrigin.name": "李先生",
                 "customerOrigin.gender": "男",
                 "customerOrigin.purpose": "婚房",
@@ -3327,41 +3252,40 @@
                 "customerOrigin.designer.uid": 1,
                 "customerOrigin.salesman.uid": 1,
             }
-            
-    ### <I> updateCustomerOrigin
+
+    ### `updateCustomerOrigin` <span style="color:gray">[内部]</span>
 
         更新客源信息 , 包括: 目的, 意向, 价格, 等级
-        
+
         判断客源是否存在 , 不存在 , 错误信息 **330001 客源不存在**
-        
+
         判断客源状态为0(初始) , 其他状态 , 错误信息 **330014 客源状态不可操作**
-        
+
         创建记录信息 , 同时将原客源信息以及新客源信息作为记录内容 , 信息包括: 目的, 意向, 价格, 等级
-        
-                |Requests:|
-                :param customerOrigin.csid: 客源ID
-        :type customerOrigin.csid: Long
-        :param customerOrigin.purpose: 目的
-        :type customerOrigin.purpose: String
-        :param customerOrigin.intention: 意向
-        :type customerOrigin.intention: String
-        :param customerOrigin.price: 需求价格
-        :type customerOrigin.price: String
-        :param customerOrigin.grade: 客户等级
-        :type customerOrigin.grade: String
-        :param customerOrigin.comment: 备注
-        :type customerOrigin.comment: String
-        
-        :param customerOrigin.busitype.dbid: 业务类型ID
-        :type customerOrigin.busitype.dbid: Long
-        :param customerOrigin.designer.uid: 设计师ID
-        :type customerOrigin.designer.uid: Long
-        :param customerOrigin.salesman.uid: 业务员ID
-        :type customerOrigin.salesman.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOrigin.csid**:
+  客源ID
+        - **customerOrigin.purpose**:
+  目的
+        - **customerOrigin.intention**:
+  意向
+        - **customerOrigin.price**:
+  需求价格
+        - **customerOrigin.grade**:
+  客户等级
+        - **customerOrigin.comment**:
+  备注
+
+        - **customerOrigin.busitype.dbid**:
+  业务类型ID
+        - **customerOrigin.designer.uid**:
+  设计师ID
+        - **customerOrigin.salesman.uid**:
+  业务员ID
+
+        **示例**:{
                 "customerOrigin.csid": 2,
                 "customerOrigin.purpose": "婚房",
                 "customerOrigin.intention": "铁西广场附近",
@@ -3371,171 +3295,164 @@
                 "customerOrigin.designer.uid": 1,
                 "customerOrigin.salesman.uid": 1
             }
-            
-    ### <I> updateCustomerOriginForBelonger
+
+    ### `updateCustomerOriginForBelonger` <span style="color:gray">[内部]</span>
 
         更新客源归属信息
-        
+
         判断客源是否存在 , 不存在 , 错误信息 **330001 客源不存在**
-        
+
         判断客源状态为0(初始) , 其他状态 , 错误信息 **330014 客源状态不可操作**
-        
+
         修改归属人信息同时更新归属部门以及分区
-        
+
         客源归属人信息可以为空 , 为空时 , 不更新归属部门和分区
-        
+
         创建记录信息 , 将原归属人, 部门, 分区以及新归属人, 部门, 分区作为记录内容
-        
-                |Requests:|
-                :param customerOrigin.csid: 客源ID
-        :type customerOrigin.csid: Long
-        :param customerOrigin.belonger.userId: 归属人ID
-        :type customerOrigin.belonger.userId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOrigin.csid**:
+  客源ID
+        - **customerOrigin.belonger.userId**:
+  归属人ID
+
+        **示例**:{
                 "customerOrigin.csid": 2,
                 "customer.belonger.userId": "U9382"
             }
-            
-    ### <I> freeCustomerOrigin
+
+    ### `freeCustomerOrigin` <span style="color:gray">[内部]</span>
 
         释放客源归属信息
-        
+
         判断客源是否存在 , 不存在 , 错误信息 **330001 客源不存在**
-        
+
         判断客源状态为0(初始) , 其他状态 , 错误信息 **330014 客源状态不可操作**
-        
+
         客源归属人为当前操作人能够释放 , 否则释放失败 , 错误信息 **330002 客源归属人错误**
-        
+
         更新归属人为空
-        
+
         创建记录信息 , 记录原归属人信息 , 包括原归属人的员工号以及员工名
-        
-                |Requests:|
-                :param customerOrigin.csid: 客源ID
-        :type customerOrigin.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOrigin.csid**:
+  客源ID
+
+        **示例**:{
                 "customerOrigin.csid": 2
             }
-            
-    ### <I> takeCustomerOrigin
+
+    ### `takeCustomerOrigin` <span style="color:gray">[内部]</span>
 
         认领房源
-        
+
         判断客源是否存在 , 不存在 , 错误信息 **330001 客源不存在**
-        
+
         判断客源状态为0(初始) , 其他状态 , 错误信息 **330014 客源状态不可操作**
-        
+
         客源归属人为空能够认领 , 否则认领失败 , 错误信息 **330002 客源归属人错误**
-        
+
         更新归属人 , 部门以及分区信息
-        
+
         创建记录信息 , 记录原归属人信息 , 包括认领人的员工号以及员工名
-        
-                |Requests:|
-                :param customerOrigin.csid: 客源ID
-        :type customerOrigin.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOrigin.csid**:
+  客源ID
+
+        **示例**:{
                 "customerOrigin.csid": 2
             }
-            
-    ### <I> bindCustomerOrigin
+
+    ### `bindCustomerOrigin` <span style="color:gray">[内部]</span>
 
         绑定客源信息 , 包括: 设计师 , 业务员 , 房产ID , 客户ID
-        
+
         判断客源是否存在 , 不存在 , 错误信息 **330001 客源不存在**
-        
+
         判断客源状态为0(初始) , 其他状态 , 错误信息 **330014 客源状态不可操作**
-        
+
         判断房产是否存在 , 不存在 , 错误信息 **320002 房产不存在**
-        
-                |Requests:|
-                :param customerOrigin.csid: 客源ID
-        :type customerOrigin.csid: Long
-        :param customerOrigin.designer.userId: 设计师ID
-        :type customerOrigin.designer.userId: String
-        :param customerOrigin.salesman.userId: 业务员ID
-        :type customerOrigin.salesman.userId: String
-        :param customerOrigin.customer.cid: 客户ID
-        :type customerOrigin.customer.cid: Long
-        :param customerOrigin.house.hid: 房产ID
-        :type customerOrigin.house.hid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOrigin.csid**:
+  客源ID
+        - **customerOrigin.designer.userId**:
+  设计师ID
+        - **customerOrigin.salesman.userId**:
+  业务员ID
+        - **customerOrigin.customer.cid**:
+  客户ID
+        - **customerOrigin.house.hid**:
+  房产ID
+
+        **示例**:{
                 "customerOrigin.csid": 2,
                 "customerOrigin.designer.userId": "U0002",
                 "customerOrigin.salesman.userId": "U0002",
                 "customerOrigin.customer.cid": 1,
                 "customerOrigin.house.hid": 1
             }
-            
-    ### <I> commitCustomerOrigin
+
+    ### `commitCustomerOrigin` <span style="color:gray">[内部]</span>
 
         提交客源
-        
+
         判断客源是否存在 , 不存在 , 错误信息 **330001 客源不存在**
-        
+
         判断客源状态为1(初审) , 其他状态 , 错误信息 **330014 客源状态不可操作**
-        
-                |Requests:|
-                :param customerOrigin.csid: 客源ID
-        :type customerOrigin.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOrigin.csid**:
+  客源ID
+
+        **示例**:{
                 "customerOrigin.csid": 2
             }
-        
-    ### <I> confirmCustomerOrigin
+
+    ### `confirmCustomerOrigin` <span style="color:gray">[内部]</span>
 
         确认客源
-        
+
         判断客源是否存在 , 不存在 , 错误信息 **330001 客源不存在**
-        
+
         判断客源状态为2(提交) , 其他状态 , 错误信息 **330014 客源状态不可操作**
-        
-                |Requests:|
-                :param customerOrigin.csid: 客源ID
-        :type customerOrigin.csid: Long
+
+**请求参数**:
+
+- **customerOrigin.csid**:
+  客源ID
         - **securityCode**: 验证码
           - 类型: *String*
         - **verifyCode**: 验证码
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "customerOrigin.csid": 2,
                 "securityCode": "",
                 "verifyCode": ""
             }
 
-    ### <I> cancelCustomerOrigin
+    ### `cancelCustomerOrigin` <span style="color:gray">[内部]</span>
 
         撤销客源
-        
+
         判断客源是否存在 , 不存在 , 错误信息 **330001 客源不存在**
-        
+
         判断客源状态为2(提交)/3(确认)/5(拒绝) , 其他状态 , 错误信息 **330014 客源状态不可操作**
-        
-                |Requests:|
-                :param customerOrigin.csid: 客源ID
-        :type customerOrigin.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOrigin.csid**:
+  客源ID
+
+        **示例**:{
                 "customerOrigin.csid": 2
             }
 
@@ -3543,8 +3460,9 @@
 
 ## api.customer.CustomerRecordAction
 
-        |DataType:|
-        #### customerOriginRecord
+**数据类型**:
+
+#### customerOriginRecord
 
     - **crid**: 客户记录ID
       - 类型: *Long*
@@ -3559,27 +3477,25 @@
     - **operatTime**: 记录时间
       - 类型: *Timestamp*
 
-    ### <I> queryCustomerOriginRecord
+    ### `queryCustomerOriginRecord` <span style="color:gray">[内部]</span>
 
         通过客源查询记录信息
-        
-                |Requests:|
-                :param customerOriginRecord.csid: 客源ID
-        :type customerOriginRecord.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOriginRecord.csid**:
+  客源ID
+
+        **示例**:{
                 "customerOriginRecord.csid": 2
             }
-            
-                |Returns:|
-                - **customerOriginRecords**: 记录信息列表 , 每条数据类型 *customerOriginRecord*
+
+**返回参数**:
+
+- **customerOriginRecords**: 记录信息列表 , 每条数据类型 *customerOriginRecord*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customerOriginRecords": [
                     {
@@ -3602,20 +3518,19 @@
                 ],
                 ...
             }
-            
-    ### <I> addCustomerOriginRecord
+
+    ### `addCustomerOriginRecord` <span style="color:gray">[内部]</span>
 
         创建客户记录信息
-        
-                |Requests:|
-                :param customerOriginRecord.csid: 客源ID
-        :type customerOriginRecord.csid: Long
-        :param customerOriginRecord.comment: 说明
-        :type customerOriginRecord.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOriginRecord.csid**:
+  客源ID
+        - **customerOriginRecord.comment**:
+  说明
+
+        **示例**:{
                 "customerOriginRecord.csid": 2,
                 "customerOriginRecord.comment": "说明"
             }
@@ -3624,8 +3539,9 @@
 
 ## api.customer.CustomerOriginFunctionAction
 
-        |DataType:|
-        #### customerOriginFunction
+**数据类型**:
+
+#### customerOriginFunction
 
     - **cofid**: 功能ID
       - 类型: *Long*
@@ -3646,27 +3562,25 @@
     - **sort**: 排序
       - 类型: *Short*
 
-    ### <I> queryCustomerOriginFunction
+    ### `queryCustomerOriginFunction` <span style="color:gray">[内部]</span>
 
         获取客源功能信息
-    
-                |Requests:|
-                :param customerOriginFunction.type: 类型
-        :type customerOriginFunction.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **customerOriginFunction.type**:
+  类型
+
+        **示例**:{
                 "customerOriginFunction.type": 0
             }
-            
-                |Returns:|
-                - **customerOriginFunctions**: 功能信息列表 , 类型 *customerOriginFunction*
+
+**返回参数**:
+
+- **customerOriginFunctions**: 功能信息列表 , 类型 *customerOriginFunction*
           - 类型: *List*
-            
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "customerOriginFunctions": [
                     {
@@ -3689,8 +3603,9 @@
 
 ## api.customer.ConsultionAction
 
-        |DataType:|
-        #### consultion
+**数据类型**:
+
+#### consultion
 
     - **cid**: 咨询ID
       - 类型: *Long*
@@ -3705,19 +3620,18 @@
     - **company**: 公司
       - 类型: *Integer*
 
-    ### <I> pageConsultion
+    ### `pageConsultion` <span style="color:gray">[内部]</span>
 
         分页方式获取咨询信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 咨询信息列表 , 每条数据类型 *consultion*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  咨询信息列表 , 每条数据类型 *consultion*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3765,7 +3679,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部",
@@ -3785,27 +3699,25 @@
                 ...
             }
 
-    ### <I> queryConsultionByOrderId
+    ### `queryConsultionByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取咨询信息
-        
-                |Requests:|
-                :param consultion.decoration.orderId: 装修单号
-        :type consultion.decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **consultion.decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "consultion.decoration.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **consultions**: 咨询信息 , 每条数据类型 *user*
+
+**返回参数**:
+
+- **consultions**: 咨询信息 , 每条数据类型 *user*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "user": [
                     {
@@ -3851,7 +3763,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -3868,30 +3780,30 @@
                 ]
                 ...
             }
-    
-    ### <I> addConsultion
+
+    ### `addConsultion` <span style="color:gray">[内部]</span>
 
         添加咨询信息
-        
-                |Requests:|
-                :param consultion.decoration.orderId: 装修单号
-        :type consultion.decoration.orderId: String
-        :param consultion.comment: 咨询内容
-        :type consultion.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **consultion.decoration.orderId**:
+  装修单号
+        - **consultion.comment**:
+  咨询内容
+
+        **示例**:{
                 "consultion.decoration.orderId": "1601010001",
                 "consultion.comment": "咨询内容"
             }
-    
+
 ### 报修/维修
 
 ## api.customer.AepairAction
 
-        |DataType:|
-        #### aepair
+**数据类型**:
+
+#### aepair
 
     - **aid**: 报修ID
       - 类型: *Long*
@@ -3933,20 +3845,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageAepair
+
+    ### `pageAepair` <span style="color:gray">[内部]</span>
 
         分页方式获取报修信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 报修信息列表 , 每条数据类型 *aepair*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  报修信息列表 , 每条数据类型 *aepair*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -3994,7 +3905,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部",
@@ -4038,28 +3949,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryAepair
+
+    ### `queryAepair` <span style="color:gray">[内部]</span>
 
         通过咨询ID获取报修信息
-        
-                |Requests:|
-                :param aepair.csid: 咨询ID
-        :type aepair.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aepair.csid**:
+  咨询ID
+
+        **示例**:{
                 "aepair.csid": 1
             }
-            
-                |Returns:|
-                - **aepairs**: 报修信息列表 , 每条数据类型 *aepair*
+
+**返回参数**:
+
+- **aepairs**: 报修信息列表 , 每条数据类型 *aepair*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "aepairs": [
                     {
@@ -4105,7 +4014,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -4140,28 +4049,26 @@
                 ]
                 ...
             }
-            
-    ### <I> queryAepairByOrderId
+
+    ### `queryAepairByOrderId` <span style="color:gray">[内部]</span>
 
         通过咨询ID获取报修信息
-        
-                |Requests:|
-                :param aepair.decoration.orderId: 装修单号
-        :type aepair.decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aepair.decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "aepair.decoration.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **aepairs**: 报修信息列表 , 每条数据类型 *aepair*
+
+**返回参数**:
+
+- **aepairs**: 报修信息列表 , 每条数据类型 *aepair*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "aepairs": [
                     {
@@ -4207,7 +4114,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -4242,186 +4149,179 @@
                 ]
                 ...
             }
-    
-    ### <I> addAepair
+
+    ### `addAepair` <span style="color:gray">[内部]</span>
 
         添加报修信息
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **130014 订单不存在**
-        
-                |Requests:|
-                :param consultion.csid: 咨询ID
-        :type consultion.csid: Long
-        :param consultion.decoration.orderId: 装修单号
-        :type consultion.decoration.orderId: String
-        :param consultion.comment: 说明
-        :type consultion.comment: String
-        
-        :param aepair.decoration.orderId: 装修单号
-        :type aepair.decoration.orderId: String
-        :param aepair.targetTime: 预计完成时间
-        :type aepair.targetTime: Timestamp
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **consultion.csid**:
+  咨询ID
+        - **consultion.decoration.orderId**:
+  装修单号
+        - **consultion.comment**:
+  说明
+
+        - **aepair.decoration.orderId**:
+  装修单号
+        - **aepair.targetTime**:
+  预计完成时间
+
+        **示例**:{
                 "consultion.csid": 1,
                 "consultion.comment": 1,
                 "aepair.decoration.orderId": "1601010001",
                 "aepair.targetTime": "2016-01-01 00:00:00"
             }
 
-    ### <I> updateAepair
+    ### `updateAepair` <span style="color:gray">[内部]</span>
 
         更新报修信息
-        
+
         判断报修信息是否存在 , 不存在 , 错误信息 **330021 报修信息不存在**
-        
+
         判断报修信息状态为0(初始)或1(维修) , 其他状态 **330022 报修状态不可操作**
-        
-                |Requests:|
-                :param aepair.aid: 报修ID
-        :type aepair.aid: Long
-        :param aepair.outlay: 维修费用
-        :type aepair.outlay: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aepair.aid**:
+  报修ID
+        - **aepair.outlay**:
+  维修费用
+
+        **示例**:{
                 "aepair.rid": 1,
                 "aepair.outlay": 100000
             }
 
-    ### <I> receiveAepair
+    ### `receiveAepair` <span style="color:gray">[内部]</span>
 
         领取报修信息
-        
+
         判断报修信息是否存在 , 不存在 , 错误信息 **330021 报修信息不存在**
-        
+
         判断报修信息状态是否为0(初始) , 其他状态 , 错误信息 **330022 报修状态不可操作**
-        
+
         判断维修信息是否存在维修人 , 已存在 , 错误信息 **330027 维修已有归属**
-        
+
         更新报修单中维修人信息 , 报修单状态为1(维修)
-        
+
         生成维修信息
-        
-                |Requests:|
-                :param aepair.aid: 报修ID
-        :type aepair.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aepair.aid**:
+  报修ID
+
+        **示例**:{
                 "aepair.aid": 1
             }
-    
-    ### <I> deliveAepair
+
+    ### `deliveAepair` <span style="color:gray">[内部]</span>
 
         分配报修信息
-        
+
         判断报修信息是否存在 , 不存在 , 错误信息 **330021 报修信息不存在**
-        
+
         判断报修信息状态是否为0(初始) , 其他状态 , 错误信息 **330022 报修状态不可操作**
-        
+
         判断维修信息是否存在维修人 , 已存在 , 错误信息 **330027 维修已有归属**
-        
+
         生成维修信息
-        
-                |Requests:|
-                :param aepair.aid: 报修ID
-        :type aepair.aid: Long
-        :param aepair.repaier.uid: 维修人ID
-        :type aepair.repaier.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aepair.aid**:
+  报修ID
+        - **aepair.repaier.uid**:
+  维修人ID
+
+        **示例**:{
                 "aepair.aid": 1,
                 "aepair.repaier.uid": 1
             }
-    
-    ### <I> tranAepair
+
+    ### `tranAepair` <span style="color:gray">[内部]</span>
 
         转交报修信息
-        
+
         判断报修信息是否存在 , 不存在 , 错误信息 **330021 报修信息不存在**
-        
+
         判断报修信息状态是否为1(维修) , 其他状态 , 错误信息 **330022 报修状态不可操作**
-        
+
         判断维修归属为当前操作人 , 非同一人 , 错误信息 **330028 维修非当前归属**
-        
-                |Requests:|
-                :param aepair.aid: 报修ID
-        :type aepair.aid: Long
-        :param aepair.repaier.uid: 维修人ID
-        :type aepair.repaier.uid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aepair.aid**:
+  报修ID
+        - **aepair.repaier.uid**:
+  维修人ID
+
+        **示例**:{
                 "aepair.aid": 1,
                 "aepair.repaier.uid": 1
             }
 
-    ### <I> finishAepair
+    ### `finishAepair` <span style="color:gray">[内部]</span>
 
         完工报修
-        
+
         判断报修信息是否存在 , 不存在 , 错误信息 **330021 报修信息不存在**
-        
+
         判断报修信息状态是否为1(维修) , 其他状态 , 错误信息 **330022 报修状态不可操作**
-        
+
         更新报修状态为2(完工)
-        
-                |Requests:|
-                :param aepair.aid: 报修ID
-        :type aepair.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aepair.aid**:
+  报修ID
+
+        **示例**:{
                 "aepair.aid": 1
             }
 
-    ### <I> closeAepair
+    ### `closeAepair` <span style="color:gray">[内部]</span>
 
         关闭报修
-        
+
         判断报修信息是否存在 , 不存在 , 错误信息 **330021 报修信息不存在**
-        
+
         判断报修信息状态是否为2(完工) , 其他状态 , 错误信息 **330022 报修状态不可操作**
-        
-                |Requests:|
-                :param aepair.aid: 报修ID
-        :type aepair.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aepair.aid**:
+  报修ID
+
+        **示例**:{
                 "aepair.aid": 1
             }
 
-    ### <I> sendAepair
+    ### `sendAepair` <span style="color:gray">[内部]</span>
 
         发送报修信息
-        
+
         判断报修信息是否存在 , 不存在 , 错误信息 **330021 报修信息不存在**
-        
-                |Requests:|
-                :param aepair.aid: 报修ID
-        :type aepair.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **aepair.aid**:
+  报修ID
+
+        **示例**:{
                 "aepair.aid": 1
             }
 
 ## api.customer.RepairAction
 
-        |DataType:|
-        #### repair
+**数据类型**:
+
+#### repair
 
     - **rid**: 维修ID
       - 类型: *Long*
@@ -4447,28 +4347,26 @@
       - 类型: *Short*
     - **content**: 内容
       - 类型: *String*
-    
-    ### <I> queryRepair
+
+    ### `queryRepair` <span style="color:gray">[内部]</span>
 
         通过报修ID获取维修信息
-        
-                |Requests:|
-                :param repair.aid: 报修ID
-        :type repair.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **repair.aid**:
+  报修ID
+
+        **示例**:{
                 "repair.aid": 1
             }
-            
-                |Returns:|
-                - **repairs**: 维修信息列表 , 每条数据类型 *repair*
+
+**返回参数**:
+
+- **repairs**: 维修信息列表 , 每条数据类型 *repair*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "repairs": [
                     {
@@ -4508,101 +4406,98 @@
                 ]
                 ...
             }
-            
-    ### <I> addRepair
+
+    ### `addRepair` <span style="color:gray">[内部]</span>
 
         添加维修信息
-        
-                |Requests:|
-                :param repair.aid: 报修ID
-        :type repair.aid: Long
-        :param repair.repaier.uid: 维修人ID
-        :type repair.repaier.uid: Long
-        :param repair.content: 维修内容
-        :type repair.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **repair.aid**:
+  报修ID
+        - **repair.repaier.uid**:
+  维修人ID
+        - **repair.content**:
+  维修内容
+
+        **示例**:{
                 "repair.aid": 1,
                 "repair.repaier.uid": 1,
                 "repair.content": "维修内容"
             }
 
-    ### <I> sendRepair
+    ### `sendRepair` <span style="color:gray">[内部]</span>
 
         发送
-        
+
         判断维修信息是否存在 , 不存在 , 错误信息 **330025 维修信息不存在**
-        
+
         判断维修状态为0(初始) , 其他状态 , 错误信息 **330026 维修状态不可操作**
-        
-                |Requests:|
-                :param repair.rid: 维修ID
-        :type repair.rid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **repair.rid**:
+  维修ID
+
+        **示例**:{
                 "repair.rid": 1
             }
-    
-    ### <I> keepRepair
+
+    ### `keepRepair` <span style="color:gray">[内部]</span>
 
         维修
-        
+
         判断维修信息是否存在 , 不存在 , 错误信息 **330025 维修信息不存在**
-        
+
         判断维修状态为0(初始) , 其他状态 , 错误信息 **330026 维修状态不可操作**
-        
+
         更新维修信息状态为1(维修)
-        
+
         更新报修信息状态为1(维修)
-        
-                |Requests:|
-                :param repair.rid: 维修ID
-        :type repair.rid: Long
-        :param repair.schedule: 进度
-        :type repair.schedule: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **repair.rid**:
+  维修ID
+        - **repair.schedule**:
+  进度
+
+        **示例**:{
                 "repair.rid": 1,
                 "repair.schedule": "one"
             }
-    
-    ### <I> finishRepair
+
+    ### `finishRepair` <span style="color:gray">[内部]</span>
 
         完工
-        
+
         判断维修信息是否存在 , 不存在 , 错误信息 **330025 维修信息不存在**
-        
+
         判断维修状态为1(维修) , 其他状态 , 错误信息 **330026 维修状态不可操作**
-        
+
         判断维修归属为当前操作人 , 非同一人 , 错误信息 **330028 维修非当前归属**
-        
+
         更新维修信息状态为2(完工)
-        
+
         更新报修信息状态为0(初始)
-        
-                |Requests:|
-                :param repair.rid: 维修ID
-        :type repair.rid: Long
-        :param repair.schedule: 进度
-        :type repair.schedule: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **repair.rid**:
+  维修ID
+        - **repair.schedule**:
+  进度
+
+        **示例**:{
                 "repair.rid": 1,
                 "repair.schedule": "one"
             }
-    
+
 ## api.customer.RepairpayAction
 
-        |DataType:|
-        #### repairpay
+**数据类型**:
+
+#### repairpay
 
     - **rpid**: 维修款ID
       - 类型: *Long*
@@ -4620,28 +4515,26 @@
       - 类型: *Timestamp*
     - **status**: 状态 , 0: 初始 , 1: 已付款 , 2: 已确认
       - 类型: *Short*
-    
-    ### <I> queryRepairpay
+
+    ### `queryRepairpay` <span style="color:gray">[内部]</span>
 
         通过维修信息ID获取维修款信息
-        
-                |Requests:|
-                :param repairpay.aid: 报修ID
-        :type repairpay.aid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **repairpay.aid**:
+  报修ID
+
+        **示例**:{
                 "repairpay.aid": 1
             }
 
-                |Returns:|
-                - **repairpays**: 维修款信息列表 , 每条数据类型 *repairpay*
+**返回参数**:
+
+- **repairpays**: 维修款信息列表 , 每条数据类型 *repairpay*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "repairpays": [
                     {
@@ -4662,45 +4555,43 @@
                 ...
             }
 
-    ### <I> addRepairpay
+    ### `addRepairpay` <span style="color:gray">[内部]</span>
 
         添加维修款
-        
+
         判断维修信息是否存在 , 不存在 , 错误信息 **330025 维修信息不存在**
-        
+
         更新报修单的维修费用
-        
-                |Requests:|
-                :param repairpay.aid: 报修ID
-        :type repairpay.aid: Long
-        :param repairpay.type: 类型
-        :type repairpay.type: Short
-        :param repairpay.money: 金额
-        :type repairpay.money: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **repairpay.aid**:
+  报修ID
+        - **repairpay.type**:
+  类型
+        - **repairpay.money**:
+  金额
+
+        **示例**:{
                 "repairpay.aid": 1,
                 "repairpay.type": 1,
                 "repairpay.money": 100000,
             }
 
-    ### <I> deleteRepairpay
+    ### `deleteRepairpay` <span style="color:gray">[内部]</span>
 
         删除维修款
-        
+
         判断维修款是否存在 , 不存在 , 错误信息 **330032 维修款不存在**
-        
+
         判断维修款状态是否为0(初始) , 其他状态 , 错误信息 **330033 维修款状态不可操作**
-        
-                |Requests:|
-                :param repairpay.rpid: 维修款ID
-        :type repairpay.rpid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **repairpay.rpid**:
+  维修款ID
+
+        **示例**:{
                 "repairpay.rpid": 1
             }
 
@@ -4708,8 +4599,9 @@
 
 ## api.customer.ComplainAction
 
-        |DataType:|
-        #### complain
+**数据类型**:
+
+#### complain
 
     - **cid**: 投诉ID
       - 类型: *Long*
@@ -4735,20 +4627,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageComplain
+
+    ### `pageComplain` <span style="color:gray">[内部]</span>
 
         分页方式获取投诉信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 投诉信息列表 , 每条数据类型 *complain*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  投诉信息列表 , 每条数据类型 *complain*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -4796,7 +4687,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部",
@@ -4826,28 +4717,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryComplain
+
+    ### `queryComplain` <span style="color:gray">[内部]</span>
 
         通过咨询ID获取投诉信息
-        
-                |Requests:|
-                :param complain.csid: 咨询ID
-        :type complain.csid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complain.csid**:
+  咨询ID
+
+        **示例**:{
                 "complain.csid": 1
             }
-            
-                |Returns:|
-                - **complains**: 投诉信息列表 , 每条数据类型 *complain*
+
+**返回参数**:
+
+- **complains**: 投诉信息列表 , 每条数据类型 *complain*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "complains": [
                     {
@@ -4893,7 +4782,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -4922,27 +4811,25 @@
                 ...
             }
 
-    ### <I> queryComplainByOrderId
+    ### `queryComplainByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取投诉信息
-        
-                |Requests:|
-                :param complain.decoration.orderId: 装修单号
-        :type complain.decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complain.decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "complain.csid": 1
             }
-            
-                |Returns:|
-                - **complains**: 投诉信息列表 , 每条数据类型 *complain*
+
+**返回参数**:
+
+- **complains**: 投诉信息列表 , 每条数据类型 *complain*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "complains": [
                     {
@@ -4988,7 +4875,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -5017,91 +4904,89 @@
                 ...
             }
 
-    ### <I> addComplain
+    ### `addComplain` <span style="color:gray">[内部]</span>
 
         添加投诉信息
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **130014 订单不存在**
-        
-                |Requests:|
-                :param consultion.csid: 咨询ID
-        :type consultion.csid: Long
-        :param consultion.decoration.orderId: 装修单号
-        :type consultion.decoration.orderId: String
-        :param consultion.comment: 说明
-        :type consultion.comment: String
-        
-        :param complain.level: 等级
-        :type complain.level: Short
-        
-        :param complaints[n].type: 类型
-        :type complaints[n].type: Short
-        :param complaints[n].dept.did: 部门ID
-        :type complaints[n].dept.did: Short
-        :param complaints[n].staff.uid: 人员ID
-        :type complaints[n].staff.uid: Short
-        :param complaints[n].brand.bid: 品牌ID
-        :type complaints[n].brand.bid: Short
-        :param complaints[n].content: 内容
-        :type complaints[n].content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **consultion.csid**:
+  咨询ID
+        - **consultion.decoration.orderId**:
+  装修单号
+        - **consultion.comment**:
+  说明
+
+        - **complain.level**:
+  等级
+
+        - **complaints[n].type**:
+  类型
+        - **complaints[n].dept.did**:
+  部门ID
+        - **complaints[n].staff.uid**:
+  人员ID
+        - **complaints[n].brand.bid**:
+  品牌ID
+        - **complaints[n].content**:
+  内容
+
+        **示例**:{
                 "complain.csid": 1,
                 "complain.level": 1,
-                
+
                 "complaints[0].type": 0,
                 "complaints[0].dept.did": 1,
                 "complaints[0].staff.uid": 1,
                 "complaints[0].brand.bid": 1,
                 "complaints[0].content": "投诉内容",
             }
-    
-    ### <I> finishComplain
+
+    ### `finishComplain` <span style="color:gray">[内部]</span>
 
         完结
-        
+
         判断投诉信息是否存在 , 不存在 , 错误信息 **330037 投诉信息不存在**
-        
+
         判断投诉信息状态是否为1(处理) , 其他状态 , 错误信息 **330038 投诉状态不可操作**
-        
+
         更新投诉信息状态为2(完结)
-        
-                |Requests:|
-                :param complain.cid: 投诉ID
-        :type complain.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complain.cid**:
+  投诉ID
+
+        **示例**:{
                 "complain.cid": 1
             }
-    
-    ### <I> closeComplain
+
+    ### `closeComplain` <span style="color:gray">[内部]</span>
 
         关闭
-        
+
         判断投诉信息是否存在 , 不存在 , 错误信息 **330037 投诉信息不存在**
-        
+
         判断投诉信息状态是否为2(完结) , 其他状态 , 错误信息 **330038 投诉状态不可操作**
-        
+
         更新投诉信息状态为3(关闭)
-        
-                |Requests:|
-                :param complain.cid: 投诉ID
-        :type complain.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complain.cid**:
+  投诉ID
+
+        **示例**:{
                 "complain.cid": 1
             }
 
 ## api.customer.ComplaintAction
 
-        |DataType:|
-        #### complaint
+**数据类型**:
+
+#### complaint
 
     - **ctid**: 投诉内容ID
       - 类型: *Long*
@@ -5129,28 +5014,26 @@
       - 类型: *Timestamp*
     - **status**: 状态 , 0: 初始 , 1: 处理 , 2: 完结 , 3: 关闭
       - 类型: *Short*
-    
-    ### <I> queryComplaint
+
+    ### `queryComplaint` <span style="color:gray">[内部]</span>
 
         通过投诉ID获取内容信息
-        
-                |Requests:|
-                :param complaint.cid: 投诉ID
-        :type complaint.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complaint.cid**:
+  投诉ID
+
+        **示例**:{
                 "complaint.cid": 1
             }
-            
-                |Returns:|
-                - **complaints**: 投诉内容信息列表 , 每条数据类型 *complaint*
+
+**返回参数**:
+
+- **complaints**: 投诉内容信息列表 , 每条数据类型 *complaint*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "complaints": [
                     {
@@ -5195,28 +5078,27 @@
                 ],
                 ...
             }
-    
-    ### <I> addComplaint
+
+    ### `addComplaint` <span style="color:gray">[内部]</span>
 
         添加投诉内容
-        
-                |Requests:|
-                :param complaint.cid: 咨询ID
-        :type complaint.cid: Long
-        :param complaint.type: 类型
-        :type complaint.type: Short
-        :param complaint.dept.did: 部门ID
-        :type complaint.dept.did: Short
-        :param complaint.staff.uid: 人员ID
-        :type complaint.staff.uid: Short
-        :param complaint.brand.bid: 品牌ID
-        :type complaint.brand.bid: Short
-        :param complaint.content: 内容
-        :type complaint.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complaint.cid**:
+  咨询ID
+        - **complaint.type**:
+  类型
+        - **complaint.dept.did**:
+  部门ID
+        - **complaint.staff.uid**:
+  人员ID
+        - **complaint.brand.bid**:
+  品牌ID
+        - **complaint.content**:
+  内容
+
+        **示例**:{
                 "complaint.cid": 1,
                 "complaint.type": 1,
                 "complaint.dept.did": 1,
@@ -5224,51 +5106,50 @@
                 "complaint.brand.bid": 1,
                 "complaint.content": "投诉内容"
             }
-    
-    ### <I> finishComplaint
+
+    ### `finishComplaint` <span style="color:gray">[内部]</span>
 
         完结
-        
+
         判断投诉信息是否存在 , 不存在 , 错误信息 **330042 投诉内容不存在**
-        
+
         判断投诉状态是否为1(处理) , 其他状态 , 错误信息 **330043 投诉内容不可操作**
-        
+
         更新投诉状态为2(完结)
-        
-                |Requests:|
-                :param complaint.ctid: 投诉ID
-        :type complaint.ctid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complaint.ctid**:
+  投诉ID
+
+        **示例**:{
                 "complaint.ctid": 1
             }
-    
-    ### <I> closeComplaint
+
+    ### `closeComplaint` <span style="color:gray">[内部]</span>
 
         关闭
-        
+
         判断投诉内容是否存在 , 不存在 , 错误信息 **330042 投诉内容不存在**
-        
+
         判断投诉内容状态是否为1(处理) , 其他状态 , 错误信息 **330043 投诉内容不可操作**
-        
+
         更新投诉内容状态为3(关闭)
-        
-                |Requests:|
-                :param complaint.ctid: 投诉ID
-        :type complaint.ctid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complaint.ctid**:
+  投诉ID
+
+        **示例**:{
                 "complaint.ctid": 1
             }
 
 ## api.customer.ComplackAction
 
-        |DataType:|
-        #### complack
+**数据类型**:
+
+#### complack
 
     - **ckid**: 跟踪ID
       - 类型: *Long*
@@ -5284,28 +5165,26 @@
       - 类型: *Timestamp*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> queryComplack
+
+    ### `queryComplack` <span style="color:gray">[内部]</span>
 
         通过投诉内容ID获取跟踪信息
-        
-                |Requests:|
-                :param complack.ctid: 投诉内容ID
-        :type complack.ctid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complack.ctid**:
+  投诉内容ID
+
+        **示例**:{
                 "complack.ctid": 1
             }
 
-                |Returns:|
-                - **complacks**: 跟踪信息列表 , 每条数据类型 *complack*
+**返回参数**:
+
+- **complacks**: 跟踪信息列表 , 每条数据类型 *complack*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "complacks": [
                     {
@@ -5326,23 +5205,22 @@
                 ...
             }
 
-    ### <I> trackComplack
+    ### `trackComplack` <span style="color:gray">[内部]</span>
 
         跟踪
-        
+
         判断投诉内容是否存在 , 不存在 , 错误信息 **330042 投诉内容不存在**
-        
-                |Requests:|
-                :param complack.cid: 投诉ID
-        :type complack.cid: Long
-        :param complack.ctid: 投诉内容ID
-        :type complack.ctid: Long
-        :param complack.comment: 说明
-        :type complack.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **complack.cid**:
+  投诉ID
+        - **complack.ctid**:
+  投诉内容ID
+        - **complack.comment**:
+  说明
+
+        **示例**:{
                 "complack.cid": 1,
                 "complack.ctid": 1,
                 "complack.comment": "说明"
@@ -5352,8 +5230,9 @@
 
 ## api.customer.RevisitAction
 
-        |DataType:|
-        #### revisit
+**数据类型**:
+
+#### revisit
 
     - **rid**: 回访ID
       - 类型: *Long*
@@ -5371,20 +5250,19 @@
       - 类型: *Short*
     - **content**: 内容
       - 类型: *String*
-    
-    ### <I> pageRevisit
+
+    ### `pageRevisit` <span style="color:gray">[内部]</span>
 
         分页方式获取回访信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 回访信息列表 , 每条数据类型 *revisit*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  回访信息列表 , 每条数据类型 *revisit*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5431,7 +5309,7 @@
                                 "escorter": null,
                                 "supervisor": null,
                                 "contracter": null,
-                                
+
                                 "designDepartment": "设计中心一部",
                                 "designRegion": "设计一分区",
                                 "businessDepartment": "市场营销一部",
@@ -5454,28 +5332,26 @@
                 },
                 ...
             }
-    
-    ### <I> queryRevisitForAepair
+
+    ### `queryRevisitForAepair` <span style="color:gray">[内部]</span>
 
         获取报修类型回访信息
-    
-                |Requests:|
-                :param revisit.ident: 引用ID
-        :type revisit.ident: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **revisit.ident**:
+  引用ID
+
+        **示例**:{
                 "revisit.ident": 1
             }
-        
-                |Returns:|
-                - **revisits**: 回访信息列表 , 每条数据类型 *revisit*
+
+**返回参数**:
+
+- **revisits**: 回访信息列表 , 每条数据类型 *revisit*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "revisits": [
                     {
@@ -5520,7 +5396,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -5541,28 +5417,26 @@
                 ],
                 ...
             }
-    
-    ### <I> queryRevisitForComplain
+
+    ### `queryRevisitForComplain` <span style="color:gray">[内部]</span>
 
         获取投诉类型回访信息
-    
-                |Requests:|
-                :param revisit.ident: 引用ID
-        :type revisit.ident: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **revisit.ident**:
+  引用ID
+
+        **示例**:{
                 "revisit.ident": 1
             }
-        
-                |Returns:|
-                - **revisits**: 回访信息列表 , 每条数据类型 *revisit*
+
+**返回参数**:
+
+- **revisits**: 回访信息列表 , 每条数据类型 *revisit*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "revisits": [
                     {
@@ -5607,7 +5481,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -5629,27 +5503,25 @@
                 ...
             }
 
-    ### <I> queryRevisitByOrderId
+    ### `queryRevisitByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取回访信息
-    
-                |Requests:|
-                :param revisit.decoration.orderId: 装修单号
-        :type revisit.decoration.orderId: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **revisit.decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "revisit.decoration.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **revisits**: 回访信息列表 , 每条数据类型 *revisit*
+
+**返回参数**:
+
+- **revisits**: 回访信息列表 , 每条数据类型 *revisit*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "revisits": [
                     {
@@ -5694,7 +5566,7 @@
                             "escorter": null,
                             "supervisor": null,
                             "contracter": null,
-                            
+
                             "designDepartment": "设计中心一部",
                             "designRegion": "设计一分区",
                             "businessDepartment": "市场营销一部",
@@ -5716,25 +5588,24 @@
                 ...
             }
 
-    ### <I> visitRevisit
+    ### `visitRevisit` <span style="color:gray">[内部]</span>
 
         回访
-        
-                |Requests:|
-                :param revisit.decoration.orderId: 装修单号
-        :type revisit.decoration.orderId: Long
-        :param revisit.type: 类型
-        :type revisit.type: Short
-        :param revisit.ident: 引用ID
-        :type revisit.ident: Long
-        :param revisit.gladness: 满意度
-        :type revisit.gladness: Short
-        :param revisit.comment: 说明
-        :type revisit.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **revisit.decoration.orderId**:
+  装修单号
+        - **revisit.type**:
+  类型
+        - **revisit.ident**:
+  引用ID
+        - **revisit.gladness**:
+  满意度
+        - **revisit.comment**:
+  说明
+
+        **示例**:{
                 "revisit.decoration.orderId": "1601010001",
                 "revisit.type": 1,
                 "revisit.ident": 1,
@@ -5746,8 +5617,9 @@
 
 ## api.customer.VustomerAction
 
-        |DataType:|
-        #### vustomer
+**数据类型**:
+
+#### vustomer
 
     - **vid**: 大客户ID
       - 类型: *Long*
@@ -5773,22 +5645,21 @@
       - 类型: *Float*
     - **status**: 状态 , 0: 有效 , 1: 无效
       - 类型: *Short*
-    
-    ### <I> pageVustomer
+
+    ### `pageVustomer` <span style="color:gray">[内部]</span>
 
         分页方式获取大客户信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         针对当前登录人员返回归属的大客户信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 大客户信息列表 , 每条数据类型 *vustomer*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  大客户信息列表 , 每条数据类型 *vustomer*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5821,20 +5692,19 @@
                 },
                 ...
             }
-            
-    ### <I> pageVustomerForAdvance
+
+    ### `pageVustomerForAdvance` <span style="color:gray">[内部]</span>
 
         分页方式获取大客户信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 大客户信息列表 , 每条数据类型 *vustomer*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  大客户信息列表 , 每条数据类型 *vustomer*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5867,22 +5737,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageVustomerForCommunion
+
+    ### `pageVustomerForCommunion` <span style="color:gray">[内部]</span>
 
         分页方式获取大客户信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         归属人为空的大客户信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 大客户信息列表 , 每条数据类型 *vustomer*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  大客户信息列表 , 每条数据类型 *vustomer*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5906,22 +5775,21 @@
                 },
                 ...
             }
-            
+
     ### <I-C> pageVustomerByUnionId
 
         分页方式获取大客户信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         固定条件为通过unionId获取归属的大客户信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 大客户信息列表 , 每条数据类型 *vustomer*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  大客户信息列表 , 每条数据类型 *vustomer*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -5944,28 +5812,26 @@
                 },
                 ...
             }
-            
+
     ### <I-C> queryVustomerByUnionId
 
         通过归属人ID获取大客户信息 , 状态为0(有效)
-        
-                |Requests:|
-                :param vustomer.unionId: 归属人ID
-        :type vustomer.unionId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vustomer.unionId**:
+  归属人ID
+
+        **示例**:{
                 "vustomer.unionId": 1918
             }
-            
-                |Returns:|
-                - **vustomers**: 大客户信息列表 , 每条数据类型 *vustomer*
+
+**返回参数**:
+
+- **vustomers**: 大客户信息列表 , 每条数据类型 *vustomer*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "vustomers": [
                     {
@@ -5984,30 +5850,28 @@
                 ],
                 ...
             }
-            
+
     ### <I-C> countVustomerByUnionId
 
         统计归属人对应的客户信息
-        
+
         返回结果依次为: 签单总额 , 签单总数 , 客户总数
-        
-                |Requests:|
-                :param vustomer.unionId: 归属人ID
-        :type vustomer.unionId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vustomer.unionId**:
+  归属人ID
+
+        **示例**:{
                 "vustomer.unionId": 1918
             }
-            
-                |Returns:|
-                - **counts**: 统计信息信息 , 类型 List <String> , 依次为: 签单总额 , 签单总数 , 客户总数
+
+**返回参数**:
+
+- **counts**: 统计信息信息 , 类型 List <String> , 依次为: 签单总额 , 签单总数 , 客户总数
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "counts":[
                     "100000",
@@ -6016,28 +5880,27 @@
                 ],
                 ...
             }
-            
+
     ### <I-C> addVustomer
 
         添加大客户信息
-        
-                |Requests:|
-                :param vustomer.uniondId: 标识
-        :type vustomer.uniondId: String
-        :param vustomer.name: 姓名
-        :type vustomer.name: String
-        :param vustomer.phone: 电话
-        :type vustomer.phone: String
-        :param vustomer.address: 地址
-        :type vustomer.address: String
-        :param vustomer.referrer: 推荐人姓名
-        :type vustomer.referrer: String
-        :param vustomer.referPhone: 推荐人电话
-        :type vustomer.referPhone: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vustomer.uniondId**:
+  标识
+        - **vustomer.name**:
+  姓名
+        - **vustomer.phone**:
+  电话
+        - **vustomer.address**:
+  地址
+        - **vustomer.referrer**:
+  推荐人姓名
+        - **vustomer.referPhone**:
+  推荐人电话
+
+        **示例**:{
                 "vustomer.uniondId": 1918,
                 "vustomer.name": "大客户",
                 "vustomer.phone": "138xxxx9872",
@@ -6045,86 +5908,81 @@
                 "vustomer.referrer": "推荐人",
                 "vustomer.referPhone": "135xxxx1918"
             }
-            
-    ### <I> updateVustomer
+
+    ### `updateVustomer` <span style="color:gray">[内部]</span>
 
         大客户绑定装修单
-        
+
         判断大客户信息是否存在 , 不存在 , 错误信息 **330003 客户信息不存在**
-        
+
         判断大客户信息是否已经绑定装修单 , 已经绑定 , 错误信息 **330004 客户已绑装修单**
-        
+
         判断绑定装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断绑定装修单状态为2(签约) , 其他状态 , 错误信息 **330006 装修单未签约**
-        
-                |Requests:|
-                :param vustomer.vid: 大客户ID
-        :type vustomer.vid: String
-        :param vustomer.orderId: 装修单号
-        :type vustomer.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vustomer.vid**:
+  大客户ID
+        - **vustomer.orderId**:
+  装修单号
+
+        **示例**:{
                 "vustomer.vid": 1918,
                 "vustomer.orderId": "1601010001"
             }
-            
-    ### <I> freeVustomer
+
+    ### `freeVustomer` <span style="color:gray">[内部]</span>
 
         释放大客户信息
-        
+
         判断大客户信息是否存在 , 不存在 , 错误信息 **330003 客户信息不存在**
-        
+
         判断大客户信息是否已经绑定装修单 , 已经绑定 , 错误信息 **330004 客户已绑装修单**
-        
-                |Requests:|
-                :param vustomer.vid: 大客户ID
-        :type vustomer.vid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vustomer.vid**:
+  大客户ID
+
+        **示例**:{
                 "vustomer.vid": 1918
             }
-            
-    ### <I> takeVustomer
+
+    ### `takeVustomer` <span style="color:gray">[内部]</span>
 
         认领大客户信息
-        
+
         判断大客户信息是否存在 , 不存在 , 错误信息 **330003 客户信息不存在**
-        
+
         判断大客户信息是否已经绑定装修单 , 已经绑定 , 错误信息 **330004 客户已绑装修单**
-        
+
         判断大客户是否已经存在归属人 , 存在归属人 , 错误信息 **330007 客户存在归属**
-        
-        :param vustomer.vid: 大客户ID
-        :type vustomer.vid: String
-        
-        Example::
-        
-            {
+
+        - **vustomer.vid**:
+  大客户ID
+
+        **示例**:{
                 "vustomer.vid": 1918
             }
-        
-    ### <I> updateVustomerForBelonger
+
+    ### `updateVustomerForBelonger` <span style="color:gray">[内部]</span>
 
         更新大客户归属信息
-        
+
         判断大客户信息是否存在 , 不存在 , 错误信息 **330003 客户信息不存在**
-        
+
         判断大客户信息是否已经绑定装修单 , 已经绑定 , 错误信息 **330004 客户已绑装修单**
-    
-                |Requests:|
-                :param vustomer.vid: 标识
-        :type vustomer.vid: String
-        :param vustomer.belonger.userId: 归属人ID
-        :type vustomer.belonger.userId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vustomer.vid**:
+  标识
+        - **vustomer.belonger.userId**:
+  归属人ID
+
+        **示例**:{
                 "vustomer.vid": 1918,
                 "vustomer.belonger.userId": "U0001"
             }
@@ -6132,23 +5990,23 @@
     ### <I-C> deleteVustomer
 
         逻辑删除大客户信息 , 更新状态为1(无效)
-        
-                |Requests:|
-                :param vustomer.vid: 标识
-        :type vustomer.vid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vustomer.vid**:
+  标识
+
+        **示例**:{
                 "vustomer.vid": 1,
             }
-            
+
 ## api.customer.VustomerNetAction
 
     大客户关系网
 
-        |DataType:|
-        #### vustomerNet
+**数据类型**:
+
+#### vustomerNet
 
     - **vnid**: 客户网ID
       - 类型: *Long*
@@ -6156,52 +6014,49 @@
       - 类型: *String*
     - **netunionId**: 关系人ID
       - 类型: *String*
-    
+
     ### <I-C> countVustomerNetByUnionId
 
         统计客户关系网
-        
+
         返回结果依次为: 关系客户数
-        
-                |Requests:|
-                :param vustomerNet.unionId: 归属人ID
-        :type vustomerNet.unionId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vustomerNet.unionId**:
+  归属人ID
+
+        **示例**:{
                 "vustomerNet.unionId": 1918
             }
-            
-                |Returns:|
-                - **counts**: 统计信息信息 , 类型 List <String> , 依次为: 关系客户数
+
+**返回参数**:
+
+- **counts**: 统计信息信息 , 类型 List <String> , 依次为: 关系客户数
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "counts":[
                     "2"
                 ],
                 ...
             }
-            
+
     ### <I-C> buildVustomerNet
 
         建立客户关系
-        
+
         判断关系人ID是否绑定归属人ID , 如果存在 , 错误信息 ** 客户关系已存在**
-        
-                |Requests:|
-                :param vustomerNet.unionId: 归属人ID
-        :type vustomerNet.unionId: String
-        :param vustomerNet.netunionId: 关系人ID
-        :type vustomerNet.netunionId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vustomerNet.unionId**:
+  归属人ID
+        - **vustomerNet.netunionId**:
+  关系人ID
+
+        **示例**:{
                 "vustomerNet.unionId": 1918,
                 "vustomerNet.netunionId": 1919
             }
@@ -6210,8 +6065,9 @@
 
     客户记录信息
 
-        |DataType:|
-        #### vrecord
+**数据类型**:
+
+#### vrecord
 
     - **vrid**: 记录ID
       - 类型: *Long*
@@ -6223,28 +6079,26 @@
       - 类型: *Timestamp*
     - **comment**: 内容
       - 类型: *String*
-    
-    ### <I> queryVrecordByVid
+
+    ### `queryVrecordByVid` <span style="color:gray">[内部]</span>
 
         通过大客户ID获取记录信息
-        
-                |Requests:|
-                :param vrecord.vid: 大客户ID
-        :type vrecord.vid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vrecord.vid**:
+  大客户ID
+
+        **示例**:{
                 "vrecord.vid": 1,
             }
-            
-                |Returns:|
-                - **vrecords**: 记录信息列表 , 每条数据类型 *vrecord*
+
+**返回参数**:
+
+- **vrecords**: 记录信息列表 , 每条数据类型 *vrecord*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "vrecords": [
                     {
@@ -6262,30 +6116,30 @@
                 ],
                 ...
             }
-            
-    ### <I> addVrecord
+
+    ### `addVrecord` <span style="color:gray">[内部]</span>
 
         添加大客户对应的记录信息
-    
-                |Requests:|
-                :param vrecord.vid: 大客户ID
-        :type vrecord.vid: String
-        :param vrecord.comment: 说明
-        :type vrecord.comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vrecord.vid**:
+  大客户ID
+        - **vrecord.comment**:
+  说明
+
+        **示例**:{
                 "vrecord.vid": 1,
                 "vrecord.comment": "说明",
             }
-            
+
 ## api.customer.VscoreAction
 
     客户积分相关信息
 
-        |DataType:|
-        #### vscore
+**数据类型**:
+
+#### vscore
 
     - **vsid**: 积分ID
       - 类型: *Long*
@@ -6293,7 +6147,7 @@
       - 类型: *String*
     - **score**: 积分
       - 类型: *Integer*
-    
+
     #### vscoreRecord
 
     - **vsrid**: 积分记录ID
@@ -6314,28 +6168,26 @@
       - 类型: *Short*
     - **comment**: 备注
       - 类型: *String*
-    
+
     ### <I-C> queryVscoreByUnionId
 
         通过归属人ID获取积分信息
-        
-                |Requests:|
-                :param vscore.unionId: 归属人ID
-        :type vscore.unionId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vscore.unionId**:
+  归属人ID
+
+        **示例**:{
                 "vrecord.unionId": 1918,
             }
-            
-                |Returns:|
-                - **vscore**: 积分信息 , 类型 *vscore*
+
+**返回参数**:
+
+- **vscore**: 积分信息 , 类型 *vscore*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "vscore": {
                     "vsid": 1,
@@ -6345,22 +6197,21 @@
                 }
                 ...
             }
-            
-    ### <I> pageVscoreRecordByUnionId
+
+    ### `pageVscoreRecordByUnionId` <span style="color:gray">[内部]</span>
 
         分页方式获取积分记录信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         默认条件为归属人ID
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 积分记录列表 , 每条数据类型 *vscoreRecord*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  积分记录列表 , 每条数据类型 *vscoreRecord*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6384,69 +6235,68 @@
                 },
                 ...
             }
-            
-    ### <I> updateVscoreRecordForStatus
+
+    ### `updateVscoreRecordForStatus` <span style="color:gray">[内部]</span>
 
         更新积分记录状态
-        
+
         判断积分记录类型以及状态不同情况进行处理
-        
+
         通过增加类型的积分记录 , 归属人ID对应的积分值增加
-        
+
         拒绝提取类型的积分记录 , 归属人ID对应的积分值增加
-        
-    ### <I> raiseVscore
+
+    ### `raiseVscore` <span style="color:gray">[内部]</span>
 
         增加积分
-        
+
         根据归属人ID获取积分信息 , 不存在创建积分信息
-        
+
         生成对应的积分记录 , 更新积分信息中的积分值
-        
-                |Requests:|
-                :param vscore.unionId: 归属人ID
-        :type vscore.unionId: String
-        :param vscore.score: 积分
-        :type vscore.score: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vscore.unionId**:
+  归属人ID
+        - **vscore.score**:
+  积分
+
+        **示例**:{
                 "vrecord.unionId": "1918",
                 "vrecord.score": 1000
             }
-            
+
     ### <I-C> pickupVscore
 
         提取积分
-        
+
         根据归属人ID获取积分信息 , 不存在 , 错误信息 ** 积分不存在**
-        
+
         判断积分信息中积分值是否大于提取积分值 , 不满足提取积分值 , 错误信息 ** 积分不足**
-        
+
         生成积分记录信息 , 同时减少归属人ID积分信息中的积分值
-        
-                |Requests:|
-                :param vscore.unionId: 归属人ID
-        :type vscore.unionId: String
-        :param vscore.score: 积分
-        :type vscore.score: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **vscore.unionId**:
+  归属人ID
+        - **vscore.score**:
+  积分
+
+        **示例**:{
                 "vrecord.unionId": "1918",
                 "vrecord.score": 1000
             }
-            
+
 ## 资料
 
 ### 订单
 
 ## api.customer.DecorationAction
 
-        |DataType:|
-        #### decoration
+**数据类型**:
+
+#### decoration
 
     - **did**: 装修单ID
       - 类型: *Long*
@@ -6470,35 +6320,33 @@
       - 类型: *String*
     - **memberFlag**: 会员状态,0:初始 1:会员
       - 类型: *String*
-    
+
     #### decorationActivity
 
     - **orderId**: 装修单号
       - 类型: *String*
     - **activity**: 活动信息
       - 类型: *String*
-    
+
     ### <I-C> queryCusDecoration
 
         通过unionId获取绑定的所有装修单信息
-        
-                |Requests:|
-                - **unionId**: 联合ID
+
+**请求参数**:
+
+- **unionId**: 联合ID
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "unionId": "SDJ4SDF5"
             }
-        
-                |Returns:|
-                - **decorations**: 装修单列表 , 每条数据类型 :[decoration](./customer.html#api.customer.DecorationAction.decoration)
+
+**返回参数**:
+
+- **decorations**: 装修单列表 , 每条数据类型 :[decoration](./customer.html#api.customer.DecorationAction.decoration)
           - 类型: *List*
-        
-        Example::
-        
-            {                    
+
+        **示例**:{
                 ...
                 "decorations": [
                     {
@@ -6511,28 +6359,26 @@
                 ],
                 ...
             }
-            
+
     ### <I-C> queryCusDecorationForDefault
 
         通过unionId获取默认装修单
-        
-                |Requests:|
-                - **unionId**: 联合ID
+
+**请求参数**:
+
+- **unionId**: 联合ID
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "unionId": "SDJ4SDF5"
             }
-        
-                |Returns:|
-                - **decoration**: 装修单信息 , 类型 :[decoration](./customer.html#api.customer.DecorationAction.decoration)
+
+**返回参数**:
+
+- **decoration**: 装修单信息 , 类型 :[decoration](./customer.html#api.customer.DecorationAction.decoration)
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decoration":{
                     "did": 1,
@@ -6562,31 +6408,29 @@
                 }
                 ...
             }
-            
+
     ### <I-C> queryCusDecorationByOrderId
 
         通过unionId获取装修单
-        
-                |Requests:|
-                - **unionId**: 联合ID
+
+**请求参数**:
+
+- **unionId**: 联合ID
           - 类型: *String*
-        :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+        - **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "unionId": "SDJ4SDF5",
                 "decoration.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **decoration**: 装修单信息 , 类型 :[decoration](./customer.html#api.customer.DecorationAction.decoration)
+
+**返回参数**:
+
+- **decoration**: 装修单信息 , 类型 :[decoration](./customer.html#api.customer.DecorationAction.decoration)
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decoration":{
                     "did": 1,
@@ -6616,33 +6460,31 @@
                 }
                 ...
             }
-            
+
     ### <I-C> queryCusDecorationUser
 
         分页方式获取装修单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
-        
-                |Requests:|
-                - **unionId**: 联合ID
+
+**请求参数**:
+
+- **unionId**: 联合ID
           - 类型: *String*
-        :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+        - **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "unionId": "SDJ4SDF5",
                 "decoration.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 人员信息列表 , 每条数据类型 :[decorationUser](./decoration.html#api.decoration.DecorationUserAction.decorationUser)
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  人员信息列表 , 每条数据类型 :[decorationUser](./decoration.html#api.decoration.DecorationUserAction.decorationUser)
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -6654,7 +6496,7 @@
                                 "uid": 1,
                                 "userName": "白雪",
                                 "currentName": "白雪",
-                                "duty": "设计师" 
+                                "duty": "设计师"
                                 "userPhoto": "1d7184baf670d0370658.png"
                             },
                             "content": "说明"
@@ -6664,28 +6506,26 @@
                 },
                 ...
             }
-            
+
     ### <I-C> queryCusDecorationActivity
 
         获取装修单活动信息
-        
-                |Requests:|
-                :param decorationActivity.orderId: 装修单号
-        :type decorationActivity.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationActivity.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationActivity.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationActivity**: 活动信息 , 每条数据类型 *decorationActivity*
+
+**返回参数**:
+
+- **decorationActivity**: 活动信息 , 每条数据类型 *decorationActivity*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationActivity": {
                     "orderId": "1601010001",
@@ -6693,28 +6533,26 @@
                 }
                 ...
             }
-        
+
     ### <I-C> queryCusDecorationHolonomy
 
         获取装修单半价信息
-        
-                |Requests:|
-                :param decorationHolonomy.orderId: 装修单号
-        :type decorationHolonomy.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decorationHolonomy.orderId**:
+  装修单号
+
+        **示例**:{
                 "decorationHolonomy.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **decorationHolonomy**: 半价/满减信息 , 每条数据类型 *decorationHolonomy*
+
+**返回参数**:
+
+- **decorationHolonomy**: 半价/满减信息 , 每条数据类型 *decorationHolonomy*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "decorationHolonomy": {
                     "name": null,
@@ -6737,92 +6575,87 @@
     ### <I-C> vodeCusDecoration
 
         短信验证
-        
-                |Requests:|
-                :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decoration.orderId": "1601010001"
             }
 
-                |Returns:|
-                - **securityCode**: 验证码
+**返回参数**:
+
+- **securityCode**: 验证码
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "securityCode": "SUDF2JH3J423NJ"
                 ...
             }
-            
+
     ### <I-C> bindingCusDecoration
 
         绑定装修单
-        
+
         按照规则判断验证码和校验码 , 不匹配 , 错误信息 **330008 绑定订单失败,验证码错误**
-        
+
         通过电话获取到对应客户的装修单 , 如果没有可绑定装修单 , 错误信息 **330009 无可绑定订单**
-        
-                |Requests:|
-                :param decoration.unionId: 联合ID
-        :type decoration.unionId: String
-        :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
+
+**请求参数**:
+
+- **decoration.unionId**:
+  联合ID
+        - **decoration.orderId**:
+  装修单号
         - **phone**: 客户电话
           - 类型: *String*
         - **securityCode**: 验证码
           - 类型: *String*
         - **verifyCode**: 校验码
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "decoration.unionId": "SDJ4SDF5",
                 "decoration.orderId": "1601010001",
                 "phone": "13333333333",
                 "securityCode": "1234",
                 "verifyCode": "1234"
             }
-        
-            
+
+
     ### <I-C> updateCusDecorationForDefault
 
         更换默认装修单
-        
-                |Requests:|
-                - **unionId**: 联合ID
+
+**请求参数**:
+
+- **unionId**: 联合ID
           - 类型: *String*
-        :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+        - **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "unionId": "SDJ4SDF5",
                 "decoration.orderId":"1601010001"
             }
 
-    ### <I> unbindingCusDecoration
+    ### `unbindingCusDecoration` <span style="color:gray">[内部]</span>
 
         解绑装修单
-        
+
         按照规则判断验证码和校验码 , 不匹配 , 错误信息 **330008 绑定订单失败,验证码错误**
-        
-                |Requests:|
-                :param decoration.unionId: 联合ID
-        :type decoration.unionId: String
-        :param decoration.orderId: 装修单号
-        :type decoration.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **decoration.unionId**:
+  联合ID
+        - **decoration.orderId**:
+  装修单号
+
+        **示例**:{
                 "decoration.unionId": "SDJ4SDF5",
                 "decoration.orderId": "1601010001"
             }
@@ -6831,8 +6664,9 @@
 
 ## api.customer.PaymentAction
 
-        |DataType:|
-        #### advancePayment
+**数据类型**:
+
+#### advancePayment
 
     - **cid**: 客户ID
       - 类型: *Long*
@@ -6844,7 +6678,7 @@
       - 类型: *Float*
     - **zhenglinBalance**: 正林预付款
       - 类型: *Float*
-    
+
     #### payment
 
     - **orderId**: 装修单号
@@ -6859,7 +6693,7 @@
       - 类型: *String*
     - **collectTime**: 收款时间
       - 类型: *Timestamp*
-    
+
     #### decorationPayment
 
     - **orderId**: 装修单号
@@ -6876,7 +6710,7 @@
       - 类型: *Short*
     - **paymentType**: 类型
       - 类型: *String*
-    
+
     #### materialPayment
 
     - **orderId**: 装修单号
@@ -6899,7 +6733,7 @@
       - 类型: *Short*
     - **paymentType**: 类型
       - 类型: *Short*
-    
+
     #### salesPayment
 
     - **orderId**: 装修单号
@@ -6914,7 +6748,7 @@
       - 类型: *Short*
     - **paymentType**: 类型
       - 类型: *Short*
-    
+
     #### servicePayment
 
     - **orderId**: 装修单号
@@ -6954,62 +6788,58 @@
       - 类型: *Short*
     - **platform**: 平台信息
       - 类型: *String*
-    
+
     ### <I-C> queryCusAdvance
 
         通过客户ID查询预付款信息
-        
-                |Requests:|
-                :param advance.cid: 客户ID
-        :type advance.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **advance.cid**:
+  客户ID
+
+        **示例**:{
                 "advance.cid": 1,
             }
-            
-                |Returns:|
-                - **advance**: 预付款信息 , 每条数据类型 :advance
+
+**返回参数**:
+
+- **advance**: 预付款信息 , 每条数据类型 :advance
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
-                "advance": 
+                "advance":
                     {
                         "balance": 0,
                         "materialBalance": 0,
                         "projectBalance": 0,
-                        "zhenglinBalance": 0                    
+                        "zhenglinBalance": 0
                     }
                 ...
             }
-    
+
     ### <I-C> queryCusPayment
 
-        分页方式通过装修单号获取预付款明细信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-    
-                |Requests:|
-                :param payment.orderId: 装修单号
-        :type payment.orderId: String
-        
-        Example::
-        
-            {
+        分页方式通过装修单号获取预付款明细信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**请求参数**:
+
+- **payment.orderId**:
+  装修单号
+
+        **示例**:{
                 "payment.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 款项列表 , 每条数据类型 *payment*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  款项列表 , 每条数据类型 *payment*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7026,31 +6856,29 @@
                 },
                 ...
             }
-            
+
     ### <I-C> queryCusDecorationPayment
 
-        分页方式通过装修单号获取装修款项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Requests:|
-                :param payment.orderId: 装修单号
-        :type payment.orderId: String
-        
-        Example::
-        
-            {
+        分页方式通过装修单号获取装修款项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**请求参数**:
+
+- **payment.orderId**:
+  装修单号
+
+        **示例**:{
                 "payment.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 款项信息列表 , 每条数据类型 *decorationPayment*
-        :type paging.data: List
-        
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  款项信息列表 , 每条数据类型 *decorationPayment*
+
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7063,7 +6891,7 @@
                             "couponInfo": "优惠券",
                             "paymentStatus": 0,
                             "paymentType": "首付款"
-                            
+
                         }
                     ],
                     ...
@@ -7074,27 +6902,25 @@
     ### <I-C> queryCusDecorationPaymentForContract
 
         获取装修单的合同类型款项 , 一类为0(收款) , 二类为1(合同) , 状态为1(已付款)和2(已确认)
-        
-                |Requests:|
-                :param payment.orderId: 装修单号
-        :type payment.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **payment.orderId**:
+  装修单号
+
+        **示例**:{
                 "payment.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 款项信息列表 , 每条数据类型 *decorationPayment*
-        :type paging.data: List
-        
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  款项信息列表 , 每条数据类型 *decorationPayment*
+
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7107,7 +6933,7 @@
                             "couponInfo": "优惠券",
                             "paymentStatus": 0,
                             "paymentType": "首付款"
-                            
+
                         }
                     ],
                     ...
@@ -7117,27 +6943,25 @@
 
     ### <I-C> queryCusMaterialPayment
 
-        分页方式通过装修单号获取主材款项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Requests:|
-                :param payment.orderId: 装修单号
-        :type payment.orderId: String
-        
-        Example::
-        
-            {
+        分页方式通过装修单号获取主材款项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**请求参数**:
+
+- **payment.orderId**:
+  装修单号
+
+        **示例**:{
                 "payment.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 款项信息列表 , 每条数据类型 *materialPayment*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  款项信息列表 , 每条数据类型 *materialPayment*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7153,37 +6977,35 @@
                             "couponInfo": "优惠券",
                             "paymentStatus": 1,
                             "paymentType": "2"
-                            
+
                         }
                     ],
                     ...
                 },
                 ...
             }
-            
+
     ### <I-C> queryCusSalesPayment
 
-        分页方式通过装修单号获取销售款项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Requests:|
-                :param payment.orderId: 装修单号
-        :type payment.orderId: String
-        
-        Example::
-        
-            {
+        分页方式通过装修单号获取销售款项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**请求参数**:
+
+- **payment.orderId**:
+  装修单号
+
+        **示例**:{
                 "payment.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 款项信息列表 , 每条数据类型 *salesPayment*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  款项信息列表 , 每条数据类型 *salesPayment*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7201,30 +7023,28 @@
                 },
                 ...
             }
-            
+
     ### <I-C> queryCusServicePayment
 
-        分页方式通过装修单号获取服务款项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Requests:|
-                :param payment.orderId: 装修单号
-        :type payment.orderId: String
-        
-        Example::
-        
-            {
+        分页方式通过装修单号获取服务款项信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**请求参数**:
+
+- **payment.orderId**:
+  装修单号
+
+        **示例**:{
                 "payment.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 款项信息列表 , 每条数据类型 *servicePayment*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  款项信息列表 , 每条数据类型 *servicePayment*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7236,7 +7056,7 @@
                             "collectTime": "2016-01-01 00:00:00",
                             "type": 0,
                             "type": 0
-                            
+
                         }
                     ],
                     ...
@@ -7247,24 +7067,22 @@
     ### <I-C> queryCusProxyPayment
 
         获取代付款信息
-        
-                |Requests:|
-                :param proxyPayment.ppid: 款项ID
-        :type proxyPayment.ppid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **proxyPayment.ppid**:
+  款项ID
+
+        **示例**:{
                 "proxyPayment.ppid": "1601010001"
             }
 
-                |Returns:|
-                - **proxyPayment**: 代付款信息 , 类型 *proxyPayment*
+**返回参数**:
+
+- **proxyPayment**: 代付款信息 , 类型 *proxyPayment*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "proxyPayment": {
                     "ppid": 1,
@@ -7280,76 +7098,70 @@
                 },
                 ...
             }
-            
+
     ### <I-C> countCusMaterialPaymentForAmount
 
         统计主材款 , 状态为1(已付款)和2(已确认)
-        
-                |Requests:|
-                :param materialPayment.orderId: 装修单号
-        :type materialPayment.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialPayment.orderId**:
+  装修单号
+
+        **示例**:{
                 "materialPayment.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **realMoney**: 总额
+
+**返回参数**:
+
+- **realMoney**: 总额
           - 类型: *Float*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "realMoney": 1020.00
             }
-            
+
     ### <I-C> countCusSalesPaymentForAmount
 
         统计销售款 , 状态为1(已付款)和2(已确认)
-        
-                |Requests:|
-                :param salesPayment.orderId: 装修单号
-        :type salesPayment.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **salesPayment.orderId**:
+  装修单号
+
+        **示例**:{
                 "salesPayment.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **realMoney**: 总额
+
+**返回参数**:
+
+- **realMoney**: 总额
           - 类型: *Float*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "realMoney": 1020.00
             }
-    
+
     ### <I-C> countCusServicePaymentForAmount
 
         统计服务款 , 状态为1(已付款)和2(已确认)
-        
-                |Requests:|
-                :param servicePayment.orderId: 装修单号
-        :type servicePayment.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **servicePayment.orderId**:
+  装修单号
+
+        **示例**:{
                 "servicePayment.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **realMoney**: 总额
+
+**返回参数**:
+
+- **realMoney**: 总额
           - 类型: *Float*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "realMoney": 1020.00
             }
 
@@ -7357,8 +7169,9 @@
 
 ## api.customer.ContractAction
 
-        |DataType:|
-        #### contract
+**数据类型**:
+
+#### contract
 
     - **dcid**: 合同ID
       - 类型: *Long*
@@ -7380,29 +7193,27 @@
       - 类型: *Short*
     - **ishow**: 显示标识
       - 类型: *Short*
-    
-    ### <I> queryCusContract
+
+    ### `queryCusContract` <span style="color:gray">[内部]</span>
 
         通过装修单号获取合同信息
-        
-                |Requests:|
-                :param contract.orderId: 装修单号
-        :type contract.orderId: String
-    
-    
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **contract.orderId**:
+  装修单号
+
+
+        **示例**:{
                 "contract.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **contracts**: 合同信息列表 , 类型 *contract*
+
+**返回参数**:
+
+- **contracts**: 合同信息列表 , 类型 *contract*
           - 类型: *List*
-    
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "contracts":[
                     {
@@ -7432,37 +7243,36 @@
 
 ## api.customer.PictureAction
 
-        |DataType:|
-        #### picture
+**数据类型**:
+
+#### picture
 
     - **name**: 文件名
       - 类型: *String*
     - **path**: 路径
       - 类型: *String*
-    
+
     ### <I-C> queryCusDecorationPicture
 
         分页方式获取装修图片 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                - **orderId**: 装修单号
+
+**请求参数**:
+
+- **orderId**: 装修单号
           - 类型: *String*
 
-        Example::
-
-            {
+        **示例**:{
                 "orderId": "1601010001"
             }
 
-                |Returns:|
-                - **paging**: 分页信息
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 图片信息列表 , 每条数据类型 *picture*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  图片信息列表 , 每条数据类型 *picture*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7476,33 +7286,31 @@
                 },
                 ...
             }
-            
+
     ### <I-C> queryCusConstructionDrawing
 
         分页方式获取工程图片 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                - **orderId**: 工程ID
+
+**请求参数**:
+
+- **orderId**: 工程ID
           - 类型: *Long*
         - **schedule**: 施工进度
           - 类型: *Integer*
 
-        Example::
-
-            {
+        **示例**:{
                 "orderId": 1,
                 "schedule": 1
             }
 
-                |Returns:|
-                - **paging**: 分页信息
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 图片信息列表 , 每条数据类型 *picture*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  图片信息列表 , 每条数据类型 *picture*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7546,24 +7354,22 @@
     ### <I-C> queryCusConstruction
 
         通过装修单号获取工程信息
-        
-                |Requests:|
-                - **orderId**: 装修单号
+
+**请求参数**:
+
+- **orderId**: 装修单号
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **construction**: 工程信息 , 类型 *construction*
+
+**返回参数**:
+
+- **construction**: 工程信息 , 类型 *construction*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "construction": {
                     "cid": 1,
@@ -7575,24 +7381,22 @@
     ### <I-C> queryCusConstructionSchedule
 
         通过装修单号获取施工环节信息
-        
-                |Requests:|
-                - **orderId**: 装修单号
+
+**请求参数**:
+
+- **orderId**: 装修单号
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **constructionSchedules**: 施工环节信息列表 , 类型 *construction*
+
+**返回参数**:
+
+- **constructionSchedules**: 施工环节信息列表 , 类型 *construction*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "constructionSchedules": [
                     {
@@ -7605,7 +7409,7 @@
                         "endTime": "2016-01-01"
                     }
                 ]{
-                    
+
                 },
                 ...
             }
@@ -7613,29 +7417,27 @@
     ### <I-C> queryCusConstructer
 
         分页方式通过装修单号获取工人信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Requests:|
-                - **unionId**: 联合ID
+
+**请求参数**:
+
+- **unionId**: 联合ID
           - 类型: *String*
         - **orderId**: 装修单号
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "unionId": "SDJ4SDF5",
                 "orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 图片信息列表 , 每条数据类型 [user](./user.html#api.personel.UserAction.user)
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  图片信息列表 , 每条数据类型 [user](./user.html#api.personel.UserAction.user)
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7653,17 +7455,18 @@
                 },
                 ...
             }
-            
+
 ### 审批
 
 ## api.customer.ApprovalAction
 
-        |DataType:|
-        #### approval
+**数据类型**:
+
+#### approval
 
     - **aid**: 审批ID
       - 类型: *Long*
-    - **type**: 类型 
+    - **type**: 类型
       - 类型: *Short*
     - **status**: 状态 , 包括: 0: 初始 , 1: 审批通过 , 2: 审批拒绝 , 3: 审批中 , 4: 发起失败 , 5: 客户确认
       - 类型: *Short*
@@ -7677,28 +7480,26 @@
       - 类型: *String*
     - **annotate**: 批注
       - 类型: *String*
-    
+
     ### <I-C> queryApproval
 
         获取审批信息
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
-            
-                |Returns:|
-                - **approval**: 审批信息
+
+**返回参数**:
+
+- **approval**: 审批信息
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "approval": {
                     "aid": 1,
@@ -7712,18 +7513,17 @@
                 },
                 ...
             }
-            
+
     ### <I-C> confirmApproval
 
         确认审批信息
-        
-                |Requests:|
-                :param approval.aid: 审批ID
-        :type approval.aid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **approval.aid**:
+  审批ID
+
+        **示例**:{
                 "approval.aid": 1
             }
 
@@ -7735,8 +7535,9 @@
 
 ## api.customer.FeedbackAction
 
-        |DataType:|
-        #### feedback
+**数据类型**:
+
+#### feedback
 
     - **fid**: 反馈ID
       - 类型: *Long*
@@ -7756,20 +7557,19 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
-    ### <I> pageFeedback
 
-        分页方式获取反馈信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Returns:|
-                - **paging**: 分页信息
+    ### `pageFeedback` <span style="color:gray">[内部]</span>
+
+        分页方式获取反馈信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 反馈信息列表 , 每条数据类型 *feedback*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  反馈信息列表 , 每条数据类型 *feedback*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7792,27 +7592,26 @@
     ### <I-C> addFeedback
 
         添加反馈
-        
-                |Requests:|
-                :param feedback.unionId: 联合ID
-        :type feedback.unionId: String
-        :param feedback.orderId: 装修单号
-        :type feedback.orderId: String
-        :param feedback.phone: 电话
-        :type feedback.phone: String
-        :param feedback.picture: 图片
-        :type feedback.picture: String
-        :param feedback.content: 反馈信息
-        :type feedback.content: String
-        :param feedback.type: 类型
-        :type feedback.type: Short
-        
-        :param feedback.drawings: 图片列表
-        :type feedback.drawings: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **feedback.unionId**:
+  联合ID
+        - **feedback.orderId**:
+  装修单号
+        - **feedback.phone**:
+  电话
+        - **feedback.picture**:
+  图片
+        - **feedback.content**:
+  反馈信息
+        - **feedback.type**:
+  类型
+
+        - **feedback.drawings**:
+  图片列表
+
+        **示例**:{
                 "feedback.unionId": "SDJ4SDF5",
                 "feedback.orderId": "1601010001",
                 "feedback.phone": "13800254521",
@@ -7824,8 +7623,9 @@
 
 ## api.customer.FeedbackDrawingAction
 
-        |DataType:|
-        #### feedbackDrawing
+**数据类型**:
+
+#### feedbackDrawing
 
     - **fdid**: 图片ID
       - 类型: *Long*
@@ -7837,26 +7637,24 @@
       - 类型: *Timestamp*
     - **status**: 状态
       - 类型: *Short*
-    
+
     ### <I-C> queryFeedbackDrawing
 
-                |Requests:|
-                :param feedback.fid: 反馈ID
-        :type feedback.fid: Long
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **feedback.fid**:
+  反馈ID
+
+        **示例**:{
                 "feedback.fid": 1
             }
 
-                |Returns:|
-                - **feedbackDrawings**: 图片信息列表 , 每条数据类型 *feedbackDrawing*
+**返回参数**:
+
+- **feedbackDrawings**: 图片信息列表 , 每条数据类型 *feedbackDrawing*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "feedbackDrawings": [
                     {
@@ -7868,17 +7666,16 @@
                 ...
             }
 
-    ### <I> addFeedbackDrawing
+    ### `addFeedbackDrawing` <span style="color:gray">[内部]</span>
 
-                |Requests:|
-                :param feedbackDrawing.fid: 反馈ID
-        :type feedbackDrawing.fid: Long
-        :param feedbackDrawing.path: 地址
-        :type feedbackDrawing.path: String
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **feedbackDrawing.fid**:
+  反馈ID
+        - **feedbackDrawing.path**:
+  地址
+
+        **示例**:{
                 "feedbackDrawing.fid": 1,
                 "feedbackDrawing.fid": "bd9f4736d3334afd87318c5c24fe6c44.jpg"
             }
@@ -7887,8 +7684,9 @@
 
 ## api.customer.SurveyAction
 
-        |DataType:|
-        #### survey
+**数据类型**:
+
+#### survey
 
     - **sid**: 调研ID
       - 类型: *Long*
@@ -7916,10 +7714,10 @@
       - 类型: *Short*
     - **company**: 公司
       - 类型: *Integer*
-    
+
     - **items**: 项目列表 , 每条数据类型 [surveyItem](./customer.html#api.customer.SurveyAction.surveyItem)
       - 类型: *List*
-    
+
     #### surveyItem
 
     - **siid**: 项目ID
@@ -7932,9 +7730,9 @@
       - 类型: *Short*
     - **content**: 内容
       - 类型: *String*
-    
+
     - **options**: 选项列表 , 每条数据类型 [surveyOption](./customer.html#api.customer.SurveyAction.surveyOption)
-    
+
     #### surveyOption
 
     - **soid**: 选项ID
@@ -7947,20 +7745,19 @@
       - 类型: *String*
     - **checked**: 标识 , 0: 已选 , 1: 未选
       - 类型: *Short*
-    
-    ### <I> pageSurvey
+
+    ### `pageSurvey` <span style="color:gray">[内部]</span>
 
         分页方式获取调研模版信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 调研列表 , 每条数据类型 *survey*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  调研列表 , 每条数据类型 *survey*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -7991,27 +7788,25 @@
                 ...
             }
 
-    ### <I> querySurveyByOrderId
+    ### `querySurveyByOrderId` <span style="color:gray">[内部]</span>
 
         通过装修单号获取调研信息
-        
-                |Requests:|
-                :param survey.orderId: 装修单号
-        :type survey.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **survey.orderId**:
+  装修单号
+
+        **示例**:{
                 "survey.orderId": "1601010001"
             }
 
-                |Returns:|
-                - **surveys**: 调研信息列表 , 每条数据类型 *survey*
+**返回参数**:
+
+- **surveys**: 调研信息列表 , 每条数据类型 *survey*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "surveys": [
                     {
@@ -8038,27 +7833,25 @@
                 ...
             }
 
-    ### <I> querySurveyBySid
+    ### `querySurveyBySid` <span style="color:gray">[内部]</span>
 
         通过装修单号获取调研信息
-        
-                |Requests:|
-                :param survey.sid: 调研ID
-        :type survey.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **survey.sid**:
+  调研ID
+
+        **示例**:{
                 "survey.sid": 1
             }
 
-                |Returns:|
-                - **survey**: 调研 , 数据类型 *survey*
+**返回参数**:
+
+- **survey**: 调研 , 数据类型 *survey*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "surveys": [
                     {
@@ -8110,104 +7903,100 @@
                 ...
             }
 
-    ### <I> makeSurvey
+    ### `makeSurvey` <span style="color:gray">[内部]</span>
 
         生成调研
-        
+
         判断调研模版是否存在 , 不存在 , 错误信息 **130096 调研模版不存在**
-        
-                |Requests:|
-                :param survey.orderId: 装修单号
-        :type survey.orderId: String
-        :param survey.stid: 模版ID
-        :type survey.stid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **survey.orderId**:
+  装修单号
+        - **survey.stid**:
+  模版ID
+
+        **示例**:{
                 "survey.orderId": "1601010001",
                 "survey.stid": 1
             }
 
-    ### <I> sendSurvey
+    ### `sendSurvey` <span style="color:gray">[内部]</span>
 
         推送调研
-        
+
         判断调研是否存在 , 不存在 , 错误信息 **330058 调研不存在**
-        
+
         判断调研装修是否为0(初始) , 其他状态 , 错误信息 **330059 调研状态不可操作**
-        
+
         更新状态为1(推送) , 更新推送时间/推送人
-        
-                |Requests:|
-                :param survey.sid: 调研ID
-        :type survey.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **survey.sid**:
+  调研ID
+
+        **示例**:{
                 "survey.sid": 1,
-                
+
                 "survey.items[0].siid": 1,
                 "survey.items[0].content": "内容",
-                
+
                 "survey.items[0].options[0].soid": 1,
                 "survey.items[0].options[0].checked": 1,
             }
 
-    ### <I> handleSurvey
+    ### `handleSurvey` <span style="color:gray">[内部]</span>
 
         执行调研
-        
+
         判断调研是否存在 , 不存在 , 错误信息 **330058 调研不存在**
-        
+
         判断调研装修是否为1(推送) , 其他状态 , 错误信息 **330059 调研状态不可操作**
-        
+
         更新状态为2(处理) , 更新完成时间
-        
-                |Requests:|
-                :param survey.sid: 调研ID
-        :type survey.sid: Long
-        
-        :param survey.items[n].siid: 项目ID
-        :type survey.items[n].siid: Long
-        :param survey.items[n].content: 内容
-        :type survey.items[n].content: String
-        
-        :param survey.items[n].options[n].soid: 选项ID
-        :type survey.items[n].options[n].soid: Short
-        :param survey.items[n].options[n].checked: 标识
-        :type survey.items[n].options[n].checked: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **survey.sid**:
+  调研ID
+
+        - **survey.items[n].siid**:
+  项目ID
+        - **survey.items[n].content**:
+  内容
+
+        - **survey.items[n].options[n].soid**:
+  选项ID
+        - **survey.items[n].options[n].checked**:
+  标识
+
+        **示例**:{
                 "survey.sid": 1,
-                
+
                 "survey.items[0].siid": 1,
                 "survey.items[0].content": "内容",
-                
+
                 "survey.items[0].options[0].soid": 1,
                 "survey.items[0].options[0].checked": 1,
             }
 
-    ### <I> finishSurvey
+    ### `finishSurvey` <span style="color:gray">[内部]</span>
 
         完成
-        
+
         判断调研是否存在 , 不存在 , 错误信息 **330058 调研不存在**
-        
+
         判断调研装修是否为2(处理) , 其他状态 , 错误信息 **330059 调研状态不可操作**
-        
+
         更新状态为3(完成) , 更新完成时间/完成人
-        
-                |Requests:|
-                :param survey.sid: 调研ID
-        :type survey.sid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **survey.sid**:
+  调研ID
+
+        **示例**:{
                 "survey.sid": 1
             }
 
@@ -8217,8 +8006,9 @@
 
 ## api.customer.EmemberAction
 
-        |DataType:|
-        #### emember
+**数据类型**:
+
+#### emember
 
     - **emid**: 电子会员ID
       - 类型: *Long*
@@ -8238,20 +8028,19 @@
       - 类型: *String*
     - **status**: 状态 , 0: 启用 , 1: 禁用
       - 类型: *Short*
-    
-    ### <I> pageEmember
 
-        分页方式获取电子会员信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Returns:|
-                - **paging**: 分页信息
+    ### `pageEmember` <span style="color:gray">[内部]</span>
+
+        分页方式获取电子会员信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 电子会员信息列表 , 每条数据类型 *emember*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  电子会员信息列表 , 每条数据类型 *emember*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -8270,28 +8059,26 @@
                 },
                 ...
             }
-    
+
     ### <I-C> queryEmember
 
         通过unionId获取电子会员信息
-        
-                |Requests:|
-                - **unionId**: 联合ID
-          - 类型: *String*
-        
-        Example::
 
-            {
+**请求参数**:
+
+- **unionId**: 联合ID
+          - 类型: *String*
+
+        **示例**:{
                 "unionId": "SDJ4SDF5"
             }
-        
-                |Returns:|
-                - **emember**: 电子会员信息 , 类型 :[emember](./customer.html#api.customer.EmemberAction.emember)
+
+**返回参数**:
+
+- **emember**: 电子会员信息 , 类型 :[emember](./customer.html#api.customer.EmemberAction.emember)
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "emember": {
                     "emid": 1,
@@ -8304,30 +8091,29 @@
                 }
                 ...
             }
-            
+
     ### <I-C> addEmember
 
         添加电子会员
 
-                |Requests:|
-                :param emember.unionId: 联合ID
-        :type emember.unionId: String
-        :param emember.name: 姓名
-        :type emember.name: String
-        :param emember.phone: 电话
-        :type emember.phone: String
-        :param emember.address: 地址
-        :type emember.address: String
-        :param emember.ticket: 票号
-        :type emember.ticket: String
+**请求参数**:
+
+- **emember.unionId**:
+  联合ID
+        - **emember.name**:
+  姓名
+        - **emember.phone**:
+  电话
+        - **emember.address**:
+  地址
+        - **emember.ticket**:
+  票号
         - **securityCode**: 验证码
           - 类型: *String*
         - **verifyCode**: 校验码
           - 类型: *String*
 
-        Example::
-
-            {
+        **示例**:{
                 "emember.unionId": "SDJ4SDF5",
                 "emember.name": "客户",
                 "emember.phone": "138xxxx2738",
@@ -8340,14 +8126,13 @@
     ### <I-C> deleteEmember
 
         删除电子会员
-        
-                |Requests:|
-                :param emember.emid: 会员ID
-        :type emember.emid: Long
 
-        Example::
+**请求参数**:
 
-            {
+- **emember.emid**:
+  会员ID
+
+        **示例**:{
                 "emember.emid": 1
             }
 
@@ -8355,8 +8140,9 @@
 
 ## api.customer.GroupAction
 
-        |DataType:|
-        #### group
+**数据类型**:
+
+#### group
 
     - **gid**: 群ID
       - 类型: *Long*
@@ -8368,7 +8154,7 @@
       - 类型: *String*
     - **content**: 说明
       - 类型: *String*
-    
+
     #### groupUser
 
     - **guid**: 群用户Id
@@ -8377,20 +8163,19 @@
       - 类型: *String*
     - **user**: 人员 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
-    
+
     ### <I-C> pageGroup
 
-        分页方式获取群信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ . 
-        
-                |Returns:|
-                - **paging**: 分页信息
+        分页方式获取群信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_ .
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *object*
-        :param paging.data: 群信息列表 , 每条数据类型 *group*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  群信息列表 , 每条数据类型 *group*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -8411,24 +8196,22 @@
     ### <I-C> queryGroup
 
         通过opengid获取群信息
-        
-                |Requests:|
-                :param group.opengid: 群编号
-        :type group.opengid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **group.opengid**:
+  群编号
+
+        **示例**:{
                 "group.opengid": "0KJ6nAsYbfKA_hsRHB2MUgs"
             }
-            
-                |Returns:|
-                - **group**: 群信息 , 类型 :[group](./customer.html#api.customer.GroupAction.group)
+
+**返回参数**:
+
+- **group**: 群信息 , 类型 :[group](./customer.html#api.customer.GroupAction.group)
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "group":{
                     "gid": 1,
@@ -8439,58 +8222,55 @@
                 }
                 ...
             }
-            
-    ### <I> updateGroup
+
+    ### `updateGroup` <span style="color:gray">[内部]</span>
 
         更新群信息
-        
-                |Requests:|
-                :param group.gid: 群ID
-        :type group.gid: String
-        :param group.name: 名称
-        :type group.name: String
-        :param group.content: 说明
-        :type group.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **group.gid**:
+  群ID
+        - **group.name**:
+  名称
+        - **group.content**:
+  说明
+
+        **示例**:{
                 "group.gid": 1,
                 "group.name": "名称",
                 "group.content": "说明",
             }
-            
+
     ### <I-C> bindGroup
 
         绑定群信息
-        
-                |Requests:|
-                - **unionId**: 联合ID
+
+**请求参数**:
+
+- **unionId**: 联合ID
           - 类型: *String*
-        :param group.opengid: 群编号
-        :type group.opengid: String
-        :param group.orderId: 装修单号
-        :type group.orderId: String
-        
-        Example::
-        
-            {
+        - **group.opengid**:
+  群编号
+        - **group.orderId**:
+  装修单号
+
+        **示例**:{
                 "unionId": "SDJ4SDF5",
                 "group.opengid": "0KJ6nAsYbfKA_hsRHB2MUgs",
                 "group.orderId": "1601010001",
             }
-            
-    ### <I> unbindGroup
+
+    ### `unbindGroup` <span style="color:gray">[内部]</span>
 
         解绑群信息
-        
-                |Requests:|
-                :param group.gid: 群编号
-        :type group.gid: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **group.gid**:
+  群编号
+
+        **示例**:{
                 "group.gid": 1
             }
 
@@ -8498,8 +8278,9 @@
 
 ## api.customer.DroupAction
 
-        |DataType:|
-        #### droup
+**数据类型**:
+
+#### droup
 
     - **did**: 钉群ID
       - 类型: *Long*
@@ -8525,20 +8306,19 @@
       - 类型: *Timestamp*
     - **company**: 公司ID
       - 类型: *Integer*
-    
+
     ### <I-C> pageDroup
 
-        分页方式获取钉群 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter) . 
-        
-                |Returns:|
-                - **paging**: 分页信息
+        分页方式获取钉群 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter) .
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 钉群信息列表 , 每条数据类型 *droup*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  钉群信息列表 , 每条数据类型 *droup*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -8590,29 +8370,27 @@
                 ...
             }
 
-    ### <I> queryDroup
+    ### `queryDroup` <span style="color:gray">[内部]</span>
 
         通过装修单号或者会话ID查询钉群信息
-        
-                |Requests:|
-                :param droup.decoration.orderId: 装修单号
-        :type droup.decoration.orderId: String
-        :param droup.chatId: 会话ID
-        :type droup.chatId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **droup.decoration.orderId**:
+  装修单号
+        - **droup.chatId**:
+  会话ID
+
+        **示例**:{
                 "droup.decoration.orderId:": "1601010001"
             }
 
-                |Returns:|
-                - **oaleses**: 钉群信息列表 , 每条数据类型 *oales*
+**返回参数**:
+
+- **oaleses**: 钉群信息列表 , 每条数据类型 *oales*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "oaleses": [
                     {
@@ -8659,59 +8437,56 @@
                 ...
             }
 
-    ### <I> bindDroup
+    ### `bindDroup` <span style="color:gray">[内部]</span>
 
         绑定
-        
+
         判断归属装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param droup.decoration.orderId: 装修单号
-        :type droup.decoration.orderId: String
-        :param droup.chatId: 会话ID
-        :type droup.chatId: String
-        :param droup.openId: 会话ID
-        :type droup.openId: String
-        :param droup.type: 类型
-        :type droup.type: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **droup.decoration.orderId**:
+  装修单号
+        - **droup.chatId**:
+  会话ID
+        - **droup.openId**:
+  会话ID
+        - **droup.type**:
+  类型
+
+        **示例**:{
                 "droup.decoration.orderId:": "1601010001",
                 "droup.chatId": "",
                 "droup.openId": "",
                 "droup.type": 1
             }
 
-    ### <I> updateDroup
+    ### `updateDroup` <span style="color:gray">[内部]</span>
 
         更新
-        
-                |Requests:|
-                :param droup.did: 钉群ID
-        :type droup.did: Long
-        :param droup.isRead: 是否已读
-        :type droup.isRead: Short
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **droup.did**:
+  钉群ID
+        - **droup.isRead**:
+  是否已读
+
+        **示例**:{
                 "droup.did:": 1,
                 "droup.isRead": 0
             }
 
-    ### <I> deleteDroup
+    ### `deleteDroup` <span style="color:gray">[内部]</span>
 
         删除
-        
-                |Requests:|
-                :param droup.did: 钉群ID
-        :type droup.did: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **droup.did**:
+  钉群ID
+
+        **示例**:{
                 "droup.did:": 1
             }
 
@@ -8719,8 +8494,9 @@
 
 ## api.customer.ConversationAction
 
-        |DataType:|
-        #### conversation
+**数据类型**:
+
+#### conversation
 
     - **cid**: 对话ID
       - 类型: *Long*
@@ -8752,31 +8528,29 @@
       - 类型: *Timestamp*
     - **status**: 状态 , 0: 初始 , 1: 已读 , 2: 删除
       - 类型: *Short*
-    
+
 
     ### <I-C> pageConversation
 
-        分页方式获取对话 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter) . 
-        
-                |Requests:|
-                :param conversation.orderId: 装修单号
-        :type conversation.orderId: String
-        
-        Example::
-        
-            {
+        分页方式获取对话 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter) .
+
+**请求参数**:
+
+- **conversation.orderId**:
+  装修单号
+
+        **示例**:{
                 "conversation.orderId:": "1601010001"
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 对话信息列表 , 每条数据类型 *conversation*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  对话信息列表 , 每条数据类型 *conversation*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -8813,40 +8587,39 @@
     ### <I-C> requestConversation
 
         请求
-        
+
         判断归属装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断钉群是否存在 , 不存在 , 错误信息 **330067 群信息不存在**
-        
+
         业务类型默认为0(请求) , 代表客户发起
-        
+
         如果钉群处理状态非0(客户) , 更新钉群处理状态为0(客户) , 更新钉群更新时间
-        
-                |Requests:|
-                :param conversation.orderId: 装修单号
-        :type conversation.orderId: String
-        :param conversation.name: 名称
-        :type conversation.name: String
-        :param conversation.type: 类型
-        :type conversation.type: Short
-        :param conversation.contype: 内容类型
-        :type conversation.contype: Short
-        :param conversation.content: 内容
-        :type conversation.content: String
-        :param conversation.path: 路径
-        :type conversation.path: String
-        :param conversation.filesize: 文件大小
-        :type conversation.filesize: Integer
-        :param conversation.width: 宽度
-        :type conversation.width: Integer
-        :param conversation.height: 高度
-        :type conversation.height: Integer
-        :param conversation.focuser.userId: 关注人ID
-        :type conversation.focuser.userId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **conversation.orderId**:
+  装修单号
+        - **conversation.name**:
+  名称
+        - **conversation.type**:
+  类型
+        - **conversation.contype**:
+  内容类型
+        - **conversation.content**:
+  内容
+        - **conversation.path**:
+  路径
+        - **conversation.filesize**:
+  文件大小
+        - **conversation.width**:
+  宽度
+        - **conversation.height**:
+  高度
+        - **conversation.focuser.userId**:
+  关注人ID
+
+        **示例**:{
                 "conversation.orderId:": "1601010001",
                 "conversation.name": "",
                 "conversation.type": 0,
@@ -8862,38 +8635,37 @@
     ### <I-C> responseConversation
 
         响应
-        
+
         判断归属装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
+
         判断钉群是否存在 , 不存在 , 错误信息 **330067 群信息不存在**
-        
+
         业务类型默认为1(相应) , 代表公司员工发起
-        
+
         如果钉群处理状态非1(处理) , 更新钉群处理状态为1(处理) , 更新钉群处理时间
-        
-                |Requests:|
-                :param conversation.orderId: 装修单号
-        :type conversation.orderId: String
-        :param conversation.name: 名称
-        :type conversation.name: String
-        :param conversation.type: 类型
-        :type conversation.type: Short
-        :param conversation.contype: 内容类型
-        :type conversation.contype: Short
-        :param conversation.content: 内容
-        :type conversation.content: String
-        :param conversation.path: 路径
-        :type conversation.path: String
-        :param conversation.filesize: 文件大小
-        :type conversation.filesize: Integer
-        :param conversation.width: 宽度
-        :type conversation.width: Integer
-        :param conversation.height: 高度
-        :type conversation.height: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **conversation.orderId**:
+  装修单号
+        - **conversation.name**:
+  名称
+        - **conversation.type**:
+  类型
+        - **conversation.contype**:
+  内容类型
+        - **conversation.content**:
+  内容
+        - **conversation.path**:
+  路径
+        - **conversation.filesize**:
+  文件大小
+        - **conversation.width**:
+  宽度
+        - **conversation.height**:
+  高度
+
+        **示例**:{
                 "conversation.orderId:": "1601010001",
                 "conversation.name": "",
                 "conversation.type": 0,
@@ -8905,26 +8677,26 @@
                 "conversation.height": 0
             }
 
-    ### <I> deleteConversation
+    ### `deleteConversation` <span style="color:gray">[内部]</span>
 
         删除
-        
-                |Requests:|
-                :param conversation.cid: 对话ID
-        :type conversation.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **conversation.cid**:
+  对话ID
+
+        **示例**:{
                 "conversation.cid:": 1
             }
-            
+
 ### 服务圈
 
 ## api.customer.CircleAction
 
-        |DataType:|
-        #### circle
+**数据类型**:
+
+#### circle
 
     - **cid**: 圈ID
       - 类型: *Long*
@@ -8940,10 +8712,10 @@
       - 类型: *Timestamp*
     - **praise**: 赞数
       - 类型: *Integer*
-    
+
     - **drawings**: 图片信息列表 , 每条数据类型 *circleDrawing*
       - 类型: *List*
-    
+
     #### circleDrawing
 
     - **cdid**: 图片ID
@@ -8952,30 +8724,28 @@
       - 类型: *Long*
     - **path**: 图片路径
       - 类型: *String*
-    
+
     ### <I-C> pageCircleByUnionId
 
-        分页方式获取服务圈 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter) . 
-        
+        分页方式获取服务圈 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter) .
+
         通过联合主键归属的装修单 , 分页方式查询服务圈信息
-        
-                |Requests:|
-                - **unionId**: 联合主键
+
+**请求参数**:
+
+- **unionId**: 联合主键
           - 类型: *String*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 "unionId": "SDJ4SDF5"
             }
-        
-                |Returns:|
-                - **circles**: 群信息 , 类型 *circle*
+
+**返回参数**:
+
+- **circles**: 群信息 , 类型 *circle*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "circles":[
                     "cid": 1,
@@ -9002,30 +8772,28 @@
                 ],
                 ...
             }
-            
+
     ### <I-C> pageCircleByOrderId
 
-        分页方式获取服务圈 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter) . 
-        
+        分页方式获取服务圈 , 分页以及条件参数传递方式参照 [paging](../check_rule.html#page) 以及 [filter](../check_rule.html#filter) .
+
         通过装修单号归属的装修单 , 分页方式查询服务圈信息
-        
-                |Requests:|
-                :param circle.orderId: 装修单号
-        :type circle.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **circle.orderId**:
+  装修单号
+
+        **示例**:{
                 "circle.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **circles**: 群信息 , 类型 *circle*
+
+**返回参数**:
+
+- **circles**: 群信息 , 类型 *circle*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "circles":[
                     "cid": 1,
@@ -9052,44 +8820,42 @@
                 ],
                 ...
             }
-            
+
     ### <I-C> addCircle
 
         添加服务圈信息
-        
-                |Requests:|
-                :param circle.orderId: 装修单号
-        :type circle.orderId: String
-        :param circle.userId: 创建人编号
-        :type circle.userId: String
-        :param circle.address: 地址
-        :type circle.address: String
-        :param circle.content: 内容
-        :type circle.content: String
-        :param circle.drawings[n].path: 图片
-        :type circle.drawings[n].path: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **circle.orderId**:
+  装修单号
+        - **circle.userId**:
+  创建人编号
+        - **circle.address**:
+  地址
+        - **circle.content**:
+  内容
+        - **circle.drawings[n].path**:
+  图片
+
+        **示例**:{
                 "circle.orderId": "1601010001",
                 "circle.userId": "U001",
                 "circle.address": "地址",
                 "circle.content": "说明内容",
                 "circle.drawings[0].path": "2016/08/02/2/c7ec4da2429a4debbc3cca21eb5035b9.png"
             }
-            
+
     ### <I-C> updateCircleForPraise
 
         点赞
-        
-                |Requests:|
-                :param circle.cid: 服务圈ID
-        :type circle.cid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **circle.cid**:
+  服务圈ID
+
+        **示例**:{
                 "circle.cid": 1
             }
 
@@ -9097,8 +8863,9 @@
 
 ## api.customer.BackgroundAction
 
-        |DataType:|
-        #### background
+**数据类型**:
+
+#### background
 
     - **bid**: 背景图ID
       - 类型: *Long*
@@ -9106,28 +8873,26 @@
       - 类型: *String*
     - **path**: 图片路径
       - 类型: *String*
-    
+
     ### <I-C> queryBackground
 
         通过联合主键查询背景图信息
-    
-                |Requests:|
-                :param background.unionId: 联合主键
-        :type background.unionId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **background.unionId**:
+  联合主键
+
+        **示例**:{
                 "background.unionId": "SDJ4SDF5"
             }
-            
-                |Returns:|
-                - **background**: 背景图信息 , 类型 *background*
+
+**返回参数**:
+
+- **background**: 背景图信息 , 类型 *background*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "background":{
                     "bid": 1,
@@ -9136,20 +8901,19 @@
                 }
                 ...
             }
-            
+
     ### <I-C> updateBackground
 
         更新背景图信息
-        
-                |Requests:|
-                :param background.unionId: 联合主键
-        :type background.unionId: String
-        :param background.path: 图片路径
-        :type background.path: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **background.unionId**:
+  联合主键
+        - **background.path**:
+  图片路径
+
+        **示例**:{
                 "background.unionId": "SDJ4SDF5",
                 "background.path": "2016/08/02/2/c7ec4da2429a4debbc3cca21eb5035b9.png"
             }

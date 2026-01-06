@@ -1,6 +1,4 @@
-# tools {#tools}
-
-# 工具
+# tools 工具
 ## 开发环境
 
 [JDK 7u60](http://192.168.5.21/Demeter/upload/Other/download/jdk-7u60-windows-x64.exe)

@@ -1,14 +1,13 @@
-# common {#common}
-
-# 通用
+# common 通用
 ## 登陆
 
 登陆以及相关操作
 
 ## api.common.LoginAction
 
-        |DataType:|
-        #### role
+**数据类型**:
+
+#### role
 
     - **rid**: 角色ID
       - 类型: *Integer*
@@ -67,7 +66,7 @@
       - 类型: *Integer*
     - **message**: 错误信息 , 当code为非-1或0状态时 , 该信息表示操作错误的具体原因
       - 类型: *String*
-    - **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 . 
+    - **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 .
       - 类型: *String*
     - **optime**: 操作时间
       - 类型: *Long*
@@ -75,241 +74,228 @@
       - 类型: *Double*
     - **y**: 位置信息 , y表示纬度
       - 类型: *Double*
-	
-	### <I> doLogin
 
-		登陆 , 同时获取登陆结果信息 . 
-		
-				|Requests:|
-				- **userId**: 登陆用户编号
-		  - 类型: *String*
-		- **password**: 登陆密码
-		  - 类型: *String*
-		- **verifyCode**: 验证码
-		  - 类型: *String*
-		- **securityCode**: 安全码
-		  - 类型: *String*
-		
-		Example::
-		
-			{
-				userId: "U001",
-				password: "password",
-				verify: "1234",
-				securityCode: "D0CCCF1C21CB4"
-			}
-		
-				|Returns:|
-				- **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 . 
-		  - 类型: *String*
-		- **user**: 登陆用户信息 , 类型 *user*
-		  - 类型: *object*
-		
-		Example::
-		
-			{
-				...
-				"authentication": "FCA5C7A2DA9EDA010A7ECD3DCE2",
-				"user":{
-					"UId":34,
-					"currentName": "游客",
-					"dept":{
-						"dId":250,
-						"deptId": "DD_09",
-						"deptName": "系统部",
-						"fatherDept":null,
-						"subType": "行政部",
-						"type": "职能部"
-					},
-					"deptType": "职能部",
-					"duty": "游客",
-					"loginId": "baitianyu",
-					"oldUserId": "DZSW.0102",
-					"password": "86101F2733C1D",
-					"role":{
-						"roleId": "R01",
-						"roleName": "游客"
-					},
-					"userId": "U001",
-					"userName": "游客",
-					"userPhoto": "18c5c24fe6c44.jpg",
-				},
-				...
-			}
-            
-    ### <A> logout
+    ### `doLogin` <span style="color:gray">[内部]</span>
 
-        登出 , 同时删除登陆信息
-        
-                |Returns:|
-        		无
-		
-        Example::
+        登陆 , 同时获取登陆结果信息 .
 
-            {
+**请求参数**:
+
+- **userId**: 登陆用户编号
+          - 类型: *String*
+        - **password**: 登陆密码
+          - 类型: *String*
+        - **verifyCode**: 验证码
+          - 类型: *String*
+        - **securityCode**: 安全码
+          - 类型: *String*
+
+        **示例**:{
+                userId: "U001",
+                password: "password",
+                verify: "1234",
+                securityCode: "D0CCCF1C21CB4"
+            }
+
+**返回参数**:
+
+- **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 .
+          - 类型: *String*
+        - **user**: 登陆用户信息 , 类型 *user*
+          - 类型: *object*
+
+        **示例**:{
+                ...
+                "authentication": "FCA5C7A2DA9EDA010A7ECD3DCE2",
+                "user":{
+                    "UId":34,
+                    "currentName": "游客",
+                    "dept":{
+                        "dId":250,
+                        "deptId": "DD_09",
+                        "deptName": "系统部",
+                        "fatherDept":null,
+                        "subType": "行政部",
+                        "type": "职能部"
+                    },
+                    "deptType": "职能部",
+                    "duty": "游客",
+                    "loginId": "baitianyu",
+                    "oldUserId": "DZSW.0102",
+                    "password": "86101F2733C1D",
+                    "role":{
+                        "roleId": "R01",
+                        "roleName": "游客"
+                    },
+                    "userId": "U001",
+                    "userName": "游客",
+                    "userPhoto": "18c5c24fe6c44.jpg",
+                },
                 ...
             }
 
-    ### <C> requestAuthCode
+    ### `logout` <span style="color:green">[公开]</span>
+
+        登出 , 同时删除登陆信息
+
+**返回参数**:
+
+无
+
+        **示例**:{
+                ...
+            }
+
+    ### `requestAuthCode` <span style="color:blue">[自定义]</span>
 
         免登 , 同时获取登陆信息
 
-                |Requests:|
-                - **userId**: 登陆用户编号
+**请求参数**:
+
+- **userId**: 登陆用户编号
           - 类型: *String*
         - **code**: 验证码
           - 类型: *String*
         - **secret**: 安全码
           - 类型: *String*
-		
-        Example::
 
-            {
+        **示例**:{
                 "userId": "U001",
                 "code": "C21CB4D0CCCF1",
                 "secret": "C21CB4D0CCCF1"
             }
-			
-                |Returns:|
-                - **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 . 
+
+**返回参数**:
+
+- **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 .
           - 类型: *String*
 
-        Example::
-
-            {
+        **示例**:{
                 ...
                 "authentication": "FCA5C7A2DA9EDA010A7ECD3DCE2",
                 ...
             }
-            
-    ### <C> changeAuthCode
+
+    ### `changeAuthCode` <span style="color:blue">[自定义]</span>
 
         更换 , 更新权限码中公司
-        
-                |Requests:|
-                - **authentication**: 权限码
-          - 类型: *String*
-		
-        Example::
 
-            {
+**请求参数**:
+
+- **authentication**: 权限码
+          - 类型: *String*
+
+        **示例**:{
                 "authentication": "FCA5C7A2DA9EDA010A7ECD3DCE2"
             }
-            
-                |Returns:|
-                - **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 . 
+
+**返回参数**:
+
+- **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 .
           - 类型: *String*
 
-        Example::
-
-            {
+        **示例**:{
                 ...
                 "authentication": "A9EDA0FCA5C7A2D10A7ECD3DCE2",
                 ...
             }
-            
-    ### <C> updateAuthCode
+
+    ### `updateAuthCode` <span style="color:blue">[自定义]</span>
 
         更换 , 更新权限码中有效时间
-        
-                |Requests:|
-                - **authentication**: 权限码
-          - 类型: *String*
-		
-        Example::
 
-            {
+**请求参数**:
+
+- **authentication**: 权限码
+          - 类型: *String*
+
+        **示例**:{
                 "authentication": "FCA5C7A2DA9EDA010A7ECD3DCE2"
             }
-            
-                |Returns:|
-                - **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 . 
+
+**返回参数**:
+
+- **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 .
           - 类型: *String*
 
-        Example::
-
-            {
+        **示例**:{
                 ...
                 "authentication": "A0FCA5C7A2A9EDD10A7ECD3DCE2",
                 ...
             }
-            
-    ### <A> ping
+
+    ### `ping` <span style="color:green">[公开]</span>
 
         通过该API判断当前服务是否可用
-        
-                |Returns:|
-                无
 
-        Example::
+**返回参数**:
 
-            {
+无
+
+        **示例**:{
                 ...
             }
 
-    ### <A> current
+    ### `current` <span style="color:green">[公开]</span>
 
         获取当前系统时间
-        
-                |Requests:|
-                - **current**: 时间格式 , 默认 yyyy-MM-dd hh:mm:ss
-          - 类型: *String*
-		
-        Example::
 
-            {
+**请求参数**:
+
+- **current**: 时间格式 , 默认 yyyy-MM-dd hh:mm:ss
+          - 类型: *String*
+
+        **示例**:{
                 "current": "yyyy-MM-dd hh:mm:ss"
             }
-        
-                |Returns:|
-                - **current**: 时间
-          - 类型: *String*
-		
-        Example::
 
-            {
+**返回参数**:
+
+- **current**: 时间
+          - 类型: *String*
+
+        **示例**:{
                 "current": "2016-01-01 00:00:00"
             }
-			
+
 ## 验证码
 
 验证码获取以及处理方式
 
 ## api.common.LoginAction
 
-	### <I> queryVode
+    ### `queryVode` <span style="color:gray">[内部]</span>
 
-		获取验证码信息
-		
-				|Returns:|
-				- **securityCode**: 验证码信息
-		  - 类型: *String*
-		
-		Example::
-		
-			{
-				...
-				"securityCode": "C3FCFAA9AB125D8712BA9EDA010A7E8B0B5C",
-				...
-			}
-	
-	### <I> verifyCode
+        获取验证码信息
 
-		获取验证码图片
-		
-				|Requests:|
-				- **securityCode**: 验证码信息 , 利用  *queryVode* 接口获取到的securityCode
-		  - 类型: *String*
-		
-		Example::
-		
-			{
-				"securityCode": "C3FCFAA9AB125D8712BA9EDA010A7E8B0B5C",
-			}
-		
-				|Returns:|
-				- **imageStream**: 验证码图片流信息
-		  - 类型: *stream*
+**返回参数**:
+
+- **securityCode**: 验证码信息
+          - 类型: *String*
+
+        **示例**:{
+                ...
+                "securityCode": "C3FCFAA9AB125D8712BA9EDA010A7E8B0B5C",
+                ...
+            }
+
+    ### `verifyCode` <span style="color:gray">[内部]</span>
+
+        获取验证码图片
+
+**请求参数**:
+
+- **securityCode**: 验证码信息 , 利用  *queryVode* 接口获取到的securityCode
+          - 类型: *String*
+
+        **示例**:{
+                "securityCode": "C3FCFAA9AB125D8712BA9EDA010A7E8B0B5C",
+            }
+
+**返回参数**:
+
+- **imageStream**: 验证码图片流信息
+          - 类型: *stream*
 
 ## 水印
 
@@ -317,30 +303,30 @@
 
 ## api.common.WMCodeAction
 
-	### <I> wmCode
+    ### `wmCode` <span style="color:gray">[内部]</span>
 
-		获取水印图片
-		
-				|Returns:|
-				- **watermark**: 水印图片信息 , 利用Base64进行编码的图片信息 , 支持页面直接显示
-		  - 类型: *String*
-		
-		Example::
-		
-			{
-				...
-				"watermark": "data:image\/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAYAAAB5fY51AAAID0lEQVR42u...",
-				...
-			}
-		
+        获取水印图片
+
+**返回参数**:
+
+- **watermark**: 水印图片信息 , 利用Base64进行编码的图片信息 , 支持页面直接显示
+          - 类型: *String*
+
+        **示例**:{
+                ...
+                "watermark": "data:image\/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAYAAAB5fY51AAAID0lEQVR42u...",
+                ...
+            }
+
 ## 二维码
 
 二维码获取以及处理方式
 
 ## api.common.LoginInfoAction
 
-        |DataType:|
-        #### loginInfo
+**数据类型**:
+
+#### loginInfo
 
     - **loginFlag**: 标识键值 , 可以通过该信息获取二维码登陆信息
       - 类型: *String*
@@ -350,7 +336,7 @@
       - 类型: *Integer*
     - **message**: 错误信息 , 当code为非-1或0状态时 , 该信息表示操作错误的具体原因
       - 类型: *String*
-    - **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 . 
+    - **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 .
       - 类型: *String*
     - **optime**: 操作时间
       - 类型: *long*
@@ -358,116 +344,112 @@
       - 类型: *double*
     - **y**: 位置信息 , y表示纬度
       - 类型: *double*
-	
-	### <C> QRCode
 
-		获取二维码信息
-		
-				|Returns:|
-				- **QRCode**: 二维码信息 , 利用Base64进行编码的图片信息 , 支持页面直接显示
-		  - 类型: *String*
-		
-		Example::
-		
-			{
-				...
-				"QRCode": "data:image\/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAYAAAB5fY51AAAID0lEQVR42u...",
-				...
-			}
-	
-	### <C> queryLoginInfoByLoginFlag
+    ### `QRCode` <span style="color:blue">[自定义]</span>
 
-		获取二维码登陆状态
-		
-				|Requests:|
-				:param loginInfo.loginFlag: 标识键值 , 可以通过该信息获取二维码登陆信息
-		:type loginInfo.loginFlag: String
-		
-		Example::
-		
-			{
-				"loginInfo.loginFlag": "1f60e515cda647d1894295df49cc4467",
-			}
-			
-				|Returns:|
-				- **loginInfo**: 二维码登陆信息 , 类型 *loginInfo*
-		  - 类型: *object*
-		:param loginInfo.loginFlag: 标识键值 , 可以通过该信息获取二维码登陆信息
-		:type loginInfo.loginFlag: String
-		:param loginInfo.code: 登陆状态 , -1: 无操作 , 需要再次确认 , 0: 成功 , 其他代码表示失败 , 同时带有错误信息
-		:type loginInfo.code: Integer
-		- **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 . 
-		  - 类型: *String*
-		
-		Example::
-		
-			{
-				...
-				"loginInfo": {
-					"loginFlag": "1f60e515cda647d1894295df49cc4467",
-					"code": 0,
-					"authentication": "FCA5C7A2DA9EDA010A7ECD3DCE2",
-				},
-				...
-			}
-			
-	### <C> updateLoginInfoForAuthentication
+        获取二维码信息
 
-		更新二维码登陆状态 , 同时判断用户是否有权登陆系统
-		
-				|Requests:|
-				:param loginInfo.loginFlag: 标识键值 , 可以通过该信息获取二维码登陆信息
-		:type loginInfo.loginFlag: String
-		:param loginInfo.userId: 用户编号
-		:type loginInfo.userId: String
-		:param loginInfo.x: 位置信息 , x表示经度
-		:type loginInfo.x: double
-		:param loginInfo.y: 位置信息 , y表示纬度
-		:type loginInfo.y: double
-		
-		Example::
-		
-			{
-				"loginInfo.loginFlag": "1f60e515cda647d1894295df49cc4467",
-				"loginInfo.userId": "U001",
-				"loginInfo.x": 42.251251,
-				"loginInfo.y": 123.52545852
-			}
-            
-    ### <C> deleteLoginInfo
+**返回参数**:
+
+- **QRCode**: 二维码信息 , 利用Base64进行编码的图片信息 , 支持页面直接显示
+          - 类型: *String*
+
+        **示例**:{
+                ...
+                "QRCode": "data:image\/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAYAAAB5fY51AAAID0lEQVR42u...",
+                ...
+            }
+
+    ### `queryLoginInfoByLoginFlag` <span style="color:blue">[自定义]</span>
+
+        获取二维码登陆状态
+
+**请求参数**:
+
+- **loginInfo.loginFlag**:
+  标识键值 , 可以通过该信息获取二维码登陆信息
+
+        **示例**:{
+                "loginInfo.loginFlag": "1f60e515cda647d1894295df49cc4467",
+            }
+
+**返回参数**:
+
+- **loginInfo**: 二维码登陆信息 , 类型 *loginInfo*
+          - 类型: *object*
+        - **loginInfo.loginFlag**:
+  标识键值 , 可以通过该信息获取二维码登陆信息
+        - **loginInfo.code**:
+  登陆状态 , -1: 无操作 , 需要再次确认 , 0: 成功 , 其他代码表示失败 , 同时带有错误信息
+        - **authentication**: 权限码 , 成功登陆之后返回该编号 , 其他API请求需要携带该编号完成其他API请求动作 .
+          - 类型: *String*
+
+        **示例**:{
+                ...
+                "loginInfo": {
+                    "loginFlag": "1f60e515cda647d1894295df49cc4467",
+                    "code": 0,
+                    "authentication": "FCA5C7A2DA9EDA010A7ECD3DCE2",
+                },
+                ...
+            }
+
+    ### `updateLoginInfoForAuthentication` <span style="color:blue">[自定义]</span>
+
+        更新二维码登陆状态 , 同时判断用户是否有权登陆系统
+
+**请求参数**:
+
+- **loginInfo.loginFlag**:
+  标识键值 , 可以通过该信息获取二维码登陆信息
+        - **loginInfo.userId**:
+  用户编号
+        - **loginInfo.x**:
+  位置信息 , x表示经度
+        - **loginInfo.y**:
+  位置信息 , y表示纬度
+
+        **示例**:{
+                "loginInfo.loginFlag": "1f60e515cda647d1894295df49cc4467",
+                "loginInfo.userId": "U001",
+                "loginInfo.x": 42.251251,
+                "loginInfo.y": 123.52545852
+            }
+
+    ### `deleteLoginInfo` <span style="color:blue">[自定义]</span>
 
         删除当前操作之前 , 无效的登陆信息
-        
+
 ## 菜单
 
 菜单信息
 
 ## api.common.IndexAction
 
-		|DataType:|
-		#### tree
+**数据类型**:
 
-	- **id**: 菜单ID
-	  - 类型: *Integer*
-	- **name**: 菜单名称
-	  - 类型: *String*
-	- **url**: 菜单URL
-	  - 类型: *String*
-	- **icon**: 图标
-	  - 类型: *String*
-	- **sub**: 子菜单列表 , 每条数据类型 *tree*
-	
-	### <I> createTree
+#### tree
 
-		获取菜单信息
-		
-				|Returns:|
-				- **tree**: 菜单信息列表 , 每条数据类型 *tree*
-		  - 类型: *List*
-		
-        Example::
-            
-            {
+    - **id**: 菜单ID
+      - 类型: *Integer*
+    - **name**: 菜单名称
+      - 类型: *String*
+    - **url**: 菜单URL
+      - 类型: *String*
+    - **icon**: 图标
+      - 类型: *String*
+    - **sub**: 子菜单列表 , 每条数据类型 *tree*
+
+    ### `createTree` <span style="color:gray">[内部]</span>
+
+        获取菜单信息
+
+**返回参数**:
+
+- **tree**: 菜单信息列表 , 每条数据类型 *tree*
+          - 类型: *List*
+
+        **示例**:{
                 ...
                 "tree": [
                     {
@@ -510,13 +492,14 @@
                 ],
                 ...
             }
-            
+
 ## 监控
 
 ## api.factory.MonitorAction
 
-        |DataType:|
-        #### monitor
+**数据类型**:
+
+#### monitor
 
     - **mid**: 监控ID
       - 类型: *Long*
@@ -537,11 +520,11 @@
     - **updateTime**: 更新时间
       - 类型: *Timestamp*
 
-    ### <C> queryMonitor
+    ### `queryMonitor` <span style="color:blue">[自定义]</span>
 
         获取监控信息
 
-    ### <C> updateMonitor
+    ### `updateMonitor` <span style="color:blue">[自定义]</span>
 
         更新监控信息
 
@@ -549,8 +532,9 @@
 
 ## api.factory.ServerAction
 
-        |DataType:|
-        #### server
+**数据类型**:
+
+#### server
 
     - **sid**: 服务ID
       - 类型: *Long*
@@ -565,7 +549,7 @@
     - **comment**: 说明
       - 类型: *String*
 
-    ### <C> queryServer
+    ### `queryServer` <span style="color:blue">[自定义]</span>
 
         获取服务信息
 
@@ -573,8 +557,9 @@
 
 ## api.factory.MacontrolAction
 
-        |DataType:|
-        #### macontrol
+**数据类型**:
+
+#### macontrol
 
     - **mid**: 硬件ID
       - 类型: *Long*
@@ -590,20 +575,20 @@
       - 类型: *Short*
     - **comment**: 说明
       - 类型: *String*
-    
-    ### <I> queryMacontrol
+
+    ### `queryMacontrol` <span style="color:gray">[内部]</span>
 
         通过归属人和地址获取硬件信息
-        
-    ### <I> checkMacontrol
+
+    ### `checkMacontrol` <span style="color:gray">[内部]</span>
 
         验证硬件信息
-        
-    ### <C> addMacontrol
+
+    ### `addMacontrol` <span style="color:blue">[自定义]</span>
 
         添加硬件信息
-        
-    ### <I> deleteMacontrol
+
+    ### `deleteMacontrol` <span style="color:gray">[内部]</span>
 
         删除硬件信息
 
@@ -611,7 +596,7 @@
 
 ## api.common.UploadAction
 
-    ### <I> uploadFile
+    ### `uploadFile` <span style="color:gray">[内部]</span>
 
         上传资源 , 控制文件大小类型等处理
 
@@ -623,67 +608,67 @@
 
     辅料类型导入
 
-    ### <I> importAccessoriesType
+    ### `importAccessoriesType` <span style="color:gray">[内部]</span>
 
         辅料类型导入
-        
+
 ## api.imports.GoodsImport
 
     商品颜色导入
-    
-    ### <I> importGoods
+
+    ### `importGoods` <span style="color:gray">[内部]</span>
 
         商品导入
 
-    ### <I> importColor
+    ### `importColor` <span style="color:gray">[内部]</span>
 
         商品颜色导入
-        
-    ### <I> importFormat
+
+    ### `importFormat` <span style="color:gray">[内部]</span>
 
         商品规格导入
-        
-    ### <I> importPrice
+
+    ### `importPrice` <span style="color:gray">[内部]</span>
 
         商品价格导入
-        
-    ### <I> importDeletePrice
+
+    ### `importDeletePrice` <span style="color:gray">[内部]</span>
 
         导入方式删除商品价格
-        
+
 ## api.imports.MaterialModuleImport
 
     主材商品型号导入
 
-    ### <I> importMaterialModule
+    ### `importMaterialModule` <span style="color:gray">[内部]</span>
 
         主材商品型号导入
-        
+
 ## api.imports.QuotationItemImport
 
     报价项导入
 
-    ### <I> importQuotationItem
+    ### `importQuotationItem` <span style="color:gray">[内部]</span>
 
         报价项导入
-        
+
 ## api.imports.WorkerSalaryImport
 
     工人工费导入
-    
-    ### <I> importWorkerSalary
+
+    ### `importWorkerSalary` <span style="color:gray">[内部]</span>
 
         工人工费基本导入
-        
-    ### <I> batchImportWorkerSalary
+
+    ### `batchImportWorkerSalary` <span style="color:gray">[内部]</span>
 
         工人工费高级导入
-        
+
 ## api.imports.UserSalaryImport
 
     员工薪资导入
-    
-    ### <I> importUserSalary
+
+    ### `importUserSalary` <span style="color:gray">[内部]</span>
 
         员工薪资基本导入
 
@@ -695,32 +680,32 @@
 
     装修导出
 
-    ### <I> exportDecorationByContractTime
+    ### `exportDecorationByContractTime` <span style="color:gray">[内部]</span>
 
         根据签单时间导出装修单信息
-        
+
 ## api.exports.PaymentExportAction
 
     款项导出
 
-    ### <I> exportDecorationPayment
+    ### `exportDecorationPayment` <span style="color:gray">[内部]</span>
 
         装修款导出
-        
-    ### <I> exportMaterialPayment
+
+    ### `exportMaterialPayment` <span style="color:gray">[内部]</span>
 
         主材款导出
-        
+
 ## 日志
 
 ## api.log.LogAction
 
     日志记录
-    
-    ### <C> pageActionLog
+
+    ### `pageActionLog` <span style="color:blue">[自定义]</span>
 
         分页方式获取操作记录
-        
-    ### <C> pageLoginLog
+
+    ### `pageLoginLog` <span style="color:blue">[自定义]</span>
 
         分页方式获取登陆记录

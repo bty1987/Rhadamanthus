@@ -1,14 +1,13 @@
-# material {#material}
-
-# 主材
+# material 主材
 ## 订单
 
 主材单信息以及部分业务管理
 
 ## api.material.MaterialAction
 
-        |DataType:|
-        #### material
+**数据类型**:
+
+#### material
 
     - **mid**: 主材单ID
       - 类型: *Long*
@@ -18,14 +17,14 @@
       - 类型: *String*
     - **house**: 房产 , 类型 [house](./data.html#api.data.HouseAction.house)
       - 类型: *Object*
-    
+
     - **salesman**: 业务员 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
     - **materialer**: 主材员 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
     - **instorer**: 驻店 , 类型 [user](./user.html#api.personel.UserAction.user)
       - 类型: *Object*
-    
+
     - **grade**: 等级 , 包括: A/B/C
       - 类型: *String*
     - **category**: 品类
@@ -34,7 +33,7 @@
       - 类型: *Long*
     - **brand**: 品牌
       - 类型: *String*
-    
+
     - **designerFlag**: 设计师标识 , 0: 业务员类型为设计师 , 1: 业务员类型非设计师
       - 类型: *Short*
     - **packageFlag**: 套餐标识 , 0: 主材单中存在套餐 , 1: 主材单中不存在套餐
@@ -46,7 +45,7 @@
       - 类型: *String*
     - **materialDepartment**: 主材部
       - 类型: *String*
-    
+
     - **createTime**: 创建时间
       - 类型: *Timestamp*
     - **preBalanceTime**: 预结算时间
@@ -55,7 +54,7 @@
       - 类型: *Timestamp*
     - **fullpayTime**: 补款收款时间
       - 类型: *Timestamp*
-    
+
     - **type**: 类型 , 包括: 0: 标准
       - 类型: *String*
     - **status**: 状态 , 包括: 0: 初始 , 1: 删除 , 2: 退货 , 3: 预结算 , 4: 购货 (保留) , 5: 结算 , 6: 全退 , 7: 倒单 , 8: 废单 , 9: 完结
@@ -64,7 +63,7 @@
       - 类型: *Short*
     - **otherStatus**: 其他状态 , 包括: 1: 补款审批 , 2: 修理
       - 类型: *Short*
-    
+
     - **depositPayment**: 定金金额
       - 类型: *Long*
     - **depositStatus**: 定金状态 , 包括: 0: 初始 , 1: 未付款 , 2: 已付款 , 3: 已确认
@@ -73,7 +72,7 @@
       - 类型: *Long*
     - **fullStatus**: 补款状态 , 包括: 0: 初始 , 1: 未付款 , 2: 已付款 , 3: 已确认
       - 类型: *Short*
-    
+
     - **total**: 总价
       - 类型: *Long*
     - **distotal**: 折扣总价
@@ -86,10 +85,10 @@
       - 类型: *Integer*
     - **couponInfo**: 券信息 , 例子: #洁具券:150#
       - 类型: *String*
-    
+
     - **comment**: 说明
       - 类型: *String*
-    
+
         |Filters:|
         - **no**: 主材单号
       - 类型: *String*
@@ -109,22 +108,21 @@
       - 类型: *String*
     - **fullCollectTimeRange**: 补款收款时间 , 格式: 2016/01/01-2016/01/01
       - 类型: *String*
-    
-    ### <I> pageMaterial
+
+    ### `pageMaterial` <span style="color:gray">[内部]</span>
 
         分页方式获取主材单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         主材单状态不可为1(删除) , 归属装修单号非空
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 主材单信息列表 , 每条数据类型 *material*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  主材单信息列表 , 每条数据类型 *material*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -167,28 +165,28 @@
                                 "phone": "138xxxx2837",
                                 ...
                             },
-                            
+
                             "grade": "B",
                             "category": "洁具",
                             "brand": "卫浴",
-                            
+
                             "designerFlag": 1,
                             "packageFlag": 1,
-                            
+
                             "designRegion": "设计一分区",
                             "designDepartment": "设计一部",
                             "materialDepartment": "主材二组",
-                            
+
                             "createTime": "2016-01-01 15:31:55",
                             "preBalanceTime": "2016-01-01 00:00:00",
                             "postBalanceTime": "2016-01-01 00:00:00",
                             "fullpayTime": "2016-01-01 13:03:09",
-                            
+
                             "type": 1,
                             "status": 0,
                             "balanceStatus": 0,
                             "otherStatus": 2000,
-                            
+
                             "total": 0,
                             "distotal": 0,
                             "maling": 0,
@@ -200,7 +198,7 @@
                             "depositStatus": 3,
                             "fullPayment": 2360000,
                             "fullStatus": 2000,
-                            
+
                             "comment": ""
                         }
                     ],
@@ -208,22 +206,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageMaterialForAdvance
+
+    ### `pageMaterialForAdvance` <span style="color:gray">[内部]</span>
 
         分页方式获取主材单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         通过装修单号 , 同时主材单状态不为1(删除)
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 主材单信息列表 , 每条数据类型 *material*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  主材单信息列表 , 每条数据类型 *material*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -266,28 +263,28 @@
                                 "phone": "138xxxx2837",
                                 ...
                             },
-                            
+
                             "grade": "B",
                             "category": "洁具",
                             "brand": "卫浴",
-                            
+
                             "designerFlag": 1,
                             "packageFlag": 1,
-                            
+
                             "designRegion": "设计一分区",
                             "designDepartment": "设计一部",
                             "materialDepartment": "主材二组",
-                            
+
                             "createTime": "2016-01-01 15:31:55",
                             "preBalanceTime": "2016-01-01 00:00:00",
                             "postBalanceTime": "2016-01-01 00:00:00",
                             "fullpayTime": "2016-01-01 13:03:09",
-                            
+
                             "type": 1,
                             "status": 0,
                             "balanceStatus": 0,
                             "otherStatus": 2000,
-                            
+
                             "total": 0,
                             "distotal": 0,
                             "maling": 0,
@@ -299,7 +296,7 @@
                             "depositStatus": 3,
                             "fullPayment": 2360000,
                             "fullStatus": 2000,
-                            
+
                             "comment": ""
                         }
                     ],
@@ -307,32 +304,30 @@
                 },
                 ...
             }
-            
-    ### <I> pageMaterialByOrderId
+
+    ### `pageMaterialByOrderId` <span style="color:gray">[内部]</span>
 
         分页方式获取操作用户所有主材单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         通过归属装修单号 , 根据当前操作用户信息 , 过滤主材单归属人员 , 包括业务员 , 驻店员 , 主材员
-        
-                |Requests:|
-                :param material.orderId: 订单编号
-        :type material.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.orderId**:
+  订单编号
+
+        **示例**:{
                 "material.orderId": 1601010001
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 主材单信息列表 , 每条数据类型 *material*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  主材单信息列表 , 每条数据类型 *material*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -375,28 +370,28 @@
                                 "phone": "138xxxx2837",
                                 ...
                             },
-                            
+
                             "grade": "B",
                             "category": "洁具",
                             "brand": "卫浴",
-                            
+
                             "designerFlag": 1,
                             "packageFlag": 1,
-                            
+
                             "designRegion": "设计一分区",
                             "designDepartment": "设计一部",
                             "materialDepartment": "主材二组",
-                            
+
                             "createTime": "2016-01-01 15:31:55",
                             "preBalanceTime": "2016-01-01 00:00:00",
                             "postBalanceTime": "2016-01-01 00:00:00",
                             "fullpayTime": "2016-01-01 13:03:09",
-                            
+
                             "type": 1,
                             "status": 0,
                             "balanceStatus": 0,
                             "otherStatus": 2000,
-                            
+
                             "total": 0,
                             "distotal": 0,
                             "maling": 0,
@@ -408,7 +403,7 @@
                             "depositStatus": 3,
                             "fullPayment": 2360000,
                             "fullStatus": 2000,
-                            
+
                             "comment": ""
                         }
                     ],
@@ -416,32 +411,30 @@
                 },
                 ...
             }
-            
-    ### <I> pageMaterialByUserId
+
+    ### `pageMaterialByUserId` <span style="color:gray">[内部]</span>
 
         分页方式获取订单所有主材单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         通过归属装修单号 , 根据当前操作用户信息 , 过滤主材单归属人员 , 包括业务员 , 驻店员 , 主材员
-        
-                |Requests:|
-                :param material.orderId: 订单编号
-        :type material.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.orderId**:
+  订单编号
+
+        **示例**:{
                 "material.orderId": 1601010001
             }
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 主材单信息列表 , 每条数据类型 *material*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  主材单信息列表 , 每条数据类型 *material*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -484,28 +477,28 @@
                                 "phone": "138xxxx2837",
                                 ...
                             },
-                            
+
                             "grade": "B",
                             "category": "洁具",
                             "brand": "卫浴",
-                            
+
                             "designerFlag": 1,
                             "packageFlag": 1,
-                            
+
                             "designRegion": "设计一分区",
                             "designDepartment": "设计一部",
                             "materialDepartment": "主材二组",
-                            
+
                             "createTime": "2016-01-01 15:31:55",
                             "preBalanceTime": "2016-01-01 00:00:00",
                             "postBalanceTime": "2016-01-01 00:00:00",
                             "fullpayTime": "2016-01-01 13:03:09",
-                            
+
                             "type": 1,
                             "status": 0,
                             "balanceStatus": 0,
                             "otherStatus": 2000,
-                            
+
                             "total": 0,
                             "distotal": 0,
                             "maling": 0,
@@ -517,7 +510,7 @@
                             "depositStatus": 3,
                             "fullPayment": 2360000,
                             "fullStatus": 2000,
-                            
+
                             "comment": ""
                         }
                     ],
@@ -525,30 +518,28 @@
                 },
                 ...
             }
-            
-    ### <I> queryMaterialByMid
+
+    ### `queryMaterialByMid` <span style="color:gray">[内部]</span>
 
         通过主材单ID获取主材单信息
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
-                |Requests:|
-                :param material.mid: 主材单ID
-        :type material.mid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.mid**:
+  主材单ID
+
+        **示例**:{
                 "material.mid": 1
             }
-            
-                |Returns:|
-                - **material**: 主材单信息 , 类型 *material*
+
+**返回参数**:
+
+- **material**: 主材单信息 , 类型 *material*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "material":{
                     "mid": 1,
@@ -588,28 +579,28 @@
                         "phone": "138xxxx2837",
                         ...
                     },
-                    
+
                     "grade": "B",
                     "category": "洁具",
                     "brand": "卫浴",
-                    
+
                     "designerFlag": 1,
                     "packageFlag": 1,
-                    
+
                     "designRegion": "设计一分区",
                     "designDepartment": "设计一部",
                     "materialDepartment": "主材二组",
-                    
+
                     "createTime": "2016-01-01 15:31:55",
                     "preBalanceTime": "2016-01-01 00:00:00",
                     "postBalanceTime": "2016-01-01 00:00:00",
                     "fullpayTime": "2016-01-01 13:03:09",
-                    
+
                     "type": 1,
                     "status": 0,
                     "balanceStatus": 0,
                     "otherStatus": 2000,
-                    
+
                     "total": 0,
                     "distotal": 0,
                     "maling": 0,
@@ -621,35 +612,33 @@
                     "depositStatus": 3,
                     "fullPayment": 2360000,
                     "fullStatus": 2000,
-                    
+
                     "comment": ""
                 }
                 ...
             }
-            
-    ### <I> queryMaterialByNo
+
+    ### `queryMaterialByNo` <span style="color:gray">[内部]</span>
 
         通过主材单号获取主材单信息
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
-                |Requests:|
-                :param material.no: 主材单号
-        :type material.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.no**:
+  主材单号
+
+        **示例**:{
                 "material.no": 1
             }
-            
-                |Returns:|
-                - **material**: 主材单信息 , 类型 *material*
+
+**返回参数**:
+
+- **material**: 主材单信息 , 类型 *material*
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "material":{
                     "mid": 1,
@@ -689,28 +678,28 @@
                         "phone": "138xxxx2837",
                         ...
                     },
-                    
+
                     "grade": "B",
                     "category": "洁具",
                     "brand": "卫浴",
-                    
+
                     "designerFlag": 1,
                     "packageFlag": 1,
-                    
+
                     "designRegion": "设计一分区",
                     "designDepartment": "设计一部",
                     "materialDepartment": "主材二组",
-                    
+
                     "createTime": "2016-01-01 15:31:55",
                     "preBalanceTime": "2016-01-01 00:00:00",
                     "postBalanceTime": "2016-01-01 00:00:00",
                     "fullpayTime": "2016-01-01 13:03:09",
-                    
+
                     "type": 1,
                     "status": 0,
                     "balanceStatus": 0,
                     "otherStatus": 2000,
-                    
+
                     "total": 0,
                     "distotal": 0,
                     "maling": 0,
@@ -722,90 +711,89 @@
                     "depositStatus": 3,
                     "fullPayment": 2360000,
                     "fullStatus": 2000,
-                    
+
                     "comment": ""
                 }
                 ...
             }
-            
-    ### <I> addMaterial
+
+    ### `addMaterial` <span style="color:gray">[内部]</span>
 
         创建主材单信息 , 同时包括主材项信息
-        
+
         判断主材单品牌信息与主材项品牌信息是否一致 , 不一致 , 错误信息 **180024 主材项品牌不一致**
-        
+
         获取当前默认主材活动信息 , 同时赋值给创建的主材单
-        
+
         主材项需要判断套餐项目过程 , 针对总价计算以及结算信息进行区分处理
-        
+
         利用归属装修单等级和公司以及主材单归属公司 , 按照规则生成主材单等级信息
-        
-                |Requests:|
-                :param material.orderId: 装修单号
-        :type material.orderId: String
-        :param material.salesman.userId: 业务员编号
-        :type material.salesman.userId: String
-        :param material.materialer.userId: 主材员编号
-        :type material.materialer.userId: String
-        :param material.instore.userId: 驻店编号
-        :type material.instore.userId: String
-        :param material.category: 品类
-        :type material.category: String
-        :param material.bid: 品牌ID
-        :type material.bid: Long
-        :param material.brand: 品牌
-        :type material.brand: String
-        :param material.type: 类型 , 包括: 0:标准
-        :type material.type: Short
-        :param material.total: 总价
-        :type material.total: Long
-        :param material.maling: 抹零
-        :type material.maling: Integer
-        :param material.coupon: 券值
-        :type material.coupon: Integer
-        :param material.couponInfo: 券信息
-        :type material.couponInfo: String
-        :param material.comment: 说明
-        :type material.comment: String
-        
-        :param materialItem[n].no: 型号编号
-        :type materialItem[n].no: String
-        :param materialItem[n].name: 型号名
-        :type materialItem[n].name: String
-        :param materialItem[n].category: 品类
-        :type materialItem[n].category: String
-        :param materialItem[n].brand: 品牌
-        :type materialItem[n].brand: String
-        :param materialItem[n].measurementUnit: 单位
-        :type materialItem[n].measurementUnit: String
-        :param materialItem[n].packageName: 套餐名
-        :type materialItem[n].packageName: String
-        :param materialItem[n].unitPrice: 单价
-        :type materialItem[n].unitPrice: Integer
-        :param materialItem[n].purchasePrice: 进价
-        :type materialItem[n].purchasePrice: Integer
-        :param materialItem[n].salePrice: 折后价
-        :type materialItem[n].salePrice: Integer
-        :param materialItem[n].price: 售价
-        :type materialItem[n].price: Integer
-        :param materialItem[n].discount: 折扣
-        :type materialItem[n].discount: Integer
-        :param materialItem[n].postDiscount: 折让
-        :type materialItem[n].postDiscount: Integer
-        :param materialItem[n].num: 数量
-        :type materialItem[n].num: Integer
-        :param materialItem[n].total: 总价
-        :type materialItem[n].total: Integer
-        :param materialItem[n].calcType: 结算方式
-        :type materialItem[n].calcType: Integer
-        :param materialItem[n].prePoint: 预结算值
-        :type materialItem[n].prePoint: Integer
-        :param materialItem[n].comment: 备注
-        :type materialItem[n].comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.orderId**:
+  装修单号
+        - **material.salesman.userId**:
+  业务员编号
+        - **material.materialer.userId**:
+  主材员编号
+        - **material.instore.userId**:
+  驻店编号
+        - **material.category**:
+  品类
+        - **material.bid**:
+  品牌ID
+        - **material.brand**:
+  品牌
+        - **material.type**:
+  类型 , 包括: 0:标准
+        - **material.total**:
+  总价
+        - **material.maling**:
+  抹零
+        - **material.coupon**:
+  券值
+        - **material.couponInfo**:
+  券信息
+        - **material.comment**:
+  说明
+
+        - **materialItem[n].no**:
+  型号编号
+        - **materialItem[n].name**:
+  型号名
+        - **materialItem[n].category**:
+  品类
+        - **materialItem[n].brand**:
+  品牌
+        - **materialItem[n].measurementUnit**:
+  单位
+        - **materialItem[n].packageName**:
+  套餐名
+        - **materialItem[n].unitPrice**:
+  单价
+        - **materialItem[n].purchasePrice**:
+  进价
+        - **materialItem[n].salePrice**:
+  折后价
+        - **materialItem[n].price**:
+  售价
+        - **materialItem[n].discount**:
+  折扣
+        - **materialItem[n].postDiscount**:
+  折让
+        - **materialItem[n].num**:
+  数量
+        - **materialItem[n].total**:
+  总价
+        - **materialItem[n].calcType**:
+  结算方式
+        - **materialItem[n].prePoint**:
+  预结算值
+        - **materialItem[n].comment**:
+  备注
+
+        **示例**:{
                 "material.orderId": "1601010001",
                 "material.salesman.userId": "U0186",
                 "material.materialer.userId": "U0511",
@@ -819,14 +807,14 @@
                 "material.maling": 0,
                 "material.total": 0,
                 "material.comment": "",
-                
+
                 "materialItem[0].no": "JP0005",
                 "materialItem[0].name": "卫浴AB1116",
                 "materialItem[0].category": "洁具",
                 "materialItem[0].brand": "卫浴",
                 "materialItem[0].measurementUnit": "个",
                 "materialItem[0].packageName": "package",
-                
+
                 "materialItem[0].unitPrice": 2670000,
                 "materialItem[0].purchasePrice": 1,
                 "materialItem[0].salePrice": 2670000,
@@ -835,131 +823,126 @@
                 "materialItem[0].postDiscount": 1,
                 "materialItem[0].num": 2000,
                 "materialItem[0].total": 0,
-                
+
                 "materialItem[0].calcType": 1,
                 "materialItem[0].prePoint": 0,
-                
+
                 "materialItem[0].comment": ""
 
             }
-            
-    ### <I> changeMaterialForOrderId
+
+    ### `changeMaterialForOrderId` <span style="color:gray">[内部]</span>
 
         更换主材单所属装修单号
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **130014 订单不存在**
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
-                |Requests:|
-                :param material.no: 主材单号
-        :type material.no: String
-        :param material.orderId: 更换装修单号
-        :type material.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.no**:
+  主材单号
+        - **material.orderId**:
+  更换装修单号
+
+        **示例**:{
                 "material.no": "M1601012703",
                 "material.orderId": "1601010001"
             }
-            
-    ### <I> updateMaterialForCoupon
+
+    ### `updateMaterialForCoupon` <span style="color:gray">[内部]</span>
 
         更新主材单中券相关信息
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
+
         判断主材单状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单补款状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单结算状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
-                |Requests:|
-                :param material.mid: 主材单ID
-        :type material.mid: Long
-        :param material.coupon: 券值
-        :type material.coupon: Integer
-        :param material.couponInfo: 券信息 , 例子: #洁具券:150#
-        :type material.couponInfo: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.mid**:
+  主材单ID
+        - **material.coupon**:
+  券值
+        - **material.couponInfo**:
+  券信息 , 例子: #洁具券:150#
+
+        **示例**:{
                 "material.mid": 1,
                 "material.coupon": 150000,
                 "material.couponInfo": #洁具券:150#
             }
-            
-    ### <I> updateMaterialForMaling
+
+    ### `updateMaterialForMaling` <span style="color:gray">[内部]</span>
 
         更新主材单中抹零信息
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
+
         判断主材单状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单补款状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单结算状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
-                |Requests:|
-                :param material.mid: 主材单ID
-        :type material.mid: Long
-        :param material.maling: 抹零
-        :type material.maling: Integer
-        :param material.venderMaling: 厂商抹零
-        :type material.venderMaling: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.mid**:
+  主材单ID
+        - **material.maling**:
+  抹零
+        - **material.venderMaling**:
+  厂商抹零
+
+        **示例**:{
                 "material.mid": 1,
                 "material.maling": 100,
                 "material.venderMaling": 100
             }
-            
-    ### <I> updateMaterialForActivity
+
+    ### `updateMaterialForActivity` <span style="color:gray">[内部]</span>
 
         更新主材单参与活动信息
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
-                |Requests:|
-                :param material.mid: 主材单ID
-        :type material.mid: Long
-        :param material.activityId: 活动ID
-        :type material.activityId: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.mid**:
+  主材单ID
+        - **material.activityId**:
+  活动ID
+
+        **示例**:{
                 "material.mid": 1,
                 "material.activityId": 1
             }
-            
-    ### <I> deleteMaterial
+
+    ### `deleteMaterial` <span style="color:gray">[内部]</span>
 
         删除主材单信息
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
+
         判断主材单状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单定金状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单补款状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单结算状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
-                |Requests:|
-                :param material.mid: 主材单ID
-        :type material.mid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.mid**:
+  主材单ID
+
+        **示例**:{
                 "material.mid": 1
             }
 
@@ -969,8 +952,9 @@
 
 ## api.material.MaterialItemAction
 
-        |DataType:|
-        #### materialItem
+**数据类型**:
+
+#### materialItem
 
     - **miid**: 主材项ID
       - 类型: *Long*
@@ -1023,27 +1007,25 @@
     - **comment**: 备注
       - 类型: *String*
 
-    ### <I> queryMaterialItemByMid
+    ### `queryMaterialItemByMid` <span style="color:gray">[内部]</span>
 
         通过主材单ID获取型号信息
-        
-                |Requests:|
-                :param material.mid: 主材单ID
-        :type material.mid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.mid**:
+  主材单ID
+
+        **示例**:{
                 "material.mid": 1
             }
-            
-                |Returns:|
-                - **materialItems**: 型号信息列表 , 每条数据类型 *materialItem*
+
+**返回参数**:
+
+- **materialItems**: 型号信息列表 , 每条数据类型 *materialItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialItems": [
                     {
@@ -1055,7 +1037,7 @@
                         "brand": "卫浴",
                         "measurementUnit": "个",
                         "packageName": "package",
-                        
+
                         "unitPrice": 2670000,
                         "purchasePrice": 1,
                         "salePrice": 2670000,
@@ -1064,44 +1046,42 @@
                         "postDiscount": 1,
                         "num": 2000,
                         "total": 0,
-                        
+
                         "status": 0,
                         "balanceStatus": 0,
                         "refundStatus": 0,
-                        
+
                         "rawCalcType": 0,
                         "rawPoint": 1,
                         "calcType": 1,
                         "prePoint": 0,
                         "postPoint": 0,
-                        
+
                         "comment": null
                     }
                 ],
                 ...
             }
-            
-    ### <I> queryMaterialItemByMiid
+
+    ### `queryMaterialItemByMiid` <span style="color:gray">[内部]</span>
 
         通过主材项ID获取型号信息 , 返回结果为销售基础信息
-        
-                |Requests:|
-                :param materialItem.miid: 主材项ID
-        :type materialItem.miid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialItem.miid**:
+  主材项ID
+
+        **示例**:{
                 "materialItem.miid": 1
             }
-            
-                |Returns:|
-                - **materialItem**: 型号信息 , 类型 *materialItem*
+
+**返回参数**:
+
+- **materialItem**: 型号信息 , 类型 *materialItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialItem": {
                     "miid": 1,
@@ -1112,7 +1092,7 @@
                     "brand": "卫浴",
                     "measurementUnit": "个",
                     "packageName": "package",
-                    
+
                     "unitPrice": 2670000,
                     "purchasePrice": 1,
                     "salePrice": 2670000,
@@ -1121,46 +1101,44 @@
                     "postDiscount": 1,
                     "num": 2000,
                     "total": 0,
-                    
+
                     "status": 0,
                     "balanceStatus": 0,
                     "refundStatus": 0,
-                    
+
                     "rawCalcType": 0,
                     "rawPoint": 1,
                     "calcType": 1,
                     "prePoint": 0,
                     "postPoint": 0,
-                    
+
                     "comment": null
                 }
                 ...
             }
-            
-    ### <I> queryMaterialItemForNameByName
+
+    ### `queryMaterialItemForNameByName` <span style="color:gray">[内部]</span>
 
         通过主材项名称查询指定主材单下型号相关信息
-        
-                |Requests:|
-                :param materialItem.mid: 主材单ID
-        :type materialItem.mid: Long
-        :param materialItem.name: 型号名称
-        :type materialItem.name: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialItem.mid**:
+  主材单ID
+        - **materialItem.name**:
+  型号名称
+
+        **示例**:{
                 "materialItem.mid": 1,
                 "materialItem.name": "卫浴"
             }
-            
-                |Returns:|
-                - **materialItems**: 型号信息列表 , 每条数据类型 *materialItem*
+
+**返回参数**:
+
+- **materialItems**: 型号信息列表 , 每条数据类型 *materialItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialItems": [
                     {
@@ -1172,7 +1150,7 @@
                         "brand": "卫浴",
                         "measurementUnit": "个",
                         "packageName": "package",
-                        
+
                         "unitPrice": 2670000,
                         "purchasePrice": 1,
                         "salePrice": 2670000,
@@ -1181,47 +1159,45 @@
                         "postDiscount": 1,
                         "num": 2000,
                         "total": 0,
-                        
+
                         "status": 0,
                         "balanceStatus": 0,
                         "refundStatus": 0,
-                        
+
                         "rawCalcType": 0,
                         "rawPoint": 1,
                         "calcType": 1,
                         "prePoint": 0,
                         "postPoint": 0,
-                        
+
                         "comment": null
                     }
                 ],
                 ...
             }
-    
-    ### <I> queryMaterialItemForNameByNo
+
+    ### `queryMaterialItemForNameByNo` <span style="color:gray">[内部]</span>
 
         通过主材项编号查询指定主材单下型号相关信息
-        
-                |Requests:|
-                :param materialItem.mid: 主材单ID
-        :type materialItem.mid: Long
-        :param materialItem.no: 型号编号
-        :type materialItem.no: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialItem.mid**:
+  主材单ID
+        - **materialItem.no**:
+  型号编号
+
+        **示例**:{
                 "materialItem.mid": 1,
                 "materialItem.no": "AB1154"
             }
-            
-                |Returns:|
-                - **materialItems**: 型号信息列表 , 每条数据类型 *materialItem*
+
+**返回参数**:
+
+- **materialItems**: 型号信息列表 , 每条数据类型 *materialItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialItems": [
                     {
@@ -1233,7 +1209,7 @@
                         "brand": "卫浴",
                         "measurementUnit": "个",
                         "packageName": "package",
-                        
+
                         "unitPrice": 2670000,
                         "purchasePrice": 1,
                         "salePrice": 2670000,
@@ -1242,81 +1218,80 @@
                         "postDiscount": 1,
                         "num": 2000,
                         "total": 0,
-                        
+
                         "status": 0,
                         "balanceStatus": 0,
                         "refundStatus": 0,
-                        
+
                         "rawCalcType": 0,
                         "rawPoint": 1,
                         "calcType": 1,
                         "prePoint": 0,
                         "postPoint": 0,
-                        
+
                         "comment": null
                     }
                 ],
                 ...
             }
-            
-    ### <I> addMaterialItem
+
+    ### `addMaterialItem` <span style="color:gray">[内部]</span>
 
         主材单中添加主材项信息
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
+
         判断主材单状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单补款状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单结算状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         主材项需要判断套餐项目过程 , 针对总价计算以及结算信息进行区分处理
-        
+
         更新主材单中总价金额
-        
-                |Requests:|
-                :param material.mid: 主材单ID
-        :type material.mid: Long
-        
-        :param materialItem[n].no: 型号名
-        :type materialItem[n].no: String
-        :param materialItem[n].name: 型号名
-        :type materialItem[n].name: String
-        :param materialItem[n].category: 品类
-        :type materialItem[n].category: String
-        :param materialItem[n].brand: 品牌
-        :type materialItem[n].brand: String
-        :param materialItem[n].measurementUnit: 单位
-        :type materialItem[n].measurementUnit: String
-        :param materialItem[n].packageName: 套餐名
-        :type materialItem[n].packageName: String
-        :param materialItem[n].unitPrice: 单价
-        :type materialItem[n].unitPrice: Integer
-        :param materialItem[n].purchasePrice: 进价
-        :type materialItem[n].purchasePrice: Integer
-        :param materialItem[n].salePrice: 折后价
-        :type materialItem[n].salePrice: Integer
-        :param materialItem[n].price: 售价
-        :type materialItem[n].price: Integer
-        :param materialItem[n].discount: 折扣
-        :type materialItem[n].discount: Integer
-        :param materialItem[n].postDiscount: 折让
-        :type materialItem[n].postDiscount: Integer
-        :param materialItem[n].num: 数量
-        :type materialItem[n].num: Integer
-        :param materialItem[n].total: 总价
-        :type materialItem[n].total: Integer
-        :param materialItem[n].calcType: 结算方式
-        :type materialItem[n].calcType: Integer
-        :param materialItem[n].prePoint: 预结算值
-        :type materialItem[n].prePoint: Integer
-        :param materialItem[n].comment: 备注
-        :type materialItem[n].comment: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.mid**:
+  主材单ID
+
+        - **materialItem[n].no**:
+  型号名
+        - **materialItem[n].name**:
+  型号名
+        - **materialItem[n].category**:
+  品类
+        - **materialItem[n].brand**:
+  品牌
+        - **materialItem[n].measurementUnit**:
+  单位
+        - **materialItem[n].packageName**:
+  套餐名
+        - **materialItem[n].unitPrice**:
+  单价
+        - **materialItem[n].purchasePrice**:
+  进价
+        - **materialItem[n].salePrice**:
+  折后价
+        - **materialItem[n].price**:
+  售价
+        - **materialItem[n].discount**:
+  折扣
+        - **materialItem[n].postDiscount**:
+  折让
+        - **materialItem[n].num**:
+  数量
+        - **materialItem[n].total**:
+  总价
+        - **materialItem[n].calcType**:
+  结算方式
+        - **materialItem[n].prePoint**:
+  预结算值
+        - **materialItem[n].comment**:
+  备注
+
+        **示例**:{
                 "material.mid": 1,
                 "materialItem[0].no": "JP0005",
                 "materialItem[0].name": "卫浴AB1116",
@@ -1324,7 +1299,7 @@
                 "materialItem[0].brand": "卫浴",
                 "materialItem[0].measurementUnit": "个",
                 "materialItem[0].packageName": "package",
-                
+
                 "materialItem[0].unitPrice": 2670000,
                 "materialItem[0].purchasePrice": 1,
                 "materialItem[0].salePrice": 2670000,
@@ -1336,145 +1311,140 @@
                 "materialItem[0].calcType": 1,
                 "materialItem[0].prePoint": 0,
                 "materialItem[0].comment": "",
-                
+
             }
-            
-    ### <I> updateMaterialItemForModel
+
+    ### `updateMaterialItemForModel` <span style="color:gray">[内部]</span>
 
         更新型号类型的型号信息
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
+
         判断主材单状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单补款状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单结算状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材项是否存在 , 不存在 , 错误信息 **180022 主材项不存在**
-        
+
         只可更新主材项数量 , 通过利用主材项价格信息更新项目总价以及主材单总价
-        
-                |Requests:|
-                :param material.mid: 主材单ID
-        :type material.mid: Long
-        :param materialItem.miid: 主材项ID
-        :type materialItem.miid: Long
-        :param materialItem.num: 数量
-        :type materialItem.num: Integer
-        :param materialItem.total: 总价
-        :type materialItem.total: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.mid**:
+  主材单ID
+        - **materialItem.miid**:
+  主材项ID
+        - **materialItem.num**:
+  数量
+        - **materialItem.total**:
+  总价
+
+        **示例**:{
                 "material.mid": 1,
                 "materialItem.miid": 2000,
                 "materialItem.num": 2000,
                 "materialItem.total": 0
             }
-            
-    ### <I> updateMaterialItemForPackage
+
+    ### `updateMaterialItemForPackage` <span style="color:gray">[内部]</span>
 
         更新套餐类型的型号信息
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
+
         判断主材单状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单补款状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单结算状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材项是否存在 , 不存在 , 错误信息 **180022 主材项不存在**
-        
+
         只可更新主材项数量以及总价 , 总价代表套餐整体价格 , 通过利用主材项价格信息更新项目总价以及主材单总价
-        
-                |Requests:|
-                :param material.mid: 主材单ID
-        :type material.mid: Long
-        
-        :param materialItem[n].miid: 主材项ID
-        :type materialItem[n].miid: Long
-        :param materialItem[n].packageName: 套餐名
-        :type materialItem[n].packageName: String
-        :param materialItem[n].num: 数量
-        :type materialItem[n].num: Integer
-        :param materialItem[n].total: 总价
-        :type materialItem[n].total: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.mid**:
+  主材单ID
+
+        - **materialItem[n].miid**:
+  主材项ID
+        - **materialItem[n].packageName**:
+  套餐名
+        - **materialItem[n].num**:
+  数量
+        - **materialItem[n].total**:
+  总价
+
+        **示例**:{
                 "material.mid": 1,
                 "materialItem[0].miid": 1,
                 "materialItem[0].packageName": "套餐1",
                 "materialItem[0].num": 2000,
                 "materialItem[0].total": 0,
             }
-            
-    ### <I> changeMaterialItemForCaclType
+
+    ### `changeMaterialItemForCaclType` <span style="color:gray">[内部]</span>
 
         更改主材项结算方式
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
+
         判断主材单结算状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材项是否存在 , 不存在 , 错误信息 **180022 主材项不存在**
-        
+
         判断主材项是否为套餐 , 套餐不可修改 , 错误信息 **180010 套餐不能修改结算方式**
-        
-                |Requests:|
-                :param materialItem.miid: 主材型号ID
-        :type materialItem.miid: Long
-        :param materialItem.prePoint: 结算值
-        :type materialItem.prePonit: Integer
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialItem.miid**:
+  主材型号ID
+        - **materialItem.prePoint**:
+  结算值
+
+        **示例**:{
                 "materialItem.miid": 1,
                 "materialItem.prePoint": 10
             }
 
-    ### <I> updateMaterialItemForPrePT
+    ### `updateMaterialItemForPrePT` <span style="color:gray">[内部]</span>
 
         更新主材项预结算计算值
 
-                |Requests:|
-                :param materialItem.miids: 主材项ID
-        :type materialItem.miids: Long
-        
-        Example::
-        
-            {
+**请求参数**:
+
+- **materialItem.miids**:
+  主材项ID
+
+        **示例**:{
                 "materialItem.miids": 15
             }
-            
-    ### <I> deleteMaterialItem
+
+    ### `deleteMaterialItem` <span style="color:gray">[内部]</span>
 
         删除主材项信息
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
+
         判断主材单状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单补款状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         判断主材单结算状态是否为0(初始) , 其他状态 , 错误信息 **180025 主材单不可操作**
-        
+
         计算项目总金额更新主材单总金额
-        
-                |Requests:|
-                :param material.mid: 主材单ID
-        :type material.mid: Long
-        :param miids[n]: 主材项ID列表 , 类型为 Long
-        :type miids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.mid**:
+  主材单ID
+        - **miids[n]**:
+  主材项ID列表 , 类型为 Long
+
+        **示例**:{
                 "material.mid": 1,
                 "miids[0]": 1,
                 "miids[1]": 2
@@ -1486,8 +1456,9 @@
 
 ## api.material.MaterialRefundAction
 
-        |DataType:|
-        #### materialRefund
+**数据类型**:
+
+#### materialRefund
 
     - **mrid**: 退货型号ID
       - 类型: *Long*
@@ -1531,28 +1502,26 @@
       - 类型: *Integer*
     - **comment**: 备注
       - 类型: *String*
-    
-    ### <I> queryMaterialRefundByMid
+
+    ### `queryMaterialRefundByMid` <span style="color:gray">[内部]</span>
 
         通过主材单ID获取退货信息
-        
-                |Requests:|
-                :param materialRefund.mid: 主材单ID
-        :type materialRefund.mid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialRefund.mid**:
+  主材单ID
+
+        **示例**:{
                 "materialRefund.mid": 1
             }
-            
-                |Returns:|
-                - **materialRefunds**: 型号信息列表 , 每条数据类型 *materialRefund*
+
+**返回参数**:
+
+- **materialRefunds**: 型号信息列表 , 每条数据类型 *materialRefund*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialRefunds": [
                     {
@@ -1583,15 +1552,16 @@
                 ],
                 ...
             }
-        
+
 ## 结算
 
 主材单结算功能
 
 ## api.material.MaterialBalanceAction
 
-        |DataType:|
-        #### materialBalance
+**数据类型**:
+
+#### materialBalance
 
     - **mbid**: 结算ID
       - 类型: *Long*
@@ -1621,13 +1591,13 @@
       - 类型: *Long*
     - **status**: 状态 , 0: 预结算 , 1: 厂商结算 , 2: 结算
       - 类型: *Short*
-    - **type**: 类型 , 0: 购货 , 1: 预结算退货 , 2: 结算退货 
+    - **type**: 类型 , 0: 购货 , 1: 预结算退货 , 2: 结算退货
       - 类型: *Short*
     - **ident**: 退货标识
       - 类型: *Integer*
     - **mpid**: 款项ID, 类型为1(预结算退货)和2(结算退货)需要关联退货生成款项
       - 类型: *Integer*
-    
+
         |Filters:|
         - **msoNo**: 主材单号
       - 类型: *String*
@@ -1641,20 +1611,19 @@
       - 类型: *Short*
     - **fullCollectTimeRange**: 补款收款时间 , 格式: 2016/01/01-2016/01/01
       - 类型: *String*
-    
-    ### <I> pageMaterialBalance
+
+    ### `pageMaterialBalance` <span style="color:gray">[内部]</span>
 
         分页方式获取主材结算信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 主材单信息列表 , 每条数据类型 *materialBalance*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  主材单信息列表 , 每条数据类型 *materialBalance*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1717,27 +1686,27 @@
                                     "phone": "138xxxx2837",
                                     ...
                                 },
-                                
+
                                 "category": "洁具",
                                 "brand": "卫浴",
-                                
+
                                 "designerFlag": 1,
                                 "packageFlag": 1,
-                                
+
                                 "designRegion": "设计一分区",
                                 "designDepartment": "设计一部",
                                 "materialDepartment": "主材二组",
-                                
+
                                 "createTime": "2016-01-01 15:31:55",
                                 "preBalanceTime": "2016-01-01 00:00:00",
                                 "postBalanceTime": "2016-01-01 00:00:00",
                                 "fullpayTime": "2016-01-01 13:03:09",
-                                
+
                                 "type": 1,
                                 "status": 0,
                                 "balanceStatus": 0,
                                 "otherStatus": 2000,
-                                
+
                                 "total": 0,
                                 "distotal": 0,
                                 "maling": 0,
@@ -1749,7 +1718,7 @@
                                 "depositStatus": 3,
                                 "fullPayment": 2360000,
                                 "fullStatus": 2000,
-                                
+
                                 "comment": ""
                             }
                         }
@@ -1758,22 +1727,21 @@
                 },
                 ...
             }
-            
-    ### <I> pageMaterialBalanceForVender
+
+    ### `pageMaterialBalanceForVender` <span style="color:gray">[内部]</span>
 
         分页方式获取主材结算信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
+
         根据当前登陆系统的用户信息获取关联的主材驻店人员进行获取主材结算信息
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 主材结算信息列表 , 每条数据类型 *materialBalance*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  主材结算信息列表 , 每条数据类型 *materialBalance*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1836,27 +1804,27 @@
                                     "phone": "138xxxx2837",
                                     ...
                                 },
-                                
+
                                 "category": "洁具",
                                 "brand": "卫浴",
-                                
+
                                 "designerFlag": 1,
                                 "packageFlag": 1,
-                                
+
                                 "designRegion": "设计一分区",
                                 "designDepartment": "设计一部",
                                 "materialDepartment": "主材二组",
-                                
+
                                 "createTime": "2016-01-01 15:31:55",
                                 "preBalanceTime": "2016-01-01 00:00:00",
                                 "postBalanceTime": "2016-01-01 00:00:00",
                                 "fullpayTime": "2016-01-01 13:03:09",
-                                
+
                                 "type": 1,
                                 "status": 0,
                                 "balanceStatus": 0,
                                 "otherStatus": 2000,
-                                
+
                                 "total": 0,
                                 "distotal": 0,
                                 "maling": 0,
@@ -1868,7 +1836,7 @@
                                 "depositStatus": 3,
                                 "fullPayment": 2360000,
                                 "fullStatus": 2000,
-                                
+
                                 "comment": ""
                             }
                         }
@@ -1878,19 +1846,18 @@
                 ...
             }
 
-    ### <I> pageMaterialForPreBalance
+    ### `pageMaterialForPreBalance` <span style="color:gray">[内部]</span>
 
         分页方式获取需要预结算的主材单信息 , 分页以及条件参数传递方式参照 `paging <../check_rule.html#page>`_ 以及 `filter <../check_rule.html#filter>`_
-        
-                |Returns:|
-                - **paging**: 分页信息
+
+**返回参数**:
+
+- **paging**: 分页信息
           - 类型: *Object*
-        :param paging.data: 主材单信息列表 , 每条数据类型 *material*
-        :type paging.data: List
-        
-        Example::
-        
-            {
+        - **paging.data**:
+  主材单信息列表 , 每条数据类型 *material*
+
+        **示例**:{
                 ...
                 "paging": {
                     ...
@@ -1933,27 +1900,27 @@
                                 "phone": "138xxxx2837",
                                 ...
                             },
-                            
+
                             "category": "洁具",
                             "brand": "卫浴",
-                            
+
                             "designerFlag": 1,
                             "packageFlag": 1,
-                            
+
                             "designRegion": "设计一分区",
                             "designDepartment": "设计一部",
                             "materialDepartment": "主材二组",
-                            
+
                             "createTime": "2016-01-01 15:31:55",
                             "preBalanceTime": "2016-01-01 00:00:00",
                             "postBalanceTime": "2016-01-01 00:00:00",
                             "fullpayTime": "2016-01-01 13:03:09",
-                            
+
                             "type": 1,
                             "status": 0,
                             "balanceStatus": 0,
                             "otherStatus": 2000,
-                            
+
                             "total": 0,
                             "distotal": 0,
                             "maling": 0,
@@ -1965,7 +1932,7 @@
                             "depositStatus": 3,
                             "fullPayment": 2360000,
                             "fullStatus": 2000,
-                            
+
                             "comment": ""
                         }
                     ],
@@ -1973,132 +1940,126 @@
                 },
                 ...
             }
-            
-    ### <I> updateMaterialBalanceForVBalance
+
+    ### `updateMaterialBalanceForVBalance` <span style="color:gray">[内部]</span>
 
         更新主材结算信息中的厂商结算值
-        
+
         判断主材结算信息是否存在 , 不存在 , 错误信息 **180018 主材结算信息不存在**
-        
+
         判断主材结算信息状态是否为0(预结算) , 其他状态 **180019 主材结算信息状态错误**
-        
-                |Requests:|
-                :param materialBalance.mbid: 结算ID
-        :type materialBalance.mbid: Long
-        :param materialBalance.vbalance: 厂商结算值
-        :type materialBalance.vbalance: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialBalance.mbid**:
+  结算ID
+        - **materialBalance.vbalance**:
+  厂商结算值
+
+        **示例**:{
                 "materialBalance.mbid": 1,
                 "materialBalance.vbalance": 100
             }
-            
-    ### <I> updateMaterialBalanceForBalance
+
+    ### `updateMaterialBalanceForBalance` <span style="color:gray">[内部]</span>
 
         更新主材结算信息中的结算值
-        
+
         判断主材结算信息是否存在 , 不存在 , 错误信息 **180018 主材结算信息不存在**
-        
+
         判断主材结算信息状态是否为1(厂商结算) , 其他状态 **180019 主材结算信息状态错误**
-        
-                |Requests:|
-                :param materialBalance.mbid: 结算ID
-        :type materialBalance.mbid: Long
-        :param materialBalance.balance: 厂商结算值
-        :type materialBalance.balance: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialBalance.mbid**:
+  结算ID
+        - **materialBalance.balance**:
+  厂商结算值
+
+        **示例**:{
                 "materialBalance.mbid": 1,
                 "materialBalance.balance": 100
             }
-            
-    ### <I> passBalanceMaterial
+
+    ### `passBalanceMaterial` <span style="color:gray">[内部]</span>
 
         批量处理主材单到完结 , 主要提供跳过主材结算过程
-        
+
         根据主材单状态以及结算状态处理 , 状态为0(初始) , 结算状态为0(初始)
-        
+
         更新主材单状态为9(完结)
-        
-                |Requests:|
-                :param mids[n]: 主材单ID列表 , 每条数据类型 Long
-        :type mids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **mids[n]**:
+  主材单ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "mids[0]": 1,
                 "mids[1]": 2
             }
-            
-    ### <I> preBalanceMaterial
+
+    ### `preBalanceMaterial` <span style="color:gray">[内部]</span>
 
         批量预结算主材单
-        
+
         判断主材单是否存在 , 不存在 , 错误信息 **180001 主材单不存在**
-        
+
         判断预结算的主材单是否存在未处理审批 , 存在未处理审批 , 错误信息 **240007 存在未处理审批信息**
-        
+
         判断主材单状态以及结算状态进行处理 , 状态为0(初始) , 结算状态为0(初始) , 补款状态为3(已确认) , 满足三个状态可以进行预结算处理
-        
+
         生成主材单对应的主材结算信息
-        
+
         利润计算公式 , 套餐商品只能根据点位方式进行计算
-        
+
         点位计算方式: 利润 = (售价 - 折扣价 * (1 - 点位)) * 数量 , 成本 = 折扣价 * (1 - 点位) * 数量
-        
+
         底价计算方式: 利润 = (售价 - 底价) * 数量 , 成本 = 底价 * 数量
-        
+
         套餐计算方式: 利润 = 总价 * 点位 , 成本 = 总价 * (1 - 点位)
-        
-                |Requests:|
-                :param mids[n]: 主材单ID列表 , 每条数据类型 Long
-        :type mids[n]: List
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **mids[n]**:
+  主材单ID列表 , 每条数据类型 Long
+
+        **示例**:{
                 "mids[0]": 1,
                 "mids[1]": 2
             }
-        
-    ### <I> vpostMaterialBalance
+
+    ### `vpostMaterialBalance` <span style="color:gray">[内部]</span>
 
         厂商结算
-        
+
         判断主材结算信息是否存在 , 不存在 , 错误信息 **180018 主材结算信息不存在**
-        
+
         判断主材结算信息状态是否为0(预结算) , 其他状态 **180019 主材结算信息状态错误**
-        
-                |Requests:|
-                :param materialBalance.mbid: 结算ID
-        :type materialBalance.mbid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialBalance.mbid**:
+  结算ID
+
+        **示例**:{
                 "materialBalance.mbid": 1
             }
-            
-    ### <I> postMaterialBalance
+
+    ### `postMaterialBalance` <span style="color:gray">[内部]</span>
 
         结算
-        
+
         判断主材结算信息是否存在 , 不存在 , 错误信息 **180018 主材结算信息不存在**
-        
+
         判断主材结算信息状态是否为1(厂商结算) , 其他状态 **180019 主材结算信息状态错误**
-        
-                |Requests:|
-                :param materialBalance.mbid: 结算ID
-        :type materialBalance.mbid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialBalance.mbid**:
+  结算ID
+
+        **示例**:{
                 "materialBalance.mbid": 1
             }
 
@@ -2108,8 +2069,9 @@
 
 ## api.material.MaterialActivityAction
 
-        |DataType:|
-        #### materialActivityItem
+**数据类型**:
+
+#### materialActivityItem
 
     - **maiid**: 活动项ID
       - 类型: *Long*
@@ -2123,7 +2085,7 @@
       - 类型: *String*
     - **name**: 活动项名
       - 类型: *String*
-    
+
     - **type**: 类型 , 0: 券 , 1: 物品
       - 类型: *Short*
     - **state**: 状态 , 0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 消耗
@@ -2132,42 +2094,40 @@
       - 类型: *Short*
     - **isPayment**: 是否计入金额 , 0: 计入 , 1: 不计入 , 主要体现在装修实收额计算
       - 类型: *Short*
-    
+
     - **num**: 数量
       - 类型: *Integer*
     - **money**: 价格
       - 类型: *Integer*
     - **content**: 备注
       - 类型: *String*
-    
+
     - **receiveUserId**: 接收人编号
       - 类型: *String*
     - **receiveUserName**: 接收人名
       - 类型: *String*
     - **receiveTime**: 接收时间
       - 类型: *Timestamp*
-    
-    ### <I> queryMaterialActivity
+
+    ### `queryMaterialActivity` <span style="color:gray">[内部]</span>
 
         通过装修单号 , 获取归属主材单参与的活动信息以及款项信息
-        
-                |Requests:|
-                :param material.orderId: 装修单号
-        :type material.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.orderId**:
+  装修单号
+
+        **示例**:{
                 "material.orderId": "1601010001"
             }
-        
-                |Returns:|
-                - **materialActivitys**: 活动信息 , 类型 List <Map <String, String>>
+
+**返回参数**:
+
+- **materialActivitys**: 活动信息 , 类型 List <Map <String, String>>
           - 类型: *Object*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "materialActivitys":[
                     {
@@ -2178,28 +2138,26 @@
                 ],
                 ...
             }
-    
-    ### <I> queryMaterialActivityItem
+
+    ### `queryMaterialActivityItem` <span style="color:gray">[内部]</span>
 
         通过装修单号 , 查询归属所有主材单参与的活动项信息
-        
-                |Requests:|
-                :param material.orderId: 装修单号
-        :type material.orderId: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **material.orderId**:
+  装修单号
+
+        **示例**:{
                 "material.orderId": "1601010001"
             }
-            
-                |Returns:|
-                - **materialActivityItems**: 活动项信息列表 , 每条数据类型 *materialActivityItem*
+
+**返回参数**:
+
+- **materialActivityItems**: 活动项信息列表 , 每条数据类型 *materialActivityItem*
           - 类型: *List*
-        
-        Example::
-        
-            {
+
+        **示例**:{
                 ...
                 "MaterialActivityItems": [
                     {
@@ -2212,12 +2170,12 @@
                         "state": 0,
                         "type": 0,
                         "stateType": 0,
-                        
+
                         "money": 100,
                         "num": 1,
                         "content": "",
-                        
-                        
+
+
                         "receiveTime": "2016-08-21 15:00:54",
                         "receiveUserId": "",
                         "receiveUserName": ""
@@ -2225,36 +2183,35 @@
                 ],
                 ...
             }
-            
-    ### <I> addMaterialActivityItem
+
+    ### `addMaterialActivityItem` <span style="color:gray">[内部]</span>
 
         添加主材活动项
-        
+
         判断装修单是否存在 , 不存在 , 错误信息 **140013 订单不存在**
-        
-                |Requests:|
-                :param materialActivityItem.orderId: 装修单号
-        :type materialActivityItem.orderId: String
-        :param materialActivityItem.aid: 活动ID
-        :type materialActivityItem.aid: Long
-        :param materialActivityItem.asid: 奖品ID
-        :type materialActivityItem.asid: Long
-        :param materialActivityItem.activity: 活动名
-        :type materialActivityItem.activity: String
-        :param materialActivityItem.name: 物品名
-        :type materialActivityItem.name: String
-        :param materialActivityItem.type: 类型
-        :type materialActivityItem.type: Short
-        :param materialActivityItem.num: 数量
-        :type materialActivityItem.num: Integer
-        :param materialActivityItem.money: 金额
-        :type materialActivityItem.money: Integer
-        :param materialActivityItem.content: 说明
-        :type materialActivityItem.content: String
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialActivityItem.orderId**:
+  装修单号
+        - **materialActivityItem.aid**:
+  活动ID
+        - **materialActivityItem.asid**:
+  奖品ID
+        - **materialActivityItem.activity**:
+  活动名
+        - **materialActivityItem.name**:
+  物品名
+        - **materialActivityItem.type**:
+  类型
+        - **materialActivityItem.num**:
+  数量
+        - **materialActivityItem.money**:
+  金额
+        - **materialActivityItem.content**:
+  说明
+
+        **示例**:{
                 "materialActivityItem.orderId": "1601010001",
                 "materialActivityItem.aid": 1,
                 "materialActivityItem.asid": 1,
@@ -2265,127 +2222,121 @@
                 "materialActivityItem.money": 10000,
                 "materialActivityItem.content": "说明"
             }
-            
-    ### <I> receiveMaterialActivityItem
+
+    ### `receiveMaterialActivityItem` <span style="color:gray">[内部]</span>
 
         领取主材活动项
-        
+
         判断主材活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断奖品信息是否存在 , 不存在 , 错误信息 **160043 物品不存在**
-        
+
         判断奖品数量是否满足出库数量 , 不满足 , 错误信息 **160038 库存不足**
-        
+
         判断主材活动项中是否计入库存标识 , 更新关联奖品对应的库存数量 , 同时生成奖品记录
-        
-                |Requests:|
-                :param materialActivityItem.maiid: 活动项ID
-        :type materialActivityItem.maiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialActivityItem.maiid**:
+  活动项ID
+
+        **示例**:{
                 "materialActivityItem.maiid": 1
             }
-            
-    ### <I> abateMaterialActivityItem
+
+    ### `abateMaterialActivityItem` <span style="color:gray">[内部]</span>
 
         失效主材活动项
-        
+
         判断主材活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断主材活动项状态为0(初始) , 其他状态不可操作 , 错误信息 **140057 订单活动奖品不可操作**
-        
+
         主材活动项状态更新为1(失效)
-        
-                |Requests:|
-                :param materialActivityItem.maiid: 活动项ID
-        :type materialActivityItem.maiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialActivityItem.maiid**:
+  活动项ID
+
+        **示例**:{
                 "materialActivityItem.maiid": 1
             }
-            
-    ### <I> deliveMaterialActivityItem
+
+    ### `deliveMaterialActivityItem` <span style="color:gray">[内部]</span>
 
         配送主材活动项
-        
+
         判断主材活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断主材活动项状态为0(初始) , 其他状态不可操作 , 错误信息 **140057 订单活动奖品不可操作**
-        
+
         主材活动项状态更新为4(配送)
-        
-                |Requests:|
-                :param materialActivityItem.daiid: 活动项ID
-        :type materialActivityItem.daiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialActivityItem.daiid**:
+  活动项ID
+
+        **示例**:{
                 "materialActivityItem.daiid": 1
             }
-            
-    ### <I> unrefundMaterialActivityItem
+
+    ### `unrefundMaterialActivityItem` <span style="color:gray">[内部]</span>
 
         未退装修活动 , 已审批未退货
-        
+
         判断主材活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断主材活动项状态为2(已领) , 其他状态不可操作 , 错误信息 **140057 订单活动奖品不可操作**
-        
+
         主材活动项状态更新为5(未退)
-        
-                |Requests:|
-                :param materialActivityItem.daiid: 活动项ID
-        :type materialActivityItem.daiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialActivityItem.daiid**:
+  活动项ID
+
+        **示例**:{
                 "materialActivityItem.daiid": 1
             }
-            
-    ### <I> refundMaterialActivityItem
+
+    ### `refundMaterialActivityItem` <span style="color:gray">[内部]</span>
 
         退货主材活动项
-        
+
         判断主材活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断主材活动项状态为2(已领)/5(未退) , 其他状态不可操作 , 错误信息 **140057 订单活动奖品不可操作**
-        
+
         主材活动项状态更新为3(退货)
-        
+
         判断主材活动项中是否计入库存标识 , 更新关联奖品对应的库存数量 , 同时生成奖品记录以及装修单号
-        
-                |Requests:|
-                :param materialActivityItem.daiid: 活动项ID
-        :type materialActivityItem.daiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialActivityItem.daiid**:
+  活动项ID
+
+        **示例**:{
                 "materialActivityItem.daiid": 1
             }
-        
-    ### <I> expendMaterialActivityItem
+
+    ### `expendMaterialActivityItem` <span style="color:gray">[内部]</span>
 
         消耗主材活动项
-        
+
         判断主材活动项是否存在 , 不存在 , 错误信息 **140030 订单活动物品不存在**
-        
+
         判断主材活动项状态为2(已领) , 其他状态不可操作 , 错误信息 **140057 订单活动奖品不可操作**
-        
+
         主材活动项状态更新为7(消耗)
-        
-                |Requests:|
-                :param materialActivityItem.daiid: 活动项ID
-        :type materialActivityItem.daiid: Long
-        
-        Example::
-        
-            {
+
+**请求参数**:
+
+- **materialActivityItem.daiid**:
+  活动项ID
+
+        **示例**:{
                 "materialActivityItem.daiid": 1
             }
