@@ -806,7 +806,10 @@
                     $btnSyncRight.click(function() {
 
                         user.uid = v.uid;
+                        user.userId = v.userId;
+                        
                         showCompanySelectionModal(v.uid, v.currentName);
+                        
                         user.modals.companyCopyModal.modal('show');
                     });
 
@@ -1799,7 +1802,7 @@
 
         // 构建请求参数
         var params = {
-            'user.uid': user.uid,
+            'user.userId': user.userId,
             'companys[0].cid': selectedCompanies[0]
         };
 

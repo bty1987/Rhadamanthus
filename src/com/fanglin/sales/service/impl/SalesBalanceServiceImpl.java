@@ -523,8 +523,13 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 					brandTotal = Arith.add(brandTotal, salesItemPO.getTotal());
 				}
 
+				if (brandItemsMap.keySet().size() == 1) { // 非套餐
+					salesBalancePO.setTotal(salesPO.getTotal());
+				} else {
+					salesBalancePO.setTotal(brandTotal);
+				}
+
 				// 设置结算单的金额信息
-				salesBalancePO.setTotal(brandTotal);
 				salesBalancePO.setBalance(Arith.round(brandBalance, 0, Arith.ROUND_HALF_UP));
 				salesBalancePO.setAllowance(brandAllowance);
 

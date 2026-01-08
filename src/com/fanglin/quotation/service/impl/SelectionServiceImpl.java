@@ -333,7 +333,7 @@ public class SelectionServiceImpl implements SelectionService {
 			throw new FLException(200035, "选材单不存在");
 		}
 
-		checkSelection(selectionVO);
+		// checkSelection(selectionVO);
 
 		String orderId = selectionPO.getOrderId();
 

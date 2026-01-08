@@ -403,11 +403,8 @@ jQuery(function($) {
 
                         printSelectionItems[si].items.push([sv.items.length + 1, itemName, v.goods.brand, contractEdit.selectionTypes[v.type], v.goods.name, v.goods.measurementUnit, v.num, v.comment == null ? "" : v.comment]);
                     }
-
                 });
-
             }
-
         });
 
         $.each(printSelectionItems, function(i, v) {
@@ -418,8 +415,9 @@ jQuery(function($) {
 
                 table3.datas.push(iv);
             });
-
         });
+
+        table3.datas.push('', '', '', '', '', '', '', '注: 开工放线当日起，48小时内是允许变更一次主材，且最多只允许变更两个品类，如超期发生主材变更，每变更一个品类，客户主材工期自动顺延7个工作日.');
     }
 
     contractEdit.table.push(table1);
@@ -461,7 +459,8 @@ jQuery(function($) {
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         }, null, false);
-    };
+    }
+    ;
 
     var displayFunc = (function() {
 
