@@ -110,7 +110,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			}
 
 			if (extensionItemDao.countExtensionItem(quotationFunctionAreaPO.getQfaId(), qfaiId) > 0) {
-				throw new FLException(200043, "存在关联扩展项");
+				// throw new FLException(200043, "存在关联扩展项");
 			}
 
 			quotationFunctionAreaItemPO.setFormula(quotationFunctionAreaItemVO.getFormula());

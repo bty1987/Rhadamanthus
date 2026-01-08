@@ -283,7 +283,7 @@ $(function() {
         }
 
         // 将文件路径和报价版本拼接为参数
-        var args = filePath + "|" + quotationVersion;
+        var args = filePath + "," + quotationVersion;
 
         var date = normrice.items.executeDates.val();
         var time = normrice.items.executeTimes.val();

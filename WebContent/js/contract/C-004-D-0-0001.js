@@ -324,11 +324,12 @@ jQuery(function($) {
         }
     });
 
-    protationItems[0].items.push(["标配产品", 1, protation.protation.quotePrice]);
+    protationItems[0].items.push(["标配产品", 1, utils.accAdd(protation.protation.quotePrice, protation.protation.activityPrice)]);
     protationItems[0].items.push(["优惠金额", '', protation.protation.preferPrice]);
     protationItems[0].items.push(["管理费收取比例", 1, protation.protation.manageRate]);
     protationItems[0].items.push(["管理费", 1, protation.protation.managePrice]);
     protationItems[0].items.push(["管理优惠", 1, protation.protation.manageProfit]);
+    protationItems[0].items.push(["活动优惠", 1, protation.protation.activityProfit]);
 
     if (protation.protation.advanceProfit && protation.protation.advanceProfit != 0) {
         protationItems[0].items.push(["特批优惠", 1, protation.protation.advanceProfit]);
@@ -377,8 +378,8 @@ jQuery(function($) {
             table1.headers.push('', '', '');
             table1.colWidthPercent.push(3, 3, 3);
             table1.datas.push([presignProduce.name, '', '']);
-            table1.datas.push(["项目", "计价面积", "金额"]);
-            table1.datas.push([protation.protation.name, protation.protation.quoteArea, utils.changeThrDecimal(utils.accAdd(utils.accMul(protation.protation.quotePrice, utils.accAdd(1, protation.protation.manageRate)), utils.accAdd(protation.protation.accdPrice, protation.protation.accmPrice)))]);
+            table1.datas.push(["项目", "计价面积", ""]);
+            table1.datas.push([protation.protation.name, protation.protation.quoteArea, '']); // utils.changeThrDecimal(utils.accAdd(utils.accMul(protation.protation.quotePrice, utils.accAdd(1, protation.protation.manageRate)), utils.accAdd(protation.protation.accdPrice, protation.protation.accmPrice)))
 
             $.each(protationItems, function(i, q) {
 

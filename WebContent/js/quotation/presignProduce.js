@@ -276,7 +276,7 @@ jQuery(function($) {
 
         var taxFormula = presignProduce.items.taxFormula.val();
 
-        if (manageFormula.replace(/(\u8d77\u62a5\u4ef7|\u4f18\u60e0\u989d|\u529f\u80fd\u533a|\u4e2a\u6027|\u51cf\u9879|\u8d4b\u80fd|\u7279\u6b8a\u4f18\u60e0)/g, "").replace(/[\+\-\*\/\(\)]/g, "").replace(/[0-9]/g, "") != "") {
+        if (manageFormula.replace(/(\u8d77\u62a5\u4ef7|\u4f18\u60e0\u989d|\u529f\u80fd\u533a|\u4e2a\u6027|\u51cf\u9879|\u8d4b\u80fd|\u7279\u6b8a\u4f18\u60e0|\u6d6e\u52a8\u989d|\u6d3b\u52a8\u4f18\u60e0)/g, "").replace(/[\+\-\*\/\(\)]/g, "").replace(/[0-9]/g, "") != "") {
 
             com.showAlert(com.warning, "管理费公式存在无效参数");
 
@@ -290,7 +290,7 @@ jQuery(function($) {
             return false;
         }
 
-        if (taxFormula.replace(/(\u8d77\u62a5\u4ef7|\u4f18\u60e0\u989d|\u529f\u80fd\u533a|\u4e2a\u6027|\u51cf\u9879|\u8d4b\u80fd|\u7ba1\u7406\u8d39|\u7279\u6b8a\u4f18\u60e0|\u7ba1\u7406\u4f18\u60e0)/g, "").replace(/[\+\-\*\/\(\)]/g, "").replace(/[0-9]/g, "") != "") {
+        if (taxFormula.replace(/(\u8d77\u62a5\u4ef7|\u4f18\u60e0\u989d|\u529f\u80fd\u533a|\u4e2a\u6027|\u51cf\u9879|\u8d4b\u80fd|\u7ba1\u7406\u8d39|\u7279\u6b8a\u4f18\u60e0|\u7ba1\u7406\u4f18\u60e0|\u6d6e\u52a8\u989d|\u6d3b\u52a8\u4f18\u60e0)/g, "").replace(/[\+\-\*\/\(\)]/g, "").replace(/[0-9]/g, "") != "") {
 
             com.showAlert(com.warning, "税金公式存在无效参数");
 
@@ -343,12 +343,12 @@ jQuery(function($) {
 
     function formulaToParam(formula) {
 
-        return formula.replace(/\u8d77\u62a5\u4ef7/g, "{a}").replace(/\u4f18\u60e0\u989d/g, "{b}").replace(/\u529f\u80fd\u533a/g, "{c}").replace(/\u4e2a\u6027/g, "{d}").replace(/\u51cf\u9879/g, "{e}").replace(/\u8d4b\u80fd/g, "{f}").replace(/\u7ba1\u7406\u8d39/g, "{g}").replace(/\u7279\u6b8a\u4f18\u60e0/g, "{h}").replace(/\u7ba1\u7406\u4f18\u60e0/g, "{i}");
+        return formula.replace(/\u8d77\u62a5\u4ef7/g, "{a}").replace(/\u4f18\u60e0\u989d/g, "{b}").replace(/\u529f\u80fd\u533a/g, "{c}").replace(/\u4e2a\u6027/g, "{d}").replace(/\u51cf\u9879/g, "{e}").replace(/\u8d4b\u80fd/g, "{f}").replace(/\u7ba1\u7406\u8d39/g, "{g}").replace(/\u7279\u6b8a\u4f18\u60e0/g, "{h}").replace(/\u7ba1\u7406\u4f18\u60e0/g, "{i}").replace(/\u6d6e\u52a8\u989d/g, "{j}").replace(/\u6d3b\u52a8\u4f18\u60e0/g, "{k}");
     }
 
     function paramToFormula(param) {
 
-        return param.replace(/\{a\}/g, "\u8d77\u62a5\u4ef7").replace(/\{b\}/g, "\u4f18\u60e0\u989d").replace(/\{c\}/g, "\u529f\u80fd\u533a").replace(/\{d\}/g, "\u4e2a\u6027").replace(/\{e\}/g, "\u51cf\u9879").replace(/\{f\}/g, "\u8d4b\u80fd").replace(/\{g\}/g, "\u7ba1\u7406\u8d39").replace(/\{h\}/g, "\u7279\u6b8a\u4f18\u60e0").replace(/\{i\}/g, "\u7ba1\u7406\u4f18\u60e0");
+        return param.replace(/\{a\}/g, "\u8d77\u62a5\u4ef7").replace(/\{b\}/g, "\u4f18\u60e0\u989d").replace(/\{c\}/g, "\u529f\u80fd\u533a").replace(/\{d\}/g, "\u4e2a\u6027").replace(/\{e\}/g, "\u51cf\u9879").replace(/\{f\}/g, "\u8d4b\u80fd").replace(/\{g\}/g, "\u7ba1\u7406\u8d39").replace(/\{h\}/g, "\u7279\u6b8a\u4f18\u60e0").replace(/\{i\}/g, "\u7ba1\u7406\u4f18\u60e0").replace(/\{j\}/g, "\u6d6e\u52a8\u989d").replace(/\{k\}/g, "\u6d3b\u52a8\u4f18\u60e0");
     }
 
     function evals(formula) {
@@ -363,6 +363,8 @@ jQuery(function($) {
             "g": 1,
             "h": 1,
             "i": 1,
+            "j": 1,
+            "k": 1,
         });
 
         var res = new Function("return function(){return " + formula + "}")()();

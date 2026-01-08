@@ -1097,6 +1097,17 @@ $(function() {
                 return protation.pageConfig.propertyArr.contains("activityProfit");
             }
         }, {
+            field: "activityAdvance",
+            name: "活动余额",
+            prop: function(v){
+                return utils.changeThrDecimal(utils.accSub(v.activityPrice, v.activityProfit));
+            },
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("activityProfit");
+            }
+        }, {
             field: "comment",
             name: "备注",
             prop: "comment",

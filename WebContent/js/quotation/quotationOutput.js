@@ -177,8 +177,8 @@ function printFinanceTable(subtype, showType) {
                 contentHtml += '<td>' + qv.total + '</td>';
                 contentHtml += '</tr>';
 
-                sum = sum + qv.total;
-                preSum = preSum + qv.total;
+                sum = qv.extensionAtttype && qv.extensionAtttype == constant.quotation().extension.ATTTYPE_ACTIVITY_INT ? sum : sum + qv.total;
+                preSum = qv.extensionAtttype && qv.extensionAtttype == constant.quotation().extension.ATTTYPE_ACTIVITY_INT ? preSum : preSum + qv.total;
 
                 if (qv.type == constant.quotation().quotationFunctionAreaItem.TYPE_CMPREH_INT) {
                     preSum = utils.changeThrDecimal(preSum);

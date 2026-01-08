@@ -18,11 +18,12 @@ function printProjectTable(type) {
 
     var contentHtml = '';
     var _quoteArea = protation.protation.quoteArea;
-    var _quotePrice = protation.protation.quotePrice;
+    var _quotePrice = utils.changeThrDecimal(utils.accAdd(protation.protation.quotePrice, protation.protation.activityPrice));
     var _manageRate = protation.protation.manageRate;
     var _accdPrice = protation.protation.accdPrice;
     var _accmPrice = protation.protation.accmPrice;
     var _manageProfit = protation.protation.manageProfit;
+    var _activityProfit = protation.protation.activityProfit;
     var _advanceProfit = protation.protation.advanceProfit;
     var _managePrice = protation.protation.managePrice;
     var _taxPrice = protation.protation.taxPrice;
@@ -43,7 +44,7 @@ function printProjectTable(type) {
     contentHtml += '<tr>';
     contentHtml += '<td width="5%" align="center">' + protation.protation.name + '</td>';
     contentHtml += '<td colspan="2" width="5%" align="center">' + _quoteArea + '</td>';
-    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accAdd(utils.accMul(_quotePrice, utils.accAdd(1, _manageRate)), utils.accAdd(_accdPrice, _accmPrice))) + '</td>';
+    contentHtml += '<td width="5%" align="center"></td>'; // utils.changeThrDecimal(utils.accAdd(utils.accMul(_quotePrice, utils.accAdd(1, _manageRate)), utils.accAdd(_accdPrice, _accmPrice)))
     contentHtml += '</tr>';
     contentHtml += '<tr>';
     contentHtml += '<td colspan="4" style="font-size: 15px; font-weight: bold;" align="center">标配产品</td>';
@@ -82,6 +83,11 @@ function printProjectTable(type) {
     contentHtml += '<td width="5%" align="center">管理优惠</td>';
     contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
     contentHtml += '<td width="5%" align="center">' + _manageProfit + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td width="5%" align="center">活动优惠</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
+    contentHtml += '<td width="5%" align="center">' + _activityProfit + '</td>';
     contentHtml += '</tr>';
     
     if(_advanceProfit != 0){
