@@ -223,7 +223,9 @@ var protationPart = (function() {
                     "d": utils.accAdd(addd, addm),
                     "e": utils.accAdd(utils.accAdd(subd, subm), subc),
                     "f": utils.accAdd(accm, accd),
-                    "h": quo.basicParams["protation.advanceProfit"]
+                    "h": quo.basicParams["protation.advanceProfit"],
+                    "j": quo.basicParams["protation.activityPrice"],
+                    "k": quo.basicParams["protation.activityProfit"]
                 });
             }
 
@@ -241,7 +243,9 @@ var protationPart = (function() {
                     "f": utils.accAdd(accm, accd),
                     "g": _managePrice,
                     "h": quo.basicParams["protation.advanceProfit"],
-                    "i": quo.basicParams["protation.manageProfit"]
+                    "i": quo.basicParams["protation.manageProfit"],
+                    "j": quo.basicParams["protation.activityPrice"],
+                    "k": quo.basicParams["protation.activityProfit"]
                 });
             }
 
@@ -1517,6 +1521,8 @@ var protationPart = (function() {
                     "e": utils.accAdd(utils.accAdd(subd, subm), subc),
                     "f": utils.accAdd(accm, accd),
                     "h": quo.basicParams["protation.advanceProfit"],
+                    "j": quo.basicParams["protation.activityPrice"],
+                    "k": quo.basicParams["protation.activityProfit"]
                 });
             }
 
@@ -1534,7 +1540,9 @@ var protationPart = (function() {
                     "f": utils.accAdd(accm, accd),
                     "g": _managePrice,
                     "h": quo.basicParams["protation.advanceProfit"],
-                    "i": quo.basicParams["protation.manageProfit"]
+                    "i": quo.basicParams["protation.manageProfit"],
+                    "j": quo.basicParams["protation.activityPrice"],
+                    "k": quo.basicParams["protation.activityProfit"]
                 });
             }
 

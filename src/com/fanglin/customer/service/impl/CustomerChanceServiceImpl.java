@@ -249,7 +249,6 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (customerChanceVO.getSource().getHouse() != null && customerChanceVO.getSource().getHouse().getBuildArea() != null) {
 			houseVO.setBuildArea(customerChanceVO.getSource().getHouse().getBuildArea());
-			houseVO.setInnerArea(customerChanceVO.getSource().getHouse().getBuildArea());
 		}
 
 		// 调用 existHouse：自动判断房产是否存在，不存在则创建

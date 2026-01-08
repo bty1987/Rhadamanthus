@@ -290,7 +290,7 @@ $(function() {
         }
 
         // 将文件路径和报价版本拼接为参数
-        var args = filePath + "|" + quotationVersion;
+        var args = filePath + "," + quotationVersion;
 
         var date = normood.items.executeDates.val();
         var time = normood.items.executeTimes.val();

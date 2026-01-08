@@ -121,7 +121,7 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 		StringBuffer sql = new StringBuffer("SELECT count(*) FROM quotation.quotation q ");
 
 		sql.append("INNER JOIN quotation.quotationfunctionarea qfa ON q.qid = qfa.quotationId ");
-		sql.append(String.format("INNER JOIN quotation.quotationfunctionareaitem%s qfai ON qfa.qfaid = qfai.quotationFunctionAreaId ", index));
+		sql.append(String.format("INNER JOIN quotation.quotationfunctionareaitem%s qfai ON qfa.qfaid = qfai.quotationFunctionAreaId AND qfai.subtype not in (0, 1, 3)", index));
 		sql.append("LEFT JOIN quotation.selectionitem si on si.orderId = q.orderId AND qfai.qfaiId = si.quoteid AND si.type = 0 ");
 		sql.append("WHERE qfa.qfaid = :qfaid AND q.defaults = 1 AND si.siid is null;");
 
@@ -135,9 +135,9 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 
 		StringBuffer sql = new StringBuffer("SELECT count(*) FROM quotation.extension e ");
 
-		sql.append("LEFT JOIN quotation.extensionitem ei ON ei.eid = e.eid AND ei.subtype not in (0, 1) ");
+		sql.append("LEFT JOIN quotation.extensionitem ei ON ei.eid = e.eid AND ei.subtype not in (0, 1, 3) ");
 		sql.append("LEFT JOIN quotation.selectionitem si on si.orderId = e.orderId AND ei.eiid = si.quoteid AND si.type in (1, 2) ");
-		sql.append("WHERE e.orderId = :orderId AND si.siid is null and ei.eiid is not null");
+		sql.append("WHERE e.orderId = :orderId AND e.type = 0 AND si.siid is null and ei.eiid is not null");
 
 		BigInteger count = (BigInteger) session().createSQLQuery(sql.toString()).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).uniqueResult();
 
