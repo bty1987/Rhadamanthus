@@ -93,6 +93,8 @@ jQuery(function($) {
 
                 tools.personel.info(btn, v.decoration.designer.userId);
             }],
+            ["业务员:", v.decoration.salesman ? v.decoration.salesman.currentName : "", "grey"],
+            ["方案设计:", v.decoration.escorter ? v.decoration.escorter.currentName : "", "grey"],
             ["监理:", v.decoration.supervisor ? v.decoration.supervisor.userName : "", "grey", function(btn) {
 
                 tools.personel.info(btn, v.decoration.supervisor.userId);
