@@ -78,6 +78,60 @@
 
 </div>
 
+<!-- 导入预签价格模态框 -->
+<div class="modal fade" id="importPresignPriceModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">导入预签价格</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <!-- 导入格式说明 -->
+                    <div class="form-group alert alert-info">
+                        <p><strong>导入格式说明:</strong></p>
+                        <p>名称/起始面积/终止面积/价格/工程成本/主材成本/浮动额</p>
+                        <p style="color: #999;">示例: 90平米套餐/0/90/180000/150000/120000/5000</p>
+                        <p style="color: #999;">注意: 上传文件中请填写具体内容, 不显示表头</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="attachment">上传文件</label>
+                        <div class="col-sm-9">
+                            <div id="attachment"></div>
+                            <input type="text" class="hidden" id="filePath"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="executeDates">执行日期</label>
+                        <div class="col-sm-9">
+                            <input class="date-picker v_required" id="executeDates" type="text" readonly="readonly"
+                                   data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="executeTimes">执行时间</label>
+                        <div class="col-sm-9">
+                            <div class="bootstrap-timepicker">
+                                <input id="executeTimes" type="text" class="v_required"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmImportBtn" class="btn btn-success">导入</button>
+                <button type="button" id="cancelImportBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
-    $.loadScript(['js/quotation/presignPrice.js']);
+    $.loadScript(['js/utils/planUtils.js','js/quotation/presignPrice.js']);
 </script>
