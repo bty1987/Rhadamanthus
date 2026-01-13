@@ -446,6 +446,28 @@ jQuery(function($) {
             data["con-sign-date-month-3"] = month;
             data["con-sign-date-day-3"] = day;
 
+            // 新增参数 - 公司信息-12系列
+            data["con-company-name-12"] = data["con-company-name"];
+            data["con-company-addr-12"] = data["con-company-addr"];
+            data["con-company-legal-12"] = data["con-company-legal"];
+            data["con-company-phone-12"] = data["con-company-phone"];
+            data["con-company-email-12"] = data["con-company-email"];
+
+            // 新增参数 - 供应商信息-12系列
+            data["con-supplier-name-12"] = data["con-supplier-name"];
+            data["con-supplier-addr-12"] = data["con-supplier-addr"];
+            data["con-supplier-legal-12"] = data["con-supplier-legal"];
+            data["con-supplier-phone-12"] = data["con-supplier-phone"];
+            data["con-supplier-email-12"] = data["con-supplier-email"];
+
+            // 新增参数 - 合同编号和日期
+            data["cov-contract-no-5"] = contractEdit.no;
+            data["con-sign-date-year-1"] = year;
+            data["con-sign-date-month-1"] = month;
+            data["con-sign-date-day-1"] = day;
+            data["con-contract-no-6"] = contractEdit.no;
+            data["con-brand-list-2"] = contractEdit.brandNameList;
+
             data["con-supplier-name-1"] = data["con-supplier-name"];
             data["con-supplier-name-2"] = data["con-supplier-name"];
             data["con-supplier-name-3"] = data["con-supplier-name"];
