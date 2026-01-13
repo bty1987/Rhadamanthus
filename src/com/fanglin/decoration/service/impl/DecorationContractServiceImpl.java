@@ -375,6 +375,23 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int noticeDecorationContract(DecorationContractVO decorationContractVO) throws FLException {
+
+		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
+
+		if (decorationContractPO == null) {
+			throw new FLException(140067, "合同不存在");
+		}
+
+		// 更新通知确认状态为已确认 (1表示已确认)
+		decorationContractPO.setNoticeStatus((short) 1);
+		decorationContractDao.update(decorationContractPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int expireDecorationContract(DecorationContractVO decorationContractVO) throws FLException {
 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());

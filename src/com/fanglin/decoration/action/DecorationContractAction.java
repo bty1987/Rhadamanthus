@@ -128,6 +128,14 @@ public class DecorationContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "noticeDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String noticeDecorationContract() throws FLException {
+
+		decorationContractService.noticeDecorationContract(decorationContract);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "expireDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String expireDecorationContract() throws FLException {
 
