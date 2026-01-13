@@ -696,6 +696,9 @@ $(function() {
         accountBasic.material = decorationAccount.matching;
         accountBasic.service = decorationAccount.serviceRate;
 
+        // 设置查询返回的决算主材额,确保 accountSuper 使用查询结果而非计算值
+        accountBasic.materialAccount = decorationAccount.materialPrice;
+
         accountBasic.cal = (decorationAccount.arcal == 0);
 
         decorationDetail.items.discountName.val(decorationAccount.name);
@@ -1215,7 +1218,13 @@ $(function() {
         accountBasic.directC = Math.round(accountBasic.foldFrontTotal + accountBasic.addFoldFrontTotal - accountBasic.minusFoldFrontTotal + accountBasic.addPredisPrice - accountBasic.reducePredisPrice);
         accountBasic.fullPayment = Math.round(accountBasic.signFactOwing + accountBasic.addOwing - accountBasic.reduceOwing);
 
-        accountBasic.materialAccount = Math.round(materialAccount);
+        // 当已有决算记录时,使用查询结果而非计算值
+        if (accountBasic.daid) {
+            // materialAccount 保持查询结果值,不使用计算值
+            // accountBasic.materialAccount 保持查询返回的值
+        } else {
+            accountBasic.materialAccount = Math.round(materialAccount);
+        }
 
         accountBasic.accountForehead = Math.round(contartval);
         accountBasic.accountServicePrice = Math.round(service);
@@ -1236,7 +1245,10 @@ $(function() {
         decorationDetail.accountItems.direct.html(accountBasic.direct);
         decorationDetail.accountItems.beforeTotal.html(accountBasic.beforeTotal);
         decorationDetail.accountItems.management.html(accountBasic.management);
-        decorationDetail.accountItems.materialAccount.val(accountBasic.materialAccount);
+        // 当已有决算记录时,不更新 materialAccount 显示值(保持查询结果)
+        if (!accountBasic.daid) {
+            decorationDetail.accountItems.materialAccount.val(accountBasic.materialAccount);
+        }
 
         decorationDetail.accountItems.flowerRatio.html(accountBasic.flowerRatio);
         decorationDetail.accountItems.flowerOalesRatio.html(accountBasic.flowerOalesRatio);
@@ -1287,14 +1299,11 @@ $(function() {
      * 加载业务类型数据并计算方案
      */
     function loadBusitypesAndCalculate() {
-        com.post(api.data.queryDecorationBusitype, {
-            typeness: decorationDetail.orderTypeness
-        }, function(res) {
-            accountCalculatorData.busitypes = res.decorationBusitypes || [];
+        // 使用已加载的 decorationMatchings 数据
+        accountCalculatorData.busitypes = accountBasic.machingType || [];
 
-            // 生成计算方案（每个业务类型生成两条：配比/非配比）
-            generateAccountSchemes();
-        });
+        // 生成计算方案（每个业务类型生成两条：配比/非配比）
+        generateAccountSchemes();
     }
 
     /**
@@ -1349,6 +1358,9 @@ $(function() {
      */
     function calculateSchemeResult(scheme, materialAccount, preferences, internalCoupon, fulldel, cashback) {
         var busitype = scheme.busitype;
+        // 字段映射：decorationMatchings 使用 typeness，计算逻辑使用 type
+        busitype.type = busitype.typeness;
+
         var flag = scheme.calcType;  // 1 = 算配比, 0 = 不算配比
 
         var contartval = 0, service = 0, sub = 0, direct = 0, beforeTotal = 0, management = 0, taxment = 0;
@@ -1558,6 +1570,9 @@ $(function() {
 
         // 回填数据到功能模块
         var busitype = scheme.busitype;
+        // 字段映射：decorationMatchings 使用 typeness，匹配逻辑使用 type
+        busitype.type = busitype.typeness;
+        busitype.dbid = busitype.dmid;
 
         // 简化匹配逻辑：直接遍历所有 machingType 找到第一个
         var config = null;
