@@ -629,9 +629,16 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) decorationService.checkOverDecoration(customerChancePO.getCustomer().getCid(), customerChancePO.getHouse().getHid());
 
+		// 保存原来的orderId，用于后续比较
+		String originalOrderId = customerChancePO.getOrderId();
+
 		decorationService.tranDecoration(decorationVO, decorationInfoVO, company);
 
-		customerChancePO.setOrderId(decorationVO.getOrderId());
+		// 判断orderId是否发生变化，如果不同则更新
+		if (!originalOrderId.equals(decorationVO.getOrderId())) {
+			customerChancePO.setOrderId(decorationVO.getOrderId());
+		}
+
 		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
 
 		customerChanceDao.update(customerChancePO);
