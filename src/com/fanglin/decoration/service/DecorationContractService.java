@@ -32,6 +32,8 @@ public interface DecorationContractService {
 
 	public int affixDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;
 
+	public int noticeDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
+
 	public int expireDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
 
 	public int filingDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;

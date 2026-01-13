@@ -19,13 +19,16 @@
             color:black;
             background-color:darkgrey;
         }
-        #uploadBtn, #clearBtn {
+        #uploadBtn, #clearBtn, #confirmNoticeBtn {
             width:280px;
             height:50px;
             border-radius: 20px;
             line-height: 1.5;
             margin-right: 16px;
             background-color: #5bc0de;
+        }
+        #confirmNoticeBtn {
+            background-color: #5cb85c;
         }
         #button {
             float: right;
@@ -38,12 +41,57 @@
         body{
             background: #FFF;
         }
+        /* 通知确认区域样式 */
+        #noticeContainer {
+            display: none;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        #noticeContainer h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        #noticePdfFrame {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+        }
+        #noticeActions {
+            text-align: center;
+        }
+        #loadingNotice {
+            text-align: center;
+            padding: 20px;
+            font-size: 16px;
+            color: #666;
+        }
+        /* 隐藏签名区域 */
+        .hidden {
+            display: none !important;
+        }
     </style>
 
 </head>
 <body>
 
-    <div class="container">
+    <!-- 通知确认区域 -->
+    <div id="noticeContainer">
+        <h3>合同通知确认</h3>
+        <p style="color: #666; margin-bottom: 15px;">请仔细阅读以下通知内容，确认后进行签名操作</p>
+        <div id="loadingNotice">正在加载通知内容...</div>
+        <iframe id="noticePdfFrame" class="hidden"></iframe>
+        <div id="noticeActions" class="hidden">
+            <button type="button" id="confirmNoticeBtn"><span>我已阅读并确认</span></button>
+        </div>
+    </div>
+
+    <!-- 签名区域 -->
+    <div class="container" id="signatureContainer">
         <div id="signatureparent">
             <div id="signature"></div>
         </div>
@@ -58,12 +106,12 @@
 <script type="text/javascript">
 
     var name = getQueryParams(window.location.href)['name'];
-    
+
     if(name && name != null && name != 'null' && name != 'undefined'){
-    
+
         var tx = name.length == 1 ? 25 : name.length == 2 ? 10 : name.length == 3 ? 5 : 0;
         var ts = name.length == 1 ? 50 : name.length == 2 ? 40 : name.length == 3 ? 30 : 25;
-    
+
         var backword = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><text x="' + tx + '%" y="60%" fill="grey" font-size="' + ts + 'vw">' + name + '</text></svg>';
         var style = $('<style>.text-background { background: url(\'' + backword + '\') no-repeat center; }</style>');
         $('head').append(style);
@@ -77,26 +125,172 @@
         signatureLine: false,//去除默认画布上那条横线
         lineWidth: '16'
     };
-    
+
     var imgpath = "";
-    
+    var noticeConfirmed = false; // 通知确认状态
+
     $("#signature").jSignature(arguments);
-    
+
     var authentication = "eX3o2SZdrpVOV9HC4UYTRA==";
-    
+
     var cid = getQueryString('cid');
     var type = getQueryString('type');
-    
+
     var apiurl = "../../signateCustomer.do";
     var argkey = "customer.cid";
-    
+
     if(type == "2"){
         apiurl = "../../signateUser.do";
         argkey = "user.uid";
     }
 
+    // ========== 通知确认相关逻辑 ==========
+
+    /**
+     * 初始化通知确认流程
+     */
+    function initNoticeConfirmation() {
+        if (!cid) {
+            // 没有cid，直接显示签名区域
+            showSignatureArea();
+            return;
+        }
+
+        // 获取装饰合同信息
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "../../queryDecorationContract.do",
+            data: {
+                "decorationContract.dcid": cid,
+                "authentication": authentication
+            },
+            cache: false,
+            success: function (res) {
+                if (res.errorCode == 0 && res.decorationContract) {
+                    var contract = res.decorationContract;
+
+                    // 判断noticeStatus是否已确认 (假设1表示已确认)
+                    if (contract.noticeStatus == 1) {
+                        // 已确认，直接显示签名区域
+                        noticeConfirmed = true;
+                        showSignatureArea();
+                    } else {
+                        // 未确认，加载通知内容
+                        loadNoticeContent();
+                    }
+                } else {
+                    // 获取合同信息失败，直接显示签名区域
+                    showSignatureArea();
+                }
+            },
+            error: function () {
+                // 请求失败，直接显示签名区域
+                showSignatureArea();
+            }
+        });
+    }
+
+    /**
+     * 加载通知内容
+     */
+    function loadNoticeContent() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "../../queryContractByCid.do",
+            data: {
+                "contract.dcid": cid,
+                "authentication": authentication
+            },
+            cache: false,
+            success: function (res) {
+                if (res.errorCode == 0 && res.contract) {
+                    var contract = res.contract;
+
+                    // 判断noticePath是否存在
+                    if (contract.noticePath && contract.noticePath.length > 0) {
+                        // 显示通知PDF
+                        showNoticePdf(contract.noticePath);
+                    } else {
+                        // 没有通知文件，直接显示签名区域
+                        showSignatureArea();
+                    }
+                } else {
+                    // 获取失败，直接显示签名区域
+                    showSignatureArea();
+                }
+            },
+            error: function () {
+                // 请求失败，直接显示签名区域
+                showSignatureArea();
+            }
+        });
+    }
+
+    /**
+     * 显示通知PDF
+     */
+    function showNoticePdf(noticePath) {
+        $('#loadingNotice').addClass('hidden');
+        $('#noticePdfFrame').removeClass('hidden');
+        $('#noticeActions').removeClass('hidden');
+        $('#noticeContainer').show();
+
+        // 设置PDF路径
+        $('#noticePdfFrame').attr('src', noticePath);
+    }
+
+    /**
+     * 显示签名区域
+     */
+    function showSignatureArea() {
+        $('#noticeContainer').hide();
+        $('#signatureContainer').removeClass('hidden');
+    }
+
+    /**
+     * 确认通知按钮点击事件
+     */
+    $("#confirmNoticeBtn").click(function () {
+        $(this).prop('disabled', true).find('span').text('确认中...');
+
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "../../noticeDecorationContract.do",
+            data: {
+                "decorationContract.dcid": cid,
+                "authentication": authentication
+            },
+            cache: false,
+            success: function (res) {
+                if (res.errorCode == 0) {
+                    noticeConfirmed = true;
+                    alert('通知确认成功');
+                    // 隐藏通知区域，显示签名区域
+                    showSignatureArea();
+                } else {
+                    alert(res.errorMsg || '确认失败');
+                    $("#confirmNoticeBtn").prop('disabled', false).find('span').text('我已阅读并确认');
+                }
+            },
+            error: function () {
+                alert('网络错误，请重试');
+                $("#confirmNoticeBtn").prop('disabled', false).find('span').text('我已阅读并确认');
+            }
+        });
+    });
+
+    // ========== 签名相关逻辑 ==========
+
     //印章按钮
     $("#uploadBtn").click(function () {
+
+        // 检查通知是否已确认（如果有通知需要确认）
+        if (!noticeConfirmed && $('#noticeContainer').is(':visible') === false && cid) {
+            // 这里可能需要再次检查确认状态
+        }
 
         var datapair =  $("#signature").jSignature("getData", "image");
 
@@ -111,6 +305,14 @@
     //清除印章按钮
     $("#clearBtn").click(function () {
         $("#signature").jSignature("reset");
+    });
+
+    // 页面加载时初始化通知确认流程
+    $(document).ready(function() {
+        // 先隐藏签名区域
+        $('#signatureContainer').addClass('hidden');
+        // 初始化通知确认流程
+        initNoticeConfirmation();
     });
 
     //获取url属性值
