@@ -1037,6 +1037,14 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (decorationVO.getOrderId() != null) {
 			orderId = decorationVO.getOrderId();
+			// 检查orderId是否已存在，如果存在则生成新的orderId
+			DecorationPO existingOrder = decorationDao.queryDecorationByOrderId(orderId);
+			if (existingOrder != null) {
+				// orderId已存在，生成新的orderId
+				String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
+				int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
+				orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+			}
 		} else {
 			String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
 			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
