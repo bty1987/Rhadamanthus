@@ -187,6 +187,12 @@ $.extend(api, {
                 args: ["referMoney"]
             }]
         },
+        queryDecorationContract: {
+            url: "queryDecorationContract.do"
+        },
+        noticeDecorationContract: {
+            url: "noticeDecorationContract.do"
+        },
         sendDecorationContractForAuth: {
             url: "sendDecorationContractForAuth.do"
         },
