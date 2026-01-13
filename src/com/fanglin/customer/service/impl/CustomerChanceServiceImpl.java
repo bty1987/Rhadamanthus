@@ -627,7 +627,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
 		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
 
-		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
+		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) decorationService.checkOverDecoration(customerChancePO.getCustomer().getCid(), customerChancePO.getHouse().getHid());
 
 		decorationService.tranDecoration(decorationVO, decorationInfoVO, company);
 
