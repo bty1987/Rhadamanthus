@@ -7,16 +7,93 @@
 
     <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
 
-    <style></style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        /* 通知确认区域样式 */
+        #noticeContainer {
+            display: none;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        #noticeContainer h3 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+            font-size: 24px;
+        }
+        #noticeContainer p {
+            color: #666;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        #noticePdfFrame {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        #noticeActions {
+            text-align: center;
+        }
+        #loadingNotice {
+            text-align: center;
+            padding: 40px;
+            font-size: 16px;
+            color: #666;
+        }
+        #confirmNoticeBtn {
+            width: 280px;
+            height: 50px;
+            border-radius: 25px;
+            background-color: #5cb85c;
+            color: #FFF;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+        }
+        #confirmNoticeBtn:hover {
+            background-color: #4cae4c;
+        }
+        #confirmNoticeBtn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .hidden {
+            display: none !important;
+        }
+    </style>
 
 </head>
 <body>
 
-<div></div>
+    <!-- 通知确认区域 -->
+    <div id="noticeContainer">
+        <h3>合同通知确认</h3>
+        <p>请仔细阅读以下通知内容，确认后将继续跳转</p>
+        <div id="loadingNotice">正在加载通知内容...</div>
+        <iframe id="noticePdfFrame" class="hidden"></iframe>
+        <div id="noticeActions" class="hidden">
+            <button type="button" id="confirmNoticeBtn">我已阅读并确认</button>
+        </div>
+    </div>
 
 <script src="/assets/altogether/js/jquery-2.0.3.min.js"></script>
 <script type="text/javascript">
 
+    var noticeConfirmed = false; // 通知确认状态
+    var redirectUrl = null; // 重定向URL
+    var redirectArgs = null; // 重定向参数
 
     //获取url属性值
     function getQueryString(name) {
@@ -24,55 +101,203 @@
         var r = window.location.search.substr(1).match(reg);
         if (r != null) return unescape(r[2]); return null;
     }
-    
-    var url = "../../redirectDecorationContract.do";
+
     var dcid = getQueryString('dcid');
     var type = getQueryString('type');
     var module = getQueryString('module');
-    
-    var args = {
-        "decorationContract.dcid": dcid,
-        "decorationContract.type": type,
-        "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
-    }
-    
-    if(module && module == "payment"){
-    
-        url = "../../rediretPaymentContract.do";
-        
-        args = {
-            "paymentContract.pcid": dcid,
-            "paymentContract.type": type,
-            "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+
+    // 初始化通知确认流程
+    function initNoticeConfirmation() {
+        // 只有装饰合同模块需要通知确认
+        if (!module || module !== "payment") {
+            // 非付款模块，直接执行重定向
+            executeRedirect();
+            return;
         }
-    }
-    
-    if(module && module == "personel"){
-    
-        url = "../../redirectUserContract.do";
-        
-        args = {
-            "userContract.ucid": dcid,
-            "userContract.type": type,
-            "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+
+        if (!dcid) {
+            // 没有合同ID，直接执行重定向
+            executeRedirect();
+            return;
         }
+
+        // 获取装饰合同信息，检查通知确认状态
+        checkNoticeStatus();
     }
 
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: url,
-        data: args,
-        cache: false,
-        success: function (msg) {
-            if (msg.errorCode == 0) {
-                //window.location.href = msg.redirect;
-                window.location.replace(msg.redirect + '&timestamp=' + new Date().getTime() + Math.random());
-                return true;
+    /**
+     * 检查通知确认状态
+     */
+    function checkNoticeStatus() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "../../queryDecorationContract.do",
+            data: {
+                "decorationContract.dcid": dcid,
+                "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+            },
+            cache: false,
+            success: function (res) {
+                if (res.errorCode == 0 && res.decorationContract) {
+                    var contract = res.decorationContract;
+
+                    // 判断noticeStatus是否已确认 (1表示已确认)
+                    if (contract.noticeStatus == 1) {
+                        // 已确认，直接执行重定向
+                        noticeConfirmed = true;
+                        executeRedirect();
+                    } else {
+                        // 未确认，加载通知内容
+                        loadNoticeContent();
+                    }
+                } else {
+                    // 获取合同信息失败，直接执行重定向
+                    executeRedirect();
+                }
+            },
+            error: function () {
+                // 请求失败，直接执行重定向
+                executeRedirect();
+            }
+        });
+    }
+
+    /**
+     * 加载通知内容
+     */
+    function loadNoticeContent() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "../../queryContractByCid.do",
+            data: {
+                "contract.dcid": dcid,
+                "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+            },
+            cache: false,
+            success: function (res) {
+                if (res.errorCode == 0 && res.contract) {
+                    var contract = res.contract;
+
+                    // 判断noticePath是否存在
+                    if (contract.noticePath && contract.noticePath.length > 0) {
+                        // 显示通知PDF
+                        showNoticePdf(contract.noticePath);
+                    } else {
+                        // 没有通知文件，直接执行重定向
+                        executeRedirect();
+                    }
+                } else {
+                    // 获取失败，直接执行重定向
+                    executeRedirect();
+                }
+            },
+            error: function () {
+                // 请求失败，直接执行重定向
+                executeRedirect();
+            }
+        });
+    }
+
+    /**
+     * 显示通知PDF
+     */
+    function showNoticePdf(noticePath) {
+        $('#loadingNotice').addClass('hidden');
+        $('#noticePdfFrame').removeClass('hidden');
+        $('#noticeActions').removeClass('hidden');
+        $('#noticeContainer').show();
+
+        // 设置PDF路径
+        $('#noticePdfFrame').attr('src', noticePath);
+    }
+
+    /**
+     * 确认通知按钮点击事件
+     */
+    $("#confirmNoticeBtn").click(function () {
+        $(this).prop('disabled', true).text('确认中...');
+
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "../../noticeDecorationContract.do",
+            data: {
+                "decorationContract.dcid": dcid,
+                "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+            },
+            cache: false,
+            success: function (res) {
+                if (res.errorCode == 0) {
+                    noticeConfirmed = true;
+                    // 隐藏通知区域，执行重定向
+                    $('#noticeContainer').hide();
+                    executeRedirect();
+                } else {
+                    alert(res.errorMsg || '确认失败');
+                    $("#confirmNoticeBtn").prop('disabled', false).text('我已阅读并确认');
+                }
+            },
+            error: function () {
+                alert('网络错误，请重试');
+                $("#confirmNoticeBtn").prop('disabled', false).text('我已阅读并确认');
+            }
+        });
+    });
+
+    /**
+     * 执行重定向
+     */
+    function executeRedirect() {
+        if (!redirectUrl) {
+            // 准备重定向参数
+            if (module && module == "payment") {
+                redirectUrl = "../../rediretPaymentContract.do";
+                redirectArgs = {
+                    "paymentContract.pcid": dcid,
+                    "paymentContract.type": type,
+                    "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+                }
+            } else if (module && module == "personel") {
+                redirectUrl = "../../redirectUserContract.do";
+                redirectArgs = {
+                    "userContract.ucid": dcid,
+                    "userContract.type": type,
+                    "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+                }
             } else {
-                alert(msg.errorMsg);
+                redirectUrl = "../../redirectDecorationContract.do";
+                redirectArgs = {
+                    "decorationContract.dcid": dcid,
+                    "decorationContract.type": type,
+                    "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+                }
             }
         }
+
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: redirectUrl,
+            data: redirectArgs,
+            cache: false,
+            success: function (msg) {
+                if (msg.errorCode == 0) {
+                    window.location.replace(msg.redirect + '&timestamp=' + new Date().getTime() + Math.random());
+                } else {
+                    alert(msg.errorMsg);
+                }
+            },
+            error: function () {
+                alert('请求失败，请重试');
+            }
+        });
+    }
+
+    // 页面加载时初始化
+    $(document).ready(function() {
+        initNoticeConfirmation();
     });
 
 </script>
