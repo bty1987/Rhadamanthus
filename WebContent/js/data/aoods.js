@@ -158,38 +158,31 @@ $(function() {
         "companyType": aoods.pageType
     });
 
-    searcher.button([{
-        id: "add",
-        name: "添加",
-        clazz: "btn-yellow",
-        icon: "icon-plus"
-    }]);
-
     searcher.button(function () {
 
+        var $btnGroup = $("<div></div>").addClass("btn-group");
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary').attr('id', 'add').css({
+            'margin-left': '4px'
+        }).appendTo($btnGroup);
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
         var $importGroup = $("<div></div>").addClass("btn-group");
-        var $addaImport = $('<a></a>').addClass('btn btn-minier btn-warning dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'importAoods').css({
+        var $addaImport = $('<a></a>').addClass('btn btn-minier btn-warning').attr("id", "importAoodsBtn").css({
             'margin-left': '4px'
         }).appendTo($importGroup);
         $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImport);
-        $('<span></span>').text('导入').appendTo($addaImport);
-        $('<span></span>').addClass('icon-caret-down icon-on-right').appendTo($addaImport);
-
-        var $addImportUl = $("<ul></ul>").addClass("dropdown-menu dropdown-inverse").appendTo($importGroup);
-        var $importAoods = $("<li></li>").append($("<a></a>").attr("id", "importAoodsBtn").text("导入辅材")).appendTo($addImportUl);
+        $('<span></span>').text('导入辅材').appendTo($addaImport);
 
         var $updateGroup = $("<div></div>").addClass("btn-group");
-        var $addaUpdate = $('<a></a>').addClass('btn btn-minier btn-danger dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'updateAoods').css({
+        var $addaUpdate = $('<a></a>').addClass('btn btn-minier btn-danger').attr("id", "statusAoodsBtn").css({
             'margin-left': '4px'
         }).appendTo($updateGroup);
         $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaUpdate);
-        $('<span></span>').text('更新').appendTo($addaUpdate);
-        $('<span></span>').addClass('icon-caret-down icon-on-right').appendTo($addaUpdate);
+        $('<span></span>').text('更新状态').appendTo($addaUpdate);
 
-        var $addUpdateUl = $("<ul></ul>").addClass("dropdown-menu dropdown-inverse").appendTo($updateGroup);
-        var $statusAoods = $("<li></li>").append($("<a></a>").attr("id", "statusAoodsBtn").text("更新辅材状态")).appendTo($addUpdateUl);
-
-        return [$importGroup, $updateGroup];
+        return [$btnGroup, $importGroup, $updateGroup];
     });
 
     if (aoods.pageType == "company") {
