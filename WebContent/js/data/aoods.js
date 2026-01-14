@@ -39,14 +39,20 @@ $(function() {
             editStorenum: com.focusPage('#storenum', "#editLayer"),
 
             ccompany: com.focusPage("#ccompany", "#copyLayer"),
-            quotationVersion: com.focusPage("#quotationVersion", "#quotationVersionModal")
+            quotationVersion: com.focusPage("#quotationVersion", "#quotationVersionModal"),
+
+            executeDatesAoods: com.focusPage("#executeDatesAoods"),
+            executeTimesAoods: com.focusPage("#executeTimesAoods"),
+            aoodsFilePath: com.focusPage("#aoodsFilePath")
         },
 
         btns: {
             submitBtn: com.focusPage("#submitBtn", "#addLayer"),
             editBtn: com.focusPage("#editBtn", "#editLayer"),
             copyBtn: com.focusPage("#copyBtn", "#copyLayer"),
-            confirmItemBtn: com.focusPage("#confirmItemBtn", "#quotationVersionModal")
+            confirmItemBtn: com.focusPage("#confirmItemBtn", "#quotationVersionModal"),
+            aoodsImportBtn: com.focusPage("#aoodsImportBtn"),
+            aoodsExportBtn: com.focusPage("#aoodsExportBtn")
         },
 
         modals: {
@@ -123,6 +129,19 @@ $(function() {
         copyAoods();
     });
 
+    com.datetime(aoods.items.executeDatesAoods, "date", false);
+    com.datetime(aoods.items.executeTimesAoods, "time", false);
+
+    aoods.btns.aoodsImportBtn.click(function() {
+
+        importAoods();
+    });
+
+    aoods.btns.aoodsExportBtn.click(function() {
+
+        exportAoods();
+    });
+
     com.initTypeahead(aoods.items.goodsName, api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name");
 
     var searcher = new Searcher();
@@ -145,6 +164,33 @@ $(function() {
         clazz: "btn-yellow",
         icon: "icon-plus"
     }]);
+
+    searcher.button(function () {
+
+        var $importGroup = $("<div></div>").addClass("btn-group");
+        var $addaImport = $('<a></a>').addClass('btn btn-minier btn-warning dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'importAoods').css({
+            'margin-left': '4px'
+        }).appendTo($importGroup);
+        $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImport);
+        $('<span></span>').text('导入').appendTo($addaImport);
+        $('<span></span>').addClass('icon-caret-down icon-on-right').appendTo($addaImport);
+
+        var $addImportUl = $("<ul></ul>").addClass("dropdown-menu dropdown-inverse").appendTo($importGroup);
+        var $importAoods = $("<li></li>").append($("<a></a>").attr("id", "importAoodsBtn").text("导入辅材")).appendTo($addImportUl);
+
+        var $updateGroup = $("<div></div>").addClass("btn-group");
+        var $addaUpdate = $('<a></a>').addClass('btn btn-minier btn-danger dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'updateAoods').css({
+            'margin-left': '4px'
+        }).appendTo($updateGroup);
+        $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaUpdate);
+        $('<span></span>').text('更新').appendTo($addaUpdate);
+        $('<span></span>').addClass('icon-caret-down icon-on-right').appendTo($addaUpdate);
+
+        var $addUpdateUl = $("<ul></ul>").addClass("dropdown-menu dropdown-inverse").appendTo($updateGroup);
+        var $statusAoods = $("<li></li>").append($("<a></a>").attr("id", "statusAoodsBtn").text("更新辅材状态")).appendTo($addUpdateUl);
+
+        return [$importGroup, $updateGroup];
+    });
 
     if (aoods.pageType == "company") {
         searcher.button([{
@@ -326,6 +372,36 @@ $(function() {
 
         com.cleanItems(aoods.items);
         com.popup4model("#copyLayer", "复制");
+    });
+
+    com.focusPage('#importAoodsBtn', '#pagenation').on("click", function() {
+
+        aoods.keyword = "import_aoods";
+
+        var form = com.focusPage("#importAoodsForm");
+
+        com.focusPage("#aoodsUploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#aoodsFileUpload").removeClass("hide");
+
+        aoods.btns.aoodsImportBtn.removeClass("hide");
+        aoods.btns.aoodsExportBtn.addClass("hide");
+
+        com.popup4model("#importAoods", "导入辅材");
+    });
+
+    com.focusPage('#statusAoodsBtn', '#pagenation').on("click", function() {
+
+        aoods.keyword = "update_status_aoods";
+
+        var form = com.focusPage("#statusAoodsForm");
+
+        com.focusPage("#aoodsUploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#aoodsFileUpload").removeClass("hide");
+
+        aoods.btns.aoodsImportBtn.removeClass("hide");
+        aoods.btns.aoodsExportBtn.addClass("hide");
+
+        com.popup4model("#statusAoods", "更新辅材状态");
     });
 
     function saveData() {
@@ -587,6 +663,104 @@ $(function() {
         aoods.modals.quotationVersionModal.modal("hide");
         aoods.modals.addQuotaionItemModal.modal("show");
 
+    });
+
+    function importAoods() {
+
+        if (com.validate("aoodsUploaddiv")) {
+            return false;
+        }
+
+        var filePath = aoods.items.aoodsFilePath.val();
+
+        if (filePath == null || filePath == "") {
+            com.showAlert(com.warning, "上传文件不能为空");
+            return false;
+        }
+
+        var args = filePath;
+
+        var date = aoods.items.executeDatesAoods.val();
+        var time = aoods.items.executeTimesAoods.val();
+
+        var executeTime = date.replace(/-/g, '').substr(2) + time.replace(/:/g, '').substr(0, 4);
+
+        var times = aoods.items.executeDatesAoods.val() + ' ' + aoods.items.executeTimesAoods.val();
+        var checkTime = new Date(times);
+
+        if (!planUtils.TimeComparison(checkTime, config.planTimeLimit)) {
+            com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟");
+            return false;
+        }
+
+        var options = {
+            "plan.task.keyWord": aoods.keyword,
+            "plan.executeTime": executeTime,
+            "plan.args": args
+        };
+
+        com.post(api.information.createPlan, options, function(res) {
+
+            com.showAlert(com.info, "计划创建成功");
+            com.closePopup();
+        });
+    }
+
+    function exportAoods() {
+
+        if (com.validate("aoodsUploaddiv")) {
+            return false;
+        }
+
+        var filtersName = ['data-aoods-name', 'data-aoods-type', 'data-aoods-type-sort', 'data-aoods-status', 'data-aoods-bompany', 'data-aoods-atttype'];
+
+        var args = "";
+
+        $.each(filtersName, function(i, v) {
+
+            var val = com.focusPage("[name='" + v + "']").val();
+            var columnName = $("[name='" + v + "']").attr("data-rqs");
+
+            if (val != "undefined" && val != null && val != "") {
+                args = args + columnName + "-" + val + ",";
+            }
+        });
+
+        if (args == null || args == "") {
+            args = ","
+        }
+
+        var date = aoods.items.executeDatesAoods.val();
+        var time = aoods.items.executeTimesAoods.val();
+
+        var executeTime = date.replace(/-/g, '').substr(2) + time.replace(/:/g, '').substr(0, 4);
+
+        var times = aoods.items.executeDatesAoods.val() + ' ' + aoods.items.executeTimesAoods.val();
+        var checkTime = new Date(times);
+
+        if (!planUtils.TimeComparison(checkTime, config.planTimeLimit)) {
+            com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟");
+            return false;
+        }
+
+        var options = {
+            "plan.task.keyWord": aoods.keyword,
+            "plan.executeTime": executeTime,
+            "plan.args": args
+        };
+
+        com.post(api.information.createPlan, options, function(res) {
+
+            com.showAlert(com.info, "计划创建成功");
+            com.closePopup();
+        });
+    }
+
+    com.uploadify("#aoodsAttachment", "上传文件", api.common.uploadOther, 'btn btn-sm btn-primary lineheight0', "*.xls", {
+        'uploadType': 3
+    }, 1, function(data) {
+
+        0 == data.errorCode ? com.focusPage("#aoodsFilePath").val(data.resUrl) : alert(data.errorMsg);
     });
 
 });
