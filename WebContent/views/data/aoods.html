@@ -1,4 +1,4 @@
-﻿<div class="row">
+<div class="row">
     <div class="col-xs-12">
         <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
         <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
@@ -342,9 +342,127 @@
     </div>
 </div>
 
+<div id="importAoods" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="importAoodsForm">
+
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 名称 商品ID 定材ID 分类辅类ID 排序辅类ID 归属公司ID 业务类型 结算价 售价 工程节点ID 定额单位 定额数量 库房单位 库房数量</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col13">
+                            <div class="cell">名称</div>
+                            <div class="cell">商品ID</div>
+                            <div class="cell">定材ID</div>
+                            <div class="cell">分类辅类ID</div>
+                            <div class="cell">排序辅类ID</div>
+                            <div class="cell">归属公司ID</div>
+                            <div class="cell">业务类型</div>
+                            <div class="cell">结算价</div>
+                            <div class="cell">售价</div>
+                            <div class="cell">工程节点ID</div>
+                            <div class="cell">定额单位</div>
+                            <div class="cell">定额数量</div>
+                            <div class="cell">库房单位</div>
+                            <div class="cell">库房数量</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col13">
+                            <div class="cell">测试辅材名称</div>
+                            <div class="cell">1001</div>
+                            <div class="cell">2001</div>
+                            <div class="cell">1</div>
+                            <div class="cell">2</div>
+                            <div class="cell">1</div>
+                            <div class="cell">0</div>
+                            <div class="cell">100.000</div>
+                            <div class="cell">120.000</div>
+                            <div class="cell">1</div>
+                            <div class="cell">个</div>
+                            <div class="cell">1.000</div>
+                            <div class="cell">个</div>
+                            <div class="cell">1.000</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div id="statusAoods" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="statusAoodsForm">
+
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 辅材ID 辅材名称 状态(0:启用, 1:禁用) 归属公司ID</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col4">
+                            <div class="cell">辅材ID</div>
+                            <div class="cell">辅材名称</div>
+                            <div class="cell">状态</div>
+                            <div class="cell">归属公司ID</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col4">
+                            <div class="cell">1001</div>
+                            <div class="cell">测试辅材</div>
+                            <div class="cell">0</div>
+                            <div class="cell">1</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="form-group hide" style="margin: 0px;" id="aoodsUploaddiv">
+	<div id="aoodsFileUpload" class="hide">
+	    <label class="col-sm-3 control-label no-padding-right" for="aoodsAttachment"></label>
+	    <div class="col-sm-9">
+	        <div id="aoodsAttachment"></div>
+	        <input type="text" class="hidden" id="aoodsFilePath"/>
+	    </div>
+	</div>
+
+	<label class="col-sm-3 control-label no-padding-right" for="executeDatesAoods"><strong>执行日期</strong></label>
+	<div class="col-sm-9">
+	    <input class="date-picker v_required " id="executeDatesAoods" type="text" readonly="readonly"
+	           data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+	</div>
+
+	<label class="col-sm-3 control-label no-padding-right" for="executeTimesAoods"><strong>执行时间</strong></label>
+	<div class="col-sm-9">
+	    <div class="bootstrap-timepicker">
+	        <input id="executeTimesAoods" type="text" class="v_required"/>
+	    </div>
+	</div>
+
+	<label class="col-sm-3 control-label no-padding-right"></label>
+	<div class="col-sm-9">
+		<a class="btn btn-success btn-sm" id="aoodsImportBtn">导入</a>
+		<a class="btn btn-sm" id="aoodsExportBtn">导出</a>
+	</div>
+</div>
+
 <div id="miniPopUp"></div>
 <div id="optPopUp" class="portlet box page-content"></div>
 
 <script type="text/javascript">
-    $.loadScript(['js/data/aoods.js']);
+    $.loadScript(['js/utils/planUtils.js','js/data/aoods.js']);
 </script>
