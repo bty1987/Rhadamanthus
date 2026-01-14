@@ -19,6 +19,7 @@ jQuery(function($) {
         customer: null,
         decoration: null,
         holonomy: null,
+        midpack: null,
         quotation: null,
 
         cover: {},
@@ -138,6 +139,25 @@ jQuery(function($) {
         contractEdit.quotation = quotation;
     });
 
+    var updateMaterialPrice = function() {
+        var materialPrice = 0;
+        var servicePrice = 0;
+
+        if (contractEdit.holonomy && contractEdit.holonomy.materialPrice > 0) {
+            materialPrice = contractEdit.holonomy.materialPrice;
+            servicePrice = contractEdit.holonomy.servicePrice || 0;
+        } else if (contractEdit.midpack && contractEdit.midpack.materialPrice > 0) {
+            materialPrice = contractEdit.midpack.materialPrice;
+            servicePrice = contractEdit.midpack.servicePrice || 0;
+        }
+
+        com.focusPage("#con-material-total", "#form").val(parseInt(materialPrice));
+        com.focusPage("#con-service-total", "#form").val(servicePrice);
+
+        contractEdit.cover["con-payment-first"] = utils.accMul(materialPrice, 0.5);
+        contractEdit.cover["con-payment-final"] = utils.accMul(materialPrice, 0.5);
+    };
+
     com.post(api.decoration.queryDecorationHolonomy, {
         "decorationHolonomy.decoration.orderId": contractEdit.decorationOrderId
     }, function(res) {
@@ -150,13 +170,26 @@ jQuery(function($) {
         if (!holonomy.materialPrice)
             holonomy.materialPrice = 0;
 
-        com.focusPage("#con-material-total", "#form").val(parseInt(holonomy.materialPrice));
-        com.focusPage("#con-service-total", "#form").val(holonomy.servicePrice);
-
-        contractEdit.cover["con-payment-first"] = utils.accMul(holonomy.materialPrice, 0.5);
-        contractEdit.cover["con-payment-final"] = utils.accMul(holonomy.materialPrice, 0.5);
-
         contractEdit.holonomy = holonomy;
+
+        updateMaterialPrice();
+    });
+
+    com.post(api.decoration.queryDecorationMidpack, {
+        "decorationMidpack.decoration.orderId": contractEdit.decorationOrderId
+    }, function(res) {
+
+        var midpack = res.decorationMidpack;
+
+        if (!midpack.servicePrice)
+            midpack.servicePrice = 0;
+
+        if (!midpack.materialPrice)
+            midpack.materialPrice = 0;
+
+        contractEdit.midpack = midpack;
+
+        updateMaterialPrice();
     });
 
     com.focusPage("#preservation").unbind("click").on('click', function() {
