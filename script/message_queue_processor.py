@@ -176,11 +176,14 @@ class MessageQueueProcessor:
             )
 
             if response.status_code == 200:
-                result = response.json()
+                try:
+                    result = response.json()
+                except ValueError:
+                    result = {"raw_response": response.text}
                 logger.info(f"ERP事件响应: {result}")
                 return result
             else:
-                logger.error(f"ERP事件发布失败: HTTP {response.status_code}")
+                logger.error(f"ERP事件发布失败: HTTP {response.status_code}, response={response.text[:200]}")
                 return None
 
         except requests.exceptions.Timeout:
@@ -190,26 +193,29 @@ class MessageQueueProcessor:
             logger.error(f"发布事件异常: {e}")
             return None
 
-    def update_message_status(self, mqid):
+    def update_message_status(self, mqid, success=True):
         """
-        更新消息队列状态为已处理
+        更新消息队列状态
         :param mqid: 消息队列ID
+        :param success: 是否成功（True=status=1, False=status=2）
         :return: 是否成功
         """
         try:
             conn = self.get_connection()
             cursor = conn.cursor()
 
+            status = 1 if success else 2
             sql = """
                 UPDATE information.messagequeuing
-                SET status = 1, finishtime = NOW()
+                SET status = %s, finishtime = NOW()
                 WHERE mqid = %s
             """
-            cursor.execute(sql, (mqid,))
+            cursor.execute(sql, (status, mqid))
             conn.commit()
             cursor.close()
 
-            logger.info(f"更新消息状态成功: mqid={mqid}")
+            status_text = "成功" if success else "失败"
+            logger.info(f"更新消息状态{status_text}: mqid={mqid}, status={status}")
             return True
 
         except Exception as e:
@@ -251,18 +257,33 @@ class MessageQueueProcessor:
                 response = self.publish_event(operation, args, orderId)
 
                 if response is not None:
+                    # 判断是否成功：支持多种返回格式
+                    # 1. {"code": 200} 或 {"code": "200"}
+                    # 2. {"success": true}
+                    # 3. HTTP 200 且有响应内容即视为成功
+                    is_success = False
+
                     code = response.get('code')
-                    if code == 200:
-                        # 更新状态为已处理
-                        if self.update_message_status(mqid):
+                    if code == 200 or code == '200' or code == 0 or code == '0':
+                        is_success = True
+                    elif response.get('success') is True:
+                        is_success = True
+                    elif 'raw_response' in response and response.get('raw_response'):
+                        # HTTP 200 但 JSON 解析失败，有原始响应视为成功
+                        is_success = True
+
+                    # 更新状态（成功=1, 失败=2）
+                    if self.update_message_status(mqid, success=is_success):
+                        if is_success:
                             success_count += 1
                         else:
                             fail_count += 1
                     else:
-                        logger.error(f"事件返回失败: mqid={mqid}, response={response}")
                         fail_count += 1
                 else:
+                    # 请求失败（超时、网络错误等），标记为失败
                     logger.error(f"事件发布失败: mqid={mqid}")
+                    self.update_message_status(mqid, success=False)
                     fail_count += 1
 
             logger.info(f"消息处理完成: 成功={success_count}, 失败={fail_count}")
