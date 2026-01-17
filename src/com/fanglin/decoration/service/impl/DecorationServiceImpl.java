@@ -1260,6 +1260,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "changeDecorationForAdvance", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_INFO_UPDATED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "changeDecorationForAdvance", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"TEAM_PLAN_DESIGNER_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 	}
 
 	@Override

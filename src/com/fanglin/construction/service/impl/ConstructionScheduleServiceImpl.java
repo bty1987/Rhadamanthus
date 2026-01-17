@@ -259,6 +259,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "beginConstructionSchedule", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"PROJECT_NODE_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "beginConstructionSchedule", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
