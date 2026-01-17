@@ -61,6 +61,9 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 	@Autowired
 	private DingTalkApprovalService approvalService;
 
+	@Autowired
+	private com.fanglin.information.dao.MessageQueuingDao messageQueuingDao;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int submitApprovalForDecorationTerminal(ApprovalVO approvalVO, ApprovalDecorationTerminalVO approvalDecorationTerminalVO, List<ApprovalDecorationTerminalItemVO> approvalDecorationTerminalItemVOs, String userId, int company, String code, String forms) throws FLException {
@@ -146,6 +149,15 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 
 			approvalDao.update(approvalPO);
 		}
+
+		// 生成消息队列数据
+		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
+		mq.setOperation("submitApprovalForDecorationTerminal");
+		mq.setOrderId(orderId);
+		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\"}");
+		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
+		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
+		messageQueuingDao.save(mq);
 
 		return 0;
 	}

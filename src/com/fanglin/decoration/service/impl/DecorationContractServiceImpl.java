@@ -66,6 +66,8 @@ import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageQueuingPO;
 
 @Service("decorationContractService")
 @Transactional(readOnly = true)
@@ -130,6 +132,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Autowired
 	private CustomerUserRuleDao customerUserRuleDao;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
 
 	@Override
 	public List<DecorationContractVO> queryDecorationContractByOrderId(DecorationContractVO decorationContract) throws FLException {
@@ -617,6 +622,15 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			}
 		}
 
+		// 生成消息队列数据
+		MessageQueuingPO mq = new MessageQueuingPO();
+		mq.setOperation("signDecorationContract");
+		mq.setOrderId(orderId);
+		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"userId\":" + userId + "}");
+		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
+		mq.setStatus(MessageQueuingPO.STATUS_PENDING_INT);
+		messageQueuingDao.save(mq);
+
 		return 0;
 	}
 
@@ -666,6 +680,15 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		// List<DecorationBelongPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryDecorationBelongForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
 		// List<DecorationBelongPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryDecorationBelongForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
 		// DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, operater, decorationPO.getOrderTotalPrice(), -1, decorationOperatePO.getType());
+
+		// 生成消息队列数据
+		MessageQueuingPO mq = new MessageQueuingPO();
+		mq.setOperation("resignDecorationContract");
+		mq.setOrderId(orderId);
+		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"userId\":" + userId + "}");
+		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
+		mq.setStatus(MessageQueuingPO.STATUS_PENDING_INT);
+		messageQueuingDao.save(mq);
 
 		return 0;
 	}
@@ -747,6 +770,15 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationOperateDao.save(new DecorationOperatePO().prosign(orderId, operater)); // 创建装修单操作信息
+
+		// 生成消息队列数据
+		MessageQueuingPO mq = new MessageQueuingPO();
+		mq.setOperation("presignDecorationContract");
+		mq.setOrderId(orderId);
+		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"userId\":" + userId + "}");
+		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
+		mq.setStatus(MessageQueuingPO.STATUS_PENDING_INT);
+		messageQueuingDao.save(mq);
 
 		return 0;
 	}

@@ -34,6 +34,9 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 	@Autowired
 	private SurveyTemplateDao surveyTemplateDao;
 
+	@Autowired
+	private com.fanglin.information.dao.MessageQueuingDao messageQueuingDao;
+
 	@Override
 	public void pageConstructionNode(Paging paging, List<Filter> filters, int company) {
 
@@ -124,6 +127,14 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setProset(constructionNodeVO.getProset());
 
 		constructionNodeDao.save(constructionNodePO);
+
+		// 生成消息队列数据
+		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
+		mq.setOperation("addConstructionNode");
+		mq.setArgs("{\"cnid\":" + constructionNodePO.getCnid() + "}");
+		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
+		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
+		messageQueuingDao.save(mq);
 	}
 
 	@Override
@@ -167,6 +178,14 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setSalaryLimit(constructionNodeVO.getSalaryLimit());
 
 		constructionNodeDao.update(constructionNodePO);
+
+		// 生成消息队列数据
+		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
+		mq.setOperation("updateConstructionNode");
+		mq.setArgs("{\"cnid\":" + constructionNodeVO.getCnid() + "}");
+		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
+		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
+		messageQueuingDao.save(mq);
 	}
 
 	@Override
@@ -182,6 +201,14 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setStatus(constructionNodeVO.getStatus());
 
 		constructionNodeDao.update(constructionNodePO);
+
+		// 生成消息队列数据
+		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
+		mq.setOperation("updateConstructionNodeForStatus");
+		mq.setArgs("{\"cnid\":" + constructionNodeVO.getCnid() + ",\"status\":" + constructionNodeVO.getStatus() + "}");
+		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
+		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
+		messageQueuingDao.save(mq);
 	}
 
 }

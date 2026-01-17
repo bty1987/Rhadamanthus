@@ -44,6 +44,8 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.dingding.service.DingTalkApprovalService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -87,6 +89,9 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 	@Autowired
 	private DepartmentDao departmentDao;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -295,6 +300,15 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 		decorationAdditionDao.update(decorationAdditionPO);
 		decorationDao.update(decorationPO);
+
+		// 生成消息队列数据
+		MessageQueuingPO mq = new MessageQueuingPO();
+		mq.setOperation("approveForDecorationBelong");
+		mq.setOrderId(orderId);
+		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"userId\":" + approvalPO.getReceiver() + "}");
+		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
+		mq.setStatus(MessageQueuingPO.STATUS_PENDING_INT);
+		messageQueuingDao.save(mq);
 
 		return 0;
 	}
