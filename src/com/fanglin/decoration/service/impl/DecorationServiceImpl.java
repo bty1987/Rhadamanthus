@@ -1258,13 +1258,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationDao.update(decorationPO);
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("changeDecorationForAdvance");
-		mq.setOrderId(orderId);
-		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\"}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "changeDecorationForAdvance", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_INFO_UPDATED\"}"));
 	}
 
 	@Override
@@ -1449,13 +1443,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationDao.update(decorationPO);
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("changeDecorationForStatus");
-		mq.setOrderId(orderId);
-		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"status\":" + status + ",\"userId\":\"" + userId + "\"}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "changeDecorationForStatus", "{\"orderId\":\"" + orderId + "\",\"status\":" + status + ",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
 
 		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单:%s状态修改,原状态:%s,修改状态为:%s.", orderId, oldStatus, status)));
 	}
@@ -1535,13 +1523,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationOperateDao.save(new DecorationOperatePO().obsolete(decorationPO.getOrderId(), operater));
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("obsoleteDecoration");
-		mq.setOrderId(decorationPO.getOrderId());
-		mq.setArgs("{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":" + userId + "}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "obsoleteDecoration", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":" + userId + ",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
 	}
 
 	@Override
@@ -1676,13 +1658,7 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("terminalDecoration");
-		mq.setOrderId(orderId);
-		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"userId\":" + userId + "}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":" + userId + ",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
 	}
 
 	@Override

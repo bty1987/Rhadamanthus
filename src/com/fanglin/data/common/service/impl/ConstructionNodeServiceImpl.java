@@ -129,12 +129,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodeDao.save(constructionNodePO);
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("addConstructionNode");
-		mq.setArgs("{\"cnid\":" + constructionNodePO.getCnid() + "}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(null, "addConstructionNode", "{\"cnid\":" + constructionNodePO.getCnid() + ",\"event\":\"NODE_CREATED\"}"));
 	}
 
 	@Override
@@ -180,12 +175,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodeDao.update(constructionNodePO);
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("updateConstructionNode");
-		mq.setArgs("{\"cnid\":" + constructionNodeVO.getCnid() + "}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(null, "updateConstructionNode", "{\"cnid\":" + constructionNodeVO.getCnid() + ",\"event\":\"NODE_UPDATED\"}"));
 	}
 
 	@Override
@@ -203,12 +193,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodeDao.update(constructionNodePO);
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("updateConstructionNodeForStatus");
-		mq.setArgs("{\"cnid\":" + constructionNodeVO.getCnid() + ",\"status\":" + constructionNodeVO.getStatus() + "}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(null, "updateConstructionNodeForStatus", "{\"cnid\":" + constructionNodeVO.getCnid() + ",\"status\":" + constructionNodeVO.getStatus() + ",\"event\":\"NODE_UPDATED\"}"));
 	}
 
 }

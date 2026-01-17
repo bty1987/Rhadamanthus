@@ -142,7 +142,7 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 		decorationDao.update(decorationPO);
 
-		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "makeDecorationAccount", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "makeDecorationAccount", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
 	}
 
 	@Override

@@ -258,13 +258,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionScheduleVO.setStartTime(constructionSchedulePO.getStartTime());
 
 		// 生成消息队列数据
-		MessageQueuingPO mq = new MessageQueuingPO();
-		mq.setOperation("beginConstructionSchedule");
-		mq.setOrderId(decorationPO.getOrderId());
-		mq.setArgs("{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":" + userId + "}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "beginConstructionSchedule", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":" + userId + ",\"event\":\"PROJECT_NODE_STATUS_CHANGED\"}"));
 
 		return 0;
 	}
@@ -344,13 +338,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionScheduleVO.setEndTime(constructionSchedulePO.getEndTime());
 
 		// 生成消息队列数据
-		MessageQueuingPO mq = new MessageQueuingPO();
-		mq.setOperation("finishConstructionSchedule");
-		mq.setOrderId(decorationPO.getOrderId());
-		mq.setArgs("{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":" + userId + "}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "finishConstructionSchedule", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":" + userId + ",\"event\":\"PROJECT_NODE_STATUS_CHANGED\"}"));
 
 		return 0;
 	}

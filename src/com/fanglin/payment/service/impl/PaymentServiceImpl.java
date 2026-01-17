@@ -288,13 +288,7 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("collectPayment");
-		mq.setOrderId(paymentVO.getOrderId());
-		mq.setArgs("{\"orderId\":\"" + paymentVO.getOrderId() + "\",\"userId\":\"" + userId + "\"}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(paymentVO.getOrderId(), "collectPayment", "{\"orderId\":\"" + paymentVO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
 
 		return 0;
 	}
