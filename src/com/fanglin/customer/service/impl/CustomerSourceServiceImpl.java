@@ -590,7 +590,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			customerChanceVO.setCcid(customerChancePO.getCcid());
+			customerChanceVO.setOrderId(customerChancePO.getOrderId());
 			customerChanceVO.setBelonger(new UserBaseVO(belonger.getUserId()));
+			customerChanceVO.setIssuer(new UserBaseVO(issuer.getUserId()));
+			customerChanceVO.setIssueTime(customerChancePO.getIssueTime());
 
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("自动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s),机会数:%s,剩余数:%s,轮询数:%s", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo(), Arith.div(customerUserRulePO.getChance(), 1000.0), Arith.div(customerUserRulePO.getSurplus(), 1000.0), customerUserRulePO.getPolling()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("分配规则,%s,%s", customerDeptRulePO.getFocus(), customerUserRuleItemPO.getCuriid()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
@@ -631,6 +634,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChanceDao.save(customerChancePO);
 
 			customerChanceVO.setCcid(customerChancePO.getCcid());
+			customerChanceVO.setOrderId(customerChancePO.getOrderId());
+			if (customerChancePO.getBelonger() != null) {
+				customerChanceVO.setBelonger(new UserBaseVO(customerChancePO.getBelonger().getUserId()));
+			}
+			customerChanceVO.setIssuer(new UserBaseVO(issuer.getUserId()));
+			customerChanceVO.setIssueTime(customerChancePO.getIssueTime());
 
 			String message = String.format("新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), customerSourcePO.getHouseNumber());
 
@@ -670,6 +679,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChanceDao.save(customerChancePO);
 
 			customerChanceVO.setCcid(customerChancePO.getCcid());
+			customerChanceVO.setOrderId(customerChancePO.getOrderId());
+			if (customerChancePO.getBelonger() != null) {
+				customerChanceVO.setBelonger(new UserBaseVO(customerChancePO.getBelonger().getUserId()));
+			}
+			customerChanceVO.setIssuer(new UserBaseVO(issuer.getUserId()));
+			customerChanceVO.setIssueTime(customerChancePO.getIssueTime());
 
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动部门分配,部门:%s(%s),分区:%s(%s)", customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
@@ -713,7 +728,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChanceDao.save(customerChancePO);
 
 			customerChanceVO.setCcid(customerChancePO.getCcid());
+			customerChanceVO.setOrderId(customerChancePO.getOrderId());
 			customerChanceVO.setBelonger(new UserBaseVO(belonger.getUserId()));
+			customerChanceVO.setIssuer(new UserBaseVO(issuer.getUserId()));
+			customerChanceVO.setIssueTime(customerChancePO.getIssueTime());
 
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动人员分配,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 

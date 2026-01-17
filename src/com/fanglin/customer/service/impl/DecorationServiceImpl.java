@@ -234,6 +234,7 @@ public class DecorationServiceImpl implements DecorationService {
 	public int bindingCusDecoration(DecorationVO decorationVO, String unionId, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
 		log.info(String.format("Binding Decoration UnionId: %s, OrderId: %s.", unionId, decorationVO.getOrderId()));
+		System.out.println(String.format("Binding Decoration UnionId: %s, OrderId: %s.", unionId, decorationVO.getOrderId()));
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330010, "绑定订单失败,验证码错误");
@@ -275,6 +276,10 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (decorationPO == null) {
 			throw new FLException(330009, "无可绑定订单");
+		}
+
+		if (cecorationDao.queryCusDecorationByOrderId(decorationVO.getOrderId(), unionId) != null) {
+			throw new FLException(330009, "订单已绑定");
 		}
 
 		DecorationPO cecorationPO = new DecorationPO();

@@ -25,8 +25,10 @@ import com.fanglin.communion.dao.DepartmentPartnerDao;
 import com.fanglin.communion.po.CityProperPartnerPO;
 import com.fanglin.communion.po.DepartmentPartnerPO;
 import com.fanglin.construction.dao.ConstructionDao;
+import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.dao.ConstructionRecordDao;
 import com.fanglin.construction.dao.QualiterDao;
+import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionRecordPO;
 import com.fanglin.construction.po.QualiterPO;
@@ -55,6 +57,9 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 	@Autowired
 	private ConstructionDao constructionDao;
+
+	@Autowired
+	private ConstructionInfoDao constructionInfoDao;
 
 	@Autowired
 	private ConstructionRecordDao constructionRecordDao;
@@ -178,6 +183,12 @@ public class ConstructionServiceImpl implements ConstructionService {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
+		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(decorationPO.getOrderId());
+
+		if (constructionInfoPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
 		if (constructionVO.getDecoration() != null && constructionVO.getDecoration().getConpany() != null) {
 			decorationPO.setConpany(CompanyServiceImpl.decode(constructionVO.getDecoration().getConpany()));
 		}
@@ -193,6 +204,10 @@ public class ConstructionServiceImpl implements ConstructionService {
 		constructionDao.update(constructionPO);
 
 		decorationPO.setSupervisor(supervisor);
+
+		constructionInfoPO.setIsIssue(ConstructionInfoPO.ISISSUE_ISSUE_INT);
+
+		constructionInfoDao.update(constructionInfoPO);
 
 		UserPartnerPO partnerPO = userPartnerDao.queryUserPartner(supervisor.getUid(), UserPartnerPO.TYPE_SERV_INT, decorationPO.getCompany());
 
