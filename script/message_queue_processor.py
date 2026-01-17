@@ -154,13 +154,15 @@ class MessageQueueProcessor:
             }
 
             # 添加 orderId（必填）
-            params["orderId"] = orderId if orderId else args_dict.get("orderId")
+            if orderId:
+                params["orderId"] = orderId
+            elif "orderId" in args_dict:
+                params["orderId"] = args_dict.get("orderId")
 
-            # 只添加 args 中存在的字段
-            if "cnid" in args_dict:
-                params["cnid"] = args_dict.get("cnid")
-            if "userId" in args_dict:
-                params["userId"] = args_dict.get("userId")
+            # 动态传递 args 中所有字段（包括 cnid, userId, dpid, belongType, status 等）
+            for key, value in args_dict.items():
+                if key not in ("event", "orderId"):  # event 和 orderId 已处理
+                    params[key] = value
 
             logger.info(f"发布ERP事件: url={self.pm_url}, operation={operation}, params={params}")
 
