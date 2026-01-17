@@ -302,13 +302,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		decorationDao.update(decorationPO);
 
 		// 生成消息队列数据
-		MessageQueuingPO mq = new MessageQueuingPO();
-		mq.setOperation("approveForDecorationBelong");
-		mq.setOrderId(orderId);
-		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"userId\":" + approvalPO.getReceiver() + "}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", "{\"orderId\":\"" + orderId + "\",\"userId\":" + approvalPO.getReceiver() + ",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"}"));
 
 		return 0;
 	}

@@ -331,13 +331,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		constructionDao.update(constructionPO);
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("pretreatDrawLine");
-		mq.setOrderId(orderId);
-		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\"}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "pretreatDrawLine", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"SUPERVISOR_PRE_ASSIGNED\"}"));
 
 		return 0;
 	}
@@ -584,13 +578,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		}
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("successDrawLine");
-		mq.setOrderId(orderId);
-		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\"}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "successDrawLine", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"SNAPLINE_DONE\"}"));
 
 		return 0;
 	}

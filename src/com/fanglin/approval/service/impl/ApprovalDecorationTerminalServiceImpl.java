@@ -151,13 +151,7 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 		}
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("submitApprovalForDecorationTerminal");
-		mq.setOrderId(orderId);
-		mq.setArgs("{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\"}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "submitApprovalForDecorationTerminal", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
 
 		return 0;
 	}

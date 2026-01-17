@@ -110,7 +110,9 @@ public class MessageQueuingPO implements Serializable {
 
 	public MessageQueuingPO init(String orderId, String operation, String args) {
 
+		setOrderId(orderId);
 		setOperation(operation);
+		setArgs(args);
 		setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
 		setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
 

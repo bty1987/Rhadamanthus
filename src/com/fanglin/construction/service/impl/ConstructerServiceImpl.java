@@ -170,13 +170,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		constructerDao.save(constructerPO);
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("addConstructer");
-		mq.setOrderId(constructionPO.getDecoration().getOrderId());
-		mq.setArgs("{\"orderId\":\"" + constructionPO.getDecoration().getOrderId() + "\",\"csid\":" + csid + ",\"createrId\":\"" + createrId + "\"}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(constructionPO.getDecoration().getOrderId(), "addConstructer", "{\"orderId\":\"" + constructionPO.getDecoration().getOrderId() + "\",\"csid\":" + csid + ",\"createrId\":\"" + createrId + "\",\"event\":\"PROJECT_NODE_WORKER_ADDED\"}"));
 
 		constructerVO.setCid(cid);
 		constructerVO.setCsid(csid);
@@ -302,12 +296,6 @@ public class ConstructerServiceImpl implements ConstructerService {
 		constructerDao.update(constructerPO);
 
 		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("deleteConstructer");
-		mq.setOrderId(constructerPO.getOrderId());
-		mq.setArgs("{\"crid\":" + constructerVO.getCrid() + "}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(constructerPO.getOrderId(), "deleteConstructer", "{\"crid\":" + constructerVO.getCrid() + ",\"event\":\"PROJECT_NODE_WORKER_REMOVED\"}"));
 	}
 }
