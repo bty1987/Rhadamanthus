@@ -174,7 +174,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		constructerDao.save(constructerPO);
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(constructionPO.getDecoration().getOrderId(), "addConstructer", "{\"orderId\":\"" + constructionPO.getDecoration().getOrderId() + "\",\"cnid\":" + constructionPO.getCnid() + ",\"userId\":\"" + userPO.getUserId() + "\",\"event\":\"PROJECT_NODE_WORKER_ADDED\"" + (constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(constructionPO.getDecoration().getOrderId(), "addConstructer", "{\"orderId\":\"" + constructionPO.getDecoration().getOrderId() + "\",\"cnid\":" + constructerPO.getCnid() + ",\"userId\":\"" + userPO.getUserId() + "\",\"event\":\"PROJECT_NODE_WORKER_ADDED\"" + (constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
 
 		constructerVO.setCid(cid);
 		constructerVO.setCsid(csid);
