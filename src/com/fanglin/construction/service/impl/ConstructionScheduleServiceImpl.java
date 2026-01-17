@@ -32,6 +32,8 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.DateUtil;
@@ -64,6 +66,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 	@Autowired
 	private MessageService messageService;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
 
 	@Override
 	public void pageConstructionSchedule(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -252,6 +257,15 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		constructionScheduleVO.setStartTime(constructionSchedulePO.getStartTime());
 
+		// 生成消息队列数据
+		MessageQueuingPO mq = new MessageQueuingPO();
+		mq.setOperation("beginConstructionSchedule");
+		mq.setOrderId(decorationPO.getOrderId());
+		mq.setArgs("{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":" + userId + "}");
+		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
+		mq.setStatus(MessageQueuingPO.STATUS_PENDING_INT);
+		messageQueuingDao.save(mq);
+
 		return 0;
 	}
 
@@ -328,6 +342,15 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		messageService.sendMessage(constructionPO.getSupervisor().getUserId(), decorationPO.getCreater().getUserId(), content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, decorationPO.getCompany());
 
 		constructionScheduleVO.setEndTime(constructionSchedulePO.getEndTime());
+
+		// 生成消息队列数据
+		MessageQueuingPO mq = new MessageQueuingPO();
+		mq.setOperation("finishConstructionSchedule");
+		mq.setOrderId(decorationPO.getOrderId());
+		mq.setArgs("{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":" + userId + "}");
+		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
+		mq.setStatus(MessageQueuingPO.STATUS_PENDING_INT);
+		messageQueuingDao.save(mq);
 
 		return 0;
 	}
