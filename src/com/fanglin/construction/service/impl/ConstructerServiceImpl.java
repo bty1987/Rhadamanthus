@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +23,13 @@ import com.fanglin.construction.service.ConstructerService;
 import com.fanglin.construction.vo.ConstructerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.salary.dao.WorkerSalaryDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service("constructerService")
 @Transactional(readOnly = true)
