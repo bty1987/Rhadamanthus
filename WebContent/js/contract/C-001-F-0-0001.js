@@ -345,7 +345,6 @@ jQuery(function($) {
             data["con-company-name-3"] = data["con-company-name"];
             data["con-company-name-4"] = data["con-company-name"];
             data["con-company-name-5"] = data["con-company-name"];
-            data["con-company-name-6"] = data["con-company-name"];
             data["con-company-name-7"] = data["con-company-name"];
             data["con-company-name-11"] = data["con-company-name"];
             data["con-company-addr-11"] = data["con-company-addr"];
@@ -473,7 +472,6 @@ jQuery(function($) {
             data["con-supplier-name-3"] = data["con-supplier-name"];
             data["con-supplier-name-4"] = data["con-supplier-name"];
             data["con-supplier-name-5"] = data["con-supplier-name"];
-            data["con-supplier-name-6"] = data["con-supplier-name"];
             data["con-sign-date-year-4"] = year;
             data["con-sign-date-month-4"] = month;
             data["con-sign-date-day-4"] = day;
