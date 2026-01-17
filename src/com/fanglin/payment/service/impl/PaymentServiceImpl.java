@@ -32,7 +32,6 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.dingding.service.DingTalkMessageService;
-import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -96,9 +95,6 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
-
-	@Autowired
-	private com.fanglin.information.dao.MessageQueuingDao messageQueuingDao;
 
 	@Override
 	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company) throws FLException {
@@ -289,7 +285,7 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(paymentVO.getOrderId(), "collectPayment", "{\"orderId\":\"" + paymentVO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		// messageQueuingDao.save(new MessageQueuingPO().init(paymentVO.getOrderId(), "collectPayment", "{\"orderId\":\"" + paymentVO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
