@@ -335,19 +335,18 @@ jQuery(function($) {
             data["con-experience-hall-notes"] = data["con-experience-hall-notes"];
             data["con-experience-oem-notes"] = data["con-experience-oem-notes"];
             data["con-experience-special-notes"] = data["con-experience-special-notes"];
-            data["con-experience-hall-breakpay"] = data["con-experience-hall-breakpay"];
+            //data["con-experience-hall-breakpay"] = data["con-experience-hall-breakpay"];
 
             data["cov-company-name"] = data["con-company-name"];
             data["cov-company-name-11"] = data["con-company-name"];
+            data["cov-company-name-12"] = data["con-company-name"];
             data["sin-company-name"] = data["con-company-name"];
             data["con-company-name-1"] = data["con-company-name"];
             data["con-company-name-2"] = data["con-company-name"];
             data["con-company-name-3"] = data["con-company-name"];
             data["con-company-name-4"] = data["con-company-name"];
             data["con-company-name-5"] = data["con-company-name"];
-            data["con-company-name-7"] = data["con-company-name"];
             data["con-company-name-11"] = data["con-company-name"];
-            data["con-company-addr-11"] = data["con-company-addr"];
             data["con-company-legal-11"] = data["con-company-legal"];
             data["con-company-phone-11"] = data["con-company-phone"];
             data["con-company-email-11"] = data["con-company-email"];
@@ -365,6 +364,7 @@ jQuery(function($) {
 
             data["cov-supplier-name"] = data["con-supplier-name"];
             data["cov-supplier-name-1"] = data["con-supplier-name"];
+            data["cov-supplier-name-2"] = data["con-supplier-name"];
             data["sin-supplier-name"] = data["con-supplier-name"];
             data["con-supplier-addr1"] = data["con-supplier-addr"];
             data["con-supplier-phone1"] = data["con-supplier-phone"];
