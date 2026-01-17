@@ -256,25 +256,29 @@ public class DrawLineServiceImpl implements DrawLineService {
 			if (decorationPO.getSupervisor() != null) {
 				constructionPO.setSupervisor(decorationPO.getSupervisor());
 			}
+		}
 
-			if (drawLineVO.getDecoration().getSupervisor() != null) {
+		if (drawLineVO.getDecoration() != null && drawLineVO.getDecoration().getSupervisor() != null && drawLineVO.getDecoration().getSupervisor().getUserId() != null) {
 
-				UserPO supervisor = userDao.queryUserByUserId(drawLineVO.getDecoration().getSupervisor().getUserId());
+			UserPO supervisor = userDao.queryUserByUserId(drawLineVO.getDecoration().getSupervisor().getUserId());
 
-				constructionRecordDao.save(new ConstructionRecordPO().init(constructionPO.getDecoration().getOrderId(), constructionPO.getCid(), operater, ConstructionRecordPO.TYPE_COMMON_INT, String.format("更换监理, 原监理: %s(%s), 现监理: %s(%s)", decorationPO.getSupervisor() != null ? decorationPO.getSupervisor().getCurrentName() : "-", decorationPO.getSupervisor() != null ? decorationPO.getSupervisor().getUserId() : "-", supervisor.getCurrentName(), supervisor.getUserId())));
-
-				constructionPO.setSupervisor(supervisor);
-				decorationPO.setSupervisor(supervisor);
-
-				decorationDao.update(decorationPO);
-
-				constructionInfoPO.setIsIssue(ConstructionInfoPO.ISISSUE_ISSUE_INT);
-
-				constructionInfoDao.update(constructionInfoPO);
+			if (supervisor == null) {
+				throw new FLException(120021, "施工人员不存在");
 			}
 
-			constructionDao.save(constructionPO);
+			constructionRecordDao.save(new ConstructionRecordPO().init(constructionPO.getDecoration().getOrderId(), constructionPO.getCid(), operater, ConstructionRecordPO.TYPE_COMMON_INT, String.format("更换监理, 原监理: %s(%s), 现监理: %s(%s)", decorationPO.getSupervisor() != null ? decorationPO.getSupervisor().getCurrentName() : "-", decorationPO.getSupervisor() != null ? decorationPO.getSupervisor().getUserId() : "-", supervisor.getCurrentName(), supervisor.getUserId())));
+
+			constructionPO.setSupervisor(supervisor);
+			decorationPO.setSupervisor(supervisor);
+
+			decorationDao.update(decorationPO);
+
+			constructionInfoPO.setIsIssue(ConstructionInfoPO.ISISSUE_ISSUE_INT);
+
+			constructionInfoDao.update(constructionInfoPO);
 		}
+
+		constructionDao.save(constructionPO);
 
 		constructionDao.flush();
 
