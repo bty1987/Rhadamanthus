@@ -288,12 +288,12 @@ public class A20260103Action extends BaseListAction {
 				this.erpJhCode = String.valueOf(result.getCcid());
 			}
 
-			// 老ERP设计师分派人编码(工号 如FL-xxx)
+			// ERP设计师分派人编码(工号 如FL-xxx)
 			if (result.getIssuer() != null && result.getIssuer().getUserId() != null) {
 				this.erpAssignerCode = result.getIssuer().getUserId();
 			}
 
-			// 老ERP设计师编码(工号 如FL-xxx)
+			// ERP设计师编码(工号 如FL-xxx)
 			if (result.getBelonger() != null && result.getBelonger().getUserId() != null) {
 				this.erpDesignerCode = result.getBelonger().getUserId();
 			}
@@ -307,6 +307,16 @@ public class A20260103Action extends BaseListAction {
 			if (result.getOrderId() != null) {
 				this.erpZxdCode = result.getOrderId();
 			}
+		}
+
+		if (departmentId != null) {
+			this.issusTime = null;
+			this.erpDesignerCode = null;
+		}
+		// 规则1: 派到设计分区
+		if (regionId != null) {
+			this.issusTime = null;
+			this.erpDesignerCode = null;
 		}
 
 		// 封装 data 对象（包含请求参数和返回结果）
@@ -489,7 +499,7 @@ public class A20260103Action extends BaseListAction {
 		}
 
 		// 设置规则类型（0:派到公司 1:派到设计分区 2:派到设计部门 3:派到设计师）并放入 data
-		this.ruleId = this.customerDeptRuleVO.getType().intValue();
+		this.ruleId = this.customerDeptRuleVO.getAtttype().intValue();
 		this.data.put("ruleId", this.ruleId);
 
 		return SUCCESS;
