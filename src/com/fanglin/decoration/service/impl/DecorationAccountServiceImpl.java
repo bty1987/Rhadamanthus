@@ -21,6 +21,7 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAccountService;
 import com.fanglin.decoration.vo.DecorationAccountVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.dao.UserDao;
@@ -141,14 +142,7 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 		decorationDao.update(decorationPO);
 
-		// 生成消息队列数据
-		com.fanglin.information.po.MessageQueuingPO mq = new com.fanglin.information.po.MessageQueuingPO();
-		mq.setOperation("makeDecorationAccount");
-		mq.setOrderId(decorationPO.getOrderId());
-		mq.setArgs("{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\"}");
-		mq.setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		mq.setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
-		messageQueuingDao.save(mq);
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "makeDecorationAccount", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\"}"));
 	}
 
 	@Override
