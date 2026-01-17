@@ -302,7 +302,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		decorationDao.update(decorationPO);
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + approvalPO.getReceiver() + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + approvalPO.getReceiver() + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
