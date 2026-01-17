@@ -1524,7 +1524,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationOperateDao.save(new DecorationOperatePO().obsolete(decorationPO.getOrderId(), operater));
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "obsoleteDecoration", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":" + userId + ",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "obsoleteDecoration", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
 	}
 
 	@Override
@@ -1659,7 +1659,7 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":" + userId + ",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
 	}
 
 	@Override
