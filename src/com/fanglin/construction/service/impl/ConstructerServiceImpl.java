@@ -170,7 +170,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		constructerDao.save(constructerPO);
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(constructionPO.getDecoration().getOrderId(), "addConstructer", "{\"orderId\":\"" + constructionPO.getDecoration().getOrderId() + "\",\"csid\":" + csid + ",\"createrId\":\"" + createrId + "\",\"event\":\"PROJECT_NODE_WORKER_ADDED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(constructionPO.getDecoration().getOrderId(), "addConstructer", "{\"orderId\":\"" + constructionPO.getDecoration().getOrderId() + "\",\"cnid\":" + constructionPO.getCnid() + ",\"userId\":\"" + userPO.getUserId() + "\",\"event\":\"PROJECT_NODE_WORKER_ADDED\"}"));
 
 		constructerVO.setCid(cid);
 		constructerVO.setCsid(csid);
@@ -296,6 +296,6 @@ public class ConstructerServiceImpl implements ConstructerService {
 		constructerDao.update(constructerPO);
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(constructerPO.getOrderId(), "deleteConstructer", "{\"crid\":" + constructerVO.getCrid() + ",\"event\":\"PROJECT_NODE_WORKER_REMOVED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(constructerPO.getOrderId(), "deleteConstructer", "{\"orderId\":\"" + constructerPO.getOrderId() + "\",\"cnid\":" + constructerPO.getCnid() + ",\"userId\":\"" + constructerPO.getUser().getUserId() + "\",\"event\":\"PROJECT_NODE_WORKER_REMOVED\"}"));
 	}
 }
