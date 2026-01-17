@@ -26,6 +26,7 @@ import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
@@ -46,6 +47,9 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
+
+	@Autowired
+	private com.fanglin.information.dao.MessageQueuingDao messageQueuingDao;
 
 	@Override
 	public AcceptanceVO queryAcceptanceById(AcceptanceVO acceptanceVO) {
@@ -113,6 +117,8 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
+		String orderId = decorationPO.getOrderId();
+
 		AcceptancePO acceptancePO = acceptanceDao.queryAcceptanceByOrderId(acceptanceVO.getOrderId());
 
 		if (acceptancePO == null) {
@@ -144,6 +150,8 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 		}
 
 		constructionDao.update(constructionPO);
+
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "updateAcceptance", "{\"orderId\":\"" + orderId + "\",\"status\":\"2\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}

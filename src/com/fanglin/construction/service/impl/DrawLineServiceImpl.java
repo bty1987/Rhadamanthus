@@ -584,7 +584,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		}
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "successDrawLine", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"SNAPLINE_DONE\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "successDrawLine", "{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"userId\":\"" + userId + "\",\"event\":\"SNAPLINE_DONE\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
