@@ -647,7 +647,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修交款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=1", decorationPaymentPO.getDecoration().getOrderId(), decorationReceiptPO.getDrId()));
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}

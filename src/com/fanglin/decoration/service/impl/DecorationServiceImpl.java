@@ -1259,7 +1259,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationDao.update(decorationPO);
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "changeDecorationForAdvance", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_INFO_UPDATED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "changeDecorationForAdvance", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_INFO_UPDATED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 	}
 
 	@Override
@@ -1444,7 +1444,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationDao.update(decorationPO);
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "changeDecorationForStatus", "{\"orderId\":\"" + orderId + "\",\"status\":" + status + ",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "changeDecorationForStatus", "{\"orderId\":\"" + orderId + "\",\"status\":" + status + ",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单:%s状态修改,原状态:%s,修改状态为:%s.", orderId, oldStatus, status)));
 	}
@@ -1524,7 +1524,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationOperateDao.save(new DecorationOperatePO().obsolete(decorationPO.getOrderId(), operater));
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "obsoleteDecoration", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "obsoleteDecoration", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 	}
 
 	@Override
@@ -1659,7 +1659,7 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 	}
 
 	@Override

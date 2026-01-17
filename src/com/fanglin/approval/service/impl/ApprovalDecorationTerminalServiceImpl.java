@@ -152,7 +152,7 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 		}
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "submitApprovalForDecorationTerminal", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "submitApprovalForDecorationTerminal", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}

@@ -53,6 +53,9 @@ public class ConstructerServiceImpl implements ConstructerService {
 	private WorkerSalaryDao workerSalaryDao;
 
 	@Autowired
+	private com.fanglin.decoration.dao.DecorationDao decorationDao;
+
+	@Autowired
 	private DecorationService decorationService;
 
 	@Autowired
@@ -171,7 +174,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		constructerDao.save(constructerPO);
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(constructionPO.getDecoration().getOrderId(), "addConstructer", "{\"orderId\":\"" + constructionPO.getDecoration().getOrderId() + "\",\"cnid\":" + constructionPO.getCnid() + ",\"userId\":\"" + userPO.getUserId() + "\",\"event\":\"PROJECT_NODE_WORKER_ADDED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(constructionPO.getDecoration().getOrderId(), "addConstructer", "{\"orderId\":\"" + constructionPO.getDecoration().getOrderId() + "\",\"cnid\":" + constructionPO.getCnid() + ",\"userId\":\"" + userPO.getUserId() + "\",\"event\":\"PROJECT_NODE_WORKER_ADDED\"" + (constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
 
 		constructerVO.setCid(cid);
 		constructerVO.setCsid(csid);
@@ -296,7 +299,10 @@ public class ConstructerServiceImpl implements ConstructerService {
 
 		constructerDao.update(constructerPO);
 
+		// 查询装修单获取业务类型
+		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructerPO.getOrderId());
+
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(constructerPO.getOrderId(), "deleteConstructer", "{\"orderId\":\"" + constructerPO.getOrderId() + "\",\"cnid\":" + constructerPO.getCnid() + ",\"userId\":\"" + constructerPO.getUser().getUserId() + "\",\"event\":\"PROJECT_NODE_WORKER_REMOVED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(constructerPO.getOrderId(), "deleteConstructer", "{\"orderId\":\"" + constructerPO.getOrderId() + "\",\"cnid\":" + constructerPO.getCnid() + ",\"userId\":\"" + constructerPO.getUser().getUserId() + "\",\"event\":\"PROJECT_NODE_WORKER_REMOVED\"" + (decorationPO != null && decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 	}
 }
