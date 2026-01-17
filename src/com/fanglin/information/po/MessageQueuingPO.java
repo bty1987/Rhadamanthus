@@ -10,18 +10,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Title: MessageQueuingPO
- * Description: 消息队列持久化对象
- * Copyright: Copyright (c) 2013 All rights reserved.
- * Company: BTY
+ * Title: MessageQueuingPO Description: 消息队列持久化对象 Copyright: Copyright (c) 2013 All rights reserved. Company: BTY
+ * 
  * @author bty1987
- *
+ * 
  */
 @Entity
 @Table(name = "messagequeuing", catalog = "information")
 public class MessageQueuingPO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5265676191043540185L;
 
 	public static final short STATUS_PENDING_INT = 0; // 未处理
 
@@ -47,6 +45,7 @@ public class MessageQueuingPO implements Serializable {
 
 	@Id
 	@GeneratedValue
+	@Column(name = "mqid")
 	public long getMqid() {
 		return mqid;
 	}
@@ -55,7 +54,16 @@ public class MessageQueuingPO implements Serializable {
 		this.mqid = mqid;
 	}
 
-	@Column(nullable = false, length = 100)
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	@Column(name = "operation")
 	public String getOperation() {
 		return operation;
 	}
@@ -64,7 +72,7 @@ public class MessageQueuingPO implements Serializable {
 		this.operation = operation;
 	}
 
-	@Column(length = 65535)
+	@Column(name = "args")
 	public String getArgs() {
 		return args;
 	}
@@ -73,7 +81,7 @@ public class MessageQueuingPO implements Serializable {
 		this.args = args;
 	}
 
-	@Column(nullable = false)
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -82,6 +90,7 @@ public class MessageQueuingPO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	@Column(name = "finishTime")
 	public Timestamp getFinishTime() {
 		return finishTime;
 	}
@@ -90,7 +99,7 @@ public class MessageQueuingPO implements Serializable {
 		this.finishTime = finishTime;
 	}
 
-	@Column(nullable = false)
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -99,13 +108,13 @@ public class MessageQueuingPO implements Serializable {
 		this.status = status;
 	}
 
-	@Column(length = 50)
-	public String getOrderId() {
-		return orderId;
-	}
+	public MessageQueuingPO init(String orderId, String operation, String args) {
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+		setOperation(operation);
+		setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
+		setStatus(com.fanglin.information.po.MessageQueuingPO.STATUS_PENDING_INT);
+
+		return this;
 	}
 
 }
