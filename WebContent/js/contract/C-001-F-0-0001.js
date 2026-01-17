@@ -394,6 +394,13 @@ jQuery(function($) {
             data["sin-company-phone-11"] = data["con-company-phone"];
             data["sin-company-email-11"] = data["con-company-email"];
 
+            // 新增参数 - 公司信息-13系列
+            data["sin-company-name-13"] = data["con-company-name"];
+            data["sin-company-addr-13"] = data["con-company-addr"];
+            data["sin-company-legal-13"] = data["con-company-legal"];
+            data["sin-company-phone-13"] = data["con-company-phone"];
+            data["sin-company-email-13"] = data["con-company-email"];
+
             data["sin-supplier-addr"] = data["con-supplier-addr"];
             data["sin-supplier-legal"] = data["con-supplier-legal"];
             data["sin-supplier-phone"] = data["con-supplier-phone"];
@@ -407,6 +414,15 @@ jQuery(function($) {
             data["sin-supplier-email-11"] = data["con-supplier-email"];
             data["sin-supplier-bank-no-11"] = data["con-supplier-bank-no"];
             data["sin-supplier-bank-11"] = data["con-supplier-bank"];
+
+            // 新增参数 - 供应商信息-13系列
+            data["sin-supplier-name-13"] = data["con-supplier-name"];
+            data["sin-supplier-addr-13"] = data["con-supplier-addr"];
+            data["sin-supplier-legal-13"] = data["con-supplier-legal"];
+            data["sin-supplier-phone-13"] = data["con-supplier-phone"];
+            data["sin-supplier-email-13"] = data["con-supplier-email"];
+            data["sin-supplier-bank-no-13"] = data["con-supplier-bank-no"];
+            data["sin-supplier-bank-13"] = data["con-supplier-bank"];
 
             data["con-cooperation-amount-undis-cn"] = utils.getCNMoney(parseFloat(data["con-cooperation-amount-undis"]));
             data["con-venue-rental-fee-cn"] = utils.getCNMoney(parseFloat(data["con-venue-rental-fee"]));
