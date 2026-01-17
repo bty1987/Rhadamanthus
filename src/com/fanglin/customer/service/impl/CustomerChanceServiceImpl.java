@@ -200,7 +200,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addCustomerChance(CustomerChanceVO customerChanceVO, String userId, int company) throws FLException {
+	public CustomerChanceVO addCustomerChance(CustomerChanceVO customerChanceVO, String userId, int company) throws FLException {
 
 		if (customerChanceVO == null) {
 			throw new FLException(330075, "客户机会不存在");
@@ -214,9 +214,12 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			// throw new FLException(330072, "客户资源已存在");
 		}
 
-		if (customerChanceDao.queryCustomerChanceByCno(customerChanceVO.getCno()) != null) {
-			customerSourceService.issueCustomerSource(customerChanceVO.getSource(), customerChanceVO, userId, company);
-			return;
+		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChanceByCno(customerChanceVO.getCno());
+
+		if (customerChancePO != null) {
+			CustomerSourcePO customerSourcePO = customerSourceDao.get(customerChancePO.getSource().getCsid());
+			customerSourceService.issueCustomerSource(new CustomerSourceVO(customerSourcePO.getCsid()), customerChanceVO, userId, company);
+			return customerChanceVO;
 		}
 
 		// ========== 自动处理客户和房产 ==========
@@ -260,6 +263,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChanceVO.getSource().getCustomer().setCid(cid);
 		customerChanceVO.getSource().getHouse().setHid(hid);
 		// ==========================================
+		customerChanceVO.getSource().setBuildArea(customerChanceVO.getSource().getHouse().getBuildArea());
+		customerChanceVO.getSource().setInnerArea(customerChanceVO.getSource().getHouse().getBuildArea());
 
 		customerChanceVO.getSource().setBusitype(customerChanceVO.getBusitype());
 
@@ -268,6 +273,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChanceDao.flush();
 
 		customerSourceService.issueCustomerSource(customerChanceVO.getSource(), customerChanceVO, userId, company);
+
+		return customerChanceVO;
 	}
 
 	@Override
@@ -627,18 +634,11 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
 		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
 
-		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) decorationService.checkOverDecoration(customerChancePO.getCustomer().getCid(), customerChancePO.getHouse().getHid());
-
-		// 保存原来的orderId，用于后续比较
-		String originalOrderId = customerChancePO.getOrderId();
+		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
 
 		decorationService.tranDecoration(decorationVO, decorationInfoVO, company);
 
-		// 判断orderId是否发生变化，如果不同则更新
-		if (!originalOrderId.equals(decorationVO.getOrderId())) {
-			customerChancePO.setOrderId(decorationVO.getOrderId());
-		}
-
+		customerChancePO.setOrderId(decorationVO.getOrderId());
 		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
 
 		customerChanceDao.update(customerChancePO);

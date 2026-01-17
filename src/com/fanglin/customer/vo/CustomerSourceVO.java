@@ -83,6 +83,11 @@ public class CustomerSourceVO implements Serializable {
 		super();
 	}
 
+	public CustomerSourceVO(Long csid) {
+		super();
+		this.csid = csid;
+	}
+
 	public CustomerSourceVO(VillageVO village, UserBaseVO creater, CustomerVO customer, HouseVO house, UserBaseVO designer, UserBaseVO salesman, DecorationBusitypeVO busitype) {
 		super();
 		this.village = village;

@@ -16,7 +16,7 @@ public interface CustomerChanceService {
 
 	public CustomerChanceVO queryCustomerChanceByCcid(CustomerChanceVO customerChanceVO) throws FLException;
 
-	public void addCustomerChance(CustomerChanceVO customerChanceVO, String userId, int company) throws FLException;
+	public CustomerChanceVO addCustomerChance(CustomerChanceVO customerChanceVO, String userId, int company) throws FLException;
 
 	public void updateCustomerChance(CustomerChanceVO customerChanceVO) throws FLException;
 
