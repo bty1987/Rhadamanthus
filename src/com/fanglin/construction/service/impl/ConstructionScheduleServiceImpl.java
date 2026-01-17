@@ -258,7 +258,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionScheduleVO.setStartTime(constructionSchedulePO.getStartTime());
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "beginConstructionSchedule", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":" + userId + ",\"event\":\"PROJECT_NODE_STATUS_CHANGED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "beginConstructionSchedule", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"PROJECT_NODE_STATUS_CHANGED\"}"));
 
 		return 0;
 	}
@@ -338,7 +338,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionScheduleVO.setEndTime(constructionSchedulePO.getEndTime());
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "finishConstructionSchedule", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":" + userId + ",\"event\":\"PROJECT_NODE_STATUS_CHANGED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "finishConstructionSchedule", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"PROJECT_NODE_STATUS_CHANGED\"}"));
 
 		return 0;
 	}

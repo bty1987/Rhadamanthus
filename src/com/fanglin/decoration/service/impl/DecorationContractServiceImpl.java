@@ -623,7 +623,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "signDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":" + userId + ",\"event\":\"CUSTOMER_SIGNED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "signDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_SIGNED\"}"));
 
 		return 0;
 	}
@@ -676,7 +676,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		// DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, operater, decorationPO.getOrderTotalPrice(), -1, decorationOperatePO.getType());
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "resignDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":" + userId + ",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "resignDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
 
 		return 0;
 	}
@@ -760,7 +760,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationOperateDao.save(new DecorationOperatePO().prosign(orderId, operater)); // 创建装修单操作信息
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "presignDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":" + userId + ",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "presignDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"}"));
 
 		return 0;
 	}
