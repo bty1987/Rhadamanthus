@@ -583,6 +583,11 @@ public class A20251208ServiceImpl implements A20251208Service {
 			constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
 		} else {
 			constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(constructionScheduleVO.getOrderId(), constructionScheduleVO.getCnid());
+			
+			if (constructionSchedulePO == null) {
+				throw new FLException(120024, "工程环节不存在");
+			}
+
 			constructionScheduleVO.setCsid(constructionSchedulePO.getCsid());
 		}
 

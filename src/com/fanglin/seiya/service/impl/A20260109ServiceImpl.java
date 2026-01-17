@@ -13,18 +13,24 @@ package com.fanglin.seiya.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.seiya.service.A20260109Service;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 
 @Service("A20260109Service")
 @Transactional(readOnly = true)
 public class A20260109ServiceImpl implements A20260109Service {
 
 	private static final Logger logger = LoggerFactory.getLogger(A20260109ServiceImpl.class);
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Override
 	public JSONObject publishErpEvent(String eventType, String orderId) throws FLException {
@@ -34,9 +40,17 @@ public class A20260109ServiceImpl implements A20260109Service {
 	@Override
 	public JSONObject publishErpEvent(String eventType, String orderId, Long cnid, Integer userId) throws FLException {
 
+		// 权限配置检查
+		SystemConfigPO pmurl = systemConfigDao.querySystemConfig("PM_URL_STR");
+
+		if (pmurl == null) {
+			logger.warn("ERP事件发布功能未启用: PM_URL_STR配置不存在");
+			return null;
+		}
+
 		try {
 
-			String url = "https://daily-gateway.fanglin.vip/admin-api/sync/erp/event/publish";
+			String url = pmurl.getValue();
 
 			JSONObject params = new JSONObject();
 

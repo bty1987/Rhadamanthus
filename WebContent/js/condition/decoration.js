@@ -422,11 +422,38 @@ Condition.addupRule("decoration", {
             validate: null
         }
     },
+    "issueTime": {
+        label: "分尺时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "decoration.issueTime.range",
+            op: "cn",
+            validate: null
+        }
+    },
+    "meetTime": {
+        label: "到店时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "decoration.meetTime.range",
+            op: "cn",
+            validate: null
+        }
+    },
     "measureTime": {
         label: "量尺时间",
         type: "dateRangePicker",
         submitConfig: {
             name: "decoration.measureTime.range",
+            op: "cn",
+            validate: null
+        }
+    },
+    "belongTime": {
+        label: "变更时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "decoration.belongTime.range",
             op: "cn",
             validate: null
         }
@@ -481,6 +508,15 @@ Condition.addupRule("decoration", {
         type: "dateRangePicker",
         submitConfig: {
             name: "decoration.signTime.range",
+            op: "cn",
+            validate: null
+        }
+    },
+    "recontractTime": {
+        label: "重签时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "decoration.recontractTime.range",
             op: "cn",
             validate: null
         }
