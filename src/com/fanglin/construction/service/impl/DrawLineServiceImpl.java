@@ -479,6 +479,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		drawLinePO.setEndTime(end);
 		drawLinePO.setStartTime(start);
 		drawLinePO.setGroup(drawLineGroupPO);
+		drawLinePO.setActualTime(Long.parseLong(DateUtil.getDateToDateString(end, "yyyyMMdd")));
 
 		drawLineDao.update(drawLinePO);
 
