@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.communion.dao.DepartmentDao;
+import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.dao.VillageDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
@@ -84,6 +85,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Autowired
 	private CustomerSourceRecordDao customerSourceRecordDao;
+
+	@Autowired
+	private HouseDao houseDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -633,6 +637,14 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
 		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
+
+		if (customerChancePO.getHouse() != null) {
+			HousePO housePO = customerChancePO.getHouse();
+
+			housePO.setBuildArea(customerChancePO.getSource().getBuildArea());
+
+			houseDao.update(housePO);
+		}
 
 		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
 
