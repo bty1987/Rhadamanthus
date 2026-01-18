@@ -33,6 +33,14 @@ public class CustypePO implements java.io.Serializable {
 
 	public static final String COLUMN_PLATFORM_STR = "platform";
 
+	public static final String COLUMN_NO_STR = "no";
+
+	public static final String COLUMN_AGENT_STR = "agent";
+
+	public static final String COLUMN_PHONE_STR = "phone";
+
+	public static final String COLUMN_WXAPP_STR = "wxapp";
+
 	public static final short STATUS_ENABLE_INT = 0;
 
 	public static final short STATUS_DISABLE_INT = 1;
