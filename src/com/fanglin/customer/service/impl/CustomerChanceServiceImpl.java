@@ -561,6 +561,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setBelonger(belonger);
 			customerChancePO.setCompany(belonger.getCompany());
+			customerChancePO.setIsIssue(CustomerChancePO.ISISSUE_ISSUED_INT);
 
 			dept = belonger.getDept();
 		}

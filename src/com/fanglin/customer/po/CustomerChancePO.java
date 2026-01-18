@@ -55,6 +55,10 @@ public class CustomerChancePO implements Serializable {
 
 	public static final short ISCHECK_IGNORE_INT = 1; // 忽略
 
+	public static final short ISISSUE_UNISSUE_INT = 0; // 未分配
+
+	public static final short ISISSUE_ISSUED_INT = 1; // 已分配
+
 	private long ccid;
 
 	private String orderId;
@@ -111,6 +115,8 @@ public class CustomerChancePO implements Serializable {
 
 	private short isCheck;
 
+	private short isIssue;
+
 	private String comment;
 
 	private String annotate;
@@ -122,6 +128,7 @@ public class CustomerChancePO implements Serializable {
 	public CustomerChancePO() {
 		super();
 		this.isCheck = ISCHECK_CHECK_INT; // 默认为验证状态
+		this.isIssue = ISISSUE_UNISSUE_INT; // 默认为未分配状态
 	}
 
 	public CustomerChancePO(CustomerPO customer, HousePO house, CustomerSourcePO source, DecorationBusitypePO busitype, UserPO creater, UserPO issuer, UserPO belonger, DepartmentPO department, DepartmentPO region) {
@@ -138,6 +145,7 @@ public class CustomerChancePO implements Serializable {
 		this.department = department;
 		this.region = region;
 		this.isCheck = ISCHECK_CHECK_INT; // 默认为验证状态
+		this.isIssue = ISISSUE_UNISSUE_INT; // 默认为未分配状态
 	}
 
 	@Id
@@ -395,6 +403,15 @@ public class CustomerChancePO implements Serializable {
 		this.isCheck = isCheck;
 	}
 
+	@Column(name = "isIssue")
+	public short getIsIssue() {
+		return isIssue;
+	}
+
+	public void setIsIssue(short isIssue) {
+		this.isIssue = isIssue;
+	}
+
 	@Column(name = "fineTime")
 	public Timestamp getFineTime() {
 		return fineTime;
@@ -442,7 +459,7 @@ public class CustomerChancePO implements Serializable {
 
 	public CustomerChanceVO ptv(CustomerChanceVO customerChanceVO) {
 
-		BeanUtil.copyProperties(this, customerChanceVO, Arrays.asList("customer", "house", "source", "busitype", "creater", "issuer", "finer", "belonger", "department", "region"));
+		BeanUtil.copyProperties(this, customerChanceVO, Arrays.asList("customer", "house", "source", "busitype", "creater", "issuer", "finer", "belonger", "department", "region", "isIssue"));
 
 		if (customerChanceVO.getHouse() != null && getHouse() != null) getHouse().ptv(customerChanceVO.getHouse());
 		if (customerChanceVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(customerChanceVO.getCustomer());

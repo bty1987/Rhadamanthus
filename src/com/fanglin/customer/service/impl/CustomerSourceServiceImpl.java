@@ -568,19 +568,13 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());
 			customerChancePO.setCompany(belonger.getCompany());
-
-			if (belonger.getDept().getFatherDept() == null) {
-				customerChancePO.setRegion(belonger.getDept());
-			}
+			customerChancePO.setIsIssue(CustomerChancePO.ISISSUE_ISSUED_INT);
 
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_AUTO_INT);
 			customerChancePO.setBusitype(busitype);
-
 			String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
 			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
-
 			String orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
-
 			customerChancePO.setOrderId(orderId);
 
 			customerChanceDao.save(customerChancePO);
@@ -617,8 +611,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_REGION_INT);
-			customerChancePO.setRegion(region);
+		customerChancePO.setRegion(region);
 			customerChancePO.setCompany(region.getCompany());
+			customerChancePO.setIsIssue(CustomerChancePO.ISISSUE_ISSUED_INT);
 
 			if (region.getManager() != null) {
 				customerChancePO.setBelonger(region.getManager());
