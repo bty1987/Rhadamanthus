@@ -1758,6 +1758,9 @@ var decorationUtils = {
 
         $infobox.click(function() {
 
+            if (depage == "designer" || dataPage == plan)
+                return false;
+
             com.post(api.decoration.viewDecorationContract, {
                 "decorationContract.dcid": i.dcid
             }, function(res) {
@@ -1765,7 +1768,6 @@ var decorationUtils = {
                 com.popup4frame("合同查看", res.redirect);
             });
         });
-
     },
 
     initConstructionScheduleInfo: function() {
