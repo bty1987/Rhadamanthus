@@ -81,6 +81,20 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 				} else if ("fund".equals(filter.getField())) {
 					query.add(Restrictions.eq("fund", Short.valueOf(filter.getData())));
+				} else if ("grade".equals(filter.getField())) {
+					query.add(Restrictions.eq("grade", filter.getData()));
+				} else if ("kino".equals(filter.getField())) {
+					query.add(Restrictions.ilike("kino", filter.getData(), MatchMode.ANYWHERE));
+				} else if ("kiname".equals(filter.getField())) {
+					query.add(Restrictions.ilike("kiname", filter.getData(), MatchMode.ANYWHERE));
+				} else if ("kibalance".equals(filter.getField())) {
+					query.add(Restrictions.ilike("kibalance", filter.getData(), MatchMode.ANYWHERE));
+				} else if ("bankno".equals(filter.getField())) {
+					query.add(Restrictions.ilike("bankno", filter.getData(), MatchMode.ANYWHERE));
+				} else if ("assistant".equals(filter.getField())) {
+					query.add(Restrictions.ilike("assistant", filter.getData(), MatchMode.ANYWHERE));
+				} else if ("value".equals(filter.getField())) {
+					query.add(Restrictions.ilike("value", filter.getData(), MatchMode.ANYWHERE));
 				}
 			}
 		}

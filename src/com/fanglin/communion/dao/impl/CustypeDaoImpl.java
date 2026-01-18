@@ -74,6 +74,22 @@ public class CustypeDaoImpl extends DaoImpl<CustypePO> implements CustypeDao {
 				query.add(query.getCriterion(field, data, op));
 			} else if (CustypePO.COLUMN_STATUS_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.valueOf(data), op));
+			} else if (CustypePO.COLUMN_NO_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if (CustypePO.COLUMN_AGENT_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if (CustypePO.COLUMN_PHONE_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if (CustypePO.COLUMN_WXAPP_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if (CustypePO.COLUMN_ATTTYPE_STR.equals(field)) {
+				query.add(query.getCriterion(field, Short.valueOf(data), op));
+			} else if (CustypePO.COLUMN_DGRADE_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if (CustypePO.COLUMN_SGRADE_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if (CustypePO.COLUMN_PLATFORM_STR.equals(field)) {
+				query.add(query.getCriterion(field, Short.valueOf(data), op));
 			}
 		}
 	}

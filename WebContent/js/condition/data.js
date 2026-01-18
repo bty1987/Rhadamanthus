@@ -203,6 +203,84 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.data().receiptType.fund.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "receiptType-grade": {
+        label: "等级",
+        type: "select",
+        submitConfig: {
+            name: "grade",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.data().receiptType.grade.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "receiptType-kino": {
+        label: "金蝶编号",
+        type: "text",
+        submitConfig: {
+            name: "kino",
+            op: "cn",
+            validate: null
+        }
+    },
+    "receiptType-kiname": {
+        label: "金蝶名称",
+        type: "text",
+        submitConfig: {
+            name: "kiname",
+            op: "cn",
+            validate: null
+        }
+    },
+    "receiptType-kibalance": {
+        label: "结算方式",
+        type: "text",
+        submitConfig: {
+            name: "kibalance",
+            op: "cn",
+            validate: null
+        }
+    },
+    "receiptType-bankno": {
+        label: "银行账号",
+        type: "text",
+        submitConfig: {
+            name: "bankno",
+            op: "cn",
+            validate: null
+        }
+    },
+    "receiptType-assistant": {
+        label: "辅核项",
+        type: "text",
+        submitConfig: {
+            name: "assistant",
+            op: "cn",
+            validate: null
+        }
+    },
+    "receiptType-value": {
+        label: "POS值",
+        type: "text",
+        submitConfig: {
+            name: "value",
+            op: "cn",
+            validate: null
+        }
+    },
         dataSource: {// 从后台取数据的各种配置
             url: null,
             postData: {},
@@ -1349,6 +1427,106 @@ Condition.addupRule("data", {
             url: null,
             postData: null,
             listPath: constant.data().custype.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "custype-no": {
+        label: "商户号",
+        type: "text",
+        submitConfig: {
+            name: "no",
+            op: "cn",
+            validate: null
+        }
+    },
+    "custype-agent": {
+        label: "机构号",
+        type: "text",
+        submitConfig: {
+            name: "agent",
+            op: "cn",
+            validate: null
+        }
+    },
+    "custype-phone": {
+        label: "手机号",
+        type: "text",
+        submitConfig: {
+            name: "phone",
+            op: "cn",
+            validate: null
+        }
+    },
+    "custype-wxapp": {
+        label: "小程序appid",
+        type: "text",
+        submitConfig: {
+            name: "wxapp",
+            op: "cn",
+            validate: null
+        }
+    },
+    "custype-atttype": {
+        label: "业务类型",
+        type: "select",
+        submitConfig: {
+            name: "atttype",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.payment().receipt.paymentType.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "custype-dgrade": {
+        label: "装修等级",
+        type: "select",
+        submitConfig: {
+            name: "dgrade",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().custype.dgrade.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "custype-sgrade": {
+        label: "销售等级",
+        type: "select",
+        submitConfig: {
+            name: "sgrade",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().custype.sgrade.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "custype-platform": {
+        label: "支付平台",
+        type: "select",
+        submitConfig: {
+            name: "platform",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().custype.platform.datas,
             keyPath: "key",
             valuePath: "value"
         }

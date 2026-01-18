@@ -184,7 +184,7 @@ $(function($) {
     })();
 
     var searcher = new Searcher();
-    var _condArr = ["data-receiptType-name", "data-receiptType-type", "data-receiptType-status", "data-receiptType-fund"];
+    var _condArr = ["data-receiptType-name", "data-receiptType-type", "data-receiptType-status", "data-receiptType-fund", "data-receiptType-grade", "data-receiptType-kino", "data-receiptType-kiname", "data-receiptType-kibalance", "data-receiptType-bankno", "data-receiptType-assistant", "data-receiptType-value"];
 
     searcher.init(_condArr, "condList", api.data.pageReceiptType, function(data) {
 
