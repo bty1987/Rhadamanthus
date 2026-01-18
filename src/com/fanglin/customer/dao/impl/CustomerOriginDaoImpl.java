@@ -43,13 +43,13 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 		if (filters == null) return;
-		
+
 		for (Filter filter : filters) {
-			
+
 			String field = filter.getField();
 			String data = filter.getData();
 			String op = filter.getOp();
-			
+
 			if ("phone".equals(field)) {
 				query.add(query.getCriterion("phone", data, op));
 			} else if ("creater".equals(field)) {
@@ -69,7 +69,7 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 				query.alias("village", "village");
 				query.add(query.getCriterion("village.no", String.valueOf(data), op));
 			} else if ("createTime".equals(field)) {
-				query.add(query.timeranges("createTime", data));
+				query.timeranges("createTime", data);
 			} else if ("source".equals(field)) {
 				query.add(query.getCriterion("source", data, op));
 			} else if ("contact".equals(field)) {
@@ -77,8 +77,6 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 			} else if ("referOrderId".equals(field)) {
 				query.add(query.getCriterion("referOrderId", data, op));
 			}
-		}
-	}
 		}
 	}
 }
