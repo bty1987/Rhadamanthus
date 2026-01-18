@@ -44,4 +44,5 @@ public interface CustomerChanceService {
 
 	public void uncheckCustomerChance(CustomerChanceVO customerChanceVO) throws FLException;
 
+	public void approveCustomerChance(CustomerChanceVO customerChanceVO, int company) throws FLException;
 }

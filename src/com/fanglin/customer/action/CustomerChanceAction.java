@@ -170,10 +170,18 @@ public class CustomerChanceAction extends BaseListAction {
 
 	@Action(value = "uncheckCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String uncheckCustomerChance() throws FLException {
-
 		customerChanceService.uncheckCustomerChance(customerChance);
-
 		return SUCCESS;
+	}
+
+	@Action(value = "approveCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String approveCustomerChance() throws FLException {
+		customerChanceService.approveCustomerChance(customerChance, queryCompany());
+		return SUCCESS;
+	}
+
+	public List<CustomerChanceVO> getCustomerChances() {
+		return customerChances;
 	}
 
 	public List<CustomerChanceVO> getCustomerChances() {

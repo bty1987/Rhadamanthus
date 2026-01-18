@@ -94,6 +94,7 @@ jQuery(function($) {
             issueSaveBtn: com.focusPage("#saveBtn", "#issueModal").on("click", issue),
             changeBtn: com.focusPage("#changeBtn", "#changeModal").on("click", change),
             approveBtn: com.focusPage("#approvalBtn", "#approveModal").on("click", approval),
+            directApproveBtn: com.focusPage("#directApproveBtn", "#approveModal").on("click", directApprove),
             firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#firstApproveModal").on("click", firstApproval),
             belongApprovalBtn: com.focusPage("#belongApprovalBtn", "#belongApproveModal").on("click", belongApproval),
             updateBtn: com.focusPage("#updateBtn", "#updateModal").on("click", update),
@@ -1137,6 +1138,30 @@ jQuery(function($) {
             };
 
             com.post(api.approval.submitApprovalForCustomerChance, option, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+
+                com.clearValidator();
+                searcher.doSearch();
+
+                customerChance.modals.approveModal.modal("hide");
+            });
+        });
+    }
+
+    function directApprove() {
+
+        if (com.validate("approveModal")) {
+            return false;
+        }
+
+        com.showConfirm("是否确认直接转装修单", function() {
+
+            var option = {
+                "customerChance.ccid": customerChance.ccid
+            };
+
+            com.post(api.customer.approveCustomerChance, option, function(res) {
 
                 com.showAlert(com.info, "操作成功");
 
