@@ -42,15 +42,14 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
-
 		if (filters == null) return;
-
+		
 		for (Filter filter : filters) {
-
+			
 			String field = filter.getField();
 			String data = filter.getData();
 			String op = filter.getOp();
-
+			
 			if ("phone".equals(field)) {
 				query.add(query.getCriterion("phone", data, op));
 			} else if ("creater".equals(field)) {
@@ -60,7 +59,8 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 			} else if ("belonger.uid".equals(field)) {
 				query.add(Restrictions.sqlRestriction("buid is ? ", null, StandardBasicTypes.STRING));
 			} else if ("designer".equals(field)) {
-				query.add(Restrictions.eq(CustomerOriginPO.COLUMN_DESIGNER_STR, Integer.valueOf(data)));
+				query.alias("designer", "designer");
+				query.add(Restrictions.eq("designer.uid", Integer.valueOf(data)));
 			} else if ("salesman".equals(field)) {
 				query.add(Restrictions.eq(CustomerOriginPO.COLUMN_SALESMAN_STR, Integer.valueOf(data)));
 			} else if ("status".equals(field)) {
@@ -69,7 +69,7 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 				query.alias("village", "village");
 				query.add(query.getCriterion("village.no", String.valueOf(data), op));
 			} else if ("createTime".equals(field)) {
-				query.timeranges("createTime", data);
+				query.add(query.timeranges("createTime", data));
 			} else if ("source".equals(field)) {
 				query.add(query.getCriterion("source", data, op));
 			} else if ("contact".equals(field)) {
@@ -77,6 +77,8 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 			} else if ("referOrderId".equals(field)) {
 				query.add(query.getCriterion("referOrderId", data, op));
 			}
+		}
+	}
 		}
 	}
 }
