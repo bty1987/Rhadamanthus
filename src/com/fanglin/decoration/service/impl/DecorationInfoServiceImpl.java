@@ -206,16 +206,17 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			}
 
 			if (constructionInfoPO != null) {
+
 				Timestamp designTime = constructionInfoPO.getDesignTime();
+
 				if (designTime == null) {
 					designTime = DateUtil.getDateToTimestamp(new Date());
 				}
 
 				if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MINI_INT) {
 					constructionInfoPO.setDesignTime(DateUtil.getDateToTimestamp(DateUtil.plusDay(new Date(designTime.getTime()), 3)));
-				} else if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MORE_INT && constructionInfoPO.getDesignPeriod() != null) {
-					long addMinutes = Arith.round(Arith.mul(constructionInfoPO.getDesignPeriod(), 0.03));
-					Date newDesignTime = new Date(designTime.getTime() + addMinutes * 60 * 1000);
+				} else if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MORE_INT && constructionInfoPO.getDesignPeriod() != 0) {
+					Date newDesignTime = new Date(designTime.getTime() + Arith.mul(constructionInfoPO.getDesignPeriod(), 30) * 60 * 1000);
 					constructionInfoPO.setDesignTime(DateUtil.getDateToTimestamp(newDesignTime));
 				}
 				constructionInfoDao.update(constructionInfoPO);
