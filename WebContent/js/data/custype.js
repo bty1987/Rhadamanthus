@@ -44,7 +44,7 @@ $(function() {
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageCustype);
 
-    searcher.condition(["data-custype-name", "data-custype-status"]);
+    searcher.condition(["data-custype-name", "data-custype-status", "data-custype-no", "data-custype-agent", "data-custype-phone", "data-custype-wxapp", "data-custype-atttype", "data-custype-dgrade", "data-custype-sgrade", "data-custype-platform"]);
 
     searcher.button([{
         id: "addCustype",
