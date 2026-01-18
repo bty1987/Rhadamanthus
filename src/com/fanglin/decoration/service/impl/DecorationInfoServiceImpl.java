@@ -1,5 +1,6 @@
 package com.fanglin.decoration.service.impl;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,6 +203,22 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 			if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MORE_INT && constructionInfoPO != null) {
 				daynum = daynum + Arith.div(constructionInfoPO.getDesignPeriod(), 300, Arith.ROUND_FLOOR) / 1000;
+			}
+
+			if (constructionInfoPO != null) {
+				Timestamp designTime = constructionInfoPO.getDesignTime();
+				if (designTime == null) {
+					designTime = DateUtil.getDateToTimestamp(new Date());
+				}
+
+				if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MINI_INT) {
+					constructionInfoPO.setDesignTime(DateUtil.getDateToTimestamp(DateUtil.plusDay(new Date(designTime.getTime()), 3)));
+				} else if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MORE_INT && constructionInfoPO.getDesignPeriod() != null) {
+					long addMinutes = Arith.round(Arith.mul(constructionInfoPO.getDesignPeriod(), 0.03));
+					Date newDesignTime = new Date(designTime.getTime() + addMinutes * 60 * 1000);
+					constructionInfoPO.setDesignTime(DateUtil.getDateToTimestamp(newDesignTime));
+				}
+				constructionInfoDao.update(constructionInfoPO);
 			}
 
 			// 设置计划时间：当前时间 + 4天
