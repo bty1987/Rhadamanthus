@@ -779,4 +779,74 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		log.info("客户机会设置为忽略状态, ccid={}, isCheck={}", customerChancePO.getCcid(), customerChancePO.getIsCheck());
 	}
-}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void approveCustomerChance(CustomerChanceVO customerChanceVO, int company) throws FLException {
+
+		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());
+
+		if (customerChancePO == null) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_CONFIRM_INT) {
+			throw new FLException(330077, "客户机会不可操作");
+		}
+
+		CustomerSourcePO customerSourcePO = customerChancePO.getSource();
+
+		if (customerSourcePO == null) {
+			throw new FLException(330074, "客户资源不存在");
+		}
+
+		if (customerSourcePO.getStatus() != CustomerSourcePO.STATUS_CONFIRM_INT) {
+			throw new FLException(330074, "客户资源不可操作");
+		}
+
+		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) {
+			decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
+		}
+		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid(), company);
+
+		DecorationVO decorationVO = new DecorationVO();
+		decorationVO.setCreater(new UserBaseVO(customerChancePO.getCreater().getUserId()));
+		decorationVO.setHouse(new HouseVO(customerSourcePO.getHouse().getHid()));
+		decorationVO.setCustomer(new CustomerVO(customerSourcePO.getCustomer().getCid()));
+		decorationVO.setDesigner(new UserBaseVO(customerChancePO.getBelonger().getUserId()));
+		decorationVO.setSalesman(new UserBaseVO(customerSourcePO.getCreater().getUserId()));
+		decorationVO.setGrade("C");
+		decorationVO.setNotSalesmanRate(customerChancePO.getBusitype().getNotSalesmanRate());
+		decorationVO.setBusitype(customerChancePO.getBusitype().getDbid());
+
+		DecorationInfoVO decorationInfoVO = new DecorationInfoVO();
+		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
+		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
+
+		decorationService.tranDecoration(decorationVO, decorationInfoVO, company);
+
+		customerSourcePO.setOrderId(decorationVO.getOrderId());
+		customerSourcePO.setDesigner(customerChancePO.getBelonger());
+		customerSourcePO.setSalesman(customerSourcePO.getCreater());
+		customerSourcePO.setStatus(CustomerSourcePO.STATUS_TRAN_INT);
+
+		customerSourceDao.update(customerSourcePO);
+
+		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
+		customerChanceDao.update(customerChancePO);
+
+		customerProfileDao.updateCustomerProfile(decorationVO.getOrderId(), customerChancePO.getCustomer().getCid(), customerSourcePO.getCsid());
+
+		HousePO housePO = customerSourcePO.getHouse();
+		VillagePO villagePO = housePO.getVillage();
+
+		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s", customerSourcePO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerSourcePO.getOrderId());
+		UserPO designer = customerChancePO.getBelonger();
+		UserPO salesman = customerSourcePO.getCreater();
+
+		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
+		messageService.sendMessage(salesman.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, salesman.getCompany());
+
+		log.info("客户机会直接转装修单成功, ccid={}, orderId={}", customerChancePO.getCcid(), decorationVO.getOrderId());
+	}
+ }

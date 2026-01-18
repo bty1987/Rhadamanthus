@@ -1,4 +1,4 @@
-﻿$.extend(api.index, {
+$.extend(api.index, {
     vustomer: {
         url: "/views/customer/vustomer.html"
     },
@@ -445,6 +445,9 @@ $.extend(api, {
         },
         uncheckCustomerChance: {
             url: "uncheckCustomerChance.do"
+        },
+        approveCustomerChance: {
+            url: "approveCustomerChance.do"
         },
 
         pageCustomerProfile: {
