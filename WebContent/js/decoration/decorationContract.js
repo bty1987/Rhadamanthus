@@ -283,8 +283,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return [3, 4].indexOf(v.status) != -1;
-
+            return [3, 4].indexOf(v.status) != -1 && (decorationContract.showtype != "design" && decorationContract.showtype != "plan");
         }
     }, {
         name: "隐藏",
@@ -295,7 +294,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.ishow == 0;
+            return v.ishow == 0 && (decorationContract.showtype != "design" && decorationContract.showtype != "plan");
         }
     }, {
         name: "显示",
