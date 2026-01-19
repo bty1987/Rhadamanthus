@@ -233,6 +233,10 @@ jQuery(function($) {
         drawline.items.actualDate.val(v.applayTime);
         drawline.items.drawLineGroup.get(0).selectedIndex = 0;
 
+        // 为隐藏的时间控件设置默认值
+        drawline.items.startTime.val("00:00");
+        drawline.items.endTime.val("02:00");
+
         drawline.modals.editModal.modal("show");
     }
 
@@ -276,8 +280,21 @@ jQuery(function($) {
             return false;
         }
 
-        var start = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + drawline.items.startTime.val());
-        var end = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + drawline.items.endTime.val());
+        // 为隐藏的时间控件设置默认值
+        var startTimeVal = drawline.items.startTime.val();
+        var endTimeVal = drawline.items.endTime.val();
+        var groupIdVal = drawline.items.drawLineGroup.val();
+
+        // 如果隐藏字段为空，设置默认值
+        if (!startTimeVal) {
+            startTimeVal = "00:00";  // 默认开始时间
+        }
+        if (!endTimeVal) {
+            endTimeVal = "02:00";    // 默认结束时间
+        }
+
+        var start = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + startTimeVal);
+        var end = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + endTimeVal);
 
         if (start == NaN || end == NaN || start >= end) {
             com.showAlert(com.info, "起始时间和结束时间非法");
@@ -286,9 +303,8 @@ jQuery(function($) {
 
         var options = {
             "drawLine.dlid": drawline.items.dlid.val(),
-            "drawLine.startTime": drawline.items.actualDate.val() + " " + drawline.items.startTime.val(),
-            "drawLine.endTime": drawline.items.actualDate.val() + " " + drawline.items.endTime.val(),
-            "drawLine.group.gid": drawline.items.drawLineGroup.val()
+            "drawLine.startTime": drawline.items.actualDate.val() + " " + startTimeVal,
+            "drawLine.endTime": drawline.items.actualDate.val() + " " + endTimeVal
         };
 
         com.post(api.construction.resetDrawLine, options, function(res) {
