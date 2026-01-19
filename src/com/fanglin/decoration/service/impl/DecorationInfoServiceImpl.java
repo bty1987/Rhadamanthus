@@ -180,11 +180,15 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 		String houseAddr = String.format("%s %s", villagePO.getName(), housePO.getHouseNumber());
 
+		if (decorationInfoVO.getSourceStatus() == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
+			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_END_INT);
+			decorationPO.setSourceStatus(DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT);
+			decorationPO.setSdesignTime(DateUtil.getDateToTimestamp(new Date()));
+		}
+
 		if ((decorationInfoVO.getSourceStatus() % 10) == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
 
-			decorationPO.setSourceStatus(DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT);
 			decorationPO.setDesignStatus(decorationInfoVO.getSourceStatus());
-			decorationPO.setSdesignTime(DateUtil.getDateToTimestamp(new Date()));
 
 			DecorationServicePO decorationServicePO = new DecorationServicePO();
 
@@ -232,7 +236,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 		if (decorationInfoVO.getSourceStatus() == DecorationPO.STATUS_SETTING_OUT_CONFIRMATION_INT) {
 
-			decorationPO.setSourceStatus(decorationInfoVO.getSourceStatus());
+			decorationPO.setSourceStatus(DecorationPO.STATUS_SETTING_OUT_CONFIRMATION_INT);
 			decorationPO.setEdesignTime(DateUtil.getDateToTimestamp(new Date()));
 
 			messageService.sendMessage(designer.getUserId(), null, String.format("装修单: %s , 地址: %s , 放线开工设计方案客户已确认通过 , 持续关注客户服务及对接排放线事项安排 .", orderId, houseAddr), MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());

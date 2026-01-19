@@ -184,10 +184,6 @@ public class CustomerChanceAction extends BaseListAction {
 		return customerChances;
 	}
 
-	public List<CustomerChanceVO> getCustomerChances() {
-		return customerChances;
-	}
-
 	public void setCustomerChances(List<CustomerChanceVO> customerChances) {
 		this.customerChances = customerChances;
 	}
