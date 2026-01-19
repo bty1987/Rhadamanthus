@@ -283,7 +283,6 @@ jQuery(function($) {
         // 为隐藏的时间控件设置默认值
         var startTimeVal = drawline.items.startTime.val();
         var endTimeVal = drawline.items.endTime.val();
-        var groupIdVal = drawline.items.drawLineGroup.val();
 
         // 如果隐藏字段为空，设置默认值
         if (!startTimeVal) {
@@ -291,14 +290,6 @@ jQuery(function($) {
         }
         if (!endTimeVal) {
             endTimeVal = "02:00";    // 默认结束时间
-        }
-
-        var start = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + startTimeVal);
-        var end = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + endTimeVal);
-
-        if (start == NaN || end == NaN || start >= end) {
-            com.showAlert(com.info, "起始时间和结束时间非法");
-            return false;
         }
 
         var options = {
