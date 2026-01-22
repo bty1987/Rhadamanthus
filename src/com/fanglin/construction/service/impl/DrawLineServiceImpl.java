@@ -462,33 +462,23 @@ public class DrawLineServiceImpl implements DrawLineService {
 			throw new FLException(120014, "放线信息不存在");
 		}
 
+		DrawLineGroupPO drawLineGroupPO = drawLineGroupDao.get(drawLineVO.getGroup().getGid());
+
+		if (drawLineGroupPO == null) {
+			throw new FLException(120016, "不存在放线小组");
+		}
+
 		Timestamp start = drawLineVO.getStartTime();
 		Timestamp end = drawLineVO.getEndTime();
 
-		// 小组参数为非必填，如果传递了小组ID则进行校验
-		DrawLineGroupPO drawLineGroupPO = null;
-		if (drawLineVO.getGroup() != null && drawLineVO.getGroup().getGid() > 0) {
-			drawLineGroupPO = drawLineGroupDao.get(drawLineVO.getGroup().getGid());
-
-			if (drawLineGroupPO == null) {
-				throw new FLException(120016, "不存在放线小组");
-			}
-
-			// 检查时间重叠（仅在有小组时检查）
-			if (drawLineDao.countDrawLine(drawLineVO.getGroup().getGid(), start, end, drawLinePO.getCompany()) > 0) {
-				throw new FLException(120015, "时间重叠不能申请放线计划");
-			}
+		if (drawLineDao.countDrawLine(drawLineVO.getGroup().getGid(), start, end, drawLinePO.getCompany()) > 0) {
+			throw new FLException(120015, "时间重叠不能申请放线计划");
 		}
 
 		drawLinePO.setStatus(DrawLinePO.STATUS_APPLICATION_INT);
 		drawLinePO.setEndTime(end);
 		drawLinePO.setStartTime(start);
-
-		// 只有传递了小组才设置，否则保持原值或为空
-		if (drawLineGroupPO != null) {
-			drawLinePO.setGroup(drawLineGroupPO);
-		}
-
+		drawLinePO.setGroup(drawLineGroupPO);
 		drawLinePO.setActualTime(Long.parseLong(DateUtil.getDateToDateString(end, "yyyyMMdd")));
 
 		drawLineDao.update(drawLinePO);
