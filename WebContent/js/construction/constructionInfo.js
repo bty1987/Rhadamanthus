@@ -104,6 +104,8 @@ jQuery(function($) {
             ["报价版本: ", v.decoration.version.name, "grey"],
             ["签单时间: ", v.decoration.contractTime, "green"],
             ["设计天数: ", v.designPeriod ? v.designPeriod + "天" : "", "blue"],
+            ["设计超期天数: ", v.designOverdueDays ? v.designOverdueDays + "天" : "", "red"],
+            ["初始设计完成时间: ", v.initDesignTime, "green"],
             ["预计交钥匙时间: ", v.keyTime, "green"],
             ["预计放线时间: ", v.drawlineTime, "green"],
             ["预计完工时间: ", v.finishTime, "green"],
@@ -256,6 +258,8 @@ jQuery(function($) {
                 ["设计师", "decoration.designer.userName"],
                 ["签单时间", "decoration.contractTime"],
                 ["设计天数", "designPeriod"],
+                ["设计超期天数", "designOverdueDays"],
+                ["初始设计完成时间", "initDesignTime"],
                 ["预计交钥匙时间", "keyTime"],
                 ["预计放线时间", "drawlineTime"],
                 ["预计完工时间", 'finishTime'],
@@ -277,6 +281,8 @@ jQuery(function($) {
                 v.decoration.designer.dept.fatherDept.name = (v.decoration.designer == null ? " " : v.decoration.designer.dept.fatherDept.name);
                 v.decoration.contractTime = (v.decoration.contractTime == null ? "" : v.decoration.contractTime);
                 v.designPeriod = (v.designPeriod == null ? "" : v.designPeriod);
+                v.designOverdueDays = (v.designOverdueDays == null ? "" : v.designOverdueDays);
+                v.initDesignTime = (v.initDesignTime == null ? "" : v.initDesignTime);
                 v.keyTime = (v.keyTime == null ? "" : v.keyTime);
                 v.drawlineTime = (v.drawlineTime == null ? "" : v.drawlineTime);
                 v.finishTime = (v.finishTime == null ? "" : v.finishTime);

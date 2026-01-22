@@ -560,7 +560,27 @@ $(function() {
 
         com.post(api.construction.updateConstructionInfoByOrderId, options, function(res) {
 
-            com.showAlert(com.info, "操作成功");
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                "decoration.orderId": contract.orderId
+            }, function(decorationRes) {
+
+                var decoration = decorationRes.decoration;
+                var designPeriodValue = parseInt(order.infoItems.designPeriod.val()) || 0;
+                var baseTime = null;
+
+                if (decoration.precontractTime) {
+                    baseTime = decoration.precontractTime;
+                } else if (decoration.contractTime) {
+                    baseTime = decoration.contractTime;
+                }
+
+                if (baseTime && designPeriodValue > 0) {
+                    var newDesignTime = utils.workDays(baseTime, designPeriodValue);
+                    order.infoItems.designTime.val(newDesignTime);
+                }
+
+                com.showAlert(com.info, "操作成功");
+            }, null, false);
         });
     });
 
@@ -591,7 +611,27 @@ $(function() {
             com.focusPage('#drawlineCalendar').fullCalendar('next');
             com.focusPage('#drawlineCalendar').fullCalendar('prev');
 
-            com.showAlert(com.info, "操作成功");
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                "decoration.orderId": contract.orderId
+            }, function(decorationRes) {
+
+                var decoration = decorationRes.decoration;
+                var designPeriodValue = parseInt(order.infoItems.designPeriod.val()) || 0;
+                var baseTime = null;
+
+                if (decoration.precontractTime) {
+                    baseTime = decoration.precontractTime;
+                } else if (decoration.contractTime) {
+                    baseTime = decoration.contractTime;
+                }
+
+                if (baseTime && designPeriodValue > 0) {
+                    var newDesignTime = utils.workDays(baseTime, designPeriodValue);
+                    order.infoItems.designTime.val(newDesignTime);
+                }
+
+                com.showAlert(com.info, "操作成功");
+            }, null, false);
         });
     });
 

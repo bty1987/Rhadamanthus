@@ -21,6 +21,10 @@ public class ConstructionInfoVO implements Serializable {
 
 	private Integer designPeriod;
 
+	private Integer designOverdueDays;
+
+	private Timestamp initDesignTime;
+
 	private Long cid;
 
 	private Short ishovel;
@@ -100,6 +104,23 @@ public class ConstructionInfoVO implements Serializable {
 
 	public void setDesignPeriod(Integer designPeriod) {
 		this.designPeriod = designPeriod;
+	}
+
+	public Integer getDesignOverdueDays() {
+		return designOverdueDays;
+	}
+
+	public void setDesignOverdueDays(Integer designOverdueDays) {
+		this.designOverdueDays = designOverdueDays;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getInitDesignTime() {
+		return initDesignTime;
+	}
+
+	public void setInitDesignTime(Timestamp initDesignTime) {
+		this.initDesignTime = initDesignTime;
 	}
 
 	public Long getCid() {

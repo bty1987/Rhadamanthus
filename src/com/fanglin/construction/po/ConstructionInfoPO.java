@@ -43,6 +43,10 @@ public class ConstructionInfoPO implements Serializable {
 
 	private int designPeriod;
 
+	private int designOverdueDays;
+
+	private Timestamp initDesignTime;
+
 	private short ishovel;
 
 	private short iskey;
@@ -115,6 +119,24 @@ public class ConstructionInfoPO implements Serializable {
 
 	public void setDesignPeriod(int designPeriod) {
 		this.designPeriod = designPeriod;
+	}
+
+	@Column(name = "designOverdueDays")
+	public int getDesignOverdueDays() {
+		return designOverdueDays;
+	}
+
+	public void setDesignOverdueDays(int designOverdueDays) {
+		this.designOverdueDays = designOverdueDays;
+	}
+
+	@Column(name = "initDesignTime")
+	public Timestamp getInitDesignTime() {
+		return initDesignTime;
+	}
+
+	public void setInitDesignTime(Timestamp initDesignTime) {
+		this.initDesignTime = initDesignTime;
 	}
 
 	public void setOrderId(String orderId) {

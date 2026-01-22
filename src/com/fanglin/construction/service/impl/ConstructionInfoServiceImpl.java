@@ -141,6 +141,7 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 
 		if (constructionInfoPO == null) {
 			constructionInfoPO = new ConstructionInfoPO();
+			constructionInfoPO.setInitDesignTime(decorationPO.getContractTime());
 		}
 
 		BeanUtil.copyPropertie(constructionInfoVO, constructionInfoPO);
