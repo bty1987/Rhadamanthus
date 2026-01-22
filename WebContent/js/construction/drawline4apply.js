@@ -280,22 +280,14 @@ jQuery(function($) {
             return false;
         }
 
-        // 为隐藏的时间控件设置默认值
-        var startTimeVal = drawline.items.startTime.val();
-        var endTimeVal = drawline.items.endTime.val();
-
-        // 如果隐藏字段为空，设置默认值
-        if (!startTimeVal) {
-            startTimeVal = "00:00";  // 默认开始时间
-        }
-        if (!endTimeVal) {
-            endTimeVal = "02:00";    // 默认结束时间
-        }
+        // 获取日期部分（截取到 yyyy-MM-dd）
+        var actualDateVal = drawline.items.actualDate.val();
+        var datePart = actualDateVal ? actualDateVal.substring(0, 10) : "";
 
         var options = {
             "drawLine.dlid": drawline.items.dlid.val(),
-            "drawLine.startTime": drawline.items.actualDate.val() + " " + startTimeVal,
-            "drawLine.endTime": drawline.items.actualDate.val() + " " + endTimeVal
+            "drawLine.startTime": datePart + " 00:00:00",
+            "drawLine.endTime": datePart + " 02:00:00"
         };
 
         com.post(api.construction.resetDrawLine, options, function(res) {
