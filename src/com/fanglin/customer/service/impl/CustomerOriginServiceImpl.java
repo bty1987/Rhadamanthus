@@ -420,7 +420,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			customerOriginVO.setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
-		if (customerOriginVO.getPhone() != null && !customerOriginVO.getPhone().equals(customerOriginPO.getPhone())) {
+		if (customerOriginVO.getPhone() != null && !customerOriginPO.getPhone().equals(FormatUtil.encodePhone(customerOriginVO.getPhone()))) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
 

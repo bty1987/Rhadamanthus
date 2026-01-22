@@ -655,7 +655,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		decorationService.tranDecoration(decorationVO, decorationInfoVO, company);
 
 		// 判断orderId是否发生变化，如果不同则更新
-		if (!originalOrderId.equals(decorationVO.getOrderId())) {
+		if (!decorationVO.getOrderId().equals(originalOrderId)) {
 			customerChancePO.setOrderId(decorationVO.getOrderId());
 		}
 

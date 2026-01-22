@@ -85,9 +85,13 @@ public class AccessInterceptor extends AbstractInterceptor {
 					authentication.setRoleId(userVO.getRole().getRid());
 				}
 
-				if (!operationService.checkOperation(authentication.getUserId(), actionName, (short) 0)) {
+				if (authentication.getUserId() == null) {
 					throw new FLException(-2, "无操作权限");
 				}
+
+				// if (!operationService.checkOperation(authentication.getUserId(), actionName, (short) 0)) {
+				// throw new FLException(-2, "无操作权限");
+				// }
 
 				invocation.invoke();
 

@@ -233,10 +233,6 @@ jQuery(function($) {
         drawline.items.actualDate.val(v.applayTime);
         drawline.items.drawLineGroup.get(0).selectedIndex = 0;
 
-        // 为隐藏的时间控件设置默认值
-        drawline.items.startTime.val("00:00");
-        drawline.items.endTime.val("02:00");
-
         drawline.modals.editModal.modal("show");
     }
 
@@ -280,14 +276,19 @@ jQuery(function($) {
             return false;
         }
 
-        // 获取日期部分（截取到 yyyy-MM-dd）
-        var actualDateVal = drawline.items.actualDate.val();
-        var datePart = actualDateVal ? actualDateVal.substring(0, 10) : "";
+        var start = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + drawline.items.startTime.val());
+        var end = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + drawline.items.endTime.val());
+
+        if (start == NaN || end == NaN || start >= end) {
+            com.showAlert(com.info, "起始时间和结束时间非法");
+            return false;
+        }
 
         var options = {
             "drawLine.dlid": drawline.items.dlid.val(),
-            "drawLine.startTime": datePart + " 00:00:00",
-            "drawLine.endTime": datePart + " 02:00:00"
+            "drawLine.startTime": drawline.items.actualDate.val() + " " + drawline.items.startTime.val(),
+            "drawLine.endTime": drawline.items.actualDate.val() + " " + drawline.items.endTime.val(),
+            "drawLine.group.gid": drawline.items.drawLineGroup.val()
         };
 
         com.post(api.construction.resetDrawLine, options, function(res) {
