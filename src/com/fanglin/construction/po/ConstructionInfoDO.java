@@ -51,6 +51,8 @@ public class ConstructionInfoDO implements Serializable {
 
 	private int designPeriod;
 
+	private int designOverdueDays;
+
 	private short ishovel;
 
 	private short iskey;
@@ -129,6 +131,15 @@ public class ConstructionInfoDO implements Serializable {
 
 	public void setDesignPeriod(int designPeriod) {
 		this.designPeriod = designPeriod;
+	}
+
+	@Column(name = "designOverdueDays")
+	public int getDesignOverdueDays() {
+		return designOverdueDays;
+	}
+
+	public void setDesignOverdueDays(int designOverdueDays) {
+		this.designOverdueDays = designOverdueDays;
 	}
 
 	@Column(name = "cid")

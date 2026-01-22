@@ -223,6 +223,14 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 					Date newDesignTime = new Date(designTime.getTime() + Arith.mul(constructionInfoPO.getDesignPeriod(), 30) * 60 * 1000);
 					constructionInfoPO.setDesignTime(DateUtil.getDateToTimestamp(newDesignTime));
 				}
+
+				Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
+				int overdueDays = DateUtil.diffDay(designTime, currentTime);
+				if (overdueDays > 0) {
+					int currentOverdueDays = constructionInfoPO.getDesignOverdueDays();
+					constructionInfoPO.setDesignOverdueDays(currentOverdueDays + overdueDays);
+				}
+
 				constructionInfoDao.update(constructionInfoPO);
 			}
 
