@@ -489,4 +489,36 @@ Condition.addupRule("construction", {
             valuePath: "value"
         }
     },
+    "constructionSchedule-node-cnid": {
+        label: "施工节点",
+        type: "select",
+        submitConfig: {
+            name: "constructionSchedule.node.cnid",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryConstructionNode,
+            postData: {},
+            listPath: "constructionNodes",
+            keyPath: "cnid",
+            valuePath: "name"
+        }
+    },
+    "constructionSchedule-status": {
+        label: "计划状态",
+        type: "select",
+        submitConfig: {
+            name: "constructionSchedule.status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.construction().constructionSchedule.status.keys(),
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });

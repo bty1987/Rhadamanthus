@@ -60,7 +60,7 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.construction.pageConstructionSchedule);
-    searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "construction-supervisor", "decoration-projectStatus", "construction-schedule-createTime", "construction-schedule-startTime", "construction-schedule-endTime", "construction-schedule-enterTime", "construction-schedule-leaveTime", "construction-diary-isUpload"]);
+    searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "construction-supervisor", "decoration-projectStatus", "construction-schedule-createTime", "construction-schedule-startTime", "construction-schedule-endTime", "construction-schedule-enterTime", "construction-schedule-leaveTime", "constructionSchedule-node-cnid", "constructionSchedule-status", "construction-diary-isUpload"]);
     searcher.history("constructoinSchedulePostData");
 
     var lineprops = [{
