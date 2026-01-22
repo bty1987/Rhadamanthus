@@ -279,8 +279,7 @@ Condition.addupRule("data", {
             name: "value",
             op: "cn",
             validate: null
-        }
-    },
+        },
         dataSource: {// 从后台取数据的各种配置
             url: null,
             postData: {},

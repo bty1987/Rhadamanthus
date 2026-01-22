@@ -350,6 +350,7 @@ jQuery(function($) {
             data["con-company-legal-11"] = data["con-company-legal"];
             data["con-company-phone-11"] = data["con-company-phone"];
             data["con-company-email-11"] = data["con-company-email"];
+            data["con-company-addr-11"] = data["con-company-addr"];
             data["con-company-name-21"] = data["con-company-name"];
             data["con-company-addr-21"] = data["con-company-addr"];
             data["con-company-legal-21"] = data["con-company-legal"];
