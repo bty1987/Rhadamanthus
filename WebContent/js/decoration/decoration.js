@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var order = {
         saveBtn: null,
@@ -1601,9 +1601,9 @@
                 if (datas.designTime) {
                     designTime = datas.designTime;
                 } else if (decoration.precontractTime) {
-                    designTime = utils.workDays(decoration.precontractTime, (datas.designPeriod ? datas.designPeriod : 0));
+                    designTime = utils.workDays(decoration.precontractTime, (datas.designPeriod && datas.designPeriod > 0 ? datas.designPeriod : designPeriod));
                 } else if (decoration.contractTime) {
-                    designTime = utils.workDays(decoration.contractTime, (datas.designPeriod ? datas.designPeriod : 0));
+                    designTime = utils.workDays(decoration.contractTime, (datas.designPeriod && datas.designPeriod > 0 ? datas.designPeriod : designPeriod));
                 }
 
                 var finishTime = null;
@@ -1616,7 +1616,7 @@
                     constructionPeriod = datas.timeLimit;
                 }
 
-                if(datas.designPeriod){
+                if(datas.designPeriod && datas.designPeriod > 0){
                     designPeriod = datas.designPeriod;
                 }
 
@@ -1631,7 +1631,7 @@
                 order.infoItems.dlmConpany.val(0);
                 order.infoItems.quoteArea.val(decoration.house.innerArea);
                 order.infoItems.timeLimit.val(constructionPeriod);
-                order.infoItems.designPeriod.val(datas.designPeriod ? datas.designPeriod : "");
+                order.infoItems.designPeriod.val(datas.designPeriod && datas.designPeriod > 0 ? datas.designPeriod : designPeriod);
                 order.infoItems.ishovel.val(datas.ishovel);
                 order.infoItems.iskey.val(datas.iskey);
                 order.infoItems.isCeremony.val(datas.isCeremony);
