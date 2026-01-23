@@ -804,6 +804,11 @@ jQuery(function($) {
                     window.authentication = response.domain;
 
                     setTimeout(function(){
+                        
+                        setCookie("authentication", response.domain.replace(/[\r\n]/g, ""), config.timeout);
+                        setCookie("loginTime", new Date().getTime(), config.timeout);
+                        setCookie("versionCode", config.versionCode, config.timeout);
+                        
                         window.location.replace(config.server + "/redirect.html?authentication=" + response.domain.replace(/[\r\n]/g, ""));
                     }, 3000);
 
