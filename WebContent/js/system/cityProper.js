@@ -38,10 +38,12 @@ jQuery(function($) {
 	};
 	
 	var mp;
-	
+	var multiMarker = null;
+	var mpstyle = null;
+
 	cityProper.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
 	cityProper.cancelBtn = com.focusPage("#cancelBtn");
-	saveMapBtn: com.focusPage("#saveMapBtn").on("click", saveMap);
+	cityProper.saveMapBtn = com.focusPage("#saveMapBtn").on("click", saveMap);
 	
 	cityProper.items.cityProperId = com.focusPage("#cityProperId");
 	cityProper.items.cityProperName = com.focusPage("#cityProperName");
@@ -221,170 +223,185 @@ jQuery(function($) {
 	}
 	
 	// 初始化地图 创建地图函数
-    // var mp = createMap();
+	function createMap(lng, lat) {
+		var center = new TMap.LatLng(41.810947, 123.38497);
+		var mp = new TMap.Map("mapContainer", {
+			enableMapClick: false,
+			minZoom: 11,
+			maxZoom: 20,
+			center: center,
+		});
 
-    function createMap(lng, lat) {
-        var mp = new BMap.Map("mapContainer", {enableMapClick: false, minZoom: 11, maxZoom: 20}); // 在百度地图容器中创建一个地图
-        mp.centerAndZoom(new BMap.Point(123.38497, 41.810947), 15); // 设定地图中心和坐标并将地图显示在地图容器中
-        mp.setMapStyle({style: 'light'});
-        mp.enableKeyboard();
-        mp.enableScrollWheelZoom(true);
+		var mapc = com.focusPage("#mapContainer");
+		mapc.find("canvas").css("height", mapc.height());
 
-        mp.addEventListener("click", showInfo);
+		return mp;
+	}
 
-        return mp;
-    }
+	function showInfo(e) {
+		if (!com.focusPage('#mapContainer').hasClass('changing-point')) {
+			return false;
+		}
 
-    function showInfo(e) {
-        if (!com.focusPage('#mapContainer').hasClass('changing-point')) {
-            return;
-        }
+		clearMultiMarker();
 
-        mp.clearOverlays();
+		var vill = cityProper.currentVill;
+		var name = vill.name;
+		var x = vill.x;
+		var y = vill.y;
+		var count = vill.count;
+		var comment = name + "已完成订单" + count + "套";
 
-        var vill = cityProper.currentVill;
-        var name = vill.name;
-        var x = vill.x;
-        var y = vill.y;
-        var count = vill.count;
-        var comment = name + "已完成订单" + count + "套";
+		var latlng = new TMap.LatLng(e.point.lat, e.point.lng);
 
-        var mytext = new ComplexCustomOverlay(new BMap.Point(e.point.lng, e.point.lat), name, comment); // 控制标注地址和备注信息
+		if (!mpstyle) {
+			mpstyle = new TMap.MarkerStyle({
+				"width": 25,
+				"height": 35,
+				"anchor": {
+					x: 16,
+					y: 32
+				}
+			});
+		}
 
-        mp.addOverlay(mytext);
+		if (!multiMarker) {
+			multiMarker = new TMap.MultiMarker({
+				map: mp,
+				styles: {
+					"myStyle": mpstyle
+				},
+				geometries: []
+			});
+		}
 
-        cityProper.currentVill.tempPoint = {
-            x: e.point.lng,
-            y: e.point.lat
-        }
-    }
+		multiMarker.setGeometries([{
+			"id": "1",
+			"styleId": 'myStyle',
+			"position": latlng,
+			"properties": {
+				"title": name
+			}
+		}]);
 
-    // 自定义覆盖物
-    function ComplexCustomOverlay(point, text, mouseoverText) {
-        this._point = point;
-        this._text = text;
-        this._mouseoverText = mouseoverText;
-    }
+		cityProper.currentVill.tempPoint = {
+			x: e.point.lng,
+			y: e.point.lat
+		}
+	}
 
-    // 标记点提示框样式
-    ComplexCustomOverlay.prototype = new BMap.Overlay();
-    ComplexCustomOverlay.prototype.initialize = function (map) {
-        this._map = map;
+	// 重选位置点击
+	com.focusPage('[name="resetPositionBtn"]').click(function () {
+		com.focusPage('#mapContainer').addClass('changing-point');
+		clearMultiMarker();
+	});
 
-        // 定位点
-        var circle = document.createElement('section');
-        circle.setAttribute('class', 'position-mark');
+	// 重新加载地图
+	com.focusPage('[name="resetMapBtn"]').click(function () {
+		drawMap();
+	});
 
-        this._circle = circle;
+	// 确认位置
+	com.focusPage("#placeBtn").click(function(){
+		getPlace(com.focusPage("#name").val());
+	});
 
-        mp.getPanes().labelPane.appendChild(circle);
+	// 保存位置
+	function saveMap() {
 
-        // 文字描述
-        var div = this._div = document.createElement("div");
-        div.setAttribute('class', 'txt');
-        // div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat); //堆叠顺序
+		var params = {
+			'cityProper.cpid': cityProper.currentVill.cpid,
+			'cityProper.x': cityProper.currentVill.tempPoint.x * 1000000,
+			'cityProper.y': cityProper.currentVill.tempPoint.y * 1000000
+		};
 
-        var span = this._span = document.createElement("span");
-        div.appendChild(span);
-        span.innerHTML = this._text;
-        var that = this;
-        /*
-         * div.onclick = function(){ window.open('html/1.html'); //跳转定向 };
-         */
+		com.post(api.system.updateCityProperForPosition, params, function (res) {
+			cityProper.mapModal.modal('hide');
+			searcher.doSearch();
+		}, null);
+	}
 
-        // 箭头边框
-        var arrowBorder = this._arrow = document.createElement("div");
-        arrowBorder.setAttribute('class', 'arrow-border');
-        div.appendChild(arrowBorder);
+	// 编辑位置
+	function editPosition(vill) {
+		cityProper.mapItems.no.val(vill.no);
+		cityProper.mapItems.name.val(vill.name);
 
-        // 提示框下面的小三角和提示框横向位置
-        var arrow = this._arrow = document.createElement("div");
-        arrow.setAttribute('class', 'arrow');
-        div.appendChild(arrow);
+		cityProper.mapModal.modal("show");
 
-        circle.appendChild(div);
-        return circle;// 当调用map.removeOverlay或者map.clearOverlays方法时,API会自动将initialize方法返回的DOM元素进行移除.
-    };
+		cityProper.currentVill = vill;
 
-    ComplexCustomOverlay.prototype.draw = function () {
-        var map = this._map;
-        var pixel = map.pointToOverlayPixel(this._point);
+		var x = vill.x / 1000000;
+		var y = vill.y / 1000000;
 
-        this._circle.style.top = pixel.y - 5 + 'px';
-        this._circle.style.left = pixel.x - 5 + 'px';
-    };
+		cityProper.currentVill.tempPoint = {
+			x: x,
+			y: y
+		};
+	}
 
-    // 重选位置点击
-    com.focusPage('[name="resetPositionBtn"]').click(function () {
-        com.focusPage('#mapContainer').addClass('changing-point');
-        mp.clearOverlays();
-    });
+	function drawMap() {
+		if (com.focusPage("#mapContainer>canvas").length == 0) {
+			mp = createMap();
+		}
 
-    // 重新加载地图
-    com.focusPage('[name="resetMapBtn"]').click(function () {
-        // mp.reset();
-        drawMap();
-    });
+		if (!mpstyle) {
+			mpstyle = new TMap.MarkerStyle({
+				"width": 25,
+				"height": 35,
+				"anchor": {
+					x: 16,
+					y: 32
+				}
+			});
+		}
 
-    // 确认位置
-    com.focusPage("#placeBtn").click(function(){
-        getPlace(com.focusPage("#name").val());
-    });
+		var vill = cityProper.currentVill;
+		var name = vill.name;
+		var x = vill.x / 1000000;
+		var y = vill.y / 1000000;
+		var count = vill.count;
+		var comment = name + "已完成订单" + count + "套";
 
-    // 保存位置
-    function saveMap() {
+		if (x && y) {
+			var latlng = new TMap.LatLng(y, x);
 
-        var params = {
-            'cityProper.cpid': cityProper.currentVill.cpid,
-            'cityProper.x': cityProper.currentVill.tempPoint.x * 1000000,
-            'cityProper.y': cityProper.currentVill.tempPoint.y * 1000000
-        };
-        
-        com.post(api.system.updateCityProperForPosition, params, function (res) {
-            cityProper.mapModal.modal('hide');
-            searcher.doSearch();
-        }, null);
-    }
+			mp.setCenter(latlng);
 
-    // 编辑位置
-    function editPosition(vill) {
-        // 初始化地图 创建地图函数
-        mp = createMap();
+			if (!multiMarker) {
+				multiMarker = new TMap.MultiMarker({
+					map: mp,
+					styles: {
+						"myStyle": mpstyle
+					},
+					geometries: []
+				});
+			}
 
-        cityProper.mapItems.no.val(vill.no);
-        cityProper.mapItems.name.val(vill.name);
+			multiMarker.setGeometries([{
+				"id": "1",
+				"styleId": 'myStyle',
+				"position": latlng,
+				"properties": {
+					"title": name
+				}
+			}]);
+		}
+	}
 
-        mp && mp.clearOverlays();
+	// 清除标记点
+	function clearMultiMarker() {
+		if (!mp)
+			return false;
 
-        cityProper.mapModal.modal("show");
+		if (!multiMarker)
+			return false;
 
-        cityProper.currentVill = vill;
+		var geos = multiMarker.getGeometries();
 
-        var x = vill.x / 1000000;
-        var y = vill.y / 1000000;
-
-        cityProper.currentVill.tempPoint = {
-            x: x,
-            y: y
-        };
-    }
-
-    function drawMap() {
-        mp = createMap();
-        var vill = cityProper.currentVill;
-        var name = vill.name;
-        var x = vill.x / 1000000;
-        var y = vill.y / 1000000;
-        var count = vill.count;
-        var comment = name + "已完成订单" + count + "套";
-
-        if (x && y) {
-            var mytext = new ComplexCustomOverlay(new BMap.Point(x, y), name, comment); // 控制标注地址和备注信息
-            mp.addOverlay(mytext);
-            // mp.panTo(mytext);
-            mp.setCenter(new BMap.Point(x, y));
-        }
-    }
+		$.each(geos, function(i, v) {
+			multiMarker.remove([v.id])
+		});
+	}
 
     function bindCityProper(a, b, d, c) {
         "" != a ? com.post(api.system.queryCityProperByCid, {
@@ -397,46 +414,70 @@ jQuery(function($) {
             }) : b.bindData([], "", "", d)
     }
 
-    // webapi
-    function getPlace(villageName){
-        $.ajax({
-            url: "http://api.map.baidu.com/place/v2/search?query=" + villageName + "&region=" + city + "&output=json&ak=LRGsFoxg2Z21c9on5s5YhBQ9zeewZGw8",
-            type: "GET",
-            dataType: "JSONP",
-            success: function(data){
-                var lng;
-                var lat;
-                var placeFlag;
+	// webapi - 调用后台接口进行定位
+	function getPlace(cityProperName){
+		console.log('开始定位城区: ' + cityProperName);
 
-                if(data.results.length > 0 && data.results[0].location != undefined){
-                    lng = data.results[0].location.lng;
-                    lat = data.results[0].location.lat;
-                    placeFlag = true;
-                }else{
-                    lng = 123.38497;
-                    lat = 41.810947;
-                    placeFlag = false;
-                }
+		// 调用后台接口进行定位
+		com.post(api.system.locateCityProper, {
+			"cityProper.cpid": cityProper.currentVill.cpid
+		}, function(res) {
 
-                cityProper.currentVill.tempPoint.x = lng;
-                cityProper.currentVill.tempPoint.y = lat;
+			com.showAlert(com.info, '定位成功');
 
-                mp = createMap();
-                mp = new BMap.Map("mapContainer", {enableMapClick: false, minZoom: 11, maxZoom: 20}); // 在百度地图容器中创建一个地图
-                mp.centerAndZoom(new BMap.Point(lng, lat), 15); // 设定地图中心和坐标并将地图显示在地图容器中
-                mp.setMapStyle({style: 'light'});
-                mp.enableKeyboard();
-                mp.enableScrollWheelZoom(true);
+			// 使用接口返回的城区信息(包含更新后的坐标)
+			cityProper.currentVill = res.cityProper;
 
-                if(placeFlag){
-                    var newPoint = new BMap.Point(lng, lat);
-                    var marker2 = new ComplexCustomOverlay(newPoint, villageName); // 控制标注地址和备注信息
-                    mp.addOverlay(marker2);
-                    mp.setCenter(newPoint);
-                }
+			var x = res.cityProper.x / 1000000;
+			var y = res.cityProper.y / 1000000;
 
-            }
-        })
-    }
+			cityProper.currentVill.tempPoint = {
+				x: x,
+				y: y
+			};
+
+			// 重新绘制地图
+			if (com.focusPage("#mapContainer>canvas").length == 0) {
+				mp = createMap();
+			}
+
+			var latlng = new TMap.LatLng(y, x);
+			mp.setCenter(latlng);
+
+			// 添加标记点
+			if (!mpstyle) {
+				mpstyle = new TMap.MarkerStyle({
+					"width": 25,
+					"height": 35,
+					"anchor": {
+						x: 16,
+						y: 32
+					}
+				});
+			}
+
+			if (!multiMarker) {
+				multiMarker = new TMap.MultiMarker({
+					map: mp,
+					styles: {
+						"myStyle": mpstyle
+					},
+					geometries: []
+				});
+			}
+
+			multiMarker.setGeometries([{
+				"id": "1",
+				"styleId": 'myStyle',
+				"position": latlng,
+				"properties": {
+					"title": cityProperName
+				}
+			}]);
+
+		}, function(err) {
+			com.showAlert(com.error, '定位失败: ' + err.errorMsg);
+		});
+	}
 	
 });
