@@ -15,7 +15,6 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.po.RolePO;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Repository("userDao")
 public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
@@ -56,7 +55,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 
-		if (SystemConfig.getInt("multicompany", 0) != 0) {
+		if (company != null) {
 			query.add(Restrictions.eq("company", company));
 		}
 

@@ -192,15 +192,13 @@ public class A20260103Action extends BaseListAction {
 
 	/**
 	 * 添加客户线索接口
-	 *
+	 * 
 	 * 接收外部系统传入的客户线索信息，转换为 ERP 客户机会并创建
-	 *
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "addCustomerLead", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "condition,errorCode,errorMsg,data.*" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "addCustomerLead", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "condition,errorCode,errorMsg,data.*" }) }, params = { "contentType", "text/html" })
 	public String addCustomerLead() throws FLException {
 
 		// 初始化 data 对象（在方法开始处，确保即使出错也有返回值）
@@ -230,7 +228,7 @@ public class A20260103Action extends BaseListAction {
 			throw new FLException(130061, "业务类型不存在");
 		}
 
-		customerChanceVO.setBusitype(new DecorationBusitypeVO(busitypeVO.getDbid())) ;
+		customerChanceVO.setBusitype(new DecorationBusitypeVO(busitypeVO.getDbid()));
 
 		// 3. 客户资源
 		CustomerSourceVO source = new CustomerSourceVO();
@@ -307,16 +305,7 @@ public class A20260103Action extends BaseListAction {
 			if (result.getOrderId() != null) {
 				this.erpZxdCode = result.getOrderId();
 			}
-		}
 
-		if (departmentId != null) {
-			this.issusTime = null;
-			this.erpDesignerCode = null;
-		}
-		// 规则1: 派到设计分区
-		if (regionId != null) {
-			this.issusTime = null;
-			this.erpDesignerCode = null;
 		}
 
 		// 封装 data 对象（包含请求参数和返回结果）
@@ -341,24 +330,25 @@ public class A20260103Action extends BaseListAction {
 		this.data.put("erpDesignerCode", erpDesignerCode);
 		this.data.put("issusTime", issusTime);
 		this.data.put("erpZxdCode", erpZxdCode);
+		this.data.put("isIssue", result.getIsIssue() == null ? 0 : result.getIsIssue());
 
 		return SUCCESS;
 	}
 
 	/**
 	 * 查询部门列表接口（重写）
-	 *
+	 * 
 	 * 请求参数：
-	 * - orgId: 信息平台编码，即公司标识（ERP中communion.company.cid加密）
-	 * - deptType: 部门类型（1:设计分区，2:设计部门）
-	 * - deptName: 部门名称（支持模糊匹配）
-	 *
+	 * 
+	 * @orgId: 信息平台编码，即公司标识（ERP中communion.company.cid加密）
+	 * @deptType: 部门类型（1:设计分区，2:设计部门）
+	 * @deptName: 部门名称（支持模糊匹配）
+	 * 
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "queryDepartmentByNameForSF", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "queryDepartmentByNameForSF", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" }) }, params = { "contentType", "text/html" })
 	public String queryDepartmentByNameForSF() throws FLException {
 
 		// 初始化 data 对象
@@ -403,17 +393,16 @@ public class A20260103Action extends BaseListAction {
 
 	/**
 	 * 根据拼音查询用户接口（重写）
-	 *
+	 * 
 	 * 请求参数：
-	 * - pinyinName: 设计师名称（支持模糊匹配）
-	 * - userStatus: 人员状态 0:在职 1:离职
-	 *
+	 * 
+	 * @pinyinName: 设计师名称（支持模糊匹配）
+	 * @userStatus: 人员状态 0:在职 1:离职
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "queryUserByPinyinForSF", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "queryUserByPinyinForSF", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" }) }, params = { "contentType", "text/html" })
 	public String queryUserByPinyinForSF() throws FLException {
 
 		// 初始化 data 对象
@@ -427,6 +416,12 @@ public class A20260103Action extends BaseListAction {
 			user.setStatus(Short.parseShort(userStatus.trim()));
 		}
 
+		if (departmentType == null) {
+			departmentType = new DepartmentTypeVO();
+
+			departmentType.setName("设计部");
+		}
+
 		// 查询用户列表
 		List<UserBaseVO> users = userService.queryUserByPinyin(pinyinName, user, departmentType, orgId);
 
@@ -434,10 +429,16 @@ public class A20260103Action extends BaseListAction {
 		List<SimpleUserVO> resultList = new ArrayList<SimpleUserVO>();
 		if (users != null && !users.isEmpty()) {
 			for (UserBaseVO u : users) {
+
 				SimpleUserVO simple = new SimpleUserVO();
+
 				simple.setId(u.getUid() != null ? String.valueOf(u.getUid()) : null);
 				simple.setCode(u.getUserId());
 				simple.setName(u.getCurrentName());
+				simple.setDept(u.getDept() != null ? u.getDept().getName() : "");
+				simple.setRegion(u.getDept() != null && u.getDept().getFatherDept() != null ? u.getDept().getFatherDept().getName() : "");
+				simple.setCompany(u.getCompany());
+
 				resultList.add(simple);
 			}
 		}
@@ -448,17 +449,16 @@ public class A20260103Action extends BaseListAction {
 
 	/**
 	 * 根据部门ID和业务类型dbid查询客户部门规则接口（SF专用）
-	 *
+	 * 
 	 * 请求参数：
-	 * - orgId: 信息平台编码，即公司标识（ERP中communion.company.cid加密）
-	 * - userId: 约访专员工号（如FL-123456）
-	 *
+	 * 
+	 * @orgId: 信息平台编码，即公司标识（ERP中communion.company.cid加密）
+	 * @userId: 约访专员工号（如FL-123456）
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "queryCustomerDeptRuleByDbidForSF", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "queryCustomerDeptRuleByDbidForSF", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerDeptRuleByDbidForSF() throws FLException {
 
 		// 初始化 data 对象
@@ -466,6 +466,10 @@ public class A20260103Action extends BaseListAction {
 
 		// 使用默认业务类型：电商信息流客源
 		String defaultBusitype = "电商信息流客源";
+
+		if (busitype != null) {
+			defaultBusitype = busitype;
+		}
 
 		// 查询业务类型
 		DecorationBusitypeVO busitypeVO = new DecorationBusitypeVO();
@@ -813,8 +817,7 @@ public class A20260103Action extends BaseListAction {
 	}
 
 	/**
-	 * 简化部门VO（用于SF接口返回）
-	 * 只包含 id 和 name 两个字段
+	 * 简化部门VO（用于SF接口返回） 只包含 id 和 name 两个字段
 	 */
 	public static class SimpleDepartmentVO implements java.io.Serializable {
 
@@ -841,8 +844,7 @@ public class A20260103Action extends BaseListAction {
 	}
 
 	/**
-	 * 简化用户VO（用于SF接口返回）
-	 * 只包含 id、code 和 name 三个字段
+	 * 简化用户VO（用于SF接口返回） 只包含 id、code 和 name 三个字段
 	 */
 	public static class SimpleUserVO implements java.io.Serializable {
 
@@ -851,6 +853,9 @@ public class A20260103Action extends BaseListAction {
 		private String id;
 		private String code;
 		private String name;
+		private String dept;
+		private String region;
+		private String company;
 
 		public String getId() {
 			return id;
@@ -874,6 +879,30 @@ public class A20260103Action extends BaseListAction {
 
 		public void setName(String name) {
 			this.name = name;
+		}
+
+		public String getDept() {
+			return dept;
+		}
+
+		public void setDept(String dept) {
+			this.dept = dept;
+		}
+
+		public String getRegion() {
+			return region;
+		}
+
+		public void setRegion(String region) {
+			this.region = region;
+		}
+
+		public String getCompany() {
+			return company;
+		}
+
+		public void setCompany(String company) {
+			this.company = company;
 		}
 	}
 

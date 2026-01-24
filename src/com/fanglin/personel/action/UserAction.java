@@ -145,7 +145,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserByPinyin() throws FLException {
 
-		packageUserName(userService.queryUserByPinyin(pinyinName, user, departmentType, queryCompany()));
+		packageUserName(userService.queryUserByPinyin(pinyinName, user, departmentType, queryCompany(), true));
 
 		return SUCCESS;
 	}

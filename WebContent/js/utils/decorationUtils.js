@@ -1755,10 +1755,10 @@ var decorationUtils = {
         var $infoboxLeft = $('<div></div>').css('float', 'left').appendTo($infoboxData);
         var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.name).appendTo($infoboxLeft);
         var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.createTime).appendTo($infoboxLeft);
-
+        
         $infobox.click(function() {
-
-            if (depage == "designer" || dataPage == plan)
+            
+            if (params.urlLoadParams.depage == "designer" || params.urlLoadParams.depage == "plan")
                 return false;
 
             com.post(api.decoration.viewDecorationContract, {
