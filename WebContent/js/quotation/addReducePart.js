@@ -563,7 +563,7 @@
 
                         $.each(data.extensions, function(i, res) {
 
-                            if (res.extensionItems && res.extensionItems.length) {
+                            if (res.extensionItems && res.extensionItems.length && res.atttype != constant.quotation().extension.ATTTYPE_ACTIVITY_INT) {
                                 $.each(res.extensionItems, function(index, v) {
 
                                     if (v.quotationFunctionAreaId == funcid) {

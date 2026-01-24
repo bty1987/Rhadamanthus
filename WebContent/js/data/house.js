@@ -293,7 +293,9 @@ $(function() {
             decoration(v);
         }
     }];
+    
     searcher.line("village.name", propertyArr, linebtns).render();
+    
     com.focusPage('#addHouse', '#pagenation').on("click", function() {
 
         house.editFlag = false;
@@ -328,10 +330,6 @@ $(function() {
         options["house.floor"] = house.items.floor.val().trim();
         options["house.door"] = house.items.door.val().trim();
         options["house.type"] = house.items.type.val();
-        options["house.buildArea"] = utils.changeThrDecimal(house.items.innerArea.val());
-        options["house.freeArea"] = 0;
-        options["house.innerArea"] = utils.changeThrDecimal(house.items.innerArea.val());
-        options["house.totalArea"] = 0;
         options["house.maxFloor"] = house.items.maxFloor.val();
         options["house.through"] = house.items.through.val();
         options["house.orientation"] = house.items.orientation.val();

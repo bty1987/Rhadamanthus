@@ -30,6 +30,8 @@ public class UserBaseVO implements Serializable {
 
 	private DepartmentVO dept;
 
+	private String company;
+
 	public UserBaseVO() {
 		super();
 	}
@@ -139,6 +141,14 @@ public class UserBaseVO implements Serializable {
 		this.dept = dept;
 	}
 
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
 	public UserBaseVO setBaseInfo(UserPO userPO) {
 
 		if (userPO == null) return this;
@@ -183,6 +193,18 @@ public class UserBaseVO implements Serializable {
 
 		if (getDuty() != null && userPO.getDuty() != null) userPO.getDuty().ptv(getDuty());
 		if (getDept() != null && userPO.getDept() != null) userPO.getDept().ptv(getDept());
+
+		return this;
+	}
+
+	public UserBaseVO ptv(UserPO userPO, String company) {
+
+		BeanUtil.copyProperties(userPO, this, Arrays.asList("role", "dept", "duty", "password", "phone", "identity", "company"));
+
+		if (getDuty() != null && userPO.getDuty() != null) userPO.getDuty().ptv(getDuty());
+		if (getDept() != null && userPO.getDept() != null) userPO.getDept().ptv(getDept());
+
+		setCompany(company);
 
 		return this;
 	}

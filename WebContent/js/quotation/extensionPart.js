@@ -10,6 +10,7 @@ var ExtensionDetail = (function() {
         quoManagePrice: 0,
         quotaxRate: 0,
         quotaxPrice: 0,
+        activityTotal: 0,
         quotation: null,
         protation: null,
 
@@ -283,8 +284,10 @@ var ExtensionDetail = (function() {
 
             var activityBalance = utils.changeTwoDecimal(utils.accSub(protation.activityPrice, protation.activityProfit));
 
-            if (protation.pid && extensionDetail.basicParams["extension.atttype"] == constant.quotation().extension.ATTTYPE_ACTIVITY_INT && total > activityBalance) {
-                com.showAlert(com.warning, "总额不能大于活动额");
+            var activityTotal = utils.accAdd(extensionDetail.activityTotal, total);
+
+            if (protation.pid && extensionDetail.basicParams["extension.atttype"] == constant.quotation().extension.ATTTYPE_ACTIVITY_INT && activityTotal > activityBalance) {
+                com.showAlert(com.warning, "活动扩展总额不合理");
                 return false;
             }
 
@@ -1211,6 +1214,17 @@ var ExtensionDetail = (function() {
             }, function(res) {
 
                 extensionDetail.protation = res.protation;
+            }, null, false);
+
+            com.post(api.quotation.queryExtensionByOrderId, {
+                "extension.orderId": extensionDetail.orderId
+            }, function(res) {
+
+                $.each(res.extensions, function(i, v) {
+
+                    if (v.eid != extensionDetail.eid)
+                        extensionDetail.activityTotal = utils.accAdd(extensionDetail.activityTotal, v.total);
+                });
             }, null, false);
 
             if (extensionDetail.quoManagePrice != 0 && extensionDetail.quoManageRate != 0) {

@@ -31,7 +31,9 @@ public interface UserService {
 
 	public void pageUserByMid(Paging paging, List<Filter> filters, ModuleVO moduleVO, Integer company) throws FLException;
 
-	public List<UserBaseVO> queryUserByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, int company) throws FLException;
+	public List<UserBaseVO> queryUserByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, Integer company) throws FLException;
+
+	List<UserBaseVO> queryUserByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, Integer company, Boolean all) throws FLException;
 
 	public List<UserBaseVO> queryUserByUids(List<Integer> uids) throws FLException;
 
@@ -49,6 +51,7 @@ public interface UserService {
 
 	/**
 	 * 使用挑战-响应方式验证用户
+	 * 
 	 * @param loginId 登录ID
 	 * @param responseHash 客户端计算的响应哈希
 	 * @param nonce 服务器端生成的随机数

@@ -313,7 +313,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserBaseVO> queryUserByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, int company) throws FLException {
+	public List<UserBaseVO> queryUserByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, Integer company) throws FLException {
+		return queryUserByPinyin(pinyinName, userVO, departmentType, company, false);
+	}
+
+	@Override
+	public List<UserBaseVO> queryUserByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, Integer company, Boolean all) throws FLException {
+
+		CompanyPO companyPO = null;
+
+		if (company != null) {
+			companyPO = companyDao.get(company);
+		}
+
+		if (SystemConfig.getInt("multicompany", 0) == 0 && all) {
+			company = null;
+		}
 
 		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
 
@@ -326,7 +341,6 @@ public class UserServiceImpl implements UserService {
 		int dtid = 0;
 
 		if (departmentType != null && departmentType.getName() != null && departmentType.getName().length() != 0) {
-
 			dtid = departmentTypeDao.queryDepartmentTypeByName(departmentType.getName()).getDtid();
 		}
 
@@ -345,7 +359,7 @@ public class UserServiceImpl implements UserService {
 		List<UserPO> userPOs = userDao.pageUserByPinyin(paging, pinyinName, userVO.getStatus(), company, dtid, did, rid);
 
 		for (UserPO userPO : userPOs) {
-			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO()).ptv(userPO));
+			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentVO())).ptv(userPO, companyPO.getName()));
 		}
 
 		return userBaseVOs;
