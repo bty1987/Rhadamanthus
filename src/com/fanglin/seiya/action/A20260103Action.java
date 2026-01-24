@@ -33,8 +33,10 @@ import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.CustomerChanceService;
+import com.fanglin.customer.service.CustomerCompanyRuleService;
 import com.fanglin.customer.service.CustomerDeptRuleService;
 import com.fanglin.customer.vo.CustomerChanceVO;
+import com.fanglin.customer.vo.CustomerCompanyRuleVO;
 import com.fanglin.customer.vo.CustomerDeptRuleVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.service.DecorationBusitypeService;
@@ -43,6 +45,7 @@ import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.system.vo.CompanyVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -62,6 +65,9 @@ public class A20260103Action extends BaseListAction {
 
 	@Autowired
 	private CustomerDeptRuleService customerDeptRuleService;
+
+	@Autowired
+	private CustomerCompanyRuleService customerCompanyRuleService;
 
 	@Autowired
 	private UserService userService;
@@ -175,6 +181,10 @@ public class A20260103Action extends BaseListAction {
 	private String deptName; // 部门名称（支持模糊匹配）
 	private String deptType; // 部门类型 1:设计分区 2:设计部门
 	private List<SimpleDepartmentVO> simpleDeptList; // 简化部门列表（用于SF接口返回）
+
+	// ==================== queryCompany 相关字段 ====================
+	private String companyName; // 公司名称（支持模糊匹配）
+	private List<SimpleCompanyVO> simpleCompanyList; // 简化公司列表（用于SF接口返回）
 
 	// ==================== queryUserByPinyin 相关字段 ====================
 	private UserVO user;
@@ -509,6 +519,52 @@ public class A20260103Action extends BaseListAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 查询公司列表接口
+	 *
+	 * 请求参数：
+	 *
+	 * @orgId: 信息平台编码，即公司标识（ERP中communion.company.cid加密）
+	 * @companyName: 公司名称（支持模糊匹配）
+	 *
+	 * @return SUCCESS
+	 * @throws FLException 业务异常
+	 */
+	@Action(value = "queryCompanyForSF", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" }) }, params = { "contentType", "text/html" })
+	public String queryCompanyForSF() throws FLException {
+
+		// 初始化 data 对象
+		this.data = new HashMap<String, Object>();
+
+		// 构建 CustomerCompanyRuleVO 查询条件
+		CustomerCompanyRuleVO queryCompany = new CustomerCompanyRuleVO();
+
+		// 根据companyName设置查询条件
+		if (companyName != null && !companyName.trim().isEmpty()) {
+			queryCompany.setCompany(new CompanyVO());
+			queryCompany.getCompany().setName(companyName.trim());
+		}
+
+		// 查询客户公司规则列表
+		List<CustomerCompanyRuleVO> companyList = customerCompanyRuleService.queryCustomerCompanyRule(queryCompany, CompanyServiceImpl.encode(orgId));
+
+		// 转换为简化格式并放入 data
+		List<SimpleCompanyVO> resultList = new ArrayList<SimpleCompanyVO>();
+		if (companyList != null && !companyList.isEmpty()) {
+			for (CustomerCompanyRuleVO companyRule : companyList) {
+				SimpleCompanyVO simple = new SimpleCompanyVO();
+				if (companyRule.getCompany() != null) {
+					simple.setId(companyRule.getCompany().getCid() != null ? companyRule.getCompany().getCid() : null);
+					simple.setName(companyRule.getCompany().getName());
+					resultList.add(simple);
+				}
+			}
+		}
+		this.data.put("simpleCompanyList", resultList);
+
+		return SUCCESS;
+	}
+
 	// ==================== Getter and Setter ====================
 
 	@JSON(serialize = false)
@@ -736,6 +792,17 @@ public class A20260103Action extends BaseListAction {
 		this.deptType = deptType;
 	}
 
+	// ==================== queryCompany Getter and Setter ====================
+
+	@JSON(serialize = false)
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
 	// ==================== queryUserByPinyin Getter and Setter ====================
 
 	@JSON(serialize = false)
@@ -814,6 +881,17 @@ public class A20260103Action extends BaseListAction {
 
 	public void setSimpleUserList(List<SimpleUserVO> simpleUserList) {
 		this.simpleUserList = simpleUserList;
+	}
+
+	// ==================== SimpleCompanyVO Getter and Setter ====================
+
+	@JSON(serialize = false)
+	public List<SimpleCompanyVO> getSimpleCompanyList() {
+		return simpleCompanyList;
+	}
+
+	public void setSimpleCompanyList(List<SimpleCompanyVO> simpleCompanyList) {
+		this.simpleCompanyList = simpleCompanyList;
 	}
 
 	/**
@@ -901,8 +979,35 @@ public class A20260103Action extends BaseListAction {
 			return company;
 		}
 
-		public void setCompany(String company) {
+	public void setCompany(String company) {
 			this.company = company;
+		}
+	}
+
+	/**
+	 * 简化公司VO（用于SF接口返回） 只包含 id 和 name 两个字段
+	 */
+	public static class SimpleCompanyVO implements java.io.Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		private String id;
+		private String name;
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
 		}
 	}
 
