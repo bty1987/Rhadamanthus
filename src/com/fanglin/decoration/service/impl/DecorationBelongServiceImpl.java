@@ -40,6 +40,8 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.information.po.MessageCueuingPO;
+import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
@@ -66,6 +68,9 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 	@Autowired
 	private WeChatAppService weChatAppService;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
 
 	@Override
 	public List<DecorationBelongVO> queryDecorationBelong(DecorationBelongVO decorationBelongVO) {
@@ -232,6 +237,9 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		decorationBelongPO.setStatus(DecorationBelongPO.STATUS_INVALID_INT);
 
 		decorationBelongDao.save(decorationBelongPO);
+
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "tranDecorationBelong", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
