@@ -184,9 +184,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_END_INT);
 			decorationPO.setSourceStatus(DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT);
 			decorationPO.setSdesignTime(DateUtil.getDateToTimestamp(new Date()));
-		}
-
-		if ((decorationInfoVO.getSourceStatus() % 10) == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
+		} else if ((decorationInfoVO.getSourceStatus() % 10) == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
 
 			decorationPO.setDesignStatus(decorationInfoVO.getSourceStatus());
 
@@ -238,7 +236,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 				if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MINI_INT) {
 					constructionInfoPO.setDesignTime(DateUtil.getDateToTimestamp(DateUtil.plusDay(new Date(designTime.getTime()), 3)));
 				} else if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MORE_INT && constructionInfoPO.getDesignPeriod() != 0) {
-					Date newDesignTime = new Date(designTime.getTime() + Arith.mul(constructionInfoPO.getDesignPeriod(), 30) * 60 * 1000);
+					Date newDesignTime = new Date(designTime.getTime() + Arith.mul(constructionInfoPO.getDesignPeriod(), 40) * 60 * 1000);
 					constructionInfoPO.setDesignTime(DateUtil.getDateToTimestamp(newDesignTime));
 				}
 
