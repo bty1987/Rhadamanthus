@@ -206,7 +206,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			if (latestService != null && latestService.getCreateTime() != null) {
 				Timestamp latestCreateTime = latestService.getCreateTime();
 				Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
-				int daysDiff = DateUtil.diffDay(new Date(latestCreateTime.getTime()), new Date(currentTime.getTime()));
+				int daysDiff = DateUtil.diffDay(latestCreateTime, currentTime);
 				if (daysDiff > 0) {
 					overdueDays = latestService.getOverdueDays() + daysDiff;
 				} else {
