@@ -31,6 +31,14 @@ public class DecorationServicePO implements Serializable {
 
 	public static final short SERVICESTATUS_FINISH_INT = 1;
 
+	// 服务类型常量
+	public static final short TYPE_DESIGN_CONFIRM = 1;      // 设计方案确认
+	public static final short TYPE_CONSTRUCTION_CONFIRM = 2; // 施工方案确认
+	public static final short TYPE_DRAWLINE = 3;             // 放线服务
+	public static final short TYPE_SUPERVISION = 4;          // 施工巡查
+	public static final short TYPE_ACCEPTANCE = 5;           // 验收服务
+	public static final short TYPE_OTHER = 9;                // 其他自定义服务
+
 	private long dsid;
 
 	private String orderId;
@@ -54,6 +62,10 @@ public class DecorationServicePO implements Serializable {
 	private short status;
 
 	private String comment;
+
+	private int overdueDays;
+
+	private short type;
 
 	@Id
 	@GeneratedValue
@@ -164,6 +176,24 @@ public class DecorationServicePO implements Serializable {
 
 	public void setFinisher(UserPO finisher) {
 		this.finisher = finisher;
+	}
+
+	@Column(name = "overdueDays")
+	public int getOverdueDays() {
+		return overdueDays;
+	}
+
+	public void setOverdueDays(int overdueDays) {
+		this.overdueDays = overdueDays;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	public DecorationServiceVO ptv(DecorationServiceVO decorationServiceVO) {

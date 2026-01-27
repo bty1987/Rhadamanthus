@@ -1,5 +1,6 @@
 package com.fanglin.decoration.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -81,6 +83,25 @@ public class DecorationServiceServiceImpl implements DecorationServiceService {
 		decorationServicePO.setOperater(operater);
 		decorationServicePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationServicePO.setComment("");
+		decorationServicePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		// 计算超期天数：根据type获取最近一次的服务记录，累积超期天数
+		int overdueDays = 0;
+		if (decorationServicePO.getType() > 0) {
+			DecorationServicePO latestService = decorationServiceDao.queryLatestByOrderIdAndType(
+					decorationServicePO.getOrderId(), decorationServicePO.getType());
+			if (latestService != null && latestService.getCreateTime() != null) {
+				Timestamp latestCreateTime = latestService.getCreateTime();
+				Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
+				int daysDiff = DateUtil.diffDay(new Date(latestCreateTime.getTime()), new Date(currentTime.getTime()));
+				if (daysDiff > 0) {
+					overdueDays = latestService.getOverdueDays() + daysDiff;
+				} else {
+					overdueDays = latestService.getOverdueDays();
+				}
+			}
+		}
+		decorationServicePO.setOverdueDays(overdueDays);
 
 		decorationServiceDao.save(decorationServicePO);
 

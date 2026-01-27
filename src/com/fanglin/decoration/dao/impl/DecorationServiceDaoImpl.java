@@ -48,6 +48,17 @@ public class DecorationServiceDaoImpl extends DaoImpl<DecorationServicePO> imple
 		return 0;
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public DecorationServicePO queryLatestByOrderIdAndType(String orderId, short type) {
+		return (DecorationServicePO) session().createCriteria(DecorationServicePO.class)
+				.add(Restrictions.eq(DecorationServicePO.DECORATION_ORDERID_STR, orderId))
+				.add(Restrictions.eq("type", type))
+				.addOrder(org.hibernate.criterion.Order.desc("createTime"))
+				.setMaxResults(1)
+				.uniqueResult();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		DecorationDaoImpl.queryFilterExcute(query, filters, "decoration");

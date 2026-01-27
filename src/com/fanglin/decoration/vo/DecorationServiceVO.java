@@ -37,6 +37,10 @@ public class DecorationServiceVO implements Serializable {
 
 	private String comment;
 
+	private Integer overdueDays;
+
+	private Short type;
+
 	public DecorationServiceVO() {
 		super();
 	}
@@ -158,6 +162,22 @@ public class DecorationServiceVO implements Serializable {
 
 	public void setFinisher(UserBaseVO finisher) {
 		this.finisher = finisher;
+	}
+
+	public Integer getOverdueDays() {
+		return overdueDays;
+	}
+
+	public void setOverdueDays(Integer overdueDays) {
+		this.overdueDays = overdueDays;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 }
