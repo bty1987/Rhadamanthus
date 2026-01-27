@@ -3,8 +3,8 @@
 -- 创建时间：2026-01-27
 -- 作者：AI Assistant
 
--- 创建 messagecueing 表
-CREATE TABLE IF NOT EXISTS information.messagecueing (
+-- 创建 messagecueuing 表
+CREATE TABLE IF NOT EXISTS information.messagecueuing (
     mcid BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '消息提示ID',
     operation VARCHAR(100) NOT NULL COMMENT '操作类型',
     args TEXT COMMENT '参数(JSON格式)',
@@ -26,7 +26,7 @@ SELECT
     TABLE_COMMENT
 FROM INFORMATION_SCHEMA.TABLES
 WHERE TABLE_SCHEMA = 'information'
-  AND TABLE_NAME = 'messagecueing';
+  AND TABLE_NAME = 'messagecueuing';
 
 -- 验证字段创建
 SELECT
@@ -38,5 +38,5 @@ SELECT
     COLUMN_COMMENT
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_SCHEMA = 'information'
-  AND TABLE_NAME = 'messagecueing'
+  AND TABLE_NAME = 'messagecueuing'
 ORDER BY ORDINAL_POSITION;
