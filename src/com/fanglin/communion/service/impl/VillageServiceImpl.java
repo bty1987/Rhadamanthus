@@ -29,6 +29,8 @@ import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.PinYin4Util;
+import com.fanglin.information.po.MessageDueingPO;
+import com.fanglin.information.dao.MessageQueuingDao;
 
 @Service("villageService")
 @Transactional(readOnly = true)
@@ -45,6 +47,9 @@ public class VillageServiceImpl implements VillageService {
 
 	@Autowired
 	private CountingService countingService;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
 
 	@Override
 	public void pageVillage(Paging paging, List<Filter> filters, Integer company) {
@@ -139,6 +144,9 @@ public class VillageServiceImpl implements VillageService {
 			villageDao.update(villagePO);
 		}
 
+		// 生成消息到期数据
+		messageQueuingDao.save(new MessageDueingPO().init(villagePO.getNo(), "addVillage", "{\"no\":\"" + villagePO.getNo() + "\",\"name\":\"" + villagePO.getName() + "\",\"vid\":" + villagePO.getVid() + ",\"company\":" + company + "}"));
+
 		return 0;
 	}
 
@@ -178,6 +186,9 @@ public class VillageServiceImpl implements VillageService {
 		if (villageVO.getParentVillage() != null) villagePO.setParentVillage(villageDao.get(villageVO.getParentVillage().getNo()));
 
 		villageDao.update(villagePO);
+
+		// 生成消息到期数据
+		messageQueuingDao.save(new MessageDueingPO().init(villagePO.getNo(), "updateVillage", "{\"no\":\"" + villagePO.getNo() + "\",\"name\":\"" + villagePO.getName() + "\",\"vid\":" + villagePO.getVid() + ",\"company\":" + company + "}"));
 
 		return 0;
 	}
