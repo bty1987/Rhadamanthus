@@ -39,6 +39,7 @@ import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -134,6 +135,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
+
+	@Autowired
+	private com.fanglin.information.dao.MessageQueuingDao messageQueuingDao;
 
 	@Autowired
 	private DingTalkMessageService messageDDService;
@@ -520,6 +524,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		if (decorationPO.getStatus() == DecorationPO.STATUS_INIT_INT) {
 			decorationPO.setStatus(DecorationPO.STATUS_DEPOSIT_INT);
 			decorationPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
+			// 生成消息提示数据
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + ",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 		}
 
 		String paymentType = decorationPaymentPO.getPaymentType();
