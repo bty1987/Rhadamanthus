@@ -530,6 +530,11 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		String paymentType = decorationPaymentPO.getPaymentType();
 
+		// 设计费收款时生成消息提示数据
+		if (paymentType.equals(DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR)) {
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + ",\"event\":\"DESIGN_FEE_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		}
+
 		if (paymentType.contains(DecorationPaymentPO.PAYMENTTYPE_REFUND_STR) || paymentType.equals(DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR)) {
 			decorationReceiptPO.setType(DecorationReceiptPO.RECEIPT_TYPE_REFUND_INT);
 		} else {
