@@ -1,5 +1,5 @@
 /**
- * Title: MessageDueingVO
+ * Title: MessageDueuingVO
  * Description: 消息到期值对象
  * Copyright: Copyright (c) 2013 All rights reserved.
  * Company: BTY
@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class MessageDueingVO implements Serializable {
+public class MessageDueuingVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,7 +32,7 @@ public class MessageDueingVO implements Serializable {
 
 	private String orderId;
 
-	public MessageDueingVO() {
+	public MessageDueuingVO() {
 		super();
 	}
 
