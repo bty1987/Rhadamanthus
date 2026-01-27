@@ -45,7 +45,6 @@ import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
-import com.fanglin.system.vo.CompanyVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -183,7 +182,6 @@ public class A20260103Action extends BaseListAction {
 	private List<SimpleDepartmentVO> simpleDeptList; // 简化部门列表（用于SF接口返回）
 
 	// ==================== queryCompany 相关字段 ====================
-	private String companyName; // 公司名称（支持模糊匹配）
 	private List<SimpleCompanyVO> simpleCompanyList; // 简化公司列表（用于SF接口返回）
 
 	// ==================== queryUserByPinyin 相关字段 ====================
@@ -432,11 +430,12 @@ public class A20260103Action extends BaseListAction {
 			departmentType.setName("设计部");
 		}
 
+		// 转换为简化格式并放入 data
+		List<SimpleUserVO> resultList = new ArrayList<SimpleUserVO>();
+
 		// 查询用户列表
 		List<UserBaseVO> users = userService.queryUserByPinyin(pinyinName, user, departmentType, orgId);
 
-		// 转换为简化格式并放入 data
-		List<SimpleUserVO> resultList = new ArrayList<SimpleUserVO>();
 		if (users != null && !users.isEmpty()) {
 			for (UserBaseVO u : users) {
 
@@ -521,12 +520,12 @@ public class A20260103Action extends BaseListAction {
 
 	/**
 	 * 查询公司列表接口
-	 *
+	 * 
 	 * 请求参数：
-	 *
+	 * 
 	 * @orgId: 信息平台编码，即公司标识（ERP中communion.company.cid加密）
 	 * @companyName: 公司名称（支持模糊匹配）
-	 *
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
@@ -536,17 +535,21 @@ public class A20260103Action extends BaseListAction {
 		// 初始化 data 对象
 		this.data = new HashMap<String, Object>();
 
+		// 根据工号查询用户
+		UserVO creater = userService.queryUserByUserId(new UserVO(userId));
+
+		if (creater == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
 		// 构建 CustomerCompanyRuleVO 查询条件
 		CustomerCompanyRuleVO queryCompany = new CustomerCompanyRuleVO();
 
-		// 根据companyName设置查询条件
-		if (companyName != null && !companyName.trim().isEmpty()) {
-			queryCompany.setCompany(new CompanyVO());
-			queryCompany.getCompany().setName(companyName.trim());
-		}
+		queryCompany.setDept(creater.getDept());
+		queryCompany.setUppval(buildArea);
 
 		// 查询客户公司规则列表
-		List<CustomerCompanyRuleVO> companyList = customerCompanyRuleService.queryCustomerCompanyRule(queryCompany, CompanyServiceImpl.encode(orgId));
+		List<CustomerCompanyRuleVO> companyList = customerCompanyRuleService.queryCustomerCompanyRule(queryCompany, orgId);
 
 		// 转换为简化格式并放入 data
 		List<SimpleCompanyVO> resultList = new ArrayList<SimpleCompanyVO>();
@@ -554,7 +557,7 @@ public class A20260103Action extends BaseListAction {
 			for (CustomerCompanyRuleVO companyRule : companyList) {
 				SimpleCompanyVO simple = new SimpleCompanyVO();
 				if (companyRule.getCompany() != null) {
-					simple.setId(companyRule.getCompany().getCid() != null ? companyRule.getCompany().getCid() : null);
+					simple.setId(CompanyServiceImpl.decode(companyRule.getCompany().getCid()));
 					simple.setName(companyRule.getCompany().getName());
 					resultList.add(simple);
 				}
@@ -792,17 +795,6 @@ public class A20260103Action extends BaseListAction {
 		this.deptType = deptType;
 	}
 
-	// ==================== queryCompany Getter and Setter ====================
-
-	@JSON(serialize = false)
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
 	// ==================== queryUserByPinyin Getter and Setter ====================
 
 	@JSON(serialize = false)
@@ -979,7 +971,7 @@ public class A20260103Action extends BaseListAction {
 			return company;
 		}
 
-	public void setCompany(String company) {
+		public void setCompany(String company) {
 			this.company = company;
 		}
 	}
@@ -991,14 +983,14 @@ public class A20260103Action extends BaseListAction {
 
 		private static final long serialVersionUID = 1L;
 
-		private String id;
+		private int id;
 		private String name;
 
-		public String getId() {
+		public int getId() {
 			return id;
 		}
 
-		public void setId(String id) {
+		public void setId(int id) {
 			this.id = id;
 		}
 
