@@ -70,6 +70,7 @@ import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.po.MessageQueuingPO;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -1526,6 +1527,8 @@ public class DecorationServiceImpl implements DecorationService {
 
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "obsoleteDecoration", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "obsoleteDecoration", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 	}
 
 	@Override
@@ -1661,6 +1664,8 @@ public class DecorationServiceImpl implements DecorationService {
 
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 	}
 
 	@Override

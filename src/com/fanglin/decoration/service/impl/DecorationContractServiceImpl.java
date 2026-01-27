@@ -68,6 +68,7 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageQueuingPO;
+import com.fanglin.information.po.MessageCueuingPO;
 
 @Service("decorationContractService")
 @Transactional(readOnly = true)
@@ -624,6 +625,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "signDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_SIGNED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "signDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_SIGNED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
@@ -677,6 +680,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "resignDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "resignDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
@@ -761,6 +766,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "presignDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "presignDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
