@@ -46,6 +46,7 @@ import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageQueuingPO;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -304,6 +305,8 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + approvalPO.getReceiver() + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + approvalPO.getReceiver() + "\",\"belongType\":" + belongType + ",\"event\":\"TEAM_SALESMAN_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "approveForDecorationBelong", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + approvalPO.getReceiver() + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
