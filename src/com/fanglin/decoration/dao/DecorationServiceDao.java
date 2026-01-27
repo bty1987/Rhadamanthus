@@ -17,4 +17,12 @@ public interface DecorationServiceDao extends Dao<DecorationServicePO> {
 
 	public int makeDecorationService(short type, String orderId, int ouid);
 
+	/**
+	 * 根据订单ID和服务类型查询最近一条记录
+	 * @param orderId 订单ID
+	 * @param type 服务类型
+	 * @return 最近的服务记录
+	 */
+	public DecorationServicePO queryLatestByOrderIdAndType(String orderId, short type);
+
 }

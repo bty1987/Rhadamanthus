@@ -197,7 +197,25 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			decorationServicePO.setStatus(DecorationServicePO.SERVICESTATUS_INIT_INT);
 			decorationServicePO.setOperater(designer);
 			decorationServicePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationServicePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationServicePO.setType(DecorationServicePO.TYPE_DESIGN_CONFIRM);
 			decorationServicePO.setComment(String.format("装修单: %s, 设计方案确认, %s", decorationPO.getOrderId(), decorationInfoVO.getSourceStatus()));
+
+			// 计算超期天数：根据type获取最近一次的服务记录，累积超期天数
+			int overdueDays = 0;
+			DecorationServicePO latestService = decorationServiceDao.queryLatestByOrderIdAndType(
+					decorationPO.getOrderId(), DecorationServicePO.TYPE_DESIGN_CONFIRM);
+			if (latestService != null && latestService.getCreateTime() != null) {
+				Timestamp latestCreateTime = latestService.getCreateTime();
+				Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
+				int daysDiff = DateUtil.diffDay(new Date(latestCreateTime.getTime()), new Date(currentTime.getTime()));
+				if (daysDiff > 0) {
+					overdueDays = latestService.getOverdueDays() + daysDiff;
+				} else {
+					overdueDays = latestService.getOverdueDays();
+				}
+			}
+			decorationServicePO.setOverdueDays(overdueDays);
 
 			ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(orderId);
 
@@ -225,10 +243,10 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 				}
 
 				Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
-				int overdueDays = DateUtil.diffDay(designTime, currentTime);
-				if (overdueDays > 0) {
+				int constructionOverdueDays = DateUtil.diffDay(designTime, currentTime);
+				if (constructionOverdueDays > 0) {
 					int currentOverdueDays = constructionInfoPO.getDesignOverdueDays();
-					constructionInfoPO.setDesignOverdueDays(currentOverdueDays + overdueDays);
+					constructionInfoPO.setDesignOverdueDays(currentOverdueDays + constructionOverdueDays);
 				}
 
 				constructionInfoDao.update(constructionInfoPO);
