@@ -10,14 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Title: MessageCueingPO Description: 消息提示持久化对象 Copyright: Copyright (c) 2013 All rights reserved. Company: BTY
+ * Title: MessageCueuingPO Description: 消息提示持久化对象 Copyright: Copyright (c) 2013 All rights reserved. Company: BTY
  *
  * @author bty1987
  *
  */
 @Entity
-@Table(name = "messagecueing", catalog = "information")
-public class MessageCueingPO implements Serializable {
+@Table(name = "messagecueuing", catalog = "information")
+public class MessageCueuingPO implements Serializable {
 
 	private static final long serialVersionUID = 5265676191043540187L;
 
@@ -39,7 +39,7 @@ public class MessageCueingPO implements Serializable {
 
 	private String orderId;
 
-	public MessageCueingPO() {
+	public MessageCueuingPO() {
 		super();
 	}
 
@@ -108,13 +108,13 @@ public class MessageCueingPO implements Serializable {
 		this.status = status;
 	}
 
-	public MessageCueingPO init(String orderId, String operation, String args) {
+	public MessageCueuingPO init(String orderId, String operation, String args) {
 
 		setOrderId(orderId);
 		setOperation(operation);
 		setArgs(args);
 		setCreateTime(new java.sql.Timestamp(System.currentTimeMillis()));
-		setStatus(com.fanglin.information.po.MessageCueingPO.STATUS_PENDING_INT);
+		setStatus(com.fanglin.information.po.MessageCueuingPO.STATUS_PENDING_INT);
 
 		return this;
 	}
