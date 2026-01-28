@@ -22,7 +22,6 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -88,8 +87,7 @@ public class DecorationServiceServiceImpl implements DecorationServiceService {
 		// 计算超期天数：根据type获取最近一次的服务记录，累积超期天数
 		int overdueDays = 0;
 		if (decorationServicePO.getType() > 0) {
-			DecorationServicePO latestService = decorationServiceDao.queryLatestByOrderIdAndType(
-					decorationServicePO.getOrderId(), decorationServicePO.getType());
+			DecorationServicePO latestService = decorationServiceDao.queryDecorationService(decorationServicePO.getOrderId(), decorationServicePO.getType());
 			if (latestService != null && latestService.getCreateTime() != null) {
 				Timestamp latestCreateTime = latestService.getCreateTime();
 				Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
