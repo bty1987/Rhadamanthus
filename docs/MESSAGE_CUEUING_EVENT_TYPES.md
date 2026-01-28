@@ -12,10 +12,10 @@
 | event 类型 | 说明 | 触发场景 |
 |-----------|------|----------|
 | `CUSTOMER_SIGNED` | 客户签约 | 签约 |
-| `CUSTOMER_STATUS_CHANGED` | 客户状态变更 | 重签、预签、退单、废单、定金收款 |
+| `CUSTOMER_STATUS_CHANGED` | 客户状态变更 | 重签、预签、退单、废单 |
+| `PAYMENT_COLLECTED` | 款项已收取 | 定金收款、预付款收款、设计费收款 |
 | `TEAM_DESIGNER_CHANGED` | 设计师变更 | 订单归属审批通过/转移 (设计师) |
 | `TEAM_SALESMAN_CHANGED` | 业务员变更 | 订单归属审批通过/转移 (业务员) |
-| `DESIGN_FEE_COLLECTED` | 设计费已收取 | 设计费收款 |
 
 ### 按操作分类
 
@@ -26,9 +26,9 @@
 | 预签 | `CUSTOMER_STATUS_CHANGED` | DecorationContractServiceImpl.presignDecorationContract |
 | 退单 | `CUSTOMER_STATUS_CHANGED` | DecorationServiceImpl.terminalDecoration |
 | 废单 | `CUSTOMER_STATUS_CHANGED` | DecorationServiceImpl.obsoleteDecoration |
-| 定金收款 | `CUSTOMER_STATUS_CHANGED` | DecorationPaymentServiceImpl.collectDecorationPayment (status INIT→DEPOSIT) |
-| 预付款收款 | `CUSTOMER_STATUS_CHANGED` | PaymentServiceImpl.collectPayment (status INIT→DEPOSIT) |
-| 设计费收款 | `DESIGN_FEE_COLLECTED` | DecorationPaymentServiceImpl.collectDecorationPayment (paymentType=设计费) |
+| 定金收款 | `PAYMENT_COLLECTED` | DecorationPaymentServiceImpl.collectDecorationPayment (status INIT→DEPOSIT) |
+| 预付款收款 | `PAYMENT_COLLECTED` | PaymentServiceImpl.collectPayment (status INIT→DEPOSIT) |
+| 设计费收款 | `PAYMENT_COLLECTED` | DecorationPaymentServiceImpl.collectDecorationPayment (paymentType=设计费) |
 | 归属审批通过 | `TEAM_DESIGNER_CHANGED` / `TEAM_SALESMAN_CHANGED` | ApprovalDecorationBelongServiceImpl.approveForDecorationBelong |
 | 归属转移 | `TEAM_DESIGNER_CHANGED` / `TEAM_SALESMAN_CHANGED` | DecorationBelongServiceImpl.tranDecorationBelong |
 
@@ -130,6 +130,7 @@ messageQueuingDao.save(new MessageDueingPO().init(
 
 | 日期 | 提交 | 说明 |
 |------|------|------|
+| 2026-01-28 | xxxxxxxx | 重构款项收款事件类型为 PAYMENT_COLLECTED |
 | 2026-01-28 | b7a2288a | 订单归属转移时生成消息提示数据 |
 | 2026-01-28 | 7c161925 | 订单归属审批通过时生成消息提示数据 |
 | 2026-01-28 | e3fdfd4a | 创建/更新楼盘时生成消息到期数据 |
