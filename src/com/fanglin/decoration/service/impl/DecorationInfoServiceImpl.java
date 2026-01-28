@@ -201,8 +201,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 			// 计算超期天数：根据type获取最近一次的服务记录，累积超期天数
 			int overdueDays = 0;
-			DecorationServicePO latestService = decorationServiceDao.queryLatestByOrderIdAndType(
-					decorationPO.getOrderId(), DecorationServicePO.TYPE_DESIGN_CONFIRM);
+			DecorationServicePO latestService = decorationServiceDao.queryDecorationService(decorationPO.getOrderId(), DecorationServicePO.TYPE_DESIGN_CONFIRM);
 			if (latestService != null && latestService.getCreateTime() != null) {
 				Timestamp latestCreateTime = latestService.getCreateTime();
 				Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());

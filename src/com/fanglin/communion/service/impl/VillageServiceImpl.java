@@ -18,6 +18,8 @@ import com.fanglin.communion.service.VillageService;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageDueuingPO;
 import com.fanglin.system.dao.CityProperDao;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CityProperPO;
@@ -29,8 +31,6 @@ import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.PinYin4Util;
-import com.fanglin.information.po.MessageDueingPO;
-import com.fanglin.information.dao.MessageQueuingDao;
 
 @Service("villageService")
 @Transactional(readOnly = true)
@@ -145,7 +145,7 @@ public class VillageServiceImpl implements VillageService {
 		}
 
 		// 生成消息到期数据
-		messageQueuingDao.save(new MessageDueingPO().init(villagePO.getNo(), "addVillage", "{\"no\":\"" + villagePO.getNo() + "\",\"name\":\"" + villagePO.getName() + "\",\"vid\":" + villagePO.getVid() + ",\"company\":" + company + "}"));
+		messageQueuingDao.save(new MessageDueuingPO().init(villagePO.getNo(), "addVillage", "{\"no\":\"" + villagePO.getNo() + "\",\"name\":\"" + villagePO.getName() + "\",\"vid\":" + villagePO.getVid() + ",\"company\":" + company + "\",\"event\":\"ESTATE_CREATED\"}"));
 
 		return 0;
 	}
@@ -188,7 +188,7 @@ public class VillageServiceImpl implements VillageService {
 		villageDao.update(villagePO);
 
 		// 生成消息到期数据
-		messageQueuingDao.save(new MessageDueingPO().init(villagePO.getNo(), "updateVillage", "{\"no\":\"" + villagePO.getNo() + "\",\"name\":\"" + villagePO.getName() + "\",\"vid\":" + villagePO.getVid() + ",\"company\":" + company + "}"));
+		messageQueuingDao.save(new MessageDueuingPO().init(villagePO.getNo(), "updateVillage", "{\"no\":\"" + villagePO.getNo() + "\",\"name\":\"" + villagePO.getName() + "\",\"vid\":" + villagePO.getVid() + ",\"company\":" + company + "\",\"event\":\"ESTATE_UPDATED\"}"));
 
 		return 0;
 	}
