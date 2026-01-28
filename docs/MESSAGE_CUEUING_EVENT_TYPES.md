@@ -130,7 +130,7 @@ messageQueuingDao.save(new MessageDueingPO().init(
 
 | 日期 | 提交 | 说明 |
 |------|------|------|
-| 2026-01-28 | xxxxxxxx | 重构款项收款事件类型为 PAYMENT_COLLECTED |
+| 2026-01-28 | 6eefd3ae | 重构款项收款事件类型为 PAYMENT_COLLECTED |
 | 2026-01-28 | b7a2288a | 订单归属转移时生成消息提示数据 |
 | 2026-01-28 | 7c161925 | 订单归属审批通过时生成消息提示数据 |
 | 2026-01-28 | e3fdfd4a | 创建/更新楼盘时生成消息到期数据 |
