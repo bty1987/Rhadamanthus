@@ -145,7 +145,7 @@ public class VillageServiceImpl implements VillageService {
 		}
 
 		// 生成消息到期数据
-		messageQueuingDao.save(new MessageQueuingPO().init(villagePO.getNo(), "addVillage", "{\"no\":\"" + villagePO.getNo() + "\",\"name\":\"" + villagePO.getName() + "\",\"vid\":" + villagePO.getVid() + ",\"company\":" + company + "\",\"event\":\"ESTATE_CREATED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(villagePO.getNo(), "addVillage", "{\"no\":\"" + villagePO.getNo() + "\",\"name\":\"" + villagePO.getName() + "\",\"vid\":" + villagePO.getVid() + ",\"company\":" + company + ",\"event\":\"ESTATE_CREATED\"}"));
 
 		return 0;
 	}
@@ -188,7 +188,7 @@ public class VillageServiceImpl implements VillageService {
 		villageDao.update(villagePO);
 
 		// 生成消息到期数据
-		messageQueuingDao.save(new MessageQueuingPO().init(villagePO.getNo(), "updateVillage", "{\"no\":\"" + villagePO.getNo() + "\",\"name\":\"" + villagePO.getName() + "\",\"vid\":" + villagePO.getVid() + ",\"company\":" + company + "\",\"event\":\"ESTATE_UPDATED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(villagePO.getNo(), "updateVillage", "{\"no\":\"" + villagePO.getNo() + "\",\"name\":\"" + villagePO.getName() + "\",\"vid\":" + villagePO.getVid() + ",\"company\":" + company + ",\"event\":\"ESTATE_UPDATED\"}"));
 
 		return 0;
 	}
@@ -295,6 +295,8 @@ public class VillageServiceImpl implements VillageService {
 		villagePO.setY((int) (lat * 1000000));
 
 		villageDao.update(villagePO);
+
+		messageQueuingDao.save(new MessageQueuingPO().init(villagePO.getNo(), "updateVillage", "{\"no\":\"" + villagePO.getNo() + "\",\"name\":\"" + villagePO.getName() + "\",\"vid\":" + villagePO.getVid() + ",\"event\":\"ESTATE_UPDATED\"}"));
 
 		// 6. 返回更新后的楼盘信息
 		VillageVO resultVO = new VillageVO(new CityProperVO(new CityVO()), new VillageVO());
