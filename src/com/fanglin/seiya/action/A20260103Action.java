@@ -212,6 +212,14 @@ public class A20260103Action extends BaseListAction {
 		// 初始化 data 对象（在方法开始处，确保即使出错也有返回值）
 		this.data = new HashMap<String, Object>();
 
+		// 参数必填验证
+		if (name == null || name.trim().isEmpty()) {
+			throw new FLException(400001, "客户名称不能为空");
+		}
+		if (phone == null || phone.trim().isEmpty()) {
+			throw new FLException(400002, "客户电话不能为空");
+		}
+
 		CustomerChanceVO customerChanceVO = new CustomerChanceVO();
 
 		// 1. 客户机会编号
