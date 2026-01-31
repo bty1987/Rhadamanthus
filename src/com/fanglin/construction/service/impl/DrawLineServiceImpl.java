@@ -271,9 +271,10 @@ public class DrawLineServiceImpl implements DrawLineService {
 			constructionPO.setSupervisor(supervisor);
 			decorationPO.setSupervisor(supervisor);
 
-			decorationDao.update(decorationPO);
+			decorationDao.update(destructionPO);
 
 			constructionInfoPO.setIsIssue(ConstructionInfoPO.ISISSUE_ISSUE_INT);
+			constructionInfoPO.setIssueTime(DateUtil.getDateToTimestamp(new Date()));
 
 			constructionInfoDao.update(constructionInfoPO);
 		}
@@ -605,6 +606,262 @@ public class DrawLineServiceImpl implements DrawLineService {
 		drawLinePO.setStatus(DrawLinePO.STATUS_FAIL_INT);
 
 		drawLineDao.update(drawLinePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int finishDrawLine(DrawLineVO drawLineVO, String userId) throws FLException {
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int finishDrawLine(DrawLineVO drawLineVO, String userId) throws FLException {
+
+		// 🚀 直接查询装修单和工程信息，不判断放线状态
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(drawLineVO.getDecoration().getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(130014, "装修不存在");
+		}
+
+		String orderId = decorationPO.getOrderId();
+
+		// 查询已有工程信息
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在，请先放线");
+		}
+
+		long cid = constructionPO.getCid();
+
+		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(orderId);
+
+		if (constructionInfoPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		// 获取所有施工节点（用于创建/更新施工计划）
+		List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.queryConstructionNodeList();
+
+		if (constructionNodePOs == null || constructionNodePOs.size() == 0) {
+			throw new FLException(120020, "施工节点不存在");
+		}
+
+		// 🚀 执行 successDrawLine 的完整逻辑（更新施工计划）
+		int timelimit = 0;
+		SystemConfigPO salaryLimitTotal = systemConfigDao.querySystemConfig("WORKER_SALARY_LIMIT_TOTAL_INT", decorationPO.getCompany());
+		Timestamp drawlineTime = constructionInfoPO.getDrawlineTime() == null ? DateUtil.getDateToTimestamp(new Date()) : constructionInfoPO.getDrawlineTime();
+
+		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
+
+			if (constructionNodePO.getTimeLimit() == null) constructionNodePO.setTimeLimit(0);
+
+			int prenum = constructionNodePO.getPrenum() != null ? constructionNodePO.getPrenum() : 0;
+			int postnum = constructionNodePO.getPostnum() != null ? constructionNodePO.getPostnum() : 0;
+
+			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(drawlineTime), Arith.div(timelimit + prenum, 1000000)));
+			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(drawlineTime), Arith.div((timelimit + prenum - 1000 + constructionNodePO.getTimeLimit()), 1000000)));
+
+			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCid(cid, constructionNodePO.getCnid());
+
+			if (constructionSchedulePO != null) {
+				// 更新已有施工计划
+				constructionSchedulePO.setPreStartTime(startTime);
+				constructionSchedulePO.setPreEndTime(endTime);
+				constructionSchedulePO.setStartTime(startTime);
+				constructionSchedulePO.setEndTime(endTime);
+				constructionSchedulePO.setPrenum(prenum);
+				constructionSchedulePO.setPostnum(postnum);
+				constructionSchedulePO.setPeriod(constructionNodePO.getTimeLimit() != null ? constructionNodePO.getTimeLimit() : 0);
+				constructionScheduleDao.update(constructionSchedulePO);
+			} else {
+				// 创建新的施工计划
+				ConstructionNodePO constructionNodePO2 = constructionNodeDao.get(constructionNodePO.getCnid());
+				if (constructionNodePO2 == null) continue;
+
+				constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodePO.getSort(), constructionNodePO.getTimeLimit(), prenum, postnum).init(constructionNodePO2);
+				constructionSchedulePO.setSalaryLimitTotal(salaryLimitTotal == null ? 5000000 : Integer.valueOf(salaryLimitTotal.getValue()));
+				constructionScheduleDao.save(constructionSchedulePO);
+			}
+
+			timelimit = timelimit + prenum + (constructionNodePO.getTimeLimit() != null ? constructionNodePO.getTimeLimit() : 0) + postnum;
+
+			constructionPO.setPreStartTime(drawlineTime);
+			constructionPO.setPreEndTime(endTime);
+			constructionPO.setPeriod(DateUtil.diffDay(drawlineTime, endTime));
+		}
+
+		constructionDao.update(constructionPO);
+
+		// 🚀 设置放线状态为成功（如果存在）
+		DrawLinePO drawLinePO = drawLineDao.queryDrawLineByOrderId(orderId);
+		if (drawLinePO != null) {
+			drawLinePO.setStatus(DrawLinePO.STATUS_SUCCESS_INT);
+			drawLineDao.update(drawLinePO);
+		}
+
+		// 更新装修单工程状态
+		if (decorationPO.getProjectStatus() == DecorationPO.PROJECTSTATUS_INITIAL_INT) {
+			decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_START_INT);
+			decorationDao.update(decorationPO);
+		}
+
+		// 生成消息队列数据（DRAWLINE_FINISHED 事件）
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "finishDrawLine", "\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"userId\":\"" + userId + "\",\"event\":\"DRAWLINE_FINISHED\"" + (decorationPO.getBusitype() != null ? ",\"busitypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int failureDrawLine(DrawLineVO drawLineVO, String userId) throws FLException {
+
+		DrawLinePO drawLinePO = drawLineDao.get(drawLineVO.getDlid());
+
+		if (drawLinePO == null) {
+			throw new FLException(120014, "放线信息不存在");
+		}
+
+		messageService.sendMessage(drawLinePO.getDecoration().getDesigner().getUserId(), userId, (String.format("装修单:%s,放线失败!请重新申请放线.", drawLinePO.getDecoration().getOrderId())), MessagePO.TYPE_SEND_CONSTRUCTION_INT, drawLinePO.getCompany());
+
+		drawLinePO.setStatus(DrawLinePO.STATUS_FAIL_INT);
+
+		drawLineDao.update(drawLinePO);
+
+		return 0;
+	}
+
+}
+		String orderId = decorationPO.getOrderId();
+
+		// 🚀 查询已有的工程信息（不创建）
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在，请先放线");
+		}
+
+		long cid = constructionPO.getCid();
+
+		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(orderId);
+
+		if (constructionInfoPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		// 🚀 执行 successDrawLine 的完整逻辑（更新施工计划）
+		List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.queryConstructionNodeList();
+
+		if (constructionNodePOs == null || constructionNodePOs.size() == 0) {
+			throw new FLException(120020, "施工节点不存在");
+		}
+
+		int timelimit = 0;
+		SystemConfigPO salaryLimitTotal = systemConfigDao.querySystemConfig("WORKER_SALARY_LIMIT_TOTAL_INT", decorationPO.getCompany());
+
+		Timestamp drawlineTime = constructionInfoPO.getDrawlineTime() == null ? DateUtil.getDateToTimestamp(new Date()) : constructionInfoPO.getDrawlineTime();
+
+		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
+
+			if (constructionNodePO.getTimeLimit() == null) constructionNodePO.setTimeLimit(0);
+
+			int prenum = constructionNodePO.getPrenum() != null ? constructionNodePO.getPrenum() : 0;
+			int postnum = constructionNodePO.getPostnum() != null ? constructionNodePO.getPostnum() : 0;
+
+			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(drawlineTime), Arith.div(timelimit + prenum, 1000000)));
+			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(drawlineTime), Arith.div((timelimit + prenum - 1000 + constructionNodePO.getTimeLimit()), 1000000)));
+
+			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCid(cid, constructionNodePO.getCnid());
+
+			if (constructionSchedulePO != null) {
+				// 更新已有施工计划
+				constructionSchedulePO.setPreStartTime(startTime);
+				constructionSchedulePO.setPreEndTime(endTime);
+				constructionSchedulePO.setStartTime(startTime);
+				constructionSchedulePO.setEndTime(endTime);
+				constructionSchedulePO.setPrenum(prenum);
+				constructionSchedulePO.setPostnum(postnum);
+				constructionSchedulePO.setPeriod(constructionNodePO.getTimeLimit() != null ? constructionNodePO.getTimeLimit() : 0);
+				constructionScheduleDao.update(constructionSchedulePO);
+			} else {
+				// 创建新的施工计划（successDrawLine 的逻辑）
+				ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodePO.getCnid());
+
+				if (constructionNodePO == null) continue;
+
+				constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodePO.getSort(), constructionNodePO.getTimeLimit(), prenum, postnum).init(constructionNodePO);
+
+				constructionSchedulePO.setSalaryLimitTotal(salaryLimitTotal == null ? 5000000 : Integer.valueOf(salaryLimitTotal.getValue()));
+
+				constructionScheduleDao.save(constructionSchedulePO);
+			}
+
+			timelimit = timelimit + prenum + (constructionNodePO.getTimeLimit() != null ? constructionNodePO.getTimeLimit() : 0) + postnum;
+
+			constructionPO.setPreStartTime(drawlineTime);
+			constructionPO.setPreEndTime(endTime);
+			constructionPO.setPeriod(DateUtil.diffDay(drawlineTime, endTime));
+		}
+
+		constructionDao.update(constructionPO);
+
+		// 🚀 设置放线状态为成功
+		DrawLinePO drawLinePO = drawLineDao.get(drawLineVO.getDlid());
+		if (drawLinePO != null) {
+			drawLinePO.setStatus(DrawLinePO.STATUS_SUCCESS_INT);
+			drawLineDao.update(drawLinePO);
+		}
+
+		// 更新装修单工程状态
+		if (decorationPO.getProjectStatus() == DecorationPO.PROJECTSTATUS_INITIAL_INT) {
+			decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_START_INT);
+			decorationDao.update(decorationPO);
+		}
+
+		// 生成消息队列数据
+		messageQueuingDao.save(new MessageQueuingPO().init(
+			orderId, 
+			"finishDrawLine", 
+			"{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"userId\":\"" + userId + "\",\"event\":\"DRAWLINE_FINISHED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busitypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"
+		));
+
+		return 0;
+	}
+
+		if (drawLinePO.getStatus() != DrawLinePO.STATUS_APPLICATION_INT) {
+			throw new FLException(120017, "订单放线状态错误");
+		}
+
+		DecorationPO decorationPO = drawLinePO.getDecoration();
+
+		String orderId = decorationPO.getOrderId();
+
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(orderId);
+
+		if (constructionInfoPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		// 跳过所有放线过程，直接设置放线成功状态
+		drawLinePO.setStatus(DrawLinePO.STATUS_SUCCESS_INT);
+
+		drawLineDao.update(drawLinePO);
+
+		// 更新装修单工程状态
+		if (decorationPO.getProjectStatus() == DecorationPO.PROJECTSTATUS_INITIAL_INT) {
+			decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_START_INT);
+			decorationDao.update(decorationPO);
+		}
+
+		// 生成消息队列数据
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "finishDrawLine", "{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"userId\":\"" + userId + "\",\"event\":\"DRAWLINE_FINISHED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busitypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}

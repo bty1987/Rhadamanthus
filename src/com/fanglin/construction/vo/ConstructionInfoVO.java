@@ -23,6 +23,8 @@ public class ConstructionInfoVO implements Serializable {
 
 	private Integer designOverdueDays;
 
+	private Timestamp issueTime;
+
 	private Timestamp initDesignTime;
 
 	private Long cid;
@@ -112,6 +114,15 @@ public class ConstructionInfoVO implements Serializable {
 
 	public void setDesignOverdueDays(Integer designOverdueDays) {
 		this.designOverdueDays = designOverdueDays;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getIssueTime() {
+		return issueTime;
+	}
+
+	public void setIssueTime(Timestamp issueTime) {
+		this.issueTime = issueTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd")

@@ -37,6 +37,8 @@ public interface DrawLineService {
 
 	public int successDrawLine(DrawLineVO drawLineVO, List<ConstructionNodeVO> constructionNodes, String userId) throws FLException;
 
+	public int finishDrawLine(DrawLineVO drawLineVO, String userId) throws FLException;
+
 	public int failureDrawLine(DrawLineVO drawLineVO, String userId) throws FLException;
 
 }

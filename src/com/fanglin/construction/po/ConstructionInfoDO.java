@@ -53,6 +53,8 @@ public class ConstructionInfoDO implements Serializable {
 
 	private int designOverdueDays;
 
+	private Timestamp issueTime;
+
 	private short ishovel;
 
 	private short iskey;
@@ -140,6 +142,15 @@ public class ConstructionInfoDO implements Serializable {
 
 	public void setDesignOverdueDays(int designOverdueDays) {
 		this.designOverdueDays = designOverdueDays;
+	}
+
+	@Column(name = "issueTime")
+	public Timestamp getIssueTime() {
+		return issueTime;
+	}
+
+	public void setIssueTime(Timestamp issueTime) {
+		this.issueTime = issueTime;
 	}
 
 	@Column(name = "cid")

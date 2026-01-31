@@ -47,6 +47,8 @@ public class ConstructionInfoPO implements Serializable {
 
 	private Timestamp initDesignTime;
 
+	private Timestamp issueTime;
+
 	private short ishovel;
 
 	private short iskey;
@@ -137,6 +139,15 @@ public class ConstructionInfoPO implements Serializable {
 
 	public void setInitDesignTime(Timestamp initDesignTime) {
 		this.initDesignTime = initDesignTime;
+	}
+
+	@Column(name = "issueTime")
+	public Timestamp getIssueTime() {
+		return issueTime;
+	}
+
+	public void setIssueTime(Timestamp issueTime) {
+		this.issueTime = issueTime;
 	}
 
 	public void setOrderId(String orderId) {
