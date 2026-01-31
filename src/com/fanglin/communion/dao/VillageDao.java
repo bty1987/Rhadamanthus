@@ -26,6 +26,8 @@ public interface VillageDao extends Dao<VillagePO> {
 
 	public VillagePO queryVillage(String name);
 
+	public VillagePO queryVillage(long vid);
+
 	public int countVillageByCpid(Integer cpid);
 
 	public int countVillageByNameACpid(String name, Integer cpid, Integer company);
