@@ -612,7 +612,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int finishDrawLine(DrawLineVO drawLineVO, String userId) throws FLException {
+	public int finishDrawLine(DrawLineVO drawLineVO, List<ConstructionNodeVO> constructionNodes, String userId) throws FLException {
 
 		// 直接查询装修单和工程信息，不判断放线状态
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(drawLineVO.getDecoration().getOrderId());
@@ -623,11 +623,10 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		String orderId = decorationPO.getOrderId();
 
-		// 查询已有工程信息
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
 
 		if (constructionPO == null) {
-			throw new FLException(120020, "工程信息不存在，请先放线");
+			throw new FLException(120020, "工程信息不存在");
 		}
 
 		long cid = constructionPO.getCid();
@@ -638,70 +637,58 @@ public class DrawLineServiceImpl implements DrawLineService {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
-		// 获取所有施工节点（用于创建/更新施工计划）
-		List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.queryConstructionNodeList();
+		constructionInfoPO.setCid(cid);
 
-		if (constructionNodePOs == null || constructionNodePOs.size() == 0) {
-			throw new FLException(120020, "施工节点不存在");
-		}
+		constructionInfoDao.update(constructionInfoPO);
 
-		// 执行 successDrawLine 的完整逻辑（更新施工计划）
 		int timelimit = 0;
+
 		SystemConfigPO salaryLimitTotal = systemConfigDao.querySystemConfig("WORKER_SALARY_LIMIT_TOTAL_INT", decorationPO.getCompany());
-		Timestamp drawlineTime = constructionInfoPO.getDrawlineTime() == null ? DateUtil.getDateToTimestamp(new Date()) : constructionInfoPO.getDrawlineTime();
 
-		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
+		for (ConstructionNodeVO constructionNodeVO : constructionNodes) {
 
-			if (constructionNodePO.getTimeLimit() == null) constructionNodePO.setTimeLimit(0);
+			if (constructionNodeVO.getTimeLimit() == null) constructionNodeVO.setTimeLimit(0);
 
-			int prenum = constructionNodePO.getPrenum() != null ? constructionNodePO.getPrenum() : 0;
-			int postnum = constructionNodePO.getPostnum() != null ? constructionNodePO.getPostnum() : 0;
+			Timestamp drawlineTime = constructionInfoPO.getDrawlineTime() == null ? DateUtil.getDateToTimestamp(new Date()) : constructionInfoPO.getDrawlineTime();
+
+			int prenum = constructionNodeVO.getPrenum() != null ? constructionNodeVO.getPrenum() : 0;
+			int postnum = constructionNodeVO.getPostnum() != null ? constructionNodeVO.getPostnum() : 0;
 
 			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(drawlineTime), Arith.div(timelimit + prenum, 1000000)));
-			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(drawlineTime), Arith.div((timelimit + prenum - 1000 + constructionNodePO.getTimeLimit()), 1000000)));
+			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(drawlineTime), Arith.div((timelimit + prenum - 1000 + constructionNodeVO.getTimeLimit()), 1000000)));
 
-			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCid(cid, constructionNodePO.getCnid());
+			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCid(cid, constructionNodeVO.getCnid());
 
 			if (constructionSchedulePO != null) {
-				// 更新已有施工计划
+
 				constructionSchedulePO.setPreStartTime(startTime);
 				constructionSchedulePO.setPreEndTime(endTime);
 				constructionSchedulePO.setStartTime(startTime);
 				constructionSchedulePO.setEndTime(endTime);
 				constructionSchedulePO.setPrenum(prenum);
 				constructionSchedulePO.setPostnum(postnum);
-				constructionSchedulePO.setPeriod(constructionNodePO.getTimeLimit() != null ? constructionNodePO.getTimeLimit() : 0);
+
+				constructionSchedulePO.setPeriod(constructionNodeVO.getTimeLimit() != null ? constructionNodeVO.getTimeLimit() : 0);
+
 				constructionScheduleDao.update(constructionSchedulePO);
 			} else {
-				// 创建新的施工计划
-				ConstructionNodePO constructionNodePO2 = constructionNodeDao.get(constructionNodePO.getCnid());
-				if (constructionNodePO2 == null) continue;
 
-				constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodePO.getSort(), constructionNodePO.getTimeLimit(), prenum, postnum).init(constructionNodePO2);
+				ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodeVO.getCnid());
+
+				if (constructionNodePO == null) continue;
+
+				constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodePO.getSort(), constructionNodeVO.getTimeLimit(), prenum, postnum).init(constructionNodePO);
+
 				constructionSchedulePO.setSalaryLimitTotal(salaryLimitTotal == null ? 5000000 : Integer.valueOf(salaryLimitTotal.getValue()));
+
 				constructionScheduleDao.save(constructionSchedulePO);
 			}
 
-			timelimit = timelimit + prenum + (constructionNodePO.getTimeLimit() != null ? constructionNodePO.getTimeLimit() : 0) + postnum;
+			timelimit = timelimit + prenum + (constructionNodeVO.getTimeLimit() != null ? constructionNodeVO.getTimeLimit() : 0) + postnum;
 
 			constructionPO.setPreStartTime(drawlineTime);
 			constructionPO.setPreEndTime(endTime);
 			constructionPO.setPeriod(DateUtil.diffDay(drawlineTime, endTime));
-		}
-
-		constructionDao.update(constructionPO);
-
-		// 设置放线状态为成功（如果存在）
-		DrawLinePO drawLinePO = drawLineDao.queryDrawLineByOrderId(orderId);
-		if (drawLinePO != null) {
-			drawLinePO.setStatus(DrawLinePO.STATUS_SUCCESS_INT);
-			drawLineDao.update(drawLinePO);
-		}
-
-		// 更新装修单工程状态
-		if (decorationPO.getProjectStatus() == DecorationPO.PROJECTSTATUS_INITIAL_INT) {
-			decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_START_INT);
-			decorationDao.update(decorationPO);
 		}
 
 		// 生成消息队列数据（DRAWLINE_FINISHED 事件）
