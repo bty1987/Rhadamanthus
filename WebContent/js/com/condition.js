@@ -80,6 +80,62 @@ var Condition = function(api) {
             }
         },
 
+        // select - ConstructionSchedule
+        "constructionSchedule-cid": {
+            label: "工程ID",
+            type: "text",
+            submitConfig: {
+                name: "constructionSchedule.cid",
+                op: "eq",
+                validate: null
+            }
+        },
+        "constructionSchedule-status": {
+            label: "施工状态",
+            type: "select",
+            submitConfig: {
+                name: "constructionSchedule.status",
+                op: "eq",
+                validate: null
+            }
+        },
+        "constructionSchedule-node-cnid": {
+            label: "工程节点",
+            type: "autofill",
+            submitConfig: {
+                name: "constructionSchedule.node.cnid",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.data.queryConstructionNode,
+                postData: {},
+                listPath: "constructionNodes",
+                keyPath: "cnid",
+                valuePath: "name"
+            }
+        },
+
+        // timeRange
+        "construction-schedule-enterTime": {
+            label: "开工时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "constructionSchedule.enterTime",
+                op: "cn",
+                validate: null
+            }
+        },
+        "construction-schedule-leaveTime": {
+            label: "完工时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "constructionSchedule.leaveTime",
+                op: "cn",
+                validate: null
+            }
+        },
+
     };
 
     var fillCondition = function(url) {

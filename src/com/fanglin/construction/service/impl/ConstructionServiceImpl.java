@@ -206,6 +206,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 		decorationPO.setSupervisor(supervisor);
 
 		constructionInfoPO.setIsIssue(ConstructionInfoPO.ISISSUE_ISSUE_INT);
+		constructionInfoPO.setIssueTime(DateUtil.getDateToTimestamp(new Date()));
 
 		constructionInfoDao.update(constructionInfoPO);
 

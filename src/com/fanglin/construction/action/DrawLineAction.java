@@ -149,6 +149,16 @@ public class DrawLineAction extends BaseListAction {
 		return constructionNodes;
 	}
 
+	@Action(value = "finishDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishDrawLine() throws FLException {
+
+		drawLine.setStatus(DrawLinePO.STATUS_SUCCESS_INT);
+
+		drawLineService.finishDrawLine(drawLine, queryUserId());
+
+		return SUCCESS;
+	}
+
 	public void setConstructionNodes(List<ConstructionNodeVO> constructionNodes) {
 		this.constructionNodes = constructionNodes;
 	}

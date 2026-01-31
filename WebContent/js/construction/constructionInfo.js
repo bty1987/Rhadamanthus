@@ -67,6 +67,12 @@ jQuery(function($) {
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html("验房");
             var $btnProfile = $('<a></a>').addClass('btn btn-minier btn-warning').html("画像");
 
+            // contract 类型不显示预派监理和验房按钮
+            if (information.pageType == "contract") {
+                $btnProLine.hide();
+                $btnCheck.hide();
+            }
+
             var propertyArr = [
             ["装修单: ", v.decoration.orderId, "blue", function(btn) {
 
@@ -104,7 +110,8 @@ jQuery(function($) {
             ["报价版本: ", v.decoration.version.name, "grey"],
             ["签单时间: ", v.decoration.contractTime, "green"],
             ["设计天数: ", v.designPeriod ? v.designPeriod + "天" : "", "blue"],
-            ["设计超期天数: ", v.designOverdueDays ? v.designOverdueDays + "天" : "", "red"],
+            ["设计超期天数: ", v.designOverdueDays ? v.designOverdueDays + "天" : "", "blue"],
+            ["分配时间: ", v.issueTime, "green"],
             ["初始设计完成时间: ", v.initDesignTime, "green"],
             ["预计交钥匙时间: ", v.keyTime, "green"],
             ["预计放线时间: ", v.drawlineTime, "green"],
@@ -220,7 +227,12 @@ jQuery(function($) {
         options["constructionInfo.isIssue"] = 1;
     }
 
-    searcher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-supervisor', 'decoration-houseType', 'decoration-designStatus', 'decoration-projectStatus', "construction-info-keyTime", "construction-info-drawlineTime", "construction-info-finishTime", "construction-info-designTime", "decoration-sdesignTime", "decoration-edesignTime", "construction-info-isIssue", "construction-info-isCheck", ], "condList", api.construction.pageConstructionInfo, function(data) {
+    if (information.pageType == "contract") {
+        options["decoration.statuses"] = [2, 3, 7];
+        options["constructionInfo.isIssue"] = 0;
+    }
+
+    searcher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-supervisor', 'decoration-houseType', 'decoration-designStatus', 'decoration-statuses', 'decoration-projectStatus', "construction-info-keyTime", "construction-info-drawlineTime", "construction-info-finishTime", "construction-info-designTime", "decoration-sdesignTime", "decoration-edesignTime", "construction-info-isIssue", "construction-info-isCheck", ], "condList", api.construction.pageConstructionInfo, function(data) {
 
         displayFunc.init('resultList', data);
     }, "pagenation", "constructionInfoPostData", options, false, null, function() {
@@ -259,6 +271,7 @@ jQuery(function($) {
                 ["签单时间", "decoration.contractTime"],
                 ["设计天数", "designPeriod"],
                 ["设计超期天数", "designOverdueDays"],
+                ["分配时间", "issueTime"],
                 ["初始设计完成时间", "initDesignTime"],
                 ["预计交钥匙时间", "keyTime"],
                 ["预计放线时间", "drawlineTime"],
@@ -282,6 +295,7 @@ jQuery(function($) {
                 v.decoration.contractTime = (v.decoration.contractTime == null ? "" : v.decoration.contractTime);
                 v.designPeriod = (v.designPeriod == null ? "" : v.designPeriod);
                 v.designOverdueDays = (v.designOverdueDays == null ? "" : v.designOverdueDays);
+                v.issueTime = (v.issueTime == null ? "" : v.issueTime);
                 v.initDesignTime = (v.initDesignTime == null ? "" : v.initDesignTime);
                 v.keyTime = (v.keyTime == null ? "" : v.keyTime);
                 v.drawlineTime = (v.drawlineTime == null ? "" : v.drawlineTime);

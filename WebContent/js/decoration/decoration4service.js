@@ -78,6 +78,12 @@ jQuery(function($) {
         },
         clazz: "red"
     }, {
+        name: "超期天数",
+        prop: function(v) {
+            return v.overdueDays ? v.overdueDays + '天' : '';
+        },
+        clazz: "blue"
+    }, {
         name: "备注",
         prop: "comment",
         clazz: "grey"
