@@ -254,11 +254,13 @@ public class CustomerServiceImpl implements CustomerService {
 			String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 
 			customerPO.setNo(no);
-			customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
-			customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
 			customerPO.setCompany(company);
-
 			customerPO.setPhone(phone);
+
+			if (customerVO.getName() == null || customerVO.getName().trim().isEmpty()) {
+				customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
+				customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
+			}
 
 			customerDao.save(customerPO);
 
@@ -329,8 +331,10 @@ public class CustomerServiceImpl implements CustomerService {
 
 		BeanUtil.copyProperties(customerVO, customerPO, "phone");
 
-		customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
-		customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
+		if (customerVO.getName() == null || customerVO.getName().trim().isEmpty()) {
+			customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
+			customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
+		}
 
 		if (customerVO.getPhone() != null) {
 			customerPO.setPhone(FormatUtil.encodePhone(customerVO.getPhone()));

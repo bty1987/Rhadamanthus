@@ -57,7 +57,7 @@ $(function() {
     });
 
     com.post(api.data.queryDecorationBusitype, {}, function(res){
-        var decorationBusitypes = [];
+        var decorationBusitypes = [{key: -1, value: '通用'}];
 
         $.each(res.decorationBusitypes, function(intex, value) {
             if (value.status == 0) {
@@ -69,7 +69,7 @@ $(function() {
         paymentScale.items.dbid.bindData(decorationBusitypes, "key", "value");
     });
 
-    paymentScale.items.typeness.bindData(constant.decoration().decoration.typeness.datas, "key", "value");
+    paymentScale.items.typeness.bindData([{key: -1, value: '通用'}].concat(constant.decoration().decoration.typeness.datas), "key", "value");
 
     paymentScale.items.atttype.bindData(paymentScale.atttype_decoration, "key", "value");
 

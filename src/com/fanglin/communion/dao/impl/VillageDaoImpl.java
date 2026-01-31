@@ -68,6 +68,11 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 	}
 
 	@Override
+	public VillagePO queryVillage(long vid) {
+		return (VillagePO) session().createCriteria(VillagePO.class).add(Restrictions.eq("vid", vid)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	public VillagePO queryVillage(String name) {
 		return (VillagePO) session().createCriteria(VillagePO.class).add(Restrictions.eq("name", name)).setMaxResults(1).uniqueResult();
 	}
