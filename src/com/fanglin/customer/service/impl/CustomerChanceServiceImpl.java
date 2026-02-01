@@ -49,6 +49,8 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -106,6 +108,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Autowired
 	private MessageService messageService;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
 
 	@Autowired
 	private CustomerSourceService customerSourceService;
@@ -225,6 +230,15 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			customerSourceService.issueCustomerSource(new CustomerSourceVO(customerSourcePO.getCsid()), customerChanceVO, userId, company);
 			return customerChanceVO;
 		}
+
+		// UserPO creater = userDao.queryUserByUserId(userId);
+		//
+		// CustomerSourcePO customerSourcePO = customerSourceDao.queryCustomerSource(creater.getUid(), FormatUtil.encodePhone(customerChanceVO.getSource().getPhone()), company);
+		//
+		// if (customerSourcePO != null) {
+		// customerSourceService.issueCustomerSource(new CustomerSourceVO(customerSourcePO.getCsid()), customerChanceVO, userId, company);
+		// return customerChanceVO;
+		// }
 
 		// ========== 自动处理客户和房产 ==========
 		// 1. 处理客户信息
@@ -658,6 +672,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		if (!decorationVO.getOrderId().equals(originalOrderId)) {
 			customerChancePO.setOrderId(decorationVO.getOrderId());
 		}
+
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originalOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + "}"));
 
 		customerChancePO.setOrderId(decorationVO.getOrderId());
 		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
