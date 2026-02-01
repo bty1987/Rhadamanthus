@@ -1,0 +1,498 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue">
+                    <h4>采购合同模板</h4>
+                    <div class="orange">*橙色名称标签为必填信息</div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form id="contract-form">
+
+                            <!-- 甲方信息 -->
+                            <div class="col-md-12">
+
+                                <div class="modal-header" style="border-bottom: none;">
+                                    <h5 class="modal-title">甲方信息</h5>
+                                </div>
+
+                                <div class="form-group col-sm-6 customer">
+                                    <label for="con-company-name" class="col-sm-3 control-label no-padding-right orange">甲方</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" maxlength="32" data-toggle="popover" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-legal" class="col-sm-3 control-label no-padding-right orange">联系人</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-legal" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-phone-1" class="col-sm-3 control-label no-padding-right orange">联系方式</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-phone-1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-email" class="col-sm-3 control-label no-padding-right orange">联系邮箱</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-email" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-addr-1" class="col-sm-3 control-label no-padding-right orange">联系地址</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-addr-1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 乙方信息 -->
+                            <div class="col-md-12">
+
+                                <hr>
+
+                                <div class="modal-header" style="border-bottom: none;">
+                                    <h5 class="modal-title">乙方信息</h5>
+                                </div>
+
+                                <div class="form-group col-sm-6 customer">
+                                    <label for="con-supplier-name" class="col-sm-3 control-label no-padding-right orange">乙方</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" maxlength="32" data-toggle="popover" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-legal" class="col-sm-3 control-label no-padding-right orange">联系人</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-legal" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-phone-1" class="col-sm-3 control-label no-padding-right orange">联系方式</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-phone-1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-email" class="col-sm-3 control-label no-padding-right orange">联系邮箱</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-email" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-addr-1" class="col-sm-3 control-label no-padding-right orange">联系地址</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-addr-1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 合作信息 -->
+                            <div class="col-md-12">
+
+                                <hr>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-term-start-date" class="col-sm-3 control-label no-padding-right orange">合作起始时间</label>
+                                    <div class="col-sm-9">
+                                        <input class="cov-sign-data col-xs-12 col-sm-7 v_required" id="con-term-start-date" type="date" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger="manual">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-term-end-date" class="col-sm-3 control-label no-padding-right orange">合作结束时间</label>
+                                    <div class="col-sm-9">
+                                        <input class="cov-sign-data col-xs-12 col-sm-7 v_required" id="con-term-end-date" type="date" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger="manual">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-cooperation-area" class="col-sm-3 control-label no-padding-right orange">合作区域</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-cooperation-area" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-payment-method" class="col-sm-3 control-label no-padding-right orange">结算方式</label>
+                                    <div class="col-sm-9">
+                                        <select id="con-payment-method" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-brand-list" class="col-sm-3 control-label no-padding-right orange">品牌</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-brand-list" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-goods-list" class="col-sm-3 control-label no-padding-right orange">品类</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-goods-list" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="product-model" class="col-sm-3 control-label no-padding-right orange">产品模式</label>
+                                    <div class="col-sm-9">
+                                        <select id="con-product-model" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="ordering-method" class="col-sm-3 control-label no-padding-right orange">下单方式</label>
+                                    <div class="col-sm-9">
+                                        <select id="con-ordering-method" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="delivery-mode" class="col-sm-3 control-label no-padding-right orange">配送方式</label>
+                                    <div class="col-sm-9">
+                                        <select id="con-delivery-mode" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="installation-mode" class="col-sm-3 control-label no-padding-right orange">安装模式</label>
+                                    <div class="col-sm-9">
+                                        <select id="con-installation-mode" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="replenishment-cycle" class="col-sm-3 control-label no-padding-right">补货周期</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-replenishment-cycle" type="text" class="col-sm-7 col-xs-10 conitem v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='0'>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 费用信息 -->
+                            <div class="col-md-12">
+
+                                <hr>
+
+                                <div class="modal-header" style="border-bottom: none;">
+                                    <h5 class="modal-title">费用信息</h5>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-management-fee" class="col-sm-3 control-label no-padding-right orange">综合管理费</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-management-fee" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='0'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-marketing-expenses" class="col-sm-3 control-label no-padding-right orange">活动营销费</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-marketing-expenses" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='0'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-bond-price-category" class="col-sm-3 control-label no-padding-right orange">保证金品类</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-bond-price-category" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-bond-price" class="col-sm-3 control-label no-padding-right orange">保证金</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-bond-price" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='0'>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-12">
+                                    <label for="con-sales-volume" class="col-sm-3 control-label no-padding-right orange">如应结款金额乘以5%大于</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-sales-volume" type="text" class="col-sm-2 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='0'>
+                                        <span class="col-sm-5 orange">万元,按应结款金额的5%在应结款金额扣除</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-12">
+                                    <label for="con-sales-volume2" class="col-sm-3 control-label no-padding-right orange">如应结款金额乘以5%小于5万元,按</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-sales-volume2" type="text" class="col-sm-2 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='0'>
+                                        <span class="col-sm-5 orange">万元在应结款金额扣除</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="con-subsidiary" class="col-sm-3 control-label no-padding-right orange">甲方关联公司</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-subsidiary" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="con-deducting-the-deposit" class="col-sm-3 control-label no-padding-right orange">违约扣除保证金</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-deducting-the-deposit" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 银行账户信息 -->
+                            <div class="col-md-12">
+
+                                <hr>
+
+                                <div class="modal-header" style="border-bottom: none;">
+                                    <h5 class="modal-title">甲方开票信息</h5>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-bank" class="col-sm-3 control-label no-padding-right orange">开户银行</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-bank" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-bank-no" class="col-sm-3 control-label no-padding-right orange">开户行账号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-bank-no" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-bank-ident" class="col-sm-3 control-label no-padding-right orange">纳税人识别号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-bank-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                                
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-addr" class="col-sm-3 control-label no-padding-right orange">地址</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-addr" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-phone" class="col-sm-3 control-label no-padding-right orange">电话</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <hr>
+
+                                <div class="modal-header" style="border-bottom: none;">
+                                    <h5 class="modal-title">甲方收款账户信息</h5>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-bank-name" class="col-sm-3 control-label no-padding-right orange">账户名称</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-bank-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-bank-1" class="col-sm-3 control-label no-padding-right orange">开户行</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-bank-1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-bank-no-1" class="col-sm-3 control-label no-padding-right orange">账号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-bank-no-1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                            </div>
+                           
+                            <div class="col-md-12">
+                            
+                                <hr>
+
+                                <div class="modal-header" style="border-bottom: none;">
+                                    <h5 class="modal-title">乙方开票信息</h5>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-bank-ident" class="col-sm-3 control-label no-padding-right orange">纳税人识别号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-bank-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-bank" class="col-sm-3 control-label no-padding-right orange">开户行</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-bank" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-bank-no" class="col-sm-3 control-label no-padding-right orange">银行账号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-bank-no" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                                             
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-addr" class="col-sm-3 control-label no-padding-right orange">住所地</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-addr" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-phone" class="col-sm-3 control-label no-padding-right orange">联系电话</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <hr>
+
+                                <div class="modal-header" style="border-bottom: none;">
+                                    <h5 class="modal-title">乙方收款账户信息</h5>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-bank-name" class="col-sm-3 control-label no-padding-right orange">账户名称</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-bank-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-bank-1" class="col-sm-3 control-label no-padding-right orange">开户行</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-bank-1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-supplier-bank-no-1" class="col-sm-3 control-label no-padding-right orange">账号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-supplier-bank-no-1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-12">
+                            
+                                <hr>
+
+                                <div class="modal-header" style="border-bottom: none;">
+                                    <h5 class="modal-title">授权书</h5>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-legal-1" class="col-sm-3 control-label no-padding-right orange">授权人</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-legal-1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-company-name-1" class="col-sm-3 control-label no-padding-right orange">代表公司</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-name-1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-brand-list-1" class="col-sm-3 control-label no-padding-right orange">代理品牌</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-brand-list-1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 售后服务联系人 -->
+                            <div class="col-md-12">
+
+                                <hr>
+
+                                <div class="modal-header" style="border-bottom: none;">
+                                    <h5 class="modal-title">售后服务</h5>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-after-sales-service-contact-person" class="col-sm-3 control-label no-padding-right">售后服务联系人</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-after-sales-service-contact-person" type="text" class="col-sm-7 col-xs-10 conitem" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-after-sales-service-contact-phone" class="col-sm-3 control-label no-padding-right">售后服务联系电话</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-after-sales-service-contact-phone" type="text" class="col-sm-7 col-xs-10 conitem" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="con-after-sales-service-contact-person-1" class="col-sm-3 control-label no-padding-right">售后服务联系人</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-after-sales-service-contact-person-1" type="text" class="col-sm-7 col-xs-10 conitem" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-after-sales-service-contact-phone-1" class="col-sm-3 control-label no-padding-right">售后服务联系电话</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-after-sales-service-contact-phone-1" type="text" class="col-sm-7 col-xs-10 conitem" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="con-after-sales-service-contact-person-2" class="col-sm-3 control-label no-padding-right">售后服务联系人</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-after-sales-service-contact-person-2" type="text" class="col-sm-7 col-xs-10 conitem" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-after-sales-service-contact-phone-2" class="col-sm-3 control-label no-padding-right">售后服务联系电话</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-after-sales-service-contact-phone-2" type="text" class="col-sm-7 col-xs-10 conitem" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='/'>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/contract/C-001-F-0-0002.js']);
+</script>
