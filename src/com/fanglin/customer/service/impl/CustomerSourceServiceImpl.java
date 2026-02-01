@@ -184,7 +184,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		String phone = FormatUtil.encodePhone(customerSourceVO.getPhone());
 
 		if (customerSourceDao.queryCustomerSource(creater.getUid(), phone, company) != null) {
-			throw new FLException(330071, "客户手机号码存在");
+			throw new FLException(330071, "客户手机号存在,发生撞尺");
 		}
 
 		if (customerSourceVO.getBusitype() == null || customerSourceVO.getBusitype().getDbid() == null) {
@@ -506,7 +506,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			if (customerUserRuleDao.existCustomerUserRule(company, area) == 0) {
-				throw new FLException(330081, "无匹配规则");
+				throw new FLException(330081, "设计公司无设计师接单");
 			}
 
 			CustomerConfigRulePO customerConfigRulePO = customerConfigRuleDao.queryCustomerConfigRule(company);
@@ -528,14 +528,26 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_TYPE_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, customerSourcePO.getCreater().getDept().getType().getDtid(), exporters);
 				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, customerSourcePO.getCreater().getDept().getDid());
 
-				if (customerUserRuleItemPO == null) {
-					throw new FLException(330081, "无匹配规则");
+				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_COM_INT) {
+					throw new FLException(330081, "无设计师接单"); // 无匹配规则
+				}
+
+				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_AREA_INT) {
+					throw new FLException(330081, "面积段无设计师接单");
+				}
+
+				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_TYPE_INT) {
+					throw new FLException(330081, "部门类型无设计师接单");
+				}
+
+				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_INT) {
+					throw new FLException(330081, "部门无设计师接单");
 				}
 
 				customerUserRulePO = customerUserRuleDao.get(customerUserRuleItemPO.getCurid());
 
 				if (customerUserRulePO == null) {
-					throw new FLException(330081, "无匹配规则");
+					throw new FLException(330081, "设计师匹配规则不存在");
 				}
 
 				if (customerSourceDao.countCustomerSource(customerUserRulePO.getUser().getUid(), customerSourcePO.getPhone(), company) == 0) break;
