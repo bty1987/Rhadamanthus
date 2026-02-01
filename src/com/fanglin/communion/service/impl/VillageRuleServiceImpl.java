@@ -65,7 +65,7 @@ public class VillageRuleServiceImpl implements VillageRuleService {
 
 		villageRuleDao.save(villageRulePO);
 
-		messageQueuingDao.save(new MessageQueuingPO().init("", "addVillageRule", "{\"vid\":" + villagePO.getVid() + "\",\"vrid\":" + villageRulePO.getVrid() + "\",\"brid\":" + villageRulePO.getRule().getId() + ",\"event\":\"BUILDING_RULE_CREATED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init("", "addVillageRule", "{\"vid\":" + villagePO.getVid() + ",\"vrid\":" + villageRulePO.getVrid() + ",\"brid\":" + villageRulePO.getRule().getId() + ",\"event\":\"BUILDING_RULE_CREATED\"}"));
 
 		return 0;
 	}
@@ -80,7 +80,7 @@ public class VillageRuleServiceImpl implements VillageRuleService {
 
 		villageRuleDao.delete(villageRulePO);
 
-		messageQueuingDao.save(new MessageQueuingPO().init("", "addVillageRule", "{\"vid\":" + villageRulePO.getVid() + "\",\"vrid\":" + villageRulePO.getVrid() + "\",\"brid\":" + villageRulePO.getRule().getId() + ",\"event\":\"BUILDING_RULE_DELETED\"}"));
+		messageQueuingDao.save(new MessageQueuingPO().init("", "addVillageRule", "{\"vid\":" + villageRulePO.getVid() + ",\"vrid\":" + villageRulePO.getVrid() + ",\"brid\":" + villageRulePO.getRule().getId() + ",\"event\":\"BUILDING_RULE_DELETED\"}"));
 
 		return 0;
 	}
