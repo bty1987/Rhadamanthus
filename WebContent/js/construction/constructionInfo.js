@@ -67,12 +67,6 @@ jQuery(function($) {
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html("验房");
             var $btnProfile = $('<a></a>').addClass('btn btn-minier btn-warning').html("画像");
 
-            // contract 类型不显示预派监理和验房按钮
-            if (information.pageType == "contract") {
-                $btnProLine.hide();
-                $btnCheck.hide();
-            }
-
             var propertyArr = [
             ["装修单: ", v.decoration.orderId, "blue", function(btn) {
 
