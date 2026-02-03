@@ -334,7 +334,7 @@
             });
 
             com.post(api.construction.finishDrawLine, options, function(res) {
-                com.showAlert(com.info, "完成放线成功");
+                com.showAlert(com.info, "开工成功");
                 order.drawLineModal.modal("hide");
                 // 刷新列表或页面
                 if (typeof refreshList === 'function') {
