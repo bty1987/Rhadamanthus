@@ -224,6 +224,126 @@
         });
     });
 
+    // 完成放线
+    com.focusPage("#finishDrawLineBtn").on("click", function() {
+
+        if (com.validate("drawLineModal")) {
+            return false;
+        }
+
+        var orderId = com.focusPage("#dischargeLineOrderId").val();
+
+        // 显示加载中
+        com.showLoading("正在获取施工节点数据...");
+
+        // 1. 获取订单信息（包含房屋面积）
+        var decoration = null;
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {
+            "decoration.orderId": orderId
+        }, function(res) {
+            decoration = res.decoration;
+        }, null, false);
+
+        if (!decoration || !decoration.house) {
+            com.hideLoading();
+            com.showAlert(com.warning, "获取订单信息失败");
+            return false;
+        }
+
+        // 2. 获取基础 constructionNode 数据
+        var constructionNodes = [];
+        com.post(api.data.queryConstructionNode, {}, function(res) {
+            constructionNodes = res.constructionNodes || [];
+        }, null, false);
+
+        // 过滤出预派节点（proset = 1）
+        var preSetNodes = [];
+        $.each(constructionNodes, function(i, node) {
+            if (node.proset == 1) { // PROSET_PROSET_INT
+                preSetNodes.push(node);
+            }
+        });
+
+        // 3. 根据面积获取 constructionPace 数据
+        var pace = null;
+        com.post(api.data.queryConstructionPace, {
+            "constructionPace.lowerArea": decoration.house.innerArea
+        }, function(res) {
+            pace = res.constructionPace;
+        }, null, false);
+
+        // 4. 如果有 constructionPace，获取 constructionPaceNode 数据
+        if (pace && pace.cpid) {
+            com.post(api.data.queryConstructionPaceNode, {
+                "constructionPaceNode.cpid": pace.cpid
+            }, function(res) {
+                var paceNodes = res.constructionPaceNodes || [];
+
+                // 用 constructionPaceNode 数据覆盖基础节点数据
+                $.each(paceNodes, function(i, paceNode) {
+                    $.each(preSetNodes, function(j, node) {
+                        if (node.cnid == paceNode.node.cnid) {
+                            // 优先使用 constructionPaceNode 的数据
+                            node.prenum = paceNode.prenum;
+                            node.postnum = paceNode.postnum;
+                            node.timeLimit = paceNode.period || node.timeLimit;
+                        }
+                    });
+                });
+            }, null, false);
+        }
+
+        // 5. 获取已有的施工计划数据（最高优先级）
+        com.post(api.construction.queryConstructionPlanByOrderId, {
+            "constructionPlan.orderId": orderId
+        }, function(res) {
+            var constructionPlans = res.constructionPlans || [];
+
+            // 用已有施工计划数据覆盖
+            $.each(constructionPlans, function(i, plan) {
+                $.each(preSetNodes, function(j, node) {
+                    if (node.cnid == plan.cnid) {
+                        node.timeLimit = plan.connum || node.timeLimit;
+                    }
+                });
+            });
+        }, null, false);
+
+        com.hideLoading();
+
+        // 6. 构建请求参数
+        com.showConfirm("确认完成放线吗?", function() {
+
+            var options = {
+                "drawLine.content": order.infoItems.applayDes.val(),
+                "drawLine.applayTime": order.infoItems.applayTime.val() + " 00:00:00",
+                "drawLine.decoration.orderId": orderId,
+            };
+
+            if (order.infoItems.dlmConpany.val()) {
+                options["drawLine.decoration.dompany"] = order.infoItems.dlmConpany.val();
+            }
+
+            // 添加 constructionNodes 参数
+            $.each(preSetNodes, function(i, node) {
+                options["constructionNodes[" + i + "].cnid"] = node.cnid;
+                options["constructionNodes[" + i + "].sort"] = node.sort;
+                options["constructionNodes[" + i + "].timeLimit"] = node.timeLimit || 0;
+                options["constructionNodes[" + i + "].prenum"] = node.prenum || 0;
+                options["constructionNodes[" + i + "].postnum"] = node.postnum || 0;
+            });
+
+            com.post(api.construction.finishDrawLine, options, function(res) {
+                com.showAlert(com.info, "完成放线成功");
+                order.drawLineModal.modal("hide");
+                // 刷新列表或页面
+                if (typeof refreshList === 'function') {
+                    refreshList();
+                }
+            });
+        });
+    });
+
     com.focusPage("#seveSuccess").on("click", function() {
 
         if (com.validate("contructionNodeModal")) {
