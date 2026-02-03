@@ -468,6 +468,13 @@ $.extend(api, {
                 args: ["constructionNodes.timeLimit","constructionNodes.prenum","constructionNodes.postnum"]
             }
         },
+        finishDrawLine: {
+            url: "finishDrawLine.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionNodes.timeLimit","constructionNodes.prenum","constructionNodes.postnum"]
+            }
+        },
         failureDrawLine: {
             url: "failureDrawLine.do"
         },
