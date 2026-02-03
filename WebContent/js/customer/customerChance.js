@@ -314,6 +314,11 @@ jQuery(function($) {
             return !!v.orderId;
         }
     }, {
+        field: "cno",
+        name: "线索编号",
+        prop: "cno",
+        clazz: "blue"
+    }, {
         field: "source",
         name: "客户姓名",
         prop: "source.name",
