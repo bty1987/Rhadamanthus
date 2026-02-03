@@ -257,7 +257,7 @@ public class CustomerServiceImpl implements CustomerService {
 			customerPO.setCompany(company);
 			customerPO.setPhone(phone);
 
-			if (customerVO.getName() == null || customerVO.getName().trim().isEmpty()) {
+			if (customerVO.getName() != null && !customerVO.getName().trim().isEmpty()) {
 				customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
 				customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
 			}
