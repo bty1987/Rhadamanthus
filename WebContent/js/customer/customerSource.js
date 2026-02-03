@@ -553,6 +553,11 @@ $(function() {
         prop: "gender",
         clazz: "grey"
     }, {
+        field: "no",
+        name: "尺源编号",
+        prop: "no",
+        clazz: "blue"
+    }, {
         field: "phone",
         name: "客户电话",
         prop: function(v) {
