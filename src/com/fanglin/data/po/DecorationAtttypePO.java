@@ -30,6 +30,10 @@ public class DecorationAtttypePO implements Serializable {
 
 	private int company;
 
+	private short manageDiscount;
+
+	private short taxDiscount;
+
 	public DecorationAtttypePO() {
 		super();
 	}
@@ -103,6 +107,24 @@ public class DecorationAtttypePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "manageDiscount")
+	public short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(short manageDiscount) {
+		this.manageDiscount = manageDiscount;
+	}
+
+	@Column(name = "taxDiscount")
+	public short getTaxDiscount() {
+		return taxDiscount;
+	}
+
+	public void setTaxDiscount(short taxDiscount) {
+		this.taxDiscount = taxDiscount;
 	}
 
 }

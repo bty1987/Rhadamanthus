@@ -55,4 +55,16 @@ public class DecorationAtttypeServiceImpl implements DecorationAtttypeService {
 		return decorationAtttypeVOs;
 	}
 
+	@Override
+	public DecorationAtttypeVO queryDecorationAtttypeByTypeAndCompany(short type, int company) {
+		DecorationAtttypePO decorationAtttypePO = decorationAtttypeDao.queryDecorationAtttypeByTypeAndCompany(type, company);
+
+		if (decorationAtttypePO != null) {
+			DecorationAtttypeVO decorationAtttypeVO = new DecorationAtttypeVO();
+			BeanUtil.copyPropertie(decorationAtttypePO, decorationAtttypeVO);
+			return decorationAtttypeVO;
+		}
+		return null;
+	}
+
 }

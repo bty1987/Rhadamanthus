@@ -26,6 +26,8 @@ public class QuotetionFunctionAreaPO implements Serializable {
 
 	private long qfaId;
 
+	private String qfapId;
+
 	private long qid;
 
 	private String name;
@@ -61,6 +63,15 @@ public class QuotetionFunctionAreaPO implements Serializable {
 
 	public void setQfaId(long qfaId) {
 		this.qfaId = qfaId;
+	}
+
+	@Column(name = "qfapId", length = 50)
+	public String getQfapId() {
+		return qfapId;
+	}
+
+	public void setQfapId(String qfapId) {
+		this.qfapId = qfapId;
 	}
 
 	@Column(name = "qid")

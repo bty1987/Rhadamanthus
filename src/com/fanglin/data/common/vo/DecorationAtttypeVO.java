@@ -16,6 +16,10 @@ public class DecorationAtttypeVO implements Serializable {
 
 	private Short status;
 
+	private Short manageDiscount;
+
+	private Short taxDiscount;
+
 	public DecorationAtttypeVO() {
 		super();
 	}
@@ -58,6 +62,22 @@ public class DecorationAtttypeVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(Short manageDiscount) {
+		this.manageDiscount = manageDiscount;
+	}
+
+	public Short getTaxDiscount() {
+		return taxDiscount;
+	}
+
+	public void setTaxDiscount(Short taxDiscount) {
+		this.taxDiscount = taxDiscount;
 	}
 
 }

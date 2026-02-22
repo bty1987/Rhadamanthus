@@ -42,6 +42,17 @@ public class DecorationAtttypeAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryDecorationAtttypeByTypeAndCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationAtttypeByTypeAndCompany() throws FLException {
+
+		short type = getShortParameter("type", (short)0);
+		DecorationAtttypeVO atttype = decorationAtttypeService.queryDecorationAtttypeByTypeAndCompany(type, queryCompany());
+
+		setJsonResult(atttype);
+
+		return SUCCESS;
+	}
+
 	public List<DecorationAtttypeVO> getDecorationAtttypes() {
 		return decorationAtttypes;
 	}

@@ -12,4 +12,6 @@ public interface DecorationAtttypeDao extends Dao<DecorationAtttypePO> {
 	public List<DecorationAtttypePO> pageDecorationAtttype(Paging paging, List<Filter> filters, int company);
 
 	public List<DecorationAtttypePO> queryDecorationAtttype(int company);
+
+	public DecorationAtttypePO queryDecorationAtttypeByTypeAndCompany(short type, int company);
 }
