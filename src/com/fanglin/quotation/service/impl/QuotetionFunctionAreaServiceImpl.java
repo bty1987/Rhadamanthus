@@ -2,7 +2,9 @@ package com.fanglin.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +20,15 @@ import com.fanglin.data.quotation.dao.QuotationPriceDao;
 import com.fanglin.quotation.dao.QuotetionDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaItemDao;
+import com.fanglin.quotation.dao.QuotetionFunctionAreaParamDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaPO;
+import com.fanglin.quotation.po.QuotetionFunctionAreaParamPO;
 import com.fanglin.quotation.po.QuotetionPO;
 import com.fanglin.quotation.service.QuotetionFunctionAreaService;
 import com.fanglin.quotation.vo.QuotetionFunctionAreaItemVO;
+import com.fanglin.quotation.vo.QuotetionFunctionAreaParamVO;
 import com.fanglin.quotation.vo.QuotetionFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotetionVO;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -48,6 +53,9 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 	@Autowired
 	private QuotetionFunctionAreaItemDao quotetionFunctionAreaItemDao;
+
+	@Autowired
+	private QuotetionFunctionAreaParamDao quotetionFunctionAreaParamDao;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
@@ -92,6 +100,25 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 			}
 
 			quotetionFunctionAreaVO.setQuotetionFunctionAreaItems(quotetionFunctionAreaItemVOs);
+
+			// 加载功能区参数
+			QuotetionFunctionAreaParamPO paramPO = quotetionFunctionAreaParamDao.queryQuotetionFunctionAreaParam(quotetionFunctionAreaPO.getQfaId());
+			if (paramPO != null) {
+				QuotetionFunctionAreaParamVO paramVO = new QuotetionFunctionAreaParamVO();
+				paramVO.setQfapId(paramPO.getQfapId());
+				paramVO.setQfaId(paramPO.getQfaId());
+				paramVO.setGirth(paramPO.getGirth());
+				paramVO.setArea(paramPO.getArea());
+				paramVO.setHeight(paramPO.getHeight());
+				paramVO.setHoleLength(paramPO.getHoleLength());
+				paramVO.setHoleHeight(paramPO.getHoleHeight());
+				paramVO.setWindowLength(paramPO.getWindowLength());
+				paramVO.setWindowHeight(paramPO.getWindowHeight());
+				paramVO.setBeamLength(paramPO.getBeamLength());
+				paramVO.setBeamHeight(paramPO.getBeamHeight());
+				quotetionFunctionAreaVO.setQuotetionFunctionAreaParam(paramVO);
+				quotetionFunctionAreaVO.setQfapId(paramPO.getQfapId());
+			}
 
 			if ("0".equals(quotetionFunctionAreaVO.getType())) {
 				autogeneration = quotetionFunctionAreaVO;
@@ -150,30 +177,30 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 			for (QuotationPricePO quotationPricePO : quotationPricePOs) {
 
-				short itemType = QuotationFunctionAreaItemPO.TYPE_COMMON_INT;
+				short itemType = QuotetionFunctionAreaItemPO.TYPE_COMMON_INT;
 
 				QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO = new QuotetionFunctionAreaItemVO();
 
 				QuotationItemPO quotationItemPO = quotationPricePO.getQuotationItem();
 
 				if (functionAreaPO.getType() == FunctionAreaPO.TYPE_IGNORE_INT) {
-					itemType = QuotationFunctionAreaItemPO.TYPE_IGNORE_INT;
+					itemType = QuotetionFunctionAreaItemPO.TYPE_IGNORE_INT;
 				}
 
 				if (functionAreaPO.getType() == FunctionAreaPO.TYPE_COST_INT) {
-					itemType = QuotationFunctionAreaItemPO.TYPE_COST_INT;
+					itemType = QuotetionFunctionAreaItemPO.TYPE_COST_INT;
 				}
 
 				if (functionAreaPO.getType() == FunctionAreaPO.TYPE_UNACHE_INT) {
-					itemType = QuotationFunctionAreaItemPO.TYPE_UNACHE_INT;
+					itemType = QuotetionFunctionAreaItemPO.TYPE_UNACHE_INT;
 				}
 
 				if (quotationItemPO.getType() == QuotationItemPO.TYPE_COST_INT) {
-					itemType = QuotationFunctionAreaItemPO.TYPE_COST_INT;
+					itemType = QuotetionFunctionAreaItemPO.TYPE_COST_INT;
 				}
 
 				if (quotationItemPO.getType() == QuotationItemPO.TYPE_UNACHE_INT) {
-					itemType = QuotationFunctionAreaItemPO.TYPE_UNACHE_INT;
+					itemType = QuotetionFunctionAreaItemPO.TYPE_UNACHE_INT;
 				}
 
 				quotetionFunctionAreaItemVO.setQiid(quotationItemPO.getQiid());
@@ -230,6 +257,11 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 		quotetionFunctionAreaDao.update(quotetionFunctionAreaPO);
 
+		// 保存功能区参数
+		if (quotetionFunctionAreaVO.getQuotetionFunctionAreaParam() != null) {
+			saveQuotetionFunctionAreaParam(quotetionFunctionAreaVO.getQfaId(), quotetionFunctionAreaVO.getQuotetionFunctionAreaParam());
+		}
+
 		quotetionDao.update(quotetionPO);
 
 		return 0;
@@ -259,6 +291,122 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 		quotetionDao.update(quotetionPO);
 
 		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public List<QuotetionFunctionAreaVO> copyQuotetionFunctionArea(QuotetionFunctionAreaVO quotetionFunctionAreaVO, QuotetionVO quotetionVO) throws FLException {
+
+		// 检查报价状态
+		QuotetionPO quotetionPO = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
+		QuotetionServiceImpl.convertQuotetionVOToPOForAdvance(quotetionVO, quotetionPO);
+
+		// 查询原功能区
+		QuotetionFunctionAreaPO sourceFunctionArea = quotetionFunctionAreaDao.get(quotetionFunctionAreaVO.getQfaId());
+
+		if (sourceFunctionArea == null) {
+			throw new FLException(200012, "功能区不存在");
+		}
+
+		// 创建新功能区
+		QuotetionFunctionAreaPO newFunctionArea = new QuotetionFunctionAreaPO();
+		BeanUtil.copyProperties(sourceFunctionArea, newFunctionArea);
+
+		// 设置新功能区的名称（原名称_副本）
+		String newName = sourceFunctionArea.getName() + "_副本";
+		newFunctionArea.setName(newName);
+
+		// 保存新功能区
+		quotetionFunctionAreaDao.saveOrUpdate(newFunctionArea);
+
+		// 复制功能区参数（如果存在）
+		QuotetionFunctionAreaParamPO sourceParam = quotetionFunctionAreaParamDao.queryQuotetionFunctionAreaParam(sourceFunctionArea.getQfaId());
+		if (sourceParam != null) {
+			QuotetionFunctionAreaParamPO newParam = new QuotetionFunctionAreaParamPO();
+			BeanUtil.copyProperties(sourceParam, newParam);
+			newParam.setQfapId(UUID.randomUUID().toString());
+			newParam.setQfaId(newFunctionArea.getQfaId());
+			newParam.setCreateTime(new Date());
+			quotetionFunctionAreaParamDao.save(newParam);
+		}
+
+		// 查询原功能区的所有报价项
+		String sourceTableName = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(
+				sourceFunctionArea.getQfaId(), sourceFunctionArea.getIndex());
+		List<QuotetionFunctionAreaItemPO> sourceItems = quotetionFunctionAreaItemDao
+				.queryQuotetionFunctionAreaItemByFunctionAreaId(sourceTableName, sourceFunctionArea.getQfaId());
+
+		// 复制所有报价项
+		if (sourceItems != null && !sourceItems.isEmpty()) {
+			for (QuotetionFunctionAreaItemPO sourceItem : sourceItems) {
+				// 创建新的报价项
+				QuotetionFunctionAreaItemPO newItem = new QuotetionFunctionAreaItemPO();
+				BeanUtil.copyProperties(sourceItem, newItem);
+
+				// 重新设置ID和功能区ID
+				newItem.setQfaiId(newFunctionArea.getQfaId());
+				// qfaiId 会自动生成
+
+				// 保存新报价项
+				quotetionFunctionAreaItemDao.save(newItem);
+			}
+		}
+
+		// 更新报价
+		quotetionDao.update(quotetionPO);
+
+		// 查询新功能区的所有数据
+		List<QuotetionFunctionAreaVO> newFunctionAreas = quotetionFunctionAreaDao
+				.queryQuotetionFunctionAreaByQuotetionId(quotetionVO);
+
+		return newFunctionAreas;
+	}
+
+	/**
+	 * 保存功能区参数
+	 *
+	 * @param qfaId 功能区ID
+	 * @param paramVO 参数VO
+	 * @return 参数ID
+	 */
+	private String saveQuotetionFunctionAreaParam(Long qfaId, QuotetionFunctionAreaParamVO paramVO) {
+
+		// 查询是否已存在参数
+		QuotetionFunctionAreaParamPO existingParam = quotetionFunctionAreaParamDao.queryQuotetionFunctionAreaParam(qfaId);
+
+		QuotetionFunctionAreaParamPO paramPO;
+
+		if (existingParam != null) {
+			// 更新参数
+			paramPO = existingParam;
+		} else {
+			// 新增参数
+			paramPO = new QuotetionFunctionAreaParamPO();
+			paramPO.setQfapId(UUID.randomUUID().toString());
+			paramPO.setQfaId(qfaId);
+			paramPO.setCreateTime(new Date());
+		}
+
+		// 设置参数值
+		paramPO.setGirth(paramVO.getGirth());
+		paramPO.setArea(paramVO.getArea());
+		paramPO.setHeight(paramVO.getHeight());
+		paramPO.setHoleLength(paramVO.getHoleLength());
+		paramPO.setHoleHeight(paramVO.getHoleHeight());
+		paramPO.setWindowLength(paramVO.getWindowLength());
+		paramPO.setWindowHeight(paramVO.getWindowHeight());
+		paramPO.setBeamLength(paramVO.getBeamLength());
+		paramPO.setBeamHeight(paramVO.getBeamHeight());
+		paramPO.setUpdateTime(new Date());
+
+		// 保存
+		if (existingParam != null) {
+			quotetionFunctionAreaParamDao.update(paramPO);
+		} else {
+			quotetionFunctionAreaParamDao.save(paramPO);
+		}
+
+		return paramPO.getQfapId();
 	}
 
 	private QuotetionPO checkQuotetionForStatusByEnabled(long qid) throws FLException {

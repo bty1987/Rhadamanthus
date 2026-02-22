@@ -9,6 +9,8 @@ public class QuotetionFunctionAreaVO implements Serializable {
 
 	private Long qfaId;
 
+	private String qfapId;
+
 	private Long qid;
 
 	private String name;
@@ -19,12 +21,22 @@ public class QuotetionFunctionAreaVO implements Serializable {
 
 	private List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItems;
 
+	private QuotetionFunctionAreaParamVO quotetionFunctionAreaParam;
+
 	public Long getQfaId() {
 		return qfaId;
 	}
 
 	public void setQfaId(Long qfaId) {
 		this.qfaId = qfaId;
+	}
+
+	public String getQfapId() {
+		return qfapId;
+	}
+
+	public void setQfapId(String qfapId) {
+		this.qfapId = qfapId;
 	}
 
 	public Long getQid() {
@@ -65,6 +77,14 @@ public class QuotetionFunctionAreaVO implements Serializable {
 
 	public void setQuotetionFunctionAreaItems(List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItems) {
 		this.quotetionFunctionAreaItems = quotetionFunctionAreaItems;
+	}
+
+	public QuotetionFunctionAreaParamVO getQuotetionFunctionAreaParam() {
+		return quotetionFunctionAreaParam;
+	}
+
+	public void setQuotetionFunctionAreaParam(QuotetionFunctionAreaParamVO quotetionFunctionAreaParam) {
+		this.quotetionFunctionAreaParam = quotetionFunctionAreaParam;
 	}
 
 }

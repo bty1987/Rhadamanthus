@@ -16,4 +16,6 @@ public interface QuotetionFunctionAreaService {
 
 	public int deleteQuotetionFunctionArea(QuotetionFunctionAreaVO quotetionFunctionAreaVO, QuotetionVO quotetionVO) throws FLException;
 
+	public List<QuotetionFunctionAreaVO> copyQuotetionFunctionArea(QuotetionFunctionAreaVO quotetionFunctionAreaVO, QuotetionVO quotetionVO) throws FLException;
+
 }

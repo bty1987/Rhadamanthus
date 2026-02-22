@@ -910,7 +910,15 @@ $.extend(api, {
         queryDecorationFunctionByName: {
             url: "queryDecorationFunctionByName.do"
         },
-        
+        queryDecorationAtttypeByTypeAndCompany: {
+            url: "queryDecorationAtttypeByTypeAndCompany.do"
+        },
+        decorationatttype: {
+            queryDecorationAtttypeByTypeAndCompany: {
+                url: "queryDecorationAtttypeByTypeAndCompany.do"
+            }
+        }
+
     }
 });
 

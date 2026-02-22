@@ -35,4 +35,13 @@ public class DecorationAtttypeDaoImpl extends DaoImpl<DecorationAtttypePO> imple
 	public List<DecorationAtttypePO> queryDecorationAtttype(int company) {
 		return session().createCriteria(DecorationAtttypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", DecorationAtttypePO.STATUS_ENABLE_INT)).list();
 	}
+
+	@Override
+	public DecorationAtttypePO queryDecorationAtttypeByTypeAndCompany(short type, int company) {
+		return (DecorationAtttypePO) session().createCriteria(DecorationAtttypePO.class)
+				.add(Restrictions.eq("type", type))
+				.add(Restrictions.eq("company", company))
+				.add(Restrictions.eq("status", DecorationAtttypePO.STATUS_ENABLE_INT))
+				.uniqueResult();
+	}
 }

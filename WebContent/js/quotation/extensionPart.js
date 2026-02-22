@@ -51,6 +51,37 @@ var ExtensionDetail = (function() {
         isCountManageDiscount: com.focusPage("#isCountManageDiscount"),
         isCountTax: com.focusPage("#isCountTax"),
 
+        // 查询 decorationatttype，根据 typeness + company（后台自动获取）
+        loadDecorationAtttypeByType: function(typeness) {
+            if (typeness == null || typeness == undefined) return;
+
+            com.post(api.decorationatttype.queryDecorationAtttypeByTypeAndCompany, {
+                "type": typeness
+            }, function(res) {
+                if (res && res.decorationAtttype) {
+                    // 设置默认折扣标识（仅在创建新单据时）
+                    if (extensionDetail.extension == null) {
+                        extensionDetail.manageDiscount = res.decorationAtttype.manageDiscount;
+                        extensionDetail.taxDiscount = res.decorationAtttype.taxDiscount;
+
+                        // 更新 UI
+                        if (extensionDetail.manageDiscount == 1) {
+                            extensionDetail.isCountManageDiscount.prop("checked", true);
+                        } else {
+                            extensionDetail.isCountManageDiscount.prop("checked", false);
+                        }
+
+                        // 更新 basicParams
+                        extensionDetail.basicParams["extension.manageDiscount"] = extensionDetail.manageDiscount;
+                        extensionDetail.basicParams["extension.taxDiscount"] = extensionDetail.taxDiscount;
+
+                        // 触发计算
+                        arCalculator.calculateArFees();
+                    }
+                }
+            }, null, false);
+        },
+
         $modals: {},
         $btnItems: {},
 
@@ -1160,6 +1191,11 @@ var ExtensionDetail = (function() {
             }, function(res) {
 
                 extensionDetail.decoration = res.decoration;
+
+                // 需求14：创建扩展单时，查询 decorationatttype 设置默认折扣标识
+                if (extensionDetail.extension == null && extensionDetail.decoration.typeness != null) {
+                    extensionDetail.loadDecorationAtttypeByType(extensionDetail.decoration.typeness);
+                }
 
             }, null, false);
 
