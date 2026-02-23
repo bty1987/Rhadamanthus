@@ -17,7 +17,7 @@ public class NotificationAction extends BaseAction {
 
 	private static final long serialVersionUID = -3189624715024527674L;
 
-	private Long userId;
+	private String userId;
 	private String message;
 	private String type;
 
@@ -32,11 +32,11 @@ public class NotificationAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
