@@ -55,8 +55,8 @@ var ExtensionDetail = (function() {
         loadDecorationAtttypeByType: function(typeness) {
             if (typeness == null || typeness == undefined) return;
 
-            com.post(api.decorationatttype.queryDecorationAtttypeByTypeAndCompany, {
-                "type": typeness
+            com.post(api.decorationatttype.queryDecorationAtttypeByType, {
+                "decorationAtttype.type": typeness
             }, function(res) {
                 if (res && res.decorationAtttype) {
                     // 设置默认折扣标识（仅在创建新单据时）
