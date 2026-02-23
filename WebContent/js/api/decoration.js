@@ -910,12 +910,12 @@ $.extend(api, {
         queryDecorationFunctionByName: {
             url: "queryDecorationFunctionByName.do"
         },
-        queryDecorationAtttypeByTypeAndCompany: {
-            url: "queryDecorationAtttypeByTypeAndCompany.do"
+        queryDecorationAtttypeByType: {
+            url: "queryDecorationAtttypeByType.do"
         },
         decorationatttype: {
-            queryDecorationAtttypeByTypeAndCompany: {
-                url: "queryDecorationAtttypeByTypeAndCompany.do"
+            queryDecorationAtttypeByType: {
+                url: "queryDecorationAtttypeByType.do"
             }
         }
 

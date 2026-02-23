@@ -1327,7 +1327,8 @@
                     // 复用 saveDomainTemplete 的局部刷新逻辑
                     var $aimDomains = com.focusPage('.widget-box', '#functionAreaDetailList');
 
-                    data.quotetionFunctionAreas.length && $.each(data.quotetionFunctionAreas, function(i, v) {
+                    if (data.quotetionFunctionArea) {
+                        var v = data.quotetionFunctionArea;
 
                         // 创建新功能区的详情 DOM
                         var $newDomain = painter.createdomain(v);
@@ -1354,17 +1355,17 @@
                         }
 
                         // 如果功能区有报价项，也插入到详情列表中
-                        if (v.quotetionFunctionAreaItems.length) {
+                        if (v.quotetionFunctionAreaItems && v.quotetionFunctionAreaItems.length) {
                             $.each(v.quotetionFunctionAreaItems, function(index, j) {
 
                                 // 创建报价项 DOM
                                 var $newItem = painter.createQuote(index + 1, j).appendTo($newDomain.find('.fl-quo-list.list'));
                             });
                         }
-                    });
 
-                    // 重新计算报价费用
-                    quo.calculateQuoFees();
+                        // 重新计算报价费用
+                        quo.calculateQuoFees();
+                    }
 
                     // 关闭弹窗
                     if (quo.modals && quo.modals.functionAreaModal) {
