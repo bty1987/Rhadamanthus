@@ -26,6 +26,8 @@ public class DecorationAtttypeAction extends BaseListAction {
 
 	private List<DecorationAtttypeVO> decorationAtttypes;
 
+	private DecorationAtttypeVO decorationAtttype;
+
 	@Action(value = "pageDecorationAtttype", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationAtttype() throws FLException {
 
@@ -42,13 +44,10 @@ public class DecorationAtttypeAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryDecorationAtttypeByTypeAndCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationAtttypeByTypeAndCompany() throws FLException {
+	@Action(value = "queryDecorationAtttypeByType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationAtttypeByType() throws FLException {
 
-		short type = getShortParameter("type", (short)0);
-		DecorationAtttypeVO atttype = decorationAtttypeService.queryDecorationAtttypeByTypeAndCompany(type, queryCompany());
-
-		setJsonResult(atttype);
+		decorationAtttype = decorationAtttypeService.queryDecorationAtttype(decorationAtttype, queryCompany());
 
 		return SUCCESS;
 	}
@@ -59,6 +58,14 @@ public class DecorationAtttypeAction extends BaseListAction {
 
 	public void setDecorationAtttypes(List<DecorationAtttypeVO> decorationAtttypes) {
 		this.decorationAtttypes = decorationAtttypes;
+	}
+
+	public DecorationAtttypeVO getDecorationAtttype() {
+		return decorationAtttype;
+	}
+
+	public void setDecorationAtttype(DecorationAtttypeVO decorationAtttype) {
+		this.decorationAtttype = decorationAtttype;
 	}
 
 }

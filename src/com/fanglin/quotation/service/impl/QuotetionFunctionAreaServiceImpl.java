@@ -21,7 +21,6 @@ import com.fanglin.quotation.dao.QuotetionDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaItemDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaParamDao;
-import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaParamPO;
@@ -295,7 +294,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public List<QuotetionFunctionAreaVO> copyQuotetionFunctionArea(QuotetionFunctionAreaVO quotetionFunctionAreaVO, QuotetionVO quotetionVO) throws FLException {
+	public QuotetionFunctionAreaVO copyQuotetionFunctionArea(QuotetionFunctionAreaVO quotetionFunctionAreaVO, QuotetionVO quotetionVO) throws FLException {
 
 		// 检查报价状态
 		QuotetionPO quotetionPO = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
@@ -331,10 +330,9 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 		}
 
 		// 查询原功能区的所有报价项
-		String sourceTableName = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(
-				sourceFunctionArea.getQfaId(), sourceFunctionArea.getIndex());
-		List<QuotetionFunctionAreaItemPO> sourceItems = quotetionFunctionAreaItemDao
-				.queryQuotetionFunctionAreaItemByFunctionAreaId(sourceTableName, sourceFunctionArea.getQfaId());
+		List<QuotetionFunctionAreaItemPO> sourceItems = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(sourceFunctionArea.getQfaId(), sourceFunctionArea.getIndex()), sourceFunctionArea.getQfaId());
+
+		List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItemVOs = new ArrayList<QuotetionFunctionAreaItemVO>();
 
 		// 复制所有报价项
 		if (sourceItems != null && !sourceItems.isEmpty()) {
@@ -349,22 +347,26 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 				// 保存新报价项
 				quotetionFunctionAreaItemDao.save(newItem);
+
+				QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO = new QuotetionFunctionAreaItemVO();
+
+				BeanUtil.copyProperties(newItem, quotetionFunctionAreaItemVO, "");
+
+				quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);
 			}
 		}
 
 		// 更新报价
 		quotetionDao.update(quotetionPO);
 
-		// 查询新功能区的所有数据
-		List<QuotetionFunctionAreaVO> newFunctionAreas = quotetionFunctionAreaDao
-				.queryQuotetionFunctionAreaByQuotetionId(quotetionVO);
+		quotetionFunctionAreaVO.setQuotetionFunctionAreaItems(quotetionFunctionAreaItemVOs);
 
-		return newFunctionAreas;
+		return quotetionFunctionAreaVO;
 	}
 
 	/**
 	 * 保存功能区参数
-	 *
+	 * 
 	 * @param qfaId 功能区ID
 	 * @param paramVO 参数VO
 	 * @return 参数ID

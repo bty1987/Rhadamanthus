@@ -13,5 +13,5 @@ public interface DecorationAtttypeDao extends Dao<DecorationAtttypePO> {
 
 	public List<DecorationAtttypePO> queryDecorationAtttype(int company);
 
-	public DecorationAtttypePO queryDecorationAtttypeByTypeAndCompany(short type, int company);
+	public DecorationAtttypePO queryDecorationAtttype(short type, int company);
 }
