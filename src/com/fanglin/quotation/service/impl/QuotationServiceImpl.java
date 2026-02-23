@@ -72,6 +72,7 @@ import com.fanglin.quotation.po.SelectionItemPO;
 import com.fanglin.quotation.service.NormtionService;
 import com.fanglin.quotation.service.QuotationService;
 import com.fanglin.quotation.service.SelectionService;
+import com.fanglin.decoration.service.NotificationService;
 import com.fanglin.quotation.vo.NormtionVO;
 import com.fanglin.quotation.vo.QuotationVO;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -155,6 +156,12 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Autowired
 	private MessageService messageService;
+
+	@Autowired
+	private com.fanglin.quotation.dao.QuotationRecordDao quotationRecordDao;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	@Override
 	public void pageQuotation(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -673,6 +680,24 @@ public class QuotationServiceImpl implements QuotationService {
 		String content = String.format("装修单号：%s,报价单:%s,已审核", decorationPO.getOrderId(), quotationPO.getName());
 
 		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
+
+		// 保存错误点记录到 quotationrecord
+		if (quotationVO.getContent() != null && !quotationVO.getContent().trim().isEmpty()) {
+			UserPO budgeter = userDao.queryUserByUserId(userId);
+			QuotationRecordPO recordPO = new QuotationRecordPO();
+			// type=1 对应"报价"
+			recordPO.init(quotationPO.getQid(), quotationVO.getContent(), (short) 1, budgeter);
+			quotationRecordDao.save(recordPO);
+
+			// 发送钉钉消息给预算员（报价单创建人）
+			String dingtalkMessage = String.format(
+				"报价单 %s（%s）审核完成，请查看错误点：\n%s",
+				decorationPO.getOrderId(),
+				quotationPO.getName(),
+				quotationVO.getContent()
+			);
+			notificationService.sendDingtalk(quotationPO.getCreater().getUid(), dingtalkMessage, "报价审核错误点");
+		}
 
 		return 0;
 	}
