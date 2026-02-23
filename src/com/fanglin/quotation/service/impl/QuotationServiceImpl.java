@@ -65,6 +65,7 @@ import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaParamPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.QuotationPreferPO;
+import com.fanglin.quotation.po.QuotationRecordPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaPO;
 import com.fanglin.quotation.po.QuotetionPO;
@@ -72,7 +73,6 @@ import com.fanglin.quotation.po.SelectionItemPO;
 import com.fanglin.quotation.service.NormtionService;
 import com.fanglin.quotation.service.QuotationService;
 import com.fanglin.quotation.service.SelectionService;
-import com.fanglin.decoration.service.NotificationService;
 import com.fanglin.quotation.vo.NormtionVO;
 import com.fanglin.quotation.vo.QuotationVO;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -159,9 +159,6 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Autowired
 	private com.fanglin.quotation.dao.QuotationRecordDao quotationRecordDao;
-
-	@Autowired
-	private NotificationService notificationService;
 
 	@Autowired
 	private com.fanglin.dingding.service.DingTalkMessageService dingTalkMessageService;
@@ -699,12 +696,7 @@ public class QuotationServiceImpl implements QuotationService {
 				int managerUid = creater.getDept().getManager().getUid();
 				UserPO manager = userDao.get(managerUid);
 				if (manager != null && manager.getUserId() != null && !manager.getUserId().trim().isEmpty()) {
-					String dingtalkMessage = String.format(
-						"报价单 %s（%s）审核完成，请查看错误点：\n%s",
-						decorationPO.getOrderId(),
-						quotationPO.getName(),
-						quotationVO.getContent()
-					);
+					String dingtalkMessage = String.format("报价单 %s（%s）审核完成，请查看错误点：\n%s", decorationPO.getOrderId(), quotationPO.getName(), quotationVO.getContent());
 					try {
 						dingTalkMessageService.sendDing(manager.getUserId(), dingtalkMessage, manager.getCompany());
 					} catch (Exception e) {

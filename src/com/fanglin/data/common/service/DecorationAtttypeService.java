@@ -12,6 +12,6 @@ public interface DecorationAtttypeService {
 
 	public List<DecorationAtttypeVO> queryDecorationAtttype(int company);
 
-	public DecorationAtttypeVO queryDecorationAtttypeByTypeAndCompany(short type, int company);
+	public DecorationAtttypeVO queryDecorationAtttype(DecorationAtttypeVO decorationAtttypeVO, int company);
 
 }

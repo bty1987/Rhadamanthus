@@ -37,11 +37,7 @@ public class DecorationAtttypeDaoImpl extends DaoImpl<DecorationAtttypePO> imple
 	}
 
 	@Override
-	public DecorationAtttypePO queryDecorationAtttypeByTypeAndCompany(short type, int company) {
-		return (DecorationAtttypePO) session().createCriteria(DecorationAtttypePO.class)
-				.add(Restrictions.eq("type", type))
-				.add(Restrictions.eq("company", company))
-				.add(Restrictions.eq("status", DecorationAtttypePO.STATUS_ENABLE_INT))
-				.uniqueResult();
+	public DecorationAtttypePO queryDecorationAtttype(short type, int company) {
+		return (DecorationAtttypePO) session().createCriteria(DecorationAtttypePO.class).add(Restrictions.eq("type", type)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
 	}
 }
