@@ -136,8 +136,8 @@ function printFinanceTable(subtype, showType) {
     contentHtml += '<td width="8%"><strong>折前单价</strong></td>';
     contentHtml += '<td width="10%"><strong>折前金额(元)</strong></td>';
     contentHtml += '<td width="6%"><strong>折扣</strong></td>';
-    contentHtml += '<td width="8%"><strong>折后单价</strong></td>';
-    contentHtml += '<td width="10%"><strong>折后金额(元)</strong></td>';
+    contentHtml += '<!-- <td width="8%"><strong>折后单价</strong></td> -->';
+    contentHtml += '<!-- <td width="10%"><strong>折后金额(元)</strong></td> -->';
     contentHtml += '</tr>';
 
     var discountPrice = 0.0;
@@ -173,8 +173,8 @@ function printFinanceTable(subtype, showType) {
                 contentHtml += '<td>' + qv.unitPrice + '</td>';
                 contentHtml += '<td>' + qv.unitPrice + '</td>';
                 contentHtml += '<td>' + qv._discountNum + '</td>';
-                contentHtml += '<td>' + qv.unitPrice + '</td>';
-                contentHtml += '<td>' + qv.total + '</td>';
+                contentHtml += '<!-- <td>' + qv.unitPrice + '</td> -->';
+                contentHtml += '<!-- <td>' + qv.total + '</td> -->';
                 contentHtml += '</tr>';
 
                 sum = qv.extensionAtttype && qv.extensionAtttype == constant.quotation().extension.ATTTYPE_ACTIVITY_INT ? sum : sum + qv.total;

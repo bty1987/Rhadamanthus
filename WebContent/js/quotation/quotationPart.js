@@ -142,10 +142,14 @@ var QuotationDetail = (function() {
                 // 打印
                 // $btnPrint : com.focusPage('#printFinanceBtn').attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&orderType="+ quo.decorationType + "&type=2&time=" + params.loginTime),
                 $btnPrint: com.focusPage('#printFinanceBtn').click(function() {
-
+                    $('#printDialog').modal('show');
+                }),
+                // 确认打印
+                $confirmPrintBtn: com.focusPage('#confirmPrintBtn').click(function() {
+                    var printType = $('input[name="printType"]:checked').val();
                     var printConf = {
                         "quotationId": quo.quotationid,
-                        "layout": "3",
+                        "layout": printType == "byWorkType" ? "4" : "3",  // 按工种显示为"4"，按项目显示为"3"
                         "type": 17,
                         "itemtype": [0, 1, 2, 3, 4, 5, 6, 7],
                         "calType": "0"
@@ -155,6 +159,7 @@ var QuotationDetail = (function() {
                         "printConf": printConf
                     };
 
+                    $('#printDialog').modal('hide');
                     com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, true);
                 }),
                 // 返回

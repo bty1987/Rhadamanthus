@@ -875,6 +875,39 @@
 	</div>
 </div>
 
+<!-- 打印方式选择弹窗 -->
+<div class="modal fade" id="printDialog" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span>
+				</button>
+				<h4 class="modal-title">选择打印方式</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label class="control-label">请选择打印方式：</label>
+					<div style="margin-top: 10px;">
+						<label class="radio-inline">
+							<input type="radio" name="printType" value="byWorkType" checked>
+							按工种显示
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="printType" value="byItem">
+							按项目显示
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="confirmPrintBtn" class="btn btn-primary">确认</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 	$.loadScript(['js/utils/approvalUtils.js','js/quotation/quotationPart.js']);
 </script>
