@@ -119,14 +119,16 @@ public class AuditServiceImpl implements AuditService{
 			// 钉钉推送消息给报价创建人的经理
 			UserPO creater = auditPO.getDecoration().getQuotation().getCreater();
 			if (creater != null && creater.getDept() != null && creater.getDept().getManager() != null) {
-				String managerUserId = creater.getDept().getManager().getUserId();
-				if (managerUserId != null && !managerUserId.trim().isEmpty()) {
+				// 根据管理者的 uid 查询完整的 UserPO 对象，以获取 userId
+				int managerUid = creater.getDept().getManager().getUid();
+				UserPO manager = userDao.get(managerUid);
+				if (manager != null && manager.getUserId() != null && !manager.getUserId().trim().isEmpty()) {
 					String dingtalkMessage = String.format(
 						"报价单 %s 审核完成，请查看错误点：\n%s",
 						auditPO.getDecoration().getOrderId(),
 						auditVO.getErrorPoints()
 					);
-					notificationService.sendDingtalk(managerUserId, dingtalkMessage, "报价审核错误点");
+					notificationService.sendDingtalk(manager.getUserId(), dingtalkMessage, "报价审核错误点");
 				}
 			}
 		}
