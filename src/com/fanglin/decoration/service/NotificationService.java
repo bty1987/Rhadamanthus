@@ -9,5 +9,5 @@ public interface NotificationService {
 	 * @param message 消息内容
 	 * @param type 消息类型
 	 */
-	void sendDingtalk(Long userId, String message, String type);
+	void sendDingtalk(String userId, String message, String type);
 }
