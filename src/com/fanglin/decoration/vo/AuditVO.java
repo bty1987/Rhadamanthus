@@ -27,8 +27,6 @@ public class AuditVO implements Serializable {
 
 	private Integer designerId;
 
-	private String errorPoints;
-
 	public Long getAid() {
 		return aid;
 	}
@@ -102,13 +100,5 @@ public class AuditVO implements Serializable {
 		super();
 		this.decoration = decoration;
 		this.auditer = auditer;
-	}
-
-	public String getErrorPoints() {
-		return errorPoints;
-	}
-
-	public void setErrorPoints(String errorPoints) {
-		this.errorPoints = errorPoints;
 	}
 }

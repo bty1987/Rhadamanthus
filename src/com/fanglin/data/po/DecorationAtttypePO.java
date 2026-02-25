@@ -28,11 +28,12 @@ public class DecorationAtttypePO implements Serializable {
 
 	private short status;
 
-	private int company;
-
 	private short manageDiscount;
 
 	private short taxDiscount;
+
+
+	private int company;
 
 	public DecorationAtttypePO() {
 		super();

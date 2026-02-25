@@ -681,29 +681,23 @@ public class QuotationServiceImpl implements QuotationService {
 
 		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
 
-		// 保存错误点记录到 quotationrecord
-		if (quotationVO.getContent() != null && !quotationVO.getContent().trim().isEmpty()) {
-			UserPO budgeter = userDao.queryUserByUserId(userId);
-			QuotationRecordPO recordPO = new QuotationRecordPO();
-			// type=1 对应"报价"
-			recordPO.init(quotationPO.getQid(), quotationVO.getContent(), (short) 1, budgeter);
-			quotationRecordDao.save(recordPO);
+		UserPO budgeter = userDao.queryUserByUserId(userId);
 
-			// 发送钉钉消息给报价创建人的经理
-			UserPO creater = quotationPO.getCreater();
-			if (creater != null && creater.getDept() != null && creater.getDept().getManager() != null) {
-				// 根据管理者的 uid 查询完整的 UserPO 对象，以获取 userId
-				int managerUid = creater.getDept().getManager().getUid();
-				UserPO manager = userDao.get(managerUid);
-				if (manager != null && manager.getUserId() != null && !manager.getUserId().trim().isEmpty()) {
-					String dingtalkMessage = String.format("报价单 %s（%s）审核完成，请查看错误点：\n%s", decorationPO.getOrderId(), quotationPO.getName(), quotationVO.getContent());
-					try {
-						dingTalkMessageService.sendDing(manager.getUserId(), dingtalkMessage, manager.getCompany());
-					} catch (Exception e) {
-						System.err.println("钉钉推送失败: " + e.getMessage());
-					}
-				}
-			}
+		QuotationRecordPO quotationRecordPO = new QuotationRecordPO();
+		quotationRecordPO.init(quotationPO.getQid(), quotationVO.getContent(), QuotationRecordPO.TYPE_SPECIAL_INT, budgeter);
+
+		quotationRecordDao.save(quotationRecordPO);
+
+		// 发送钉钉消息给报价创建人的经理
+		UserPO creater = quotationPO.getCreater();
+
+		if (creater != null && creater.getDept() != null && creater.getDept().getManager() != null) {
+
+			UserPO manager = creater.getDept().getManager();
+
+			String dingtalkMessage = String.format("报价单 %s（%s）审核完成，请查看错误点：\n%s", decorationPO.getOrderId(), quotationPO.getName(), quotationVO.getContent());
+			
+			dingTalkMessageService.sendDing(manager.getUserId(), dingtalkMessage, manager.getCompany());
 		}
 
 		return 0;
