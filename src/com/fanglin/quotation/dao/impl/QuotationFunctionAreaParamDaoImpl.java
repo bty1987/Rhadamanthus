@@ -27,4 +27,14 @@ public class QuotationFunctionAreaParamDaoImpl extends DaoImpl<QuotationFunction
 		return createCriteria(QuotationFunctionAreaParamPO.class).add(Restrictions.eq("qfaid", qfaid)).list();
 	}
 
+	@Override
+	public int copyQuotationFunctionAreaParam(long sqfaid, long tqfaid) {
+		String sql = "INSERT INTO quotation.quotationfunctionareaparam (qfaid, girth, area, height, holeLength, holeHeight, windowLength, windowHeight, beamLength, beamHeight) SELECT :tqfaid, girth, area, height, holeLength, holeHeight, windowLength, windowHeight, beamLength, beamHeight FROM quotation.quotationfunctionareaparam WHERE qfaid = :sqfaid";
+
+		return session().createSQLQuery(sql)
+				.setLong("tqfaid", tqfaid)
+				.setLong("sqfaid", sqfaid)
+				.executeUpdate();
+	}
+
 }

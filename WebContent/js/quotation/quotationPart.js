@@ -1387,6 +1387,69 @@ var QuotationDetail = (function() {
             });
         },
 
+        // 复制功能区
+        copyDomain: function($domain) {
+
+            var that = this;
+
+            com.showConfirm("是否确定要复制功能区", function() {
+
+                var qfaId = $domain.attr('data-qfaid');
+
+                var _params = $.extend({}, {
+                    'quotationFunctionArea.qfaId': qfaId
+                }, quo.basicParams);
+
+                com.post(api.quotation.copyQuotationFunctionArea, _params, function(data) {
+
+                    var quotationFunctionArea = data.quotationFunctionArea;
+
+                    // 创建新的功能区数据
+                    var newFunctionArea = {
+                        qfaId: quotationFunctionArea.qfaId,
+                        functionAreaName: quotationFunctionArea.functionAreaName,
+                        functionAreaOrder: quotationFunctionArea.functionAreaOrder,
+                        type: quotationFunctionArea.type,
+                        total: quotationFunctionArea.total,
+                        quotationFunctionAreaParam: quotationFunctionArea.quotationFunctionAreaParam,
+                        quotationFunctionAreaItems: []
+                    };
+
+                    // 处理报价项数据
+                    if (quotationFunctionArea.quotationFunctionAreaItems && quotationFunctionArea.quotationFunctionAreaItems.length) {
+                        $.each(quotationFunctionArea.quotationFunctionAreaItems, function(i, item) {
+                            item.areaType = quotationFunctionArea.type;
+                            item.qfaid = quotationFunctionArea.qfaId;
+                            item.qfaiId = item.qfaiid;
+                            newFunctionArea.quotationFunctionAreaItems.push(item);
+                        });
+                    }
+
+                    // 使用 painter 创建新的功能区 DOM
+                    var $newDomain = painter.createdomain(newFunctionArea);
+
+                    // 将新功能区插入到当前功能区之后
+                    $newDomain.insertAfter($domain);
+
+                    // 更新报价金额（管理费、车运费、总价等）
+                    com.post(api.quotation.updateQuotationForAdvance, quo.basicParams, function(res) {
+
+                        if (res.quotation) {
+                            $.each(res.quotation, function(k, v) {
+                                quo.basicParams["quotation." + k] = v;
+                            });
+                        }
+
+                        // 更新页面显示
+                        quo.calculateQuoFees();
+                        quo.calculateQuoFeesPost();
+
+                    }, null, false);
+
+                }, null, false);
+            });
+        },
+
         calculateTotal: function() {
 
             com.focusPage('#calculateTotalFeeBtn').on('click', function() {
@@ -3802,6 +3865,7 @@ var QuotationDetail = (function() {
                 "$btnSet": ["自定义报价项", '<i class="bigger-125  icon-plus-sign purple"></i>', btnShow],
                 "$btnHistory": ["历史报价项", '<i class="bigger-125 icon-star green"></i>', btnShow],
                 "$btnDelQuo": ["批量删除报价项", '<i class="bigger-125 icon-remove pink"></i>', btnShow],
+                "$btnCopyDomain": ["复制功能区", '<i class="bigger-125 icon-copy orange"></i>', btnShow],
                 "$btnDelDomain": ["删除功能区", '<i class="bigger-125 icon-trash red"></i>', btnShow],
                 "$btnFold": ["折叠", '<i class="bigger-125 icon-chevron-up" functionindexdata="1" id="oneChevron_1"></i>', true]
             };
@@ -4045,6 +4109,10 @@ var QuotationDetail = (function() {
                 $btns.$btnDelQuo.click(function() {// 批量删除报价项
 
                     quote.deleteQuoteInBatches($domain);
+                });
+                $btns.$btnCopyDomain.click(function() {// 复制功能区
+
+                    domain.copyDomain($domain);
                 });
                 $btns.$btnDelDomain.click(function() {// 删除功能区
 
