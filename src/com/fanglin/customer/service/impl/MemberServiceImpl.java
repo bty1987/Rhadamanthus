@@ -151,6 +151,9 @@ public class MemberServiceImpl implements MemberService {
 				customerIdList = new ArrayList<Long>();
 				phoneToCustomerMap.put(customerPO.getPhone(), customerIdList);
 			}
+
+			if (customerIdList.contains(customerPO.getCid())) continue;
+
 			customerIdList.add(customerPO.getCid());
 		}
 
@@ -164,6 +167,9 @@ public class MemberServiceImpl implements MemberService {
 				customerIdList = new ArrayList<Long>();
 				phoneToCustomerMap.put(customerPhone.getPhone(), customerIdList);
 			}
+
+			if (customerIdList.contains(customerPhone.getCid())) continue;
+
 			customerIdList.add(customerPhone.getCid());
 		}
 

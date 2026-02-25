@@ -27,7 +27,6 @@ import com.fanglin.quotation.po.QuotetionFunctionAreaParamPO;
 import com.fanglin.quotation.po.QuotetionPO;
 import com.fanglin.quotation.service.QuotetionFunctionAreaService;
 import com.fanglin.quotation.vo.QuotetionFunctionAreaItemVO;
-import com.fanglin.quotation.vo.QuotetionFunctionAreaParamVO;
 import com.fanglin.quotation.vo.QuotetionFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotetionVO;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -99,25 +98,6 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 			}
 
 			quotetionFunctionAreaVO.setQuotetionFunctionAreaItems(quotetionFunctionAreaItemVOs);
-
-			// 加载功能区参数
-			QuotetionFunctionAreaParamPO paramPO = quotetionFunctionAreaParamDao.queryQuotetionFunctionAreaParam(quotetionFunctionAreaPO.getQfaId());
-			if (paramPO != null) {
-				QuotetionFunctionAreaParamVO paramVO = new QuotetionFunctionAreaParamVO();
-				paramVO.setQfapId(paramPO.getQfapId());
-				paramVO.setQfaId(paramPO.getQfaId());
-				paramVO.setGirth(paramPO.getGirth());
-				paramVO.setArea(paramPO.getArea());
-				paramVO.setHeight(paramPO.getHeight());
-				paramVO.setHoleLength(paramPO.getHoleLength());
-				paramVO.setHoleHeight(paramPO.getHoleHeight());
-				paramVO.setWindowLength(paramPO.getWindowLength());
-				paramVO.setWindowHeight(paramPO.getWindowHeight());
-				paramVO.setBeamLength(paramPO.getBeamLength());
-				paramVO.setBeamHeight(paramPO.getBeamHeight());
-				quotetionFunctionAreaVO.setQuotetionFunctionAreaParam(paramVO);
-				quotetionFunctionAreaVO.setQfapId(paramPO.getQfapId());
-			}
 
 			if ("0".equals(quotetionFunctionAreaVO.getType())) {
 				autogeneration = quotetionFunctionAreaVO;
@@ -256,11 +236,6 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 		quotetionFunctionAreaDao.update(quotetionFunctionAreaPO);
 
-		// 保存功能区参数
-		if (quotetionFunctionAreaVO.getQuotetionFunctionAreaParam() != null) {
-			saveQuotetionFunctionAreaParam(quotetionFunctionAreaVO.getQfaId(), quotetionFunctionAreaVO.getQuotetionFunctionAreaParam());
-		}
-
 		quotetionDao.update(quotetionPO);
 
 		return 0;
@@ -362,53 +337,6 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 		quotetionFunctionAreaVO.setQuotetionFunctionAreaItems(quotetionFunctionAreaItemVOs);
 
 		return quotetionFunctionAreaVO;
-	}
-
-	/**
-	 * 保存功能区参数
-	 * 
-	 * @param qfaId 功能区ID
-	 * @param paramVO 参数VO
-	 * @return 参数ID
-	 */
-	private String saveQuotetionFunctionAreaParam(Long qfaId, QuotetionFunctionAreaParamVO paramVO) {
-
-		// 查询是否已存在参数
-		QuotetionFunctionAreaParamPO existingParam = quotetionFunctionAreaParamDao.queryQuotetionFunctionAreaParam(qfaId);
-
-		QuotetionFunctionAreaParamPO paramPO;
-
-		if (existingParam != null) {
-			// 更新参数
-			paramPO = existingParam;
-		} else {
-			// 新增参数
-			paramPO = new QuotetionFunctionAreaParamPO();
-			paramPO.setQfapId(UUID.randomUUID().toString());
-			paramPO.setQfaId(qfaId);
-			paramPO.setCreateTime(new Date());
-		}
-
-		// 设置参数值
-		paramPO.setGirth(paramVO.getGirth());
-		paramPO.setArea(paramVO.getArea());
-		paramPO.setHeight(paramVO.getHeight());
-		paramPO.setHoleLength(paramVO.getHoleLength());
-		paramPO.setHoleHeight(paramVO.getHoleHeight());
-		paramPO.setWindowLength(paramVO.getWindowLength());
-		paramPO.setWindowHeight(paramVO.getWindowHeight());
-		paramPO.setBeamLength(paramVO.getBeamLength());
-		paramPO.setBeamHeight(paramVO.getBeamHeight());
-		paramPO.setUpdateTime(new Date());
-
-		// 保存
-		if (existingParam != null) {
-			quotetionFunctionAreaParamDao.update(paramPO);
-		} else {
-			quotetionFunctionAreaParamDao.save(paramPO);
-		}
-
-		return paramPO.getQfapId();
 	}
 
 	private QuotetionPO checkQuotetionForStatusByEnabled(long qid) throws FLException {

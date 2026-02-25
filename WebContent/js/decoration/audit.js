@@ -111,45 +111,15 @@ jQuery(function($) {
 
     function applyAudit(aid) {
 
-        var $modal = $('<div class="modal fade" tabindex="-1">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">' +
-            '<div class="modal-header">' +
-            '<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>' +
-            '<h4 class="modal-title">审核报价</h4>' +
-            '</div>' +
-            '<div class="modal-body">' +
-            '<div class="form-group">' +
-            '<label>错误点记录（可选）：</label>' +
-            '<textarea id="errorPointsInput" class="form-control" rows="3" maxlength="45" placeholder="请输入审核发现的错误点（最多45字）"></textarea>' +
-            '</div>' +
-            '</div>' +
-            '<div class="modal-footer">' +
-            '<button type="button" class="btn btn-primary" id="confirmAuditBtn">确认审核</button>' +
-            '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>');
-
-        $modal.appendTo('body').modal('show');
-
-        $modal.find('#confirmAuditBtn').click(function() {
-            var errorPoints = $('#errorPointsInput').val().trim();
+        com.showConfirm("确认审核吗?", function() {
 
             com.post(api.decoration.applyAudit, {
-                "audit.aid": aid,
-                "audit.errorPoints": errorPoints
+                "audit.aid": aid
             }, function(res) {
 
-                $modal.modal('hide');
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
             });
-        });
-
-        $modal.on('hidden.bs.modal', function() {
-            $modal.remove();
         });
     }
 

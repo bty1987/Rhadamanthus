@@ -142,14 +142,10 @@ var QuotationDetail = (function() {
                 // 打印
                 // $btnPrint : com.focusPage('#printFinanceBtn').attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&orderType="+ quo.decorationType + "&type=2&time=" + params.loginTime),
                 $btnPrint: com.focusPage('#printFinanceBtn').click(function() {
-                    $('#printDialog').modal('show');
-                }),
-                // 确认打印
-                $confirmPrintBtn: com.focusPage('#confirmPrintBtn').click(function() {
-                    var printType = $('input[name="printType"]:checked').val();
+
                     var printConf = {
                         "quotationId": quo.quotationid,
-                        "layout": printType == "byWorkType" ? "4" : "3",  // 按工种显示为"4"，按项目显示为"3"
+                        "layout": "3",
                         "type": 17,
                         "itemtype": [0, 1, 2, 3, 4, 5, 6, 7],
                         "calType": "0"
@@ -159,56 +155,7 @@ var QuotationDetail = (function() {
                         "printConf": printConf
                     };
 
-                    $('#printDialog').modal('hide');
                     com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, true);
-                }),
-                // 审核
-                $btnAudit: com.focusPage('#auditQuotationBtn').click(function() {
-
-                    var qid = quo.basicParams["quotation.qid"];
-                    var orderId = quo.basicParams["quotation.orderId"];
-
-                    var $modal = $('<div class="modal fade" tabindex="-1">' +
-                        '<div class="modal-dialog">' +
-                        '<div class="modal-content">' +
-                        '<div class="modal-header">' +
-                        '<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>' +
-                        '<h4 class="modal-title">审核报价</h4>' +
-                        '</div>' +
-                        '<div class="modal-body">' +
-                        '<div class="form-group">' +
-                        '<label>错误点记录（可选）：</label>' +
-                        '<textarea id="errorPointsInput" class="form-control" rows="3" maxlength="45" placeholder="请输入审核发现的错误点（最多45字）"></textarea>' +
-                        '</div>' +
-                        '</div>' +
-                        '<div class="modal-footer">' +
-                        '<button type="button" class="btn btn-primary" id="confirmAuditQuotationBtn">确认审核</button>' +
-                        '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>');
-
-                    $modal.appendTo('body').modal('show');
-
-                    $modal.find('#confirmAuditQuotationBtn').click(function() {
-                        var errorPoints = $('#errorPointsInput').val().trim();
-
-                        com.post(api.quotation.auditQuotation, {
-                            "quotation.qid": qid,
-                            "quotation.content": errorPoints
-                        }, function(res) {
-
-                            $modal.modal('hide');
-                            com.showAlert(com.info, "审核成功");
-                            // 刷新页面或更新状态
-                            com.switchPage(api.index.quotationPart.url);
-                        });
-                    });
-
-                    $modal.on('hidden.bs.modal', function() {
-                        $modal.remove();
-                    });
                 }),
                 // 返回
                 $btnBack: com.focusPage('#detailBckBtn').on('click', function() {
