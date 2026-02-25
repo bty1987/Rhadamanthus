@@ -11,7 +11,7 @@ import com.fanglin.quotation.po.QuotetionFunctionAreaParamPO;
 
 /**
  * 模板报价功能区参数 DAO 实现
- *
+ * 
  * @author Clawd
  * @since 2026-02-23
  */
@@ -23,18 +23,14 @@ public class QuotetionFunctionAreaParamDaoImpl extends DaoImpl<QuotetionFunction
 	}
 
 	@Override
-	public QuotetionFunctionAreaParamPO queryQuotetionFunctionAreaParam(Long qfaId) {
-		return (QuotetionFunctionAreaParamPO) session().createCriteria(QuotetionFunctionAreaParamPO.class)
-				.add(Restrictions.eq("qfaId", qfaId))
-				.uniqueResult();
+	@SuppressWarnings("unchecked")
+	public List<QuotetionFunctionAreaParamPO> queryQuotetionFunctionAreaParam(long qfaId) {
+		return createCriteria(QuotetionFunctionAreaParamPO.class).add(Restrictions.eq("qfaId", qfaId)).list();
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<QuotetionFunctionAreaParamPO> queryQuotetionFunctionAreaParamByQfaId(Long qfaId) {
-		return createCriteria(QuotetionFunctionAreaParamPO.class)
-				.add(Restrictions.eq("qfaId", qfaId))
-				.list();
+	public int copyQuotetionFunctionAreaParam(long sqfaid, long tqfaid) {
+		return 0;
 	}
 
 }

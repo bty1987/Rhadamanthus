@@ -241,6 +241,7 @@
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
             "decoration.orderId": orderId
         }, function(res) {
+
             decoration = res.decoration;
         }, null, false);
 
@@ -253,15 +254,15 @@
         // 2. 获取基础 constructionNode 数据
         var constructionNodes = [];
         com.post(api.data.queryConstructionNode, {}, function(res) {
+
             constructionNodes = res.constructionNodes || [];
         }, null, false);
 
         // 过滤出预派节点（proset = 1）
         var preSetNodes = [];
         $.each(constructionNodes, function(i, node) {
-            if (node.proset == 1) { // PROSET_PROSET_INT
-                preSetNodes.push(node);
-            }
+
+            preSetNodes.push(node);
         });
 
         // 3. 根据面积获取 constructionPace 数据
@@ -269,6 +270,7 @@
         com.post(api.data.queryConstructionPace, {
             "constructionPace.lowerArea": decoration.house.innerArea
         }, function(res) {
+
             pace = res.constructionPace;
         }, null, false);
 
@@ -277,11 +279,14 @@
             com.post(api.data.queryConstructionPaceNode, {
                 "constructionPaceNode.cpid": pace.cpid
             }, function(res) {
+
                 var paceNodes = res.constructionPaceNodes || [];
 
                 // 用 constructionPaceNode 数据覆盖基础节点数据
                 $.each(paceNodes, function(i, paceNode) {
+
                     $.each(preSetNodes, function(j, node) {
+
                         if (node.cnid == paceNode.node.cnid) {
                             // 优先使用 constructionPaceNode 的数据
                             node.prenum = paceNode.prenum;
@@ -297,11 +302,14 @@
         com.post(api.construction.queryConstructionPlanByOrderId, {
             "constructionPlan.orderId": orderId
         }, function(res) {
+
             var constructionPlans = res.constructionPlans || [];
 
             // 用已有施工计划数据覆盖
             $.each(constructionPlans, function(i, plan) {
+
                 $.each(preSetNodes, function(j, node) {
+
                     if (node.cnid == plan.cnid) {
                         node.timeLimit = plan.connum || node.timeLimit;
                     }
@@ -326,6 +334,7 @@
 
             // 添加 constructionNodes 参数
             $.each(preSetNodes, function(i, node) {
+
                 options["constructionNodes[" + i + "].cnid"] = node.cnid;
                 options["constructionNodes[" + i + "].sort"] = node.sort;
                 options["constructionNodes[" + i + "].timeLimit"] = node.timeLimit || 0;
@@ -334,6 +343,7 @@
             });
 
             com.post(api.construction.finishDrawLine, options, function(res) {
+
                 com.showAlert(com.info, "开工成功");
                 order.drawLineModal.modal("hide");
                 // 刷新列表或页面
@@ -787,6 +797,7 @@
 
     // 初始化退款合同模态框的下拉选项
     com.post(api.ds.decoration, {}, function(res) {
+
         // 绑定所属公司下拉框
         com.focusPage("#refundCompany").bindData(res.refundCompany, "key", "value");
         // 绑定人员状态下拉框
@@ -824,6 +835,7 @@
 
         // 绑定钉钉审批复选框事件，控制表单详情的显示/隐藏
         com.focusPage("#dingApprove").on("change", function() {
+
             var $detailContainer = com.focusPage("#refundFormDetailContainer");
             if ($(this).is(":checked")) {
                 // 勾选时显示详情容器
@@ -1772,11 +1784,11 @@
                     finishTime = utils.workDays(datas.drawlineTime, (constructionPeriod ? constructionPeriod : 0));
                 }
 
-                if(datas.timeLimit){
+                if (datas.timeLimit) {
                     constructionPeriod = datas.timeLimit;
                 }
 
-                if(datas.designPeriod && datas.designPeriod > 0){
+                if (datas.designPeriod && datas.designPeriod > 0) {
                     designPeriod = datas.designPeriod;
                 }
 
@@ -2107,13 +2119,14 @@
             com.post(api.decoration.queryDecorationActivityByOrderId, {
                 "decorationActivity.orderId": decoration.orderId
             }, function(res) {
+
                 decorationActivity = (res.decorationActivitys && res.decorationActivitys.length > 0) ? res.decorationActivitys[0] : {};
             }, null, false);
 
             var couponCut = 0;
             var thingCut = 0;
 
-            if(decorationActivity && decorationActivity.activity && decorationActivity.activity.atttype == 1){
+            if (decorationActivity && decorationActivity.activity && decorationActivity.activity.atttype == 1) {
                 thingCut = decoration.factPrice / 100;
             }
 
@@ -2181,8 +2194,8 @@
 
             params.historyPage = api.index.decorationIndex.url;
 
-//            com.switchPage(api.index.decorationServiceIndex.url);
-             com.popup4page("#layerPopUp", api.index.decorationServiceIndex.url, "装修单服务: " + orderId);
+            // com.switchPage(api.index.decorationServiceIndex.url);
+            com.popup4page("#layerPopUp", api.index.decorationServiceIndex.url, "装修单服务: " + orderId);
         }
 
         // 推荐
@@ -2450,11 +2463,12 @@
                 }, function(res) {
 
                     var discountDetail = "";
-                    var activityNames = "";  // 参加活动名称列表
+                    var activityNames = ""; // 参加活动名称列表
 
                     if (res.decorationActivityItems && res.decorationActivityItems.length > 0) {
                         // 拼接活动物品信息
                         $.each(res.decorationActivityItems, function(index, item) {
+
                             if (discountDetail != "") {
                                 discountDetail += "；";
                             }
@@ -2463,7 +2477,8 @@
 
                             // 收集活动名称
                             if (activityNames.indexOf(item.activity.name) === -1) {
-                                if (activityNames != "") activityNames += "、";
+                                if (activityNames != "")
+                                    activityNames += "、";
                                 activityNames += item.activity.name;
                             }
 
@@ -2483,6 +2498,7 @@
                     com.focusPage("#refundActivity").text(activityNames);
 
                 }, function(error) {
+
                     // 即使获取失败也继续显示模态框
                     console.log("获取活动物品信息失败", error);
                     com.focusPage("#refundDiscountDetail").val("");
@@ -2493,6 +2509,7 @@
                 order.refundContractModal.modal("show");
 
             }, function(error) {
+
                 com.showAlert(com.error, "查询订单信息失败: " + (error.errorMsg || ""));
                 console.log("查询订单信息失败", error);
             });

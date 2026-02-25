@@ -2,9 +2,7 @@ package com.fanglin.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +21,6 @@ import com.fanglin.quotation.dao.QuotetionFunctionAreaItemDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaParamDao;
 import com.fanglin.quotation.po.QuotetionFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaPO;
-import com.fanglin.quotation.po.QuotetionFunctionAreaParamPO;
 import com.fanglin.quotation.po.QuotetionPO;
 import com.fanglin.quotation.service.QuotetionFunctionAreaService;
 import com.fanglin.quotation.vo.QuotetionFunctionAreaItemVO;
@@ -276,63 +273,53 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 		QuotetionServiceImpl.convertQuotetionVOToPOForAdvance(quotetionVO, quotetionPO);
 
 		// 查询原功能区
-		QuotetionFunctionAreaPO sourceFunctionArea = quotetionFunctionAreaDao.get(quotetionFunctionAreaVO.getQfaId());
+		QuotetionFunctionAreaPO quotetionFunctionAreaSO = quotetionFunctionAreaDao.get(quotetionFunctionAreaVO.getQfaId());
 
-		if (sourceFunctionArea == null) {
+		if (quotetionFunctionAreaSO == null) {
 			throw new FLException(200012, "功能区不存在");
 		}
 
 		// 创建新功能区
-		QuotetionFunctionAreaPO newFunctionArea = new QuotetionFunctionAreaPO();
-		BeanUtil.copyProperties(sourceFunctionArea, newFunctionArea);
+		QuotetionFunctionAreaPO quotetionFunctionAreaTO = new QuotetionFunctionAreaPO();
+		BeanUtil.copyProperties(quotetionFunctionAreaSO, quotetionFunctionAreaTO);
 
 		// 设置新功能区的名称（原名称_副本）
-		String newName = sourceFunctionArea.getName() + "_副本";
-		newFunctionArea.setName(newName);
+		String newName = quotetionFunctionAreaSO.getName() + "_副本";
+		quotetionFunctionAreaTO.setName(newName);
 
 		// 保存新功能区
-		quotetionFunctionAreaDao.saveOrUpdate(newFunctionArea);
-
-		// 复制功能区参数（如果存在）
-		QuotetionFunctionAreaParamPO sourceParam = quotetionFunctionAreaParamDao.queryQuotetionFunctionAreaParam(sourceFunctionArea.getQfaId());
-		if (sourceParam != null) {
-			QuotetionFunctionAreaParamPO newParam = new QuotetionFunctionAreaParamPO();
-			BeanUtil.copyProperties(sourceParam, newParam);
-			newParam.setQfapId(UUID.randomUUID().toString());
-			newParam.setQfaId(newFunctionArea.getQfaId());
-			newParam.setCreateTime(new Date());
-			quotetionFunctionAreaParamDao.save(newParam);
-		}
-
-		// 查询原功能区的所有报价项
-		List<QuotetionFunctionAreaItemPO> sourceItems = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(sourceFunctionArea.getQfaId(), sourceFunctionArea.getIndex()), sourceFunctionArea.getQfaId());
-
-		List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItemVOs = new ArrayList<QuotetionFunctionAreaItemVO>();
-
-		// 复制所有报价项
-		if (sourceItems != null && !sourceItems.isEmpty()) {
-			for (QuotetionFunctionAreaItemPO sourceItem : sourceItems) {
-				// 创建新的报价项
-				QuotetionFunctionAreaItemPO newItem = new QuotetionFunctionAreaItemPO();
-				BeanUtil.copyProperties(sourceItem, newItem);
-
-				// 重新设置ID和功能区ID
-				newItem.setQfaiId(newFunctionArea.getQfaId());
-				// qfaiId 会自动生成
-
-				// 保存新报价项
-				quotetionFunctionAreaItemDao.save(newItem);
-
-				QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO = new QuotetionFunctionAreaItemVO();
-
-				BeanUtil.copyProperties(newItem, quotetionFunctionAreaItemVO, "");
-
-				quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);
-			}
-		}
+		quotetionFunctionAreaDao.save(quotetionFunctionAreaTO);
 
 		// 更新报价
 		quotetionDao.update(quotetionPO);
+
+		quotetionFunctionAreaParamDao.copyQuotetionFunctionAreaParam(quotetionFunctionAreaSO.getQfaId(), quotetionFunctionAreaTO.getQfaId());
+
+		// 查询原功能区的所有报价项
+		List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemSOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaSO.getQfaId(), quotetionFunctionAreaSO.getIndex()), quotetionFunctionAreaSO.getQfaId());
+		List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItemVOs = new ArrayList<QuotetionFunctionAreaItemVO>();
+
+		// 复制所有报价项
+		if (quotetionFunctionAreaItemSOs == null || quotetionFunctionAreaItemSOs.isEmpty()) return quotetionFunctionAreaVO;
+
+		for (QuotetionFunctionAreaItemPO quotetionFunctionAreaItemSO : quotetionFunctionAreaItemSOs) {
+			// 创建新的报价项
+			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemTO = new QuotetionFunctionAreaItemPO();
+
+			BeanUtil.copyProperties(quotetionFunctionAreaItemSO, quotetionFunctionAreaItemTO);
+
+			// 重新设置ID和功能区ID
+			quotetionFunctionAreaItemTO.setQfaiId(quotetionFunctionAreaTO.getQfaId());
+
+			// 保存新报价项
+			quotetionFunctionAreaItemDao.save(quotetionFunctionAreaItemTO);
+
+			QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO = new QuotetionFunctionAreaItemVO();
+
+			BeanUtil.copyProperties(quotetionFunctionAreaItemTO, quotetionFunctionAreaItemVO, "");
+
+			quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);
+		}
 
 		quotetionFunctionAreaVO.setQuotetionFunctionAreaItems(quotetionFunctionAreaItemVOs);
 
