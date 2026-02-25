@@ -295,30 +295,20 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 		quotetionFunctionAreaParamDao.copyQuotetionFunctionAreaParam(quotetionFunctionAreaSO.getQfaId(), quotetionFunctionAreaTO.getQfaId());
 
-		// 查询原功能区的所有报价项
-		List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemSOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaSO.getQfaId(), quotetionFunctionAreaSO.getIndex()), quotetionFunctionAreaSO.getQfaId());
+		// 复制报价项（使用 SQL 方式）
+		String table = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(quotetionFunctionAreaTO.getQfaId(), quotetionFunctionAreaTO.getIndex());
+		quotetionFunctionAreaItemDao.copyQuotetionFunctionAreaItem(table, quotetionFunctionAreaSO.getQfaId(), quotetionFunctionAreaTO.getQfaId());
+
+		// 查询新功能区的所有报价项，用于返回给前端
+		List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemPOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaTO.getQfaId(), quotetionFunctionAreaTO.getIndex()), quotetionFunctionAreaTO.getQfaId());
 		List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItemVOs = new ArrayList<QuotetionFunctionAreaItemVO>();
 
-		// 复制所有报价项
-		if (quotetionFunctionAreaItemSOs == null || quotetionFunctionAreaItemSOs.isEmpty()) return quotetionFunctionAreaVO;
-
-		for (QuotetionFunctionAreaItemPO quotetionFunctionAreaItemSO : quotetionFunctionAreaItemSOs) {
-			// 创建新的报价项
-			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemTO = new QuotetionFunctionAreaItemPO();
-
-			BeanUtil.copyProperties(quotetionFunctionAreaItemSO, quotetionFunctionAreaItemTO);
-
-			// 重新设置ID和功能区ID
-			quotetionFunctionAreaItemTO.setQfaiId(quotetionFunctionAreaTO.getQfaId());
-
-			// 保存新报价项
-			quotetionFunctionAreaItemDao.save(quotetionFunctionAreaItemTO);
-
-			QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO = new QuotetionFunctionAreaItemVO();
-
-			BeanUtil.copyProperties(quotetionFunctionAreaItemTO, quotetionFunctionAreaItemVO, "");
-
-			quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);
+		if (quotetionFunctionAreaItemPOs != null && !quotetionFunctionAreaItemPOs.isEmpty()) {
+			for (QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO : quotetionFunctionAreaItemPOs) {
+				QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO = new QuotetionFunctionAreaItemVO();
+				BeanUtil.copyProperties(quotetionFunctionAreaItemPO, quotetionFunctionAreaItemVO, "");
+				quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);
+			}
 		}
 
 		quotetionFunctionAreaVO.setQuotetionFunctionAreaItems(quotetionFunctionAreaItemVOs);
