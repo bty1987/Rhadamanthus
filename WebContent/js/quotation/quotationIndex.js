@@ -434,11 +434,21 @@
         name: "审完",
         clazz: "btn-warning",
         handle: function(v) {
-
-            com.post(api.quotation.auditQuotation, {
-                "quotation.qid": v.qid
+            // 清空备注输入框
+            $("#auditRemark").val("");
+            // 显示审核备注弹窗
+            $("#auditQuotationModal").modal("show");
+            // 绑定确认按钮事件
+            $("#confirmAuditBtn").off("click").on("click", function() {
+                var remark = $("#auditRemark").val();
+                com.post(api.quotation.auditQuotation, {
+                    "quotation.qid": v.qid,
+                    "quotation.content": remark
+                }, function(res) {
+                    $("#auditQuotationModal").modal("hide");
+                    searcher.doSearch();
+                });
             });
-            searcher.doSearch();
         },
         show: function(v) {
 
