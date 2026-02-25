@@ -412,6 +412,76 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public QuotationFunctionAreaVO copyQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionAreaVO, QuotationVO quotationVO) throws FLException {
+
+		// 检查报价状态
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid());
+		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
+
+		// 查询原功能区
+		QuotationFunctionAreaPO quotationFunctionAreaSO = quotationFunctionAreaDao.get(quotationFunctionAreaVO.getQfaId());
+
+		if (quotationFunctionAreaSO == null) {
+			throw new FLException(200012, "功能区不存在");
+		}
+
+		// 创建新功能区
+		QuotationFunctionAreaPO quotationFunctionAreaTO = new QuotationFunctionAreaPO();
+		BeanUtil.copyProperties(quotationFunctionAreaSO, quotationFunctionAreaTO);
+
+		// 设置新功能区的名称（原名称_副本）
+		String newName = quotationFunctionAreaSO.getFunctionAreaName() + "_副本";
+		quotationFunctionAreaTO.setFunctionAreaName(newName);
+
+		// 设置关联的报价单
+		quotationFunctionAreaTO.setQuotation(quotationPO);
+
+		// 保存新功能区
+		quotationFunctionAreaDao.save(quotationFunctionAreaTO);
+
+		// 更新报价
+		quotationDao.update(quotationPO);
+
+		// 复制功能区参数
+		quotationFunctionAreaParamDao.copyQuotationFunctionAreaParam(quotationFunctionAreaSO.getQfaId(), quotationFunctionAreaTO.getQfaId());
+
+		// 复制报价项（使用 SQL 方式）
+		String table = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaTO.getQfaId(), quotationFunctionAreaTO.getIndex());
+		quotationFunctionAreaItemDao.copyQuotationFunctionAreaItem(table, quotationFunctionAreaSO.getQfaId(), quotationFunctionAreaTO.getQfaId());
+
+		// 查询新功能区的所有报价项，用于返回给前端
+		List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaTO.getQfaId(), quotationFunctionAreaTO.getIndex()), quotationFunctionAreaTO.getQfaId());
+		List<QuotationFunctionAreaItemVO> quotationFunctionAreaItemVOs = new ArrayList<QuotationFunctionAreaItemVO>();
+
+		if (quotationFunctionAreaItemPOs != null && !quotationFunctionAreaItemPOs.isEmpty()) {
+			for (QuotationFunctionAreaItemPO quotationFunctionAreaItemPO : quotationFunctionAreaItemPOs) {
+				QuotationFunctionAreaItemVO quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO();
+				BeanUtil.copyProperties(quotationFunctionAreaItemPO, quotationFunctionAreaItemVO, Arrays.asList("quotationFunctionArea", "quotationItem"));
+
+				quotationFunctionAreaItemVO.setQuotationFunctionAreaId(quotationFunctionAreaTO.getQfaId());
+
+				if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
+					QuotationItemPO quotationItemPO = quotationFunctionAreaItemPO.getQuotationItem();
+					quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiid());
+					quotationFunctionAreaItemVO.setContent(quotationItemPO.getComment());
+					quotationFunctionAreaItemVO.setExpres(quotationItemPO.getFormula());
+					quotationFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
+					quotationFunctionAreaItemVO.setQuotationRtemId(quotationItemPO.getRtemFlag());
+				}
+
+				quotationFunctionAreaItemVOs.add(quotationFunctionAreaItemVO);
+			}
+		}
+
+		quotationFunctionAreaVO.setQfaId(quotationFunctionAreaTO.getQfaId());
+		quotationFunctionAreaVO.setFunctionAreaName(quotationFunctionAreaTO.getFunctionAreaName());
+		quotationFunctionAreaVO.setQuotationFunctionAreaItems(quotationFunctionAreaItemVOs);
+
+		return quotationFunctionAreaVO;
+	}
+
 	private QuotationPO checkQuotationForStatusByEnabled(long qid) throws FLException {
 		QuotationPO quotationPO = quotationDao.get(qid);
 

@@ -31,4 +31,6 @@ public interface QuotationFunctionAreaService {
 
 	public int deleteQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionAreaVO, QuotationVO quotationVO) throws FLException;
 
+	public QuotationFunctionAreaVO copyQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionAreaVO, QuotationVO quotationVO) throws FLException;
+
 }

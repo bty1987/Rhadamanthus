@@ -33,4 +33,6 @@ public interface QuotationFunctionAreaItemDao extends Dao<QuotationFunctionAreaI
 
 	public int deleteQuotationFunctionAreaItemByQfaiIds(String table, List<Long> qfaiIds);
 
+	public int copyQuotationFunctionAreaItem(String table, long sqfaid, long tqfaid);
+
 }

@@ -998,6 +998,23 @@ $.extend(api, {
                 args: ["quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice", "quotation.costPrice", "quotation.unachePrice", "quotation.consPrice", "quotation.comsPrice", "quotation.undisComPrice", "quotation.disComPrice", "quotation.taxPrice", "quotation.taxRate"]
             }
         },
+        copyQuotationFunctionArea: {
+            url: "copyQuotationFunctionArea.do",
+            type: "update",
+            tranargs: {
+                args: ["quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice", "quotation.costPrice", "quotation.unachePrice", "quotation.consPrice", "quotation.comsPrice", "quotation.undisComPrice", "quotation.disComPrice", "quotation.taxPrice", "quotation.taxRate"],
+                query: [{
+                    result: "quotationFunctionArea",
+                    args: ["total"]
+                }, {
+                    result: "quotationFunctionArea-quotationFunctionAreaParam",
+                    args: ["girth", "area", "height", "holeLength", "holeHeight", "windowLength", "windowHeight", "beamLength", "beamHeight"]
+                }, {
+                    result: "quotationFunctionArea-quotationFunctionAreaItems",
+                    args: ["unitPrice", "addPrice", "subPrice", "initNum", "num"]
+                }]
+            }
+        },
 
         queryQuotationFunctionAreaItemByQuotationFunctionAreaId: {
             url: "queryQuotationFunctionAreaItemByQuotationFunctionAreaId.do",

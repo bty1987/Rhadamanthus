@@ -11,4 +11,6 @@ public interface QuotationFunctionAreaParamDao extends Dao<QuotationFunctionArea
 
 	public List<QuotationFunctionAreaParamPO> queryQuotationFunctionAreaParamByQfaid(Long qfaid);
 
+	public int copyQuotationFunctionAreaParam(long sqfaid, long tqfaid);
+
 }
