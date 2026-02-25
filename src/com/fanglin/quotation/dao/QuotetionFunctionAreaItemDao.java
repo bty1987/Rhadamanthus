@@ -21,4 +21,6 @@ public interface QuotetionFunctionAreaItemDao extends Dao<QuotetionFunctionAreaI
 
 	public int deleteQuotetionFunctionAreaItemByFunctionAreaId(String clazz, long functionAreaId);
 
+	public int copyQuotetionFunctionAreaItem(String table, long sqfaid, long tqfaid);
+
 }

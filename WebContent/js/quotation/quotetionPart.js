@@ -1365,6 +1365,11 @@
 
                         // 重新计算报价费用
                         quo.calculateQuoFees();
+
+                        // 更新报价金额（管理费、车运费、总价等）
+                        com.post(api.quotation.updateQuotetionForAdvance, quo.basicParams, function(res) {
+
+                        }, null, false);
                     }
 
                     // 关闭弹窗
@@ -2928,6 +2933,7 @@
                 "$btnSet": ["自定义报价项", '<i class="bigger-125  icon-plus-sign purple"></i>', btnShow],
                 "$btnHistory": ["历史报价项", '<i class="bigger-125 icon-star green"></i>', btnShow],
                 "$btnDelQuo": ["批量删除报价项", '<i class="bigger-125 icon-remove pink"></i>', btnShow],
+                "$btnCopyDomain": ["复制功能区", '<i class="bigger-125 icon-copy orange"></i>', btnShow],
                 "$btnDelDomain": ["删除功能区", '<i class="bigger-125 icon-trash red"></i>', btnShow],
                 "$btnFold": ["折叠", '<i class="bigger-125 icon-chevron-up" functionindexdata="1" id="oneChevron_1"></i>', true]
             };
@@ -3124,6 +3130,10 @@
 
                     domain.nowEditDomain = $domain;
                     domain.deletDomain($domain);
+                });
+                $btns.$btnCopyDomain.click(function() {// 复制功能区
+
+                    domain.copyDomain($domain);
                 });
             }
 
