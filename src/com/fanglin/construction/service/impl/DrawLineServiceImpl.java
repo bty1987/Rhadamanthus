@@ -626,8 +626,37 @@ public class DrawLineServiceImpl implements DrawLineService {
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
 
 		if (constructionPO == null) {
-			throw new FLException(120020, "工程信息不存在");
+			constructionPO = new ConstructionPO(decorationPO);
 		}
+
+		ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(decorationPO.getHouse().getBuildArea(), decorationPO.getCompany());
+
+		SystemConfigPO accessoryLimit = systemConfigDao.querySystemConfig("accessoryLimit", decorationPO.getCompany());
+		SystemConfigPO salaryLimit = systemConfigDao.querySystemConfig("salaryLimit", decorationPO.getCompany());
+		SystemConfigPO salaryLimitTotal = systemConfigDao.querySystemConfig("WORKER_SALARY_LIMIT_TOTAL_INT", decorationPO.getCompany());
+
+		if (constructionCostPO == null) {
+			constructionPO.setAccessoryLimit(accessoryLimit == null ? ConstructionCostPO.ACCESSORY_DEFAULT_LONG : Long.valueOf(accessoryLimit.getValue()));
+			constructionPO.setSalaryLimit(salaryLimit == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(salaryLimit.getValue()));
+			constructionPO.setSalaryLimitTotal(salaryLimitTotal == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(salaryLimitTotal.getValue()));
+		} else {
+			constructionPO.setAccessoryLimit(constructionCostPO.getAccessory());
+			constructionPO.setSalaryLimit(constructionCostPO.getSalary());
+			constructionPO.setSalaryLimitTotal(constructionCostPO.getSalary());
+		}
+
+		constructionPO.setStartTime(DateUtil.getDateToTimestamp(new Date()));
+		constructionPO.setCreateTime((DateUtil.getDateToTimestamp(new Date())));
+
+		ConstructionPeriodPO constructionPeriodPO = constructionPeriodDao.queryConstructionPeriod(decorationPO.getHouse().getInnerArea(), decorationPO.getCompany());
+
+		if (constructionPeriodPO != null) {
+			constructionPO.setPeriod(constructionPeriodPO.getPeriod());
+		}
+
+		constructionDao.saveOrUpdate(constructionPO);
+
+		constructionDao.flush();
 
 		long cid = constructionPO.getCid();
 
@@ -642,8 +671,6 @@ public class DrawLineServiceImpl implements DrawLineService {
 		constructionInfoDao.update(constructionInfoPO);
 
 		int timelimit = 0;
-
-		SystemConfigPO salaryLimitTotal = systemConfigDao.querySystemConfig("WORKER_SALARY_LIMIT_TOTAL_INT", decorationPO.getCompany());
 
 		for (ConstructionNodeVO constructionNodeVO : constructionNodes) {
 
