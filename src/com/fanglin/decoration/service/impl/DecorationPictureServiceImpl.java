@@ -100,9 +100,40 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int batchDecorationPicture(List<DecorationPictureVO> decorationPictures) {
-		// TODO Auto-generated method stub 批量更新图片状态
-		return 0;
+		if (decorationPictures == null || decorationPictures.isEmpty()) {
+			return 0;
+		}
+
+		// 获取订单ID和目标状态
+		String orderId = null;
+		Short targetStatus = null;
+		List<Long> dpids = new ArrayList<Long>();
+
+		for (DecorationPictureVO vo : decorationPictures) {
+			if (vo.getDpId() != null) {
+				dpids.add(vo.getDpId());
+			}
+			if (orderId == null) {
+				orderId = vo.getOrderId();
+			}
+			if (targetStatus == null && vo.getStatus() != null) {
+				targetStatus = vo.getStatus();
+			}
+		}
+
+		if (dpids.isEmpty() || orderId == null || targetStatus == null) {
+			return 0;
+		}
+
+		// 如果设置为"本次确认展示"，使用带清除逻辑的方法
+		if (targetStatus == DecorationPicturePO.STATUS_CONFIRM_SHOW_INT) {
+			return decorationPictureDao.batchUpdateDecorationPictureForStatusByOrderIdAndDpids(orderId, dpids, targetStatus);
+		} else {
+			// 直接批量更新状态
+			return decorationPictureDao.batchUpdateDecorationPictureForStatusByDpids(dpids, targetStatus);
+		}
 	}
 
 	@Override

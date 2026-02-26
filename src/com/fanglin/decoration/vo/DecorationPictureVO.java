@@ -40,6 +40,8 @@ public class DecorationPictureVO implements Serializable {
 
 	private Integer type;
 
+	private Short status;
+
 	public Long getDpId() {
 		return dpId;
 	}
@@ -119,6 +121,14 @@ public class DecorationPictureVO implements Serializable {
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 }
