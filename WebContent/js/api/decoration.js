@@ -237,6 +237,13 @@ $.extend(api, {
         showDecorationContract: {
             url: "showDecorationContract.do"
         },
+        queryDecorationContractRecord: {
+            url: "queryDecorationContractRecord.do",
+            demo: true
+        },
+        updateDecorationContract: {
+            url: "updateDecorationContract.do"
+        },
 
         failureDecorationMeasure: {
             url: "failureDecorationMeasure.do"
