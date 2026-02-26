@@ -13,4 +13,10 @@ public interface DecorationContractRecordService {
 	 */
 	public List<DecorationContractRecordVO> queryDecorationContractRecord(String orderId);
 
+	/**
+	 * 更新或创建合同记录(根据orderId判断存在则更新，不存在则创建)
+	 * @param decorationContractRecordVO 合同记录
+	 */
+	public void updateDecorationContract(DecorationContractRecordVO decorationContractRecordVO);
+
 }

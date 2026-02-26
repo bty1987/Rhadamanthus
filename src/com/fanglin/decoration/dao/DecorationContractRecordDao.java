@@ -14,4 +14,11 @@ public interface DecorationContractRecordDao extends Dao<DecorationContractRecor
 	 */
 	public List<DecorationContractRecordPO> queryDecorationContractRecord(String orderId);
 
+	/**
+	 * 根据订单ID查询单条合同记录
+	 * @param orderId 订单ID
+	 * @return 合同记录，不存在返回null
+	 */
+	public DecorationContractRecordPO querySingleDecorationContractRecord(String orderId);
+
 }
