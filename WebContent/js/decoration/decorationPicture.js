@@ -7,6 +7,9 @@ jQuery(function($) {
     var $input = $('<input type="file" multiple accept="image/*" style="display:none">').appendTo($('body'));
 
     var uploadedImages = [];
+    var currentOrderId = null; // 当前订单ID
+    var pictureList = []; // 图片列表
+
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
@@ -155,6 +158,21 @@ jQuery(function($) {
         img.attr("src", imgUrl);
 
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+
+        // 添加复选框用于批量选择
+        var $checkbox = $('<input type="checkbox">')
+            .addClass('picture-checkbox')
+            .attr('data-uniqueid', uniqueId)
+            .css({
+                'position': 'absolute',
+                'top': '5px',
+                'left': '5px',
+                'z-index': '10',
+                'width': '18px',
+                'height': '18px'
+            })
+            .appendTo(imgLi);
+
         var toolsA = $("<a></a>").attr("href", "#").addClass("cboxElement").on("click", function() {
 
             (uploadedImages.indexOf(imgUrl) != -1 & uploadedImages.splice(ll.indexOf(imgUrl)))
@@ -200,5 +218,83 @@ jQuery(function($) {
     function displayImageIcon(imageData, uniqueId, fileName) {
         appendGalleryElement('imageDataUL' + vrecord.iid, 'imageDataUL' + vrecord.iid, imageData, 1, uniqueId, fileName);
     }
+
+    // ==================== 批量操作功能 ====================
+
+    /**
+     * 批量更新图片状态
+     * @param {Number} status - 目标状态 (1=显示, 4=确认展示, 0=隐藏)
+     */
+    function batchUpdatePictureStatus(status) {
+        var selectedDpids = [];
+        var orderId = null;
+
+        // 获取所有选中的图片
+        com.focusPage('.picture-checkbox:checked').each(function() {
+            var $this = $(this);
+            var dpId = $this.data('dpid');
+            if (dpId) {
+                selectedDpids.push(dpId);
+            }
+            if (!orderId) {
+                orderId = $this.data('orderid');
+            }
+        });
+
+        if (selectedDpids.length === 0) {
+            com.showAlert(com.warning, '请先选择图片');
+            return;
+        }
+
+        if (!orderId) {
+            com.showAlert(com.warning, '无法获取订单信息');
+            return;
+        }
+
+        com.showLoading('正在处理...');
+
+        // 构建请求数据 - 按照后端 Action 接收的格式
+        var requestData = {};
+        for (var i = 0; i < selectedDpids.length; i++) {
+            requestData['decorationPictures[' + i + '].dpId'] = selectedDpids[i];
+            requestData['decorationPictures[' + i + '].orderId'] = orderId;
+            requestData['decorationPictures[' + i + '].status'] = status;
+        }
+
+        com.post(api.decoration.batchDecorationPicture, requestData, function(res) {
+            com.hideLoading();
+            if (res.errorCode == 0) {
+                com.showAlert(com.info, '操作成功，已更新 ' + selectedDpids.length + ' 张图片状态');
+                // 刷新列表
+                searcher.refresh();
+            } else {
+                com.showAlert(com.error, res.errorMsg || '操作失败');
+            }
+        }, function(err) {
+            com.hideLoading();
+            com.showAlert(com.error, '操作失败');
+        });
+    }
+
+    /**
+     * 批量显示
+     */
+    com.focusPage('#batchShow').on('click', function() {
+        batchUpdatePictureStatus(1);
+    });
+
+    /**
+     * 批量确认展示
+     */
+    com.focusPage('#batchConfirm').on('click', function() {
+        batchUpdatePictureStatus(4);
+    });
+
+    /**
+     * 批量隐藏
+     */
+    com.focusPage('#batchHide').on('click', function() {
+        batchUpdatePictureStatus(0);
+    });
 
 });
