@@ -31,4 +31,29 @@ public class DecorationContractRecordServiceImpl implements DecorationContractRe
 		return decorationContractRecordVOs;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateDecorationContract(DecorationContractRecordVO decorationContractRecordVO) {
+		// 根据orderId查询是否存在记录
+		DecorationContractRecordPO existingRecord = decorationContractRecordDao.querySingleDecorationContractRecord(decorationContractRecordVO.getOrderId());
+
+		if (existingRecord != null) {
+			// 存在则更新
+			existingRecord.setCommitTime(decorationContractRecordVO.getCommitTime());
+			existingRecord.setStartTime(decorationContractRecordVO.getStartTime());
+			existingRecord.setEndTime(decorationContractRecordVO.getEndTime());
+			existingRecord.setComment(decorationContractRecordVO.getComment());
+			decorationContractRecordDao.saveOrUpdate(existingRecord);
+		} else {
+			// 不存在则创建
+			DecorationContractRecordPO newRecord = new DecorationContractRecordPO();
+			newRecord.setOrderId(decorationContractRecordVO.getOrderId());
+			newRecord.setCommitTime(decorationContractRecordVO.getCommitTime());
+			newRecord.setStartTime(decorationContractRecordVO.getStartTime());
+			newRecord.setEndTime(decorationContractRecordVO.getEndTime());
+			newRecord.setComment(decorationContractRecordVO.getComment());
+			decorationContractRecordDao.save(newRecord);
+		}
+	}
+
 }

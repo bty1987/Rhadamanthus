@@ -24,4 +24,10 @@ public class DecorationContractRecordDaoImpl extends DaoImpl<DecorationContractR
 				.list();
 	}
 
+	@Override
+	public DecorationContractRecordPO querySingleDecorationContractRecord(String orderId) {
+		List<DecorationContractRecordPO> list = queryDecorationContractRecord(orderId);
+		return (list != null && !list.isEmpty()) ? list.get(0) : null;
+	}
+
 }
