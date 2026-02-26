@@ -22,6 +22,8 @@ public interface DecorationPictureService {
 
 	public int addDecorationPicture(DecorationPictureVO decorationPictureVO, String userId, int company) throws FLException;
 
+	public int batchDecorationPicture(List<DecorationPictureVO> decorationPictures);
+
 	public int deleteDecorationPicture(DecorationPictureVO decorationPictureVO);
 
 }

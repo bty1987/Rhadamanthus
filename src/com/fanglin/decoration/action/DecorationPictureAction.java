@@ -55,6 +55,14 @@ public class DecorationPictureAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "batchDecorationPicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String batchDecorationPictureForStatus() throws FLException {
+
+		decorationPictureService.batchDecorationPicture(decorationPictures);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteDecorationPicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteDecorationPicture() {
 
