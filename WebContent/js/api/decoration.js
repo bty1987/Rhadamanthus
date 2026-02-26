@@ -672,6 +672,10 @@ $.extend(api, {
         deleteDecorationPicture: {
             url: "deleteDecorationPicture.do"
         },
+        batchDecorationPicture: {
+            url: "batchDecorationPicture.do",
+            intercept: true
+        },
 
         createDesignConfirmation: {
             url: "createDesignConfirmation.do"
