@@ -35,6 +35,12 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationPicturePO> queryDecorationPictureByOrderId(String orderId, short status) {
+		return createCriteria(DecorationPicturePO.class).add(Restrictions.eq(DecorationPicturePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(DecorationPicturePO.COLUMN_STATUS_STR, status)).list();
+	}
+
+	@Override
 	public int countDecorationPicture(String orderId, Integer type) {
 
 		String sql = "select count(*) from decoration.decorationpicture where orderId = :orderId and type = :type and status = 0";
@@ -43,69 +49,42 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 		return count.intValue();
 	}
 
-	// ==================== 设计确认相关方法实现 ====================
-
 	@Override
-	public int batchUpdateDecorationPictureForStatusByDpids(List<Long> dpids, short status) {
+	public int batchDecorationPicture(List<Long> dpids, short status) {
+
 		if (dpids == null || dpids.isEmpty()) {
 			return 0;
 		}
+
 		String sql = "update decoration.decorationpicture set status = :status where dpId in :dpids";
-		return session().createSQLQuery(sql)
-				.setShort("status", status)
-				.setParameterList("dpids", dpids)
-				.executeUpdate();
+
+		return session().createSQLQuery(sql).setShort("status", status).setParameterList("dpids", dpids).executeUpdate();
 	}
 
 	@Override
-	public int batchUpdateDecorationPictureForStatusByOrderIdAndDpids(String orderId, List<Long> dpids, short status) {
+	public int batchDecorationPicture(String orderId, List<Long> dpids, short status) {
+
 		if (dpids == null || dpids.isEmpty()) {
 			return 0;
 		}
 
 		// 如果设置为"本次确认展示"，先清除其他图片的展示状态
 		if (status == DecorationPicturePO.STATUS_CONFIRM_SHOW_INT) {
-			String clearSql = "update decoration.decorationpicture set status = 1 " +
-					"where orderId = :orderId and status = 4";
-			session().createSQLQuery(clearSql)
-					.setString("orderId", orderId)
-					.executeUpdate();
+			String clearSql = "update decoration.decorationpicture set status = 1 where orderId = :orderId and status = 4";
+			session().createSQLQuery(clearSql).setString("orderId", orderId).executeUpdate();
 		}
 
 		// 批量更新选中的图片
-		String updateSql = "update decoration.decorationpicture set status = :status " +
-				"where dpId in :dpids";
-		return session().createSQLQuery(updateSql)
-				.setShort("status", status)
-				.setParameterList("dpids", dpids)
-				.executeUpdate();
+		String updateSql = "update decoration.decorationpicture set status = :status where dpId in :dpids";
+		return session().createSQLQuery(updateSql).setShort("status", status).setParameterList("dpids", dpids).executeUpdate();
 	}
 
 	@Override
-	public int clearDecorationPictureForConfirmShowByOrderId(String orderId) {
-		String sql = "update decoration.decorationpicture set status = 1 " +
-				"where orderId = :orderId and status = 4";
-		return session().createSQLQuery(sql)
-				.setString("orderId", orderId)
-				.executeUpdate();
-	}
+	public int clearDecorationPicture(String orderId) {
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationPicturePO> queryDecorationPictureForStatusByOrderIdAndStatus(String orderId, short status) {
-		return createCriteria(DecorationPicturePO.class)
-				.add(Restrictions.eq(DecorationPicturePO.COLUMN_ORDERID_STR, orderId))
-				.add(Restrictions.eq(DecorationPicturePO.COLUMN_STATUS_STR, status))
-				.list();
-	}
+		String sql = "update decoration.decorationpicture set status = 0 where orderId = :orderId and status = 4";
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationPicturePO> queryDecorationPictureForConfirmShowByOrderId(String orderId) {
-		return createCriteria(DecorationPicturePO.class)
-				.add(Restrictions.eq(DecorationPicturePO.COLUMN_ORDERID_STR, orderId))
-				.add(Restrictions.eq(DecorationPicturePO.COLUMN_STATUS_STR, DecorationPicturePO.STATUS_CONFIRM_SHOW_INT))
-				.list();
+		return session().createSQLQuery(sql).setString("orderId", orderId).executeUpdate();
 	}
 
 }
