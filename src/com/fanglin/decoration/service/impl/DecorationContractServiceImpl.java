@@ -37,6 +37,7 @@ import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationContractDao;
+import com.fanglin.decoration.dao.DecorationContractRecordDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
@@ -44,6 +45,7 @@ import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationContractPO;
+import com.fanglin.decoration.po.DecorationContractRecordPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationContractService;
@@ -76,6 +78,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Autowired
 	private DecorationContractDao decorationContractDao;
+
+	@Autowired
+	private DecorationContractRecordDao decorationContractRecordDao;
 
 	@Autowired
 	private DecorationDao decorationDao;
@@ -243,6 +248,10 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
+		// 判断是否为第一份合同
+		List<DecorationContractPO> existingContracts = decorationContractDao.queryDecorationContractByOrderId(decorationContractVO.getOrderId());
+		boolean isFirstContract = (existingContracts == null || existingContracts.isEmpty());
+
 		DecorationContractPO decorationContractPO = new DecorationContractPO(new UserPO());
 
 		BeanUtil.copyProperties(decorationContractVO, decorationContractPO, Arrays.asList("creater"));
@@ -257,6 +266,18 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationContractPO.setNoticeStatus(DecorationContractPO.NOTICE_STATUS_UNCONFIRMED_INT);
 
 		decorationContractDao.save(decorationContractPO);
+
+		// 如果是第一份合同，创建合同记录
+		if (isFirstContract) {
+			DecorationContractRecordPO recordPO = new DecorationContractRecordPO();
+			recordPO.setOrderId(decorationContractVO.getOrderId());
+			recordPO.setCommitTime(DateUtil.getDateToTimestamp(new Date()));
+			// startTime, endTime, comment 需要通过其他方式设置
+			recordPO.setStartTime(null);
+			recordPO.setEndTime(null);
+			recordPO.setComment(null);
+			decorationContractRecordDao.save(recordPO);
+		}
 
 		JSONObject params = JSONObject.parseObject(data);
 
