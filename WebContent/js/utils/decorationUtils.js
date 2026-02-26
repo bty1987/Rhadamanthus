@@ -1658,6 +1658,23 @@ var decorationUtils = {
         var $toolLabel = $('<label></label>').appendTo($tools);
         var $downA = $('<a></a>').addClass("icon-download-alt").appendTo($tools);
 
+        // 为 type=21 (图纸) 图片添加批量选择复选框
+        if (i.type == 21) {
+            var $checkbox = $('<input type="checkbox">')
+                .addClass('picture-checkbox')
+                .attr('data-dpid', i.dpId)
+                .attr('data-orderid', i.orderId)
+                .css({
+                    'position': 'absolute',
+                    'top': '5px',
+                    'left': '5px',
+                    'z-index': '10',
+                    'width': '18px',
+                    'height': '18px'
+                })
+                .appendTo($li);
+        }
+
         var $delA = $('<a></a>').addClass("icon-remove").appendTo($tools);
 
         $delA.click(function() {

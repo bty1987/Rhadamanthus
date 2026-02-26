@@ -580,7 +580,22 @@ $(function() {
 
         var $btn = createDiv("inline", btnName);
 
-        $div.append($thumbnailList)
+        $div.append($thumbnailList);
+
+        // 为图纸区块添加批量操作按钮
+        if (codeName == "drawingPicture") {
+            var $batchBtns = $('<div></div>').addClass('clearfix').css({"margin-top": "5px"});
+            var $btnGroup = $('<div></div>').addClass('pull-left').css({"margin-left": "15px"});
+
+            $btnGroup.append($('<a class="btn btn-minier btn-success" id="detailBatchShow">批量显示</a>'))
+                      .append(' ')
+                      .append($('<a class="btn btn-minier btn-info" id="detailBatchConfirm">批量确认</a>'))
+                      .append(' ')
+                      .append($('<a class="btn btn-minier btn-danger" id="detailBatchHide">批量隐藏</a>'));
+
+            $batchBtns.append($btnGroup);
+            $div.append($batchBtns);
+        }
 
         // 组装完整区块
         $col.append($title).append($div).append($btn);
