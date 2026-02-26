@@ -61,4 +61,11 @@ public interface DecorationDao extends Dao<DecorationPO> {
 
 	public void changeDecorationForOrderId(String nrderId, String orderId);
 
+	/**
+	 * 更新订单设计状态
+	 * @param orderId 订单编号
+	 * @param designStatus 设计状态
+	 */
+	public void updateDesignStatus(String orderId, short designStatus);
+
 }

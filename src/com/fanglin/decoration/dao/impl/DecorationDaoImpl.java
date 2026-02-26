@@ -302,6 +302,12 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
 	}
 
+	@Override
+	public void updateDesignStatus(String orderId, short designStatus) {
+		String sql = "update decoration.decoration set designStatus = :designStatus where orderId = :orderId";
+		session().createSQLQuery(sql).setShort("designStatus", designStatus).setString("orderId", orderId).executeUpdate();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 		queryFilterExcute(query, filters, "");
 	}

@@ -62,6 +62,10 @@ $.extend(api.index, {
         url: "/views/decoration/decorationPicture.html"
     },
 
+    decorationDesignConfirmationIndex: {
+        url: "/views/decoration/decorationDesignConfirmation.html"
+    },
+
     decorationSales2print: {
         url: "/views/decoration/decorationSales2print.html"
     },
@@ -667,6 +671,21 @@ $.extend(api, {
         },
         deleteDecorationPicture: {
             url: "deleteDecorationPicture.do"
+        },
+
+        createDesignConfirmation: {
+            url: "createDesignConfirmation.do"
+        },
+        confirmDesignConfirmation: {
+            url: "confirmDesignConfirmation.do"
+        },
+        queryDesignConfirmationHistory: {
+            url: "queryDesignConfirmationHistory.do",
+            type: "query"
+        },
+        queryPendingDesignConfirmation: {
+            url: "queryPendingDesignConfirmation.do",
+            type: "query"
         },
 
         pageDecorationHolonomy: {
