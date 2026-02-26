@@ -2099,18 +2099,18 @@ jQuery(function($) {
         decorationDetail.decorationUserModal.modal("hide");
     }
 
-    // ==================== 图纸批量操作功能 ====================
+    // ==================== 合同方案批量操作功能 ====================
 
     /**
-     * 批量更新图纸图片状态
+     * 批量更新合同方案图片状态
      * @param {Number} status - 目标状态 (1=显示, 4=确认展示, 0=隐藏)
      */
-    function batchUpdateDrawingStatus(status) {
+    function batchUpdateDesignStatus(status) {
         var selectedDpids = [];
         var orderId = decorationDetail.orderId;
 
-        // 获取所有选中的图片（仅在drawingPicture容器内）
-        com.focusPage('#drawingPicture .picture-checkbox:checked').each(function() {
+        // 获取所有选中的图片（仅在designPictures容器内）
+        com.focusPage('#designPictures .picture-checkbox:checked').each(function() {
             var $this = $(this);
             var dpId = $this.data('dpid');
             if (dpId) {
@@ -2142,7 +2142,7 @@ jQuery(function($) {
             com.hideLoading();
             if (res.errorCode == 0) {
                 com.showAlert(com.info, '操作成功，已更新 ' + selectedDpids.length + ' 张图片状态');
-                // 刷新图纸图片
+                // 刷新合同方案图片
                 decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", "designContractPicture", "selfiePicture", "drawingPicture", "livePicture", "720Files", decorationDetail.orderId);
             } else {
                 com.showAlert(com.error, res.errorMsg || '操作失败');
@@ -2155,15 +2155,15 @@ jQuery(function($) {
 
     // 绑定批量操作按钮事件
     com.focusPage('#detailBatchShow').on('click', function() {
-        batchUpdateDrawingStatus(1);
+        batchUpdateDesignStatus(1);
     });
 
     com.focusPage('#detailBatchConfirm').on('click', function() {
-        batchUpdateDrawingStatus(4);
+        batchUpdateDesignStatus(4);
     });
 
     com.focusPage('#detailBatchHide').on('click', function() {
-        batchUpdateDrawingStatus(0);
+        batchUpdateDesignStatus(0);
     });
 
 });
