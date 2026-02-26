@@ -12,7 +12,6 @@
 package com.fanglin.decoration.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -109,21 +108,30 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 
 		String orderId = null;
 		Short status = null;
+		List<Long> dpids = new ArrayList<Long>();
 
-		List<Long> dpids = Arrays.asList(0l);
-
+		// 收集 dpids、orderId 和 status
 		for (DecorationPictureVO decorationPictureVO : decorationPictures) {
+			if (decorationPictureVO.getDpId() == null) {
+				continue;
+			}
+			dpids.add(decorationPictureVO.getDpId());
 
-			if (decorationPictureVO.getDpId() == null) continue;
-			if (decorationPictureVO.getOrderId() == null) continue;
-			if (status != null || decorationPictureVO.getStatus() == null) continue;
-
-			orderId = decorationPictureVO.getOrderId();
-			status = decorationPictureVO.getStatus();
+			if (orderId == null) {
+				orderId = decorationPictureVO.getOrderId();
+			}
+			if (status == null && decorationPictureVO.getStatus() != null) {
+				status = decorationPictureVO.getStatus();
+			}
 		}
 
 		if (dpids.isEmpty() || orderId == null || status == null) {
 			return 0;
+		}
+
+		// 如果设置为"本次确认展示"，先清除其他图片的确认展示状态
+		if (status == DecorationPicturePO.STATUS_CONFIRM_SHOW_INT) {
+			decorationPictureDao.clearDecorationPicture(orderId);
 		}
 
 		return decorationPictureDao.batchDecorationPicture(orderId, dpids, status);
