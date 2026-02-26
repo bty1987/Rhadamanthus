@@ -102,38 +102,31 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int batchDecorationPicture(List<DecorationPictureVO> decorationPictures) {
+
 		if (decorationPictures == null || decorationPictures.isEmpty()) {
 			return 0;
 		}
 
-		// 获取订单ID和目标状态
 		String orderId = null;
-		Short targetStatus = null;
-		List<Long> dpids = new ArrayList<Long>();
+		Short status = null;
 
-		for (DecorationPictureVO vo : decorationPictures) {
-			if (vo.getDpId() != null) {
-				dpids.add(vo.getDpId());
-			}
-			if (orderId == null) {
-				orderId = vo.getOrderId();
-			}
-			if (targetStatus == null && vo.getStatus() != null) {
-				targetStatus = vo.getStatus();
-			}
+		List<Long> dpids = Arrays.asList(0l);
+
+		for (DecorationPictureVO decorationPictureVO : decorationPictures) {
+
+			if (decorationPictureVO.getDpId() == null) continue;
+			if (decorationPictureVO.getOrderId() == null) continue;
+			if (status != null || decorationPictureVO.getStatus() == null) continue;
+
+			orderId = decorationPictureVO.getOrderId();
+			status = decorationPictureVO.getStatus();
 		}
 
-		if (dpids.isEmpty() || orderId == null || targetStatus == null) {
+		if (dpids.isEmpty() || orderId == null || status == null) {
 			return 0;
 		}
 
-		// 如果设置为"本次确认展示"，使用带清除逻辑的方法
-		if (targetStatus == DecorationPicturePO.STATUS_CONFIRM_SHOW_INT) {
-			return decorationPictureDao.batchUpdateDecorationPictureForStatusByOrderIdAndDpids(orderId, dpids, targetStatus);
-		} else {
-			// 直接批量更新状态
-			return decorationPictureDao.batchUpdateDecorationPictureForStatusByDpids(dpids, targetStatus);
-		}
+		return decorationPictureDao.batchDecorationPicture(orderId, dpids, status);
 	}
 
 	@Override
