@@ -68,15 +68,9 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 			return 0;
 		}
 
-		// 如果设置为"本次确认展示"，先清除其他图片的展示状态
-		if (status == DecorationPicturePO.STATUS_CONFIRM_SHOW_INT) {
-			String clearSql = "update decoration.decorationpicture set status = 1 where orderId = :orderId and status = 4";
-			session().createSQLQuery(clearSql).setString("orderId", orderId).executeUpdate();
-		}
+		String sql = "update decoration.decorationpicture set status = :status where dpId in :dpids";
 
-		// 批量更新选中的图片
-		String updateSql = "update decoration.decorationpicture set status = :status where dpId in :dpids";
-		return session().createSQLQuery(updateSql).setShort("status", status).setParameterList("dpids", dpids).executeUpdate();
+		return session().createSQLQuery(sql).setShort("status", status).setParameterList("dpids", dpids).executeUpdate();
 	}
 
 	@Override

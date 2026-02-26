@@ -1,11 +1,17 @@
 package com.fanglin.decoration.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.fastjson.JSON;
 
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
@@ -21,8 +27,10 @@ import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationInfoDao;
+import com.fanglin.decoration.dao.DecorationPictureDao;
 import com.fanglin.decoration.dao.DecorationServiceDao;
 import com.fanglin.decoration.po.DecorationInfoPO;
+import com.fanglin.decoration.po.DecorationPicturePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.po.DecorationServicePO;
 import com.fanglin.decoration.service.DecorationInfoService;
@@ -51,6 +59,9 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 	@Autowired
 	private DecorationServiceDao decorationServiceDao;
+
+	@Autowired
+	private DecorationPictureDao decorationPictureDao;
 
 	@Autowired
 	private ConstructionInfoDao constructionInfoDao;
@@ -251,6 +262,19 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 			// 设置计划时间：当前时间 + 4天
 			decorationServicePO.setPlanTime(DateUtil.getDateToTimestamp(DateUtil.plusDay(new Date(), daynum)));
+
+			// 填充 args：查询 status=4 的图片信息
+			List<DecorationPicturePO> showPictures = decorationPictureDao.queryDecorationPictureByOrderId(orderId, DecorationPicturePO.STATUS_CONFIRM_SHOW_INT);
+			if (showPictures != null && !showPictures.isEmpty()) {
+				List<Long> dpids = new ArrayList<Long>();
+				for (DecorationPicturePO pic : showPictures) {
+					dpids.add(pic.getDpId());
+				}
+				Map<String, Object> argsMap = new HashMap<String, Object>();
+				argsMap.put("dpids", dpids);
+				argsMap.put("pictureCount", dpids.size());
+				decorationServicePO.setArgs(JSON.toJSONString(argsMap));
+			}
 
 			decorationServiceDao.save(decorationServicePO);
 
