@@ -43,7 +43,7 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 	@Override
 	public int countDecorationPicture(String orderId, Integer type) {
 
-		String sql = "select count(*) from decoration.decorationpicture where orderId = :orderId and type = :type and status = 0";
+		String sql = "select count(*) from decoration.decorationpicture where orderId = :orderId and type = :type and status = 1";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setInteger("type", type).uniqueResult();
 
 		return count.intValue();
@@ -76,7 +76,7 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 	@Override
 	public int clearDecorationPicture(String orderId) {
 
-		String sql = "update decoration.decorationpicture set status = 0 where orderId = :orderId and status = 4";
+		String sql = "update decoration.decorationpicture set status = 1 where orderId = :orderId and status = 4";
 
 		return session().createSQLQuery(sql).setString("orderId", orderId).executeUpdate();
 	}
