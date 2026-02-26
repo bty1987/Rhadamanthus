@@ -26,4 +26,21 @@ public interface DecorationServiceDao extends Dao<DecorationServicePO> {
 
 	public int makeDecorationService(short type, String orderId, int ouid);
 
+	// ==================== 设计确认相关方法 ====================
+
+	/**
+	 * 查询订单的设计确认记录列表(type=1)
+	 */
+	public List<DecorationServicePO> queryDecorationServiceForDesignConfirmByOrderId(String orderId);
+
+	/**
+	 * 查询订单的待确认设计记录
+	 */
+	public DecorationServicePO queryDecorationServiceForPendingByOrderId(String orderId);
+
+	/**
+	 * 获取订单的下一确认轮次
+	 */
+	public int getNextRoundForDesignConfirmByOrderId(String orderId);
+
 }

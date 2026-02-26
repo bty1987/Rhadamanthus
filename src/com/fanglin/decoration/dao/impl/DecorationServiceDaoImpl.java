@@ -53,6 +53,40 @@ public class DecorationServiceDaoImpl extends DaoImpl<DecorationServicePO> imple
 		return (DecorationServicePO) session().createCriteria(DecorationServicePO.class).add(Restrictions.eq(DecorationServicePO.DECORATION_ORDERID_STR, orderId)).add(Restrictions.eq("type", type)).addOrder(org.hibernate.criterion.Order.desc("createTime")).setMaxResults(1).uniqueResult();
 	}
 
+	// ==================== 设计确认相关方法实现 ====================
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationServicePO> queryDecorationServiceForDesignConfirmByOrderId(String orderId) {
+		return session().createCriteria(DecorationServicePO.class)
+				.add(Restrictions.eq(DecorationServicePO.DECORATION_ORDERID_STR, orderId))
+				.add(Restrictions.eq("type", DecorationServicePO.TYPE_DESIGN_CONFIRM))
+				.addOrder(org.hibernate.criterion.Order.asc("createTime"))
+				.list();
+	}
+
+	@Override
+	public DecorationServicePO queryDecorationServiceForPendingByOrderId(String orderId) {
+		return (DecorationServicePO) session().createCriteria(DecorationServicePO.class)
+				.add(Restrictions.eq(DecorationServicePO.DECORATION_ORDERID_STR, orderId))
+				.add(Restrictions.eq("type", DecorationServicePO.TYPE_DESIGN_CONFIRM))
+				.add(Restrictions.eq("status", DecorationServicePO.SERVICESTATUS_INIT_INT))
+				.addOrder(org.hibernate.criterion.Order.desc("createTime"))
+				.setMaxResults(1)
+				.uniqueResult();
+	}
+
+	@Override
+	public int getNextRoundForDesignConfirmByOrderId(String orderId) {
+		// 查询订单当前已有的确认记录数量，作为下一轮次号
+		Long count = (Long) session().createCriteria(DecorationServicePO.class)
+				.add(Restrictions.eq(DecorationServicePO.DECORATION_ORDERID_STR, orderId))
+				.add(Restrictions.eq("type", DecorationServicePO.TYPE_DESIGN_CONFIRM))
+				.setProjection(org.hibernate.criterion.Projections.rowCount())
+				.uniqueResult();
+		return count != null ? count.intValue() + 1 : 1;
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		DecorationDaoImpl.queryFilterExcute(query, filters, "decoration");

@@ -39,6 +39,15 @@ public class DecorationServicePO implements Serializable {
 	public static final short TYPE_ACCEPTANCE = 5;           // 验收服务
 	public static final short TYPE_OTHER = 9;                // 其他自定义服务
 
+	// 设计确认结果常量
+	public static final short CONFIRM_RESULT_COMPLETE = 2;  // 完成
+	public static final short CONFIRM_RESULT_MINOR = 4;     // 微改
+	public static final short CONFIRM_RESULT_MAJOR = 6;     // 大改
+
+	// 设计确认状态常量
+	public static final short CONFIRM_STATUS_PENDING = 0;   // 待确认
+	public static final short CONFIRM_STATUS_CONFIRMED = 1; // 已确认
+
 	private long dsid;
 
 	private String orderId;
@@ -66,6 +75,8 @@ public class DecorationServicePO implements Serializable {
 	private int overdueDays;
 
 	private short type;
+
+	private String args;  // 扩展参数(JSON格式),存储设计确认相关数据
 
 	@Id
 	@GeneratedValue
@@ -194,6 +205,15 @@ public class DecorationServicePO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "args", columnDefinition = "TEXT")
+	public String getArgs() {
+		return args;
+	}
+
+	public void setArgs(String args) {
+		this.args = args;
 	}
 
 	public DecorationServiceVO ptv(DecorationServiceVO decorationServiceVO) {

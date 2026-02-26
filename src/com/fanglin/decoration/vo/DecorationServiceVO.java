@@ -41,6 +41,11 @@ public class DecorationServiceVO implements Serializable {
 
 	private Short type;
 
+	// 设计确认扩展字段
+	private String args;                      // JSON参数
+	private Short confirmResult;              // 确认结果: 2=完成,4=微改,6=大改
+	private java.util.List<DecorationPictureVO> pictures; // 确认关联的图片列表
+
 	public DecorationServiceVO() {
 		super();
 	}
@@ -178,6 +183,30 @@ public class DecorationServiceVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public String getArgs() {
+		return args;
+	}
+
+	public void setArgs(String args) {
+		this.args = args;
+	}
+
+	public Short getConfirmResult() {
+		return confirmResult;
+	}
+
+	public void setConfirmResult(Short confirmResult) {
+		this.confirmResult = confirmResult;
+	}
+
+	public java.util.List<DecorationPictureVO> getPictures() {
+		return pictures;
+	}
+
+	public void setPictures(java.util.List<DecorationPictureVO> pictures) {
+		this.pictures = pictures;
 	}
 
 }

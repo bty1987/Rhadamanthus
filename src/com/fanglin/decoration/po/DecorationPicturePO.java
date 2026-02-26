@@ -43,6 +43,8 @@ public class DecorationPicturePO implements Serializable {
 
 	public static final short STATUS_DISABLE_INT = 0;
 
+	public static final short STATUS_CONFIRM_SHOW_INT = 4;  // 本次确认展示
+
 	private long dpId;
 
 	private String orderId;
