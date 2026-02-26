@@ -100,6 +100,12 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 	}
 
 	@Override
+	public int batchDecorationPicture(List<DecorationPictureVO> decorationPictures) {
+		// TODO Auto-generated method stub 批量更新图片状态
+		return 0;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteDecorationPicture(DecorationPictureVO decorationPictureVO) {
 

@@ -18,31 +18,4 @@ public interface DecorationServiceService {
 
 	public int completeDecorationService(DecorationServiceVO decorationServiceVO) throws FLException;
 
-	// ==================== 设计确认相关方法 ====================
-
-	/**
-	 * 创建设计确认记录
-	 */
-	public long createDesignConfirmationForPictureByOrderId(DecorationServiceVO serviceVO, Authentication authentication) throws FLException;
-
-	/**
-	 * 提交设计确认
-	 */
-	public void submitDesignConfirmationForResultByDsid(DecorationServiceVO serviceVO, Authentication authentication) throws FLException;
-
-	/**
-	 * 查询设计确认历史
-	 */
-	public List<DecorationServiceVO> queryDesignConfirmationHistoryForByOrderId(String orderId);
-
-	/**
-	 * 切换图片确认展示状态
-	 */
-	public void toggleDecorationPictureForShowStatusByOrderIdAndDpid(String orderId, Long dpid, short status) throws FLException;
-
-	/**
-	 * 批量切换图片展示状态
-	 */
-	public int batchToggleDecorationPictureForShowStatusByOrderIdAndDpids(String orderId, String dpidStr, short status) throws FLException;
-
 }
