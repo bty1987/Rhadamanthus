@@ -25,10 +25,10 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 
 		query.add(query.getCriterion("orderId", orderId, "eq"));
 
-		// 查询 status=0(显示) 或 status=4(确认) 的图片
+		// 查询 status=1(显示) 或 status=4(确认) 的图片
 		query.add(Restrictions.in(DecorationPicturePO.COLUMN_STATUS_STR,
 				new Short[] {
-					DecorationPicturePO.STATUS_DISABLE_INT,
+					DecorationPicturePO.STATUS_ENABLE_INT,
 					DecorationPicturePO.STATUS_CONFIRM_SHOW_INT
 				}));
 
