@@ -32,17 +32,26 @@ jQuery(function($) {
             passhkmBtn: com.focusPage("#passhkmBtn", "#customerModal"),
             
             approvalSubmitBtn: com.focusPage("#approvalSubmitBtn", "#approvalModal").on("click", approval),
+            saveRecordBtn: com.focusPage("#saveRecordBtn", "#contractRecordModal"),
         },
         modals: {
             qrcodeModal: null,
             decorationContractModal: com.focusPage("#decorationContractModal"),
             customerModal: com.focusPage("#customerModal"),
             approvalModal: com.focusPage("#approvalModal"),
+            contractRecordModal: com.focusPage("#contractRecordModal"),
         },
 
         decorationInfo: com.focusPage("#decorationInfo"),
         customerInfo: com.focusPage("#customerInfo"),
-        
+        contractRecordInfo: com.focusPage("#contractRecordInfo"),
+
+        // 合同记录弹窗相关
+        recordCommitTime: com.focusPage("#recordCommitTime", "#contractRecordModal"),
+        recordStartTime: com.focusPage("#recordStartTime", "#contractRecordModal"),
+        recordEndTime: com.focusPage("#recordEndTime", "#contractRecordModal"),
+        recordComment: com.focusPage("#recordComment", "#contractRecordModal"),
+
         decoration: null,
 
         dcid: null,
@@ -112,6 +121,7 @@ jQuery(function($) {
     }
     
     customerItems(decorationContract.decoration);
+    contractRecordItems();
 
     decorationContract.status = constant.decoration().decorationContract.status.keys;
 
@@ -124,7 +134,11 @@ jQuery(function($) {
 
         decorationContract.decorationInfo.hide();
         decorationContract.customerInfo.hide();
+        decorationContract.contractRecordInfo.hide();
     }
+
+    // 合同记录信息对象
+    decorationContract.contractRecord = null;
 
     function customerItems(decoration) {
 
@@ -160,6 +174,81 @@ jQuery(function($) {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info2);
 
     }
+
+    function contractRecordItems() {
+
+        var $widget = $('<div></div>').addClass("").prependTo(decorationContract.contractRecordInfo);
+        var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
+        var $header = $('<div></div>').addClass("widget-header header-color-blue").appendTo($box);
+
+        var name = $('<h4></h4>').attr('id', 'h4name_record').text("合同记录").appendTo($header);
+
+        // 添加编辑按钮
+        var $editBtn = $('<a></a>')
+            .addClass('btn btn-xs btn-info pull-right')
+            .css('margin', '8px')
+            .html('<i class="icon-edit"></i> 编辑')
+            .on('click', function() {
+                showContractRecordModal();
+            })
+            .appendTo($header);
+
+        var $body = $('<div></div>').addClass("widget-body").appendTo($box);
+        var $main = $('<div></div>').addClass("widget-main").appendTo($body);
+        var $info = $('<div></div>').css("padding", "5px").appendTo($main);
+
+        // 查询合同记录
+        com.post(api.decoration.queryDecorationContractRecord, {
+            "decorationContractRecord.orderId": params.decoration.orderId
+        }, function(res) {
+            var records = res.decorationContractRecords || [];
+            if (records.length > 0) {
+                decorationContract.contractRecord = records[0];
+
+                var record = records[0];
+                var commitTime = record.commitTime || "暂无";
+                var startTime = record.startTime || "暂无";
+                var endTime = record.endTime || "暂无";
+                var comment = record.comment || "暂无";
+
+                $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('提交时间: ' + commitTime)).appendTo($info);
+                $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('开始时间: ' + startTime)).appendTo($info);
+                $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('结束时间: ' + endTime)).appendTo($info);
+                $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('备注: ' + comment)).appendTo($info);
+            } else {
+                $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('暂无合同记录')).appendTo($info);
+            }
+        });
+
+        // 如果没有权限或不是特定页面类型，隐藏编辑按钮
+        if (!decorationContract.authFlag) {
+            $editBtn.addClass('hide');
+        }
+    }
+
+    function showContractRecordModal() {
+
+        var record = decorationContract.contractRecord;
+
+        if (record) {
+            decorationContract.items.recordCommitTime.val(record.commitTime || "");
+            decorationContract.items.recordStartTime.val(record.startTime || "");
+            decorationContract.items.recordEndTime.val(record.endTime || "");
+            decorationContract.items.recordComment.val(record.comment || "");
+        } else {
+            decorationContract.items.recordCommitTime.val("");
+            decorationContract.items.recordStartTime.val("");
+            decorationContract.items.recordEndTime.val("");
+            decorationContract.items.recordComment.val("");
+        }
+
+        // 初始化日期选择器
+        decorationContract.items.recordStartTime.datepicker(com.datepickerdefault);
+        decorationContract.items.recordEndTime.datepicker(com.datepickerdefault);
+
+        decorationContract.modals.contractRecordModal.modal("show");
+    }
+
     var searcher = new Searcher();
 
     searcher.set("pageltList", "pageltList", "contracts", api.decoration.queryDecorationContractByOrderId, {
@@ -579,6 +668,28 @@ jQuery(function($) {
             com.post(api.data.resetCustomer, {
                 "customer.cid": params.decoration.cid
             });
+        });
+    });
+
+    // 保存合同记录
+    decorationContract.btns.saveRecordBtn.on('click', function() {
+
+        var recordData = {
+            "decorationContractRecord.orderId": params.decoration.orderId,
+            "decorationContractRecord.commitTime": decorationContract.items.recordCommitTime.val(),
+            "decorationContractRecord.startTime": decorationContract.items.recordStartTime.val(),
+            "decorationContractRecord.endTime": decorationContract.items.recordEndTime.val(),
+            "decorationContractRecord.comment": decorationContract.items.recordComment.val()
+        };
+
+        com.post(api.decoration.updateDecorationContract, recordData, function(res) {
+
+            com.showAlert(com.info, "保存成功");
+            decorationContract.modals.contractRecordModal.modal("hide");
+
+            // 刷新合同记录显示
+            decorationContract.contractRecordInfo.html("");
+            contractRecordItems();
         });
     });
 

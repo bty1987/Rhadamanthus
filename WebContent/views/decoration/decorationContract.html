@@ -5,6 +5,8 @@
 
     <div class="widget-container-span col-xs-6 col-md-3" id="customerInfo"></div>
 
+    <div class="widget-container-span col-xs-6 col-md-3" id="contractRecordInfo"></div>
+
     <div id="function" class="widget-container-span col-xs-6 col-md-3">
         <a href="#" id="register" class="btn btn-default btn-app btn-sm radius-4 hide" style="padding: 5px 0;">
             <i class="icon-edit bigger-230"></i>
@@ -182,6 +184,51 @@
             </div>
             <div class="modal-footer" style="text-align: center">
                 <button type="button" id="approvalSubmitBtn" class="btn btn-primary" data-loading-text="提交中...">提交</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="contractRecordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">合同记录信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">提交时间</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="recordCommitTime" class="col-xs-10 col-sm-6" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">开始时间</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="recordStartTime" class="col-xs-10 col-sm-6">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">结束时间</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="recordEndTime" class="col-xs-10 col-sm-6">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">备注</label>
+                        <div class="col-sm-9">
+                            <textarea id="recordComment" class="col-xs-10 col-sm-6" rows="3" maxlength="256"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveRecordBtn" class="btn btn-primary">保存</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
