@@ -1628,10 +1628,6 @@ jQuery(function($) {
                 break;
             case "picture":
                 decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", "designContractPicture", "selfiePicture", "drawingPicture", "livePicture", "720Files", decorationDetail.orderId);
-                // 添加批量操作按钮到合同方案区域
-                setTimeout(function() {
-                    addBatchOperationButtons();
-                }, 500);
                 break;
             case "material":
                 decorationUtils.initMaterial(decorationDetail);
@@ -2106,49 +2102,6 @@ jQuery(function($) {
     // ==================== 合同方案批量操作功能 ====================
 
     /**
-     * 添加批量操作按钮到合同方案区域
-     */
-    function addBatchOperationButtons() {
-        // 检查按钮是否已存在
-        if ($('#detailBatchShow').length > 0) {
-            console.log('批量操作按钮已存在，跳过');
-            return;
-        }
-
-        // 查找合同方案区域（包含"合同方案"文本的 widget-header）
-        $('#step-container .widget-header').each(function() {
-            var $header = $(this);
-            var headerText = $header.text();
-            if (headerText.indexOf('合同方案') !== -1 && headerText.indexOf('合同方案2') === -1) {
-                // 找到了合同方案区域
-                var $buttonContainer = $header.find('.inline.pull-right').first();
-                if ($buttonContainer.length === 0) {
-                    $buttonContainer = $('<div class="inline pull-right" style="text-align: right;"></div>');
-                    $header.append($buttonContainer);
-                }
-
-                // 创建批量操作按钮容器
-                var $batchButtonContainer = $('<div class="pull-left" id="designPictureUpload_b" style="margin-left: 10px;"></div>');
-
-                // 添加批量显示按钮
-                $batchButtonContainer.append('<a class="btn btn-minier btn-success" id="detailBatchShow">批量显示</a> ');
-
-                // 添加批量确认按钮
-                $batchButtonContainer.append('<a class="btn btn-minier btn-info" id="detailBatchConfirm">批量确认</a> ');
-
-                // 添加批量隐藏按钮
-                $batchButtonContainer.append('<a class="btn btn-minier btn-danger" id="detailBatchHide">批量隐藏</a>');
-
-                // 将按钮容器添加到右侧按钮容器中
-                $buttonContainer.append($batchButtonContainer);
-
-                console.log('批量操作按钮已添加到合同方案区域');
-                return false; // 退出循环
-            }
-        });
-    }
-
-    /**
      * 批量更新合同方案图片状态
      * @param {Number} status - 目标状态 (1=显示, 4=确认展示, 0=隐藏)
      */
@@ -2191,10 +2144,6 @@ jQuery(function($) {
                 com.showAlert(com.info, '操作成功，已更新 ' + selectedDpids.length + ' 张图片状态');
                 // 刷新合同方案图片
                 decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", "designContractPicture", "selfiePicture", "drawingPicture", "livePicture", "720Files", decorationDetail.orderId);
-                // 刷新后重新添加批量操作按钮
-                setTimeout(function() {
-                    addBatchOperationButtons();
-                }, 500);
             } else {
                 com.showAlert(com.error, res.errorMsg || '操作失败');
             }
