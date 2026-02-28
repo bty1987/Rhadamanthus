@@ -1516,8 +1516,8 @@ var decorationUtils = {
         // 创建方案状态标签行
         var statusRow = $('<div class="col-md-12"></div>')
             .append($('<h5></h5>')
-                .append($('<strong class="clearfix col-md-3"></strong>').html('合同方案: ').append($('<span id="designStatus" class="label label-danger arrowed"></span>'))
-                .append($('<strong class="clearfix col-md-3"></strong>').html('放线方案: ').append($('<span id="prictureStatus" class="label label-danger arrowed"></span>'))
+                .append($('<strong class="clearfix col-md-3"></strong>').html('合同方案: ').append($('<span id="designStatus" class="label label-danger arrowed"></span>')))
+                .append($('<strong class="clearfix col-md-3"></strong>').html('放线方案: ').append($('<span id="prictureStatus" class="label label-danger arrowed"></span>')))
             );
         row1.find('.widget-box').append(statusRow);
 
