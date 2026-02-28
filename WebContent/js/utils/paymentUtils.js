@@ -923,7 +923,7 @@ var paymentUtils = {
 
         paymentUtils.setTime($id, wallet.countdown);
         $.ajax({
-            url: 'https://www.fanglinserver.com/queryVode + phone=' + phone,
+            url: 'https://service-erp.fanglin.vip/queryVode + phone=' + phone,
             type: "POST",
             dataType: "json",
             success: function(data) {
@@ -1039,7 +1039,7 @@ var paymentUtils = {
 
     customerSignCode: function(paymentContract, htmlName) {
 
-        paymentUtils.showQRCode(htmlName + "qrcode", "http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + paymentContract.pcid + "&type=2&module=payment", htmlName + "paymentContractQrcodeModal");
+        paymentUtils.showQRCode(htmlName + "qrcode", "http://service-erp.fanglin.vip/platform/" + "/views/contract/redirect.html?dcid=" + paymentContract.pcid + "&type=2&module=payment", htmlName + "paymentContractQrcodeModal");
     },
 
     customerSignSend: function(paymentContract) {
@@ -1140,7 +1140,7 @@ var paymentUtils = {
                     "paymentContract.rtid": rtid,
                     "paymentContract.orderId": options["orderId"],
                     "paymentContract.paymentType": paymentType,
-                    "paymentContract.viewpdf": "http://www.fanglinserver.com/" + res.resUrl
+                    "paymentContract.viewpdf": "http://service-erp.fanglin.vip/" + res.resUrl
                 };
 
                 com.post(api.payment.addPaymentContract, contractOptions, function(data) {

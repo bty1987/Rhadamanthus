@@ -447,7 +447,7 @@ jQuery(function($) {
         clazz: "btn-info",
         handle: function(v) {
 
-            showQRCode(decorationContract.items.qrcode, "http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=1");
+            showQRCode(decorationContract.items.qrcode, "http://service-erp.fanglin.vip/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=1");
         },
         show: function(v) {
 
@@ -458,7 +458,7 @@ jQuery(function($) {
         clazz: "btn-info",
         handle: function(v) {
 
-            showQRCode(decorationContract.items.qrcode, "http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=2");
+            showQRCode(decorationContract.items.qrcode, "http://service-erp.fanglin.vip/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=2");
         },
         show: function(v) {
 
@@ -515,7 +515,7 @@ jQuery(function($) {
         clazz: "btn-info",
         handle: function(v) {
 
-            showQRCode(decorationContract.items.qrcode, "http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=1");
+            showQRCode(decorationContract.items.qrcode, "http://service-erp.fanglin.vip/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=1");
         },
         show: function() {
 

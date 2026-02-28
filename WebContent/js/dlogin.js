@@ -72,7 +72,7 @@ jQuery(function (a) {
 
     if (!config.intranet) {
         $.ajax({
-            url: 'https://www.fanglinserver.com/communion.do',
+            url: 'https://service-erp.fanglin.vip/communion.do',
             data: {},
             type: "post",
             dataType: "json",

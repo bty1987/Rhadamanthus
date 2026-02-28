@@ -118,7 +118,7 @@ jQuery(function($) {
                 render: "canvas",
                 width: 150,
                 height: 150,
-                text: "http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?pcid=" + v.pcid + "&type=1&module=payment"
+                text: "http://service-erp.fanglin.vip/platform/" + "/views/contract/redirect.html?pcid=" + v.pcid + "&type=1&module=payment"
             });
             
             paymentContract.modals.qrcodeModal.modal('show');
@@ -130,7 +130,7 @@ jQuery(function($) {
                  render: "canvas",
                  width: 150,
                  height: 150,
-                 text: "http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?pcid=" + v.pcid + "&type=1&module=payment"
+                 text: "http://service-erp.fanglin.vip/platform/" + "/views/contract/redirect.html?pcid=" + v.pcid + "&type=1&module=payment"
              });
              
         	 paymentContract.modals.qrcodeModal.modal('show');
@@ -142,7 +142,7 @@ jQuery(function($) {
                  render: "canvas",
                  width: 150,
                  height: 150,
-                 text: "http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?pcid=" + v.pcid + "&type=2&module=payment"
+                 text: "http://service-erp.fanglin.vip/platform/" + "/views/contract/redirect.html?pcid=" + v.pcid + "&type=2&module=payment"
              });
              
         	 paymentContract.modals.qrcodeModal.modal('show');
