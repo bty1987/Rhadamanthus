@@ -107,6 +107,21 @@ jQuery(function($) {
         contractEdit.cover["cov-customer-phone"] = contractEdit.customer.phone;
 
     }, null, false);
+    
+    var updateMaterialPrice = function() {
+        
+        var materialPrice = 0;
+
+        if (contractEdit.holonomy && contractEdit.holonomy.materialPrice > 0) {
+            materialPrice = contractEdit.holonomy.materialPrice;
+        } else if (contractEdit.midpack && contractEdit.midpack.materialPrice > 0) {
+            materialPrice = contractEdit.midpack.materialPrice;
+        }
+
+        com.focusPage("#con-material-total", "#form").val(materialPrice);
+        com.focusPage("#con-material-first", "#form").val(Math.round(utils.accMul(materialPrice, 0.5)));
+        com.focusPage("#con-material-final", "#form").val(Math.round(utils.accMul(materialPrice, 0.5)));
+    };
 
     com.post(api.decoration.queryDecorationHolonomy, {
         "decorationHolonomy.decoration.orderId": contractEdit.decorationOrderId
@@ -116,11 +131,23 @@ jQuery(function($) {
 
         if (!holonomy.materialPrice)
             holonomy.materialPrice = 0;
+        
+        contractEdit.holonomy = holonomy;
+    }, null, false);
+    
+    com.post(api.decoration.queryDecorationMidpack, {
+        "decorationMidpack.decoration.orderId": contractEdit.decorationOrderId
+    }, function(res) {
 
-        com.focusPage("#con-material-total", "#form").val(holonomy.materialPrice);
-        com.focusPage("#con-material-first", "#form").val(Math.round(utils.accMul(holonomy.materialPrice, 0.5)));
-        com.focusPage("#con-material-final", "#form").val(Math.round(utils.accMul(holonomy.materialPrice, 0.5)));
-    });
+        var midpack = res.decorationMidpack;
+
+        if (!midpack.materialPrice)
+            midpack.materialPrice = 0;
+
+        contractEdit.midpack = midpack;
+    }, null, false);
+    
+    updateMaterialPrice();
 
     if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
 
