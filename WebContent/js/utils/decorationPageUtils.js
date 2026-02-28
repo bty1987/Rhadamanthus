@@ -433,10 +433,11 @@ $(function() {
             var $batchContainer = com.focusPage("#designPictureUpload_b");
             // 检查是否已存在批量操作按钮，避免重复添加
             if ($batchContainer.find('#detailBatchShow').length === 0) {
-                $batchContainer.append($('<a class="btn btn-minier btn-success" id="detailBatchShow">批量显示</a>'))
-                    .append(' ')
+                $batchContainer
+                    .append($('<a class="btn btn-minier btn-success" id="detailBatchShow">批量显示</a>'))
+                    .append('&nbsp;')
                     .append($('<a class="btn btn-minier btn-info" id="detailBatchConfirm">批量确认</a>'))
-                    .append(' ')
+                    .append('&nbsp;')
                     .append($('<a class="btn btn-minier btn-danger" id="detailBatchHide">批量隐藏</a>'));
             }
         }
