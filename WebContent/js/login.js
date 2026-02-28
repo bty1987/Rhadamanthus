@@ -52,7 +52,7 @@ jQuery(function($) {
         // 如果不是内网环境,获取服务器地址
         if (!config.intranet && !config.demo) {
             $.ajax({
-                url: 'https://www.fanglinserver.com/communion.do',
+                url: 'https://service-erp.fanglin.vip/communion.do',
                 data: {},
                 type: "post",
                 dataType: "json",

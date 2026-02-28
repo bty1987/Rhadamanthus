@@ -303,7 +303,7 @@ jQuery(function($) {
         clazz: "btn-yellow",
         handle: function(v) {
 
-            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.ucid + "&type=3&module=personel");
+            showQRCode("http://service-erp.fanglin.vip/platform/" + "/views/contract/redirect.html?dcid=" + v.ucid + "&type=3&module=personel");
         },
         show: function() {
 
