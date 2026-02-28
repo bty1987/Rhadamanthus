@@ -1489,17 +1489,157 @@ var decorationUtils = {
 
     initDecorationPicture: function(designId, pictureId, cadId, contractId, originalId, agreeId, designContractPictureId, selfieId, drawingId, liveId, panoramaId, orderId) {
 
-        var $desgin = com.focusPage("#" + designId).html("");
-        var $picture = com.focusPage("#" + pictureId).html("");
-        var $contract = com.focusPage("#" + contractId).html("");
-        var $cad = com.focusPage("#" + cadId).html("");
-        var $original = com.focusPage("#" + originalId).html("");
-        var $agree = com.focusPage("#" + agreeId).html("");
-        var $contractPicture = com.focusPage("#" + designContractPictureId).html("");
-        var $selfie = com.focusPage("#" + selfieId).html("");
-        var $drawing = com.focusPage("#" + drawingId).html("");
-        var $live = com.focusPage("#" + liveId).html("");
-        var $panorama = com.focusPage("#" + panoramaId).html("");
+        // 处理合同方案容器（designId = "designPictures"）
+        // 创建包含批量操作按钮的完整结构
+        var $stepContainer = $('#step-container');
+
+        // 检查容器是否存在
+        if ($stepContainer.length === 0) {
+            console.error('step-container 不存在！');
+            return;
+        }
+
+        // 清空 step-container 以确保干净的状态
+        $stepContainer.html("");
+
+        // 创建方案状态行
+        var row1 = $('<div class="row" style="min-height: 150px;"></div>')
+            .append($('<div class="col-md-12 widget-container-span ui-sortable"></div>')
+                .append($('<div class="widget-box transparent" id="basePaymentWidget"></div>')
+                    .append($('<div class="widget-header"></div>')
+                        .append($('<h4></h4>').append($('<strong></strong>').text('方案状态')))
+                    )
+                )
+            );
+        $stepContainer.append(row1);
+
+        // 创建方案状态标签行
+        var statusRow = $('<div class="col-md-12"></div>')
+            .append($('<h5></h5>')
+                .append($('<strong class="clearfix col-md-3"></strong>').html('合同方案: ').append($('<span id="designStatus" class="label label-danger arrowed"></span>'))
+                .append($('<strong class="clearfix col-md-3"></strong>').html('放线方案: ').append($('<span id="prictureStatus" class="label label-danger arrowed"></span>'))
+            );
+        row1.find('.widget-box').append(statusRow);
+
+        // 创建合同方案容器（包含批量操作按钮）
+        var $designPicturesWrapper = $('<div class="col-xs-12 widget-container-span ui-sortable"></div>')
+            .append($('<div class="widget-box transparent"></div>')
+                .append($('<div class="widget-header"></div>')
+                    .append($('<h4></h4>').append($('<strong></strong>').text('合同方案')))
+                    .append($('<div class="inline pull-right" style="text-align: right;"></div>')
+                        .append($('<div class="pull-left"></div>')
+                            .append($('<a class="btn btn-minier btn-success" id="detailBatchShow">批量显示</a>'))
+                            .append(' ')
+                            .append($('<a class="btn btn-minier btn-info" id="detailBatchConfirm">批量确认</a>'))
+                            .append(' ')
+                            .append($('<a class="btn btn-minier btn-danger" id="detailBatchHide">批量隐藏</a>'))
+                        )
+                    )
+                )
+                .append($('<div style="min-height: 150px;"></div>')
+                    .append($('<ul id="' + designId + '" class="ace-thumbnails"></ul>'))
+                )
+            );
+
+        // 创建放线方案容器
+        var $projectPicturesWrapper = $('<div class="col-xs-12 widget-container-span ui-sortable"></div>')
+            .append($('<div class="widget-box transparent"></div>')
+                .append($('<div class="widget-header"></div>')
+                    .append($('<h4></h4>').append($('<strong></strong>').text('放线方案')))
+                    .append($('<div class="inline pull-right" style="text-align: right;"></div>')
+                        .append($('<div class="pull-left" id="projectPictureUpload_b"></div>'))
+                    )
+                )
+                .append($('<div style="min-height: 150px;"></div>')
+                    .append($('<ul id="' + pictureId + '" class="ace-thumbnails"></ul>'))
+                )
+            );
+
+        // 创建其他图片容器
+        var $contractWrapper = $('<div class="col-xs-12 widget-container-span ui-sortable"></div>')
+            .append($('<div class="widget-box transparent"></div>')
+                .append($('<div class="widget-header"></div>')
+                    .append($('<h4></h4>').append($('<strong></strong>').text('合同备档')))
+                )
+                .append($('<div style="min-height: 150px;"></div>')
+                    .append($('<ul id="' + contractId + '" class="ace-thumbnails"></ul>'))
+                )
+            );
+
+        var $cadWrapper = $('<div class="col-xs-12 widget-container-span ui-sortable"></div>')
+            .append($('<div class="widget-box transparent"></div>')
+                .append($('<div class="widget-header"></div>')
+                    .append($('<h4></h4>').append($('<strong></strong>').text('工程文件CAD')))
+                )
+                .append($('<div style="min-height: 150px;"></div>')
+                    .append($('<div id="' + cadId + '" class="infobox-container"></div>'))
+                )
+            );
+
+        var $originalWrapper = $('<div class="col-xs-12 widget-container-span ui-sortable"></div>')
+            .append($('<div class="widget-box transparent"></div>')
+                .append($('<div class="widget-header"></div>')
+                    .append($('<h4></h4>').append($('<strong></strong>').text('现场图')))
+                )
+                .append($('<div style="min-height: 150px;"></div>')
+                    .append($('<ul id="' + originalId + '" class="ace-thumbnails"></ul>'))
+                )
+            );
+
+        var $contractFileWrapper = $('<div class="col-xs-12 widget-container-span ui-sortable"></div>')
+            .append($('<div class="widget-box transparent"></div>')
+                .append($('<div class="widget-header"></div>')
+                    .append($('<h4></h4>').append($('<strong></strong>').text('合同文件')))
+                )
+                .append($('<div style="min-height: 150px;"></div>')
+                    .append($('<div id="' + agreeId + '" class="infobox-container"></div>'))
+                )
+            );
+
+        var $designContractWrapper = $('<div class="col-xs-12 widget-container-span ui-sortable"></div>')
+            .append($('<div class="widget-box transparent"></div>')
+                .append($('<div class="widget-header"></div>')
+                    .append($('<h4></h4>').append($('<strong></strong>').text('合同方案2')))
+                    .append($('<div class="inline pull-right" style="text-align: right;"></div>')
+                        .append($('<div class="pull-left" id="designContractPictureUpload_b"></div>'))
+                    )
+                )
+                .append($('<div style="min-height: 150px;"></div>')
+                    .append($('<ul id="' + designContractPictureId + '" class="ace-thumbnails"></ul>'))
+                )
+            );
+
+        // 创建 row2 并添加所有容器
+        var row2 = $('<div class="row"></div>')
+            .append($designPicturesWrapper)
+            .append($projectPicturesWrapper)
+            .append($contractWrapper)
+            .append($cadWrapper)
+            .append($originalWrapper)
+            .append($contractFileWrapper)
+            .append($designContractWrapper);
+
+        $stepContainer.append(row2);
+
+        // 引用各个图片容器并清空内容
+        var $desgin = com.focusPage("#" + designId);
+        var $picture = com.focusPage("#" + pictureId);
+        var $contract = com.focusPage("#" + contractId);
+        var $cad = com.focusPage("#" + cadId);
+        var $original = com.focusPage("#" + originalId);
+        var $agree = com.focusPage("#" + agreeId);
+        var $contractPicture = com.focusPage("#" + designContractPictureId);
+        var $selfie = com.focusPage("#" + selfieId);
+        var $drawing = com.focusPage("#" + drawingId);
+        var $live = com.focusPage("#" + liveId);
+        var $panorama = com.focusPage("#" + panoramaId);
+
+        // 调试：检查按钮是否被创建
+        console.log('批量操作按钮检查:', {
+            detailBatchShow: $('#detailBatchShow').length,
+            detailBatchConfirm: $('#detailBatchConfirm').length,
+            detailBatchHide: $('#detailBatchHide').length
+        });
 
         com.post(api.decoration.queryDecorationPictureByOrderId, {
             "decorationPicture.orderId": orderId
