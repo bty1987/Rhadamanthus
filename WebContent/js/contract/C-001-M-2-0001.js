@@ -172,8 +172,7 @@ jQuery(function($) {
 
         contractEdit.holonomy = holonomy;
 
-        updateMaterialPrice();
-    });
+    }, null, false);
 
     com.post(api.decoration.queryDecorationMidpack, {
         "decorationMidpack.decoration.orderId": contractEdit.decorationOrderId
@@ -188,9 +187,9 @@ jQuery(function($) {
             midpack.materialPrice = 0;
 
         contractEdit.midpack = midpack;
-
-        updateMaterialPrice();
-    });
+    }, null, false);
+    
+    updateMaterialPrice();
 
     com.focusPage("#preservation").unbind("click").on('click', function() {
 
