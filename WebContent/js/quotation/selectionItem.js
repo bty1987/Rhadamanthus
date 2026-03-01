@@ -1123,6 +1123,9 @@ $(function() {
                     });
                     propertyArr.push([_text, v.decoration.materialer != null ? v.decoration.materialer.currentName : "无", "grey"]);
                     break;
+                case "decorationProcontracttime":
+                    propertyArr.push(["预签时间:", v.decoration.procontracttime || "无", "green"]);
+                    break;
             }
         });
         return propertyArr;
