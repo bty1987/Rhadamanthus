@@ -35,6 +35,7 @@
         basicParams: null,
         notSalesmanRate: null,
         decoration: null,
+        houseParams: null, // 房屋参数（楼层、电梯等）
         paymentType: null,
         packageType: null,
         startTime: null,
@@ -1812,6 +1813,15 @@
                     quo.notSalesmanRate = res.decoration.notSalesmanRate;
                     quo.decoration = res.decoration;
 
+                    // 初始化房屋参数
+                    var house = res.decoration.house;
+                    quo.houseParams = {
+                        "house.hid": house.hid, // 房产ID
+                        "house.floor": house.floor, // 楼层
+                        "house.innerFloor": house.innerFloor, // 计价楼层
+                        "house.isLift": house.isLift, // 有无电梯
+                    };
+
                 }, null, false);
 
                 if (quo.decoration != null) {
@@ -1840,6 +1850,7 @@
         init: function() {
 
             this.saveDomainEdit();
+            this.paramsDomainEdit();  // 绑定参数按钮点击事件
             this.calculateTotal();
             this.calculateCons();
             this.saveDiscountEdit();
@@ -2874,8 +2885,8 @@
                     "h": param.beamLength, // 梁长
                     "i": param.beamHeight, // 梁高
 
-                    "o": 0, // 楼层（quotetion 默认为0）
-                    "of": 0, // 有无电梯（quotetion 默认为0）
+                    "o": quo.houseParams && quo.houseParams["house.floor"] ? quo.houseParams["house.floor"] : 0, // 楼层
+                    "of": quo.houseParams && quo.houseParams["house.isLift"] ? 0 : 1, // 有无电梯
 
                     "u": quo.basicParams["quotetion.taxPrice"], // 税金
                     "v": quo.basicParams["quotetion.managePrice"], // 管理费
