@@ -193,6 +193,11 @@ $(function() {
 
             tools.personel.info(btn, v.selectionItem.decoration.supervisor.userId);
         }
+    }, {
+        fieId: "selectionItem.decoration.procontracttime",
+        name: "预签时间",
+        prop: "selectionItem.decoration.procontracttime",
+        clazz: "green"
     }];
 
     var linebtus = [{
@@ -361,7 +366,8 @@ $(function() {
                 ['成本', 'price'], //
                 ['结算人', 'selectionItem.balancer.currentName'], //
                 ['拆单时间', 'selectionItem.createTime'], //
-                ['结算时间', 'selectionItem.balanceTime']],
+                ['结算时间', 'selectionItem.balanceTime'], //
+                ['预签时间', 'selectionItem.decoration.procontracttime']],
                 list: res.paging.data
             }, function(v) {
 
@@ -421,6 +427,7 @@ $(function() {
                 ['备注', 'selectionItem.comment'], //
                 ['面积', 'selectionItem.decoration.house.innerArea'], //
                 ['标配/升级', ''], //
+                ['预签时间', 'selectionItem.decoration.procontracttime'], //
                 ],
                 list: res.paging.data
             }, function(v) {
