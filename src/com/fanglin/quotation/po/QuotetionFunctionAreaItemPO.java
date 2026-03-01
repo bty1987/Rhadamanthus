@@ -231,6 +231,15 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 		return quotetionFunctionAreaItemTable;
 	}
 
+	/**
+	 * 获取数据库表名（用于原生SQL）
+	 */
+	public static String quotetionFunctionAreaItemTableName(Long qfaid, Short index) {
+
+		// 数据库表名全小写：quotetionfunctionareaitem + index
+		return "quotetionfunctionareaitem" + index;
+	}
+
 	public static QuotetionFunctionAreaItemPO factoryToInstance(Long qfaid, Short index) throws FLException {
 
 		try {
