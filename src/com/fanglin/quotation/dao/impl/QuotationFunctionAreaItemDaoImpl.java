@@ -78,12 +78,10 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 
 	@Override
 	public int copyQuotationFunctionAreaItem(String table, long sqfaid, long tqfaid) {
-		String sql = String.format("INSERT INTO %s (qfaid, itemName, measurementUnit, workType, addPrice, unitPrice, subPrice, formula, initNum, num, type, subtype, discount, content, index) SELECT :tqfaid, itemName, measurementUnit, workType, addPrice, unitPrice, subPrice, formula, initNum, num, type, subtype, discount, content, index FROM %s WHERE qfaid = :sqfaid", table, table);
 
-		return session().createSQLQuery(sql)
-				.setLong("tqfaid", tqfaid)
-				.setLong("sqfaid", sqfaid)
-				.executeUpdate();
+		String sql = String.format("INSERT INTO quotation.%s (qfaid, itemName, measurementUnit, workType, addPrice, unitPrice, subPrice, formula, initNum, num, type, subtype, discount, content, index) SELECT :tqfaid, itemName, measurementUnit, workType, addPrice, unitPrice, subPrice, formula, initNum, num, type, subtype, discount, content, index FROM quotation.%s WHERE qfaid = :sqfaid", table, table);
+
+		return session().createSQLQuery(sql).setLong("tqfaid", tqfaid).setLong("sqfaid", sqfaid).executeUpdate();
 	}
 
 }
