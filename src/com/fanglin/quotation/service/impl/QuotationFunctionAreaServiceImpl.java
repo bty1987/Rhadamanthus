@@ -448,8 +448,8 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 		quotationFunctionAreaParamDao.copyQuotationFunctionAreaParam(quotationFunctionAreaSO.getQfaId(), quotationFunctionAreaTO.getQfaId());
 
 		// 复制报价项（使用 SQL 方式）
-		String table = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaTO.getQfaId(), quotationFunctionAreaTO.getIndex());
-		quotationFunctionAreaItemDao.copyQuotationFunctionAreaItem(table, quotationFunctionAreaSO.getQfaId(), quotationFunctionAreaTO.getQfaId());
+		String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTableName(quotationFunctionAreaTO.getQfaId(), quotationFunctionAreaTO.getIndex());
+		quotationFunctionAreaItemDao.copyQuotationFunctionAreaItem(tableName, quotationFunctionAreaSO.getQfaId(), quotationFunctionAreaTO.getQfaId());
 
 		// 查询新功能区的所有报价项，用于返回给前端
 		List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaTO.getQfaId(), quotationFunctionAreaTO.getIndex()), quotationFunctionAreaTO.getQfaId());
