@@ -37,7 +37,7 @@ public class QuotetionFunctionAreaItemDaoImpl extends DaoImpl<QuotetionFunctionA
 	@Override
 	public int updateQuotetionFunctionAreaItemForIndex(String table, QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO) throws FLException {
 
-		String sql = String.format("update %s  set index = :index where qfaiId = :qfaiId", table);
+		String sql = String.format("update %s  set `index` = :index where qfaiId = :qfaiId", table);
 		session().createQuery(sql).setInteger("index", quotetionFunctionAreaItemVO.getIndex()).setLong("qfaiId", quotetionFunctionAreaItemVO.getQfaiId()).executeUpdate();
 
 		return 0;
@@ -64,7 +64,7 @@ public class QuotetionFunctionAreaItemDaoImpl extends DaoImpl<QuotetionFunctionA
 	@Override
 	public int copyQuotetionFunctionAreaItem(String table, long sqfaid, long tqfaid) {
 
-		String sql = String.format("INSERT INTO quotetion.%s (qfaid, qiid, name, addPrice, unitPrice, subPrice, index, formula, num, type, subtype, measurementUnit, workType, discount, content) SELECT :tqfaid, qiid, name, addPrice, unitPrice, subPrice, index, formula, num, type, subtype, measurementUnit, workType, discount, content FROM quotetion.%s WHERE qfaid = :sqfaid", table, table);
+		String sql = String.format("INSERT INTO quotetion.%s (qfaid, qiid, name, addPrice, unitPrice, subPrice, `index`, formula, num, type, subtype, measurementUnit, workType, discount, content) SELECT :tqfaid, qiid, name, addPrice, unitPrice, subPrice, `index`, formula, num, type, subtype, measurementUnit, workType, discount, content FROM quotetion.%s WHERE qfaid = :sqfaid", table, table);
 
 		return session().createSQLQuery(sql).setLong("tqfaid", tqfaid).setLong("sqfaid", sqfaid).executeUpdate();
 	}
