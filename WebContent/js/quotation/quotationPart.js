@@ -828,9 +828,6 @@ var QuotationDetail = (function() {
                 if ((v.vision & 1) != constant.data().decorationMatching.VISION_QUOTEDISCOUNT_INT)
                     return true;
 
-                _manageDiscount = v.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? _discount : 1; // 管理费折扣
-                _transDiscount = v.transDiscount == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT ? _discount : 1; // 车运费折扣
-
                 var $label = $('<label></label>').addClass('col-xs-2').appendTo(labels);
                 var $radio = $('<input>').addClass('ace').attr({
                     "name": "machingInfos",
@@ -911,8 +908,12 @@ var QuotationDetail = (function() {
 
                 } else {
 
-                    _ddtransfee = v.trafficDiscount == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT ? utils.changeThrDecimal(utils.accMul(_dtransfee, _discount)) : _dtransfee;
-                    _ddmanagefee = v.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? utils.changeThrDecimal(utils.accMul(_dmanagefee, _discount)) : _dmanagefee;
+                    // 判断是否为固定折扣模式，如果是则使用配置的固定折扣，否则使用用户输入的折扣
+                    var _useDiscount = v.discountType == constant.data().decorationMatching.DISCOUNTTYPE_ONLY_INT ? utils.accDiv(v.discount, 10) : _discount;
+                    var _showDiscount = v.discountType == constant.data().decorationMatching.DISCOUNTTYPE_ONLY_INT ? v.discount : discount;
+
+                    _ddtransfee = v.trafficDiscount == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT ? utils.changeThrDecimal(utils.accMul(_dtransfee, _useDiscount)) : _dtransfee;
+                    _ddmanagefee = v.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? utils.changeThrDecimal(utils.accMul(_dmanagefee, _useDiscount)) : _dmanagefee;
                     _ddtaxfee = v.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? utils.changeThrDecimal(utils.accMul(_dtaxfee, utils.accDiv(v.discount, 10))) : _dtaxfee;
 
                     cdiscount = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_disPrice, (v.trafficDiscount == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT ? _ddtransfee : 0)), (v.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? utils.accAdd(_dmanagefee, v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _dtaxfee : 0) : 0)));
@@ -921,14 +922,14 @@ var QuotationDetail = (function() {
                     var materialPrice = utils.changeThrDecimal(utils.accMul(_ddtotal, v.material));
                     var servicePrice = utils.changeThrDecimal(utils.accMul(materialPrice, v.service));
 
-                    var _projectPrice = utils.changeThrDecimal(utils.accAdd(_rtemPrice, utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(_disPrice, _discount), _undisPrice), _ddtransfee), _ddmanagefee), _ddtaxfee)));
+                    var _projectPrice = utils.changeThrDecimal(utils.accAdd(_rtemPrice, utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(_disPrice, _useDiscount), _undisPrice), _ddtransfee), _ddmanagefee), _ddtaxfee)));
                     var $_total = utils.changeTwoDecimal(utils.accAdd(_projectPrice, utils.accAdd(materialPrice, servicePrice)));
 
                     var halfPacksDiv = $('<div></div>').addClass('fl-quo-cal-item');
 
                     halfPacksDiv.append(createCalItem(v.name, 'normal'));
                     halfPacksDiv.append(createCalItem(_ddtotal, 'normal'));
-                    halfPacksDiv.append(createCalItem(discount, 'small'));
+                    halfPacksDiv.append(createCalItem(_showDiscount, 'small'));
                     halfPacksDiv.append(createCalItem(cdiscount, 'normal'));
                     halfPacksDiv.append(createCalItem(ndiscount, 'normal'));
                     halfPacksDiv.append(createCalItem(_unachefee, 'normal').addClass("hide"));
