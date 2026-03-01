@@ -675,10 +675,16 @@ jQuery(function($) {
 
     printConf = params.quotation.quotation.printConf;
 
-    printConf.showType = {
-        "itemtype": printConf.type,
-        "showStandardPrice": printConf.calType == 0
-    };
+    // 如果用户没有传入 showType，则使用默认值
+    if (!printConf.showType) {
+        printConf.showType = {
+            "itemtype": printConf.type,
+            "showStandardPrice": printConf.calType == 0
+        };
+    } else if (!printConf.showType.showStandardPrice) {
+        // 保留用户传入的 showType.itemtype，但补充 showStandardPrice
+        printConf.showType.showStandardPrice = printConf.calType == 0;
+    }
 
     quotationUtils.quotationDetail = {};
     var url = api.quotation.queryQuotationById;
