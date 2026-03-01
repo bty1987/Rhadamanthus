@@ -1261,23 +1261,6 @@
             });
         },
 
-        // 参数显示/隐藏切换
-        paramsDomainEdit: function() {
-
-            com.focusPage('#paramsFunctionAreasBtn').click(function() {
-
-                if (quo.modals.functionAreaModal.hasClass("parameter")) {
-                    quo.modals.functionAreaModal.find(".parameter").hide();
-                    quo.modals.functionAreaModal.removeClass("parameter");
-                } else {
-                    quo.modals.functionAreaModal.find(".parameter").show();
-                    quo.modals.functionAreaModal.addClass("parameter");
-                }
-
-                com.closeTip();
-            });
-        },
-
         // 删除功能区
         deletDomain: function($domain) {
 
@@ -1860,7 +1843,6 @@
         init: function() {
 
             this.saveDomainEdit();
-            this.paramsDomainEdit();  // 绑定参数按钮点击事件
             this.calculateTotal();
             this.calculateCons();
             this.saveDiscountEdit();
