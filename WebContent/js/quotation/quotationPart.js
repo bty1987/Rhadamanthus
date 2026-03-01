@@ -1331,6 +1331,15 @@ var QuotationDetail = (function() {
                         $(e).show();
                     });
 
+                    // 自动触发功能区内所有报价项的 num 计算
+                    var $items = that.nowEditDomain.find('.fl-quo-list.list .fl-quo-item.item[data-expres]');
+                    $.each($items, function(i, item) {
+                        var $item = $(item);
+                        if ($item.attr('data-qfaiid') && $item.attr("data-expres") && $item.attr("data-control") != 1) {
+                            quote.checkedExpres($item);
+                        }
+                    });
+
                     quo.quoModals.$domainEditModal.modal("hide");
                 }, null, false);
 

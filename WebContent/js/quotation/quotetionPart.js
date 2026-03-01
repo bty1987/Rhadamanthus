@@ -1245,6 +1245,15 @@
                         $dmoney.insertBefore(com.focusPage('#functionAreaSumList > div').eq(0));
                     }
 
+                    // 自动触发功能区内所有报价项的 num 计算
+                    var $items = that.nowEditDomain.find('.fl-quo-list.list .fl-quo-item.item[data-expres]');
+                    $.each($items, function(i, item) {
+                        var $item = $(item);
+                        if ($item.attr('data-qfaiid') && $item.attr("data-expres")) {
+                            quote.checkedExpres($item);
+                        }
+                    });
+
                     quo.modals.functionAreaModal.modal("hide");
 
                 }, null, false);
@@ -2918,6 +2927,55 @@
             };
 
             return formula;
+        },
+
+        // 自动计算并更新报价项 num（通过功能区参数公式）
+        checkedExpres: function($item) {
+
+            var expres = $item.attr("data-expres");
+
+            if (!expres)
+                return false;
+
+            var qfaiid = $item.attr('data-qfaiid');
+
+            if (!qfaiid)
+                return false;
+
+            var $widget = $item.parents('.widget-box');
+
+            var num = quote.quotetionFunctionAreaFormula(expres, $widget, 0).num;
+
+            var oldformula = $item.find('.cell.formula .cell-wrap').text();
+            var oldNum = $item.find('.cell.num .cell-wrap').text();
+
+            $item.find('.cell.formula .cell-wrap').text(num);
+            $item.find('.cell.num .cell-wrap').text(num);
+
+            var args = {
+                "quotetionFunctionAreaItem.qfaiId": qfaiid,
+                "quotetionFunctionAreaItem.quotetionFunctionAreaId": $widget.attr('data-qfaid'),
+                "quotetionFunctionAreaItem.formula": num,
+                "quotetionFunctionAreaItem.initNum": num,
+                "quotetionFunctionAreaItem.num": num,
+            };
+
+            var $params = $.extend({}, args, quo.basicParams);
+
+            com.post(api.quotation.updateQuotetionFunctionAreaItem, $params, function(res) {
+
+                // 更新功能区总额
+                var areaTotal = 0;
+                $widget.find('.fl-quo-list.list .fl-quo-item.item').each(function() {
+                    var price = parseFloat($(this).attr('data-totalprice')) || 0;
+                    areaTotal = utils.accAdd(areaTotal, price);
+                });
+                com.focusPage('[data-qfaid="' + $widget.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(areaTotal);
+
+                quote.cacsedeUpdateItem($item);
+                quote.cacsedeUpdateCpItem([$item]);
+                quo.calculateQuoFees();
+            });
         },
 
         init: function() {
