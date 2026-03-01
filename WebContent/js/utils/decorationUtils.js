@@ -2544,7 +2544,7 @@ var decorationUtils = {
             params.quotation.quotation = {
                 "printConf": printConf
             };
-
+            
             var $show = wizard.opt == null ? [] : wizard.opt.btn == null ? [] : wizard.opt.btn;
 
             status = $show.includes("quotationIsPrint") ? true : false
