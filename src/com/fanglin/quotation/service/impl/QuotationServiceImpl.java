@@ -691,14 +691,9 @@ public class QuotationServiceImpl implements QuotationService {
 		// 发送钉钉消息给报价创建人的经理
 		UserPO creater = quotationPO.getCreater();
 
-		if (creater != null && creater.getDept() != null && creater.getDept().getManager() != null) {
+		String dingtalkMessage = String.format("报价单 %s（%s）审核完成，请查看错误点：\n%s", decorationPO.getOrderId(), quotationPO.getName(), quotationVO.getContent());
 
-			UserPO manager = creater.getDept().getManager();
-
-			String dingtalkMessage = String.format("报价单 %s（%s）审核完成，请查看错误点：\n%s", decorationPO.getOrderId(), quotationPO.getName(), quotationVO.getContent());
-			
-			dingTalkMessageService.sendDing(manager.getUserId(), dingtalkMessage, manager.getCompany());
-		}
+		dingTalkMessageService.sendDing(creater.getUserId(), dingtalkMessage, creater.getCompany());
 
 		return 0;
 	}

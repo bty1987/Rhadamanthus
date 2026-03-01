@@ -491,7 +491,7 @@ function printWorkTable(workType) {
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
     contentHtml += '<td width="8%" align="center">序号</td>';
-    contentHtml += '<td width="22%" align="center">功能区</td>';
+    contentHtml += '<td width="22%" align="center">工种</td>';
     contentHtml += '<td width="30%" align="center">项目名称</td>';
     contentHtml += '<td width="10%" align="center">单位</td>';
     contentHtml += '<td width="10%" align="center">数量</td>';
