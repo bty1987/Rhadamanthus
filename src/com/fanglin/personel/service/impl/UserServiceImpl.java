@@ -1144,6 +1144,15 @@ public class UserServiceImpl implements UserService {
 
 		userInfoDao.update(userInfoPO);
 
+		// 处理定岗人数：离职时减少原部门-原岗位的人数
+		if (userPO.getDept() != null && userPO.getDuty() != null) {
+			DutmentPO dutment = dutmentDao.queryDutmentByDids(userPO.getDept().getDid(), userPO.getDuty().getDid());
+			if (dutment != null && dutment.getLimit() > 0 && dutment.getNum() > 0) {
+				dutment.setNum(dutment.getNum() - 1);
+				dutmentDao.update(dutment);
+			}
+		}
+
 		userDao.update(userPO);
 	}
 
@@ -1291,6 +1300,37 @@ public class UserServiceImpl implements UserService {
 		userInfoPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
 
 		userInfoDao.update(userInfoPO);
+
+		// 处理定岗人数：如果部门或岗位发生变化，需要更新定岗人数
+		if ((newdept != null && olddept.getDid() != newdept.getDid()) ||
+			(newduty != null && oldduty.getDid() != newduty.getDid())) {
+
+			// 确定原来的部门-岗位组合和新的部门-岗位组合
+			DepartmentPO finalOldDept = olddept;
+			DutyPO finalOldDuty = oldduty;
+			DepartmentPO finalNewDept = (newdept != null) ? newdept : olddept;
+			DutyPO finalNewDuty = (newduty != null) ? newduty : oldduty;
+
+			// 处理新部门-新岗位：验证定岗配置并增加人数
+			DutmentPO newDutment = dutmentDao.queryDutmentByDids(finalNewDept.getDid(), finalNewDuty.getDid());
+			if (newDutment == null || newDutment.getLimit() <= 0) {
+				throw new FLException(130052, "定岗异常信息：新部门-岗位没有定岗配置");
+			}
+			if (newDutment.getNum() >= newDutment.getLimit()) {
+				throw new FLException(130053, "定岗异常信息：新部门-岗位定岗已满");
+			}
+			newDutment.setNum(newDutment.getNum() + 1);
+			dutmentDao.update(newDutment);
+
+			// 处理原部门-原岗位：减少人数（如果与新部门-岗位不同）
+			if (finalOldDept.getDid() != finalNewDept.getDid() || finalOldDuty.getDid() != finalNewDuty.getDid()) {
+				DutmentPO oldDutment = dutmentDao.queryDutmentByDids(finalOldDept.getDid(), finalOldDuty.getDid());
+				if (oldDutment != null && oldDutment.getLimit() > 0 && oldDutment.getNum() > 0) {
+					oldDutment.setNum(oldDutment.getNum() - 1);
+					dutmentDao.update(oldDutment);
+				}
+			}
+		}
 
 		userDao.update(userPO);
 	}
