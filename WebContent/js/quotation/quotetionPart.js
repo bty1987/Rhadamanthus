@@ -297,11 +297,7 @@
             var postData = "quotetionPartItemPostData";
 
             if (parseInt(domain.nowEditDomain.attr("data-areatype")) == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT) {
-                // extraParams["quotationItem.type"] = constant.data().quotationItem.TYPE_CMPREH_INT;
-                extraParams["quotationItem.type"] = null;
                 postData = "quotetionPartItemByCmprehPostData";
-            } else {
-                extraParams["quotationItem.type"] = null;
             }
 
             var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
