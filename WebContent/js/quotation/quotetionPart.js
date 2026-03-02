@@ -3518,9 +3518,17 @@
         // 创建添加功能区中的功能区
         createDomainTemplete: function(v) {
 
-            var $div = $('<div></div>').addClass('functionAreaItem').css('clear', 'both');
+            var $div = $('<div></div>').addClass('functionAreaItem');
 
-            var $item = $('<div></div>').addClass('col-xs-2').appendTo($div);
+            // 创建包裹容器，使用 flex 布局
+            var $wrapper = $('<div></div>').css({
+                'display': 'flex',
+                'align-items': 'center',
+                'flex-wrap': 'wrap'
+            }).appendTo($div);
+
+            // checkbox 容器
+            var $item = $('<div></div>').addClass('functionAreaCheckbox').css('flex-shrink', '0').appendTo($wrapper);
 
             var $label = $('<label></label>').appendTo($item);
             var $radio = $('<input>').addClass('ace').attr({
@@ -3530,10 +3538,15 @@
             var $span = $('<span></span>').addClass('lbl').text(v.name).appendTo($label);
 
             // 参数输入区域（默认隐藏）
-            var $params = $('<div></div>').addClass('col-xs-10 params').css("display", "none").appendTo($div);
+            var $params = $('<div></div>').addClass('params').hide().css('flex-shrink', '0').appendTo($wrapper);
 
             // 周长
-            $('<input></input>').addClass("col-xs-1 a").attr({
+            $('<input></input>').addClass("param-input a").css({
+                'width': '60px',
+                'margin': '0 3px',
+                'display': 'inline-block',
+                'vertical-align': 'middle'
+            }).attr({
                 "type": "text",
                 "placeholder": "周长",
                 "name": "quoteparam",
@@ -3541,7 +3554,12 @@
                 "parama": "a"
             }).appendTo($params);
             // 面积
-            $('<input></input>').addClass("col-xs-1 b").attr({
+            $('<input></input>').addClass("param-input b").css({
+                'width': '60px',
+                'margin': '0 3px',
+                'display': 'inline-block',
+                'vertical-align': 'middle'
+            }).attr({
                 "type": "text",
                 "placeholder": "面积",
                 "name": "quoteparam",
@@ -3549,7 +3567,12 @@
                 "parama": "b"
             }).appendTo($params);
             // 举架
-            $('<input></input>').addClass("col-xs-1 c").attr({
+            $('<input></input>').addClass("param-input c").css({
+                'width': '60px',
+                'margin': '0 3px',
+                'display': 'inline-block',
+                'vertical-align': 'middle'
+            }).attr({
                 "type": "text",
                 "placeholder": "举架",
                 "name": "quoteparam",
@@ -3557,7 +3580,12 @@
                 "parama": "c"
             }).appendTo($params);
             // 洞面
-            $('<input></input>').addClass("col-xs-1 d").attr({
+            $('<input></input>').addClass("param-input d").css({
+                'width': '60px',
+                'margin': '0 3px',
+                'display': 'inline-block',
+                'vertical-align': 'middle'
+            }).attr({
                 "type": "text",
                 "placeholder": "洞面",
                 "name": "quoteparam",
@@ -3565,7 +3593,12 @@
                 "parama": "d"
             }).appendTo($params);
             // 参数
-            $('<input></input>').addClass("col-xs-1 e").attr({
+            $('<input></input>').addClass("param-input e").css({
+                'width': '60px',
+                'margin': '0 3px',
+                'display': 'inline-block',
+                'vertical-align': 'middle'
+            }).attr({
                 "type": "text",
                 "placeholder": "参数",
                 "name": "quoteparam",
@@ -3573,7 +3606,12 @@
                 "parama": "e"
             }).appendTo($params);
             // 窗面
-            $('<input></input>').addClass("col-xs-1 f").attr({
+            $('<input></input>').addClass("param-input f").css({
+                'width': '60px',
+                'margin': '0 3px',
+                'display': 'inline-block',
+                'vertical-align': 'middle'
+            }).attr({
                 "type": "text",
                 "placeholder": "窗面",
                 "name": "quoteparam",
@@ -3581,7 +3619,12 @@
                 "parama": "f"
             }).appendTo($params);
             // 变量
-            $('<input></input>').addClass("col-xs-1 g").attr({
+            $('<input></input>').addClass("param-input g").css({
+                'width': '60px',
+                'margin': '0 3px',
+                'display': 'inline-block',
+                'vertical-align': 'middle'
+            }).attr({
                 "type": "text",
                 "placeholder": "变量",
                 "name": "quoteparam",
@@ -3589,7 +3632,12 @@
                 "parama": "g"
             }).appendTo($params);
             // 梁长
-            $('<input></input>').addClass("col-xs-1 h").attr({
+            $('<input></input>').addClass("param-input h").css({
+                'width': '60px',
+                'margin': '0 3px',
+                'display': 'inline-block',
+                'vertical-align': 'middle'
+            }).attr({
                 "type": "text",
                 "placeholder": "梁长",
                 "name": "quoteparam",
@@ -3597,7 +3645,12 @@
                 "parama": "h"
             }).appendTo($params);
             // 梁高
-            $('<input></input>').addClass("col-xs-1 i").attr({
+            $('<input></input>').addClass("param-input i").css({
+                'width': '60px',
+                'margin': '0 3px',
+                'display': 'inline-block',
+                'vertical-align': 'middle'
+            }).attr({
                 "type": "text",
                 "placeholder": "梁高",
                 "name": "quoteparam",
