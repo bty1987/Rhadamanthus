@@ -1519,10 +1519,26 @@
             com.focusPage("#paramFunctionAreasBtn").click(function() {
 
                 if (quo.modals.functionAreaTemplateModal.hasClass("params")) {
+                    // 隐藏参数：功能区项横向排列
                     quo.modals.functionAreaTemplateModal.find(".params").hide();
+                    quo.modals.functionAreaTemplateModal.find(".functionAreaItem").css({
+                        'display': 'inline-block',
+                        'width': 'auto'
+                    });
+                    quo.modals.functionAreaTemplateModal.find("> .modal-body > .widget-box > .widget-body > .functionAreaItem > div").css({
+                        'flex-wrap': 'nowrap'
+                    });
                     quo.modals.functionAreaTemplateModal.removeClass("params");
                 } else {
+                    // 显示参数：功能区项纵向排列（每个占一行）
                     quo.modals.functionAreaTemplateModal.find(".params").show();
+                    quo.modals.functionAreaTemplateModal.find(".functionAreaItem").css({
+                        'display': 'block',
+                        'width': '100%'
+                    });
+                    quo.modals.functionAreaTemplateModal.find("> .modal-body > .widget-box > .widget-body > .functionAreaItem > div").css({
+                        'flex-wrap': 'wrap'
+                    });
                     quo.modals.functionAreaTemplateModal.addClass("params");
                 }
             });
@@ -3521,13 +3537,17 @@
         // 创建添加功能区中的功能区
         createDomainTemplete: function(v) {
 
-            var $div = $('<div></div>').addClass('functionAreaItem');
+            var $div = $('<div></div>').addClass('functionAreaItem').css({
+                'display': 'inline-block',  // 默认横向排列
+                'margin': '5px 10px 5px 0',
+                'vertical-align': 'top'
+            });
 
             // 创建包裹容器，使用 flex 布局
             var $wrapper = $('<div></div>').css({
                 'display': 'flex',
                 'align-items': 'center',
-                'flex-wrap': 'wrap'
+                'flex-wrap': 'nowrap'  // 默认不换行，横向排列
             }).appendTo($div);
 
             // checkbox 容器
