@@ -24,6 +24,7 @@ import com.fanglin.quotation.po.QuotetionFunctionAreaPO;
 import com.fanglin.quotation.po.QuotetionPO;
 import com.fanglin.quotation.service.QuotetionFunctionAreaService;
 import com.fanglin.quotation.vo.QuotetionFunctionAreaItemVO;
+import com.fanglin.quotation.vo.QuotetionFunctionAreaParamVO;
 import com.fanglin.quotation.vo.QuotetionFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotetionVO;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -335,7 +336,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 		// 复制报价项（使用 SQL 方式）
 		String tableName = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTableName(quotetionFunctionAreaTO.getQfaId(), quotetionFunctionAreaTO.getIndex());
-		quotetionFunctionAreaItemDao.copyQuotetionFunctionAreaItem(tableName, quotetionFunctionAreaSO.getQfaid(), quotetionFunctionAreaTO.getQfaId());
+		quotetionFunctionAreaItemDao.copyQuotetionFunctionAreaItem(tableName, quotetionFunctionAreaSO.getQfaId(), quotetionFunctionAreaTO.getQfaId());
 
 		// 查询新功能区的所有报价项，用于返回给前端
 		List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemPOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaTO.getQfaId(), quotetionFunctionAreaTO.getIndex()), quotetionFunctionAreaTO.getQfaId());
