@@ -1271,7 +1271,7 @@
                     $.each($items, function(i, item) {
                         var $item = $(item);
                         if ($item.attr('data-qfaiid') && $item.attr("data-expres")) {
-                            quote.checkedExpres($item);
+                            painter.checkedExpres($item);
                         }
                     });
 
@@ -2974,7 +2974,7 @@
 
             var $widget = $item.parents('.widget-box');
 
-            var num = quote.quotetionFunctionAreaFormula(expres, $widget, 0).num;
+            var num = painter.quotetionFunctionAreaFormula(expres, $widget, 0).num;
 
             var oldformula = $item.find('.cell.formula .cell-wrap').text();
             var oldNum = $item.find('.cell.num .cell-wrap').text();
