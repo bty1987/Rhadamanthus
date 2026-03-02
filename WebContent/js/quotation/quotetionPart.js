@@ -1523,10 +1523,9 @@
                     quo.modals.functionAreaTemplateModal.find(".params").hide();
                     quo.modals.functionAreaTemplateModal.find(".functionAreaItem").css({
                         'display': 'inline-block',
-                        'width': 'auto'
-                    });
-                    quo.modals.functionAreaTemplateModal.find("> .modal-body > .widget-box > .widget-body > .functionAreaItem > div").css({
-                        'flex-wrap': 'nowrap'
+                        'width': 'auto',
+                        'min-width': '140px',
+                        'white-space': 'nowrap'
                     });
                     quo.modals.functionAreaTemplateModal.removeClass("params");
                 } else {
@@ -1534,10 +1533,9 @@
                     quo.modals.functionAreaTemplateModal.find(".params").show();
                     quo.modals.functionAreaTemplateModal.find(".functionAreaItem").css({
                         'display': 'block',
-                        'width': '100%'
-                    });
-                    quo.modals.functionAreaTemplateModal.find("> .modal-body > .widget-box > .widget-body > .functionAreaItem > div").css({
-                        'flex-wrap': 'wrap'
+                        'width': '100%',
+                        'min-width': 'auto',
+                        'white-space': 'normal'
                     });
                     quo.modals.functionAreaTemplateModal.addClass("params");
                 }
@@ -3538,16 +3536,18 @@
         createDomainTemplete: function(v) {
 
             var $div = $('<div></div>').addClass('functionAreaItem').css({
-                'display': 'inline-block',  // 默认横向排列
-                'margin': '5px 10px 5px 0',
-                'vertical-align': 'top'
+                'display': 'inline-block',
+                'margin': '3px 8px 3px 0',
+                'vertical-align': 'top',
+                'min-width': '140px',  // 固定最小宽度，确保对齐
+                'white-space': 'nowrap'  // 防止内容换行
             });
 
             // 创建包裹容器，使用 flex 布局
             var $wrapper = $('<div></div>').css({
                 'display': 'flex',
                 'align-items': 'center',
-                'flex-wrap': 'nowrap'  // 默认不换行，横向排列
+                'flex-wrap': 'nowrap'
             }).appendTo($div);
 
             // checkbox 容器
