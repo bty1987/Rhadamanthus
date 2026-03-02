@@ -1311,16 +1311,15 @@ public class UserServiceImpl implements UserService {
 			DepartmentPO finalNewDept = (newdept != null) ? newdept : olddept;
 			DutyPO finalNewDuty = (newduty != null) ? newduty : oldduty;
 
-			// 处理新部门-新岗位：验证定岗配置并增加人数
+			// 处理新部门-新岗位：如果存在定岗配置，验证并增加人数
 			DutmentPO newDutment = dutmentDao.queryDutmentByDids(finalNewDept.getDid(), finalNewDuty.getDid());
-			if (newDutment == null || newDutment.getLimit() <= 0) {
-				throw new FLException(130052, "定岗异常信息：新部门-岗位没有定岗配置");
+			if (newDutment != null && newDutment.getLimit() > 0) {
+				if (newDutment.getNum() >= newDutment.getLimit()) {
+					throw new FLException(130053, "定岗异常信息：新部门-岗位定岗已满");
+				}
+				newDutment.setNum(newDutment.getNum() + 1);
+				dutmentDao.update(newDutment);
 			}
-			if (newDutment.getNum() >= newDutment.getLimit()) {
-				throw new FLException(130053, "定岗异常信息：新部门-岗位定岗已满");
-			}
-			newDutment.setNum(newDutment.getNum() + 1);
-			dutmentDao.update(newDutment);
 
 			// 处理原部门-原岗位：减少人数（如果与新部门-岗位不同）
 			if (finalOldDept.getDid() != finalNewDept.getDid() || finalOldDuty.getDid() != finalNewDuty.getDid()) {
