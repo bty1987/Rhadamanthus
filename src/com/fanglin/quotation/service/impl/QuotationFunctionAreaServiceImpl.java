@@ -440,6 +440,8 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 		// 保存新功能区
 		quotationFunctionAreaDao.save(quotationFunctionAreaTO);
+		// 立即刷新以确保主键回填（用于后续参数复制）
+		quotationFunctionAreaDao.flush();
 
 		// 更新报价
 		quotationDao.update(quotationPO);
