@@ -2734,6 +2734,7 @@
                         "workType": v.target.workType.name,
                         "isRtem": v.target.isRtem,
                         "quotationRtemId": v.target.rtemFlag,
+                        "expres": v.target.formula // 公式表达式，用于通过功能区参数自动计算工程量
                     };
 
                     if (v.type == constant.data().quotationRtem.TYPE_CMPREH_INT && cpWidget.length) {
@@ -3503,6 +3504,8 @@
             $item.attr('data-count-num', qv.isRtem == 1 ? null : qv.num);
             $item.attr('data-addPrice', qv.addPrice);
             $item.attr('data-subPrice', qv.subPrice);
+            // 设置公式表达式属性，用于功能区参数更新后计算工程量
+            $item.attr('data-expres', (qv.expres && qv.expres != "") ? qv.expres : "");
 
             $item.attr('data-undisPrice', qv.discount == constant.quotation().quotetionFunctionAreaItem.DISCOUNT_NODISCOUNT_INT && (qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_COMMON_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_CUSTOM_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_UNACHE_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_CMPREH_INT) ? utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice)) : 0);
             $item.attr('data-disPrice', qv.discount == constant.quotation().quotetionFunctionAreaItem.DISCOUNT_DISCOUNT_INT && (qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_COMMON_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_CUSTOM_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_UNACHE_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_CMPREH_INT) ? utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice)) : 0);
