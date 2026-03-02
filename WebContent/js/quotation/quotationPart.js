@@ -2092,8 +2092,6 @@ var QuotationDetail = (function() {
             if (parseInt(domain.nowEditDomain.attr("data-dlevel")) == "9998") {
                 extraParams["quotationItem.type"] = constant.data().quotationItem.TYPE_CMPREH_INT;
                 postData = "quotationDetailCmprehItemPostData"
-            } else {
-                extraParams["quotationItem.type"] = null;
             }
 
             var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
