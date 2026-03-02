@@ -1357,6 +1357,23 @@ $.extend(api, {
                 args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.basePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate"],
             }
         },
+        copyQuotetionFunctionArea: {
+            url: "copyQuotetionFunctionArea.do",
+            type: "update",
+            tranargs: {
+                args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.basePrice", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate"],
+                query: [{
+                    result: "quotetionFunctionArea",
+                    args: ["total"]
+                }, {
+                    result: "quotetionFunctionArea-quotetionFunctionAreaParam",
+                    args: ["girth", "area", "height", "holeLength", "holeHeight", "windowLength", "windowHeight", "beamLength", "beamHeight"]
+                }, {
+                    result: "quotetionFunctionArea-quotetionFunctionAreaItems",
+                    args: ["unitPrice", "addPrice", "subPrice", "initNum", "num"]
+                }]
+            }
+        },
 
         updateQuotetionFunctionAreaItem: {
             url: "updateQuotetionFunctionAreaItem.do",
