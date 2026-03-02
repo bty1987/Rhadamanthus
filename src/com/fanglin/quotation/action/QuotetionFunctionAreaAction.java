@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.service.QuotetionFunctionAreaService;
+import com.fanglin.quotation.vo.QuotetionFunctionAreaParamVO;
 import com.fanglin.quotation.vo.QuotetionFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotetionVO;
 
@@ -33,6 +34,9 @@ public class QuotetionFunctionAreaAction extends BaseListAction {
 
 	private List<Long> functionAreaIds;
 
+	// 创建功能区时的参数列表
+	private List<QuotetionFunctionAreaParamVO> functionAreaParams;
+
 	@Action(value = "queryQuotetionFunctionAreaByQid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotetionFunctionAreaByQid() throws FLException {
 
@@ -44,7 +48,7 @@ public class QuotetionFunctionAreaAction extends BaseListAction {
 	@Action(value = "addQuotetionFuctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addQuotetionFuctionArea() throws FLException {
 
-		quotetionFunctionAreas = quotetionFunctionAreaService.addQuotetionFuctionArea(functionAreaIds, quotetion);
+		quotetionFunctionAreas = quotetionFunctionAreaService.addQuotetionFuctionArea(functionAreaIds, functionAreaParams, quotetion);
 
 		return SUCCESS;
 	}
@@ -103,6 +107,14 @@ public class QuotetionFunctionAreaAction extends BaseListAction {
 
 	public void setFunctionAreaIds(List<Long> functionAreaIds) {
 		this.functionAreaIds = functionAreaIds;
+	}
+
+	public List<QuotetionFunctionAreaParamVO> getFunctionAreaParams() {
+		return functionAreaParams;
+	}
+
+	public void setFunctionAreaParams(List<QuotetionFunctionAreaParamVO> functionAreaParams) {
+		this.functionAreaParams = functionAreaParams;
 	}
 
 }

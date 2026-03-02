@@ -227,6 +227,9 @@
                 }),
             };
 
+            // 初始隐藏功能区参数编辑区域
+            com.focusPage("#functionAreaModal").find('.parameter').hide();
+
             return that;
         },
 
@@ -1157,6 +1160,24 @@
             return false;
         },
 
+        // 编辑功能区参数按钮点击
+        paramsDomainEdit: function() {
+
+            com.focusPage('#paramsFunctionAreasBtn').click(function() {
+
+                if (quo.modals.functionAreaModal.hasClass("parameter")) {
+                    quo.modals.functionAreaModal.find(".parameter").hide();
+                    quo.modals.functionAreaModal.removeClass("parameter");
+                } else {
+                    quo.modals.functionAreaModal.find(".parameter").show();
+                    quo.modals.functionAreaModal.addClass("parameter");
+                }
+
+                com.closeTip();
+
+            });
+        },
+
         // 编辑功能区保存按钮点击
         saveDomainEdit: function() {
 
@@ -1494,6 +1515,18 @@
 
             var that = this;
 
+            // 参数按钮点击事件 - 切换参数编辑区域显示/隐藏
+            com.focusPage("#paramFunctionAreasBtn").click(function() {
+
+                if (quo.modals.functionAreaTemplateModal.hasClass("params")) {
+                    quo.modals.functionAreaTemplateModal.find(".params").hide();
+                    quo.modals.functionAreaTemplateModal.removeClass("params");
+                } else {
+                    quo.modals.functionAreaTemplateModal.find(".params").show();
+                    quo.modals.functionAreaTemplateModal.addClass("params");
+                }
+            });
+
             com.focusPage('#addFunctionAreaTemplateBtn').click(function() {
 
                 var $darr = com.focusPage('input[name="quotempl"]:checked');
@@ -1507,7 +1540,21 @@
 
                 $.each($darr, function(i, v) {
 
-                    _param['functionAreaIds[' + i + ']'] = $(v).val();
+                    var input = $(v);
+                    var params = input.parents(".functionAreaItem").find("[name='quoteparam']");
+
+                    _param['functionAreaIds[' + i + ']'] = input.val();
+
+                    $.each(params, function(j, v) {
+
+                        var e = com.focusPage(v);
+
+                        if (e.val() == '')
+                            return true;
+
+                        var param = e.attr("param");
+                        _param['functionAreaParams[' + i + '].' + param] = e.val();
+                    });
                 });
 
                 if (!_param["quotetion.updateTime"]) {
@@ -1842,6 +1889,7 @@
         // 绑定各种关于报价的操作
         init: function() {
 
+            this.paramsDomainEdit();
             this.saveDomainEdit();
             this.calculateTotal();
             this.calculateCons();
@@ -3470,16 +3518,94 @@
         // 创建添加功能区中的功能区
         createDomainTemplete: function(v) {
 
-            var $label = $('<label></label>').addClass('col-xs-6');
+            var $div = $('<div></div>').addClass('functionAreaItem').css('clear', 'both');
+
+            var $item = $('<div></div>').addClass('col-xs-2').appendTo($div);
+
+            var $label = $('<label></label>').appendTo($item);
             var $radio = $('<input>').addClass('ace').attr({
                 "name": "quotempl",
                 "type": "checkbox"
-            }).val(v.faid);
-            var $span = $('<span></span>').addClass('lbl').text(v.name);
+            }).val(v.faid).appendTo($label);
+            var $span = $('<span></span>').addClass('lbl').text(v.name).appendTo($label);
 
-            $label.append($radio).append($span);
+            // 参数输入区域（默认隐藏）
+            var $params = $('<div></div>').addClass('col-xs-10 params').css("display", "none").appendTo($div);
 
-            return $label;
+            // 周长
+            $('<input></input>').addClass("col-xs-1 a").attr({
+                "type": "text",
+                "placeholder": "周长",
+                "name": "quoteparam",
+                "param": "girth",
+                "parama": "a"
+            }).appendTo($params);
+            // 面积
+            $('<input></input>').addClass("col-xs-1 b").attr({
+                "type": "text",
+                "placeholder": "面积",
+                "name": "quoteparam",
+                "param": "area",
+                "parama": "b"
+            }).appendTo($params);
+            // 举架
+            $('<input></input>').addClass("col-xs-1 c").attr({
+                "type": "text",
+                "placeholder": "举架",
+                "name": "quoteparam",
+                "param": "height",
+                "parama": "c"
+            }).appendTo($params);
+            // 洞面
+            $('<input></input>').addClass("col-xs-1 d").attr({
+                "type": "text",
+                "placeholder": "洞面",
+                "name": "quoteparam",
+                "param": "holeLength",
+                "parama": "d"
+            }).appendTo($params);
+            // 参数
+            $('<input></input>').addClass("col-xs-1 e").attr({
+                "type": "text",
+                "placeholder": "参数",
+                "name": "quoteparam",
+                "param": "holeHeight",
+                "parama": "e"
+            }).appendTo($params);
+            // 窗面
+            $('<input></input>').addClass("col-xs-1 f").attr({
+                "type": "text",
+                "placeholder": "窗面",
+                "name": "quoteparam",
+                "param": "windowLength",
+                "parama": "f"
+            }).appendTo($params);
+            // 变量
+            $('<input></input>').addClass("col-xs-1 g").attr({
+                "type": "text",
+                "placeholder": "变量",
+                "name": "quoteparam",
+                "param": "windowHeight",
+                "parama": "g"
+            }).appendTo($params);
+            // 梁长
+            $('<input></input>').addClass("col-xs-1 h").attr({
+                "type": "text",
+                "placeholder": "梁长",
+                "name": "quoteparam",
+                "param": "beamLength",
+                "parama": "h"
+            }).appendTo($params);
+            // 梁高
+            $('<input></input>').addClass("col-xs-1 i").attr({
+                "type": "text",
+                "placeholder": "梁高",
+                "name": "quoteparam",
+                "param": "beamHeight",
+                "parama": "i"
+            }).appendTo($params);
+
+            return $div;
         },
 
         // 创建添加报价项天窗中的报价项
