@@ -34,6 +34,10 @@ public class ApprovalProtationPreferPO implements java.io.Serializable {
 
 	private int totalPrice;
 
+	private int activityPrice;
+
+	private short type;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "appid")
@@ -115,6 +119,24 @@ public class ApprovalProtationPreferPO implements java.io.Serializable {
 
 	public void setTotalPrice(int totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	@Column(name = "activityPrice")
+	public int getActivityPrice() {
+		return activityPrice;
+	}
+
+	public void setActivityPrice(int activityPrice) {
+		this.activityPrice = activityPrice;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 }
