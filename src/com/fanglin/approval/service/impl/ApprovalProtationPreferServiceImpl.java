@@ -159,10 +159,18 @@ public class ApprovalProtationPreferServiceImpl implements ApprovalProtationPref
 			throw new FLException(200047, "预签状态不可操作");
 		}
 
-		protationPO.setPreferPrice(approvalProtationPreferPO.getPreferPrice());
-		protationPO.setManageProfit(approvalProtationPreferPO.getManagePrefer());
-		protationPO.setAdvanceProfit(approvalProtationPreferPO.getAdvancePrefer());
-		protationPO.setTotalPrice(approvalProtationPreferPO.getTotalPrice());
+		if (approvalProtationPreferPO.getType() == 1) {
+			if (approvalProtationPreferPO.getActivityPrice() > protationPO.getActivityProfit()) {
+				throw new FLException(240005, "活动额不能大于活动利润");
+			}
+			protationPO.setActivityPrice(approvalProtationPreferPO.getActivityPrice());
+			protationPO.setTotalPrice(approvalProtationPreferPO.getTotalPrice());
+		} else {
+			protationPO.setPreferPrice(approvalProtationPreferPO.getPreferPrice());
+			protationPO.setManageProfit(approvalProtationPreferPO.getManagePrefer());
+			protationPO.setAdvanceProfit(approvalProtationPreferPO.getAdvancePrefer());
+			protationPO.setTotalPrice(approvalProtationPreferPO.getTotalPrice());
+		}
 
 		protationPO.setStatus(ProtationPO.STATUS_INIT_INT);
 

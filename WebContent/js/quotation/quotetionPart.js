@@ -288,6 +288,10 @@
 
         pageQuotationItemForPrice: function() {
 
+            // 清理可能存在的历史参数记录，避免遗留的type参数
+            delete params["quotetionPartItemPostData"];
+            delete params["quotetionPartItemByCmprehPostData"];
+
             // 初始化报价项选择弹层
             var extraParams = {
                 "quotationItem.version.no": quo.basicParams["quotetion.version.no"],
