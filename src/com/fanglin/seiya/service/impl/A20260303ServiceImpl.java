@@ -1,0 +1,283 @@
+/**
+ * @File Name		: A20260303ServiceImpl.java
+ * @Package   	: com.fanglin.seiya.service.impl
+ * @Version		: 1.0
+ * @Date			: 2026-03-03
+ * @Copyright	: Copyright Creators 2014
+ * @Author		: baity
+ * @Email			: bty1987@163.com
+ * @Describing	: Village楼盘数据同步实现
+ */
+
+package com.fanglin.seiya.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.fanglin.common.po.CountingPO;
+import com.fanglin.common.service.CountingService;
+import com.fanglin.communion.dao.BuildingNameRuleDao;
+import com.fanglin.communion.dao.VillageDao;
+import com.fanglin.communion.dao.VillageRuleDao;
+import com.fanglin.communion.po.BuildingNameRulePO;
+import com.fanglin.communion.po.VillagePO;
+import com.fanglin.communion.po.VillageRulePO;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.seiya.service.A20260303Service;
+import com.fanglin.system.dao.CityDao;
+import com.fanglin.system.dao.CityProperDao;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CityPO;
+import com.fanglin.system.po.CityProperPO;
+import com.fanglin.system.po.CompanyPO;
+import com.fanglin.utils.FormatUtil;
+import com.fanglin.utils.Paging;
+import com.fanglin.utils.PinYin4Util;
+
+@Service("A20260303Service")
+@Transactional
+public class A20260303ServiceImpl implements A20260303Service {
+
+	private static final Logger logger = LoggerFactory.getLogger(A20260303ServiceImpl.class);
+
+	@Autowired
+	private VillageDao villageDao;
+
+	@Autowired
+	private CityDao cityDao;
+
+	@Autowired
+	private CityProperDao cityProperDao;
+
+	@Autowired
+	private CompanyDao companyDao;
+
+	@Autowired
+	private BuildingNameRuleDao buildingNameRuleDao;
+
+	@Autowired
+	private VillageRuleDao villageRuleDao;
+
+	@Autowired
+	private CountingService countingService;
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public Map<String, Object> syncVillage(String vid, String name, String proper, String city, String pvid, Integer company, JSONArray ruleArray) throws FLException {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		try {
+			logger.info("同步楼盘数据: vid={}, name={}, proper={}, city={}, pvid={}, company={}", vid, name, proper, city, pvid, company);
+
+			// 0. 验证公司是否存在
+			if (company == null) {
+				throw new FLException(510000, "公司ID不能为空");
+			}
+			CompanyPO companyPO = companyDao.get(company);
+			if (companyPO == null) {
+				throw new FLException(510000, "公司不存在: " + company);
+			}
+
+			// 1. 通过城市名称查找城市（不创建）
+			CityPO cityPO = queryCityByName(city);
+			if (cityPO == null) {
+				throw new FLException(510001, "城市不存在: " + city);
+			}
+
+			// 2. 通过城市和区域名称查找城区（不创建）
+			CityProperPO cityProperPO = queryCityProperByNameAndCity(proper, cityPO.getCid());
+			if (cityProperPO == null) {
+				throw new FLException(510002, "城区不存在: " + proper);
+			}
+
+			// 3. 判断是新增还是更新
+			VillagePO villagePO = null;
+			String operation = "add";
+
+			if (vid != null && !vid.trim().isEmpty()) {
+				// vid 不为空，尝试查找现有楼盘进行更新
+				try {
+					long vidLong = Long.parseLong(vid);
+					villagePO = villageDao.get(vidLong);
+					if (villagePO != null) {
+						operation = "update";
+					}
+				} catch (NumberFormatException e) {
+					// vid 格式不正确，视为新增
+					logger.warn("vid格式不正确，视为新增: vid={}", vid);
+				}
+			}
+
+			// 4. 构建 VillagePO 对象
+			if (villagePO == null) {
+				// 新增：创建新对象
+				villagePO = new VillagePO();
+
+				// 生成楼盘编号（使用 CountingService）
+				int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_VILLAGE_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
+				StringBuffer no = new StringBuffer();
+				no.append(String.format("%sP-", companyPO.getShortname()));
+				no.append(FormatUtil.fillZero(count, "00000"));
+				villagePO.setNo(no.toString());
+			}
+
+			// 设置基本信息
+			villagePO.setName(name);
+			villagePO.setCityProper(new CityProperPO(cityProperPO.getCpid()));
+			villagePO.setCid(cityPO.getCid());
+			villagePO.setCompany(company);
+
+			// 设置拼音
+			@SuppressWarnings("unchecked")
+			List<String> pinyinList = (List<String>) PinYin4Util.getPinyin(name);
+			if (pinyinList != null && !pinyinList.isEmpty()) {
+				villagePO.setPinyinAll(pinyinList.get(0));
+			}
+			@SuppressWarnings("unchecked")
+			List<String> pinyinABList = (List<String>) PinYin4Util.getPinYinHeadChar(name);
+			if (pinyinABList != null && !pinyinABList.isEmpty()) {
+				villagePO.setPinyinAB(pinyinABList.get(0));
+			}
+
+			// 设置父级楼盘（如果 pvid 不为空）
+			if (pvid != null && !pvid.trim().isEmpty()) {
+				try {
+					long pvidLong = Long.parseLong(pvid);
+					VillagePO parentVillage = villageDao.get(pvidLong);
+					if (parentVillage != null) {
+						villagePO.setParentVillage(parentVillage);
+					} else {
+						logger.warn("父级楼盘不存在: pvid={}", pvid);
+					}
+				} catch (NumberFormatException e) {
+					logger.warn("pvid格式不正确: pvid={}", pvid);
+				}
+			} else {
+				villagePO.setParentVillage(null);
+			}
+
+			// 5. 保存或更新楼盘
+			if ("update".equals(operation)) {
+				villageDao.update(villagePO);
+				logger.info("更新楼盘成功: vid={}, no={}, name={}", villagePO.getVid(), villagePO.getNo(), villagePO.getName());
+			} else {
+				villageDao.save(villagePO);
+				// 刷新以获取生成的 vid
+				villageDao.flush();
+				villageDao.refresh(villagePO);
+				logger.info("新增楼盘成功: vid={}, no={}, name={}", villagePO.getVid(), villagePO.getNo(), villagePO.getName());
+			}
+
+			// 6. 处理规则数组（只关联已存在的规则，不创建）
+			if (ruleArray != null && !ruleArray.isEmpty()) {
+				// 先删除原有规则（如果是更新操作）
+				if ("update".equals(operation)) {
+					List<VillageRulePO> existingRules = villageRuleDao.queryVillageRule(villagePO.getVid());
+					if (existingRules != null) {
+						for (VillageRulePO existingRule : existingRules) {
+							villageRuleDao.delete(existingRule);
+						}
+						logger.info("删除原有楼盘规则: vid={}, count={}", villagePO.getVid(), existingRules.size());
+					}
+				}
+
+				// 添加新规则关联
+				for (int i = 0; i < ruleArray.size(); i++) {
+					JSONObject ruleObj = ruleArray.getJSONObject(i);
+					String rule = ruleObj.getString("rule");
+					String comment = ruleObj.getString("comment");
+
+					if (rule != null && !rule.trim().isEmpty()) {
+						// 只查找已存在的规则，不创建
+						BuildingNameRulePO buildingNameRulePO = findBuildingNameRule(rule);
+						if (buildingNameRulePO == null) {
+							logger.warn("规则不存在，跳过: rule={}", rule);
+							continue;
+						}
+
+						// 创建 VillageRule 关联
+						VillageRulePO villageRulePO = new VillageRulePO();
+						villageRulePO.setVid(villagePO.getVid());
+						villageRulePO.setRule(buildingNameRulePO);
+						villageRuleDao.save(villageRulePO);
+
+						logger.info("添加楼盘规则关联成功: vid={}, rule={}", villagePO.getVid(), rule);
+					}
+				}
+			}
+
+			// 7. 返回结果
+			result.put("success", true);
+			result.put("operation", operation);
+			result.put("vid", villagePO.getVid());
+			result.put("no", villagePO.getNo());
+			result.put("name", villagePO.getName());
+			result.put("cpid", cityProperPO.getCpid());
+			result.put("cid", cityPO.getCid());
+
+			return result;
+
+		} catch (FLException e) {
+			throw e;
+		} catch (Exception e) {
+			logger.error("同步楼盘异常: name={}, proper={}, city={}, company={}", name, proper, city, company, e);
+			throw new FLException(500003, "同步楼盘失败: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * 通过名称查询城市
+	 *
+	 * @param cityName 城市名称
+	 * @return CityPO
+	 */
+	private CityPO queryCityByName(String cityName) {
+		return cityDao.queryCity(cityName);
+	}
+
+	/**
+	 * 通过名称和城市ID查询城区
+	 *
+	 * @param properName 城区名称
+	 * @param cid 城市ID
+	 * @return CityProperPO
+	 */
+	private CityProperPO queryCityProperByNameAndCity(String properName, Integer cid) {
+		// 先通过名称查询城区
+		CityProperPO cityProper = cityProperDao.queryCityProper(properName);
+		// 验证该城区是否属于指定的城市
+		if (cityProper != null && cityProper.getCity() != null && cityProper.getCity().getCid() == cid) {
+			return cityProper;
+		}
+		return null;
+	}
+
+	/**
+	 * 通过规则表达式查找楼栋名称规则（不创建）
+	 *
+	 * @param rule 规则表达式
+	 * @return BuildingNameRulePO，不存在则返回null
+	 */
+	private BuildingNameRulePO findBuildingNameRule(String rule) {
+		List<Filter> filters = new java.util.ArrayList<Filter>();
+		filters.add(new Filter("rule", rule, Filter.OP_EQ));
+		List<BuildingNameRulePO> existingRules = buildingNameRuleDao.pageBuildingNameRule(new Paging(0, 1), filters);
+
+		if (existingRules != null && !existingRules.isEmpty()) {
+			return existingRules.get(0);
+		}
+		return null;
+	}
+
+}
