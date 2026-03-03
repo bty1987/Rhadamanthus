@@ -22,6 +22,10 @@ public class ApprovalProtationPreferVO implements java.io.Serializable {
 
 	private Integer totalPrice;
 
+	private Integer activityPrice;
+
+	private Short type;
+
 	public Long getAppid() {
 		return appid;
 	}
@@ -92,6 +96,22 @@ public class ApprovalProtationPreferVO implements java.io.Serializable {
 
 	public void setTotalPrice(Integer totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public Integer getActivityPrice() {
+		return activityPrice;
+	}
+
+	public void setActivityPrice(Integer activityPrice) {
+		this.activityPrice = activityPrice;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 }
