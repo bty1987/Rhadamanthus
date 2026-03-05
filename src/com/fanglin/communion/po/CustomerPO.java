@@ -146,7 +146,7 @@ public class CustomerPO implements Serializable {
 	}
 
 	public void setPinyinAll(String pinyinAll) {
-		this.pinyinAll = pinyinAll.substring(0, pinyinAll.length() >= 50 ? 50 : pinyinAll.length());
+		this.pinyinAll = pinyinAll != null ? (pinyinAll.substring(0, pinyinAll.length() >= 50 ? 50 : pinyinAll.length())) : "";
 	}
 
 	@Column(name = "pinyinAB")
