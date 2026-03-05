@@ -1,6 +1,6 @@
 
 jQuery(function($) {
-    
+
     var city = {
         saveBtn: null,
         cancelBtn: null,
@@ -205,11 +205,53 @@ jQuery(function($) {
     }
     
     
+    // 创建地图标记样式（复用逻辑）
+    function createMarkerStyle() {
+        if (!mpstyle) {
+            mpstyle = new TMap.MarkerStyle({
+                "width": 25,
+                "height": 35,
+                "anchor": {
+                    x: 16,
+                    y: 32
+                }
+            });
+        }
+        return mpstyle;
+    }
+
+    // 创建多点标记（复用逻辑）
+    function createMultiMarker() {
+        if (!multiMarker) {
+            multiMarker = new TMap.MultiMarker({
+                map: mp,
+                styles: {
+                    "myStyle": createMarkerStyle()
+                },
+                geometries: []
+            });
+        }
+        return multiMarker;
+    }
+
+    // 在地图上添加标记点
+    function addMarker(latlng, title) {
+        createMultiMarker().setGeometries([{
+            "id": "1",
+            "styleId": 'myStyle',
+            "position": latlng,
+            "properties": {
+                "title": title
+            }
+        }]);
+    }
+
     // 初始化地图 创建地图函数
     function createMap(lng, lat) {
-        var center = new TMap.LatLng(41.810947, 123.38497);
+        // 使用传入的经纬度，如果没有则使用默认坐标（沈阳）
+        var center = new TMap.LatLng(lat || 41.810947, lng || 123.38497);
         var mp = new TMap.Map("mapContainer", {
-            enableMapClick: false,
+            enableMapClick: true,  // 改为true以支持点击事件
             minZoom: 11,
             maxZoom: 20,
             center: center,
@@ -221,6 +263,7 @@ jQuery(function($) {
         return mp;
     }
 
+    // 处理地图点击事件 - 重选位置
     function showInfo(e) {
         if (!com.focusPage('#mapContainer').hasClass('changing-point')) {
             return false;
@@ -229,48 +272,16 @@ jQuery(function($) {
         clearMultiMarker();
 
         var vill = city.currentVill;
-        var name = vill.name;
-        var x = vill.x;
-        var y = vill.y;
-        var count = vill.count;
-        var comment = name + "已完成订单" + count + "套";
+        var latlng = new TMap.LatLng(e.latLng.lat, e.latLng.lng);
 
-        var latlng = new TMap.LatLng(e.point.lat, e.point.lng);
+        // 使用复用的标记点添加函数
+        addMarker(latlng, vill.name);
 
-        if (!mpstyle) {
-            mpstyle = new TMap.MarkerStyle({
-                "width": 25,
-                "height": 35,
-                "anchor": {
-                    x: 16,
-                    y: 32
-                }
-            });
-        }
-
-        if (!multiMarker) {
-            multiMarker = new TMap.MultiMarker({
-                map: mp,
-                styles: {
-                    "myStyle": mpstyle
-                },
-                geometries: []
-            });
-        }
-
-        multiMarker.setGeometries([{
-            "id": "1",
-            "styleId": 'myStyle',
-            "position": latlng,
-            "properties": {
-                "title": name
-            }
-        }]);
-
+        // 保存临时坐标
         city.currentVill.tempPoint = {
-            x: e.point.lng,
-            y: e.point.lat
-        }
+            x: e.latLng.lng,
+            y: e.latLng.lat
+        };
     }
 
     // 重选位置点击
@@ -322,62 +333,38 @@ jQuery(function($) {
         };
     }
 
+    // 绘制地图并显示城市位置
     function drawMap() {
         if (com.focusPage("#mapContainer>canvas").length == 0) {
             mp = createMap();
-        }
 
-        if (!mpstyle) {
-            mpstyle = new TMap.MarkerStyle({
-                "width": 25,
-                "height": 35,
-                "anchor": {
-                    x: 16,
-                    y: 32
-                }
+            // 绑定地图点击事件，支持重选位置功能
+            mp.on("click", function(e) {
+                showInfo(e);
             });
         }
 
         var vill = city.currentVill;
-        var name = vill.name;
         var x = vill.x / 1000000;
         var y = vill.y / 1000000;
-        var count = vill.count;
-        var comment = name + "已完成订单" + count + "套";
 
-        if (x && y) {
+        // 更精确的空值判断（允许坐标为0）
+        var hasValidCoords = (x !== undefined && x !== null && !isNaN(x) &&
+                              y !== undefined && y !== null && !isNaN(y));
+
+        if (hasValidCoords && x !== 0 && y !== 0) {
             var latlng = new TMap.LatLng(y, x);
-
             mp.setCenter(latlng);
-
-            if (!multiMarker) {
-                multiMarker = new TMap.MultiMarker({
-                    map: mp,
-                    styles: {
-                        "myStyle": mpstyle
-                    },
-                    geometries: []
-                });
-            }
-
-            multiMarker.setGeometries([{
-                "id": "1",
-                "styleId": 'myStyle',
-                "position": latlng,
-                "properties": {
-                    "title": name
-                }
-            }]);
+            // 使用复用的标记点添加函数
+            addMarker(latlng, vill.name);
         }
     }
 
     // 清除标记点
     function clearMultiMarker() {
-        if (!mp)
-            return false;
-
-        if (!multiMarker)
-            return false;
+        if (!mp || !multiMarker) {
+            return;
+        }
 
         var geos = multiMarker.getGeometries();
 
@@ -386,21 +373,8 @@ jQuery(function($) {
         });
     }
 
-    function bindCityProper(a, b, d, c) {
-        "" != a ? com.post(api.system.queryCityProperByCid, {
-                "cityProper.city.cid": a
-            },
-            function (res) {
-
-                b.bindData(res.cityPropers, city.cityProperKey, city.cityProperValue, d);
-                c && c()
-            }) : b.bindData([], "", "", d)
-    }
-
     // webapi - 调用后台接口进行定位
     function getPlace(cityName){
-        console.log('开始定位城市: ' + cityName);
-
         // 调用后台接口进行定位
         com.post(api.system.locateCity, {
             "city.cid": city.currentVill.cid
@@ -422,45 +396,22 @@ jQuery(function($) {
             // 重新绘制地图
             if (com.focusPage("#mapContainer>canvas").length == 0) {
                 mp = createMap();
+
+                // 绑定地图点击事件
+                mp.on("click", function(e) {
+                    showInfo(e);
+                });
             }
 
             var latlng = new TMap.LatLng(y, x);
             mp.setCenter(latlng);
 
-            // 添加标记点
-            if (!mpstyle) {
-                mpstyle = new TMap.MarkerStyle({
-                    "width": 25,
-                    "height": 35,
-                    "anchor": {
-                        x: 16,
-                        y: 32
-                    }
-                });
-            }
-
-            if (!multiMarker) {
-                multiMarker = new TMap.MultiMarker({
-                    map: mp,
-                    styles: {
-                        "myStyle": mpstyle
-                    },
-                    geometries: []
-                });
-            }
-
-            multiMarker.setGeometries([{
-                "id": "1",
-                "styleId": 'myStyle',
-                "position": latlng,
-                "properties": {
-                    "title": cityName
-                }
-            }]);
+            // 使用复用的标记点添加函数
+            addMarker(latlng, cityName);
 
         }, function(err) {
             com.showAlert(com.error, '定位失败: ' + err.errorMsg);
         });
     }
-    
+
 });
