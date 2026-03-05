@@ -813,8 +813,10 @@ var protationPart = (function() {
             quote.currentSubmitType = submitType;
 
             if (submitType === 1) {
-                // 活动优惠提交：直接显示审批弹窗，不做任何验证
-                com.focusPage("#approveModal").modal("show");
+                // 活动优惠提交：加载审批人后直接显示审批弹窗，不做任何验证
+                quote.loadApprovers(1, function() {
+                    com.focusPage("#approveModal").modal("show");
+                });
                 return false;
             }
 
@@ -847,8 +849,10 @@ var protationPart = (function() {
 
             // 审批条件：只检查特殊优惠（advanceProfit）是否增加
             if (parseFloat(quo.basicParams["protation.advanceProfit"]) > parseFloat(quo.oldProtation.advanceProfit)) {
-                // 特殊优惠增加，需要审批
-                com.focusPage("#approveModal").modal("show");
+                // 特殊优惠增加，加载审批人后需要审批
+                quote.loadApprovers(0, function() {
+                    com.focusPage("#approveModal").modal("show");
+                });
                 return false;
             }
 
@@ -936,6 +940,50 @@ var protationPart = (function() {
             quo.basicParams["protation.activityProfit"] = quo.oldProtation.activityProfit;
 
             quo.calculateQuoFees();
+        },
+
+        // 加载审批人列表
+        // submitType: 0=特批优惠(type=22), 1=活动优惠(type=26)
+        loadApprovers: function(submitType, callback) {
+
+            // 根据提交类型确定审批人类型
+            var approverType = (submitType === 1) ? 26 : 22;
+
+            // 清空旧的审批人列表
+            com.focusPage("#approveManSel", "#approveModal").empty();
+
+            // 查询审批人
+            com.post(api.approval.queryApproverByType, {
+                "approver.type": approverType
+            }, function(res) {
+
+                $.each(res.approvers, function(i, v) {
+
+                    var comment = v.comment == null ? "" : v.comment;
+
+                    var approveManSel = com.focusPage("#approveManSel", "#approveModal");
+                    var $div = $('<div></div>').addClass("radio no-padding").attr("style", "margin-bottom:10px").appendTo(approveManSel);
+                    var $approvaler = $('<label></label>').appendTo($div);
+
+                    var $input = $('<input>').attr({
+                        "type": "radio",
+                        "name": "form-field-radio",
+                        "class": "ace",
+                        "uid": v.userBase.uid,
+                        "userId": v.userBase.userId
+                    }).appendTo($approvaler);
+
+                    var $span = $('<span></span>').addClass('lbl').appendTo($approvaler);
+                    var $name = $('<label></label>').attr('style', 'margin-left:10px;').text(v.userBase.currentName).appendTo($span);
+
+                    var $comment = $('<span></span>').addClass("lbl").text(comment).attr("style", "margin-left:15px").appendTo($approvaler);
+                });
+
+                // 执行回调函数
+                if (callback) {
+                    callback();
+                }
+            }, null, false);
         },
 
         init: function() {
@@ -1453,33 +1501,6 @@ var protationPart = (function() {
                     }
 
                     protationFunctionAreas[type].protationFunctionAreaItems.push(v);
-                });
-            }, null, false);
-
-            com.post(api.approval.queryApproverByType, {
-                "approver.type": 26
-            }, function(res) {
-
-                $.each(res.approvers, function(i, v) {
-
-                    var comment = v.comment == null ? "" : v.comment;
-
-                    var approveManSel = com.focusPage("#approveManSel", "#approveModal");
-                    var $div = $('<div></div>').addClass("radio no-padding").attr("style", "margin-bottom:10px").appendTo(approveManSel);
-                    var $approvaler = $('<label></label>').appendTo($div);
-
-                    var $input = $('<input>').attr({
-                        "type": "radio",
-                        "name": "form-field-radio",
-                        "class": "ace",
-                        "uid": v.userBase.uid,
-                        "userId": v.userBase.userId
-                    }).appendTo($approvaler);
-
-                    var $span = $('<span></span>').addClass('lbl').appendTo($approvaler);
-                    var $name = $('<label></label>').attr('style', 'margin-left:10px;').text(v.userBase.currentName).appendTo($span);
-
-                    var $comment = $('<span></span>').addClass("lbl").text(comment).attr("style", "margin-left:15px").appendTo($approvaler);
                 });
             }, null, false);
 
