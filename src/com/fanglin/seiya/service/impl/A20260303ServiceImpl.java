@@ -138,13 +138,11 @@ public class A20260303ServiceImpl implements A20260303Service {
 			villagePO.setCid(cityPO.getCid());
 			villagePO.setCompany(company);
 
-			// 设置拼音
-			@SuppressWarnings("unchecked")
 			List<String> pinyinList = (List<String>) PinYin4Util.getPinyin(name);
 			if (pinyinList != null && !pinyinList.isEmpty()) {
 				villagePO.setPinyinAll(pinyinList.get(0));
 			}
-			@SuppressWarnings("unchecked")
+
 			List<String> pinyinABList = (List<String>) PinYin4Util.getPinYinHeadChar(name);
 			if (pinyinABList != null && !pinyinABList.isEmpty()) {
 				villagePO.setPinyinAB(pinyinABList.get(0));
@@ -196,7 +194,6 @@ public class A20260303ServiceImpl implements A20260303Service {
 				for (int i = 0; i < ruleArray.size(); i++) {
 					JSONObject ruleObj = ruleArray.getJSONObject(i);
 					String rule = ruleObj.getString("rule");
-					String comment = ruleObj.getString("comment");
 
 					if (rule != null && !rule.trim().isEmpty()) {
 						// 只查找已存在的规则，不创建
@@ -238,7 +235,7 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	/**
 	 * 通过名称查询城市
-	 *
+	 * 
 	 * @param cityName 城市名称
 	 * @return CityPO
 	 */
@@ -248,7 +245,7 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	/**
 	 * 通过名称和城市ID查询城区
-	 *
+	 * 
 	 * @param properName 城区名称
 	 * @param cid 城市ID
 	 * @return CityProperPO
@@ -265,13 +262,13 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	/**
 	 * 通过规则表达式查找楼栋名称规则（不创建）
-	 *
+	 * 
 	 * @param rule 规则表达式
 	 * @return BuildingNameRulePO，不存在则返回null
 	 */
 	private BuildingNameRulePO findBuildingNameRule(String rule) {
 		List<Filter> filters = new java.util.ArrayList<Filter>();
-		filters.add(new Filter("rule", rule, Filter.OP_EQ));
+		filters.add(new Filter("rule", rule, "eq"));
 		List<BuildingNameRulePO> existingRules = buildingNameRuleDao.pageBuildingNameRule(new Paging(0, 1), filters);
 
 		if (existingRules != null && !existingRules.isEmpty()) {

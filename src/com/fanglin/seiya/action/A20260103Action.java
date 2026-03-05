@@ -267,7 +267,7 @@ public class A20260103Action extends BaseListAction {
 		source.setHouse(houseVO);
 
 		// 客户对象
-		source.setCustomer(new CustomerVO());
+		source.setCustomer(new CustomerVO(name, phone));
 
 		// 业务类型
 		source.setBusitype(customerChanceVO.getBusitype());

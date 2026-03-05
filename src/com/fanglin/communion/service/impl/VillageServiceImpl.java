@@ -22,8 +22,10 @@ import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.system.dao.CityProperDao;
 import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CityProperPO;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.BeanUtil;
@@ -44,6 +46,9 @@ public class VillageServiceImpl implements VillageService {
 
 	@Autowired
 	private CityProperDao cityProperDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Autowired
 	private CountingService countingService;
@@ -256,8 +261,12 @@ public class VillageServiceImpl implements VillageService {
 		String villageName = villagePO.getName();
 		String cityName = villagePO.getCityProper().getCity().getName();
 
+		SystemConfigPO key = systemConfigDao.querySystemConfig("TENCENT_MAP_KEY_STR");
+
+		String defaultKey = "3IEBZ-VUD6J-ZF4FV-XQXN7-YZL55-VBFQX";
+
 		// 3. 调用腾讯地图API获取坐标
-		String apiUrl = String.format("https://apis.map.qq.com/ws/place/v1/suggestion?keyword=%s&region=%s&output=json&key=U5FBZ-SQLKZ-H5BX3-TCVW6-L3APZ-LUF5F", villageName, cityName);
+		String apiUrl = String.format("https://apis.map.qq.com/ws/place/v1/suggestion?keyword=%s&region=%s&output=json&key=%s", (key == null || key.getValue() == null) ? defaultKey : key.getValue(), villageName, cityName);
 
 		JSONObject result = HttpUtil.httpGet(apiUrl);
 
@@ -302,5 +311,4 @@ public class VillageServiceImpl implements VillageService {
 		VillageVO resultVO = new VillageVO(new CityProperVO(new CityVO()), new VillageVO());
 		return villagePO.ptv(resultVO);
 	}
-
 }
