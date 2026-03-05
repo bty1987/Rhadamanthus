@@ -11,7 +11,6 @@
 
 package com.fanglin.seiya.action;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -59,38 +58,17 @@ public class A20260303Action extends BaseListAction {
 	private String rule;
 
 	// ==================== 响应字段 ====================
-	/** 错误码 0:成功 */
-	private Integer errorCode = 0;
-
-	/** 错误信息 */
-	private String errorMsg;
-
-	/** 条件信息 */
-	private String condition;
-
-	/** 返回数据对象 */
-	private Map<String, Object> data;
 
 	/**
 	 * 同步楼盘数据接口
-	 *
-	 * 请求参数示例（表单格式）：
-	 * vid=
-	 * name=万科城市花园
-	 * proper=铁西区
-	 * city=沈阳市
-	 * pvid=
-	 * company=1
-	 * rule=[{"rule":"\\d#\\d-\\d","comment":"数字#数字-数字"}]
-	 *
+	 * 
+	 * 请求参数示例（表单格式）： vid= name=万科城市花园 proper=铁西区 city=沈阳市 pvid= company=1 rule=[{"rule":"\\d#\\d-\\d","comment":"数字#数字-数字"}]
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
 	@Action(value = "syncVillageData", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,vid,data.*" }) }, params = { "contentType", "text/html" })
 	public String syncVillageData() throws FLException {
-
-		// 初始化 data 对象
-		this.data = new HashMap<String, Object>();
 
 		// 参数必填验证
 		if (name == null || name.trim().isEmpty()) {
@@ -115,8 +93,6 @@ public class A20260303Action extends BaseListAction {
 
 		// 调用服务层处理
 		Map<String, Object> result = a20260303Service.syncVillage(vid, name, proper, city, pvid, company, ruleArray);
-
-		this.data.putAll(result);
 
 		// 将返回的vid赋值给请求参数，作为响应结果
 		Object resultVid = result.get("vid");
@@ -183,38 +159,6 @@ public class A20260303Action extends BaseListAction {
 
 	public void setRule(String rule) {
 		this.rule = rule;
-	}
-
-	public Integer getErrorCode() {
-		return errorCode;
-	}
-
-	public void setErrorCode(Integer errorCode) {
-		this.errorCode = errorCode;
-	}
-
-	public String getErrorMsg() {
-		return errorMsg;
-	}
-
-	public void setErrorMsg(String errorMsg) {
-		this.errorMsg = errorMsg;
-	}
-
-	public String getCondition() {
-		return condition;
-	}
-
-	public void setCondition(String condition) {
-		this.condition = condition;
-	}
-
-	public Map<String, Object> getData() {
-		return data;
-	}
-
-	public void setData(Map<String, Object> data) {
-		this.data = data;
 	}
 
 }
