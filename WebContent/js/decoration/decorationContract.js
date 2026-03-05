@@ -690,6 +690,8 @@ jQuery(function($) {
             // 刷新合同记录显示
             decorationContract.contractRecordInfo.html("");
             contractRecordItems();
+        }, function(err) {
+            com.showAlert(com.error, err.errorMsg || "保存失败");
         });
     });
 
