@@ -80,7 +80,8 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 	public int copyQuotationFunctionAreaItem(String table, long sqfaid, long tqfaid) {
 
 		// 使用正确的外键列名 quotationFunctionAreaId（而非 qfaid）
-		String sql = String.format("INSERT INTO quotation.%s (quotationFunctionAreaId, itemName, measurementUnit, workType, addPrice, unitPrice, subPrice, formula, initNum, num, type, subtype, discount, content, `index`) SELECT :tqfaid, itemName, measurementUnit, workType, addPrice, unitPrice, subPrice, formula, initNum, num, type, subtype, discount, content, `index` FROM quotation.%s WHERE quotationFunctionAreaId = :sqfaid", table, table);
+		// 添加 quotationItemId 字段，保持与报价模板的关联
+		String sql = String.format("INSERT INTO quotation.%s (quotationFunctionAreaId, quotationItemId, itemName, measurementUnit, workType, addPrice, unitPrice, subPrice, formula, initNum, num, type, subtype, discount, content, `index`) SELECT :tqfaid, quotationItemId, itemName, measurementUnit, workType, addPrice, unitPrice, subPrice, formula, initNum, num, type, subtype, discount, content, `index` FROM quotation.%s WHERE quotationFunctionAreaId = :sqfaid", table, table);
 
 		return session().createSQLQuery(sql).setLong("tqfaid", tqfaid).setLong("sqfaid", sqfaid).executeUpdate();
 	}
