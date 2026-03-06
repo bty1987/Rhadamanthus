@@ -219,11 +219,6 @@ jQuery(function($) {
                 $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('暂无合同记录')).appendTo($info);
             }
         });
-
-        // 如果没有权限或不是特定页面类型，隐藏编辑按钮
-        if (!decorationContract.authFlag) {
-            $editBtn.addClass('hide');
-        }
     }
 
     function showContractRecordModal() {
