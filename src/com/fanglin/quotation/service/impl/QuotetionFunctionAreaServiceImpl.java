@@ -353,7 +353,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 		}
 
 		// 设置返回字段
-		quotetionFunctionAreaVO.setQfaId(quotetetionFunctionAreaTO.getQfaId());
+		quotetionFunctionAreaVO.setQfaId(quotetionFunctionAreaTO.getQfaId());
 		quotetionFunctionAreaVO.setQid(quotetionFunctionAreaTO.getQid());
 		quotetionFunctionAreaVO.setFunctionAreaOrder(quotetionFunctionAreaTO.getFunctionAreaOrder());
 		quotetionFunctionAreaVO.setType(quotetionFunctionAreaTO.getType());

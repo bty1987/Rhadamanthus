@@ -152,7 +152,7 @@ function printFinanceTable(subtype, showType) {
 
         contentHtml += '<tr bgcolor="#CCCCCC">';
         contentHtml += '<td><div align="center">' + utils.getBigNumber(index + 1) + '</div></td>';
-        contentHtml += '<td colspan="8">';
+        contentHtml += '<td colspan="6">';
         contentHtml += '<div align="left"> ' + i.split('-')[1] + '</div>';
         contentHtml += '</td>';
         contentHtml += '</tr>';
@@ -201,8 +201,6 @@ function printFinanceTable(subtype, showType) {
         contentHtml += '<td>&nbsp;</td>';
         contentHtml += '<td>&nbsp;</td>';
         contentHtml += '<td><span class="STYLE2"><strong>' + preSum + '</strong></span></td>';
-        contentHtml += '<td>&nbsp;</td>';
-        contentHtml += '<td>&nbsp;</td>';
         contentHtml += '<td><span class="STYLE2"><strong>' + sum + '</strong></span></td>';
         contentHtml += '</tr>';
         contentHtml += '';
@@ -218,7 +216,7 @@ function printFinanceTable(subtype, showType) {
     }
 
     contentHtml += '<tr bgcolor="#FFFFFF">';
-    contentHtml += '<td colspan="9" align="left"><strong>总 计&nbsp;&nbsp;&nbsp;&nbsp;折前:' + preDiscountPrice + '&nbsp;&nbsp;&nbsp;&nbsp;折后:' + discountPrice + '</strong></td>';
+    contentHtml += '<td colspan="7" align="left"><strong>总 计&nbsp;&nbsp;&nbsp;&nbsp;折前:' + preDiscountPrice + '&nbsp;&nbsp;&nbsp;&nbsp;折后:' + discountPrice + '</strong></td>';
     contentHtml += '</tr>';
     contentHtml += '</tbody>';
     contentHtml += '</table>';

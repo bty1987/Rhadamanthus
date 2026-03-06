@@ -11,7 +11,17 @@ public class MemberVO implements Serializable {
 
 	private static final long serialVersionUID = 1543202163841476255L;
 
+	/**
+	 * 记录唯一标识（基于 doid） - 主订单：doid（如 "12345"） - 关联订单：parentDoid-doid（如 "12345-67890"）
+	 */
+	private String uniqueId;
+
 	private String orderId;
+
+	/**
+	 * 主订单号（被推荐的单号） - 主订单：此字段为空 - 关联订单：指向主订单的 orderId
+	 */
+	private String referOrderId;
 
 	private String phone;
 
@@ -36,20 +46,6 @@ public class MemberVO implements Serializable {
 	private Short status;
 
 	private String company;
-
-	/**
-	 * 记录唯一标识（基于 doid）
-	 * - 主订单：doid（如 "12345"）
-	 * - 关联订单：parentDoid-doid（如 "12345-67890"）
-	 */
-	private String uniqueId;
-
-	/**
-	 * 主订单号（被推荐的单号）
-	 * - 主订单：此字段为空
-	 * - 关联订单：指向主订单的 orderId
-	 */
-	private String referOrderId;
 
 	public String getOrderId() {
 		return orderId;
