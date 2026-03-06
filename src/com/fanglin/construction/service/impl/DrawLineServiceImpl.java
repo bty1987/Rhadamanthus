@@ -623,6 +623,29 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		String orderId = decorationPO.getOrderId();
 
+		// 创建放线记录
+		DrawLinePO drawLinePO = drawLineDao.queryDrawLineByOrderId(orderId);
+		Timestamp drawlineTime = DateUtil.getDateToTimestamp(new Date());
+
+		if (drawLinePO == null) {
+			drawLinePO = new DrawLinePO();
+			drawLinePO.setCount(0);
+			drawLinePO.setApplayTime(drawlineTime);
+			drawLinePO.setDecoration(decorationPO);
+			drawLinePO.setStatus(DrawLinePO.STATUS_SUCCESS_INT);
+			drawLinePO.setActualTime(Long.parseLong(DateUtil.getDateToDateString(drawlineTime, "yyyyMMdd")));
+			drawLinePO.setContent("放线完成");
+			drawLinePO.setCompany(decorationPO.getCompany());
+
+			drawLineDao.save(drawLinePO);
+		} else {
+			// 更新现有放线记录状态为成功
+			drawLinePO.setStatus(DrawLinePO.STATUS_SUCCESS_INT);
+			drawLinePO.setStartTime(drawlineTime);
+			drawLinePO.setEndTime(drawlineTime);
+			drawLineDao.update(drawLinePO);
+		}
+
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
 
 		if (constructionPO == null) {
