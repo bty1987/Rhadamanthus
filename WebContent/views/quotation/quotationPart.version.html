@@ -1,0 +1,206 @@
+<!--
+===========================================
+报价页面版本切换集成说明
+===========================================
+
+在现有的 quotationPart.html 中进行以下修改：
+
+## 1. 在 <head> 中添加配置脚本（在原有脚本之后）
+
+-->
+
+<!-- ==================== 步骤1：添加版本配置脚本 ==================== -->
+<!-- 放在所有原有脚本之后，</head> 之前 -->
+<script src="../../js/quotation/quotationConfig.js"></script>
+<script src="../../js/quotation/quotationToggle.js"></script>
+
+<!-- ==================== 步骤2：添加版本切换脚本 ==================== -->
+<script>
+// 版本切换逻辑
+(function() {
+    // 当前加载的版本
+    var currentLoadedVersion = null;
+
+    /**
+     * 动态加载对应版本的脚本
+     */
+    function loadQuotationScript(version) {
+        // 如果已经加载过该版本，直接返回
+        if (currentLoadedVersion === version) {
+            console.log('[QuotationSwitch] 版本 ' + version + ' 已加载');
+            return;
+        }
+
+        var versionInfo = QuotationVersionConfig.config.versions[version];
+        if (!versionInfo) {
+            console.error('[QuotationSwitch] 无效版本:', version);
+            return;
+        }
+
+        console.log('============================================');
+        console.log('正在加载报价模块:');
+        console.log('  版本名称:', versionInfo.name);
+        console.log('  版本号:', versionInfo.version);
+        console.log('  文件路径:', versionInfo.file);
+        console.log('============================================');
+
+        // 动态加载脚本
+        $.ajax({
+            url: rootPath + versionInfo.file + '?v=' + versionInfo.version,
+            dataType: 'script',
+            cache: true,
+            success: function() {
+                currentLoadedVersion = version;
+                console.log('%c✅ [QuotationSwitch] 脚本加载成功: ' + versionInfo.name, 'color: green; font-weight: bold');
+
+                // 标记版本到页面（用于调试）
+                if ($('#quotationVersionMarker').length === 0) {
+                    $('body').append('<div id="quotationVersionMarker" style="display:none;" data-version="' + version + '"></div>');
+                } else {
+                    $('#quotationVersionMarker').attr('data-version', version);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('[QuotationSwitch] 脚本加载失败:', versionInfo.file, error);
+                // 加载失败时，显示错误提示
+                showError('报价模块加载失败，请联系管理员');
+            }
+        });
+    }
+
+    /**
+     * 显示错误提示
+     */
+    function showError(message) {
+        if ($('#quotationLoadError').length === 0) {
+            $('body').append(
+                '<div id="quotationLoadError" style="position:fixed;top:0;left:0;right:0;background:#ffcccc;color:#cc0000;padding:20px;text-align:center;z-index:99999;">' +
+                '<h3>⚠️ 系统提示</h3>' +
+                '<p>' + message + '</p>' +
+                '<button onclick="location.reload()">重新加载</button>' +
+                '</div>'
+            );
+        }
+    }
+
+    /**
+     * 初始化版本配置
+     */
+    function init() {
+        QuotationVersionConfig.init(function() {
+            var version = QuotationVersionConfig.getVersionForUser();
+            loadQuotationScript(version);
+        });
+    }
+
+    // 页面加载完成后初始化
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
+
+<!-- ==================== 步骤3：可选 - 添加调试面板 ==================== -->
+<script id="version-debug-panel" type="text/html">
+    <div id="quotationVersionPanel" style="position:fixed;top:10px;right:10px;background:#fff;border:1px solid #ccc;padding:15px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.15);z-index:99999;font-size:13px;font-family:Arial,sans-serif;min-width:200px;display:none;">
+        <div style="font-weight:bold;margin-bottom:10px;color:#333;border-bottom:1px solid #eee;padding-bottom:5px;">
+            📊 报价版本控制
+        </div>
+        <div style="margin-bottom:8px;">
+            当前: <span id="currentVersionText" style="font-weight:bold;color:#0066cc;">-</span>
+        </div>
+        <div style="margin-bottom:10px;">
+            <button onclick="QuotationVersionConfig.switchVersion('original')"
+                    style="width:100%;padding:6px;margin-bottom:5px;background:#f0f0f0;border:1px solid #ccc;border-radius:4px;cursor:pointer;">
+                切换到旧版
+            </button>
+            <button onclick="QuotationVersionConfig.switchVersion('optimized')"
+                    style="width:100%;padding:6px;background:#e8f5e8;border:1px solid #4caf50;border-radius:4px;cursor:pointer;color:#2e7d32;">
+                切换到新版
+            </button>
+        </div>
+        <div style="font-size:11px;color:#999;border-top:1px solid #eee;padding-top:8px;">
+            <div>URL: ?quotation_version=optimized</div>
+            <div style="margin-top:3px;">控制台: quoToggle.info()</div>
+        </div>
+        <button onclick="$('#quotationVersionPanel').hide()"
+                style="position:absolute;top:5px;right:5px;background:none;border:none;cursor:pointer;font-size:16px;color:#999;">×</button>
+    </div>
+</script>
+
+<script>
+// 显示调试面板（仅开发/测试环境）
+(function() {
+    var hostname = location.hostname;
+    var isDev = hostname === 'localhost' ||
+                 hostname === '127.0.0.1' ||
+                 hostname.indexOf('192.168') === 0 ||
+                 location.href.indexOf('test') !== -1;
+
+    if (isDev) {
+        $(function() {
+            // 插入面板HTML
+            $('#version-debug-panel').after(function() {
+                return this.innerHTML;
+            });
+
+            // 显示面板
+            $('#quotationVersionPanel').show();
+
+            // 更新当前版本显示
+            function updateVersionDisplay() {
+                var version = QuotationVersionConfig ?
+                    QuotationVersionConfig.getVersionForUser() : 'unknown';
+                var versionInfo = QuotationVersionConfig ?
+                    QuotationVersionConfig.config.versions[version] : null;
+
+                var versionText = versionInfo ? versionInfo.name : version;
+                var versionColor = version === 'optimized' ? '#4caf50' : '#999';
+
+                $('#currentVersionText').text(versionText).css('color', versionColor);
+            }
+
+            updateVersionDisplay();
+
+            // 每秒更新一次（因为配置可能变化）
+            setInterval(updateVersionDisplay, 1000);
+        });
+    }
+})();
+</script>
+
+<!-- ==================== 说明 ====================
+
+## 修改总结：
+
+1. 在 </head> 之前添加以下脚本引用：
+   - quotationConfig.js（配置管理）
+   - quotationToggle.js（切换工具）
+
+2. 添加版本切换脚本（自动加载对应版本的JS文件）
+
+3. 可选：添加调试面板（仅开发环境显示）
+
+## 验证方法：
+
+1. 访问页面（默认使用原版本）
+   http://example.com/views/quotation/quotationPart.html
+
+2. 使用URL参数切换版本
+   http://example.com/views/quotation/quotationPart.html?quotation_version=optimized
+
+3. 在控制台使用命令
+   - quoToggle.info()  - 查看版本信息
+   - quoToggle.new()    - 切换到新版本
+   - quoToggle.old()    - 切换到旧版本
+   - quoToggle.test()   - 运行对比测试
+
+## 回滚方法：
+
+如果需要完全移除版本切换功能：
+1. 删除上述添加的代码
+2. 恢复原有的脚本引用方式
+
+-->

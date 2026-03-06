@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件上传测试页面</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #428bca;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #428bca;
+        }
+        .section h2 {
+            margin-top: 0;
+            color: #428bca;
+        }
+        .upload-area {
+            margin: 20px 0;
+        }
+        .preview-area {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .preview-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            max-width: 200px;
+        }
+        .preview-item img {
+            max-width: 100%;
+            height: auto;
+        }
+        .config-panel {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .switch {
+            margin: 10px 0;
+        }
+        .switch label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+        .info {
+            background: #d1ecf1;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📤 文件上传功能测试页面</h1>
+
+        <!-- 配置面板 -->
+        <div class="config-panel">
+            <h3>⚙️ 上传配置</h3>
+            <div class="switch">
+                <label>上传模式：</label>
+                <select id="uploadModeSelect">
+                    <option value="local" selected>本地上传</option>
+                    <option value="oss">阿里云 OSS 上传</option>
+                </select>
+            </div>
+            <div class="info">
+                💡 <strong>当前模式：</strong>
+                <span id="currentMode">本地上传</span> |
+                <strong>配置值：</strong>
+                <code>config.isAliOss = <span id="configValue">false</span></code>
+            </div>
+        </div>
+
+        <!-- 测试区域1: 单图片上传 -->
+        <div class="section">
+            <h2>📷 测试1: 单图片上传</h2>
+            <div class="upload-area">
+                <div id="uploadBtn1"></div>
+            </div>
+            <div id="result1" style="margin-top: 15px;"></div>
+            <div id="preview1" class="preview-area"></div>
+        </div>
+
+        <!-- 测试区域2: 多图片上传 -->
+        <div class="section">
+            <h2>🖼️ 测试2: 批量图片上传（最多5张）</h2>
+            <div class="upload-area">
+                <div id="uploadBtn2"></div>
+            </div>
+            <div id="result2" style="margin-top: 15px;"></div>
+            <div id="preview2" class="preview-area"></div>
+        </div>
+
+        <!-- 测试区域3: 文档上传 -->
+        <div class="section">
+            <h2>📄 测试3: 文档上传（PDF、Word、Excel）</h2>
+            <div class="upload-area">
+                <div id="uploadBtn3"></div>
+            </div>
+            <div id="result3" style="margin-top: 15px;"></div>
+            <div id="fileList3"></div>
+        </div>
+
+        <!-- 日志区域 -->
+        <div class="section">
+            <h2>📋 上传日志</h2>
+            <div id="logArea" style="background: #fff; padding: 15px; border: 1px solid #ddd; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px;">
+                <div style="color: #999;">等待上传...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载必要的JS库 -->
+    <script>
+        // 模拟必要的依赖（实际使用时会从项目加载）
+        var config = {
+            isAliOss: false,
+            uploadTimeout: 30,
+            media: 'http://localhost:8080/',
+            server: 'http://localhost:8080/'
+        };
+
+        var api = {
+            common: {
+                uploadImg: { url: 'uploadImg.do' },
+                uploadOther: { url: 'uploadOther.do' }
+            },
+            upgrade: {
+                generatePostSignature: { url: 'generatePostSignature.do' }
+            }
+        };
+
+        // 日志辅助函数
+        function addLog(message, type) {
+            type = type || 'info';
+            var logArea = document.getElementById('logArea');
+            var time = new Date().toLocaleTimeString();
+            var color = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#333';
+
+            logArea.innerHTML += '<div style="color: ' + color + '; margin: 5px 0;">' +
+                '<strong>[' + time + ']</strong> ' + message +
+                '</div>';
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        // 更新配置显示
+        function updateConfigDisplay() {
+            document.getElementById('currentMode').textContent = config.isAliOss ? '阿里云 OSS 上传' : '本地上传';
+            document.getElementById('configValue').textContent = config.isAliOss;
+        }
+
+        // 模式切换
+        document.getElementById('uploadModeSelect').addEventListener('change', function() {
+            var mode = this.value;
+            config.isAliOss = (mode === 'oss');
+            updateConfigDisplay();
+            addLog('切换上传模式为: ' + (config.isAliOss ? 'OSS' : '本地'), 'info');
+
+            // 重新初始化上传组件
+            initUploads();
+        });
+
+        // 初始化上传组件
+        function initUploads() {
+            // 注意：这里只是展示结构，实际使用时需要引入完整的 com 对象和相关库
+
+            addLog('初始化上传组件...', 'info');
+
+            // 示例：单图片上传
+            document.getElementById('uploadBtn1').innerHTML =
+                '<button class="btn btn-success">选择单张图片</button>';
+
+            // 示例：多图片上传
+            document.getElementById('uploadBtn2').innerHTML =
+                '<button class="btn btn-primary">选择多张图片（最多5张）</button>';
+
+            // 示例：文档上传
+            document.getElementById('uploadBtn3').innerHTML =
+                '<button class="btn btn-warning">选择文档</button>';
+
+            addLog('上传组件初始化完成', 'success');
+        }
+
+        // 页面加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            updateConfigDisplay();
+            initUploads();
+
+            addLog('='.repeat(50), 'info');
+            addLog('文件上传测试页面已加载', 'success');
+            addLog('请选择上传模式，然后点击上传按钮测试', 'info');
+            addLog('='.repeat(50), 'info');
+        });
+
+        /*
+         * 实际使用时的完整代码示例:
+         *
+         * // 引入必要的库
+         * <script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
+         * <script src="assets/ace/js/huploadify.js"></script>
+         * <script src="js/com/config.js"></script>
+         * <script src="js/com/api.js"></script>
+         * <script src="js/com/core.js"></script>
+         *
+         * // 初始化单图片上传
+         * com.uploadify(
+         *     '#uploadBtn1',
+         *     '上传图片',
+         *     null,
+         *     'btn btn-success',
+         *     '*.jpg;*.png;*.gif',
+         *     {},
+         *     1,
+         *     function(result, file) {
+         *         console.log('上传成功:', result.uploadPath);
+         *         var html = '<div class="preview-item">' +
+         *             '<img src="' + result.uploadPath + '">' +
+         *             '<p>' + file.name + '</p>' +
+         *             '</div>';
+         *         $('#preview1').html(html);
+         *         $('#result1').html('<div class="success">✓ 上传成功: ' + result.uploadPath + '</div>');
+         *     },
+         *     function(error) {
+         *         console.error('上传失败:', error);
+         *         $('#result1').html('<div class="error">✗ 上传失败: ' + error.errorMsg + '</div>');
+         *     }
+         * );
+         *
+         * // 初始化多图片上传
+         * com.uploadify(
+         *     '#uploadBtn2',
+         *     '批量上传',
+         *     null,
+         *     'btn btn-primary',
+         *     '*.jpg;*.png;*.jpeg',
+         *     {},
+         *     5,
+         *     function(result, file) {
+         *         var html = '<div class="preview-item">' +
+         *             '<img src="' + result.uploadPath + '">' +
+         *             '<p>' + file.name + '</p>' +
+         *             '</div>';
+         *         $('#preview2').append(html);
+         *     },
+         *     function(error) {
+         *         $('#result2').html('<div class="error">✗ 上传失败: ' + error.errorMsg + '</div>');
+         *     },
+         *     function() {
+         *         $('#result2').html('<div class="success">✓ 所有图片上传完成</div>');
+         *     }
+         * );
+         *
+         * // 初始化文档上传
+         * com.uploadify(
+         *     '#uploadBtn3',
+         *     '上传文档',
+         *     null,
+         *     'btn btn-warning',
+         *     '*.pdf;*.doc;*.docx;*.xls;*.xlsx',
+         *     {},
+         *     1,
+         *     function(result, file) {
+         *         var html = '<div class="success">✓ 文档上传成功</div>' +
+         *             '<p>文件名: ' + file.name + '</p>' +
+         *             '<p>路径: ' + result.uploadPath + '</p>';
+         *         $('#fileList3').html(html);
+         *     },
+         *     function(error) {
+         *         $('#result3').html('<div class="error">✗ 上传失败: ' + error.errorMsg + '</div>');
+         *     }
+         * );
+         */
+    </script>
+</body>
+</html>

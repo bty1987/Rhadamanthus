@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>报价模块版本对比测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, "Microsoft YaHei", sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .section-title {
+            background: #f8f9fa;
+            padding: 12px 20px;
+            font-weight: bold;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .section-body {
+            padding: 20px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .test-item {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .test-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+        .test-item.running {
+            background: #e8f5e8;
+            border-color: #4caf50;
+        }
+        .test-item.passed {
+            background: #e8f5e8;
+            border-color: #4caf50;
+        }
+        .test-item.failed {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+        .test-item-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .test-item-formula {
+            font-family: monospace;
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        .test-item-result {
+            font-size: 14px;
+        }
+        .result-actual {
+            color: #2196f3;
+        }
+        .result-expected {
+            color: #999;
+            font-size: 12px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s;
+            margin-right: 10px;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        .btn-success {
+            background: #4caf50;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #45a049;
+        }
+        .btn-warning {
+            background: #ff9800;
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #f57c00;
+        }
+        .btn-danger {
+            background: #f44336;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #da190b;
+        }
+        .console-output {
+            background: #1e1e1e;
+            color: #00ff00;
+            font-family: monospace;
+            padding: 15px;
+            border-radius: 6px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .console-output .error {
+            color: #ff6b6b;
+        }
+        .console-output .success {
+            color: #51cf66;
+        }
+        .console-output .info {
+            color: #4dabf7;
+        }
+        .console-output .warning {
+            color: #ffd43b;
+        }
+        .version-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        .version-original {
+            background: #e0e0e0;
+            color: #666;
+        }
+        .version-optimized {
+            background: #4caf50;
+            color: #fff;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            min-width: 100px;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .switch-info {
+            flex: 1;
+        }
+        .switch-buttons {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 报价模块 A/B 版本对比测试</h1>
+            <p>验证优化版本与原始版本的兼容性</p>
+        </div>
+
+        <div class="content">
+            <!-- 版本切换区域 -->
+            <div class="section">
+                <div class="section-title">版本控制</div>
+                <div class="section-body">
+                    <div class="switch-container">
+                        <div class="switch-info">
+                            <strong>当前版本:</strong> <span id="currentVersion">原始版本</span>
+                            <span class="version-badge" id="versionBadge">original</span>
+                            <div style="margin-top: 5px; font-size: 12px; color: #999;">
+                                文件: <span id="currentFile">js/quotation/quotationPart.js</span>
+                            </div>
+                        </div>
+                        <div class="switch-buttons">
+                            <button class="btn" onclick="switchVersion('original')">🔄 切换到原始版</button>
+                            <button class="btn btn-primary" onclick="switchVersion('optimized')">⚡ 切换到优化版</button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; font-size: 12px; color: #999;">
+                        提示：也可以使用 URL 参数 ?version=optimized 直接指定版本
+                    </div>
+                </div>
+            </div>
+
+            <!-- 测试执行区域 -->
+            <div class="section">
+                <div class="section-title">单元测试</div>
+                <div class="section-body">
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn btn-success" onclick="runAllTests()">▶ 运行所有测试</button>
+                        <button class="btn btn-warning" onclick="clearResults()">🗑 清空结果</button>
+                    </div>
+
+                    <!-- 统计信息 -->
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="statTotal">0</div>
+                            <div class="stat-label">总用例</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="statPassed">0</div>
+                            <div class="stat-label">通过</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="statFailed">0</div>
+                            <div class="stat-label">失败</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="statRate">-</div>
+                            <div class="stat-label">通过率</div>
+                        </div>
+                    </div>
+
+                    <!-- 测试用例网格 -->
+                    <div class="test-grid" id="testGrid">
+                        <!-- 测试用例会动态生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 控制台输出区域 -->
+            <div class="section">
+                <div class="section-title">测试日志</div>
+                <div class="section-body">
+                    <div class="console-output" id="consoleOutput">
+                        <div class="info">等待测试运行...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 代码示例区域 -->
+            <div class="section">
+                <div class="section-title">代码示例</div>
+                <div class="section-body">
+                    <h4 style="margin-bottom: 10px;">1. 快速切换命令（在报价页面控制台使用）</h4>
+                    <div class="code-block">// 切换到优化版本
+quoToggle.new()
+
+// 切换到原始版本
+quoToggle.old()
+
+// 查看版本信息
+quoToggle.info()
+
+// 添加当前用户到白名单
+quoToggle.whitelist.add()
+
+// 运行对比测试
+quoToggle.test()</div>
+
+                    <h4 style="margin: 15px 0 10px;">2. URL 参数切换</h4>
+                    <div class="code-block"># 使用原始版本（默认）
+http://example.com/views/quotation/quotationPart.html
+
+# 使用优化版本
+http://example.com/views/quotation/quotationPart.html?quotation_version=optimized
+
+# 强制使用原始版本
+http://example.com/views/quotation/quotationPart.html?quotation_version=original</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引用项目脚本 -->
+    <script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
+
+    <script>
+        // ==================== 常量定义 ====================
+        var CONST = {
+            LEVEL_CMPREH_DOMAIN: '9998',
+            MAX_FORMULA_VALUE: 10000000
+        };
+
+        // ==================== 原始版本：eval 函数 ====================
+        function evalCalculate(formula) {
+            if (!formula || formula === '') return 0;
+            formula = formula.replace(/\s+/g, '');
+            try {
+                var result = eval(formula);
+                if (isNaN(result) || !isFinite(result)) return 0;
+                if (result < 0 || result > CONST.MAX_FORMULA_VALUE) return 0;
+                return result;
+            } catch (e) {
+                return 0;
+            }
+        }
+
+        // ==================== 优化版本：safeEval 函数 ====================
+        function safeEval(formula) {
+            if (!formula || formula === '') return 0;
+            formula = formula.replace(/\s+/g, '');
+
+            var safePattern = /^[\d\+\-\*\/\(\)\.a-zA-Z_]+$/;
+            if (!safePattern.test(formula)) {
+                return 0;
+            }
+
+            var dangerous = ['window', 'document', 'alert', 'console', 'function', 'return', 'this'];
+            for (var i = 0; i < dangerous.length; i++) {
+                if (formula.indexOf(dangerous[i]) !== -1) {
+                    return 0;
+                }
+            }
+
+            try {
+                var result = new Function('return (' + formula + ')')();
+                if (typeof result !== 'number' || isNaN(result) || !isFinite(result)) return 0;
+                if (result < 0 || result > CONST.MAX_FORMULA_VALUE) return 0;
+                return result;
+            } catch (e) {
+                return 0;
+            }
+        }
+
+        // ==================== 测试用例定义 ====================
+        var testCases = [
+            {
+                id: 'test01',
+                title: '简单加法',
+                formula: '2 + 3',
+                expected: 5,
+                category: 'basic'
+            },
+            {
+                id: 'test02',
+                title: '简单减法',
+                formula: '10 - 4',
+                expected: 6,
+                category: 'basic'
+            },
+            {
+                id: 'test03',
+                title: '简单乘法',
+                formula: '3 * 4',
+                expected: 12,
+                category: 'basic'
+            },
+            {
+                id: 'test04',
+                title: '简单除法',
+                formula: '15 / 3',
+                expected: 5,
+                category: 'basic'
+            },
+            {
+                id: 'test05',
+                title: '混合运算',
+                formula: '2 + 3 * 4',
+                expected: 14,
+                category: 'basic'
+            },
+            {
+                id: 'test06',
+                title: '括号优先级',
+                formula: '(2 + 3) * 4',
+                expected: 20,
+                category: 'basic'
+            },
+            {
+                id: 'test07',
+                title: '多级括号',
+                formula: '((10 + 5) * 2) - 5',
+                expected: 25,
+                category: 'basic'
+            },
+            {
+                id: 'test08',
+                title: '小数运算',
+                formula: '0.1 + 0.2',
+                expected: 0.3,
+                category: 'basic',
+                tolerance: 0.0001  // 允许浮点误差
+            },
+            {
+                id: 'test09',
+                title: '零值计算',
+                formula: '0 + 0',
+                expected: 0,
+                category: 'boundary'
+            },
+            {
+                id: 'test10',
+                title: '负数计算',
+                formula: '-5 + 3',
+                expected: -2,
+                category: 'boundary'
+            },
+            {
+                id: 'test11',
+                title: '最大值边界',
+                formula: '9999999',
+                expected: 9999999,
+                category: 'boundary'
+            },
+            {
+                id: 'test12',
+                title: '超限值（应返回0）',
+                formula: '10000001',
+                expected: 0,
+                category: 'boundary'
+            },
+            {
+                id: 'test13',
+                title: '空字符串',
+                formula: '',
+                expected: 0,
+                category: 'error'
+            },
+            {
+                id: 'test14',
+                title: '恶意代码alert',
+                formula: 'alert(1)',
+                expected: 0,
+                category: 'security'
+            },
+            {
+                id: 'test15',
+                title: '恶意代码window',
+                formula: 'window.location',
+                expected: 0,
+                category: 'security'
+            },
+            {
+                id: 'test16',
+                title: '复杂公式1',
+                formula: '100 + 50 * 2 - 30',
+                expected: 170,
+                category: 'complex'
+            },
+            {
+                id: 'test17',
+                title: '复杂公式2',
+                formula: '(100 - 20) / 4 * 3',
+                expected: 60,
+                category: 'complex'
+            }
+        ];
+
+        // ==================== 测试执行 ====================
+        var currentVersion = 'original';
+
+        function runSingleTest(testCase) {
+            log('info', '运行测试: ' + testCase.title + ' (' + testCase.id + ')');
+            log('info', '  公式: ' + testCase.formula);
+
+            // 原始版本计算
+            var oldResult = evalCalculate(testCase.formula);
+
+            // 优化版本计算
+            var newResult = safeEval(testCase.formula);
+
+            // 对比结果
+            var tolerance = testCase.tolerance || 0.001;
+            var diff = Math.abs(oldResult - newResult);
+            var isPass = diff <= tolerance;
+
+            // 验证期望值
+            var expectedMatch = Math.abs(oldResult - testCase.expected) <= tolerance;
+
+            if (isPass && expectedMatch) {
+                log('success', '  ✅ 通过 - 结果: ' + oldResult + ' (期望: ' + testCase.expected + ')');
+                updateTestItem(testCase.id, 'passed', oldResult);
+                return { pass: true, old: oldResult, new: newResult };
+            } else {
+                log('error', '  ❌ 失败');
+                log('error', '    原版本结果: ' + oldResult);
+                log('error', '    优化版结果: ' + newResult);
+                log('error', '    期望结果: ' + testCase.expected);
+                log('error', '    差异: ' + diff);
+                updateTestItem(testCase.id, 'failed', oldResult, newResult);
+                return { pass: false, old: oldResult, new: newResult };
+            }
+        }
+
+        function runAllTests() {
+            clearResults();
+            log('info', '============================================');
+            log('info', '开始运行测试套件...');
+            log('info', '当前版本: ' + (currentVersion === 'original' ? '原始版本 (eval)' : '优化版本 (safeEval)'));
+            log('info', '============================================');
+            log('info', '');
+
+            var results = testCases.map(function(testCase) {
+                return runSingleTest(testCase);
+            });
+
+            var passed = results.filter(function(r) { return r.pass; }).length;
+            var failed = results.filter(function(r) { return !r.pass; }).length;
+            var rate = ((passed / testCases.length) * 100).toFixed(1);
+
+            log('info', '');
+            log('info', '============================================');
+            if (failed === 0) {
+                log('success', '🎉 所有测试通过！');
+            } else {
+                log('error', '⚠️  有 ' + failed + ' 个测试失败！');
+            }
+            log('info', '总用例: ' + testCases.length);
+            log('info', '通过: ' + passed + ' (' + rate + '%)');
+            log('info', '失败: ' + failed);
+            log('info', '============================================');
+
+            updateStats(testCases.length, passed, failed, rate);
+        }
+
+        // ==================== UI 更新 ====================
+        function renderTestGrid() {
+            var grid = document.getElementById('testGrid');
+            grid.innerHTML = '';
+
+            testCases.forEach(function(testCase) {
+                var item = document.createElement('div');
+                item.className = 'test-item';
+                item.id = 'item-' + testCase.id;
+                item.onclick = function() {
+                    runSingleTest(testCase);
+                };
+
+                item.innerHTML =
+                    '<div class="test-item-title">' + testCase.title + '</div>' +
+                    '<div class="test-item-formula">' + testCase.formula + '</div>' +
+                    '<div class="test-item-result" id="result-' + testCase.id + '">点击运行</div>';
+
+                grid.appendChild(item);
+            });
+        }
+
+        function updateTestItem(id, status, oldValue, newValue) {
+            var item = document.getElementById('item-' + id);
+            var resultDiv = document.getElementById('result-' + id);
+
+            item.classList.remove('running');
+            item.classList.add(status);
+
+            if (status === 'passed') {
+                resultDiv.innerHTML =
+                    '<span class="result-actual">✅ ' + oldValue + '</span>';
+            } else if (status === 'failed') {
+                resultDiv.innerHTML =
+                    '<span class="result-actual">❌ ' + oldValue + '</span><br>' +
+                    '<span class="result-expected">(期望: ' + oldValue + ')</span>';
+            }
+        }
+
+        function updateStats(total, passed, failed, rate) {
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statPassed').textContent = passed;
+            document.getElementById('statFailed').textContent = failed;
+            document.getElementById('statRate').textContent = rate + '%';
+        }
+
+        function clearResults() {
+            testCases.forEach(function(testCase) {
+                var item = document.getElementById('item-' + testCase.id);
+                item.classList.remove('passed', 'failed');
+                document.getElementById('result-' + testCase.id).textContent = '点击运行';
+            });
+            document.getElementById('consoleOutput').innerHTML = '';
+            updateStats(0, 0, 0, '-');
+        }
+
+        // ==================== 日志输出 ====================
+        function log(type, message) {
+            var console = document.getElementById('consoleOutput');
+            var div = document.createElement('div');
+            div.className = type;
+            div.textContent = message;
+            console.appendChild(div);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        // ==================== 版本切换 ====================
+        function switchVersion(version) {
+            currentVersion = version;
+            var versionName = version === 'original' ? '原始版本' : '优化版本';
+            var versionClass = version === 'original' ? 'version-original' : 'version-optimized';
+
+            document.getElementById('currentVersion').textContent = versionName;
+            var badge = document.getElementById('versionBadge');
+            badge.textContent = version;
+            badge.className = 'version-badge ' + versionClass;
+
+            log('info', '已切换到: ' + versionName);
+            clearResults();
+        }
+
+        // ==================== 初始化 ====================
+        function init() {
+            renderTestGrid();
+
+            // 检查 URL 参数
+            var urlParams = new URLSearchParams(window.location.search);
+            var urlVersion = urlParams.get('version');
+            if (urlVersion === 'original' || urlVersion === 'optimized') {
+                switchVersion(urlVersion);
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

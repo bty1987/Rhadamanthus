@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>楼盘查询条件测试</title>
+    <link rel="stylesheet" href="../../assets/ace/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, "Microsoft YaHei", sans-serif;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #337ab7;
+        }
+        .test-btn {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            min-height: 100px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            padding: 5px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .log-entry.success {
+            color: #28a745;
+        }
+        .log-entry.error {
+            color: #dc3545;
+        }
+        .log-entry.info {
+            color: #17a2b8;
+        }
+        .code-block {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏘️ 楼盘查询条件测试页面</h1>
+        <hr>
+
+        <div class="alert alert-info">
+            <strong>测试说明：</strong>
+            <ul>
+                <li>本页面用于测试新增的楼盘查询条件功能</li>
+                <li>请确保后端服务已启动</li>
+                <li>点击测试按钮后，查询结果将在下方显示</li>
+            </ul>
+        </div>
+
+        <!-- 测试1: 开发商查询 -->
+        <div class="test-section">
+            <h3>📋 测试1: 开发商查询</h3>
+            <p>查询开发商名称包含"万科"的所有楼盘</p>
+            <button class="btn btn-primary test-btn" onclick="testDeveloperQuery()">
+                <i class="icon-search"></i> 执行测试
+            </button>
+            <div class="code-block">
+                <strong>请求参数：</strong><br>
+                filters[0].field: "developer"<br>
+                filters[0].data: "万科"
+            </div>
+        </div>
+
+        <!-- 测试2: 状态查询 -->
+        <div class="test-section">
+            <h3>📋 测试2: 状态查询</h3>
+            <p>查询所有启用的楼盘（status=0）</p>
+            <button class="btn btn-success test-btn" onclick="testStatusQuery()">
+                <i class="icon-ok"></i> 执行测试
+            </button>
+            <div class="code-block">
+                <strong>请求参数：</strong><br>
+                filters[0].field: "status"<br>
+                filters[0].data: "0"
+            </div>
+        </div>
+
+        <!-- 测试3: 禁用楼盘查询 -->
+        <div class="test-section">
+            <h3>📋 测试3: 禁用楼盘查询</h3>
+            <p>查询所有禁用的楼盘（status=1）</p>
+            <button class="btn btn-warning test-btn" onclick="testDisabledQuery()">
+                <i class="icon-ban-circle"></i> 执行测试
+            </button>
+            <div class="code-block">
+                <strong>请求参数：</strong><br>
+                filters[0].field: "status"<br>
+                filters[0].data: "1"
+            </div>
+        </div>
+
+        <!-- 测试4: 交付时间范围查询 -->
+        <div class="test-section">
+            <h3>📋 测试4: 交付时间范围查询</h3>
+            <p>查询2024年交付的楼盘</p>
+            <button class="btn btn-info test-btn" onclick="testDeliveryTimeRangeQuery()">
+                <i class="icon-calendar"></i> 执行测试
+            </button>
+            <div class="code-block">
+                <strong>请求参数：</strong><br>
+                filters[0].field: "deliveryTimeStart"<br>
+                filters[0].data: "2024-01-01"<br>
+                filters[1].field: "deliveryTimeEnd"<br>
+                filters[1].data: "2024-12-31"
+            </div>
+        </div>
+
+        <!-- 测试5: 组合查询 -->
+        <div class="test-section">
+            <h3>📋 测试5: 组合查询</h3>
+            <p>查询万科的启用楼盘</p>
+            <button class="btn btn-primary test-btn" onclick="testCombinedQuery()">
+                <i class="icon-filter"></i> 执行测试
+            </button>
+            <div class="code-block">
+                <strong>请求参数：</strong><br>
+                filters[0].field: "developer"<br>
+                filters[0].data: "万科"<br>
+                filters[1].field: "status"<br>
+                filters[1].data: "0"
+            </div>
+        </div>
+
+        <!-- 测试6: 楼盘名称查询（拼音） -->
+        <div class="test-section">
+            <h3>📋 测试6: 楼盘名称查询（支持拼音）</h3>
+            <p>查询名称或拼音包含"WK"的楼盘</p>
+            <button class="btn btn-default test-btn" onclick="testNameQuery()">
+                <i class="icon-font"></i> 执行测试
+            </button>
+            <div class="code-block">
+                <strong>请求参数：</strong><br>
+                filters[0].field: "villageName"<br>
+                filters[0].data: "WK"
+            </div>
+        </div>
+
+        <!-- 结果显示 -->
+        <div class="test-section">
+            <h3>📊 测试结果</h3>
+            <button class="btn btn-sm btn-default" onclick="clearResult()">
+                <i class="icon-trash"></i> 清空结果
+            </button>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
+    <script>
+        // 配置服务器地址（根据实际环境修改）
+        var CONFIG = {
+            server: 'http://192.168.5.21/', // 请根据实际环境修改
+            authentication: '' // 需要先登录获取authentication
+        };
+
+        // 测试1: 开发商查询
+        function testDeveloperQuery() {
+            addLog('开始测试：开发商查询', 'info');
+
+            var params = {
+                "filters[0].field": "developer",
+                "filters[0].data": "万科",
+                "page.pageNo": 1,
+                "page.pageSize": 10
+            };
+
+            executeQuery('开发商查询', params);
+        }
+
+        // 测试2: 状态查询（启用）
+        function testStatusQuery() {
+            addLog('开始测试：状态查询（启用）', 'info');
+
+            var params = {
+                "filters[0].field": "status",
+                "filters[0].data": "0",
+                "page.pageNo": 1,
+                "page.pageSize": 10
+            };
+
+            executeQuery('状态查询', params);
+        }
+
+        // 测试3: 状态查询（禁用）
+        function testDisabledQuery() {
+            addLog('开始测试：状态查询（禁用）', 'info');
+
+            var params = {
+                "filters[0].field": "status",
+                "filters[0].data": "1",
+                "page.pageNo": 1,
+                "page.pageSize": 10
+            };
+
+            executeQuery('禁用楼盘查询', params);
+        }
+
+        // 测试4: 交付时间范围查询
+        function testDeliveryTimeRangeQuery() {
+            addLog('开始测试：交付时间范围查询', 'info');
+
+            var params = {
+                "filters[0].field": "deliveryTimeStart",
+                "filters[0].data": "2024-01-01",
+                "filters[1].field": "deliveryTimeEnd",
+                "filters[1].data": "2024-12-31",
+                "page.pageNo": 1,
+                "page.pageSize": 10
+            };
+
+            executeQuery('交付时间范围查询', params);
+        }
+
+        // 测试5: 组合查询
+        function testCombinedQuery() {
+            addLog('开始测试：组合查询（万科 + 启用）', 'info');
+
+            var params = {
+                "filters[0].field": "developer",
+                "filters[0].data": "万科",
+                "filters[1].field": "status",
+                "filters[1].data": "0",
+                "page.pageNo": 1,
+                "page.pageSize": 10
+            };
+
+            executeQuery('组合查询', params);
+        }
+
+        // 测试6: 楼盘名称查询（拼音）
+        function testNameQuery() {
+            addLog('开始测试：楼盘名称查询（支持拼音）', 'info');
+
+            var params = {
+                "filters[0].field": "villageName",
+                "filters[0].data": "WK",
+                "page.pageNo": 1,
+                "page.pageSize": 10
+            };
+
+            executeQuery('楼盘名称查询', params);
+        }
+
+        // 执行查询
+        function executeQuery(testName, params) {
+            addLog('执行查询：' + testName, 'info');
+            addLog('请求参数：' + JSON.stringify(params, null, 2), 'info');
+
+            $.ajax({
+                url: CONFIG.server + 'pageVillage.do',
+                type: 'POST',
+                data: $.param(params) + '&authentication=' + CONFIG.authentication,
+                dataType: 'json',
+                timeout: 10000,
+                success: function(response) {
+                    addLog('查询成功！', 'success');
+                    displayResult(response);
+                },
+                error: function(xhr, status, error) {
+                    addLog('查询失败：' + error, 'error');
+                    addLog('HTTP状态码：' + xhr.status, 'error');
+                    addLog('响应内容：' + xhr.responseText, 'info');
+                }
+            });
+        }
+
+        // 显示结果
+        function displayResult(response) {
+            var html = '<h4>查询结果：</h4>';
+
+            if (response.errorCode === 0 || response.errorCode === '0') {
+                // 成功
+                var villages = response.villages || response.data || [];
+                var page = response.page || {};
+
+                html += '<p><strong>返回记录数：</strong>' + villages.length + ' 条</p>';
+                html += '<p><strong>总记录数：</strong>' + (page.total || 0) + ' 条</p>';
+
+                if (villages.length > 0) {
+                    html += '<table class="table table-bordered table-striped table-hover">';
+                    html += '<thead><tr>';
+                    html += '<th>楼盘编号</th>';
+                    html += '<th>楼盘名称</th>';
+                    html += '<th>开发商</th>';
+                    html += '<th>城市</th>';
+                    html += '<th>城区</th>';
+                    html += '<th>交付时间</th>';
+                    html += '<th>状态</th>';
+                    html += '</tr></thead>';
+                    html += '<tbody>';
+
+                    $.each(villages, function(i, village) {
+                        html += '<tr>';
+                        html += '<td>' + (village.no || '-') + '</td>';
+                        html += '<td>' + (village.name || '-') + '</td>';
+                        html += '<td>' + (village.developer || '-') + '</td>';
+                        html += '<td>' + (village.cityProper && village.cityProper.city ? village.cityProper.city.name : '-') + '</td>';
+                        html += '<td>' + (village.cityProper ? village.cityProper.name : '-') + '</td>';
+                        html += '<td>' + (village.deliveryTime || '-') + '</td>';
+                        html += '<td>' + (village.status == 0 ? '<span class="label label-success">启用</span>' : '<span class="label label-default">禁用</span>') + '</td>';
+                        html += '</tr>';
+                    });
+
+                    html += '</tbody></table>';
+                } else {
+                    html += '<p class="text-warning">没有查询到相关楼盘</p>';
+                }
+            } else {
+                // 失败
+                html += '<p class="text-danger">查询失败：' + (response.errorMsg || '未知错误') + '</p>';
+                html += '<p><strong>错误码：</strong>' + response.errorCode + '</p>';
+            }
+
+            $('#result').html(html);
+        }
+
+        // 添加日志
+        function addLog(message, type) {
+            var timestamp = new Date().toLocaleTimeString();
+            var html = '<div class="log-entry ' + type + '">';
+            html += '<strong>[' + timestamp + ']</strong> ' + message;
+            html += '</div>';
+            $('#result').prepend(html);
+        }
+
+        // 清空结果
+        function clearResult() {
+            $('#result').html('');
+            addLog('结果已清空', 'info');
+        }
+
+        // 页面加载完成
+        $(document).ready(function() {
+            addLog('页面加载完成，准备开始测试', 'success');
+            addLog('请确保已配置正确的服务器地址和authentication', 'info');
+
+            // 检查authentication
+            var auth = getCookie('authentication');
+            if (auth) {
+                CONFIG.authentication = auth;
+                addLog('已从Cookie读取authentication', 'success');
+            } else {
+                addLog('警告：未找到authentication，请先登录系统', 'error');
+            }
+        });
+
+        // 获取Cookie
+        function getCookie(name) {
+            var value = '; ' + document.cookie;
+            var parts = value.split('; ' + name + '=');
+            if (parts.length == 2) return parts.pop().split(';').shift();
+        }
+    </script>
+</body>
+</html>

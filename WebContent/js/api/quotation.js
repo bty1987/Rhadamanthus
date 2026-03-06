@@ -865,7 +865,9 @@ $.extend(api, {
             url: "updateQuotationForAdvance.do",
             type: "update",
             tranargs: {
-                args: ["quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice", "quotation.costPrice", "quotation.unachePrice", "quotation.consPrice", "quotation.comsPrice", "quotation.undisComPrice", "quotation.disComPrice", "quotation.taxPrice", "quotation.taxRate"]
+                // 移除 quotation.discount 和 quotation.totalPrice，因为它们已经是后端存储格式（×1000）
+                // 如果再次进行 accExtend 转换会导致数值被错误地扩大 1000 倍
+                args: ["quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice", "quotation.costPrice", "quotation.unachePrice", "quotation.consPrice", "quotation.comsPrice", "quotation.undisComPrice", "quotation.disComPrice", "quotation.taxPrice", "quotation.taxRate"]
             }
         },
         updateQuotationForPrice: {
