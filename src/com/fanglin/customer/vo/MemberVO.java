@@ -37,6 +37,20 @@ public class MemberVO implements Serializable {
 
 	private String company;
 
+	/**
+	 * 记录唯一标识（基于 doid）
+	 * - 主订单：doid（如 "12345"）
+	 * - 关联订单：parentDoid-doid（如 "12345-67890"）
+	 */
+	private String uniqueId;
+
+	/**
+	 * 主订单号（被推荐的单号）
+	 * - 主订单：此字段为空
+	 * - 关联订单：指向主订单的 orderId
+	 */
+	private String referOrderId;
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -141,6 +155,22 @@ public class MemberVO implements Serializable {
 
 	public void setCompany(String company) {
 		this.company = company;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
+	}
+
+	public String getReferOrderId() {
+		return referOrderId;
+	}
+
+	public void setReferOrderId(String referOrderId) {
+		this.referOrderId = referOrderId;
 	}
 
 	public MemberVO init(DecorationPO decorationPO, String companyName) {
