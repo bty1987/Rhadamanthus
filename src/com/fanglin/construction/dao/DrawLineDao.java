@@ -34,4 +34,11 @@ public interface DrawLineDao extends Dao<DrawLinePO> {
 
 	public List<?> countDrawLineForTime(long startTime, long endTime, int company);
 
+	/**
+	 * 根据订单ID查询放线记录
+	 * @param orderId 订单ID
+	 * @return 放线记录
+	 */
+	public DrawLinePO queryDrawLineByOrderId(String orderId);
+
 }
