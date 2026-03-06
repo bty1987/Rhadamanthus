@@ -52,6 +52,18 @@ public class DecorationAtttypeAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateDecorationAtttype", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationAtttype() throws FLException {
+
+		decorationAtttypeService.updateDecorationAtttype(
+			decorationAtttype.getDaid(),
+			decorationAtttype.getManageDiscount(),
+			decorationAtttype.getTaxDiscount()
+		);
+
+		return SUCCESS;
+	}
+
 	public List<DecorationAtttypeVO> getDecorationAtttypes() {
 		return decorationAtttypes;
 	}

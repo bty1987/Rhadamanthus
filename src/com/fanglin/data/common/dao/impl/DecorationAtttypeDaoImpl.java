@@ -40,4 +40,14 @@ public class DecorationAtttypeDaoImpl extends DaoImpl<DecorationAtttypePO> imple
 	public DecorationAtttypePO queryDecorationAtttype(short type, int company) {
 		return (DecorationAtttypePO) session().createCriteria(DecorationAtttypePO.class).add(Restrictions.eq("type", type)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
 	}
+
+	@Override
+	public void updateDecorationAtttype(long daid, short manageDiscount, short taxDiscount) {
+		String sql = "update data.decorationatttype set managediscount = :manageDiscount, taxdiscount = :taxDiscount where daid = :daid";
+		session().createSQLQuery(sql)
+			.setShort("manageDiscount", manageDiscount)
+			.setShort("taxDiscount", taxDiscount)
+			.setLong("daid", daid)
+			.executeUpdate();
+	}
 }
