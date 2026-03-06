@@ -478,7 +478,19 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 		}
 
 		quotationFunctionAreaVO.setQfaId(quotationFunctionAreaTO.getQfaId());
+		quotationFunctionAreaVO.setFunctionAreaOrder(quotationFunctionAreaTO.getFunctionAreaOrder());
+		quotationFunctionAreaVO.setType(quotationFunctionAreaTO.getType());
+		quotationFunctionAreaVO.setTotal(quotationFunctionAreaTO.getTotal());
 		quotationFunctionAreaVO.setFunctionAreaName(quotationFunctionAreaTO.getFunctionAreaName());
+
+		// 查询并返回功能区参数
+		QuotationFunctionAreaParamPO paramPO = quotationFunctionAreaParamDao.get(quotationFunctionAreaTO.getQfaId());
+		if (paramPO != null) {
+			QuotationFunctionAreaParamVO paramVO = new QuotationFunctionAreaParamVO();
+			BeanUtil.copyProperties(paramPO, paramVO);
+			quotationFunctionAreaVO.setQuotationFunctionAreaParam(paramVO);
+		}
+
 		quotationFunctionAreaVO.setQuotationFunctionAreaItems(quotationFunctionAreaItemVOs);
 
 		return quotationFunctionAreaVO;
