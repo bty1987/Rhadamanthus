@@ -290,23 +290,11 @@ public class MemberServiceImpl implements MemberService {
 
 	/**
 	 * 查询会员信息（优化版本）
-	 *
-	 * 【业务逻辑说明】
-	 * - 同时返回【主订单】和【关联订单】（chanceRefer/originRefer/orderRefer）
-	 * - 如果客户没有装饰订单，返回空列表（不抛异常）
-	 * - 关联订单的手机号从主订单推荐人获取
-	 * - 关联订单通过 referOrderId 字段关联到主订单
-	 *
-	 * 【优化点】
-	 * 1. 业务增强：原逻辑只返回关联订单，现同时返回主订单
-	 * 2. 新增 referOrderId 字段：关联订单可追溯到主订单
-	 * 3. 消除 N+1 查询问题 - 批量查询客户电话
-	 * 4. 修复批量查询遗漏：包含关联订单的客户
-	 * 5. 消除嵌套循环 - 使用反向索引 Map
-	 * 6. 抽取重复代码 - 统一处理 refer 订单
-	 * 7. 添加空值检查 - 提高健壮性（原代码有 NPE 风险）
-	 * 8. uniqueId 降级策略：doid 无效时使用 orderId
-	 *
+	 * 
+	 * 【业务逻辑说明】 - 同时返回【主订单】和【关联订单】（chanceRefer/originRefer/orderRefer） - 如果客户没有装饰订单，返回空列表（不抛异常） - 关联订单的手机号从主订单推荐人获取 - 关联订单通过 referOrderId 字段关联到主订单
+	 * 
+	 * 【优化点】 1. 业务增强：原逻辑只返回关联订单，现同时返回主订单 2. 新增 referOrderId 字段：关联订单可追溯到主订单 3. 消除 N+1 查询问题 - 批量查询客户电话 4. 修复批量查询遗漏：包含关联订单的客户 5. 消除嵌套循环 - 使用反向索引 Map 6. 抽取重复代码 - 统一处理 refer 订单 7. 添加空值检查 - 提高健壮性（原代码有 NPE 风险） 8. uniqueId 降级策略：doid 无效时使用 orderId
+	 * 
 	 * @param members 会员查询条件列表（包含手机号）
 	 * @param company 公司ID过滤条件
 	 * @return Map<手机号, 会员列表>
@@ -339,8 +327,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		// ========== 3. 查询客户电话并构建映射关系 ==========
-		List<CustomerPhonePO> customerPhoneList = customerPhoneDao.queryCustomerPhone(
-				encodedPhoneList, null, null, company);
+		List<CustomerPhonePO> customerPhoneList = customerPhoneDao.queryCustomerPhone(encodedPhoneList, null, null, company);
 
 		if (customerPhoneList == null || customerPhoneList.isEmpty()) {
 			throw new FLException(130021, "客户电话不存在");
@@ -369,7 +356,7 @@ public class MemberServiceImpl implements MemberService {
 
 		// ========== 4. 查询装饰订单 ==========
 		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomerIds(customerIds);
-		List<DecorationPO> referOrders = new ArrayList<DecorationPO>();  // 关联订单
+		List<DecorationPO> referOrders = new ArrayList<DecorationPO>(); // 关联订单
 
 		// 【保持原逻辑】没有装饰订单时返回空结果，不抛异常
 		if (decorationPOs == null || decorationPOs.isEmpty()) {
@@ -396,29 +383,26 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		// ========== 6. 查询并收集关联订单 ==========
-		processReferOrders(decorationPOs, referOrders, orderToPhoneMap, referToParentOrderMap,
-				new ReferOrderQuery() {
-					public List<DecorationPO> query(String orderId) {
-						return decorationInfoDao.queryDecorationForChanceRefer(orderId);
-					}
-				});
+		processReferOrders(decorationPOs, referOrders, orderToPhoneMap, referToParentOrderMap, new ReferOrderQuery() {
+			public List<DecorationPO> query(String orderId) {
+				return decorationInfoDao.queryDecorationForChanceRefer(orderId);
+			}
+		});
 
-		processReferOrders(decorationPOs, referOrders, orderToPhoneMap, referToParentOrderMap,
-				new ReferOrderQuery() {
-					public List<DecorationPO> query(String orderId) {
-						return decorationInfoDao.queryDecorationForOriginRefer(orderId);
-					}
-				});
+		processReferOrders(decorationPOs, referOrders, orderToPhoneMap, referToParentOrderMap, new ReferOrderQuery() {
+			public List<DecorationPO> query(String orderId) {
+				return decorationInfoDao.queryDecorationForOriginRefer(orderId);
+			}
+		});
 
-		processReferOrders(decorationPOs, referOrders, orderToPhoneMap, referToParentOrderMap,
-				new ReferOrderQuery() {
-					public List<DecorationPO> query(String orderId) {
-						return decorationInfoDao.queryDecorationForOrderReferd(orderId);
-					}
-				});
+		processReferOrders(decorationPOs, referOrders, orderToPhoneMap, referToParentOrderMap, new ReferOrderQuery() {
+			public List<DecorationPO> query(String orderId) {
+				return decorationInfoDao.queryDecorationForOrderReferd(orderId);
+			}
+		});
 
 		// ========== 6.5 【修复】补充收集关联订单的客户ID（防止批量查询遗漏）==========
-		Set<Long> allCustomerIds = new HashSet<Long>(customerIds);  // 使用 Set 去重
+		Set<Long> allCustomerIds = new HashSet<Long>(customerIds); // 使用 Set 去重
 		for (DecorationPO refer : referOrders) {
 			CustomerPO customer = refer.getCustomer();
 			if (customer != null) {
@@ -431,8 +415,7 @@ public class MemberServiceImpl implements MemberService {
 		// ========== 7. 批量查询客户电话（消除 N+1 问题）==========
 		Map<Long, List<CustomerPhonePO>> customerPhoneBatchMap = new HashMap<Long, List<CustomerPhonePO>>();
 		for (Long cid : customerIds) {
-			List<CustomerPhonePO> phones = customerPhoneDao.queryCustomerPhoneByCid(
-					cid, CustomerPhonePO.STATUS_ENABLE_INT);
+			List<CustomerPhonePO> phones = customerPhoneDao.queryCustomerPhoneByCid(cid, CustomerPhonePO.STATUS_ENABLE_INT);
 			if (phones != null && !phones.isEmpty()) {
 				customerPhoneBatchMap.put(cid, phones);
 			}
@@ -899,7 +882,7 @@ public class MemberServiceImpl implements MemberService {
 
 	/**
 	 * 生成 uniqueId
-	 *
+	 * 
 	 * @param doid 当前订单 doid
 	 * @param orderId 当前订单号（降级使用）
 	 * @param parentOrderId 主订单号（关联订单专用，主订单传 null）
@@ -936,7 +919,7 @@ public class MemberServiceImpl implements MemberService {
 
 	/**
 	 * 创建 MemberVO 对象（抽取公共方法）
-	 *
+	 * 
 	 * @param decorationPO 装饰订单
 	 * @param phone 手机号
 	 * @param referOrderId 主订单号
@@ -963,18 +946,14 @@ public class MemberServiceImpl implements MemberService {
 
 	/**
 	 * 处理关联订单（抽取的公共方法）
-	 *
+	 * 
 	 * @param parentOrders 父订单列表
 	 * @param referOrders 收集关联订单的列表
 	 * @param orderToPhoneMap 订单-手机号映射
 	 * @param referToParentOrderMap 关联订单->主订单 映射（用于设置 referOrderId）
 	 * @param query 查询接口
 	 */
-	private void processReferOrders(List<DecorationPO> parentOrders,
-	                                List<DecorationPO> referOrders,
-	                                Map<String, String> orderToPhoneMap,
-	                                Map<String, String> referToParentOrderMap,
-	                                ReferOrderQuery query) {
+	private void processReferOrders(List<DecorationPO> parentOrders, List<DecorationPO> referOrders, Map<String, String> orderToPhoneMap, Map<String, String> referToParentOrderMap, ReferOrderQuery query) {
 		for (DecorationPO parent : parentOrders) {
 			String parentPhone = orderToPhoneMap.get(parent.getOrderId());
 			if (parentPhone == null) {

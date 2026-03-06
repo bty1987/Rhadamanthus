@@ -1440,19 +1440,23 @@ var QuotationDetail = (function() {
 
                     // 将新功能区插入到当前功能区之后
                     $newDomain.insertAfter($domain);
+                    
+                    console.log(quo)
+                    
+                    quo.calculateQuoFees();
+                    
+                    console.log(quo)
+                    
+                    quo.calculateQuoFeesPost();
+                    
+                    console.log(quo)
 
                     // 更新报价金额（管理费、车运费、总价等）
                     com.post(api.quotation.updateQuotationForAdvance, quo.basicParams, function(res) {
 
-                        if (res.quotation) {
-                            $.each(res.quotation, function(k, v) {
-                                quo.basicParams["quotation." + k] = v;
-                            });
-                        }
-
                         // 更新页面显示
-                        quo.calculateQuoFees();
-                        quo.calculateQuoFeesPost();
+//                        quo.calculateQuoFees();
+//                        quo.calculateQuoFeesPost();
 
                     }, null, false);
 

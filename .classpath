@@ -113,17 +113,7 @@
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/fadada/junit-4.12.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/aliyun-oss/jdom-1.1.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/aliyun-oss/aliyun-sdk-oss-2.5.0.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/fadada/bcprov-jdk15on-1.60.jar"/>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" path="target/generated-sources/annotations">
 		<attributes>
 			<attribute name="optional" value="true"/>
@@ -140,5 +130,7 @@
 			<attribute name="m2e-apt" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -699,13 +699,13 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 			if (constructionNodeVO.getTimeLimit() == null) constructionNodeVO.setTimeLimit(0);
 
-			Timestamp drawlineTime = constructionInfoPO.getDrawlineTime() == null ? DateUtil.getDateToTimestamp(new Date()) : constructionInfoPO.getDrawlineTime();
+			Timestamp drawlineTime1 = constructionInfoPO.getDrawlineTime() == null ? DateUtil.getDateToTimestamp(new Date()) : constructionInfoPO.getDrawlineTime();
 
 			int prenum = constructionNodeVO.getPrenum() != null ? constructionNodeVO.getPrenum() : 0;
 			int postnum = constructionNodeVO.getPostnum() != null ? constructionNodeVO.getPostnum() : 0;
 
-			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(drawlineTime), Arith.div(timelimit + prenum, 1000000)));
-			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(drawlineTime), Arith.div((timelimit + prenum - 1000 + constructionNodeVO.getTimeLimit()), 1000000)));
+			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(drawlineTime1), Arith.div(timelimit + prenum, 1000000)));
+			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(drawlineTime1), Arith.div((timelimit + prenum - 1000 + constructionNodeVO.getTimeLimit()), 1000000)));
 
 			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCid(cid, constructionNodeVO.getCnid());
 
@@ -736,9 +736,9 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 			timelimit = timelimit + prenum + (constructionNodeVO.getTimeLimit() != null ? constructionNodeVO.getTimeLimit() : 0) + postnum;
 
-			constructionPO.setPreStartTime(drawlineTime);
+			constructionPO.setPreStartTime(drawlineTime1);
 			constructionPO.setPreEndTime(endTime);
-			constructionPO.setPeriod(DateUtil.diffDay(drawlineTime, endTime));
+			constructionPO.setPeriod(DateUtil.diffDay(drawlineTime1, endTime));
 		}
 
 		// 生成消息队列数据（DRAWLINE_FINISHED 事件）

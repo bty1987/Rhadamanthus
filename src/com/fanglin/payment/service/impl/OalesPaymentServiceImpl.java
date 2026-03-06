@@ -259,8 +259,10 @@ public class OalesPaymentServiceImpl implements OalesPaymentService {
 
 		oalesPaymentDao.update(oalesPayment);
 
-		oales.setStatus(OalesPO.STATUS_CHECK_INT);
-		oales.setCheckTime(oalesReceiptPO.getCollectTime());
+		if (oales.getStatus() != OalesPO.STATUS_CHECK_INT) {
+			oales.setStatus(OalesPO.STATUS_CHECK_INT);
+			oales.setCheckTime(oalesReceiptPO.getCollectTime());
+		}
 
 		oalesDao.update(oales);
 
