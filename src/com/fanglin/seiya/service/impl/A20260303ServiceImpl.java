@@ -37,9 +37,11 @@ import com.fanglin.seiya.service.A20260303Service;
 import com.fanglin.system.dao.CityDao;
 import com.fanglin.system.dao.CityProperDao;
 import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.dao.RegionDao;
 import com.fanglin.system.po.CityPO;
 import com.fanglin.system.po.CityProperPO;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.po.RegionPO;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.PinYin4Util;
@@ -70,6 +72,9 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	@Autowired
 	private CountingService countingService;
+
+	@Autowired
+	private RegionDao regionDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -310,8 +315,9 @@ public class A20260303ServiceImpl implements A20260303Service {
 			cityPO.setPinyin(pinyinList.get(0));
 		}
 
-		// region可以为空
-		cityPO.setRegion(null);
+		// 获取或创建默认大区（rid 字段 NOT NULL，必须设置）
+		RegionPO regionPO = getOrCreateDefaultRegion();
+		cityPO.setRegion(regionPO);
 
 		// 保存并刷新以获取生成的cid
 		cityDao.save(cityPO);
@@ -393,6 +399,41 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 		// 默认返回原城市名称
 		return cityName;
+	}
+
+	/**
+	 * 获取或创建默认大区
+	 * 用于解决 city 表 rid 字段 NOT NULL 的约束问题
+	 *
+	 * @return 默认的 RegionPO
+	 */
+	private RegionPO getOrCreateDefaultRegion() {
+		// 先尝试查找名为"默认大区"的 Region
+		RegionPO region = regionDao.queryRegion("默认大区");
+		if (region != null) {
+			return region;
+		}
+
+		// 如果不存在，查找第一个可用的 Region
+		List<RegionPO> regions = regionDao.queryRegion();
+		if (regions != null && !regions.isEmpty()) {
+			return regions.get(0);
+		}
+
+		// 如果没有任何 Region，创建一个默认的
+		RegionPO defaultRegion = new RegionPO();
+		defaultRegion.setName("默认大区");
+		defaultRegion.setNo("R_DEFAULT");
+		defaultRegion.setPinyin("morendaqu");
+		defaultRegion.setX(0);
+		defaultRegion.setY(0);
+
+		regionDao.save(defaultRegion);
+		regionDao.flush();
+		regionDao.refresh(defaultRegion);
+
+		logger.info("创建默认大区: rid={}", defaultRegion.getRid());
+		return defaultRegion;
 	}
 
 }
