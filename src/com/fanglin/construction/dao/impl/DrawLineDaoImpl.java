@@ -93,6 +93,12 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 		return session().createSQLQuery(sql).setLong("start", startTime).setLong("end", endTime).setInteger("company", company).list();
 	}
 
+	@Override
+	public DrawLinePO queryDrawLineByOrderId(String orderId) {
+		String hql = "from DrawLinePO where decoration.orderId = :orderId order by dlid desc";
+		return (DrawLinePO) session().createQuery(hql).setString("orderId", orderId).setMaxResults(1).uniqueResult();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;
