@@ -352,6 +352,21 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 			}
 		}
 
+		// 设置返回字段
+		quotetionFunctionAreaVO.setQfaId(quotetetionFunctionAreaTO.getQfaId());
+		quotetionFunctionAreaVO.setQid(quotetionFunctionAreaTO.getQid());
+		quotetionFunctionAreaVO.setFunctionAreaOrder(quotetionFunctionAreaTO.getFunctionAreaOrder());
+		quotetionFunctionAreaVO.setType(quotetionFunctionAreaTO.getType());
+		quotetionFunctionAreaVO.setName(quotetionFunctionAreaTO.getName());
+
+		// 查询并返回功能区参数
+		List<com.fanglin.quotation.po.QuotetionFunctionAreaParamPO> params = quotetionFunctionAreaParamDao.queryQuotetionFunctionAreaParam(quotetionFunctionAreaTO.getQfaId());
+		if (params != null && !params.isEmpty()) {
+			com.fanglin.quotation.vo.QuotetionFunctionAreaParamVO paramVO = new com.fanglin.quotation.vo.QuotetionFunctionAreaParamVO();
+			BeanUtil.copyProperties(params.get(0), paramVO);
+			quotetionFunctionAreaVO.setQuotetionFunctionAreaParam(paramVO);
+		}
+
 		quotetionFunctionAreaVO.setQuotetionFunctionAreaItems(quotetionFunctionAreaItemVOs);
 
 		return quotetionFunctionAreaVO;
