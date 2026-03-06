@@ -1546,6 +1546,10 @@ $.extend(api, {
         queryDecorationAtttype: {
             url: "queryDecorationAtttype.do"
         },
+        updateDecorationAtttype: {
+            url: "updateDecorationAtttype.do",
+            type: "update"
+        },
 
         pageDecorationMatching: {
             url: "pageDecorationMatching.do",

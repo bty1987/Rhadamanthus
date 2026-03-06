@@ -69,4 +69,10 @@ public class DecorationAtttypeServiceImpl implements DecorationAtttypeService {
 		return null;
 	}
 
+	@Override
+	@Transactional(readOnly = false)
+	public void updateDecorationAtttype(long daid, short manageDiscount, short taxDiscount) {
+		decorationAtttypeDao.updateDecorationAtttype(daid, manageDiscount, taxDiscount);
+	}
+
 }

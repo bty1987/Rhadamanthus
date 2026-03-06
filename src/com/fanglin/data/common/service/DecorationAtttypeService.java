@@ -14,4 +14,6 @@ public interface DecorationAtttypeService {
 
 	public DecorationAtttypeVO queryDecorationAtttype(DecorationAtttypeVO decorationAtttypeVO, int company);
 
+	public void updateDecorationAtttype(long daid, short manageDiscount, short taxDiscount);
+
 }
