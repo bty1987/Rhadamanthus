@@ -118,7 +118,7 @@ public class A20260303ServiceImpl implements A20260303Service {
 				// vid 不为空，尝试查找现有楼盘进行更新
 				try {
 					long vidLong = Long.parseLong(vid);
-					villagePO = villageDao.get(vidLong);
+					villagePO = villageDao.queryVillage(vidLong);
 					if (villagePO != null) {
 						operation = "update";
 					}
@@ -161,7 +161,7 @@ public class A20260303ServiceImpl implements A20260303Service {
 			if (pvid != null && !pvid.trim().isEmpty()) {
 				try {
 					long pvidLong = Long.parseLong(pvid);
-					VillagePO parentVillage = villageDao.get(pvidLong);
+					VillagePO parentVillage = villageDao.queryVillage(pvidLong);
 					if (parentVillage != null) {
 						villagePO.setParentVillage(parentVillage);
 					} else {
