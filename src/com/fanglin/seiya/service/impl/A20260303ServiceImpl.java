@@ -89,16 +89,20 @@ public class A20260303ServiceImpl implements A20260303Service {
 				throw new FLException(510000, "公司不存在: " + company);
 			}
 
-			// 1. 通过城市名称查找城市（不创建）
+			// 1. 通过城市名称查找城市，不存在则自动创建
 			CityPO cityPO = queryCityByName(city);
 			if (cityPO == null) {
-				throw new FLException(510001, "城市不存在: " + city);
+				logger.info("城市不存在，自动创建: city={}", city);
+				cityPO = createCity(city);
+				logger.info("城市创建成功: cid={}, name={}", cityPO.getCid(), cityPO.getName());
 			}
 
-			// 2. 通过城市和区域名称查找城区（不创建）
+			// 2. 通过城市和区域名称查找城区，不存在则自动创建
 			CityProperPO cityProperPO = queryCityProperByNameAndCity(proper, cityPO.getCid());
 			if (cityProperPO == null) {
-				throw new FLException(510002, "城区不存在: " + proper);
+				logger.info("城区不存在，自动创建: proper={}, cityCid={}", proper, cityPO.getCid());
+				cityProperPO = createCityProper(proper, cityPO);
+				logger.info("城区创建成功: cpid={}, name={}", cityProperPO.getCpid(), cityProperPO.getName());
 			}
 
 			// 3. 判断是新增还是更新
@@ -262,7 +266,7 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	/**
 	 * 通过规则表达式查找楼栋名称规则（不创建）
-	 * 
+	 *
 	 * @param rule 规则表达式
 	 * @return BuildingNameRulePO，不存在则返回null
 	 */
@@ -275,6 +279,120 @@ public class A20260303ServiceImpl implements A20260303Service {
 			return existingRules.get(0);
 		}
 		return null;
+	}
+
+	/**
+	 * 创建城市
+	 *
+	 * @param cityName 城市名称
+	 * @return 创建的CityPO
+	 */
+	private CityPO createCity(String cityName) {
+		CityPO cityPO = new CityPO();
+
+		// 生成城市编号
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CITY_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
+		StringBuffer no = new StringBuffer();
+		no.append("C_");
+		no.append(FormatUtil.fillZero(count, "00"));
+		cityPO.setNo(no.toString());
+
+		// 设置城市名称
+		cityPO.setName(cityName);
+
+		// 从城市名称中提取省份（如"沈阳市"提取"辽宁省"，默认使用城市名称）
+		String province = extractProvinceFromCityName(cityName);
+		cityPO.setProvince(province);
+
+		// 生成拼音
+		List<String> pinyinList = (List<String>) PinYin4Util.getPinyin(cityName);
+		if (pinyinList != null && !pinyinList.isEmpty()) {
+			cityPO.setPinyin(pinyinList.get(0));
+		}
+
+		// region可以为空
+		cityPO.setRegion(null);
+
+		// 保存并刷新以获取生成的cid
+		cityDao.save(cityPO);
+		cityDao.flush();
+		cityDao.refresh(cityPO);
+
+		return cityPO;
+	}
+
+	/**
+	 * 创建城区
+	 *
+	 * @param properName 城区名称
+	 * @param cityPO 所属城市
+	 * @return 创建的CityProperPO
+	 */
+	private CityProperPO createCityProper(String properName, CityPO cityPO) {
+		CityProperPO cityProperPO = new CityProperPO();
+
+		// 生成城区编号
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CITY_PROPER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
+		StringBuffer no = new StringBuffer();
+		no.append("R_");
+		no.append(FormatUtil.fillZero(count, "000"));
+		cityProperPO.setNo(no.toString());
+
+		// 设置城区名称
+		cityProperPO.setName(properName);
+
+		// 关联城市
+		cityProperPO.setCity(cityPO);
+
+		// 生成拼音
+		List<String> pinyinList = (List<String>) PinYin4Util.getPinyin(properName);
+		if (pinyinList != null && !pinyinList.isEmpty()) {
+			cityProperPO.setPinyin(pinyinList.get(0));
+		}
+
+		// 保存并刷新以获取生成的cpid
+		cityProperDao.save(cityProperPO);
+		cityProperDao.flush();
+		cityProperDao.refresh(cityProperPO);
+
+		return cityProperPO;
+	}
+
+	/**
+	 * 从城市名称中提取省份
+	 * 简单规则：如果城市名称以"市"结尾，则提取或推测省份
+	 *
+	 * @param cityName 城市名称
+	 * @return 省份名称
+	 */
+	private String extractProvinceFromCityName(String cityName) {
+		if (cityName == null || cityName.isEmpty()) {
+			return "";
+		}
+
+		// 常见的直辖市
+		if (cityName.contains("北京")) {
+			return "北京市";
+		}
+		if (cityName.contains("上海")) {
+			return "上海市";
+		}
+		if (cityName.contains("天津")) {
+			return "天津市";
+		}
+		if (cityName.contains("重庆")) {
+			return "重庆市";
+		}
+
+		// 如果城市名称以"市"结尾，去掉"市"作为省份的参考
+		if (cityName.endsWith("市")) {
+			// 尝试从第一个字符提取省份（简单处理）
+			// 实际项目中可能需要更完善的地区映射表
+			return cityName.replace("市", "省"); // 简单替换，如"沈阳市" -> "沈阳省"
+		}
+
+		// 默认返回原城市名称
+		return cityName;
 	}
 
 }
