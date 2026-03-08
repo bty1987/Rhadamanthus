@@ -141,6 +141,18 @@ public class DutyServiceImpl implements DutyService {
 		dutyPO.setStatus(DutyPO.STATUS_INIT_INT);
 		dutyPO.setPinYin(PinYin4Util.getPinyin(dutyVO.getName()).get(0));
 
+		// 自动生成编号（如果用户未填写）
+		if (dutyVO.getCode() == null || dutyVO.getCode().trim().isEmpty()) {
+			dutyPO.setCode(generateDutyCode());
+		} else {
+			// 手动指定编号，检查唯一性
+			DutyPO existingCode = dutyDao.queryDutyByCode(dutyVO.getCode());
+			if (existingCode != null) {
+				throw new FLException(130017, "编号已存在");
+			}
+			dutyPO.setCode(dutyVO.getCode().trim());
+		}
+
 		dutyDao.save(dutyPO);
 
 		return 0;
@@ -156,15 +168,51 @@ public class DutyServiceImpl implements DutyService {
 			throw new FLException(130015, "职位不存在");
 		}
 
+		// 如果修改了编号，检查唯一性
+		if (dutyVO.getCode() != null && !dutyVO.getCode().trim().isEmpty()) {
+			String newCode = dutyVO.getCode().trim();
+			if (!newCode.equals(dutyPO.getCode())) {
+				DutyPO existingCode = dutyDao.queryDutyByCode(newCode);
+				if (existingCode != null && !existingCode.getDid().equals(dutyPO.getDid())) {
+					throw new FLException(130017, "编号已存在");
+				}
+			}
+		}
+
 		DepartmentTypePO departmentTypePO = departmentTypeDao.get(dutyVO.getDepartmentType().getDtid());
 
 		BeanUtil.copyProperties(dutyVO, dutyPO, Arrays.asList("departmentType", "status"));
+
+		if (dutyVO.getCode() != null && !dutyVO.getCode().trim().isEmpty()) {
+			dutyPO.setCode(dutyVO.getCode().trim());
+		}
 
 		dutyPO.setDepartmentType(departmentTypePO);
 
 		dutyDao.update(dutyPO);
 
 		return 0;
+	}
+
+	/**
+	 * 自动生成岗位编号
+	 * 规则：D + 3位数字（如：D001, D002...）
+	 */
+	private String generateDutyCode() {
+		String maxCode = dutyDao.queryMaxDutyCode();
+
+		if (maxCode == null || maxCode.isEmpty()) {
+			return "D001";
+		}
+
+		try {
+			// 提取数字部分并递增
+			int num = Integer.parseInt(maxCode.substring(1));
+			return String.format("D%03d", num + 1);
+		} catch (Exception e) {
+			// 如果解析失败，从头开始
+			return "D001";
+		}
 	}
 
 	@Override
