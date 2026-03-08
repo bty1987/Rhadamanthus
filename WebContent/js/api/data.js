@@ -1450,6 +1450,41 @@ $.extend(api, {
         deleteNormrice: {
             url: "deleteNormrice.do"
         },
+
+        // 定额工期
+        pageNormtime: {
+            url: "pageNormtime.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["trannum", "workdays"]
+            }, {
+                result: "paging-data-quotationItem",
+                args: ["unitPrice"]
+            }]
+        },
+        queryNormtimeByQiid: {
+            url: "queryNormtimeByQiid.do",
+            type: "query",
+            tranargs: [{
+                result: "normtimes",
+                args: ["trannum", "workdays"]
+            }, {
+                result: "normtimes-constructionNode",
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+            }]
+        },
+        addNormtime: {
+            url: "addNormtime.do",
+            type: "update",
+            tranargs: {
+                args: ["normtime.trannum", "normtime.workdays"]
+            }
+        },
+        deleteNormtime: {
+            url: "deleteNormtime.do"
+        },
+
         pageNormood: {
             url: "pageNormood.do",
             type: "query",
