@@ -66,6 +66,7 @@ jQuery(function($) {
             var $btnProLine = $('<a></a>').addClass('btn btn-minier btn-inverse').html("预派监理");
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html("验房");
             var $btnProfile = $('<a></a>').addClass('btn btn-minier btn-warning').html("画像");
+            var $btnService = $('<a></a>').addClass('btn btn-minier btn-purple').html("服务功能");
 
             var propertyArr = [
             ["装修单: ", v.decoration.orderId, "blue", function(btn) {
@@ -136,7 +137,7 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $btnDiv.append($btnView).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).append($btnProfile).appendTo($h3);
+            $btnDiv.append($btnView).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).append($btnProfile).append($btnService).appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function() {
@@ -175,6 +176,11 @@ jQuery(function($) {
             $btnProfile.click(function() {
 
                 viewDecorationProfile(v.decoration.orderId);
+            });
+
+            $btnService.click(function() {
+
+                viewDecorationService(v.decoration.orderId);
             });
 
             return $liLine;
@@ -480,5 +486,13 @@ jQuery(function($) {
         }
 
         com.popup4page("#layerPopUp", api.index.customerProfile4detailIndex.url, "客户画像: ");
+    }
+
+    // 服务功能
+    function viewDecorationService(orderId) {
+
+        params.decoration.orderId = orderId;
+
+        com.popup4page("#servicePopUp", "/views/decoration/decoration4service.html", "服务功能: ");
     }
 });
