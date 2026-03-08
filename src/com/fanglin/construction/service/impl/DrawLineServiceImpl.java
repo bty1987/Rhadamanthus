@@ -112,6 +112,9 @@ public class DrawLineServiceImpl implements DrawLineService {
 	private SystemConfigDao systemConfigDao;
 
 	@Autowired
+	private com.fanglin.dingding.service.DingTalkMessageService dingTalkMessageService;
+
+	@Autowired
 	private ConstructionAccessoryDao constructionAccessoryDao;
 
 	@Autowired
@@ -335,6 +338,26 @@ public class DrawLineServiceImpl implements DrawLineService {
 		}
 
 		constructionDao.update(constructionPO);
+
+		// 推送钉钉消息给监理
+		if (constructionPO.getSupervisor() != null && constructionPO.getSupervisor().getUserId() != null) {
+			String supervisorId = constructionPO.getSupervisor().getUserId();
+			String busiTypeName = constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? constructionPO.getDecoration().getBusitype().getName() : "-";
+			String operatorName = operater != null ? operater.getCurrentName() : "-";
+
+			String dingtalkMessage = String.format(
+				"【放线预处理通知】\n订单号: %s\n业务类型: %s\n操作人: %s\n说明: 该订单已完成放线预处理，请关注后续放线安排。",
+				decorationPO.getOrderId(),
+				busiTypeName,
+				operatorName
+			);
+
+			try {
+				dingTalkMessageService.sendDing(supervisorId, dingtalkMessage, decorationPO.getCompany());
+			} catch (Exception e) {
+				// 推送失败不影响主业务流程
+			}
+		}
 
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "pretreatDrawLine", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"SUPERVISOR_PRE_ASSIGNED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
