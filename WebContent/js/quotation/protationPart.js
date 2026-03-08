@@ -814,6 +814,7 @@ var protationPart = (function() {
 
             if (submitType === 1) {
                 // 活动优惠提交：加载审批人后直接显示审批弹窗，不做任何验证
+                // 注意：活动优惠金额必须通过审批流程才能修改，不能直接更新到全局参数
                 quote.loadApprovers(1, function() {
                     com.focusPage("#approveModal").modal("show");
                 });
@@ -829,11 +830,11 @@ var protationPart = (function() {
             quo.oldProtation.manageDiscount = quo.basicParams["protation.manageDiscount"];
             quo.oldProtation.activityProfit = quo.basicParams["protation.activityProfit"];
 
-            // 获取用户输入的新值
+            // 获取用户输入的新值（管理优惠提交时不包含活动优惠，活动优惠只能通过审批流程修改）
             quo.basicParams["protation.preferPrice"] = com.focusPage('#preferPrices').val();
             quo.basicParams["protation.manageProfit"] = com.focusPage('#preferManage').val();
             quo.basicParams["protation.advanceProfit"] = com.focusPage('#preferAdvance').val();
-            quo.basicParams["protation.activityProfit"] = com.focusPage('#activityProfit').val();
+            // 注意：活动优惠(activityProfit)不在此处更新，只能通过审批流程(type=1)修改
 
             // 校验管理优惠不能大于管理费
             if (quo.basicParams["protation.manageProfit"] > quo.basicParams["protation.managePrice"]) {
@@ -905,8 +906,10 @@ var protationPart = (function() {
                 }, quo.basicParams);
 
                 if (quote.currentSubmitType === 1) {
-                    // 活动优惠审批
-                    params["approvalProtationPrefer.activityPrice"] = quo.basicParams["protation.activityProfit"];
+                    // 活动优惠审批：从输入框获取活动优惠金额（不使用全局参数）
+                    // 注意：活动优惠只能通过审批流程修改，审批通过后由后端更新到数据库
+                    var activityProfitInput = com.focusPage('#activityProfit').val();
+                    params["approvalProtationPrefer.activityPrice"] = activityProfitInput;
                     params["approvalProtationPrefer.totalPrice"] = quo.basicParams["protation.totalPrice"];
                 } else {
                     // 管理优惠审批
