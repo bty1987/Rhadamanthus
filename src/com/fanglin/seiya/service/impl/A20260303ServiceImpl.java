@@ -219,7 +219,7 @@ public class A20260303ServiceImpl implements A20260303Service {
 						if (buildingNameRulePO == null) {
 							logger.info("规则不存在，自动创建: rule={}", rule);
 							buildingNameRulePO = createBuildingNameRule(rule, comment);
-							logger.info("规则创建成功: bnrid={}, rule={}", buildingNameRulePO.getBnrid(), rule);
+							logger.info("规则创建成功: bnrid={}, rule={}", buildingNameRulePO.getId(), rule);
 						}
 
 						// 创建 VillageRule 关联
@@ -281,7 +281,7 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	/**
 	 * 通过规则表达式查找楼栋名称规则（不创建）
-	 *
+	 * 
 	 * @param rule 规则表达式
 	 * @return BuildingNameRulePO，不存在则返回null
 	 */
@@ -298,7 +298,7 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	/**
 	 * 创建城市
-	 *
+	 * 
 	 * @param cityName 城市名称
 	 * @return 创建的CityPO
 	 */
@@ -339,7 +339,7 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	/**
 	 * 创建城区
-	 *
+	 * 
 	 * @param properName 城区名称
 	 * @param cityPO 所属城市
 	 * @return 创建的CityProperPO
@@ -375,9 +375,8 @@ public class A20260303ServiceImpl implements A20260303Service {
 	}
 
 	/**
-	 * 从城市名称中提取省份
-	 * 简单规则：如果城市名称以"市"结尾，则提取或推测省份
-	 *
+	 * 从城市名称中提取省份 简单规则：如果城市名称以"市"结尾，则提取或推测省份
+	 * 
 	 * @param cityName 城市名称
 	 * @return 省份名称
 	 */
@@ -412,9 +411,8 @@ public class A20260303ServiceImpl implements A20260303Service {
 	}
 
 	/**
-	 * 获取或创建默认大区
-	 * 用于解决 city 表 rid 字段 NOT NULL 的约束问题
-	 *
+	 * 获取或创建默认大区 用于解决 city 表 rid 字段 NOT NULL 的约束问题
+	 * 
 	 * @return 默认的 RegionPO
 	 */
 	private RegionPO getOrCreateDefaultRegion() {
@@ -448,7 +446,7 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	/**
 	 * 创建楼栋名称规则
-	 *
+	 * 
 	 * @param rule 规则表达式（如：\d+#\d+-\d）
 	 * @param comment 规则说明（可为空）
 	 * @return 创建的 BuildingNameRulePO
@@ -461,14 +459,14 @@ public class A20260303ServiceImpl implements A20260303Service {
 		StringBuffer no = new StringBuffer();
 		no.append("BNR-");
 		no.append(FormatUtil.fillZero(count, "00000"));
-		buildingNameRulePO.setNo(no.toString());
+		buildingNameRulePO.setBuildingNameRuleId(no.toString());
 
 		// 设置规则表达式和说明
 		buildingNameRulePO.setRule(rule);
 		if (comment != null && !comment.trim().isEmpty()) {
-			buildingNameRulePO.setComment(comment);
+			buildingNameRulePO.setRuleContent(comment);
 		} else {
-			buildingNameRulePO.setComment(rule); // 默认使用规则表达式作为说明
+			buildingNameRulePO.setRuleContent(rule); // 默认使用规则表达式作为说明
 		}
 
 		// 保存并刷新以获取生成的bnrid
