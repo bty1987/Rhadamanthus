@@ -173,7 +173,7 @@ public class DutyServiceImpl implements DutyService {
 			String newCode = dutyVO.getCode().trim();
 			if (!newCode.equals(dutyPO.getCode())) {
 				DutyPO existingCode = dutyDao.queryDutyByCode(newCode);
-				if (existingCode != null && !existingCode.getDid().equals(dutyPO.getDid())) {
+				if (existingCode != null && existingCode.getDid() != dutyPO.getDid()) {
 					throw new FLException(130017, "编号已存在");
 				}
 			}
@@ -195,8 +195,7 @@ public class DutyServiceImpl implements DutyService {
 	}
 
 	/**
-	 * 自动生成岗位编号
-	 * 规则：D + 3位数字（如：D001, D002...）
+	 * 自动生成岗位编号 规则：D + 3位数字（如：D001, D002...）
 	 */
 	private String generateDutyCode() {
 		String maxCode = dutyDao.queryMaxDutyCode();
