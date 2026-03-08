@@ -389,8 +389,8 @@ public class Signature {
 		params.setVerifiedWay("0"); // 实名认证套餐类型 , 0: 三要素标准方案
 		params.setPageModify("1"); // 是否允许用户页面修改, 1: 允许 , 2: 不允许
 
-		params.setNotifyUrl(NOTIFY_URL_STR); // 异步回调地址
-		params.setReturnUrl(RETURN_URL_STR); // 同步通知url
+		// params.setNotifyUrl(NOTIFY_URL_STR); // 异步回调地址
+		// params.setReturnUrl(RETURN_URL_STR); // 同步通知url
 		params.setResultType("1"); // 认证跳转方式 , 1: 直接跳转 , 2: 确认后跳转
 		params.setCertFlag("1"); // 自动申请证书 , 0: 不申请 , 1: 自动申请
 		params.setCertType("0"); // 证件类型 , 0: 身份证 , 1: 护照 , B: 港澳 , C: 台湾

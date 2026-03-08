@@ -227,7 +227,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		}
 
 		if (housePO != null && customerSourceDao.queryCustomerSource(creater.getUid(), housePO.getHouseNumber(), housePO.getVillage().getVid(), company) != null) {
-			throw new FLException(330071, "客户楼盘楼号存在");
+			// throw new FLException(330071, "客户楼盘楼号存在");
 		}
 
 		if (housePO != null) {

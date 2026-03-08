@@ -52,6 +52,9 @@ import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.fadada.signature.Signature;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageCueuingPO;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.dao.UserDao;
@@ -68,9 +71,6 @@ import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.information.dao.MessageQueuingDao;
-import com.fanglin.information.po.MessageQueuingPO;
-import com.fanglin.information.po.MessageCueuingPO;
 
 @Service("decorationContractService")
 @Transactional(readOnly = true)
@@ -597,6 +597,10 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		decorationDao.update(decorationPO);
+
+		constructionInfoPO.setInitDesignTime(DateUtil.getDateToTimestamp(new Date()));
+
+		constructionInfoDao.update(constructionInfoPO);
 
 		if (!resignFlag && !prosignFlag) { // 签约
 
