@@ -203,13 +203,15 @@ public class A20260303ServiceImpl implements A20260303Service {
 				for (int i = 0; i < ruleArray.size(); i++) {
 					JSONObject ruleObj = ruleArray.getJSONObject(i);
 					String rule = ruleObj.getString("rule");
+					String comment = ruleObj.getString("comment");
 
 					if (rule != null && !rule.trim().isEmpty()) {
-						// 只查找已存在的规则，不创建
+						// 查找规则，不存在则自动创建
 						BuildingNameRulePO buildingNameRulePO = findBuildingNameRule(rule);
 						if (buildingNameRulePO == null) {
-							logger.warn("规则不存在，跳过: rule={}", rule);
-							continue;
+							logger.info("规则不存在，自动创建: rule={}", rule);
+							buildingNameRulePO = createBuildingNameRule(rule, comment);
+							logger.info("规则创建成功: bnrid={}, rule={}", buildingNameRulePO.getBnrid(), rule);
 						}
 
 						// 创建 VillageRule 关联
@@ -434,6 +436,39 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 		logger.info("创建默认大区: rid={}", defaultRegion.getRid());
 		return defaultRegion;
+	}
+
+	/**
+	 * 创建楼栋名称规则
+	 *
+	 * @param rule 规则表达式（如：\d+#\d+-\d）
+	 * @param comment 规则说明（可为空）
+	 * @return 创建的 BuildingNameRulePO
+	 */
+	private BuildingNameRulePO createBuildingNameRule(String rule, String comment) {
+		BuildingNameRulePO buildingNameRulePO = new BuildingNameRulePO();
+
+		// 生成规则编号
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BUILDING_NAME_RULE_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
+		StringBuffer no = new StringBuffer();
+		no.append("BNR-");
+		no.append(FormatUtil.fillZero(count, "00000"));
+		buildingNameRulePO.setNo(no.toString());
+
+		// 设置规则表达式和说明
+		buildingNameRulePO.setRule(rule);
+		if (comment != null && !comment.trim().isEmpty()) {
+			buildingNameRulePO.setComment(comment);
+		} else {
+			buildingNameRulePO.setComment(rule); // 默认使用规则表达式作为说明
+		}
+
+		// 保存并刷新以获取生成的bnrid
+		buildingNameRuleDao.save(buildingNameRulePO);
+		buildingNameRuleDao.flush();
+		buildingNameRuleDao.refresh(buildingNameRulePO);
+
+		return buildingNameRulePO;
 	}
 
 }
