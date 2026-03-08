@@ -57,6 +57,12 @@ public class A20260303Action extends BaseListAction {
 	/** 规则数组（JSON字符串格式） */
 	private String rule;
 
+	/** X坐标（double类型，会乘以1000000转为整数） */
+	private Double x;
+
+	/** Y坐标（double类型，会乘以1000000转为整数） */
+	private Double y;
+
 	// ==================== 响应字段 ====================
 
 	/**
@@ -92,7 +98,7 @@ public class A20260303Action extends BaseListAction {
 		}
 
 		// 调用服务层处理
-		Map<String, Object> result = a20260303Service.syncVillage(vid, name, proper, city, pvid, company, ruleArray);
+		Map<String, Object> result = a20260303Service.syncVillage(vid, name, proper, city, pvid, company, ruleArray, x, y);
 
 		// 将返回的vid赋值给请求参数，作为响应结果
 		Object resultVid = result.get("vid");
@@ -159,6 +165,22 @@ public class A20260303Action extends BaseListAction {
 
 	public void setRule(String rule) {
 		this.rule = rule;
+	}
+
+	public Double getX() {
+		return x;
+	}
+
+	public void setX(Double x) {
+		this.x = x;
+	}
+
+	public Double getY() {
+		return y;
+	}
+
+	public void setY(Double y) {
+		this.y = y;
 	}
 
 }

@@ -78,12 +78,12 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, Object> syncVillage(String vid, String name, String proper, String city, String pvid, Integer company, JSONArray ruleArray) throws FLException {
+	public Map<String, Object> syncVillage(String vid, String name, String proper, String city, String pvid, Integer company, JSONArray ruleArray, Double x, Double y) throws FLException {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		try {
-			logger.info("同步楼盘数据: vid={}, name={}, proper={}, city={}, pvid={}, company={}", vid, name, proper, city, pvid, company);
+			logger.info("同步楼盘数据: vid={}, name={}, proper={}, city={}, pvid={}, company={}, x={}, y={}", vid, name, proper, city, pvid, company, x, y);
 
 			// 0. 验证公司是否存在
 			if (company == null) {
@@ -146,6 +146,14 @@ public class A20260303ServiceImpl implements A20260303Service {
 			villagePO.setCityProper(new CityProperPO(cityProperPO.getCpid()));
 			villagePO.setCid(cityPO.getCid());
 			villagePO.setCompany(company);
+
+			// 设置坐标（乘以1000000转为整数）
+			if (x != null) {
+				villagePO.setX((int) (x * 1000000));
+			}
+			if (y != null) {
+				villagePO.setY((int) (y * 1000000));
+			}
 
 			List<String> pinyinList = (List<String>) PinYin4Util.getPinyin(name);
 			if (pinyinList != null && !pinyinList.isEmpty()) {
