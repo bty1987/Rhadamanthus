@@ -61,12 +61,12 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $invalid = $('<div></div>').addClass('pull-right');
             var $btnView = $("<a></a>").addClass("btn btn-minier btn-yellow").html("记录");
-            var $btnConplan = $('<a></a>').addClass('btn btn-minier btn-warning').html("施工计划");
+            var $btnService = $('<a></a>').addClass('btn btn-minier btn-purple').html("服务");
             var $btnConplanPrint = $('<a></a>').addClass('btn btn-minier btn-success').html("打印");
+            var $btnConplan = $('<a></a>').addClass('btn btn-minier btn-warning').html("施工计划");
             var $btnProLine = $('<a></a>').addClass('btn btn-minier btn-inverse').html("预派监理");
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html("验房");
             var $btnProfile = $('<a></a>').addClass('btn btn-minier btn-warning').html("画像");
-            var $btnService = $('<a></a>').addClass('btn btn-minier btn-purple').html("服务功能");
 
             var propertyArr = [
             ["装修单: ", v.decoration.orderId, "blue", function(btn) {
@@ -137,7 +137,7 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $btnDiv.append($btnView).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).append($btnProfile).append($btnService).appendTo($h3);
+            $btnDiv.append($btnView).append($btnService).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).append($btnProfile).appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function() {
@@ -215,12 +215,14 @@ jQuery(function($) {
         options["constructionInfo.decoration.designStatus"] = constant.decoration().decoration.DESIGNSTATUS_END_INT;
         options["constructionInfo.isIssue"] = 0;
         options["constructionInfo.drawlineTime"] = com.dateFormat(current, "yyyy-MM-dd");
+        options["decoration.statuses"] = [0, 1, 2, 3, 4, 7];  // 排除废单(5)、终止(6)、完工(8)
     }
 
     if (information.pageType == "done") {
         options["constructionInfo.decoration.houseType"] = "现房";
         options["constructionInfo.decoration.designStatus"] = constant.decoration().decoration.DESIGNSTATUS_END_INT;
         options["constructionInfo.isIssue"] = 0;
+        options["decoration.statuses"] = [0, 1, 2, 3, 4, 7];  // 排除废单(5)、终止(6)、完工(8)
     }
 
     if (information.pageType == "issue") {
