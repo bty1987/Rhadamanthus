@@ -80,6 +80,22 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 		return (DutyPO) session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_NAME_STR, name)).uniqueResult();
 	}
 
+	@Override
+	public DutyPO queryDutyByCode(String code) {
+		if (code == null || code.trim().isEmpty()) {
+			return null;
+		}
+		return (DutyPO) session().createCriteria(DutyPO.class)
+				.add(Restrictions.eq(DutyPO.COLUMN_CODE_STR, code.trim()))
+				.uniqueResult();
+	}
+
+	@Override
+	public String queryMaxDutyCode() {
+		String hql = "SELECT MAX(d.code) FROM DutyPO d WHERE d.code LIKE 'D%'";
+		return (String) session().createQuery(hql).uniqueResult();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

@@ -29,6 +29,19 @@
                         <div class="space-4"></div>
 
                         <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="dutyCode">编号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="dutyCode" class="col-xs-10 col-sm-5"
+                                       placeholder="留空自动生成（如：D001）"
+                                       data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                                <span class="help-inline" style="margin-left: 5px; color: #999;">
+                                    <i class="icon-info-sign"></i> 留空自动生成，或手动输入自定义编号
+                                </span>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange" for="lead">领导标识</label>
                             <div class="col-sm-9">
                                 <select maxlength="64" id="lead" class="col-xs-10 col-sm-5  v_required" data-toggle="popover" data-trigger='manual'>

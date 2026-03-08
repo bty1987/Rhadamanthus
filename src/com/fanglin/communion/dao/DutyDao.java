@@ -19,4 +19,8 @@ public interface DutyDao extends Dao<DutyPO> {
 
 	public DutyPO queryDutyByName(String name);
 
+	public DutyPO queryDutyByCode(String code);
+
+	public String queryMaxDutyCode();
+
 }

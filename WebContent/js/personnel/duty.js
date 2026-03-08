@@ -25,7 +25,7 @@
         var creatLine = function(v) { // 页面中的一条数据
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name + (v.code ? ' <span class="grey">[' + v.code + ']</span>' : '')));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -127,6 +127,7 @@
     duty.modal = com.focusPage("#addItemModal");
     duty.dutyItems.did = com.focusPage("#did");
     duty.dutyItems.name = com.focusPage("#dutyName");
+    duty.dutyItems.code = com.focusPage("#dutyCode");
     duty.dutyItems.lead = com.focusPage("#lead");
     duty.dutyItems.depttype = com.focusPage("#depttype");
     $.extend(com.validator, duty.validator); // 将多个对象合并成一个对象
@@ -146,6 +147,7 @@
         duty.dutyItems.lead.val(row.lead);
         duty.dutyItems.did.val(row.did);
         duty.dutyItems.name.val(row.name);
+        duty.dutyItems.code.val(row.code);
         duty.modal.modal("show"); // 弹出弹层
     }
     // 保存
@@ -157,6 +159,7 @@
         var url;
         var options = {
             "duty.name": duty.dutyItems.name.val(),
+            "duty.code": duty.dutyItems.code.val(),
             "duty.lead": duty.dutyItems.lead.val(),
             "duty.departmentType.dtid": duty.dutyItems.depttype.val(),
             "duty.type": 0,

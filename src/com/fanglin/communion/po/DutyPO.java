@@ -27,6 +27,8 @@ public class DutyPO implements Serializable {
 
 	public static final String COLUMN_NAME_STR = "name";
 
+	public static final String COLUMN_CODE_STR = "code";
+
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final short STATUS_INIT_INT = 0;
@@ -34,6 +36,8 @@ public class DutyPO implements Serializable {
 	private long did;
 
 	private String name;
+
+	private String code;
 
 	private short status;
 
@@ -83,6 +87,15 @@ public class DutyPO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name = "code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	@Column(name = "status")
