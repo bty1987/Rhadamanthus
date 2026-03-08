@@ -1,0 +1,123 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="normtimeCondList" class="fl_search clearfix"></div>
+            <div id="normtimeResultList" class="clearfix tab-pane active col-xs-12"></div>
+            <div id="normtimePagenation" class="fl-page-wrap clearfix col-xs-12"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加定额工期模态框 -->
+<div class="modal fade" id="addNormtimeModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="SaveModal">添加定额工期</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="constructionNode">工程节点</label>
+                        <div class="col-sm-9">
+                            <select id="constructionNode" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="unit">定额单位</label>
+                        <div class="col-sm-9">
+                            <select  id="unit" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="trannum">转换量</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="trannum" class="col-xs-10 col-sm-5 v_required v_afloat_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="workdays">工时天数</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="workdays" class="col-xs-10 col-sm-5 v_required v_afloat_2" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="addNormtimeItemBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="CancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 导入定额工期模态框 -->
+<div class="modal fade" id="importNormtimeModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">导入定额工期</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <!-- 导入格式说明 -->
+                    <div class="form-group alert alert-info">
+                        <p><strong>导入格式说明:</strong></p>
+                        <p>报价项ID/工程节点ID/单位/转换量/工时天数</p>
+                        <p style="color: #999;">注意: 上传文件中请填写具体内容, 不显示表头</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="quotationVersion">报价版本</label>
+                        <div class="col-sm-9">
+                            <select id="quotationVersion" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="attachment">上传文件</label>
+                        <div class="col-sm-9">
+                            <div id="attachment"></div>
+                            <input type="text" class="hidden" id="filePath"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="executeDates">执行日期</label>
+                        <div class="col-sm-9">
+                            <input class="date-picker v_required" id="executeDates" type="text" readonly="readonly"
+                                   data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="executeTimes">执行时间</label>
+                        <div class="col-sm-9">
+                            <div class="bootstrap-timepicker">
+                                <input id="executeTimes" type="text" class="v_required"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmImportBtn" class="btn btn-success">导入</button>
+                <button type="button" id="cancelImportBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/utils/planUtils.js','js/data/normtime.js']);
+</script>
