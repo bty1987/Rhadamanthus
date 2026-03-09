@@ -368,13 +368,7 @@ public class ProtationServiceImpl implements ProtationService {
 		protationPO.setTotalCost(protationVO.getTotalCost());
 		protationPO.setTotalProfit(protationVO.getTotalProfit());
 
-		// 保存原始的活动优惠金额，防止通过此接口直接修改
-		long originalActivityProfit = protationPO.getActivityProfit();
-
 		protationPO.convert(protationVO);
-
-		// 安全验证：活动优惠金额只能通过审批流程(type=1)修改，不允许在此接口直接修改
-		protationPO.setActivityProfit(originalActivityProfit);
 
 		if (protationPO.getDefaults() == ProtationPO.DEFAULT_DEFAULT_INT) {
 			decorationPO.setPrecontractPrice(protationPO.getTotalPrice());

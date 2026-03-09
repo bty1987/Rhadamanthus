@@ -1,7 +1,6 @@
 package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 
@@ -37,7 +36,7 @@ public class NormtimeItemVO implements Serializable {
 
 	private Integer trannum;
 
-	private BigDecimal workdays;
+	private Integer workdays;
 
 	private Integer num;
 
@@ -164,11 +163,11 @@ public class NormtimeItemVO implements Serializable {
 		this.trannum = trannum;
 	}
 
-	public BigDecimal getWorkdays() {
+	public Integer getWorkdays() {
 		return workdays;
 	}
 
-	public void setWorkdays(BigDecimal workdays) {
+	public void setWorkdays(Integer workdays) {
 		this.workdays = workdays;
 	}
 
