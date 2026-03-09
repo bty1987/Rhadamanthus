@@ -283,10 +283,15 @@ jQuery(function($) {
                 ["装修单号", "decoration.orderId"],
                 ["楼盘地址", "decoration.house.houseNumber"],
                 ["面积", "decoration.house.buildArea"],
+                ["计划面积", "decoration.house.innerArea"],
                 ["设计分区", "decoration.designer.dept.fatherDept.name"],
                 ["设计部", "decoration.designer.dept.name"],
                 ["设计师", "decoration.designer.userName"],
+                ["业务员", "decoration.salesman.currentName"],
                 ["签单时间", "decoration.contractTime"],
+                ["合同额", "decoration.orderTotalPrice"],
+                ["预签合同额", "decoration.procontractPrice"],
+                ["折扣", "decoration.discount"],
                 ["设计天数", "designPeriod"],
                 ["设计超期天数", "designOverdueDays"],
                 ["分配时间", "issueTime"],
@@ -307,10 +312,15 @@ jQuery(function($) {
                 v.orderId = v.orderId == null ? "" : v.orderId;
                 v.decoration.house.houseNumber = (v.decoration.house == null ? " " : v.decoration.house.village.cityProper.city.name + " " + v.decoration.house.village.cityProper.name + " " + v.decoration.house.village.name + " " + v.decoration.house.houseNumber);
                 v.decoration.house.buildArea = (v.decoration.house == null ? " " : v.decoration.house.buildArea);
+                v.decoration.house.innerArea = (v.decoration.house == null ? " " : v.decoration.house.innerArea);
                 v.decoration.designer.userName = (v.decoration.designer == null ? " " : v.decoration.designer.userName);
                 v.decoration.designer.dept.name = (v.decoration.designer == null ? " " : v.decoration.designer.dept.name);
                 v.decoration.designer.dept.fatherDept.name = (v.decoration.designer == null ? " " : v.decoration.designer.dept.fatherDept.name);
+                v.decoration.salesman.currentName = (v.decoration.salesman == null ? " " : v.decoration.salesman.currentName);
                 v.decoration.contractTime = (v.decoration.contractTime == null ? "" : v.decoration.contractTime);
+                v.decoration.orderTotalPrice = (v.decoration.orderTotalPrice == null ? "" : v.decoration.orderTotalPrice);
+                v.decoration.procontractPrice = (v.decoration.procontractPrice == null ? "" : v.decoration.procontractPrice);
+                v.decoration.discount = (v.decoration.discount == null ? "" : v.decoration.discount);
                 v.designPeriod = (v.designPeriod == null ? "" : v.designPeriod);
                 v.designOverdueDays = (v.designOverdueDays == null ? "" : v.designOverdueDays);
                 v.issueTime = (v.issueTime == null ? "" : v.issueTime);
