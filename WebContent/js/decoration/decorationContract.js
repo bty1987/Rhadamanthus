@@ -123,6 +123,11 @@ jQuery(function($) {
     customerItems(decorationContract.decoration);
     contractRecordItems();
 
+    // 初始化合同记录弹窗中的日期时间控件
+    com.datetime(decorationContract.items.recordCommitTime);
+    com.datetime(decorationContract.items.recordStartTime);
+    com.datetime(decorationContract.items.recordEndTime);
+
     decorationContract.status = constant.decoration().decorationContract.status.keys;
 
     com.post(api.data.querySignet, {}, function(res) {
@@ -240,12 +245,6 @@ jQuery(function($) {
         // 显示模态框
         decorationContract.modals.contractRecordModal.modal("show");
     }
-
-    // 模态框显示完成后初始化日期选择器
-    decorationContract.modals.contractRecordModal.on("shown.bs.modal", function() {
-        decorationContract.items.recordStartTime.datepicker(com.datepickerdefault);
-        decorationContract.items.recordEndTime.datepicker(com.datepickerdefault);
-    });
 
     var searcher = new Searcher();
 
