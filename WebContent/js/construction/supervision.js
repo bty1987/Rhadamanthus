@@ -5,12 +5,15 @@
         modals: {
             constructionInfoModal: com.focusPage("#constructionInfoModal"),
             printQuotationCNModal: com.focusPage("#printQuotationCNModal"),
+            printNormtimeCNModal: com.focusPage("#printNormtimeCNModal"),
         },
 
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
             printNormriceSBtn: com.focusPage("#printNormriceSBtn"),
             printNormriceWBtn: com.focusPage("#printNormriceWBtn"),
+            printNormtimeSBtn: com.focusPage("#printNormtimeSBtn"),
+            printNormtimeWBtn: com.focusPage("#printNormtimeWBtn"),
         },
 
         items: {
@@ -26,6 +29,7 @@
             comment: com.focusPage("#comment")
         },
         constructionNode: com.focusPage("#constructionNode"),
+        normtimeConstructionNode: com.focusPage("#normtimeConstructionNode"),
         quotationDetail: {},
         pageType: params.urlLoadParams.type,
 
@@ -35,6 +39,8 @@
 
     constructionNodes.btns.printNormriceSBtn.bindClick(printNormriceS);
     constructionNodes.btns.printNormriceWBtn.bindClick(printNormriceW);
+    constructionNodes.btns.printNormtimeSBtn.bindClick(printNormtimeS);
+    constructionNodes.btns.printNormtimeWBtn.bindClick(printNormtimeW);
 
     constructionNodes.modals.constructionInfoModal.on("hide.bs.modal", function() {
 
@@ -48,6 +54,7 @@
     com.datetime(constructionNodes.items.designTime);
 
     constructionNodes.constructionNode.bindData(constant.data().construction.node.datas, "key", "value", false);
+    constructionNodes.normtimeConstructionNode.bindData(constant.data().construction.node.datas, "key", "value", false);
 
     constructionNodes.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas, "key", "value");
     constructionNodes.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas, "key", "value");
@@ -84,6 +91,7 @@
             var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-info').html('扣款');
             var $btnQuota = $('<a></a>').addClass('btn btn-minier btn-purple').html("定额材料");
             var $btnQuopt = $('<a></a>').addClass('btn btn-minier btn-danger').html('定额工费');
+            var $btnNormtime = $('<a></a>').addClass('btn btn-minier btn-pink').html('定额工时');
 
             var propertyArr = [
                 ["装修单: ", v.orderId, "blue", function(btn) {
@@ -130,7 +138,7 @@
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnQuota).append($btnQuopt).appendTo($h3);
+            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnQuota).append($btnQuopt).append($btnNormtime).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -189,6 +197,31 @@
                 params.quotation.pageType = constructionNodes.pageType;
 
                 constructionNodes.modals.printQuotationCNModal.modal("show");
+            });
+
+            $btnNormtime.click(function() {
+
+                constructionNodes.quotationDetail = {};
+
+                com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+                    "quotation.orderId": v.orderId
+                }, function(res) {
+
+                    constructionNodes.quotationDetail.quotation = res.quotation;
+                }, null, false);
+
+                var quotationId = constructionNodes.quotationDetail.quotation.qid;
+
+                params.quotation.orderId = v.orderId;
+                params.quotation.orderType = v.type;
+                params.quotation.quotationId = quotationId;
+                params.quotation.subtype = [1];
+                params.quotation.showType = {
+                    itemtype: 5
+                };
+                params.quotation.pageType = constructionNodes.pageType;
+
+                constructionNodes.modals.printNormtimeCNModal.modal("show");
             });
 
             return $liLine;
@@ -336,6 +369,42 @@
         com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, true);
 
         constructionNodes.modals.printQuotationCNModal.modal("hide");
+    }
+
+    function printNormtimeS() {
+
+        params.quotation.type = 1;
+        params.quotation.subtype = 0;
+        params.quotation.workType = constructionNodes.normtimeConstructionNode.val();
+
+        var $subtypes = com.focusPage('input[name="normtimeType"]:checked', '#normtimeSubtype');
+
+        $.each($subtypes, function(i, v) {
+
+            params.quotation.subtype = parseInt(params.quotation.subtype) + parseInt($(v).attr('value'));
+        });
+
+        com.popup("打印定额工时", "/views/quotation/normtimeOutput.html", null, null, true);
+
+        constructionNodes.modals.printNormtimeCNModal.modal("hide");
+    }
+
+    function printNormtimeW() {
+
+        params.quotation.type = 2;
+        params.quotation.subtype = 0;
+        params.quotation.workType = constructionNodes.normtimeConstructionNode.val();
+
+        var $subtypes = com.focusPage('input[name="normtimeType"]:checked', '#normtimeSubtype');
+
+        $.each($subtypes, function(i, v) {
+
+            params.quotation.subtype = parseInt(params.quotation.subtype) + parseInt($(v).attr('value'));
+        });
+
+        com.popup("打印定额工时", "/views/quotation/normtimeOutput.html", null, null, true);
+
+        constructionNodes.modals.printNormtimeCNModal.modal("hide");
     }
 
 });

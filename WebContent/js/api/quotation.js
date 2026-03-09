@@ -1732,6 +1732,31 @@ $.extend(api, {
             intercept: true
         },
 
+        queryNormtimeItem: {
+            url: "queryNormtimeItem.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "normtimeItems",
+                args: ["trannum", "workdays", "num"]
+            }]
+        },
+        addNormtimeItem: {
+            url: "addNormtimeItem.do",
+            type: "update",
+            tranargs: {
+                args: ["normtimeItem.trannum", "normtimeItem.workdays", "normtimeItem.num"],
+                query: [{
+                    result: "normtimeItem",
+                    args: ["trannum", "workdays", "num"]
+                }]
+            },
+        },
+        deleteNormtimeItem: {
+            url: "deleteNormtimeItem.do",
+            intercept: true
+        },
+
         queryQuotationNormood: {
             url: "queryQuotationNormood.do",
             type: "query",
@@ -1837,6 +1862,59 @@ $.extend(api, {
                 handle: true,
             }
         },
+
+        queryQuotationNormtime: {
+            url: "queryQuotationNormtime.do",
+            type: "query",
+            tranargs: [{
+                result: "quotationFunctionAreas-quotationFunctionAreaItems",
+                args: ["unitPrice", "initNum", "num"]
+            }, {
+                result: "quotationFunctionAreas-quotationFunctionAreaItems-normtime",
+                args: ["trannum", "workdays"]
+            }, {
+                result: "quotationFunctionAreas-quotationFunctionAreaItems-normtime-constructionNode",
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+            }],
+            loading: {
+                handle: true,
+            }
+        },
+        queryExtensionNormtime: {
+            url: "queryExtensionNormtime.do",
+            type: "query",
+            tranargs: [{
+                result: "extensions-extensionItems",
+                args: ["addPrice", "unitPrice", "subPrice", "num", "initnum"]
+            }, {
+                result: "extensions-extensionItems-normtime",
+                args: ["trannum", "workdays"]
+            }, {
+                result: "extensions-extensionItems-normtime-constructionNode",
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+            }],
+            loading: {
+                handle: true,
+            }
+        },
+        queryAddReduceNormtime: {
+            url: "queryAddReduceNormtime.do",
+            type: "query",
+            tranargs: [{
+                result: "addReduces-addReduceItems",
+                args: ["unitPrice", "initnum", "num"]
+            }, {
+                result: "addReduces-addReduceItems-normtime",
+                args: ["trannum", "workdays"]
+            }, {
+                result: "addReduces-addReduceItems-normtime-constructionNode",
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+            }],
+            loading: {
+                handle: true,
+            }
+        },
+
         amountQuotationNormood: {
             url: "amountQuotationNormood.do",
             type: "query",
