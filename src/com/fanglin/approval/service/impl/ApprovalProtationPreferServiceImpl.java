@@ -165,12 +165,16 @@ public class ApprovalProtationPreferServiceImpl implements ApprovalProtationPref
 		}
 
 		if (approvalProtationPreferPO.getType() == 1) {
+			// type=1: 活动优惠审批
 			if (approvalProtationPreferPO.getActivityPrice() > protationPO.getActivityProfit()) {
 				throw new FLException(240005, "活动额不能大于活动利润");
 			}
+			// 直接使用前端传入的 activityPrice 和 totalPrice
+			// 前端已重新计算 totalPrice，确保数据准确性
 			protationPO.setActivityPrice(approvalProtationPreferPO.getActivityPrice());
 			protationPO.setTotalPrice(approvalProtationPreferPO.getTotalPrice());
 		} else {
+			// type=0: 管理优惠审批
 			protationPO.setPreferPrice(approvalProtationPreferPO.getPreferPrice());
 			protationPO.setManageProfit(approvalProtationPreferPO.getManagePrefer());
 			protationPO.setAdvanceProfit(approvalProtationPreferPO.getAdvancePrefer());
