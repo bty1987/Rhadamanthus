@@ -84,19 +84,19 @@ var protationPart = (function() {
                 }),
                 $preferPriceClose: com.focusPage('#closeBtn', '#functionAreaPreferPrice').click(function() {
 
-                    quo.oldProtationData();
+                    quote.oldProtationData();
                 }),
                 $preferPriceX: com.focusPage('.close', '#functionAreaPreferPrice').click(function() {
 
-                    quo.oldProtationData();
+                    quote.oldProtationData();
                 }),
                 $approveClose: com.focusPage('#closeApproveBtn', '#approveModal').click(function() {
 
-                    quo.oldProtationData();
+                    quote.oldProtationData();
                 }),
                 $approveX: com.focusPage('.close', '#approveModal').click(function() {
 
-                    quo.oldProtationData();
+                    quote.oldProtationData();
                 }),
             };
             return that;
@@ -844,7 +844,7 @@ var protationPart = (function() {
 
             // 重新计算费用，验证优惠金额是否合理
             if (!quo.calculateQuoFees()) {
-                quo.oldProtationData();
+                quote.oldProtationData();
                 return false;
             }
 
