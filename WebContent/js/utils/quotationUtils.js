@@ -1149,6 +1149,65 @@ var quotationUtils = {
 
         quotationUtils.quotationDetail.quotationFunctionAreaItemMs = quotationFunctionAreaItemMs;
     },
+    quotationNormtimeProcessing: function(quotationFunctionAreas, extensions, addreduces) {
+
+        var quotationFunctionAreaItemMs = {};
+        var index = 0;
+
+        $.each(quotationFunctionAreas, function(i, v) {
+
+            var functionAreaName = v.functionAreaName;
+            var functionAreaId = v.qfaid;
+
+            $.each(v.quotationFunctionAreaItems, function(j, qv) {
+
+                var normtime = qv.normtime;
+
+                qv.quotationFunctionAreaId = functionAreaId;
+                qv.quotationFunctionAreaName = functionAreaName;
+
+                if (!quotationFunctionAreaItemMs[normtime.constructionNode.cnid + "-" + normtime.constructionNode.name + "-1"]) {
+                    quotationFunctionAreaItemMs[normtime.constructionNode.cnid + "-" + normtime.constructionNode.name + "-1"] = [qv];
+                } else {
+                    quotationFunctionAreaItemMs[normtime.constructionNode.cnid + "-" + normtime.constructionNode.name + "-1"].push(qv);
+                }
+            });
+        });
+
+        $.each(extensions, function(i, v) {
+
+            $.each(v.extensionItems, function(j, qv) {
+
+                var normtime = qv.normtime;
+
+                qv.initNum = [0, 1, 5].indexOf(qv.type) != -1 ? qv.initnum : -qv.initnum;
+
+                if (!quotationFunctionAreaItemMs[normtime.constructionNode.cnid + "-" + normtime.constructionNode.name + "-2"]) {
+                    quotationFunctionAreaItemMs[normtime.constructionNode.cnid + "-" + normtime.constructionNode.name + "-2"] = [qv];
+                } else {
+                    quotationFunctionAreaItemMs[normtime.constructionNode.cnid + "-" + normtime.constructionNode.name + "-2"].push(qv);
+                }
+            });
+        });
+
+        $.each(addreduces, function(i, v) {
+
+            $.each(v.addReduceItems, function(j, qv) {
+
+                var normtime = qv.normtime;
+
+                qv.initNum = [0, 1, 2].indexOf(qv.type) != -1 ? qv.initnum : -qv.initnum;
+
+                if (!quotationFunctionAreaItemMs[normtime.constructionNode.cnid + "-" + normtime.constructionNode.name + "-3"]) {
+                    quotationFunctionAreaItemMs[normtime.constructionNode.cnid + "-" + normtime.constructionNode.name + "-3"] = [qv];
+                } else {
+                    quotationFunctionAreaItemMs[normtime.constructionNode.cnid + "-" + normtime.constructionNode.name + "-3"].push(qv);
+                }
+            });
+        });
+
+        quotationUtils.quotationDetail.quotationFunctionAreaItemMs = quotationFunctionAreaItemMs;
+    },
     quotationNormoodProcessing: function(quotationFunctionAreas, extensions, addreduces, normoods) {
 
         var quotationFunctionAreaItemAs = {};
