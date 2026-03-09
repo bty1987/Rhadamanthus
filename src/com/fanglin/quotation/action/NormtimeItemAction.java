@@ -47,7 +47,7 @@ public class NormtimeItemAction extends BaseListAction {
 	}
 
 	@Action(value = "deleteNormtimeItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String normtimeItems() throws FLException {
+	public String deleteNormtimeItem() throws FLException {
 
 		normtimeItemService.deleteNormtimeItem(normtion, normtimeItem);
 

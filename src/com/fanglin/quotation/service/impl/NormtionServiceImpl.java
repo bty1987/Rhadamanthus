@@ -28,8 +28,10 @@ import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.data.po.NoodsPO;
 import com.fanglin.data.po.NormoodPO;
 import com.fanglin.data.po.NormricePO;
+import com.fanglin.data.po.NormtimePO;
 import com.fanglin.data.quotation.vo.NormoodVO;
 import com.fanglin.data.quotation.vo.NormriceVO;
+import com.fanglin.data.quotation.vo.NormtimeVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -40,16 +42,19 @@ import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.NormoodItemDao;
 import com.fanglin.quotation.dao.NormriceItemDao;
 import com.fanglin.quotation.dao.NormtionDao;
+import com.fanglin.quotation.dao.NormtimeItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationNormoodDao;
 import com.fanglin.quotation.dao.QuotationNormriceDao;
+import com.fanglin.quotation.dao.QuotationNormtimeDao;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.NormoodItemPO;
 import com.fanglin.quotation.po.NormriceItemPO;
+import com.fanglin.quotation.po.NormtimeItemPO;
 import com.fanglin.quotation.po.NormtionDO;
 import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemAO;
@@ -103,6 +108,12 @@ public class NormtionServiceImpl implements NormtionService {
 
 	@Autowired
 	private NormriceItemDao normriceItemDao;
+
+	@Autowired
+	private NormtimeItemDao normtimeItemDao;
+
+	@Autowired
+	private QuotationNormtimeDao quotationNormtimeDao;
 
 	@Autowired
 	private DecorationDao decorationDao;
@@ -673,11 +684,16 @@ public class NormtionServiceImpl implements NormtionService {
 			normriceItemDao.deleteNormriceItem(normtionPO.getQid(), NormriceItemPO.TYPE_EXPAND_INT, NormriceItemPO.STATUS_DISABLED_INT);
 			normriceItemDao.deleteNormriceItem(normtionPO.getQid(), NormriceItemPO.TYPE_ADDCUT_INT, NormriceItemPO.STATUS_DISABLED_INT);
 
+			normtimeItemDao.deleteNormtimeItem(normtionPO.getQid(), NormtimeItemPO.TYPE_OFFER_INT, NormtimeItemPO.STATUS_DISABLED_INT);
+			normtimeItemDao.deleteNormtimeItem(normtionPO.getQid(), NormtimeItemPO.TYPE_EXPAND_INT, NormtimeItemPO.STATUS_DISABLED_INT);
+			normtimeItemDao.deleteNormtimeItem(normtionPO.getQid(), NormtimeItemPO.TYPE_ADDCUT_INT, NormtimeItemPO.STATUS_DISABLED_INT);
+
 			return 0;
 		}
 
 		normoodItemDao.disableNormoodItem(normtionVO.getQid());
 		normriceItemDao.disabledNormriceItem(normtionVO.getQid());
+		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid());
 
 		normoodItemDao.flush();
 
@@ -718,6 +734,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 		normoodItemDao.disableNormoodItem(normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT);
 		normriceItemDao.disabledNormriceItem(normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT);
+		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid(), NormtimeItemPO.TYPE_OFFER_INT);
 
 		normoodItemDao.flush();
 
@@ -825,6 +842,59 @@ public class NormtionServiceImpl implements NormtionService {
 
 				normriceItemDao.save(normriceItemPO);
 			}
+
+			List<?> quotationFunctionAreaItemTimeMOs = quotationNormtimeDao.queryQuotationFunctionAreaItem(quotationFunctionAreaPO.getIndex(), quotationFunctionAreaPO.getQfaId(), schedule);
+
+			for (Object quotationFunctionAreaItemTimeMO : quotationFunctionAreaItemTimeMOs) {
+
+				Object[] data = (Object[]) quotationFunctionAreaItemTimeMO;
+
+				QuotationFunctionAreaItemMO item = (QuotationFunctionAreaItemMO) data[0];
+				NormtimePO normtimePO = (NormtimePO) data[1];
+				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
+
+				NormtimeItemPO normtimeItemPO = normtimeItemDao.queryNormtimeItem(normtionVO.getQid(), item.getQfaiid(), normtimePO.getNtid(), NormtimeItemPO.TYPE_OFFER_INT);
+
+				if (normtimeItemPO != null) {
+
+					normtimeItemPO.setStatus(NormtimeItemPO.STATUS_INIT_INT);
+
+					normtimeItemPO.setConstructionNode(constructionNodePO);
+
+					normtimeItemPO.setName(constructionNodePO.getName());
+					normtimeItemPO.setUnit(normtimePO.getUnit());
+					normtimeItemPO.setTrannum(normtimePO.getTrannum());
+					normtimeItemPO.setWorkdays(normtimePO.getWorkdays().intValue());
+					normtimeItemPO.setNum(item.getInitNum());
+
+					normtimeItemDao.update(normtimeItemPO);
+
+					continue;
+				}
+
+				normtimeItemPO = new NormtimeItemPO();
+
+				normtimeItemPO.setQid(normtionVO.getQid());
+				normtimeItemPO.setSid(normtionVO.getQid());
+				normtimeItemPO.setAreald(item.getQuotationFunctionAreaId());
+				normtimeItemPO.setQuoteld(item.getQfaiid());
+				normtimeItemPO.setQiid(item.getQuotationItemId());
+				normtimeItemPO.setNtid(normtimePO.getNtid());
+
+				normtimeItemPO.setType(NormtimeItemPO.TYPE_OFFER_INT);
+				normtimeItemPO.setNormtype(NormtimeItemPO.NORMTYPE_WORKDAYS_INT);
+				normtimeItemPO.setAtttype(NormtimeItemPO.ATTTYPE_COLLECTION_INT);
+
+				normtimeItemPO.setConstructionNode(constructionNodePO);
+
+				normtimeItemPO.setName(constructionNodePO.getName());
+				normtimeItemPO.setUnit(normtimePO.getUnit());
+				normtimeItemPO.setTrannum(normtimePO.getTrannum());
+				normtimeItemPO.setWorkdays(normtimePO.getWorkdays().intValue());
+				normtimeItemPO.setNum(item.getInitNum());
+
+				normtimeItemDao.save(normtimeItemPO);
+			}
 		}
 
 		return 0;
@@ -848,6 +918,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 		normoodItemDao.disableNormoodItem(normtionVO.getQid(), extensionVO.getEid(), NormoodItemPO.TYPE_EXPAND_INT);
 		normriceItemDao.disabledNormriceItem(normtionVO.getQid(), extensionVO.getEid(), NormriceItemPO.TYPE_EXPAND_INT);
+		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid(), extensionVO.getEid(), NormtimeItemPO.TYPE_EXPAND_INT);
 
 		normoodItemDao.flush();
 
@@ -962,6 +1033,64 @@ public class NormtionServiceImpl implements NormtionService {
 			normriceItemDao.save(normriceItemPO);
 		}
 
+		List<?> extensionItemTimeMOs = quotationNormtimeDao.queryExtensionItem(extensionVO.getEid(), schedule);
+
+		for (Object extensionItemTimeMO : extensionItemTimeMOs) {
+
+			Object[] data = (Object[]) extensionItemTimeMO;
+
+			ExtensionItemPO itemPO = (ExtensionItemPO) data[0];
+			NormtimePO normtimePO = (NormtimePO) data[1];
+			ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
+
+			NormtimeItemPO normtimeItemPO = normtimeItemDao.queryNormtimeItem(normtionVO.getQid(), itemPO.getEiid(), normtimePO.getNtid(), NormtimeItemPO.TYPE_EXPAND_INT);
+
+			if (normtimeItemPO != null) {
+
+				normtimeItemPO.setStatus(NormtimeItemPO.STATUS_INIT_INT);
+
+				normtimeItemPO.setConstructionNode(constructionNodePO);
+
+				normtimeItemPO.setName(constructionNodePO.getName());
+				normtimeItemPO.setUnit(normtimePO.getUnit());
+				normtimeItemPO.setTrannum(normtimePO.getTrannum());
+				normtimeItemPO.setWorkdays(normtimePO.getWorkdays().intValue());
+				normtimeItemPO.setNum(itemPO.getInitnum());
+
+				normtimeItemDao.update(normtimeItemPO);
+
+				continue;
+			}
+
+			normtimeItemPO = new NormtimeItemPO();
+
+			normtimeItemPO.setQid(normtionVO.getQid());
+			normtimeItemPO.setSid(itemPO.getEid());
+			normtimeItemPO.setAreald(itemPO.getQuotationFunctionArea().getQfaId());
+			normtimeItemPO.setQuoteld(itemPO.getEiid());
+			normtimeItemPO.setQiid(itemPO.getQiid());
+			normtimeItemPO.setNtid(normtimePO.getNtid());
+
+			normtimeItemPO.setType(NormtimeItemPO.TYPE_EXPAND_INT);
+			normtimeItemPO.setNormtype(NormtimeItemPO.NORMTYPE_WORKDAYS_INT);
+
+			if (Arrays.asList(ExtensionItemPO.TYPE_ADD_DATA_INT, ExtensionItemPO.TYPE_ADD_CUSTOM_INT, ExtensionItemPO.TYPE_ADD_QUOTE_INT).contains(itemPO.getType())) {
+				normtimeItemPO.setAtttype(NormtimeItemPO.ATTTYPE_COLLECTION_INT);
+			} else {
+				normtimeItemPO.setAtttype(NormtimeItemPO.ATTTYPE_SUB_INT);
+			}
+
+			normtimeItemPO.setConstructionNode(constructionNodePO);
+
+			normtimeItemPO.setName(constructionNodePO.getName());
+			normtimeItemPO.setUnit(normtimePO.getUnit());
+			normtimeItemPO.setTrannum(normtimePO.getTrannum());
+			normtimeItemPO.setWorkdays(normtimePO.getWorkdays().intValue());
+			normtimeItemPO.setNum(itemPO.getInitnum());
+
+			normtimeItemDao.save(normtimeItemPO);
+		}
+
 		return 0;
 	}
 
@@ -983,6 +1112,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 		normoodItemDao.disableNormoodItem(normtionVO.getQid(), addReduceVO.getArId(), NormoodItemPO.TYPE_ADDCUT_INT);
 		normriceItemDao.disabledNormriceItem(normtionVO.getQid(), addReduceVO.getArId(), NormriceItemPO.TYPE_ADDCUT_INT);
+		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid(), addReduceVO.getArId(), NormtimeItemPO.TYPE_ADDCUT_INT);
 
 		normoodItemDao.flush();
 
@@ -1097,6 +1227,64 @@ public class NormtionServiceImpl implements NormtionService {
 			normriceItemDao.save(normriceItemPO);
 		}
 
+		List<?> addReduceItemTimeMOs = quotationNormtimeDao.queryAddReduceItem(addReduceVO.getArId(), schedule);
+
+		for (Object addReduceItemTimeMO : addReduceItemTimeMOs) {
+
+			Object[] data = (Object[]) addReduceItemTimeMO;
+
+			AddReduceItemPO itemPO = (AddReduceItemPO) data[0];
+			NormtimePO normtimePO = (NormtimePO) data[1];
+			ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
+
+			NormtimeItemPO normtimeItemPO = normtimeItemDao.queryNormtimeItem(normtionVO.getQid(), itemPO.getAriId(), normtimePO.getNtid(), NormtimeItemPO.TYPE_ADDCUT_INT);
+
+			if (normtimeItemPO != null) {
+
+				normtimeItemPO.setStatus(NormtimeItemPO.STATUS_INIT_INT);
+
+				normtimeItemPO.setConstructionNode(constructionNodePO);
+
+				normtimeItemPO.setName(constructionNodePO.getName());
+				normtimeItemPO.setUnit(normtimePO.getUnit());
+				normtimeItemPO.setTrannum(normtimePO.getTrannum());
+				normtimeItemPO.setWorkdays(normtimePO.getWorkdays().intValue());
+				normtimeItemPO.setNum(itemPO.getInitnum());
+
+				normtimeItemDao.update(normtimeItemPO);
+
+				continue;
+			}
+
+			normtimeItemPO = new NormtimeItemPO();
+
+			normtimeItemPO.setQid(normtionVO.getQid());
+			normtimeItemPO.setSid(itemPO.getArId());
+			normtimeItemPO.setAreald(itemPO.getQuotationFunctionArea().getQfaId());
+			normtimeItemPO.setQuoteld(itemPO.getAriId());
+			normtimeItemPO.setQiid(itemPO.getQiid());
+			normtimeItemPO.setNtid(normtimePO.getNtid());
+
+			normtimeItemPO.setType(NormtimeItemPO.TYPE_ADDCUT_INT);
+			normtimeItemPO.setNormtype(NormtimeItemPO.NORMTYPE_WORKDAYS_INT);
+
+			if (Arrays.asList(AddReduceItemPO.TYPE_COMMON_QUOTATION_INT, AddReduceItemPO.TYPE_CUSTOM_QUOTATION_INT).contains(itemPO.getType())) {
+				normtimeItemPO.setAtttype(NormtimeItemPO.ATTTYPE_COLLECTION_INT);
+			} else {
+				normtimeItemPO.setAtttype(NormtimeItemPO.ATTTYPE_SUB_INT);
+			}
+
+			normtimeItemPO.setConstructionNode(constructionNodePO);
+
+			normtimeItemPO.setName(constructionNodePO.getName());
+			normtimeItemPO.setUnit(normtimePO.getUnit());
+			normtimeItemPO.setTrannum(normtimePO.getTrannum());
+			normtimeItemPO.setWorkdays(normtimePO.getWorkdays().intValue());
+			normtimeItemPO.setNum(itemPO.getInitnum());
+
+			normtimeItemDao.save(normtimeItemPO);
+		}
+
 		return 0;
 	}
 
@@ -1162,5 +1350,251 @@ public class NormtionServiceImpl implements NormtionService {
 		normtionDao.update(normtionPO);
 
 		return 0;
+	}
+
+	@Override
+	public List<QuotationFunctionAreaVO> queryQuotationNormtime(QuotationVO quotationVO, Short schedule) throws FLException {
+
+		List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationVO.getQid());
+		List<QuotationFunctionAreaVO> quotationFunctionAreaVOs = new ArrayList<QuotationFunctionAreaVO>();
+
+		for (QuotationFunctionAreaPO quotationFunctionAreaPO : quotationFunctionAreaPOs) {
+
+			QuotationFunctionAreaVO quotationFunctionAreaVO = new QuotationFunctionAreaVO();
+
+			BeanUtil.copyProperties(quotationFunctionAreaPO, quotationFunctionAreaVO);
+
+			List<QuotationFunctionAreaItemVO> quotationFunctionAreaItemVOs = new ArrayList<QuotationFunctionAreaItemVO>();
+			List<?> quotationFunctionAreaItemMOs = quotationNormtimeDao.queryQuotationFunctionAreaItem(quotationFunctionAreaPO.getIndex(), quotationFunctionAreaPO.getQfaId(), schedule);
+
+			for (Object quotationFunctionAreaItemMO : quotationFunctionAreaItemMOs) {
+
+				Object[] data = (Object[]) quotationFunctionAreaItemMO;
+
+				QuotationFunctionAreaItemMO item = (QuotationFunctionAreaItemMO) data[0];
+				NormtimePO normtimePO = (NormtimePO) data[1];
+				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
+
+				QuotationFunctionAreaItemVO quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO();
+				quotationFunctionAreaItemVO.setNormtime(new NormtimeVO(new ConstructionNodeVO(), null));
+
+				BeanUtil.copyProperties(item, quotationFunctionAreaItemVO, Arrays.asList("normood", "normrice"));
+
+				BeanUtil.copyProperties(normtimePO, quotationFunctionAreaItemVO.getNormtime(), Arrays.asList("constructionNode", "quotationItem"));
+				BeanUtil.copyProperties(constructionNodePO, quotationFunctionAreaItemVO.getNormtime().getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+
+				quotationFunctionAreaItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
+
+				quotationFunctionAreaItemVOs.add(quotationFunctionAreaItemVO);
+			}
+
+			quotationFunctionAreaVO.setQuotationFunctionAreaItems(quotationFunctionAreaItemVOs);
+
+			quotationFunctionAreaVOs.add(quotationFunctionAreaVO);
+		}
+
+		return quotationFunctionAreaVOs;
+	}
+
+	@Override
+	public List<ExtensionVO> queryExtensionNormtime(ExtensionVO extensionVO, Short schedule) throws FLException {
+
+		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(extensionVO.getOrderId());
+		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
+
+		for (ExtensionPO extensionPO : extensionPOs) {
+
+			extensionVO = new ExtensionVO();
+
+			BeanUtil.copyPropertie(extensionPO, extensionVO, Arrays.asList("creater"));
+
+			List<ExtensionItemVO> extensionItemVOs = new ArrayList<ExtensionItemVO>();
+			List<?> extensionItemMOs = quotationNormtimeDao.queryExtensionItem(extensionPO.getEid(), schedule);
+
+			for (Object extensionItemMO : extensionItemMOs) {
+
+				Object[] data = (Object[]) extensionItemMO;
+
+				ExtensionItemPO extensionItemPO = (ExtensionItemPO) data[0];
+				NormtimePO normtimePO = (NormtimePO) data[1];
+				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
+
+				ExtensionItemVO extensionItemVO = new ExtensionItemVO();
+				extensionItemVO.setNormtime(new NormtimeVO(new ConstructionNodeVO(), null));
+
+				BeanUtil.copyProperties(extensionItemPO, extensionItemVO, Arrays.asList("quotationFunctionArea"));
+
+				BeanUtil.copyProperties(normtimePO, extensionItemVO.getNormtime(), Arrays.asList("constructionNode", "quotationItem"));
+				BeanUtil.copyProperties(constructionNodePO, extensionItemVO.getNormtime().getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+
+				extensionItemVO.setQuotationFunctionAreaId(extensionItemPO.getQuotationFunctionArea().getQfaId());
+				extensionItemVO.setQuotationFunctionAreaName(extensionItemPO.getQuotationFunctionArea().getFunctionAreaName());
+
+				extensionItemVOs.add(extensionItemVO);
+			}
+
+			extensionVO.setExtensionItems(extensionItemVOs);
+
+			extensionVOs.add(extensionVO);
+		}
+
+		return extensionVOs;
+	}
+
+	@Override
+	public List<AddReduceVO> queryAddReduceNormtime(AddReduceVO addReduceVO, Short schedule) throws FLException {
+
+		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceByOrderId(addReduceVO.getOrderId());
+		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
+
+		Short status = addReduceVO.getStatus();
+
+		for (AddReducePO addReducePO : addReducePOs) {
+
+			if (status == null && !Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus()) && addReducePO.getType() == AddReducePO.TYPE_ADD_INT && addReducePO.getPaytype() == AddReducePO.PAYTYPE_PAY_INT) continue;
+
+			addReduceVO = new AddReduceVO();
+
+			BeanUtil.copyPropertie(addReducePO, addReduceVO, Arrays.asList("creater", "constructionNode"));
+
+			List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
+			List<?> addReduceItemMOs = quotationNormtimeDao.queryAddReduceItem(addReducePO.getArId(), schedule);
+
+			for (Object addReduceItemMO : addReduceItemMOs) {
+
+				Object[] data = (Object[]) addReduceItemMO;
+
+				AddReduceItemPO addReduceItemPO = (AddReduceItemPO) data[0];
+				NormtimePO normtimePO = (NormtimePO) data[1];
+				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
+
+				AddReduceItemVO addReduceItemVO = new AddReduceItemVO();
+				addReduceItemVO.setNormtime(new NormtimeVO(new ConstructionNodeVO(), null));
+
+				BeanUtil.copyProperties(addReduceItemPO, addReduceItemVO);
+
+				BeanUtil.copyProperties(normtimePO, addReduceItemVO.getNormtime(), Arrays.asList("constructionNode", "quotationItem"));
+				BeanUtil.copyProperties(constructionNodePO, addReduceItemVO.getNormtime().getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+
+				addReduceItemVO.setQuotationFunctionAreaId(addReduceItemPO.getQuotationFunctionArea().getQfaId());
+				addReduceItemVO.setQuotationFunctionAreaName(addReduceItemPO.getQuotationFunctionArea().getFunctionAreaName());
+
+				addReduceItemVOs.add(addReduceItemVO);
+			}
+
+			addReduceVO.setAddReduceItems(addReduceItemVOs);
+
+			addReduceVOs.add(addReduceVO);
+		}
+
+		return addReduceVOs;
+	}
+
+	@Override
+	public List<NormtimeVO> amountQuotationNormtime(QuotationVO quotationVO) throws FLException {
+
+		List<QuotationFunctionAreaPO> QuotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationVO.getQid());
+
+		List<NormtimeVO> normtimeVOs = new ArrayList<NormtimeVO>();
+
+		for (QuotationFunctionAreaPO quotationFunctionAreaPO : QuotationFunctionAreaPOs) {
+
+			List<?>> normtimes = quotationNormtimeDao.amountQuotationNormtime(quotationFunctionAreaPO.getIndex(), quotationFunctionAreaPO.getQfaId());
+
+			for (Object normtime : normtimes) {
+
+				Object[] data = (Object[]) normtime;
+
+				NormtimePO normtimePO = (NormtimePO) data[0];
+				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[1];
+				Double totalDays = (Double) data[2];
+				Integer stuff = (Integer) data[3];
+				Integer num = (Integer) data[4];
+
+				NormtimeVO normtimeVO = new NormtimeVO(new ConstructionNodeVO(), null);
+
+				BeanUtil.copyProperties(normtimePO, normtimeVO, Arrays.asList("constructionNode", "quotationItem"));
+				BeanUtil.copyProperties(constructionNodePO, normtimeVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+
+				normtimeVO.setTotalDays(new java.math.BigDecimal(totalDays));
+				normtimeVO.setNum(num);
+
+				normtimeVOs.add(normtimeVO);
+			}
+		}
+
+		return normtimeVOs;
+	}
+
+	@Override
+	public List<NormtimeVO> amountExtensionNormtime(ExtensionVO extensionVO) throws FLException {
+
+		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(extensionVO.getOrderId());
+
+		List<NormtimeVO> normtimeVOs = new ArrayList<NormtimeVO>();
+
+		for (ExtensionPO extensionPO : extensionPOs) {
+
+			List<?> normtimes = quotationNormtimeDao.amountExtensionNormtime(extensionPO.getEid());
+
+			for (Object normtime : normtimes) {
+
+				Object[] data = (Object[]) normtime;
+
+				NormtimePO normtimePO = (NormtimePO) data[0];
+				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[1];
+				Double totalDays = (Double) data[2];
+				Integer stuff = (Integer) data[3];
+				Integer num = (Integer) data[4];
+
+				NormtimeVO normtimeVO = new NormtimeVO(new ConstructionNodeVO(), null);
+
+				BeanUtil.copyProperties(normtimePO, normtimeVO, Arrays.asList("constructionNode", "quotationItem"));
+				BeanUtil.copyProperties(constructionNodePO, normtimeVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+
+				normtimeVO.setTotalDays(new java.math.BigDecimal(totalDays));
+				normtimeVO.setNum(num);
+
+				normtimeVOs.add(normtimeVO);
+			}
+		}
+
+		return normtimeVOs;
+	}
+
+	@Override
+	public List<NormtimeVO> amountAddReduceNormtime(AddReduceVO addReduceVO) throws FLException {
+
+		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceByOrderId(addReduceVO.getOrderId());
+
+		List<NormtimeVO> normtimeVOs = new ArrayList<NormtimeVO>();
+
+		for (AddReducePO addReducePO : addReducePOs) {
+
+			List<?> normtimes = quotationNormtimeDao.amountAddReduceNormtime(addReducePO.getArId());
+
+			for (Object normtime : normtimes) {
+
+				Object[] data = (Object[]) normtime;
+
+				NormtimePO normtimePO = (NormtimePO) data[0];
+				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[1];
+				Double totalDays = (Double) data[2];
+				Integer stuff = (Integer) data[3];
+				Integer num = (Integer) data[4];
+
+				NormtimeVO normtimeVO = new NormtimeVO(new ConstructionNodeVO(), null);
+
+				BeanUtil.copyProperties(normtimePO, normtimeVO, Arrays.asList("constructionNode", "quotationItem"));
+				BeanUtil.copyProperties(constructionNodePO, normtimeVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+
+				normtimeVO.setTotalDays(new java.math.BigDecimal(totalDays));
+				normtimeVO.setNum(num);
+
+				normtimeVOs.add(normtimeVO);
+			}
+		}
+
+		return normtimeVOs;
 	}
 }

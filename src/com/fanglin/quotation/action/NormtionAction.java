@@ -24,6 +24,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.quotation.vo.NormoodVO;
 import com.fanglin.data.quotation.vo.NormriceVO;
+import com.fanglin.data.quotation.vo.NormtimeVO;
 import com.fanglin.quotation.service.NormtionService;
 import com.fanglin.quotation.vo.AddReduceVO;
 import com.fanglin.quotation.vo.ExtensionVO;
@@ -56,6 +57,8 @@ public class NormtionAction extends BaseListAction {
 	private List<NormoodVO> normoods;
 
 	private List<NormriceVO> normrices;
+
+	private List<NormtimeVO> normtimes;
 
 	private NormtionVO normtion;
 
@@ -161,6 +164,54 @@ public class NormtionAction extends BaseListAction {
 	public String amountAddReduceNormrice() throws FLException {
 
 		normrices = normtionService.amountAddReduceNormrice(addReduce);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryQuotationNormtime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationNormtime() throws FLException {
+
+		quotationFunctionAreas = normtionService.queryQuotationNormtime(quotation, schedule);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryExtensionNormtime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryExtensionNormtime() throws FLException {
+
+		extensions = normtionService.queryExtensionNormtime(extension, schedule);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryAddReduceNormtime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAddReduceNormtime() throws FLException {
+
+		addReduces = normtionService.queryAddReduceNormtime(addReduce, schedule);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "amountQuotationNormtime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountQuotationNormtime() throws FLException {
+
+		normtimes = normtionService.amountQuotationNormtime(quotation);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "amountExtensionNormtime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountExtensionNormtime() throws FLException {
+
+		normtimes = normtionService.amountExtensionNormtime(extension);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "amountAddReduceNormtime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountAddReduceNormtime() throws FLException {
+
+		normtimes = normtionService.amountAddReduceNormtime(addReduce);
 
 		return SUCCESS;
 	}
@@ -283,6 +334,14 @@ public class NormtionAction extends BaseListAction {
 
 	public void setNormrices(List<NormriceVO> normrices) {
 		this.normrices = normrices;
+	}
+
+	public List<NormtimeVO> getNormtimes() {
+		return normtimes;
+	}
+
+	public void setNormtimes(List<NormtimeVO> normtimes) {
+		this.normtimes = normtimes;
 	}
 
 	public Short getSchedule() {
