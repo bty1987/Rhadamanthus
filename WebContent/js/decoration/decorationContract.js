@@ -237,12 +237,15 @@ jQuery(function($) {
             decorationContract.items.recordComment.val("");
         }
 
-        // 初始化日期选择器
-        decorationContract.items.recordStartTime.datepicker(com.datepickerdefault);
-        decorationContract.items.recordEndTime.datepicker(com.datepickerdefault);
-
+        // 显示模态框
         decorationContract.modals.contractRecordModal.modal("show");
     }
+
+    // 模态框显示完成后初始化日期选择器
+    decorationContract.modals.contractRecordModal.on("shown.bs.modal", function() {
+        decorationContract.items.recordStartTime.datepicker(com.datepickerdefault);
+        decorationContract.items.recordEndTime.datepicker(com.datepickerdefault);
+    });
 
     var searcher = new Searcher();
 
