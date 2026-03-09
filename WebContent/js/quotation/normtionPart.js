@@ -12,6 +12,8 @@ var QuotationDetail = (function() {
         storenumtotals: 0,
         normricetotal: 0,
         normricetotals: 0,
+        normtimetotal: 0,
+        normtimetotals: 0,
         trannum: 0,
         sayary: 0,
 
@@ -27,7 +29,10 @@ var QuotationDetail = (function() {
             normoNum: com.focusPage('#normoNum'),
             constructionNode: com.focusPage('#constructionNode'),
             normrName: com.focusPage('#normrName'),
-            salary: com.focusPage('#salary')
+            salary: com.focusPage('#salary'),
+            normtimeConstructionNode: com.focusPage('#normtimeConstructionNode'),
+            normtName: com.focusPage('#normtName'),
+            workdays: com.focusPage('#workdays')
         },
 
         // 定义左下角按钮重新定义和弹窗提示
@@ -65,6 +70,11 @@ var QuotationDetail = (function() {
 
                     that.quoModals.$domainNormriceItemModal.modal("show");
                 }),
+                // 工时项
+                $btnNormtimeItempack: com.focusPage('#normtimeitem').on('click', function() {
+
+                    that.quoModals.$domainNormtimeItemModal.modal("show");
+                }),
                 // 展开
                 $btnSpread: com.focusPage('#openFunctionAreasBtn').click(function() {
 
@@ -100,6 +110,11 @@ var QuotationDetail = (function() {
                     com.focusPage('input[name="num"]').val('');
                 }),
                 $domainNormriceItemModal: com.focusPage("#normriceModal").on("show.bs.modal", function(a) {
+
+                    com.cleanItems(quo.items);
+                }),
+
+                $domainNormtimeItemModal: com.focusPage("#normtimeModal").on("show.bs.modal", function(a) {
 
                     com.cleanItems(quo.items);
                 })
@@ -204,6 +219,72 @@ var QuotationDetail = (function() {
             });
 
             $.each(normnodes, function(k, v) {
+
+                var nodesum = com.focusPage(k);
+
+                if (!nodesum)
+                    return true;
+
+                nodesum.text(v).attr("data-total", v);
+            });
+
+        },
+
+        normtimeQuoFees: function(func) {
+
+            var normtimetotal = 0;
+            var normtimenodes = {};
+
+            var $domains = [];
+
+            $.each(com.focusPage('#normtimeItem1 .fl-quo-item.item'), function(i, v) {
+
+                $domains.push(v);
+            });
+
+            $.each(com.focusPage('#normtimeItem3 .fl-quo-item.item'), function(i, v) {
+
+                $domains.push(v);
+            });
+
+            if (!$domains.length) {
+                return false;
+            }
+
+            $.each($domains, function(i, v) {
+
+                var that = $(this);
+
+                var _dataworkdays = parseFloat(that.attr('data-workdays'));
+                var _datanum = parseFloat(that.attr('data-num'));
+                var _datatrannum = parseFloat(that.attr('data-trannum'));
+
+                var num = parseFloat(_datatrannum == '0' ? 1 : _datanum);
+                var trannum = parseFloat(_datatrannum == '0' ? 1 : _datatrannum);
+                var workdays = parseFloat(_dataworkdays);
+                var atttype = that.attr('data-atttype');
+
+                var _normtimetotal = utils.changeThrDecimal(utils.accMul(utils.accMul(trannum, utils.accMul(num, workdays)), atttype == "0" ? 1 : -1));
+
+                normtimetotal = utils.changeThrDecimal(utils.accAdd(normtimetotal, _normtimetotal));
+
+                var _schedule = that.attr('data-name');
+
+                if (normtimenodes["#cnt_" + _schedule]) {
+                    normtimenodes["#cnt_" + _schedule] = utils.accAdd(normtimenodes["#cnt_" + _schedule], _normtimetotal);
+                } else {
+                    normtimenodes["#cnt_" + _schedule] = utils.accAdd(0, _normtimetotal);
+                }
+            });
+
+            com.focusPage('#normtimetotal').text(normtimetotal);
+
+            com.focusPage("#normtimeSumList").find(".normtimenodesum").each(function(i, e) {
+
+                $(e).text(0).attr("data-total", 0);
+            });
+
+            $.each(normtimenodes, function(k, v) {
 
                 var nodesum = com.focusPage(k);
 
@@ -322,7 +403,12 @@ var QuotationDetail = (function() {
             $btns["$btnFold"].attr({
                 "data-action": "collapse"
             });
-            var _lineSet = [["line", "0"], ["formula", "数量"], ["num", "工费"], ["name", "施工进度"], ["type", "类型"], ["num totalPrice", "总额"], ["btns", "功能"]];
+
+            // 根据 dv.name 或 dv.index 来决定列表类型和表头
+            var listType = (dv.name === "工时") ? "normtime" : "normrice";
+            var fieldLabel = (dv.name === "工时") ? "工时(天)" : "工费";
+
+            var _lineSet = [["line", "0"], ["formula", "数量"], ["num", fieldLabel], ["name", "施工进度"], ["type", "类型"], ["num totalPrice", "总额"], ["btns", "功能"]];
 
             var $ul = $('<ul></ul>').addClass('fl-quo-list');
             var $li = $('<li></li>').addClass('fl-quo-item').appendTo($ul);
@@ -335,7 +421,7 @@ var QuotationDetail = (function() {
 
             $dbody = $('<div></div>').addClass('widget-body');
             $dbodyInner = $('<div></div>').addClass('widget-body-inner');
-            $list = $('<ul></ul>').addClass('fl-quo-list items').attr("id", "normriceItem" + dv.type);
+            $list = $('<ul></ul>').addClass('fl-quo-list items').attr("id", listType + "Item" + dv.type);
             $input = $('<div></div>').addClass('fl-quo-input hide').append($('<input type="text">').addClass('v_required v_float').attr('maxlength', '16'));
 
             $dhead.append($dname).append($dtoolbar);
@@ -350,7 +436,11 @@ var QuotationDetail = (function() {
 
                 $.each(_items, function(i, v) {
 
-                    $list.append(that.normriceQuote($list, i + 1, v));
+                    if (dv.name === "工时") {
+                        $list.append(that.normtimeQuote($list, i + 1, v));
+                    } else {
+                        $list.append(that.normriceQuote($list, i + 1, v));
+                    }
                 });
             }
 
@@ -612,6 +702,104 @@ var QuotationDetail = (function() {
             });
 
             return $item;
+        },
+
+        // 工时项
+        normtimeQuote: function(list, linenum, qv) {
+
+            var $item = $('<li></li>').addClass('fl-quo-item item').prop('title', qv.ntiid).attr({
+                "data-workdays": qv.workdays,
+                "data-num": qv.num,
+                "data-trannum": qv.trannum,
+                "data-name": qv.constructionNode.sort,
+                "data-normtype": qv.normtype,
+                "data-atttype": qv.atttype,
+            });
+
+            var _total = 0;
+
+            var _typeName = "-";
+
+            if (qv.normtype == 0 && qv.type == 0) {
+                _typeName = "报价项";
+            }
+
+            if (qv.normtype == 0 && qv.type == 1) {
+                _typeName = "增项";
+            }
+
+            if (qv.normtype == 0 && qv.type == 2) {
+                _typeName = "增减项";
+            }
+
+            if (qv.normtype == 0 && qv.type == 3) {
+                _typeName = "定额";
+            }
+
+            if (qv.normtype == 1) { // 附加型定额
+                _typeName = "附加";
+            }
+
+            var num = parseFloat(qv.trannum == '0' ? 1 : qv.num);
+            var trannum = parseFloat(qv.trannum == '0' ? 1 : qv.trannum);
+            var workdays = parseFloat(qv.workdays);
+
+            _total = utils.changeThrDecimal(utils.accMul(trannum, utils.accMul(num, workdays)));
+
+            var _lineSet = [];
+
+            _lineSet.push(["line", list.find("li").length + 1, ["data-areaType", qv.areaType]]);
+            _lineSet.push(["formula", num]);
+            _lineSet.push(["num", qv.workdays + " 天"]);
+            _lineSet.push(["name", qv.constructionNode.name]);
+            _lineSet.push(["type", _typeName, ["data-type", qv.type]]);
+            _lineSet.push(["num totalPrice", _total]);
+
+            var $btnCell, $btnCellWrap, $inputLable, $ispan, $btnDel;
+
+            $.each(_lineSet, function(i, v) {
+
+                var $cell = $('<div></div>').addClass('cell ' + v[0]);
+                var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]);
+                if (v[2]) {
+                    $cell.attr(v[2][0], v[2][1]);
+                }
+                $cell.append($cellWrap).appendTo($item);
+            });
+
+            $btnCell = $('<div></div>').addClass('cell btns');
+            $btnCellWrap = $('<div></div>').addClass('cell-wrap');
+            $inputLable = $('<label></label>');
+            $ispan = $('<span></span>').addClass('lbl align-top');
+
+            $inputLable.append($ispan);
+            $btnCellWrap.appendTo($btnCell);
+            $item.append($btnCell);
+
+            var colour = qv.normtype == 1 || qv.type == 3 ? "pink" : "grey";
+
+            $btnDel = $('<a></a>').attr({
+                "href": "javascript:void(0)",
+                "type": "checkbox",
+                "role": "checkbox",
+                "name": "deleteItems",
+                "data-ntiid": qv.ntiid ? qv.ntiid : ""
+            }).val(qv.ntiid).css({
+                "padding-left": "5px"
+            }).append($('<i class="bigger-125 icon-remove"></i>').addClass(colour));
+
+            $btnCellWrap.append($inputLable).append($btnDel);
+
+            $btnDel.click(function(e) {
+
+                if (qv.normtype == 1 || qv.type == 3)
+
+                    quote.deleteNormtimeQuote($item);
+
+                return false;
+            });
+
+            return $item;
         }
     };
 
@@ -710,6 +898,36 @@ var QuotationDetail = (function() {
 
             });
         },
+        saveNormtimeItemDomain: function() {
+
+            com.focusPage('#addNormtime').click(function() {
+
+                if (com.validate("normtimeModal"))
+                    return false;
+
+                var options = {
+                    "normtion.qid": quo.quotationId,
+                    "normtimeItem.constructionNode.cnid": quo.items.normtimeConstructionNode.val(),
+                    "normtimeItem.name": quo.items.normtName.val(),
+                    "normtimeItem.num": 1,
+                    "normtimeItem.trannum": 1,
+                    "normtimeItem.workdays": quo.items.workdays.val()
+                };
+
+                com.post(api.quotation.addNormtimeItem, options, function(res) {
+
+                    var _list = com.focusPage("#normtimeItem1");
+
+                    _list.append(painter.normtimeQuote(_list, _list.find("li").length + 1, res.normtimeItem));
+
+                    quo.normtimeQuoFees();
+
+                    quo.quoModals.$domainNormtimeItemModal.modal("hide");
+
+                }, null, false);
+
+            });
+        },
         makeNormtionForQuotation: function() {
 
             com.focusPage('#makeQuotation').click(function() {
@@ -740,6 +958,7 @@ var QuotationDetail = (function() {
             this.saveNormoodItemDomain();
             this.saveNormriceDoamin();
             this.saveNormriceItemDomain();
+            this.saveNormtimeItemDomain();
             this.makeNormtionForQuotation();
         }
     };
@@ -805,6 +1024,7 @@ var QuotationDetail = (function() {
             quo.normnumtotals = 0;
             quo.storenumtotals = 0;
             quo.normricetotals = 0;
+            quo.normtimetotals = 0;
 
             com.post(api.quotation.queryNormoodItem, {
                 "normoodItem.qid": quo.quotationId
@@ -847,12 +1067,38 @@ var QuotationDetail = (function() {
 
             }, null, false);
 
+            com.post(api.quotation.queryNormtimeItem, {
+                "normtimeItem.qid": quo.quotationId
+            }, function(res) {
+
+                $.each(res.normtimeItems, function(i, v) {
+
+                    if (v.normtype == 0) {
+
+                        var _list = com.focusPage("#normtimeItem1");
+
+                        var num = parseFloat(v.trannum == '0' ? 1 : v.num);
+                        var trannum = parseFloat(v.trannum == '0' ? 1 : v.trannum);
+                        var workdays = parseFloat(v.workdays);
+                        var _total = utils.changeThrDecimal(utils.accMul(utils.accMul(trannum, utils.accMul(num, workdays)), v.atttype == "0" ? 1 : -1));
+
+                        quo.normtimetotals = utils.accAdd(quo.normtimetotals, _total);
+
+                        _list.append(painter.normtimeQuote(_list, _list.find("li").length + 1, v));
+                    }
+
+                });
+
+            }, null, false);
+
             com.focusPage('#normnumtotals').text(quo.normnumtotals);
             com.focusPage('#storenumtotals').text(quo.storenumtotals);
             com.focusPage('#normricetotals').text(quo.normricetotals);
+            com.focusPage('#normtimetotals').text(quo.normtimetotals);
 
             quo.calculateQuoFees();
             quo.normriceQuoFees();
+            quo.normtimeQuoFees();
         },
         deleteQuote: function($quote) {
 
@@ -897,6 +1143,30 @@ var QuotationDetail = (function() {
                 com.post(api.quotation.deleteNormriceItem, _params);
 
                 quo.normriceQuoFees();
+            }
+        },
+        deleteNormtimeQuote: function($quote) {
+
+            var that = this;
+            var _ntiid = $quote.find('a[type="checkbox"]').val();
+            var _params = {};
+
+            domain.nowEditDomain = $quote.parents('.widget-box');
+            domain.nowEditDomain.find('.fl-quo-input').insertAfter(domain.nowEditDomain.find('.fl-quo-list.items')).addClass('hide');
+
+            if (!_ntiid) {
+                $quote.remove();
+            } else {
+
+                $quote.remove();
+
+                _params = $.extend({
+                    "normtimeItem.ntiid": _ntiid
+                }, quo.basicParams);
+
+                com.post(api.quotation.deleteNormtimeItem, _params);
+
+                quo.normtimeQuoFees();
             }
         },
         init: function() {
@@ -967,6 +1237,15 @@ var QuotationDetail = (function() {
                 "total": 0,
                 "index": 4,
                 "quotationFunctionAreaItems1": [],
+            }, {
+                "pfaid": 5,
+                "name": "工时",
+                "functionAreaOrder": 5,
+                "functionAreaType": 1,
+                "type": 1,
+                "total": 0,
+                "index": 5,
+                "quotationFunctionAreaItems1": [],
             }];
 
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
@@ -990,6 +1269,17 @@ var QuotationDetail = (function() {
                     $('<label class=" col-md-6 no-padding-left normnodesum"></label>').attr("id", "cn_" + v.sort).attr("data-total", 0).text(0).appendTo(group);
                 });
 
+                // 创建工时汇总节点
+                var normtimesumlist = com.focusPage("#normtimeSumList");
+
+                $.each(res.constructionNodes, function(i, v) {
+
+                    var group = $('<div class="form-group"></div>').appendTo(normtimesumlist);
+
+                    $('<label class=" col-md-6 no-padding-right"></label>').text(v.name + "总额").appendTo(group);
+                    $('<label class=" col-md-6 no-padding-left normtimenodesum"></label>').attr("id", "cnt_" + v.sort).attr("data-total", 0).text(0).appendTo(group);
+                });
+
             }, null, false);
 
             com.initTypeahead('noodsName', api.data.queryNoodsByName, "noods.name", {}, "noodes", "nid", "name", null);
@@ -1004,6 +1294,7 @@ var QuotationDetail = (function() {
             }, function(res) {
 
                 quo.items.constructionNode.bindData(res.constructionNodes, 'cnid', 'name');
+                quo.items.normtimeConstructionNode.bindData(res.constructionNodes, 'cnid', 'name');
             }, null, false);
 
             com.post(api.quotation.queryNormoodItem, {
@@ -1047,6 +1338,29 @@ var QuotationDetail = (function() {
                 });
             }, null, false);
 
+            com.post(api.quotation.queryNormtimeItem, {
+                "normtimeItem.qid": quo.quotationId
+            }, function(res) {
+
+                $.each(res.normtimeItems, function(i, v) {
+
+                    var num = parseFloat(v.trannum == '0' ? 1 : v.num);
+                    var trannum = parseFloat(v.trannum == '0' ? 1 : v.trannum);
+                    var workdays = parseFloat(v.workdays);
+
+                    if (v.normtype == 0) {
+                        var _total = utils.changeThrDecimal(utils.accMul(utils.accMul(trannum, utils.accMul(num, workdays)), v.atttype == "0" ? 1 : -1));
+                        quo.normtimetotals = utils.changeThrDecimal(utils.accAdd(quo.normtimetotals, _total));
+                        quotationFunctionAreasa[2].quotationFunctionAreaItems1.push(v);
+                    } else {
+                        var _total = utils.changeThrDecimal(utils.accMul(utils.accMul(trannum, utils.accMul(num, workdays)), v.atttype == "0" ? 1 : -1));
+                        quo.normtimetotal = utils.changeThrDecimal(utils.accAdd(quo.normtimetotal, _total));
+                        quotationFunctionAreasa[2].quotationFunctionAreaItems1.push(v);
+                    }
+
+                });
+            }, null, false);
+
             $.each(quotationFunctionAreas, function(i, v) {
 
                 if (v.type == 1)
@@ -1068,8 +1382,11 @@ var QuotationDetail = (function() {
 
             com.focusPage('#normricetotals').text(quo.normricetotals);
 
+            com.focusPage('#normtimetotals').text(quo.normtimetotals);
+
             quo.calculateQuoFees();
             quo.normriceQuoFees();
+            quo.normtimeQuoFees();
 
             quo.init();
             domain.init();
