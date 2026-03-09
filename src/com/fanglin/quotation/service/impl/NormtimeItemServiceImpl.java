@@ -83,7 +83,7 @@ public class NormtimeItemServiceImpl implements NormtimeItemService {
 			normtimeItemPO.setName(normaddPO.getName());
 			normtimeItemPO.setUnit(normaddPO.getUnit());
 			normtimeItemPO.setTrannum(0);
-			normtimeItemPO.setWorkdays(normaddPO.getPrice());
+			normtimeItemPO.setWorkdays(0);
 
 			normtimeItemDao.save(normtimeItemPO);
 

@@ -1,7 +1,6 @@
 package com.fanglin.quotation.po;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -69,7 +68,7 @@ public class NormtimeItemPO implements Serializable {
 
 	private int trannum;
 
-	private BigDecimal workdays;
+	private int workdays;
 
 	private int num;
 
@@ -214,11 +213,11 @@ public class NormtimeItemPO implements Serializable {
 	}
 
 	@Column(name = "workdays", precision = 10, scale = 2)
-	public BigDecimal getWorkdays() {
+	public int getWorkdays() {
 		return workdays;
 	}
 
-	public void setWorkdays(BigDecimal workdays) {
+	public void setWorkdays(int workdays) {
 		this.workdays = workdays;
 	}
 
