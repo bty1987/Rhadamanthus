@@ -807,44 +807,15 @@ var protationPart = (function() {
         // 当前提交类型: 0=管理优惠, 1=活动优惠
         currentSubmitType: 0,
 
-        // 修改优惠价格处理逻辑
-        // submitType: 0=特批优惠提交（复用原始管理优惠逻辑），1=活动优惠提交（直接审批）
-        handleSaveFunctionAreaPreferPrice: function(submitType) {
+        /**
+         * 处理特批优惠提交
+         * 包含：优惠价格、管理费优惠、特殊优惠
+         * 如果特殊优惠增加，需要走审批流程
+         */
+        handleSpecialPreferSubmit: function() {
 
-            submitType = submitType || 0;
-            quote.currentSubmitType = submitType;
+            quote.currentSubmitType = 0;
 
-            if (submitType === 1) {
-                // 活动优惠提交：需要先保存旧值，然后验证和重新计算
-
-                // 保存旧值，用于取消时恢复
-                quo.oldProtation.preferPrice = quo.basicParams["protation.preferPrice"];
-                quo.oldProtation.manageProfit = quo.basicParams["protation.manageProfit"];
-                quo.oldProtation.advanceProfit = quo.basicParams["protation.advanceProfit"];
-                quo.oldProtation.discount = quo.basicParams["protation.discount"];
-                quo.oldProtation.manageDiscount = quo.basicParams["protation.manageDiscount"];
-                quo.oldProtation.activityPrice = quo.basicParams["protation.activityPrice"];
-
-                // 获取用户输入的活动优惠金额
-                var activityPriceInput = com.focusPage('#activityPrice', "#functionAreaPreferPrice").val();
-
-                // 临时更新到全局参数，用于计算 totalPrice
-                quo.basicParams["protation.activityPrice"] = activityPriceInput;
-
-                // 重新计算费用，验证优惠金额是否合理
-                if (!quo.calculateQuoFees()) {
-                    quote.oldProtationData();
-                    return false;
-                }
-
-                // 加载审批人后显示审批弹窗
-                quote.loadApprovers(1, function() {
-                    com.focusPage("#approveModal").modal("show");
-                });
-                return false;
-            }
-
-            // 特批优惠提交：复用原始管理优惠逻辑
             // 保存旧值，用于取消时恢复
             quo.oldProtation.preferPrice = quo.basicParams["protation.preferPrice"];
             quo.oldProtation.manageProfit = quo.basicParams["protation.manageProfit"];
@@ -853,11 +824,10 @@ var protationPart = (function() {
             quo.oldProtation.manageDiscount = quo.basicParams["protation.manageDiscount"];
             quo.oldProtation.activityPrice = quo.basicParams["protation.activityPrice"];
 
-            // 获取用户输入的新值（管理优惠提交时不包含活动优惠，活动优惠只能通过审批流程修改）
+            // 获取用户输入的新值
             quo.basicParams["protation.preferPrice"] = com.focusPage('#preferPrices').val();
             quo.basicParams["protation.manageProfit"] = com.focusPage('#preferManage').val();
             quo.basicParams["protation.advanceProfit"] = com.focusPage('#preferAdvance').val();
-            // 注意：活动优惠(activityPrice)不在此处更新，只能通过审批流程(type=1)修改
 
             // 校验管理优惠不能大于管理费
             if (quo.basicParams["protation.manageProfit"] > quo.basicParams["protation.managePrice"]) {
@@ -889,17 +859,53 @@ var protationPart = (function() {
             return true;
         },
 
+        /**
+         * 处理活动优惠提交
+         * 活动优惠需要走审批流程，审批通过后由后端更新到数据库
+         */
+        handleActivityPreferSubmit: function() {
+
+            quote.currentSubmitType = 1;
+
+            // 保存旧值，用于取消时恢复
+            quo.oldProtation.preferPrice = quo.basicParams["protation.preferPrice"];
+            quo.oldProtation.manageProfit = quo.basicParams["protation.manageProfit"];
+            quo.oldProtation.advanceProfit = quo.basicParams["protation.advanceProfit"];
+            quo.oldProtation.discount = quo.basicParams["protation.discount"];
+            quo.oldProtation.manageDiscount = quo.basicParams["protation.manageDiscount"];
+            quo.oldProtation.activityPrice = quo.basicParams["protation.activityPrice"];
+
+            // 获取用户输入的活动优惠金额
+            var activityPriceInput = com.focusPage('#activityPrice', "#functionAreaPreferPrice").val();
+
+            // 临时更新到全局参数，用于计算 totalPrice
+            quo.basicParams["protation.activityPrice"] = activityPriceInput;
+
+            // 重新计算费用，验证优惠金额是否合理
+            if (!quo.calculateQuoFees()) {
+                quote.oldProtationData();
+                return false;
+            }
+
+            // 加载审批人后显示审批弹窗
+            quote.loadApprovers(1, function() {
+                com.focusPage("#approveModal").modal("show");
+            });
+
+            return false;
+        },
+
         // 修改优惠价格提交按钮方法
         saveFunctionAreaPreferPrice: function() {
 
-            // 特批优惠后提交按钮 - type=0（复用原始管理优惠逻辑，只检查特殊优惠是否增加）
+            // 特批优惠提交按钮 - 处理优惠价格、管理费优惠、特殊优惠
             com.focusPage('#submitFunctionAreaBtn').click(function() {
-                quote.handleSaveFunctionAreaPreferPrice(0);
+                quote.handleSpecialPreferSubmit();
             });
 
-            // 活动优惠后提交按钮 - type=1（直接显示审批弹窗，不做任何验证）
+            // 活动优惠提交按钮 - 需要审批流程
             com.focusPage('#submitFunctionAreaBtn2').click(function() {
-                quote.handleSaveFunctionAreaPreferPrice(1);
+                quote.handleActivityPreferSubmit();
             });
         },
 
