@@ -463,6 +463,15 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 		// 设置规则表达式和说明
 		buildingNameRulePO.setRule(rule);
+
+		// 设置规则示例（使用 comment 或 rule，不能为 null）
+		if (comment != null && !comment.trim().isEmpty()) {
+			buildingNameRulePO.setRuleExample(comment);
+		} else {
+			buildingNameRulePO.setRuleExample(rule); // 默认使用规则表达式作为示例
+		}
+
+		// 设置规则内容
 		if (comment != null && !comment.trim().isEmpty()) {
 			buildingNameRulePO.setRuleContent(comment);
 		} else {
