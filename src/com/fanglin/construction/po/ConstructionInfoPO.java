@@ -73,6 +73,8 @@ public class ConstructionInfoPO implements Serializable {
 
 	private String comment;
 
+	private short handoverStatus;
+
 	public ConstructionInfoPO() {
 		super();
 	}
@@ -270,6 +272,15 @@ public class ConstructionInfoPO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Column(name = "handoverStatus")
+	public short getHandoverStatus() {
+		return handoverStatus;
+	}
+
+	public void setHandoverStatus(short handoverStatus) {
+		this.handoverStatus = handoverStatus;
 	}
 
 	public ConstructionInfoVO ptv(ConstructionInfoVO constructionInfoVO) {

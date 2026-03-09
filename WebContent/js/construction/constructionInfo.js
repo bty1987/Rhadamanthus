@@ -8,10 +8,12 @@ jQuery(function($) {
         modals: {
             contructionNodeModal: com.focusPage("#contructionNodeModal"),
             checkModal: com.focusPage("#checkModal"),
+            handoverModal: com.focusPage("#handoverModal"),
         },
 
         btns: {
             checkBtn: com.focusPage("#checkBtn", "#checkModal").click(checkInfo),
+            handoverBtn: com.focusPage("#handoverBtn", "#handoverModal").click(handoverInfo),
         },
 
         nodeItems: {
@@ -20,6 +22,7 @@ jQuery(function($) {
 
         items: {
             isCheck: com.focusPage("#isCheck", "#checkModal"),
+            handoverStatus: com.focusPage("#handoverStatus", "#handoverModal"),
         },
 
         info: null,
@@ -33,6 +36,7 @@ jQuery(function($) {
     }, "autoFillKeyValue", "key", "value", null);
 
     information.items.isCheck.bindData(constant.construction().constructionInfo.isCheck.datas, "key", "value");
+    information.items.handoverStatus.bindData(constant.construction().constructionInfo.handoverStatus.datas, "key", "value");
 
     var displayFunc = (function() {
 
@@ -66,6 +70,7 @@ jQuery(function($) {
             var $btnConplan = $('<a></a>').addClass('btn btn-minier btn-warning').html("施工计划");
             var $btnProLine = $('<a></a>').addClass('btn btn-minier btn-inverse').html("预派监理");
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html("验房");
+            var $btnHandover = $('<a></a>').addClass('btn btn-minier btn-pink').html("交接");
             var $btnProfile = $('<a></a>').addClass('btn btn-minier btn-warning').html("画像");
 
             var propertyArr = [
@@ -119,6 +124,7 @@ jQuery(function($) {
             ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"],
             ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
             ["备注: ", v.comment, "grey"],
+            ["交接状态: ", constant.construction().constructionInfo.handoverStatus.keys[v.handoverStatus] || "-", "blue"],
             ];
 
             $.each(propertyArr, function(index, value) {
@@ -137,7 +143,7 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $btnDiv.append($btnView).append($btnService).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).append($btnProfile).appendTo($h3);
+            $btnDiv.append($btnView).append($btnService).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).append($btnHandover).append($btnProfile).appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function() {
@@ -171,6 +177,16 @@ jQuery(function($) {
                 information.info = v;
 
                 information.modals.checkModal.modal("show");
+            });
+
+            $btnHandover.click(function() {
+
+                information.info = v;
+
+                // 设置当前交接状态
+                com.focusPage("#handoverStatus").val(v.handoverStatus || 0);
+
+                information.modals.handoverModal.modal("show");
             });
 
             $btnProfile.click(function() {
@@ -476,6 +492,23 @@ jQuery(function($) {
             searcher.doSearch();
 
             information.checkModal.modal("hide");
+        });
+    }
+
+    function handoverInfo() {
+
+        var option = {
+            "constructionInfo.orderId": information.info.orderId,
+            "constructionInfo.handoverStatus": com.focusPage("#handoverStatus").val(),
+        };
+
+        com.post(api.construction.handoverConstructionInfo, option, function(res) {
+
+            com.showAlert(com.info, "交接成功");
+
+            searcher.doSearch();
+
+            information.handoverModal.modal("hide");
         });
     }
 
