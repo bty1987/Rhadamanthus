@@ -57,6 +57,8 @@ public class ConstructionInfoVO implements Serializable {
 
 	private String comment;
 
+	private Short handoverStatus;
+
 	public ConstructionInfoVO() {
 		super();
 	}
@@ -257,6 +259,14 @@ public class ConstructionInfoVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Short getHandoverStatus() {
+		return handoverStatus;
+	}
+
+	public void setHandoverStatus(Short handoverStatus) {
+		this.handoverStatus = handoverStatus;
 	}
 
 }

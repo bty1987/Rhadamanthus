@@ -532,6 +532,9 @@ $.extend(api, {
                 args: ["constructionInfo.timeLimit", "constructionInfo.designPeriod", "constructionInfo.decoration.house.quoteArea"]
             }
         },
+        handoverConstructionInfo: {
+            url: "handoverConstructionInfo.do"
+        },
 
         pageConstructionAccessory: {
             url: "pageConstructionAccessory.do",
