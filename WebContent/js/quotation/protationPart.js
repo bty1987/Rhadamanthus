@@ -815,8 +815,29 @@ var protationPart = (function() {
             quote.currentSubmitType = submitType;
 
             if (submitType === 1) {
-                // 活动优惠提交：加载审批人后直接显示审批弹窗，不做任何验证
-                // 注意：活动优惠金额必须通过审批流程才能修改，不能直接更新到全局参数
+                // 活动优惠提交：需要先保存旧值，然后验证和重新计算
+
+                // 保存旧值，用于取消时恢复
+                quo.oldProtation.preferPrice = quo.basicParams["protation.preferPrice"];
+                quo.oldProtation.manageProfit = quo.basicParams["protation.manageProfit"];
+                quo.oldProtation.advanceProfit = quo.basicParams["protation.advanceProfit"];
+                quo.oldProtation.discount = quo.basicParams["protation.discount"];
+                quo.oldProtation.manageDiscount = quo.basicParams["protation.manageDiscount"];
+                quo.oldProtation.activityPrice = quo.basicParams["protation.activityPrice"];
+
+                // 获取用户输入的活动优惠金额
+                var activityPriceInput = com.focusPage('#activityPrice', "#functionAreaPreferPrice").val();
+
+                // 临时更新到全局参数，用于计算 totalPrice
+                quo.basicParams["protation.activityPrice"] = activityPriceInput;
+
+                // 重新计算费用，验证优惠金额是否合理
+                if (!quo.calculateQuoFees()) {
+                    quote.oldProtationData();
+                    return false;
+                }
+
+                // 加载审批人后显示审批弹窗
                 quote.loadApprovers(1, function() {
                     com.focusPage("#approveModal").modal("show");
                 });
