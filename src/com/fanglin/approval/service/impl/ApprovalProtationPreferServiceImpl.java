@@ -97,7 +97,21 @@ public class ApprovalProtationPreferServiceImpl implements ApprovalProtationPref
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("装修单号:%s,优惠额:%s,管理优惠额:%s特批优惠额:%s", orderId, approvalProtationPreferVO.getPreferPrice() / 1000, approvalProtationPreferVO.getManagePrefer() / 1000, approvalProtationPreferVO.getAdvancePrefer() / 1000);
+		String content;
+		if (approvalProtationPreferVO.getType() == 1) {
+			// type=1: 活动优惠审批
+			content = String.format("装修单号:%s,活动优惠额:%s,总价:%s",
+				orderId,
+				approvalProtationPreferVO.getActivityPrice() / 1000,
+				approvalProtationPreferVO.getTotalPrice() / 1000);
+		} else {
+			// type=0: 特批优惠审批（默认）
+			content = String.format("装修单号:%s,优惠额:%s,管理优惠额:%s,特批优惠额:%s",
+				orderId,
+				approvalProtationPreferVO.getPreferPrice() / 1000,
+				approvalProtationPreferVO.getManagePrefer() / 1000,
+				approvalProtationPreferVO.getAdvancePrefer() / 1000);
+		}
 
 		approvalPO = new ApprovalPO().init(sender, receiver, orderId, pid, ApprovalPO.APPROVAL_TYPE_PROTATION_PREFER_INT, content, approvalVO.getComment(), company);
 
