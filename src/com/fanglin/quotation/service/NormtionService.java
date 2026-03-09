@@ -17,6 +17,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.quotation.vo.NormoodVO;
 import com.fanglin.data.quotation.vo.NormriceVO;
+import com.fanglin.data.quotation.vo.NormtimeVO;
 import com.fanglin.quotation.vo.AddReduceVO;
 import com.fanglin.quotation.vo.ExtensionVO;
 import com.fanglin.quotation.vo.NormtionVO;
@@ -40,6 +41,12 @@ public interface NormtionService {
 
 	public List<AddReduceVO> queryAddReduceNormrice(AddReduceVO addReduceVO, Short schedule) throws FLException;
 
+	public List<QuotationFunctionAreaVO> queryQuotationNormtime(QuotationVO quotationVO, Short schedule) throws FLException;
+
+	public List<ExtensionVO> queryExtensionNormtime(ExtensionVO extensionVO, Short schedule) throws FLException;
+
+	public List<AddReduceVO> queryAddReduceNormtime(AddReduceVO addReduceVO, Short schedule) throws FLException;
+
 	public List<NormoodVO> amountQuotationNormood(QuotationVO quotationVO) throws FLException;
 
 	public List<NormoodVO> amountExtensionNormood(ExtensionVO extensionVO) throws FLException;
@@ -51,6 +58,12 @@ public interface NormtionService {
 	public List<NormriceVO> amountExtensionNormrice(ExtensionVO extensionVO) throws FLException;
 
 	public List<NormriceVO> amountAddReduceNormrice(AddReduceVO addReduceVO) throws FLException;
+
+	public List<NormtimeVO> amountQuotationNormtime(QuotationVO quotationVO) throws FLException;
+
+	public List<NormtimeVO> amountExtensionNormtime(ExtensionVO extensionVO) throws FLException;
+
+	public List<NormtimeVO> amountAddReduceNormtime(AddReduceVO addReduceVO) throws FLException;
 
 	public NormtionVO queryNormtion(NormtionVO normtionVO) throws FLException;
 

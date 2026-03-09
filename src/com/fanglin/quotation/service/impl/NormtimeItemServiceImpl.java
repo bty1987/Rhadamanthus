@@ -12,8 +12,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
-import com.fanglin.data.po.NormaddPO;
-import com.fanglin.data.quotation.dao.impl.NormaddDaoImpl;
 import com.fanglin.quotation.dao.NormtimeItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.NormtimeItemPO;
@@ -29,9 +27,6 @@ public class NormtimeItemServiceImpl implements NormtimeItemService {
 
 	@Autowired
 	private NormtimeItemDao normtimeItemDao;
-
-	@Autowired
-	private NormaddDaoImpl normaddDaoImpl;
 
 	@Autowired
 	private QuotationDao quotationDao;
@@ -66,55 +61,27 @@ public class NormtimeItemServiceImpl implements NormtimeItemService {
 
 		NormtimeItemPO normtimeItemPO = new NormtimeItemPO();
 
-		if (normtimeItemVO.getSid() != null) {
+		normtimeItemPO.setQid(quotationPO.getQid());
 
-			NormaddPO normaddPO = normaddDaoImpl.get(normtimeItemVO.getSid());
+		ConstructionNodePO constructionNodePO = constructionNodeDao.get(normtimeItemVO.getConstructionNode().getCnid());
 
-			normtimeItemPO.setQid(quotationPO.getQid());
-			normtimeItemPO.setSid(quotationPO.getQid());
+		normtimeItemPO.setConstructionNode(constructionNodePO);
 
-			normtimeItemPO.setType(NormtimeItemPO.TYPE_QUOTA_INT);
-			normtimeItemPO.setNormtype(NormtimeItemPO.NORMTYPE_ADD_INT);
-			normtimeItemPO.setAtttype(NormtimeItemPO.ATTTYPE_COLLECTION_INT);
-			normtimeItemPO.setNum(normtimeItemVO.getNum());
+		normtimeItemPO.setName(normtimeItemVO.getName());
+		normtimeItemPO.setNum(normtimeItemVO.getNum());
+		normtimeItemPO.setTrannum(normtimeItemVO.getTrannum());
+		normtimeItemPO.setWorkdays(normtimeItemVO.getWorkdays());
 
-			normtimeItemPO.setConstructionNode(normaddPO.getConstructionNode());
+		normtimeItemPO.setType(NormtimeItemPO.TYPE_QUOTA_INT);
+		normtimeItemPO.setNormtype(NormtimeItemPO.NORMTYPE_WORKDAYS_INT);
+		normtimeItemPO.setAtttype(NormtimeItemPO.ATTTYPE_COLLECTION_INT);
 
-			normtimeItemPO.setName(normaddPO.getName());
-			normtimeItemPO.setUnit(normaddPO.getUnit());
-			normtimeItemPO.setTrannum(0);
-			normtimeItemPO.setWorkdays(0);
+		normtimeItemDao.save(normtimeItemPO);
 
-			normtimeItemDao.save(normtimeItemPO);
+		normtimeItemVO.setConstructionNode(new ConstructionNodeVO());
 
-			normtimeItemVO.setConstructionNode(new ConstructionNodeVO());
-
-			BeanUtil.copyProperties(normtimeItemPO, normtimeItemVO, Arrays.asList("constructionNode"));
-			BeanUtil.copyPropertie(normtimeItemPO.getConstructionNode(), normtimeItemVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
-		} else {
-
-			normtimeItemPO.setQid(quotationPO.getQid());
-
-			ConstructionNodePO constructionNodePO = constructionNodeDao.get(normtimeItemVO.getConstructionNode().getCnid());
-
-			normtimeItemPO.setConstructionNode(constructionNodePO);
-
-			normtimeItemPO.setName(normtimeItemVO.getName());
-			normtimeItemPO.setNum(normtimeItemVO.getNum());
-			normtimeItemPO.setTrannum(normtimeItemVO.getTrannum());
-			normtimeItemPO.setWorkdays(normtimeItemVO.getWorkdays());
-
-			normtimeItemPO.setType(NormtimeItemPO.TYPE_QUOTA_INT);
-			normtimeItemPO.setNormtype(NormtimeItemPO.NORMTYPE_WORKDAYS_INT);
-			normtimeItemPO.setAtttype(NormtimeItemPO.ATTTYPE_COLLECTION_INT);
-
-			normtimeItemDao.save(normtimeItemPO);
-
-			normtimeItemVO.setConstructionNode(new ConstructionNodeVO());
-
-			BeanUtil.copyProperties(normtimeItemPO, normtimeItemVO, Arrays.asList("constructionNode"));
-			BeanUtil.copyPropertie(normtimeItemPO.getConstructionNode(), normtimeItemVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
-		}
+		BeanUtil.copyProperties(normtimeItemPO, normtimeItemVO, Arrays.asList("constructionNode"));
+		BeanUtil.copyPropertie(normtimeItemPO.getConstructionNode(), normtimeItemVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 		return 0;
 	}
