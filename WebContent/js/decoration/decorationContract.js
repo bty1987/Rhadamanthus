@@ -13,9 +13,15 @@ jQuery(function($) {
             passhkm: com.focusPage("#passhkm", "#customerModal"),
             qrcode: null,
             qrcodeCustomer: com.focusPage("#qrcodeCustomer"),
-            
+
             approveContract: com.focusPage("#approveContract", "#approvalModal"),
             approveComment: com.focusPage("#approveComment", "#approvalModal"),
+
+            // 合同记录弹窗相关元素
+            recordCommitTime: com.focusPage("#recordCommitTime", "#contractRecordModal"),
+            recordStartTime: com.focusPage("#recordStartTime", "#contractRecordModal"),
+            recordEndTime: com.focusPage("#recordEndTime", "#contractRecordModal"),
+            recordComment: com.focusPage("#recordComment", "#contractRecordModal"),
         },
         btns: {
             saveBtn: com.focusPage('#saveBtn'),
@@ -45,12 +51,6 @@ jQuery(function($) {
         decorationInfo: com.focusPage("#decorationInfo"),
         customerInfo: com.focusPage("#customerInfo"),
         contractRecordInfo: com.focusPage("#contractRecordInfo"),
-
-        // 合同记录弹窗相关
-        recordCommitTime: com.focusPage("#recordCommitTime", "#contractRecordModal"),
-        recordStartTime: com.focusPage("#recordStartTime", "#contractRecordModal"),
-        recordEndTime: com.focusPage("#recordEndTime", "#contractRecordModal"),
-        recordComment: com.focusPage("#recordComment", "#contractRecordModal"),
 
         decoration: null,
 
