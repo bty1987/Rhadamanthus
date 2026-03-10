@@ -508,8 +508,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void tranCustomerOrigin(CustomerOriginVO customerOriginVO, Short type, short typeness,
-	                                String houseType, String houseClass, Short resourceType, int company) throws FLException {
+	public void tranCustomerOrigin(CustomerOriginVO customerOriginVO, int company) throws FLException {
 
 		if (customerOriginVO == null || customerOriginVO.getCsid() <= 0) {
 			throw new FLException(330001, "客源数据不能为空");
@@ -560,21 +559,21 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			decorationVO.setBusitype(busitypeDbid);
 		}
 
-		// 如果前端传了其他参数，设置到装修单
-		if (type != null) {
-			decorationVO.setType(type);
+		// 如果前端传了其他参数，从 customerOriginVO 中获取并设置到装修单
+		if (customerOriginVO.getType() != null) {
+			decorationVO.setType(customerOriginVO.getType());
 		}
-		if (typeness > 0) {
-			decorationVO.setTypeness(typeness);
+		if (customerOriginVO.getTypeness() > 0) {
+			decorationVO.setTypeness(customerOriginVO.getTypeness());
 		}
-		if (houseType != null && !houseType.isEmpty()) {
-			decorationVO.setHouseType(houseType);
+		if (customerOriginVO.getHouseType() != null && !customerOriginVO.getHouseType().isEmpty()) {
+			decorationVO.setHouseType(customerOriginVO.getHouseType());
 		}
-		if (houseClass != null && !houseClass.isEmpty()) {
-			decorationVO.setHouseClass(houseClass);
+		if (customerOriginVO.getHouseClass() != null && !customerOriginVO.getHouseClass().isEmpty()) {
+			decorationVO.setHouseClass(customerOriginVO.getHouseClass());
 		}
-		if (resourceType != null) {
-			decorationVO.setResourceType(resourceType);
+		if (customerOriginVO.getResourceType() != null) {
+			decorationVO.setResourceType(customerOriginVO.getResourceType());
 		}
 
 		// 调用装修单服务创建装修单
