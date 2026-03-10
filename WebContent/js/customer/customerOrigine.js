@@ -302,6 +302,8 @@ $(function() {
             var $backout = $("<a></a>").addClass("btn btn-minier btn-danger").html("撤销");
             var $confirm = $("<a></a>").addClass("btn btn-minier btn-inverse").html("确认");
             var $btnApproval = $("<a></a>").addClass("btn btn-minier btn-success").html("审批");
+            var $directFirstApprove = $("<a></a>").addClass("btn btn-minier btn-primary").html("直接初审");
+            var $directTran = $("<a></a>").addClass("btn btn-minier btn-purple").html("直接转单");
             var $belonger = $("<a></a>").addClass("btn btn-minier btn-yellow").html("归属");
             var $btnclaim = $("<a></a>").addClass("btn btn-minier btn-yellow").html("认领");
 
@@ -330,6 +332,8 @@ $(function() {
                     $divBtnWrap.append($btnBind);
                 if (customerOrigine.pageConfig.pageBtn.contains("firstApprove"))
                     $divBtnWrap.append($firstApprove);
+                if (customerOrigine.pageConfig.pageBtn.contains("directFirstApprove"))
+                    $divBtnWrap.append($directFirstApprove);
                 if (customerOrigine.pageConfig.pageBtn.contains("free"))
                     $divBtnWrap.append($release);
             } else if (v.status == constant.customer().customerOrigine.STATUS_COMMIT_INT) {
@@ -340,6 +344,8 @@ $(function() {
             } else if ([constant.customer().customerOrigine.STATUS_CONFIRM_INT, constant.customer().customerOrigine.STATUS_REFUSE_INT].contains(v.status)) {
                 if (customerOrigine.pageConfig.pageBtn.contains("approve"))
                     $divBtnWrap.append($btnApproval);
+                if (customerOrigine.pageConfig.pageBtn.contains("directTran"))
+                    $divBtnWrap.append($directTran);
             }
 
             if ([constant.customer().customerOrigine.STATUS_COMMIT_INT, constant.customer().customerOrigine.STATUS_CONFIRM_INT, constant.customer().customerOrigine.STATUS_REFUSE_INT].contains(v.status)) {
@@ -424,6 +430,21 @@ $(function() {
                 customerOrigine.modals.commitFirstApprove.modal("show");
             });
 
+            // 直接初审（不走审批流程）
+            $directFirstApprove.click(function() {
+
+                com.showConfirm("是否确认直接初审通过?", function() {
+
+                    com.post(api.customer.approveCustomerOrigin, {
+                        "customerOrigin.csid": v.csid
+                    }, function(res) {
+
+                        com.showAlert(com.info, "操作成功");
+                        searcher.doSearch();
+                    });
+                });
+            });
+
             // 撤销
             $backout.click(function() {
 
@@ -471,6 +492,21 @@ $(function() {
                 customerOrigine.items.nameApprove.val(v.name);
                 customerOrigine.items.phoneApprove.val(v.phone);
                 customerOrigine.modals.commitApproveModal.modal("show");
+            });
+
+            // 直接转单（不走审批流程）
+            $directTran.click(function() {
+
+                com.showConfirm("是否确认直接转装修单?", function() {
+
+                    com.post(api.customer.tranCustomerOrigin, {
+                        "customerOrigin.csid": v.csid
+                    }, function(res) {
+
+                        com.showAlert(com.info, "操作成功");
+                        searcher.doSearch();
+                    });
+                });
             });
 
             // 编辑归属人

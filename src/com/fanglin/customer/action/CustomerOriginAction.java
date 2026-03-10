@@ -130,6 +130,22 @@ public class CustomerOriginAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "approveCustomerOrigin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String approveCustomerOrigin() throws FLException {
+
+		customerOriginService.approveCustomerOrigin(customerOrigin, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "tranCustomerOrigin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String tranCustomerOrigin() throws FLException {
+
+		customerOriginService.tranCustomerOrigin(customerOrigin, queryCompany());
+
+		return SUCCESS;
+	}
+
 	public CustomerOriginVO getCustomerOrigin() {
 		return customerOrigin;
 	}

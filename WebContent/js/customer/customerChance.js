@@ -6,6 +6,7 @@ jQuery(function($) {
             issueModal: com.focusPage("#issueModal"),
             changeModal: com.focusPage("#changeModal"),
             approveModal: com.focusPage("#approveModal"),
+            directApproveModal: com.focusPage("#directApproveModal"),
             firstApproveModal: com.focusPage("#firstApproveModal"),
             belongApproveModal: com.focusPage("#belongApproveModal"),
             QRcodeModal: com.focusPage("#QRcodeModal"),
@@ -42,6 +43,16 @@ jQuery(function($) {
             resourceTypeApprove: com.focusPage("#resourceTypeApprove", "#approveModal"),
             approveMan: com.focusPage("#approveMan", "#approveModal"),
             approveComment: com.focusPage("#approveComment", "#approveModal"),
+
+            directVillageNo: com.focusPage("#directVillageNo", "#directApproveModal"),
+            directHouseNumber: com.focusPage("#directHouseNumber", "#directApproveModal"),
+            directName: com.focusPage("#directName", "#directApproveModal"),
+            directPhone: com.focusPage("#directPhone", "#directApproveModal"),
+            directBusitype: com.focusPage("#directBusitype", "#directApproveModal"),
+            directHouseType: com.focusPage("#directHouseType", "#directApproveModal"),
+            directHouseClass: com.focusPage("#directHouseClass", "#directApproveModal"),
+            directOrderType: com.focusPage("#directOrderType", "#directApproveModal"),
+            directResourceType: com.focusPage("#directResourceType", "#directApproveModal"),
 
             firstApproveComment: com.focusPage("#firstApproveComment", "#firstApproveModal"),
 
@@ -94,7 +105,7 @@ jQuery(function($) {
             issueSaveBtn: com.focusPage("#saveBtn", "#issueModal").on("click", issue),
             changeBtn: com.focusPage("#changeBtn", "#changeModal").on("click", change),
             approveBtn: com.focusPage("#approvalBtn", "#approveModal").on("click", approval),
-            directApproveBtn: com.focusPage("#directApproveBtn", "#approveModal").on("click", directApprove),
+            directApproveConfirmBtn: com.focusPage("#directApproveConfirmBtn", "#directApproveModal").on("click", directApproveConfirm),
             firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#firstApproveModal").on("click", firstApproval),
             belongApprovalBtn: com.focusPage("#belongApprovalBtn", "#belongApproveModal").on("click", belongApproval),
             updateBtn: com.focusPage("#updateBtn", "#updateModal").on("click", update),
@@ -205,6 +216,10 @@ jQuery(function($) {
     customerChance.items.houseClassApprove.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
     customerChance.items.resourceTypeApprove.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
 
+    customerChance.items.directHouseType.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
+    customerChance.items.directHouseClass.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
+    customerChance.items.directResourceType.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
+
     customerChance.items.configEvent.bindData(customerChance.config, "key", "value");
     customerChance.items.isFine.bindData(constant.customer().customerChance.config.datas, "key", "value");
 
@@ -221,6 +236,7 @@ jQuery(function($) {
 
         customerChance.items.orderType.bindData(customerChance.atttypes, 'key', 'name');
         customerChance.items.orderTypeApprove.bindData(customerChance.atttypes, 'key', 'name');
+        customerChance.items.directOrderType.bindData(customerChance.atttypes, 'key', 'name');
     });
 
     com.post(api.customer.queryCustomerUserRule, {
@@ -890,6 +906,30 @@ jQuery(function($) {
         },
 
     }, {
+        name: "审核",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            customerChance.ccid = v.ccid;
+            customerChance.currentCustomerChance = v;
+
+            // 填充弹窗数据
+            v.busitype != null ? customerChance.items.directBusitype.val(v.busitype.dbid) : "";
+            com.updateTypeahead('directVillageNo', v.source.village.no, v.source.village.name + "-" + v.source.village.cityProper.name);
+            customerChance.items.directHouseNumber.val(v.source.houseNumber);
+            customerChance.items.directName.val(v.source.name);
+            customerChance.items.directPhone.val(v.source.phone);
+
+            // 打开直接审核弹窗
+            customerChance.modals.directApproveModal.modal("show");
+
+            return false;
+        },
+        show: function(v) {
+
+            return v.status == constant.customer().customerChance.STATUS_INIT_INT && (customerChance.depage == "user" || customerChance.depage == "designer") && customerChance.detype == null;
+        },
+    }, {
         name: "记录",
         clazz: "btn-pink",
         handle: function(v) {
@@ -992,6 +1032,7 @@ jQuery(function($) {
 
         customerChance.items.busitypeApprove.bindData($arr, 'dbid', 'name');
         customerChance.items.busitype.bindData($arr, "dbid", "name", true);
+        customerChance.items.directBusitype.bindData($arr, 'dbid', 'name');
         customerChance.approveItems.busitype.bindData($arr, 'dbid', 'name');
         customerChance.updateItems.busitype.bindData($arr, 'dbid', 'name');
     });
@@ -1154,27 +1195,25 @@ jQuery(function($) {
         });
     }
 
-    function directApprove() {
+    // 直接审核确认函数（新弹窗的提交函数）
+    function directApproveConfirm() {
 
-        if (com.validate("approveModal")) {
+        if (com.validate("directApproveModal")) {
             return false;
         }
 
-        com.showConfirm("是否确认直接转装修单", function() {
+        var option = {
+            "customerChance.ccid": customerChance.ccid
+        };
 
-            var option = {
-                "customerChance.ccid": customerChance.ccid
-            };
+        com.post(api.customer.approveCustomerChance, option, function(res) {
 
-            com.post(api.customer.approveCustomerChance, option, function(res) {
+            com.showAlert(com.info, "操作成功");
 
-                com.showAlert(com.info, "操作成功");
+            com.clearValidator();
+            searcher.doSearch();
 
-                com.clearValidator();
-                searcher.doSearch();
-
-                customerChance.modals.approveModal.modal("hide");
-            });
+            customerChance.modals.directApproveModal.modal("hide");
         });
     }
 
