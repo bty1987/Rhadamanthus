@@ -2809,6 +2809,18 @@
                 item = painter.createQuote(v.index, v).appendTo(quolist);
             }
 
+            // 如果有公式表达式，通过公式计算工程量
+            if (v.expres && v.expres != "" && (!v.qfaiId || v.qfaiId == "")) {
+                var $widget = v.areaType == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT ? cpWidget : widget;
+                var formulaResult = this.quotetionFunctionAreaFormula(v.expres, $widget, 0);
+                v.num = formulaResult.num;
+                v.formula = formulaResult.num;
+
+                // 更新页面显示
+                item.find('.cell.formula .cell-wrap').text(v.num);
+                item.find('.cell.num .cell-wrap').text(v.num);
+            }
+
             var fee = quo.calculateNowQuoteItem(v.num, v.areaType, item);
 
             var args = {
@@ -2839,11 +2851,6 @@
 
                 item.find(".icon-arrow-up").removeClass("grey").addClass("green");
                 item.find(".icon-arrow-down").removeClass("grey").addClass("red");
-
-                // 如果有公式表达式，自动触发公式计算
-                if (v.expres && v.expres != "") {
-                    quote.checkedExpres(item);
-                }
             }, null, false);
         },
 
@@ -2995,7 +3002,7 @@
 
             var $widget = $item.parents('.widget-box');
 
-            var num = painter.quotetionFunctionAreaFormula(expres, $widget, 0).num;
+            var num = this.quotetionFunctionAreaFormula(expres, $widget, 0).num;
 
             var oldformula = $item.find('.cell.formula .cell-wrap').text();
             var oldNum = $item.find('.cell.num .cell-wrap').text();
