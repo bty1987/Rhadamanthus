@@ -3029,12 +3029,47 @@
             $item.find('.cell.formula .cell-wrap').text(num);
             $item.find('.cell.num .cell-wrap').text(num);
 
+            // 从 $item 元素及其子元素中获取完整的参数信息
+            var qiid = $item.attr('data-qiid');
+            var qfaid = $widget.attr('data-qfaid');
+            var areaType = $widget.attr('data-areaType');
+
+            // 从各个子单元格中获取属性
+            var $nameCell = $item.find('.cell.name');
+            var $numCell = $item.find('.cell.num');
+            var $unitPriceCell = $item.find('.cell.unitprice');
+            var $discountPriceCell = $item.find('.cell.discountprice');
+
+            var name = $nameCell.find('.cell-wrap').text();
+            var subtype = $numCell.attr('data-subtype');
+            var type = $item.find('.cell.line').attr('data-areaType');
+            var unitPrice = $unitPriceCell.attr('data-unitprice') || $unitPriceCell.find('.cell-wrap').text();
+            var discount = $discountPriceCell.attr('data-discount') || $item.attr('data-addPrice') || 0;
+            var addPrice = $item.attr('data-addPrice') || 0;
+            var subPrice = $item.attr('data-subPrice') || 0;
+            var measurementUnit = $item.find('.cell.unit').find('.cell-wrap').text();
+            var workType = $item.find('.cell.worktype').find('.cell-wrap').text();
+            var index = $item.find('.cell.line').text();
+            var content = $item.attr('data-content') || "";
+
             var args = {
+                "quotetionFunctionAreaItem.discount": discount,
                 "quotetionFunctionAreaItem.qfaiId": qfaiid,
-                "quotetionFunctionAreaItem.quotetionFunctionAreaId": $widget.attr('data-qfaid'),
+                "quotetionFunctionAreaItem.name": name,
+                "quotetionFunctionAreaItem.measurementUnit": measurementUnit,
                 "quotetionFunctionAreaItem.formula": num,
+                "quotetionFunctionAreaItem.workType": workType,
+                "quotetionFunctionAreaItem.unitPrice": unitPrice,
+                "quotetionFunctionAreaItem.addPrice": addPrice,
+                "quotetionFunctionAreaItem.subPrice": subPrice,
                 "quotetionFunctionAreaItem.initNum": num,
                 "quotetionFunctionAreaItem.num": num,
+                "quotetionFunctionAreaItem.subtype": subtype,
+                "quotetionFunctionAreaItem.type": type,
+                "quotetionFunctionAreaItem.qfaid": qfaid,
+                "quotetionFunctionAreaItem.index": index,
+                "quotetionFunctionAreaItem.qiid": qiid,
+                "quotetionFunctionAreaItem.content": content,
             };
 
             var $params = $.extend({}, args, quo.basicParams);
@@ -3295,6 +3330,25 @@
             $domain.attr('data-rtemPrice', utils.changeThrDecimal(rtem));
             $domain.attr('data-consPrice', cons);
             $domain.attr('data-comsPrice', coms);
+
+            // 为功能区内有公式的报价项添加更新工程量按钮
+            if (dv.type != constant.quotation().quotetionFunctionArea.TYPE_MANAGEMENT_INT) {
+                var $itemsWithExpres = $domain.find('.fl-quo-list.list .fl-quo-item.item[data-expres]');
+                $.each($itemsWithExpres, function(i, e) {
+                    var $item = $(e);
+                    var expres = $item.attr('data-expres');
+                    if (expres && expres != "" && $item.attr('data-qfaiid')) {
+                        var $numCell = $item.find('.cell.num');
+                        if ($numCell.find('.icon-circle-arrow-up').length == 0) {
+                            var $update = $('<i class="icon-circle-arrow-up blue" style="display: inline-block; padding-left: 3px; cursor: pointer;"></i>');
+                            $update.click(function() {
+                                quote.checkedExpres($item);
+                            });
+                            $numCell.find('.cell-wrap').append($update);
+                        }
+                    }
+                });
+            }
 
             return $domain;
         },
