@@ -2839,6 +2839,11 @@
 
                 item.find(".icon-arrow-up").removeClass("grey").addClass("green");
                 item.find(".icon-arrow-down").removeClass("grey").addClass("red");
+
+                // 如果有公式表达式，自动触发公式计算
+                if (v.expres && v.expres != "") {
+                    painter.checkedExpres(item);
+                }
             }, null, false);
         },
 
