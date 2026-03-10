@@ -3090,7 +3090,7 @@
                 });
                 com.focusPage('[data-qfaid="' + $widget.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(areaTotal);
 
-                quote.cacsedeUpdateItem($item);
+                // 手动更新工程量场景不需要调用 cacsedeUpdateItem（避免重置 data-count-num）
                 quote.cacsedeUpdateCpItem([$item]);
                 quo.calculateQuoFees();
 
