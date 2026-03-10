@@ -2842,7 +2842,7 @@
 
                 // 如果有公式表达式，自动触发公式计算
                 if (v.expres && v.expres != "") {
-                    painter.checkedExpres(item);
+                    quote.checkedExpres(item);
                 }
             }, null, false);
         },
