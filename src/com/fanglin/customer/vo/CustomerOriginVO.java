@@ -76,6 +76,8 @@ public class CustomerOriginVO implements Serializable {
 
 	private String orderId;
 
+	private String companyName;
+
 	public CustomerOriginVO() {
 		super();
 	}
@@ -333,6 +335,14 @@ public class CustomerOriginVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 }

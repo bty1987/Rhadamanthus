@@ -17,6 +17,8 @@ public class CustomerChanceVO implements Serializable {
 
 	private Long ccid;
 
+	private String cno;
+
 	private String orderId;
 
 	private CustomerVO customer;
@@ -79,7 +81,7 @@ public class CustomerChanceVO implements Serializable {
 
 	private Integer company;
 
-	private String cno;
+	private String companyName;
 
 	public CustomerChanceVO() {
 		super();
@@ -107,6 +109,14 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setCcid(Long ccid) {
 		this.ccid = ccid;
+	}
+
+	public String getCno() {
+		return cno;
+	}
+
+	public void setCno(String cno) {
+		this.cno = cno;
 	}
 
 	public String getOrderId() {
@@ -363,12 +373,12 @@ public class CustomerChanceVO implements Serializable {
 		this.company = company;
 	}
 
-	public String getCno() {
-		return cno;
+	public String getCompanyName() {
+		return companyName;
 	}
 
-	public void setCno(String cno) {
-		this.cno = cno;
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 }
