@@ -149,6 +149,28 @@ jQuery(function($) {
                 $tableWrap = resultList;
             }
 
+            // 兼容 gid 为 null 的情况，创建或获取默认容器
+            if ($tableWrap.length == 0 && v.group.gid == null) {
+                var defaultResultList = com.focusPage("#resultList");
+                $tableWrap = com.focusPage("#groupDefault");
+
+                // 如果默认容器不存在，则创建
+                if ($tableWrap.length == 0) {
+                    var defaultGroupDiv = $("<div></div>").addClass("col-xs-6 col-md-6 widget-container-span ui-sortable").appendTo(defaultResultList);
+                    var defaultGroupWidgetBox = $("<div></div>").addClass("widget-box transparent").appendTo(defaultGroupDiv);
+                    var defaultGroupWidgetHeader = $("<div></div>").addClass("widget-header").appendTo(defaultGroupWidgetBox);
+
+                    var defaultGroupH5 = $("<h4></h4>").appendTo(defaultGroupWidgetHeader);
+                    var defaultGroupStrong = $("<strong></strong>").text("未分组").appendTo(defaultGroupH5);
+
+                    var defaultGroupWidgetBody = $("<div></div>").addClass("widget-body").appendTo(defaultGroupWidgetBox);
+                    var defaultGroupWidgetBodyInner = $("<div></div>").addClass("widget-body-inner").css("display", "block").appendTo(defaultGroupWidgetBody);
+                    var defaultContainer = $('<div></div>').attr("id", "groupDefault").addClass("clearfix tab-pane active").appendTo(defaultGroupWidgetBodyInner);
+
+                    $tableWrap = defaultContainer;
+                }
+            }
+
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($tableWrap);
             var $liLine = $('<li></li>').addClass('ite m-orange clearfix').appendTo($ul);
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
