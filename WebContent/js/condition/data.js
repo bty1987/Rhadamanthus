@@ -1972,5 +1972,59 @@ Condition.addupRule("data", {
             op: "between",
             validate: null
         }
+    },
+
+    "normtime-quotationItem": {
+        label: "报价项",
+        type: "text",
+        submitConfig: {
+            name: "quotationItem.name",
+            op: "eq",
+            validate: null
+        }
+    },
+
+    "normtime-quotation-version": {
+        label: "报价版本",
+        type: "select",
+        submitConfig: {
+            name: "quotationItem.quotationVersion.no",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.quotation.queryQuotationVersion,
+            postData: {},
+            listPath: "quotationVersions",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+
+    "normtime-constructionNode": {
+        label: "施工节点",
+        type: "text",
+        submitConfig: {
+            name: "constructionNode.name",
+            op: "eq",
+            validate: null
+        }
+    },
+
+    "normtime-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().normtime.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
     }
 });
