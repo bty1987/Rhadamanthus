@@ -56,7 +56,9 @@ import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
@@ -99,6 +101,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private CompanyDao companyDao;
 
 	@Autowired
 	private DecorationService decorationService;
@@ -202,6 +207,12 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (customerChancePO.getCustomer() != null) {
 			customerChanceVO.getSource().setPhone(customerChancePO.getCustomer().getPhone());
+		}
+
+		CompanyPO companyPO = companyDao.get(customerChancePO.getCompany());
+
+		if (companyPO != null) {
+			customerChanceVO.setCompanyName(companyPO.getName());
 		}
 
 		return customerChanceVO;

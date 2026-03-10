@@ -226,8 +226,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			housePO = houseDao.get(customerSourceVO.getHouse().getHid());
 		}
 
-		if (housePO != null && customerSourceDao.queryCustomerSource(creater.getUid(), housePO.getHouseNumber(), housePO.getVillage().getVid(), company) != null) {
+		CustomerSourcePO customerSourceOO = customerSourceDao.queryCustomerSource(creater.getUid(), housePO.getHouseNumber(), housePO.getVillage().getVid(), company);
+
+		if (housePO != null && customerSourceOO != null) {
 			// throw new FLException(330071, "客户楼盘楼号存在");
+			customerSourceVO.setCsid(customerSourceOO.getCsid());
+			return;
 		}
 
 		if (housePO != null) {

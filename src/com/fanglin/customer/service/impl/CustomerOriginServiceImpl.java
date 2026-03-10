@@ -40,6 +40,8 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.right.dao.CustomerSourceRightDao;
 import com.fanglin.right.po.CustomerSourceRightPO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
@@ -74,6 +76,9 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 	@Autowired
 	private CustomerDao customerDao;
+
+	@Autowired
+	private CompanyDao companyDao;
 
 	@Autowired
 	private MessageService messageService;
@@ -146,6 +151,12 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		customerOriginVO = customerOriginPO.ptv(new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO())), new DecorationBusitypeVO()));
 
 		customerOriginVO.setPhone(FormatUtil.decodePhone(customerOriginPO.getCustomer().getPhone()));
+
+		CompanyPO companyPO = companyDao.get(customerOriginPO.getBelonger().getCompany());
+
+		if (companyPO != null) {
+			customerOriginVO.setCompanyName(companyPO.getName());
+		}
 
 		return customerOriginVO;
 	}
