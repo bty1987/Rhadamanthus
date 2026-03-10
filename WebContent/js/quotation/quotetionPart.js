@@ -1266,8 +1266,10 @@
                         $dmoney.insertBefore(com.focusPage('#functionAreaSumList > div').eq(0));
                     }
 
-                    // 更新功能区参数后，重新计算功能区总额并更新左侧显示
-                    var _fee = quo.calculateDomainFees(that.nowEditDomain);
+                    // 更新功能区参数后，重新计算所有报价项价格属性和功能区总额
+                    var _fee = quo.calculateDomainFees(that.nowEditDomain, function($quote) {
+                        quo.calculateQuoteFee($quote);
+                    });
                     com.focusPage('[data-qfaid="' + that.nowEditDomain.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
 
                     // 显示更新工程量按钮（针对有公式的报价项）
