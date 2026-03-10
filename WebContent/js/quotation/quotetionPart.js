@@ -1270,7 +1270,8 @@
                     var _fee = quo.calculateDomainFees(that.nowEditDomain, function($quote) {
                         quo.calculateQuoteFee($quote);
                     });
-                    com.focusPage('[data-qfaid="' + that.nowEditDomain.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
+                    // 使用 $dmoney 变量直接更新金额，而不是重新查找
+                    $dmoney.find('label.no-padding-left').text(_fee);
 
                     // 显示更新工程量按钮（针对有公式的报价项）
                     var $btnExpres = that.nowEditDomain.find('.fl-quo-list.list .fl-quo-item.item[data-expres] .cell.num');
