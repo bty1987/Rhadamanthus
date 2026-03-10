@@ -508,7 +508,8 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void tranCustomerOrigin(CustomerOriginVO customerOriginVO, int company) throws FLException {
+	public void tranCustomerOrigin(CustomerOriginVO customerOriginVO, Short type, short typeness,
+	                                String houseType, String houseClass, Short resourceType, int company) throws FLException {
 
 		if (customerOriginVO == null || customerOriginVO.getCsid() <= 0) {
 			throw new FLException(330001, "客源数据不能为空");
@@ -520,7 +521,28 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			throw new FLException(330001, "客源不存在");
 		}
 
-		// 构建装修单数据（使用客源关联的销售员和业务类型）
+		// 如果前端传了业务类型，使用前端传的值；否则使用客源关联的值
+		int busitypeDbid = 0;
+		if (customerOriginVO.getDecorationBusitype() != null && customerOriginVO.getDecorationBusitype().getDbid() > 0) {
+			busitypeDbid = customerOriginVO.getDecorationBusitype().getDbid();
+		} else if (customerOriginPO.getDecorationBusitype() != null) {
+			busitypeDbid = customerOriginPO.getDecorationBusitype().getDbid();
+		}
+
+		// 如果前端传了销售员，使用前端传的销售员；否则使用客源关联的销售员
+		Long salesmanUserId = null;
+		if (customerOriginVO.getSalesman() != null && customerOriginVO.getSalesman().getUserId() != null) {
+			salesmanUserId = customerOriginVO.getSalesman().getUserId();
+		} else if (customerOriginPO.getSalesman() != null) {
+			salesmanUserId = customerOriginPO.getSalesman().getUserId();
+		}
+
+		// 如果还没有销售员，使用创建人
+		if (salesmanUserId == null) {
+			salesmanUserId = customerOriginPO.getCreater().getUserId();
+		}
+
+		// 构建装修单数据
 		DecorationVO decorationVO = new DecorationVO();
 		BeanUtil.copyPropertie(customerOriginPO, decorationVO, java.util.Arrays.asList("customerOrigin", "decorationBusitype", "salesman"));
 
@@ -528,20 +550,31 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		decorationVO.setHouse(new HouseVO(customerOriginPO.getHouse().getHid()));
 		decorationVO.setCustomer(new CustomerVO(customerOriginPO.getCustomer().getCid()));
 		decorationVO.setDesigner(new UserBaseVO(customerOriginPO.getDesigner().getUserId()));
-
-		// 设置销售员：优先使用客源关联的销售员，否则使用创建人
-		if (customerOriginPO.getSalesman() != null) {
-			decorationVO.setSalesman(new UserBaseVO(customerOriginPO.getSalesman().getUserId()));
-		} else {
-			decorationVO.setSalesman(new UserBaseVO(customerOriginPO.getCreater().getUserId()));
-		}
+		decorationVO.setSalesman(new UserBaseVO(salesmanUserId));
 
 		decorationVO.setGrade("C");
 		decorationVO.setNotSalesmanRate(0);
 
 		// 设置业务类型
-		if (customerOriginPO.getDecorationBusitype() != null) {
-			decorationVO.setBusitype(customerOriginPO.getDecorationBusitype().getDbid());
+		if (busitypeDbid > 0) {
+			decorationVO.setBusitype(busitypeDbid);
+		}
+
+		// 如果前端传了其他参数，设置到装修单
+		if (type != null) {
+			decorationVO.setType(type);
+		}
+		if (typeness > 0) {
+			decorationVO.setTypeness(typeness);
+		}
+		if (houseType != null && !houseType.isEmpty()) {
+			decorationVO.setHouseType(houseType);
+		}
+		if (houseClass != null && !houseClass.isEmpty()) {
+			decorationVO.setHouseClass(houseClass);
+		}
+		if (resourceType != null) {
+			decorationVO.setResourceType(resourceType);
 		}
 
 		// 调用装修单服务创建装修单
@@ -564,13 +597,12 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		);
 
 		UserPO designer = customerOriginPO.getDesigner();
-		UserPO salesman = customerOriginPO.getSalesman();
-
 		if (designer != null) {
 			messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, designer.getCompany());
 		}
-		if (salesman != null) {
-			messageService.sendMessage(salesman.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, salesman.getCompany());
+		// 通知实际的销售员
+		if (salesmanUserId != null) {
+			messageService.sendMessage(salesmanUserId, null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, company);
 		}
 	}
 

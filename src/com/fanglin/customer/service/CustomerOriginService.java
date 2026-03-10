@@ -46,9 +46,15 @@ public interface CustomerOriginService {
 	 * 客源转装修单（直接接口，不走审批流程）
 	 * 对应 approveForCustomerOriginTDecoration 的业务逻辑
 	 * @param customerOrigin 客源数据
+	 * @param type 订单类型
+	 * @param typeness 订单类型编号
+	 * @param houseType 房屋类别
+	 * @param houseClass 房屋类型
+	 * @param resourceType 订单状态
 	 * @param company 公司ID
 	 * @throws FLException
 	 */
-	public void tranCustomerOrigin(CustomerOriginVO customerOrigin, int company) throws FLException;
+	public void tranCustomerOrigin(CustomerOriginVO customerOrigin, Short type, short typeness,
+	                                String houseType, String houseClass, Short resourceType, int company) throws FLException;
 
 }

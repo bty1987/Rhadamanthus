@@ -24,6 +24,13 @@ public class CustomerOriginAction extends BaseListAction {
 
 	private CustomerOriginVO customerOrigin;
 
+	// 直接转装修单时的额外参数
+	private Short type;
+	private short typeness;
+	private String houseType;
+	private String houseClass;
+	private Short resourceType;
+
 	private String user;
 
 	private String securityCode;
@@ -141,7 +148,7 @@ public class CustomerOriginAction extends BaseListAction {
 	@Action(value = "tranCustomerOrigin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String tranCustomerOrigin() throws FLException {
 
-		customerOriginService.tranCustomerOrigin(customerOrigin, queryCompany());
+		customerOriginService.tranCustomerOrigin(customerOrigin, type, typeness, houseType, houseClass, resourceType, queryCompany());
 
 		return SUCCESS;
 	}
@@ -192,6 +199,46 @@ public class CustomerOriginAction extends BaseListAction {
 
 	public void setCompany(String company) {
 		this.company = company;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public short getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(short typeness) {
+		this.typeness = typeness;
+	}
+
+	public String getHouseType() {
+		return houseType;
+	}
+
+	public void setHouseType(String houseType) {
+		this.houseType = houseType;
+	}
+
+	public String getHouseClass() {
+		return houseClass;
+	}
+
+	public void setHouseClass(String houseClass) {
+		this.houseClass = houseClass;
+	}
+
+	public Short getResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(Short resourceType) {
+		this.resourceType = resourceType;
 	}
 
 }
