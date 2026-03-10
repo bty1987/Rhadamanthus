@@ -33,7 +33,6 @@ public class QuotationNormtimeDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<?> queryQuotationFunctionAreaItem(short index, long functionAreaId, Short schedule) {
 
 		String sql = String.format("select i.*, m.*, n.* from quotation.quotationfunctionareaitem%d i, data.normtime m, data.constructionnode n where i.quotationFunctionAreaId = :functionAreaId and i.quotationItemId = m.qiid and m.cnid = n.cnid", index);
@@ -54,7 +53,6 @@ public class QuotationNormtimeDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<?> queryExtensionItem(long eid, Short schedule) {
 
 		String sql = "select i.*, m.*, n.* from quotation.extensionitem i, data.normtime m, data.constructionnode n where i.eid = :eid and i.qiid = m.qiid and m.cnid = n.cnid";
@@ -75,7 +73,6 @@ public class QuotationNormtimeDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<?> queryAddReduceItem(long arid, Short schedule) {
 
 		String sql = "select i.*, m.*, n.* from quotation.addreduceitem i, data.normtime m, data.constructionnode n where i.arid = :arid and i.qiid = m.qiid and m.cnid = n.cnid";
@@ -96,7 +93,6 @@ public class QuotationNormtimeDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<?> amountQuotationNormtime(short index, long functionAreaId) {
 
 		String sql = String.format("select m.*, n.*, m.workdays as totalDays, 0 as stuff, i.num as num from quotation.quotationfunctionareaitem%d i, data.normtime m, data.constructionnode n where i.quotationFunctionAreaId = :functionAreaId and i.quotationItemId = m.qiid and m.cnid = n.cnid", index);
@@ -105,7 +101,6 @@ public class QuotationNormtimeDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<?> amountExtensionNormtime(long eid) {
 
 		String sql = "select m.*, n.*, if(i.type in (0, 1, 5), m.workdays, -m.workdays) as totalDays, if(i.type in (0, 1, 5), 0, 0) as stuff, if(i.type in (0, 1, 5), i.num, -i.num) as num from quotation.extensionitem i, data.normtime m, data.constructionnode n where i.eid = :eid and i.qiid = m.qiid and m.cnid = n.cnid";
@@ -114,7 +109,6 @@ public class QuotationNormtimeDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<?> amountAddReduceNormtime(long arid) {
 
 		String sql = "select m.*, n.*, if(i.type in (0, 1, 2), m.workdays, -m.workdays) as totalDays, if(i.type in (0, 1, 2), 0, 0) as stuff, if(i.type in (0, 1, 2), i.num, -i.num) as num from quotation.addreduceitem i, data.normtime m, data.constructionnode n where i.arid = :arid and i.qiid = m.qiid and m.cnid = n.cnid";

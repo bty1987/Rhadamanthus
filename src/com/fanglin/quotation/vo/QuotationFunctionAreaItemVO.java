@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.fanglin.data.quotation.vo.NormoodVO;
 import com.fanglin.data.quotation.vo.NormriceVO;
+import com.fanglin.data.quotation.vo.NormtimeVO;
 
 public class QuotationFunctionAreaItemVO implements Serializable {
 
@@ -40,7 +41,7 @@ public class QuotationFunctionAreaItemVO implements Serializable {
 	private Long quotationFunctionAreaId;
 
 	private Long quotationItemId;
-	
+
 	private String quotationRtemId;
 
 	private Short isRtem;
@@ -52,6 +53,8 @@ public class QuotationFunctionAreaItemVO implements Serializable {
 	private NormoodVO normood;
 
 	private NormriceVO normrice;
+
+	private NormtimeVO normtime;
 
 	public QuotationFunctionAreaItemVO() {
 		super();
@@ -241,6 +244,14 @@ public class QuotationFunctionAreaItemVO implements Serializable {
 
 	public void setNormrice(NormriceVO normrice) {
 		this.normrice = normrice;
+	}
+
+	public NormtimeVO getNormtime() {
+		return normtime;
+	}
+
+	public void setNormtime(NormtimeVO normtime) {
+		this.normtime = normtime;
 	}
 
 }

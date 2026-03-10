@@ -41,8 +41,8 @@ import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.NormoodItemDao;
 import com.fanglin.quotation.dao.NormriceItemDao;
-import com.fanglin.quotation.dao.NormtionDao;
 import com.fanglin.quotation.dao.NormtimeItemDao;
+import com.fanglin.quotation.dao.NormtionDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationNormoodDao;
@@ -1499,7 +1499,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 		for (QuotationFunctionAreaPO quotationFunctionAreaPO : QuotationFunctionAreaPOs) {
 
-			List<?>> normtimes = quotationNormtimeDao.amountQuotationNormtime(quotationFunctionAreaPO.getIndex(), quotationFunctionAreaPO.getQfaId());
+			List<?> normtimes = quotationNormtimeDao.amountQuotationNormtime(quotationFunctionAreaPO.getIndex(), quotationFunctionAreaPO.getQfaId());
 
 			for (Object normtime : normtimes) {
 
@@ -1508,7 +1508,6 @@ public class NormtionServiceImpl implements NormtionService {
 				NormtimePO normtimePO = (NormtimePO) data[0];
 				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[1];
 				Double totalDays = (Double) data[2];
-				Integer stuff = (Integer) data[3];
 				Integer num = (Integer) data[4];
 
 				NormtimeVO normtimeVO = new NormtimeVO(new ConstructionNodeVO(), null);
@@ -1544,7 +1543,6 @@ public class NormtionServiceImpl implements NormtionService {
 				NormtimePO normtimePO = (NormtimePO) data[0];
 				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[1];
 				Double totalDays = (Double) data[2];
-				Integer stuff = (Integer) data[3];
 				Integer num = (Integer) data[4];
 
 				NormtimeVO normtimeVO = new NormtimeVO(new ConstructionNodeVO(), null);
@@ -1580,7 +1578,6 @@ public class NormtionServiceImpl implements NormtionService {
 				NormtimePO normtimePO = (NormtimePO) data[0];
 				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[1];
 				Double totalDays = (Double) data[2];
-				Integer stuff = (Integer) data[3];
 				Integer num = (Integer) data[4];
 
 				NormtimeVO normtimeVO = new NormtimeVO(new ConstructionNodeVO(), null);
