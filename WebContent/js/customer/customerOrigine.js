@@ -9,6 +9,8 @@ $(function() {
         belongerBtn: com.focusPage("#belongerBtn", "#customerOrigine"),
         saveBtn: com.focusPage("#saveBtn", "#customerOrigine"),
         cancelBtn1: com.focusPage("#cancelBtn1", "#customerOrigine"),
+        directFirstApproveBtn: com.focusPage("#directFirstApproveBtn", "#customerOrigine"),
+        directTranBtn: com.focusPage("#directTranBtn", "#customerOrigine"),
 
         modals: {
             bindAllInfoModal: com.focusPage("#bindAllInfo", "#customerOrigine"),
@@ -18,6 +20,8 @@ $(function() {
             commitFirstApprove: com.focusPage("#commitFirstApprove", "#customerOrigine"),
             customerorigineforbelonger: com.focusPage("#customerorigineforbelonger", "#customerOrigine"),
             createSourceModal: com.focusPage("#createsource", "#customerOrigine"),
+            directFirstApproveModal: com.focusPage("#directFirstApproveModal", "#customerOrigine"),
+            directTranModal: com.focusPage("#directTranModal", "#customerOrigine"),
         },
 
         items: {
@@ -72,6 +76,18 @@ $(function() {
 
             firstApproveComment: com.focusPage("#firstApproveComment", "#customerOrigine"),
 
+            directFirstApproveComment: com.focusPage("#directFirstApproveComment", "#customerOrigine"),
+            directVillageNoDesiger: com.focusPage("#directVillageNoDesiger", "#customerOrigine"),
+            directHouseNumberApprove: com.focusPage("#directHouseNumberApprove", "#customerOrigine"),
+            directNameApprove: com.focusPage("#directNameApprove", "#customerOrigine"),
+            directPhoneApprove: com.focusPage("#directPhoneApprove", "#customerOrigine"),
+            directSalesman: com.focusPage("#directSalesman", "#customerOrigine"),
+            directSalesmanType: com.focusPage("#directSalesmanType", "#customerOrigine"),
+            directHouseType: com.focusPage("#directHouseType", "#customerOrigine"),
+            directHouseClass: com.focusPage("#directHouseClass", "#customerOrigine"),
+            directOrderType: com.focusPage("#directOrderType", "#customerOrigine"),
+            directResourceType: com.focusPage("#directResourceType", "#customerOrigine"),
+
             name1: com.focusPage("#name1", "#customerOrigine"),
             gender1: com.focusPage("#gender1", "#customerOrigine"),
             phone1: com.focusPage("#phone1", "#customerOrigine"),
@@ -114,6 +130,8 @@ $(function() {
     customerOrigine.belongerBtn.bindClick(editBelonger);
     customerOrigine.saveBtn.bindClick(saveDate);
     customerOrigine.cancelBtn1.bindClick(deleteDate);
+    customerOrigine.directFirstApproveBtn.bindClick(directFirstApproveConfirm);
+    customerOrigine.directTranBtn.bindClick(directTranConfirm);
 
     customerOrigine.items.gender.switchBtn("gender");
     customerOrigine.items.grade.bindData(customerOrigine.grade, "key", "value", false);
@@ -432,17 +450,10 @@ $(function() {
 
             // 直接初审（不走审批流程）
             $directFirstApprove.click(function() {
-
-                com.showConfirm("是否确认直接初审通过?", function() {
-
-                    com.post(api.customer.approveCustomerOrigin, {
-                        "customerOrigin.csid": v.csid
-                    }, function(res) {
-
-                        com.showAlert(com.info, "操作成功");
-                        searcher.doSearch();
-                    });
-                });
+                customerOrigine.currentCustomerOrigine = v;
+                com.clearValidator();
+                com.focusPage("#directFirstApproveComment").val("");
+                com.focusPage("#directFirstApproveModal").modal("show");
             });
 
             // 撤销
@@ -497,16 +508,43 @@ $(function() {
             // 直接转单（不走审批流程）
             $directTran.click(function() {
 
-                com.showConfirm("是否确认直接转装修单?", function() {
+                customerOrigine.currentCustomerOrigine = v;
+                com.clearValidator();
 
-                    com.post(api.customer.tranCustomerOrigin, {
-                        "customerOrigin.csid": v.csid
-                    }, function(res) {
+                // 填充表单数据
+                com.focusPage("#directVillageNoDesiger").val(com.checkNull(v.villageName, ''));
+                com.updateTypeahead("directVillageNoDesiger", v.villageId, com.checkNull(v.villageName, ''));
 
-                        com.showAlert(com.info, "操作成功");
-                        searcher.doSearch();
-                    });
-                });
+                if (v.houseNumber != null) {
+                    com.focusPage("#directHouseNumberApprove").val(v.houseNumber);
+                }
+                com.focusPage("#directNameApprove").val(v.name);
+                com.focusPage("#directPhoneApprove").val(v.phone);
+
+                if (v.salesman != null) {
+                    com.updateTypeahead("directSalesman", v.salesman.userId, com.checkNull(v.salesman.userName, ''));
+                }
+                if (v.decorationBusitype != null) {
+                    com.focusPage("#directSalesmanType").val(v.decorationBusitype.dbid);
+                }
+
+                if (v.houseType != null) {
+                    com.focusPage("#directHouseType").val(v.houseType);
+                }
+                if (v.houseClass != null) {
+                    com.focusPage("#directHouseClass").val(v.houseClass);
+                }
+
+                if (v.decorationBusitype != null) {
+                    var typeValue = customerOrigine.getDecorationTypeValue(v.decorationBusitype.dbid);
+                    com.focusPage("#directOrderType").val(typeValue);
+                }
+
+                if (v.resourceType != null) {
+                    com.focusPage("#directResourceType").val(v.resourceType);
+                }
+
+                com.focusPage("#directTranModal").modal("show");
             });
 
             // 编辑归属人
@@ -835,6 +873,56 @@ $(function() {
                     com.showAlert(com.error, "提交失败");
                 }
             });
+        });
+    }
+
+    // 直接初审确认
+    function directFirstApproveConfirm() {
+
+        var option = {
+            "customerOrigin.csid": customerOrigine.currentCustomerOrigine.csid
+        };
+
+        com.post(api.customer.approveCustomerOrigin, option, function(res) {
+
+            if (res.errorCode == 0) {
+                com.showAlert(com.info, "操作成功");
+                com.clearValidator();
+                searcher.doSearch();
+                customerOrigine.modals.directFirstApproveModal.modal("hide");
+            } else {
+                com.showAlert(com.error, "操作失败");
+            }
+        });
+    }
+
+    // 直接转单确认
+    function directTranConfirm() {
+
+        if (com.validate("directTran"))
+            return false;
+
+        var option = {
+            "customerOrigin.csid": customerOrigine.currentCustomerOrigine.csid,
+            "customerOrigin.type": customerOrigine.decorationTypes[customerOrigine.items.directOrderType.val()],
+            "customerOrigin.typeness": customerOrigine.items.directOrderType.val(),
+            "customerOrigin.salesman.userId": com.typeahead("directSalesman"),
+            "customerOrigin.decorationBusitype.dbid": customerOrigine.items.directSalesmanType.val(),
+            "customerOrigin.houseType": customerOrigine.items.directHouseType.val(),
+            "customerOrigin.houseClass": customerOrigine.items.directHouseClass.val(),
+            "customerOrigin.resourceType": customerOrigine.items.directResourceType.val()
+        };
+
+        com.post(api.customer.tranCustomerOrigin, option, function(res) {
+
+            if (res.errorCode == 0) {
+                com.showAlert(com.info, "操作成功");
+                com.clearValidator();
+                searcher.doSearch();
+                customerOrigine.modals.directTranModal.modal("hide");
+            } else {
+                com.showAlert(com.error, "操作失败");
+            }
         });
     }
 
