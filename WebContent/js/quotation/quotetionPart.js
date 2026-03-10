@@ -3078,6 +3078,10 @@
 
             com.post(api.quotation.updateQuotetionFunctionAreaItem, $params, function(res) {
 
+                // 重新计算报价项价格属性（更新 data-totalprice 等）
+                var areaType = $widget.attr('data-areaType');
+                quo.calculateNowQuoteItem(num, areaType, $item);
+
                 // 更新功能区总额
                 var areaTotal = 0;
                 $widget.find('.fl-quo-list.list .fl-quo-item.item').each(function() {
