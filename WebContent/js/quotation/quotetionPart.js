@@ -1266,6 +1266,10 @@
                         $dmoney.insertBefore(com.focusPage('#functionAreaSumList > div').eq(0));
                     }
 
+                    // 更新功能区参数后，重新计算功能区总额并更新左侧显示
+                    var _fee = quo.calculateDomainFees(that.nowEditDomain);
+                    com.focusPage('[data-qfaid="' + that.nowEditDomain.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
+
                     // 显示更新工程量按钮（针对有公式的报价项）
                     var $btnExpres = that.nowEditDomain.find('.fl-quo-list.list .fl-quo-item.item[data-expres] .cell.num');
                     $.each($btnExpres, function(i, e) {
@@ -3078,19 +3082,23 @@
 
             com.post(api.quotation.updateQuotetionFunctionAreaItem, $params, function(res) {
 
+                // 保存当前项的 data-count-num，避免被 cacsedeUpdateItem 重置
+                var originalCountNum = $item.attr('data-count-num');
+
                 // 重新计算报价项价格属性（更新 data-totalprice 等）
                 var areaType = $widget.attr('data-areaType');
                 quo.calculateNowQuoteItem(num, areaType, $item);
 
-                // 更新功能区总额
-                var areaTotal = 0;
-                $widget.find('.fl-quo-list.list .fl-quo-item.item').each(function() {
-                    var price = parseFloat($(this).attr('data-totalprice')) || 0;
-                    areaTotal = utils.accAdd(areaTotal, price);
-                });
-                com.focusPage('[data-qfaid="' + $widget.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(areaTotal);
+                // 定额工时联动更新（会重置 data-count-num，需要恢复）
+                quote.cacsedeUpdateItem($item);
 
-                // 手动更新工程量场景不需要调用 cacsedeUpdateItem（避免重置 data-count-num）
+                // 恢复当前项的 data-count-num
+                $item.attr('data-count-num', originalCountNum);
+
+                // 使用现有方法更新左侧功能区总额
+                var _fee = quo.calculateDomainFees($widget);
+                com.focusPage('[data-qfaid="' + $widget.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
+
                 quote.cacsedeUpdateCpItem([$item]);
                 quo.calculateQuoFees();
 
