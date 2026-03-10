@@ -78,12 +78,12 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, Object> syncVillage(String vid, String name, String proper, String city, String pvid, Integer company, JSONArray ruleArray, Double x, Double y) throws FLException {
+	public Map<String, Object> syncVillage(String vid, String name, String proper, String city, String pvid, Integer company, String no, JSONArray ruleArray, Double x, Double y) throws FLException {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		try {
-			logger.info("同步楼盘数据: vid={}, name={}, proper={}, city={}, pvid={}, company={}, x={}, y={}", vid, name, proper, city, pvid, company, x, y);
+			logger.info("同步楼盘数据: vid={}, name={}, proper={}, city={}, pvid={}, company={}, no={}, x={}, y={}", vid, name, proper, city, pvid, company, no, x, y);
 
 			// 0. 验证公司是否存在
 			if (company == null) {
@@ -133,12 +133,42 @@ public class A20260303ServiceImpl implements A20260303Service {
 				// 新增：创建新对象
 				villagePO = new VillagePO();
 
-				// 生成楼盘编号（使用 CountingService）
-				int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_VILLAGE_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
-				StringBuffer no = new StringBuffer();
-				no.append(String.format("%sP-", companyPO.getShortname()));
-				no.append(FormatUtil.fillZero(count, "00000"));
-				villagePO.setNo(no.toString());
+				// 处理楼盘编号 no
+				if (no != null && !no.trim().isEmpty()) {
+					// 使用传入的 no 参数
+					String trimmedNo = no.trim();
+
+					// 唯一性验证：检查 no 是否已存在
+					VillagePO existingVillage = villageDao.queryVillageByNo(trimmedNo);
+					if (existingVillage != null) {
+						throw new FLException(400005, "楼盘编号已存在: " + trimmedNo);
+					}
+
+					villagePO.setNo(trimmedNo);
+					logger.info("使用传入的楼盘编号: no={}", trimmedNo);
+				} else {
+					// no 为空，自动生成楼盘编号
+					int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_VILLAGE_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
+					StringBuffer autoNo = new StringBuffer();
+					autoNo.append(String.format("%sP-", companyPO.getShortname()));
+					autoNo.append(FormatUtil.fillZero(count, "00000"));
+					villagePO.setNo(autoNo.toString());
+					logger.info("自动生成楼盘编号: no={}", autoNo.toString());
+				}
+			} else {
+				// 更新：如果传入了 no 参数，且与现有值不同，则更新
+				if (no != null && !no.trim().isEmpty()) {
+					String trimmedNo = no.trim();
+					if (!trimmedNo.equals(villagePO.getNo())) {
+						// 唯一性验证：检查新 no 是否已被其他楼盘使用
+						VillagePO existingVillage = villageDao.queryVillageByNo(trimmedNo);
+						if (existingVillage != null && existingVillage.getVid() != villagePO.getVid()) {
+							throw new FLException(400005, "楼盘编号已被其他楼盘使用: " + trimmedNo);
+						}
+						villagePO.setNo(trimmedNo);
+						logger.info("更新楼盘编号: no={}", trimmedNo);
+					}
+				}
 			}
 
 			// 设置基本信息
