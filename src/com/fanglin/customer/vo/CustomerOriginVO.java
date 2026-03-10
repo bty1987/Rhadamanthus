@@ -78,6 +78,13 @@ public class CustomerOriginVO implements Serializable {
 
 	private String companyName;
 
+	// 转装修单时的临时参数（不持久化到数据库）
+	private Short type;
+	private short typeness;
+	private String houseType;
+	private String houseClass;
+	private Short resourceType;
+
 	public CustomerOriginVO() {
 		super();
 	}
@@ -343,6 +350,46 @@ public class CustomerOriginVO implements Serializable {
 
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public short getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(short typeness) {
+		this.typeness = typeness;
+	}
+
+	public String getHouseType() {
+		return houseType;
+	}
+
+	public void setHouseType(String houseType) {
+		this.houseType = houseType;
+	}
+
+	public String getHouseClass() {
+		return houseClass;
+	}
+
+	public void setHouseClass(String houseClass) {
+		this.houseClass = houseClass;
+	}
+
+	public Short getResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(Short resourceType) {
+		this.resourceType = resourceType;
 	}
 
 }
