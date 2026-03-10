@@ -1266,12 +1266,19 @@
                         $dmoney.insertBefore(com.focusPage('#functionAreaSumList > div').eq(0));
                     }
 
-                    // 自动触发功能区内所有报价项的 num 计算
-                    var $items = that.nowEditDomain.find('.fl-quo-list.list .fl-quo-item.item[data-expres]');
-                    $.each($items, function(i, item) {
-                        var $item = $(item);
-                        if ($item.attr('data-qfaiid') && $item.attr("data-expres")) {
-                            painter.checkedExpres($item);
+                    // 显示更新工程量按钮（针对有公式的报价项）
+                    var $btnExpres = that.nowEditDomain.find('.fl-quo-list.list .fl-quo-item.item[data-expres] .cell.num');
+                    $.each($btnExpres, function(i, e) {
+                        var $line = $(e).parents('li.fl-quo-item.item');
+                        if (!$line.attr("data-qfaiid") || !$line.attr("data-expres") || $line.attr("data-control") == 1)
+                            return true;
+                        // 如果还没有更新工程量按钮，则添加
+                        if ($(e).find('.icon-circle-arrow-up').length == 0) {
+                            var $update = $('<i class="icon-circle-arrow-up blue" style="display: inline-block; padding-left: 3px; cursor: pointer;"></i>');
+                            $update.click(function() {
+                                quote.checkedExpres($line);
+                            });
+                            $(e).find('.cell-wrap').append($update);
                         }
                     });
 
@@ -2851,6 +2858,18 @@
 
                 item.find(".icon-arrow-up").removeClass("grey").addClass("green");
                 item.find(".icon-arrow-down").removeClass("grey").addClass("red");
+
+                // 如果有公式，显示更新工程量按钮
+                if (v.expres && v.expres != "") {
+                    var $numCell = item.find('.cell.num');
+                    if ($numCell.find('.icon-circle-arrow-up').length == 0) {
+                        var $update = $('<i class="icon-circle-arrow-up blue" style="display: inline-block; padding-left: 3px; cursor: pointer;"></i>');
+                        $update.click(function() {
+                            quote.checkedExpres(item);
+                        });
+                        $numCell.find('.cell-wrap').append($update);
+                    }
+                }
             }, null, false);
         },
 
@@ -3033,6 +3052,9 @@
                 quote.cacsedeUpdateItem($item);
                 quote.cacsedeUpdateCpItem([$item]);
                 quo.calculateQuoFees();
+
+                // 隐藏更新工程量按钮
+                $item.find('.num .icon-circle-arrow-up').hide();
             });
         },
 
