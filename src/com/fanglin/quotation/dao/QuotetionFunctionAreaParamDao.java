@@ -13,7 +13,9 @@ import com.fanglin.quotation.po.QuotetionFunctionAreaParamPO;
  */
 public interface QuotetionFunctionAreaParamDao extends Dao<QuotetionFunctionAreaParamPO> {
 
-	public List<QuotetionFunctionAreaParamPO> queryQuotetionFunctionAreaParam(long qfaId);
+	public QuotetionFunctionAreaParamPO queryQuotetionFunctionAreaParam(Long qfaid);
+
+	public List<QuotetionFunctionAreaParamPO> queryQuotetionFunctionAreaParamByQfaid(long qfaId);
 
 	public int copyQuotetionFunctionAreaParam(long sfaid, long tfaid);
 

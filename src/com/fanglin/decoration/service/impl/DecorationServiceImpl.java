@@ -68,9 +68,9 @@ import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.po.MessageQueuingPO;
-import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -1238,6 +1238,8 @@ public class DecorationServiceImpl implements DecorationService {
 		if (decorationVO.getEscorter() != null) {
 			UserPO escorter = userDao.queryUserByUserId(decorationVO.getEscorter().getUserId());
 			decorationPO.setEscorter(escorter);
+
+			messageQueuingDao.save(new MessageQueuingPO().init(orderId, "changeDecorationForAdvance", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"TEAM_PLAN_DESIGNER_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 		}
 
 		if (decorationVO.getMaterialer() != null) {
@@ -1261,7 +1263,6 @@ public class DecorationServiceImpl implements DecorationService {
 
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "changeDecorationForAdvance", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_INFO_UPDATED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "changeDecorationForAdvance", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"TEAM_PLAN_DESIGNER_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 	}
 
 	@Override

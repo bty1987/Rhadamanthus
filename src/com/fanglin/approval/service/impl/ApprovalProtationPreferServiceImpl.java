@@ -99,7 +99,7 @@ public class ApprovalProtationPreferServiceImpl implements ApprovalProtationPref
 
 		String content;
 		if (approvalProtationPreferVO.getType() == 1) { // type=1: 活动优惠审批
-			content = String.format("装修单号:%s,活动优惠额:%s,总价:%s", orderId, approvalProtationPreferVO.getActivityPrice() / 1000, approvalProtationPreferVO.getTotalPrice() / 1000);
+			content = String.format("装修单号:%s,活动优惠额:%s,总价:%s", orderId, approvalProtationPreferVO.getActivityProfit() / 1000, approvalProtationPreferVO.getTotalPrice() / 1000);
 		} else { // type=0: 特批优惠审批（默认）
 			content = String.format("装修单号:%s,优惠额:%s,管理优惠额:%s,特批优惠额:%s", orderId, approvalProtationPreferVO.getPreferPrice() / 1000, approvalProtationPreferVO.getManagePrefer() / 1000, approvalProtationPreferVO.getAdvancePrefer() / 1000);
 		}
@@ -166,12 +166,12 @@ public class ApprovalProtationPreferServiceImpl implements ApprovalProtationPref
 
 		if (approvalProtationPreferPO.getType() == 1) {
 			// type=1: 活动优惠审批
-			if (approvalProtationPreferPO.getActivityPrice() > protationPO.getActivityProfit()) {
+			if (approvalProtationPreferPO.getActivityProfit() > protationPO.getActivityPrice()) {
 				throw new FLException(240005, "活动额不能大于活动利润");
 			}
 			// 直接使用前端传入的 activityPrice 和 totalPrice
 			// 前端已重新计算 totalPrice，确保数据准确性
-			protationPO.setActivityPrice(approvalProtationPreferPO.getActivityPrice());
+			protationPO.setActivityProfit(approvalProtationPreferPO.getActivityProfit());
 			protationPO.setTotalPrice(approvalProtationPreferPO.getTotalPrice());
 		} else {
 			// type=0: 管理优惠审批

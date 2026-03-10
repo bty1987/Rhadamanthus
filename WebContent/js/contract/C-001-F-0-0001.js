@@ -430,13 +430,17 @@ jQuery(function($) {
 
             data["con-brand-lists"] = contractEdit.brandNameList;
             data["con-brand-list-1"] = contractEdit.brandNameList;
+            
             data["cov-contract-no"] = contractEdit.no;
             data["cov-contract-no-1"] = contractEdit.no;
             data["cov-contract-no-2"] = contractEdit.no;
             data["cov-contract-no-3"] = contractEdit.no;
+            data["cov-contract-no-8"] = contractEdit.no;
+            
             data["con-contract-no"] = contractEdit.no;
             data["con-contract-no-1"] = contractEdit.no;
             data["con-contract-no-2"] = contractEdit.no;
+            data["con-contract-no-8"] = contractEdit.no;
 
             data["con-regular-settlement-amount-1"] = data["con-regular-settlement-amount"];
             data["con-regular-product-service-fee1"] = data["con-regular-product-service-fee2"];

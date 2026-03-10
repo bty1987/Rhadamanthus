@@ -34,7 +34,7 @@ public class ApprovalProtationPreferPO implements java.io.Serializable {
 
 	private int totalPrice;
 
-	private int activityPrice;
+	private int activityProfit;
 
 	private short type;
 
@@ -121,13 +121,13 @@ public class ApprovalProtationPreferPO implements java.io.Serializable {
 		this.totalPrice = totalPrice;
 	}
 
-	@Column(name = "activityPrice")
-	public int getActivityPrice() {
-		return activityPrice;
+	@Column(name = "activityProfit")
+	public int getActivityProfit() {
+		return activityProfit;
 	}
 
-	public void setActivityPrice(int activityPrice) {
-		this.activityPrice = activityPrice;
+	public void setActivityProfit(int activityProfit) {
+		this.activityProfit = activityProfit;
 	}
 
 	@Column(name = "type")

@@ -6,15 +6,16 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
  * 模板报价功能区参数 PO
- *
- * 用途：存储模板报价功能区的参数（周长、面积、举架等）
- * 用于公式计算，自动计算报价项工程量
- *
+ * 
+ * 用途：存储模板报价功能区的参数（周长、面积、举架等） 用于公式计算，自动计算报价项工程量
+ * 
  * @author Clawd
  * @since 2026-02-23
  */
@@ -68,6 +69,7 @@ public class QuotetionFunctionAreaParamPO implements Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "qfapId", length = 50)
 	public String getQfapId() {
 		return qfapId;

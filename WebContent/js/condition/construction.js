@@ -516,7 +516,7 @@ Condition.addupRule("construction", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: constant.construction().constructionSchedule.status.keys(),
+            listPath: constant.construction().constructionSchedule.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
