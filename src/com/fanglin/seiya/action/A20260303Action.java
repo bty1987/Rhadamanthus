@@ -54,6 +54,9 @@ public class A20260303Action extends BaseListAction {
 	/** 公司ID */
 	private Integer company;
 
+	/** 楼盘编号（可选，为空时自动生成） */
+	private String no;
+
 	/** 规则数组（JSON字符串格式） */
 	private String rule;
 
@@ -67,9 +70,9 @@ public class A20260303Action extends BaseListAction {
 
 	/**
 	 * 同步楼盘数据接口
-	 * 
-	 * 请求参数示例（表单格式）： vid= name=万科城市花园 proper=铁西区 city=沈阳市 pvid= company=1 rule=[{"rule":"\\d#\\d-\\d","comment":"数字#数字-数字"}]
-	 * 
+	 *
+	 * 请求参数示例（表单格式）： vid= name=万科城市花园 proper=铁西区 city=沈阳市 pvid= company=1 no=FLP-00001 rule=[{"rule":"\\d#\\d-\\d","comment":"数字#数字-数字"}]
+	 *
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
@@ -98,7 +101,7 @@ public class A20260303Action extends BaseListAction {
 		}
 
 		// 调用服务层处理
-		Map<String, Object> result = a20260303Service.syncVillage(vid, name, proper, city, pvid, company, ruleArray, x, y);
+		Map<String, Object> result = a20260303Service.syncVillage(vid, name, proper, city, pvid, company, no, ruleArray, x, y);
 
 		// 将返回的vid赋值给请求参数，作为响应结果
 		Object resultVid = result.get("vid");
@@ -157,6 +160,14 @@ public class A20260303Action extends BaseListAction {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 	public String getRule() {

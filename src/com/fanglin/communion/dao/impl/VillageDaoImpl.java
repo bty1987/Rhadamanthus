@@ -78,6 +78,11 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 	}
 
 	@Override
+	public VillagePO queryVillageByNo(String no) {
+		return (VillagePO) session().createCriteria(VillagePO.class).add(Restrictions.eq("no", no)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	public int countVillageByCpid(Integer cpid) {
 
 		String sql = "select count(*) from communion.village where cityProperId = :cityProperId";
