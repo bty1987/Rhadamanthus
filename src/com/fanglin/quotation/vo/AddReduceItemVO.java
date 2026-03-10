@@ -2,6 +2,7 @@ package com.fanglin.quotation.vo;
 
 import com.fanglin.data.quotation.vo.NormoodVO;
 import com.fanglin.data.quotation.vo.NormriceVO;
+import com.fanglin.data.quotation.vo.NormtimeVO;
 
 public class AddReduceItemVO implements java.io.Serializable {
 
@@ -52,6 +53,8 @@ public class AddReduceItemVO implements java.io.Serializable {
 	private NormoodVO normood;
 
 	private NormriceVO normrice;
+
+	private NormtimeVO normtime;
 
 	private Integer index;
 
@@ -251,6 +254,14 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	public void setNormrice(NormriceVO normrice) {
 		this.normrice = normrice;
+	}
+
+	public NormtimeVO getNormtime() {
+		return normtime;
+	}
+
+	public void setNormtime(NormtimeVO normtime) {
+		this.normtime = normtime;
 	}
 
 	public Integer getIndex() {
