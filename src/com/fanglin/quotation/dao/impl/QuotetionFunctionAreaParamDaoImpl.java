@@ -9,12 +9,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaParamDao;
 import com.fanglin.quotation.po.QuotetionFunctionAreaParamPO;
 
-/**
- * 模板报价功能区参数 DAO 实现
- * 
- * @author Clawd
- * @since 2026-02-23
- */
 @Repository("QuotetionFunctionAreaParamDao")
 public class QuotetionFunctionAreaParamDaoImpl extends DaoImpl<QuotetionFunctionAreaParamPO> implements QuotetionFunctionAreaParamDao {
 
@@ -23,8 +17,13 @@ public class QuotetionFunctionAreaParamDaoImpl extends DaoImpl<QuotetionFunction
 	}
 
 	@Override
+	public QuotetionFunctionAreaParamPO queryQuotetionFunctionAreaParam(Long qfaid) {
+		return (QuotetionFunctionAreaParamPO) session().createCriteria(QuotetionFunctionAreaParamPO.class).add(Restrictions.eq("qfaId", qfaid)).uniqueResult();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotetionFunctionAreaParamPO> queryQuotetionFunctionAreaParam(long qfaId) {
+	public List<QuotetionFunctionAreaParamPO> queryQuotetionFunctionAreaParamByQfaid(long qfaId) {
 		return createCriteria(QuotetionFunctionAreaParamPO.class).add(Restrictions.eq("qfaId", qfaId)).list();
 	}
 
@@ -32,10 +31,7 @@ public class QuotetionFunctionAreaParamDaoImpl extends DaoImpl<QuotetionFunction
 	public int copyQuotetionFunctionAreaParam(long sqfaid, long tqfaid) {
 		String sql = "INSERT INTO quotetion.quotetionFunctionAreaParam (qfaid, girth, area, height, holeLength, holeHeight, windowLength, windowHeight, beamLength, beamHeight) SELECT :tqfaid, girth, area, height, holeLength, holeHeight, windowLength, windowHeight, beamLength, beamHeight FROM quotetion.quotetionFunctionAreaParam WHERE qfaid = :sqfaid";
 
-		return session().createSQLQuery(sql)
-				.setLong("tqfaid", tqfaid)
-				.setLong("sqfaid", sqfaid)
-				.executeUpdate();
+		return session().createSQLQuery(sql).setLong("tqfaid", tqfaid).setLong("sqfaid", sqfaid).executeUpdate();
 	}
 
 }

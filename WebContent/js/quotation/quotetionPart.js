@@ -1258,16 +1258,10 @@
 
                     $dmoney.find('.order').text(_dorder);
                     $dmoney.find('.name').text(_dname);
-                    $dmoney.remove();
-
-                    if (_index != 0) {
-                        $dmoney.insertAfter(com.focusPage('#functionAreaSumList > div').eq(_index - 1));
-                    } else {
-                        $dmoney.insertBefore(com.focusPage('#functionAreaSumList > div').eq(0));
-                    }
 
                     // 更新功能区参数后，重新计算所有报价项价格属性和功能区总额
                     var _fee = quo.calculateDomainFees(that.nowEditDomain, function($quote) {
+
                         quo.calculateQuoteFee($quote);
                     });
                     // 使用 $dmoney 变量直接更新金额，而不是重新查找
@@ -1276,6 +1270,7 @@
                     // 显示更新工程量按钮（针对有公式的报价项）
                     var $btnExpres = that.nowEditDomain.find('.fl-quo-list.list .fl-quo-item.item[data-expres] .cell.num');
                     $.each($btnExpres, function(i, e) {
+
                         var $line = $(e).parents('li.fl-quo-item.item');
                         if (!$line.attr("data-qfaiid") || !$line.attr("data-expres") || $line.attr("data-control") == 1)
                             return true;
@@ -1283,6 +1278,7 @@
                         if ($(e).find('.icon-circle-arrow-up').length == 0) {
                             var $update = $('<i class="icon-circle-arrow-up blue" style="display: inline-block; padding-left: 3px; cursor: pointer;"></i>');
                             $update.click(function() {
+
                                 quote.checkedExpres($line);
                             });
                             $(e).find('.cell-wrap').append($update);
@@ -2732,9 +2728,9 @@
                     "expres": $this.attr('data-expres') || ""
                 };
 
-//                if (areaType == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT) {
-//                    _quotval["type"] = constant.quotation().quotetionFunctionAreaItem.TYPE_CMPREH_INT;
-//                }
+                // if (areaType == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT) {
+                // _quotval["type"] = constant.quotation().quotetionFunctionAreaItem.TYPE_CMPREH_INT;
+                // }
 
                 quote.addQuoteRtem(_quotval);
                 var $historyItem = $this.parents('li.item-blue').clone(true);
@@ -2763,7 +2759,8 @@
                         "workType": v.target.workType.name,
                         "isRtem": v.target.isRtem,
                         "quotationRtemId": v.target.rtemFlag,
-                        "expres": v.target.formula // 公式表达式，用于通过功能区参数自动计算工程量
+                        "expres": v.target.formula
+                    // 公式表达式，用于通过功能区参数自动计算工程量
                     };
 
                     if (v.type == constant.data().quotationRtem.TYPE_CMPREH_INT && cpWidget.length) {
@@ -2873,6 +2870,7 @@
                     if ($numCell.find('.icon-circle-arrow-up').length == 0) {
                         var $update = $('<i class="icon-circle-arrow-up blue" style="display: inline-block; padding-left: 3px; cursor: pointer;"></i>');
                         $update.click(function() {
+
                             quote.checkedExpres(item);
                         });
                         $numCell.find('.cell-wrap').append($update);
@@ -3348,25 +3346,6 @@
             $domain.attr('data-consPrice', cons);
             $domain.attr('data-comsPrice', coms);
 
-            // 为功能区内有公式的报价项添加更新工程量按钮
-            if (dv.type != constant.quotation().quotetionFunctionArea.TYPE_MANAGEMENT_INT) {
-                var $itemsWithExpres = $domain.find('.fl-quo-list.list .fl-quo-item.item[data-expres]');
-                $.each($itemsWithExpres, function(i, e) {
-                    var $item = $(e);
-                    var expres = $item.attr('data-expres');
-                    if (expres && expres != "" && $item.attr('data-qfaiid')) {
-                        var $numCell = $item.find('.cell.num');
-                        if ($numCell.find('.icon-circle-arrow-up').length == 0) {
-                            var $update = $('<i class="icon-circle-arrow-up blue" style="display: inline-block; padding-left: 3px; cursor: pointer;"></i>');
-                            $update.click(function() {
-                                quote.checkedExpres($item);
-                            });
-                            $numCell.find('.cell-wrap').append($update);
-                        }
-                    }
-                });
-            }
-
             return $domain;
         },
 
@@ -3647,8 +3626,8 @@
                 'display': 'inline-block',
                 'margin': '3px 8px 3px 0',
                 'vertical-align': 'top',
-                'min-width': '140px',  // 固定最小宽度，确保对齐
-                'white-space': 'nowrap'  // 防止内容换行
+                'min-width': '140px', // 固定最小宽度，确保对齐
+                'white-space': 'nowrap' // 防止内容换行
             });
 
             // 创建包裹容器，使用 flex 布局

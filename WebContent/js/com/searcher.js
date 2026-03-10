@@ -591,8 +591,14 @@ var Searcher = function() {
 
             var _inputType = $input.attr("data-type");
             var _postName = $input.attr("data-rqs");
-
+            
             var _rule = Condition.getRuleByCondName(val);
+            
+            if(!_rule) {
+                console.log("Condition is not exist . " , val);
+                return true;
+            }
+            
             var _reg = _rule.submitConfig.validate;
             var _alone = _rule.submitConfig.alone;
 

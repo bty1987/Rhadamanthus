@@ -22,7 +22,7 @@ public class ApprovalProtationPreferVO implements java.io.Serializable {
 
 	private Integer totalPrice;
 
-	private Integer activityPrice;
+	private Integer activityProfit;
 
 	private Short type;
 
@@ -98,12 +98,12 @@ public class ApprovalProtationPreferVO implements java.io.Serializable {
 		this.totalPrice = totalPrice;
 	}
 
-	public Integer getActivityPrice() {
-		return activityPrice;
+	public Integer getActivityProfit() {
+		return activityProfit;
 	}
 
-	public void setActivityPrice(Integer activityPrice) {
-		this.activityPrice = activityPrice;
+	public void setActivityProfit(Integer activityProfit) {
+		this.activityProfit = activityProfit;
 	}
 
 	public Short getType() {
