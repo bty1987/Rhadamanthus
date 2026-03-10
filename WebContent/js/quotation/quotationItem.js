@@ -175,6 +175,7 @@ $(function() {
             var $btnSelection = $('<a></a>').addClass('btn btn-minier btn-success').html('选材');
             var $btnNormood = $('<a></a>').addClass('btn btn-minier btn-warning').html('定额材料');
             var $btnNormrice = $('<a></a>').addClass('btn btn-minier btn-inverse').html('定额工费');
+            var $btnNormtime = $('<a></a>').addClass('btn btn-minier btn-info').html('定额工时');
             var $btnRtem = $('<a></a>').addClass('btn btn-minier btn-success').html('关联');
             var $btnPrice = $('<a></a>').addClass('btn btn-minier btn-purple').html('价格');
             var $btnFormula = $('<a></a>').addClass('btn btn-minier btn-pink').html('公式');
@@ -213,7 +214,7 @@ $(function() {
                     break;
                 case "norm":
 
-                    $divBtnWrap.append($btnNormrice).append($btnNormood).appendTo($h3);
+                    $divBtnWrap.append($btnNormtime).append($btnNormrice).append($btnNormood).appendTo($h3);
                     break;
                 case "finance":
 
@@ -223,7 +224,13 @@ $(function() {
                 default:
 
                     accessArr = [["增补价 :", v.addPrice, "blue"], ["单价: ", v.unitPrice, "blue"], ["退减价: ", v.subPrice, "blue"], ["业绩额:", v.achePrice, "blue"], ["公式:", paramToFormula(v.formula), "grey"]];
-                    $divBtnWrap.append($btnRtem).append($btnPrice).append($btnFormula).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
+
+                    // 对于定额类型(type==3)的报价项，显示定额工时按钮
+                    if (v.type == 3) {
+                        $divBtnWrap.append($btnNormtime).append($btnRtem).append($btnPrice).append($btnFormula).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
+                    } else {
+                        $divBtnWrap.append($btnRtem).append($btnPrice).append($btnFormula).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
+                    }
             }
 
             $.each(propertyArr, function(index, value) {
@@ -285,6 +292,15 @@ $(function() {
                 params.urlLoadParams.pageType = "query";
 
                 com.popup4page("#normricePopUp", "/views/data/normrice.html", "定额工费");
+            });
+
+            $btnNormtime.click(function() {
+
+                params.data.quotationItem = v;
+
+                params.urlLoadParams.pageType = "query";
+
+                com.popup4page("#normtimePopUp", "/views/data/normtime.html", "定额工时");
             });
 
             $btnRtem.click(function() {
