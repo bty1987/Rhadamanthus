@@ -1,5 +1,6 @@
 package com.fanglin.customer.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,9 +29,12 @@ import com.fanglin.customer.po.CustomerOriginPO;
 import com.fanglin.customer.po.CustomerOriginRecordPO;
 import com.fanglin.customer.service.CustomerOriginService;
 import com.fanglin.customer.vo.CustomerOriginVO;
+import com.fanglin.data.common.dao.DecorationBusitypeDao;
+import com.fanglin.data.common.vo.DecorationBusitypeVO;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.decoration.service.impl.DecorationServiceImpl;
-import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.decoration.vo.DecorationInfoVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -493,13 +497,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		HousePO housePO = customerOriginPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源初审通过,客户名:%s,楼盘:%s %s %s %s",
-			customerOriginPO.getName(),
-			villagePO.getCityProper().getCity().getName(),
-			villagePO.getCityProper().getName(),
-			villagePO.getName(),
-			housePO.getHouseNumber()
-		);
+		String content = String.format("客源初审通过,客户名:%s,楼盘:%s %s %s %s", customerOriginPO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
 
 		if (designer != null) {
 			messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, designer.getCompany());
@@ -521,7 +519,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		}
 
 		// 如果前端传了业务类型，使用前端传的值；否则使用客源关联的值
-		int busitypeDbid = 0;
+		Long busitypeDbid = 0l;
 		if (customerOriginVO.getDecorationBusitype() != null && customerOriginVO.getDecorationBusitype().getDbid() > 0) {
 			busitypeDbid = customerOriginVO.getDecorationBusitype().getDbid();
 		} else if (customerOriginPO.getDecorationBusitype() != null) {
@@ -529,7 +527,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		}
 
 		// 如果前端传了销售员，使用前端传的销售员；否则使用客源关联的销售员
-		Long salesmanUserId = null;
+		String salesmanUserId = null;
 		if (customerOriginVO.getSalesman() != null && customerOriginVO.getSalesman().getUserId() != null) {
 			salesmanUserId = customerOriginVO.getSalesman().getUserId();
 		} else if (customerOriginPO.getSalesman() != null) {
@@ -588,12 +586,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		HousePO housePO = customerOriginPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s",
-			customerOriginPO.getName(),
-			villagePO.getName(),
-			housePO.getHouseNumber(),
-			customerOriginPO.getOrderId()
-		);
+		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerOriginPO.getOrderId());
 
 		UserPO designer = customerOriginPO.getDesigner();
 		if (designer != null) {
