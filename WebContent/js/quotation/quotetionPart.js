@@ -2714,7 +2714,8 @@
                     "quotetionTypeId": $this.attr('data-quotetionTypeId'),
                     "areaType": domain.nowEditDomain.attr('data-areaType'),
                     "isRtem": $this.attr('data-isRtem'),
-                    "quotationRtemId": $this.attr('data-qrid')
+                    "quotationRtemId": $this.attr('data-qrid'),
+                    "expres": $this.attr('data-expres') || ""
                 };
 
 //                if (areaType == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT) {
@@ -3713,6 +3714,7 @@
                 "data-isRtem": v.isRtem,
                 "data-qrid": v.rtemFlag,
                 "data-des": v.comment,
+                "data-expres": v.formula || ""
             }).val(v.qiid);
 
             var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.name);
