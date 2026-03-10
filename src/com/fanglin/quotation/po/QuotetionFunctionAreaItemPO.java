@@ -46,6 +46,8 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 
 	private String formula;
 
+	private String expres;
+
 	private int num;
 
 	private short type;
@@ -130,6 +132,14 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 
 	public void setFormula(String formula) {
 		this.formula = formula;
+	}
+
+	public String getExpres() {
+		return expres;
+	}
+
+	public void setExpres(String expres) {
+		this.expres = expres;
 	}
 
 	public int getNum() {
