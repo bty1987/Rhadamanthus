@@ -314,7 +314,7 @@ $(function() {
         var $show = conf.opt == null ? [] : conf.opt.show == null ? [] : conf.opt.show;
 
         var $OriginalPicture = $show.includes("OriginalPicture") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("现场图")), createDiv("inline pull-right", "checkOriginal").css("text-align", "right"), createDiv("inline pull-right", "OriginalUpload").css("text-align", "right")), createDiv().css("min-height", "150px").append(createUl("OriginalPicture", "ace-thumbnails"))))) : null;
-        var $designPictures = $show.includes("designPictures") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("合同方案")), createDiv("inline pull-right", "designPictureUpload_a").css("text-align", "right").append(createDiv("pull-left", "designPictureUpload_b").append($('<a class="btn btn-minier btn-success" id="detailBatchShow">批量显示</a>')).append(' ').append($('<a class="btn btn-minier btn-info" id="detailBatchConfirm">批量确认</a>')).append(' ').append($('<a class="btn btn-minier btn-danger" id="detailBatchHide">批量隐藏</a>')))), createDiv().css("min-height", "150px").append(createUl("designPictures", "ace-thumbnails"))))) : null;
+        var $designPictures = $show.includes("designPictures") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("合同方案")).append($('<a class="btn btn-minier btn-success" id="detailBatchShow">批量显示</a>')).append(' ').append($('<a class="btn btn-minier btn-info" id="detailBatchConfirm">批量确认</a>')).append(' ').append($('<a class="btn btn-minier btn-danger" id="detailBatchHide">批量隐藏</a>')), createDiv("inline pull-right", "designPictureUpload_a").css("text-align", "right").append(createDiv("pull-left", "designPictureUpload_b"))), createDiv().css("min-height", "150px").append(createUl("designPictures", "ace-thumbnails"))))) : null;
         var $projectPictures = $show.includes("projectPictures") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("放线方案")), createDiv("inline pull-right", "projectPictureUpload_a").css("text-align", "right").append(createDiv("pull-left", "projectPictureUpload_b"))), createDiv().css("min-height", "150px").append(createUl("projectPictures", "ace-thumbnails"))))) : null;
         var $contractMap = $show.includes("contractMap") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("合同备档")), createDiv("inline pull-right", "ContractUpload").css("text-align", "right")), createDiv().css("min-height", "150px").append(createUl("ContractPictures", "ace-thumbnails"))))) : null;
         var $CADProjectPicture = $show.includes("CADProjectPicture") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("工程文件CAD")), createDiv("inline pull-right", "CADUpload").css("text-align", "right")), createDiv().css("min-height", "150px").append(createDiv("infobox-container", "CADProjectPicture"))))) : null;
@@ -427,20 +427,6 @@ $(function() {
         }
 
         com.focusPage("#checkOriginal").append($checkOriginal);
-
-        // 添加批量操作按钮到合同方案区域
-        if ($designPictures) {
-            var $batchContainer = com.focusPage("#designPictureUpload_b");
-            // 检查是否已存在批量操作按钮，避免重复添加
-            if ($batchContainer.find('#detailBatchShow').length === 0) {
-                $batchContainer
-                    .append($('<a class="btn btn-minier btn-success" id="detailBatchShow">批量显示</a>'))
-                    .append('&nbsp;')
-                    .append($('<a class="btn btn-minier btn-info" id="detailBatchConfirm">批量确认</a>'))
-                    .append('&nbsp;')
-                    .append($('<a class="btn btn-minier btn-danger" id="detailBatchHide">批量隐藏</a>'));
-            }
-        }
 
         return [row1, row2];
     }
