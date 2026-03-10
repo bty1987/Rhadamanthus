@@ -98,6 +98,8 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 					quotetionFunctionAreaItemVO.setQiid(quotetionFunctionAreaItemPO.getQiid());
 					quotetionFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
 					quotetionFunctionAreaItemVO.setQuotationRtemId(quotationItemPO.getRtemFlag());
+					// 复制公式表达式用于功能区参数更新后计算工程量
+					quotetionFunctionAreaItemVO.setExpres(quotationItemPO.getFormula());
 				}
 
 				quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);

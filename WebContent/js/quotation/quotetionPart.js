@@ -2848,6 +2848,7 @@
                 "quotetionFunctionAreaItem.index": v.index,
                 "quotetionFunctionAreaItem.qiid": v.qiid,
                 "quotetionFunctionAreaItem.content": v.content,
+                "quotetionFunctionAreaItem.expres": v.expres || "",
             }
 
             com.post(api.quotation.updateQuotetionFunctionAreaItem, $.extend({}, args, quo.basicParams), function(res) {
@@ -3070,6 +3071,7 @@
                 "quotetionFunctionAreaItem.index": index,
                 "quotetionFunctionAreaItem.qiid": qiid,
                 "quotetionFunctionAreaItem.content": content,
+                "quotetionFunctionAreaItem.expres": expres,
             };
 
             var $params = $.extend({}, args, quo.basicParams);
@@ -3608,7 +3610,9 @@
             $item.attr('data-addPrice', qv.addPrice);
             $item.attr('data-subPrice', qv.subPrice);
             // 设置公式表达式属性，用于功能区参数更新后计算工程量
-            $item.attr('data-expres', (qv.expres && qv.expres != "") ? qv.expres : "");
+            // 优先使用 expres 字段（公式表达式），如果不存在则使用 formula 字段
+            var expresValue = (qv.expres && qv.expres != "") ? qv.expres : (qv.formula && qv.formula != "0" ? qv.formula : "");
+            $item.attr('data-expres', expresValue);
 
             $item.attr('data-undisPrice', qv.discount == constant.quotation().quotetionFunctionAreaItem.DISCOUNT_NODISCOUNT_INT && (qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_COMMON_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_CUSTOM_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_UNACHE_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_CMPREH_INT) ? utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice)) : 0);
             $item.attr('data-disPrice', qv.discount == constant.quotation().quotetionFunctionAreaItem.DISCOUNT_DISCOUNT_INT && (qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_COMMON_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_CUSTOM_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_UNACHE_INT || qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_CMPREH_INT) ? utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice)) : 0);
