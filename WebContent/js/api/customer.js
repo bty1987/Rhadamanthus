@@ -159,6 +159,12 @@ $.extend(api, {
         cancelCustomerOrigin: {
             url: "cancelCustomerOrigin.do"
         },
+        approveCustomerOrigin: {
+            url: "approveCustomerOrigin.do"
+        },
+        tranCustomerOrigin: {
+            url: "tranCustomerOrigin.do"
+        },
 
         queryCustomerOriginRecord: {
             url: "queryCustomerOriginRecord.do"

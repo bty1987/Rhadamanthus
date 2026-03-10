@@ -1,6 +1,5 @@
 package com.fanglin.customer.service.impl;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,10 +28,9 @@ import com.fanglin.customer.po.CustomerOriginPO;
 import com.fanglin.customer.po.CustomerOriginRecordPO;
 import com.fanglin.customer.service.CustomerOriginService;
 import com.fanglin.customer.vo.CustomerOriginVO;
-import com.fanglin.data.common.dao.DecorationBusitypeDao;
-import com.fanglin.data.common.vo.DecorationBusitypeVO;
-import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.decoration.service.impl.DecorationServiceImpl;
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -465,6 +463,115 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_INIT_INT);
 
 		customerOriginDao.update(customerOriginPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void approveCustomerOrigin(CustomerOriginVO customerOriginVO, int company) throws FLException {
+
+		if (customerOriginVO == null || customerOriginVO.getCsid() <= 0) {
+			throw new FLException(330001, "客源数据不能为空");
+		}
+
+		// 查询客源
+		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOriginVO.getCsid());
+		if (customerOriginPO == null) {
+			throw new FLException(330001, "客源不存在");
+		}
+
+		// 验证客源状态：不能是初始或已绑定状态
+		if (java.util.Arrays.asList(CustomerOriginPO.STATUS_INIT_INT, CustomerOriginPO.STATUS_BIND_INT).contains(customerOriginPO.getStatus())) {
+			throw new FLException(330014, "客源状态不可操作");
+		}
+
+		// 更新客源状态为"已提交" (STATUS_COMMIT_INT)
+		customerOriginPO.setStatus(CustomerOriginPO.STATUS_COMMIT_INT);
+		customerOriginDao.update(customerOriginPO);
+
+		// 发送消息通知设计师
+		UserPO designer = customerOriginPO.getDesigner();
+		HousePO housePO = customerOriginPO.getHouse();
+		VillagePO villagePO = housePO.getVillage();
+
+		String content = String.format("客源初审通过,客户名:%s,楼盘:%s %s %s %s",
+			customerOriginPO.getName(),
+			villagePO.getCityProper().getCity().getName(),
+			villagePO.getCityProper().getName(),
+			villagePO.getName(),
+			housePO.getHouseNumber()
+		);
+
+		if (designer != null) {
+			messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, designer.getCompany());
+		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void tranCustomerOrigin(CustomerOriginVO customerOriginVO, int company) throws FLException {
+
+		if (customerOriginVO == null || customerOriginVO.getCsid() <= 0) {
+			throw new FLException(330001, "客源数据不能为空");
+		}
+
+		// 查询客源
+		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOriginVO.getCsid());
+		if (customerOriginPO == null) {
+			throw new FLException(330001, "客源不存在");
+		}
+
+		// 构建装修单数据（使用客源关联的销售员和业务类型）
+		DecorationVO decorationVO = new DecorationVO();
+		BeanUtil.copyPropertie(customerOriginPO, decorationVO, java.util.Arrays.asList("customerOrigin", "decorationBusitype", "salesman"));
+
+		decorationVO.setCreater(new UserBaseVO(customerOriginPO.getCreater().getUserId()));
+		decorationVO.setHouse(new HouseVO(customerOriginPO.getHouse().getHid()));
+		decorationVO.setCustomer(new CustomerVO(customerOriginPO.getCustomer().getCid()));
+		decorationVO.setDesigner(new UserBaseVO(customerOriginPO.getDesigner().getUserId()));
+
+		// 设置销售员：优先使用客源关联的销售员，否则使用创建人
+		if (customerOriginPO.getSalesman() != null) {
+			decorationVO.setSalesman(new UserBaseVO(customerOriginPO.getSalesman().getUserId()));
+		} else {
+			decorationVO.setSalesman(new UserBaseVO(customerOriginPO.getCreater().getUserId()));
+		}
+
+		decorationVO.setGrade("C");
+		decorationVO.setNotSalesmanRate(0);
+
+		// 设置业务类型
+		if (customerOriginPO.getDecorationBusitype() != null) {
+			decorationVO.setBusitype(customerOriginPO.getDecorationBusitype().getDbid());
+		}
+
+		// 调用装修单服务创建装修单
+		decorationService.tranDecoration(decorationVO, new DecorationInfoVO(), company);
+
+		// 更新客源状态为"已绑定"，绑定订单ID
+		customerOriginPO.setOrderId(decorationVO.getOrderId());
+		customerOriginPO.setStatus(CustomerOriginPO.STATUS_BIND_INT);
+		customerOriginDao.update(customerOriginPO);
+
+		// 发送消息通知设计师和销售员
+		HousePO housePO = customerOriginPO.getHouse();
+		VillagePO villagePO = housePO.getVillage();
+
+		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s",
+			customerOriginPO.getName(),
+			villagePO.getName(),
+			housePO.getHouseNumber(),
+			customerOriginPO.getOrderId()
+		);
+
+		UserPO designer = customerOriginPO.getDesigner();
+		UserPO salesman = customerOriginPO.getSalesman();
+
+		if (designer != null) {
+			messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, designer.getCompany());
+		}
+		if (salesman != null) {
+			messageService.sendMessage(salesman.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, salesman.getCompany());
+		}
 	}
 
 }

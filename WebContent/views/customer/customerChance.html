@@ -217,6 +217,89 @@
         </div>
     </div>
 
+    <div class="modal fade" id="directApproveModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">直接转装修单</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="directVillageNo" class="col-sm-3 control-label no-padding-right">楼盘信息</label>
+                            <div class="col-sm-9">
+                                <input id="directVillageNo" type="text" class="col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" style="margin-right: 35px;" disabled />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="directHouseNumber" class="col-sm-3 control-label no-padding-right">楼牌号</label>
+                            <div class="col-sm-9">
+                                <input id="directHouseNumber" type="text" class="m-wrap col-xs-6 v_required" maxlength="30" disabled />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">姓名</label>
+                            <div class="col-sm-9">
+                                <input id="directName" type="text" class="m-wrap col-xs-6 v_required" maxlength="32" style="margin-right: 35px;" disabled />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">电话</label>
+                            <div class="col-sm-9">
+                                <input id="directPhone" type="text" class="m-wrap col-xs-6 v_phone v_required" disabled />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">业务类型</label>
+                            <div class="col-sm-9">
+                                <select id="directBusitype" class="col-xs-6 m-wrap v_required" disabled></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">房屋类别</label>
+                            <div class="col-sm-9">
+                                <select id="directHouseType" class="col-xs-6 m-wrap"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="directHouseClass" class="col-sm-3 control-label no-padding-right">房屋类型</label>
+                            <div class="col-sm-9">
+                                <select id='directHouseClass' class='col-sm-6 m-wrap'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="directOrderType" class="col-sm-3 control-label no-padding-right">订单类型</label>
+                            <div class="col-sm-9">
+                                <select id='directOrderType' class='col-xs-6 m-wrap'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="directResourceType" class="col-sm-3 control-label no-padding-right">订单状态</label>
+                            <div class="col-sm-9">
+                                <select id='directResourceType' class='col-xs-6 m-wrap'></select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="directApproveConfirmBtn" class="btn btn-success" data-loading-text="处理中...">确定</button>
+                    <button type="button" id="directApproveCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="firstApproveModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">

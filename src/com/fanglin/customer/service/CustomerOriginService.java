@@ -33,4 +33,22 @@ public interface CustomerOriginService {
 
 	public void cancelCustomerOrigin(CustomerOriginVO customerOrigin) throws FLException;
 
+	/**
+	 * 客源初审通过（直接接口，不走审批流程）
+	 * 对应 approveForCustomerSource 的业务逻辑
+	 * @param customerOrigin 客源数据
+	 * @param company 公司ID
+	 * @throws FLException
+	 */
+	public void approveCustomerOrigin(CustomerOriginVO customerOrigin, int company) throws FLException;
+
+	/**
+	 * 客源转装修单（直接接口，不走审批流程）
+	 * 对应 approveForCustomerOriginTDecoration 的业务逻辑
+	 * @param customerOrigin 客源数据
+	 * @param company 公司ID
+	 * @throws FLException
+	 */
+	public void tranCustomerOrigin(CustomerOriginVO customerOrigin, int company) throws FLException;
+
 }
