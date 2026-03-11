@@ -1654,6 +1654,31 @@ var decorationUtils = {
         var $timeHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
         var $timeInfo = $('<span></span>').addClass('label label-danger arrowed').text(i.uploadTime).appendTo($timeHolder);
 
+        // 为合同方案图片(type=1)添加状态文字显示
+        if (i.type == 1) {
+            // 使用常量获取状态文字
+            var statusConfig = constant.decoration().decorationPicture.status;
+            var statusText = statusConfig.keys[i.status] || '未知';
+            var statusClass = '';
+
+            switch (i.status) {
+                case 0:
+                    statusClass = 'label-grey';
+                    break;
+                case 1:
+                    statusClass = 'label-success';
+                    break;
+                case 4:
+                    statusClass = 'label-primary';
+                    break;
+                default:
+                    statusClass = 'label-default';
+            }
+
+            var $statusHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+            var $statusInfo = $('<span></span>').addClass('label ' + statusClass + ' arrowed').text(statusText).appendTo($statusHolder);
+        }
+
         var $tools = $('<div></div>').addClass('tools tools-top').appendTo($li);
         var $toolLabel = $('<label></label>').appendTo($tools);
         var $downA = $('<a></a>').addClass("icon-download-alt").appendTo($tools);
