@@ -2,13 +2,8 @@ $(function() {
 
     var approval7Achievement = {
 
-        type: [],
+        type: constant.approval().approval.type.datas,
     };
-
-    com.post(api.ds.approval, {}, function(res) {
-
-        approval7Achievement.type = res.approvalType.split("key", "value");
-    }, null, false);
 
     var searcher = new Searcher();
 

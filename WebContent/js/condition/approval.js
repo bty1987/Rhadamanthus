@@ -70,9 +70,7 @@ Condition.addupRule("approval", {
             validate: null
         },
         dataSource: {
-            url: api.ds.approval,
-            postData: {"timestamp": new Date().getTime()},
-            listPath: "approvalType",
+            data: constant.approval().approval.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -86,9 +84,7 @@ Condition.addupRule("approval", {
             validate: null
         },
         dataSource: {
-            url: api.ds.approval,
-            postData: {"timestamp": new Date().getTime()},
-            listPath: "approvalStatus",
+            data: constant.approval().approval.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
