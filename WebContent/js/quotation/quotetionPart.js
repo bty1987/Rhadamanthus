@@ -2183,7 +2183,7 @@
 
                         var newNum = parseFloat(handler.attr("data-count-num"));
 
-                        newNum = newNum + ($item.attr('data-del-sign') == 1 ? 0 : quote.quotetionFunctionAreaFormula(v.formula, number));
+                        newNum = newNum + ($item.attr('data-del-sign') == 1 ? 0 : quote.quotetionFunctionAreaFormula(v.formula, $domain, number).num);
 
                         handler.attr("data-count-num", utils.changeThrDecimal(newNum));
 
@@ -2263,7 +2263,7 @@
 
                     var newNum = parseFloat(handler.attr("data-count-num"));
 
-                    newNum = newNum + (isItem.attr('data-del-sign') == 1 ? 0 : quote.quotetionFunctionAreaFormula(v.formula, number));
+                    newNum = newNum + (isItem.attr('data-del-sign') == 1 ? 0 : quote.quotetionFunctionAreaFormula(v.formula, widget, number).num);
 
                     handler.attr("data-count-num", utils.changeThrDecimal(newNum));
 
