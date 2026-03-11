@@ -130,7 +130,9 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 			short maxSchedule = Short.MIN_VALUE;
 
 			for (ConstructionSchedulePO cs : constructionSchedules) {
+
 				short currentSchedule = cs.getSchedule();
+
 				if (currentSchedule < minSchedule) {
 					minSchedule = currentSchedule;
 				}
@@ -140,10 +142,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 			}
 
 			// 判断当前工程状态是否在订单实际施工节点范围内（排除放线节点schedule=2，因为它是工程完工状态）
-			if (projectStatus > ConstructionPO.SCHEDULE_TYPE_PUTLINE_INT
-				&& projectStatus >= minSchedule
-				&& projectStatus <= maxSchedule
-				&& schedule < (short) (projectStatus + 2)) {
+			if (projectStatus > ConstructionPO.SCHEDULE_TYPE_PUTLINE_INT && projectStatus >= minSchedule && projectStatus <= maxSchedule && schedule < (short) (projectStatus + 2)) {
 				schedule = (short) (projectStatus + 2);
 			}
 		}
