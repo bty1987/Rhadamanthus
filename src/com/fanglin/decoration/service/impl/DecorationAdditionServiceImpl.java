@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.po.ConstructionPO;
+import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.po.ConstructionNodePO;
@@ -67,6 +69,9 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
 
+	@Autowired
+	private ConstructionScheduleDao constructionScheduleDao;
+
 	@Override
 	public DecorationAdditionVO queryDecorationAdditionByOrderId(DecorationAdditionVO decorationAdditionVO) {
 
@@ -116,8 +121,32 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		if (decorationPO.getSourceStatus() == DecorationPO.STATUS_SETTING_OUT_CONFIRMATION_INT && schedule < 4) // 判断装修确认状态是否为2, 是 值为 4.开工设计方案完成
 		schedule = 4;
 
-		if (projectStatus >= ConstructionPO.SCHEDULE_TYPE_WATERWAYCIRCUIT_INT && schedule < (short) (projectStatus + 2)) // 判断装修单工程状态是否为3-13, 是 值为5-15.铲大白 - 保洁
-		schedule = (short) (projectStatus + 2);
+		// 【改进】查询订单实际创建的施工进度节点，动态判断节点范围
+		List<ConstructionSchedulePO> constructionSchedules = constructionScheduleDao.queryConstructionScheduleByOrderId(decorationVO.getOrderId());
+
+		if (constructionSchedules != null && !constructionSchedules.isEmpty()) {
+			// 计算订单实际施工节点的schedule范围
+			short minSchedule = Short.MAX_VALUE;
+			short maxSchedule = Short.MIN_VALUE;
+
+			for (ConstructionSchedulePO cs : constructionSchedules) {
+				short currentSchedule = cs.getSchedule();
+				if (currentSchedule < minSchedule) {
+					minSchedule = currentSchedule;
+				}
+				if (currentSchedule > maxSchedule) {
+					maxSchedule = currentSchedule;
+				}
+			}
+
+			// 判断当前工程状态是否在订单实际施工节点范围内（排除放线节点schedule=2，因为它是工程完工状态）
+			if (projectStatus > ConstructionPO.SCHEDULE_TYPE_PUTLINE_INT
+				&& projectStatus >= minSchedule
+				&& projectStatus <= maxSchedule
+				&& schedule < (short) (projectStatus + 2)) {
+				schedule = (short) (projectStatus + 2);
+			}
+		}
 
 		if (status == DecorationPO.STATUS_FINAL_INT && schedule < 16) // 判断装修单状态是否为7, 是 值为 16.决算
 		schedule = 16;
