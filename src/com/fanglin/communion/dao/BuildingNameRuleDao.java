@@ -11,4 +11,6 @@ public interface BuildingNameRuleDao extends Dao<BuildingNameRulePO> {
 
 	public List<BuildingNameRulePO> pageBuildingNameRule(Paging paging, List<Filter> filters);
 
+	public BuildingNameRulePO queryBuildingNameRule(String rule);
+
 }

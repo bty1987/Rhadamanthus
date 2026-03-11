@@ -13,6 +13,7 @@ package com.fanglin.communion.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.communion.dao.BuildingNameRuleDao;
@@ -36,6 +37,15 @@ public class BuildingNameRuleDaoImpl extends DaoImpl<BuildingNameRulePO> impleme
 		queryFilterExcute(query, filters);
 
 		return query.list();
+	}
+
+	@Override
+	public BuildingNameRulePO queryBuildingNameRule(String rule) {
+		return (BuildingNameRulePO) session()
+				.createCriteria(BuildingNameRulePO.class)
+				.add(Restrictions.eq("rule", rule))
+				.setMaxResults(1)
+				.uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
