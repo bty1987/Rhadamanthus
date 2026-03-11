@@ -263,6 +263,22 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			throw new FLException(150034, "款项类型不可用");
 		}
 
+		// 设计费金额验证
+		if (DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR.equals(paymentTypePO.getName())) {
+			SystemConfigPO designFeeLimitConfig = systemConfigDao.querySystemConfig("PAYMENT_DESIGN_FEE_LIMIT", decorationPO.getCompany());
+			if (designFeeLimitConfig != null && designFeeLimitConfig.getValue() != null) {
+				try {
+					// 配置金额单位为元，转换为厘进行比较（1元 = 1000厘）
+					long limitAmount = Arith.mul(Long.parseLong(designFeeLimitConfig.getValue()), 1000);
+					if (decorationPaymentVO.getReferMoney() > limitAmount) {
+						throw new FLException(150040, String.format("设计费金额不能超过%s元", designFeeLimitConfig.getValue()));
+					}
+				} catch (NumberFormatException e) {
+					throw new FLException(150041, "设计费金额配置格式错误");
+				}
+			}
+		}
+
 		DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();
 		UserPO creater = userDao.queryUserByUserId(userId);
 
