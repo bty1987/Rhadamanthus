@@ -737,12 +737,26 @@ jQuery(function($) {
     }
     
     function makeContract(v) {
-        
+
         params.decoration.contract = v;
 
         com.popup4page("#layerPopUp", "/views/decoration/decorationContract2create.html", "创建合同", null, function() {
 
             searcher.doSearch();
+
+            // 查询合同记录并更新卡片信息
+            com.post(api.decoration.queryDecorationContractRecord, {
+                "decorationContractRecord.orderId": params.decoration.orderId
+            }, function(res) {
+                var records = res.decorationContractRecords || [];
+                if (records.length > 0) {
+                    decorationContract.contractRecord = records[0];
+                }
+
+                // 刷新合同记录显示
+                decorationContract.contractRecordInfo.html("");
+                contractRecordItems();
+            });
         });
     }
 
