@@ -50,7 +50,10 @@ $.extend(api.index, {
     cityProperPartnerIndex: {
         url: '/views/system/cityProperPartner.html'
     },
-    
+    companySystemConfigIndex: {
+        url: '/views/system/companySystemConfig.html'
+    }
+
 });
 
 $.extend(api, {

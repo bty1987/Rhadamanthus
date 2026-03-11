@@ -1,0 +1,119 @@
+<div>
+    <!-- 页面标题 -->
+    <div id="fl-statement"></div>
+
+    <!-- 工具栏 -->
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-inline">
+                <!-- 公司选择器 -->
+                <div class="form-group">
+                    <label>公司：</label>
+                    <select id="companySelect" class="form-control input-sm">
+                        <option value="">请选择公司</option>
+                    </select>
+                </div>
+
+                <!-- 搜索框 -->
+                <div class="form-group">
+                    <input type="text" id="searchInput" class="form-control input-sm"
+                           placeholder="搜索配置键、值或说明..." style="width: 300px;">
+                </div>
+
+                <!-- 操作按钮 -->
+                <button id="addConfigBtn" class="btn btn-sm btn-success">
+                    <i class="icon-plus"></i> 新增配置
+                </button>
+
+                <button id="refreshBtn" class="btn btn-sm btn-info">
+                    <i class="icon-refresh"></i> 刷新
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 配置分组折叠面板 -->
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-xs-12">
+            <div class="panel-group" id="configAccordion">
+                <!-- 动态生成分组面板 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑/新增模态框 -->
+<div class="modal fade" id="configModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="modalTitle">配置项</h4>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal" id="configForm">
+                    <!-- 分组 -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">分组</label>
+                        <div class="col-sm-9">
+                            <select id="configGroup" class="form-control">
+                                <option value="">请选择分组</option>
+                                <option value="decoration">装饰订单配置</option>
+                                <option value="quotation">报价管理配置</option>
+                                <option value="construction">施工管理配置</option>
+                                <option value="customer">客户管理配置</option>
+                                <option value="payment">支付管理配置</option>
+                                <option value="personel">人事管理配置</option>
+                                <option value="sales">主材销售配置</option>
+                                <option value="dingtalk">钉钉集成配置</option>
+                                <option value="wechat">微信集成配置</option>
+                                <option value="seiya">世雅集成配置</option>
+                                <option value="">其他配置</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 配置键 -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">配置键</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="configKey" class="form-control"
+                                   placeholder="输入配置键（如：manageRate）" maxlength="125">
+                            <small class="text-muted">建议使用字母、数字、下划线</small>
+                        </div>
+                    </div>
+
+                    <!-- 配置值 -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">配置值</label>
+                        <div class="col-sm-9">
+                            <textarea id="configValue" class="form-control" rows="3"
+                                      placeholder="输入配置值"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 说明 -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">说明</label>
+                        <div class="col-sm-9">
+                            <textarea id="configComment" class="form-control" rows="2"
+                                      placeholder="配置项说明" maxlength="125"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/system/companySystemConfig.js']);
+</script>
