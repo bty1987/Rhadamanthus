@@ -145,7 +145,7 @@ jQuery(function($) {
     // ========== 绑定规则相关逻辑 ==========
 
     villageRule.btns.cancelBindBtn.click(function() {
-        com.closePopup();
+        villageRule.modals.bindRuleModal.modal("hide");
     });
 
     villageRule.btns.bindRuleModalBtn.click(function() {
@@ -295,7 +295,7 @@ jQuery(function($) {
     villageRule.btns.cancelCreateBtn.on("click", function() {
 
         resetCreateRuleForm();
-        com.closePopup();
+        villageRule.modals.createRuleModal.modal("hide");
     });
 
     // 保存并绑定按钮点击
