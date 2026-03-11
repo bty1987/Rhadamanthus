@@ -253,3 +253,91 @@ INSERT INTO communion.custype (name, no, agent, phone, wxapp, rtid, platform, at
 --   商户4（rtid=2959）：3 条（atttype: 0, 1, 6，dgrade=C）- 兴业微信8856（新增）
 --   商户5（rtid=2966）：3 条（atttype: 0, 3, 6，sgrade=C）- 兴业微信8378（新增）
 -- ====================================================================
+
+-- ====================================================================
+-- 5. 营口方林 - 兴业微信8856（rtid=2890）
+-- 用途：C等级装修单的合同预付款/装修款/装修转换款
+-- 商户号：403590217521 | 收银台商户号：shenyang-fljjzs
+-- ====================================================================
+
+INSERT INTO communion.custype (name, no, agent, phone, wxapp, rtid, platform, atttype, dgrade, sgrade, status, company) VALUES
+('方林家居装饰有限公司营口分公司', '403590217521', 'shenyang-fljjzs', '15640043108', 'wxafd3ea57ab9dec48', 2890, 1, 0, 'C', NULL, 0, 88),  -- 合同预付款
+('方林家居装饰有限公司营口分公司', '403590217521', 'shenyang-fljjzs', '15640043108', 'wxafd3ea57ab9dec48', 2890, 1, 1, 'C', NULL, 0, 88),  -- 装修款
+('方林家居装饰有限公司营口分公司', '403590217521', 'shenyang-fljjzs', '15640043108', 'wxafd3ea57ab9dec48', 2890, 1, 6, 'C', NULL, 0, 88);  -- 装修转换款
+
+-- ====================================================================
+-- 5. 营口方林 - 兴业微信8378（rtid=2897）
+-- 用途：C等级装修单的主材预付款/销售款/主材转换款
+-- 商户号：403510237937 | 收银台商户号：syfh-fljjzsyxgs-2
+-- ====================================================================
+
+INSERT INTO communion.custype (name, no, agent, phone, wxapp, rtid, platform, atttype, dgrade, sgrade, status, company) VALUES
+('方林家居装饰有限公司营口分公司', '403510237937', 'syfh-fljjzsyxgs-2', '15640043108', 'wxafd3ea57ab9dec48', 2897, 1, 0, NULL, 'C', 0, 88),  -- 主材预付款
+('方林家居装饰有限公司营口分公司', '403510237937', 'syfh-fljjzsyxgs-2', '15640043108', 'wxafd3ea57ab9dec48', 2897, 1, 3, NULL, 'C', 0, 88),  -- 销售款
+('方林家居装饰有限公司营口分公司', '403510237937', 'syfh-fljjzsyxgs-2', '15640043108', 'wxafd3ea57ab9dec48', 2897, 1, 6, NULL, 'C', 0, 88);  -- 主材转换款
+
+-- ====================================================================
+-- 6. 辽阳方林 - 兴业微信8856（rtid=2905）
+-- 用途：C等级装修单的合同预付款/装修款/装修转换款
+-- 商户号：403590217521 | 收银台商户号：shenyang-fljjzs
+-- ====================================================================
+
+INSERT INTO communion.custype (name, no, agent, phone, wxapp, rtid, platform, atttype, dgrade, sgrade, status, company) VALUES
+('方林家居装饰有限公司辽阳分公司', '403590217521', 'shenyang-fljjzs', '15640043108', 'wxafd3ea57ab9dec48', 2905, 1, 0, 'C', NULL, 0, 89),  -- 合同预付款
+('方林家居装饰有限公司辽阳分公司', '403590217521', 'shenyang-fljjzs', '15640043108', 'wxafd3ea57ab9dec48', 2905, 1, 1, 'C', NULL, 0, 89),  -- 装修款
+('方林家居装饰有限公司辽阳分公司', '403590217521', 'shenyang-fljjzs', '15640043108', 'wxafd3ea57ab9dec48', 2905, 1, 6, 'C', NULL, 0, 89);  -- 装修转换款
+
+-- ====================================================================
+-- 6. 辽阳方林 - 兴业微信8378（rtid=2912）
+-- 用途：C等级装修单的主材预付款/销售款/主材转换款
+-- 商户号：403510237937 | 收银台商户号：syfh-fljjzsyxgs-2
+-- ====================================================================
+
+INSERT INTO communion.custype (name, no, agent, phone, wxapp, rtid, platform, atttype, dgrade, sgrade, status, company) VALUES
+('方林家居装饰有限公司辽阳分公司', '403510237937', 'syfh-fljjzsyxgs-2', '15640043108', 'wxafd3ea57ab9dec48', 2912, 1, 0, NULL, 'C', 0, 89),  -- 主材预付款
+('方林家居装饰有限公司辽阳分公司', '403510237937', 'syfh-fljjzsyxgs-2', '15640043108', 'wxafd3ea57ab9dec48', 2912, 1, 3, NULL, 'C', 0, 89),  -- 销售款
+('方林家居装饰有限公司辽阳分公司', '403510237937', 'syfh-fljjzsyxgs-2', '15640043108', 'wxafd3ea57ab9dec48', 2912, 1, 6, NULL, 'C', 0, 89);  -- 主材转换款
+
+-- ====================================================================
+-- 最终验证查询
+-- ====================================================================
+
+-- 查看所有分公司的 wxpay 商户配置汇总
+-- SELECT company, cid, name, COUNT(*) as record_count
+-- FROM communion.custype c
+-- LEFT JOIN communion.company comp ON c.company = comp.cid
+-- WHERE c.platform = 1 AND c.company IN (87, 88, 89, 90)
+-- GROUP BY company, cid, name
+-- ORDER BY company;
+
+-- ====================================================================
+-- 最终回滚语句
+-- ====================================================================
+
+-- 删除营口的配置
+-- DELETE FROM communion.custype WHERE company = 88 AND rtid IN (2890, 2897);
+
+-- 删除辽阳的配置
+-- DELETE FROM communion.custype WHERE company = 89 AND rtid IN (2905, 2912);
+
+-- ====================================================================
+-- 文档最终总结
+-- 总计：27 条记录
+-- 
+-- 秦皇岛分公司（cid=87）- 9 条：
+--   商户1（rtid=2920）：3 条（atttype: 0, 1, 6，dgrade=C）- 兴业微信8856
+--   商户2（rtid=2927）：3 条（attype: 0, 3, 6，sgrade=C）- 兴业微信8378
+--   商户3（rtid=2897）：3 条（attype: 0, 3, 6，sgrade=C）- 兴业微信8378
+--
+-- 营口分公司（cid=88）- 6 条（新增）：
+--   商户4（rtid=2890）：3 条（atttype: 0, 1, 6，dgrade=C）- 兴业微信8856
+--   商户5（rtid=2897）：3 条（atttype: 0, 3, 6，sgrade=C）- 兴业微信8378
+--
+-- 辽阳分公司（cid=89）- 6 条（新增）：
+--   商户6（rtid=2905）：3 条（atttype: 0, 1, 6，dgrade=C）- 兴业微信8856
+--   商户7（rtid=2912）：3 条（atttype: 0, 3, 6，sgrade=C）- 兴业微信8378
+--
+-- 阜新分公司（cid=90）- 6 条：
+--   商户8（rtid=2959）：3 条（atttype: 0, 1, 6，dgrade=C）- 兴业微信8856
+--   商户9（rtid=2966）：3 条（atttype: 0, 3, 6，sgrade=C）- 兴业微信8378
+-- ====================================================================
