@@ -230,6 +230,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 			decorationUserPO.setOrderId(decorationPO.getOrderId());
 			decorationUserPO.setUser(partnerSO.getPartner());
+			decorationUserPO.setType(DecorationUserPO.TYPE_SALES_INT);
 
 			decorationUserDao.save(decorationUserPO);
 		}
@@ -241,6 +242,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 			DecorationUserPO decorationUserPO = new DecorationUserPO();
 
 			decorationUserPO.setOrderId(decorationPO.getOrderId());
+			decorationUserPO.setType(DecorationUserPO.TYPE_SERV_INT);
 			decorationUserPO.setUser(partnerCPO.getPartner());
 
 			decorationUserDao.save(decorationUserPO);

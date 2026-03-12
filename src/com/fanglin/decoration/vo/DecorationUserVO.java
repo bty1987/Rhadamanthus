@@ -18,6 +18,8 @@ public class DecorationUserVO implements Serializable {
 
 	private Short isPay;
 
+	private Short type;
+
 	private String content;
 
 	public DecorationUserVO() {
@@ -67,6 +69,14 @@ public class DecorationUserVO implements Serializable {
 
 	public void setIsPay(Short isPay) {
 		this.isPay = isPay;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public String getContent() {
