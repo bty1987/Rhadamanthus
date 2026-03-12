@@ -19,6 +19,10 @@ public interface CustomerUserRuleItemDao extends Dao<CustomerUserRuleItemPO> {
 
 	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company, int area, List<Integer> uids, int did);
 
+	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company, int area, List<Integer> uids, int did, Integer cityid); // 新增城区参数（4+1）
+
+	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company, int area, List<Integer> uids, int did, int dtid, Integer cityid); // 新增城区参数（5+1）
+
 	public int existCustomerUserRuleItem(int company, int area);
 
 }

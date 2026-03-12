@@ -41,6 +41,8 @@ public class CustomerDeptRulePO implements Serializable {
 
 	public static final short FOCUS_DEPT_TYPE_INT = 3;
 
+	public static final short FOCUS_CITY_INT = 4; // 城区优先（新增）
+
 	private long cdrid;
 
 	private String name;
