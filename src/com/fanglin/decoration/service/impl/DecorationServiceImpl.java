@@ -1115,6 +1115,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 			decorationUserPO.setOrderId(decorationPO.getOrderId());
 			decorationUserPO.setUser(partnerSO.getPartner());
+			decorationUserPO.setType(DecorationUserPO.TYPE_SALES_INT);
 
 			decorationUserDao.save(decorationUserPO);
 		}
@@ -1130,6 +1131,7 @@ public class DecorationServiceImpl implements DecorationService {
 			DecorationUserPO decorationUserPO = new DecorationUserPO();
 
 			decorationUserPO.setOrderId(decorationPO.getOrderId());
+			decorationUserPO.setType(DecorationUserPO.TYPE_SALES_INT);
 			decorationUserPO.setUser(partnerCPO.getPartner());
 
 			decorationUserDao.save(decorationUserPO);

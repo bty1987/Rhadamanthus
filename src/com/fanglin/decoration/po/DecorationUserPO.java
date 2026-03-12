@@ -24,6 +24,14 @@ public class DecorationUserPO implements Serializable {
 
 	public static final String DECORATION_ORDERID_STR = "orderId";
 
+	// 人员类型常量
+	public static final short TYPE_BUSI_INT = 0;   // 业务
+	public static final short TYPE_DECO_INT = 1;   // 装饰
+	public static final short TYPE_SERV_INT = 2;   // 服务
+	public static final short TYPE_CONT_INT = 3;   // 合同
+	public static final short TYPE_SALES_INT = 4;  // 销售
+	public static final short TYPE_OTHER_INT = 99; // 其他
+
 	private long duid;
 
 	private String orderId;
@@ -33,6 +41,8 @@ public class DecorationUserPO implements Serializable {
 	private short isShow;
 
 	private short isPay;
+
+	private Short type;
 
 	private String content;
 
@@ -82,6 +92,15 @@ public class DecorationUserPO implements Serializable {
 
 	public void setIsPay(short isPay) {
 		this.isPay = isPay;
+	}
+
+	@Column(name = "type")
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	@Column(name = "content")
