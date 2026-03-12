@@ -37,6 +37,8 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	public static final short TYPE_DEPT_TYPE_INT = 3;
 
+	public static final short TYPE_CITY_INT = 4; // 城区规则（新增）
+
 	public static final short ISSURPLUS_ENABLE_INT = 0;
 
 	public static final short ISSURPLUS_NONE_INT = 1;
@@ -76,6 +78,8 @@ public class CustomerUserRuleItemPO implements Serializable {
 	private Timestamp deleteTime;
 
 	private String comment;
+
+	private Integer cityid; // 城区ID（新增）
 
 	public CustomerUserRuleItemPO() {
 		super();
@@ -227,6 +231,15 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Column(name = "cityid")
+	public Integer getCityid() {
+		return cityid;
+	}
+
+	public void setCityid(Integer cityid) {
+		this.cityid = cityid;
 	}
 
 	public CustomerUserRuleItemPO award(String orderId, long curid, String name, DepartmentTypePO departmentType) {
