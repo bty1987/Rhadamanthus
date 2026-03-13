@@ -653,6 +653,9 @@ public class MemberServiceImpl implements MemberService {
 			decorationActivityItemPO.setCreater(creater);
 			decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
+			// 设置 uniqueId，用于区分不同活动物品对应的被推荐装修单号和推荐装修单号的对应关系
+			decorationActivityItemPO.setUniqueId(memberOrderVO.getUniqueId());
+
 			decorationActivityItemDao.save(decorationActivityItemPO);
 		}
 
