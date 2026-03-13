@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-3 control-label no-padding-right orange">结算�?/label>
+                            <label class="col-md-3 control-label no-padding-right orange">结算价</label>
                             <div class="col-md-9">
                                 <input type="text" class="col-xs-10 col-sm-7 v_float_3 v_required" id="balance" name="balance" data-required="1" data-toggle="popover" data-trigger='manual'>
                             </div>
@@ -158,7 +158,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-3 control-label no-padding-right orange">原归属公�?/label>
+                    <label class="col-md-3 control-label no-padding-right orange">原归属公司</label>
                     <div class="col-md-9">
                         <input type="text" class="col-xs-10 col-sm-7" id="old" name="old" data-required="1" readonly="readonly" data-toggle="popover" data-trigger='manual'>
                     </div>
@@ -179,7 +179,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-3 control-label no-padding-right orange">结算�?/label>
+                    <label class="col-md-3 control-label no-padding-right orange">结算价</label>
                     <div class="col-md-9">
                         <input type="text" class="col-xs-10 col-sm-7 v_float_3 v_required" id="editBalance" name="editBalance" data-required="1" data-toggle="popover" data-trigger='manual'>
                     </div>
@@ -245,12 +245,12 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">澶嶅埗杈呮潗</h4>
+                <h4 class="modal-title">复制</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" novalidate="novalidate" id="copyAoods">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange">褰掑睘鍏徃</label>
+                        <label class="col-sm-3 control-label no-padding-right orange">归属公司</label>
                         <div class="col-sm-9">
                             <select class="col-xs-10 col-sm-7 v_required" id="ccompany" name="ccompany" data-required="1" data-toggle="popover" data-trigger='manual'></select>
                         </div>
@@ -258,8 +258,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="copyBtn" class="btn btn-success">纭畾</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">鍙栨秷</button>
+                <button type="button" id="copyBtn" class="btn btn-success">确认</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>
@@ -286,7 +286,7 @@
     </div>
 </div>
 
-<!-- 标准报价项弹�?->
+<!-- 标准报价项弹层-->
 <div class="modal fade" id="addQuotaionItemModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog" style="width:900px;">
         <div class="modal-content col-md-12">
@@ -294,7 +294,7 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">标准报价�?/h4>
+                <h4 class="modal-title">标准报价项</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -335,7 +335,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" id="confirmItemBtn" class="btn btn-primary">下一�?/button>
+                <button type="button" id="confirmItemBtn" class="btn btn-primary">下一步</button>
                 <button type="button" id="cancelItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
@@ -348,8 +348,8 @@
 
             <div class="form-group alert alert-danger">
                 <p>上传字段均为文本类型</p>
-                <p>上传格式: 名称 商品ID 定材ID 分类辅类ID 排序辅类ID 归属公司ID 业务类型 结算�?售价 工程节点ID 定额单位 定额数量 库房单位 库房数量</p>
-                <p>注意: 上传文件中请填写具体内容, 不显示表�?/p>
+                <p>上传格式: 名称 商品ID 定材ID 分类辅类ID 排序辅类ID 归属公司ID 业务类型 结算价 售价 工程节点ID 定额单位 定额数量 库房单位 库房数量</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
             </div>
 
             <div class="form-group">
@@ -363,7 +363,7 @@
                             <div class="cell">排序辅类ID</div>
                             <div class="cell">归属公司ID</div>
                             <div class="cell">业务类型</div>
-                            <div class="cell">结算�?/div>
+                            <div class="cell">结算价</div>
                             <div class="cell">售价</div>
                             <div class="cell">工程节点ID</div>
                             <div class="cell">定额单位</div>
@@ -384,9 +384,9 @@
                             <div class="cell">100.000</div>
                             <div class="cell">120.000</div>
                             <div class="cell">1</div>
-                            <div class="cell">�?/div>
+                            <div class="cell">个</div>
                             <div class="cell">1.000</div>
-                            <div class="cell">�?/div>
+                            <div class="cell">个</div>
                             <div class="cell">1.000</div>
                         </div>
                     </li>
@@ -403,8 +403,8 @@
 
             <div class="form-group alert alert-danger">
                 <p>上传字段均为文本类型</p>
-                <p>上传格式: 辅材ID 辅材名称 状�?0:启用, 1:禁用) 归属公司ID</p>
-                <p>注意: 上传文件中请填写具体内容, 不显示表�?/p>
+                <p>上传格式: 辅材ID 辅材名称 状态(0:启用, 1:禁用) 归属公司ID</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
             </div>
 
             <div class="form-group">
@@ -413,7 +413,7 @@
                         <div class="line-wrap content col4">
                             <div class="cell">辅材ID</div>
                             <div class="cell">辅材名称</div>
-                            <div class="cell">状�?/div>
+                            <div class="cell">状态</div>
                             <div class="cell">归属公司ID</div>
                         </div>
                     </li>

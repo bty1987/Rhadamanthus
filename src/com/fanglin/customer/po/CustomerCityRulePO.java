@@ -15,11 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.communion.po.CityProperPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.vo.CustomerCityRuleVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.system.po.CityProperPO;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
 
@@ -36,13 +36,13 @@ public class CustomerCityRulePO implements Serializable {
 	public static final String COLUMN_STATUS_STR = "status";
 
 	// 规则类型
-	public static final short TYPE_COMPANY_INT = 0;    // 城区→公司
-	public static final short TYPE_DEPT_INT = 1;       // 城区→部门
-	public static final short TYPE_USER_INT = 2;       // 城区→设计师
+	public static final short TYPE_COMPANY_INT = 0; // 城区→公司
+	public static final short TYPE_DEPT_INT = 1; // 城区→部门
+	public static final short TYPE_USER_INT = 2; // 城区→设计师
 
 	// 状态
-	public static final short STATUS_ENABLE_INT = 0;   // 启用
-	public static final short STATUS_DISABLE_INT = 1;  // 禁用
+	public static final short STATUS_ENABLE_INT = 0; // 启用
+	public static final short STATUS_DISABLE_INT = 1; // 禁用
 
 	private long ccrid;
 
@@ -222,11 +222,10 @@ public class CustomerCityRulePO implements Serializable {
 
 	public CustomerCityRuleVO ptv(CustomerCityRuleVO customerCityRuleVO) throws FLException {
 
-		BeanUtil.copyProperties(this, customerCityRuleVO,
-			Arrays.asList("city", "company", "targetCompany", "department", "user"));
+		BeanUtil.copyProperties(this, customerCityRuleVO, Arrays.asList("city", "company", "targetCompany", "department", "user"));
 
 		if (customerCityRuleVO.getCity() != null && getCity() != null) {
-			customerCityRuleVO.getCity().ptv(getCity());
+			getCity().ptv(customerCityRuleVO.getCity());
 		}
 
 		if (customerCityRuleVO.getCompany() != null && getCompany() != null) {
