@@ -17,8 +17,10 @@ public class MemberOrderVO implements Serializable {
 	private Integer operatePoint; // 扣除运营积分
 
 	private Integer surplusPoint; // 剩余运营积分
-	
+
 	private Integer point; //扣除装修积分+扣除主材积分
+
+	private String uniqueId; // 唯一标识，用于区分不同活动物品对应的被推荐装修单号和推荐装修单号的对应关系
 
 	public String getOrderId() {
 		return orderId;
@@ -74,5 +76,13 @@ public class MemberOrderVO implements Serializable {
 
 	public void setPoint(Integer point) {
 		this.point = point;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 }
