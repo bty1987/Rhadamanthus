@@ -47,6 +47,11 @@ public class MemberVO implements Serializable {
 
 	private String company;
 
+	/**
+	 * 活动项目数量
+	 */
+	private Integer activityItemCount;
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -167,6 +172,14 @@ public class MemberVO implements Serializable {
 
 	public void setReferOrderId(String referOrderId) {
 		this.referOrderId = referOrderId;
+	}
+
+	public Integer getActivityItemCount() {
+		return activityItemCount;
+	}
+
+	public void setActivityItemCount(Integer activityItemCount) {
+		this.activityItemCount = activityItemCount;
 	}
 
 	public MemberVO init(DecorationPO decorationPO, String companyName) {

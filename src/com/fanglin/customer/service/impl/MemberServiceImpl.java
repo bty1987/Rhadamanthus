@@ -434,6 +434,38 @@ public class MemberServiceImpl implements MemberService {
 		// ========== 9. 构建返回结果（主订单 + 关联订单） ==========
 		// 【业务增强】同时返回主订单和关联订单（原逻辑只返回关联订单）
 
+		// 9.0 批量查询所有订单的活动项目数量（避免 N+1 查询）
+		List<String> allOrderIds = new ArrayList<String>();
+		for (DecorationPO po : decorationPOs) {
+			allOrderIds.add(po.getOrderId());
+		}
+		for (DecorationPO po : referOrders) {
+			allOrderIds.add(po.getOrderId());
+		}
+
+		// 定义有效状态列表（排除失效、退货和采购状态）
+		// 有效状态：初始(0)、已领(2)、配送(4)、未退(5)、升级(6)、消耗(7)、抵现(8)
+		// 无效状态：失效(1)、退货(3)、采购(9)
+		List<Short> validStates = Arrays.asList(
+			DecorationActivityItemPO.STATUS_INIT_INT,           // 初始
+			DecorationActivityItemPO.STATUS_RECEIVE_INT,        // 已领
+			DecorationActivityItemPO.STATUS_DELIVERY_INT,       // 配送
+			DecorationActivityItemPO.STATUS_WAIT_INT,           // 未退
+			DecorationActivityItemPO.STATUS_UPGRADE_INT,        // 升级
+			DecorationActivityItemPO.STATUS_CONSUME_INT,        // 消耗
+			DecorationActivityItemPO.STATUS_DISCOUNT_INT        // 抵现
+		);
+
+		// orderId -> 活动项目数量映射
+		Map<String, Integer> orderActivityCountMap = new HashMap<String, Integer>();
+		if (!allOrderIds.isEmpty()) {
+			for (String orderId : allOrderIds) {
+				// 使用 COUNT(*) 统计数量，而不是 SUM(money*num) 计算金额
+				long count = decorationActivityItemDao.countDecorationActivityItem(orderId, null, validStates, null, null);
+				orderActivityCountMap.put(orderId, (int) count);
+			}
+		}
+
 		// 9.1 处理主订单
 		for (DecorationPO decorationPO : decorationPOs) {
 			String recommenderPhone = orderToPhoneMap.get(decorationPO.getOrderId());
@@ -451,8 +483,9 @@ public class MemberServiceImpl implements MemberService {
 				String phone = FormatUtil.decodePhone(customerPhones.get(0).getPhone());
 				String referOrderId = null;
 				String uniqueId = generateUniqueId(decorationPO.getDoid(), decorationPO.getOrderId(), null);
+				Integer activityCount = orderActivityCountMap.get(decorationPO.getOrderId());
 
-				MemberVO member = createMemberVO(decorationPO, phone, referOrderId, uniqueId);
+				MemberVO member = createMemberVO(decorationPO, phone, referOrderId, uniqueId, activityCount);
 
 				List<MemberVO> memberList = resultMap.get(recommenderPhone);
 				if (memberList != null) {
@@ -478,8 +511,9 @@ public class MemberServiceImpl implements MemberService {
 				String phone = FormatUtil.decodePhone(customerPhones.get(0).getPhone());
 				String parentOrderId = referToParentOrderMap.get(decorationPO.getOrderId());
 				String uniqueId = generateUniqueId(decorationPO.getDoid(), decorationPO.getOrderId(), parentOrderId, orderIdToDoIdMap);
+				Integer activityCount = orderActivityCountMap.get(decorationPO.getOrderId());
 
-				MemberVO member = createMemberVO(decorationPO, phone, parentOrderId, uniqueId);
+				MemberVO member = createMemberVO(decorationPO, phone, parentOrderId, uniqueId, activityCount);
 
 				List<MemberVO> memberList = resultMap.get(recommenderPhone);
 				if (memberList != null) {
@@ -919,14 +953,15 @@ public class MemberServiceImpl implements MemberService {
 
 	/**
 	 * 创建 MemberVO 对象（抽取公共方法）
-	 * 
+	 *
 	 * @param decorationPO 装饰订单
 	 * @param phone 手机号
 	 * @param referOrderId 主订单号
 	 * @param uniqueId 唯一标识
+	 * @param activityItemCount 活动项目数量
 	 * @return MemberVO
 	 */
-	private MemberVO createMemberVO(DecorationPO decorationPO, String phone, String referOrderId, String uniqueId) {
+	private MemberVO createMemberVO(DecorationPO decorationPO, String phone, String referOrderId, String uniqueId, Integer activityItemCount) {
 		MemberVO member = new MemberVO();
 		member.setPhone(phone);
 		member.setStoreTime(decorationPO.getCreateTime());
@@ -941,6 +976,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		member.setStatus(decorationPO.getStatus());
+		member.setActivityItemCount(activityItemCount);
 		return member;
 	}
 

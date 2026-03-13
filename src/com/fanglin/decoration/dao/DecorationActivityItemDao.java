@@ -30,4 +30,15 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 
 	public long pointDecorationActivityItem(String orderId);
 
+	/**
+	 * 统计活动项目数量（使用 COUNT(*)）
+	 * @param orderId 订单号
+	 * @param type 活动类型（可选）
+	 * @param states 状态列表（可选）
+	 * @param isPrefor 是否计算业绩（可选）
+	 * @param isPayment 是否计算金额（可选）
+	 * @return 活动项目数量
+	 */
+	public long countDecorationActivityItem(String orderId, Short type, List<Short> states, Short isPrefor, Short isPayment);
+
 }
