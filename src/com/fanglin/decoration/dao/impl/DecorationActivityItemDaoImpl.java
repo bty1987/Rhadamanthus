@@ -113,4 +113,64 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 
 		return Arith.div(sqlQuery.longValue(), 1000000);
 	}
+
+	@Override
+	public long countDecorationActivityItem(String orderId, Short type, List<Short> states, Short isPrefor, Short isPayment) {
+
+		StringBuffer sql = new StringBuffer();
+
+		// 使用 COUNT(*) 统计数量
+		sql.append("SELECT COUNT(*) FROM decoration.decorationActivityitem WHERE orderId =:orderId");
+
+		if (type != null) {
+			sql.append(" AND type = :type");
+		}
+
+		if (states != null) {
+			sql.append(" AND state IN (:state)");
+		}
+
+		if (isPrefor != null) {
+			sql.append(" AND isPrefor = :isPrefor");
+		}
+
+		if (isPayment != null) {
+			sql.append(" AND isPayment = :isPayment");
+		}
+
+		SQLQuery sqlQuery = session().createSQLQuery(sql.toString());
+
+		sqlQuery.setString("orderId", orderId);
+
+		if (type != null) {
+			sqlQuery.setShort("type", type);
+		}
+
+		if (states != null) {
+			sqlQuery.setParameterList("state", states);
+		}
+
+		if (isPrefor != null) {
+			sqlQuery.setShort("isPrefor", isPrefor);
+		}
+
+		if (isPayment != null) {
+			sqlQuery.setShort("isPayment", isPayment);
+		}
+
+		// COUNT(*) 返回 BigInteger 或 Long
+		Object result = sqlQuery.uniqueResult();
+		if (result == null) {
+			return 0L;
+		}
+
+		// 处理不同类型的返回值
+		if (result instanceof BigDecimal) {
+			return ((BigDecimal) result).longValue();
+		} else if (result instanceof Number) {
+			return ((Number) result).longValue();
+		}
+
+		return 0L;
+	}
 }
