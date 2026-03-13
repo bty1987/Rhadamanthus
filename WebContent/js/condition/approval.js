@@ -70,7 +70,9 @@ Condition.addupRule("approval", {
             validate: null
         },
         dataSource: {
-            data: constant.approval().approval.type.datas,
+            url: null,
+            postData: null,
+            listPath: constant.approval().approval.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -84,7 +86,9 @@ Condition.addupRule("approval", {
             validate: null
         },
         dataSource: {
-            data: constant.approval().approval.status.datas,
+            url: null,
+            postData: null,
+            listPath: constant.approval().approval.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
