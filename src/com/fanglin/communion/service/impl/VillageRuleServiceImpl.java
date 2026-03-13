@@ -81,6 +81,15 @@ public class VillageRuleServiceImpl implements VillageRuleService {
 			// 如果不存在，创建新规则
 			if (buildingNameRulePO == null) {
 				buildingNameRulePO = new BuildingNameRulePO();
+
+				// 设置 buildingNameRuleId（必填字段）
+				if (villageRuleVO.getRule().getBuildingNameRuleId() != null
+						&& !villageRuleVO.getRule().getBuildingNameRuleId().trim().isEmpty()) {
+					buildingNameRulePO.setBuildingNameRuleId(villageRuleVO.getRule().getBuildingNameRuleId().trim());
+				} else {
+					throw new FLException(130006, "规则编号不能为空");
+				}
+
 				buildingNameRulePO.setRule(ruleContent);
 				if (villageRuleVO.getRule().getRuleExample() != null) {
 					buildingNameRulePO.setRuleExample(villageRuleVO.getRule().getRuleExample().trim());
