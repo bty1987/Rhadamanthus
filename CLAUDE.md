@@ -19,6 +19,16 @@
 
 ## 变更记录 (Changelog)
 
+### 2026-03-11
+- **✅ 创建辅助工具文档体系**
+- **新增文档**：
+  - **辅助工具手册** (`TOOLS.md`)：集中管理所有开发辅助工具，包含数据库查询、代码生成、测试调试等工具的完整使用指南
+- **核心成果**：
+  - ✅ 在主文档中添加数据库工具快速引用
+  - ✅ 创建独立的工具文档便于查阅和维护
+  - ✅ 数据库查询工具支持生产/测试环境切换
+  - ✅ AI 每次对话自动发现并使用辅助工具
+
 ### 2025-12-31
 - **✅ 创建项目知识库**
 - **新增文档**：
@@ -254,6 +264,28 @@ graph TD
 
 ---
 
+## 🛠️ 辅助工具
+
+### 数据库查询工具
+项目提供专用的数据库查询工具，支持生产环境和测试环境：
+- **完整文档**: [`.claude/skills/DB_QUERY_README.md`](.claude/skills/DB_QUERY_README.md)
+- **快速使用**: `D:/Python/Python38/python.exe .claude/skills/simple_query.py [环境] [SQL] [数据库]`
+- **支持环境**:
+  - `prod`: 生产环境（只读）- rr-2ze11ccr650aw2c79oo.mysql.rds.aliyuncs.com
+  - `test`: 测试环境（读/写）- rm-2ze6qgdw1vit531v3io.mysql.rds.aliyuncs.com
+- **使用示例**:
+  ```bash
+  # 查看所有数据库
+  D:/Python/Python38/python.exe .claude/skills/simple_query.py prod "SHOW DATABASES"
+
+  # 查询装饰订单（前5条）
+  D:/Python/Python38/python.exe .claude/skills/simple_query.py prod "SELECT * FROM decorationorder LIMIT 5" decoration
+  ```
+
+**更多工具**: 参见 [TOOLS.md](./TOOLS.md) - 项目辅助工具完整列表
+
+---
+
 ## 测试策略
 
 ### 当前测试覆盖
@@ -436,6 +468,13 @@ Action 层 → 传递 VO 对象 → Service 层 → 提取属性 → 传递基�
   - 分页查询与过滤条件规范
   - 完整的错误码说明
   - 5个详细接口调用示例
+
+### 工具文档
+- **[辅助工具手册](./TOOLS.md)** - 开发辅助工具完整列表与使用指南
+  - 数据库查询工具（多环境支持）
+  - 代码生成与转换工具
+  - 测试与调试工具
+  - 部署与运维工具
 
 ---
 
