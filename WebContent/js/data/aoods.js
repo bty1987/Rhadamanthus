@@ -181,7 +181,7 @@ $(function() {
             'margin-left': '4px'
         }).appendTo($updateGroup);
         $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaUpdate);
-        $('<span></span>').text('更新状�?).appendTo($addaUpdate);
+        $('<span></span>').text('更新状态').appendTo($addaUpdate);
 
         return [$btnGroup, $importGroup, $updateGroup];
     });
@@ -222,7 +222,7 @@ $(function() {
         clazz: "blue"
     }, {
         field: "balance",
-        name: "结算�?,
+        name: "结算价",
         prop: "balance",
         clazz: "blue"
     }, {
@@ -240,7 +240,7 @@ $(function() {
         clazz: "red"
     }, {
         field: "status",
-        name: "状�?",
+        name: "状态 ",
         prop: "status",
         clazz: "red",
         dataset: aoods.status
@@ -334,7 +334,7 @@ $(function() {
             com.popup4page("#optPopUp", "views/data/aoodsCost.html", "辅材成本");
         }
     }, {
-        name: "状�?,
+        name: "状态",
         type: "switch",
         clazz: "status-lbl",
         handle: function(v, check) {
@@ -395,7 +395,7 @@ $(function() {
         aoods.btns.aoodsImportBtn.removeClass("hide");
         aoods.btns.aoodsExportBtn.addClass("hide");
 
-        com.popup4model("#statusAoods", "更新辅材状�?);
+        com.popup4model("#statusAoods", "更新辅材状态");
     });
 
     function saveData() {
@@ -480,7 +480,7 @@ $(function() {
 
     var painter = {
         /**
-         * 创建添加数据中报价项弹窗中的报价�?
+         * 创建添加数据中报价项弹窗中的报价项
          * 
          * @param v
          * @param id
@@ -559,7 +559,7 @@ $(function() {
             return $liLine;
         },
         /**
-         * 创建添加报价中定额材�?
+         * 创建添加报价中定额材料
          * 
          * @param v
          * @param id
@@ -584,7 +584,7 @@ $(function() {
             propertyArr.push(["定额数量: ", v.normnum, "blue"]);
             propertyArr.push(["库房单位: ", v.storeunit, "gray"]);
             propertyArr.push(["库房数量: ", v.storenum, "blue"]);
-            propertyArr.push(["状�? ", constant.data().normood.status.keys[v.status], "red"]);
+            propertyArr.push(["状态: ", constant.data().normood.status.keys[v.status], "red"]);
 
             $.each(propertyArr, function(index, value) {
 
@@ -683,7 +683,7 @@ $(function() {
         var checkTime = new Date(times);
 
         if (!planUtils.TimeComparison(checkTime, config.planTimeLimit)) {
-            com.showAlert(com.warning, "执行时间请大于当前时�? + config.planTimeLimit + "分钟");
+            com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟");
             return false;
         }
 
@@ -733,7 +733,7 @@ $(function() {
         var checkTime = new Date(times);
 
         if (!planUtils.TimeComparison(checkTime, config.planTimeLimit)) {
-            com.showAlert(com.warning, "执行时间请大于当前时�? + config.planTimeLimit + "分钟");
+            com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟");
             return false;
         }
 

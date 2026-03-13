@@ -1,6 +1,5 @@
 package com.fanglin.customer.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -13,8 +12,7 @@ import com.fanglin.customer.po.CustomerCityRulePO;
 import com.fanglin.utils.Paging;
 
 @Repository("customerCityRuleDao")
-public class CustomerCityRuleDaoImpl extends DaoImpl<CustomerCityRulePO>
-	implements CustomerCityRuleDao {
+public class CustomerCityRuleDaoImpl extends DaoImpl<CustomerCityRulePO> implements CustomerCityRuleDao {
 
 	public CustomerCityRuleDaoImpl() {
 		super(CustomerCityRulePO.class);
@@ -40,37 +38,23 @@ public class CustomerCityRuleDaoImpl extends DaoImpl<CustomerCityRulePO>
 	@SuppressWarnings("unchecked")
 	public List<CustomerCityRulePO> queryCustomerCityRule(Integer cityid, int company) {
 
-		return session().createCriteria(CustomerCityRulePO.class)
-			.createAlias("city", "city")
-			.add(Restrictions.eq("city.cpid", cityid))
-			.add(Restrictions.eq("company", company))
-			.add(Restrictions.eq("status", CustomerCityRulePO.STATUS_ENABLE_INT))
-			.addOrder(org.hibernate.criterion.Order.desc("priority"))
-			.list();
+		return session().createCriteria(CustomerCityRulePO.class).createAlias("city", "city").add(Restrictions.eq("city.cpid", cityid)).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", CustomerCityRulePO.STATUS_ENABLE_INT)).addOrder(org.hibernate.criterion.Order.desc("priority")).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<CustomerCityRulePO> queryCustomerCityRuleByType(Integer cityid, int company, short type) {
 
-		return session().createCriteria(CustomerCityRulePO.class)
-			.createAlias("city", "city")
-			.add(Restrictions.eq("city.cpid", cityid))
-			.add(Restrictions.eq("company", company))
-			.add(Restrictions.eq("type", type))
-			.add(Restrictions.eq("status", CustomerCityRulePO.STATUS_ENABLE_INT))
-			.addOrder(org.hibernate.criterion.Order.desc("priority"))
-			.list();
+		return session().createCriteria(CustomerCityRulePO.class).createAlias("city", "city").add(Restrictions.eq("city.cpid", cityid)).add(Restrictions.eq("company", company)).add(Restrictions.eq("type", type)).add(Restrictions.eq("status", CustomerCityRulePO.STATUS_ENABLE_INT)).addOrder(org.hibernate.criterion.Order.desc("priority")).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CustomerCityRulePO> queryEnabledCustomerCityRule(int company) {
+	public List<CustomerCityRulePO> queryCustomerCityRule(int company) {
 
-		return session().createCriteria(CustomerCityRulePO.class)
-			.add(Restrictions.eq("company", company))
-			.add(Restrictions.eq("status", CustomerCityRulePO.STATUS_ENABLE_INT))
-			.addOrder(org.hibernate.criterion.Order.desc("priority"))
-			.list();
+		return session().createCriteria(CustomerCityRulePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", CustomerCityRulePO.STATUS_ENABLE_INT)).addOrder(org.hibernate.criterion.Order.desc("priority")).list();
+	}
+
+	private void queryFilterExcute(PagingQuery<CustomerCityRulePO> query, List<Filter> filters) {
 	}
 }

@@ -2,9 +2,9 @@ package com.fanglin.customer.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.communion.vo.CityProperVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CompanyVO;
 
 public class CustomerCityRuleVO implements Serializable {
