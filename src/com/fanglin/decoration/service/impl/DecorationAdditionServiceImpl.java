@@ -147,11 +147,11 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 			}
 		}
 
-		if (status == DecorationPO.STATUS_FINAL_INT && schedule < 16) // 判断装修单状态是否为7, 是 值为 16.决算
-		schedule = 16;
+		if (status == DecorationPO.STATUS_FINAL_INT) // 判断装修单状态是否为7, 是 值为 16.决算
+		schedule = 115;
 
 		if (projectStatus == ConstructionPO.SCHEDULE_TYPE_PUTLINE_INT) // 判断装修单工程状态是否为2, 是 值为 17.工程完工
-		schedule = 17;
+		schedule = 116;
 
 		return schedule;
 	}
