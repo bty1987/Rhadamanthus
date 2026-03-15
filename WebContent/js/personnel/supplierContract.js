@@ -205,6 +205,8 @@ jQuery(function($) {
         name: "生成合同",
         clazz: "btn-warning",
         handle: function(v) {
+            
+            params.personel.supplier = v;
 
             generateContract(v.cid, v.scid);
         },
