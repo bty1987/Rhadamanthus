@@ -58,7 +58,7 @@ $(function() {
 
         if (cityId) {
             com.post(api.system.queryCityProperByCid, {
-                "city.cid": cityId
+                "cityProper.city.cid": cityId
             }, function(res) {
                 customerCityProperRule.items.cityProperSel.bindData(res.cityPropers, "cpid", "name", true);
             });
