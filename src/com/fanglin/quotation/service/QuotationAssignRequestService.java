@@ -23,10 +23,10 @@ public interface QuotationAssignRequestService {
 
 	/**
 	 * 根据 ID 查询待分配请求
-	 * @param barid 请求ID
+	 * @param qarid 请求ID
 	 * @return 待分配请求
 	 */
-	QuotationAssignRequestVO getAssignRequest(Integer barid);
+	QuotationAssignRequestVO getAssignRequest(Integer qarid);
 
 	/**
 	 * 根据订单号查询待分配请求
@@ -37,17 +37,17 @@ public interface QuotationAssignRequestService {
 
 	/**
 	 * 更新请求优先级
-	 * @param barid 请求ID
+	 * @param qarid 请求ID
 	 * @param priority 新优先级（1-最高，2-高，3-普通，4-低）
 	 */
-	void updatePriority(Integer barid, Byte priority);
+	void updatePriority(Integer qarid, Byte priority);
 
 	/**
 	 * 取消请求
-	 * @param barid 请求ID
+	 * @param qarid 请求ID
 	 * @param reason 取消原因
 	 */
-	void cancelRequest(Integer barid, String reason);
+	void cancelRequest(Integer qarid, String reason);
 
 	/**
 	 * 查询待分配队列统计信息
