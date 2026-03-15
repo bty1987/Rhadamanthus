@@ -5,6 +5,7 @@ import java.util.List;
 import com.fanglin.communion.vo.TaskVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.Paging;
 
@@ -29,5 +30,7 @@ public interface TaskService {
 	public int updateRoleTask(RoleVO roleVO, TaskVO taskVO, String userId, Integer company) throws FLException;
 
 	public int deleteRoleTask(RoleVO roleVO, TaskVO taskVO, Integer company) throws FLException;
+
+	public int syncRoleTask(RoleVO roleVO, List<CompanyVO> companyVOs, String userId, Integer company) throws FLException;
 
 }

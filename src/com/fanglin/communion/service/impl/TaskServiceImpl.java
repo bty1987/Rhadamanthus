@@ -22,6 +22,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.po.UserRolePO;
 import com.fanglin.system.dao.RoleDao;
 import com.fanglin.system.po.RolePO;
+import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -231,6 +232,24 @@ public class TaskServiceImpl implements TaskService {
 		RoleTaskPO roleTaskPO = roleTaskDao.queryRoleTask(roleVO.getRid(), taskVO.getTid(), company);
 
 		if (roleTaskPO != null) roleTaskDao.delete(roleTaskPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int syncRoleTask(RoleVO roleVO, List<CompanyVO> companyVOs, String userId, Integer company) throws FLException {
+
+		List<Integer> cids = new ArrayList<Integer>();
+
+		for (CompanyVO companyVO : companyVOs) {
+			cids.add(companyVO.getCid());
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		roleTaskDao.deleteRoleTask(roleVO.getRid(), cids);
+		roleTaskDao.syncRoleTask(roleVO.getRid(), operater.getUid(), cids, company);
 
 		return 0;
 	}

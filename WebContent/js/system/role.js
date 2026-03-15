@@ -29,6 +29,7 @@ jQuery(function($) {
             companyCopyModal: com.focusPage("#companyCopyModal"),
             operationModal: com.focusPage("#operationModal"),
             taskModal: com.focusPage("#taskModal"),
+            taskCopyModal: com.focusPage("#taskCopyModal"),
 
             chainPageModal: com.focusPage("#chainPageModal"),
             chartPageModal: com.focusPage("#chartPageModal"),
@@ -88,6 +89,8 @@ jQuery(function($) {
     com.focusPage("#saveChartPageBtn").on("click", saveChartPage);
     com.focusPage("#saveModuleNewBtn").on("click", saveModuleNew);
     com.focusPage("#confirmCopyBtn").on("click", confirmCopyModule);
+    com.focusPage("#taskCopyBtn").on("click", showTaskCopySelectionModal);
+    com.focusPage("#confirmTaskCopyBtn").on("click", confirmCopyTask);
 
     com.post(api.data.queryChainPage, {}, function(res) {
 
@@ -1794,6 +1797,121 @@ jQuery(function($) {
     com.focusPage('#companyCopyModal').on('hidden.bs.modal', function() {
         // 清理滚动事件监听器，避免内存泄漏
         com.focusPage('#companyList').off('wheel mousewheel DOMMouseScroll');
+    });
+
+    /**
+     * 显示任务复制弹窗
+     */
+    function showTaskCopySelectionModal() {
+        // 获取当前角色名称
+        var roleName = '';
+        com.post(api.system.queryRole, {
+            "role.rid": role.rid
+        }, function(res) {
+            if (res.role) {
+                roleName = res.role.name;
+                com.focusPage('#sourceTaskRoleName').text(roleName);
+                com.focusPage('#copyTaskRoleName').text('从角色【' + roleName + '】复制任务到其他公司');
+            }
+
+            var taskCompanyList = com.focusPage('#taskCompanyList');
+
+            // 清空公司列表
+            taskCompanyList.html('<div class="text-center"><i class="ace-icon fa fa-spinner fa-spin fa-2x"></i><p>正在加载公司列表...</p></div>');
+
+            // 加载公司列表
+            com.post(api.system.queryCompany, {}, function(data) {
+
+                if (!data.companys || data.companys.length == 0) {
+                    taskCompanyList.html('<div class="text-center text-muted">暂无可选公司</div>');
+                    return false;
+                }
+
+                taskCompanyList.html("");
+
+                data.companys.forEach(function(company) {
+                    var item = $('<div class="company-item"></div>').appendTo(taskCompanyList);
+                    var label = $('<label class="checkbox-inline"></label>').appendTo(item);
+                    var input = $('<input type="checkbox" class="ace task-company-checkbox" value="' + company.cid + '"></input>').appendTo(label);
+                    var span = $('<span class="lbl">' + company.name + '</span>').appendTo(label);
+
+                    label.click(function(e){
+
+                        $(this).find("input").prop("checked", "checked");
+
+                        e.stopPropagation();
+
+                        return false;
+                    });
+                });
+            }, function() {
+                taskCompanyList.html('<div class="text-center text-danger">加载公司列表失败</div>');
+            });
+
+            // 显示弹窗
+            role.modals.taskCopyModal.modal('show');
+        });
+    }
+
+    /**
+     * 确认任务复制操作
+     */
+    function confirmCopyTask() {
+        var selectedCompanies = [];
+        com.focusPage('.task-company-checkbox:checked').each(function() {
+            selectedCompanies.push($(this).val());
+        });
+
+        if (selectedCompanies.length === 0) {
+            com.showAlert(com.warning, '请至少选择一个目标公司');
+            return;
+        }
+
+        // 禁用按钮，防止重复提交
+        var $confirmBtn = com.focusPage('#confirmTaskCopyBtn');
+        $confirmBtn.prop('disabled', true).html('<i class="ace-icon fa fa-spinner fa-spin fa-1x"></i> 正在复制...');
+
+        // 构建请求参数
+        var params = {
+            'role.rid': role.rid,
+            'companys[0].cid': selectedCompanies[0]
+        };
+
+        // 如果选择了多个公司，添加其他公司参数
+        for (var i = 1; i < selectedCompanies.length; i++) {
+            params['companys[' + i + '].cid'] = selectedCompanies[i];
+        }
+
+        // 调用同步接口
+        com.post(api.communion.syncRoleTask, params, function(data) {
+            if (data.errorCode == 0) {
+                com.showAlert(com.info, '任务复制成功！');
+                role.modals.taskCopyModal.modal('hide');
+
+                // 刷新角色列表
+                setTimeout(function() {
+                    if (typeof searcher !== 'undefined') {
+                        searcher.doSearch();
+                    }
+                }, 500);
+            } else {
+                com.showAlert(com.error, data.errorMsg || '任务复制失败');
+            }
+        }, function(error) {
+            console.error('任务复制失败:', error);
+            com.showAlert(com.error, '任务复制失败，请重试');
+            // 确保在失败时也恢复按钮状态
+            $confirmBtn.prop('disabled', false).html('确认复制');
+        }, function() {
+            // 恢复按钮状态 - complete回调在成功或失败后都会执行
+            $confirmBtn.prop('disabled', false).html('确认复制');
+        });
+    }
+
+    // 绑定任务复制弹窗的关闭事件，清理滚动事件监听器
+    com.focusPage('#taskCopyModal').on('hidden.bs.modal', function() {
+        // 清理滚动事件监听器，避免内存泄漏
+        com.focusPage('#taskCompanyList').off('wheel mousewheel DOMMouseScroll');
     });
 
 });

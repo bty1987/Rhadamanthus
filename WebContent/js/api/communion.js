@@ -173,6 +173,10 @@ $.extend(api, {
             server: "communion",
             intercept: true
         },
+        syncRoleTask: {
+            url: "syncRoleTask.do",
+            server: "communion"
+        },
 
         pageTaskParam: {
             url: "pageTaskParam.do"
