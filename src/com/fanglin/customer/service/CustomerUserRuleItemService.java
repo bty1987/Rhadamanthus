@@ -13,4 +13,11 @@ public interface CustomerUserRuleItemService {
 
 	public void deleteCustomerUserRuleItem(CustomerUserRuleItemVO customerUserRuleItemVO) throws FLException;
 
+	/**
+	 * 通过用户拼音查询客户规则项
+	 * @param pinyinName 用户拼音
+	 * @return 客户规则项列表（包含用户信息）
+	 */
+	public List<CustomerUserRuleItemVO> queryCustomerUserRuleItemByPinyin(String pinyinName);
+
 }

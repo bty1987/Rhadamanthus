@@ -7,6 +7,8 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.CityProperVO;
 
 public class CustomerUserRuleItemVO implements Serializable {
@@ -22,6 +24,8 @@ public class CustomerUserRuleItemVO implements Serializable {
 	private DepartmentVO department;
 
 	private CityProperVO cityProper;
+
+	private UserBaseVO user; // 关联的用户（type=5时使用）
 
 	private String name;
 
@@ -100,6 +104,14 @@ public class CustomerUserRuleItemVO implements Serializable {
 
 	public void setCityProper(CityProperVO cityProper) {
 		this.cityProper = cityProper;
+	}
+
+	public UserBaseVO getUser() {
+		return user;
+	}
+
+	public void setUser(UserBaseVO user) {
+		this.user = user;
 	}
 
 	public String getName() {

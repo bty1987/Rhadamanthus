@@ -353,6 +353,10 @@ $.extend(api, {
         deleteCustomerUserRuleItem: {
             url: "deleteCustomerUserRuleItem.do"
         },
+        queryCustomerUserRuleItemByPinyin: {
+            url: "queryCustomerUserRuleItemByPinyin.do",
+            type: "query"
+        },
 
         pageCustomerSource: {
             url: "pageCustomerSource.do",
