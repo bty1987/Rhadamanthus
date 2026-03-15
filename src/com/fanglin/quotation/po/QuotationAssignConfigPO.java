@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.quotation.vo.QuotationAssignConfigVO;
+import com.fanglin.utils.BeanUtil;
 
 /**
  * 报价单预算配置表 PO
@@ -124,5 +126,34 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	// PO 转 VO 方法
+	public QuotationAssignConfigVO ptv() {
+		return ptv(new QuotationAssignConfigVO());
+	}
+
+	public QuotationAssignConfigVO ptv(QuotationAssignConfigVO vo) {
+		BeanUtil.copyProperties(this, vo);
+
+		// 设置关联对象
+		if (getDepartment() != null) {
+			vo.setDepartment(getDepartment().getDId());
+		}
+
+		// 设置状态名称
+		if (getEnabled() == ENABLED_ENABLED_INT) {
+			vo.setEnabledName("已启用");
+		} else {
+			vo.setEnabledName("已禁用");
+		}
+
+		if (getAutoAssign() == AUTO_ASSIGN_AUTO_INT) {
+			vo.setAutoAssignName("自动分配");
+		} else {
+			vo.setAutoAssignName("手动分配");
+		}
+
+		return vo;
 	}
 }
