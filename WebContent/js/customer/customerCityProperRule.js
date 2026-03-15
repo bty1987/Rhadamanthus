@@ -106,6 +106,8 @@ $(function() {
         icon: "icon-plus"
     }]);
     searcher.history("addCustomerCityProperRulePostData");
+    // 配置查询条件
+    searcher.cond(["customerCityProperRule-type", "customerCityProperRule-status", "customerCityProperRule-city"]);
 
     // 列表显示字段
     var lineprops = [{
@@ -206,8 +208,10 @@ $(function() {
 
     // 保存按钮点击事件
     com.focusPage("#saveBtn", "#customerCityProperRuleModal").on("click", function() {
-        if (com.validate('customerCityProperRuleModal'))
+        // 验证表单：如果验证失败，直接返回
+        if (!com.validate('customerCityProperRuleModal')) {
             return false;
+        }
 
         var url = api.customer.addCustomerCityProperRule;
         var options = {
@@ -229,10 +233,16 @@ $(function() {
             options["customerCityProperRule.user.uid"] = customerCityProperRule.items.userSel.val();
         }
 
-        com.post(url, options, function() {
-            com.showAlert(com.info, "操作成功");
-            searcher.doSearch();
-            customerCityProperRule.modals.customerCityProperRuleModal.modal("hide");
+        com.post(url, options, function(res) {
+            if (res.errorCode === 0) {
+                com.showAlert(com.info, "操作成功");
+                // 先关闭 modal
+                customerCityProperRule.modals.customerCityProperRuleModal.modal("hide");
+                // 再刷新列表
+                searcher.doSearch();
+            } else {
+                com.showAlert(com.error, res.errorMsg || "操作失败");
+            }
         });
     });
 
