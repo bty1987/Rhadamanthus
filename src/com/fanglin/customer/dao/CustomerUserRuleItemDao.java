@@ -25,4 +25,12 @@ public interface CustomerUserRuleItemDao extends Dao<CustomerUserRuleItemPO> {
 
 	public int existCustomerUserRuleItem(int company, int area);
 
+	/**
+	 * 通过用户拼音查询客户规则项
+	 * 查询逻辑：通过 pinyinName 查询 user -> 查询 customerUserRule -> 查询 customerUserRuleItem
+	 * @param pinyinName 用户拼音
+	 * @return 客户规则项列表
+	 */
+	public List<Object[]> queryCustomerUserRuleItemByPinyin(String pinyinName);
+
 }

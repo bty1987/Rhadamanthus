@@ -17,6 +17,8 @@ import com.fanglin.customer.dao.CustomerUserRuleItemDao;
 import com.fanglin.customer.po.CustomerUserRuleItemPO;
 import com.fanglin.customer.service.CustomerUserRuleItemService;
 import com.fanglin.customer.vo.CustomerUserRuleItemVO;
+import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("customerUserRuleItemService")
@@ -77,6 +79,42 @@ public class CustomerUserRuleItemServiceImpl implements CustomerUserRuleItemServ
 		}
 
 		customerUserRuleItemDao.delete(customerUserRuleItemPO);
+	}
+
+	@Override
+	public List<CustomerUserRuleItemVO> queryCustomerUserRuleItemByPinyin(String pinyinName) {
+
+		List<Object[]> results = customerUserRuleItemDao.queryCustomerUserRuleItemByPinyin(pinyinName);
+		List<CustomerUserRuleItemVO> customerUserRuleItemVOs = new ArrayList<CustomerUserRuleItemVO>();
+
+		for (Object[] result : results) {
+			CustomerUserRuleItemPO itemPO = (CustomerUserRuleItemPO) result[0];
+			UserPO userPO = (UserPO) result[1];
+
+			CustomerUserRuleItemVO itemVO = new CustomerUserRuleItemVO(new DepartmentTypeVO(), new DepartmentVO());
+
+			// 复制基本属性
+			BeanUtil.copyProperties(itemPO, itemVO, Arrays.asList("departmentType", "department", "cityProper"));
+
+			// 复制关联对象
+			if (itemPO.getDepartment() != null) {
+				BeanUtil.copyProperties(itemPO.getDepartment(), itemVO.getDepartment());
+			}
+			if (itemPO.getDepartmentType() != null) {
+				BeanUtil.copyProperties(itemPO.getDepartmentType(), itemVO.getDepartmentType());
+			}
+
+			// 设置用户信息
+			if (userPO != null) {
+				UserBaseVO userVO = new UserBaseVO();
+				userVO.ptv(userPO, null);
+				itemVO.setUser(userVO);
+			}
+
+			customerUserRuleItemVOs.add(itemVO);
+		}
+
+		return customerUserRuleItemVOs;
 	}
 
 }

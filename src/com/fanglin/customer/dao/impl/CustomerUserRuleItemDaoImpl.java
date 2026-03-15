@@ -149,4 +149,26 @@ public class CustomerUserRuleItemDaoImpl extends DaoImpl<CustomerUserRuleItemPO>
 		return (CustomerUserRuleItemPO) query.uniqueResult();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Object[]> queryCustomerUserRuleItemByPinyin(String pinyinName) {
+		// 通过 JOIN 查询：customeruserruleitem -> customeruserrule -> user
+		// 使用 addEntity 让 Hibernate 自动映射到实体类
+		String sql = "SELECT {curi.*}, {u.*} " +
+			     "FROM customer.customeruserruleitem curi " +
+			     "INNER JOIN customer.customeruserrule cur ON curi.curid = cur.curid " +
+			     "INNER JOIN communion.user u ON cur.uid = u.uid " +
+			     "WHERE u.pinyin LIKE :pinyinName " +
+			     "AND curi.status = 0 " +
+			     "AND cur.status != 4 " +
+			     "ORDER BY curi.priority DESC, curi.createTime";
+
+		SQLQuery query = session().createSQLQuery(sql);
+		query.setString("pinyinName", pinyinName + "%");
+		query.addEntity("curi", CustomerUserRuleItemPO.class);
+		query.addEntity("u", com.fanglin.personel.po.UserPO.class);
+
+		return query.list();
+	}
+
 }

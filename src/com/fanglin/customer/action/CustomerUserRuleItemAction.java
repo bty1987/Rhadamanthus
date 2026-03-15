@@ -28,6 +28,8 @@ public class CustomerUserRuleItemAction extends BaseListAction {
 
 	private CustomerUserRuleItemVO customerUserRuleItem;
 
+	private String pinyinName; // 用于拼音查询
+
 	@Action(value = "queryCustomerUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerUserRuleItem() throws FLException {
 
@@ -52,6 +54,14 @@ public class CustomerUserRuleItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryCustomerUserRuleItemByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerUserRuleItemByPinyin() throws FLException {
+
+		customerUserRuleItems = customerUserRuleItemService.queryCustomerUserRuleItemByPinyin(pinyinName);
+
+		return SUCCESS;
+	}
+
 	public List<CustomerUserRuleItemVO> getCustomerUserRuleItems() {
 		return customerUserRuleItems;
 	}
@@ -66,6 +76,14 @@ public class CustomerUserRuleItemAction extends BaseListAction {
 
 	public void setCustomerUserRuleItem(CustomerUserRuleItemVO customerUserRuleItem) {
 		this.customerUserRuleItem = customerUserRuleItem;
+	}
+
+	public String getPinyinName() {
+		return pinyinName;
+	}
+
+	public void setPinyinName(String pinyinName) {
+		this.pinyinName = pinyinName;
 	}
 
 }

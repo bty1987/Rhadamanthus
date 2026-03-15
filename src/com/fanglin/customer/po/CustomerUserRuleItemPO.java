@@ -40,6 +40,8 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	public static final short TYPE_CITY_INT = 4; // 城区规则（新增）
 
+	public static final short TYPE_USER_INT = 5; // 人员规则（新增）
+
 	public static final short ISSURPLUS_ENABLE_INT = 0;
 
 	public static final short ISSURPLUS_NONE_INT = 1;
