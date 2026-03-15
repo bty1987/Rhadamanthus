@@ -170,7 +170,7 @@ $(function() {
         clazz: "grey",
         show: function(v) {
 
-            return v.type == constant.customer().customerUserRuleItem.TYPE_CITY_INT;
+            return v.type == constant.customer().customerUserRuleItem.TYPE_CITY_PROPER_INT;
         }
     }, {
         fieId: "uppval",
@@ -289,7 +289,7 @@ $(function() {
             com.focusPage("#isDelete").prop("checked", true);
         }
 
-        if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_CITY_INT) {
+        if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_CITY_PROPER_INT) {
             com.focusPage(".companySel").hide();
             com.focusPage(".deptype").hide();
             com.focusPage(".deptSel").hide();
