@@ -22,37 +22,48 @@ $(function() {
 
     // 规则类型常量
     var TYPE_COMPANY_INT = 0; // 城区→公司
-    var TYPE_DEPT_INT = 1;    // 城区→部门
-    var TYPE_USER_INT = 2;    // 城区→设计师
+    var TYPE_DEPT_INT = 1; // 城区→部门
+    var TYPE_USER_INT = 2; // 城区→设计师
 
     // 绑定类型下拉框
-    customerCityProperRule.items.type.bindData([
-        { key: TYPE_COMPANY_INT, value: "城区→公司" },
-        { key: TYPE_DEPT_INT, value: "城区→部门" },
-        { key: TYPE_USER_INT, value: "城区→设计师" }
-    ], "key", "value", true);
+    customerCityProperRule.items.type.bindData([{
+        key: TYPE_COMPANY_INT,
+        value: "城区→公司"
+    }, {
+        key: TYPE_DEPT_INT,
+        value: "城区→部门"
+    }, {
+        key: TYPE_USER_INT,
+        value: "城区→设计师"
+    }], "key", "value", true);
 
     // 绑定状态下拉框
-    customerCityProperRule.items.status.bindData([
-        { key: 0, value: "启用" },
-        { key: 1, value: "禁用" }
-    ], "key", "value", true);
+    customerCityProperRule.items.status.bindData([{
+        key: 0,
+        value: "启用"
+    }, {
+        key: 1,
+        value: "禁用"
+    }], "key", "value", true);
 
     // 初始化加载公司列表
     com.post(api.system.queryCompany, {
         "company.atttype": "1"
     }, function(res) {
+
         customerCityProperRule.items.company.bindData(res.companys, "cid", "name", true);
         customerCityProperRule.items.targetCompany.bindData(res.companys, "cid", "name", true);
     }, null, false);
 
     // 初始化加载城市列表
     com.post(api.system.queryCity, {}, function(res) {
+
         customerCityProperRule.items.citySel.bindData(res.citys, "cid", "name", true);
     }, null, false);
 
     // 监听城市选择变化，加载对应城区列表
     customerCityProperRule.items.citySel.on("change", function() {
+
         var cityId = $(this).val();
         customerCityProperRule.items.cityProperSel.html('<option value="">请选择城区</option>');
 
@@ -60,6 +71,7 @@ $(function() {
             com.post(api.system.queryCityProperByCid, {
                 "cityProper.city.cid": cityId
             }, function(res) {
+
                 customerCityProperRule.items.cityProperSel.bindData(res.cityPropers, "cpid", "name", true);
             });
         }
@@ -67,11 +79,13 @@ $(function() {
 
     // 初始化加载部门列表
     com.post(api.communion.queryDepartmentType, {}, function(res) {
+
         // 部门类型列表（如需要）
     }, null, false);
 
     // 类型切换事件
     customerCityProperRule.items.type.change(function() {
+
         var type = parseInt($(this).val());
 
         // 隐藏所有特定字段
@@ -95,10 +109,7 @@ $(function() {
     // 初始化搜索器
     var searcher = new Searcher();
     searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerCityProperRule);
-    searcher.param({
-        "company": params.userInfo.company.cid
-    });
-    searcher.result("customerCityProperRules").isPage(true);
+    searcher.result("customerCityProperRules");
     searcher.button([{
         id: "addCustomerCityProperRule",
         name: "添加",
@@ -107,7 +118,7 @@ $(function() {
     }]);
     searcher.history("addCustomerCityProperRulePostData");
     // 配置查询条件
-    searcher.cond(["customerCityProperRule-type", "customerCityProperRule-status", "customerCityProperRule-city"]);
+    searcher.condition(["customer-customerCityProperRule-type", "customer-customerCityProperRule-status", "customer-customerCityProperRule-city"]);
 
     // 列表显示字段
     var lineprops = [{
@@ -131,6 +142,7 @@ $(function() {
         prop: "targetCompany.name",
         clazz: "grey",
         show: function(v) {
+
             return v.type == TYPE_COMPANY_INT;
         }
     }, {
@@ -139,6 +151,7 @@ $(function() {
         prop: "department.name",
         clazz: "grey",
         show: function(v) {
+
             return v.type == TYPE_DEPT_INT;
         }
     }, {
@@ -147,6 +160,7 @@ $(function() {
         prop: "user.currentName",
         clazz: "grey",
         show: function(v) {
+
             return v.type == TYPE_USER_INT;
         }
     }, {
@@ -175,10 +189,13 @@ $(function() {
         name: "删除",
         clazz: "btn-danger",
         handle: function(v) {
-            com.confirm("确认删除该规则吗？", function() {
+
+            com.showConfirm("确认删除该规则吗？", function() {
+
                 com.post(api.customer.deleteCustomerCityProperRule, {
                     "customerCityProperRule.ccrid": v.ccrid
                 }, function(res) {
+
                     searcher.doSearch();
                 });
             });
@@ -190,6 +207,7 @@ $(function() {
 
     // 添加按钮点击事件
     com.focusPage('#addCustomerCityProperRule', '#pagenation').on("click", function() {
+
         // 隐藏所有特定字段
         com.focusPage(".targetCompanyGroup", "#customerCityProperRuleModal").hide();
         com.focusPage(".deptGroup", "#customerCityProperRuleModal").hide();
@@ -208,8 +226,9 @@ $(function() {
 
     // 保存按钮点击事件
     com.focusPage("#saveBtn", "#customerCityProperRuleModal").on("click", function() {
+
         // 验证表单：如果验证失败，直接返回
-        if (!com.validate('customerCityProperRuleModal')) {
+        if (com.validate('customerCityProperRuleModal')) {
             return false;
         }
 
@@ -232,27 +251,26 @@ $(function() {
         } else if (type === TYPE_USER_INT) {
             options["customerCityProperRule.user.uid"] = customerCityProperRule.items.userSel.val();
         }
-
+        
         com.post(url, options, function(res) {
-            if (res.errorCode === 0) {
-                com.showAlert(com.info, "操作成功");
-                // 先关闭 modal
-                customerCityProperRule.modals.customerCityProperRuleModal.modal("hide");
-                // 再刷新列表
-                searcher.doSearch();
-            } else {
-                com.showAlert(com.error, res.errorMsg || "操作失败");
-            }
+
+            com.showAlert(com.info, "操作成功");
+            // 先关闭 modal
+            customerCityProperRule.modals.customerCityProperRuleModal.modal("hide");
+            // 再刷新列表
+            searcher.doSearch();
         });
     });
 
     // 取消按钮点击事件
     com.focusPage("#cancelBtn", "#customerCityProperRuleModal").on("click", function() {
+
         customerCityProperRule.modals.customerCityProperRuleModal.modal("hide");
     });
 
     // 模态框关闭事件
     customerCityProperRule.modals.customerCityProperRuleModal.on("hide.bs.modal", function() {
+
         com.cleanItems(customerCityProperRule.items);
         com.clearValidator();
     });
