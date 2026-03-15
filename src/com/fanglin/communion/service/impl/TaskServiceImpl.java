@@ -22,6 +22,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.po.UserRolePO;
 import com.fanglin.system.dao.RoleDao;
 import com.fanglin.system.po.RolePO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.BeanUtil;
@@ -243,7 +244,7 @@ public class TaskServiceImpl implements TaskService {
 		List<Integer> cids = new ArrayList<Integer>();
 
 		for (CompanyVO companyVO : companyVOs) {
-			cids.add(companyVO.getCid());
+			cids.add(CompanyServiceImpl.decode(companyVO.getCid()));
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);

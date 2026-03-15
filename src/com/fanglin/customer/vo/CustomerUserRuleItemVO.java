@@ -8,7 +8,6 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.CityProperVO;
 
 public class CustomerUserRuleItemVO implements Serializable {

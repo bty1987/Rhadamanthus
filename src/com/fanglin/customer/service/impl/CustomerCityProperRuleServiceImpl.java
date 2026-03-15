@@ -91,9 +91,6 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 		// 设置公司
 		if (customerCityProperRuleVO.getCompany() != null && customerCityProperRuleVO.getCompany().getCid() != null) {
 
-			System.out.println(customerCityProperRuleVO.getCompany().getCid());
-			System.out.println(CompanyServiceImpl.decode(customerCityProperRuleVO.getCompany().getCid()));
-
 			CompanyPO companyPO = companyDao.get(CompanyServiceImpl.decode(customerCityProperRuleVO.getCompany().getCid()));
 			if (companyPO == null) {
 				throw new FLException(310001, "公司不存在");
@@ -103,9 +100,6 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 
 		// 设置目标公司（用于城区→公司规则）
 		if (customerCityProperRuleVO.getTargetCompany() != null && customerCityProperRuleVO.getTargetCompany().getCid() != null) {
-
-			System.out.println(customerCityProperRuleVO.getTargetCompany().getCid());
-			System.out.println(CompanyServiceImpl.decode(customerCityProperRuleVO.getTargetCompany().getCid()));
 
 			CompanyPO targetCompanyPO = companyDao.get(CompanyServiceImpl.decode(customerCityProperRuleVO.getTargetCompany().getCid()));
 			if (targetCompanyPO == null) {
@@ -169,9 +163,6 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 
 		// 更新目标公司
 		if (customerCityProperRuleVO.getTargetCompany() != null && customerCityProperRuleVO.getTargetCompany().getCid() != null) {
-
-			System.out.println(customerCityProperRuleVO.getTargetCompany().getCid());
-			System.out.println(CompanyServiceImpl.decode(customerCityProperRuleVO.getTargetCompany().getCid()));
 
 			CompanyPO targetCompanyPO = companyDao.get(CompanyServiceImpl.decode(customerCityProperRuleVO.getTargetCompany().getCid()));
 			if (targetCompanyPO == null) {
