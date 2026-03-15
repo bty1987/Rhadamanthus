@@ -7,6 +7,7 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.system.vo.CityProperVO;
 
 public class CustomerUserRuleItemVO implements Serializable {
 
@@ -19,6 +20,8 @@ public class CustomerUserRuleItemVO implements Serializable {
 	private DepartmentTypeVO departmentType;
 
 	private DepartmentVO department;
+
+	private CityProperVO cityProper;
 
 	private String name;
 
@@ -89,6 +92,14 @@ public class CustomerUserRuleItemVO implements Serializable {
 
 	public void setDepartment(DepartmentVO department) {
 		this.department = department;
+	}
+
+	public CityProperVO getCityProper() {
+		return cityProper;
+	}
+
+	public void setCityProper(CityProperVO cityProper) {
+		this.cityProper = cityProper;
 	}
 
 	public String getName() {

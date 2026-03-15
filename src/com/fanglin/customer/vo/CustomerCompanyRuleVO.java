@@ -23,7 +23,7 @@ public class CustomerCompanyRuleVO implements Serializable {
 
 	private Integer companys;
 
-	private Integer cityid; // 城区ID（仅用于查询参数，新增）
+	private Integer cpid; // 城区ID（仅用于查询参数）
 
 	public CustomerCompanyRuleVO() {
 		super();
@@ -91,12 +91,12 @@ public class CustomerCompanyRuleVO implements Serializable {
 		this.companys = companys;
 	}
 
-	public Integer getCityid() {
-		return cityid;
+	public Integer getCpid() {
+		return cpid;
 	}
 
-	public void setCityid(Integer cityid) {
-		this.cityid = cityid;
+	public void setCpid(Integer cpid) {
+		this.cpid = cpid;
 	}
 
 }

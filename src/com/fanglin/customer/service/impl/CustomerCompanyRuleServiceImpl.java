@@ -15,9 +15,9 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.customer.dao.CustomerCityRuleDao;
+import com.fanglin.customer.dao.CustomerCityProperRuleDao;
 import com.fanglin.customer.dao.CustomerCompanyRuleDao;
-import com.fanglin.customer.po.CustomerCityRulePO;
+import com.fanglin.customer.po.CustomerCityProperRulePO;
 import com.fanglin.customer.po.CustomerCompanyRulePO;
 import com.fanglin.customer.service.CustomerCompanyRuleService;
 import com.fanglin.customer.vo.CustomerCompanyRuleVO;
@@ -36,7 +36,7 @@ public class CustomerCompanyRuleServiceImpl implements CustomerCompanyRuleServic
 	private CustomerCompanyRuleDao customerCompanyRuleDao;
 
 	@Autowired
-	private CustomerCityRuleDao customerCityRuleDao;
+	private CustomerCityProperRuleDao customerCityProperRuleDao;
 
 	@Autowired
 	private CompanyDao companyDao;
@@ -75,15 +75,15 @@ public class CustomerCompanyRuleServiceImpl implements CustomerCompanyRuleServic
 		if (customerCompanyRuleVO.getCityid() != null) {
 
 			// 2.1 查询该城区的规则（城区→公司）
-			List<CustomerCityRulePO> cityRules = customerCityRuleDao.queryCustomerCityRuleByType(
+			List<CustomerCityProperRulePO> cityRules = customerCityProperRuleDao.queryCustomerCityProperRuleByType(
 				customerCompanyRuleVO.getCityid(),
 				company,
-				CustomerCityRulePO.TYPE_COMPANY_INT  // 0=城区→公司
+				CustomerCityProperRulePO.TYPE_COMPANY_INT  // 0=城区→公司
 			);
 
 			// 2.2 提取允许的公司ID集合
 			Set<Integer> allowedCompanyIds = new HashSet<Integer>();
-			for (CustomerCityRulePO cityRule : cityRules) {
+			for (CustomerCityProperRulePO cityRule : cityRules) {
 				if (cityRule.getTargetCompany() != null) {
 					allowedCompanyIds.add(cityRule.getTargetCompany().getCid());
 				}

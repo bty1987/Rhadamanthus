@@ -107,35 +107,35 @@ public class CustomerUserRuleItemDaoImpl extends DaoImpl<CustomerUserRuleItemPO>
 	}
 
 	@Override
-	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company, int area, List<Integer> uids, int did, Integer cityid) {
+	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company, int area, List<Integer> uids, int did, Integer cpid) {
 
 		if (uids == null) uids = new ArrayList<Integer>();
 
 		uids.add(0);
 
-		// 新增城区规则支持：type = 4 and curi.cityid = :cityid
-		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 4 and curi.cityid = :cityid)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, curi.handletime, cur.surplus desc limit 1";
+		// 城区规则支持：type = 4 and curi.cpid = :cpid
+		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 4 and curi.cpid = :cpid)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, curi.handletime, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRuleItemPO.class);
 
 		query.setInteger("company", company)
 		      .setInteger("uppval", area).setInteger("lowval", area)
 		      .setInteger("did", did).setInteger("uppval1", area).setInteger("lowval1", area)
-		      .setInteger("cityid", cityid != null ? cityid : 0) // 新增城区参数
+		      .setInteger("cpid", cpid != null ? cpid : 0) // 城区参数
 		      .setParameterList("uids", uids);
 
 		return (CustomerUserRuleItemPO) query.uniqueResult();
 	}
 
 	@Override
-	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company, int area, List<Integer> uids, int did, int dtid, Integer cityid) {
+	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company, int area, List<Integer> uids, int did, int dtid, Integer cpid) {
 
 		if (uids == null) uids = new ArrayList<Integer>();
 
 		uids.add(0);
 
-		// 新增城区规则支持：type = 4 and curi.cityid = :cityid
-		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 3 and curi.dtid = :dtid and curi.uppval < :uppval2 and curi.lowval >= :lowval2) or (curi.type = 4 and curi.cityid = :cityid)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, curi.handletime, cur.surplus desc limit 1";
+		// 城区规则支持：type = 4 and curi.cpid = :cpid
+		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 3 and curi.dtid = :dtid and curi.uppval < :uppval2 and curi.lowval >= :lowval2) or (curi.type = 4 and curi.cpid = :cpid)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, curi.handletime, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRuleItemPO.class);
 
@@ -143,7 +143,7 @@ public class CustomerUserRuleItemDaoImpl extends DaoImpl<CustomerUserRuleItemPO>
 		      .setInteger("uppval", area).setInteger("lowval", area)
 		      .setInteger("did", did).setInteger("uppval1", area).setInteger("lowval1", area)
 		      .setInteger("dtid", dtid).setInteger("uppval2", area).setInteger("lowval2", area)
-		      .setInteger("cityid", cityid != null ? cityid : 0) // 新增城区参数
+		      .setInteger("cpid", cpid != null ? cpid : 0) // 城区参数
 		      .setParameterList("uids", uids);
 
 		return (CustomerUserRuleItemPO) query.uniqueResult();

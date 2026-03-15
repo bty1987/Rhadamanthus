@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DepartmentTypePO;
+import com.fanglin.system.po.CityProperPO;
 import com.fanglin.utils.DateUtil;
 
 @Entity
@@ -55,6 +56,8 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	private DepartmentPO department;
 
+	private CityProperPO cityProper;
+
 	private String name;
 
 	private short type;
@@ -78,8 +81,6 @@ public class CustomerUserRuleItemPO implements Serializable {
 	private Timestamp deleteTime;
 
 	private String comment;
-
-	private Integer cityid; // 城区ID（新增）
 
 	public CustomerUserRuleItemPO() {
 		super();
@@ -123,6 +124,16 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	public void setDepartment(DepartmentPO department) {
 		this.department = department;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cpid", referencedColumnName = "cpid")
+	public CityProperPO getCityProper() {
+		return cityProper;
+	}
+
+	public void setCityProper(CityProperPO cityProper) {
+		this.cityProper = cityProper;
 	}
 
 	@Column(name = "name")
@@ -231,15 +242,6 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	@Column(name = "cityid")
-	public Integer getCityid() {
-		return cityid;
-	}
-
-	public void setCityid(Integer cityid) {
-		this.cityid = cityid;
 	}
 
 	public CustomerUserRuleItemPO award(String orderId, long curid, String name, DepartmentTypePO departmentType) {

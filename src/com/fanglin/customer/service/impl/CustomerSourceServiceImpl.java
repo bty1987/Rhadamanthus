@@ -504,10 +504,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		int area = customerSourcePO.getInnerArea();
 
-		// 【新增】获取楼盘所属城区ID
-		Integer cityid = null;
+		// 获取楼盘所属城区ID
+		Integer cpid = null;
 		if (customerSourcePO.getVillage() != null && customerSourcePO.getVillage().getCityProper() != null) {
-			cityid = customerSourcePO.getVillage().getCityProper().getCpid();
+			cpid = customerSourcePO.getVillage().getCityProper().getCpid();
 		}
 
 		if (atttype == CustomerChancePO.ATTTYPE_AUTO_INT) {
@@ -534,12 +534,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			while (true) {
 
-				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_COM_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, customerSourcePO.getCreater().getDept().getDid(), customerSourcePO.getCreater().getDept().getType().getDtid(), cityid);
-				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_AREA_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, 0, cityid);
+				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_COM_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, customerSourcePO.getCreater().getDept().getDid(), customerSourcePO.getCreater().getDept().getType().getDtid(), cpid);
+				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_AREA_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, 0, cpid);
 				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_TYPE_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, customerSourcePO.getCreater().getDept().getType().getDtid(), exporters);
-				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, customerSourcePO.getCreater().getDept().getDid(), cityid);
-				// 【新增】城区优先聚焦分支
-				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_CITY_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, 0, cityid);
+				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, customerSourcePO.getCreater().getDept().getDid(), cpid);
+				// 城区优先聚焦分支
+				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_CITY_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, 0, cpid);
 
 				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_COM_INT) {
 					throw new FLException(330081, "无设计师接单"); // 无匹配规则
