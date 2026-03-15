@@ -44,6 +44,9 @@ $.extend(api.index, {
     customerCompanyRule: {
         url: "/views/customer/customerCompanyRule.html"
     },
+    customerCityProperRule: {
+        url: "/views/customer/customerCityProperRule.html"
+    },
     customerprofile: {
         url: "/views/customer/customerProfile.html"
     },
@@ -209,6 +212,27 @@ $.extend(api, {
             tranargs: {
                 args: ["customerCompanyRule.uppval", "customerCompanyRule.lowval"]
             }
+        },
+
+        pageCustomerCityProperRule: {
+            url: "pageCustomerCityProperRule.do",
+            type: "query"
+        },
+        queryCustomerCityProperRule: {
+            url: "queryCustomerCityProperRule.do",
+            type: "query"
+        },
+        addCustomerCityProperRule: {
+            url: "addCustomerCityProperRule.do",
+            type: "update"
+        },
+        deleteCustomerCityProperRule: {
+            url: "deleteCustomerCityProperRule.do",
+            type: "update"
+        },
+        updateCustomerCityProperRule: {
+            url: "updateCustomerCityProperRule.do",
+            type: "update"
         },
 
         pageCustomerProtectRule: {

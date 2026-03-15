@@ -1,0 +1,113 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div id="condList" class="fl_search clearfix"></div>
+        <div id="resultList" class="clearfix tab-pane active"></div>
+        <div id="pagenation" class="fl-page-wrap clearfix"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="customerCityProperRuleModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">城区规则</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="type">类型</label>
+                        <div class="col-sm-9">
+                            <select class="col-xs-10 col-sm-6 v_required" id="type"></select>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group companyGroup">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="company">公司</label>
+                        <div class="col-sm-9">
+                            <select class="col-xs-10 col-sm-6" id="company"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group citySelGroup">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="citySel">城市</label>
+                        <div class="col-sm-9">
+                            <select class="col-sm-6 col-xs-10" id="citySel" data-toggle="popover" data-trigger='manual'>
+                                <option value="">请选择城市</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group cityProperSelGroup">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="cityProperSel">城区</label>
+                        <div class="col-sm-9">
+                            <select class="col-sm-6 col-xs-10 v_required" id="cityProperSel" data-toggle="popover" data-trigger='manual'>
+                                <option value="">请先选择城市</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group targetCompanyGroup">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="targetCompany">目标公司</label>
+                        <div class="col-sm-9">
+                            <select class="col-sm-6 col-xs-10" id="targetCompany" data-toggle="popover" data-trigger='manual'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group deptGroup">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="deptSel">部门</label>
+                        <div class="col-sm-9">
+                            <select class="col-sm-6 col-xs-10" id="deptSel" data-toggle="popover" data-trigger='manual'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group userGroup">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="userSel">设计师</label>
+                        <div class="col-sm-9">
+                            <select class="col-sm-6 col-xs-10" id="userSel" data-toggle="popover" data-trigger='manual'></select>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="priority">优先级</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="priority" maxlength="3" class="col-xs-10 col-sm-6 v_required v_number" data-toggle="popover" data-trigger='manual' value="0" />
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="status">状态</label>
+                        <div class="col-sm-9">
+                            <select class="col-xs-10 col-sm-6 v_required" id="status"></select>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="comment">备注</label>
+                        <div class="col-sm-9">
+                            <textarea id="comment" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/customer/customerCityProperRule.js']);
+</script>

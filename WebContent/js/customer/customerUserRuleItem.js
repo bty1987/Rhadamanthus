@@ -16,6 +16,8 @@ $(function() {
             companySel: com.focusPage("#companySel", "#customerUserRuleItem"),
             deptype: com.focusPage("#deptype", "#customerUserRuleItem"),
             deptSel: com.focusPage("#deptSel", "#customerUserRuleItem"),
+            citySel: com.focusPage("#citySel", "#customerUserRuleItem"),
+            cityProperSel: com.focusPage("#cityProperSel", "#customerUserRuleItem"),
             uppval: com.focusPage("#uppval", "#customerUserRuleItem"),
             lowval: com.focusPage("#lowval", "#customerUserRuleItem"),
             priority: com.focusPage("#priority", "#customerUserRuleItem"),
@@ -54,6 +56,30 @@ $(function() {
 
         customerUserRuleItem.items.companySel.bindData(res.companys, "cid", "name", true);
     }, null, false);
+
+    // 初始化加载城市列表
+    com.post(api.system.queryCity, {}, function(res) {
+
+        customerUserRuleItem.items.citySel.bindData(res.citys, "cid", "name", true);
+    }, null, false);
+
+    // 监听城市选择变化，加载对应城区列表
+    customerUserRuleItem.items.citySel.on("change", function() {
+
+        var cityId = $(this).val();
+
+        // 清空城区选择
+        customerUserRuleItem.items.cityProperSel.html('<option value="">请选择城区</option>');
+
+        if (cityId) {
+            // 根据选择的城市加载城区列表
+            com.post(api.system.queryCityProperByCid, {
+                "city.cid": cityId
+            }, function(res) {
+                customerUserRuleItem.items.cityProperSel.bindData(res.cityPropers, "cpid", "name", true);
+            });
+        }
+    });
 
     // 监听公司选择变化，清空部门选择并重新加载
     customerUserRuleItem.items.companySel.on("change", function() {
@@ -138,6 +164,15 @@ $(function() {
             return v.type == constant.customer().customerUserRuleItem.TYPE_DEPT_INT;
         }
     }, {
+        fieId: "cityProper.name",
+        name: "城区",
+        prop: "cityProper.name",
+        clazz: "grey",
+        show: function(v) {
+
+            return v.type == constant.customer().customerUserRuleItem.TYPE_CITY_INT;
+        }
+    }, {
         fieId: "uppval",
         name: "起始值",
         prop: "uppval",
@@ -202,6 +237,8 @@ $(function() {
         com.focusPage(".companySel").hide();
         com.focusPage(".deptype").hide();
         com.focusPage(".deptSel").hide();
+        com.focusPage(".citySel").hide();
+        com.focusPage(".cityProperSel").hide();
 
         customerUserRuleItem.modals.addCustomerUserRuleItemModal.modal("show");
     });
@@ -212,6 +249,8 @@ $(function() {
             com.focusPage(".companySel").hide();
             com.focusPage(".deptype").hide();
             com.focusPage(".deptSel").hide();
+            com.focusPage(".citySel").hide();
+            com.focusPage(".cityProperSel").hide();
             com.focusPage(".uppval").show();
             com.focusPage(".lowval").show();
             com.focusPage("#isDelete").prop("checked", false);
@@ -221,6 +260,8 @@ $(function() {
             com.focusPage(".companySel").hide();
             com.focusPage(".deptype").hide();
             com.focusPage(".deptSel").hide();
+            com.focusPage(".citySel").hide();
+            com.focusPage(".cityProperSel").hide();
             com.focusPage(".uppval").hide();
             com.focusPage(".lowval").hide();
             com.focusPage("#isDelete").prop("checked", true);
@@ -230,6 +271,8 @@ $(function() {
             com.focusPage(".companySel").hide();
             com.focusPage(".deptype").show();
             com.focusPage(".deptSel").hide();
+            com.focusPage(".citySel").hide();
+            com.focusPage(".cityProperSel").hide();
             com.focusPage(".uppval").show();
             com.focusPage(".lowval").show();
             com.focusPage("#isDelete").prop("checked", true);
@@ -239,6 +282,19 @@ $(function() {
             com.focusPage(".companySel").show();
             com.focusPage(".deptype").show();
             com.focusPage(".deptSel").show();
+            com.focusPage(".citySel").hide();
+            com.focusPage(".cityProperSel").hide();
+            com.focusPage(".uppval").show();
+            com.focusPage(".lowval").show();
+            com.focusPage("#isDelete").prop("checked", true);
+        }
+
+        if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_CITY_INT) {
+            com.focusPage(".companySel").hide();
+            com.focusPage(".deptype").hide();
+            com.focusPage(".deptSel").hide();
+            com.focusPage(".citySel").show();
+            com.focusPage(".cityProperSel").show();
             com.focusPage(".uppval").show();
             com.focusPage(".lowval").show();
             com.focusPage("#isDelete").prop("checked", true);
@@ -263,7 +319,8 @@ $(function() {
             "customerUserRuleItem.status": customerUserRuleItem.items.status.val(),
             "customerUserRuleItem.isSurplus": customerUserRuleItem.getProp[customerUserRuleItem.items.isSurplus.prop("checked")],
             "customerUserRuleItem.isDelete": customerUserRuleItem.getProp[customerUserRuleItem.items.isDelete.prop("checked")],
-            "customerUserRuleItem.handleTime": customerUserRuleItem.items.handleTime.val()
+            "customerUserRuleItem.handleTime": customerUserRuleItem.items.handleTime.val(),
+            "customerUserRuleItem.cpid": customerUserRuleItem.items.cityProperSel.val()
         };
 
         com.post(url, options, function() {
