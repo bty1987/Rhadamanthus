@@ -14,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.quotation.vo.QuotationAssignUserRuleTypeVO;
+import com.fanglin.utils.BeanUtil;
+
 /**
  * 报价单预算员类型支持表 PO
  * @table quotationassignuserruletype
@@ -81,5 +84,30 @@ public class QuotationAssignUserRuleTypePO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	// PO 转 VO 方法
+	public QuotationAssignUserRuleTypeVO ptv() {
+		return ptv(new QuotationAssignUserRuleTypeVO());
+	}
+
+	public QuotationAssignUserRuleTypeVO ptv(QuotationAssignUserRuleTypeVO vo) {
+		BeanUtil.copyProperties(this, vo);
+
+		// 处理 quotationAssignUserRule 关联对象
+		if (getQuotationAssignUserRule() != null) {
+			vo.setQaurid(getQuotationAssignUserRule().getQaurid());
+		}
+
+		// 设置类型名称
+		if (getType() == TYPE_HALF_INT) {
+			vo.setTypeName("半包");
+		} else if (getType() == TYPE_FULL_INT) {
+			vo.setTypeName("整装");
+		} else {
+			vo.setTypeName("未知");
+		}
+
+		return vo;
 	}
 }

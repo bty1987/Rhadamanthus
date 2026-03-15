@@ -16,6 +16,8 @@ import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
+import com.fanglin.utils.BeanUtil;
 
 /**
  * 报价单预算员规则表 PO
@@ -141,5 +143,46 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	// PO 转 VO 方法
+	public QuotationAssignUserRuleVO ptv() {
+		return ptv(new QuotationAssignUserRuleVO());
+	}
+
+	public QuotationAssignUserRuleVO ptv(QuotationAssignUserRuleVO vo) {
+		BeanUtil.copyProperties(this, vo);
+
+		// 处理 user 关联对象
+		if (getUser() != null) {
+			vo.setUid(getUser().getUid());
+		}
+
+		// 处理 department 关联对象
+		if (getDepartment() != null) {
+			vo.setDepartment(getDepartment().getDId());
+			vo.setDepartmentName(getDepartment().getDName());
+		}
+
+		// 设置状态名称
+		switch (getStatus()) {
+			case STATUS_AVAILABLE_INT:
+				vo.setStatusName("待分配");
+				break;
+			case STATUS_BUSY_INT:
+				vo.setStatusName("制作中");
+				break;
+			case STATUS_STOP_INT:
+				vo.setStatusName("停止");
+				break;
+			case STATUS_COMPLETED_INT:
+				vo.setStatusName("已完成");
+				break;
+			default:
+				vo.setStatusName("未知");
+				break;
+		}
+
+		return vo;
 	}
 }

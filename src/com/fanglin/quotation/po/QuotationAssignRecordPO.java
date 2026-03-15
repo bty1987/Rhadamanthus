@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.vo.QuotationAssignRecordVO;
+import com.fanglin.utils.BeanUtil;
 
 /**
  * 装修单预算分配记录表 PO
@@ -141,5 +143,62 @@ public class QuotationAssignRecordPO implements Serializable {
 
 	public void setDecorationType(Short decorationType) {
 		this.decorationType = decorationType;
+	}
+
+	// PO 转 VO 方法
+	public QuotationAssignRecordVO ptv() {
+		return ptv(new QuotationAssignRecordVO());
+	}
+
+	public QuotationAssignRecordVO ptv(QuotationAssignRecordVO vo) {
+		BeanUtil.copyProperties(this, vo);
+
+		// 处理 user 关联对象（预算员）
+		if (getUser() != null) {
+			vo.setUid(getUser().getUid());
+		}
+
+		// 处理 assignUser 关联对象（分配人）
+		if (getAssignUser() != null) {
+			vo.setAssignUid(getAssignUser().getUid());
+		}
+
+		// 设置分配类型名称
+		switch (getAssignType()) {
+			case ASSIGN_TYPE_AUTO_INT:
+				vo.setAssignTypeName("正向自动");
+				break;
+			case ASSIGN_TYPE_MANUAL_INT:
+				vo.setAssignTypeName("手动");
+				break;
+			case ASSIGN_TYPE_REVERSE_INT:
+				vo.setAssignTypeName("反向自动");
+				break;
+			default:
+				vo.setAssignTypeName("未知");
+				break;
+		}
+
+		// 设置分配结果名称
+		if (getAssignResult() == ASSIGN_RESULT_SUCCESS_INT) {
+			vo.setAssignResultName("成功");
+		} else if (getAssignResult() == ASSIGN_RESULT_FAIL_INT) {
+			vo.setAssignResultName("失败");
+		} else {
+			vo.setAssignResultName("未知");
+		}
+
+		// 设置装修类型名称
+		if (getDecorationType() != null) {
+			if (getDecorationType() == 1) {
+				vo.setDecorationTypeName("半包");
+			} else if (getDecorationType() == 2) {
+				vo.setDecorationTypeName("整装");
+			} else {
+				vo.setDecorationTypeName("未知");
+			}
+		}
+
+		return vo;
 	}
 }
