@@ -224,15 +224,12 @@ $.extend(api, {
         },
         addCustomerCityProperRule: {
             url: "addCustomerCityProperRule.do",
-            type: "update"
         },
         deleteCustomerCityProperRule: {
             url: "deleteCustomerCityProperRule.do",
-            type: "update"
         },
         updateCustomerCityProperRule: {
             url: "updateCustomerCityProperRule.do",
-            type: "update"
         },
 
         pageCustomerProtectRule: {
