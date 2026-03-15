@@ -9,18 +9,18 @@ import com.fanglin.communion.vo.CompanyVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 /**
- * 预算员规则表 VO
+ * 报价单预算员规则表 VO
  */
-public class BudgetUserRuleVO implements Serializable {
+public class QuotationAssignUserRuleVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	// 基础字段
-	private Integer burid;				// 预算员规则ID
+	private Long qaurid;				// 预算员规则ID
 	private Integer uid;				// 用户ID（预算员工号）
 	private Integer company;			// 关联公司ID
 	private Integer department;			// 部门ID
-	private Byte status;				// 状态：1-待分配，2-制作中，3-停止，4-已完成
+	private Short status;				// 状态：1-待分配，2-制作中，3-停止，4-已完成
 	private Timestamp lastFinishTime;	// 最后完成时间
 	private Integer currentTaskCount;	// 当前任务数量
 	private Timestamp createTime;		// 创建时间
@@ -34,17 +34,17 @@ public class BudgetUserRuleVO implements Serializable {
 	private String supportedTypes;		// 支持的类型（如："半包,整装"）
 
 	// 构造函数
-	public BudgetUserRuleVO() {
+	public QuotationAssignUserRuleVO() {
 		super();
 	}
 
 	// Getter and Setter
-	public Integer getBurid() {
-		return burid;
+	public Long getQaurid() {
+		return qaurid;
 	}
 
-	public void setBurid(Integer burid) {
-		this.burid = burid;
+	public void setQaurid(Long qaurid) {
+		this.qaurid = qaurid;
 	}
 
 	public Integer getUid() {
@@ -71,11 +71,11 @@ public class BudgetUserRuleVO implements Serializable {
 		this.department = department;
 	}
 
-	public Byte getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Byte status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 
