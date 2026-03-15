@@ -58,27 +58,23 @@ public class CustomerCityProperRuleDaoImpl extends DaoImpl<CustomerCityProperRul
 		if (filters == null || filters.isEmpty()) {
 			return;
 		}
-		
+
 		for (Filter filter : filters) {
 			String fieldName = filter.getField();
-			Object value = filter.getValue();
-			
-			if (value == null || value.toString().trim().isEmpty()) {
-				continue;
-			}
-			
+			String data = filter.getData();
+
 			// 处理类型查询（type）
 			if ("type".equals(fieldName)) {
-				query.add(Restrictions.eq("type", Short.parseShort(value.toString())));
+				query.add(Restrictions.eq("type", Short.parseShort(data.toString())));
 			}
 			// 处理状态查询（status）
 			else if ("status".equals(fieldName)) {
-				query.add(Restrictions.eq("status", Short.parseShort(value.toString())));
+				query.add(Restrictions.eq("status", Short.parseShort(data.toString())));
 			}
 			// 处理城市查询（city.cid）
 			else if ("city.cid".equals(fieldName)) {
-				query.createAlias("city", "city");
-				query.add(Restrictions.eq("city.cid", Integer.parseInt(value.toString())));
+				query.alias("city", "city");
+				query.add(Restrictions.eq("city.cid", Integer.parseInt(data.toString())));
 			}
 		}
 	}

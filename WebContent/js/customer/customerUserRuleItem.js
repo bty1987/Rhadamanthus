@@ -74,7 +74,7 @@ $(function() {
         if (cityId) {
             // 根据选择的城市加载城区列表
             com.post(api.system.queryCityProperByCid, {
-                "city.cid": cityId
+                "cityProper.city.cid": cityId
             }, function(res) {
                 customerUserRuleItem.items.cityProperSel.bindData(res.cityPropers, "cpid", "name", true);
             });
