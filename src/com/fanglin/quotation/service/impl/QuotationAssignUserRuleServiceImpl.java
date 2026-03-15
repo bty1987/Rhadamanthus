@@ -15,7 +15,7 @@ import com.fanglin.quotation.dao.QuotationAssignUserRuleDao;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleTypeDao;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.quotation.service.QuotationAssignUserRuleService;
-import com.fanglin.quotation.vo.BudgetUserRuleVO;
+import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -37,71 +37,71 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	private UserDao userDao;
 
 	@Override
-	public BudgetUserRuleVO queryQuotationAssignUserRuleByUidAndCompany(BudgetUserRuleVO budgetUserRule) {
+	public QuotationAssignUserRuleVO queryQuotationAssignUserRuleByUidAndCompany(QuotationAssignUserRuleVO quotationAssignUserRule) {
 		QuotationAssignUserRulePO po = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUidAndCompany(
-			budgetUserRule.getUid(), budgetUserRule.getCompany());
-		return po != null ? BeanUtil.copyProperties(po, BudgetUserRuleVO.class) : null;
+			quotationAssignUserRule.getUid(), quotationAssignUserRule.getCompany());
+		return po != null ? po.ptv(new QuotationAssignUserRuleVO()) : null;
 	}
 
 	@Override
-	public List<BudgetUserRuleVO> pullQuotationAssignUserRule(int company, Integer department) {
+	public List<QuotationAssignUserRuleVO> pullQuotationAssignUserRule(int company, Integer department) {
 		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.pullQuotationAssignUserRule(company, department);
-		List<BudgetUserRuleVO> voList = new ArrayList<BudgetUserRuleVO>();
+		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 		for (QuotationAssignUserRulePO po : poList) {
-			voList.add(BeanUtil.copyProperties(po, BudgetUserRuleVO.class));
+			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
 		}
 		return voList;
 	}
 
 	@Override
-	public BudgetUserRuleVO queryQuotationAssignUserRuleByUid(BudgetUserRuleVO budgetUserRule) {
-		QuotationAssignUserRulePO po = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUid(budgetUserRule.getUid());
-		return po != null ? BeanUtil.copyProperties(po, BudgetUserRuleVO.class) : null;
+	public QuotationAssignUserRuleVO queryQuotationAssignUserRuleByUid(QuotationAssignUserRuleVO quotationAssignUserRule) {
+		QuotationAssignUserRulePO po = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUid(quotationAssignUserRule.getUid());
+		return po != null ? po.ptv(new QuotationAssignUserRuleVO()) : null;
 	}
 
 	@Override
-	public List<BudgetUserRuleVO> queryQuotationAssignUserRuleByCompany(int company) {
+	public List<QuotationAssignUserRuleVO> queryQuotationAssignUserRuleByCompany(int company) {
 		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByCompany(company);
-		List<BudgetUserRuleVO> voList = new ArrayList<BudgetUserRuleVO>();
+		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 		for (QuotationAssignUserRulePO po : poList) {
-			voList.add(BeanUtil.copyProperties(po, BudgetUserRuleVO.class));
+			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
 		}
 		return voList;
 	}
 
 	@Override
-	public List<BudgetUserRuleVO> queryQuotationAssignUserRuleByDepartment(int company, int department) {
+	public List<QuotationAssignUserRuleVO> queryQuotationAssignUserRuleByDepartment(int company, int department) {
 		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByDepartment(company, department);
-		List<BudgetUserRuleVO> voList = new ArrayList<BudgetUserRuleVO>();
+		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 		for (QuotationAssignUserRulePO po : poList) {
-			voList.add(BeanUtil.copyProperties(po, BudgetUserRuleVO.class));
+			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
 		}
 		return voList;
 	}
 
 	@Override
-	public List<BudgetUserRuleVO> pullAvailableQuotationAssignUserRule(int company, Integer department) {
+	public List<QuotationAssignUserRuleVO> pullAvailableQuotationAssignUserRule(int company, Integer department) {
 		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.pullAvailableQuotationAssignUserRule(company, department);
-		List<BudgetUserRuleVO> voList = new ArrayList<BudgetUserRuleVO>();
+		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 		for (QuotationAssignUserRulePO po : poList) {
-			voList.add(BeanUtil.copyProperties(po, BudgetUserRuleVO.class));
+			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
 		}
 		return voList;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateStatusAndTaskCount(BudgetUserRuleVO budgetUserRule) throws FLException {
+	public void updateStatusAndTaskCount(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
 		quotationAssignUserRuleDao.updateStatusAndTaskCount(
-			budgetUserRule.getUid(),
-			budgetUserRule.getStatus(),
-			budgetUserRule.getCurrentTaskCount()
+			quotationAssignUserRule.getUid(),
+			quotationAssignUserRule.getStatus(),
+			quotationAssignUserRule.getCurrentTaskCount()
 		);
 	}
 
 	@Override
-	public int countQuotationAssignTaskByUid(BudgetUserRuleVO budgetUserRule) {
-		return quotationAssignUserRuleDao.countQuotationAssignTaskByUid(budgetUserRule.getUid());
+	public int countQuotationAssignTaskByUid(QuotationAssignUserRuleVO quotationAssignUserRule) {
+		return quotationAssignUserRuleDao.countQuotationAssignTaskByUid(quotationAssignUserRule.getUid());
 	}
 
 	@Override
@@ -115,45 +115,45 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	}
 
 	@Override
-	public int existQuotationAssignUserRule(BudgetUserRuleVO budgetUserRule) {
-		return quotationAssignUserRuleDao.existQuotationAssignUserRule(budgetUserRule.getUid(), budgetUserRule.getCompany());
+	public int existQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) {
+		return quotationAssignUserRuleDao.existQuotationAssignUserRule(quotationAssignUserRule.getUid(), quotationAssignUserRule.getCompany());
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void disableQuotationAssignUserRuleByUid(BudgetUserRuleVO budgetUserRule) throws FLException {
-		quotationAssignUserRuleDao.disableQuotationAssignUserRuleByUid(budgetUserRule.getUid());
+	public void disableQuotationAssignUserRuleByUid(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
+		quotationAssignUserRuleDao.disableQuotationAssignUserRuleByUid(quotationAssignUserRule.getUid());
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void enableQuotationAssignUserRuleByUid(BudgetUserRuleVO budgetUserRule) throws FLException {
-		quotationAssignUserRuleDao.enableQuotationAssignUserRuleByUid(budgetUserRule.getUid());
+	public void enableQuotationAssignUserRuleByUid(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
+		quotationAssignUserRuleDao.enableQuotationAssignUserRuleByUid(quotationAssignUserRule.getUid());
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addQuotationAssignUserRule(BudgetUserRuleVO budgetUserRuleVO, String userId) throws FLException {
+	public void addQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRuleVO, String userId) throws FLException {
 		// 检查用户是否已是预算员
 		QuotationAssignUserRulePO existingPO = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUidAndCompany(
-			budgetUserRuleVO.getUid(), budgetUserRuleVO.getCompany());
+			quotationAssignUserRuleVO.getUid(), quotationAssignUserRuleVO.getCompany());
 		if (existingPO != null) {
 			throw new FLException(330080, "该用户已是预算员");
 		}
 
 		// 创建新的预算员规则
 		QuotationAssignUserRulePO po = new QuotationAssignUserRulePO();
-		BeanUtil.copyProperties(budgetUserRuleVO, po);
+		BeanUtil.copyProperties(quotationAssignUserRuleVO, po);
 
 		// 设置用户对象
-		UserPO user = userDao.get(budgetUserRuleVO.getUid());
+		UserPO user = userDao.get(quotationAssignUserRuleVO.getUid());
 		if (user == null) {
 			throw new FLException(330081, "用户不存在");
 		}
 		po.setUser(user);
 
 		// 设置默认值
-		po.setStatus(QuotationAssignUserRulePO.STATUS_PENDING_INT);
+		po.setStatus(QuotationAssignUserRulePO.STATUS_AVAILABLE_INT);
 		po.setCurrentTaskCount(0);
 		po.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		po.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -163,16 +163,16 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateQuotationAssignUserRule(BudgetUserRuleVO budgetUserRuleVO, String userId) throws FLException {
-		QuotationAssignUserRulePO po = quotationAssignUserRuleDao.get(budgetUserRuleVO.getBurid());
+	public void updateQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRuleVO, String userId) throws FLException {
+		QuotationAssignUserRulePO po = quotationAssignUserRuleDao.get(quotationAssignUserRuleVO.getQaurid());
 		if (po == null) {
 			throw new FLException(330081, "预算员规则不存在");
 		}
 
 		// 更新字段（不更新uid、company、createTime）
-		po.setStatus(budgetUserRuleVO.getStatus());
-		po.setCurrentTaskCount(budgetUserRuleVO.getCurrentTaskCount());
-		po.setLastFinishTime(budgetUserRuleVO.getLastFinishTime());
+		po.setStatus(quotationAssignUserRuleVO.getStatus());
+		po.setCurrentTaskCount(quotationAssignUserRuleVO.getCurrentTaskCount());
+		po.setLastFinishTime(quotationAssignUserRuleVO.getLastFinishTime());
 		po.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		quotationAssignUserRuleDao.update(po);
