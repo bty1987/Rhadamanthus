@@ -175,10 +175,6 @@ public class QuotationAssignRequestPO implements Serializable {
 	}
 
 	// PO 转 VO 方法
-	public QuotationAssignRequestVO ptv() {
-		return ptv(new QuotationAssignRequestVO());
-	}
-
 	public QuotationAssignRequestVO ptv(QuotationAssignRequestVO vo) {
 		BeanUtil.copyProperties(this, vo);
 
