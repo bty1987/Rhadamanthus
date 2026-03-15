@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerCityProperRuleDao;
@@ -18,9 +20,12 @@ import com.fanglin.customer.service.CustomerCityProperRuleService;
 import com.fanglin.customer.vo.CustomerCityProperRuleVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CityProperPO;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -48,7 +53,13 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 		List<CustomerCityProperRuleVO> customerCityProperRuleVOs = new ArrayList<CustomerCityProperRuleVO>();
 
 		for (CustomerCityProperRulePO customerCityProperRulePO : customerCityProperRulePOs) {
-			customerCityProperRuleVOs.add(customerCityProperRulePO.ptv(new CustomerCityProperRuleVO()));
+			CustomerCityProperRuleVO customerCityProperRuleVO = new CustomerCityProperRuleVO();
+			customerCityProperRuleVO.setCity(new CityProperVO());
+			customerCityProperRuleVO.setCompany(new CompanyVO());
+			customerCityProperRuleVO.setTargetCompany(new CompanyVO());
+			customerCityProperRuleVO.setDepartment(new DepartmentVO());
+			customerCityProperRuleVO.setUser(new UserBaseVO(new DutyVO(), new DepartmentVO()));
+			customerCityProperRuleVOs.add(customerCityProperRulePO.ptv(customerCityProperRuleVO));
 		}
 
 		paging.setData(customerCityProperRuleVOs);

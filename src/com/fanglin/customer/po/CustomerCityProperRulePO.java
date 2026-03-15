@@ -224,24 +224,24 @@ public class CustomerCityProperRulePO implements Serializable {
 
 		BeanUtil.copyProperties(this, customerCityProperRuleVO, Arrays.asList("city", "company", "targetCompany", "department", "user"));
 
-		if (customerCityProperRuleVO.getCity() != null && getCity() != null) {
+		if (getCity() != null && customerCityProperRuleVO.getCity() != null) {
 			getCity().ptv(customerCityProperRuleVO.getCity());
 		}
 
-		if (customerCityProperRuleVO.getCompany() != null && getCompany() != null) {
+		if (getCompany() != null && customerCityProperRuleVO.getCompany() != null) {
 			getCompany().ptv(customerCityProperRuleVO.getCompany());
 		}
 
-		if (customerCityProperRuleVO.getTargetCompany() != null && getTargetCompany() != null) {
+		if (getTargetCompany() != null && customerCityProperRuleVO.getTargetCompany() != null) {
 			getTargetCompany().ptv(customerCityProperRuleVO.getTargetCompany());
 		}
 
-		if (customerCityProperRuleVO.getDepartment() != null && getDepartment() != null) {
-			customerCityProperRuleVO.setDepartment(getDepartment().ptv());
+		if (getDepartment() != null && customerCityProperRuleVO.getDepartment() != null) {
+			getDepartment().ptv(customerCityProperRuleVO.getDepartment());
 		}
 
-		if (customerCityProperRuleVO.getUser() != null && getUser() != null) {
-			customerCityProperRuleVO.getUser().ptv(getUser());
+		if (getUser() != null && customerCityProperRuleVO.getUser() != null) {
+			customerCityProperRuleVO.getUser().setBaseInfo(getUser());
 		}
 
 		return customerCityProperRuleVO;
