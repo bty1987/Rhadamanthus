@@ -12,7 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.dao.QuotationAssignConfigDao;
 import com.fanglin.quotation.po.QuotationAssignConfigPO;
 import com.fanglin.quotation.service.QuotationAssignConfigService;
-import com.fanglin.quotation.vo.QuotationConfigVO;
+import com.fanglin.quotation.vo.QuotationAssignConfigVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -28,43 +28,43 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	private QuotationAssignConfigDao quotationAssignConfigDao;
 
 	@Override
-	public QuotationConfigVO findByCompanyAndDepartment(QuotationConfigVO quotationConfig) {
-		QuotationAssignConfigPO po = quotationAssignConfigDao.findByCompanyAndDepartment(
-			quotationConfig.getCompany(),
-			quotationConfig.getDepartment()
+	public QuotationAssignConfigVO queryQuotationAssignConfigByCompanyAndDepartment(QuotationAssignConfigVO quotationAssignConfig) {
+		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(
+			quotationAssignConfig.getCompany(),
+			quotationAssignConfig.getDepartment()
 		);
-		return po != null ? BeanUtil.copyProperties(po, QuotationConfigVO.class) : null;
+		return po != null ? BeanUtil.copyProperties(po, QuotationAssignConfigVO.class) : null;
 	}
 
 	@Override
-	public List<QuotationConfigVO> findByCompany(QuotationConfigVO quotationConfig) {
-		List<QuotationAssignConfigPO> poList = quotationAssignConfigDao.findByCompany(quotationConfig.getCompany());
-		List<QuotationConfigVO> voList = new ArrayList<QuotationConfigVO>();
+	public List<QuotationAssignConfigVO> queryQuotationAssignConfigByCompany(QuotationAssignConfigVO quotationAssignConfig) {
+		List<QuotationAssignConfigPO> poList = quotationAssignConfigDao.queryQuotationAssignConfigByCompany(quotationAssignConfig.getCompany());
+		List<QuotationAssignConfigVO> voList = new ArrayList<QuotationAssignConfigVO>();
 		for (QuotationAssignConfigPO po : poList) {
-			voList.add(BeanUtil.copyProperties(po, QuotationConfigVO.class));
+			voList.add(BeanUtil.copyProperties(po, QuotationAssignConfigVO.class));
 		}
 		return voList;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void saveQuotationAssignConfig(QuotationConfigVO quotationConfigVO, String userId) throws FLException {
+	public void saveQuotationAssignConfig(QuotationAssignConfigVO quotationAssignConfigVO, String userId) throws FLException {
 		// 检查是否已存在配置
-		QuotationAssignConfigPO existingPO = quotationAssignConfigDao.findByCompanyAndDepartment(
-			quotationConfigVO.getCompany(),
-			quotationConfigVO.getDepartment()
+		QuotationAssignConfigPO existingPO = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(
+			quotationAssignConfigVO.getCompany(),
+			quotationAssignConfigVO.getDepartment()
 		);
 
 		if (existingPO != null) {
 			// 更新现有配置
-			existingPO.setEnabled(quotationConfigVO.getEnabled().shortValue());
-			existingPO.setAutoAssign(quotationConfigVO.getAutoAssign().shortValue());
+			existingPO.setEnabled(quotationAssignConfigVO.getEnabled());
+			existingPO.setAutoAssign(quotationAssignConfigVO.getAutoAssign());
 			existingPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 			quotationAssignConfigDao.update(existingPO);
 		} else {
 			// 创建新配置
 			QuotationAssignConfigPO po = new QuotationAssignConfigPO();
-			BeanUtil.copyProperties(quotationConfigVO, po);
+			BeanUtil.copyProperties(quotationAssignConfigVO, po);
 			po.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			po.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 			quotationAssignConfigDao.save(po);
@@ -73,8 +73,8 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteQuotationAssignConfig(QuotationConfigVO quotationConfig, String userId) throws FLException {
-		QuotationAssignConfigPO po = quotationAssignConfigDao.get(quotationConfig.getBcid());
+	public void deleteQuotationAssignConfig(QuotationAssignConfigVO quotationAssignConfig, String userId) throws FLException {
+		QuotationAssignConfigPO po = quotationAssignConfigDao.get(quotationAssignConfig.getQacid());
 		if (po == null) {
 			throw new FLException(330081, "配置不存在");
 		}
@@ -83,8 +83,8 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void enableQuotationAssignConfig(QuotationConfigVO quotationConfig, String userId) throws FLException {
-		QuotationAssignConfigPO po = quotationAssignConfigDao.get(quotationConfig.getBcid());
+	public void enableQuotationAssignConfig(QuotationAssignConfigVO quotationAssignConfig, String userId) throws FLException {
+		QuotationAssignConfigPO po = quotationAssignConfigDao.get(quotationAssignConfig.getQacid());
 		if (po == null) {
 			throw new FLException(330081, "配置不存在");
 		}
@@ -95,8 +95,8 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void disableQuotationAssignConfig(QuotationConfigVO quotationConfig, String userId) throws FLException {
-		QuotationAssignConfigPO po = quotationAssignConfigDao.get(quotationConfig.getBcid());
+	public void disableQuotationAssignConfig(QuotationAssignConfigVO quotationAssignConfig, String userId) throws FLException {
+		QuotationAssignConfigPO po = quotationAssignConfigDao.get(quotationAssignConfig.getQacid());
 		if (po == null) {
 			throw new FLException(330081, "配置不存在");
 		}
@@ -106,19 +106,19 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	}
 
 	@Override
-	public boolean isQuotationAssignEnabled(QuotationConfigVO quotationConfig) {
-		QuotationAssignConfigPO po = quotationAssignConfigDao.findByCompanyAndDepartment(
-			quotationConfig.getCompany(),
-			quotationConfig.getDepartment()
+	public boolean isQuotationAssignEnabled(QuotationAssignConfigVO quotationAssignConfig) {
+		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(
+			quotationAssignConfig.getCompany(),
+			quotationAssignConfig.getDepartment()
 		);
 		return po != null && po.getEnabled() == QuotationAssignConfigPO.ENABLED_ENABLED_INT;
 	}
 
 	@Override
-	public boolean isAutoAssignEnabled(QuotationConfigVO quotationConfig) {
-		QuotationAssignConfigPO po = quotationAssignConfigDao.findByCompanyAndDepartment(
-			quotationConfig.getCompany(),
-			quotationConfig.getDepartment()
+	public boolean isAutoAssignEnabled(QuotationAssignConfigVO quotationAssignConfig) {
+		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(
+			quotationAssignConfig.getCompany(),
+			quotationAssignConfig.getDepartment()
 		);
 		return po != null && po.getAutoAssign() == QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT;
 	}
