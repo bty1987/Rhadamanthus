@@ -43,7 +43,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 	@Override
 	public void pageCustomerCityProperRule(Paging paging, List<Filter> filters, int company) throws FLException {
 
-		List<CustomerCityProperRulePO> customerCityProperRulePOs = customerCityProperRuleDao.page(paging, filters);
+		List<CustomerCityProperRulePO> customerCityProperRulePOs = customerCityProperRuleDao.pageCustomerCityProperRule(paging, filters, company);
 
 		List<CustomerCityProperRuleVO> customerCityProperRuleVOs = new ArrayList<CustomerCityProperRuleVO>();
 
@@ -67,8 +67,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 
 		CustomerCityProperRulePO customerCityProperRulePO = new CustomerCityProperRulePO();
 
-		BeanUtil.copyProperties(customerCityProperRuleVO, customerCityProperRulePO,
-			Arrays.asList("city", "company", "targetCompany", "department", "user"));
+		BeanUtil.copyProperties(customerCityProperRuleVO, customerCityProperRulePO, Arrays.asList("city", "company", "targetCompany", "department", "user"));
 
 		// 设置城区
 		if (customerCityProperRuleVO.getCity() != null && customerCityProperRuleVO.getCity().getCpid() != null) {
@@ -139,8 +138,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 			throw new FLException(330081, "无匹配规则");
 		}
 
-		BeanUtil.copyProperties(customerCityProperRuleVO, customerCityProperRulePO,
-			Arrays.asList("city", "company", "targetCompany", "department", "user", "type", "priority", "status", "comment"));
+		BeanUtil.copyProperties(customerCityProperRuleVO, customerCityProperRulePO, Arrays.asList("city", "company", "targetCompany", "department", "user", "type", "priority", "status", "comment"));
 
 		// 更新城区
 		if (customerCityProperRuleVO.getCity() != null && customerCityProperRuleVO.getCity().getCpid() != null) {

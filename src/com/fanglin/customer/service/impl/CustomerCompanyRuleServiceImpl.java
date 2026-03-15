@@ -65,21 +65,14 @@ public class CustomerCompanyRuleServiceImpl implements CustomerCompanyRuleServic
 		}
 
 		// Step 1: 查询公司规则（基础过滤条件）
-		List<CustomerCompanyRulePO> companyRules = customerCompanyRuleDao.queryCustomerCompanyRule(
-			company,
-			customerCompanyRuleVO.getDept().getDid(),
-			customerCompanyRuleVO.getUppval()
-		);
+		List<CustomerCompanyRulePO> companyRules = customerCompanyRuleDao.queryCustomerCompanyRule(company, customerCompanyRuleVO.getDept().getDid(), customerCompanyRuleVO.getUppval());
 
 		// Step 2: 如果提供了城区ID，查询城区规则并过滤
-		if (customerCompanyRuleVO.getCityid() != null) {
+		if (customerCompanyRuleVO.getCpid() != null) {
 
 			// 2.1 查询该城区的规则（城区→公司）
-			List<CustomerCityProperRulePO> cityRules = customerCityProperRuleDao.queryCustomerCityProperRuleByType(
-				customerCompanyRuleVO.getCityid(),
-				company,
-				CustomerCityProperRulePO.TYPE_COMPANY_INT  // 0=城区→公司
-			);
+			List<CustomerCityProperRulePO> cityRules = customerCityProperRuleDao.queryCustomerCityProperRuleByType(customerCompanyRuleVO.getCpid(), company, CustomerCityProperRulePO.TYPE_COMPANY_INT // 0=城区→公司
+					);
 
 			// 2.2 提取允许的公司ID集合
 			Set<Integer> allowedCompanyIds = new HashSet<Integer>();
@@ -97,8 +90,7 @@ public class CustomerCompanyRuleServiceImpl implements CustomerCompanyRuleServic
 			// 2.4 过滤公司规则：只保留城区规则允许的公司
 			List<CustomerCompanyRulePO> filteredRules = new ArrayList<CustomerCompanyRulePO>();
 			for (CustomerCompanyRulePO rule : companyRules) {
-				if (rule.getCompany() != null
-					&& allowedCompanyIds.contains(rule.getCompany().getCid())) {
+				if (rule.getCompany() != null && allowedCompanyIds.contains(rule.getCompany().getCid())) {
 					filteredRules.add(rule);
 				}
 			}
@@ -115,7 +107,7 @@ public class CustomerCompanyRuleServiceImpl implements CustomerCompanyRuleServic
 			// 去重：使用 "部门ID_类型" 作为唯一键
 			String key = buildUniqueKey(po);
 			if (uniqueKeys.contains(key)) {
-				continue;  // 跳过重复
+				continue; // 跳过重复
 			}
 			uniqueKeys.add(key);
 
