@@ -4,46 +4,46 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- * 预算员类型支持表 VO
+ * 报价单预算员类型支持表 VO
  */
-public class BudgetUserRuleTypeVO implements Serializable {
+public class QuotationAssignUserRuleTypeVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	// 字段
-	private Integer id;			// ID
-	private Integer burid;		// 预算员规则ID
-	private Byte type;			// 装修类型：1-半包，2-整装
-	private String typeName;		// 类型名称
+	private Long id;			// ID
+	private Long qaurid;		// 预算员规则ID
+	private Short type;			// 装修类型：1-半包，2-整装
+	private String typeName;	// 类型名称
 	private Timestamp createTime;	// 创建时间
 
 	// 构造函数
-	public BudgetUserRuleTypeVO() {
+	public QuotationAssignUserRuleTypeVO() {
 		super();
 	}
 
 	// Getter and Setter
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Integer getBurid() {
-		return burid;
+	public Long getQaurid() {
+		return qaurid;
 	}
 
-	public void setBurid(Integer burid) {
-		this.burid = burid;
+	public void setQaurid(Long qaurid) {
+		this.qaurid = qaurid;
 	}
 
-	public Byte getType() {
+	public Short getType() {
 		return type;
 	}
 
-	public void setType(Byte type) {
+	public void setType(Short type) {
 		this.type = type;
 	}
 

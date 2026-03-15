@@ -1,13 +1,21 @@
 package com.fanglin.quotation.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.personel.po.UserPO;
 
 /**
  * 装修单预算分配请求表 PO
@@ -20,27 +28,34 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	// COLUMN 常量
+	public static final String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_COMPANY_STR = "company";
+	public static final String COLUMN_DEPARTMENT_STR = "department";
+	public static final String COLUMN_STATUS_STR = "status";
+	public static final String COLUMN_DECORATIONTYPE_STR = "decorationType";
+
 	// 状态常量
-	public static final byte STATUS_PENDING_INT = 1;	// 待分配
-	public static final byte STATUS_ASSIGNED_INT = 2;	// 已分配
+	public static final short STATUS_PENDING_INT = 1;	// 待分配
+	public static final short STATUS_ASSIGNED_INT = 2;	// 已分配
 
 	// 优先级常量
-	public static final byte PRIORITY_HIGHEST_INT = 1;	// 最高
-	public static final byte PRIORITY_HIGH_INT = 3;		// 高
-	public static final byte PRIORITY_NORMAL_INT = 5;	// 普通
-	public static final byte PRIORITY_LOW_INT = 7;		// 低
-	public static final byte PRIORITY_LOWEST_INT = 9;	// 最低
+	public static final short PRIORITY_HIGHEST_INT = 1;	// 最高
+	public static final short PRIORITY_HIGH_INT = 3;		// 高
+	public static final short PRIORITY_NORMAL_INT = 5;	// 普通
+	public static final short PRIORITY_LOW_INT = 7;		// 低
+	public static final short PRIORITY_LOWEST_INT = 9;	// 最低
 
 	// 字段
-	private Integer barid;				// 请求ID
-	private String orderId;			// 装修单号（关联 decoration）
-	private Integer company;			// 公司ID
-	private Integer department;			// 部门ID
-	private Byte decorationType;		// 装修类型：1-半包，2-整装
-	private Byte priority;				// 优先级：1-最高，5-普通，9-最低
+	private long qarid;					// 请求ID
+	private String orderId;				// 装修单号（关联 decoration）
+	private int company;				// 公司ID
+	private DepartmentPO department;	// 部门对象
+	private short decorationType;		// 装修类型：1-半包，2-整装
+	private short priority;				// 优先级：1-最高，5-普通，9-最低
 	private Timestamp requestTime;		// 请求时间
-	private Integer requestUid;			// 请求人用户ID（设计师）
-	private Byte status;				// 状态：1-待分配，2-已分配
+	private UserPO requestUser;			// 请求人（设计师）
+	private short status;				// 状态：1-待分配，2-已分配
 	private Timestamp assignTime;		// 分配时间
 	private String remark;				// 备注
 
@@ -55,14 +70,14 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	// Getter and Setter
 	@Id
-	@GeneratedValue
-	@Column(name = "barid")
-	public Integer getBarid() {
-		return barid;
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "qarid")
+	public long getQarid() {
+		return qarid;
 	}
 
-	public void setBarid(Integer barid) {
-		this.barid = barid;
+	public void setQarid(long qarid) {
+		this.qarid = qarid;
 	}
 
 	@Column(name = "orderId", nullable = false)
@@ -75,38 +90,39 @@ public class QuotationAssignRequestPO implements Serializable {
 	}
 
 	@Column(name = "company", nullable = false)
-	public Integer getCompany() {
+	public int getCompany() {
 		return company;
 	}
 
-	public void setCompany(Integer company) {
+	public void setCompany(int company) {
 		this.company = company;
 	}
 
-	@Column(name = "department")
-	public Integer getDepartment() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "department", referencedColumnName = "dId")
+	public DepartmentPO getDepartment() {
 		return department;
 	}
 
-	public void setDepartment(Integer department) {
+	public void setDepartment(DepartmentPO department) {
 		this.department = department;
 	}
 
 	@Column(name = "decorationType", nullable = false)
-	public Byte getDecorationType() {
+	public short getDecorationType() {
 		return decorationType;
 	}
 
-	public void setDecorationType(Byte decorationType) {
+	public void setDecorationType(short decorationType) {
 		this.decorationType = decorationType;
 	}
 
 	@Column(name = "priority", nullable = false)
-	public Byte getPriority() {
+	public short getPriority() {
 		return priority;
 	}
 
-	public void setPriority(Byte priority) {
+	public void setPriority(short priority) {
 		this.priority = priority;
 	}
 
@@ -119,21 +135,22 @@ public class QuotationAssignRequestPO implements Serializable {
 		this.requestTime = requestTime;
 	}
 
-	@Column(name = "requestUid")
-	public Integer getRequestUid() {
-		return requestUid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "requestUid", referencedColumnName = "uId")
+	public UserPO getRequestUser() {
+		return requestUser;
 	}
 
-	public void setRequestUid(Integer requestUid) {
-		this.requestUid = requestUid;
+	public void setRequestUser(UserPO requestUser) {
+		this.requestUser = requestUser;
 	}
 
 	@Column(name = "status", nullable = false)
-	public Byte getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Byte status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 
