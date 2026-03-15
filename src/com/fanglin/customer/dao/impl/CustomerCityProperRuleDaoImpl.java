@@ -19,7 +19,7 @@ public class CustomerCityProperRuleDaoImpl extends DaoImpl<CustomerCityProperRul
 	}
 
 	@Override
-	public void pageCustomerCityProperRule(Paging paging, List<Filter> filters, int company) {
+	public List<CustomerCityProperRulePO> pageCustomerCityProperRule(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<CustomerCityProperRulePO> query = pagingQuery(paging, CustomerCityProperRulePO.class);
 
@@ -31,7 +31,7 @@ public class CustomerCityProperRuleDaoImpl extends DaoImpl<CustomerCityProperRul
 		query.desc("priority");
 		query.desc("createTime");
 
-		query.list();
+		return query.list();
 	}
 
 	@Override

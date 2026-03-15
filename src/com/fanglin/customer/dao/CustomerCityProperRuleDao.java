@@ -11,8 +11,10 @@ public interface CustomerCityProperRuleDao extends Dao<CustomerCityProperRulePO>
 
 	/**
 	 * 分页查询城区规则
+	 * 
+	 * @return
 	 */
-	public void pageCustomerCityProperRule(Paging paging, List<Filter> filters, int company);
+	public List<CustomerCityProperRulePO> pageCustomerCityProperRule(Paging paging, List<Filter> filters, int company);
 
 	/**
 	 * 根据城区查询规则
@@ -21,7 +23,7 @@ public interface CustomerCityProperRuleDao extends Dao<CustomerCityProperRulePO>
 
 	/**
 	 * 根据城区和规则类型查询
-	 *
+	 * 
 	 * @param cpid 城区ID
 	 * @param company 公司ID
 	 * @param type 规则类型（0=公司, 1=部门, 2=设计师）
