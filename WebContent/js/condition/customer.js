@@ -252,8 +252,17 @@
         label: "楼号",
         type: "text",
         submitConfig: {
-            name: "decoration.house.houseNumber",
+            name: "house.houseNumber",
             op: "cn",
+            validate: null
+        }
+    },
+    "chance-orderId": {
+        label: "预派单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
             validate: null
         }
     },
