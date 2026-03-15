@@ -13,34 +13,34 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.quotation.service.QuotationConfigService;
-import com.fanglin.quotation.vo.QuotationConfigVO;
+import com.fanglin.quotation.service.QuotationAssignConfigService;
+import com.fanglin.quotation.vo.QuotationAssignConfigVO;
 
 /**
- * 预算配置管理 Action
+ * 报价单预算配置管理 Action
  * 提供预算配置的查询、保存、启用/禁用等 API 接口
  */
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class QuotationConfigAction extends BaseAction {
+public class QuotationAssignConfigAction extends BaseAction {
 
 	private static final long serialVersionUID = 1L;
 
 	@Autowired
-	private QuotationConfigService quotationConfigService;
+	private QuotationAssignConfigService quotationAssignConfigService;
 
 	// 参数字段
-	private Integer qcid;			// 预算配置ID
-	private Integer company;		// 公司ID
-	private Integer department;	// 部门ID
-	private Byte enabled;			// 是否启用（1-启用，0-禁用）
-	private Byte autoAssign;		// 是否自动分配（1-自动，0-手动）
+	private Long qacid;				// 配置ID
+	private Integer company;			// 公司ID
+	private Integer department;		// 部门ID
+	private Short enabled;			// 是否启用（1-启用，0-禁用）
+	private Short autoAssign;		// 是否自动分配（1-自动，0-手动）
 
 	// 返回字段
-	private Map<String, Object> result;			// 返回结果
-	private QuotationConfigVO quotationConfig;	// 预算配置
-	private List<QuotationConfigVO> quotationConfigs; // 预算配置列表
+	private Map<String, Object> result;						// 返回结果
+	private QuotationAssignConfigVO quotationAssignConfig;	// 预算配置
+	private List<QuotationAssignConfigVO> quotationAssignConfigs; // 预算配置列表
 
 	/**
 	 * 查询预算配置
@@ -50,13 +50,17 @@ public class QuotationConfigAction extends BaseAction {
 	 * - department: 部门ID（可选）
 	 *
 	 * 返回数据:
-	 * - quotationConfig: 预算配置
+	 * - quotationAssignConfig: 预算配置
 	 */
-	@Action(value = "getQuotationConfig", results = {
+	@Action(value = "getQuotationAssignConfig", results = {
 		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String getQuotationConfig() throws FLException {
-		quotationConfig = quotationConfigService.getQuotationConfig(company, department);
+	public String getQuotationAssignConfig() throws FLException {
+		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+		vo.setCompany(company);
+		vo.setDepartment(department);
+
+		quotationAssignConfig = quotationAssignConfigService.queryQuotationAssignConfigByCompanyAndDepartment(vo);
 		return SUCCESS;
 	}
 
@@ -67,13 +71,16 @@ public class QuotationConfigAction extends BaseAction {
 	 * - company: 公司ID（必需）
 	 *
 	 * 返回数据:
-	 * - quotationConfigs: 预算配置列表
+	 * - quotationAssignConfigs: 预算配置列表
 	 */
-	@Action(value = "getQuotationConfigsByCompany", results = {
+	@Action(value = "getQuotationAssignConfigsByCompany", results = {
 		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String getQuotationConfigsByCompany() throws FLException {
-		quotationConfigs = quotationConfigService.getQuotationConfigsByCompany(company);
+	public String getQuotationAssignConfigsByCompany() throws FLException {
+		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+		vo.setCompany(company);
+
+		quotationAssignConfigs = quotationAssignConfigService.queryQuotationAssignConfigByCompany(vo);
 		return SUCCESS;
 	}
 
@@ -81,20 +88,20 @@ public class QuotationConfigAction extends BaseAction {
 	 * 保存预算配置（新增或更新）
 	 *
 	 * 请求参数:
-	 * - quotationConfig: 预算配置对象
+	 * - quotationAssignConfig: 预算配置对象
 	 *
 	 * 返回数据:
 	 * - success: 是否成功
 	 * - message: 提示信息
 	 */
-	@Action(value = "saveQuotationConfig", results = {
+	@Action(value = "saveQuotationAssignConfig", results = {
 		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String saveQuotationConfig() throws FLException {
+	public String saveQuotationAssignConfig() throws FLException {
 		result = new HashMap<String, Object>();
 
 		try {
-			quotationConfigService.saveQuotationConfig(quotationConfig);
+			quotationAssignConfigService.saveQuotationAssignConfig(quotationAssignConfig, getUserId());
 			result.put("success", true);
 			result.put("message", "保存成功");
 		} catch (Exception e) {
@@ -106,51 +113,25 @@ public class QuotationConfigAction extends BaseAction {
 	}
 
 	/**
-	 * 更新预算配置
-	 *
-	 * 请求参数:
-	 * - quotationConfig: 预算配置对象
-	 *
-	 * 返回数据:
-	 * - success: 是否成功
-	 * - message: 提示信息
-	 */
-	@Action(value = "updateQuotationConfig", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
-	public String updateQuotationConfig() throws FLException {
-		result = new HashMap<String, Object>();
-
-		try {
-			quotationConfigService.updateQuotationConfig(quotationConfig);
-			result.put("success", true);
-			result.put("message", "更新成功");
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", "更新失败: " + e.getMessage());
-		}
-
-		return SUCCESS;
-	}
-
-	/**
 	 * 删除预算配置
 	 *
 	 * 请求参数:
-	 * - qcid: 预算配置ID（必需）
+	 * - qacid: 配置ID（必需）
 	 *
 	 * 返回数据:
 	 * - success: 是否成功
 	 * - message: 提示信息
 	 */
-	@Action(value = "deleteQuotationConfig", results = {
+	@Action(value = "deleteQuotationAssignConfig", results = {
 		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String deleteQuotationConfig() throws FLException {
+	public String deleteQuotationAssignConfig() throws FLException {
 		result = new HashMap<String, Object>();
 
 		try {
-			quotationConfigService.deleteQuotationConfig(qcid);
+			QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+			vo.setQacid(qacid);
+			quotationAssignConfigService.deleteQuotationAssignConfig(vo, getUserId());
 			result.put("success", true);
 			result.put("message", "删除成功");
 		} catch (Exception e) {
@@ -165,21 +146,22 @@ public class QuotationConfigAction extends BaseAction {
 	 * 启用预算分配功能
 	 *
 	 * 请求参数:
-	 * - company: 公司ID（必需）
-	 * - department: 部门ID（可选）
+	 * - qacid: 配置ID（必需）
 	 *
 	 * 返回数据:
 	 * - success: 是否成功
 	 * - message: 提示信息
 	 */
-	@Action(value = "enableQuotationAssign", results = {
+	@Action(value = "enableQuotationAssignConfig", results = {
 		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String enableQuotationAssign() throws FLException {
+	public String enableQuotationAssignConfig() throws FLException {
 		result = new HashMap<String, Object>();
 
 		try {
-			quotationConfigService.enableQuotationAssign(company, department);
+			QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+			vo.setQacid(qacid);
+			quotationAssignConfigService.enableQuotationAssignConfig(vo, getUserId());
 			result.put("success", true);
 			result.put("message", "已启用预算分配功能");
 		} catch (Exception e) {
@@ -194,21 +176,22 @@ public class QuotationConfigAction extends BaseAction {
 	 * 禁用预算分配功能
 	 *
 	 * 请求参数:
-	 * - company: 公司ID（必需）
-	 * - department: 部门ID（可选）
+	 * - qacid: 配置ID（必需）
 	 *
 	 * 返回数据:
 	 * - success: 是否成功
 	 * - message: 提示信息
 	 */
-	@Action(value = "disableQuotationAssign", results = {
+	@Action(value = "disableQuotationAssignConfig", results = {
 		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String disableQuotationAssign() throws FLException {
+	public String disableQuotationAssignConfig() throws FLException {
 		result = new HashMap<String, Object>();
 
 		try {
-			quotationConfigService.disableQuotationAssign(company, department);
+			QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+			vo.setQacid(qacid);
+			quotationAssignConfigService.disableQuotationAssignConfig(vo, getUserId());
 			result.put("success", true);
 			result.put("message", "已禁用预算分配功能");
 		} catch (Exception e) {
@@ -220,58 +203,64 @@ public class QuotationConfigAction extends BaseAction {
 	}
 
 	/**
-	 * 启用自动分配模式
+	 * 检查是否启用预算分配功能
 	 *
 	 * 请求参数:
 	 * - company: 公司ID（必需）
 	 * - department: 部门ID（可选）
 	 *
 	 * 返回数据:
-	 * - success: 是否成功
-	 * - message: 提示信息
+	 * - enabled: 是否启用
 	 */
-	@Action(value = "enableAutoAssign", results = {
+	@Action(value = "isQuotationAssignEnabled", results = {
 		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String enableAutoAssign() throws FLException {
+	public String isQuotationAssignEnabled() throws FLException {
 		result = new HashMap<String, Object>();
 
 		try {
-			quotationConfigService.enableAutoAssign(company, department);
+			QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+			vo.setCompany(company);
+			vo.setDepartment(department);
+
+			boolean enabled = quotationAssignConfigService.isQuotationAssignEnabled(vo);
+			result.put("enabled", enabled);
 			result.put("success", true);
-			result.put("message", "已启用自动分配模式");
 		} catch (Exception e) {
 			result.put("success", false);
-			result.put("message", "启用失败: " + e.getMessage());
+			result.put("message", "查询失败: " + e.getMessage());
 		}
 
 		return SUCCESS;
 	}
 
 	/**
-	 * 禁用自动分配模式（改为手动分配模式）
+	 * 检查是否启用自动分配模式
 	 *
 	 * 请求参数:
 	 * - company: 公司ID（必需）
 	 * - department: 部门ID（可选）
 	 *
 	 * 返回数据:
-	 * - success: 是否成功
-	 * - message: 提示信息
+	 * - autoAssign: 是否自动分配
 	 */
-	@Action(value = "disableAutoAssign", results = {
+	@Action(value = "isAutoAssignEnabled", results = {
 		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String disableAutoAssign() throws FLException {
+	public String isAutoAssignEnabled() throws FLException {
 		result = new HashMap<String, Object>();
 
 		try {
-			quotationConfigService.disableAutoAssign(company, department);
+			QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+			vo.setCompany(company);
+			vo.setDepartment(department);
+
+			boolean autoAssign = quotationAssignConfigService.isAutoAssignEnabled(vo);
+			result.put("autoAssign", autoAssign);
 			result.put("success", true);
-			result.put("message", "已切换为手动分配模式");
 		} catch (Exception e) {
 			result.put("success", false);
-			result.put("message", "切换失败: " + e.getMessage());
+			result.put("message", "查询失败: " + e.getMessage());
 		}
 
 		return SUCCESS;
@@ -279,12 +268,12 @@ public class QuotationConfigAction extends BaseAction {
 
 	// Getter and Setter
 
-	public Integer getQcid() {
-		return qcid;
+	public Long getQacid() {
+		return qacid;
 	}
 
-	public void setQcid(Integer qcid) {
-		this.qcid = qcid;
+	public void setQacid(Long qacid) {
+		this.qacid = qacid;
 	}
 
 	public Integer getCompany() {
@@ -303,19 +292,19 @@ public class QuotationConfigAction extends BaseAction {
 		this.department = department;
 	}
 
-	public Byte getEnabled() {
+	public Short getEnabled() {
 		return enabled;
 	}
 
-	public void setEnabled(Byte enabled) {
+	public void setEnabled(Short enabled) {
 		this.enabled = enabled;
 	}
 
-	public Byte getAutoAssign() {
+	public Short getAutoAssign() {
 		return autoAssign;
 	}
 
-	public void setAutoAssign(Byte autoAssign) {
+	public void setAutoAssign(Short autoAssign) {
 		this.autoAssign = autoAssign;
 	}
 
@@ -327,19 +316,19 @@ public class QuotationConfigAction extends BaseAction {
 		this.result = result;
 	}
 
-	public QuotationConfigVO getQuotationConfig() {
-		return quotationConfig;
+	public QuotationAssignConfigVO getQuotationAssignConfig() {
+		return quotationAssignConfig;
 	}
 
-	public void setQuotationConfig(QuotationConfigVO quotationConfig) {
-		this.quotationConfig = quotationConfig;
+	public void setQuotationAssignConfig(QuotationAssignConfigVO quotationAssignConfig) {
+		this.quotationAssignConfig = quotationAssignConfig;
 	}
 
-	public List<QuotationConfigVO> getQuotationConfigs() {
-		return quotationConfigs;
+	public List<QuotationAssignConfigVO> getQuotationAssignConfigs() {
+		return quotationAssignConfigs;
 	}
 
-	public void setQuotationConfigs(List<QuotationConfigVO> quotationConfigs) {
-		this.quotationConfigs = quotationConfigs;
+	public void setQuotationAssignConfigs(List<QuotationAssignConfigVO> quotationAssignConfigs) {
+		this.quotationAssignConfigs = quotationAssignConfigs;
 	}
 }
