@@ -45,6 +45,9 @@ jQuery(function($) {
         }, {
             value: '[A-Za-z]+',
             text: '字母'
+        }, {
+            value: '#',
+            text: '#'
         }],
 
         // 连接符选项（字面值）
@@ -246,6 +249,7 @@ jQuery(function($) {
             '[A-Za-z]+[0-9]+': 'A1',
             '[0-9]+': '1',
             '[A-Za-z]+': 'A',
+            '#': '#',
             '': ''
         };
         return examples[value] || '';
@@ -313,7 +317,7 @@ jQuery(function($) {
             "villageRule.vid": villageRule.vid,
             // 不传 id，而是传 rule 内容
             "villageRule.rule.buildingNameRuleId": villageRule.items.buildingNameRuleId.val(),
-            "villageRule.rule.rule": encodeRule(),
+            "villageRule.rule.rule": villageRule.items.ruleRegex.val(),
             "villageRule.rule.ruleContent": villageRule.items.ruleContent.val(),
             "villageRule.rule.ruleExample": villageRule.items.ruleExample.val()
         };
