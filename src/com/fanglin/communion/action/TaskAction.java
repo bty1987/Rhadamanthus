@@ -34,6 +34,8 @@ public class TaskAction extends BaseListAction {
 
 	private List<Long> tids;
 
+	private List<com.fanglin.system.vo.CompanyVO> companys;
+
 	@Action(value = "pageTask", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageTask() {
 
@@ -138,6 +140,18 @@ public class TaskAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "syncRoleTask", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncRoleTask() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		taskService.syncRoleTask(role, companys, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	public TaskVO getTask() {
 		return task;
 	}
@@ -168,6 +182,14 @@ public class TaskAction extends BaseListAction {
 
 	public void setTids(List<Long> tids) {
 		this.tids = tids;
+	}
+
+	public List<com.fanglin.system.vo.CompanyVO> getCompanys() {
+		return companys;
+	}
+
+	public void setCompanys(List<com.fanglin.system.vo.CompanyVO> companys) {
+		this.companys = companys;
 	}
 
 }

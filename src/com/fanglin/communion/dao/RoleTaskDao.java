@@ -14,4 +14,8 @@ public interface RoleTaskDao extends Dao<RoleTaskPO> {
 	public RoleTaskPO queryRoleTask(int rid, Long tid, Integer company);
 
 	public void deleteRoleTask(int rid, Integer company);
+
+	public int deleteRoleTask(int rid, List<Integer> companys);
+
+	public int syncRoleTask(int rid, int cuid, List<Integer> companys, int company);
 }

@@ -44,4 +44,25 @@ public class RoleTaskDaoImpl extends DaoImpl<RoleTaskPO> implements RoleTaskDao 
 		session().createSQLQuery(sql).setLong("rid", rid).setInteger("company", company).executeUpdate();
 	}
 
+	@Override
+	public int deleteRoleTask(int rid, List<Integer> companys) {
+
+		String sql = "delete from communion.roletask where rid = :rid and company in :companys";
+		session().createSQLQuery(sql).setInteger("rid", rid).setParameterList("companys", companys).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int syncRoleTask(int rid, int cuid, List<Integer> companys, int company) {
+
+		StringBuffer syncsql = new StringBuffer("insert into communion.roletask (rid, tid, cuid, company) ");
+
+		syncsql.append("select rt.rid, rt.tid, :cuid, co.cid from communion.roletask rt, communion.company co where rt.rid = :rid and rt.company = :company and co.cid in :companys");
+
+		session().createSQLQuery(syncsql.toString()).setInteger("cuid", cuid).setInteger("rid", rid).setParameterList("companys", companys).setInteger("company", company).executeUpdate();
+
+		return 0;
+	}
+
 }
