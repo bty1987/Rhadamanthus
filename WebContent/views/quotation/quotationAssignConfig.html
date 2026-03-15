@@ -1,0 +1,202 @@
+<div class="page-content">
+	<!-- 功能说明 -->
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="alert alert-block alert-success">
+				<h4><i class="icon-info-sign"></i> 预算员自动分配功能</h4>
+				<p>
+					本功能用于配置和管理报价单预算员的自动分配机制。
+					支持<strong>正向自动分配</strong>（设计师发起时自动分配）和<strong>反向自动分配</strong>（预算员完成后自动获取新任务）两种模式。
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- 工具栏 -->
+	<div class="row">
+		<div class="col-xs-12">
+			<button id="addBtn" class="btn btn-sm btn-success">
+				<i class="icon-plus"></i> 新增配置
+			</button>
+			<button id="refreshBtn" class="btn btn-sm btn-primary">
+				<i class="icon-refresh"></i> 刷新
+			</button>
+		</div>
+	</div>
+
+	<!-- 查询条件 -->
+	<div class="row search-row">
+		<div class="col-xs-12">
+			<div class="form-inline">
+				<label>公司:</label>
+				<select id="companySelect" data-condition="system.company">
+					<option value="">全部</option>
+				</select>
+
+				<label>部门:</label>
+				<select id="departmentSelect">
+					<option value="">全部</option>
+				</select>
+
+				<label>启用状态:</label>
+				<select id="enabledSelect">
+					<option value="">全部</option>
+					<option value="1">已启用</option>
+					<option value="0">已禁用</option>
+				</select>
+
+				<button id="searchBtn" class="btn btn-sm btn-primary">
+					<i class="icon-search"></i> 查询
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 数据表格 -->
+	<div class="row">
+		<div class="col-xs-12">
+			<table id="dataTable" class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>公司名称</th>
+						<th>部门名称</th>
+						<th>功能状态</th>
+						<th>分配模式</th>
+						<th>创建时间</th>
+						<th>更新时间</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="dataBody"></tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- 分页 -->
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="pagination"></div>
+		</div>
+	</div>
+</div>
+
+<!-- 编辑模态框 -->
+<div class="modal fade" id="editModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span>
+				</button>
+				<h4 class="modal-title" id="modalTitle">预算配置</h4>
+			</div>
+			<div class="modal-body">
+				<form id="editForm" class="form-horizontal">
+					<input type="hidden" id="qcid">
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">公司<span class="required">*</span></label>
+						<div class="col-sm-9">
+							<select id="companyId" class="form-control chosen-select" required>
+								<option value="">请选择公司</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">部门</label>
+						<div class="col-sm-9">
+							<select id="departmentId" class="form-control chosen-select">
+								<option value="">请选择部门（可选）</option>
+							</select>
+							<span class="help-block">不选择则应用于整个公司</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">功能状态<span class="required">*</span></label>
+						<div class="col-sm-9">
+							<div class="radio">
+								<label>
+									<input type="radio" name="enabled" value="1" checked>
+									<span class="label label-success">启用</span>
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="enabled" value="0">
+									<span class="label label-default">禁用</span>
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">分配模式<span class="required">*</span></label>
+						<div class="col-sm-9">
+							<div class="radio">
+								<label>
+									<input type="radio" name="autoAssign" value="1" checked>
+									<span class="label label-info">自动分配</span>
+									- 系统自动为订单分配预算员
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="autoAssign" value="0">
+									<span class="label label-warning">手动分配</span>
+									- 需要管理员手动指定
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-sm-9">
+							<div class="alert alert-info">
+								<strong>说明：</strong>
+								<ul>
+									<li><strong>启用 + 自动分配：</strong>设计师发起时自动分配预算员，预算员完成后自动获取新任务</li>
+									<li><strong>启用 + 手动分配：</strong>订单进入待分配队列，由管理员手动分配</li>
+									<li><strong>禁用：</strong>不使用预算分配功能，保持原有流程</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" id="saveBtn">保存</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 快速操作模态框 -->
+<div class="modal fade" id="quickActionModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span>
+				</button>
+				<h4 class="modal-title" id="quickActionTitle">快速操作</h4>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="actionQcid">
+				<input type="hidden" id="actionType">
+
+				<div id="actionContent"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" id="confirmActionBtn">确认</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/quotation/quotationAssignConfig.js']);
+</script>

@@ -70,7 +70,10 @@
       "Bash(git push)",
       "Bash(git pull:*)",
       "Bash(git push:*)",
-      "Bash(git update-index:*)"
+      "Bash(git update-index:*)",
+      "Bash(curl:*)",
+      "Bash(D:/Python/Python38/python.exe:*)",
+      "Bash(move:*)"
     ],
     "deny": [],
     "ask": []
