@@ -301,7 +301,7 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerChance);
 
-    searcher.condition(customerChance.depage != "source" ? ["customer-chance-source-name", "customer-chance-customer-phone", "customer-chance-house-village-no", "customer-chance-source-buildArea", "customer-chance-type", "customer-chance-status", "customer-chance-isFine", "customer-chance-belonger", "customer-chance-source-creater", "customer-chance-belonger-dept", "customer-chance-source-creater-dept", "customer-chance-finer", "customer-chance-source-createTime", "customer-chance-createTime", "customer-chance-fineTime", "customer-chance-source-houseAttr"] : []);
+    searcher.condition(customerChance.depage != "source" ? ["customer-chance-orderId", "customer-chance-source-name", "customer-chance-customer-phone", "customer-chance-house-village-no", "customer-chance-house-houseNumber", "customer-chance-source-buildArea", "customer-chance-type", "customer-chance-status", "customer-chance-isFine", "customer-chance-belonger", "customer-chance-source-creater", "customer-chance-belonger-dept", "customer-chance-source-creater-dept", "customer-chance-finer", "customer-chance-source-createTime", "customer-chance-createTime", "customer-chance-fineTime", "customer-chance-source-houseAttr"] : []);
 
     searcher.history(customerChance.depage + "customerChancePostData");
 

@@ -153,6 +153,8 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 				query.add(query.getCriterion("village.no", data, op));
 			} else if ("house.houseNumber".equals(field)) {
 				query.add(query.getCriterion("house.houseNumber", data, op));
+			} else if ("orderId".equals(field)) {
+				query.add(query.getCriterion("orderId", data, op));
 			} else if ("finer".equals(field)) {
 				query.add(query.getCriterion("finer.userId", data, op));
 			} else if ("fineTime".equals(field)) {
