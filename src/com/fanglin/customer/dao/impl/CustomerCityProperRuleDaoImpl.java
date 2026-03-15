@@ -24,7 +24,6 @@ public class CustomerCityProperRuleDaoImpl extends DaoImpl<CustomerCityProperRul
 		PagingQuery<CustomerCityProperRulePO> query = pagingQuery(paging, CustomerCityProperRulePO.class);
 
 		query.add(Restrictions.eq("company.cid", company));
-		query.add(Restrictions.eq("status", CustomerCityProperRulePO.STATUS_ENABLE_INT));
 
 		queryFilterExcute(query, filters);
 
@@ -56,5 +55,31 @@ public class CustomerCityProperRuleDaoImpl extends DaoImpl<CustomerCityProperRul
 	}
 
 	private void queryFilterExcute(PagingQuery<CustomerCityProperRulePO> query, List<Filter> filters) {
+		if (filters == null || filters.isEmpty()) {
+			return;
+		}
+		
+		for (Filter filter : filters) {
+			String fieldName = filter.getField();
+			Object value = filter.getValue();
+			
+			if (value == null || value.toString().trim().isEmpty()) {
+				continue;
+			}
+			
+			// 处理类型查询（type）
+			if ("type".equals(fieldName)) {
+				query.add(Restrictions.eq("type", Short.parseShort(value.toString())));
+			}
+			// 处理状态查询（status）
+			else if ("status".equals(fieldName)) {
+				query.add(Restrictions.eq("status", Short.parseShort(value.toString())));
+			}
+			// 处理城市查询（city.cid）
+			else if ("city.cid".equals(fieldName)) {
+				query.createAlias("city", "city");
+				query.add(Restrictions.eq("city.cid", Integer.parseInt(value.toString())));
+			}
+		}
 	}
 }

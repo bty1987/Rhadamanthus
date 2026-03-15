@@ -1307,6 +1307,70 @@
             keyPath: "key",
             valuePath: "value"
         }
+    },
+    "customerCityProperRule-type": {
+        label: "规则类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: [{
+                "key": "0",
+                "value": "城区→公司"
+            }, {
+                "key": "1",
+                "value": "城区→部门"
+            }, {
+                "key": "2",
+                "value": "城区→设计师"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerCityProperRule-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: [{
+                "key": "0",
+                "value": "启用"
+            }, {
+                "key": "1",
+                "value": "禁用"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerCityProperRule-city": {
+        label: "城市",
+        type: "autofill",
+        submitConfig: {
+            name: "city.cid",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.system.queryCity,
+            postData: {},
+            listPath: "citys",
+            keyPath: "cid",
+            valuePath: "name"
+        }
     }
+
 
 });
