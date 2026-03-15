@@ -129,10 +129,6 @@ public class QuotationAssignConfigPO implements Serializable {
 	}
 
 	// PO 转 VO 方法
-	public QuotationAssignConfigVO ptv() {
-		return ptv(new QuotationAssignConfigVO());
-	}
-
 	public QuotationAssignConfigVO ptv(QuotationAssignConfigVO vo) {
 		BeanUtil.copyProperties(this, vo);
 

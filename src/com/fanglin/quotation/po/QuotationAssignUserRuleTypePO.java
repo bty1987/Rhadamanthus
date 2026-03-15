@@ -87,10 +87,6 @@ public class QuotationAssignUserRuleTypePO implements Serializable {
 	}
 
 	// PO 转 VO 方法
-	public QuotationAssignUserRuleTypeVO ptv() {
-		return ptv(new QuotationAssignUserRuleTypeVO());
-	}
-
 	public QuotationAssignUserRuleTypeVO ptv(QuotationAssignUserRuleTypeVO vo) {
 		BeanUtil.copyProperties(this, vo);
 

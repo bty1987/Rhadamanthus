@@ -33,7 +33,7 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 			quotationAssignConfig.getCompany(),
 			quotationAssignConfig.getDepartment()
 		);
-		return po != null ? po.ptv() : null;
+		return po != null ? po.ptv(new QuotationAssignConfigVO()) : null;
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 		List<QuotationAssignConfigPO> poList = quotationAssignConfigDao.queryQuotationAssignConfigByCompany(quotationAssignConfig.getCompany());
 		List<QuotationAssignConfigVO> voList = new ArrayList<QuotationAssignConfigVO>();
 		for (QuotationAssignConfigPO po : poList) {
-			voList.add(po.ptv());
+			voList.add(po.ptv(new QuotationAssignConfigVO()));
 		}
 		return voList;
 	}

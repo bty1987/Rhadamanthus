@@ -146,10 +146,6 @@ public class QuotationAssignRecordPO implements Serializable {
 	}
 
 	// PO 转 VO 方法
-	public QuotationAssignRecordVO ptv() {
-		return ptv(new QuotationAssignRecordVO());
-	}
-
 	public QuotationAssignRecordVO ptv(QuotationAssignRecordVO vo) {
 		BeanUtil.copyProperties(this, vo);
 
