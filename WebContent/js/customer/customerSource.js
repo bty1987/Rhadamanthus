@@ -987,6 +987,23 @@ $(function() {
             com.focusPage(".belonger", "#issueCustomerChanceModal").show();
             com.focusPage(".department", "#issueCustomerChanceModal").hide();
             com.focusPage(".region", "#issueCustomerChanceModal").hide();
+
+            // 根据聚焦状态重新初始化 belonger 的 typeahead
+            // focus == 1: 聚焦模式，使用 queryCustomerUserRuleItemByPinyin（查询人员规则中的配置人员）
+            // focus == 0: 非聚焦模式，使用 queryUserByPinyin（查询所有用户）
+            if (customerSource.rule.focus == 1) {
+                // 聚焦模式：查询人员规则中的配置用户
+                com.initTypeahead('belonger', api.customer.queryCustomerUserRuleItemByPinyin, "pinyinName", {}, 'autoFillKeyValue', 'user.uid', 'user.userId', function(list, key, value) {
+                    // 从规则项中提取用户信息
+                    return value;
+                });
+            } else {
+                // 非聚焦模式：查询所有用户（保持原有方式）
+                com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {
+                    "user.status": 0,
+                    "departmentType.name": "",
+                }, 'autoFillKeyValue', 'key', 'value');
+            }
         }
 
         if (customerSource.rule.atttype == constant.customer().customerDeptRule.ATTTYPE_DEPT_INT) {
