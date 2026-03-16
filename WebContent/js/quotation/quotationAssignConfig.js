@@ -46,11 +46,11 @@ jQuery(function($) {
 				html += '<td>' + com.formatDate(item.createTime, 'yyyy-MM-dd HH:mm') + '</td>';
 				html += '<td>' + com.formatDate(item.updateTime, 'yyyy-MM-dd HH:mm') + '</td>';
 				html += '<td>';
-				html += '  <button class="btn btn-xs btn-info edit-btn" data-id="' + item.qcid + '"><i class="icon-edit"></i> 编辑</button> ';
-				html += '  <button class="btn btn-xs btn-success toggle-btn" data-id="' + item.qcid + '" data-enabled="' + item.enabled + '">';
+				html += '  <button class="btn btn-xs btn-info edit-btn" data-id="' + item.qacid + '"><i class="icon-edit"></i> 编辑</button> ';
+				html += '  <button class="btn btn-xs btn-success toggle-btn" data-id="' + item.qacid + '" data-enabled="' + item.enabled + '">';
 				html += item.enabled == 1 ? '<i class="icon-ban-circle"></i> 禁用' : '<i class="icon-ok"></i> 启用';
 				html += '</button> ';
-				html += '  <button class="btn btn-xs btn-danger delete-btn" data-id="' + item.qcid + '"><i class="icon-trash"></i> 删除</button>';
+				html += '  <button class="btn btn-xs btn-danger delete-btn" data-id="' + item.qacid + '"><i class="icon-trash"></i> 删除</button>';
 				html += '</td>';
 				html += '</tr>';
 			});
@@ -97,20 +97,20 @@ jQuery(function($) {
 	}
 
 	// 打开编辑对话框
-	function openEditModal(qcid) {
+	function openEditModal(qacid) {
 		$('#editForm')[0].reset();
-		$('#qcid').val('');
+		$('#qacid').val('');
 		$('input[name="enabled"][value="1"]').prop('checked', true);
 		$('input[name="autoAssign"][value="1"]').prop('checked', true);
 
-		if (qcid) {
+		if (qacid) {
 			$('#modalTitle').text('编辑预算配置');
 
 			com.post(api.quotationAssign.getQuotationConfig, {
-				"qcid": qcid
+				"qacid": qacid
 			}, function(res) {
 				var config = res.quotationConfig;
-				$('#qcid').val(config.qcid);
+				$('#qacid').val(config.qacid);
 				$('#companyId').val(config.company).trigger('chosen:updated');
 				loadDepartmentOptions(config.company);
 
@@ -131,7 +131,7 @@ jQuery(function($) {
 
 	// 保存
 	function save() {
-		var qcid = $('#qcid').val();
+		var qacid = $('#qacid').val();
 		var company = $('#companyId').val();
 		var department = $('#departmentId').val();
 		var enabled = parseInt($('input[name="enabled"]:checked').val());
@@ -143,14 +143,14 @@ jQuery(function($) {
 		}
 
 		var params = {
-			"quotationConfig.qcid": qcid || null,
+			"quotationConfig.qacid": qacid || null,
 			"quotationConfig.company": company,
 			"quotationConfig.department": department || null,
 			"quotationConfig.enabled": enabled,
 			"quotationConfig.autoAssign": autoAssign
 		};
 
-		var apiMethod = qcid ? api.quotationAssign.updateQuotationConfig : api.quotationAssign.saveQuotationConfig;
+		var apiMethod = qacid ? api.quotationAssign.updateQuotationConfig : api.quotationAssign.saveQuotationConfig;
 
 		com.post(apiMethod, params, function(res) {
 			if (res.success) {
@@ -164,10 +164,10 @@ jQuery(function($) {
 	}
 
 	// 删除
-	function deleteConfig(qcid) {
+	function deleteConfig(qacid) {
 		com.showConfirm('确认删除该配置？', function() {
 			com.post(api.quotationAssign.deleteQuotationConfig, {
-				"qcid": qcid
+				"qacid": qacid
 			}, function(res) {
 				if (res.success) {
 					com.showAlert(com.info, '删除成功');
@@ -180,7 +180,7 @@ jQuery(function($) {
 	}
 
 	// 切换启用状态
-	function toggleEnabled(qcid, currentEnabled) {
+	function toggleEnabled(qacid, currentEnabled) {
 		var apiMethod = currentEnabled == 1 ? api.quotationAssign.disableQuotationAssign : api.quotationAssign.enableQuotationAssign;
 		var actionText = currentEnabled == 1 ? '禁用' : '启用';
 
@@ -188,7 +188,7 @@ jQuery(function($) {
 			com.post(apiMethod, {
 				"company": null,  // 从配置中获取
 				"department": null,
-				"qcid": qcid
+				"qacid": qacid
 			}, function(res) {
 				if (res.success) {
 					com.showAlert(com.info, res.message || actionText + '成功');

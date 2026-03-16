@@ -26,7 +26,19 @@ import com.fanglin.quotation.service.QuotationAssignService;
 import com.fanglin.quotation.vo.QuotationAssignVO;
 
 /**
- * 装修单预算分配服务实现 核心分配逻辑实现
+ * 装修单预算分配服务实现 - 核心分配逻辑实现
+ *
+ * <p>重要业务规则：
+ * <ul>
+ * <li><b>报价员 = 预算员</b>：分配给装修单的报价员，就是后续报价单的创建人（预算员）</li>
+ * <li>decoration.quoter (decoration.quid) = 报价员</li>
+ * <li>quotation.creater (quotation.cuid) = 预算员</li>
+ * <li>分配时设置 decoration.quoter，创建报价单时该人员自动成为 quotation.creater</li>
+ * <li>分配时间使用 quotation.createtime，不需要额外的 budgetAssignTime 字段</li>
+ * </ul>
+ *
+ * @author Claude AI
+ * @since 2026-03-16
  */
 @Service
 public class QuotationAssignServiceImpl implements QuotationAssignService {
@@ -101,12 +113,15 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	/**
 	 * 执行分配操作（分支1：分配成功）
+	 *
+	 * <p>将预算员分配给装修单，设置为装修单的报价员（decoration.quoter）。
+	 * 该人员后续创建报价单时，会自动成为报价单的预算员（quotation.creater）。
 	 */
 	private Integer executeAssign(String orderId, QuotationAssignUserRulePO budgetUser, Integer companyId, Short decorationType) {
-		// 1. 更新装修单的预算员ID
+		// 1. 更新装修单的报价员（该人员也是预算员）
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration != null) {
-			// 创建 UserPO 对象并设置预算员
+			// 设置装修单的报价员（decoration.quoter = decoration.quid）
 			UserPO quoter = new UserPO();
 			quoter.setUid(budgetUser.getUser().getUid());
 			decoration.setQuoter(quoter);
@@ -176,8 +191,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	/**
 	 * 处理类型不匹配（分支3：返回错误）
-	 * 
-	 * @throws FLException
+	 *
+	 * @throws FLException 当无预算员支持该装修类型时抛出异常
 	 */
 	private Integer handleTypeMismatch(String orderId, Integer companyId, Short decorationType, Integer designerUid) throws FLException {
 		String typeName = (decorationType == 1) ? "半包" : "整装";
@@ -197,6 +212,16 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		throw new FLException(330091, "当前无预算员支持该装修类型（" + typeName + "），请联系管理员配置预算员类型");
 	}
 
+	/**
+	 * 手动分配报价员（该人员也是预算员）
+	 *
+	 * <p>由预算经理手动将指定的预算员分配给装修单，设置为装修单的报价员（decoration.quoter）。
+	 * 该人员后续创建报价单时，会自动成为报价单的预算员（quotation.creater）。
+	 *
+	 * @param quotationAssign 分配请求对象，包含装修单号、预算员ID、分配人ID
+	 * @return 是否分配成功
+	 * @throws FLException 当预算员不存在、不支持该装修类型时抛出异常
+	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public boolean manualQuotationAssign(QuotationAssignVO quotationAssign) throws FLException {
@@ -224,7 +249,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(330092, "该预算员不支持装修类型（" + typeName + "）");
 		}
 
-		// 4. 更新装修单的预算员ID
+		// 4. 更新装修单的报价员（该人员也是预算员）
 		Integer oldQuoterUid = decoration.getQuoter() != null ? decoration.getQuoter().getUid() : null;
 		UserPO quoter = new UserPO();
 		quoter.setUid(budgetUid);

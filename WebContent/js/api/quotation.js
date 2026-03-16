@@ -95,6 +95,16 @@ $.extend(api.index, {
     qeasure4detailIndex: {
         url: "/views/quotation/qeasure4detail.html"
     },
+
+    quotationAssignUserRuleIndex: {
+        url: "/views/quotation/quotationAssignUserRule.html"
+    },
+    quotationAssignRequestIndex: {
+        url: "/views/quotation/quotationAssignRequest.html"
+    },
+    quotationAssignConfigIndex: {
+        url: "/views/quotation/quotationAssignConfig.html"
+    }
 });
 
 $.extend(api, {
@@ -2222,6 +2232,83 @@ $.extend(api, {
             }
         },
 
+    },
+
+    // 预算分配管理 API
+    quotationAssign: {
+        // 预算员规则管理
+        pageQuotationAssignUserRuleByCondition: {
+            url: "pageQuotationAssignUserRuleByCondition.do"
+        },
+        queryQuotationAssignUserRuleForOption: {
+            url: "queryQuotationAssignUserRuleForOption.do"
+        },
+        addQuotationAssignUserRule: {
+            url: "addQuotationAssignUserRule.do",
+            validate: {
+                "quotationAssignUserRule.user.uid": { required: true },
+                "quotationAssignUserRule.company.cid": { required: true }
+            }
+        },
+        updateQuotationAssignUserRule: {
+            url: "updateQuotationAssignUserRule.do"
+        },
+        disableQuotationAssignUserRuleByQaurid: {
+            url: "disableQuotationAssignUserRuleByQaurid.do"
+        },
+        queryQuotationAssignUserRuleTypeByQaurid: {
+            url: "queryQuotationAssignUserRuleTypeByQaurid.do"
+        },
+        updateQuotationAssignUserRuleType: {
+            url: "updateQuotationAssignUserRuleType.do"
+        },
+
+        // 待分配队列管理
+        pageQuotationAssignRequestByCondition: {
+            url: "pageQuotationAssignRequestByCondition.do"
+        },
+        queryQuotationAssignRequestForPending: {
+            url: "queryQuotationAssignRequestForPending.do"
+        },
+
+        // 分配配置管理
+        pageQuotationAssignConfigByCondition: {
+            url: "pageQuotationAssignConfigByCondition.do"
+        },
+        queryQuotationAssignConfigByDid: {
+            url: "queryQuotationAssignConfigByDid.do"
+        },
+        updateQuotationAssignConfig: {
+            url: "updateQuotationAssignConfig.do"
+        },
+
+        // 分配操作
+        assignQuotationAssign: {
+            url: "assignQuotationAssign.do",
+            validate: {
+                "quotationAssign.orderId": { required: true }
+            }
+        },
+        manualQuotationAssign: {
+            url: "manualQuotationAssign.do",
+            validate: {
+                "quotationAssign.orderId": { required: true },
+                "quotationAssign.budgetUid": { required: true }
+            }
+        },
+        finishQuotationAssign: {
+            url: "finishQuotationAssign.do",
+            validate: {
+                "quotationAssign.orderId": { required: true }
+            }
+        },
+        reassignQuotationAssign: {
+            url: "reassignQuotationAssign.do",
+            validate: {
+                "quotationAssign.orderId": { required: true },
+                "quotationAssign.newBudgetUid": { required: true }
+            }
+        }
     }
 });
 
