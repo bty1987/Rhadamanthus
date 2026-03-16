@@ -136,4 +136,5 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		String hql = "DELETE FROM QuotationAssignRequestPO WHERE orderId = :orderId AND status = :status";
 		return session().createQuery(hql).setParameter("orderId", orderId).setParameter("status", status).executeUpdate();
 	}
+
 }

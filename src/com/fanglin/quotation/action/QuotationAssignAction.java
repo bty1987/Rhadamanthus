@@ -34,7 +34,7 @@ public class QuotationAssignAction extends BaseListAction {
 	private String orderId; // 装修单号
 	private Integer companyId; // 公司ID
 	private Integer departmentId; // 部门ID
-	private Byte decorationType; // 装修类型：1-半包，2-整装
+	private Short decorationType; // 装修类型：1-半包，2-整装
 	private Integer budgetUid; // 预算员用户ID
 	private Integer newBudgetUid; // 新预算员用户ID（重新分配时使用）
 	private Integer assignUid; // 分配人用户ID（手动分配时使用）
@@ -152,11 +152,11 @@ public class QuotationAssignAction extends BaseListAction {
 		this.departmentId = departmentId;
 	}
 
-	public Byte getDecorationType() {
+	public Short getDecorationType() {
 		return decorationType;
 	}
 
-	public void setDecorationType(Byte decorationType) {
+	public void setDecorationType(Short decorationType) {
 		this.decorationType = decorationType;
 	}
 

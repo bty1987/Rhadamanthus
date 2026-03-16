@@ -122,4 +122,5 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	int deleteQuotationAssignRequestByOrderIdAndStatus(String orderId, short status);
 
 	List<QuotationAssignRequestPO> page(Paging paging, List<Filter> filters);
+
 }
