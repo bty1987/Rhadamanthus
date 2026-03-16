@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
@@ -149,7 +150,12 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		QuotationAssignRequestPO request = new QuotationAssignRequestPO();
 		request.setOrderId(orderId);
 		request.setCompany(companyId);
-		request.setDepartment(department);
+		// 设置部门对象（如果department不为null）
+		if (department != null) {
+			DepartmentPO dept = new DepartmentPO();
+			dept.setDid(department);
+			request.setDepartment(dept);
+		}
 		request.setDecorationType(decorationType.shortValue());
 		request.setPriority(QuotationAssignRequestPO.PRIORITY_NORMAL_INT);
 		request.setRequestTime(new Timestamp(System.currentTimeMillis()));
@@ -292,7 +298,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 查询待分配队列中最优先且类型匹配的任务
-		QuotationAssignRequestPO request = quotationAssignRequestDao.pullTopPriorityQuotationAssignRequestByTypes(budgetUser.getCompany(), budgetUser.getDepartment() != null ? budgetUser.getDepartment() : null, supportedTypes);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.pullTopPriorityQuotationAssignRequestByTypes(
+				budgetUser.getCompany(),
+				budgetUser.getDepartment() != null ? budgetUser.getDepartment().getDid() : null,
+				supportedTypes);
 
 		if (request == null) {
 			// 队列为空或无匹配类型，预算员保持空闲
