@@ -237,6 +237,7 @@ jQuery(function($) {
             var $btnModuleNew = $('<a></a>').addClass('btn btn-minier btn-purple').html('模块配置');
             var $btnCopyModule = $('<a></a>').addClass('btn btn-minier btn-default').html('模块复制');
             var $btnTask = $('<a></a>').addClass('btn btn-minier btn-danger').html('任务配置');
+            var $btnCopyTask = $('<a></a>').addClass('btn btn-minier btn-default').html('任务复制');
             var $officeModule = $('<a></a>').addClass('btn btn-minier btn-info').html('办公配置');
             var $btnOperation = $('<a></a>').addClass('btn btn-minier btn-warning').html('操作配置');
             var $btnChart = $('<a></a>').addClass('btn btn-minier btn-pink').html('图表配置');
@@ -254,9 +255,9 @@ jQuery(function($) {
             });
 
             if (role.pageType == "advance") {
-                $divBtnWrap.append($chainPage).append($btnModule).append($btnModuleNew).append($btnCopyModule).append($btnTask).append($officeModule).append($btnOperation).append($btnChart).append($btnEdit).append($btnDel).appendTo($h3);
+                $divBtnWrap.append($chainPage).append($btnModule).append($btnModuleNew).append($btnCopyModule).append($btnTask).append($btnCopyTask).append($officeModule).append($btnOperation).append($btnChart).append($btnEdit).append($btnDel).appendTo($h3);
             } else {
-                $divBtnWrap.append($btnModule).append($btnModuleNew).append($btnCopyModule).append($btnTask).appendTo($h3);
+                $divBtnWrap.append($btnModule).append($btnModuleNew).append($btnCopyModule).append($btnTask).append($btnCopyTask).appendTo($h3);
             }
 
             $liLine.append($h3).append($ulProperty);
@@ -308,6 +309,14 @@ jQuery(function($) {
                 });
 
                 role.modals.taskModal.modal("show");
+
+            });
+
+            $btnCopyTask.click(function() {
+
+                role.rid = v.rid;
+
+                showTaskCopySelectionModal();
 
             });
 
