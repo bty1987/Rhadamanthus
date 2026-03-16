@@ -16,6 +16,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.service.QuotationAssignService;
 import com.fanglin.quotation.vo.QuotationAssignRecordVO;
 import com.fanglin.quotation.vo.QuotationAssignRequestVO;
+import com.fanglin.quotation.vo.QuotationAssignVO;
 
 /**
  * 装修单预算分配 Action 提供预算员自动分配、手动分配、重新分配等 API 接口
@@ -30,15 +31,8 @@ public class QuotationAssignAction extends BaseListAction {
 	@Autowired
 	private QuotationAssignService quotationAssignService;
 
-	// 参数字段
-	private String orderId; // 装修单号
-	private Integer companyId; // 公司ID
-	private Integer departmentId; // 部门ID
-	private Short decorationType; // 装修类型：1-半包，2-整装
-	private Integer budgetUid; // 预算员用户ID
-	private Integer newBudgetUid; // 新预算员用户ID（重新分配时使用）
-	private Integer assignUid; // 分配人用户ID（手动分配时使用）
-	private String remark; // 备注
+	// 参数字段（使用VO对象）
+	private QuotationAssignVO quotationAssign;
 
 	// 返回字段
 	private Map<String, Object> result; // 返回结果
@@ -55,8 +49,8 @@ public class QuotationAssignAction extends BaseListAction {
 	 */
 	@Action(value = "autoAssignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String autoAssignBudgetUser() throws FLException {
-
-		quotationAssignService.autoAssignBudgetUser(orderId, companyId, decorationType);
+		quotationAssign.setCompanyId(queryCompany());
+		quotationAssignService.autoAssignBudgetUser(quotationAssign.getOrderId(), quotationAssign.getCompanyId(), quotationAssign.getDecorationType());
 
 		return SUCCESS;
 	}
@@ -70,8 +64,7 @@ public class QuotationAssignAction extends BaseListAction {
 	 */
 	@Action(value = "manualAssignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String manualAssignBudgetUser() throws FLException {
-
-		quotationAssignService.manualAssignBudgetUser(orderId, budgetUid, assignUid);
+		quotationAssignService.manualAssignBudgetUser(quotationAssign.getOrderId(), quotationAssign.getBudgetUid(), quotationAssign.getAssignUid());
 
 		return SUCCESS;
 	}
@@ -85,8 +78,7 @@ public class QuotationAssignAction extends BaseListAction {
 	 */
 	@Action(value = "reassignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String reassignBudgetUser() throws FLException {
-
-		quotationAssignService.reassignBudgetUser(orderId, newBudgetUid, assignUid);
+		quotationAssignService.reassignBudgetUser(quotationAssign.getOrderId(), quotationAssign.getNewBudgetUid(), quotationAssign.getAssignUid());
 
 		return SUCCESS;
 	}
@@ -100,8 +92,7 @@ public class QuotationAssignAction extends BaseListAction {
 	 */
 	@Action(value = "finishQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishQuotation() throws FLException {
-
-		quotationAssignService.finishQuotation(orderId);
+		quotationAssignService.finishQuotation(quotationAssign.getOrderId());
 
 		return SUCCESS;
 	}
@@ -116,9 +107,10 @@ public class QuotationAssignAction extends BaseListAction {
 	@Action(value = "isQuotationAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String isQuotationAssignEnabled() throws FLException {
 		result = new HashMap<String, Object>();
+		quotationAssign.setCompanyId(queryCompany());
 
-		boolean enabled = quotationAssignService.isQuotationAssignEnabled(companyId, departmentId);
-		boolean autoAssign = quotationAssignService.isAutoAssign(companyId, departmentId);
+		boolean enabled = quotationAssignService.isQuotationAssignEnabled(quotationAssign.getCompanyId(), quotationAssign.getDepartment());
+		boolean autoAssign = quotationAssignService.isAutoAssign(quotationAssign.getCompanyId(), quotationAssign.getDepartment());
 
 		result.put("enabled", enabled);
 		result.put("autoAssign", autoAssign);
@@ -128,68 +120,12 @@ public class QuotationAssignAction extends BaseListAction {
 
 	// Getter and Setter
 
-	public String getOrderId() {
-		return orderId;
+	public QuotationAssignVO getQuotationAssign() {
+		return quotationAssign;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
-	public Integer getCompanyId() {
-		return companyId;
-	}
-
-	public void setCompanyId(Integer companyId) {
-		this.companyId = companyId;
-	}
-
-	public Integer getDepartmentId() {
-		return departmentId;
-	}
-
-	public void setDepartmentId(Integer departmentId) {
-		this.departmentId = departmentId;
-	}
-
-	public Short getDecorationType() {
-		return decorationType;
-	}
-
-	public void setDecorationType(Short decorationType) {
-		this.decorationType = decorationType;
-	}
-
-	public Integer getBudgetUid() {
-		return budgetUid;
-	}
-
-	public void setBudgetUid(Integer budgetUid) {
-		this.budgetUid = budgetUid;
-	}
-
-	public Integer getNewBudgetUid() {
-		return newBudgetUid;
-	}
-
-	public void setNewBudgetUid(Integer newBudgetUid) {
-		this.newBudgetUid = newBudgetUid;
-	}
-
-	public Integer getAssignUid() {
-		return assignUid;
-	}
-
-	public void setAssignUid(Integer assignUid) {
-		this.assignUid = assignUid;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setQuotationAssign(QuotationAssignVO quotationAssign) {
+		this.quotationAssign = quotationAssign;
 	}
 
 	public Map<String, Object> getResult() {
