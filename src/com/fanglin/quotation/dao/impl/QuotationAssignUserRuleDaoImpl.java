@@ -7,9 +7,11 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleDao;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
+import com.fanglin.utils.Paging;
 
 /**
  * 报价单预算员规则表 DAO 实现 职责: 管理预算员的分配规则（状态、任务数、完成时间等）
@@ -114,5 +116,21 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 	public int enableQuotationAssignUserRule(int uid) {
 		String sql = "UPDATE quotation.quotationassignuserrule SET status = :status, updateTime = CURRENT_TIMESTAMP WHERE qaurid IN (SELECT qaurid FROM quotation.quotationassignuserrule WHERE uid = :uid)";
 		return session().createSQLQuery(sql).setParameter("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT).setParameter("uid", uid).executeUpdate();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company) {
+		PagingQuery<QuotationAssignUserRulePO> query = pagingQuery(paging, QuotationAssignUserRulePO.class);
+
+		query.add(Restrictions.eq(QuotationAssignUserRulePO.COLUMN_COMPANY_STR, company));
+
+		queryFilterExcute(query, filters);
+
+		query.createAlias("user", "user");
+		query.addOrder(Order.asc(QuotationAssignUserRulePO.COLUMN_STATUS_STR));
+		query.addOrder(Order.asc(QuotationAssignUserRulePO.COLUMN_LASTFINISHTIME_STR));
+
+		return query.list();
 	}
 }

@@ -116,9 +116,19 @@ public interface QuotationAssignUserRuleDao extends Dao<QuotationAssignUserRuleP
 
 	/**
 	 * 启用预算员（设置状态为待分配）
-	 * 
+	 *
 	 * @param uid 用户ID
 	 * @return 影响行数
 	 */
 	int enableQuotationAssignUserRule(int uid);
+
+	/**
+	 * 分页查询预算员规则
+	 *
+	 * @param paging 分页对象
+	 * @param filters 过滤条件
+	 * @param company 公司ID
+	 * @return 预算员规则列表
+	 */
+	List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(com.fanglin.utils.Paging paging, List<com.fanglin.core.vo.Filter> filters, int company);
 }
