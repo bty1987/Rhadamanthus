@@ -28,51 +28,38 @@ public class QuotationAssignConfigAction extends BaseAction {
 	@Autowired
 	private QuotationAssignConfigService quotationAssignConfigService;
 
-	// 参数字段
-	private Long qacid; // 配置ID
-	private Integer company; // 公司ID
-	private Integer department; // 部门ID
-	private Short enabled; // 是否启用（1-启用，0-禁用）
-	private Short autoAssign; // 是否自动分配（1-自动，0-手动）
+	// 参数字段（使用VO对象）
+	private QuotationAssignConfigVO quotationAssignConfig;
 
 	// 返回字段
 	private Map<String, Object> result; // 返回结果
-	private QuotationAssignConfigVO quotationAssignConfig; // 预算配置
 	private List<QuotationAssignConfigVO> quotationAssignConfigs; // 预算配置列表
 
 	/**
 	 * 查询预算配置
-	 * 
-	 * 请求参数: - company: 公司ID（必需） - department: 部门ID（可选）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需） - quotationAssignConfig.department: 部门ID（可选）
+	 *
 	 * 返回数据: - quotationAssignConfig: 预算配置
 	 */
 	@Action(value = "queryQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignConfig() throws FLException {
-
-		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-		vo.setCompany(company);
-		vo.setDepartment(department);
-
-		quotationAssignConfig = quotationAssignConfigService.queryQuotationAssignConfigByCompanyAndDepartment(vo);
+		quotationAssignConfig.setCompany(queryCompany());
+		quotationAssignConfig = quotationAssignConfigService.queryQuotationAssignConfigByCompanyAndDepartment(quotationAssignConfig);
 		return SUCCESS;
 	}
 
 	/**
 	 * 根据公司ID查询所有预算配置
-	 * 
-	 * 请求参数: - company: 公司ID（必需）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需）
+	 *
 	 * 返回数据: - quotationAssignConfigs: 预算配置列表
 	 */
 	@Action(value = "getQuotationAssignConfigsByCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getQuotationAssignConfigsByCompany() throws FLException {
-
-		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-		vo.setCompany(company);
-
-		quotationAssignConfigs = quotationAssignConfigService.queryQuotationAssignConfigByCompany(vo);
-
+		quotationAssignConfig.setCompany(queryCompany());
+		quotationAssignConfigs = quotationAssignConfigService.queryQuotationAssignConfigByCompany(quotationAssignConfig);
 		return SUCCESS;
 	}
 
@@ -93,134 +80,72 @@ public class QuotationAssignConfigAction extends BaseAction {
 
 	/**
 	 * 删除预算配置
-	 * 
-	 * 请求参数: - qacid: 配置ID（必需）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignConfig.qacid: 配置ID（必需）
+	 *
 	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
 	@Action(value = "deleteQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationAssignConfig() throws FLException {
-
-		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-		vo.setQacid(qacid);
-		quotationAssignConfigService.deleteQuotationAssignConfig(vo, queryUserId());
-
+		quotationAssignConfigService.deleteQuotationAssignConfig(quotationAssignConfig, queryUserId());
 		return SUCCESS;
 	}
 
 	/**
 	 * 启用预算分配功能
-	 * 
-	 * 请求参数: - qacid: 配置ID（必需）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignConfig.qacid: 配置ID（必需）
+	 *
 	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
 	@Action(value = "enableQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String enableQuotationAssignConfig() throws FLException {
-
-		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-		vo.setQacid(qacid);
-		quotationAssignConfigService.enableQuotationAssignConfig(vo, queryUserId());
-
+		quotationAssignConfigService.enableQuotationAssignConfig(quotationAssignConfig, queryUserId());
 		return SUCCESS;
 	}
 
 	/**
 	 * 禁用预算分配功能
-	 * 
-	 * 请求参数: - qacid: 配置ID（必需）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignConfig.qacid: 配置ID（必需）
+	 *
 	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
 	@Action(value = "disableQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String disableQuotationAssignConfig() throws FLException {
-
-		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-		vo.setQacid(qacid);
-		quotationAssignConfigService.disableQuotationAssignConfig(vo, queryUserId());
-
+		quotationAssignConfigService.disableQuotationAssignConfig(quotationAssignConfig, queryUserId());
 		return SUCCESS;
 	}
 
 	/**
 	 * 检查是否启用预算分配功能
-	 * 
-	 * 请求参数: - company: 公司ID（必需） - department: 部门ID（可选）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需） - quotationAssignConfig.department: 部门ID（可选）
+	 *
 	 * 返回数据: - enabled: 是否启用
 	 */
 	@Action(value = "isQuotationAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String isQuotationAssignEnabled() throws FLException {
-
-		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-		vo.setCompany(company);
-		vo.setDepartment(department);
-
-		quotationAssignConfigService.isQuotationAssignEnabled(vo);
-
+		quotationAssignConfig.setCompany(queryCompany());
+		quotationAssignConfigService.isQuotationAssignEnabled(quotationAssignConfig);
 		return SUCCESS;
 	}
 
 	/**
 	 * 检查是否启用自动分配模式
-	 * 
-	 * 请求参数: - company: 公司ID（必需） - department: 部门ID（可选）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需） - quotationAssignConfig.department: 部门ID（可选）
+	 *
 	 * 返回数据: - autoAssign: 是否自动分配
 	 */
 	@Action(value = "isAutoAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String isAutoAssignEnabled() throws FLException {
-
-		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-		vo.setCompany(company);
-		vo.setDepartment(department);
-
-		quotationAssignConfigService.isAutoAssignEnabled(vo);
-
+		quotationAssignConfig.setCompany(queryCompany());
+		quotationAssignConfigService.isAutoAssignEnabled(quotationAssignConfig);
 		return SUCCESS;
 	}
 
 	// Getter and Setter
-
-	public Long getQacid() {
-		return qacid;
-	}
-
-	public void setQacid(Long qacid) {
-		this.qacid = qacid;
-	}
-
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
-	}
-
-	public Integer getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(Integer department) {
-		this.department = department;
-	}
-
-	public Short getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Short enabled) {
-		this.enabled = enabled;
-	}
-
-	public Short getAutoAssign() {
-		return autoAssign;
-	}
-
-	public void setAutoAssign(Short autoAssign) {
-		this.autoAssign = autoAssign;
-	}
 
 	public Map<String, Object> getResult() {
 		return result;
