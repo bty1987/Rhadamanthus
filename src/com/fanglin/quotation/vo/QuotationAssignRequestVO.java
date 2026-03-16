@@ -17,7 +17,7 @@ public class QuotationAssignRequestVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// 字段
-	private Integer barid; // 请求ID
+	private Integer qarid; // 请求ID
 	private String orderId; // 装修单号
 	private Integer company; // 公司ID
 	private Integer department; // 部门ID
@@ -48,13 +48,12 @@ public class QuotationAssignRequestVO implements Serializable {
 		super();
 	}
 
-	// Getter and Setter
-	public Integer getBarid() {
-		return barid;
+	public Integer getQarid() {
+		return qarid;
 	}
 
-	public void setBarid(Integer barid) {
-		this.barid = barid;
+	public void setQarid(Integer qarid) {
+		this.qarid = qarid;
 	}
 
 	public String getOrderId() {

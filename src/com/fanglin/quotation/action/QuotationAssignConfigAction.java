@@ -37,29 +37,30 @@ public class QuotationAssignConfigAction extends BaseAction {
 
 	/**
 	 * 查询预算配置
-	 *
+	 * 
 	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需） - quotationAssignConfig.department: 部门ID（可选）
-	 *
+	 * 
 	 * 返回数据: - quotationAssignConfig: 预算配置
 	 */
 	@Action(value = "queryQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignConfig() throws FLException {
-		quotationAssignConfig.setCompany(queryCompany());
-		quotationAssignConfig = quotationAssignConfigService.queryQuotationAssignConfigByCompanyAndDepartment(quotationAssignConfig);
+
+		quotationAssignConfig = quotationAssignConfigService.queryQuotationAssignConfigByCompanyAndDepartment(quotationAssignConfig, queryCompany());
 		return SUCCESS;
 	}
 
 	/**
 	 * 根据公司ID查询所有预算配置
-	 *
+	 * 
 	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需）
-	 *
+	 * 
 	 * 返回数据: - quotationAssignConfigs: 预算配置列表
 	 */
 	@Action(value = "getQuotationAssignConfigsByCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getQuotationAssignConfigsByCompany() throws FLException {
-		quotationAssignConfig.setCompany(queryCompany());
-		quotationAssignConfigs = quotationAssignConfigService.queryQuotationAssignConfigByCompany(quotationAssignConfig);
+
+		quotationAssignConfigs = quotationAssignConfigService.queryQuotationAssignConfigByCompany(quotationAssignConfig, queryCompany());
+
 		return SUCCESS;
 	}
 
@@ -80,68 +81,76 @@ public class QuotationAssignConfigAction extends BaseAction {
 
 	/**
 	 * 删除预算配置
-	 *
+	 * 
 	 * 请求参数: - quotationAssignConfig.qacid: 配置ID（必需）
-	 *
+	 * 
 	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
 	@Action(value = "deleteQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationAssignConfig() throws FLException {
+
 		quotationAssignConfigService.deleteQuotationAssignConfig(quotationAssignConfig, queryUserId());
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 启用预算分配功能
-	 *
+	 * 
 	 * 请求参数: - quotationAssignConfig.qacid: 配置ID（必需）
-	 *
+	 * 
 	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
 	@Action(value = "enableQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String enableQuotationAssignConfig() throws FLException {
+
 		quotationAssignConfigService.enableQuotationAssignConfig(quotationAssignConfig, queryUserId());
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 禁用预算分配功能
-	 *
+	 * 
 	 * 请求参数: - quotationAssignConfig.qacid: 配置ID（必需）
-	 *
+	 * 
 	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
 	@Action(value = "disableQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String disableQuotationAssignConfig() throws FLException {
+
 		quotationAssignConfigService.disableQuotationAssignConfig(quotationAssignConfig, queryUserId());
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 检查是否启用预算分配功能
-	 *
+	 * 
 	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需） - quotationAssignConfig.department: 部门ID（可选）
-	 *
+	 * 
 	 * 返回数据: - enabled: 是否启用
 	 */
 	@Action(value = "isQuotationAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String isQuotationAssignEnabled() throws FLException {
-		quotationAssignConfig.setCompany(queryCompany());
-		quotationAssignConfigService.isQuotationAssignEnabled(quotationAssignConfig);
+
+		quotationAssignConfigService.isQuotationAssignEnabled(quotationAssignConfig, queryCompany());
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 检查是否启用自动分配模式
-	 *
+	 * 
 	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需） - quotationAssignConfig.department: 部门ID（可选）
-	 *
+	 * 
 	 * 返回数据: - autoAssign: 是否自动分配
 	 */
 	@Action(value = "isAutoAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String isAutoAssignEnabled() throws FLException {
-		quotationAssignConfig.setCompany(queryCompany());
-		quotationAssignConfigService.isAutoAssignEnabled(quotationAssignConfig);
+
+		quotationAssignConfigService.isAutoAssignEnabled(quotationAssignConfig, queryCompany());
+
 		return SUCCESS;
 	}
 
