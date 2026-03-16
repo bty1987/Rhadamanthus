@@ -1,6 +1,7 @@
 package com.fanglin.quotation.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import com.fanglin.quotation.po.QuotationAssignConfigPO;
 import com.fanglin.quotation.po.QuotationAssignRecordPO;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
+import com.fanglin.quotation.po.QuotationAssignUserRuleTypePO;
 import com.fanglin.quotation.service.QuotationAssignService;
 
 /**
@@ -46,16 +48,13 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	@Autowired
 	private DecorationDao decorationDao;
 
-	@Autowired(required = false)
-	private InformationService informationService;
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public Integer autoAssignBudgetUser(String orderId, Integer companyId, Byte decorationType) {
 		// 1. 检查装修单是否已分配预算员
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
-			throw new FLException("装修单不存在: " + orderId);
+			throw new FLException(330090, "装修单不存在: " + orderId);
 		}
 
 		Integer currentQuoterUid = decoration.getQuoter() != null ? decoration.getQuoter().getUid() : null;
@@ -81,7 +80,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 4. 遍历预算员，查找支持该类型的预算员
 		for (QuotationAssignUserRulePO budgetUser : budgetUsers) {
 			// 验证预算员是否支持该装修类型
-			boolean isTypeSupported = quotationAssignUserRuleTypeDao.countByQauridAndType(budgetUser.getQaurid(), decorationType.shortValue()) > 0;
+			boolean isTypeSupported = quotationAssignUserRuleTypeDao.existQuotationAssignUserRuleType(budgetUser.getQaurid(), decorationType.shortValue()) > 0;
 
 			if (isTypeSupported) {
 				// 分支1：找到匹配的预算员，执行分配
@@ -180,7 +179,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		sendManagerNotification(companyId, orderId, typeName);
 
 		// 5. 抛出异常或返回错误码
-		throw new FLException("当前无预算员支持该装修类型（" + typeName + "），请联系管理员配置预算员类型");
+		throw new FLException(330091, "当前无预算员支持该装修类型（" + typeName + "），请联系管理员配置预算员类型");
 	}
 
 	@Override
@@ -189,20 +188,20 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 1. 验证预算员
 		QuotationAssignUserRulePO budgetUser = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUid(budgetUid);
 		if (budgetUser == null) {
-			throw new FLException("预算员不存在: " + budgetUid);
+			throw new FLException(330080, "预算员不存在: " + budgetUid);
 		}
 
 		// 2. 获取装修单信息
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
-			throw new FLException("装修单不存在: " + orderId);
+			throw new FLException(330090, "装修单不存在: " + orderId);
 		}
 
 		// 3. 验证类型匹配
-		boolean isTypeSupported = quotationAssignUserRuleTypeDao.countByQauridAndType(budgetUser.getQaurid(), decoration.getType()) > 0;
+		boolean isTypeSupported = quotationAssignUserRuleTypeDao.existQuotationAssignUserRuleType(budgetUser.getQaurid(), decoration.getType()) > 0;
 		if (!isTypeSupported) {
 			String typeName = (decoration.getType() == 1) ? "半包" : "整装";
-			throw new FLException("该预算员不支持装修类型（" + typeName + "）");
+			throw new FLException(330092, "该预算员不支持装修类型（" + typeName + "）");
 		}
 
 		// 4. 更新装修单的预算员ID
@@ -273,11 +272,17 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			return;
 		}
 
-		List<Short> supportedTypes = quotationAssignUserRuleTypeDao.queryTypesByQaurid(budgetUser.getQaurid());
+		List<QuotationAssignUserRuleTypePO> typePOs = quotationAssignUserRuleTypeDao.queryQuotationAssignUserRuleTypeByQaurid(budgetUser.getQaurid());
 
-		if (supportedTypes == null || supportedTypes.isEmpty()) {
+		if (typePOs == null || typePOs.isEmpty()) {
 			// 预算员未配置类型，无法分配
 			return;
+		}
+
+		// 提取类型列表
+		List<Short> supportedTypes = new java.util.ArrayList<Short>();
+		for (QuotationAssignUserRuleTypePO typePO : typePOs) {
+			supportedTypes.add(typePO.getType());
 		}
 
 		// 2. 查询待分配队列中最优先且类型匹配的任务
@@ -317,7 +322,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	public boolean reassignBudgetUser(String orderId, Integer newBudgetUid, Integer assignUid) {
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
-			throw new FLException("装修单不存在: " + orderId);
+			throw new FLException(330090, "装修单不存在: " + orderId);
 		}
 
 		Integer oldQuoterUid = decoration.getQuoter() != null ? decoration.getQuoter().getUid() : null;
@@ -407,10 +412,6 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	 * 发送分配通知
 	 */
 	private void sendAssignNotification(String orderId, Integer budgetUid, Integer assignUid, String assignType) {
-		if (informationService == null) {
-			return;
-		}
-
 		// TODO: 实现通知逻辑
 		// 通知设计师、预算员、预算经理
 	}
@@ -419,10 +420,6 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	 * 发送待分配队列通知
 	 */
 	private void sendQueueNotification(String orderId, Integer designerUid, Integer companyId, String action) {
-		if (informationService == null) {
-			return;
-		}
-
 		// TODO: 实现通知逻辑
 	}
 
@@ -430,10 +427,6 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	 * 发送错误通知
 	 */
 	private void sendErrorNotification(Integer designerUid, String orderId, String typeName) {
-		if (informationService == null) {
-			return;
-		}
-
 		// TODO: 实现通知逻辑
 	}
 
@@ -441,10 +434,6 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	 * 发送经理通知
 	 */
 	private void sendManagerNotification(Integer companyId, String orderId, String typeName) {
-		if (informationService == null) {
-			return;
-		}
-
 		// TODO: 实现通知逻辑
 	}
 }
