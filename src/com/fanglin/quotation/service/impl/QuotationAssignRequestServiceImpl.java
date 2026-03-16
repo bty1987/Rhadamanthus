@@ -41,31 +41,31 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	}
 
 	@Override
-	public QuotationAssignRequestVO getAssignRequest(Integer qarid) {
-		QuotationAssignRequestPO po = quotationAssignRequestDao.get(qarid);
+	public QuotationAssignRequestVO queryQuotationAssignRequestByQarid(QuotationAssignRequestVO quotationAssignRequestVO) {
+		QuotationAssignRequestPO po = quotationAssignRequestDao.get(quotationAssignRequestVO.getQarid());
 		return po != null ? po.ptv(new QuotationAssignRequestVO()) : null;
 	}
 
 	@Override
-	public QuotationAssignRequestVO getAssignRequestByOrderId(String orderId) {
-		QuotationAssignRequestPO po = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(orderId);
+	public QuotationAssignRequestVO queryQuotationAssignRequestByOrderId(QuotationAssignRequestVO quotationAssignRequestVO) {
+		QuotationAssignRequestPO po = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(quotationAssignRequestVO.getOrderId());
 		return po != null ? po.ptv(new QuotationAssignRequestVO()) : null;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updatePriority(Integer qarid, Byte priority) {
-		QuotationAssignRequestPO po = quotationAssignRequestDao.get(qarid);
+	public void updateQuotationAssignRequestPriority(QuotationAssignRequestVO quotationAssignRequestVO) {
+		QuotationAssignRequestPO po = quotationAssignRequestDao.get(quotationAssignRequestVO.getQarid());
 		if (po != null) {
-			po.setPriority(priority);
+			po.setPriority(quotationAssignRequestVO.getPriority());
 			quotationAssignRequestDao.update(po);
 		}
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void cancelRequest(Integer qarid, String reason) {
-		QuotationAssignRequestPO po = quotationAssignRequestDao.get(qarid);
+	public void cancelQuotationAssignRequest(QuotationAssignRequestVO quotationAssignRequestVO) {
+		QuotationAssignRequestPO po = quotationAssignRequestDao.get(quotationAssignRequestVO.getQarid());
 		if (po != null) {
 			// 删除待分配请求
 			quotationAssignRequestDao.deleteQuotationAssignRequestByOrderIdAndStatus(po.getOrderId(), QuotationAssignRequestPO.STATUS_PENDING_INT);
@@ -73,11 +73,11 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	}
 
 	@Override
-	public Map<String, Object> getQueueStatistics(Integer company, Integer department) {
+	public Map<String, Object> queryQuotationAssignRequestQueueStatistics(QuotationAssignRequestVO quotationAssignRequestVO, Integer company) {
 		Map<String, Object> statistics = new HashMap<String, Object>();
 
 		// 查询待分配队列
-		List<QuotationAssignRequestPO> pendingList = quotationAssignRequestDao.queryPendingQuotationAssignRequestQueue(company, department);
+		List<QuotationAssignRequestPO> pendingList = quotationAssignRequestDao.queryPendingQuotationAssignRequestQueue(company, quotationAssignRequestVO.getDepartment());
 
 		// 总数量
 		statistics.put("totalCount", pendingList.size());
@@ -135,8 +135,8 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	}
 
 	@Override
-	public List<QuotationAssignRequestVO> getPendingQueue(Integer company, Integer department) {
-		List<QuotationAssignRequestPO> poList = quotationAssignRequestDao.queryPendingQuotationAssignRequestQueue(company, department);
+	public List<QuotationAssignRequestVO> queryPendingQuotationAssignRequestQueue(QuotationAssignRequestVO quotationAssignRequestVO, Integer company) {
+		List<QuotationAssignRequestPO> poList = quotationAssignRequestDao.queryPendingQuotationAssignRequestQueue(company, quotationAssignRequestVO.getDepartment());
 		List<QuotationAssignRequestVO> voList = new ArrayList<QuotationAssignRequestVO>();
 
 		for (QuotationAssignRequestPO po : poList) {
@@ -147,8 +147,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	}
 
 	@Override
-	public int getQueuePosition(Integer company, Integer department, Long requestTime) {
-		Timestamp timestamp = new Timestamp(requestTime);
-		return quotationAssignRequestDao.getQuotationAssignRequestQueuePosition(company, timestamp);
+	public int queryQuotationAssignRequestQueuePosition(QuotationAssignRequestVO quotationAssignRequestVO, Integer company) {
+		return quotationAssignRequestDao.getQuotationAssignRequestQueuePosition(company, quotationAssignRequestVO.getRequestTime());
 	}
 }

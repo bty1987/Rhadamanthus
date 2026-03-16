@@ -126,30 +126,30 @@ public class QuotationAssignConfigAction extends BaseAction {
 
 	/**
 	 * 检查是否启用预算分配功能
-	 * 
+	 *
 	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需） - quotationAssignConfig.department: 部门ID（可选）
-	 * 
+	 *
 	 * 返回数据: - enabled: 是否启用
 	 */
 	@Action(value = "isQuotationAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String isQuotationAssignEnabled() throws FLException {
 
-		quotationAssignConfigService.isQuotationAssignEnabled(quotationAssignConfig, queryCompany());
+		quotationAssignConfigService.queryQuotationAssignEnabled(quotationAssignConfig, queryCompany());
 
 		return SUCCESS;
 	}
 
 	/**
 	 * 检查是否启用自动分配模式
-	 * 
+	 *
 	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需） - quotationAssignConfig.department: 部门ID（可选）
-	 * 
+	 *
 	 * 返回数据: - autoAssign: 是否自动分配
 	 */
 	@Action(value = "isAutoAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String isAutoAssignEnabled() throws FLException {
 
-		quotationAssignConfigService.isAutoAssignEnabled(quotationAssignConfig, queryCompany());
+		quotationAssignConfigService.queryAutoAssignEnabled(quotationAssignConfig, queryCompany());
 
 		return SUCCESS;
 	}

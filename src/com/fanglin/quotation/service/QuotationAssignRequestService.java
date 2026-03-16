@@ -23,60 +23,58 @@ public interface QuotationAssignRequestService {
 
 	/**
 	 * 根据 ID 查询待分配请求
-	 * 
-	 * @param qarid 请求ID
+	 *
+	 * @param quotationAssignRequestVO 请求VO（包含qarid）
 	 * @return 待分配请求
 	 */
-	QuotationAssignRequestVO getAssignRequest(QuotationAssignRequestVO quotationAssignRequestVO);
+	QuotationAssignRequestVO queryQuotationAssignRequestByQarid(QuotationAssignRequestVO quotationAssignRequestVO);
 
 	/**
 	 * 根据订单号查询待分配请求
-	 * 
-	 * @param orderId 订单号
+	 *
+	 * @param quotationAssignRequestVO 请求VO（包含orderId）
 	 * @return 待分配请求
 	 */
-	QuotationAssignRequestVO getAssignRequestByOrderId(QuotationAssignRequestVO quotationAssignRequestVO);
+	QuotationAssignRequestVO queryQuotationAssignRequestByOrderId(QuotationAssignRequestVO quotationAssignRequestVO);
 
 	/**
 	 * 更新请求优先级
-	 * 
-	 * @param qarid 请求ID
-	 * @param priority 新优先级（1-最高，2-高，3-普通，4-低）
+	 *
+	 * @param quotationAssignRequestVO 请求VO（包含qarid和priority）
 	 */
-	void updatePriority(QuotationAssignRequestVO quotationAssignRequestVO);
+	void updateQuotationAssignRequestPriority(QuotationAssignRequestVO quotationAssignRequestVO);
 
 	/**
 	 * 取消请求
-	 * 
-	 * @param qarid 请求ID
-	 * @param reason 取消原因
+	 *
+	 * @param quotationAssignRequestVO 请求VO（包含qarid和reason）
 	 */
-	void cancelRequest(QuotationAssignRequestVO quotationAssignRequestVO);
+	void cancelQuotationAssignRequest(QuotationAssignRequestVO quotationAssignRequestVO);
 
 	/**
 	 * 查询待分配队列统计信息
-	 * 
+	 *
+	 * @param quotationAssignRequestVO 请求VO（包含company和department）
 	 * @param company 公司ID
-	 * @param department 部门ID（可选）
 	 * @return 统计信息（总数量、各优先级数量、各类型数量等）
 	 */
-	Map<String, Object> getQueueStatistics(QuotationAssignRequestVO quotationAssignRequestVO, Integer company);
+	Map<String, Object> queryQuotationAssignRequestQueueStatistics(QuotationAssignRequestVO quotationAssignRequestVO, Integer company);
 
 	/**
 	 * 查询待分配队列
-	 * 
+	 *
+	 * @param quotationAssignRequestVO 请求VO（包含company和department）
 	 * @param company 公司ID
-	 * @param department 部门ID（可选）
 	 * @return 待分配请求列表（按优先级和请求时间排序）
 	 */
-	List<QuotationAssignRequestVO> getPendingQueue(QuotationAssignRequestVO quotationAssignRequestVO, Integer company);
+	List<QuotationAssignRequestVO> queryPendingQuotationAssignRequestQueue(QuotationAssignRequestVO quotationAssignRequestVO, Integer company);
 
 	/**
 	 * 查询队列位置
-	 * 
+	 *
+	 * @param quotationAssignRequestVO 请求VO（包含company和requestTime）
 	 * @param company 公司ID
-	 * @param requestTime 请求时间
 	 * @return 队列位置（从1开始）
 	 */
-	int getQueuePosition(QuotationAssignRequestVO quotationAssignRequestVO, Integer company);
+	int queryQuotationAssignRequestQueuePosition(QuotationAssignRequestVO quotationAssignRequestVO, Integer company);
 }
