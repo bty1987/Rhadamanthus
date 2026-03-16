@@ -28,7 +28,7 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	private QuotationAssignConfigDao quotationAssignConfigDao;
 
 	@Override
-	public QuotationAssignConfigVO queryQuotationAssignConfigByCompanyAndDepartment(QuotationAssignConfigVO quotationAssignConfig) {
+	public QuotationAssignConfigVO queryQuotationAssignConfigByCompanyAndDepartment(QuotationAssignConfigVO quotationAssignConfig, Integer company) {
 		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(
 			quotationAssignConfig.getCompany(),
 			quotationAssignConfig.getDepartment()
@@ -37,7 +37,7 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	}
 
 	@Override
-	public List<QuotationAssignConfigVO> queryQuotationAssignConfigByCompany(QuotationAssignConfigVO quotationAssignConfig) {
+	public List<QuotationAssignConfigVO> queryQuotationAssignConfigByCompany(QuotationAssignConfigVO quotationAssignConfig, Integer company) {
 		List<QuotationAssignConfigPO> poList = quotationAssignConfigDao.queryQuotationAssignConfigByCompany(quotationAssignConfig.getCompany());
 		List<QuotationAssignConfigVO> voList = new ArrayList<QuotationAssignConfigVO>();
 		for (QuotationAssignConfigPO po : poList) {
@@ -106,7 +106,7 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	}
 
 	@Override
-	public boolean isQuotationAssignEnabled(QuotationAssignConfigVO quotationAssignConfig) {
+	public boolean queryQuotationAssignEnabled(QuotationAssignConfigVO quotationAssignConfig, Integer company) {
 		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(
 			quotationAssignConfig.getCompany(),
 			quotationAssignConfig.getDepartment()
@@ -115,7 +115,7 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	}
 
 	@Override
-	public boolean isAutoAssignEnabled(QuotationAssignConfigVO quotationAssignConfig) {
+	public boolean queryAutoAssignEnabled(QuotationAssignConfigVO quotationAssignConfig, Integer company) {
 		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(
 			quotationAssignConfig.getCompany(),
 			quotationAssignConfig.getDepartment()
