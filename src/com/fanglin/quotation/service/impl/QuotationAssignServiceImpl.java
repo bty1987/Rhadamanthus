@@ -69,11 +69,15 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 3. 查找待分配且完成时间最早的预算员（列表）
-		List<QuotationAssignUserRulePO> budgetUsers = quotationAssignUserRuleDao.pullAvailableQuotationAssignUserRule(companyId, decoration.getDepartment());
+		List<QuotationAssignUserRulePO> budgetUsers = quotationAssignUserRuleDao.pullAvailableQuotationAssignUserRule(companyId,
+				decoration.getDesignDept() != null ? decoration.getDesignDept().getDid() : null);
 
 		if (budgetUsers == null || budgetUsers.isEmpty()) {
 			// 分支2：未找到预算员，进入待分配队列
-			return createAssignRequest(orderId, companyId, decoration.getDepartment(), decorationType, decoration.getCuid());
+			return createAssignRequest(orderId, companyId,
+					decoration.getDesignDept() != null ? decoration.getDesignDept().getDid() : null,
+					decorationType,
+					decoration.getDesigner() != null ? decoration.getDesigner().getUid() : null);
 		}
 
 		// 4. 遍历预算员，查找支持该类型的预算员
@@ -89,7 +93,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 分支3：有预算员但都不支持该类型，返回错误提示
-		return handleTypeMismatch(orderId, companyId, decorationType, decoration.getCuid());
+		return handleTypeMismatch(orderId, companyId, decorationType,
+				decoration.getDesigner() != null ? decoration.getDesigner().getUid() : null);
 	}
 
 	/**
