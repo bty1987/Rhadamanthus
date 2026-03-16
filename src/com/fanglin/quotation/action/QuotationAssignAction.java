@@ -50,7 +50,7 @@ public class QuotationAssignAction extends BaseListAction {
 	@Action(value = "autoAssignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String autoAssignBudgetUser() throws FLException {
 		quotationAssign.setCompanyId(queryCompany());
-		quotationAssignService.autoAssignBudgetUser(quotationAssign.getOrderId(), quotationAssign.getCompanyId(), quotationAssign.getDecorationType());
+		quotationAssignService.autoAssignBudgetUser(quotationAssign);
 
 		return SUCCESS;
 	}
@@ -64,7 +64,7 @@ public class QuotationAssignAction extends BaseListAction {
 	 */
 	@Action(value = "manualAssignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String manualAssignBudgetUser() throws FLException {
-		quotationAssignService.manualAssignBudgetUser(quotationAssign.getOrderId(), quotationAssign.getBudgetUid(), quotationAssign.getAssignUid());
+		quotationAssignService.manualAssignBudgetUser(quotationAssign);
 
 		return SUCCESS;
 	}
@@ -78,7 +78,7 @@ public class QuotationAssignAction extends BaseListAction {
 	 */
 	@Action(value = "reassignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String reassignBudgetUser() throws FLException {
-		quotationAssignService.reassignBudgetUser(quotationAssign.getOrderId(), quotationAssign.getNewBudgetUid(), quotationAssign.getAssignUid());
+		quotationAssignService.reassignBudgetUser(quotationAssign);
 
 		return SUCCESS;
 	}
@@ -92,7 +92,7 @@ public class QuotationAssignAction extends BaseListAction {
 	 */
 	@Action(value = "finishQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishQuotation() throws FLException {
-		quotationAssignService.finishQuotation(quotationAssign.getOrderId());
+		quotationAssignService.finishQuotation(quotationAssign);
 
 		return SUCCESS;
 	}
@@ -109,8 +109,8 @@ public class QuotationAssignAction extends BaseListAction {
 		result = new HashMap<String, Object>();
 		quotationAssign.setCompanyId(queryCompany());
 
-		boolean enabled = quotationAssignService.isQuotationAssignEnabled(quotationAssign.getCompanyId(), quotationAssign.getDepartment());
-		boolean autoAssign = quotationAssignService.isAutoAssign(quotationAssign.getCompanyId(), quotationAssign.getDepartment());
+		boolean enabled = quotationAssignService.isQuotationAssignEnabled(quotationAssign);
+		boolean autoAssign = quotationAssignService.isAutoAssign(quotationAssign);
 
 		result.put("enabled", enabled);
 		result.put("autoAssign", autoAssign);
