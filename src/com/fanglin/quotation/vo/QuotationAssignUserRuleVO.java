@@ -5,8 +5,8 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.communion.vo.CompanyVO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.vo.CompanyVO;
 
 /**
  * 报价单预算员规则表 VO
@@ -16,22 +16,22 @@ public class QuotationAssignUserRuleVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// 基础字段
-	private Long qaurid;				// 预算员规则ID
-	private Integer uid;				// 用户ID（预算员工号）
-	private Integer company;			// 关联公司ID
-	private Integer department;			// 部门ID
-	private Short status;				// 状态：1-待分配，2-制作中，3-停止，4-已完成
-	private Timestamp lastFinishTime;	// 最后完成时间
-	private Integer currentTaskCount;	// 当前任务数量
-	private Timestamp createTime;		// 创建时间
-	private Timestamp updateTime;		// 更新时间
+	private Long qaurid; // 预算员规则ID
+	private Integer uid; // 用户ID（预算员工号）
+	private Integer company; // 关联公司ID
+	private Integer department; // 部门ID
+	private Short status; // 状态：1-待分配，2-制作中，3-停止，4-已完成
+	private Timestamp lastFinishTime; // 最后完成时间
+	private Integer currentTaskCount; // 当前任务数量
+	private Timestamp createTime; // 创建时间
+	private Timestamp updateTime; // 更新时间
 
 	// 关联对象
-	private UserBaseVO user;			// 预算员用户信息
-	private CompanyVO companyVO;		// 公司信息
-	private String departmentName;		// 部门名称
-	private String statusName;			// 状态名称
-	private String supportedTypes;		// 支持的类型（如："半包,整装"）
+	private UserBaseVO user; // 预算员用户信息
+	private CompanyVO companyVO; // 公司信息
+	private String departmentName; // 部门名称
+	private String statusName; // 状态名称
+	private String supportedTypes; // 支持的类型（如："半包,整装"）
 
 	// 构造函数
 	public QuotationAssignUserRuleVO() {

@@ -19,8 +19,8 @@ import com.fanglin.quotation.vo.QuotationAssignConfigVO;
 import com.fanglin.utils.BeanUtil;
 
 /**
- * 报价单预算配置表 PO
- * 职责: 控制哪些公司/部门启用预算员分配功能
+ * 报价单预算配置表 PO 职责: 控制哪些公司/部门启用预算员分配功能
+ * 
  * @table quotationassignconfig
  */
 @Entity
@@ -36,21 +36,21 @@ public class QuotationAssignConfigPO implements Serializable {
 	public static final String COLUMN_AUTOASSIGN_STR = "autoAssign";
 
 	// 启用状态常量
-	public static final short ENABLED_DISABLED_INT = 0;	// 禁用
-	public static final short ENABLED_ENABLED_INT = 1;	// 启用
+	public static final short ENABLED_DISABLED_INT = 0; // 禁用
+	public static final short ENABLED_ENABLED_INT = 1; // 启用
 
 	// 自动分配常量
-	public static final short AUTO_ASSIGN_MANUAL_INT = 0;	// 手动
-	public static final short AUTO_ASSIGN_AUTO_INT = 1;		// 自动
+	public static final short AUTO_ASSIGN_MANUAL_INT = 0; // 手动
+	public static final short AUTO_ASSIGN_AUTO_INT = 1; // 自动
 
 	// 字段
-	private long qacid;					// 配置ID
-	private int company;				// 公司ID
-	private DepartmentPO department;	// 部门对象
-	private short enabled;				// 是否启用：0-禁用，1-启用
-	private short autoAssign;			// 是否自动分配：0-手动，1-自动
-	private Timestamp createTime;		// 创建时间
-	private Timestamp updateTime;		// 更新时间
+	private long qacid; // 配置ID
+	private int company; // 公司ID
+	private DepartmentPO department; // 部门对象
+	private short enabled; // 是否启用：0-禁用，1-启用
+	private short autoAssign; // 是否自动分配：0-手动，1-自动
+	private Timestamp createTime; // 创建时间
+	private Timestamp updateTime; // 更新时间
 
 	// 构造函数
 	public QuotationAssignConfigPO() {
@@ -134,7 +134,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 		// 设置关联对象
 		if (getDepartment() != null) {
-			vo.setDepartment(getDepartment().getDId());
+			vo.setDepartment(getDepartment().getDid());
 		}
 
 		// 设置状态名称

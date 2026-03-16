@@ -7,10 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.common.common.BusinessException;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.information.service.InformationService;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationAssignConfigDao;
 import com.fanglin.quotation.dao.QuotationAssignRecordDao;
@@ -24,8 +22,7 @@ import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.quotation.service.QuotationAssignService;
 
 /**
- * 装修单预算分配服务实现
- * 核心分配逻辑实现
+ * 装修单预算分配服务实现 核心分配逻辑实现
  */
 @Service
 public class QuotationAssignServiceImpl implements QuotationAssignService {
@@ -63,8 +60,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		Integer currentQuoterUid = decoration.getQuoter() != null ? decoration.getQuoter().getUid() : null;
 		if (currentQuoterUid != null) {
 			// 已分配，记录并返回，不重新分配
-			saveAssignRecord(orderId, currentQuoterUid, (short) 1, (short) 1,
-					decorationType.shortValue(), null);
+			saveAssignRecord(orderId, currentQuoterUid, (short) 1, (short) 1, decorationType.shortValue(), null);
 			return currentQuoterUid;
 		}
 
@@ -74,20 +70,17 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 3. 查找待分配且完成时间最早的预算员（列表）
-		List<QuotationAssignUserRulePO> budgetUsers = quotationAssignUserRuleDao
-				.pullAvailableQuotationAssignUserRule(companyId, decoration.getDepartment());
+		List<QuotationAssignUserRulePO> budgetUsers = quotationAssignUserRuleDao.pullAvailableQuotationAssignUserRule(companyId, decoration.getDepartment());
 
 		if (budgetUsers == null || budgetUsers.isEmpty()) {
 			// 分支2：未找到预算员，进入待分配队列
-			return createAssignRequest(orderId, companyId, decoration.getDepartment(),
-					decorationType, decoration.getCuid());
+			return createAssignRequest(orderId, companyId, decoration.getDepartment(), decorationType, decoration.getCuid());
 		}
 
 		// 4. 遍历预算员，查找支持该类型的预算员
 		for (QuotationAssignUserRulePO budgetUser : budgetUsers) {
 			// 验证预算员是否支持该装修类型
-			boolean isTypeSupported = quotationAssignUserRuleTypeDao
-					.countByQauridAndType(budgetUser.getQaurid(), decorationType.shortValue()) > 0;
+			boolean isTypeSupported = quotationAssignUserRuleTypeDao.countByQauridAndType(budgetUser.getQaurid(), decorationType.shortValue()) > 0;
 
 			if (isTypeSupported) {
 				// 分支1：找到匹配的预算员，执行分配
@@ -103,8 +96,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	/**
 	 * 执行分配操作（分支1：分配成功）
 	 */
-	private Integer executeAssign(String orderId, QuotationAssignUserRulePO budgetUser,
-			Integer companyId, Byte decorationType) {
+	private Integer executeAssign(String orderId, QuotationAssignUserRulePO budgetUser, Integer companyId, Byte decorationType) {
 		// 1. 更新装修单的预算员ID
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration != null) {
@@ -116,8 +108,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 更新或创建 quotationassignrequest（状态改为已分配）
-		QuotationAssignRequestPO request = quotationAssignRequestDao
-				.queryQuotationAssignRequestByOrderId(orderId);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(orderId);
 
 		if (request != null) {
 			request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
@@ -129,8 +120,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		updateBudgetUserStatus(budgetUser.getUser().getUid());
 
 		// 4. 记录分配历史
-		saveAssignRecord(orderId, budgetUser.getUser().getUid(), (short) 1, (short) 1,
-				decorationType.shortValue(), null);
+		saveAssignRecord(orderId, budgetUser.getUser().getUid(), (short) 1, (short) 1, decorationType.shortValue(), null);
 
 		// 5. 发送通知（异步）
 		sendAssignNotification(orderId, budgetUser.getUser().getUid(), null, "auto");
@@ -141,18 +131,15 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	/**
 	 * 创建待分配请求（分支2：无预算员）
 	 */
-	private Integer createAssignRequest(String orderId, Integer companyId,
-			Integer department, Byte decorationType, Integer designerUid) {
+	private Integer createAssignRequest(String orderId, Integer companyId, Integer department, Byte decorationType, Integer designerUid) {
 		// 1. 检查是否已存在待分配请求
-		QuotationAssignRequestPO existingRequest = quotationAssignRequestDao
-				.queryQuotationAssignRequestByOrderId(orderId);
+		QuotationAssignRequestPO existingRequest = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(orderId);
 		if (existingRequest != null && existingRequest.getStatus() == QuotationAssignRequestPO.STATUS_PENDING_INT) {
 			return null; // 已在队列中
 		}
 
 		// 2. 生成分配记录（进入队列）
-		saveAssignRecord(orderId, null, (short) 1, (short) 0, decorationType.shortValue(),
-				"无可用预算员");
+		saveAssignRecord(orderId, null, (short) 1, (short) 0, decorationType.shortValue(), "无可用预算员");
 
 		// 3. 创建待分配请求记录
 		QuotationAssignRequestPO request = new QuotationAssignRequestPO();
@@ -177,13 +164,11 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	/**
 	 * 处理类型不匹配（分支3：返回错误）
 	 */
-	private Integer handleTypeMismatch(String orderId, Integer companyId,
-			Byte decorationType, Integer designerUid) {
+	private Integer handleTypeMismatch(String orderId, Integer companyId, Byte decorationType, Integer designerUid) {
 		String typeName = (decorationType == 1) ? "半包" : "整装";
 
 		// 1. 生成分配记录（类型不匹配）
-		saveAssignRecord(orderId, null, (short) 1, (short) 0, decorationType.shortValue(),
-				"无预算员支持该类型（" + typeName + "）");
+		saveAssignRecord(orderId, null, (short) 1, (short) 0, decorationType.shortValue(), "无预算员支持该类型（" + typeName + "）");
 
 		// 2. 不创建报价单
 
@@ -194,8 +179,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		sendManagerNotification(companyId, orderId, typeName);
 
 		// 5. 抛出异常或返回错误码
-		throw new BusinessException(
-				"当前无预算员支持该装修类型（" + typeName + "），请联系管理员配置预算员类型");
+		throw new BusinessException("当前无预算员支持该装修类型（" + typeName + "），请联系管理员配置预算员类型");
 	}
 
 	@Override
@@ -214,8 +198,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 3. 验证类型匹配
-		boolean isTypeSupported = quotationAssignUserRuleTypeDao
-				.countByQauridAndType(budgetUser.getQaurid(), decoration.getType()) > 0;
+		boolean isTypeSupported = quotationAssignUserRuleTypeDao.countByQauridAndType(budgetUser.getQaurid(), decoration.getType()) > 0;
 		if (!isTypeSupported) {
 			String typeName = (decoration.getType() == 1) ? "半包" : "整装";
 			throw new BusinessException("该预算员不支持装修类型（" + typeName + "）");
@@ -245,8 +228,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		updateBudgetUserStatus(budgetUid);
 
 		// 8. 记录分配历史
-		saveAssignRecord(orderId, budgetUid, (short) 2, (short) 1,
-				decoration.getType(), null);
+		saveAssignRecord(orderId, budgetUid, (short) 2, (short) 1, decoration.getType(), null);
 
 		// 9. 发送通知
 		sendAssignNotification(orderId, budgetUid, assignUid, "manual");
@@ -268,8 +250,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 1. 删除 quotationassignrequest 记录（已完成）
-		QuotationAssignRequestPO request = quotationAssignRequestDao
-				.queryQuotationAssignRequestByOrderId(orderId);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(orderId);
 		if (request != null) {
 			quotationAssignRequestDao.delete(request);
 		}
@@ -291,8 +272,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			return;
 		}
 
-		List<Short> supportedTypes = quotationAssignUserRuleTypeDao
-				.queryTypesByQaurid(budgetUser.getQaurid());
+		List<Short> supportedTypes = quotationAssignUserRuleTypeDao.queryTypesByQaurid(budgetUser.getQaurid());
 
 		if (supportedTypes == null || supportedTypes.isEmpty()) {
 			// 预算员未配置类型，无法分配
@@ -300,9 +280,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 查询待分配队列中最优先且类型匹配的任务
-		QuotationAssignRequestPO request = quotationAssignRequestDao
-				.pullTopPriorityQuotationAssignRequestByTypes(budgetUser.getCompany(),
-						budgetUser.getDepartment() != null ? budgetUser.getDepartment() : null, supportedTypes);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.pullTopPriorityQuotationAssignRequestByTypes(budgetUser.getCompany(), budgetUser.getDepartment() != null ? budgetUser.getDepartment() : null, supportedTypes);
 
 		if (request == null) {
 			// 队列为空或无匹配类型，预算员保持空闲
@@ -327,8 +305,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		updateBudgetUserStatus(budgetUid);
 
 		// 6. 记录分配历史
-		saveAssignRecord(request.getOrderId(), budgetUid, (short) 3, (short) 1,
-				request.getDecorationType(), null);
+		saveAssignRecord(request.getOrderId(), budgetUid, (short) 3, (short) 1, request.getDecorationType(), null);
 
 		// 7. 发送通知
 		sendAssignNotification(request.getOrderId(), budgetUid, null, "reverse_auto_assign");
@@ -351,8 +328,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		decorationDao.update(decoration);
 
 		// 2. 更新 quotationassignrequest（如果存在）
-		QuotationAssignRequestPO request = quotationAssignRequestDao
-				.queryQuotationAssignRequestByOrderId(orderId);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(orderId);
 		if (request != null) {
 			request.setAssignTime(new Timestamp(System.currentTimeMillis()));
 			quotationAssignRequestDao.update(request);
@@ -367,8 +343,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		updateBudgetUserStatus(newBudgetUid);
 
 		// 5. 记录分配历史
-		saveAssignRecord(orderId, newBudgetUid, (short) 2, (short) 1,
-				decoration.getType(), null);
+		saveAssignRecord(orderId, newBudgetUid, (short) 2, (short) 1, decoration.getType(), null);
 
 		// 6. 发送通知
 		sendAssignNotification(orderId, newBudgetUid, assignUid, "manual");
@@ -411,8 +386,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	/**
 	 * 生成分配记录（所有分支都调用）
 	 */
-	private void saveAssignRecord(String orderId, Integer budgetUid, short assignType,
-			short assignResult, Short decorationType, String failReason) {
+	private void saveAssignRecord(String orderId, Integer budgetUid, short assignType, short assignResult, Short decorationType, String failReason) {
 		QuotationAssignRecordPO record = new QuotationAssignRecordPO();
 		record.setOrderId(orderId);
 		if (budgetUid != null) {
@@ -431,8 +405,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	/**
 	 * 发送分配通知
 	 */
-	private void sendAssignNotification(String orderId, Integer budgetUid,
-			Integer assignUid, String assignType) {
+	private void sendAssignNotification(String orderId, Integer budgetUid, Integer assignUid, String assignType) {
 		if (informationService == null) {
 			return;
 		}
@@ -444,8 +417,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	/**
 	 * 发送待分配队列通知
 	 */
-	private void sendQueueNotification(String orderId, Integer designerUid,
-			Integer companyId, String action) {
+	private void sendQueueNotification(String orderId, Integer designerUid, Integer companyId, String action) {
 		if (informationService == null) {
 			return;
 		}

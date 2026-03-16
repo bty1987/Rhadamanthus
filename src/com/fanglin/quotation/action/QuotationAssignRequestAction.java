@@ -13,14 +13,11 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.service.QuotationAssignRequestService;
 import com.fanglin.quotation.vo.QuotationAssignRequestVO;
-import com.fanglin.utils.Paging;
 
 /**
- * 待分配请求管理 Action
- * 提供待分配队列的查询、优先级调整、取消等 API 接口
+ * 待分配请求管理 Action 提供待分配队列的查询、优先级调整、取消等 API 接口
  */
 @ParentPackage("base")
 @Namespace("/")
@@ -33,72 +30,54 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	private QuotationAssignRequestService quotationAssignRequestService;
 
 	// 参数字段
-	private Integer barid;			// 请求ID
-	private String orderId;		// 订单号
-	private Integer company;		// 公司ID
-	private Integer department;	// 部门ID
-	private Byte priority;		// 优先级
-	private String reason;		// 取消原因
-	private Long requestTime;	// 请求时间
+	private Integer barid; // 请求ID
+	private String orderId; // 订单号
+	private Integer company; // 公司ID
+	private Integer department; // 部门ID
+	private Byte priority; // 优先级
+	private String reason; // 取消原因
+	private Long requestTime; // 请求时间
 
 	// 返回字段
-	private Map<String, Object> result;					// 返回结果
-	private QuotationAssignRequestVO assignRequest;	// 待分配请求
+	private Map<String, Object> result; // 返回结果
+	private QuotationAssignRequestVO assignRequest; // 待分配请求
 	private List<QuotationAssignRequestVO> assignRequests; // 待分配请求列表
-	private Map<String, Object> statistics;			// 统计信息
+	private Map<String, Object> statistics; // 统计信息
 
 	/**
 	 * 分页查询待分配请求列表
-	 *
-	 * 请求参数:
-	 * - paging: 分页参数
-	 * - filters: 过滤条件
-	 *
-	 * 返回数据:
-	 * - total: 总记录数
-	 * - rows: 待分配请求列表
+	 * 
+	 * 请求参数: - paging: 分页参数 - filters: 过滤条件
+	 * 
+	 * 返回数据: - total: 总记录数 - rows: 待分配请求列表
 	 */
-	@Action(value = "pageAssignRequest", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "pageAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAssignRequest() throws FLException {
-		List<Filter> filters = getFilters();
-		Paging paging = getPaging();
-		List<QuotationAssignRequestVO> list = quotationAssignRequestService.pageAssignRequest(paging, filters);
-		setRows(list);
-		setTotal(paging.getTotal());
+		quotationAssignRequestService.pageAssignRequest(getPaging(), getFilters());
 		return SUCCESS;
 	}
 
 	/**
 	 * 查询单个待分配请求
-	 *
-	 * 请求参数:
-	 * - barid: 请求ID（必需）
-	 *
-	 * 返回数据:
-	 * - assignRequest: 待分配请求
+	 * 
+	 * 请求参数: - barid: 请求ID（必需）
+	 * 
+	 * 返回数据: - assignRequest: 待分配请求
 	 */
-	@Action(value = "getAssignRequest", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
-	public String getAssignRequest() throws FLException {
+	@Action(value = "queryAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAssignRequest() throws FLException {
 		assignRequest = quotationAssignRequestService.getAssignRequest(barid);
 		return SUCCESS;
 	}
 
 	/**
 	 * 根据订单号查询待分配请求
-	 *
-	 * 请求参数:
-	 * - orderId: 订单号（必需）
-	 *
-	 * 返回数据:
-	 * - assignRequest: 待分配请求
+	 * 
+	 * 请求参数: - orderId: 订单号（必需）
+	 * 
+	 * 返回数据: - assignRequest: 待分配请求
 	 */
-	@Action(value = "getAssignRequestByOrderId", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "getAssignRequestByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getAssignRequestByOrderId() throws FLException {
 		assignRequest = quotationAssignRequestService.getAssignRequestByOrderId(orderId);
 		return SUCCESS;
@@ -106,18 +85,12 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	/**
 	 * 更新请求优先级
-	 *
-	 * 请求参数:
-	 * - barid: 请求ID（必需）
-	 * - priority: 新优先级（1-最高，2-高，3-普通，4-低）
-	 *
-	 * 返回数据:
-	 * - success: 是否成功
-	 * - message: 提示信息
+	 * 
+	 * 请求参数: - barid: 请求ID（必需） - priority: 新优先级（1-最高，2-高，3-普通，4-低）
+	 * 
+	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
-	@Action(value = "updateAssignRequestPriority", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "updateAssignRequestPriority", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAssignRequestPriority() throws FLException {
 		result = new HashMap<String, Object>();
 
@@ -135,18 +108,12 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	/**
 	 * 取消请求
-	 *
-	 * 请求参数:
-	 * - barid: 请求ID（必需）
-	 * - reason: 取消原因（可选）
-	 *
-	 * 返回数据:
-	 * - success: 是否成功
-	 * - message: 提示信息
+	 * 
+	 * 请求参数: - barid: 请求ID（必需） - reason: 取消原因（可选）
+	 * 
+	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
-	@Action(value = "cancelAssignRequest", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "cancelAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String cancelAssignRequest() throws FLException {
 		result = new HashMap<String, Object>();
 
@@ -164,17 +131,12 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	/**
 	 * 查询待分配队列统计信息
-	 *
-	 * 请求参数:
-	 * - company: 公司ID（必需）
-	 * - department: 部门ID（可选）
-	 *
-	 * 返回数据:
-	 * - statistics: 统计信息（总数量、各优先级数量、各类型数量等）
+	 * 
+	 * 请求参数: - company: 公司ID（必需） - department: 部门ID（可选）
+	 * 
+	 * 返回数据: - statistics: 统计信息（总数量、各优先级数量、各类型数量等）
 	 */
-	@Action(value = "getQueueStatistics", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "getQueueStatistics", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getQueueStatistics() throws FLException {
 		statistics = quotationAssignRequestService.getQueueStatistics(company, department);
 		return SUCCESS;
@@ -182,17 +144,12 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	/**
 	 * 查询待分配队列
-	 *
-	 * 请求参数:
-	 * - company: 公司ID（必需）
-	 * - department: 部门ID（可选）
-	 *
-	 * 返回数据:
-	 * - assignRequests: 待分配请求列表（按优先级和请求时间排序）
+	 * 
+	 * 请求参数: - company: 公司ID（必需） - department: 部门ID（可选）
+	 * 
+	 * 返回数据: - assignRequests: 待分配请求列表（按优先级和请求时间排序）
 	 */
-	@Action(value = "getPendingQueue", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "getPendingQueue", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getPendingQueue() throws FLException {
 		assignRequests = quotationAssignRequestService.getPendingQueue(company, department);
 		return SUCCESS;
@@ -200,18 +157,12 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	/**
 	 * 查询队列位置
-	 *
-	 * 请求参数:
-	 * - company: 公司ID（必需）
-	 * - department: 部门ID（可选）
-	 * - requestTime: 请求时间（毫秒时间戳）
-	 *
-	 * 返回数据:
-	 * - position: 队列位置（从1开始）
+	 * 
+	 * 请求参数: - company: 公司ID（必需） - department: 部门ID（可选） - requestTime: 请求时间（毫秒时间戳）
+	 * 
+	 * 返回数据: - position: 队列位置（从1开始）
 	 */
-	@Action(value = "getQueuePosition", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "getQueuePosition", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getQueuePosition() throws FLException {
 		result = new HashMap<String, Object>();
 
