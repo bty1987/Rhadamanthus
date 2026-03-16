@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.communion.vo.CompanyVO;
+import com.fanglin.system.vo.CompanyVO;
 
 /**
  * 报价单预算配置表 VO
@@ -15,19 +15,19 @@ public class QuotationAssignConfigVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// 字段
-	private Long qacid;				// 配置ID
-	private Integer company;			// 公司ID
-	private Integer department;			// 部门ID
-	private Short enabled;				// 是否启用：0-禁用，1-启用
-	private String enabledName;			// 启用状态名称
-	private Short autoAssign;			// 是否自动分配：0-手动，1-自动
-	private String autoAssignName;		// 自动分配状态名称
-	private Timestamp createTime;		// 创建时间
-	private Timestamp updateTime;		// 更新时间
+	private Long qacid; // 配置ID
+	private Integer company; // 公司ID
+	private Integer department; // 部门ID
+	private Short enabled; // 是否启用：0-禁用，1-启用
+	private String enabledName; // 启用状态名称
+	private Short autoAssign; // 是否自动分配：0-手动，1-自动
+	private String autoAssignName; // 自动分配状态名称
+	private Timestamp createTime; // 创建时间
+	private Timestamp updateTime; // 更新时间
 
 	// 关联对象
-	private CompanyVO companyVO;		// 公司信息
-	private String departmentName;		// 部门名称
+	private CompanyVO companyVO; // 公司信息
+	private String departmentName; // 部门名称
 
 	// 构造函数
 	public QuotationAssignConfigVO() {

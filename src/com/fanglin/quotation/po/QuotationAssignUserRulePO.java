@@ -21,6 +21,7 @@ import com.fanglin.utils.BeanUtil;
 
 /**
  * 报价单预算员规则表 PO
+ * 
  * @table quotationassignuserrule
  */
 @Entity
@@ -38,21 +39,21 @@ public class QuotationAssignUserRulePO implements Serializable {
 	public static final String COLUMN_CURRENTTASKCOUNT_STR = "currentTaskCount";
 
 	// 状态常量
-	public static final short STATUS_AVAILABLE_INT = 1;	// 待分配
-	public static final short STATUS_BUSY_INT = 2;		// 制作中
-	public static final short STATUS_STOP_INT = 3;		// 停止
-	public static final short STATUS_COMPLETED_INT = 4;	// 已完成
+	public static final short STATUS_AVAILABLE_INT = 1; // 待分配
+	public static final short STATUS_BUSY_INT = 2; // 制作中
+	public static final short STATUS_STOP_INT = 3; // 停止
+	public static final short STATUS_COMPLETED_INT = 4; // 已完成
 
 	// 字段
-	private long qaurid;					// 预算员规则ID
-	private UserPO user;					// 预算员用户对象
-	private int company;					// 关联公司ID
-	private DepartmentPO department;		// 部门对象
-	private short status;					// 状态：1-待分配，2-制作中，3-停止，4-已完成
-	private Timestamp lastFinishTime;		// 最后完成时间
-	private int currentTaskCount;			// 当前任务数量
-	private Timestamp createTime;			// 创建时间
-	private Timestamp updateTime;			// 更新时间
+	private long qaurid; // 预算员规则ID
+	private UserPO user; // 预算员用户对象
+	private int company; // 关联公司ID
+	private DepartmentPO department; // 部门对象
+	private short status; // 状态：1-待分配，2-制作中，3-停止，4-已完成
+	private Timestamp lastFinishTime; // 最后完成时间
+	private int currentTaskCount; // 当前任务数量
+	private Timestamp createTime; // 创建时间
+	private Timestamp updateTime; // 更新时间
 
 	// 构造函数
 	public QuotationAssignUserRulePO() {
@@ -156,8 +157,8 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 		// 处理 department 关联对象
 		if (getDepartment() != null) {
-			vo.setDepartment(getDepartment().getDId());
-			vo.setDepartmentName(getDepartment().getDName());
+			vo.setDepartment(getDepartment().getDid());
+			vo.setDepartmentName(getDepartment().getName());
 		}
 
 		// 设置状态名称

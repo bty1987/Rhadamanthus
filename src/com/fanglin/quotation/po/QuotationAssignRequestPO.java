@@ -20,8 +20,8 @@ import com.fanglin.quotation.vo.QuotationAssignRequestVO;
 import com.fanglin.utils.BeanUtil;
 
 /**
- * 装修单预算分配请求表 PO
- * 职责: 控制分配逻辑和待分配队列（装修单级别，最多1条活跃记录）
+ * 装修单预算分配请求表 PO 职责: 控制分配逻辑和待分配队列（装修单级别，最多1条活跃记录）
+ * 
  * @table quotationassignrequest
  */
 @Entity
@@ -38,28 +38,28 @@ public class QuotationAssignRequestPO implements Serializable {
 	public static final String COLUMN_DECORATIONTYPE_STR = "decorationType";
 
 	// 状态常量
-	public static final short STATUS_PENDING_INT = 1;	// 待分配
-	public static final short STATUS_ASSIGNED_INT = 2;	// 已分配
+	public static final short STATUS_PENDING_INT = 1; // 待分配
+	public static final short STATUS_ASSIGNED_INT = 2; // 已分配
 
 	// 优先级常量
-	public static final short PRIORITY_HIGHEST_INT = 1;	// 最高
-	public static final short PRIORITY_HIGH_INT = 3;		// 高
-	public static final short PRIORITY_NORMAL_INT = 5;	// 普通
-	public static final short PRIORITY_LOW_INT = 7;		// 低
-	public static final short PRIORITY_LOWEST_INT = 9;	// 最低
+	public static final short PRIORITY_HIGHEST_INT = 1; // 最高
+	public static final short PRIORITY_HIGH_INT = 3; // 高
+	public static final short PRIORITY_NORMAL_INT = 5; // 普通
+	public static final short PRIORITY_LOW_INT = 7; // 低
+	public static final short PRIORITY_LOWEST_INT = 9; // 最低
 
 	// 字段
-	private long qarid;					// 请求ID
-	private String orderId;				// 装修单号（关联 decoration）
-	private int company;				// 公司ID
-	private DepartmentPO department;	// 部门对象
-	private short decorationType;		// 装修类型：1-半包，2-整装
-	private short priority;				// 优先级：1-最高，5-普通，9-最低
-	private Timestamp requestTime;		// 请求时间
-	private UserPO requestUser;			// 请求人（设计师）
-	private short status;				// 状态：1-待分配，2-已分配
-	private Timestamp assignTime;		// 分配时间
-	private String remark;				// 备注
+	private long qarid; // 请求ID
+	private String orderId; // 装修单号（关联 decoration）
+	private int company; // 公司ID
+	private DepartmentPO department; // 部门对象
+	private short decorationType; // 装修类型：1-半包，2-整装
+	private short priority; // 优先级：1-最高，5-普通，9-最低
+	private Timestamp requestTime; // 请求时间
+	private UserPO requestUser; // 请求人（设计师）
+	private short status; // 状态：1-待分配，2-已分配
+	private Timestamp assignTime; // 分配时间
+	private String remark; // 备注
 
 	// 构造函数
 	public QuotationAssignRequestPO() {
@@ -180,8 +180,8 @@ public class QuotationAssignRequestPO implements Serializable {
 
 		// 处理 department 关联对象
 		if (getDepartment() != null) {
-			vo.setDepartment(getDepartment().getDId());
-			vo.setDepartmentName(getDepartment().getDName());
+			vo.setDepartment(getDepartment().getDid());
+			vo.setDepartmentName(getDepartment().getName());
 		}
 
 		// 处理 requestUser 关联对象

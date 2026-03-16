@@ -35,6 +35,8 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 			voList.add(po.ptv(new QuotationAssignRequestVO()));
 		}
 
+		paging.setData(voList);
+
 		return voList;
 	}
 
@@ -66,10 +68,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		QuotationAssignRequestPO po = quotationAssignRequestDao.get(qarid);
 		if (po != null) {
 			// 删除待分配请求
-			quotationAssignRequestDao.deleteQuotationAssignRequestByOrderIdAndStatus(
-				po.getOrderId(),
-				QuotationAssignRequestPO.STATUS_PENDING_INT
-			);
+			quotationAssignRequestDao.deleteQuotationAssignRequestByOrderIdAndStatus(po.getOrderId(), QuotationAssignRequestPO.STATUS_PENDING_INT);
 		}
 	}
 
@@ -90,35 +89,31 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		int lowCount = 0;
 
 		// 各类型数量
-		int halfPackageCount = 0;  // 半包
-		int fullPackageCount = 0;  // 整装
+		int halfPackageCount = 0; // 半包
+		int fullPackageCount = 0; // 整装
 
 		for (QuotationAssignRequestPO request : pendingList) {
 			// 统计优先级
-			if (request.getPriority() != null) {
-				switch (request.getPriority()) {
-					case QuotationAssignRequestPO.PRIORITY_HIGHEST_INT:
-						highestCount++;
-						break;
-					case QuotationAssignRequestPO.PRIORITY_HIGH_INT:
-						highCount++;
-						break;
-					case QuotationAssignRequestPO.PRIORITY_NORMAL_INT:
-						normalCount++;
-						break;
-					case QuotationAssignRequestPO.PRIORITY_LOW_INT:
-						lowCount++;
-						break;
-				}
+			switch (request.getPriority()) {
+				case QuotationAssignRequestPO.PRIORITY_HIGHEST_INT:
+					highestCount++;
+					break;
+				case QuotationAssignRequestPO.PRIORITY_HIGH_INT:
+					highCount++;
+					break;
+				case QuotationAssignRequestPO.PRIORITY_NORMAL_INT:
+					normalCount++;
+					break;
+				case QuotationAssignRequestPO.PRIORITY_LOW_INT:
+					lowCount++;
+					break;
 			}
 
 			// 统计类型
-			if (request.getDecorationType() != null) {
-				if (request.getDecorationType() == 1) {
-					halfPackageCount++;
-				} else if (request.getDecorationType() == 2) {
-					fullPackageCount++;
-				}
+			if (request.getDecorationType() == 1) {
+				halfPackageCount++;
+			} else if (request.getDecorationType() == 2) {
+				fullPackageCount++;
 			}
 		}
 

@@ -1,6 +1,5 @@
 package com.fanglin.quotation.action;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +16,7 @@ import com.fanglin.quotation.service.QuotationAssignUserRuleService;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 
 /**
- * 报价单预算员规则 Action
- * 提供预算员规则管理 API 接口
+ * 报价单预算员规则 Action 提供预算员规则管理 API 接口
  */
 @ParentPackage("base")
 @Namespace("/")
@@ -39,271 +37,142 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 
 	/**
 	 * 分页查询预算员规则
+	 * 
+	 * @throws FLException
 	 */
-	@Action(value = "pageQuotationAssignUserRule", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
-	public String pageQuotationAssignUserRule() {
-		try {
-			List<QuotationAssignUserRuleVO> list = quotationAssignUserRuleService
-				.pageQuotationAssignUserRule(getPaging(), getFilters(), getCompany());
+	@Action(value = "pageQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationAssignUserRule() throws FLException {
 
-			result = new HashMap<String, Object>();
-			result.put("total", getPaging().getTotalRows());
-			result.put("rows", list);
-			result.put("code", 200);
-			result.put("message", "查询成功");
-		} catch (Exception e) {
-			result = new HashMap<String, Object>();
-			result.put("code", 500);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignUserRuleService.pageQuotationAssignUserRule(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 根据用户ID和公司ID查询预算员规则
 	 */
-	@Action(value = "queryQuotationAssignUserRuleByUidAndCompany", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "queryQuotationAssignUserRuleByUidAndCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignUserRuleByUidAndCompany() {
-		try {
-			QuotationAssignUserRuleVO vo = quotationAssignUserRuleService
-				.queryQuotationAssignUserRuleByUidAndCompany(quotationAssignUserRule);
 
-			result = new HashMap<String, Object>();
-			result.put("code", 200);
-			result.put("message", "查询成功");
-			result.put("data", vo);
-		} catch (Exception e) {
-			result = new HashMap<String, Object>();
-			result.put("code", 500);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignUserRule = quotationAssignUserRuleService.queryQuotationAssignUserRuleByUidAndCompany(quotationAssignUserRule);
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 根据用户ID查询预算员规则
 	 */
-	@Action(value = "queryQuotationAssignUserRuleByUid", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "queryQuotationAssignUserRuleByUid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignUserRuleByUid() {
-		try {
-			QuotationAssignUserRuleVO vo = quotationAssignUserRuleService
-				.queryQuotationAssignUserRuleByUid(quotationAssignUserRule);
 
-			result = new HashMap<String, Object>();
-			result.put("code", 200);
-			result.put("message", "查询成功");
-			result.put("data", vo);
-		} catch (Exception e) {
-			result = new HashMap<String, Object>();
-			result.put("code", 500);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignUserRule = quotationAssignUserRuleService.queryQuotationAssignUserRuleByUid(quotationAssignUserRule);
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 查询公司的所有预算员
+	 * 
+	 * @throws FLException
 	 */
-	@Action(value = "queryQuotationAssignUserRuleByCompany", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
-	public String queryQuotationAssignUserRuleByCompany() {
-		try {
-			List<QuotationAssignUserRuleVO> list = quotationAssignUserRuleService
-				.queryQuotationAssignUserRuleByCompany(getCompany());
+	@Action(value = "queryQuotationAssignUserRuleByCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationAssignUserRuleByCompany() throws FLException {
 
-			result = new HashMap<String, Object>();
-			result.put("code", 200);
-			result.put("message", "查询成功");
-			result.put("data", list);
-		} catch (Exception e) {
-			result = new HashMap<String, Object>();
-			result.put("code", 500);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignUserRules = quotationAssignUserRuleService.queryQuotationAssignUserRuleByCompany(queryCompany());
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 查询指定部门的预算员列表
+	 * 
+	 * @throws FLException
 	 */
-	@Action(value = "queryQuotationAssignUserRuleByDepartment", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
-	public String queryQuotationAssignUserRuleByDepartment() {
-		try {
-			List<QuotationAssignUserRuleVO> list = quotationAssignUserRuleService
-				.queryQuotationAssignUserRuleByDepartment(getCompany(), quotationAssignUserRule.getDepartment());
+	@Action(value = "queryQuotationAssignUserRuleByDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationAssignUserRuleByDepartment() throws FLException {
 
-			result = new HashMap<String, Object>();
-			result.put("code", 200);
-			result.put("message", "查询成功");
-			result.put("data", list);
-		} catch (Exception e) {
-			result = new HashMap<String, Object>();
-			result.put("code", 500);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignUserRules = quotationAssignUserRuleService.queryQuotationAssignUserRuleByDepartment(queryCompany(), quotationAssignUserRule.getDepartment());
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 查询可用的预算员列表（状态为待分配）
+	 * 
+	 * @throws FLException
 	 */
-	@Action(value = "pullAvailableQuotationAssignUserRule", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
-	public String pullAvailableQuotationAssignUserRule() {
-		try {
-			List<QuotationAssignUserRuleVO> list = quotationAssignUserRuleService
-				.pullAvailableQuotationAssignUserRule(getCompany(), quotationAssignUserRule.getDepartment());
+	@Action(value = "pullAvailableQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pullAvailableQuotationAssignUserRule() throws FLException {
 
-			result = new HashMap<String, Object>();
-			result.put("code", 200);
-			result.put("message", "查询成功");
-			result.put("data", list);
-		} catch (Exception e) {
-			result = new HashMap<String, Object>();
-			result.put("code", 500);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignUserRules = quotationAssignUserRuleService.pullAvailableQuotationAssignUserRule(queryCompany(), quotationAssignUserRule.getDepartment());
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 添加预算员规则
+	 * 
+	 * @throws FLException
 	 */
-	@Action(value = "addQuotationAssignUserRule", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
-	public String addQuotationAssignUserRule() {
-		try {
-			quotationAssignUserRuleService.addQuotationAssignUserRule(
-				quotationAssignUserRule, queryUserId());
+	@Action(value = "addQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addQuotationAssignUserRule() throws FLException {
 
-			result = new HashMap<String, Object>();
-			result.put("code", 200);
-			result.put("message", "添加成功");
-		} catch (FLException e) {
-			result = new HashMap<String, Object>();
-			result.put("code", e.getErrorCode());
-			result.put("message", e.getMessage());
-		} catch (Exception e) {
-			result = new HashMap<String, Object>();
-			result.put("code", 500);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignUserRuleService.addQuotationAssignUserRule(quotationAssignUserRule, queryUserId());
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 更新预算员规则
+	 * 
+	 * @throws FLException
 	 */
-	@Action(value = "updateQuotationAssignUserRule", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
-	public String updateQuotationAssignUserRule() {
-		try {
-			quotationAssignUserRuleService.updateQuotationAssignUserRule(
-				quotationAssignUserRule, queryUserId());
+	@Action(value = "updateQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationAssignUserRule() throws FLException {
 
-			result = new HashMap<String, Object>();
-			result.put("code", 200);
-			result.put("message", "更新成功");
-		} catch (FLException e) {
-			result = new HashMap<String, Object>();
-			result.put("code", e.getErrorCode());
-			result.put("message", e.getMessage());
-		} catch (Exception e) {
-			result = new HashMap<String, Object>();
-			result.put("code", 500);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignUserRuleService.updateQuotationAssignUserRule(quotationAssignUserRule, queryUserId());
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 更新预算员状态和任务数量
+	 * 
+	 * @throws FLException
 	 */
-	@Action(value = "updateStatusAndTaskCount", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
-	public String updateStatusAndTaskCount() {
-		try {
-			quotationAssignUserRuleService.updateStatusAndTaskCount(quotationAssignUserRule);
+	@Action(value = "updateStatusAndTaskCount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateStatusAndTaskCount() throws FLException {
 
-			result = new HashMap<String, Object>();
-			result.put("code", 200);
-			result.put("message", "更新成功");
-		} catch (FLException e) {
-			result = new HashMap<String, Object>();
-			result.put("code", e.getErrorCode());
-			result.put("message", e.getMessage());
-		} catch (Exception e) {
-			result = new HashMap<String, Object>();
-			result.put("code", 500);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignUserRuleService.updateStatusAndTaskCount(quotationAssignUserRule);
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 启用预算员
+	 * 
+	 * @throws FLException
 	 */
-	@Action(value = "enableQuotationAssignUserRuleByUid", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
-	public String enableQuotationAssignUserRuleByUid() {
-		try {
-			quotationAssignUserRuleService.enableQuotationAssignUserRuleByUid(quotationAssignUserRule);
+	@Action(value = "enableQuotationAssignUserRuleByUid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String enableQuotationAssignUserRuleByUid() throws FLException {
 
-			result = new HashMap<String, Object>();
-			result.put("code", 200);
-			result.put("message", "启用成功");
-		} catch (FLException e) {
-			result = new HashMap<String, Object>();
-			result.put("code", e.getErrorCode());
-			result.put("message", e.getMessage());
-		} catch (Exception e) {
-			result = new HashMap<String, Object>();
-			result.put("code", 500);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignUserRuleService.enableQuotationAssignUserRuleByUid(quotationAssignUserRule);
+
 		return SUCCESS;
 	}
 
 	/**
 	 * 禁用预算员
+	 * 
+	 * @throws FLException
 	 */
-	@Action(value = "disableQuotationAssignUserRuleByUid", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
-	public String disableQuotationAssignUserRuleByUid() {
-		try {
-			quotationAssignUserRuleService.disableQuotationAssignUserRuleByUid(quotationAssignUserRule);
+	@Action(value = "disableQuotationAssignUserRuleByUid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String disableQuotationAssignUserRuleByUid() throws FLException {
 
-			result = new HashMap<String, Object>();
-			result.put("code", 200);
-			result.put("message", "禁用成功");
-		} catch (FLException e) {
-			result = new HashMap<String, Object>();
-			result.put("code", e.getErrorCode());
-			result.put("message", e.getMessage());
-		} catch (Exception e) {
-			result = new HashMap<String, Object>();
-			result.put("code", 500);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignUserRuleService.disableQuotationAssignUserRuleByUid(quotationAssignUserRule);
+
 		return SUCCESS;
 	}
-
-	// Getter and Setter
 
 	public QuotationAssignUserRuleVO getQuotationAssignUserRule() {
 		return quotationAssignUserRule;
