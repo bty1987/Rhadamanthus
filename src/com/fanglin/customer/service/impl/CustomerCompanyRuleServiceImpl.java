@@ -105,44 +105,16 @@ public class CustomerCompanyRuleServiceImpl implements CustomerCompanyRuleServic
 		for (CustomerCompanyRulePO po : companyRules) {
 
 			// 去重：使用 "部门ID_类型" 作为唯一键
-			String key = buildUniqueKey(po);
+			String key = String.valueOf(po.getCompany().getCid());
 			if (uniqueKeys.contains(key)) {
 				continue; // 跳过重复
 			}
 			uniqueKeys.add(key);
 
-			// 转换为VO
-			CustomerCompanyRuleVO vo = new CustomerCompanyRuleVO(new CompanyVO(), new DepartmentVO());
-			po.ptv(vo);
-			result.add(vo);
+			result.add(po.ptv(new CustomerCompanyRuleVO(new CompanyVO(), new DepartmentVO())));
 		}
 
 		return result;
-	}
-
-	/**
-	 * 构建唯一键用于去重
-	 */
-	private String buildUniqueKey(CustomerCompanyRulePO po) {
-		StringBuilder key = new StringBuilder();
-
-		if (po.getDept() != null) {
-			key.append(po.getDept().getDid());
-		} else {
-			key.append("0");
-		}
-
-		key.append("_");
-
-		if (po.getType() == CustomerCompanyRulePO.TYPE_AREA_INT) {
-			key.append("AREA_");
-			key.append(po.getLowval()).append("-").append(po.getUppval());
-		} else if (po.getType() == CustomerCompanyRulePO.TYPE_DEPT_INT) {
-			key.append("DEPT_");
-			key.append(po.getDept() != null ? po.getDept().getDid() : 0);
-		}
-
-		return key.toString();
 	}
 
 	@Override

@@ -13,199 +13,107 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.Filter;
-import com.fanglin.quotation.po.QuotationAssignRecordPO;
-import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.quotation.service.QuotationAssignService;
 import com.fanglin.quotation.vo.QuotationAssignRecordVO;
 import com.fanglin.quotation.vo.QuotationAssignRequestVO;
-import com.fanglin.utils.Paging;
 
 /**
- * 装修单预算分配 Action
- * 提供预算员自动分配、手动分配、重新分配等 API 接口
+ * 装修单预算分配 Action 提供预算员自动分配、手动分配、重新分配等 API 接口
  */
 @ParentPackage("base")
 @Namespace("/")
 @Controller
 public class QuotationAssignAction extends BaseListAction {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -1615588964130278412L;
 
 	@Autowired
 	private QuotationAssignService quotationAssignService;
 
 	// 参数字段
-	private String orderId;				// 装修单号
-	private Integer companyId;			// 公司ID
-	private Integer departmentId;		// 部门ID
-	private Byte decorationType;		// 装修类型：1-半包，2-整装
-	private Integer budgetUid;			// 预算员用户ID
-	private Integer newBudgetUid;		// 新预算员用户ID（重新分配时使用）
-	private Integer assignUid;			// 分配人用户ID（手动分配时使用）
-	private String remark;				// 备注
+	private String orderId; // 装修单号
+	private Integer companyId; // 公司ID
+	private Integer departmentId; // 部门ID
+	private Byte decorationType; // 装修类型：1-半包，2-整装
+	private Integer budgetUid; // 预算员用户ID
+	private Integer newBudgetUid; // 新预算员用户ID（重新分配时使用）
+	private Integer assignUid; // 分配人用户ID（手动分配时使用）
+	private String remark; // 备注
 
 	// 返回字段
-	private Map<String, Object> result;	// 返回结果
+	private Map<String, Object> result; // 返回结果
 	private QuotationAssignRequestVO assignRequest; // 分配请求
 	private List<QuotationAssignRequestVO> assignRequests; // 分配请求列表
 	private List<QuotationAssignRecordVO> assignRecords; // 分配记录列表
 
 	/**
 	 * 自动分配预算员（含类型匹配）
-	 *
-	 * 请求参数:
-	 * - orderId: 装修单号（必需）
-	 * - companyId: 公司ID（必需）
-	 * - decorationType: 装修类型（可选，1-半包，2-整装，默认从装修单获取）
-	 *
-	 * 返回数据:
-	 * - success: 是否成功
-	 * - budgetUid: 分配的预算员用户ID（成功时）
-	 * - message: 提示信息
+	 * 
+	 * 请求参数: - orderId: 装修单号（必需） - companyId: 公司ID（必需） - decorationType: 装修类型（可选，1-半包，2-整装，默认从装修单获取）
+	 * 
+	 * 返回数据: - success: 是否成功 - budgetUid: 分配的预算员用户ID（成功时） - message: 提示信息
 	 */
-	@Action(value = "autoAssignBudgetUser", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "autoAssignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String autoAssignBudgetUser() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			// 自动分配预算员
-			Integer assignedBudgetUid = quotationAssignService.autoAssignBudgetUser(
-				orderId, companyId, decorationType);
-
-			if (assignedBudgetUid != null) {
-				// 分配成功
-				result.put("success", true);
-				result.put("budgetUid", assignedBudgetUid);
-				result.put("message", "预算员分配成功");
-			} else {
-				// 无可用预算员，已进入待分配队列
-				result.put("success", false);
-				result.put("budgetUid", null);
-				result.put("message", "无可用预算员，已加入待分配队列");
-			}
-		} catch (Exception e) {
-			// 分配失败（如类型不匹配）
-			result.put("success", false);
-			result.put("budgetUid", null);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignService.autoAssignBudgetUser(orderId, companyId, decorationType);
 
 		return SUCCESS;
 	}
 
 	/**
 	 * 手动分配预算员
-	 *
-	 * 请求参数:
-	 * - orderId: 装修单号（必需）
-	 * - budgetUid: 预算员用户ID（必需）
-	 * - assignUid: 分配人用户ID（必需）
-	 *
-	 * 返回数据:
-	 * - success: 是否成功
-	 * - message: 提示信息
+	 * 
+	 * 请求参数: - orderId: 装修单号（必需） - budgetUid: 预算员用户ID（必需） - assignUid: 分配人用户ID（必需）
+	 * 
+	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
-	@Action(value = "manualAssignBudgetUser", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "manualAssignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String manualAssignBudgetUser() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			// 手动分配预算员
-			boolean success = quotationAssignService.manualAssignBudgetUser(
-				orderId, budgetUid, assignUid);
-
-			result.put("success", success);
-			result.put("message", success ? "手动分配成功" : "手动分配失败");
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignService.manualAssignBudgetUser(orderId, budgetUid, assignUid);
 
 		return SUCCESS;
 	}
 
 	/**
 	 * 重新分配预算员
-	 *
-	 * 请求参数:
-	 * - orderId: 装修单号（必需）
-	 * - newBudgetUid: 新预算员用户ID（必需）
-	 * - assignUid: 分配人用户ID（必需）
-	 *
-	 * 返回数据:
-	 * - success: 是否成功
-	 * - message: 提示信息
+	 * 
+	 * 请求参数: - orderId: 装修单号（必需） - newBudgetUid: 新预算员用户ID（必需） - assignUid: 分配人用户ID（必需）
+	 * 
+	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
-	@Action(value = "reassignBudgetUser", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "reassignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String reassignBudgetUser() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			// 重新分配预算员
-			boolean success = quotationAssignService.reassignBudgetUser(
-				orderId, newBudgetUid, assignUid);
-
-			result.put("success", success);
-			result.put("message", success ? "重新分配成功" : "重新分配失败");
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignService.reassignBudgetUser(orderId, newBudgetUid, assignUid);
 
 		return SUCCESS;
 	}
 
 	/**
 	 * 完成报价单，触发反向自动分配
-	 *
-	 * 请求参数:
-	 * - orderId: 装修单号（必需）
-	 *
-	 * 返回数据:
-	 * - success: 是否成功
-	 * - message: 提示信息
+	 * 
+	 * 请求参数: - orderId: 装修单号（必需）
+	 * 
+	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
-	@Action(value = "finishQuotation", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "finishQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishQuotation() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			// 完成报价单，触发反向自动分配
-			quotationAssignService.finishQuotation(orderId);
-
-			result.put("success", true);
-			result.put("message", "报价单已完成");
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", e.getMessage());
-		}
+		quotationAssignService.finishQuotation(orderId);
 
 		return SUCCESS;
 	}
 
 	/**
 	 * 检查是否启用预算分配功能
-	 *
-	 * 请求参数:
-	 * - companyId: 公司ID（必需）
-	 * - departmentId: 部门ID（可选）
-	 *
-	 * 返回数据:
-	 * - enabled: 是否启用
-	 * - autoAssign: 是否自动分配
+	 * 
+	 * 请求参数: - companyId: 公司ID（必需） - departmentId: 部门ID（可选）
+	 * 
+	 * 返回数据: - enabled: 是否启用 - autoAssign: 是否自动分配
 	 */
-	@Action(value = "isQuotationAssignEnabled", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "isQuotationAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String isQuotationAssignEnabled() throws FLException {
 		result = new HashMap<String, Object>();
 
