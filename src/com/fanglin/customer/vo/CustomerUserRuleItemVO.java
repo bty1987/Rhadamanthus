@@ -59,10 +59,13 @@ public class CustomerUserRuleItemVO implements Serializable {
 		this.department = department;
 	}
 
-	public CustomerUserRuleItemVO(DepartmentTypeVO departmentType, DepartmentVO department) {
+	public CustomerUserRuleItemVO(DepartmentTypeVO departmentType, DepartmentVO department, CityProperVO cityProper) {
+
 		super();
+
 		this.departmentType = departmentType;
 		this.department = department;
+		this.cityProper = cityProper;
 	}
 
 	public Long getCuriid() {

@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -17,7 +18,9 @@ import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DepartmentTypePO;
+import com.fanglin.customer.vo.CustomerUserRuleItemVO;
 import com.fanglin.system.po.CityProperPO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Entity
@@ -269,5 +272,16 @@ public class CustomerUserRuleItemPO implements Serializable {
 		setComment(orderId);
 
 		return this;
+	}
+
+	public CustomerUserRuleItemVO ptv(CustomerUserRuleItemVO customerUserRuleItemVO) {
+
+		BeanUtil.copyProperties(this, customerUserRuleItemVO, Arrays.asList("departmentType", "department", "cityProper"));
+
+		if (customerUserRuleItemVO.getDepartment() != null && getDepartment() != null) getDepartment().ptv(customerUserRuleItemVO.getDepartment());
+		if (customerUserRuleItemVO.getDepartmentType() != null && getDepartmentType() != null) getDepartmentType().ptv(customerUserRuleItemVO.getDepartmentType());
+		if (customerUserRuleItemVO.getCityProper() != null && getCityProper() != null) getCityProper().ptv(customerUserRuleItemVO.getCityProper());
+
+		return customerUserRuleItemVO;
 	}
 }
