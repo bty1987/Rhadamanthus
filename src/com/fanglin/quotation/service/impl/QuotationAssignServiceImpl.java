@@ -50,7 +50,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Integer autoAssignBudgetUser(String orderId, Integer companyId, Byte decorationType) {
+	public Integer autoAssignBudgetUser(String orderId, Integer companyId, Short decorationType) throws FLException {
 		// 1. 检查装修单是否已分配预算员
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
@@ -70,15 +70,11 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 3. 查找待分配且完成时间最早的预算员（列表）
-		List<QuotationAssignUserRulePO> budgetUsers = quotationAssignUserRuleDao.pullAvailableQuotationAssignUserRule(companyId,
-				decoration.getDesignDept() != null ? decoration.getDesignDept().getDid() : null);
+		List<QuotationAssignUserRulePO> budgetUsers = quotationAssignUserRuleDao.pullAvailableQuotationAssignUserRule(companyId, decoration.getDesignDept() != null ? decoration.getDesignDept().getDid() : null);
 
 		if (budgetUsers == null || budgetUsers.isEmpty()) {
 			// 分支2：未找到预算员，进入待分配队列
-			return createAssignRequest(orderId, companyId,
-					decoration.getDesignDept() != null ? decoration.getDesignDept().getDid() : null,
-					decorationType,
-					decoration.getDesigner() != null ? decoration.getDesigner().getUid() : null);
+			return createAssignRequest(orderId, companyId, decoration.getDesignDept() != null ? decoration.getDesignDept().getDid() : null, decorationType, decoration.getDesigner() != null ? decoration.getDesigner().getUid() : null);
 		}
 
 		// 4. 遍历预算员，查找支持该类型的预算员
@@ -94,14 +90,13 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 分支3：有预算员但都不支持该类型，返回错误提示
-		return handleTypeMismatch(orderId, companyId, decorationType,
-				decoration.getDesigner() != null ? decoration.getDesigner().getUid() : null);
+		return handleTypeMismatch(orderId, companyId, decorationType, decoration.getDesigner() != null ? decoration.getDesigner().getUid() : null);
 	}
 
 	/**
 	 * 执行分配操作（分支1：分配成功）
 	 */
-	private Integer executeAssign(String orderId, QuotationAssignUserRulePO budgetUser, Integer companyId, Byte decorationType) {
+	private Integer executeAssign(String orderId, QuotationAssignUserRulePO budgetUser, Integer companyId, Short decorationType) {
 		// 1. 更新装修单的预算员ID
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration != null) {
@@ -136,7 +131,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	/**
 	 * 创建待分配请求（分支2：无预算员）
 	 */
-	private Integer createAssignRequest(String orderId, Integer companyId, Integer department, Byte decorationType, Integer designerUid) {
+	private Integer createAssignRequest(String orderId, Integer companyId, Integer department, Short decorationType, Integer designerUid) {
 		// 1. 检查是否已存在待分配请求
 		QuotationAssignRequestPO existingRequest = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(orderId);
 		if (existingRequest != null && existingRequest.getStatus() == QuotationAssignRequestPO.STATUS_PENDING_INT) {
@@ -176,7 +171,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	 * 
 	 * @throws FLException
 	 */
-	private Integer handleTypeMismatch(String orderId, Integer companyId, Byte decorationType, Integer designerUid) throws FLException {
+	private Integer handleTypeMismatch(String orderId, Integer companyId, Short decorationType, Integer designerUid) throws FLException {
 		String typeName = (decorationType == 1) ? "半包" : "整装";
 
 		// 1. 生成分配记录（类型不匹配）
@@ -298,10 +293,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 查询待分配队列中最优先且类型匹配的任务
-		QuotationAssignRequestPO request = quotationAssignRequestDao.pullTopPriorityQuotationAssignRequestByTypes(
-				budgetUser.getCompany(),
-				budgetUser.getDepartment() != null ? budgetUser.getDepartment().getDid() : null,
-				supportedTypes);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.pullTopPriorityQuotationAssignRequestByTypes(budgetUser.getCompany(), budgetUser.getDepartment() != null ? budgetUser.getDepartment().getDid() : null, supportedTypes);
 
 		if (request == null) {
 			// 队列为空或无匹配类型，预算员保持空闲

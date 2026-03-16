@@ -14,8 +14,9 @@ public interface QuotationAssignService {
 	 * @param companyId 公司ID
 	 * @param decorationType 装修类型（1-半包，2-整装）
 	 * @return 分配的预算员用户ID，失败返回null
+	 * @throws FLException
 	 */
-	Integer autoAssignBudgetUser(String orderId, Integer companyId, Byte decorationType);
+	Integer autoAssignBudgetUser(String orderId, Integer companyId, Short decorationType) throws FLException;
 
 	/**
 	 * 手动分配预算员
