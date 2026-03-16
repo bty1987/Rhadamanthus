@@ -1,7 +1,6 @@
 package com.fanglin.quotation.action;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -31,8 +30,6 @@ public class QuotationAssignConfigAction extends BaseAction {
 	// 参数字段（使用VO对象）
 	private QuotationAssignConfigVO quotationAssignConfig;
 
-	// 返回字段
-	private Map<String, Object> result; // 返回结果
 	private List<QuotationAssignConfigVO> quotationAssignConfigs; // 预算配置列表
 
 	/**
@@ -46,6 +43,7 @@ public class QuotationAssignConfigAction extends BaseAction {
 	public String queryQuotationAssignConfig() throws FLException {
 
 		quotationAssignConfig = quotationAssignConfigService.queryQuotationAssignConfigByCompanyAndDepartment(quotationAssignConfig, queryCompany());
+
 		return SUCCESS;
 	}
 
@@ -122,46 +120,6 @@ public class QuotationAssignConfigAction extends BaseAction {
 		quotationAssignConfigService.disableQuotationAssignConfig(quotationAssignConfig, queryUserId());
 
 		return SUCCESS;
-	}
-
-	/**
-	 * 检查是否启用预算分配功能
-	 *
-	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需） - quotationAssignConfig.department: 部门ID（可选）
-	 *
-	 * 返回数据: - enabled: 是否启用
-	 */
-	@Action(value = "isQuotationAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String isQuotationAssignEnabled() throws FLException {
-
-		quotationAssignConfigService.queryQuotationAssignEnabled(quotationAssignConfig, queryCompany());
-
-		return SUCCESS;
-	}
-
-	/**
-	 * 检查是否启用自动分配模式
-	 *
-	 * 请求参数: - quotationAssignConfig.company: 公司ID（必需） - quotationAssignConfig.department: 部门ID（可选）
-	 *
-	 * 返回数据: - autoAssign: 是否自动分配
-	 */
-	@Action(value = "isAutoAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String isAutoAssignEnabled() throws FLException {
-
-		quotationAssignConfigService.queryAutoAssignEnabled(quotationAssignConfig, queryCompany());
-
-		return SUCCESS;
-	}
-
-	// Getter and Setter
-
-	public Map<String, Object> getResult() {
-		return result;
-	}
-
-	public void setResult(Map<String, Object> result) {
-		this.result = result;
 	}
 
 	public QuotationAssignConfigVO getQuotationAssignConfig() {

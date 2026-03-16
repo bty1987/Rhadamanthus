@@ -18,16 +18,7 @@ public interface QuotationAssignUserRuleService {
 	 * @param quotationAssignUserRule 预算员规则VO（包含uid和company）
 	 * @return 预算员规则VO
 	 */
-	QuotationAssignUserRuleVO queryQuotationAssignUserRuleByUidAndCompany(QuotationAssignUserRuleVO quotationAssignUserRule);
-
-	/**
-	 * 查询待分配且完成时间最早的预算员列表
-	 * 
-	 * @param company 公司ID
-	 * @param department 部门ID（可选）
-	 * @return 预算员规则列表
-	 */
-	List<QuotationAssignUserRuleVO> pullQuotationAssignUserRule(int company, Integer department);
+	QuotationAssignUserRuleVO queryQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule);
 
 	/**
 	 * 根据用户ID查询预算员规则
@@ -52,7 +43,16 @@ public interface QuotationAssignUserRuleService {
 	 * @param department 部门ID
 	 * @return 预算员规则列表
 	 */
-	List<QuotationAssignUserRuleVO> queryQuotationAssignUserRuleByDepartment(int company, int department);
+	List<QuotationAssignUserRuleVO> queryQuotationAssignUserRuleByDid(int company, int department);
+
+	/**
+	 * 查询待分配且完成时间最早的预算员列表
+	 * 
+	 * @param company 公司ID
+	 * @param department 部门ID（可选）
+	 * @return 预算员规则列表
+	 */
+	List<QuotationAssignUserRuleVO> pullQuotationAssignUserRule(int company, Integer department);
 
 	/**
 	 * 查询可用的预算员列表（状态为待分配）
@@ -61,7 +61,7 @@ public interface QuotationAssignUserRuleService {
 	 * @param department 部门ID（可选）
 	 * @return 预算员规则列表
 	 */
-	List<QuotationAssignUserRuleVO> pullAvailableQuotationAssignUserRule(int company, Integer department);
+	List<QuotationAssignUserRuleVO> pullQuotationAssignUserRuleForPending(int company, Integer department);
 
 	/**
 	 * 更新预算员状态和任务数量
@@ -69,7 +69,7 @@ public interface QuotationAssignUserRuleService {
 	 * @param quotationAssignUserRule 预算员规则VO（包含uid、status、currentTaskCount）
 	 * @throws FLException
 	 */
-	void updateStatusAndTaskCount(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException;
+	void updateQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException;
 
 	/**
 	 * 统计预算员的当前任务数（基于 quotationassignrequest）

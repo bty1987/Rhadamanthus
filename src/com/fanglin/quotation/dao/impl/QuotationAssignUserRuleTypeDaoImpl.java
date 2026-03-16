@@ -21,12 +21,12 @@ public class QuotationAssignUserRuleTypeDaoImpl extends DaoImpl<QuotationAssignU
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignUserRuleTypePO> queryQuotationAssignUserRuleTypeByQaurid(long qaurid) {
+	public List<QuotationAssignUserRuleTypePO> queryQuotationAssignUserRuleType(long qaurid) {
 		return session().createCriteria(QuotationAssignUserRuleTypePO.class).createAlias("quotationAssignUserRule", "quotationAssignUserRule").add(Restrictions.eq("quotationAssignUserRule.qaurid", qaurid)).list();
 	}
 
 	@Override
-	public QuotationAssignUserRuleTypePO queryQuotationAssignUserRuleTypeByQauridAndType(long qaurid, short type) {
+	public QuotationAssignUserRuleTypePO queryQuotationAssignUserRuleType(long qaurid, short type) {
 		return (QuotationAssignUserRuleTypePO) session().createCriteria(QuotationAssignUserRuleTypePO.class).createAlias("quotationAssignUserRule", "quotationAssignUserRule").add(Restrictions.eq("quotationAssignUserRule.qaurid", qaurid)).add(Restrictions.eq(QuotationAssignUserRuleTypePO.COLUMN_TYPE_STR, type)).setMaxResults(1).uniqueResult();
 	}
 
@@ -37,19 +37,20 @@ public class QuotationAssignUserRuleTypeDaoImpl extends DaoImpl<QuotationAssignU
 	}
 
 	@Override
-	public int countQuotationAssignUserRuleTypeByQaurid(long qaurid) {
+	public int countQuotationAssignUserRuleType(long qaurid) {
 		String hql = "SELECT COUNT(*) FROM QuotationAssignUserRuleTypePO WHERE quotationAssignUserRule.qaurid = :qaurid";
 		return ((Number) session().createQuery(hql).setParameter("qaurid", qaurid).uniqueResult()).intValue();
 	}
 
 	@Override
-	public int deleteQuotationAssignUserRuleTypeByQaurid(long qaurid) {
+	public int deleteQuotationAssignUserRuleType(long qaurid) {
 		String hql = "DELETE FROM QuotationAssignUserRuleTypePO WHERE quotationAssignUserRule.qaurid = :qaurid";
 		return session().createQuery(hql).setParameter("qaurid", qaurid).executeUpdate();
 	}
 
 	@Override
-	public int batchSaveQuotationAssignUserRuleType(List<QuotationAssignUserRuleTypePO> types) {
+	public int batchQuotationAssignUserRuleType(List<QuotationAssignUserRuleTypePO> types) {
+
 		if (types == null || types.isEmpty()) {
 			return 0;
 		}

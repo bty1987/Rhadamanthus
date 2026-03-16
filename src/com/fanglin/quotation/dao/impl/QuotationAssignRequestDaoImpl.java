@@ -25,23 +25,23 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	}
 
 	@Override
-	public List<QuotationAssignRequestPO> page(Paging paging, List<Filter> filters) {
+	public List<QuotationAssignRequestPO> pageQuotationAssignRequest(Paging paging, List<Filter> filters) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public QuotationAssignRequestPO queryQuotationAssignRequestByOrderId(String orderId) {
+	public QuotationAssignRequestPO queryQuotationAssignRequest(String orderId) {
 		return (QuotationAssignRequestPO) session().createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq(QuotationAssignRequestPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.in(QuotationAssignRequestPO.COLUMN_STATUS_STR, new Short[] { QuotationAssignRequestPO.STATUS_PENDING_INT, QuotationAssignRequestPO.STATUS_ASSIGNED_INT })).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	public QuotationAssignRequestPO queryQuotationAssignRequestByOrderIdAndStatus(String orderId, short status) {
+	public QuotationAssignRequestPO queryQuotationAssignRequest(String orderId, short status) {
 		return (QuotationAssignRequestPO) session().createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq(QuotationAssignRequestPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(QuotationAssignRequestPO.COLUMN_STATUS_STR, status)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	public QuotationAssignRequestPO pullTopPriorityQuotationAssignRequest(int company, Integer department) {
+	public QuotationAssignRequestPO pullQuotationAssignRequest(int company, Integer department) {
 		org.hibernate.Criteria criteria = session().createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq(QuotationAssignRequestPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(QuotationAssignRequestPO.COLUMN_STATUS_STR, QuotationAssignRequestPO.STATUS_PENDING_INT));
 
 		if (department != null) {
@@ -56,7 +56,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	}
 
 	@Override
-	public QuotationAssignRequestPO pullTopPriorityQuotationAssignRequestByTypes(int company, Integer department, List<Short> supportedTypes) {
+	public QuotationAssignRequestPO pullQuotationAssignRequest(int company, Integer department, List<Short> supportedTypes) {
 		// 使用 SQL 查询，因为需要 JOIN quotationassignuserruletype 表
 		String sql = "SELECT bar.* FROM quotation.quotationassignrequest bar " + "INNER JOIN quotation.quotationassignuserruletype qaurtype ON bar.decorationType = qaurtype.type " + "WHERE bar.status = :status " + "AND bar.company = :company " + "AND qaurtype.type IN (:types) ";
 
@@ -81,7 +81,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignRequestPO> queryPendingQuotationAssignRequestQueue(int company, Integer department) {
+	public List<QuotationAssignRequestPO> queueQuotationAssignRequest(int company, Integer department) {
 		org.hibernate.Criteria criteria = session().createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq(QuotationAssignRequestPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(QuotationAssignRequestPO.COLUMN_STATUS_STR, QuotationAssignRequestPO.STATUS_PENDING_INT));
 
 		if (department != null) {
@@ -95,44 +95,44 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	}
 
 	@Override
-	public int countPendingQuotationAssignRequestQueue(int company) {
+	public int countQuotationAssignRequestForQueue(int company) {
 		String hql = "SELECT COUNT(*) FROM QuotationAssignRequestPO WHERE company = :company AND status = :status";
 		return ((Number) session().createQuery(hql).setParameter("company", company).setParameter("status", QuotationAssignRequestPO.STATUS_PENDING_INT).uniqueResult()).intValue();
 	}
 
 	@Override
-	public int countPendingQuotationAssignRequestQueueByDepartment(int company, int department) {
+	public int countQuotationAssignRequestForPeding(int company, int department) {
 		String hql = "SELECT COUNT(*) FROM QuotationAssignRequestPO WHERE company = :company AND department = :department AND status = :status";
 		return ((Number) session().createQuery(hql).setParameter("company", company).setParameter("department", department).setParameter("status", QuotationAssignRequestPO.STATUS_PENDING_INT).uniqueResult()).intValue();
 	}
 
 	@Override
-	public int getQuotationAssignRequestQueuePosition(int company, Timestamp requestTime) {
+	public int locateQuotationAssignRequest(int company, Timestamp requestTime) {
 		String hql = "SELECT COUNT(*) + 1 FROM QuotationAssignRequestPO " + "WHERE company = :company AND status = :status " + "AND (priority < :priority OR (priority = :priority AND requestTime < :requestTime))";
 
 		return ((Number) session().createQuery(hql).setParameter("company", company).setParameter("status", QuotationAssignRequestPO.STATUS_PENDING_INT).setParameter("priority", QuotationAssignRequestPO.PRIORITY_NORMAL_INT).setParameter("requestTime", requestTime).uniqueResult()).intValue();
 	}
 
 	@Override
-	public int updateQuotationAssignRequestStatus(long qarid, short status) {
+	public int updateQuotationAssignRequest(long qarid, short status) {
 		String hql = "UPDATE QuotationAssignRequestPO SET status = :status, assignTime = CURRENT_TIMESTAMP WHERE qarid = :qarid";
 		return session().createQuery(hql).setParameter("status", status).setParameter("qarid", qarid).executeUpdate();
 	}
 
 	@Override
-	public int batchUpdateExpiredQuotationAssignRequestStatus(int company, Timestamp beforeTime, short oldStatus, short newStatus) {
+	public int batchQuotationAssignRequest(int company, Timestamp beforeTime, short oldStatus, short newStatus) {
 		String hql = "UPDATE QuotationAssignRequestPO SET status = :newStatus WHERE company = :company AND status = :oldStatus AND requestTime < :beforeTime";
 		return session().createQuery(hql).setParameter("newStatus", newStatus).setParameter("company", company).setParameter("oldStatus", oldStatus).setParameter("beforeTime", beforeTime).executeUpdate();
 	}
 
 	@Override
-	public int existQuotationAssignRequestInQueue(String orderId, short status) {
+	public int existQuotationAssignRequest(String orderId, short status) {
 		String hql = "SELECT COUNT(*) FROM QuotationAssignRequestPO WHERE orderId = :orderId AND status = :status";
 		return ((Number) session().createQuery(hql).setParameter("orderId", orderId).setParameter("status", status).uniqueResult()).intValue();
 	}
 
 	@Override
-	public int deleteQuotationAssignRequestByOrderIdAndStatus(String orderId, short status) {
+	public int deleteQuotationAssignRequest(String orderId, short status) {
 		String hql = "DELETE FROM QuotationAssignRequestPO WHERE orderId = :orderId AND status = :status";
 		return session().createQuery(hql).setParameter("orderId", orderId).setParameter("status", status).executeUpdate();
 	}

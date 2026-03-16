@@ -20,7 +20,7 @@ public class QuotationAssignConfigDaoImpl extends DaoImpl<QuotationAssignConfigP
 	}
 
 	@Override
-	public QuotationAssignConfigPO queryQuotationAssignConfigByCompanyAndDepartment(int company, Integer department) {
+	public QuotationAssignConfigPO queryQuotationAssignConfigByDid(int company, Integer department) {
 		org.hibernate.Criteria criteria = session().createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq(QuotationAssignConfigPO.COLUMN_COMPANY_STR, company));
 
 		if (department == null) {
@@ -34,65 +34,65 @@ public class QuotationAssignConfigDaoImpl extends DaoImpl<QuotationAssignConfigP
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignConfigPO> queryQuotationAssignConfigByCompany(int company) {
+	public List<QuotationAssignConfigPO> queryQuotationAssignConfig(int company) {
 		return session().createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq(QuotationAssignConfigPO.COLUMN_COMPANY_STR, company)).list();
 	}
 
 	@Override
-	public QuotationAssignConfigPO queryQuotationAssignConfigByCompanyLevel(int company) {
+	public QuotationAssignConfigPO queryQuotationAssignConfigForCompany(int company) {
 		return (QuotationAssignConfigPO) session().createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq(QuotationAssignConfigPO.COLUMN_COMPANY_STR, company)).add(Restrictions.isNull(QuotationAssignConfigPO.COLUMN_DEPARTMENT_STR)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignConfigPO> queryQuotationAssignConfigByDepartmentLevel(int company) {
+	public List<QuotationAssignConfigPO> queryQuotationAssignConfigForDepartment(int company) {
 		return session().createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq(QuotationAssignConfigPO.COLUMN_COMPANY_STR, company)).add(Restrictions.isNotNull(QuotationAssignConfigPO.COLUMN_DEPARTMENT_STR)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignConfigPO> queryEnabledQuotationAssignConfig(int company) {
+	public List<QuotationAssignConfigPO> queryQuotationAssignConfigForEnable(int company) {
 		return session().createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq(QuotationAssignConfigPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(QuotationAssignConfigPO.COLUMN_ENABLED_STR, QuotationAssignConfigPO.ENABLED_ENABLED_INT)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignConfigPO> queryAutoAssignQuotationAssignConfig(int company) {
+	public List<QuotationAssignConfigPO> queryQuotationAssignConfigForAuto(int company) {
 		return session().createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq(QuotationAssignConfigPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(QuotationAssignConfigPO.COLUMN_ENABLED_STR, QuotationAssignConfigPO.ENABLED_ENABLED_INT)).add(Restrictions.eq(QuotationAssignConfigPO.COLUMN_AUTOASSIGN_STR, QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT)).list();
 	}
 
 	@Override
-	public int existEnabledQuotationAssignConfig(int company) {
+	public int existQuotationAssignConfigForEnable(int company) {
 		String hql = "SELECT COUNT(*) FROM QuotationAssignConfigPO WHERE company = :company AND enabled = :enabled";
 		return ((Number) session().createQuery(hql).setParameter("company", company).setParameter("enabled", QuotationAssignConfigPO.ENABLED_ENABLED_INT).uniqueResult()).intValue();
 	}
 
 	@Override
-	public int existEnabledQuotationAssignConfigByDepartment(int company, int department) {
+	public int existQuotationAssignConfigByDidForEnable(int company, int department) {
 		String hql = "SELECT COUNT(*) FROM QuotationAssignConfigPO WHERE company = :company AND department = :department AND enabled = :enabled";
 		return ((Number) session().createQuery(hql).setParameter("company", company).setParameter("department", department).setParameter("enabled", QuotationAssignConfigPO.ENABLED_ENABLED_INT).uniqueResult()).intValue();
 	}
 
 	@Override
-	public int existAutoAssignQuotationAssignConfig(int company) {
+	public int existQuotationAssignConfigForAuto(int company) {
 		String hql = "SELECT COUNT(*) FROM QuotationAssignConfigPO WHERE company = :company AND enabled = :enabled AND autoAssign = :autoAssign";
 		return ((Number) session().createQuery(hql).setParameter("company", company).setParameter("enabled", QuotationAssignConfigPO.ENABLED_ENABLED_INT).setParameter("autoAssign", QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT).uniqueResult()).intValue();
 	}
 
 	@Override
-	public int existAutoAssignQuotationAssignConfigByDepartment(int company, int department) {
+	public int existQuotationAssignConfigByDidForAuto(int company, int department) {
 		String hql = "SELECT COUNT(*) FROM QuotationAssignConfigPO WHERE company = :company AND department = :department AND enabled = :enabled AND autoAssign = :autoAssign";
 		return ((Number) session().createQuery(hql).setParameter("company", company).setParameter("department", department).setParameter("enabled", QuotationAssignConfigPO.ENABLED_ENABLED_INT).setParameter("autoAssign", QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT).uniqueResult()).intValue();
 	}
 
 	@Override
-	public int updateQuotationAssignConfigEnabled(long qacid, short enabled) {
+	public int updateQuotationAssignConfigForEnable(long qacid, short enabled) {
 		String hql = "UPDATE QuotationAssignConfigPO SET enabled = :enabled, updateTime = CURRENT_TIMESTAMP WHERE qacid = :qacid";
 		return session().createQuery(hql).setParameter("enabled", enabled).setParameter("qacid", qacid).executeUpdate();
 	}
 
 	@Override
-	public int updateQuotationAssignConfigAutoAssign(long qacid, short autoAssign) {
+	public int updateQuotationAssignConfigForAuto(long qacid, short autoAssign) {
 		String hql = "UPDATE QuotationAssignConfigPO SET autoAssign = :autoAssign, updateTime = CURRENT_TIMESTAMP WHERE qacid = :qacid";
 		return session().createQuery(hql).setParameter("autoAssign", autoAssign).setParameter("qacid", qacid).executeUpdate();
 	}
@@ -110,7 +110,7 @@ public class QuotationAssignConfigDaoImpl extends DaoImpl<QuotationAssignConfigP
 	}
 
 	@Override
-	public int deleteQuotationAssignConfigByDepartment(int company, int department) {
+	public int deleteQuotationAssignConfigByDDid(int company, int department) {
 		String hql = "DELETE FROM QuotationAssignConfigPO WHERE company = :company AND department = :department";
 		return session().createQuery(hql).setParameter("company", company).setParameter("department", department).executeUpdate();
 	}

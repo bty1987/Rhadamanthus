@@ -1,9 +1,5 @@
 package com.fanglin.quotation.action;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -14,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.service.QuotationAssignService;
-import com.fanglin.quotation.vo.QuotationAssignRecordVO;
-import com.fanglin.quotation.vo.QuotationAssignRequestVO;
 import com.fanglin.quotation.vo.QuotationAssignVO;
 
 /**
@@ -31,14 +25,7 @@ public class QuotationAssignAction extends BaseListAction {
 	@Autowired
 	private QuotationAssignService quotationAssignService;
 
-	// 参数字段（使用VO对象）
 	private QuotationAssignVO quotationAssign;
-
-	// 返回字段
-	private Map<String, Object> result; // 返回结果
-	private QuotationAssignRequestVO assignRequest; // 分配请求
-	private List<QuotationAssignRequestVO> assignRequests; // 分配请求列表
-	private List<QuotationAssignRecordVO> assignRecords; // 分配记录列表
 
 	/**
 	 * 自动分配预算员（含类型匹配）
@@ -47,10 +34,10 @@ public class QuotationAssignAction extends BaseListAction {
 	 * 
 	 * 返回数据: - success: 是否成功 - budgetUid: 分配的预算员用户ID（成功时） - message: 提示信息
 	 */
-	@Action(value = "autoAssignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String autoAssignBudgetUser() throws FLException {
-		quotationAssign.setCompanyId(queryCompany());
-		quotationAssignService.autoAssignBudgetUser(quotationAssign);
+	@Action(value = "assignQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String assignQuotationAssign() throws FLException {
+
+		quotationAssignService.assignQuotationAssign(quotationAssign, queryCompany());
 
 		return SUCCESS;
 	}
@@ -62,9 +49,10 @@ public class QuotationAssignAction extends BaseListAction {
 	 * 
 	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
-	@Action(value = "manualAssignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String manualAssignBudgetUser() throws FLException {
-		quotationAssignService.manualAssignBudgetUser(quotationAssign);
+	@Action(value = "manualQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String manualQuotationAssign() throws FLException {
+
+		quotationAssignService.manualQuotationAssign(quotationAssign);
 
 		return SUCCESS;
 	}
@@ -76,9 +64,10 @@ public class QuotationAssignAction extends BaseListAction {
 	 * 
 	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
-	@Action(value = "reassignBudgetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String reassignBudgetUser() throws FLException {
-		quotationAssignService.reassignBudgetUser(quotationAssign);
+	@Action(value = "reassignQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String reassignQuotationAssign() throws FLException {
+
+		quotationAssignService.reassignQuotationAssign(quotationAssign);
 
 		return SUCCESS;
 	}
@@ -90,35 +79,13 @@ public class QuotationAssignAction extends BaseListAction {
 	 * 
 	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
-	@Action(value = "finishQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String finishQuotation() throws FLException {
-		quotationAssignService.finishQuotation(quotationAssign);
+	@Action(value = "finishQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishQuotationAssign() throws FLException {
+
+		quotationAssignService.finishQuotationAssign(quotationAssign);
 
 		return SUCCESS;
 	}
-
-	/**
-	 * 检查是否启用预算分配功能
-	 * 
-	 * 请求参数: - companyId: 公司ID（必需） - departmentId: 部门ID（可选）
-	 * 
-	 * 返回数据: - enabled: 是否启用 - autoAssign: 是否自动分配
-	 */
-	@Action(value = "isQuotationAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String isQuotationAssignEnabled() throws FLException {
-		result = new HashMap<String, Object>();
-		quotationAssign.setCompanyId(queryCompany());
-
-		boolean enabled = quotationAssignService.isQuotationAssignEnabled(quotationAssign);
-		boolean autoAssign = quotationAssignService.isAutoAssign(quotationAssign);
-
-		result.put("enabled", enabled);
-		result.put("autoAssign", autoAssign);
-
-		return SUCCESS;
-	}
-
-	// Getter and Setter
 
 	public QuotationAssignVO getQuotationAssign() {
 		return quotationAssign;
@@ -126,37 +93,5 @@ public class QuotationAssignAction extends BaseListAction {
 
 	public void setQuotationAssign(QuotationAssignVO quotationAssign) {
 		this.quotationAssign = quotationAssign;
-	}
-
-	public Map<String, Object> getResult() {
-		return result;
-	}
-
-	public void setResult(Map<String, Object> result) {
-		this.result = result;
-	}
-
-	public QuotationAssignRequestVO getAssignRequest() {
-		return assignRequest;
-	}
-
-	public void setAssignRequest(QuotationAssignRequestVO assignRequest) {
-		this.assignRequest = assignRequest;
-	}
-
-	public List<QuotationAssignRequestVO> getAssignRequests() {
-		return assignRequests;
-	}
-
-	public void setAssignRequests(List<QuotationAssignRequestVO> assignRequests) {
-		this.assignRequests = assignRequests;
-	}
-
-	public List<QuotationAssignRecordVO> getAssignRecords() {
-		return assignRecords;
-	}
-
-	public void setAssignRecords(List<QuotationAssignRecordVO> assignRecords) {
-		this.assignRecords = assignRecords;
 	}
 }
