@@ -34,19 +34,15 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	private UserDao userDao;
 
 	@Override
-	public QuotationAssignUserRuleVO queryQuotationAssignUserRuleByUidAndCompany(QuotationAssignUserRuleVO quotationAssignUserRule) {
-		QuotationAssignUserRulePO po = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUidAndCompany(quotationAssignUserRule.getUid(), quotationAssignUserRule.getCompany());
-		return po != null ? po.ptv(new QuotationAssignUserRuleVO()) : null;
+	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int queryCompany) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public List<QuotationAssignUserRuleVO> pullQuotationAssignUserRule(int company, Integer department) {
-		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.pullQuotationAssignUserRule(company, department);
-		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
-		for (QuotationAssignUserRulePO po : poList) {
-			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
-		}
-		return voList;
+	public QuotationAssignUserRuleVO queryQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) {
+		QuotationAssignUserRulePO po = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUid(quotationAssignUserRule.getUid(), quotationAssignUserRule.getCompany());
+		return po != null ? po.ptv(new QuotationAssignUserRuleVO()) : null;
 	}
 
 	@Override
@@ -57,7 +53,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	public List<QuotationAssignUserRuleVO> queryQuotationAssignUserRuleByCompany(int company) {
-		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByCompany(company);
+		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.queryQuotationAssignUserRule(company);
 		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 		for (QuotationAssignUserRulePO po : poList) {
 			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
@@ -66,8 +62,8 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	}
 
 	@Override
-	public List<QuotationAssignUserRuleVO> queryQuotationAssignUserRuleByDepartment(int company, int department) {
-		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByDepartment(company, department);
+	public List<QuotationAssignUserRuleVO> queryQuotationAssignUserRuleByDid(int company, int department) {
+		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByDid(company, department);
 		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 		for (QuotationAssignUserRulePO po : poList) {
 			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
@@ -76,8 +72,18 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	}
 
 	@Override
-	public List<QuotationAssignUserRuleVO> pullAvailableQuotationAssignUserRule(int company, Integer department) {
-		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.pullAvailableQuotationAssignUserRule(company, department);
+	public List<QuotationAssignUserRuleVO> pullQuotationAssignUserRule(int company, Integer department) {
+		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.pullQuotationAssignUserRuleforQueue(company, department);
+		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
+		for (QuotationAssignUserRulePO po : poList) {
+			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
+		}
+		return voList;
+	}
+
+	@Override
+	public List<QuotationAssignUserRuleVO> pullQuotationAssignUserRuleForPending(int company, Integer department) {
+		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.pullQuotationAssignUserRuleForPending(company, department);
 		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 		for (QuotationAssignUserRulePO po : poList) {
 			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
@@ -87,13 +93,13 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateStatusAndTaskCount(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
-		quotationAssignUserRuleDao.updateStatusAndTaskCount(quotationAssignUserRule.getUid(), quotationAssignUserRule.getStatus(), quotationAssignUserRule.getCurrentTaskCount());
+	public void updateQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
+		quotationAssignUserRuleDao.updateQuotationAssignUserRule(quotationAssignUserRule.getUid(), quotationAssignUserRule.getStatus(), quotationAssignUserRule.getCurrentTaskCount());
 	}
 
 	@Override
 	public int countQuotationAssignTaskByUid(QuotationAssignUserRuleVO quotationAssignUserRule) {
-		return quotationAssignUserRuleDao.countQuotationAssignTaskByUid(quotationAssignUserRule.getUid());
+		return quotationAssignUserRuleDao.countQuotationAssignUserRuleByUid(quotationAssignUserRule.getUid());
 	}
 
 	@Override
@@ -103,7 +109,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	public int countQuotationAssignUserRuleByDepartment(int company, int department) {
-		return quotationAssignUserRuleDao.countQuotationAssignUserRuleByDepartment(company, department);
+		return quotationAssignUserRuleDao.countQuotationAssignUserRuleByDid(company, department);
 	}
 
 	@Override
@@ -114,20 +120,20 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void disableQuotationAssignUserRuleByUid(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
-		quotationAssignUserRuleDao.disableQuotationAssignUserRuleByUid(quotationAssignUserRule.getUid());
+		quotationAssignUserRuleDao.disableQuotationAssignUserRule(quotationAssignUserRule.getUid());
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void enableQuotationAssignUserRuleByUid(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
-		quotationAssignUserRuleDao.enableQuotationAssignUserRuleByUid(quotationAssignUserRule.getUid());
+		quotationAssignUserRuleDao.enableQuotationAssignUserRule(quotationAssignUserRule.getUid());
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRuleVO, String userId) throws FLException {
 		// 检查用户是否已是预算员
-		QuotationAssignUserRulePO existingPO = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUidAndCompany(quotationAssignUserRuleVO.getUid(), quotationAssignUserRuleVO.getCompany());
+		QuotationAssignUserRulePO existingPO = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUid(quotationAssignUserRuleVO.getUid(), quotationAssignUserRuleVO.getCompany());
 		if (existingPO != null) {
 			throw new FLException(330080, "该用户已是预算员");
 		}
@@ -169,9 +175,4 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		quotationAssignUserRuleDao.update(po);
 	}
 
-	@Override
-	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int queryCompany) {
-		// TODO Auto-generated method stub
-
-	}
 }

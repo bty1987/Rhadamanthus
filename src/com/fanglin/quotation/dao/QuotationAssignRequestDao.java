@@ -12,13 +12,15 @@ import com.fanglin.utils.Paging;
  */
 public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO> {
 
+	List<QuotationAssignRequestPO> pageQuotationAssignRequest(Paging paging, List<Filter> filters);
+
 	/**
 	 * 根据装修单号查询待分配或已分配请求
 	 * 
 	 * @param orderId 装修单号
 	 * @return 分配请求
 	 */
-	QuotationAssignRequestPO queryQuotationAssignRequestByOrderId(String orderId);
+	QuotationAssignRequestPO queryQuotationAssignRequest(String orderId);
 
 	/**
 	 * 根据装修单号和状态查询请求
@@ -27,7 +29,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param status 状态
 	 * @return 分配请求
 	 */
-	QuotationAssignRequestPO queryQuotationAssignRequestByOrderIdAndStatus(String orderId, short status);
+	QuotationAssignRequestPO queryQuotationAssignRequest(String orderId, short status);
 
 	/**
 	 * 查询待分配队列中最优先的任务
@@ -36,7 +38,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param department 部门ID（可选）
 	 * @return 分配请求
 	 */
-	QuotationAssignRequestPO pullTopPriorityQuotationAssignRequest(int company, Integer department);
+	QuotationAssignRequestPO pullQuotationAssignRequest(int company, Integer department);
 
 	/**
 	 * 查询待分配队列中最优先且类型匹配的任务
@@ -46,7 +48,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param supportedTypes 支持的类型列表（如：[1,2]）
 	 * @return 分配请求
 	 */
-	QuotationAssignRequestPO pullTopPriorityQuotationAssignRequestByTypes(int company, Integer department, List<Short> supportedTypes);
+	QuotationAssignRequestPO pullQuotationAssignRequest(int company, Integer department, List<Short> supportedTypes);
 
 	/**
 	 * 查询公司的待分配队列
@@ -55,7 +57,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param department 部门ID（可选）
 	 * @return 分配请求列表
 	 */
-	List<QuotationAssignRequestPO> queryPendingQuotationAssignRequestQueue(int company, Integer department);
+	List<QuotationAssignRequestPO> queueQuotationAssignRequest(int company, Integer department);
 
 	/**
 	 * 统计待分配队列数量
@@ -63,7 +65,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param company 公司ID
 	 * @return 数量
 	 */
-	int countPendingQuotationAssignRequestQueue(int company);
+	int countQuotationAssignRequestForQueue(int company);
 
 	/**
 	 * 统计指定部门的待分配队列数量
@@ -72,7 +74,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param department 部门ID
 	 * @return 数量
 	 */
-	int countPendingQuotationAssignRequestQueueByDepartment(int company, int department);
+	int countQuotationAssignRequestForPeding(int company, int department);
 
 	/**
 	 * 获取队列位置
@@ -81,7 +83,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param requestTime 请求时间
 	 * @return 位置（从1开始）
 	 */
-	int getQuotationAssignRequestQueuePosition(int company, java.sql.Timestamp requestTime);
+	int locateQuotationAssignRequest(int company, java.sql.Timestamp requestTime);
 
 	/**
 	 * 更新分配请求状态
@@ -90,7 +92,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param status 新状态
 	 * @return 影响行数
 	 */
-	int updateQuotationAssignRequestStatus(long qarid, short status);
+	int updateQuotationAssignRequest(long qarid, short status);
 
 	/**
 	 * 批量更新过期请求的状态
@@ -101,7 +103,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param newStatus 新状态
 	 * @return 影响行数
 	 */
-	int batchUpdateExpiredQuotationAssignRequestStatus(int company, java.sql.Timestamp beforeTime, short oldStatus, short newStatus);
+	int batchQuotationAssignRequest(int company, java.sql.Timestamp beforeTime, short oldStatus, short newStatus);
 
 	/**
 	 * 检查装修单是否在待分配队列中
@@ -110,7 +112,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param status 状态
 	 * @return 数量（0表示不在，>0表示在）
 	 */
-	int existQuotationAssignRequestInQueue(String orderId, short status);
+	int existQuotationAssignRequest(String orderId, short status);
 
 	/**
 	 * 删除指定状态的分配请求
@@ -119,8 +121,6 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param status 状态
 	 * @return 影响行数
 	 */
-	int deleteQuotationAssignRequestByOrderIdAndStatus(String orderId, short status);
-
-	List<QuotationAssignRequestPO> page(Paging paging, List<Filter> filters);
+	int deleteQuotationAssignRequest(String orderId, short status);
 
 }

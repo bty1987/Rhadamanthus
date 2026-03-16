@@ -61,20 +61,4 @@ public interface QuotationAssignConfigService {
 	 * @throws FLException
 	 */
 	void disableQuotationAssignConfig(QuotationAssignConfigVO quotationAssignConfig, String userId) throws FLException;
-
-	/**
-	 * 检查公司是否启用了预算员分配功能
-	 *
-	 * @param quotationAssignConfig 配置VO（包含company）
-	 * @return true-已启用，false-未启用
-	 */
-	boolean queryQuotationAssignEnabled(QuotationAssignConfigVO quotationAssignConfig, Integer company);
-
-	/**
-	 * 检查公司/部门是否启用自动分配
-	 *
-	 * @param quotationAssignConfig 配置VO（包含company和department）
-	 * @return true-自动分配，false-手动分配
-	 */
-	boolean queryAutoAssignEnabled(QuotationAssignConfigVO quotationAssignConfig, Integer company);
 }

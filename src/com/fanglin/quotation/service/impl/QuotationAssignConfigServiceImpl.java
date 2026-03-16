@@ -17,8 +17,7 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 /**
- * 报价单预算配置表 Service 实现
- * 职责: 控制哪些公司/部门启用预算员分配功能
+ * 报价单预算配置表 Service 实现 职责: 控制哪些公司/部门启用预算员分配功能
  */
 @Service("quotationAssignConfigService")
 @Transactional(readOnly = true)
@@ -29,16 +28,13 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 
 	@Override
 	public QuotationAssignConfigVO queryQuotationAssignConfigByCompanyAndDepartment(QuotationAssignConfigVO quotationAssignConfig, Integer company) {
-		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(
-			quotationAssignConfig.getCompany(),
-			quotationAssignConfig.getDepartment()
-		);
+		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByDid(quotationAssignConfig.getCompany(), quotationAssignConfig.getDepartment());
 		return po != null ? po.ptv(new QuotationAssignConfigVO()) : null;
 	}
 
 	@Override
 	public List<QuotationAssignConfigVO> queryQuotationAssignConfigByCompany(QuotationAssignConfigVO quotationAssignConfig, Integer company) {
-		List<QuotationAssignConfigPO> poList = quotationAssignConfigDao.queryQuotationAssignConfigByCompany(quotationAssignConfig.getCompany());
+		List<QuotationAssignConfigPO> poList = quotationAssignConfigDao.queryQuotationAssignConfig(quotationAssignConfig.getCompany());
 		List<QuotationAssignConfigVO> voList = new ArrayList<QuotationAssignConfigVO>();
 		for (QuotationAssignConfigPO po : poList) {
 			voList.add(po.ptv(new QuotationAssignConfigVO()));
@@ -50,10 +46,7 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	@Transactional(rollbackFor = Exception.class)
 	public void saveQuotationAssignConfig(QuotationAssignConfigVO quotationAssignConfigVO, String userId) throws FLException {
 		// 检查是否已存在配置
-		QuotationAssignConfigPO existingPO = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(
-			quotationAssignConfigVO.getCompany(),
-			quotationAssignConfigVO.getDepartment()
-		);
+		QuotationAssignConfigPO existingPO = quotationAssignConfigDao.queryQuotationAssignConfigByDid(quotationAssignConfigVO.getCompany(), quotationAssignConfigVO.getDepartment());
 
 		if (existingPO != null) {
 			// 更新现有配置
@@ -103,23 +96,5 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 		po.setEnabled(QuotationAssignConfigPO.ENABLED_DISABLED_INT);
 		po.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 		quotationAssignConfigDao.update(po);
-	}
-
-	@Override
-	public boolean queryQuotationAssignEnabled(QuotationAssignConfigVO quotationAssignConfig, Integer company) {
-		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(
-			quotationAssignConfig.getCompany(),
-			quotationAssignConfig.getDepartment()
-		);
-		return po != null && po.getEnabled() == QuotationAssignConfigPO.ENABLED_ENABLED_INT;
-	}
-
-	@Override
-	public boolean queryAutoAssignEnabled(QuotationAssignConfigVO quotationAssignConfig, Integer company) {
-		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(
-			quotationAssignConfig.getCompany(),
-			quotationAssignConfig.getDepartment()
-		);
-		return po != null && po.getAutoAssign() == QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT;
 	}
 }

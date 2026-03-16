@@ -51,10 +51,12 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Integer autoAssignBudgetUser(QuotationAssignVO quotationAssign) throws FLException {
+	public Integer assignQuotationAssign(QuotationAssignVO quotationAssign, Integer company) throws FLException {
+
 		String orderId = quotationAssign.getOrderId();
 		Integer companyId = quotationAssign.getCompanyId();
 		Short decorationType = quotationAssign.getDecorationType();
+
 		// 1. 检查装修单是否已分配预算员
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
@@ -74,7 +76,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 3. 查找待分配且完成时间最早的预算员（列表）
-		List<QuotationAssignUserRulePO> budgetUsers = quotationAssignUserRuleDao.pullAvailableQuotationAssignUserRule(companyId, decoration.getDesignDept() != null ? decoration.getDesignDept().getDid() : null);
+		List<QuotationAssignUserRulePO> budgetUsers = quotationAssignUserRuleDao.pullQuotationAssignUserRuleForPending(companyId, decoration.getDesignDept() != null ? decoration.getDesignDept().getDid() : null);
 
 		if (budgetUsers == null || budgetUsers.isEmpty()) {
 			// 分支2：未找到预算员，进入待分配队列
@@ -112,7 +114,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 更新或创建 quotationassignrequest（状态改为已分配）
-		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(orderId);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequest(orderId);
 
 		if (request != null) {
 			request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
@@ -139,7 +141,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	 */
 	private Integer createAssignRequest(String orderId, Integer companyId, Integer department, Short decorationType, Integer designerUid) {
 		// 1. 检查是否已存在待分配请求
-		QuotationAssignRequestPO existingRequest = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(orderId);
+		QuotationAssignRequestPO existingRequest = quotationAssignRequestDao.queryQuotationAssignRequest(orderId);
 		if (existingRequest != null && existingRequest.getStatus() == QuotationAssignRequestPO.STATUS_PENDING_INT) {
 			return null; // 已在队列中
 		}
@@ -197,7 +199,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean manualAssignBudgetUser(QuotationAssignVO quotationAssign) throws FLException {
+	public boolean manualQuotationAssign(QuotationAssignVO quotationAssign) throws FLException {
+
 		String orderId = quotationAssign.getOrderId();
 		Integer budgetUid = quotationAssign.getBudgetUid();
 		Integer assignUid = quotationAssign.getAssignUid();
@@ -229,7 +232,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		decorationDao.update(decoration);
 
 		// 5. 更新或创建 quotationassignrequest
-		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(orderId);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequest(orderId);
 		if (request != null) {
 			request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
 			request.setAssignTime(new Timestamp(System.currentTimeMillis()));
@@ -259,7 +262,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void finishQuotation(QuotationAssignVO quotationAssign) {
+	public void finishQuotationAssign(QuotationAssignVO quotationAssign) {
 		String orderId = quotationAssign.getOrderId();
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
@@ -272,7 +275,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 1. 删除 quotationassignrequest 记录（已完成）
-		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(orderId);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequest(orderId);
 		if (request != null) {
 			quotationAssignRequestDao.delete(request);
 		}
@@ -296,7 +299,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			return;
 		}
 
-		List<QuotationAssignUserRuleTypePO> typePOs = quotationAssignUserRuleTypeDao.queryQuotationAssignUserRuleTypeByQaurid(budgetUser.getQaurid());
+		List<QuotationAssignUserRuleTypePO> typePOs = quotationAssignUserRuleTypeDao.queryQuotationAssignUserRuleType(budgetUser.getQaurid());
 
 		if (typePOs == null || typePOs.isEmpty()) {
 			// 预算员未配置类型，无法分配
@@ -310,7 +313,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 查询待分配队列中最优先且类型匹配的任务
-		QuotationAssignRequestPO request = quotationAssignRequestDao.pullTopPriorityQuotationAssignRequestByTypes(budgetUser.getCompany(), budgetUser.getDepartment() != null ? budgetUser.getDepartment().getDid() : null, supportedTypes);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.pullQuotationAssignRequest(budgetUser.getCompany(), budgetUser.getDepartment() != null ? budgetUser.getDepartment().getDid() : null, supportedTypes);
 
 		if (request == null) {
 			// 队列为空或无匹配类型，预算员保持空闲
@@ -345,7 +348,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean reassignBudgetUser(QuotationAssignVO quotationAssign) throws FLException {
+	public boolean reassignQuotationAssign(QuotationAssignVO quotationAssign) throws FLException {
+
 		String orderId = quotationAssign.getOrderId();
 		Integer newBudgetUid = quotationAssign.getNewBudgetUid();
 		Integer assignUid = quotationAssign.getAssignUid();
@@ -364,7 +368,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		decorationDao.update(decoration);
 
 		// 2. 更新 quotationassignrequest（如果存在）
-		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequestByOrderId(orderId);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequest(orderId);
 		if (request != null) {
 			request.setAssignTime(new Timestamp(System.currentTimeMillis()));
 			quotationAssignRequestDao.update(request);
@@ -393,13 +397,13 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	public boolean isQuotationAssignEnabled(QuotationAssignVO quotationAssign) {
-		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(quotationAssign.getCompanyId(), quotationAssign.getDepartment());
+		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfigByDid(quotationAssign.getCompanyId(), quotationAssign.getDepartment());
 		return config != null && config.getEnabled() == QuotationAssignConfigPO.ENABLED_ENABLED_INT;
 	}
 
 	@Override
 	public boolean isAutoAssign(QuotationAssignVO quotationAssign) {
-		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(quotationAssign.getCompanyId(), quotationAssign.getDepartment());
+		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfigByDid(quotationAssign.getCompanyId(), quotationAssign.getDepartment());
 		return config != null && config.getAutoAssign() == QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT;
 	}
 
@@ -408,7 +412,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		Integer uid = quotationAssign.getBudgetUid();
 
 		// 统计该预算员的已分配请求数
-		int taskCount = quotationAssignUserRuleDao.countQuotationAssignTaskByUid(uid);
+		int taskCount = quotationAssignUserRuleDao.countQuotationAssignUserRuleByUid(uid);
 
 		QuotationAssignUserRulePO user = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUid(uid);
 		if (user == null) {
@@ -422,7 +426,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			status = QuotationAssignUserRulePO.STATUS_BUSY_INT; // 制作中
 		}
 
-		quotationAssignUserRuleDao.updateStatusAndTaskCount(uid, status, taskCount);
+		quotationAssignUserRuleDao.updateQuotationAssignUserRule(uid, status, taskCount);
 	}
 
 	/**

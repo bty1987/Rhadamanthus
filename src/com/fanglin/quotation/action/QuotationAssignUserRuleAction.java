@@ -51,10 +51,10 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	/**
 	 * 根据用户ID和公司ID查询预算员规则
 	 */
-	@Action(value = "queryQuotationAssignUserRuleByUidAndCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationAssignUserRuleByUidAndCompany() {
+	@Action(value = "queryQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationAssignUserRule() {
 
-		quotationAssignUserRule = quotationAssignUserRuleService.queryQuotationAssignUserRuleByUidAndCompany(quotationAssignUserRule);
+		quotationAssignUserRule = quotationAssignUserRuleService.queryQuotationAssignUserRule(quotationAssignUserRule);
 
 		return SUCCESS;
 	}
@@ -88,10 +88,10 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	 * 
 	 * @throws FLException
 	 */
-	@Action(value = "queryQuotationAssignUserRuleByDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationAssignUserRuleByDepartment() throws FLException {
+	@Action(value = "queryQuotationAssignUserRuleByDid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationAssignUserRuleByDid() throws FLException {
 
-		quotationAssignUserRules = quotationAssignUserRuleService.queryQuotationAssignUserRuleByDepartment(queryCompany(), quotationAssignUserRule.getDepartment());
+		quotationAssignUserRules = quotationAssignUserRuleService.queryQuotationAssignUserRuleByDid(queryCompany(), quotationAssignUserRule.getDepartment());
 
 		return SUCCESS;
 	}
@@ -101,10 +101,10 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	 * 
 	 * @throws FLException
 	 */
-	@Action(value = "pullAvailableQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pullAvailableQuotationAssignUserRule() throws FLException {
+	@Action(value = "pullQuotationAssignUserRuleForPending", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pullQuotationAssignUserRuleForPending() throws FLException {
 
-		quotationAssignUserRules = quotationAssignUserRuleService.pullAvailableQuotationAssignUserRule(queryCompany(), quotationAssignUserRule.getDepartment());
+		quotationAssignUserRules = quotationAssignUserRuleService.pullQuotationAssignUserRuleForPending(queryCompany(), quotationAssignUserRule.getDepartment());
 
 		return SUCCESS;
 	}
@@ -140,10 +140,10 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	 * 
 	 * @throws FLException
 	 */
-	@Action(value = "updateStatusAndTaskCount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateStatusAndTaskCount() throws FLException {
+	@Action(value = "updateQuotationAssignUserRuleForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationAssignUserRuleForStatus() throws FLException {
 
-		quotationAssignUserRuleService.updateStatusAndTaskCount(quotationAssignUserRule);
+		quotationAssignUserRuleService.updateQuotationAssignUserRule(quotationAssignUserRule);
 
 		return SUCCESS;
 	}

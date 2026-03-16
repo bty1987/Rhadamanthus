@@ -22,12 +22,12 @@ public class QuotationAssignUserRuleTypeServiceImpl implements QuotationAssignUs
 
 	@Override
 	public List<QuotationAssignUserRuleTypePO> queryQuotationAssignUserRuleTypeByQaurid(long qaurid) {
-		return quotationAssignUserRuleTypeDao.queryQuotationAssignUserRuleTypeByQaurid(qaurid);
+		return quotationAssignUserRuleTypeDao.queryQuotationAssignUserRuleType(qaurid);
 	}
 
 	@Override
 	public QuotationAssignUserRuleTypePO queryQuotationAssignUserRuleTypeByQauridAndType(long qaurid, short type) {
-		return quotationAssignUserRuleTypeDao.queryQuotationAssignUserRuleTypeByQauridAndType(qaurid, type);
+		return quotationAssignUserRuleTypeDao.queryQuotationAssignUserRuleType(qaurid, type);
 	}
 
 	@Override
@@ -37,18 +37,18 @@ public class QuotationAssignUserRuleTypeServiceImpl implements QuotationAssignUs
 
 	@Override
 	public int countQuotationAssignUserRuleTypeByQaurid(long qaurid) {
-		return quotationAssignUserRuleTypeDao.countQuotationAssignUserRuleTypeByQaurid(qaurid);
+		return quotationAssignUserRuleTypeDao.countQuotationAssignUserRuleType(qaurid);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteQuotationAssignUserRuleTypeByQaurid(long qaurid) {
-		return quotationAssignUserRuleTypeDao.deleteQuotationAssignUserRuleTypeByQaurid(qaurid);
+		return quotationAssignUserRuleTypeDao.deleteQuotationAssignUserRuleType(qaurid);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int batchSaveQuotationAssignUserRuleType(List<QuotationAssignUserRuleTypePO> types) {
-		return quotationAssignUserRuleTypeDao.batchSaveQuotationAssignUserRuleType(types);
+		return quotationAssignUserRuleTypeDao.batchQuotationAssignUserRuleType(types);
 	}
 }

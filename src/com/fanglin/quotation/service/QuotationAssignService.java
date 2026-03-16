@@ -10,41 +10,41 @@ public interface QuotationAssignService {
 
 	/**
 	 * 自动分配预算员（含类型匹配）
-	 *
+	 * 
 	 * @param quotationAssign 分配参数VO（包含orderId、companyId、decorationType）
 	 * @return 分配的预算员用户ID，失败返回null
 	 * @throws FLException
 	 */
-	Integer autoAssignBudgetUser(QuotationAssignVO quotationAssign) throws FLException;
+	Integer assignQuotationAssign(QuotationAssignVO quotationAssign, Integer company) throws FLException;
 
 	/**
 	 * 手动分配预算员
-	 *
+	 * 
 	 * @param quotationAssign 分配参数VO（包含orderId、budgetUid、assignUid）
 	 * @return 是否成功
 	 * @throws FLException
 	 */
-	boolean manualAssignBudgetUser(QuotationAssignVO quotationAssign) throws FLException;
+	boolean manualQuotationAssign(QuotationAssignVO quotationAssign) throws FLException;
 
 	/**
 	 * 完成报价单，触发反向自动分配
-	 *
+	 * 
 	 * @param quotationAssign 分配参数VO（包含orderId）
 	 */
-	void finishQuotation(QuotationAssignVO quotationAssign);
+	void finishQuotationAssign(QuotationAssignVO quotationAssign);
 
 	/**
 	 * 重新分配预算员
-	 *
+	 * 
 	 * @param quotationAssign 分配参数VO（包含orderId、newBudgetUid、assignUid）
 	 * @return 是否成功
 	 * @throws FLException
 	 */
-	boolean reassignBudgetUser(QuotationAssignVO quotationAssign) throws FLException;
+	boolean reassignQuotationAssign(QuotationAssignVO quotationAssign) throws FLException;
 
 	/**
 	 * 检查是否启用预算分配功能
-	 *
+	 * 
 	 * @param quotationAssign 分配参数VO（包含companyId、department）
 	 * @return 是否启用
 	 */
@@ -52,7 +52,7 @@ public interface QuotationAssignService {
 
 	/**
 	 * 检查是否自动分配模式
-	 *
+	 * 
 	 * @param quotationAssign 分配参数VO（包含companyId、department）
 	 * @return 是否自动分配
 	 */
@@ -60,7 +60,7 @@ public interface QuotationAssignService {
 
 	/**
 	 * 更新预算员状态（基于 quotationassignrequest 统计）
-	 *
+	 * 
 	 * @param quotationAssign 分配参数VO（包含budgetUid）
 	 */
 	void updateBudgetUserStatus(QuotationAssignVO quotationAssign);
