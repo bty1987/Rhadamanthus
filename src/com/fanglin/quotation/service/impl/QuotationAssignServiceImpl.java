@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
@@ -54,7 +55,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 1. 检查装修单是否已分配预算员
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
-			throw new BusinessException("装修单不存在: " + orderId);
+			throw new FLException("装修单不存在: " + orderId);
 		}
 
 		Integer currentQuoterUid = decoration.getQuoter() != null ? decoration.getQuoter().getUid() : null;
@@ -179,7 +180,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		sendManagerNotification(companyId, orderId, typeName);
 
 		// 5. 抛出异常或返回错误码
-		throw new BusinessException("当前无预算员支持该装修类型（" + typeName + "），请联系管理员配置预算员类型");
+		throw new FLException("当前无预算员支持该装修类型（" + typeName + "），请联系管理员配置预算员类型");
 	}
 
 	@Override
@@ -188,20 +189,20 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 1. 验证预算员
 		QuotationAssignUserRulePO budgetUser = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUid(budgetUid);
 		if (budgetUser == null) {
-			throw new BusinessException("预算员不存在: " + budgetUid);
+			throw new FLException("预算员不存在: " + budgetUid);
 		}
 
 		// 2. 获取装修单信息
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
-			throw new BusinessException("装修单不存在: " + orderId);
+			throw new FLException("装修单不存在: " + orderId);
 		}
 
 		// 3. 验证类型匹配
 		boolean isTypeSupported = quotationAssignUserRuleTypeDao.countByQauridAndType(budgetUser.getQaurid(), decoration.getType()) > 0;
 		if (!isTypeSupported) {
 			String typeName = (decoration.getType() == 1) ? "半包" : "整装";
-			throw new BusinessException("该预算员不支持装修类型（" + typeName + "）");
+			throw new FLException("该预算员不支持装修类型（" + typeName + "）");
 		}
 
 		// 4. 更新装修单的预算员ID
@@ -316,7 +317,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	public boolean reassignBudgetUser(String orderId, Integer newBudgetUid, Integer assignUid) {
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
-			throw new BusinessException("装修单不存在: " + orderId);
+			throw new FLException("装修单不存在: " + orderId);
 		}
 
 		Integer oldQuoterUid = decoration.getQuoter() != null ? decoration.getQuoter().getUid() : null;
