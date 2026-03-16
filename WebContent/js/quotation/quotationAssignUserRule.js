@@ -41,7 +41,7 @@ jQuery(function($) {
 				};
 
 				html += '<tr>';
-				html += '<td><input type="checkbox" class="row-checkbox" data-id="' + item.burid + '"></td>';
+				html += '<td><input type="checkbox" class="row-checkbox" data-id="' + item.qaurid + '"></td>';
 				html += '<td>' + (item.userNo || '-') + '</td>';
 				html += '<td>' + (item.userName || '-') + '</td>';
 				html += '<td>' + (item.departmentName || '-') + '</td>';
@@ -49,13 +49,13 @@ jQuery(function($) {
 				html += '<td>' + (item.currentTaskCount || 0) + ' / ' + (item.maxTasks || 5) + '</td>';
 				html += '<td>' + (item.supportedTypes || '-') + '</td>';
 				html += '<td>';
-				html += '  <button class="btn btn-xs btn-info edit-btn" data-id="' + item.burid + '"><i class="icon-edit"></i> 编辑</button> ';
+				html += '  <button class="btn btn-xs btn-info edit-btn" data-id="' + item.qaurid + '"><i class="icon-edit"></i> 编辑</button> ';
 				if (item.status == 3) {
-					html += '  <button class="btn btn-xs btn-success enable-btn" data-id="' + item.burid + '"><i class="icon-ok"></i> 启用</button> ';
+					html += '  <button class="btn btn-xs btn-success enable-btn" data-id="' + item.qaurid + '"><i class="icon-ok"></i> 启用</button> ';
 				} else {
-					html += '  <button class="btn btn-xs btn-warning disable-btn" data-id="' + item.burid + '"><i class="icon-ban-circle"></i> 停用</button> ';
+					html += '  <button class="btn btn-xs btn-warning disable-btn" data-id="' + item.qaurid + '"><i class="icon-ban-circle"></i> 停用</button> ';
 				}
-				html += '  <button class="btn btn-xs btn-danger delete-btn" data-id="' + item.burid + '"><i class="icon-trash"></i> 删除</button>';
+				html += '  <button class="btn btn-xs btn-danger delete-btn" data-id="' + item.qaurid + '"><i class="icon-trash"></i> 删除</button>';
 				html += '</td>';
 				html += '</tr>';
 			});
@@ -127,26 +127,26 @@ jQuery(function($) {
 	}
 
 	// 打开编辑对话框
-	function openEditModal(burid) {
+	function openEditModal(qaurid) {
 		$('#editForm')[0].reset();
-		$('#burid').val('');
+		$('#qaurid').val('');
 		$('input[name="supportType"]').prop('checked', false);
 
-		if (burid) {
+		if (qaurid) {
 			$('#modalTitle').text('编辑预算员');
 
 			// 查询详情
 			com.post(api.quotationAssign.getBudgetUserRule, {
-				"burid": burid
+				"qaurid": qaurid
 			}, function(res) {
 				var rule = res.budgetUserRule;
-				$('#burid').val(rule.burid);
+				$('#qaurid').val(rule.qaurid);
 				$('#userId').val(rule.userId).trigger('chosen:updated');
 				$('#maxTasks').val(rule.maxTasks || 5);
 
 				// 加载支持类型
 				com.post(api.quotationAssign.getBudgetUserTypes, {
-					"burid": burid
+					"qaurid": qaurid
 				}, function(typeRes) {
 					$('input[name="supportType"]').each(function() {
 						$(this).prop('checked', $.inArray(parseInt($(this).val()), typeRes.types || []) !== -1);
@@ -162,7 +162,7 @@ jQuery(function($) {
 
 	// 保存
 	function save() {
-		var burid = $('#burid').val();
+		var qaurid = $('#qaurid').val();
 		var userId = $('#userId').val();
 
 		if (!userId) {
@@ -182,12 +182,12 @@ jQuery(function($) {
 		}
 
 		var params = {
-			"budgetUserRule.burid": burid || null,
+			"budgetUserRule.qaurid": qaurid || null,
 			"budgetUserRule.userId": userId,
 			"budgetUserRule.company": params.userInfo.company.cid,
 			"budgetUserRule.department": params.userInfo.user.department,
 			"budgetUserRule.maxTasks": parseInt($('#maxTasks').val()) || 5,
-			"budgetUserRule.status": burid ? undefined : 1
+			"budgetUserRule.status": qaurid ? undefined : 1
 		};
 
 		com.post(api.quotationAssign.saveBudgetUserRule, params, function(res) {
@@ -195,9 +195,9 @@ jQuery(function($) {
 				com.showAlert(com.info, '保存成功');
 
 				// 保存支持类型
-				var newBurid = burid || res.burid;
+				var newBurid = qaurid || res.qaurid;
 				com.post(api.quotationAssign.assignBudgetUserTypes, {
-					"burid": newBurid,
+					"qaurid": newBurid,
 					"types": types
 				}, function() {
 					$('#editModal').modal('hide');
@@ -210,10 +210,10 @@ jQuery(function($) {
 	}
 
 	// 删除
-	function deleteRule(burid) {
+	function deleteRule(qaurid) {
 		com.showConfirm('确认删除该预算员规则？', function() {
 			com.post(api.quotationAssign.deleteBudgetUserRule, {
-				"burid": burid
+				"qaurid": qaurid
 			}, function(res) {
 				if (res.success) {
 					com.showAlert(com.info, '删除成功');
@@ -226,11 +226,11 @@ jQuery(function($) {
 	}
 
 	// 启用/停用
-	function toggleStatus(burid, enabled) {
+	function toggleStatus(qaurid, enabled) {
 		var apiMethod = enabled ? api.quotationAssign.enableBudgetUser : api.quotationAssign.disableBudgetUser;
 
 		com.post(apiMethod, {
-			"burid": burid
+			"qaurid": qaurid
 		}, function(res) {
 			if (res.success) {
 				com.showAlert(com.info, enabled ? '已启用' : '已停用');

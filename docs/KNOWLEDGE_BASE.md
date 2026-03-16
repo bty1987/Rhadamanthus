@@ -334,3 +334,60 @@ public CustomerVO getCustomerById(Long id) {
 ---
 
 **维护说明**: 本文件由 AI 维护，请在文档末尾添加更新记录
+
+---
+
+## 🔑 装修单报价员与预算员关系（重要更新）
+
+**更新日期**: 2026-03-16
+**优先级**: ⭐⭐⭐⭐⭐（核心业务规则）
+
+### 核心业务规则
+
+- **decoration.quoter (decoration.quid)** = **报价员**
+- **quotation.creater (quotation.cuid)** = **预算员**
+- **报价员和预算员是同一个人**
+
+### 业务流程
+
+1. 为装修单分配报价员（设置 `decoration.quoter`）
+2. 创建报价单时，该报价员自动成为报价单的创建人/预算员（`quotation.creater`）
+3. 分配时间记录在 `quotation.createtime`
+
+### 字段映射关系
+
+```
+装修单层: decoration.quoter (UserPO) → decoration.quid (int)
+            ↓ (同一人)
+报价单层: quotation.creater (UserPO) → quotation.cuid (int)
+```
+
+### 代码示例
+
+```java
+// 为装修单分配报价员（该人员也是预算员）
+DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
+UserPO quoter = new UserPO();
+quoter.setUid(budgetUserUid);
+decoration.setQuoter(quoter);  // 设置报价员
+decorationDao.update(decoration);
+
+// 创建报价单时，报价员自动成为预算员
+QuotationPO quotation = new QuotationPO();
+quotation.setCreater(decoration.getQuoter());  // 报价员 = 预算员
+quotation.setOrderId(orderId);
+quotationDao.save(quotation);
+```
+
+### 重要注意事项
+
+- ~~不需要~~ `budgetUid` 和 `budgetAssignTime` 字段（设计文档 v1.4 中的错误设计已更正）
+- 分配时间使用 `quotation.createtime`，不需要额外的分配时间字段
+- 报价员和预算员始终是同一个人，不可分离
+- 任何提到 `budgetUid` 的设计文档都是过时的，请参考 v1.5 版本
+
+### 相关文档
+
+- [预算分配功能设计文档 v1.5](./DESIGN_quotation_budget_assignment_v1.5.md)
+- [报价管理模块文档](../src/com/fanglin/quotation/CLAUDE.md)
+
