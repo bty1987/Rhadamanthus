@@ -23,6 +23,7 @@ import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.quotation.po.QuotationAssignUserRuleTypePO;
 import com.fanglin.quotation.service.QuotationAssignService;
+import com.fanglin.quotation.vo.QuotationAssignVO;
 
 /**
  * 装修单预算分配服务实现 核心分配逻辑实现
@@ -50,7 +51,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Integer autoAssignBudgetUser(String orderId, Integer companyId, Short decorationType) throws FLException {
+	public Integer autoAssignBudgetUser(QuotationAssignVO quotationAssign) throws FLException {
+		String orderId = quotationAssign.getOrderId();
+		Integer companyId = quotationAssign.getCompanyId();
+		Short decorationType = quotationAssign.getDecorationType();
 		// 1. 检查装修单是否已分配预算员
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
@@ -117,7 +121,9 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 3. 更新预算员状态（基于 quotationassignrequest 统计）
-		updateBudgetUserStatus(budgetUser.getUser().getUid());
+		QuotationAssignVO statusVO1 = new QuotationAssignVO();
+		statusVO1.setBudgetUid(budgetUser.getUser().getUid());
+		updateBudgetUserStatus(statusVO1);
 
 		// 4. 记录分配历史
 		saveAssignRecord(orderId, budgetUser.getUser().getUid(), (short) 1, (short) 1, decorationType.shortValue(), null);
@@ -191,7 +197,11 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean manualAssignBudgetUser(String orderId, Integer budgetUid, Integer assignUid) throws FLException {
+	public boolean manualAssignBudgetUser(QuotationAssignVO quotationAssign) throws FLException {
+		String orderId = quotationAssign.getOrderId();
+		Integer budgetUid = quotationAssign.getBudgetUid();
+		Integer assignUid = quotationAssign.getAssignUid();
+
 		// 1. 验证预算员
 		QuotationAssignUserRulePO budgetUser = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUid(budgetUid);
 		if (budgetUser == null) {
@@ -228,11 +238,15 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		// 6. 更新旧预算员状态
 		if (oldQuoterUid != null) {
-			updateBudgetUserStatus(oldQuoterUid);
+			QuotationAssignVO statusVO2 = new QuotationAssignVO();
+			statusVO2.setBudgetUid(oldQuoterUid);
+			updateBudgetUserStatus(statusVO2);
 		}
 
 		// 7. 更新新预算员状态
-		updateBudgetUserStatus(budgetUid);
+		QuotationAssignVO statusVO3 = new QuotationAssignVO();
+		statusVO3.setBudgetUid(budgetUid);
+		updateBudgetUserStatus(statusVO3);
 
 		// 8. 记录分配历史
 		saveAssignRecord(orderId, budgetUid, (short) 2, (short) 1, decoration.getType(), null);
@@ -245,7 +259,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void finishQuotation(String orderId) {
+	public void finishQuotation(QuotationAssignVO quotationAssign) {
+		String orderId = quotationAssign.getOrderId();
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
 			return;
@@ -263,7 +278,9 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 更新预算员状态
-		updateBudgetUserStatus(budgetUid);
+		QuotationAssignVO statusVO = new QuotationAssignVO();
+		statusVO.setBudgetUid(budgetUid);
+		updateBudgetUserStatus(statusVO);
 
 		// 3. 反向自动分配：预算员变为空闲时，检查待分配队列
 		reverseAutoAssign(budgetUid);
@@ -315,7 +332,9 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		quotationAssignRequestDao.update(request);
 
 		// 5. 更新预算员状态
-		updateBudgetUserStatus(budgetUid);
+		QuotationAssignVO statusVO4 = new QuotationAssignVO();
+		statusVO4.setBudgetUid(budgetUid);
+		updateBudgetUserStatus(statusVO4);
 
 		// 6. 记录分配历史
 		saveAssignRecord(request.getOrderId(), budgetUid, (short) 3, (short) 1, request.getDecorationType(), null);
@@ -326,7 +345,11 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean reassignBudgetUser(String orderId, Integer newBudgetUid, Integer assignUid) throws FLException {
+	public boolean reassignBudgetUser(QuotationAssignVO quotationAssign) throws FLException {
+		String orderId = quotationAssign.getOrderId();
+		Integer newBudgetUid = quotationAssign.getNewBudgetUid();
+		Integer assignUid = quotationAssign.getAssignUid();
+
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
 			throw new FLException(330090, "装修单不存在: " + orderId);
@@ -349,11 +372,15 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		// 3. 更新旧预算员状态
 		if (oldQuoterUid != null) {
-			updateBudgetUserStatus(oldQuoterUid);
+			QuotationAssignVO statusVO5 = new QuotationAssignVO();
+			statusVO5.setBudgetUid(oldQuoterUid);
+			updateBudgetUserStatus(statusVO5);
 		}
 
 		// 4. 更新新预算员状态
-		updateBudgetUserStatus(newBudgetUid);
+		QuotationAssignVO statusVO6 = new QuotationAssignVO();
+		statusVO6.setBudgetUid(newBudgetUid);
+		updateBudgetUserStatus(statusVO6);
 
 		// 5. 记录分配历史
 		saveAssignRecord(orderId, newBudgetUid, (short) 2, (short) 1, decoration.getType(), null);
@@ -365,19 +392,21 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	}
 
 	@Override
-	public boolean isQuotationAssignEnabled(Integer companyId, Integer departmentId) {
-		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(companyId, departmentId);
+	public boolean isQuotationAssignEnabled(QuotationAssignVO quotationAssign) {
+		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(quotationAssign.getCompanyId(), quotationAssign.getDepartment());
 		return config != null && config.getEnabled() == QuotationAssignConfigPO.ENABLED_ENABLED_INT;
 	}
 
 	@Override
-	public boolean isAutoAssign(Integer companyId, Integer departmentId) {
-		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(companyId, departmentId);
+	public boolean isAutoAssign(QuotationAssignVO quotationAssign) {
+		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfigByCompanyAndDepartment(quotationAssign.getCompanyId(), quotationAssign.getDepartment());
 		return config != null && config.getAutoAssign() == QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT;
 	}
 
 	@Override
-	public void updateBudgetUserStatus(Integer uid) {
+	public void updateBudgetUserStatus(QuotationAssignVO quotationAssign) {
+		Integer uid = quotationAssign.getBudgetUid();
+
 		// 统计该预算员的已分配请求数
 		int taskCount = quotationAssignUserRuleDao.countQuotationAssignTaskByUid(uid);
 

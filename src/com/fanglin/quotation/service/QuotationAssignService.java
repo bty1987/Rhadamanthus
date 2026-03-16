@@ -1,6 +1,7 @@
 package com.fanglin.quotation.service;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.quotation.vo.QuotationAssignVO;
 
 /**
  * 装修单预算分配服务接口 职责: 实现自动分配、手动分配、反向自动分配等核心逻辑
@@ -9,66 +10,58 @@ public interface QuotationAssignService {
 
 	/**
 	 * 自动分配预算员（含类型匹配）
-	 * 
-	 * @param orderId 装修单号
-	 * @param companyId 公司ID
-	 * @param decorationType 装修类型（1-半包，2-整装）
+	 *
+	 * @param quotationAssign 分配参数VO（包含orderId、companyId、decorationType）
 	 * @return 分配的预算员用户ID，失败返回null
 	 * @throws FLException
 	 */
-	Integer autoAssignBudgetUser(String orderId, Integer companyId, Short decorationType) throws FLException;
+	Integer autoAssignBudgetUser(QuotationAssignVO quotationAssign) throws FLException;
 
 	/**
 	 * 手动分配预算员
-	 * 
-	 * @param orderId 装修单号
-	 * @param budgetUid 预算员用户ID
-	 * @param assignUid 分配人用户ID（手动分配时）
+	 *
+	 * @param quotationAssign 分配参数VO（包含orderId、budgetUid、assignUid）
 	 * @return 是否成功
 	 * @throws FLException
 	 */
-	boolean manualAssignBudgetUser(String orderId, Integer budgetUid, Integer assignUid) throws FLException;
+	boolean manualAssignBudgetUser(QuotationAssignVO quotationAssign) throws FLException;
 
 	/**
 	 * 完成报价单，触发反向自动分配
-	 * 
-	 * @param orderId 装修单号
+	 *
+	 * @param quotationAssign 分配参数VO（包含orderId）
 	 */
-	void finishQuotation(String orderId);
+	void finishQuotation(QuotationAssignVO quotationAssign);
 
 	/**
 	 * 重新分配预算员
-	 * 
-	 * @param orderId 装修单号
-	 * @param newBudgetUid 新预算员用户ID
-	 * @param assignUid 分配人用户ID
+	 *
+	 * @param quotationAssign 分配参数VO（包含orderId、newBudgetUid、assignUid）
 	 * @return 是否成功
 	 * @throws FLException
 	 */
-	boolean reassignBudgetUser(String orderId, Integer newBudgetUid, Integer assignUid) throws FLException;
+	boolean reassignBudgetUser(QuotationAssignVO quotationAssign) throws FLException;
 
 	/**
 	 * 检查是否启用预算分配功能
-	 * 
-	 * @param companyId 公司ID
-	 * @param departmentId 部门ID
+	 *
+	 * @param quotationAssign 分配参数VO（包含companyId、department）
 	 * @return 是否启用
 	 */
-	boolean isQuotationAssignEnabled(Integer companyId, Integer departmentId);
+	boolean isQuotationAssignEnabled(QuotationAssignVO quotationAssign);
 
 	/**
 	 * 检查是否自动分配模式
-	 * 
-	 * @param companyId 公司ID
-	 * @param departmentId 部门ID
+	 *
+	 * @param quotationAssign 分配参数VO（包含companyId、department）
 	 * @return 是否自动分配
 	 */
-	boolean isAutoAssign(Integer companyId, Integer departmentId);
+	boolean isAutoAssign(QuotationAssignVO quotationAssign);
 
 	/**
 	 * 更新预算员状态（基于 quotationassignrequest 统计）
-	 * 
-	 * @param uid 预算员用户ID
+	 *
+	 * @param quotationAssign 分配参数VO（包含budgetUid）
 	 */
-	void updateBudgetUserStatus(Integer uid);
+	void updateBudgetUserStatus(QuotationAssignVO quotationAssign);
 }
