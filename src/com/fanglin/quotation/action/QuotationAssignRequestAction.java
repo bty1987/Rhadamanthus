@@ -28,18 +28,11 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	@Autowired
 	private QuotationAssignRequestService quotationAssignRequestService;
 
-	// 参数字段
-	private Integer barid; // 请求ID
-	private String orderId; // 订单号
-	private Integer company; // 公司ID
-	private Integer department; // 部门ID
-	private Byte priority; // 优先级
-	private String reason; // 取消原因
-	private Long requestTime; // 请求时间
+	// 参数字段（使用VO对象）
+	private QuotationAssignRequestVO quotationAssignRequest;
 
 	// 返回字段
 	private Map<String, Object> result; // 返回结果
-	private QuotationAssignRequestVO assignRequest; // 待分配请求
 	private List<QuotationAssignRequestVO> assignRequests; // 待分配请求列表
 	private Map<String, Object> statistics; // 统计信息
 
@@ -60,166 +53,99 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	/**
 	 * 查询单个待分配请求
-	 * 
-	 * 请求参数: - barid: 请求ID（必需）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignRequest.qarid: 请求ID（必需）
+	 *
 	 * 返回数据: - assignRequest: 待分配请求
 	 */
 	@Action(value = "queryAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAssignRequest() throws FLException {
-
-		assignRequest = quotationAssignRequestService.getAssignRequest(barid);
-
+		assignRequest = quotationAssignRequestService.getAssignRequest(quotationAssignRequest.getQarid());
 		return SUCCESS;
 	}
 
 	/**
 	 * 根据订单号查询待分配请求
-	 * 
-	 * 请求参数: - orderId: 订单号（必需）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignRequest.orderId: 订单号（必需）
+	 *
 	 * 返回数据: - assignRequest: 待分配请求
 	 */
 	@Action(value = "getAssignRequestByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getAssignRequestByOrderId() throws FLException {
-
-		assignRequest = quotationAssignRequestService.getAssignRequestByOrderId(orderId);
-
+		assignRequest = quotationAssignRequestService.getAssignRequestByOrderId(quotationAssignRequest.getOrderId());
 		return SUCCESS;
 	}
 
 	/**
 	 * 更新请求优先级
-	 * 
-	 * 请求参数: - barid: 请求ID（必需） - priority: 新优先级（1-最高，2-高，3-普通，4-低）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignRequest.qarid: 请求ID（必需） - quotationAssignRequest.priority: 新优先级（1-最高，2-高，3-普通，4-低）
+	 *
 	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
 	@Action(value = "updateAssignRequestPriority", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAssignRequestPriority() throws FLException {
-
-		quotationAssignRequestService.updatePriority(barid, priority);
-
+		quotationAssignRequestService.updatePriority(quotationAssignRequest.getQarid(), quotationAssignRequest.getPriority());
 		return SUCCESS;
 	}
 
 	/**
 	 * 取消请求
-	 * 
-	 * 请求参数: - barid: 请求ID（必需） - reason: 取消原因（可选）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignRequest.qarid: 请求ID（必需） - quotationAssignRequest.reason: 取消原因（可选）
+	 *
 	 * 返回数据: - success: 是否成功 - message: 提示信息
 	 */
 	@Action(value = "cancelAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String cancelAssignRequest() throws FLException {
-
-		quotationAssignRequestService.cancelRequest(barid, reason);
-
+		quotationAssignRequestService.cancelRequest(quotationAssignRequest.getQarid(), quotationAssignRequest.getReason());
 		return SUCCESS;
 	}
 
 	/**
 	 * 查询待分配队列统计信息
-	 * 
-	 * 请求参数: - company: 公司ID（必需） - department: 部门ID（可选）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignRequest.company: 公司ID（必需） - quotationAssignRequest.department: 部门ID（可选）
+	 *
 	 * 返回数据: - statistics: 统计信息（总数量、各优先级数量、各类型数量等）
 	 */
 	@Action(value = "getQueueStatistics", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getQueueStatistics() throws FLException {
-
-		statistics = quotationAssignRequestService.getQueueStatistics(company, department);
-
+		quotationAssignRequest.setCompany(queryCompany());
+		statistics = quotationAssignRequestService.getQueueStatistics(quotationAssignRequest.getCompany(), quotationAssignRequest.getDepartment());
 		return SUCCESS;
 	}
 
 	/**
 	 * 查询待分配队列
-	 * 
-	 * 请求参数: - company: 公司ID（必需） - department: 部门ID（可选）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignRequest.company: 公司ID（必需） - quotationAssignRequest.department: 部门ID（可选）
+	 *
 	 * 返回数据: - assignRequests: 待分配请求列表（按优先级和请求时间排序）
 	 */
 	@Action(value = "getPendingQueue", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getPendingQueue() throws FLException {
-
-		assignRequests = quotationAssignRequestService.getPendingQueue(company, department);
-
+		quotationAssignRequest.setCompany(queryCompany());
+		assignRequests = quotationAssignRequestService.getPendingQueue(quotationAssignRequest.getCompany(), quotationAssignRequest.getDepartment());
 		return SUCCESS;
 	}
 
 	/**
 	 * 查询队列位置
-	 * 
-	 * 请求参数: - company: 公司ID（必需） - department: 部门ID（可选） - requestTime: 请求时间（毫秒时间戳）
-	 * 
+	 *
+	 * 请求参数: - quotationAssignRequest.company: 公司ID（必需） - quotationAssignRequest.requestTime: 请求时间（毫秒时间戳）
+	 *
 	 * 返回数据: - position: 队列位置（从1开始）
 	 */
 	@Action(value = "getQueuePosition", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getQueuePosition() throws FLException {
-
-		quotationAssignRequestService.getQueuePosition(company, department, requestTime);
-
+		quotationAssignRequest.setCompany(queryCompany());
+		quotationAssignRequestService.getQueuePosition(quotationAssignRequest.getCompany(), quotationAssignRequest.getRequestTime());
 		return SUCCESS;
 	}
 
 	// Getter and Setter
-
-	public Integer getBarid() {
-		return barid;
-	}
-
-	public void setBarid(Integer barid) {
-		this.barid = barid;
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
-	}
-
-	public Integer getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(Integer department) {
-		this.department = department;
-	}
-
-	public Byte getPriority() {
-		return priority;
-	}
-
-	public void setPriority(Byte priority) {
-		this.priority = priority;
-	}
-
-	public String getReason() {
-		return reason;
-	}
-
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-
-	public Long getRequestTime() {
-		return requestTime;
-	}
-
-	public void setRequestTime(Long requestTime) {
-		this.requestTime = requestTime;
-	}
 
 	public Map<String, Object> getResult() {
 		return result;
@@ -227,6 +153,14 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	public void setResult(Map<String, Object> result) {
 		this.result = result;
+	}
+
+	public QuotationAssignRequestVO getQuotationAssignRequest() {
+		return quotationAssignRequest;
+	}
+
+	public void setQuotationAssignRequest(QuotationAssignRequestVO quotationAssignRequest) {
+		this.quotationAssignRequest = quotationAssignRequest;
 	}
 
 	public QuotationAssignRequestVO getAssignRequest() {
