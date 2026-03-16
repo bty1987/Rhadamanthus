@@ -19,6 +19,9 @@ import com.fanglin.customer.service.CustomerUserRuleItemService;
 import com.fanglin.customer.vo.CustomerUserRuleItemVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.po.CityProperPO;
+import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("customerUserRuleItemService")
@@ -35,15 +38,7 @@ public class CustomerUserRuleItemServiceImpl implements CustomerUserRuleItemServ
 		List<CustomerUserRuleItemVO> customerUserRuleItemVOs = new ArrayList<CustomerUserRuleItemVO>();
 
 		for (CustomerUserRuleItemPO customerUserRuleItemPO : customerUserRuleItemPOs) {
-
-			CustomerUserRuleItemVO customerUserRuleItemVO = new CustomerUserRuleItemVO(new DepartmentTypeVO(), new DepartmentVO());
-
-			BeanUtil.copyProperties(customerUserRuleItemPO, customerUserRuleItemVO, Arrays.asList("departmentType", "department"));
-
-			BeanUtil.copyProperties(customerUserRuleItemPO.getDepartment(), customerUserRuleItemVO.getDepartment());
-			BeanUtil.copyProperties(customerUserRuleItemPO.getDepartmentType(), customerUserRuleItemVO.getDepartmentType());
-
-			customerUserRuleItemVOs.add(customerUserRuleItemVO);
+			customerUserRuleItemVOs.add(customerUserRuleItemPO.ptv(new CustomerUserRuleItemVO(new DepartmentTypeVO(), new DepartmentVO(), new CityProperVO(new CityVO()))));
 		}
 
 		return customerUserRuleItemVOs;
@@ -63,6 +58,10 @@ public class CustomerUserRuleItemServiceImpl implements CustomerUserRuleItemServ
 
 		if (customerUserRuleItemVO.getDepartmentType() != null && customerUserRuleItemVO.getDepartmentType().getDtid() != null) {
 			customerUserRuleItemPO.setDepartmentType(new DepartmentTypePO(customerUserRuleItemVO.getDepartmentType().getDtid()));
+		}
+
+		if (customerUserRuleItemVO.getCityProper() != null && customerUserRuleItemVO.getCityProper().getCpid() != null) {
+			customerUserRuleItemPO.setCityProper(new CityProperPO(customerUserRuleItemVO.getCityProper().getCpid()));
 		}
 
 		customerUserRuleItemDao.save(customerUserRuleItemPO);
@@ -91,7 +90,7 @@ public class CustomerUserRuleItemServiceImpl implements CustomerUserRuleItemServ
 			CustomerUserRuleItemPO itemPO = (CustomerUserRuleItemPO) result[0];
 			UserPO userPO = (UserPO) result[1];
 
-			CustomerUserRuleItemVO itemVO = new CustomerUserRuleItemVO(new DepartmentTypeVO(), new DepartmentVO());
+			CustomerUserRuleItemVO itemVO = new CustomerUserRuleItemVO(new DepartmentTypeVO(), new DepartmentVO(), new CityProperVO(new CityVO()));
 
 			// 复制基本属性
 			BeanUtil.copyProperties(itemPO, itemVO, Arrays.asList("departmentType", "department", "cityProper"));
@@ -116,5 +115,4 @@ public class CustomerUserRuleItemServiceImpl implements CustomerUserRuleItemServ
 
 		return customerUserRuleItemVOs;
 	}
-
 }
