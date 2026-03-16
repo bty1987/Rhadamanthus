@@ -35,8 +35,14 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int queryCompany) {
-		// TODO Auto-generated method stub
+		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.pageQuotationAssignUserRule(paging, filters, queryCompany);
+		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 
+		for (QuotationAssignUserRulePO po : poList) {
+			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
+		}
+
+		paging.setData(voList);
 	}
 
 	@Override
