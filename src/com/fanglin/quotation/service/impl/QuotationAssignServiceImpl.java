@@ -1,7 +1,6 @@
 package com.fanglin.quotation.service.impl;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,8 +162,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	/**
 	 * 处理类型不匹配（分支3：返回错误）
+	 * 
+	 * @throws FLException
 	 */
-	private Integer handleTypeMismatch(String orderId, Integer companyId, Byte decorationType, Integer designerUid) {
+	private Integer handleTypeMismatch(String orderId, Integer companyId, Byte decorationType, Integer designerUid) throws FLException {
 		String typeName = (decorationType == 1) ? "半包" : "整装";
 
 		// 1. 生成分配记录（类型不匹配）
@@ -184,7 +185,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean manualAssignBudgetUser(String orderId, Integer budgetUid, Integer assignUid) {
+	public boolean manualAssignBudgetUser(String orderId, Integer budgetUid, Integer assignUid) throws FLException {
 		// 1. 验证预算员
 		QuotationAssignUserRulePO budgetUser = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUid(budgetUid);
 		if (budgetUser == null) {
@@ -319,7 +320,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean reassignBudgetUser(String orderId, Integer newBudgetUid, Integer assignUid) {
+	public boolean reassignBudgetUser(String orderId, Integer newBudgetUid, Integer assignUid) throws FLException {
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
 			throw new FLException(330090, "装修单不存在: " + orderId);

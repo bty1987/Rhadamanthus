@@ -1,6 +1,5 @@
 package com.fanglin.quotation.action;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +49,7 @@ public class QuotationAssignConfigAction extends BaseAction {
 	 */
 	@Action(value = "queryQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignConfig() throws FLException {
+
 		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
 		vo.setCompany(company);
 		vo.setDepartment(department);
@@ -67,10 +67,12 @@ public class QuotationAssignConfigAction extends BaseAction {
 	 */
 	@Action(value = "getQuotationAssignConfigsByCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getQuotationAssignConfigsByCompany() throws FLException {
+
 		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
 		vo.setCompany(company);
 
 		quotationAssignConfigs = quotationAssignConfigService.queryQuotationAssignConfigByCompany(vo);
+
 		return SUCCESS;
 	}
 
@@ -83,16 +85,8 @@ public class QuotationAssignConfigAction extends BaseAction {
 	 */
 	@Action(value = "saveQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String saveQuotationAssignConfig() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			quotationAssignConfigService.saveQuotationAssignConfig(quotationAssignConfig, queryUserId());
-			result.put("success", true);
-			result.put("message", "保存成功");
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", "保存失败: " + e.getMessage());
-		}
+		quotationAssignConfigService.saveQuotationAssignConfig(quotationAssignConfig, queryUserId());
 
 		return SUCCESS;
 	}
@@ -106,18 +100,10 @@ public class QuotationAssignConfigAction extends BaseAction {
 	 */
 	@Action(value = "deleteQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationAssignConfig() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-			vo.setQacid(qacid);
-			quotationAssignConfigService.deleteQuotationAssignConfig(vo, queryUserId());
-			result.put("success", true);
-			result.put("message", "删除成功");
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", "删除失败: " + e.getMessage());
-		}
+		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+		vo.setQacid(qacid);
+		quotationAssignConfigService.deleteQuotationAssignConfig(vo, queryUserId());
 
 		return SUCCESS;
 	}
@@ -131,18 +117,10 @@ public class QuotationAssignConfigAction extends BaseAction {
 	 */
 	@Action(value = "enableQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String enableQuotationAssignConfig() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-			vo.setQacid(qacid);
-			quotationAssignConfigService.enableQuotationAssignConfig(vo, queryUserId());
-			result.put("success", true);
-			result.put("message", "已启用预算分配功能");
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", "启用失败: " + e.getMessage());
-		}
+		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+		vo.setQacid(qacid);
+		quotationAssignConfigService.enableQuotationAssignConfig(vo, queryUserId());
 
 		return SUCCESS;
 	}
@@ -156,18 +134,10 @@ public class QuotationAssignConfigAction extends BaseAction {
 	 */
 	@Action(value = "disableQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String disableQuotationAssignConfig() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-			vo.setQacid(qacid);
-			quotationAssignConfigService.disableQuotationAssignConfig(vo, queryUserId());
-			result.put("success", true);
-			result.put("message", "已禁用预算分配功能");
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", "禁用失败: " + e.getMessage());
-		}
+		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+		vo.setQacid(qacid);
+		quotationAssignConfigService.disableQuotationAssignConfig(vo, queryUserId());
 
 		return SUCCESS;
 	}
@@ -181,20 +151,12 @@ public class QuotationAssignConfigAction extends BaseAction {
 	 */
 	@Action(value = "isQuotationAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String isQuotationAssignEnabled() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-			vo.setCompany(company);
-			vo.setDepartment(department);
+		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+		vo.setCompany(company);
+		vo.setDepartment(department);
 
-			boolean enabled = quotationAssignConfigService.isQuotationAssignEnabled(vo);
-			result.put("enabled", enabled);
-			result.put("success", true);
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", "查询失败: " + e.getMessage());
-		}
+		quotationAssignConfigService.isQuotationAssignEnabled(vo);
 
 		return SUCCESS;
 	}
@@ -208,20 +170,12 @@ public class QuotationAssignConfigAction extends BaseAction {
 	 */
 	@Action(value = "isAutoAssignEnabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String isAutoAssignEnabled() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
-			vo.setCompany(company);
-			vo.setDepartment(department);
+		QuotationAssignConfigVO vo = new QuotationAssignConfigVO();
+		vo.setCompany(company);
+		vo.setDepartment(department);
 
-			boolean autoAssign = quotationAssignConfigService.isAutoAssignEnabled(vo);
-			result.put("autoAssign", autoAssign);
-			result.put("success", true);
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", "查询失败: " + e.getMessage());
-		}
+		quotationAssignConfigService.isAutoAssignEnabled(vo);
 
 		return SUCCESS;
 	}

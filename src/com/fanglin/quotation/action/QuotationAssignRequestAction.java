@@ -1,6 +1,5 @@
 package com.fanglin.quotation.action;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +52,9 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "pageAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAssignRequest() throws FLException {
+
 		quotationAssignRequestService.pageAssignRequest(getPaging(), getFilters());
+
 		return SUCCESS;
 	}
 
@@ -66,7 +67,9 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "queryAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAssignRequest() throws FLException {
+
 		assignRequest = quotationAssignRequestService.getAssignRequest(barid);
+
 		return SUCCESS;
 	}
 
@@ -79,7 +82,9 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "getAssignRequestByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getAssignRequestByOrderId() throws FLException {
+
 		assignRequest = quotationAssignRequestService.getAssignRequestByOrderId(orderId);
+
 		return SUCCESS;
 	}
 
@@ -92,16 +97,8 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "updateAssignRequestPriority", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAssignRequestPriority() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			quotationAssignRequestService.updatePriority(barid, priority);
-			result.put("success", true);
-			result.put("message", "优先级更新成功");
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", "优先级更新失败: " + e.getMessage());
-		}
+		quotationAssignRequestService.updatePriority(barid, priority);
 
 		return SUCCESS;
 	}
@@ -115,16 +112,8 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "cancelAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String cancelAssignRequest() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			quotationAssignRequestService.cancelRequest(barid, reason);
-			result.put("success", true);
-			result.put("message", "请求已取消");
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", "取消失败: " + e.getMessage());
-		}
+		quotationAssignRequestService.cancelRequest(barid, reason);
 
 		return SUCCESS;
 	}
@@ -138,7 +127,9 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "getQueueStatistics", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getQueueStatistics() throws FLException {
+
 		statistics = quotationAssignRequestService.getQueueStatistics(company, department);
+
 		return SUCCESS;
 	}
 
@@ -151,7 +142,9 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "getPendingQueue", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getPendingQueue() throws FLException {
+
 		assignRequests = quotationAssignRequestService.getPendingQueue(company, department);
+
 		return SUCCESS;
 	}
 
@@ -164,16 +157,8 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "getQueuePosition", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String getQueuePosition() throws FLException {
-		result = new HashMap<String, Object>();
 
-		try {
-			int position = quotationAssignRequestService.getQueuePosition(company, department, requestTime);
-			result.put("position", position);
-			result.put("success", true);
-		} catch (Exception e) {
-			result.put("success", false);
-			result.put("message", "查询失败: " + e.getMessage());
-		}
+		quotationAssignRequestService.getQueuePosition(company, department, requestTime);
 
 		return SUCCESS;
 	}
