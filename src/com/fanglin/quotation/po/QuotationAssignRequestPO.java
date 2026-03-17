@@ -181,52 +181,11 @@ public class QuotationAssignRequestPO implements Serializable {
 		// 处理 department 关联对象
 		if (getDepartment() != null) {
 			vo.setDepartment(getDepartment().getDid());
-			vo.setDepartmentName(getDepartment().getName());
 		}
 
 		// 处理 requestUser 关联对象
 		if (getRequestUser() != null) {
 			vo.setRequestUid(getRequestUser().getUid());
-		}
-
-		// 设置装修类型名称
-		if (getDecorationType() == 1) {
-			vo.setDecorationTypeName("半包");
-		} else if (getDecorationType() == 2) {
-			vo.setDecorationTypeName("整装");
-		} else {
-			vo.setDecorationTypeName("未知");
-		}
-
-		// 设置优先级名称
-		switch (getPriority()) {
-			case PRIORITY_HIGHEST_INT:
-				vo.setPriorityName("最高");
-				break;
-			case PRIORITY_HIGH_INT:
-				vo.setPriorityName("高");
-				break;
-			case PRIORITY_NORMAL_INT:
-				vo.setPriorityName("普通");
-				break;
-			case PRIORITY_LOW_INT:
-				vo.setPriorityName("低");
-				break;
-			case PRIORITY_LOWEST_INT:
-				vo.setPriorityName("最低");
-				break;
-			default:
-				vo.setPriorityName("未知");
-				break;
-		}
-
-		// 设置状态名称
-		if (getStatus() == STATUS_PENDING_INT) {
-			vo.setStatusName("待分配");
-		} else if (getStatus() == STATUS_ASSIGNED_INT) {
-			vo.setStatusName("已分配");
-		} else {
-			vo.setStatusName("未知");
 		}
 
 		return vo;

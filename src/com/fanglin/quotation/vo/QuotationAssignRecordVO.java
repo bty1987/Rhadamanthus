@@ -19,14 +19,11 @@ public class QuotationAssignRecordVO implements Serializable {
 	private String orderId;			// 装修单号
 	private Integer uid;				// 预算员用户ID（成功时有值）
 	private Byte assignType;			// 分配类型：1-正向自动，2-手动，3-反向自动
-	private String assignTypeName;		// 分配类型名称
 	private Byte assignResult;			// 分配结果：1-成功，0-失败
-	private String assignResultName;	// 分配结果名称
 	private Integer assignUid;			// 分配人用户ID（手动分配时）
 	private Timestamp assignTime;		// 分配时间
 	private String failReason;			// 失败原因
 	private Byte decorationType;		// 装修类型
-	private String decorationTypeName;	// 装修类型名称
 
 	// 关联对象
 	private UserBaseVO budgetUser;		// 预算员用户信息
@@ -70,28 +67,12 @@ public class QuotationAssignRecordVO implements Serializable {
 		this.assignType = assignType;
 	}
 
-	public String getAssignTypeName() {
-		return assignTypeName;
-	}
-
-	public void setAssignTypeName(String assignTypeName) {
-		this.assignTypeName = assignTypeName;
-	}
-
 	public Byte getAssignResult() {
 		return assignResult;
 	}
 
 	public void setAssignResult(Byte assignResult) {
 		this.assignResult = assignResult;
-	}
-
-	public String getAssignResultName() {
-		return assignResultName;
-	}
-
-	public void setAssignResultName(String assignResultName) {
-		this.assignResultName = assignResultName;
 	}
 
 	public Integer getAssignUid() {
@@ -124,14 +105,6 @@ public class QuotationAssignRecordVO implements Serializable {
 
 	public void setDecorationType(Byte decorationType) {
 		this.decorationType = decorationType;
-	}
-
-	public String getDecorationTypeName() {
-		return decorationTypeName;
-	}
-
-	public void setDecorationTypeName(String decorationTypeName) {
-		this.decorationTypeName = decorationTypeName;
 	}
 
 	@JSON(serialize = false)
