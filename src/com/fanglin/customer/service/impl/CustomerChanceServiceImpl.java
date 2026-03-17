@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.dao.VillageDao;
@@ -101,6 +102,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private CustomerDao customerDao;
 
 	@Autowired
 	private CompanyDao companyDao;
@@ -840,6 +844,18 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330074, "客户资源不可操作");
 		}
 
+		CustomerPO customerPO = customerDao.get(customerChanceVO.getCustomer().getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		HousePO housePO = houseDao.get(customerChanceVO.getHouse().getHid());
+
+		if (housePO == null) {
+			throw new FLException(130017, "房产不存在");
+		}
+
 		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) {
 			decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
 		}
@@ -873,7 +889,6 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerProfileDao.updateCustomerProfile(decorationVO.getOrderId(), customerChancePO.getCustomer().getCid(), customerSourcePO.getCsid());
 
-		HousePO housePO = customerSourcePO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
 		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s", customerSourcePO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerSourcePO.getOrderId());
@@ -930,21 +945,13 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		HousePO housePO = customerSourcePO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客户机会直接初审通过,客户名:%s,楼盘:%s %s %s",
-			customerSourcePO.getName(),
-			villagePO.getCityProper().getCity().getName(),
-			villagePO.getCityProper().getName(),
-			villagePO.getName(),
-			housePO.getHouseNumber());
+		String content = String.format("客户机会直接初审通过,客户名:%s,楼盘:%s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
 
 		UserPO belonger = customerChancePO.getBelonger();
 		if (belonger != null) {
 			messageService.sendMessage(belonger.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, belonger.getCompany());
 		}
 
-		log.info("客户机会直接初审成功, ccid={}, sourceStatus={}, chanceStatus={}",
-			customerChancePO.getCcid(),
-			customerSourcePO.getStatus(),
-			customerChancePO.getStatus());
+		log.info("客户机会直接初审成功, ccid={}, sourceStatus={}, chanceStatus={}", customerChancePO.getCcid(), customerSourcePO.getStatus(), customerChancePO.getStatus());
 	}
 }

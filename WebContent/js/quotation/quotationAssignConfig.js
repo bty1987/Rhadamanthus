@@ -13,7 +13,7 @@ jQuery(function($) {
 
 	// 加载列表
 	function loadList() {
-		com.post(api.quotationAssign.getQuotationConfigsByCompany, {
+		com.post(api.quotation.getQuotationConfigsByCompany, {
 			"company": $('#companySelect').val() || params.userInfo.company.cid
 		}, function(res) {
 			renderList(res.quotationConfigs || []);
@@ -106,7 +106,7 @@ jQuery(function($) {
 		if (qacid) {
 			$('#modalTitle').text('编辑预算配置');
 
-			com.post(api.quotationAssign.getQuotationConfig, {
+			com.post(api.quotation.getQuotationConfig, {
 				"qacid": qacid
 			}, function(res) {
 				var config = res.quotationConfig;
@@ -150,7 +150,7 @@ jQuery(function($) {
 			"quotationConfig.autoAssign": autoAssign
 		};
 
-		var apiMethod = qacid ? api.quotationAssign.updateQuotationConfig : api.quotationAssign.saveQuotationConfig;
+		var apiMethod = qacid ? api.quotation.updateQuotationConfig : api.quotation.saveQuotationConfig;
 
 		com.post(apiMethod, params, function(res) {
 			if (res.success) {
@@ -166,7 +166,7 @@ jQuery(function($) {
 	// 删除
 	function deleteConfig(qacid) {
 		com.showConfirm('确认删除该配置？', function() {
-			com.post(api.quotationAssign.deleteQuotationConfig, {
+			com.post(api.quotation.deleteQuotationConfig, {
 				"qacid": qacid
 			}, function(res) {
 				if (res.success) {
@@ -181,7 +181,7 @@ jQuery(function($) {
 
 	// 切换启用状态
 	function toggleEnabled(qacid, currentEnabled) {
-		var apiMethod = currentEnabled == 1 ? api.quotationAssign.disableQuotationAssign : api.quotationAssign.enableQuotationAssign;
+		var apiMethod = currentEnabled == 1 ? api.quotation.disableQuotationAssign : api.quotation.enableQuotationAssign;
 		var actionText = currentEnabled == 1 ? '禁用' : '启用';
 
 		com.showConfirm('确认' + actionText + '该配置？', function() {

@@ -12,7 +12,7 @@ jQuery(function($) {
 
 	// 加载列表
 	function loadList() {
-		com.post(api.quotationAssign.pageBudgetUserRule, {
+		com.post(api.quotation.pageBudgetUserRule, {
 			"budgetUserRule.company": params.userInfo.company.cid,
 			"budgetUserRule.status": $('#statusSelect').val(),
 			"budgetUserRule.userName": $('#userName').val(),
@@ -100,7 +100,7 @@ jQuery(function($) {
 
 	// 加载统计信息
 	function loadStatistics() {
-		com.post(api.quotationAssign.getBudgetUserStatistics, {
+		com.post(api.quotation.getBudgetUserStatistics, {
 			"company": params.userInfo.company.cid,
 			"department": params.userInfo.user.department
 		}, function(res) {
@@ -136,7 +136,7 @@ jQuery(function($) {
 			$('#modalTitle').text('编辑预算员');
 
 			// 查询详情
-			com.post(api.quotationAssign.getBudgetUserRule, {
+			com.post(api.quotation.getBudgetUserRule, {
 				"qaurid": qaurid
 			}, function(res) {
 				var rule = res.budgetUserRule;
@@ -145,7 +145,7 @@ jQuery(function($) {
 				$('#maxTasks').val(rule.maxTasks || 5);
 
 				// 加载支持类型
-				com.post(api.quotationAssign.getBudgetUserTypes, {
+				com.post(api.quotation.getBudgetUserTypes, {
 					"qaurid": qaurid
 				}, function(typeRes) {
 					$('input[name="supportType"]').each(function() {
@@ -190,13 +190,13 @@ jQuery(function($) {
 			"budgetUserRule.status": qaurid ? undefined : 1
 		};
 
-		com.post(api.quotationAssign.saveBudgetUserRule, params, function(res) {
+		com.post(api.quotation.saveBudgetUserRule, params, function(res) {
 			if (res.success) {
 				com.showAlert(com.info, '保存成功');
 
 				// 保存支持类型
 				var newBurid = qaurid || res.qaurid;
-				com.post(api.quotationAssign.assignBudgetUserTypes, {
+				com.post(api.quotation.assignBudgetUserTypes, {
 					"qaurid": newBurid,
 					"types": types
 				}, function() {
@@ -212,7 +212,7 @@ jQuery(function($) {
 	// 删除
 	function deleteRule(qaurid) {
 		com.showConfirm('确认删除该预算员规则？', function() {
-			com.post(api.quotationAssign.deleteBudgetUserRule, {
+			com.post(api.quotation.deleteBudgetUserRule, {
 				"qaurid": qaurid
 			}, function(res) {
 				if (res.success) {
@@ -227,7 +227,7 @@ jQuery(function($) {
 
 	// 启用/停用
 	function toggleStatus(qaurid, enabled) {
-		var apiMethod = enabled ? api.quotationAssign.enableBudgetUser : api.quotationAssign.disableBudgetUser;
+		var apiMethod = enabled ? api.quotation.enableBudgetUser : api.quotation.disableBudgetUser;
 
 		com.post(apiMethod, {
 			"qaurid": qaurid
@@ -243,7 +243,7 @@ jQuery(function($) {
 
 	// 显示工作负载
 	function showWorkload() {
-		com.post(api.quotationAssign.getBudgetUserWorkload, {
+		com.post(api.quotation.getBudgetUserWorkload, {
 			"company": params.userInfo.company.cid,
 			"department": params.userInfo.user.department
 		}, function(res) {
