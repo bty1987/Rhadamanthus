@@ -158,26 +158,6 @@ public class QuotationAssignUserRulePO implements Serializable {
 		// 处理 department 关联对象
 		if (getDepartment() != null) {
 			vo.setDepartment(getDepartment().getDid());
-			vo.setDepartmentName(getDepartment().getName());
-		}
-
-		// 设置状态名称
-		switch (getStatus()) {
-			case STATUS_AVAILABLE_INT:
-				vo.setStatusName("待分配");
-				break;
-			case STATUS_BUSY_INT:
-				vo.setStatusName("制作中");
-				break;
-			case STATUS_STOP_INT:
-				vo.setStatusName("停止");
-				break;
-			case STATUS_COMPLETED_INT:
-				vo.setStatusName("已完成");
-				break;
-			default:
-				vo.setStatusName("未知");
-				break;
 		}
 
 		return vo;

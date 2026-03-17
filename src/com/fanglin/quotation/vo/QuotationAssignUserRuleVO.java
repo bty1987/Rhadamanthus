@@ -29,9 +29,6 @@ public class QuotationAssignUserRuleVO implements Serializable {
 	// 关联对象
 	private UserBaseVO user; // 预算员用户信息
 	private CompanyVO companyVO; // 公司信息
-	private String departmentName; // 部门名称
-	private String statusName; // 状态名称
-	private String supportedTypes; // 支持的类型（如："半包,整装"）
 
 	// 构造函数
 	public QuotationAssignUserRuleVO() {
@@ -127,29 +124,5 @@ public class QuotationAssignUserRuleVO implements Serializable {
 
 	public void setCompanyVO(CompanyVO companyVO) {
 		this.companyVO = companyVO;
-	}
-
-	public String getDepartmentName() {
-		return departmentName;
-	}
-
-	public void setDepartmentName(String departmentName) {
-		this.departmentName = departmentName;
-	}
-
-	public String getStatusName() {
-		return statusName;
-	}
-
-	public void setStatusName(String statusName) {
-		this.statusName = statusName;
-	}
-
-	public String getSupportedTypes() {
-		return supportedTypes;
-	}
-
-	public void setSupportedTypes(String supportedTypes) {
-		this.supportedTypes = supportedTypes;
 	}
 }

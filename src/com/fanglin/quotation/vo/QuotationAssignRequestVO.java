@@ -22,13 +22,10 @@ public class QuotationAssignRequestVO implements Serializable {
 	private Integer company; // 公司ID
 	private Integer department; // 部门ID
 	private Byte decorationType; // 装修类型：1-半包，2-整装
-	private String decorationTypeName; // 装修类型名称
 	private Byte priority; // 优先级：1-最高，5-普通，9-最低
-	private String priorityName; // 优先级名称
 	private Timestamp requestTime; // 请求时间
 	private Integer requestUid; // 请求人用户ID（设计师）
 	private Byte status; // 状态：1-待分配，2-已分配
-	private String statusName; // 状态名称
 	private Timestamp assignTime; // 分配时间
 	private String remark; // 备注
 
@@ -37,7 +34,6 @@ public class QuotationAssignRequestVO implements Serializable {
 	private UserBaseVO requestUser; // 请求人（设计师）
 	private UserBaseVO assignBudgetUser; // 分配的预算员
 	private CompanyVO companyVO; // 公司信息
-	private String departmentName; // 部门名称
 
 	// 计算字段
 	private Integer waitTime; // 等待时长（分钟）
@@ -88,28 +84,12 @@ public class QuotationAssignRequestVO implements Serializable {
 		this.decorationType = decorationType;
 	}
 
-	public String getDecorationTypeName() {
-		return decorationTypeName;
-	}
-
-	public void setDecorationTypeName(String decorationTypeName) {
-		this.decorationTypeName = decorationTypeName;
-	}
-
 	public Byte getPriority() {
 		return priority;
 	}
 
 	public void setPriority(Byte priority) {
 		this.priority = priority;
-	}
-
-	public String getPriorityName() {
-		return priorityName;
-	}
-
-	public void setPriorityName(String priorityName) {
-		this.priorityName = priorityName;
 	}
 
 	public Timestamp getRequestTime() {
@@ -134,14 +114,6 @@ public class QuotationAssignRequestVO implements Serializable {
 
 	public void setStatus(Byte status) {
 		this.status = status;
-	}
-
-	public String getStatusName() {
-		return statusName;
-	}
-
-	public void setStatusName(String statusName) {
-		this.statusName = statusName;
 	}
 
 	public Timestamp getAssignTime() {
@@ -194,14 +166,6 @@ public class QuotationAssignRequestVO implements Serializable {
 
 	public void setCompanyVO(CompanyVO companyVO) {
 		this.companyVO = companyVO;
-	}
-
-	public String getDepartmentName() {
-		return departmentName;
-	}
-
-	public void setDepartmentName(String departmentName) {
-		this.departmentName = departmentName;
 	}
 
 	public Integer getWaitTime() {
