@@ -24,6 +24,18 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 	}
 
 	@Override
+	public List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company) {
+
+		PagingQuery<QuotationAssignUserRulePO> query = pagingQuery(paging, QuotationAssignUserRulePO.class);
+
+		query.add(Restrictions.eq(QuotationAssignUserRulePO.COLUMN_COMPANY_STR, company));
+
+		queryFilterExcute(query, filters);
+
+		return query.list();
+	}
+
+	@Override
 	public QuotationAssignUserRulePO queryQuotationAssignUserRuleByUid(int uid, int company) {
 		return (QuotationAssignUserRulePO) session().createCriteria(QuotationAssignUserRulePO.class).createAlias("user", "user").add(Restrictions.eq("user.uid", uid)).add(Restrictions.eq(QuotationAssignUserRulePO.COLUMN_COMPANY_STR, company)).setMaxResults(1).uniqueResult();
 	}
@@ -118,19 +130,8 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 		return session().createSQLQuery(sql).setParameter("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT).setParameter("uid", uid).executeUpdate();
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company) {
-		PagingQuery<QuotationAssignUserRulePO> query = pagingQuery(paging, QuotationAssignUserRulePO.class);
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		query.add(Restrictions.eq(QuotationAssignUserRulePO.COLUMN_COMPANY_STR, company));
-
-		queryFilterExcute(query, filters);
-
-		query.createAlias("user", "user");
-		query.addOrder(Order.asc(QuotationAssignUserRulePO.COLUMN_STATUS_STR));
-		query.addOrder(Order.asc(QuotationAssignUserRulePO.COLUMN_LASTFINISHTIME_STR));
-
-		return query.list();
 	}
+
 }
