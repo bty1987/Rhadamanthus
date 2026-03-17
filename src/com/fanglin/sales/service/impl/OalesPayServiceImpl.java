@@ -23,7 +23,9 @@ import com.fanglin.sales.dao.OalesPayDao;
 import com.fanglin.sales.po.OalesPO;
 import com.fanglin.sales.po.OalesPayOO;
 import com.fanglin.sales.po.OalesPayPO;
+import com.fanglin.sales.po.OalesRecordPO;
 import com.fanglin.sales.service.OalesPayService;
+import com.fanglin.sales.service.OalesRecordService;
 import com.fanglin.sales.vo.OalesPayVO;
 import com.fanglin.sales.vo.OalesVO;
 import com.fanglin.utils.BeanUtil;
@@ -45,6 +47,9 @@ public class OalesPayServiceImpl implements OalesPayService {
 
 	@Autowired
 	private OalesPaymentDao oalesPaymentDao;
+
+	@Autowired
+	private OalesRecordService oalesRecordService;
 
 	@Override
 	public void pageOalesPay(Paging paging, List<Filter> filters, int company) throws FLException {
@@ -132,12 +137,15 @@ public class OalesPayServiceImpl implements OalesPayService {
 
 		oalesPaymentDao.save(oalesPaymentPO);
 
+		// 添加操作记录
+		oalesRecordService.addOalesPayRecord(oales.getOid(), oalesPayPO.getOpid(), OalesRecordPO.TYPE_ADD_PAY, userId, "添加支付记录");
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateOalesPay(OalesPayVO oalesPayVO) throws FLException {
+	public int updateOalesPay(OalesPayVO oalesPayVO, String userId) throws FLException {
 
 		OalesPayPO oalesPayPO = oalesPayDao.get(oalesPayVO.getOpid());
 
@@ -145,12 +153,15 @@ public class OalesPayServiceImpl implements OalesPayService {
 
 		oalesPayDao.update(oalesPayPO);
 
+		// 添加操作记录
+		oalesRecordService.addOalesPayRecord(oalesPayPO.getOid(), oalesPayPO.getOpid(), OalesRecordPO.TYPE_UPDATE_PAY, userId, "更新支付记录");
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateOalesPayForAdvance(OalesPayVO oalesPayVO) throws FLException {
+	public int updateOalesPayForAdvance(OalesPayVO oalesPayVO, String userId) throws FLException {
 
 		OalesPayPO oalesPayPO = oalesPayDao.get(oalesPayVO.getOpid());
 
@@ -162,12 +173,15 @@ public class OalesPayServiceImpl implements OalesPayService {
 
 		oalesPayDao.update(oalesPayPO);
 
+		// 添加操作记录
+		oalesRecordService.addOalesPayRecord(oalesPayPO.getOid(), oalesPayPO.getOpid(), OalesRecordPO.TYPE_UPDATE_PAY, userId, "更新预付日期");
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteOalesPay(OalesPayVO oalesPayVO) throws FLException {
+	public int deleteOalesPay(OalesPayVO oalesPayVO, String userId) throws FLException {
 
 		OalesPayPO oalesPayPO = oalesPayDao.get(oalesPayVO.getOpid());
 
@@ -181,11 +195,17 @@ public class OalesPayServiceImpl implements OalesPayService {
 			throw new FLException(150088, "外销款不可操作");
 		}
 
+		long oid = oalesPayPO.getOid();
+		long opid = oalesPayPO.getOpid();
+
 		oalesPayDao.delete(oalesPayPO);
 
 		if (oalesPaymentPO != null) {
 			oalesPaymentDao.delete(oalesPaymentPO);
 		}
+
+		// 添加操作记录
+		oalesRecordService.addOalesPayRecord(oid, opid, OalesRecordPO.TYPE_DELETE_PAY, userId, "删除支付记录");
 
 		return 0;
 	}

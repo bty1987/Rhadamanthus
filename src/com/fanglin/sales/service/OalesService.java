@@ -19,28 +19,28 @@ public interface OalesService {
 
 	public void addOales(OalesVO oalesVO, String userId, int company) throws FLException;
 
-	public void updateOales(OalesVO oalesVO) throws FLException;
+	public void updateOales(OalesVO oalesVO, String userId) throws FLException;
 
-	public void submitOales(OalesVO oales) throws FLException;
+	public void submitOales(OalesVO oales, String userId) throws FLException;
 
-	public void cancelOales(OalesVO oales) throws FLException;
+	public void cancelOales(OalesVO oales, String userId) throws FLException;
 
-	public void confirmOales(OalesVO oalesVO) throws FLException;
+	public void confirmOales(OalesVO oalesVO, String userId) throws FLException;
 
 	public void rejectOales(OalesVO oalesVO, String userId) throws FLException;
 
-	public void checkOales(List<OalesVO> oaleses) throws FLException;
+	public void checkOales(List<OalesVO> oaleses, String userId) throws FLException;
 
-	public void finishOales(OalesVO oalesVO) throws FLException;
+	public void finishOales(OalesVO oalesVO, String userId) throws FLException;
 
-	public void abateOales(OalesVO oales) throws FLException;
+	public void abateOales(OalesVO oales, String userId) throws FLException;
 
 	public void refundOales(OalesVO oalesVO, String userId) throws FLException;
 
-	public void scaleOales(OalesVO oalesVO) throws FLException;
+	public void scaleOales(OalesVO oalesVO, String userId) throws FLException;
 
-	public void deleteOales(OalesVO oalesVO) throws FLException;
+	public void deleteOales(OalesVO oalesVO, String userId) throws FLException;
 
-	public void activityOales(OalesVO oalesVO) throws FLException;
+	public void activityOales(OalesVO oalesVO, String userId) throws FLException;
 
 }
