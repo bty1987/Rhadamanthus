@@ -477,6 +477,9 @@ $.extend(api, {
         uncheckCustomerChance: {
             url: "uncheckCustomerChance.do"
         },
+        tranCustomerChance: {
+            url: "tranCustomerChance.do"
+        },
         approveCustomerChance: {
             url: "approveCustomerChance.do"
         },

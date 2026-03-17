@@ -174,6 +174,12 @@ public class CustomerChanceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "tranCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String tranCustomerChance() throws FLException {
+		customerChanceService.tranCustomerChance(customerChance, queryCompany());
+		return SUCCESS;
+	}
+
 	@Action(value = "approveCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String approveCustomerChance() throws FLException {
 		customerChanceService.approveCustomerChance(customerChance, queryCompany());

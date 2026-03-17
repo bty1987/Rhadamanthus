@@ -818,7 +818,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void approveCustomerChance(CustomerChanceVO customerChanceVO, int company) throws FLException {
+	public void tranCustomerChance(CustomerChanceVO customerChanceVO, int company) throws FLException {
 
 		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());
 
@@ -884,5 +884,67 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		messageService.sendMessage(salesman.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, salesman.getCompany());
 
 		log.info("客户机会直接转装修单成功, ccid={}, orderId={}", customerChancePO.getCcid(), decorationVO.getOrderId());
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void approveCustomerChance(CustomerChanceVO customerChanceVO, int company) throws FLException {
+
+		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());
+
+		if (customerChancePO == null) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_INIT_INT) {
+			throw new FLException(330077, "客户机会不可操作");
+		}
+
+		CustomerSourcePO customerSourcePO = customerChancePO.getSource();
+
+		if (customerSourcePO == null) {
+			throw new FLException(330074, "客户资源不存在");
+		}
+
+		// 检查是否需要校验重复订单
+		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) {
+			decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
+		}
+		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid(), company);
+
+		// 设置客户来源状态为初审通过（STATUS_APPROVE_ONE_INT = 2）
+		customerSourcePO.setStatus(CustomerSourcePO.STATUS_APPROVE_ONE_INT);
+		customerSourceDao.update(customerSourcePO);
+
+		// 设置客户机会信息（参照 approveForCustomerSource 的逻辑）
+		customerChancePO.setCustomer(customerSourcePO.getCustomer());
+		customerChancePO.setHouse(customerSourcePO.getHouse());
+		customerChancePO.setRate(customerChanceVO.getRate() != null ? customerChanceVO.getRate() : 0);
+		customerChancePO.setBusitype(customerChancePO.getBusitype());
+
+		// 设置客户机会状态为审批通过（STATUS_APPROVE_INT = 2）
+		customerChancePO.setStatus(CustomerChancePO.STATUS_APPROVE_INT);
+		customerChanceDao.update(customerChancePO);
+
+		// 发送消息通知
+		HousePO housePO = customerSourcePO.getHouse();
+		VillagePO villagePO = housePO.getVillage();
+
+		String content = String.format("客户机会直接初审通过,客户名:%s,楼盘:%s %s %s",
+			customerSourcePO.getName(),
+			villagePO.getCityProper().getCity().getName(),
+			villagePO.getCityProper().getName(),
+			villagePO.getName(),
+			housePO.getHouseNumber());
+
+		UserPO belonger = customerChancePO.getBelonger();
+		if (belonger != null) {
+			messageService.sendMessage(belonger.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, belonger.getCompany());
+		}
+
+		log.info("客户机会直接初审成功, ccid={}, sourceStatus={}, chanceStatus={}",
+			customerChancePO.getCcid(),
+			customerSourcePO.getStatus(),
+			customerChancePO.getStatus());
 	}
 }
