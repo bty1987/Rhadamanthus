@@ -62,5 +62,16 @@ INSERT INTO communion.constant (name, module, clazz, type, field, `key`, value, 
 -- 2. 前台使用constant来转换显示（例如：status=1显示为"待分配"）
 -- 3. 后台只存储数字值，不存储中文名称
 -- 4. 前台JS使用示例：
---    com.getEnumText(constant.quotationAssignUserRule.status, status)
+--    constant.quotation().quotationAssignUserRule.status.datas
+--    或: constant.quotation().quotationAssignRequest.status.datas
+--    或: constant.quotation().quotationAssignRecord.assignType.datas
 -- ==========================================
+
+-- 示例：获取状态映射数据
+-- var statusDatas = constant.quotation().quotationAssignUserRule.status.datas;
+-- statusDatas[0].key   // 返回: 1
+-- statusDatas[0].value // 返回: "待分配"
+--
+-- 使用示例：
+-- var statusText = constant.quotation().quotationAssignUserRule.status.datas[item.status - 1].value;
+
