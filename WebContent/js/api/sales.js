@@ -302,6 +302,9 @@ $.extend(api, {
         scaleOales: {
             url: "scaleOales.do"
         },
+        activityOales: {
+            url: "activityOales.do"
+        },
         deleteOales: {
             url: "deleteOales.do"
         },

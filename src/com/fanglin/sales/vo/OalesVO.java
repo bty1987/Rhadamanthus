@@ -70,6 +70,8 @@ public class OalesVO implements Serializable {
 
 	private Short isScale;
 
+	private Short isActivity;
+
 	private String comment;
 
 	private Integer company;
@@ -377,6 +379,14 @@ public class OalesVO implements Serializable {
 
 	public void setIsScale(Short isScale) {
 		this.isScale = isScale;
+	}
+
+	public Short getIsActivity() {
+		return isActivity;
+	}
+
+	public void setIsActivity(Short isActivity) {
+		this.isActivity = isActivity;
 	}
 
 	public Integer getCompany() {

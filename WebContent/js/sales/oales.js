@@ -613,6 +613,37 @@ jQuery(function($) {
 
             return oales.pageType != "account";
         }
+    }, {
+        name: "对账",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            scaleOales(v.oid);
+        },
+        show: function(v) {
+
+            return (v.isScale == constant.sales().oales.ISSCALE_INIT_INT && oales.pageType != "account");
+        }
+    }, {
+        name: function(v) {
+
+            return v.isActivity == constant.sales().oales.ISACTIVITY_YES_INT ? "不参与活动" : "参与活动";
+        },
+        clazz: function(v) {
+
+            return v.isActivity == constant.sales().oales.ISACTIVITY_YES_INT ? "btn-warning" : "btn-success";
+        },
+        handle: function(v) {
+
+            var newStatus = v.isActivity == constant.sales().oales.ISACTIVITY_YES_INT
+                ? constant.sales().oales.ISACTIVITY_NO_INT
+                : constant.sales().oales.ISACTIVITY_YES_INT;
+            activityOales(v.oid, newStatus);
+        },
+        show: function(v) {
+
+            return oales.pageType != "account";
+        }
     }, ];
 
     searcher.line("no", lineprops, linebtns).render();
@@ -876,6 +907,33 @@ jQuery(function($) {
             "oales.oid": oid,
         };
         com.post(api.sales.confirmOales, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            searcher.doSearch();
+        });
+    }
+
+    function scaleOales(oid) {
+
+        var options = {
+            "oales.oid": oid,
+        };
+        com.post(api.sales.scaleOales, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            searcher.doSearch();
+        });
+    }
+
+    function activityOales(oid, isActivity) {
+
+        var options = {
+            "oales.oid": oid,
+            "oales.isActivity": isActivity
+        };
+        com.post(api.sales.activityOales, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
 

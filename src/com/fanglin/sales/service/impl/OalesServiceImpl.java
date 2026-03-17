@@ -444,4 +444,19 @@ public class OalesServiceImpl implements OalesService {
 		oalesDao.delete(oalesPO);
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void activityOales(OalesVO oalesVO) throws FLException {
+
+		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
+
+		if (oalesPO == null) {
+			throw new FLException(370021, "外销单不存在");
+		}
+
+		oalesPO.setIsActivity(oalesVO.getIsActivity());
+
+		oalesDao.update(oalesPO);
+	}
+
 }
