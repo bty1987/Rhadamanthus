@@ -21,9 +21,9 @@ import com.fanglin.utils.DateUtil;
 
 /**
  * 外销单操作记录表
- *
+ * 
  * 记录外销单的所有操作历史，包括创建、修改、状态变更等
- *
+ * 
  * @author AI Assistant
  * @date 2026-03-17
  */
@@ -255,7 +255,7 @@ public class OalesRecordPO implements Serializable {
 
 	/**
 	 * 初始化记录对象
-	 *
+	 * 
 	 * @param oid 外销单ID
 	 * @param type 操作类型
 	 * @param operater 操作人
@@ -274,7 +274,7 @@ public class OalesRecordPO implements Serializable {
 
 	/**
 	 * 初始化记录对象（带状态变更）
-	 *
+	 * 
 	 * @param oid 外销单ID
 	 * @param type 操作类型
 	 * @param operater 操作人
@@ -297,7 +297,7 @@ public class OalesRecordPO implements Serializable {
 
 	/**
 	 * 初始化记录对象（支付相关）
-	 *
+	 * 
 	 * @param oid 外销单ID
 	 * @param opid 支付记录ID
 	 * @param type 操作类型
@@ -318,32 +318,7 @@ public class OalesRecordPO implements Serializable {
 
 	/**
 	 * PO 转 VO
-	 *
-	 * @param oalesRecordVO VO对象
-	 * @return VO对象
-	 */
-	public OalesRecordVO ptv(OalesRecordVO oalesRecordVO) {
-		BeanUtil.copyProperties(this, oalesRecordVO, Arrays.asList("oales", "oalesPay", "operate"));
-
-		if (oalesRecordVO.getOales() != null && getOales() != null) {
-			// 简单复制oales的基本信息
-			BeanUtil.copyProperties(getOales(), oalesRecordVO.getOales(), Arrays.asList("decoration", "channer", "dept", "region", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer", "accounter"));
-		}
-
-		if (oalesRecordVO.getOalesPay() != null && getOalesPay() != null) {
-			BeanUtil.copyProperties(getOalesPay(), oalesRecordVO.getOalesPay(), Arrays.asList("oales", "creater"));
-		}
-
-		if (oalesRecordVO.getOperate() != null && getOperate() != null) {
-			BeanUtil.copyProperties(getOperate(), oalesRecordVO.getOperate(), Arrays.asList("duty", "dept", "role"));
-		}
-
-		return oalesRecordVO;
-	}
-
-	/**
-	 * PO 转 VO
-	 *
+	 * 
 	 * @param oalesRecordVO VO对象
 	 * @return VO对象
 	 */
