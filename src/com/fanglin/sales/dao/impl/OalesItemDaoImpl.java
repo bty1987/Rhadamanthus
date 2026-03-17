@@ -13,9 +13,6 @@ import com.fanglin.sales.dao.OalesItemDao;
 import com.fanglin.sales.po.OalesItemPO;
 import com.fanglin.utils.Paging;
 
-/**
- * 其他销售单项目明细 DAO 实现
- */
 @Repository("oalesItemDao")
 public class OalesItemDaoImpl extends DaoImpl<OalesItemPO> implements OalesItemDao {
 
@@ -38,18 +35,19 @@ public class OalesItemDaoImpl extends DaoImpl<OalesItemPO> implements OalesItemD
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<OalesItemPO> queryOalesItem(long oid) {
-		return session().createCriteria(OalesItemPO.class)
-				.add(Restrictions.eq("oid", oid))
-				.list();
+		return session().createCriteria(OalesItemPO.class).add(Restrictions.eq("oid", oid)).list();
 	}
 
 	@Override
 	public Long amountOalesItem(long oid) {
 		String hql = "SELECT COALESCE(SUM(i.total), 0) FROM OalesItemPO i WHERE i.oid = :oid";
-		BigDecimal result = (BigDecimal) session().createQuery(hql)
-				.setLong("oid", oid)
-				.uniqueResult();
+		BigDecimal result = (BigDecimal) session().createQuery(hql).setLong("oid", oid).uniqueResult();
 		return result != null ? result.longValue() : 0L;
+	}
+
+	public static void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) throws FLException {
+
 	}
 }

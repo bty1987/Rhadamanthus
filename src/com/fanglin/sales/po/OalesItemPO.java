@@ -5,27 +5,18 @@ import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.sales.vo.OalesItemVO;
 import com.fanglin.utils.BeanUtil;
 
-/**
- * 其他销售单项目明细 (OalesItemPO)
- * 对应表：sales.oalesitem
- *
- * 职责：存储外销单的商品明细信息
- */
 @Entity
 @Table(name = "oalesitem", catalog = "sales")
 public class OalesItemPO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -159616027998204009L;
 
 	public static final String COLUMN_OIID_STR = "oiid";
 
@@ -60,9 +51,6 @@ public class OalesItemPO implements Serializable {
 
 	/** 备注 */
 	private String comment;
-
-	/** 关联的外销单对象 */
-	private OalesPO oales;
 
 	public OalesItemPO() {
 		super();
@@ -168,21 +156,10 @@ public class OalesItemPO implements Serializable {
 		this.comment = comment;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "oid", insertable = false, updatable = false)
-	public OalesPO getOales() {
-		return oales;
-	}
-
-	public void setOales(OalesPO oales) {
-		this.oales = oales;
-	}
-
-	/**
-	 * PO 转 VO 方法
-	 */
 	public OalesItemVO ptv(OalesItemVO oalesItemVO) {
+
 		BeanUtil.copyProperties(this, oalesItemVO, Arrays.asList("oales"));
+
 		return oalesItemVO;
 	}
 }

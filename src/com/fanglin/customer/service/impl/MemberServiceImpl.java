@@ -290,11 +290,11 @@ public class MemberServiceImpl implements MemberService {
 
 	/**
 	 * 查询会员信息（优化版本）
-	 *
+	 * 
 	 * 【业务逻辑说明】 - 只返回【关联订单】（chanceRefer/originRefer/orderRefer），不返回主订单 - 如果客户没有装饰订单，返回空列表（不抛异常） - 关联订单的手机号从主订单推荐人获取 - 关联订单通过 referOrderId 字段关联到主订单
-	 *
+	 * 
 	 * 【优化点】 1. 业务调整：只返回关联订单（推荐信息），隐藏主订单数据 2. 新增 referOrderId 字段：关联订单可追溯到主订单 3. 消除 N+1 查询问题 - 批量查询客户电话 4. 修复批量查询遗漏：包含关联订单的客户 5. 消除嵌套循环 - 使用反向索引 Map 6. 抽取重复代码 - 统一处理 refer 订单 7. 添加空值检查 - 提高健壮性（原代码有 NPE 风险） 8. uniqueId 降级策略：doid 无效时使用 orderId
-	 *
+	 * 
 	 * @param members 会员查询条件列表（包含手机号）
 	 * @param company 公司ID过滤条件
 	 * @return Map<手机号, 会员列表>（仅包含关联订单/推荐信息）
@@ -446,15 +446,14 @@ public class MemberServiceImpl implements MemberService {
 		// 定义有效状态列表（排除失效、退货和采购状态）
 		// 有效状态：初始(0)、已领(2)、配送(4)、未退(5)、升级(6)、消耗(7)、抵现(8)
 		// 无效状态：失效(1)、退货(3)、采购(9)
-		List<Short> validStates = Arrays.asList(
-			DecorationActivityItemPO.STATUS_INIT_INT,           // 初始
-			DecorationActivityItemPO.STATUS_RECEIVE_INT,        // 已领
-			DecorationActivityItemPO.STATUS_DELIVERY_INT,       // 配送
-			DecorationActivityItemPO.STATUS_WAIT_INT,           // 未退
-			DecorationActivityItemPO.STATUS_UPGRADE_INT,        // 升级
-			DecorationActivityItemPO.STATUS_CONSUME_INT,        // 消耗
-			DecorationActivityItemPO.STATUS_DISCOUNT_INT        // 抵现
-		);
+		List<Short> validStates = Arrays.asList(DecorationActivityItemPO.STATUS_INIT_INT, // 初始
+				DecorationActivityItemPO.STATUS_RECEIVE_INT, // 已领
+				DecorationActivityItemPO.STATUS_DELIVERY_INT, // 配送
+				DecorationActivityItemPO.STATUS_WAIT_INT, // 未退
+				DecorationActivityItemPO.STATUS_UPGRADE_INT, // 升级
+				DecorationActivityItemPO.STATUS_CONSUME_INT, // 消耗
+				DecorationActivityItemPO.STATUS_DISCOUNT_INT // 抵现
+				);
 
 		// orderId -> 活动项目数量映射
 		Map<String, Integer> orderActivityCountMap = new HashMap<String, Integer>();
@@ -467,32 +466,34 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		// 9.1 【隐藏】处理主订单 - 根据业务需求，只返回推荐信息（关联订单）
-		// for (DecorationPO decorationPO : decorationPOs) {
-		// 	String recommenderPhone = orderToPhoneMap.get(decorationPO.getOrderId());
-		// 	if (recommenderPhone == null) {
-		// 		continue;
-		// 	}
-		//
-		// 	CustomerPO customer = decorationPO.getCustomer();
-		// 	if (customer == null) {
-		// 		continue;
-		// 	}
-		//
-		// 	List<CustomerPhonePO> customerPhones = customerPhoneBatchMap.get(customer.getCid());
-		// 	if (customerPhones != null && !customerPhones.isEmpty()) {
-		// 		String phone = FormatUtil.decodePhone(customerPhones.get(0).getPhone());
-		// 		String referOrderId = null;
-		// 		String uniqueId = generateUniqueId(decorationPO.getDoid(), decorationPO.getOrderId(), null);
-		// 		Integer activityCount = orderActivityCountMap.get(decorationPO.getOrderId());
-		//
-		// 		MemberVO member = createMemberVO(decorationPO, phone, referOrderId, uniqueId, activityCount);
-		//
-		// 		List<MemberVO> memberList = resultMap.get(recommenderPhone);
-		// 		if (memberList != null) {
-		// 			memberList.add(member);
-		// 		}
-		// 	}
-		// }
+		for (DecorationPO decorationPO : decorationPOs) {
+			String recommenderPhone = orderToPhoneMap.get(decorationPO.getOrderId());
+			if (recommenderPhone == null) {
+				continue;
+			}
+
+			CustomerPO customer = decorationPO.getCustomer();
+			if (customer == null) {
+				continue;
+			}
+
+			boolean flag = false;
+
+			List<CustomerPhonePO> customerPhones = customerPhoneBatchMap.get(customer.getCid());
+			if (customerPhones != null && !customerPhones.isEmpty()) {
+				String phone = FormatUtil.decodePhone(customerPhones.get(0).getPhone());
+				String referOrderId = null;
+				String uniqueId = generateUniqueId(decorationPO.getDoid(), decorationPO.getOrderId(), null);
+				Integer activityCount = orderActivityCountMap.get(decorationPO.getOrderId());
+
+				MemberVO member = createMemberVO(decorationPO, phone, referOrderId, uniqueId, activityCount);
+
+				List<MemberVO> memberList = resultMap.get(recommenderPhone);
+				if (memberList != null && flag) {
+					memberList.add(member);
+				}
+			}
+		}
 
 		// 9.2 处理关联订单（推荐信息）
 		for (DecorationPO decorationPO : referOrders) {
@@ -956,7 +957,7 @@ public class MemberServiceImpl implements MemberService {
 
 	/**
 	 * 创建 MemberVO 对象（抽取公共方法）
-	 *
+	 * 
 	 * @param decorationPO 装饰订单
 	 * @param phone 手机号
 	 * @param referOrderId 主订单号
