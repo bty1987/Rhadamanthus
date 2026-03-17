@@ -186,6 +186,11 @@ jQuery(function($) {
         customerChance.updateItems.unitrule.bindData(res.buildruleTwo, "key", "value");
         customerChance.updateItems.floorrule.bindData(res.buildruleTwo, "key", "value");
         customerChance.updateItems.doorrule.bindData(res.buildruleThr, "key", "value");
+
+        customerChance.directFirstApproveItems.builtrule.bindData(res.buildruleOne, "key", "value");
+        customerChance.directFirstApproveItems.unitrule.bindData(res.buildruleTwo, "key", "value");
+        customerChance.directFirstApproveItems.floorrule.bindData(res.buildruleTwo, "key", "value");
+        customerChance.directFirstApproveItems.doorrule.bindData(res.buildruleThr, "key", "value");
     });
 
     function initVillage(items, args) {
@@ -219,6 +224,7 @@ jQuery(function($) {
 
     initVillage(customerChance.updateItems);
     initVillage(customerChance.approveItems);
+    initVillage(customerChance.directFirstApproveItems);
 
     $.each(constant.customer().customerChance.config.datas, function(i, v) {
 
@@ -1089,6 +1095,7 @@ jQuery(function($) {
         customerChance.items.directBusitype.bindData($arr, 'dbid', 'name');
         customerChance.approveItems.busitype.bindData($arr, 'dbid', 'name');
         customerChance.updateItems.busitype.bindData($arr, 'dbid', 'name');
+        customerChance.directFirstApproveItems.busitype.bindData($arr, 'dbid', 'name');
     });
 
     function issue() {
