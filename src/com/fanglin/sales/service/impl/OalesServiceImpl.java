@@ -27,6 +27,8 @@ import com.fanglin.sales.dao.OalesDao;
 import com.fanglin.sales.dao.OalesPayDao;
 import com.fanglin.sales.po.OalesBO;
 import com.fanglin.sales.po.OalesPO;
+import com.fanglin.sales.po.OalesRecordPO;
+import com.fanglin.sales.service.OalesRecordService;
 import com.fanglin.sales.service.OalesService;
 import com.fanglin.sales.vo.OalesVO;
 import com.fanglin.system.dao.CompanyDao;
@@ -60,6 +62,9 @@ public class OalesServiceImpl implements OalesService {
 
 	@Autowired
 	private OalesPayDao oalesPayDao;
+
+	@Autowired
+	private OalesRecordService oalesRecordService;
 
 	@Override
 	public void pageOales(Paging paging, List<Filter> filters, int company, List<Short> statuses) throws FLException {
@@ -166,11 +171,14 @@ public class OalesServiceImpl implements OalesService {
 		oalesPO.setHouse(decorationPO.getHouse());
 
 		oalesDao.save(oalesPO);
+
+		// 添加操作记录
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_ADD, userId, "新增外销单");
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateOales(OalesVO oalesVO) throws FLException {
+	public void updateOales(OalesVO oalesVO, String userId) throws FLException {
 
 		if (oalesVO.getDecoration() == null) {
 			throw new FLException(140013, "订单不存在");
@@ -212,11 +220,14 @@ public class OalesServiceImpl implements OalesService {
 		BeanUtil.copyProperties(oalesVO, oalesPO, Arrays.asList("decoration", "channer", "dept", "region", "supplier", "creater", "servicer", "checker", "materialer"));
 
 		oalesDao.update(oalesPO);
+
+		// 添加操作记录
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_UPDATE, userId, "更新外销单");
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void submitOales(OalesVO oalesVO) throws FLException {
+	public void submitOales(OalesVO oalesVO, String userId) throws FLException {
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
@@ -228,14 +239,18 @@ public class OalesServiceImpl implements OalesService {
 			throw new FLException(370022, "外销单状态不可操作");
 		}
 
+		short beforeStatus = oalesPO.getStatus();
 		oalesPO.setStatus(OalesPO.STATUS_SUBMIT_INI);
 
 		oalesDao.update(oalesPO);
+
+		// 添加操作记录
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_SUBMIT, userId, "提交外销单", beforeStatus, oalesPO.getStatus());
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void cancelOales(OalesVO oalesVO) throws FLException {
+	public void cancelOales(OalesVO oalesVO, String userId) throws FLException {
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
@@ -247,14 +262,18 @@ public class OalesServiceImpl implements OalesService {
 			throw new FLException(370022, "外销单状态不可操作");
 		}
 
+		short beforeStatus = oalesPO.getStatus();
 		oalesPO.setStatus(OalesPO.STATUS_INIT_INT);
 
 		oalesDao.update(oalesPO);
+
+		// 添加操作记录
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_CANCEL, userId, "取消外销单", beforeStatus, oalesPO.getStatus());
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void confirmOales(OalesVO oalesVO) throws FLException {
+	public void confirmOales(OalesVO oalesVO, String userId) throws FLException {
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
@@ -270,10 +289,14 @@ public class OalesServiceImpl implements OalesService {
 			throw new FLException(370022, "外销单状态不可操作");
 		}
 
+		short beforeStatus = oalesPO.getStatus();
 		oalesPO.setStatus(OalesPO.STATUS_CONFIRM_INI);
 		oalesPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 
 		oalesDao.update(oalesPO);
+
+		// 添加操作记录
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_CONFIRM, userId, "确认外销单", beforeStatus, oalesPO.getStatus());
 	}
 
 	@Override
@@ -292,15 +315,20 @@ public class OalesServiceImpl implements OalesService {
 
 		UserPO checker = userDao.queryUserByUserId(userId);
 
+		short beforeStatus = oalesPO.getStatus();
 		oalesPO.setStatus(OalesPO.STATUS_REJECT_INT);
 		oalesPO.setChecker(checker);
 
 		oalesDao.update(oalesPO);
+
+		// 添加操作记录
+		String comment = oalesVO.getComment() != null ? oalesVO.getComment() : "驳回外销单";
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_REJECT, userId, comment, beforeStatus, oalesPO.getStatus());
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void checkOales(List<OalesVO> oaleses) throws FLException {
+	public void checkOales(List<OalesVO> oaleses, String userId) throws FLException {
 
 		for (OalesVO oalesVO : oaleses) {
 
@@ -314,17 +342,21 @@ public class OalesServiceImpl implements OalesService {
 				continue;
 			}
 
+			short beforeStatus = oalesPO.getStatus();
 			oalesPO.setStatus(OalesPO.STATUS_CHECK_INT);
 
 			oalesPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
 
 			oalesDao.update(oalesPO);
+
+			// 添加操作记录
+			oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_CHECK, userId, "复核外销单", beforeStatus, oalesPO.getStatus());
 		}
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void finishOales(OalesVO oalesVO) throws FLException {
+	public void finishOales(OalesVO oalesVO, String userId) throws FLException {
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
@@ -336,15 +368,19 @@ public class OalesServiceImpl implements OalesService {
 			throw new FLException(370022, "外销单状态不可操作");
 		}
 
+		short beforeStatus = oalesPO.getStatus();
 		oalesPO.setStatus(OalesPO.STATUS_FINISH_INI);
 		oalesPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 
 		oalesDao.update(oalesPO);
+
+		// 添加操作记录
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_FINISH, userId, "完结外销单", beforeStatus, oalesPO.getStatus());
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void abateOales(OalesVO oalesVO) throws FLException {
+	public void abateOales(OalesVO oalesVO, String userId) throws FLException {
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
@@ -352,9 +388,13 @@ public class OalesServiceImpl implements OalesService {
 			throw new FLException(370021, "外销单不存在");
 		}
 
+		short beforeStatus = oalesPO.getStatus();
 		oalesPO.setStatus(OalesPO.STATUS_INVALID_INI);
 
 		oalesDao.update(oalesPO);
+
+		// 添加操作记录
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_ABATE, userId, "废单", beforeStatus, oalesPO.getStatus());
 	}
 
 	@Override
@@ -406,11 +446,17 @@ public class OalesServiceImpl implements OalesService {
 		oalesRO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		oalesDao.save(oalesRO);
+
+		// 添加操作记录（原外销单）
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_REFUND, userId, "创建退款单");
+
+		// 添加操作记录（新退款单）
+		oalesRecordService.addOalesRecord(oalesRO.getOid(), OalesRecordPO.TYPE_ADD, userId, "新增退款外销单");
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void scaleOales(OalesVO oalesVO) throws FLException {
+	public void scaleOales(OalesVO oalesVO, String userId) throws FLException {
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
@@ -421,11 +467,14 @@ public class OalesServiceImpl implements OalesService {
 		oalesPO.setIsScale(OalesPO.ISSCALE_MATCH_INT);
 
 		oalesDao.update(oalesPO);
+
+		// 添加操作记录
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_UPDATE, userId, "标记已对账");
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteOales(OalesVO oalesVO) throws FLException {
+	public void deleteOales(OalesVO oalesVO, String userId) throws FLException {
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
@@ -441,12 +490,16 @@ public class OalesServiceImpl implements OalesService {
 			throw new FLException(370027, "外销付款已存在");
 		}
 
+		long oid = oalesPO.getOid();
 		oalesDao.delete(oalesPO);
+
+		// 添加操作记录
+		oalesRecordService.addOalesRecord(oid, OalesRecordPO.TYPE_DELETE, userId, "删除外销单");
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void activityOales(OalesVO oalesVO) throws FLException {
+	public void activityOales(OalesVO oalesVO, String userId) throws FLException {
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
@@ -457,6 +510,10 @@ public class OalesServiceImpl implements OalesService {
 		oalesPO.setIsActivity(oalesVO.getIsActivity());
 
 		oalesDao.update(oalesPO);
+
+		// 添加操作记录
+		String activity = oalesVO.getIsActivity() == OalesPO.ISACTIVITY_YES_INT ? "参与活动" : "不参与活动";
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_ACTIVITY, userId, activity);
 	}
 
 }

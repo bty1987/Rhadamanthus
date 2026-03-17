@@ -15,10 +15,10 @@ public interface OalesPayService {
 
 	public int addOalesPay(OalesPayVO oalesPayVO, String userId, int company) throws FLException;
 
-	public int updateOalesPay(OalesPayVO oalesPayVO) throws FLException;
+	public int updateOalesPay(OalesPayVO oalesPayVO, String userId) throws FLException;
 
-	public int updateOalesPayForAdvance(OalesPayVO oalesPay) throws FLException;
+	public int updateOalesPayForAdvance(OalesPayVO oalesPay, String userId) throws FLException;
 
-	public int deleteOalesPay(OalesPayVO oalesPayVO) throws FLException;
+	public int deleteOalesPay(OalesPayVO oalesPayVO, String userId) throws FLException;
 
 }
