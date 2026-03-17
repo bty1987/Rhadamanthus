@@ -144,11 +144,22 @@ jQuery(function($) {
                 var ele = $(this);
                 var checked = ele.prop("checked");
 
+                // 验证 role.rid 是否已设置
+                if (!role.rid) {
+                    com.showAlert(com.warning, '请先选择要配置的角色');
+                    ele.prop("checked", !checked); // 恢复复选框状态
+                    return false;
+                }
+
                 com.post(checked ? api.communion.updateRoleTask : api.communion.deleteRoleTask, {
                     "role.rid": role.rid,
                     'task.tid': ele.val()
                 }, function(res) {
-
+                    // 成功时不做处理，复选框状态已正确
+                }, function(res) {
+                    // 失败时恢复复选框状态
+                    ele.prop("checked", !checked);
+                    com.showAlert(com.error, res.errorMsg || '操作失败');
                 });
             })
 

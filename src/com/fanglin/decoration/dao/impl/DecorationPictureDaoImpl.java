@@ -31,7 +31,11 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPicturePO> queryDecorationPictureByOrderId(String orderId) {
-		return createCriteria(DecorationPicturePO.class).add(Restrictions.eq(DecorationPicturePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(DecorationPicturePO.COLUMN_STATUS_STR, DecorationPicturePO.STATUS_ENABLE_INT)).list();
+		return createCriteria(DecorationPicturePO.class)
+				.add(Restrictions.eq(DecorationPicturePO.COLUMN_ORDERID_STR, orderId))
+				.add(Restrictions.in(DecorationPicturePO.COLUMN_STATUS_STR,
+						new Short[]{DecorationPicturePO.STATUS_ENABLE_INT, DecorationPicturePO.STATUS_CONFIRM_SHOW_INT}))
+				.list();
 	}
 
 	@Override
