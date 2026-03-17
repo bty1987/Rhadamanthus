@@ -379,6 +379,44 @@ $.extend(api, {
             url: "deleteOalesPay.do"
         },
 
+        // ==================== OalesItem - 外销单项目明细 ====================
+        pageOalesItem: {
+            url: "pageOalesItem.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["price", "num", "total"]
+            }]
+        },
+        queryOalesItem: {
+            url: "queryOalesItem.do",
+            type: "query",
+            tranargs: [{
+                result: "oalesItems",
+                args: ["price", "num", "total"]
+            }]
+        },
+        addOalesItem: {
+            url: "addOalesItem.do",
+            intercept: true,
+            type: "update",
+            tranargs: {
+                args: ["oales.total", "oalesItem.price", "oalesItem.num", "oalesItem.total"],
+                query: [{
+                    result: "oalesItem",
+                    args: ["price", "num", "total"]
+                }]
+            }
+        },
+        deleteOalesItem: {
+            url: "deleteOalesItem.do",
+            intercept: true,
+            type: "update",
+            tranargs: {
+                args: ["oales.total"]
+            }
+        },
+
         pageSalesBalance: {
             url: "pageSalesBalance.do",
             type: "query",
