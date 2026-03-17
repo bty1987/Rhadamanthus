@@ -924,12 +924,16 @@ jQuery(function($) {
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
 
-            com.post(api.sales.deleteSalesPicture, {
-                "salesPicture.spid": value.spid
-            }, function(res) {
+            com.showConfirm("确认删除该图片?", function() {
+                com.post(api.sales.deleteSalesPicture, {
+                    "salesPicture.spid": value.spid
+                }, function(res) {
 
-                com.focusPage("#gallery_li" + value.spid).remove();
+                    com.focusPage("#gallery_li" + value.spid).remove();
+                    com.showAlert(com.info, "删除成功");
+                });
             });
+            return false;
         }).appendTo(toolsDiv);
         
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
