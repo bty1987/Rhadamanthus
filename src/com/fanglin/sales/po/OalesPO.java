@@ -61,6 +61,10 @@ public class OalesPO implements Serializable {
 
 	public static final short ISSCALE_MATCH_INT = 1;
 
+	public static final short ISACTIVITY_YES_INT = 0; // 参与活动
+
+	public static final short ISACTIVITY_NO_INT = 1; // 不参与活动
+
 	private long oid;
 
 	private String no;
@@ -110,6 +114,8 @@ public class OalesPO implements Serializable {
 	private short accountStatus;
 
 	private short isScale;
+
+	private short isActivity;
 
 	private String comment;
 
@@ -388,6 +394,15 @@ public class OalesPO implements Serializable {
 
 	public void setIsScale(short isScale) {
 		this.isScale = isScale;
+	}
+
+	@Column(name = "isActivity")
+	public short getIsActivity() {
+		return isActivity;
+	}
+
+	public void setIsActivity(short isActivity) {
+		this.isActivity = isActivity;
 	}
 
 	@Column(name = "comment")

@@ -41,4 +41,6 @@ public interface OalesService {
 
 	public void deleteOales(OalesVO oalesVO) throws FLException;
 
+	public void activityOales(OalesVO oalesVO) throws FLException;
+
 }

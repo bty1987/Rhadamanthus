@@ -160,6 +160,14 @@ public class OalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "activityOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String activityOales() throws FLException {
+
+		oalesService.activityOales(oales);
+
+		return SUCCESS;
+	}
+
 	public OalesVO getOales() {
 		return oales;
 	}
