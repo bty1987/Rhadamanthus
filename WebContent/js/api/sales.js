@@ -31,6 +31,9 @@ $.extend(api.index, {
     },
     salesProfile2print: {
         url: "/views/sales/salesProfile2print.html"
+    },
+    oalesItemIndex: {
+        url: "views/sales/oalesItem.html"
     }
 });
 

@@ -614,6 +614,22 @@ jQuery(function($) {
             return oales.pageType != "account";
         }
     }, {
+        name: "查看项目",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            // 跳转到外销项页面，传递oid参数
+            params.urlLoadParams = {
+                oid: v.oid
+            };
+            com.switchPage(api.index.oalesItemIndex.url);
+        },
+        show: function(v) {
+
+            // 所有状态都可以查看项目
+            return true;
+        }
+    }, {
         name: "对账",
         clazz: "btn-info",
         handle: function(v) {
