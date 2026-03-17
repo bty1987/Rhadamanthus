@@ -11,7 +11,7 @@ jQuery(function($) {
 
 	// 加载统计信息
 	function loadStatistics() {
-		com.post(api.quotationAssign.getAssignRequestStatistics, {
+		com.post(api.quotation.getAssignRequestStatistics, {
 			"company": params.userInfo.company.cid,
 			"department": params.userInfo.user.department
 		}, function(res) {
@@ -25,7 +25,7 @@ jQuery(function($) {
 
 	// 加载列表
 	function loadList() {
-		com.post(api.quotationAssign.pageAssignRequest, {
+		com.post(api.quotation.pageAssignRequest, {
 			"assignRequest.company": params.userInfo.company.cid,
 			"assignRequest.department": params.userInfo.user.department,
 			"assignRequest.status": $('#statusSelect').val(),
@@ -138,7 +138,7 @@ jQuery(function($) {
 
 	// 加载可用预算员
 	function loadAvailableBudgetUsers() {
-		com.post(api.quotationAssign.pageAvailableBudgetUsers, {
+		com.post(api.quotation.pageAvailableBudgetUsers, {
 			"company": params.userInfo.company.cid,
 			"department": params.userInfo.user.department,
 			"page.pageNo": 1,
@@ -177,7 +177,7 @@ jQuery(function($) {
 			return false;
 		}
 
-		com.post(api.quotationAssign.manualProcessPendingRequest, {
+		com.post(api.quotation.manualProcessPendingRequest, {
 			"barid": barid,
 			"budgetUid": budgetUid
 		}, function(res) {
@@ -194,7 +194,7 @@ jQuery(function($) {
 	// 取消请求
 	function cancelRequest(barid) {
 		com.showConfirm('确认取消该分配请求？', function() {
-			com.post(api.quotationAssign.cancelAssignRequest, {
+			com.post(api.quotation.cancelAssignRequest, {
 				"barid": barid
 			}, function(res) {
 				if (res.success) {
@@ -221,7 +221,7 @@ jQuery(function($) {
 		var barid = $('#priorityBarid').val();
 		var priority = parseInt($('#prioritySelect').val());
 
-		com.post(api.quotationAssign.updateAssignRequestPriority, {
+		com.post(api.quotation.updateAssignRequestPriority, {
 			"barid": barid,
 			"priority": priority
 		}, function(res) {
@@ -248,7 +248,7 @@ jQuery(function($) {
 		}
 
 		com.showConfirm('确认取消选中的 ' + barids.length + ' 条请求？', function() {
-			com.post(api.quotationAssign.batchCancelAssignRequests, {
+			com.post(api.quotation.batchCancelAssignRequests, {
 				"barids": barids
 			}, function(res) {
 				if (res.success) {
@@ -264,7 +264,7 @@ jQuery(function($) {
 	// 清除已完成请求
 	function clearCompleted() {
 		com.showConfirm('确认清除7天前的已完成请求？', function() {
-			com.post(api.quotationAssign.clearCompletedRequests, {
+			com.post(api.quotation.clearCompletedRequests, {
 				"company": params.userInfo.company.cid,
 				"department": params.userInfo.user.department,
 				"days": 7
