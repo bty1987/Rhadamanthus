@@ -8,6 +8,7 @@ jQuery(function($) {
             approveModal: com.focusPage("#approveModal"),
             directApproveModal: com.focusPage("#directApproveModal"),
             firstApproveModal: com.focusPage("#firstApproveModal"),
+            directFirstApproveModal: com.focusPage("#directFirstApproveModal"),
             belongApproveModal: com.focusPage("#belongApproveModal"),
             QRcodeModal: com.focusPage("#QRcodeModal"),
             configModal: com.focusPage("#configModal"),
@@ -97,6 +98,23 @@ jQuery(function($) {
             phone: com.focusPage("#phone", "#firstApproveModal")
         },
 
+        directFirstApproveItems: {
+            villageName: com.focusPage("#directFirstVillageName", "#directFirstApproveModal"),
+            villageRule: com.focusPage("#directFirstVillageRule", "#directFirstApproveModal"),
+            built: com.focusPage("#directFirstBuilt", "#directFirstApproveModal"),
+            unit: com.focusPage("#directFirstUnit", "#directFirstApproveModal"),
+            floor: com.focusPage("#directFirstFloor", "#directFirstApproveModal"),
+            door: com.focusPage("#directFirstDoor", "#directFirstApproveModal"),
+            builtrule: com.focusPage("#directFirstBuiltrule", "#directFirstApproveModal"),
+            unitrule: com.focusPage("#directFirstUnitrule", "#directFirstApproveModal"),
+            floorrule: com.focusPage("#directFirstFloorrule", "#directFirstApproveModal"),
+            doorrule: com.focusPage("#directFirstDoorrule", "#directFirstApproveModal"),
+            rule: com.focusPage("#directFirstRule", "#directFirstApproveModal"),
+            busitype: com.focusPage("#directFirstBusitype", "#directFirstApproveModal"),
+            rate: com.focusPage("#directFirstRate", "#directFirstApproveModal"),
+            phone: com.focusPage("#directFirstPhone", "#directFirstApproveModal")
+        },
+
         belongItems: {
             belongApproveComment: com.focusPage("#belongApproveComment", "#belongApproveModal"),
         },
@@ -106,6 +124,7 @@ jQuery(function($) {
             changeBtn: com.focusPage("#changeBtn", "#changeModal").on("click", change),
             approveBtn: com.focusPage("#approvalBtn", "#approveModal").on("click", approval),
             directApproveConfirmBtn: com.focusPage("#directApproveConfirmBtn", "#directApproveModal").on("click", directApproveConfirm),
+            directFirstApproveConfirmBtn: com.focusPage("#directFirstApproveConfirmBtn", "#directFirstApproveModal").on("click", directFirstApproveConfirm),
             firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#firstApproveModal").on("click", firstApproval),
             belongApprovalBtn: com.focusPage("#belongApprovalBtn", "#belongApproveModal").on("click", belongApproval),
             updateBtn: com.focusPage("#updateBtn", "#updateModal").on("click", update),
@@ -874,6 +893,41 @@ jQuery(function($) {
             return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && (customerChance.depage == "user" || customerChance.depage == "designer") && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2 && customerChance.detype == null;
         },
     }, {
+        name: "直接初审",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            com.cleanTypeahead("directFirstVillageName");
+            com.cleanItems(customerChance.directFirstApproveItems);
+
+            customerChance.ccid = v.ccid;
+            customerChance.source.csid = v.source.csid;
+            customerChance.source.name = v.source.name;
+            customerChance.source.gender = v.source.gender;
+
+            var village = (v.house.village && v.house.village.vid) ? v.house.village : v.source.village;
+
+            if (village && village.parentVillage && village.parentVillage.vid) {
+                com.focusPage("#directFirstVillageName", "#directFirstApproveModal").typeahead("args", {
+                    "village.parentVillage.vid": village.parentVillage.vid
+                });
+            }
+
+            if (village && village.vid) {
+                com.updateTypeahead(customerChance.directFirstApproveItems.villageName, village.no, village.name);
+            }
+
+            customerChance.directFirstApproveItems.busitype.val(v.busitype.dbid);
+
+            customerChance.modals.directFirstApproveModal.modal("show");
+
+            return false;
+        },
+        show: function(v) {
+
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && (customerChance.depage == "user" || customerChance.depage == "designer") && customerChance.detype == null;
+        },
+    }, {
         name: "审批",
         clazz: "btn-danger",
         handle: function(v) {
@@ -1206,7 +1260,7 @@ jQuery(function($) {
             "customerChance.ccid": customerChance.ccid
         };
 
-        com.post(api.customer.approveCustomerChance, option, function(res) {
+        com.post(api.customer.tranCustomerChance, option, function(res) {
 
             com.showAlert(com.info, "操作成功");
 
@@ -1214,6 +1268,42 @@ jQuery(function($) {
             searcher.doSearch();
 
             customerChance.modals.directApproveModal.modal("hide");
+        });
+    }
+
+    // 直接初审确认函数
+    function directFirstApproveConfirm() {
+
+        if (com.validate("directFirstApproveModal")) {
+            return false;
+        }
+
+        var hid = checkHouse(customerChance.directFirstApproveItems);
+
+        if (!hid)
+            return false;
+
+        var cid = checkCustomer(customerChance.directFirstApproveItems);
+
+        if (!cid)
+            return false;
+
+        var option = {
+            "customerChance.ccid": customerChance.ccid,
+            "customerChance.house.hid": hid,
+            "customerChance.customer.cid": cid,
+            "customerChance.busitype.dbid": customerChance.directFirstApproveItems.busitype.val(),
+            "customerChance.rate": 0
+        };
+
+        com.post(api.customer.approveCustomerChance, option, function(res) {
+
+            com.showAlert(com.info, "直接初审成功");
+
+            com.clearValidator();
+            searcher.doSearch();
+
+            customerChance.modals.directFirstApproveModal.modal("hide");
         });
     }
 
