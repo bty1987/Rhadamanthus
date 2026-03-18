@@ -24,6 +24,14 @@ jQuery(function($) {
     searcher.condition(conditions);
     searcher.param(options);
 
+    // 添加创建外销项按钮
+    searcher.button([{
+        id: "oalesItemAddBtn",
+        name: "创建外销项",
+        clazz: "btn-success",
+        icon: "icon-plus"
+    }]);
+
     var lineprops = [{
         field: "oiid",
         type: "checkbox",
@@ -104,7 +112,7 @@ jQuery(function($) {
     searcher.line("no", lineprops, linebtns).render();
 
     // 创建外销项按钮点击事件
-    com.focusPage('#oalesItemAddBtn').on('click', function() {
+    com.focusPage('#oalesItemAddBtn', '#oalesItemPagenation').on('click', function() {
 
         // 清空表单
         com.focusPage('#oalesItemForm')[0].reset();
