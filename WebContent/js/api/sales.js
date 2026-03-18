@@ -34,6 +34,9 @@ $.extend(api.index, {
     },
     oalesItemIndex: {
         url: "views/sales/oalesItem.html"
+    },
+    oalesRecordIndex: {
+        url: "views/sales/oalesRecord.html"
     }
 });
 
@@ -421,6 +424,14 @@ $.extend(api, {
             tranargs: {
                 args: ["oales.total"]
             }
+        },
+        pageOalesRecord: {
+            url: "pageOalesRecord.do",
+            result: "paging-data-oalesRecord"
+        },
+        queryOalesRecordByOid: {
+            url: "queryOalesRecordByOid.do",
+            result: "oalesRecords"
         },
 
         pageSalesBalance: {
