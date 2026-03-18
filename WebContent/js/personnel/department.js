@@ -7,6 +7,7 @@
             name: com.focusPage("#deptName"),
             fatherdept: com.focusPage("#fatherdept"),// 部门
             deptype: com.focusPage("#deptype"),// 部门类型
+            busitype: com.focusPage("#busitype"),// 业务类型
             kino: com.focusPage("#kino"),
             kiname: com.focusPage("#kiname"),
             manager: com.focusPage("#manager"),
@@ -54,6 +55,11 @@
         department.items.deptype.bindData(res.departmentTypes, "dtid", "name", true);
     });
 
+    com.post(api.data.queryDecorationBusitype, {}, function(res) {
+
+        department.items.busitype.bindData(res.decorationBusitypes, "dbid", "name", true);
+    });
+
     com.initTypeahead('manager', api.personel.queryUserByPinyin, "pinyinName", {
         "departmentType.name": "",
         "user.status": 0
@@ -92,7 +98,7 @@
             var $span = $('<span></span>').addClass('lbl isOrNot');
             var $btnDutment = $('<a></a>').addClass('btn btn-minier btn-blue').html('定岗');
 
-            var propertyArr = [["编号:", v.no, "grey"], ["所属分区:", v.fatherDept.name == null ? '无' : v.fatherDept.name, "grey"], ["创建时间:", v.createTime, "green"], ["金蝶编号:", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"], ["管理人员:", com.checkNull(v.manager.userName, "无"), "grey"], ["是否定岗:", com.checkNull(v.isdet == 1 ? "定岗" : "开放"), "red"], ["人员数量上限:", v.limit, "blue"], ["描述:", v.comment == "" ? '无' : v.comment, "grey"], ["code:", v.code == null ? '无' : v.code, "grey"]];
+            var propertyArr = [["编号:", v.no, "grey"], ["所属分区:", v.fatherDept.name == null ? '无' : v.fatherDept.name, "grey"], ["创建时间:", v.createTime, "green"], ["金蝶编号:", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"], ["管理人员:", com.checkNull(v.manager.userName, "无"), "grey"], ["是否定岗:", com.checkNull(v.isdet == 1 ? "定岗" : "开放"), "red"], ["人员数量上限:", v.limit, "blue"], ["描述:", v.comment == "" ? '无' : v.comment, "grey"], ["code:", v.code == null ? '无' : v.code, "grey"], ["业务类型:", com.checkNull(v.busitype && v.busitype.name ? v.busitype.name : '无'), "grey"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -208,6 +214,7 @@
         department.items.did = dept.did;
         department.items.no.val(dept.no);
         department.items.deptype.val(dept.type.dtid);
+        department.items.busitype.val(dept.busitype && dept.busitype.dbid ? dept.busitype.dbid : null);
         department.items.name.val(dept.name);
         department.items.fatherdept.val(dept.fatherDept.name == null ? null : dept.fatherDept.did);
         department.items.kino.val(dept.kino);
@@ -247,6 +254,7 @@
         var options = {
             'dept.name': department.items.name.val(),
             'dept.type.dtid': department.items.deptype.val(),
+            'dept.busitype.dbid': department.items.busitype.val() ? department.items.busitype.val() : null,
             'dept.fatherDept.did': department.items.fatherdept.val() ? department.items.fatherdept.val() : null,
             'dept.kino': department.items.kino.val(),
             'dept.kiname': department.items.kiname.val(),

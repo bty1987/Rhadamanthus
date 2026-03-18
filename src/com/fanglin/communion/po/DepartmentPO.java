@@ -26,6 +26,8 @@ import javax.persistence.Table;
 
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.data.po.DecorationBusitypePO;
+import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
@@ -69,6 +71,8 @@ public class DepartmentPO implements Serializable {
 	private String pinyin;
 
 	private DepartmentTypePO type;
+
+	private DecorationBusitypePO busitype;
 
 	private DepartmentPO fatherDept;
 
@@ -186,6 +190,16 @@ public class DepartmentPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "busitype", referencedColumnName = "dbid")
+	public DecorationBusitypePO getBusitype() {
+		return busitype;
+	}
+
+	public void setBusitype(DecorationBusitypePO busitype) {
+		this.busitype = busitype;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fdid", referencedColumnName = "did")
 	public DepartmentPO getFatherDept() {
 		return fatherDept;
@@ -288,12 +302,16 @@ public class DepartmentPO implements Serializable {
 
 	public DepartmentVO ptv() {
 
-		DepartmentVO departmentVO = new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO());
+		DepartmentVO departmentVO = new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO(), new DecorationBusitypeVO());
 
-		BeanUtil.copyProperties(this, departmentVO, Arrays.asList("fatherDept", "type", "manager"));
+		BeanUtil.copyProperties(this, departmentVO, Arrays.asList("fatherDept", "type", "manager", "busitype"));
 
 		if (getType() != null) {
 			BeanUtil.copyProperties(getType(), departmentVO.getType());
+		}
+
+		if (getBusitype() != null && departmentVO.getBusitype() != null) {
+			BeanUtil.copyProperties(getBusitype(), departmentVO.getBusitype());
 		}
 
 		if (getFatherDept() != null) {
@@ -307,9 +325,10 @@ public class DepartmentPO implements Serializable {
 
 	public DepartmentVO ptv(DepartmentVO departmentVO) {
 
-		BeanUtil.copyProperties(this, departmentVO, Arrays.asList("fatherDept", "type", "manager"));
+		BeanUtil.copyProperties(this, departmentVO, Arrays.asList("fatherDept", "type", "manager", "busitype"));
 
 		if (getType() != null && departmentVO.getType() != null) getType().ptv(departmentVO.getType());
+		if (getBusitype() != null && departmentVO.getBusitype() != null) getBusitype().ptv(departmentVO.getBusitype());
 		if (getFatherDept() != null && departmentVO.getFatherDept() != null) getFatherDept().ptv(departmentVO.getFatherDept());
 		if (departmentVO.getManager() != null && getManager() != null && getManager().getUid() != 0) departmentVO.getManager().setBaseInfo(getManager());
 
