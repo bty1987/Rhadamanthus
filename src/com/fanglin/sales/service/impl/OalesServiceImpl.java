@@ -464,12 +464,14 @@ public class OalesServiceImpl implements OalesService {
 			throw new FLException(370021, "外销单不存在");
 		}
 
-		oalesPO.setIsScale(OalesPO.ISSCALE_MATCH_INT);
+		// 使用前端传递的参数设置配比状态
+		oalesPO.setIsScale(oalesVO.getIsScale());
 
 		oalesDao.update(oalesPO);
 
 		// 添加操作记录
-		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_UPDATE, userId, "标记已对账");
+		String scale = oalesVO.getIsScale() == OalesPO.ISSCALE_SCALE_INT ? "需配比" : "不需配比";
+		oalesRecordService.addOalesRecord(oalesPO.getOid(), OalesRecordPO.TYPE_UPDATE, userId, "更新配比状态：" + scale);
 	}
 
 	@Override

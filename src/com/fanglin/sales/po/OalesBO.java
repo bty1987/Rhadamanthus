@@ -58,9 +58,9 @@ public class OalesBO implements Serializable {
 
 	public static final short TYPE_REFUND_INT = 1;
 
-	public static final short ISSCALE_INIT_INT = 0;
+	public static final short ISSCALE_SCALE_INT = 0;  // 需配比
 
-	public static final short ISSCALE_MATCH_INT = 1;
+	public static final short ISSCALE_NONE_INT = 1;   // 不需配比
 
 	private long oid;
 
