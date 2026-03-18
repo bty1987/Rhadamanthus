@@ -194,9 +194,9 @@ $(function() {
             tools.personel.info(btn, v.selectionItem.decoration.supervisor.userId);
         }
     }, {
-        fieId: "selectionItem.decoration.procontracttime",
+        fieId: "selectionItem.decoration.precontractTime",
         name: "预签时间",
-        prop: "selectionItem.decoration.procontracttime",
+        prop: "selectionItem.decoration.precontractTime",
         clazz: "green"
     }];
 
@@ -367,7 +367,7 @@ $(function() {
                 ['结算人', 'selectionItem.balancer.currentName'], //
                 ['拆单时间', 'selectionItem.createTime'], //
                 ['结算时间', 'selectionItem.balanceTime'], //
-                ['预签时间', 'selectionItem.decoration.procontracttime']],
+                ['预签时间', 'selectionItem.decoration.precontractTime']],
                 list: res.paging.data
             }, function(v) {
 

@@ -183,8 +183,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		String phone = FormatUtil.encodePhone(customerSourceVO.getPhone());
 
-		if (customerSourceDao.queryCustomerSource(creater.getUid(), phone, company) != null) {
-			throw new FLException(330071, "客户手机号存在,发生撞尺");
+		CustomerSourcePO customerSourcePP = customerSourceDao.queryCustomerSource(creater.getUid(), phone, company);
+
+		if (customerSourcePP != null) {
+			// throw new FLException(330071, "客户手机号存在,发生撞尺");
+			customerSourceVO.setCsid(customerSourcePP.getCsid());
+			return;
 		}
 
 		if (customerSourceVO.getBusitype() == null || customerSourceVO.getBusitype().getDbid() == null) {
