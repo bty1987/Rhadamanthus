@@ -1008,5 +1008,196 @@ Condition.addupRule("quotation", {
             op: "eq",
             validate: null
         }
+    },
+
+    // ==================== 报价预算员分配相关条件 ====================
+
+    // 预算员规则 - 状态
+    "budgetUserRule-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "budgetUserRule.status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "1",
+                value: "可用"
+            }, {
+                key: "2",
+                value: "忙碌"
+            }, {
+                key: "3",
+                value: "已停用"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 预算员规则 - 姓名
+    "budgetUserRule-userName": {
+        label: "姓名",
+        type: "text",
+        submitConfig: {
+            name: "budgetUserRule.userName",
+            op: "cn",
+            validate: null
+        }
+    },
+
+    // 待分配队列 - 状态
+    "assignRequest-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "assignRequest.status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "1",
+                value: "待处理"
+            }, {
+                key: "2",
+                value: "处理中"
+            }, {
+                key: "3",
+                value: "已完成"
+            }, {
+                key: "4",
+                value: "已取消"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 待分配队列 - 优先级
+    "assignRequest-priority": {
+        label: "优先级",
+        type: "select",
+        submitConfig: {
+            name: "assignRequest.priority",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "1",
+                value: "最高"
+            }, {
+                key: "2",
+                value: "高"
+            }, {
+                key: "3",
+                value: "普通"
+            }, {
+                key: "4",
+                value: "低"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 待分配队列 - 装修单号
+    "assignRequest-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "assignRequest.orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确，仅支持A-Z,0-9"
+            }
+        }
+    },
+
+    // ==================== 预算配置管理相关条件 ====================
+
+    // 预算配置 - 公司
+    "assignConfig-company": {
+        label: "公司",
+        type: "select",
+        submitConfig: {
+            name: "company",
+            op: "eq",
+            alone: true,
+            validate: null
+        },
+        dataSource: {
+            url: api.system.queryCompanyForOption,
+            postData: {},
+            listPath: "companies",
+            keyPath: "cid",
+            valuePath: "name"
+        }
+    },
+
+    // 预算配置 - 启用状态
+    "assignConfig-enabled": {
+        label: "启用状态",
+        type: "select",
+        submitConfig: {
+            name: "enabled",
+            op: "eq",
+            alone: true,
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "",
+                value: "全部"
+            }, {
+                key: "1",
+                value: "已启用"
+            }, {
+                key: "0",
+                value: "已禁用"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 预算配置 - 分配方式
+    "assignConfig-autoAssign": {
+        label: "分配方式",
+        type: "select",
+        submitConfig: {
+            name: "autoAssign",
+            op: "eq",
+            alone: true,
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "",
+                value: "全部"
+            }, {
+                key: "1",
+                value: "自动分配"
+            }, {
+                key: "0",
+                value: "手动分配"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
     }
 });
