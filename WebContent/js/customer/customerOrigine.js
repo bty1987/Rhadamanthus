@@ -9,7 +9,6 @@ $(function() {
         belongerBtn: com.focusPage("#belongerBtn", "#customerOrigine"),
         saveBtn: com.focusPage("#saveBtn", "#customerOrigine"),
         cancelBtn1: com.focusPage("#cancelBtn1", "#customerOrigine"),
-        directFirstApproveBtn: com.focusPage("#directFirstApproveBtn", "#customerOrigine"),
         directTranBtn: com.focusPage("#directTranBtn", "#customerOrigine"),
 
         modals: {
@@ -20,7 +19,6 @@ $(function() {
             commitFirstApprove: com.focusPage("#commitFirstApprove", "#customerOrigine"),
             customerorigineforbelonger: com.focusPage("#customerorigineforbelonger", "#customerOrigine"),
             createSourceModal: com.focusPage("#createsource", "#customerOrigine"),
-            directFirstApproveModal: com.focusPage("#directFirstApproveModal", "#customerOrigine"),
             directTranModal: com.focusPage("#directTranModal", "#customerOrigine"),
         },
 
@@ -76,18 +74,6 @@ $(function() {
 
             firstApproveComment: com.focusPage("#firstApproveComment", "#customerOrigine"),
 
-            directFirstApproveComment: com.focusPage("#directFirstApproveComment", "#customerOrigine"),
-            directVillageNoDesiger: com.focusPage("#directVillageNoDesiger", "#customerOrigine"),
-            directHouseNumberApprove: com.focusPage("#directHouseNumberApprove", "#customerOrigine"),
-            directNameApprove: com.focusPage("#directNameApprove", "#customerOrigine"),
-            directPhoneApprove: com.focusPage("#directPhoneApprove", "#customerOrigine"),
-            directSalesman: com.focusPage("#directSalesman", "#customerOrigine"),
-            directSalesmanType: com.focusPage("#directSalesmanType", "#customerOrigine"),
-            directHouseType: com.focusPage("#directHouseType", "#customerOrigine"),
-            directHouseClass: com.focusPage("#directHouseClass", "#customerOrigine"),
-            directOrderType: com.focusPage("#directOrderType", "#customerOrigine"),
-            directResourceType: com.focusPage("#directResourceType", "#customerOrigine"),
-
             name1: com.focusPage("#name1", "#customerOrigine"),
             gender1: com.focusPage("#gender1", "#customerOrigine"),
             phone1: com.focusPage("#phone1", "#customerOrigine"),
@@ -130,7 +116,6 @@ $(function() {
     customerOrigine.belongerBtn.bindClick(editBelonger);
     customerOrigine.saveBtn.bindClick(saveDate);
     customerOrigine.cancelBtn1.bindClick(deleteDate);
-    customerOrigine.directFirstApproveBtn.bindClick(directFirstApproveConfirm);
     customerOrigine.directTranBtn.bindClick(directTranConfirm);
 
     customerOrigine.items.gender.switchBtn("gender");
@@ -450,10 +435,21 @@ $(function() {
 
             // 直接初审（不走审批流程）
             $directFirst.click(function() {
-                customerOrigine.currentCustomerOrigine = v;
-                com.clearValidator();
-                com.focusPage("#directFirstApproveComment").val("");
-                com.focusPage("#directFirstApproveModal").modal("show");
+
+                com.showConfirm("是否确认直接初审该客源？", function() {
+
+                    com.post(api.customer.approveCustomerOrigin, {
+                        "customerOrigin.csid": v.csid
+                    }, function(res) {
+
+                        if (res.errorCode == 0) {
+                            com.showAlert(com.info, "直接初审成功！");
+                            searcher.doSearch();
+                        } else {
+                            com.showAlert(com.error, "直接初审失败：" + res.errorMsg);
+                        }
+                    });
+                });
             });
 
             // 撤销
@@ -873,26 +869,6 @@ $(function() {
                     com.showAlert(com.error, "提交失败");
                 }
             });
-        });
-    }
-
-    // 直接初审确认
-    function directFirstApproveConfirm() {
-
-        var option = {
-            "customerOrigin.csid": customerOrigine.currentCustomerOrigine.csid
-        };
-
-        com.post(api.customer.approveCustomerOrigin, option, function(res) {
-
-            if (res.errorCode == 0) {
-                com.showAlert(com.info, "操作成功");
-                com.clearValidator();
-                searcher.doSearch();
-                customerOrigine.modals.directFirstApproveModal.modal("hide");
-            } else {
-                com.showAlert(com.error, "操作失败");
-            }
         });
     }
 
