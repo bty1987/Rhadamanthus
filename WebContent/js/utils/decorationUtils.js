@@ -630,6 +630,11 @@ var decorationUtils = {
 
                 var item = decorationActivityItems[i];
 
+                // 只显示线下活动（atttype=0）的数据到装修活动物品区域
+                if (item.atttype != 0) {
+                    continue;
+                }
+
                 if (item.type == 0 && [0, 2, 4, 5, 6].indexOf(item.state) != -1 && item.isPrefor == 0) {// 0卷
                     couponCut = utils.accAdd(couponCut, utils.accMul(item.money, item.num));
                 } else if (item.type == 1 && [0, 2, 4, 5, 6].indexOf(item.state) != -1 && item.isPrefor == 0) {// 物品
@@ -818,6 +823,33 @@ var decorationUtils = {
                 var totalSpan = $("<span></span>").addClass("blue").attr("id", "total_" + item.saiid).text(utils.accMul(item.money, item.num)).appendTo(totalLi);
 
                 var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetBody);
+            }
+        });
+    },
+
+    memberActivityItemInfo: function(orderId, itempack, config, wizard) {
+
+        var uiBtnMethod = wizard["uiBtnMethod"];
+
+        com.post(api.decoration.queryDecorationActivityItem, {
+            "decoration.orderId": orderId
+        }, function(res) {
+
+            var decorationActivityItems = res.decorationActivityItems;
+
+            itempack.html("");
+
+            for ( var i = 0; i < decorationActivityItems.length; i++) {
+
+                var item = decorationActivityItems[i];
+
+                // 只显示线上活动（atttype=1）的数据到会员活动物品区域
+                if (item.atttype != 1) {
+                    continue;
+                }
+
+                // 使用相同的显示逻辑
+                decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, wizard.content);
             }
         });
     },

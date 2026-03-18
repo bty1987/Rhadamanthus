@@ -314,6 +314,7 @@ jQuery(function($) {
     decorationDetail.activityItems = com.focusPage("#activityItems");
     decorationDetail.activityPriceInfo = com.focusPage("#activityPriceInfo");
     decorationDetail.salesActivityItems = com.focusPage("#salesActivityItems");
+    decorationDetail.memberActivityItems = com.focusPage("#memberActivityItems");
 
     decorationDetail.printPresignModal = com.focusPage("#printPresignModal");
     decorationDetail.printQuotationModal = com.focusPage("#printQuotationModal");
@@ -1643,6 +1644,7 @@ jQuery(function($) {
                 decorationUtils.decorationActivityInfo(decorationDetail.orderId, decorationDetail.activitys, wizard);
                 decorationUtils.decorationActivityItemInfo(decorationDetail.orderId, decorationDetail.activityPriceInfo, decorationDetail.activityItems, decorationActivity, wizard);
                 decorationUtils.salesActivityItemInfo(decorationDetail.orderId, decorationDetail.salesActivityItems, salesActivityItem, wizard);
+                decorationUtils.memberActivityItemInfo(decorationDetail.orderId, decorationDetail.memberActivityItems, wizard);
 
                 break;
             case "belong":
