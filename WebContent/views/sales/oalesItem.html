@@ -1,12 +1,83 @@
 <div id="oalesItem">
     <div class="row">
         <div class="col-xs-12">
-            <div id="condList" class="fl_search clearfix"></div>
+            <div id="oalesItemCondList" class="fl_search clearfix"></div>
             <!-- 查询条件-->
-            <div id="resultList" class="clearfix tab-pane active"></div>
+            <div class="fl-page-wrap clearfix" style="margin-bottom: 10px;">
+                <button id="oalesItemAddBtn" class="btn btn-sm btn-success pull-left">
+                    <i class="icon-plus"></i>
+                    <span>创建外销项</span>
+                </button>
+            </div>
+            <div id="oalesItemResultList" class="clearfix tab-pane active"></div>
             <!--查询结果-->
-            <div id="pagenation" class="fl-page-wrap clearfix"></div>
+            <div id="oalesItemPagenation" class="fl-page-wrap clearfix"></div>
             <!--分页-->
+        </div>
+    </div>
+
+    <!-- 创建外销项弹窗 -->
+    <div class="modal fade" id="oalesItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">创建外销项</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="oalesItemForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="oalesItemName">商品名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-5 m-wrap v_required" id="oalesItemName" name="name" placeholder="请输入商品名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="oalesItemFormat">规格</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-5 m-wrap" id="oalesItemFormat" name="format" placeholder="请输入规格">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="oalesItemColor">颜色</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-5 m-wrap" id="oalesItemColor" name="color" placeholder="请输入颜色">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="oalesItemModel">型号</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-5 m-wrap" id="oalesItemModel" name="model" placeholder="请输入型号">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="oalesItemPrice">价格（元）</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-5 m-wrap v_float_3 v_required" id="oalesItemPrice" name="price" placeholder="请输入价格">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="oalesItemNum">数量</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-5 m-wrap v_required v_integer" id="oalesItemNum" name="num" placeholder="请输入数量">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="oalesItemComment">备注</label>
+                            <div class="col-sm-9">
+                                <textarea class="col-xs-10 col-sm-5 m-wrap" id="oalesItemComment" name="comment" rows="3" placeholder="请输入备注"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="oalesItemSaveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

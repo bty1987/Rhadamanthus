@@ -19,7 +19,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", url);
+    searcher.base("oalesRecordCondList", "oalesRecordPagenation", "oalesRecordResultList", url);
     searcher.condition(conditions);
     searcher.param(options);
 
