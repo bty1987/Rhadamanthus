@@ -679,7 +679,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return oales.pageType != "account";
+            return oales.pageType == "finance";
         }
     }, {
         name: function(v) {
@@ -699,7 +699,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return oales.pageType != "account";
+            return oales.pageType == "finance";
         }
     }, ];
 
