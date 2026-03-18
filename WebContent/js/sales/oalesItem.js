@@ -2,17 +2,9 @@ jQuery(function($) {
 
     var oalesitem = {
 
-        // 页面参数
-        oid: null  // 外销单ID
+        oid: params.sales.oales.oid
+    // 外销单ID
     };
-
-    // 从URL参数获取外销单ID
-    var urlParams = com.getUrlParams();
-    if (urlParams.oid) {
-        oalesitem.oid = urlParams.oid;
-    } else if (params.urlLoadParams && params.urlLoadParams.oid) {
-        oalesitem.oid = params.urlLoadParams.oid;
-    }
 
     // 如果没有外销单ID，提示错误
     if (!oalesitem.oid) {
@@ -63,6 +55,7 @@ jQuery(function($) {
         prop: "price",
         clazz: "blue",
         format: function(v) {
+
             return com.formatMoney(v / 1000, 3);
         }
     }, {
@@ -76,6 +69,7 @@ jQuery(function($) {
         prop: "total",
         clazz: "blue",
         format: function(v) {
+
             return com.formatMoney(v / 1000, 3);
         }
     }, {
@@ -91,15 +85,18 @@ jQuery(function($) {
         handle: function(v) {
 
             com.showConfirm('确认删除该外销项吗？', function() {
+
                 com.post(api.sales.deleteOalesItem, {
                     'oalesItem.oiid': v.oiid
                 }, function(res) {
+
                     com.showAlert(com.info, '删除成功');
                     searcher.doSearch();
                 });
             });
         },
         show: function(v) {
+
             return true;
         }
     }];

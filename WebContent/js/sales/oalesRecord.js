@@ -2,17 +2,8 @@ jQuery(function($) {
 
     var oalesrecord = {
 
-        // 页面参数
-        oid: null  // 外销单ID
+        oid: params.sales.oales.oid  // 外销单ID
     };
-
-    // 从URL参数获取外销单ID
-    var urlParams = com.getUrlParams();
-    if (urlParams.oid) {
-        oalesrecord.oid = urlParams.oid;
-    } else if (params.urlLoadParams && params.urlLoadParams.oid) {
-        oalesrecord.oid = params.urlLoadParams.oid;
-    }
 
     // 如果没有外销单ID，提示错误
     if (!oalesrecord.oid) {
@@ -32,25 +23,6 @@ jQuery(function($) {
     searcher.condition(conditions);
     searcher.param(options);
 
-    // 操作类型映射
-    var typeMap = {
-        1: "新增",
-        2: "更新",
-        3: "提交",
-        4: "取消",
-        5: "确认",
-        6: "驳回",
-        7: "复核",
-        8: "完结",
-        9: "废单",
-        10: "退款",
-        11: "删除",
-        12: "活动",
-        13: "添加支付",
-        14: "更新支付",
-        15: "删除支付"
-    };
-
     var lineprops = [{
         field: "orid",
         type: "checkbox",
@@ -67,7 +39,7 @@ jQuery(function($) {
         prop: "type",
         clazz: "blue",
         format: function(v) {
-            return typeMap[v] || "未知";
+            return constant.sales().oalesRecord.type.keys[v.type] || "未知";
         }
     }, {
         field: "comment",
