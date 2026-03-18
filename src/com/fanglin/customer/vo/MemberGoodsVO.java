@@ -14,6 +14,10 @@ public class MemberGoodsVO implements Serializable {
 
 	private Integer point;
 
+	private Short isPrefor; // 是否计算业绩（0=计算, 1=不计算）
+
+	private Short isPayment; // 是否计入金额（0=计入, 1=不计入）
+
 	public String getNo() {
 		return no;
 	}
@@ -44,6 +48,22 @@ public class MemberGoodsVO implements Serializable {
 
 	public void setPoint(Integer point) {
 		this.point = point;
+	}
+
+	public Short getIsPrefor() {
+		return isPrefor;
+	}
+
+	public void setIsPrefor(Short isPrefor) {
+		this.isPrefor = isPrefor;
+	}
+
+	public Short getIsPayment() {
+		return isPayment;
+	}
+
+	public void setIsPayment(Short isPayment) {
+		this.isPayment = isPayment;
 	}
 
 }

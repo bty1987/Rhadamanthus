@@ -759,6 +759,10 @@ public class MemberServiceImpl implements MemberService {
 
 		AwardStockPO awardStockPO = awardStockDao.queryAwardStockByNo(memberGoodsVO.getNo(), CompanyPO.TYPE_HEADQUARTER_INT);
 
+		// 获取业绩和金额标识，如果未传递则默认为1（不计入）
+		short isPrefor = memberGoodsVO.getIsPrefor() != null ? memberGoodsVO.getIsPrefor() : AwardStockPO.ISPREFOR_NCAL_INT;
+		short isPayment = memberGoodsVO.getIsPayment() != null ? memberGoodsVO.getIsPayment() : AwardStockPO.ISPAYMENT_NCAL_INT;
+
 		if (awardStockPO == null) {
 
 			awardStockPO = new AwardStockPO();
@@ -769,6 +773,8 @@ public class MemberServiceImpl implements MemberService {
 			awardStockPO.setStatus(AwardStockPO.STATUS_ABLE_SHORT);
 			awardStockPO.setCompany(CompanyPO.TYPE_HEADQUARTER_INT);
 			awardStockPO.setFormat(memberGoodsVO.getCategory());
+			awardStockPO.setIsPrefor(isPrefor);
+			awardStockPO.setIsPayment(isPayment);
 
 			awardStockDao.save(awardStockPO);
 		} else {
@@ -777,6 +783,8 @@ public class MemberServiceImpl implements MemberService {
 			awardStockPO.setName(memberGoodsVO.getName());
 			awardStockPO.setUnitPrice(Arith.mul(memberGoodsVO.getPoint(), 1000000));
 			awardStockPO.setStatus(AwardStockPO.STATUS_ABLE_SHORT);
+			awardStockPO.setIsPrefor(isPrefor);
+			awardStockPO.setIsPayment(isPayment);
 
 			awardStockDao.update(awardStockPO);
 		}
