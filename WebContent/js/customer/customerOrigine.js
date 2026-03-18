@@ -74,6 +74,18 @@ $(function() {
 
             firstApproveComment: com.focusPage("#firstApproveComment", "#customerOrigine"),
 
+            // 直接转单相关字段
+            directVillageNoDesiger: com.focusPage("#directVillageNoDesiger", "#customerOrigine"),
+            directHouseNumberApprove: com.focusPage("#directHouseNumberApprove", "#customerOrigine"),
+            directNameApprove: com.focusPage("#directNameApprove", "#customerOrigine"),
+            directPhoneApprove: com.focusPage("#directPhoneApprove", "#customerOrigine"),
+            directSalesman: com.focusPage("#directSalesman", "#customerOrigine"),
+            directSalesmanType: com.focusPage("#directSalesmanType", "#customerOrigine"),
+            directHouseType: com.focusPage("#directHouseType", "#customerOrigine"),
+            directHouseClass: com.focusPage("#directHouseClass", "#customerOrigine"),
+            directOrderType: com.focusPage("#directOrderType", "#customerOrigine"),
+            directResourceType: com.focusPage("#directResourceType", "#customerOrigine"),
+
             name1: com.focusPage("#name1", "#customerOrigine"),
             gender1: com.focusPage("#gender1", "#customerOrigine"),
             phone1: com.focusPage("#phone1", "#customerOrigine"),
@@ -167,6 +179,10 @@ $(function() {
     customerOrigine.items.houseClass.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
     customerOrigine.items.resourceType.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
 
+    // 初始化直接转单弹窗的下拉框数据
+    customerOrigine.items.directHouseClass.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
+    customerOrigine.items.directResourceType.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
+
     com.post(api.data.queryDecorationAtttype, {}, function(res) {
 
         $.each(res.decorationAtttypes, function(i, v) {
@@ -179,6 +195,7 @@ $(function() {
         });
 
         customerOrigine.items.orderType.bindData(customerOrigine.decorationAtttypes, 'key', 'name', "请选择");
+        customerOrigine.items.directOrderType.bindData(customerOrigine.decorationAtttypes, 'key', 'name', "请选择");
     });
 
     com.initTypeahead('designer', api.personel.queryUserByPinyin, "pinyinName", {
@@ -220,6 +237,12 @@ $(function() {
         return v;
     });
 
+    // 初始化直接转单弹窗的 typeahead
+    com.initTypeahead('directSalesman', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0
+    }, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('directVillageNoDesiger', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", null);
+
     customerOrigine.modals.sustomerSourceModal.on("hide.bs.modal", function() {
 
         com.closeTip();
@@ -234,6 +257,12 @@ $(function() {
     });
 
     customerOrigine.modals.commitApproveModal.on("hide.bs.modal", function() {
+
+        com.closeTip();
+        com.cleanItems(customerOrigine.items);
+    });
+
+    customerOrigine.modals.directTranModal.on("hide.bs.modal", function() {
 
         com.closeTip();
         com.cleanItems(customerOrigine.items);
@@ -507,40 +536,76 @@ $(function() {
                 customerOrigine.currentCustomerOrigine = v;
                 com.clearValidator();
 
-                // 填充表单数据
-                com.focusPage("#directVillageNoDesiger").val(com.checkNull(v.villageName, ''));
-                com.updateTypeahead("directVillageNoDesiger", v.villageId, com.checkNull(v.villageName, ''));
-
-                if (v.houseNumber != null) {
-                    com.focusPage("#directHouseNumberApprove").val(v.houseNumber);
+                // 参考 $btnApproval 的表单填充逻辑
+                // 填充楼盘信息
+                if (v.village != null) {
+                    com.updateTypeahead('directVillageNoDesiger', v.village.no, v.village.name + "-" + v.village.cityProper.name);
+                } else {
+                    com.cleanTypeahead('directVillageNoDesiger');
                 }
-                com.focusPage("#directNameApprove").val(v.name);
-                com.focusPage("#directPhoneApprove").val(v.phone);
 
+                // 填充楼牌号
+                customerOrigine.items.directHouseNumberApprove.val(v.houseNumber != null ? v.houseNumber : '');
+
+                // 填充姓名和电话
+                customerOrigine.items.directNameApprove.val(v.name != null ? v.name : '');
+                customerOrigine.items.directPhoneApprove.val(v.phone != null ? v.phone : '');
+
+                // 填充业务员
                 if (v.salesman != null) {
-                    com.updateTypeahead("directSalesman", v.salesman.userId, com.checkNull(v.salesman.userName, ''));
-                }
-                if (v.decorationBusitype != null) {
-                    com.focusPage("#directSalesmanType").val(v.decorationBusitype.dbid);
+                    com.updateTypeahead("directSalesman", v.salesman.userId, v.salesman.currentName);
+                } else {
+                    com.cleanTypeahead("directSalesman");
                 }
 
+                // 填充业务类型
+                if (v.decorationBusitype != null) {
+                    customerOrigine.items.directSalesmanType.val(v.decorationBusitype.dbid);
+                } else {
+                    customerOrigine.items.directSalesmanType.val('');
+                }
+
+                // 填充房屋类别 (期房/现房)
                 if (v.houseType != null) {
-                    com.focusPage("#directHouseType").val(v.houseType);
+                    customerOrigine.items.directHouseType.val(v.houseType);
+                } else {
+                    customerOrigine.items.directHouseType.val('期房'); // 默认值
                 }
+
+                // 填充房屋类型
                 if (v.houseClass != null) {
-                    com.focusPage("#directHouseClass").val(v.houseClass);
+                    customerOrigine.items.directHouseClass.val(v.houseClass);
+                } else {
+                    customerOrigine.items.directHouseClass.val('');
                 }
 
+                // 填充订单类型 - 使用 decorationTypes 映射
                 if (v.decorationBusitype != null) {
-                    var typeValue = customerOrigine.getDecorationTypeValue(v.decorationBusitype.dbid);
-                    com.focusPage("#directOrderType").val(typeValue);
+                    // decorationTypes[v.key] = v.type，所以需要遍历查找匹配的 key
+                    var typeValue = null;
+                    $.each(customerOrigine.decorationAtttypes, function(i, attType) {
+                        if (attType.dbid == v.decorationBusitype.dbid && attType.status == 0) {
+                            typeValue = attType.key;
+                            return false; // 找到后退出循环
+                        }
+                    });
+                    if (typeValue != null) {
+                        customerOrigine.items.directOrderType.val(typeValue);
+                    } else {
+                        customerOrigine.items.directOrderType.val('');
+                    }
+                } else {
+                    customerOrigine.items.directOrderType.val('');
                 }
 
+                // 填充订单状态 (资源类型)
                 if (v.resourceType != null) {
-                    com.focusPage("#directResourceType").val(v.resourceType);
+                    customerOrigine.items.directResourceType.val(v.resourceType);
+                } else {
+                    customerOrigine.items.directResourceType.val('');
                 }
 
-                com.focusPage("#directTranModal").modal("show");
+                customerOrigine.modals.directTranModal.modal("show");
             });
 
             // 编辑归属人
