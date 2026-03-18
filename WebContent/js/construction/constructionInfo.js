@@ -288,6 +288,7 @@ jQuery(function($) {
                 ["设计部", "decoration.designer.dept.name"],
                 ["设计师", "decoration.designer.userName"],
                 ["业务员", "decoration.salesman.currentName"],
+                ["监理", "decoration.supervisor.userName"],
                 ["签单时间", "decoration.contractTime"],
                 ["合同额", "decoration.orderTotalPrice"],
                 ["预签合同额", "decoration.procontractPrice"],
@@ -317,6 +318,7 @@ jQuery(function($) {
                 v.decoration.designer.dept.name = (v.decoration.designer == null ? " " : v.decoration.designer.dept.name);
                 v.decoration.designer.dept.fatherDept.name = (v.decoration.designer == null ? " " : v.decoration.designer.dept.fatherDept.name);
                 v.decoration.salesman.currentName = (v.decoration.salesman == null ? " " : v.decoration.salesman.currentName);
+                v.decoration.supervisor.userName = (v.decoration.supervisor == null ? " " : v.decoration.supervisor.userName);
                 v.decoration.contractTime = (v.decoration.contractTime == null ? "" : v.decoration.contractTime);
                 v.decoration.orderTotalPrice = (v.decoration.orderTotalPrice == null ? "" : v.decoration.orderTotalPrice);
                 v.decoration.procontractPrice = (v.decoration.procontractPrice == null ? "" : v.decoration.procontractPrice);
