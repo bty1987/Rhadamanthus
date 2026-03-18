@@ -1,78 +1,22 @@
 /**
- * 预算配置管理
+ * 预算配置管理 - 使用 Searcher 组件
  * 管理报价单预算员自动分配功能的配置
  */
 jQuery(function($) {
 
-	// 初始化分页
-	var page = {
-		pageNo: 1,
-		pageSize: 20,
-		total: 0
-	};
-
-	// 加载列表
-	function loadList() {
-		com.post(api.quotation.getQuotationConfigsByCompany, {
-			"company": $('#companySelect').val() || params.userInfo.company.cid
-		}, function(res) {
-			renderList(res.quotationConfigs || []);
-		});
-	}
-
-	// 渲染列表
-	function renderList(list) {
-		var html = '';
-
-		if (list.length === 0) {
-			html = '<tr><td colspan="7" class="text-center">暂无配置，点击"新增配置"创建</td></tr>';
-		} else {
-			$.each(list, function(i, item) {
-				var enabledMap = {
-					1: '<span class="label label-success">已启用</span>',
-					0: '<span class="label label-default">已禁用</span>'
-				};
-
-				var autoAssignMap = {
-					1: '<span class="label label-info">自动分配</span>',
-					0: '<span class="label label-warning">手动分配</span>'
-				};
-
-				html += '<tr>';
-				html += '<td>' + (item.companyName || '-') + '</td>';
-				html += '<td>' + (item.departmentName || '全公司') + '</td>';
-				html += '<td>' + (enabledMap[item.enabled] || '-') + '</td>';
-				html += '<td>' + (autoAssignMap[item.autoAssign] || '-') + '</td>';
-				html += '<td>' + com.formatDate(item.createTime, 'yyyy-MM-dd HH:mm') + '</td>';
-				html += '<td>' + com.formatDate(item.updateTime, 'yyyy-MM-dd HH:mm') + '</td>';
-				html += '<td>';
-				html += '  <button class="btn btn-xs btn-info edit-btn" data-id="' + item.qacid + '"><i class="icon-edit"></i> 编辑</button> ';
-				html += '  <button class="btn btn-xs btn-success toggle-btn" data-id="' + item.qacid + '" data-enabled="' + item.enabled + '">';
-				html += item.enabled == 1 ? '<i class="icon-ban-circle"></i> 禁用' : '<i class="icon-ok"></i> 启用';
-				html += '</button> ';
-				html += '  <button class="btn btn-xs btn-danger delete-btn" data-id="' + item.qacid + '"><i class="icon-trash"></i> 删除</button>';
-				html += '</td>';
-				html += '</tr>';
-			});
-		}
-
-		com.focusPage('#dataBody').html(html);
-	}
-
-	// 加载公司选项
+	// 加载公司选项（用于编辑对话框）
 	function loadCompanyOptions() {
 		com.post(api.system.queryCompanyForOption, {}, function(res) {
-			var html = '<option value="">全部</option>';
+			var html = '<option value="">请选择公司</option>';
 			$.each(res.companies || [], function(i, company) {
 				html += '<option value="' + company.cid + '">' + company.name + '</option>';
 			});
-			$('#companySelect').html(html);
-			$('#companyId').html('<option value="">请选择公司</option>' + html);
-			$('#companyId').chosen({ allow_single_deselect: true });
+			com.focusPage('#companyId').html(html);
+			com.focusPage('#companyId').chosen({ allow_single_deselect: true });
 
 			// 自动选择当前用户的公司
 			if (params.userInfo && params.userInfo.company) {
-				$('#companyId').val(params.userInfo.company.cid).trigger('chosen:updated');
+				com.focusPage('#companyId').val(params.userInfo.company.cid).trigger('chosen:updated');
 			}
 		});
 	}
@@ -80,7 +24,7 @@ jQuery(function($) {
 	// 加载部门选项
 	function loadDepartmentOptions(companyId) {
 		if (!companyId) {
-			$('#departmentId').html('<option value="">请选择部门（可选）</option>').trigger('chosen:updated');
+			com.focusPage('#departmentId').html('<option value="">请选择部门（可选）</option>').trigger('chosen:updated');
 			return;
 		}
 
@@ -91,51 +35,51 @@ jQuery(function($) {
 			$.each(res.departments || [], function(i, dept) {
 				html += '<option value="' + dept.did + '">' + dept.name + '</option>';
 			});
-			$('#departmentId').html(html);
-			$('#departmentId').chosen({ allow_single_deselect: true });
+			com.focusPage('#departmentId').html(html);
+			com.focusPage('#departmentId').chosen({ allow_single_deselect: true });
 		});
 	}
 
 	// 打开编辑对话框
 	function openEditModal(qacid) {
-		$('#editForm')[0].reset();
-		$('#qacid').val('');
-		$('input[name="enabled"][value="1"]').prop('checked', true);
-		$('input[name="autoAssign"][value="1"]').prop('checked', true);
+		com.focusPage('#editForm')[0].reset();
+		com.focusPage('#qacid').val('');
+		com.focusPage('input[name="enabled"][value="1"]').prop('checked', true);
+		com.focusPage('input[name="autoAssign"][value="1"]').prop('checked', true);
 
 		if (qacid) {
-			$('#modalTitle').text('编辑预算配置');
+			com.focusPage('#modalTitle').text('编辑预算配置');
 
 			com.post(api.quotation.getQuotationConfig, {
 				"qacid": qacid
 			}, function(res) {
 				var config = res.quotationConfig;
-				$('#qacid').val(config.qacid);
-				$('#companyId').val(config.company).trigger('chosen:updated');
+				com.focusPage('#qacid').val(config.qacid);
+				com.focusPage('#companyId').val(config.company).trigger('chosen:updated');
 				loadDepartmentOptions(config.company);
 
 				setTimeout(function() {
 					if (config.department) {
-						$('#departmentId').val(config.department).trigger('chosen:updated');
+						com.focusPage('#departmentId').val(config.department).trigger('chosen:updated');
 					}
-					$('input[name="enabled"][value="' + config.enabled + '"]').prop('checked', true);
-					$('input[name="autoAssign"][value="' + config.autoAssign + '"]').prop('checked', true);
+					com.focusPage('input[name="enabled"][value="' + config.enabled + '"]').prop('checked', true);
+					com.focusPage('input[name="autoAssign"][value="' + config.autoAssign + '"]').prop('checked', true);
 				}, 200);
 			});
 		} else {
-			$('#modalTitle').text('新增预算配置');
+			com.focusPage('#modalTitle').text('新增预算配置');
 		}
 
-		$('#editModal').modal('show');
+		com.focusPage('#editModal').modal('show');
 	}
 
 	// 保存
 	function save() {
-		var qacid = $('#qacid').val();
-		var company = $('#companyId').val();
-		var department = $('#departmentId').val();
-		var enabled = parseInt($('input[name="enabled"]:checked').val());
-		var autoAssign = parseInt($('input[name="autoAssign"]:checked').val());
+		var qacid = com.focusPage('#qacid').val();
+		var company = com.focusPage('#companyId').val();
+		var department = com.focusPage('#departmentId').val();
+		var enabled = parseInt(com.focusPage('input[name="enabled"]:checked').val());
+		var autoAssign = parseInt(com.focusPage('input[name="autoAssign"]:checked').val());
 
 		if (!company) {
 			com.showAlert(com.warning, '请选择公司');
@@ -155,8 +99,8 @@ jQuery(function($) {
 		com.post(apiMethod, params, function(res) {
 			if (res.success) {
 				com.showAlert(com.info, '保存成功');
-				$('#editModal').modal('hide');
-				loadList();
+				com.focusPage('#editModal').modal('hide');
+				searcher.doSearch();
 			} else {
 				com.showAlert(com.error, res.message);
 			}
@@ -171,7 +115,7 @@ jQuery(function($) {
 			}, function(res) {
 				if (res.success) {
 					com.showAlert(com.info, '删除成功');
-					loadList();
+					searcher.doSearch();
 				} else {
 					com.showAlert(com.error, res.message);
 				}
@@ -186,13 +130,11 @@ jQuery(function($) {
 
 		com.showConfirm('确认' + actionText + '该配置？', function() {
 			com.post(apiMethod, {
-				"company": null,  // 从配置中获取
-				"department": null,
 				"qacid": qacid
 			}, function(res) {
 				if (res.success) {
 					com.showAlert(com.info, res.message || actionText + '成功');
-					loadList();
+					searcher.doSearch();
 				} else {
 					com.showAlert(com.error, res.message);
 				}
@@ -200,39 +142,137 @@ jQuery(function($) {
 		});
 	}
 
-	// 事件绑定
-	com.focusPage('#searchBtn').on('click', function() {
-		loadList();
+	// 创建 Searcher 实例
+	var searcher = new Searcher();
+
+	// 设置基础配置
+	searcher.base(
+		"condList",                                    // 查询条件容器ID
+		"pagenation",                                  // 分页容器ID
+		"resultList",                                  // 结果容器ID
+		api.quotation.getQuotationConfigsByCompany    // API接口
+	);
+
+	// 设置结果数据名称
+	searcher.result("quotationConfigs");
+
+	// 设置查询条件
+	searcher.condition([
+		"quotation-assignConfig-company",
+		"quotation-assignConfig-enabled",
+		"quotation-assignConfig-autoAssign"
+	]);
+
+	// 设置工具按钮
+	searcher.button(function() {
+		var $addBtn = $('<a></a>')
+			.addClass('btn btn-minier btn-success pull-left')
+			.attr('id', 'addConfigBtn')
+			.css('margin', '0px 3px');
+		$('<i></i>').addClass('icon-plus bigger-110').appendTo($addBtn);
+		$('<span></span>').text('新增配置').appendTo($addBtn);
+
+		return [$addBtn];
 	});
 
-	com.focusPage('#addBtn').on('click', function() {
+	// 定义列表列配置
+	var lineprops = [{
+		field: "qacid",
+		name: "多选",
+		type: "checkbox",
+		prop: "qacid"
+	}, {
+		field: "companyName",
+		name: "公司",
+		prop: "companyName",
+		clazz: "blue"
+	}, {
+		field: "departmentName",
+		name: "部门",
+		prop: function(v) {
+			return v.departmentName || '<span class="grey">全公司</span>';
+		},
+		clazz: "grey"
+	}, {
+		field: "enabled",
+		name: "启用状态",
+		prop: function(v) {
+			return v.enabled == 1
+				? '<span class="label label-success">已启用</span>'
+				: '<span class="label label-default">已禁用</span>';
+		}
+	}, {
+		field: "autoAssign",
+		name: "分配方式",
+		prop: function(v) {
+			return v.autoAssign == 1
+				? '<span class="label label-info">自动分配</span>'
+				: '<span class="label label-warning">手动分配</span>';
+		}
+	}, {
+		field: "createTime",
+		name: "创建时间",
+		prop: function(v) {
+			return com.formatDate(v.createTime, 'yyyy-MM-dd HH:mm');
+		},
+		clazz: "grey"
+	}, {
+		field: "updateTime",
+		name: "更新时间",
+		prop: function(v) {
+			return com.formatDate(v.updateTime, 'yyyy-MM-dd HH:mm');
+		},
+		clazz: "grey"
+	}];
+
+	// 定义行操作按钮
+	var linebtns = {
+		'edit': {
+			name: "编辑",
+			clazz: "btn-info",
+			handle: function(v) {
+				openEditModal(v.qacid);
+			}
+		},
+		'toggle': {
+			name: function(v) {
+				return v.enabled == 1 ? '禁用' : '启用';
+			},
+			clazz: function(v) {
+				return v.enabled == 1 ? 'btn-warning' : 'btn-success';
+			},
+			handle: function(v) {
+				toggleEnabled(v.qacid, v.enabled);
+			}
+		},
+		'delete': {
+			name: "删除",
+			clazz: "btn-danger",
+			handle: function(v) {
+				deleteConfig(v.qacid);
+			}
+		}
+	};
+
+	// 设置为不分页模式，使用现有接口
+	searcher.isPage(true);
+
+	// 渲染列表
+	searcher.line("companyName", lineprops, linebtns).render();
+
+	// 绑定新增按钮事件
+	com.focusPage('#addConfigBtn', '#pagenation').on('click', function() {
 		openEditModal(null);
 	});
 
-	com.focusPage('#refreshBtn').on('click', function() {
-		loadList();
-	});
+	// 绑定保存按钮事件
+	com.focusPage('#saveBtn').on('click', save);
 
+	// 绑定公司选择变更事件
 	com.focusPage('#companyId').on('change', function() {
 		loadDepartmentOptions($(this).val());
 	});
 
-	com.focusPage('#dataBody').on('click', '.edit-btn', function() {
-		openEditModal($(this).data('id'));
-	});
-
-	com.focusPage('#dataBody').on('click', '.delete-btn', function() {
-		deleteConfig($(this).data('id'));
-	});
-
-	com.focusPage('#dataBody').on('click', '.toggle-btn', function() {
-		var $btn = $(this);
-		toggleEnabled($btn.data('id'), $btn.data('enabled'));
-	});
-
-	com.focusPage('#saveBtn').on('click', save);
-
-	// 初始化
+	// 初始化加载公司选项
 	loadCompanyOptions();
-	loadList();
 });
