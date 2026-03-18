@@ -20,7 +20,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", url);
+    searcher.base("oalesItemCondList", "oalesItemPagenation", "oalesItemResultList", url);
     searcher.condition(conditions);
     searcher.param(options);
 
@@ -102,5 +102,62 @@ jQuery(function($) {
     }];
 
     searcher.line("no", lineprops, linebtns).render();
+
+    // 创建外销项按钮点击事件
+    com.focusPage('#oalesItemAddBtn').on('click', function() {
+
+        // 清空表单
+        com.focusPage('#oalesItemForm')[0].reset();
+        com.clearValidator();
+
+        // 显示弹窗
+        com.focusPage('#oalesItemModal').modal('show');
+    });
+
+    // 保存按钮点击事件
+    com.focusPage('#oalesItemSaveBtn').on('click', function() {
+
+        // 表单验证
+        if (com.validate('oalesItemModal')) {
+            return false;
+        }
+
+        // 收集表单数据
+        var formData = {
+            'oalesItem.oales.oid': oalesitem.oid,
+            'oalesItem.name': com.focusPage('#oalesItemName').val(),
+            'oalesItem.format': com.focusPage('#oalesItemFormat').val(),
+            'oalesItem.color': com.focusPage('#oalesItemColor').val(),
+            'oalesItem.model': com.focusPage('#oalesItemModel').val(),
+            'oalesItem.price': com.focusPage('#oalesItemPrice').val(),
+            'oalesItem.num': com.focusPage('#oalesItemNum').val(),
+            'oalesItem.comment': com.focusPage('#oalesItemComment').val()
+        };
+
+        com.showLoading('正在保存...');
+
+        com.post(api.sales.addOalesItem, formData, function(res) {
+
+            com.hideLoading();
+            com.showAlert(com.info, '创建成功');
+
+            // 关闭弹窗
+            com.focusPage('#oalesItemModal').modal('hide');
+
+            // 刷新列表
+            searcher.doSearch();
+        }, function(res) {
+
+            com.hideLoading();
+            com.showAlert(com.error, res.errorMsg || '创建失败');
+        });
+    });
+
+    // 弹窗关闭时清空表单
+    com.focusPage('#oalesItemModal').on('hide.bs.modal', function() {
+
+        com.focusPage('#oalesItemForm')[0].reset();
+        com.clearValidator();
+    });
 
 });
