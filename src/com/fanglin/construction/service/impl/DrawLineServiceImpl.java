@@ -640,7 +640,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		// 创建放线记录
 		DrawLinePO drawLinePO = drawLineDao.queryDrawLineByOrderId(orderId);
-		Timestamp drawlineTime = DateUtil.getDateToTimestamp(new Date());
+		Timestamp drawlineTime = drawLineVO.getApplayTime() != null ? drawLineVO.getApplayTime() : DateUtil.getDateToTimestamp(new Date());
 
 		if (drawLinePO == null) {
 			drawLinePO = new DrawLinePO();

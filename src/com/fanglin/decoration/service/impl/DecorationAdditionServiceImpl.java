@@ -211,7 +211,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
 		saleTotal = Arith.add(saleTotal, advancePaymentPO != null ? advancePaymentPO.getMaterialBalance() : 0);
 
-		saleTotal = Arith.add(saleTotal, oalesDao.amountOales(orderId, OalesPO.ISSCALE_MATCH_INT));
+		saleTotal = Arith.add(saleTotal, oalesDao.amountOales(orderId, OalesPO.ISSCALE_SCALE_INT));
 
 		if (decorationPO.getType() == DecorationPO.TYPE_MIDPACK_INT) {
 

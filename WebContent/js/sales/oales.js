@@ -383,13 +383,13 @@ jQuery(function($) {
         field: "isScale",
         name: "计入配比",
         prop: "isScale",
-        clazz: "purple",
+        clazz: "red",
         dataset: constant.sales().oales.isScale.keys,
     }, {
         field: "isActivity",
         name: "计入积分",
         prop: "isActivity",
-        clazz: "purple",
+        clazz: "red",
         dataset: constant.sales().oales.isActivity.keys,
     }];
     var linebtns = [{
@@ -630,10 +630,8 @@ jQuery(function($) {
         clazz: "btn-info",
         handle: function(v) {
 
-            // 使用弹窗方式加载外销项页面，传递oid参数
-            params.urlLoadParams = {
-                oid: v.oid
-            };
+            params.sales.oales = v;
+            
             com.popup4page("#oalesItemPopUp", "/views/sales/oalesItem.html", "外销项明细", null, function() {
                 // 关闭弹窗时清理参数
                 params.urlLoadParams = {};
@@ -650,10 +648,8 @@ jQuery(function($) {
         clazz: "btn-purple",
         handle: function(v) {
 
-            // 使用弹窗方式加载操作记录页面，传递oid参数
-            params.urlLoadParams = {
-                oid: v.oid
-            };
+            params.sales.oales = v;
+            
             com.popup4page("#oalesRecordPopUp", "/views/sales/oalesRecord.html", "外销单操作记录", null, function() {
                 // 关闭弹窗时清理参数
                 params.urlLoadParams = {};
@@ -668,17 +664,17 @@ jQuery(function($) {
     }, {
         name: function(v) {
 
-            return v.isScale == constant.sales().oales.isScale.ISSCALE_SCALE_INT ? "不计入配比" : "计入配比";
+            return v.isScale == constant.sales().oales.ISSCALE_SCALE_INT ? "不计入配比" : "计入配比";
         },
         clazz: function(v) {
 
-            return v.isScale == constant.sales().oales.isScale.ISSCALE_SCALE_INT ? "btn-warning" : "btn-success";
+            return v.isScale == constant.sales().oales.ISSCALE_SCALE_INT ? "btn-warning" : "btn-success";
         },
         handle: function(v) {
 
-            var newStatus = v.isScale == constant.sales().oales.isScale.ISSCALE_SCALE_INT
-                ? constant.sales().oales.isScale.ISSCALE_NONE_INT
-                : constant.sales().oales.isScale.ISSCALE_SCALE_INT;
+            var newStatus = v.isScale == constant.sales().oales.ISSCALE_SCALE_INT
+                ? constant.sales().oales.ISSCALE_NONE_INT
+                : constant.sales().oales.ISSCALE_SCALE_INT;
             scaleOales(v.oid, newStatus);
         },
         show: function(v) {
@@ -688,17 +684,17 @@ jQuery(function($) {
     }, {
         name: function(v) {
 
-            return v.isActivity == constant.sales().oales.isActivity.ISACTIVITY_YES_INT ? "不参与活动" : "参与活动";
+            return v.isActivity == constant.sales().oales.ISACTIVITY_YES_INT ? "不参与活动" : "参与活动";
         },
         clazz: function(v) {
 
-            return v.isActivity == constant.sales().oales.isActivity.ISACTIVITY_YES_INT ? "btn-warning" : "btn-success";
+            return v.isActivity == constant.sales().oales.ISACTIVITY_YES_INT ? "btn-warning" : "btn-success";
         },
         handle: function(v) {
 
-            var newStatus = v.isActivity == constant.sales().oales.isActivity.ISACTIVITY_YES_INT
-                ? constant.sales().oales.isActivity.ISACTIVITY_NO_INT
-                : constant.sales().oales.isActivity.ISACTIVITY_YES_INT;
+            var newStatus = v.isActivity == constant.sales().oales.ISACTIVITY_YES_INT
+                ? constant.sales().oales.ISACTIVITY_NO_INT
+                : constant.sales().oales.ISACTIVITY_YES_INT;
             activityOales(v.oid, newStatus);
         },
         show: function(v) {
