@@ -120,7 +120,19 @@ $(function() {
         decorationTypes: [],
         decorationAtttypes: [],
         decorationBusitypeList: {},
-        grade1: ["A", "B", "C", "D"]
+        grade1: ["A", "B", "C", "D"],
+
+        // 根据业务类型dbid获取订单类型key
+        getDecorationTypeValue: function(busitypeDbid) {
+            var typeValue = "";
+            $.each(customerOrigine.decorationAtttypes, function(i, v) {
+                if (v.busitypeDbid == busitypeDbid) {
+                    typeValue = v.key;
+                    return false; // 跳出循环
+                }
+            });
+            return typeValue;
+        }
     };
 
     customerOrigine.saveDesignerBtn.bindClick(bindAllInfo);
@@ -182,6 +194,10 @@ $(function() {
     customerOrigine.items.houseClass.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
     customerOrigine.items.resourceType.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
 
+    // 直接初审和直接转单的字段数据绑定
+    customerOrigine.items.directHouseClass.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
+    customerOrigine.items.directResourceType.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
+
     com.post(api.data.queryDecorationAtttype, {}, function(res) {
 
         $.each(res.decorationAtttypes, function(i, v) {
@@ -194,6 +210,7 @@ $(function() {
         });
 
         customerOrigine.items.orderType.bindData(customerOrigine.decorationAtttypes, 'key', 'name', "请选择");
+        customerOrigine.items.directOrderType.bindData(customerOrigine.decorationAtttypes, 'key', 'name', "请选择");
     });
 
     com.initTypeahead('designer', api.personel.queryUserByPinyin, "pinyinName", {
@@ -234,6 +251,12 @@ $(function() {
         }, null, false);
         return v;
     });
+
+    // 直接初审和直接转单的typeahead初始化
+    com.initTypeahead('directVillageNoDesiger', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", null);
+    com.initTypeahead('directSalesman', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0
+    }, 'autoFillKeyValue', 'key', 'value', null);
 
     customerOrigine.modals.sustomerSourceModal.on("hide.bs.modal", function() {
 
@@ -452,6 +475,40 @@ $(function() {
             $directFirst.click(function() {
                 customerOrigine.currentCustomerOrigine = v;
                 com.clearValidator();
+
+                // 填充表单数据
+                com.focusPage("#directVillageNoDesiger").val(com.checkNull(v.villageName, ''));
+                com.updateTypeahead("directVillageNoDesiger", v.villageId, com.checkNull(v.villageName, ''));
+
+                if (v.houseNumber != null) {
+                    com.focusPage("#directHouseNumberApprove").val(v.houseNumber);
+                }
+                com.focusPage("#directNameApprove").val(v.name);
+                com.focusPage("#directPhoneApprove").val(v.phone);
+
+                if (v.salesman != null) {
+                    com.updateTypeahead("directSalesman", v.salesman.userId, com.checkNull(v.salesman.userName, ''));
+                }
+                if (v.decorationBusitype != null) {
+                    com.focusPage("#directSalesmanType").val(v.decorationBusitype.dbid);
+                }
+
+                if (v.houseType != null) {
+                    com.focusPage("#directHouseType").val(v.houseType);
+                }
+                if (v.houseClass != null) {
+                    com.focusPage("#directHouseClass").val(v.houseClass);
+                }
+
+                if (v.decorationBusitype != null) {
+                    var typeValue = customerOrigine.getDecorationTypeValue(v.decorationBusitype.dbid);
+                    com.focusPage("#directOrderType").val(typeValue);
+                }
+
+                if (v.resourceType != null) {
+                    com.focusPage("#directResourceType").val(v.resourceType);
+                }
+
                 com.focusPage("#directFirstApproveComment").val("");
                 com.focusPage("#directFirstApproveModal").modal("show");
             });
@@ -879,8 +936,23 @@ $(function() {
     // 直接初审确认
     function directFirstApproveConfirm() {
 
+        if (com.validate("directFirstApproveForm"))
+            return false;
+
         var option = {
-            "customerOrigin.csid": customerOrigine.currentCustomerOrigine.csid
+            "customerOrigin.csid": customerOrigine.currentCustomerOrigine.csid,
+            "customerOrigin.village.no": com.typeahead("directVillageNoDesiger"),
+            "customerOrigin.houseNumber": customerOrigine.items.directHouseNumberApprove.val(),
+            "customerOrigin.name": customerOrigine.items.directNameApprove.val(),
+            "customerOrigin.phone": customerOrigine.items.directPhoneApprove.val(),
+            "customerOrigin.salesman.userId": com.typeahead("directSalesman"),
+            "customerOrigin.decorationBusitype.dbid": customerOrigine.items.directSalesmanType.val(),
+            "customerOrigin.houseType": customerOrigine.items.directHouseType.val(),
+            "customerOrigin.houseClass": customerOrigine.items.directHouseClass.val(),
+            "customerOrigin.type": customerOrigine.decorationTypes[customerOrigine.items.directOrderType.val()],
+            "customerOrigin.typeness": customerOrigine.items.directOrderType.val(),
+            "customerOrigin.resourceType": customerOrigine.items.directResourceType.val(),
+            "customerOrigin.comment": customerOrigine.items.directFirstApproveComment.val()
         };
 
         com.post(api.customer.approveCustomerOrigin, option, function(res) {
