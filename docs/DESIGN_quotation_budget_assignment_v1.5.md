@@ -863,9 +863,48 @@ public class QuotationAssignConfigVO implements Serializable {
 
 **关键规范**：
 - ✅ 实现 `Serializable` 接口
-- ✅ 字段类型与 PO 一致
-- ✅ 使用包装类型（Long, Integer, Short）而不是基本类型
-- ✅ 关联对象使用 VO 类型
+- ✅ 字段类型与 PO 一致（使用包装类型）
+- ✅ 关联对象使用 VO 类型（如 CompanyVO、DepartmentVO）
+- ✅ **不要添加枚举转文字的方法**（如 `getEnabledText()`、`getStatusText()` 等）
+- ✅ **枚举值转换由前端处理**：前端使用三元运算符 `v.status == 0 ? "启用" : "禁用"`
+- ✅ **前端从 `ds/*.json` 文件读取枚举定义**，后端只提供数据
+
+**❌ 错误示例**：
+```java
+// ❌ 不要在 VO 中添加转文字的方法
+public String getEnabledText() {
+    return enabled == 1 ? "启用" : "禁用";
+}
+
+// ❌ 不要在 VO 中添加工具方法
+public boolean isEnabled() {
+    return this.enabled == 1;
+}
+```
+
+**✅ 正确示例**：
+```java
+// ✅ 只保留纯数据字段和 Getter/Setter
+public Short getEnabled() {
+    return enabled;
+}
+
+public void setEnabled(Short enabled) {
+    this.enabled = enabled;
+}
+```
+
+**前端转换示例**：
+```javascript
+// ✅ 前端使用三元运算符转换
+var enabledText = config.enabled == 1 ? "启用" : "禁用";
+
+// ✅ 前端从 constant 读取枚举定义
+quotation.items.status.bindData(constant.system().status, "key", "value");
+
+// ✅ 前端直接使用三元运算符
+[v.status == 0 ? "启用" : "禁用", 'red']
+```
 
 #### 3. DAO 接口规范
 
