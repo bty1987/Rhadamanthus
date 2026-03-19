@@ -73,7 +73,7 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 
 		SystemConfigPO decorationPictureLimit = systemConfigDao.querySystemConfig(String.format("decorationpicturelimit%d", type), company);
 
-		if (decorationPictureDao.countDecorationPicture(orderId, type) >= (decorationPictureLimit == null ? 30 : Integer.valueOf(decorationPictureLimit.getValue()))) {
+		if (decorationPictureDao.countDecorationPicture(orderId, type) >= (decorationPictureLimit == null ? 100 : Integer.valueOf(decorationPictureLimit.getValue()))) {
 			throw new FLException(110017, "资源数已达上限");
 		}
 
