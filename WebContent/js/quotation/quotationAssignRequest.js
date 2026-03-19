@@ -5,9 +5,9 @@ jQuery(function($) {
 
 	// 加载统计信息
 	function loadStatistics() {
-		com.post(api.quotation.getAssignRequestStatistics, {
-			"company": params.userInfo.company.cid,
-			"department": params.userInfo.user.department
+		com.post(api.quotation.statisQuotationAssignRequest, {
+			"quotationAssignRequest.company": params.userInfo.company.cid,
+			"quotationAssignRequest.department": params.userInfo.user.department ? params.userInfo.user.department.did : null
 		}, function(res) {
 			var stats = res.statistics || {};
 			com.focusPage('#pendingCount').text(stats.pendingCount || 0);
@@ -19,17 +19,18 @@ jQuery(function($) {
 
 	// 加载可用预算员
 	function loadAvailableBudgetUsers() {
-		com.post(api.quotation.pageAvailableBudgetUsers, {
+		com.post(api.quotation.pullQuotationAssignUserRuleForPending, {
 			"company": params.userInfo.company.cid,
-			"department": params.userInfo.user.department,
-			"page.pageNo": 1,
-			"page.pageSize": 1000
+			"quotationAssignUserRule.department": params.userInfo.user.department ? params.userInfo.user.department.did : null
 		}, function(res) {
 			var html = '<option value="">请选择预算员</option>';
-			$.each(res.budgetUsers || [], function(i, user) {
-				var loadRate = user.maxTasks > 0 ? Math.round((user.currentTaskCount / user.maxTasks) * 100) : 0;
-				html += '<option value="' + user.budgetUid + '">';
-				html += user.userName + ' (当前任务: ' + user.currentTaskCount + '/' + user.maxTasks + ', 负载: ' + loadRate + '%)';
+			$.each(res.quotationAssignUserRules || [], function(i, rule) {
+				var user = rule.user;
+				if (!user) return;
+
+				var loadRate = rule.maxTasks > 0 ? Math.round((rule.currentTaskCount / rule.maxTasks) * 100) : 0;
+				html += '<option value="' + rule.qaurid + '">';
+				html += user.currentName + ' (当前任务: ' + (rule.currentTaskCount || 0) + '/' + (rule.maxTasks || 5) + ', 负载: ' + loadRate + '%)';
 				html += '</option>';
 			});
 			com.focusPage('#budgetUserId').html(html);
@@ -38,8 +39,8 @@ jQuery(function($) {
 	}
 
 	// 打开手动分配对话框
-	function openProcessModal(barid, orderId) {
-		com.focusPage('#processBarid').val(barid);
+	function openProcessModal(qarid, orderId) {
+		com.focusPage('#processQarid').val(qarid);
 		com.focusPage('#processOrderId').val(orderId);
 		com.focusPage('#displayOrderId').text(orderId);
 		com.focusPage('#budgetUserId').val('').trigger('chosen:updated');
@@ -48,24 +49,26 @@ jQuery(function($) {
 		com.focusPage('#processModal').modal('show');
 	}
 
-	// 手动处理
+	// 手动分配
 	function manualProcess() {
-		var barid = com.focusPage('#processBarid').val();
-		var budgetUid = com.focusPage('#budgetUserId').val();
+		var qarid = com.focusPage('#processQarid').val();
+		var orderId = com.focusPage('#processOrderId').val();
+		var qaurid = com.focusPage('#budgetUserId').val();
 
-		if (!budgetUid) {
+		if (!qaurid) {
 			com.showAlert(com.warning, '请选择预算员');
 			return false;
 		}
 
-		com.post(api.quotation.manualProcessPendingRequest, {
-			"barid": barid,
-			"budgetUid": budgetUid
+		com.post(api.quotation.manualQuotationAssign, {
+			"quotationAssign.orderId": orderId,
+			"quotationAssign.budgetUid": qaurid
 		}, function(res) {
 			if (res.success) {
 				com.showAlert(com.info, '分配成功');
 				com.focusPage('#processModal').modal('hide');
 				searcher.doSearch();
+				loadStatistics();
 			} else {
 				com.showAlert(com.error, res.message);
 			}
@@ -73,14 +76,15 @@ jQuery(function($) {
 	}
 
 	// 取消请求
-	function cancelRequest(barid) {
+	function cancelRequest(qarid) {
 		com.showConfirm('确认取消该分配请求？', function() {
-			com.post(api.quotation.cancelAssignRequest, {
-				"barid": barid
+			com.post(api.quotation.cancelQuotationAssignRequest, {
+				"quotationAssignRequest.qarid": qarid
 			}, function(res) {
 				if (res.success) {
 					com.showAlert(com.info, '已取消');
 					searcher.doSearch();
+					loadStatistics();
 				} else {
 					com.showAlert(com.error, res.message);
 				}
@@ -89,8 +93,8 @@ jQuery(function($) {
 	}
 
 	// 打开优先级调整对话框
-	function openPriorityModal(barid, orderId, currentPriority) {
-		com.focusPage('#priorityBarid').val(barid);
+	function openPriorityModal(qarid, orderId, currentPriority) {
+		com.focusPage('#priorityQarid').val(qarid);
 		com.focusPage('#priorityOrderId').text(orderId);
 		com.focusPage('#prioritySelect').val(currentPriority);
 
@@ -99,12 +103,12 @@ jQuery(function($) {
 
 	// 调整优先级
 	function updatePriority() {
-		var barid = com.focusPage('#priorityBarid').val();
+		var qarid = com.focusPage('#priorityQarid').val();
 		var priority = parseInt(com.focusPage('#prioritySelect').val());
 
-		com.post(api.quotation.updateAssignRequestPriority, {
-			"barid": barid,
-			"priority": priority
+		com.post(api.quotation.updateQuotationAssignRequestForPriority, {
+			"quotationAssignRequest.qarid": qarid,
+			"quotationAssignRequest.priority": priority
 		}, function(res) {
 			if (res.success) {
 				com.showAlert(com.info, '优先级已调整');
@@ -116,70 +120,19 @@ jQuery(function($) {
 		});
 	}
 
-	// 批量取消
-	function batchCancel() {
-		var checkedItems = searcher.checks();
-		if (checkedItems.length === 0) {
-			com.showAlert(com.warning, '请先选择要取消的请求');
-			return false;
-		}
-
-		var barids = [];
-		checkedItems.each(function() {
-			barids.push($(this).val());
-		});
-
-		com.showConfirm('确认取消选中的 ' + barids.length + ' 条请求？', function() {
-			com.post(api.quotation.batchCancelAssignRequests, {
-				"barids": barids
-			}, function(res) {
-				if (res.success) {
-					com.showAlert(com.info, '已取消 ' + res.canceledCount + ' 条请求');
-					searcher.doSearch();
-				} else {
-					com.showAlert(com.error, res.message);
-				}
-			});
-		});
-	}
-
-	// 清除已完成请求
-	function clearCompleted() {
-		com.showConfirm('确认清除7天前的已完成请求？', function() {
-			com.post(api.quotation.clearCompletedRequests, {
-				"company": params.userInfo.company.cid,
-				"department": params.userInfo.user.department,
-				"days": 7
-			}, function(res) {
-				if (res.success) {
-					com.showAlert(com.info, '已清除 ' + res.clearedCount + ' 条记录');
-					searcher.doSearch();
-				} else {
-					com.showAlert(com.error, res.message);
-				}
-			});
-		});
-	}
-
 	// 创建 Searcher 实例
 	var searcher = new Searcher();
 
 	// 设置基础配置
 	searcher.base(
-		"condList",                                 // 查询条件容器ID
-		"pagenation",                               // 分页容器ID
-		"resultList",                               // 结果容器ID
-		api.quotation.pageAssignRequest            // API接口
+		"condList",                                         // 查询条件容器ID
+		"pagenation",                                       // 分页容器ID
+		"resultList",                                       // 结果容器ID
+		api.quotation.pageQuotationAssignRequest           // API接口
 	);
 
 	// 设置结果数据名称
-	searcher.result("requests");
-
-	// 设置额外参数（公司、部门）
-	searcher.param({
-		"assignRequest.company": params.userInfo.company.cid,
-		"assignRequest.department": params.userInfo.user.department
-	});
+	searcher.result("quotationAssignRequests");
 
 	// 设置查询条件
 	searcher.condition([
@@ -197,29 +150,15 @@ jQuery(function($) {
 		$('<i></i>').addClass('icon-refresh bigger-110').appendTo($refreshBtn);
 		$('<span></span>').text('刷新').appendTo($refreshBtn);
 
-		var $batchCancelBtn = $('<a></a>')
-			.addClass('btn btn-minier btn-danger pull-left')
-			.attr('id', 'batchCancelBtn')
-			.css('margin', '0px 3px');
-		$('<i></i>').addClass('icon-remove bigger-110').appendTo($batchCancelBtn);
-		$('<span></span>').text('批量取消').appendTo($batchCancelBtn);
-
-		var $clearCompletedBtn = $('<a></a>')
-			.addClass('btn btn-minier btn-default pull-left')
-			.attr('id', 'clearCompletedBtn')
-			.css('margin', '0px 3px');
-		$('<i></i>').addClass('icon-trash bigger-110').appendTo($clearCompletedBtn);
-		$('<span></span>').text('清除已完成').appendTo($clearCompletedBtn);
-
-		return [$refreshBtn, $batchCancelBtn, $clearCompletedBtn];
+		return [$refreshBtn];
 	});
 
 	// 定义列表列配置
 	var lineprops = [{
-		field: "barid",
+		field: "qarid",
 		name: "多选",
 		type: "checkbox",
-		prop: "barid"
+		prop: "qarid"
 	}, {
 		field: "orderId",
 		name: "订单编号",
@@ -301,21 +240,21 @@ jQuery(function($) {
 					com.showAlert(com.warning, '只能处理待处理状态的请求');
 					return;
 				}
-				openProcessModal(v.barid, v.orderId);
+				openProcessModal(v.qarid, v.orderId);
 			}
 		},
 		'priority': {
 			name: "优先级",
 			clazz: "btn-info",
 			handle: function(v) {
-				openPriorityModal(v.barid, v.orderId, v.priority);
+				openPriorityModal(v.qarid, v.orderId, v.priority);
 			}
 		},
 		'cancel': {
 			name: "取消",
 			clazz: "btn-danger",
 			handle: function(v) {
-				cancelRequest(v.barid);
+				cancelRequest(v.qarid);
 			},
 			show: function(v) {
 				return v.status == 1; // 只对待处理状态显示取消按钮
@@ -329,11 +268,8 @@ jQuery(function($) {
 	// 绑定工具按钮事件
 	com.focusPage('#refreshBtn', '#pagenation').on('click', function() {
 		searcher.doSearch();
+		loadStatistics();
 	});
-
-	com.focusPage('#batchCancelBtn', '#pagenation').on('click', batchCancel);
-
-	com.focusPage('#clearCompletedBtn', '#pagenation').on('click', clearCompleted);
 
 	// 绑定对话框按钮事件
 	com.focusPage('#confirmProcessBtn').on('click', manualProcess);

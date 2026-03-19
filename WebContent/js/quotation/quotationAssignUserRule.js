@@ -5,29 +5,18 @@ jQuery(function($) {
 
 	// 加载用户列表（用于编辑对话框）
 	function loadUserOptions() {
-		com.post(api.personel.queryUserForOption, {
+		com.post(api.personel.pageUser, {
 			"user.company": params.userInfo.company.cid,
-			"user.status": 1
+			"user.status": 1,
+			"page.pageNo": 1,
+			"page.pageSize": 1000
 		}, function(res) {
 			var html = '<option value="">请选择用户</option>';
-			$.each(res.users || [], function(i, user) {
+			$.each(res.data || [], function(i, user) {
 				html += '<option value="' + user.uid + '">' + user.currentName + ' (工号:' + user.userNo + ')</option>';
 			});
 			com.focusPage('#userId').html(html);
 			com.focusPage('#userId').chosen({ allow_single_deselect: true });
-		});
-	}
-
-	// 加载统计信息
-	function loadStatistics() {
-		com.post(api.quotation.getBudgetUserStatistics, {
-			"company": params.userInfo.company.cid,
-			"department": params.userInfo.user.department
-		}, function(res) {
-			var stats = res.statistics || {};
-			com.focusPage('#availableCount').text(stats.availableCount || 0);
-			com.focusPage('#busyCount').text(stats.busyCount || 0);
-			com.focusPage('#stoppedCount').text(stats.stoppedCount || 0);
 		});
 	}
 
@@ -41,20 +30,26 @@ jQuery(function($) {
 			com.focusPage('#modalTitle').text('编辑预算员');
 
 			// 查询详情
-			com.post(api.quotation.getBudgetUserRule, {
-				"qaurid": qaurid
+			com.post(api.quotation.queryQuotationAssignUserRule, {
+				"quotationAssignUserRule.qaurid": qaurid
 			}, function(res) {
-				var rule = res.budgetUserRule;
+				var rule = res.quotationAssignUserRule;
+				if (!rule) {
+					com.showAlert(com.error, '未找到预算员规则');
+					return;
+				}
+
 				com.focusPage('#qaurid').val(rule.qaurid);
-				com.focusPage('#userId').val(rule.userId).trigger('chosen:updated');
+				com.focusPage('#userId').val(rule.uid).trigger('chosen:updated');
 				com.focusPage('#maxTasks').val(rule.maxTasks || 5);
 
 				// 加载支持类型
-				com.post(api.quotation.getBudgetUserTypes, {
-					"qaurid": qaurid
+				com.post(api.quotation.queryQuotationAssignUserRuleTypeByQaurid, {
+					"quotationAssignUserRule.qaurid": qaurid
 				}, function(typeRes) {
+					var types = typeRes.quotationAssignUserRuleTypes || [];
 					com.focusPage('input[name="supportType"]').each(function() {
-						$(this).prop('checked', $.inArray(parseInt($(this).val()), typeRes.types || []) !== -1);
+						$(this).prop('checked', $.inArray(parseInt($(this).val()), types.map(function(t) { return t.type; })) !== -1);
 					});
 				});
 			});
@@ -87,23 +82,23 @@ jQuery(function($) {
 		}
 
 		var params = {
-			"budgetUserRule.qaurid": qaurid || null,
-			"budgetUserRule.userId": userId,
-			"budgetUserRule.company": params.userInfo.company.cid,
-			"budgetUserRule.department": params.userInfo.user.department,
-			"budgetUserRule.maxTasks": parseInt(com.focusPage('#maxTasks').val()) || 5,
-			"budgetUserRule.status": qaurid ? undefined : 1
+			"quotationAssignUserRule.qaurid": qaurid || null,
+			"quotationAssignUserRule.uid": userId,
+			"quotationAssignUserRule.company": params.userInfo.company.cid,
+			"quotationAssignUserRule.department": params.userInfo.user.department
 		};
 
-		com.post(api.quotation.saveBudgetUserRule, params, function(res) {
+		var apiMethod = qaurid ? api.quotation.updateQuotationAssignUserRule : api.quotation.addQuotationAssignUserRule;
+
+		com.post(apiMethod, params, function(res) {
 			if (res.success) {
 				com.showAlert(com.info, '保存成功');
 
 				// 保存支持类型
-				var newBurid = qaurid || res.qaurid;
-				com.post(api.quotation.assignBudgetUserTypes, {
-					"qaurid": newBurid,
-					"types": types
+				var newQaurid = qaurid || res.quotationAssignUserRule.qaurid;
+				com.post(api.quotation.updateQuotationAssignUserRuleType, {
+					"quotationAssignUserRule.qaurid": newQaurid,
+					"types": types.join(',')
 				}, function() {
 					com.focusPage('#editModal').modal('hide');
 					searcher.doSearch();
@@ -114,14 +109,14 @@ jQuery(function($) {
 		});
 	}
 
-	// 删除
+	// 删除（停用）
 	function deleteRule(qaurid) {
-		com.showConfirm('确认删除该预算员规则？', function() {
-			com.post(api.quotation.deleteBudgetUserRule, {
-				"qaurid": qaurid
+		com.showConfirm('确认停用该预算员规则？', function() {
+			com.post(api.quotation.disableQuotationAssignUserRuleByQaurid, {
+				"quotationAssignUserRule.qaurid": qaurid
 			}, function(res) {
 				if (res.success) {
-					com.showAlert(com.info, '删除成功');
+					com.showAlert(com.info, '停用成功');
 					searcher.doSearch();
 				} else {
 					com.showAlert(com.error, res.message);
@@ -133,12 +128,12 @@ jQuery(function($) {
 	// 启用/停用
 	function toggleStatus(qaurid, currentStatus) {
 		var willEnable = currentStatus == 3; // 已停用时启用
-		var apiMethod = willEnable ? api.quotation.enableBudgetUser : api.quotation.disableBudgetUser;
 		var actionText = willEnable ? '启用' : '停用';
 
 		com.showConfirm('确认' + actionText + '该预算员？', function() {
-			com.post(apiMethod, {
-				"qaurid": qaurid
+			com.post(api.quotation.updateQuotationAssignUserRuleForStatus, {
+				"quotationAssignUserRule.qaurid": qaurid,
+				"quotationAssignUserRule.status": willEnable ? 1 : 3
 			}, function(res) {
 				if (res.success) {
 					com.showAlert(com.info, actionText + '成功');
@@ -152,25 +147,24 @@ jQuery(function($) {
 
 	// 显示工作负载
 	function showWorkload() {
-		com.post(api.quotation.getBudgetUserWorkload, {
-			"company": params.userInfo.company.cid,
-			"department": params.userInfo.user.department
+		com.post(api.quotation.queryQuotationAssignUserRuleByCompany, {
+			"company": params.userInfo.company.cid
 		}, function(res) {
-			var workloads = res.workloads || [];
+			var rules = res.quotationAssignUserRules || [];
 			var html = '';
 
-			if (workloads.length === 0) {
+			if (rules.length === 0) {
 				html = '<tr><td colspan="5" class="text-center">暂无数据</td></tr>';
 			} else {
-				$.each(workloads, function(i, item) {
-					var loadRate = item.maxTasks > 0 ? Math.round((item.currentTaskCount / item.maxTasks) * 100) : 0;
+				$.each(rules, function(i, rule) {
+					var loadRate = rule.maxTasks > 0 ? Math.round((rule.currentTaskCount / rule.maxTasks) * 100) : 0;
 					var statusColor = loadRate >= 100 ? 'red' : (loadRate >= 80 ? 'orange' : 'green');
-					var statusText = item.status == 1 ? '可用' : (item.status == 2 ? '忙碌' : '已停用');
+					var statusText = rule.status == 1 ? '可用' : (rule.status == 2 ? '忙碌' : '已停用');
 
 					html += '<tr>';
-					html += '<td>' + item.userName + '</td>';
-					html += '<td>' + item.currentTaskCount + '</td>';
-					html += '<td>' + item.maxTasks + '</td>';
+					html += '<td>' + (rule.userName || rule.userName) + '</td>';
+					html += '<td>' + (rule.currentTaskCount || 0) + '</td>';
+					html += '<td>' + (rule.maxTasks || 5) + '</td>';
 					html += '<td><span style="color:' + statusColor + ';font-weight:bold;">' + loadRate + '%</span></td>';
 					html += '<td>' + statusText + '</td>';
 					html += '</tr>';
@@ -187,25 +181,19 @@ jQuery(function($) {
 
 	// 设置基础配置
 	searcher.base(
-		"condList",                                 // 查询条件容器ID
-		"pagenation",                               // 分页容器ID
-		"resultList",                               // 结果容器ID
-		api.quotation.pageBudgetUserRule           // API接口
+		"condList",                                          // 查询条件容器ID
+		"pagenation",                                        // 分页容器ID
+		"resultList",                                        // 结果容器ID
+		api.quotation.pageQuotationAssignUserRuleByCondition // API接口
 	);
 
 	// 设置结果数据名称
-	searcher.result("budgetUserRules");
-
-	// 设置额外参数（公司、部门）
-	searcher.param({
-		"budgetUserRule.company": params.userInfo.company.cid,
-		"budgetUserRule.department": params.userInfo.user.department
-	});
+	searcher.result("quotationAssignUserRules");
 
 	// 设置查询条件
 	searcher.condition([
-		"quotation-budgetUserRule-status",
-		"quotation-budgetUserRule-userName"
+		"quotation-assignUserRule-status",
+		"quotation-assignUserRule-userName"
 	]);
 
 	// 设置工具按钮
@@ -236,12 +224,16 @@ jQuery(function($) {
 	}, {
 		field: "userNo",
 		name: "工号",
-		prop: "userNo",
+		prop: function(v) {
+			return v.user ? v.user.userNo : '-';
+		},
 		clazz: "grey"
 	}, {
 		field: "userName",
 		name: "姓名",
-		prop: "userName",
+		prop: function(v) {
+			return v.user ? v.user.currentName : '-';
+		},
 		clazz: "blue"
 	}, {
 		field: "departmentName",
@@ -273,6 +265,7 @@ jQuery(function($) {
 		name: "支持类型",
 		prop: function(v) {
 			var typeMap = { 1: '半包', 2: '整装' };
+			// 假设后台返回 supportedTypes 字段
 			var types = (v.supportedTypes || '').split(',').map(function(t) {
 				return typeMap[t.trim()] || '';
 			}).filter(function(t) {
@@ -304,7 +297,7 @@ jQuery(function($) {
 			}
 		},
 		'delete': {
-			name: "删除",
+			name: "停用",
 			clazz: "btn-danger",
 			handle: function(v) {
 				deleteRule(v.qaurid);
@@ -328,5 +321,4 @@ jQuery(function($) {
 
 	// 初始化
 	loadUserOptions();
-	loadStatistics();
 });
