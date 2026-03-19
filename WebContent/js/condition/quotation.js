@@ -1051,11 +1051,11 @@ Condition.addupRule("quotation", {
     },
 
     // 待分配队列 - 状态
-    "assignRequest-status": {
+    "quotation-assignRequest-status": {
         label: "状态",
         type: "select",
         submitConfig: {
-            name: "assignRequest.status",
+            name: "quotationAssignRequest.status",
             op: "eq",
             validate: null
         },
@@ -1064,16 +1064,10 @@ Condition.addupRule("quotation", {
             postData: null,
             listPath: [{
                 key: "1",
-                value: "待处理"
+                value: "待分配"
             }, {
                 key: "2",
-                value: "处理中"
-            }, {
-                key: "3",
-                value: "已完成"
-            }, {
-                key: "4",
-                value: "已取消"
+                value: "已分配"
             }],
             keyPath: "key",
             valuePath: "value"
@@ -1081,11 +1075,11 @@ Condition.addupRule("quotation", {
     },
 
     // 待分配队列 - 优先级
-    "assignRequest-priority": {
+    "quotation-assignRequest-priority": {
         label: "优先级",
         type: "select",
         submitConfig: {
-            name: "assignRequest.priority",
+            name: "quotationAssignRequest.priority",
             op: "eq",
             validate: null
         },
@@ -1099,11 +1093,11 @@ Condition.addupRule("quotation", {
                 key: "2",
                 value: "高"
             }, {
-                key: "3",
+                key: "5",
                 value: "普通"
             }, {
-                key: "4",
-                value: "低"
+                key: "9",
+                value: "最低"
             }],
             keyPath: "key",
             valuePath: "value"
@@ -1111,11 +1105,11 @@ Condition.addupRule("quotation", {
     },
 
     // 待分配队列 - 装修单号
-    "assignRequest-orderId": {
+    "quotation-assignRequest-orderId": {
         label: "装修单号",
         type: "text",
         submitConfig: {
-            name: "assignRequest.orderId",
+            name: "quotationAssignRequest.orderId",
             op: "eq",
             validate: {
                 "reg": /^[A-Z0-9]*$/,
@@ -1127,7 +1121,7 @@ Condition.addupRule("quotation", {
     // ==================== 预算配置管理相关条件 ====================
 
     // 预算配置 - 公司
-    "assignConfig-company": {
+    "quotation-assignConfig-company": {
         label: "公司",
         type: "select",
         submitConfig: {
@@ -1137,16 +1131,16 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.system.queryCompanyForOption,
+            url: api.system.queryCompany,
             postData: {},
-            listPath: "companies",
+            listPath: "companys",
             keyPath: "cid",
             valuePath: "name"
         }
     },
 
     // 预算配置 - 启用状态
-    "assignConfig-enabled": {
+    "quotation-assignConfig-enabled": {
         label: "启用状态",
         type: "select",
         submitConfig: {
@@ -1174,7 +1168,7 @@ Condition.addupRule("quotation", {
     },
 
     // 预算配置 - 分配方式
-    "assignConfig-autoAssign": {
+    "quotation-assignConfig-autoAssign": {
         label: "分配方式",
         type: "select",
         submitConfig: {
@@ -1198,6 +1192,50 @@ Condition.addupRule("quotation", {
             }],
             keyPath: "key",
             valuePath: "value"
+        }
+    },
+
+    // ==================== 预算员规则管理相关条件 ====================
+
+    // 预算员规则 - 状态
+    "quotation-assignUserRule-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            alone: true,
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "",
+                value: "全部"
+            }, {
+                key: "1",
+                value: "可用"
+            }, {
+                key: "2",
+                value: "制作中"
+            }, {
+                key: "3",
+                value: "已停用"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 预算员规则 - 用户姓名
+    "quotation-assignUserRule-userName": {
+        label: "用户姓名",
+        type: "text",
+        submitConfig: {
+            name: "userName",
+            op: "like",
+            validate: null
         }
     }
 });
