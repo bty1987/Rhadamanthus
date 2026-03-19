@@ -12,7 +12,8 @@ jQuery(function($) {
 				html += '<option value="' + company.cid + '">' + company.name + '</option>';
 			});
 			com.focusPage('#companyId').html(html);
-			com.focusPage('#companyId').chosen({ allow_single_deselect: true });
+			// chosen-select 类会自动初始化，只需更新即可
+			com.focusPage('#companyId').trigger('chosen:updated');
 
 			// 自动选择当前用户的公司
 			if (params.userInfo && params.userInfo.company) {
@@ -37,7 +38,8 @@ jQuery(function($) {
 				html += '<option value="' + dept.did + '">' + dept.name + '</option>';
 			});
 			com.focusPage('#departmentId').html(html);
-			com.focusPage('#departmentId').chosen({ allow_single_deselect: true });
+			// chosen-select 类会自动初始化，只需更新即可
+			com.focusPage('#departmentId').trigger('chosen:updated');
 		});
 	}
 
