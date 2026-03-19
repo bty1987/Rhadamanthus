@@ -1,16 +1,23 @@
 # 报价单预算员自动分配功能设计方案
 
-> **设计文档版本**: v1.5
+> **设计文档版本**: v2.0
 > **创建日期**: 2026-03-13
-> **最后更新**: 2026-03-16
+> **最后更新**: 2026-03-19
 > **设计目标**: 实现装修单预算员的自动分配与手动派单功能，支持待分配队列、反向自动分配、装修类型匹配
 > **核心原则**: 一个装修单只分配一次报价员（该人员也是后续报价单的预算员），多个报价单版本共用同一预算员
 >
-> **重要更正（v1.5）**:
+> **重要说明（v2.0）**:
 > - ✅ 报价员分配关系存储在 `decoration.quoter`（`decoration.quid`）
 > - ✅ **报价员=预算员**：分配给装修单的报价员，就是后续报价单的创建人（`quotation.creater`）
 > - ✅ 分配时间使用 `quotation.createtime`，不需要 `budgetAssignTime` 字段
+> - ✅ 数据库表结构已更新为v2.0版本（统一使用 `quotationassign` 前缀）
 > - ❌ ~~不需要添加 `budgetUid` 和 `budgetAssignTime` 字段~~（v1.4 中的错误已更正）
+>
+> **v2.0 主要变更**:
+> - 🔄 表名统一使用 `quotationassign` 前缀（quotationassignconfig、quotationassignuserrule等）
+> - 🔄 主键字段名调整（bcid→qacid, burid→qaurid, barid→qarid）
+> - 🔄 状态字段类型从 TINYINT(1) 改为 SMALLINT(6)
+> - 🔄 主键字段类型从 INT(11) 改为 BIGINT(20)
 
 ---
 
@@ -92,27 +99,29 @@ decoration.quoter (UserPO 对象，通过 quid 关联)
 
 ---
 
-### 2. 预算员规则表 (quotation.quotationuserrule)
+### 2. 预算员规则表 (quotation.quotationassignuserrule)
 
 ```sql
-CREATE TABLE quotation.quotationuserrule (
-    burid INT(11) NOT NULL AUTO_INCREMENT COMMENT '预算员规则ID',
+CREATE TABLE quotation.quotationassignuserrule (
+    qaurid BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '预算员规则ID',
     uid INT(11) NOT NULL COMMENT '用户ID（预算员工号）',
     company INT(11) NOT NULL COMMENT '关联公司ID',
     department INT(11) COMMENT '部门ID',
-    status TINYINT(1) NOT NULL DEFAULT 1 COMMENT '状态：1-待分配，2-制作中，3-停止，4-已完成',
+    status SMALLINT(6) NOT NULL DEFAULT 1 COMMENT '状态：1-待分配，2-制作中，3-停止，4-已完成',
     lastFinishTime TIMESTAMP NULL COMMENT '最后完成时间',
     currentTaskCount INT(8) DEFAULT 0 COMMENT '当前任务数量',
     createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (burid),
+    PRIMARY KEY (qaurid),
     UNIQUE KEY uk_uid_company (uid, company),
     KEY idx_status_finishTime (status, lastFinishTime),
-    KEY idx_company (company)
+    KEY idx_company (company),
+    KEY idx_department (department)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='预算员人员规则表';
 ```
 
 **字段说明**:
+- `qaurid`: 预算员规则ID（主键，BIGINT类型）
 - `uid`: 预算员用户ID（该用户会被分配为装修单的报价员）
 - `status`: 预算员状态
   - `1`: 待分配（可接收新任务）
@@ -129,24 +138,24 @@ CREATE TABLE quotation.quotationuserrule (
 
 ---
 
-### 3. 预算员类型支持表 (quotation.quotationuserruletype)
+### 3. 预算员类型支持表 (quotation.quotationassignuserruletype)
 
 ```sql
-CREATE TABLE quotation.quotationuserruletype (
-    id INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    burid INT(11) NOT NULL COMMENT '预算员规则ID',
-    type TINYINT(1) NOT NULL COMMENT '装修类型：1-半包，2-整装',
+CREATE TABLE quotation.quotationassignuserruletype (
+    id BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    qaurid BIGINT(20) NOT NULL COMMENT '预算员规则ID',
+    type SMALLINT(6) NOT NULL COMMENT '装修类型：1-半包，2-整装',
     createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (id),
-    UNIQUE KEY uk_burid_type (burid, type),
-    KEY idx_burid (burid),
+    UNIQUE KEY uk_qaurid_type (qaurid, type),
+    KEY idx_qaurid (qaurid),
     KEY idx_type (type)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='预算员支持类型表';
 ```
 
 **字段说明**:
-- `id`: 主键ID
-- `burid`: 预算员规则ID（关联 `quotationuserrule.burid`）
+- `id`: 主键ID（BIGINT类型）
+- `qaurid`: 预算员规则ID（关联 `quotationassignuserrule.qaurid`）
 - `type`: 支持的装修类型
   - `1`: 半包
   - `2`: 整装
@@ -165,25 +174,27 @@ CREATE TABLE quotation.quotationuserruletype (
 
 ```sql
 CREATE TABLE quotation.quotationassignrequest (
-    barid INT(11) NOT NULL AUTO_INCREMENT COMMENT '请求ID',
+    qarid BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '请求ID',
     orderId VARCHAR(15) NOT NULL COMMENT '装修单号（关联 decoration）',
     company INT(11) NOT NULL COMMENT '公司ID',
     department INT(11) COMMENT '部门ID',
-    decorationType TINYINT(1) NOT NULL COMMENT '装修类型：1-半包，2-整装',
-    priority TINYINT(1) NOT NULL DEFAULT 5 COMMENT '优先级：1-最高，5-普通，9-最低',
+    decorationType SMALLINT(6) NOT NULL COMMENT '装修类型：1-半包，2-整装',
+    priority SMALLINT(6) NOT NULL DEFAULT 5 COMMENT '优先级：1-最高，5-普通，9-最低',
     requestTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '请求时间',
     requestUid INT(11) COMMENT '请求人用户ID（设计师）',
-    status TINYINT(1) NOT NULL DEFAULT 1 COMMENT '状态：1-待分配，2-已分配',
+    status SMALLINT(6) NOT NULL DEFAULT 1 COMMENT '状态：1-待分配，2-已分配',
     assignTime TIMESTAMP NULL COMMENT '分配时间',
     remark VARCHAR(255) COMMENT '备注',
-    PRIMARY KEY (barid),
+    PRIMARY KEY (qarid),
     UNIQUE KEY uk_orderId_status (orderId, status),
     KEY idx_company_status (company, status),
-    KEY idx_priority_time (priority, requestTime)
+    KEY idx_priority_time (priority, requestTime),
+    KEY idx_orderId (orderId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='装修单预算分配请求表';
 ```
 
 **字段说明**:
+- `qarid`: 请求ID（主键，BIGINT类型）
 - `orderId`: 装修单号（关联 decoration.orderId）
 - `company`: 公司ID（用于匹配预算员）
 - `department`: 部门ID（可选）
@@ -210,23 +221,25 @@ CREATE TABLE quotation.quotationassignrequest (
 
 ```sql
 CREATE TABLE quotation.quotationassignrecord (
-    qarid INT(11) NOT NULL AUTO_INCREMENT COMMENT '记录ID',
+    qarid BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '记录ID',
     orderId VARCHAR(15) NOT NULL COMMENT '装修单号',
     uid INT(11) COMMENT '预算员用户ID（成功时有值）',
-    assignType TINYINT(1) NOT NULL COMMENT '分配类型：1-正向自动，2-手动，3-反向自动',
-    assignResult TINYINT(1) NOT NULL COMMENT '分配结果：1-成功，0-失败',
+    assignType SMALLINT(6) NOT NULL COMMENT '分配类型：1-正向自动，2-手动，3-反向自动',
+    assignResult SMALLINT(6) NOT NULL COMMENT '分配结果：1-成功，0-失败',
     assignUid INT(11) COMMENT '分配人用户ID（手动分配时）',
     assignTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '分配时间',
     failReason VARCHAR(255) COMMENT '失败原因',
-    decorationType TINYINT(1) COMMENT '装修类型',
+    decorationType SMALLINT(6) COMMENT '装修类型',
     PRIMARY KEY (qarid),
     KEY idx_orderId (orderId),
     KEY idx_uid (uid),
-    KEY idx_assignTime (assignTime)
+    KEY idx_assignTime (assignTime),
+    KEY idx_assignType (assignType)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='装修单预算分配记录表（历史追溯）';
 ```
 
 **字段说明**:
+- `qarid`: 记录ID（主键，BIGINT类型）
 - `orderId`: 装修单号
 - `uid`: 预算员用户ID（成功分配时有值，失败时为NULL）
 - `assignType`: 分配类型
@@ -247,18 +260,18 @@ CREATE TABLE quotation.quotationassignrecord (
 
 ---
 
-### 6. 预算配置表 (quotation.quotationconfig)
+### 6. 预算配置表 (quotation.quotationassignconfig)
 
 ```sql
-CREATE TABLE quotation.quotationconfig (
-    bcid INT(11) NOT NULL AUTO_INCREMENT COMMENT '配置ID',
+CREATE TABLE quotation.quotationassignconfig (
+    qacid BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '配置ID',
     company INT(11) NOT NULL COMMENT '公司ID',
     department INT(11) COMMENT '部门ID',
-    enabled TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否启用：0-禁用，1-启用',
-    autoAssign TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否自动分配：0-手动，1-自动',
+    enabled SMALLINT(6) NOT NULL DEFAULT 1 COMMENT '是否启用：0-禁用，1-启用',
+    autoAssign SMALLINT(6) NOT NULL DEFAULT 1 COMMENT '是否自动分配：0-手动，1-自动',
     createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (bcid),
+    PRIMARY KEY (qacid),
     UNIQUE KEY uk_company_dept (company, department)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='预算配置表';
 ```
@@ -358,14 +371,14 @@ graph TD
 **分配逻辑（含类型匹配）**:
 ```sql
 -- 步骤1：查找待分配且完成时间最早的预算员
-SELECT * FROM quotation.quotationuserrule
+SELECT * FROM quotation.quotationassignuserrule
 WHERE status = 1  -- 待分配
   AND company = ?
 ORDER BY lastFinishTime ASC, currentTaskCount ASC;
 
 -- 步骤2：验证预算员是否支持该装修类型
-SELECT * FROM quotation.quotationuserruletype
-WHERE burid = ?
+SELECT * FROM quotation.quotationassignuserruletype
+WHERE qaurid = ?
   AND type = ?;  -- 装修单类型（1或2）
 ```
 
@@ -376,7 +389,7 @@ WHERE burid = ?
    - 如果未分配：继续后续步骤
 3. 查找状态为"待分配"的预算员（按完成时间排序）
 4. **逐个验证预算员是否支持该类型**：
-   - 查询 `quotationuserruletype` 表
+   - 查询 `quotationassignuserruletype` 表
    - 判断是否包含目标类型
    - 如果不支持，继续查找下一个
    - 如果支持，选中该预算员
@@ -420,7 +433,7 @@ WHERE burid = ?
 
 **执行步骤**:
 1. **事务开始**
-2. **获取预算员支持的类型列表**（查询 `quotationuserruletype`）
+2. **获取预算员支持的类型列表**（查询 `quotationassignuserruletype`）
 3. 查找待分配队列中类型匹配且最优先的任务
 4. 如果找到任务：
    - 更新装修单报价员（`decoration.quoter`）
@@ -559,7 +572,7 @@ quotation/
 - `quotation.quotationassignuserruletype` - 预算员类型支持表
 - `quotation.quotationassignrequest` - 分配请求表
 - `quotation.quotationassignrecord` - 分配记录表
-- `quotation.quotationconfig` - 预算配置表
+- `quotation.quotationassignconfig` - 预算配置表
 - `decoration.decorationpicture` - 装修图纸表
 
 ### 字段对应关系
@@ -575,6 +588,55 @@ quotation/
 ---
 
 **设计完成日期**: 2026-03-13
-**最后更新**: 2026-03-16
+**最后更新**: 2026-03-19
 **文档维护**: Claude AI
-**审核状态**: 已更新（v1.5）
+**审核状态**: 已更新（v2.0）
+
+---
+
+## 📝 版本更新日志
+
+### v2.0 (2026-03-19)
+**重大更新**: 数据库表结构标准化
+
+**变更内容**:
+1. **表名统一化**：
+   - `quotationconfig` → `quotationassignconfig`
+   - `quotationuserrule` → `quotationassignuserrule`
+   - `quotationuserruletype` → `quotationassignuserruletype`
+   - `quotationassignrequest` 保持不变（已有assign前缀）
+   - `quotationassignrecord` 保持不变（已有assign前缀）
+
+2. **主键字段调整**：
+   - `bcid` → `qacid` (Budget Config ID → Quotation Assign Config ID)
+   - `burid` → `qaurid` (Budget User Rule ID → Quotation Assign User Rule ID)
+   - `barid` → `qarid` (Budget Assign Request ID → Quotation Assign Request ID)
+
+3. **数据类型优化**：
+   - 主键字段：`INT(11)` → `BIGINT(20)`（支持更大的数据量）
+   - 状态字段：`TINYINT(1)` → `SMALLINT(6)`（更好的扩展性）
+
+4. **索引优化**：
+   - 新增 `idx_department` 索引（quotationassignuserrule表）
+   - 新增 `idx_orderId` 索引（quotationassignrequest表）
+   - 新增 `idx_assignType` 索引（quotationassignrecord表）
+
+5. **SQL脚本**：
+   - 完整的建表脚本：`sql/add_quotation_budget_assignment.sql`
+   - 包含详细注释和示例数据
+   - 包含索引说明和使用场景
+
+**影响范围**:
+- ✅ 所有PO实体类已更新（匹配新表结构）
+- ✅ 所有DAO、Service、Action已实现
+- ✅ 前端API已更新为正确的接口名称
+- ⚠️ 需要执行SQL脚本创建数据库表
+
+### v1.5 (2026-03-16)
+- 更正报价员与预算员的关系说明
+- 明确分配关系存储在 `decoration.quoter`
+- 移除错误的 `budgetUid` 和 `budgetAssignTime` 字段设计
+
+### v1.0 (2026-03-13)
+- 初始设计版本
+- 定义核心业务流程和表结构
