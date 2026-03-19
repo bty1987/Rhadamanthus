@@ -7,40 +7,23 @@ jQuery(function($) {
 	// 加载公司选项（用于编辑对话框）
 	function loadCompanyOptions() {
 		com.post(api.system.queryCompany, {}, function(res) {
-			var $companyId = com.focusPage('#companyId');
-
-			// 先销毁已存在的chosen实例（如果有）
-			if ($companyId.data('chosen')) {
-				$companyId.chosen('destroy');
-			}
-
 			var html = '<option value="">请选择公司</option>';
 			$.each(res.companys || [], function(i, company) {
 				html += '<option value="' + company.cid + '">' + company.name + '</option>';
 			});
-			$companyId.html(html);
-
-			// 重新初始化chosen
-			$companyId.chosen({ allow_single_deselect: true });
+			com.focusPage('#companyId').html(html);
 
 			// 自动选择当前用户的公司
 			if (params.userInfo && params.userInfo.company) {
-				$companyId.val(params.userInfo.company.cid).trigger('chosen:updated');
+				com.focusPage('#companyId').val(params.userInfo.company.cid);
 			}
 		});
 	}
 
 	// 加载部门选项（使用 communion 模块的部门接口）
 	function loadDepartmentOptions(companyId) {
-		var $departmentId = com.focusPage('#departmentId');
-
 		if (!companyId) {
-			// 先销毁已存在的chosen实例（如果有）
-			if ($departmentId.data('chosen')) {
-				$departmentId.chosen('destroy');
-			}
-			$departmentId.html('<option value="">请选择部门（可选）</option>');
-			$departmentId.chosen({ allow_single_deselect: true });
+			com.focusPage('#departmentId').html('<option value="">请选择部门（可选）</option>');
 			return;
 		}
 
@@ -48,19 +31,11 @@ jQuery(function($) {
 			"dept": {},
 			"company": companyId
 		}, function(res) {
-			// 先销毁已存在的chosen实例（如果有）
-			if ($departmentId.data('chosen')) {
-				$departmentId.chosen('destroy');
-			}
-
 			var html = '<option value="">请选择部门（可选）</option>';
 			$.each(res.deptList || [], function(i, dept) {
 				html += '<option value="' + dept.did + '">' + dept.name + '</option>';
 			});
-			$departmentId.html(html);
-
-			// 重新初始化chosen
-			$departmentId.chosen({ allow_single_deselect: true });
+			com.focusPage('#departmentId').html(html);
 		});
 	}
 
@@ -79,12 +54,12 @@ jQuery(function($) {
 			}, function(res) {
 				var config = res.quotationAssignConfig;
 				com.focusPage('#qacid').val(config.qacid);
-				com.focusPage('#companyId').val(config.company).trigger('chosen:updated');
+				com.focusPage('#companyId').val(config.company);
 				loadDepartmentOptions(config.company);
 
 				setTimeout(function() {
 					if (config.department) {
-						com.focusPage('#departmentId').val(config.department).trigger('chosen:updated');
+						com.focusPage('#departmentId').val(config.department);
 					}
 					com.focusPage('input[name="enabled"][value="' + config.enabled + '"]').prop('checked', true);
 					com.focusPage('input[name="autoAssign"][value="' + config.autoAssign + '"]').prop('checked', true);
