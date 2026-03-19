@@ -16,7 +16,8 @@ jQuery(function($) {
 				html += '<option value="' + user.uid + '">' + user.currentName + ' (工号:' + user.userNo + ')</option>';
 			});
 			com.focusPage('#userId').html(html);
-			com.focusPage('#userId').chosen({ allow_single_deselect: true });
+			// chosen-select 类会自动初始化，只需更新即可
+			com.focusPage('#userId').trigger('chosen:updated');
 		});
 	}
 

@@ -34,7 +34,8 @@ jQuery(function($) {
 				html += '</option>';
 			});
 			com.focusPage('#budgetUserId').html(html);
-			com.focusPage('#budgetUserId').chosen({ allow_single_deselect: true });
+			// chosen-select 类会自动初始化，只需更新即可
+			com.focusPage('#budgetUserId').trigger('chosen:updated');
 		});
 	}
 
