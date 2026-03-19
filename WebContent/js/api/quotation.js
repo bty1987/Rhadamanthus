@@ -2059,6 +2059,21 @@ $.extend(api, {
         queryQuotationAssignUserRuleForOption: {
             url: "queryQuotationAssignUserRuleForOption.do"
         },
+        queryQuotationAssignUserRule: {
+            url: "queryQuotationAssignUserRule.do"
+        },
+        queryQuotationAssignUserRuleByUid: {
+            url: "queryQuotationAssignUserRuleByUid.do"
+        },
+        queryQuotationAssignUserRuleByCompany: {
+            url: "queryQuotationAssignUserRuleByCompany.do"
+        },
+        queryQuotationAssignUserRuleByDid: {
+            url: "queryQuotationAssignUserRuleByDid.do"
+        },
+        pullQuotationAssignUserRuleForPending: {
+            url: "pullQuotationAssignUserRuleForPending.do"
+        },
         addQuotationAssignUserRule: {
             url: "addQuotationAssignUserRule.do",
             validate: {
@@ -2068,6 +2083,9 @@ $.extend(api, {
         },
         updateQuotationAssignUserRule: {
             url: "updateQuotationAssignUserRule.do"
+        },
+        updateQuotationAssignUserRuleForStatus: {
+            url: "updateQuotationAssignUserRuleForStatus.do"
         },
         disableQuotationAssignUserRuleByQaurid: {
             url: "disableQuotationAssignUserRuleByQaurid.do"
@@ -2091,11 +2109,23 @@ $.extend(api, {
         pageQuotationAssignConfigByCondition: {
             url: "pageQuotationAssignConfigByCondition.do"
         },
-        queryQuotationAssignConfigByDid: {
-            url: "queryQuotationAssignConfigByDid.do"
+        queryQuotationAssignConfig: {
+            url: "queryQuotationAssignConfig.do"
         },
-        updateQuotationAssignConfig: {
-            url: "updateQuotationAssignConfig.do"
+        getQuotationAssignConfigsByCompany: {
+            url: "getQuotationAssignConfigsByCompany.do"
+        },
+        saveQuotationAssignConfig: {
+            url: "saveQuotationAssignConfig.do"
+        },
+        deleteQuotationAssignConfig: {
+            url: "deleteQuotationAssignConfig.do"
+        },
+        enableQuotationAssignConfig: {
+            url: "enableQuotationAssignConfig.do"
+        },
+        disableQuotationAssignConfig: {
+            url: "disableQuotationAssignConfig.do"
         },
 
         // 分配操作
