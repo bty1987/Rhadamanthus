@@ -28,7 +28,10 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 
 	@Override
 	public QuotationAssignConfigVO queryQuotationAssignConfigByCompanyAndDepartment(QuotationAssignConfigVO quotationAssignConfig, Integer company) {
-		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByDid(quotationAssignConfig.getCompany(), quotationAssignConfig.getDepartment());
+		// 使用参数中的 company，而不是从 VO 中获取（避免空指针）
+		// department 从 VO 中获取是安全的，因为它是可选参数
+		Integer department = quotationAssignConfig != null ? quotationAssignConfig.getDepartment() : null;
+		QuotationAssignConfigPO po = quotationAssignConfigDao.queryQuotationAssignConfigByDid(company, department);
 		return po != null ? po.ptv(new QuotationAssignConfigVO()) : null;
 	}
 
