@@ -6,9 +6,9 @@ jQuery(function($) {
 
 	// 加载公司选项（用于编辑对话框）
 	function loadCompanyOptions() {
-		com.post(api.system.queryCompanyForOption, {}, function(res) {
+		com.post(api.system.queryCompany, {}, function(res) {
 			var html = '<option value="">请选择公司</option>';
-			$.each(res.companies || [], function(i, company) {
+			$.each(res.companys || [], function(i, company) {
 				html += '<option value="' + company.cid + '">' + company.name + '</option>';
 			});
 			com.focusPage('#companyId').html(html);
@@ -21,18 +21,19 @@ jQuery(function($) {
 		});
 	}
 
-	// 加载部门选项
+	// 加载部门选项（使用 communion 模块的部门接口）
 	function loadDepartmentOptions(companyId) {
 		if (!companyId) {
 			com.focusPage('#departmentId').html('<option value="">请选择部门（可选）</option>').trigger('chosen:updated');
 			return;
 		}
 
-		com.post(api.system.queryDepartmentByCompany, {
+		com.post(api.communion.queryDepartment, {
+			"dept": {},
 			"company": companyId
 		}, function(res) {
 			var html = '<option value="">请选择部门（可选）</option>';
-			$.each(res.departments || [], function(i, dept) {
+			$.each(res.deptList || [], function(i, dept) {
 				html += '<option value="' + dept.did + '">' + dept.name + '</option>';
 			});
 			com.focusPage('#departmentId').html(html);
@@ -50,10 +51,10 @@ jQuery(function($) {
 		if (qacid) {
 			com.focusPage('#modalTitle').text('编辑预算配置');
 
-			com.post(api.quotation.getQuotationConfig, {
-				"qacid": qacid
+			com.post(api.quotation.queryQuotationAssignConfig, {
+				"quotationAssignConfig.qacid": qacid
 			}, function(res) {
-				var config = res.quotationConfig;
+				var config = res.quotationAssignConfig;
 				com.focusPage('#qacid').val(config.qacid);
 				com.focusPage('#companyId').val(config.company).trigger('chosen:updated');
 				loadDepartmentOptions(config.company);
@@ -87,14 +88,14 @@ jQuery(function($) {
 		}
 
 		var params = {
-			"quotationConfig.qacid": qacid || null,
-			"quotationConfig.company": company,
-			"quotationConfig.department": department || null,
-			"quotationConfig.enabled": enabled,
-			"quotationConfig.autoAssign": autoAssign
+			"quotationAssignConfig.qacid": qacid || null,
+			"quotationAssignConfig.company": company,
+			"quotationAssignConfig.department": department || null,
+			"quotationAssignConfig.enabled": enabled,
+			"quotationAssignConfig.autoAssign": autoAssign
 		};
 
-		var apiMethod = qacid ? api.quotation.updateQuotationConfig : api.quotation.saveQuotationConfig;
+		var apiMethod = api.quotation.saveQuotationAssignConfig;
 
 		com.post(apiMethod, params, function(res) {
 			if (res.success) {
@@ -110,8 +111,8 @@ jQuery(function($) {
 	// 删除
 	function deleteConfig(qacid) {
 		com.showConfirm('确认删除该配置？', function() {
-			com.post(api.quotation.deleteQuotationConfig, {
-				"qacid": qacid
+			com.post(api.quotation.deleteQuotationAssignConfig, {
+				"quotationAssignConfig.qacid": qacid
 			}, function(res) {
 				if (res.success) {
 					com.showAlert(com.info, '删除成功');
@@ -125,12 +126,12 @@ jQuery(function($) {
 
 	// 切换启用状态
 	function toggleEnabled(qacid, currentEnabled) {
-		var apiMethod = currentEnabled == 1 ? api.quotation.disableQuotationAssign : api.quotation.enableQuotationAssign;
+		var apiMethod = currentEnabled == 1 ? api.quotation.disableQuotationAssignConfig : api.quotation.enableQuotationAssignConfig;
 		var actionText = currentEnabled == 1 ? '禁用' : '启用';
 
 		com.showConfirm('确认' + actionText + '该配置？', function() {
 			com.post(apiMethod, {
-				"qacid": qacid
+				"quotationAssignConfig.qacid": qacid
 			}, function(res) {
 				if (res.success) {
 					com.showAlert(com.info, res.message || actionText + '成功');
