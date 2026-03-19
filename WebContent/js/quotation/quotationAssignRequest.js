@@ -23,6 +23,13 @@ jQuery(function($) {
 			"company": params.userInfo.company.cid,
 			"quotationAssignUserRule.department": params.userInfo.user.department ? params.userInfo.user.department.did : null
 		}, function(res) {
+			var $budgetUserId = com.focusPage('#budgetUserId');
+
+			// 先销毁已存在的chosen实例（如果有）
+			if ($budgetUserId.data('chosen')) {
+				$budgetUserId.chosen('destroy');
+			}
+
 			var html = '<option value="">请选择预算员</option>';
 			$.each(res.quotationAssignUserRules || [], function(i, rule) {
 				var user = rule.user;
@@ -33,9 +40,10 @@ jQuery(function($) {
 				html += user.currentName + ' (当前任务: ' + (rule.currentTaskCount || 0) + '/' + (rule.maxTasks || 5) + ', 负载: ' + loadRate + '%)';
 				html += '</option>';
 			});
-			com.focusPage('#budgetUserId').html(html);
-			// chosen-select 类会自动初始化，只需更新即可
-			com.focusPage('#budgetUserId').trigger('chosen:updated');
+			$budgetUserId.html(html);
+
+			// 重新初始化chosen
+			$budgetUserId.chosen({ allow_single_deselect: true });
 		});
 	}
 

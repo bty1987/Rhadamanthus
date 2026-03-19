@@ -7,25 +7,40 @@ jQuery(function($) {
 	// 加载公司选项（用于编辑对话框）
 	function loadCompanyOptions() {
 		com.post(api.system.queryCompany, {}, function(res) {
+			var $companyId = com.focusPage('#companyId');
+
+			// 先销毁已存在的chosen实例（如果有）
+			if ($companyId.data('chosen')) {
+				$companyId.chosen('destroy');
+			}
+
 			var html = '<option value="">请选择公司</option>';
 			$.each(res.companys || [], function(i, company) {
 				html += '<option value="' + company.cid + '">' + company.name + '</option>';
 			});
-			com.focusPage('#companyId').html(html);
-			// chosen-select 类会自动初始化，只需更新即可
-			com.focusPage('#companyId').trigger('chosen:updated');
+			$companyId.html(html);
+
+			// 重新初始化chosen
+			$companyId.chosen({ allow_single_deselect: true });
 
 			// 自动选择当前用户的公司
 			if (params.userInfo && params.userInfo.company) {
-				com.focusPage('#companyId').val(params.userInfo.company.cid).trigger('chosen:updated');
+				$companyId.val(params.userInfo.company.cid).trigger('chosen:updated');
 			}
 		});
 	}
 
 	// 加载部门选项（使用 communion 模块的部门接口）
 	function loadDepartmentOptions(companyId) {
+		var $departmentId = com.focusPage('#departmentId');
+
 		if (!companyId) {
-			com.focusPage('#departmentId').html('<option value="">请选择部门（可选）</option>').trigger('chosen:updated');
+			// 先销毁已存在的chosen实例（如果有）
+			if ($departmentId.data('chosen')) {
+				$departmentId.chosen('destroy');
+			}
+			$departmentId.html('<option value="">请选择部门（可选）</option>');
+			$departmentId.chosen({ allow_single_deselect: true });
 			return;
 		}
 
@@ -33,13 +48,19 @@ jQuery(function($) {
 			"dept": {},
 			"company": companyId
 		}, function(res) {
+			// 先销毁已存在的chosen实例（如果有）
+			if ($departmentId.data('chosen')) {
+				$departmentId.chosen('destroy');
+			}
+
 			var html = '<option value="">请选择部门（可选）</option>';
 			$.each(res.deptList || [], function(i, dept) {
 				html += '<option value="' + dept.did + '">' + dept.name + '</option>';
 			});
-			com.focusPage('#departmentId').html(html);
-			// chosen-select 类会自动初始化，只需更新即可
-			com.focusPage('#departmentId').trigger('chosen:updated');
+			$departmentId.html(html);
+
+			// 重新初始化chosen
+			$departmentId.chosen({ allow_single_deselect: true });
 		});
 	}
 

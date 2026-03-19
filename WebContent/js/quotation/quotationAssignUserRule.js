@@ -11,13 +11,21 @@ jQuery(function($) {
 			"page.pageNo": 1,
 			"page.pageSize": 1000
 		}, function(res) {
+			var $userId = com.focusPage('#userId');
+
+			// 先销毁已存在的chosen实例（如果有）
+			if ($userId.data('chosen')) {
+				$userId.chosen('destroy');
+			}
+
 			var html = '<option value="">请选择用户</option>';
 			$.each(res.data || [], function(i, user) {
 				html += '<option value="' + user.uid + '">' + user.currentName + ' (工号:' + user.userNo + ')</option>';
 			});
-			com.focusPage('#userId').html(html);
-			// chosen-select 类会自动初始化，只需更新即可
-			com.focusPage('#userId').trigger('chosen:updated');
+			$userId.html(html);
+
+			// 重新初始化chosen
+			$userId.chosen({ allow_single_deselect: true });
 		});
 	}
 
