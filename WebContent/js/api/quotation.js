@@ -2,6 +2,9 @@ $.extend(api.index, {
     functionAreaIndex: {
         url: "/views/quotation/functionArea.html"
     },
+    quotationAssignConfigIndex: {
+        url: "/views/quotation/quotationAssignConfig.html"
+    },
     quotationItemIndex: {
         url: "/views/quotation/quotationItem.html"
     },
@@ -2337,6 +2340,44 @@ $.extend(api, {
                 args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.comsPrice", "addReduce.discount", "addReduce.taxRate", "addReduce.taxPrice"],
             }
         },
+
+        // ==================== 预算员分配配置接口 ====================
+
+        pageQuotationAssignConfig: {
+            url: "pageQuotationAssignConfig.do",
+            demo: true
+        },
+
+        queryQuotationAssignConfigById: {
+            url: "queryQuotationAssignConfigById.do",
+            demo: true,
+            type: "query"
+        },
+
+        createQuotationAssignConfig: {
+            url: "createQuotationAssignConfig.do",
+            intercept: true
+        },
+
+        updateQuotationAssignConfig: {
+            url: "updateQuotationAssignConfig.do",
+            intercept: true
+        },
+
+        deleteQuotationAssignConfig: {
+            url: "deleteQuotationAssignConfig.do",
+            intercept: true
+        },
+
+        updateQuotationAssignConfigForStatus: {
+            url: "updateQuotationAssignConfigForStatus.do",
+            intercept: true
+        },
+
+        updateQuotationAssignConfigForAssign: {
+            url: "updateQuotationAssignConfigForAssign.do",
+            intercept: true
+        }
 
     }
 });

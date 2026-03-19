@@ -1237,5 +1237,43 @@ Condition.addupRule("quotation", {
             op: "like",
             validate: null
         }
+    },
+
+    // ==================== 预算员分配配置相关条件 ====================
+
+    // 预算配置 - 公司
+    "quotation-assign-config-company": {
+        label: "公司",
+        type: "select",
+        submitConfig: {
+            name: "company",
+            op: "eq",
+            alone: true,
+            validate: null
+        },
+        dataSource: {
+            url: api.system.queryCompany,
+            postData: {},
+            listPath: "companys",
+            keyPath: "cid",
+            valuePath: "name"
+        }
+    },
+
+    // 预算配置 - 启用状态
+    "quotation-assign-config-enabled": {
+        label: "启用状态",
+        type: "select",
+        submitConfig: {
+            name: "enabled",
+            op: "eq",
+            alone: true,
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.quotation().quotationAssignConfig.enabled.datas
+        }
     }
 });
