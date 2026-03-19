@@ -34,7 +34,8 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 
 	@Override
 	public List<QuotationAssignConfigVO> queryQuotationAssignConfigByCompany(QuotationAssignConfigVO quotationAssignConfig, Integer company) {
-		List<QuotationAssignConfigPO> poList = quotationAssignConfigDao.queryQuotationAssignConfig(quotationAssignConfig.getCompany());
+		// 使用参数中的 company，而不是从 VO 中获取（避免空指针）
+		List<QuotationAssignConfigPO> poList = quotationAssignConfigDao.queryQuotationAssignConfig(company);
 		List<QuotationAssignConfigVO> voList = new ArrayList<QuotationAssignConfigVO>();
 		for (QuotationAssignConfigPO po : poList) {
 			voList.add(po.ptv(new QuotationAssignConfigVO()));
