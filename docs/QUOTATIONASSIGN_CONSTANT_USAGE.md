@@ -61,11 +61,22 @@
 
 ## 📦 constant 对象使用说明
 
-### 语法格式
+### ⚠️ 重要规范
+
+**前台使用 constant 的标准格式：**
 
 ```javascript
-constant.模块名().类名.字段名.datas
+constant.<module>().<clazz>.<field/常量名>.<datas/keys>
 ```
+
+**规则说明：**
+- `module()` - 模块名，注意是**函数调用**（有括号）
+- `clazz` - 类名（实体类名）
+- `field` - 字段名或常量名
+- `datas` - 获取数据列表（返回 `[{key, value}, ...]`）
+- `keys` - 获取键列表（返回 `[key1, key2, ...]`）
+
+### 语法格式
 
 ### quotationAssign 相关的 constant 路径
 
