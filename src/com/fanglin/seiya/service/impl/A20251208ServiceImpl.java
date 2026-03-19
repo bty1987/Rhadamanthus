@@ -185,7 +185,7 @@ public class A20251208ServiceImpl implements A20251208Service {
 		SystemConfigPO userlimit = systemConfigDao.querySystemConfig("userlimit", company);
 
 		if (userDao.countUserByCompany(company) >= (userlimit == null ? 100 : Integer.valueOf(userlimit.getValue()))) {
-			throw new FLException(190008, "人员数已达上限, 公司上限");
+			// throw new FLException(190008, "人员数已达上限, 公司上限");
 		}
 
 		UserVO userVO = userInfoVO.getUser();
@@ -193,7 +193,10 @@ public class A20251208ServiceImpl implements A20251208Service {
 		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(userVO.getPhone(), userVO.getIdentity());
 
 		if (userPOs.size() > 0) {
-			throw new FLException(190006, "人员已存在");
+			// throw new FLException(190006, "人员已存在");
+			userInfoVO.getUser().ptv(userPOs.get(0));
+			userVO.setUid(userPOs.get(0).getUid());
+			return;
 		}
 
 		UserPO userPO = userDao.queryUserByLoginId(userVO.getLoginId());
@@ -583,7 +586,7 @@ public class A20251208ServiceImpl implements A20251208Service {
 			constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
 		} else {
 			constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(constructionScheduleVO.getOrderId(), constructionScheduleVO.getCnid());
-			
+
 			if (constructionSchedulePO == null) {
 				throw new FLException(120024, "工程环节不存在");
 			}

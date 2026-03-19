@@ -250,7 +250,16 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 			throw new FLException(330017, "装修单未绑定");
 		}
 
+		if (salesRefundsPO.getIsAffirm() == SalesRefundsPO.ISAFFIRM_AFFIRM_INT) {
+			return 0;
+		}
+
 		UserPO operater = salesRefundsPO.getCreater();
+
+		salesRefundsPO.setIsAffirm(SalesRefundsPO.ISAFFIRM_AFFIRM_INT);
+		salesRefundsPO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
+
+		salesRefundsDao.update(salesRefundsPO);
 
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO();
 
@@ -270,9 +279,6 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 		salesPaymentDao.flush();
 
 		salesRefundsPO.setSpid(salesPaymentPO.getSpid());
-
-		salesRefundsPO.setIsAffirm(SalesRefundsPO.ISAFFIRM_AFFIRM_INT);
-		salesRefundsPO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
 
 		salesRefundsDao.update(salesRefundsPO);
 
@@ -456,5 +462,4 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 
 		return 0;
 	}
-
 }

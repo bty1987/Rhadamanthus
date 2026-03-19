@@ -20,20 +20,28 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.beans.BeanUtils;
+
+import com.fanglin.quotation.vo.QuotationAssignConfigVO;
+
 /**
  * 预算配置表实体类
- *
- * <p>职责：控制哪些公司/部门启用预算员分配功能，以及分配方式</p>
- *
- * <p>核心字段：</p>
+ * 
+ * <p>
+ * 职责：控制哪些公司/部门启用预算员分配功能，以及分配方式
+ * </p>
+ * 
+ * <p>
+ * 核心字段：
+ * </p>
  * <ul>
- *   <li>qacid: 配置ID（主键）</li>
- *   <li>company: 公司ID</li>
- *   <li>department: 部门ID（NULL表示该公司所有部门）</li>
- *   <li>enabled: 是否启用（0-禁用，1-启用）</li>
- *   <li>autoAssign: 是否自动分配（0-手动，1-自动）</li>
+ * <li>qacid: 配置ID（主键）</li>
+ * <li>company: 公司ID</li>
+ * <li>department: 部门ID（NULL表示该公司所有部门）</li>
+ * <li>enabled: 是否启用（0-禁用，1-启用）</li>
+ * <li>autoAssign: 是否自动分配（0-手动，1-自动）</li>
  * </ul>
- *
+ * 
  * @author bty1987
  * @version 1.0
  */
@@ -113,7 +121,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 带主键的构造函数
-	 *
+	 * 
 	 * @param qacid 配置ID
 	 */
 	public QuotationAssignConfigPO(long qacid) {
@@ -125,7 +133,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 获取配置ID
-	 *
+	 * 
 	 * @return 配置ID
 	 */
 	@Id
@@ -137,7 +145,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 设置配置ID
-	 *
+	 * 
 	 * @param qacid 配置ID
 	 */
 	public void setQacid(long qacid) {
@@ -146,7 +154,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 获取公司ID
-	 *
+	 * 
 	 * @return 公司ID
 	 */
 	@Column(name = "company", nullable = false)
@@ -156,7 +164,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 设置公司ID
-	 *
+	 * 
 	 * @param company 公司ID
 	 */
 	public void setCompany(int company) {
@@ -165,7 +173,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 获取部门ID
-	 *
+	 * 
 	 * @return 部门ID（NULL表示该公司所有部门）
 	 */
 	@Column(name = "department")
@@ -175,7 +183,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 设置部门ID
-	 *
+	 * 
 	 * @param department 部门ID（NULL表示该公司所有部门）
 	 */
 	public void setDepartment(Integer department) {
@@ -184,7 +192,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 获取是否启用状态
-	 *
+	 * 
 	 * @return 是否启用（0-禁用，1-启用）
 	 */
 	@Column(name = "enabled", nullable = false)
@@ -194,7 +202,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 设置是否启用状态
-	 *
+	 * 
 	 * @param enabled 是否启用（0-禁用，1-启用）
 	 */
 	public void setEnabled(short enabled) {
@@ -203,7 +211,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 获取是否自动分配
-	 *
+	 * 
 	 * @return 是否自动分配（0-手动，1-自动）
 	 */
 	@Column(name = "autoAssign", nullable = false)
@@ -213,7 +221,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 设置是否自动分配
-	 *
+	 * 
 	 * @param autoAssign 是否自动分配（0-手动，1-自动）
 	 */
 	public void setAutoAssign(short autoAssign) {
@@ -222,7 +230,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 获取创建时间
-	 *
+	 * 
 	 * @return 创建时间
 	 */
 	@Column(name = "createTime", nullable = false, updatable = false)
@@ -232,7 +240,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 设置创建时间
-	 *
+	 * 
 	 * @param createTime 创建时间
 	 */
 	public void setCreateTime(Timestamp createTime) {
@@ -241,7 +249,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 获取更新时间
-	 *
+	 * 
 	 * @return 更新时间
 	 */
 	@Column(name = "updateTime", nullable = false)
@@ -251,7 +259,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 设置更新时间
-	 *
+	 * 
 	 * @param updateTime 更新时间
 	 */
 	public void setUpdateTime(Timestamp updateTime) {
@@ -262,7 +270,7 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 判断是否启用
-	 *
+	 * 
 	 * @return true-启用，false-禁用
 	 */
 	public boolean isEnabled() {
@@ -271,10 +279,17 @@ public class QuotationAssignConfigPO implements Serializable {
 
 	/**
 	 * 判断是否自动分配
-	 *
+	 * 
 	 * @return true-自动分配，false-手动分配
 	 */
 	public boolean isAutoAssign() {
 		return this.autoAssign == AUTO_ASSIGN_AUTO_INT;
+	}
+
+	public QuotationAssignConfigVO ptv(QuotationAssignConfigVO quotationAssignConfigVO) {
+
+		BeanUtils.copyProperties(this, quotationAssignConfigVO, "department", "company");
+
+		return quotationAssignConfigVO;
 	}
 }

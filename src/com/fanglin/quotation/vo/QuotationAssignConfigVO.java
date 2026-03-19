@@ -16,27 +16,33 @@ import java.sql.Timestamp;
 
 /**
  * 预算配置表值对象
- *
- * <p>职责：控制哪些公司/部门启用预算员分配功能，以及分配方式</p>
- *
- * <p>核心字段：</p>
+ * 
+ * <p>
+ * 职责：控制哪些公司/部门启用预算员分配功能，以及分配方式
+ * </p>
+ * 
+ * <p>
+ * 核心字段：
+ * </p>
  * <ul>
- *   <li>qacid: 配置ID（主键）</li>
- *   <li>company: 公司ID</li>
- *   <li>companyVO: 公司信息（关联对象）</li>
- *   <li>department: 部门ID</li>
- *   <li>departmentVO: 部门信息（关联对象）</li>
- *   <li>enabled: 是否启用（0-禁用，1-启用）</li>
- *   <li>autoAssign: 是否自动分配（0-手动，1-自动）</li>
+ * <li>qacid: 配置ID（主键）</li>
+ * <li>company: 公司ID</li>
+ * <li>companyVO: 公司信息（关联对象）</li>
+ * <li>department: 部门ID</li>
+ * <li>departmentVO: 部门信息（关联对象）</li>
+ * <li>enabled: 是否启用（0-禁用，1-启用）</li>
+ * <li>autoAssign: 是否自动分配（0-手动，1-自动）</li>
  * </ul>
- *
- * <p>注意：</p>
+ * 
+ * <p>
+ * 注意：
+ * </p>
  * <ul>
- *   <li>枚举值转换由前端处理，不在 VO 中添加转文字的方法</li>
- *   <li>前端使用三元运算符：v.enabled == 1 ? "启用" : "禁用"</li>
- *   <li>前端从 ds/*.json 文件读取枚举定义</li>
+ * <li>枚举值转换由前端处理，不在 VO 中添加转文字的方法</li>
+ * <li>前端使用三元运算符：v.enabled == 1 ? "启用" : "禁用"</li>
+ * <li>前端从 ds/*.json 文件读取枚举定义</li>
  * </ul>
- *
+ * 
  * @author bty1987
  * @version 1.0
  */
@@ -54,7 +60,7 @@ public class QuotationAssignConfigVO implements Serializable {
 	/**
 	 * 公司ID
 	 */
-	private Integer company;
+	private String company;
 
 	/**
 	 * 公司信息（关联对象）
@@ -102,7 +108,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 带主键的构造函数
-	 *
+	 * 
 	 * @param qacid 配置ID
 	 */
 	public QuotationAssignConfigVO(Long qacid) {
@@ -114,7 +120,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 获取配置ID
-	 *
+	 * 
 	 * @return 配置ID
 	 */
 	public Long getQacid() {
@@ -123,7 +129,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 设置配置ID
-	 *
+	 * 
 	 * @param qacid 配置ID
 	 */
 	public void setQacid(Long qacid) {
@@ -132,25 +138,25 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 获取公司ID
-	 *
+	 * 
 	 * @return 公司ID
 	 */
-	public Integer getCompany() {
+	public String getCompany() {
 		return company;
 	}
 
 	/**
 	 * 设置公司ID
-	 *
+	 * 
 	 * @param company 公司ID
 	 */
-	public void setCompany(Integer company) {
+	public void setCompany(String company) {
 		this.company = company;
 	}
 
 	/**
 	 * 获取公司信息
-	 *
+	 * 
 	 * @return 公司信息
 	 */
 	public Object getCompanyVO() {
@@ -159,7 +165,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 设置公司信息
-	 *
+	 * 
 	 * @param companyVO 公司信息
 	 */
 	public void setCompanyVO(Object companyVO) {
@@ -168,7 +174,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 获取部门ID
-	 *
+	 * 
 	 * @return 部门ID（NULL表示该公司所有部门）
 	 */
 	public Integer getDepartment() {
@@ -177,7 +183,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 设置部门ID
-	 *
+	 * 
 	 * @param department 部门ID（NULL表示该公司所有部门）
 	 */
 	public void setDepartment(Integer department) {
@@ -186,7 +192,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 获取部门信息
-	 *
+	 * 
 	 * @return 部门信息
 	 */
 	public Object getDepartmentVO() {
@@ -195,7 +201,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 设置部门信息
-	 *
+	 * 
 	 * @param departmentVO 部门信息
 	 */
 	public void setDepartmentVO(Object departmentVO) {
@@ -204,7 +210,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 获取是否启用状态
-	 *
+	 * 
 	 * @return 是否启用（0-禁用，1-启用）
 	 */
 	public Short getEnabled() {
@@ -213,7 +219,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 设置是否启用状态
-	 *
+	 * 
 	 * @param enabled 是否启用（0-禁用，1-启用）
 	 */
 	public void setEnabled(Short enabled) {
@@ -222,7 +228,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 获取是否自动分配
-	 *
+	 * 
 	 * @return 是否自动分配（0-手动，1-自动）
 	 */
 	public Short getAutoAssign() {
@@ -231,7 +237,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 设置是否自动分配
-	 *
+	 * 
 	 * @param autoAssign 是否自动分配（0-手动，1-自动）
 	 */
 	public void setAutoAssign(Short autoAssign) {
@@ -240,7 +246,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 获取创建时间
-	 *
+	 * 
 	 * @return 创建时间
 	 */
 	public Timestamp getCreateTime() {
@@ -249,7 +255,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 设置创建时间
-	 *
+	 * 
 	 * @param createTime 创建时间
 	 */
 	public void setCreateTime(Timestamp createTime) {
@@ -258,7 +264,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 获取更新时间
-	 *
+	 * 
 	 * @return 更新时间
 	 */
 	public Timestamp getUpdateTime() {
@@ -267,7 +273,7 @@ public class QuotationAssignConfigVO implements Serializable {
 
 	/**
 	 * 设置更新时间
-	 *
+	 * 
 	 * @param updateTime 更新时间
 	 */
 	public void setUpdateTime(Timestamp updateTime) {
