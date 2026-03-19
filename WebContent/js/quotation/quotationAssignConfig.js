@@ -46,6 +46,9 @@ jQuery(function($) {
 		com.focusPage('input[name="enabled"][value="1"]').prop('checked', true);
 		com.focusPage('input[name="autoAssign"][value="1"]').prop('checked', true);
 
+		// 先加载公司选项
+		loadCompanyOptions();
+
 		if (qacid) {
 			com.focusPage('#modalTitle').text('编辑预算配置');
 
@@ -271,7 +274,4 @@ jQuery(function($) {
 	com.focusPage('#companyId').on('change', function() {
 		loadDepartmentOptions($(this).val());
 	});
-
-	// 初始化加载公司选项
-	loadCompanyOptions();
 });
