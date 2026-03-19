@@ -465,7 +465,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		}
 
 		if (Arrays.asList(CustomerSourcePO.STATUS_DISABLE_INT, CustomerSourcePO.STATUS_TRAN_INT).contains(customerSourcePO.getStatus())) {
-			throw new FLException(330074, "客户资源不可操作");
+			// throw new FLException(330074, "客户资源不可操作");
 		}
 
 		CompanyPO companyPO = companyDao.get(company);

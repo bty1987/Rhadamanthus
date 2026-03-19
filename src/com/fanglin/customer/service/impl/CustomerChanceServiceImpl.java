@@ -841,7 +841,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		if (customerSourcePO.getStatus() != CustomerSourcePO.STATUS_CONFIRM_INT) {
-			throw new FLException(330074, "客户资源不可操作");
+			// throw new FLException(330074, "客户资源不可操作");
 		}
 
 		CustomerPO customerPO = customerDao.get(customerChanceVO.getCustomer().getCid());
