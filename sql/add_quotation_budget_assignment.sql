@@ -424,9 +424,15 @@ INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, 
 ('启用', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_ENABLED_INT', '1', '启用', '0');
 
 -- 插入分配方式枚举数据
-INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, `key`, `value`, `status`) VALUES 
+INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, `key`, `value`, `status`) VALUES
 ('手动', 'quotation', 'quotationAssignConfig', 'autoAssign', 'ASSIGN_MUNAL_INT', '0', '手动', '0'),
 ('自动', 'quotation', 'quotationAssignConfig', 'autoAssign', 'ASSIGN_AUTO_INT', '1', '自动', '0');
+
+-- 插入预算员规则状态枚举数据
+INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, `key`, `value`, `status`) VALUES
+('可用', 'quotation', 'quotationAssignUserRule', 'status', 'STATUS_AVAILABLE', '1', '可用', '0'),
+('制作中', 'quotation', 'quotationAssignUserRule', 'status', 'STATUS_BUSY', '2', '制作中', '0'),
+('停止', 'quotation', 'quotationAssignUserRule', 'status', 'STATUS_STOPPED', '3', '停止', '0');
 
 
 -- 切换回quotation数据库
