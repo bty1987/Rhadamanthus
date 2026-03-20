@@ -94,11 +94,21 @@ public interface QuotationAssignUserRuleDao extends Dao<QuotationAssignUserRuleP
 
 	/**
 	 * 更新最后完成时间
-	 * 
+	 *
 	 * @param qaurid 预算员规则ID
 	 * @param lastFinishTime 最后完成时间
 	 * @return 影响行数
 	 * @throws FLException 业务异常
 	 */
 	int updateLastFinishTime(long qaurid, java.sql.Timestamp lastFinishTime) throws FLException;
+
+	/**
+	 * 更新当前任务数量
+	 *
+	 * @param qaurid 预算员规则ID
+	 * @param currentTaskCount 当前任务数量
+	 * @return 影响行数
+	 * @throws FLException 业务异常
+	 */
+	int updateCurrentTaskCount(long qaurid, int currentTaskCount) throws FLException;
 }

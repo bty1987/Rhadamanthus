@@ -12,6 +12,7 @@ package com.fanglin.quotation.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -26,6 +27,7 @@ import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.quotation.service.QuotationAssignUserRuleService;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 /**
@@ -111,6 +113,11 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 			po.setDepartment(quotationAssignUserRule.getDepartment().getDid());
 		}
 
+		// 设置创建时间和更新时间
+		Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
+		po.setCreateTime(currentTime);
+		po.setUpdateTime(currentTime);
+
 		// 保存
 		quotationAssignUserRuleDao.save(po);
 
@@ -162,6 +169,9 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		}
 
 		po.setStatus(quotationAssignUserRule.getStatus());
+
+		// 设置更新时间
+		po.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		// 保存更新
 		quotationAssignUserRuleDao.update(po);
