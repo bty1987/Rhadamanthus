@@ -18,17 +18,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.core.exception.FLException;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.service.QuotationAssignUserRuleService;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 
 /**
  * 预算员规则表 Action 控制器
- *
+ * 
  * <p>
  * 职责：处理预算员规则管理的 HTTP 请求
  * </p>
- *
+ * 
  * <p>
  * 主要功能：
  * </p>
@@ -38,7 +38,7 @@ import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
  * <li>新增、编辑、删除规则</li>
  * <li>启用/停止预算员</li>
  * </ul>
- *
+ * 
  * @author Claude AI
  * @version 1.0
  */
@@ -59,21 +59,21 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 
 	/**
 	 * 分页查询预算员规则列表
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
 	@Action(value = "pageQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignUserRule() throws FLException {
 
-		quotationAssignUserRuleService.pageQuotationAssignUserRule(getPage(), getFilters());
+		quotationAssignUserRuleService.pageQuotationAssignUserRule(getPaging(), getFilters());
 
 		return SUCCESS;
 	}
 
 	/**
 	 * 查询规则详情（用于编辑回显）
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
@@ -87,7 +87,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 
 	/**
 	 * 新增预算员规则
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
@@ -101,7 +101,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 
 	/**
 	 * 更新预算员规则
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
@@ -115,7 +115,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 
 	/**
 	 * 删除预算员规则
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
@@ -129,7 +129,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 
 	/**
 	 * 启用/停止预算员
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
