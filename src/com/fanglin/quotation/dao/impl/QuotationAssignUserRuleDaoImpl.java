@@ -24,8 +24,19 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
 	@Override
 	public List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException {
-		// todo
-		return null;
+		PagingQuery<QuotationAssignUserRulePO> query = pagingQuery(paging, QuotationAssignUserRulePO.class);
+
+		// 添加过滤条件
+		if (filters != null) {
+			for (Filter filter : filters) {
+				query.add(query.getCriterion(filter.getField(), filter.getValue(), filter.getOperator()));
+			}
+		}
+
+		// 按创建时间倒序排序
+		query.desc("createTime");
+
+		return query.list();
 	}
 
 	@Override
@@ -46,9 +57,28 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<QuotationAssignUserRulePO> queryAvailableUsers(int company, Integer department) throws FLException {
-		// todo
-		return null;
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignUserRulePO.class);
+
+		// 按公司筛选
+		criteria.add(org.hibernate.criterion.Restrictions.eq("company", company));
+
+		// 只查询待分配状态的人员
+		criteria.add(org.hibernate.criterion.Restrictions.eq("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
+
+		// 按部门筛选（如果指定了部门，则匹配该部门或部门为NULL的规则）
+		if (department != null) {
+			criteria.add(org.hibernate.criterion.Restrictions.or(
+				org.hibernate.criterion.Restrictions.eq("department", department),
+				org.hibernate.criterion.Restrictions.isNull("department")
+			));
+		}
+
+		// 按最后完成时间升序排序（最早完成的排在前面）
+		criteria.addOrder(org.hibernate.criterion.Order.asc("lastFinishTime"));
+
+		return criteria.list();
 	}
 
 	@Override
