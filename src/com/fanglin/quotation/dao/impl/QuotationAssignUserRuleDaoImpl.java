@@ -47,7 +47,7 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 	@Override
 	@SuppressWarnings("unchecked")
 	public QuotationAssignUserRulePO getByUidAndCompany(int uid, int company) throws FLException {
-		String hql = "FROM QuotationAssignUserRulePO WHERE uid = :uid AND company = :company";
+		String hql = "FROM QuotationAssignUserRulePO WHERE user.uid = :uid AND company.cid = :company";
 		Query query = session().createQuery(hql);
 		query.setParameter("uid", uid);
 		query.setParameter("company", company);
@@ -62,14 +62,17 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 		org.hibernate.Criteria criteria = createCriteria(QuotationAssignUserRulePO.class);
 
 		// 按公司筛选
-		criteria.add(org.hibernate.criterion.Restrictions.eq("company", company));
+		criteria.add(org.hibernate.criterion.Restrictions.eq("company.cid", company));
 
 		// 只查询待分配状态的人员
 		criteria.add(org.hibernate.criterion.Restrictions.eq("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
 
 		// 按部门筛选（如果指定了部门，则匹配该部门或部门为NULL的规则）
 		if (department != null) {
-			criteria.add(org.hibernate.criterion.Restrictions.or(org.hibernate.criterion.Restrictions.eq("department", department), org.hibernate.criterion.Restrictions.isNull("department")));
+			criteria.add(org.hibernate.criterion.Restrictions.or(
+				org.hibernate.criterion.Restrictions.eq("department.did", department),
+				org.hibernate.criterion.Restrictions.isNull("department.did")
+			));
 		}
 
 		// 按最后完成时间升序排序（最早完成的排在前面）
