@@ -102,6 +102,34 @@ $(function() {
     // 渲染列表
     searcher.line("companyVO.name", lineprops, linebtns).render();
 
+    // ==================== 初始化Select数据 ====================
+
+    // 初始化状态下拉框（使用constant）
+    $enabled.bindData(
+        constant.quotation().quotationAssignConfig.enabled.datas,
+        "key",   // value: 0, 1
+        "value"  // text: "禁用", "启用"
+    );
+
+    // 初始化分配方式下拉框（使用constant）
+    $autoAssign.bindData(
+        constant.quotation().quotationAssignConfig.autoAssign.datas,
+        "key",   // value: 0, 1
+        "value"  // text: "手动", "自动"
+    );
+
+    // 初始化公司下拉框（从API加载）
+    com.post(api.system.queryCompany, {}, function(res) {
+        $company.bindData(
+            res.companys,
+            "cid",   // value: 公司ID
+            "name",  // text: 公司名称
+            false   // 不需要"全部"选项
+        );
+    }, null, false);
+
+    // 部门下拉框保持为空（所有部门选项）
+
     // ==================== Modal 操作 ====================
 
     var $modal = com.focusPage('#configModal');
