@@ -11,7 +11,9 @@
 
 package com.fanglin.quotation.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import com.fanglin.quotation.service.QuotationAssignConfigService;
 import com.fanglin.quotation.vo.QuotationAssignConfigVO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 /**
@@ -87,6 +90,11 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 
 		BeanUtil.copyProperties(quotationAssignConfigVO, quotationAssignConfigPO);
 
+		// 设置创建时间和更新时间
+		Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
+		quotationAssignConfigPO.setCreateTime(currentTime);
+		quotationAssignConfigPO.setUpdateTime(currentTime);
+
 		// 保存
 		quotationAssignConfigDao.save(quotationAssignConfigPO);
 
@@ -115,6 +123,9 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 		QuotationAssignConfigPO po = new QuotationAssignConfigPO();
 		BeanUtil.copyProperties(quotationAssignConfigVO, po);
 
+		// 设置更新时间
+		po.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+
 		// 更新
 		quotationAssignConfigDao.update(po);
 
@@ -131,6 +142,9 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 
 		quotationAssignConfigPO.setEnabled(quotationAssignConfigVO.getEnabled());
 
+		// 设置更新时间
+		quotationAssignConfigPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+
 		quotationAssignConfigDao.save(quotationAssignConfigPO);
 
 		return 0;
@@ -145,6 +159,9 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 		if (quotationAssignConfigPO == null) throw new FLException(0, "配置不存在");
 
 		quotationAssignConfigPO.setAutoAssign(quotationAssignConfigVO.getAutoAssign());
+
+		// 设置更新时间
+		quotationAssignConfigPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		quotationAssignConfigDao.save(quotationAssignConfigPO);
 

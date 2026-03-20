@@ -71,7 +71,7 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
 	@Override
 	public int updateQuotationAssignUserRuleStatus(long qaurid, short status) throws FLException {
-		String hql = "UPDATE QuotationAssignUserRulePO SET status = :status WHERE qaurid = :qaurid";
+		String hql = "UPDATE QuotationAssignUserRulePO SET status = :status, updateTime = CURRENT_TIMESTAMP WHERE qaurid = :qaurid";
 		Query query = session().createQuery(hql);
 		query.setParameter("status", status);
 		query.setParameter("qaurid", qaurid);
@@ -83,6 +83,15 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 		String hql = "UPDATE QuotationAssignUserRulePO SET lastFinishTime = :lastFinishTime WHERE qaurid = :qaurid";
 		Query query = session().createQuery(hql);
 		query.setParameter("lastFinishTime", lastFinishTime);
+		query.setParameter("qaurid", qaurid);
+		return query.executeUpdate();
+	}
+
+	@Override
+	public int updateCurrentTaskCount(long qaurid, int currentTaskCount) throws FLException {
+		String hql = "UPDATE QuotationAssignUserRulePO SET currentTaskCount = :currentTaskCount, updateTime = CURRENT_TIMESTAMP WHERE qaurid = :qaurid";
+		Query query = session().createQuery(hql);
+		query.setParameter("currentTaskCount", currentTaskCount);
 		query.setParameter("qaurid", qaurid);
 		return query.executeUpdate();
 	}
