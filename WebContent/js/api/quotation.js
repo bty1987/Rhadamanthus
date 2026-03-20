@@ -2141,6 +2141,35 @@ $.extend(api, {
             url: "updateQuotationAssignConfigForAssign.do"
         },
 
+        // ==================== 预算员规则管理接口 ====================
+
+        pageQuotationAssignUserRule: {
+            url: "pageQuotationAssignUserRule.do",
+            demo: true
+        },
+
+        queryQuotationAssignUserRuleById: {
+            url: "queryQuotationAssignUserRuleById.do",
+            demo: true,
+            type: "query"
+        },
+
+        createQuotationAssignUserRule: {
+            url: "createQuotationAssignUserRule.do"
+        },
+
+        updateQuotationAssignUserRule: {
+            url: "updateQuotationAssignUserRule.do"
+        },
+
+        deleteQuotationAssignUserRule: {
+            url: "deleteQuotationAssignUserRule.do"
+        },
+
+        updateQuotationAssignUserRuleForStatus: {
+            url: "updateQuotationAssignUserRuleForStatus.do"
+        },
+
         // 分配操作
         assignQuotationAssign: {
             url: "assignQuotationAssign.do",
