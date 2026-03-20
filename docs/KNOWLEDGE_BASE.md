@@ -106,6 +106,255 @@ public void saveCustomer(CustomerVO customer) {
 }
 ```
 
+### 4. 编码规范（⚠️ 重要）
+
+#### 4.1 Import 导入规范
+
+**标准导入路径**：
+```java
+// ✅ 正确的导入
+import com.fanglin.core.interceptor.FLException;     // 异常类
+import com.fanglin.core.vo.Filter;                    // 过滤条件
+import com.fanglin.utils.Paging;                      // 分页对象
+import com.fanglin.utils.BeanUtil;                    // Bean转换工具
+
+// ❌ 错误的导入（常见错误）
+import com.fanglin.core.exception.FLException;        // 路径错误
+import com.fanglin.core.dao.Filter;                   // 路径错误
+import com.fanglin.core.dao.Page;                     // 类名错误
+```
+
+**完整导入示例**：
+```java
+package com.fanglin.example.service.impl;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.example.dao.ExampleDao;
+import com.fanglin.example.po.ExamplePO;
+import com.fanglin.example.service.ExampleService;
+import com.fanglin.example.vo.ExampleVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;  // 如需decode公司ID
+import com.fanglin.utils.Paging;
+```
+
+#### 4.2 Service 层规范
+
+**方法签名规范**：
+```java
+// ✅ 正确：使用 VO 和 Paging
+@Override
+@Transactional(rollbackFor = Exception.class)
+public void pageExample(Paging paging, List<Filter> filters) throws FLException {
+    // 1. 调用 DAO 查询（返回 PO 列表）
+    List<ExamplePO> poList = exampleDao.pageExample(paging, filters);
+
+    // 2. PO 转 VO
+    List<ExampleVO> voList = new ArrayList<ExampleVO>();
+    for (ExamplePO po : poList) {
+        voList.add(po.ptv(new ExampleVO()));
+    }
+
+    // 3. 设置分页结果
+    paging.setData(voList);
+}
+
+// ❌ 错误：void 返回，没有 PO 转 VO
+@Override
+public void pageExample(Page page, List<Filter> filters) {
+    exampleDao.pageExample(page, filters);  // 直接返回，没有转换
+}
+```
+
+**PO 转 VO 规范**：
+```java
+// ✅ 正确：使用 PO 的 ptv 方法
+ExampleVO vo = po.ptv(new ExampleVO());
+
+// ✅ 正确：批量转换
+for (ExamplePO po : poList) {
+    voList.add(po.ptv(new ExampleVO()));
+}
+
+// ❌ 错误：手动拷贝（项目已有 ptv 方法）
+ExampleVO vo = new ExampleVO();
+vo.setId(po.getId());
+vo.setName(po.getName());
+// ...
+```
+
+**VO 转 PO 规范**：
+```java
+// ✅ 正确：使用 VO 的 vtp 方法
+ExamplePO po = vo.vtp(new ExamplePO());
+
+// ✅ 正确：从 VO 提取属性传递给 DAO
+int uid = vo.getUser().getUid();
+int company = CompanyServiceImpl.decode(vo.getCompany().getCid());
+```
+
+#### 4.3 DAO 层规范
+
+**接口方法签名规范**：
+```java
+// ✅ 正确：返回 PO 列表
+List<ExamplePO> pageExample(Paging paging, List<Filter> filters) throws FLException;
+ExamplePO get(long id) throws FLException;
+
+// ❌ 错误：void 返回
+void pageExample(Page page, List<Filter> filters) throws FLException;
+```
+
+**DAO 实现规范**：
+```java
+@Override
+public List<ExamplePO> pageExample(Paging paging, List<Filter> filters) {
+    PagingQuery<ExamplePO> query = pagingQuery(paging, ExamplePO.class);
+
+    // 添加过滤条件
+    if (filters != null) {
+        for (Filter filter : filters) {
+            query.add(query.getCriterion(filter.getField(), filter.getValue(), filter.getOperator()));
+        }
+    }
+
+    // 排序
+    query.desc("createTime");
+
+    return query.list();
+}
+```
+
+#### 4.4 VO 规范
+
+**VO 字段类型规范**：
+```java
+// ✅ 正确：关联其他 VO，时间用 String
+public class ExampleVO {
+    private UserVO user;           // 关联 UserVO，不是 UserPO
+    private CompanyVO company;     // 关联 CompanyVO，不是 CompanyPO
+    private DepartmentVO department; // 关联 DepartmentVO，不是 DepartmentPO
+
+    private String createTime;     // 时间字段用 String，不是 Timestamp
+    private String updateTime;
+
+    // 基本类型
+    private Long id;
+    private String name;
+    private Integer status;
+}
+
+// ❌ 错误：VO 中关联 PO
+public class ExampleVO {
+    private UserPO user;           // 错误！不应该关联 PO
+    private Timestamp createTime;  // 错误！时间应该用 String
+}
+```
+
+**VO 与 PO 的关系**：
+```
+VO (视图对象) → 用于前端展示和接收参数
+  - 只包含 VO 类型或其他基本类型
+  - 时间字段用 String
+  - 不直接关联 PO
+
+PO (持久化对象) → 用于数据库操作
+  - 可以关联其他 PO（Hibernate 关系映射）
+  - 时间字段用 Timestamp
+  - 提供 ptv() 和 vtp() 方法进行转换
+```
+
+#### 4.5 常用工具方法
+
+**CompanyServiceImpl.decode()**：
+```java
+// 用于解码/编码公司 ID（加密存储）
+int companyId = CompanyServiceImpl.decode(vo.getCompany().getCid());
+String encodedCid = CompanyServiceImpl.encode(companyId);
+```
+
+**常量使用规范**：
+```java
+// ✅ 正确：使用 PO 中定义的常量
+if (status == QuotationAssignUserRulePO.STATUS_AVAILABLE_INT) {
+    // ...
+}
+
+// ❌ 错误：魔法数字
+if (status == 1) {  // 不知道 1 代表什么
+    // ...
+}
+```
+
+**常量命名规范**：
+```java
+// PO 中的常量必须以 _INT 结尾
+public static final Short STATUS_AVAILABLE_INT = 1;
+public static final Short STATUS_BUSY_INT = 2;
+public static final Short STATUS_STOPPED_INT = 3;
+public static final Integer SUPPORTED_TYPE_ALL_INT = -1;
+```
+
+#### 4.6 参数传递规范
+
+**Service 层参数规范**：
+```java
+// ✅ 正确：使用 VO 对象作为参数
+public void createExample(ExampleVO example) throws FLException {
+    // 从 VO 中提取属性
+    String name = example.getName();
+    int uid = example.getUser().getUid();
+    int company = CompanyServiceImpl.decode(example.getCompany().getCid());
+
+    // 调用 DAO
+    exampleDao.addExample(name, uid, company);
+}
+
+// ❌ 错误：使用多个独立参数
+public void createExample(String name, int uid, int company, String status) {
+    // 参数太多，不利于扩展
+}
+```
+
+**DAO 层参数规范**：
+```java
+// ✅ 正确：传递基本类型或 PO
+int addExample(String name, int uid, int company) throws FLException;
+ExamplePO get(long id) throws FLException;
+
+// ❌ 错误：传递 VO
+int addExample(ExampleVO example) throws FLException;  // DAO 不应该知道 VO
+```
+
+#### 4.7 编码检查清单
+
+**写代码前**：
+- [ ] 读 3 个同类文件的实现
+- [ ] 复制 import 语句（不要猜测）
+- [ ] 确认方法签名模式
+
+**写代码时**：
+- [ ] VO 中只关联 VO，不关联 PO
+- [ ] 时间字段用 String，不用 Timestamp
+- [ ] 使用 PO 的 ptv() / vtp() 方法
+- [ ] 使用常量，不用魔法数字
+- [ ] Service 层方法抛出 FLException
+
+**写代码后**：
+- [ ] 对比已有实现，检查是否符合规范
+- [ ] 确认所有 import 路径正确
+- [ ] 确认 DAO 返回值类型正确
+- [ ] 确认 PO 转 VO 逻辑正确
+
 ---
 
 ## 常见问题
@@ -323,6 +572,16 @@ public CustomerVO getCustomerById(Long id) {
 ---
 
 ## 更新记录
+
+### 2026-03-20
+- ✅ 新增详细编码规范（第 4 节）
+  - Import 导入规范（FLException、Filter、Paging 的正确路径）
+  - Service 层规范（PO 转 VO、方法签名）
+  - DAO 层规范（返回值类型）
+  - VO 规范（不关联 PO、时间字段用 String）
+  - 常用工具方法（CompanyServiceImpl.decode、常量使用）
+  - 参数传递规范
+  - 编码检查清单
 
 ### 2025-12-31
 - ✅ 创建知识库文件
