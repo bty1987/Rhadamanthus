@@ -1278,5 +1278,56 @@ Condition.addupRule("quotation", {
             valuePath: "value"
         }
     },
-    
+
+    // ==================== 预算员规则管理相关条件 ====================
+
+    // 预算员规则 - 公司
+    "assign-user-rule-company": {
+        label: "公司",
+        type: "select",
+        submitConfig: {
+            name: "company",
+            op: "eq",
+            alone: true,
+            validate: null
+        },
+        dataSource: {
+            url: api.system.queryCompany,
+            postData: {},
+            listPath: "companys",
+            keyPath: "cid",
+            valuePath: "name"
+        }
+    },
+
+    // 预算员规则 - 状态
+    "assign-user-rule-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            alone: true,
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.quotation().quotationAssignUserRule.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 预算员规则 - 用户姓名
+    "assign-user-rule-userName": {
+        label: "用户姓名",
+        type: "text",
+        submitConfig: {
+            name: "userName",
+            op: "like",
+            validate: null
+        }
+    },
+
 });
