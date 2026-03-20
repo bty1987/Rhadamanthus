@@ -419,19 +419,11 @@ INSERT INTO quotation.quotationassignuserruletype (qaurid, type) VALUES
 USE communion;
 
 -- 插入启用状态枚举数据
-INSERT INTO communion.constant (module, clazz, type, field, `key`, `value`) VALUES
-('quotation', 'quotationAssignConfig', 'enabled', 'enabled', '0', '禁用'),
-('quotation', 'quotationAssignConfig', 'enabled', 'enabled', '1', '启用');
-
 INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, `key`, `value`, `status`, `updateTime`) VALUES 
 ('禁用', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_DISABLED_INT', '0', '禁用', '0'),
 ('启用', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_ENABLED_INT', '1', '启用', '0');
 
 -- 插入分配方式枚举数据
-INSERT INTO communion.constant (module, clazz, type, field, `key`, `value`) VALUES
-('quotation', 'quotationAssignConfig', 'autoAssign', 'autoAssign', '0', '手动'),
-('quotation', 'quotationAssignConfig', 'autoAssign', 'autoAssign', '1', '自动');
-
 INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, `key`, `value`, `status`, `updateTime`) VALUES 
 ('手动', 'quotation', 'quotationAssignConfig', 'autoAssign', 'ASSIGN_MUNAL_INT', '0', '手动', '0'),
 ('自动', 'quotation', 'quotationAssignConfig', 'autoAssign', 'ASSIGN_AUTO_INT', '1', '自动', '0');
