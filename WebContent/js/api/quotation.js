@@ -2122,28 +2122,23 @@ $.extend(api, {
         },
 
         createQuotationAssignConfig: {
-            url: "createQuotationAssignConfig.do",
-            intercept: true
+            url: "createQuotationAssignConfig.do"
         },
 
         updateQuotationAssignConfig: {
-            url: "updateQuotationAssignConfig.do",
-            intercept: true
+            url: "updateQuotationAssignConfig.do"
         },
 
         deleteQuotationAssignConfig: {
-            url: "deleteQuotationAssignConfig.do",
-            intercept: true
+            url: "deleteQuotationAssignConfig.do"
         },
 
         updateQuotationAssignConfigForStatus: {
-            url: "updateQuotationAssignConfigForStatus.do",
-            intercept: true
+            url: "updateQuotationAssignConfigForStatus.do"
         },
 
         updateQuotationAssignConfigForAssign: {
-            url: "updateQuotationAssignConfigForAssign.do",
-            intercept: true
+            url: "updateQuotationAssignConfigForAssign.do"
         },
 
         // 分配操作
