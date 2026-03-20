@@ -1242,7 +1242,7 @@ Condition.addupRule("quotation", {
     // ==================== 预算员分配配置相关条件 ====================
 
     // 预算配置 - 公司
-    "quotation-assign-config-company": {
+    "assign-config-company": {
         label: "公司",
         type: "select",
         submitConfig: {
@@ -1261,8 +1261,8 @@ Condition.addupRule("quotation", {
     },
 
     // 预算配置 - 启用状态
-    "quotation-assign-config-enabled": {
-        label: "启用状态",
+    "assign-config-enabled": {
+        label: "状态",
         type: "select",
         submitConfig: {
             name: "enabled",
@@ -1273,7 +1273,10 @@ Condition.addupRule("quotation", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: constant.quotation().quotationAssignConfig.enabled.datas
+            listPath: constant.quotation().quotationAssignConfig.enabled.datas,
+            keyPath: "key",
+            valuePath: "value"
         }
-    }
+    },
+    
 });
