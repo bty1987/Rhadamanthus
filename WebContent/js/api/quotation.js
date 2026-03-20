@@ -2108,27 +2108,42 @@ $.extend(api, {
             url: "queryQuotationAssignRequestForPending.do"
         },
 
-        // 分配配置管理
-        pageQuotationAssignConfigByCondition: {
-            url: "pageQuotationAssignConfigByCondition.do"
+        // ==================== 预算员分配配置接口 ====================
+
+        pageQuotationAssignConfig: {
+            url: "pageQuotationAssignConfig.do",
+            demo: true
         },
-        queryQuotationAssignConfig: {
-            url: "queryQuotationAssignConfig.do"
+
+        queryQuotationAssignConfigById: {
+            url: "queryQuotationAssignConfigById.do",
+            demo: true,
+            type: "query"
         },
-        getQuotationAssignConfigsByCompany: {
-            url: "getQuotationAssignConfigsByCompany.do"
+
+        createQuotationAssignConfig: {
+            url: "createQuotationAssignConfig.do",
+            intercept: true
         },
-        saveQuotationAssignConfig: {
-            url: "saveQuotationAssignConfig.do"
+
+        updateQuotationAssignConfig: {
+            url: "updateQuotationAssignConfig.do",
+            intercept: true
         },
+
         deleteQuotationAssignConfig: {
-            url: "deleteQuotationAssignConfig.do"
+            url: "deleteQuotationAssignConfig.do",
+            intercept: true
         },
-        enableQuotationAssignConfig: {
-            url: "enableQuotationAssignConfig.do"
+
+        updateQuotationAssignConfigForStatus: {
+            url: "updateQuotationAssignConfigForStatus.do",
+            intercept: true
         },
-        disableQuotationAssignConfig: {
-            url: "disableQuotationAssignConfig.do"
+
+        updateQuotationAssignConfigForAssign: {
+            url: "updateQuotationAssignConfigForAssign.do",
+            intercept: true
         },
 
         // 分配操作
@@ -2339,44 +2354,6 @@ $.extend(api, {
             tranargs: {
                 args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.comsPrice", "addReduce.discount", "addReduce.taxRate", "addReduce.taxPrice"],
             }
-        },
-
-        // ==================== 预算员分配配置接口 ====================
-
-        pageQuotationAssignConfig: {
-            url: "pageQuotationAssignConfig.do",
-            demo: true
-        },
-
-        queryQuotationAssignConfigById: {
-            url: "queryQuotationAssignConfigById.do",
-            demo: true,
-            type: "query"
-        },
-
-        createQuotationAssignConfig: {
-            url: "createQuotationAssignConfig.do",
-            intercept: true
-        },
-
-        updateQuotationAssignConfig: {
-            url: "updateQuotationAssignConfig.do",
-            intercept: true
-        },
-
-        deleteQuotationAssignConfig: {
-            url: "deleteQuotationAssignConfig.do",
-            intercept: true
-        },
-
-        updateQuotationAssignConfigForStatus: {
-            url: "updateQuotationAssignConfigForStatus.do",
-            intercept: true
-        },
-
-        updateQuotationAssignConfigForAssign: {
-            url: "updateQuotationAssignConfigForAssign.do",
-            intercept: true
         }
 
     }
