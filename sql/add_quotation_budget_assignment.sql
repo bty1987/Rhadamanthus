@@ -110,6 +110,16 @@ CREATE TABLE quotation.quotationassignuserrule (
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='预算员人员规则表';
 
+-- 添加支持类型字段（如果不存在）
+ALTER TABLE quotation.quotationassignuserrule
+ADD COLUMN IF NOT EXISTS supportedType SMALLINT(6) NOT NULL DEFAULT -1
+COMMENT '支持的类型：-1通用，0半包，1整装'
+AFTER status;
+
+-- 添加支持类型索引（用于类型匹配查询）
+ALTER TABLE quotation.quotationassignuserrule
+ADD INDEX IF NOT EXISTS idx_supportedType (supportedType);
+
 -- ============================================================================
 -- 表3: 预算员类型支持表 (quotationassignuserruletype)
 -- ============================================================================
