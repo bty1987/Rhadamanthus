@@ -16,62 +16,47 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.beans.BeanUtils;
 
+import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.vo.QuotationAssignConfigVO;
+import com.fanglin.system.po.CompanyPO;
 
-/**
- * 预算配置表实体类
- * 
- * <p>
- * 职责：控制哪些公司/部门启用预算员分配功能，以及分配方式
- * </p>
- * 
- * <p>
- * 核心字段：
- * </p>
- * <ul>
- * <li>qacid: 配置ID（主键）</li>
- * <li>company: 公司ID</li>
- * <li>department: 部门ID（NULL表示该公司所有部门）</li>
- * <li>enabled: 是否启用（0-禁用，1-启用）</li>
- * <li>autoAssign: 是否自动分配（0-手动，1-自动）</li>
- * </ul>
- * 
- * @author bty1987
- * @version 1.0
- */
 @Entity
 @Table(name = "quotationassignconfig", catalog = "quotation")
 public class QuotationAssignConfigPO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	// ==================== 常量定义 ====================
+
+	private static final long serialVersionUID = 2946584976684534443L;
 
 	/**
 	 * 禁用状态（不使用预算员自动分配，走原流程）
 	 */
-	public static final Short ENABLED_DISABLED_INT = 0;
+	public static final short ENABLED_DISABLED_INT = 0;
 
 	/**
 	 * 启用状态（使用预算员自动分配）
 	 */
-	public static final Short ENABLED_ENABLED_INT = 1;
+	public static final short ENABLED_ENABLED_INT = 1;
 
 	/**
 	 * 手动分配（预算员完成后不自动分配，需要手动派单）
 	 */
-	public static final Short AUTO_ASSIGN_MANUAL_INT = 0;
+	public static final short AUTO_ASSIGN_MANUAL_INT = 0;
 
 	/**
 	 * 自动分配（预算员完成后自动从队列分配）
 	 */
-	public static final Short AUTO_ASSIGN_AUTO_INT = 1;
+	public static final short AUTO_ASSIGN_AUTO_INT = 1;
 
 	// ==================== 字段定义 ====================
 
@@ -83,12 +68,12 @@ public class QuotationAssignConfigPO implements Serializable {
 	/**
 	 * 公司ID
 	 */
-	private int company;
+	private CompanyPO company;
 
 	/**
 	 * 部门ID（NULL表示该公司所有部门）
 	 */
-	private Integer department;
+	private DepartmentPO department;
 
 	/**
 	 * 是否启用（0-禁用，1-启用）
@@ -157,8 +142,9 @@ public class QuotationAssignConfigPO implements Serializable {
 	 * 
 	 * @return 公司ID
 	 */
-	@Column(name = "company", nullable = false)
-	public int getCompany() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "company", referencedColumnName = "cid")
+	public CompanyPO getCompany() {
 		return company;
 	}
 
@@ -167,7 +153,7 @@ public class QuotationAssignConfigPO implements Serializable {
 	 * 
 	 * @param company 公司ID
 	 */
-	public void setCompany(int company) {
+	public void setCompany(CompanyPO company) {
 		this.company = company;
 	}
 
@@ -176,8 +162,9 @@ public class QuotationAssignConfigPO implements Serializable {
 	 * 
 	 * @return 部门ID（NULL表示该公司所有部门）
 	 */
-	@Column(name = "department")
-	public Integer getDepartment() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "department", referencedColumnName = "did")
+	public DepartmentPO getDepartment() {
 		return department;
 	}
 
@@ -186,7 +173,7 @@ public class QuotationAssignConfigPO implements Serializable {
 	 * 
 	 * @param department 部门ID（NULL表示该公司所有部门）
 	 */
-	public void setDepartment(Integer department) {
+	public void setDepartment(DepartmentPO department) {
 		this.department = department;
 	}
 
@@ -266,29 +253,12 @@ public class QuotationAssignConfigPO implements Serializable {
 		this.updateTime = updateTime;
 	}
 
-	// ==================== 工具方法 ====================
-
-	/**
-	 * 判断是否启用
-	 * 
-	 * @return true-启用，false-禁用
-	 */
-	public boolean isEnabled() {
-		return this.enabled == ENABLED_ENABLED_INT;
-	}
-
-	/**
-	 * 判断是否自动分配
-	 * 
-	 * @return true-自动分配，false-手动分配
-	 */
-	public boolean isAutoAssign() {
-		return this.autoAssign == AUTO_ASSIGN_AUTO_INT;
-	}
-
-	public QuotationAssignConfigVO ptv(QuotationAssignConfigVO quotationAssignConfigVO) {
+	public QuotationAssignConfigVO ptv(QuotationAssignConfigVO quotationAssignConfigVO) throws FLException {
 
 		BeanUtils.copyProperties(this, quotationAssignConfigVO, "department", "company");
+
+		if (quotationAssignConfigVO.getDepartment() != null && getDepartment() != null) getDepartment().ptv(quotationAssignConfigVO.getDepartment());
+		if (quotationAssignConfigVO.getCompany() != null && getCompany() != null) getCompany().ptv(quotationAssignConfigVO.getCompany());
 
 		return quotationAssignConfigVO;
 	}

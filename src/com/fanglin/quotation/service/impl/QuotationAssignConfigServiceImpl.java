@@ -20,13 +20,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.QuotationAssignConfigDao;
 import com.fanglin.quotation.po.QuotationAssignConfigPO;
 import com.fanglin.quotation.service.QuotationAssignConfigService;
 import com.fanglin.quotation.vo.QuotationAssignConfigVO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -47,6 +51,9 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	@Autowired
 	private QuotationAssignConfigDao quotationAssignConfigDao;
 
+	@Autowired
+	private CompanyDao companyDao;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void pageQuotationAssignConfig(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -55,7 +62,7 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 		List<QuotationAssignConfigVO> quotationAssignConfigVOs = new ArrayList<QuotationAssignConfigVO>();
 
 		for (QuotationAssignConfigPO quotationAssignConfigPO : quotationAssignConfigPOs) {
-			quotationAssignConfigVOs.add(quotationAssignConfigPO.ptv(new QuotationAssignConfigVO()));
+			quotationAssignConfigVOs.add(quotationAssignConfigPO.ptv(new QuotationAssignConfigVO(new CompanyVO(), new DepartmentVO())));
 		}
 
 		// 设置分页结果
@@ -75,9 +82,8 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	@Transactional(rollbackFor = Exception.class)
 	public int createQuotationAssignConfig(QuotationAssignConfigVO quotationAssignConfigVO) throws FLException {
 
-		// 校验：公司部门组合唯一性
-		int company = CompanyServiceImpl.decode(quotationAssignConfigVO.getCompany());
-		Integer department = quotationAssignConfigVO.getDepartment();
+		int company = CompanyServiceImpl.decode(quotationAssignConfigVO.getCompany().getCid());
+		Integer department = quotationAssignConfigVO.getDepartment() != null ? quotationAssignConfigVO.getDepartment().getDid() : null;
 
 		QuotationAssignConfigPO quotationAssignConfigPO = quotationAssignConfigDao.queryQuotationAssignConfig(company, department);
 
@@ -85,12 +91,14 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 			throw new FLException(0, "该公司和部门的配置已存在");
 		}
 
-		// VO 转 PO
+		CompanyPO companyPO = companyDao.get(company);
+
 		quotationAssignConfigPO = new QuotationAssignConfigPO();
 
-		BeanUtil.copyProperties(quotationAssignConfigVO, quotationAssignConfigPO);
+		BeanUtil.copyProperties(quotationAssignConfigVO, quotationAssignConfigPO, "company", "department");
 
-		// 设置创建时间和更新时间
+		quotationAssignConfigPO.setCompany(companyPO);
+
 		Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
 		quotationAssignConfigPO.setCreateTime(currentTime);
 		quotationAssignConfigPO.setUpdateTime(currentTime);
@@ -108,9 +116,9 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationAssignConfig(QuotationAssignConfigVO quotationAssignConfigVO) throws FLException {
 
-		// 校验：公司部门组合唯一性（排除自己）
-		int company = CompanyServiceImpl.decode(quotationAssignConfigVO.getCompany());
-		Integer department = quotationAssignConfigVO.getDepartment();
+		int company = CompanyServiceImpl.decode(quotationAssignConfigVO.getCompany().getCid());
+		Integer department = quotationAssignConfigVO.getDepartment() != null ? quotationAssignConfigVO.getDepartment().getDid() : null;
+
 		Long qacid = quotationAssignConfigVO.getQacid();
 
 		QuotationAssignConfigPO existPO = quotationAssignConfigDao.queryQuotationAssignConfig(company, department);
@@ -119,15 +127,13 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 			throw new FLException(0, "该公司和部门的配置已存在");
 		}
 
-		// VO 转 PO
-		QuotationAssignConfigPO po = new QuotationAssignConfigPO();
-		BeanUtil.copyProperties(quotationAssignConfigVO, po);
+		QuotationAssignConfigPO quotationAssignConfigPO = new QuotationAssignConfigPO();
 
-		// 设置更新时间
-		po.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+		BeanUtil.copyProperties(quotationAssignConfigVO, quotationAssignConfigPO, "company", "department");
 
-		// 更新
-		quotationAssignConfigDao.update(po);
+		quotationAssignConfigPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		quotationAssignConfigDao.update(quotationAssignConfigPO);
 
 		return 1;
 	}

@@ -29,7 +29,7 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 		// 添加过滤条件
 		if (filters != null) {
 			for (Filter filter : filters) {
-				query.add(query.getCriterion(filter.getField(), filter.getValue(), filter.getOperator()));
+				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}
 
@@ -69,10 +69,7 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
 		// 按部门筛选（如果指定了部门，则匹配该部门或部门为NULL的规则）
 		if (department != null) {
-			criteria.add(org.hibernate.criterion.Restrictions.or(
-				org.hibernate.criterion.Restrictions.eq("department", department),
-				org.hibernate.criterion.Restrictions.isNull("department")
-			));
+			criteria.add(org.hibernate.criterion.Restrictions.or(org.hibernate.criterion.Restrictions.eq("department", department), org.hibernate.criterion.Restrictions.isNull("department")));
 		}
 
 		// 按最后完成时间升序排序（最早完成的排在前面）
