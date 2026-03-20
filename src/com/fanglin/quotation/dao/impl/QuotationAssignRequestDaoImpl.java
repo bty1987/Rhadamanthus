@@ -75,16 +75,16 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		// 需要关联 quotationassignuserrule 表来统计当前任务数
 		String sql = "SELECT COUNT(*) " +
 				     "FROM quotation.quotationassignrequest r " +
-				     "INNER JOIN quotation.quotationassignuserrule u ON r.company = u.company " +
+				     "INNER JOIN quotation.quotationassignuserrule u ON u.uid = :uid " +
+				     "  AND r.company = u.company " +
 				     "  AND (r.department IS NULL OR u.department IS NULL OR r.department = u.department) " +
-				     "WHERE r.status = 2 " +
-				     "AND u.uid = :uid";
+				     "WHERE r.status = 2";
 
 		SQLQuery query = session().createSQLQuery(sql);
 		query.setInteger("uid", uid);
 
-	 Number count = (Number) query.uniqueResult();
-	 return count != null ? count.intValue() : 0;
+		Number count = (Number) query.uniqueResult();
+		return count != null ? count.intValue() : 0;
 	}
 
 	@SuppressWarnings("unchecked")
