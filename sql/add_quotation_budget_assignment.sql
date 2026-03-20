@@ -408,6 +408,30 @@ INSERT INTO quotation.quotationassignuserruletype (qaurid, type) VALUES
 (3, 2);  -- 预算员1003支持整装
 
 -- ============================================================================
+-- 前端常量数据（communion.constant）
+-- ============================================================================
+-- 说明: 前端页面使用constant常量进行枚举转换
+-- 位置: WebContent/js/quotation/quotationAssignConfig.js
+-- 访问方式: constant.quotation().quotationAssignConfig.enabled.datas[value]
+-- ============================================================================
+
+-- 切换到communion数据库
+USE communion;
+
+-- 插入启用状态枚举数据
+INSERT INTO communion.constant (module, clazz, type, field, `key`, `value`) VALUES
+('quotation', 'quotationAssignConfig', 'enabled', 'enabled', '0', '禁用'),
+('quotation', 'quotationAssignConfig', 'enabled', 'enabled', '1', '启用');
+
+-- 插入分配方式枚举数据
+INSERT INTO communion.constant (module, clazz, type, field, `key`, `value`) VALUES
+('quotation', 'quotationAssignConfig', 'autoAssign', 'autoAssign', '0', '手动'),
+('quotation', 'quotationAssignConfig', 'autoAssign', 'autoAssign', '1', '自动');
+
+-- 切换回quotation数据库
+USE quotation;
+
+-- ============================================================================
 -- 验证脚本
 -- ============================================================================
 
