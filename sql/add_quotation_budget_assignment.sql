@@ -434,6 +434,12 @@ INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, 
 ('制作中', 'quotation', 'quotationAssignUserRule', 'status', 'STATUS_BUSY', '2', '制作中', '0'),
 ('停止', 'quotation', 'quotationAssignUserRule', 'status', 'STATUS_STOPPED', '3', '停止', '0');
 
+-- 插入预算员支持类型枚举数据
+INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, `key`, `value`, `status`) VALUES
+('通用', 'quotation', 'quotationAssignUserRule', 'supportedType', 'SUPPORTED_TYPE_ALL', '-1', '通用', '0'),
+('半包', 'quotation', 'quotationAssignUserRule', 'supportedType', 'SUPPORTED_TYPE_HALF', '0', '半包', '0'),
+('整装', 'quotation', 'quotationAssignUserRule', 'supportedType', 'SUPPORTED_TYPE_WHOLE', '1', '整装', '0');
+
 
 -- 切换回quotation数据库
 USE quotation;

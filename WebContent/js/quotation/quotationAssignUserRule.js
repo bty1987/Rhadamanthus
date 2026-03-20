@@ -71,6 +71,15 @@ $(function() {
             return "red";                       // 停止
         }
     }, {
+        field: "supportedType",
+        name: "支持类型",
+        prop: function(v) {
+            // 使用 constant 进行枚举转换
+            var type = v.supportedType;
+            return constant.quotation().quotationAssignUserRule.supportedType.datas[type] || "未设置";
+        },
+        clazz: "blue"
+    }, {
         field: "currentTaskCount",
         name: "当前任务",
         prop: function(v) {
@@ -132,6 +141,7 @@ $(function() {
     var $department = com.focusPage('#department');
     var $status = com.focusPage('#status');
     var $saveBtn = com.focusPage('#saveBtn');
+    var $supportedType = com.focusPage('input[name="supportedType"]');
 
     // 初始化下拉框
     function initSelectOptions() {
@@ -203,9 +213,11 @@ $(function() {
     function resetForm() {
         $qaurid.val('');
         $user.val('');
+        $user.removeData('uid');  // 清除保存的UID
         $company.val('');
         $department.empty().append('<option value="">全部部门</option>');
         $status.val('1');  // 默认可用
+        $supportedType.filter('[value="-1"]').prop('checked', true);  // 默认通用
     }
 
     // 编辑配置
@@ -228,6 +240,13 @@ $(function() {
         }
 
         $status.val(row.status);
+
+        // 设置支持类型选中
+        if (row.supportedType !== undefined && row.supportedType !== null) {
+            $supportedType.filter('[value="' + row.supportedType + '"]').prop('checked', true);
+        } else {
+            $supportedType.filter('[value="-1"]').prop('checked', true);  // 默认通用
+        }
 
         com.focusPage('#modalTitle').text('编辑预算员规则');
         $modal.modal('show');
@@ -255,7 +274,8 @@ $(function() {
             "quotationAssignUserRule.user.uid": uid,
             "quotationAssignUserRule.company.cid": $company.val(),
             "quotationAssignUserRule.department.did": $department.val() || null,
-            "quotationAssignUserRule.status": parseInt($status.val())
+            "quotationAssignUserRule.status": parseInt($status.val()),
+            "quotationAssignUserRule.supportedType": parseInt($supportedType.filter(':checked').val())
         };
 
         var apiMethod = isNew
