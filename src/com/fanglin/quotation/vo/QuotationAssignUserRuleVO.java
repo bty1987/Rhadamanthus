@@ -1,5 +1,7 @@
 package com.fanglin.quotation.vo;
 
+import java.util.List;
+
 import com.fanglin.core.vo.BaseVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.communion.po.CompanyPO;
@@ -37,6 +39,11 @@ public class QuotationAssignUserRuleVO extends BaseVO {
      * 状态: 1-待分配，2-制作中，3-停止
      */
     private Short status;
+
+    /**
+     * 支持的类型（单选）：-1通用，0半包，1整装
+     */
+    private Integer supportedType;
 
     /**
      * 最后完成时间
@@ -98,6 +105,14 @@ public class QuotationAssignUserRuleVO extends BaseVO {
 
     public void setStatus(Short status) {
         this.status = status;
+    }
+
+    public Integer getSupportedType() {
+        return supportedType;
+    }
+
+    public void setSupportedType(Integer supportedType) {
+        this.supportedType = supportedType;
     }
 
     public String getLastFinishTime() {
