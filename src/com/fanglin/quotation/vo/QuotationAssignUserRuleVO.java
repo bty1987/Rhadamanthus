@@ -1,16 +1,22 @@
 package com.fanglin.quotation.vo;
 
+import java.io.Serializable;
+
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.CompanyVO;
 
 /**
  * 预算员规则表 VO
- * 
+ *
  * @author Claude AI
  * @date 2026-03-20
  */
-public class QuotationAssignUserRuleVO {
+public class QuotationAssignUserRuleVO implements Serializable {
+
+	private static final long serialVersionUID = -988461889194269257L;
 
 	/**
 	 * 预算员规则ID
@@ -61,6 +67,27 @@ public class QuotationAssignUserRuleVO {
 	 * 更新时间
 	 */
 	private String updateTime;
+
+	/**
+	 * 默认构造函数
+	 */
+	public QuotationAssignUserRuleVO() {
+		super();
+	}
+
+	/**
+	 * 带关联对象的构造函数
+	 *
+	 * @param user 预算员用户对象
+	 * @param company 公司对象
+	 * @param department 部门对象
+	 */
+	public QuotationAssignUserRuleVO(UserVO user, CompanyVO company, DepartmentVO department) {
+		super();
+		this.user = user;
+		this.company = company;
+		this.department = department;
+	}
 
 	// ==================== Getter & Setter ====================
 

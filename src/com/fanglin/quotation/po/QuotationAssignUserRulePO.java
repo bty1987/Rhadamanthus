@@ -15,13 +15,20 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.beans.BeanUtils;
 
+import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
+import com.fanglin.system.po.CompanyPO;
 
 /**
  * 预算员规则表实体类
@@ -50,39 +57,39 @@ import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 @Table(name = "quotationassignuserrule", catalog = "quotation")
 public class QuotationAssignUserRulePO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2946584976684534443L;
 
 	// ==================== 常量定义 ====================
 
 	/**
 	 * 状态：待分配（可接收新任务）
 	 */
-	public static final Short STATUS_AVAILABLE_INT = 1;
+	public static final short STATUS_AVAILABLE_INT = 1;
 
 	/**
 	 * 状态：制作中（正在处理任务）
 	 */
-	public static final Short STATUS_BUSY_INT = 2;
+	public static final short STATUS_BUSY_INT = 2;
 
 	/**
 	 * 状态：停止（不再接收任务）
 	 */
-	public static final Short STATUS_STOPPED_INT = 3;
+	public static final short STATUS_STOPPED_INT = 3;
 
 	/**
 	 * 支持类型：通用（支持所有装修类型）
 	 */
-	public static final Integer SUPPORTED_TYPE_ALL_INT = -1;
+	public static final int SUPPORTED_TYPE_ALL_INT = -1;
 
 	/**
 	 * 支持类型：半包
 	 */
-	public static final Integer SUPPORTED_TYPE_HALF_INT = 0;
+	public static final int SUPPORTED_TYPE_HALF_INT = 0;
 
 	/**
 	 * 支持类型：整装
 	 */
-	public static final Integer SUPPORTED_TYPE_FULL_INT = 1;
+	public static final int SUPPORTED_TYPE_FULL_INT = 1;
 
 	// ==================== 字段定义 ====================
 
@@ -92,19 +99,19 @@ public class QuotationAssignUserRulePO implements Serializable {
 	private long qaurid;
 
 	/**
-	 * 用户ID（预算员工号，该用户会被分配为装修单的报价员）
+	 * 预算员用户对象
 	 */
-	private int uid;
+	private UserPO user;
 
 	/**
-	 * 关联公司ID
+	 * 关联公司对象
 	 */
-	private int company;
+	private CompanyPO company;
 
 	/**
-	 * 部门ID（NULL表示该公司所有部门）
+	 * 部门对象（NULL表示该公司所有部门）
 	 */
-	private Integer department;
+	private DepartmentPO department;
 
 	/**
 	 * 状态: 1-待分配(可接收新任务)，2-制作中(正在处理任务)，3-停止(不再接收任务)
@@ -184,59 +191,62 @@ public class QuotationAssignUserRulePO implements Serializable {
 	}
 
 	/**
-	 * 获取用户ID
+	 * 获取预算员用户对象
 	 *
-	 * @return 用户ID
+	 * @return 预算员用户对象
 	 */
-	@Column(name = "uid", nullable = false)
-	public int getUid() {
-		return uid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "uid", referencedColumnName = "uid")
+	public UserPO getUser() {
+		return user;
 	}
 
 	/**
-	 * 设置用户ID
+	 * 设置预算员用户对象
 	 *
-	 * @param uid 用户ID
+	 * @param user 预算员用户对象
 	 */
-	public void setUid(int uid) {
-		this.uid = uid;
+	public void setUser(UserPO user) {
+		this.user = user;
 	}
 
 	/**
-	 * 获取公司ID
+	 * 获取公司对象
 	 *
-	 * @return 公司ID
+	 * @return 公司对象
 	 */
-	@Column(name = "company", nullable = false)
-	public int getCompany() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "company", referencedColumnName = "cid")
+	public CompanyPO getCompany() {
 		return company;
 	}
 
 	/**
-	 * 设置公司ID
+	 * 设置公司对象
 	 *
-	 * @param company 公司ID
+	 * @param company 公司对象
 	 */
-	public void setCompany(int company) {
+	public void setCompany(CompanyPO company) {
 		this.company = company;
 	}
 
 	/**
-	 * 获取部门ID
+	 * 获取部门对象
 	 *
-	 * @return 部门ID
+	 * @return 部门对象（NULL表示该公司所有部门）
 	 */
-	@Column(name = "department")
-	public Integer getDepartment() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "department", referencedColumnName = "did")
+	public DepartmentPO getDepartment() {
 		return department;
 	}
 
 	/**
-	 * 设置部门ID
+	 * 设置部门对象
 	 *
-	 * @param department 部门ID
+	 * @param department 部门对象（NULL表示该公司所有部门）
 	 */
-	public void setDepartment(Integer department) {
+	public void setDepartment(DepartmentPO department) {
 		this.department = department;
 	}
 
@@ -381,19 +391,14 @@ public class QuotationAssignUserRulePO implements Serializable {
 	 * @param vo VO对象
 	 * @return 转换后的VO对象
 	 */
-	public QuotationAssignUserRuleVO ptv(QuotationAssignUserRuleVO vo) {
-		BeanUtils.copyProperties(this, vo);
-		return vo;
-	}
+	public QuotationAssignUserRuleVO ptv(QuotationAssignUserRuleVO vo) throws FLException {
 
-	/**
-	 * VO 转 PO
-	 *
-	 * @param vo VO对象
-	 * @return 转换后的PO对象
-	 */
-	public QuotationAssignUserRulePO vtp(QuotationAssignUserRuleVO vo) {
-		BeanUtils.copyProperties(vo, this);
-		return this;
+		BeanUtils.copyProperties(this, vo, "user", "company", "department");
+
+		if (vo.getUser() != null && getUser() != null) getUser().ptv(vo.getUser());
+		if (vo.getCompany() != null && getCompany() != null) getCompany().ptv(vo.getCompany());
+		if (vo.getDepartment() != null && getDepartment() != null) getDepartment().ptv(vo.getDepartment());
+
+		return vo;
 	}
 }

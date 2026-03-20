@@ -20,13 +20,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.DepartmentDao;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserVO;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleDao;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.quotation.service.QuotationAssignUserRuleService;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -46,6 +54,15 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Autowired
 	private QuotationAssignUserRuleDao quotationAssignUserRuleDao;
 
+	@Autowired
+	private UserDao userDao;
+
+	@Autowired
+	private CompanyDao companyDao;
+
+	@Autowired
+	private DepartmentDao departmentDao;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException {
@@ -57,7 +74,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRulePO po : poList) {
-			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
+			voList.add(po.ptv(new QuotationAssignUserRuleVO(new com.fanglin.personel.vo.UserVO(), new com.fanglin.system.vo.CompanyVO(), new com.fanglin.communion.vo.DepartmentVO())));
 		}
 
 		// 设置分页结果
@@ -74,7 +91,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		// 调用DAO查询
 		QuotationAssignUserRulePO po = quotationAssignUserRuleDao.get(qaurid);
 
-		return po == null ? null : po.ptv(new QuotationAssignUserRuleVO());
+		return po == null ? null : po.ptv(new QuotationAssignUserRuleVO(new com.fanglin.personel.vo.UserVO(), new com.fanglin.system.vo.CompanyVO(), new com.fanglin.communion.vo.DepartmentVO()));
 	}
 
 	@Override
@@ -99,17 +116,22 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 			throw new FLException(0, "该公司下该用户的规则已存在");
 		}
 
+		// 获取关联的PO对象
+		UserPO userPO = userDao.get(uid);
+		CompanyPO companyPO = companyDao.get(company);
+
 		// VO转PO
 		QuotationAssignUserRulePO po = new QuotationAssignUserRulePO();
-		BeanUtils.copyProperties(quotationAssignUserRule, po);
+		BeanUtils.copyProperties(quotationAssignUserRule, po, "user", "company", "department");
 
-		// 从关联对象中提取ID（已做空值检查，安全）
-		po.setUid(uid);
-		po.setCompany(company);
+		// 设置关联对象
+		po.setUser(userPO);
+		po.setCompany(companyPO);
 
 		// Department可能是NULL（该公司所有部门）
-		if (quotationAssignUserRule.getDepartment() != null) {
-			po.setDepartment(quotationAssignUserRule.getDepartment().getDid());
+		if (quotationAssignUserRule.getDepartment() != null && quotationAssignUserRule.getDepartment().getDid() != null) {
+			DepartmentPO departmentPO = departmentDao.get(quotationAssignUserRule.getDepartment().getDid());
+			po.setDepartment(departmentPO);
 		}
 
 		// 设置创建时间和更新时间
@@ -156,13 +178,18 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 			throw new FLException(0, "规则不存在");
 		}
 
+		// 获取关联的PO对象
+		UserPO userPO = userDao.get(uid);
+		CompanyPO companyPO = companyDao.get(company);
+
 		// 更新字段（已做空值检查，安全）
-		po.setUid(uid);
-		po.setCompany(company);
+		po.setUser(userPO);
+		po.setCompany(companyPO);
 
 		// Department可能是NULL（该公司所有部门）
-		if (quotationAssignUserRule.getDepartment() != null) {
-			po.setDepartment(quotationAssignUserRule.getDepartment().getDid());
+		if (quotationAssignUserRule.getDepartment() != null && quotationAssignUserRule.getDepartment().getDid() != null) {
+			DepartmentPO departmentPO = departmentDao.get(quotationAssignUserRule.getDepartment().getDid());
+			po.setDepartment(departmentPO);
 		} else {
 			po.setDepartment(null);
 		}
@@ -223,7 +250,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRulePO po : poList) {
-			voList.add(po.ptv(new QuotationAssignUserRuleVO()));
+			voList.add(po.ptv(new QuotationAssignUserRuleVO(new UserVO(), new CompanyVO(), new com.fanglin.communion.vo.DepartmentVO())));
 		}
 
 		return voList;
