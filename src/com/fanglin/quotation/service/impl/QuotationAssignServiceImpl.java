@@ -17,14 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.exception.FLException;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.QuotationAssignConfigDao;
 import com.fanglin.quotation.dao.QuotationAssignRecordDao;
 import com.fanglin.quotation.dao.QuotationAssignRequestDao;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleDao;
-import com.fanglin.quotation.dao.QuotationAssignUserRuleTypeDao;
 import com.fanglin.quotation.po.QuotationAssignConfigPO;
 import com.fanglin.quotation.po.QuotationAssignRecordPO;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;
@@ -105,7 +104,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 4. 检查预算配置是否启用
-		QuotationAssignConfigPO config = quotationAssignConfigDao.getByCompanyAndDepartment(company, department);
+		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfig(company, department);
 		if (config == null || config.getEnabled() != QuotationAssignConfigPO.ENABLED_ENABLED_INT) {
 			throw new FLException(0, "该公司/部门未启用预算员自动分配功能");
 		}
@@ -170,7 +169,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 查询预算员规则
-		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getByUid(budgetUid);
+		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getByUidAndCompany(budgetUid, decoration.getCompany());
 		if (userRule == null) {
 			throw new FLException(0, "预算员规则不存在");
 		}
@@ -227,7 +226,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 4. 查询新预算员规则
-		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getByUid(newBudgetUid);
+		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getByUidAndCompany(newBudgetUid, decoration.getCompany());
 		if (userRule == null) {
 			throw new FLException(0, "新预算员规则不存在");
 		}
@@ -270,7 +269,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		int budgetUid = decoration.getQuid();
 
 		// 2. 更新预算员的最后完成时间
-		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getByUid(budgetUid);
+		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getByUidAndCompany(budgetUid, decoration.getCompany());
 		if (userRule != null) {
 			quotationAssignUserRuleDao.updateLastFinishTime(userRule.getQaurid(), new Timestamp(System.currentTimeMillis()));
 		}
