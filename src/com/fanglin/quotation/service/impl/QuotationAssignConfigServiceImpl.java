@@ -14,7 +14,6 @@ package com.fanglin.quotation.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +25,7 @@ import com.fanglin.quotation.po.QuotationAssignConfigPO;
 import com.fanglin.quotation.service.QuotationAssignConfigService;
 import com.fanglin.quotation.vo.QuotationAssignConfigVO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 /**
@@ -76,22 +76,22 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 		int company = CompanyServiceImpl.decode(quotationAssignConfigVO.getCompany());
 		Integer department = quotationAssignConfigVO.getDepartment();
 
-		QuotationAssignConfigPO existPO = quotationAssignConfigDao.queryQuotationAssignConfig(company, department);
+		QuotationAssignConfigPO quotationAssignConfigPO = quotationAssignConfigDao.queryQuotationAssignConfig(company, department);
 
-		if (existPO != null) {
+		if (quotationAssignConfigPO != null) {
 			throw new FLException(0, "该公司和部门的配置已存在");
 		}
 
 		// VO 转 PO
-		QuotationAssignConfigPO po = new QuotationAssignConfigPO();
+		quotationAssignConfigPO = new QuotationAssignConfigPO();
 
-		BeanUtils.copyProperties(quotationAssignConfigVO, po);
+		BeanUtil.copyProperties(quotationAssignConfigVO, quotationAssignConfigPO);
 
 		// 保存
-		quotationAssignConfigDao.save(po);
+		quotationAssignConfigDao.save(quotationAssignConfigPO);
 
 		// 设置返回的ID
-		quotationAssignConfigVO.setQacid(po.getQacid());
+		quotationAssignConfigVO.setQacid(quotationAssignConfigPO.getQacid());
 
 		return 1;
 	}
@@ -113,7 +113,7 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 
 		// VO 转 PO
 		QuotationAssignConfigPO po = new QuotationAssignConfigPO();
-		BeanUtils.copyProperties(quotationAssignConfigVO, po);
+		BeanUtil.copyProperties(quotationAssignConfigVO, po);
 
 		// 更新
 		quotationAssignConfigDao.update(po);

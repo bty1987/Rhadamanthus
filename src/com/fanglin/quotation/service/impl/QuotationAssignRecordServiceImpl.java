@@ -27,11 +27,11 @@ import com.fanglin.utils.Paging;
 
 /**
  * 装修单预算分配记录表 Service 实现类
- *
+ * 
  * <p>
  * 职责：实现分配记录的业务逻辑处理
  * </p>
- *
+ * 
  * @author Claude AI
  * @version 1.0
  */
@@ -73,8 +73,8 @@ public class QuotationAssignRecordServiceImpl implements QuotationAssignRecordSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public List<QuotationAssignRecordVO> queryQuotationAssignRecordByOrderId(String orderId) throws FLException {
-		List<QuotationAssignRecordPO> quotationAssignRecordPOs = quotationAssignRecordDao.queryQuotationAssignRecordByOrderId(orderId);
+	public List<QuotationAssignRecordVO> queryQuotationAssignRecordByOrderId(QuotationAssignRecordVO quotationAssignRecordVO) throws FLException {
+		List<QuotationAssignRecordPO> quotationAssignRecordPOs = quotationAssignRecordDao.queryQuotationAssignRecordByOrderId(quotationAssignRecordVO.getOrderId());
 		List<QuotationAssignRecordVO> quotationAssignRecordVOs = new ArrayList<QuotationAssignRecordVO>();
 
 		for (QuotationAssignRecordPO quotationAssignRecordPO : quotationAssignRecordPOs) {

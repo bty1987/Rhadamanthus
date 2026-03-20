@@ -36,7 +36,7 @@ public class SalesRefundsPO implements java.io.Serializable {
 
 	public static final short STATUS_TYPE_REFUNDS_INT = 0;
 
-	public static final short ISAFFIRM_AFFIRM_INT = 0;
+	public static final short ISAFFIRM_AFFIRM_INT = 1;
 
 	public static final short ISAFFIRM_NONE_INT = 0;
 

@@ -19,21 +19,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.exception.FLException;
-import com.fanglin.core.dao.Filter;
-import com.fanglin.core.dao.Page;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleDao;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.quotation.service.QuotationAssignUserRuleService;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.utils.Paging;
 
 /**
  * 预算员规则表 Service 实现类
- *
+ * 
  * <p>
  * 职责：实现预算员规则的业务逻辑处理
  * </p>
- *
+ * 
  * @author Claude AI
  * @version 1.0
  */
@@ -45,13 +46,13 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void pageQuotationAssignUserRule(Page page, List<Filter> filters) throws FLException {
+	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException {
 
 		// 调用DAO分页查询
-		quotationAssignUserRuleDao.pageQuotationAssignUserRule(page, filters);
+		;
 
 		// PO转VO
-		List<QuotationAssignUserRulePO> poList = page.getData();
+		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.pageQuotationAssignUserRule(paging, filters);
 		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRulePO po : poList) {
@@ -59,7 +60,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		}
 
 		// 设置分页结果
-		page.setData(voList);
+		paging.setData(voList);
 	}
 
 	@Override
@@ -89,7 +90,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 		// 校验：用户+公司组合唯一性
 		int uid = quotationAssignUserRule.getUser().getUid();
-		int company = quotationAssignUserRule.getCompany().getCid();
+		int company = CompanyServiceImpl.decode(quotationAssignUserRule.getCompany().getCid());
 
 		QuotationAssignUserRulePO existPO = quotationAssignUserRuleDao.getByUidAndCompany(uid, company);
 
@@ -133,7 +134,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 		// 校验：用户+公司组合唯一性（排除自己）
 		int uid = quotationAssignUserRule.getUser().getUid();
-		int company = quotationAssignUserRule.getCompany().getCid();
+		int company = CompanyServiceImpl.decode(quotationAssignUserRule.getCompany().getCid());
 		long qaurid = quotationAssignUserRule.getQaurid();
 
 		QuotationAssignUserRulePO existPO = quotationAssignUserRuleDao.getByUidAndCompany(uid, company);
