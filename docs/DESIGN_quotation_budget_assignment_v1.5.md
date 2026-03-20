@@ -1786,6 +1786,238 @@ var $form = $('#editForm');        // 禁止
 var $dataBody = $('#dataBody');    // 禁止
 ```
 
+### 6. Constant 常量使用规范 ⭐ 重要
+
+**原则**: 前端必须使用 `constant` 常量系统进行枚举转换，禁止使用三元运算符或后端转换方法。
+
+#### Constant 表结构
+
+`communion.constant` 表字段说明：
+- `cid`: 主键（自增）
+- `name`: 常量显示名称（如"初始(状态)"）
+- `module`: 模块名（如 `quotation`、`decoration`）
+- `clazz`: 类名（如 `quotationAssignConfig`）
+- `type`: 类型名（如 `enabled`、`autoAssign`）
+- `field`: 字段名（通常与type相同）
+- `key`: 枚举键（使用大写+下划线命名，如 `ENABLED_ENABLED_INT`）
+- `value`: 枚举值（实际存储值，如 `0`、`1`）
+- `status`: 状态（0-启用）
+- `updateTime`: 更新时间
+
+#### Key 命名规范
+
+**格式**: `[字段名]_[含义]_INT`
+
+**示例**：
+```javascript
+// 启用状态
+ENABLED_DISABLED_INT  // 0 - 禁用
+ENABLED_ENABLED_INT   // 1 - 启用
+
+// 分配方式
+ASSIGN_MUNAL_INT  // 0 - 手动
+ASSIGN_AUTO_INT   // 1 - 自动
+```
+
+#### 前端使用方式
+
+**在列表行配置中使用**：
+```javascript
+// ✅ 正确：使用 constant 常量转换
+var lineprops = [{
+    field: "enabled",
+    name: "启用状态",
+    prop: function(v) {
+        return constant.quotation().quotationAssignConfig.enabled.datas[v.enabled];
+    },
+    clazz: function(v) {
+        return v.enabled == 1 ? "green" : "red";
+    }
+}, {
+    field: "autoAssign",
+    name: "分配方式",
+    prop: function(v) {
+        return constant.quotation().quotationAssignConfig.autoAssign.datas[v.autoAssign];
+    }
+}];
+```
+
+**在查询条件中使用**：
+```javascript
+// ✅ 正确：查询条件中引用 constant
+"quotation-assign-config-enabled": {
+    label: "启用状态",
+    type: "select",
+    submitConfig: {
+        name: "enabled",
+        op: "eq",
+        alone: true
+    },
+    dataSource: {
+        url: null,
+        listPath: constant.quotation().quotationAssignConfig.enabled.datas
+    }
+}
+```
+
+**❌ 错误示例**：
+```javascript
+// ❌ 错误：使用三元运算符
+prop: function(v) {
+    return v.enabled == 1 ? "启用" : "禁用";
+}
+
+// ❌ 错误：使用后端转换方法
+prop: function(v) {
+    return v.enabledVO.name;
+}
+
+// ❌ 错误：硬编码映射
+prop: function(v) {
+    var map = {0: "禁用", 1: "启用"};
+    return map[v.enabled];
+}
+```
+
+#### 访问路径格式
+
+```javascript
+constant.[module]().[clazz].[type].datas[value]
+
+// 示例
+constant.quotation().quotationAssignConfig.enabled.datas[0]  // 返回 "禁用"
+constant.quotation().quotationAssignConfig.enabled.datas[1]  // 返回 "启用"
+constant.quotation().quotationAssignConfig.autoAssign.datas[0] // 返回 "手动"
+constant.quotation().quotationAssignConfig.autoAssign.datas[1] // 返回 "自动"
+```
+
+#### 数据库插入示例
+
+```sql
+-- 插入启用状态枚举
+INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, `key`, `value`, `status`) VALUES
+('禁用', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_DISABLED_INT', '0', '禁用', '0'),
+('启用', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_ENABLED_INT', '1', '启用', '0');
+
+-- 插入分配方式枚举
+INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, `key`, `value`, `status`) VALUES
+('手动', 'quotation', 'quotationAssignConfig', 'autoAssign', 'ASSIGN_MUNAL_INT', '0', '手动', '0'),
+('自动', 'quotation', 'quotationAssignConfig', 'autoAssign', 'ASSIGN_AUTO_INT', '1', '自动', '0');
+```
+
+---
+
+## 📝 版本更新历史
+
+### v2.1 (2026-03-20) - Constant 规范调整
+
+#### Git Pull 差异对比
+
+**Commit**: `1be98239` → `f019b49a`
+**文件**: `sql/add_quotation_budget_assignment.sql`
+**变更**: 7 insertions(+), 6 deletions(-)
+
+#### 差异分析
+
+**1. Constant 表字段完整性**
+
+❌ **原版本（本地）**：
+```sql
+INSERT INTO communion.constant (module, clazz, type, field, `key`, `value`) VALUES
+('quotation', 'quotationAssignConfig', 'enabled', 'enabled', '0', '禁用'),
+('quotation', 'quotationAssignConfig', 'enabled', 'enabled', '1', '启用');
+```
+
+✅ **新版本（远程）**：
+```sql
+INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, `key`, `value`, `status`, `updateTime`) VALUES
+('禁用', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_DISABLED_INT', '0', '禁用', '0'),
+('启用', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_ENABLED_INT', '1', '启用', '0');
+```
+
+**差异点**：
+- ✅ 添加了 `name` 字段（常量显示名称）
+- ✅ 添加了 `status` 字段（状态标识）
+- ✅ 表名和字段名使用反引号（`` ` ``）包裹
+- ✅ `key` 字段不使用反引号（不是保留字）
+
+**2. Key 命名规范调整**
+
+❌ **原版本**：
+```javascript
+'key': 'enabled'    // 直接使用字段名
+'key': 'autoAssign'
+```
+
+✅ **新版本**：
+```javascript
+'key': 'ENABLED_DISABLED_INT'    // 使用大写+下划线+INT后缀
+'key': 'ENABLED_ENABLED_INT'
+'key': 'ASSIGN_MUNAL_INT'
+'key': 'ASSIGN_AUTO_INT'
+```
+
+**命名规范**：`[字段名]_[含义]_INT`
+
+#### 规范总结
+
+**Constant 表完整字段列表**：
+```sql
+cid          INT(11)         主键（自增）
+name         VARCHAR(32)     常量显示名称（NOT NULL）
+module       VARCHAR(64)     模块名
+clazz        VARCHAR(64)     类名
+type         VARCHAR(64)     类型名
+field        VARCHAR(64)     字段名
+`key`        VARCHAR(64)     枚举键（不使用反引号）
+value        VARCHAR(64)     枚举值
+status       TINYINT(1)      状态（0-启用）
+updateTime   TIMESTAMP       更新时间
+```
+
+**Key 命令规范**：
+- 格式：`[字段名]_[含义]_INT`
+- 示例：`ENABLED_ENABLED_INT`、`ASSIGN_AUTO_INT`
+- 参考：decoration 模块的 `STATUS_INIT_INT`、`STATUS_SIGNED_INT` 等
+
+**SQL 插入规范**：
+```sql
+-- ✅ 正确：包含所有必需字段
+INSERT INTO `communion`.`constant`
+(`name`, `module`, `clazz`, `type`, `field`, `key`, `value`, `status`)
+VALUES
+('禁用', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_DISABLED_INT', '0', '禁用', '0');
+
+-- ❌ 错误：缺少 name 和 status 字段
+INSERT INTO communion.constant (module, clazz, type, field, `key`, `value`) VALUES
+('quotation', 'quotationAssignConfig', 'enabled', 'enabled', '0', '禁用');
+```
+
+**前端使用方式（不变）**：
+```javascript
+// 访问路径保持不变
+constant.quotation().quotationAssignConfig.enabled.datas[0]  // 返回 "禁用"
+constant.quotation().quotationAssignConfig.enabled.datas[1]  // 返回 "启用"
+```
+
+#### 影响评估
+
+✅ **无影响**：
+- 前端代码无需修改（访问路径不变）
+- 数据库表结构符合实际（包含 name 和 status 字段）
+- SQL 脚本已更新为正确版本
+
+⚠️ **注意事项**：
+- 后续添加新常量时，必须包含 `name` 和 `status` 字段
+- Key 字段必须遵循 `[字段名]_[含义]_INT` 命名规范
+- SQL 中表名和字段名建议使用反引号包裹（避免保留字冲突）
+
+#### 相关文件更新
+
+- ✅ `sql/add_quotation_budget_assignment.sql` - 已更新为正确版本
+- ✅ `docs/DESIGN_quotation_budget_assignment_v1.5.md` - 本文档已更新规范说明
+- ✅ `WebContent/js/quotation/quotationAssignConfig.js` - 前端代码无需修改
+
 ---
 
 ## 📊 进度跟踪
