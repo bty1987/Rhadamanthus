@@ -97,6 +97,29 @@ $(function() {
             deleteConfig(v);
             return false;
         }
+    }, {
+        name: function(v) {
+            // 动态显示按钮文本
+            return v.enabled == 1 ? "禁用" : "启用";
+        },
+        clazz: function(v) {
+            // 动态显示按钮样式
+            return v.enabled == 1 ? "btn-warning" : "btn-success";
+        },
+        handle: function(v) {
+            toggleStatus(v);
+            return false;
+        }
+    }, {
+        name: function(v) {
+            // 动态显示按钮文本
+            return v.autoAssign == 1 ? "切手动" : "切自动";
+        },
+        clazz: "btn-info",
+        handle: function(v) {
+            toggleAssign(v);
+            return false;
+        }
     }];
 
     // 渲染列表
@@ -215,6 +238,38 @@ $(function() {
                 "quotationAssignConfig.qacid": row.qacid
             }, function(res) {
                 com.showAlert(com.info, '删除成功');
+                searcher.doSearch(); // 刷新列表
+            });
+        });
+    }
+
+    // 快捷切换状态（启用/禁用）
+    function toggleStatus(row) {
+        var newStatus = row.enabled == 1 ? 0 : 1;
+        var statusText = newStatus == 1 ? "启用" : "禁用";
+
+        com.showConfirm('确认要将该配置' + statusText + '吗？', function() {
+            com.post(api.quotation.updateQuotationAssignConfigForStatus, {
+                "quotationAssignConfig.qacid": row.qacid,
+                "quotationAssignConfig.enabled": newStatus
+            }, function(res) {
+                com.showAlert(com.info, statusText + '成功');
+                searcher.doSearch(); // 刷新列表
+            });
+        });
+    }
+
+    // 快捷切换分配方式（手动/自动）
+    function toggleAssign(row) {
+        var newAssign = row.autoAssign == 1 ? 0 : 1;
+        var assignText = newAssign == 1 ? "自动分配" : "手动分配";
+
+        com.showConfirm('确认要将该配置切换为' + assignText + '吗？', function() {
+            com.post(api.quotation.updateQuotationAssignConfigForAssign, {
+                "quotationAssignConfig.qacid": row.qacid,
+                "quotationAssignConfig.autoAssign": newAssign
+            }, function(res) {
+                com.showAlert(com.info, '切换成功');
                 searcher.doSearch(); // 刷新列表
             });
         });
