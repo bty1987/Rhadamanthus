@@ -56,7 +56,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	@Override
 	public QuotationAssignRequestPO queryPendingRequestByOrderId(String orderId) {
-		String hql = "from QuotationAssignRequestPO where orderId = :orderId and status = 1";
+		String hql = "from QuotationAssignRequestPO where orderId = :orderId and status = " + QuotationAssignRequestPO.STATUS_PENDING_INT;
 		return (QuotationAssignRequestPO) session().createQuery(hql)
 				.setString("orderId", orderId)
 				.uniqueResult();
@@ -64,7 +64,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	@Override
 	public QuotationAssignRequestPO queryAssignedRequestByOrderId(String orderId) {
-		String hql = "from QuotationAssignRequestPO where orderId = :orderId and status = 2";
+		String hql = "from QuotationAssignRequestPO where orderId = :orderId and status = " + QuotationAssignRequestPO.STATUS_ASSIGNED_INT;
 		return (QuotationAssignRequestPO) session().createQuery(hql)
 				.setString("orderId", orderId)
 				.uniqueResult();
@@ -78,7 +78,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 				     "INNER JOIN quotation.quotationassignuserrule u ON u.uid = :uid " +
 				     "  AND r.company = u.company " +
 				     "  AND (r.department IS NULL OR u.department IS NULL OR r.department = u.department) " +
-				     "WHERE r.status = 2";
+				     "WHERE r.status = " + QuotationAssignRequestPO.STATUS_ASSIGNED_INT;
 
 		SQLQuery query = session().createSQLQuery(sql);
 		query.setInteger("uid", uid);
@@ -92,7 +92,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	public List<QuotationAssignRequestPO> queryPendingQueue(int company, Integer department, short decorationType) {
 		String hql = "from QuotationAssignRequestPO " +
 				     "where company = :company " +
-				     "and status = 1 " +
+				     "and status = " + QuotationAssignRequestPO.STATUS_PENDING_INT + " " +
 				     "and decorationType = :decorationType ";
 
 		if (department != null) {
@@ -115,7 +115,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	@Override
 	public int updateStatusToAssigned(long qarid) {
 		String sql = "update quotation.quotationassignrequest " +
-				     "set status = 2, assignTime = CURRENT_TIMESTAMP " +
+				     "set status = " + QuotationAssignRequestPO.STATUS_ASSIGNED_INT + ", assignTime = CURRENT_TIMESTAMP " +
 				     "where qarid = :qarid";
 
 		SQLQuery query = session().createSQLQuery(sql);

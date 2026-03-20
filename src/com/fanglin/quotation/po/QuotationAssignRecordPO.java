@@ -58,27 +58,27 @@ public class QuotationAssignRecordPO implements Serializable {
 	/**
 	 * 分配类型：正向自动（设计师发起）
 	 */
-	public static final Short ASSIGN_TYPE_FORWARD_AUTO = 1;
+	public static final Short ASSIGN_TYPE_FORWARD_AUTO_INT = 1;
 
 	/**
 	 * 分配类型：手动（预算经理手动派单）
 	 */
-	public static final Short ASSIGN_TYPE_MANUAL = 2;
+	public static final Short ASSIGN_TYPE_MANUAL_INT = 2;
 
 	/**
 	 * 分配类型：反向自动（预算员完成后自动分配）
 	 */
-	public static final Short ASSIGN_TYPE_REVERSE_AUTO = 3;
+	public static final Short ASSIGN_TYPE_REVERSE_AUTO_INT = 3;
 
 	/**
 	 * 分配结果：失败（无预算员/类型不匹配/其他原因）
 	 */
-	public static final Byte ASSIGN_RESULT_FAILED = 0;
+	public static final Byte ASSIGN_RESULT_FAILED_INT = 0;
 
 	/**
 	 * 分配结果：成功
 	 */
-	public static final Byte ASSIGN_RESULT_SUCCESS = 1;
+	public static final Byte ASSIGN_RESULT_SUCCESS_INT = 1;
 
 	// ==================== 字段定义 ====================
 

@@ -60,7 +60,7 @@ public class QuotationAssignRecordDaoImpl extends DaoImpl<QuotationAssignRecordP
 		String sql = "SELECT COUNT(*) " +
 				     "FROM quotation.quotationassignrecord " +
 				     "WHERE uid = :uid " +
-				     "AND assignResult = 1";
+				     "AND assignResult = " + QuotationAssignRecordPO.ASSIGN_RESULT_SUCCESS_INT;
 
 		SQLQuery query = session().createSQLQuery(sql);
 		query.setInteger("uid", uid);

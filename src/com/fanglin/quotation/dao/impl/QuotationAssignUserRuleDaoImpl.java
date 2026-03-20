@@ -46,7 +46,7 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
     @Override
     public List<QuotationAssignUserRulePO> queryAvailableUsers(int company, Integer department) throws FLException {
-        String hql = "FROM QuotationAssignUserRulePO WHERE company = :company AND status = 1";
+        String hql = "FROM QuotationAssignUserRulePO WHERE company = :company AND status = " + QuotationAssignUserRulePO.STATUS_AVAILABLE_INT;
 
         if (department != null) {
             hql += " AND department = :department";

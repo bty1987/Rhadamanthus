@@ -59,37 +59,37 @@ public class QuotationAssignRequestPO implements Serializable {
 	/**
 	 * 状态：待分配（在队列中等待）
 	 */
-	public static final Short STATUS_PENDING = 1;
+	public static final Short STATUS_PENDING_INT = 1;
 
 	/**
 	 * 状态：已分配（成功分配给预算员）
 	 */
-	public static final Short STATUS_ASSIGNED = 2;
+	public static final Short STATUS_ASSIGNED_INT = 2;
 
 	/**
 	 * 优先级：最高
 	 */
-	public static final Short PRIORITY_HIGHEST = 1;
+	public static final Short PRIORITY_HIGHEST_INT = 1;
 
 	/**
 	 * 优先级：高
 	 */
-	public static final Short PRIORITY_HIGH = 3;
+	public static final Short PRIORITY_HIGH_INT = 3;
 
 	/**
 	 * 优先级：普通（默认）
 	 */
-	public static final Short PRIORITY_NORMAL = 5;
+	public static final Short PRIORITY_NORMAL_INT = 5;
 
 	/**
 	 * 优先级：低
 	 */
-	public static final Short PRIORITY_LOW = 7;
+	public static final Short PRIORITY_LOW_INT = 7;
 
 	/**
 	 * 优先级：最低
 	 */
-	public static final Short PRIORITY_LOWEST = 9;
+	public static final Short PRIORITY_LOWEST_INT = 9;
 
 	// ==================== 字段定义 ====================
 
