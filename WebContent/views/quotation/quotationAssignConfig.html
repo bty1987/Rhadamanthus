@@ -6,6 +6,65 @@
             <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
         </div>
     </div>
+
+    <!-- 新增/编辑弹窗 -->
+    <div class="modal fade" id="configModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="modalTitle">预算员分配配置</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" id="qacid">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="company">公司</label>
+                            <div class="col-sm-9">
+                                <select id="company" class="col-xs-10 col-sm-8 v_required" data-condition="system-company"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="department">部门</label>
+                            <div class="col-sm-9">
+                                <select id="department" class="col-xs-10 col-sm-8">
+                                    <option value="">所有部门</option>
+                                </select>
+                                <span class="help-block" style="margin-bottom: 0;">留空表示该公司所有部门</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="enabled">启用状态</label>
+                            <div class="col-sm-9">
+                                <select id="enabled" class="col-xs-10 col-sm-8 v_required" data-condition="assign-config-enabled"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="autoAssign">分配方式</label>
+                            <div class="col-sm-9">
+                                <select id="autoAssign" class="col-xs-10 col-sm-8 v_required">
+                                    <option value="0">手动</option>
+                                    <option value="1">自动</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">

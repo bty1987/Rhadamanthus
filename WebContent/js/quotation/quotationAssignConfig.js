@@ -17,13 +17,20 @@ $(function() {
 
     // 查询条件
     searcher.condition([
-        "quotation-assign-config-company",
-        "quotation-assign-config-enabled"
+        "assign-config-company",
+        "assign-config-enabled"
     ]);
 
-    // 操作按钮（暂时留空，后续添加）
+    // 顶部按钮
     searcher.button(function() {
-        return [];
+        var $addBtn = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left')
+            .attr('id', 'addConfigBtn')
+            .css('margin', '0px 3px');
+
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($addBtn);
+        $('<span></span>').text('新增').appendTo($addBtn);
+
+        return [$addBtn];
     });
 
     // 列表行配置
@@ -47,7 +54,7 @@ $(function() {
         clazz: "grey"
     }, {
         field: "enabled",
-        name: "启用状态",
+        name: "状态",
         prop: function(v) {
             // 使用 constant 进行枚举转换
             return constant.quotation().quotationAssignConfig.enabled.datas[v.enabled];
@@ -75,10 +82,114 @@ $(function() {
         clazz: "grey"
     }];
 
-    // 行按钮（暂时留空，后续添加编辑、删除等）
-    var linebtns = [];
+    // 行按钮
+    var linebtns = [{
+        name: "编辑",
+        clazz: "btn-yellow",
+        handle: function(v) {
+            editConfig(v);
+            return false;
+        }
+    }, {
+        name: "删除",
+        clazz: "btn-danger",
+        handle: function(v) {
+            deleteConfig(v);
+            return false;
+        }
+    }];
 
-    // 渲染列表（标题显示 "companyVO.name"）
+    // 渲染列表
     searcher.line("companyVO.name", lineprops, linebtns).render();
+
+    // ==================== Modal 操作 ====================
+
+    var $modal = com.focusPage('#configModal');
+    var $qacid = com.focusPage('#qacid');
+    var $company = com.focusPage('#company');
+    var $department = com.focusPage('#department');
+    var $enabled = com.focusPage('#enabled');
+    var $autoAssign = com.focusPage('#autoAssign');
+    var $saveBtn = com.focusPage('#saveBtn');
+
+    // 新增按钮点击事件
+    com.focusPage('#addConfigBtn', '#pagenation').on('click', function() {
+        openModal();
+    });
+
+    // 保存按钮点击事件
+    $saveBtn.on('click', saveConfig);
+
+    // Modal关闭时清理表单
+    $modal.on('hide.bs.modal', function() {
+        com.clearValidator();
+        com.cleanItems({
+            qacid: $qacid,
+            company: $company,
+            department: $department,
+            enabled: $enabled,
+            autoAssign: $autoAssign
+        });
+    });
+
+    // 打开Modal（新增模式）
+    function openModal() {
+        $qacid.val(''); // 清空ID表示新增
+        com.focusPage('#modalTitle').text('新增预算员分配配置');
+        $modal.modal('show');
+    }
+
+    // 打开Modal（编辑模式）
+    function editConfig(row) {
+        $qacid.val(row.qacid);
+        $company.val(row.company);
+        $department.val(row.department || '');
+        $enabled.val(row.enabled);
+        $autoAssign.val(row.autoAssign);
+
+        com.focusPage('#modalTitle').text('编辑预算员分配配置');
+        $modal.modal('show');
+    }
+
+    // 保存配置
+    function saveConfig() {
+        // 表单验证
+        if (com.validate('configModal')) {
+            return false;
+        }
+
+        var qacid = $qacid.val();
+        var isNew = !qacid;
+
+        var params = {
+            "quotationAssignConfig.qacid": qacid,
+            "quotationAssignConfig.company": parseInt($company.val()),
+            "quotationAssignConfig.department": $department.val() ? parseInt($department.val()) : null,
+            "quotationAssignConfig.enabled": parseInt($enabled.val()),
+            "quotationAssignConfig.autoAssign": parseInt($autoAssign.val())
+        };
+
+        var apiMethod = isNew
+            ? api.quotation.createQuotationAssignConfig
+            : api.quotation.updateQuotationAssignConfig;
+
+        com.post(apiMethod, params, function(res) {
+            com.showAlert(com.info, isNew ? '新增成功' : '更新成功');
+            $modal.modal('hide');
+            searcher.doSearch(); // 刷新列表
+        });
+    }
+
+    // 删除配置
+    function deleteConfig(row) {
+        com.showConfirm('确认删除该配置吗？', function() {
+            com.post(api.quotation.deleteQuotationAssignConfig, {
+                "quotationAssignConfig.qacid": row.qacid
+            }, function(res) {
+                com.showAlert(com.info, '删除成功');
+                searcher.doSearch(); // 刷新列表
+            });
+        });
+    }
 
 })
