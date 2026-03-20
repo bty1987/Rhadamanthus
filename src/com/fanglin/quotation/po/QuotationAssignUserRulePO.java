@@ -57,17 +57,32 @@ public class QuotationAssignUserRulePO implements Serializable {
 	/**
 	 * 状态：待分配（可接收新任务）
 	 */
-	public static final Short STATUS_AVAILABLE = 1;
+	public static final Short STATUS_AVAILABLE_INT = 1;
 
 	/**
 	 * 状态：制作中（正在处理任务）
 	 */
-	public static final Short STATUS_BUSY = 2;
+	public static final Short STATUS_BUSY_INT = 2;
 
 	/**
 	 * 状态：停止（不再接收任务）
 	 */
-	public static final Short STATUS_STOPPED = 3;
+	public static final Short STATUS_STOPPED_INT = 3;
+
+	/**
+	 * 支持类型：通用（支持所有装修类型）
+	 */
+	public static final Integer SUPPORTED_TYPE_ALL_INT = -1;
+
+	/**
+	 * 支持类型：半包
+	 */
+	public static final Integer SUPPORTED_TYPE_HALF_INT = 0;
+
+	/**
+	 * 支持类型：整装
+	 */
+	public static final Integer SUPPORTED_TYPE_FULL_INT = 1;
 
 	// ==================== 字段定义 ====================
 
