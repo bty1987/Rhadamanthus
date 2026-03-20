@@ -13,7 +13,6 @@ package com.fanglin.quotation.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -51,7 +50,7 @@ public class QuotationAssignConfigDaoImpl extends DaoImpl<QuotationAssignConfigP
 
 		// 按公司筛选
 		if (company != null) {
-			query.add(query.getCriterion("company", company, "eq"));
+			query.add(query.alias("company", "company").getCriterion("company.cid", company, "eq"));
 		}
 
 		// 按创建时间倒序排序
@@ -62,25 +61,25 @@ public class QuotationAssignConfigDaoImpl extends DaoImpl<QuotationAssignConfigP
 
 	@Override
 	public QuotationAssignConfigPO queryQuotationAssignConfig(int company, Integer department) {
-		return (QuotationAssignConfigPO) createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("department", department)).uniqueResult();
+		return (QuotationAssignConfigPO) createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq("company.cid", company)).add(Restrictions.eq("department", department)).uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationAssignConfigPO> queryQuotationAssignConfig(int company) {
-		return createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq("company", company)).addOrder(Order.asc("department")).list();
+		return createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq("company.cid", company)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationAssignConfigPO> queryQuotationAssignConfig(int company, Integer department, short status) {
-		return createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("enabled", status)).add(Restrictions.or(Restrictions.eq("department", department), Restrictions.isNull("department"))).addOrder(Order.asc("department")).list();
+		return createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq("company.cid", company)).add(Restrictions.eq("enabled", status)).add(Restrictions.or(Restrictions.eq("department.did", department), Restrictions.isNull("department.did"))).list();
 	}
 
 	@Override
 	public boolean queryQuotationAssignConfigForEnable(int company) {
 
-		Number count = (Number) createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("enabled", QuotationAssignConfigPO.ENABLED_ENABLED_INT)).add(Restrictions.eq("autoAssign", QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT)).setProjection(Projections.rowCount()).uniqueResult();
+		Number count = (Number) createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq("company.cid", company)).add(Restrictions.eq("enabled", QuotationAssignConfigPO.ENABLED_ENABLED_INT)).add(Restrictions.eq("autoAssign", QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT)).setProjection(Projections.rowCount()).uniqueResult();
 
 		return count != null && count.intValue() > 0;
 	}

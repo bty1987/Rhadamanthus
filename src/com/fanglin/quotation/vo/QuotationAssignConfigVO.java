@@ -14,6 +14,11 @@ package com.fanglin.quotation.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.system.vo.CompanyVO;
+
 /**
  * 预算配置表值对象
  * 
@@ -48,9 +53,7 @@ import java.sql.Timestamp;
  */
 public class QuotationAssignConfigVO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
-	// ==================== 字段定义 ====================
+	private static final long serialVersionUID = -988461889194269257L;
 
 	/**
 	 * 配置ID
@@ -58,24 +61,14 @@ public class QuotationAssignConfigVO implements Serializable {
 	private Long qacid;
 
 	/**
-	 * 公司ID
-	 */
-	private String company;
-
-	/**
 	 * 公司信息（关联对象）
 	 */
-	private Object companyVO;
-
-	/**
-	 * 部门ID（NULL表示该公司所有部门）
-	 */
-	private Integer department;
+	private CompanyVO company;
 
 	/**
 	 * 部门信息（关联对象）
 	 */
-	private Object departmentVO;
+	private DepartmentVO department;
 
 	/**
 	 * 是否启用（0-禁用，1-启用）
@@ -104,6 +97,12 @@ public class QuotationAssignConfigVO implements Serializable {
 	 */
 	public QuotationAssignConfigVO() {
 		super();
+	}
+
+	public QuotationAssignConfigVO(CompanyVO company, DepartmentVO department) {
+		super();
+		this.company = company;
+		this.department = department;
 	}
 
 	/**
@@ -141,7 +140,7 @@ public class QuotationAssignConfigVO implements Serializable {
 	 * 
 	 * @return 公司ID
 	 */
-	public String getCompany() {
+	public CompanyVO getCompany() {
 		return company;
 	}
 
@@ -150,26 +149,8 @@ public class QuotationAssignConfigVO implements Serializable {
 	 * 
 	 * @param company 公司ID
 	 */
-	public void setCompany(String company) {
+	public void setCompany(CompanyVO company) {
 		this.company = company;
-	}
-
-	/**
-	 * 获取公司信息
-	 * 
-	 * @return 公司信息
-	 */
-	public Object getCompanyVO() {
-		return companyVO;
-	}
-
-	/**
-	 * 设置公司信息
-	 * 
-	 * @param companyVO 公司信息
-	 */
-	public void setCompanyVO(Object companyVO) {
-		this.companyVO = companyVO;
 	}
 
 	/**
@@ -177,7 +158,7 @@ public class QuotationAssignConfigVO implements Serializable {
 	 * 
 	 * @return 部门ID（NULL表示该公司所有部门）
 	 */
-	public Integer getDepartment() {
+	public DepartmentVO getDepartment() {
 		return department;
 	}
 
@@ -186,26 +167,8 @@ public class QuotationAssignConfigVO implements Serializable {
 	 * 
 	 * @param department 部门ID（NULL表示该公司所有部门）
 	 */
-	public void setDepartment(Integer department) {
+	public void setDepartment(DepartmentVO department) {
 		this.department = department;
-	}
-
-	/**
-	 * 获取部门信息
-	 * 
-	 * @return 部门信息
-	 */
-	public Object getDepartmentVO() {
-		return departmentVO;
-	}
-
-	/**
-	 * 设置部门信息
-	 * 
-	 * @param departmentVO 部门信息
-	 */
-	public void setDepartmentVO(Object departmentVO) {
-		this.departmentVO = departmentVO;
 	}
 
 	/**
@@ -249,6 +212,7 @@ public class QuotationAssignConfigVO implements Serializable {
 	 * 
 	 * @return 创建时间
 	 */
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -267,6 +231,7 @@ public class QuotationAssignConfigVO implements Serializable {
 	 * 
 	 * @return 更新时间
 	 */
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getUpdateTime() {
 		return updateTime;
 	}

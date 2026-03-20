@@ -60,9 +60,9 @@ $(function() {
         type: "checkbox",
         prop: "qacid"
     }, {
-        field: "companyVO",
+        field: "company",
         name: "公司",
-        prop: "companyVO.name",
+        prop: "company.name",
         clazz: "blue"
     }, {
         field: "department",
@@ -70,7 +70,7 @@ $(function() {
         prop: function(v) {
 
             // 部门ID为NULL表示该公司所有部门
-            return v.department ? (v.departmentVO ? v.departmentVO.name : "未知部门") : "所有部门";
+            return v.department ? (v.department ? v.department.name : "未知部门") : "所有部门";
         },
         clazz: "grey"
     }, {
@@ -79,7 +79,7 @@ $(function() {
         prop: function(v) {
 
             // 使用 constant 进行枚举转换
-            return constant.quotation().quotationAssignConfig.enabled.datas[v.enabled];
+            return constant.quotation().quotationAssignConfig.enabled.keys[v.enabled];
         },
         clazz: function(v) {
 
@@ -91,7 +91,7 @@ $(function() {
         prop: function(v) {
 
             // 使用 constant 进行枚举转换
-            return constant.quotation().quotationAssignConfig.autoAssign.datas[v.autoAssign];
+            return constant.quotation().quotationAssignConfig.autoAssign.keys[v.autoAssign];
         },
         clazz: "grey"
     }, {
@@ -154,7 +154,7 @@ $(function() {
     }];
 
     // 渲染列表
-    searcher.line("companyVO.name", lineprops, linebtns).render();
+    searcher.line("company.name", lineprops, linebtns).render();
 
     // ==================== 初始化Select数据 ====================
 
@@ -230,8 +230,8 @@ $(function() {
         }
 
         var params = {
-            "quotationAssignConfig.company": config.items.company.val(),
-            "quotationAssignConfig.department": config.items.department.val() ? parseInt(config.items.department.val()) : null,
+            "quotationAssignConfig.company.cid": config.items.company.val(),
+            "quotationAssignConfig.department.did": config.items.department.val() ? parseInt(config.items.department.val()) : null,
             "quotationAssignConfig.enabled": parseInt(config.items.enabled.val()),
             "quotationAssignConfig.autoAssign": parseInt(config.items.autoAssign.val())
         };
