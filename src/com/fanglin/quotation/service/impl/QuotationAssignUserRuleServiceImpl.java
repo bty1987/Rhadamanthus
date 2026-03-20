@@ -51,10 +51,9 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException {
 
 		// 调用DAO分页查询
-		;
+		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.pageQuotationAssignUserRule(paging, filters);
 
 		// PO转VO
-		List<QuotationAssignUserRulePO> poList = quotationAssignUserRuleDao.pageQuotationAssignUserRule(paging, filters);
 		List<QuotationAssignUserRuleVO> voList = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRulePO po : poList) {
