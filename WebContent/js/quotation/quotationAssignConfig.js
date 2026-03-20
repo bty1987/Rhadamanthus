@@ -70,7 +70,7 @@ $(function() {
         prop: function(v) {
 
             // 部门ID为NULL表示该公司所有部门
-            return v.department ? (v.department ? v.department.name : "未知部门") : "所有部门";
+            return v.department ? v.department.name : "所有部门";
         },
         clazz: "grey"
     }, {
@@ -170,7 +170,25 @@ $(function() {
         config.items.company.bindData(res.companys, "cid", "name", false);
     }, null, false);
 
-    // 部门下拉框保持为空（所有部门选项）
+    // 初始化部门下拉框（公司选择后加载）
+    function initDepartmentSelect(companyId) {
+        if (!companyId) {
+            config.items.department.empty().append('<option value="">所有部门</option>');
+            return;
+        }
+
+        com.post(api.system.queryDepartmentByCompany, {
+            "company.cid": companyId
+        }, function(res) {
+            config.items.department.bindData(res.departments, "did", "name", true);
+        }, null, false);
+    }
+
+    // 监听公司变化，联动部门
+    config.items.company.on('change', function() {
+        var companyId = $(this).val();
+        initDepartmentSelect(companyId);
+    });
 
     // ==================== Modal 操作 ====================
 
@@ -199,9 +217,15 @@ $(function() {
     function openModal() {
 
         com.focusPage('#modalTitle').text('新增预算员分配配置');
-        
+
         config.data.currentRow = null;
-        
+
+        // 重置表单
+        config.items.company.val('');
+        config.items.department.empty().append('<option value="">所有部门</option>');
+        config.items.enabled.val('1');
+        config.items.autoAssign.val('1');
+
         config.modals.configModal.modal('show');
     }
 
@@ -209,14 +233,23 @@ $(function() {
     function editConfig(row) {
 
         config.data.currentRow = row;
-        
-        config.items.company.val(row.company);
-        config.items.department.val(row.department || '');
+
+        // 设置公司（从对象中提取ID）
+        config.items.company.val(row.company.cid);
+
+        // 初始化部门并选中（先加载部门列表，再设置值）
+        initDepartmentSelect(row.company.cid);
+        if (row.department && row.department.did) {
+            setTimeout(function() {
+                config.items.department.val(row.department.did);
+            }, 100);
+        }
+
         config.items.enabled.val(row.enabled);
         config.items.autoAssign.val(row.autoAssign);
 
         config.config = row;
-        
+
         com.focusPage('#modalTitle').text('编辑预算员分配配置');
         config.modals.configModal.modal('show');
     }
