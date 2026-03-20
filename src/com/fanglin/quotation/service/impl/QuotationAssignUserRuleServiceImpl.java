@@ -79,6 +79,14 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Transactional(rollbackFor = Exception.class)
 	public int createQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
 
+		// 空值检查
+		if (quotationAssignUserRule.getUser() == null) {
+			throw new FLException(0, "用户信息不能为空");
+		}
+		if (quotationAssignUserRule.getCompany() == null) {
+			throw new FLException(0, "公司信息不能为空");
+		}
+
 		// 校验：用户+公司组合唯一性
 		int uid = quotationAssignUserRule.getUser().getUid();
 		int company = quotationAssignUserRule.getCompany().getCid();
@@ -93,9 +101,9 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		QuotationAssignUserRulePO po = new QuotationAssignUserRulePO();
 		BeanUtils.copyProperties(quotationAssignUserRule, po);
 
-		// 从关联对象中提取ID
-		po.setUid(quotationAssignUserRule.getUser().getUid());
-		po.setCompany(quotationAssignUserRule.getCompany().getCid());
+		// 从关联对象中提取ID（已做空值检查，安全）
+		po.setUid(uid);
+		po.setCompany(company);
 
 		// Department可能是NULL（该公司所有部门）
 		if (quotationAssignUserRule.getDepartment() != null) {
@@ -115,6 +123,14 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
 
+		// 空值检查
+		if (quotationAssignUserRule.getUser() == null) {
+			throw new FLException(0, "用户信息不能为空");
+		}
+		if (quotationAssignUserRule.getCompany() == null) {
+			throw new FLException(0, "公司信息不能为空");
+		}
+
 		// 校验：用户+公司组合唯一性（排除自己）
 		int uid = quotationAssignUserRule.getUser().getUid();
 		int company = quotationAssignUserRule.getCompany().getCid();
@@ -133,9 +149,9 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 			throw new FLException(0, "规则不存在");
 		}
 
-		// 更新字段
-		po.setUid(quotationAssignUserRule.getUser().getUid());
-		po.setCompany(quotationAssignUserRule.getCompany().getCid());
+		// 更新字段（已做空值检查，安全）
+		po.setUid(uid);
+		po.setCompany(company);
 
 		// Department可能是NULL（该公司所有部门）
 		if (quotationAssignUserRule.getDepartment() != null) {
