@@ -1,150 +1,360 @@
+/**
+ * @File Name     : QuotationAssignUserRulePO.java
+ * @Package      : com.fanglin.quotation.po
+ * @Version       : 1.0
+ * @Date          : 2026-03-20
+ * @Copyright     : Copyright Creators 2026
+ * @Author        : Claude AI
+ * @Describing    : 预算员规则表实体类
+ */
+
 package com.fanglin.quotation.po;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
-import com.fanglin.core.po.BasePO;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.beans.BeanUtils;
+
+import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 
 /**
- * 预算员规则表 PO
+ * 预算员规则表实体类
  *
- * 表名: quotation.quotationassignuserrule
- * 说明: 定义预算员的基本信息和状态
+ * <p>
+ * 职责：定义哪些用户可以作为预算员，以及其当前状态
+ * </p>
+ *
+ * <p>
+ * 核心字段：
+ * </p>
+ * <ul>
+ * <li>qaurid: 规则ID（主键）</li>
+ * <li>uid: 用户ID（预算员工号）</li>
+ * <li>company: 公司ID</li>
+ * <li>department: 部门ID（NULL表示该公司所有部门）</li>
+ * <li>status: 状态（1-待分配，2-制作中，3-停止）</li>
+ * <li>lastFinishTime: 最后完成时间（用于自动分配排序）</li>
+ * <li>currentTaskCount: 当前任务数量</li>
+ * </ul>
  *
  * @author Claude AI
- * @date 2026-03-20
+ * @version 1.0
  */
-public class QuotationAssignUserRulePO extends BasePO {
+@Entity
+@Table(name = "quotationassignuserrule", catalog = "quotation")
+public class QuotationAssignUserRulePO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * 预算员规则ID (主键)
-     */
-    private long qaurid;
+	// ==================== 常量定义 ====================
 
-    /**
-     * 用户ID (预算员工号，该用户会被分配为装修单的报价员)
-     */
-    private int uid;
+	/**
+	 * 状态：待分配（可接收新任务）
+	 */
+	public static final Short STATUS_AVAILABLE = 1;
 
-    /**
-     * 关联公司ID
-     */
-    private int company;
+	/**
+	 * 状态：制作中（正在处理任务）
+	 */
+	public static final Short STATUS_BUSY = 2;
 
-    /**
-     * 部门ID (NULL表示该公司所有部门)
-     */
-    private Integer department;
+	/**
+	 * 状态：停止（不再接收任务）
+	 */
+	public static final Short STATUS_STOPPED = 3;
 
-    /**
-     * 状态: 1-待分配(可接收新任务)，2-制作中(正在处理任务)，3-停止(不再接收任务)
-     */
-    private short status;
+	// ==================== 字段定义 ====================
 
-    /**
-     * 最后完成时间 (用于自动分配排序，最早完成的优先)
-     */
-    private Timestamp lastFinishTime;
+	/**
+	 * 预算员规则ID（主键）
+	 */
+	private long qaurid;
 
-    /**
-     * 当前任务数量 (缓存字段，基于quotationassignrequest统计)
-     */
-    private Integer currentTaskCount;
+	/**
+	 * 用户ID（预算员工号，该用户会被分配为装修单的报价员）
+	 */
+	private int uid;
 
-    /**
-     * 任务数量统计时间 (用于判断缓存是否过期)
-     */
-    private Timestamp taskCountUpdateTime;
+	/**
+	 * 关联公司ID
+	 */
+	private int company;
 
-    /**
-     * 创建时间
-     */
-    private Timestamp createTime;
+	/**
+	 * 部门ID（NULL表示该公司所有部门）
+	 */
+	private Integer department;
 
-    /**
-     * 更新时间
-     */
-    private Timestamp updateTime;
+	/**
+	 * 状态: 1-待分配(可接收新任务)，2-制作中(正在处理任务)，3-停止(不再接收任务)
+	 */
+	private short status;
 
-    // ==================== Getter & Setter ====================
+	/**
+	 * 最后完成时间（用于自动分配排序，最早完成的优先）
+	 */
+	private Timestamp lastFinishTime;
 
-    public long getQaurid() {
-        return qaurid;
-    }
+	/**
+	 * 当前任务数量（缓存字段，基于quotationassignrequest统计）
+	 */
+	private Integer currentTaskCount;
 
-    public void setQaurid(long qaurid) {
-        this.qaurid = qaurid;
-    }
+	/**
+	 * 任务数量统计时间（用于判断缓存是否过期）
+	 */
+	private Timestamp taskCountUpdateTime;
 
-    public int getUid() {
-        return uid;
-    }
+	/**
+	 * 创建时间
+	 */
+	private Timestamp createTime;
 
-    public void setUid(int uid) {
-        this.uid = uid;
-    }
+	/**
+	 * 更新时间
+	 */
+	private Timestamp updateTime;
 
-    public int getCompany() {
-        return company;
-    }
+	// ==================== 构造函数 ====================
 
-    public void setCompany(int company) {
-        this.company = company;
-    }
+	/**
+	 * 默认构造函数
+	 */
+	public QuotationAssignUserRulePO() {
+		super();
+	}
 
-    public Integer getDepartment() {
-        return department;
-    }
+	/**
+	 * 带主键的构造函数
+	 *
+	 * @param qaurid 预算员规则ID
+	 */
+	public QuotationAssignUserRulePO(long qaurid) {
+		super();
+		this.qaurid = qaurid;
+	}
 
-    public void setDepartment(Integer department) {
-        this.department = department;
-    }
+	// ==================== Getter/Setter ====================
 
-    public short getStatus() {
-        return status;
-    }
+	/**
+	 * 获取预算员规则ID
+	 *
+	 * @return 预算员规则ID
+	 */
+	@Id
+	@GeneratedValue
+	@Column(name = "qaurid", unique = true, nullable = false)
+	public long getQaurid() {
+		return qaurid;
+	}
 
-    public void setStatus(short status) {
-        this.status = status;
-    }
+	/**
+	 * 设置预算员规则ID
+	 *
+	 * @param qaurid 预算员规则ID
+	 */
+	public void setQaurid(long qaurid) {
+		this.qaurid = qaurid;
+	}
 
-    public Timestamp getLastFinishTime() {
-        return lastFinishTime;
-    }
+	/**
+	 * 获取用户ID
+	 *
+	 * @return 用户ID
+	 */
+	@Column(name = "uid", nullable = false)
+	public int getUid() {
+		return uid;
+	}
 
-    public void setLastFinishTime(Timestamp lastFinishTime) {
-        this.lastFinishTime = lastFinishTime;
-    }
+	/**
+	 * 设置用户ID
+	 *
+	 * @param uid 用户ID
+	 */
+	public void setUid(int uid) {
+		this.uid = uid;
+	}
 
-    public Integer getCurrentTaskCount() {
-        return currentTaskCount;
-    }
+	/**
+	 * 获取公司ID
+	 *
+	 * @return 公司ID
+	 */
+	@Column(name = "company", nullable = false)
+	public int getCompany() {
+		return company;
+	}
 
-    public void setCurrentTaskCount(Integer currentTaskCount) {
-        this.currentTaskCount = currentTaskCount;
-    }
+	/**
+	 * 设置公司ID
+	 *
+	 * @param company 公司ID
+	 */
+	public void setCompany(int company) {
+		this.company = company;
+	}
 
-    public Timestamp getTaskCountUpdateTime() {
-        return taskCountUpdateTime;
-    }
+	/**
+	 * 获取部门ID
+	 *
+	 * @return 部门ID
+	 */
+	@Column(name = "department")
+	public Integer getDepartment() {
+		return department;
+	}
 
-    public void setTaskCountUpdateTime(Timestamp taskCountUpdateTime) {
-        this.taskCountUpdateTime = taskCountUpdateTime;
-    }
+	/**
+	 * 设置部门ID
+	 *
+	 * @param department 部门ID
+	 */
+	public void setDepartment(Integer department) {
+		this.department = department;
+	}
 
-    public Timestamp getCreateTime() {
-        return createTime;
-    }
+	/**
+	 * 获取状态
+	 *
+	 * @return 状态
+	 */
+	@Column(name = "status", nullable = false)
+	public short getStatus() {
+		return status;
+	}
 
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
-    }
+	/**
+	 * 设置状态
+	 *
+	 * @param status 状态
+	 */
+	public void setStatus(short status) {
+		this.status = status;
+	}
 
-    public Timestamp getUpdateTime() {
-        return updateTime;
-    }
+	/**
+	 * 获取最后完成时间
+	 *
+	 * @return 最后完成时间
+	 */
+	@Column(name = "lastFinishTime")
+	public Timestamp getLastFinishTime() {
+		return lastFinishTime;
+	}
 
-    public void setUpdateTime(Timestamp updateTime) {
-        this.updateTime = updateTime;
-    }
+	/**
+	 * 设置最后完成时间
+	 *
+	 * @param lastFinishTime 最后完成时间
+	 */
+	public void setLastFinishTime(Timestamp lastFinishTime) {
+		this.lastFinishTime = lastFinishTime;
+	}
+
+	/**
+	 * 获取当前任务数量
+	 *
+	 * @return 当前任务数量
+	 */
+	@Column(name = "currentTaskCount")
+	public Integer getCurrentTaskCount() {
+		return currentTaskCount;
+	}
+
+	/**
+	 * 设置当前任务数量
+	 *
+	 * @param currentTaskCount 当前任务数量
+	 */
+	public void setCurrentTaskCount(Integer currentTaskCount) {
+		this.currentTaskCount = currentTaskCount;
+	}
+
+	/**
+	 * 获取任务数量统计时间
+	 *
+	 * @return 任务数量统计时间
+	 */
+	@Column(name = "taskCountUpdateTime")
+	public Timestamp getTaskCountUpdateTime() {
+		return taskCountUpdateTime;
+	}
+
+	/**
+	 * 设置任务数量统计时间
+	 *
+	 * @param taskCountUpdateTime 任务数量统计时间
+	 */
+	public void setTaskCountUpdateTime(Timestamp taskCountUpdateTime) {
+		this.taskCountUpdateTime = taskCountUpdateTime;
+	}
+
+	/**
+	 * 获取创建时间
+	 *
+	 * @return 创建时间
+	 */
+	@Column(name = "createTime", nullable = false)
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	/**
+	 * 设置创建时间
+	 *
+	 * @param createTime 创建时间
+	 */
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	/**
+	 * 获取更新时间
+	 *
+	 * @return 更新时间
+	 */
+	@Column(name = "updateTime", nullable = false)
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	/**
+	 * 设置更新时间
+	 *
+	 * @param updateTime 更新时间
+	 */
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	// ==================== PO/VO 转换方法 ====================
+
+	/**
+	 * PO 转 VO
+	 *
+	 * @param vo VO对象
+	 * @return 转换后的VO对象
+	 */
+	public QuotationAssignUserRuleVO ptv(QuotationAssignUserRuleVO vo) {
+		BeanUtils.copyProperties(this, vo);
+		return vo;
+	}
+
+	/**
+	 * VO 转 PO
+	 *
+	 * @param vo VO对象
+	 * @return 转换后的PO对象
+	 */
+	public QuotationAssignUserRulePO vtp(QuotationAssignUserRuleVO vo) {
+		BeanUtils.copyProperties(vo, this);
+		return this;
+	}
 }

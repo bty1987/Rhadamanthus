@@ -20,8 +20,8 @@ import com.fanglin.quotation.po.QuotationAssignUserRulePO;
  * @author Claude AI
  * @date 2026-03-20
  */
-@Repository
-public class QuotationAssignUserRuleDaoImpl extends BaseDaoImpl<QuotationAssignUserRulePO> implements QuotationAssignUserRuleDao {
+@Repository("quotationAssignUserRuleDao")
+public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserRulePO> implements QuotationAssignUserRuleDao {
 
     @Override
     public void pageQuotationAssignUserRule(Page page, List<Filter> filters) throws FLException {
