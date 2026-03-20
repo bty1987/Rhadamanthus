@@ -97,6 +97,11 @@ public class QuotationAssignUserRulePO implements Serializable {
 	private short status;
 
 	/**
+	 * 支持的类型：-1通用，0半包，1整装
+	 */
+	private int supportedType;
+
+	/**
 	 * 最后完成时间（用于自动分配排序，最早完成的优先）
 	 */
 	private Timestamp lastFinishTime;
@@ -237,6 +242,25 @@ public class QuotationAssignUserRulePO implements Serializable {
 	 */
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	/**
+	 * 获取支持类型
+	 *
+	 * @return 支持类型（-1通用，0半包，1整装）
+	 */
+	@Column(name = "supportedType", nullable = false)
+	public int getSupportedType() {
+		return supportedType;
+	}
+
+	/**
+	 * 设置支持类型
+	 *
+	 * @param supportedType 支持类型（-1通用，0半包，1整装）
+	 */
+	public void setSupportedType(int supportedType) {
+		this.supportedType = supportedType;
 	}
 
 	/**
