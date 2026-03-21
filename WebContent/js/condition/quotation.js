@@ -1330,4 +1330,107 @@ Condition.addupRule("quotation", {
         }
     },
 
+    // ==================== 分配请求管理相关条件 ====================
+
+    // 分配请求 - 公司
+    "assign-request-company": {
+        label: "公司",
+        type: "select",
+        submitConfig: {
+            name: "company",
+            op: "eq",
+            alone: true,
+            validate: null
+        },
+        dataSource: {
+            url: api.system.queryCompany,
+            postData: {},
+            listPath: "companys",
+            keyPath: "cid",
+            valuePath: "name"
+        }
+    },
+
+    // 分配请求 - 状态
+    "assign-request-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            alone: true,
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "",
+                value: "全部"
+            }, {
+                key: "1",
+                value: "待分配"
+            }, {
+                key: "2",
+                value: "已分配"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 分配请求 - 装修单号
+    "assign-request-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "like",
+            validate: null
+        }
+    },
+
+    // ==================== 分配记录管理相关条件 ====================
+
+    // 分配记录 - 公司
+    "assign-record-company": {
+        label: "公司",
+        type: "select",
+        submitConfig: {
+            name: "company",
+            op: "eq",
+            alone: true,
+            validate: null
+        },
+        dataSource: {
+            url: api.system.queryCompany,
+            postData: {},
+            listPath: "companys",
+            keyPath: "cid",
+            valuePath: "name"
+        }
+    },
+
+    // 分配记录 - 预算员
+    "assign-record-user": {
+        label: "预算员",
+        type: "text",
+        submitConfig: {
+            name: "budgetUserName",
+            op: "like",
+            validate: null
+        }
+    },
+
+    // 分配记录 - 装修单号
+    "assign-record-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "like",
+            validate: null
+        }
+    },
+
 });
