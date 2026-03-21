@@ -413,7 +413,7 @@ public class QuotationAssignRequestPO implements Serializable {
 	 * @return 转换后的VO对象
 	 */
 	public QuotationAssignRequestVO ptv(QuotationAssignRequestVO vo) {
-		// 复制基本属性，排除需要手动处理的关联对象字段
+		// 复制基本属性
 		com.fanglin.utils.BeanUtil.copyProperties(this, vo);
 
 		// 手动处理关联对象（由于 PO 使用基本类型 ID）
@@ -448,7 +448,7 @@ public class QuotationAssignRequestPO implements Serializable {
 	 * @return 转换后的PO对象
 	 */
 	public QuotationAssignRequestPO vtp(QuotationAssignRequestVO vo) {
-		// 复制基本属性
+		// 复制基本属性，显式忽略关联对象字段
 		com.fanglin.utils.BeanUtil.copyProperties(vo, this);
 
 		// 手动处理关联对象（从 VO 的关联对象中提取 ID）
