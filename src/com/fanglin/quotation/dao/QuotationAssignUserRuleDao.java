@@ -27,15 +27,6 @@ public interface QuotationAssignUserRuleDao extends Dao<QuotationAssignUserRuleP
 	List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException;
 
 	/**
-	 * 根据ID查询预算员规则
-	 * 
-	 * @param qaurid 预算员规则ID
-	 * @return 预算员规则PO
-	 * @throws FLException 业务异常
-	 */
-	QuotationAssignUserRulePO get(long qaurid) throws FLException;
-
-	/**
 	 * 根据用户ID和公司ID查询预算员规则
 	 * 
 	 * @param uid 用户ID
@@ -43,7 +34,7 @@ public interface QuotationAssignUserRuleDao extends Dao<QuotationAssignUserRuleP
 	 * @return 预算员规则PO
 	 * @throws FLException 业务异常
 	 */
-	QuotationAssignUserRulePO getByUidAndCompany(int uid, int company) throws FLException;
+	QuotationAssignUserRulePO getQuotationAssignUserRule(String userId, int company) throws FLException;
 
 	/**
 	 * 查询所有待分配的预算员（status=1，按最后完成时间排序）

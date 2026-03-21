@@ -15,6 +15,10 @@ import com.fanglin.utils.Paging;
 @Repository("quotationAssignUserRuleDao")
 public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserRulePO> implements QuotationAssignUserRuleDao {
 
+	public QuotationAssignUserRuleDaoImpl() {
+		super(QuotationAssignUserRulePO.class);
+	}
+
 	@Override
 	public List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException {
 
@@ -29,16 +33,8 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 	}
 
 	@Override
-	public QuotationAssignUserRulePO get(long qaurid) throws FLException {
-		return get(QuotationAssignUserRulePO.class, qaurid);
-	}
-
-	@Override
-	public QuotationAssignUserRulePO getByUidAndCompany(int uid, int company) throws FLException {
-		return (QuotationAssignUserRulePO) createCriteria(QuotationAssignUserRulePO.class)
-				.add(Restrictions.eq("user.uid", uid))
-				.add(Restrictions.eq("company.cid", company))
-				.uniqueResult();
+	public QuotationAssignUserRulePO getQuotationAssignUserRule(String userId, int company) throws FLException {
+		return (QuotationAssignUserRulePO) createCriteria(QuotationAssignUserRulePO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).add(Restrictions.eq("company.cid", company)).uniqueResult();
 	}
 
 	@Override
@@ -54,10 +50,7 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
 		// 按部门筛选（如果指定了部门，则匹配该部门或部门为NULL的规则）
 		if (department != null) {
-			criteria.add(org.hibernate.criterion.Restrictions.or(
-				org.hibernate.criterion.Restrictions.eq("department.did", department),
-				org.hibernate.criterion.Restrictions.isNull("department.did")
-			));
+			criteria.add(org.hibernate.criterion.Restrictions.or(org.hibernate.criterion.Restrictions.eq("department.did", department), org.hibernate.criterion.Restrictions.isNull("department.did")));
 		}
 
 		// 按最后完成时间升序排序（最早完成的排在前面）

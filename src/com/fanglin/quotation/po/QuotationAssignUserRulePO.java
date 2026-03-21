@@ -131,7 +131,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 	/**
 	 * 当前任务数量（缓存字段，基于quotationassignrequest统计）
 	 */
-	private Integer currentTaskCount;
+	private int currentTaskCount;
 
 	/**
 	 * 任务数量统计时间（用于判断缓存是否过期）
@@ -313,7 +313,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 	 * @return 当前任务数量
 	 */
 	@Column(name = "currentTaskCount")
-	public Integer getCurrentTaskCount() {
+	public int getCurrentTaskCount() {
 		return currentTaskCount;
 	}
 
@@ -322,7 +322,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 	 * 
 	 * @param currentTaskCount 当前任务数量
 	 */
-	public void setCurrentTaskCount(Integer currentTaskCount) {
+	public void setCurrentTaskCount(int currentTaskCount) {
 		this.currentTaskCount = currentTaskCount;
 	}
 
@@ -395,7 +395,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 		BeanUtils.copyProperties(this, quotationAssignUserRuleVO, "user", "company", "department");
 
-		if (quotationAssignUserRuleVO.getUser() != null && getUser() != null) getUser().ptv(quotationAssignUserRuleVO.getUser());
+		if (quotationAssignUserRuleVO.getUser() != null && getUser() != null) quotationAssignUserRuleVO.getUser().setBaseInfo(getUser());
 		if (quotationAssignUserRuleVO.getCompany() != null && getCompany() != null) getCompany().ptv(quotationAssignUserRuleVO.getCompany());
 		if (quotationAssignUserRuleVO.getDepartment() != null && getDepartment() != null) getDepartment().ptv(quotationAssignUserRuleVO.getDepartment());
 

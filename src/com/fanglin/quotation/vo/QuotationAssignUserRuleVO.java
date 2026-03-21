@@ -3,7 +3,7 @@ package com.fanglin.quotation.vo;
 import java.io.Serializable;
 
 import com.fanglin.communion.vo.DepartmentVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.CompanyVO;
 
 /**
@@ -24,7 +24,7 @@ public class QuotationAssignUserRuleVO implements Serializable {
 	/**
 	 * 预算员用户对象
 	 */
-	private UserVO user;
+	private UserBaseVO user;
 
 	/**
 	 * 公司对象
@@ -80,7 +80,7 @@ public class QuotationAssignUserRuleVO implements Serializable {
 	 * @param company 公司对象
 	 * @param department 部门对象
 	 */
-	public QuotationAssignUserRuleVO(UserVO user, CompanyVO company, DepartmentVO department) {
+	public QuotationAssignUserRuleVO(UserBaseVO user, CompanyVO company, DepartmentVO department) {
 		super();
 		this.user = user;
 		this.company = company;
@@ -97,11 +97,11 @@ public class QuotationAssignUserRuleVO implements Serializable {
 		this.qaurid = qaurid;
 	}
 
-	public UserVO getUser() {
+	public UserBaseVO getUser() {
 		return user;
 	}
 
-	public void setUser(UserVO user) {
+	public void setUser(UserBaseVO user) {
 		this.user = user;
 	}
 

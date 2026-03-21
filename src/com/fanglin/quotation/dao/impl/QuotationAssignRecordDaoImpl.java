@@ -52,20 +52,13 @@ public class QuotationAssignRecordDaoImpl extends DaoImpl<QuotationAssignRecordP
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationAssignRecordPO> queryQuotationAssignRecordByOrderId(String orderId) {
-		return createCriteria(QuotationAssignRecordPO.class)
-				.add(Restrictions.eq("orderId", orderId))
-				.addOrder(org.hibernate.criterion.Order.desc("assignTime"))
-				.list();
+		return createCriteria(QuotationAssignRecordPO.class).add(Restrictions.eq("orderId", orderId)).addOrder(org.hibernate.criterion.Order.desc("assignTime")).list();
 	}
 
 	@Override
 	public int countQuotationAssignRecordByUid(int uid) {
 
-		Number count = (Number) createCriteria(QuotationAssignRecordPO.class)
-				.add(Restrictions.eq("uid", uid))
-				.add(Restrictions.eq("assignResult", QuotationAssignRecordPO.ASSIGN_RESULT_SUCCESS_INT))
-				.setProjection(Projections.rowCount())
-				.uniqueResult();
+		Number count = (Number) createCriteria(QuotationAssignRecordPO.class).add(Restrictions.eq("uid", uid)).add(Restrictions.eq("assignResult", QuotationAssignRecordPO.ASSIGN_RESULT_SUCCESS_INT)).setProjection(Projections.rowCount()).uniqueResult();
 
 		return count != null ? count.intValue() : 0;
 	}

@@ -19,17 +19,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.springframework.beans.BeanUtils;
-
 import com.fanglin.quotation.vo.QuotationAssignRequestVO;
 
 /**
  * 装修单预算分配请求表实体类
- *
+ * 
  * <p>
  * 职责：控制分配逻辑和待分配队列（装修单级别，最多1条活跃记录）
  * </p>
- *
+ * 
  * <p>
  * 核心字段：
  * </p>
@@ -44,7 +42,7 @@ import com.fanglin.quotation.vo.QuotationAssignRequestVO;
  * <li>requestTime: 请求加入队列的时间</li>
  * <li>assignTime: 分配时间</li>
  * </ul>
- *
+ * 
  * @author Claude AI
  * @version 1.0
  */
@@ -164,7 +162,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 带主键的构造函数
-	 *
+	 * 
 	 * @param qarid 请求ID
 	 */
 	public QuotationAssignRequestPO(long qarid) {
@@ -176,7 +174,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取请求ID
-	 *
+	 * 
 	 * @return 请求ID
 	 */
 	@Id
@@ -188,7 +186,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置请求ID
-	 *
+	 * 
 	 * @param qarid 请求ID
 	 */
 	public void setQarid(long qarid) {
@@ -197,7 +195,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取装修单号
-	 *
+	 * 
 	 * @return 装修单号
 	 */
 	@Column(name = "orderId", nullable = false, length = 15)
@@ -207,7 +205,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置装修单号
-	 *
+	 * 
 	 * @param orderId 装修单号
 	 */
 	public void setOrderId(String orderId) {
@@ -216,7 +214,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取公司ID
-	 *
+	 * 
 	 * @return 公司ID
 	 */
 	@Column(name = "company", nullable = false)
@@ -226,7 +224,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置公司ID
-	 *
+	 * 
 	 * @param company 公司ID
 	 */
 	public void setCompany(int company) {
@@ -235,7 +233,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取部门ID
-	 *
+	 * 
 	 * @return 部门ID
 	 */
 	@Column(name = "department")
@@ -245,7 +243,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置部门ID
-	 *
+	 * 
 	 * @param department 部门ID
 	 */
 	public void setDepartment(Integer department) {
@@ -254,7 +252,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取装修类型
-	 *
+	 * 
 	 * @return 装修类型（1-半包，2-整装）
 	 */
 	@Column(name = "decorationType", nullable = false)
@@ -264,7 +262,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置装修类型
-	 *
+	 * 
 	 * @param decorationType 装修类型（1-半包，2-整装）
 	 */
 	public void setDecorationType(short decorationType) {
@@ -273,7 +271,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取优先级
-	 *
+	 * 
 	 * @return 优先级（1-最高，5-普通，9-最低）
 	 */
 	@Column(name = "priority", nullable = false)
@@ -283,7 +281,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置优先级
-	 *
+	 * 
 	 * @param priority 优先级（1-最高，5-普通，9-最低）
 	 */
 	public void setPriority(short priority) {
@@ -292,7 +290,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取请求时间
-	 *
+	 * 
 	 * @return 请求时间
 	 */
 	@Column(name = "requestTime", nullable = false)
@@ -302,7 +300,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置请求时间
-	 *
+	 * 
 	 * @param requestTime 请求时间
 	 */
 	public void setRequestTime(Timestamp requestTime) {
@@ -311,7 +309,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取请求人用户ID
-	 *
+	 * 
 	 * @return 请求人用户ID
 	 */
 	@Column(name = "requestUid")
@@ -321,7 +319,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置请求人用户ID
-	 *
+	 * 
 	 * @param requestUid 请求人用户ID
 	 */
 	public void setRequestUid(Integer requestUid) {
@@ -330,7 +328,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取状态
-	 *
+	 * 
 	 * @return 状态
 	 */
 	@Column(name = "status", nullable = false)
@@ -340,7 +338,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置状态
-	 *
+	 * 
 	 * @param status 状态
 	 */
 	public void setStatus(short status) {
@@ -349,7 +347,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取分配时间
-	 *
+	 * 
 	 * @return 分配时间
 	 */
 	@Column(name = "assignTime")
@@ -359,7 +357,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置分配时间
-	 *
+	 * 
 	 * @param assignTime 分配时间
 	 */
 	public void setAssignTime(Timestamp assignTime) {
@@ -368,7 +366,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取备注
-	 *
+	 * 
 	 * @return 备注
 	 */
 	@Column(name = "remark", length = 255)
@@ -378,7 +376,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置备注
-	 *
+	 * 
 	 * @param remark 备注
 	 */
 	public void setRemark(String remark) {
@@ -387,7 +385,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取创建时间
-	 *
+	 * 
 	 * @return 创建时间
 	 */
 	@Column(name = "createTime", nullable = false)
@@ -397,7 +395,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置创建时间
-	 *
+	 * 
 	 * @param createTime 创建时间
 	 */
 	public void setCreateTime(Timestamp createTime) {
@@ -408,7 +406,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * PO 转 VO
-	 *
+	 * 
 	 * @param vo VO对象
 	 * @return 转换后的VO对象
 	 */
@@ -416,53 +414,18 @@ public class QuotationAssignRequestPO implements Serializable {
 		// 复制基本属性
 		com.fanglin.utils.BeanUtil.copyProperties(this, vo);
 
-		// 手动处理关联对象（由于 PO 使用基本类型 ID）
-		// 公司对象
-		if (vo.getCompany() == null && this.company > 0) {
-			com.fanglin.system.vo.CompanyVO companyVO = new com.fanglin.system.vo.CompanyVO();
-			companyVO.setCid(this.company);
-			vo.setCompany(companyVO);
-		}
-
-		// 部门对象（可能为 NULL）
-		if (vo.getDepartment() == null && this.department != null) {
-			com.fanglin.communion.vo.DepartmentVO departmentVO = new com.fanglin.communion.vo.DepartmentVO();
-			departmentVO.setDid(this.department);
-			vo.setDepartment(departmentVO);
-		}
-
-		// 请求人用户对象（可能为 NULL）
-		if (vo.getRequestUser() == null && this.requestUid != null) {
-			com.fanglin.personel.vo.UserVO userVO = new com.fanglin.personel.vo.UserVO();
-			userVO.setUid(this.requestUid);
-			vo.setRequestUser(userVO);
-		}
-
 		return vo;
 	}
 
 	/**
 	 * VO 转 PO
-	 *
+	 * 
 	 * @param vo VO对象
 	 * @return 转换后的PO对象
 	 */
 	public QuotationAssignRequestPO vtp(QuotationAssignRequestVO vo) {
 		// 复制基本属性，显式忽略关联对象字段
 		com.fanglin.utils.BeanUtil.copyProperties(vo, this);
-
-		// 手动处理关联对象（从 VO 的关联对象中提取 ID）
-		if (vo.getCompany() != null) {
-			this.company = com.fanglin.system.service.impl.CompanyServiceImpl.decode(vo.getCompany().getCid());
-		}
-
-		if (vo.getDepartment() != null) {
-			this.department = vo.getDepartment().getDid();
-		}
-
-		if (vo.getRequestUser() != null) {
-			this.requestUid = vo.getRequestUser().getUid();
-		}
 
 		return this;
 	}
