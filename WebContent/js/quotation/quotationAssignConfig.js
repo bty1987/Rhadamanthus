@@ -18,12 +18,9 @@ $(function() {
         },
         plugins: {},
         lists: {},
-        
-        config: null,
-        
+
         data: {
-            keyword: null,
-            currentRow: null
+            keyword: null
         }
     };
 
@@ -108,14 +105,6 @@ $(function() {
 
     // 行按钮
     var linebtns = [{
-        name: "编辑",
-        clazz: "btn-yellow",
-        handle: function(v) {
-
-            editConfig(v);
-            return false;
-        }
-    }, {
         name: "删除",
         clazz: "btn-danger",
         handle: function(v) {
@@ -132,7 +121,7 @@ $(function() {
         clazz: function(v) {
 
             // 动态显示按钮样式
-            return v.enabled == 1 ? "btn-warning" : "btn-success";
+            return v.enabled == 1 ? "btn-grey" : "btn-success";
         },
         handle: function(v) {
 
@@ -145,7 +134,11 @@ $(function() {
             // 动态显示按钮文本
             return v.autoAssign == 1 ? "切手动" : "切自动";
         },
-        clazz: "btn-info",
+        clazz: function(v) {
+
+            // 动态显示按钮样式
+            return v.autoAssign == 1 ? "btn-grey" : "btn-info";
+        },
         handle: function(v) {
 
             toggleAssign(v);
@@ -219,8 +212,6 @@ $(function() {
 
         com.focusPage('#modalTitle').text('新增预算员分配配置');
 
-        config.data.currentRow = null;
-
         // 重置表单
         config.items.company.val('');
         config.items.department.empty().append('<option value="">所有部门</option>');
@@ -230,32 +221,7 @@ $(function() {
         config.modals.configModal.modal('show');
     }
 
-    // 打开Modal（编辑模式）
-    function editConfig(row) {
-
-        config.data.currentRow = row;
-
-        // 设置公司（从对象中提取ID）
-        config.items.company.val(row.company.cid);
-
-        // 初始化部门并选中（先加载部门列表，再设置值）
-        initDepartmentSelect(row.company.cid);
-        if (row.department && row.department.did) {
-            setTimeout(function() {
-                config.items.department.val(row.department.did);
-            }, 100);
-        }
-
-        config.items.enabled.val(row.enabled);
-        config.items.autoAssign.val(row.autoAssign);
-
-        config.config = row;
-
-        com.focusPage('#modalTitle').text('编辑预算员分配配置');
-        config.modals.configModal.modal('show');
-    }
-
-    // 保存配置
+    // 保存配置（仅新增）
     function saveConfig() {
 
         // 表单验证
@@ -270,17 +236,10 @@ $(function() {
             "quotationAssignConfig.autoAssign": parseInt(config.items.autoAssign.val())
         };
 
-        var apiMethod = api.quotation.createQuotationAssignConfig;
-        
-        if(config.data.currentRow){
-            apiMethod = api.quotation.updateQuotationAssignConfig;
-            params["quotationAssignConfig.qacid"] = config.data.currentRow.qacid;
-        }
-
-        com.post(apiMethod, params, function(res) {
+        com.post(api.quotation.createQuotationAssignConfig, params, function(res) {
 
             config.modals.configModal.modal('hide');
-            
+
             searcher.doSearch(); // 刷新列表
         });
     }

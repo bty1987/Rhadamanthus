@@ -144,10 +144,10 @@ $(function() {
 		}
 	}, {
 		name: function(v) {
-			return v.status == 1 ? "停止" : "启用";
+			return v.status == 1 ? "禁用" : "启用";
 		},
 		clazz: function(v) {
-			return v.status == 1 ? "btn-warning" : "btn-success";
+			return v.status == 1 ? "btn-grey" : "btn-success";
 		},
 		handle: function(v) {
 			toggleStatus(v);
@@ -248,6 +248,7 @@ $(function() {
 		// 使用 com.cleanTypeahead 清除 typeahead 的值和属性
 		com.cleanTypeahead(config.items.user);
 		config.data.selectedUid = null;
+		config.items.user.prop('disabled', false);  // 启用预算员输入框（新增模式）
 		config.items.company.val('');
 		config.items.department.empty().append('<option value="">全部部门</option>');
 		config.items.status.val('1');  // 默认可用
@@ -270,6 +271,7 @@ $(function() {
 		config.items.user.attr('data-typeahead-key', row.user.uid);
 		config.items.user.attr('data-typeahead-value', row.user.currentName);
 		config.data.selectedUid = row.user.uid;  // 保留兼容性
+		config.items.user.prop('disabled', true);  // 禁用预算员输入框（编辑模式不可修改人员）
 		config.items.company.val(row.company.cid);
 
 		// 初始化部门并选中
@@ -345,10 +347,10 @@ $(function() {
 		});
 	}
 
-	// 快捷切换状态（启用/停止）
+	// 快捷切换状态（启用/禁用）
 	function toggleStatus(row) {
 		var newStatus = row.status == 1 ? 3 : 1;  // 1(可用) <-> 3(停止)
-		var statusText = newStatus == 1 ? "启用" : "停止";
+		var statusText = newStatus == 1 ? "启用" : "禁用";
 
 		com.showConfirm('确认要将该预算员' + statusText + '吗？', function() {
 			com.post(api.quotation.updateQuotationAssignUserRuleForStatus, {
