@@ -144,23 +144,25 @@ $(function() {
 		}
 	}, {
 		// 启用按钮：仅在状态不为1（可用）时显示
-		name: function(v) {
-			return v.status == 1 ? null : "启用";
-		},
+		name: "启用",
 		clazz: "btn-success",
 		handle: function(v) {
 			enableUserRule(v);
 			return false;
+		},
+		show: function(v){
+			return v.status != 1;
 		}
 	}, {
 		// 禁用按钮：仅在状态为1（可用）时显示
-		name: function(v) {
-			return v.status == 1 ? "禁用" : null;
-		},
+		name: "禁用",
 		clazz: "btn-grey",
 		handle: function(v) {
 			disableUserRule(v);
 			return false;
+		},
+		show: function(v){
+			return v.status == 1;
 		}
 	}];
 

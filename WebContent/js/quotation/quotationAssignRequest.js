@@ -167,16 +167,16 @@ $(function() {
             return false;
         }
     }, {
-        name: function(v) {
-
-            // 仅待分配状态可以取消
-            return v.status == 1 ? "取消请求" : null;
-        },
+        name: "取消请求",
         clazz: "btn-warning",
         handle: function(v) {
 
             cancelRequest(v);
             return false;
+        },
+        show: function(v) {
+            // 仅待分配状态可以取消
+            return v.status == 1;
         }
     }];
 
