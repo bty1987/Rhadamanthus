@@ -190,7 +190,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 查询预算员规则
-		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getByUidAndCompany(budgetUid, decoration.getCompany());
+		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getQuotationAssignUserRule(budgetUid, decoration.getCompany());
 		if (userRule == null) {
 			throw new FLException(0, "预算员规则不存在");
 		}
@@ -247,7 +247,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 4. 查询新预算员规则
-		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getByUidAndCompany(newBudgetUid, decoration.getCompany());
+		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getQuotationAssignUserRule(newBudgetUid, decoration.getCompany());
 		if (userRule == null) {
 			throw new FLException(0, "新预算员规则不存在");
 		}
@@ -290,7 +290,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 更新预算员的最后完成时间
-		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getByUidAndCompany(budgetUid, decoration.getCompany());
+		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getQuotationAssignUserRule(budgetUid, decoration.getCompany());
 		if (userRule != null) {
 			quotationAssignUserRuleDao.updateLastFinishTime(userRule.getQaurid(), new Timestamp(System.currentTimeMillis()));
 		}
