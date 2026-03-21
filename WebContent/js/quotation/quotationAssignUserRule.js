@@ -18,7 +18,7 @@ $(function() {
 			saveBtn: com.focusPage('#saveBtn')
 		},
 		plugins: {
-			userAutofill: null
+			userTypeahead: null
 		},
 		lists: {},
 		status: {
@@ -194,22 +194,35 @@ $(function() {
 		}, null, false);
 	}
 
-	// 初始化预算员输入框（autofill）
+	// 初始化预算员输入框（typeahead）
 	function initUserInput() {
-		config.plugins.userAutofill = config.items.user.autofill({
-			url: api.personel.queryUserByPinyin,
-			postData: {
-				"user.status": 3  // 仅在职员工
-			},
-			listPath: "autoFillKeyValue",
-			keyPath: "key",
-			valuePath: "value",
-			onSelect: function(item) {
-				// 选中用户后，保存UID
-				config.data.selectedUid = item.uid;
-				console.log('Selected user:', item);
+		com.initTypeahead(
+			config.items.user,                           // 容器元素
+			api.personel.queryUserByPinyin,             // 请求地址
+			"user.pinyin",                              // 参数名称
+			{ "user.status": 3 },                       // 额外参数：仅在职员工
+			"autoFillKeyValue",                         // 返回结果路径
+			"key",                                      // key路径
+			"value",                                    // value路径
+			function(list, key, value) {                 // 选中回调
+				// 选中用户后，从 list 中找到完整的用户信息
+				var selectedUser = null;
+				$.each(list, function(i, item) {
+					if (item.key == key) {
+						selectedUser = item;
+						return false;
+					}
+				});
+
+				if (selectedUser) {
+					config.data.selectedUid = selectedUser.uid;
+					config.items.user.data('uid', selectedUser.uid);
+					console.log('Selected user:', selectedUser);
+				}
+
+				return value;  // 返回显示值
 			}
-		});
+		);
 	}
 
 	// 页面加载时初始化
