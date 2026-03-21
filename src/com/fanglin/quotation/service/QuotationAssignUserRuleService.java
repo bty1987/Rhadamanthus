@@ -58,6 +58,16 @@ public interface QuotationAssignUserRuleService {
 	QuotationAssignUserRuleVO queryQuotationAssignUserRuleById(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException;
 
 	/**
+	 * 查询所有可分配的预算员（status=1，按最后完成时间排序） 注意：此方法不暴露给Action，仅用于内部自动分配逻辑
+	 * 
+	 * @param company 公司ID
+	 * @param department 部门ID（可选，NULL表示查询所有部门）
+	 * @return 预算员规则PO列表
+	 * @throws FLException 业务异常
+	 */
+	List<QuotationAssignUserRuleVO> queryQuotationAssignUserRuleForAvaile(QuotationAssignUserRuleVO quotationAssignUserRule, Integer company) throws FLException;
+
+	/**
 	 * 新增预算员规则
 	 * 
 	 * @param quotationAssignUserRule 预算员规则VO对象
@@ -76,15 +86,6 @@ public interface QuotationAssignUserRuleService {
 	int updateQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException;
 
 	/**
-	 * 删除预算员规则
-	 * 
-	 * @param quotationAssignUserRule 预算员规则VO对象（包含 qaurid）
-	 * @return 成功返回0，失败返回-1
-	 * @throws FLException 业务异常
-	 */
-	int deleteQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException;
-
-	/**
 	 * 更新预算员状态（快捷操作）
 	 * 
 	 * @param quotationAssignUserRule 预算员规则VO对象（包含 qaurid 和 status）
@@ -94,16 +95,6 @@ public interface QuotationAssignUserRuleService {
 	int updateQuotationAssignUserRuleForStatus(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException;
 
 	/**
-	 * 查询所有可分配的预算员（status=1，按最后完成时间排序） 注意：此方法不暴露给Action，仅用于内部自动分配逻辑
-	 * 
-	 * @param company 公司ID
-	 * @param department 部门ID（可选，NULL表示查询所有部门）
-	 * @return 预算员规则PO列表
-	 * @throws FLException 业务异常
-	 */
-	List<QuotationAssignUserRuleVO> queryAvailableUsers(int company, Integer department) throws FLException;
-
-	/**
 	 * 更新最后完成时间（内部方法，用于自动分配完成后更新） 注意：此方法不暴露给Action，仅用于内部自动分配逻辑
 	 * 
 	 * @param quotationAssignUserRule 预算员规则VO对象（包含 qaurid 和 lastFinishTime）
@@ -111,4 +102,14 @@ public interface QuotationAssignUserRuleService {
 	 * @throws FLException 业务异常
 	 */
 	int updateLastFinishTime(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException;
+
+	/**
+	 * 删除预算员规则
+	 * 
+	 * @param quotationAssignUserRule 预算员规则VO对象（包含 qaurid）
+	 * @return 成功返回0，失败返回-1
+	 * @throws FLException 业务异常
+	 */
+	int deleteQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException;
+
 }

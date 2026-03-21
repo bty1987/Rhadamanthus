@@ -15,15 +15,15 @@ import java.util.List;
 import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 
-import com.fanglin.core.vo.Filter;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.QuotationAssignRecordDao;
 import com.fanglin.quotation.po.QuotationAssignRecordPO;
 import com.fanglin.utils.Paging;
 
 /**
  * 装修单预算分配记录表 DAO 实现类
- *
+ * 
  * @author Claude AI
  * @date 2026-03-20
  */
@@ -56,11 +56,9 @@ public class QuotationAssignRecordDaoImpl extends DaoImpl<QuotationAssignRecordP
 	}
 
 	@Override
-	public int countSuccessAssignByUid(int uid) {
-		String sql = "SELECT COUNT(*) " +
-				     "FROM quotation.quotationassignrecord " +
-				     "WHERE uid = :uid " +
-				     "AND assignResult = " + QuotationAssignRecordPO.ASSIGN_RESULT_SUCCESS_INT;
+	public int countQuotationAssignRecordByUid(int uid) {
+
+		String sql = "SELECT COUNT(*) " + "FROM quotation.quotationassignrecord " + "WHERE uid = :uid " + "AND assignResult = " + QuotationAssignRecordPO.ASSIGN_RESULT_SUCCESS_INT;
 
 		SQLQuery query = session().createSQLQuery(sql);
 		query.setInteger("uid", uid);

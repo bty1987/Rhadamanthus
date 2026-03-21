@@ -15,15 +15,15 @@ import java.util.List;
 import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 
-import com.fanglin.core.vo.Filter;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.QuotationAssignRequestDao;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.utils.Paging;
 
 /**
  * 装修单预算分配请求表 DAO 实现类
- *
+ * 
  * @author Claude AI
  * @date 2026-03-20
  */
@@ -55,45 +55,21 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	}
 
 	@Override
-	public QuotationAssignRequestPO queryPendingRequestByOrderId(String orderId) {
+	public QuotationAssignRequestPO queryQuotationAssignRequestForPending(String orderId) {
 		String hql = "from QuotationAssignRequestPO where orderId = :orderId and status = " + QuotationAssignRequestPO.STATUS_PENDING_INT;
-		return (QuotationAssignRequestPO) session().createQuery(hql)
-				.setString("orderId", orderId)
-				.uniqueResult();
+		return (QuotationAssignRequestPO) session().createQuery(hql).setString("orderId", orderId).uniqueResult();
 	}
 
 	@Override
-	public QuotationAssignRequestPO queryAssignedRequestByOrderId(String orderId) {
+	public QuotationAssignRequestPO queryQuotationAssignRequestForAssigned(String orderId) {
 		String hql = "from QuotationAssignRequestPO where orderId = :orderId and status = " + QuotationAssignRequestPO.STATUS_ASSIGNED_INT;
-		return (QuotationAssignRequestPO) session().createQuery(hql)
-				.setString("orderId", orderId)
-				.uniqueResult();
-	}
-
-	@Override
-	public int countCurrentTasksByUid(int uid) {
-		// 需要关联 quotationassignuserrule 表来统计当前任务数
-		String sql = "SELECT COUNT(*) " +
-				     "FROM quotation.quotationassignrequest r " +
-				     "INNER JOIN quotation.quotationassignuserrule u ON u.uid = :uid " +
-				     "  AND r.company = u.company " +
-				     "  AND (r.department IS NULL OR u.department IS NULL OR r.department = u.department) " +
-				     "WHERE r.status = " + QuotationAssignRequestPO.STATUS_ASSIGNED_INT;
-
-		SQLQuery query = session().createSQLQuery(sql);
-		query.setInteger("uid", uid);
-
-		Number count = (Number) query.uniqueResult();
-		return count != null ? count.intValue() : 0;
+		return (QuotationAssignRequestPO) session().createQuery(hql).setString("orderId", orderId).uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<QuotationAssignRequestPO> queryPendingQueue(int company, Integer department, short decorationType) {
-		String hql = "from QuotationAssignRequestPO " +
-				     "where company = :company " +
-				     "and status = " + QuotationAssignRequestPO.STATUS_PENDING_INT + " " +
-				     "and decorationType = :decorationType ";
+	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(int company, Integer department, short decorationType) {
+		String hql = "from QuotationAssignRequestPO " + "where company = :company " + "and status = " + QuotationAssignRequestPO.STATUS_PENDING_INT + " " + "and decorationType = :decorationType ";
 
 		if (department != null) {
 			hql += "and (department is null or department = :department) ";
@@ -113,14 +89,15 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	}
 
 	@Override
-	public int updateStatusToAssigned(long qarid) {
-		String sql = "update quotation.quotationassignrequest " +
-				     "set status = " + QuotationAssignRequestPO.STATUS_ASSIGNED_INT + ", assignTime = CURRENT_TIMESTAMP " +
-				     "where qarid = :qarid";
+	public int countQuotationAssignRequest(int uid) {
+		// 需要关联 quotationassignuserrule 表来统计当前任务数
+		String sql = "SELECT COUNT(*) " + "FROM quotation.quotationassignrequest r " + "INNER JOIN quotation.quotationassignuserrule u ON u.uid = :uid " + "  AND r.company = u.company " + "  AND (r.department IS NULL OR u.department IS NULL OR r.department = u.department) " + "WHERE r.status = " + QuotationAssignRequestPO.STATUS_ASSIGNED_INT;
 
 		SQLQuery query = session().createSQLQuery(sql);
-		query.setLong("qarid", qarid);
+		query.setInteger("uid", uid);
 
-		return query.executeUpdate();
+		Number count = (Number) query.uniqueResult();
+		return count != null ? count.intValue() : 0;
 	}
+
 }

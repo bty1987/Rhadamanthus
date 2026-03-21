@@ -87,6 +87,6 @@ public class QuotationAssignRecordServiceImpl implements QuotationAssignRecordSe
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int countSuccessAssignByUid(int uid) throws FLException {
-		return quotationAssignRecordDao.countSuccessAssignByUid(uid);
+		return quotationAssignRecordDao.countQuotationAssignRecordByUid(uid);
 	}
 }

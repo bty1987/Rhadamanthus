@@ -32,11 +32,11 @@ import com.fanglin.system.po.CompanyPO;
 
 /**
  * 预算员规则表实体类
- *
+ * 
  * <p>
  * 职责：定义哪些用户可以作为预算员，以及其当前状态
  * </p>
- *
+ * 
  * <p>
  * 核心字段：
  * </p>
@@ -49,7 +49,7 @@ import com.fanglin.system.po.CompanyPO;
  * <li>lastFinishTime: 最后完成时间（用于自动分配排序）</li>
  * <li>currentTaskCount: 当前任务数量</li>
  * </ul>
- *
+ * 
  * @author Claude AI
  * @version 1.0
  */
@@ -159,7 +159,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 带主键的构造函数
-	 *
+	 * 
 	 * @param qaurid 预算员规则ID
 	 */
 	public QuotationAssignUserRulePO(long qaurid) {
@@ -171,7 +171,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 获取预算员规则ID
-	 *
+	 * 
 	 * @return 预算员规则ID
 	 */
 	@Id
@@ -183,7 +183,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 设置预算员规则ID
-	 *
+	 * 
 	 * @param qaurid 预算员规则ID
 	 */
 	public void setQaurid(long qaurid) {
@@ -192,7 +192,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 获取预算员用户对象
-	 *
+	 * 
 	 * @return 预算员用户对象
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -203,7 +203,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 设置预算员用户对象
-	 *
+	 * 
 	 * @param user 预算员用户对象
 	 */
 	public void setUser(UserPO user) {
@@ -212,7 +212,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 获取公司对象
-	 *
+	 * 
 	 * @return 公司对象
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -223,7 +223,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 设置公司对象
-	 *
+	 * 
 	 * @param company 公司对象
 	 */
 	public void setCompany(CompanyPO company) {
@@ -232,7 +232,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 获取部门对象
-	 *
+	 * 
 	 * @return 部门对象（NULL表示该公司所有部门）
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -243,7 +243,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 设置部门对象
-	 *
+	 * 
 	 * @param department 部门对象（NULL表示该公司所有部门）
 	 */
 	public void setDepartment(DepartmentPO department) {
@@ -252,7 +252,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 获取状态
-	 *
+	 * 
 	 * @return 状态
 	 */
 	@Column(name = "status", nullable = false)
@@ -262,7 +262,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 设置状态
-	 *
+	 * 
 	 * @param status 状态
 	 */
 	public void setStatus(short status) {
@@ -271,7 +271,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 获取支持类型
-	 *
+	 * 
 	 * @return 支持类型（-1通用，0半包，1整装）
 	 */
 	@Column(name = "supportedType", nullable = false)
@@ -281,7 +281,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 设置支持类型
-	 *
+	 * 
 	 * @param supportedType 支持类型（-1通用，0半包，1整装）
 	 */
 	public void setSupportedType(int supportedType) {
@@ -290,7 +290,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 获取最后完成时间
-	 *
+	 * 
 	 * @return 最后完成时间
 	 */
 	@Column(name = "lastFinishTime")
@@ -300,7 +300,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 设置最后完成时间
-	 *
+	 * 
 	 * @param lastFinishTime 最后完成时间
 	 */
 	public void setLastFinishTime(Timestamp lastFinishTime) {
@@ -309,7 +309,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 获取当前任务数量
-	 *
+	 * 
 	 * @return 当前任务数量
 	 */
 	@Column(name = "currentTaskCount")
@@ -319,7 +319,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 设置当前任务数量
-	 *
+	 * 
 	 * @param currentTaskCount 当前任务数量
 	 */
 	public void setCurrentTaskCount(Integer currentTaskCount) {
@@ -328,7 +328,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 获取任务数量统计时间
-	 *
+	 * 
 	 * @return 任务数量统计时间
 	 */
 	@Column(name = "taskCountUpdateTime")
@@ -338,7 +338,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 设置任务数量统计时间
-	 *
+	 * 
 	 * @param taskCountUpdateTime 任务数量统计时间
 	 */
 	public void setTaskCountUpdateTime(Timestamp taskCountUpdateTime) {
@@ -347,7 +347,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 获取创建时间
-	 *
+	 * 
 	 * @return 创建时间
 	 */
 	@Column(name = "createTime", nullable = false)
@@ -357,7 +357,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 设置创建时间
-	 *
+	 * 
 	 * @param createTime 创建时间
 	 */
 	public void setCreateTime(Timestamp createTime) {
@@ -366,7 +366,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 获取更新时间
-	 *
+	 * 
 	 * @return 更新时间
 	 */
 	@Column(name = "updateTime", nullable = false)
@@ -376,7 +376,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * 设置更新时间
-	 *
+	 * 
 	 * @param updateTime 更新时间
 	 */
 	public void setUpdateTime(Timestamp updateTime) {
@@ -387,18 +387,18 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	/**
 	 * PO 转 VO
-	 *
-	 * @param vo VO对象
+	 * 
+	 * @param quotationAssignUserRuleVO VO对象
 	 * @return 转换后的VO对象
 	 */
-	public QuotationAssignUserRuleVO ptv(QuotationAssignUserRuleVO vo) throws FLException {
+	public QuotationAssignUserRuleVO ptv(QuotationAssignUserRuleVO quotationAssignUserRuleVO) throws FLException {
 
-		BeanUtils.copyProperties(this, vo, "user", "company", "department");
+		BeanUtils.copyProperties(this, quotationAssignUserRuleVO, "user", "company", "department");
 
-		if (vo.getUser() != null && getUser() != null) getUser().ptv(vo.getUser());
-		if (vo.getCompany() != null && getCompany() != null) getCompany().ptv(vo.getCompany());
-		if (vo.getDepartment() != null && getDepartment() != null) getDepartment().ptv(vo.getDepartment());
+		if (quotationAssignUserRuleVO.getUser() != null && getUser() != null) getUser().ptv(quotationAssignUserRuleVO.getUser());
+		if (quotationAssignUserRuleVO.getCompany() != null && getCompany() != null) getCompany().ptv(quotationAssignUserRuleVO.getCompany());
+		if (quotationAssignUserRuleVO.getDepartment() != null && getDepartment() != null) getDepartment().ptv(quotationAssignUserRuleVO.getDepartment());
 
-		return vo;
+		return quotationAssignUserRuleVO;
 	}
 }
