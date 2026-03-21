@@ -174,7 +174,7 @@ $(function() {
         com.post(api.communion.queryDepartment, {
             "department.company.cid": companyId
         }, function(res) {
-            config.items.department.bindData(res.departments, "did", "name", true);
+            config.items.department.bindData(res.deptList, "did", "name", true);
         }, null, false);
     }
 
