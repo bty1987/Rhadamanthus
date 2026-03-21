@@ -92,7 +92,7 @@ $(function() {
             // 1-半包，2-整装
             return v.decorationType == 1 ? "半包" : "整装";
         },
-        clazz: "grey"
+        clazz: "red"  // 类型/状态使用 red
     }, {
         field: "priority",
         name: "优先级",
@@ -108,12 +108,7 @@ $(function() {
             };
             return priorityMap[v.priority] || "未知";
         },
-        clazz: function(v) {
-
-            if (v.priority <= 3) return "red"; // 最高、高
-            if (v.priority == 5) return "blue"; // 普通
-            return "grey"; // 低、最低
-        }
+        clazz: "red"  // 类型/状态使用 red
     }, {
         field: "status",
         name: "状态",
@@ -122,10 +117,7 @@ $(function() {
             // 1-待分配，2-已分配
             return v.status == 1 ? "待分配" : "已分配";
         },
-        clazz: function(v) {
-
-            return v.status == 1 ? "orange" : "green";
-        }
+        clazz: "red"  // 类型/状态使用 red
     }, {
         field: "requestUser",
         name: "请求人",
@@ -138,7 +130,7 @@ $(function() {
         field: "requestTime",
         name: "请求时间",
         prop: "requestTime",
-        clazz: "grey"
+        clazz: "green"  // 时间类型使用 green
     }, {
         field: "assignTime",
         name: "分配时间",
@@ -146,7 +138,7 @@ $(function() {
 
             return v.assignTime || "-";
         },
-        clazz: "grey"
+        clazz: "green"  // 时间类型使用 green
     }];
 
     // 行按钮

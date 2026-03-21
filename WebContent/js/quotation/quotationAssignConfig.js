@@ -78,10 +78,7 @@ $(function() {
             // 使用 constant 进行枚举转换
             return constant.quotation().quotationAssignConfig.enabled.keys[v.enabled];
         },
-        clazz: function(v) {
-
-            return v.enabled == 1 ? "green" : "red";
-        }
+        clazz: "red"  // 类型/状态使用 red
     }, {
         field: "autoAssign",
         name: "分配方式",
@@ -90,17 +87,17 @@ $(function() {
             // 使用 constant 进行枚举转换
             return constant.quotation().quotationAssignConfig.autoAssign.keys[v.autoAssign];
         },
-        clazz: "grey"
+        clazz: "red"  // 类型/状态使用 red
     }, {
         field: "createTime",
         name: "创建时间",
         prop: "createTime",
-        clazz: "grey"
+        clazz: "green"  // 时间类型使用 green
     }, {
         field: "updateTime",
         name: "更新时间",
         prop: "updateTime",
-        clazz: "grey"
+        clazz: "green"  // 时间类型使用 green
     }];
 
     // 行按钮

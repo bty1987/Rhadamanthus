@@ -94,11 +94,7 @@ $(function() {
 			// 使用 constant 进行枚举转换
 			return constant.quotation().quotationAssignUserRule.status.keys[v.status];
 		},
-		clazz: function(v) {
-			if (v.status == 1) return "green";  // 可用
-			if (v.status == 2) return "orange"; // 制作中
-			return "red";                       // 停止
-		}
+		clazz: "red"  // 类型/状态使用 red
 	}, {
 		field: "supportedType",
 		name: "支持类型",
@@ -107,24 +103,24 @@ $(function() {
 			var type = v.supportedType;
 			return constant.quotation().quotationAssignUserRule.supportedType.keys[type] || "未设置";
 		},
-		clazz: "blue"
+		clazz: "red"  // 类型/状态使用 red
 	}, {
 		field: "currentTaskCount",
 		name: "当前任务",
 		prop: function(v) {
 			return v.currentTaskCount || 0;
 		},
-		clazz: "grey"
+		clazz: "blue"  // 数值类型使用 blue
 	}, {
 		field: "lastFinishTime",
 		name: "最后完成时间",
 		prop: "lastFinishTime",
-		clazz: "grey"
+		clazz: "green"  // 时间类型使用 green
 	}, {
 		field: "createTime",
 		name: "创建时间",
 		prop: "createTime",
-		clazz: "grey"
+		clazz: "green"  // 时间类型使用 green
 	}];
 
 	// 行按钮
