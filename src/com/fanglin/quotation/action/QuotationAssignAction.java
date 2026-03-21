@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.service.QuotationAssignService;
+import com.fanglin.quotation.vo.QuotationAssignVO;
 
 /**
  * 核心分配逻辑 Action 控制器
@@ -52,24 +53,9 @@ public class QuotationAssignAction extends BaseListAction {
 	private QuotationAssignService quotationAssignService;
 
 	/**
-	 * 装修单号
+	 * 分配请求VO
 	 */
-	private String orderId;
-
-	/**
-	 * 预算员ID
-	 */
-	private Integer budgetUid;
-
-	/**
-	 * 新预算员ID（重新分配时使用）
-	 */
-	private Integer newBudgetUid;
-
-	/**
-	 * 分配人ID（预算经理）
-	 */
-	private Integer assignUid;
+	private QuotationAssignVO quotationAssignVO;
 
 	/**
 	 * 正向自动分配（设计师发起）
@@ -82,7 +68,7 @@ public class QuotationAssignAction extends BaseListAction {
 			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
 	public String autoQuotationAssign() throws FLException {
-		quotationAssignService.autoQuotationAssign(orderId);
+		quotationAssignService.autoQuotationAssign(quotationAssignVO);
 		return SUCCESS;
 	}
 
@@ -97,7 +83,7 @@ public class QuotationAssignAction extends BaseListAction {
 			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
 	public String manualQuotationAssign() throws FLException {
-		quotationAssignService.manualQuotationAssign(orderId, budgetUid, assignUid);
+		quotationAssignService.manualQuotationAssign(quotationAssignVO);
 		return SUCCESS;
 	}
 
@@ -112,7 +98,7 @@ public class QuotationAssignAction extends BaseListAction {
 			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
 	public String reassignQuotationAssign() throws FLException {
-		quotationAssignService.reassignQuotationAssign(orderId, newBudgetUid, assignUid);
+		quotationAssignService.reassignQuotationAssign(quotationAssignVO);
 		return SUCCESS;
 	}
 
@@ -127,41 +113,17 @@ public class QuotationAssignAction extends BaseListAction {
 			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
 	public String finishQuotationAssign() throws FLException {
-		quotationAssignService.finishQuotationAssign(orderId);
+		quotationAssignService.finishQuotationAssign(quotationAssignVO);
 		return SUCCESS;
 	}
 
 	// ==================== Getter & Setter ====================
 
-	public String getOrderId() {
-		return orderId;
+	public QuotationAssignVO getQuotationAssignVO() {
+		return quotationAssignVO;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
-	public Integer getBudgetUid() {
-		return budgetUid;
-	}
-
-	public void setBudgetUid(Integer budgetUid) {
-		this.budgetUid = budgetUid;
-	}
-
-	public Integer getNewBudgetUid() {
-		return newBudgetUid;
-	}
-
-	public void setNewBudgetUid(Integer newBudgetUid) {
-		this.newBudgetUid = newBudgetUid;
-	}
-
-	public Integer getAssignUid() {
-		return assignUid;
-	}
-
-	public void setAssignUid(Integer assignUid) {
-		this.assignUid = assignUid;
+	public void setQuotationAssignVO(QuotationAssignVO quotationAssignVO) {
+		this.quotationAssignVO = quotationAssignVO;
 	}
 }

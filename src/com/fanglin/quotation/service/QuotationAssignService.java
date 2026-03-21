@@ -48,33 +48,29 @@ public interface QuotationAssignService {
 	 * <li>如果未找到：创建待分配请求</li>
 	 * </ol>
 	 *
-	 * @param orderId 装修单号
+	 * @param quotationAssignVO 分配参数VO（包含orderId）
 	 * @return 影响行数
 	 * @throws FLException 业务异常
 	 */
-	int autoQuotationAssign(String orderId) throws FLException;
+	int autoQuotationAssign(QuotationAssignVO quotationAssignVO) throws FLException;
 
 	/**
 	 * 手动分配报价员（预算经理派单）
 	 *
-	 * @param orderId 装修单号
-	 * @param budgetUid 预算员ID
-	 * @param assignUid 分配人ID
+	 * @param quotationAssignVO 分配参数VO（包含orderId、budgetUid、assignUid）
 	 * @return 影响行数
 	 * @throws FLException 业务异常
 	 */
-	int manualQuotationAssign(String orderId, int budgetUid, int assignUid) throws FLException;
+	int manualQuotationAssign(QuotationAssignVO quotationAssignVO) throws FLException;
 
 	/**
 	 * 重新分配报价员（更换预算员）
 	 *
-	 * @param orderId 装修单号
-	 * @param newBudgetUid 新预算员ID
-	 * @param assignUid 分配人ID
+	 * @param quotationAssignVO 分配参数VO（包含orderId、newBudgetUid、assignUid）
 	 * @return 影响行数
 	 * @throws FLException 业务异常
 	 */
-	int reassignQuotationAssign(String orderId, int newBudgetUid, int assignUid) throws FLException;
+	int reassignQuotationAssign(QuotationAssignVO quotationAssignVO) throws FLException;
 
 	/**
 	 * 完成报价单后触发反向自动分配（内部方法）
@@ -88,9 +84,9 @@ public interface QuotationAssignService {
 	 * <li>如果找到：自动分配给该预算员</li>
 	 * </ol>
 	 *
-	 * @param orderId 装修单号
+	 * @param quotationAssignVO 分配参数VO（包含orderId）
 	 * @return 影响行数
 	 * @throws FLException 业务异常
 	 */
-	int finishQuotationAssign(String orderId) throws FLException;
+	int finishQuotationAssign(QuotationAssignVO quotationAssignVO) throws FLException;
 }
