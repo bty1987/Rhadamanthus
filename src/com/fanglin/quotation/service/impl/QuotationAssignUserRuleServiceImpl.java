@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +32,7 @@ import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.system.vo.CompanyVO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -116,7 +116,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		quotationAssignUserRulePO = new QuotationAssignUserRulePO();
 
 		// 使用 BeanUtils 复制基本属性（排除关联对象）
-		BeanUtils.copyProperties(quotationAssignUserRuleVO, quotationAssignUserRulePO, "user", "company", "department");
+		BeanUtil.copyProperties(quotationAssignUserRuleVO, quotationAssignUserRulePO, "user", "company", "department");
 
 		// 手动设置关联对象（使用 ID 创建 PO 对象）
 		quotationAssignUserRulePO.setUser(new UserPO(uid));
@@ -174,8 +174,8 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 			throw new FLException(0, "规则不存在");
 		}
 
-		// 使用 BeanUtils 复制基本属性（排除关联对象和只读字段）
-		BeanUtils.copyProperties(quotationAssignUserRule, quotationAssignUserRulePO,
+		// 使用 BeanUtil 复制基本属性（排除关联对象和只读字段）
+		BeanUtil.copyProperties(quotationAssignUserRule, quotationAssignUserRulePO,
 				"user", "company", "department", "qaurid", "createTime", "updateTime");
 
 		// 手动设置关联对象（使用 ID 创建 PO 对象）

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +35,7 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.service.CompanyService;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.system.vo.CompanyVO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -62,7 +62,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
 			QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-			BeanUtils.copyProperties(quotationAssignRequestPO, vo);
+			BeanUtil.copyProperties(quotationAssignRequestPO, vo);
 			loadAssociations(quotationAssignRequestPO, vo);
 			quotationAssignRequestVOs.add(vo);
 		}
@@ -80,7 +80,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		}
 
 		QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-		BeanUtils.copyProperties(quotationAssignRequestPO, vo);
+		BeanUtil.copyProperties(quotationAssignRequestPO, vo);
 		loadAssociations(quotationAssignRequestPO, vo);
 		return vo;
 	}
@@ -94,7 +94,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		}
 
 		QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-		BeanUtils.copyProperties(quotationAssignRequestPO, vo);
+		BeanUtil.copyProperties(quotationAssignRequestPO, vo);
 		loadAssociations(quotationAssignRequestPO, vo);
 		return vo;
 	}
@@ -107,7 +107,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
 			QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-			BeanUtils.copyProperties(quotationAssignRequestPO, vo);
+			BeanUtil.copyProperties(quotationAssignRequestPO, vo);
 			loadAssociations(quotationAssignRequestPO, vo);
 			quotationAssignRequestVOs.add(vo);
 		}
@@ -133,8 +133,8 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		// 创建 PO 对象
 		QuotationAssignRequestPO quotationAssignRequestPO = new QuotationAssignRequestPO();
 
-		// 使用 BeanUtils 复制基本属性（会跳过关联对象）
-		BeanUtils.copyProperties(quotationAssignRequestVO, quotationAssignRequestPO, "company", "department", "requestUser");
+		// 使用 BeanUtil 复制基本属性（会跳过关联对象）
+		BeanUtil.copyProperties(quotationAssignRequestVO, quotationAssignRequestPO, "company", "department", "requestUser");
 
 		// 手动设置基本类型字段
 		quotationAssignRequestPO.setCompany(company);
@@ -186,8 +186,8 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 			throw new FLException(0, "分配请求不存在");
 		}
 
-		// 使用 BeanUtils 复制基本属性（会跳过关联对象）
-		BeanUtils.copyProperties(quotationAssignRequestVO, quotationAssignRequestPO, "company", "department", "requestUser", "qarid", "orderId", "requestTime", "createTime");
+		// 使用 BeanUtil 复制基本属性（会跳过关联对象）
+		BeanUtil.copyProperties(quotationAssignRequestVO, quotationAssignRequestPO, "company", "department", "requestUser", "qarid", "orderId", "requestTime", "createTime");
 
 		// 如果 VO 中包含公司对象，更新公司ID
 		if (quotationAssignRequestVO.getCompany() != null) {
