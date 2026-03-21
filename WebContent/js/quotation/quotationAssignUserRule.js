@@ -182,15 +182,25 @@ $(function() {
 
 	// 初始化部门下拉框（公司选择后加载）
 	function initDepartmentSelect(companyId) {
+		console.log('initDepartmentSelect called with companyId:', companyId);
+
 		if (!companyId) {
 			config.items.department.empty().append('<option value="">全部部门</option>');
 			return;
 		}
 
-		com.post(api.system.queryDepartmentByCompany, {
-			"company.cid": companyId
+		// 使用正确的接口：api.communion.queryDepartment
+		com.post(api.communion.queryDepartment, {
+			"department.company.cid": companyId
 		}, function(res) {
-			config.items.department.bindData(res.departments, "did", "name", true);
+			console.log('queryDepartment response:', res);
+			console.log('departments:', res.departments);
+
+			if (res.departments && res.departments.length > 0) {
+				config.items.department.bindData(res.departments, "did", "name", true);
+			} else {
+				config.items.department.empty().append('<option value="">无部门数据</option>');
+			}
 		}, null, false);
 	}
 

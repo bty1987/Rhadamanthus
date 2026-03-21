@@ -177,8 +177,9 @@ $(function() {
             return;
         }
 
-        com.post(api.system.queryDepartmentByCompany, {
-            "company.cid": companyId
+        // 使用正确的接口：api.communion.queryDepartment
+        com.post(api.communion.queryDepartment, {
+            "department.company.cid": companyId
         }, function(res) {
             config.items.department.bindData(res.departments, "did", "name", true);
         }, null, false);
