@@ -205,21 +205,9 @@ $(function() {
 			"key",                                      // key路径
 			"value",                                    // value路径
 			function(list, key, value) {                 // 选中回调
-				// 选中用户后，从 list 中找到完整的用户信息
-				var selectedUser = null;
-				$.each(list, function(i, item) {
-					if (item.key == key) {
-						selectedUser = item;
-						return false;
-					}
-				});
-
-				if (selectedUser) {
-					config.data.selectedUid = selectedUser.uid;
-					config.items.user.data('uid', selectedUser.uid);
-					console.log('Selected user:', selectedUser);
-				}
-
+				// typeahead 组件会自动设置 data-typeahead-key 和 data-typeahead-value
+				// key 就是 uid，value 就是显示名称
+				console.log('Selected user - key(uid):', key, 'value(name):', value);
 				return value;  // 返回显示值
 			}
 		);
@@ -247,8 +235,8 @@ $(function() {
 	// 重置表单
 	function resetForm() {
 		config.items.qaurid.val('');
-		config.items.user.val('');
-		config.items.user.removeData('uid');  // 清除保存的UID
+		// 使用 com.cleanTypeahead 清除 typeahead 的值和属性
+		com.cleanTypeahead(config.items.user);
 		config.data.selectedUid = null;
 		config.items.company.val('');
 		config.items.department.empty().append('<option value="">全部部门</option>');
@@ -268,8 +256,10 @@ $(function() {
 		// 填充表单数据
 		config.items.qaurid.val(row.qaurid);
 		config.items.user.val(row.user.currentName);
-		config.data.selectedUid = row.user.uid;  // 保存UID
-		config.items.user.data('uid', row.user.uid);
+		// 使用 typeahead 的 data 属性保存 uid
+		config.items.user.attr('data-typeahead-key', row.user.uid);
+		config.items.user.attr('data-typeahead-value', row.user.currentName);
+		config.data.selectedUid = row.user.uid;  // 保留兼容性
 		config.items.company.val(row.company.cid);
 
 		// 初始化部门并选中
@@ -302,7 +292,10 @@ $(function() {
 
 		var qaurid = config.items.qaurid.val();
 		var isNew = !qaurid;
-		var uid = config.data.selectedUid || config.items.user.data('uid');
+
+		// 使用 com.typeahead 方法获取选中的 uid
+		// 第三个参数 false 表示获取 key（即 uid）
+		var uid = com.typeahead(config.items.user, null, false);
 
 		// 验证是否选择了用户
 		if (!uid) {
