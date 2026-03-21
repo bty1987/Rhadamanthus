@@ -143,14 +143,23 @@ $(function() {
 			return false;
 		}
 	}, {
+		// 启用按钮：仅在状态不为1（可用）时显示
 		name: function(v) {
-			return v.status == 1 ? "禁用" : "启用";
+			return v.status == 1 ? null : "启用";
 		},
-		clazz: function(v) {
-			return v.status == 1 ? "btn-grey" : "btn-success";
-		},
+		clazz: "btn-success",
 		handle: function(v) {
-			toggleStatus(v);
+			enableUserRule(v);
+			return false;
+		}
+	}, {
+		// 禁用按钮：仅在状态为1（可用）时显示
+		name: function(v) {
+			return v.status == 1 ? "禁用" : null;
+		},
+		clazz: "btn-grey",
+		handle: function(v) {
+			disableUserRule(v);
 			return false;
 		}
 	}];
@@ -347,17 +356,27 @@ $(function() {
 		});
 	}
 
-	// 快捷切换状态（启用/禁用）
-	function toggleStatus(row) {
-		var newStatus = row.status == 1 ? 3 : 1;  // 1(可用) <-> 3(停止)
-		var statusText = newStatus == 1 ? "启用" : "禁用";
-
-		com.showConfirm('确认要将该预算员' + statusText + '吗？', function() {
+	// 快捷启用预算员
+	function enableUserRule(row) {
+		com.showConfirm('确认要启用该预算员吗？', function() {
 			com.post(api.quotation.updateQuotationAssignUserRuleForStatus, {
 				"quotationAssignUserRule.qaurid": row.qaurid,
-				"quotationAssignUserRule.status": newStatus
+				"quotationAssignUserRule.status": 1  // 1-可用
 			}, function(res) {
-				com.showAlert(com.info, statusText + '成功');
+				com.showAlert(com.info, '启用成功');
+				searcher.doSearch(); // 刷新列表
+			});
+		});
+	}
+
+	// 快捷禁用预算员
+	function disableUserRule(row) {
+		com.showConfirm('确认要禁用该预算员吗？', function() {
+			com.post(api.quotation.updateQuotationAssignUserRuleForStatus, {
+				"quotationAssignUserRule.qaurid": row.qaurid,
+				"quotationAssignUserRule.status": 3  // 3-停止
+			}, function(res) {
+				com.showAlert(com.info, '禁用成功');
 				searcher.doSearch(); // 刷新列表
 			});
 		});
