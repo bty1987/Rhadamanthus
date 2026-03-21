@@ -70,7 +70,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int autoAssignQuotation(String orderId) throws FLException {
+	public int autoQuotationAssign(String orderId) throws FLException {
 
 		// ========== 参数校验 ==========
 		if (orderId == null || orderId.trim().isEmpty()) {
@@ -145,7 +145,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int manualAssignQuotation(String orderId, int budgetUid, int assignUid) throws FLException {
+	public int manualQuotationAssign(String orderId, int budgetUid, int assignUid) throws FLException {
 
 		// ========== 参数校验 ==========
 		if (orderId == null || orderId.trim().isEmpty()) {
@@ -190,7 +190,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int reassignQuotation(String orderId, int newBudgetUid, int assignUid) throws FLException {
+	public int reassignQuotationAssign(String orderId, int newBudgetUid, int assignUid) throws FLException {
 
 		// ========== 参数校验 ==========
 		if (orderId == null || orderId.trim().isEmpty()) {
@@ -247,7 +247,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int finishQuotationForAssign(String orderId) throws FLException {
+	public int finishQuotationAssign(String orderId) throws FLException {
 
 		// ========== 参数校验 ==========
 		if (orderId == null || orderId.trim().isEmpty()) {

@@ -52,7 +52,7 @@ public interface QuotationAssignService {
 	 * @return 影响行数
 	 * @throws FLException 业务异常
 	 */
-	int autoAssignQuotation(String orderId) throws FLException;
+	int autoQuotationAssign(String orderId) throws FLException;
 
 	/**
 	 * 手动分配报价员（预算经理派单）
@@ -63,7 +63,7 @@ public interface QuotationAssignService {
 	 * @return 影响行数
 	 * @throws FLException 业务异常
 	 */
-	int manualAssignQuotation(String orderId, int budgetUid, int assignUid) throws FLException;
+	int manualQuotationAssign(String orderId, int budgetUid, int assignUid) throws FLException;
 
 	/**
 	 * 重新分配报价员（更换预算员）
@@ -74,7 +74,7 @@ public interface QuotationAssignService {
 	 * @return 影响行数
 	 * @throws FLException 业务异常
 	 */
-	int reassignQuotation(String orderId, int newBudgetUid, int assignUid) throws FLException;
+	int reassignQuotationAssign(String orderId, int newBudgetUid, int assignUid) throws FLException;
 
 	/**
 	 * 完成报价单后触发反向自动分配（内部方法）
@@ -92,5 +92,5 @@ public interface QuotationAssignService {
 	 * @return 影响行数
 	 * @throws FLException 业务异常
 	 */
-	int finishQuotationForAssign(String orderId) throws FLException;
+	int finishQuotationAssign(String orderId) throws FLException;
 }
