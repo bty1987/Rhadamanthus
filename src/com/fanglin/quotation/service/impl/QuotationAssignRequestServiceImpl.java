@@ -19,22 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.communion.po.DepartmentPO;
-import com.fanglin.communion.service.DepartmentService;
-import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.service.UserService;
-import com.fanglin.personel.vo.UserVO;
 import com.fanglin.quotation.dao.QuotationAssignRequestDao;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.quotation.service.QuotationAssignRequestService;
 import com.fanglin.quotation.vo.QuotationAssignRequestVO;
-import com.fanglin.system.po.CompanyPO;
-import com.fanglin.system.service.CompanyService;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
-import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -45,15 +36,6 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	@Autowired
 	private QuotationAssignRequestDao quotationAssignRequestDao;
 
-	@Autowired
-	private CompanyService companyService;
-
-	@Autowired
-	private DepartmentService departmentService;
-
-	@Autowired
-	private UserService userService;
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void pageQuotationAssignRequest(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -61,10 +43,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
-			QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-			BeanUtil.copyProperties(quotationAssignRequestPO, vo);
-			loadAssociations(quotationAssignRequestPO, vo);
-			quotationAssignRequestVOs.add(vo);
+			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(new QuotationAssignRequestVO()));
 		}
 
 		// 设置分页结果
@@ -74,29 +53,27 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public QuotationAssignRequestVO queryQuotationAssignRequestById(QuotationAssignRequestVO quotationAssignRequestVO) throws FLException {
+
 		QuotationAssignRequestPO quotationAssignRequestPO = quotationAssignRequestDao.get(quotationAssignRequestVO.getQarid());
+
 		if (quotationAssignRequestPO == null) {
 			return null;
 		}
 
-		QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-		BeanUtil.copyProperties(quotationAssignRequestPO, vo);
-		loadAssociations(quotationAssignRequestPO, vo);
-		return vo;
+		return quotationAssignRequestPO.ptv(new QuotationAssignRequestVO());
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public QuotationAssignRequestVO queryQuotationAssignRequestForPending(String orderId) throws FLException {
+
 		QuotationAssignRequestPO quotationAssignRequestPO = quotationAssignRequestDao.queryQuotationAssignRequestForPending(orderId);
+
 		if (quotationAssignRequestPO == null) {
 			return null;
 		}
 
-		QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-		BeanUtil.copyProperties(quotationAssignRequestPO, vo);
-		loadAssociations(quotationAssignRequestPO, vo);
-		return vo;
+		return quotationAssignRequestPO.ptv(new QuotationAssignRequestVO());
 	}
 
 	@Override
@@ -106,10 +83,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
-			QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-			BeanUtil.copyProperties(quotationAssignRequestPO, vo);
-			loadAssociations(quotationAssignRequestPO, vo);
-			quotationAssignRequestVOs.add(vo);
+			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(new QuotationAssignRequestVO()));
 		}
 
 		return quotationAssignRequestVOs;
@@ -209,9 +183,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		}
 
 		// 如果状态更新为已分配，设置分配时间
-		if (quotationAssignRequestVO.getStatus() != null
-				&& quotationAssignRequestVO.getStatus() == QuotationAssignRequestPO.STATUS_ASSIGNED_INT
-				&& quotationAssignRequestPO.getStatus() != QuotationAssignRequestPO.STATUS_ASSIGNED_INT) {
+		if (quotationAssignRequestVO.getStatus() != null && quotationAssignRequestVO.getStatus() == QuotationAssignRequestPO.STATUS_ASSIGNED_INT && quotationAssignRequestPO.getStatus() != QuotationAssignRequestPO.STATUS_ASSIGNED_INT) {
 			quotationAssignRequestPO.setAssignTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 
@@ -230,39 +202,5 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 			return 1;
 		}
 		return 0;
-	}
-
-	/**
-	 * 加载关联对象到 VO
-	 *
-	 * @param po PO对象
-	 * @param vo VO对象
-	 */
-	private void loadAssociations(QuotationAssignRequestPO po, QuotationAssignRequestVO vo) {
-		try {
-			// 加载公司对象
-			if (po.getCompany() > 0) {
-				CompanyVO companyVO = new CompanyVO();
-				companyVO.setCid(po.getCompany());
-				vo.setCompany(companyVO);
-			}
-
-			// 加载部门对象（可能为NULL）
-			if (po.getDepartment() != null) {
-				DepartmentVO departmentVO = new DepartmentVO();
-				departmentVO.setDid(po.getDepartment());
-				vo.setDepartment(departmentVO);
-			}
-
-			// 加载请求人用户对象（可能为NULL）
-			if (po.getRequestUid() != null) {
-				UserVO userVO = new UserVO();
-				userVO.setUid(po.getRequestUid());
-				vo.setRequestUser(userVO);
-			}
-		} catch (Exception e) {
-			// 关联对象加载失败不影响主流程
-			// 可以记录日志，但不抛出异常
-		}
 	}
 }

@@ -23,8 +23,9 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleDao;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.quotation.service.QuotationAssignUserRuleService;
@@ -52,6 +53,9 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Autowired
 	private QuotationAssignUserRuleDao quotationAssignUserRuleDao;
 
+	@Autowired
+	private UserDao userDao;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException {
@@ -60,7 +64,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		List<QuotationAssignUserRuleVO> quotationAssignUserRuleVOs = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRulePO po : quotationAssignUserRulePOs) {
-			quotationAssignUserRuleVOs.add(po.ptv(new QuotationAssignUserRuleVO(new UserVO(), new CompanyVO(), new DepartmentVO())));
+			quotationAssignUserRuleVOs.add(po.ptv(new QuotationAssignUserRuleVO(new UserBaseVO(), new CompanyVO(), new DepartmentVO())));
 		}
 
 		paging.setData(quotationAssignUserRuleVOs);
@@ -73,7 +77,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		// 调用DAO查询
 		QuotationAssignUserRulePO quotationAssignUserRulePO = quotationAssignUserRuleDao.get(quotationAssignUserRule.getQaurid());
 
-		return quotationAssignUserRulePO == null ? null : quotationAssignUserRulePO.ptv(new QuotationAssignUserRuleVO(new UserVO(), new CompanyVO(), new DepartmentVO()));
+		return quotationAssignUserRulePO == null ? null : quotationAssignUserRulePO.ptv(new QuotationAssignUserRuleVO(new UserBaseVO(), new CompanyVO(), new DepartmentVO()));
 	}
 
 	@Override
@@ -84,7 +88,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		List<QuotationAssignUserRuleVO> quotationAssignUserRuleVOs = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRulePO po : quotationAssignUserRulePOs) {
-			quotationAssignUserRuleVOs.add(po.ptv(new QuotationAssignUserRuleVO(new UserVO(), new CompanyVO(), new DepartmentVO())));
+			quotationAssignUserRuleVOs.add(po.ptv(new QuotationAssignUserRuleVO(new UserBaseVO(), new CompanyVO(), new DepartmentVO())));
 		}
 
 		return quotationAssignUserRuleVOs;
@@ -103,14 +107,16 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		}
 
 		// 校验：用户+公司组合唯一性
-		int uid = quotationAssignUserRuleVO.getUser().getUid();
+		String userId = quotationAssignUserRuleVO.getUser().getUserId();
 		int company = CompanyServiceImpl.decode(quotationAssignUserRuleVO.getCompany().getCid());
 
-		QuotationAssignUserRulePO quotationAssignUserRulePO = quotationAssignUserRuleDao.getByUidAndCompany(uid, company);
+		QuotationAssignUserRulePO quotationAssignUserRulePO = quotationAssignUserRuleDao.getQuotationAssignUserRule(userId, company);
 
 		if (quotationAssignUserRulePO != null) {
 			throw new FLException(0, "该公司下该用户的规则已存在");
 		}
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
 
 		// 创建 PO 对象
 		quotationAssignUserRulePO = new QuotationAssignUserRulePO();
@@ -119,7 +125,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		BeanUtil.copyProperties(quotationAssignUserRuleVO, quotationAssignUserRulePO, "user", "company", "department");
 
 		// 手动设置关联对象（使用 ID 创建 PO 对象）
-		quotationAssignUserRulePO.setUser(new UserPO(uid));
+		quotationAssignUserRulePO.setUser(userPO);
 		quotationAssignUserRulePO.setCompany(new CompanyPO(company));
 
 		// Department可能是NULL（该公司所有部门）
@@ -148,43 +154,44 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
+	public int updateQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRuleVO) throws FLException {
 
 		// 空值检查
-		if (quotationAssignUserRule.getUser() == null) {
+		if (quotationAssignUserRuleVO.getUser() == null) {
 			throw new FLException(0, "用户信息不能为空");
 		}
-		if (quotationAssignUserRule.getCompany() == null) {
+		if (quotationAssignUserRuleVO.getCompany() == null) {
 			throw new FLException(0, "公司信息不能为空");
 		}
 
-		int uid = quotationAssignUserRule.getUser().getUid();
-		int company = CompanyServiceImpl.decode(quotationAssignUserRule.getCompany().getCid());
+		String userId = quotationAssignUserRuleVO.getUser().getUserId();
+		int company = CompanyServiceImpl.decode(quotationAssignUserRuleVO.getCompany().getCid());
 
 		// 校验：用户+公司组合唯一性（排除当前记录）
-		QuotationAssignUserRulePO checkPO = quotationAssignUserRuleDao.getByUidAndCompany(uid, company);
-		if (checkPO != null && checkPO.getQaurid() != quotationAssignUserRule.getQaurid()) {
+		QuotationAssignUserRulePO checkPO = quotationAssignUserRuleDao.getQuotationAssignUserRule(userId, company);
+		if (checkPO != null && checkPO.getQaurid() != quotationAssignUserRuleVO.getQaurid()) {
 			throw new FLException(0, "该公司下该用户的规则已存在");
 		}
 
 		// 查询现有记录
-		QuotationAssignUserRulePO quotationAssignUserRulePO = quotationAssignUserRuleDao.get(quotationAssignUserRule.getQaurid());
+		QuotationAssignUserRulePO quotationAssignUserRulePO = quotationAssignUserRuleDao.get(quotationAssignUserRuleVO.getQaurid());
 
 		if (quotationAssignUserRulePO == null) {
 			throw new FLException(0, "规则不存在");
 		}
 
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
 		// 使用 BeanUtil 复制基本属性（排除关联对象和只读字段）
-		BeanUtil.copyProperties(quotationAssignUserRule, quotationAssignUserRulePO,
-				"user", "company", "department", "qaurid", "createTime", "updateTime");
+		BeanUtil.copyProperties(quotationAssignUserRuleVO, quotationAssignUserRulePO, "user", "company", "department", "qaurid", "createTime", "updateTime");
 
 		// 手动设置关联对象（使用 ID 创建 PO 对象）
-		quotationAssignUserRulePO.setUser(new UserPO(uid));
+		quotationAssignUserRulePO.setUser(userPO);
 		quotationAssignUserRulePO.setCompany(new CompanyPO(company));
 
 		// Department可能是NULL（该公司所有部门）
-		if (quotationAssignUserRule.getDepartment() != null) {
-			quotationAssignUserRulePO.setDepartment(new DepartmentPO(quotationAssignUserRule.getDepartment().getDid()));
+		if (quotationAssignUserRuleVO.getDepartment() != null) {
+			quotationAssignUserRulePO.setDepartment(new DepartmentPO(quotationAssignUserRuleVO.getDepartment().getDid()));
 		} else {
 			// 如果部门对象为null，表示设置为"所有部门"
 			quotationAssignUserRulePO.setDepartment(null);
@@ -201,15 +208,15 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateQuotationAssignUserRuleForStatus(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
+	public int updateQuotationAssignUserRuleForStatus(QuotationAssignUserRuleVO quotationAssignUserRuleVO) throws FLException {
 
-		QuotationAssignUserRulePO quotationAssignUserRulePO = quotationAssignUserRuleDao.get(quotationAssignUserRule.getQaurid());
+		QuotationAssignUserRulePO quotationAssignUserRulePO = quotationAssignUserRuleDao.get(quotationAssignUserRuleVO.getQaurid());
 
 		if (quotationAssignUserRulePO == null) {
 			throw new FLException(0, "规则不存在");
 		}
 
-		quotationAssignUserRulePO.setStatus(quotationAssignUserRule.getStatus());
+		quotationAssignUserRulePO.setStatus(quotationAssignUserRuleVO.getStatus());
 
 		quotationAssignUserRuleDao.update(quotationAssignUserRulePO);
 
