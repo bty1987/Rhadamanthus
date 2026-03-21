@@ -948,7 +948,15 @@ var Searcher = function() {
                                 (_check ? $switch.prop("checked") : $switch.removeAttr("checked"));
                             });
                         } else {
-                            $('<a></a>').addClass('btn btn-minier ' + button.clazz).html(button.name).appendTo($divBtnWrap).click(function() {
+                            // 处理按钮名称：支持函数类型
+                            var btnName = typeof button.name == 'function' ? button.name(v) : button.name;
+
+                            // 如果按钮名称为null或undefined，不渲染该按钮
+                            if (btnName == null || btnName == undefined) {
+                                return true;
+                            }
+
+                            $('<a></a>').addClass('btn btn-minier ' + button.clazz).html(btnName).appendTo($divBtnWrap).click(function() {
 
                                 button.handle(v);
                             });
