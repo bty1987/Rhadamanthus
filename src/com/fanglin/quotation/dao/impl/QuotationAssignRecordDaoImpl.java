@@ -12,7 +12,8 @@ package com.fanglin.quotation.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.SQLQuery;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -48,22 +49,24 @@ public class QuotationAssignRecordDaoImpl extends DaoImpl<QuotationAssignRecordP
 		return query.list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<QuotationAssignRecordPO> queryQuotationAssignRecordByOrderId(String orderId) {
-		String hql = "from QuotationAssignRecordPO where orderId = :orderId order by assignTime desc";
-		return session().createQuery(hql).setString("orderId", orderId).list();
+		return createCriteria(QuotationAssignRecordPO.class)
+				.add(Restrictions.eq("orderId", orderId))
+				.addOrder(org.hibernate.criterion.Order.desc("assignTime"))
+				.list();
 	}
 
 	@Override
 	public int countQuotationAssignRecordByUid(int uid) {
 
-		String sql = "SELECT COUNT(*) " + "FROM quotation.quotationassignrecord " + "WHERE uid = :uid " + "AND assignResult = " + QuotationAssignRecordPO.ASSIGN_RESULT_SUCCESS_INT;
+		Number count = (Number) createCriteria(QuotationAssignRecordPO.class)
+				.add(Restrictions.eq("uid", uid))
+				.add(Restrictions.eq("assignResult", QuotationAssignRecordPO.ASSIGN_RESULT_SUCCESS_INT))
+				.setProjection(Projections.rowCount())
+				.uniqueResult();
 
-		SQLQuery query = session().createSQLQuery(sql);
-		query.setInteger("uid", uid);
-
-		Number count = (Number) query.uniqueResult();
 		return count != null ? count.intValue() : 0;
 	}
 }

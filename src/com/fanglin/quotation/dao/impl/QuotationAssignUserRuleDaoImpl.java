@@ -2,7 +2,7 @@ package com.fanglin.quotation.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -34,15 +34,11 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public QuotationAssignUserRulePO getByUidAndCompany(int uid, int company) throws FLException {
-		String hql = "FROM QuotationAssignUserRulePO WHERE user.uid = :uid AND company.cid = :company";
-		Query query = session().createQuery(hql);
-		query.setParameter("uid", uid);
-		query.setParameter("company", company);
-		query.setMaxResults(1);
-		List<QuotationAssignUserRulePO> list = query.list();
-		return list.isEmpty() ? null : list.get(0);
+		return (QuotationAssignUserRulePO) createCriteria(QuotationAssignUserRulePO.class)
+				.add(Restrictions.eq("user.uid", uid))
+				.add(Restrictions.eq("company.cid", company))
+				.uniqueResult();
 	}
 
 	@Override
