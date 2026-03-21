@@ -199,7 +199,7 @@ $(function() {
 		com.initTypeahead(
 			config.items.user,                           // 容器元素
 			api.personel.queryUserByPinyin,             // 请求地址
-			"user.pinyin",                              // 参数名称
+			"pinyinName",                               // 参数名称（后端Action接收的字段名）
 			{ "user.status": 3 },                       // 额外参数：仅在职员工
 			"autoFillKeyValue",                         // 返回结果路径
 			"key",                                      // key路径
