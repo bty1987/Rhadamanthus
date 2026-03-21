@@ -180,13 +180,10 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 			throw new FLException(0, "规则不存在");
 		}
 
-		UserPO userPO = userDao.queryUserByUserId(userId);
-
 		// 使用 BeanUtil 复制基本属性（排除关联对象和只读字段）
 		BeanUtil.copyProperties(quotationAssignUserRuleVO, quotationAssignUserRulePO, "user", "company", "department", "qaurid", "createTime", "updateTime");
 
 		// 手动设置关联对象（使用 ID 创建 PO 对象）
-		quotationAssignUserRulePO.setUser(userPO);
 		quotationAssignUserRulePO.setCompany(new CompanyPO(company));
 
 		// Department可能是NULL（该公司所有部门）

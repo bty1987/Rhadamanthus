@@ -92,7 +92,7 @@ $(function() {
 		name: "状态",
 		prop: function(v) {
 			// 使用 constant 进行枚举转换
-			return constant.quotation().quotationAssignUserRule.status.datas[v.status];
+			return constant.quotation().quotationAssignUserRule.status.keys[v.status];
 		},
 		clazz: function(v) {
 			if (v.status == 1) return "green";  // 可用
@@ -105,7 +105,7 @@ $(function() {
 		prop: function(v) {
 			// 使用 constant 进行枚举转换
 			var type = v.supportedType;
-			return constant.quotation().quotationAssignUserRule.supportedType.datas[type] || "未设置";
+			return constant.quotation().quotationAssignUserRule.supportedType.keys[type] || "未设置";
 		},
 		clazz: "blue"
 	}, {
@@ -165,7 +165,7 @@ $(function() {
 	}];
 
 	// 配置行
-	searcher.line(lineprops, linebtns);
+	searcher.line("user.currentName", lineprops, linebtns);
 
 	// 渲染列表
 	searcher.render();
@@ -203,10 +203,10 @@ $(function() {
 			"department.company.cid": companyId
 		}, function(res) {
 			console.log('queryDepartment response:', res);
-			console.log('departments:', res.departments);
+			console.log('deptList:', res.deptList);
 
-			if (res.departments && res.departments.length > 0) {
-				config.items.department.bindData(res.departments, "did", "name", true);
+			if (res.deptList && res.deptList.length > 0) {
+				config.items.department.bindData(res.deptList, "did", "name", true);
 			} else {
 				config.items.department.empty().append('<option value="">无部门数据</option>');
 			}
@@ -326,7 +326,7 @@ $(function() {
 
 		var params = {
 			"quotationAssignUserRule.qaurid": qaurid,
-			"quotationAssignUserRule.user.uid": uid,
+			"quotationAssignUserRule.user.userId": uid,
 			"quotationAssignUserRule.company.cid": config.items.company.val(),
 			"quotationAssignUserRule.department.did": config.items.department.val() || null,
 			"quotationAssignUserRule.status": parseInt(config.items.status.val()),
