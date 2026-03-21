@@ -114,25 +114,27 @@ $(function() {
         }
     }, {
         // 启用按钮：仅在状态不为1（启用）时显示
-        name: function(v) {
-            return v.enabled == 1 ? null : "启用";
-        },
+        name: "启用",
         clazz: "btn-success",
         handle: function(v) {
 
             toggleStatus(v);
             return false;
+        },
+        show: function(v){
+            return v.enabled == 0;
         }
     }, {
         // 禁用按钮：仅在状态为1（启用）时显示
-        name: function(v) {
-            return v.enabled == 1 ? "禁用" : null;
-        },
+        name: "禁用",
         clazz: "btn-grey",
         handle: function(v) {
 
             toggleStatus(v);
             return false;
+        },
+        show: function(v){
+            return v.enabled == 1;
         }
     }, {
         name: function(v) {
