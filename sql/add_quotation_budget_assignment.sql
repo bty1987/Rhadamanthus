@@ -259,6 +259,8 @@ CREATE TABLE quotation.quotationassignrecord (
 
     -- 装修类型（用于追溯）
     decorationType SMALLINT(6) DEFAULT NULL COMMENT '装修类型（用于追溯分析）',
+    
+    createTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 
     -- 主键约束
     PRIMARY KEY (qasrid),
