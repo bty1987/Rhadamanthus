@@ -108,6 +108,9 @@ $.extend(api.index, {
     },
     quotationAssignConfigIndex: {
         url: "/views/quotation/quotationAssignConfig.html"
+    },
+    quotationAssignRecordIndex: {
+        url: "/views/quotation/quotationAssignRecord.html"
     }
 });
 
@@ -2106,6 +2109,59 @@ $.extend(api, {
         },
         queryQuotationAssignRequestForPending: {
             url: "queryQuotationAssignRequestForPending.do"
+        },
+
+        // ==================== 分配请求管理接口 ====================
+
+        pageQuotationAssignRequest: {
+            url: "pageQuotationAssignRequest.do",
+            demo: true
+        },
+
+        queryQuotationAssignRequestById: {
+            url: "queryQuotationAssignRequestById.do",
+            demo: true,
+            type: "query"
+        },
+
+        createQuotationAssignRequest: {
+            url: "createQuotationAssignRequest.do",
+            validate: {
+                "quotationAssignRequest.orderId": { required: true },
+                "quotationAssignRequest.company.cid": { required: true }
+            }
+        },
+
+        updateQuotationAssignRequest: {
+            url: "updateQuotationAssignRequest.do",
+            validate: {
+                "quotationAssignRequest.qarid": { required: true }
+            }
+        },
+
+        deleteQuotationAssignRequest: {
+            url: "deleteQuotationAssignRequest.do",
+            validate: {
+                "quotationAssignRequest.qarid": { required: true }
+            }
+        },
+
+        // ==================== 分配记录管理接口 ====================
+
+        pageQuotationAssignRecord: {
+            url: "pageQuotationAssignRecord.do",
+            demo: true
+        },
+
+        queryQuotationAssignRecordById: {
+            url: "queryQuotationAssignRecordById.do",
+            demo: true,
+            type: "query"
+        },
+
+        queryQuotationAssignRecordByOrderId: {
+            url: "queryQuotationAssignRecordByOrderId.do",
+            demo: true
         },
 
         // ==================== 预算员分配配置接口 ====================
