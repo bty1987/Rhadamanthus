@@ -413,7 +413,31 @@ public class QuotationAssignRequestPO implements Serializable {
 	 * @return 转换后的VO对象
 	 */
 	public QuotationAssignRequestVO ptv(QuotationAssignRequestVO vo) {
-		BeanUtils.copyProperties(this, vo);
+		// 复制基本属性，排除需要手动处理的关联对象字段
+		com.fanglin.utils.BeanUtil.copyProperties(this, vo);
+
+		// 手动处理关联对象（由于 PO 使用基本类型 ID）
+		// 公司对象
+		if (vo.getCompany() == null && this.company > 0) {
+			com.fanglin.system.vo.CompanyVO companyVO = new com.fanglin.system.vo.CompanyVO();
+			companyVO.setCid(this.company);
+			vo.setCompany(companyVO);
+		}
+
+		// 部门对象（可能为 NULL）
+		if (vo.getDepartment() == null && this.department != null) {
+			com.fanglin.communion.vo.DepartmentVO departmentVO = new com.fanglin.communion.vo.DepartmentVO();
+			departmentVO.setDid(this.department);
+			vo.setDepartment(departmentVO);
+		}
+
+		// 请求人用户对象（可能为 NULL）
+		if (vo.getRequestUser() == null && this.requestUid != null) {
+			com.fanglin.personel.vo.UserVO userVO = new com.fanglin.personel.vo.UserVO();
+			userVO.setUid(this.requestUid);
+			vo.setRequestUser(userVO);
+		}
+
 		return vo;
 	}
 
@@ -424,7 +448,22 @@ public class QuotationAssignRequestPO implements Serializable {
 	 * @return 转换后的PO对象
 	 */
 	public QuotationAssignRequestPO vtp(QuotationAssignRequestVO vo) {
-		BeanUtils.copyProperties(vo, this);
+		// 复制基本属性
+		com.fanglin.utils.BeanUtil.copyProperties(vo, this);
+
+		// 手动处理关联对象（从 VO 的关联对象中提取 ID）
+		if (vo.getCompany() != null) {
+			this.company = com.fanglin.system.service.impl.CompanyServiceImpl.decode(vo.getCompany().getCid());
+		}
+
+		if (vo.getDepartment() != null) {
+			this.department = vo.getDepartment().getDid();
+		}
+
+		if (vo.getRequestUser() != null) {
+			this.requestUid = vo.getRequestUser().getUid();
+		}
+
 		return this;
 	}
 }
