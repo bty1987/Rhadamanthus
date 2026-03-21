@@ -112,9 +112,13 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 			throw new FLException(0, "该公司下该用户的规则已存在");
 		}
 
+		// 创建 PO 对象
 		quotationAssignUserRulePO = new QuotationAssignUserRulePO();
-		BeanUtils.copyProperties(quotationAssignUserRuleVO, quotationAssignUserRulePO);
 
+		// 使用 BeanUtils 复制基本属性（排除关联对象）
+		BeanUtils.copyProperties(quotationAssignUserRuleVO, quotationAssignUserRulePO, "user", "company", "department");
+
+		// 手动设置关联对象（使用 ID 创建 PO 对象）
 		quotationAssignUserRulePO.setUser(new UserPO(uid));
 		quotationAssignUserRulePO.setCompany(new CompanyPO(company));
 
@@ -123,11 +127,17 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 			quotationAssignUserRulePO.setDepartment(new DepartmentPO(quotationAssignUserRuleVO.getDepartment().getDid()));
 		}
 
+		// 设置默认值
+		if (quotationAssignUserRulePO.getStatus() == 0) {
+			quotationAssignUserRulePO.setStatus(QuotationAssignUserRulePO.STATUS_AVAILABLE_INT);
+		}
+
 		// 设置创建时间和更新时间
 		Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
 		quotationAssignUserRulePO.setCreateTime(currentTime);
 		quotationAssignUserRulePO.setUpdateTime(currentTime);
 
+		// 保存到数据库
 		quotationAssignUserRuleDao.save(quotationAssignUserRulePO);
 
 		// 设置返回的ID
@@ -151,18 +161,24 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		int uid = quotationAssignUserRule.getUser().getUid();
 		int company = CompanyServiceImpl.decode(quotationAssignUserRule.getCompany().getCid());
 
-		QuotationAssignUserRulePO quotationAssignUserRulePO = quotationAssignUserRuleDao.getByUidAndCompany(uid, company);
-
-		if (quotationAssignUserRulePO != null && quotationAssignUserRulePO.getQaurid() != quotationAssignUserRule.getQaurid()) {
+		// 校验：用户+公司组合唯一性（排除当前记录）
+		QuotationAssignUserRulePO checkPO = quotationAssignUserRuleDao.getByUidAndCompany(uid, company);
+		if (checkPO != null && checkPO.getQaurid() != quotationAssignUserRule.getQaurid()) {
 			throw new FLException(0, "该公司下该用户的规则已存在");
 		}
 
-		quotationAssignUserRulePO = quotationAssignUserRuleDao.get(quotationAssignUserRule.getQaurid());
+		// 查询现有记录
+		QuotationAssignUserRulePO quotationAssignUserRulePO = quotationAssignUserRuleDao.get(quotationAssignUserRule.getQaurid());
 
 		if (quotationAssignUserRulePO == null) {
 			throw new FLException(0, "规则不存在");
 		}
 
+		// 使用 BeanUtils 复制基本属性（排除关联对象和只读字段）
+		BeanUtils.copyProperties(quotationAssignUserRule, quotationAssignUserRulePO,
+				"user", "company", "department", "qaurid", "createTime", "updateTime");
+
+		// 手动设置关联对象（使用 ID 创建 PO 对象）
 		quotationAssignUserRulePO.setUser(new UserPO(uid));
 		quotationAssignUserRulePO.setCompany(new CompanyPO(company));
 
@@ -170,10 +186,9 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		if (quotationAssignUserRule.getDepartment() != null) {
 			quotationAssignUserRulePO.setDepartment(new DepartmentPO(quotationAssignUserRule.getDepartment().getDid()));
 		} else {
+			// 如果部门对象为null，表示设置为"所有部门"
 			quotationAssignUserRulePO.setDepartment(null);
 		}
-
-		quotationAssignUserRulePO.setStatus(quotationAssignUserRule.getStatus());
 
 		// 设置更新时间
 		quotationAssignUserRulePO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
