@@ -111,10 +111,6 @@ jQuery(function($) {
 
             affirmSalesRefund(v);
 
-        },
-        show: function(v) {
-
-            return (v.isAffirm == constant.sales().refunds.STATUS_CHECK_INT);
         }
     }];
 
@@ -156,7 +152,7 @@ jQuery(function($) {
 
         var options = {
             "refunds.rid": v.rid,
-            "refunds.sales.customer.no": v.sales.customer.no,
+            "refunds.sales.customer.cid": v.sales.customer.cid,
         };
 
         com.post(api.sales.affirmSalesRefunds, options, function(res) {
