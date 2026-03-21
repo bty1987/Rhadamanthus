@@ -80,7 +80,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// ========== 业务逻辑开始 ==========
 
 		// 1. 查询装修单
-		DecorationPO decoration = decorationDao.queryByOrderId(orderId);
+		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
 			throw new FLException(0, "装修单不存在");
 		}
@@ -163,7 +163,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// ========== 业务逻辑开始 ==========
 
 		// 1. 查询装修单
-		DecorationPO decoration = decorationDao.queryByOrderId(orderId);
+		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
 			throw new FLException(0, "装修单不存在");
 		}
@@ -208,7 +208,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// ========== 业务逻辑开始 ==========
 
 		// 1. 查询装修单
-		DecorationPO decoration = decorationDao.queryByOrderId(orderId);
+		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
 			throw new FLException(0, "装修单不存在");
 		}
@@ -257,7 +257,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// ========== 业务逻辑开始 ==========
 
 		// 1. 查询装修单，获取预算员信息
-		DecorationPO decoration = decorationDao.queryByOrderId(orderId);
+		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
 			throw new FLException(0, "装修单不存在");
 		}
@@ -290,7 +290,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 						|| userRule.getSupportedType() == request.getDecorationType();
 				if (typeSupported) {
 					// 分配给当前预算员
-					DecorationPO pendingDecoration = decorationDao.queryByOrderId(request.getOrderId());
+					DecorationPO pendingDecoration = decorationDao.queryDecorationByOrderId(request.getOrderId());
 					if (pendingDecoration != null) {
 						assignToUser(request.getOrderId(), pendingDecoration, userRule, QuotationAssignRecordPO.ASSIGN_TYPE_REVERSE_AUTO_INT, null);
 						// 只分配一个任务，然后退出
