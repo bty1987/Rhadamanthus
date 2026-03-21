@@ -90,9 +90,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int autoQuotationAssign(String orderId) throws FLException {
+	public int autoQuotationAssign(QuotationAssignVO quotationAssignVO) throws FLException {
 
 		// ========== 参数校验 ==========
+		String orderId = quotationAssignVO.getOrderId();
 		if (orderId == null || orderId.trim().isEmpty()) {
 			throw new FLException(0, "装修单号不能为空");
 		}
@@ -166,18 +167,21 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int manualQuotationAssign(String orderId, int budgetUid, int assignUid) throws FLException {
+	public int manualQuotationAssign(QuotationAssignVO quotationAssignVO) throws FLException {
 
 		// ========== 参数校验 ==========
+		String orderId = quotationAssignVO.getOrderId();
 		if (orderId == null || orderId.trim().isEmpty()) {
 			throw new FLException(0, "装修单号不能为空");
 		}
 
-		if (budgetUid <= 0) {
+		Integer budgetUid = quotationAssignVO.getBudgetUid();
+		if (budgetUid == null || budgetUid <= 0) {
 			throw new FLException(0, "预算员ID不能为空");
 		}
 
-		if (assignUid <= 0) {
+		Integer assignUid = quotationAssignVO.getAssignUid();
+		if (assignUid == null || assignUid <= 0) {
 			throw new FLException(0, "分配人ID不能为空");
 		}
 
@@ -212,18 +216,21 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int reassignQuotationAssign(String orderId, int newBudgetUid, int assignUid) throws FLException {
+	public int reassignQuotationAssign(QuotationAssignVO quotationAssignVO) throws FLException {
 
 		// ========== 参数校验 ==========
+		String orderId = quotationAssignVO.getOrderId();
 		if (orderId == null || orderId.trim().isEmpty()) {
 			throw new FLException(0, "装修单号不能为空");
 		}
 
-		if (newBudgetUid <= 0) {
+		Integer newBudgetUid = quotationAssignVO.getNewBudgetUid();
+		if (newBudgetUid == null || newBudgetUid <= 0) {
 			throw new FLException(0, "新预算员ID不能为空");
 		}
 
-		if (assignUid <= 0) {
+		Integer assignUid = quotationAssignVO.getAssignUid();
+		if (assignUid == null || assignUid <= 0) {
 			throw new FLException(0, "分配人ID不能为空");
 		}
 
@@ -269,9 +276,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int finishQuotationAssign(String orderId) throws FLException {
+	public int finishQuotationAssign(QuotationAssignVO quotationAssignVO) throws FLException {
 
 		// ========== 参数校验 ==========
+		String orderId = quotationAssignVO.getOrderId();
 		if (orderId == null || orderId.trim().isEmpty()) {
 			throw new FLException(0, "装修单号不能为空");
 		}
