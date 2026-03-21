@@ -77,12 +77,12 @@ public class QuotationAssignAction extends BaseListAction {
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "autoAssignQuotation", results = {
+	@Action(value = "autoQuotationAssign", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
 			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String autoAssignQuotation() throws FLException {
-		quotationAssignService.autoAssignQuotation(orderId);
+	public String autoQuotationAssign() throws FLException {
+		quotationAssignService.autoQuotationAssign(orderId);
 		return SUCCESS;
 	}
 
@@ -92,12 +92,12 @@ public class QuotationAssignAction extends BaseListAction {
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "manualAssignQuotation", results = {
+	@Action(value = "manualQuotationAssign", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
 			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String manualAssignQuotation() throws FLException {
-		quotationAssignService.manualAssignQuotation(orderId, budgetUid, assignUid);
+	public String manualQuotationAssign() throws FLException {
+		quotationAssignService.manualQuotationAssign(orderId, budgetUid, assignUid);
 		return SUCCESS;
 	}
 
@@ -107,12 +107,12 @@ public class QuotationAssignAction extends BaseListAction {
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "reassignQuotation", results = {
+	@Action(value = "reassignQuotationAssign", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
 			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String reassignQuotation() throws FLException {
-		quotationAssignService.reassignQuotation(orderId, newBudgetUid, assignUid);
+	public String reassignQuotationAssign() throws FLException {
+		quotationAssignService.reassignQuotationAssign(orderId, newBudgetUid, assignUid);
 		return SUCCESS;
 	}
 
@@ -122,12 +122,12 @@ public class QuotationAssignAction extends BaseListAction {
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "finishQuotationForAssign", results = {
+	@Action(value = "finishQuotationAssign", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
 			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
-	public String finishQuotationForAssign() throws FLException {
-		quotationAssignService.finishQuotationForAssign(orderId);
+	public String finishQuotationAssign() throws FLException {
+		quotationAssignService.finishQuotationAssign(orderId);
 		return SUCCESS;
 	}
 
