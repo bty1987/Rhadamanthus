@@ -196,11 +196,14 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteQuotationAssignRequest(QuotationAssignRequestVO quotationAssignRequestVO) throws FLException {
-		QuotationAssignRequestPO quotationAssignRequestPO = quotationAssignRequestDao.get(quotationAssignRequestVO.getQarid());
-		if (quotationAssignRequestPO != null) {
-			quotationAssignRequestDao.delete(quotationAssignRequestPO);
-			return 1;
+
+		// 空值检查
+		if (quotationAssignRequestVO.getQarid() == null || quotationAssignRequestVO.getQarid() <= 0) {
+			throw new FLException(0, "请求ID不能为空");
 		}
+
+		quotationAssignRequestDao.deleteById(quotationAssignRequestVO.getQarid());
+
 		return 0;
 	}
 }

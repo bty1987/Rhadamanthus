@@ -58,8 +58,10 @@ public class QuotationAssignRecordServiceImpl implements QuotationAssignRecordSe
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public QuotationAssignRecordVO queryQuotationAssignRecordById(QuotationAssignRecordVO quotationAssignRecordVO) throws FLException {
+
 		QuotationAssignRecordPO quotationAssignRecordPO = quotationAssignRecordDao.get(quotationAssignRecordVO.getQasrid());
-		return quotationAssignRecordPO.ptv(new QuotationAssignRecordVO());
+
+		return quotationAssignRecordPO == null ? null : quotationAssignRecordPO.ptv(new QuotationAssignRecordVO());
 	}
 
 	@Override

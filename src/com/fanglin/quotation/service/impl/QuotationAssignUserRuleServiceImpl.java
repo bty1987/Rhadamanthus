@@ -210,14 +210,25 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationAssignUserRuleForStatus(QuotationAssignUserRuleVO quotationAssignUserRuleVO) throws FLException {
 
+		// 空值检查
+		if (quotationAssignUserRuleVO.getQaurid() == null || quotationAssignUserRuleVO.getQaurid() <= 0) {
+			throw new FLException(0, "规则ID不能为空");
+		}
+
+		// 查询现有记录
 		QuotationAssignUserRulePO quotationAssignUserRulePO = quotationAssignUserRuleDao.get(quotationAssignUserRuleVO.getQaurid());
 
 		if (quotationAssignUserRulePO == null) {
 			throw new FLException(0, "规则不存在");
 		}
 
+		// 更新状态
 		quotationAssignUserRulePO.setStatus(quotationAssignUserRuleVO.getStatus());
 
+		// 设置更新时间
+		quotationAssignUserRulePO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		// 保存更新
 		quotationAssignUserRuleDao.update(quotationAssignUserRulePO);
 
 		return 0;
@@ -227,6 +238,11 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Transactional(rollbackFor = Exception.class)
 	public int updateLastFinishTime(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
 
+		// 空值检查
+		if (quotationAssignUserRule.getQaurid() == null || quotationAssignUserRule.getQaurid() <= 0) {
+			throw new FLException(0, "规则ID不能为空");
+		}
+
 		Timestamp lastFinishTime;
 
 		if (quotationAssignUserRule.getLastFinishTime() == null || quotationAssignUserRule.getLastFinishTime().isEmpty()) {
@@ -235,6 +251,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 			lastFinishTime = Timestamp.valueOf(quotationAssignUserRule.getLastFinishTime());
 		}
 
+		// 查询现有记录
 		QuotationAssignUserRulePO quotationAssignUserRulePO = quotationAssignUserRuleDao.get(quotationAssignUserRule.getQaurid());
 
 		if (quotationAssignUserRulePO == null) {
@@ -245,6 +262,10 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 		quotationAssignUserRulePO.setLastFinishTime(lastFinishTime);
 
+		// 设置更新时间
+		quotationAssignUserRulePO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		// 保存更新
 		quotationAssignUserRuleDao.update(quotationAssignUserRulePO);
 
 		return 0;
@@ -253,6 +274,11 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) throws FLException {
+
+		// 空值检查
+		if (quotationAssignUserRule.getQaurid() == null || quotationAssignUserRule.getQaurid() <= 0) {
+			throw new FLException(0, "规则ID不能为空");
+		}
 
 		quotationAssignUserRuleDao.deleteById(quotationAssignUserRule.getQaurid());
 

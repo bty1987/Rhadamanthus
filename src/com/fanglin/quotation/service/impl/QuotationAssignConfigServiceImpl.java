@@ -116,23 +116,51 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationAssignConfig(QuotationAssignConfigVO quotationAssignConfigVO) throws FLException {
 
+		// 空值检查
+		if (quotationAssignConfigVO.getQacid() == null || quotationAssignConfigVO.getQacid() <= 0) {
+			throw new FLException(0, "配置ID不能为空");
+		}
+		if (quotationAssignConfigVO.getCompany() == null) {
+			throw new FLException(0, "公司信息不能为空");
+		}
+
 		int company = CompanyServiceImpl.decode(quotationAssignConfigVO.getCompany().getCid());
 		Integer department = quotationAssignConfigVO.getDepartment() != null ? quotationAssignConfigVO.getDepartment().getDid() : null;
-
 		Long qacid = quotationAssignConfigVO.getQacid();
 
+		// 查询现有记录
+		QuotationAssignConfigPO quotationAssignConfigPO = quotationAssignConfigDao.get(qacid);
+
+		if (quotationAssignConfigPO == null) {
+			throw new FLException(0, "配置不存在");
+		}
+
+		// 检查公司+部门组合唯一性（排除当前记录）
 		QuotationAssignConfigPO existPO = quotationAssignConfigDao.queryQuotationAssignConfig(company, department);
 
 		if (existPO != null && existPO.getQacid() != qacid.longValue()) {
 			throw new FLException(0, "该公司和部门的配置已存在");
 		}
 
-		QuotationAssignConfigPO quotationAssignConfigPO = new QuotationAssignConfigPO();
+		// 使用 BeanUtil 复制基本属性（排除关联对象和只读字段）
+		BeanUtil.copyProperties(quotationAssignConfigVO, quotationAssignConfigPO,
+				"company", "department", "qacid", "createTime");
 
-		BeanUtil.copyProperties(quotationAssignConfigVO, quotationAssignConfigPO, "company", "department");
+		// 手动设置关联对象
+		quotationAssignConfigPO.setCompany(new CompanyPO(company));
 
+		// Department可能是NULL（该公司所有部门）
+		if (quotationAssignConfigVO.getDepartment() != null) {
+			quotationAssignConfigPO.setDepartment(new com.fanglin.communion.po.DepartmentPO(department));
+		} else {
+			// 如果部门对象为null，表示设置为"所有部门"
+			quotationAssignConfigPO.setDepartment(null);
+		}
+
+		// 设置更新时间
 		quotationAssignConfigPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
+		// 更新数据库
 		quotationAssignConfigDao.update(quotationAssignConfigPO);
 
 		return 1;
@@ -142,16 +170,26 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationAssignConfigForStatus(QuotationAssignConfigVO quotationAssignConfigVO) throws FLException {
 
+		// 空值检查
+		if (quotationAssignConfigVO.getQacid() == null || quotationAssignConfigVO.getQacid() <= 0) {
+			throw new FLException(0, "配置ID不能为空");
+		}
+
+		// 查询现有记录
 		QuotationAssignConfigPO quotationAssignConfigPO = quotationAssignConfigDao.get(quotationAssignConfigVO.getQacid());
 
-		if (quotationAssignConfigPO == null) throw new FLException(0, "配置不存在");
+		if (quotationAssignConfigPO == null) {
+			throw new FLException(0, "配置不存在");
+		}
 
+		// 更新状态
 		quotationAssignConfigPO.setEnabled(quotationAssignConfigVO.getEnabled());
 
 		// 设置更新时间
 		quotationAssignConfigPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
-		quotationAssignConfigDao.save(quotationAssignConfigPO);
+		// 保存更新
+		quotationAssignConfigDao.update(quotationAssignConfigPO);
 
 		return 0;
 	}
@@ -160,25 +198,40 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationAssignConfigForAssign(QuotationAssignConfigVO quotationAssignConfigVO) throws FLException {
 
+		// 空值检查
+		if (quotationAssignConfigVO.getQacid() == null || quotationAssignConfigVO.getQacid() <= 0) {
+			throw new FLException(0, "配置ID不能为空");
+		}
+
+		// 查询现有记录
 		QuotationAssignConfigPO quotationAssignConfigPO = quotationAssignConfigDao.get(quotationAssignConfigVO.getQacid());
 
-		if (quotationAssignConfigPO == null) throw new FLException(0, "配置不存在");
+		if (quotationAssignConfigPO == null) {
+			throw new FLException(0, "配置不存在");
+		}
 
+		// 更新分配方式
 		quotationAssignConfigPO.setAutoAssign(quotationAssignConfigVO.getAutoAssign());
 
 		// 设置更新时间
 		quotationAssignConfigPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
-		quotationAssignConfigDao.save(quotationAssignConfigPO);
+		// 保存更新
+		quotationAssignConfigDao.update(quotationAssignConfigPO);
 
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteQuotationAssignConfig(QuotationAssignConfigVO config) throws FLException {
+	public int deleteQuotationAssignConfig(QuotationAssignConfigVO quotationAssignConfigVO) throws FLException {
 
-		long qacid = config.getQacid();
+		// 空值检查
+		if (quotationAssignConfigVO.getQacid() == null || quotationAssignConfigVO.getQacid() <= 0) {
+			throw new FLException(0, "配置ID不能为空");
+		}
+
+		long qacid = quotationAssignConfigVO.getQacid();
 
 		quotationAssignConfigDao.deleteById(qacid);
 
