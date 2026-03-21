@@ -57,34 +57,22 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	@Override
 	public QuotationAssignRequestPO queryQuotationAssignRequestForPending(String orderId) {
-		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class)
-				.add(Restrictions.eq("orderId", orderId))
-				.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT))
-				.uniqueResult();
+		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT)).uniqueResult();
 	}
 
 	@Override
 	public QuotationAssignRequestPO queryQuotationAssignRequestForAssigned(String orderId) {
-		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class)
-				.add(Restrictions.eq("orderId", orderId))
-				.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT))
-				.uniqueResult();
+		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(int company, Integer department, short decorationType) {
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
-				.add(Restrictions.eq("company", company))
-				.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT))
-				.add(Restrictions.eq("decorationType", decorationType));
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT)).add(Restrictions.eq("decorationType", decorationType));
 
 		// 如果指定了部门，则匹配该部门或部门为NULL的请求
 		if (department != null) {
-			criteria.add(Restrictions.or(
-				Restrictions.eq("department", department),
-				Restrictions.isNull("department")
-			));
+			criteria.add(Restrictions.or(Restrictions.eq("department", department), Restrictions.isNull("department")));
 		}
 
 		// 按优先级升序、请求时间升序排序
@@ -96,22 +84,14 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	@Override
 	public int countQuotationAssignRequest(int uid) {
-		// 使用子查询：找出与该用户规则匹配的已分配请求
-		// 子查询逻辑：查询 quotationassignuserrule 表，找出匹配的公司和部门
-		org.hibernate.Criteria userRuleCriteria = createCriteria(com.fanglin.quotation.po.QuotationAssignUserRulePO.class)
-				.add(Restrictions.eq("user.uid", uid));
 
 		// 使用 DetachedCriteria 创建子查询
-		org.hibernate.criterion.DetachedCriteria userRuleSubQuery = org.hibernate.criterion.DetachedCriteria.forClass(com.fanglin.quotation.po.QuotationAssignUserRulePO.class)
-				.add(Restrictions.eq("user.uid", uid))
-				.setProjection(Projections.property("company.cid"));
+		org.hibernate.criterion.DetachedCriteria userRuleSubQuery = org.hibernate.criterion.DetachedCriteria.forClass(com.fanglin.quotation.po.QuotationAssignUserRulePO.class).add(Restrictions.eq("user.uid", uid)).setProjection(Projections.property("company.cid"));
 
 		// 主查询：统计已分配的请求数量
 		// 条件：company IN (子查询的公司列表) AND status = 已分配
 		// 并且：department 匹配规则（department IS NULL OR request.department = rule.department）
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
-				.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT))
-				.add(org.hibernate.criterion.Property.forName("company").in(userRuleSubQuery));
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).add(org.hibernate.criterion.Property.forName("company").in(userRuleSubQuery));
 
 		// 添加部门匹配条件：请求的部门为NULL，或者请求的部门在用户规则的部门中
 		// 注意：这里需要额外的逻辑来处理部门匹配，但由于 Criteria API 限制，
