@@ -68,6 +68,26 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	@Autowired
 	private QuotationAssignRecordDao quotationAssignRecordDao;
 
+	/**
+	 * 安全获取报价员ID
+	 *
+	 * @param decoration 装修单对象
+	 * @return 报价员ID，如果不存在返回null
+	 */
+	private Integer getQuoteterUid(DecorationPO decoration) {
+		return decoration.getQuoteter() != null ? decoration.getQuoteter().getUid() : null;
+	}
+
+	/**
+	 * 安全获取设计部门ID
+	 *
+	 * @param decoration 装修单对象
+	 * @return 设计部门ID，如果不存在返回null
+	 */
+	private Integer getDesignDeptId(DecorationPO decoration) {
+		return decoration.getDesignDept() != null ? decoration.getDesignDept().getDid() : null;
+	}
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int autoQuotationAssign(String orderId) throws FLException {
@@ -86,14 +106,15 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 检查是否已分配报价员
-		if (decoration.getQuid() != null && decoration.getQuid() > 0) {
+		Integer quoterUid = getQuoteterUid(decoration);
+		if (quoterUid != null && quoterUid > 0) {
 			throw new FLException(0, "该装修单已分配报价员，无需重复分配");
 		}
 
 		// 3. 获取装修单类型和公司部门信息
 		Short decorationType = decoration.getType();
 		Integer company = decoration.getCompany();
-		Integer department = decoration.getDepartment();
+		Integer department = getDesignDeptId(decoration);
 
 		if (decorationType == null) {
 			throw new FLException(0, "装修单类型不能为空");
@@ -179,8 +200,9 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(0, "预算员公司与装修单公司不匹配");
 		}
 
-		if (userRule.getDepartment() != null && decoration.getDepartment() != null
-				&& !userRule.getDepartment().equals(decoration.getDepartment())) {
+		Integer designDeptId = getDesignDeptId(decoration);
+		if (userRule.getDepartment() != null && designDeptId != null
+				&& !userRule.getDepartment().equals(designDeptId)) {
 			throw new FLException(0, "预算员部门与装修单部门不匹配");
 		}
 
@@ -214,11 +236,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 检查是否已分配报价员
-		if (decoration.getQuid() == null || decoration.getQuid() == 0) {
+		Integer oldBudgetUid = getQuoteterUid(decoration);
+		if (oldBudgetUid == null || oldBudgetUid == 0) {
 			throw new FLException(0, "该装修单尚未分配报价员，请使用手动分配功能");
 		}
-
-		int oldBudgetUid = decoration.getQuid();
 
 		// 3. 如果新旧预算员相同，无需重新分配
 		if (oldBudgetUid == newBudgetUid) {
@@ -236,8 +257,9 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(0, "新预算员公司与装修单公司不匹配");
 		}
 
-		if (userRule.getDepartment() != null && decoration.getDepartment() != null
-				&& !userRule.getDepartment().equals(decoration.getDepartment())) {
+		Integer designDeptId = getDesignDeptId(decoration);
+		if (userRule.getDepartment() != null && designDeptId != null
+				&& !userRule.getDepartment().equals(designDeptId)) {
 			throw new FLException(0, "新预算员部门与装修单部门不匹配");
 		}
 
@@ -262,11 +284,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(0, "装修单不存在");
 		}
 
-		if (decoration.getQuid() == null || decoration.getQuid() == 0) {
+		Integer budgetUid = getQuoteterUid(decoration);
+		if (budgetUid == null || budgetUid == 0) {
 			throw new FLException(0, "该装修单未分配报价员");
 		}
-
-		int budgetUid = decoration.getQuid();
 
 		// 2. 更新预算员的最后完成时间
 		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getByUidAndCompany(budgetUid, decoration.getCompany());
@@ -276,7 +297,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		// 3. 检查待分配队列
 		Integer company = decoration.getCompany();
-		Integer department = decoration.getDepartment();
+		Integer department = getDesignDeptId(decoration);
 		Short decorationType = decoration.getType();
 
 		// 查询待分配队列中类型匹配且最优先的任务
@@ -388,7 +409,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			QuotationAssignUserRulePO userRule, short assignType, Integer assignUid) throws FLException {
 
 		// 1. 更新装修单报价员
-		decoration.setQuid(userRule.getUid());
+		decoration.setQuoteter(userRule);
 		decorationDao.update(decoration);
 
 		// 2. 更新或创建分配请求（status=2 已分配）
@@ -401,7 +422,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			request = new QuotationAssignRequestPO();
 			request.setOrderId(orderId);
 			request.setCompany(decoration.getCompany());
-			request.setDepartment(decoration.getDepartment());
+			request.setDepartment(getDesignDeptId(decoration));
 			request.setDecorationType(decoration.getType());
 			request.setPriority(QuotationAssignRequestPO.PRIORITY_NORMAL_INT);
 			request.setRequestTime(new Timestamp(System.currentTimeMillis()));
