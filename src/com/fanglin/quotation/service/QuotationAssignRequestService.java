@@ -43,6 +43,24 @@ public interface QuotationAssignRequestService {
 	QuotationAssignRequestVO queryQuotationAssignRequestById(QuotationAssignRequestVO quotationAssignRequestVO) throws FLException;
 
 	/**
+	 * 根据装修单号查询待分配请求
+	 * 
+	 * @param orderId 装修单号
+	 * @return 待分配请求VO
+	 */
+	QuotationAssignRequestVO queryQuotationAssignRequestForPending(String orderId) throws FLException;
+
+	/**
+	 * 查询待分配队列（用于自动分配）
+	 * 
+	 * @param company 公司ID
+	 * @param department 部门ID
+	 * @param decorationType 装修类型
+	 * @return 待分配请求列表
+	 */
+	java.util.List<QuotationAssignRequestVO> queryQuotationAssignRequestForQueue(int company, Integer department, short decorationType) throws FLException;
+
+	/**
 	 * 创建分配请求
 	 * 
 	 * @param quotationAssignRequestVO 分配请求VO
@@ -66,21 +84,4 @@ public interface QuotationAssignRequestService {
 	 */
 	int deleteQuotationAssignRequest(QuotationAssignRequestVO quotationAssignRequestVO) throws FLException;
 
-	/**
-	 * 根据装修单号查询待分配请求
-	 * 
-	 * @param orderId 装修单号
-	 * @return 待分配请求VO
-	 */
-	QuotationAssignRequestVO queryPendingRequestByOrderId(String orderId) throws FLException;
-
-	/**
-	 * 查询待分配队列（用于自动分配）
-	 * 
-	 * @param company 公司ID
-	 * @param department 部门ID
-	 * @param decorationType 装修类型
-	 * @return 待分配请求列表
-	 */
-	java.util.List<QuotationAssignRequestVO> queryPendingQueue(int company, Integer department, short decorationType) throws FLException;
 }

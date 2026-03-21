@@ -2,15 +2,13 @@ package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
 
-import org.apache.struts2.json.annotations.JSON;
-
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.CompanyVO;
 
 /**
  * 预算员规则表 VO
- *
+ * 
  * @author Claude AI
  * @date 2026-03-20
  */
@@ -77,7 +75,7 @@ public class QuotationAssignUserRuleVO implements Serializable {
 
 	/**
 	 * 带关联对象的构造函数
-	 *
+	 * 
 	 * @param user 预算员用户对象
 	 * @param company 公司对象
 	 * @param department 部门对象

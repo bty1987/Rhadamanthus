@@ -25,16 +25,6 @@ import com.fanglin.quotation.service.QuotationAssignRequestService;
 import com.fanglin.quotation.vo.QuotationAssignRequestVO;
 import com.fanglin.utils.Paging;
 
-/**
- * 装修单预算分配请求表 Service 实现类
- *
- * <p>
- * 职责：实现分配请求的业务逻辑处理
- * </p>
- *
- * @author Claude AI
- * @version 1.0
- */
 @Service("quotationAssignRequestService")
 public class QuotationAssignRequestServiceImpl implements QuotationAssignRequestService {
 
@@ -60,6 +50,26 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	public QuotationAssignRequestVO queryQuotationAssignRequestById(QuotationAssignRequestVO quotationAssignRequestVO) throws FLException {
 		QuotationAssignRequestPO quotationAssignRequestPO = quotationAssignRequestDao.get(quotationAssignRequestVO.getQarid());
 		return quotationAssignRequestPO.ptv(new QuotationAssignRequestVO());
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public QuotationAssignRequestVO queryQuotationAssignRequestForPending(String orderId) throws FLException {
+		QuotationAssignRequestPO quotationAssignRequestPO = quotationAssignRequestDao.queryQuotationAssignRequestForPending(orderId);
+		return quotationAssignRequestPO != null ? quotationAssignRequestPO.ptv(new QuotationAssignRequestVO()) : null;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public List<QuotationAssignRequestVO> queryQuotationAssignRequestForQueue(int company, Integer department, short decorationType) throws FLException {
+		List<QuotationAssignRequestPO> quotationAssignRequestPOs = quotationAssignRequestDao.queryQuotationAssignRequestForQueue(company, department, decorationType);
+		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
+
+		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
+			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(new QuotationAssignRequestVO()));
+		}
+
+		return quotationAssignRequestVOs;
 	}
 
 	@Override
@@ -92,25 +102,5 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 			return 1;
 		}
 		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public QuotationAssignRequestVO queryPendingRequestByOrderId(String orderId) throws FLException {
-		QuotationAssignRequestPO quotationAssignRequestPO = quotationAssignRequestDao.queryPendingRequestByOrderId(orderId);
-		return quotationAssignRequestPO != null ? quotationAssignRequestPO.ptv(new QuotationAssignRequestVO()) : null;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public List<QuotationAssignRequestVO> queryPendingQueue(int company, Integer department, short decorationType) throws FLException {
-		List<QuotationAssignRequestPO> quotationAssignRequestPOs = quotationAssignRequestDao.queryPendingQueue(company, department, decorationType);
-		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
-
-		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
-			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(new QuotationAssignRequestVO()));
-		}
-
-		return quotationAssignRequestVOs;
 	}
 }

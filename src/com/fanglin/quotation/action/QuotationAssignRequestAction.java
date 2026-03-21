@@ -24,11 +24,11 @@ import com.fanglin.quotation.vo.QuotationAssignRequestVO;
 
 /**
  * 装修单预算分配请求表 Action 控制器
- *
+ * 
  * <p>
  * 职责：处理分配请求管理的 HTTP 请求
  * </p>
- *
+ * 
  * <p>
  * 主要功能：
  * </p>
@@ -38,7 +38,7 @@ import com.fanglin.quotation.vo.QuotationAssignRequestVO;
  * <li>新增、编辑、删除分配请求</li>
  * <li>查询待分配队列</li>
  * </ul>
- *
+ * 
  * @author Claude AI
  * @version 1.0
  */
@@ -59,14 +59,11 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	/**
 	 * 分页查询分配请求列表
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "pageQuotationAssignRequest", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
-			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-		}, params = { "contentType", "text/html" })
+	@Action(value = "pageQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignRequest() throws FLException {
 
 		quotationAssignRequestService.pageQuotationAssignRequest(getPaging(), getFilters(), queryCompany());
@@ -76,14 +73,11 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	/**
 	 * 查询分配请求详情（用于编辑回显）
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "queryQuotationAssignRequestById", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
-			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-		}, params = { "contentType", "text/html" })
+	@Action(value = "queryQuotationAssignRequestById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignRequestById() throws FLException {
 
 		quotationAssignRequest = quotationAssignRequestService.queryQuotationAssignRequestById(quotationAssignRequest);
@@ -93,14 +87,11 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	/**
 	 * 新增分配请求
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "createQuotationAssignRequest", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
-			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-		}, params = { "contentType", "text/html" })
+	@Action(value = "createQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createQuotationAssignRequest() throws FLException {
 
 		quotationAssignRequestService.createQuotationAssignRequest(quotationAssignRequest);
@@ -110,14 +101,11 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	/**
 	 * 更新分配请求
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "updateQuotationAssignRequest", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
-			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-		}, params = { "contentType", "text/html" })
+	@Action(value = "updateQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationAssignRequest() throws FLException {
 
 		quotationAssignRequestService.updateQuotationAssignRequest(quotationAssignRequest);
@@ -127,14 +115,11 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	/**
 	 * 删除分配请求
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "deleteQuotationAssignRequest", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
-			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-		}, params = { "contentType", "text/html" })
+	@Action(value = "deleteQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationAssignRequest() throws FLException {
 
 		quotationAssignRequestService.deleteQuotationAssignRequest(quotationAssignRequest);
