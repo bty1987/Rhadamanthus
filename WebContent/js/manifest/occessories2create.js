@@ -268,14 +268,22 @@ jQuery(function() {
         // 清空费用列表
         com.focusPage('#chargeTableBody').html('');
 
-        // 从 aoodsCharge 加载费用模板，获取当前项的 aid
-        var $item = com.focusPage('.list-group-item').eq(itemIndex);
-        var aid = $item.attr('data-aid');
-        if (aid) {
-            loadAoodsChargeTemplate(aid);
+        // 加载已保存的费用（优先使用缓存）
+        if (occessories.chargesCache[itemIndex] && occessories.chargesCache[itemIndex].length > 0) {
+            // 从缓存加载（用户上次填写的数量）
+            $.each(occessories.chargesCache[itemIndex], function(i, charge) {
+                addChargeRow(charge.name, charge.price, charge.num);
+            });
         } else {
-            // 如果没有 aid，显示提示
-            com.focusPage('#chargeTableBody').html('<tr><td colspan="2" class="text-center">该外辅项未关联辅材，无法加载费用模板</td></tr>');
+            // 从 aoodsCharge 加载费用模板，获取当前项的 aid
+            var $item = com.focusPage('.list-group-item').eq(itemIndex);
+            var aid = $item.attr('data-aid');
+            if (aid) {
+                loadAoodsChargeTemplate(aid);
+            } else {
+                // 如果没有 aid，显示提示
+                com.focusPage('#chargeTableBody').html('<tr><td colspan="2" class="text-center">该外辅项未关联辅材，无法加载费用模板</td></tr>');
+            }
         }
 
         // 显示弹窗
