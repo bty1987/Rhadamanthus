@@ -12,7 +12,9 @@ import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
+import com.fanglin.data.material.vo.AoodsVO;
 import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.material.vo.NoodsVO;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.inventory.dao.OccessoriesDao;
 import com.fanglin.inventory.dao.OccessoriesItemDao;
@@ -44,9 +46,12 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 
 		for (OccessoriesItemPO occessoriesItemPO : occessoriesItemPOs) {
 
-			occessoriesItemVO = new OccessoriesItemVO(new GoodsVO(new AccessoriesTypeVO(new WorkTypeVO())));
+			occessoriesItemVO = new OccessoriesItemVO(
+				new GoodsVO(new AccessoriesTypeVO(new WorkTypeVO())),
+				new AoodsVO()
+			);
 
-			BeanUtil.copyProperties(occessoriesItemPO, occessoriesItemVO, Arrays.asList("goods"));
+			BeanUtil.copyProperties(occessoriesItemPO, occessoriesItemVO, Arrays.asList("goods", "aoods"));
 			BeanUtil.copyProperties(occessoriesItemPO.getGoods(), occessoriesItemVO.getGoods(), Arrays.asList("accessoriesType"));
 
 			if (occessoriesItemPO.getGoods().getAccessoriesType() != null) {
@@ -56,6 +61,11 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 				if (occessoriesItemPO.getGoods().getAccessoriesType().getWorkType() != null) {
 					BeanUtil.copyProperties(occessoriesItemPO.getGoods().getAccessoriesType().getWorkType(), occessoriesItemVO.getGoods().getAccessoriesType().getWorkType());
 				}
+			}
+
+			// 处理 aoods 数据
+			if (occessoriesItemPO.getAoods() != null && ocessoriesItemVO.getAoods() != null) {
+				occessoriesItemPO.getAoods().ptv(occessoriesItemVO.getAoods());
 			}
 
 			occessoriesItemVOs.add(occessoriesItemVO);
