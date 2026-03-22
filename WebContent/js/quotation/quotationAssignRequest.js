@@ -51,7 +51,7 @@ $(function() {
     );
 
     // 查询条件
-    searcher.condition(["assign-request-company", "assign-request-status", "assign-request-orderId"]);
+    searcher.condition(["quotation-assign-request-company", "quotation-assign-request-status", "quotation-assign-request-orderId"]);
 
     // 顶部按钮
     searcher.button(function() {
@@ -67,7 +67,7 @@ $(function() {
         var $finishAndAssignBtn = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'finishAndAssignBtn').css('margin', '0px 3px');
 
         $('<i></i>').addClass('icon-ok-circle bigger-110').appendTo($finishAndAssignBtn);
-        $('<span></span>').text('完成并分配').appendTo($finishAndAssignBtn);
+        $('<span></span>').text('交付').appendTo($finishAndAssignBtn);
 
         config.btns.finishAndAssignBtn = $finishAndAssignBtn; // 缓存按钮引用
 
@@ -162,7 +162,7 @@ $(function() {
 
     // 行按钮
     var linebtns = [{
-        name: "申请自动分配",
+        name: "自动分配",
         clazz: "btn-info",
         handle: function(v) {
 
@@ -170,7 +170,7 @@ $(function() {
             return false;
         },
         show: function(v) {
-            // 仅待分配状态可以申请自动分配
+            // 仅待分配状态可以自动分配
             return v.status == 1;
         }
     }, {
@@ -476,10 +476,10 @@ $(function() {
 
     // ==================== 分配功能 ====================
 
-    // 申请自动分配
+    // 自动分配
     function autoAssign(row) {
 
-        com.showConfirm('确认申请自动分配该装修单吗？系统将自动查找可用预算员进行分配。', function() {
+        com.showConfirm('确认自动分配该装修单吗？系统将自动查找可用预算员进行分配。', function() {
 
             com.post(api.quotation.autoQuotationAssign, {
                 "quotationAssign.orderId": row.orderId

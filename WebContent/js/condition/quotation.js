@@ -1127,8 +1127,6 @@ Condition.addupRule("quotation", {
         submitConfig: {
             name: "company",
             op: "eq",
-            alone: true,
-            validate: null
         },
         dataSource: {
             url: api.system.queryCompany,
@@ -1146,8 +1144,6 @@ Condition.addupRule("quotation", {
         submitConfig: {
             name: "enabled",
             op: "eq",
-            alone: true,
-            validate: null
         },
         dataSource: {
             url: null,
@@ -1174,8 +1170,6 @@ Condition.addupRule("quotation", {
         submitConfig: {
             name: "autoAssign",
             op: "eq",
-            alone: true,
-            validate: null
         },
         dataSource: {
             url: null,
@@ -1204,8 +1198,6 @@ Condition.addupRule("quotation", {
         submitConfig: {
             name: "status",
             op: "eq",
-            alone: true,
-            validate: null
         },
         dataSource: {
             url: null,
@@ -1248,8 +1240,6 @@ Condition.addupRule("quotation", {
         submitConfig: {
             name: "company",
             op: "eq",
-            alone: true,
-            validate: null
         },
         dataSource: {
             url: api.system.queryCompany,
@@ -1267,8 +1257,6 @@ Condition.addupRule("quotation", {
         submitConfig: {
             name: "enabled",
             op: "eq",
-            alone: true,
-            validate: null
         },
         dataSource: {
             url: null,
@@ -1288,8 +1276,6 @@ Condition.addupRule("quotation", {
         submitConfig: {
             name: "company",
             op: "eq",
-            alone: true,
-            validate: null
         },
         dataSource: {
             url: api.system.queryCompany,
@@ -1307,8 +1293,6 @@ Condition.addupRule("quotation", {
         submitConfig: {
             name: "status",
             op: "eq",
-            alone: true,
-            validate: null
         },
         dataSource: {
             url: null,
@@ -1339,8 +1323,6 @@ Condition.addupRule("quotation", {
         submitConfig: {
             name: "company",
             op: "eq",
-            alone: true,
-            validate: null
         },
         dataSource: {
             url: api.system.queryCompany,
@@ -1358,8 +1340,6 @@ Condition.addupRule("quotation", {
         submitConfig: {
             name: "status",
             op: "eq",
-            alone: true,
-            validate: null
         },
         dataSource: {
             url: null,
@@ -1399,8 +1379,6 @@ Condition.addupRule("quotation", {
         submitConfig: {
             name: "company",
             op: "eq",
-            alone: true,
-            validate: null
         },
         dataSource: {
             url: api.system.queryCompany,
