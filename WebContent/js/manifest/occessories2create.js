@@ -103,7 +103,7 @@ jQuery(function() {
         var $charge = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button')
             .append($('<a></a>').addClass('btn btn-info btn-minier').html('费用'))
             .click(function() {
-                openChargeModal(itemIndex);
+                openChargeModal(aid);
             });
 
         var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button')
@@ -134,9 +134,9 @@ jQuery(function() {
         com.cleanItems(occessories.leftitems);
 
         $delete.click(function() {
-            var index = $(this).parents('.list-group-item').attr('data-index');
-            // 删除费用缓存
-            delete occessories.chargesCache[index];
+            var aid = $(this).parents('.list-group-item').attr('data-aid');
+            // 删除费用缓存（使用 aid 作为 key）
+            delete occessories.chargesCache[aid];
             // 重新索引
             reindexItems();
             $(this).parents('.list-group-item').remove();
@@ -220,16 +220,16 @@ jQuery(function() {
         $list && $list.length && $.each($list, function(i, v) {
 
             var $v = $(v);
-            var itemIndex = $v.attr('data-index');
+            var aid = $v.attr('data-aid');
 
             options["occessoriesItems[" + i + "].goods.gid"] = $v.attr('data-gid');
-            options["occessoriesItems[" + i + "].aoods.aid"] = $v.attr('data-aid');
+            options["occessoriesItems[" + i + "].aoods.aid"] = aid;
             options["occessoriesItems[" + i + "].num"] = $v.attr('data-num');
             options["occessoriesItems[" + i + "].rbalance"] = $v.attr('data-balance');
 
-            // 添加费用数据
-            if (occessories.chargesCache[itemIndex] && occessories.chargesCache[itemIndex].length > 0) {
-                $.each(occessories.chargesCache[itemIndex], function(j, charge) {
+            // 添加费用数据（使用 aid 作为缓存 key）
+            if (occessories.chargesCache[aid] && occessories.chargesCache[aid].length > 0) {
+                $.each(occessories.chargesCache[aid], function(j, charge) {
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].name"] = charge.name;
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].price"] = charge.price;
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].num"] = charge.num;
@@ -262,22 +262,21 @@ jQuery(function() {
     /**
      * 打开费用弹窗
      */
-    function openChargeModal(itemIndex) {
-        occessories.currentItemIndex = itemIndex;
+    function openChargeModal(aid) {
+        // 保存当前 aid
+        occessories.currentItemIndex = aid;
 
         // 清空费用列表
         com.focusPage('#chargeTableBody').html('');
 
         // 加载已保存的费用（优先使用缓存）
-        if (occessories.chargesCache[itemIndex] && occessories.chargesCache[itemIndex].length > 0) {
+        if (occessories.chargesCache[aid] && occessories.chargesCache[aid].length > 0) {
             // 从缓存加载（用户上次填写的数量）
-            $.each(occessories.chargesCache[itemIndex], function(i, charge) {
+            $.each(occessories.chargesCache[aid], function(i, charge) {
                 addChargeRow(charge.name, charge.price, charge.num);
             });
         } else {
-            // 从 aoodsCharge 加载费用模板，获取当前项的 aid
-            var $item = com.focusPage('.list-group-item').eq(itemIndex);
-            var aid = $item.attr('data-aid');
+            // 从 aoodsCharge 加载费用模板
             if (aid) {
                 loadAoodsChargeTemplate(aid);
             } else {
@@ -352,7 +351,7 @@ jQuery(function() {
             }
         });
 
-        // 保存到缓存
+        // 保存到缓存（使用 aid 作为 key）
         occessories.chargesCache[occessories.currentItemIndex] = charges;
 
         // 关闭弹窗
