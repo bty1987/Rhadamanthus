@@ -1,0 +1,187 @@
+package com.fanglin.inventory.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.inventory.dao.OccessoriesChargeDao;
+import com.fanglin.inventory.dao.OccessoriesDao;
+import com.fanglin.inventory.dao.OccessoriesItemDao;
+import com.fanglin.inventory.po.OccessoriesChargePO;
+import com.fanglin.inventory.po.OccessoriesItemPO;
+import com.fanglin.inventory.po.OccessoriesPO;
+import com.fanglin.inventory.service.OccessoriesChargeService;
+import com.fanglin.inventory.vo.OccessoriesChargeVO;
+import com.fanglin.utils.BeanUtil;
+
+@Service("occessoriesChargeService")
+@Transactional(readOnly = true)
+public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
+
+	@Autowired
+	private OccessoriesChargeDao occessoriesChargeDao;
+
+	@Autowired
+	private OccessoriesDao occessoriesDao;
+
+	@Autowired
+	private OccessoriesItemDao occessoriesItemDao;
+
+	@Override
+	public List<OccessoriesChargeVO> queryOccessoriesCharge(OccessoriesChargeVO occessoriesChargeVO) {
+
+		List<OccessoriesChargePO> occessoriesChargePOs = null;
+
+		// 根据 oiid 查询（优先）
+		if (occessoriesChargeVO != null && occessoriesChargeVO.getOccessoriesItem() != null
+				&& occessoriesChargeVO.getOccessoriesItem().getOiid() != null) {
+			occessoriesChargePOs = occessoriesChargeDao.queryOccessoriesChargeByOiid(
+					occessoriesChargeVO.getOccessoriesItem().getOiid());
+		}
+		// 根据 oid 查询
+		else if (occessoriesChargeVO != null && occessoriesChargeVO.getOccessories() != null
+				&& occessoriesChargeVO.getOccessories().getOid() != null) {
+			occessoriesChargePOs = occessoriesChargeDao.queryOccessoriesChargeByOid(
+					occessoriesChargeVO.getOccessories().getOid());
+		}
+
+		List<OccessoriesChargeVO> occessoriesChargeVOs = new ArrayList<OccessoriesChargeVO>();
+
+		if (occessoriesChargePOs != null) {
+			for (OccessoriesChargePO occessoriesChargePO : occessoriesChargePOs) {
+				OccessoriesChargeVO vo = new OccessoriesChargeVO();
+				BeanUtil.copyProperties(occessoriesChargePO, vo);
+				occessoriesChargeVOs.add(vo);
+			}
+		}
+
+		return occessoriesChargeVOs;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int addOccessoriesCharge(OccessoriesChargeVO occessoriesChargeVO) throws FLException {
+
+		// 验证外辅单或外辅项存在
+		if (occessoriesChargeVO.getOccessories() != null && occessoriesChargeVO.getOccessories().getOid() != null) {
+			OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesChargeVO.getOccessories().getOid());
+			if (occessoriesPO == null) {
+				throw new FLException(260023, "外辅单不存在");
+			}
+		}
+
+		if (occessoriesChargeVO.getOccessoriesItem() != null && occessoriesChargeVO.getOccessoriesItem().getOiid() != null) {
+			OccessoriesItemPO occessoriesItemPO = occessoriesItemDao.get(occessoriesChargeVO.getOccessoriesItem().getOiid());
+			if (occessoriesItemPO == null) {
+				throw new FLException(260024, "外辅项不存在");
+			}
+		}
+
+		OccessoriesChargePO occessoriesChargePO = new OccessoriesChargePO();
+		BeanUtil.copyProperties(occessoriesChargeVO, occessoriesChargePO, "occessories", "occessoriesItem");
+
+		if (occessoriesChargeVO.getOccessories() != null) {
+			occessoriesChargePO.setOccessories(new OccessoriesPO(occessoriesChargeVO.getOccessories().getOid()));
+		}
+
+		if (occessoriesChargeVO.getOccessoriesItem() != null) {
+			OccessoriesItemPO itemPO = new OccessoriesItemPO();
+			itemPO.setOiid(occessoriesChargeVO.getOccessoriesItem().getOiid());
+			occessoriesChargePO.setOccessoriesItem(itemPO);
+		}
+
+		occessoriesChargeDao.save(occessoriesChargePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateOccessoriesCharge(OccessoriesChargeVO occessoriesChargeVO) throws FLException {
+
+		if (occessoriesChargeVO.getAcid() == null) {
+			throw new FLException(260070, "费用ID不能为空");
+		}
+
+		OccessoriesChargePO occessoriesChargePO = occessoriesChargeDao.get(occessoriesChargeVO.getAcid());
+
+		if (occessoriesChargePO == null) {
+			throw new FLException(260071, "外辅费用不存在");
+		}
+
+		BeanUtil.copyProperties(occessoriesChargeVO, occessoriesChargePO, "occessories", "occessoriesItem");
+
+		occessoriesChargeDao.update(occessoriesChargePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteOccessoriesCharge(OccessoriesChargeVO occessoriesChargeVO) throws FLException {
+
+		if (occessoriesChargeVO.getAcid() == null) {
+			throw new FLException(260070, "费用ID不能为空");
+		}
+
+		OccessoriesChargePO occessoriesChargePO = occessoriesChargeDao.get(occessoriesChargeVO.getAcid());
+
+		if (occessoriesChargePO != null) {
+			occessoriesChargeDao.delete(occessoriesChargePO);
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int batchOccessoriesCharge(OccessoriesChargeVO occessoriesChargeVO, List<OccessoriesChargeVO> occessoriesCharges) throws FLException {
+
+		// 获取外辅单ID
+		if (occessoriesChargeVO == null || occessoriesChargeVO.getOccessories() == null
+				|| occessoriesChargeVO.getOccessories().getOid() == null) {
+			throw new FLException(260070, "外辅单ID不能为空");
+		}
+
+		Long oid = occessoriesChargeVO.getOccessories().getOid();
+
+		// 验证外辅单存在
+		OccessoriesPO occessoriesPO = occessoriesDao.get(oid);
+		if (occessoriesPO == null) {
+			throw new FLException(260023, "外辅单不存在");
+		}
+
+		// 删除该外辅单的所有旧费用
+		List<OccessoriesChargePO> oldCharges = occessoriesChargeDao.queryOccessoriesChargeByOid(oid);
+		if (oldCharges != null && !oldCharges.isEmpty()) {
+			for (OccessoriesChargePO oldCharge : oldCharges) {
+				occessoriesChargeDao.delete(oldCharge);
+			}
+		}
+
+		// 批量插入新费用
+		if (occessoriesCharges != null && !occessoriesCharges.isEmpty()) {
+			for (OccessoriesChargeVO vo : occessoriesCharges) {
+				OccessoriesChargePO po = new OccessoriesChargePO();
+				BeanUtil.copyProperties(vo, po, "occessories", "occessoriesItem");
+				po.setOccessories(new OccessoriesPO(oid));
+
+				// 如果有外辅项，也需要设置
+				if (vo.getOccessoriesItem() != null && vo.getOccessoriesItem().getOiid() != null) {
+					OccessoriesItemPO itemPO = new OccessoriesItemPO();
+					itemPO.setOiid(vo.getOccessoriesItem().getOiid());
+					po.setOccessoriesItem(itemPO);
+				}
+
+				occessoriesChargeDao.save(po);
+			}
+		}
+
+		return 0;
+	}
+
+}
