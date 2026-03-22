@@ -2,6 +2,9 @@ package com.fanglin.data.material.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -30,21 +33,21 @@ public class AoodsChargeDaoImpl extends DaoImpl<AoodsChargePO> implements AoodsC
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<AoodsChargePO> queryAoodsChargeByAid(Long aid, Short type) {
 
-		PagingQuery<AoodsChargePO> query = pagingQuery(null, AoodsChargePO.class);
-		query.alias("aoods", "aoods");
-		query.add(query.getCriterion("aoods.aid", aid, "eq"));
-		query.add(query.getCriterion("status", AoodsChargePO.STATUS_ENABLE_SHORT, "eq"));
+		Criteria query = session().createCriteria(AoodsChargePO.class).createAlias("aoods", "aoods");
+
+		query.add(Restrictions.eq("aoods.aid", aid));
+		query.add(Restrictions.eq("status", AoodsChargePO.STATUS_ENABLE_SHORT));
 
 		// 如果传入了 type 参数，则添加类型过滤条件
 		if (type != null) {
-			query.add(query.getCriterion("type", type, "eq"));
+			query.add(Restrictions.eq("type", type));
 		}
 
-		query.asc("sort");
+		query.addOrder(Order.asc("sort"));
 
 		return query.list();
 	}
-
 }

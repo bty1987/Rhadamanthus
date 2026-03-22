@@ -48,20 +48,20 @@ public class AccessoriesTypeDaoImpl extends DaoImpl<AccessoriesTypePO> implement
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
+		if (filters == null) return;
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+		for (Filter filter : filters) {
 
-				query.alias("workType", "workType");
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 
-				if ("workTypeName".equals(field)) {
-					query.add(query.getCriterion(AccessoriesTypePO.COLUMN_WORKTYPE_NAME_STR, data, op));
-				} else if (AccessoriesTypePO.COLUMN_TYPE_STR.equals(field)) {
-					query.add(query.getCriterion(AccessoriesTypePO.COLUMN_TYPE_STR, Short.parseShort(data), op));
-				}
+			query.alias("workType", "workType");
+
+			if ("workTypeName".equals(field)) {
+				query.add(query.getCriterion(AccessoriesTypePO.COLUMN_WORKTYPE_NAME_STR, data, op));
+			} else if (AccessoriesTypePO.COLUMN_TYPE_STR.equals(field)) {
+				query.add(query.getCriterion(AccessoriesTypePO.COLUMN_TYPE_STR, Short.parseShort(data), op));
 			}
 		}
 	}

@@ -39,11 +39,15 @@ jQuery(function() {
         balance: null,
     };
 
-    com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {}, 'aoodes', 'gid', 'name', function(list, k, v) {
+    com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {}, 'aoodes', 'aid', 'name', function(list, k, v) {
 
 
         $.each(list, function(index, val) {
-            if (val.gid == k) {
+            
+            if (val.aid == k) {
+                
+                console.log(val)
+                
                 occessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-aid', val.aid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-balance', val.balance);
 
                 occessories.leftitems.goodsNo.attr('data-no', val.no).val(val.goods.no);
