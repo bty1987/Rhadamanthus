@@ -61,13 +61,27 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		// 添加过滤条件
-		if (filters != null) {
-			for (Filter filter : filters) {
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("status".equals(field)) {
+				// 状态：精确匹配
+				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("userName".equals(field)) {
+				// 用户姓名：需要关联 user 表，使用 currentName 字段
+				query.alias("user", "user");
+				query.add(query.getCriterion("user.currentName", data, op));
+			} else if ("company".equals(field)) {
+				// 公司：需要关联 company 表，使用 cid 字段
+				query.alias("company", "company");
+				query.add(query.getCriterion("company.cid", Integer.valueOf(data), op));
 			}
 		}
-
 	}
 
 }

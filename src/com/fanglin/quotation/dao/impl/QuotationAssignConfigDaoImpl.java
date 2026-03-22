@@ -53,10 +53,39 @@ public class QuotationAssignConfigDaoImpl extends DaoImpl<QuotationAssignConfigP
 			query.add(query.alias("company", "company").getCriterion("company.cid", company, "eq"));
 		}
 
+		// 处理动态过滤条件
+		queryFilterExcute(query, filters);
+
 		// 按创建时间倒序排序
 		query.desc("createTime");
 
 		return query.list();
+	}
+
+	/**
+	 * 执行过滤条件
+	 *
+	 * @param query 分页查询对象
+	 * @param filters 过滤条件列表
+	 */
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("enabled".equals(field)) {
+				// 是否启用：精确匹配
+				query.add(query.getCriterion("enabled", Short.valueOf(data), op));
+			} else if ("company".equals(field)) {
+				// 公司：已在方法参数中处理，这里跳过
+				continue;
+			}
+		}
 	}
 
 	@Override
