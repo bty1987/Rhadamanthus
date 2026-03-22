@@ -55,6 +55,17 @@ public class OccessoriesItemVO implements Serializable {
 		this.goods = goods;
 	}
 
+	public OccessoriesItemVO(AoodsVO aoods) {
+		super();
+		this.aoods = aoods;
+	}
+
+	public OccessoriesItemVO(GoodsVO goods, AoodsVO aoods) {
+		super();
+		this.goods = goods;
+		this.aoods = aoods;
+	}
+
 	public Long getOiid() {
 		return oiid;
 	}
