@@ -143,10 +143,12 @@ public class OccessoriesItemPO implements Serializable {
 
 	public OccessoriesItemVO ptv(OccessoriesItemVO occessoriesItemVO) {
 
-		BeanUtil.copyProperties(this, occessoriesItemVO, Arrays.asList("goods"));
+		BeanUtil.copyProperties(this, occessoriesItemVO, Arrays.asList("goods", "aoods"));
 
 		if (occessoriesItemVO.getGoods() != null && getGoods() != null) BeanUtil.copyProperties(getGoods(), occessoriesItemVO.getGoods(), Arrays.asList("accessoriesType"));
 		if (occessoriesItemVO.getGoods() != null && occessoriesItemVO.getGoods().getAccessoriesType() != null && getGoods() != null && getGoods().getAccessoriesType() != null) getGoods().getAccessoriesType().ptv(occessoriesItemVO.getGoods().getAccessoriesType());
+
+		if (occessoriesItemVO.getAoods() != null && getAoods() != null) getAoods().ptv(occessoriesItemVO.getAoods());
 
 		return occessoriesItemVO;
 	}
