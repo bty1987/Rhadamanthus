@@ -44,7 +44,7 @@ jQuery(function() {
 
         $.each(list, function(index, val) {
             if (val.gid == k) {
-                occessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-balance', val.balance);
+                occessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-aid', val.aid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-balance', val.balance);
 
                 occessories.leftitems.goodsNo.attr('data-no', val.no).val(val.goods.no);
                 occessories.leftitems.category.attr('data-category', val.category).val(val.goods.category);
@@ -68,6 +68,7 @@ jQuery(function() {
 
         if (com.validate("left", "left")) { return false; }
         var gid = occessories.leftitems.goodsHidden.attr('data-gid');
+        var aid = occessories.leftitems.goodsHidden.attr('data-aid');
         var type = occessories.leftitems.goodsHidden.attr('data-type');
         var selling = occessories.leftitems.goodsHidden.attr('data-selling');
         var balance = occessories.leftitems.goodsHidden.attr('data-balance');
@@ -84,6 +85,7 @@ jQuery(function() {
 
         var $liList = $('<li></li>').addClass('list-group-item')
             .attr("data-gid", gid)
+            .attr("data-aid", aid)
             .attr("data-num", num)
             .attr("data-selling", selling)
             .attr("data-balance", balance)
@@ -217,6 +219,7 @@ jQuery(function() {
             var itemIndex = $v.attr('data-index');
 
             options["occessoriesItems[" + i + "].goods.gid"] = $v.attr('data-gid');
+            options["occessoriesItems[" + i + "].aoods.aid"] = $v.attr('data-aid');
             options["occessoriesItems[" + i + "].num"] = $v.attr('data-num');
             options["occessoriesItems[" + i + "].rbalance"] = $v.attr('data-balance');
 
@@ -267,8 +270,12 @@ jQuery(function() {
                 addChargeRow(charge.name, charge.price, charge.num);
             });
         } else {
-            // 从 aoodsCharge 加载费用模板
-            loadAoodsChargeTemplate();
+            // 从 aoodsCharge 加载费用模板，获取当前项的 aid
+            var $item = com.focusPage('.list-group-item').eq(itemIndex);
+            var aid = $item.attr('data-aid');
+            if (aid) {
+                loadAoodsChargeTemplate(aid);
+            }
         }
 
         // 显示弹窗
