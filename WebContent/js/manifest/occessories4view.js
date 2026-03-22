@@ -54,6 +54,11 @@ jQuery(function($) {
             $line.find('div.number').text(v.num);
             $line.find('div.pieceNum').text(v.goods.pieceNum);
 
+            // 绑定费用按钮点击事件
+            $line.find('div.charge button').click(function() {
+                openChargeViewModal(v.oiid);
+            });
+
             if (occessories.pageType == "bind" || occessories.pageType == "supplier") {
                 $line.find('div.sennum input').val(v.num);
                 $line.find('div.rbalance').text(v.rbalance);
@@ -62,7 +67,7 @@ jQuery(function($) {
                 $line.find('div.sennum').text(v.sennum);
                 $line.find('div.rbalance').text(v.rbalance);
                 $line.find('div.vbalance input').val(v.rbalance);
-            } else if (occessories.pageType != "bind" && occessories.pageType != "receive" && occessories.pageType != "supplier") {
+            } else if (occessories.pageType != "bind" && ocessories.pageType != "receive" && occessories.pageType != "supplier") {
                 $line.find('div.sennum').text(v.sennum);
                 $line.find('div.rbalance').text(v.rbalance);
                 $line.find('div.vbalance').text(v.vbalance);
@@ -167,6 +172,9 @@ jQuery(function($) {
             cellClass: "vbalance blue", // 结算值
             hasInput: true,
             validate: "v_required v_float_3"
+        }, {
+            cellClass: "charge grey", // 费用
+            isAction: true
         }];
 
         var $btncheck = $('<a class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');
@@ -181,6 +189,12 @@ jQuery(function($) {
                     'type': 'text',
                     'autocomplete': 'off'
                 }).addClass('editable').addClass(v.validate ? v.validate : '').appendTo($cell)
+            }
+
+            if (v.isAction) {
+                // 添加费用按钮
+                var $chargeBtn = $('<button type="button" class="btn btn-xs btn-info">费用</button>');
+                $chargeBtn.appendTo($cell);
             }
 
             $cell.appendTo($lineInfoWrap);
@@ -219,6 +233,60 @@ jQuery(function($) {
             com.closePopup();
         });
 
+    }
+
+    /**
+     * 打开费用查看弹窗（只读）
+     */
+    function openChargeViewModal(oiid) {
+        // 清空费用列表
+        com.focusPage('#chargeViewTableBody').html('');
+        com.focusPage('#chargeTotalAmount').text('0.00');
+
+        // 隐藏合计行
+        com.focusPage('#chargeTotalRow').hide();
+
+        // 查询费用
+        var occessoriesChargeVO = {
+            occessoriesItem: {
+                oiid: oiid
+            }
+        };
+
+        com.post(api.inventory.queryOccessoriesCharge, occessoriesChargeVO, function(res) {
+            if (res && res.occessoriesCharges && res.occessoriesCharges.length > 0) {
+                var totalAmount = 0;
+
+                $.each(res.occessoriesCharges, function(i, charge) {
+                    var price = charge.price / 1000; // 转换为元
+                    var num = charge.num / 1000; // 转换为实际数量
+                    var subtotal = price * num; // 小计
+
+                    totalAmount += subtotal;
+
+                    var $row = $('<tr></tr>');
+                    $row.append($('<td></td>').text(i + 1));
+                    $row.append($('<td></td>').text(charge.name));
+                    $row.append($('<td></td>').text(price.toFixed(3)));
+                    $row.append($('<td></td>').text(num.toFixed(3)));
+                    $row.append($('<td></td>').addClass('red').text(subtotal.toFixed(3)));
+
+                    com.focusPage('#chargeViewTableBody').append($row);
+                });
+
+                // 显示合计
+                com.focusPage('#chargeTotalAmount').text(totalAmount.toFixed(3));
+                com.focusPage('#chargeTotalRow').show();
+            } else {
+                // 无费用数据
+                var $emptyRow = $('<tr></tr>');
+                $emptyRow.append($('<td></td>').attr('colspan', 5).addClass('text-center').text('暂无费用数据'));
+                com.focusPage('#chargeViewTableBody').append($emptyRow);
+            }
+
+            // 显示弹窗
+            com.focusPage('#chargeViewModal').modal('show');
+        });
     }
 
 });

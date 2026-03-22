@@ -1,6 +1,7 @@
 package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.fanglin.data.material.vo.GoodsVO;
 
@@ -9,20 +10,22 @@ public class OccessoriesItemVO implements Serializable {
 	private static final long serialVersionUID = -8219707602421923655L;
 
 	private Long oiid;
-	
+
 	private Long oid;
-	
+
 	private GoodsVO goods;
-	
+
 	private Integer num;
-	
+
 	private Integer sennum; //送货数量
-	
+
 	private Integer recnum; //到货数量
-	
+
 	private Integer rbalance;//原结算价
-	
+
 	private Integer vbalance;//结算价
+
+	private List<OccessoriesChargeVO> occessoriesCharges; // 外辅费用列表
 	
 	public Integer getRbalance() {
 		return rbalance;
@@ -95,5 +98,13 @@ public class OccessoriesItemVO implements Serializable {
 
 	public void setRecnum(Integer recnum) {
 		this.recnum = recnum;
+	}
+
+	public List<OccessoriesChargeVO> getOccessoriesCharges() {
+		return occessoriesCharges;
+	}
+
+	public void setOccessoriesCharges(List<OccessoriesChargeVO> occessoriesCharges) {
+		this.occessoriesCharges = occessoriesCharges;
 	}
 }

@@ -2,6 +2,8 @@ jQuery(function() {
 
     var occessories = {
         cid: null,
+        currentItemIndex: null, // 当前编辑费用的外辅项索引
+        chargesCache: {}, // 费用缓存 {itemIndex: [{name, price, num}]}
         occessoriesPath: [{
             key: "0",
             value: "是"
@@ -76,17 +78,36 @@ jQuery(function() {
         var brand = occessories.leftitems.brand.val();
         var measurementUnit = occessories.leftitems.measurementUnit.val();
         var num = occessories.leftitems.num.val();
-        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num).attr("data-selling", selling).attr("data-balance", balance);
+
+        // 获取当前外辅项索引
+        var itemIndex = com.focusPage('.list-group-item').length;
+
+        var $liList = $('<li></li>').addClass('list-group-item')
+            .attr("data-gid", gid)
+            .attr("data-num", num)
+            .attr("data-selling", selling)
+            .attr("data-balance", balance)
+            .attr("data-index", itemIndex); // 添加索引
+
         var $h4 = $('<h4></h4>').html(name + ' ' + no).attr('gid', gid);
 
         var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除'));
-        var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function() {
 
-            com.focusPage('#viewPopUp').attr({
-                'data-gid': gid
+        // 添加费用按钮
+        var $charge = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button')
+            .append($('<a></a>').addClass('btn btn-info btn-minier').html('费用'))
+            .click(function() {
+                openChargeModal(itemIndex);
             });
-            com.popup4page('#viewPopUp', "views/sales/salesItem4package.html", "查看套餐")
-        });
+
+        var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button')
+            .append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看'))
+            .click(function() {
+                com.focusPage('#viewPopUp').attr({
+                    'data-gid': gid
+                });
+                com.popup4page('#viewPopUp', "views/sales/salesItem4package.html", "查看套餐")
+            });
 
         $h4.append($delete).appendTo($liList);
 
@@ -94,14 +115,24 @@ jQuery(function() {
             $h4.append($query);
         }
 
-        $liList.append(addSpan('品类 : ', 's_category', category, " ", 'b_category', null)).append(addSpan('品牌 : ', 's_brand', brand, " ", 'b_brand', null)).append(addSpan('单位 : ', 's_unit', measurementUnit, " ", 'b_unit', null)).append(addSpan('数量 : ', 's_number', num, 'red', 'b_number'));
+        // 添加费用按钮
+        $h4.append($charge);
+
+        $liList.append(addSpan('品类 : ', 's_category', category, " ", 'b_category', null))
+            .append(addSpan('品牌 : ', 's_brand', brand, " ", 'b_brand', null))
+            .append(addSpan('单位 : ', 's_unit', measurementUnit, " ", 'b_unit', null))
+            .append(addSpan('数量 : ', 's_number', num, 'red', 'b_number'));
 
         occessories.itemlist.append($liList);
 
         com.cleanItems(occessories.leftitems);
 
         $delete.click(function() {
-
+            var index = $(this).parents('.list-group-item').attr('data-index');
+            // 删除费用缓存
+            delete occessories.chargesCache[index];
+            // 重新索引
+            reindexItems();
             $(this).parents('.list-group-item').remove();
             com.focusPage('.list-group-item:last').css("border-bottom", "solid 1px");
         });
@@ -183,18 +214,164 @@ jQuery(function() {
         $list && $list.length && $.each($list, function(i, v) {
 
             var $v = $(v);
+            var itemIndex = $v.attr('data-index');
 
             options["occessoriesItems[" + i + "].goods.gid"] = $v.attr('data-gid');
             options["occessoriesItems[" + i + "].num"] = $v.attr('data-num');
             options["occessoriesItems[" + i + "].rbalance"] = $v.attr('data-balance');
+
+            // 添加费用数据
+            if (occessories.chargesCache[itemIndex] && occessories.chargesCache[itemIndex].length > 0) {
+                $.each(occessories.chargesCache[itemIndex], function(j, charge) {
+                    options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].name"] = charge.name;
+                    options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].price"] = charge.price;
+                    options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].num"] = charge.num;
+                });
+            }
         });
+
         com.post(api.inventory.addOccessories, options, function(data) {
 
             com.showAlert(com.info, "操作成功");
 
+            // 清空费用缓存
+            occessories.chargesCache = {};
             com.cleanItems(occessories.rightitems);
             occessories.itemlist.html("");
         });
+    });
+
+    // ========== 费用相关函数 ==========
+
+    /**
+     * 重新索引外辅项
+     */
+    function reindexItems() {
+        com.focusPage('.list-group-item').each(function(index) {
+            $(this).attr('data-index', index);
+        });
+    }
+
+    /**
+     * 打开费用弹窗
+     */
+    function openChargeModal(itemIndex) {
+        occessories.currentItemIndex = itemIndex;
+
+        // 清空费用列表
+        com.focusPage('#chargeTableBody').html('');
+
+        // 加载已保存的费用
+        if (occessories.chargesCache[itemIndex] && occessories.chargesCache[itemIndex].length > 0) {
+            $.each(occessories.chargesCache[itemIndex], function(i, charge) {
+                addChargeRow(charge.name, charge.price, charge.num);
+            });
+        } else {
+            // 从 aoodsCharge 加载费用模板
+            loadAoodsChargeTemplate();
+        }
+
+        // 显示弹窗
+        com.focusPage('#chargeModal').modal('show');
+    }
+
+    /**
+     * 加载辅材费用模板
+     */
+    function loadAoodsChargeTemplate() {
+        com.post(api.data.queryAoodsChargeByAid, {}, function(data) {
+            if (data && data.aoodsCharges && data.aoodsCharges.length > 0) {
+                $.each(data.aoodsCharges, function(i, charge) {
+                    addChargeRow(charge.name, charge.price / 1000, charge.num || 1);
+                });
+            }
+        });
+    }
+
+    /**
+     * 添加费用行
+     */
+    function addChargeRow(name, price, num) {
+        var $row = $('<tr></tr>');
+
+        // 费用名称
+        var $nameTd = $('<td></td>');
+        var $nameInput = $('<input type="text" class="form-control input-sm" placeholder="费用名称">').val(name);
+        $nameTd.append($nameInput);
+        $row.append($nameTd);
+
+        // 价格
+        var $priceTd = $('<td></td>');
+        var $priceInput = $('<input type="text" class="form-control input-sm v_float_3" placeholder="0.00">').val(price);
+        $priceTd.append($priceInput);
+        $row.append($priceTd);
+
+        // 数量
+        var $numTd = $('<td></td>');
+        var $numInput = $('<input type="text" class="form-control input-sm v_int" placeholder="1">').val(num);
+        $numTd.append($numInput);
+        $row.append($numTd);
+
+        // 操作
+        var $actionTd = $('<td></td>');
+        var $deleteBtn = $('<button type="button" class="btn btn-xs btn-danger">删除</button>');
+        $deleteBtn.click(function() {
+            $(this).parents('tr').remove();
+        });
+        $actionTd.append($deleteBtn);
+        $row.append($actionTd);
+
+        com.focusPage('#chargeTableBody').append($row);
+    }
+
+    /**
+     * 添加费用按钮点击
+     */
+    com.focusPage('#addChargeBtn').click(function() {
+        addChargeRow('', '', 1);
+    });
+
+    /**
+     * 保存费用
+     */
+    com.focusPage('#saveChargeBtn').click(function() {
+        var charges = [];
+        var hasError = false;
+
+        com.focusPage('#chargeTableBody tr').each(function() {
+            var $row = $(this);
+            var name = $row.find('td:eq(0) input').val().trim();
+            var price = $row.find('td:eq(1) input').val();
+            var num = $row.find('td:eq(2) input').val();
+
+            if (!name) {
+                com.showAlert(com.warning, '请填写费用名称');
+                hasError = true;
+                return false;
+            }
+
+            if (!price) {
+                com.showAlert(com.warning, '请填写价格');
+                hasError = true;
+                return false;
+            }
+
+            charges.push({
+                name: name,
+                price: price,
+                num: num || 1
+            });
+        });
+
+        if (hasError) {
+            return false;
+        }
+
+        // 保存到缓存
+        occessories.chargesCache[occessories.currentItemIndex] = charges;
+
+        // 关闭弹窗
+        com.focusPage('#chargeModal').modal('hide');
     });
 
 });

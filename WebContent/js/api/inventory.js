@@ -532,7 +532,29 @@ $.extend(api, {
             url: "addOccessories.do",
             type: "update",
             tranargs: {
-                args: ["occessoriesItems.num", "occessoriesItems.rbalance"]
+                args: [
+                    "occessoriesItems.num",
+                    "occessoriesItems.rbalance",
+                    "occessoriesItems.occessoriesCharges.price",
+                    "occessoriesItems.occessoriesCharges.num"
+                ]
+            }
+        },
+        batchOccessoriesCharge: {
+            url: "batchOccessoriesCharge.do",
+            type: "update",
+            tranargs: {
+                args: [
+                    "occessoriesCharges.price",
+                    "occessoriesCharges.num"
+                ]
+            }
+        },
+        queryOccessoriesCharge: {
+            url: "queryOccessoriesCharge.do",
+            type: "query",
+            tranargs: {
+                args: ["price", "num"]
             }
         },
         bindOccessories: {
