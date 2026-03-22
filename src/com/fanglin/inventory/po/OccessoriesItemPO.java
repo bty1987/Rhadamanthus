@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.AoodsPO;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.inventory.vo.OccessoriesItemVO;
 import com.fanglin.utils.BeanUtil;
@@ -29,6 +30,8 @@ public class OccessoriesItemPO implements Serializable {
 	private long oid;
 
 	private GoodsPO goods;
+
+	private AoodsPO aoods;
 
 	private int num;
 
@@ -90,6 +93,16 @@ public class OccessoriesItemPO implements Serializable {
 
 	public void setGoods(GoodsPO goods) {
 		this.goods = goods;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "aid", referencedColumnName = "aid")
+	public AoodsPO getAoods() {
+		return aoods;
+	}
+
+	public void setAoods(AoodsPO aoods) {
+		this.aoods = aoods;
 	}
 
 	@Column(name = "num")

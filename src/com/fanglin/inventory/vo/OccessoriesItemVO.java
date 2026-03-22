@@ -3,6 +3,7 @@ package com.fanglin.inventory.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fanglin.data.material.vo.AoodsVO;
 import com.fanglin.data.material.vo.GoodsVO;
 
 public class OccessoriesItemVO implements Serializable {
@@ -14,6 +15,8 @@ public class OccessoriesItemVO implements Serializable {
 	private Long oid;
 
 	private GoodsVO goods;
+
+	private AoodsVO aoods;
 
 	private Integer num;
 
@@ -74,6 +77,14 @@ public class OccessoriesItemVO implements Serializable {
 
 	public void setGoods(GoodsVO goods) {
 		this.goods = goods;
+	}
+
+	public AoodsVO getAoods() {
+		return aoods;
+	}
+
+	public void setAoods(AoodsVO aoods) {
+		this.aoods = aoods;
 	}
 
 	public Integer getNum() {
