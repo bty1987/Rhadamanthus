@@ -31,6 +31,7 @@ public class AoodsChargeDaoImpl extends DaoImpl<AoodsChargePO> implements AoodsC
 
 	@Override
 	public List<AoodsChargePO> queryAoodsChargeByAid(Long aid, Short type) {
+
 		PagingQuery<AoodsChargePO> query = pagingQuery(null, AoodsChargePO.class);
 		query.alias("aoods", "aoods");
 		query.add(query.getCriterion("aoods.aid", aid, "eq"));
@@ -41,7 +42,7 @@ public class AoodsChargeDaoImpl extends DaoImpl<AoodsChargePO> implements AoodsC
 			query.add(query.getCriterion("type", type, "eq"));
 		}
 
-		query.addOrder("sort", true);
+		query.asc("sort");
 
 		return query.list();
 	}

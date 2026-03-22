@@ -3,6 +3,7 @@ package com.fanglin.inventory.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.data.po.GoodsPO;
+import com.fanglin.inventory.vo.OccessoriesItemVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "occessoriesItem", catalog = "inventory")
@@ -22,21 +25,21 @@ public class OccessoriesItemPO implements Serializable {
 	private static final long serialVersionUID = 235550936041004117L;
 
 	private long oiid;
-	
-	private long oid;
-	
-	private GoodsPO goods;
-	
-	private int num;
-	
-	private int sennum; //送货数量
-	
-	private int recnum; //到货数量
 
-	private int rbalance;//原结算价
-	
-	private int vbalance;//结算价
-	
+	private long oid;
+
+	private GoodsPO goods;
+
+	private int num;
+
+	private int sennum; // 送货数量
+
+	private int recnum; // 到货数量
+
+	private int rbalance;// 原结算价
+
+	private int vbalance;// 结算价
+
 	@Column(name = "rbalance")
 	public int getRbalance() {
 		return rbalance;
@@ -55,7 +58,7 @@ public class OccessoriesItemPO implements Serializable {
 		this.vbalance = vbalance;
 	}
 
-	public OccessoriesItemPO(){
+	public OccessoriesItemPO() {
 		super();
 	}
 
@@ -97,7 +100,7 @@ public class OccessoriesItemPO implements Serializable {
 	public void setNum(int num) {
 		this.num = num;
 	}
-	
+
 	@Column(name = "sennum")
 	public int getSennum() {
 		return sennum;
@@ -106,7 +109,7 @@ public class OccessoriesItemPO implements Serializable {
 	public void setSennum(Integer sennum) {
 		this.sennum = sennum;
 	}
-	
+
 	@Column(name = "recnum")
 	public int getRecnum() {
 		return recnum;
@@ -115,16 +118,24 @@ public class OccessoriesItemPO implements Serializable {
 	public void setRecnum(int recnum) {
 		this.recnum = recnum;
 	}
-	
-	public OccessoriesItemPO init(long oid, long gid, int num){
-		
+
+	public OccessoriesItemPO init(long oid, long gid, int num) {
+
 		setOid(oid);
 		setGoods(new GoodsPO(gid));
 		setNum(num);
-		
+
 		return this;
 	}
 
+	public OccessoriesItemVO ptv(OccessoriesItemVO occessoriesItemVO) {
 
-	
+		BeanUtil.copyProperties(this, occessoriesItemVO, Arrays.asList("goods"));
+
+		if (occessoriesItemVO.getGoods() != null && getGoods() != null) BeanUtil.copyProperties(getGoods(), occessoriesItemVO.getGoods(), Arrays.asList("accessoriesType"));
+		if (occessoriesItemVO.getGoods() != null && occessoriesItemVO.getGoods().getAccessoriesType() != null && getGoods() != null && getGoods().getAccessoriesType() != null) getGoods().getAccessoriesType().ptv(occessoriesItemVO.getGoods().getAccessoriesType());
+
+		return occessoriesItemVO;
+	}
+
 }

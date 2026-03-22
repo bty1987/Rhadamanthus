@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -16,7 +17,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.inventory.vo.OccessoriesVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Entity
@@ -107,6 +110,11 @@ public class OccessoriesPO implements Serializable {
 
 	public OccessoriesPO() {
 		super();
+	}
+
+	public OccessoriesPO(Long oid) {
+		super();
+		setOid(oid);
 	}
 
 	@Id
@@ -356,6 +364,20 @@ public class OccessoriesPO implements Serializable {
 		setIsAttic(isAttic);
 
 		return this;
+	}
+
+	public OccessoriesVO ptv(OccessoriesVO occessoriesVO) {
+
+		BeanUtil.copyProperties(this, occessoriesVO, Arrays.asList("decoration", "creater", "supervisor", "supplier", "deliver", "receiver", "balancer"));
+
+		if (occessoriesVO.getCreater() != null && getCreater() != null) occessoriesVO.getCreater().setBaseInfo(getCreater());
+		if (occessoriesVO.getSupervisor() != null && getSupervisor() != null) occessoriesVO.getSupervisor().setBaseInfo(getSupervisor());
+
+		if (occessoriesVO.getSupplier() != null && getSupplier() != null) occessoriesVO.getSupplier().setBaseInfo(getSupplier());
+
+		if (occessoriesVO.getDecoration() != null && getDecoration() != null) getDecoration().ptvcascade(occessoriesVO.getDecoration());
+
+		return occessoriesVO;
 	}
 
 }
