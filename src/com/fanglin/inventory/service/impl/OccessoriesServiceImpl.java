@@ -13,16 +13,20 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.po.AoodsPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.inventory.dao.OccessoriesChargeDao;
 import com.fanglin.inventory.dao.OccessoriesDao;
 import com.fanglin.inventory.dao.OccessoriesItemDao;
+import com.fanglin.inventory.po.OccessoriesChargePO;
 import com.fanglin.inventory.po.OccessoriesItemPO;
 import com.fanglin.inventory.po.OccessoriesPO;
 import com.fanglin.inventory.service.OccessoriesService;
+import com.fanglin.inventory.vo.OccessoriesChargeVO;
 import com.fanglin.inventory.vo.OccessoriesItemVO;
 import com.fanglin.inventory.vo.OccessoriesVO;
 import com.fanglin.personel.dao.UserDao;
@@ -56,6 +60,9 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 	@Autowired
 	private OccessoriesItemDao occessoriesItemDao;
+
+	@Autowired
+	private OccessoriesChargeDao occessoriesChargeDao;
 
 	@Autowired
 	private MessageService messageService;
@@ -198,7 +205,27 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 			OccessoriesItemPO occessoriesItemPO = new OccessoriesItemPO().init(occessoriesPO.getOid(), occessoriesItemVO.getGoods().getGid(), occessoriesItemVO.getNum());
 			occessoriesItemPO.setRbalance(occessoriesItemVO.getRbalance());
 			occessoriesItemPO.setVbalance(occessoriesItemVO.getRbalance());
+
+			// 设置 aoods 关联
+			if (occessoriesItemVO.getAoods() != null && occessoriesItemVO.getAoods().getAid() != null) {
+				occessoriesItemPO.setAoods(new AoodsPO(occessoriesItemVO.getAoods().getAid()));
+			}
+
 			occessoriesItemDao.save(occessoriesItemPO);
+
+			// 保存外辅费用
+			if (occessoriesItemVO.getOccessoriesCharges() != null && occessoriesItemVO.getOccessoriesCharges().size() > 0) {
+				for (OccessoriesChargeVO occessoriesChargeVO : occessoriesItemVO.getOccessoriesCharges()) {
+					OccessoriesChargePO occessoriesChargePO = new OccessoriesChargePO();
+					occessoriesChargePO.setOccessories(occessoriesPO);
+					occessoriesChargePO.setOccessoriesItem(occessoriesItemPO);
+					occessoriesChargePO.setName(occessoriesChargeVO.getName());
+					occessoriesChargePO.setPrice(occessoriesChargeVO.getPrice());
+					occessoriesChargePO.setSurplus(occessoriesChargeVO.getSurplus() != null ? occessoriesChargeVO.getSurplus() : 0);
+					occessoriesChargePO.setNum(occessoriesChargeVO.getNum() != null ? occessoriesChargeVO.getNum() : 0);
+					occessoriesChargeDao.save(occessoriesChargePO);
+				}
+			}
 		}
 
 		return 0;
