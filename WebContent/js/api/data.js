@@ -1381,24 +1381,14 @@ $.extend(api, {
             tranargs: {
                 args: ["aoodsCharge.price", "aoodsCharge.surplus"]
             },
-            validate: {
-                "aoodsCharge.aoods.aid": { required: true },
-                "aoodsCharge.name": { required: true }
-            }
         },
-
         updateAoodsCharge: {
             url: "updateAoodsCharge.do",
             type: "update",
             tranargs: {
                 args: ["aoodsCharge.price", "aoodsCharge.surplus"]
             },
-            validate: {
-                "aoodsCharge.acid": { required: true },
-                "aoodsCharge.name": { required: true }
-            }
         },
-
         deleteAoodsCharge: {
             url: "deleteAoodsCharge.do"
         },

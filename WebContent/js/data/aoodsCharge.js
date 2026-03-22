@@ -56,7 +56,7 @@ $(function() {
 
         var creatLine = function(v) {
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -65,8 +65,8 @@ $(function() {
 
             var propertyArr = [
                 ["费用名称: ", v.name, "grey"],
-                ["价格: ", (v.price / 1000).toFixed(3), "blue"],
-                ["浮动额: ", (v.surplus / 1000).toFixed(3), "blue"],
+                ["价格: ", v.price, "blue"],
+                ["浮动额: ", v.surplus, "blue"],
                 ["费用类型: ", constant.data.aoodsCharge.type.keys[v.type], "red"],
                 ["状态: ", constant.data.aoodsCharge.status.keys[v.status], "red"],
                 ["排序: ", v.sort, "blue"]
@@ -94,7 +94,7 @@ $(function() {
                     "aoodsCharge.acid": v.acid
                 }, function() {
                     com.showAlert(com.info, "删除成功");
-                    chargesearcher.doSearch();
+                    searcher.doSearch();
                 });
             });
 
@@ -112,9 +112,9 @@ $(function() {
         }
     })();
 
-    var chargesearcher = new Searcher();
+    var searcher = new Searcher();
 
-    chargesearcher.init(null, "condListCharge", api.data.pageAoodsCharge, function(data) {
+    searcher.init(null, "condListCharge", api.data.pageAoodsCharge, function(data) {
         displayFunc.init('resultListCharge', data);
     }, "pagenationCharge", "aoodsChargePostData", {
         "aoodsCharge.aoods.aid": aoodsCharge.aid
@@ -145,24 +145,29 @@ $(function() {
 
     // 保存数据
     function saveData() {
-        if (com.validate('formAoodsCharge', 'right')) {
+        
+        if (com.validate('addAoodsCharge', 'right')) {
             return false;
         }
 
         var options = {
             "aoodsCharge.aoods.aid": aoodsCharge.aid,
-            "aoodsCharge.name": aoodsCharge.items.name.val(),
-            "aoodsCharge.price": aoodsCharge.items.price.val(),
-            "aoodsCharge.surplus": aoodsCharge.items.surplus.val() || 0,
-            "aoodsCharge.type": aoodsCharge.items.type.val(),
-            "aoodsCharge.status": aoodsCharge.items.status.val(),
-            "aoodsCharge.sort": aoodsCharge.items.sort.val() || 0
+            "aoodsCharge.name": com.focusPage("#name", "#addAoodsCharge").val(),
+            "aoodsCharge.price": com.focusPage("#price", "#addAoodsCharge").val()|| 0,
+            "aoodsCharge.surplus": com.focusPage("#surplus", "#addAoodsCharge").val() || 0,
+            "aoodsCharge.type": com.focusPage("#type", "#addAoodsCharge").val(),
+            "aoodsCharge.status": com.focusPage("#status", "#addAoodsCharge").val(),
+            "aoodsCharge.sort": com.focusPage("#sort", "#addAoodsCharge").val() || 0
         };
-
+        
+        console.log(aoodsCharge.items.name)
+        
+        console.log(options)
+        
         com.post(api.data.addAoodsCharge, options, function() {
             com.showAlert(com.info, "添加成功");
             com.closePopup(com.focusPage("#confirmBtn", "#miniPopUp"));
-            chargesearcher.doSearch();
+            searcher.doSearch();
         });
     }
 
@@ -189,19 +194,19 @@ $(function() {
 
         var options = {
             "aoodsCharge.acid": aoodsCharge.acid,
-            "aoodsCharge.name": aoodsCharge.items.editName.val(),
-            "aoodsCharge.price": aoodsCharge.items.editPrice.val(),
-            "aoodsCharge.surplus": aoodsCharge.items.editSurplus.val() || 0,
-            "aoodsCharge.type": aoodsCharge.items.editType.val(),
-            "aoodsCharge.status": aoodsCharge.items.editStatus.val(),
-            "aoodsCharge.sort": aoodsCharge.items.editSort.val() || 0
+            "aoodsCharge.name": com.focusPage("#name", "#addAoodsCharge").val(),
+            "aoodsCharge.price": com.focusPage("#price", "#addAoodsCharge").val()|| 0,
+            "aoodsCharge.surplus": com.focusPage("#surplus", "#addAoodsCharge").val() || 0,
+            "aoodsCharge.type": com.focusPage("#type", "#addAoodsCharge").val(),
+            "aoodsCharge.status": com.focusPage("#status", "#addAoodsCharge").val(),
+            "aoodsCharge.sort": com.focusPage("#sort", "#addAoodsCharge").val() || 0
         };
 
         com.post(api.data.updateAoodsCharge, options, function() {
             com.showAlert(com.info, "更新成功");
             com.closePopup(com.focusPage("#editConfirmBtn", "#miniPopUp"));
-            chargesearcher.doSearch();
+            searcher.doSearch();
         });
     }
 
-})();
+});

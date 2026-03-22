@@ -2155,25 +2155,21 @@ $.extend(api, {
 
         queryQuotationAssignRecordById: {
             url: "queryQuotationAssignRecordById.do",
-            demo: true,
             type: "query"
         },
 
         queryQuotationAssignRecordByOrderId: {
             url: "queryQuotationAssignRecordByOrderId.do",
-            demo: true
         },
 
         // ==================== 预算员分配配置接口 ====================
 
         pageQuotationAssignConfig: {
             url: "pageQuotationAssignConfig.do",
-            demo: true
         },
 
         queryQuotationAssignConfigById: {
             url: "queryQuotationAssignConfigById.do",
-            demo: true,
             type: "query"
         },
 
@@ -2201,12 +2197,10 @@ $.extend(api, {
 
         pageQuotationAssignUserRule: {
             url: "pageQuotationAssignUserRule.do",
-            demo: true
         },
 
         queryQuotationAssignUserRuleById: {
             url: "queryQuotationAssignUserRuleById.do",
-            demo: true,
             type: "query"
         },
 
@@ -2250,7 +2244,7 @@ $.extend(api, {
             url: "reassignQuotationAssign.do",
             validate: {
                 "quotationAssign.orderId": { required: true },
-                "quotationAssign.newBudgetUid": { required: true }
+                "quotationAssign.quoter.userId": { required: true }
             }
         }
     }
