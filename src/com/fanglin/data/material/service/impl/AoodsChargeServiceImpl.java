@@ -40,6 +40,7 @@ public class AoodsChargeServiceImpl implements AoodsChargeService {
 
 	@Override
 	public List<AoodsChargeVO> queryAoodsChargeByAid(AoodsChargeVO aoodsChargeVO) {
+
 		Long aid = aoodsChargeVO != null && aoodsChargeVO.getAoods() != null ? aoodsChargeVO.getAoods().getAid() : null;
 		Short type = aoodsChargeVO != null ? aoodsChargeVO.getType() : null;
 
@@ -47,9 +48,7 @@ public class AoodsChargeServiceImpl implements AoodsChargeService {
 		List<AoodsChargeVO> aoodsChargeVOs = new ArrayList<AoodsChargeVO>();
 
 		for (AoodsChargePO aoodsChargePO : aoodsChargePOs) {
-			AoodsChargeVO vo = new AoodsChargeVO(new AoodsVO());
-			aoodsChargePO.ptv(vo);
-			aoodsChargeVOs.add(vo);
+			aoodsChargeVOs.add(aoodsChargePO.ptv(new AoodsChargeVO(new AoodsVO())));
 		}
 
 		return aoodsChargeVOs;

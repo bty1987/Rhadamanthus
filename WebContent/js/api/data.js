@@ -1366,15 +1366,13 @@ $.extend(api, {
                 args: ["price", "surplus"]
             }]
         },
-
         queryAoodsChargeByAid: {
             url: "queryAoodsChargeByAid.do",
-            type: "query",
             tranargs: {
+                result: "aoodsCharges",
                 args: ["price", "surplus"]
             }
         },
-
         addAoodsCharge: {
             url: "addAoodsCharge.do",
             type: "update",
