@@ -1,7 +1,6 @@
 package com.fanglin.inventory.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
 import com.fanglin.data.material.vo.AoodsVO;
 import com.fanglin.data.material.vo.GoodsVO;
-import com.fanglin.data.material.vo.NoodsVO;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.inventory.dao.OccessoriesDao;
 import com.fanglin.inventory.dao.OccessoriesItemDao;
@@ -23,7 +21,6 @@ import com.fanglin.inventory.po.OccessoriesPO;
 import com.fanglin.inventory.service.OccessoriesItemService;
 import com.fanglin.inventory.vo.OccessoriesItemVO;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.BeanUtil;
 
 @Service("occessoriesItemService")
 @Transactional(readOnly = true)
@@ -45,30 +42,7 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		List<OccessoriesItemVO> occessoriesItemVOs = new ArrayList<OccessoriesItemVO>();
 
 		for (OccessoriesItemPO occessoriesItemPO : occessoriesItemPOs) {
-
-			occessoriesItemVO = new OccessoriesItemVO(
-				new GoodsVO(new AccessoriesTypeVO(new WorkTypeVO())),
-				new AoodsVO()
-			);
-
-			BeanUtil.copyProperties(occessoriesItemPO, occessoriesItemVO, Arrays.asList("goods", "aoods"));
-			BeanUtil.copyProperties(occessoriesItemPO.getGoods(), occessoriesItemVO.getGoods(), Arrays.asList("accessoriesType"));
-
-			if (occessoriesItemPO.getGoods().getAccessoriesType() != null) {
-
-				BeanUtil.copyProperties(occessoriesItemPO.getGoods().getAccessoriesType(), occessoriesItemVO.getGoods().getAccessoriesType(), Arrays.asList("workType"));
-
-				if (occessoriesItemPO.getGoods().getAccessoriesType().getWorkType() != null) {
-					BeanUtil.copyProperties(occessoriesItemPO.getGoods().getAccessoriesType().getWorkType(), occessoriesItemVO.getGoods().getAccessoriesType().getWorkType());
-				}
-			}
-
-			// 处理 aoods 数据
-			if (occessoriesItemPO.getAoods() != null && ocessoriesItemVO.getAoods() != null) {
-				occessoriesItemPO.getAoods().ptv(occessoriesItemVO.getAoods());
-			}
-
-			occessoriesItemVOs.add(occessoriesItemVO);
+			occessoriesItemVOs.add(occessoriesItemPO.ptv(new OccessoriesItemVO(new GoodsVO(new AccessoriesTypeVO(new WorkTypeVO())), new AoodsVO())));
 		}
 
 		return occessoriesItemVOs;
