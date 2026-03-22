@@ -2041,6 +2041,128 @@ constant.quotation().quotationAssignConfig.enabled.datas[1]  // 返回 "启用"
 
 ---
 
+## 📝 附录：数据库常量SQL
+
+### quotationAssign 缺失常量插入语句
+
+**更新日期**: 2026-03-22
+
+**说明**: 以下常量用于替换前端JS文件中的魔法数字，需要在测试/生产环境执行。
+
+#### ✅ 已存在的常量（无需插入）
+
+| clazz | type | 说明 | CID范围 | 数据 |
+|-------|------|------|---------|------|
+| quotationAssignRequest | decorationType | 装修类型（半包/整装） | 2020-2021 | 1=半包, 2=整装 |
+| quotationAssignRequest | priority | 优先级（最高/高/普通/低/最低） | 2015-2019 | 1=最高, 3=高, 5=普通, 7=低, 9=最低 |
+| quotationAssignRequest | status | 状态（待分配/已分配） | 2013-2014 | 1=待分配, 2=已分配 |
+| quotationAssignUserRule | status | 状态（可用/制作中/停止/已完成） | 2009-2012 | 1=可用, 2=制作中, 3=停止, 4=已完成 |
+| quotationAssignRecord | assignResult | 分配结果（失败/成功） | 2025-2026 | 0=失败, 1=成功 |
+| quotationAssignRecord | assignType | 分配类型（正向自动/手动/反向自动） | 2022-2024 | 1=正向自动, 2=手动, 3=反向自动 |
+| quotationAssignRecord | decorationType | 装修类型（半包/整装） | 2027-2028 | 1=半包, 2=整装 |
+
+**总计**: 17个常量已存在于 `communion.constant` 表中
+
+#### ❌ 缺失的常量（需要插入）
+
+**文件**: `docs/quotationassign_constant_data.sql`
+
+```sql
+-- ========================================
+-- quotationAssign 配置常量
+-- ========================================
+
+-- enabled: 是否启用 (0=禁用, 1=启用)
+INSERT INTO communion.constant (name, module, clazz, type, field, `key`, `value`, status) VALUES
+('禁用(是否启用)', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_DISABLED_INT', '0', '禁用', 0),
+('启用(是否启用)', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_ENABLED_INT', '1', '启用', 0);
+
+-- autoAssign: 分配方式 (0=手动, 1=自动)
+INSERT INTO communion.constant (name, module, clazz, type, field, `key`, `value`, status) VALUES
+('手动(分配方式)', 'quotation', 'quotationAssignConfig', 'autoAssign', 'AUTOASSIGN_MANUAL_INT', '0', '手动', 0),
+('自动(分配方式)', 'quotation', 'quotationAssignConfig', 'autoAssign', 'AUTOASSIGN_AUTO_INT', '1', '自动', 0);
+
+-- ========================================
+-- quotationAssignUserRule 支持类型常量
+-- ========================================
+
+-- supportedType: 支持类型 (-1=通用, 0=半包, 1=整装, 2=全部)
+INSERT INTO communion.constant (name, module, clazz, type, field, `key`, `value`, status) VALUES
+('通用(支持类型)', 'quotation', 'quotationAssignUserRule', 'supportedType', 'SUPPORTEDTYPE_COMMON_INT', '-1', '通用', 0),
+('半包(支持类型)', 'quotation', 'quotationAssignUserRule', 'supportedType', 'SUPPORTEDTYPE_HALF_INT', '0', '半包', 0),
+('整装(支持类型)', 'quotation', 'quotationAssignUserRule', 'supportedType', 'SUPPORTEDTYPE_FULL_INT', '1', '整装', 0),
+('全部(支持类型)', 'quotation', 'quotationAssignUserRule', 'supportedType', 'SUPPORTEDTYPE_ALL_INT', '2', '全部', 0);
+```
+
+**总计**: 6个常量需要插入
+
+#### 前端常量访问方式
+
+插入上述常量后，前端可以通过以下方式访问：
+
+```javascript
+// quotationAssignConfig.enabled
+constant.quotation().quotationAssignConfig.enabled.keys[0]    // 返回 "禁用"
+constant.quotation().quotationAssignConfig.enabled.keys[1]    // 返回 "启用"
+constant.quotation().quotationAssignConfig.enabled.values['禁用']  // 返回 0
+constant.quotation().quotationAssignConfig.enabled.values['启用']  // 返回 1
+
+// quotationAssignConfig.autoAssign
+constant.quotation().quotationAssignConfig.autoAssign.keys[0]   // 返回 "手动"
+constant.quotation().quotationAssignConfig.autoAssign.keys[1]   // 返回 "自动"
+
+// quotationAssignUserRule.supportedType
+constant.quotation().quotationAssignUserRule.supportedType.keys[-1]  // 返回 "通用"
+constant.quotation().quotationAssignUserRule.supportedType.keys[0]   // 返回 "半包"
+constant.quotation().quotationAssignUserRule.supportedType.keys[1]   // 返回 "整装"
+constant.quotation().quotationAssignUserRule.supportedType.keys[2]   // 返回 "全部"
+```
+
+#### 执行方式
+
+**测试环境**:
+```bash
+mysql -h rm-2ze6qgdw1vit531v3io.mysql.rds.aliyuncs.com -u fanglin_rhadamanthus -p'Fanglin@2018' communion < docs/quotationassign_constant_data.sql
+```
+
+**生产环境**（需谨慎操作，先确认）:
+```bash
+mysql -h rr-2ze11ccr650aw2c79oo.mysql.rds.aliyuncs.com -u [username] -p[password] communion < docs/quotationassign_constant_data.sql
+```
+
+#### 验证方式
+
+执行SQL后，可以通过以下查询验证：
+
+```sql
+-- 查看新增的常量
+SELECT * FROM communion.constant
+WHERE module = 'quotation'
+  AND clazz IN ('quotationAssignConfig', 'quotationAssignUserRule')
+  AND type IN ('enabled', 'autoAssign', 'supportedType')
+ORDER BY clazz, type, `key`;
+```
+
+#### 影响范围
+
+执行此SQL后，需要修改以下JS文件以替换魔法数字：
+
+1. **quotationAssignConfig.js** (2处魔法数字)
+   - `enabled: 0` → `constant.quotation().quotationAssignConfig.enabled.keys[0]`
+   - `enabled: 1` → `constant.quotation().quotationAssignConfig.enabled.keys[1]`
+   - `autoAssign: 0` → `constant.quotation().quotationAssignConfig.autoAssign.keys[0]`
+   - `autoAssign: 1` → `constant.quotation().quotationAssignConfig.autoAssign.keys[1]`
+
+2. **quotationAssignUserRule.js** (4处魔法数字)
+   - `supportedType: -1` → `constant.quotation().quotationAssignUserRule.supportedType.keys[-1]`
+   - `supportedType: 0` → `constant.quotation().quotationAssignUserRule.supportedType.keys[0]`
+   - `supportedType: 1` → `constant.quotation().quotationAssignUserRule.supportedType.keys[1]`
+   - `supportedType: 2` → `constant.quotation().quotationAssignUserRule.supportedType.keys[2]`
+
+**其他常量已存在，无需修改代码**。
+
+---
+
 **维护者**: Claude AI
 **审核者**: 待指定
-**最后更新**: 2026-03-19
+**最后更新**: 2026-03-22
