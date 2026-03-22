@@ -48,11 +48,43 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 			query.add(query.getCriterion("company", company, "eq"));
 		}
 
+		// 处理动态过滤条件
+		queryFilterExcute(query, filters);
+
 		// 按优先级升序、请求时间升序排序
 		query.asc("priority");
 		query.asc("requestTime");
 
 		return query.list();
+	}
+
+	/**
+	 * 执行过滤条件
+	 *
+	 * @param query 分页查询对象
+	 * @param filters 过滤条件列表
+	 */
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("status".equals(field)) {
+				// 状态：精确匹配
+				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("orderId".equals(field)) {
+				// 装修单号：模糊匹配
+				query.add(query.getCriterion("orderId", data, op));
+			} else if ("company".equals(field)) {
+				// 公司：已在方法参数中处理，这里跳过
+				continue;
+			}
+		}
 	}
 
 	@Override
