@@ -1,0 +1,145 @@
+<div class="row">
+    <div id="condListCharge" class="fl_search clearfix"></div> <!-- 查询条件-->
+    <div id="resultListCharge" class="clearfix tab-pane active"></div> <!--查询结果-->
+    <div id="pagenationCharge" class="fl-page-wrap clearfix" style="text-align: center;max-width: 680px;"></div><!--分页-->
+</div>
+
+
+<div style="margin-top: -6.7%">
+    <a class="btn btn-minier btn-success pull-left" id="addBtn" style="margin-top: -2px; margin-left: 4px;">
+        <i class="icon-plus bigger-110"></i>
+        <span>添加</span>
+    </a>
+    <a class="btn btn-minier btn-primary pull-left" id="backBtn" style="margin-top: -2px; margin-left: 4px;">
+        <i class="icon-mail-forward "></i>
+        <span>返回</span>
+    </a>
+</div>
+
+<div id="addAoodsCharge" class="page-content" style="display: none;">
+    <form class="form-horizontal" novalidate="novalidate" id="formAoodsCharge">
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">费用名称</label>
+            <div class="col-md-9">
+                <input type="text" class="col-xs-10 col-sm-7 v_required" id="name" name="name" maxlength="100"
+                       data-required="1" data-toggle="popover" data-trigger='manual' placeholder="请输入费用名称"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">价格</label>
+            <div class="col-md-9">
+                <input type="text" class="col-xs-10 col-sm-7 v_float_3 v_required" id="price" name="price" data-required="1"
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入价格（元）"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right">浮动额</label>
+            <div class="col-md-9">
+                <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="surplus" name="surplus"
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入浮动额（元）"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">费用类型</label>
+            <div class="col-md-9">
+                <select class="col-xs-10 col-sm-7 v_required" id="type" name="type" data-required="1"
+                        data-toggle="popover" data-trigger='manual'>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">状态</label>
+            <div class="col-md-9">
+                <select class="col-xs-10 col-sm-7 v_required" id="status" name="status" data-required="1"
+                        data-toggle="popover" data-trigger='manual'>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right">排序</label>
+            <div class="col-md-9">
+                <input type="text" class="col-xs-10 col-sm-7 v_int" id="sort" name="sort"
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入排序号"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-9">
+                <a class="btn btn-success btn-sm" id="confirmBtn">确定</a>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div id="editAoodsCharge" class="page-content" style="display: none;">
+    <form class="form-horizontal" novalidate="novalidate" id="editFormAoodsCharge">
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">费用名称</label>
+            <div class="col-md-9">
+                <input type="text" class="col-xs-10 col-sm-7 v_required" id="editName" name="editName" maxlength="100"
+                       data-required="1" data-toggle="popover" data-trigger='manual' placeholder="请输入费用名称"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">价格</label>
+            <div class="col-md-9">
+                <input type="text" class="col-xs-10 col-sm-7 v_float_3 v_required" id="editPrice" name="editPrice" data-required="1"
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入价格（元）"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right">浮动额</label>
+            <div class="col-md-9">
+                <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="editSurplus" name="editSurplus"
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入浮动额（元）"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">费用类型</label>
+            <div class="col-md-9">
+                <select class="col-xs-10 col-sm-7 v_required" id="editType" name="editType" data-required="1"
+                        data-toggle="popover" data-trigger='manual'>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">状态</label>
+            <div class="col-md-9">
+                <select class="col-xs-10 col-sm-7 v_required" id="editStatus" name="editStatus" data-required="1"
+                        data-toggle="popover" data-trigger='manual'>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right">排序</label>
+            <div class="col-md-9">
+                <input type="text" class="col-xs-10 col-sm-7 v_int" id="editSort" name="editSort"
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入排序号"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-9">
+                <a class="btn btn-success btn-sm" id="editConfirmBtn">确定</a>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/aoodsCharge.js']);
+</script>
