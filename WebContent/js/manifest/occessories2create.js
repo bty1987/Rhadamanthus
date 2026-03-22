@@ -286,7 +286,7 @@ jQuery(function() {
      * 加载辅材费用模板
      */
     function loadAoodsChargeTemplate(aid) {
-        com.post(api.data.queryAoodsChargeByAid, {"aoodsCharge.aid": aid}, function(data) {
+        com.post(api.data.queryAoodsChargeByAid, {"aoodsCharge.aoods.aid": aid}, function(data) {
             if (data && data.aoodsCharges && data.aoodsCharges.length > 0) {
                 $.each(data.aoodsCharges, function(i, charge) {
                     addChargeRow(charge.name, charge.price, charge.num || 1);
