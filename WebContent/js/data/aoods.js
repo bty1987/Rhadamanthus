@@ -334,6 +334,14 @@ $(function() {
             com.popup4page("#optPopUp", "views/data/aoodsCost.html", "辅材成本");
         }
     }, {
+        name: "费用",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            params.data.aoods = v;
+            com.popup4page("#optPopUp", "views/data/aoodsCharge.html", "辅材费用");
+        }
+    }, {
         name: "状态",
         type: "switch",
         clazz: "status-lbl",

@@ -1357,6 +1357,52 @@ $.extend(api, {
         deleteAoodsCost: {
             url: "deleteAoodsCost.do"
         },
+
+        pageAoodsCharge: {
+            url: "pageAoodsCharge.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["price", "surplus"]
+            }]
+        },
+
+        queryAoodsChargeByAid: {
+            url: "queryAoodsChargeByAid.do",
+            type: "query",
+            tranargs: {
+                args: ["price", "surplus"]
+            }
+        },
+
+        addAoodsCharge: {
+            url: "addAoodsCharge.do",
+            type: "update",
+            tranargs: {
+                args: ["aoodsCharge.price", "aoodsCharge.surplus"]
+            },
+            validate: {
+                "aoodsCharge.aoods.aid": { required: true },
+                "aoodsCharge.name": { required: true }
+            }
+        },
+
+        updateAoodsCharge: {
+            url: "updateAoodsCharge.do",
+            type: "update",
+            tranargs: {
+                args: ["aoodsCharge.price", "aoodsCharge.surplus"]
+            },
+            validate: {
+                "aoodsCharge.acid": { required: true },
+                "aoodsCharge.name": { required: true }
+            }
+        },
+
+        deleteAoodsCharge: {
+            url: "deleteAoodsCharge.do"
+        },
+
         pageHouseLayout: {
             url: "pageHouseLayout.do",
             type: "query",
