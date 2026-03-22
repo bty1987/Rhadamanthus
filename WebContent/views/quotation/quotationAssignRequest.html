@@ -81,6 +81,118 @@
             </div>
         </div>
     </div>
+
+    <!-- 手动分配弹窗 -->
+    <div class="modal fade" id="manualAssignModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">手动分配预算员</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" id="manualAssignOrderId">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">装修单号</label>
+                            <div class="col-sm-9">
+                                <span id="manualAssignOrderIdDisplay" class="form-control-static"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">公司</label>
+                            <div class="col-sm-9">
+                                <span id="manualAssignCompanyDisplay" class="form-control-static"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">装修类型</label>
+                            <div class="col-sm-9">
+                                <span id="manualAssignDecorationTypeDisplay" class="form-control-static"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="manualAssignBudgeter">预算员 <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="manualAssignBudgeter" class="col-xs-10 col-sm-8 v_required" placeholder="输入拼音或姓名搜索">
+                                <span class="help-block" style="margin-bottom: 0;">请输入预算员姓名或拼音进行搜索</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="confirmManualAssignBtn" class="btn btn-purple">
+                        <i class="icon-hand-right"></i> 确认分配
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 完成并分配弹窗 -->
+    <div class="modal fade" id="finishAndAssignModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">
+                        <i class="icon-ok-circle bigger-120 green"></i> 完成并反向自动分配
+                    </h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="finishOrderId">已完成的装修单号 <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="finishOrderId" class="col-xs-10 col-sm-8 v_required" placeholder="输入装修单号，如：2024030001">
+                                <span class="help-block" style="margin-bottom: 0;">输入预算员刚完成报价的装修单号</span>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-success">
+                            <i class="icon-info-sign"></i>
+                            <strong>功能说明：</strong>
+                            <ul style="margin: 5px 0 0 20px;">
+                                <li>系统会更新该预算员的最后完成时间</li>
+                                <li>自动从待分配队列中查找匹配的任务</li>
+                                <li>优先分配类型相同且优先级最高的任务</li>
+                                <li>如果找到匹配任务，自动分配给该预算员</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <i class="icon-warning-sign"></i>
+                            <strong>注意：</strong>
+                            <ul style="margin: 5px 0 0 20px;">
+                                <li>该功能用于测试反向自动分配逻辑</li>
+                                <li>确保输入的装修单号已分配给预算员</li>
+                                <li>系统不会实际修改报价单状态</li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="confirmFinishAndAssignBtn" class="btn btn-success">
+                        <i class="icon-ok"></i> 完成并分配
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">

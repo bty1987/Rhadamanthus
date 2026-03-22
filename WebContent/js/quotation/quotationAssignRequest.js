@@ -3,7 +3,9 @@ $(function() {
     // ==================== 页面元素声明 ====================
     var config = {
         modals: {
-            requestModal: com.focusPage('#requestModal')
+            requestModal: com.focusPage('#requestModal'),
+            manualAssignModal: com.focusPage('#manualAssignModal'),
+            finishAndAssignModal: com.focusPage('#finishAndAssignModal')
         },
         items: {
             qarid: com.focusPage('#qarid'),
@@ -13,11 +15,19 @@ $(function() {
             decorationType: com.focusPage('#decorationType'),
             priority: com.focusPage('#priority'),
             requestUser: com.focusPage('#requestUser'),
-            remark: com.focusPage('#remark')
+            remark: com.focusPage('#remark'),
+            // 手动分配相关
+            manualAssignOrderId: com.focusPage('#manualAssignOrderId'),
+            manualAssignBudgeter: com.focusPage('#manualAssignBudgeter'),
+            // 完成并分配相关
+            finishOrderId: com.focusPage('#finishOrderId')
         },
         btns: {
             addBtn: null, // 动态创建
-            saveBtn: com.focusPage('#saveBtn')
+            finishAndAssignBtn: null, // 动态创建
+            saveBtn: com.focusPage('#saveBtn'),
+            confirmManualAssignBtn: com.focusPage('#confirmManualAssignBtn'),
+            confirmFinishAndAssignBtn: com.focusPage('#confirmFinishAndAssignBtn')
         },
         plugins: {},
         lists: {},
@@ -25,7 +35,8 @@ $(function() {
         data: {
             keyword: null,
             currentRow: null,
-            selectedRequestUid: null
+            selectedRequestUid: null,
+            selectedManualAssignUid: null // 手动分配选中的预算员UID
         }
     };
 
@@ -52,7 +63,15 @@ $(function() {
 
         config.btns.addBtn = $addBtn; // 缓存按钮引用
 
-        return [$addBtn];
+        // 完成并分配按钮
+        var $finishAndAssignBtn = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'finishAndAssignBtn').css('margin', '0px 3px');
+
+        $('<i></i>').addClass('icon-ok-circle bigger-110').appendTo($finishAndAssignBtn);
+        $('<span></span>').text('完成并分配').appendTo($finishAndAssignBtn);
+
+        config.btns.finishAndAssignBtn = $finishAndAssignBtn; // 缓存按钮引用
+
+        return [$addBtn, $finishAndAssignBtn];
     });
 
     // 列表行配置
@@ -143,6 +162,30 @@ $(function() {
 
     // 行按钮
     var linebtns = [{
+        name: "申请自动分配",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            autoAssign(v);
+            return false;
+        },
+        show: function(v) {
+            // 仅待分配状态可以申请自动分配
+            return v.status == 1;
+        }
+    }, {
+        name: "手动分配",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            openManualAssignModal(v);
+            return false;
+        },
+        show: function(v) {
+            // 仅待分配状态可以手动分配
+            return v.status == 1;
+        }
+    }, {
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(v) {
@@ -241,12 +284,32 @@ $(function() {
 
     // 页面加载时初始化
     initRequestUserInput();
+    initManualAssignBudgeterInput(); // 初始化手动分配预算员输入框
 
     // 监听公司变化，联动部门
     config.items.company.on('change', function() {
         var companyId = $(this).val();
         initDepartmentSelect(companyId);
     });
+
+    // ==================== 手动分配相关初始化 ====================
+
+    // 初始化手动分配预算员输入框（typeahead）
+    function initManualAssignBudgeterInput() {
+        com.initTypeahead(
+            config.items.manualAssignBudgeter, // 容器元素
+            api.personel.queryUserByPinyin, // 请求地址
+            "pinyinName", // 参数名称
+            { "user.status": 0 }, // 额外参数：仅在职员工
+            "autoFillKeyValue", // 返回结果路径
+            "key", // key路径
+            "value", // value路径
+            function(list, key, value) { // 选中回调
+                config.data.selectedManualAssignUid = key;
+                return value;
+            }
+        );
+    }
 
     // ==================== Modal 操作 ====================
 
@@ -256,8 +319,20 @@ $(function() {
         openModal();
     });
 
+    // 完成并分配按钮点击事件
+    com.focusPage('#finishAndAssignBtn', '#pagenation').on('click', function() {
+
+        openFinishAndAssignModal();
+    });
+
     // 保存按钮点击事件
     config.btns.saveBtn.on('click', saveRequest);
+
+    // 手动分配确认按钮点击事件
+    config.btns.confirmManualAssignBtn.on('click', confirmManualAssign);
+
+    // 完成并分配确认按钮点击事件
+    config.btns.confirmFinishAndAssignBtn.on('click', confirmFinishAndAssign);
 
     // Modal关闭时清理表单
     config.modals.requestModal.on('hide.bs.modal', function() {
@@ -396,6 +471,149 @@ $(function() {
                 com.showAlert(com.info, '取消成功');
                 searcher.doSearch(); // 刷新列表
             });
+        });
+    }
+
+    // ==================== 分配功能 ====================
+
+    // 申请自动分配
+    function autoAssign(row) {
+
+        com.showConfirm('确认申请自动分配该装修单吗？系统将自动查找可用预算员进行分配。', function() {
+
+            com.post(api.quotation.autoQuotationAssign, {
+                "quotationAssign.orderId": row.orderId
+            }, function(res) {
+
+                // 判断响应结果
+                if (res.errorCode == 0) {
+                    // 成功
+                    com.showAlert(com.info, '分配成功！已自动分配给预算员');
+                } else {
+                    // 失败或入队
+                    com.showAlert(com.warning, res.errorMsg || '分配失败，请查看分配记录了解详情');
+                }
+
+                searcher.doSearch(); // 刷新列表
+            }, function(res) {
+                // 异常回调
+                com.showAlert(com.error, res.errorMsg || '分配失败');
+            });
+        });
+    }
+
+    // 打开手动分配Modal
+    function openManualAssignModal(row) {
+
+        // 填充装修单信息
+        com.focusPage('#manualAssignOrderIdDisplay').text(row.orderId);
+        com.focusPage('#manualAssignOrderIdDisplay').attr('data-order-id', row.orderId);
+
+        // 显示公司名称
+        var companyName = row.company && row.company.name ? row.company.name : '未知';
+        com.focusPage('#manualAssignCompanyDisplay').text(companyName);
+
+        // 显示装修类型
+        var decorationTypeText = row.decorationType == 1 ? '半包' : '整装';
+        com.focusPage('#manualAssignDecorationTypeDisplay').text(decorationTypeText);
+
+        // 清空预算员输入框
+        com.cleanTypeahead(config.items.manualAssignBudgeter);
+        config.data.selectedManualAssignUid = null;
+
+        // 显示Modal
+        config.modals.manualAssignModal.modal('show');
+    }
+
+    // 确认手动分配
+    function confirmManualAssign() {
+
+        // 表单验证
+        if (com.validate('manualAssignModal')) {
+            return false;
+        }
+
+        // 获取装修单号
+        var orderId = com.focusPage('#manualAssignOrderIdDisplay').attr('data-order-id');
+        if (!orderId) {
+            com.showAlert(com.warning, '装修单号不能为空');
+            return false;
+        }
+
+        // 获取预算员UID
+        var budgetUid = config.data.selectedManualAssignUid;
+        if (!budgetUid) {
+            com.showAlert(com.warning, '请选择预算员');
+            return false;
+        }
+
+        // 调用手动分配接口
+        com.post(api.quotation.manualQuotationAssign, {
+            "quotationAssign.orderId": orderId,
+            "quotationAssign.quoter.userId": budgetUid
+        }, function(res) {
+
+            com.showAlert(com.info, '分配成功！');
+            config.modals.manualAssignModal.modal('hide');
+            searcher.doSearch(); // 刷新列表
+        }, function(res) {
+            // 异常回调
+            com.showAlert(com.error, res.errorMsg || '分配失败');
+        });
+    }
+
+    // ==================== 完成并分配功能 ====================
+
+    // 打开完成并分配Modal
+    function openFinishAndAssignModal() {
+
+        // 清空输入框
+        config.items.finishOrderId.val('');
+
+        // 显示Modal
+        config.modals.finishAndAssignModal.modal('show');
+    }
+
+    // 确认完成并分配
+    function confirmFinishAndAssign() {
+
+        // 表单验证
+        if (com.validate('finishAndAssignModal')) {
+            return false;
+        }
+
+        // 获取装修单号
+        var orderId = config.items.finishOrderId.val();
+        if (!orderId || orderId.trim() === '') {
+            com.showAlert(com.warning, '请输入装修单号');
+            return false;
+        }
+
+        // 显示加载提示
+        com.showLoading('正在处理...');
+
+        // 调用完成并分配接口
+        com.post(api.quotation.finishQuotationAssign, {
+            "quotationAssign.orderId": orderId.trim()
+        }, function(res) {
+
+            com.hideLoading();
+
+            // 判断响应结果
+            if (res.errorCode == 0) {
+                // 成功
+                com.showAlert(com.info, '操作成功！预算员最后完成时间已更新，系统已自动分配下一个任务');
+            } else {
+                // 失败或无任务可分配
+                com.showAlert(com.warning, res.errorMsg || '操作完成，但无可用任务可分配');
+            }
+
+            config.modals.finishAndAssignModal.modal('hide');
+            searcher.doSearch(); // 刷新列表
+        }, function(res) {
+            // 异常回调
+            com.hideLoading();
+            com.showAlert(com.error, res.errorMsg || '操作失败');
         });
     }
 

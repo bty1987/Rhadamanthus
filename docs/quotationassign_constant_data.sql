@@ -75,3 +75,42 @@ INSERT INTO communion.constant (name, module, clazz, type, field, `key`, value, 
 -- 使用示例：
 -- var statusText = constant.quotation().quotationAssignUserRule.status.datas[item.status - 1].value;
 
+-- ==========================================
+-- 4. quotationAssignConfig - 分配配置（新增）
+-- 更新日期: 2026-03-22
+-- ==========================================
+
+-- enabled: 是否启用 (0=禁用, 1=启用)
+INSERT INTO communion.constant (name, module, clazz, type, field, `key`, `value`, status) VALUES
+('禁用(是否启用)', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_DISABLED_INT', '0', '禁用', 0),
+('启用(是否启用)', 'quotation', 'quotationAssignConfig', 'enabled', 'ENABLED_ENABLED_INT', '1', '启用', 0);
+
+-- autoAssign: 分配方式 (0=手动, 1=自动)
+INSERT INTO communion.constant (name, module, clazz, type, field, `key`, `value`, status) VALUES
+('手动(分配方式)', 'quotation', 'quotationAssignConfig', 'autoAssign', 'AUTOASSIGN_MANUAL_INT', '0', '手动', 0),
+('自动(分配方式)', 'quotation', 'quotationAssignConfig', 'autoAssign', 'AUTOASSIGN_AUTO_INT', '1', '自动', 0);
+
+-- ==========================================
+-- 5. quotationAssignUserRule - 支持类型（新增）
+-- 更新日期: 2026-03-22
+-- ==========================================
+
+-- supportedType: 支持类型 (-1=通用, 0=半包, 1=整装, 2=全部)
+INSERT INTO communion.constant (name, module, clazz, type, field, `key`, `value`, status) VALUES
+('通用(支持类型)', 'quotation', 'quotationAssignUserRule', 'supportedType', 'SUPPORTEDTYPE_COMMON_INT', '-1', '通用', 0),
+('半包(支持类型)', 'quotation', 'quotationAssignUserRule', 'supportedType', 'SUPPORTEDTYPE_HALF_INT', '0', '半包', 0),
+('整装(支持类型)', 'quotation', 'quotationAssignUserRule', 'supportedType', 'SUPPORTEDTYPE_FULL_INT', '1', '整装', 0),
+('全部(支持类型)', 'quotation', 'quotationAssignUserRule', 'supportedType', 'SUPPORTEDTYPE_ALL_INT', '2', '全部', 0);
+
+-- ==========================================
+-- 更新说明：
+-- 1. 以上新增6个常量（第4、5部分）用于替换前端JS文件中的魔法数字
+-- 2. 第1-3部分的17个常量已存在于数据库中（CID: 2009-2028）
+-- 3. 新增常量仅在执行SQL后才生效，执行前前端仍需使用魔法数字
+-- 4. 执行验证：
+--    SELECT * FROM communion.constant
+--    WHERE module = 'quotation'
+--      AND clazz IN ('quotationAssignConfig', 'quotationAssignUserRule')
+--      AND type IN ('enabled', 'autoAssign', 'supportedType')
+--    ORDER BY clazz, type, `key`;
+-- ==========================================
