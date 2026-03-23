@@ -138,6 +138,62 @@
         </div>
     </div>
 
+    <!-- 正向自动分配弹窗 -->
+    <div class="modal fade" id="autoAssignModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">
+                        <i class="icon-magic bigger-120 blue"></i> 正向自动分配
+                    </h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="autoAssignOrderId">装修单号 <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="autoAssignOrderId" class="col-xs-10 col-sm-8 v_required" placeholder="输入装修单号，如：2024030001">
+                                <span class="help-block" style="margin-bottom: 0;">输入需要分配报价员的装修单号</span>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="icon-info-sign"></i>
+                            <strong>功能说明：</strong>
+                            <ul style="margin: 5px 0 0 20px;">
+                                <li>系统会根据装修单的类型、公司、部门信息自动查找可用预算员</li>
+                                <li>优先分配给最后完成时间最早的预算员</li>
+                                <li>如果找不到可用预算员，系统会将任务加入等待队列</li>
+                                <li>该功能不依赖分配请求记录，可直接发起分配</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <i class="icon-warning-sign"></i>
+                            <strong>注意：</strong>
+                            <ul style="margin: 5px 0 0 20px;">
+                                <li>确保装修单存在且未分配报价员</li>
+                                <li>系统会根据用户规则自动筛选匹配的预算员</li>
+                                <li>分配成功后会自动创建分配记录</li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="confirmAutoAssignBtn" class="btn btn-info">
+                        <i class="icon-magic"></i> 自动分配
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 完成并分配弹窗 -->
     <div class="modal fade" id="finishAndAssignModal" tabindex="-1">
         <div class="modal-dialog">

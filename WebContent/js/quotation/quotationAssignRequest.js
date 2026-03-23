@@ -5,6 +5,7 @@ $(function() {
         modals: {
             requestModal: com.focusPage('#requestModal'),
             manualAssignModal: com.focusPage('#manualAssignModal'),
+            autoAssignModal: com.focusPage('#autoAssignModal'),
             finishAndAssignModal: com.focusPage('#finishAndAssignModal')
         },
         items: {
@@ -19,15 +20,10 @@ $(function() {
             // 手动分配相关
             manualAssignOrderId: com.focusPage('#manualAssignOrderId'),
             manualAssignBudgeter: com.focusPage('#manualAssignBudgeter'),
+            // 正向自动分配相关
+            autoAssignOrderId: com.focusPage('#autoAssignOrderId'),
             // 完成并分配相关
             finishOrderId: com.focusPage('#finishOrderId')
-        },
-        btns: {
-            addBtn: null, // 动态创建
-            finishAndAssignBtn: null, // 动态创建
-            saveBtn: com.focusPage('#saveBtn'),
-            confirmManualAssignBtn: com.focusPage('#confirmManualAssignBtn'),
-            confirmFinishAndAssignBtn: com.focusPage('#confirmFinishAndAssignBtn')
         },
         plugins: {},
         lists: {},
@@ -53,26 +49,23 @@ $(function() {
     // 查询条件
     searcher.condition(["quotation-assign-request-company", "quotation-assign-request-status", "quotation-assign-request-orderId"]);
 
-    // 顶部按钮
-    searcher.button(function() {
-
-        var $addBtn = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addRequestBtn').css('margin', '0px 3px');
-
-        $('<i></i>').addClass('icon-plus bigger-110').appendTo($addBtn);
-        $('<span></span>').text('新增').appendTo($addBtn);
-
-        config.btns.addBtn = $addBtn; // 缓存按钮引用
-
-        // 完成并分配按钮
-        var $finishAndAssignBtn = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'finishAndAssignBtn').css('margin', '0px 3px');
-
-        $('<i></i>').addClass('icon-ok-circle bigger-110').appendTo($finishAndAssignBtn);
-        $('<span></span>').text('交付').appendTo($finishAndAssignBtn);
-
-        config.btns.finishAndAssignBtn = $finishAndAssignBtn; // 缓存按钮引用
-
-        return [$addBtn, $finishAndAssignBtn];
-    });
+    // 顶部按钮（使用配置对象方式）
+    searcher.button([{
+        id: 'addRequestBtn',
+        name: '新增',
+        clazz: 'btn-yellow',
+        icon: 'icon-plus'
+    }, {
+        id: 'autoAssignBtn',
+        name: '正向自动分配',
+        clazz: 'btn-info',
+        icon: 'icon-magic'
+    }, {
+        id: 'finishAndAssignBtn',
+        name: '交付',
+        clazz: 'btn-success',
+        icon: 'icon-ok-circle'
+    }]);
 
     // 列表行配置
     var lineprops = [{
@@ -319,6 +312,12 @@ $(function() {
         openModal();
     });
 
+    // 正向自动分配按钮点击事件
+    com.focusPage('#autoAssignBtn', '#pagenation').on('click', function() {
+
+        openAutoAssignModal();
+    });
+
     // 完成并分配按钮点击事件
     com.focusPage('#finishAndAssignBtn', '#pagenation').on('click', function() {
 
@@ -326,13 +325,16 @@ $(function() {
     });
 
     // 保存按钮点击事件
-    config.btns.saveBtn.on('click', saveRequest);
+    com.focusPage('#saveBtn').on('click', saveRequest);
 
     // 手动分配确认按钮点击事件
-    config.btns.confirmManualAssignBtn.on('click', confirmManualAssign);
+    com.focusPage('#confirmManualAssignBtn').on('click', confirmManualAssign);
+
+    // 正向自动分配确认按钮点击事件
+    com.focusPage('#confirmAutoAssignBtn').on('click', confirmAutoAssign);
 
     // 完成并分配确认按钮点击事件
-    config.btns.confirmFinishAndAssignBtn.on('click', confirmFinishAndAssign);
+    com.focusPage('#confirmFinishAndAssignBtn').on('click', confirmFinishAndAssign);
 
     // Modal关闭时清理表单
     config.modals.requestModal.on('hide.bs.modal', function() {
@@ -558,6 +560,61 @@ $(function() {
             searcher.doSearch(); // 刷新列表
         }, function(res) {
             // 异常回调
+            com.showAlert(com.error, res.errorMsg || '分配失败');
+        });
+    }
+
+    // ==================== 正向自动分配功能 ====================
+
+    // 打开正向自动分配Modal
+    function openAutoAssignModal() {
+
+        // 清空输入框
+        config.items.autoAssignOrderId.val('');
+
+        // 显示Modal
+        config.modals.autoAssignModal.modal('show');
+    }
+
+    // 确认正向自动分配
+    function confirmAutoAssign() {
+
+        // 表单验证
+        if (com.validate('autoAssignModal')) {
+            return false;
+        }
+
+        // 获取装修单号
+        var orderId = config.items.autoAssignOrderId.val();
+        if (!orderId || orderId.trim() === '') {
+            com.showAlert(com.warning, '请输入装修单号');
+            return false;
+        }
+
+        // 显示加载提示
+        com.showLoading('正在自动分配...');
+
+        // 调用正向自动分配接口
+        com.post(api.quotation.autoQuotationAssign, {
+            "quotationAssign.orderId": orderId.trim()
+        }, function(res) {
+
+            com.hideLoading();
+
+            // 判断响应结果
+            if (res.errorCode == 0) {
+                // 成功
+                com.showAlert(com.info, '分配成功！已自动分配给预算员');
+            } else {
+                // 失败或入队
+                com.showAlert(com.warning, res.errorMsg || '分配失败，请查看分配记录了解详情');
+            }
+
+            config.modals.autoAssignModal.modal('hide');
+            searcher.doSearch(); // 刷新列表
+        }, function(res) {
+            // 异常回调
+            com.hideLoading();
             com.showAlert(com.error, res.errorMsg || '分配失败');
         });
     }
