@@ -55,6 +55,24 @@ public class NormoodItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	private int amount;
+
+	@Action(value = "amountNormoodItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountNormoodItem() {
+
+		amount = normoodItemService.amountNormoodItem(normoodItem);
+
+		return SUCCESS;
+	}
+
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+
 	public QuotationVO getQuotation() {
 		return quotation;
 	}

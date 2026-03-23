@@ -165,4 +165,9 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 		return 0;
 	}
 
+	@Override
+	public int amountNormoodItem(NormoodItemVO normoodItemVO) {
+		return normoodItemDao.amountNormoodItem(normoodItemVO.getQid(), normoodItemVO.getNoods().getNid());
+	}
+
 }
