@@ -28,8 +28,12 @@ public class OccessoriesItemVO implements Serializable {
 
 	private Integer vbalance;//结算价
 
+	private Long charge; // 外辅项费用总额
+
+	private Long nid; // 定材ID
+
 	private List<OccessoriesChargeVO> occessoriesCharges; // 外辅费用列表
-	
+
 	public Integer getRbalance() {
 		return rbalance;
 	}
@@ -44,6 +48,22 @@ public class OccessoriesItemVO implements Serializable {
 
 	public void setVbalance(Integer vbalance) {
 		this.vbalance = vbalance;
+	}
+
+	public Long getCharge() {
+		return charge;
+	}
+
+	public void setCharge(Long charge) {
+		this.charge = charge;
+	}
+
+	public Long getNid() {
+		return nid;
+	}
+
+	public void setNid(Long nid) {
+		this.nid = nid;
 	}
 
 	public OccessoriesItemVO(){

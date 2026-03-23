@@ -540,6 +540,9 @@ $.extend(api, {
                 ]
             }
         },
+        amountOccessoriesItem: {
+            url: "amountOccessoriesItem.do"
+        },
         batchOccessoriesCharge: {
             url: "batchOccessoriesCharge.do",
             type: "update",

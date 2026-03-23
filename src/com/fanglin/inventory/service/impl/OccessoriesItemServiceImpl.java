@@ -128,4 +128,9 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		return 0;
 	}
 
+	@Override
+	public int amountOccessoriesItem(OccessoriesItemVO occessoriesItemVO) {
+		return occessoriesItemDao.amountOccessoriesItem(occessoriesItemVO.getOccessories().getOrderId(), occessoriesItemVO.getNid());
+	}
+
 }

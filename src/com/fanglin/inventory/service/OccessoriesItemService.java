@@ -15,4 +15,6 @@ public interface OccessoriesItemService {
 
 	public int deleteOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException;
 
+	public int amountOccessoriesItem(OccessoriesItemVO occessoriesItemVO);
+
 }

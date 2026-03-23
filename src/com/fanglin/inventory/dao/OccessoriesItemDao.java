@@ -9,4 +9,6 @@ public interface OccessoriesItemDao extends Dao<OccessoriesItemPO> {
 
 	public List<OccessoriesItemPO> queryOccessoriesItemByOid(long oid);
 
+	public int amountOccessoriesItem(String orderId, long nid);
+
 }

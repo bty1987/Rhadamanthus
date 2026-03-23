@@ -43,6 +43,10 @@ public class OccessoriesItemPO implements Serializable {
 
 	private int vbalance;// 结算价
 
+	private long charge; // 外辅项费用总额
+
+	private long nid; // 定材ID
+
 	@Column(name = "rbalance")
 	public int getRbalance() {
 		return rbalance;
@@ -59,6 +63,24 @@ public class OccessoriesItemPO implements Serializable {
 
 	public void setVbalance(int vbalance) {
 		this.vbalance = vbalance;
+	}
+
+	@Column(name = "charge")
+	public long getCharge() {
+		return charge;
+	}
+
+	public void setCharge(long charge) {
+		this.charge = charge;
+	}
+
+	@Column(name = "nid")
+	public long getNid() {
+		return nid;
+	}
+
+	public void setNid(long nid) {
+		this.nid = nid;
 	}
 
 	public OccessoriesItemPO() {
