@@ -1723,6 +1723,9 @@ $.extend(api, {
             url: "deleteNormoodItem.do",
             intercept: true
         },
+        amountNormoodItem: {
+            url: "amountNormoodItem.do"
+        },
 
         queryNormriceItem: {
             url: "queryNormriceItem.do",
@@ -2227,6 +2230,12 @@ $.extend(api, {
                 "quotationAssign.orderId": { required: true }
             }
         },
+
+        // 正向自动分配（设计师发起，不通过request记录）
+        autoQuotationAssign: {
+            url: "autoQuotationAssign.do"
+        },
+
         manualQuotationAssign: {
             url: "manualQuotationAssign.do",
             validate: {
