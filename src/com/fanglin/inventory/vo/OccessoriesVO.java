@@ -40,6 +40,8 @@ public class OccessoriesVO implements Serializable {
 
 	private Long total;
 
+	private Long charge; // 外辅费用总额
+
 	private short isEnter;// 是否可进园区
 
 	private short isLift;// 是否有电梯
@@ -184,6 +186,14 @@ public class OccessoriesVO implements Serializable {
 
 	public void setTotal(Long total) {
 		this.total = total;
+	}
+
+	public Long getCharge() {
+		return charge;
+	}
+
+	public void setCharge(Long charge) {
+		this.charge = charge;
 	}
 
 	public short getIsEnter() {

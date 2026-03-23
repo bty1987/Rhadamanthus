@@ -26,6 +26,8 @@ jQuery(function() {
             brand: com.focusPage('#brand'),
             measurementUnit: com.focusPage('#measurementUnit'),
             num: com.focusPage('#num'),
+            normoodAmount: com.focusPage('#normoodAmount'),
+            occessoriesAmount: com.focusPage('#occessoriesAmount'),
         },
         rightitems: {
             orderId: com.focusPage('#orderId'),
@@ -43,17 +45,41 @@ jQuery(function() {
 
 
         $.each(list, function(index, val) {
-            
+
             if (val.aid == k) {
-                
+
                 console.log(val)
-                
-                occessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-aid', val.aid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-balance', val.balance);
+
+                // 验证 orderId 是否已填写
+                var orderId = occessories.rightitems.orderId.val();
+                if (!orderId || orderId.trim() === '') {
+                    com.showAlert(com.warning, "请先填写装修单号！");
+                    occessories.leftitems.goodsName.val('');
+                    occessories.leftitems.goodsHidden.removeAttr('data-gid data-aid data-type data-selling data-balance data-nid');
+                    occessories.leftitems.goodsNo.val('');
+                    occessories.leftitems.category.val('');
+                    occessories.leftitems.brand.val('');
+                    occessories.leftitems.measurementUnit.val('');
+                    occessories.leftitems.normoodAmount.val('0');
+                    occessories.leftitems.occessoriesAmount.val('0');
+                    return false;
+                }
+
+                // 保存辅材信息
+                occessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-aid', val.aid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-balance', val.balance).attr('data-nid', val.nid || '');
 
                 occessories.leftitems.goodsNo.attr('data-no', val.no).val(val.goods.no);
                 occessories.leftitems.category.attr('data-category', val.category).val(val.goods.category);
                 occessories.leftitems.brand.attr('data-brand', val.brand).val(val.goods.brand);
                 occessories.leftitems.measurementUnit.attr('data-measurementUnit', val.measurementUnit).val(val.goods.measurementUnit);
+
+                // 如果有 nid，查询定额和外辅数量
+                if (val.nid) {
+                    queryAmounts(orderId, val.nid);
+                } else {
+                    occessories.leftitems.normoodAmount.val('0');
+                    occessories.leftitems.occessoriesAmount.val('0');
+                }
             }
         });
 
@@ -73,6 +99,7 @@ jQuery(function() {
         if (com.validate("left", "left")) { return false; }
         var gid = occessories.leftitems.goodsHidden.attr('data-gid');
         var aid = occessories.leftitems.goodsHidden.attr('data-aid');
+        var nid = occessories.leftitems.goodsHidden.attr('data-nid');
         var type = occessories.leftitems.goodsHidden.attr('data-type');
         var selling = occessories.leftitems.goodsHidden.attr('data-selling');
         var balance = occessories.leftitems.goodsHidden.attr('data-balance');
@@ -90,6 +117,7 @@ jQuery(function() {
         var $liList = $('<li></li>').addClass('list-group-item')
             .attr("data-gid", gid)
             .attr("data-aid", aid)
+            .attr("data-nid", nid || '')
             .attr("data-num", num)
             .attr("data-selling", selling)
             .attr("data-balance", balance)
@@ -221,9 +249,11 @@ jQuery(function() {
 
             var $v = $(v);
             var aid = $v.attr('data-aid');
+            var nid = $v.attr('data-nid');
 
             options["occessoriesItems[" + i + "].goods.gid"] = $v.attr('data-gid');
             options["occessoriesItems[" + i + "].aoods.aid"] = aid;
+            options["occessoriesItems[" + i + "].nid"] = nid || '';
             options["occessoriesItems[" + i + "].num"] = $v.attr('data-num');
             options["occessoriesItems[" + i + "].rbalance"] = $v.attr('data-balance');
 
@@ -249,6 +279,57 @@ jQuery(function() {
     });
 
     // ========== 费用相关函数 ==========
+
+    /**
+     * 查询定额和外辅数量
+     */
+    function queryAmounts(orderId, nid) {
+        // 先重置数量显示
+        occessories.leftitems.normoodAmount.val('0');
+        occessories.leftitems.occessoriesAmount.val('0');
+
+        // 1. 查询报价单获取 qid
+        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            "quotation.decoration.orderId": orderId
+        }, function(data) {
+            if (data && data.quotation && data.quotation.qid) {
+                var qid = data.quotation.qid;
+
+                // 2. 查询定额材料数量
+                com.post(api.quotation.amountNormoodItem, {
+                    "normoodItem.qid": qid,
+                    "normoodItem.nid": nid
+                }, function(result) {
+                    if (result !== undefined && result !== null) {
+                        occessories.leftitems.normoodAmount.val(result);
+                    }
+                }, function() {
+                    // 查询失败时保持为 0
+                });
+
+                // 3. 查询外辅材料数量
+                com.post(api.inventory.amountOccessoriesItem, {
+                    "occessoriesItem.occessories.orderId": orderId,
+                    "occessoriesItem.nid": nid
+                }, function(result) {
+                    if (result !== undefined && result !== null) {
+                        occessories.leftitems.occessoriesAmount.val(result);
+                    }
+                }, function() {
+                    // 查询失败时保持为 0
+                });
+
+            } else {
+                // 没有找到报价单，数量都为 0
+                occessories.leftitems.normoodAmount.val('0');
+                occessories.leftitems.occessoriesAmount.val('0');
+            }
+        }, function() {
+            // 查询报价单失败，数量都为 0
+            occessories.leftitems.normoodAmount.val('0');
+            occessories.leftitems.occessoriesAmount.val('0');
+        });
+    }
 
     /**
      * 重新索引外辅项

@@ -1,5 +1,6 @@
 package com.fanglin.inventory.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.inventory.dao.OccessoriesItemDao;
 import com.fanglin.inventory.po.OccessoriesItemPO;
+import com.fanglin.utils.Arith;
 
 @Repository("occessoriesItemDao")
 public class OccessoriesItemDaoImpl extends DaoImpl<OccessoriesItemPO> implements OccessoriesItemDao {
@@ -15,11 +17,19 @@ public class OccessoriesItemDaoImpl extends DaoImpl<OccessoriesItemPO> implement
 	public OccessoriesItemDaoImpl(){
 		super(OccessoriesItemPO.class);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<OccessoriesItemPO> queryOccessoriesItemByOid(long oid) {
 		return session().createCriteria(OccessoriesItemPO.class).add(Restrictions.eq("oid", oid)).list();
+	}
+
+	@Override
+	public int amountOccessoriesItem(String orderId, long nid) {
+		String sql = "select CAST(sum(oi.num) AS SIGNED) from inventory.occessories o, inventory.occessoriesItem oi where o.orderId = :orderId and o.oid = oi.oid and oi.nid = :nid and o.status not in (3, 4)";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setLong("nid", nid).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
 	}
 
 }
