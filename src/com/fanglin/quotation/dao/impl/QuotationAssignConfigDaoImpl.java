@@ -64,7 +64,7 @@ public class QuotationAssignConfigDaoImpl extends DaoImpl<QuotationAssignConfigP
 
 	/**
 	 * 执行过滤条件
-	 *
+	 * 
 	 * @param query 分页查询对象
 	 * @param filters 过滤条件列表
 	 */
@@ -90,7 +90,7 @@ public class QuotationAssignConfigDaoImpl extends DaoImpl<QuotationAssignConfigP
 
 	@Override
 	public QuotationAssignConfigPO queryQuotationAssignConfig(int company, Integer department) {
-		return (QuotationAssignConfigPO) createCriteria(QuotationAssignConfigPO.class).add(Restrictions.eq("company.cid", company)).add(Restrictions.eq("department", department)).uniqueResult();
+		return (QuotationAssignConfigPO) createCriteria(QuotationAssignConfigPO.class).createAlias("company", "company").createAlias("department", "department").add(Restrictions.eq("company.cid", company)).add(Restrictions.eq("department", department)).uniqueResult();
 	}
 
 	@Override
