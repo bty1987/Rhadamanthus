@@ -14,6 +14,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -101,6 +102,39 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 	public DepartmentPO queryDepartmentByNo(String no) {
 
 		return (DepartmentPO) session().createCriteria(DepartmentPO.class).add(Restrictions.eq("no", no)).uniqueResult();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public DepartmentPO queryDepartmentByNameAndCompany(String name, Integer companyId) {
+		return (DepartmentPO) session().createCriteria(DepartmentPO.class)
+				.add(Restrictions.eq("name", name))
+				.add(Restrictions.eq("company", companyId))
+				.uniqueResult();
+	}
+
+	@Override
+	public String queryMaxDepartmentNoByCompany(Integer companyId) {
+		// 查询指定公司下所有部门编号，找出最大值
+		List<String> nos = session().createCriteria(DepartmentPO.class)
+				.add(Restrictions.eq("company", companyId))
+				.setProjection(Projections.property("no"))
+				.add(Restrictions.isNotNull("no"))
+				.addOrder(Order.desc("no"))
+				.list();
+
+		if (nos == null || nos.isEmpty()) {
+			return null;
+		}
+
+		// 过滤出符合 DEPT+数字 格式的编号
+		for (String no : nos) {
+			if (no != null && no.matches("DEPT\\d+")) {
+				return no;
+			}
+		}
+
+		return null;
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

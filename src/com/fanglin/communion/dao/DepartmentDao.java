@@ -27,4 +27,21 @@ public interface DepartmentDao extends Dao<DepartmentPO> {
 
 	public DepartmentPO queryDepartmentByNo(String no);
 
+	/**
+	 * 根据名称和公司ID查询部门
+	 *
+	 * @param name 部门名称
+	 * @param companyId 公司ID
+	 * @return 部门对象
+	 */
+	public DepartmentPO queryDepartmentByNameAndCompany(String name, Integer companyId);
+
+	/**
+	 * 查询指定公司的最大部门编号
+	 *
+	 * @param companyId 公司ID
+	 * @return 最大部门编号（如：DEPT0001）
+	 */
+	public String queryMaxDepartmentNoByCompany(Integer companyId);
+
 }
