@@ -19,16 +19,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.common.po.CountingPO;
+import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.DepartmentDao;
-import com.fanglin.communion.dao.DutyDao;
 import com.fanglin.communion.dao.DepartmentTypeDao;
+import com.fanglin.communion.dao.DutyDao;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DepartmentTypePO;
 import com.fanglin.communion.po.DutyPO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.seiya.service.A20260324Service;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.PinYin4Util;
 
 @Service("A20260324Service")
@@ -49,13 +54,18 @@ public class A20260324ServiceImpl implements A20260324Service {
 	@Autowired
 	private UserDao userDao;
 
+	@Autowired
+	private CompanyDao companyDao;
+
+	@Autowired
+	private CountingService countingService;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public String syncDuty(String code, String name, String orgCode, Integer type, Integer status, Integer leaderFlag) throws FLException {
 
 		try {
-			logger.info("同步职位信息: code={}, name={}, orgCode={}, type={}, status={}, leaderFlag={}",
-					code, name, orgCode, type, status, leaderFlag);
+			logger.info("同步职位信息: code={}, name={}, orgCode={}, type={}, status={}, leaderFlag={}", code, name, orgCode, type, status, leaderFlag);
 
 			// 1. 获取部门类型
 			// 注意：orgCode 参数保留但未使用，因为职位（Duty）是集团级数据，不需要归属到具体公司
@@ -69,13 +79,11 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 			// 3. 判断是新增还是更新
 			DutyPO dutyPO = null;
-			String operation = "add";
 
 			if (code != null && !code.trim().isEmpty()) {
 				// code 有值，尝试通过编码查找现有职位进行更新
 				dutyPO = dutyDao.queryDutyByCode(code);
 				if (dutyPO != null) {
-					operation = "update";
 				} else {
 					logger.warn("根据code未找到职位，视为新增: code={}", code);
 				}
@@ -146,10 +154,8 @@ public class A20260324ServiceImpl implements A20260324Service {
 	}
 
 	/**
-	 * 自动生成职位编号
-	 * 规则：D + 3位数字（如：D001, D002...）
-	 * 使用 synchronized 避免并发问题
-	 *
+	 * 自动生成职位编号 规则：D + 3位数字（如：D001, D002...） 使用 synchronized 避免并发问题
+	 * 
 	 * @return 编号
 	 */
 	private synchronized String generateDutyCode() {
@@ -171,12 +177,10 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public String syncDepartment(String code, String name, Integer type, String parentCode,
-			String orgCode, Integer status, String leaderCode, String posts, Integer orderValue) throws FLException {
+	public String syncDepartment(String code, String name, Integer type, String parentCode, String orgCode, Integer status, String leaderCode, String posts, Integer orderValue) throws FLException {
 
 		try {
-			logger.info("同步部门信息: code={}, name={}, type={}, parentCode={}, orgCode={}, status={}, leaderCode={}, orderValue={}",
-					code, name, type, parentCode, orgCode, status, leaderCode, orderValue);
+			logger.info("同步部门信息: code={}, name={}, type={}, parentCode={}, orgCode={}, status={}, leaderCode={}, orderValue={}", code, name, type, parentCode, orgCode, status, leaderCode, orderValue);
 
 			// 1. 获取部门类型
 			DepartmentTypePO departmentType = departmentTypeDao.get(type);
@@ -207,13 +211,11 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 			// 5. 判断是新增还是更新
 			DepartmentPO deptPO = null;
-			String operation = "add";
 
 			if (code != null && !code.trim().isEmpty()) {
 				// code 有值，尝试通过编码查找现有部门进行更新
 				deptPO = departmentDao.queryDepartmentByNo(code);
 				if (deptPO != null) {
-					operation = "update";
 				} else {
 					logger.warn("根据code未找到部门，视为新增: code={}", code);
 				}
@@ -234,7 +236,7 @@ public class A20260324ServiceImpl implements A20260324Service {
 					}
 
 					// 检查部门名称是否已存在（同一公司下）
-					DepartmentPO existingDept = departmentDao.queryDepartmentByNameAndCompany(name, companyId);
+					DepartmentPO existingDept = departmentDao.queryDepartment(name, companyId);
 					if (existingDept != null) {
 						throw new FLException(130017, "部门名称已存在: " + name);
 					}
@@ -300,7 +302,7 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 				// 检查部门名称是否已存在（同一公司下，排除自己）
 				if (companyId != null) {
-					DepartmentPO existingDept = departmentDao.queryDepartmentByNameAndCompany(name, companyId);
+					DepartmentPO existingDept = departmentDao.queryDepartment(name, companyId);
 					if (existingDept != null && existingDept.getDid() != deptPO.getDid()) {
 						throw new FLException(130017, "部门名称已存在: " + name);
 					}
@@ -357,34 +359,29 @@ public class A20260324ServiceImpl implements A20260324Service {
 	}
 
 	/**
-	 * 自动生成部门编号
-	 * 规则：查询当前公司下最大的部门编号，递增生成
-	 *
+	 * 自动生成部门编号 规则：查询当前公司下最大的部门编号，递增生成
+	 * 
 	 * @param companyId 公司ID
 	 * @return 部门编号
+	 * @throws FLException
 	 */
-	private String generateDepartmentNo(Integer companyId) {
-		// 查询数据库获取当前公司下最大的部门编号
-		String maxNo = departmentDao.queryMaxDepartmentNoByCompany(companyId);
+	private String generateDepartmentNo(Integer companyId) throws FLException {
 
-		if (maxNo == null || maxNo.isEmpty()) {
-			// 如果没有找到编号，从 DEPT0001 开始
-			return "DEPT0001";
+		CompanyPO companyPO = companyDao.get(companyId);
+
+		if (companyPO == null) {
+			throw new FLException(230015, "公司不存在");
 		}
 
-		try {
-			// 提取数字部分并递增（如：DEPT0001 -> 1, DEPT0002 -> 2）
-			int num = Integer.parseInt(maxNo.substring(4));
-			return String.format("DEPT%04d", num + 1);
-		} catch (Exception e) {
-			logger.warn("解析部门编号失败，使用默认编号: maxNo={}", maxNo, e);
-			return "DEPT0001";
-		}
+		int count = countingService.queryCountingByTypeDate(DepartmentPO.IDENT_NUM_INT, CountingPO.COUNTING_DATE_SILNLE_STR, companyId);
+
+		return String.format("%sD_%s", companyPO.getShortname(), FormatUtil.fillZero(count, "000"));
+
 	}
 
 	/**
 	 * 生成拼音
-	 *
+	 * 
 	 * @param name 名称
 	 * @return 拼音字符串，失败返回空字符串
 	 */
