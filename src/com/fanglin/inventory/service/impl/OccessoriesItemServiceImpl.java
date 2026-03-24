@@ -20,6 +20,7 @@ import com.fanglin.inventory.po.OccessoriesItemPO;
 import com.fanglin.inventory.po.OccessoriesPO;
 import com.fanglin.inventory.service.OccessoriesItemService;
 import com.fanglin.inventory.vo.OccessoriesItemVO;
+import com.fanglin.inventory.vo.OccessoriesVO;
 import com.fanglin.utils.Arith;
 
 @Service("occessoriesItemService")
@@ -129,8 +130,8 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 	}
 
 	@Override
-	public int amountOccessoriesItem(OccessoriesItemVO occessoriesItemVO) {
-		return occessoriesItemDao.amountOccessoriesItem(occessoriesItemVO.getOccessories().getOrderId(), occessoriesItemVO.getNid());
+	public int amountOccessoriesItem(OccessoriesVO occessoriesVO, OccessoriesItemVO occessoriesItemVO) {
+		return occessoriesItemDao.amountOccessoriesItem(occessoriesVO.getDecoration().getOrderId(), occessoriesItemVO.getNid());
 	}
 
 }

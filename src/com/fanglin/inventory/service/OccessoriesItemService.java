@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.vo.OccessoriesItemVO;
+import com.fanglin.inventory.vo.OccessoriesVO;
 
 public interface OccessoriesItemService {
 
@@ -15,6 +16,6 @@ public interface OccessoriesItemService {
 
 	public int deleteOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException;
 
-	public int amountOccessoriesItem(OccessoriesItemVO occessoriesItemVO);
+	public int amountOccessoriesItem(OccessoriesVO occessoriesVO, OccessoriesItemVO occessoriesItemVO);
 
 }

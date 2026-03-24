@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.service.OccessoriesItemService;
 import com.fanglin.inventory.vo.OccessoriesItemVO;
+import com.fanglin.inventory.vo.OccessoriesVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -29,6 +30,8 @@ public class OccessoriesItemAction extends BaseListAction {
 	private List<OccessoriesItemVO> occessoriesItems;
 
 	private OccessoriesVO occessories;
+
+	private int amount;
 
 	@Action(value = "queryOccessoriesItemByOid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryOccessoriesItemByOid() throws FLException {
@@ -62,12 +65,10 @@ public class OccessoriesItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	private int amount;
-
 	@Action(value = "amountOccessoriesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String amountOccessoriesItem() {
 
-		amount = occessoriesItemService.amountOccessoriesItem(occessoriesItem);
+		amount = occessoriesItemService.amountOccessoriesItem(occessories, occessoriesItem);
 
 		return SUCCESS;
 	}
