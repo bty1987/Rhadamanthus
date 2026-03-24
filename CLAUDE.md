@@ -1,6 +1,6 @@
 # Rhadamanthus - 方林装饰 ERP 系统
 
-> 最后更新：2025-12-31
+> 最后更新：2026-03-24
 
 ---
 
@@ -24,6 +24,18 @@
 ---
 
 ## 变更记录 (Changelog)
+
+### 2026-03-24
+- **✅ 完成 inventory 模块文档**
+- **新增文档**：
+  - **库存管理模块** (`src/com/fanglin/inventory/CLAUDE.md`)：材料采购、入库出库、库存盘点、仓库管理、辅料管理
+- **核心成果**：
+  - ✅ 15 个 Action 控制器（Manifest、Purchase、Accessories、Storehouse 等）
+  - ✅ 33 个 Service/DAO 层实现
+  - ✅ 21 个 PO/VO 数据模型
+  - ✅ 12 种单据类型（进货/出货/采购/辅料/盘点等）
+  - ✅ 8 种辅料领用状态（初始→预出→出货→完成）
+- **当前已完成 29/29 个模块文档，覆盖率 100%** 🎉
 
 ### 2026-03-19
 - **✅ 创建模块开发规范文档**
@@ -172,6 +184,7 @@ graph TD
     B --> B7["customer 客户管理"];
     B --> B8["building 楼盘管理"];
     B --> B9["production 生产管理"];
+    B --> B10["inventory 库存管理"];
 
     C --> C1["system 系统管理"];
     C --> C2["communion 公共基础"];
@@ -203,6 +216,7 @@ graph TD
     click B7 "./src/com/fanglin/customer/CLAUDE.md" "查看客户管理模块"
     click B8 "./src/com/fanglin/building/CLAUDE.md" "查看楼盘管理模块"
     click B9 "./src/com/fanglin/production/CLAUDE.md" "查看生产管理模块"
+    click B10 "./src/com/fanglin/inventory/CLAUDE.md" "查看库存管理模块"
     click C1 "./src/com/fanglin/system/CLAUDE.md" "查看系统管理模块"
     click C2 "./src/com/fanglin/communion/CLAUDE.md" "查看公共基础模块"
     click C3 "./src/com/fanglin/common/CLAUDE.md" "查看通用功能模块"
@@ -234,6 +248,7 @@ graph TD
 | `src/com/fanglin/common` | 通用功能 | 登录上传等通用服务 | 登录认证、文件上传、验证码、二维码生成 | [已完成](./src/com/fanglin/common/CLAUDE.md) ✅ |
 | `src/com/fanglin/utils` | 工具类 | 通用工具方法 | 日期处理、Excel导入导出、加解密、HTTP请求、拼音转换 | [已完成](./src/com/fanglin/utils/CLAUDE.md) ✅ |
 | `src/com/fanglin/data` | 数据字典 | 报价与规范数据 | 标准工艺、材料定额、报价模板、施工配置 | [已完成](./src/com/fanglin/data/CLAUDE.md) ✅ |
+| `src/com/fanglin/inventory` | 库存管理 | 材料采购与库存管理 | 采购订单、入库出库、库存盘点、辅料领用、仓库管理 | [已完成](./src/com/fanglin/inventory/CLAUDE.md) ✅ |
 | `src/com/fanglin/decoration` | 装饰订单管理 | 整装订单全生命周期管理 | 订单创建、合同管理、付款跟踪、客户信息 | [已完成](./src/com/fanglin/decoration/CLAUDE.md) ✅ |
 | `src/com/fanglin/quotation` | 报价管理 | 装饰项目报价与预算 | 功能区报价、工程量预算、报价版本管理、定制项目 | [已完成](./src/com/fanglin/quotation/CLAUDE.md) ✅ |
 | `src/com/fanglin/construction` | 施工管理 | 施工现场与进度管理 | 施工计划、工地日志、验收记录、返工管理、客服售后 | [已完成](./src/com/fanglin/construction/CLAUDE.md) ✅ |
@@ -505,9 +520,9 @@ Action 层 → 传递 VO 对象 → Service 层 → 提取属性 → 传递基�
 
 ## 扩展阅读
 
-### 所有模块文档（28个模块 100%覆盖）
+### 所有模块文档（29个模块 100%覆盖）
 
-#### 核心业务模块（9个）
+#### 核心业务模块（10个）
 - [装饰订单模块](./src/com/fanglin/decoration/CLAUDE.md) ✅
 - [报价管理模块](./src/com/fanglin/quotation/CLAUDE.md) ✅
 - [施工管理模块](./src/com/fanglin/construction/CLAUDE.md) ✅
@@ -517,6 +532,7 @@ Action 层 → 传递 VO 对象 → Service 层 → 提取属性 → 传递基�
 - [客户管理模块](./src/com/fanglin/customer/CLAUDE.md) ✅
 - [楼盘管理模块](./src/com/fanglin/building/CLAUDE.md) ✅
 - [生产管理模块](./src/com/fanglin/production/CLAUDE.md) ✅
+- [库存管理模块](./src/com/fanglin/inventory/CLAUDE.md) ✅
 
 #### 基础设施模块（12个）
 - [系统管理模块](./src/com/fanglin/system/CLAUDE.md) ✅
