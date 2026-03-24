@@ -67,7 +67,7 @@ jQuery(function($) {
                 $line.find('div.sennum').text(v.sennum);
                 $line.find('div.rbalance').text(v.rbalance);
                 $line.find('div.vbalance input').val(v.rbalance);
-            } else if (occessories.pageType != "bind" && ocessories.pageType != "receive" && occessories.pageType != "supplier") {
+            } else if (occessories.pageType != "bind" && occessories.pageType != "receive" && occessories.pageType != "supplier") {
                 $line.find('div.sennum').text(v.sennum);
                 $line.find('div.rbalance').text(v.rbalance);
                 $line.find('div.vbalance').text(v.vbalance);

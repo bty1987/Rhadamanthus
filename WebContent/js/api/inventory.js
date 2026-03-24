@@ -555,7 +555,6 @@ $.extend(api, {
         },
         queryOccessoriesCharge: {
             url: "queryOccessoriesCharge.do",
-            type: "query",
             tranargs: {
                 args: ["price", "num"]
             }
