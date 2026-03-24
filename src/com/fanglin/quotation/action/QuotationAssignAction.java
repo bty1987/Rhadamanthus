@@ -35,7 +35,7 @@ public class QuotationAssignAction extends BaseListAction {
 	/**
 	 * 分配请求VO
 	 */
-	private QuotationAssignVO quotationAssignVO;
+	private QuotationAssignVO quotationAssign;
 
 	/**
 	 * 正向自动分配（设计师发起）
@@ -46,7 +46,7 @@ public class QuotationAssignAction extends BaseListAction {
 	@Action(value = "autoQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String autoQuotationAssign() throws FLException {
 
-		quotationAssignService.autoQuotationAssign(quotationAssignVO);
+		quotationAssignService.autoQuotationAssign(quotationAssign);
 
 		return SUCCESS;
 	}
@@ -60,7 +60,7 @@ public class QuotationAssignAction extends BaseListAction {
 	@Action(value = "manualQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String manualQuotationAssign() throws FLException {
 
-		quotationAssignService.manualQuotationAssign(quotationAssignVO, queryUserId());
+		quotationAssignService.manualQuotationAssign(quotationAssign, queryUserId());
 
 		return SUCCESS;
 	}
@@ -74,7 +74,7 @@ public class QuotationAssignAction extends BaseListAction {
 	@Action(value = "reassignQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String reassignQuotationAssign() throws FLException {
 
-		quotationAssignService.reassignQuotationAssign(quotationAssignVO, queryUserId());
+		quotationAssignService.reassignQuotationAssign(quotationAssign, queryUserId());
 
 		return SUCCESS;
 	}
@@ -88,16 +88,16 @@ public class QuotationAssignAction extends BaseListAction {
 	@Action(value = "finishQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishQuotationAssign() throws FLException {
 
-		quotationAssignService.finishQuotationAssign(quotationAssignVO);
+		quotationAssignService.finishQuotationAssign(quotationAssign);
 
 		return SUCCESS;
 	}
 
-	public QuotationAssignVO getQuotationAssignVO() {
-		return quotationAssignVO;
+	public QuotationAssignVO getQuotationAssign() {
+		return quotationAssign;
 	}
 
-	public void setQuotationAssignVO(QuotationAssignVO quotationAssignVO) {
-		this.quotationAssignVO = quotationAssignVO;
+	public void setQuotationAssign(QuotationAssignVO quotationAssign) {
+		this.quotationAssign = quotationAssign;
 	}
 }

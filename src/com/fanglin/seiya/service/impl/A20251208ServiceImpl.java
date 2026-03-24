@@ -821,6 +821,11 @@ public class A20251208ServiceImpl implements A20251208Service {
 			constructerPO = constructerDao.get(constructerVO.getCrid());
 		} else {
 			UserPO userPO = userDao.queryUserByUserId(constructerVO.getUser().getUserId());
+
+			if (userPO == null) {
+				throw new FLException(120021, "施工人员不存在");
+			}
+
 			constructerPO = constructerDao.queryConstructerByUid(constructerVO.getOrderId(), constructerVO.getCnid(), userPO.getUid());
 		}
 
