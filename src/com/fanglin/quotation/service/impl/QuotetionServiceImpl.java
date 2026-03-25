@@ -21,9 +21,11 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
+import com.fanglin.quotation.dao.QuotationFunctionAreaParamDao;
 import com.fanglin.quotation.dao.QuotetionDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaItemDao;
+import com.fanglin.quotation.dao.QuotetionFunctionAreaParamDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
@@ -68,6 +70,12 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 	@Autowired
 	private QuotationFunctionAreaDao quotationFunctionAreaDao;
+
+	@Autowired
+	private QuotationFunctionAreaParamDao quotationFunctionAreaParamDao;
+
+	@Autowired
+	private QuotetionFunctionAreaParamDao quotetionFunctionAreaParamDao;
 
 	@Autowired
 	private QuotationPriceDao quotationPriceDao;
@@ -411,6 +419,9 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 				quotetionFunctionAreaItemDao.save(quotetionFunctionAreaItemPO);
 			}
+
+			// 复制功能区参数（quotation → quotetion，使用跨表 DAO 方法）
+			quotationFunctionAreaParamDao.copyQuotationToQuotetionParam(quotationFunctionAreaSO.getQfaId(), quotetionFunctionAreaPO.getQfaId());
 		}
 		return 0;
 	}
@@ -458,6 +469,9 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 				quotetionFunctionAreaItemDao.save(quotetionFunctionAreaItemPO);
 			}
+
+			// 复制功能区参数
+			quotetionFunctionAreaParamDao.copyQuotetionFunctionAreaParam(quotetionFunctionAreaSO.getQfaId(), quotetionFunctionAreaPO.getQfaId());
 		}
 
 		return 0;
