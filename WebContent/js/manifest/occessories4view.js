@@ -150,7 +150,7 @@ jQuery(function($) {
 
         var $line = $('<li></li>').addClass('line').appendTo(com.focusPage('#list'));
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
-        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col10');
+        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col11');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
 
         var _lineInfoSet = [{
