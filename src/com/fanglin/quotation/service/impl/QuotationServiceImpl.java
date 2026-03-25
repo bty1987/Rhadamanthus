@@ -56,6 +56,7 @@ import com.fanglin.quotation.dao.QuotationPreferDao;
 import com.fanglin.quotation.dao.QuotetionDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaItemDao;
+import com.fanglin.quotation.dao.QuotetionFunctionAreaParamDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.ProtationPO;
@@ -117,6 +118,9 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Autowired
 	private QuotationFunctionAreaParamDao quotationFunctionAreaParamDao;
+
+	@Autowired
+	private QuotetionFunctionAreaParamDao quotetionFunctionAreaParamDao;
 
 	@Autowired
 	private QuotetionFunctionAreaItemDao quotetionFunctionAreaItemDao;
@@ -1115,6 +1119,9 @@ public class QuotationServiceImpl implements QuotationService {
 
 				quotationFunctionAreaItemDao.save(quotationFunctionAreaItemTO);
 			}
+
+			// 复制功能区参数（quotetion → quotation，使用跨表 DAO 方法）
+			quotetionFunctionAreaParamDao.copyQuotetionToQuotationParam(quotetionFunctionAreaSO.getQfaId(), quotationFunctionAreaTO.getQfaId());
 		}
 		return 0;
 	}
