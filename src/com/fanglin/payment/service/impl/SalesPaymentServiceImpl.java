@@ -174,7 +174,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	@Override
 	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt) {
 
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentForNotInitBySrid(salesReceipt.getSrId());
+		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentBySrid(salesReceipt.getSrId());
 
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 

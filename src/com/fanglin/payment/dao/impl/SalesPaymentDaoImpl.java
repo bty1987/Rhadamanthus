@@ -79,15 +79,21 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 		return session().createCriteria(SalesPaymentPO.class).createAlias("sales", "sales").add(Restrictions.in("sales.sid", sids)).add(Restrictions.in(SalesPaymentPO.COLUMN_STATUS_STR, status)).list();
 
 	}
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<SalesPaymentPO> querySalesPaymentForNotInitBySrid(long srid) {
+	public List<SalesPaymentPO> querySalesPaymentBySrid(long srid) {
 		return session().createCriteria(SalesPaymentPO.class).createAlias("salesReceipt", "salesReceipt").add(Restrictions.eq("salesReceipt.srId", srid)).add(Restrictions.sqlRestriction(" status!=0")).list();
 	}
 
 	@Override
 	public SalesPaymentPO querySalesPayment(long sid, List<Short> types) {
 		return (SalesPaymentPO) session().createCriteria(SalesPaymentPO.class).createAlias("sales", "sales").add(Restrictions.eq(SalesPaymentPO.COLUMN_SALES_SID_STR, sid)).add(Restrictions.in(SalesPaymentPO.COLUMN_TYPE_STR, types)).uniqueResult();
+	}
+
+	@Override
+	public SalesPaymentPO querySalesPaymentByRid(long rid) {
+		return (SalesPaymentPO) session().createCriteria(SalesPaymentPO.class).createAlias("salesRefunds", "refund").add(Restrictions.eq("refund.rid", rid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
