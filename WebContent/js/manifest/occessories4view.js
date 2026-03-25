@@ -54,10 +54,15 @@ jQuery(function($) {
             $line.find('div.number').text(v.num);
             $line.find('div.pieceNum').text(v.goods.pieceNum);
 
+            // 显示费用值（charge 字段单位是厘，需要除以 1000 转换为元）
+            var chargeValue = v.charge || 0;
+            var chargeText = (chargeValue / 1000).toFixed(3);
+            $line.find('div.charge').text(chargeText);
+
             // 绑定费用按钮点击事件
-            $line.find('div.charge button').click(function() {
+            $line.find('div.charge').click(function() {
                 openChargeViewModal(v.oiid);
-            });
+            }).css('cursor', 'pointer').attr('title', '点击查看费用详情');
 
             if (occessories.pageType == "bind" || occessories.pageType == "supplier") {
                 $line.find('div.sennum input').val(v.num);
@@ -173,8 +178,7 @@ jQuery(function($) {
             hasInput: true,
             validate: "v_required v_float_3"
         }, {
-            cellClass: "charge grey", // 费用
-            isAction: true
+            cellClass: "charge grey", // 费用（显示值，可点击查看详情）
         }];
 
         var $btncheck = $('<a class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');
@@ -189,12 +193,6 @@ jQuery(function($) {
                     'type': 'text',
                     'autocomplete': 'off'
                 }).addClass('editable').addClass(v.validate ? v.validate : '').appendTo($cell)
-            }
-
-            if (v.isAction) {
-                // 添加费用按钮
-                var $chargeBtn = $('<button type="button" class="btn btn-xs btn-info">费用</button>');
-                $chargeBtn.appendTo($cell);
             }
 
             $cell.appendTo($lineInfoWrap);
