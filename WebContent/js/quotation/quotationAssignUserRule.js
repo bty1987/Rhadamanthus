@@ -11,7 +11,8 @@ $(function() {
             company: com.focusPage('#company'),
             department: com.focusPage('#department'),
             status: com.focusPage('#status'),
-            supportedType: com.focusPage('input[name="supportedType"]')
+            supportedType: com.focusPage('input[name="supportedType"]'),
+            lastFinishTime: com.focusPage('#lastFinishTime')
         },
         btns: {
             addBtn: null, // 动态创建
@@ -230,10 +231,16 @@ $(function() {
         });
     }
 
+    // 初始化最后完成时间日期选择器
+    function initLastFinishTimePicker() {
+        config.items.lastFinishTime.datetimepicker(com.datepickerdefault);
+    }
+
     // 页面加载时初始化
     initSelectOptions();
     initCompanySelect();
     initUserInput();
+    initLastFinishTimePicker();
 
     // 监听公司变化，联动部门
     config.items.company.on('change', function() {
@@ -263,6 +270,7 @@ $(function() {
         config.items.department.empty().append('<option value="">全部部门</option>');
         config.items.status.val('1'); // 默认可用
         config.items.supportedType.filter('[value="-1"]').prop('checked', true); // 默认通用
+        config.items.lastFinishTime.val(''); // 清空最后完成时间
     }
 
     // 编辑配置
@@ -303,6 +311,9 @@ $(function() {
             config.items.supportedType.filter('[value="-1"]').prop('checked', true); // 默认通用
         }
 
+        // 设置最后完成时间
+        config.items.lastFinishTime.val(row.lastFinishTime || '');
+
         com.focusPage('#modalTitle').text('编辑预算员规则');
         config.modals.userRuleModal.modal('show');
     }
@@ -334,7 +345,8 @@ $(function() {
             "quotationAssignUserRule.company.cid": config.items.company.val(),
             "quotationAssignUserRule.department.did": config.items.department.val() || null,
             "quotationAssignUserRule.status": parseInt(config.items.status.val()),
-            "quotationAssignUserRule.supportedType": parseInt(config.items.supportedType.filter(':checked').val())
+            "quotationAssignUserRule.supportedType": parseInt(config.items.supportedType.filter(':checked').val()),
+            "quotationAssignUserRule.lastFinishTime": config.items.lastFinishTime.val() || null
         };
 
         var apiMethod = isNew ? api.quotation.createQuotationAssignUserRule : api.quotation.updateQuotationAssignUserRule;
