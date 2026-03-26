@@ -159,7 +159,7 @@ $(function () {
         field: "total",
         name: "总价",
         prop: "total",
-        clazz: "green",
+        clazz: "blue",
         dataset: occessories.total
     }, {
         field: "charge",
@@ -169,7 +169,17 @@ $(function () {
             var charge = v.charge || 0;
             return (charge / 1000).toFixed(3);
         },
-        clazz: "green"
+        clazz: "blue"
+    }, {
+        field: "rbalance",
+        name: "结算额",
+        prop: "rbalance",
+        clazz: "blue"
+    }, {
+        field: "vbalance",
+        name: "结算额",
+        prop: "vbalance",
+        clazz: "blue"
     }, {
         field: "status",
         name: "状态",
