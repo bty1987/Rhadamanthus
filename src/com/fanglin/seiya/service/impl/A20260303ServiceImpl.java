@@ -78,12 +78,12 @@ public class A20260303ServiceImpl implements A20260303Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, Object> syncVillage(String vid, String name, String proper, String city, String pvid, Integer company, String no, JSONArray ruleArray, Double x, Double y) throws FLException {
+	public Map<String, Object> syncVillage(String vid, String name, String proper, String city, String pvid, Integer company, String no, JSONArray ruleArray, Double x, Double y, Long companyDistance) throws FLException {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		try {
-			logger.info("同步楼盘数据: vid={}, name={}, proper={}, city={}, pvid={}, company={}, no={}, x={}, y={}", vid, name, proper, city, pvid, company, no, x, y);
+			logger.info("同步楼盘数据: vid={}, name={}, proper={}, city={}, pvid={}, company={}, no={}, x={}, y={}, companyDistance={}", vid, name, proper, city, pvid, company, no, x, y, companyDistance);
 
 			// 0. 验证公司是否存在
 			if (company == null) {
@@ -183,6 +183,11 @@ public class A20260303ServiceImpl implements A20260303Service {
 			}
 			if (y != null) {
 				villagePO.setY((int) (y * 1000000));
+			}
+
+			// 设置公司距离（需要乘以1000后保存到数据库）
+			if (companyDistance != null) {
+				villagePO.setMileage(companyDistance * 1000);
 			}
 
 			List<String> pinyinList = (List<String>) PinYin4Util.getPinyin(name);
