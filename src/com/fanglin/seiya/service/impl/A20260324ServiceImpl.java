@@ -28,10 +28,10 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DepartmentTypePO;
 import com.fanglin.communion.po.DutyPO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.DutmentDao;
-import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.DutmentPO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.seiya.service.A20260324Service;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
@@ -403,40 +403,30 @@ public class A20260324ServiceImpl implements A20260324Service {
 	}
 
 	/**
-	 * 处理定岗数据（posts）
-	 * 解析 JSON 并创建/更新 dutment 记录
-	 *
+	 * 处理定岗数据（posts） 解析 JSON 并创建/更新 dutment 记录
+	 * 
 	 * @param deptPO 部门对象
 	 * @param postsJsonString 定岗数据 JSON 字符串，格式：{"职位ID": "人员上限", ...}
 	 * @throws FLException 业务异常
 	 */
 	private void processDutmentPosts(DepartmentPO deptPO, String postsJsonString) throws FLException {
+
 		if (postsJsonString == null || postsJsonString.trim().isEmpty()) {
 			logger.info("定岗数据为空，跳过处理: deptId={}", deptPO.getDid());
 			return;
 		}
 
-		try {
-			logger.info("开始处理定岗数据: deptId={}, deptName={}, posts={}",
-					deptPO.getDid(), deptPO.getName(), postsJsonString);
+		logger.info("开始处理定岗数据: deptId={}, deptName={}, posts={}", deptPO.getDid(), deptPO.getName(), postsJsonString);
 
-			// 使用简单的字符串解析（不依赖 JSON 库）
-			processDutmentPostsSimple(deptPO, postsJsonString);
+		// 使用简单的字符串解析（不依赖 JSON 库）
+		processDutmentPostsSimple(deptPO, postsJsonString);
 
-			logger.info("定岗数据处理完成: deptId={}", deptPO.getDid());
-
-		} catch (FLException e) {
-			throw e;
-		} catch (Exception e) {
-			logger.error("处理定岗数据异常: deptId={}, posts={}", deptPO.getDid(), postsJsonString, e);
-			throw new FLException(511009, "处理定岗数据失败: " + e.getMessage());
-		}
+		logger.info("定岗数据处理完成: deptId={}", deptPO.getDid());
 	}
 
 	/**
-	 * 简单的定岗数据处理（不依赖 JSON 库）
-	 * 解析格式：{"1": 10, "2": 20}
-	 *
+	 * 简单的定岗数据处理（不依赖 JSON 库） 解析格式：{"1": 10, "2": 20}
+	 * 
 	 * @param deptPO 部门对象
 	 * @param postsJsonString 定岗数据 JSON 字符串
 	 */
@@ -502,14 +492,12 @@ public class A20260324ServiceImpl implements A20260324Service {
 					dutment.setLimit(limit);
 					dutment.setNum(0); // 初始数量为0
 					dutmentDao.save(dutment);
-					logger.info("新增定岗记录: deptId={}, dutyId={}, limit={}",
-							deptPO.getDid(), dutyId, limit);
+					logger.info("新增定岗记录: deptId={}, dutyId={}, limit={}", deptPO.getDid(), dutyId, limit);
 				} else {
 					// 更新定岗记录
 					dutment.setLimit(limit);
 					dutmentDao.update(dutment);
-					logger.info("更新定岗记录: did={}, deptId={}, dutyId={}, limit={}",
-							dutment.getDid(), deptPO.getDid(), dutyId, limit);
+					logger.info("更新定岗记录: did={}, deptId={}, dutyId={}, limit={}", dutment.getDid(), deptPO.getDid(), dutyId, limit);
 				}
 
 				successCount++;
@@ -523,8 +511,7 @@ public class A20260324ServiceImpl implements A20260324Service {
 			}
 		}
 
-		logger.info("定岗数据处理完成: deptId={}, 成功={}, 跳过={}",
-				deptPO.getDid(), successCount, skipCount);
+		logger.info("定岗数据处理完成: deptId={}, 成功={}, 跳过={}", deptPO.getDid(), successCount, skipCount);
 	}
 
 }
