@@ -90,16 +90,7 @@ public class QuotationAssignConfigDaoImpl extends DaoImpl<QuotationAssignConfigP
 
 	@Override
 	public QuotationAssignConfigPO queryQuotationAssignConfig(int company, Integer department) {
-		// 使用 OR 逻辑：匹配该部门的配置 OR 公司级配置（department IS NULL）
-		return (QuotationAssignConfigPO) createCriteria(QuotationAssignConfigPO.class)
-			.createAlias("company", "company")
-			.add(Restrictions.eq("company.cid", company))
-			.add(Restrictions.or(
-				Restrictions.eq("department.did", department),
-				Restrictions.isNull("department")
-			))
-			.setMaxResults(1)
-			.uniqueResult();
+		return (QuotationAssignConfigPO) createCriteria(QuotationAssignConfigPO.class).createAlias("company", "company").add(Restrictions.eq("company.cid", company)).add(Restrictions.or(Restrictions.eq("department.did", department), Restrictions.isNull("department"))).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
