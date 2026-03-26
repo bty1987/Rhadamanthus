@@ -6,7 +6,7 @@ public interface A20260324Service {
 
 	/**
 	 * 同步职位信息（支持新增/更新/逻辑删除）
-	 *
+	 * 
 	 * @param code 职位编码（更新时提供，新增时为null，如：POST9526）
 	 * @param name 职位名称
 	 * @param orgCode 部门编号（如：DEPT9526，保留但未使用）
@@ -20,7 +20,7 @@ public interface A20260324Service {
 
 	/**
 	 * 同步部门信息（支持新增/更新/逻辑删除）
-	 *
+	 * 
 	 * @param code 部门编码（更新时提供，新增时为null，如：DEPT9526）
 	 * @param name 部门名称
 	 * @param type 部门类型ID
@@ -33,12 +33,11 @@ public interface A20260324Service {
 	 * @return 部门ID（did）的字符串形式
 	 * @throws FLException 业务异常
 	 */
-	public String syncDepartment(String code, String name, Integer type, String parentCode,
-			String orgCode, Integer status, String leaderCode, String posts, Integer orderValue) throws FLException;
+	public String syncDepartment(String code, String name, Integer type, String parentCode, String orgCode, Integer status, String leaderCode, String posts, Integer orderValue) throws FLException;
 
 	/**
 	 * 同步用户信息（支持新增/更新）
-	 *
+	 * 
 	 * @param code 用户工号（更新时提供，新增时为null，如：FL-09527）
 	 * @param name 姓名
 	 * @param currentName 现用名（可选，默认使用name）
@@ -53,8 +52,6 @@ public interface A20260324Service {
 	 * @return 用户ID（uid）的字符串形式，格式：{"code":"uid","belong_org_code":"company","userId":"工号"}
 	 * @throws FLException 业务异常
 	 */
-	public String syncUser(String code, String name, String currentName, Integer gender,
-			String identity, String phone, String loginId, Integer deptId, Integer dutyId,
-			Integer company, Integer status) throws FLException;
+	public String syncUser(String code, String name, String currentName, Integer gender, String identity, String phone, String loginId, Integer deptId, Long dutyId, Integer company, Integer status) throws FLException;
 
 }
