@@ -10,12 +10,12 @@ public interface OccessoriesItemService {
 
 	public List<OccessoriesItemVO> queryOccessoriesItemByOid(OccessoriesItemVO occessoriesItemVO);
 
+	public int amountOccessoriesItem(OccessoriesVO occessoriesVO, OccessoriesItemVO occessoriesItemVO);
+
 	public int addOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException;
 
 	public int updateOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException;
 
 	public int deleteOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException;
-
-	public int amountOccessoriesItem(OccessoriesVO occessoriesVO, OccessoriesItemVO occessoriesItemVO);
 
 }

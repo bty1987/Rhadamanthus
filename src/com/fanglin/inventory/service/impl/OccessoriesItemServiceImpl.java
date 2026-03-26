@@ -50,6 +50,11 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 	}
 
 	@Override
+	public int amountOccessoriesItem(OccessoriesVO occessoriesVO, OccessoriesItemVO occessoriesItemVO) {
+		return occessoriesItemDao.amountOccessoriesItem(occessoriesVO.getDecoration().getOrderId(), occessoriesItemVO.getNid());
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException {
 
@@ -127,11 +132,6 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		occessoriesItemDao.delete(occessoriesItemPO);
 
 		return 0;
-	}
-
-	@Override
-	public int amountOccessoriesItem(OccessoriesVO occessoriesVO, OccessoriesItemVO occessoriesItemVO) {
-		return occessoriesItemDao.amountOccessoriesItem(occessoriesVO.getDecoration().getOrderId(), occessoriesItemVO.getNid());
 	}
 
 }

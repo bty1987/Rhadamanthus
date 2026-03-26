@@ -1368,10 +1368,11 @@ $.extend(api, {
         },
         queryAoodsChargeByAid: {
             url: "queryAoodsChargeByAid.do",
-            tranargs: {
+            type: "query",
+            tranargs: [{
                 result: "aoodsCharges",
                 args: ["price", "surplus"]
-            }
+            }]
         },
         addAoodsCharge: {
             url: "addAoodsCharge.do",

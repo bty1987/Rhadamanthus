@@ -49,6 +49,7 @@ jQuery(function() {
             if (val.aid == k) {
 
                 console.log(val)
+                console.log(val.noods.nid)
 
                 // 验证 orderId 是否已填写
                 var orderId = occessories.rightitems.orderId.val();
@@ -72,10 +73,12 @@ jQuery(function() {
                 occessories.leftitems.category.attr('data-category', val.category).val(val.goods.category);
                 occessories.leftitems.brand.attr('data-brand', val.brand).val(val.goods.brand);
                 occessories.leftitems.measurementUnit.attr('data-measurementUnit', val.measurementUnit).val(val.goods.measurementUnit);
+                
+                
 
                 // 如果有 nid，查询定额和外辅数量
-                if (val.nid) {
-                    queryAmounts(orderId, val.nid);
+                if (val.noods && val.noods.nid) {
+                    queryAmounts(orderId, val.noods.nid);
                 } else {
                     occessories.leftitems.normoodAmount.val('0');
                     occessories.leftitems.occessoriesAmount.val('0');
@@ -291,18 +294,18 @@ jQuery(function() {
 
         // 1. 查询报价单获取 qid
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-            "quotation.decoration.orderId": orderId
+            "quotation.orderId": orderId
         }, function(data) {
             if (data && data.quotation && data.quotation.qid) {
                 var qid = data.quotation.qid;
                 var normAmount = 0;
                 var accAmount = 0;
                 var queryCount = 0;
-
+                
                 // 2. 查询定额材料数量
                 com.post(api.quotation.amountNormoodItem, {
                     "normoodItem.qid": qid,
-                    "normoodItem.nid": nid
+                    "normoodItem.noods.nid": nid
                 }, function(result) {
                     if (result !== undefined && result !== null) {
                         normAmount = parseInt(result) || 0;
@@ -411,6 +414,7 @@ jQuery(function() {
         com.post(api.data.queryAoodsChargeByAid, {"aoodsCharge.aoods.aid": aid}, function(data) {
             if (data && data.aoodsCharges && data.aoodsCharges.length > 0) {
                 $.each(data.aoodsCharges, function(i, charge) {
+                    console.log(charge)
                     addChargeRow(charge.name, charge.price, charge.num || 1);
                 });
             } else {

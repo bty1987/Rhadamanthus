@@ -501,7 +501,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["rate", "total"]
+                args: ["rate", "charge", "total"]
             }]
         },
         pageOccessoriesForSupplier: {
@@ -509,7 +509,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["rate", "total"]
+                args: ["rate", "charge", "total"]
             }]
         },
         queryOccessoriesByOrderId: {
@@ -517,7 +517,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "occessoriess",
-                args: ["rate", "total"]
+                args: ["rate", "charge", "total"]
             }]
         },
         queryOccessoriesByOid: {
@@ -525,7 +525,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "occessories",
-                args: ["rate", "total"]
+                args: ["rate", "charge", "total"]
             }]
         },
         addOccessories: {
@@ -534,7 +534,11 @@ $.extend(api, {
             tranargs: {
                 args: [
                     "occessoriesItems.num",
+                    "occessoriesItems.sennum",
+                    "occessoriesItems.recnum",
                     "occessoriesItems.rbalance",
+                    "occessoriesItems.vbalance",
+                    "occessoriesItems.charge",
                     "occessoriesItems.occessoriesCharges.price",
                     "occessoriesItems.occessoriesCharges.num"
                 ]
@@ -555,9 +559,11 @@ $.extend(api, {
         },
         queryOccessoriesCharge: {
             url: "queryOccessoriesCharge.do",
-            tranargs: {
+            type: "query",
+            tranargs: [{
+                result: "occessoriesCharges",
                 args: ["price", "num"]
-            }
+            }]
         },
         bindOccessories: {
             url: "bindOccessories.do",
@@ -606,7 +612,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "occessoriesItems",
-                args: ["num", "sennum", "recnum", "rbalance", "vbalance"]
+                args: ["num", "sennum", "recnum", "rbalance", "vbalance", "charge"]
             }, {
                 result: "occessoriesItems-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -616,14 +622,14 @@ $.extend(api, {
             url: "addOccessoriesItem.do",
             type: "update",
             tranargs: {
-                args: ["occessoriesItem.num", "occessoriesItems.rbalance"]
+                args: ["occessoriesItem.num", "occessoriesItems.sennum", "occessoriesItems.recnum", "occessoriesItems.rbalance", "occessoriesItems.vbalance", "occessoriesItems.charge"]
             }
         },
         updateOccessoriesItem: {
             url: "updateOccessoriesItem.do",
             type: "update",
             tranargs: {
-                args: ["occessoriesItem.num", "occessoriesItem.sennum", "occessoriesItem.recnum", "occessoriesItem.rbalance", "occessoriesItem.vbalance"]
+                args: ["occessoriesItem.num", "occessoriesItem.sennum", "occessoriesItem.recnum", "occessoriesItem.rbalance", "occessoriesItem.vbalance", "occessoriesItems.charge"]
             }
         },
         deleteOccessoriesItem: {

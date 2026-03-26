@@ -19,17 +19,13 @@ public class OccessoriesChargeDaoImpl extends DaoImpl<OccessoriesChargePO> imple
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<OccessoriesChargePO> queryOccessoriesChargeByOid(long oid) {
-		return session().createCriteria(OccessoriesChargePO.class)
-				.add(Restrictions.eq("oid", oid))
-				.list();
+		return session().createCriteria(OccessoriesChargePO.class).add(Restrictions.eq("occessories.oid", oid)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<OccessoriesChargePO> queryOccessoriesChargeByOiid(long oiid) {
-		return session().createCriteria(OccessoriesChargePO.class)
-				.add(Restrictions.eq("oiid", oiid))
-				.list();
+		return session().createCriteria(OccessoriesChargePO.class).add(Restrictions.eq("occessoriesItem.oiid", oiid)).list();
 	}
 
 }
