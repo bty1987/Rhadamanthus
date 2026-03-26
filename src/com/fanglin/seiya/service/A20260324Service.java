@@ -36,4 +36,25 @@ public interface A20260324Service {
 	public String syncDepartment(String code, String name, Integer type, String parentCode,
 			String orgCode, Integer status, String leaderCode, String posts, Integer orderValue) throws FLException;
 
+	/**
+	 * 同步用户信息（支持新增/更新）
+	 *
+	 * @param code 用户工号（更新时提供，新增时为null，如：FL-09527）
+	 * @param name 姓名
+	 * @param currentName 现用名（可选，默认使用name）
+	 * @param gender 性别（0女，1男）
+	 * @param identity 身份证号
+	 * @param phone 手机号
+	 * @param loginId 登录用户名（可选，默认使用userId）
+	 * @param deptId 部门ID
+	 * @param dutyId 职位ID
+	 * @param company 公司ID（user.company）
+	 * @param status 状态（1在职，0离职，2停薪留职，外部参数）
+	 * @return 用户ID（uid）的字符串形式，格式：{"code":"uid","belong_org_code":"company","userId":"工号"}
+	 * @throws FLException 业务异常
+	 */
+	public String syncUser(String code, String name, String currentName, Integer gender,
+			String identity, String phone, String loginId, Integer deptId, Integer dutyId,
+			Integer company, Integer status) throws FLException;
+
 }

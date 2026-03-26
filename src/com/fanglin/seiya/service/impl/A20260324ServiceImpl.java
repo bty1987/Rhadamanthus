@@ -36,7 +36,13 @@ import com.fanglin.seiya.service.A20260324Service;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.utils.MD5Helper;
 import com.fanglin.utils.PinYin4Util;
+import com.fanglin.personel.dao.UserRoleDao;
+import com.fanglin.personel.po.UserRolePO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.RolePO;
+import com.fanglin.system.po.SystemConfigPO;
 
 @Service("A20260324Service")
 @Transactional
@@ -64,6 +70,12 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 	@Autowired
 	private CountingService countingService;
+
+	@Autowired
+	private UserRoleDao userRoleDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -512,6 +524,202 @@ public class A20260324ServiceImpl implements A20260324Service {
 		}
 
 		logger.info("定岗数据处理完成: deptId={}, 成功={}, 跳过={}", deptPO.getDid(), successCount, skipCount);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public String syncUser(String code, String name, String currentName, Integer gender,
+			String identity, String phone, String loginId, Integer deptId, Integer dutyId,
+			Integer company, Integer status) throws FLException {
+
+		try {
+			logger.info("同步用户信息: code={}, name={}, currentName={}, gender={}, identity={}, phone={}, loginId={}, deptId={}, dutyId={}, company={}, status={}",
+					code, name, currentName, gender, identity, phone, loginId, deptId, dutyId, company, status);
+
+			// 1. 获取公司信息
+			CompanyPO companyPO = companyDao.get(company);
+			if (companyPO == null) {
+				throw new FLException(402008, "公司不存在: " + company);
+			}
+
+			// 2. 获取部门信息
+			DepartmentPO deptPO = departmentDao.get(deptId);
+			if (deptPO == null) {
+				throw new FLException(402009, "部门不存在: " + deptId);
+			}
+
+			// 3. 获取职位信息
+			DutyPO dutyPO = dutyDao.get(dutyId);
+			if (dutyPO == null) {
+				throw new FLException(402010, "职位不存在: " + dutyId);
+			}
+
+			// 4. 状态转换（外部参数 → 内部常量）
+			// 外部: 1=在职, 0=离职, 2=停薪留职
+			// 内部: 0=在职, 1=离职, 2=停薪留职
+			short userStatus;
+			if (status == null || status == 1) {
+				userStatus = UserPO.STATUS_ONJOB_INT; // 0 在职
+			} else if (status == 0) {
+				userStatus = UserPO.STATUS_QUIT_INT; // 1 离职
+			} else {
+				userStatus = (short) 2; // 2 停薪留职
+			}
+
+			// 5. 判断是新增还是更新
+			UserPO userPO = null;
+
+			if (code != null && !code.trim().isEmpty()) {
+				// code 有值，尝试通过工号查找现有用户进行更新
+				userPO = userDao.queryUserByUserId(code);
+				if (userPO == null) {
+					logger.warn("根据code未找到用户，视为新增: code={}", code);
+				}
+			}
+
+			// 6. 构建或更新 UserPO 对象
+			if (userPO == null) {
+				// ========== 新增场景 ==========
+
+				// 6.1 校验手机号/身份证是否已存在
+				List<UserPO> existUsers = userDao.queryUserByPhoneAIdent(phone, identity);
+				if (existUsers != null && existUsers.size() > 0) {
+					throw new FLException(402011, "手机号或身份证已被使用");
+				}
+
+				// 6.2 校验登录名是否已存在
+				String actualLoginId = (loginId != null && !loginId.trim().isEmpty()) ? loginId : code;
+				if (actualLoginId != null) {
+					UserPO existUser = userDao.queryUserByLoginId(actualLoginId);
+					if (existUser != null) {
+						throw new FLException(402012, "登录名已存在: " + actualLoginId);
+					}
+				}
+
+				// 6.3 生成工号（使用 code，如果 code 为空则自动生成）
+				String userId;
+				if (code != null && !code.trim().isEmpty()) {
+					userId = code;
+				} else {
+					// 自动生成工号
+					int count = countingService.queryCountingByTypeDate(
+							CountingPO.TYPE_USER_INT,
+							CountingPO.COUNTING_DATE_SILNLE_STR,
+							company);
+					userId = String.format("%sU-%s", companyPO.getShortname(),
+							FormatUtil.fillZero(count, "00000"));
+					logger.info("自动生成工号: userId={}", userId);
+				}
+
+				// 6.4 创建用户对象
+				userPO = new UserPO();
+				userPO.setUserId(userId);
+
+				// 设置登录名
+				if (actualLoginId != null && !actualLoginId.trim().isEmpty()) {
+					userPO.setLoginId(actualLoginId);
+				} else {
+					userPO.setLoginId(userId);
+				}
+
+				// 6.5 设置默认角色（游客角色）
+				SystemConfigPO visitor = systemConfigDao.querySystemConfig("visitor");
+				if (visitor == null) {
+					throw new FLException(402013, "游客角色配置不存在");
+				}
+				userPO.setRole(new RolePO(Integer.valueOf(visitor.getValue())));
+
+				// 6.6 设置访问权限
+				userPO.setIsLogin(UserPO.ISLOGIN_NOT_INT);
+				userPO.setExtranet((short) (UserPO.EXTRANET_QCODE_INT + UserPO.EXTRANET_WEB_INT + UserPO.EXTRANET_PC_INT));
+				userPO.setType(UserPO.TYPE_USER_INT);
+				userPO.setCompany(company);
+
+				// 6.7 设置基本信息
+				userPO.setName(name);
+				userPO.setCurrentName((currentName != null && !currentName.trim().isEmpty()) ? currentName : name);
+				userPO.setGender(gender != null && gender == 0 ? "女" : "男");
+				userPO.setIdentity(identity);
+				userPO.setMobile(phone);
+				userPO.setDept(deptPO);
+				userPO.setDuty(dutyPO);
+				userPO.setStatus(userStatus);
+
+				// 生成拼音
+				try {
+					List<String> pinyinList = PinYin4Util.getPinyin(userPO.getCurrentName());
+					if (pinyinList != null && !pinyinList.isEmpty()) {
+						userPO.setPinYin(pinyinList.get(0));
+					}
+				} catch (Exception e) {
+					logger.warn("生成拼音失败: name={}", userPO.getCurrentName(), e);
+					userPO.setPinYin("");
+				}
+
+				userPO.setIsUpdate(UserPO.ISUPDATE_ADD_INT);
+
+				// 6.8 设置默认密码
+				SystemConfigPO password = systemConfigDao.querySystemConfig("password", company);
+				userPO.setPassword(MD5Helper.MD5(password == null ? "helloworld" : password.getValue()));
+
+				// 6.9 保存用户
+				userDao.save(userPO);
+				logger.info("新增用户成功: uid={}, userId={}, name={}", userPO.getUid(), userPO.getUserId(), userPO.getName());
+
+				// 6.10 保存用户角色关联
+				userRoleDao.save(new UserRolePO(userPO.getUid(), userPO.getRole(), null));
+
+				// 6.11 更新定岗人数
+				DutmentPO dutmentPO = dutmentDao.queryDutmentByDids(deptId, dutyId);
+				if (dutmentPO != null) {
+					dutmentPO.setNum(dutmentPO.getNum() + 1);
+					dutmentDao.update(dutmentPO);
+					logger.info("更新定岗人数: deptId={}, dutyId={}, num={}", deptId, dutyId, dutmentPO.getNum());
+				}
+
+			} else {
+				// ========== 更新场景 ==========
+
+				// 7.1 更新基本信息
+				userPO.setName(name);
+				userPO.setCurrentName((currentName != null && !currentName.trim().isEmpty()) ? currentName : name);
+				userPO.setGender(gender != null && gender == 0 ? "女" : "男");
+				userPO.setIdentity(identity);
+				userPO.setMobile(phone);
+				userPO.setDept(deptPO);
+				userPO.setDuty(dutyPO);
+				userPO.setCompany(company); // 允许跨公司调动
+				userPO.setStatus(userStatus);
+
+				// 更新拼音
+				try {
+					List<String> pinyinList = PinYin4Util.getPinyin(userPO.getCurrentName());
+					if (pinyinList != null && !pinyinList.isEmpty()) {
+						userPO.setPinYin(pinyinList.get(0));
+					}
+				} catch (Exception e) {
+					logger.warn("生成拼音失败: name={}", userPO.getCurrentName(), e);
+				}
+
+				// 7.2 更新用户（不处理定岗人数，不修改loginId）
+				userDao.update(userPO);
+				logger.info("更新用户成功: uid={}, userId={}, name={}, status={}", userPO.getUid(), userPO.getUserId(), userPO.getName(), userPO.getStatus());
+			}
+
+			// 8. 返回 JSON 格式的结果
+			// 格式：{"code":"uid","belong_org_code":"company","userId":"工号"}
+			String result = String.format("{\"code\":\"%d\",\"belong_org_code\":\"%d\",\"userId\":\"%s\"}",
+					userPO.getUid(), userPO.getCompany(), userPO.getUserId());
+
+			logger.info("同步用户完成: result={}", result);
+			return result;
+
+		} catch (FLException e) {
+			throw e;
+		} catch (Exception e) {
+			logger.error("同步用户异常: name={}, identity={}, phone={}", name, identity, phone, e);
+			throw new FLException(500006, "同步用户失败: " + e.getMessage());
+		}
 	}
 
 }
