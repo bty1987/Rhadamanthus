@@ -88,6 +88,10 @@ public class OccessoriesPO implements Serializable {
 
 	private long total;
 
+	private int rbalance; // 实结算额
+
+	private int vbalance; // 虚结算额
+
 	private long charge; // 外辅费用总额
 
 	private short isEnter;// 是否可进园区
@@ -269,6 +273,24 @@ public class OccessoriesPO implements Serializable {
 
 	public void setTotal(long total) {
 		this.total = total;
+	}
+
+	@Column(name = "rbalance")
+	public int getRbalance() {
+		return rbalance;
+	}
+
+	public void setRbalance(int rbalance) {
+		this.rbalance = rbalance;
+	}
+
+	@Column(name = "vbalance")
+	public int getVbalance() {
+		return vbalance;
+	}
+
+	public void setVbalance(int vbalance) {
+		this.vbalance = vbalance;
 	}
 
 	@Column(name = "charge")
