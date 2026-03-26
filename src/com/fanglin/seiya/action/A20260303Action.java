@@ -66,6 +66,9 @@ public class A20260303Action extends BaseListAction {
 	/** Y坐标（double类型，会乘以1000000转为整数） */
 	private Double y;
 
+	/** 公司距离（对应village中的mileage字段） */
+	private Long companyDistance;
+
 	// ==================== 响应字段 ====================
 
 	/**
@@ -101,7 +104,7 @@ public class A20260303Action extends BaseListAction {
 		}
 
 		// 调用服务层处理
-		Map<String, Object> result = a20260303Service.syncVillage(vid, name, proper, city, pvid, company, no, ruleArray, x, y);
+		Map<String, Object> result = a20260303Service.syncVillage(vid, name, proper, city, pvid, company, no, ruleArray, x, y, companyDistance);
 
 		// 将返回的vid赋值给请求参数，作为响应结果
 		Object resultVid = result.get("vid");
@@ -192,6 +195,14 @@ public class A20260303Action extends BaseListAction {
 
 	public void setY(Double y) {
 		this.y = y;
+	}
+
+	public Long getCompanyDistance() {
+		return companyDistance;
+	}
+
+	public void setCompanyDistance(Long companyDistance) {
+		this.companyDistance = companyDistance;
 	}
 
 }
