@@ -41,6 +41,14 @@ public class OccessoriesItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "amountOccessoriesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountOccessoriesItem() {
+
+		amount = occessoriesItemService.amountOccessoriesItem(occessories, occessoriesItem);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addOccessoriesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addOccessoriesItem() throws FLException {
 
@@ -61,14 +69,6 @@ public class OccessoriesItemAction extends BaseListAction {
 	public String deleteOccessoriesItem() throws FLException {
 
 		occessoriesItemService.deleteOccessoriesItem(occessoriesItem);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "amountOccessoriesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String amountOccessoriesItem() {
-
-		amount = occessoriesItemService.amountOccessoriesItem(occessories, occessoriesItem);
 
 		return SUCCESS;
 	}

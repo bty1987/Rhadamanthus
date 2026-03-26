@@ -244,20 +244,13 @@ jQuery(function($) {
         // 隐藏合计行
         com.focusPage('#chargeTotalRow').hide();
 
-        // 查询费用
-        var occessoriesChargeVO = {
-            occessoriesItem: {
-                oiid: oiid
-            }
-        };
-
-        com.post(api.inventory.queryOccessoriesCharge, occessoriesChargeVO, function(res) {
+        com.post(api.inventory.queryOccessoriesCharge, {"occessoriesCharge.occessoriesItem.oiid": oiid}, function(res) {
             if (res && res.occessoriesCharges && res.occessoriesCharges.length > 0) {
                 var totalAmount = 0;
 
                 $.each(res.occessoriesCharges, function(i, charge) {
-                    var price = charge.price / 1000; // 转换为元
-                    var num = charge.num / 1000; // 转换为实际数量
+                    var price = charge.price; // 转换为元
+                    var num = charge.num; // 转换为实际数量
                     var subtotal = price * num; // 小计
 
                     totalAmount += subtotal;
