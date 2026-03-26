@@ -28,21 +28,21 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DepartmentTypePO;
 import com.fanglin.communion.po.DutyPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.MD5Helper;
 import com.fanglin.personel.dao.DutmentDao;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.dao.UserRoleDao;
 import com.fanglin.personel.po.DutmentPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.po.UserRolePO;
 import com.fanglin.seiya.service.A20260324Service;
 import com.fanglin.system.dao.CompanyDao;
-import com.fanglin.system.po.CompanyPO;
-import com.fanglin.utils.FormatUtil;
-import com.fanglin.utils.MD5Helper;
-import com.fanglin.utils.PinYin4Util;
-import com.fanglin.personel.dao.UserRoleDao;
-import com.fanglin.personel.po.UserRolePO;
 import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.RolePO;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.utils.FormatUtil;
+import com.fanglin.utils.PinYin4Util;
 
 @Service("A20260324Service")
 @Transactional
@@ -528,13 +528,10 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public String syncUser(String code, String name, String currentName, Integer gender,
-			String identity, String phone, String loginId, Integer deptId, Integer dutyId,
-			Integer company, Integer status) throws FLException {
+	public String syncUser(String code, String name, String currentName, Integer gender, String identity, String phone, String loginId, Integer deptId, Long dutyId, Integer company, Integer status) throws FLException {
 
 		try {
-			logger.info("同步用户信息: code={}, name={}, currentName={}, gender={}, identity={}, phone={}, loginId={}, deptId={}, dutyId={}, company={}, status={}",
-					code, name, currentName, gender, identity, phone, loginId, deptId, dutyId, company, status);
+			logger.info("同步用户信息: code={}, name={}, currentName={}, gender={}, identity={}, phone={}, loginId={}, deptId={}, dutyId={}, company={}, status={}", code, name, currentName, gender, identity, phone, loginId, deptId, dutyId, company, status);
 
 			// 1. 获取公司信息
 			CompanyPO companyPO = companyDao.get(company);
@@ -561,7 +558,7 @@ public class A20260324ServiceImpl implements A20260324Service {
 			if (status == null || status == 1) {
 				userStatus = UserPO.STATUS_ONJOB_INT; // 0 在职
 			} else if (status == 0) {
-				userStatus = UserPO.STATUS_QUIT_INT; // 1 离职
+				userStatus = UserPO.STATUS_OFFJOB_INT; // 1 离职
 			} else {
 				userStatus = (short) 2; // 2 停薪留职
 			}
@@ -602,12 +599,8 @@ public class A20260324ServiceImpl implements A20260324Service {
 					userId = code;
 				} else {
 					// 自动生成工号
-					int count = countingService.queryCountingByTypeDate(
-							CountingPO.TYPE_USER_INT,
-							CountingPO.COUNTING_DATE_SILNLE_STR,
-							company);
-					userId = String.format("%sU-%s", companyPO.getShortname(),
-							FormatUtil.fillZero(count, "00000"));
+					int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_USER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
+					userId = String.format("%sU-%s", companyPO.getShortname(), FormatUtil.fillZero(count, "00000"));
 					logger.info("自动生成工号: userId={}", userId);
 				}
 
@@ -636,11 +629,11 @@ public class A20260324ServiceImpl implements A20260324Service {
 				userPO.setCompany(company);
 
 				// 6.7 设置基本信息
-				userPO.setName(name);
+				userPO.setUserName(name);
 				userPO.setCurrentName((currentName != null && !currentName.trim().isEmpty()) ? currentName : name);
 				userPO.setGender(gender != null && gender == 0 ? "女" : "男");
 				userPO.setIdentity(identity);
-				userPO.setMobile(phone);
+				userPO.setPhone(phone);
 				userPO.setDept(deptPO);
 				userPO.setDuty(dutyPO);
 				userPO.setStatus(userStatus);
@@ -664,7 +657,7 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 				// 6.9 保存用户
 				userDao.save(userPO);
-				logger.info("新增用户成功: uid={}, userId={}, name={}", userPO.getUid(), userPO.getUserId(), userPO.getName());
+				logger.info("新增用户成功: uid={}, userId={}, name={}", userPO.getUid(), userPO.getUserId(), userPO.getUserName());
 
 				// 6.10 保存用户角色关联
 				userRoleDao.save(new UserRolePO(userPO.getUid(), userPO.getRole(), null));
@@ -681,11 +674,11 @@ public class A20260324ServiceImpl implements A20260324Service {
 				// ========== 更新场景 ==========
 
 				// 7.1 更新基本信息
-				userPO.setName(name);
+				userPO.setUserName(name);
 				userPO.setCurrentName((currentName != null && !currentName.trim().isEmpty()) ? currentName : name);
 				userPO.setGender(gender != null && gender == 0 ? "女" : "男");
 				userPO.setIdentity(identity);
-				userPO.setMobile(phone);
+				userPO.setPhone(phone);
 				userPO.setDept(deptPO);
 				userPO.setDuty(dutyPO);
 				userPO.setCompany(company); // 允许跨公司调动
@@ -703,13 +696,12 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 				// 7.2 更新用户（不处理定岗人数，不修改loginId）
 				userDao.update(userPO);
-				logger.info("更新用户成功: uid={}, userId={}, name={}, status={}", userPO.getUid(), userPO.getUserId(), userPO.getName(), userPO.getStatus());
+				logger.info("更新用户成功: uid={}, userId={}, name={}, status={}", userPO.getUid(), userPO.getUserId(), userPO.getUserName(), userPO.getStatus());
 			}
 
 			// 8. 返回 JSON 格式的结果
 			// 格式：{"code":"uid","belong_org_code":"company","userId":"工号"}
-			String result = String.format("{\"code\":\"%d\",\"belong_org_code\":\"%d\",\"userId\":\"%s\"}",
-					userPO.getUid(), userPO.getCompany(), userPO.getUserId());
+			String result = String.format("{\"code\":\"%d\",\"belong_org_code\":\"%d\",\"userId\":\"%s\"}", userPO.getUid(), userPO.getCompany(), userPO.getUserId());
 
 			logger.info("同步用户完成: result={}", result);
 			return result;

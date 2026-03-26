@@ -83,7 +83,7 @@ public class A20260324Action extends BaseListAction {
 	private Integer dept_id;
 
 	/** 职位ID */
-	private Integer duty_id;
+	private Long duty_id;
 
 	/** 公司ID（user.company） */
 	private Integer company;
@@ -94,17 +94,9 @@ public class A20260324Action extends BaseListAction {
 
 	/**
 	 * 同步职位信息接口
-	 *
-	 * 请求参数示例：
-	 * {
-	 *     "name": "司机",              // 职位名称
-	 *     "code": "POST9526",          // 职位编码（更新时提供）
-	 *     "type": 1,                   // 部门类型ID
-	 *     "org_code": "DEPT9526",      // 部门编号（保留但未使用）
-	 *     "status": 1,                 // 状态：1启用，2禁用
-	 *     "leader_flag": 0             // 是否领导岗：0否，1是
-	 * }
-	 *
+	 * 
+	 * 请求参数示例： { "name": "司机", // 职位名称 "code": "POST9526", // 职位编码（更新时提供） "type": 1, // 部门类型ID "org_code": "DEPT9526", // 部门编号（保留但未使用） "status": 1, // 状态：1启用，2禁用 "leader_flag": 0 // 是否领导岗：0否，1是 }
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
@@ -127,20 +119,9 @@ public class A20260324Action extends BaseListAction {
 
 	/**
 	 * 同步部门信息接口
-	 *
-	 * 请求参数示例：
-	 * {
-	 *     "name": "设计一部",              // 部门名称
-	 *     "code": "DEPT9526",             // 信息平台部门ID或编码：更新时提供
-	 *     "type": 1,                      // 部门类型ID
-	 *     "parent_code": "DEPT9525",      // 信息平台父级编码：创建/更新时提供
-	 *     "org_code": "1",                // 公司ID（对应 company.cid）：创建时提供
-	 *     "status": 1,                    // 状态：1启用，2禁用
-	 *     "order_value": 1,               // 排序值
-	 *     "leader_code": "FL-09527",      // 部门经理工号
-	 *     "posts": "{\"1\": 10, \"2\": 20}" // 定岗映射信息：岗位码 => 人员上限值（JSON字符串）
-	 * }
-	 *
+	 * 
+	 * 请求参数示例： { "name": "设计一部", // 部门名称 "code": "DEPT9526", // 信息平台部门ID或编码：更新时提供 "type": 1, // 部门类型ID "parent_code": "DEPT9525", // 信息平台父级编码：创建/更新时提供 "org_code": "1", // 公司ID（对应 company.cid）：创建时提供 "status": 1, // 状态：1启用，2禁用 "order_value": 1, // 排序值 "leader_code": "FL-09527", // 部门经理工号 "posts": "{\"1\": 10, \"2\": 20}" // 定岗映射信息：岗位码 => 人员上限值（JSON字符串） }
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
@@ -159,41 +140,18 @@ public class A20260324Action extends BaseListAction {
 		}
 
 		// 调用服务层处理
-		data = a20260324Service.syncDepartment(code, name, type, parent_code,
-				org_code, status, leader_code, posts, order_value);
+		data = a20260324Service.syncDepartment(code, name, type, parent_code, org_code, status, leader_code, posts, order_value);
 
 		return SUCCESS;
 	}
 
 	/**
 	 * 同步用户信息接口
-	 *
-	 * 请求参数示例：
-	 * {
-	 *     "code": "FL-09527",         // 用户工号（更新时提供，新增时为空）
-	 *     "name": "张三",             // 姓名（必填）
-	 *     "current_name": "张三",     // 现用名（可选，默认使用name）
-	 *     "gender": 1,               // 性别：0女，1男（可选，默认1）
-	 *     "identity": "210xxx...",   // 身份证号（必填）
-	 *     "phone": "13800138000",    // 手机号（必填）
-	 *     "login_id": "zhangsan",    // 登录用户名（可选，默认使用userId）
-	 *     "dept_id": 123,            // 部门ID（必填）
-	 *     "duty_id": 456,            // 职位ID（必填）
-	 *     "company": 1,              // 公司ID（必填，user.company）
-	 *     "status": 1                // 状态：1在职, 0离职, 2停薪留职（可选，默认1）
-	 * }
-	 *
-	 * 响应示例：
-	 * {
-	 *     "errorCode": 0,
-	 *     "errorMsg": "",
-	 *     "data": {
-	 *         "code": "12345",          // user.uid
-	 *         "belong_org_code": "1",   // user.company
-	 *         "userId": "FL-09527"      // user.userId（工号）
-	 *     }
-	 * }
-	 *
+	 * 
+	 * 请求参数示例： { "code": "FL-09527", // 用户工号（更新时提供，新增时为空） "name": "张三", // 姓名（必填） "current_name": "张三", // 现用名（可选，默认使用name） "gender": 1, // 性别：0女，1男（可选，默认1） "identity": "210xxx...", // 身份证号（必填） "phone": "13800138000", // 手机号（必填） "login_id": "zhangsan", // 登录用户名（可选，默认使用userId） "dept_id": 123, // 部门ID（必填） "duty_id": 456, // 职位ID（必填） "company": 1, // 公司ID（必填，user.company） "status": 1 // 状态：1在职, 0离职, 2停薪留职（可选，默认1） }
+	 * 
+	 * 响应示例： { "errorCode": 0, "errorMsg": "", "data": { "code": "12345", // user.uid "belong_org_code": "1", // user.company "userId": "FL-09527" // user.userId（工号） } }
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
@@ -221,8 +179,7 @@ public class A20260324Action extends BaseListAction {
 		}
 
 		// 调用服务层处理
-		data = a20260324Service.syncUser(code, name, current_name, gender, identity, phone,
-				login_id, dept_id, duty_id, company, status);
+		data = a20260324Service.syncUser(code, name, current_name, gender, identity, phone, login_id, dept_id, duty_id, company, status);
 
 		return SUCCESS;
 	}
@@ -365,11 +322,11 @@ public class A20260324Action extends BaseListAction {
 		this.dept_id = dept_id;
 	}
 
-	public Integer getDuty_id() {
+	public Long getDuty_id() {
 		return duty_id;
 	}
 
-	public void setDuty_id(Integer duty_id) {
+	public void setDuty_id(Long duty_id) {
 		this.duty_id = duty_id;
 	}
 

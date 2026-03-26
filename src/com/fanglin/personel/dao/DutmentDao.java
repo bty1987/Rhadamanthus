@@ -10,7 +10,7 @@ public interface DutmentDao extends Dao<DutmentPO> {
 	public List<DutmentPO> queryDutmentByDeid(Integer did);
 
 	public List<DutmentPO> queryDutmentByDuid(Long did);
-	
-	public DutmentPO queryDutmentByDids(Integer deid, Long did);
+
+	public DutmentPO queryDutmentByDids(Integer deptId, Long dutyId);
 
 }

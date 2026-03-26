@@ -32,5 +32,5 @@ public class DutmentDaoImpl extends DaoImpl<DutmentPO> implements DutmentDao {
 	public DutmentPO queryDutmentByDids(Integer deid, Long did) {
 		return (DutmentPO) session().createCriteria(DutmentPO.class).createAlias("duty", "duty").createAlias("dept", "dept").add(Restrictions.eq("duty.did", did)).add(Restrictions.eq("dept.did", deid)).uniqueResult();
 	}
-	
+
 }
