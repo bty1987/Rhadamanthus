@@ -246,8 +246,19 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 			occessoriesItemDao.update(occessoriesItemPO);
 		}
 
-		// 更新外辅单费用总额
+		// 更新外辅单费用总额和结算额
 		occessoriesPO.setCharge(totalCharge);
+
+		// 汇总所有 item 的实结算额和虚结算额
+		int totalRbalance = 0;
+		int totalVbalance = 0;
+		for (OccessoriesItemVO occessoriesItemVO : OccessoriesItemVOs) {
+			totalRbalance += occessoriesItemVO.getRbalance() != null ? occessoriesItemVO.getRbalance() : 0;
+			totalVbalance += occessoriesItemVO.getVbalance() != null ? occessoriesItemVO.getVbalance() : 0;
+		}
+		occessoriesPO.setRbalance(totalRbalance);
+		occessoriesPO.setVbalance(totalVbalance);
+
 		occessoriesDao.update(occessoriesPO);
 
 		return 0;
@@ -372,16 +383,29 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		occessoriesPO.setBalancer(user);
 		occessoriesPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 
-		occessoriesDao.update(occessoriesPO);
+		// 汇总所有 item 的实结算额和虚结算额
+		int totalRbalance = 0;
+		int totalVbalance = 0;
 
 		for (OccessoriesItemVO occessoriesItemVO : occessoriesItemVOs) {
 
 			OccessoriesItemPO occessoriesItemPO = occessoriesItemDao.get(occessoriesItemVO.getOiid());
 
+			occessoriesItemPO.setRbalance(occessoriesItemVO.getRbalance());
 			occessoriesItemPO.setVbalance(occessoriesItemVO.getVbalance());
 
 			occessoriesItemDao.save(occessoriesItemPO);
+
+			// 累加结算额
+			totalRbalance += occessoriesItemVO.getRbalance() != null ? occessoriesItemVO.getRbalance() : 0;
+			totalVbalance += occessoriesItemVO.getVbalance() != null ? occessoriesItemVO.getVbalance() : 0;
 		}
+
+		// 更新外辅单的结算额
+		occessoriesPO.setRbalance(totalRbalance);
+		occessoriesPO.setVbalance(totalVbalance);
+
+		occessoriesDao.update(occessoriesPO);
 
 		return 0;
 	}
