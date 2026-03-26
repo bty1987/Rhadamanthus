@@ -9,7 +9,6 @@ jQuery(function() {
             supervisor: null,
             house: null,
             fetchTime: null,
-            qid: null, // 报价单ID
         },
 
         itemlist: com.focusPage('#accessoriesItemList'),
@@ -53,7 +52,7 @@ jQuery(function() {
             $.each(list, function(index, val) {
 
                 if (val.aid == k) {
-
+                    
                     accessories.leftitems.goodsHidden.attr('data-gid', val.goods.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-caid', val.aid).attr('data-nid', val.noods.nid).attr('data-normnum', val.normnum).attr('data-normunit', val.normunit).attr('data-storenum', val.storenum).attr('data-storeunit', val.storeunit);
 
                     accessories.leftitems.goodsNo.attr('data-no', val.goods.no).val(val.goods.no);
@@ -63,35 +62,6 @@ jQuery(function() {
 
                     if (val.constructionNode)
                         accessories.leftitems.constructionNode.attr('data-constructionNode', val.constructionNode.cnid).attr('data-schedule', val.constructionNode.sort).val(val.constructionNode.name);
-
-                    // 如果有定材ID（nid），查询定额用量和外辅用量
-                    if (val.noods && val.noods.nid) {
-                        var nid = val.noods.nid;
-
-                        // 查询定额用量
-                        if (accessories.postData.qid) {
-                            com.post(api.quotation.amountNormoodItem, {
-                                "normoodItem.qid": accessories.postData.qid,
-                                "normoodItem.noods.nid": nid
-                            }, function(normRes) {
-                                var normAmount = normRes.amount || 0;
-
-                                // 查询外辅用量
-                                com.post(api.inventory.amountOccessoriesItem, {
-                                    "occessories.decoration.orderId": accessories.postData.orderId,
-                                    "occessoriesItem.nid": nid
-                                }, function(accRes) {
-                                    var accAmount = accRes.amount || 0;
-
-                                    // 计算总用量并填充到数量输入框
-                                    var totalAmount = normAmount + accAmount;
-                                    if (totalAmount > 0) {
-                                        accessories.leftitems.num.val(totalAmount);
-                                    }
-                                }, null, false);
-                            }, null, false);
-                        }
-                    }
                 }
             });
 
@@ -229,15 +199,6 @@ jQuery(function() {
             accessories.postData.company = data.decoration.company;
             accessories.postData.supervisor = data.decoration.supervisor.userId;
             accessories.postData.house = data.decoration.house.hid;
-
-            // 获取报价单ID
-            com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-                "quotation.orderId": orderId
-            }, function(quotationRes) {
-                if (quotationRes.quotation) {
-                    accessories.postData.qid = quotationRes.quotation.qid;
-                }
-            }, null, false);
 
         }, function(e) {
 

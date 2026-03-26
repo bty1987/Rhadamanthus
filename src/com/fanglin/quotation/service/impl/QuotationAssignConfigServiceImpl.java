@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -97,9 +98,12 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 
 		BeanUtil.copyProperties(quotationAssignConfigVO, quotationAssignConfigPO, "company", "department");
 
-		quotationAssignConfigPO.setCompany(companyPO);
+		if (companyPO != null) quotationAssignConfigPO.setCompany(companyPO);
+
+		if (department != null) quotationAssignConfigPO.setDepartment(new DepartmentPO(department));
 
 		Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
+
 		quotationAssignConfigPO.setCreateTime(currentTime);
 		quotationAssignConfigPO.setUpdateTime(currentTime);
 
@@ -143,8 +147,7 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 		}
 
 		// 使用 BeanUtil 复制基本属性（排除关联对象和只读字段）
-		BeanUtil.copyProperties(quotationAssignConfigVO, quotationAssignConfigPO,
-				"company", "department", "qacid", "createTime");
+		BeanUtil.copyProperties(quotationAssignConfigVO, quotationAssignConfigPO, "company", "department", "qacid", "createTime");
 
 		// 手动设置关联对象
 		quotationAssignConfigPO.setCompany(new CompanyPO(company));
