@@ -1,9 +1,9 @@
 # Seiya 模块同步接口 API 文档
 
-> **版本**: v1.0
-> **更新日期**: 2026-03-24
+> **版本**: v1.1
+> **更新日期**: 2026-03-26
 > **模块**: seiya（第三方数据同步模块）
-> **功能**: 职位和部门信息同步
+> **功能**: 职位、部门、用户信息同步
 
 ---
 
@@ -12,6 +12,7 @@
 - [接口概述](#接口概述)
 - [1. 职位同步接口](#1-职位同步接口-syncduty)
 - [2. 部门同步接口](#2-部门同步接口-syncdepartment)
+- [3. 用户同步接口](#3-用户同步接口-syncuser)
 - [错误码说明](#错误码说明)
 - [数据字典](#数据字典)
 
@@ -341,6 +342,297 @@ curl -X POST "http://localhost:8080/Rhadamanthus/syncDepartment.do" \
 
 ---
 
+## 3. 用户同步接口 (syncUser)
+
+### 接口信息
+
+| 项目 | 说明 |
+|------|------|
+| **接口URL** | `/syncUser.do` |
+| **请求方式** | POST |
+| **功能描述** | 同步用户信息，支持新增、更新操作 |
+| **权限要求** | 需要登录认证 |
+
+### 请求参数
+
+| 参数名 | 类型 | 必填 | 说明 | 示例值 |
+|--------|------|------|------|--------|
+| `name` | String | ✅ | 姓名 | "张三" |
+| `code` | String | ❌ | 用户工号（更新时提供） | "FL-09527" |
+| `current_name` | String | ❌ | 现用名（默认使用name） | "张三" |
+| `gender` | Integer | ❌ | 性别：0女，1男（默认1） | 1 |
+| `identity` | String | ✅ | 身份证号 | "210xxx199001011234" |
+| `phone` | String | ✅ | 手机号 | "13800138000" |
+| `login_id` | String | ❌ | 登录用户名（默认使用userId） | "zhangsan" |
+| `dept_id` | Integer | ✅ | 部门ID | 123 |
+| `duty_id` | Integer | ✅ | 职位ID | 456 |
+| `company` | Integer | ✅ | 公司ID（user.company） | 1 |
+| `status` | Integer | ❌ | 状态：1在职，0离职，2停薪留职（默认1） | 1 |
+
+### 业务规则
+
+#### 新增场景（code 为空）
+1. **工号生成**：不提供 `code` 参数时，系统自动生成工号（格式：公司简称U-编号，如：FLU-00001）
+2. **唯一性校验**：
+   - 手机号不能已存在
+   - 身份证号不能已存在
+   - 登录名不能已存在
+3. **默认设置**：
+   - 默认密码：系统配置的默认密码（MD5加密）
+   - 默认角色：游客角色
+   - 默认状态：在职（status=1）
+4. **定岗处理**：新增时自动更新定岗人数 +1
+5. **拼音生成**：自动生成姓名拼音
+
+#### 更新场景（code 有值）
+1. **用户查找**：通过 `code`（工号）查找现有用户
+2. **灵活修改**：
+   - ✅ 允许修改手机号/身份证（不检查重复）
+   - ✅ 允许跨公司调动
+   - ✅ 允许修改部门和职位
+   - ❌ 不允许修改登录名（login_id）
+3. **定岗处理**：更新时不处理定岗人数
+4. **状态更新**：支持修改用户状态（在职/离职/停薪留职）
+
+#### 状态值转换
+- **外部参数** → **内部常量**
+  - `1`（在职）→ `0`（STATUS_ONJOB_INT）
+  - `0`（离职）→ `1`（STATUS_QUIT_INT）
+  - `2`（停薪留职）→ `2`（STATUS_SUSPEND_INT）
+
+### 请求示例
+
+#### 新增用户（自动生成工号）
+
+```bash
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "name=张三" \
+  -d "gender=1" \
+  -d "identity=210xxx199001011234" \
+  -d "phone=13800138000" \
+  -d "dept_id=123" \
+  -d "duty_id=456" \
+  -d "company=1" \
+  -d "status=1"
+```
+
+#### 新增用户（指定工号）
+
+```bash
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "code=FL-09527" \
+  -d "name=李四" \
+  -d "current_name=李四" \
+  -d "gender=1" \
+  -d "identity=210xxx199002022345" \
+  -d "phone=13900139000" \
+  -d "login_id=lisi" \
+  -d "dept_id=123" \
+  -d "duty_id=456" \
+  -d "company=1" \
+  -d "status=1"
+```
+
+#### 更新用户（基本信息）
+
+```bash
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "code=FL-09527" \
+  -d "name=李四（更新）" \
+  -d "gender=0" \
+  -d "identity=210xxx199002023456" \
+  -d "phone=13900139999" \
+  -d "dept_id=124" \
+  -d "duty_id=457" \
+  -d "company=1" \
+  -d "status=1"
+```
+
+#### 更新用户（跨公司调动）
+
+```bash
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "code=FL-09527" \
+  -d "name=李四" \
+  -d "gender=1" \
+  -d "identity=210xxx199002022345" \
+  -d "phone=13900139000" \
+  -d "dept_id=200" \
+  -d "duty_id=500" \
+  -d "company=2" \
+  -d "status=1"
+```
+
+#### 更新用户（离职）
+
+```bash
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "code=FL-09527" \
+  -d "name=李四" \
+  -d "gender=1" \
+  -d "identity=210xxx199002022345" \
+  -d "phone=13900139000" \
+  -d "dept_id=123" \
+  -d "duty_id=456" \
+  -d "company=1" \
+  -d "status=0"
+```
+
+#### 更新用户（停薪留职）
+
+```bash
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "code=FL-09527" \
+  -d "name=李四" \
+  -d "gender=1" \
+  -d "identity=210xxx199002022345" \
+  -d "phone=13900139000" \
+  -d "dept_id=123" \
+  -d "duty_id=456" \
+  -d "company=1" \
+  -d "status=2"
+```
+
+### 响应示例
+
+**成功响应（新增用户）**:
+```json
+{
+    "errorCode": 0,
+    "errorMsg": "成功",
+    "data": "{\"code\":\"12345\",\"belong_org_code\":\"1\",\"userId\":\"FLU-00001\"}"
+}
+```
+
+**成功响应（更新用户）**:
+```json
+{
+    "errorCode": 0,
+    "errorMsg": "成功",
+    "data": "{\"code\":\"12345\",\"belong_org_code\":\"1\",\"userId\":\"FL-09527\"}"
+}
+```
+
+**data 字段说明**:
+- `code`: user.uid（用户内部ID）
+- `belong_org_code`: user.company（公司ID）
+- `userId`: user.userId（工号）
+
+**失败响应（参数缺失）**:
+```json
+{
+    "errorCode": 402001,
+    "errorMsg": "姓名不能为空",
+    "data": null
+}
+```
+
+```json
+{
+    "errorCode": 402002,
+    "errorMsg": "身份证号不能为空",
+    "data": null
+}
+```
+
+```json
+{
+    "errorCode": 402003,
+    "errorMsg": "手机号不能为空",
+    "data": null
+}
+```
+
+```json
+{
+    "errorCode": 402005,
+    "errorMsg": "部门ID不能为空",
+    "data": null
+}
+```
+
+```json
+{
+    "errorCode": 402006,
+    "errorMsg": "职位ID不能为空",
+    "data": null
+}
+```
+
+```json
+{
+    "errorCode": 402007,
+    "errorMsg": "公司ID不能为空",
+    "data": null
+}
+```
+
+**失败响应（业务校验）**:
+```json
+{
+    "errorCode": 402008,
+    "errorMsg": "公司不存在: 999",
+    "data": null
+}
+```
+
+```json
+{
+    "errorCode": 402009,
+    "errorMsg": "部门不存在: 999",
+    "data": null
+}
+```
+
+```json
+{
+    "errorCode": 402010,
+    "errorMsg": "职位不存在: 999",
+    "data": null
+}
+```
+
+```json
+{
+    "errorCode": 402011,
+    "errorMsg": "手机号或身份证已被使用",
+    "data": null
+}
+```
+
+```json
+{
+    "errorCode": 402012,
+    "errorMsg": "登录名已存在: zhangsan",
+    "data": null
+}
+```
+
+```json
+{
+    "errorCode": 402013,
+    "errorMsg": "游客角色配置不存在",
+    "data": null
+}
+```
+
+**失败响应（系统异常）**:
+```json
+{
+    "errorCode": 500006,
+    "errorMsg": "同步用户失败: 数据库异常",
+    "data": null
+}
+```
+
+---
+
 ## 错误码说明
 
 ### 通用错误码
@@ -350,6 +642,7 @@ curl -X POST "http://localhost:8080/Rhadamanthus/syncDepartment.do" \
 | 0 | 成功 |
 | 500003 | 同步职位失败 |
 | 500004 | 同步部门失败 |
+| 500006 | 同步用户失败 |
 
 ### 职位同步错误码
 
@@ -373,16 +666,50 @@ curl -X POST "http://localhost:8080/Rhadamanthus/syncDepartment.do" \
 | 511004 | 组织编码格式错误，必须是数字 |
 | 130017 | 部门名称已存在 |
 
+### 用户同步错误码
+
+| 错误码 | 说明 |
+|--------|------|
+| 402001 | 姓名不能为空 |
+| 402002 | 身份证号不能为空 |
+| 402003 | 手机号不能为空 |
+| 402005 | 部门ID不能为空 |
+| 402006 | 职位ID不能为空 |
+| 402007 | 公司ID不能为空 |
+| 402008 | 公司不存在 |
+| 402009 | 部门不存在 |
+| 402010 | 职位不存在 |
+| 402011 | 手机号或身份证已被使用 |
+| 402012 | 登录名已存在 |
+| 402013 | 游客角色配置不存在 |
+
 ---
 
 ## 数据字典
 
 ### 状态值 (status)
 
+#### 职位/部门状态
+
 | 值 | 说明 |
 |----|------|
 | 1 | 启用 |
 | 2 | 禁用 |
+
+#### 用户状态
+
+| 外部参数 | 内部常量 | 说明 |
+|----------|---------|------|
+| 1 | 0 | 在职 |
+| 0 | 1 | 离职 |
+| 2 | 2 | 停薪留职 |
+
+### 性别值 (gender)
+
+| 值 | 说明 |
+|----|------|
+| 0 | 女 |
+| 1 | 男 |
 
 ### 是否领导岗 (leader_flag)
 
@@ -406,6 +733,7 @@ curl -X POST "http://localhost:8080/Rhadamanthus/syncDepartment.do" \
 |------|---------|------|
 | 职位 | D + 3位数字 | D001, D002, D003 |
 | 部门 | DEPT + 4位数字 | DEPT0001, DEPT0002, DEPT0003 |
+| 用户 | 公司简称U- + 5位数字 | FLU-00001, FLU-00002, SYU-00001 |
 
 ---
 
@@ -526,6 +854,135 @@ curl -X POST "http://localhost:8080/Rhadamanthus/syncDepartment.do" \
 # 预期返回：{"errorCode":511004,"errorMsg":"组织编码格式错误，必须是数字: ABC","data":null}
 ```
 
+### 场景9：新增用户（自动生成工号）
+
+```bash
+# 9. 新增用户，系统自动生成工号
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "name=张三" \
+  -d "gender=1" \
+  -d "identity=210xxx199001011234" \
+  -d "phone=13800138000" \
+  -d "dept_id=123" \
+  -d "duty_id=456" \
+  -d "company=1" \
+  -d "status=1"
+
+# 预期返回：{"errorCode":0,"errorMsg":"成功","data":"{\"code\":\"12345\",\"belong_org_code\":\"1\",\"userId\":\"FLU-00001\"}"}
+```
+
+### 场景10：新增用户（指定工号）
+
+```bash
+# 10. 新增用户，指定工号
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "code=FL-09527" \
+  -d "name=李四" \
+  -d "gender=1" \
+  -d "identity=210xxx199002022345" \
+  -d "phone=13900139000" \
+  -d "login_id=lisi" \
+  -d "dept_id=123" \
+  -d "duty_id=456" \
+  -d "company=1" \
+  -d "status=1"
+
+# 预期返回：{"errorCode":0,"errorMsg":"成功","data":"{\"code\":\"12346\",\"belong_org_code\":\"1\",\"userId\":\"FL-09527\"}"}
+```
+
+### 场景11：更新用户（基本信息）
+
+```bash
+# 11. 更新用户基本信息
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "code=FL-09527" \
+  -d "name=李四（更新）" \
+  -d "gender=0" \
+  -d "identity=210xxx199002023456" \
+  -d "phone=13900139999" \
+  -d "dept_id=124" \
+  -d "duty_id=457" \
+  -d "company=1" \
+  -d "status=1"
+
+# 预期返回：{"errorCode":0,"errorMsg":"成功","data":"{\"code\":\"12346\",\"belong_org_code\":\"1\",\"userId\":\"FL-09527\"}"}
+```
+
+### 场景12：更新用户（跨公司调动）
+
+```bash
+# 12. 用户跨公司调动
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "code=FL-09527" \
+  -d "name=李四" \
+  -d "gender=1" \
+  -d "identity=210xxx199002022345" \
+  -d "phone=13900139000" \
+  -d "dept_id=200" \
+  -d "duty_id=500" \
+  -d "company=2" \
+  -d "status=1"
+
+# 预期返回：{"errorCode":0,"errorMsg":"成功","data":"{\"code\":\"12346\",\"belong_org_code\":\"2\",\"userId\":\"FL-09527\"}"}
+```
+
+### 场景13：更新用户（离职）
+
+```bash
+# 13. 用户离职
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "code=FL-09527" \
+  -d "name=李四" \
+  -d "gender=1" \
+  -d "identity=210xxx199002022345" \
+  -d "phone=13900139000" \
+  -d "dept_id=123" \
+  -d "duty_id=456" \
+  -d "company=1" \
+  -d "status=0"
+
+# 预期返回：{"errorCode":0,"errorMsg":"成功","data":"{\"code\":\"12346\",\"belong_org_code\":\"1\",\"userId\":\"FL-09527\"}"}
+```
+
+### 场景14：错误测试 - 手机号重复
+
+```bash
+# 14. 测试手机号重复
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "name=王五" \
+  -d "identity=210xxx199003033456" \
+  -d "phone=13800138000" \
+  -d "dept_id=123" \
+  -d "duty_id=456" \
+  -d "company=1"
+
+# 预期返回：{"errorCode":402011,"errorMsg":"手机号或身份证已被使用","data":null}
+```
+
+### 场景15：错误测试 - 登录名重复
+
+```bash
+# 15. 测试登录名重复
+curl -X POST "http://localhost:8080/Rhadamanthus/syncUser.do" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "code=FL-09528" \
+  -d "name=王五" \
+  -d "identity=210xxx199003033456" \
+  -d "phone=13900139555" \
+  -d "login_id=lisi" \
+  -d "dept_id=123" \
+  -d "duty_id=456" \
+  -d "company=1"
+
+# 预期返回：{"errorCode":402012,"errorMsg":"登录名已存在: lisi","data":null}
+```
+
 ---
 
 ## 注意事项
@@ -534,6 +991,7 @@ curl -X POST "http://localhost:8080/Rhadamanthus/syncDepartment.do" \
 
 - **职位编号**：自动生成时格式为 `D001`, `D002`，递增
 - **部门编号**：自动生成时格式为 `DEPT0001`, `DEPT0002`，递增
+- **用户工号**：自动生成时格式为 `公司简称U-00001`，递增（如：FLU-00001）
 - **编号唯一性**：系统保证编号不会重复
 
 ### 2. 更新操作
@@ -541,27 +999,45 @@ curl -X POST "http://localhost:8080/Rhadamanthus/syncDepartment.do" \
 - **通过编码查找**：更新时必须提供 `code` 参数
 - **部分更新**：只更新提供的字段，未提供的字段保持不变
 - **编码不可修改**：更新时不能修改 `code` 字段
+- **用户特殊限制**：
+  - ❌ 不允许修改登录名（login_id）
+  - ✅ 允许修改手机号/身份证（更新时不检查重复）
+  - ✅ 允许跨公司调动
 
 ### 3. 业务校验
 
 - **名称唯一性**：
   - 职位：全局唯一
   - 部门：同一公司内唯一
+  - 用户：不限制姓名重复
 - **关联数据校验**：
   - 父部门必须存在
   - 部门经理用户必须存在
   - 部门类型必须存在
+  - 公司必须存在（用户）
+  - 部门必须存在（用户）
+  - 职位必须存在（用户）
+- **唯一性校验（用户新增）**：
+  - 手机号不能已存在
+  - 身份证号不能已存在
+  - 登录名不能已存在
 
 ### 4. 并发控制
 
 - **职位编号生成**：使用 `synchronized` 保护，避免单机并发重复
 - **部门编号生成**：查询数据库最大编号后递增
+- **用户工号生成**：使用计数器服务（countingService），保证编号唯一性
 
 ### 5. 字段说明
 
 - **org_code（职位）**：保留字段，当前未使用
 - **org_code（部门）**：对应 `company.cid`，必须是纯数字字符串
 - **posts**：定岗数据，JSON 字符串格式，存储在部门备注字段
+- **login_id（用户）**：登录用户名，可选，默认使用工号（userId）
+- **current_name（用户）**：现用名，可选，默认使用姓名（name）
+- **status（用户）**：
+  - 外部参数：1=在职，0=离职，2=停薪留职
+  - 内部常量：0=在职，1=离职，2=停薪留职
 
 ---
 
@@ -600,6 +1076,30 @@ curl -X POST "http://localhost:8080/Rhadamanthus/syncDepartment.do" \
 | limit | INT | 排序值/限制 |
 | isdet | SMALLINT | 是否详细部门 |
 
+#### user（用户表）
+
+| 字段名 | 类型 | 说明 |
+|--------|------|------|
+| uid | INT | 用户ID（主键） |
+| userId | VARCHAR | 工号 |
+| name | VARCHAR | 姓名 |
+| currentName | VARCHAR | 现用名 |
+| gender | VARCHAR | 性别 |
+| identity | VARCHAR | 身份证号 |
+| mobile | VARCHAR | 手机号 |
+| loginId | VARCHAR | 登录用户名 |
+| password | VARCHAR | 密码（MD5加密） |
+| dept | BIGINT | 部门ID（外键） |
+| duty | BIGINT | 职位ID（外键） |
+| company | INT | 公司ID |
+| status | SMALLINT | 状态 |
+| role | BIGINT | 角色ID（外键） |
+| pinYin | VARCHAR | 拼音 |
+| isLogin | SMALLINT | 是否允许登录 |
+| extranet | SMALLINT | 外网访问权限 |
+| type | SMALLINT | 用户类型 |
+| isUpdate | SMALLINT | 更新标识 |
+
 ### B. 相关文件
 
 - **Action**: `src/com/fanglin/seiya/action/A20260324Action.java`
@@ -611,6 +1111,16 @@ curl -X POST "http://localhost:8080/Rhadamanthus/syncDepartment.do" \
 ---
 
 ## 更新日志
+
+### v1.1 (2026-03-26)
+
+- ✅ 新增用户同步接口（syncUser）
+- ✅ 支持用户新增和更新操作
+- ✅ 支持自动生成工号和指定工号
+- ✅ 支持跨公司调动
+- ✅ 支持状态管理（在职/离职/停薪留职）
+- ✅ 完善用户数据校验
+- ✅ 添加定岗人数处理
 
 ### v1.0 (2026-03-24)
 
