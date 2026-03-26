@@ -26,12 +26,16 @@ import com.fanglin.quotation.dao.QuotationAssignConfigDao;
 import com.fanglin.quotation.dao.QuotationAssignRecordDao;
 import com.fanglin.quotation.dao.QuotationAssignRequestDao;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleDao;
+import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationAssignConfigPO;
 import com.fanglin.quotation.po.QuotationAssignRecordPO;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
+import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.QuotationAssignService;
+import com.fanglin.quotation.service.QuotationService;
 import com.fanglin.quotation.vo.QuotationAssignVO;
+import com.fanglin.quotation.vo.QuotationVO;
 
 /**
  * 核心分配逻辑 Service 实现类
@@ -72,7 +76,13 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	private QuotationAssignRecordDao quotationAssignRecordDao;
 
 	@Autowired
+	private QuotationDao quotationDao;
+
+	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private QuotationService quotationService;
 
 	/**
 	 * 安全获取报价员ID
@@ -361,6 +371,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		request.setDepartment(department);
 		request.setDecorationType(decorationType);
 		request.setPriority(QuotationAssignRequestPO.PRIORITY_NORMAL_INT); // 普通优先级
+		request.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		request.setRequestTime(new Timestamp(System.currentTimeMillis()));
 		request.setStatus(QuotationAssignRequestPO.STATUS_PENDING_INT); // 待分配
 		quotationAssignRequestDao.save(request);
@@ -377,8 +388,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		record.setDecorationType(decorationType);
 		quotationAssignRecordDao.save(record);
 
-		// 4. 抛出异常提示前端
-		throw new FLException(0, "已加入待分配队列，暂无可用预算员");
+		return 0;
 	}
 
 	/**
@@ -433,6 +443,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			request.setDepartment(getDesignDeptId(decoration));
 			request.setDecorationType(decoration.getType());
 			request.setPriority(QuotationAssignRequestPO.PRIORITY_NORMAL_INT);
+			request.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			request.setRequestTime(new Timestamp(System.currentTimeMillis()));
 			request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT); // 已分配
 			request.setAssignTime(new Timestamp(System.currentTimeMillis()));
@@ -459,6 +470,19 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		record.setAssignTime(new Timestamp(System.currentTimeMillis()));
 		record.setDecorationType(decoration.getType());
 		quotationAssignRecordDao.save(record);
+
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
+
+		if (quotationPO != null) return 1;
+
+		QuotationVO quotationVO = new QuotationVO();
+
+		quotationVO.setName("Auto Assign");
+		quotationVO.setOrderId(orderId);
+		quotationVO.setStyle("");
+		quotationVO.setContent("");
+
+		quotationService.addQuotation(quotationVO, userRule.getUser().getUserId(), decoration.getCompany());
 
 		return 1;
 	}

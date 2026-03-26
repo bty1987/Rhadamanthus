@@ -233,7 +233,7 @@ $(function() {
 
     // 初始化最后完成时间日期选择器
     function initLastFinishTimePicker() {
-        config.items.lastFinishTime.datetimepicker(com.datepickerdefault);
+        com.datetime(config.items.lastFinishTime)
     }
 
     // 页面加载时初始化
