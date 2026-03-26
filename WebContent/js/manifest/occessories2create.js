@@ -287,6 +287,7 @@ jQuery(function() {
         // 先重置数量显示
         occessories.leftitems.normoodAmount.val('0');
         occessories.leftitems.occessoriesAmount.val('0');
+        occessories.leftitems.num.val('');
 
         // 1. 查询报价单获取 qid
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
@@ -294,6 +295,9 @@ jQuery(function() {
         }, function(data) {
             if (data && data.quotation && data.quotation.qid) {
                 var qid = data.quotation.qid;
+                var normAmount = 0;
+                var accAmount = 0;
+                var queryCount = 0;
 
                 // 2. 查询定额材料数量
                 com.post(api.quotation.amountNormoodItem, {
@@ -301,22 +305,42 @@ jQuery(function() {
                     "normoodItem.nid": nid
                 }, function(result) {
                     if (result !== undefined && result !== null) {
-                        occessories.leftitems.normoodAmount.val(result);
+                        normAmount = parseInt(result) || 0;
+                        occessories.leftitems.normoodAmount.val(normAmount);
+                    }
+                    queryCount++;
+
+                    // 两个查询都完成后，计算总数量并填充
+                    if (queryCount >= 2) {
+                        fillTotalAmount(normAmount, accAmount);
                     }
                 }, function() {
-                    // 查询失败时保持为 0
+                    queryCount++;
+                    if (queryCount >= 2) {
+                        fillTotalAmount(normAmount, accAmount);
+                    }
                 });
 
                 // 3. 查询外辅材料数量
                 com.post(api.inventory.amountOccessoriesItem, {
-                    "occessoriesItem.occessories.orderId": orderId,
+                    "occessories.decoration.orderId": orderId,
                     "occessoriesItem.nid": nid
                 }, function(result) {
                     if (result !== undefined && result !== null) {
-                        occessories.leftitems.occessoriesAmount.val(result);
+                        accAmount = parseInt(result) || 0;
+                        occessories.leftitems.occessoriesAmount.val(accAmount);
+                    }
+                    queryCount++;
+
+                    // 两个查询都完成后，计算总数量并填充
+                    if (queryCount >= 2) {
+                        fillTotalAmount(normAmount, accAmount);
                     }
                 }, function() {
-                    // 查询失败时保持为 0
+                    queryCount++;
+                    if (queryCount >= 2) {
+                        fillTotalAmount(normAmount, accAmount);
+                    }
                 });
 
             } else {
@@ -329,6 +353,16 @@ jQuery(function() {
             occessories.leftitems.normoodAmount.val('0');
             occessories.leftitems.occessoriesAmount.val('0');
         });
+    }
+
+    /**
+     * 填充总数量到数量输入框
+     */
+    function fillTotalAmount(normAmount, accAmount) {
+        var totalAmount = normAmount + accAmount;
+        if (totalAmount > 0) {
+            occessories.leftitems.num.val(totalAmount);
+        }
     }
 
     /**
