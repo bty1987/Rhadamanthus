@@ -48,10 +48,11 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 		// 只查询待分配状态的人员
 		criteria.add(org.hibernate.criterion.Restrictions.eq("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
 
-		// 按部门筛选（如果指定了部门，则匹配该部门或部门为NULL的规则）
-		if (department != null) {
-			criteria.add(org.hibernate.criterion.Restrictions.or(org.hibernate.criterion.Restrictions.eq("department.did", department), org.hibernate.criterion.Restrictions.isNull("department.did")));
-		}
+		// 使用 OR 逻辑：匹配该部门的规则 OR 公司级规则（department IS NULL）
+		criteria.add(org.hibernate.criterion.Restrictions.or(
+			org.hibernate.criterion.Restrictions.eq("department.did", department),
+			org.hibernate.criterion.Restrictions.isNull("department.did")
+		));
 
 		// 按最后完成时间升序排序（最早完成的排在前面）
 		criteria.addOrder(org.hibernate.criterion.Order.asc("lastFinishTime"));

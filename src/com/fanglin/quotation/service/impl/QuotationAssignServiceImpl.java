@@ -220,7 +220,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		Integer designDeptId = getDesignDeptId(decoration);
-		if (userRule.getDepartment() != null && designDeptId != null && !userRule.getDepartment().equals(designDeptId)) {
+		Integer userDeptId = userRule.getDepartment() != null ? userRule.getDepartment().getDid() : null;
+
+		// 部门级规则必须匹配装修单部门（公司级规则 department=null 可匹配所有部门）
+		if (userDeptId != null && !userDeptId.equals(designDeptId)) {
 			throw new FLException(0, "预算员部门与装修单部门不匹配");
 		}
 
@@ -279,7 +282,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		Integer designDeptId = getDesignDeptId(decoration);
-		if (userRule.getDepartment() != null && designDeptId != null && !userRule.getDepartment().equals(designDeptId)) {
+		Integer userDeptId = userRule.getDepartment() != null ? userRule.getDepartment().getDid() : null;
+
+		// 部门级规则必须匹配装修单部门（公司级规则 department=null 可匹配所有部门）
+		if (userDeptId != null && !userDeptId.equals(designDeptId)) {
 			throw new FLException(0, "新预算员部门与装修单部门不匹配");
 		}
 
