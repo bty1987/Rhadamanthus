@@ -54,13 +54,13 @@ public interface QuotationAssignConfigDao extends Dao<QuotationAssignConfigPO> {
 
 	/**
 	 * 根据公司和部门查询配置
-	 * 
+	 *
 	 * <p>
-	 * 注意：company + department 组合是唯一的
+	 * 查询条件：(company + department) OR (company + department IS NULL)
 	 * </p>
-	 * 
+	 *
 	 * @param company 公司ID
-	 * @param department 部门ID（NULL表示该公司所有部门）
+	 * @param department 部门ID（必填）
 	 * @return 配置对象，不存在则返回 NULL
 	 */
 	QuotationAssignConfigPO queryQuotationAssignConfig(int company, Integer department);
