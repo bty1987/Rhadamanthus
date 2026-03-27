@@ -37,7 +37,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 
 	/**
 	 * 查询待分配队列（按优先级和请求时间排序）
-	 *
+	 * 
 	 * @param company 公司ID
 	 * @param department 部门ID（可选，NULL表示所有部门）
 	 * @param decorationType 装修类型（可选，NULL表示所有类型）

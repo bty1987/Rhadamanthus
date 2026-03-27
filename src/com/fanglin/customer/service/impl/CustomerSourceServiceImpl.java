@@ -48,6 +48,8 @@ import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.dao.DecorationBusitypeDao;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.data.po.DecorationBusitypePO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
@@ -89,6 +91,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 	@Autowired
 	private CustomerConfigRuleDao customerConfigRuleDao;
+
+	@Autowired
+	private DecorationDao decorationDao;
 
 	@Autowired
 	private DecorationBusitypeDao decorationBusitypeDao;
@@ -516,7 +521,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		if (atttype == CustomerChancePO.ATTTYPE_AUTO_INT) {
 
-			if (customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), company) != null) {
+			CustomerChancePO customerChanceEO = customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), company);
+
+			if (checkCustomerChance(customerChanceEO) != null) {
 				throw new FLException(330076, "客户机会已存在");
 			}
 
@@ -594,7 +601,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			UserPO belonger = customerUserRulePO.getUser();
 
-			if (customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), belonger.getCompany()) != null) {
+			customerChanceEO = customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), belonger.getCompany());
+
+			if (customerChanceEO != null) {
 				throw new FLException(330076, "客户机会已存在");
 			}
 
@@ -733,7 +742,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 				throw new FLException(190005, "人员不存在");
 			}
 
-			if (customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), belonger.getCompany()) != null) {
+			CustomerChancePO customerChanceEO = customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), belonger.getCompany());
+
+			if (checkCustomerChance(customerChanceEO) != null) {
 				throw new FLException(330076, "客户机会已存在");
 			}
 
@@ -774,5 +785,19 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			return;
 		}
+	}
+
+	private CustomerChancePO checkCustomerChance(CustomerChancePO customerChancePO) {
+
+		if (customerChancePO.getOrderId() == null) return customerChancePO;
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(customerChancePO.getOrderId());
+
+		if (decorationPO == null) return customerChancePO;
+
+		if (Arrays.asList(DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_FINAL_INT).contains(decorationPO.getStatus())) return null;
+		if (DecorationPO.BALANCESTATUS_CONDUCT_INT == decorationPO.getBalanceStatus()) return null;
+
+		return customerChancePO;
 	}
 }
