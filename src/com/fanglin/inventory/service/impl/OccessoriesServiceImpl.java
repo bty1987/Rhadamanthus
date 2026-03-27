@@ -200,9 +200,10 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		occessoriesDao.save(occessoriesPO);
 
-		// 计算外辅费用总额
-		long totalCharge = 0;
-		int totalBalance = 0;
+		// 计算外辅费用总额和商品总额
+		long totalCharge = 0;      // 费用总额
+		long totalGoodsAmount = 0; // 商品总额 = ∑(数量 × 单价)
+		int totalBalance = 0;     // 结算总额 = ∑(结算价)
 
 		for (OccessoriesItemVO occessoriesItemVO : OccessoriesItemVOs) {
 
@@ -210,7 +211,9 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 			occessoriesItemPO.setRbalance(occessoriesItemVO.getRbalance());
 			occessoriesItemPO.setVbalance(occessoriesItemVO.getRbalance());
 
-			totalBalance += occessoriesItemVO.getRbalance() != null ? occessoriesItemVO.getRbalance() : 0;
+			// 累计结算额
+			int itemBalance = occessoriesItemVO.getRbalance() != null ? occessoriesItemVO.getRbalance() : 0;
+			totalBalance += itemBalance;
 
 			// 设置 aoods 关联
 			if (occessoriesItemVO.getAoods() != null && occessoriesItemVO.getAoods().getAid() != null) {
@@ -246,10 +249,19 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 			// 更新当前 item 的费用总额
 			occessoriesItemPO.setCharge(itemCharge);
+
+			// 累计商品总额：数量 × 单价
+			long itemGoodsAmount = (long) occessoriesItemPO.getNum() * occessoriesItemPO.getGoods().getSelling();
+			totalGoodsAmount += itemGoodsAmount;
+
 			occessoriesItemDao.update(occessoriesItemPO);
 		}
 
-		// 更新外辅单费用总额和结算额
+		// 计算外辅单总额：total = ∑(数量 × 单价)
+		long total = totalGoodsAmount;
+
+		// 更新外辅单总额、费用总额和结算额
+		occessoriesPO.setTotal(total);
 		occessoriesPO.setCharge(totalCharge);
 		occessoriesPO.setRbalance(totalBalance);
 		occessoriesPO.setVbalance(totalBalance);
