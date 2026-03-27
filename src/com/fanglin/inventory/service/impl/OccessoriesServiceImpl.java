@@ -211,9 +211,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 			occessoriesItemPO.setRbalance(occessoriesItemVO.getRbalance());
 			occessoriesItemPO.setVbalance(occessoriesItemVO.getRbalance());
 
-			// 累计结算额
-			int itemBalance = occessoriesItemVO.getRbalance() != null ? occessoriesItemVO.getRbalance() : 0;
-			totalBalance += itemBalance;
+			totalBalance += occessoriesItemVO.getRbalance() != null ? occessoriesItemVO.getRbalance() : 0;
 
 			// 设置 aoods 关联
 			if (occessoriesItemVO.getAoods() != null && occessoriesItemVO.getAoods().getAid() != null) {
