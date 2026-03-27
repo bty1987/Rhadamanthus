@@ -188,6 +188,18 @@ jQuery(function($) {
 
         var name = $('<h4></h4>').attr('id', 'h4name_record').text("合同记录").appendTo($header);
 
+        // 添加完成按钮（仅当结束时间为空时显示）
+        var $completeBtn = $('<a></a>')
+            .addClass('btn btn-xs btn-success pull-right')
+            .css('margin', '8px')
+            .html('<i class="icon-ok"></i> 完成')
+            .attr('id', 'completeContractRecordBtn')
+            .hide()
+            .on('click', function() {
+                completeContractRecord();
+            })
+            .appendTo($header);
+
         // 添加编辑按钮
         var $editBtn = $('<a></a>')
             .addClass('btn btn-xs btn-info pull-right')
@@ -220,6 +232,11 @@ jQuery(function($) {
                 $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('开始时间: ' + startTime)).appendTo($info);
                 $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('结束时间: ' + endTime)).appendTo($info);
                 $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('备注: ' + comment)).appendTo($info);
+
+                // 如果结束时间为空，显示完成按钮
+                if (!record.endTime) {
+                    $('#completeContractRecordBtn').show();
+                }
             } else {
                 $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('暂无合同记录')).appendTo($info);
             }
@@ -691,6 +708,40 @@ jQuery(function($) {
             com.showAlert(com.error, err.errorMsg || "保存失败");
         });
     });
+
+    // 完成合同记录 - 更新结束时间为当前时间
+    function completeContractRecord() {
+
+        com.showConfirm("确认完成合同？结束时间将更新为当前时间", function() {
+
+            // 获取当前时间并格式化
+            var now = new Date();
+            var currentTime = now.format('yyyy-MM-dd HH:mm:ss');
+
+            var recordData = {
+                "decorationContractRecord.orderId": params.decoration.orderId,
+                "decorationContractRecord.endTime": currentTime
+            };
+
+            // 如果有合同记录，也需要传递其他字段
+            if (decorationContract.contractRecord) {
+                recordData["decorationContractRecord.commitTime"] = decorationContract.contractRecord.commitTime || "";
+                recordData["decorationContractRecord.startTime"] = decorationContract.contractRecord.startTime || "";
+                recordData["decorationContractRecord.comment"] = decorationContract.contractRecord.comment || "";
+            }
+
+            com.post(api.decoration.updateDecorationContract, recordData, function(res) {
+
+                com.showAlert(com.info, "合同已完成");
+
+                // 刷新合同记录显示
+                decorationContract.contractRecordInfo.html("");
+                contractRecordItems();
+            }, function(err) {
+                com.showAlert(com.error, err.errorMsg || "操作失败");
+            });
+        });
+    }
 
     function sendNotice(title, dcid, type) {
 
