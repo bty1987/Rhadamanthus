@@ -126,26 +126,15 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	@Override
 	public int countQuotationAssignRequest(int uid) {
+		// 使用 HQL 子查询统计已分配的请求数量
+		String hql = "SELECT COUNT(r) FROM QuotationAssignRequestPO r " +
+				"WHERE r.status = :status " +
+				"AND r.company IN (SELECT rule.company.cid FROM QuotationAssignUserRulePO rule WHERE rule.user.uid = :uid)";
 
-		// 先查询预算员规则，获取公司信息
-		// 避免使用子查询导致的 "unknown entity: null" 错误
-		com.fanglin.quotation.po.QuotationAssignUserRulePO userRule = createCriteria(com.fanglin.quotation.po.QuotationAssignUserRulePO.class)
-				.add(Restrictions.eq("user.uid", uid))
+		Number count = (Number) getSession().createQuery(hql)
+				.setParameter("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)
+				.setParameter("uid", uid)
 				.uniqueResult();
-
-		if (userRule == null || userRule.getCompany() == null) {
-			// 预算员规则不存在或公司信息为空，返回0
-			return 0;
-		}
-
-		// 主查询：统计已分配的请求数量
-		// 条件：company = 预算员的公司 AND status = 已分配
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
-				.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT))
-				.add(Restrictions.eq("company", userRule.getCompany().getCid()));
-
-		// 统计数量
-		Number count = (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
 
 		return count != null ? count.intValue() : 0;
 	}
