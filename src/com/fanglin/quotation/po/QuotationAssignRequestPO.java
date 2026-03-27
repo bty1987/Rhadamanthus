@@ -137,6 +137,11 @@ public class QuotationAssignRequestPO implements Serializable {
 	private short status;
 
 	/**
+	 * 分配给的预算员用户ID（status=2时有值，status=1时为NULL）
+	 */
+	private Integer uid;
+
+	/**
 	 * 分配时间（status=2时有值，status=1时为NULL）
 	 */
 	private Timestamp assignTime;
@@ -338,7 +343,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置状态
-	 * 
+	 *
 	 * @param status 状态
 	 */
 	public void setStatus(short status) {
@@ -346,8 +351,27 @@ public class QuotationAssignRequestPO implements Serializable {
 	}
 
 	/**
+	 * 获取分配给的预算员用户ID
+	 *
+	 * @return 预算员用户ID
+	 */
+	@Column(name = "uid")
+	public Integer getUid() {
+		return uid;
+	}
+
+	/**
+	 * 设置分配给的预算员用户ID
+	 *
+	 * @param uid 预算员用户ID
+	 */
+	public void setUid(Integer uid) {
+		this.uid = uid;
+	}
+
+	/**
 	 * 获取分配时间
-	 * 
+	 *
 	 * @return 分配时间
 	 */
 	@Column(name = "assignTime")

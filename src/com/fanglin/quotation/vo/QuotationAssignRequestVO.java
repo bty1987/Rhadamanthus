@@ -58,6 +58,16 @@ public class QuotationAssignRequestVO {
 	private Short status;
 
 	/**
+	 * 分配给的预算员用户ID
+	 */
+	private Integer uid;
+
+	/**
+	 * 分配给的预算员用户对象
+	 */
+	private UserPO user;
+
+	/**
 	 * 分配时间
 	 */
 	private String assignTime;
@@ -144,6 +154,22 @@ public class QuotationAssignRequestVO {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Integer getUid() {
+		return uid;
+	}
+
+	public void setUid(Integer uid) {
+		this.uid = uid;
+	}
+
+	public UserPO getUser() {
+		return user;
+	}
+
+	public void setUser(UserPO user) {
+		this.user = user;
 	}
 
 	public String getAssignTime() {
