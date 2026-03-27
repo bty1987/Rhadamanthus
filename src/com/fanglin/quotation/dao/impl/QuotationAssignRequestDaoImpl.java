@@ -127,17 +127,24 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	@Override
 	public int countQuotationAssignRequest(int uid) {
 
-		// 使用 DetachedCriteria 创建子查询
-		org.hibernate.criterion.DetachedCriteria userRuleSubQuery = org.hibernate.criterion.DetachedCriteria.forClass(com.fanglin.quotation.po.QuotationAssignUserRulePO.class).add(Restrictions.eq("user.uid", uid)).setProjection(Projections.property("company.cid"));
+		// 先查询预算员规则，获取公司信息
+		// 避免使用子查询导致的 "unknown entity: null" 错误
+		com.fanglin.quotation.po.QuotationAssignUserRulePO userRule = createCriteria(com.fanglin.quotation.po.QuotationAssignUserRulePO.class)
+				.add(Restrictions.eq("user.uid", uid))
+				.uniqueResult();
+
+		if (userRule == null || userRule.getCompany() == null) {
+			// 预算员规则不存在或公司信息为空，返回0
+			return 0;
+		}
 
 		// 主查询：统计已分配的请求数量
-		// 条件：company IN (子查询的公司列表) AND status = 已分配
-		// 并且：department 匹配规则（department IS NULL OR request.department = rule.department）
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).add(org.hibernate.criterion.Property.forName("company").in(userRuleSubQuery));
+		// 条件：company = 预算员的公司 AND status = 已分配
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
+				.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT))
+				.add(Restrictions.eq("company", userRule.getCompany().getCid()));
 
-		// 添加部门匹配条件：请求的部门为NULL，或者请求的部门在用户规则的部门中
-		// 注意：这里需要额外的逻辑来处理部门匹配，但由于 Criteria API 限制，
-		// 我们先统计所有匹配公司的请求数，Service 层可以进一步过滤
+		// 统计数量
 		Number count = (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
 
 		return count != null ? count.intValue() : 0;
