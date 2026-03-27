@@ -3,7 +3,7 @@ jQuery(function() {
     var occessories = {
         cid: null,
         currentItemIndex: null, // 当前编辑费用的外辅项索引
-        chargesCache: {}, // 费用缓存 {orderId_aid: [{name, price, num}]}
+        chargesCache: {}, // 费用缓存 {orderId_aid_uniqueId: [{name, price, num}]}
         occessoriesPath: [{
             key: "0",
             value: "是"
@@ -114,8 +114,8 @@ jQuery(function() {
         var measurementUnit = occessories.leftitems.measurementUnit.val();
         var num = occessories.leftitems.num.val();
 
-        // 获取当前外辅项索引
-        var itemIndex = com.focusPage('.list-group-item').length;
+        // 生成唯一ID（时间戳 + 随机数）
+        var uniqueId = Date.now() + '_' + Math.floor(Math.random() * 10000);
 
         var $liList = $('<li></li>').addClass('list-group-item')
             .attr("data-gid", gid)
@@ -124,7 +124,7 @@ jQuery(function() {
             .attr("data-num", num)
             .attr("data-selling", selling)
             .attr("data-balance", balance)
-            .attr("data-index", itemIndex); // 添加索引
+            .attr("data-unique-id", uniqueId); // 添加唯一ID
 
         var $h4 = $('<h4></h4>').html(name + ' ' + no).attr('gid', gid);
 
@@ -134,7 +134,7 @@ jQuery(function() {
         var $charge = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button')
             .append($('<a></a>').addClass('btn btn-info btn-minier').html('费用'))
             .click(function() {
-                openChargeModal(aid);
+                openChargeModal(aid, uniqueId);
             });
 
         var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button')
@@ -166,9 +166,10 @@ jQuery(function() {
 
         $delete.click(function() {
             var aid = $(this).parents('.list-group-item').attr('data-aid');
+            var uniqueId = $(this).parents('.list-group-item').attr('data-unique-id');
             var orderId = occessories.postData.orderId; // 获取当前 orderId
-            var cacheKey = orderId + '_' + aid; // 组合 key
-            // 删除费用缓存（使用 orderId_aid 作为 key）
+            var cacheKey = orderId + '_' + aid + '_' + uniqueId; // 组合 key
+            // 删除费用缓存（使用 orderId_aid_uniqueId 作为 key）
             delete occessories.chargesCache[cacheKey];
             // 重新索引
             reindexItems();
@@ -255,7 +256,8 @@ jQuery(function() {
             var $v = $(v);
             var aid = $v.attr('data-aid');
             var nid = $v.attr('data-nid');
-            var cacheKey = occessories.postData.orderId + '_' + aid; // 组合 key
+            var uniqueId = $v.attr('data-unique-id');
+            var cacheKey = occessories.postData.orderId + '_' + aid + '_' + uniqueId; // 组合 key
 
             options["occessoriesItems[" + i + "].goods.gid"] = $v.attr('data-gid');
             options["occessoriesItems[" + i + "].aoods.aid"] = aid;
@@ -263,7 +265,7 @@ jQuery(function() {
             options["occessoriesItems[" + i + "].num"] = $v.attr('data-num');
             options["occessoriesItems[" + i + "].rbalance"] = $v.attr('data-balance');
 
-            // 添加费用数据（使用 orderId_aid 作为缓存 key）
+            // 添加费用数据（使用 orderId_aid_uniqueId 作为缓存 key）
             if (occessories.chargesCache[cacheKey] && occessories.chargesCache[cacheKey].length > 0) {
                 $.each(occessories.chargesCache[cacheKey], function(j, charge) {
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].name"] = charge.name;
@@ -383,9 +385,9 @@ jQuery(function() {
     /**
      * 打开费用弹窗
      */
-    function openChargeModal(aid) {
+    function openChargeModal(aid, uniqueId) {
         var orderId = occessories.postData.orderId; // 获取当前 orderId
-        var cacheKey = orderId + '_' + aid; // 组合 key
+        var cacheKey = orderId + '_' + aid + '_' + uniqueId; // 组合 key
 
         // 保存当前组合 key
         occessories.currentItemIndex = cacheKey;
