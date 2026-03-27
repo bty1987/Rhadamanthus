@@ -289,41 +289,77 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		// ========== 业务逻辑开始 ==========
 
-		// 1. 查询装修单，获取预算员信息
+		// 1. 查询装修单，获取释放的预算员信息
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
 			throw new FLException(0, "装修单不存在");
 		}
 
+		// 获取释放的预算员ID
 		String budgetUid = getQuoteterUid(decoration);
-		if (budgetUid == null || budgetUid == null) {
+		if (budgetUid == null) {
 			throw new FLException(0, "该装修单未分配报价员");
 		}
 
-		// 2. 更新预算员的最后完成时间
-		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getQuotationAssignUserRule(quotationAssignVO.getQuoter().getUserId(), decoration.getCompany());
-		if (userRule != null) {
-			userRule.setLastFinishTime(new Timestamp(System.currentTimeMillis()));
+		// 2. 根据预算员ID查询其规则
+		Integer company = decoration.getCompany();
+		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.getQuotationAssignUserRule(budgetUid, company);
+
+		if (userRule == null) {
+			// 预算员规则不存在，无需后续处理
+			return 1;
 		}
 
-		// 3. 检查待分配队列
-		Integer company = decoration.getCompany();
+		// 3. 更新预算员的最后完成时间和状态
+		userRule.setLastFinishTime(new Timestamp(System.currentTimeMillis()));
+
+		// 更新当前任务数（统计status=2的请求数量）
+		int currentTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(budgetUid);
+		userRule.setCurrentTaskCount(currentTaskCount);
+
+		// 更新状态：currentTaskCount > 0 制作中，否则待分配
+		short newStatus = currentTaskCount > 0
+				? QuotationAssignUserRulePO.STATUS_BUSY_INT
+				: QuotationAssignUserRulePO.STATUS_AVAILABLE_INT;
+		userRule.setStatus(newStatus);
+
+		// 保存到数据库
+		quotationAssignUserRuleDao.update(userRule);
+
+		// 4. 如果预算员状态为"待分配"，从待分配队列查询任务
+		if (newStatus != QuotationAssignUserRulePO.STATUS_AVAILABLE_INT) {
+			// 预算员仍有其他任务，不分配新任务
+			return 1;
+		}
+
 		Integer department = getDesignDeptId(decoration);
-		Short decorationType = decoration.getType();
 
-		// 查询待分配队列中类型匹配且最优先的任务
-		List<QuotationAssignRequestPO> pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueue(company, department, decorationType);
+		// 5. 根据预算员支持的类型查询待分配队列
+		List<QuotationAssignRequestPO> pendingQueue;
+		Short supportedType = userRule.getSupportedType();
 
+		if (supportedType == QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT) {
+			// 通用类型，查询所有类型的任务
+			pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueue(company, department, null);
+		} else {
+			// 特定类型，只查询该类型
+			pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueue(company, department, supportedType);
+		}
+
+		// 6. 遍历队列，执行分配
 		if (pendingQueue != null && !pendingQueue.isEmpty()) {
-			// 找到任务，执行反向自动分配
 			for (QuotationAssignRequestPO request : pendingQueue) {
-				// 检查预算员是否支持该任务的装修类型：-1通用，0半包，1整装
-				boolean typeSupported = userRule.getSupportedType() == QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT || userRule.getSupportedType() == request.getDecorationType();
+				// 双重检查：确保预算员支持该任务的装修类型
+				boolean typeSupported =
+						userRule.getSupportedType() == QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT
+								|| userRule.getSupportedType() == request.getDecorationType();
+
 				if (typeSupported) {
 					// 分配给当前预算员
 					DecorationPO pendingDecoration = decorationDao.queryDecorationByOrderId(request.getOrderId());
 					if (pendingDecoration != null) {
-						assignToUser(request.getOrderId(), pendingDecoration, userRule, QuotationAssignRecordPO.ASSIGN_TYPE_REVERSE_AUTO_INT, null);
+						assignToUser(request.getOrderId(), pendingDecoration, userRule,
+								QuotationAssignRecordPO.ASSIGN_TYPE_REVERSE_AUTO_INT, null);
 						// 只分配一个任务，然后退出
 						break;
 					}

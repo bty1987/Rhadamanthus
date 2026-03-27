@@ -37,13 +37,13 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 
 	/**
 	 * 查询待分配队列（按优先级和请求时间排序）
-	 * 
+	 *
 	 * @param company 公司ID
 	 * @param department 部门ID（可选，NULL表示所有部门）
-	 * @param decorationType 装修类型
+	 * @param decorationType 装修类型（可选，NULL表示所有类型）
 	 * @return 待分配请求列表
 	 */
-	List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(int company, Integer department, short decorationType);
+	List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(int company, Integer department, Short decorationType);
 
 	/**
 	 * 根据装修单号查询待分配请求
