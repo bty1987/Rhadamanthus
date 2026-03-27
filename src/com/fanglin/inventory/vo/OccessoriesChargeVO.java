@@ -20,6 +20,16 @@ public class OccessoriesChargeVO implements Serializable {
 
 	private Integer num;
 
+	public OccessoriesChargeVO() {
+		super();
+	}
+
+	public OccessoriesChargeVO(OccessoriesVO occessories, OccessoriesItemVO occessoriesItem) {
+		super();
+		this.occessories = occessories;
+		this.occessoriesItem = occessoriesItem;
+	}
+
 	public Long getAcid() {
 		return acid;
 	}

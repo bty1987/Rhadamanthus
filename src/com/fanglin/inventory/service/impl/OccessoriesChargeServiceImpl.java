@@ -16,6 +16,8 @@ import com.fanglin.inventory.po.OccessoriesItemPO;
 import com.fanglin.inventory.po.OccessoriesPO;
 import com.fanglin.inventory.service.OccessoriesChargeService;
 import com.fanglin.inventory.vo.OccessoriesChargeVO;
+import com.fanglin.inventory.vo.OccessoriesItemVO;
+import com.fanglin.inventory.vo.OccessoriesVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("occessoriesChargeService")
@@ -53,8 +55,12 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 
 		if (occessoriesChargePOs != null) {
 			for (OccessoriesChargePO occessoriesChargePO : occessoriesChargePOs) {
-				OccessoriesChargeVO vo = new OccessoriesChargeVO();
-				BeanUtil.copyProperties(occessoriesChargePO, vo);
+				// 使用 ptv 方法转换，需要先声明关联对象
+				OccessoriesChargeVO vo = new OccessoriesChargeVO(
+					new OccessoriesVO(),
+					new OccessoriesItemVO()
+				);
+				occessoriesChargePO.ptv(vo);
 				occessoriesChargeVOs.add(vo);
 			}
 		}
