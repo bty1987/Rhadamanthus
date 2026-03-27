@@ -460,7 +460,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequestForPending(orderId);
 		if (request != null) {
 			// 更新待分配请求为已分配
-			request.setStatus(QuotationAssignRecordPO.ASSIGN_RESULT_SUCCESS_INT);
+			request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
+			request.setUid(userRule.getUser().getUid());
+			request.setAssignTime(new Timestamp(System.currentTimeMillis()));
+			quotationAssignRequestDao.update(request);
 		} else {
 			// 创建新的已分配请求
 			request = new QuotationAssignRequestPO();
@@ -472,6 +475,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			request.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			request.setRequestTime(new Timestamp(System.currentTimeMillis()));
 			request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT); // 已分配
+			request.setUid(userRule.getUser().getUid());
 			request.setAssignTime(new Timestamp(System.currentTimeMillis()));
 			quotationAssignRequestDao.save(request);
 		}

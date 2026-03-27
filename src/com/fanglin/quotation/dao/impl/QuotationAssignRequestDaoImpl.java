@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -126,16 +127,12 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	@Override
 	public int countQuotationAssignRequest(int uid) {
-		// 使用 HQL 子查询统计已分配的请求数量
-		String hql = "SELECT COUNT(r) FROM QuotationAssignRequestPO r " +
-				"WHERE r.status = :status " +
-				"AND r.company IN (SELECT rule.company.cid FROM QuotationAssignUserRulePO rule WHERE rule.user.uid = :uid)";
+		// 统计该预算员已分配的任务数量
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
+				.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT))
+				.add(Restrictions.eq("uid", uid));
 
-		Number count = (Number) getSession().createQuery(hql)
-				.setParameter("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)
-				.setParameter("uid", uid)
-				.uniqueResult();
-
+		Number count = (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
 		return count != null ? count.intValue() : 0;
 	}
 
