@@ -4,8 +4,8 @@
 
 -- 1. 添加实结算额和虚结算额字段
 ALTER TABLE inventory.occessories
-ADD COLUMN rbalance INT(11) NOT NULL DEFAULT 0 COMMENT '实结算额' AFTER total,
-ADD COLUMN vbalance INT(11) NOT NULL DEFAULT 0 COMMENT '虚结算额' AFTER rbalance;
+ADD COLUMN rbalance INT(8) DEFAULT 0 COMMENT '实结算额' AFTER total,
+ADD COLUMN vbalance INT(8) DEFAULT 0 COMMENT '虚结算额' AFTER rbalance;
 
 -- 2. 从 occessoriesitem 汇总历史数据
 UPDATE inventory.occessories o

@@ -201,9 +201,9 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		occessoriesDao.save(occessoriesPO);
 
 		// 计算外辅费用总额和商品总额
-		long totalCharge = 0;      // 费用总额
+		long totalCharge = 0; // 费用总额
 		long totalGoodsAmount = 0; // 商品总额 = ∑(数量 × 单价)
-		int totalBalance = 0;     // 结算总额 = ∑(结算价)
+		int totalBalance = 0; // 结算总额 = ∑(结算价)
 
 		for (OccessoriesItemVO occessoriesItemVO : OccessoriesItemVOs) {
 
@@ -292,7 +292,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		UserPO supervisor = occessoriesPO.getSupervisor();
 
-		messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
+		if (supervisor != null) messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
 
 		return 0;
 	}
