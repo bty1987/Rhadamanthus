@@ -18,12 +18,21 @@ $(function () {
             var chargeMap = {};
             if (chargeRes.occessoriesCharges && chargeRes.occessoriesCharges.length > 0) {
                 $.each(chargeRes.occessoriesCharges, function (i, charge) {
-                    var oiid = charge.occessoriesItem ? charge.occessoriesItem.oiid : null;
+                    // 获取 oiid（支持多种数据结构）
+                    var oiid = null;
+                    if (charge.occessoriesItem && charge.occessoriesItem.oiid) {
+                        oiid = charge.occessoriesItem.oiid;
+                    } else if (charge.oiid) {
+                        oiid = charge.oiid;
+                    }
+
                     if (oiid) {
-                        if (!chargeMap[oiid]) {
-                            chargeMap[oiid] = [];
+                        // 统一转换为字符串，确保类型匹配
+                        var oiidKey = String(oiid);
+                        if (!chargeMap[oiidKey]) {
+                            chargeMap[oiidKey] = [];
                         }
-                        chargeMap[oiid].push(charge);
+                        chargeMap[oiidKey].push(charge);
                     }
                 });
             }
@@ -87,7 +96,7 @@ $(function () {
             $('<td colspan="1" style="border: 1px solid;"></td>').html("").appendTo(tr);
 
             // 费用明细行（从 chargeMap 中获取）
-            var charges = chargeMap[item.oiid] || [];
+            var charges = chargeMap[String(item.oiid)] || [];
             if (charges.length > 0) {
                 $.each(charges, function (j, charge) {
                     var chargeTr = $('<tr style="border: 1px solid;height: 25px;text-align: center;background-color:#f9f9f9;"></tr>').appendTo(table);
