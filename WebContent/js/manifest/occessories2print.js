@@ -103,7 +103,7 @@ $(function () {
                     $('<td colspan="2" style="border: 1px solid;padding-left:30px;"></td>').html("　└ " + charge.name).appendTo(chargeTr);
                     $('<td colspan="1" style="border: 1px solid;"></td>').html("").appendTo(chargeTr);
                     $('<td colspan="1" style="border: 1px solid;"></td>').html(charge.num).appendTo(chargeTr);
-                    $('<td colspan="1" style="border: 1px solid;"></td>').html(((charge.price * charge.num) / 1000).toFixed(2) + " 元").appendTo(chargeTr);
+                    $('<td colspan="1" style="border: 1px solid;"></td>').html((charge.price * charge.num).toFixed(2) + " 元").appendTo(chargeTr);
                 });
             }
         });
