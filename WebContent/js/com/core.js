@@ -203,7 +203,7 @@
         if (api.type == 'update' && api.tranargs) {
             $.each(opts, function(k, v) {
 
-                if (api.tranargs.args.indexOf(k.replace(/\[\d+\]/, '')) != -1) {
+                if (api.tranargs.args.indexOf(k.replace(/\[\d+\]/g, '')) != -1) {
                     utils.accExtend(opts, k);
                 }
             });
