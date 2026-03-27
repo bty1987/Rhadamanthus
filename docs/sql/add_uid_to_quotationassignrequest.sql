@@ -10,7 +10,7 @@ DESC quotation.quotationassignrequest;
 
 -- 增加 uid 字段
 ALTER TABLE quotation.quotationassignrequest
-ADD COLUMN uid INT NULL COMMENT '分配给的预算员用户ID（status=2时有值，status=1时为NULL）'
+ADD COLUMN uid INT(11)) NULL COMMENT '分配给的预算员用户ID（status=2时有值，status=1时为NULL）'
 AFTER status;
 
 -- 为已有数据设置默认值（已分配的请求需要找到对应的预算员）

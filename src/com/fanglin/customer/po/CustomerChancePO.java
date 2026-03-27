@@ -37,6 +37,8 @@ public class CustomerChancePO implements Serializable {
 
 	public static final short STATUS_COMPLETE_INT = 4; // 完成
 
+	public static final short STATUS_FINISH_INT = 5; // 对应装修单 , 废单/终止/决算/完工/内决
+
 	public static final short ATTTYPE_AUTO_INT = 0;
 
 	public static final short ATTTYPE_USER_INT = 1;

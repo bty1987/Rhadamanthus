@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -61,7 +60,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	/**
 	 * 执行过滤条件
-	 *
+	 * 
 	 * @param query 分页查询对象
 	 * @param filters 过滤条件列表
 	 */
@@ -101,9 +100,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(int company, Integer department, Short decorationType) {
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
-				.add(Restrictions.eq("company", company))
-				.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
 
 		// 如果指定了部门，则匹配该部门或部门为NULL的请求
 		if (department != null) {
@@ -112,10 +109,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 		// 如果指定了装修类型，则匹配该类型或类型为NULL的请求
 		if (decorationType != null) {
-			criteria.add(Restrictions.or(
-					Restrictions.eq("decorationType", decorationType.shortValue()),
-					Restrictions.isNull("decorationType")
-			));
+			criteria.add(Restrictions.or(Restrictions.eq("decorationType", decorationType.shortValue()), Restrictions.isNull("decorationType")));
 		}
 
 		// 按优先级升序、请求时间升序排序
@@ -128,9 +122,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	@Override
 	public int countQuotationAssignRequest(int uid) {
 		// 统计该预算员已分配的任务数量
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
-				.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT))
-				.add(Restrictions.eq("uid", uid));
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).add(Restrictions.eq("uid", uid));
 
 		Number count = (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
 		return count != null ? count.intValue() : 0;
