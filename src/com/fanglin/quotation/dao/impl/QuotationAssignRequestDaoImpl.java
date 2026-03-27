@@ -99,12 +99,22 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(int company, Integer department, short decorationType) {
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT)).add(Restrictions.eq("decorationType", decorationType));
+	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(int company, Integer department, Short decorationType) {
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
+				.add(Restrictions.eq("company", company))
+				.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
 
 		// 如果指定了部门，则匹配该部门或部门为NULL的请求
 		if (department != null) {
 			criteria.add(Restrictions.or(Restrictions.eq("department", department), Restrictions.isNull("department")));
+		}
+
+		// 如果指定了装修类型，则匹配该类型或类型为NULL的请求
+		if (decorationType != null) {
+			criteria.add(Restrictions.or(
+					Restrictions.eq("decorationType", decorationType.shortValue()),
+					Restrictions.isNull("decorationType")
+			));
 		}
 
 		// 按优先级升序、请求时间升序排序
