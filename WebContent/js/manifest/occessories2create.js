@@ -3,7 +3,7 @@ jQuery(function() {
     var occessories = {
         cid: null,
         currentItemIndex: null, // 当前编辑费用的外辅项索引
-        chargesCache: {}, // 费用缓存 {itemIndex: [{name, price, num}]}
+        chargesCache: {}, // 费用缓存 {orderId_aid: [{name, price, num}]}
         occessoriesPath: [{
             key: "0",
             value: "是"
@@ -166,8 +166,10 @@ jQuery(function() {
 
         $delete.click(function() {
             var aid = $(this).parents('.list-group-item').attr('data-aid');
-            // 删除费用缓存（使用 aid 作为 key）
-            delete occessories.chargesCache[aid];
+            var orderId = occessories.postData.orderId; // 获取当前 orderId
+            var cacheKey = orderId + '_' + aid; // 组合 key
+            // 删除费用缓存（使用 orderId_aid 作为 key）
+            delete occessories.chargesCache[cacheKey];
             // 重新索引
             reindexItems();
             $(this).parents('.list-group-item').remove();
@@ -253,6 +255,7 @@ jQuery(function() {
             var $v = $(v);
             var aid = $v.attr('data-aid');
             var nid = $v.attr('data-nid');
+            var cacheKey = occessories.postData.orderId + '_' + aid; // 组合 key
 
             options["occessoriesItems[" + i + "].goods.gid"] = $v.attr('data-gid');
             options["occessoriesItems[" + i + "].aoods.aid"] = aid;
@@ -260,9 +263,9 @@ jQuery(function() {
             options["occessoriesItems[" + i + "].num"] = $v.attr('data-num');
             options["occessoriesItems[" + i + "].rbalance"] = $v.attr('data-balance');
 
-            // 添加费用数据（使用 aid 作为缓存 key）
-            if (occessories.chargesCache[aid] && occessories.chargesCache[aid].length > 0) {
-                $.each(occessories.chargesCache[aid], function(j, charge) {
+            // 添加费用数据（使用 orderId_aid 作为缓存 key）
+            if (occessories.chargesCache[cacheKey] && occessories.chargesCache[cacheKey].length > 0) {
+                $.each(occessories.chargesCache[cacheKey], function(j, charge) {
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].name"] = charge.name;
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].price"] = charge.price;
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].num"] = charge.num;
@@ -381,16 +384,19 @@ jQuery(function() {
      * 打开费用弹窗
      */
     function openChargeModal(aid) {
-        // 保存当前 aid
-        occessories.currentItemIndex = aid;
+        var orderId = occessories.postData.orderId; // 获取当前 orderId
+        var cacheKey = orderId + '_' + aid; // 组合 key
+
+        // 保存当前组合 key
+        occessories.currentItemIndex = cacheKey;
 
         // 清空费用列表
         com.focusPage('#chargeTableBody').html('');
 
         // 加载已保存的费用（优先使用缓存）
-        if (occessories.chargesCache[aid] && occessories.chargesCache[aid].length > 0) {
+        if (occessories.chargesCache[cacheKey] && occessories.chargesCache[cacheKey].length > 0) {
             // 从缓存加载（用户上次填写的数量）
-            $.each(occessories.chargesCache[aid], function(i, charge) {
+            $.each(occessories.chargesCache[cacheKey], function(i, charge) {
                 addChargeRow(charge.name, charge.price, charge.num);
             });
         } else {
@@ -470,7 +476,7 @@ jQuery(function() {
             }
         });
 
-        // 保存到缓存（使用 aid 作为 key）
+        // 保存到缓存（使用 orderId_aid 组合 key，已在 openChargeModal 中设置）
         occessories.chargesCache[occessories.currentItemIndex] = charges;
 
         // 关闭弹窗
