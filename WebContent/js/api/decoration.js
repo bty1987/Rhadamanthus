@@ -534,6 +534,18 @@ $.extend(api, {
                 args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
+        queryDecorationByDoid: {
+            url: "queryDecorationByDoid.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "decoration-house",
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
+            }]
+        },
         queryDecorationForCommonByOrderId: {
             url: "queryDecorationForCommonByOrderId.do",
             demo: true,

@@ -970,6 +970,42 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
+	public DecorationVO queryDecorationByDoid(DecorationVO decorationVO) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByDoid(decorationVO.getDoid());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		DecorationVO resultDecorationVO = new DecorationVO();
+
+		resultDecorationVO.setEscorter(new UserBaseVO());
+		resultDecorationVO.setQuoter(new UserBaseVO());
+		resultDecorationVO.setSupervisor(new UserBaseVO());
+		resultDecorationVO.setMaterialer(new UserBaseVO());
+
+		decorationPO.ptvcascade(resultDecorationVO);
+
+		if (decorationPO.getCustomer() != null && resultDecorationVO.getCustomer() != null) resultDecorationVO.getCustomer().initBank(decorationPO.getCustomer());
+
+		if (resultDecorationVO.getOrderTotalPrice() == null || resultDecorationVO.getOrderTotalPrice() == 0) {
+			resultDecorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+		}
+
+		if (resultDecorationVO.getDesigner() != null && decorationPO.getDesigner() != null) resultDecorationVO.getDesigner().setPhone(decorationPO.getDesigner().getPhone());
+		if (resultDecorationVO.getSupervisor() != null && decorationPO.getSupervisor() != null) resultDecorationVO.getSupervisor().setPhone(decorationPO.getSupervisor().getPhone());
+
+		addition(decorationPO.getAddition(), resultDecorationVO);
+
+		resultDecorationVO.setDompany(CompanyServiceImpl.encode(decorationPO.getCompany()));
+		resultDecorationVO.setConpany(CompanyServiceImpl.encode(decorationPO.getConpany()));
+		resultDecorationVO.setBompany(CompanyServiceImpl.encode(decorationPO.getBompany()));
+
+		return resultDecorationVO;
+	}
+
+	@Override
 	public DecorationVO queryDecorationForCommonByOrderId(DecorationVO decorationVO, String userId) throws FLException {
 
 		decorationVO = queryDecorationByOrderId(decorationVO.getOrderId());

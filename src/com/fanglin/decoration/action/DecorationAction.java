@@ -201,6 +201,14 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryDecorationByDoid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationByDoid() throws FLException {
+
+		decoration = decorationService.queryDecorationByDoid(decoration);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryDecorationForCommonByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationForCommonByOrderId() throws FLException {
 
