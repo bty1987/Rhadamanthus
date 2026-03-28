@@ -714,115 +714,32 @@ var decorationUtils = {
 
             // 点击按钮弹窗显示推荐信息
             referInfoBtn.on("click", function() {
-                var content = "<div style='padding: 15px;'>";
+                var content = "<div style='line-height: 2; padding: 10px;'>";
 
                 if (referDecoration) {
-                    content += "<div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);'>";
-                    content += "  <div style='display: flex; align-items: center; margin-bottom: 15px;'>";
-                    content += "    <div style='width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;'>";
-                    content += "      <i class='icon-arrow-up' style='font-size: 24px; color: #fff;'></i>";
-                    content += "    </div>";
-                    content += "    <div>";
-                    content += "      <h3 style='color: #fff; margin: 0; font-size: 18px;'>推荐人订单</h3>";
-                    content += "      <p style='color: rgba(255,255,255,0.8); margin: 5px 0 0 0; font-size: 12px;'>Referrer Order</p>";
-                    content += "    </div>";
-                    content += "  </div>";
-                    content += "  <div style='background: rgba(255,255,255,0.95); border-radius: 8px; padding: 15px;'>";
-                    content += "    <div style='display: flex; align-items: center; margin-bottom: 10px;'>";
-                    content += "      <span style='background: #667eea; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;'>订单号</span>";
-                    content += "      <span style='color: #667eea; font-size: 18px; font-weight: bold; margin-left: 10px;'>" + referDecoration.orderId + "</span>";
-                    content += "    </div>";
-                    content += "    <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 10px;'>";
-                    content += "      <div style='display: flex; align-items: center;'>";
-                    content += "        <i class='icon-user' style='color: #667eea; margin-right: 8px;'></i>";
-                    content += "        <span style='color: #666; font-size: 13px;'>客户：</span>";
-                    content += "        <span style='color: #333; font-weight: 500; margin-left: 5px;'>" + (referDecoration.customer ? referDecoration.customer.name : '无') + "</span>";
-                    content += "      </div>";
-                    content += "      <div style='display: flex; align-items: center;'>";
-                    content += "        <i class='icon-home' style='color: #667eea; margin-right: 8px;'></i>";
-                    content += "        <span style='color: #666; font-size: 13px;'>楼盘：</span>";
-                    content += "        <span style='color: #333; font-weight: 500; margin-left: 5px;'>" + (referDecoration.house && referDecoration.house.village ? referDecoration.house.village.name : '无') + "</span>";
-                    content += "      </div>";
-                    content += "      <div style='display: flex; align-items: center;'>";
-                    content += "        <i class='icon-map-marker' style='color: #667eea; margin-right: 8px;'></i>";
-                    content += "        <span style='color: #666; font-size: 13px;'>房号：</span>";
-                    content += "        <span style='color: #333; font-weight: 500; margin-left: 5px;'>" + (referDecoration.house ? referDecoration.house.houseNumber || '' : '无') + "</span>";
-                    content += "      </div>";
-                    content += "    </div>";
-                    content += "  </div>";
+                    content += "<div style='margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #667eea;'>";
+                    content += "<h4 style='color: #667eea; margin: 0 0 10px 0;'><i class='icon-arrow-up'></i> 推荐人订单</h4>";
+                    content += "<p style='margin: 5px 0;'><strong>订单号：</strong>" + referDecoration.orderId + "</p>";
+                    content += "<p style='margin: 5px 0;'><strong>客户：</strong>" + (referDecoration.customer ? referDecoration.customer.name : '无') + "</p>";
+                    content += "<p style='margin: 5px 0;'><strong>楼盘：</strong>" + (referDecoration.house && referDecoration.house.village ? referDecoration.house.village.name : '无') + "</p>";
+                    content += "<p style='margin: 5px 0;'><strong>房号：</strong>" + (referDecoration.house ? referDecoration.house.houseNumber || '' : '无') + "</p>";
                     content += "</div>";
                 }
 
                 if (referredDecoration) {
-                    content += "<div style='background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);'>";
-                    content += "  <div style='display: flex; align-items: center; margin-bottom: 15px;'>";
-                    content += "    <div style='width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;'>";
-                    content += "      <i class='icon-arrow-down' style='font-size: 24px; color: #fff;'></i>";
-                    content += "    </div>";
-                    content += "    <div>";
-                    content += "      <h3 style='color: #fff; margin: 0; font-size: 18px;'>被推荐人订单</h3>";
-                    content += "      <p style='color: rgba(255,255,255,0.8); margin: 5px 0 0 0; font-size: 12px;'>Referee Order</p>";
-                    content += "    </div>";
-                    content += "  </div>";
-                    content += "  <div style='background: rgba(255,255,255,0.95); border-radius: 8px; padding: 15px;'>";
-                    content += "    <div style='display: flex; align-items: center; margin-bottom: 10px;'>";
-                    content += "      <span style='background: #f5576c; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;'>订单号</span>";
-                    content += "      <span style='color: #f5576c; font-size: 18px; font-weight: bold; margin-left: 10px;'>" + referredDecoration.orderId + "</span>";
-                    content += "    </div>";
-                    content += "    <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 10px;'>";
-                    content += "      <div style='display: flex; align-items: center;'>";
-                    content += "        <i class='icon-user' style='color: #f5576c; margin-right: 8px;'></i>";
-                    content += "        <span style='color: #666; font-size: 13px;'>客户：</span>";
-                    content += "        <span style='color: #333; font-weight: 500; margin-left: 5px;'>" + (referredDecoration.customer ? referredDecoration.customer.name : '无') + "</span>";
-                    content += "      </div>";
-                    content += "      <div style='display: flex; align-items: center;'>";
-                    content += "        <i class='icon-home' style='color: #f5576c; margin-right: 8px;'></i>";
-                    content += "        <span style='color: #666; font-size: 13px;'>楼盘：</span>";
-                    content += "        <span style='color: #333; font-weight: 500; margin-left: 5px;'>" + (referredDecoration.house && referredDecoration.house.village ? referredDecoration.house.village.name : '无') + "</span>";
-                    content += "      </div>";
-                    content += "      <div style='display: flex; align-items: center;'>";
-                    content += "        <i class='icon-map-marker' style='color: #f5576c; margin-right: 8px;'></i>";
-                    content += "        <span style='color: #666; font-size: 13px;'>房号：</span>";
-                    content += "        <span style='color: #333; font-weight: 500; margin-left: 5px;'>" + (referredDecoration.house ? referredDecoration.house.houseNumber || '' : '无') + "</span>";
-                    content += "      </div>";
-                    content += "    </div>";
-                    content += "  </div>";
+                    content += "<div style='padding-top: 10px;'>";
+                    content += "<h4 style='color: #f5576c; margin: 0 0 10px 0;'><i class='icon-arrow-down'></i> 被推荐人订单</h4>";
+                    content += "<p style='margin: 5px 0;'><strong>订单号：</strong>" + referredDecoration.orderId + "</p>";
+                    content += "<p style='margin: 5px 0;'><strong>客户：</strong>" + (referredDecoration.customer ? referredDecoration.customer.name : '无') + "</p>";
+                    content += "<p style='margin: 5px 0;'><strong>楼盘：</strong>" + (referredDecoration.house && referredDecoration.house.village ? referredDecoration.house.village.name : '无') + "</p>";
+                    content += "<p style='margin: 5px 0;'><strong>房号：</strong>" + (referredDecoration.house ? referredDecoration.house.houseNumber || '' : '无') + "</p>";
                     content += "</div>";
                 }
 
                 content += "</div>";
 
-                // 使用 bootbox 显示弹窗
-                if (typeof bootbox !== 'undefined') {
-                    bootbox.dialog({
-                        title: "<i class='icon-link blue'></i> 推荐订单详情",
-                        message: content,
-                        buttons: {
-                            success: {
-                                label: "<i class='icon-ok'></i> 关闭",
-                                className: "btn-success"
-                            }
-                        }
-                    });
-                } else {
-                    // 降级方案：使用原生 alert
-                    var infoText = "【推荐订单详情】\n\n";
-                    if (referDecoration) {
-                        infoText += "★ 推荐人订单 ★\n";
-                        infoText += "订单号：" + referDecoration.orderId + "\n";
-                        infoText += "客户：" + (referDecoration.customer ? referDecoration.customer.name : '无') + "\n";
-                        infoText += "楼盘：" + (referDecoration.house && referDecoration.house.village ? referDecoration.house.village.name : '无') + "\n";
-                        infoText += "房号：" + (referDecoration.house ? referDecoration.house.houseNumber || '' : '无') + "\n\n";
-                    }
-                    if (referredDecoration) {
-                        infoText += "☆ 被推荐人订单 ☆\n";
-                        infoText += "订单号：" + referredDecoration.orderId + "\n";
-                        infoText += "客户：" + (referredDecoration.customer ? referredDecoration.customer.name : '无') + "\n";
-                        infoText += "楼盘：" + (referredDecoration.house && referredDecoration.house.village ? referredDecoration.house.village.name : '无') + "\n";
-                        infoText += "房号：" + (referredDecoration.house ? referredDecoration.house.houseNumber || '' : '无');
-                    }
-                    alert(infoText);
-                }
+                // 使用 com.showInfo 显示弹窗（简化版）
+                com.showInfo("<i class='icon-link blue'></i> 推荐订单详情", content);
             });
         }
 
