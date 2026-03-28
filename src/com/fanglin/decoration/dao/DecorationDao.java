@@ -57,6 +57,8 @@ public interface DecorationDao extends Dao<DecorationPO> {
 
 	public DecorationPO queryDecorationByOrderId(String orderId);
 
+	public DecorationPO queryDecorationByDoid(Long doid);
+
 	public DecorationPO queryDecoration(String orderId, String phone);
 
 	public void changeDecorationForOrderId(String nrderId, String orderId);

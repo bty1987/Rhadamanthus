@@ -290,6 +290,11 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
+	public DecorationPO queryDecorationByDoid(Long doid) {
+		return (DecorationPO) session().get(DecorationPO.class, doid);
+	}
+
+	@Override
 	public DecorationPO queryDecoration(String orderId, String phone) {
 		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("customer", "customer").add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("customer.phone", phone)).setMaxResults(1).uniqueResult();
 	}
