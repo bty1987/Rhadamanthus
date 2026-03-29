@@ -871,11 +871,21 @@ var decorationUtils = {
 
     memberActivityItemInfo: function(orderId, itempack, config, wizard) {
 
+        console.log('========== memberActivityItemInfo 方法开始执行 ==========');
+        console.log('参数 orderId:', orderId);
+        console.log('参数 itempack:', itempack);
+        console.log('参数 config:', config);
+        console.log('参数 wizard:', wizard);
+
         var uiBtnMethod = wizard["uiBtnMethod"];
 
         com.post(api.decoration.queryDecorationActivityItem, {
             "decoration.orderId": orderId
         }, function(res) {
+
+            console.log('========== queryDecorationActivityItem 返回 ==========');
+            console.log('返回数据 res:', res);
+            console.log('decorationActivityItems:', res.decorationActivityItems);
 
             var decorationActivityItems = res.decorationActivityItems;
 
