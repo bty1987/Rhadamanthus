@@ -653,7 +653,7 @@ var decorationUtils = {
         });
     },
 
-    addActivityItemForDiv: function(itempack, _activityItem, uiBtnMethod, config, nodeContent, referDecoration, referredDecoration) {
+    addActivityItemForDiv: function(itempack, _activityItem, uiBtnMethod, config, nodeContent, uniqueId) {
 
         if (_activityItem.state == 1)
             return false;
@@ -773,46 +773,112 @@ var decorationUtils = {
 
                 });
 
-                // 如果有推荐装修单信息，显示"推荐"按钮
-                if (referDecoration || referredDecoration) {
-                    console.log('显示推荐信息按钮，referDecoration:', referDecoration, 'referredDecoration:', referredDecoration);
+                // 如果有 uniqueId（格式：doid-doid），显示"推荐"按钮
+                if (uniqueId) {
+                    var ids = uniqueId.split('-');
+                    if (ids.length === 2 && ids[0] && ids[1]) {
+                        console.log('显示推荐信息按钮，uniqueId:', uniqueId);
 
-                    var referInfoBtn = $("<a></a>").addClass("btn btn-minier btn-info")
-                        .html("<i class='icon-info-sign'></i> 推荐")
-                        .css("margin", "0px 3px")
-                        .appendTo(uiPgDiv);
+                        var referInfoBtn = $("<a></a>").addClass("btn btn-minier btn-info")
+                            .html("<i class='icon-info-sign'></i> 推荐")
+                            .css("margin", "0px 3px")
+                            .appendTo(uiPgDiv);
 
-                    console.log('推荐信息按钮已创建');
+                        console.log('推荐信息按钮已创建');
 
-                    // 点击按钮弹窗显示推荐信息
-                    referInfoBtn.on("click", function() {
-                        var content = "<div style='line-height: 2; padding: 10px;'>";
+                        // 点击按钮弹窗显示推荐信息
+                        referInfoBtn.on("click", (function(doid1, doid2) {
+                            return function() {
+                                console.log('点击推荐按钮，查询 doid1:', doid1, 'doid2:', doid2);
 
-                        if (referDecoration) {
-                            content += "<div style='margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #667eea;'>";
-                            content += "<h4 style='color: #667eea; margin: 0 0 10px 0;'><i class='icon-arrow-up'></i> 推荐人订单</h4>";
-                            content += "<p style='margin: 5px 0;'><strong>订单号：</strong>" + referDecoration.orderId + "</p>";
-                            content += "<p style='margin: 5px 0;'><strong>客户：</strong>" + (referDecoration.customer ? referDecoration.customer.name : '无') + "</p>";
-                            content += "<p style='margin: 5px 0;'><strong>楼盘：</strong>" + (referDecoration.house && referDecoration.house.village ? referDecoration.house.village.name : '无') + "</p>";
-                            content += "<p style='margin: 5px 0;'><strong>房号：</strong>" + (referDecoration.house ? referDecoration.house.houseNumber || '' : '无') + "</p>";
-                            content += "</div>";
-                        }
+                                // 显示加载提示
+                                var loadingIndex = com.showLoading('正在查询推荐信息...');
 
-                        if (referredDecoration) {
-                            content += "<div style='padding-top: 10px;'>";
-                            content += "<h4 style='color: #f5576c; margin: 0 0 10px 0;'><i class='icon-arrow-down'></i> 被推荐人订单</h4>";
-                            content += "<p style='margin: 5px 0;'><strong>订单号：</strong>" + referredDecoration.orderId + "</p>";
-                            content += "<p style='margin: 5px 0;'><strong>客户：</strong>" + (referredDecoration.customer ? referredDecoration.customer.name : '无') + "</p>";
-                            content += "<p style='margin: 5px 0;'><strong>楼盘：</strong>" + (referredDecoration.house && referredDecoration.house.village ? referredDecoration.house.village.name : '无') + "</p>";
-                            content += "<p style='margin: 5px 0;'><strong>房号：</strong>" + (referredDecoration.house ? referredDecoration.house.houseNumber || '' : '无') + "</p>";
-                            content += "</div>";
-                        }
+                                // 并行查询两个装修单
+                                var queryCount = 0;
+                                var referDecoration = null;
+                                var referredDecoration = null;
 
-                        content += "</div>";
+                                // 查询推荐人订单
+                                com.post(api.decoration.queryDecorationByDoid, {
+                                    "decoration.doid": parseInt(doid1)
+                                }, function(res1) {
+                                    if (res1.decoration) {
+                                        referDecoration = res1.decoration;
+                                        console.log('查询到推荐人订单:', referDecoration);
+                                    }
+                                    queryCount++;
+                                    checkAndShow();
+                                }, function(err1) {
+                                    console.error('查询推荐人订单失败，doid:', doid1, err1);
+                                    queryCount++;
+                                    checkAndShow();
+                                });
 
-                        // 使用 com.showInfo 显示弹窗（简化版）
-                        com.showInfo("<i class='icon-link blue'></i> 推荐订单详情", content);
-                    });
+                                // 查询被推荐人订单
+                                com.post(api.decoration.queryDecorationByDoid, {
+                                    "decoration.doid": parseInt(doid2)
+                                }, function(res2) {
+                                    if (res2.decoration) {
+                                        referredDecoration = res2.decoration;
+                                        console.log('查询到被推荐人订单:', referredDecoration);
+                                    }
+                                    queryCount++;
+                                    checkAndShow();
+                                }, function(err2) {
+                                    console.error('查询被推荐人订单失败，doid:', doid2, err2);
+                                    queryCount++;
+                                    checkAndShow();
+                                });
+
+                                // 检查是否两个查询都完成，然后显示弹窗
+                                function checkAndShow() {
+                                    if (queryCount === 2) {
+                                        // 关闭加载提示
+                                        layer.close(loadingIndex);
+
+                                        // 构建弹窗内容
+                                        var content = "<div style='line-height: 2; padding: 10px;'>";
+
+                                        if (referDecoration) {
+                                            content += "<div style='margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #667eea;'>";
+                                            content += "<h4 style='color: #667eea; margin: 0 0 10px 0;'><i class='icon-arrow-up'></i> 推荐人订单</h4>";
+                                            content += "<p style='margin: 5px 0;'><strong>订单号：</strong>" + referDecoration.orderId + "</p>";
+                                            content += "<p style='margin: 5px 0;'><strong>客户：</strong>" + (referDecoration.customer ? referDecoration.customer.name : '无') + "</p>";
+                                            content += "<p style='margin: 5px 0;'><strong>楼盘：</strong>" + (referDecoration.house && referDecoration.house.village ? referDecoration.house.village.name : '无') + "</p>";
+                                            content += "<p style='margin: 5px 0;'><strong>房号：</strong>" + (referDecoration.house ? referDecoration.house.houseNumber || '' : '无') + "</p>";
+                                            content += "</div>";
+                                        } else {
+                                            content += "<div style='margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #999;'>";
+                                            content += "<h4 style='color: #999; margin: 0 0 10px 0;'><i class='icon-arrow-up'></i> 推荐人订单</h4>";
+                                            content += "<p style='margin: 5px 0; color: #999;'>未找到订单信息（doid: " + doid1 + "）</p>";
+                                            content += "</div>";
+                                        }
+
+                                        if (referredDecoration) {
+                                            content += "<div style='padding-top: 10px;'>";
+                                            content += "<h4 style='color: #f5576c; margin: 0 0 10px 0;'><i class='icon-arrow-down'></i> 被推荐人订单</h4>";
+                                            content += "<p style='margin: 5px 0;'><strong>订单号：</strong>" + referredDecoration.orderId + "</p>";
+                                            content += "<p style='margin: 5px 0;'><strong>客户：</strong>" + (referredDecoration.customer ? referredDecoration.customer.name : '无') + "</p>";
+                                            content += "<p style='margin: 5px 0;'><strong>楼盘：</strong>" + (referredDecoration.house && referredDecoration.house.village ? referredDecoration.house.village.name : '无') + "</p>";
+                                            content += "<p style='margin: 5px 0;'><strong>房号：</strong>" + (referredDecoration.house ? referredDecoration.house.houseNumber || '' : '无') + "</p>";
+                                            content += "</div>";
+                                        } else {
+                                            content += "<div style='padding-top: 10px;'>";
+                                            content += "<h4 style='color: #999; margin: 0 0 10px 0;'><i class='icon-arrow-down'></i> 被推荐人订单</h4>";
+                                            content += "<p style='margin: 5px 0; color: #999;'>未找到订单信息（doid: " + doid2 + "）</p>";
+                                            content += "</div>";
+                                        }
+
+                                        content += "</div>";
+
+                                        // 使用 com.showInfo 显示弹窗
+                                        com.showInfo("<i class='icon-link blue'></i> 推荐订单详情", content);
+                                    }
+                                }
+                            };
+                        })(ids[0], ids[1]));
+                    }
                 }
             } else {
                 uiBtnMethod(uiPgDiv, _activityItem);
@@ -891,9 +957,7 @@ var decorationUtils = {
 
             itempack.html("");
 
-            // 收集所有需要查询的装修单ID（从uniqueId字段解析）
-            var uniqueIdSet = {};
-
+            // 直接渲染活动物品，传递 uniqueId 参数
             for (var i = 0; i < decorationActivityItems.length; i++) {
                 var item = decorationActivityItems[i];
 
@@ -902,120 +966,10 @@ var decorationUtils = {
                     continue;
                 }
 
-                // 解析uniqueId字段（格式：doid-doid）
-                if (item.uniqueId) {
-                    var ids = item.uniqueId.split('-');
+                console.log('处理活动物品，daiId:', item.daiId, 'uniqueId:', item.uniqueId);
 
-                    // 验证格式：必须是两个ID用'-'连接
-                    if (ids.length === 2 && ids[0] && ids[1]) {
-                        uniqueIdSet[ids[0]] = true;  // 推荐人订单ID
-                        uniqueIdSet[ids[1]] = true;  // 被推荐人订单ID
-                    } else {
-                        console.warn('uniqueId格式错误，应为doid-doid:', item.uniqueId);
-                    }
-                }
-            }
-
-            // 将收集到的ID转换为数组
-            var decorationIds = Object.keys(uniqueIdSet);
-
-            // 如果没有需要查询的装修单，直接显示
-            if (decorationIds.length === 0) {
-                for (var i = 0; i < decorationActivityItems.length; i++) {
-                    var item = decorationActivityItems[i];
-                    if (item.atttype != 1) {
-                        continue;
-                    }
-                    decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, wizard.content, null, null);
-                }
-                return;
-            }
-
-            // 循环查询每个装修单信息
-            var decorationMap = {};
-            var completedCount = 0;
-
-            console.log('开始查询装修单，IDs:', decorationIds);
-
-            for (var j = 0; j < decorationIds.length; j++) {
-                (function(orderId) {
-                    var doidValue = parseInt(orderId);
-                    console.log('查询装修单，doid:', doidValue);
-                    com.post(api.decoration.queryDecorationByDoid, {
-                        "decoration.doid": doidValue
-                    }, function(decoRes) {
-                        console.log('查询装修单返回，doid:', orderId, 'result:', decoRes);
-                        // 查询成功，保存到map
-                        if (decoRes.decoration) {
-                            decorationMap[orderId] = decoRes.decoration;
-                            console.log('保存到map，orderId:', orderId, 'decoration:', decoRes.decoration);
-                        } else {
-                            console.warn('装修单查询成功但decoration为空，doid:', orderId);
-                        }
-
-                        completedCount++;
-
-                        // 所有查询完成后，显示活动物品
-                        if (completedCount === decorationIds.length) {
-                            console.log('所有查询完成，decorationMap:', decorationMap);
-                            renderActivityItems();
-                        }
-                    }, function(decoErr) {
-                        // 查询失败，记录错误但继续
-                        console.error('查询装修单失败，doid:', orderId, 'error:', decoErr);
-                        completedCount++;
-
-                        // 所有查询完成后，显示活动物品
-                        if (completedCount === decorationIds.length) {
-                            console.log('部分查询失败，仍然渲染，decorationMap:', decorationMap);
-                            renderActivityItems();
-                        }
-                    });
-                })(decorationIds[j]);
-            }
-
-            // 渲染活动物品的函数
-            function renderActivityItems() {
-                console.log('开始渲染活动物品，总数:', decorationActivityItems.length);
-
-                for (var i = 0; i < decorationActivityItems.length; i++) {
-                    var item = decorationActivityItems[i];
-
-                    if (item.atttype != 1) {
-                        continue;
-                    }
-
-                    console.log('处理活动物品，daiId:', item.daiId, 'uniqueId:', item.uniqueId);
-
-                    // 解析关联的装修单信息
-                    var referDecoration = null;
-                    var referredDecoration = null;
-
-                    if (item.uniqueId) {
-                        var ids = item.uniqueId.split('-');
-                        console.log('解析uniqueId，ids:', ids, 'map keys:', Object.keys(decorationMap));
-
-                        if (ids.length === 2) {
-                            if (decorationMap[ids[0]]) {
-                                referDecoration = decorationMap[ids[0]];
-                                console.log('找到推荐人订单:', referDecoration);
-                            } else {
-                                console.warn('未找到推荐人订单，id:', ids[0]);
-                            }
-                            if (decorationMap[ids[1]]) {
-                                referredDecoration = decorationMap[ids[1]];
-                                console.log('找到被推荐人订单:', referredDecoration);
-                            } else {
-                                console.warn('未找到被推荐人订单，id:', ids[1]);
-                            }
-                        }
-                    }
-
-                    console.log('推荐信息 - referDecoration:', referDecoration, 'referredDecoration:', referredDecoration);
-
-                    // 使用相同的显示逻辑，传入装修单信息
-                    decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, wizard.content, referDecoration, referredDecoration);
-                }
+                // 直接传递 uniqueId，不提前查询数据
+                decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, wizard.content, item.uniqueId);
             }
         });
     },
