@@ -777,20 +777,14 @@ var decorationUtils = {
                 if (uniqueId) {
                     var ids = uniqueId.split('-');
                     if (ids.length === 2 && ids[0] && ids[1]) {
-                        console.log('显示推荐信息按钮，uniqueId:', uniqueId);
-
                         var referInfoBtn = $("<a></a>").addClass("btn btn-minier btn-info")
                             .html("<i class='icon-info-sign'></i> 推荐")
                             .css("margin", "0px 3px")
                             .appendTo(uiPgDiv);
 
-                        console.log('推荐信息按钮已创建');
-
                         // 点击按钮弹窗显示推荐信息
                         referInfoBtn.on("click", (function(doid1, doid2) {
                             return function() {
-                                console.log('点击推荐按钮，查询 doid1:', doid1, 'doid2:', doid2);
-
                                 // 显示加载提示
                                 var loadingIndex = com.showLoading('正在查询推荐信息...');
 
@@ -805,12 +799,10 @@ var decorationUtils = {
                                 }, function(res1) {
                                     if (res1.decoration) {
                                         referDecoration = res1.decoration;
-                                        console.log('查询到推荐人订单:', referDecoration);
                                     }
                                     queryCount++;
                                     checkAndShow();
                                 }, function(err1) {
-                                    console.error('查询推荐人订单失败，doid:', doid1, err1);
                                     queryCount++;
                                     checkAndShow();
                                 });
@@ -821,12 +813,10 @@ var decorationUtils = {
                                 }, function(res2) {
                                     if (res2.decoration) {
                                         referredDecoration = res2.decoration;
-                                        console.log('查询到被推荐人订单:', referredDecoration);
                                     }
                                     queryCount++;
                                     checkAndShow();
                                 }, function(err2) {
-                                    console.error('查询被推荐人订单失败，doid:', doid2, err2);
                                     queryCount++;
                                     checkAndShow();
                                 });
@@ -937,21 +927,11 @@ var decorationUtils = {
 
     memberActivityItemInfo: function(orderId, itempack, config, wizard) {
 
-        console.log('========== memberActivityItemInfo 方法开始执行 ==========');
-        console.log('参数 orderId:', orderId);
-        console.log('参数 itempack:', itempack);
-        console.log('参数 config:', config);
-        console.log('参数 wizard:', wizard);
-
         var uiBtnMethod = wizard["uiBtnMethod"];
 
         com.post(api.decoration.queryDecorationActivityItem, {
             "decoration.orderId": orderId
         }, function(res) {
-
-            console.log('========== queryDecorationActivityItem 返回 ==========');
-            console.log('返回数据 res:', res);
-            console.log('decorationActivityItems:', res.decorationActivityItems);
 
             var decorationActivityItems = res.decorationActivityItems;
 
@@ -965,8 +945,6 @@ var decorationUtils = {
                 if (item.atttype != 1) {
                     continue;
                 }
-
-                console.log('处理活动物品，daiId:', item.daiId, 'uniqueId:', item.uniqueId);
 
                 // 直接传递 uniqueId，不提前查询数据
                 decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, wizard.content, item.uniqueId);
