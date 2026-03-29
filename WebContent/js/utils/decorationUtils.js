@@ -703,48 +703,6 @@ var decorationUtils = {
         var createTimeState = $("<strong></strong>").text("创建时间: ").appendTo(createTimeLi);
         var createTimeSpan = $("<span></span>").addClass("green").text(_activityItem.createTime).appendTo(createTimeLi);
 
-        // 如果有推荐装修单信息，显示"查看推荐信息"按钮
-        if (referDecoration || referredDecoration) {
-            console.log('显示推荐信息按钮，referDecoration:', referDecoration, 'referredDecoration:', referredDecoration);
-            var referInfoLi = $("<li></li>").appendTo(ul);
-            var referInfoBtn = $("<button></button>")
-                .addClass("btn btn-minier btn-info")
-                .html("<i class='icon-info-sign'></i> 查看推荐信息")
-                .css("margin-left", "10px")
-                .appendTo(referInfoLi);
-            console.log('推荐信息按钮已创建');
-
-            // 点击按钮弹窗显示推荐信息
-            referInfoBtn.on("click", function() {
-                var content = "<div style='line-height: 2; padding: 10px;'>";
-
-                if (referDecoration) {
-                    content += "<div style='margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #667eea;'>";
-                    content += "<h4 style='color: #667eea; margin: 0 0 10px 0;'><i class='icon-arrow-up'></i> 推荐人订单</h4>";
-                    content += "<p style='margin: 5px 0;'><strong>订单号：</strong>" + referDecoration.orderId + "</p>";
-                    content += "<p style='margin: 5px 0;'><strong>客户：</strong>" + (referDecoration.customer ? referDecoration.customer.name : '无') + "</p>";
-                    content += "<p style='margin: 5px 0;'><strong>楼盘：</strong>" + (referDecoration.house && referDecoration.house.village ? referDecoration.house.village.name : '无') + "</p>";
-                    content += "<p style='margin: 5px 0;'><strong>房号：</strong>" + (referDecoration.house ? referDecoration.house.houseNumber || '' : '无') + "</p>";
-                    content += "</div>";
-                }
-
-                if (referredDecoration) {
-                    content += "<div style='padding-top: 10px;'>";
-                    content += "<h4 style='color: #f5576c; margin: 0 0 10px 0;'><i class='icon-arrow-down'></i> 被推荐人订单</h4>";
-                    content += "<p style='margin: 5px 0;'><strong>订单号：</strong>" + referredDecoration.orderId + "</p>";
-                    content += "<p style='margin: 5px 0;'><strong>客户：</strong>" + (referredDecoration.customer ? referredDecoration.customer.name : '无') + "</p>";
-                    content += "<p style='margin: 5px 0;'><strong>楼盘：</strong>" + (referredDecoration.house && referredDecoration.house.village ? referredDecoration.house.village.name : '无') + "</p>";
-                    content += "<p style='margin: 5px 0;'><strong>房号：</strong>" + (referredDecoration.house ? referredDecoration.house.houseNumber || '' : '无') + "</p>";
-                    content += "</div>";
-                }
-
-                content += "</div>";
-
-                // 使用 com.showInfo 显示弹窗（简化版）
-                com.showInfo("<i class='icon-link blue'></i> 推荐订单详情", content);
-            });
-        }
-
         if (nodeContent == "content") {
             var isStockLi = $("<li></li>").appendTo(ul);
             var isStockState = $("<strong></strong>").text("是否计入库存:").appendTo(isStockLi);
@@ -814,6 +772,48 @@ var decorationUtils = {
                     com.popup4page("#decorationActivityRecordPopUp", "/views/decoration/decorationActivityRecord.html", "记录");
 
                 });
+
+                // 如果有推荐装修单信息，显示"查看推荐信息"按钮
+                if (referDecoration || referredDecoration) {
+                    console.log('显示推荐信息按钮，referDecoration:', referDecoration, 'referredDecoration:', referredDecoration);
+
+                    var referInfoBtn = $("<a></a>").addClass("btn btn-minier btn-info")
+                        .html("<i class='icon-info-sign'></i> 查看推荐信息")
+                        .css("margin", "0px 3px")
+                        .appendTo(uiPgDiv);
+
+                    console.log('推荐信息按钮已创建');
+
+                    // 点击按钮弹窗显示推荐信息
+                    referInfoBtn.on("click", function() {
+                        var content = "<div style='line-height: 2; padding: 10px;'>";
+
+                        if (referDecoration) {
+                            content += "<div style='margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #667eea;'>";
+                            content += "<h4 style='color: #667eea; margin: 0 0 10px 0;'><i class='icon-arrow-up'></i> 推荐人订单</h4>";
+                            content += "<p style='margin: 5px 0;'><strong>订单号：</strong>" + referDecoration.orderId + "</p>";
+                            content += "<p style='margin: 5px 0;'><strong>客户：</strong>" + (referDecoration.customer ? referDecoration.customer.name : '无') + "</p>";
+                            content += "<p style='margin: 5px 0;'><strong>楼盘：</strong>" + (referDecoration.house && referDecoration.house.village ? referDecoration.house.village.name : '无') + "</p>";
+                            content += "<p style='margin: 5px 0;'><strong>房号：</strong>" + (referDecoration.house ? referDecoration.house.houseNumber || '' : '无') + "</p>";
+                            content += "</div>";
+                        }
+
+                        if (referredDecoration) {
+                            content += "<div style='padding-top: 10px;'>";
+                            content += "<h4 style='color: #f5576c; margin: 0 0 10px 0;'><i class='icon-arrow-down'></i> 被推荐人订单</h4>";
+                            content += "<p style='margin: 5px 0;'><strong>订单号：</strong>" + referredDecoration.orderId + "</p>";
+                            content += "<p style='margin: 5px 0;'><strong>客户：</strong>" + (referredDecoration.customer ? referredDecoration.customer.name : '无') + "</p>";
+                            content += "<p style='margin: 5px 0;'><strong>楼盘：</strong>" + (referredDecoration.house && referredDecoration.house.village ? referredDecoration.house.village.name : '无') + "</p>";
+                            content += "<p style='margin: 5px 0;'><strong>房号：</strong>" + (referredDecoration.house ? referredDecoration.house.houseNumber || '' : '无') + "</p>";
+                            content += "</div>";
+                        }
+
+                        content += "</div>";
+
+                        // 使用 com.showInfo 显示弹窗（简化版）
+                        com.showInfo("<i class='icon-link blue'></i> 推荐订单详情", content);
+                    });
+                }
             } else {
                 uiBtnMethod(uiPgDiv, _activityItem);
             }
