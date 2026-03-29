@@ -66,6 +66,8 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	private String comment;
 
+	private String uniqueId; // 唯一标识，用于区分不同活动物品对应的被推荐装修单号和推荐装修单号的对应关系
+
 	public DecorationActivityItemVO() {
 		super();
 	}
@@ -297,6 +299,14 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 
 }

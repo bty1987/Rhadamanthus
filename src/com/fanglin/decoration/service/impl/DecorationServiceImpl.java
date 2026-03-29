@@ -224,18 +224,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setMaterialer(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
-
-			addition(decorationPO.getAddition(), decorationVO);
-
-			decorationVOs.add(decorationVO);
+			decorationVOs.add(addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		paging.setData(decorationVOs);
@@ -254,19 +243,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
-
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setMaterialer(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
-
-			addition(decorationPO.getAddition(), decorationVO);
-
-			decorationVOs.add(decorationVO);
+			decorationVOs.add(addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		paging.setData(decorationVOs);
@@ -318,21 +295,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, authentication.getCompany());
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
+		DecorationVO decorationVO;
+
 		for (DecorationPO decorationPO : decorationPOs) {
 
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setMaterialer(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
+			decorationVO = addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}
@@ -352,15 +322,13 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForCompany(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
-		for (DecorationPO decorationPO : decorationPOs) {
-			DecorationVO decorationVO = new DecorationVO();
+		DecorationVO decorationVO;
 
-			decorationPO.ptvcascade(decorationVO);
+		for (DecorationPO decorationPO : decorationPOs) {
+			decorationVO = addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO()));
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}
@@ -376,19 +344,13 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForGrade(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
+		DecorationVO decorationVO;
+
 		for (DecorationPO decorationPO : decorationPOs) {
-			DecorationVO decorationVO = new DecorationVO();
 
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setMaterialer(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
+			decorationVO = addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 
 			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}
@@ -410,20 +372,13 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForCompany(paging, filters, null);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
+		DecorationVO decorationVO;
+
 		for (DecorationPO decorationPO : decorationPOs) {
 
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setMaterialer(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
+			decorationVO = addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 
 			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}
@@ -446,20 +401,13 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForDesign(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
+		DecorationVO decorationVO;
+
 		for (DecorationPO decorationPO : decorationPOs) {
 
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setMaterialer(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
+			decorationVO = addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 
 			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}
@@ -490,22 +438,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForDesignDept(paging, filters, deptIds, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
+		DecorationVO decorationVO;
+
 		for (DecorationPO decorationPO : decorationPOs) {
 
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setMaterialer(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
-
-			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+			decorationVO = addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 
 			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 
 			decorationVOs.add(decorationVO);
 		}
@@ -559,22 +499,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForDesignerManager(paging, filters, designDepartmentIds, statuses, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
+		DecorationVO decorationVO;
+
 		for (DecorationPO decorationPO : decorationPOs) {
 
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setMaterialer(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
-
-			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+			decorationVO = addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 
 			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 
 			decorationVOs.add(decorationVO);
 		}
@@ -597,16 +529,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesman(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
+		DecorationVO decorationVO;
+
 		for (DecorationPO decorationPO : decorationPOs) {
 
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationPO.ptvcascade(decorationVO);
+			decorationVO = addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO()));
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}
@@ -636,21 +566,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesDept(paging, filters, deptIds);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
+		DecorationVO decorationVO;
+
 		for (DecorationPO decorationPO : decorationPOs) {
 
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setMaterialer(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
+			decorationVO = addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}
@@ -706,21 +629,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesmanManager(paging, filters, salesmanDepartmentIds, statuses);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
+		DecorationVO decorationVO;
+
 		for (DecorationPO decorationPO : decorationPOs) {
 
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setMaterialer(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
+			decorationVO = addition(decorationPO.getAddition(), decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}
@@ -876,14 +792,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		for (DecorationPO decorationPO : decorationPOs) {
 
-			decorationVO = new DecorationVO();
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
-
-			decorationVOs.add(decorationVO);
+			decorationVOs.add(decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return decorationVOs;
@@ -1869,16 +1778,18 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 	}
 
-	private void addition(DecorationAdditionPO addition, DecorationVO decorationVO) {
+	private DecorationVO addition(DecorationAdditionPO addition, DecorationVO decorationVO) {
 
-		if (addition != null) {
-			decorationVO.getDesigner().setCurrentName(addition.getDesigner());
-			decorationVO.getSalesman().setCurrentName(addition.getSalesman());
-			decorationVO.getDesigner().getDept().setName(addition.getDesignDepartment());
-			decorationVO.getSalesman().getDept().setName(addition.getSalesDepartment());
-			decorationVO.getDesigner().getDept().getFatherDept().setName(addition.getDesignRegion());
-			decorationVO.getSalesman().getDept().getFatherDept().setName(addition.getSalesRegion());
-		}
+		if (addition == null) return decorationVO;
+
+		if (decorationVO.getDesigner() != null && addition.getDesigner() != null) decorationVO.getDesigner().setCurrentName(addition.getDesigner());
+		if (decorationVO.getSalesman() != null && addition.getSalesman() != null) decorationVO.getSalesman().setCurrentName(addition.getSalesman());
+		if (decorationVO.getDesigner() != null && decorationVO.getDesigner().getDept() != null && addition.getDesignDepartment() != null) decorationVO.getDesigner().getDept().setName(addition.getDesignDepartment());
+		if (decorationVO.getSalesman() != null && decorationVO.getSalesman().getDept() != null && addition.getSalesDepartment() != null) decorationVO.getSalesman().getDept().setName(addition.getSalesDepartment());
+		if (decorationVO.getDesigner() != null && decorationVO.getDesigner().getDept() != null && decorationVO.getDesigner().getDept().getFatherDept() != null && addition.getDesignRegion() != null) decorationVO.getDesigner().getDept().getFatherDept().setName(addition.getDesignRegion());
+		if (decorationVO.getSalesman() != null && decorationVO.getSalesman().getDept() != null && decorationVO.getSalesman().getDept().getFatherDept() != null && addition.getSalesRegion() != null) decorationVO.getSalesman().getDept().getFatherDept().setName(addition.getSalesRegion());
+
+		return decorationVO;
 	}
 
 }
