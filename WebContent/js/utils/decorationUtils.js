@@ -773,12 +773,12 @@ var decorationUtils = {
 
                 });
 
-                // 如果有推荐装修单信息，显示"查看推荐信息"按钮
+                // 如果有推荐装修单信息，显示"推荐"按钮
                 if (referDecoration || referredDecoration) {
                     console.log('显示推荐信息按钮，referDecoration:', referDecoration, 'referredDecoration:', referredDecoration);
 
                     var referInfoBtn = $("<a></a>").addClass("btn btn-minier btn-info")
-                        .html("<i class='icon-info-sign'></i> 查看推荐信息")
+                        .html("<i class='icon-info-sign'></i> 推荐")
                         .css("margin", "0px 3px")
                         .appendTo(uiPgDiv);
 
