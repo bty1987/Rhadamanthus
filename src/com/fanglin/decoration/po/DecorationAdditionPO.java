@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.decoration.vo.DecorationVO;
+
 @Entity
 @Table(name = "decorationaddition", catalog = "decoration")
 public class DecorationAdditionPO implements Serializable {
@@ -195,6 +197,18 @@ public class DecorationAdditionPO implements Serializable {
 
 		if (this.salesRegion == null || "".equals(this.salesRegion)) this.salesRegion = salesRegion;
 		else this.salesRegion = String.format("%s/%s", this.salesRegion, salesRegion);
+	}
+
+	public DecorationVO ptv(DecorationVO decorationVO) {
+
+		if (decorationVO.getDesigner() != null && getDesigner() != null) decorationVO.getDesigner().setCurrentName(getDesigner());
+		if (decorationVO.getSalesman() != null && getSalesman() != null) decorationVO.getSalesman().setCurrentName(getSalesman());
+		if (decorationVO.getDesigner() != null && decorationVO.getDesigner().getDept() != null && getDesignDepartment() != null) decorationVO.getDesigner().getDept().setName(getDesignDepartment());
+		if (decorationVO.getSalesman() != null && decorationVO.getSalesman().getDept() != null && getSalesDepartment() != null) decorationVO.getSalesman().getDept().setName(getSalesDepartment());
+		if (decorationVO.getDesigner() != null && decorationVO.getDesigner().getDept() != null && decorationVO.getDesigner().getDept().getFatherDept() != null && getDesignRegion() != null) decorationVO.getDesigner().getDept().getFatherDept().setName(getDesignRegion());
+		if (decorationVO.getSalesman() != null && decorationVO.getSalesman().getDept() != null && decorationVO.getSalesman().getDept().getFatherDept() != null && getSalesRegion() != null) decorationVO.getSalesman().getDept().getFatherDept().setName(getSalesRegion());
+
+		return decorationVO;
 	}
 
 }

@@ -277,7 +277,7 @@ $.extend(api, {
                 args: ["cvalue", "breakpay"]
             }, {
                 result: "paging-data-supplierContractCategorys",
-                args: ["cva lue", "breakpay"]
+                args: ["cvalue", "breakpay"]
             }]
         },
         querySupplierContractBrand: {

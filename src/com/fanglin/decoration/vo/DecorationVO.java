@@ -164,6 +164,21 @@ public class DecorationVO implements Serializable {
 		this.supervisor = supervisor;
 	}
 
+	public DecorationVO(UserBaseVO supervisor, UserBaseVO quoter, UserBaseVO escorter) {
+		super();
+		this.supervisor = supervisor;
+		this.quoter = quoter;
+		this.escorter = escorter;
+	}
+
+	public DecorationVO(UserBaseVO supervisor, UserBaseVO quoter, UserBaseVO escorter, UserBaseVO materialer) {
+		super();
+		this.supervisor = supervisor;
+		this.quoter = quoter;
+		this.escorter = escorter;
+		this.materialer = materialer;
+	}
+
 	public Long getDoid() {
 		return doid;
 	}
