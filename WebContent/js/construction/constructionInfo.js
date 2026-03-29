@@ -441,6 +441,9 @@ jQuery(function($) {
                 com.focusPage("input[cnid='" + v.node.cnid + "'][postnum]", "#contructionNodes").attr("postnum", v.postnum);
 
                 com.focusPage("input.timeLimits[cnid='" + v.node.cnid + "']", "#contructionNodes").val(v.period);
+
+                // 默认勾选复选框
+                com.focusPage("input[type='checkbox'][cnid='" + v.node.cnid + "']", "#contructionNodes").prop('checked', true);
             });
 
         }, null, false);
@@ -452,6 +455,9 @@ jQuery(function($) {
             $.each(res.constructionPlans, function(i, v) {
 
                 com.focusPage("input.timeLimits[cnid='" + v.cnid + "']", "#contructionNodes").val(v.connum);
+
+                // 默认勾选已有施工计划的复选框
+                com.focusPage("input[type='checkbox'][cnid='" + v.cnid + "']", "#contructionNodes").prop('checked', true);
             });
         });
     };
