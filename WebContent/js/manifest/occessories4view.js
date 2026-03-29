@@ -5,6 +5,7 @@ jQuery(function($) {
         oid: params.manifest.oid,
         orderId: params.manifest.orderId,
         pageType: params.urlLoadParams.type,
+        isExceed: params.manifest.isExceed, // 保存超阶标识
 
         oiid: [],
         sennum: [],
@@ -61,7 +62,7 @@ jQuery(function($) {
 
             // 绑定费用按钮点击事件
             $line.find('div.charge').click(function() {
-                openChargeViewModal(v.oiid);
+                openChargeViewModal(v.oiid, occessories.isExceed);
             }).css('cursor', 'pointer').attr('title', '点击查看费用详情');
 
             if (occessories.pageType == "bind" || occessories.pageType == "supplier") {
@@ -235,8 +236,10 @@ jQuery(function($) {
 
     /**
      * 打开费用查看弹窗（只读）
+     * @param {number} oiid 外辅项ID
+     * @param {number} isExceed 超阶标识（0-超阶，1-不超阶）
      */
-    function openChargeViewModal(oiid) {
+    function openChargeViewModal(oiid, isExceed) {
         // 清空费用列表
         com.focusPage('#chargeViewTableBody').html('');
         com.focusPage('#chargeTotalAmount').text('0.00');
@@ -249,9 +252,20 @@ jQuery(function($) {
                 var totalAmount = 0;
 
                 $.each(res.occessoriesCharges, function(i, charge) {
-                    var price = charge.price; // 转换为元
-                    var num = charge.num; // 转换为实际数量
-                    var subtotal = price * num; // 小计
+                    var price = charge.price || 0;
+                    var surplus = charge.surplus || 0;
+                    var num = charge.num || 0;
+                    var subtotal;
+
+                    // 根据 isExceed 判断 surplus 是否参与运算
+                    // isExceed == 0 时（超阶），surplus 参与运算；否则不参与
+                    if (isExceed == 0) {
+                        // 超阶：price + surplus
+                        subtotal = (price + surplus) * num;
+                    } else {
+                        // 不超阶：仅 price
+                        subtotal = price * num;
+                    }
 
                     totalAmount += subtotal;
 
@@ -259,7 +273,7 @@ jQuery(function($) {
                     $row.append($('<td></td>').text(i + 1));
                     $row.append($('<td></td>').text(charge.name));
                     $row.append($('<td></td>').text(price.toFixed(3)));
-                    $row.append($('<td></td>').text(num.toFixed(3)));
+                    $row.append($('<td></td>').text(num.toFixed(0)));
                     $row.append($('<td></td>').addClass('red').text(subtotal.toFixed(3)));
 
                     com.focusPage('#chargeViewTableBody').append($row);
