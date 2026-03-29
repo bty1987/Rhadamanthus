@@ -510,7 +510,7 @@ jQuery(function($) {
     function handoverInfo() {
 
         var option = {
-            "constructionInfo.orderId": information.info.orderId,
+            "constructionInfo.orderId": information.info.decoration.orderId,
             "constructionInfo.handoverStatus": com.focusPage("#handoverStatus").val(),
         };
 
