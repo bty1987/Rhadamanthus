@@ -939,10 +939,10 @@ var decorationUtils = {
 
             for (var j = 0; j < decorationIds.length; j++) {
                 (function(orderId) {
-                    var decorationVO = {"doid": parseInt(orderId)};
-                    console.log('查询装修单，doid:', decorationVO.doid);
+                    var doidValue = parseInt(orderId);
+                    console.log('查询装修单，doid:', doidValue);
                     com.post(api.decoration.queryDecorationByDoid, {
-                        "decoration": decorationVO
+                        "decoration.doid": doidValue
                     }, function(decoRes) {
                         console.log('查询装修单返回，doid:', orderId, 'result:', decoRes);
                         // 查询成功，保存到map
