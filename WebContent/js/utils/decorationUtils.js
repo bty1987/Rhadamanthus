@@ -891,8 +891,8 @@ var decorationUtils = {
 
             itempack.html("");
 
-            // 收集所有需要查询的装修单ID（从requireId字段解析）
-            var requireIdSet = {};
+            // 收集所有需要查询的装修单ID（从uniqueId字段解析）
+            var uniqueIdSet = {};
 
             for (var i = 0; i < decorationActivityItems.length; i++) {
                 var item = decorationActivityItems[i];
@@ -902,22 +902,22 @@ var decorationUtils = {
                     continue;
                 }
 
-                // 解析requireId字段（格式：doid-doid）
-                if (item.requireId) {
-                    var ids = item.requireId.split('-');
+                // 解析uniqueId字段（格式：doid-doid）
+                if (item.uniqueId) {
+                    var ids = item.uniqueId.split('-');
 
                     // 验证格式：必须是两个ID用'-'连接
                     if (ids.length === 2 && ids[0] && ids[1]) {
-                        requireIdSet[ids[0]] = true;  // 推荐人订单ID
-                        requireIdSet[ids[1]] = true;  // 被推荐人订单ID
+                        uniqueIdSet[ids[0]] = true;  // 推荐人订单ID
+                        uniqueIdSet[ids[1]] = true;  // 被推荐人订单ID
                     } else {
-                        console.warn('requireId格式错误，应为doid-doid:', item.requireId);
+                        console.warn('uniqueId格式错误，应为doid-doid:', item.uniqueId);
                     }
                 }
             }
 
             // 将收集到的ID转换为数组
-            var decorationIds = Object.keys(requireIdSet);
+            var decorationIds = Object.keys(uniqueIdSet);
 
             // 如果没有需要查询的装修单，直接显示
             if (decorationIds.length === 0) {
@@ -985,15 +985,15 @@ var decorationUtils = {
                         continue;
                     }
 
-                    console.log('处理活动物品，daiId:', item.daiId, 'requireId:', item.requireId);
+                    console.log('处理活动物品，daiId:', item.daiId, 'uniqueId:', item.uniqueId);
 
                     // 解析关联的装修单信息
                     var referDecoration = null;
                     var referredDecoration = null;
 
-                    if (item.requireId) {
-                        var ids = item.requireId.split('-');
-                        console.log('解析requireId，ids:', ids, 'map keys:', Object.keys(decorationMap));
+                    if (item.uniqueId) {
+                        var ids = item.uniqueId.split('-');
+                        console.log('解析uniqueId，ids:', ids, 'map keys:', Object.keys(decorationMap));
 
                         if (ids.length === 2) {
                             if (decorationMap[ids[0]]) {
