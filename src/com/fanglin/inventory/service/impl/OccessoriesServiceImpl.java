@@ -235,11 +235,20 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 					occessoriesChargePO.setNum(occessoriesChargeVO.getNum() != null ? occessoriesChargeVO.getNum() : 0);
 					occessoriesChargeDao.save(occessoriesChargePO);
 
-					// 累计费用：charge = ∑((price + surplus) * num)
+					// 累计费用：根据 isExceed 判断 surplus 是否参与运算
+					// isExceed == 0 时（超阶），surplus 参与运算；否则不参与
 					int price = occessoriesChargeVO.getPrice() != null ? occessoriesChargeVO.getPrice() : 0;
 					int surplus = occessoriesChargeVO.getSurplus() != null ? occessoriesChargeVO.getSurplus() : 0;
 					int num = occessoriesChargeVO.getNum() != null ? occessoriesChargeVO.getNum() : 0;
-					long chargeAmount = ((long) price + surplus) * num;
+
+					long chargeAmount;
+					if (occessoriesPO.getIsExceed() == 0) {
+						// 超阶：surplus 参与运算
+						chargeAmount = ((long) price + surplus) * num;
+					} else {
+						// 不超阶：surplus 不参与运算
+						chargeAmount = (long) price * num;
+					}
 					itemCharge += chargeAmount;
 					totalCharge += chargeAmount;
 				}

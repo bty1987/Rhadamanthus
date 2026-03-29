@@ -103,7 +103,18 @@ $(function () {
                     $('<td colspan="2" style="border: 1px solid;padding-left:30px;"></td>').html("　└ " + charge.name).appendTo(chargeTr);
                     $('<td colspan="1" style="border: 1px solid;"></td>').html("").appendTo(chargeTr);
                     $('<td colspan="1" style="border: 1px solid;"></td>').html(charge.num).appendTo(chargeTr);
-                    $('<td colspan="1" style="border: 1px solid;"></td>').html((charge.price * charge.num).toFixed(2) + " 元").appendTo(chargeTr);
+
+                    // 根据 isExceed 判断 surplus 是否参与运算
+                    // isExceed == 0 时（超阶），surplus 参与运算；否则不参与
+                    var chargeAmount = 0;
+                    if (data.isExceed == 0) {
+                        // 超阶：price + surplus
+                        chargeAmount = (charge.price + (charge.surplus || 0)) * charge.num;
+                    } else {
+                        // 不超阶：仅 price
+                        chargeAmount = charge.price * charge.num;
+                    }
+                    $('<td colspan="1" style="border: 1px solid;"></td>').html(chargeAmount.toFixed(2) + " 元").appendTo(chargeTr);
                 });
             }
         });
