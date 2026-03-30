@@ -515,12 +515,6 @@ jQuery(function($) {
 
     function handoverInfo() {
 
-        // 调试：打印 information.info 对象结构
-        console.log('information.info:', information.info);
-        console.log('information.info.orderId:', information.info.orderId);
-        console.log('information.info.decoration.orderId:', information.info.decoration.orderId);
-        console.log('information.info.ciid:', information.info.ciid);
-
         // 确定使用哪个 orderId
         var orderId = information.info.orderId || information.info.decoration.orderId;
 
@@ -531,6 +525,7 @@ jQuery(function($) {
 
         var option = {
             "constructionInfo.orderId": orderId,
+            "constructionInfo.decoration.orderId": orderId,
             "constructionInfo.handoverStatus": com.focusPage("#handoverStatus").val(),
         };
 
@@ -540,7 +535,7 @@ jQuery(function($) {
 
             searcher.doSearch();
 
-            information.handoverModal.modal("hide");
+            information.modals.handoverModal.modal("hide");
         });
     }
 
