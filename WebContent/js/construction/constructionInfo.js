@@ -515,8 +515,22 @@ jQuery(function($) {
 
     function handoverInfo() {
 
+        // 调试：打印 information.info 对象结构
+        console.log('information.info:', information.info);
+        console.log('information.info.orderId:', information.info.orderId);
+        console.log('information.info.decoration.orderId:', information.info.decoration.orderId);
+        console.log('information.info.ciid:', information.info.ciid);
+
+        // 确定使用哪个 orderId
+        var orderId = information.info.orderId || information.info.decoration.orderId;
+
+        if (!orderId) {
+            com.showAlert(com.error, '订单ID为空，无法进行交接操作');
+            return;
+        }
+
         var option = {
-            "constructionInfo.orderId": information.info.decoration.orderId,
+            "constructionInfo.orderId": orderId,
             "constructionInfo.handoverStatus": com.focusPage("#handoverStatus").val(),
         };
 
