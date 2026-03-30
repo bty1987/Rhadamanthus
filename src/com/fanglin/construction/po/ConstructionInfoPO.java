@@ -59,6 +59,8 @@ public class ConstructionInfoPO implements Serializable {
 
 	private short isCheck;
 
+	private short handoverStatus;
+
 	private Timestamp finishTime;
 
 	private Timestamp keyTime;
@@ -72,8 +74,6 @@ public class ConstructionInfoPO implements Serializable {
 	private long actuaTime;
 
 	private String comment;
-
-	private short handoverStatus;
 
 	public ConstructionInfoPO() {
 		super();
