@@ -65,6 +65,8 @@ public class ConstructionInfoDO implements Serializable {
 
 	private short isCheck;
 
+	private short handoverStatus;
+
 	private Timestamp finishTime;
 
 	private Timestamp keyTime;
@@ -206,6 +208,15 @@ public class ConstructionInfoDO implements Serializable {
 
 	public void setIsCheck(short isCheck) {
 		this.isCheck = isCheck;
+	}
+
+	@Column(name = "handoverStatus")
+	public short getHandoverStatus() {
+		return handoverStatus;
+	}
+
+	public void setHandoverStatus(short handoverStatus) {
+		this.handoverStatus = handoverStatus;
 	}
 
 	@Column(name = "finishTime")
