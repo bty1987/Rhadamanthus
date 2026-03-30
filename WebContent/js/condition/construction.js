@@ -455,6 +455,15 @@ Condition.addupRule("construction", {
             validate: null
         }
     },
+    "info-issueTime": {
+        label: "分配时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "issueTime",
+            op: "between",
+            validate: null
+        }
+    },
     "info-sdesignTimeRange": {
         label: "合同方案确认",
         type: "dateRangePicker",
