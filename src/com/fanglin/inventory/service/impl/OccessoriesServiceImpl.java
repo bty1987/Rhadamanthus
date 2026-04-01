@@ -19,6 +19,7 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.utils.Arith;
 import com.fanglin.inventory.dao.OccessoriesChargeDao;
 import com.fanglin.inventory.dao.OccessoriesDao;
 import com.fanglin.inventory.dao.OccessoriesItemDao;
@@ -211,7 +212,16 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 			occessoriesItemPO.setRbalance(occessoriesItemVO.getRbalance());
 			occessoriesItemPO.setVbalance(occessoriesItemVO.getRbalance());
 
-			totalBalance += occessoriesItemVO.getRbalance() != null ? occessoriesItemVO.getRbalance() : 0;
+			// 设置 nid（定材ID）
+			if (occessoriesItemVO.getNid() != null && occessoriesItemVO.getNid() > 0) {
+				occessoriesItemPO.setNid(occessoriesItemVO.getNid());
+			}
+
+			// 计算结算总额：数量 × 单价（使用 Arith 精确运算）
+			int rbalance = occessoriesItemVO.getRbalance() != null ? occessoriesItemVO.getRbalance() : 0;
+			int num = occessoriesItemVO.getNum() != null ? occessoriesItemVO.getNum() : 0;
+			int itemBalance = Arith.mul(rbalance, num);
+			totalBalance = Arith.add(totalBalance, itemBalance);
 
 			// 设置 aoods 关联
 			if (occessoriesItemVO.getAoods() != null && occessoriesItemVO.getAoods().getAid() != null) {
@@ -235,7 +245,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 					occessoriesChargePO.setNum(occessoriesChargeVO.getNum() != null ? occessoriesChargeVO.getNum() : 0);
 					occessoriesChargeDao.save(occessoriesChargePO);
 
-					// 累计费用：根据 isExceed 判断 surplus 是否参与运算
+					// 累计费用：根据 isExceed 判断 surplus 是否参与运算（使用 Arith 精确运算）
 					// isExceed == 0 时（超阶），surplus 参与运算；否则不参与
 					int price = occessoriesChargeVO.getPrice() != null ? occessoriesChargeVO.getPrice() : 0;
 					int surplus = occessoriesChargeVO.getSurplus() != null ? occessoriesChargeVO.getSurplus() : 0;
@@ -244,22 +254,23 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 					long chargeAmount;
 					if (occessoriesPO.getIsExceed() == 0) {
 						// 超阶：surplus 参与运算
-						chargeAmount = ((long) price + surplus) * num;
+						int priceWithSurplus = Arith.add(price, surplus);
+						chargeAmount = Arith.mul(priceWithSurplus, num);
 					} else {
 						// 不超阶：surplus 不参与运算
-						chargeAmount = (long) price * num;
+						chargeAmount = Arith.mul(price, num);
 					}
-					itemCharge += chargeAmount;
-					totalCharge += chargeAmount;
+					itemCharge = Arith.add(itemCharge, chargeAmount);
+					totalCharge = Arith.add(totalCharge, chargeAmount);
 				}
 			}
 
 			// 更新当前 item 的费用总额
 			occessoriesItemPO.setCharge(itemCharge);
 
-			// 累计商品总额：数量 × 单价
-			long itemGoodsAmount = (long) occessoriesItemPO.getNum() * occessoriesItemPO.getGoods().getSelling();
-			totalGoodsAmount += itemGoodsAmount;
+			// 累计商品总额：数量 × 单价（使用 Arith 精确运算）
+			long itemGoodsAmount = Arith.mul(occessoriesItemPO.getNum(), occessoriesItemPO.getGoods().getSelling());
+			totalGoodsAmount = Arith.add(totalGoodsAmount, itemGoodsAmount);
 
 			occessoriesItemDao.update(occessoriesItemPO);
 		}

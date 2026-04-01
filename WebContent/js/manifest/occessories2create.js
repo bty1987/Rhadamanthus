@@ -263,6 +263,8 @@ jQuery(function() {
             options["occessoriesItems[" + i + "].aoods.aid"] = aid;
             options["occessoriesItems[" + i + "].nid"] = nid || '';
             options["occessoriesItems[" + i + "].num"] = $v.attr('data-num');
+
+            // item 保持单价逻辑，后台会根据 num * rbalance 计算总额
             options["occessoriesItems[" + i + "].rbalance"] = $v.attr('data-balance');
 
             // 添加费用数据（使用 orderId_aid_uniqueId 作为缓存 key）
@@ -312,8 +314,15 @@ jQuery(function() {
                     "normoodItem.qid": qid,
                     "normoodItem.noods.nid": nid
                 }, function(result) {
+                    console.log('定额数量查询结果:', result);
                     if (result !== undefined && result !== null) {
-                        normAmount = parseInt(result) || 0;
+                        // 处理可能的返回格式：直接数值或对象
+                        if (typeof result === 'object') {
+                            normAmount = parseInt(result.amount) || parseInt(result.result) || parseInt(result.normoodAmount) || 0;
+                        } else {
+                            normAmount = parseInt(result) || 0;
+                        }
+                        console.log('定额数量解析值:', normAmount);
                         occessories.leftitems.normoodAmount.val(normAmount);
                     }
                     queryCount++;
@@ -334,8 +343,15 @@ jQuery(function() {
                     "occessories.decoration.orderId": orderId,
                     "occessoriesItem.nid": nid
                 }, function(result) {
+                    console.log('外辅数量查询结果:', result);
                     if (result !== undefined && result !== null) {
-                        accAmount = parseInt(result) || 0;
+                        // 处理可能的返回格式：直接数值或对象
+                        if (typeof result === 'object') {
+                            accAmount = parseInt(result.amount) || parseInt(result.result) || parseInt(result.occessoriesAmount) || 0;
+                        } else {
+                            accAmount = parseInt(result) || 0;
+                        }
+                        console.log('外辅数量解析值:', accAmount);
                         occessories.leftitems.occessoriesAmount.val(accAmount);
                     }
                     queryCount++;
@@ -423,7 +439,8 @@ jQuery(function() {
             if (data && data.aoodsCharges && data.aoodsCharges.length > 0) {
                 $.each(data.aoodsCharges, function(i, charge) {
                     console.log(charge)
-                    addChargeRow(charge.name, charge.price, charge.num || 1);
+                    // 不再使用 || 1 设置默认值，让 addChargeRow 函数自己处理默认值 0
+                    addChargeRow(charge.name, charge.price, charge.num);
                 });
             } else {
                 // 如果没有费用模板，显示提示
@@ -449,7 +466,9 @@ jQuery(function() {
 
         // 数量（可编辑）
         var $numTd = $('<td></td>');
-        var $numInput = $('<input type="text" class="form-control input-sm v_int" placeholder="1">').val(num);
+        // 如果传入了 num 值（缓存有值），使用该值；否则默认为 0
+        var displayNum = (num !== undefined && num !== null && num !== '') ? num : 0;
+        var $numInput = $('<input type="text" class="form-control input-sm v_int" placeholder="0">').val(displayNum);
         $numTd.append($numInput);
         $row.append($numTd);
 
