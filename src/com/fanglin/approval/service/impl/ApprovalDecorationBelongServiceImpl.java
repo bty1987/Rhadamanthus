@@ -281,10 +281,6 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 					decorationPO.setSalesman(userPO);
 					decorationPO.setSalesDept(userPO.getDept());
 				}
-
-				if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType && userPO.getDept().getBusitype() != null) {
-					decorationPO.setBusitype(userPO.getDept().getBusitype());
-				}
 			}
 
 			decorationBelongPO.setOrderId(decorationPO.getOrderId());

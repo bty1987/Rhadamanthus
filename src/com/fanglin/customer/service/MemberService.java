@@ -13,18 +13,22 @@ import com.fanglin.customer.vo.MemberVO;
 
 public interface MemberService {
 
-	public Map<String,List<MemberVO>> queryMember(List<MemberVO> members) throws FLException;
+	public Map<String, List<MemberVO>> queryMember(List<MemberVO> members) throws FLException;
 
 	public List<MemberPointVO> queryMemberPoint(List<MemberPointVO> memberPointVOs);
 
-	public int addMemberActivity(MemberActivityVO memberActivityVO, List<String> companys, String userId)  throws FLException;
+	public int addMemberActivity(MemberActivityVO memberActivityVO, List<String> companys, String userId) throws FLException;
 
 	public int makeMemberOrder(MemberOrderVO memberOrderVO, List<MemberOrderItemVO> memberOrderItemVOs, String userId) throws FLException;
 
 	public int cancelMemberOrder(MemberOrderVO memberOrderVO, String userId) throws FLException;
 
+	public int makeMemberOrderItem(MemberOrderVO memberOrderVO, MemberOrderItemVO memberOrderItemVO, String userId) throws FLException;
+
+	public int cancelMemberOrderItem(MemberOrderVO memberOrderVO, MemberOrderItemVO memberOrderItemVO, String userId) throws FLException;
+
 	public int updateMemberGoods(MemberGoodsVO memberGoodsVO);
 
-	public Map<String,List<MemberVO>> queryMemberForInfo(List<MemberVO> members, Integer company) throws FLException;
+	public Map<String, List<MemberVO>> queryMemberForInfo(List<MemberVO> members, Integer company) throws FLException;
 
 }

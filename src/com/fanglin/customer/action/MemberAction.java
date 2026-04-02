@@ -34,13 +34,15 @@ public class MemberAction extends BaseListAction {
 
 	private List<MemberVO> members;
 
-	private Map<String,List<MemberVO>> resultMap;
+	private Map<String, List<MemberVO>> resultMap;
 
 	private List<MemberPointVO> memberPoints;
 
 	private MemberActivityVO memberActivity;
 
 	private MemberOrderVO memberOrder;
+
+	private MemberOrderItemVO memberOrderItem;
 
 	private List<MemberOrderItemVO> memberOrderItems;
 
@@ -88,6 +90,22 @@ public class MemberAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "makeMemberOrderItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String makeMemberOrderItem() throws FLException {
+
+		memberService.makeMemberOrderItem(memberOrder, memberOrderItem, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "cancelMemberOrderItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelMemberOrderItem() throws FLException {
+
+		memberService.cancelMemberOrderItem(memberOrder, memberOrderItem, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateMemberGoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateMemberGoods() throws FLException {
 
@@ -95,7 +113,7 @@ public class MemberAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryMemberForInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryMemberForInfo() throws FLException {
 
@@ -144,6 +162,14 @@ public class MemberAction extends BaseListAction {
 		this.memberOrder = memberOrder;
 	}
 
+	public MemberOrderItemVO getMemberOrderItem() {
+		return memberOrderItem;
+	}
+
+	public void setMemberOrderItem(MemberOrderItemVO memberOrderItem) {
+		this.memberOrderItem = memberOrderItem;
+	}
+
 	public List<MemberOrderItemVO> getMemberOrderItems() {
 		return memberOrderItems;
 	}
@@ -168,11 +194,11 @@ public class MemberAction extends BaseListAction {
 		this.companys = companys;
 	}
 
-	public Map<String,List<MemberVO>> getResultMap() {
+	public Map<String, List<MemberVO>> getResultMap() {
 		return resultMap;
 	}
 
-	public void setResultMap(Map<String,List<MemberVO>> resultMap) {
+	public void setResultMap(Map<String, List<MemberVO>> resultMap) {
 		this.resultMap = resultMap;
 	}
 
