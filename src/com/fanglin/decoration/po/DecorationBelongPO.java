@@ -26,6 +26,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.decoration.vo.DecorationBelongVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
@@ -68,6 +69,8 @@ public class DecorationBelongPO implements Serializable {
 	private DepartmentPO department;
 
 	private DepartmentPO region;
+
+	private DecorationBusitypePO busitype;
 
 	private int rate;
 
@@ -155,6 +158,16 @@ public class DecorationBelongPO implements Serializable {
 		this.region = region;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "busitype", referencedColumnName = "dbid")
+	public DecorationBusitypePO getBusitype() {
+		return busitype;
+	}
+
+	public void setBusitype(DecorationBusitypePO busitype) {
+		this.busitype = busitype;
+	}
+
 	@JoinColumn(name = "rate")
 	public int getRate() {
 		return rate;
@@ -224,6 +237,8 @@ public class DecorationBelongPO implements Serializable {
 
 		setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
+		if (designer.getDept().getBusitype() != null) setBusitype(designer.getDept().getBusitype());
+
 		return this;
 	}
 
@@ -244,6 +259,8 @@ public class DecorationBelongPO implements Serializable {
 		setStatus(DecorationBelongPO.STATUS_INVALID_INT);
 
 		setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		if (salesman.getDept().getBusitype() != null) setBusitype(salesman.getDept().getBusitype());
 
 		return this;
 	}
