@@ -35,13 +35,13 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationBelongService;
 import com.fanglin.decoration.vo.DecorationBelongVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.information.po.MessageCueuingPO;
-import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
@@ -211,6 +211,8 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 		decorationBelongPO.setDepartment(dept);
 		decorationBelongPO.setRegion(regn);
+
+		if (dept.getBusitype() != null) decorationBelongPO.setBusitype(dept.getBusitype());
 
 		if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == type) {
 			decorationAdditionPO.setDesign(userPO.getCurrentName(), dept.getName(), regn.getName());
