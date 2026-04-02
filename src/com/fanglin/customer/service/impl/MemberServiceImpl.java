@@ -707,6 +707,60 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int makeMemberOrderItem(MemberOrderVO memberOrderVO, MemberOrderItemVO memberOrderItemVO, String userId) throws FLException {
+
+		String orderId = memberOrderVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		List<DecorationActivityPO> decorationActivityPOs = decorationActivityDao.queryDecorationActivityByOrderId(orderId);
+
+		DecorationActivityPO decorationActivityPO = decorationActivityPOs != null && decorationActivityPOs.size() != 0 ? decorationActivityPOs.get(0) : null;
+
+		if (decorationActivityPO == null) {
+			throw new FLException(160011, "活动信息不存在");
+		}
+
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
+
+		AwardStockPO awardStockPO = awardStockDao.queryAwardStockByNo(memberOrderItemVO.getNo(), CompanyPO.TYPE_HEADQUARTER_INT);
+
+		decorationActivityItemPO.setOrderId(orderId);
+
+		decorationActivityItemPO.setAid(decorationActivityPO.getActivity().getAid());
+		decorationActivityItemPO.setActivityName(decorationActivityPO.getActivity().getName());
+
+		if (awardStockPO != null) decorationActivityItemPO.setAsid(awardStockPO.getAsId());
+
+		decorationActivityItemPO.setActivityItemName(memberOrderItemVO.getName());
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DELIVERY_INT);
+
+		decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
+		decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
+
+		decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
+		decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
+		decorationActivityItemPO.setNum((int) Arith.mul(memberOrderItemVO.getNum(), 1000000l));
+		decorationActivityItemPO.setMoney((int) Arith.mul(memberOrderItemVO.getPoint(), 1000000l));
+		decorationActivityItemPO.setCreater(creater);
+		decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		// 设置 uniqueId，用于区分不同活动物品对应的被推荐装修单号和推荐装修单号的对应关系
+		decorationActivityItemPO.setUniqueId(memberOrderVO.getUniqueId());
+
+		decorationActivityItemDao.save(decorationActivityItemPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int cancelMemberOrder(MemberOrderVO memberOrderVO, String userId) throws FLException {
 
 		String orderId = memberOrderVO.getOrderId();
@@ -749,6 +803,35 @@ public class MemberServiceImpl implements MemberService {
 
 		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, cppointPO.getPoint(), cppointPO.getDpoint(), cppointPO.getSpoint(), cppointPO.getOpoint(), Arith.mul(memberOrderVO.getPoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
 		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, cppointPO.getOpoint(), cppointPO.getDpoint(), cppointPO.getSpoint(), cppointPO.getOpoint(), Arith.mul(memberOrderVO.getOperatePoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int cancelMemberOrderItem(MemberOrderVO memberOrderVO, MemberOrderItemVO memberOrderItemVO, String userId) throws FLException {
+
+		String orderId = memberOrderVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItem(orderId, memberOrderItemVO.getNo());
+
+		for (DecorationActivityItemPO decorationActivityItemPO : decorationActivityItemPOs) {
+
+			if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
+				throw new FLException(140057, "装修活动奖品不可操作");
+			}
+
+			decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
+
+			decorationActivityItemDao.update(decorationActivityItemPO);
+		}
 
 		return 0;
 	}
