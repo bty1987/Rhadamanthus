@@ -25,7 +25,7 @@ public class OccessoriesItemDaoImpl extends DaoImpl<OccessoriesItemPO> implement
 
 	@Override
 	public int amountOccessoriesItem(String orderId, long nid) {
-		String sql = "select CAST(sum(oi.num) AS SIGNED) from inventory.occessories o, inventory.occessoriesItem oi where o.orderId = :orderId and o.oid = oi.oid and oi.nid = :nid and o.status not in (3, 4)";
+		String sql = "select CAST(sum(oi.num) AS SIGNED) from inventory.occessories o, inventory.occessoriesItem oi where o.orderId = :orderId and o.oid = oi.oid and oi.nid = :nid";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setLong("nid", nid).uniqueResult();
 
 		return count == null ? 0 : count.intValue();

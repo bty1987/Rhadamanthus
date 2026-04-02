@@ -19,7 +19,6 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
-import com.fanglin.utils.Arith;
 import com.fanglin.inventory.dao.OccessoriesChargeDao;
 import com.fanglin.inventory.dao.OccessoriesDao;
 import com.fanglin.inventory.dao.OccessoriesItemDao;
@@ -35,6 +34,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -249,16 +249,16 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 					// isExceed == 0 时（超阶），surplus 参与运算；否则不参与
 					int price = occessoriesChargeVO.getPrice() != null ? occessoriesChargeVO.getPrice() : 0;
 					int surplus = occessoriesChargeVO.getSurplus() != null ? occessoriesChargeVO.getSurplus() : 0;
-					int num = occessoriesChargeVO.getNum() != null ? occessoriesChargeVO.getNum() : 0;
+					int inum = occessoriesChargeVO.getNum() != null ? occessoriesChargeVO.getNum() : 0;
 
 					long chargeAmount;
 					if (occessoriesPO.getIsExceed() == 0) {
 						// 超阶：surplus 参与运算
 						int priceWithSurplus = Arith.add(price, surplus);
-						chargeAmount = Arith.mul(priceWithSurplus, num);
+						chargeAmount = Arith.mul(priceWithSurplus, inum);
 					} else {
 						// 不超阶：surplus 不参与运算
-						chargeAmount = Arith.mul(price, num);
+						chargeAmount = Arith.mul(price, inum);
 					}
 					itemCharge = Arith.add(itemCharge, chargeAmount);
 					totalCharge = Arith.add(totalCharge, chargeAmount);
