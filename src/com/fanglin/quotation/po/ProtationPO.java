@@ -575,7 +575,6 @@ public class ProtationPO implements Serializable {
 		if (protationVO.getPreferPrice() != null) setPreferPrice(protationVO.getPreferPrice());
 		if (protationVO.getManageProfit() != null) setManageProfit(protationVO.getManageProfit());
 		if (protationVO.getAdvanceProfit() != null) setAdvanceProfit(protationVO.getAdvanceProfit());
-		if (protationVO.getActivityProfit() != null) setActivityProfit(protationVO.getActivityProfit());
 	}
 
 }
