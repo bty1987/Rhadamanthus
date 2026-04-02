@@ -452,7 +452,8 @@ public class MemberServiceImpl implements MemberService {
 				DecorationActivityItemPO.STATUS_WAIT_INT, // 未退
 				DecorationActivityItemPO.STATUS_UPGRADE_INT, // 升级
 				DecorationActivityItemPO.STATUS_CONSUME_INT, // 消耗
-				DecorationActivityItemPO.STATUS_DISCOUNT_INT // 抵现
+				DecorationActivityItemPO.STATUS_DISCOUNT_INT, // 抵现
+				DecorationActivityItemPO.STATUS_VERIFY_INT // 抵现
 				);
 
 		// orderId -> 活动项目数量映射
