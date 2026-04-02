@@ -470,6 +470,47 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int consumeDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
+
+		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
+
+		if (decorationActivityItemPO == null) {
+			throw new FLException(140030, "装修活动物品不存在");
+		}
+
+		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
+			throw new FLException(140057, "装修活动奖品不可操作");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_VERIFY_INT);
+
+		decorationActivityItemPO.setReceiver(operater);
+		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationActivityItemPO.setContent(decorationActivityItemVO.getContent());
+
+		decorationActivityItemDao.update(decorationActivityItemPO);
+		decorationActivityItemDao.flush();
+
+		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_VERIFY_INT, operater, decorationActivityItemVO.getContent());
+
+		decorationActivityRecordDao.save(decorationActivityRecordPO);
+
+		subDecorationForCut(decorationPO, decorationActivityItemPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int amountDecorationActivityItem(DecorationVO decorationVO, String userId) throws FLException {
 
 		String orderId = decorationVO.getOrderId();

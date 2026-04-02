@@ -41,6 +41,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public static final short STATUS_PURCHER_INT = 9; // 采购
 
+	public static final short STATUS_VERIFY_INT = 10; // 核销
+
 	public static final short TYPE_COUPON_INT = 0; // 卷
 
 	public static final short TYPE_THING_INT = 1; // 物品
