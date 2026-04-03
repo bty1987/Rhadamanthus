@@ -23,13 +23,24 @@ public interface CustomerCityProperRuleDao extends Dao<CustomerCityProperRulePO>
 
 	/**
 	 * 根据城区和规则类型查询
-	 * 
+	 *
 	 * @param cpid 城区ID
 	 * @param company 公司ID
 	 * @param type 规则类型（0=公司, 1=部门, 2=设计师）
 	 * @return 城区规则列表
 	 */
 	public List<CustomerCityProperRulePO> queryCustomerCityProperRuleByType(Integer cpid, int company, short type);
+
+	/**
+	 * 根据城区、业务类型和规则类型查询
+	 *
+	 * @param cpid 城区ID
+	 * @param dbid 业务类型ID（可选，为null时不限制）
+	 * @param company 公司ID
+	 * @param type 规则类型（0=公司, 1=部门, 2=设计师）
+	 * @return 城区规则列表
+	 */
+	public List<CustomerCityProperRulePO> queryCustomerCityProperRuleByTypeAndDbid(Integer cpid, Long dbid, int company, short type);
 
 	/**
 	 * 查询所有启用的城区规则

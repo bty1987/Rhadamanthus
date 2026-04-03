@@ -70,8 +70,12 @@ public class CustomerCompanyRuleServiceImpl implements CustomerCompanyRuleServic
 		// Step 2: 如果提供了城区ID，查询城区规则并过滤
 		if (customerCompanyRuleVO.getCpid() != null) {
 
-			// 2.1 查询该城区的规则（城区→公司）
-			List<CustomerCityProperRulePO> cityRules = customerCityProperRuleDao.queryCustomerCityProperRuleByType(customerCompanyRuleVO.getCpid(), company, CustomerCityProperRulePO.TYPE_COMPANY_INT // 0=城区→公司
+			// 2.1 查询该城区的规则（城区→公司），支持按业务类型过滤
+			List<CustomerCityProperRulePO> cityRules = customerCityProperRuleDao.queryCustomerCityProperRuleByTypeAndDbid(
+					customerCompanyRuleVO.getCpid(),
+					customerCompanyRuleVO.getDbid(),
+					company,
+					CustomerCityProperRulePO.TYPE_COMPANY_INT // 0=城区→公司
 					);
 
 			// 2.2 提取允许的公司ID集合

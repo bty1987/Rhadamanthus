@@ -11,6 +11,7 @@ $(function() {
             company: com.focusPage("#company", "#customerCityProperRuleModal"),
             citySel: com.focusPage("#citySel", "#customerCityProperRuleModal"),
             cityProperSel: com.focusPage("#cityProperSel", "#customerCityProperRuleModal"),
+            decorationBusinessTypeSel: com.focusPage("#decorationBusinessTypeSel", "#customerCityProperRuleModal"),
             targetCompany: com.focusPage("#targetCompany", "#customerCityProperRuleModal"),
             deptSel: com.focusPage("#deptSel", "#customerCityProperRuleModal"),
             userSel: com.focusPage("#userSel", "#customerCityProperRuleModal"),
@@ -53,6 +54,12 @@ $(function() {
 
         customerCityProperRule.items.company.bindData(res.companys, "cid", "name", true);
         customerCityProperRule.items.targetCompany.bindData(res.companys, "cid", "name", true);
+    }, null, false);
+
+    // 初始化加载业务类型列表
+    com.post(api.data.queryDecorationBusitype, {}, function(res) {
+
+        customerCityProperRule.items.decorationBusinessTypeSel.bindData(res.decorationBusitypes, "dbid", "name", true);
     }, null, false);
 
     // 初始化加载城市列表
@@ -136,6 +143,11 @@ $(function() {
         name: "城区",
         prop: "city.name",
         clazz: "blue"
+    }, {
+        fieId: "decorationBusinessType.name",
+        name: "业务类型",
+        prop: "decorationBusinessType.name",
+        clazz: "purple"
     }, {
         fieId: "targetCompany.name",
         name: "目标公司",
@@ -241,6 +253,11 @@ $(function() {
             "customerCityProperRule.status": customerCityProperRule.items.status.val(),
             "customerCityProperRule.comment": customerCityProperRule.items.comment.val()
         };
+
+        // 添加业务类型（可选）
+        if (customerCityProperRule.items.decorationBusinessTypeSel.val()) {
+            options["customerCityProperRule.decorationBusinessType.dbid"] = customerCityProperRule.items.decorationBusinessTypeSel.val();
+        }
 
         // 根据类型添加对应字段
         var type = parseInt(customerCityProperRule.items.type.val());

@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.vo.CustomerCityProperRuleVO;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.po.CityProperPO;
 import com.fanglin.system.po.CompanyPO;
@@ -55,6 +56,9 @@ public class CustomerCityProperRulePO implements Serializable {
 	private DepartmentPO department;
 
 	private UserPO user;
+	private Long dbid;
+
+	private DecorationBusitypePO decorationBusinessType;
 
 	private short type;
 
@@ -139,6 +143,24 @@ public class CustomerCityProperRulePO implements Serializable {
 		this.user = user;
 	}
 
+	@Column(name = "dbid")
+	public Long getDbid() {
+		return dbid;
+	}
+
+	public void setDbid(Long dbid) {
+		this.dbid = dbid;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dbid", referencedColumnName = "dbid", insertable = false, updatable = false)
+	public DecorationBusitypePO getDecorationBusinessType() {
+		return decorationBusinessType;
+	}
+
+	public void setDecorationBusinessType(DecorationBusitypePO decorationBusinessType) {
+		this.decorationBusinessType = decorationBusinessType;
+	}
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -222,7 +244,7 @@ public class CustomerCityProperRulePO implements Serializable {
 
 	public CustomerCityProperRuleVO ptv(CustomerCityProperRuleVO customerCityProperRuleVO) throws FLException {
 
-		BeanUtil.copyProperties(this, customerCityProperRuleVO, Arrays.asList("city", "company", "targetCompany", "department", "user"));
+		BeanUtil.copyProperties(this, customerCityProperRuleVO, Arrays.asList("city", "company", "targetCompany", "department", "user", "decorationBusinessType"));
 
 		if (getCity() != null && customerCityProperRuleVO.getCity() != null) {
 			getCity().ptv(customerCityProperRuleVO.getCity());
@@ -242,6 +264,10 @@ public class CustomerCityProperRulePO implements Serializable {
 
 		if (getUser() != null && customerCityProperRuleVO.getUser() != null) {
 			customerCityProperRuleVO.getUser().setBaseInfo(getUser());
+		}
+
+		if (getDecorationBusinessType() != null && customerCityProperRuleVO.getDecorationBusinessType() != null) {
+			getDecorationBusinessType().ptv(customerCityProperRuleVO.getDecorationBusinessType());
 		}
 
 		return customerCityProperRuleVO;

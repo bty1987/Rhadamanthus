@@ -49,6 +49,27 @@ public class CustomerCityProperRuleDaoImpl extends DaoImpl<CustomerCityProperRul
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<CustomerCityProperRulePO> queryCustomerCityProperRuleByTypeAndDbid(Integer cpid, Long dbid, int company, short type) {
+
+		org.hibernate.Criteria criteria = session().createCriteria(CustomerCityProperRulePO.class)
+				.createAlias("city", "city")
+				.add(Restrictions.eq("city.cpid", cpid))
+				.add(Restrictions.eq("company.cid", company))
+				.add(Restrictions.eq("type", type))
+				.add(Restrictions.eq("status", CustomerCityProperRulePO.STATUS_ENABLE_INT));
+
+		// 如果提供了业务类型ID，添加dbid条件
+		if (dbid != null) {
+			criteria.add(Restrictions.eq("dbid", dbid));
+		}
+
+		criteria.addOrder(org.hibernate.criterion.Order.desc("priority"));
+
+		return criteria.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<CustomerCityProperRulePO> queryCustomerCityProperRule(int company) {
 
 		return session().createCriteria(CustomerCityProperRulePO.class).add(Restrictions.eq("company.cid", company)).add(Restrictions.eq("status", CustomerCityProperRulePO.STATUS_ENABLE_INT)).addOrder(org.hibernate.criterion.Order.desc("priority")).list();
