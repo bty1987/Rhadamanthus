@@ -744,24 +744,6 @@ var decorationUtils = {
 
             if (uiBtnMethod == "uiBtnMethod") {
 
-                var abateBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + _activityItem.daiId).appendTo(uiPgDiv);
-
-                abateBtn.on("click", function() {
-
-                    com.showConfirm("是否确认失效" + _activityItem.activityItemName + "活动物品?", function() {
-
-                        com.post(api.decoration.abateDecorationActivityItem, {
-                            "decorationActivityItem.daiId": _activityItem.daiId
-                        }, function(res) {
-
-                            com.showAlert(com.info, "操作成功");
-
-                            decorationUtils.countTatol(res.decorationActivityItem.daiId);
-
-                            com.focusPage("#pricing_" + res.decorationActivityItem.daiId).remove();
-                        });
-                    });
-                });
 
                 var decorationActivityRecordBtn = $("<a></a>").addClass("btn btn-minier btn-pink").html("记录").css("margin", "0px 3px").appendTo(uiPgDiv);
 
@@ -771,6 +753,25 @@ var decorationUtils = {
 
                     com.popup4page("#decorationActivityRecordPopUp", "/views/decoration/decorationActivityRecord.html", "记录");
 
+                });
+
+                var consumeBtn = $("<a></a>").addClass("btn btn-minier btn-primary").html("核销").css("margin", "0px 3px").attr("id", "consume_" + _activityItem.daiId).appendTo(uiPgDiv);
+
+                consumeBtn.on("click", function() {
+
+                    com.showConfirm("是否确认核销" + _activityItem.activityItemName + "活动物品?", function() {
+
+                        com.post(api.decoration.consumeDecorationActivityItem, {
+                            "decorationActivityItem.daiId": _activityItem.daiId
+                        }, function(res) {
+
+                            com.showAlert(com.info, "核销成功");
+
+                            decorationUtils.countTatol(res.decorationActivityItem.daiId);
+
+                            com.focusPage("#state_" + res.decorationActivityItem.daiId).text("核销");
+                        });
+                    });
                 });
 
                 // 如果有 uniqueId（格式：doid-doid），显示"推荐"按钮
