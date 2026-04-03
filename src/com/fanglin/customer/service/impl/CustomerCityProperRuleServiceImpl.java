@@ -15,6 +15,8 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerCityProperRuleDao;
+import com.fanglin.data.common.dao.DecorationBusitypeDao;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.customer.po.CustomerCityProperRulePO;
 import com.fanglin.customer.service.CustomerCityProperRuleService;
 import com.fanglin.customer.vo.CustomerCityProperRuleVO;
@@ -29,6 +31,7 @@ import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.data.common.vo.DecorationBusitypeVO;
 
 @Service("customerCityProperRuleService")
 @Transactional(readOnly = true)
@@ -46,6 +49,9 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 	@Autowired
 	private UserDao userDao;
 
+	@Autowired
+	private DecorationBusitypeDao decorationBusitypeDao;
+
 	@Override
 	public void pageCustomerCityProperRule(Paging paging, List<Filter> filters, int company) throws FLException {
 
@@ -60,6 +66,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 			customerCityProperRuleVO.setTargetCompany(new CompanyVO());
 			customerCityProperRuleVO.setDepartment(new DepartmentVO());
 			customerCityProperRuleVO.setUser(new UserBaseVO(new DutyVO(), new DepartmentVO()));
+			customerCityProperRuleVO.setDecorationBusinessType(new DecorationBusitypeVO());
 			customerCityProperRuleVOs.add(customerCityProperRulePO.ptv(customerCityProperRuleVO));
 		}
 
@@ -79,7 +86,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 
 		CustomerCityProperRulePO customerCityProperRulePO = new CustomerCityProperRulePO();
 
-		BeanUtil.copyProperties(customerCityProperRuleVO, customerCityProperRulePO, Arrays.asList("city", "company", "targetCompany", "department", "user"));
+		BeanUtil.copyProperties(customerCityProperRuleVO, customerCityProperRulePO, Arrays.asList("city", "company", "targetCompany", "department", "user", "decorationBusinessType"));
 
 		// 设置城区
 		if (customerCityProperRuleVO.getCity() != null && customerCityProperRuleVO.getCity().getCpid() != null) {
@@ -126,6 +133,15 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 			customerCityProperRulePO.setUser(userPO);
 		}
 
+		// 设置业务类型
+		if (customerCityProperRuleVO.getDecorationBusinessType() != null && customerCityProperRuleVO.getDecorationBusinessType().getDbid() != null) {
+			DecorationBusitypePO decorationBusitypePO = decorationBusitypeDao.get(customerCityProperRuleVO.getDecorationBusinessType().getDbid());
+			if (decorationBusitypePO == null) {
+				throw new FLException(310001, "业务类型不存在");
+			}
+			customerCityProperRulePO.setDecorationBusinessType(decorationBusitypePO);
+		}
+
 		customerCityProperRuleDao.save(customerCityProperRulePO);
 	}
 
@@ -152,7 +168,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 			throw new FLException(330081, "无匹配规则");
 		}
 
-		BeanUtil.copyProperties(customerCityProperRuleVO, customerCityProperRulePO, Arrays.asList("city", "company", "targetCompany", "department", "user", "type", "priority", "status", "comment"));
+		BeanUtil.copyProperties(customerCityProperRuleVO, customerCityProperRulePO, Arrays.asList("city", "company", "targetCompany", "department", "user", "decorationBusinessType", "type", "priority", "status", "comment"));
 
 		// 更新城区
 		if (customerCityProperRuleVO.getCity() != null && customerCityProperRuleVO.getCity().getCpid() != null) {
@@ -188,6 +204,15 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 				throw new FLException(310001, "用户不存在");
 			}
 			customerCityProperRulePO.setUser(userPO);
+		}
+
+		// 更新业务类型
+		if (customerCityProperRuleVO.getDecorationBusinessType() != null && customerCityProperRuleVO.getDecorationBusinessType().getDbid() != null) {
+			DecorationBusitypePO decorationBusitypePO = decorationBusitypeDao.get(customerCityProperRuleVO.getDecorationBusinessType().getDbid());
+			if (decorationBusitypePO == null) {
+				throw new FLException(310001, "业务类型不存在");
+			}
+			customerCityProperRulePO.setDecorationBusinessType(decorationBusitypePO);
 		}
 
 		customerCityProperRuleDao.update(customerCityProperRulePO);

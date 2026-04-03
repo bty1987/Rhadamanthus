@@ -25,6 +25,8 @@ public class CustomerCompanyRuleVO implements Serializable {
 
 	private Integer cpid; // 城区ID（仅用于查询参数）
 
+	private Long dbid; // 业务类型ID（仅用于查询参数）
+
 	public CustomerCompanyRuleVO() {
 		super();
 	}
@@ -97,6 +99,14 @@ public class CustomerCompanyRuleVO implements Serializable {
 
 	public void setCpid(Integer cpid) {
 		this.cpid = cpid;
+	}
+
+	public Long getDbid() {
+		return dbid;
+	}
+
+	public void setDbid(Long dbid) {
+		this.dbid = dbid;
 	}
 
 }

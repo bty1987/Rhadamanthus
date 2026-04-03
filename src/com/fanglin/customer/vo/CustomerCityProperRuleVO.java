@@ -3,6 +3,7 @@ package com.fanglin.customer.vo;
 import java.io.Serializable;
 
 import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CompanyVO;
@@ -22,6 +23,10 @@ public class CustomerCityProperRuleVO implements Serializable {
 	private DepartmentVO department;
 
 	private UserBaseVO user;
+
+	private Long dbid;
+
+	private DecorationBusitypeVO decorationBusinessType;
 
 	private Short type;
 
@@ -81,6 +86,22 @@ public class CustomerCityProperRuleVO implements Serializable {
 
 	public void setUser(UserBaseVO user) {
 		this.user = user;
+	}
+
+	public Long getDbid() {
+		return dbid;
+	}
+
+	public void setDbid(Long dbid) {
+		this.dbid = dbid;
+	}
+
+	public DecorationBusitypeVO getDecorationBusinessType() {
+		return decorationBusinessType;
+	}
+
+	public void setDecorationBusinessType(DecorationBusitypeVO decorationBusinessType) {
+		this.decorationBusinessType = decorationBusinessType;
 	}
 
 	public Short getType() {
