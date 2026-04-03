@@ -217,6 +217,11 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 				occessoriesItemPO.setNid(occessoriesItemVO.getNid());
 			}
 
+			// 设置 surplus（浮动额）
+			if (occessoriesItemVO.getSurplus() != null) {
+				occessoriesItemPO.setSurplus(occessoriesItemVO.getSurplus());
+			}
+
 			// 计算结算总额：数量 × 单价（使用 Arith 精确运算）
 			int rbalance = occessoriesItemVO.getRbalance() != null ? occessoriesItemVO.getRbalance() : 0;
 			int num = occessoriesItemVO.getNum() != null ? occessoriesItemVO.getNum() : 0;

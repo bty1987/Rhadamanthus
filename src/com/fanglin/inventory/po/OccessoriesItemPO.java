@@ -47,6 +47,8 @@ public class OccessoriesItemPO implements Serializable {
 
 	private long nid; // 定材ID
 
+	private int surplus; // 浮动额（分）
+
 	@Column(name = "rbalance")
 	public int getRbalance() {
 		return rbalance;
@@ -81,6 +83,15 @@ public class OccessoriesItemPO implements Serializable {
 
 	public void setNid(long nid) {
 		this.nid = nid;
+	}
+
+	@Column(name = "surplus")
+	public int getSurplus() {
+		return surplus;
+	}
+
+	public void setSurplus(int surplus) {
+		this.surplus = surplus;
 	}
 
 	public OccessoriesItemPO() {
