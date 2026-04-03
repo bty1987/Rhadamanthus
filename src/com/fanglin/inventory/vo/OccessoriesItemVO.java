@@ -30,6 +30,8 @@ public class OccessoriesItemVO implements Serializable {
 
 	private Long charge; // 外辅项费用总额
 
+	private Integer surplus; // 浮动额（分）
+
 	private Long nid; // 定材ID
 
 	private List<OccessoriesChargeVO> occessoriesCharges; // 外辅费用列表
@@ -56,6 +58,14 @@ public class OccessoriesItemVO implements Serializable {
 
 	public void setCharge(Long charge) {
 		this.charge = charge;
+	}
+
+	public Integer getSurplus() {
+		return surplus;
+	}
+
+	public void setSurplus(Integer surplus) {
+		this.surplus = surplus;
 	}
 
 	public Long getNid() {
