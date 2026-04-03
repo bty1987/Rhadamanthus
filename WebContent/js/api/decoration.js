@@ -147,6 +147,9 @@ $.extend(api, {
         discountDecorationActivityItem: {
             url: "discountDecorationActivityItem.do"
         },
+        consumeDecorationActivityItem: {
+            url: "consumeDecorationActivityItem.do"
+        },
         amountDecorationActivityItem: {
             url: "amountDecorationActivityItem.do",
             type: "query",

@@ -67,7 +67,7 @@ jQuery(function() {
                 }
 
                 // 保存辅材信息
-                occessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-aid', val.aid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-balance', val.balance).attr('data-nid', val.nid || '');
+                occessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-aid', val.aid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-balance', val.balance).attr('data-nid', val.noods && val.noods.nid || '');
 
                 occessories.leftitems.goodsNo.attr('data-no', val.no).val(val.goods.no);
                 occessories.leftitems.category.attr('data-category', val.category).val(val.goods.category);
@@ -272,6 +272,7 @@ jQuery(function() {
                 $.each(occessories.chargesCache[cacheKey], function(j, charge) {
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].name"] = charge.name;
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].price"] = charge.price;
+                    options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].surplus"] = charge.surplus;
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].num"] = charge.num;
                 });
             }
@@ -415,7 +416,7 @@ jQuery(function() {
         if (occessories.chargesCache[cacheKey] && occessories.chargesCache[cacheKey].length > 0) {
             // 从缓存加载（用户上次填写的数量）
             $.each(occessories.chargesCache[cacheKey], function(i, charge) {
-                addChargeRow(charge.name, charge.price, charge.num);
+                addChargeRow(charge.name, charge.price, charge.surplus, charge.num);
             });
         } else {
             // 从 aoodsCharge 加载费用模板
@@ -440,7 +441,7 @@ jQuery(function() {
                 $.each(data.aoodsCharges, function(i, charge) {
                     console.log(charge)
                     // 不再使用 || 1 设置默认值，让 addChargeRow 函数自己处理默认值 0
-                    addChargeRow(charge.name, charge.price, charge.num);
+                    addChargeRow(charge.name, charge.price, charge.surplus, charge.num);
                 });
             } else {
                 // 如果没有费用模板，显示提示
@@ -452,7 +453,7 @@ jQuery(function() {
     /**
      * 添加费用行
      */
-    function addChargeRow(name, price, num) {
+    function addChargeRow(name, price, surplus, num) {
         var $row = $('<tr></tr>');
 
         // 费用名称（只读）
@@ -463,6 +464,10 @@ jQuery(function() {
         // 价格（隐藏）
         var $priceInput = $('<input type="hidden" class="charge-price">').val(price);
         $row.append($priceInput);
+
+        // 浮动额（隐藏）
+        var $surplusInput = $('<input type="hidden" class="charge-surplus">').val(surplus || 0);
+        $row.append($surplusInput);
 
         // 数量（可编辑）
         var $numTd = $('<td></td>');
@@ -485,6 +490,7 @@ jQuery(function() {
             var $row = $(this);
             var name = $row.find('td:eq(0)').text().trim();
             var price = $row.find('input.charge-price').val();
+            var surplus = $row.find('input.charge-surplus').val();
             var num = $row.find('td:eq(1) input').val();
 
             // 只保存有名称的行（过滤提示行）
@@ -492,6 +498,7 @@ jQuery(function() {
                 charges.push({
                     name: name,
                     price: price,
+                    surplus: surplus || 0,
                     num: num || 1
                 });
             }
