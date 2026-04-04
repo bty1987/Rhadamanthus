@@ -43,7 +43,6 @@ jQuery(function() {
 
     com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {}, 'aoodes', 'aid', 'name', function(list, k, v) {
 
-
         $.each(list, function(index, val) {
 
             if (val.aid == k) {
@@ -73,8 +72,6 @@ jQuery(function() {
                 occessories.leftitems.category.attr('data-category', val.category).val(val.goods.category);
                 occessories.leftitems.brand.attr('data-brand', val.brand).val(val.goods.brand);
                 occessories.leftitems.measurementUnit.attr('data-measurementUnit', val.measurementUnit).val(val.goods.measurementUnit);
-                
-                
 
                 // 如果有 nid，查询定额和外辅数量
                 if (val.noods && val.noods.nid) {
@@ -99,7 +96,9 @@ jQuery(function() {
 
     com.focusPage("#add").click(function() {
 
-        if (com.validate("left", "left")) { return false; }
+        if (com.validate("left", "left")) {
+            return false;
+        }
         var gid = occessories.leftitems.goodsHidden.attr('data-gid');
         var aid = occessories.leftitems.goodsHidden.attr('data-aid');
         var nid = occessories.leftitems.goodsHidden.attr('data-nid');
@@ -117,34 +116,25 @@ jQuery(function() {
         // 生成唯一ID（时间戳 + 随机数）
         var uniqueId = Date.now() + '_' + Math.floor(Math.random() * 10000);
 
-        var $liList = $('<li></li>').addClass('list-group-item')
-            .attr("data-gid", gid)
-            .attr("data-aid", aid)
-            .attr("data-nid", nid || '')
-            .attr("data-num", num)
-            .attr("data-selling", selling)
-            .attr("data-balance", balance)
-            .attr("data-unique-id", uniqueId); // 添加唯一ID
+        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-aid", aid).attr("data-nid", nid || '').attr("data-num", num).attr("data-selling", selling).attr("data-balance", balance).attr("data-unique-id", uniqueId); // 添加唯一ID
 
         var $h4 = $('<h4></h4>').html(name + ' ' + no).attr('gid', gid);
 
         var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除'));
 
         // 添加费用按钮
-        var $charge = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button')
-            .append($('<a></a>').addClass('btn btn-info btn-minier').html('费用'))
-            .click(function() {
-                openChargeModal(aid, uniqueId);
-            });
+        var $charge = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-info btn-minier').html('费用')).click(function() {
 
-        var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button')
-            .append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看'))
-            .click(function() {
-                com.focusPage('#viewPopUp').attr({
-                    'data-gid': gid
-                });
-                com.popup4page('#viewPopUp', "views/sales/salesItem4package.html", "查看套餐")
+            openChargeModal(aid, uniqueId);
+        });
+
+        var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function() {
+
+            com.focusPage('#viewPopUp').attr({
+                'data-gid': gid
             });
+            com.popup4page('#viewPopUp', "views/sales/salesItem4package.html", "查看套餐")
+        });
 
         $h4.append($delete).appendTo($liList);
 
@@ -155,16 +145,14 @@ jQuery(function() {
         // 添加费用按钮
         $h4.append($charge);
 
-        $liList.append(addSpan('品类 : ', 's_category', category, " ", 'b_category', null))
-            .append(addSpan('品牌 : ', 's_brand', brand, " ", 'b_brand', null))
-            .append(addSpan('单位 : ', 's_unit', measurementUnit, " ", 'b_unit', null))
-            .append(addSpan('数量 : ', 's_number', num, 'red', 'b_number'));
+        $liList.append(addSpan('品类 : ', 's_category', category, " ", 'b_category', null)).append(addSpan('品牌 : ', 's_brand', brand, " ", 'b_brand', null)).append(addSpan('单位 : ', 's_unit', measurementUnit, " ", 'b_unit', null)).append(addSpan('数量 : ', 's_number', num, 'red', 'b_number'));
 
         occessories.itemlist.append($liList);
 
         com.cleanItems(occessories.leftitems);
 
         $delete.click(function() {
+
             var aid = $(this).parents('.list-group-item').attr('data-aid');
             var uniqueId = $(this).parents('.list-group-item').attr('data-unique-id');
             var orderId = occessories.postData.orderId; // 获取当前 orderId
@@ -239,7 +227,9 @@ jQuery(function() {
             return false;
         }
 
-        if (com.validate('searchInfo', 'left')) { return false; }
+        if (com.validate('searchInfo', 'left')) {
+            return false;
+        }
 
         var options = {
             "occessories.decoration.orderId": occessories.postData.orderId,
@@ -270,6 +260,7 @@ jQuery(function() {
             // 添加费用数据（使用 orderId_aid_uniqueId 作为缓存 key）
             if (occessories.chargesCache[cacheKey] && occessories.chargesCache[cacheKey].length > 0) {
                 $.each(occessories.chargesCache[cacheKey], function(j, charge) {
+
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].name"] = charge.name;
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].price"] = charge.price;
                     options["occessoriesItems[" + i + "].occessoriesCharges[" + j + "].surplus"] = charge.surplus;
@@ -295,6 +286,7 @@ jQuery(function() {
      * 查询定额和外辅数量
      */
     function queryAmounts(orderId, nid) {
+
         // 先重置数量显示
         occessories.leftitems.normoodAmount.val('0');
         occessories.leftitems.occessoriesAmount.val('0');
@@ -304,17 +296,19 @@ jQuery(function() {
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
             "quotation.orderId": orderId
         }, function(data) {
+
             if (data && data.quotation && data.quotation.qid) {
                 var qid = data.quotation.qid;
                 var normAmount = 0;
                 var accAmount = 0;
                 var queryCount = 0;
-                
+
                 // 2. 查询定额材料数量
                 com.post(api.quotation.amountNormoodItem, {
                     "normoodItem.qid": qid,
                     "normoodItem.noods.nid": nid
                 }, function(result) {
+
                     console.log('定额数量查询结果:', result);
                     if (result !== undefined && result !== null) {
                         // 处理可能的返回格式：直接数值或对象
@@ -326,17 +320,6 @@ jQuery(function() {
                         console.log('定额数量解析值:', normAmount);
                         occessories.leftitems.normoodAmount.val(normAmount);
                     }
-                    queryCount++;
-
-                    // 两个查询都完成后，计算总数量并填充
-                    if (queryCount >= 2) {
-                        fillTotalAmount(normAmount, accAmount);
-                    }
-                }, function() {
-                    queryCount++;
-                    if (queryCount >= 2) {
-                        fillTotalAmount(normAmount, accAmount);
-                    }
                 });
 
                 // 3. 查询外辅材料数量
@@ -344,6 +327,7 @@ jQuery(function() {
                     "occessories.decoration.orderId": orderId,
                     "occessoriesItem.nid": nid
                 }, function(result) {
+
                     console.log('外辅数量查询结果:', result);
                     if (result !== undefined && result !== null) {
                         // 处理可能的返回格式：直接数值或对象
@@ -355,17 +339,6 @@ jQuery(function() {
                         console.log('外辅数量解析值:', accAmount);
                         occessories.leftitems.occessoriesAmount.val(accAmount);
                     }
-                    queryCount++;
-
-                    // 两个查询都完成后，计算总数量并填充
-                    if (queryCount >= 2) {
-                        fillTotalAmount(normAmount, accAmount);
-                    }
-                }, function() {
-                    queryCount++;
-                    if (queryCount >= 2) {
-                        fillTotalAmount(normAmount, accAmount);
-                    }
                 });
 
             } else {
@@ -374,6 +347,7 @@ jQuery(function() {
                 occessories.leftitems.occessoriesAmount.val('0');
             }
         }, function() {
+
             // 查询报价单失败，数量都为 0
             occessories.leftitems.normoodAmount.val('0');
             occessories.leftitems.occessoriesAmount.val('0');
@@ -381,20 +355,12 @@ jQuery(function() {
     }
 
     /**
-     * 填充总数量到数量输入框
-     */
-    function fillTotalAmount(normAmount, accAmount) {
-        var totalAmount = normAmount + accAmount;
-        if (totalAmount > 0) {
-            occessories.leftitems.num.val(totalAmount);
-        }
-    }
-
-    /**
      * 重新索引外辅项
      */
     function reindexItems() {
+
         com.focusPage('.list-group-item').each(function(index) {
+
             $(this).attr('data-index', index);
         });
     }
@@ -403,6 +369,7 @@ jQuery(function() {
      * 打开费用弹窗
      */
     function openChargeModal(aid, uniqueId) {
+
         var orderId = occessories.postData.orderId; // 获取当前 orderId
         var cacheKey = orderId + '_' + aid + '_' + uniqueId; // 组合 key
 
@@ -416,6 +383,7 @@ jQuery(function() {
         if (occessories.chargesCache[cacheKey] && occessories.chargesCache[cacheKey].length > 0) {
             // 从缓存加载（用户上次填写的数量）
             $.each(occessories.chargesCache[cacheKey], function(i, charge) {
+
                 addChargeRow(charge.name, charge.price, charge.surplus, charge.num);
             });
         } else {
@@ -436,9 +404,14 @@ jQuery(function() {
      * 加载辅材费用模板
      */
     function loadAoodsChargeTemplate(aid) {
-        com.post(api.data.queryAoodsChargeByAid, {"aoodsCharge.aoods.aid": aid}, function(data) {
+
+        com.post(api.data.queryAoodsChargeByAid, {
+            "aoodsCharge.aoods.aid": aid
+        }, function(data) {
+
             if (data && data.aoodsCharges && data.aoodsCharges.length > 0) {
                 $.each(data.aoodsCharges, function(i, charge) {
+
                     console.log(charge)
                     // 不再使用 || 1 设置默认值，让 addChargeRow 函数自己处理默认值 0
                     addChargeRow(charge.name, charge.price, charge.surplus, charge.num);
@@ -454,6 +427,7 @@ jQuery(function() {
      * 添加费用行
      */
     function addChargeRow(name, price, surplus, num) {
+
         var $row = $('<tr></tr>');
 
         // 费用名称（只读）
@@ -484,9 +458,11 @@ jQuery(function() {
      * 保存费用
      */
     com.focusPage('#saveChargeBtn').click(function() {
+
         var charges = [];
 
         com.focusPage('#chargeTableBody tr').each(function() {
+
             var $row = $(this);
             var name = $row.find('td:eq(0)').text().trim();
             var price = $row.find('input.charge-price').val();

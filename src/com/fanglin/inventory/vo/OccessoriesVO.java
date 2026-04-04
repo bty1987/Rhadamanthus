@@ -68,6 +68,8 @@ public class OccessoriesVO implements Serializable {
 
 	private String remake; // 评价
 
+	private Integer amount;
+
 	public OccessoriesVO() {
 		super();
 	}
@@ -310,6 +312,14 @@ public class OccessoriesVO implements Serializable {
 
 	public void setRemake(String remake) {
 		this.remake = remake;
+	}
+
+	public Integer getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
 	}
 
 }

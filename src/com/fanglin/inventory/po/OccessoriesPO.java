@@ -58,6 +58,8 @@ public class OccessoriesPO implements Serializable {
 
 	public static final short STATUS_FINISH_INT = 5;
 
+	public static final short ISEXCEED_EXCEED_INT = 0;
+
 	private long oid;
 
 	private String no;

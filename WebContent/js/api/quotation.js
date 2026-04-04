@@ -1699,14 +1699,20 @@ $.extend(api, {
 
         queryNormoodItem: {
             url: "queryNormoodItem.do",
-            demo: true,
             type: "query",
             tranargs: [{
                 result: "normoodItems",
                 args: ["normnum", "storenum"]
             }]
         },
-        // 增加方法
+        amountNormoodItem: {
+            url: "amountNormoodItem.do",
+            type: "query",
+            tranargs: [{
+                result: "normoodItem",
+                args: ["normnum", "storenum", "amount"]
+            }]
+        },
         addNormoodItem: {
             url: "addNormoodItem.do",
             type: "update",
@@ -1718,13 +1724,9 @@ $.extend(api, {
                 }]
             }
         },
-        // 删除方法
         deleteNormoodItem: {
             url: "deleteNormoodItem.do",
             intercept: true
-        },
-        amountNormoodItem: {
-            url: "amountNormoodItem.do"
         },
 
         queryNormriceItem: {

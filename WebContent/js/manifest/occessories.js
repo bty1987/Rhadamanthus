@@ -167,7 +167,7 @@ $(function () {
         prop: function(v) {
             // charge 字段单位是厘，需要除以 1000 转换为元
             var charge = v.charge || 0;
-            return (charge / 1000).toFixed(3);
+            return charge;
         },
         clazz: "blue"
     }, {
