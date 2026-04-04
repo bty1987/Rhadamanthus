@@ -2045,8 +2045,9 @@
             }, function(res) {
 
                 var constructionInfo = res.constructionInfo;
+                var handoverStatusText = constant.construction().constructionInfo.handoverStatus.keys[constructionInfo.handoverStatus] || "-";
 
-                com.showTip(btn, " 预计交钥匙时间:" + com.checkNull(constructionInfo.keyTime, "") + "<br\>预计放线时间:" + com.checkNull(constructionInfo.drawlineTime, "") + "<br\>预计完工时间:" + com.checkNull(constructionInfo.finishTime, "") + "<br\>预计设计完成时间:" + com.checkNull(constructionInfo.designTime, ""));
+                com.showTip(btn, " 预计交钥匙时间:" + com.checkNull(constructionInfo.keyTime, "") + "<br\>预计放线时间:" + com.checkNull(constructionInfo.drawlineTime, "") + "<br\>预计完工时间:" + com.checkNull(constructionInfo.finishTime, "") + "<br\>预计设计完成时间:" + com.checkNull(constructionInfo.designTime, "") + "<br\>交接状态:" + handoverStatusText);
             });
         };
 
