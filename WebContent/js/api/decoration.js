@@ -613,6 +613,9 @@ $.extend(api, {
         obsoleteDecoration: {
             url: "obsoleteDecoration.do"
         },
+        hiddenDecoration: {
+            url: "hiddenDecoration.do"
+        },
         terminalDecoration: {
             url: "terminalDecoration.do",
             type: "update",

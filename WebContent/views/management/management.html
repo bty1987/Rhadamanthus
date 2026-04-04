@@ -55,6 +55,11 @@
                 <span>装修单销售配比忽略验证</span>
             </button>
 
+            <button id="hiddenDecoration" class="btn btn-info col-xs-2" style="margin: 2px;">
+                <i class="icon-eye-close"></i>
+                <span>隐藏装修单</span>
+            </button>
+
         </div>
     </div>
 
@@ -974,6 +979,40 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="saveDecorationForPayScaleBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="hiddenDecorationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">隐藏/显示装修单</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="orderIdForHidden">装修单号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="orderIdForHidden" class="col-xs-10 col-sm-5 v_required" maxlength='15' data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right"></label>
+                            <div class="col-sm-9">
+                                <span class="help-block">切换装修单的隐藏/显示状态（0=显示，3=隐藏）</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveHiddenDecorationBtn" class="btn btn-primary">确定</button>
                     <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>

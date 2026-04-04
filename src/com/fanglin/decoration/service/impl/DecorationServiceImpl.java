@@ -1778,6 +1778,39 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void hiddenDecoration(DecorationVO decorationVO, String userId) throws FLException {
+
+		String orderId = decorationVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		// 自动切换：显示→隐藏，隐藏→显示
+		short currentStatus = decorationPO.getOtherStatus();
+		short newStatus = (currentStatus == DecorationPO.OTHERSTATUS_SHOW_INT)
+				? DecorationPO.OTHERSTATUS_HIDDEN_INT
+				: DecorationPO.OTHERSTATUS_SHOW_INT;
+
+		decorationPO.setOtherStatus(newStatus);
+		decorationDao.update(decorationPO);
+
+		// 记录操作历史
+		UserPO operater = userDao.queryUserByUserId(userId);
+		String comment = (newStatus == DecorationPO.OTHERSTATUS_HIDDEN_INT) ? "隐藏" : "显示";
+		decorationOperateDao.save(new DecorationOperatePO()
+				.setOrderId(orderId)
+				.setOperater(operater)
+				.setOperateTime(DateUtil.getDateToTimestamp(new Date()))
+				.setType(DecorationOperatePO.TYPE_HIDDEN_DECORATION_ORDER_INT)
+				.setStatus(DecorationOperatePO.STATUS_INIT_INT)
+				.setComment(comment));
+	}
+
 	private DecorationVO addition(DecorationAdditionPO addition, DecorationVO decorationVO) {
 
 		if (addition == null) return decorationVO;

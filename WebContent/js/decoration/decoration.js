@@ -925,6 +925,8 @@
 
                     var btnTerminalStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('工程终止');
 
+                    var btnHidden = $('<a></a>').addClass('btn btn-minier btn-info').html('隐藏');
+
                     var propertyArr = [];
                     $.each(pageConfig.propertyArr, function(pi, pv) {
 
@@ -1354,6 +1356,11 @@
                         terminalStatus(v.orderId);
                     });
 
+                    btnHidden.click(function() {
+
+                        hiddenOrder(v.orderId);
+                    });
+
                     $.each(pageConfig.pageBtn, function(k, b) {
 
                         switch (b) {
@@ -1483,6 +1490,8 @@
                                 $divBtnWrap.append(btnRepair);
                             case "terminalStatus":// 工程终止
                                 $divBtnWrap.append(btnTerminalStatus);
+                            case "hidden":// 隐藏/显示
+                                $divBtnWrap.append(btnHidden);
                         }
                     });
                     $divBtnWrap.appendTo($h3);
@@ -2246,6 +2255,23 @@
             com.showConfirm("确认要废单吗?", function() {
 
                 com.post(api.decoration.obsoleteDecoration, {
+                    "decoration.orderId": orderId
+                }, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            });
+        }
+
+        // 隐藏/显示
+        function hiddenOrder(orderId) {
+
+            params.decoration.orderId = orderId;
+
+            com.showConfirm("确认要切换隐藏/显示状态吗?", function() {
+
+                com.post(api.decoration.hiddenDecoration, {
                     "decoration.orderId": orderId
                 }, function(res) {
 
