@@ -14,7 +14,6 @@ package com.fanglin.seiya.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.service.HouseService;
@@ -68,26 +67,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 			throw new FLException(330075, "客户线索不存在");
 		}
 
-		CustomerChanceVO customerChanceVO = new CustomerChanceVO(
-				new CustomerVO(),
-				new HouseVO(new VillageVO()),
-				new CustomerSourceVO(
-						new VillageVO(),
-						new UserBaseVO(),
-						new CustomerVO(),
-						new HouseVO(),
-						new UserBaseVO(),
-						new UserBaseVO(),
-						new DecorationBusitypeVO()
-				),
-				new DecorationBusitypeVO(),
-				new UserBaseVO(),
-				new UserBaseVO(),
-				new UserBaseVO(),
-				new UserBaseVO(),
-				new DepartmentVO(),
-				new DepartmentVO()
-		);
+		CustomerChanceVO customerChanceVO = new CustomerChanceVO(new CustomerVO(), new HouseVO(new VillageVO()), new CustomerSourceVO(new VillageVO(), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationBusitypeVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
 
 		customerChancePO.ptv(customerChanceVO);
 
@@ -100,10 +80,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateCustomerLead(String leadCode, String village, String houseNumber,
-									Integer buildArea, String phone, String name,
-									String referOrderId, String sourceInfo, String contactInfo,
-									String userId, Integer orgId) throws FLException {
+	public void updateCustomerLead(String leadCode, String village, String houseNumber, Integer buildArea, String phone, String name, String referOrderId, String sourceInfo, String contactInfo, String userId, Integer orgId) throws FLException {
 
 		// 参数必填验证 - 线索编号必填
 		if (leadCode == null || leadCode.trim().isEmpty()) {
@@ -145,8 +122,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 				if (buildArea != null) {
 					houseVO.setBuildArea(buildArea);
 				}
-				int hid = houseService.addHouse(houseVO, orgId);
-				houseVO.setHid(hid);
+				houseService.existHouse(houseVO, orgId);
 			}
 		}
 
@@ -166,12 +142,11 @@ public class A20260103ServiceImpl implements A20260103Service {
 				// 客户不存在，创建新客户
 				customerVO = new CustomerVO();
 				customerVO.setName(name != null ? name : "未知客户");
-				int newCid = customerService.addCustomer(customerVO, orgId);
-				customerVO.setCid(newCid);
+				customerService.existCustomer(customerVO, orgId);
 
 				// 添加电话
 				CustomerPhoneVO customerPhoneVO = new CustomerPhoneVO();
-				customerPhoneVO.setCid(newCid);
+				customerPhoneVO.setCid(customerVO.getCid());
 				customerPhoneVO.setPhone(phone);
 				customerService.addCustomerPhone(customerPhoneVO, orgId);
 			}
