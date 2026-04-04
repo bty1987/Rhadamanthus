@@ -59,6 +59,16 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 	}
 
 	@Override
+	public int amountNormoodItem(NormoodItemVO normoodItemVO) {
+
+		int amount = normoodItemDao.amountNormoodItem(normoodItemVO.getQid(), normoodItemVO.getNoods().getNid());
+
+		normoodItemVO.setAmount(amount);
+
+		return 0;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public List<NormoodItemVO> addNormoodItem(QuotationVO quotationVO, List<NormoodItemVO> normoodItemVOs) throws FLException {
 
@@ -163,11 +173,6 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 		normoodItemDao.delete(normoodItemPO);
 
 		return 0;
-	}
-
-	@Override
-	public int amountNormoodItem(NormoodItemVO normoodItemVO) {
-		return normoodItemDao.amountNormoodItem(normoodItemVO.getQid(), normoodItemVO.getNoods().getNid());
 	}
 
 }

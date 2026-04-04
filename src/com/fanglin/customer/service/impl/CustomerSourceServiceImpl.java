@@ -799,6 +799,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 	private CustomerChancePO checkCustomerChance(CustomerChancePO customerChancePO) {
 
+		if (customerChancePO == null) return customerChancePO;
+
 		if (customerChancePO.getOrderId() == null) return customerChancePO;
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(customerChancePO.getOrderId());

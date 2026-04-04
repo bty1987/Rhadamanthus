@@ -57,7 +57,7 @@ jQuery(function($) {
 
             // 显示费用值（charge 字段单位是厘，需要除以 1000 转换为元）
             var chargeValue = v.charge || 0;
-            var chargeText = (chargeValue / 1000).toFixed(3);
+            var chargeText = chargeValue;
             $line.find('div.charge').text(chargeText);
 
             // 绑定费用按钮点击事件

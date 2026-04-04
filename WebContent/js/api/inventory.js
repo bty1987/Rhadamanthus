@@ -501,7 +501,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["rate", "charge", "total"]
+                args: ["rate", "charge", "total", "rbalance", "vbalance"]
             }]
         },
         pageOccessoriesForSupplier: {
@@ -509,7 +509,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["rate", "charge", "total"]
+                args: ["rate", "charge", "total", "rbalance", "vbalance"]
             }]
         },
         queryOccessoriesByOrderId: {
@@ -517,7 +517,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "occessoriess",
-                args: ["rate", "charge", "total"]
+                args: ["rate", "charge", "total", "rbalance", "vbalance"]
             }]
         },
         queryOccessoriesByOid: {
@@ -525,7 +525,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "occessories",
-                args: ["rate", "charge", "total"]
+                args: ["rate", "charge", "total", "rbalance", "vbalance"]
             }]
         },
         addOccessories: {
@@ -540,12 +540,10 @@ $.extend(api, {
                     "occessoriesItems.vbalance",
                     "occessoriesItems.charge",
                     "occessoriesItems.occessoriesCharges.price",
+                    "occessoriesItems.occessoriesCharges.surplus",
                     "occessoriesItems.occessoriesCharges.num"
                 ]
             }
-        },
-        amountOccessoriesItem: {
-            url: "amountOccessoriesItem.do"
         },
         batchOccessoriesCharge: {
             url: "batchOccessoriesCharge.do",
@@ -616,6 +614,14 @@ $.extend(api, {
             }, {
                 result: "occessoriesItems-goods",
                 args: ["purchase", "selling", "pieceNum"]
+            }]
+        },
+        amountOccessoriesItem: {
+            url: "amountOccessoriesItem.do",
+            type: "query",
+            tranargs: [{
+                result: "occessoriesItem",
+                args: ["purchase", "selling", "pieceNum", "amount"]
             }]
         },
         addOccessoriesItem: {

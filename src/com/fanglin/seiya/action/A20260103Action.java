@@ -101,6 +101,8 @@ public class A20260103Action extends BaseListAction {
 	 */
 	private String village;
 
+	private Integer cpid;
+
 	/**
 	 * 楼号 - 对应 house.houseNumber
 	 */
@@ -550,11 +552,22 @@ public class A20260103Action extends BaseListAction {
 			throw new FLException(190005, "人员不存在");
 		}
 
+		DecorationBusitypeVO busitypeVO = new DecorationBusitypeVO();
+
+		// 2. 业务类型
+		if (busitype != null) {
+			busitypeVO.setName(busitype);
+			busitypeVO = decorationBusitypeService.queryDecorationBusitypeByName(busitypeVO, creater.getCompanyNo());
+		}
+
 		// 构建 CustomerCompanyRuleVO 查询条件
 		CustomerCompanyRuleVO queryCompany = new CustomerCompanyRuleVO();
 
 		queryCompany.setDept(creater.getDept());
 		queryCompany.setUppval(buildArea);
+
+		if (cpid != null) queryCompany.setCpid(cpid);
+		if (busitypeVO != null) queryCompany.setDbid(busitypeVO.getDbid());
 
 		// 查询客户公司规则列表
 		List<CustomerCompanyRuleVO> companyList = customerCompanyRuleService.queryCustomerCompanyRule(queryCompany, orgId);
@@ -630,6 +643,14 @@ public class A20260103Action extends BaseListAction {
 
 	public void setVillage(String village) {
 		this.village = village;
+	}
+
+	public Integer getCpid() {
+		return cpid;
+	}
+
+	public void setCpid(Integer cpid) {
+		this.cpid = cpid;
 	}
 
 	@JSON(serialize = false)

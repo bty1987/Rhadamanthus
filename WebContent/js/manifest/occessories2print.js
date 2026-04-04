@@ -82,18 +82,16 @@ $(function () {
 
         var tr4 = $('<tr style="border: 1px solid;height: 25px;text-align: center;  font-size: 15px;"></tr>').appendTo(table);
         $('<td colspan="2" style="border: 1px solid;"></td>').text("项目").appendTo(tr4);
-        $('<td colspan="1" style="border: 1px solid;"></td>').text("单位").appendTo(tr4);
-        $('<td colspan="1" style="border: 1px solid;"></td>').text("数量").appendTo(tr4);
-        $('<td colspan="1" style="border: 1px solid;"></td>').text("费用明细").appendTo(tr4);
+        $('<td colspan="2" style="border: 1px solid;"></td>').text("单位").appendTo(tr4);
+        $('<td colspan="2" style="border: 1px solid;"></td>').text("数量").appendTo(tr4);
 
         // 遍历外辅项
         $.each(items, function (i, item) {
             // 外辅项数据行
             var tr = $('<tr style="border: 1px solid;height: 25px;text-align: center;"></tr>').appendTo(table);
             $('<td colspan="2" style="border: 1px solid;"></td>').html(item.goods.name).appendTo(tr);
-            $('<td colspan="1" style="border: 1px solid;"></td>').html(item.goods.measurementUnit).appendTo(tr);
-            $('<td colspan="1" style="border: 1px solid;"></td>').html(item.num).appendTo(tr);
-            $('<td colspan="1" style="border: 1px solid;"></td>').html("").appendTo(tr);
+            $('<td colspan="2" style="border: 1px solid;"></td>').html(item.goods.measurementUnit).appendTo(tr);
+            $('<td colspan="2" style="border: 1px solid;"></td>').html(item.num).appendTo(tr);
 
             // 费用明细行（从 chargeMap 中获取）
             var charges = chargeMap[String(item.oiid)] || [];
@@ -101,28 +99,11 @@ $(function () {
                 $.each(charges, function (j, charge) {
                     var chargeTr = $('<tr style="border: 1px solid;height: 25px;text-align: center;background-color:#f9f9f9;"></tr>').appendTo(table);
                     $('<td colspan="2" style="border: 1px solid;padding-left:30px;"></td>').html("　└ " + charge.name).appendTo(chargeTr);
-                    $('<td colspan="1" style="border: 1px solid;"></td>').html("").appendTo(chargeTr);
-                    $('<td colspan="1" style="border: 1px solid;"></td>').html(charge.num).appendTo(chargeTr);
-
-                    // 根据 isExceed 判断 surplus 是否参与运算
-                    // isExceed == 0 时（超阶），surplus 参与运算；否则不参与
-                    var chargeAmount = 0;
-                    if (data.isExceed == 0) {
-                        // 超阶：price + surplus
-                        chargeAmount = (charge.price + (charge.surplus || 0)) * charge.num;
-                    } else {
-                        // 不超阶：仅 price
-                        chargeAmount = charge.price * charge.num;
-                    }
-                    $('<td colspan="1" style="border: 1px solid;"></td>').html(chargeAmount.toFixed(2) + " 元").appendTo(chargeTr);
+                    $('<td colspan="2" style="border: 1px solid;"></td>').html("").appendTo(chargeTr);
+                    $('<td colspan="2" style="border: 1px solid;"></td>').html(charge.num).appendTo(chargeTr);
                 });
             }
         });
-
-        // 添加费用汇总行
-        var trTotal = $('<tr style="border: 1px solid;height: 25px;text-align: center;  font-size: 15px;font-weight:bold;"></tr>').appendTo(table);
-        $('<td colspan="4" style="border: 1px solid;"></td>').text("总费用").appendTo(trTotal);
-        $('<td colspan="2" style="border: 1px solid;"></td>').text((data.charge / 1000).toFixed(2) + " 元").appendTo(trTotal);
 
         // 添加备注行
         var tr5 = $('<tr style="border: 1px solid;height: 25px;text-align: center;  font-size: 15px;"></tr>').appendTo(table);

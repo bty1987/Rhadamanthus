@@ -31,8 +31,6 @@ public class OccessoriesItemAction extends BaseListAction {
 
 	private OccessoriesVO occessories;
 
-	private int amount;
-
 	@Action(value = "queryOccessoriesItemByOid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryOccessoriesItemByOid() throws FLException {
 
@@ -44,7 +42,7 @@ public class OccessoriesItemAction extends BaseListAction {
 	@Action(value = "amountOccessoriesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String amountOccessoriesItem() {
 
-		amount = occessoriesItemService.amountOccessoriesItem(occessories, occessoriesItem);
+		occessoriesItemService.amountOccessoriesItem(occessories, occessoriesItem);
 
 		return SUCCESS;
 	}
@@ -71,14 +69,6 @@ public class OccessoriesItemAction extends BaseListAction {
 		occessoriesItemService.deleteOccessoriesItem(occessoriesItem);
 
 		return SUCCESS;
-	}
-
-	public int getAmount() {
-		return amount;
-	}
-
-	public void setAmount(int amount) {
-		this.amount = amount;
 	}
 
 	public OccessoriesItemVO getOccessoriesItem() {

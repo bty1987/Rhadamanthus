@@ -51,7 +51,12 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 
 	@Override
 	public int amountOccessoriesItem(OccessoriesVO occessoriesVO, OccessoriesItemVO occessoriesItemVO) {
-		return occessoriesItemDao.amountOccessoriesItem(occessoriesVO.getDecoration().getOrderId(), occessoriesItemVO.getNid());
+
+		int amount = occessoriesItemDao.amountOccessoriesItem(occessoriesVO.getDecoration().getOrderId(), occessoriesItemVO.getNid());
+
+		occessoriesVO.setAmount(amount);
+
+		return 0;
 	}
 
 	@Override
