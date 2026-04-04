@@ -15,11 +15,12 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerCityProperRuleDao;
-import com.fanglin.data.common.dao.DecorationBusitypeDao;
-import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.customer.po.CustomerCityProperRulePO;
 import com.fanglin.customer.service.CustomerCityProperRuleService;
 import com.fanglin.customer.vo.CustomerCityProperRuleVO;
+import com.fanglin.data.common.dao.DecorationBusitypeDao;
+import com.fanglin.data.common.vo.DecorationBusitypeVO;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -31,7 +32,6 @@ import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.data.common.vo.DecorationBusitypeVO;
 
 @Service("customerCityProperRuleService")
 @Transactional(readOnly = true)
@@ -56,7 +56,6 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 	public void pageCustomerCityProperRule(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		List<CustomerCityProperRulePO> customerCityProperRulePOs = customerCityProperRuleDao.pageCustomerCityProperRule(paging, filters, company);
-
 		List<CustomerCityProperRuleVO> customerCityProperRuleVOs = new ArrayList<CustomerCityProperRuleVO>();
 
 		for (CustomerCityProperRulePO customerCityProperRulePO : customerCityProperRulePOs) {
@@ -66,7 +65,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 			customerCityProperRuleVO.setTargetCompany(new CompanyVO());
 			customerCityProperRuleVO.setDepartment(new DepartmentVO());
 			customerCityProperRuleVO.setUser(new UserBaseVO(new DutyVO(), new DepartmentVO()));
-			customerCityProperRuleVO.setDecorationBusinessType(new DecorationBusitypeVO());
+			customerCityProperRuleVO.setBusitype(new DecorationBusitypeVO());
 			customerCityProperRuleVOs.add(customerCityProperRulePO.ptv(customerCityProperRuleVO));
 		}
 
@@ -134,12 +133,12 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 		}
 
 		// 设置业务类型
-		if (customerCityProperRuleVO.getDecorationBusinessType() != null && customerCityProperRuleVO.getDecorationBusinessType().getDbid() != null) {
-			DecorationBusitypePO decorationBusitypePO = decorationBusitypeDao.get(customerCityProperRuleVO.getDecorationBusinessType().getDbid());
+		if (customerCityProperRuleVO.getBusitype() != null && customerCityProperRuleVO.getBusitype().getDbid() != null) {
+			DecorationBusitypePO decorationBusitypePO = decorationBusitypeDao.get(customerCityProperRuleVO.getBusitype().getDbid());
 			if (decorationBusitypePO == null) {
 				throw new FLException(310001, "业务类型不存在");
 			}
-			customerCityProperRulePO.setDecorationBusinessType(decorationBusitypePO);
+			customerCityProperRulePO.setBusitype(decorationBusitypePO);
 		}
 
 		customerCityProperRuleDao.save(customerCityProperRulePO);
@@ -207,12 +206,12 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 		}
 
 		// 更新业务类型
-		if (customerCityProperRuleVO.getDecorationBusinessType() != null && customerCityProperRuleVO.getDecorationBusinessType().getDbid() != null) {
-			DecorationBusitypePO decorationBusitypePO = decorationBusitypeDao.get(customerCityProperRuleVO.getDecorationBusinessType().getDbid());
+		if (customerCityProperRuleVO.getBusitype() != null && customerCityProperRuleVO.getBusitype().getDbid() != null) {
+			DecorationBusitypePO decorationBusitypePO = decorationBusitypeDao.get(customerCityProperRuleVO.getBusitype().getDbid());
 			if (decorationBusitypePO == null) {
 				throw new FLException(310001, "业务类型不存在");
 			}
-			customerCityProperRulePO.setDecorationBusinessType(decorationBusitypePO);
+			customerCityProperRulePO.setBusitype(decorationBusitypePO);
 		}
 
 		customerCityProperRuleDao.update(customerCityProperRulePO);

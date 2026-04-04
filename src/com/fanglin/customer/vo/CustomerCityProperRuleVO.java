@@ -24,9 +24,7 @@ public class CustomerCityProperRuleVO implements Serializable {
 
 	private UserBaseVO user;
 
-	private Long dbid;
-
-	private DecorationBusitypeVO decorationBusinessType;
+	private DecorationBusitypeVO busitype;
 
 	private Short type;
 
@@ -88,20 +86,12 @@ public class CustomerCityProperRuleVO implements Serializable {
 		this.user = user;
 	}
 
-	public Long getDbid() {
-		return dbid;
+	public DecorationBusitypeVO getBusitype() {
+		return busitype;
 	}
 
-	public void setDbid(Long dbid) {
-		this.dbid = dbid;
-	}
-
-	public DecorationBusitypeVO getDecorationBusinessType() {
-		return decorationBusinessType;
-	}
-
-	public void setDecorationBusinessType(DecorationBusitypeVO decorationBusinessType) {
-		this.decorationBusinessType = decorationBusinessType;
+	public void setBusitype(DecorationBusitypeVO busitype) {
+		this.busitype = busitype;
 	}
 
 	public Short getType() {

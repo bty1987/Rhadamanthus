@@ -56,9 +56,8 @@ public class CustomerCityProperRulePO implements Serializable {
 	private DepartmentPO department;
 
 	private UserPO user;
-	private Long dbid;
 
-	private DecorationBusitypePO decorationBusinessType;
+	private DecorationBusitypePO busitype;
 
 	private short type;
 
@@ -143,24 +142,16 @@ public class CustomerCityProperRulePO implements Serializable {
 		this.user = user;
 	}
 
-	@Column(name = "dbid")
-	public Long getDbid() {
-		return dbid;
-	}
-
-	public void setDbid(Long dbid) {
-		this.dbid = dbid;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "dbid", referencedColumnName = "dbid", insertable = false, updatable = false)
-	public DecorationBusitypePO getDecorationBusinessType() {
-		return decorationBusinessType;
+	@JoinColumn(name = "dbid", referencedColumnName = "dbid")
+	public DecorationBusitypePO getBusitype() {
+		return busitype;
 	}
 
-	public void setDecorationBusinessType(DecorationBusitypePO decorationBusinessType) {
-		this.decorationBusinessType = decorationBusinessType;
+	public void setBusitype(DecorationBusitypePO busitype) {
+		this.busitype = busitype;
 	}
+
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -266,8 +257,8 @@ public class CustomerCityProperRulePO implements Serializable {
 			customerCityProperRuleVO.getUser().setBaseInfo(getUser());
 		}
 
-		if (getDecorationBusinessType() != null && customerCityProperRuleVO.getDecorationBusinessType() != null) {
-			getDecorationBusinessType().ptv(customerCityProperRuleVO.getDecorationBusinessType());
+		if (getBusitype() != null && customerCityProperRuleVO.getBusitype() != null) {
+			getBusitype().ptv(customerCityProperRuleVO.getBusitype());
 		}
 
 		return customerCityProperRuleVO;
