@@ -41,6 +41,7 @@ import com.fanglin.customer.vo.CustomerDeptRuleVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.service.DecorationBusitypeService;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
@@ -84,6 +85,11 @@ public class A20260103Action extends BaseListAction {
 	 * 尺源编码 - 对应 source.no
 	 */
 	private String adornCode;
+
+	/**
+	 * 装修单编号 - 查询客户线索使用
+	 */
+	private String orderId;
 
 	/**
 	 * 客户名称 - 对应 source.name
@@ -242,6 +248,32 @@ public class A20260103Action extends BaseListAction {
 		this.data.put("leadCode", leadCode);
 		this.data.put("updateTime", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));
 		this.data.put("message", "更新成功");
+
+		return SUCCESS;
+	}
+
+	/**
+	 * 查询客户线索接口
+	 *
+	 * 支持三种查询方式：
+	 * 1. orderId - 单独查询
+	 * 2. village + houseNumber - 楼盘+楼号一同查询
+	 * 3. phone - 单独查询
+	 *
+	 * @return SUCCESS
+	 * @throws FLException 业务异常
+	 */
+	@Action(value = "queryCustomerLead", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerLead() throws FLException {
+
+		// 初始化 data 对象
+		this.data = new HashMap<String, Object>();
+
+		// 调用 Service 层处理业务逻辑
+		DecorationVO decorationVO = a20260103Service.queryCustomerLead(orderId, village, houseNumber, phone, orgId);
+
+		// 设置返回参数 - 只返回 orderId
+		this.data.put("orderId", decorationVO.getOrderId());
 
 		return SUCCESS;
 	}
@@ -653,6 +685,15 @@ public class A20260103Action extends BaseListAction {
 
 	public void setAdornCode(String adornCode) {
 		this.adornCode = adornCode;
+	}
+
+	@JSON(serialize = false)
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	@JSON(serialize = false)

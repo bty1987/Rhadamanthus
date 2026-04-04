@@ -53,4 +53,22 @@ public interface A20260103Service {
 							String referOrderId, String sourceInfo, String contactInfo,
 							String userId, Integer orgId) throws FLException;
 
+	/**
+	 * 查询客户线索（装饰订单）
+	 *
+	 * 支持三种查询方式：
+	 * 1. orderId - 单独查询
+	 * 2. village + houseNumber - 楼盘+楼号一同查询
+	 * 3. phone - 单独查询
+	 *
+	 * @param orderId 装修单编号
+	 * @param village 楼盘名称
+	 * @param houseNumber 楼号
+	 * @param phone 客户电话
+	 * @param orgId 公司ID
+	 * @return 装饰订单信息
+	 * @throws FLException 业务异常
+	 */
+	com.fanglin.decoration.vo.DecorationVO queryCustomerLead(String orderId, String village, String houseNumber, String phone, Integer orgId) throws FLException;
+
 }
