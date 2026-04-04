@@ -815,10 +815,20 @@ $(function() {
 
             com.focusPage(".busitype", "#issueCustomerChanceModal").show();
 
-            com.post(api.customer.queryCustomerCompanyRule, {
+            var options = {
                 "customerCompanyRule.uppval": customerSource.source.innerArea,
                 "customerCompanyRule.dept.did": customerSource.source.creater.dept.did
-            }, function(res) {
+            };
+
+            if (customerSource.source.village && customerSource.source.village.cityProper) {
+                options["customerCompanyRule.cpid"] = customerSource.source.village.cityProper.cpid;
+            }
+
+            if (customerSource.source.busitype) {
+                options["customerCompanyRule.dbid"] = customerSource.source.busitype.dbid;
+            }
+
+            com.post(api.customer.queryCustomerCompanyRule, options, function(res) {
 
                 var companys = [];
 
