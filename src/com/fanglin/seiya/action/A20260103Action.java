@@ -24,10 +24,7 @@ import org.apache.struts2.json.annotations.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.service.DepartmentService;
-import com.fanglin.communion.service.HouseService;
-import com.fanglin.communion.vo.CustomerPhoneVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
@@ -35,13 +32,9 @@ import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.customer.dao.CustomerSourceDao;
-import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.service.CustomerChanceService;
-import com.fanglin.seiya.service.A20260103Service;
 import com.fanglin.customer.service.CustomerCompanyRuleService;
 import com.fanglin.customer.service.CustomerDeptRuleService;
-import com.fanglin.customer.service.CustomerSourceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerCompanyRuleVO;
 import com.fanglin.customer.vo.CustomerDeptRuleVO;
@@ -51,6 +44,7 @@ import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.seiya.service.A20260103Service;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 
 @ParentPackage("base")
@@ -68,18 +62,6 @@ public class A20260103Action extends BaseListAction {
 
 	@Autowired
 	private A20260103Service a20260103Service;
-
-	@Autowired
-	private CustomerSourceService customerSourceService;
-
-	@Autowired
-	private CustomerSourceDao customerSourceDao;
-
-	@Autowired
-	private HouseService houseService;
-
-	@Autowired
-	private CustomerService customerService;
 
 	@Autowired
 	private DepartmentService departmentService;
@@ -239,14 +221,11 @@ public class A20260103Action extends BaseListAction {
 
 	/**
 	 * 更新客户线索接口
-	 *
+	 * 
 	 * 通过线索编号更新现有客户线索信息
-	 *
-	 * 更新规则：
-	 * 1. 楼盘+楼号必须一起更新，缺一不可
-	 * 2. house存在则关联，不存在则创建
-	 * 3. customer存在则关联，不存在则创建
-	 *
+	 * 
+	 * 更新规则： 1. 楼盘+楼号必须一起更新，缺一不可 2. house存在则关联，不存在则创建 3. customer存在则关联，不存在则创建
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
@@ -269,9 +248,9 @@ public class A20260103Action extends BaseListAction {
 
 	/**
 	 * 添加客户线索接口
-	 *
+	 * 
 	 * 接收外部系统传入的客户线索信息，转换为 ERP 客户机会并创建
-	 *
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
