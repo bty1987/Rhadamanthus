@@ -86,9 +86,9 @@ public class DecorationPO implements Serializable {
 
 	public static final short DESIGNSTATUS_END_INT = 2;// 已完成
 
-    public static final short DESIGN_STATUS_MINI_INT = 11; // 微改
+	public static final short DESIGN_STATUS_MINI_INT = 11; // 微改
 
-    public static final short DESIGN_STATUS_MORE_INT = 21; // 大改
+	public static final short DESIGN_STATUS_MORE_INT = 21; // 大改
 
 	public static final short STATUS_INITIA_INT = 0;// 待确认
 
@@ -107,6 +107,10 @@ public class DecorationPO implements Serializable {
 	public static final short BALANCESTATUS_INIT_INT = 0;// 结算
 
 	public static final short BALANCESTATUS_CONDUCT_INT = 1;// 结算
+
+	public static final short OTHERSTATUS_SHOW_INT = 0;// 显示
+
+	public static final short OTHERSTATUS_HIDDEN_INT = 3;// 隐藏
 
 	private long doid;
 
@@ -489,12 +493,6 @@ public class DecorationPO implements Serializable {
 	public void setBalanceStatus(short balanceStatus) {
 		this.balanceStatus = balanceStatus;
 	}
-
-	public static final short OTHERSTATUS_SHOW_INT = 0;// 显示
-
-	public static final short OTHERSTATUS_HIDDEN_INT = 3;// 隐藏
-
-	private short otherStatus;
 
 	public Timestamp getContractTime() {
 		return contractTime;

@@ -254,18 +254,18 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 			return 0;
 		}
 
-		SalesPaymentPO salesPaymentPO = salesPaymentDao.querySalesPaymentByRid(salesRefundsPO.getRid());
-
-		if (salesPaymentPO != null) {
-			return 0;
-		}
-
 		UserPO operater = salesRefundsPO.getCreater();
 
 		salesRefundsPO.setIsAffirm(SalesRefundsPO.ISAFFIRM_AFFIRM_INT);
 		salesRefundsPO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
 
 		salesRefundsDao.update(salesRefundsPO);
+
+		SalesPaymentPO salesPaymentPO = salesPaymentDao.querySalesPaymentByRid(salesRefundsPO.getRid());
+
+		if (salesPaymentPO != null) {
+			return 0;
+		}
 
 		salesPaymentPO = new SalesPaymentPO();
 

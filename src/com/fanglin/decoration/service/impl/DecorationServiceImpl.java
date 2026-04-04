@@ -1792,9 +1792,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		// 自动切换：显示→隐藏，隐藏→显示
 		short currentStatus = decorationPO.getOtherStatus();
-		short newStatus = (currentStatus == DecorationPO.OTHERSTATUS_SHOW_INT)
-				? DecorationPO.OTHERSTATUS_HIDDEN_INT
-				: DecorationPO.OTHERSTATUS_SHOW_INT;
+		short newStatus = (currentStatus == DecorationPO.OTHERSTATUS_SHOW_INT) ? DecorationPO.OTHERSTATUS_HIDDEN_INT : DecorationPO.OTHERSTATUS_SHOW_INT;
 
 		decorationPO.setOtherStatus(newStatus);
 		decorationDao.update(decorationPO);
@@ -1802,13 +1800,17 @@ public class DecorationServiceImpl implements DecorationService {
 		// 记录操作历史
 		UserPO operater = userDao.queryUserByUserId(userId);
 		String comment = (newStatus == DecorationPO.OTHERSTATUS_HIDDEN_INT) ? "隐藏" : "显示";
-		decorationOperateDao.save(new DecorationOperatePO()
-				.setOrderId(orderId)
-				.setOperater(operater)
-				.setOperateTime(DateUtil.getDateToTimestamp(new Date()))
-				.setType(DecorationOperatePO.TYPE_HIDDEN_DECORATION_ORDER_INT)
-				.setStatus(DecorationOperatePO.STATUS_INIT_INT)
-				.setComment(comment));
+
+		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+
+		decorationOperatePO.setOrderId(orderId);
+		decorationOperatePO.setOperater(operater);
+		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationOperatePO.setType(DecorationOperatePO.TYPE_HIDDEN_DECORATION_ORDER_INT);
+		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		decorationOperatePO.setComment(comment);
+
+		decorationOperateDao.save(decorationOperatePO);
 	}
 
 	private DecorationVO addition(DecorationAdditionPO addition, DecorationVO decorationVO) {
