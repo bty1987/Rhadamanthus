@@ -11,7 +11,7 @@ $(function() {
             company: com.focusPage("#company", "#customerCityProperRuleModal"),
             citySel: com.focusPage("#citySel", "#customerCityProperRuleModal"),
             cityProperSel: com.focusPage("#cityProperSel", "#customerCityProperRuleModal"),
-            decorationBusinessTypeSel: com.focusPage("#decorationBusinessTypeSel", "#customerCityProperRuleModal"),
+            busitypeSel: com.focusPage("#busitypeSel", "#customerCityProperRuleModal"),
             targetCompany: com.focusPage("#targetCompany", "#customerCityProperRuleModal"),
             deptSel: com.focusPage("#deptSel", "#customerCityProperRuleModal"),
             userSel: com.focusPage("#userSel", "#customerCityProperRuleModal"),
@@ -59,7 +59,7 @@ $(function() {
     // 初始化加载业务类型列表
     com.post(api.data.queryDecorationBusitype, {}, function(res) {
 
-        customerCityProperRule.items.decorationBusinessTypeSel.bindData(res.decorationBusitypes, "dbid", "name", true);
+        customerCityProperRule.items.busitypeSel.bindData(res.decorationBusitypes, "dbid", "name", true);
     }, null, false);
 
     // 初始化加载城市列表
@@ -144,9 +144,9 @@ $(function() {
         prop: "city.name",
         clazz: "blue"
     }, {
-        fieId: "decorationBusinessType.name",
+        fieId: "busitype.name",
         name: "业务类型",
-        prop: "decorationBusinessType.name",
+        prop: "busitype.name",
         clazz: "purple"
     }, {
         fieId: "targetCompany.name",
@@ -255,8 +255,8 @@ $(function() {
         };
 
         // 添加业务类型（可选）
-        if (customerCityProperRule.items.decorationBusinessTypeSel.val()) {
-            options["customerCityProperRule.decorationBusinessType.dbid"] = customerCityProperRule.items.decorationBusinessTypeSel.val();
+        if (customerCityProperRule.items.busitypeSel.val()) {
+            options["customerCityProperRule.busitype.dbid"] = customerCityProperRule.items.busitypeSel.val();
         }
 
         // 根据类型添加对应字段
