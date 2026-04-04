@@ -117,6 +117,8 @@ jQuery(function($) {
     management.items.check4constructionschedule = com.focusPage("#check4constructionschedule");
     management.items.orderIdForPayScale = com.focusPage("#orderIdForPayScale");
 
+    management.items.orderIdForHidden = com.focusPage("#orderIdForHidden");
+
     management.decorationForOrderIdModal = com.focusPage("#decorationForOrderIdModal").on('hide.bs.modal', function(e) {
 
         com.cleanItems(management.items);
@@ -254,6 +256,12 @@ jQuery(function($) {
     });
 
     management.changeDecorationForPayScaleModal = com.focusPage("#changeDecorationForPayScaleModal").on('hide.bs.modal', function(e) {
+
+        com.cleanItems(management.items);
+        com.clearValidator();
+    });
+
+    management.hiddenDecorationModal = com.focusPage("#hiddenDecorationModal").on('hide.bs.modal', function(e) {
 
         com.cleanItems(management.items);
         com.clearValidator();
@@ -406,6 +414,11 @@ jQuery(function($) {
     com.focusPage("#changeDecorationForPayScale").click(function() {
 
         management.changeDecorationForPayScaleModal.modal("show");
+    });
+
+    com.focusPage("#hiddenDecoration").click(function() {
+
+        management.hiddenDecorationModal.modal("show");
     });
 
     // com.focusPage("#refundOrderForOrderId").click(function(){
@@ -911,6 +924,27 @@ jQuery(function($) {
         });
 
         management.changeDecorationForPayScaleModal.modal("hide");
+    });
+
+    com.focusPage("#saveHiddenDecorationBtn").click(function() {
+
+        if (com.validate("hiddenDecorationModal")) {
+            return false;
+        }
+
+        var orderId = management.items.orderIdForHidden.val();
+
+        com.showConfirm("确认要切换装修单 [" + orderId + "] 的隐藏/显示状态吗?", function() {
+
+            com.post(api.decoration.hiddenDecoration, {
+                "decoration.orderId": orderId
+            }, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+            });
+
+            management.hiddenDecorationModal.modal("hide");
+        });
     });
 
     com.focusPage("#exportMaterialPaymentBtn").click(function() {

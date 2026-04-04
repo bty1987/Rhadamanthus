@@ -490,6 +490,12 @@ public class DecorationPO implements Serializable {
 		this.balanceStatus = balanceStatus;
 	}
 
+	public static final short OTHERSTATUS_SHOW_INT = 0;// 显示
+
+	public static final short OTHERSTATUS_HIDDEN_INT = 3;// 隐藏
+
+	private short otherStatus;
+
 	public Timestamp getContractTime() {
 		return contractTime;
 	}

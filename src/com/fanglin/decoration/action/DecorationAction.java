@@ -361,6 +361,14 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "hiddenDecoration", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String hiddenDecoration() throws FLException {
+
+		decorationService.hiddenDecoration(decoration, queryUserId());
+
+		return SUCCESS;
+	}
+
 	public List<DecorationVO> getDecorations() {
 		return decorations;
 	}

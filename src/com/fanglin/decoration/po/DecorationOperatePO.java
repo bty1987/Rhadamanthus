@@ -51,6 +51,8 @@ public class DecorationOperatePO implements java.io.Serializable {
 
 	public static final short TYPE_PROSIGN_DECORATION_ORDER_INT = 12;// 预签
 
+	public static final short TYPE_HIDDEN_DECORATION_ORDER_INT = 13;// 隐藏/显示
+
 	public static final short ATTTYPE_CURRENCY_INT = 0; // 通用
 
 	public static final short ATTTYPE_DESIGN_INT = 1;// 设计

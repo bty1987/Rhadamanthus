@@ -112,4 +112,12 @@ public interface DecorationService {
 
 	public void updateDecorationForSaleScale(DecorationVO decorationVO) throws FLException;
 
+	/**
+	 * 隐藏/显示装修单（自动切换：0显示→3隐藏，3隐藏→0显示）
+	 * @param decorationVO 装修单信息（需包含 orderId）
+	 * @param userId 操作人ID
+	 * @throws FLException
+	 */
+	public void hiddenDecoration(DecorationVO decorationVO, String userId) throws FLException;
+
 }
