@@ -11,6 +11,9 @@
 
 package com.fanglin.seiya.service.impl;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +34,10 @@ import com.fanglin.customer.service.CustomerSourceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationService;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
@@ -57,6 +64,12 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private DecorationDao decorationDao;
+
+	@Autowired
+	private DecorationService decorationService;
 
 	@Override
 	public CustomerChanceVO queryCustomerChanceByCno(String cno) throws FLException {
@@ -185,6 +198,56 @@ public class A20260103ServiceImpl implements A20260103Service {
 				customerSourceDao.save(sourcePO);
 			}
 		}
+	}
+
+	@Override
+	public DecorationVO queryCustomerLead(String orderId, String village, String houseNumber, String phone, Integer orgId) throws FLException {
+
+		DecorationPO decorationPO = null;
+
+		// 方式1: 通过 orderId 查询
+		if (orderId != null && !orderId.trim().isEmpty()) {
+			decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+		}
+		// 方式2: 通过 楼盘+楼号 查询
+		else if (village != null && !village.trim().isEmpty() && houseNumber != null && !houseNumber.trim().isEmpty()) {
+			VillageVO villageVO = new VillageVO(village);
+			HouseVO queryHouse = new HouseVO();
+			queryHouse.setVillage(villageVO);
+			queryHouse.setHouseNumber(houseNumber);
+			HouseVO houseVO = houseService.queryHouseByNoAHnum(queryHouse, orgId);
+
+			if (houseVO != null && houseVO.getHid() != null) {
+				List<Integer> companys = Arrays.asList(orgId);
+				decorationPO = decorationDao.queryDecorationByHid(houseVO.getHid(), companys);
+			}
+		}
+		// 方式3: 通过 电话 查询
+		else if (phone != null && !phone.trim().isEmpty()) {
+			CustomerPhoneVO queryPhone = new CustomerPhoneVO();
+			queryPhone.setPhone(phone);
+			CustomerVO customerVO = customerService.queryCustomerForPhone(queryPhone, null);
+
+			if (customerVO != null && customerVO.getCid() != null) {
+				List<DecorationPO> decorations = decorationDao.queryDecorationByCustomerId(customerVO.getCid());
+				if (decorations != null && !decorations.isEmpty()) {
+					// 取最新的订单
+					decorationPO = decorations.get(0);
+				}
+			}
+		} else {
+			throw new FLException(400003, "请提供查询条件：orderId 或 楼盘+楼号 或 电话");
+		}
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		// PO 转 VO
+		DecorationVO decorationVO = new DecorationVO();
+		decorationPO.ptv(decorationVO);
+
+		return decorationVO;
 	}
 
 }
