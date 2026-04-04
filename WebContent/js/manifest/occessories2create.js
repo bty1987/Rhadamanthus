@@ -86,13 +86,12 @@ jQuery(function() {
         return v;
     });
 
-    com.focusPage('select[name="isEnter"]').bindData(occessories.occessoriesPath, "key", "value", false);
-
-    com.focusPage('select[name="isLift"]').bindData(occessories.occessoriesPath, "key", "value", false);
-
-    com.focusPage('select[name="isExceed"]').bindData(occessories.occessoriesPath, "key", "value", false);
-
-    com.focusPage('select[name="isAttic"]').bindData(occessories.occessoriesPath, "key", "value", false);
+    // 使用反序数据，使"否"成为默认选项
+    var occessoriesPathReverse = occessories.occessoriesPath.slice().reverse();
+    com.focusPage('select[name="isEnter"]').bindData(occessoriesPathReverse, "key", "value", false);
+    com.focusPage('select[name="isLift"]').bindData(occessoriesPathReverse, "key", "value", false);
+    com.focusPage('select[name="isExceed"]').bindData(occessoriesPathReverse, "key", "value", false);
+    com.focusPage('select[name="isAttic"]').bindData(occessoriesPathReverse, "key", "value", false);
 
     com.focusPage("#add").click(function() {
 
