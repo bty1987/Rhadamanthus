@@ -24,7 +24,10 @@ import org.apache.struts2.json.annotations.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.service.DepartmentService;
+import com.fanglin.communion.service.HouseService;
+import com.fanglin.communion.vo.CustomerPhoneVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
@@ -32,9 +35,13 @@ import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.customer.dao.CustomerSourceDao;
+import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.service.CustomerChanceService;
+import com.fanglin.seiya.service.A20260103Service;
 import com.fanglin.customer.service.CustomerCompanyRuleService;
 import com.fanglin.customer.service.CustomerDeptRuleService;
+import com.fanglin.customer.service.CustomerSourceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerCompanyRuleVO;
 import com.fanglin.customer.vo.CustomerDeptRuleVO;
@@ -58,6 +65,21 @@ public class A20260103Action extends BaseListAction {
 
 	@Autowired
 	private CustomerChanceService customerChanceService;
+
+	@Autowired
+	private A20260103Service a20260103Service;
+
+	@Autowired
+	private CustomerSourceService customerSourceService;
+
+	@Autowired
+	private CustomerSourceDao customerSourceDao;
+
+	@Autowired
+	private HouseService houseService;
+
+	@Autowired
+	private CustomerService customerService;
 
 	@Autowired
 	private DepartmentService departmentService;
@@ -166,6 +188,21 @@ public class A20260103Action extends BaseListAction {
 	private String erpZxdCode;
 
 	/**
+	 * 转介绍订单ID
+	 */
+	private String referOrderId;
+
+	/**
+	 * 来源（三方信息）
+	 */
+	private String sourceInfo;
+
+	/**
+	 * 联系方式（三方信息）
+	 */
+	private String contactInfo;
+
+	/**
 	 * 返回字段 - data对象，封装请求参数
 	 */
 	private Map<String, Object> data;
@@ -201,10 +238,40 @@ public class A20260103Action extends BaseListAction {
 	private DecorationBusitypeService decorationBusitypeService;
 
 	/**
+	 * 更新客户线索接口
+	 *
+	 * 通过线索编号更新现有客户线索信息
+	 *
+	 * 更新规则：
+	 * 1. 楼盘+楼号必须一起更新，缺一不可
+	 * 2. house存在则关联，不存在则创建
+	 * 3. customer存在则关联，不存在则创建
+	 *
+	 * @return SUCCESS
+	 * @throws FLException 业务异常
+	 */
+	@Action(value = "updateCustomerLead", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" }) }, params = { "contentType", "text/html" })
+	public String updateCustomerLead() throws FLException {
+
+		// 初始化 data 对象
+		this.data = new HashMap<String, Object>();
+
+		// 调用 Service 层处理业务逻辑
+		a20260103Service.updateCustomerLead(leadCode, village, houseNumber, buildArea, phone, name, referOrderId, sourceInfo, contactInfo, userId, orgId);
+
+		// 设置返回参数
+		this.data.put("leadCode", leadCode);
+		this.data.put("updateTime", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));
+		this.data.put("message", "更新成功");
+
+		return SUCCESS;
+	}
+
+	/**
 	 * 添加客户线索接口
-	 * 
+	 *
 	 * 接收外部系统传入的客户线索信息，转换为 ERP 客户机会并创建
-	 * 
+	 *
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
@@ -759,6 +826,33 @@ public class A20260103Action extends BaseListAction {
 
 	public void setErpZxdCode(String erpZxdCode) {
 		this.erpZxdCode = erpZxdCode;
+	}
+
+	@JSON(serialize = false)
+	public String getReferOrderId() {
+		return referOrderId;
+	}
+
+	public void setReferOrderId(String referOrderId) {
+		this.referOrderId = referOrderId;
+	}
+
+	@JSON(serialize = false)
+	public String getSourceInfo() {
+		return sourceInfo;
+	}
+
+	public void setSourceInfo(String sourceInfo) {
+		this.sourceInfo = sourceInfo;
+	}
+
+	@JSON(serialize = false)
+	public String getContactInfo() {
+		return contactInfo;
+	}
+
+	public void setContactInfo(String contactInfo) {
+		this.contactInfo = contactInfo;
 	}
 
 	@JSON(serialize = false)
