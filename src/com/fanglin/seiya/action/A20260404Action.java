@@ -47,13 +47,18 @@ public class A20260404Action extends BaseListAction {
 	/** 公司ID */
 	private Integer company;
 
+	/**
+	 * 返回字段 - data对象，封装请求参数
+	 */
+	private Map<String, Object> data;
+
 	// ==================== 响应字段 ====================
 
 	/**
 	 * 同步供应商数据接口
-	 *
+	 * 
 	 * 通过编号(userId)判断是否存在，存在则更新，不存在则创建
-	 *
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
@@ -115,6 +120,14 @@ public class A20260404Action extends BaseListAction {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public Map<String, Object> getData() {
+		return data;
+	}
+
+	public void setData(Map<String, Object> data) {
+		this.data = data;
 	}
 
 }

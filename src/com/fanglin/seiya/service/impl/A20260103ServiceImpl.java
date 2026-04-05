@@ -36,7 +36,6 @@ import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -67,9 +66,6 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Autowired
 	private DecorationDao decorationDao;
-
-	@Autowired
-	private DecorationService decorationService;
 
 	@Override
 	public CustomerChanceVO queryCustomerChanceByCno(String cno) throws FLException {
@@ -245,7 +241,8 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 		// PO 转 VO
 		DecorationVO decorationVO = new DecorationVO();
-		decorationPO.ptv(decorationVO);
+
+		decorationVO.setOrderId(decorationPO.getOrderId());
 
 		return decorationVO;
 	}
