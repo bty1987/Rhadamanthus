@@ -329,6 +329,14 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "hiddenDecoration", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String hiddenDecoration() throws FLException {
+
+		decorationService.hiddenDecoration(decoration, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "subDecorationForQuotationTime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String subDecorationForQuotationTime() throws FLException {
 
@@ -357,14 +365,6 @@ public class DecorationAction extends BaseListAction {
 	public String updateDecorationForSaleScale() throws FLException {
 
 		decorationService.updateDecorationForSaleScale(decoration);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "hiddenDecoration", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String hiddenDecoration() throws FLException {
-
-		decorationService.hiddenDecoration(decoration, queryUserId());
 
 		return SUCCESS;
 	}
