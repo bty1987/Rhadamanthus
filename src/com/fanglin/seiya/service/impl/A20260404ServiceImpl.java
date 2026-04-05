@@ -114,18 +114,32 @@ public class A20260404ServiceImpl implements A20260404Service {
 					throw new FLException(190008, "供应商数已达上限");
 				}
 
-				// 3. 获取默认部门（供应商部门）
-				DepartmentPO departmentPO = getOrCreateSupplierDepartment(company);
+				// 3. 获取默认部门（从 systemConfig 获取 supplierDept 配置）
+				SystemConfigPO deptConfig = systemConfigDao.querySystemConfig("supplierDept", company);
+				if (deptConfig == null) {
+					throw new FLException(310002, "供应商部门配置不存在(supplierDept)");
+				}
+				DepartmentPO departmentPO = departmentDao.get(Integer.valueOf(deptConfig.getValue()));
+				if (departmentPO == null) {
+					throw new FLException(310002, "供应商部门不存在: " + deptConfig.getValue());
+				}
 
 				// 4. 获取默认角色（从 systemConfig 获取 supplier 角色ID）
-				SystemConfigPO supplierConfig = systemConfigDao.querySystemConfig("supplier");
-				if (supplierConfig == null) {
-					throw new FLException(230010, "供应商角色配置不存在");
+				SystemConfigPO roleConfig = systemConfigDao.querySystemConfig("supplier");
+				if (roleConfig == null) {
+					throw new FLException(230010, "供应商角色配置不存在(supplier)");
 				}
-				RolePO rolePO = new RolePO(Integer.valueOf(supplierConfig.getValue()));
+				RolePO rolePO = new RolePO(Integer.valueOf(roleConfig.getValue()));
 
-				// 5. 获取默认职位（供应商职位）
-				DutyPO dutyPO = getOrCreateSupplierDuty();
+				// 5. 获取默认职位（从 systemConfig 获取 supplierDuty 配置）
+				SystemConfigPO dutyConfig = systemConfigDao.querySystemConfig("supplierDuty");
+				if (dutyConfig == null) {
+					throw new FLException(230011, "供应商职位配置不存在(supplierDuty)");
+				}
+				DutyPO dutyPO = dutyDao.get(Integer.valueOf(dutyConfig.getValue()));
+				if (dutyPO == null) {
+					throw new FLException(230011, "供应商职位不存在: " + dutyConfig.getValue());
+				}
 
 				// 6. 创建供应商用户
 				supplierPO = new UserPO();
@@ -187,65 +201,6 @@ public class A20260404ServiceImpl implements A20260404Service {
 			logger.error("同步供应商异常: userId={}, userName={}, company={}", userId, userName, company, e);
 			throw new FLException(500003, "同步供应商失败: " + e.getMessage());
 		}
-	}
-
-	/**
-	 * 获取或创建供应商部门
-	 *
-	 * @param company 公司ID
-	 * @return 供应商部门
-	 * @throws FLException
-	 */
-	private DepartmentPO getOrCreateSupplierDepartment(Integer company) throws FLException {
-		// 先尝试查找名为"供应商"的部门
-		DepartmentPO dept = departmentDao.queryDepartment("供应商", company);
-
-		if (dept != null) {
-			// 验证是否是子部门（有父部门）
-			if (dept.getFatherDept() == null) {
-				logger.warn("供应商部门是根部门，不能添加人员，尝试查找子部门");
-			} else {
-				return dept;
-			}
-		}
-
-		// 查找公司下的所有子部门
-		java.util.List<DepartmentPO> depts = departmentDao.queryDepartment(null, null, company);
-		if (depts != null && !depts.isEmpty()) {
-			// 找第一个有父部门的子部门
-			for (DepartmentPO d : depts) {
-				if (d.getFatherDept() != null) {
-					logger.info("使用默认部门: did={}, name={}", d.getDid(), d.getName());
-					return d;
-				}
-			}
-		}
-
-		throw new FLException(310002, "未找到可用的供应商部门");
-	}
-
-	/**
-	 * 获取或创建供应商职位
-	 *
-	 * @return 供应商职位
-	 * @throws FLException
-	 */
-	private DutyPO getOrCreateSupplierDuty() throws FLException {
-		// 先尝试查找名为"供应商"的职位
-		DutyPO duty = dutyDao.queryDutyByName("供应商");
-
-		if (duty != null) {
-			return duty;
-		}
-
-		// 查找第一个可用职位
-		java.util.List<DutyPO> dutys = dutyDao.queryDuty();
-		if (dutys != null && !dutys.isEmpty()) {
-			logger.info("使用默认职位: dtid={}, name={}", dutys.get(0).getDtid(), dutys.get(0).getName());
-			return dutys.get(0);
-		}
-
-		throw new FLException(230011, "未找到可用的职位");
 	}
 
 }
