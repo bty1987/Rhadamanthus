@@ -1,7 +1,6 @@
 package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * 模板报价功能区参数 VO
@@ -21,45 +20,45 @@ public class QuotetionFunctionAreaParamVO implements Serializable {
 	/** 功能区ID */
 	private Long qfaId;
 
-	/** 周长（米）- 对应公式变量 {a} */
-	private BigDecimal girth;
+	/** 周长（毫米）- 对应公式变量 {a} */
+	private Integer girth;
 
-	/** 面积（平方米）- 对应公式变量 {b} */
-	private BigDecimal area;
+	/** 面积（平方毫米）- 对应公式变量 {b} */
+	private Integer area;
 
-	/** 举架（米）- 对应公式变量 {c} */
-	private BigDecimal height;
+	/** 举架（毫米）- 对应公式变量 {c} */
+	private Integer height;
 
-	/** 洞面长度（米）- 对应公式变量 {d} */
-	private BigDecimal holeLength;
+	/** 洞面长度（毫米）- 对应公式变量 {d} */
+	private Integer holeLength;
 
-	/** 洞面高度（米）- 对应公式变量 {e} */
-	private BigDecimal holeHeight;
+	/** 洞面高度（毫米）- 对应公式变量 {e} */
+	private Integer holeHeight;
 
-	/** 窗面长度（米）- 对应公式变量 {f} */
-	private BigDecimal windowLength;
+	/** 窗面长度（毫米）- 对应公式变量 {f} */
+	private Integer windowLength;
 
-	/** 窗面高度（米）- 对应公式变量 {g} */
-	private BigDecimal windowHeight;
+	/** 窗面高度（毫米）- 对应公式变量 {g} */
+	private Integer windowHeight;
 
-	/** 梁长（米）- 对应公式变量 {h} */
-	private BigDecimal beamLength;
+	/** 梁长（毫米）- 对应公式变量 {h} */
+	private Integer beamLength;
 
-	/** 梁高（米）- 对应公式变量 {i} */
-	private BigDecimal beamHeight;
+	/** 梁高（毫米）- 对应公式变量 {i} */
+	private Integer beamHeight;
 
 	public QuotetionFunctionAreaParamVO() {
 		super();
 		// 初始化默认值为 0
-		this.girth = BigDecimal.ZERO;
-		this.area = BigDecimal.ZERO;
-		this.height = BigDecimal.ZERO;
-		this.holeLength = BigDecimal.ZERO;
-		this.holeHeight = BigDecimal.ZERO;
-		this.windowLength = BigDecimal.ZERO;
-		this.windowHeight = BigDecimal.ZERO;
-		this.beamLength = BigDecimal.ZERO;
-		this.beamHeight = BigDecimal.ZERO;
+		this.girth = 0;
+		this.area = 0;
+		this.height = 0;
+		this.holeLength = 0;
+		this.holeHeight = 0;
+		this.windowLength = 0;
+		this.windowHeight = 0;
+		this.beamLength = 0;
+		this.beamHeight = 0;
 	}
 
 	public String getQfapId() {
@@ -78,75 +77,75 @@ public class QuotetionFunctionAreaParamVO implements Serializable {
 		this.qfaId = qfaId;
 	}
 
-	public BigDecimal getGirth() {
+	public Integer getGirth() {
 		return girth;
 	}
 
-	public void setGirth(BigDecimal girth) {
+	public void setGirth(Integer girth) {
 		this.girth = girth;
 	}
 
-	public BigDecimal getArea() {
+	public Integer getArea() {
 		return area;
 	}
 
-	public void setArea(BigDecimal area) {
+	public void setArea(Integer area) {
 		this.area = area;
 	}
 
-	public BigDecimal getHeight() {
+	public Integer getHeight() {
 		return height;
 	}
 
-	public void setHeight(BigDecimal height) {
+	public void setHeight(Integer height) {
 		this.height = height;
 	}
 
-	public BigDecimal getHoleLength() {
+	public Integer getHoleLength() {
 		return holeLength;
 	}
 
-	public void setHoleLength(BigDecimal holeLength) {
+	public void setHoleLength(Integer holeLength) {
 		this.holeLength = holeLength;
 	}
 
-	public BigDecimal getHoleHeight() {
+	public Integer getHoleHeight() {
 		return holeHeight;
 	}
 
-	public void setHoleHeight(BigDecimal holeHeight) {
+	public void setHoleHeight(Integer holeHeight) {
 		this.holeHeight = holeHeight;
 	}
 
-	public BigDecimal getWindowLength() {
+	public Integer getWindowLength() {
 		return windowLength;
 	}
 
-	public void setWindowLength(BigDecimal windowLength) {
+	public void setWindowLength(Integer windowLength) {
 		this.windowLength = windowLength;
 	}
 
-	public BigDecimal getWindowHeight() {
+	public Integer getWindowHeight() {
 		return windowHeight;
 	}
 
-	public void setWindowHeight(BigDecimal windowHeight) {
+	public void setWindowHeight(Integer windowHeight) {
 		this.windowHeight = windowHeight;
 	}
 
-	public BigDecimal getBeamLength() {
+	public Integer getBeamLength() {
 		return beamLength;
 	}
 
-	public void setBeamLength(BigDecimal beamLength) {
+	public void setBeamLength(Integer beamLength) {
 		this.beamLength = beamLength;
 	}
 
-	public BigDecimal getBeamHeight() {
+	public Integer getBeamHeight() {
 		return beamHeight;
 	}
 
-	public void setBeamHeight(BigDecimal beamHeight) {
+	public void setBeamHeight(Integer beamHeight) {
 		this.beamHeight = beamHeight;
 	}
 

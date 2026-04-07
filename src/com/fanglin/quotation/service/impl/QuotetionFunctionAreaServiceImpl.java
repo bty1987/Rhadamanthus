@@ -126,20 +126,20 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public List<QuotetionFunctionAreaVO> addQuotetionFuctionArea(List<Long> functionAreaIds, List<QuotetionFunctionAreaParamVO> functionAreaParams, QuotetionVO quotetionVO) throws FLException {
+	public List<QuotetionFunctionAreaVO> addQuotetionFuctionArea(List<QuotetionFunctionAreaVO> quotetionFunctionAreas, QuotetionVO quotetionVO) throws FLException {
 
 		QuotetionPO quotetionPO = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
 
 		QuotetionServiceImpl.convertQuotetionVOToPOForAdvance(quotetionVO, quotetionPO);
 
-		List<QuotetionFunctionAreaVO> quotetionFunctionAreaVOs = new ArrayList<QuotetionFunctionAreaVO>();
+		List<QuotetionFunctionAreaVO> resultQuotetionFunctionAreaVOs = new ArrayList<QuotetionFunctionAreaVO>();
 
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotetionFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
 
-		for (int i = 0; i < functionAreaIds.size(); i++) {
+		for (QuotetionFunctionAreaVO inputVO : quotetionFunctionAreas) {
 
-			Long functionAreaId = functionAreaIds.get(i);
+			Long functionAreaId = inputVO.getId();
 
 			FunctionAreaPO functionAreaPO = functionAreaDao.get(functionAreaId);
 
@@ -161,13 +161,16 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 			quotetionFunctionAreaDao.saveOrUpdate(quotetionFunctionAreaPO);
 
-			// 保存功能区参数
-			if (functionAreaParams != null && i < functionAreaParams.size() && functionAreaParams.get(i) != null) {
-				QuotetionFunctionAreaParamVO paramVO = functionAreaParams.get(i);
+			// 保存功能区参数（从 inputVO 中获取 quotetionFunctionAreaParam）
+			QuotetionFunctionAreaParamVO paramVO = inputVO.getQuotetionFunctionAreaParam();
+			if (paramVO != null) {
 				com.fanglin.quotation.po.QuotetionFunctionAreaParamPO paramPO = new com.fanglin.quotation.po.QuotetionFunctionAreaParamPO();
 				BeanUtil.copyProperties(paramVO, paramPO);
 				paramPO.setQfaId(quotetionFunctionAreaPO.getQfaId());
 				quotetionFunctionAreaParamDao.saveOrUpdate(paramPO);
+				// 将 paramPO 复制回 paramVO，以便返回给前端
+				BeanUtil.copyProperties(paramPO, paramVO);
+				quotetionFunctionAreaVO.setQuotetionFunctionAreaParam(paramVO);
 			}
 
 			List<QuotationPricePO> quotationPricePOs = quotationPriceDao.queryQuotationPrice(functionAreaPO.getFaid(), quotetionPO.getUpdateTime());
@@ -230,12 +233,12 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 			quotetionFunctionAreaVO.setQfaId(quotetionFunctionAreaPO.getQfaId());
 			quotetionFunctionAreaVO.setQuotetionFunctionAreaItems(quotetionFunctionAreaItemVOs);
 
-			quotetionFunctionAreaVOs.add(quotetionFunctionAreaVO);
+			resultQuotetionFunctionAreaVOs.add(quotetionFunctionAreaVO);
 		}
 
 		quotetionDao.update(quotetionPO);
 
-		return quotetionFunctionAreaVOs;
+		return resultQuotetionFunctionAreaVOs;
 	}
 
 	@Override
