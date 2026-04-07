@@ -137,15 +137,11 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotetionFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
 
-		for (QuotetionFunctionAreaVO inputVO : quotetionFunctionAreas) {
+		for (QuotetionFunctionAreaVO quotetionFunctionAreaVO : quotetionFunctionAreas) {
 
-			Long functionAreaId = inputVO.getId();
-
-			FunctionAreaPO functionAreaPO = functionAreaDao.get(functionAreaId);
+			FunctionAreaPO functionAreaPO = functionAreaDao.get(quotetionFunctionAreaVO.getQfaId());
 
 			if (functionAreaPO == null) continue;
-
-			QuotetionFunctionAreaVO quotetionFunctionAreaVO = new QuotetionFunctionAreaVO();
 
 			quotetionFunctionAreaVO.setQid(quotetionVO.getQid());
 			quotetionFunctionAreaVO.setName(functionAreaPO.getName());
@@ -161,16 +157,18 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 			quotetionFunctionAreaDao.saveOrUpdate(quotetionFunctionAreaPO);
 
-			// 保存功能区参数（从 inputVO 中获取 quotetionFunctionAreaParam）
-			QuotetionFunctionAreaParamVO paramVO = inputVO.getQuotetionFunctionAreaParam();
-			if (paramVO != null) {
-				com.fanglin.quotation.po.QuotetionFunctionAreaParamPO paramPO = new com.fanglin.quotation.po.QuotetionFunctionAreaParamPO();
-				BeanUtil.copyProperties(paramVO, paramPO);
-				paramPO.setQfaId(quotetionFunctionAreaPO.getQfaId());
-				quotetionFunctionAreaParamDao.saveOrUpdate(paramPO);
-				// 将 paramPO 复制回 paramVO，以便返回给前端
-				BeanUtil.copyProperties(paramPO, paramVO);
-				quotetionFunctionAreaVO.setQuotetionFunctionAreaParam(paramVO);
+			QuotetionFunctionAreaParamVO quotetionFunctionAreaParamVO = quotetionFunctionAreaVO.getQuotetionFunctionAreaParam();
+
+			if (quotetionFunctionAreaParamVO != null) {
+
+				QuotetionFunctionAreaParamPO quotetionFunctionAreaParamPO = new QuotetionFunctionAreaParamPO();
+
+				BeanUtil.copyProperties(quotetionFunctionAreaParamVO, quotetionFunctionAreaParamPO);
+				quotetionFunctionAreaParamPO.setQfaId(quotetionFunctionAreaPO.getQfaId());
+
+				quotetionFunctionAreaParamDao.saveOrUpdate(quotetionFunctionAreaParamPO);
+
+				BeanUtil.copyPropertie(quotetionFunctionAreaParamPO, quotetionFunctionAreaVO.getQuotetionFunctionAreaParam());
 			}
 
 			List<QuotationPricePO> quotationPricePOs = quotationPriceDao.queryQuotationPrice(functionAreaPO.getFaid(), quotetionPO.getUpdateTime());

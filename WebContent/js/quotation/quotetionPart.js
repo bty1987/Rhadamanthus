@@ -1567,7 +1567,7 @@
                     var input = $(v);
                     var params = input.parents(".functionAreaItem").find("[name='quoteparam']");
 
-                    _param['quotetionFunctionAreas[' + i + '].id'] = input.val();
+                    _param['quotetionFunctionAreas[' + i + '].qfaId'] = input.val();
 
                     $.each(params, function(j, v) {
 
