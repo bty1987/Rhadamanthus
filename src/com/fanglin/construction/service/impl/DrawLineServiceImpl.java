@@ -210,7 +210,9 @@ public class DrawLineServiceImpl implements DrawLineService {
 			throw new FLException(130014, "装修不存在");
 		}
 
-		if (decorationPO.getDesignStatus() != DecorationPO.DESIGNSTATUS_END_INT) {
+		SystemConfigPO designFlag = systemConfigDao.querySystemConfig("DESIGN_STATUS_CHECK_INT", decorationPO.getCompany());
+
+		if (designFlag == null && decorationPO.getDesignStatus() != DecorationPO.DESIGNSTATUS_END_INT) {
 			throw new FLException(140092, "装修设计状态不可操作");
 		}
 
