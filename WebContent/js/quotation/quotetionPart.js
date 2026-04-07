@@ -1567,7 +1567,7 @@
                     var input = $(v);
                     var params = input.parents(".functionAreaItem").find("[name='quoteparam']");
 
-                    _param['functionAreaIds[' + i + ']'] = input.val();
+                    _param['quotetionFunctionAreas[' + i + '].id'] = input.val();
 
                     $.each(params, function(j, v) {
 
@@ -1577,7 +1577,7 @@
                             return true;
 
                         var param = e.attr("param");
-                        _param['functionAreaParams[' + i + '].' + param] = e.val();
+                        _param['quotetionFunctionAreas[' + i + '].quotetionFunctionAreaParam.' + param] = e.val();
                     });
                 });
 

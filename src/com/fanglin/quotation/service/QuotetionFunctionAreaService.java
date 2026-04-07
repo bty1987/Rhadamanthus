@@ -11,7 +11,7 @@ public interface QuotetionFunctionAreaService {
 
 	public List<QuotetionFunctionAreaVO> queryQuotetionFunctionAreaByQid(QuotetionVO quotetionVO) throws FLException;
 
-	public List<QuotetionFunctionAreaVO> addQuotetionFuctionArea(List<Long> functionAreaIds, List<QuotetionFunctionAreaParamVO> functionAreaParams, QuotetionVO quotetionVO) throws FLException;
+	public List<QuotetionFunctionAreaVO> addQuotetionFuctionArea(List<QuotetionFunctionAreaVO> quotetionFunctionAreas, QuotetionVO quotetionVO) throws FLException;
 
 	public int updateQuotetionFunctionArea(QuotetionFunctionAreaVO quotetionFunctionAreaVO, QuotetionVO quotetionVO) throws FLException;
 

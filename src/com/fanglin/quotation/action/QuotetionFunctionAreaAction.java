@@ -48,7 +48,7 @@ public class QuotetionFunctionAreaAction extends BaseListAction {
 	@Action(value = "addQuotetionFuctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addQuotetionFuctionArea() throws FLException {
 
-		quotetionFunctionAreas = quotetionFunctionAreaService.addQuotetionFuctionArea(functionAreaIds, functionAreaParams, quotetion);
+		quotetionFunctionAreas = quotetionFunctionAreaService.addQuotetionFuctionArea(quotetionFunctionAreas, quotetion);
 
 		return SUCCESS;
 	}

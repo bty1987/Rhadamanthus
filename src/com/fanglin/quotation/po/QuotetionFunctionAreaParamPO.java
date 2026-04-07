@@ -1,7 +1,6 @@
 package com.fanglin.quotation.po;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,9 +12,9 @@ import javax.persistence.Table;
 
 /**
  * 模板报价功能区参数 PO
- * 
+ *
  * 用途：存储模板报价功能区的参数（周长、面积、举架等） 用于公式计算，自动计算报价项工程量
- * 
+ *
  * @author Clawd
  * @since 2026-02-23
  */
@@ -31,32 +30,32 @@ public class QuotetionFunctionAreaParamPO implements Serializable {
 	/** 功能区ID（关联 quotetion_function_area） */
 	private Long qfaId;
 
-	/** 周长（米）- 对应公式变量 {a} */
-	private BigDecimal girth;
+	/** 周长（毫米）- 对应公式变量 {a} */
+	private Integer girth;
 
-	/** 面积（平方米）- 对应公式变量 {b} */
-	private BigDecimal area;
+	/** 面积（平方毫米）- 对应公式变量 {b} */
+	private Integer area;
 
-	/** 举架（米）- 对应公式变量 {c} */
-	private BigDecimal height;
+	/** 举架（毫米）- 对应公式变量 {c} */
+	private Integer height;
 
-	/** 洞面长度（米）- 对应公式变量 {d} */
-	private BigDecimal holeLength;
+	/** 洞面长度（毫米）- 对应公式变量 {d} */
+	private Integer holeLength;
 
-	/** 洞面高度（米）- 对应公式变量 {e} */
-	private BigDecimal holeHeight;
+	/** 洞面高度（毫米）- 对应公式变量 {e} */
+	private Integer holeHeight;
 
-	/** 窗面长度（米）- 对应公式变量 {f} */
-	private BigDecimal windowLength;
+	/** 窗面长度（毫米）- 对应公式变量 {f} */
+	private Integer windowLength;
 
-	/** 窗面高度（米）- 对应公式变量 {g} */
-	private BigDecimal windowHeight;
+	/** 窗面高度（毫米）- 对应公式变量 {g} */
+	private Integer windowHeight;
 
-	/** 梁长（米）- 对应公式变量 {h} */
-	private BigDecimal beamLength;
+	/** 梁长（毫米）- 对应公式变量 {h} */
+	private Integer beamLength;
 
-	/** 梁高（米）- 对应公式变量 {i} */
-	private BigDecimal beamHeight;
+	/** 梁高（毫米）- 对应公式变量 {i} */
+	private Integer beamHeight;
 
 	/** 更新时间 */
 	private Date updateTime;
@@ -88,84 +87,84 @@ public class QuotetionFunctionAreaParamPO implements Serializable {
 		this.qfaId = qfaId;
 	}
 
-	@Column(name = "girth", precision = 10, scale = 2)
-	public BigDecimal getGirth() {
+	@Column(name = "girth")
+	public Integer getGirth() {
 		return girth;
 	}
 
-	public void setGirth(BigDecimal girth) {
+	public void setGirth(Integer girth) {
 		this.girth = girth;
 	}
 
-	@Column(name = "area", precision = 10, scale = 2)
-	public BigDecimal getArea() {
+	@Column(name = "area")
+	public Integer getArea() {
 		return area;
 	}
 
-	public void setArea(BigDecimal area) {
+	public void setArea(Integer area) {
 		this.area = area;
 	}
 
-	@Column(name = "height", precision = 10, scale = 2)
-	public BigDecimal getHeight() {
+	@Column(name = "height")
+	public Integer getHeight() {
 		return height;
 	}
 
-	public void setHeight(BigDecimal height) {
+	public void setHeight(Integer height) {
 		this.height = height;
 	}
 
-	@Column(name = "holeLength", precision = 10, scale = 2)
-	public BigDecimal getHoleLength() {
+	@Column(name = "holeLength")
+	public Integer getHoleLength() {
 		return holeLength;
 	}
 
-	public void setHoleLength(BigDecimal holeLength) {
+	public void setHoleLength(Integer holeLength) {
 		this.holeLength = holeLength;
 	}
 
-	@Column(name = "holeHeight", precision = 10, scale = 2)
-	public BigDecimal getHoleHeight() {
+	@Column(name = "holeHeight")
+	public Integer getHoleHeight() {
 		return holeHeight;
 	}
 
-	public void setHoleHeight(BigDecimal holeHeight) {
+	public void setHoleHeight(Integer holeHeight) {
 		this.holeHeight = holeHeight;
 	}
 
-	@Column(name = "windowLength", precision = 10, scale = 2)
-	public BigDecimal getWindowLength() {
+	@Column(name = "windowLength")
+	public Integer getWindowLength() {
 		return windowLength;
 	}
 
-	public void setWindowLength(BigDecimal windowLength) {
+	public void setWindowLength(Integer windowLength) {
 		this.windowLength = windowLength;
 	}
 
-	@Column(name = "windowHeight", precision = 10, scale = 2)
-	public BigDecimal getWindowHeight() {
+	@Column(name = "windowHeight")
+	public Integer getWindowHeight() {
 		return windowHeight;
 	}
 
-	public void setWindowHeight(BigDecimal windowHeight) {
+	public void setWindowHeight(Integer windowHeight) {
 		this.windowHeight = windowHeight;
 	}
 
-	@Column(name = "beamLength", precision = 10, scale = 2)
-	public BigDecimal getBeamLength() {
+	@Column(name = "beamLength")
+	public Integer getBeamLength() {
 		return beamLength;
 	}
 
-	public void setBeamLength(BigDecimal beamLength) {
+	public void setBeamLength(Integer beamLength) {
 		this.beamLength = beamLength;
 	}
 
-	@Column(name = "beamHeight", precision = 10, scale = 2)
-	public BigDecimal getBeamHeight() {
+	@Column(name = "beamHeight")
+	public Integer getBeamHeight() {
 		return beamHeight;
 	}
 
-	public void setBeamHeight(BigDecimal beamHeight) {
+	public void setBeamHeight(Integer beamHeight) {
 		this.beamHeight = beamHeight;
 	}
 
