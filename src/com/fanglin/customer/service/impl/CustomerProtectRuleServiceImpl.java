@@ -1,5 +1,6 @@
 package com.fanglin.customer.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -193,8 +194,8 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 		}
 
 		// 5. 岗位规则检查
-		if (decorationPO.getDesigner() != null && decorationPO.getDesigner().getDuty() != null) {
-			Integer dutyId = decorationPO.getDesigner().getDuty().getDid();
+		if (customerProtectRuleVO.getDuty() != null && customerProtectRuleVO.getDuty().getDid() != null) {
+			Long dutyId = customerProtectRuleVO.getDuty().getDid();
 			List<CustomerProtectRulePO> dutyRules = customerProtectRuleDao.queryCustomerProtectRuleByDuty(dutyId, company);
 			for (CustomerProtectRulePO dutyRule : dutyRules) {
 				long daysPassed = DateUtil.diffDay(decorationPO.getCreateTime(), now);

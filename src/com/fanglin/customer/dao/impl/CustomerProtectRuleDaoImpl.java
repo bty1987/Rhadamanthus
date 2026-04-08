@@ -71,14 +71,8 @@ public class CustomerProtectRuleDaoImpl extends DaoImpl<CustomerProtectRulePO> i
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CustomerProtectRulePO> queryCustomerProtectRuleByDuty(Integer did, int company) {
-		return session().createCriteria(CustomerProtectRulePO.class)
-				.add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, CustomerProtectRulePO.TYPE_DUTY_INT))
-				.add(Restrictions.eq(CustomerProtectRulePO.COLUMN_STATUS_STR, CustomerProtectRulePO.STATUS_ABLE_SHORT))
-				.add(Restrictions.eq(CustomerProtectRulePO.COLUMN_COMPANY_STR, company))
-				.createAlias("duty", "d")
-				.add(Restrictions.eq("d.did", did))
-				.list();
+	public List<CustomerProtectRulePO> queryCustomerProtectRuleByDuty(Long did, int company) {
+		return session().createCriteria(CustomerProtectRulePO.class).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, CustomerProtectRulePO.TYPE_DUTY_INT)).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_STATUS_STR, CustomerProtectRulePO.STATUS_ABLE_SHORT)).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_COMPANY_STR, company)).createAlias("duty", "d").add(Restrictions.eq("d.did", did)).list();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {

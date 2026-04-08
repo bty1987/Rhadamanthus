@@ -15,8 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.customer.vo.CustomerProtectRuleVO;
 import com.fanglin.communion.po.DutyPO;
+import com.fanglin.customer.vo.CustomerProtectRuleVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
@@ -200,8 +200,7 @@ public class CustomerProtectRulePO implements Serializable {
 		BeanUtil.copyProperties(this, customerProtectRuleVO, Arrays.asList("creater", "duty"));
 
 		if (customerProtectRuleVO.getCreater() != null && getCreater() != null) customerProtectRuleVO.getCreater().ptv(getCreater());
-
-		if (customerProtectRuleVO.getDuty() != null && getDuty() != null) customerProtectRuleVO.getDuty().ptv(getDuty());
+		if (customerProtectRuleVO.getDuty() != null && getDuty() != null) getDuty().ptv(customerProtectRuleVO.getDuty());
 
 		return customerProtectRuleVO;
 	}
