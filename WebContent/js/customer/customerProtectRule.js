@@ -14,6 +14,7 @@ $(function() {
             type: com.focusPage("#type", "#customerProtectRule"),
             uppval: com.focusPage("#uppval", "#customerProtectRule"),
             lowval: com.focusPage("#lowval", "#customerProtectRule"),
+            duty: com.focusPage("#duty", "#customerProtectRule"),
             days: com.focusPage("#days", "#customerProtectRule")
         }
     };
@@ -25,6 +26,11 @@ $(function() {
     });
 
     customerProtectRule.items.type.bindData(constant.customer().customerProtectRule.type.datas, "key", "value");
+
+    // 加载岗位数据
+    com.post(api.personel.queryDutyForOption, {}, function(res) {
+        customerProtectRule.items.duty.bindData(res.duties, "did", "name");
+    });
 
     customerProtectRule.items.type.on("change", function() {
 
@@ -64,6 +70,11 @@ $(function() {
         name: "终止值",
         prop: "lowval",
         clazz: "blue"
+    }, {
+        fieId: "duty",
+        name: "岗位",
+        prop: "duty.name",
+        clazz: "purple"
     }, {
         fieId: "days",
         name: "天数",
@@ -126,6 +137,7 @@ $(function() {
             "customerProtectRule.type": customerProtectRule.items.type.val(),
             "customerProtectRule.uppval": customerProtectRule.items.uppval.val(),
             "customerProtectRule.lowval": customerProtectRule.items.lowval.val(),
+            "customerProtectRule.duty.did": customerProtectRule.items.duty.val(),
             "customerProtectRule.days": customerProtectRule.items.days.val()
         };
 

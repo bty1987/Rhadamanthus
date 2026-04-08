@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.customer.vo.CustomerProtectRuleVO;
+import com.fanglin.communion.po.DutyPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
@@ -39,6 +40,8 @@ public class CustomerProtectRulePO implements Serializable {
 
 	public static final String COLUMN_COMPANY_STR = "company";
 
+	public static final String COLUMN_DUTY_STR = "duty";
+
 	public static final short STATUS_ABLE_SHORT = 0; // 有效
 
 	public static final short STATUS_DISABLE_SHORT = 1; // 失效
@@ -58,6 +61,8 @@ public class CustomerProtectRulePO implements Serializable {
 	private int uppval;
 
 	private int lowval;
+
+	private DutyPO duty;
 
 	private int days;
 
@@ -130,6 +135,16 @@ public class CustomerProtectRulePO implements Serializable {
 		this.lowval = lowval;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "did", referencedColumnName = "did")
+	public DutyPO getDuty() {
+		return duty;
+	}
+
+	public void setDuty(DutyPO duty) {
+		this.duty = duty;
+	}
+
 	@Column(name = "days")
 	public int getDays() {
 		return days;
@@ -178,9 +193,11 @@ public class CustomerProtectRulePO implements Serializable {
 
 	public CustomerProtectRuleVO ptv(CustomerProtectRuleVO customerProtectRuleVO) {
 
-		BeanUtil.copyProperties(this, customerProtectRuleVO, Arrays.asList("creater"));
+		BeanUtil.copyProperties(this, customerProtectRuleVO, Arrays.asList("creater", "duty"));
 
 		if (customerProtectRuleVO.getCreater() != null && getCreater() != null) customerProtectRuleVO.getCreater().ptv(getCreater());
+
+		if (customerProtectRuleVO.getDuty() != null && getDuty() != null) customerProtectRuleVO.getDuty().ptv(getDuty());
 
 		return customerProtectRuleVO;
 	}

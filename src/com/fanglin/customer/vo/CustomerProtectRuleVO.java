@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.personel.vo.UserVO;
 
 public class CustomerProtectRuleVO implements Serializable {
@@ -20,6 +21,8 @@ public class CustomerProtectRuleVO implements Serializable {
 	private Integer uppval;
 
 	private Integer lowval;
+
+	private DutyVO duty;
 
 	private Integer days;
 
@@ -84,6 +87,14 @@ public class CustomerProtectRuleVO implements Serializable {
 
 	public void setLowval(Integer lowval) {
 		this.lowval = lowval;
+	}
+
+	public DutyVO getDuty() {
+		return duty;
+	}
+
+	public void setDuty(DutyVO duty) {
+		this.duty = duty;
 	}
 
 	public Integer getDays() {
