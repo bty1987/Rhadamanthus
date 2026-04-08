@@ -23,6 +23,7 @@ import com.fanglin.customer.service.CustomerProtectRuleService;
 import com.fanglin.customer.vo.CustomerProtectRuleVO;
 import com.fanglin.data.common.dao.DecorationMeasureRuleDao;
 import com.fanglin.data.po.DecorationMeasureRuleItemPO;
+import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationPO;
@@ -58,6 +59,9 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private DecorationBelongDao decorationBelongDao;
 
 	@Autowired
 	private PaymentDao paymentDao;
@@ -194,10 +198,33 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 		}
 
 		// 5. 岗位规则检查
+		// 先查询装修单的业务员归属（type = 1）
+		List<DecorationBelongPO> salesmanBelongs = decorationBelongDao.queryDecorationBelong(
+				decorationPO.getOrderId(),
+				DecorationBelongPO.BELONGTYPE_SALESMAN_INT,
+				DecorationBelongPO.STATUS_EFFCTIVE_INT);
+
 		if (customerProtectRuleVO.getDuty() != null && customerProtectRuleVO.getDuty().getDid() != null) {
 			Long dutyId = customerProtectRuleVO.getDuty().getDid();
 			List<CustomerProtectRulePO> dutyRules = customerProtectRuleDao.queryCustomerProtectRuleByDuty(dutyId, company);
 			for (CustomerProtectRulePO dutyRule : dutyRules) {
+				// 检查业务员归属的岗位是否匹配规则中的岗位
+				boolean isSalesmanDutyMatch = false;
+				for (DecorationBelongPO belong : salesmanBelongs) {
+					if (belong.getBelonger() != null && belong.getBelonger().getDuty() != null) {
+						if (belong.getBelonger().getDuty().getDid() == dutyId) {
+							// 业务员的岗位匹配规则中的岗位，不触发保护
+							isSalesmanDutyMatch = true;
+							break;
+						}
+					}
+				}
+
+				if (isSalesmanDutyMatch) {
+					// 业务员岗位匹配，返回空 VO（不触发保护）
+					return new CustomerProtectRuleVO();
+				}
+
 				long daysPassed = DateUtil.diffDay(decorationPO.getCreateTime(), now);
 				int protectDays = dutyRule.getDays();
 				if (daysPassed < protectDays) {
