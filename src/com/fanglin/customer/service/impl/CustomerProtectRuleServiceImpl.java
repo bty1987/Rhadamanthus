@@ -126,8 +126,9 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 		customerProtectRuleVO.setOrderId(decorationPO.getOrderId());
 
-		// 存储匹配到的规则及其剩余保护天数
-		List<java.util.AbstractMap.SimpleEntry<CustomerProtectRulePO, Integer>> matchedRules = new ArrayList<>();
+		// 存储匹配到的规则和剩余天数
+		List<CustomerProtectRulePO> matchedRules = new ArrayList<>();
+		List<Integer> remainingDays = new ArrayList<>();
 
 		Timestamp now = DateUtil.getDateToTimestamp(new Date());
 
@@ -137,7 +138,8 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			long daysPassed = DateUtil.diffDay(decorationPO.getMeasureTime(), now);
 			int protectDays = Arith.div(areaRule.getDays(), 10000000);
 			if (daysPassed < protectDays) {
-				matchedRules.add(new java.util.AbstractMap.SimpleEntry<>(areaRule, (int) (protectDays - daysPassed)));
+				matchedRules.add(areaRule);
+				remainingDays.add((int) (protectDays - daysPassed));
 			}
 		}
 
@@ -148,7 +150,8 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
 			int protectDays = Arith.div(advanceRule.getDays(), 1000000);
 			if (daysPassed < protectDays) {
-				matchedRules.add(new java.util.AbstractMap.SimpleEntry<>(advanceRule, (int) (protectDays - daysPassed)));
+				matchedRules.add(advanceRule);
+				remainingDays.add((int) (protectDays - daysPassed));
 			}
 		}
 
@@ -160,7 +163,8 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
 			int protectDays = Arith.div(designRule.getDays(), 1000000);
 			if (daysPassed < protectDays) {
-				matchedRules.add(new java.util.AbstractMap.SimpleEntry<>(designRule, (int) (protectDays - daysPassed)));
+				matchedRules.add(designRule);
+				remainingDays.add((int) (protectDays - daysPassed));
 			}
 		}
 
@@ -171,7 +175,8 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
 			int protectDays = Arith.div(depositRule.getDays(), 1000000);
 			if (daysPassed < protectDays) {
-				matchedRules.add(new java.util.AbstractMap.SimpleEntry<>(depositRule, (int) (protectDays - daysPassed)));
+				matchedRules.add(depositRule);
+				remainingDays.add((int) (protectDays - daysPassed));
 			}
 		}
 
@@ -183,7 +188,8 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 				long daysPassed = DateUtil.diffDay(decorationPO.getCreateTime(), now);
 				int protectDays = dutyRule.getDays();
 				if (daysPassed < protectDays) {
-					matchedRules.add(new java.util.AbstractMap.SimpleEntry<>(dutyRule, (int) (protectDays - daysPassed)));
+					matchedRules.add(dutyRule);
+					remainingDays.add((int) (protectDays - daysPassed));
 				}
 			}
 		}
@@ -193,16 +199,14 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			return customerProtectRuleVO;
 		}
 
-		CustomerProtectRulePO maxRule = matchedRules.get(0).getKey();
-		int maxDays = matchedRules.get(0).getValue();
-		for (java.util.AbstractMap.SimpleEntry<CustomerProtectRulePO, Integer> entry : matchedRules) {
-			if (entry.getValue() > maxDays) {
-				maxDays = entry.getValue();
-				maxRule = entry.getKey();
+		int maxIndex = 0;
+		for (int i = 1; i < remainingDays.size(); i++) {
+			if (remainingDays.get(i) > remainingDays.get(maxIndex)) {
+				maxIndex = i;
 			}
 		}
 
-		return maxRule.ptv(customerProtectRuleVO);
+		return matchedRules.get(maxIndex).ptv(customerProtectRuleVO);
 	}
 
 	@Override
