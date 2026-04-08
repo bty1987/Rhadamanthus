@@ -126,9 +126,9 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 		customerProtectRuleVO.setOrderId(decorationPO.getOrderId());
 
-		// 存储匹配到的规则和剩余天数
-		List<CustomerProtectRulePO> matchedRules = new ArrayList<>();
-		List<Integer> remainingDays = new ArrayList<>();
+		// 标准VO，用于存储当前最大保护天数的规则
+		CustomerProtectRuleVO maxRuleVO = new CustomerProtectRuleVO();
+		int maxRemainingDays = 0;
 
 		Timestamp now = DateUtil.getDateToTimestamp(new Date());
 
@@ -138,8 +138,11 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			long daysPassed = DateUtil.diffDay(decorationPO.getMeasureTime(), now);
 			int protectDays = Arith.div(areaRule.getDays(), 10000000);
 			if (daysPassed < protectDays) {
-				matchedRules.add(areaRule);
-				remainingDays.add((int) (protectDays - daysPassed));
+				int remaining = (int) (protectDays - daysPassed);
+				if (remaining > maxRemainingDays) {
+					maxRemainingDays = remaining;
+					maxRuleVO = areaRule.ptv(new CustomerProtectRuleVO());
+				}
 			}
 		}
 
@@ -150,8 +153,11 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
 			int protectDays = Arith.div(advanceRule.getDays(), 1000000);
 			if (daysPassed < protectDays) {
-				matchedRules.add(advanceRule);
-				remainingDays.add((int) (protectDays - daysPassed));
+				int remaining = (int) (protectDays - daysPassed);
+				if (remaining > maxRemainingDays) {
+					maxRemainingDays = remaining;
+					maxRuleVO = advanceRule.ptv(new CustomerProtectRuleVO());
+				}
 			}
 		}
 
@@ -163,8 +169,11 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
 			int protectDays = Arith.div(designRule.getDays(), 1000000);
 			if (daysPassed < protectDays) {
-				matchedRules.add(designRule);
-				remainingDays.add((int) (protectDays - daysPassed));
+				int remaining = (int) (protectDays - daysPassed);
+				if (remaining > maxRemainingDays) {
+					maxRemainingDays = remaining;
+					maxRuleVO = designRule.ptv(new CustomerProtectRuleVO());
+				}
 			}
 		}
 
@@ -175,8 +184,11 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
 			int protectDays = Arith.div(depositRule.getDays(), 1000000);
 			if (daysPassed < protectDays) {
-				matchedRules.add(depositRule);
-				remainingDays.add((int) (protectDays - daysPassed));
+				int remaining = (int) (protectDays - daysPassed);
+				if (remaining > maxRemainingDays) {
+					maxRemainingDays = remaining;
+					maxRuleVO = depositRule.ptv(new CustomerProtectRuleVO());
+				}
 			}
 		}
 
@@ -188,25 +200,21 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 				long daysPassed = DateUtil.diffDay(decorationPO.getCreateTime(), now);
 				int protectDays = dutyRule.getDays();
 				if (daysPassed < protectDays) {
-					matchedRules.add(dutyRule);
-					remainingDays.add((int) (protectDays - daysPassed));
+					int remaining = (int) (protectDays - daysPassed);
+					if (remaining > maxRemainingDays) {
+						maxRemainingDays = remaining;
+						maxRuleVO = dutyRule.ptv(new CustomerProtectRuleVO());
+					}
 				}
 			}
 		}
 
-		// 返回保护天数最大的规则
-		if (matchedRules.isEmpty()) {
-			return customerProtectRuleVO;
+		// 如果有匹配的规则，返回最大天数的规则
+		if (maxRemainingDays > 0) {
+			return maxRuleVO;
 		}
 
-		int maxIndex = 0;
-		for (int i = 1; i < remainingDays.size(); i++) {
-			if (remainingDays.get(i) > remainingDays.get(maxIndex)) {
-				maxIndex = i;
-			}
-		}
-
-		return matchedRules.get(maxIndex).ptv(customerProtectRuleVO);
+		return customerProtectRuleVO;
 	}
 
 	@Override
