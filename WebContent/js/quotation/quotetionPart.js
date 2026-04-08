@@ -1567,7 +1567,7 @@
                     var input = $(v);
                     var params = input.parents(".functionAreaItem").find("[name='quoteparam']");
 
-                    _param['quotetionFunctionAreas[' + i + '].qfaId'] = input.val();
+                    _param['quotetionFunctionAreas[' + i + '].id'] = input.val();
 
                     $.each(params, function(j, v) {
 
@@ -1585,7 +1585,7 @@
                     _param["quotetion.updateTime"] = com.currentTime();
                 }
 
-                com.post(api.quotation.addQuotetionFuctionArea, _param, function(data) {
+                com.post(api.quotation.addQuotetionFunctionArea, _param, function(data) {
 
                     data.quotetionFunctionAreas.length && $.each(data.quotetionFunctionAreas, function(i, v) {
 

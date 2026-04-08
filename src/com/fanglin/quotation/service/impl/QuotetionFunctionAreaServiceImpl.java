@@ -126,7 +126,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public List<QuotetionFunctionAreaVO> addQuotetionFuctionArea(List<QuotetionFunctionAreaVO> quotetionFunctionAreas, QuotetionVO quotetionVO) throws FLException {
+	public List<QuotetionFunctionAreaVO> addQuotetionFunctionArea(List<QuotetionFunctionAreaVO> quotetionFunctionAreas, QuotetionVO quotetionVO) throws FLException {
 
 		QuotetionPO quotetionPO = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
 
@@ -139,7 +139,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 		for (QuotetionFunctionAreaVO quotetionFunctionAreaVO : quotetionFunctionAreas) {
 
-			FunctionAreaPO functionAreaPO = functionAreaDao.get(quotetionFunctionAreaVO.getQfaId());
+			FunctionAreaPO functionAreaPO = functionAreaDao.get(quotetionFunctionAreaVO.getId());
 
 			if (functionAreaPO == null) continue;
 
@@ -157,16 +157,15 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 			quotetionFunctionAreaDao.saveOrUpdate(quotetionFunctionAreaPO);
 
-			QuotetionFunctionAreaParamVO quotetionFunctionAreaParamVO = quotetionFunctionAreaVO.getQuotetionFunctionAreaParam();
-
-			if (quotetionFunctionAreaParamVO != null) {
+			if (quotetionFunctionAreaVO.getQuotetionFunctionAreaParam() != null) {
 
 				QuotetionFunctionAreaParamPO quotetionFunctionAreaParamPO = new QuotetionFunctionAreaParamPO();
 
-				BeanUtil.copyProperties(quotetionFunctionAreaParamVO, quotetionFunctionAreaParamPO);
+				BeanUtil.copyProperties(quotetionFunctionAreaVO.getQuotetionFunctionAreaParam(), quotetionFunctionAreaParamPO);
+
 				quotetionFunctionAreaParamPO.setQfaId(quotetionFunctionAreaPO.getQfaId());
 
-				quotetionFunctionAreaParamDao.saveOrUpdate(quotetionFunctionAreaParamPO);
+				quotetionFunctionAreaParamDao.save(quotetionFunctionAreaParamPO);
 
 				BeanUtil.copyPropertie(quotetionFunctionAreaParamPO, quotetionFunctionAreaVO.getQuotetionFunctionAreaParam());
 			}

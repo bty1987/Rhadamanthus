@@ -1,3 +1,3 @@
 $(function(){
-    config.versionCode = '8.3.024.001';
+    config.versionCode = '8.3.024.003';
 });

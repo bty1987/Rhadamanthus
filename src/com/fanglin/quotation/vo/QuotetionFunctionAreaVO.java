@@ -7,6 +7,8 @@ public class QuotetionFunctionAreaVO implements Serializable {
 
 	private static final long serialVersionUID = -6568973240707170532L;
 
+	private Long id; // 配合页面存储信息
+
 	private Long qfaId;
 
 	private Long qid;
@@ -20,6 +22,14 @@ public class QuotetionFunctionAreaVO implements Serializable {
 	private List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItems;
 
 	private QuotetionFunctionAreaParamVO quotetionFunctionAreaParam;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Long getQfaId() {
 		return qfaId;
