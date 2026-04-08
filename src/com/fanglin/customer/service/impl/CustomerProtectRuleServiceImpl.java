@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.service.ApprovalDecorationBelongService;
+import com.fanglin.communion.dao.DutyDao;
+import com.fanglin.communion.po.DutyPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
@@ -46,6 +48,9 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private DutyDao dutyDao;
 
 	@Autowired
 	private DecorationMeasureRuleDao decorationMeasureRuleDao;
@@ -178,7 +183,13 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 		CustomerProtectRulePO customerProtectRulePO = new CustomerProtectRulePO(creater);
 
-		BeanUtil.copyProperties(customerProtectRuleVO, customerProtectRulePO, Arrays.asList("creater"));
+		BeanUtil.copyProperties(customerProtectRuleVO, customerProtectRulePO, Arrays.asList("creater", "duty"));
+
+		// 处理岗位关联
+		if (customerProtectRuleVO.getDuty() != null && customerProtectRuleVO.getDuty().getDid() != null) {
+			DutyPO dutyPO = dutyDao.get(customerProtectRuleVO.getDuty().getDid());
+			customerProtectRulePO.setDuty(dutyPO);
+		}
 
 		customerProtectRulePO.setCompany(company);
 
