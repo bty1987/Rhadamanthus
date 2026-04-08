@@ -34,10 +34,19 @@ $(function() {
 
     customerProtectRule.items.type.on("change", function() {
 
-        if (customerProtectRule.items.type.val() == 0) {
+        var type = parseInt(customerProtectRule.items.type.val());
+
+        // 根据类型控制控件显示
+        // type = 0(面积), 1(预付款), 2(设计费), 3(定金): 显示起始值/终止值，隐藏岗位
+        // type = 4(岗位): 隐藏起始值/终止值，显示岗位
+        if (type <= 3) {
             com.focusPage("#uppvalDiv").removeClass("hide");
+            com.focusPage("#lowvalDiv").removeClass("hide");
+            com.focusPage("#dutyDiv").addClass("hide");
         } else {
             com.focusPage("#uppvalDiv").addClass("hide");
+            com.focusPage("#lowvalDiv").addClass("hide");
+            com.focusPage("#dutyDiv").removeClass("hide");
         }
     });
 
@@ -122,7 +131,11 @@ $(function() {
 
     com.focusPage('#addCustomerProtectRule', '#pagenation').on("click", function() {
 
+        // 默认显示面积类型的控件状态
         com.focusPage("#uppvalDiv").removeClass("hide");
+        com.focusPage("#lowvalDiv").removeClass("hide");
+        com.focusPage("#dutyDiv").addClass("hide");
+
         customerProtectRule.modals.addCustomerProtectRuleModal.modal("show");
     });
 

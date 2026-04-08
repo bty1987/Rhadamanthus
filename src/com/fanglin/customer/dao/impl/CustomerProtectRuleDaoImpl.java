@@ -69,6 +69,18 @@ public class CustomerProtectRuleDaoImpl extends DaoImpl<CustomerProtectRulePO> i
 		return (CustomerProtectRulePO) session().createCriteria(CustomerProtectRulePO.class).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, type)).add(Restrictions.le(CustomerProtectRulePO.COLUMN_UPPVAL_STR, value)).add(Restrictions.ge(CustomerProtectRulePO.COLUMN_LOWVAL_STR, value)).uniqueResult();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CustomerProtectRulePO> queryCustomerProtectRuleByDuty(Integer did, int company) {
+		return session().createCriteria(CustomerProtectRulePO.class)
+				.add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, CustomerProtectRulePO.TYPE_DUTY_INT))
+				.add(Restrictions.eq(CustomerProtectRulePO.COLUMN_STATUS_STR, CustomerProtectRulePO.STATUS_ABLE_SHORT))
+				.add(Restrictions.eq(CustomerProtectRulePO.COLUMN_COMPANY_STR, company))
+				.createAlias("duty", "d")
+				.add(Restrictions.eq("d.did", did))
+				.list();
+	}
+
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;
