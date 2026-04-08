@@ -66,13 +66,12 @@ public class CustomerProtectRuleDaoImpl extends DaoImpl<CustomerProtectRulePO> i
 
 	@Override
 	public CustomerProtectRulePO queryCustomerProtectRule(Short type, int value) {
-		return (CustomerProtectRulePO) session().createCriteria(CustomerProtectRulePO.class).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, type)).add(Restrictions.le(CustomerProtectRulePO.COLUMN_UPPVAL_STR, value)).add(Restrictions.ge(CustomerProtectRulePO.COLUMN_LOWVAL_STR, value)).uniqueResult();
+		return (CustomerProtectRulePO) session().createCriteria(CustomerProtectRulePO.class).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, type)).add(Restrictions.le(CustomerProtectRulePO.COLUMN_UPPVAL_STR, value)).add(Restrictions.ge(CustomerProtectRulePO.COLUMN_LOWVAL_STR, value)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<CustomerProtectRulePO> queryCustomerProtectRuleByDuty(Long did, int company) {
-		return session().createCriteria(CustomerProtectRulePO.class).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, CustomerProtectRulePO.TYPE_DUTY_INT)).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_STATUS_STR, CustomerProtectRulePO.STATUS_ABLE_SHORT)).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_COMPANY_STR, company)).createAlias("duty", "d").add(Restrictions.eq("d.did", did)).list();
+	public CustomerProtectRulePO queryCustomerProtectRule(Long did, int company) {
+		return (CustomerProtectRulePO) session().createCriteria(CustomerProtectRulePO.class).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, CustomerProtectRulePO.TYPE_DUTY_INT)).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_STATUS_STR, CustomerProtectRulePO.STATUS_ABLE_SHORT)).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_COMPANY_STR, company)).createAlias("duty", "d").add(Restrictions.eq("d.did", did)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
