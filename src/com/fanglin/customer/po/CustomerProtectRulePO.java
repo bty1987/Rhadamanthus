@@ -52,6 +52,10 @@ public class CustomerProtectRulePO implements Serializable {
 
 	public static final short TYPE_PAYMENT_DESIGN_INT = 2;
 
+	public static final short TYPE_DEPOSIT_INT = 3; // 定金（预付款+设计费）
+
+	public static final short TYPE_DUTY_INT = 4; // 岗位
+
 	private long cprid;
 
 	private String title;

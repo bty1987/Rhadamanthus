@@ -124,49 +124,85 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 		if (decorationPO == null) return customerProtectRuleVO;
 
-		if (Arrays.asList(DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_RESIGNED_INT, DecorationPO.STATUS_COMPLETED_INT).contains(decorationPO.getStatus())) {
-			throw new FLException(140004, "装修单状态不可操作");
-		}
-
-		if (Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT).contains(decorationPO.getStatus()) || DecorationPO.BALANCESTATUS_CONDUCT_INT == decorationPO.getBalanceStatus()) return customerProtectRuleVO;
-
 		customerProtectRuleVO.setOrderId(decorationPO.getOrderId());
 
-		CustomerProtectRulePO customerProtectRulePO = null;
+		// 存储匹配到的规则及其剩余保护天数
+		List<java.util.AbstractMap.SimpleEntry<CustomerProtectRulePO, Integer>> matchedRules = new ArrayList<>();
 
-		if (DecorationPO.STATUS_INIT_INT == decorationPO.getStatus()) {
+		Timestamp now = DateUtil.getDateToTimestamp(new Date());
 
-			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_AREA_INT, decorationPO.getHouse().getInnerArea());
-
-			if (customerProtectRulePO != null && DateUtil.diffDay(decorationPO.getMeasureTime(), DateUtil.getDateToTimestamp(new Date())) < Arith.div(customerProtectRulePO.getDays(), 10000000)) { // 量尺时间-当前时间>保护规则天数
-				return customerProtectRulePO.ptv(customerProtectRuleVO);
+		// 1. 面积规则检查
+		CustomerProtectRulePO areaRule = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_AREA_INT, decorationPO.getHouse().getInnerArea());
+		if (areaRule != null && decorationPO.getMeasureTime() != null) {
+			long daysPassed = DateUtil.diffDay(decorationPO.getMeasureTime(), now);
+			int protectDays = Arith.div(areaRule.getDays(), 10000000);
+			if (daysPassed < protectDays) {
+				matchedRules.add(new java.util.AbstractMap.SimpleEntry<>(areaRule, (int) (protectDays - daysPassed)));
 			}
 		}
 
-		if (DecorationPO.STATUS_DEPOSIT_INT == decorationPO.getStatus()) {
-
-			int advanceAmount = paymentDao.amountPayment(decorationPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, decorationPO.getDepositTime()); // QUERY ADVANCEPAYMENT
-
-			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_ADVANCE_INT, advanceAmount);
-
-			if (customerProtectRulePO != null && DateUtil.diffDay(decorationPO.getDepositTime(), DateUtil.getDateToTimestamp(new Date())) < Arith.div(customerProtectRulePO.getDays(), 1000000)) {
-				return customerProtectRulePO.ptv(customerProtectRuleVO);
-			}
-
-			DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.queryDecorationPayment(decorationPO.getOrderId(), DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR); // QUERY DESIGNPAYMENT
-
-			int designAmount = (int) (decorationPaymentPO != null ? decorationPaymentPO.getReferMoney() : 0);
-
-			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_DESIGN_INT, designAmount);
-
-			if (customerProtectRulePO != null && DateUtil.diffDay(decorationPO.getDepositTime(), DateUtil.getDateToTimestamp(new Date())) < Arith.div(customerProtectRulePO.getDays(), 1000000)) {
-				return customerProtectRulePO.ptv(customerProtectRuleVO);
+		// 2. 预付款规则检查
+		int advanceAmount = paymentDao.amountPayment(decorationPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, decorationPO.getDepositTime());
+		CustomerProtectRulePO advanceRule = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_ADVANCE_INT, advanceAmount);
+		if (advanceRule != null && decorationPO.getDepositTime() != null) {
+			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
+			int protectDays = Arith.div(advanceRule.getDays(), 1000000);
+			if (daysPassed < protectDays) {
+				matchedRules.add(new java.util.AbstractMap.SimpleEntry<>(advanceRule, (int) (protectDays - daysPassed)));
 			}
 		}
 
-		customerProtectRuleVO.setOrderId(decorationPO.getOrderId());
+		// 3. 设计费规则检查
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.queryDecorationPayment(decorationPO.getOrderId(), DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR);
+		int designAmount = (int) (decorationPaymentPO != null ? decorationPaymentPO.getReferMoney() : 0);
+		CustomerProtectRulePO designRule = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_DESIGN_INT, designAmount);
+		if (designRule != null && decorationPO.getDepositTime() != null) {
+			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
+			int protectDays = Arith.div(designRule.getDays(), 1000000);
+			if (daysPassed < protectDays) {
+				matchedRules.add(new java.util.AbstractMap.SimpleEntry<>(designRule, (int) (protectDays - daysPassed)));
+			}
+		}
 
-		return customerProtectRuleVO;
+		// 4. 定金规则检查（预付款+设计费）
+		int depositAmount = advanceAmount + designAmount;
+		CustomerProtectRulePO depositRule = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_DEPOSIT_INT, depositAmount);
+		if (depositRule != null && decorationPO.getDepositTime() != null) {
+			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
+			int protectDays = Arith.div(depositRule.getDays(), 1000000);
+			if (daysPassed < protectDays) {
+				matchedRules.add(new java.util.AbstractMap.SimpleEntry<>(depositRule, (int) (protectDays - daysPassed)));
+			}
+		}
+
+		// 5. 岗位规则检查
+		if (decorationPO.getDesigner() != null && decorationPO.getDesigner().getDuty() != null) {
+			Integer dutyId = decorationPO.getDesigner().getDuty().getDid();
+			List<CustomerProtectRulePO> dutyRules = customerProtectRuleDao.queryCustomerProtectRuleByDuty(dutyId, company);
+			for (CustomerProtectRulePO dutyRule : dutyRules) {
+				long daysPassed = DateUtil.diffDay(decorationPO.getCreateTime(), now);
+				int protectDays = dutyRule.getDays();
+				if (daysPassed < protectDays) {
+					matchedRules.add(new java.util.AbstractMap.SimpleEntry<>(dutyRule, (int) (protectDays - daysPassed)));
+				}
+			}
+		}
+
+		// 返回保护天数最大的规则
+		if (matchedRules.isEmpty()) {
+			return customerProtectRuleVO;
+		}
+
+		CustomerProtectRulePO maxRule = matchedRules.get(0).getKey();
+		int maxDays = matchedRules.get(0).getValue();
+		for (java.util.AbstractMap.SimpleEntry<CustomerProtectRulePO, Integer> entry : matchedRules) {
+			if (entry.getValue() > maxDays) {
+				maxDays = entry.getValue();
+				maxRule = entry.getKey();
+			}
+		}
+
+		return maxRule.ptv(customerProtectRuleVO);
 	}
 
 	@Override

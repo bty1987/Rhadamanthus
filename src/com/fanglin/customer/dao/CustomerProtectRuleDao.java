@@ -17,4 +17,12 @@ public interface CustomerProtectRuleDao extends Dao<CustomerProtectRulePO> {
 
 	public CustomerProtectRulePO queryCustomerProtectRule(Short type, int value);
 
+	/**
+	 * 根据岗位查询保护规则
+	 * @param did 岗位ID
+	 * @param company 公司ID
+	 * @return 规则列表
+	 */
+	public List<CustomerProtectRulePO> queryCustomerProtectRuleByDuty(Integer did, int company);
+
 }
