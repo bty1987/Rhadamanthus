@@ -19,10 +19,11 @@ public interface CustomerProtectRuleDao extends Dao<CustomerProtectRulePO> {
 
 	/**
 	 * 根据岗位查询保护规则
+	 * 
 	 * @param did 岗位ID
 	 * @param company 公司ID
 	 * @return 规则列表
 	 */
-	public List<CustomerProtectRulePO> queryCustomerProtectRuleByDuty(Integer did, int company);
+	public List<CustomerProtectRulePO> queryCustomerProtectRuleByDuty(Long did, int company);
 
 }
