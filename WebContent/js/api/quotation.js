@@ -1352,11 +1352,11 @@ $.extend(api, {
                 args: ["unitPrice", "addPrice", "subPrice", "num"]
             }]
         },
-        addQuotetionFuctionArea: {
-            url: "addQuotetionFuctionArea.do",
+        addQuotetionFunctionArea: {
+            url: "addQuotetionFunctionArea.do",
             type: "update",
             tranargs: {
-                args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.basePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate"],
+                args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.basePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate", "quotetionFunctionAreas.quotetionFunctionAreaParam.girth", "quotetionFunctionAreas.quotetionFunctionAreaParam.area", "quotetionFunctionAreas.quotetionFunctionAreaParam.height", "quotetionFunctionAreas.quotetionFunctionAreaParam.holeLength", "quotetionFunctionAreas.quotetionFunctionAreaParam.holeHeight", "quotetionFunctionAreas.quotetionFunctionAreaParam.windowLength", "quotetionFunctionAreas.quotetionFunctionAreaParam.windowHeight", "quotetionFunctionAreas.quotetionFunctionAreaParam.beamLength", "quotetionFunctionAreas.quotetionFunctionAreaParam.beamHeight", ],
                 query: [{
                     result: "quotetionFunctionAreas-quotetionFunctionAreaItems",
                     args: ["unitPrice", "addPrice", "subPrice", "num"]

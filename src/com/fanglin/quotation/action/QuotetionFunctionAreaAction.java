@@ -45,10 +45,10 @@ public class QuotetionFunctionAreaAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "addQuotetionFuctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addQuotetionFuctionArea() throws FLException {
+	@Action(value = "addQuotetionFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addQuotetionFunctionArea() throws FLException {
 
-		quotetionFunctionAreas = quotetionFunctionAreaService.addQuotetionFuctionArea(quotetionFunctionAreas, quotetion);
+		quotetionFunctionAreas = quotetionFunctionAreaService.addQuotetionFunctionArea(quotetionFunctionAreas, quotetion);
 
 		return SUCCESS;
 	}
