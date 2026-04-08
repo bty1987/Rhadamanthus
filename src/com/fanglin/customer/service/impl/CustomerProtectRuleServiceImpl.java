@@ -194,29 +194,28 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 		}
 
 		// 5. 岗位规则检查
-		// 先查询装修单的业务员归属（type = 1）
-		CustomerProtectRulePO dutyRule = customerProtectRuleDao.queryCustomerProtectRule(decorationPO.getSalesman().getDuty().getDid(), company);
-		// 检查业务员归属的岗位是否匹配规则中的岗位
-		if (depositRule != null && decorationPO.getSalesman().getDuty() != null && customerProtectRuleVO.getDuty() != null && customerProtectRuleVO.getDuty().getDid() != null) {
-			boolean isSalesmanDutyMatch = false;
-			if (decorationPO.getSalesman().getDuty().getDid() == customerProtectRuleVO.getDuty().getDid()) {
-				// 业务员的岗位匹配规则中的岗位，不触发保护
-				isSalesmanDutyMatch = true;
-			}
+		if (customerProtectRuleVO.getDuty() != null && customerProtectRuleVO.getDuty().getDid() != null) {
+			// 按传入的岗位ID查询规则
+			CustomerProtectRulePO dutyRule = customerProtectRuleDao.queryCustomerProtectRule(customerProtectRuleVO.getDuty().getDid(), company);
 
-			if (isSalesmanDutyMatch) {
-				// 业务员岗位匹配，返回空 VO（不触发保护）
+			// 检查装修单的业务员岗位是否等于传入的岗位
+			if (decorationPO.getSalesman() != null && decorationPO.getSalesman().getDuty() != null
+					&& decorationPO.getSalesman().getDuty().getDid().equals(customerProtectRuleVO.getDuty().getDid())) {
+				// 业务员岗位匹配传入的岗位，返回空 VO（不触发保护）
 				return new CustomerProtectRuleVO();
 			}
-		}
 
-		long daysPassed = DateUtil.diffDay(decorationPO.getCreateTime(), now);
-		int protectDays = dutyRule.getDays();
-		if (daysPassed < protectDays) {
-			int remaining = (int) (protectDays - daysPassed);
-			if (remaining > maxRemainingDays) {
-				maxRemainingDays = remaining;
-				maxRuleVO = dutyRule.ptv(new CustomerProtectRuleVO());
+			// 业务员岗位不匹配，检查保护期
+			if (dutyRule != null) {
+				long daysPassed = DateUtil.diffDay(decorationPO.getCreateTime(), now);
+				int protectDays = dutyRule.getDays();
+				if (daysPassed < protectDays) {
+					int remaining = (int) (protectDays - daysPassed);
+					if (remaining > maxRemainingDays) {
+						maxRemainingDays = remaining;
+						maxRuleVO = dutyRule.ptv(new CustomerProtectRuleVO());
+					}
+				}
 			}
 		}
 
