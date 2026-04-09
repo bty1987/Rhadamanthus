@@ -10,7 +10,7 @@ import com.fanglin.utils.Paging;
 
 public interface SalesRefundsDao extends Dao<SalesRefundsPO> {
 
-	public List<SalesRefundsPO> pageSalesRefunds(Paging paging, List<Filter> filters) throws FLException;
+	public List<SalesRefundsPO> pageSalesRefunds(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	public List<SalesRefundsPO> querySalesRefundsBySid(Long sid);
 

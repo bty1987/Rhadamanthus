@@ -20,9 +20,12 @@ public class SalesRefundsDaoImpl extends DaoImpl<SalesRefundsPO> implements Sale
 	}
 
 	@Override
-	public List<SalesRefundsPO> pageSalesRefunds(Paging paging, List<Filter> filters) throws FLException {
+	public List<SalesRefundsPO> pageSalesRefunds(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<SalesRefundsPO> query = pagingQuery(paging, SalesRefundsPO.class);
+
+		query.alias("sales", "sales");
+		query.add(query.getCriterion("sales.company", company, "eq"));
 
 		queryFilterExecute(query, filters);
 
