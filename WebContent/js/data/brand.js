@@ -108,6 +108,11 @@ jQuery(function($) {
         }]);
     }
     var lineprops = [{
+        field: "bid",
+        name: "ID",
+        prop: "bid",
+        clazz: "grey"
+    }, {
         field: "categoryName",
         name: "品类",
         prop: "categoryName",
