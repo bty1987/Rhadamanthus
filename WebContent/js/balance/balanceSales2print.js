@@ -111,7 +111,7 @@ $(function() {
         var td3 = $('<td colspan="3" style="border: 1px solid;"></td>').text("公司名称：" + params.company.name).appendTo(tr1);
         var tr2 = $('<tr colspan="11" style="border: 1px solid;height: 60px;text-align: center; font-size: 7px;"></tr>').appendTo(table);
 
-        var td37 = $('<td colspan="11" style="border: 1px solid;"></td>').appendTo(tr2);
+        var td37 = $('<td colspan="12" style="border: 1px solid;"></td>').appendTo(tr2);
 
         // 使用 talking 话术内容，如果没有配置则使用默认文本
         var noticeText = talkingContent || "首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在【数据核对无误】处盖章并签字确认，本次账单代收款的金额为：人民币";
