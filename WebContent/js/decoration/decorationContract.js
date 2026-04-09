@@ -715,8 +715,7 @@ jQuery(function($) {
         com.showConfirm("确认完成合同？结束时间将更新为当前时间", function() {
 
             // 获取当前时间并格式化
-            var now = new Date();
-            var currentTime = now.format('yyyy-MM-dd HH:mm:ss');
+            var currentTime = com.dateFormat(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
             var recordData = {
                 "decorationContractRecord.orderId": params.decoration.orderId,
