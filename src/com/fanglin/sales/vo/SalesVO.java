@@ -105,7 +105,12 @@ public class SalesVO implements Serializable {
 		super();
 	}
 
-	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer,BrandVO brand) {
+	public SalesVO(Long sid) {
+		super();
+		this.sid = sid;
+	}
+
+	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer, BrandVO brand) {
 		super();
 		this.house = house;
 		this.customer = customer;
@@ -118,7 +123,7 @@ public class SalesVO implements Serializable {
 		this.brand = brand;
 	}
 
-	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer, UserBaseVO supplier, UserBaseVO finisher, UserBaseVO creater,BrandVO brand) {
+	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer, UserBaseVO supplier, UserBaseVO finisher, UserBaseVO creater, BrandVO brand) {
 		super();
 		this.house = house;
 		this.customer = customer;

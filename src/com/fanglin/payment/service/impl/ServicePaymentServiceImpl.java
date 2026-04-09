@@ -193,7 +193,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		servicePaymentDao.save(servicePaymentPO);
 
 		servicePayment.setSpid(servicePaymentPO.getSpid());
-
 	}
 
 	@Override

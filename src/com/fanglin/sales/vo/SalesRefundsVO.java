@@ -38,6 +38,11 @@ public class SalesRefundsVO implements Serializable {
 		super();
 	}
 
+	public SalesRefundsVO(Long rid) {
+		super();
+		this.rid = rid;
+	}
+
 	public SalesRefundsVO(UserVO creater) {
 		super();
 		this.creater = creater;
