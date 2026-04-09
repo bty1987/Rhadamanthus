@@ -23,6 +23,16 @@ $(function() {
     var brand = {};
     var creater = {};
     var trList = $("#reslist");
+    var talkingContent = ""; // 结算销售打印话术内容
+
+    // 获取结算销售打印话术 (type=9)
+    com.post(api.data.queryTalking, {
+        "types[0]": 9
+    }, function(res) {
+        if (res.talkings && res.talkings.length > 0) {
+            talkingContent = res.talkings[0].content;
+        }
+    }, null, false);
 
     com.post(api.balance.queryBalanceSalesByBsid, {
         "balanceSales.bsid": params.balance.bsid
@@ -102,7 +112,10 @@ $(function() {
         var tr2 = $('<tr colspan="11" style="border: 1px solid;height: 60px;text-align: center; font-size: 7px;"></tr>').appendTo(table);
 
         var td37 = $('<td colspan="11" style="border: 1px solid;"></td>').appendTo(tr2);
-        var span1 = $('<span></span>').text("首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，" + "特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在“数据核对无误”处盖章并签字确认，" + "本次账单代收款的金额为：人民币").appendTo(td37);
+
+        // 使用 talking 话术内容，如果没有配置则使用默认文本
+        var noticeText = talkingContent || "首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在"数据核对无误"处盖章并签字确认，本次账单代收款的金额为：人民币";
+        var span1 = $('<span></span>').text(noticeText).appendTo(td37);
         var span2 = $('<span></span>').attr("id", "totalInc").text("").appendTo(span1);
         var span3 = $('<span></span>').text(")，本次账单服务费的金额为：人民币").appendTo(span1);
         var span4 = $('<span></span>').attr("id", "totalSer").text("").appendTo(span1);
