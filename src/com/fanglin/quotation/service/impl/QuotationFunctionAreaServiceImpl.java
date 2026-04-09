@@ -433,6 +433,10 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 		// 设置新功能区的名称（原名称_副本）
 		String newName = quotationFunctionAreaSO.getFunctionAreaName() + "_副本";
+		// 名称长度限制为10个字符，超过部分截断
+		if (newName.length() > 10) {
+			newName = newName.substring(0, 10);
+		}
 		quotationFunctionAreaTO.setFunctionAreaName(newName);
 
 		// 设置关联的报价单

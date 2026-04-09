@@ -1440,7 +1440,19 @@ var QuotationDetail = (function() {
 
                     // 将新功能区插入到当前功能区之后
                     $newDomain.insertAfter($domain);
-                    
+
+                    // 更新左侧功能区金额统计列表
+                    // 获取当前功能区对应的左侧金额项
+                    var $currentMoneyItem = com.focusPage('#functionAreaSumList > div[data-qfaId="' + qfaId + '"]');
+                    // 创建新的金额统计项
+                    var $newMoneyItem = painter.createDomainMoney(quotationFunctionArea.total, newFunctionArea);
+                    // 插入到当前金额项之后
+                    if ($currentMoneyItem.length > 0) {
+                        $newMoneyItem.insertAfter($currentMoneyItem);
+                    } else {
+                        $newMoneyItem.appendTo(com.focusPage('#functionAreaSumList'));
+                    }
+
                     quo.calculateQuoFees();
                     quo.calculateQuoFeesPost();
                     
