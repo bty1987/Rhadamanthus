@@ -114,7 +114,7 @@ $(function() {
         var td37 = $('<td colspan="11" style="border: 1px solid;"></td>').appendTo(tr2);
 
         // 使用 talking 话术内容，如果没有配置则使用默认文本
-        var noticeText = talkingContent || "首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在"数据核对无误"处盖章并签字确认，本次账单代收款的金额为：人民币";
+        var noticeText = talkingContent || "首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在【数据核对无误】处盖章并签字确认，本次账单代收款的金额为：人民币";
         var span1 = $('<span></span>').text(noticeText).appendTo(td37);
         var span2 = $('<span></span>').attr("id", "totalInc").text("").appendTo(span1);
         var span3 = $('<span></span>').text(")，本次账单服务费的金额为：人民币").appendTo(span1);
