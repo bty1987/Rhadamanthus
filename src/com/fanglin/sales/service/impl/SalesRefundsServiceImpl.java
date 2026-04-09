@@ -84,10 +84,10 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 	private SalesBalanceService salesBalanceService;
 
 	@Override
-	public void pageSalesRefunds(Paging paging, List<Filter> filters) throws FLException {
+	public void pageSalesRefunds(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		List<SalesRefundsVO> refundsVOs = new ArrayList<SalesRefundsVO>();
-		List<SalesRefundsPO> refundsPOs = salesRefundsDao.pageSalesRefunds(paging, filters);
+		List<SalesRefundsPO> refundsPOs = salesRefundsDao.pageSalesRefunds(paging, filters, company);
 
 		for (SalesRefundsPO refundsPO : refundsPOs) {
 			refundsVOs.add(refundsPO.ptv(new SalesRefundsVO(new UserVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO()))));

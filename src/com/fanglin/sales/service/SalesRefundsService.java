@@ -10,7 +10,7 @@ import com.fanglin.utils.Paging;
 
 public interface SalesRefundsService {
 
-	public void pageSalesRefunds(Paging paging, List<Filter> filters) throws FLException;
+	public void pageSalesRefunds(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	public List<SalesRefundsVO> querySalesRefundsBySid(SalesRefundsVO refundsVO);
 

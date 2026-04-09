@@ -42,7 +42,7 @@ public class SalesRefundsAction extends BaseListAction {
 	@Action(value = "pageSalesRefunds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesRefunds() throws FLException {
 
-		salesRefundsService.pageSalesRefunds(getPaging(), getFilters());
+		salesRefundsService.pageSalesRefunds(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
