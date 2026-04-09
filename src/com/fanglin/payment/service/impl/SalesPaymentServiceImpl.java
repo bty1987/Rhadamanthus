@@ -43,6 +43,7 @@ import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.dao.SalesRefundsDao;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.sales.service.SalesActivityService;
 import com.fanglin.sales.service.SalesBalanceService;
 import com.fanglin.sales.vo.SalesVO;
@@ -359,6 +360,75 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_UNPAY_SHORT);
 
 		salesDao.update(sales);
+
+		return 0;
+	}
+
+	@Override
+	public int addSalesPaymentForRefunds(SalesPaymentVO salesPaymentVO, String userId) throws FLException {
+
+		SalesPO salesPO = salesDao.get(salesPaymentVO.getSales().getSid());
+
+		if (salesPO == null) {
+			throw new FLException(370001, "销售单不存在");
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		SalesPaymentPO salesPaymentPO = new SalesPaymentPO();
+
+		salesPaymentPO.setSales(salesPO);
+		salesPaymentPO.setOrderId(salesPO.getOrderId());
+		salesPaymentPO.setCreater(operater);
+		salesPaymentPO.setCategory(salesPO.getCategory());
+		salesPaymentPO.setReferMoney(salesPaymentVO.getReferMoney());// 退款金额
+		salesPaymentPO.setBrand(salesPO.getBrand().getName());// 品牌
+		salesPaymentPO.setStatus(SalesPO.STATUS_INIT_SHORT);
+		salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		salesPaymentPO.setType(SalesPaymentPO.TYPE_REFUNDS_INT);
+
+		if (salesPaymentVO.getSalesRefunds() != null && salesPaymentVO.getSalesRefunds().getRid() != null) {
+			salesPaymentPO.setSalesRefunds(new SalesRefundsPO(salesPaymentVO.getSalesRefunds().getRid()));
+		}
+
+		salesPaymentDao.save(salesPaymentPO);
+		salesPaymentDao.flush();
+
+		salesPaymentVO.setSpid(salesPaymentPO.getSpid());
+
+		if (salesPO.getType() == SalesPO.TYPE_PROFIT_INT) {
+
+			Timestamp current = DateUtil.getDateToTimestamp(new Date());
+
+			SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
+
+			salesReceiptPO.setCollecter(operater);
+			salesReceiptPO.setCollecterName(operater.getUserName());
+			salesReceiptPO.setCollectTime(current);
+			salesReceiptPO.setConfirmer(operater);
+			salesReceiptPO.setConfirmerName(operater.getUserName());
+			salesReceiptPO.setConfirmTime(current);
+			salesReceiptPO.setBankInfo("");
+			salesReceiptPO.setCheckvBank("");
+			salesReceiptPO.setCouponInfo("");
+			salesReceiptPO.setComment("");
+			salesReceiptPO.setRealMoney(salesPO.getTotal());
+
+			salesReceiptDao.save(salesReceiptPO);
+
+			salesPaymentPO.setOrderId(salesPO.getOrderId());
+			salesPaymentPO.setSalesReceipt(salesReceiptPO);
+
+			salesPaymentPO.setStatus(SalesPaymentPO.STATUS_CONFIRMED_INT);
+			salesPaymentPO.setCategory(salesPO.getCategory());
+			salesPaymentPO.setBrand(salesPO.getBrand().getName());
+			salesPaymentPO.setCreater(operater);
+			salesPaymentPO.setCreateTime(current);
+			salesPaymentPO.setReferMoney(Math.abs(salesPO.getTotal()));
+			salesPaymentPO.setCompany(salesPO.getCompany());
+
+			salesPaymentDao.update(salesPaymentPO);
+		}
 
 		return 0;
 	}

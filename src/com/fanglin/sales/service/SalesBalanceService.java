@@ -41,4 +41,6 @@ public interface SalesBalanceService {
 
 	public int rejectSalesBalance(SalesBalanceVO salesBalanceVO, String userId) throws FLException;
 
+	public int refundSalesBalance(SalesBalanceVO salesBalanceVO, String userId) throws FLException;
+
 }

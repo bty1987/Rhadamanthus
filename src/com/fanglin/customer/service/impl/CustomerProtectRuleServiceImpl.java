@@ -199,8 +199,7 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			CustomerProtectRulePO dutyRule = customerProtectRuleDao.queryCustomerProtectRule(customerProtectRuleVO.getDuty().getDid(), company);
 
 			// 检查装修单的业务员岗位是否等于传入的岗位
-			if (decorationPO.getSalesman() != null && decorationPO.getSalesman().getDuty() != null
-					&& decorationPO.getSalesman().getDuty().getDid().equals(customerProtectRuleVO.getDuty().getDid())) {
+			if (decorationPO.getSalesman() != null && decorationPO.getSalesman().getDuty() != null && decorationPO.getSalesman().getDuty().getDid() == customerProtectRuleVO.getDuty().getDid()) {
 				// 业务员岗位匹配传入的岗位，返回空 VO（不触发保护）
 				return new CustomerProtectRuleVO();
 			}

@@ -34,6 +34,10 @@ import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.dingding.service.DingTalkApprovalService;
+import com.fanglin.payment.dao.SalesPaymentDao;
+import com.fanglin.payment.po.SalesPaymentPO;
+import com.fanglin.payment.service.SalesPaymentService;
+import com.fanglin.payment.vo.SalesPaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -46,7 +50,10 @@ import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.po.SalesRefundsItemPO;
 import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.sales.service.SalesActivityService;
+import com.fanglin.sales.service.SalesBalanceService;
+import com.fanglin.sales.vo.SalesBalanceVO;
 import com.fanglin.sales.vo.SalesItemVO;
+import com.fanglin.sales.vo.SalesRefundsVO;
 import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
@@ -81,7 +88,16 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	private SalesRefundsItemDao salesRefundsItemDao;
 
 	@Autowired
+	private SalesPaymentDao salesPaymentDao;
+
+	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private SalesPaymentService salesPaymentService;
+
+	@Autowired
+	private SalesBalanceService salesBalanceService;
 
 	@Autowired
 	private SalesActivityService salesActivityService;
@@ -322,6 +338,33 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesDao.update(salesPO);
 
 		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(salesPO.getOrderId()));
+
+		SalesPaymentPO salesPaymentPO = salesPaymentDao.querySalesPaymentByRid(salesRefundsPO.getRid());
+
+		if (salesPaymentPO != null) {
+			return 0;
+		}
+
+		if (salesPO.getType() == SalesPO.TYPE_INIT_INT) return 0;
+
+		SalesPaymentVO salesPaymentVO = new SalesPaymentVO();
+
+		salesPaymentVO.setSales(new SalesVO(salesRefundsPO.getSales().getSid()));
+		salesPaymentVO.setSalesRefunds(new SalesRefundsVO(salesRefundsPO.getRid()));
+		salesPaymentVO.setReferMoney(salesRefundsPO.getTotal());
+
+		salesPaymentService.addSalesPaymentForRefunds(salesPaymentVO, salesRefundsPO.getCreater().getUserId());
+
+		salesRefundsPO.setSpid(salesPaymentVO.getSpid());
+
+		salesRefundsDao.update(salesRefundsPO);
+
+		SalesBalanceVO salesBalanceVO = new SalesBalanceVO();
+
+		salesBalanceVO.setSales(new SalesVO(salesRefundsPO.getSales().getSid()));
+		salesBalanceVO.setRefunds(new SalesRefundsVO(salesRefundsPO.getRid()));
+
+		salesBalanceService.refundSalesBalance(salesBalanceVO, salesRefundsPO.getCreater().getUserId());
 
 		return 0;
 	}
