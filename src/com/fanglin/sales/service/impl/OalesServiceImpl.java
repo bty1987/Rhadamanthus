@@ -169,7 +169,6 @@ public class OalesServiceImpl implements OalesService {
 		oalesPO.setDecoration(decorationPO);
 		oalesPO.setCustomer(decorationPO.getCustomer());
 		oalesPO.setHouse(decorationPO.getHouse());
-
 		oalesDao.save(oalesPO);
 
 		// 添加操作记录
