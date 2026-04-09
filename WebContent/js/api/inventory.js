@@ -501,7 +501,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["rate", "charge", "total", "rbalance", "vbalance"]
+                args: ["rate", "charge", "total", "rbalance", "vbalance", "rcharge"]
             }]
         },
         pageOccessoriesForSupplier: {
@@ -509,7 +509,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["rate", "charge", "total", "rbalance", "vbalance"]
+                args: ["rate", "charge", "total", "rbalance", "vbalance", "rcharge"]
             }]
         },
         queryOccessoriesByOrderId: {
@@ -517,7 +517,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "occessoriess",
-                args: ["rate", "charge", "total", "rbalance", "vbalance"]
+                args: ["rate", "charge", "total", "rbalance", "vbalance", "rcharge"]
             }]
         },
         queryOccessoriesByOid: {
@@ -525,7 +525,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "occessories",
-                args: ["rate", "charge", "total", "rbalance", "vbalance"]
+                args: ["rate", "charge", "total", "rbalance", "vbalance", "rcharge"]
             }]
         },
         addOccessories: {
