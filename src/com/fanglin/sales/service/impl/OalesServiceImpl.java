@@ -170,6 +170,9 @@ public class OalesServiceImpl implements OalesService {
 		oalesPO.setCustomer(decorationPO.getCustomer());
 		oalesPO.setHouse(decorationPO.getHouse());
 
+		oalesPO.setIsScale(OalesPO.ISSCALE_NONE_INT); // 默认不计入配比
+		oalesPO.setIsActivity(OalesPO.ISACTIVITY_NO_INT); // 默认不参与活动
+
 		oalesDao.save(oalesPO);
 
 		// 添加操作记录
