@@ -755,24 +755,27 @@ var decorationUtils = {
 
                 });
 
-                var consumeBtn = $("<a></a>").addClass("btn btn-minier btn-primary").html("核销").css("margin", "0px 3px").attr("id", "consume_" + _activityItem.daiId).appendTo(uiPgDiv);
+                // 核销功能仅对会员活动物品（atttype=1）可用，装修活动物品（atttype=0）不可使用
+                if (_activityItem.atttype == 1) {
+                    var consumeBtn = $("<a></a>").addClass("btn btn-minier btn-primary").html("核销").css("margin", "0px 3px").attr("id", "consume_" + _activityItem.daiId).appendTo(uiPgDiv);
 
-                consumeBtn.on("click", function() {
+                    consumeBtn.on("click", function() {
 
-                    com.showConfirm("是否确认核销" + _activityItem.activityItemName + "活动物品?", function() {
+                        com.showConfirm("是否确认核销" + _activityItem.activityItemName + "活动物品?", function() {
 
-                        com.post(api.decoration.consumeDecorationActivityItem, {
-                            "decorationActivityItem.daiId": _activityItem.daiId
-                        }, function(res) {
+                            com.post(api.decoration.consumeDecorationActivityItem, {
+                                "decorationActivityItem.daiId": _activityItem.daiId
+                            }, function(res) {
 
-                            com.showAlert(com.info, "核销成功");
+                                com.showAlert(com.info, "核销成功");
 
-                            decorationUtils.countTatol(res.decorationActivityItem.daiId);
+                                decorationUtils.countTatol(res.decorationActivityItem.daiId);
 
-                            com.focusPage("#state_" + res.decorationActivityItem.daiId).text("核销");
+                                com.focusPage("#state_" + res.decorationActivityItem.daiId).text("核销");
+                            });
                         });
                     });
-                });
+                }
 
                 // 如果有 uniqueId（格式：doid-doid），显示"推荐"按钮
                 if (uniqueId) {
