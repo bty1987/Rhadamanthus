@@ -27,6 +27,8 @@ public interface SalesPaymentService {
 
 	public int addSalesPaymentForFullpay(SalesPaymentVO salesPaymentVO, String userId, int company) throws FLException;
 
+	public int addSalesPaymentForRefunds(SalesPaymentVO salesPaymentVO, String userId) throws FLException;
+
 	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, String userId, Integer company) throws FLException;
 
 	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, String userId, Integer company) throws FLException;

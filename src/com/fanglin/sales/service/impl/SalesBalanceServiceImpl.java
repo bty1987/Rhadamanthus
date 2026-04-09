@@ -1,6 +1,7 @@
 package com.fanglin.sales.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,10 +36,14 @@ import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.dao.SalesBalanceItemDao;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesItemDao;
+import com.fanglin.sales.dao.SalesRefundsDao;
+import com.fanglin.sales.dao.SalesRefundsItemDao;
 import com.fanglin.sales.po.SalesBalanceItemPO;
 import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.po.SalesRefundsItemPO;
+import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.sales.service.SalesBalanceService;
 import com.fanglin.sales.vo.SalesBalanceVO;
 import com.fanglin.sales.vo.SalesRefundsVO;
@@ -65,6 +70,12 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 	@Autowired
 	private SalesItemDao salesItemDao;
+
+	@Autowired
+	private SalesRefundsDao salesRefundsDao;
+
+	@Autowired
+	private SalesRefundsItemDao salesRefundsItemDao;
 
 	@Autowired
 	private SalesPaymentDao salesPaymentDao;
@@ -724,6 +735,178 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_INIT_SHORT);
 
 		salesDao.update(salesPO);
+
+		return 0;
+	}
+
+	@Override
+	public int refundSalesBalance(SalesBalanceVO salesBalanceVO, String userId) throws FLException {
+
+		if (salesBalanceVO.getSales() == null || salesBalanceVO.getSales().getSid() == null) {
+			throw new FLException(370001, "销售单不存在");
+		}
+
+		SalesPO salesPO = salesDao.get(salesBalanceVO.getSales().getSid());
+
+		if (salesPO == null) {
+			throw new FLException(370001, "销售单不存在");
+		}
+
+		if (salesBalanceVO.getRefunds() == null || salesBalanceVO.getRefunds().getRid() == null) {
+			throw new FLException(370016, "退货单不存在");
+		}
+
+		SalesRefundsPO salesRefundsPO = salesRefundsDao.get(salesBalanceVO.getRefunds().getRid());
+
+		if (salesRefundsPO == null) {
+			throw new FLException(370016, "退货单不存在");
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		short balanceStatus = salesPO.getBalanceStatus();
+
+		List<Short> balanceStatuses = Arrays.asList(SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT, SalesPO.BALANCESTATUS_SETTLEMENT_SHORT, SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT);
+
+		// 准备工作：查询所有退货项并按品牌分组
+		List<SalesRefundsItemPO> salesRefundItemPOs = salesRefundsItemDao.querySalesRefundsItemByRid(salesBalanceVO.getRefunds().getRid());
+
+		// 按品牌分组退货项
+		Map<Long, List<SalesRefundsItemPO>> brandRefundItemsMap = new HashMap<Long, List<SalesRefundsItemPO>>();
+		for (SalesRefundsItemPO salesRefundItemPO : salesRefundItemPOs) {
+			SalesItemPO salesItemPO = salesRefundItemPO.getSalesItem();
+
+			// 跳过套餐项
+			if (salesItemPO.getPsiid() == 0 && salesItemPO.getType() == SalesItemPO.TYPE_PACKAGE_INT) continue;
+
+			long bid = salesItemPO.getGoods().getBid();
+
+			// 将退货项添加到对应品牌的列表中
+			if (!brandRefundItemsMap.containsKey(bid)) {
+				brandRefundItemsMap.put(bid, new ArrayList<SalesRefundsItemPO>());
+			}
+			brandRefundItemsMap.get(bid).add(salesRefundItemPO);
+		}
+
+		// 创建品牌维度的结算单映射
+		Map<Long, SalesBalancePO> brandBalanceMap = new HashMap<Long, SalesBalancePO>();
+
+		// 为每个品牌创建对应的退货结算数据
+		for (Map.Entry<Long, List<SalesRefundsItemPO>> entry : brandRefundItemsMap.entrySet()) {
+			Long bid = entry.getKey();
+			List<SalesRefundsItemPO> brandRefundItems = entry.getValue();
+
+			// 创建该品牌的退款结算单
+			SalesBalancePO salesBalancePO = new SalesBalancePO();
+
+			if (balanceStatuses.contains(balanceStatus)) { // 结算状态为预结算/厂商结算/结算
+				salesBalancePO.setSales(salesPO);
+				salesBalancePO.setRefunds(salesRefundsPO);
+				salesBalancePO.setCreater(operater);
+				salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+				salesBalancePO.setType(balanceStatus == SalesPO.BALANCESTATUS_SETTLEMENT_SHORT ? SalesBalancePO.TYPE_BALANCEREFUNDS_INT : SalesBalancePO.TYPE_PREBALANCEREFUNDS_INT);
+				salesBalancePO.setOnetype(salesRefundsPO.getType());
+				salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
+
+				salesBalancePO.setSalesman(salesPO.getSalesman());
+				salesBalancePO.setDept(salesPO.getSalesman().getDept());
+				salesBalancePO.setRegion(salesPO.getSalesman().getDept().getFatherDept());
+
+				BrandPO brandPO = brandDao.get(bid);
+
+				if (brandPO == null) continue;
+
+				salesBalancePO.setBrand(brandPO);
+				salesBalancePO.setCompany(brandPO.getCompany());
+
+				// 初始化金额
+				long brandTotal = 0;
+				long brandBalance = 0;
+				long brandAllowance = 0;
+
+				// 计算该品牌的各项金额
+				for (SalesRefundsItemPO salesRefundItemPO : brandRefundItems) {
+					SalesItemPO salesItemPO = salesRefundItemPO.getSalesItem();
+
+					int price = salesItemPO.getPrice();// 折让价
+					int disPrice = salesItemPO.getDisPrice();// 折扣价
+					long num = salesRefundItemPO.getNum();// 退货数量
+
+					// 计算结算金额（负值）
+					short ctype = salesItemPO.getCtype();
+					int cvalue = salesItemPO.getCvalue();
+
+					if (ctype == SalesItemPO.CTYPE_RESERVEPRICE_INT) {
+						// 0: 底价
+						brandBalance = Arith.sub(brandBalance, Arith.mul(Arith.sub(price, cvalue), num));
+					} else if (ctype == SalesItemPO.CTYPE_POINT_INT) {
+						// 1: 点位
+						brandBalance = Arith.sub(brandBalance, Arith.mul(Arith.sub(Arith.mul(disPrice, cvalue), Arith.sub(disPrice, price)), num));
+					}
+
+					// 累加优惠金额
+					brandAllowance = Arith.sub(brandAllowance, Arith.mul(Arith.sub(salesItemPO.getDisPrice(), salesItemPO.getPrice()), num));
+
+					// 累加总金额
+					brandTotal = Arith.sub(brandTotal, salesRefundItemPO.getTotal());
+				}
+
+				// 计算应付和实付金额
+				long vbalance = Arith.sub(Arith.round(brandTotal, 0, Arith.ROUND_DOWN), Arith.round(brandBalance, 0, Arith.ROUND_DOWN));
+
+				// 设置金额信息
+
+				if (brandRefundItemsMap.keySet().size() == 1) { // 非套餐
+					salesBalancePO.setTotal(Arith.sub(0, salesRefundsPO.getTotal()));
+				} else {
+					salesBalancePO.setTotal(Arith.round(brandTotal, 0, Arith.ROUND_HALF_UP));
+				}
+
+				salesBalancePO.setBalance(Arith.round(brandBalance, 0, Arith.ROUND_HALF_UP));
+				salesBalancePO.setAllowance(brandAllowance);
+				salesBalancePO.setVbalance(vbalance);
+				salesBalancePO.setPbalance(vbalance);
+				salesBalancePO.setRate(1000);
+
+				salesBalanceDao.save(salesBalancePO);
+
+				brandBalanceMap.put(bid, salesBalancePO);
+
+				SystemConfigPO taggle = systemConfigDao.querySystemConfig("SALES_AUTO_BALANCE_INT", salesPO.getCompany());
+
+				int count = salesBalanceDao.countSalesBalance(salesPO.getSid(), SalesBalancePO.TYPE_INIT_INT, SalesBalancePO.ONETYPE_INIT_INT, SalesBalancePO.CHECKSTATUS_CHECK_INT);
+
+				if (taggle != null && taggle.getValue() != null && count > 0) {
+					balanceSalesBalanceService.submitBalanceSalesBalance(null, new BalanceSalesBalanceVO(new SalesBalanceVO(salesBalancePO.getSbid())), operater.getUserId(), salesPO.getCompany());
+				}
+			}
+		}
+
+		for (SalesRefundsItemPO salesRefundItemPO : salesRefundItemPOs) {
+
+			SalesItemPO salesItemPO = salesRefundItemPO.getSalesItem();
+
+			if (balanceStatuses.contains(balanceStatus)) { // 结算状态为预结算/厂商结算/结算
+				// 获取该品牌对应的结算单
+				long bid = salesItemPO.getGoods().getBid();
+				SalesBalancePO brandSalesBalancePO = brandBalanceMap.get(bid);
+
+				if (brandSalesBalancePO != null) {
+					SalesBalanceItemPO salesBalanceItemPO = new SalesBalanceItemPO();
+					salesBalanceItemPO.setCtype(salesItemPO.getCtype());
+					salesBalanceItemPO.setCvalue(salesItemPO.getCvalue());
+					salesBalanceItemPO.setNum(salesRefundItemPO.getNum());
+					salesBalanceItemPO.setRawCvalue(salesItemPO.getRawCvalue());
+					salesBalanceItemPO.setSalesItem(salesItemPO);
+					salesBalanceItemPO.setRawCtype(salesItemPO.getRawCtype());
+					salesBalanceItemPO.setSbid(brandSalesBalancePO.getSbid());
+					salesBalanceItemPO.setTotal(Arith.sub(0, salesRefundItemPO.getTotal()));
+
+					salesBalanceItemDao.save(salesBalanceItemPO);
+				}
+			}
+		}
 
 		return 0;
 	}
