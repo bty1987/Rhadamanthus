@@ -46,6 +46,8 @@ public class OccessoriesVO implements Serializable {
 
 	private Long charge; // 外辅费用总额
 
+	private Long rcharge; // 结算费用
+
 	private short isEnter;// 是否可进园区
 
 	private short isLift;// 是否有电梯
@@ -216,6 +218,14 @@ public class OccessoriesVO implements Serializable {
 
 	public void setCharge(Long charge) {
 		this.charge = charge;
+	}
+
+	public Long getRcharge() {
+		return rcharge;
+	}
+
+	public void setRcharge(Long rcharge) {
+		this.rcharge = rcharge;
 	}
 
 	public short getIsEnter() {
