@@ -776,7 +776,8 @@ jQuery(function($) {
 
             com.post(api.customer.checkCustomerProtectRule, {
                 "customerProtectRule.hid": v.house.hid,
-                "customerProtectRule.cid": v.customer.cid
+                "customerProtectRule.cid": v.customer.cid,
+                "customerProtectRule.duty.did": v.belonger.duty.did
             }, function(res) {
 
                 var rule = res.customerProtectRule;
