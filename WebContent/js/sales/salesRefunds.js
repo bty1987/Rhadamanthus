@@ -77,6 +77,16 @@ jQuery(function($) {
         prop: "affirmTime",
         clazz: "green"
     }, {
+        field: "affirmer",
+        name: "确认人",
+        prop: "affirmer.currentName",
+        clazz: "grey",
+        click: function(btn, v) {
+            if (v.affirmer && v.affirmer.userId) {
+                tools.personel.info(btn, v.affirmer.userId);
+            }
+        }
+    }, {
         fieId: "comment",
         name: "备注",
         prop: "comment",

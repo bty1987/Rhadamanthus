@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
 
 public class SalesRefundsVO implements Serializable {
@@ -31,6 +32,8 @@ public class SalesRefundsVO implements Serializable {
 	private Timestamp balanceTime;
 
 	private Timestamp affirmTime;
+
+	private UserBaseVO affirmer;// 确认人
 
 	private String comment;
 
@@ -143,6 +146,14 @@ public class SalesRefundsVO implements Serializable {
 
 	public void setAffirmTime(Timestamp affirmTime) {
 		this.affirmTime = affirmTime;
+	}
+
+	public UserBaseVO getAffirmer() {
+		return affirmer;
+	}
+
+	public void setAffirmer(UserBaseVO affirmer) {
+		this.affirmer = affirmer;
 	}
 
 	public String getComment() {

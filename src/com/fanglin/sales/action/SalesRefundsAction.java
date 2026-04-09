@@ -90,7 +90,7 @@ public class SalesRefundsAction extends BaseListAction {
 	@Action(value = "affirmSalesRefunds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmSalesRefunds() throws FLException {
 
-		salesRefundsService.affirmSalesRefunds(refunds, securityCode, verifyCode, phoneCode, company);
+		salesRefundsService.affirmSalesRefunds(refunds, securityCode, verifyCode, phoneCode, company, queryUserId());
 
 		return SUCCESS;
 	}
