@@ -588,7 +588,7 @@ $.extend(api, {
             url: "balanceOccessories.do",
             type: "update",
             tranargs: {
-                args: ["occessoriesItems.vbalance"]
+                args: ["occessories.vbalance", "occessories.rcharge"]
             }
         },
         finishOccessories: {

@@ -96,6 +96,8 @@ public class OccessoriesPO implements Serializable {
 
 	private long charge; // 外辅费用总额
 
+	private long rcharge; // 结算费用
+
 	private short isEnter;// 是否可进园区
 
 	private short isLift;// 是否有电梯
@@ -302,6 +304,15 @@ public class OccessoriesPO implements Serializable {
 
 	public void setCharge(long charge) {
 		this.charge = charge;
+	}
+
+	@Column(name = "rcharge")
+	public long getRcharge() {
+		return rcharge;
+	}
+
+	public void setRcharge(long rcharge) {
+		this.rcharge = rcharge;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)

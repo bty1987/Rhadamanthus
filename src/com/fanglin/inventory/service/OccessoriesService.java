@@ -26,7 +26,7 @@ public interface OccessoriesService {
 
 	public int receiveOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException;
 
-	public int balanceOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException;
+	public int balanceOccessories(OccessoriesVO occessoriesVO, String userId) throws FLException;
 
 	public int finishOccessories(OccessoriesVO occessories) throws FLException;
 

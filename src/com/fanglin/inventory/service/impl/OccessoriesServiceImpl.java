@@ -392,7 +392,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int balanceOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> occessoriesItemVOs, String userId) throws FLException {
+	public int balanceOccessories(OccessoriesVO occessoriesVO, String userId) throws FLException {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
 
@@ -410,23 +410,9 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		occessoriesPO.setBalancer(user);
 		occessoriesPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 
-		// 汇总所有 item 的实结算额和虚结算额
-		int totalVbalance = 0;
-
-		for (OccessoriesItemVO occessoriesItemVO : occessoriesItemVOs) {
-
-			OccessoriesItemPO occessoriesItemPO = occessoriesItemDao.get(occessoriesItemVO.getOiid());
-
-			occessoriesItemPO.setVbalance(occessoriesItemVO.getVbalance());
-
-			occessoriesItemDao.save(occessoriesItemPO);
-
-			// 累加结算额
-			totalVbalance += occessoriesItemVO.getVbalance() != null ? occessoriesItemVO.getVbalance() : 0;
-		}
-
-		// 更新外辅单的结算额
-		occessoriesPO.setVbalance(totalVbalance);
+		// 从页面参数直接获取虚结算额和结算费用
+		occessoriesPO.setVbalance(occessoriesVO.getVbalance() != null ? occessoriesVO.getVbalance() : 0);
+		occessoriesPO.setRcharge(occessoriesVO.getRcharge() != null ? occessoriesVO.getRcharge() : 0);
 
 		occessoriesDao.update(occessoriesPO);
 

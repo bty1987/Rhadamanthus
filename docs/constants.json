@@ -1780,6 +1780,13 @@
           "key": "2",
           "name": "设计"
         }
+      ],
+      "TYPE_DEPOSIT_SHORT": [
+        {
+          "value": "定金",
+          "key": "3",
+          "name": "定金"
+        }
       ]
     },
     "customerSource": {

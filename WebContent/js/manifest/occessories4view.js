@@ -32,6 +32,11 @@ jQuery(function($) {
         com.closePopup();
     });
 
+    // 当页面类型为 receive（结算）时，显示结算输入区域
+    if (occessories.pageType == "receive") {
+        com.focusPage("#balanceInputArea").show();
+    }
+
     com.post(api.inventory.queryOccessoriesItemByOid, {
         "occessoriesItem.oid": occessories.oid
     }, function(res) {
@@ -97,11 +102,9 @@ jQuery(function($) {
                 occessories.sennum[i] = $(v).val();
             });
         } else if (occessories.pageType == "receive") {
-
+            // 结算页面：不再从明细项汇总 vbalance，而是从输入框直接获取
             var a = com.focusPage(".editable");
-
             $.each(a, function(i, v) {
-
                 occessories.vbalance[i] = $(v).val();
             });
         } else if (occessories.pageType != "bind" && occessories.pageType != "receive" && occessories.pageType != "supplier") {
@@ -132,11 +135,12 @@ jQuery(function($) {
             })
         } else if (occessories.pageType == "receive") {
 
-            occessories.oiid && occessories.oiid.length && $.each(occessories.oiid, function(i, v) {
+            // 结算页面：从输入框获取 vbalance 和 rcharge
+            var vbalanceValue = com.focusPage('#vbalanceInput').val();
+            var rchargeValue = com.focusPage('#rchargeInput').val();
 
-                options["occessoriesItems[" + i + "].oiid"] = v;
-                options["occessoriesItems[" + i + "].vbalance"] = occessories.vbalance[i];
-            });
+            options["occessories.vbalance"] = vbalanceValue;
+            options["occessories.rcharge"] = rchargeValue;
 
             com.post(api.inventory.balanceOccessories, options, function(data) {
 
