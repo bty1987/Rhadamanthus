@@ -172,7 +172,7 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmSalesRefunds(SalesRefundsVO refundsVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
+	public int affirmSalesRefunds(SalesRefundsVO refundsVO, String securityCode, String verifyCode, String phoneCode, String company, String userId) throws FLException {
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
@@ -228,6 +228,12 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 		}
 
 		UserPO operater = salesRefundsPO.getCreater();
+
+		// 查询确认人信息
+		UserPO affirmer = userDao.queryUserByUserId(userId);
+		if (affirmer != null) {
+			salesRefundsPO.setAffirmer(affirmer);
+		}
 
 		salesRefundsPO.setIsAffirm(SalesRefundsPO.ISAFFIRM_AFFIRM_INT);
 		salesRefundsPO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));

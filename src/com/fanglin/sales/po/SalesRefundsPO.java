@@ -68,6 +68,8 @@ public class SalesRefundsPO implements java.io.Serializable {
 
 	private Timestamp affirmTime;// 确认时间
 
+	private UserPO affirmer;// 确认人
+
 	private String comment; // 说明
 
 	public SalesRefundsPO(long rid) {
@@ -184,6 +186,16 @@ public class SalesRefundsPO implements java.io.Serializable {
 		this.affirmTime = affirmTime;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "auid", referencedColumnName = "uid")
+	public UserPO getAffirmer() {
+		return affirmer;
+	}
+
+	public void setAffirmer(UserPO affirmer) {
+		this.affirmer = affirmer;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -195,11 +207,13 @@ public class SalesRefundsPO implements java.io.Serializable {
 
 	public SalesRefundsVO ptv(SalesRefundsVO salesRefundsVO) {
 
-		BeanUtil.copyProperties(this, salesRefundsVO, Arrays.asList("creater", "sales"));
+		BeanUtil.copyProperties(this, salesRefundsVO, Arrays.asList("creater", "sales", "affirmer"));
 
 		if (salesRefundsVO.getSales() != null && getSales() != null) getSales().ptv(salesRefundsVO.getSales());
 
 		if (salesRefundsVO.getCreater() != null && getCreater() != null) salesRefundsVO.getCreater().setBaseInfo(getCreater());
+
+		if (salesRefundsVO.getAffirmer() != null && getAffirmer() != null) salesRefundsVO.getAffirmer().setBaseInfo(getAffirmer());
 
 		return salesRefundsVO;
 	}
