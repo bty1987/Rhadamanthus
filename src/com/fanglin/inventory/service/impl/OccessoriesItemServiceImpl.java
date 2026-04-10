@@ -55,6 +55,7 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		int amount = occessoriesItemDao.amountOccessoriesItem(occessoriesVO.getDecoration().getOrderId(), occessoriesItemVO.getNid());
 
 		occessoriesVO.setAmount(amount);
+		occessoriesItemVO.setAmount(amount);
 
 		return 0;
 	}
