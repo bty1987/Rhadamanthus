@@ -1128,6 +1128,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 		auditDao.save(new AuditPO(decorationPO)); // 预算审核
 
+		// 生成装修单创建事件
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "makeDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"DECORATION_CREATED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+
 		decorationVO.setOrderId(decorationPO.getOrderId());
 	}
 
