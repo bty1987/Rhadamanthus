@@ -8,6 +8,7 @@ $(function() {
             saveBtn: com.focusPage("#saveBtn").on("click", saveData),
             cancelBtn: com.focusPage("#cancelBtn"),
             callBtn: com.focusPage("#callBtn"),
+            balanceSubmitBtn: com.focusPage("#balanceSubmitBtn").on("click", submitBalance),
         },
 
         items: {
@@ -15,11 +16,15 @@ $(function() {
             supplier: com.focusPage("#supplier", "#bindOccessoriesModal"),
             rate: com.focusPage('#rate', "#finishModal"),
             remake: com.focusPage('#remake', "#finishModal"),
+            vbalanceInput: com.focusPage("#vbalanceInput", "#balanceModal"),
+            rchargeInput: com.focusPage("#rchargeInput", "#balanceModal"),
+            balanceNo: com.focusPage("#balanceNo", "#balanceModal"),
         },
 
         modals: {
             bindOccessoriesModal: com.focusPage("#bindOccessoriesModal"),
             finishModal: com.focusPage("#finishModal"),
+            balanceModal: com.focusPage("#balanceModal"),
         },
         drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
 
@@ -83,6 +88,13 @@ $(function() {
         com.cleanItems(occessories.items);
         com.focusPage(".occessories").remove();
         searcher.doSearch();
+    });
+
+    occessories.modals.balanceModal.on("hide.bs.modal", function(e) {
+        com.clearValidator();
+        occessories.items.vbalanceInput.val('');
+        occessories.items.rchargeInput.val('');
+        occessories.items.balanceNo.text('');
     });
 
     com.initTypeahead('supplier', api.personel.querySupplierByPinyin, "supplier.pinYin", {
@@ -328,12 +340,14 @@ $(function() {
                 return false;
             }
 
-            params.manifest.oid = v.oid;
+            occessories.oid = v.oid;
+            occessories.items.balanceNo.text(v.no);
 
-            com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no, null, function() {
+            // 设置默认值
+            occessories.items.vbalanceInput.val(v.vbalance || '');
+            occessories.items.rchargeInput.val(v.rcharge || '');
 
-                searcher.doSearch();
-            });
+            occessories.modals.balanceModal.modal("show");
             return false;
         },
         show: function(v) {
@@ -587,6 +601,26 @@ $(function() {
 
             com.showAlert(com.info, "操作成功");
 
+            searcher.doSearch();
+        });
+    }
+
+    function submitBalance() {
+
+        if (com.validate('balanceModal')) {
+            return false;
+        }
+
+        var options = {
+            "occessories.oid": occessories.oid,
+            "occessories.vbalance": occessories.items.vbalanceInput.val(),
+            "occessories.rcharge": occessories.items.rchargeInput.val()
+        };
+
+        com.post(api.inventory.balanceOccessories, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+            occessories.modals.balanceModal.modal("hide");
             searcher.doSearch();
         });
     }

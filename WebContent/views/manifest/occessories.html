@@ -95,6 +95,48 @@
         </div>
     </div>
 
+    <!-- 结算模态框 -->
+    <div class="modal fade" id="balanceModal" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 10%; width: 500px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">外辅单结算</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label no-padding-right" for="vbalanceInput">虚结算额（元）</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="vbalanceInput" class="form-control input-sm"
+                                       data-validate="v_required v_float_3" placeholder="请输入虚结算额" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label no-padding-right" for="rchargeInput">结算费用（元）</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="rchargeInput" class="form-control input-sm"
+                                       data-validate="v_required v_float_3" placeholder="请输入结算费用" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label no-padding-right" for="balanceNo">外辅单号</label>
+                            <div class="col-sm-7">
+                                <span id="balanceNo" class="form-control-static"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="balanceSubmitBtn" class="btn btn-primary">确定</button>
+                    <button type="button" id="balanceCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <div id="miniPopUp"></div>
 <div id="layerPopUp" class="portlet box page-content"></div>
