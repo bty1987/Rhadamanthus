@@ -253,6 +253,9 @@ jQuery(function() {
             // item 保持单价逻辑，后台会根据 num * rbalance 计算总额
             options["occessoriesItems[" + i + "].rbalance"] = $v.attr('data-balance');
 
+            // 添加 selling 参数，用于计算 total（数量 × 销售单价）
+            options["occessoriesItems[" + i + "].goods.selling"] = $v.attr('data-selling');
+
             // 添加费用数据（使用 orderId_aid_uniqueId 作为缓存 key）
             if (occessories.chargesCache[cacheKey] && occessories.chargesCache[cacheKey].length > 0) {
                 $.each(occessories.chargesCache[cacheKey], function(j, charge) {

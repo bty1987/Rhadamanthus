@@ -534,6 +534,7 @@ $.extend(api, {
             tranargs: {
                 args: [
                     "occessoriesItems.num",
+                    "occessoriesItems.goods.selling",
                     "occessoriesItems.sennum",
                     "occessoriesItems.recnum",
                     "occessoriesItems.rbalance",
