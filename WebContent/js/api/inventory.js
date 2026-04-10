@@ -622,6 +622,9 @@ $.extend(api, {
             tranargs: [{
                 result: "occessoriesItem",
                 args: ["purchase", "selling", "pieceNum", "amount"]
+            }, {
+                result: "occessories",
+                args: ["amount"]
             }]
         },
         addOccessoriesItem: {

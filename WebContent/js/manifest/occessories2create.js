@@ -47,9 +47,6 @@ jQuery(function() {
 
             if (val.aid == k) {
 
-                console.log(val)
-                console.log(val.noods.nid)
-
                 // 验证 orderId 是否已填写
                 var orderId = occessories.rightitems.orderId.val();
                 if (!orderId || orderId.trim() === '') {
@@ -88,8 +85,8 @@ jQuery(function() {
 
     // 使用反序数据，使"否"成为默认选项
     var occessoriesPathReverse = occessories.occessoriesPath.slice().reverse();
-    com.focusPage('select[name="isEnter"]').bindData(occessoriesPathReverse, "key", "value", false);
-    com.focusPage('select[name="isLift"]').bindData(occessoriesPathReverse, "key", "value", false);
+    com.focusPage('select[name="isEnter"]').bindData(occessories.occessoriesPath, "key", "value", false);
+    com.focusPage('select[name="isLift"]').bindData(occessories.occessoriesPath, "key", "value", false);
     com.focusPage('select[name="isExceed"]').bindData(occessoriesPathReverse, "key", "value", false);
     com.focusPage('select[name="isAttic"]').bindData(occessoriesPathReverse, "key", "value", false);
 
@@ -309,16 +306,8 @@ jQuery(function() {
                 }, function(result) {
 
                     console.log('定额数量查询结果:', result);
-                    if (result !== undefined && result !== null) {
-                        // 处理可能的返回格式：直接数值或对象
-                        if (typeof result === 'object') {
-                            normAmount = parseInt(result.amount) || parseInt(result.result) || parseInt(result.normoodAmount) || 0;
-                        } else {
-                            normAmount = parseInt(result) || 0;
-                        }
-                        console.log('定额数量解析值:', normAmount);
-                        occessories.leftitems.normoodAmount.val(normAmount);
-                    }
+
+                    occessories.leftitems.normoodAmount.val(parseInt(result.normoodItem.amount) || 0);
                 });
 
                 // 3. 查询外辅材料数量
@@ -328,16 +317,7 @@ jQuery(function() {
                 }, function(result) {
 
                     console.log('外辅数量查询结果:', result);
-                    if (result !== undefined && result !== null) {
-                        // 处理可能的返回格式：直接数值或对象
-                        if (typeof result === 'object') {
-                            accAmount = parseInt(result.amount) || parseInt(result.result) || parseInt(result.occessoriesAmount) || 0;
-                        } else {
-                            accAmount = parseInt(result) || 0;
-                        }
-                        console.log('外辅数量解析值:', accAmount);
-                        occessories.leftitems.occessoriesAmount.val(accAmount);
-                    }
+                    occessories.leftitems.occessoriesAmount.val(parseInt(result.occessories.amount) || 0);
                 });
 
             } else {

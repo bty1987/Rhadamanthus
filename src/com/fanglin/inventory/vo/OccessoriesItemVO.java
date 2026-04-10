@@ -20,19 +20,21 @@ public class OccessoriesItemVO implements Serializable {
 
 	private Integer num;
 
-	private Integer sennum; //送货数量
+	private Integer sennum; // 送货数量
 
-	private Integer recnum; //到货数量
+	private Integer recnum; // 到货数量
 
-	private Integer rbalance;//原结算价
+	private Integer rbalance;// 原结算价
 
-	private Integer vbalance;//结算价
+	private Integer vbalance;// 结算价
 
 	private Long charge; // 外辅项费用总额
 
 	private Integer surplus; // 浮动额（分）
 
 	private Long nid; // 定材ID
+
+	private Integer amount;
 
 	private List<OccessoriesChargeVO> occessoriesCharges; // 外辅费用列表
 
@@ -76,7 +78,7 @@ public class OccessoriesItemVO implements Serializable {
 		this.nid = nid;
 	}
 
-	public OccessoriesItemVO(){
+	public OccessoriesItemVO() {
 		super();
 	}
 
@@ -150,6 +152,14 @@ public class OccessoriesItemVO implements Serializable {
 
 	public void setRecnum(Integer recnum) {
 		this.recnum = recnum;
+	}
+
+	public Integer getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
 	}
 
 	public List<OccessoriesChargeVO> getOccessoriesCharges() {
