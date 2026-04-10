@@ -659,8 +659,8 @@ public class A20260324ServiceImpl implements A20260324Service {
 				userDao.save(userPO);
 				logger.info("新增用户成功: uid={}, userId={}, name={}", userPO.getUid(), userPO.getUserId(), userPO.getUserName());
 
-				// 6.10 保存用户角色关联
-				userRoleDao.save(new UserRolePO(userPO.getUid(), userPO.getRole(), null));
+				// 6.10 保存用户角色关联（使用用户自己作为创建人，满足cuid NOT NULL约束）
+				userRoleDao.save(new UserRolePO(userPO.getUid(), userPO.getRole(), userPO));
 
 				// 6.11 更新定岗人数
 				DutmentPO dutmentPO = dutmentDao.queryDutmentByDids(deptId, dutyId);
