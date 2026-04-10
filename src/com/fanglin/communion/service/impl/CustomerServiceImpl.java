@@ -402,9 +402,14 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130021, "客户电话不存在");
 		}
 
+		if (customerPhonePO.getDefaults() == CustomerPhonePO.DEFAULTS_ENABLE_INT
+			&& customerPhoneVO.getStatus() == CustomerPhonePO.STATUS_DISABLE_INT) {
+			throw new FLException(130024, "默认电话不能禁用，请先设置其他电话为默认");
+		}
+
 		customerPhonePO.setStatus(customerPhoneVO.getStatus());
 
-		customerDao.update(customerPhonePO);
+		customerPhoneDao.update(customerPhonePO);
 
 		BeanUtil.copyProperties(customerPhonePO, customerPhoneVO);
 
@@ -589,9 +594,9 @@ public class CustomerServiceImpl implements CustomerService {
 			customerPhonePO.setPhone(customerPO.getPhone());
 			customerPhonePO.setStatus(CustomerPhonePO.STATUS_ENABLE_INT);
 			customerPhonePO.setDefaults(CustomerPhonePO.DEFAULTS_ENABLE_INT);
-		}
 
-		if (customerPhonePO != null && customerPhonePO.getDefaults() != CustomerPhonePO.DEFAULTS_ENABLE_INT) {
+			customerPhoneDao.save(customerPhonePO);
+		} else if (customerPhonePO.getDefaults() != CustomerPhonePO.DEFAULTS_ENABLE_INT) {
 
 			customerPhoneDao.clearCustomerPhoneForDefault(customerPO.getCid());
 
