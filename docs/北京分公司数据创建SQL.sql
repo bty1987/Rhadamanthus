@@ -23,94 +23,94 @@ FROM communion.company WHERE cid = 67;
 -- ============================================
 -- 二、factory.server 服务器配置表
 -- ============================================
--- 当前最大 sid: 478
+-- 主键 sid 由系统自动生成 (AUTO_INCREMENT)
 
 -- 北京方林装饰 (cid=91) 服务器配置
-INSERT INTO factory.server (sid, name, host, type, company, comment)
-SELECT sid + 144, name, host, type, 91, '北京方林装饰'
+INSERT INTO factory.server (name, host, type, company, comment)
+SELECT name, host, type, 91, '北京方林装饰'
 FROM factory.server WHERE company = 66;
 
 -- 北京方林整装 (cid=92) 服务器配置
-INSERT INTO factory.server (sid, name, host, type, company, comment)
-SELECT sid + 144, name, host, type, 92, '北京方林整装'
+INSERT INTO factory.server (name, host, type, company, comment)
+SELECT name, host, type, 92, '北京方林整装'
 FROM factory.server WHERE company = 67;
 
 
 -- ============================================
 -- 三、communion.systemconfig 系统配置表
 -- ============================================
--- 当前最大 scid: 1858
+-- 主键 scid 由系统自动生成 (AUTO_INCREMENT)
 
 -- 北京方林装饰 (company=91) 系统配置
-INSERT INTO communion.systemconfig (scid, `group`, `key`, `value`, cuid, createTime, comment, company)
-SELECT scid + 200, `group`, `key`,
+INSERT INTO communion.systemconfig (`group`, `key`, `value`, cuid, createTime, comment, company)
+SELECT `group`, `key`,
        CASE WHEN `key` IN ('messageAgentId', 'corpId', 'secret') THEN '待配置' ELSE `value` END,
        cuid, NOW(), comment, 91
 FROM communion.systemconfig WHERE company = 66;
 
 -- 北京方林装饰 钉钉企业配置 (dingtalk 分组) - 单独处理待配置
-INSERT INTO communion.systemconfig (scid, `group`, `key`, `value`, cuid, createTime, comment, company)
-SELECT scid + 200, `group`, `key`, '待配置', cuid, NOW(), comment, 91
+INSERT INTO communion.systemconfig (`group`, `key`, `value`, cuid, createTime, comment, company)
+SELECT `group`, `key`, '待配置', cuid, NOW(), comment, 91
 FROM communion.systemconfig WHERE company = 66 AND `group` = 'dingtalk';
 
 -- 北京方林整装 (company=92) 系统配置
-INSERT INTO communion.systemconfig (scid, `group`, `key`, `value`, cuid, createTime, comment, company)
-SELECT scid + 250, `group`, `key`,
+INSERT INTO communion.systemconfig (`group`, `key`, `value`, cuid, createTime, comment, company)
+SELECT `group`, `key`,
        CASE WHEN `key` IN ('messageAgentId', 'corpId', 'secret') THEN '待配置' ELSE `value` END,
        cuid, NOW(), comment, 92
 FROM communion.systemconfig WHERE company = 67;
 
 -- 北京方林整装 钉钉企业配置 (dingtalk 分组) - 单独处理待配置
-INSERT INTO communion.systemconfig (scid, `group`, `key`, `value`, cuid, createTime, comment, company)
-SELECT scid + 250, `group`, `key`, '待配置', cuid, NOW(), comment, 92
+INSERT INTO communion.systemconfig (`group`, `key`, `value`, cuid, createTime, comment, company)
+SELECT `group`, `key`, '待配置', cuid, NOW(), comment, 92
 FROM communion.systemconfig WHERE company = 67 AND `group` = 'dingtalk';
 
 
 -- ============================================
 -- 四、data.constructionnode 施工节点表
 -- ============================================
--- 当前最大 cnid: 1212
+-- 主键 cnid 由系统自动生成 (AUTO_INCREMENT)
 
 -- 北京方林装饰 (company=91) 施工节点
-INSERT INTO data.constructionnode (cnid, name, precheck, postcheck, stacheck, fincheck, startalk, endtalk, sstid, estid, timeLimit, accessoryLimit, salaryLimit, process, sort, proset, kino, kiname, mark, status, company)
-SELECT cnid + 700, name, precheck, postcheck, stacheck, fincheck, startalk, endtalk, sstid, estid, timeLimit, accessoryLimit, salaryLimit, process, sort, proset, kino, kiname, mark, status, 91
+INSERT INTO data.constructionnode (name, precheck, postcheck, stacheck, fincheck, startalk, endtalk, sstid, estid, timeLimit, accessoryLimit, salaryLimit, process, sort, proset, kino, kiname, mark, status, company)
+SELECT name, precheck, postcheck, stacheck, fincheck, startalk, endtalk, sstid, estid, timeLimit, accessoryLimit, salaryLimit, process, sort, proset, kino, kiname, mark, status, 91
 FROM data.constructionnode WHERE company = 66;
 
 -- 北京方林整装 (company=92) 施工节点
-INSERT INTO data.constructionnode (cnid, name, precheck, postcheck, stacheck, fincheck, startalk, endtalk, sstid, estid, timeLimit, accessoryLimit, salaryLimit, process, sort, proset, kino, kiname, mark, status, company)
-SELECT cnid + 700, name, precheck, postcheck, stacheck, fincheck, startalk, endtalk, sstid, estid, timeLimit, accessoryLimit, salaryLimit, process, sort, proset, kino, kiname, mark, status, 92
+INSERT INTO data.constructionnode (name, precheck, postcheck, stacheck, fincheck, startalk, endtalk, sstid, estid, timeLimit, accessoryLimit, salaryLimit, process, sort, proset, kino, kiname, mark, status, company)
+SELECT name, precheck, postcheck, stacheck, fincheck, startalk, endtalk, sstid, estid, timeLimit, accessoryLimit, salaryLimit, process, sort, proset, kino, kiname, mark, status, 92
 FROM data.constructionnode WHERE company = 67;
 
 
 -- ============================================
 -- 五、data.paymenttype 付款类型表
 -- ============================================
--- 当前最大 ptid: 3924
+-- 主键 ptid 由系统自动生成 (AUTO_INCREMENT)
 
 -- 北京方林装饰 (company=91) 付款类型
-INSERT INTO data.paymenttype (ptid, name, type, paytype, bustype, atttype, payScale, saleScale, code, taxrate, kino, kiname, kibalance, billType, status, company)
-SELECT ptid + 1200, name, type, paytype, bustype, atttype, payScale, saleScale, code, taxrate, kino, kiname, kibalance, billType, status, 91
+INSERT INTO data.paymenttype (name, type, paytype, bustype, atttype, payScale, saleScale, code, taxrate, kino, kiname, kibalance, billType, status, company)
+SELECT name, type, paytype, bustype, atttype, payScale, saleScale, code, taxrate, kino, kiname, kibalance, billType, status, 91
 FROM data.paymenttype WHERE company = 66;
 
 -- 北京方林整装 (company=92) 付款类型
-INSERT INTO data.paymenttype (ptid, name, type, paytype, bustype, atttype, payScale, saleScale, code, taxrate, kino, kiname, kibalance, billType, status, company)
-SELECT ptid + 1200, name, type, paytype, bustype, atttype, payScale, saleScale, code, taxrate, kino, kiname, kibalance, billType, status, 92
+INSERT INTO data.paymenttype (name, type, paytype, bustype, atttype, payScale, saleScale, code, taxrate, kino, kiname, kibalance, billType, status, company)
+SELECT name, type, paytype, bustype, atttype, payScale, saleScale, code, taxrate, kino, kiname, kibalance, billType, status, 92
 FROM data.paymenttype WHERE company = 67;
 
 
 -- ============================================
 -- 六、data.decorationbusitype 装修业务类型表
 -- ============================================
--- 当前最大 dbid: 2492
+-- 主键 dbid 由系统自动生成 (AUTO_INCREMENT)
 
 -- 北京方林装饰 (company=91) 业务类型
-INSERT INTO data.decorationbusitype (dbid, no, name, alias, fdbid, outside, sort, type, isRefer, notSalesmanRate, isAward, status, company)
-SELECT dbid + 500, no, name, alias, fdbid, outside, sort, type, isRefer, notSalesmanRate, isAward, status, 91
+INSERT INTO data.decorationbusitype (no, name, alias, fdbid, outside, sort, type, isRefer, notSalesmanRate, isAward, status, company)
+SELECT no, name, alias, fdbid, outside, sort, type, isRefer, notSalesmanRate, isAward, status, 91
 FROM data.decorationbusitype WHERE company = 66;
 
 -- 北京方林整装 (company=92) 业务类型
-INSERT INTO data.decorationbusitype (dbid, no, name, alias, fdbid, outside, sort, type, isRefer, notSalesmanRate, isAward, status, company)
-SELECT dbid + 500, no, name, alias, fdbid, outside, sort, type, isRefer, notSalesmanRate, isAward, status, 92
+INSERT INTO data.decorationbusitype (no, name, alias, fdbid, outside, sort, type, isRefer, notSalesmanRate, isAward, status, company)
+SELECT no, name, alias, fdbid, outside, sort, type, isRefer, notSalesmanRate, isAward, status, 92
 FROM data.decorationbusitype WHERE company = 67;
 
 
@@ -122,7 +122,7 @@ FROM data.decorationbusitype WHERE company = 67;
 -- 3. doid/soid 字段从天津公司复制，需要后续根据北京分公司实际部门结构调整
 -- 4. block 字段: 1=方林装饰, 4=方林整装
 -- 5. 北京区域代码: 110100 (天津市为 120100)
--- 6. 各表自增ID偏移量已预留足够空间
+-- 6. 除 company 表外，其他表的主键由系统自动生成 (AUTO_INCREMENT)
 -- ============================================
 
 
