@@ -299,9 +299,15 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_AREA_INT, decorationPO.getHouse().getInnerArea());
 
-			if (customerProtectRulePO != null && DateUtil.diffDay(DateUtil.getDateToTimestamp(new Date()), decorationPO.getCreateTime()) < customerProtectRulePO.getDays()) { // 量尺时间-当前时间>保护规则天数
-				approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
-				return false;
+			// 面积规则检查：使用量尺时间作为起算时间
+			if (customerProtectRulePO != null && decorationPO.getMeasureTime() != null) {
+				Timestamp now = DateUtil.getDateToTimestamp(new Date());
+				long daysPassed = DateUtil.diffDay(decorationPO.getMeasureTime(), now);
+				int protectDays = Arith.div(customerProtectRulePO.getDays(), 10000000);
+				if (daysPassed < protectDays) { // 当前时间-量尺时间 < 保护天数，触发审批
+					approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
+					return false;
+				}
 			}
 		}
 
@@ -311,9 +317,15 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_ADVANCE_INT, advanceAmount);
 
-			if (customerProtectRulePO != null && DateUtil.diffDay(DateUtil.getDateToTimestamp(new Date()), decorationPO.getDepositTime()) < customerProtectRulePO.getDays()) {
-				approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
-				return false;
+			// 预付款规则检查：使用定金时间作为起算时间
+			if (customerProtectRulePO != null && decorationPO.getDepositTime() != null) {
+				Timestamp now = DateUtil.getDateToTimestamp(new Date());
+				long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
+				int protectDays = Arith.div(customerProtectRulePO.getDays(), 1000000);
+				if (daysPassed < protectDays) { // 当前时间-定金时间 < 保护天数，触发审批
+					approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
+					return false;
+				}
 			}
 
 			DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.queryDecorationPayment(decorationPO.getOrderId(), DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR); // QUERY DESIGNPAYMENT
@@ -322,9 +334,15 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_DESIGN_INT, designAmount);
 
-			if (customerProtectRulePO != null && DateUtil.diffDay(DateUtil.getDateToTimestamp(new Date()), decorationPO.getDepositTime()) < customerProtectRulePO.getDays()) {
-				approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
-				return false;
+			// 设计费规则检查：使用定金时间作为起算时间
+			if (customerProtectRulePO != null && decorationPO.getDepositTime() != null) {
+				Timestamp now = DateUtil.getDateToTimestamp(new Date());
+				long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
+				int protectDays = Arith.div(customerProtectRulePO.getDays(), 1000000);
+				if (daysPassed < protectDays) { // 当前时间-定金时间 < 保护天数，触发审批
+					approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
+					return false;
+				}
 			}
 		}
 
