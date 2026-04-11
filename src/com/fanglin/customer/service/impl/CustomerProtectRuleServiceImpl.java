@@ -297,67 +297,59 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 		CustomerProtectRulePO customerProtectRulePO = null;
 
 		// 1. 面积规则检查（初始状态）
-		if (DecorationPO.STATUS_INIT_INT == decorationPO.getStatus()) {
-			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_AREA_INT, decorationPO.getHouse().getInnerArea());
-			if (customerProtectRulePO != null && decorationPO.getMeasureTime() != null) {
-				long daysPassed = DateUtil.diffDay(decorationPO.getMeasureTime(), now);
-				int protectDays = Arith.div(customerProtectRulePO.getDays(), 10000000);
-				if (daysPassed < protectDays) {
-					approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
-					return false;
-				}
+		customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_AREA_INT, decorationPO.getHouse().getInnerArea());
+		if (customerProtectRulePO != null && decorationPO.getMeasureTime() != null) {
+			long daysPassed = DateUtil.diffDay(decorationPO.getMeasureTime(), now);
+			int protectDays = Arith.div(customerProtectRulePO.getDays(), 10000000);
+			if (daysPassed < protectDays) {
+				approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
+				return false;
 			}
 		}
 
 		// 2. 预付款规则检查（定金状态）
-		if (DecorationPO.STATUS_DEPOSIT_INT == decorationPO.getStatus()) {
-			int advanceAmount = paymentDao.amountPayment(decorationPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, decorationPO.getDepositTime());
-			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_ADVANCE_INT, advanceAmount);
-			if (customerProtectRulePO != null && decorationPO.getDepositTime() != null) {
-				long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
-				int protectDays = Arith.div(customerProtectRulePO.getDays(), 1000000);
-				if (daysPassed < protectDays) {
-					approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
-					return false;
-				}
+		int advanceAmount = paymentDao.amountPayment(decorationPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, decorationPO.getDepositTime());
+		customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_ADVANCE_INT, advanceAmount);
+		if (customerProtectRulePO != null && decorationPO.getDepositTime() != null) {
+			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
+			int protectDays = Arith.div(customerProtectRulePO.getDays(), 1000000);
+			if (daysPassed < protectDays) {
+				approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
+				return false;
 			}
 		}
 
 		// 3. 设计费规则检查（定金状态）
-		if (DecorationPO.STATUS_DEPOSIT_INT == decorationPO.getStatus()) {
-			DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.queryDecorationPayment(decorationPO.getOrderId(), DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR);
-			int designAmount = (int) (decorationPaymentPO != null ? decorationPaymentPO.getReferMoney() : 0);
-			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_DESIGN_INT, designAmount);
-			if (customerProtectRulePO != null && decorationPO.getDepositTime() != null) {
-				long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
-				int protectDays = Arith.div(customerProtectRulePO.getDays(), 1000000);
-				if (daysPassed < protectDays) {
-					approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
-					return false;
-				}
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.queryDecorationPayment(decorationPO.getOrderId(), DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR);
+		int designAmount = (int) (decorationPaymentPO != null ? decorationPaymentPO.getReferMoney() : 0);
+		customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_DESIGN_INT, designAmount);
+		if (customerProtectRulePO != null && decorationPO.getDepositTime() != null) {
+			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
+			int protectDays = Arith.div(customerProtectRulePO.getDays(), 1000000);
+			if (daysPassed < protectDays) {
+				approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
+				return false;
 			}
 		}
 
 		// 4. 定金规则检查（预付款+设计费）
-		if (DecorationPO.STATUS_DEPOSIT_INT == decorationPO.getStatus()) {
-			int advanceAmount = paymentDao.amountPayment(decorationPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, decorationPO.getDepositTime());
-			DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.queryDecorationPayment(decorationPO.getOrderId(), DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR);
-			int designAmount = (int) (decorationPaymentPO != null ? decorationPaymentPO.getReferMoney() : 0);
-			int depositAmount = advanceAmount + designAmount;
-			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_DEPOSIT_INT, depositAmount);
-			if (customerProtectRulePO != null && decorationPO.getDepositTime() != null) {
-				long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
-				int protectDays = Arith.div(customerProtectRulePO.getDays(), 1000000);
-				if (daysPassed < protectDays) {
-					approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
-					return false;
-				}
+		advanceAmount = paymentDao.amountPayment(decorationPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, decorationPO.getDepositTime());
+		decorationPaymentPO = decorationPaymentDao.queryDecorationPayment(decorationPO.getOrderId(), DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR);
+		designAmount = (int) (decorationPaymentPO != null ? decorationPaymentPO.getReferMoney() : 0);
+		int depositAmount = advanceAmount + designAmount;
+		customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_DEPOSIT_INT, depositAmount);
+		if (customerProtectRulePO != null && decorationPO.getDepositTime() != null) {
+			long daysPassed = DateUtil.diffDay(decorationPO.getDepositTime(), now);
+			int protectDays = Arith.div(customerProtectRulePO.getDays(), 1000000);
+			if (daysPassed < protectDays) {
+				approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
+				return false;
 			}
 		}
 
 		// 5. 岗位规则检查
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		if (userPO != null && userPO.getDuty() != null && userPO.getDuty().getDid() != null) {
+		if (userPO != null && userPO.getDuty() != null) {
 			CustomerProtectRulePO dutyRule = customerProtectRuleDao.queryCustomerProtectRule(userPO.getDuty().getDid(), company);
 
 			// 检查装修单的业务员岗位是否等于当前用户的岗位
