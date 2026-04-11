@@ -177,6 +177,15 @@ public class A20260303ServiceImpl implements A20260303Service {
 			villagePO.setCid(cityPO.getCid());
 			villagePO.setCompany(company);
 
+			// 设置 rule（从 ruleArray 中提取第一个 comment）
+			if (ruleArray != null && !ruleArray.isEmpty()) {
+				JSONObject firstRule = ruleArray.getJSONObject(0);
+				String comment = firstRule.getString("comment");
+				if (comment != null && !comment.trim().isEmpty()) {
+					villagePO.setRule(comment);
+				}
+			}
+
 			// 设置坐标（乘以1000000转为整数）
 			if (x != null) {
 				villagePO.setX((int) (x * 1000000));
