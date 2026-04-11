@@ -2,7 +2,7 @@
 -- 用户创建脚本
 -- ============================================
 -- 功能：创建只读用户，授予除敏感表外所有表的查询权限
--- 版本：v1.1
+-- 版本：v1.2
 -- 日期：2026-04-11
 -- ============================================
 
@@ -17,22 +17,22 @@
 
 -- 权限说明：
 -- 1. 所有用户只读权限 (SELECT)
--- 2. 敏感表只能访问脱敏视图
--- 3. 所有用户都可以访问视图
+-- 2. 敏感表只能访问脱敏视图，不能访问原表
 
 -- ============================================
 -- 步骤1：创建用户
 -- ============================================
 
--- ⚠️ 请执行前替换以下密码为实际密码
+-- 注意：MySQL 5.6 不支持 CREATE USER IF NOT EXISTS
+-- 如用户已存在，请先执行 DROP USER '用户名'@'%';
 
-CREATE USER IF NOT EXISTS 'BI'@'%' IDENTIFIED BY 'bS86YCLQiHv3cIzoI7MThQ==';
-CREATE USER IF NOT EXISTS 'PM'@'%' IDENTIFIED BY 'joBBT+C/mZorJIG5UE5A9A==';
-CREATE USER IF NOT EXISTS 'CRM'@'%' IDENTIFIED BY 'hY+Kv2RjhnykoTm9/zAKsg==';
-CREATE USER IF NOT EXISTS 'MEM'@'%' IDENTIFIED BY 'Wb3I4VFcteLJoLizC1nEvg==';
-CREATE USER IF NOT EXISTS 'zhanglt'@'%' IDENTIFIED BY '71bEgvNTAwu5CHsTMpqpVQ==';
-CREATE USER IF NOT EXISTS 'zhouhh'@'%' IDENTIFIED BY 'rfbGz5BrzYcuoPhxlNWb8g==';
-CREATE USER IF NOT EXISTS 'zhous'@'%' IDENTIFIED BY 'BRfrcBWSbxQZXw4NJWHt/g==';
+CREATE USER 'BI'@'%' IDENTIFIED BY 'bS86YCLQiHv3cIzoI7MThQ==';
+CREATE USER 'PM'@'%' IDENTIFIED BY 'joBBT+C/mZorJIG5UE5A9A==';
+CREATE USER 'CRM'@'%' IDENTIFIED BY 'hY+Kv2RjhnykoTm9/zAKsg==';
+CREATE USER 'MEM'@'%' IDENTIFIED BY 'Wb3I4VFcteLJoLizC1nEvg==';
+CREATE USER 'zhanglt'@'%' IDENTIFIED BY '71bEgvNTAwu5CHsTMpqpVQ==';
+CREATE USER 'zhouhh'@'%' IDENTIFIED BY 'rfbGz5BrzYcuoPhxlNWb8g==';
+CREATE USER 'zhous'@'%' IDENTIFIED BY 'BRfrcBWSbxQZXw4NJWHt/g==';
 
 FLUSH PRIVILEGES;
 
@@ -40,32 +40,14 @@ FLUSH PRIVILEGES;
 SELECT user, host FROM mysql.user WHERE user IN ('BI', 'PM', 'CRM', 'MEM', 'zhanglt', 'zhouhh', 'zhous');
 
 -- ============================================
--- 步骤2：授予权限模板（所有用户通用）
+-- 步骤2：授予权限
 -- ============================================
 
--- communion 库非敏感表列表（80个表）
-SET @communion_tables = '
-    assistance, assistanceitem, attendance, brand, branddeliver, brandinstall,
-    brandinstorer, brandproduct, brandserver, brandsupplier, branduserright,
-    buildingnamerule, category, chart, city, cityproper, cityproperpartner,
-    colorpool, company, constant, constructionnode, contract, counting,
-    customerrecord, custype, datadrawing, department, departmentpartner,
-    departmenttype, dutment, duty, formatpool, goodspool, houselayout,
-    keyvalue, label, macontrol, measurementunit, module, operation, organization,
-    paymenttyped, performance, pricepool, quotationbigcategory,
-    quotationclassification, quotationsmallcategory, quotationtype, receipttype,
-    receipttypeitem, recruitment, recruitmenteducation, recruitmentoperation,
-    region, role, roleaction, rolechart, rolemodule, roleoperation, roletask,
-    servicenode, signet, supplier, suppliercontract, suppliercontractbrand,
-    suppliercontractcategory, suppliercontractgoods, suppliercontractproduct,
-    suppliercontractservice, supplieruserright, systemconfig, talking, task,
-    taskparam, upgrade, userinfo, usercompany, usercontract, usereducation,
-    userexperience, userfunction, userlabel, useroperation, userpartner,
-    userrequire, userrole, version, village, villagerule, worktype
-';
+-- 说明：先授予整个库的权限，然后收回敏感表权限
+-- 敏感表：customer, user, customerphone, house (只能访问脱敏视图)
 
 -- ============================================
--- 2.1 BI 用户权限（全库只读）
+-- 2.1 BI 用户权限
 -- ============================================
 
 -- 业务库权限
@@ -91,35 +73,15 @@ GRANT SELECT ON approval.* TO 'BI'@'%';
 GRANT SELECT ON platform.* TO 'BI'@'%';
 GRANT SELECT ON data.* TO 'BI'@'%';
 
--- communion 库非敏感表
-GRANT SELECT ON
-    assistance, assistanceitem, attendance, brand, branddeliver, brandinstall,
-    brandinstorer, brandproduct, brandserver, brandsupplier, branduserright,
-    buildingnamerule, category, chart, city, cityproper, cityproperpartner,
-    colorpool, company, constant, constructionnode, contract, counting,
-    customerrecord, custype, datadrawing, department, departmentpartner,
-    departmenttype, dutment, duty, formatpool, goodspool, houselayout,
-    keyvalue, label, macontrol, measurementunit, module, operation, organization,
-    paymenttyped, performance, pricepool, quotationbigcategory,
-    quotationclassification, quotationsmallcategory, quotationtype, receipttype,
-    receipttypeitem, recruitment, recruitmenteducation, recruitmentoperation,
-    region, role, roleaction, rolechart, rolemodule, roleoperation, roletask,
-    servicenode, signet, supplier, suppliercontract, suppliercontractbrand,
-    suppliercontractcategory, suppliercontractgoods, suppliercontractproduct,
-    suppliercontractservice, supplieruserright, systemconfig, talking, task,
-    taskparam, upgrade, userinfo, usercompany, usercontract, usereducation,
-    userexperience, userfunction, userlabel, useroperation, userpartner,
-    userrequire, userrole, version, village, villagerule, worktype
-TO 'BI'@'%';
-
--- 敏感表视图
-GRANT SELECT ON communion.customer_v TO 'BI'@'%';
-GRANT SELECT ON communion.user_v TO 'BI'@'%';
-GRANT SELECT ON communion.customerphone_v TO 'BI'@'%';
-GRANT SELECT ON communion.house_v TO 'BI'@'%';
+-- communion 库：先授予全部，再收回敏感表
+GRANT SELECT ON communion.* TO 'BI'@'%';
+REVOKE SELECT ON communion.`customer` FROM 'BI'@'%';
+REVOKE SELECT ON communion.`user` FROM 'BI'@'%';
+REVOKE SELECT ON communion.`customerphone` FROM 'BI'@'%';
+REVOKE SELECT ON communion.`house` FROM 'BI'@'%';
 
 -- ============================================
--- 2.2 PM 用户权限（全库只读）
+-- 2.2 PM 用户权限
 -- ============================================
 
 GRANT SELECT ON decoration.* TO 'PM'@'%';
@@ -144,33 +106,14 @@ GRANT SELECT ON approval.* TO 'PM'@'%';
 GRANT SELECT ON platform.* TO 'PM'@'%';
 GRANT SELECT ON data.* TO 'PM'@'%';
 
-GRANT SELECT ON
-    assistance, assistanceitem, attendance, brand, branddeliver, brandinstall,
-    brandinstorer, brandproduct, brandserver, brandsupplier, branduserright,
-    buildingnamerule, category, chart, city, cityproper, cityproperpartner,
-    colorpool, company, constant, constructionnode, contract, counting,
-    customerrecord, custype, datadrawing, department, departmentpartner,
-    departmenttype, dutment, duty, formatpool, goodspool, houselayout,
-    keyvalue, label, macontrol, measurementunit, module, operation, organization,
-    paymenttyped, performance, pricepool, quotationbigcategory,
-    quotationclassification, quotationsmallcategory, quotationtype, receipttype,
-    receipttypeitem, recruitment, recruitmenteducation, recruitmentoperation,
-    region, role, roleaction, rolechart, rolemodule, roleoperation, roletask,
-    servicenode, signet, supplier, suppliercontract, suppliercontractbrand,
-    suppliercontractcategory, suppliercontractgoods, suppliercontractproduct,
-    suppliercontractservice, supplieruserright, systemconfig, talking, task,
-    taskparam, upgrade, userinfo, usercompany, usercontract, usereducation,
-    userexperience, userfunction, userlabel, useroperation, userpartner,
-    userrequire, userrole, version, village, villagerule, worktype
-TO 'PM'@'%';
-
-GRANT SELECT ON communion.customer_v TO 'PM'@'%';
-GRANT SELECT ON communion.user_v TO 'PM'@'%';
-GRANT SELECT ON communion.customerphone_v TO 'PM'@'%';
-GRANT SELECT ON communion.house_v TO 'PM'@'%';
+GRANT SELECT ON communion.* TO 'PM'@'%';
+REVOKE SELECT ON communion.`customer` FROM 'PM'@'%';
+REVOKE SELECT ON communion.`user` FROM 'PM'@'%';
+REVOKE SELECT ON communion.`customerphone` FROM 'PM'@'%';
+REVOKE SELECT ON communion.`house` FROM 'PM'@'%';
 
 -- ============================================
--- 2.3 CRM 用户权限（全库只读）
+-- 2.3 CRM 用户权限
 -- ============================================
 
 GRANT SELECT ON decoration.* TO 'CRM'@'%';
@@ -195,33 +138,14 @@ GRANT SELECT ON approval.* TO 'CRM'@'%';
 GRANT SELECT ON platform.* TO 'CRM'@'%';
 GRANT SELECT ON data.* TO 'CRM'@'%';
 
-GRANT SELECT ON
-    assistance, assistanceitem, attendance, brand, branddeliver, brandinstall,
-    brandinstorer, brandproduct, brandserver, brandsupplier, branduserright,
-    buildingnamerule, category, chart, city, cityproper, cityproperpartner,
-    colorpool, company, constant, constructionnode, contract, counting,
-    customerrecord, custype, datadrawing, department, departmentpartner,
-    departmenttype, dutment, duty, formatpool, goodspool, houselayout,
-    keyvalue, label, macontrol, measurementunit, module, operation, organization,
-    paymenttyped, performance, pricepool, quotationbigcategory,
-    quotationclassification, quotationsmallcategory, quotationtype, receipttype,
-    receipttypeitem, recruitment, recruitmenteducation, recruitmentoperation,
-    region, role, roleaction, rolechart, rolemodule, roleoperation, roletask,
-    servicenode, signet, supplier, suppliercontract, suppliercontractbrand,
-    suppliercontractcategory, suppliercontractgoods, suppliercontractproduct,
-    suppliercontractservice, supplieruserright, systemconfig, talking, task,
-    taskparam, upgrade, userinfo, usercompany, usercontract, usereducation,
-    userexperience, userfunction, userlabel, useroperation, userpartner,
-    userrequire, userrole, version, village, villagerule, worktype
-TO 'CRM'@'%';
-
-GRANT SELECT ON communion.customer_v TO 'CRM'@'%';
-GRANT SELECT ON communion.user_v TO 'CRM'@'%';
-GRANT SELECT ON communion.customerphone_v TO 'CRM'@'%';
-GRANT SELECT ON communion.house_v TO 'CRM'@'%';
+GRANT SELECT ON communion.* TO 'CRM'@'%';
+REVOKE SELECT ON communion.`customer` FROM 'CRM'@'%';
+REVOKE SELECT ON communion.`user` FROM 'CRM'@'%';
+REVOKE SELECT ON communion.`customerphone` FROM 'CRM'@'%';
+REVOKE SELECT ON communion.`house` FROM 'CRM'@'%';
 
 -- ============================================
--- 2.4 MEM 用户权限（全库只读）
+-- 2.4 MEM 用户权限
 -- ============================================
 
 GRANT SELECT ON decoration.* TO 'MEM'@'%';
@@ -246,33 +170,14 @@ GRANT SELECT ON approval.* TO 'MEM'@'%';
 GRANT SELECT ON platform.* TO 'MEM'@'%';
 GRANT SELECT ON data.* TO 'MEM'@'%';
 
-GRANT SELECT ON
-    assistance, assistanceitem, attendance, brand, branddeliver, brandinstall,
-    brandinstorer, brandproduct, brandserver, brandsupplier, branduserright,
-    buildingnamerule, category, chart, city, cityproper, cityproperpartner,
-    colorpool, company, constant, constructionnode, contract, counting,
-    customerrecord, custype, datadrawing, department, departmentpartner,
-    departmenttype, dutment, duty, formatpool, goodspool, houselayout,
-    keyvalue, label, macontrol, measurementunit, module, operation, organization,
-    paymenttyped, performance, pricepool, quotationbigcategory,
-    quotationclassification, quotationsmallcategory, quotationtype, receipttype,
-    receipttypeitem, recruitment, recruitmenteducation, recruitmentoperation,
-    region, role, roleaction, rolechart, rolemodule, roleoperation, roletask,
-    servicenode, signet, supplier, suppliercontract, suppliercontractbrand,
-    suppliercontractcategory, suppliercontractgoods, suppliercontractproduct,
-    suppliercontractservice, supplieruserright, systemconfig, talking, task,
-    taskparam, upgrade, userinfo, usercompany, usercontract, usereducation,
-    userexperience, userfunction, userlabel, useroperation, userpartner,
-    userrequire, userrole, version, village, villagerule, worktype
-TO 'MEM'@'%';
-
-GRANT SELECT ON communion.customer_v TO 'MEM'@'%';
-GRANT SELECT ON communion.user_v TO 'MEM'@'%';
-GRANT SELECT ON communion.customerphone_v TO 'MEM'@'%';
-GRANT SELECT ON communion.house_v TO 'MEM'@'%';
+GRANT SELECT ON communion.* TO 'MEM'@'%';
+REVOKE SELECT ON communion.`customer` FROM 'MEM'@'%';
+REVOKE SELECT ON communion.`user` FROM 'MEM'@'%';
+REVOKE SELECT ON communion.`customerphone` FROM 'MEM'@'%';
+REVOKE SELECT ON communion.`house` FROM 'MEM'@'%';
 
 -- ============================================
--- 2.5 zhanglt 用户权限（全库只读）
+-- 2.5 zhanglt 用户权限
 -- ============================================
 
 GRANT SELECT ON decoration.* TO 'zhanglt'@'%';
@@ -297,33 +202,14 @@ GRANT SELECT ON approval.* TO 'zhanglt'@'%';
 GRANT SELECT ON platform.* TO 'zhanglt'@'%';
 GRANT SELECT ON data.* TO 'zhanglt'@'%';
 
-GRANT SELECT ON
-    assistance, assistanceitem, attendance, brand, branddeliver, brandinstall,
-    brandinstorer, brandproduct, brandserver, brandsupplier, branduserright,
-    buildingnamerule, category, chart, city, cityproper, cityproperpartner,
-    colorpool, company, constant, constructionnode, contract, counting,
-    customerrecord, custype, datadrawing, department, departmentpartner,
-    departmenttype, dutment, duty, formatpool, goodspool, houselayout,
-    keyvalue, label, macontrol, measurementunit, module, operation, organization,
-    paymenttyped, performance, pricepool, quotationbigcategory,
-    quotationclassification, quotationsmallcategory, quotationtype, receipttype,
-    receipttypeitem, recruitment, recruitmenteducation, recruitmentoperation,
-    region, role, roleaction, rolechart, rolemodule, roleoperation, roletask,
-    servicenode, signet, supplier, suppliercontract, suppliercontractbrand,
-    suppliercontractcategory, suppliercontractgoods, suppliercontractproduct,
-    suppliercontractservice, supplieruserright, systemconfig, talking, task,
-    taskparam, upgrade, userinfo, usercompany, usercontract, usereducation,
-    userexperience, userfunction, userlabel, useroperation, userpartner,
-    userrequire, userrole, version, village, villagerule, worktype
-TO 'zhanglt'@'%';
-
-GRANT SELECT ON communion.customer_v TO 'zhanglt'@'%';
-GRANT SELECT ON communion.user_v TO 'zhanglt'@'%';
-GRANT SELECT ON communion.customerphone_v TO 'zhanglt'@'%';
-GRANT SELECT ON communion.house_v TO 'zhanglt'@'%';
+GRANT SELECT ON communion.* TO 'zhanglt'@'%';
+REVOKE SELECT ON communion.`customer` FROM 'zhanglt'@'%';
+REVOKE SELECT ON communion.`user` FROM 'zhanglt'@'%';
+REVOKE SELECT ON communion.`customerphone` FROM 'zhanglt'@'%';
+REVOKE SELECT ON communion.`house` FROM 'zhanglt'@'%';
 
 -- ============================================
--- 2.6 zhouhh 用户权限（全库只读）
+-- 2.6 zhouhh 用户权限
 -- ============================================
 
 GRANT SELECT ON decoration.* TO 'zhouhh'@'%';
@@ -348,33 +234,14 @@ GRANT SELECT ON approval.* TO 'zhouhh'@'%';
 GRANT SELECT ON platform.* TO 'zhouhh'@'%';
 GRANT SELECT ON data.* TO 'zhouhh'@'%';
 
-GRANT SELECT ON
-    assistance, assistanceitem, attendance, brand, branddeliver, brandinstall,
-    brandinstorer, brandproduct, brandserver, brandsupplier, branduserright,
-    buildingnamerule, category, chart, city, cityproper, cityproperpartner,
-    colorpool, company, constant, constructionnode, contract, counting,
-    customerrecord, custype, datadrawing, department, departmentpartner,
-    departmenttype, dutment, duty, formatpool, goodspool, houselayout,
-    keyvalue, label, macontrol, measurementunit, module, operation, organization,
-    paymenttyped, performance, pricepool, quotationbigcategory,
-    quotationclassification, quotationsmallcategory, quotationtype, receipttype,
-    receipttypeitem, recruitment, recruitmenteducation, recruitmentoperation,
-    region, role, roleaction, rolechart, rolemodule, roleoperation, roletask,
-    servicenode, signet, supplier, suppliercontract, suppliercontractbrand,
-    suppliercontractcategory, suppliercontractgoods, suppliercontractproduct,
-    suppliercontractservice, supplieruserright, systemconfig, talking, task,
-    taskparam, upgrade, userinfo, usercompany, usercontract, usereducation,
-    userexperience, userfunction, userlabel, useroperation, userpartner,
-    userrequire, userrole, version, village, villagerule, worktype
-TO 'zhouhh'@'%';
-
-GRANT SELECT ON communion.customer_v TO 'zhouhh'@'%';
-GRANT SELECT ON communion.user_v TO 'zhouhh'@'%';
-GRANT SELECT ON communion.customerphone_v TO 'zhouhh'@'%';
-GRANT SELECT ON communion.house_v TO 'zhouhh'@'%';
+GRANT SELECT ON communion.* TO 'zhouhh'@'%';
+REVOKE SELECT ON communion.`customer` FROM 'zhouhh'@'%';
+REVOKE SELECT ON communion.`user` FROM 'zhouhh'@'%';
+REVOKE SELECT ON communion.`customerphone` FROM 'zhouhh'@'%';
+REVOKE SELECT ON communion.`house` FROM 'zhouhh'@'%';
 
 -- ============================================
--- 2.7 zhous 用户权限（全库只读）
+-- 2.7 zhous 用户权限
 -- ============================================
 
 GRANT SELECT ON decoration.* TO 'zhous'@'%';
@@ -399,30 +266,11 @@ GRANT SELECT ON approval.* TO 'zhous'@'%';
 GRANT SELECT ON platform.* TO 'zhous'@'%';
 GRANT SELECT ON data.* TO 'zhous'@'%';
 
-GRANT SELECT ON
-    assistance, assistanceitem, attendance, brand, branddeliver, brandinstall,
-    brandinstorer, brandproduct, brandserver, brandsupplier, branduserright,
-    buildingnamerule, category, chart, city, cityproper, cityproperpartner,
-    colorpool, company, constant, constructionnode, contract, counting,
-    customerrecord, custype, datadrawing, department, departmentpartner,
-    departmenttype, dutment, duty, formatpool, goodspool, houselayout,
-    keyvalue, label, macontrol, measurementunit, module, operation, organization,
-    paymenttyped, performance, pricepool, quotationbigcategory,
-    quotationclassification, quotationsmallcategory, quotationtype, receipttype,
-    receipttypeitem, recruitment, recruitmenteducation, recruitmentoperation,
-    region, role, roleaction, rolechart, rolemodule, roleoperation, roletask,
-    servicenode, signet, supplier, suppliercontract, suppliercontractbrand,
-    suppliercontractcategory, suppliercontractgoods, suppliercontractproduct,
-    suppliercontractservice, supplieruserright, systemconfig, talking, task,
-    taskparam, upgrade, userinfo, usercompany, usercontract, usereducation,
-    userexperience, userfunction, userlabel, useroperation, userpartner,
-    userrequire, userrole, version, village, villagerule, worktype
-TO 'zhous'@'%';
-
-GRANT SELECT ON communion.customer_v TO 'zhous'@'%';
-GRANT SELECT ON communion.user_v TO 'zhous'@'%';
-GRANT SELECT ON communion.customerphone_v TO 'zhous'@'%';
-GRANT SELECT ON communion.house_v TO 'zhous'@'%';
+GRANT SELECT ON communion.* TO 'zhous'@'%';
+REVOKE SELECT ON communion.`customer` FROM 'zhous'@'%';
+REVOKE SELECT ON communion.`user` FROM 'zhous'@'%';
+REVOKE SELECT ON communion.`customerphone` FROM 'zhous'@'%';
+REVOKE SELECT ON communion.`house` FROM 'zhous'@'%';
 
 FLUSH PRIVILEGES;
 
