@@ -921,11 +921,23 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330074, "客户资源不存在");
 		}
 
+		// 如果前端传了 house.hid，优先使用前端传入的（支持直接初审时修改楼盘/楼号）
+		HousePO housePO;
+		if (customerChanceVO.getHouse() != null && customerChanceVO.getHouse().getHid() != null && customerChanceVO.getHouse().getHid() > 0) {
+			housePO = houseDao.get(customerChanceVO.getHouse().getHid());
+			if (housePO == null) {
+				throw new FLException(330074, "房产不存在");
+			}
+			customerSourcePO.setHouse(housePO);
+		} else {
+			housePO = customerSourcePO.getHouse();
+		}
+
 		// 检查是否需要校验重复订单
 		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) {
-			decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
+			decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), housePO.getHid());
 		}
-		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid(), company);
+		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), housePO.getHid(), company);
 
 		// 设置客户来源状态为初审通过（STATUS_APPROVE_ONE_INT = 2）
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_APPROVE_ONE_INT);
@@ -933,7 +945,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		// 设置客户机会信息（参照 approveForCustomerSource 的逻辑）
 		customerChancePO.setCustomer(customerSourcePO.getCustomer());
-		customerChancePO.setHouse(customerSourcePO.getHouse());
+		customerChancePO.setHouse(housePO);
 		customerChancePO.setRate(customerChanceVO.getRate() != null ? customerChanceVO.getRate() : 0);
 
 		if (customerChanceVO.getBusitype() != null && customerChanceVO.getBusitype().getDbid() != null && customerChanceVO.getBusitype().getDbid() > 0) {
@@ -945,7 +957,6 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChanceDao.update(customerChancePO);
 
 		// 发送消息通知
-		HousePO housePO = customerSourcePO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
 		String content = String.format("客户机会直接初审通过,客户名:%s,楼盘:%s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
