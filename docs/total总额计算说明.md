@@ -17,10 +17,11 @@
 
 ## 二、各组成部分详解
 
-### 1. 报价单价
-- 公式：`quotePrice + activityPrice`
+### 1. 报价单价（_quotePrice）
+- 公式：`_quotePrice = quotePrice + activityPrice`
 - quotePrice：基础报价单价
 - activityPrice：活动加价部分
+- 说明：activityPrice 是活动方案对报价单价的加价，需要加入报价单价后参与 total 计算。同时 manageFormula/taxFormula 中的 `{a}` 也使用此 _quotePrice 作为基数
 
 ### 2. 管理费（_managePrice）
 - 由 `manageFormula` 模板动态计算
