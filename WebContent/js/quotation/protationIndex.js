@@ -182,7 +182,7 @@ $(function() {
 
         var _taxPrice = utils.changeThrDecimal(isNaN(eval(taxFormula)) ? 0 : eval(taxFormula));
 
-        var total = utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_quotePrice, _managePrice), _taxPrice), preferPrice), preferManage), preferAdvance), _protation.activityProfit);
+        var total = utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_protation.quotePrice, _managePrice), _taxPrice), preferPrice), preferManage), preferAdvance), _protation.activityProfit);
         total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(_protation.basicPrice, utils.accAdd(_protation.adddPrice, utils.accSub(_protation.addmPrice, utils.accAdd(utils.accAdd(_protation.subdPrice, _protation.submPrice), _protation.subcPrice)))), utils.accAdd(_protation.accmPrice, _protation.accdPrice))));
 
         if (_protation.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
