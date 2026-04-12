@@ -935,7 +935,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChancePO.setCustomer(customerSourcePO.getCustomer());
 		customerChancePO.setHouse(customerSourcePO.getHouse());
 		customerChancePO.setRate(customerChanceVO.getRate() != null ? customerChanceVO.getRate() : 0);
-		customerChancePO.setBusitype(customerChancePO.getBusitype());
+
+		if (customerChanceVO.getBusitype() != null && customerChanceVO.getBusitype().getDbid() != null && customerChanceVO.getBusitype().getDbid() > 0) {
+			customerChancePO.setBusitype(new DecorationBusitypePO(customerChanceVO.getBusitype().getDbid()));
+		}
 
 		// 设置客户机会状态为审批通过（STATUS_APPROVE_INT = 2）
 		customerChancePO.setStatus(CustomerChancePO.STATUS_APPROVE_INT);
