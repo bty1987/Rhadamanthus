@@ -2,11 +2,11 @@ package com.fanglin.communion.vo;
 
 import java.io.Serializable;
 
-public class CustomerBankVO implements Serializable {
+public class CustomerAccountVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long cbid;
+	private Long caid;
 
 	private Long cid;
 
@@ -32,21 +32,21 @@ public class CustomerBankVO implements Serializable {
 
 	private String updateTime;
 
-	public CustomerBankVO() {
+	public CustomerAccountVO() {
 		super();
 	}
 
-	public CustomerBankVO(Long cbid) {
+	public CustomerAccountVO(Long caid) {
 		super();
-		this.cbid = cbid;
+		this.caid = caid;
 	}
 
-	public Long getCbid() {
-		return cbid;
+	public Long getCaid() {
+		return caid;
 	}
 
-	public void setCbid(Long cbid) {
-		this.cbid = cbid;
+	public void setCaid(Long caid) {
+		this.caid = caid;
 	}
 
 	public Long getCid() {
