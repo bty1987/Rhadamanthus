@@ -27,7 +27,9 @@ import com.fanglin.communion.dao.CustomerRecordDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.CustomerRecordPO;
+import com.fanglin.communion.service.CustomerAccountService;
 import com.fanglin.communion.service.CustomerService;
+import com.fanglin.communion.vo.CustomerAccountVO;
 import com.fanglin.communion.vo.CustomerPhoneVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
@@ -55,6 +57,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private CountingService countingService;
+
+	@Autowired
+	private CustomerAccountService customerAccountService;
 
 	@Autowired
 	private UserDao userDao;
@@ -92,12 +97,19 @@ public class CustomerServiceImpl implements CustomerService {
 		customerVO.setQq(customerPO.getQq());
 		customerVO.setEmail(customerPO.getEmail());
 
-		customerVO.setCompanyAddr(customerPO.getCompanyAddr());
-		customerVO.setCompanyBank(customerPO.getCompanyBank());
-		customerVO.setCompanyBankno(customerPO.getCompanyBankno());
-		customerVO.setCompanyName(customerPO.getCompanyName());
-		customerVO.setCompanyNo(customerPO.getCompanyNo());
-		customerVO.setCompanyPhone(customerPO.getCompanyPhone());
+		// 从 customeraccount 读取默认银行账户
+		CustomerAccountVO accountQuery = new CustomerAccountVO();
+		accountQuery.setCid(customerPO.getCid());
+		CustomerAccountVO defaultAccount = customerAccountService.queryDefaultCustomerAccount(accountQuery);
+		if (defaultAccount != null) {
+			customerVO.setCompanyNo(defaultAccount.getNo());
+			customerVO.setCompanyName(defaultAccount.getName());
+			customerVO.setCompanyAddr(defaultAccount.getAddress());
+			customerVO.setCompanyPhone(defaultAccount.getPhone());
+			customerVO.setCompanyBank(defaultAccount.getBank());
+			customerVO.setCompanyBankno(defaultAccount.getBankno());
+			customerVO.setCustomerAccount(defaultAccount);
+		}
 
 		return customerVO;
 	}
@@ -229,6 +241,13 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPhonePO.setPhone(phone);
 
 		customerPhoneDao.save(customerPhonePO);
+
+		// 如果携带了 customerAccount 信息, 写入 customeraccount 表
+		CustomerAccountVO addAccountVO = customerVO.getCustomerAccount();
+		if (addAccountVO != null) {
+			addAccountVO.setCid(customerPO.getCid());
+			customerAccountService.addCustomerAccount(addAccountVO);
+		}
 
 		BeanUtil.copyProperties(customerPO, customerVO);
 
@@ -364,6 +383,17 @@ public class CustomerServiceImpl implements CustomerService {
 
 		customerDao.update(customerPO);
 
+		// 如果携带了 customerAccount 信息, 同步写入 customeraccount 表
+		CustomerAccountVO accountVO = customerVO.getCustomerAccount();
+		if (accountVO != null) {
+			accountVO.setCid(customerVO.getCid());
+			if (accountVO.getCaid() != null && accountVO.getCaid() > 0) {
+				customerAccountService.updateCustomerAccount(accountVO);
+			} else {
+				customerAccountService.addCustomerAccount(accountVO);
+			}
+		}
+
 		BeanUtil.copyProperties(customerPO, customerVO);
 
 		return 0;
@@ -380,14 +410,19 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		customerPO.setType(customerVO.getType());
-		customerPO.setCompanyNo(customerVO.getCompanyNo());
-		customerPO.setCompanyName(customerVO.getCompanyName());
-		customerPO.setCompanyAddr(customerVO.getCompanyAddr());
-		customerPO.setCompanyPhone(customerVO.getCompanyPhone());
-		customerPO.setCompanyBank(customerVO.getCompanyBank());
-		customerPO.setCompanyBankno(customerVO.getCompanyBankno());
 
 		customerDao.update(customerPO);
+
+		// 银行账户信息写入 customeraccount 表
+		CustomerAccountVO accountVO = customerVO.getCustomerAccount();
+		if (accountVO != null) {
+			accountVO.setCid(customerVO.getCid());
+			if (accountVO.getCaid() != null && accountVO.getCaid() > 0) {
+				customerAccountService.updateCustomerAccount(accountVO);
+			} else {
+				customerAccountService.addCustomerAccount(accountVO);
+			}
+		}
 
 		return 0;
 	}
