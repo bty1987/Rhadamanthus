@@ -21,10 +21,11 @@ public interface QuotationAssignUserRuleDao extends Dao<QuotationAssignUserRuleP
 	 * 
 	 * @param page 分页对象
 	 * @param filters 过滤条件
+	 * @param company 公司ID（可选）
 	 * @return
 	 * @throws FLException 业务异常
 	 */
-	List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException;
+	List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
 	/**
 	 * 根据用户ID和公司ID查询预算员规则

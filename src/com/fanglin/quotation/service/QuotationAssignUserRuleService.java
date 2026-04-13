@@ -44,9 +44,10 @@ public interface QuotationAssignUserRuleService {
 	 * 
 	 * @param page 分页对象
 	 * @param filters 过滤条件
+	 * @param company 公司ID
 	 * @throws FLException 业务异常
 	 */
-	void pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException;
+	void pageQuotationAssignUserRule(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
 	/**
 	 * 根据ID查询预算员规则（用于编辑回显）

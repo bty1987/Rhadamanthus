@@ -72,7 +72,7 @@ public class QuotetionFunctionAreaAction extends BaseListAction {
 	@Action(value = "copyQuotetionFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String copyQuotetionFunctionArea() throws FLException {
 
-		quotetionFunctionAreaService.copyQuotetionFunctionArea(quotetionFunctionArea, quotetion);
+		quotetionFunctionArea = quotetionFunctionAreaService.copyQuotetionFunctionArea(quotetionFunctionArea, quotetion);
 
 		return SUCCESS;
 	}

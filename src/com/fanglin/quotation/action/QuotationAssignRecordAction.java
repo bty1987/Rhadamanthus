@@ -73,7 +73,7 @@ public class QuotationAssignRecordAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignRecord() throws FLException {
 
-		quotationAssignRecordService.pageQuotationAssignRecord(getPaging(), getFilters());
+		quotationAssignRecordService.pageQuotationAssignRecord(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -86,6 +86,10 @@ public class QuotationAssignRecordAction extends BaseListAction {
 	 */
 	@Action(value = "queryQuotationAssignRecordById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignRecordById() throws FLException {
+
+		if (quotationAssignRecord == null) {
+			return ERROR;
+		}
 
 		quotationAssignRecord = quotationAssignRecordService.queryQuotationAssignRecordById(quotationAssignRecord);
 
@@ -101,6 +105,10 @@ public class QuotationAssignRecordAction extends BaseListAction {
 	@Action(value = "createQuotationAssignRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createQuotationAssignRecord() throws FLException {
 
+		if (quotationAssignRecord == null) {
+			return ERROR;
+		}
+
 		quotationAssignRecordService.createQuotationAssignRecord(quotationAssignRecord);
 
 		return SUCCESS;
@@ -114,6 +122,10 @@ public class QuotationAssignRecordAction extends BaseListAction {
 	 */
 	@Action(value = "queryQuotationAssignRecordByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignRecordByOrderId() throws FLException {
+
+		if (quotationAssignRecord == null) {
+			return ERROR;
+		}
 
 		quotationAssignRecords = quotationAssignRecordService.queryQuotationAssignRecordByOrderId(quotationAssignRecord);
 

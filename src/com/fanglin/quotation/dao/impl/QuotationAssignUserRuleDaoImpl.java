@@ -2,6 +2,7 @@ package com.fanglin.quotation.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -20,11 +21,17 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 	}
 
 	@Override
-	public List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException {
+	public List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
 		PagingQuery<QuotationAssignUserRulePO> query = pagingQuery(paging, QuotationAssignUserRulePO.class);
 
 		queryFilterExcute(query, filters);
+
+		// 按公司筛选
+		if (company != null) {
+			query.alias("company", "company");
+			query.add(query.getCriterion("company.cid", company, "eq"));
+		}
 
 		// 按创建时间倒序排序
 		query.desc("createTime");
@@ -34,7 +41,7 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
 	@Override
 	public QuotationAssignUserRulePO getQuotationAssignUserRule(String userId, int company) throws FLException {
-		return (QuotationAssignUserRulePO) createCriteria(QuotationAssignUserRulePO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).add(Restrictions.eq("company.cid", company)).uniqueResult();
+		return (QuotationAssignUserRulePO) createCriteria(QuotationAssignUserRulePO.class).createAlias("user", "user").createAlias("company", "company").add(Restrictions.eq("user.userId", userId)).add(Restrictions.eq("company.cid", company)).uniqueResult();
 	}
 
 	@Override
@@ -43,13 +50,15 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 		org.hibernate.Criteria criteria = createCriteria(QuotationAssignUserRulePO.class);
 
 		// 按公司筛选（使用关联属性）
+		criteria.createAlias("company", "company");
 		criteria.add(org.hibernate.criterion.Restrictions.eq("company.cid", company));
 
 		// 只查询待分配状态的人员
 		criteria.add(org.hibernate.criterion.Restrictions.eq("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
 
 		// 使用 OR 逻辑：匹配该部门的规则 OR 公司级规则（department IS NULL）
-		criteria.add(org.hibernate.criterion.Restrictions.or(org.hibernate.criterion.Restrictions.eq("department.did", department), org.hibernate.criterion.Restrictions.isNull("department.did")));
+		criteria.createAlias("department", "department", CriteriaSpecification.LEFT_JOIN);
+		criteria.add(org.hibernate.criterion.Restrictions.or(org.hibernate.criterion.Restrictions.eq("department.did", department), org.hibernate.criterion.Restrictions.isNull("department")));
 
 		// 按最后完成时间升序排序（最早完成的排在前面）
 		criteria.addOrder(org.hibernate.criterion.Order.asc("lastFinishTime"));

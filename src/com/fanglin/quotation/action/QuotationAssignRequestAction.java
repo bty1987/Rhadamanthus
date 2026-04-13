@@ -80,6 +80,10 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	@Action(value = "queryQuotationAssignRequestById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignRequestById() throws FLException {
 
+		if (quotationAssignRequest == null) {
+			return ERROR;
+		}
+
 		quotationAssignRequest = quotationAssignRequestService.queryQuotationAssignRequestById(quotationAssignRequest);
 
 		return SUCCESS;
@@ -93,6 +97,10 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "createQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createQuotationAssignRequest() throws FLException {
+
+		if (quotationAssignRequest == null) {
+			return ERROR;
+		}
 
 		quotationAssignRequestService.createQuotationAssignRequest(quotationAssignRequest);
 
@@ -108,6 +116,10 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	@Action(value = "updateQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationAssignRequest() throws FLException {
 
+		if (quotationAssignRequest == null) {
+			return ERROR;
+		}
+
 		quotationAssignRequestService.updateQuotationAssignRequest(quotationAssignRequest);
 
 		return SUCCESS;
@@ -121,6 +133,10 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "deleteQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationAssignRequest() throws FLException {
+
+		if (quotationAssignRequest == null) {
+			return ERROR;
+		}
 
 		quotationAssignRequestService.deleteQuotationAssignRequest(quotationAssignRequest);
 

@@ -47,7 +47,7 @@ $(function() {
     );
 
     // 查询条件
-    searcher.condition(["quotation-assign-request-company", "quotation-assign-request-status", "quotation-assign-request-orderId"]);
+    searcher.condition(["assign-request-company", "assign-request-status", "assign-request-orderId"]);
 
     // 顶部按钮（使用配置对象方式）
     searcher.button([{
@@ -252,7 +252,7 @@ $(function() {
         com.post(api.communion.queryDepartment, {
             "department.company.cid": companyId
         }, function(res) {
-            config.items.department.bindData(res.departments, "did", "name", true);
+            config.items.department.bindData(res.deptList, "did", "name", true);
         }, null, false);
     }
 
@@ -383,10 +383,10 @@ $(function() {
         config.items.orderId.val(row.orderId);
 
         // 设置公司（从对象中提取ID）
-        config.items.company.val(row.company);
+        config.items.company.val(row.company.cid);
 
         // 初始化部门并选中（先加载部门列表，再设置值）
-        initDepartmentSelect(row.company);
+        initDepartmentSelect(row.company.cid);
         if (row.department && row.department.did) {
             setTimeout(function() {
                 config.items.department.val(row.department.did);

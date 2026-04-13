@@ -30,9 +30,10 @@ public interface QuotationAssignRecordService {
 	 * 
 	 * @param paging 分页对象
 	 * @param filters 过滤条件
+	 * @param company 公司ID
 	 * @throws FLException
 	 */
-	void pageQuotationAssignRecord(Paging paging, List<Filter> filters) throws FLException;
+	void pageQuotationAssignRecord(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
 	/**
 	 * 根据ID查询分配记录

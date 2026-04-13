@@ -43,7 +43,7 @@ $(function() {
     );
 
     // 查询条件
-    searcher.condition(["quotation-assign-user-rule-company", "quotation-assign-user-rule-status", "quotation-assign-user-rule-userName"]);
+    searcher.condition(["assign-user-rule-company", "assign-user-rule-status", "assign-user-rule-userName"]);
 
     // 顶部按钮
     searcher.button(function() {
@@ -80,7 +80,7 @@ $(function() {
         prop: function(v) {
 
             // 部门ID为NULL表示该公司所有部门
-            return v.department ? (v.departmentVO ? v.departmentVO.name : "未知部门") : "所有部门";
+            return v.department ? v.department.name : "所有部门";
         },
         clazz: "grey"
     }, {
