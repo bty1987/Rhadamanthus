@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,9 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.communion.dao.CustomerAccountDao;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.dao.CustomerRecordDao;
+import com.fanglin.communion.po.CustomerAccountPO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.CustomerRecordPO;
@@ -46,6 +49,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private CustomerDao customerDao;
+
+	@Autowired
+	private CustomerAccountDao customerAccountDao;
 
 	@Autowired
 	private CustomerPhoneDao customerPhoneDao;
@@ -364,6 +370,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 		customerDao.update(customerPO);
 
+		// 比对该客户所有 account, 无完全匹配则新建
+		matchOrCreateAccount(customerPO);
+
 		BeanUtil.copyProperties(customerPO, customerVO);
 
 		return 0;
@@ -388,6 +397,9 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.setCompanyBankno(customerVO.getCompanyBankno());
 
 		customerDao.update(customerPO);
+
+		// 比对该客户所有 account, 无完全匹配则新建
+		matchOrCreateAccount(customerPO);
 
 		return 0;
 	}
@@ -633,6 +645,73 @@ public class CustomerServiceImpl implements CustomerService {
 		customerDao.update(customerPO);
 
 		return 0;
+	}
+
+	/**
+	 * 比对 customer 的 company* 字段与所有 account,
+	 * 如果没有任何 account 完全匹配, 则新建一个 account 并设为默认
+	 */
+	private void matchOrCreateAccount(CustomerPO customerPO) {
+
+		String no = customerPO.getCompanyNo();
+		String name = customerPO.getCompanyName();
+		String address = customerPO.getCompanyAddr();
+		String phone = customerPO.getCompanyPhone();
+		String bank = customerPO.getCompanyBank();
+		String bankno = customerPO.getCompanyBankno();
+
+		// 如果没有银行信息, 不需要创建 account
+		if ((bank == null || bank.isEmpty()) && (bankno == null || bankno.isEmpty())) {
+			return;
+		}
+
+		List<CustomerAccountPO> accounts = customerAccountDao.queryCustomerAccountByCid(customerPO.getCid());
+
+		// 比对是否已有完全匹配的 account (no, name, address, phone, bank, bankno 全部一致)
+		for (CustomerAccountPO account : accounts) {
+			if (Objects.equals(str(account.getNo()), str(no))
+				&& Objects.equals(str(account.getName()), str(name))
+				&& Objects.equals(str(account.getAddress()), str(address))
+				&& Objects.equals(str(account.getPhone()), str(phone))
+				&& Objects.equals(str(account.getBank()), str(bank))
+				&& Objects.equals(str(account.getBankno()), str(bankno))) {
+				return; // 已有匹配, 无需新建
+			}
+		}
+
+		// 无匹配, 新建 account
+		CustomerAccountPO newAccount = new CustomerAccountPO();
+		newAccount.setCid(customerPO.getCid());
+		newAccount.setType(CustomerAccountPO.TYPE_PUBLIC);
+		newAccount.setNo(no);
+		newAccount.setName(name);
+		newAccount.setAddress(address);
+		newAccount.setPhone(phone);
+		newAccount.setBank(bank);
+		newAccount.setBankno(bankno);
+		newAccount.setStatus(CustomerAccountPO.STATUS_ENABLE);
+		newAccount.setCreateTime(DateUtil.current());
+		newAccount.setUpdateTime(DateUtil.current());
+
+		// 如果是第一个 account, 设为默认; 否则清除旧默认, 新建设为默认
+		if (accounts.isEmpty()) {
+			newAccount.setDefaults(CustomerAccountPO.DEFAULTS_YES);
+		} else {
+			// 清除旧默认
+			for (CustomerAccountPO account : accounts) {
+				if (account.getDefaults() == CustomerAccountPO.DEFAULTS_YES) {
+					account.setDefaults(CustomerAccountPO.DEFAULTS_NO);
+					customerAccountDao.update(account);
+				}
+			}
+			newAccount.setDefaults(CustomerAccountPO.DEFAULTS_YES);
+		}
+
+		customerAccountDao.save(newAccount);
+	}
+
+	private String str(String s) {
+		return s == null ? "" : s;
 	}
 
 }

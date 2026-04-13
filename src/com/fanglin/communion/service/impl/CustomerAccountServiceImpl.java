@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.CustomerAccountDao;
+import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerAccountPO;
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.service.CustomerAccountService;
 import com.fanglin.communion.vo.CustomerAccountVO;
 import com.fanglin.core.interceptor.FLException;
@@ -21,6 +23,9 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 
 	@Autowired
 	private CustomerAccountDao customerAccountDao;
+
+	@Autowired
+	private CustomerDao customerDao;
 
 	@Override
 	public List<CustomerAccountVO> queryCustomerAccount(CustomerAccountVO customerAccountVO) {
@@ -69,6 +74,20 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 		}
 
 		customerAccountDao.save(customerAccountPO);
+
+		// 如果是默认账户, 同步数据到 customer.company* 字段
+		if (customerAccountPO.getDefaults() == CustomerAccountPO.DEFAULTS_YES) {
+			CustomerPO customerPO = customerDao.get(cid);
+			if (customerPO != null) {
+				customerPO.setCompanyNo(customerAccountPO.getNo());
+				customerPO.setCompanyName(customerAccountPO.getName());
+				customerPO.setCompanyAddr(customerAccountPO.getAddress());
+				customerPO.setCompanyPhone(customerAccountPO.getPhone());
+				customerPO.setCompanyBank(customerAccountPO.getBank());
+				customerPO.setCompanyBankno(customerAccountPO.getBankno());
+				customerDao.update(customerPO);
+			}
+		}
 
 		return 0;
 	}
@@ -152,6 +171,18 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 		customerAccountPO.setDefaults(CustomerAccountPO.DEFAULTS_YES);
 		customerAccountPO.setUpdateTime(DateUtil.current());
 		customerAccountDao.update(customerAccountPO);
+
+		// 同步默认账户数据到 customer.company* 字段
+		CustomerPO customerPO = customerDao.get(cid);
+		if (customerPO != null) {
+			customerPO.setCompanyNo(customerAccountPO.getNo());
+			customerPO.setCompanyName(customerAccountPO.getName());
+			customerPO.setCompanyAddr(customerAccountPO.getAddress());
+			customerPO.setCompanyPhone(customerAccountPO.getPhone());
+			customerPO.setCompanyBank(customerAccountPO.getBank());
+			customerPO.setCompanyBankno(customerAccountPO.getBankno());
+			customerDao.update(customerPO);
+		}
 
 		return 0;
 	}
