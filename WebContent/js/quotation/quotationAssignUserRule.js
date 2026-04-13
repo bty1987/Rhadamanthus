@@ -43,7 +43,7 @@ $(function() {
     );
 
     // 查询条件
-    searcher.condition(["assign-user-rule-company", "assign-user-rule-status", "assign-user-rule-userName"]);
+    searcher.condition(["quotation-assign-user-rule-company", "quotation-assign-user-rule-status", "quotation-assign-user-rule-userName"]);
 
     // 顶部按钮
     searcher.button(function() {

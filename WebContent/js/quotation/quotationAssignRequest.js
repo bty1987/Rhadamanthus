@@ -47,7 +47,7 @@ $(function() {
     );
 
     // 查询条件
-    searcher.condition(["assign-request-company", "assign-request-status", "assign-request-orderId"]);
+    searcher.condition(["quotation-assign-request-company", "quotation-assign-request-status", "quotation-assign-request-orderId"]);
 
     // 顶部按钮（使用配置对象方式）
     searcher.button([{

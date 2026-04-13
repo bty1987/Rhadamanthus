@@ -24,7 +24,7 @@ $(function() {
     );
 
     // 查询条件
-    searcher.condition(["assign-record-company", "assign-record-user", "assign-record-orderId"]);
+    searcher.condition(["quotation-assign-record-company", "quotation-assign-record-user", "quotation-assign-record-orderId"]);
 
     // 顶部按钮（无操作按钮）
     searcher.button(function() {
