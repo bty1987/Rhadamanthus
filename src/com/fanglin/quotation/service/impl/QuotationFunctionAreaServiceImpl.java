@@ -488,7 +488,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 		quotationFunctionAreaVO.setFunctionAreaName(quotationFunctionAreaTO.getFunctionAreaName());
 
 		// 查询并返回功能区参数
-		QuotationFunctionAreaParamPO paramPO = quotationFunctionAreaParamDao.get(quotationFunctionAreaTO.getQfaId());
+		QuotationFunctionAreaParamPO paramPO = quotationFunctionAreaParamDao.queryQuotationFunctionAreaParam(quotationFunctionAreaTO.getQfaId());
 		if (paramPO != null) {
 			QuotationFunctionAreaParamVO paramVO = new QuotationFunctionAreaParamVO();
 			BeanUtil.copyProperties(paramPO, paramVO);
