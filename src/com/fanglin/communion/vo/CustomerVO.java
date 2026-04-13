@@ -52,22 +52,22 @@ public class CustomerVO implements Serializable {
 
 	private Integer company;
 
-	/** @deprecated 迁移至 CustomerBankVO, 不再使用 */
+	/** @deprecated 迁移至 CustomerAccountVO, 不再使用 */
 	private String companyNo;
 
-	/** @deprecated 迁移至 CustomerBankVO, 不再使用 */
+	/** @deprecated 迁移至 CustomerAccountVO, 不再使用 */
 	private String companyName;
 
-	/** @deprecated 迁移至 CustomerBankVO, 不再使用 */
+	/** @deprecated 迁移至 CustomerAccountVO, 不再使用 */
 	private String companyAddr;
 
-	/** @deprecated 迁移至 CustomerBankVO, 不再使用 */
+	/** @deprecated 迁移至 CustomerAccountVO, 不再使用 */
 	private String companyPhone;
 
-	/** @deprecated 迁移至 CustomerBankVO, 不再使用 */
+	/** @deprecated 迁移至 CustomerAccountVO, 不再使用 */
 	private String companyBank;
 
-	/** @deprecated 迁移至 CustomerBankVO, 不再使用 */
+	/** @deprecated 迁移至 CustomerAccountVO, 不再使用 */
 	private String companyBankno;
 
 	public CustomerVO() {
