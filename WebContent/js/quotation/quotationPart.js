@@ -1430,7 +1430,6 @@ var QuotationDetail = (function() {
                         $.each(quotationFunctionArea.quotationFunctionAreaItems, function(i, item) {
                             item.areaType = quotationFunctionArea.type;
                             item.qfaid = quotationFunctionArea.qfaId;
-                            item.qfaiId = item.qfaiid;
                             newFunctionArea.quotationFunctionAreaItems.push(item);
                         });
                     }
@@ -1444,8 +1443,10 @@ var QuotationDetail = (function() {
                     // 更新左侧功能区金额统计列表
                     // 获取当前功能区对应的左侧金额项
                     var $currentMoneyItem = com.focusPage('#functionAreaSumList > div[data-qfaId="' + qfaId + '"]');
+                    // createdomain 内部已通过 items 累加计算出 sumd, 存入 data-desTotalprice
+                    var sumd = $newDomain.attr('data-desTotalprice');
                     // 创建新的金额统计项
-                    var $newMoneyItem = painter.createDomainMoney(quotationFunctionArea.total, newFunctionArea);
+                    var $newMoneyItem = painter.createDomainMoney(sumd, newFunctionArea);
                     // 插入到当前金额项之后
                     if ($currentMoneyItem.length > 0) {
                         $newMoneyItem.insertAfter($currentMoneyItem);
