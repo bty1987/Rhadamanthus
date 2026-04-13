@@ -10,12 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fanglin.communion.vo.CustomerBankVO;
+import com.fanglin.communion.vo.CustomerAccountVO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
-@Table(name = "customer_bank", catalog = "communion")
-public class CustomerBankPO implements Serializable {
+@Table(name = "customeraccount", catalog = "communion")
+public class CustomerAccountPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,7 +39,7 @@ public class CustomerBankPO implements Serializable {
 
 	public static final short DEFAULTS_YES = 1;   // 默认
 
-	private long cbid;
+	private long caid;
 
 	private long cid;
 
@@ -65,24 +65,24 @@ public class CustomerBankPO implements Serializable {
 
 	private String updateTime;
 
-	public CustomerBankPO() {
+	public CustomerAccountPO() {
 		super();
 	}
 
-	public CustomerBankPO(long cbid) {
+	public CustomerAccountPO(long caid) {
 		super();
-		this.cbid = cbid;
+		this.caid = caid;
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "cbid")
-	public long getCbid() {
-		return cbid;
+	@Column(name = "caid")
+	public long getCaid() {
+		return caid;
 	}
 
-	public void setCbid(long cbid) {
-		this.cbid = cbid;
+	public void setCaid(long caid) {
+		this.caid = caid;
 	}
 
 	@Column(name = "cid", nullable = false)
@@ -193,11 +193,11 @@ public class CustomerBankPO implements Serializable {
 		this.updateTime = updateTime;
 	}
 
-	public CustomerBankVO ptv(CustomerBankVO customerBankVO) {
+	public CustomerAccountVO ptv(CustomerAccountVO customerAccountVO) {
 
-		BeanUtil.copyPropertie(this, customerBankVO);
+		BeanUtil.copyPropertie(this, customerAccountVO);
 
-		return customerBankVO;
+		return customerAccountVO;
 	}
 
 }
