@@ -52,4 +52,13 @@ public class CustomerAccountDaoImpl extends DaoImpl<CustomerAccountPO> implement
 		return count != null ? count.intValue() : 0;
 	}
 
+	@Override
+	public CustomerAccountPO queryCustomerAccountByCidAndContentHash(long cid, String contentHash) {
+		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class)
+			.add(Restrictions.eq(CustomerAccountPO.COLUMN_CID_STR, cid))
+			.add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE))
+			.add(Restrictions.eq(CustomerAccountPO.COLUMN_CONTENTHASH_STR, contentHash))
+			.uniqueResult();
+	}
+
 }
