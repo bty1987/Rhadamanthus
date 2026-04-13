@@ -1435,12 +1435,12 @@ jQuery(function($) {
             decorationDetail.customerItems.relationshipType.val(res.relationshipType);
             decorationDetail.customerItems.gender.prop('checked', com.genderType[res.gender]);
             decorationDetail.customerItems.type.val(res.type);
-            decorationDetail.customerItems.companyNo.val(res.companyNo);
-            decorationDetail.customerItems.companyName.val(res.companyName);
-            decorationDetail.customerItems.companyAddr.val(res.companyAddr);
-            decorationDetail.customerItems.companyPhone.val(res.companyPhone);
-            decorationDetail.customerItems.companyBank.val(res.companyBank);
-            decorationDetail.customerItems.companyBankno.val(res.companyBankno);
+            decorationDetail.customerItems.companyNo.val(res.customerAccount ? res.customerAccount.no : res.companyNo);
+            decorationDetail.customerItems.companyName.val(res.customerAccount ? res.customerAccount.name : res.companyName);
+            decorationDetail.customerItems.companyAddr.val(res.customerAccount ? res.customerAccount.address : res.companyAddr);
+            decorationDetail.customerItems.companyPhone.val(res.customerAccount ? res.customerAccount.phone : res.companyPhone);
+            decorationDetail.customerItems.companyBank.val(res.customerAccount ? res.customerAccount.bank : res.companyBank);
+            decorationDetail.customerItems.companyBankno.val(res.customerAccount ? res.customerAccount.bankno : res.companyBankno);
 
             com.focusPage("#comName").text(decorationDetail.customerTypes[res.type] + "名称");
             com.focusPage("#comPhone").text(decorationDetail.customerTypes[res.type] + "电话");
@@ -1997,12 +1997,12 @@ jQuery(function($) {
             "customer.career": decorationDetail.customerItems.career.val(),
             "customer.relationshipType": decorationDetail.customerItems.relationshipType.val(),
             "customer.type": decorationDetail.customerItems.type.val(),
-            "customer.companyNo": decorationDetail.customerItems.companyNo.val(),
-            "customer.companyName": decorationDetail.customerItems.companyName.val(),
-            "customer.companyAddr": decorationDetail.customerItems.companyAddr.val(),
-            "customer.companyPhone": decorationDetail.customerItems.companyPhone.val(),
-            "customer.companyBank": decorationDetail.customerItems.companyBank.val(),
-            "customer.companyBankno": decorationDetail.customerItems.companyBankno.val(),
+            "customer.customerAccount.no": decorationDetail.customerItems.companyNo.val(),
+            "customer.customerAccount.name": decorationDetail.customerItems.companyName.val(),
+            "customer.customerAccount.address": decorationDetail.customerItems.companyAddr.val(),
+            "customer.customerAccount.phone": decorationDetail.customerItems.companyPhone.val(),
+            "customer.customerAccount.bank": decorationDetail.customerItems.companyBank.val(),
+            "customer.customerAccount.bankno": decorationDetail.customerItems.companyBankno.val(),
         };
 
         com.post(url, options, function(res) {

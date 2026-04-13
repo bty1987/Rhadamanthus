@@ -117,6 +117,32 @@ $.extend(api, {
             url: "updateServiceNodeForStatus.do"
         },
 
+        // 客户账户(银行) api 6条
+        queryCustomerAccount: {
+            url: "queryCustomerAccount.do",
+            server: "communion"
+        },
+        queryDefaultCustomerAccount: {
+            url: "queryDefaultCustomerAccount.do",
+            server: "communion"
+        },
+        addCustomerAccount: {
+            url: "addCustomerAccount.do",
+            server: "communion"
+        },
+        updateCustomerAccount: {
+            url: "updateCustomerAccount.do",
+            server: "communion"
+        },
+        deleteCustomerAccount: {
+            url: "deleteCustomerAccount.do",
+            server: "communion"
+        },
+        setDefaultCustomerAccount: {
+            url: "setDefaultCustomerAccount.do",
+            server: "communion"
+        },
+
         // 积分模块api 5条
         queryCppoint: {
             url: "queryCppoint.do"

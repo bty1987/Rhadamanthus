@@ -292,12 +292,12 @@ jQuery(function($) {
 
             customer.items.gender.prop('checked', com.genderType[v.gender]);
 
-            customer.items.companyNo.val(v.companyNo);
-            customer.items.companyName.val(v.companyName);
-            customer.items.companyAddr.val(v.companyAddr);
-            customer.items.companyPhone.val(v.companyPhone);
-            customer.items.companyBank.val(v.companyBank);
-            customer.items.companyBankno.val(v.companyBankno);
+            customer.items.companyNo.val(v.customerAccount ? v.customerAccount.no : v.companyNo);
+            customer.items.companyName.val(v.customerAccount ? v.customerAccount.name : v.companyName);
+            customer.items.companyAddr.val(v.customerAccount ? v.customerAccount.address : v.companyAddr);
+            customer.items.companyPhone.val(v.customerAccount ? v.customerAccount.phone : v.companyPhone);
+            customer.items.companyBank.val(v.customerAccount ? v.customerAccount.bank : v.companyBank);
+            customer.items.companyBankno.val(v.customerAccount ? v.customerAccount.bankno : v.companyBankno);
 
             if (v.type == constant.customer().customer.STATUS_COMPANY_INT)
                 com.focusPage(".companyitem", "#customerModal").show();
@@ -308,12 +308,12 @@ jQuery(function($) {
             $("#customerhide").hide();
 
             customer.items.customerName.val(v.name).prop("disabled", true);
-            customer.items.companyNo.val(v.companyNo);
-            customer.items.companyName.val(v.companyName);
-            customer.items.companyAddr.val(v.companyAddr);
-            customer.items.companyPhone.val(v.companyPhone);
-            customer.items.companyBank.val(v.companyBank);
-            customer.items.companyBankno.val(v.companyBankno);
+            customer.items.companyNo.val(v.customerAccount ? v.customerAccount.no : v.companyNo);
+            customer.items.companyName.val(v.customerAccount ? v.customerAccount.name : v.companyName);
+            customer.items.companyAddr.val(v.customerAccount ? v.customerAccount.address : v.companyAddr);
+            customer.items.companyPhone.val(v.customerAccount ? v.customerAccount.phone : v.companyPhone);
+            customer.items.companyBank.val(v.customerAccount ? v.customerAccount.bank : v.companyBank);
+            customer.items.companyBankno.val(v.customerAccount ? v.customerAccount.bankno : v.companyBankno);
 
             customer.modals.customerModal.modal("show");
         }
@@ -344,24 +344,24 @@ jQuery(function($) {
             "customer.relationshipType": customer.items.relationshipType.val(),
             "customer.career": customer.items.career.val(),
             "customer.address": customer.items.address.val(),
-            "customer.companyNo": customer.items.companyNo.val(),
-            "customer.companyName": customer.items.companyName.val(),
-            "customer.companyAddr": customer.items.companyAddr.val(),
-            "customer.companyPhone": customer.items.companyPhone.val(),
-            "customer.companyBank": customer.items.companyBank.val(),
-            "customer.companyBankno": customer.items.companyBankno.val(),
+            "customer.customerAccount.no": customer.items.companyNo.val(),
+            "customer.customerAccount.name": customer.items.companyName.val(),
+            "customer.customerAccount.address": customer.items.companyAddr.val(),
+            "customer.customerAccount.phone": customer.items.companyPhone.val(),
+            "customer.customerAccount.bank": customer.items.companyBank.val(),
+            "customer.customerAccount.bankno": customer.items.companyBankno.val(),
         };
 
         var urls;
         var option = {
             "customer.type": customer.items.type.val(),
             "customer.name": customer.items.customerName.val(),
-            "customer.companyNo": customer.items.companyNo.val(),
-            "customer.companyName": customer.items.companyName.val(),
-            "customer.companyAddr": customer.items.companyAddr.val(),
-            "customer.companyPhone": customer.items.companyPhone.val(),
-            "customer.companyBank": customer.items.companyBank.val(),
-            "customer.companyBankno": customer.items.companyBankno.val(),
+            "customer.customerAccount.no": customer.items.companyNo.val(),
+            "customer.customerAccount.name": customer.items.companyName.val(),
+            "customer.customerAccount.address": customer.items.companyAddr.val(),
+            "customer.customerAccount.phone": customer.items.companyPhone.val(),
+            "customer.customerAccount.bank": customer.items.companyBank.val(),
+            "customer.customerAccount.bankno": customer.items.companyBankno.val(),
         };
 
         if (customer.cid) {

@@ -1,6 +1,7 @@
 package com.fanglin.communion.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.fanglin.communion.po.CustomerPO;
 
@@ -69,6 +70,10 @@ public class CustomerVO implements Serializable {
 
 	/** @deprecated 迁移至 CustomerAccountVO, 不再使用 */
 	private String companyBankno;
+
+	private CustomerAccountVO customerAccount;
+
+	private List<CustomerAccountVO> customerAccounts;
 
 	public CustomerVO() {
 		super();
@@ -338,5 +343,32 @@ public class CustomerVO implements Serializable {
 		setCompanyBankno(customerPO.getCompanyBankno());
 
 		return this;
+	}
+
+	public CustomerVO initBank(CustomerAccountVO customerAccountVO) {
+
+		if (customerAccountVO != null) {
+			setCompanyName(customerAccountVO.getName());
+			setCompanyBank(customerAccountVO.getBank());
+			setCompanyBankno(customerAccountVO.getBankno());
+		}
+
+		return this;
+	}
+
+	public CustomerAccountVO getCustomerAccount() {
+		return customerAccount;
+	}
+
+	public void setCustomerAccount(CustomerAccountVO customerAccount) {
+		this.customerAccount = customerAccount;
+	}
+
+	public List<CustomerAccountVO> getCustomerAccounts() {
+		return customerAccounts;
+	}
+
+	public void setCustomerAccounts(List<CustomerAccountVO> customerAccounts) {
+		this.customerAccounts = customerAccounts;
 	}
 }
