@@ -38,8 +38,6 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DepartmentPartnerPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.ServiceNodePO;
-import com.fanglin.communion.service.CustomerAccountService;
-import com.fanglin.communion.vo.CustomerAccountVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Authentication;
@@ -111,9 +109,6 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private CompanyDao companyDao;
-
-	@Autowired
-	private CustomerAccountService customerAccountService;
 
 	@Autowired
 	private CountingService countingService;
@@ -865,12 +860,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationPO.ptvcascade(decorationVO);
 
-		if (decorationPO.getCustomer() != null && decorationVO.getCustomer() != null) {
-			CustomerAccountVO accountQuery = new CustomerAccountVO();
-			accountQuery.setCid(decorationPO.getCustomer().getCid());
-			CustomerAccountVO defaultAccount = customerAccountService.queryDefaultCustomerAccount(accountQuery);
-			decorationVO.getCustomer().initBank(defaultAccount);
-		}
+		if (decorationPO.getCustomer() != null && decorationVO.getCustomer() != null) decorationVO.getCustomer().initBank(decorationPO.getCustomer());
 
 		if (decorationVO.getOrderTotalPrice() == null || decorationVO.getOrderTotalPrice() == 0) {
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
@@ -906,12 +896,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationPO.ptvcascade(resultDecorationVO);
 
-		if (decorationPO.getCustomer() != null && resultDecorationVO.getCustomer() != null) {
-			CustomerAccountVO accountQuery = new CustomerAccountVO();
-			accountQuery.setCid(decorationPO.getCustomer().getCid());
-			CustomerAccountVO defaultAccount = customerAccountService.queryDefaultCustomerAccount(accountQuery);
-			resultDecorationVO.getCustomer().initBank(defaultAccount);
-		}
+		if (decorationPO.getCustomer() != null && resultDecorationVO.getCustomer() != null) resultDecorationVO.getCustomer().initBank(decorationPO.getCustomer());
 
 		if (resultDecorationVO.getOrderTotalPrice() == null || resultDecorationVO.getOrderTotalPrice() == 0) {
 			resultDecorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
