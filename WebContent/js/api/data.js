@@ -29,6 +29,9 @@ $.extend(api.index, {
     customerRecordIndex: {
         url: "/views/data/customerRecord.html"
     },
+    customerAccountIndex: {
+        url: "/views/data/customerAccount.html"
+    },
     assistanceitemIndex: {
         url: "/views/data/assistanceItem.html"
     },
