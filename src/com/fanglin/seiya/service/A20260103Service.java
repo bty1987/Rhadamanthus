@@ -71,4 +71,20 @@ public interface A20260103Service {
 	 */
 	com.fanglin.decoration.vo.DecorationVO queryCustomerLead(String orderId, String village, String houseNumber, String phone, Integer orgId) throws FLException;
 
+	/**
+	 * 验证装修单是否存在
+	 *
+	 * 参考DecorationService.checkOverDecoration逻辑：
+	 * 1. 通过电话查询客户cid
+	 * 2. 通过楼盘+楼号查询房屋hid
+	 * 3. 根据cid和hid查询是否存在有效装修单
+	 *
+	 * @param village 楼盘名称
+	 * @param houseNumber 楼号
+	 * @param phone 客户电话
+	 * @param orgId 公司ID
+	 * @throws FLException 如果存在装修单则抛出异常
+	 */
+	void checkoverCustomerLead(String village, String houseNumber, String phone, Integer orgId) throws FLException;
+
 }
