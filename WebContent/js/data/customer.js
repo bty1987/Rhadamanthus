@@ -253,6 +253,14 @@ jQuery(function($) {
             params.customer.cid = v.cid;
             com.popup4page('#customerRecordPopUp', api.index.customerRecordIndex.url, "记录");
         }
+    }, {
+        name: "账户",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            params.customer.cid = v.cid;
+            com.popup4page('#customerAccountPopUp', api.data.customerAccountIndex.url, "银行账户");
+        }
     }];
 
     searcher.line("name", lineprops, linebtns).render();
