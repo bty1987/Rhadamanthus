@@ -65,9 +65,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 		customerAccountPO.setCreateTime(DateUtil.current());
 		customerAccountPO.setUpdateTime(DateUtil.current());
 
-		customerAccountPO.setContentHash(CustomerAccountPO.computeContentHash(
-			customerAccountPO.getNo(), customerAccountPO.getName(), customerAccountPO.getAddress(),
-			customerAccountPO.getPhone(), customerAccountPO.getBank(), customerAccountPO.getBankno()));
+		customerAccountPO.setContentHash(CustomerAccountPO.computeContentHash(customerAccountPO.getNo(), customerAccountPO.getName(), customerAccountPO.getAddress(), customerAccountPO.getPhone(), customerAccountPO.getBank(), customerAccountPO.getBankno()));
 
 		int count = customerAccountDao.countCustomerAccountByCid(cid);
 
@@ -109,9 +107,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 		BeanUtil.copyPropertie(customerAccountVO, customerAccountPO, "cid", "defaults", "status", "createTime");
 
 		customerAccountPO.setUpdateTime(DateUtil.current());
-		customerAccountPO.setContentHash(CustomerAccountPO.computeContentHash(
-			customerAccountPO.getNo(), customerAccountPO.getName(), customerAccountPO.getAddress(),
-			customerAccountPO.getPhone(), customerAccountPO.getBank(), customerAccountPO.getBankno()));
+		customerAccountPO.setContentHash(CustomerAccountPO.computeContentHash(customerAccountPO.getNo(), customerAccountPO.getName(), customerAccountPO.getAddress(), customerAccountPO.getPhone(), customerAccountPO.getBank(), customerAccountPO.getBankno()));
 
 		customerAccountDao.update(customerAccountPO);
 
@@ -128,7 +124,6 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 			throw new FLException(230001, "客户银行账户不存在");
 		}
 
-		long cid = customerAccountPO.getCid();
 		short wasDefault = customerAccountPO.getDefaults();
 
 		customerAccountPO.setStatus(CustomerAccountPO.STATUS_DISABLE);
