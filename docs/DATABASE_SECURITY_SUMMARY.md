@@ -154,13 +154,13 @@ user_v
 
 | 用户 | 密码（加密后） | 用途 |
 |-----|--------------|------|
-| BI | bS86YCLQiHv3cIzoI7MThQ== | 数据分析 |
-| PM | joBBT+C/mZorJIG5UE5A9A== | 项目管理 |
-| CRM | hY+Kv2RjhnykoTm9/zAKsg== | 客户管理 |
-| MEM | Wb3I4VFcteLJoLizC1nEvg== | 会员管理 |
-| zhanglt | 71bEgvNTAwu5CHsTMpqpVQ== | 个人账号 |
-| zhouhh | rfbGz5BrzYcuoPhxlNWb8g== | 个人账号 |
-| zhous | BRfrcBWSbxQZXw4NJWHt/g== | 个人账号 |
+| BI | **************** | 数据分析 |
+| PM | **************** | 项目管理 |
+| CRM | **************** | 客户管理 |
+| MEM | **************** | 会员管理 |
+| zhanglt | **************** | 个人账号 |
+| zhouhh | **************** | 个人账号 |
+| zhous | **************** | 个人账号 |
 
 > 密码使用 `openssl rand -base64 16` 生成，MySQL 密码格式存储
 
@@ -290,13 +290,13 @@ AND TABLE_NAME LIKE '%_v';
 | 用户 | 密码 | 权限类型 | IP限制 | 状态 |
 |-----|------|---------|--------|------|
 | fanglin1918 | - | 全部权限 | 223.100.27.233 | 主账号 |
-| BI | bS86YCLQiHv3cIzoI7MThQ== | 只读 | 任意IP | ✅ |
-| PM | joBBT+C/mZorJIG5UE5A9A== | 只读 | 任意IP | ✅ |
-| CRM | hY+Kv2RjhnykoTm9/zAKsg== | 只读 | 任意IP | ✅ |
-| MEM | Wb3I4VFcteLJoLizC1nEvg== | 只读 | 任意IP | ✅ |
-| zhanglt | 71bEgvNTAwu5CHsTMpqpVQ== | 只读 | 223.100.27.233 | ✅ |
-| zhouhh | rfbGz5BrzYcuoPhxlNWb8g== | 只读 | 223.100.27.233 | ✅ |
-| zhous | BRfrcBWSbxQZXw4NJWHt/g== | 只读 | 223.100.27.233 | ✅ |
+| BI | **************** | 只读 | 任意IP | ✅ |
+| PM | **************** | 只读 | 任意IP | ✅ |
+| CRM | **************** | 只读 | 任意IP | ✅ |
+| MEM | **************** | 只读 | 任意IP | ✅ |
+| zhanglt | **************** | 只读 | 223.100.27.233 | ✅ |
+| zhouhh | **************** | 只读 | 223.100.27.233 | ✅ |
+| zhous | **************** | 只读 | 223.100.27.233 | ✅ |
 
 ### 4.3 权限验证结果
 

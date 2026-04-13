@@ -11,12 +11,12 @@
 
 -- 北京方林装饰
 INSERT INTO communion.company (cid, `no`, code, name, fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block)
-SELECT 91, `no` + 1, '110100', '北京方林装饰', fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block
+SELECT 91, 1, '110100', '北京方林装饰', fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block
 FROM communion.company WHERE cid = 66;
 
 -- 北京方林整装
 INSERT INTO communion.company (cid, `no`, code, name, fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block)
-SELECT 92, `no` + 1, '110100', '北京方林整装', fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block
+SELECT 92, 1, '110100', '北京方林整装', fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block
 FROM communion.company WHERE cid = 67;
 
 
