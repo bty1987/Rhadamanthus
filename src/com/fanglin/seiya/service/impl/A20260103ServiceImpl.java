@@ -36,6 +36,7 @@ import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -66,6 +67,9 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private DecorationService decorationService;
 
 	@Override
 	public CustomerChanceVO queryCustomerChanceByCno(String cno) throws FLException {
@@ -245,6 +249,52 @@ public class A20260103ServiceImpl implements A20260103Service {
 		decorationVO.setOrderId(decorationPO.getOrderId());
 
 		return decorationVO;
+	}
+
+	@Override
+	public void checkoverCustomerLead(String village, String houseNumber, String phone, Integer orgId) throws FLException {
+
+		// 参数验证
+		if (phone == null || phone.trim().isEmpty()) {
+			throw new FLException(400002, "客户电话不能为空");
+		}
+
+		if (village == null || village.trim().isEmpty() || houseNumber == null || houseNumber.trim().isEmpty()) {
+			throw new FLException(400003, "楼盘和楼号不能为空");
+		}
+
+		if (orgId == null) {
+			throw new FLException(400004, "公司标识不能为空");
+		}
+
+		// 1. 通过电话查询客户cid
+		CustomerPhoneVO queryPhone = new CustomerPhoneVO();
+		queryPhone.setPhone(phone);
+		CustomerVO customerVO = customerService.queryCustomerForPhone(queryPhone, null);
+
+		long cid = 0;
+
+		if (customerVO != null && customerVO.getCid() != null) {
+			cid = customerVO.getCid();
+		}
+
+		// 2. 通过楼盘+楼号查询房屋hid
+		VillageVO villageVO = new VillageVO(village);
+		HouseVO queryHouse = new HouseVO();
+		queryHouse.setVillage(villageVO);
+		queryHouse.setHouseNumber(houseNumber);
+		HouseVO houseVO = houseService.queryHouseByNoAHnum(queryHouse, orgId);
+
+		long hid = 0;
+
+		if (houseVO != null && houseVO.getHid() != null) {
+			hid = houseVO.getHid();
+		}
+
+		// 3. 参考DecorationService.checkOverDecoration逻辑，验证装修单是否存在
+		if (cid != 0 || hid != 0) {
+			decorationService.checkOverDecoration(cid, hid, orgId);
+		}
 	}
 
 }

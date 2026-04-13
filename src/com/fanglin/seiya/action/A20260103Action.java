@@ -279,6 +279,36 @@ public class A20260103Action extends BaseListAction {
 	}
 
 	/**
+	 * 验证装修单是否存在接口
+	 *
+	 * 参考DecorationService.checkOverDecoration逻辑：
+	 * 通过客户电话和楼盘+楼号查询是否存在有效装修单
+	 *
+	 * 请求参数：
+	 * @phone: 客户电话（必填）
+	 * @village: 楼盘名称（必填）
+	 * @houseNumber: 楼号（必填）
+	 * @orgId: 公司标识（必填）
+	 *
+	 * @return SUCCESS
+	 * @throws FLException 业务异常（存在装修单时抛出140063）
+	 */
+	@Action(value = "checkoverCustomerLead", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" }) }, params = { "contentType", "text/html" })
+	public String checkoverCustomerLead() throws FLException {
+
+		// 初始化 data 对象
+		this.data = new HashMap<String, Object>();
+
+		// 调用 Service 层处理业务逻辑
+		a20260103Service.checkoverCustomerLead(village, houseNumber, phone, orgId);
+
+		// 验证通过，无装修单存在
+		this.data.put("message", "验证通过，无装修单存在");
+
+		return SUCCESS;
+	}
+
+	/**
 	 * 添加客户线索接口
 	 * 
 	 * 接收外部系统传入的客户线索信息，转换为 ERP 客户机会并创建
