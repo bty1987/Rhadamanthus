@@ -43,8 +43,8 @@ public class QuotationAssignRecordServiceImpl implements QuotationAssignRecordSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void pageQuotationAssignRecord(Paging paging, List<Filter> filters) throws FLException {
-		List<QuotationAssignRecordPO> quotationAssignRecordPOs = quotationAssignRecordDao.pageQuotationAssignRecord(paging, filters);
+	public void pageQuotationAssignRecord(Paging paging, List<Filter> filters, Integer company) throws FLException {
+		List<QuotationAssignRecordPO> quotationAssignRecordPOs = quotationAssignRecordDao.pageQuotationAssignRecord(paging, filters, company);
 		List<QuotationAssignRecordVO> quotationAssignRecordVOs = new ArrayList<QuotationAssignRecordVO>();
 
 		for (QuotationAssignRecordPO quotationAssignRecordPO : quotationAssignRecordPOs) {
@@ -67,6 +67,15 @@ public class QuotationAssignRecordServiceImpl implements QuotationAssignRecordSe
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int createQuotationAssignRecord(QuotationAssignRecordVO quotationAssignRecordVO) throws FLException {
+
+		// 参数校验
+		if (quotationAssignRecordVO == null) {
+			throw new FLException(0, "分配记录信息不能为空");
+		}
+		if (quotationAssignRecordVO.getOrderId() == null || quotationAssignRecordVO.getOrderId().trim().isEmpty()) {
+			throw new FLException(0, "装修单号不能为空");
+		}
+
 		QuotationAssignRecordPO quotationAssignRecordPO = new QuotationAssignRecordPO();
 		quotationAssignRecordPO.vtp(quotationAssignRecordVO);
 		quotationAssignRecordDao.save(quotationAssignRecordPO);

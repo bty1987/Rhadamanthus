@@ -124,7 +124,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		// 2. 检查是否已分配报价员
 		String quoterUid = getQuoteterUid(decoration);
-		if (quoterUid != null && quoterUid != null) {
+		if (quoterUid != null) {
 			throw new FLException(0, "该装修单已分配报价员，无需重复分配");
 		}
 
@@ -253,12 +253,12 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		// 2. 检查是否已分配报价员
 		String oldBudgetUid = getQuoteterUid(decoration);
-		if (oldBudgetUid == null || oldBudgetUid == null) {
+		if (oldBudgetUid == null) {
 			throw new FLException(0, "该装修单尚未分配报价员，请使用手动分配功能");
 		}
 
 		// 3. 如果新旧预算员相同，无需重新分配
-		if (oldBudgetUid == quotationAssignVO.getQuoter().getUserId()) {
+		if (oldBudgetUid.equals(quotationAssignVO.getQuoter().getUserId())) {
 			throw new FLException(0, "新旧预算员相同，无需重新分配");
 		}
 
@@ -273,7 +273,21 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(0, "新预算员公司与装修单公司不匹配");
 		}
 
-		// 6. 执行重新分配
+		// 6. 释放旧预算员状态
+		QuotationAssignUserRulePO oldUserRule = quotationAssignUserRuleDao.getQuotationAssignUserRule(oldBudgetUid, decoration.getCompany());
+		if (oldUserRule != null) {
+			int oldTaskCount = oldUserRule.getCurrentTaskCount() - 1;
+			if (oldTaskCount < 0) {
+				oldTaskCount = 0;
+			}
+			oldUserRule.setCurrentTaskCount(oldTaskCount);
+			if (oldTaskCount == 0) {
+				oldUserRule.setStatus(QuotationAssignUserRulePO.STATUS_AVAILABLE_INT);
+			}
+			quotationAssignUserRuleDao.update(oldUserRule);
+		}
+
+		// 7. 执行重新分配
 		return assignToUser(orderId, decoration, userRule, QuotationAssignRecordPO.ASSIGN_TYPE_MANUAL_INT, assigner.getUid());
 	}
 
@@ -310,11 +324,15 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			return 1;
 		}
 
-		// 3. 更新预算员的最后完成时间和状态
+		// 3. 先将当前任务的请求标记为已完成（释放当前任务），再统计剩余任务数
+		// 注意：当前订单的请求已经是 STATUS_ASSIGNED 状态，完成时应从任务数中减去
+		// 先更新预算员的最后完成时间
 		userRule.setLastFinishTime(new Timestamp(System.currentTimeMillis()));
 
-		// 更新当前任务数（统计status=2的请求数量）
+		// 统计当前任务数（此时当前订单的请求仍为 STATUS_ASSIGNED，会被统计在内）
 		int currentTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(decoration.getQuoter().getUid());
+		// 减去当前正在完成的任务
+		currentTaskCount = Math.max(0, currentTaskCount - 1);
 		userRule.setCurrentTaskCount(currentTaskCount);
 
 		// 更新状态：currentTaskCount > 0 制作中，否则待分配
@@ -357,6 +375,11 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 						assignToUser(request.getOrderId(), pendingDecoration, userRule, QuotationAssignRecordPO.ASSIGN_TYPE_REVERSE_AUTO_INT, null);
 						// 只分配一个任务，然后退出
 						break;
+					} else {
+						// 待分配请求的装修单不存在，标记请求异常
+						request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
+						quotationAssignRequestDao.update(request);
+						continue;
 					}
 				}
 			}
@@ -464,7 +487,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			request = new QuotationAssignRequestPO();
 			request.setOrderId(orderId);
 			request.setCompany(decoration.getCompany());
-			request.setDepartment(getDesignDeptId(decoration));
+			request.setDepartment(getDesignDeptId(decoration) != null ? getDesignDeptId(decoration) : 0);
 			request.setDecorationType(decoration.getType());
 			request.setPriority(QuotationAssignRequestPO.PRIORITY_NORMAL_INT);
 			request.setCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -504,8 +527,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		quotationVO.setName("Auto Assign");
 		quotationVO.setOrderId(orderId);
-		quotationVO.setStyle("");
-		quotationVO.setContent("");
+		quotationVO.setStyle(null);
+		quotationVO.setContent(null);
 
 		quotationService.addQuotation(quotationVO, userRule.getUser().getUserId(), decoration.getCompany());
 

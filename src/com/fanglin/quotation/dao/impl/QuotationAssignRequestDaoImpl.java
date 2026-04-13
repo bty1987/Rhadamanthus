@@ -116,6 +116,9 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		criteria.addOrder(org.hibernate.criterion.Order.asc("priority"));
 		criteria.addOrder(org.hibernate.criterion.Order.asc("requestTime"));
 
+		// 限制结果集数量，避免一次性加载过多数据
+		criteria.setMaxResults(50);
+
 		return criteria.list();
 	}
 

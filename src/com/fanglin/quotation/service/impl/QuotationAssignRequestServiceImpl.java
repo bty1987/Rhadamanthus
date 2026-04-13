@@ -104,6 +104,12 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		// 从 VO 的关联对象中提取 ID
 		int company = CompanyServiceImpl.decode(quotationAssignRequestVO.getCompany().getCid());
 
+		// 检查同一 orderId 是否已存在待分配请求，避免重复创建
+		QuotationAssignRequestPO existRequest = quotationAssignRequestDao.queryQuotationAssignRequestForPending(quotationAssignRequestVO.getOrderId());
+		if (existRequest != null) {
+			throw new FLException(0, "该装修单已存在待分配请求，请勿重复创建");
+		}
+
 		// 创建 PO 对象
 		QuotationAssignRequestPO quotationAssignRequestPO = new QuotationAssignRequestPO();
 

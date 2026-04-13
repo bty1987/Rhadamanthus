@@ -82,6 +82,10 @@ public class QuotationAssignConfigAction extends BaseListAction {
 	@Action(value = "queryQuotationAssignConfigById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignConfigById() throws FLException {
 
+		if (quotationAssignConfig == null) {
+			return ERROR;
+		}
+
 		quotationAssignConfig = quotationAssignConfigService.queryQuotationAssignConfigById(quotationAssignConfig);
 
 		return SUCCESS;
@@ -95,6 +99,10 @@ public class QuotationAssignConfigAction extends BaseListAction {
 	 */
 	@Action(value = "createQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createQuotationAssignConfig() throws FLException {
+
+		if (quotationAssignConfig == null) {
+			return ERROR;
+		}
 
 		quotationAssignConfigService.createQuotationAssignConfig(quotationAssignConfig);
 
@@ -110,6 +118,10 @@ public class QuotationAssignConfigAction extends BaseListAction {
 	@Action(value = "updateQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationAssignConfig() throws FLException {
 
+		if (quotationAssignConfig == null) {
+			return ERROR;
+		}
+
 		quotationAssignConfigService.updateQuotationAssignConfig(quotationAssignConfig);
 
 		return SUCCESS;
@@ -123,6 +135,10 @@ public class QuotationAssignConfigAction extends BaseListAction {
 	 */
 	@Action(value = "deleteQuotationAssignConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationAssignConfig() throws FLException {
+
+		if (quotationAssignConfig == null) {
+			return ERROR;
+		}
 
 		quotationAssignConfigService.deleteQuotationAssignConfig(quotationAssignConfig);
 
@@ -138,6 +154,10 @@ public class QuotationAssignConfigAction extends BaseListAction {
 	@Action(value = "updateQuotationAssignConfigForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationAssignConfigForStatus() throws FLException {
 
+		if (quotationAssignConfig == null) {
+			return ERROR;
+		}
+
 		// 调用 Service 更新
 		quotationAssignConfigService.updateQuotationAssignConfigForStatus(quotationAssignConfig);
 
@@ -152,6 +172,10 @@ public class QuotationAssignConfigAction extends BaseListAction {
 	 */
 	@Action(value = "updateQuotationAssignConfigForAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationAssignConfigForAssign() throws FLException {
+
+		if (quotationAssignConfig == null) {
+			return ERROR;
+		}
 
 		quotationAssignConfigService.updateQuotationAssignConfigForAssign(quotationAssignConfig);
 

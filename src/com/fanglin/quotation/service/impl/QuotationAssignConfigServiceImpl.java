@@ -76,6 +76,10 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 
 		QuotationAssignConfigPO quotationAssignConfigPO = quotationAssignConfigDao.get(quotationAssignConfigVO.getQacid());
 
+		if (quotationAssignConfigPO == null) {
+			return null;
+		}
+
 		return quotationAssignConfigPO.ptv(new QuotationAssignConfigVO());
 	}
 
@@ -186,6 +190,10 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 		}
 
 		// 更新状态
+		if (quotationAssignConfigVO.getEnabled() != QuotationAssignConfigPO.ENABLED_DISABLED_INT
+				&& quotationAssignConfigVO.getEnabled() != QuotationAssignConfigPO.ENABLED_ENABLED_INT) {
+			throw new FLException(0, "状态值不合法");
+		}
 		quotationAssignConfigPO.setEnabled(quotationAssignConfigVO.getEnabled());
 
 		// 设置更新时间
@@ -214,6 +222,10 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 		}
 
 		// 更新分配方式
+		if (quotationAssignConfigVO.getAutoAssign() != QuotationAssignConfigPO.AUTO_ASSIGN_MANUAL_INT
+				&& quotationAssignConfigVO.getAutoAssign() != QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT) {
+			throw new FLException(0, "分配方式值不合法");
+		}
 		quotationAssignConfigPO.setAutoAssign(quotationAssignConfigVO.getAutoAssign());
 
 		// 设置更新时间
@@ -235,6 +247,12 @@ public class QuotationAssignConfigServiceImpl implements QuotationAssignConfigSe
 		}
 
 		long qacid = quotationAssignConfigVO.getQacid();
+
+		// 关联性检查：确保配置存在
+		QuotationAssignConfigPO quotationAssignConfigPO = quotationAssignConfigDao.get(qacid);
+		if (quotationAssignConfigPO == null) {
+			throw new FLException(0, "配置不存在");
+		}
 
 		quotationAssignConfigDao.deleteById(qacid);
 

@@ -1370,7 +1370,17 @@ $.extend(api, {
             url: "updateQuotetionFunctionArea.do",
             type: "update",
             tranargs: {
-                args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.basePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate"],
+                args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.basePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate", "quotetionFunctionArea.quotetionFunctionAreaParam.girth", "quotetionFunctionArea.quotetionFunctionAreaParam.area", "quotetionFunctionArea.quotetionFunctionAreaParam.height", "quotetionFunctionArea.quotetionFunctionAreaParam.holeLength", "quotetionFunctionArea.quotetionFunctionAreaParam.holeHeight", "quotetionFunctionArea.quotetionFunctionAreaParam.windowLength", "quotetionFunctionArea.quotetionFunctionAreaParam.windowHeight", "quotetionFunctionArea.quotetionFunctionAreaParam.beamLength", "quotetionFunctionArea.quotetionFunctionAreaParam.beamHeight"],
+                query: [{
+                    result: "quotetion",
+                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "trafficRate", "trafficPrice", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "taxPrice", "taxRate"]
+                }, {
+                    result: "quotetionFunctionArea",
+                    args: ["total"]
+                }, {
+                    result: "quotetionFunctionArea-quotetionFunctionAreaParam",
+                    args: ["girth", "area", "height", "holeLength", "holeHeight", "windowLength", "windowHeight", "beamLength", "beamHeight"]
+                }]
             }
         },
         deleteQuotetionFunctionArea: {

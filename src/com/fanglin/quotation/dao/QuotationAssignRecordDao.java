@@ -30,9 +30,10 @@ public interface QuotationAssignRecordDao extends Dao<QuotationAssignRecordPO> {
 	 * 
 	 * @param paging 分页对象
 	 * @param filters 过滤条件
+	 * @param company 公司ID（可选）
 	 * @return 分配记录列表
 	 */
-	List<QuotationAssignRecordPO> pageQuotationAssignRecord(Paging paging, List<Filter> filters);
+	List<QuotationAssignRecordPO> pageQuotationAssignRecord(Paging paging, List<Filter> filters, Integer company);
 
 	/**
 	 * 根据装修单号查询分配记录列表

@@ -58,9 +58,9 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException {
+	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
-		List<QuotationAssignUserRulePO> quotationAssignUserRulePOs = quotationAssignUserRuleDao.pageQuotationAssignUserRule(paging, filters);
+		List<QuotationAssignUserRulePO> quotationAssignUserRulePOs = quotationAssignUserRuleDao.pageQuotationAssignUserRule(paging, filters, company);
 		List<QuotationAssignUserRuleVO> quotationAssignUserRuleVOs = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRulePO po : quotationAssignUserRulePOs) {
@@ -84,7 +84,12 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Transactional(rollbackFor = Exception.class)
 	public List<QuotationAssignUserRuleVO> queryQuotationAssignUserRuleForAvaile(QuotationAssignUserRuleVO quotationAssignUserRule, Integer company) throws FLException {
 
-		List<QuotationAssignUserRulePO> quotationAssignUserRulePOs = quotationAssignUserRuleDao.queryAvailableUsers(company, quotationAssignUserRule.getDepartment().getDid());
+		Integer departmentId = null;
+		if (quotationAssignUserRule.getDepartment() != null) {
+			departmentId = quotationAssignUserRule.getDepartment().getDid();
+		}
+
+		List<QuotationAssignUserRulePO> quotationAssignUserRulePOs = quotationAssignUserRuleDao.queryAvailableUsers(company, departmentId);
 		List<QuotationAssignUserRuleVO> quotationAssignUserRuleVOs = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRulePO po : quotationAssignUserRulePOs) {
@@ -117,6 +122,10 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) {
+			throw new FLException(0, "用户不存在");
+		}
 
 		// 创建 PO 对象
 		quotationAssignUserRulePO = new QuotationAssignUserRulePO();
@@ -166,6 +175,11 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 		String userId = quotationAssignUserRuleVO.getUser().getUserId();
 		int company = CompanyServiceImpl.decode(quotationAssignUserRuleVO.getCompany().getCid());
+
+		// qaurid 拆箱 NPE 防御
+		if (quotationAssignUserRuleVO.getQaurid() == null) {
+			throw new FLException(0, "规则ID不能为空");
+		}
 
 		// 校验：用户+公司组合唯一性（排除当前记录）
 		QuotationAssignUserRulePO checkPO = quotationAssignUserRuleDao.getQuotationAssignUserRule(userId, company);
