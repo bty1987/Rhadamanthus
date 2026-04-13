@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -648,8 +647,8 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	/**
-	 * 比对 customer 的 company* 字段与所有 account,
-	 * 如果没有任何 account 完全匹配, 则新建一个 account 并设为默认
+	 * 根据 customer 的 company* 字段计算 hash,
+	 * 用 cid + contentHash 查询, 存在则跳过, 不存在则新建 account 并设为默认
 	 */
 	private void matchOrCreateAccount(CustomerPO customerPO) {
 
@@ -665,21 +664,15 @@ public class CustomerServiceImpl implements CustomerService {
 			return;
 		}
 
-		List<CustomerAccountPO> accounts = customerAccountDao.queryCustomerAccountByCid(customerPO.getCid());
+		String contentHash = CustomerAccountPO.computeContentHash(no, name, address, phone, bank, bankno);
 
-		// 比对是否已有完全匹配的 account (no, name, address, phone, bank, bankno 全部一致)
-		for (CustomerAccountPO account : accounts) {
-			if (Objects.equals(str(account.getNo()), str(no))
-				&& Objects.equals(str(account.getName()), str(name))
-				&& Objects.equals(str(account.getAddress()), str(address))
-				&& Objects.equals(str(account.getPhone()), str(phone))
-				&& Objects.equals(str(account.getBank()), str(bank))
-				&& Objects.equals(str(account.getBankno()), str(bankno))) {
-				return; // 已有匹配, 无需新建
-			}
+		// cid + contentHash 查询, 存在则忽略
+		CustomerAccountPO existing = customerAccountDao.queryCustomerAccountByCidAndContentHash(customerPO.getCid(), contentHash);
+		if (existing != null) {
+			return;
 		}
 
-		// 无匹配, 新建 account
+		// 不存在, 新建 account
 		CustomerAccountPO newAccount = new CustomerAccountPO();
 		newAccount.setCid(customerPO.getCid());
 		newAccount.setType(CustomerAccountPO.TYPE_PUBLIC);
@@ -692,12 +685,15 @@ public class CustomerServiceImpl implements CustomerService {
 		newAccount.setStatus(CustomerAccountPO.STATUS_ENABLE);
 		newAccount.setCreateTime(DateUtil.current());
 		newAccount.setUpdateTime(DateUtil.current());
+		newAccount.setContentHash(contentHash);
 
-		// 如果是第一个 account, 设为默认; 否则清除旧默认, 新建设为默认
-		if (accounts.isEmpty()) {
+		int count = customerAccountDao.countCustomerAccountByCid(customerPO.getCid());
+
+		if (count == 0) {
 			newAccount.setDefaults(CustomerAccountPO.DEFAULTS_YES);
 		} else {
 			// 清除旧默认
+			List<CustomerAccountPO> accounts = customerAccountDao.queryCustomerAccountByCid(customerPO.getCid());
 			for (CustomerAccountPO account : accounts) {
 				if (account.getDefaults() == CustomerAccountPO.DEFAULTS_YES) {
 					account.setDefaults(CustomerAccountPO.DEFAULTS_NO);
@@ -708,10 +704,6 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		customerAccountDao.save(newAccount);
-	}
-
-	private String str(String s) {
-		return s == null ? "" : s;
 	}
 
 }

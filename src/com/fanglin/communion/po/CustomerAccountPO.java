@@ -27,6 +27,8 @@ public class CustomerAccountPO implements Serializable {
 
 	public static final String COLUMN_BANKNO_STR = "bankno";
 
+	public static final String COLUMN_CONTENTHASH_STR = "contentHash";
+
 	public static final short TYPE_PRIVATE = 0;  // 对私
 
 	public static final short TYPE_PUBLIC = 1;    // 对公
@@ -64,6 +66,8 @@ public class CustomerAccountPO implements Serializable {
 	private String createTime;
 
 	private String updateTime;
+
+	private String contentHash;
 
 	public CustomerAccountPO() {
 		super();
@@ -191,6 +195,31 @@ public class CustomerAccountPO implements Serializable {
 
 	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	@Column(name = "contentHash", length = 32)
+	public String getContentHash() {
+		return contentHash;
+	}
+
+	public void setContentHash(String contentHash) {
+		this.contentHash = contentHash;
+	}
+
+	/**
+	 * 根据6个业务字段计算 MD5 摘要
+	 */
+	public static String computeContentHash(String no, String name, String address, String phone, String bank, String bankno) {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(no != null ? no : "").append('|');
+		sb.append(name != null ? name : "").append('|');
+		sb.append(address != null ? address : "").append('|');
+		sb.append(phone != null ? phone : "").append('|');
+		sb.append(bank != null ? bank : "").append('|');
+		sb.append(bankno != null ? bankno : "");
+
+		return com.fanglin.core.security.MD5Helper.MD5(sb.toString());
 	}
 
 	public CustomerAccountVO ptv(CustomerAccountVO customerAccountVO) {

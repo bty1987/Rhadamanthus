@@ -65,6 +65,10 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 		customerAccountPO.setCreateTime(DateUtil.current());
 		customerAccountPO.setUpdateTime(DateUtil.current());
 
+		customerAccountPO.setContentHash(CustomerAccountPO.computeContentHash(
+			customerAccountPO.getNo(), customerAccountPO.getName(), customerAccountPO.getAddress(),
+			customerAccountPO.getPhone(), customerAccountPO.getBank(), customerAccountPO.getBankno()));
+
 		int count = customerAccountDao.countCustomerAccountByCid(cid);
 
 		if (count == 0) {
@@ -105,6 +109,9 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 		BeanUtil.copyPropertie(customerAccountVO, customerAccountPO, "cid", "defaults", "status", "createTime");
 
 		customerAccountPO.setUpdateTime(DateUtil.current());
+		customerAccountPO.setContentHash(CustomerAccountPO.computeContentHash(
+			customerAccountPO.getNo(), customerAccountPO.getName(), customerAccountPO.getAddress(),
+			customerAccountPO.getPhone(), customerAccountPO.getBank(), customerAccountPO.getBankno()));
 
 		customerAccountDao.update(customerAccountPO);
 

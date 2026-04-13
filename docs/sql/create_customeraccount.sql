@@ -14,7 +14,9 @@ CREATE TABLE `customeraccount` (
   `defaults` TINYINT NOT NULL DEFAULT 0 COMMENT '是否默认账户: 0-否, 1-是',
   `createTime` DATETIME DEFAULT NULL COMMENT '创建时间',
   `updateTime` DATETIME DEFAULT NULL COMMENT '更新时间',
+  `contentHash` VARCHAR(32) DEFAULT NULL COMMENT '6个业务字段的MD5摘要, 用于快速比对',
   PRIMARY KEY (`caid`),
   KEY `idx_cid` (`cid`),
-  KEY `idx_bankno` (`bankno`)
+  KEY `idx_bankno` (`bankno`),
+  UNIQUE KEY `uk_cid_hash` (`cid`, `contentHash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客户银行账户';

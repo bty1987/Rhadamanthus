@@ -15,4 +15,6 @@ public interface CustomerAccountDao extends Dao<CustomerAccountPO> {
 
 	public int countCustomerAccountByCid(long cid);
 
+	public CustomerAccountPO queryCustomerAccountByCidAndContentHash(long cid, String contentHash);
+
 }
