@@ -53,6 +53,7 @@ import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -687,6 +688,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		// 判断orderId是否发生变化，如果不同则更新
 		if (!decorationVO.getOrderId().equals(originalOrderId)) {
 			customerChancePO.setOrderId(decorationVO.getOrderId());
+
+			messageQueuingDao.save(new MessageQueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originalOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION_ORDER_CHANGED\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + "}"));
 		}
 
 		messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originalOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + "}"));
@@ -931,11 +934,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			housePO = customerSourcePO.getHouse();
 		}
 
-		// 检查是否需要校验重复订单
+		// 检查是否需要校验重复订单（isCheck=0 校验，isCheck=1 忽略）
 		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) {
-			decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), housePO.getHid());
+			decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), housePO.getHid(), company);
 		}
-		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), housePO.getHid(), company);
 
 		// 设置客户来源状态为初审通过（STATUS_APPROVE_ONE_INT = 2）
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_APPROVE_ONE_INT);
