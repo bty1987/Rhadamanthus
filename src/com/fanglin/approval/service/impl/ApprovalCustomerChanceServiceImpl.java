@@ -158,7 +158,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_APPROVE_TWO_INT);
 
-		customerChanceDao.update(customerSourcePO);
+		customerSourceDao.update(customerSourcePO);
 
 		String contents = String.format("客源转装修单提交,客户名:%s,楼盘:%s %s,装修单号:%s,批注:%s", customerSourcePO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerSourcePO.getOrderId(), approvalPO.getAnnotate());
 

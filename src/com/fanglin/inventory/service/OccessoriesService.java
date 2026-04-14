@@ -28,6 +28,8 @@ public interface OccessoriesService {
 
 	public int balanceOccessories(OccessoriesVO occessoriesVO, String userId) throws FLException;
 
+	public int rejectOccessories(OccessoriesVO occessoriesVO, String userId) throws FLException;
+
 	public int finishOccessories(OccessoriesVO occessories) throws FLException;
 
 	public int rateOccessories(OccessoriesVO occessories);

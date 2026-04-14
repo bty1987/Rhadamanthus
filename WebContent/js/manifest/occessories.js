@@ -355,6 +355,35 @@ $(function() {
             return occessories.pageType == "receive" && v.status == 3;
         }
     }, {
+        name: "驳回",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            if (v.status != 4) {
+                com.showAlert(com.warning, "外辅单状态不可操作");
+                return false;
+            }
+
+            com.showConfirm("确定要驳回外辅单 " + v.no + " 的结算信息吗？", function() {
+
+                var options = {
+                    "occessories.oid": v.oid
+                };
+
+                com.post(api.inventory.rejectOccessories, options, function(res) {
+
+                    com.showAlert(com.info, "驳回成功，可重新结算");
+                    searcher.doSearch();
+                });
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return occessories.pageType == "balance" && v.status == 4;
+        }
+    }, {
         name: "分配",
         clazz: "btn-success",
         handle: function(v) {
