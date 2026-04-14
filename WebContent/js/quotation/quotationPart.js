@@ -230,6 +230,7 @@ var QuotationDetail = (function() {
             that.quoModals = {
                 // 编辑功能区
                 $domainEditModal: com.focusPage("#functionAreaModal"),
+                $domainParamEditModal: com.focusPage("#functionAreaParamModal"),
                 // 添加功能区
                 $domainTempletModal: com.focusPage("#functionAreaTemplateModal").on("show.bs.modal", function(a) {
 
@@ -1188,7 +1189,7 @@ var QuotationDetail = (function() {
 
         nowEditDomain: null,
 
-        // 编辑功能区
+        // 编辑功能区(名称/排序)
         editDomain: function(qfaid) {
 
             var $domain = com.focusPage('.widget-box[data-qfaid="' + qfaid + '"]', '#functionAreaDetailList');
@@ -1196,18 +1197,7 @@ var QuotationDetail = (function() {
             this.nowEditDomain = $domain;
 
             com.focusPage("#functionAreaName").val($domain.find('.widget-header strong').text());
-            // $("#functionAreaIndex").val(dv.functionAreaIndex);
             com.focusPage("#functionAreaOrder").val($domain.attr("data-dlevel"));
-
-            com.focusPage("#girth", "#functionAreaModal").val($domain.attr("data-girth") ? $domain.attr("data-girth") : 0);
-            com.focusPage("#area", "#functionAreaModal").val($domain.attr("data-area") ? $domain.attr("data-area") : 0);
-            com.focusPage("#height", "#functionAreaModal").val($domain.attr("data-height") ? $domain.attr("data-height") : 0);
-            com.focusPage("#holeLength", "#functionAreaModal").val($domain.attr("data-holeLength") ? $domain.attr("data-holeLength") : 0);
-            com.focusPage("#holeHeight", "#functionAreaModal").val($domain.attr("data-holeHeight") ? $domain.attr("data-holeHeight") : 0);
-            com.focusPage("#windowLength", "#functionAreaModal").val($domain.attr("data-windowLength") ? $domain.attr("data-windowLength") : 0);
-            com.focusPage("#windowHeight", "#functionAreaModal").val($domain.attr("data-windowHeight") ? $domain.attr("data-windowHeight") : 0);
-            com.focusPage("#beamLength", "#functionAreaModal").val($domain.attr("data-beamLength") ? $domain.attr("data-beamLength") : 0);
-            com.focusPage("#beamHeight", "#functionAreaModal").val($domain.attr("data-beamHeight") ? $domain.attr("data-beamHeight") : 0);
 
             quo.quoModals.$domainEditModal.on('hide.bs.modal', function() {
 
@@ -1219,24 +1209,29 @@ var QuotationDetail = (function() {
             return false;
         },
 
-        paramsDomainEdit: function() {
+        // 编辑功能区参数
+        editDomainParam: function(qfaid) {
 
-            com.focusPage('#paramsFunctionAreasBtn').click(function() {
+            var $domain = com.focusPage('.widget-box[data-qfaid="' + qfaid + '"]', '#functionAreaDetailList');
 
-                if (quo.quoModals.$domainEditModal.hasClass("parameter")) {
-                    quo.quoModals.$domainEditModal.find(".parameter").hide();
-                    quo.quoModals.$domainEditModal.removeClass("parameter");
-                } else {
-                    quo.quoModals.$domainEditModal.find(".parameter").show();
-                    quo.quoModals.$domainEditModal.addClass("parameter");
-                }
+            this.nowEditDomain = $domain;
 
-                com.closeTip();
+            com.focusPage("#paramGirth").val($domain.attr("data-girth") ? $domain.attr("data-girth") : 0);
+            com.focusPage("#paramArea").val($domain.attr("data-area") ? $domain.attr("data-area") : 0);
+            com.focusPage("#paramHeight").val($domain.attr("data-height") ? $domain.attr("data-height") : 0);
+            com.focusPage("#paramHoleLength").val($domain.attr("data-holeLength") ? $domain.attr("data-holeLength") : 0);
+            com.focusPage("#paramHoleHeight").val($domain.attr("data-holeHeight") ? $domain.attr("data-holeHeight") : 0);
+            com.focusPage("#paramWindowLength").val($domain.attr("data-windowLength") ? $domain.attr("data-windowLength") : 0);
+            com.focusPage("#paramWindowHeight").val($domain.attr("data-windowHeight") ? $domain.attr("data-windowHeight") : 0);
+            com.focusPage("#paramBeamLength").val($domain.attr("data-beamLength") ? $domain.attr("data-beamLength") : 0);
+            com.focusPage("#paramBeamHeight").val($domain.attr("data-beamHeight") ? $domain.attr("data-beamHeight") : 0);
 
-            });
+            quo.quoModals.$domainParamEditModal.modal("show");
+
+            return false;
         },
 
-        // 编辑功能区保存按钮点击
+        // 编辑功能区保存按钮点击(名称/排序)
         saveDomainEdit: function() {
 
             var that = this;
@@ -1250,43 +1245,11 @@ var QuotationDetail = (function() {
                 var _dname = com.focusPage("#functionAreaName").val();
                 var _dorder = com.focusPage("#functionAreaOrder").val();
 
-                var _girth = com.focusPage("#girth", "#functionAreaModal").val();
-                var _area = com.focusPage("#area", "#functionAreaModal").val();
-                var _height = com.focusPage("#height", "#functionAreaModal").val();
-                var _holeLength = com.focusPage("#holeLength", "#functionAreaModal").val();
-                var _holeHeight = com.focusPage("#holeHeight", "#functionAreaModal").val();
-                var _windowLength = com.focusPage("#windowLength", "#functionAreaModal").val();
-                var _windowHeight = com.focusPage("#windowHeight", "#functionAreaModal").val();
-                var _beamLength = com.focusPage("#beamLength", "#functionAreaModal").val();
-                var _beamHeight = com.focusPage("#beamHeight", "#functionAreaModal").val();
-
                 var _params = $.extend({}, {
-                    "quotationFunctionArea.functionAreaName": _dname,// 功能区名
-                    "quotationFunctionArea.functionAreaOrder": _dorder,// 排序
-                    "quotationFunctionArea.qfaId": that.nowEditDomain.attr('data-qfaid'), // 功能区Id
-
-                    "quotationFunctionArea.quotationFunctionAreaParam.girth": _girth,
-                    "quotationFunctionArea.quotationFunctionAreaParam.area": _area,
-                    "quotationFunctionArea.quotationFunctionAreaParam.height": _height,
-                    "quotationFunctionArea.quotationFunctionAreaParam.holeLength": _holeLength,
-                    "quotationFunctionArea.quotationFunctionAreaParam.holeHeight": _holeHeight,
-                    "quotationFunctionArea.quotationFunctionAreaParam.windowLength": _windowLength,
-                    "quotationFunctionArea.quotationFunctionAreaParam.windowHeight": _windowHeight,
-                    "quotationFunctionArea.quotationFunctionAreaParam.beamLength": _beamLength,
-                    "quotationFunctionArea.quotationFunctionAreaParam.beamHeight": _beamHeight,
-
+                    "quotationFunctionArea.functionAreaName": _dname,
+                    "quotationFunctionArea.functionAreaOrder": _dorder,
+                    "quotationFunctionArea.qfaId": that.nowEditDomain.attr('data-qfaid'),
                 }, quo.basicParams);
-
-                var _paramsHide = $.extend({}, {
-                    "quotationFunctionArea.functionAreaName": _dname,// 功能区名
-                    "quotationFunctionArea.functionAreaOrder": _dorder,// 排序
-                    "quotationFunctionArea.qfaId": that.nowEditDomain.attr('data-qfaid'), // 功能区Id
-
-                }, quo.basicParams);
-
-                if (!quo.quoModals.$domainEditModal.hasClass("parameter")) {
-                    _params = _paramsHide;
-                }
 
                 com.post(api.quotation.updateQuotationFunctionArea, _params, function(res) {
 
@@ -1311,6 +1274,50 @@ var QuotationDetail = (function() {
                     } else {
                         $dmoney.insertBefore(com.focusPage('#functionAreaSumList > div').eq(0));
                     }
+
+                    quo.quoModals.$domainEditModal.modal("hide");
+                }, null, false);
+
+            });
+        },
+
+        // 编辑功能区参数保存按钮点击
+        saveDomainParamEdit: function() {
+
+            var that = this;
+
+            com.focusPage('#saveFunctionAreaParamBtn').on('click', function() {
+
+                if (com.validate("functionAreaParamModal")) {
+                    return false;
+                }
+
+                var _girth = com.focusPage("#paramGirth").val();
+                var _area = com.focusPage("#paramArea").val();
+                var _height = com.focusPage("#paramHeight").val();
+                var _holeLength = com.focusPage("#paramHoleLength").val();
+                var _holeHeight = com.focusPage("#paramHoleHeight").val();
+                var _windowLength = com.focusPage("#paramWindowLength").val();
+                var _windowHeight = com.focusPage("#paramWindowHeight").val();
+                var _beamLength = com.focusPage("#paramBeamLength").val();
+                var _beamHeight = com.focusPage("#paramBeamHeight").val();
+
+                var _params = $.extend({}, {
+                    "quotationFunctionArea.qfaId": that.nowEditDomain.attr('data-qfaid'),
+
+                    "quotationFunctionArea.quotationFunctionAreaParam.girth": _girth,
+                    "quotationFunctionArea.quotationFunctionAreaParam.area": _area,
+                    "quotationFunctionArea.quotationFunctionAreaParam.height": _height,
+                    "quotationFunctionArea.quotationFunctionAreaParam.holeLength": _holeLength,
+                    "quotationFunctionArea.quotationFunctionAreaParam.holeHeight": _holeHeight,
+                    "quotationFunctionArea.quotationFunctionAreaParam.windowLength": _windowLength,
+                    "quotationFunctionArea.quotationFunctionAreaParam.windowHeight": _windowHeight,
+                    "quotationFunctionArea.quotationFunctionAreaParam.beamLength": _beamLength,
+                    "quotationFunctionArea.quotationFunctionAreaParam.beamHeight": _beamHeight,
+
+                }, quo.basicParams);
+
+                com.post(api.quotation.updateQuotationFunctionArea, _params, function(res) {
 
                     if (res.quotationFunctionArea.quotationFunctionAreaParam) {
                         $.each(res.quotationFunctionArea.quotationFunctionAreaParam, function(k, v) {
@@ -1341,7 +1348,7 @@ var QuotationDetail = (function() {
                         }
                     });
 
-                    quo.quoModals.$domainEditModal.modal("hide");
+                    quo.quoModals.$domainParamEditModal.modal("hide");
                 }, null, false);
 
             });
@@ -2179,7 +2186,7 @@ var QuotationDetail = (function() {
         init: function() {
 
             this.saveDomainEdit();
-            this.paramsDomainEdit();
+            this.saveDomainParamEdit();
             this.calculateTotal();
             this.quotationItemPriceEdit();
             this.saveDiscountEdit();
@@ -3880,6 +3887,7 @@ var QuotationDetail = (function() {
             var _btnSet = {
                 "$btnSort": ["根据工种排序", '<i class="bigger-125 icon-sort orange"></i>', dv.type != constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT],
                 "$btnEdit": ["编辑功能区", '<i class="bigger-125 icon-pencil blue"></i>', btnShow],
+                "$btnParam": ["功能区参数", '<i class="bigger-125 icon-list-alt green"></i>', btnShow],
                 "$btnAdd": ["添加工程项", '<i class="bigger-125 icon-plus purple"></i>', dv.type != constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT],
                 "$btnSet": ["自定义报价项", '<i class="bigger-125  icon-plus-sign purple"></i>', btnShow],
                 "$btnHistory": ["历史报价项", '<i class="bigger-125 icon-star green"></i>', btnShow],
@@ -4112,8 +4120,10 @@ var QuotationDetail = (function() {
             if (dv.type != constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT && dv.functionAreaOrder != "9998") { // 管理区类型之外
 
                 $btns.$btnEdit.click(function() {// 编辑功能区
-
                     domain.editDomain(dv.qfaId);
+                });
+                $btns.$btnParam.click(function() {// 功能区参数
+                    domain.editDomainParam(dv.qfaId);
                 });
                 $btns.$btnSet.click(function() {// 自定义报价项
 
