@@ -1350,6 +1350,9 @@ $.extend(api, {
             tranargs: [{
                 result: "quotetionFunctionAreas-quotetionFunctionAreaItems",
                 args: ["unitPrice", "addPrice", "subPrice", "num"]
+            }, {
+                result: "quotetionFunctionAreas-quotetionFunctionAreaParam",
+                args: ["girth", "area", "height", "holeLength", "holeHeight", "windowLength", "windowHeight", "beamLength", "beamHeight"]
             }]
         },
         addQuotetionFunctionArea: {
