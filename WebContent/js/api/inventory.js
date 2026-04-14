@@ -592,6 +592,10 @@ $.extend(api, {
                 args: ["occessories.vbalance", "occessories.rcharge"]
             }
         },
+        rejectOccessories: {
+            url: "rejectOccessories.do",
+            type: "update"
+        },
         finishOccessories: {
             url: "finishOccessories.do"
         },

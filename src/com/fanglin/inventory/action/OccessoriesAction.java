@@ -87,6 +87,14 @@ public class OccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "rejectOccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rejectOccessories() throws FLException {
+
+		occessoriesService.rejectOccessories(occessories, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deliveOccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deliveOccessories() throws FLException {
 
