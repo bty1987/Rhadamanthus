@@ -125,6 +125,16 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 		if (decorationPO == null) return customerProtectRuleVO;
 
+		// 检查装修单状态（与 protect 方法一致）
+		if (Arrays.asList(DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_RESIGNED_INT, DecorationPO.STATUS_COMPLETED_INT).contains(decorationPO.getStatus())) {
+			return new CustomerProtectRuleVO();
+		}
+
+		// 终态/已决算的装修单不需要保护
+		if (Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT).contains(decorationPO.getStatus()) || DecorationPO.BALANCESTATUS_CONDUCT_INT == decorationPO.getBalanceStatus()) {
+			return new CustomerProtectRuleVO();
+		}
+
 		customerProtectRuleVO.setOrderId(decorationPO.getOrderId());
 
 		// 标准VO，用于存储当前最大保护天数的规则
@@ -193,29 +203,34 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			}
 		}
 
-		// 5. 岗位规则检查
+		// 5. 岗位规则检查（合尺逻辑）
 		if (customerProtectRuleVO.getDuty() != null && customerProtectRuleVO.getDuty().getDid() != null) {
-			// 按传入的岗位ID查询规则
+			// 按传入的新业务员岗位ID查询规则
 			CustomerProtectRulePO dutyRule = customerProtectRuleDao.queryCustomerProtectRule(customerProtectRuleVO.getDuty().getDid(), company);
 
-			// 检查装修单的业务员岗位是否等于传入的岗位
+			// 检查装修单的业务员岗位是否等于传入的岗位（同岗位）
 			if (decorationPO.getSalesman() != null && decorationPO.getSalesman().getDuty() != null && decorationPO.getSalesman().getDuty().getDid() == customerProtectRuleVO.getDuty().getDid()) {
-				// 业务员岗位匹配传入的岗位，返回空 VO（不触发保护）
-				return new CustomerProtectRuleVO();
+				// 同岗位：直接合尺，返回带 orderId + mergeFlag 的 VO（无 cprid，前端走直接合尺分支）
+				customerProtectRuleVO.setMergeFlag((short) 1);
+				return customerProtectRuleVO;
 			}
 
-			// 业务员岗位不匹配，检查保护期
+			// 异岗位：检查保护期
 			if (dutyRule != null) {
 				long daysPassed = DateUtil.diffDay(decorationPO.getCreateTime(), now);
 				int protectDays = dutyRule.getDays();
 				if (daysPassed < protectDays) {
+					// 保护期内：审批后合尺
 					int remaining = (int) (protectDays - daysPassed);
 					if (remaining > maxRemainingDays) {
 						maxRemainingDays = remaining;
 						maxRuleVO = dutyRule.ptv(new CustomerProtectRuleVO());
+						maxRuleVO.setMergeFlag((short) 1);
 					}
 				}
 			}
+			// 异岗位 + 过保护期/无规则：customerProtectRuleVO 已有 orderId，设置 mergeFlag=2 前端走待确认合尺
+			customerProtectRuleVO.setMergeFlag((short) 2);
 		}
 
 		// 如果有匹配的规则，返回最大天数的规则
@@ -347,30 +362,32 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			}
 		}
 
-		// 5. 岗位规则检查
+		// 5. 岗位规则检查（合尺模式）
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		if (userPO != null && userPO.getDuty() != null) {
 			CustomerProtectRulePO dutyRule = customerProtectRuleDao.queryCustomerProtectRule(userPO.getDuty().getDid(), company);
 
-			// 检查装修单的业务员岗位是否等于当前用户的岗位
+			// 检查装修单的业务员岗位是否等于新业务员的岗位
 			if (decorationPO.getSalesman() != null && decorationPO.getSalesman().getDuty() != null && decorationPO.getSalesman().getDuty().getDid() == userPO.getDuty().getDid()) {
-				// 业务员岗位匹配当前用户岗位，直接分配不需要审批
-				decorationBelongService.tranDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId);
+				// 场景1: 原业务员岗位 == 新业务员岗位 → 直接合尺，不走审批
+				decorationBelongService.mergeDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId);
 				return false;
 			}
 
-			// 业务员岗位不匹配，检查保护期
+			// 场景2/3: 原业务员岗位 != 新业务员岗位，检查保护期
 			if (dutyRule != null) {
 				long daysPassed = DateUtil.diffDay(decorationPO.getCreateTime(), now);
 				int protectDays = dutyRule.getDays();
 				if (daysPassed < protectDays) {
-					approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
+					// 场景2: 保护期内 → 提交审批，审批通过后合尺（mergeFlag=1）
+					approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null, (short) 1);
 					return false;
 				}
 			}
 		}
 
-		decorationBelongService.tranDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId);
+		// 场景3: 不同岗位 + 过保护期 → 生成待确认的合尺归属(STATUS_CONFIRM)，等待客户确认
+		decorationBelongService.confirmMergeDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId);
 
 		return false;
 	}

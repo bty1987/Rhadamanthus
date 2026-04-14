@@ -34,6 +34,10 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.dao.CustomerSourceRecordDao;
+import com.fanglin.customer.po.CustomerChancePO;
+import com.fanglin.customer.po.CustomerSourceRecordPO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
@@ -93,6 +97,12 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 	@Autowired
 	private MessageQueuingDao messageQueuingDao;
+
+	@Autowired
+	private CustomerChanceDao customerChanceDao;
+
+	@Autowired
+	private CustomerSourceRecordDao customerSourceRecordDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -230,6 +240,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 		String orderId = approvalDecorationBelongPO.getOrderId();
 		Short belongType = approvalDecorationBelongPO.getBelongType();
+		short mergeFlag = approvalDecorationBelongPO.getMergeFlag();
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
@@ -239,17 +250,28 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelong(orderId, belongType, DecorationBelongPO.STATUS_INVALID_INT);
 
-		for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
-			decorationBelongPO.setStatus(DecorationBelongPO.STATUS_EFFCTIVE_INT);
-			decorationBelongDao.update(decorationBelongPO);
+		if (mergeFlag == 1) {
+			// 合尺模式：将现有有效归属的rate从1000改为500，保留有效状态
+			for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
+				decorationBelongPO.setRate(500);
+				decorationBelongDao.update(decorationBelongPO);
+			}
+		} else {
+			// 替换模式：将现有有效归属置为失效
+			for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
+				decorationBelongPO.setStatus(DecorationBelongPO.STATUS_EFFCTIVE_INT);
+				decorationBelongDao.update(decorationBelongPO);
+			}
 		}
 
 		List<ApprovalDecorationBelongItemPO> approvalDecorationBelongItemPOs = approvalDecorationBelongItemDao.queryApprovalDecorationBelongItemByAobId(approvalDecorationBelongPO.getAdbId());
 
 		DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(orderId);
 
-		if (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT) decorationAdditionPO.clearDesign();
-		else if (belongType == DecorationBelongPO.BELONGTYPE_SALESMAN_INT) decorationAdditionPO.clearSales();
+		if (mergeFlag != 1) {
+			if (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT) decorationAdditionPO.clearDesign();
+			else if (belongType == DecorationBelongPO.BELONGTYPE_SALESMAN_INT) decorationAdditionPO.clearSales();
+		}
 
 		for (ApprovalDecorationBelongItemPO approvalDecorationBelongItemPO : approvalDecorationBelongItemPOs) {
 
@@ -275,7 +297,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 				decorationAdditionPO.setSales(userPO.getCurrentName(), dept.getName(), regn.getName());
 			}
 
-			if (DecorationBelongPO.DEFAULTFLAG_TRUE_INT == approvalDecorationBelongItemPO.getDefaultFlag()) {
+			if (mergeFlag != 1 && DecorationBelongPO.DEFAULTFLAG_TRUE_INT == approvalDecorationBelongItemPO.getDefaultFlag()) {
 				if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType) {
 					decorationPO.setDesigner(userPO);
 					decorationPO.setDesignDept(userPO.getDept());
@@ -287,7 +309,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 			decorationBelongPO.setOrderId(decorationPO.getOrderId());
 			decorationBelongPO.setBelonger(userPO);
-			decorationBelongPO.setRate(approvalDecorationBelongItemPO.getRate());
+			decorationBelongPO.setRate(mergeFlag == 1 ? 500 : approvalDecorationBelongItemPO.getRate());
 			decorationBelongPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationBelongPO.setOperater(approvalPO.getReceiver());
 			decorationBelongPO.setDefaultFlag(approvalDecorationBelongItemPO.getDefaultFlag());
@@ -310,6 +332,14 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		// 生成消息提示数据
 		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "approveForDecorationBelong", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + approvalPO.getReceiver() + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
+		// 完成关联的客户机会
+		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(orderId);
+		if (customerChancePO != null && customerChancePO.getStatus() == CustomerChancePO.STATUS_CONFIRM_INT) {
+			customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
+			customerChanceDao.update(customerChancePO);
+			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("客户机会完成(归属审批通过),装修单号:%s,归属:%s(%s),部门:%s(%s),分区:%s(%s)", orderId, customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, approvalPO.getReceiver()));
+		}
+
 		return 0;
 	}
 
@@ -331,6 +361,11 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int tranApprovalForDecorationBelong(String orderId, Short type, String userId, int company, String code, String forms) throws FLException {
+		return tranApprovalForDecorationBelong(orderId, type, userId, company, code, forms, (short) 0);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public int tranApprovalForDecorationBelong(String orderId, Short type, String userId, int company, String code, String forms, short mergeFlag) throws FLException {
 
 		UserPO designer = userDao.queryUserByUserId(userId);
 
@@ -342,6 +377,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 		approvalDecorationBelongVO.setOrderId(orderId);
 		approvalDecorationBelongVO.setBelongType(type);
+		approvalDecorationBelongVO.setMergeFlag(mergeFlag);
 
 		List<ApprovalDecorationBelongItemVO> approvalDecorationBelongItemVOs = new ArrayList<ApprovalDecorationBelongItemVO>();
 

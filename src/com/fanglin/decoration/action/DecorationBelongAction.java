@@ -82,6 +82,30 @@ public class DecorationBelongAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "mergeDecorationBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String mergeDecorationBelong() throws FLException {
+
+		if (decorationBelongs != null && decorationBelongs.size() > 0) {
+			for (DecorationBelongVO belong : decorationBelongs) {
+				decorationBelongService.mergeDecorationBelong(decorationBelong.getOrderId(), belong.getType(), belong.getBelonger().getUserId());
+			}
+		}
+
+		return SUCCESS;
+	}
+
+	@Action(value = "confirmMergeDecorationBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmMergeDecorationBelong() throws FLException {
+
+		if (decorationBelongs != null && decorationBelongs.size() > 0) {
+			for (DecorationBelongVO belong : decorationBelongs) {
+				decorationBelongService.confirmMergeDecorationBelong(decorationBelong.getOrderId(), belong.getType(), belong.getBelonger().getUserId());
+			}
+		}
+
+		return SUCCESS;
+	}
+
 	public DecorationBelongVO getDecorationBelong() {
 		return decorationBelong;
 	}

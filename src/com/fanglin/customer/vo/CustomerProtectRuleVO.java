@@ -40,6 +40,8 @@ public class CustomerProtectRuleVO implements Serializable {
 
 	private String orderId;
 
+	private Short mergeFlag;
+
 	public CustomerProtectRuleVO() {
 		super();
 	}
@@ -160,6 +162,14 @@ public class CustomerProtectRuleVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public Short getMergeFlag() {
+		return mergeFlag;
+	}
+
+	public void setMergeFlag(Short mergeFlag) {
+		this.mergeFlag = mergeFlag;
 	}
 
 }

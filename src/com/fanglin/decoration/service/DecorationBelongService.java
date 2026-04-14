@@ -27,4 +27,8 @@ public interface DecorationBelongService {
 
 	public int tranDecorationBelong(DecorationBelongVO decorationBelongVO, List<DecorationBelongVO> decorationBelongVOs) throws FLException;
 
+	public int mergeDecorationBelong(String orderId, Short type, String userId) throws FLException;
+
+	public int confirmMergeDecorationBelong(String orderId, Short type, String userId) throws FLException;
+
 }

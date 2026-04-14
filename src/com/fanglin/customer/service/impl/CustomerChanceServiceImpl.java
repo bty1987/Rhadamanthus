@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.communion.dao.CustomerDao;
+import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.dao.VillageDao;
@@ -205,7 +206,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330075, "客户机会不存在");
 		}
 
-		customerChanceVO = new CustomerChanceVO(new CustomerVO(), new HouseVO(new VillageVO()), new CustomerSourceVO(new VillageVO(), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationBusitypeVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
+		customerChanceVO = new CustomerChanceVO(new CustomerVO(), new HouseVO(new VillageVO()), new CustomerSourceVO(new VillageVO(), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationBusitypeVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(new DutyVO()), new DepartmentVO(), new DepartmentVO());
 
 		customerChancePO.ptv(customerChanceVO);
 
@@ -856,9 +857,6 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(130017, "房产不存在");
 		}
 
-		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) {
-			decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid());
-		}
 		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid(), company);
 
 		DecorationVO decorationVO = new DecorationVO();
@@ -959,7 +957,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		// 发送消息通知
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客户机会直接初审通过,客户名:%s,楼盘:%s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
+		String content = String.format("客户机会直接初审通过,客户名:%s,楼盘:%s %s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
 
 		UserPO belonger = customerChancePO.getBelonger();
 		if (belonger != null) {

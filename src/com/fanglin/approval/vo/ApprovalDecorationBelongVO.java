@@ -12,6 +12,8 @@ public class ApprovalDecorationBelongVO implements java.io.Serializable {
 	
 	private Short belongType;
 
+	private Short mergeFlag;
+
 	public Integer getAdbId() {
 		return adbId;
 	}
@@ -42,6 +44,14 @@ public class ApprovalDecorationBelongVO implements java.io.Serializable {
 
 	public void setBelongType(Short belongType) {
 		this.belongType = belongType;
+	}
+
+	public Short getMergeFlag() {
+		return this.mergeFlag;
+	}
+
+	public void setMergeFlag(Short mergeFlag) {
+		this.mergeFlag = mergeFlag;
 	}
 
 }

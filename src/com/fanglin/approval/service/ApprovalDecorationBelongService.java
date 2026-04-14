@@ -29,4 +29,6 @@ public interface ApprovalDecorationBelongService {
 
 	public int tranApprovalForDecorationBelong(String orderId, Short type, String userId, int company, String code, String forms) throws FLException;
 
+	public int tranApprovalForDecorationBelong(String orderId, Short type, String userId, int company, String code, String forms, short mergeFlag) throws FLException;
+
 }
