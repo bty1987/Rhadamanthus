@@ -889,12 +889,12 @@ jQuery(function($) {
             return false;
         },
         show: function(v) {
-
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && (customerChance.depage == "user" || customerChance.depage == "designer") && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2 && customerChance.detype == null;
+            // 审批初审隐藏，改用直接初审
+            return false;
         },
     }, {
         name: "直接初审",
-        clazz: "btn-info",
+        clazz: "btn-purple",
         handle: function(v) {
 
             com.cleanTypeahead("directFirstVillageName");
@@ -925,7 +925,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && (customerChance.depage == "user" || customerChance.depage == "designer") && customerChance.detype == null;
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && (customerChance.depage == "user" || customerChance.depage == "designer") && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2 && customerChance.detype == null;
         },
     }, {
         name: "审批",
