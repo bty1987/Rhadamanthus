@@ -795,8 +795,6 @@ jQuery(function($) {
 
                 if (!rule.cprid && rule.orderId) {
 
-                    var flag = false;
-
                     com.post(api.decoration.tranDecorationBelong, {
                         "decorationBelong.orderId": rule.orderId,
                         "decorationBelongs[0].belonger.userId": v.belonger.userId,
@@ -805,16 +803,11 @@ jQuery(function($) {
                         "decorationBelongs[1].type": 1
                     }, function(res) {
 
-                        flag = true;
+                        com.post(api.customer.finishCustomerChance, {
+                            "customerChance.ccid": v.ccid,
+                            "decoration.orderId": rule.orderId
+                        });
 
-                    }, null, false);
-
-                    if (!flag)
-                        return false;
-
-                    com.post(api.customer.finishCustomerChance, {
-                        "customerChance.ccid": v.ccid,
-                        "decoration.orderId": rule.orderId
                     });
 
                     return false;
@@ -1427,12 +1420,7 @@ jQuery(function($) {
 
             com.post(api.approval.submitApprovalForDecorationBelong, options, function(res) {
 
-                com.showAlert(com.info, "操作成功");
-
-                com.post(api.customer.finishCustomerChance, {
-                    "customerChance.ccid": customerChance.chance.ccid,
-                    "decoration.orderId": customerChance.orderId
-                });
+                com.showAlert(com.info, "操作成功, 等待审批通过");
 
                 com.clearValidator();
                 searcher.doSearch();

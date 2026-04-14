@@ -245,4 +245,133 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 		return 0;
 	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int mergeDecorationBelong(String orderId, Short type, String userId) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		DepartmentPO dept = userPO.getDept();
+		DepartmentPO regn = userPO.getDept().getFatherDept();
+
+		// 将现有的有效归属(rate=1000)改为合尺比例(rate=500)
+		List<DecorationBelongPO> existBelongs = decorationBelongDao.queryDecorationBelong(orderId, type, DecorationBelongPO.STATUS_INVALID_INT);
+
+		for (DecorationBelongPO existBelong : existBelongs) {
+			existBelong.setRate(500);
+			decorationBelongDao.update(existBelong);
+		}
+
+		// 新增新业务员的合尺归属记录，rate=500, status=0(有效)
+		DecorationBelongPO newBelongPO = new DecorationBelongPO();
+
+		newBelongPO.setDepartment(dept);
+		newBelongPO.setRegion(regn);
+
+		if (dept.getBusitype() != null) newBelongPO.setBusitype(dept.getBusitype());
+
+		if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == type) {
+			decorationPO.setDesigner(userPO);
+			decorationPO.setDesignDept(userPO.getDept());
+		} else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == type) {
+			decorationPO.setSalesman(userPO);
+			decorationPO.setSalesDept(userPO.getDept());
+		}
+
+		newBelongPO.setOrderId(decorationPO.getOrderId());
+		newBelongPO.setBelonger(userPO);
+		newBelongPO.setRate(500);
+		newBelongPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		newBelongPO.setOperater(userPO);
+		newBelongPO.setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
+
+		newBelongPO.setType(type);
+		newBelongPO.setStatus(DecorationBelongPO.STATUS_INVALID_INT);
+
+		decorationBelongDao.save(newBelongPO);
+
+		DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(orderId);
+
+		if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == type) {
+			decorationAdditionPO.clearDesign();
+			decorationAdditionPO.setDesign(userPO.getCurrentName(), dept.getName(), regn.getName());
+		} else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == type) {
+			decorationAdditionPO.clearSales();
+			decorationAdditionPO.setSales(userPO.getCurrentName(), dept.getName(), regn.getName());
+		}
+
+		decorationAdditionPO.setBelongTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationAdditionDao.update(decorationAdditionPO);
+		decorationDao.update(decorationPO);
+
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "mergeDecorationBelong", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int confirmMergeDecorationBelong(String orderId, Short type, String userId) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		DepartmentPO dept = userPO.getDept();
+		DepartmentPO regn = userPO.getDept().getFatherDept();
+
+		// 将现有的有效归属(rate=1000)改为合尺比例(rate=500)
+		List<DecorationBelongPO> existBelongs = decorationBelongDao.queryDecorationBelong(orderId, type, DecorationBelongPO.STATUS_INVALID_INT);
+
+		for (DecorationBelongPO existBelong : existBelongs) {
+			existBelong.setRate(500);
+			decorationBelongDao.update(existBelong);
+		}
+
+		// 新增新业务员的合尺归属记录，rate=500, status=2(待确认)
+		DecorationBelongPO newBelongPO = new DecorationBelongPO();
+
+		newBelongPO.setDepartment(dept);
+		newBelongPO.setRegion(regn);
+
+		if (dept.getBusitype() != null) newBelongPO.setBusitype(dept.getBusitype());
+
+		newBelongPO.setOrderId(decorationPO.getOrderId());
+		newBelongPO.setBelonger(userPO);
+		newBelongPO.setRate(500);
+		newBelongPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		newBelongPO.setOperater(userPO);
+		newBelongPO.setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
+
+		newBelongPO.setType(type);
+		newBelongPO.setStatus(DecorationBelongPO.STATUS_CONFIRM_INT);
+
+		decorationBelongDao.save(newBelongPO);
+
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "confirmMergeDecorationBelong", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+
+		return 0;
+	}
 }

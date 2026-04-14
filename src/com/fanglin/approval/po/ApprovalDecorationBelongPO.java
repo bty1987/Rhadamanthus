@@ -24,6 +24,8 @@ public class ApprovalDecorationBelongPO implements java.io.Serializable {
 
 	private short belongType;
 
+	private short mergeFlag;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "adbId")
@@ -60,6 +62,15 @@ public class ApprovalDecorationBelongPO implements java.io.Serializable {
 
 	public void setBelongType(short belongType) {
 		this.belongType = belongType;
+	}
+
+	@Column(name = "mergeFlag")
+	public short getMergeFlag() {
+		return this.mergeFlag;
+	}
+
+	public void setMergeFlag(short mergeFlag) {
+		this.mergeFlag = mergeFlag;
 	}
 
 }
