@@ -52,8 +52,8 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 	@Override
 	public int updateQuotationFunctionAreaItemForIndex(String table, long qfaiid, int index) throws FLException {
 
-		String sql = String.format("update %s  set index = :index where qfaiid = :qfaiid", table);
-		session().createQuery(sql).setLong("qfaiid", qfaiid).setInteger("index", index).executeUpdate();
+		String sql = String.format("update quotation.%s  set `index` = :index where qfaiid = :qfaiid", table);
+		session().createSQLQuery(sql).setLong("qfaiid", qfaiid).setInteger("index", index).executeUpdate();
 
 		return 0;
 	}
