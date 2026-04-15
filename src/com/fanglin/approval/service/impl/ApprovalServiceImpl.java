@@ -28,6 +28,7 @@ import com.fanglin.approval.service.ApprovalCustomerSourceService;
 import com.fanglin.approval.service.ApprovalDecorationActivityService;
 import com.fanglin.approval.service.ApprovalDecorationBelongService;
 import com.fanglin.approval.service.ApprovalDecorationContractService;
+import com.fanglin.approval.service.ApprovalPaymentWithdrawService;
 import com.fanglin.approval.service.ApprovalDecorationHolonomyService;
 import com.fanglin.approval.service.ApprovalDecorationRefundService;
 import com.fanglin.approval.service.ApprovalDecorationTerminalService;
@@ -120,6 +121,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Autowired
 	private ApprovalDecorationContractService approvalDecorationContractService;
+
+	@Autowired
+	private ApprovalPaymentWithdrawService approvalPaymentWithdrawService;
 
 	@Autowired
 	private UserDao userDao;
@@ -292,6 +296,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_DECORATION_CONTRACT_INT:
 				approvalDecorationContractService.approveForDecorationContract(approvalPO);
 				break;
+			case ApprovalPO.APPROVAL_TYPE_PAYMENT_WITHDRAW_INT:
+				approvalPaymentWithdrawService.approveForPaymentWithdraw(approvalPO);
+				break;
 			default:
 				break;
 		}
@@ -343,6 +350,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 				break;
 			case ApprovalPO.APPROVAL_TYPE_DECORATION_TERMINAL_INT:
 				approvalDecorationTerminalService.refuse(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_PAYMENT_WITHDRAW_INT:
+				approvalPaymentWithdrawService.refuseForPaymentWithdraw(approvalPO);
 				break;
 			default:
 				break;

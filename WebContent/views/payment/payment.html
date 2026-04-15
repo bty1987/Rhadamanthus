@@ -171,6 +171,68 @@
 
 		<!-- 生成预付款 -->
 		<div class="modal fade" id="createCollectPaymentModal" tabindex="-1">
+
+		<!-- 审批提款弹窗 -->
+		<div class="modal fade" id="approveWithdrawModal" tabindex="-1">
+			<div class="modal-dialog" style="margin-top: 10%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title">审批提款</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">预付款类型</label>
+								<div class="col-sm-9">
+									<select id="withdrawAdvanceType" class="col-xs-10 col-sm-7">
+										<option value='0'>合同预付款</option>
+										<option value='2'>主材预付款</option>
+									</select>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">当前余额</label>
+								<div class="col-sm-9">
+									<input type="text" id="withdrawBalance" class="col-xs-10 col-sm-7" disabled />
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right orange">提现金额</label>
+								<div class="col-sm-9">
+									<input type="text" id="withdrawAmount" class="col-xs-10 col-sm-7 v_required v_float_3" />
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">说明</label>
+								<div class="col-sm-9">
+									<textarea id="withdrawComment" class="col-xs-10 col-sm-7" rows="3" maxlength="200"></textarea>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right orange">审批人</label>
+								<div class="col-sm-9" id="withdrawApprover"></div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">审批说明</label>
+								<div class="col-sm-9">
+									<textarea id="withdrawApprovalComment" class="col-xs-10 col-sm-7" rows="2" maxlength="256"></textarea>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer" style="text-align: center">
+						<button type="button" id="approveWithdrawBtn" class="btn btn-primary">提交审批</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
 			<div class="modal-dialog" style="margin-top: 10%;">
 				<div class="modal-content">
 					<div class="modal-header">
