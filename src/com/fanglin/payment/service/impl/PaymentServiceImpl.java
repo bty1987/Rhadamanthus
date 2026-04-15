@@ -22,6 +22,8 @@ import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.ConstantPO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
@@ -101,6 +103,9 @@ public class PaymentServiceImpl implements PaymentService {
 	@Autowired
 	private MessageQueuingDao messageQueuingDao;
 
+	@Autowired
+	private ApprovalDao approvalDao;
+
 	@Override
 	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company) throws FLException {
 
@@ -163,6 +168,13 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int collectPayment(PaymentVO paymentVO, String userId, List<Long> ptids) throws FLException {
+
+		// 审批锁定检查: 存在审批中的预付款提现, 不可充值
+		List<Short> approvalStatus = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+		ApprovalPO existApproval = approvalDao.queryApprovalByChange(approvalStatus, ApprovalPO.APPROVAL_TYPE_PAYMENT_WITHDRAW_INT, paymentVO.getOrderId());
+		if (existApproval != null) {
+			throw new FLException(240004, "存在审批中的预付款提现,不可操作");
+		}
 
 		long customerId = paymentVO.getCustomer().getCid();
 
@@ -329,6 +341,13 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int withdrawPayment(PaymentVO paymentVO, String userId) throws FLException {
+
+		// 审批锁定检查: 存在审批中的预付款提现, 不可提现
+		List<Short> approvalStatus = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+		ApprovalPO existApproval = approvalDao.queryApprovalByChange(approvalStatus, ApprovalPO.APPROVAL_TYPE_PAYMENT_WITHDRAW_INT, paymentVO.getOrderId());
+		if (existApproval != null) {
+			throw new FLException(240004, "存在审批中的预付款提现,不可操作");
+		}
 
 		long customerId = paymentVO.getCustomer().getCid();
 
