@@ -9,12 +9,25 @@
 
 ## 一、背景与目标
 
-当前 AdvancePayment/Payment 模块中的 **提现功能**（`WalletServiceImpl.withdrawWallet`）直接扣减余额，没有审批环节。需要新增审批流程，在用户发起提现时先提交审批，审批通过后再执行实际扣款。
+当前 Payment 模块中的 **预付款提现功能**（`PaymentServiceImpl.withdrawPayment`）直接扣减预付款余额并创建退款单，没有审批环节。需要新增审批流程，在用户发起预付款提现时先提交审批，审批通过后再执行实际扣款。
 
 ### 现状问题
-- `withdrawWallet` 方法直接扣减余额，仅有一个 TODO 标记的银行卡操作占位
-- 无审批环节，无法控制提现风险
+- `withdrawPayment` 方法直接扣减 AdvancePayment 余额，立即创建 PaymentPO 和 AdvanceReceiptPO
+- 无审批环节，无法控制预付款提现风险
 - 需要对接钉钉审批通知
+
+### 现有 `withdrawPayment` 流程分析
+
+```
+1. 校验客户 -> 校验装修订单 -> 查询预付款(AdvancePaymentPO)
+2. 根据 paymentType 获取对应类型余额（合同/主材/工程/正林）
+3. 校验余额是否 >= 提现金额
+4. 直接扣减 AdvancePayment 余额
+5. 创建 AdvanceReceiptPO（预付款收据）
+6. 创建 PaymentPO（type=EXTRACT=0, status=PAID=1）
+7. 更新 AdvancePaymentPO
+8. 发送消息通知
+```
 
 ---
 
@@ -22,41 +35,57 @@
 
 ### 2.1 关键表结构
 
-**wallet 表**（钱包主表）：
+**advancepayment 表**（预付款，catalog=payment）：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| wid | Long | 主键 |
-| belonger | Long | FK -> buid（归属用户）|
-| no | String | 钱包编号 |
-| phone | String | 手机号 |
-| identity | String | 身份标识 |
-| balance | BigDecimal | 余额 |
-| type | Integer | 类型：COMPANY/SUPPLIER/USER |
-| status | Integer | 状态：INIT/BIND/FROZEN/CLOSE |
+| apId | int | 主键 |
+| orderId | String | FK -> decoration.orderId（关联装修订单）|
+| balance | long | 合同预付款余额 |
+| projectBalance | long | 工程预付款余额 |
+| materialBalance | long | 主材预付款余额 |
+| zhenglinBalance | long | 正林预付款余额 |
 
-**walletran 表**（钱包流水）：
+**payment 表**（支付流水，catalog=payment）：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| wtid | Long | 主键 |
-| wallet | Long | FK -> wallet |
-| type | Integer | 类型：RECHARGE=0, WITHDRAW=1, CONSUME=2, TRANSFER=3, REFUND=4 |
-| amount | BigDecimal | 金额 |
-| status | Integer | 状态 |
+| pid | long | 主键 |
+| arId | long | FK -> AdvanceReceiptPO（预付款收据）|
+| orderId | String | 关联订单号 |
+| customerId | long | FK -> customer.cid |
+| balance | long | 余额 |
+| recharge | long | 金额 |
+| type | short | 类型：EXTRACT=0, COLLECTION=1, PAYMENT=2, RETURN=3 |
+| paymentType | short | 款项类型：BALANCE=0, PROJECT=1, MATERIAL=2, ZATERIAL=3 |
+| status | short | 状态：INIT=0, PAID=1, CONFIRMED=2, CANCELED=3 |
+| company | int | 所属公司 |
+| cuid | long | FK -> user.uid（创建人）|
+| createTime | Timestamp | 创建时间 |
+| uniqueid | String | 唯一标识 |
 
-**advancepayment 表**（预付款）：
+**advancereceipt 表**（预付款收据，catalog=payment）：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| apId | Long | 主键 |
-| decoration | Long | FK -> orderId |
-| balance | BigDecimal | 余额 |
-| projectBalance | BigDecimal | 工程余额 |
-| materialBalance | BigDecimal | 主材余额 |
-| zhenglinBalance | BigDecimal | 正林余额 |
+| arId | long | 主键 |
+| orderId | String | 关联订单号 |
+| collecter | long | FK -> user.uid（收款人）|
+| realMoney | long | 实际金额 |
+| ... | ... | 其他收据字段 |
 
-### 2.2 现有审批模块
+### 2.2 余额类型映射
+
+`paymentType` 与 `advancepayment` 余额字段的对应关系（通过 `AdvancePaymentServiceImpl.getCustomerBalanceByType`）：
+
+| paymentType | 常量 | advancepayment 字段 | 含义 |
+|-------------|------|---------------------|------|
+| 0 | BALANCE_TYPE_BALANCE_INT | balance | 合同预付款 |
+| 1 | BALANCE_TYPE_PROJECT_INT | projectBalance | 工程预付款 |
+| 2 | BALANCE_TYPE_MATERIAL_INT | materialBalance | 主材预付款 |
+| 3 | BALANCE_TYPE_ZHENGLIN_INT | zhenglinBalance | 正林预付款 |
+
+### 2.3 现有审批模块
 
 审批模块（09.Approval）已有 **25种审批类型**（APPROVAL_TYPE_1 ~ 25），统一使用 **主表+子表** 模式。
 
@@ -79,34 +108,36 @@ INIT(0) -> APPROVAL(1) -> APPROVE(3) -> CONFIRM(5) -> CONFIRMED(6)
 在 `ApprovalPO` 中新增常量：
 
 ```java
-public static final int APPROVAL_TYPE_WITHDRAW_INT = 26;
+public static final short APPROVAL_TYPE_PAYMENT_WITHDRAW_INT = 26;
 ```
 
-### 3.2 新增子表：approvalwithdraw
+### 3.2 新增子表：approvalpaymentwithdraw
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| awId | Long | 主键 |
-| aid | Long | FK -> ApprovalPO.aid |
-| withdrawId | Long | FK -> WalletranPO（提现流水ID）|
-| amount | BigDecimal | 提现金额 |
-| bankInfo | String | 银行卡信息 |
+| apwId | Long | 主键 |
+| aid | Long | FK -> ApprovalPO.aid（审批主表ID）|
+| orderId | String | 关联装修订单号 |
+| paymentType | Short | 款项类型（0=合同/1=工程/2=主材/3=正林）|
+| amount | Long | 提现金额 |
+| comment | String | 提现说明 |
 | status | Integer | 状态（预留扩展）|
 
 对应建表 SQL：
 
 ```sql
-CREATE TABLE `approvalwithdraw` (
-  `awId` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `approvalpaymentwithdraw` (
+  `apwId` bigint(20) NOT NULL AUTO_INCREMENT,
   `aid` bigint(20) DEFAULT NULL COMMENT '审批主表ID',
-  `withdrawId` bigint(20) DEFAULT NULL COMMENT '提现流水ID',
-  `amount` decimal(10,2) DEFAULT NULL COMMENT '提现金额',
-  `bankInfo` varchar(200) DEFAULT NULL COMMENT '银行卡信息',
+  `orderId` varchar(50) DEFAULT NULL COMMENT '装修订单号',
+  `paymentType` smallint(6) DEFAULT NULL COMMENT '款项类型:0合同/1工程/2主材/3正林',
+  `amount` bigint(20) DEFAULT NULL COMMENT '提现金额',
+  `comment` varchar(200) DEFAULT NULL COMMENT '提现说明',
   `status` int(11) DEFAULT '0' COMMENT '状态',
-  PRIMARY KEY (`awId`),
+  PRIMARY KEY (`apwId`),
   KEY `idx_aid` (`aid`),
-  KEY `idx_withdrawId` (`withdrawId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='审批-提现子表';
+  KEY `idx_orderId` (`orderId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='审批-预付款提现子表';
 ```
 
 ### 3.3 新增后端文件
@@ -115,121 +146,143 @@ CREATE TABLE `approvalwithdraw` (
 
 | 层次 | 文件 | 说明 |
 |------|------|------|
-| Action | `ApprovalWithdrawAction.java` | API入口：submit/approve/refuse |
-| Service | `ApprovalWithdrawService.java` | 接口定义 |
-| ServiceImpl | `ApprovalWithdrawServiceImpl.java` | 核心逻辑实现 |
-| DAO | `ApprovalWithdrawDAO.java` | 数据访问 |
-| DAO Impl | `ApprovalWithdrawDAOImpl.java` | 数据访问实现 |
-| PO | `ApprovalWithdrawPO.java` | 子表实体 |
-| VO | `ApprovalWithdrawVO.java` | 视图传输对象 |
+| Action | `ApprovalPaymentWithdrawAction.java` | API入口：submit/approve/refuse |
+| Service | `ApprovalPaymentWithdrawService.java` | 接口定义 |
+| ServiceImpl | `ApprovalPaymentWithdrawServiceImpl.java` | 核心逻辑实现 |
+| DAO | `ApprovalPaymentWithdrawDAO.java` | 数据访问 |
+| DAO Impl | `ApprovalPaymentWithdrawDAOImpl.java` | 数据访问实现 |
+| PO | `ApprovalPaymentWithdrawPO.java` | 子表实体 |
+| VO | `ApprovalPaymentWithdrawVO.java` | 视图传输对象 |
 
 ### 3.4 核心流程
 
-#### 提交审批（submitApprovalForWithdraw）
+#### 提交审批（submitApprovalForPaymentWithdraw）
 
 ```
-1. 防重校验 —— 同一提现不可重复提交
-2. 验证提现金额和钱包状态（余额是否充足、钱包是否正常）
-3. 创建提现流水（walletran，type=WITHDRAW，状态设为"审批中"）
-4. 创建审批主记录（ApprovalPO，type=26）
-5. 创建审批子记录（ApprovalWithdrawPO）
-6. 发送钉钉/站内通知
+1. 防重校验 —— 同一订单+同一款项类型，存在审批中的记录不可重复提交
+2. 校验客户信息、装修订单、预付款记录是否存在
+3. 根据 paymentType 获取对应类型的预付款余额
+4. 校验余额是否 >= 提现金额
+5. 创建审批主记录（ApprovalPO，type=26，status=INIT）
+6. 创建审批子记录（ApprovalPaymentWithdrawPO，记录 orderId、paymentType、amount）
+7. 发送钉钉/站内通知
 ```
 
-#### 审批通过回调（approveForWithdraw）
+> 注意：提交审批阶段 **不扣减余额**，仅做校验和记录。余额在审批通过时才扣减。
+
+#### 审批通过回调（approveForPaymentWithdraw）
 
 ```
 1. 更新审批状态 -> APPROVE
-2. 执行实际余额扣减（调用 withdrawWallet 完成扣款）
-3. 更新提现流水状态为"已完成"
-4. 发送通过通知
+2. 重新校验预付款余额（防止审批期间余额被其他操作改变）
+3. 执行实际余额扣减（调用 AdvancePaymentServiceImpl.setCustomerBalanceByType）
+4. 更新 AdvancePaymentPO
+5. 创建 AdvanceReceiptPO（预付款收据）
+6. 创建 PaymentPO（type=EXTRACT=0, status=PAID=1）
+7. 如果是主材预付款提现，更新装修单销售比例
+8. 发送通过通知
 ```
 
-#### 审批拒绝回调（refuseForWithdraw）
+#### 审批拒绝回调（refuseForPaymentWithdraw）
 
 ```
 1. 更新审批状态 -> REFUSE
-2. 回退提现流水状态（标记为"已拒绝"）
+2. 无需操作余额（因为提交时未扣减）
 3. 发送拒绝通知
 ```
 
 ### 3.5 前端改造
 
-**wallet.js**（`D:\GIT\Athena\11.Payment\Foreground\js\payment\wallet.js`）：
+**payment.js**（`WebContent/js/payment/payment.js`）：
 
-- 提现按钮点击后，由原来的直接调用 `withdrawWallet` 改为调用 `submitApprovalForWithdraw`
+- 提现按钮点击后（原 `typeUpdate == 0` 分支），由原来的直接调用 `withdrawPayment` 改为调用 `submitApprovalForPaymentWithdraw`
 - 新增"审批中"状态的UI展示（禁用重复提交按钮）
 - 新增审批记录查看入口
 
-**approval.js** 中新增 API：
+**payment.js API**（`WebContent/js/api/payment.js`）中新增：
 
 ```javascript
-// 提交提现审批
-submitApprovalForWithdraw: function(params, callback) { ... }
+// 提交预付款提现审批
+submitApprovalForPaymentWithdraw: {
+    url: "submitApprovalForPaymentWithdraw.do",
+    type: "update",
+    tranargs: {
+        args: ["payment.realMoney", "payment.cash", "payment.bank", "payment.checkv"]
+    }
+}
 
-// 查询提现审批详情
-queryApprovalWithdraw: function(params, callback) { ... }
+// 查询预付款提现审批详情
+queryApprovalPaymentWithdraw: {
+    url: "queryApprovalPaymentWithdraw.do",
+    type: "query"
+}
 ```
 
 ### 3.6 钉钉集成
 
 与现有审批类型一致，通过 `code`/`forms` 参数支持钉钉微应用审批：
 
-- 审批表单字段：提现金额、钱包类型、银行卡信息
+- 审批表单字段：装修订单号、款项类型（合同/主材/工程/正林）、提现金额、提现说明
 - 审批链接跳转到方林办公系统内对应页面
 
 ---
 
 ## 四、关键文件清单
 
+### 后端需要新增的文件
+
+| 文件路径 | 说明 |
+|---------|------|
+| `src/com/fanglin/approval/action/ApprovalPaymentWithdrawAction.java` | API入口 |
+| `src/com/fanglin/approval/service/ApprovalPaymentWithdrawService.java` | 接口定义 |
+| `src/com/fanglin/approval/service/impl/ApprovalPaymentWithdrawServiceImpl.java` | 核心逻辑实现 |
+| `src/com/fanglin/approval/dao/ApprovalPaymentWithdrawDAO.java` | 数据访问接口 |
+| `src/com/fanglin/approval/dao/impl/ApprovalPaymentWithdrawDAOImpl.java` | 数据访问实现 |
+| `src/com/fanglin/approval/po/ApprovalPaymentWithdrawPO.java` | 子表实体 |
+| `src/com/fanglin/approval/vo/ApprovalPaymentWithdrawVO.java` | 视图传输对象 |
+
 ### 后端需要修改的文件
 
 | 文件路径 | 修改内容 |
 |---------|---------|
-| `src/com/fanglin/approval/po/ApprovalPO.java` | 新增 APPROVAL_TYPE_WITHDRAW_INT = 26 |
-| `src/com/fanglin/approval/action/ApprovalWithdrawAction.java` | **新增** |
-| `src/com/fanglin/approval/service/ApprovalWithdrawService.java` | **新增** |
-| `src/com/fanglin/approval/service/impl/ApprovalWithdrawServiceImpl.java` | **新增** |
-| `src/com/fanglin/approval/dao/ApprovalWithdrawDAO.java` | **新增** |
-| `src/com/fanglin/approval/dao/impl/ApprovalWithdrawDAOImpl.java` | **新增** |
-| `src/com/fanglin/approval/po/ApprovalWithdrawPO.java` | **新增** |
-| `src/com/fanglin/approval/vo/ApprovalWithdrawVO.java` | **新增** |
+| `src/com/fanglin/approval/po/ApprovalPO.java` | 新增 APPROVAL_TYPE_PAYMENT_WITHDRAW_INT = 26 |
 
 ### 前端需要修改的文件
 
 | 文件路径 | 修改内容 |
 |---------|---------|
-| `11.Payment/Foreground/js/payment/wallet.js` | 提现流程改为提交审批 |
-| `11.Payment/Foreground/js/api/approval.js` | 新增提现审批 API |
+| `WebContent/js/payment/payment.js` | 提现流程（typeUpdate==0）改为提交审批 |
+| `WebContent/js/api/payment.js` | 新增提现审批相关 API |
 
 ### 数据库变更
 
 | 操作 | 内容 |
 |------|------|
-| 新建表 | `approvalwithdraw` |
+| 新建表 | `approvalpaymentwithdraw` |
 | 数据迁移 | ApprovalPO 新增 type=26 的常量定义（代码层面，无需SQL）|
 
 ---
 
 ## 五、注意事项
 
-1. **现有 TODO**：`withdrawWallet` 方法中有多个 TODO（银行卡操作、`sn` 生成、`confirmWallet` 逻辑），实施时需一并处理
-2. **实际打款**：提现审批通过后的实际打款操作（银行卡转账）需要对接银行接口，当前代码中为 TODO 状态
-3. **并发控制**：需考虑同一钱包同时提交多笔提现审批时的余额校验，建议使用数据库行锁或乐观锁
-4. **代码风格**：建议参考 `ApprovalDecorationRefundServiceImpl` 的完整实现模式，保持代码风格一致
-5. **事务管理**：Service 层方法必须添加 `@Transactional(rollbackFor = Exception.class)`
-6. **安全性**：提现金额需要二次校验，防止前端篡改
+1. **余额并发控制**：提交审批时不扣减余额，审批通过时需重新校验余额是否充足，防止审批期间余额被其他操作消耗。建议使用数据库行锁或乐观锁
+2. **实际打款**：提现审批通过后的实际打款操作（银行卡转账）仍需对接银行接口
+3. **代码风格**：建议参考 `ApprovalDecorationRefundServiceImpl` 的完整实现模式，保持代码风格一致
+4. **事务管理**：Service 层方法必须添加 `@Transactional(rollbackFor = Exception.class)`
+5. **安全性**：提现金额需要二次校验，防止前端篡改
+6. **防重提交**：同一订单同一款项类型，存在审批中的提现记录时，应阻止重复提交
+7. **paymentType 兼容**：需支持全部4种款项类型（合同/工程/主材/正林），与现有 withdrawPayment 保持一致
 
 ---
 
 ## 六、实施计划建议
 
 | 阶段 | 内容 | 预估工作量 |
-|------|------|-----------|
+|------|------|-----------:|
 | P1 | 数据库建表 + PO/VO/DAO 层 | 0.5天 |
 | P2 | Service 层核心逻辑（提交/通过/拒绝）| 1天 |
 | P3 | Action 层 API + Struts 配置 | 0.5天 |
-| P4 | 前端 wallet.js 改造 + approval.js API | 1天 |
+| P4 | 前端 payment.js 改造 + payment.js API | 1天 |
 | P5 | 钉钉通知集成 | 0.5天 |
 | P6 | 联调测试 | 1天 |
 | **合计** | | **4.5天** |
@@ -240,5 +293,7 @@ queryApprovalWithdraw: function(params, callback) { ... }
 
 - 审批模块文档：`src/com/fanglin/approval/CLAUDE.md`
 - 支付模块文档：`src/com/fanglin/payment/CLAUDE.md`
-- 参考实现：`ApprovalDecorationRefundServiceImpl`（装修退款审批）
+- 参考实现：`ApprovalDecorationRefundServiceImpl`（装修退款审批，type=5）
+- 提现原始实现：`PaymentServiceImpl.withdrawPayment`（payment 模块）
+- 余额操作工具：`AdvancePaymentServiceImpl.getCustomerBalanceByType` / `setCustomerBalanceByType`
 - 项目开发规范：`AGENTS.md`
