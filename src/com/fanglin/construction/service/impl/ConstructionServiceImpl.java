@@ -42,6 +42,7 @@ import com.fanglin.decoration.dao.DecorationUserDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.po.DecorationUserPO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserPartnerDao;
 import com.fanglin.personel.po.UserPO;
@@ -84,6 +85,9 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 	@Autowired
 	private QualiterDao qualiterDao;
+
+	@Autowired
+	private com.fanglin.information.dao.MessageQueuingDao messageQueuingDao;
 
 	@Override
 	public void pageConstruction(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -221,6 +225,12 @@ public class ConstructionServiceImpl implements ConstructionService {
 		}
 
 		decorationDao.update(decorationPO);
+
+		// 生成消息队列数据: 监理更换事件
+		String orderId = decorationPO.getOrderId();
+		String busiTypeName = decorationPO.getBusitype() != null ? decorationPO.getBusitype().getName() : "-";
+
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "updateConstruction", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"TEAM_SUPERVISOR_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		DepartmentPartnerPO partnerSO = departmentPartnerDao.queryDepartmentPartner(decorationPO.getDesigner().getDept().getDid(), DepartmentPartnerPO.TYPE_SALES_INT);
 
