@@ -1,5 +1,5 @@
 -- 审批-预付款提现子表
-CREATE TABLE IF NOT EXISTS `approvalpaymentwithdraw` (
+CREATE TABLE IF NOT EXISTS `approval`.`approvalpaymentwithdraw` (
   `apwId` bigint(20) NOT NULL AUTO_INCREMENT,
   `aid` bigint(20) DEFAULT NULL COMMENT '审批主表ID',
   `orderId` varchar(50) DEFAULT NULL COMMENT '装修订单号',
