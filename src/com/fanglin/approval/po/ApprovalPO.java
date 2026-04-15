@@ -74,6 +74,8 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public static final short APPROVAL_TYPE_CUSTOMER_CHANCE_DISABLED_INT = 25;
 
+	public static final short APPROVAL_TYPE_PAYMENT_WITHDRAW_INT = 26;
+
 	public static final short APPROVAL_STATUS_INIT_INT = 0;
 
 	public static final short APPROVAL_STATUS_APPROVAL_INT = 1;

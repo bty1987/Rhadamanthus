@@ -39,7 +39,14 @@ jQuery(function($) {
 			des: com.focusPage("#des", "#payment"),
 
 			myModalLabel: com.focusPage("#myModalLabel", "#payment"),
-			paymentMethod: com.focusPage("#paymentMethod", "#payment")
+			paymentMethod: com.focusPage("#paymentMethod", "#payment"),
+
+			withdrawAdvanceType: com.focusPage("#withdrawAdvanceType", "#payment"),
+			withdrawBalance: com.focusPage("#withdrawBalance", "#payment"),
+			withdrawAmount: com.focusPage("#withdrawAmount", "#payment"),
+			withdrawComment: com.focusPage("#withdrawComment", "#payment"),
+			withdrawApprover: com.focusPage("#withdrawApprover", "#payment"),
+			withdrawApprovalComment: com.focusPage("#withdrawApprovalComment", "#payment")
 		},
 
 		createItems : {
@@ -56,6 +63,7 @@ jQuery(function($) {
 			collectBtn: com.focusPage("#collectBtn", "#payment"),
 			createBtn: com.focusPage("#createBtn", "#payment"),
 			confirmBtn: com.focusPage("#confirmBtn", "#payment"),
+			approveWithdrawBtn: com.focusPage("#approveWithdrawBtn", "#payment"),
 
 			checkvAdd: com.focusPage("#checkvAdd", "#payment"),
 			createPaytran: com.focusPage("#createPaytran", "#payment")
@@ -65,6 +73,7 @@ jQuery(function($) {
 			collectModal: com.focusPage("#collectModal", "#payment"),
 			createModal: com.focusPage("#createPaymentModal", "#payment"),
 			createCollectPaymentModal: com.focusPage("#createCollectPaymentModal", "#payment"),
+			approveWithdrawModal: com.focusPage("#approveWithdrawModal", "#payment"),
 			collectCodeQrcodeModal: com.focusPage("#collectCodeQrcodeModal").prop("id", params['urlLoadParams'].paytype+"collectCodeQrcodeModal"),
 			alipayCodepayModal: com.focusPage("#alipayCodeQrcodeModal")
 		},
@@ -98,6 +107,7 @@ jQuery(function($) {
 		statusData: constant.payment().payment.status.keys,
 		typeUpdate: "",
 		currentOrderId: "",
+		advancePayment: null,
 		pageConfig: {},
 		typeNo: 0,
 		atttype: 0,
@@ -146,6 +156,49 @@ jQuery(function($) {
 	});
 
 	payment.btns.collectBtn.bindClick(collect);
+
+	// 审批提款提交
+	payment.btns.approveWithdrawBtn.on('click', function(){
+		if(com.validate("approveWithdrawModal", "#payment")){
+			return false;
+		}
+
+		var receiverId = com.focusPage("#withdrawApprover", "#payment").find('input:checked').attr('userid');
+		if(receiverId == null || receiverId == ""){
+			com.showAlert(com.error, "请选择审批人!");
+			return false;
+		}
+
+		var withdrawAmount = parseFloat(payment.items.withdrawAmount.val());
+		var balanceAmount = parseFloat(payment.items.withdrawBalance.val());
+
+		if(withdrawAmount <= 0){
+			com.showAlert(com.warning, "提现金额需要大于零!");
+			return false;
+		}
+
+		if(withdrawAmount > balanceAmount){
+			com.showAlert(com.warning, "提现金额不能大于余额!");
+			return false;
+		}
+
+		var options = {
+			"approval.receiver.userId": receiverId,
+			"approval.comment": payment.items.withdrawApprovalComment.val(),
+			"approvalPaymentWithdraw.orderId": payment.currentOrderId,
+			"approvalPaymentWithdraw.paymentType": payment.items.withdrawAdvanceType.val(),
+			"approvalPaymentWithdraw.amount": withdrawAmount,
+			"approvalPaymentWithdraw.comment": payment.items.withdrawComment.val()
+		};
+
+		com.showConfirm("确认要提交审批提款申请吗?", function(res){
+			com.post(api.approval.submitApprovalForPaymentWithdraw, options, function(res){
+				com.showAlert(com.info, "提交成功");
+				searcher.doSearch();
+				payment.modals.approveWithdrawModal.modal("hide");
+			});
+		});
+	});
 
 	payment.btns.createPaytran.unbind().click(function(){
 		paymentUtils.pushPos(payment, payment.payment.orderId);
@@ -260,6 +313,7 @@ jQuery(function($) {
 			var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
 			var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-primary').html('收款');
 			var $btnCashout = $('<a></a>').addClass('btn btn-minier btn-warning').html('提款');
+			var $btnApproveWithdraw = $('<a></a>').addClass('btn btn-minier btn-inverse').html('审批提款');
 			var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
 			var $alipayBtnCode = $('<a></a>').addClass('btn btn-minier btn-info').html('二维收款');
 			var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
@@ -295,6 +349,7 @@ jQuery(function($) {
 
 			if (payment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
 			if (payment.pageConfig.pageBtn.contains("withdraw")) $divBtnWrap.append($btnCashout);
+			if (payment.pageConfig.pageBtn.contains("approveWithdraw")) $divBtnWrap.append($btnApproveWithdraw);
 
 			if (v.status != constant.payment().payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
 			if (v.status != constant.payment().payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
@@ -324,6 +379,36 @@ jQuery(function($) {
 				com.post(api.payment.queryAdvancePaymentByOrderId, {"advancePayment.decoration.orderId": v.decoration.orderId}, function(res){
 					initCollect(v.decoration, res);
 				});
+			});
+
+			//审批提款
+			$btnApproveWithdraw.click(function(){
+				com.cleanItems([payment.items.withdrawAmount, payment.items.withdrawComment, payment.items.withdrawApprovalComment]);
+				payment.items.withdrawAdvanceType.val("0");
+
+				// 查询预付款余额
+				com.post(api.payment.queryAdvancePaymentByOrderId, {"advancePayment.decoration.orderId": v.decoration.orderId}, function(res){
+					payment.advancePayment = res;
+					payment.items.withdrawBalance.val(res.balanceAdvance);
+				});
+
+				// 切换预付款类型时更新余额显示
+				payment.items.withdrawAdvanceType.off("change").on("change", function(){
+					var typeVal = $(this).val();
+					if(payment.advancePayment){
+						if(typeVal == "0"){
+							payment.items.withdrawBalance.val(payment.advancePayment.balanceAdvance);
+						}else if(typeVal == "2"){
+							payment.items.withdrawBalance.val(payment.advancePayment.materialAdvance);
+						}
+					}
+				});
+
+				// 查询审批人
+				approvalUtils.initqueryApprovalUser("withdrawApprover", 26);
+
+				payment.currentOrderId = v.decoration.orderId;
+				payment.modals.approveWithdrawModal.modal("show");
 			});
 
 			//更新
