@@ -53,31 +53,37 @@ var ExtensionDetail = (function() {
 
         // 查询 decorationatttype，根据 typeness + company（后台自动获取）
         loadDecorationAtttypeByType: function(typeness) {
-            if (typeness == null || typeness == undefined) return;
 
-            com.post(api.decorationatttype.queryDecorationAtttypeByType, {
+            if (typeness == null || typeness == undefined)
+                return;
+
+            com.post(api.data.queryDecorationAtttypeByType, {
                 "decorationAtttype.type": typeness
             }, function(res) {
-                if (res && res.decorationAtttype) {
-                    // 设置默认折扣标识（仅在创建新单据时）
-                    if (extensionDetail.extension == null) {
-                        extensionDetail.manageDiscount = res.decorationAtttype.manageDiscount;
-                        extensionDetail.taxDiscount = res.decorationAtttype.taxDiscount;
 
-                        // 更新 UI
-                        if (extensionDetail.manageDiscount == 1) {
-                            extensionDetail.isCountManageDiscount.prop("checked", true);
-                        } else {
-                            extensionDetail.isCountManageDiscount.prop("checked", false);
-                        }
+                return false;
 
-                        // 更新 basicParams
-                        extensionDetail.basicParams["extension.manageDiscount"] = extensionDetail.manageDiscount;
-                        extensionDetail.basicParams["extension.taxDiscount"] = extensionDetail.taxDiscount;
+                if (!res || !res.decorationAtttype)
+                    return false;
+                
+                // 设置默认折扣标识（仅在创建新单据时）
+                if (extensionDetail.extension == null) {
+                    extensionDetail.manageDiscount = res.decorationAtttype.manageDiscount;
+                    extensionDetail.taxDiscount = res.decorationAtttype.taxDiscount;
 
-                        // 触发计算
-                        arCalculator.calculateArFees();
+                    // 更新 UI
+                    if (extensionDetail.manageDiscount == 1) {
+                        extensionDetail.isCountManageDiscount.prop("checked", true);
+                    } else {
+                        extensionDetail.isCountManageDiscount.prop("checked", false);
                     }
+
+                    // 更新 basicParams
+                    extensionDetail.basicParams["extension.manageDiscount"] = extensionDetail.manageDiscount;
+                    extensionDetail.basicParams["extension.taxDiscount"] = extensionDetail.taxDiscount;
+
+                    // 触发计算
+                    arCalculator.calculateArFees();
                 }
             }, null, false);
         },
@@ -314,9 +320,8 @@ var ExtensionDetail = (function() {
             protation.activityProfit = protation.pid ? protation.activityProfit : 0;
 
             var activityBalance = utils.changeTwoDecimal(utils.accSub(protation.activityPrice, protation.activityProfit));
-
             var activityTotal = utils.accAdd(extensionDetail.activityTotal, total);
-
+            
             if (protation.pid && extensionDetail.basicParams["extension.atttype"] == constant.quotation().extension.ATTTYPE_ACTIVITY_INT && activityTotal > activityBalance) {
                 com.showAlert(com.warning, "活动扩展总额不合理");
                 return false;
@@ -1258,7 +1263,7 @@ var ExtensionDetail = (function() {
 
                 $.each(res.extensions, function(i, v) {
 
-                    if (v.eid != extensionDetail.eid)
+                    if(v.atttype == constant.quotation().extension.ATTTYPE_ACTIVITY_INT)
                         extensionDetail.activityTotal = utils.accAdd(extensionDetail.activityTotal, v.total);
                 });
             }, null, false);
