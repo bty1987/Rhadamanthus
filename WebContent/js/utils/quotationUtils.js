@@ -806,8 +806,7 @@ var quotationUtils = {
         var $extensionActivityTotal = quotationUtils.quotationDetail.extensionActivityTotal;
 
         var $quotePrice = utils.accAdd($quotationPrefer.quotePrice, com.checkNull($protation.activityPrice, 0));
-        var $activityBalance = utils.accSub(com.checkNull($protation.activityPrice, 0), com.checkNull($protation.activityProfit, 0));
-        var $totalPrices = utils.changeThrDecimal(utils.accAdd(utils.accAdd(com.checkNull($quotation.totalPrice, 0), $extensionTotalPrice), $activityBalance));
+        var $totalPrices = utils.changeThrDecimal(utils.accAdd(com.checkNull($quotation.totalPrice, 0), $extensionTotalPrice));
         var $managePrices = utils.changeThrDecimal(utils.accAdd(com.checkNull($quotation.managePrice, 0), $extensionManagePrice));
         var $taxPrices = utils.changeThrDecimal(utils.accAdd(com.checkNull($quotation.taxPrice, 0), $extensionTaxPrice));
 
