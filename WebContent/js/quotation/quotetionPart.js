@@ -1246,6 +1246,8 @@
 
                 var _params = $.extend({}, {
                     "quotetionFunctionArea.qfaId": that.nowEditDomain.attr('data-qfaid'),
+                    "quotetionFunctionArea.name": that.nowEditDomain.find('.widget-header strong').text(),
+                    "quotetionFunctionArea.functionAreaOrder": that.nowEditDomain.attr('data-dlevel'),
 
                     "quotetionFunctionArea.quotetionFunctionAreaParam.girth": _girth,
                     "quotetionFunctionArea.quotetionFunctionAreaParam.area": _area,
