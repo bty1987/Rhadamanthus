@@ -103,7 +103,35 @@ INIT(0) -> APPROVAL(1) -> APPROVE(3) -> CONFIRM(5) -> CONFIRMED(6)
 
 ## 三、设计方案
 
-### 3.1 新增审批类型
+### 3.1 审批开关配置
+
+预付款提现的审批流程与原有直接提现功能 **并存**，通过系统配置控制是否走审批。
+
+在 `system_config` 表中新增配置项：
+
+| configKey | configValue | configGroup | 说明 |
+|-----------|-------------|-------------|------|
+| `payment_withdraw_approval_enabled` | `true` / `false` | `payment` | 预付款提现是否启用审批（全局开关）|
+
+**流程判断逻辑**：
+
+```
+用户发起提现
+  |
+  +---> 读取配置 payment_withdraw_approval_enabled
+  |
+  +---> false: 走原有 withdrawPayment（直接扣款，无审批）
+  |
+  +---> true:  走 submitApprovalForPaymentWithdraw（预扣余额 + 审批）
+```
+
+**前端改造**：提现按钮点击时，先调用接口查询是否启用审批，根据结果调用不同的 API。
+
+**后端改造**：也可将开关判断放在后端 Action 层，前端只调一个接口，后端根据配置决定走哪条路径。
+
+> 推荐后端判断方案：前端仍调用 `withdrawPayment`，后端在 `PaymentServiceImpl` 或 Action 层根据配置决定走审批还是直接提现，对前端改动最小。
+
+### 3.2 新增审批类型
 
 在 `ApprovalPO` 中新增常量：
 
@@ -111,7 +139,7 @@ INIT(0) -> APPROVAL(1) -> APPROVE(3) -> CONFIRM(5) -> CONFIRMED(6)
 public static final short APPROVAL_TYPE_PAYMENT_WITHDRAW_INT = 26;
 ```
 
-### 3.2 新增子表：approvalpaymentwithdraw
+### 3.3 新增子表：approvalpaymentwithdraw
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
@@ -140,7 +168,7 @@ CREATE TABLE `approvalpaymentwithdraw` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='审批-预付款提现子表';
 ```
 
-### 3.3 新增后端文件
+### 3.4 新增后端文件
 
 按照现有审批模块的分层规范，在 `09.Approval` 中新增：
 
@@ -154,7 +182,7 @@ CREATE TABLE `approvalpaymentwithdraw` (
 | PO | `ApprovalPaymentWithdrawPO.java` | 子表实体 |
 | VO | `ApprovalPaymentWithdrawVO.java` | 视图传输对象 |
 
-### 3.4 核心流程
+### 3.5 核心流程
 
 #### 提交审批（submitApprovalForPaymentWithdraw）
 
@@ -193,12 +221,12 @@ CREATE TABLE `approvalpaymentwithdraw` (
 4. 发送拒绝通知
 ```
 
-### 3.5 前端改造
+### 3.6 前端改造
 
 **payment.js**（`WebContent/js/payment/payment.js`）：
 
-- 提现按钮点击后（原 `typeUpdate == 0` 分支），由原来的直接调用 `withdrawPayment` 改为调用 `submitApprovalForPaymentWithdraw`
-- 新增"审批中"状态的UI展示（禁用重复提交按钮）
+- 提现按钮点击后（原 `typeUpdate == 0` 分支），后端根据配置自动判断走审批还是直接提现，前端无需区分
+- 新增"审批中"状态的UI展示（禁用重复提交按钮，展示审批状态）
 - 新增审批记录查看入口
 
 **payment.js API**（`WebContent/js/api/payment.js`）中新增：
@@ -220,7 +248,7 @@ queryApprovalPaymentWithdraw: {
 }
 ```
 
-### 3.6 钉钉集成
+### 3.7 钉钉集成
 
 与现有审批类型一致，通过 `code`/`forms` 参数支持钉钉微应用审批：
 
@@ -261,19 +289,21 @@ queryApprovalPaymentWithdraw: {
 | 操作 | 内容 |
 |------|------|
 | 新建表 | `approvalpaymentwithdraw` |
+| 新增配置 | `system_config` 表插入 `payment_withdraw_approval_enabled` 配置项 |
 | 数据迁移 | ApprovalPO 新增 type=26 的常量定义（代码层面，无需SQL）|
 
 ---
 
 ## 五、注意事项
 
-1. **余额预扣与回退**：提交审批时立即预扣余额（冻结），审批拒绝时需回退余额。需确保事务一致性，防止预扣成功但审批记录创建失败，或审批拒绝但余额回退失败
-2. **实际打款**：提现审批通过后的实际打款操作（银行卡转账）仍需对接银行接口
-3. **代码风格**：建议参考 `ApprovalDecorationRefundServiceImpl` 的完整实现模式，保持代码风格一致
-4. **事务管理**：Service 层方法必须添加 `@Transactional(rollbackFor = Exception.class)`
-5. **安全性**：提现金额需要二次校验，防止前端篡改
-6. **防重提交**：同一订单同一款项类型，存在审批中的提现记录时，应阻止重复提交
-7. **paymentType 兼容**：需支持全部4种款项类型（合同/工程/主材/正林），与现有 withdrawPayment 保持一致
+1. **审批开关并存**：原有 `withdrawPayment`（直接提现）保留，通过 `system_config` 表中的 `payment_withdraw_approval_enabled` 配置控制是否走审批。推荐在后端统一判断，对前端改动最小
+2. **余额预扣与回退**：提交审批时立即预扣余额（冻结），审批拒绝时需回退余额。需确保事务一致性，防止预扣成功但审批记录创建失败，或审批拒绝但余额回退失败
+3. **实际打款**：提现审批通过后的实际打款操作（银行卡转账）仍需对接银行接口
+4. **代码风格**：建议参考 `ApprovalDecorationRefundServiceImpl` 的完整实现模式，保持代码风格一致
+5. **事务管理**：Service 层方法必须添加 `@Transactional(rollbackFor = Exception.class)`
+6. **安全性**：提现金额需要二次校验，防止前端篡改
+7. **防重提交**：同一订单同一款项类型，存在审批中的提现记录时，应阻止重复提交
+8. **paymentType 兼容**：需支持全部4种款项类型（合同/工程/主材/正林），与现有 withdrawPayment 保持一致
 
 ---
 
