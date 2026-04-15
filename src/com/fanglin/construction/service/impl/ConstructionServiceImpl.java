@@ -230,7 +230,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 		String orderId = decorationPO.getOrderId();
 		String busiTypeName = decorationPO.getBusitype() != null ? decorationPO.getBusitype().getName() : "-";
 
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "updateConstruction", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"TEAM_SUPERVISOR_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "updateConstruction", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"TEAM_SUPERVISOR_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + busiTypeName + "\"" : "") + "}"));
 
 		DepartmentPartnerPO partnerSO = departmentPartnerDao.queryDepartmentPartner(decorationPO.getDesigner().getDept().getDid(), DepartmentPartnerPO.TYPE_SALES_INT);
 

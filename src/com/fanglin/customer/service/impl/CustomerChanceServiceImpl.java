@@ -14,7 +14,6 @@ import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.communion.dao.CustomerDao;
-import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.dao.VillageDao;
@@ -26,6 +25,7 @@ import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.service.HouseService;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
@@ -53,8 +53,8 @@ import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
-import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -168,7 +168,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		for (CustomerChancePO customerChancePO : customerChancePOs) {
 
-			customerChanceVO = new CustomerChanceVO(new CustomerVO(), new HouseVO(new VillageVO(new VillageVO())), new CustomerSourceVO(new VillageVO(new CityProperVO(), new VillageVO()), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationBusitypeVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
+			customerChanceVO = new CustomerChanceVO(new CustomerVO(), new HouseVO(new VillageVO(new VillageVO())), new CustomerSourceVO(new VillageVO(new CityProperVO(), new VillageVO()), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationBusitypeVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(new DutyVO()), new DepartmentVO(), new DepartmentVO());
 
 			customerChanceVOs.add(customerChancePO.ptv(customerChanceVO));
 		}
@@ -190,7 +190,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		for (CustomerChancePO customerChancePO : customerChancePOs) {
 
-			customerChanceVO = new CustomerChanceVO(new CustomerVO(), new HouseVO(new VillageVO()), new CustomerSourceVO(new VillageVO(), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationBusitypeVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
+			customerChanceVO = new CustomerChanceVO(new CustomerVO(), new HouseVO(new VillageVO()), new CustomerSourceVO(new VillageVO(), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationBusitypeVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(new DutyVO()), new DepartmentVO(), new DepartmentVO());
 
 			customerChanceVOs.add(customerChancePO.ptv(customerChanceVO));
 		}
