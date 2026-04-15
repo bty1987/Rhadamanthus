@@ -11,19 +11,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalPaymentWithdrawDao;
-import com.fanglin.approval.po.ApprovalPaymentWithdrawPO;
 import com.fanglin.approval.po.ApprovalPO;
+import com.fanglin.approval.po.ApprovalPaymentWithdrawPO;
 import com.fanglin.approval.service.ApprovalPaymentWithdrawService;
 import com.fanglin.approval.vo.ApprovalPaymentWithdrawVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.customer.service.DecorationService;
 import com.fanglin.dingding.service.DingTalkApprovalService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
@@ -239,25 +239,21 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 			throw new FLException(240003, "审批信息不完整");
 		}
 
-		String orderId = approvalPaymentWithdrawPO.getOrderId();
-
-		// 无需回退余额, 因为提交时未预扣
-
 		return 0;
 	}
 
 	private String getPaymentTypeName(short paymentType) {
 		switch ((int) paymentType) {
-		case 0:
-			return "合同预付款";
-		case 1:
-			return "工程预付款";
-		case 2:
-			return "主材预付款";
-		case 3:
-			return "正林预付款";
-		default:
-			return "预付款";
+			case 0:
+				return "合同预付款";
+			case 1:
+				return "工程预付款";
+			case 2:
+				return "主材预付款";
+			case 3:
+				return "正林预付款";
+			default:
+				return "预付款";
 		}
 	}
 
