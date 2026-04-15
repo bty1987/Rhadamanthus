@@ -163,32 +163,34 @@ CREATE TABLE `approvalpaymentwithdraw` (
 2. 校验客户信息、装修订单、预付款记录是否存在
 3. 根据 paymentType 获取对应类型的预付款余额
 4. 校验余额是否 >= 提现金额
-5. 创建审批主记录（ApprovalPO，type=26，status=INIT）
-6. 创建审批子记录（ApprovalPaymentWithdrawPO，记录 orderId、paymentType、amount）
-7. 发送钉钉/站内通知
+5. 预扣余额（冻结）—— 调用 setCustomerBalanceByType 扣减对应类型余额
+6. 更新 AdvancePaymentPO
+7. 创建审批主记录（ApprovalPO，type=26，status=INIT）
+8. 创建审批子记录（ApprovalPaymentWithdrawPO，记录 orderId、paymentType、amount）
+9. 发送钉钉/站内通知
 ```
 
-> 注意：提交审批阶段 **不扣减余额**，仅做校验和记录。余额在审批通过时才扣减。
+> 注意：提交审批阶段 **立即预扣余额**，防止审批期间余额被其他操作重复使用。审批通过后创建正式的 PaymentPO 和 AdvanceReceiptPO；审批拒绝则回退余额。
 
 #### 审批通过回调（approveForPaymentWithdraw）
 
 ```
 1. 更新审批状态 -> APPROVE
-2. 重新校验预付款余额（防止审批期间余额被其他操作改变）
-3. 执行实际余额扣减（调用 AdvancePaymentServiceImpl.setCustomerBalanceByType）
-4. 更新 AdvancePaymentPO
-5. 创建 AdvanceReceiptPO（预付款收据）
-6. 创建 PaymentPO（type=EXTRACT=0, status=PAID=1）
-7. 如果是主材预付款提现，更新装修单销售比例
-8. 发送通过通知
+2. 创建 AdvanceReceiptPO（预付款收据）
+3. 创建 PaymentPO（type=EXTRACT=0, status=PAID=1）
+4. 如果是主材预付款提现，更新装修单销售比例
+5. 发送通过通知
 ```
+
+> 注意：余额已在提交时预扣，审批通过时无需再次操作余额。
 
 #### 审批拒绝回调（refuseForPaymentWithdraw）
 
 ```
 1. 更新审批状态 -> REFUSE
-2. 无需操作余额（因为提交时未扣减）
-3. 发送拒绝通知
+2. 回退预扣余额 —— 调用 setCustomerBalanceByType 将金额加回对应类型余额
+3. 更新 AdvancePaymentPO
+4. 发送拒绝通知
 ```
 
 ### 3.5 前端改造
@@ -265,7 +267,7 @@ queryApprovalPaymentWithdraw: {
 
 ## 五、注意事项
 
-1. **余额并发控制**：提交审批时不扣减余额，审批通过时需重新校验余额是否充足，防止审批期间余额被其他操作消耗。建议使用数据库行锁或乐观锁
+1. **余额预扣与回退**：提交审批时立即预扣余额（冻结），审批拒绝时需回退余额。需确保事务一致性，防止预扣成功但审批记录创建失败，或审批拒绝但余额回退失败
 2. **实际打款**：提现审批通过后的实际打款操作（银行卡转账）仍需对接银行接口
 3. **代码风格**：建议参考 `ApprovalDecorationRefundServiceImpl` 的完整实现模式，保持代码风格一致
 4. **事务管理**：Service 层方法必须添加 `@Transactional(rollbackFor = Exception.class)`
