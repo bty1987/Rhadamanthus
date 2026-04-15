@@ -56,31 +56,35 @@
 
         // 查询 decorationatttype，根据 typeness + company（后台自动获取）
         loadDecorationAtttypeByType: function(typeness) {
-            if (typeness == null || typeness == undefined) return;
 
-            com.post(api.decorationatttype.queryDecorationAtttypeByType, {
+            if (typeness == null || typeness == undefined)
+                return;
+
+            com.post(api.data.queryDecorationAtttypeByType, {
                 "decorationAtttype.type": typeness
             }, function(res) {
-                if (res && res.decorationAtttype) {
-                    // 设置默认折扣标识（仅在创建新单据时）
-                    if (addReduceDetail.addReduce == null) {
-                        addReduceDetail.manageDiscount = res.decorationAtttype.manageDiscount;
-                        addReduceDetail.taxDiscount = res.decorationAtttype.taxDiscount;
 
-                        // 更新 UI
-                        if (addReduceDetail.manageDiscount == 1) {
-                            addReduceDetail.isCountManageDiscount.prop("checked", true);
-                        } else {
-                            addReduceDetail.isCountManageDiscount.prop("checked", false);
-                        }
+                if (!res || !res.decorationAtttype)
+                    return false;
 
-                        // 更新 basicParams
-                        addReduceDetail.basicParams["addReduce.manageDiscount"] = addReduceDetail.manageDiscount;
-                        addReduceDetail.basicParams["addReduce.taxDiscount"] = addReduceDetail.taxDiscount;
+                // 设置默认折扣标识（仅在创建新单据时）
+                if (addReduceDetail.addReduce == null) {
+                    addReduceDetail.manageDiscount = res.decorationAtttype.manageDiscount;
+                    addReduceDetail.taxDiscount = res.decorationAtttype.taxDiscount;
 
-                        // 触发计算
-                        arCalculator.calculateFees();
+                    // 更新 UI
+                    if (addReduceDetail.manageDiscount == 1) {
+                        addReduceDetail.isCountManageDiscount.prop("checked", true);
+                    } else {
+                        addReduceDetail.isCountManageDiscount.prop("checked", false);
                     }
+
+                    // 更新 basicParams
+                    addReduceDetail.basicParams["addReduce.manageDiscount"] = addReduceDetail.manageDiscount;
+                    addReduceDetail.basicParams["addReduce.taxDiscount"] = addReduceDetail.taxDiscount;
+
+                    // 触发计算
+                    arCalculator.calculateFees();
                 }
             }, null, false);
         },
