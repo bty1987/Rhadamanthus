@@ -106,29 +106,24 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 			throw new FLException(150010, "预付款余额不足");
 		}
 
-		// 4. 获取对应类型余额并校验
+		// 4. 校验余额是否充足(不预扣,只校验)
 		long balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
 		if (balance < amount) {
 			throw new FLException(150010, "预付款余额不足");
 		}
 
-		// 5. 预扣余额(冻结)
-		long overBalance = Arith.sub(balance, amount);
-		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, overBalance);
-		advancePaymentDao.update(advancePaymentPO);
-
-		// 6. 构造审批内容描述
+		// 5. 构造审批内容描述
 		String typeName = getPaymentTypeName(paymentType);
 		String content = String.format("装修单号:%s,提现类型:%s,金额:%.3f", orderId, typeName, Arith.div(amount, 1000.0));
 
-		// 7. 创建审批主记录
+		// 6. 创建审批主记录
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
 		ApprovalPO approvalPO = new ApprovalPO().init(sender, receiver, orderId, orderId, ApprovalPO.APPROVAL_TYPE_PAYMENT_WITHDRAW_INT, content, approvalVO.getComment(), company);
 		approvalDao.save(approvalPO);
 
-		// 8. 创建审批子记录
+		// 7. 创建审批子记录
 		ApprovalPaymentWithdrawPO approvalPaymentWithdrawPO = new ApprovalPaymentWithdrawPO();
 		approvalPaymentWithdrawPO.setAid(approvalPO.getAid());
 		approvalPaymentWithdrawPO.setOrderId(orderId);
@@ -138,10 +133,10 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 
 		approvalPaymentWithdrawDao.save(approvalPaymentWithdrawPO);
 
-		// 9. 发送站内通知
+		// 8. 发送站内通知
 		messageService.sendMessage(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), approvalPO.getContents(), MessagePO.TYPE_SEND_APPROVAL_INT, company);
 
-		// 10. 钉钉审批集成
+		// 9. 钉钉审批集成
 		if (code != null && !"".equals(code)) {
 			String piid = approvalService.initiateApproval(code, userId, null, null, null, JSONArray.parseArray(forms), company);
 			approvalPO.setPiid(piid);
@@ -177,13 +172,20 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 			throw new FLException(230001, "客户信息不存在");
 		}
 
-		// 3. 查询当前余额(提交时已预扣,此处获取的是扣除后的余额)
+		// 3. 校验并扣除余额(审批通过时才真正扣款)
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
 		if (advancePaymentPO == null) {
 			throw new FLException(150010, "预付款余额不足");
 		}
 
 		long currentBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
+		if (currentBalance < amount) {
+			throw new FLException(150010, "预付款余额不足");
+		}
+
+		long overBalance = Arith.sub(currentBalance, amount);
+		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, overBalance);
+		advancePaymentDao.update(advancePaymentPO);
 
 		// 4. 创建预付款收据
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
@@ -192,7 +194,7 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 		advanceReceiptPO.setConfirmerName("");
 		advanceReceiptPO.setRealMoney(amount);
 		advanceReceiptPO.setType(AdvanceReceiptPO.STATUS_RECEIPTTYPE_INT);
-		advanceReceiptPO.setStatus(AdvanceReceiptPO.STATUS_COLLRCT_INT);
+		advanceReceiptPO.setStatus(AdvanceReceiptPO.STATUS_INIT_INT);
 		advanceReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		advanceReceiptPO.setTransfer(amount);
 		advanceReceiptPO.setComment(approvalPaymentWithdrawPO.getComment());
@@ -204,11 +206,11 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 		paymentPO.setCustomer(customerPO);
 		paymentPO.setAdvanceReceipt(advanceReceiptPO);
 		paymentPO.setOrderId(orderId);
-		paymentPO.setBalance(currentBalance);
+		paymentPO.setBalance(overBalance);
 		paymentPO.setRecharge(amount);
 		paymentPO.setType(PaymentPO.PAYMENT_TYPE_EXTRACT_INT);
 		paymentPO.setPaymentType(paymentType);
-		paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_INT);
+		paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_INIT_INT);
 		paymentPO.setCompany(decorationPO.getCompany());
 		paymentPO.setCreater(approvalPO.getSender());
 		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -238,22 +240,8 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 		}
 
 		String orderId = approvalPaymentWithdrawPO.getOrderId();
-		short paymentType = approvalPaymentWithdrawPO.getPaymentType();
-		long amount = approvalPaymentWithdrawPO.getAmount();
 
-		// 2. 查询预付款记录
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
-		if (advancePaymentPO == null) {
-			throw new FLException(150010, "预付款余额不存在");
-		}
-
-		// 3. 回退预扣余额: 当前余额 + 提现金额
-		long currentBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
-		long revertBalance = Arith.add(currentBalance, amount);
-		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, revertBalance);
-
-		// 4. 更新预付款记录
-		advancePaymentDao.update(advancePaymentPO);
+		// 无需回退余额, 因为提交时未预扣
 
 		return 0;
 	}
