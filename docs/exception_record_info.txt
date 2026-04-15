@@ -1,0 +1,14 @@
+
+
+Exception Action: updateQuotetionFunctionAreaItemForIndex
+Exception User: FL-18868
+Exception IP: 36.33.216.178
+Exception Time: 2026-04-15 09:39:16
+Exception Message: unexpected char: '`' [update com.fanglin.quotation.po.QuotetionFunctionAreaItemPO0  set `index` = :index where qfaiId = :qfaiId]
+Exception Stack: com.fanglin.quotation.dao.impl.QuotetionFunctionAreaItemDaoImpl.updateQuotetionFunctionAreaItemForIndex(QuotetionFunctionAreaItemDaoImpl.java:41)
+Exception Stack: com.fanglin.quotation.service.impl.QuotetionFunctionAreaItemServiceImpl.updateQuotetionFunctionAreaItemForIndex(QuotetionFunctionAreaItemServiceImpl.java:90)
+Exception Stack: com.fanglin.quotation.service.impl.QuotetionFunctionAreaItemServiceImpl$$FastClassBySpringCGLIB$$e3d035c2.invoke(<generated>:-1)
+Exception Stack: com.fanglin.quotation.service.impl.QuotetionFunctionAreaItemServiceImpl$$EnhancerBySpringCGLIB$$a97813d1.updateQuotetionFunctionAreaItemForIndex(<generated>:-1)
+Exception Stack: com.fanglin.quotation.action.QuotetionFunctionAreaItemAction.updateQuotetionFunctionAreaItemForIndex(QuotetionFunctionAreaItemAction.java:50)
+Exception Stack: com.fanglin.core.interceptor.AccessInterceptor.intercept(AccessInterceptor.java:156)
+
