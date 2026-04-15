@@ -248,6 +248,14 @@ $.extend(api, {
             }
         },
 
+        submitApprovalForPaymentWithdraw: {
+            url: "submitApprovalForPaymentWithdraw.do",
+            type: "update",
+            tranargs: {
+                args: ["approvalPaymentWithdraw.amount"]
+            }
+        },
+
         approveApproval: {
             url: "approveApproval.do"
         },
@@ -318,14 +326,6 @@ $.extend(api, {
         queryApprovalFunction: {
             url: "queryApprovalFunction.do"
         },
-
-        submitApprovalForPaymentWithdraw: {
-            url: "submitApprovalForPaymentWithdraw.do",
-            type: "update",
-            tranargs: {
-                args: ["approvalPaymentWithdraw.amount"]
-            }
-        }
 
     }
 });
