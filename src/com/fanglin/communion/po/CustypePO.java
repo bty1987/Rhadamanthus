@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import com.fanglin.data.po.ReceiptTypePO;
 
 @Entity
-@Table(name = "custype", catalog = "communion")
+@Table(name = "custype", catalog = "data")
 public class CustypePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -6973544575584118587L;
