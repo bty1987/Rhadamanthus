@@ -329,6 +329,9 @@ public class A20260103Action extends BaseListAction {
 		if (phone == null || phone.trim().isEmpty()) {
 			throw new FLException(400002, "客户电话不能为空");
 		}
+		if (orgId == null) {
+			throw new FLException(400004, "公司标识不能为空");
+		}
 
 		CustomerChanceVO customerChanceVO = new CustomerChanceVO();
 
@@ -443,7 +446,7 @@ public class A20260103Action extends BaseListAction {
 		this.data.put("gender", gender);
 		this.data.put("village", village);
 		this.data.put("houseNumber", houseNumber);
-		this.data.put("buildArea", buildArea / 1000.0);
+		this.data.put("buildArea", buildArea != null ? buildArea / 1000.0 : null);
 		this.data.put("busitype", busitype);
 		this.data.put("userId", userId);
 		this.data.put("orgId", orgId);
@@ -456,7 +459,7 @@ public class A20260103Action extends BaseListAction {
 		this.data.put("erpDesignerCode", erpDesignerCode);
 		this.data.put("issusTime", issusTime);
 		this.data.put("erpZxdCode", erpZxdCode);
-		this.data.put("isIssue", result.getIsIssue() == null ? 0 : result.getIsIssue());
+		this.data.put("isIssue", result != null && result.getIsIssue() != null ? result.getIsIssue() : 0);
 
 		return SUCCESS;
 	}
@@ -591,6 +594,14 @@ public class A20260103Action extends BaseListAction {
 		// 初始化 data 对象
 		this.data = new HashMap<String, Object>();
 
+		// 参数校验
+		if (orgId == null) {
+			throw new FLException(400004, "公司标识不能为空");
+		}
+		if (userId == null || userId.trim().isEmpty()) {
+			throw new FLException(190005, "用户工号不能为空");
+		}
+
 		// 使用默认业务类型：电商信息流客源
 		String defaultBusitype = "电商信息流客源";
 
@@ -617,6 +628,11 @@ public class A20260103Action extends BaseListAction {
 		// 构建查询条件
 		CustomerDeptRuleVO queryVO = new CustomerDeptRuleVO();
 		DepartmentVO departmentVO = new DepartmentVO();
+
+		if (creater.getDept() == null) {
+			throw new FLException(190005, "用户未关联部门");
+		}
+
 		departmentVO.setDid(creater.getDept().getDid());
 		queryVO.setDepartment(departmentVO);
 		queryVO.setBusitype(busitypeVO);
@@ -653,6 +669,14 @@ public class A20260103Action extends BaseListAction {
 		// 初始化 data 对象
 		this.data = new HashMap<String, Object>();
 
+		// 参数校验
+		if (orgId == null) {
+			throw new FLException(400004, "公司标识不能为空");
+		}
+		if (userId == null || userId.trim().isEmpty()) {
+			throw new FLException(190005, "用户工号不能为空");
+		}
+
 		// 根据工号查询用户
 		UserVO creater = userService.queryUserByUserId(new UserVO(userId));
 
@@ -670,6 +694,10 @@ public class A20260103Action extends BaseListAction {
 
 		// 构建 CustomerCompanyRuleVO 查询条件
 		CustomerCompanyRuleVO queryCompany = new CustomerCompanyRuleVO();
+
+		if (creater.getDept() == null) {
+			throw new FLException(190005, "用户未关联部门");
+		}
 
 		queryCompany.setDept(creater.getDept());
 		queryCompany.setUppval(buildArea);
