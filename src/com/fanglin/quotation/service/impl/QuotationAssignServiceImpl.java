@@ -152,8 +152,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			return createPendingRequest(orderId, company, department, decorationType);
 		}
 
-		// 6. 查找可分配预算员（status=1，按lastFinishTime升序、currentTaskCount升序）
-		List<QuotationAssignUserRulePO> availableUsers = quotationAssignUserRuleDao.queryAvailableUsers(company, department);
+		// 6. 查找可分配预算员（跨公司验证：在所有公司中都处于待分配状态才能参与分配）
+		List<QuotationAssignUserRulePO> availableUsers = quotationAssignUserRuleDao.queryQuotationAssignUserRuleForCrossCompany(company, department);
 
 		if (availableUsers == null || availableUsers.isEmpty()) {
 			return createPendingRequest(orderId, company, department, decorationType);
@@ -342,10 +342,21 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 保存到数据库
 		quotationAssignUserRuleDao.update(userRule);
 
-		// 4. 如果预算员状态为"待分配"，从待分配队列查询任务
+		// 4. 如果预算员状态为"待分配"，检查跨公司状态后从待分配队列查询任务
 		if (newStatus != QuotationAssignUserRulePO.STATUS_AVAILABLE_INT) {
 			// 预算员仍有其他任务，不分配新任务
 			return 1;
+		}
+
+		// ★ 跨公司验证：检查该预算员在其他公司是否也全部处于"待分配"状态
+		// 如果任一公司非待分配，说明预算员仍有进行中的工作，不触发反向分配
+		List<QuotationAssignUserRulePO> allCompanyRules = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(budgetUid);
+		for (QuotationAssignUserRulePO otherRule : allCompanyRules) {
+			if (otherRule.getCompany().getCid() != company
+				&& otherRule.getStatus() != QuotationAssignUserRulePO.STATUS_AVAILABLE_INT) {
+				// 该预算员在其他公司有进行中任务，不触发反向分配
+				return 1;
+			}
 		}
 
 		Integer department = getDesignDeptId(decoration);

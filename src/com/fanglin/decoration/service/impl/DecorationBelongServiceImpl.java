@@ -148,13 +148,13 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		}
 
 		if (decorationBelongDao.countDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_CONFIRM_INT) > 0) {
-			decorationBelongDao.updateDecorationBelong(orderId, DecorationBelongPO.STATUS_INVALID_INT, DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_EFFCTIVE_INT);
-			decorationBelongDao.updateDecorationBelong(orderId, DecorationBelongPO.STATUS_CONFIRM_INT, DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_INVALID_INT);
+			decorationBelongDao.updateDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_INVALID_INT, DecorationBelongPO.STATUS_EFFCTIVE_INT);
+			decorationBelongDao.updateDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_CONFIRM_INT, DecorationBelongPO.STATUS_INVALID_INT);
 		}
 
 		if (decorationBelongDao.countDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_SALESMAN_INT, DecorationBelongPO.STATUS_CONFIRM_INT) > 0) {
-			decorationBelongDao.updateDecorationBelong(orderId, DecorationBelongPO.STATUS_INVALID_INT, DecorationBelongPO.BELONGTYPE_SALESMAN_INT, DecorationBelongPO.STATUS_EFFCTIVE_INT);
-			decorationBelongDao.updateDecorationBelong(orderId, DecorationBelongPO.STATUS_CONFIRM_INT, DecorationBelongPO.BELONGTYPE_SALESMAN_INT, DecorationBelongPO.STATUS_INVALID_INT);
+			decorationBelongDao.updateDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_SALESMAN_INT, DecorationBelongPO.STATUS_INVALID_INT, DecorationBelongPO.STATUS_EFFCTIVE_INT);
+			decorationBelongDao.updateDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_SALESMAN_INT, DecorationBelongPO.STATUS_CONFIRM_INT, DecorationBelongPO.STATUS_INVALID_INT);
 		}
 
 		return 0;
@@ -205,7 +205,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		if (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT) decorationAdditionPO.clearDesign();
 		else if (type == DecorationBelongPO.BELONGTYPE_SALESMAN_INT) decorationAdditionPO.clearSales();
 
-		decorationBelongDao.updateDecorationBelong(orderId, DecorationBelongPO.STATUS_INVALID_INT, type, DecorationBelongPO.STATUS_EFFCTIVE_INT);
+		decorationBelongDao.updateDecorationBelong(orderId, type, DecorationBelongPO.STATUS_INVALID_INT, DecorationBelongPO.STATUS_EFFCTIVE_INT);
 
 		DecorationBelongPO decorationBelongPO = new DecorationBelongPO();
 
