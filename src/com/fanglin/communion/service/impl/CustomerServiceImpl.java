@@ -29,6 +29,8 @@ import com.fanglin.communion.po.CustomerAccountPO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.CustomerRecordPO;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.vo.CustomerPhoneVO;
 import com.fanglin.communion.vo.CustomerVO;
@@ -57,6 +59,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private CustomerRecordDao customerRecordDao;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
 
 	@Autowired
 	private CountingService countingService;
@@ -235,6 +240,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 		customerPhoneDao.save(customerPhonePO);
 
+		// 生成客户创建事件
+		messageQueuingDao.save(new MessageQueuingPO().init(null, "addCustomer", "{\"cid\":" + customerPO.getCid() + ",\"no\":\"" + customerPO.getNo() + "\",\"event\":\"CUSTOMER_CREATED\"}"));
+
 		BeanUtil.copyProperties(customerPO, customerVO);
 
 		return 0;
@@ -368,6 +376,9 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		customerDao.update(customerPO);
+
+		// 生成客户更新事件
+		messageQueuingDao.save(new MessageQueuingPO().init(null, "updateCustomer", "{\"cid\":" + customerPO.getCid() + ",\"no\":\"" + customerPO.getNo() + "\",\"event\":\"CUSTOMER_UPDATED\"}"));
 
 		// 比对该客户所有 account, 无完全匹配则新建
 		matchOrCreateAccount(customerPO);
