@@ -65,11 +65,11 @@ public class CustomerCityProperRulePO implements Serializable {
 
 	private short status;
 
-	private Integer createruid;
+	private UserPO creater;
 
 	private Timestamp createTime;
 
-	private Integer updateruid;
+	private UserPO updater;
 
 	private Timestamp updateTime;
 
@@ -179,13 +179,14 @@ public class CustomerCityProperRulePO implements Serializable {
 		this.status = status;
 	}
 
-	@Column(name = "createruid")
-	public Integer getCreateruid() {
-		return createruid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setCreateruid(Integer createruid) {
-		this.createruid = createruid;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
 	@Column(name = "createTime")
@@ -197,13 +198,14 @@ public class CustomerCityProperRulePO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	@Column(name = "updateruid")
-	public Integer getUpdateruid() {
-		return updateruid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "uuid", referencedColumnName = "uid")
+	public UserPO getUpdater() {
+		return updater;
 	}
 
-	public void setUpdateruid(Integer updateruid) {
-		this.updateruid = updateruid;
+	public void setUpdater(UserPO updater) {
+		this.updater = updater;
 	}
 
 	@Column(name = "updateTime")
@@ -235,7 +237,7 @@ public class CustomerCityProperRulePO implements Serializable {
 
 	public CustomerCityProperRuleVO ptv(CustomerCityProperRuleVO customerCityProperRuleVO) throws FLException {
 
-		BeanUtil.copyProperties(this, customerCityProperRuleVO, Arrays.asList("city", "company", "targetCompany", "department", "user", "decorationBusinessType"));
+		BeanUtil.copyProperties(this, customerCityProperRuleVO, Arrays.asList("city", "company", "targetCompany", "department", "user", "creater", "updater", "decorationBusinessType"));
 
 		if (getCity() != null && customerCityProperRuleVO.getCity() != null) {
 			getCity().ptv(customerCityProperRuleVO.getCity());
@@ -255,6 +257,14 @@ public class CustomerCityProperRulePO implements Serializable {
 
 		if (getUser() != null && customerCityProperRuleVO.getUser() != null) {
 			customerCityProperRuleVO.getUser().setBaseInfo(getUser());
+		}
+
+		if (getCreater() != null && customerCityProperRuleVO.getCreater() != null) {
+			customerCityProperRuleVO.getCreater().setBaseInfo(getCreater());
+		}
+
+		if (getUpdater() != null && customerCityProperRuleVO.getUpdater() != null) {
+			customerCityProperRuleVO.getUpdater().setBaseInfo(getUpdater());
 		}
 
 		if (getBusitype() != null && customerCityProperRuleVO.getBusitype() != null) {
