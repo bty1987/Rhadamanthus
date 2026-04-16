@@ -24,6 +24,10 @@ public class CustomerCityProperRuleVO implements Serializable {
 
 	private UserBaseVO user;
 
+	private UserBaseVO creater;
+
+	private UserBaseVO updater;
+
 	private DecorationBusitypeVO busitype;
 
 	private Short type;
@@ -124,5 +128,21 @@ public class CustomerCityProperRuleVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+
+	public UserBaseVO getUpdater() {
+		return updater;
+	}
+
+	public void setUpdater(UserBaseVO updater) {
+		this.updater = updater;
 	}
 }
