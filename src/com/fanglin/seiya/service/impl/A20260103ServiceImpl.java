@@ -249,6 +249,34 @@ public class A20260103ServiceImpl implements A20260103Service {
 		DecorationVO decorationVO = new DecorationVO();
 
 		decorationVO.setOrderId(decorationPO.getOrderId());
+		decorationVO.setContractTime(decorationPO.getContractTime());
+
+		// house 信息: village.no, village.name, houseNumber
+		if (decorationPO.getHouse() != null) {
+			HouseVO houseVO = new HouseVO();
+			houseVO.setHouseNumber(decorationPO.getHouse().getHouseNumber());
+
+			if (decorationPO.getHouse().getVillage() != null) {
+				VillageVO villageVO = new VillageVO();
+				villageVO.setNo(decorationPO.getHouse().getVillage().getNo());
+				villageVO.setName(decorationPO.getHouse().getVillage().getName());
+				houseVO.setVillage(villageVO);
+			}
+
+			decorationVO.setHouse(houseVO);
+		}
+
+		// customer 信息: phone 脱敏
+		if (decorationPO.getCustomer() != null) {
+			CustomerVO customerVO = new CustomerVO();
+			String decodedPhone = FormatUtil.decodePhone(decorationPO.getCustomer().getPhone());
+			if (decodedPhone != null && decodedPhone.length() >= 7) {
+				customerVO.setPhone(decodedPhone.substring(0, 3) + "****" + decodedPhone.substring(7));
+			} else {
+				customerVO.setPhone(decodedPhone);
+			}
+			decorationVO.setCustomer(customerVO);
+		}
 
 		return decorationVO;
 	}
