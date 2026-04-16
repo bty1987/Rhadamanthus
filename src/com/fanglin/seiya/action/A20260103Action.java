@@ -272,8 +272,29 @@ public class A20260103Action extends BaseListAction {
 		// 调用 Service 层处理业务逻辑
 		DecorationVO decorationVO = a20260103Service.queryCustomerLead(orderId, village, houseNumber, phone, orgId);
 
-		// 设置返回参数 - 只返回 orderId
+		// 设置返回参数
 		this.data.put("orderId", decorationVO.getOrderId());
+		this.data.put("contractTime", decorationVO.getContractTime());
+
+		if (decorationVO.getHouse() != null) {
+			Map<String, Object> houseMap = new HashMap<String, Object>();
+			houseMap.put("houseNumber", decorationVO.getHouse().getHouseNumber());
+
+			if (decorationVO.getHouse().getVillage() != null) {
+				Map<String, Object> villageMap = new HashMap<String, Object>();
+				villageMap.put("no", decorationVO.getHouse().getVillage().getNo());
+				villageMap.put("name", decorationVO.getHouse().getVillage().getName());
+				houseMap.put("village", villageMap);
+			}
+
+			this.data.put("house", houseMap);
+		}
+
+		if (decorationVO.getCustomer() != null) {
+			Map<String, Object> customerMap = new HashMap<String, Object>();
+			customerMap.put("phone", decorationVO.getCustomer().getPhone());
+			this.data.put("customer", customerMap);
+		}
 
 		return SUCCESS;
 	}
