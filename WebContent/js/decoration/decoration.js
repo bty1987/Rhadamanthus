@@ -1488,10 +1488,13 @@
                                 break;
                             case "repair":// 保修
                                 $divBtnWrap.append(btnRepair);
+                                break;
                             case "terminalStatus":// 工程终止
                                 $divBtnWrap.append(btnTerminalStatus);
+                                break;
                             case "hidden":// 隐藏/显示
                                 $divBtnWrap.append(btnHidden);
+                                break;
                         }
                     });
                     $divBtnWrap.appendTo($h3);
