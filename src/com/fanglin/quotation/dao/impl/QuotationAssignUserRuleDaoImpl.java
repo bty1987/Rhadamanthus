@@ -2,8 +2,13 @@ package com.fanglin.quotation.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -64,6 +69,49 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 		criteria.addOrder(org.hibernate.criterion.Order.asc("lastFinishTime"));
 
 		return criteria.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<QuotationAssignUserRulePO> queryQuotationAssignUserRuleForCrossCompany(int company, Integer department) throws FLException {
+		Criteria criteria = createCriteria(QuotationAssignUserRulePO.class);
+
+		// 按公司筛选（使用关联属性）
+		criteria.createAlias("company", "company");
+		criteria.createAlias("user", "user");
+		criteria.add(Restrictions.eq("company.cid", company));
+
+		// 只查询待分配状态的人员
+		criteria.add(Restrictions.eq("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
+
+		// 使用 OR 逻辑：匹配该部门的规则 OR 公司级规则（department IS NULL）
+		criteria.createAlias("department", "department", CriteriaSpecification.LEFT_JOIN);
+		criteria.add(Restrictions.or(
+			Restrictions.eq("department.did", department),
+			Restrictions.isNull("department")));
+
+		// ★ 跨公司验证：排除在其他公司存在非"待分配"状态的预算员
+		// 子查询：查找同一uid在其他公司有 status != 1 的记录，如果存在则排除
+		DetachedCriteria busyInOtherCompany = DetachedCriteria.forClass(QuotationAssignUserRulePO.class, "other");
+		busyInOtherCompany.add(Restrictions.eqProperty("other.user.userId", "user.userId"));
+		busyInOtherCompany.add(Restrictions.ne("other.status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
+		busyInOtherCompany.setProjection(Projections.property("other.qaurid"));
+
+		criteria.add(Subqueries.notExists(busyInOtherCompany));
+
+		// 按最后完成时间升序排序（最早完成的排在前面）
+		criteria.addOrder(Order.asc("lastFinishTime"));
+
+		return criteria.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<QuotationAssignUserRulePO> queryQuotationAssignUserRuleByUserId(String userId) throws FLException {
+		return createCriteria(QuotationAssignUserRulePO.class)
+			.createAlias("user", "user")
+			.add(Restrictions.eq("user.userId", userId))
+			.list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

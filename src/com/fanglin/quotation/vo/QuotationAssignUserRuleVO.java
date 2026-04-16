@@ -1,6 +1,9 @@
 package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
+import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -49,7 +52,7 @@ public class QuotationAssignUserRuleVO implements Serializable {
 	/**
 	 * 最后完成时间
 	 */
-	private String lastFinishTime;
+	private Timestamp lastFinishTime;
 
 	/**
 	 * 当前任务数量
@@ -59,12 +62,12 @@ public class QuotationAssignUserRuleVO implements Serializable {
 	/**
 	 * 创建时间
 	 */
-	private String createTime;
+	private Timestamp createTime;
 
 	/**
 	 * 更新时间
 	 */
-	private String updateTime;
+	private Timestamp updateTime;
 
 	/**
 	 * 默认构造函数
@@ -137,11 +140,12 @@ public class QuotationAssignUserRuleVO implements Serializable {
 		this.supportedType = supportedType;
 	}
 
-	public String getLastFinishTime() {
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getLastFinishTime() {
 		return lastFinishTime;
 	}
 
-	public void setLastFinishTime(String lastFinishTime) {
+	public void setLastFinishTime(Timestamp lastFinishTime) {
 		this.lastFinishTime = lastFinishTime;
 	}
 
@@ -153,19 +157,21 @@ public class QuotationAssignUserRuleVO implements Serializable {
 		this.currentTaskCount = currentTaskCount;
 	}
 
-	public String getCreateTime() {
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
-	public String getUpdateTime() {
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(String updateTime) {
+	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
 	}
 }

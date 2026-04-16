@@ -46,4 +46,28 @@ public interface QuotationAssignUserRuleDao extends Dao<QuotationAssignUserRuleP
 	 * @throws FLException 业务异常
 	 */
 	List<QuotationAssignUserRulePO> queryAvailableUsers(int company, Integer department) throws FLException;
+
+	/**
+	 * 根据用户ID查询该预算员在所有公司的规则记录
+	 * 
+	 * @param userId 用户ID
+	 * @return 该用户在所有公司的规则列表
+	 * @throws FLException 业务异常
+	 */
+	List<QuotationAssignUserRulePO> queryQuotationAssignUserRuleByUserId(String userId) throws FLException;
+
+	/**
+	 * 查询所有待分配的预算员，且要求该预算员在所有公司中都处于待分配状态（跨公司验证）
+	 * 
+	 * <p>
+	 * 逻辑：先按当前公司筛选 status=1 的预算员，再通过子查询排除在其他公司存在非待分配状态的预算员。
+	 * 确保同一预算员不会因为其他公司的制作中任务而被重复分配。
+	 * </p>
+	 * 
+	 * @param company 公司ID
+	 * @param department 部门ID（可选，NULL表示查询所有部门）
+	 * @return 预算员规则列表（跨公司全部待分配）
+	 * @throws FLException 业务异常
+	 */
+	List<QuotationAssignUserRulePO> queryQuotationAssignUserRuleForCrossCompany(int company, Integer department) throws FLException;
 }

@@ -256,10 +256,10 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 		Timestamp lastFinishTime;
 
-		if (quotationAssignUserRule.getLastFinishTime() == null || quotationAssignUserRule.getLastFinishTime().isEmpty()) {
+		if (quotationAssignUserRule.getLastFinishTime() == null) {
 			lastFinishTime = new Timestamp(System.currentTimeMillis());
 		} else {
-			lastFinishTime = Timestamp.valueOf(quotationAssignUserRule.getLastFinishTime());
+			lastFinishTime = quotationAssignUserRule.getLastFinishTime();
 		}
 
 		// 查询现有记录
