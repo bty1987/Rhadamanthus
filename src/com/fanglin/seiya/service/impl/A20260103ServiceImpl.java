@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.CustomerPhoneDao;
+import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.service.HouseService;
 import com.fanglin.communion.vo.CustomerPhoneVO;
@@ -26,6 +28,7 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
 import com.fanglin.customer.po.CustomerChancePO;
@@ -61,6 +64,9 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private CustomerPhoneDao customerPhoneDao;
 
 	@Autowired
 	private UserService userService;
@@ -142,10 +148,8 @@ public class A20260103ServiceImpl implements A20260103Service {
 		// 处理客户信息（通过电话）
 		CustomerVO customerVO = null;
 		if (phone != null && !phone.trim().isEmpty()) {
-			// 查询客户是否存在
-			CustomerPhoneVO queryPhone = new CustomerPhoneVO();
-			queryPhone.setPhone(phone);
-			CustomerVO foundCustomer = customerService.queryCustomerForPhone(queryPhone, userId);
+			// 通过电话查询客户
+			CustomerVO foundCustomer = findCustomerByPhone(phone, orgId);
 
 			if (foundCustomer != null && foundCustomer.getCid() != null) {
 				// 客户存在，使用现有客户
@@ -224,9 +228,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		}
 		// 方式3: 通过 电话 查询
 		else if (phone != null && !phone.trim().isEmpty()) {
-			CustomerPhoneVO queryPhone = new CustomerPhoneVO();
-			queryPhone.setPhone(phone);
-			CustomerVO customerVO = customerService.queryCustomerForPhone(queryPhone, null);
+			CustomerVO customerVO = findCustomerByPhone(phone, orgId);
 
 			if (customerVO != null && customerVO.getCid() != null) {
 				List<DecorationPO> decorations = decorationDao.queryDecorationByCustomerId(customerVO.getCid());
@@ -268,9 +270,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		}
 
 		// 1. 通过电话查询客户cid
-		CustomerPhoneVO queryPhone = new CustomerPhoneVO();
-		queryPhone.setPhone(phone);
-		CustomerVO customerVO = customerService.queryCustomerForPhone(queryPhone, null);
+		CustomerVO customerVO = findCustomerByPhone(phone, orgId);
 
 		long cid = 0;
 
@@ -295,6 +295,28 @@ public class A20260103ServiceImpl implements A20260103Service {
 		if (cid != 0 || hid != 0) {
 			decorationService.checkOverDecoration(cid, hid, orgId);
 		}
+	}
+
+	/**
+	 * 通过电话号码查询客户信息
+	 * 先通过加密后的phone查询CustomerPhonePO获取cid，再查询客户详情
+	 */
+	private CustomerVO findCustomerByPhone(String phone, Integer company) throws FLException {
+
+		String encodedPhone = FormatUtil.encodePhone(phone);
+
+		List<CustomerPhonePO> phonePOs = customerPhoneDao.queryCustomerPhoneByPhone(encodedPhone, CustomerPhonePO.STATUS_ENABLE_INT, company);
+
+		if (phonePOs == null || phonePOs.isEmpty()) {
+			return null;
+		}
+
+		CustomerPhonePO phonePO = phonePOs.get(0);
+
+		CustomerVO customerVO = new CustomerVO();
+		customerVO.setCid(phonePO.getCid());
+
+		return customerService.queryCustomerById(customerVO);
 	}
 
 }
