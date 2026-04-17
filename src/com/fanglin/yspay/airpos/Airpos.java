@@ -14,7 +14,7 @@ package com.fanglin.yspay.airpos;
 import java.util.Date;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fanglin.communion.po.CustypePO;
+import com.fanglin.data.po.CustypePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.utils.Arith;

@@ -1,4 +1,4 @@
-package com.fanglin.communion.vo;
+package com.fanglin.data.common.vo;
 
 import com.fanglin.data.common.vo.ReceiptTypeVO;
 
