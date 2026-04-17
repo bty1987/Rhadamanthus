@@ -87,4 +87,20 @@ public interface A20260103Service {
 	 */
 	void checkoverCustomerLead(String village, String houseNumber, String phone, Integer orgId) throws FLException;
 
+	/**
+	 * 修改装修单的客户电话和楼盘楼号（SF专用）
+	 *
+	 * 通过装修单号orderId查询装修单，修改客户电话和楼盘楼号。
+	 * 客户不存在则创建，存在则更新；房屋不存在则创建，存在则更新。
+	 *
+	 * @param orderId 装修单编号（必填）
+	 * @param phone 客户电话
+	 * @param village 楼盘名称
+	 * @param houseNumber 楼号
+	 * @param orgId 公司ID
+	 * @param userId 操作人userId
+	 * @throws FLException 业务异常
+	 */
+	void updateDecorationForSF(String orderId, String phone, String village, String houseNumber, Integer orgId, String userId) throws FLException;
+
 }

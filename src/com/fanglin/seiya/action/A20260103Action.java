@@ -746,6 +746,39 @@ public class A20260103Action extends BaseListAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * SF更新装修单接口
+	 *
+	 * 通过装修单号(orderId)修改装修单的客户电话和楼盘楼号
+	 * 不存在则创建，存在则更新
+	 *
+	 * 请求参数：
+	 * @orderId: 装修单号（必填）
+	 * @phone: 客户电话（可选，传则更新）
+	 * @village: 楼盘编号（可选，需与houseNumber一同传入）
+	 * @houseNumber: 楼号（可选，需与village一同传入）
+	 * @orgId: 公司标识（必填）
+	 *
+	 * @return SUCCESS
+	 * @throws FLException 业务异常
+	 */
+	@Action(value = "updateDecorationForSF", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationForSF() throws FLException {
+
+		// 初始化 data 对象
+		this.data = new HashMap<String, Object>();
+
+		// 调用 Service 层处理业务逻辑
+		a20260103Service.updateDecorationForSF(orderId, phone, village, houseNumber, orgId, userId);
+
+		// 设置返回参数
+		this.data.put("orderId", orderId);
+		this.data.put("updateTime", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));
+		this.data.put("message", "更新成功");
+
+		return SUCCESS;
+	}
+
 	// ==================== Getter and Setter ====================
 
 	@JSON(serialize = false)

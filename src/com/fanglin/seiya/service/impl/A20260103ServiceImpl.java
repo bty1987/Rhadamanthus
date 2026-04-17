@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.CustomerPhoneDao;
+import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.service.HouseService;
@@ -70,6 +72,12 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private CustomerDao customerDao;
+
+	@Autowired
+	private HouseDao houseDao;
 
 	@Autowired
 	private DecorationDao decorationDao;
@@ -323,6 +331,67 @@ public class A20260103ServiceImpl implements A20260103Service {
 		if (cid != 0 || hid != 0) {
 			decorationService.checkOverDecoration(cid, hid, orgId);
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateDecorationForSF(String orderId, String phone, String village, String houseNumber, Integer orgId, String userId) throws FLException {
+
+		// 1. 参数校验
+		if (orderId == null || orderId.trim().isEmpty()) {
+			throw new FLException(400001, "装修单号不能为空");
+		}
+
+		if (orgId == null) {
+			throw new FLException(400004, "公司标识不能为空");
+		}
+
+		// 2. 查询装修单
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		// 3. 处理客户电话：不存在创建，存在更新
+		if (phone != null && !phone.trim().isEmpty()) {
+
+			CustomerVO customerVO = new CustomerVO();
+			customerVO.setPhone(phone);
+			customerVO.setName("未知客户");
+
+			// existCustomer: 电话不存在则创建客户+电话，存在则获取cid
+			customerService.existCustomer(customerVO, orgId);
+
+			// 通过cid获取完整客户PO（托管态）
+			com.fanglin.communion.po.CustomerPO customerPO = customerDao.get(customerVO.getCid());
+
+			if (customerPO != null) {
+				decorationPO.setCustomer(customerPO);
+			}
+		}
+
+		// 4. 处理楼盘楼号：不存在创建，存在更新
+		if (village != null && !village.trim().isEmpty() && houseNumber != null && !houseNumber.trim().isEmpty()) {
+
+			VillageVO villageVO = new VillageVO(village);
+			HouseVO houseVO = new HouseVO();
+			houseVO.setVillage(villageVO);
+			houseVO.setHouseNumber(houseNumber);
+
+			// existHouse: 房屋不存在则创建，存在则获取hid
+			houseService.existHouse(houseVO, orgId);
+
+			// 通过hid获取完整房屋PO（托管态）
+			com.fanglin.communion.po.HousePO housePO = houseDao.get(houseVO.getHid());
+
+			if (housePO != null) {
+				decorationPO.setHouse(housePO);
+			}
+		}
+
+		// 5. 保存更新
+		decorationDao.update(decorationPO);
 	}
 
 	/**
