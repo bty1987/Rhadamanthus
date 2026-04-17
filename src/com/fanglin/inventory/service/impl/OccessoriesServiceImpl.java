@@ -190,7 +190,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		UserPO supervisor = userDao.queryUserByUserId(occessoriesVO.getSupervisor().getUserId());
 
-		OccessoriesPO occessoriesPO = new OccessoriesPO().init(no, occessoriesVO.getDecoration().getOrderId(), creater, company, occessoriesVO.getIsEnter(), occessoriesVO.getIsLift(), occessoriesVO.getIsExceed(), occessoriesVO.getIsAttic());
+		OccessoriesPO occessoriesPO = new OccessoriesPO().init(no, occessoriesVO.getDecoration().getOrderId(), creater, company, occessoriesVO.getIsEnter(), occessoriesVO.getIsLift(), occessoriesVO.getIsExceed(), occessoriesVO.getIsAttic(), occessoriesVO.getLoadFloor());
 
 		if (occessoriesVO.getSupervisor() != null) {
 			occessoriesPO.setSupervisor(supervisor);

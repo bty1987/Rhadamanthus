@@ -55,6 +55,7 @@ public class OccessoriesVO implements Serializable {
 	private short isExceed;// 是否超阶
 
 	private short isAttic;// 是否有阁楼
+	private short loadFloor;// 上料楼层
 
 	private Short status;
 
@@ -258,6 +259,14 @@ public class OccessoriesVO implements Serializable {
 
 	public void setIsAttic(short isAttic) {
 		this.isAttic = isAttic;
+	}
+ 
+	public short getLoadFloor() {
+		return loadFloor;
+	}
+ 
+	public void setLoadFloor(short loadFloor) {
+		this.loadFloor = loadFloor;
 	}
 
 	public Short getStatus() {
