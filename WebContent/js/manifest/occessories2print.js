@@ -77,8 +77,7 @@ $(function () {
 
         var tr2b = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 15px;"></tr>').appendTo(table);
         var td2b1 = $('<td style="border: 1px solid;"></td>').text("上料楼层").appendTo(tr2b);
-        var loadFloorMap = {"0": "负二", "1": "负一", "2": "一层", "3": "二层"};
-        var td2b2 = $('<td colspan="5" style="border: 1px solid;"></td>').text(loadFloorMap[data.loadFloor] || "").appendTo(tr2b);
+        var td2b2 = $('<td colspan="5" style="border: 1px solid;"></td>').text(constant.inventory().occessories.loadFloor.keys[data.loadFloor] || "").appendTo(tr2b);
 
         var tr3 = $('<tr style="border: 1px solid;height: 25px;text-align: center;  font-size: 15px;"></tr>').appendTo(table);
         var td13 = $('<td style="border: 1px solid;"></td>').text("创建时间").appendTo(tr3);
