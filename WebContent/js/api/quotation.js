@@ -111,6 +111,13 @@ $.extend(api.index, {
     },
     quotationAssignRecordIndex: {
         url: "/views/quotation/quotationAssignRecord.html"
+    },
+
+    quotationProfileIndex: {
+        url: "/views/quotation/quotationProfile.html"
+    },
+    quotationProfile4detailIndex: {
+        url: "/views/quotation/quotationProfile4detail.html"
     }
 });
 
@@ -2455,6 +2462,30 @@ $.extend(api, {
             tranargs: {
                 args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.comsPrice", "addReduce.discount", "addReduce.taxRate", "addReduce.taxPrice"],
             }
+        },
+
+        // -------- 报价配置 -------------------------
+
+        pageQuotationProfile: {
+            url: "pageQuotationProfile.do"
+        },
+        queryQuotationProfileByQid: {
+            url: "queryQuotationProfileByQid.do"
+        },
+        queryQuotationProfileByOrderId: {
+            url: "queryQuotationProfileByOrderId.do"
+        },
+        queryQuotationProfileByQpid: {
+            url: "queryQuotationProfileByQpid.do"
+        },
+        addQuotationProfile: {
+            url: "addQuotationProfile.do"
+        },
+        makeQuotationProfile: {
+            url: "makeQuotationProfile.do"
+        },
+        handleQuotationProfile: {
+            url: "handleQuotationProfile.do"
         }
 
     }
