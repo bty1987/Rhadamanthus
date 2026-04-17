@@ -331,7 +331,7 @@ $(function() {
             return v.status == 0;
         }
     }, {
-        name: "结算",
+        name: "填写结算额",
         clazz: "btn-danger",
         handle: function(v) {
 
@@ -348,6 +348,23 @@ $(function() {
             occessories.items.rchargeInput.val(v.rcharge || '');
 
             occessories.modals.balanceModal.modal("show");
+            return false;
+        },
+        show: function(v) {
+
+            return occessories.pageType == "receive" && v.status == 3;
+        }
+    }, {
+        name: "确认结算",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            if (v.status != 3) {
+                com.showAlert(com.warning, "外辅单状态不可操作");
+                return false;
+            }
+
+            confirmBalance(v);
             return false;
         },
         show: function(v) {
@@ -646,11 +663,27 @@ $(function() {
             "occessories.rcharge": occessories.items.rchargeInput.val()
         };
 
-        com.post(api.inventory.balanceOccessories, options, function(res) {
+        com.post(api.inventory.updateOccessoriesForBalance, options, function(res) {
 
-            com.showAlert(com.info, "操作成功");
+            com.showAlert(com.info, "结算额更新成功");
             occessories.modals.balanceModal.modal("hide");
             searcher.doSearch();
+        });
+    }
+
+    function confirmBalance(v) {
+
+        com.showConfirm("确定要确认结算外辅单 " + v.no + " 吗？", function() {
+
+            var options = {
+                "occessories.oid": v.oid
+            };
+
+            com.post(api.inventory.balanceOccessories, options, function(res) {
+
+                com.showAlert(com.info, "结算确认成功");
+                searcher.doSearch();
+            });
         });
     }
 
