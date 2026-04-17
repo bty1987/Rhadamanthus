@@ -79,6 +79,14 @@ public class OccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateOccessoriesForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateOccessoriesForBalance() throws FLException {
+
+		occessoriesService.updateOccessoriesForBalance(occessories);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "balanceOccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String balanceOccessories() throws FLException {
 

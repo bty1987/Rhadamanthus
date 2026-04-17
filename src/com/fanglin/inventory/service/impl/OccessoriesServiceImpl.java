@@ -392,6 +392,29 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateOccessoriesForBalance(OccessoriesVO occessoriesVO) throws FLException {
+
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+
+		if (occessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+
+		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_RECEIVE_INT) {
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
+
+		// 仅更新虚结算额和结算费用，不改变状态
+		occessoriesPO.setVbalance(occessoriesVO.getVbalance() != null ? occessoriesVO.getVbalance() : 0);
+		occessoriesPO.setRcharge(occessoriesVO.getRcharge() != null ? occessoriesVO.getRcharge() : 0);
+
+		occessoriesDao.update(occessoriesPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int balanceOccessories(OccessoriesVO occessoriesVO, String userId) throws FLException {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
@@ -406,13 +429,10 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		UserPO user = userDao.queryUserByUserId(userId);
 
+		// 仅更新结算状态、结算人、结算时间
 		occessoriesPO.setStatus(OccessoriesPO.STATUS_BALANCE_INT);
 		occessoriesPO.setBalancer(user);
 		occessoriesPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
-
-		// 从页面参数直接获取虚结算额和结算费用
-		occessoriesPO.setVbalance(occessoriesVO.getVbalance() != null ? occessoriesVO.getVbalance() : 0);
-		occessoriesPO.setRcharge(occessoriesVO.getRcharge() != null ? occessoriesVO.getRcharge() : 0);
 
 		occessoriesDao.update(occessoriesPO);
 

@@ -585,12 +585,16 @@ $.extend(api, {
                 args: ["occessoriesItems.recnum"]
             }
         },
-        balanceOccessories: {
-            url: "balanceOccessories.do",
+        updateOccessoriesForBalance: {
+            url: "updateOccessoriesForBalance.do",
             type: "update",
             tranargs: {
                 args: ["occessories.vbalance", "occessories.rcharge"]
             }
+        },
+        balanceOccessories: {
+            url: "balanceOccessories.do",
+            type: "update"
         },
         rejectOccessories: {
             url: "rejectOccessories.do",
