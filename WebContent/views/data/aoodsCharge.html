@@ -10,6 +10,10 @@
         <i class="icon-plus bigger-110"></i>
         <span>添加</span>
     </a>
+    <a class="btn btn-minier btn-warning pull-left" id="importChargeBtn" style="margin-top: -2px; margin-left: 4px;">
+        <i class="icon-cloud-upload bigger-110"></i>
+        <span>导入</span>
+    </a>
     <a class="btn btn-minier btn-primary pull-left" id="backBtn" style="margin-top: -2px; margin-left: 4px;">
         <i class="icon-mail-forward "></i>
         <span>返回</span>
@@ -137,6 +141,39 @@
             </div>
         </div>
 
+    </form>
+</div>
+
+<div id="importChargeModal" class="page-content" style="display: none;">
+    <form class="form-horizontal" novalidate="novalidate" id="importChargeForm">
+        <div class="form-group alert alert-danger">
+            <p>上传字段: 费用名称, 价格(元), 浮动额(元), 费用类型(通用/超阶), 状态(启用/禁用), 排序</p>
+            <p>第一行为表头, 将被跳过</p>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">执行日期</label>
+            <div class="col-md-9">
+                <input type="text" class="col-xs-10 col-sm-7" id="executeDateCharge" name="executeDateCharge" readonly="readonly" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">执行时间</label>
+            <div class="col-md-9">
+                <input type="text" class="col-xs-10 col-sm-7" id="executeTimeCharge" name="executeTimeCharge" readonly="readonly" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">导入文件</label>
+            <div class="col-md-9">
+                <input type="file" id="chargeFileUpload" name="chargeFileUpload" />
+                <input type="hidden" id="chargeFilePath" name="chargeFilePath" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-9">
+                <a class="btn btn-success btn-sm" id="importChargeConfirmBtn">确定导入</a>
+            </div>
+        </div>
     </form>
 </div>
 
