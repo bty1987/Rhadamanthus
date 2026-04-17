@@ -7,7 +7,7 @@
  * @Author		: LY
  */
 
-package com.fanglin.communion.service.impl;
+package com.fanglin.data.common.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,10 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.communion.dao.CustypeDao;
-import com.fanglin.communion.po.CustypePO;
-import com.fanglin.communion.service.CustypeService;
-import com.fanglin.communion.vo.CustypeVO;
+import com.fanglin.data.common.dao.CustypeDao;
+import com.fanglin.data.po.CustypePO;
+import com.fanglin.data.common.service.CustypeService;
+import com.fanglin.data.common.vo.CustypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.ReceiptTypeDao;

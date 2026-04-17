@@ -1,8 +1,8 @@
-package com.fanglin.communion.dao;
+package com.fanglin.data.common.dao;
 
 import java.util.List;
 
-import com.fanglin.communion.po.CustypePO;
+import com.fanglin.data.po.CustypePO;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;

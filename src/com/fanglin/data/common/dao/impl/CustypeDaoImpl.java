@@ -7,7 +7,7 @@
  * @Author		: LY
  */
 
-package com.fanglin.communion.dao.impl;
+package com.fanglin.data.common.dao.impl;
 
 import java.util.List;
 
@@ -15,8 +15,8 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.fanglin.communion.dao.CustypeDao;
-import com.fanglin.communion.po.CustypePO;
+import com.fanglin.data.common.dao.CustypeDao;
+import com.fanglin.data.po.CustypePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;

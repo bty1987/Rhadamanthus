@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.communion.dao.CustypeDao;
-import com.fanglin.communion.po.CustypePO;
+import com.fanglin.data.common.dao.CustypeDao;
+import com.fanglin.data.po.CustypePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;

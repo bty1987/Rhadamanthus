@@ -1,4 +1,4 @@
-package com.fanglin.communion.po;
+package com.fanglin.data.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 

@@ -1,4 +1,4 @@
-package com.fanglin.communion.action;
+package com.fanglin.data.common.action;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -7,8 +7,8 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.communion.service.CustypeService;
-import com.fanglin.communion.vo.CustypeVO;
+import com.fanglin.data.common.service.CustypeService;
+import com.fanglin.data.common.vo.CustypeVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.utils.SystemConfig;

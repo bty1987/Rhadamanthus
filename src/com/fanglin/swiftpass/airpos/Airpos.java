@@ -29,7 +29,7 @@ import cn.hutool.crypto.asymmetric.KeyType;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fanglin.communion.po.CustypePO;
+import com.fanglin.data.po.CustypePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.payment.bean.Wxpay;
 import com.fanglin.payment.po.PaytranPO;
