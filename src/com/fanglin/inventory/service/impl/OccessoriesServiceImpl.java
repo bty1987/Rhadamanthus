@@ -441,6 +441,34 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int batchBalanceOccessories(List<OccessoriesVO> occessoriess, String userId) throws FLException {
+
+		UserPO user = userDao.queryUserByUserId(userId);
+
+		for (OccessoriesVO occessoriesVO : occessoriess) {
+
+			OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+
+			if (occessoriesPO == null) {
+				throw new FLException(260023, "辅料单不存在");
+			}
+
+			if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_RECEIVE_INT) {
+				throw new FLException(260024, "辅料单状态不可操作");
+			}
+
+			occessoriesPO.setStatus(OccessoriesPO.STATUS_BALANCE_INT);
+			occessoriesPO.setBalancer(user);
+			occessoriesPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
+
+			occessoriesDao.update(occessoriesPO);
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int rejectOccessories(OccessoriesVO occessoriesVO, String userId) throws FLException {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());

@@ -596,6 +596,10 @@ $.extend(api, {
             url: "balanceOccessories.do",
             type: "update"
         },
+        batchBalanceOccessories: {
+            url: "batchBalanceOccessories.do",
+            type: "update"
+        },
         rejectOccessories: {
             url: "rejectOccessories.do",
             type: "update"

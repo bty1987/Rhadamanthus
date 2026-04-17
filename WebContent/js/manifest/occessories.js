@@ -103,6 +103,14 @@ $(function() {
     }, "suppliers", "uid", "userName", null);
 
     var lineprops = [{
+        type: "checkbox",
+        field: "oid",
+        name: "oids",
+        prop: "oid",
+        show: function(v) {
+            return occessories.pageType == "receive" && v.status == 3;
+        }
+    }, {
         fieId: "no",
         name: "外辅单号",
         prop: "no",
@@ -270,6 +278,35 @@ $(function() {
     searcher.condition(conditions);
     searcher.history("accessoriesPostData");
     searcher.param(options);
+
+    var _btns = [];
+
+    if (occessories.pageType == "receive") {
+
+        var $checkAllBtn = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($checkAllBtn);
+        $('<span></span>').text('全选').appendTo($checkAllBtn);
+
+        var $batchBalanceBtn = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($batchBalanceBtn);
+        $('<span></span>').text('批量结算').appendTo($batchBalanceBtn);
+
+        $checkAllBtn.on("click", function() {
+            if (com.focusPage('.searcher-checkbox', "#resultList").prop('checked')) {
+                com.focusPage('.searcher-checkbox', "#resultList").removeAttr('checked').prop('checked', false);
+            } else {
+                com.focusPage('.searcher-checkbox', "#resultList").attr('checked', true).prop('checked', true);
+            }
+        });
+
+        $batchBalanceBtn.on("click", function() {
+            batchConfirmBalance();
+        });
+
+        _btns = [$checkAllBtn, $batchBalanceBtn];
+    }
+
+    searcher.btns(_btns);
 
     var linebtns = [{
         name: "到货",
@@ -689,6 +726,33 @@ $(function() {
             com.post(api.inventory.balanceOccessories, options, function(res) {
 
                 com.showAlert(com.info, "结算确认成功");
+                searcher.doSearch();
+            });
+        });
+    }
+
+    function batchConfirmBalance() {
+
+        var inputs = searcher.checks();
+
+        if (!inputs.length) {
+            com.showAlert(com.warning, "请选择需要结算的外辅单");
+            return false;
+        }
+
+        var options = {};
+
+        $.each(inputs, function(i) {
+
+            var oid = $(inputs[i]).val();
+            options["occessoriess[" + i + "].oid"] = oid;
+        });
+
+        com.showConfirm("确定要批量结算选中的 " + inputs.length + " 条外辅单吗？", function() {
+
+            com.post(api.inventory.batchBalanceOccessories, options, function(res) {
+
+                com.showAlert(com.info, "批量结算成功");
                 searcher.doSearch();
             });
         });
