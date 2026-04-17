@@ -106,6 +106,8 @@ public class OccessoriesPO implements Serializable {
 
 	private short isAttic;// 是否有阁楼
 
+	private short loadFloor;// 上料楼层
+
 	private short status;
 
 	private int company; // 公司
@@ -361,6 +363,15 @@ public class OccessoriesPO implements Serializable {
 		this.isAttic = isAttic;
 	}
 
+	@Column(name = "loadFloor")
+	public short getLoadFloor() {
+		return loadFloor;
+	}
+
+	public void setLoadFloor(short loadFloor) {
+		this.loadFloor = loadFloor;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -397,7 +408,7 @@ public class OccessoriesPO implements Serializable {
 		this.remake = remake;
 	}
 
-	public OccessoriesPO init(String no, String orderId, UserPO creater, int company, short isEnter, short isLift, short isExceed, short isAttic) {
+	public OccessoriesPO init(String no, String orderId, UserPO creater, int company, short isEnter, short isLift, short isExceed, short isAttic, short loadFloor) {
 
 		setNo(no);
 		setCreater(creater);
@@ -408,6 +419,7 @@ public class OccessoriesPO implements Serializable {
 		setIsLift(isLift);
 		setIsExceed(isExceed);
 		setIsAttic(isAttic);
+		setLoadFloor(loadFloor);
 
 		return this;
 	}

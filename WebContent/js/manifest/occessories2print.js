@@ -75,6 +75,11 @@ $(function () {
         var td11 = $('<td style="border: 1px solid;"></td>').text("有无电梯").appendTo(tr2);
         var td12 = $('<td style="border: 1px solid;"></td>').text(constant.inventory().occessories.isLift.keys[data.isLift]).appendTo(tr2);
 
+        var tr2b = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 15px;"></tr>').appendTo(table);
+        var td2b1 = $('<td style="border: 1px solid;"></td>').text("上料楼层").appendTo(tr2b);
+        var loadFloorMap = {"0": "负二", "1": "负一", "2": "一层", "3": "二层"};
+        var td2b2 = $('<td colspan="5" style="border: 1px solid;"></td>').text(loadFloorMap[data.loadFloor] || "").appendTo(tr2b);
+
         var tr3 = $('<tr style="border: 1px solid;height: 25px;text-align: center;  font-size: 15px;"></tr>').appendTo(table);
         var td13 = $('<td style="border: 1px solid;"></td>').text("创建时间").appendTo(tr3);
         var td14 = $('<td colspan="5" style="border: 1px solid;"></td>').text(data.createTime).appendTo(tr3);
@@ -97,6 +102,7 @@ $(function () {
             var charges = chargeMap[String(item.oiid)] || [];
             if (charges.length > 0) {
                 $.each(charges, function (j, charge) {
+                    if (!charge.num || charge.num == 0) return;
                     var chargeTr = $('<tr style="border: 1px solid;height: 25px;text-align: center;background-color:#f9f9f9;"></tr>').appendTo(table);
                     $('<td colspan="2" style="border: 1px solid;padding-left:30px;"></td>').html("　└ " + charge.name).appendTo(chargeTr);
                     $('<td colspan="2" style="border: 1px solid;"></td>').html("").appendTo(chargeTr);

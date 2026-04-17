@@ -87,6 +87,12 @@
         {"key":"0","value":"有"},
         {"key":"1","value":"无"}
     ],
+    "occessoriesloadFloor": [
+        {"key":"0","value":"负二"},
+        {"key":"1","value":"负一"},
+        {"key":"2","value":"一层"},
+        {"key":"3","value":"二层"}
+    ],
     "occessoriesisCostType": [
         {"key": "0", "value": "车运费"},
         {"key": "1", "value": "搬运费"},

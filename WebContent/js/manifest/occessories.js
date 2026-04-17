@@ -44,6 +44,7 @@ $(function() {
         occessories.isLift = res.occessoriesisLift.split("key", "value");
         occessories.isExceed = res.occessoriesisExceed.split("key", "value");
         occessories.isAttic = res.occessoriesisAttic.split("key", "value");
+        occessories.loadFloor = res.occessoriesloadFloor.split("key", "value");
     }, null, false);
 
     var url = api.inventory.pageOccessories;
@@ -234,6 +235,12 @@ $(function() {
         prop: "isAttic",
         clazz: "red",
         dataset: occessories.isAttic
+    }, {
+        field: "loadFloor",
+        name: "上料楼层",
+        prop: "loadFloor",
+        clazz: "red",
+        dataset: occessories.loadFloor
     }, {
         field: "comment",
         name: "备注",
