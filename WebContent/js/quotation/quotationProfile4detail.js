@@ -188,9 +188,7 @@ jQuery(function($) {
             if (com.validate("itemlist"))
                 return false;
 
-            var options = {
-                "quotationProfile.qpid": 0
-            };
+            var options = {};
 
             var items = com.focusPage(".item", "#itemlist");
 

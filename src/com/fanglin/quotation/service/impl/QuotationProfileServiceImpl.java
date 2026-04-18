@@ -133,6 +133,7 @@ public class QuotationProfileServiceImpl implements QuotationProfileService {
 		quotationProfilePO.setTid(surveyTemplatePO.getStid());
 		quotationProfilePO.setType(quotationProfileVO.getType());
 		quotationProfilePO.setCompany(company);
+		quotationProfilePO.setStatus(QuotationProfilePO.STATUS_INIT_INT);
 
 		quotationProfileDao.save(quotationProfilePO);
 
@@ -160,8 +161,6 @@ public class QuotationProfileServiceImpl implements QuotationProfileService {
 			for (QuotationProfileOptionVO optionVO : options) {
 
 				QuotationProfileOptionPO quotationProfileOptionPO = new QuotationProfileOptionPO();
-
-				quotationProfileOptionPO.setTitle(optionVO.getTitle());
 
 				quotationProfileOptionPO.setQpid(quotationProfilePO.getQpid());
 				quotationProfileOptionPO.setQpiid(quotationProfileItemPO.getQpiid());
