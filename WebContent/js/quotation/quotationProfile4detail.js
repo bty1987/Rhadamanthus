@@ -182,6 +182,35 @@ jQuery(function($) {
 
         var $execute = $('<div id="exDiv"></div>').appendTo(quotationProfileDetail.items.particulars);
         var $button = $('<button class="btn btn-primary pull-right" type="button" id="execute">保存</button>').appendTo($execute);
+        var $assignBtn = $('<button class="btn btn-info pull-right" type="button" id="autoAssignBtn" style="margin-right: 10px;">分配</button>').appendTo($execute);
+
+        // 自动分配按钮点击事件
+        com.focusPage("#autoAssignBtn", "#quotationProfileDetailModal").click(function() {
+
+            var orderId = params.quotation.orderId;
+
+            if (!orderId) {
+                com.showAlert(com.warning, "缺少装修单号，无法进行分配");
+                return false;
+            }
+
+            com.showConfirm("确认自动分配该装修单吗？系统将自动查找可用预算员进行分配。", function() {
+
+                com.post(api.quotation.autoQuotationAssign, {
+                    "quotationAssign.orderId": orderId
+                }, function(res) {
+
+                    if (res.errorCode == 0) {
+                        com.showAlert(com.info, "分配成功！已自动分配给预算员");
+                    } else {
+                        com.showAlert(com.warning, res.errorMsg || "分配失败，请查看分配记录了解详情");
+                    }
+                }, function(res) {
+
+                    com.showAlert(com.error, res.errorMsg || "分配失败");
+                });
+            });
+        });
 
         com.focusPage("#execute", "#quotationProfileDetailModal").click(function() {
 
