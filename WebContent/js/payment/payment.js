@@ -41,7 +41,6 @@ jQuery(function($) {
 			myModalLabel: com.focusPage("#myModalLabel", "#payment"),
 			paymentMethod: com.focusPage("#paymentMethod", "#payment"),
 
-			withdrawAdvanceType: com.focusPage("#withdrawAdvanceType", "#payment"),
 			withdrawBalance: com.focusPage("#withdrawBalance", "#payment"),
 			withdrawAmount: com.focusPage("#withdrawAmount", "#payment"),
 			withdrawComment: com.focusPage("#withdrawComment", "#payment"),
@@ -107,6 +106,7 @@ jQuery(function($) {
 		statusData: constant.payment().payment.status.keys,
 		typeUpdate: "",
 		currentOrderId: "",
+		currentWithdrawType: 0,
 		advancePayment: null,
 		pageConfig: {},
 		typeNo: 0,
@@ -186,7 +186,7 @@ jQuery(function($) {
 			"approval.receiver.userId": receiverId,
 			"approval.comment": payment.items.withdrawApprovalComment.val(),
 			"approvalPaymentWithdraw.orderId": payment.currentOrderId,
-			"approvalPaymentWithdraw.paymentType": payment.items.withdrawAdvanceType.val(),
+			"approvalPaymentWithdraw.paymentType": payment.currentWithdrawType,
 			"approvalPaymentWithdraw.amount": withdrawAmount,
 			"approvalPaymentWithdraw.comment": payment.items.withdrawComment.val()
 		};
@@ -313,7 +313,8 @@ jQuery(function($) {
 			var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
 			var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-primary').html('收款');
 			var $btnCashout = $('<a></a>').addClass('btn btn-minier btn-warning').html('提款');
-			var $btnApproveWithdraw = $('<a></a>').addClass('btn btn-minier btn-inverse').html('审批提款');
+			var $btnApproveWithdrawBalance = $('<a></a>').addClass('btn btn-minier btn-inverse').html('合同额提现');
+			var $btnApproveWithdrawMaterial = $('<a></a>').addClass('btn btn-minier btn-purple').html('主材额提现');
 			var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
 			var $alipayBtnCode = $('<a></a>').addClass('btn btn-minier btn-info').html('二维收款');
 			var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
@@ -349,7 +350,8 @@ jQuery(function($) {
 
 			if (payment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
 			if (payment.pageConfig.pageBtn.contains("withdraw")) $divBtnWrap.append($btnCashout);
-			if (payment.pageConfig.pageBtn.contains("approveWithdraw")) $divBtnWrap.append($btnApproveWithdraw);
+			if (payment.pageConfig.pageBtn.contains("approveWithdrawBalance")) $divBtnWrap.append($btnApproveWithdrawBalance);
+			if (payment.pageConfig.pageBtn.contains("approveWithdrawMaterial")) $divBtnWrap.append($btnApproveWithdrawMaterial);
 
 			if (v.status != constant.payment().payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
 			if (v.status != constant.payment().payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
@@ -381,10 +383,14 @@ jQuery(function($) {
 				});
 			});
 
-			//审批提款
-			$btnApproveWithdraw.click(function(){
+			//合同额提现审批
+			$btnApproveWithdrawBalance.click(function(){
 				com.cleanItems([payment.items.withdrawAmount, payment.items.withdrawComment, payment.items.withdrawApprovalComment]);
-				payment.items.withdrawAdvanceType.val("0");
+
+				payment.currentOrderId = v.decoration.orderId;
+				payment.currentWithdrawType = 0;
+
+				com.focusPage("#approveWithdrawTitle", "#payment").html("合同额提现审批");
 
 				// 查询预付款余额
 				com.post(api.payment.queryAdvancePaymentByOrderId, {"advancePayment.decoration.orderId": v.decoration.orderId}, function(res){
@@ -392,22 +398,30 @@ jQuery(function($) {
 					payment.items.withdrawBalance.val(res.balanceAdvance);
 				});
 
-				// 切换预付款类型时更新余额显示
-				payment.items.withdrawAdvanceType.off("change").on("change", function(){
-					var typeVal = $(this).val();
-					if(payment.advancePayment){
-						if(typeVal == "0"){
-							payment.items.withdrawBalance.val(payment.advancePayment.balanceAdvance);
-						}else if(typeVal == "2"){
-							payment.items.withdrawBalance.val(payment.advancePayment.materialAdvance);
-						}
-					}
+				// 查询审批人
+				approvalUtils.initqueryApprovalUser("withdrawApprover", 26);
+
+				payment.modals.approveWithdrawModal.modal("show");
+			});
+
+			//主材额提现审批
+			$btnApproveWithdrawMaterial.click(function(){
+				com.cleanItems([payment.items.withdrawAmount, payment.items.withdrawComment, payment.items.withdrawApprovalComment]);
+
+				payment.currentOrderId = v.decoration.orderId;
+				payment.currentWithdrawType = 2;
+
+				com.focusPage("#approveWithdrawTitle", "#payment").html("主材额提现审批");
+
+				// 查询预付款余额
+				com.post(api.payment.queryAdvancePaymentByOrderId, {"advancePayment.decoration.orderId": v.decoration.orderId}, function(res){
+					payment.advancePayment = res;
+					payment.items.withdrawBalance.val(res.materialAdvance);
 				});
 
 				// 查询审批人
 				approvalUtils.initqueryApprovalUser("withdrawApprover", 26);
 
-				payment.currentOrderId = v.decoration.orderId;
 				payment.modals.approveWithdrawModal.modal("show");
 			});
 
