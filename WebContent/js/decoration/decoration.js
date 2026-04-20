@@ -2101,7 +2101,20 @@
                 }
             }, null, false);
 
-            // 净业绩 = 签单额-非业务人员提点金额-优惠券-赠送礼品-非计入业绩
+            var decorationActivity = {};
+
+            com.post(api.decoration.queryDecorationActivityByOrderId, {
+                "decorationActivity.orderId": decoration.orderId
+            }, function(res) {
+
+                decorationActivity = (res.decorationActivitys && res.decorationActivitys.length > 0) ? res.decorationActivitys[0] : {};
+            }, null, false);
+
+            if (decorationActivity && decorationActivity.activity && decorationActivity.activity.atttype == 1) {
+                couponCut = utils.accAdd(couponCut, decoration.pactPrice);
+            }
+
+            // 净业绩 = 签单额-非业务人员提点金额-优惠券-赠送礼品-线上活动签约额-非计入业绩
             var netPerformance = utils.accSub(utils.accSub(utils.accSub(decoration.orderTotalPrice, notpoint), couponCut), thingCut);
 
             com.showTip(btn, "净业绩:" + netPerformance);
