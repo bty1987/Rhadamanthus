@@ -9,6 +9,7 @@ $(function() {
             cancelBtn: com.focusPage("#cancelBtn"),
             callBtn: com.focusPage("#callBtn"),
             balanceSubmitBtn: com.focusPage("#balanceSubmitBtn").on("click", submitBalance),
+            remarkSubmitBtn: com.focusPage("#remarkSubmitBtn").on("click", submitRemark),
         },
 
         items: {
@@ -19,12 +20,14 @@ $(function() {
             vbalanceInput: com.focusPage("#vbalanceInput", "#balanceModal"),
             rchargeInput: com.focusPage("#rchargeInput", "#balanceModal"),
             balanceNo: com.focusPage("#balanceNo", "#balanceModal"),
+            remarkInput: com.focusPage("#remarkInput", "#remarkModal"),
         },
 
         modals: {
             bindOccessoriesModal: com.focusPage("#bindOccessoriesModal"),
             finishModal: com.focusPage("#finishModal"),
             balanceModal: com.focusPage("#balanceModal"),
+            remarkModal: com.focusPage("#remarkModal"),
         },
         drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
 
@@ -96,6 +99,10 @@ $(function() {
         occessories.items.vbalanceInput.val('');
         occessories.items.rchargeInput.val('');
         occessories.items.balanceNo.text('');
+    });
+
+    occessories.modals.remarkModal.on("hide.bs.modal", function(e) {
+        occessories.items.remarkInput.val('');
     });
 
     com.initTypeahead('supplier', api.personel.querySupplierByPinyin, "supplier.pinYin", {
@@ -179,13 +186,13 @@ $(function() {
         }
     }, {
         field: "total",
-        name: "总价",
+        name: "材料额",
         prop: "total",
         clazz: "blue",
         dataset: occessories.total
     }, {
         field: "charge",
-        name: "外辅费用",
+        name: "费用额",
         prop: function(v) {
 
             // charge 字段单位是厘，需要除以 1000 转换为元
@@ -195,7 +202,7 @@ $(function() {
         clazz: "blue"
     }, {
         field: "rcharge",
-        name: "结算费用",
+        name: "结算费用额",
         prop: function(v) {
 
             // charge 字段单位是厘，需要除以 1000 转换为元
@@ -205,12 +212,12 @@ $(function() {
         clazz: "blue"
     }, {
         field: "rbalance",
-        name: "结算额",
+        name: "结算材料额",
         prop: "rbalance",
         clazz: "blue"
     }, {
         field: "vbalance",
-        name: "结算额",
+        name: "结算材料额",
         prop: "vbalance",
         clazz: "blue"
     }, {
@@ -268,6 +275,11 @@ $(function() {
         field: "remake",
         name: "评价",
         prop: "remake",
+        clazz: "grey"
+    }, {
+        field: "remark",
+        name: "备注",
+        prop: "remark",
         clazz: "grey"
     }, ];
 
@@ -547,6 +559,16 @@ $(function() {
             managedrawing(v);
             initUploadBtn(v);
         }
+    }, {
+        name: "备注",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            occessories.oid = v.oid;
+            occessories.items.remarkInput.val(v.remark || '');
+            occessories.modals.remarkModal.modal("show");
+            return false;
+        }
     }, ];
 
     searcher.line("no", lineprops, linebtns).render();
@@ -711,6 +733,21 @@ $(function() {
 
             com.showAlert(com.info, "结算额更新成功");
             occessories.modals.balanceModal.modal("hide");
+            searcher.doSearch();
+        });
+    }
+
+    function submitRemark() {
+
+        var options = {
+            "occessories.oid": occessories.oid,
+            "occessories.remark": occessories.items.remarkInput.val()
+        };
+
+        com.post(api.inventory.updateOccessoriesForRemark, options, function(res) {
+
+            com.showAlert(com.info, "备注保存成功");
+            occessories.modals.remarkModal.modal("hide");
             searcher.doSearch();
         });
     }

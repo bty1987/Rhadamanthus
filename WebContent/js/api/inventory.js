@@ -552,7 +552,7 @@ $.extend(api, {
             tranargs: {
                 args: [
                     "occessoriesCharges.price",
-                    "occessoriesCharges.num"
+                    "occessoriesCharges.surplus"
                 ]
             }
         },
@@ -561,7 +561,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "occessoriesCharges",
-                args: ["price", "num"]
+                args: ["price", "surplus"]
             }]
         },
         bindOccessories: {
@@ -613,6 +613,10 @@ $.extend(api, {
             tranargs: {
                 args: ["occessories.rate"]
             }
+        },
+        updateOccessoriesForRemark: {
+            url: "updateOccessoriesForRemark.do",
+            type: "update"
         },
         deleteOccessories: {
             url: "deleteOccessories.do"

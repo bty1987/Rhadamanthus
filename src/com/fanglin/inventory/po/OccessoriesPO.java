@@ -120,6 +120,8 @@ public class OccessoriesPO implements Serializable {
 
 	private String remake; // 评价
 
+	private String remark; // 备注
+
 	public OccessoriesPO() {
 		super();
 	}
@@ -406,6 +408,15 @@ public class OccessoriesPO implements Serializable {
 
 	public void setRemake(String remake) {
 		this.remake = remake;
+	}
+
+	@Column(name = "remark")
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	public OccessoriesPO init(String no, String orderId, UserPO creater, int company, short isEnter, short isLift, short isExceed, short isAttic, short loadFloor) {
