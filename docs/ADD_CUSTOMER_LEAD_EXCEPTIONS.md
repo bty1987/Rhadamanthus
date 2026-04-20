@@ -1,8 +1,10 @@
 # addCustomerLead 异常场景汇总文档
 
-> 最后更新：2026-03-14
+> 最后更新：2026-04-20
 >
 > **文档说明**：本文档详细说明了 `addCustomerLead` 接口执行过程中所有抛出 `FLException` 的场景，包含完整的异常表格和处理建议。
+>
+> **完整接口文档**：详见 [A20260103Action_API.md](./A20260103Action_API.md)
 
 ---
 
@@ -23,7 +25,7 @@
 - **接口名称**: 添加客户线索接口
 - **接口路径**: `/addCustomerLead`
 - **控制器**: `A20260103Action`
-- **方法位置**: `src/com/fanglin/seiya/action/A20260103Action.java:210-352`
+- **方法位置**: `src/com/fanglin/seiya/action/A20260103Action.java:340-486`
 
 ### 接口功能
 接收外部系统（如 Salesforce）传入的客户线索信息，转换为 ERP 客户机会并创建，支持客户线索的自动分配和设计师指派。
@@ -44,14 +46,14 @@
 ## 异常分类总览
 
 ### 异常统计
-- **直接异常**: 4 种场景（接口层验证）
+- **直接异常**: 5 种场景（接口层验证）
 - **间接异常**: 18 种场景（调用 addCustomerChance）
-- **总计**: 22 种异常场景
+- **总计**: 23 种异常场景
 
 ### 错误码分类
 | 错误码前缀 | 分类 | 数量 |
 |-----------|------|------|
-| 40xxxx | 参数验证异常 | 2 种 |
+| 40xxxx | 参数验证异常 | 3 种 |
 | 13xxxx | 基础数据异常 | 5 种 |
 | 19xxxx | 人员管理异常 | 1 种 |
 | 31xxxx | 部门管理异常 | 2 种 |
@@ -61,14 +63,15 @@
 
 ## 异常场景详细表格
 
-### 一、接口层异常（4种）
+### 一、接口层异常（5种）
 
 #### 1. 参数验证异常
 
 | 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 | 优先级 |
 |:---:|:------:|:---------|:---------|:---------|:------:|
-| 1 | **400001** | 客户名称不能为空 | `name == null \|\| name.trim().isEmpty()` | A20260103Action:216-218 | ⭐⭐⭐ |
-| 2 | **400002** | 客户电话不能为空 | `phone == null \|\| phone.trim().isEmpty()` | A20260103Action:219-221 | ⭐⭐⭐ |
+| 1 | **400001** | 客户名称不能为空 | `name == null \|\| name.trim().isEmpty()` | A20260103Action:347-349 | ⭐⭐⭐ |
+| 2 | **400002** | 客户电话不能为空 | `phone == null \|\| phone.trim().isEmpty()` | A20260103Action:350-352 | ⭐⭐⭐ |
+| 3 | **400004** | 公司标识不能为空 | `orgId == null` | A20260103Action:353-355 | ⭐⭐⭐ |
 
 **详细说明：**
 
@@ -82,12 +85,17 @@
   - **处理建议**: 确保传入有效的客户手机号（11位数字）
   - **示例值**: `"13800138000"`
 
+- **400004 - 公司标识不能为空**
+  - **触发场景**: 请求参数中 `orgId` 字段为 null
+  - **处理建议**: 确保传入有效的公司标识（AES加密后的公司ID）
+  - **示例值**: `1`
+
 #### 2. 业务数据验证异常
 
 | 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 | 优先级 |
 |:---:|:------:|:---------|:---------|:---------|:------:|
-| 3 | **190005** | 人员不存在 | `userService.queryUserByUserId() == null` | A20260103Action:235-237 | ⭐⭐⭐ |
-| 4 | **130061** | 业务类型不存在 | `decorationBusitypeService.queryByName() == null` | A20260103Action:243-245 | ⭐⭐⭐ |
+| 4 | **190005** | 人员不存在 | `userService.queryUserByUserId() == null` | A20260103Action:369-371 | ⭐⭐⭐ |
+| 5 | **130061** | 业务类型不存在 | `decorationBusitypeService.queryByName() == null` | A20260103Action:377-379 | ⭐⭐⭐ |
 
 **详细说明：**
 
@@ -113,36 +121,36 @@
 
 | 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 | 优先级 |
 |:---:|:------:|:---------|:---------|:---------|:------:|
-| 5 | **330075** | 客户机会不存在 | `customerChanceVO == null` | CustomerChanceServiceImpl:225-227 | ⭐⭐⭐ |
-| 6 | **330071** | 客户资源不存在 | `source == null` | CustomerChanceServiceImpl:229-231 | ⭐⭐⭐ |
-| 7 | **130018** | 楼盘不存在 | `village == null \|\| village.no == null` | CustomerChanceServiceImpl:270-272 | ⭐⭐⭐ |
-| 8 | **130018** | 楼盘不存在 | `villageDao.get() == null` | CustomerChanceServiceImpl:274-277 | ⭐⭐⭐ |
+| 6 | **330075** | 客户机会不存在 | `customerChanceVO == null` | CustomerChanceServiceImpl:225-227 | ⭐⭐⭐ |
+| 7 | **330071** | 客户资源不存在 | `source == null` | CustomerChanceServiceImpl:229-231 | ⭐⭐⭐ |
+| 8 | **130018** | 楼盘不存在 | `village == null \|\| village.no == null` | CustomerChanceServiceImpl:270-272 | ⭐⭐⭐ |
+| 9 | **130018** | 楼盘不存在 | `villageDao.get() == null` | CustomerChanceServiceImpl:274-277 | ⭐⭐⭐ |
 
 #### 4. 客户资源创建异常
 
 | 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 | 优先级 |
 |:---:|:------:|:---------|:---------|:---------|:------:|
-| 9 | **330071** | 客户手机号存在，发生撞尺 | 同一创建人已有相同手机号的资源 | CustomerSourceServiceImpl:186-188 | ⭐⭐ |
-| 10 | **130061** | 业务类型为空 | `busitype == null \|\| dbid == null` | CustomerSourceServiceImpl:190-192 | ⭐⭐⭐ |
-| 11 | **130061** | 业务类型不存在 | `decorationBusitypeDao.get() == null` | CustomerSourceServiceImpl:194-198 | ⭐⭐⭐ |
-| 12 | **130062** | 业务类型不匹配 | `busitype.type == TYPE_ORIGIN_INT` | CustomerSourceServiceImpl:200-202 | ⭐⭐ |
+| 10 | **330071** | 客户手机号存在，发生撞尺 | 同一创建人已有相同手机号的资源 | CustomerSourceServiceImpl:186-188 | ⭐⭐ |
+| 11 | **130061** | 业务类型为空 | `busitype == null \|\| dbid == null` | CustomerSourceServiceImpl:190-192 | ⭐⭐⭐ |
+| 12 | **130061** | 业务类型不存在 | `decorationBusitypeDao.get() == null` | CustomerSourceServiceImpl:194-198 | ⭐⭐⭐ |
+| 13 | **130062** | 业务类型不匹配 | `busitype.type == TYPE_ORIGIN_INT` | CustomerSourceServiceImpl:200-202 | ⭐⭐ |
 
 #### 5. 客户资源分配异常
 
 | 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 | 优先级 |
 |:---:|:------:|:---------|:---------|:---------|:------:|
-| 13 | **330071** | 客户资源不存在 | `customerSourceDao.get() == null` | CustomerSourceServiceImpl:457-461 | ⭐⭐⭐ |
-| 14 | **330074** | 客户资源不可操作 | status为禁用或已转单 | CustomerSourceServiceImpl:463-465 | ⭐⭐⭐ |
-| 15 | **330076** | 客户机会已存在 | 重复分配 | CustomerSourceServiceImpl:515-517,593-595,732-734 | ⭐⭐ |
-| 16 | **330081** | 设计公司无设计师接单 | `existCustomerUserRule() == 0` | CustomerSourceServiceImpl:519-521 | ⭐⭐⭐ |
-| 17 | **330081** | 无设计师接单 | 公司聚焦模式下无匹配规则 | CustomerSourceServiceImpl:544-546 | ⭐⭐⭐ |
-| 18 | **330081** | 面积段无设计师接单 | 面积聚焦模式下无匹配规则 | CustomerSourceServiceImpl:548-550 | ⭐⭐⭐ |
-| 19 | **330081** | 部门类型无设计师接单 | 部门类型聚焦模式下无匹配规则 | CustomerSourceServiceImpl:552-554 | ⭐⭐⭐ |
-| 20 | **330081** | 部门无设计师接单 | 部门聚焦模式下无匹配规则 | CustomerSourceServiceImpl:556-558 | ⭐⭐⭐ |
-| 21 | **330081** | 城区无设计师接单 | 城区聚焦模式下无匹配规则 | CustomerSourceServiceImpl:561-563 | ⭐⭐⭐ |
-| 22 | **330081** | 设计师匹配规则不存在 | `customerUserRuleDao.get() == null` | CustomerSourceServiceImpl:567-569 | ⭐⭐⭐ |
-| 23 | **310001** | 部门不存在 | `departmentDao.get() == null` | CustomerSourceServiceImpl:638-642,678-682 | ⭐⭐⭐ |
-| 24 | **190005** | 人员不存在 | `userDao.queryUserByUserId() == null` | CustomerSourceServiceImpl:726-730 | ⭐⭐⭐ |
+| 14 | **330071** | 客户资源不存在 | `customerSourceDao.get() == null` | CustomerSourceServiceImpl:457-461 | ⭐⭐⭐ |
+| 15 | **330074** | 客户资源不可操作 | status为禁用或已转单 | CustomerSourceServiceImpl:463-465 | ⭐⭐⭐ |
+| 16 | **330076** | 客户机会已存在 | 重复分配 | CustomerSourceServiceImpl:515-517,593-595,732-734 | ⭐⭐ |
+| 17 | **330081** | 设计公司无设计师接单 | `existCustomerUserRule() == 0` | CustomerSourceServiceImpl:519-521 | ⭐⭐⭐ |
+| 18 | **330081** | 无设计师接单 | 公司聚焦模式下无匹配规则 | CustomerSourceServiceImpl:544-546 | ⭐⭐⭐ |
+| 19 | **330081** | 面积段无设计师接单 | 面积聚焦模式下无匹配规则 | CustomerSourceServiceImpl:548-550 | ⭐⭐⭐ |
+| 20 | **330081** | 部门类型无设计师接单 | 部门类型聚焦模式下无匹配规则 | CustomerSourceServiceImpl:552-554 | ⭐⭐⭐ |
+| 21 | **330081** | 部门无设计师接单 | 部门聚焦模式下无匹配规则 | CustomerSourceServiceImpl:556-558 | ⭐⭐⭐ |
+| 22 | **330081** | 城区无设计师接单 | 城区聚焦模式下无匹配规则 | CustomerSourceServiceImpl:561-563 | ⭐⭐⭐ |
+| 23 | **330081** | 设计师匹配规则不存在 | `customerUserRuleDao.get() == null` | CustomerSourceServiceImpl:567-569 | ⭐⭐⭐ |
+| 24 | **310001** | 部门不存在 | `departmentDao.get() == null` | CustomerSourceServiceImpl:638-642,678-682 | ⭐⭐⭐ |
+| 25 | **190005** | 人员不存在 | `userDao.queryUserByUserId() == null` | CustomerSourceServiceImpl:726-730 | ⭐⭐⭐ |
 
 ---
 
@@ -154,17 +162,21 @@
 
 | 参数名 | 类型 | 必填 | 说明 | 示例值 |
 |--------|------|:----:|------|--------|
-| `leadCode` | String | 否 | 线索编码（对应 cno） | `"LEAD202603140001"` |
+| `leadCode` | String | 否 | 线索编码（对应 customerChance.cno） | `"LEAD202603140001"` |
 | `adornCode` | String | 否 | 尺源编码（对应 source.no） | `"ADORN202603140001"` |
 | `name` | String | **是** | 客户名称 | `"张三"` |
 | `phone` | String | **是** | 客户电话（11位） | `"13800138000"` |
 | `gender` | String | 否 | 客户性别 | `"男"` / `"女"` |
-| `village` | String | 条件必填 | 楼盘名称 | `"方林世纪城"` |
-| `houseNumber` | String | 条件必填 | 楼号 | `"1-101"` |
-| `buildArea` | Integer | 否 | 建筑面积（单位：平方厘米） | `120000` (表示120㎡) |
-| `busitype` | String | 否 | 业务类型名称（默认："电商信息流客源"） | `"电商信息流客源"` |
+| `village` | String | 否 | 楼盘名称 | `"方林世纪城"` |
+| `houseNumber` | String | 否 | 楼号 | `"1-101"` |
+| `buildArea` | Integer | 否 | 建筑面积（单位：千分之一平方米，即 分㎡, 传 120000 表示 120.000㎡） | `120000` |
+| `busitype` | String | 否 | 业务类型名称（默认：`"电商信息流客源"`） | `"电商信息流客源"` |
 | `userId` | String | **是** | 创建人工号 | `"FL-123456"` |
-| `orgId` | Integer | **是** | 公司标识（加密后的公司ID） | `1` |
+| `orgId` | Integer | **是** | 公司标识（AES加密后的公司ID） | `1` |
+| `referOrderId` | String | 否 | 转介绍订单ID | `"FL2603140001"` |
+| `sourceInfo` | String | 否 | 来源（三方信息） | `"抖音推广"` |
+| `contactInfo` | String | 否 | 联系方式（三方信息） | `"微信:zhangsan"` |
+| `cpid` | Integer | 否 | 客户电话ID | `1001` |
 
 #### 分配参数（根据部门规则传参）
 
@@ -190,12 +202,26 @@
     "adornCode": "ADORN202603140001",
     "name": "张三",
     "phone": "13800138000",
+    "gender": "男",
+    "village": "方林世纪城",
+    "houseNumber": "1-101",
+    "buildArea": 120.0,
+    "busitype": "电商信息流客源",
+    "userId": "FL-123456",
+    "orgId": 1,
+    "designerId": "FL-789012",
+    "departmentId": null,
+    "regionId": null,
     "erpJhCode": "12345",
     "erpAssignerCode": "FL-123456",
     "erpDesignerCode": "FL-789012",
     "issusTime": "2026-03-14 10:30:00",
     "erpZxdCode": "FL2603140001",
-    "isIssue": 1
+    "isIssue": 1,
+    "referOrderId": null,
+    "sourceInfo": null,
+    "contactInfo": null,
+    "cpid": null
   }
 }
 ```
@@ -216,11 +242,16 @@
 | 字段名 | 类型 | 说明 |
 |--------|------|------|
 | `erpJhCode` | String | ERP系统机会编码（对应 ccid） |
-| `erpAssignerCode` | String | ERP设计师分派人编码（对应 issuer.userId） |
-| `erpDesignerCode` | String | ERP设计师编码（对应 belonger.userId） |
-| `issusTime` | String | 派尺时间（对应 issueTime） |
+| `erpAssignerCode` | String | ERP设计师分派人编码（对应 issuer.userId, 工号如 FL-xxx） |
+| `erpDesignerCode` | String | ERP设计师编码（对应 belonger.userId, 工号如 FL-xxx） |
+| `issusTime` | String | 派尺时间（对应 issueTime, 格式 yyyy-MM-dd HH:mm:ss） |
 | `erpZxdCode` | String | 装修单编码（对应 orderId） |
-| `isIssue` | Integer | 是否已分配（0:未分配, 1:已分配） |
+| `isIssue` | Integer | 是否已分配（0: 未分配, 1: 已分配） |
+| `buildArea` | Double | 回显的建筑面积（已除以1000, 单位㎡） |
+| `referOrderId` | String | 转介绍订单ID |
+| `sourceInfo` | String | 来源（三方信息） |
+| `contactInfo` | String | 联系方式（三方信息） |
+| `cpid` | Integer | 客户电话ID |
 
 ---
 
@@ -506,6 +537,7 @@ if __name__ == "__main__":
 |--------|---------|------|----------|--------|
 | 400001 | 客户名称不能为空 | 参数验证 | name为空 | ⭐⭐⭐ |
 | 400002 | 客户电话不能为空 | 参数验证 | phone为空 | ⭐⭐⭐ |
+| 400004 | 公司标识不能为空 | 参数验证 | orgId为null | ⭐⭐⭐ |
 | 130018 | 楼盘不存在 | 基础数据 | village数据不存在 | ⭐⭐⭐ |
 | 130061 | 业务类型不存在 | 基础数据 | busitype为空或不存在 | ⭐⭐⭐ |
 | 130062 | 业务类型不匹配 | 基础数据 | 使用了来源类型 | ⭐⭐ |
@@ -521,6 +553,7 @@ if __name__ == "__main__":
 
 ## 相关文档
 
+- [A20260103Action 完整接口文档](./A20260103Action_API.md)
 - [addCustomerChance 异常场景文档](./ADD_CUSTOMER_CHANCE_EXCEPTIONS.md)
 - [客户管理模块文档](../src/com/fanglin/customer/CLAUDE.md)
 - [客户资源分配规则说明](../src/com/fanglin/customer/service/impl/CustomerSourceServiceImpl.java)
@@ -529,6 +562,15 @@ if __name__ == "__main__":
 ---
 
 ## 变更记录
+
+### 2026-04-20
+- 更新方法位置行号 L210-352 → L340-486
+- 更新异常行号（全部偏移到正确位置）
+- 新增异常：400004 公司标识不能为空
+- 新增参数：referOrderId、sourceInfo、contactInfo、cpid
+- 修正 buildArea 说明（平方厘米 → 千分之一平方米/分㎡）
+- 补充返回字段说明：buildArea、referOrderId、sourceInfo、contactInfo、cpid
+- 异常统计更新为 5+18=23 种
 
 ### 2026-03-14
 - 初始版本
