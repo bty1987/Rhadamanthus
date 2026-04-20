@@ -137,6 +137,34 @@
         </div>
     </div>
 
+    <!-- 备注模态框 -->
+    <div class="modal fade" id="remarkModal" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 10%; width: 500px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">编辑备注</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="remarkInput">备注</label>
+                            <div class="col-sm-8">
+                                <textarea class="col-xs-10 m-wrap" id="remarkInput" rows="4" placeholder="请输入备注信息"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="remarkSubmitBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="remarkCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <div id="miniPopUp"></div>
 <div id="layerPopUp" class="portlet box page-content"></div>

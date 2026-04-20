@@ -143,6 +143,14 @@ public class OccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateOccessoriesForRemark", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateOccessoriesForRemark() throws FLException {
+
+		occessoriesService.updateOccessoriesForRemark(occessories);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteOccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteOccessories() throws FLException {
 

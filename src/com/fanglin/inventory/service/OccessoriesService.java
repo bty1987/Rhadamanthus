@@ -38,6 +38,8 @@ public interface OccessoriesService {
 
 	public int rateOccessories(OccessoriesVO occessories);
 
+	public int updateOccessoriesForRemark(OccessoriesVO occessoriesVO);
+
 	public int deleteOccessories(OccessoriesVO occessoriesVO) throws FLException;
 
 }

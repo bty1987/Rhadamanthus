@@ -530,6 +530,19 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateOccessoriesForRemark(OccessoriesVO occessoriesVO) {
+
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+
+		occessoriesPO.setRemark(occessoriesVO.getRemark());
+
+		occessoriesDao.update(occessoriesPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int deleteOccessories(OccessoriesVO occessoriesVO) throws FLException {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
