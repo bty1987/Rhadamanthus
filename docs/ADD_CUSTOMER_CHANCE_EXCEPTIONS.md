@@ -1,8 +1,10 @@
 # addCustomerChance 异常场景汇总文档
 
-> 最后更新：2026-03-14
+> 最后更新：2026-04-20
 >
 > **文档说明**：本文档详细说明了 `addCustomerChance` 方法执行过程中所有抛出 `FLException` 的场景，包括异常码、异常信息和触发条件。
+>
+> **完整接口文档**：详见 [A20260103Action_API.md](./A20260103Action_API.md)
 
 ---
 
@@ -27,7 +29,7 @@ public CustomerChanceVO addCustomerChance(CustomerChanceVO customerChanceVO, Str
 
 ### 方法位置
 - **文件**: `src/com/fanglin/customer/service/impl/CustomerChanceServiceImpl.java`
-- **行号**: 223-307
+- **行号**: 229-313
 
 ### 方法功能
 添加客户机会，自动处理客户和房产信息，创建客户资源并分配给设计师。
@@ -65,7 +67,7 @@ public CustomerChanceVO addCustomerChance(CustomerChanceVO customerChanceVO, Str
 ## 直接异常场景
 
 ### 1. 客户机会对象为空
-**位置**: `CustomerChanceServiceImpl.java:225-227`
+**位置**: `CustomerChanceServiceImpl.java:231-233`
 
 ```java
 if (customerChanceVO == null) {
@@ -83,7 +85,7 @@ if (customerChanceVO == null) {
 ---
 
 ### 2. 客户资源对象为空
-**位置**: `CustomerChanceServiceImpl.java:229-231`
+**位置**: `CustomerChanceServiceImpl.java:235-237`
 
 ```java
 if (customerChanceVO.getSource() == null) {
@@ -102,7 +104,7 @@ if (customerChanceVO.getSource() == null) {
 ---
 
 ### 3. 楼盘信息为空（对象级别）
-**位置**: `CustomerChanceServiceImpl.java:270-272`
+**位置**: `CustomerChanceServiceImpl.java:276-278`
 
 ```java
 if (customerChanceVO.getSource().getVillage() == null ||
@@ -122,7 +124,7 @@ if (customerChanceVO.getSource().getVillage() == null ||
 ---
 
 ### 4. 楼盘不存在（数据库级别）
-**位置**: `CustomerChanceServiceImpl.java:274-277`
+**位置**: `CustomerChanceServiceImpl.java:280-283`
 
 ```java
 VillagePO villagePO = villageDao.get(customerChanceVO.getSource().getVillage().getNo());
@@ -611,6 +613,8 @@ addCustomerChance (CustomerChanceServiceImpl:223)
 
 ## 相关文档
 
+- [A20260103Action 完整接口文档](./A20260103Action_API.md)
+- [addCustomerLead 异常场景文档](./ADD_CUSTOMER_LEAD_EXCEPTIONS.md)
 - [客户管理模块文档](../src/com/fanglin/customer/CLAUDE.md)
 - [客户资源分配规则说明](../src/com/fanglin/customer/service/impl/CustomerSourceServiceImpl.java)
 - [FLException 异常处理规范](../src/com/fanglin/core/interceptor/FLException.java)
@@ -618,6 +622,11 @@ addCustomerChance (CustomerChanceServiceImpl:223)
 ---
 
 ## 变更记录
+
+### 2026-04-20
+- 更新方法行号 L223-307 → L229-313
+- 更新异常行号（+6偏移）
+- 新增完整接口文档交叉引用
 
 ### 2026-03-14
 - 初始版本
