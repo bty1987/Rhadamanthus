@@ -1,6 +1,0 @@
- HttpExecutor exec cmd:{"tenantId":231,"uri":"https://test-erp.fanglin.vip/queryCompanyForSF.do?authentication=eX3o2SZdrpVOV9HC4UYTRA%3D%3D","header":{"Accept":"application/json;charset=UTF-8","Content-Type":"multipart/form-data"},"bodyJsonStr":null,"api":"/queryCompanyForSF.do","variables":null,"query":null,"body":null} 
- result:{"data":{},"errorCode":110000,"errorMsg":"操作失败,请稍后重试"} 
- form:{"orgId":"1","userId":"FL-04251","buildArea":"120000"}
-{"tenantId":231,"uri":"https://test-erp.fanglin.vip/queryCustomerDeptRuleByDbidForSF.do?authentication=eX3o2SZdrpVOV9HC4UYTRA%3D%3D","header":{"Accept":"application/json;charset=UTF-8","Content-Type":"multipart/form-data"},"bodyJsonStr":null,"api":"/queryCustomerDeptRuleByDbidForSF.do","variables":null,"query":null,"body":null} 
- result:{"data":null,"errorCode":110000,"errorMsg":"操作失败,请稍后重试"} 
- form:{"orgId":"null","userId":"FL-04251"}
