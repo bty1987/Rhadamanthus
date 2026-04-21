@@ -53,7 +53,7 @@ public class QuotationAssignRequestVO {
 	private UserPO requestUser;
 
 	/**
-	 * 状态: 1-待分配，2-已分配
+	 * 状态: 1-待分配，2-已分配，3-已完成
 	 */
 	private Short status;
 
@@ -71,6 +71,11 @@ public class QuotationAssignRequestVO {
 	 * 分配时间
 	 */
 	private String assignTime;
+
+	/**
+	 * 完成时间（报价交付时间）
+	 */
+	private String finishTime;
 
 	/**
 	 * 备注
@@ -178,6 +183,14 @@ public class QuotationAssignRequestVO {
 
 	public void setAssignTime(String assignTime) {
 		this.assignTime = assignTime;
+	}
+
+	public String getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(String finishTime) {
+		this.finishTime = finishTime;
 	}
 
 	public String getRemark() {

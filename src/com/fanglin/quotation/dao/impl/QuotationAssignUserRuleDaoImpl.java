@@ -15,9 +15,21 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleDao;
+import com.fanglin.quotation.po.QuotationAssignUserRuleItemPO;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.utils.Paging;
 
+/**
+ * 预算员规则表 DAO 实现类（人员维度）
+ * 
+ * <p>
+ * 核心变更：company/department/supportedType 已移到 UserRuleItem，
+ * 所有按这些维度查询的方法均通过 UserRuleItem 子查询实现
+ * </p>
+ * 
+ * @author Claude AI
+ * @date 2026-04-21
+ */
 @Repository("quotationAssignUserRuleDao")
 public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserRulePO> implements QuotationAssignUserRuleDao {
 
@@ -32,72 +44,76 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
 		queryFilterExcute(query, filters);
 
-		// 按公司筛选
+		// 按公司筛选：通过 UserRuleItem 子查询，找出在指定公司有规则明细的用户
 		if (company != null) {
-			query.alias("company", "company");
-			query.add(query.getCriterion("company.cid", company, "eq"));
+			DetachedCriteria itemSubquery = DetachedCriteria.forClass(QuotationAssignUserRuleItemPO.class, "item_sub");
+			itemSubquery.add(Restrictions.eqProperty("item_sub.userRule.qaurid", "qaurid"));
+			itemSubquery.createAlias("item_sub.company", "item_company");
+			itemSubquery.add(Restrictions.eq("item_company.cid", company));
+			itemSubquery.setProjection(Projections.property("item_sub.qauriid"));
+
+			query.add(Subqueries.exists(itemSubquery));
 		}
 
-		// 按创建时间倒序排序
 		query.desc("createTime");
 
 		return query.list();
 	}
 
 	@Override
-	public QuotationAssignUserRulePO getQuotationAssignUserRule(String userId, int company) throws FLException {
-		return (QuotationAssignUserRulePO) createCriteria(QuotationAssignUserRulePO.class).createAlias("user", "user").createAlias("company", "company").add(Restrictions.eq("user.userId", userId)).add(Restrictions.eq("company.cid", company)).uniqueResult();
+	public QuotationAssignUserRulePO queryQuotationAssignUserRuleByUserId(String userId) throws FLException {
+		return (QuotationAssignUserRulePO) createCriteria(QuotationAssignUserRulePO.class)
+			.createAlias("user", "user")
+			.add(Restrictions.eq("user.userId", userId))
+			.uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignUserRulePO> queryAvailableUsers(int company, Integer department) throws FLException {
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignUserRulePO.class);
-
-		// 按公司筛选（使用关联属性）
-		criteria.createAlias("company", "company");
-		criteria.add(org.hibernate.criterion.Restrictions.eq("company.cid", company));
-
-		// 只查询待分配状态的人员
-		criteria.add(org.hibernate.criterion.Restrictions.eq("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
-
-		// 使用 OR 逻辑：匹配该部门的规则 OR 公司级规则（department IS NULL）
-		criteria.createAlias("department", "department", CriteriaSpecification.LEFT_JOIN);
-		criteria.add(org.hibernate.criterion.Restrictions.or(org.hibernate.criterion.Restrictions.eq("department.did", department), org.hibernate.criterion.Restrictions.isNull("department")));
-
-		// 按最后完成时间升序排序（最早完成的排在前面）
-		criteria.addOrder(org.hibernate.criterion.Order.asc("lastFinishTime"));
-
-		return criteria.list();
+	public List<QuotationAssignUserRulePO> queryAllQuotationAssignUserRule() throws FLException {
+		return createCriteria(QuotationAssignUserRulePO.class)
+			.createAlias("user", "user")
+			.addOrder(Order.asc("status"))
+			.addOrder(Order.desc("currentTaskCount"))
+			.addOrder(Order.asc("user.currentName"))
+			.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignUserRulePO> queryQuotationAssignUserRuleForCrossCompany(int company, Integer department) throws FLException {
+	public List<QuotationAssignUserRulePO> queryAvailableUsers(int company, Integer department, Short decorationType) throws FLException {
 		Criteria criteria = createCriteria(QuotationAssignUserRulePO.class);
-
-		// 按公司筛选（使用关联属性）
-		criteria.createAlias("company", "company");
-		criteria.createAlias("user", "user");
-		criteria.add(Restrictions.eq("company.cid", company));
 
 		// 只查询待分配状态的人员
 		criteria.add(Restrictions.eq("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
 
-		// 使用 OR 逻辑：匹配该部门的规则 OR 公司级规则（department IS NULL）
-		criteria.createAlias("department", "department", CriteriaSpecification.LEFT_JOIN);
-		criteria.add(Restrictions.or(
-			Restrictions.eq("department.did", department),
-			Restrictions.isNull("department")));
+		// 通过 UserRuleItem 子查询：存在至少一条匹配 company+department+supportedType 的明细
+		DetachedCriteria itemMatch = DetachedCriteria.forClass(QuotationAssignUserRuleItemPO.class, "item");
+		itemMatch.add(Restrictions.eqProperty("item.userRule.qaurid", "qaurid"));
 
-		// ★ 跨公司验证：排除在其他公司存在非"待分配"状态的预算员
-		// 子查询：查找同一uid在其他公司有 status != 1 的记录，如果存在则排除
-		DetachedCriteria busyInOtherCompany = DetachedCriteria.forClass(QuotationAssignUserRulePO.class, "other");
-		busyInOtherCompany.add(Restrictions.eqProperty("other.user.userId", "user.userId"));
-		busyInOtherCompany.add(Restrictions.ne("other.status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
-		busyInOtherCompany.setProjection(Projections.property("other.qaurid"));
+		// 公司匹配
+		itemMatch.createAlias("item.company", "item_company");
+		itemMatch.add(Restrictions.eq("item_company.cid", company));
 
-		criteria.add(Subqueries.notExists(busyInOtherCompany));
+		// 部门匹配：匹配指定部门 OR 部门为NULL（公司级）
+		if (department != null) {
+			itemMatch.createAlias("item.department", "item_dept", CriteriaSpecification.LEFT_JOIN);
+			itemMatch.add(Restrictions.or(
+				Restrictions.eq("item_dept.did", department),
+				Restrictions.isNull("item.department")
+			));
+		}
+
+		// 装修类型匹配：-1通用 OR 匹配指定类型
+		if (decorationType != null) {
+			itemMatch.add(Restrictions.or(
+				Restrictions.eq("item.supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT),
+				Restrictions.eq("item.supportedType", (int) decorationType.shortValue())
+			));
+		}
+
+		itemMatch.setProjection(Projections.property("item.qauriid"));
+		criteria.add(Subqueries.exists(itemMatch));
 
 		// 按最后完成时间升序排序（最早完成的排在前面）
 		criteria.addOrder(Order.asc("lastFinishTime"));
@@ -107,11 +123,52 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignUserRulePO> queryQuotationAssignUserRuleByUserId(String userId) throws FLException {
-		return createCriteria(QuotationAssignUserRulePO.class)
-			.createAlias("user", "user")
-			.add(Restrictions.eq("user.userId", userId))
-			.list();
+	public List<QuotationAssignUserRulePO> queryAvailableUsersForCrossCompany(int company, Integer department, Short decorationType) throws FLException {
+		Criteria criteria = createCriteria(QuotationAssignUserRulePO.class);
+
+		// 先通过基本条件：待分配状态
+		criteria.add(Restrictions.eq("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
+
+		// 创建 user alias 供子查询使用
+		criteria.createAlias("user", "user");
+
+		// 通过 UserRuleItem 子查询：存在至少一条匹配当前 company+department+supportedType 的明细
+		DetachedCriteria itemMatch = DetachedCriteria.forClass(QuotationAssignUserRuleItemPO.class, "item");
+		itemMatch.add(Restrictions.eqProperty("item.userRule.qaurid", "qaurid"));
+
+		itemMatch.createAlias("item.company", "item_company");
+		itemMatch.add(Restrictions.eq("item_company.cid", company));
+
+		if (department != null) {
+			itemMatch.createAlias("item.department", "item_dept", CriteriaSpecification.LEFT_JOIN);
+			itemMatch.add(Restrictions.or(
+				Restrictions.eq("item_dept.did", department),
+				Restrictions.isNull("item.department")
+			));
+		}
+
+		if (decorationType != null) {
+			itemMatch.add(Restrictions.or(
+				Restrictions.eq("item.supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT),
+				Restrictions.eq("item.supportedType", (int) decorationType.shortValue())
+			));
+		}
+
+		itemMatch.setProjection(Projections.property("item.qauriid"));
+		criteria.add(Subqueries.exists(itemMatch));
+
+		// ★ 跨公司验证：排除在其他公司有非"待分配"状态的预算员
+		// 子查询：查找同一 userId 在其他公司有 status != 1 的 UserRule
+		DetachedCriteria busyInOtherCompany = DetachedCriteria.forClass(QuotationAssignUserRulePO.class, "other");
+		busyInOtherCompany.add(Restrictions.eqProperty("other.user.userId", "user.userId"));
+		busyInOtherCompany.add(Restrictions.ne("other.status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
+		busyInOtherCompany.setProjection(Projections.property("other.qaurid"));
+		criteria.add(Subqueries.notExists(busyInOtherCompany));
+
+		// 按最后完成时间升序排序
+		criteria.addOrder(Order.asc("lastFinishTime"));
+
+		return criteria.list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
@@ -125,18 +182,12 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 			String op = filter.getOp();
 
 			if ("status".equals(field)) {
-				// 状态：精确匹配
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
 			} else if ("userName".equals(field)) {
-				// 用户姓名：需要关联 user 表，使用 currentName 字段
 				query.alias("user", "user");
 				query.add(query.getCriterion("user.currentName", data, op));
-			} else if ("company".equals(field)) {
-				// 公司：需要关联 company 表，使用 cid 字段
-				query.alias("company", "company");
-				query.add(query.getCriterion("company.cid", Integer.valueOf(data), op));
 			}
+			// company 过滤已通过子查询在主方法中处理
 		}
 	}
-
 }

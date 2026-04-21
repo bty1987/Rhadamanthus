@@ -90,4 +90,25 @@ public interface QuotationAssignService {
 	 * @throws FLException 业务异常
 	 */
 	int finishQuotationAssign(QuotationAssignVO quotationAssignVO) throws FLException;
+
+	/**
+	 * 转交报价员（预算员将任务转交给其他预算员）
+	 * 
+	 * <p>
+	 * 业务规则：
+	 * </p>
+	 * <ul>
+	 * <li>只有已分配状态(status=2)的分配请求才能转交</li>
+	 * <li>更新分配队列中的预算员 uid</li>
+	 * <li>更新装修单中的预算员 quoter</li>
+	 * <li>报价单不需要变更</li>
+	 * <li>记录转交操作日志到分配记录表</li>
+	 * </ul>
+	 * 
+	 * @param quotationAssignVO 包含 orderId 和新预算员 quoter.userId
+	 * @param userId 当前操作人（转出预算员）的 userId
+	 * @return 1=成功
+	 * @throws FLException 业务异常
+	 */
+	int transferQuotationAssign(QuotationAssignVO quotationAssignVO, String userId) throws FLException;
 }

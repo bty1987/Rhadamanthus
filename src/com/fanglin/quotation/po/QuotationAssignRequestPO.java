@@ -65,6 +65,11 @@ public class QuotationAssignRequestPO implements Serializable {
 	public static final Short STATUS_ASSIGNED_INT = 2;
 
 	/**
+	 * 状态：已完成（报价已交付）
+	 */
+	public static final Short STATUS_COMPLETED_INT = 3;
+
+	/**
 	 * 优先级：最高
 	 */
 	public static final Short PRIORITY_HIGHEST_INT = 1;
@@ -132,7 +137,7 @@ public class QuotationAssignRequestPO implements Serializable {
 	private Integer requestUid;
 
 	/**
-	 * 状态: 1-待分配(在队列中等待)，2-已分配(成功分配给预算员)
+	 * 状态: 1-待分配(在队列中等待)，2-已分配(成功分配给预算员)，3-已完成(报价已交付)
 	 */
 	private short status;
 
@@ -145,6 +150,11 @@ public class QuotationAssignRequestPO implements Serializable {
 	 * 分配时间（status=2时有值，status=1时为NULL）
 	 */
 	private Timestamp assignTime;
+
+	/**
+	 * 完成时间（status=3时有值，报价交付时间）
+	 */
+	private Timestamp finishTime;
 
 	/**
 	 * 备注
@@ -389,6 +399,23 @@ public class QuotationAssignRequestPO implements Serializable {
 	}
 
 	/**
+	 * 获取完成时间
+	 */
+	@Column(name = "finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	/**
+	 * 设置完成时间
+	 * 
+	 * @param finishTime 完成时间
+	 */
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	/**
 	 * 获取备注
 	 * 
 	 * @return 备注
@@ -437,6 +464,11 @@ public class QuotationAssignRequestPO implements Serializable {
 	public QuotationAssignRequestVO ptv(QuotationAssignRequestVO vo) {
 		// 复制基本属性
 		com.fanglin.utils.BeanUtil.copyProperties(this, vo);
+
+		// 手动处理时间字段（PO: Timestamp -> VO: String）
+		if (finishTime != null) {
+			vo.setFinishTime(finishTime.toString());
+		}
 
 		return vo;
 	}

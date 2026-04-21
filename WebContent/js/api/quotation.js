@@ -2248,6 +2248,14 @@ $.extend(api, {
             url: "updateQuotationAssignUserRuleForStatus.do"
         },
 
+        pageQuotationAssignUserRuleSummary: {
+            url: "pageQuotationAssignUserRuleSummary.do"
+        },
+
+        syncQuotationAssignUserRuleStatus: {
+            url: "syncQuotationAssignUserRuleStatus.do"
+        },
+
         // 分配操作
         assignQuotationAssign: {
             url: "assignQuotationAssign.do",
@@ -2276,6 +2284,13 @@ $.extend(api, {
         },
         reassignQuotationAssign: {
             url: "reassignQuotationAssign.do",
+            validate: {
+                "quotationAssign.orderId": { required: true },
+                "quotationAssign.quoter.userId": { required: true }
+            }
+        },
+        transferQuotationAssign: {
+            url: "transferQuotationAssign.do",
             validate: {
                 "quotationAssign.orderId": { required: true },
                 "quotationAssign.quoter.userId": { required: true }
