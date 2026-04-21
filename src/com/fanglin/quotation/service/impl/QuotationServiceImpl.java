@@ -64,6 +64,7 @@ import com.fanglin.quotation.po.QuotationDO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaParamPO;
+import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.QuotationPreferPO;
 import com.fanglin.quotation.po.QuotationRecordPO;
@@ -166,6 +167,9 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Autowired
 	private com.fanglin.dingding.service.DingTalkMessageService dingTalkMessageService;
+
+	@Autowired
+	private com.fanglin.quotation.dao.QuotationAssignRequestDao quotationAssignRequestDao;
 
 	@Override
 	public void pageQuotation(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -722,6 +726,14 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 
 		quotationDao.update(quotationPO);
+
+		// 更新分配队列为已完成
+		QuotationAssignRequestPO assignRequest = quotationAssignRequestDao.queryQuotationAssignRequestForAssigned(quotationPO.getOrderId());
+		if (assignRequest != null) {
+			assignRequest.setStatus(QuotationAssignRequestPO.STATUS_COMPLETED_INT);
+			assignRequest.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+			quotationAssignRequestDao.update(assignRequest);
+		}
 
 		UserPO designer = decorationPO.getDesigner();
 

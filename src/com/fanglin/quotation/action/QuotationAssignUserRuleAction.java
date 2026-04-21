@@ -1,11 +1,11 @@
 /**
  * @File Name     : QuotationAssignUserRuleAction.java
  * @Package      : com.fanglin.quotation.action
- * @Version       : 1.0
- * @Date          : 2026-03-20
+ * @Version       : 2.0
+ * @Date          : 2026-04-21
  * @Copyright     : Copyright Creators 2026
  * @Author        : Claude AI
- * @Describing    : 预算员规则表 Action 控制器
+ * @Describing    : 预算员规则表 Action 控制器（人员维度 + Item 明细）
  */
 
 package com.fanglin.quotation.action;
@@ -33,14 +33,14 @@ import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
  * 主要功能：
  * </p>
  * <ul>
- * <li>分页查询预算员规则列表</li>
- * <li>查询规则详情（编辑回显）</li>
- * <li>新增、编辑、删除规则</li>
+ * <li>分页查询预算员规则列表（含明细）</li>
+ * <li>查询规则详情（编辑回显，含明细）</li>
+ * <li>新增、编辑、删除规则（同时管理明细）</li>
  * <li>启用/停止预算员</li>
  * </ul>
  * 
  * @author Claude AI
- * @version 1.0
+ * @version 2.0
  */
 @ParentPackage("base")
 @Namespace("/")
@@ -52,16 +52,11 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Autowired
 	private QuotationAssignUserRuleService quotationAssignUserRuleService;
 
-	/**
-	 * 预算员规则对象（用于接收前端参数）
-	 */
+	/** 预算员规则对象（用于接收前端参数，含 items 列表） */
 	private QuotationAssignUserRuleVO quotationAssignUserRule;
 
 	/**
 	 * 分页查询预算员规则列表
-	 * 
-	 * @return JSON 响应
-	 * @throws FLException 业务异常
 	 */
 	@Action(value = "pageQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignUserRule() throws FLException {
@@ -72,10 +67,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	}
 
 	/**
-	 * 查询规则详情（用于编辑回显）
-	 * 
-	 * @return JSON 响应
-	 * @throws FLException 业务异常
+	 * 查询规则详情（含明细，用于编辑回显）
 	 */
 	@Action(value = "queryQuotationAssignUserRuleById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignUserRuleById() throws FLException {
@@ -90,10 +82,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	}
 
 	/**
-	 * 新增预算员规则
-	 * 
-	 * @return JSON 响应
-	 * @throws FLException 业务异常
+	 * 新增预算员规则（同时创建明细项）
 	 */
 	@Action(value = "createQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createQuotationAssignUserRule() throws FLException {
@@ -108,10 +97,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	}
 
 	/**
-	 * 更新预算员规则
-	 * 
-	 * @return JSON 响应
-	 * @throws FLException 业务异常
+	 * 更新预算员规则（同时更新明细项）
 	 */
 	@Action(value = "updateQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationAssignUserRule() throws FLException {
@@ -126,10 +112,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	}
 
 	/**
-	 * 删除预算员规则
-	 * 
-	 * @return JSON 响应
-	 * @throws FLException 业务异常
+	 * 删除预算员规则（同时删除明细项）
 	 */
 	@Action(value = "deleteQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationAssignUserRule() throws FLException {
@@ -145,15 +128,33 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 
 	/**
 	 * 启用/停止预算员
-	 * 
-	 * @return JSON 响应
-	 * @throws FLException 业务异常
 	 */
 	@Action(value = "updateQuotationAssignUserRuleForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationAssignUserRuleForStatus() throws FLException {
 
-		// 调用 Service 更新状态
 		quotationAssignUserRuleService.updateQuotationAssignUserRuleForStatus(quotationAssignUserRule);
+
+		return SUCCESS;
+	}
+
+	/**
+	 * 全集团预算员汇总查询（含实时任务数和状态）
+	 */
+	@Action(value = "pageQuotationAssignUserRuleSummary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationAssignUserRuleSummary() throws FLException {
+
+		quotationAssignUserRuleService.pageQuotationAssignUserRuleSummary(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
+	/**
+	 * 同步所有预算员的任务数和状态
+	 */
+	@Action(value = "syncQuotationAssignUserRuleStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncQuotationAssignUserRuleStatus() throws FLException {
+
+		quotationAssignUserRuleService.syncQuotationAssignUserRuleStatus();
 
 		return SUCCESS;
 	}
@@ -167,5 +168,4 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	public void setQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) {
 		this.quotationAssignUserRule = quotationAssignUserRule;
 	}
-
 }

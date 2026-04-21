@@ -71,6 +71,11 @@ public class QuotationAssignRecordPO implements Serializable {
 	public static final Short ASSIGN_TYPE_REVERSE_AUTO_INT = 3;
 
 	/**
+	 * 分配类型：转交（预算员转交给其他预算员）
+	 */
+	public static final Short ASSIGN_TYPE_TRANSFER_INT = 4;
+
+	/**
 	 * 分配结果：失败（无预算员/类型不匹配/其他原因）
 	 */
 	public static final Byte ASSIGN_RESULT_FAILED_INT = 0;

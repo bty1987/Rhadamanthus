@@ -109,6 +109,24 @@ public class QuotationAssignAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 转交报价员（预算员将任务转交给其他预算员）
+	 * 
+	 * @return JSON 响应
+	 * @throws FLException 业务异常
+	 */
+	@Action(value = "transferQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String transferQuotationAssign() throws FLException {
+
+		if (quotationAssign == null) {
+			return ERROR;
+		}
+
+		quotationAssignService.transferQuotationAssign(quotationAssign, queryUserId());
+
+		return SUCCESS;
+	}
+
 	public QuotationAssignVO getQuotationAssign() {
 		return quotationAssign;
 	}

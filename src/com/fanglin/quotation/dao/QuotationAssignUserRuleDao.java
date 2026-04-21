@@ -9,65 +9,80 @@ import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.utils.Paging;
 
 /**
- * 预算员规则表 DAO 接口
+ * 预算员规则表 DAO 接口（人员维度）
+ * 
+ * <p>
+ * UserRule 按人员维度存储（每人一条），公司/部门/业务类型维度通过 UserRuleItem 维护
+ * </p>
  * 
  * @author Claude AI
- * @date 2026-03-20
+ * @date 2026-04-21
  */
 public interface QuotationAssignUserRuleDao extends Dao<QuotationAssignUserRulePO> {
 
 	/**
 	 * 分页查询预算员规则列表
 	 * 
-	 * @param page 分页对象
+	 * @param paging 分页对象
 	 * @param filters 过滤条件
-	 * @param company 公司ID（可选）
+	 * @param company 公司ID（可选，通过 UserRuleItem 子查询过滤）
 	 * @return
 	 * @throws FLException 业务异常
 	 */
 	List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
 	/**
-	 * 根据用户ID和公司ID查询预算员规则
+	 * 根据用户ID查询预算员规则
 	 * 
-	 * @param uid 用户ID
-	 * @param company 公司ID
-	 * @return 预算员规则PO
-	 * @throws FLException 业务异常
-	 */
-	QuotationAssignUserRulePO getQuotationAssignUserRule(String userId, int company) throws FLException;
-
-	/**
-	 * 查询所有待分配的预算员（status=1，按最后完成时间排序）
-	 * 
-	 * @param company 公司ID
-	 * @param department 部门ID（可选，NULL表示查询所有部门）
-	 * @return 预算员规则列表
-	 * @throws FLException 业务异常
-	 */
-	List<QuotationAssignUserRulePO> queryAvailableUsers(int company, Integer department) throws FLException;
-
-	/**
-	 * 根据用户ID查询该预算员在所有公司的规则记录
+	 * <p>新模型下每个用户只有一条 UserRule 记录</p>
 	 * 
 	 * @param userId 用户ID
-	 * @return 该用户在所有公司的规则列表
+	 * @return 预算员规则PO，不存在返回null
 	 * @throws FLException 业务异常
 	 */
-	List<QuotationAssignUserRulePO> queryQuotationAssignUserRuleByUserId(String userId) throws FLException;
+	QuotationAssignUserRulePO queryQuotationAssignUserRuleByUserId(String userId) throws FLException;
 
 	/**
-	 * 查询所有待分配的预算员，且要求该预算员在所有公司中都处于待分配状态（跨公司验证）
+	 * 查询所有预算员规则（全集团汇总，不过滤公司）
 	 * 
 	 * <p>
-	 * 逻辑：先按当前公司筛选 status=1 的预算员，再通过子查询排除在其他公司存在非待分配状态的预算员。
-	 * 确保同一预算员不会因为其他公司的制作中任务而被重复分配。
+	 * 用于：全集团预算员汇总页面，展示所有人员的任务数和状态
+	 * </p>
+	 * 
+	 * @return 所有预算员规则列表（按状态升序、任务数降序排列）
+	 * @throws FLException 异常
+	 */
+	List<QuotationAssignUserRulePO> queryAllQuotationAssignUserRule() throws FLException;
+
+	/**
+	 * 查询所有待分配的预算员（status=1），且在指定公司/部门下有匹配的规则明细
+	 * 
+	 * <p>
+	 * 通过子查询 UserRuleItem 过滤：存在 item 匹配 company + (department 匹配或 department 为null) 
+	 * + (supportedType=-1 或 supportedType 匹配 decorationType)
 	 * </p>
 	 * 
 	 * @param company 公司ID
 	 * @param department 部门ID（可选，NULL表示查询所有部门）
+	 * @param decorationType 装修类型（可选，NULL表示不限制类型）
+	 * @return 预算员规则列表（按 lastFinishTime 升序排序）
+	 * @throws FLException 业务异常
+	 */
+	List<QuotationAssignUserRulePO> queryAvailableUsers(int company, Integer department, Short decorationType) throws FLException;
+
+	/**
+	 * 查询所有待分配的预算员（跨公司验证：在所有规则明细对应的公司中都无进行中任务）
+	 * 
+	 * <p>
+	 * 逻辑：先通过 UserRuleItem 过滤出匹配 company+department+supportedType 的 UserRule，
+	 * 再排除在其他公司的 item 对应状态下为非待分配的预算员
+	 * </p>
+	 * 
+	 * @param company 公司ID
+	 * @param department 部门ID（可选）
+	 * @param decorationType 装修类型（可选）
 	 * @return 预算员规则列表（跨公司全部待分配）
 	 * @throws FLException 业务异常
 	 */
-	List<QuotationAssignUserRulePO> queryQuotationAssignUserRuleForCrossCompany(int company, Integer department) throws FLException;
+	List<QuotationAssignUserRulePO> queryAvailableUsersForCrossCompany(int company, Integer department, Short decorationType) throws FLException;
 }
