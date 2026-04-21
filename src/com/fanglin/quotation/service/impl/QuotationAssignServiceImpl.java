@@ -243,7 +243,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 3. 验证公司是否匹配（通过 items 检查该预算员是否覆盖此公司）
-		if (decoration.getCompany() == null || !hasMatchingItem(userRule, decoration.getCompany())) {
+		if (!hasMatchingItem(userRule, decoration.getCompany())) {
 			throw new FLException(0, "预算员不支持该公司");
 		}
 
@@ -298,7 +298,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 5. 验证公司是否匹配（通过 items 检查）
-		if (decoration.getCompany() == null || !hasMatchingItem(userRule, decoration.getCompany())) {
+		if (!hasMatchingItem(userRule, decoration.getCompany())) {
 			throw new FLException(0, "新预算员不支持该公司");
 		}
 
@@ -377,7 +377,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		Integer department = getDesignDeptId(decoration);
 
 		// 5. 查询待分配队列（不过滤类型，后续通过 items 匹配类型）
-		//    新模型下预算员可能支持多种类型，需要统一查询后逐个匹配
+		// 新模型下预算员可能支持多种类型，需要统一查询后逐个匹配
 		List<QuotationAssignRequestPO> pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueue(company, department, null);
 
 		// 6. 遍历队列，通过 items 检查预算员是否支持该任务的装修类型
@@ -441,23 +441,6 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		quotationAssignRecordDao.save(record);
 
 		return 0;
-	}
-
-	/**
-	 * 创建失败记录
-	 */
-	private void createFailRecord(String orderId, Short decorationType) throws FLException {
-
-		QuotationAssignRecordPO record = new QuotationAssignRecordPO();
-		record.setOrderId(orderId);
-		record.setUid(null);
-		record.setAssignType(QuotationAssignRecordPO.ASSIGN_TYPE_FORWARD_AUTO_INT);
-		record.setAssignResult(QuotationAssignRecordPO.ASSIGN_RESULT_FAILED_INT);
-		record.setAssignUid(null);
-		record.setAssignTime(new Timestamp(System.currentTimeMillis()));
-		record.setFailReason("无预算员支持该装修类型");
-		record.setDecorationType(decorationType);
-		quotationAssignRecordDao.save(record);
 	}
 
 	/**
@@ -562,7 +545,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 4. 不能转交给自己
-		if (transferUser.getUid().equals(request.getUid())) {
+		if (transferUser.getUid() == request.getUid()) {
 			throw new FLException(0, "不能转交给自己");
 		}
 
@@ -573,7 +556,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 6. 验证目标预算员是否支持该公司（通过 items 检查）
-		if (decoration.getCompany() == null || !hasMatchingItem(targetUserRule, decoration.getCompany())) {
+		if (!hasMatchingItem(targetUserRule, decoration.getCompany())) {
 			throw new FLException(0, "目标预算员不支持该公司");
 		}
 

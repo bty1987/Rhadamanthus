@@ -44,8 +44,7 @@ import com.fanglin.utils.Paging;
  * 预算员规则表 Service 实现类
  * 
  * <p>
- * 核心变更：UserRule 按人员维度（每人一条），公司/部门/类型通过 UserRuleItem 管理
- * CRUD 操作同时管理 items 明细
+ * 核心变更：UserRule 按人员维度（每人一条），公司/部门/类型通过 UserRuleItem 管理 CRUD 操作同时管理 items 明细
  * </p>
  * 
  * @author Claude AI
@@ -390,7 +389,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 			// 从分配队列统计该预算员的活跃任务数（status < 3）
 			int actualTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(rule.getUser().getUid());
-			int storedTaskCount = rule.getCurrentTaskCount() != null ? rule.getCurrentTaskCount() : 0;
+			int storedTaskCount = rule.getCurrentTaskCount();
 
 			boolean needUpdate = false;
 

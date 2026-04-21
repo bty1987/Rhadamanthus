@@ -12,9 +12,7 @@ package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,22 +20,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.beans.BeanUtils;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.quotation.vo.QuotationAssignUserRuleItemVO;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 
 /**
  * 预算员规则表实体类（人员维度，每人一条记录）
  * 
  * <p>
- * 职责：定义哪些用户可以作为预算员，以及其当前状态
- * 公司/部门/业务类型维度通过 QuotationAssignUserRuleItemPO 维护
+ * 职责：定义哪些用户可以作为预算员，以及其当前状态 公司/部门/业务类型维度通过 QuotationAssignUserRuleItemPO 维护
  * </p>
  * 
  * @author Claude AI
