@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.quotation.vo.QuotationAssignUserRuleItemVO;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 import com.fanglin.utils.Paging;
 
@@ -38,6 +39,15 @@ import com.fanglin.utils.Paging;
  * @version 2.0
  */
 public interface QuotationAssignUserRuleService {
+
+	/**
+	 * 根据规则ID查询明细列表
+	 * 
+	 * @param quotationAssignUserRuleItem 预算员规则明细VO（包含 qaurid）
+	 * @return 明细VO列表
+	 * @throws FLException 业务异常
+	 */
+	List<QuotationAssignUserRuleItemVO> queryQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO quotationAssignUserRuleItem) throws FLException;
 
 	/**
 	 * 分页查询预算员规则列表

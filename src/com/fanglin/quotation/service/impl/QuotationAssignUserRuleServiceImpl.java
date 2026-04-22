@@ -255,10 +255,33 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		return 0;
 	}
 
+	// ==================== 明细查询（公开方法） ====================
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public List<QuotationAssignUserRuleItemVO> queryQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO quotationAssignUserRuleItem) throws FLException {
+
+		long qaurid = quotationAssignUserRuleItem.getQaurid();
+
+		List<QuotationAssignUserRuleItemPO> itemPOs = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemByRuleId(qaurid);
+		List<QuotationAssignUserRuleItemVO> itemVOs = new ArrayList<QuotationAssignUserRuleItemVO>();
+
+		for (QuotationAssignUserRuleItemPO itemPO : itemPOs) {
+			QuotationAssignUserRuleItemVO itemVO = new QuotationAssignUserRuleItemVO();
+			itemVO.setCompany(new CompanyVO());
+			itemVO.setDepartment(new DepartmentVO());
+			itemPO.ptv(itemVO);
+			itemVO.setQaurid(qaurid);
+			itemVOs.add(itemVO);
+		}
+
+		return itemVOs;
+	}
+
 	// ==================== 私有辅助方法 ====================
 
 	/**
-	 * 根据规则ID查询明细列表并转换为 VO
+	 * 根据规则ID查询明细列表并转换为 VO（内部使用）
 	 */
 	private List<QuotationAssignUserRuleItemVO> queryItemsByRuleId(long qaurid) throws FLException {
 
