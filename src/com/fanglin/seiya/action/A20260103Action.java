@@ -191,6 +191,11 @@ public class A20260103Action extends BaseListAction {
 	private String contactInfo;
 
 	/**
+	 * 业务员userId - 用于修改 customerchance.creater 和 customersource.creater
+	 */
+	private String salesmanId;
+
+	/**
 	 * 返回字段 - data对象，封装请求参数
 	 */
 	private Map<String, Object> data;
@@ -242,7 +247,7 @@ public class A20260103Action extends BaseListAction {
 		this.data = new HashMap<String, Object>();
 
 		// 调用 Service 层处理业务逻辑
-		a20260103Service.updateCustomerLead(leadCode, village, houseNumber, buildArea, phone, name, referOrderId, sourceInfo, contactInfo, userId, orgId);
+		a20260103Service.updateCustomerLead(leadCode, village, houseNumber, buildArea, phone, name, referOrderId, sourceInfo, contactInfo, userId, orgId, salesmanId);
 
 		// 设置返回参数
 		this.data.put("leadCode", leadCode);
@@ -985,6 +990,15 @@ public class A20260103Action extends BaseListAction {
 
 	public void setContactInfo(String contactInfo) {
 		this.contactInfo = contactInfo;
+	}
+
+	@JSON(serialize = false)
+	public String getSalesmanId() {
+		return salesmanId;
+	}
+
+	public void setSalesmanId(String salesmanId) {
+		this.salesmanId = salesmanId;
 	}
 
 	@JSON(serialize = false)
