@@ -103,6 +103,12 @@ $.extend(api.index, {
     quotationAssignUserRuleIndex: {
         url: "/views/quotation/quotationAssignUserRule.html"
     },
+    quotationAssignUserRuleItemIndex: {
+        url: "/views/quotation/quotationAssignUserRuleItem.html"
+    },
+    quotationAssignUserRuleAvailableIndex: {
+        url: "/views/quotation/quotationAssignUserRuleAvailable.html"
+    },
     quotationAssignRequestIndex: {
         url: "/views/quotation/quotationAssignRequest.html"
     },
@@ -2129,6 +2135,26 @@ $.extend(api, {
         },
         updateQuotationAssignUserRuleType: {
             url: "updateQuotationAssignUserRuleType.do"
+        },
+
+        // 预算员规则明细
+        queryQuotationAssignUserRuleItem: {
+            url: "queryQuotationAssignUserRuleItem.do",
+            type: "query",
+            tranargs: [{
+                result: "quotationAssignUserRuleItems",
+                args: ["company", "department"]
+            }]
+        },
+
+        // 根据公司/部门/装修类型查询可分配预算员
+        queryQuotationAssignUserRuleForAvaile: {
+            url: "queryQuotationAssignUserRuleForAvaile.do",
+            type: "query",
+            tranargs: [{
+                result: "quotationAssignUserRules",
+                args: ["user"]
+            }]
         },
 
         // 待分配队列管理

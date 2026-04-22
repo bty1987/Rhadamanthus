@@ -1,0 +1,41 @@
+<div id="quotationAssignUserRuleAvailable" class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="fl_search clearfix">
+                <div class="pull-left" style="margin-right: 10px;">
+                    <label>公司：</label>
+                    <select id="availCompany" class="form-control input-sm" style="width:180px;display:inline-block;">
+                        <option value="">请选择公司</option>
+                    </select>
+                </div>
+                <div class="pull-left" style="margin-right: 10px;">
+                    <label>部门：</label>
+                    <select id="availDepartment" class="form-control input-sm" style="width:180px;display:inline-block;">
+                        <option value="">全部部门</option>
+                    </select>
+                </div>
+                <div class="pull-left" style="margin-right: 10px;">
+                    <label>装修类型：</label>
+                    <select id="availDecorationType" class="form-control input-sm" style="width:120px;display:inline-block;">
+                        <option value="">全部类型</option>
+                        <option value="0">半包</option>
+                        <option value="1">整装</option>
+                    </select>
+                </div>
+                <button id="availSearchBtn" class="btn btn-info btn-sm">
+                    <i class="icon-search bigger-110"></i> 查询
+                </button>
+            </div>
+
+            <div id="availResultList" class="clearfix tab-pane active" style="margin-top: 10px;">
+                <div class="alert alert-info" id="availEmptyTip" style="display:none;">
+                    <i class="icon-hand-right"></i> 请选择公司后点击查询，查看可分配的预算员列表。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/quotation/quotationAssignUserRuleAvailable.js']);
+</script>

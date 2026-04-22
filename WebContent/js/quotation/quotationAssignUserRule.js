@@ -165,6 +165,19 @@ $(function() {
 
             return v.status == 1;
         }
+    }, {
+        // 项目按钮：打开规则明细子页面
+        name: "项目",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            params["quotationAssignUserRule"] = {};
+            params.quotationAssignUserRule["qaurid"] = v.qaurid;
+
+            com.popup4page("#layerPopUp", api.index.quotationAssignUserRuleItemIndex.url, "规则项目");
+
+            return false;
+        }
     }];
 
     // 配置行

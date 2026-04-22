@@ -10,6 +10,8 @@
 
 package com.fanglin.quotation.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.service.QuotationAssignUserRuleService;
+import com.fanglin.quotation.vo.QuotationAssignUserRuleItemVO;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 
 /**
@@ -54,6 +57,35 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 
 	/** 预算员规则对象（用于接收前端参数，含 items 列表） */
 	private QuotationAssignUserRuleVO quotationAssignUserRule;
+
+	/** 预算员规则明细对象（用于接收前端参数） */
+	private QuotationAssignUserRuleItemVO quotationAssignUserRuleItem;
+
+	/** 明细列表（用于返回查询结果） */
+	private List<QuotationAssignUserRuleItemVO> quotationAssignUserRuleItems;
+
+	/** 可分配预算员规则列表（用于返回反向查询结果） */
+	private List<QuotationAssignUserRuleVO> quotationAssignUserRules;
+
+	/** 查询参数：公司ID */
+	private int company;
+
+	/** 查询参数：部门ID（可选） */
+	private Integer department;
+
+	/** 查询参数：装修类型（可选） */
+	private Short decorationType;
+
+	/**
+	 * 根据规则ID查询明细列表
+	 */
+	@Action(value = "queryQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationAssignUserRuleItem() throws FLException {
+
+		quotationAssignUserRuleItems = quotationAssignUserRuleService.queryQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
+
+		return SUCCESS;
+	}
 
 	/**
 	 * 分页查询预算员规则列表
@@ -159,6 +191,17 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 根据公司/部门/装修类型查询可分配的预算员规则列表（反向查询）
+	 */
+	@Action(value = "queryQuotationAssignUserRuleForAvaile", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationAssignUserRuleForAvaile() throws FLException {
+
+		quotationAssignUserRules = quotationAssignUserRuleService.queryQuotationAssignUserRuleForAvaile(company, department, decorationType);
+
+		return SUCCESS;
+	}
+
 	// ==================== Getter & Setter ====================
 
 	public QuotationAssignUserRuleVO getQuotationAssignUserRule() {
@@ -167,5 +210,53 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 
 	public void setQuotationAssignUserRule(QuotationAssignUserRuleVO quotationAssignUserRule) {
 		this.quotationAssignUserRule = quotationAssignUserRule;
+	}
+
+	public QuotationAssignUserRuleItemVO getQuotationAssignUserRuleItem() {
+		return quotationAssignUserRuleItem;
+	}
+
+	public void setQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO quotationAssignUserRuleItem) {
+		this.quotationAssignUserRuleItem = quotationAssignUserRuleItem;
+	}
+
+	public List<QuotationAssignUserRuleItemVO> getQuotationAssignUserRuleItems() {
+		return quotationAssignUserRuleItems;
+	}
+
+	public void setQuotationAssignUserRuleItems(List<QuotationAssignUserRuleItemVO> quotationAssignUserRuleItems) {
+		this.quotationAssignUserRuleItems = quotationAssignUserRuleItems;
+	}
+
+	public List<QuotationAssignUserRuleVO> getQuotationAssignUserRules() {
+		return quotationAssignUserRules;
+	}
+
+	public void setQuotationAssignUserRules(List<QuotationAssignUserRuleVO> quotationAssignUserRules) {
+		this.quotationAssignUserRules = quotationAssignUserRules;
+	}
+
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
+	public Integer getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Integer department) {
+		this.department = department;
+	}
+
+	public Short getDecorationType() {
+		return decorationType;
+	}
+
+	public void setDecorationType(Short decorationType) {
+		this.decorationType = decorationType;
 	}
 }
