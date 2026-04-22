@@ -46,12 +46,13 @@ public interface A20260103Service {
 	 * @param contactInfo 联系方式（三方信息）
 	 * @param userId 操作用户ID
 	 * @param orgId 公司ID
+	 * @param salesmanId 业务员userId - 用于修改 customerchance.creater 和 customersource.creater
 	 * @throws FLException 业务异常
 	 */
 	void updateCustomerLead(String leadCode, String village, String houseNumber,
 							Integer buildArea, String phone, String name,
 							String referOrderId, String sourceInfo, String contactInfo,
-							String userId, Integer orgId) throws FLException;
+							String userId, Integer orgId, String salesmanId) throws FLException;
 
 	/**
 	 * 查询客户线索（装饰订单）

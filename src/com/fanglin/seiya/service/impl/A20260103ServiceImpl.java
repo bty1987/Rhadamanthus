@@ -46,6 +46,8 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.seiya.service.A20260103Service;
 
 @Service("A20260103Service")
@@ -85,6 +87,9 @@ public class A20260103ServiceImpl implements A20260103Service {
 	@Autowired
 	private DecorationService decorationService;
 
+	@Autowired
+	private UserDao userDao;
+
 	@Override
 	public CustomerChanceVO queryCustomerChanceByCno(String cno) throws FLException {
 
@@ -107,7 +112,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateCustomerLead(String leadCode, String village, String houseNumber, Integer buildArea, String phone, String name, String referOrderId, String sourceInfo, String contactInfo, String userId, Integer orgId) throws FLException {
+	public void updateCustomerLead(String leadCode, String village, String houseNumber, Integer buildArea, String phone, String name, String referOrderId, String sourceInfo, String contactInfo, String userId, Integer orgId, String salesmanId) throws FLException {
 
 		// 参数必填验证 - 线索编号必填
 		if (leadCode == null || leadCode.trim().isEmpty()) {
@@ -208,6 +213,28 @@ public class A20260103ServiceImpl implements A20260103Service {
 					sourcePO.setContact(contactInfo);
 				}
 				customerSourceDao.save(sourcePO);
+			}
+		}
+
+		// 更新业务员信息（customerchance.creater 和 customersource.creater）
+		if (salesmanId != null && !salesmanId.trim().isEmpty()) {
+			UserPO salesmanPO = userDao.queryUserByUserId(salesmanId);
+			if (salesmanPO == null) {
+				throw new FLException(190005, "业务员不存在");
+			}
+
+			// 更新 customerchance.creater
+			CustomerChancePO chancePO = customerChanceDao.queryCustomerChanceByCno(leadCode);
+			if (chancePO != null) {
+				chancePO.setCreater(salesmanPO);
+				customerChanceDao.save(chancePO);
+			}
+
+			// 更新 customersource.creater
+			CustomerSourcePO sourcePO2 = customerSourceDao.get(existingChance.getSource().getCsid());
+			if (sourcePO2 != null) {
+				sourcePO2.setCreater(salesmanPO);
+				customerSourceDao.save(sourcePO2);
 			}
 		}
 	}
