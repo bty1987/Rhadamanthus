@@ -145,6 +145,9 @@ $.extend(api, {
         batchWorkerSalary: {
             url: "batchWorkerSalary.do"
         },
+        adoptWorkerSalaryForTimeRange: {
+            url: "adoptWorkerSalaryForTimeRange.do"
+        },
 
         pageDesignerSalary: {
             url: "pageDesignerSalary.do",

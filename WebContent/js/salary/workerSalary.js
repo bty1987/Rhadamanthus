@@ -6,6 +6,7 @@ jQuery(function($) {
             workersalaryModal: com.focusPage("#workersalaryModal"),
             importModal: com.focusPage("#importModal"),
             batchSendModal: com.focusPage("#batchSendModal"),
+            batchAdoptModal: com.focusPage("#batchAdoptModal"),
             annotateModal: com.focusPage("#annotateModal")
         },
         items: {
@@ -16,6 +17,8 @@ jQuery(function($) {
 
             beginTime: com.focusPage("#beginTime", "#batchSendModal"),
             finishTime: com.focusPage("#finishTime", "#batchSendModal"),
+            adoptBeginTime: com.focusPage("#adoptBeginTime", "#batchAdoptModal"),
+            adoptFinishTime: com.focusPage("#adoptFinishTime", "#batchAdoptModal"),
             annotate: com.focusPage("#annotate", "#annotateModal")
         },
 
@@ -27,6 +30,7 @@ jQuery(function($) {
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
             batchSendBtn: com.focusPage("#batchSendBtn"),
+            batchAdoptBtn: com.focusPage("#batchAdoptBtn"),
             annotateBtn: com.focusPage("#annotateBtn")
         },
 
@@ -45,9 +49,12 @@ jQuery(function($) {
 
     com.datetime(salary.items.beginTime);
     com.datetime(salary.items.finishTime);
+    com.datetime(salary.items.adoptBeginTime);
+    com.datetime(salary.items.adoptFinishTime);
 
     salary.btns.saveBtn.bindClick(saveData);
     salary.btns.batchSendBtn.bindClick(batchSend);
+    salary.btns.batchAdoptBtn.bindClick(batchAdopt);
     salary.btns.annotateBtn.bindClick(saveAnnotate);
 
     salary.modals.workersalaryModal.on('hide.bs.modal', function(e) {
@@ -126,6 +133,11 @@ jQuery(function($) {
         id: "batchSend",
         name: "批量通知",
         clazz: "btn-success",
+        icon: ""
+    }, {
+        id: "batchAdopt",
+        name: "按时间通过",
+        clazz: "btn-info",
         icon: ""
     }, ]);
 
@@ -513,6 +525,11 @@ jQuery(function($) {
         salary.modals.batchSendModal.modal("show");
     });
 
+    com.focusPage('a[name="batchAdopt"]', '#pagenation').click(function() {
+
+        salary.modals.batchAdoptModal.modal("show");
+    });
+
     function deletebystatus(v) {
 
         com.post(api.salary.deleteWorkerSalary, {
@@ -608,6 +625,26 @@ jQuery(function($) {
             searcher.doSearch();
 
             salary.modals.batchSendModal.modal("hide");
+        });
+    }
+
+    function batchAdopt() {
+
+        if (com.validate("batchAdoptModal"))
+            return false;
+
+        var options = {
+            "workerSalary.createTime": salary.items.adoptBeginTime.val() + " 00:00:00",
+            "workerSalary.finishTime": salary.items.adoptFinishTime.val() + " 23:59:59",
+        }
+
+        com.post(api.salary.adoptWorkerSalaryForTimeRange, options, function(res) {
+
+            searcher.doSearch();
+
+            salary.modals.batchAdoptModal.modal("hide");
+
+            com.showAlert(com.info, "按时间范围批量通过操作成功");
         });
     }
 

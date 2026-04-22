@@ -47,4 +47,6 @@ public interface WorkerSalaryService {
 
 	public int batchWorkerSalary(WorkerSalaryVO workerSalaryVO, int company) throws FLException;
 
+	public int adoptWorkerSalaryForTimeRange(WorkerSalaryVO workerSalaryVO, String userId, int company) throws FLException;
+
 }
