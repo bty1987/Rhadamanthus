@@ -3,7 +3,9 @@ package com.fanglin.salary.service.impl;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -746,6 +748,102 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workerSalaryDao.updateWorkerSalary(workerSalaryVO.getCreateTime(), workerSalaryVO.getFinishTime(), company);
 
 		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int adoptWorkerSalaryForTimeRange(WorkerSalaryVO workerSalaryVO, String userId, int company) throws FLException {
+
+		UserPO approval = userDao.queryUserByUserId(userId);
+
+		int batchSize = 200;
+
+		while (true) {
+
+			List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalaryForAdopt(workerSalaryVO.getCreateTime(), workerSalaryVO.getFinishTime(), company, batchSize);
+
+			if (workerSalaryPOs.isEmpty()) break;
+
+			Map<Integer, WorkerBalancePO> balanceCache = new HashMap<Integer, WorkerBalancePO>();
+
+			for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
+
+				adoptWorkerSalaryInBatch(workerSalaryPO, approval, company, balanceCache);
+			}
+
+			// 刷新缓存的 WorkerBalance 到数据库
+			for (WorkerBalancePO workerBalancePO : balanceCache.values()) {
+				workerBalanceDao.update(workerBalancePO);
+			}
+
+			workerSalaryDao.flush();
+			workerSalaryDao.clear();
+		}
+
+		return 0;
+	}
+
+	private void adoptWorkerSalaryInBatch(WorkerSalaryPO workerSalaryPO, UserPO approval, int company, Map<Integer, WorkerBalancePO> balanceCache) throws FLException {
+
+		if (workerSalaryPO.getStatus() != WorkerSalaryPO.STATUS_INIT_INT) {
+			return;
+		}
+
+		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalaryByCwsid(workerSalaryPO.getWsid());
+
+		for (WorkerSalaryPO workerSalary : workerSalaryPOs) {
+
+			int uid = workerSalary.getUser().getUid();
+
+			WorkerBalancePO workerBalancePO = balanceCache.get(uid);
+
+			if (workerBalancePO == null) {
+				workerBalancePO = workerBalanceDao.queryWorkerBalance(uid, company);
+
+				if (workerBalancePO == null) {
+					throw new FLException(280004, "工人帐户不存在");
+				}
+
+				balanceCache.put(uid, workerBalancePO);
+			}
+
+			long deposit = workerBalancePO.getDeposit();
+			long toplimit = workerBalancePO.getToplimit();
+			long salary = workerBalancePO.getSalary();
+
+			long money = workerSalary.getMoney();
+
+			if (workerSalary.getType() == WorkerSalaryPO.TYPE_ADD_INT) {
+
+				if (Arith.sub(deposit, toplimit) < 0) {
+
+					if (Arith.sub(Arith.add(deposit, money), toplimit) > 0) {
+
+						workerSalary.setSalary(Arith.sub(Arith.add(deposit, money), toplimit));
+						workerSalary.setDeposit(Arith.sub(toplimit, deposit));
+
+						workerBalancePO.setSalary(Arith.add(salary, Arith.sub(Arith.add(deposit, money), toplimit)));
+						workerBalancePO.setDeposit(toplimit);
+					} else {
+
+						workerSalary.setDeposit(money);
+						workerBalancePO.setDeposit(Arith.add(deposit, money));
+					}
+				} else {
+
+					workerSalary.setSalary(money);
+					workerSalary.setDeposit(0);
+					workerBalancePO.setSalary(Arith.add(salary, money));
+				}
+			}
+
+			workerSalary.setIsAppr(WorkerSalaryPO.ISAPPR_APPR_INT);
+			workerSalary.setApproveTime(new Timestamp(System.currentTimeMillis()));
+			workerSalary.setStatus(WorkerSalaryPO.STATUS_PASS_INT);
+			workerSalary.setApprover(approval);
+
+			workerSalaryDao.update(workerSalary);
+		}
 	}
 
 	private void tranSalaryToBalance(long money, WorkerSalaryPO workerSalaryPO, WorkerBalancePO workerBalancePO) throws FLException {

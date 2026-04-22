@@ -111,6 +111,33 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 		return 0;
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company) {
+
+		return session().createCriteria(WorkerSalaryPO.class)
+			.add(Restrictions.ge("createTime", beginTime))
+			.add(Restrictions.le("createTime", finishTime))
+			.add(Restrictions.eq("status", WorkerSalaryPO.STATUS_INIT_INT))
+			.add(Restrictions.eq("company", company))
+			.add(Restrictions.eq("cwsid", 0L))
+			.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company, int limit) {
+
+		return session().createCriteria(WorkerSalaryPO.class)
+			.add(Restrictions.ge("createTime", beginTime))
+			.add(Restrictions.le("createTime", finishTime))
+			.add(Restrictions.eq("status", WorkerSalaryPO.STATUS_INIT_INT))
+			.add(Restrictions.eq("company", company))
+			.add(Restrictions.eq("cwsid", 0L))
+			.setMaxResults(limit)
+			.list();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

@@ -120,6 +120,49 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="batchAdoptModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">按时间范围批量通过</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group ">
+							<label class="col-sm-3 control-label no-padding-right" for="adoptBeginTime">开始时间</label>
+							<div class="col-sm-9">
+								<input class="col-xs-12 col-sm-7 v_required" id="adoptBeginTime" type="text" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group ">
+							<label class="col-sm-3 control-label no-padding-right" for="adoptFinishTime">结束时间</label>
+							<div class="col-sm-9">
+								<input class="col-xs-12 col-sm-7 v_required" id="adoptFinishTime" type="text" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<div class="col-sm-9 col-sm-offset-3">
+								<span style="color: red;">
+									<b>将自动通过所选时间范围内状态为"初始"且非"转款"的工费记录</b>
+								</span>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="batchAdoptBtn" class="btn btn-primary">确认通过</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="modal fade" id="drawingModal"  tabindex="-1">
 		<div class="modal-dialog" style="width:60%" >
 			<div class="modal-content">

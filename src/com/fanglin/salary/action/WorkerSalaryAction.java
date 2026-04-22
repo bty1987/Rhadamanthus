@@ -184,6 +184,14 @@ public class WorkerSalaryAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "adoptWorkerSalaryForTimeRange", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String adoptWorkerSalaryForTimeRange() throws FLException {
+
+		workerSalaryService.adoptWorkerSalaryForTimeRange(workerSalary, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	public WorkerSalaryVO getWorkerSalary() {
 		return workerSalary;
 	}

@@ -32,4 +32,8 @@ public interface WorkerSalaryDao extends Dao<WorkerSalaryPO> {
 
 	public int updateWorkerSalary(Timestamp beginTime, Timestamp finishTime, int company);
 
+	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company);
+
+	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company, int limit);
+
 }
