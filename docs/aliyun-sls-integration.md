@@ -60,6 +60,7 @@ log_format log_json escape=json
     '"client_ip":"$remote_addr",'
     '"method":"$request_method",'
     '"uri":"$request_uri",'
+    '"request_body":"$request_body",'
     '"status":$status,'
     '"body_bytes":$body_bytes_sent,'
     '"request_time":$request_time,'
@@ -71,6 +72,13 @@ log_format log_json escape=json
 
 access_log /usr/local/nginx/logs/access.log log_json;
 ```
+
+> **关于 `request_body` 的说明：**
+> - `$request_uri` 记录完整 URL + Query 参数（覆盖 GET 请求参数）
+> - `$request_body` 记录 POST/PUT 请求体（覆盖 POST 表单数据和 JSON body）
+> - 请求体超过 `client_body_buffer_size`（默认 8K/16K）时会写入临时文件，此时 `$request_body` 可能为空
+> - 如需支持更大的请求体记录，在 `http {}` 或 `server {}` 块中添加：`client_body_buffer_size 256k;`
+> - **注意**：POST body 可能包含敏感信息（密码、手机号等），上线前需评估是否需要脱敏处理
 
 > 注意：如果原配置中有 `access_log` 行，注释掉或替换为上面这行。
 
@@ -97,6 +105,67 @@ tail -1 /usr/local/nginx/logs/access.log
 ```
 
 看到 JSON 格式即成功。
+
+---
+
+## 三B、配置 Nginx 日志轮转（重要）
+
+> 如果不配置日志轮转，`access.log` 会无限增长，最终占满磁盘。
+
+### 3B.1 创建 logrotate 配置
+
+```bash
+vi /etc/logrotate.d/nginx
+```
+
+写入以下内容：
+
+```
+/usr/local/nginx/logs/access.log {
+    daily
+    rotate 30
+    missingok
+    compress
+    delaycompress
+    notifempty
+    create 644 root root
+    sharedscripts
+    postrotate
+        /usr/local/nginx/sbin/nginx -s reopen
+    endscript
+}
+```
+
+各参数说明：
+
+| 参数 | 含义 |
+|------|------|
+| `daily` | 每天轮转一次 |
+| `rotate 30` | 保留30天历史日志（与SLS Logstore保留期一致，已采集到云端不怕丢） |
+| `compress` | 旧日志用 gzip 压缩（节省磁盘约 80%） |
+| `delaycompress` | 延迟一轮再压缩（保留最近一天的未压缩日志，方便排查） |
+| `missingok` | 日志文件不存在时不报错 |
+| `notifempty` | 空文件不轮转 |
+| `create` | 轮转后创建新文件的权限和属主 |
+| `postrotate` | 轮转后通知 nginx 重新打开日志文件 |
+
+### 3B.2 验证 logrotate
+
+```bash
+# 检查 logrotate 是否已安装
+which logrotate
+
+# 干跑测试（不实际执行，仅显示会做什么）
+logrotate -d /etc/logrotate.d/nginx
+
+# 手动强制执行一次（验证轮转是否正常）
+logrotate -f /etc/logrotate.d/nginx
+
+# 确认日志文件已轮转
+ls -la /usr/local/nginx/logs/access.log*
+```
+
+> **说明**：logrotate 通常由系统 crond 每天自动执行（`/etc/cron.daily/logrotate`），无需额外配置定时任务。
 
 ---
 
@@ -247,7 +316,8 @@ chmod +x /tmp/logtail.sh
 | time | text | - | 否 | 请求时间 |
 | client_ip | text | - | 是 | 客户端IP |
 | method | text | - | 是 | 请求方法 |
-| uri | text | - | 是 | 请求路径 |
+| uri | text | - | 是 | 请求路径+Query参数 |
+| request_body | text | - | 是 | POST/PUT请求体 |
 | status | long | - | 是 | HTTP状态码 |
 | body_bytes | long | - | 是 | 响应字节数 |
 | request_time | double | - | 是 | 请求耗时(秒) |
@@ -400,6 +470,10 @@ message: "Exception" OR message: "FLException"
 3. Nginx 日志改 JSON 后，原有的日志分析脚本如果依赖原格式需要同步调整
 4. 服务器磁盘空间注意监控，Logtail 采集异常时日志文件会持续增长
 5. 如果有多台 ECS 服务器，每台都要装 Logtail，控制台配置一次即可自动下发
+6. **日志轮转**：必须配置 logrotate（见第三章B），否则 access.log 会无限增长占满磁盘
+7. **POST 请求体大小**：`$request_body` 受 `client_body_buffer_size` 限制（默认 8K/16K），超过后变量为空。如需记录更大的请求体，在 nginx.conf 的 `http {}` 块中添加 `client_body_buffer_size 256k;`
+8. **敏感信息**：`request_body` 会完整记录 POST 数据（可能包含密码、手机号等），上线前需评估是否需要脱敏。如不需要记录请求体，删除 log_format 中的 `"request_body":"$request_body"` 行即可
+9. **响应体**：nginx 层不记录响应内容（仅记录状态码和字节数），如需完整请求/响应追踪，应在 Java 应用层（Filter/Interceptor）中实现
 
 ---
 
@@ -410,6 +484,7 @@ message: "Exception" OR message: "FLException"
 - [ ] 创建 Logstore `app-log`
 - [ ] 创建 Logstore `app-error`
 - [ ] Nginx 配置 JSON 日志格式
+- [ ] Nginx 配置日志轮转 logrotate（重要，防止磁盘写满）
 - [ ] Nginx reload 并验证
 - [ ] Log4j 拆分 error.log（可选）
 - [ ] Tomcat 重启并验证日志文件
