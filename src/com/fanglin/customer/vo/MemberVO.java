@@ -48,6 +48,11 @@ public class MemberVO implements Serializable {
 	private String company;
 
 	/**
+	 * 公司ID
+	 */
+	private Integer companyId;
+
+	/**
 	 * 活动项目数量
 	 */
 	private Integer activityItemCount;
@@ -158,6 +163,14 @@ public class MemberVO implements Serializable {
 		this.company = company;
 	}
 
+	public Integer getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
+
 	public String getUniqueId() {
 		return uniqueId;
 	}
@@ -182,10 +195,11 @@ public class MemberVO implements Serializable {
 		this.activityItemCount = activityItemCount;
 	}
 
-	public MemberVO init(DecorationPO decorationPO, String companyName) {
+	public MemberVO init(DecorationPO decorationPO, String companyName, Integer companyId) {
 
 		setOrderId(decorationPO.getOrderId());
 		setCompany(companyName);
+		setCompanyId(companyId);
 		setPaySacle(decorationPO.getPaySacle());
 
 		if (decorationPO.getDesigner() != null) {
