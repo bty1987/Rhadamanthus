@@ -382,22 +382,22 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			workerSalaryDao.update(workerSalaryPO);
 
-			// 更新 construction.salarytotal
-			if (workerSalaryPO.getCsid() != null && workerSalaryPO.getCsid() != 0) {
-				long cid = workerSalaryPO.getCid();
-				if (cid != 0) {
-					ConstructionPO constructionPO = constructionDao.queryConstructionByCid(cid);
-					if (constructionPO != null) {
-						long salaryTotal = Arith.sub(constructionPO.getSalaryTotal(), workerSalaryPO.getMoney());
-						constructionPO.setSalaryTotal(salaryTotal);
-						constructionDao.update(constructionPO);
-					}
-				}
-			}
+			if (workerSalaryPO.getCsid() == 0) continue;
+			if (workerSalaryPO.getCid() == 0) continue;
 
-			if (workerSalaryPO.getDecoration() != null) {
-				workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
-			}
+			ConstructionPO constructionPO = constructionDao.queryConstructionByCid(workerSalaryPO.getCid());
+
+			if (constructionPO == null) continue;
+
+			long salaryTotal = Arith.sub(constructionPO.getSalaryTotal(), workerSalaryPO.getMoney());
+
+			constructionPO.setSalaryTotal(salaryTotal);
+
+			constructionDao.update(constructionPO);
+
+			if (workerSalaryPO.getDecoration() == null) continue;
+
+			workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
 		}
 
 		return 0;
@@ -462,21 +462,22 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryDao.update(workerSalaryPO);
 
 			// 更新 construction.salarytotal
-			if (workerSalaryPO.getCsid() != null && workerSalaryPO.getCsid() != 0) {
-				long cid = workerSalaryPO.getCid();
-				if (cid != 0) {
-					ConstructionPO constructionPO = constructionDao.queryConstructionByCid(cid);
-					if (constructionPO != null) {
-						long salaryTotal = Arith.sub(constructionPO.getSalaryTotal(), workerSalaryPO.getMoney());
-						constructionPO.setSalaryTotal(salaryTotal);
-						constructionDao.update(constructionPO);
-					}
-				}
-			}
+			if (workerSalaryPO.getCsid() == 0) continue;
+			if (workerSalaryPO.getCid() == 0) continue;
 
-			if (workerSalaryPO.getDecoration() != null) {
-				workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
-			}
+			ConstructionPO constructionPO = constructionDao.queryConstructionByCid(workerSalaryPO.getCid());
+
+			if (constructionPO == null) continue;
+
+			long salaryTotal = Arith.sub(constructionPO.getSalaryTotal(), workerSalaryPO.getMoney());
+
+			constructionPO.setSalaryTotal(salaryTotal);
+
+			constructionDao.update(constructionPO);
+
+			if (workerSalaryPO.getDecoration() == null) continue;
+
+			workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
 		}
 
 		return 0;
