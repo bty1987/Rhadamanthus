@@ -133,114 +133,154 @@ public class MemberServiceImpl implements MemberService {
 
 		List<Integer> companyIds = new ArrayList<Integer>();
 		List<Long> customerIds = new ArrayList<Long>();
-
 		List<String> phoneList = new ArrayList<String>();
+		List<String> orderIdList = new ArrayList<String>();
+		List<String> orderKeyList = new ArrayList<String>();
 
+		// 收集所有查询条件：手机号或装修单号
 		for (MemberVO member : members) {
-			if (member.getPhone() == null) continue;
-
-			phoneList.add(FormatUtil.encodePhone(member.getPhone()));
-			resultMap.put(member.getPhone(), new ArrayList<MemberVO>());
+			if (member.getOrderId() != null && !member.getOrderId().isEmpty()) {
+				// 装修单号查询
+				orderIdList.add(member.getOrderId());
+				orderKeyList.add(member.getOrderId());
+			} else if (member.getPhone() != null) {
+				// 手机号查询
+				phoneList.add(FormatUtil.encodePhone(member.getPhone()));
+				resultMap.put(member.getPhone(), new ArrayList<MemberVO>());
+			}
 		}
 
-		List<CustomerPO> customers = customerDao.queryCustomer(phoneList);
+		// ========== 按装修单号查询 ==========
+		if (!orderIdList.isEmpty()) {
+			Map<Integer, String> companyMap = new HashMap<Integer, String>();
+			Map<String, String> orderIdToKeyMap = new HashMap<String, String>();
 
-		for (CustomerPO customerPO : customers) {
+			for (int i = 0; i < orderIdList.size(); i++) {
+				String orderId = orderIdList.get(i);
+				String key = orderKeyList.get(i);
+				orderIdToKeyMap.put(orderId, key);
+				resultMap.put(key, new ArrayList<MemberVO>());
 
-			List<Long> customerIdList = phoneToCustomerMap.get(customerPO.getPhone());
+				DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+				if (decorationPO != null) {
+					Integer companyId = decorationPO.getCompany();
+					companyIds.add(companyId);
 
-			if (customerIdList == null) {
-				customerIdList = new ArrayList<Long>();
-				phoneToCustomerMap.put(customerPO.getPhone(), customerIdList);
+					if (!companyMap.containsKey(companyId)) {
+						List<CompanyPO> companyPOs = companyDao.queryCompanyByIds(Arrays.asList(companyId));
+						for (CompanyPO companyPO : companyPOs) {
+							companyMap.put(companyPO.getCid(), companyPO.getName());
+						}
+					}
+
+					String companyName = companyMap.get(companyId);
+					MemberVO resultMember = new MemberVO().init(decorationPO, companyName, companyId);
+					resultMap.get(key).add(resultMember);
+				}
+			}
+		}
+
+		// ========== 按手机号查询 ==========
+		if (!phoneList.isEmpty()) {
+			List<CustomerPO> customers = customerDao.queryCustomer(phoneList);
+
+			for (CustomerPO customerPO : customers) {
+
+				List<Long> customerIdList = phoneToCustomerMap.get(customerPO.getPhone());
+
+				if (customerIdList == null) {
+					customerIdList = new ArrayList<Long>();
+					phoneToCustomerMap.put(customerPO.getPhone(), customerIdList);
+				}
+
+				if (customerIdList.contains(customerPO.getCid())) continue;
+
+				customerIdList.add(customerPO.getCid());
 			}
 
-			if (customerIdList.contains(customerPO.getCid())) continue;
+			List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhone(phoneList, CustomerPhonePO.STATUS_ENABLE_INT, null, null);
 
-			customerIdList.add(customerPO.getCid());
-		}
+			for (CustomerPhonePO customerPhone : customerPhones) {
 
-		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhone(phoneList, CustomerPhonePO.STATUS_ENABLE_INT, null, null);
+				List<Long> customerIdList = phoneToCustomerMap.get(customerPhone.getPhone());
 
-		for (CustomerPhonePO customerPhone : customerPhones) {
+				if (customerIdList == null) {
+					customerIdList = new ArrayList<Long>();
+					phoneToCustomerMap.put(customerPhone.getPhone(), customerIdList);
+				}
 
-			List<Long> customerIdList = phoneToCustomerMap.get(customerPhone.getPhone());
+				if (customerIdList.contains(customerPhone.getCid())) continue;
 
-			if (customerIdList == null) {
-				customerIdList = new ArrayList<Long>();
-				phoneToCustomerMap.put(customerPhone.getPhone(), customerIdList);
+				customerIdList.add(customerPhone.getCid());
 			}
 
-			if (customerIdList.contains(customerPhone.getCid())) continue;
-
-			customerIdList.add(customerPhone.getCid());
-		}
-
-		for (CustomerPhonePO customerPhone : customerPhones) {
-			customerIds.add(customerPhone.getCid());
-		}
-
-		if (customerIds == null || customerIds.size() == 0) {
-			throw new FLException(130006, "客户电话不存在");
-		}
-
-		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomerIds(customerIds);
-
-		if (decorationPOs == null || decorationPOs.size() == 0) {
-			throw new FLException(130006, "客户装修信息不存在");
-		}
-
-		Map<Long, List<DecorationPO>> customerToDecorationMap = new HashMap<Long, List<DecorationPO>>();
-
-		for (DecorationPO decorationPO : decorationPOs) {
-
-			companyIds.add(decorationPO.getCompany());
-
-			Long customerId = decorationPO.getCustomer().getCid();
-			List<DecorationPO> decorationList = customerToDecorationMap.get(customerId);
-
-			if (decorationList == null) {
-				decorationList = new ArrayList<DecorationPO>();
-				customerToDecorationMap.put(customerId, decorationList);
+			for (CustomerPhonePO customerPhone : customerPhones) {
+				customerIds.add(customerPhone.getCid());
 			}
 
-			decorationList.add(decorationPO);
-		}
-
-		if (companyIds == null || companyIds.size() == 0) {
-			throw new FLException(130006, "客户公司不存在");
-		}
-
-		Map<Integer, String> companyMap = new HashMap<Integer, String>();
-
-		List<CompanyPO> companyPOs = companyDao.queryCompanyByIds(companyIds);
-
-		for (CompanyPO companyPO : companyPOs) {
-			companyMap.put(companyPO.getCid(), companyPO.getName());
-		}
-
-		for (MemberVO member : members) {
-			String originalPhone = member.getPhone();
-			String encodedPhone = FormatUtil.encodePhone(originalPhone);
-
-			List<Long> customerIdList = phoneToCustomerMap.get(encodedPhone);
-			if (customerIdList == null) {
-				continue;
+			if (customerIds == null || customerIds.size() == 0) {
+				throw new FLException(130006, "客户电话不存在");
 			}
 
-			List<MemberVO> memberList = resultMap.get(originalPhone);
+			List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomerIds(customerIds);
 
-			for (Long customerId : customerIdList) {
-				List<DecorationPO> decorations = customerToDecorationMap.get(customerId);
-				if (decorations == null) {
+			if (decorationPOs == null || decorationPOs.size() == 0) {
+				throw new FLException(130006, "客户装修信息不存在");
+			}
+
+			Map<Long, List<DecorationPO>> customerToDecorationMap = new HashMap<Long, List<DecorationPO>>();
+
+			for (DecorationPO decorationPO : decorationPOs) {
+				companyIds.add(decorationPO.getCompany());
+
+				Long customerId = decorationPO.getCustomer().getCid();
+				List<DecorationPO> decorationList = customerToDecorationMap.get(customerId);
+				if (decorationList == null) {
+					decorationList = new ArrayList<DecorationPO>();
+					customerToDecorationMap.put(customerId, decorationList);
+				}
+
+				decorationList.add(decorationPO);
+			}
+
+			if (companyIds == null || companyIds.size() == 0) {
+				throw new FLException(130006, "客户公司不存在");
+			}
+
+			Map<Integer, String> companyMap = new HashMap<Integer, String>();
+
+			List<CompanyPO> companyPOs = companyDao.queryCompanyByIds(companyIds);
+
+			for (CompanyPO companyPO : companyPOs) {
+				companyMap.put(companyPO.getCid(), companyPO.getName());
+			}
+
+			for (MemberVO member : members) {
+				String originalPhone = member.getPhone();
+				if (originalPhone == null) continue;
+
+				String encodedPhone = FormatUtil.encodePhone(originalPhone);
+
+				List<Long> customerIdList = phoneToCustomerMap.get(encodedPhone);
+				if (customerIdList == null) {
 					continue;
 				}
 
-				for (DecorationPO decorationPO : decorations) {
-					String companyName = companyMap.get(decorationPO.getCompany());
-					MemberVO resultMember = new MemberVO().init(decorationPO, companyName);
+				List<MemberVO> memberList = resultMap.get(originalPhone);
+				for (Long customerId : customerIdList) {
+					List<DecorationPO> decorations = customerToDecorationMap.get(customerId);
+					if (decorations == null) {
+						continue;
+					}
 
-					resultMember.setPhone(originalPhone);
-					memberList.add(resultMember);
+					for (DecorationPO decorationPO : decorations) {
+						String companyName = companyMap.get(decorationPO.getCompany());
+						Integer companyId = decorationPO.getCompany();
+						MemberVO resultMember = new MemberVO().init(decorationPO, companyName, companyId);
+
+						resultMember.setPhone(originalPhone);
+						memberList.add(resultMember);
+					}
 				}
 			}
 		}
@@ -318,48 +358,92 @@ public class MemberServiceImpl implements MemberService {
 		List<Long> customerIds = new ArrayList<Long>();
 
 		for (MemberVO member : members) {
-			if (member.getPhone() != null) {
+			if (member.getOrderId() != null && !member.getOrderId().isEmpty()) {
+				// 装修单号查询模式 - 将在后续处理
+				queryOrderIds.add(member.getOrderId());
+			} else if (member.getPhone() != null) {
+				// 手机号查询模式
 				encodedPhoneList.add(FormatUtil.encodePhone(member.getPhone()));
 				resultMap.put(member.getPhone(), new ArrayList<MemberVO>());
 			} else {
-				throw new FLException(130021, "客户电话不存在");
+				throw new FLException(130021, "客户电话或装修单号不存在");
 			}
 		}
 
 		// ========== 3. 查询客户电话并构建映射关系 ==========
-		List<CustomerPhonePO> customerPhoneList = customerPhoneDao.queryCustomerPhone(encodedPhoneList, null, null, company);
+		List<DecorationPO> decorationPOs = new ArrayList<DecorationPO>();
+		List<CustomerPhonePO> customerPhoneList = new ArrayList<CustomerPhonePO>();
+		Map<String, String> orderIdToPhoneMap = new HashMap<String, String>(); // 装修单号 -> 推荐人手机号
 
-		if (customerPhoneList == null || customerPhoneList.isEmpty()) {
-			throw new FLException(130021, "客户电话不存在");
-		}
+		// 处理装修单号查询（如果存在）
+		if (!queryOrderIds.isEmpty()) {
+			for (String orderId : queryOrderIds) {
+				DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+				if (decorationPO != null) {
+					// 验证公司权限
+					if (company != null && !decorationPO.getCompany().equals(company)) {
+						continue;
+					}
 
-		// 手机号(原始) -> 客户ID列表
-		Map<String, List<Long>> phoneToCustomerMap = new HashMap<String, List<Long>>();
-		// 客户ID -> 手机号(原始) - 反向索引，消除嵌套循环
-		Map<Long, String> customerToPhoneMap = new HashMap<Long, String>();
+					// 查找推荐人手机号
+					if (decorationPO.getChance() != null && decorationPO.getChance().getChance() != null) {
+						String phone = decorationPO.getChance().getChance().getPhone();
+						if (phone != null) {
+							orderIdToPhoneMap.put(orderId, phone);
+							if (!resultMap.containsKey(phone)) {
+								resultMap.put(phone, new ArrayList<MemberVO>());
+							}
+						}
+					}
 
-		for (CustomerPhonePO customerPhone : customerPhoneList) {
-			String originalPhone = FormatUtil.decodePhone(customerPhone.getPhone());
-
-			// 只处理在 resultMap 中的手机号（保持原逻辑）
-			if (resultMap.containsKey(originalPhone)) {
-				List<Long> customerIdList = phoneToCustomerMap.get(originalPhone);
-				if (customerIdList == null) {
-					customerIdList = new ArrayList<Long>();
-					phoneToCustomerMap.put(originalPhone, customerIdList);
+					decorationPOs.add(decorationPO);
 				}
-				customerIdList.add(customerPhone.getCid());
-				customerToPhoneMap.put(customerPhone.getCid(), originalPhone);
-				customerIds.add(customerPhone.getCid());
 			}
 		}
 
-		// ========== 4. 查询装饰订单 ==========
-		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomerIds(customerIds);
+		// 处理手机号查询（如果存在）
+		if (!encodedPhoneList.isEmpty()) {
+			customerPhoneList = customerPhoneDao.queryCustomerPhone(encodedPhoneList, null, null, company);
+
+			if (customerPhoneList == null || customerPhoneList.isEmpty()) {
+				if (decorationPOs.isEmpty()) {
+					// 两种查询方式都无结果
+					return resultMap;
+				}
+			}
+
+			// 手机号(原始) -> 客户ID列表
+			Map<String, List<Long>> phoneToCustomerMap = new HashMap<String, List<Long>>();
+			// 客户ID -> 手机号(原始) - 反向索引，消除嵌套循环
+			Map<Long, String> customerToPhoneMap = new HashMap<Long, String>();
+			List<Long> customerIds = new ArrayList<Long>();
+
+			for (CustomerPhonePO customerPhone : customerPhoneList) {
+				String originalPhone = FormatUtil.decodePhone(customerPhone.getPhone());
+				// 只处理在 resultMap 中的手机号（保持原逻辑）
+				if (resultMap.containsKey(originalPhone)) {
+					List<Long> customerIdList = phoneToCustomerMap.get(originalPhone);
+					if (customerIdList == null) {
+						customerIdList = new ArrayList<Long>();
+						phoneToCustomerMap.put(originalPhone, customerIdList);
+					}
+					customerIdList.add(customerPhone.getCid());
+					customerToPhoneMap.put(customerPhone.getCid(), originalPhone);
+					customerIds.add(customerPhone.getCid());
+				}
+			}
+
+			// ========== 4. 查询装饰订单 ==========
+			List<DecorationPO> phoneDecorationPOs = decorationDao.queryDecorationByCustomerIds(customerIds);
+			if (phoneDecorationPOs != null) {
+				decorationPOs.addAll(phoneDecorationPOs);
+			}
+		}
+
 		List<DecorationPO> referOrders = new ArrayList<DecorationPO>(); // 关联订单
 
 		// 【保持原逻辑】没有装饰订单时返回空结果，不抛异常
-		if (decorationPOs == null || decorationPOs.isEmpty()) {
+		if (decorationPOs.isEmpty()) {
 			return resultMap;
 		}
 
@@ -379,6 +463,12 @@ public class MemberServiceImpl implements MemberService {
 					orderToPhoneMap.put(decorationPO.getOrderId(), phone);
 				}
 			}
+
+			// 对于装修单号查询模式，使用 orderIdToPhoneMap
+			if (orderIdToPhoneMap.containsKey(decorationPO.getOrderId())) {
+				orderToPhoneMap.put(decorationPO.getOrderId(), orderIdToPhoneMap.get(decorationPO.getOrderId()));
+			}
+
 			// 【健壮性改进】原代码 customer 为 null 会抛 NPE，优化后跳过
 		}
 
@@ -1072,6 +1162,8 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		member.setStatus(decorationPO.getStatus());
+		member.setPaySacle(decorationPO.getPaySacle());
+		member.setCompanyId(decorationPO.getCompany());
 		member.setActivityItemCount(activityItemCount);
 		return member;
 	}
