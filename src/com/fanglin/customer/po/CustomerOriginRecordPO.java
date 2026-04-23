@@ -24,6 +24,8 @@ public class CustomerOriginRecordPO implements Serializable {
 
 	public static final short TYPE_DEFINE_INT = 1;
 
+	public static final short TYPE_REFER_INT = 2;
+
 	private long crid;
 
 	private long csid;

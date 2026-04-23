@@ -26,6 +26,8 @@ public class CustomerSourceRecordPO implements Serializable {
 
 	public static final short TYPE_USER_RULE_INT = 2;
 
+	public static final short TYPE_REFER_INT = 3;
+
 	private long csrid;
 
 	private long csid;

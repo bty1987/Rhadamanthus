@@ -14,7 +14,7 @@ public interface DecorationInfoService {
 
 	public void confirmDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
-	public int referDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException;
+	public int referDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId) throws FLException;
 
-	public int deleteReferDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException;
+	public int deleteReferDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId) throws FLException;
 }
