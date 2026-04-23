@@ -33,8 +33,10 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
+import com.fanglin.customer.dao.CustomerSourceRecordDao;
 import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerSourcePO;
+import com.fanglin.customer.po.CustomerSourceRecordPO;
 import com.fanglin.customer.service.CustomerSourceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
@@ -62,6 +64,9 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Autowired
 	private CustomerSourceDao customerSourceDao;
+
+	@Autowired
+	private CustomerSourceRecordDao customerSourceRecordDao;
 
 	@Autowired
 	private HouseService houseService;
@@ -204,7 +209,10 @@ public class A20260103ServiceImpl implements A20260103Service {
 			CustomerSourcePO sourcePO = customerSourceDao.get(existingChance.getSource().getCsid());
 			if (sourcePO != null) {
 				if (referOrderId != null && !referOrderId.trim().isEmpty()) {
+					String oldReferOrderId = sourcePO.getReferOrderId();
 					sourcePO.setReferOrderId(referOrderId);
+					UserPO operater = userDao.queryUserByUserId(userId);
+					customerSourceRecordDao.save(new CustomerSourceRecordPO().init(sourcePO.getCsid(), existingChance.getCcid(), String.format("referOrderId: %s -> %s", oldReferOrderId, referOrderId), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
 				}
 				if (sourceInfo != null && !sourceInfo.trim().isEmpty()) {
 					sourcePO.setSource(sourceInfo);

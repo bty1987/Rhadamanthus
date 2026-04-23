@@ -19,16 +19,22 @@ import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerOriginDao;
+import com.fanglin.customer.dao.CustomerOriginRecordDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
+import com.fanglin.customer.dao.CustomerSourceRecordDao;
 import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerOriginPO;
+import com.fanglin.customer.po.CustomerOriginRecordPO;
 import com.fanglin.customer.po.CustomerSourcePO;
+import com.fanglin.customer.po.CustomerSourceRecordPO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationInfoDao;
+import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.DecorationPictureDao;
 import com.fanglin.decoration.dao.DecorationServiceDao;
 import com.fanglin.decoration.po.DecorationInfoPO;
+import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.po.DecorationPicturePO;
 import com.fanglin.decoration.po.DecorationServicePO;
@@ -79,6 +85,15 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 	@Autowired
 	private CustomerOriginDao customerOriginDao;
+
+	@Autowired
+	private CustomerSourceRecordDao customerSourceRecordDao;
+
+	@Autowired
+	private CustomerOriginRecordDao customerOriginRecordDao;
+
+	@Autowired
+	private DecorationOperateDao decorationOperateDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -300,7 +315,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int referDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException {
+	public int referDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 
@@ -313,6 +328,8 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		if (referationPO == null) {
 			throw new FLException(140086, "推荐订单不存在");
 		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
 
 		referationPO = null;// 如果不初始化 当customerChancePO，customerOriginPO，decorationInfoPO都为空 不会产生数据
 
@@ -328,8 +345,11 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 			if (customerSourcePO != null) {
 
+				String oldReferOrderId = customerSourcePO.getReferOrderId();
 				customerSourcePO.setReferOrderId(decorationInfoVO.getReferOrderId());
 				customerSourceDao.update(customerSourcePO);
+
+				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId()), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
 
 				return 0;
 			}
@@ -343,9 +363,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 		if (referationPO == null && customerOriginPO != null) {
 
+			String oldReferOrderId = customerOriginPO.getReferOrderId();
 			customerOriginPO.setReferOrderId(decorationInfoVO.getReferOrderId());
 
 			customerOriginDao.update(customerOriginPO);
+
+			customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId()), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
 
 			return 0;
 		}
@@ -356,16 +379,19 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			decorationInfoPO = new DecorationInfoPO(decorationVO.getOrderId());
 		}
 
+		String oldReferOrderId = decorationInfoPO.getReferOrderId();
 		decorationInfoPO.setReferOrderId(decorationInfoVO.getReferOrderId());
 
 		decorationInfoDao.saveOrUpdate(decorationInfoPO);
+
+		decorationOperateDao.save(new DecorationOperatePO().refer(decorationVO.getOrderId(), operater, String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId())));
 
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteReferDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException {
+	public int deleteReferDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 
@@ -379,6 +405,8 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			throw new FLException(140086, "推荐订单不存在");
 		}
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
 		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(decorationVO.getOrderId());
 
 		if (customerChancePO != null) {
@@ -386,8 +414,11 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 			if (ccReferationPO != null && customerChancePO != null && ccReferationPO.getOrderId().equals(decorationInfoVO.getReferOrderId())) {
 
+				String oldReferOrderId = customerChancePO.getSource().getReferOrderId();
 				customerChancePO.getSource().setReferOrderId(null);
 				customerChanceDao.update(customerChancePO);
+
+				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
 
 				return 0;
 			}
@@ -400,8 +431,11 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 			if (ccReferationPO != null && customerChancePO1 != null && ccReferationPO.getOrderId().equals(decorationVO.getOrderId())) {
 
+				String oldReferOrderId = customerChancePO1.getSource().getReferOrderId();
 				customerChancePO1.getSource().setReferOrderId(null);
 				customerChanceDao.update(customerChancePO1);
+
+				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO1.getSource().getCsid(), customerChancePO1.getCcid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
 
 				return 0;
 			}
@@ -414,9 +448,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 			if (coReferationPO != null && customerOriginPO != null && coReferationPO.getOrderId().equals(decorationInfoVO.getReferOrderId())) {
 
+				String oldReferOrderId = customerOriginPO.getReferOrderId();
 				customerOriginPO.setReferOrderId(null);
 
 				customerOriginDao.update(customerOriginPO);
+
+				customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
 
 				return 0;
 			}
@@ -429,9 +466,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 			if (coReferationPO != null && customerOriginPO1 != null && coReferationPO.getOrderId().equals(decorationVO.getOrderId())) {
 
+				String oldReferOrderId = customerOriginPO1.getReferOrderId();
 				customerOriginPO1.setReferOrderId(null);
 
 				customerOriginDao.update(customerOriginPO1);
+
+				customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO1.getCsid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
 
 				return 0;
 			}
@@ -440,9 +480,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(decorationVO.getOrderId());
 
 		if (decorationInfoPO != null && decorationInfoPO.getReferOrderId() != null && decorationInfoPO.getReferOrderId().equals(decorationInfoVO.getReferOrderId())) {
+			String oldReferOrderId = decorationInfoPO.getReferOrderId();
 			decorationInfoPO.setReferOrderId(null);
 
 			decorationInfoDao.update(decorationInfoPO);
+
+			decorationOperateDao.save(new DecorationOperatePO().unrefer(decorationVO.getOrderId(), operater, String.format("referOrderId: %s -> null", oldReferOrderId)));
 
 			return 0;
 		}
@@ -450,9 +493,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		DecorationInfoPO decorationInfoPO1 = decorationInfoDao.queryDecorationInfoByOrderId(decorationInfoVO.getReferOrderId());
 
 		if (decorationInfoPO1 != null && decorationInfoPO1.getReferOrderId() != null && decorationInfoPO1.getReferOrderId().equals(decorationVO.getOrderId())) {
+			String oldReferOrderId = decorationInfoPO1.getReferOrderId();
 			decorationInfoPO1.setReferOrderId(null);
 
 			decorationInfoDao.update(decorationInfoPO1);
+
+			decorationOperateDao.save(new DecorationOperatePO().unrefer(decorationInfoVO.getReferOrderId(), operater, String.format("referOrderId: %s -> null", oldReferOrderId)));
 
 			return 0;
 		}

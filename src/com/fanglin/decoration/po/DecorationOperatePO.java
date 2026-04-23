@@ -53,6 +53,10 @@ public class DecorationOperatePO implements java.io.Serializable {
 
 	public static final short TYPE_HIDDEN_DECORATION_ORDER_INT = 13;// 隐藏/显示
 
+	public static final short TYPE_REFER_DECORATION_ORDER_INT = 14;// 推介
+
+	public static final short TYPE_UNREFER_DECORATION_ORDER_INT = 15;// 取消推介
+
 	public static final short ATTTYPE_CURRENCY_INT = 0; // 通用
 
 	public static final short ATTTYPE_DESIGN_INT = 1;// 设计
@@ -319,6 +323,32 @@ public class DecorationOperatePO implements java.io.Serializable {
 		setValue(value);
 
 		setComment("Prosign");
+
+		return this;
+	}
+
+	public DecorationOperatePO refer(String orderId, UserPO operater, String comment) {
+
+		setOrderId(orderId);
+		setOperater(operater);
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setType(DecorationOperatePO.TYPE_REFER_DECORATION_ORDER_INT);
+		setStatus(DecorationOperatePO.STATUS_INIT_INT);
+
+		setComment(comment);
+
+		return this;
+	}
+
+	public DecorationOperatePO unrefer(String orderId, UserPO operater, String comment) {
+
+		setOrderId(orderId);
+		setOperater(operater);
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setType(DecorationOperatePO.TYPE_UNREFER_DECORATION_ORDER_INT);
+		setStatus(DecorationOperatePO.STATUS_INIT_INT);
+
+		setComment(comment);
 
 		return this;
 	}

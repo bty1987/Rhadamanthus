@@ -75,7 +75,7 @@ public class DecorationInfoAction extends BaseListAction {
 	@Action(value = "referDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String referDecorationInfo() throws FLException {
 
-		decorationInfoService.referDecorationInfo(decoration, decorationInfo);
+		decorationInfoService.referDecorationInfo(decoration, decorationInfo, queryUserId());
 
 		return SUCCESS;
 	}
@@ -83,7 +83,7 @@ public class DecorationInfoAction extends BaseListAction {
 	@Action(value = "deleteReferDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteReferDecorationInfo() throws FLException {
 
-		decorationInfoService.deleteReferDecorationInfo(decoration, decorationInfo);
+		decorationInfoService.deleteReferDecorationInfo(decoration, decorationInfo, queryUserId());
 
 		return SUCCESS;
 	}
