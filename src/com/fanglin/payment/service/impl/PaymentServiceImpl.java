@@ -17,13 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.communion.dao.ConstantDao;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.ConstantPO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.vo.CustomerVO;
-import com.fanglin.approval.dao.ApprovalDao;
-import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
@@ -34,6 +34,8 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.dingding.service.DingTalkMessageService;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -50,8 +52,6 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
-import com.fanglin.information.po.MessageCueuingPO;
-import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -665,6 +665,7 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void sendPayment(PaymentVO paymentVO) throws FLException {
 
 		PaymentPO paymentPO = paymentDao.get(paymentVO.getPid());
