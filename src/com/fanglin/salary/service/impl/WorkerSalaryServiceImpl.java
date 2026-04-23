@@ -382,6 +382,19 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			workerSalaryDao.update(workerSalaryPO);
 
+			// 更新 construction.salarytotal
+			if (workerSalaryPO.getCsid() != null && workerSalaryPO.getCsid() != 0) {
+				long cid = workerSalaryPO.getCid();
+				if (cid != 0) {
+					ConstructionPO constructionPO = constructionDao.queryConstructionByCid(cid);
+					if (constructionPO != null) {
+						long salaryTotal = Arith.sub(constructionPO.getSalaryTotal(), workerSalaryPO.getMoney());
+						constructionPO.setSalaryTotal(salaryTotal);
+						constructionDao.update(constructionPO);
+					}
+				}
+			}
+
 			if (workerSalaryPO.getDecoration() != null) {
 				workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
 			}
@@ -447,6 +460,19 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryPO.setApprover(approver);
 
 			workerSalaryDao.update(workerSalaryPO);
+
+			// 更新 construction.salarytotal
+			if (workerSalaryPO.getCsid() != null && workerSalaryPO.getCsid() != 0) {
+				long cid = workerSalaryPO.getCid();
+				if (cid != 0) {
+					ConstructionPO constructionPO = constructionDao.queryConstructionByCid(cid);
+					if (constructionPO != null) {
+						long salaryTotal = Arith.sub(constructionPO.getSalaryTotal(), workerSalaryPO.getMoney());
+						constructionPO.setSalaryTotal(salaryTotal);
+						constructionDao.update(constructionPO);
+					}
+				}
+			}
 
 			if (workerSalaryPO.getDecoration() != null) {
 				workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
