@@ -140,9 +140,11 @@ public class MemberServiceImpl implements MemberService {
 		// 收集所有查询条件：手机号或装修单号
 		for (MemberVO member : members) {
 			if (member.getOrderId() != null && !member.getOrderId().isEmpty()) {
-				// 装修单号查询
-				orderIdList.add(member.getOrderId());
-				orderKeyList.add(member.getOrderId());
+				// 装修单号查询（去重）
+				if (!orderIdList.contains(member.getOrderId())) {
+					orderIdList.add(member.getOrderId());
+					orderKeyList.add(member.getOrderId());
+				}
 			} else if (member.getPhone() != null) {
 				// 手机号查询
 				phoneList.add(FormatUtil.encodePhone(member.getPhone()));
@@ -356,6 +358,7 @@ public class MemberServiceImpl implements MemberService {
 		// ========== 2. 构建手机号列表和初始结果容器 ==========
 		List<String> encodedPhoneList = new ArrayList<String>();
 		List<Long> customerIds = new ArrayList<Long>();
+		List<String> queryOrderIds = new ArrayList<String>();
 
 		for (MemberVO member : members) {
 			if (member.getOrderId() != null && !member.getOrderId().isEmpty()) {
@@ -416,7 +419,6 @@ public class MemberServiceImpl implements MemberService {
 			Map<String, List<Long>> phoneToCustomerMap = new HashMap<String, List<Long>>();
 			// 客户ID -> 手机号(原始) - 反向索引，消除嵌套循环
 			Map<Long, String> customerToPhoneMap = new HashMap<Long, String>();
-			List<Long> customerIds = new ArrayList<Long>();
 
 			for (CustomerPhonePO customerPhone : customerPhoneList) {
 				String originalPhone = FormatUtil.decodePhone(customerPhone.getPhone());
@@ -542,8 +544,8 @@ public class MemberServiceImpl implements MemberService {
 				DecorationActivityItemPO.STATUS_WAIT_INT, // 未退
 				DecorationActivityItemPO.STATUS_UPGRADE_INT, // 升级
 				DecorationActivityItemPO.STATUS_CONSUME_INT, // 消耗
-				DecorationActivityItemPO.STATUS_DISCOUNT_INT, // 抵现
-				DecorationActivityItemPO.STATUS_VERIFY_INT // 抵现
+			DecorationActivityItemPO.STATUS_DISCOUNT_INT, // 抵现
+			DecorationActivityItemPO.STATUS_VERIFY_INT // 核销
 				);
 
 		// orderId -> 活动项目数量映射
@@ -556,35 +558,7 @@ public class MemberServiceImpl implements MemberService {
 			}
 		}
 
-		// 9.1 【隐藏】处理主订单 - 根据业务需求，只返回推荐信息（关联订单）
-		for (DecorationPO decorationPO : decorationPOs) {
-			String recommenderPhone = orderToPhoneMap.get(decorationPO.getOrderId());
-			if (recommenderPhone == null) {
-				continue;
-			}
-
-			CustomerPO customer = decorationPO.getCustomer();
-			if (customer == null) {
-				continue;
-			}
-
-			boolean flag = false;
-
-			List<CustomerPhonePO> customerPhones = customerPhoneBatchMap.get(customer.getCid());
-			if (customerPhones != null && !customerPhones.isEmpty()) {
-				String phone = FormatUtil.decodePhone(customerPhones.get(0).getPhone());
-				String referOrderId = null;
-				String uniqueId = generateUniqueId(decorationPO.getDoid(), decorationPO.getOrderId(), null);
-				Integer activityCount = orderActivityCountMap.get(decorationPO.getOrderId());
-
-				MemberVO member = createMemberVO(decorationPO, phone, referOrderId, uniqueId, activityCount);
-
-				List<MemberVO> memberList = resultMap.get(recommenderPhone);
-				if (memberList != null && flag) {
-					memberList.add(member);
-				}
-			}
-		}
+		// 9.1 只返回关联订单（推荐信息），不返回主订单
 
 		// 9.2 处理关联订单（推荐信息）
 		for (DecorationPO decorationPO : referOrders) {
