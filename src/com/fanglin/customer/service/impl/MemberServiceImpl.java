@@ -383,42 +383,47 @@ public class MemberServiceImpl implements MemberService {
 			for (String orderId : queryOrderIds) {
 				DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 				if (decorationPO != null) {
-					// 验证公司权限
-					if (company != null && !decorationPO.getCompany().equals(company)) {
-						continue;
-					}
+			// 验证公司权限
+			if (company != null && decorationPO.getCompany() != company) {
+				continue;
+			}
 
-					// 查找推荐人手机号
-					if (decorationPO.getChance() != null && decorationPO.getChance().getChance() != null) {
-						String phone = decorationPO.getChance().getChance().getPhone();
-						if (phone != null) {
-							orderIdToPhoneMap.put(orderId, phone);
-							if (!resultMap.containsKey(phone)) {
-								resultMap.put(phone, new ArrayList<MemberVO>());
-							}
+			// 查找推荐人手机号（通过订单所属客户查询）
+			CustomerPO orderCustomer = decorationPO.getCustomer();
+			if (orderCustomer != null) {
+				List<CustomerPhonePO> orderPhones = customerPhoneDao.queryCustomerPhoneByCid(orderCustomer.getCid(), null);
+				if (orderPhones != null && !orderPhones.isEmpty()) {
+					String phone = FormatUtil.decodePhone(orderPhones.get(0).getPhone());
+					if (phone != null) {
+						orderIdToPhoneMap.put(orderId, phone);
+						if (!resultMap.containsKey(phone)) {
+							resultMap.put(phone, new ArrayList<MemberVO>());
 						}
 					}
+				}
+			}
 
 					decorationPOs.add(decorationPO);
 				}
 			}
 		}
 
-		// 处理手机号查询（如果存在）
-		if (!encodedPhoneList.isEmpty()) {
-			customerPhoneList = customerPhoneDao.queryCustomerPhone(encodedPhoneList, null, null, company);
+	// 客户ID -> 手机号(原始) - 反向索引，消除嵌套循环（提升到外层，装修单号查询时也需要）
+	Map<Long, String> customerToPhoneMap = new HashMap<Long, String>();
 
-			if (customerPhoneList == null || customerPhoneList.isEmpty()) {
-				if (decorationPOs.isEmpty()) {
-					// 两种查询方式都无结果
-					return resultMap;
-				}
+	// 处理手机号查询（如果存在）
+	if (!encodedPhoneList.isEmpty()) {
+		customerPhoneList = customerPhoneDao.queryCustomerPhone(encodedPhoneList, null, null, company);
+
+		if (customerPhoneList == null || customerPhoneList.isEmpty()) {
+			if (decorationPOs.isEmpty()) {
+				// 两种查询方式都无结果
+				return resultMap;
 			}
+		}
 
-			// 手机号(原始) -> 客户ID列表
-			Map<String, List<Long>> phoneToCustomerMap = new HashMap<String, List<Long>>();
-			// 客户ID -> 手机号(原始) - 反向索引，消除嵌套循环
-			Map<Long, String> customerToPhoneMap = new HashMap<Long, String>();
+		// 手机号(原始) -> 客户ID列表
+		Map<String, List<Long>> phoneToCustomerMap = new HashMap<String, List<Long>>();
 
 			for (CustomerPhonePO customerPhone : customerPhoneList) {
 				String originalPhone = FormatUtil.decodePhone(customerPhone.getPhone());
