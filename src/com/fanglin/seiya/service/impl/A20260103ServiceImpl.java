@@ -30,7 +30,7 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.utils.FormatUtil;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
 import com.fanglin.customer.dao.CustomerSourceRecordDao;
@@ -312,7 +312,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		// customer 信息: phone 脱敏
 		if (decorationPO.getCustomer() != null) {
 			CustomerVO customerVO = new CustomerVO();
-			String decodedPhone = FormatUtil.decodePhone(decorationPO.getCustomer().getPhone());
+			String decodedPhone = SensitiveDataHelper.decrypt(decorationPO.getCustomer().getPhone());
 			if (decodedPhone != null && decodedPhone.length() >= 7) {
 				customerVO.setPhone(decodedPhone.substring(0, 3) + "****" + decodedPhone.substring(7));
 			} else {
@@ -435,7 +435,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 	 */
 	private CustomerVO findCustomerByPhone(String phone, Integer company) throws FLException {
 
-		String encodedPhone = FormatUtil.encodePhone(phone);
+		String encodedPhone = SensitiveDataHelper.encrypt(phone);
 
 		List<CustomerPhonePO> phonePOs = customerPhoneDao.queryCustomerPhoneByPhone(encodedPhone, CustomerPhonePO.STATUS_ENABLE_INT, company);
 
