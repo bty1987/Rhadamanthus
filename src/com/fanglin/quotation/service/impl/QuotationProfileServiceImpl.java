@@ -259,8 +259,7 @@ public class QuotationProfileServiceImpl implements QuotationProfileService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void handleQuotationProfile(QuotationProfileVO quotationProfileVO) throws FLException {
-
-		if (quotationProfileVO.getItems() == null) {
+		if (quotationProfileVO == null || quotationProfileVO.getItems() == null) {
 			throw new FLException(330087, "报价配置不存在");
 		}
 
@@ -269,6 +268,7 @@ public class QuotationProfileServiceImpl implements QuotationProfileService {
 		for (QuotationProfileItemVO itemVO : quotationProfileItems) {
 
 			QuotationProfileItemPO itemPO = quotationProfileItemDao.get(itemVO.getQpiid());
+			if (itemPO == null) continue;
 
 			if (Arrays.asList(QuotationProfileItemPO.TYPE_TEXT_INT, QuotationProfileItemPO.TYPE_INPUT_INT, QuotationProfileItemPO.TYPE_DATE_INT).contains(itemPO.getType())) {
 				itemPO.setContent(itemVO.getContent());
@@ -278,7 +278,6 @@ public class QuotationProfileServiceImpl implements QuotationProfileService {
 			List<QuotationProfileOptionVO> options = itemVO.getOptions();
 
 			if (options == null) continue;
-
 			for (QuotationProfileOptionVO optionVO : options) {
 
 				if (optionVO == null) continue;
