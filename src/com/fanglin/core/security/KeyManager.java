@@ -5,11 +5,14 @@ import com.fanglin.utils.SystemConfig;
 /**
  * 密钥管理器 — 多级兜底获取密钥
  *
- * 优先级（从高到低）:
+ * 当前密钥优先级（从高到低）:
  *   1. JVM启动参数: -Dfanglin.secret.key=xxx -Dfanglin.secret.iv=xxx
  *   2. 环境变量:    FANGLIN_SECRET_KEY / FANGLIN_SECRET_IV
  *   3. 配置文件:    sysconfig.properties 中 encryptKeyV1 / encryptIvV1
- *   4. 硬编码默认值: 开发环境兜底
+ *   4. 兜底:       使用 sysconfig.properties 中 encryptKey / encryptIv（旧版密钥）
+ *
+ * 旧版密钥（兼容存量数据解密）:
+ *   - 直接读取 sysconfig.properties 中 encryptKey / encryptIv
  */
 public class KeyManager {
 
@@ -20,14 +23,6 @@ public class KeyManager {
     // ========== 环境变量名 ==========
     private static final String ENV_VAR_KEY = "FANGLIN_SECRET_KEY";
     private static final String ENV_VAR_IV  = "FANGLIN_SECRET_IV";
-
-    // ========== 旧密钥（兼容存量数据，不可更改） ==========
-    private static final String LEGACY_KEY = "b4d617b336124c63";
-    private static final String LEGACY_IV  = "b4d1a58a416957a5";
-
-    // ========== 默认值（开发环境兜底，与旧密钥相同） ==========
-    private static final String DEFAULT_KEY = "b4d617b336124c63";
-    private static final String DEFAULT_IV  = "b4d1a58a416957a5";
 
     // ========== 缓存 ==========
     private static String cachedKey = null;
@@ -73,16 +68,26 @@ public class KeyManager {
 
     /**
      * 获取旧版密钥（兼容存量数据解密）
+     * 从 sysconfig.properties 读取 encryptKey
      */
     public static String getLegacyKey() {
-        return LEGACY_KEY;
+        try {
+            return SystemConfig.getString("encryptKey");
+        } catch (Exception e) {
+            throw new RuntimeException("旧版密钥配置缺失: sysconfig.properties 中缺少 encryptKey", e);
+        }
     }
 
     /**
      * 获取旧版 IV
+     * 从 sysconfig.properties 读取 encryptIv
      */
     public static String getLegacyIv() {
-        return LEGACY_IV;
+        try {
+            return SystemConfig.getString("encryptIv");
+        } catch (Exception e) {
+            throw new RuntimeException("旧版密钥配置缺失: sysconfig.properties 中缺少 encryptIv", e);
+        }
     }
 
     /**
@@ -125,9 +130,29 @@ public class KeyManager {
             }
         }
 
-        // 4. 硬编码默认值（开发环境兜底）
-        if (isEmpty(key)) key = DEFAULT_KEY;
-        if (isEmpty(iv))  iv  = DEFAULT_IV;
+        // 4. 兜底: 使用旧版密钥（encryptKey/encryptIv，已在配置文件中存在）
+        if (isEmpty(key)) {
+            try {
+                key = SystemConfig.getString("encryptKey");
+            } catch (Exception e) {
+                throw new RuntimeException(
+                    "无法获取AES密钥，请在以下任一来源配置:\n" +
+                    "  1. JVM参数: -Dfanglin.secret.key=xxx\n" +
+                    "  2. 环境变量: FANGLIN_SECRET_KEY\n" +
+                    "  3. 配置文件: sysconfig.properties 中 encryptKeyV1 或 encryptKey", e);
+            }
+        }
+        if (isEmpty(iv)) {
+            try {
+                iv = SystemConfig.getString("encryptIv");
+            } catch (Exception e) {
+                throw new RuntimeException(
+                    "无法获取AES IV，请在以下任一来源配置:\n" +
+                    "  1. JVM参数: -Dfanglin.secret.iv=xxx\n" +
+                    "  2. 环境变量: FANGLIN_SECRET_IV\n" +
+                    "  3. 配置文件: sysconfig.properties 中 encryptIvV1 或 encryptIv", e);
+            }
+        }
 
         cachedKey = key;
         cachedIv  = iv;
