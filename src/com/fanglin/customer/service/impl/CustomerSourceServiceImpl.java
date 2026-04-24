@@ -248,7 +248,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerSourcePO.setHouse(housePO);
 			customerSourcePO.setVillage(housePO.getVillage());
-			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
+			customerSourcePO.setHouseNumber(SensitiveDataHelper.decrypt(housePO.getHouseNumber()));
 		}
 
 		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman", "busitype", "phone"));
@@ -329,7 +329,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerSourcePO.setHouse(housePO);
 			customerSourcePO.setVillage(housePO.getVillage());
-			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
+			customerSourcePO.setHouseNumber(SensitiveDataHelper.decrypt(housePO.getHouseNumber()));
 		}
 
 		if (customerSourceVO.getBusitype() != null && customerSourceVO.getBusitype().getDbid() != null) {
@@ -452,7 +452,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		if (housePO != null) {
 			customerSourcePO.setHouse(housePO);
 			customerSourcePO.setVillage(housePO.getVillage());
-			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
+			customerSourcePO.setHouseNumber(SensitiveDataHelper.decrypt(housePO.getHouseNumber()));
 		}
 
 		customerSourceDao.save(customerSourcePO);

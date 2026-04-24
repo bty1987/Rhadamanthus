@@ -24,6 +24,7 @@ import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.service.AcceptanceService;
 import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.po.MessageQueuingPO;
@@ -79,7 +80,7 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 		}
 
 		acceptanceVO.setCustomer(decorationPO.getCustomer().getName());
-		acceptanceVO.setOrderAddr(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
+		acceptanceVO.setOrderAddr(decorationPO.getHouse().getVillage().getName() + " " + SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber()));
 		acceptanceVO.setDesigner(decorationPO.getDesigner().getCurrentName());
 
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);

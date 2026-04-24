@@ -27,6 +27,7 @@ import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.secret.service.SecretService;
 
 @Service("secretService")
@@ -83,7 +84,7 @@ public class SecretServiceImpl implements SecretService {
 					
 					decorationVO.setOrderId(decorationPO.getOrderId());
 					decorationVO.getHouse().getVillage().setName(decorationPO.getHouse().getVillage().getName());
-					decorationVO.getHouse().setHouseNumber(decorationPO.getHouse().getHouseNumber());
+					decorationVO.getHouse().setHouseNumber(SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber()));
 	
 					decorationVOs.add(decorationVO);
 				}

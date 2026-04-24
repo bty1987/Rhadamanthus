@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.data.common.dao.ReceiptTypeDao;
 import com.fanglin.data.po.ReceiptTypePO;
 import com.fanglin.kingdee.handle.Dao;
@@ -302,7 +303,7 @@ public class DecorationKingdeeServiceImpl implements DecorationKingdeeService {
 		String city = decorationPaymentPO.getDecoration().getHouse().getVillage().getCityProper().getCity().getName();
 		String cityProper = decorationPaymentPO.getDecoration().getHouse().getVillage().getCityProper().getName();
 		String village = decorationPaymentPO.getDecoration().getHouse().getVillage().getName();
-		String houseNum = decorationPaymentPO.getDecoration().getHouse().getHouseNumber();
+		String houseNum = SensitiveDataHelper.decrypt(decorationPaymentPO.getDecoration().getHouse().getHouseNumber());
 
 		String address = province + " " + city + " " + cityProper + " " + village + houseNum;
 

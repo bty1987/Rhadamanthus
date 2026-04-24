@@ -169,7 +169,7 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setSalesScale(decorationPO.getSaleScale());
 			decorationVO.setCustomerId(decorationPO.getCustomer().getCid());
 			decorationVO.setContractTime(decorationPO.getContractTime());
-			decorationVO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
+			decorationVO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber()));
 			decorationVO.setCreateTime(decorationPO.getCreateTime());
 			decorationVO.setDepositTime(decorationPO.getDepositTime());
 			decorationVO.setHouseArea(decorationPO.getHouse().getBuildArea());
@@ -286,7 +286,7 @@ public class DecorationServiceImpl implements DecorationService {
 		DecorationPO cecorationPO = new DecorationPO();
 
 		cecorationPO.setOrderId(decorationPO.getOrderId());
-		cecorationPO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
+		cecorationPO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber()));
 		cecorationPO.setUnionId(unionId);
 		cecorationPO.setDefaultFlag(DecorationPO.DEFAULTFLAG_INIT_SHORT);
 

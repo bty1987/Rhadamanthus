@@ -3,6 +3,7 @@ package com.fanglin.communion.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
@@ -76,7 +78,10 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 			} else if ("orientation".equals(filter.getField())) {
 				query.add(Restrictions.eq("orientation", Short.valueOf(filter.getData())));
 			} else if ("houseNumber".equals(filter.getField())) {
-				query.add(query.getCriterion("houseNumber", filter));
+				Disjunction disjunction = Restrictions.disjunction();
+				disjunction.add(query.getCriterion("houseNumber", filter));
+				disjunction.add(Restrictions.eq("houseNumber", SensitiveDataHelper.encrypt(filter.getData())));
+				query.add(disjunction);
 			} else if ("status".equals(filter.getField())) {
 				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 			} else if ("buildingArea".equals(filter.getField())) {

@@ -15,6 +15,7 @@ import java.io.Serializable;
 
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.kingdee.handle.Bean;
 import com.fanglin.system.po.CityPO;
@@ -65,7 +66,7 @@ public class CustomerKO extends Bean implements Serializable {
 		CityPO cityPO = cityProperPO.getCity();
 
 		this.FNumber = decorationPO.getOrderId();
-		this.FName = String.format("%s %s %s %s", cityPO.getName(), cityProperPO.getName(), villagePO.getName(), housePO.getHouseNumber());
+		this.FName = String.format("%s %s %s %s", cityPO.getName(), cityProperPO.getName(), villagePO.getName(), SensitiveDataHelper.decrypt(housePO.getHouseNumber()));
 
 		return this;
 	}

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.DroupDao;
 import com.fanglin.customer.po.DroupPO;
@@ -109,7 +110,7 @@ public class DroupServiceImpl implements DroupService {
 			throw new FLException(330068, "群信息已存在");
 		}
 
-		String houseNumber = decorationPO.getHouse().getHouseNumber();
+		String houseNumber = SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber());
 
 		String name = decorationPO.getHouse().getVillage().getName();
 

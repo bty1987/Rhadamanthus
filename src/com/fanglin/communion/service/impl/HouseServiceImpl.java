@@ -16,6 +16,7 @@ import com.fanglin.communion.service.HouseService;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
@@ -26,6 +27,7 @@ import com.fanglin.utils.Paging;
 @Service("houseService")
 @Transactional(readOnly = true)
 public class HouseServiceImpl implements HouseService {
+
 
 	@Autowired
 	private HouseDao houseDao;
@@ -55,44 +57,46 @@ public class HouseServiceImpl implements HouseService {
 			throw new FLException(320002, "房产不存在");
 		}
 
-		return housePO.ptv(new HouseVO(new VillageVO(new CityProperVO(new CityVO(new RegionVO())))));
+		return housePO.ptv(new HouseVO(new VillageVO(new CityProperVO(new CityVO(new RegionVO()))))));
 	}
 
 	@Override
 	public HouseVO queryHouseByNoAHnum(HouseVO houseVO, Integer company) throws FLException {
 
 		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
+		if (housePO == null) {
+			housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), SensitiveDataHelper.encrypt(houseVO.getHouseNumber()), company);
+		}
 
 		if (housePO == null) {
 			throw new FLException(320002, "房产不存在");
 		}
 
-		return housePO.ptv(new HouseVO(new VillageVO(new CityProperVO(new CityVO(new RegionVO())))));
+		return housePO.ptv(new HouseVO(new VillageVO(new CityProperVO(new CityVO(new RegionVO()))))));
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addHouse(HouseVO houseVO, Integer company) throws FLException {
 
-		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
+		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), SensitiveDataHelper.encrypt(houseVO.getHouseNumber()), company);
+		if (housePO == null) {
+			housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
+		}
 
 		if (housePO != null) {
 			throw new FLException(320001, "楼牌号已存在");
 		}
 
 		housePO = new HousePO();
-
-		BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village"));
+		BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village", "houseNumber"));
+		housePO.setHouseNumber(SensitiveDataHelper.encrypt(houseVO.getHouseNumber()));
 
 		VillagePO villagePO = villageDao.get(houseVO.getVillage().getNo());
-
 		housePO.setVillage(villagePO);
 		housePO.setCompany(company);
-
 		houseDao.save(housePO);
-
 		BeanUtil.copyProperties(housePO, houseVO, Arrays.asList("village"));
-
 		return 0;
 	}
 
@@ -100,21 +104,21 @@ public class HouseServiceImpl implements HouseService {
 	@Transactional(rollbackFor = Exception.class)
 	public int existHouse(HouseVO houseVO, Integer company) {
 
-		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
+		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), SensitiveDataHelper.encrypt(houseVO.getHouseNumber()), company);
+		if (housePO == null) {
+			housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
+		}
 
 		if (housePO == null) {
 			housePO = new HousePO();
-
-			BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village"));
+			BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village", "houseNumber"));
+			housePO.setHouseNumber(SensitiveDataHelper.encrypt(houseVO.getHouseNumber()));
 
 			VillagePO villagePO = villageDao.get(houseVO.getVillage().getNo());
-
 			housePO.setVillage(villagePO);
 			housePO.setCompany(company);
 			housePO.setInnerArea(0);
-
 			houseDao.save(housePO);
-
 			BeanUtil.copyProperties(housePO, houseVO, Arrays.asList("village"));
 		}
 

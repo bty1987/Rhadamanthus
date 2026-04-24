@@ -297,7 +297,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		// house 信息: village.no, village.name, houseNumber
 		if (decorationPO.getHouse() != null) {
 			HouseVO houseVO = new HouseVO();
-			houseVO.setHouseNumber(decorationPO.getHouse().getHouseNumber());
+			houseVO.setHouseNumber(SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber()));
 
 			if (decorationPO.getHouse().getVillage() != null) {
 				VillageVO villageVO = new VillageVO();
