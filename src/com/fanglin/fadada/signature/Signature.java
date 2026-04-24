@@ -57,7 +57,6 @@ import com.fanglin.fadada.bean.Contract;
 import com.fanglin.fadada.tools.FddEncryptTool;
 import com.fanglin.fadada.vo.SignatureVO;
 import com.fanglin.utils.EncryptConfigLoader;
-import com.fanglin.utils.SystemConfig;
 
 public class Signature {
 

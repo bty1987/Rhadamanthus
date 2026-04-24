@@ -13,19 +13,17 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.codec.binary.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.utils.SystemConfig;
 import com.fanglin.utils.EncryptConfigLoader;
 import com.fanglin.yspay.utils.CertUtil;
 import com.fanglin.yspay.utils.DateUtil;
 import com.fanglin.yspay.utils.HttpUtil;
 import com.fanglin.yspay.utils.RSAUtil;
 import com.fanglin.yspay.utils.SignUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Base implements Serializable {
 

@@ -2,6 +2,7 @@ package com.fanglin.customer.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.customer.dao.CppointDao;
 import com.fanglin.customer.dao.CppointPaymentDao;
 import com.fanglin.customer.dao.CppointRecordDao;
@@ -57,9 +59,6 @@ import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.core.security.SensitiveDataHelper;
-
-import java.util.Collections;
 
 @Service("memberservice")
 @Transactional(readOnly = true)
@@ -396,47 +395,47 @@ public class MemberServiceImpl implements MemberService {
 			for (String orderId : queryOrderIds) {
 				DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 				if (decorationPO != null) {
-			// 验证公司权限
-			if (company != null && decorationPO.getCompany() != company) {
-				continue;
-			}
+					// 验证公司权限
+					if (company != null && decorationPO.getCompany() != company) {
+						continue;
+					}
 
-			// 查找推荐人手机号（通过订单所属客户查询）
-			CustomerPO orderCustomer = decorationPO.getCustomer();
-			if (orderCustomer != null) {
-				List<CustomerPhonePO> orderPhones = customerPhoneDao.queryCustomerPhoneByCid(orderCustomer.getCid(), null);
-				if (orderPhones != null && !orderPhones.isEmpty()) {
-					String phone = SensitiveDataHelper.decrypt(orderPhones.get(0).getPhone());
-					if (phone != null) {
-						orderIdToPhoneMap.put(orderId, phone);
-						if (!resultMap.containsKey(phone)) {
-							resultMap.put(phone, new ArrayList<MemberVO>());
+					// 查找推荐人手机号（通过订单所属客户查询）
+					CustomerPO orderCustomer = decorationPO.getCustomer();
+					if (orderCustomer != null) {
+						List<CustomerPhonePO> orderPhones = customerPhoneDao.queryCustomerPhoneByCid(orderCustomer.getCid(), null);
+						if (orderPhones != null && !orderPhones.isEmpty()) {
+							String phone = SensitiveDataHelper.decrypt(orderPhones.get(0).getPhone());
+							if (phone != null) {
+								orderIdToPhoneMap.put(orderId, phone);
+								if (!resultMap.containsKey(phone)) {
+									resultMap.put(phone, new ArrayList<MemberVO>());
+								}
+							}
 						}
 					}
-				}
-			}
 
 					decorationPOs.add(decorationPO);
 				}
 			}
 		}
 
-	// 客户ID -> 手机号(原始) - 反向索引，消除嵌套循环（提升到外层，装修单号查询时也需要）
-	Map<Long, String> customerToPhoneMap = new HashMap<Long, String>();
+		// 客户ID -> 手机号(原始) - 反向索引，消除嵌套循环（提升到外层，装修单号查询时也需要）
+		Map<Long, String> customerToPhoneMap = new HashMap<Long, String>();
 
-	// 处理手机号查询（如果存在）
-	if (!encodedPhoneList.isEmpty()) {
-		customerPhoneList = customerPhoneDao.queryCustomerPhone(encodedPhoneList, null, null, company);
+		// 处理手机号查询（如果存在）
+		if (!encodedPhoneList.isEmpty()) {
+			customerPhoneList = customerPhoneDao.queryCustomerPhone(encodedPhoneList, null, null, company);
 
-		if (customerPhoneList == null || customerPhoneList.isEmpty()) {
-			if (decorationPOs.isEmpty()) {
-				// 两种查询方式都无结果
-				return resultMap;
+			if (customerPhoneList == null || customerPhoneList.isEmpty()) {
+				if (decorationPOs.isEmpty()) {
+					// 两种查询方式都无结果
+					return resultMap;
+				}
 			}
-		}
 
-		// 手机号(原始) -> 客户ID列表
-		Map<String, List<Long>> phoneToCustomerMap = new HashMap<String, List<Long>>();
+			// 手机号(原始) -> 客户ID列表
+			Map<String, List<Long>> phoneToCustomerMap = new HashMap<String, List<Long>>();
 
 			for (CustomerPhonePO customerPhone : customerPhoneList) {
 				String originalPhone = SensitiveDataHelper.decrypt(customerPhone.getPhone());
@@ -562,8 +561,8 @@ public class MemberServiceImpl implements MemberService {
 				DecorationActivityItemPO.STATUS_WAIT_INT, // 未退
 				DecorationActivityItemPO.STATUS_UPGRADE_INT, // 升级
 				DecorationActivityItemPO.STATUS_CONSUME_INT, // 消耗
-			DecorationActivityItemPO.STATUS_DISCOUNT_INT, // 抵现
-			DecorationActivityItemPO.STATUS_VERIFY_INT // 核销
+				DecorationActivityItemPO.STATUS_DISCOUNT_INT, // 抵现
+				DecorationActivityItemPO.STATUS_VERIFY_INT // 核销
 				);
 
 		// orderId -> 活动项目数量映射
@@ -1122,13 +1121,6 @@ public class MemberServiceImpl implements MemberService {
 			// 降级方案：parentOrderId-orderId
 			return parentOrderId + "-" + orderId;
 		}
-	}
-
-	/**
-	 * 生成 uniqueId（主订单专用）
-	 */
-	private String generateUniqueId(long doid, String orderId, String parentOrderId) {
-		return generateUniqueId(doid, orderId, parentOrderId, null);
 	}
 
 	/**
