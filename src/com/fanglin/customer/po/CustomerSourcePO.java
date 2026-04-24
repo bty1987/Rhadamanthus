@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.personel.po.UserPO;
@@ -440,7 +441,8 @@ public class CustomerSourcePO implements Serializable {
 
 	public CustomerSourceVO ptv(CustomerSourceVO customerSourceVO) {
 
-		BeanUtil.copyProperties(this, customerSourceVO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
+		BeanUtil.copyProperties(this, customerSourceVO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman", "houseNumber"));
+		customerSourceVO.setHouseNumber(SensitiveDataHelper.decrypt(getHouseNumber()));
 
 		if (customerSourceVO.getHouse() != null && getHouse() != null) getHouse().ptv(customerSourceVO.getHouse());
 		if (customerSourceVO.getVillage() != null && getVillage() != null) getVillage().ptv(customerSourceVO.getVillage());

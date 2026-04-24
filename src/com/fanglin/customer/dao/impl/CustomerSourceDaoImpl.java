@@ -9,6 +9,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerSourceDao;
 import com.fanglin.customer.po.CustomerSourcePO;
@@ -42,7 +43,9 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 
 	@Override
 	public CustomerSourcePO queryCustomerSource(int uid, String houseNumber, long vid, int company) {
-		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).createAlias("creater", "creater").add(Restrictions.eq("creater.uid", uid)).add(Restrictions.eq("houseNumber", houseNumber)).add(Restrictions.eq("village.vid", vid)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).add(Restrictions.eq("company", company)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
+		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).createAlias("creater", "creater").add(Restrictions.eq("creater.uid", uid))
+			.add(Restrictions.disjunction().add(Restrictions.eq("houseNumber", houseNumber)).add(Restrictions.eq("houseNumber", SensitiveDataHelper.decrypt(houseNumber))))
+			.add(Restrictions.eq("village.vid", vid)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).add(Restrictions.eq("company", company)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
