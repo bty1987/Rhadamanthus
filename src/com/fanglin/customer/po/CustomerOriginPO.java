@@ -18,6 +18,7 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.customer.vo.CustomerOriginVO;
 import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.personel.po.UserPO;
@@ -418,7 +419,8 @@ public class CustomerOriginPO implements Serializable {
 
 	public CustomerOriginVO ptv(CustomerOriginVO customerOriginVO) {
 
-		BeanUtil.copyProperties(this, customerOriginVO, Arrays.asList("customer", "village", "house", "creater", "belonger", "designer", "salesman", "region", "department", "decorationBusitype", "phone"));
+		BeanUtil.copyProperties(this, customerOriginVO, Arrays.asList("customer", "village", "house", "creater", "belonger", "designer", "salesman", "region", "department", "decorationBusitype", "phone", "houseNumber"));
+		customerOriginVO.setHouseNumber(SensitiveDataHelper.decrypt(getHouseNumber()));
 
 		if (customerOriginVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(customerOriginVO.getCustomer());
 		if (customerOriginVO.getVillage() != null && getVillage() != null) getVillage().ptv(customerOriginVO.getVillage());

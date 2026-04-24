@@ -13,11 +13,13 @@ package com.fanglin.approval.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.approval.dao.ApprovalCustomerOriginDao;
 import com.fanglin.approval.po.ApprovalCustomerOriginAO;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.approval.po.ApprovalCustomerOriginPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
@@ -60,7 +62,9 @@ public class ApprovalCustomerOriginDaoImpl extends DaoImpl<ApprovalCustomerOrigi
 				query.alias("customerOrigin.village", "village");
 				query.add(query.getCriterion("village.no", filter));
 			} else if ("houseNumber".equals(field)) {
-				query.add(query.getCriterion("customerOrigin.houseNumber", filter));
+				Criterion plainCriterion = query.getCriterion("customerOrigin.houseNumber", filter);
+				Criterion encryptedCriterion = query.getCriterion("customerOrigin.houseNumber", SensitiveDataHelper.encrypt(filter.getData()), filter.getOp());
+				query.add(Restrictions.disjunction().add(plainCriterion).add(encryptedCriterion));
 			} else if ("phone".equals(field)) {
 				query.add(query.getCriterion("customerOrigin.phone", filter));
 			} else if ("createTime".equals(field)) {

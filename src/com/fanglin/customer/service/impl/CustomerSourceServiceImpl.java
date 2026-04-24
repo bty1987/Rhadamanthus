@@ -248,7 +248,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerSourcePO.setHouse(housePO);
 			customerSourcePO.setVillage(housePO.getVillage());
-			customerSourcePO.setHouseNumber(SensitiveDataHelper.decrypt(housePO.getHouseNumber()));
+			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
 		}
 
 		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman", "busitype", "phone"));
@@ -265,7 +265,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		customerSourceDao.save(customerSourcePO);
 
-		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源创建,楼盘:%s,楼号:%s,电话:%s", villagePO != null ? villagePO.getName() : "", customerSourcePO.getHouseNumber(), customerSourcePO.getPhone()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, customerSourcePO.getCreater()));
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源创建,楼盘:%s,楼号:%s,电话:%s", villagePO != null ? villagePO.getName() : "", SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()), customerSourcePO.getPhone()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, customerSourcePO.getCreater()));
 
 		customerSourceDao.flush();
 
@@ -302,7 +302,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		}
 
 		String villageName = customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "";
-		String houseNumber = customerSourcePO.getHouseNumber();
+		String houseNumber = SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber());
 		String phone = customerSourcePO.getPhone();
 
 		VillagePO villagePO = null;
@@ -329,7 +329,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerSourcePO.setHouse(housePO);
 			customerSourcePO.setVillage(housePO.getVillage());
-			customerSourcePO.setHouseNumber(SensitiveDataHelper.decrypt(housePO.getHouseNumber()));
+			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
 		}
 
 		if (customerSourceVO.getBusitype() != null && customerSourceVO.getBusitype().getDbid() != null) {
@@ -347,7 +347,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		customerSourceDao.save(customerSourcePO);
 
-		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源更新,原楼盘:%s,原楼号:%s,原电话:%s,新楼盘:%s,新楼号%s,新电话%s", villageName, houseNumber, phone, customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "", customerSourcePO.getHouseNumber(), customerSourcePO.getPhone()), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源更新,原楼盘:%s,原楼号:%s,原电话:%s,新楼盘:%s,新楼号%s,新电话%s", villageName, houseNumber, phone, customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "", SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()), customerSourcePO.getPhone()), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
 	}
 
 	@Override
@@ -431,7 +431,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		}
 
 		String villageName = customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "";
-		String houseNumber = customerSourcePO.getHouseNumber();
+		String houseNumber = SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber());
 
 		VillagePO villagePO = null;
 
@@ -452,12 +452,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		if (housePO != null) {
 			customerSourcePO.setHouse(housePO);
 			customerSourcePO.setVillage(housePO.getVillage());
-			customerSourcePO.setHouseNumber(SensitiveDataHelper.decrypt(housePO.getHouseNumber()));
+			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
 		}
 
 		customerSourceDao.save(customerSourcePO);
 
-		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源更新,原楼盘:%s,原楼号:%s,新楼盘:%s,新楼号%s", villageName, houseNumber, customerSourcePO.getVillage().getName(), customerSourcePO.getHouseNumber()), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源更新,原楼盘:%s,原楼号:%s,新楼盘:%s,新楼号%s", villageName, houseNumber, customerSourcePO.getVillage().getName(), SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber())), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
 	}
 
 	@Override
@@ -647,7 +647,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("自动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s),机会数:%s,剩余数:%s,轮询数:%s", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo(), Arith.div(customerUserRulePO.getChance(), 1000.0), Arith.div(customerUserRulePO.getSurplus(), 1000.0), customerUserRulePO.getPolling()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("分配规则,%s,%s", customerDeptRulePO.getFocus(), customerUserRuleItemPO.getCuriid()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
-			String message = String.format("设计:%s(%s),新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId(), customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), customerSourcePO.getHouseNumber());
+			String message = String.format("设计:%s(%s),新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId(), customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()));
 
 			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
@@ -690,7 +690,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChanceVO.setIssuer(new UserBaseVO(issuer.getUserId()));
 			customerChanceVO.setIssueTime(customerChancePO.getIssueTime());
 
-			String message = String.format("新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), customerSourcePO.getHouseNumber());
+			String message = String.format("新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()));
 
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
@@ -737,7 +737,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动部门分配,部门:%s(%s),分区:%s(%s)", customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
-			String message = String.format("新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), customerSourcePO.getHouseNumber());
+			String message = String.format("新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()));
 
 			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
@@ -789,7 +789,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			dingTalkMessageService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
 
-			String message = String.format("设计:%s(%s),新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId(), customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), customerSourcePO.getHouseNumber());
+			String message = String.format("设计:%s(%s),新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId(), customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()));
 
 			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());

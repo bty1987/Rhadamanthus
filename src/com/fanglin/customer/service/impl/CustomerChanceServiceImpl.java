@@ -614,7 +614,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (belonger != null) messageService.sendMessage(belonger.getUserId(), null, "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
 
-		String message = String.format("设计:%s(%s),新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId(), customerChancePO.getCreater().getCurrentName(), customerChancePO.getCreater().getUserId(), customerChancePO.getSource().getVillage().getName(), customerChancePO.getSource().getHouseNumber());
+		String message = String.format("设计:%s(%s),新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId(), customerChancePO.getCreater().getCurrentName(), customerChancePO.getCreater().getUserId(), customerChancePO.getSource().getVillage().getName(), SensitiveDataHelper.decrypt(customerChancePO.getSource().getHouseNumber()));
 
 		if (dept != null && dept.getManager() != null) messageService.sendMessage(dept.getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
 		if (region != null && region.getManager() != null) messageService.sendMessage(region.getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());

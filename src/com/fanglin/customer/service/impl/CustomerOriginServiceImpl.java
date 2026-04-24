@@ -213,7 +213,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginDao.save(customerOriginPO);
 
-		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s", customerOriginPO.getVillage().getName(), customerOriginPO.getHouseNumber(), SensitiveDataHelper.encrypt(customerOriginPO.getPhone()), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
+		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s", customerOriginPO.getVillage().getName(), SensitiveDataHelper.decrypt(customerOriginPO.getHouseNumber()), SensitiveDataHelper.encrypt(customerOriginPO.getPhone()), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
 	}
 
 	@Override
@@ -239,7 +239,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 				oldVillageName = customerOriginPO.getVillage().getName();
 			}
 
-			customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s,原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s,新楼盘:%s,新楼牌号:%s,新电话:%s,新目的:%s,新风格意向:%s,新价格:%s,新等级:%s", oldVillageName, customerOriginPO.getHouseNumber(), SensitiveDataHelper.encrypt(customerOriginPO.getPhone()), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade(), villagePO.getName(), customerOriginVO.getHouseNumber(), SensitiveDataHelper.encrypt(customerOriginVO.getPhone()), customerOriginVO.getPurpose(), customerOriginVO.getIntention(), customerOriginVO.getPrice(), customerOriginVO.getGrade()), CustomerOriginRecordPO.TYPE_UPDATE_INT, userDao.queryUserByUserId(userId)));
+			customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s,原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s,新楼盘:%s,新楼牌号:%s,新电话:%s,新目的:%s,新风格意向:%s,新价格:%s,新等级:%s", oldVillageName, SensitiveDataHelper.decrypt(customerOriginPO.getHouseNumber()), SensitiveDataHelper.encrypt(customerOriginPO.getPhone()), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade(), villagePO.getName(), customerOriginVO.getHouseNumber(), SensitiveDataHelper.encrypt(customerOriginVO.getPhone()), customerOriginVO.getPurpose(), customerOriginVO.getIntention(), customerOriginVO.getPrice(), customerOriginVO.getGrade()), CustomerOriginRecordPO.TYPE_UPDATE_INT, userDao.queryUserByUserId(userId)));
 			customerOriginPO.setVillage(villagePO);
 		}
 
@@ -370,7 +370,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginPO.setHouse(housePO);
 		customerOriginPO.setVillage(housePO.getVillage());
-		customerOriginPO.setHouseNumber(SensitiveDataHelper.decrypt(housePO.getHouseNumber()));
+		customerOriginPO.setHouseNumber(housePO.getHouseNumber());
 
 		UserPO designer = userDao.queryUserByUserId(customerOriginVO.getDesigner().getUserId());
 		UserPO salesman = userDao.queryUserByUserId(customerOriginVO.getSalesman().getUserId());
