@@ -131,7 +131,9 @@ public class QuotationProfileServiceImpl implements QuotationProfileService {
 		quotationProfilePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		quotationProfilePO.setOrderId(orderId);
 		quotationProfilePO.setTid(surveyTemplatePO.getStid());
-		quotationProfilePO.setType(quotationProfileVO.getType());
+		if (quotationProfileVO.getType() != null) {
+			quotationProfilePO.setType(quotationProfileVO.getType());
+		}
 		quotationProfilePO.setCompany(company);
 		quotationProfilePO.setStatus(QuotationProfilePO.STATUS_INIT_INT);
 
@@ -199,7 +201,9 @@ public class QuotationProfileServiceImpl implements QuotationProfileService {
 		quotationProfilePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		quotationProfilePO.setOrderId(orderId);
 		quotationProfilePO.setTid(surveyTemplatePO.getStid());
-		quotationProfilePO.setType(quotationProfileVO.getType());
+		if (quotationProfileVO.getType() != null) {
+			quotationProfilePO.setType(quotationProfileVO.getType());
+		}
 		quotationProfilePO.setCompany(company);
 
 		quotationProfileDao.save(quotationProfilePO);
