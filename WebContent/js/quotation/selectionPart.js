@@ -1022,7 +1022,7 @@ var selectionDetail = (function() {
                         }
                     }, null, false);
 
-                    com.post(api.addReduce.queryAddReduceByOrderId, {
+                    com.post(api.quotation.queryAddReduceByOrderId, {
                         'addReduce.orderId': orderId
                     }, function(res) {
 
@@ -1109,7 +1109,7 @@ var selectionDetail = (function() {
                         });
                     }, null, false);
                 } else if ([constant.quotation().selectionItem.TYPE_ADDITEM_INT, constant.quotation().selectionItem.TYPE_MINUSITEM_INT, constant.quotation().selectionItem.TYPE_ADDITEM_COM_INT, constant.quotation().selectionItem.TYPE_MINUSITEM_NORETURN_INT].indexOf(type) != -1) {
-                    com.post(api.addReduce.queryAddReduceItemByAddReduceId, {
+                    com.post(api.quotation.queryAddReduceItemByAddReduceId, {
                         'addReduce.arId': functionArea.arId
                     }, function(res) {
 

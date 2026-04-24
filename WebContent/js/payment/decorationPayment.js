@@ -670,11 +670,11 @@ jQuery(function($) {
             "addReduce.dpId": decorationPaymentId
         };
 
-        com.post(api.addReduce.queryAddReduceByDecorationPaymentId, options, function(res) {
+        com.post(api.quotation.queryAddReduceByDecorationPaymentId, options, function(res) {
 
             var quotationItemSeacher = new Searcher();
 
-            quotationItemSeacher.init([], "acondList", api.addReduce.queryAddReduceItemByAddReduceId, function(data) {
+            quotationItemSeacher.init([], "acondList", api.quotation.queryAddReduceItemByAddReduceId, function(data) {
 
                 var $tableWrap = com.focusPage('#aresultList').empty();
                 var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($tableWrap);

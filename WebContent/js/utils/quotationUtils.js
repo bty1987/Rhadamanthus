@@ -54,7 +54,7 @@ var quotationUtils = {
         }
 
         if (!quotationUtils.quotationDetail.addReduces) {
-            com.post(api.addReduce.queryAddReduceByOrderId, {
+            com.post(api.quotation.queryAddReduceByOrderId, {
                 "addReduce.orderId": params.quotation.orderId
             }, function(res) {
 

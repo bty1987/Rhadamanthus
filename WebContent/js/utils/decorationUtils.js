@@ -2256,7 +2256,7 @@ var decorationUtils = {
         var qid = null;
         var versionid = null;
 
-        com.post(api.addReduce.queryAddReduceByOrderId, {
+        com.post(api.quotation.queryAddReduceByOrderId, {
             'addReduce.orderId': orderId
         }, function(data) {
 
@@ -2328,7 +2328,7 @@ var decorationUtils = {
                     $label.append($input).append($span).appendTo($h3);
                     $uul.append($thead).append($tbody);
 
-                    com.post(api.addReduce.queryAddReduceItemByAddReduceId, {
+                    com.post(api.quotation.queryAddReduceItemByAddReduceId, {
                         "addReduce.arId": v.arId
                     }, function(ress) {
 
@@ -2396,7 +2396,7 @@ var decorationUtils = {
 
                     com.showConfirm("是否推送通知", function() {
 
-                        com.post(api.addReduce.sendAddReduce, options, function(res) {
+                        com.post(api.quotation.sendAddReduce, options, function(res) {
 
                             com.showAlert(com.info, "操作成功");
                             searcher.doSearch();

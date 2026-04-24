@@ -236,7 +236,7 @@ $(function() {
 
         }, displayFunc.rankeList);
 
-        scroll("scrolling4addreduce1", api.addReduce.pageAddReduce, 30, 20, 0, 2, {
+        scroll("scrolling4addreduce1", api.quotation.pageAddReduce, 30, 20, 0, 2, {
             "addReduce.type": 0,
             "addReduce.paytype": 0,
             "addReduce.atttype": 0,
@@ -244,7 +244,7 @@ $(function() {
             "statuses[1]": 1,
         }, displayFunc.renderList);
 
-        scroll("scrolling4addreduce2", api.addReduce.pageAddReduce, 30, 20, 1, 2, {
+        scroll("scrolling4addreduce2", api.quotation.pageAddReduce, 30, 20, 1, 2, {
             "addReduce.type": 0,
             "addReduce.paytype": 0,
             "addReduce.atttype": 0,

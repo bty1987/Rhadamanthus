@@ -264,7 +264,7 @@
 
         initDecorationInfo();
 
-        searcher.init("", "condList", api.addReduce.queryAddReduceByOrderId, function(data) {
+        searcher.init("", "condList", api.quotation.queryAddReduceByOrderId, function(data) {
 
         }, null, "addReducePostData", {
             "addReduce.orderId": addReduce.orderId
@@ -408,7 +408,7 @@
         if (addReduce.pageConfig.pageBtn.contains("delete"))
             linebtns.push(deletebtn);
 
-        searcher.base("condList", "pagenation", "resultList", api.addReduce.pageAddReduce);
+        searcher.base("condList", "pagenation", "resultList", api.quotation.pageAddReduce);
         searcher.condition(addReduce.pageConfig.condArr);
         searcher.history("addReducePostData");
 
@@ -739,7 +739,7 @@
 
         com.focusPage("#pagenation").hide();
 
-        searcher.init("", "condList", api.addReduce.queryAddReduceByOrderId, function(data) {
+        searcher.init("", "condList", api.quotation.queryAddReduceByOrderId, function(data) {
 
         }, null, "addReducePostData", {
             "addReduce.orderId": addReduce.orderId
@@ -920,7 +920,7 @@
 
         com.showConfirm("是否发送查看通知", function() {
 
-            com.post(api.addReduce.sendAddReduce, options, function(res) {
+            com.post(api.quotation.sendAddReduce, options, function(res) {
 
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
@@ -946,7 +946,7 @@
             options["addReduces[" + i + "].arId"] = parseInt($(v).val());
         });
 
-        com.post(api.addReduce.submitAddReduce, options, function(res) {
+        com.post(api.quotation.submitAddReduce, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
@@ -978,7 +978,7 @@
             "addReduce.orderId": addReduce.orderId
         };
 
-        url = api.addReduce.addAddReduce;
+        url = api.quotation.addAddReduce;
         options["addReduce.status"] = constant.quotation().addreduce.STATUS_UNSUBMIT_INT;
         options["addReduce.total"] = 0;
         options["addReduce.managePrice"] = 0;
@@ -1001,7 +1001,7 @@
             "addReduce.paytype": paytype,
         };
 
-        com.post(api.addReduce.unpayAddReduce, options, function(res) {
+        com.post(api.quotation.unpayAddReduce, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
@@ -1014,7 +1014,7 @@
             "addReduce.arId": arid
         };
 
-        com.post(api.addReduce.confirmAddReduce, options, function(res) {
+        com.post(api.quotation.confirmAddReduce, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
@@ -1024,7 +1024,7 @@
     // 删除按钮方法
     function removeRow(arid) {
 
-        com.post(api.addReduce.deleteAddReduce, {
+        com.post(api.quotation.deleteAddReduce, {
             "addReduce.arId": arid
         }, function(res) {
 
@@ -1036,7 +1036,7 @@
     // 提交按钮方法
     function submit(v) {
 
-        com.post(api.addReduce.submitAddReduce, {
+        com.post(api.quotation.submitAddReduce, {
             "addReduces[0].arId": v.arId,
             "addReduce.orderId": addReduce.pageType == null ? params.quotation.orderId : v.decoration.orderId
         }, function(res) {
@@ -1049,7 +1049,7 @@
     // 撤销按钮方法
     function cancel(v) {
 
-        com.post(api.addReduce.cancelAddReduce, {
+        com.post(api.quotation.cancelAddReduce, {
             "addReduce.dpId": v.dpId
         }, function(res) {
 
@@ -1139,7 +1139,7 @@
             "addReduce.accountTaxDiscount": addReduce.items.accountTaxDiscount.val() ? 0 : 1,
         };
 
-        com.post(api.addReduce.updateAddReduceForAccount, options, function(res) {
+        com.post(api.quotation.updateAddReduceForAccount, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();

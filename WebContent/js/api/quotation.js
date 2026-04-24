@@ -2321,12 +2321,9 @@ $.extend(api, {
                 "quotationAssign.orderId": { required: true },
                 "quotationAssign.quoter.userId": { required: true }
             }
-        }
-    }
-});
+        },
 
-$.extend(api, {
-    addReduce: {
+        // -------- 增减项 -------------------------
 
         pageAddReduce: {
             url: "pageAddReduce.do",
@@ -2528,7 +2525,6 @@ $.extend(api, {
         handleQuotationProfile: {
             url: "handleQuotationProfile.do"
         }
-
     }
 });
 
