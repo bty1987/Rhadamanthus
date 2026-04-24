@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
@@ -190,9 +191,11 @@ public class UserBaseVO implements Serializable {
 	public UserBaseVO ptv(UserPO userPO) {
 
 		BeanUtil.copyProperties(userPO, this, Arrays.asList("role", "dept", "duty", "password", "phone", "identity", "company"));
-
 		if (getDuty() != null && userPO.getDuty() != null) userPO.getDuty().ptv(getDuty());
 		if (getDept() != null && userPO.getDept() != null) userPO.getDept().ptv(getDept());
+
+		setPhone(SensitiveDataHelper.decrypt(userPO.getPhone()));
+		setIdentity(SensitiveDataHelper.decrypt(userPO.getIdentity()));
 
 		return this;
 	}
@@ -200,10 +203,11 @@ public class UserBaseVO implements Serializable {
 	public UserBaseVO ptv(UserPO userPO, String company) {
 
 		BeanUtil.copyProperties(userPO, this, Arrays.asList("role", "dept", "duty", "password", "phone", "identity", "company"));
-
 		if (getDuty() != null && userPO.getDuty() != null) userPO.getDuty().ptv(getDuty());
 		if (getDept() != null && userPO.getDept() != null) userPO.getDept().ptv(getDept());
 
+		setPhone(SensitiveDataHelper.decrypt(userPO.getPhone()));
+		setIdentity(SensitiveDataHelper.decrypt(userPO.getIdentity()));
 		setCompany(company);
 
 		return this;

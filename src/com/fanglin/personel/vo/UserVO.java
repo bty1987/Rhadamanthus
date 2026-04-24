@@ -13,6 +13,8 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
+import com.fanglin.core.security.SensitiveDataHelper;
+
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.personel.po.UserPO;
@@ -384,6 +386,9 @@ public class UserVO implements Serializable {
 		BeanUtil.copyProperties(userPO, this, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 		BeanUtil.copyProperties(userPO.getDuty(), getDuty(), Arrays.asList("departmentType"));
 		BeanUtil.copyProperties(userPO.getDept(), getDept(), Arrays.asList("fatherDept", "type", "manager"));
+
+		setPhone(SensitiveDataHelper.decrypt(userPO.getPhone()));
+		setIdentity(SensitiveDataHelper.decrypt(userPO.getIdentity()));
 
 		return this;
 	}

@@ -54,6 +54,7 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
@@ -910,7 +911,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesPayment.getSales().getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
-		if (salesPayment.getSales().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(salesPayment.getSales().getCustomer().getPhone()))) {
+		if (salesPayment.getSales().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(SensitiveDataHelper.encrypt(salesPayment.getSales().getCustomer().getPhone()))) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
 

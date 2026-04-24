@@ -25,6 +25,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.material.service.GoodsService;
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.core.security.SensitiveDataHelper;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -83,7 +84,7 @@ public class GoodsAction extends BaseListAction {
 	@Action(value = "queryGoodsByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryGoodsByName() throws FLException {
 
-		goodes = goodsService.queryGoodsByName(goods, (goods.getCompany() != null && FormatUtil.decodeCompany(FormatUtil.decodePhone(goods.getCompany())) != -1) ? FormatUtil.decodeCompany(FormatUtil.decodePhone(goods.getCompany())) : queryCompany());
+		goodes = goodsService.queryGoodsByName(goods, (goods.getCompany() != null && FormatUtil.decodeCompany(SensitiveDataHelper.decrypt(goods.getCompany())) != -1) ? FormatUtil.decodeCompany(SensitiveDataHelper.decrypt(goods.getCompany())) : queryCompany());
 
 		return SUCCESS;
 	}
