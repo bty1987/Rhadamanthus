@@ -7,6 +7,7 @@ import java.util.Properties;
 import com.fanglin.swiftpass.enums.KeySignTypeEnum;
 import com.fanglin.swiftpass.enums.RespSignAlgorithmEnum;
 import com.fanglin.utils.SystemConfig;
+import com.fanglin.utils.EncryptConfigLoader;
 
 /**
  * 开放银行平台配置类
@@ -57,8 +58,7 @@ public class Configure {
 
 	static {
 		try {
-			prop = new Properties();
-			prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			prop = EncryptConfigLoader.load(configFilePathName);
 
 			PROD_URL = prop.getProperty("PROD_URL");
 			devEnv = Boolean.parseBoolean(prop.getProperty("DEVENV"));

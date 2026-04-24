@@ -18,18 +18,19 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.utils.SystemConfig;
+import com.fanglin.utils.EncryptConfigLoader;
 
 public class Kandle {
 
 	// K3 Cloud WebSite URL Example "http://192.168.19.113/K3Cloud/"
-	public static String K3CLOUD_URL_STR = "http://192.168.5.26/K3Cloud/";
+	public static String K3CLOUD_URL_STR = null;
 
 	// Cookie值
 	private static String CookieVal = null;
 
-	private static String dbid = "60cfff860168cd";
-	private static String uid = "姚晨浩";
-	private static String pwd = "888888";
+	private static String dbid = null;
+	private static String uid = null;
+	private static String pwd = null;
 	private static int lang = 2052;
 
 	private static Properties prop;
@@ -38,8 +39,7 @@ public class Kandle {
 
 	static {
 		try {
-			prop = new Properties();
-			prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			prop = EncryptConfigLoader.load(configFilePathName);
 
 			K3CLOUD_URL_STR = prop.getProperty("K3CLOUD_URL_STR");
 			dbid = prop.getProperty("KINGDEE.DBID");

@@ -56,16 +56,17 @@ import com.fanglin.data.po.SignetPO;
 import com.fanglin.fadada.bean.Contract;
 import com.fanglin.fadada.tools.FddEncryptTool;
 import com.fanglin.fadada.vo.SignatureVO;
+import com.fanglin.utils.EncryptConfigLoader;
 import com.fanglin.utils.SystemConfig;
 
 public class Signature {
 
 	private static final Logger logger = Logger.getLogger(Signature.class);
 
-	private static String APPID = "402616";
-	private static String APPSECRET = "krdhPR4a4Hb8ET1oJm9WxFAQ";
+	private static String APPID = null;
+	private static String APPSECRET = null;
 	private static String VERSION = "2.0";
-	private static String HOST = "https://testapi.fadada.com:8443/api/";
+	private static String HOST = null;
 
 	private static String NOTIFY_URL_STR = "http://www.fanglin.vip/site/index.html";
 	private static String RETURN_URL_STR = "http://www.fanglin.vip/site/index.html"; // http://fanglin.vip:30080/communion/signatureCallback.do
@@ -78,8 +79,7 @@ public class Signature {
 
 	static {
 		try {
-			prop = new Properties();
-			prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			prop = EncryptConfigLoader.load(configFilePathName);
 
 			APPID = prop.getProperty("appid");
 			APPSECRET = prop.getProperty("secret");
