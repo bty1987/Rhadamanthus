@@ -9,8 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.FormatUtil;
 
 @Entity
 @Table(name = "customer", catalog = "communion")
@@ -416,8 +416,10 @@ public class CustomerPO implements Serializable {
 
 	public CustomerVO ptv(CustomerVO customerVO) {
 
-		BeanUtil.copyProperties(this, customerVO, "phone");
+		BeanUtil.copyProperties(this, customerVO, "phone", "identity");
 
+		customerVO.setPhone(SensitiveDataHelper.decrypt(getPhone()));
+		customerVO.setIdentity(SensitiveDataHelper.decrypt(getIdentity()));
 		customerVO.setConfidentialInfo();
 
 		return customerVO;
@@ -425,9 +427,12 @@ public class CustomerPO implements Serializable {
 
 	public CustomerVO ptv(CustomerVO customerVO, Short privacy) {
 
-		BeanUtil.copyProperties(this, customerVO, "phone");
+		BeanUtil.copyProperties(this, customerVO, "phone", "identity");
 
-		if (privacy == PRIVACY_OPENESS_INT) customerVO.setPhone(FormatUtil.decodePhone(getPhone()));
+		if (privacy == PRIVACY_OPENESS_INT) {
+			customerVO.setPhone(SensitiveDataHelper.decrypt(getPhone()));
+			customerVO.setIdentity(SensitiveDataHelper.decrypt(getIdentity()));
+		}
 		if (privacy != PRIVACY_OPENESS_INT) customerVO.setConfidentialInfo();
 
 		return customerVO;

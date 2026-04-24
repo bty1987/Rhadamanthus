@@ -20,7 +20,7 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.utils.FormatUtil;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
 
@@ -70,7 +70,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 		query.setString("pinyinAll", likestr).setString("pinyinAB", likestr).setString("name", likestr).setShort("status", CustomerPhonePO.STATUS_ENABLE_INT).setInteger("limit", limit);
 
 		if (pinyinName != null && pinyinName.matches("1[3-9]\\d{9}")) {
-			query.setString("phone", FormatUtil.encodePhone(pinyinName));
+			query.setString("phone", SensitiveDataHelper.encrypt(pinyinName));
 		} else {
 			query.setString("phone", pinyinName);
 		}
@@ -110,7 +110,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 			} else if ("type".equals(field)) {
 				query.add(Restrictions.eq("type", Short.valueOf(data)));
 			} else if ("phone".equals(field)) {
-				query.add(Restrictions.eq("phone", FormatUtil.encodePhone(data)));
+				query.add(Restrictions.eq("phone", SensitiveDataHelper.encrypt(data)));
 			}
 		}
 	}

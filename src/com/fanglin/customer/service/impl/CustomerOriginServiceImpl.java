@@ -47,6 +47,7 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
@@ -152,7 +153,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginVO = customerOriginPO.ptv(new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO())), new DecorationBusitypeVO()));
 
-		customerOriginVO.setPhone(FormatUtil.decodePhone(customerOriginPO.getCustomer().getPhone()));
+		customerOriginVO.setPhone(SensitiveDataHelper.decrypt(customerOriginPO.getCustomer().getPhone()));
 
 		CompanyPO companyPO = companyDao.get(customerOriginPO.getBelonger().getCompany());
 
@@ -185,7 +186,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		BeanUtil.copyProperties(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman", "decorationBusitype"));
 
-		customerOriginPO.setPhone(FormatUtil.encodePhone(customerOriginVO.getPhone()));
+		customerOriginPO.setPhone(SensitiveDataHelper.encrypt(customerOriginVO.getPhone()));
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -212,7 +213,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginDao.save(customerOriginPO);
 
-		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s", customerOriginPO.getVillage().getName(), customerOriginPO.getHouseNumber(), FormatUtil.encodePhone(customerOriginPO.getPhone()), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
+		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s", customerOriginPO.getVillage().getName(), customerOriginPO.getHouseNumber(), SensitiveDataHelper.encrypt(customerOriginPO.getPhone()), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
 	}
 
 	@Override
@@ -238,7 +239,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 				oldVillageName = customerOriginPO.getVillage().getName();
 			}
 
-			customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s,原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s,新楼盘:%s,新楼牌号:%s,新电话:%s,新目的:%s,新风格意向:%s,新价格:%s,新等级:%s", oldVillageName, customerOriginPO.getHouseNumber(), FormatUtil.encodePhone(customerOriginPO.getPhone()), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade(), villagePO.getName(), customerOriginVO.getHouseNumber(), FormatUtil.encodePhone(customerOriginVO.getPhone()), customerOriginVO.getPurpose(), customerOriginVO.getIntention(), customerOriginVO.getPrice(), customerOriginVO.getGrade()), CustomerOriginRecordPO.TYPE_UPDATE_INT, userDao.queryUserByUserId(userId)));
+			customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s,原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s,新楼盘:%s,新楼牌号:%s,新电话:%s,新目的:%s,新风格意向:%s,新价格:%s,新等级:%s", oldVillageName, customerOriginPO.getHouseNumber(), SensitiveDataHelper.encrypt(customerOriginPO.getPhone()), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade(), villagePO.getName(), customerOriginVO.getHouseNumber(), SensitiveDataHelper.encrypt(customerOriginVO.getPhone()), customerOriginVO.getPurpose(), customerOriginVO.getIntention(), customerOriginVO.getPrice(), customerOriginVO.getGrade()), CustomerOriginRecordPO.TYPE_UPDATE_INT, userDao.queryUserByUserId(userId)));
 			customerOriginPO.setVillage(villagePO);
 		}
 
@@ -433,7 +434,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			customerOriginVO.setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
-		if (customerOriginVO.getPhone() != null && !customerOriginPO.getPhone().equals(FormatUtil.encodePhone(customerOriginVO.getPhone()))) {
+		if (customerOriginVO.getPhone() != null && !customerOriginPO.getPhone().equals(SensitiveDataHelper.encrypt(customerOriginVO.getPhone()))) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
 

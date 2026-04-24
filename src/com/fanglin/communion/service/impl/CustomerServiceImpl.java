@@ -43,6 +43,7 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.PinYin4Util;
+import com.fanglin.core.security.SensitiveDataHelper;
 
 @Service("customerService")
 @Transactional(readOnly = true)
@@ -177,7 +178,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public int checkCustomerForPhone(CustomerPhoneVO customerPhoneVO, Integer company) throws FLException {
 
-		String phone = FormatUtil.encodePhone(customerPhoneVO.getPhone());
+		String phone = SensitiveDataHelper.encrypt(customerPhoneVO.getPhone());
 
 		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(phone, customerPhoneVO.getStatus(), company);
 
@@ -205,7 +206,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addCustomer(CustomerVO customerVO, Integer company) throws FLException {
 
-		String phone = FormatUtil.encodePhone(customerVO.getPhone());
+		String phone = SensitiveDataHelper.encrypt(customerVO.getPhone());
 
 		if (customerPhoneDao.queryCustomerPhoneByPhone(phone, CustomerPhonePO.STATUS_ENABLE_INT, company).size() != 0) {
 			throw new FLException(130006, "客户电话已存在");
@@ -252,7 +253,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int existCustomer(CustomerVO customerVO, Integer company) {
 
-		String phone = customerVO.getPhone() != null && customerVO.getPhone().length() == 11 ? FormatUtil.encodePhone(customerVO.getPhone()) : customerVO.getPhone();
+		String phone = customerVO.getPhone() != null && customerVO.getPhone().length() == 11 ? SensitiveDataHelper.encrypt(customerVO.getPhone()) : customerVO.getPhone();
 
 		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhoneForDefault(phone, company);
 
@@ -297,7 +298,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addCustomerPhone(CustomerPhoneVO customerPhoneVO, Integer company) throws FLException {
 
-		String phone = FormatUtil.encodePhone(customerPhoneVO.getPhone());
+		String phone = SensitiveDataHelper.encrypt(customerPhoneVO.getPhone());
 
 		if (customerPhoneDao.queryCustomerPhoneByPhone(phone, CustomerPhonePO.STATUS_ENABLE_INT, company).size() != 0) {
 			throw new FLException(130006, "客户电话已存在");
@@ -350,7 +351,7 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		if (customerVO.getPhone() != null) {
-			customerPO.setPhone(FormatUtil.encodePhone(customerVO.getPhone()));
+			customerPO.setPhone(SensitiveDataHelper.encrypt(customerVO.getPhone()));
 
 			customerPhoneDao.clearCustomerPhoneForDefault(customerPO.getCid());
 
@@ -561,7 +562,7 @@ public class CustomerServiceImpl implements CustomerService {
 			type = 1;
 		}
 
-		JSONObject info = Signature.authenticate(customerPO.getSignno(), customerPO.getName(), FormatUtil.decodePhone(customerPO.getPhone()), authno, type);
+		JSONObject info = Signature.authenticate(customerPO.getSignno(), customerPO.getName(), SensitiveDataHelper.decrypt(customerPO.getPhone()), authno, type);
 
 		String redirect = Signature.decode(info.getString("url"));
 
@@ -594,7 +595,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.setIdentity(person.getString("idCard"));
 		customerPO.setAddress(person.getString("address"));
 
-		customerPO.setPhone(FormatUtil.encodePhone(person.getString("mobile")));
+		customerPO.setPhone(SensitiveDataHelper.encrypt(person.getString("mobile")));
 
 		customerPO.setPhotoPath(person.getString("photoUuid"));
 		customerPO.setIdentityPathF(person.getString("headPhotoPath"));

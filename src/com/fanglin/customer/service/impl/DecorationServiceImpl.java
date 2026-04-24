@@ -34,6 +34,7 @@ import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
@@ -213,7 +214,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 
-		String url = String.format("%s/queryVode.do?phone=%s", isv.getValue(), decorationVO.getCustomerPhone() != null ? decorationVO.getCustomerPhone() : FormatUtil.decodePhone(decorationPO.getCustomer().getPhone()));
+		String url = String.format("%s/queryVode.do?phone=%s", isv.getValue(), decorationVO.getCustomerPhone() != null ? decorationVO.getCustomerPhone() : SensitiveDataHelper.decrypt(decorationPO.getCustomer().getPhone()));
 
 		JSONObject json = HttpUtil.httpGet(url);
 
@@ -257,7 +258,7 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		if (decorationVO.getCustomerPhone() != null) {
-			phone = FormatUtil.encodePhone(decorationVO.getCustomerPhone());
+			phone = SensitiveDataHelper.encrypt(decorationVO.getCustomerPhone());
 		}
 
 		List<CustomerPO> customerPOs = customerDao.queryCustomer(phone);
