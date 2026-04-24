@@ -158,12 +158,17 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 		criteria.add(Subqueries.exists(itemMatch));
 
 		// ★ 跨公司验证：排除在其他公司有非"待分配"状态的预算员
-		// 子查询：查找同一 userId 在其他公司有 status != 1 的 UserRule
-		DetachedCriteria busyInOtherCompany = DetachedCriteria.forClass(QuotationAssignUserRulePO.class, "other");
-		busyInOtherCompany.add(Restrictions.eqProperty("other.user.userId", "user.userId"));
-		busyInOtherCompany.add(Restrictions.ne("other.status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
-		busyInOtherCompany.setProjection(Projections.property("other.qaurid"));
-		criteria.add(Subqueries.notExists(busyInOtherCompany));
+		// 使用 SQLRestriction 避免 Hibernate 3 中 DetachedCriteria eqProperty 跨层引用外层 alias 导致的
+		// MappingException: unknown entity: null
+		// 原理：直接用表名 + 外键关联，不依赖 Hibernate alias 解析
+		criteria.add(Restrictions.sqlRestriction(
+			"not exists (" +
+			"  select 1 from quotation.quotationassignuserrule t " +
+			"  inner join communion.user u2 on t.uid = u2.uid " +
+			"  where u2.userId = (select u3.userId from communion.user u3 where u3.uid = {alias}.uid) " +
+			"  and t.status <> " + QuotationAssignUserRulePO.STATUS_AVAILABLE_INT +
+			")"
+		));
 
 		// 按最后完成时间升序排序
 		criteria.addOrder(Order.asc("lastFinishTime"));
