@@ -73,79 +73,85 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationAssignUserRulePO> queryAvailableUsers(int company, Integer department, Short decorationType) throws FLException {
-		Criteria criteria = createCriteria(QuotationAssignUserRulePO.class);
+		// 从 item 表出发，join userRule，条件全部在同一查询中
+		// 避免 DetachedCriteria 子查询在 Hibernate 3 中的 MappingException: unknown entity: null
+		StringBuilder hql = new StringBuilder();
+		hql.append("select distinct rule from QuotationAssignUserRuleItemPO item");
+		hql.append(" join item.userRule rule");
+		hql.append(" where rule.status = :status");
+		hql.append(" and rule.currentTaskCount = 0");
+		hql.append(" and item.company.cid = :company");
 
-		// 只查询待分配状态的人员
-		criteria.add(Restrictions.eq("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
-
-		// 通过 UserRuleItem 子查询：存在至少一条匹配 company+department+supportedType 的明细
-		DetachedCriteria itemMatch = DetachedCriteria.forClass(QuotationAssignUserRuleItemPO.class, "item");
-		itemMatch.add(Restrictions.eqProperty("item.userRule.qaurid", "qaurid"));
-
-		// 公司匹配
-		itemMatch.createAlias("item.company", "item_company");
-		itemMatch.add(Restrictions.eq("item_company.cid", company));
-
-		// 部门匹配：匹配指定部门 OR 部门为NULL（公司级）
 		if (department != null) {
-			itemMatch.createAlias("item.department", "item_dept", CriteriaSpecification.LEFT_JOIN);
-			itemMatch.add(Restrictions.or(Restrictions.eq("item_dept.did", department), Restrictions.isNull("item.department")));
+			hql.append(" and (item.department.did = :department or item.department is null)");
 		}
 
-		// 装修类型匹配：-1通用 OR 匹配指定类型
 		if (decorationType != null) {
-			itemMatch.add(Restrictions.or(Restrictions.eq("item.supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT), Restrictions.eq("item.supportedType", (int) decorationType.shortValue())));
+			hql.append(" and (item.supportedType = :typeAll or item.supportedType = :decorationType)");
 		}
 
-		itemMatch.setProjection(Projections.property("item.qauriid"));
-		criteria.add(Subqueries.exists(itemMatch));
+		hql.append(" order by rule.lastFinishTime asc");
 
-		// 按最后完成时间升序排序（最早完成的排在前面）
-		criteria.addOrder(Order.asc("lastFinishTime"));
+		org.hibernate.Query query = createQuery(hql.toString());
+		query.setShort("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT);
+		query.setInteger("company", company);
 
-		return criteria.list();
+		if (department != null) {
+			query.setInteger("department", department);
+		}
+
+		if (decorationType != null) {
+			query.setInteger("typeAll", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT);
+			query.setInteger("decorationType", (int) decorationType.shortValue());
+		}
+
+		return query.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationAssignUserRulePO> queryAvailableUsersForCrossCompany(int company, Integer department, Short decorationType) throws FLException {
-		Criteria criteria = createCriteria(QuotationAssignUserRulePO.class);
-
-		// 先通过基本条件：待分配状态
-		criteria.add(Restrictions.eq("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
-
-		// 创建 user alias 供子查询使用
-		criteria.createAlias("user", "user");
-
-		// 通过 UserRuleItem 子查询：存在至少一条匹配当前 company+department+supportedType 的明细
-		DetachedCriteria itemMatch = DetachedCriteria.forClass(QuotationAssignUserRuleItemPO.class, "item");
-		itemMatch.add(Restrictions.eqProperty("item.userRule.qaurid", "qaurid"));
-
-		itemMatch.createAlias("item.company", "item_company");
-		itemMatch.add(Restrictions.eq("item_company.cid", company));
+		// 跨公司版本：在 queryAvailableUsers 基础上，额外排除在其他 item 对应公司中状态非待分配的预算员
+		// 即：该预算员的所有 item（跨公司），对应的 rule 必须都是待分配状态
+		// 实现方式：排除存在"非待分配状态 rule 的 item"的预算员
+		StringBuilder hql = new StringBuilder();
+		hql.append("select distinct rule from QuotationAssignUserRuleItemPO item");
+		hql.append(" join item.userRule rule");
+		hql.append(" where rule.status = :status");
+		hql.append(" and rule.currentTaskCount = 0");
+		hql.append(" and item.company.cid = :company");
 
 		if (department != null) {
-			itemMatch.createAlias("item.department", "item_dept", CriteriaSpecification.LEFT_JOIN);
-			itemMatch.add(Restrictions.or(Restrictions.eq("item_dept.did", department), Restrictions.isNull("item.department")));
+			hql.append(" and (item.department.did = :department or item.department is null)");
 		}
 
 		if (decorationType != null) {
-			itemMatch.add(Restrictions.or(Restrictions.eq("item.supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT), Restrictions.eq("item.supportedType", (int) decorationType.shortValue())));
+			hql.append(" and (item.supportedType = :typeAll or item.supportedType = :decorationType)");
 		}
 
-		itemMatch.setProjection(Projections.property("item.qauriid"));
-		criteria.add(Subqueries.exists(itemMatch));
+		// 跨公司排除：该预算员不存在任何其他 item 指向的 rule 处于非待分配状态
+		hql.append(" and not exists (");
+		hql.append("   select 1 from QuotationAssignUserRuleItemPO otherItem");
+		hql.append("   where otherItem.userRule.qaurid = rule.qaurid");
+		hql.append("   and otherItem.userRule.status <> :status");
+		hql.append(" )");
 
-		// ★ 跨公司验证：排除在其他公司有非"待分配"状态的预算员
-		// 使用 SQLRestriction 避免 Hibernate 3 中 DetachedCriteria eqProperty 跨层引用外层 alias 导致的
-		// MappingException: unknown entity: null
-		// 原理：直接用表名 + 外键关联，不依赖 Hibernate alias 解析
-		criteria.add(Restrictions.sqlRestriction("not exists (" + "  select 1 from quotation.quotationassignuserrule t " + "  inner join communion.user u2 on t.uid = u2.uid " + "  where u2.userId = (select u3.userId from communion.user u3 where u3.uid = {alias}.uid) " + "  and t.status <> " + QuotationAssignUserRulePO.STATUS_AVAILABLE_INT + ")"));
+		hql.append(" order by rule.lastFinishTime asc");
 
-		// 按最后完成时间升序排序
-		criteria.addOrder(Order.asc("lastFinishTime"));
+		org.hibernate.Query query = createQuery(hql.toString());
+		query.setShort("status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT);
+		query.setInteger("company", company);
 
-		return criteria.list();
+		if (department != null) {
+			query.setInteger("department", department);
+		}
+
+		if (decorationType != null) {
+			query.setInteger("typeAll", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT);
+			query.setInteger("decorationType", (int) decorationType.shortValue());
+		}
+
+		return query.list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
