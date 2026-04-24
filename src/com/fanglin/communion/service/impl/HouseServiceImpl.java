@@ -28,7 +28,6 @@ import com.fanglin.utils.Paging;
 @Transactional(readOnly = true)
 public class HouseServiceImpl implements HouseService {
 
-
 	@Autowired
 	private HouseDao houseDao;
 
@@ -57,7 +56,7 @@ public class HouseServiceImpl implements HouseService {
 			throw new FLException(320002, "房产不存在");
 		}
 
-		return housePO.ptv(new HouseVO(new VillageVO(new CityProperVO(new CityVO(new RegionVO()))))));
+		return housePO.ptv(new HouseVO(new VillageVO(new CityProperVO(new CityVO(new RegionVO())))));
 	}
 
 	@Override
@@ -72,7 +71,7 @@ public class HouseServiceImpl implements HouseService {
 			throw new FLException(320002, "房产不存在");
 		}
 
-		return housePO.ptv(new HouseVO(new VillageVO(new CityProperVO(new CityVO(new RegionVO()))))));
+		return housePO.ptv(new HouseVO(new VillageVO(new CityProperVO(new CityVO(new RegionVO())))));
 	}
 
 	@Override

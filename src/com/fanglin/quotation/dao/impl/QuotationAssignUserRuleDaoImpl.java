@@ -23,8 +23,7 @@ import com.fanglin.utils.Paging;
  * 预算员规则表 DAO 实现类（人员维度）
  * 
  * <p>
- * 核心变更：company/department/supportedType 已移到 UserRuleItem，
- * 所有按这些维度查询的方法均通过 UserRuleItem 子查询实现
+ * 核心变更：company/department/supportedType 已移到 UserRuleItem， 所有按这些维度查询的方法均通过 UserRuleItem 子查询实现
  * </p>
  * 
  * @author Claude AI
@@ -62,21 +61,13 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
 	@Override
 	public QuotationAssignUserRulePO queryQuotationAssignUserRuleByUserId(String userId) throws FLException {
-		return (QuotationAssignUserRulePO) createCriteria(QuotationAssignUserRulePO.class)
-			.createAlias("user", "user")
-			.add(Restrictions.eq("user.userId", userId))
-			.uniqueResult();
+		return (QuotationAssignUserRulePO) createCriteria(QuotationAssignUserRulePO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationAssignUserRulePO> queryAllQuotationAssignUserRule() throws FLException {
-		return createCriteria(QuotationAssignUserRulePO.class)
-			.createAlias("user", "user")
-			.addOrder(Order.asc("status"))
-			.addOrder(Order.desc("currentTaskCount"))
-			.addOrder(Order.asc("user.currentName"))
-			.list();
+		return createCriteria(QuotationAssignUserRulePO.class).createAlias("user", "user").addOrder(Order.asc("status")).addOrder(Order.desc("currentTaskCount")).addOrder(Order.asc("user.currentName")).list();
 	}
 
 	@Override
@@ -98,18 +89,12 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 		// 部门匹配：匹配指定部门 OR 部门为NULL（公司级）
 		if (department != null) {
 			itemMatch.createAlias("item.department", "item_dept", CriteriaSpecification.LEFT_JOIN);
-			itemMatch.add(Restrictions.or(
-				Restrictions.eq("item_dept.did", department),
-				Restrictions.isNull("item.department")
-			));
+			itemMatch.add(Restrictions.or(Restrictions.eq("item_dept.did", department), Restrictions.isNull("item.department")));
 		}
 
 		// 装修类型匹配：-1通用 OR 匹配指定类型
 		if (decorationType != null) {
-			itemMatch.add(Restrictions.or(
-				Restrictions.eq("item.supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT),
-				Restrictions.eq("item.supportedType", (int) decorationType.shortValue())
-			));
+			itemMatch.add(Restrictions.or(Restrictions.eq("item.supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT), Restrictions.eq("item.supportedType", (int) decorationType.shortValue())));
 		}
 
 		itemMatch.setProjection(Projections.property("item.qauriid"));
@@ -141,17 +126,11 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
 		if (department != null) {
 			itemMatch.createAlias("item.department", "item_dept", CriteriaSpecification.LEFT_JOIN);
-			itemMatch.add(Restrictions.or(
-				Restrictions.eq("item_dept.did", department),
-				Restrictions.isNull("item.department")
-			));
+			itemMatch.add(Restrictions.or(Restrictions.eq("item_dept.did", department), Restrictions.isNull("item.department")));
 		}
 
 		if (decorationType != null) {
-			itemMatch.add(Restrictions.or(
-				Restrictions.eq("item.supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT),
-				Restrictions.eq("item.supportedType", (int) decorationType.shortValue())
-			));
+			itemMatch.add(Restrictions.or(Restrictions.eq("item.supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT), Restrictions.eq("item.supportedType", (int) decorationType.shortValue())));
 		}
 
 		itemMatch.setProjection(Projections.property("item.qauriid"));
@@ -161,14 +140,7 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 		// 使用 SQLRestriction 避免 Hibernate 3 中 DetachedCriteria eqProperty 跨层引用外层 alias 导致的
 		// MappingException: unknown entity: null
 		// 原理：直接用表名 + 外键关联，不依赖 Hibernate alias 解析
-		criteria.add(Restrictions.sqlRestriction(
-			"not exists (" +
-			"  select 1 from quotation.quotationassignuserrule t " +
-			"  inner join communion.user u2 on t.uid = u2.uid " +
-			"  where u2.userId = (select u3.userId from communion.user u3 where u3.uid = {alias}.uid) " +
-			"  and t.status <> " + QuotationAssignUserRulePO.STATUS_AVAILABLE_INT +
-			")"
-		));
+		criteria.add(Restrictions.sqlRestriction("not exists (" + "  select 1 from quotation.quotationassignuserrule t " + "  inner join communion.user u2 on t.uid = u2.uid " + "  where u2.userId = (select u3.userId from communion.user u3 where u3.uid = {alias}.uid) " + "  and t.status <> " + QuotationAssignUserRulePO.STATUS_AVAILABLE_INT + ")"));
 
 		// 按最后完成时间升序排序
 		criteria.addOrder(Order.asc("lastFinishTime"));
