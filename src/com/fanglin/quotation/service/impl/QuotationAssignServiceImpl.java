@@ -193,15 +193,15 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 6. 查找可分配预算员
 		// 新模型：DAO 通过 UserRuleItem 子查询匹配 company+department+decorationType
 		// 跨公司验证：排除在其他公司有非待分配状态的预算员
-		List<QuotationAssignUserRulePO> availableUsers = quotationAssignUserRuleDao.queryAvailableUsersForCrossCompany(company, department, decorationType);
+		List<QuotationAssignUserRuleItemPO> availableItems = quotationAssignUserRuleItemDao.queryAvailableItemsForCrossCompanyAssign(company, department, decorationType);
 
-		if (availableUsers == null || availableUsers.isEmpty()) {
+		if (availableItems == null || availableItems.isEmpty()) {
 			return createPendingRequest(orderId, company, department, decorationType);
 		}
 
-		// 7. DAO 已通过 item 子查询完成类型匹配和排序（按 lastFinishTime ASC）
-		// 第一个即为最优选择，无需再遍历检查 supportedType
-		QuotationAssignUserRulePO selectedUser = availableUsers.get(0);
+		// 7. DAO 已通过 item 查询完成类型匹配和排序（按 lastFinishTime ASC）
+		// 第一个即为最优选择，通过 item.getUserRule() 获取对应的预算员规则
+		QuotationAssignUserRulePO selectedUser = availableItems.get(0).getUserRule();
 
 		// 8. 执行分配
 		return assignToUser(orderId, decoration, selectedUser, QuotationAssignRecordPO.ASSIGN_TYPE_FORWARD_AUTO_INT, null);
