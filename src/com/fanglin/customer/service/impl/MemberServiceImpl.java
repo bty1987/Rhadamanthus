@@ -57,9 +57,9 @@ import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.FormatUtil;
+import com.fanglin.core.security.SensitiveDataHelper;
 
-import edu.emory.mathcs.backport.java.util.Collections;
+import java.util.Collections;
 
 @Service("memberservice")
 @Transactional(readOnly = true)
@@ -147,7 +147,7 @@ public class MemberServiceImpl implements MemberService {
 				}
 			} else if (member.getPhone() != null) {
 				// 手机号查询
-				phoneList.add(FormatUtil.encodePhone(member.getPhone()));
+				phoneList.add(SensitiveDataHelper.encrypt(member.getPhone()));
 				resultMap.put(member.getPhone(), new ArrayList<MemberVO>());
 			}
 		}
@@ -177,6 +177,15 @@ public class MemberServiceImpl implements MemberService {
 
 					String companyName = companyMap.get(companyId);
 					MemberVO resultMember = new MemberVO().init(decorationPO, companyName, companyId);
+
+					// 补充设置客户手机号
+					if (decorationPO.getCustomer() != null) {
+						List<CustomerPhonePO> phones = customerPhoneDao.queryCustomerPhoneByCid(decorationPO.getCustomer().getCid(), CustomerPhonePO.STATUS_ENABLE_INT);
+						if (phones != null && !phones.isEmpty()) {
+							resultMember.setPhone(SensitiveDataHelper.decrypt(phones.get(0).getPhone()));
+						}
+					}
+
 					resultMap.get(key).add(resultMember);
 				}
 			}
@@ -220,14 +229,14 @@ public class MemberServiceImpl implements MemberService {
 				customerIds.add(customerPhone.getCid());
 			}
 
-			if (customerIds == null || customerIds.size() == 0) {
-				throw new FLException(130006, "客户电话不存在");
+			if (customerIds.isEmpty()) {
+				return resultMap;
 			}
 
 			List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomerIds(customerIds);
 
-			if (decorationPOs == null || decorationPOs.size() == 0) {
-				throw new FLException(130006, "客户装修信息不存在");
+			if (decorationPOs == null || decorationPOs.isEmpty()) {
+				return resultMap;
 			}
 
 			Map<Long, List<DecorationPO>> customerToDecorationMap = new HashMap<Long, List<DecorationPO>>();
@@ -245,8 +254,8 @@ public class MemberServiceImpl implements MemberService {
 				decorationList.add(decorationPO);
 			}
 
-			if (companyIds == null || companyIds.size() == 0) {
-				throw new FLException(130006, "客户公司不存在");
+			if (companyIds.isEmpty()) {
+				return resultMap;
 			}
 
 			Map<Integer, String> companyMap = new HashMap<Integer, String>();
@@ -261,7 +270,7 @@ public class MemberServiceImpl implements MemberService {
 				String originalPhone = member.getPhone();
 				if (originalPhone == null) continue;
 
-				String encodedPhone = FormatUtil.encodePhone(originalPhone);
+				String encodedPhone = SensitiveDataHelper.encrypt(originalPhone);
 
 				List<Long> customerIdList = phoneToCustomerMap.get(encodedPhone);
 				if (customerIdList == null) {
@@ -292,6 +301,10 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public List<MemberPointVO> queryMemberPoint(List<MemberPointVO> memberPointVOs) {
+
+		if (memberPointVOs == null || memberPointVOs.isEmpty()) {
+			return new ArrayList<MemberPointVO>();
+		}
 
 		List<MemberPointVO> memberPointFOs = memberPointVOs.subList(0, Math.min(10, memberPointVOs.size()));
 
@@ -327,7 +340,7 @@ public class MemberServiceImpl implements MemberService {
 			memberPointVO.setOperatePoint(point);
 		}
 
-		return memberPointVOs;
+		return memberPointFOs;
 	}
 
 	/**
@@ -366,7 +379,7 @@ public class MemberServiceImpl implements MemberService {
 				queryOrderIds.add(member.getOrderId());
 			} else if (member.getPhone() != null) {
 				// 手机号查询模式
-				encodedPhoneList.add(FormatUtil.encodePhone(member.getPhone()));
+				encodedPhoneList.add(SensitiveDataHelper.encrypt(member.getPhone()));
 				resultMap.put(member.getPhone(), new ArrayList<MemberVO>());
 			} else {
 				throw new FLException(130021, "客户电话或装修单号不存在");
@@ -393,7 +406,7 @@ public class MemberServiceImpl implements MemberService {
 			if (orderCustomer != null) {
 				List<CustomerPhonePO> orderPhones = customerPhoneDao.queryCustomerPhoneByCid(orderCustomer.getCid(), null);
 				if (orderPhones != null && !orderPhones.isEmpty()) {
-					String phone = FormatUtil.decodePhone(orderPhones.get(0).getPhone());
+					String phone = SensitiveDataHelper.decrypt(orderPhones.get(0).getPhone());
 					if (phone != null) {
 						orderIdToPhoneMap.put(orderId, phone);
 						if (!resultMap.containsKey(phone)) {
@@ -426,7 +439,7 @@ public class MemberServiceImpl implements MemberService {
 		Map<String, List<Long>> phoneToCustomerMap = new HashMap<String, List<Long>>();
 
 			for (CustomerPhonePO customerPhone : customerPhoneList) {
-				String originalPhone = FormatUtil.decodePhone(customerPhone.getPhone());
+				String originalPhone = SensitiveDataHelper.decrypt(customerPhone.getPhone());
 				// 只处理在 resultMap 中的手机号（保持原逻辑）
 				if (resultMap.containsKey(originalPhone)) {
 					List<Long> customerIdList = phoneToCustomerMap.get(originalPhone);
@@ -579,7 +592,7 @@ public class MemberServiceImpl implements MemberService {
 
 			List<CustomerPhonePO> customerPhones = customerPhoneBatchMap.get(customer.getCid());
 			if (customerPhones != null && !customerPhones.isEmpty()) {
-				String phone = FormatUtil.decodePhone(customerPhones.get(0).getPhone());
+				String phone = SensitiveDataHelper.decrypt(customerPhones.get(0).getPhone());
 				String parentOrderId = referToParentOrderMap.get(decorationPO.getOrderId());
 				String uniqueId = generateUniqueId(decorationPO.getDoid(), decorationPO.getOrderId(), parentOrderId, orderIdToDoIdMap);
 				Integer activityCount = orderActivityCountMap.get(decorationPO.getOrderId());
@@ -599,6 +612,10 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addMemberActivity(MemberActivityVO memberActivityVO, List<String> companys, String userId) throws FLException {
+
+		if (memberActivityVO.getType() == null || memberActivityVO.getType() < 0 || memberActivityVO.getType() > 2) {
+			throw new FLException(130021, "活动类型参数错误");
+		}
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
@@ -635,8 +652,7 @@ public class MemberServiceImpl implements MemberService {
 
 				activityPO.setCompany(CompanyServiceImpl.decode(company));
 				activityPO.setDefaults(ActivityPO.DEFAULTS_COMMON_INT);
-
-				activityPO.setDefaults(ActivityPO.TYPE_DECORATION_INT);
+				activityPO.setType(ActivityPO.TYPE_DECORATION_INT);
 				activityPO.setMultiple(memberActivityVO.getMultiple());
 				activityPO.setAtttype(ActivityPO.ATTTYPE_ONLINE_INT);
 
@@ -654,8 +670,7 @@ public class MemberServiceImpl implements MemberService {
 				activityPO.setCompany(CompanyServiceImpl.decode(company));
 
 				activityPO.setDefaults(ActivityPO.DEFAULTS_COMMON_INT);
-
-				activityPO.setDefaults(ActivityPO.TYPE_SALES_INT);
+				activityPO.setType(ActivityPO.TYPE_SALES_INT);
 				activityPO.setMultiple(memberActivityVO.getMultiple());
 				activityPO.setAtttype(ActivityPO.ATTTYPE_ONLINE_INT);
 
