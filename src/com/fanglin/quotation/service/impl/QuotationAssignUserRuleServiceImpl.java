@@ -98,12 +98,11 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public List<QuotationAssignUserRuleVO> queryQuotationAssignUserRuleForAvaile(int company, Integer department, Short decorationType) throws FLException {
-
-		List<QuotationAssignUserRulePO> rulePOs = quotationAssignUserRuleDao.queryAvailableUsers(company, department, decorationType);
+		List<QuotationAssignUserRuleItemPO> itemPOs = quotationAssignUserRuleItemDao.queryAvailableItemsForAssign(company, department, decorationType);
 		List<QuotationAssignUserRuleVO> ruleVOs = new ArrayList<QuotationAssignUserRuleVO>();
 
-		for (QuotationAssignUserRulePO po : rulePOs) {
-			ruleVOs.add(po.ptv(new QuotationAssignUserRuleVO(new UserBaseVO())));
+		for (QuotationAssignUserRuleItemPO itemPO : itemPOs) {
+			ruleVOs.add(itemPO.getUserRule().ptv(new QuotationAssignUserRuleVO(new UserBaseVO())));
 		}
 
 		return ruleVOs;
