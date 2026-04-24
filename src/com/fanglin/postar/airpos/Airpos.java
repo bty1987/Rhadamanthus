@@ -17,8 +17,8 @@ import java.util.TreeMap;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fanglin.data.po.CustypePO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.po.CustypePO;
 import com.fanglin.payment.bean.Wxpay;
 import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.postar.utils.HttpUtil;
@@ -28,7 +28,6 @@ import com.fanglin.postar.utils.ShaUtil;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.SystemConfig;
 import com.fanglin.utils.EncryptConfigLoader;
 
 public class Airpos {

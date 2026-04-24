@@ -195,7 +195,6 @@ public class UserBaseVO implements Serializable {
 		if (getDept() != null && userPO.getDept() != null) userPO.getDept().ptv(getDept());
 
 		setPhone(SensitiveDataHelper.decrypt(userPO.getPhone()));
-		setIdentity(SensitiveDataHelper.decrypt(userPO.getIdentity()));
 
 		return this;
 	}
@@ -207,7 +206,6 @@ public class UserBaseVO implements Serializable {
 		if (getDept() != null && userPO.getDept() != null) userPO.getDept().ptv(getDept());
 
 		setPhone(SensitiveDataHelper.decrypt(userPO.getPhone()));
-		setIdentity(SensitiveDataHelper.decrypt(userPO.getIdentity()));
 		setCompany(company);
 
 		return this;
