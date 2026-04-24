@@ -3,6 +3,7 @@ package com.fanglin.utils;
 import java.io.InputStream;
 import java.util.Properties;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.security.KeyManager;
 
@@ -28,7 +29,7 @@ public class EncryptConfigLoader {
         try {
             InputStream is = SystemConfig.class.getResourceAsStream(configFilePathName);
             if (is == null) {
-                throw new RuntimeException("配置文件不存在: " + configFilePathName);
+                throw new FLException(110030, "配置文件不存在: " + configFilePathName);
             }
             Properties prop = new Properties();
             prop.load(is);
@@ -50,7 +51,7 @@ public class EncryptConfigLoader {
                                 KeyManager.getCurrentIv()
                             ));
                         } catch (Exception e) {
-                            throw new RuntimeException("解密配置失败: " + configFilePathName + ", " + key + ", " + e.getMessage(), e);
+                            throw new FLException(110031, "解密配置失败: " + configFilePathName + ", " + key + ", " + e.getMessage());
                         }
                     }
 
@@ -58,8 +59,11 @@ public class EncryptConfigLoader {
                 }
             }
             return prop;
+        } catch (FLException e) {
+            // 安全模块 FLException 直接向上抛出（不要重新包装）
+            throw e;
         } catch (Exception e) {
-            throw new RuntimeException("加载配置文件失败: " + configFilePathName + ", " + e.getMessage(), e);
+            throw new FLException(110032, "加载配置文件失败: " + configFilePathName + ", " + e.getMessage());
         }
     }
 }

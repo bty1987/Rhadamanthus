@@ -1,5 +1,7 @@
 package com.fanglin.core.security;
 
+import com.fanglin.core.interceptor.FLException;
+
 /**
  * 敏感数据加解密统一入口
  *
@@ -22,7 +24,7 @@ public class SensitiveDataHelper {
      *
      * @param plaintext 明文
      * @return ENC(V1:base64密文) 格式，空值直接返回
-     * @throws RuntimeException 加密失败时抛出（不静默返回明文）
+     * @throws FLException 加密失败时抛出（不静默返回明文）
      */
     public static String encrypt(String plaintext) {
         // 空值安全
@@ -45,7 +47,7 @@ public class SensitiveDataHelper {
             );
             return ENCRYPT_PREFIX + ENCRYPT_VERSION + ":" + encrypted + ENCRYPT_SUFFIX;
         } catch (Exception e) {
-            throw new RuntimeException("加密失败: " + e.getMessage(), e);
+            throw new FLException(110026, "加密失败: " + e.getMessage());
         }
     }
 
@@ -111,7 +113,7 @@ public class SensitiveDataHelper {
             // 分离版本号和密文: "V1:base64data"
             int colonIndex = inner.indexOf(':');
             if (colonIndex < 0) {
-                throw new RuntimeException("加密格式错误，缺少版本号分隔符");
+                throw new FLException(110027, "加密格式错误，缺少版本号分隔符");
             }
 
             String version = inner.substring(0, colonIndex);
@@ -123,7 +125,7 @@ public class SensitiveDataHelper {
                 KeyManager.getIv(version)
             );
         } catch (Exception e) {
-            throw new RuntimeException("解密失败: " + e.getMessage(), e);
+            throw new FLException(110028, "解密失败: " + e.getMessage());
         }
     }
 

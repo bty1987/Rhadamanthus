@@ -13,7 +13,7 @@ package com.fanglin.core.interceptor;
 
 import java.util.List;
 
-public class FLException extends Exception {
+public class FLException extends RuntimeException {
 
 	private static final long serialVersionUID = 7028943330243015645L;
 	
