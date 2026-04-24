@@ -65,6 +65,7 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.Paging;
 
 @Service("customerSourceService")
@@ -186,7 +187,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		String phone = FormatUtil.encodePhone(customerSourceVO.getPhone());
+		String phone = SensitiveDataHelper.encrypt(customerSourceVO.getPhone());
 
 		CustomerSourcePO customerSourcePP = customerSourceDao.queryCustomerSource(creater.getUid(), phone, company);
 
@@ -297,7 +298,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		if (customerPO != null) {
 			customerSourcePO.setCustomer(customerPO);
-			customerSourcePO.setPhone(FormatUtil.encodePhone(customerSourceVO.getPhone()));
+			customerSourcePO.setPhone(SensitiveDataHelper.encrypt(customerSourceVO.getPhone()));
 		}
 
 		String villageName = customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "";
@@ -339,7 +340,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		}
 
 		if (customerSourceVO.getPhone() != null) {
-			customerSourcePO.setPhone(FormatUtil.encodePhone(customerSourceVO.getPhone()));
+			customerSourcePO.setPhone(SensitiveDataHelper.encrypt(customerSourceVO.getPhone()));
 		}
 
 		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman", "busitype", "phone"));
@@ -409,7 +410,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		if (customerPO != null) {
 			customerSourcePO.setCustomer(customerPO);
-			customerSourcePO.setPhone(FormatUtil.encodePhone(customerSourceVO.getPhone()));
+			customerSourcePO.setPhone(SensitiveDataHelper.encrypt(customerSourceVO.getPhone()));
 		}
 
 		customerSourceDao.save(customerSourcePO);

@@ -67,6 +67,7 @@ import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
@@ -250,7 +251,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		// UserPO creater = userDao.queryUserByUserId(userId);
 		//
-		// CustomerSourcePO customerSourcePO = customerSourceDao.queryCustomerSource(creater.getUid(), FormatUtil.encodePhone(customerChanceVO.getSource().getPhone()), company);
+		// CustomerSourcePO customerSourcePO = customerSourceDao.queryCustomerSource(creater.getUid(), SensitiveDataHelper.encrypt(customerChanceVO.getSource().getPhone()), company);
 		//
 		// if (customerSourcePO != null) {
 		// customerSourceService.issueCustomerSource(new CustomerSourceVO(customerSourcePO.getCsid()), customerChanceVO, userId, company);
@@ -419,7 +420,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 
-		String url = String.format("%s/queryVode.do?phone=%s", isv.getValue(), (customerChanceVO.getCustomer() != null) ? customerChanceVO.getCustomer().getPhone() : FormatUtil.decodePhone(customerPO.getPhone()));
+		String url = String.format("%s/queryVode.do?phone=%s", isv.getValue(), (customerChanceVO.getCustomer() != null) ? customerChanceVO.getCustomer().getPhone() : SensitiveDataHelper.decrypt(customerPO.getPhone()));
 
 		JSONObject json = HttpUtil.httpGet(url);
 
@@ -470,7 +471,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(130017, "房产不存在");
 		}
 
-		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getPhone() != null && !customerPO.getPhone().equals(FormatUtil.encodePhone(customerChanceVO.getCustomer().getPhone()))) {
+		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getPhone() != null && !customerPO.getPhone().equals(SensitiveDataHelper.encrypt(customerChanceVO.getCustomer().getPhone()))) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
 
