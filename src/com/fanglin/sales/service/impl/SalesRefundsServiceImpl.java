@@ -45,6 +45,7 @@ import com.fanglin.sales.vo.SalesRefundsVO;
 import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
@@ -210,7 +211,7 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 			refundsVO.getSales().getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
-		if (refundsVO.getSales().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(refundsVO.getSales().getCustomer().getPhone()))) {
+		if (refundsVO.getSales().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(SensitiveDataHelper.encrypt(refundsVO.getSales().getCustomer().getPhone()))) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
 
