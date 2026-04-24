@@ -1,5 +1,6 @@
 package com.fanglin.core.security;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.utils.SystemConfig;
 
 /**
@@ -53,7 +54,7 @@ public class KeyManager {
         if ("V1".equals(version)) {
             return getCurrentKey();
         }
-        throw new RuntimeException("不支持的密钥版本: " + version);
+        throw new FLException(110022, "不支持的密钥版本: " + version);
     }
 
     /**
@@ -63,7 +64,7 @@ public class KeyManager {
         if ("V1".equals(version)) {
             return getCurrentIv();
         }
-        throw new RuntimeException("不支持的密钥版本: " + version);
+        throw new FLException(110022, "不支持的密钥版本: " + version);
     }
 
     /**
@@ -74,7 +75,7 @@ public class KeyManager {
         try {
             return SystemConfig.getString("encryptKey");
         } catch (Exception e) {
-            throw new RuntimeException("旧版密钥配置缺失: sysconfig.properties 中缺少 encryptKey", e);
+            throw new FLException(110023, "旧版密钥配置缺失: sysconfig.properties 中缺少 encryptKey");
         }
     }
 
@@ -86,7 +87,7 @@ public class KeyManager {
         try {
             return SystemConfig.getString("encryptIv");
         } catch (Exception e) {
-            throw new RuntimeException("旧版密钥配置缺失: sysconfig.properties 中缺少 encryptIv", e);
+            throw new FLException(110023, "旧版密钥配置缺失: sysconfig.properties 中缺少 encryptIv");
         }
     }
 
@@ -135,22 +136,18 @@ public class KeyManager {
             try {
                 key = SystemConfig.getString("encryptKey");
             } catch (Exception e) {
-                throw new RuntimeException(
-                    "无法获取AES密钥，请在以下任一来源配置:\n" +
-                    "  1. JVM参数: -Dfanglin.secret.key=xxx\n" +
-                    "  2. 环境变量: FANGLIN_SECRET_KEY\n" +
-                    "  3. 配置文件: sysconfig.properties 中 encryptKeyV1 或 encryptKey", e);
+                throw new FLException(110024,
+                    "无法获取AES密钥，请在以下任一来源配置: " +
+                    "1.JVM参数 -Dfanglin.secret.key  2.环境变量 FANGLIN_SECRET_KEY  3.配置文件 encryptKeyV1 或 encryptKey");
             }
         }
         if (isEmpty(iv)) {
             try {
                 iv = SystemConfig.getString("encryptIv");
             } catch (Exception e) {
-                throw new RuntimeException(
-                    "无法获取AES IV，请在以下任一来源配置:\n" +
-                    "  1. JVM参数: -Dfanglin.secret.iv=xxx\n" +
-                    "  2. 环境变量: FANGLIN_SECRET_IV\n" +
-                    "  3. 配置文件: sysconfig.properties 中 encryptIvV1 或 encryptIv", e);
+                throw new FLException(110025,
+                    "无法获取AES IV，请在以下任一来源配置: " +
+                    "1.JVM参数 -Dfanglin.secret.iv  2.环境变量 FANGLIN_SECRET_IV  3.配置文件 encryptIvV1 或 encryptIv");
             }
         }
 

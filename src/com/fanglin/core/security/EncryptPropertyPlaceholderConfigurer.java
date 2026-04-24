@@ -4,6 +4,8 @@ import java.util.Properties;
 
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
+import com.fanglin.core.interceptor.FLException;
+
 /**
  * Spring XML 属性解密配置器
  * 
@@ -39,7 +41,7 @@ public class EncryptPropertyPlaceholderConfigurer extends PropertyPlaceholderCon
                     KeyManager.getCurrentIv()
                 );
             } catch (Exception e) {
-                throw new RuntimeException("解密配置失败: " + placeholder + ", " + e.getMessage(), e);
+                throw new FLException(110029, "解密配置失败: " + placeholder + ", " + e.getMessage());
             }
         }
 
