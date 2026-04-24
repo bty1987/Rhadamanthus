@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.customer.vo.DecorationVO;
 
 @Entity(name = "com.fanglin.customer.po.DecorationPO")
@@ -100,7 +101,7 @@ public class DecorationPO implements Serializable {
 		decorationVO.setSalesScale(decorationPO.getSaleScale());
 		decorationVO.setCustomerId(decorationPO.getCustomer().getCid());
 		decorationVO.setContractTime(decorationPO.getContractTime());
-		decorationVO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
+		decorationVO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber()));
 		decorationVO.setCreateTime(decorationPO.getCreateTime());
 		decorationVO.setDefaultFlag(getDefaultFlag());
 		decorationVO.setDepositTime(decorationPO.getDepositTime());

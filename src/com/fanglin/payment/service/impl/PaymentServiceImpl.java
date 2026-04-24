@@ -25,6 +25,7 @@ import com.fanglin.communion.po.ConstantPO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
@@ -300,7 +301,7 @@ public class PaymentServiceImpl implements PaymentService {
 		UserPO designer = decorationPO.getDesigner();
 
 		if (key != null) {
-			messageDDService.sendMessage(key.getValue(), String.format("装修单: %s, 楼盘地址: %s%s, 设计师工号: %s, 设计师姓名: %s, 状态: %s, 工程状态: %s, %s预付款收款, 金额: %s .", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber(), designer.getUserId(), designer.getCurrentName(), status.getValue(), projectStatus, advanceType, Arith.div(paymentPO.getRecharge(), 1000.0)));
+			messageDDService.sendMessage(key.getValue(), String.format("装修单: %s, 楼盘地址: %s%s, 设计师工号: %s, 设计师姓名: %s, 状态: %s, 工程状态: %s, %s预付款收款, 金额: %s .", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber()), designer.getUserId(), designer.getCurrentName(), status.getValue(), projectStatus, advanceType, Arith.div(paymentPO.getRecharge(), 1000.0)));
 		}
 
 		// 生成消息队列数据

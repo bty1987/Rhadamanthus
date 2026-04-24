@@ -370,7 +370,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginPO.setHouse(housePO);
 		customerOriginPO.setVillage(housePO.getVillage());
-		customerOriginPO.setHouseNumber(housePO.getHouseNumber());
+		customerOriginPO.setHouseNumber(SensitiveDataHelper.decrypt(housePO.getHouseNumber()));
 
 		UserPO designer = userDao.queryUserByUserId(customerOriginVO.getDesigner().getUserId());
 		UserPO salesman = userDao.queryUserByUserId(customerOriginVO.getSalesman().getUserId());
@@ -498,7 +498,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		HousePO housePO = customerOriginPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源初审通过,客户名:%s,楼盘:%s %s %s %s", customerOriginPO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
+		String content = String.format("客源初审通过,客户名:%s,楼盘:%s %s %s %s", customerOriginPO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), SensitiveDataHelper.decrypt(housePO.getHouseNumber()));
 
 		if (designer != null) {
 			messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, designer.getCompany());
@@ -587,7 +587,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		HousePO housePO = customerOriginPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerOriginPO.getOrderId());
+		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s", customerOriginPO.getName(), villagePO.getName(), SensitiveDataHelper.decrypt(housePO.getHouseNumber()), customerOriginPO.getOrderId());
 
 		UserPO designer = customerOriginPO.getDesigner();
 		if (designer != null) {

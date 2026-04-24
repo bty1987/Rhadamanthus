@@ -651,7 +651,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			SystemConfigPO key = systemConfigDao.querySystemConfig("MESSAGE_DING_GROUP_ADDREDUCE", company);
 
 			if (key != null) {
-				messageDDService.sendMessage(key.getValue(), String.format("装修单:%s, 地址:%s %s, 完成增减项收款.", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber()));
+				messageDDService.sendMessage(key.getValue(), String.format("装修单:%s, 地址:%s %s, 完成增减项收款.", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber())));
 			}
 
 			decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认增减项, 如未付款请付款。", String.format("pages/quotation/addReduce/addReduce?orderId=%s&arids=%s", orderId, arids));
@@ -665,7 +665,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		if (decorationPO.getSupervisor() != null) {
-			messageService.sendMessage(decorationPO.getSupervisor().getUserId(), "", String.format("订单:%s,地址:%s %s,款项金额:%.3f,%s完成收款", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber(), Arith.div(decorationPaymentPO.getReferMoney(), 1000.0), decorationPaymentPO.getPaymentType()), MessagePO.TYPE_PAYMENT_INT, decorationPO.getCompany());
+			messageService.sendMessage(decorationPO.getSupervisor().getUserId(), "", String.format("订单:%s,地址:%s %s,款项金额:%.3f,%s完成收款", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber()), Arith.div(decorationPaymentPO.getReferMoney(), 1000.0), decorationPaymentPO.getPaymentType()), MessagePO.TYPE_PAYMENT_INT, decorationPO.getCompany());
 		}
 
 		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修交款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=1", decorationPaymentPO.getDecoration().getOrderId(), decorationReceiptPO.getDrId()));
@@ -744,7 +744,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			SystemConfigPO key = systemConfigDao.querySystemConfig("MESSAGE_DING_GROUP_ADDREDUCE", company);
 
 			if (key != null) {
-				messageDDService.sendMessage(key.getValue(), String.format("装修单:%s, 地址:%s %s, 完成增减项收款.", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber()));
+				messageDDService.sendMessage(key.getValue(), String.format("装修单:%s, 地址:%s %s, 完成增减项收款.", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber())));
 			}
 
 			decorationService.sendMessage(decorationPO.getOrderId(), "装修单", "请您及时查收点确认增减项, 如未付款请付款。", String.format("pages/quotation/addReduce/addReduce?orderId=%s&arids=%s", decorationPO.getOrderId(), arids));

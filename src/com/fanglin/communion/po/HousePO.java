@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
@@ -317,7 +318,7 @@ public class HousePO implements Serializable {
 	}
 
 	public String address() {
-		return String.format("%s %s", this.village.getName(), this.houseNumber);
+		return String.format("%s %s", this.village.getName(), SensitiveDataHelper.decrypt(this.houseNumber));
 	}
 
 	@Column(name = "company")
@@ -331,7 +332,8 @@ public class HousePO implements Serializable {
 
 	public HouseVO ptv(HouseVO houseVO) {
 
-		BeanUtil.copyProperties(this, houseVO, Arrays.asList("village"));
+		BeanUtil.copyProperties(this, houseVO, Arrays.asList("village", "houseNumber"));
+		houseVO.setHouseNumber(SensitiveDataHelper.decrypt(getHouseNumber()));
 
 		if (houseVO.getVillage() != null && getVillage() != null) getVillage().ptv(houseVO.getVillage());
 

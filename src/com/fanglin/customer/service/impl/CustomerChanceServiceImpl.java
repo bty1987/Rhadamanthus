@@ -342,7 +342,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChanceVO.getSource().setName(customerChancePO.getSource().getCustomer().getName());
 
 		customerChanceVO.getSource().setGender(customerChancePO.getSource().getCustomer().getGender());
-		customerChanceVO.getSource().getHouse().setHouseNumber(customerChancePO.getSource().getHouse().getHouseNumber());
+		customerChanceVO.getSource().getHouse().setHouseNumber(SensitiveDataHelper.decrypt(customerChancePO.getSource().getHouse().getHouseNumber()));
 		customerChanceVO.getSource().getVillage().setVid(customerChancePO.getHouse().getVillage().getVid());
 
 		CustomerSourcePO customerSourcePO = customerSourceDao.get(customerChancePO.getSource().getCsid());
@@ -486,7 +486,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerSourceDao.update(customerSourcePO);
 
-		String content = String.format("客源确认,装修单:%s,客户名:%s,楼盘:%s,楼号:%s,电话:%s", customerChancePO.getOrderId(), customerChancePO.getSource().getName(), customerChancePO.getHouse().getVillage().getName(), customerChancePO.getHouse().getHouseNumber(), customerChancePO.getCustomer().getPhone());
+		String content = String.format("客源确认,装修单:%s,客户名:%s,楼盘:%s,楼号:%s,电话:%s", customerChancePO.getOrderId(), customerChancePO.getSource().getName(), customerChancePO.getHouse().getVillage().getName(), SensitiveDataHelper.decrypt(customerChancePO.getHouse().getHouseNumber()), customerChancePO.getCustomer().getPhone());
 
 		UserPO creater = customerChancePO.getCreater();
 		UserPO belonger = customerChancePO.getBelonger();
@@ -704,7 +704,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerProfileDao.updateCustomerProfile(decorationVO.getOrderId(), customerChancePO.getCustomer().getCid(), customerSourcePO.getCsid());
 
-		String message = String.format("设计:%s(%s),装修单:%s转单成功,%s %s.", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), decorationVO.getOrderId(), customerChancePO.getHouse().getVillage().getName(), customerChancePO.getHouse().getHouseNumber());
+		String message = String.format("设计:%s(%s),装修单:%s转单成功,%s %s.", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), decorationVO.getOrderId(), customerChancePO.getHouse().getVillage().getName(), SensitiveDataHelper.decrypt(customerChancePO.getHouse().getHouseNumber()));
 
 		messageService.sendMessage(customerChancePO.getCreater().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getCreater().getCompany());
 	}
@@ -893,7 +893,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s", customerSourcePO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerSourcePO.getOrderId());
+		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s", customerSourcePO.getName(), villagePO.getName(), SensitiveDataHelper.decrypt(housePO.getHouseNumber()), customerSourcePO.getOrderId());
 		UserPO designer = customerChancePO.getBelonger();
 		UserPO salesman = customerSourcePO.getCreater();
 
@@ -960,7 +960,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		// 发送消息通知
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客户机会直接初审通过,客户名:%s,楼盘:%s %s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
+		String content = String.format("客户机会直接初审通过,客户名:%s,楼盘:%s %s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), SensitiveDataHelper.decrypt(housePO.getHouseNumber()));
 
 		UserPO belonger = customerChancePO.getBelonger();
 		if (belonger != null) {

@@ -34,6 +34,7 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.security.MD5Helper;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
@@ -166,7 +167,7 @@ public class UserServiceImpl implements UserService {
 			BeanUtil.copyProperties(userInfoPO, userInfoVO, Arrays.asList("user", "fangliner"));
 
 			UserVO userVO = convertBean(userInfoPO.getUser());
-			userVO.setIdentity(userInfoPO.getUser().getIdentity());
+			userVO.setIdentity(SensitiveDataHelper.decrypt(userInfoPO.getUser().getIdentity()));
 			userInfoVO.setUser(userVO);
 
 			if (userInfoPO.getFangliner() != null) {
@@ -255,7 +256,7 @@ public class UserServiceImpl implements UserService {
 
 		userInfoVO.setUser(convertBean(userInfoPO.getUser()));
 		userInfoVO.getUser().setCompanys(companyPO.getName());
-		userInfoVO.getUser().setIdentity(userInfoPO.getUser().getIdentity());
+		userInfoVO.getUser().setIdentity(SensitiveDataHelper.decrypt(userInfoPO.getUser().getIdentity()));
 
 		return userInfoVO;
 	}
@@ -287,7 +288,7 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(230015, "公司不存在");
 		}
 
-		userInfoVO.getUser().setIdentity(userPO.getIdentity());
+		userInfoVO.getUser().setIdentity(SensitiveDataHelper.decrypt(userPO.getIdentity()));
 
 		SystemConfigPO defaultPassword = systemConfigDao.querySystemConfig("password", userPO.getCompany());
 
@@ -463,8 +464,10 @@ public class UserServiceImpl implements UserService {
 		}
 
 		UserVO userVO = userInfoVO.getUser();
-
-		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(userVO.getPhone(), userVO.getIdentity());
+		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(SensitiveDataHelper.encrypt(userVO.getPhone()), SensitiveDataHelper.encrypt(userVO.getIdentity()));
+		if (userPOs.size() == 0) {
+			userPOs = userDao.queryUserByPhoneAIdent(userVO.getPhone(), userVO.getIdentity());
+		}
 
 		if (userPOs.size() > 0) {
 			throw new FLException(190006, "人员已存在");
@@ -533,7 +536,9 @@ public class UserServiceImpl implements UserService {
 		userPO.setType(UserPO.TYPE_USER_INT);
 		userPO.setCompany(company);
 
-		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "duty", "uId", "userId", "loginId", "password", "role", "isLogin", "company", "extranet"));
+		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "duty", "uId", "userId", "loginId", "password", "role", "isLogin", "company", "extranet", "phone", "identity"));
+		userPO.setPhone(SensitiveDataHelper.encrypt(userVO.getPhone()));
+		userPO.setIdentity(SensitiveDataHelper.encrypt(userVO.getIdentity()));
 
 		userPO.setDept(departmentPO);
 
@@ -793,7 +798,7 @@ public class UserServiceImpl implements UserService {
 		userInfoPO.setEmergencyMan(userInfoVO.getEmergencyMan());
 		userInfoPO.setEmergencyPhone(userInfoVO.getEmergencyPhone());
 
-		userPO.setPhone(userVO.getPhone());
+		userPO.setPhone(SensitiveDataHelper.encrypt(userVO.getPhone()));
 		userPO.setUserPhoto(userVO.getUserPhoto());
 		userPO.setIdentityPathF(userVO.getIdentityPathF());
 
@@ -1050,7 +1055,9 @@ public class UserServiceImpl implements UserService {
 
 		UserVO userVO = new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO());
 
-		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "duty", "password", "company"));
+		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "duty", "password", "company", "phone", "identity"));
+		userVO.setPhone(SensitiveDataHelper.decrypt(userPO.getPhone()));
+		userVO.setIdentity(SensitiveDataHelper.decrypt(userPO.getIdentity()));
 
 		if (userPO.getDuty() != null) {
 			BeanUtil.copyProperties(userPO.getDuty(), userVO.getDuty(), Arrays.asList("departmentType"));
@@ -1392,8 +1399,8 @@ public class UserServiceImpl implements UserService {
 		JSONObject person = info.getJSONObject("person");
 
 		userPO.setUserName(person.getString("personName"));
-		userPO.setIdentity(person.getString("idCard"));
-		userPO.setPhone(person.getString("mobile"));
+		userPO.setIdentity(SensitiveDataHelper.encrypt(person.getString("idCard")));
+		userPO.setPhone(SensitiveDataHelper.encrypt(person.getString("mobile")));
 
 		userPO.setUserPhoto(person.getString("photoUuid"));
 		userPO.setIdentityPathF(person.getString("headPhotoPath"));
@@ -1405,8 +1412,8 @@ public class UserServiceImpl implements UserService {
 
 		userVO.setUserName(userPO.getUserName());
 		userVO.setGender(userPO.getGender());
-		userVO.setPhone(userPO.getPhone());
-		userVO.setIdentity(userPO.getIdentity());
+		userVO.setPhone(SensitiveDataHelper.decrypt(userPO.getPhone()));
+		userVO.setIdentity(SensitiveDataHelper.decrypt(userPO.getIdentity()));
 
 		return 0;
 	}
