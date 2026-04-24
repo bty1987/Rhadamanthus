@@ -234,7 +234,7 @@ var printselectionDetail = (function() {
 
             var addReduceItems = {};
 
-            com.post(api.addReduce.queryAddReduceByOrderId, {
+            com.post(api.quotation.queryAddReduceByOrderId, {
                 "addReduce.orderId": selectionDetail.orderId
             }, function(res) {
 

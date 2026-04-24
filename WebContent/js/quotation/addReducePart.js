@@ -273,7 +273,7 @@
                         "addReduces[0].arId": addReduceDetail.basicParams["addReduce.arId"],
                         "addReduce.orderId": addReduceDetail.orderid
                     };
-                    com.post(api.addReduce.submitAddReduce, option, function() {
+                    com.post(api.quotation.submitAddReduce, option, function() {
 
                         com.showAlert(com.info, '提交成功');
                         com.focusPage('#cancelAddReduceBtn').show();
@@ -286,7 +286,7 @@
                     var option = {
                         "addReduce.dpId": addReduceDetail.basicParams["addReduce.dpId"]
                     };
-                    com.post(api.addReduce.cancelAddReduce, option, function() {
+                    com.post(api.quotation.cancelAddReduce, option, function() {
 
                         com.showAlert(com.info, '提交成功');
                         addReduceDetail.addReduce.paytype == constant.quotation().addreduce.PAYTYPE_PAY_INT ? com.focusPage('#submitAddReduceBtn').show() : null;
@@ -308,7 +308,7 @@
 
                     var option = $.extend({}, addReduceDetail.basicParams);
 
-                    com.post(api.addReduce.updateAddReduceForAdvance, option, function() {
+                    com.post(api.quotation.updateAddReduceForAdvance, option, function() {
 
                         com.showAlert(com.info, '提交成功');
                     }, null, false);
@@ -555,7 +555,7 @@
                     var index = 0;
                     var arIds = {};
 
-                    com.post(api.addReduce.queryAddReduceForPayedByOrderId, {
+                    com.post(api.quotation.queryAddReduceForPayedByOrderId, {
                         "addReduce.orderId": addReduceDetail.orderid
                     }, function(res) {
 
@@ -568,7 +568,7 @@
                         });
                     }, null, false);
 
-                    com.post(api.addReduce.queryAddReduceItemByAddReduceIds, arIds, function(res) {
+                    com.post(api.quotation.queryAddReduceItemByAddReduceIds, arIds, function(res) {
 
                         var $tableWrap = com.focusPage('#addItemList', addReduceDetail.$modals.addAddItemModal).empty();
                         var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -729,7 +729,7 @@
 
                 var _params = $.extend(true, {}, args, addReduceDetail.basicParams);
 
-                com.post(api.addReduce.updateAddReduceItem, _params, function(res) {
+                com.post(api.quotation.updateAddReduceItem, _params, function(res) {
 
                     $item.find('input[name="deleteItems"]').val(res.addReduceItem.ariId);
                     $item.attr("data-ariid", res.addReduceItem.ariId);
@@ -751,7 +751,7 @@
                     options["addReduce.managePrice"] = 0;
                 }
 
-                com.post(api.addReduce.updateAddReduceForAdvance, options, function() {
+                com.post(api.quotation.updateAddReduceForAdvance, options, function() {
 
                 }, null, false);
             });
@@ -766,7 +766,7 @@
 
                 options["addReduce.manageDiscount"] = addReduceDetail.isCountManageDiscount.prop("checked") ? 1 : 0;
 
-                com.post(api.addReduce.updateAddReduceForAdvance, options, function() {
+                com.post(api.quotation.updateAddReduceForAdvance, options, function() {
 
                 }, null, false);
             });
@@ -788,7 +788,7 @@
 
                 var _params = $.extend(true, {}, addReduceDetail.basicParams);
 
-                com.post(api.addReduce.updateAddReduceForAdvance, _params, function() {
+                com.post(api.quotation.updateAddReduceForAdvance, _params, function() {
 
                     com.showAlert(com.info, '提交成功');
                     com.focusPage('#sumLabDiscount').text(addReduceDetail.discount);
@@ -822,7 +822,7 @@
                     options["addReduce.taxDiscount"] = addReduceDetail.quotation.taxDiscount;
                 }
 
-                com.post(api.addReduce.updateAddReduceForAdvance, options, function() {
+                com.post(api.quotation.updateAddReduceForAdvance, options, function() {
 
                 }, null, false);
             });
@@ -1038,7 +1038,7 @@
 
                 var _params = $.extend(true, {}, args, addReduceDetail.basicParams);
 
-                com.post(api.addReduce.updateAddReduceItem, _params, function(res) {
+                com.post(api.quotation.updateAddReduceItem, _params, function(res) {
 
                     that.$nowLine.find('input[name="ariid"]').val(res.addReduceItem.ariId);
                     that.$nowLine.attr("data-ariid", res.addReduceItem.ariId);
@@ -1138,7 +1138,7 @@
 
             var _params = $.extend(true, {}, args, addReduceDetail.basicParams);
 
-            com.post(api.addReduce.updateAddReduceItemForAdvance, _params);
+            com.post(api.quotation.updateAddReduceItemForAdvance, _params);
         },
         // 删除报价项
         deleteQuote: function($quote) {
@@ -1160,7 +1160,7 @@
                 _params["addReduceItem.ariId"] = _ariid;
                 _params["addReduceItem.quotationItemId"] = quotationItemId;
 
-                com.post(api.addReduce.deleteAddReduceItem, _params, function(res) {
+                com.post(api.quotation.deleteAddReduceItem, _params, function(res) {
 
                     $quote.remove();
                 }, function(res) {
@@ -1216,7 +1216,7 @@
             params["addReduceItems[" + 1 + "].ariId"] = $movequote.attr('data-ariid');
             params["addReduceItems[" + 1 + "].index"] = nowline;
 
-            com.post(api.addReduce.updateAddReduceItemForIndex, params);
+            com.post(api.quotation.updateAddReduceItemForIndex, params);
         },
 
         init: function() {
@@ -1536,7 +1536,7 @@
 
             addReduceDetail.historyPage = params.historyPage;
 
-            com.post(api.addReduce.queryAddReduceByArid, {
+            com.post(api.quotation.queryAddReduceByArid, {
                 "addReduce.arId": addReduceDetail.arid
             }, function(res) {
 

@@ -118,7 +118,7 @@ var printAddReduceDetail = (function() {
             }, null, false);
 
             // 获取增减信息
-            com.post(api.addReduce.queryAddReduceByOrderId, {
+            com.post(api.quotation.queryAddReduceByOrderId, {
                 "addReduce.orderId": orderId
             }, function(result) {
 

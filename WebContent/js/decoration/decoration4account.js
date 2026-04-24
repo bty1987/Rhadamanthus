@@ -926,7 +926,7 @@ $(function() {
         
         accountBasic.addDisCalPrice = 0, accountBasic.addUndisCalPrice = 0, accountBasic.reduceDisCalPrice = 0, accountBasic.reduceUndisCalPrice = 0,
 
-        com.post(api.addReduce.queryAddReduceByOrderId, {
+        com.post(api.quotation.queryAddReduceByOrderId, {
             "addReduce.orderId": decorationDetail.orderId
         }, function(res) {
 

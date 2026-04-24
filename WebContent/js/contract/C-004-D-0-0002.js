@@ -242,7 +242,7 @@ jQuery(function($) {
 
     quotationUtils.quotationDetail.addReduces = [];
 
-    com.post(api.addReduce.queryAddReduceByOrderId, {
+    com.post(api.quotation.queryAddReduceByOrderId, {
         'addReduce.orderId': contractEdit.decorationOrderId
     }, function(res) {
 
