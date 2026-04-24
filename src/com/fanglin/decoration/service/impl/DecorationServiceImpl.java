@@ -102,6 +102,7 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.core.security.SensitiveDataHelper;
 
 @Service("decorationServiceO")
 @Transactional(readOnly = true)
@@ -365,7 +366,7 @@ public class DecorationServiceImpl implements DecorationService {
 			return;
 		}
 
-		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(FormatUtil.encodePhone(customerPhone), CustomerPhonePO.STATUS_ENABLE_INT, null);
+		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(SensitiveDataHelper.encrypt(customerPhone), CustomerPhonePO.STATUS_ENABLE_INT, null);
 
 		filters.add(new Filter("decoration.customer.cid", (null != customerPhones && !customerPhones.isEmpty()) ? String.valueOf(customerPhones.get(0).getCid()) : "-1", "eq"));
 
