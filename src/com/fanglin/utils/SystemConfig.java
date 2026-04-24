@@ -11,7 +11,6 @@
 
 package com.fanglin.utils;
 
-import java.io.InputStream;
 import java.util.Properties;
 
 public class SystemConfig {
@@ -28,9 +27,7 @@ public class SystemConfig {
 
 	static {
 		try {
-			InputStream is = SystemConfig.class.getResourceAsStream(configFilePathName);
-			prop = new Properties();
-			prop.load(is);
+			prop = EncryptConfigLoader.load(configFilePathName);
 		} catch (Throwable e){
 			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
 		}

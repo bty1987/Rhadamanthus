@@ -29,6 +29,7 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.SystemConfig;
+import com.fanglin.utils.EncryptConfigLoader;
 
 public class Airpos {
 
@@ -54,8 +55,7 @@ public class Airpos {
 
 	static {
 		try {
-			prop = new Properties();
-			prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			prop = EncryptConfigLoader.load(configFilePathName);
 
 			publicKey = prop.getProperty("PUBLICKEY");
 			version = prop.getProperty("VERSION");

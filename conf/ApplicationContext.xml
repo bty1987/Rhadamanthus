@@ -20,7 +20,7 @@
 
 	<context:annotation-config />
 
-	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean id="propertyConfigurer" class="com.fanglin.core.security.EncryptPropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
 				<value>classpath:jdbc.properties</value>

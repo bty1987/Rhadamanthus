@@ -17,6 +17,7 @@ import org.apache.commons.codec.binary.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.utils.SystemConfig;
+import com.fanglin.utils.EncryptConfigLoader;
 import com.fanglin.yspay.utils.CertUtil;
 import com.fanglin.yspay.utils.DateUtil;
 import com.fanglin.yspay.utils.HttpUtil;
@@ -32,12 +33,12 @@ public class Base implements Serializable {
 
 	private static final long serialVersionUID = -6133566416044112954L;
 
-	private static String CERTID = "pinganyinhang02";
+	private static String CERTID = null;
 	private static String PFXPATH = "client.pfx";
 	private static String CRTPATH = "service.crt";
-	private static String PFXPWD = "123456";
-	private static String APPSECRET = "pd8fLbCT55SFQAtw8pnVQPEAAUsIeEKeua9RXf4h1bk=";
-	private static String HOST = "http://bd4-vtest.ysepay.com/";
+	private static String PFXPWD = null;
+	private static String APPSECRET = null;
+	private static String HOST = null;
 	private static String VERSION = "1";
 
 	// private static String NOTIFY_URL_STR = "http://www.fanglin.vip/";
@@ -49,8 +50,7 @@ public class Base implements Serializable {
 
 	static {
 		try {
-			prop = new Properties();
-			prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			prop = EncryptConfigLoader.load(configFilePathName);
 
 			CERTID = prop.getProperty("cert.id");
 			PFXPATH = prop.getProperty("pfx.path");
