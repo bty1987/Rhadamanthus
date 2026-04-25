@@ -1529,6 +1529,8 @@
             "quotationPrefer.preferPrice": preferPrice,
             "quotationPrefer.managePrefer": managePrefer,
             "quotationPrefer.advancePrefer": advancePrefer,
+            "quotationPrefer.activityPrice": quotationPrefer.activityPrice != null ? quotationPrefer.activityPrice : 0,
+            "quotationPrefer.activityProfit": quotationPrefer.activityProfit != null ? quotationPrefer.activityProfit : 0,
         };
 
         if (parseFloat(advancePrefer) > quotationPrefer.advancePrefer && parseFloat(advancePrefer) > protation.advanceProfit) {
@@ -1595,6 +1597,8 @@
             "approvalQuotationPrefer.preferPrice": options["quotationPrefer.preferPrice"],
             "approvalQuotationPrefer.managePrefer": options["quotationPrefer.managePrefer"],
             "approvalQuotationPrefer.advancePrefer": options["quotationPrefer.advancePrefer"],
+            "approvalQuotationPrefer.activityPrice": options["quotationPrefer.activityPrice"],
+            "approvalQuotationPrefer.activityProfit": options["quotationPrefer.activityProfit"],
             "approvalQuotationPrefer.taxPrice": options["quotation.taxPrice"],
             "approvalQuotationPrefer.totalPrice": options["quotation.totalPrice"],
         };

@@ -137,7 +137,7 @@ $.extend(api, {
             url: "submitApprovalForQuotationPrefer.do",
             type: "update",
             tranargs: {
-                args: ["approvalQuotationPrefer.preferPrice", "approvalQuotationPrefer.managePrefer", "approvalQuotationPrefer.advancePrefer", "approvalQuotationPrefer.taxPrice", "approvalQuotationPrefer.totalPrice"]
+                args: ["approvalQuotationPrefer.preferPrice", "approvalQuotationPrefer.managePrefer", "approvalQuotationPrefer.advancePrefer", "approvalQuotationPrefer.activityPrice", "approvalQuotationPrefer.activityProfit", "approvalQuotationPrefer.taxPrice", "approvalQuotationPrefer.totalPrice"]
             }
         },
         submitApprovalForDecorationRefund: {

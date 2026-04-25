@@ -22,6 +22,10 @@ public class ApprovalQuotationPreferVO implements Serializable {
 
 	private Long advancePrefer;
 
+	private Long activityPrice;
+
+	private Long activityProfit;
+
 	private Long totalPrice;
 
 	private Long taxPrice;
@@ -104,6 +108,22 @@ public class ApprovalQuotationPreferVO implements Serializable {
 
 	public void setAdvancePrefer(Long advancePrefer) {
 		this.advancePrefer = advancePrefer;
+	}
+
+	public Long getActivityPrice() {
+		return activityPrice;
+	}
+
+	public void setActivityPrice(Long activityPrice) {
+		this.activityPrice = activityPrice;
+	}
+
+	public Long getActivityProfit() {
+		return activityProfit;
+	}
+
+	public void setActivityProfit(Long activityProfit) {
+		this.activityProfit = activityProfit;
 	}
 
 	public Long getTotalPrice() {

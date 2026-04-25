@@ -22,6 +22,10 @@ public class QuotationPreferVO implements Serializable {
 
 	private Long advancePrefer;
 
+	private Long activityPrice;
+
+	private Long activityProfit;
+
 	private Integer discount;
 
 	private Integer manageDiscount;
@@ -99,6 +103,22 @@ public class QuotationPreferVO implements Serializable {
 
 	public void setAdvancePrefer(Long advancePrefer) {
 		this.advancePrefer = advancePrefer;
+	}
+
+	public Long getActivityPrice() {
+		return activityPrice;
+	}
+
+	public void setActivityPrice(Long activityPrice) {
+		this.activityPrice = activityPrice;
+	}
+
+	public Long getActivityProfit() {
+		return activityProfit;
+	}
+
+	public void setActivityProfit(Long activityProfit) {
+		this.activityProfit = activityProfit;
 	}
 
 	public Integer getDiscount() {
