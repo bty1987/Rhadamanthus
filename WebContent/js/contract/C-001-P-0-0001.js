@@ -69,6 +69,7 @@ jQuery(function($) {
         com.focusPage("#con-user-gender", "#form").val(user.gender);
         com.focusPage("#con-user-ident", "#form").val(user.identity);
         com.focusPage("#con-user-phone", "#form").val(user.phone);
+        com.focusPage("#con-user-wechat", "#form").val(userInfo.wechat);
         com.focusPage("#con-duty", "#form").val(user.duty.name);
         com.focusPage("#con-user-addr", "#form").val(userInfo.address);
         com.focusPage("#con-company-name", "#form").val(user.companys);
