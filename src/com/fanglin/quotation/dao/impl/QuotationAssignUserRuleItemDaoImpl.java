@@ -13,9 +13,11 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleItemDao;
 import com.fanglin.quotation.po.QuotationAssignUserRuleItemPO;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
+import com.fanglin.utils.Paging;
 
 @Repository("quotationAssignUserRuleItemDao")
 public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignUserRuleItemPO> implements QuotationAssignUserRuleItemDao {
@@ -124,5 +126,34 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 		for (QuotationAssignUserRuleItemPO item : items) {
 			delete(item);
 		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException {
+		PagingQuery<QuotationAssignUserRuleItemPO> query = pagingQuery(paging, QuotationAssignUserRuleItemPO.class);
+
+		// 预先 alias，避免 N+1
+		query.alias("userRule", "userRule");
+		query.alias("userRule.user", "user");
+		query.alias("company", "companyAlias");
+
+		if (filters != null) {
+			for (Filter filter : filters) {
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
+				if ("company".equals(field)) {
+					query.add(query.getCriterion("companyAlias.cid", Integer.valueOf(data), op));
+				} else if ("supportedType".equals(field)) {
+					query.add(query.getCriterion("supportedType", Integer.valueOf(data), op));
+				} else if ("userName".equals(field)) {
+					query.add(query.getCriterion("user.currentName", data, op));
+				}
+			}
+		}
+
+		query.desc("createTime");
+		return query.list();
 	}
 }

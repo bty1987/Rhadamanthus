@@ -93,7 +93,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignUserRule() throws FLException {
 
-		quotationAssignUserRuleService.pageQuotationAssignUserRule(getPaging(), getFilters(), queryCompany());
+		quotationAssignUserRuleService.pageQuotationAssignUserRule(getPaging(), getFilters());
 
 		return SUCCESS;
 	}
@@ -199,6 +199,65 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 
 		quotationAssignUserRules = quotationAssignUserRuleService.queryQuotationAssignUserRuleForAvaile(company, department, decorationType);
 
+		return SUCCESS;
+	}
+
+	// ==================== Item 明细管理（独立页面） ====================
+
+	/**
+	 * 分页查询预算员规则明细列表
+	 */
+	@Action(value = "pageQuotationAssignUserRuleItem", results = {
+		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
+		@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
+	}, params = { "contentType", "text/html" })
+	public String pageQuotationAssignUserRuleItem() throws FLException {
+		quotationAssignUserRuleService.pageQuotationAssignUserRuleItem(getPaging(), getFilters());
+		return SUCCESS;
+	}
+
+	/**
+	 * 新增预算员规则明细
+	 */
+	@Action(value = "createQuotationAssignUserRuleItem", results = {
+		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
+		@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
+	}, params = { "contentType", "text/html" })
+	public String createQuotationAssignUserRuleItem() throws FLException {
+		if (quotationAssignUserRuleItem == null) {
+			return ERROR;
+		}
+		quotationAssignUserRuleService.createQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
+		return SUCCESS;
+	}
+
+	/**
+	 * 更新预算员规则明细
+	 */
+	@Action(value = "updateQuotationAssignUserRuleItem", results = {
+		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
+		@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
+	}, params = { "contentType", "text/html" })
+	public String updateQuotationAssignUserRuleItem() throws FLException {
+		if (quotationAssignUserRuleItem == null) {
+			return ERROR;
+		}
+		quotationAssignUserRuleService.updateQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
+		return SUCCESS;
+	}
+
+	/**
+	 * 删除预算员规则明细
+	 */
+	@Action(value = "deleteQuotationAssignUserRuleItem", results = {
+		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
+		@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
+	}, params = { "contentType", "text/html" })
+	public String deleteQuotationAssignUserRuleItem() throws FLException {
+		if (quotationAssignUserRuleItem == null) {
+			return ERROR;
+		}
+		quotationAssignUserRuleService.deleteQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
 		return SUCCESS;
 	}
 

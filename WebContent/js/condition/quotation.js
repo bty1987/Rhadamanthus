@@ -1314,6 +1314,53 @@ Condition.addupRule("quotation", {
         }
     },
 
+    // ==================== 预算员规则明细（Item）管理相关条件 ====================
+
+    // 规则明细 - 公司
+    "assign-user-rule-item-company": {
+        label: "公司",
+        type: "select",
+        submitConfig: {
+            name: "company",
+            op: "eq",
+        },
+        dataSource: {
+            url: api.system.queryCompany,
+            postData: {},
+            listPath: "companys",
+            keyPath: "cid",
+            valuePath: "name"
+        }
+    },
+
+    // 规则明细 - 支持类型
+    "assign-user-rule-item-supportedType": {
+        label: "支持类型",
+        type: "select",
+        submitConfig: {
+            name: "supportedType",
+            op: "eq",
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.quotation().quotationAssignUserRule.supportedType.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 规则明细 - 预算员姓名
+    "assign-user-rule-item-userName": {
+        label: "预算员姓名",
+        type: "text",
+        submitConfig: {
+            name: "userName",
+            op: "like",
+            validate: null
+        }
+    },
+
     // ==================== 分配请求管理相关条件 ====================
 
     // 分配请求 - 公司

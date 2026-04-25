@@ -27,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleItemVO;
+import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 import com.fanglin.system.po.CompanyPO;
 
 /**
@@ -182,6 +183,19 @@ public class QuotationAssignUserRuleItemPO implements Serializable {
 
 		if (vo.getCompany() != null && getCompany() != null) getCompany().ptv(vo.getCompany());
 		if (vo.getDepartment() != null && getDepartment() != null) getDepartment().ptv(vo.getDepartment());
+
+		// 填充预算员规则基本信息（qaurid + 用户姓名）
+		if (getUserRule() != null) {
+			if (vo.getUserRule() == null) {
+				vo.setUserRule(new QuotationAssignUserRuleVO());
+			}
+			vo.getUserRule().setQaurid(getUserRule().getQaurid());
+			vo.getUserRule().setStatus(getUserRule().getStatus());
+			// 填充预算员用户信息
+			if (getUserRule().getUser() != null && vo.getUser() != null) {
+				vo.getUser().ptv(getUserRule().getUser());
+			}
+		}
 
 		return vo;
 	}

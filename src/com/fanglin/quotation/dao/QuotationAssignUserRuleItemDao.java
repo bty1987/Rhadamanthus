@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.po.QuotationAssignUserRuleItemPO;
+import com.fanglin.utils.Paging;
 
 /**
  * 预算员规则明细表 DAO 接口
@@ -72,6 +74,15 @@ public interface QuotationAssignUserRuleItemDao extends Dao<QuotationAssignUserR
 	 * @throws FLException 业务异常
 	 */
 	List<QuotationAssignUserRuleItemPO> queryAvailableItemsForCrossCompanyAssign(int company, Integer department, Short decorationType) throws FLException;
+
+	/**
+	 * 分页查询预算规则明细列表
+	 * 
+	 * @param paging 分页对象
+	 * @param filters 过滤条件（支持 company、supportedType、userName）
+	 * @throws FLException 业务异常
+	 */
+	List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException;
 
 	/**
 	 * 删除规则下的所有明细

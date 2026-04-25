@@ -6,6 +6,8 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 import com.fanglin.system.vo.CompanyVO;
 
 /**
@@ -52,6 +54,16 @@ public class QuotationAssignUserRuleItemVO implements Serializable {
 	 * 更新时间
 	 */
 	private Timestamp updateTime;
+
+	/**
+	 * 所属预算员规则（用于列表显示预算员姓名）
+	 */
+	private QuotationAssignUserRuleVO userRule;
+
+	/**
+	 * 预算员用户对象（扁平化，方便前端直接读取）
+	 */
+	private UserBaseVO user;
 
 	public QuotationAssignUserRuleItemVO() {
 		super();
@@ -121,5 +133,21 @@ public class QuotationAssignUserRuleItemVO implements Serializable {
 
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public QuotationAssignUserRuleVO getUserRule() {
+		return userRule;
+	}
+
+	public void setUserRule(QuotationAssignUserRuleVO userRule) {
+		this.userRule = userRule;
+	}
+
+	public UserBaseVO getUser() {
+		return user;
+	}
+
+	public void setUser(UserBaseVO user) {
+		this.user = user;
 	}
 }

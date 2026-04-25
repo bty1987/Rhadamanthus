@@ -67,9 +67,9 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters, Integer company) throws FLException {
+	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException {
 
-		List<QuotationAssignUserRulePO> rulePOs = quotationAssignUserRuleDao.pageQuotationAssignUserRule(paging, filters, company);
+		List<QuotationAssignUserRulePO> rulePOs = quotationAssignUserRuleDao.pageQuotationAssignUserRule(paging, filters);
 		List<QuotationAssignUserRuleVO> ruleVOs = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRulePO po : rulePOs) {
@@ -438,5 +438,113 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		}
 
 		return updateCount;
+	}
+
+	@Override
+	public void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException {
+		int totalCount = pagingQueryCount(QuotationAssignUserRuleItemPO.class);
+		paging.setTotalRecords(totalCount);
+
+		List<QuotationAssignUserRuleItemPO> itemPOs = quotationAssignUserRuleItemDao.pageQuotationAssignUserRuleItem(paging, filters);
+		List<QuotationAssignUserRuleItemVO> itemVOs = new ArrayList<QuotationAssignUserRuleItemVO>();
+
+		for (QuotationAssignUserRuleItemPO itemPO : itemPOs) {
+			QuotationAssignUserRuleItemVO itemVO = new QuotationAssignUserRuleItemVO(new CompanyVO(), new DepartmentVO());
+			itemVO.setUser(new UserBaseVO());
+			itemPO.ptv(itemVO);
+			itemVOs.add(itemVO);
+		}
+
+		paging.setData(itemVOs);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int createQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO itemVO) throws FLException {
+		if (itemVO == null || itemVO.getUserRule() == null || itemVO.getUserRule().getQaurid() == null) {
+			throw new FLException("请选择预算员规则");
+		}
+
+		QuotationAssignUserRulePO rulePO = quotationAssignUserRuleDao.get(itemVO.getUserRule().getQaurid());
+		if (rulePO == null) {
+			throw new FLException("预算员规则不存在");
+		}
+
+		Timestamp now = DateUtil.getDateToTimestamp(new Date());
+
+		QuotationAssignUserRuleItemPO itemPO = new QuotationAssignUserRuleItemPO();
+		itemPO.setUserRule(rulePO);
+
+		// 公司
+		if (itemVO.getCompany() != null && itemVO.getCompany().getCid() != null) {
+			itemPO.setCompany(CompanyServiceImpl.getCompany(itemVO.getCompany().getCid()));
+		}
+
+		// 部门（可选）
+		if (itemVO.getDepartment() != null && itemVO.getDepartment().getDid() != null) {
+			DepartmentPO deptPO = new DepartmentPO();
+			deptPO.setDid(itemVO.getDepartment().getDid());
+			itemPO.setDepartment(deptPO);
+		}
+
+		// 支持类型
+		itemPO.setSupportedType(itemVO.getSupportedType() != null ? itemVO.getSupportedType() : QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT);
+		itemPO.setCreateTime(now);
+		itemPO.setUpdateTime(now);
+
+		quotationAssignUserRuleItemDao.save(itemPO);
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO itemVO) throws FLException {
+		if (itemVO == null || itemVO.getQauriid() == null) {
+			throw new FLException("规则明细ID不能为空");
+		}
+
+		QuotationAssignUserRuleItemPO itemPO = quotationAssignUserRuleItemDao.get(itemVO.getQauriid());
+		if (itemPO == null) {
+			throw new FLException("规则明细不存在");
+		}
+
+		Timestamp now = DateUtil.getDateToTimestamp(new Date());
+
+		// 公司
+		if (itemVO.getCompany() != null && itemVO.getCompany().getCid() != null) {
+			itemPO.setCompany(CompanyServiceImpl.getCompany(itemVO.getCompany().getCid()));
+		}
+
+		// 部门（可选，允许清空）
+		if (itemVO.getDepartment() != null && itemVO.getDepartment().getDid() != null) {
+			DepartmentPO deptPO = new DepartmentPO();
+			deptPO.setDid(itemVO.getDepartment().getDid());
+			itemPO.setDepartment(deptPO);
+		} else {
+			itemPO.setDepartment(null);
+		}
+
+		// 支持类型
+		itemPO.setSupportedType(itemVO.getSupportedType() != null ? itemVO.getSupportedType() : QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT);
+		itemPO.setUpdateTime(now);
+
+		quotationAssignUserRuleItemDao.update(itemPO);
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO itemVO) throws FLException {
+		if (itemVO == null || itemVO.getQauriid() == null) {
+			throw new FLException("规则明细ID不能为空");
+		}
+
+		QuotationAssignUserRuleItemPO itemPO = quotationAssignUserRuleItemDao.get(itemVO.getQauriid());
+		if (itemPO == null) {
+			throw new FLException("规则明细不存在");
+		}
+
+		quotationAssignUserRuleItemDao.delete(itemPO);
+		return 0;
 	}
 }
