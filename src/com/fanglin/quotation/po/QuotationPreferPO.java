@@ -34,6 +34,10 @@ public class QuotationPreferPO implements Serializable {
 
 	private long advancePrefer;
 
+	private long activityPrice;
+
+	private long activityProfit;
+
 	private int discount;
 
 	private int manageDiscount;
@@ -129,6 +133,24 @@ public class QuotationPreferPO implements Serializable {
 		this.advancePrefer = advancePrefer;
 	}
 
+	@Column(name = "activityPrice")
+	public long getActivityPrice() {
+		return activityPrice;
+	}
+
+	public void setActivityPrice(long activityPrice) {
+		this.activityPrice = activityPrice;
+	}
+
+	@Column(name = "activityProfit")
+	public long getActivityProfit() {
+		return activityProfit;
+	}
+
+	public void setActivityProfit(long activityProfit) {
+		this.activityProfit = activityProfit;
+	}
+
 	@Column(name = "discount")
 	public int getDiscount() {
 		return discount;
@@ -201,5 +223,7 @@ public class QuotationPreferPO implements Serializable {
 		if (quotationPreferVO.getManageDiscount() != null) setManageDiscount(quotationPreferVO.getManageDiscount());
 		if (quotationPreferVO.getQuotePrice() != null) setQuotePrice(quotationPreferVO.getQuotePrice());
 		if (quotationPreferVO.getQuoteArea() != null) setQuoteArea(quotationPreferVO.getQuoteArea());
+		if (quotationPreferVO.getActivityPrice() != null) setActivityPrice(quotationPreferVO.getActivityPrice());
+		if (quotationPreferVO.getActivityProfit() != null) setActivityProfit(quotationPreferVO.getActivityProfit());
 	}
 }

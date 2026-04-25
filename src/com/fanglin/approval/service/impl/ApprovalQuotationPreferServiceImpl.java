@@ -165,6 +165,8 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 		quotationPreferPO.setPreferPrice(approvalQuotationPreferPO.getPreferPrice());
 		quotationPreferPO.setManagePrefer(approvalQuotationPreferPO.getManagePrefer());
 		quotationPreferPO.setAdvancePrefer(approvalQuotationPreferPO.getAdvancePrefer());
+		quotationPreferPO.setActivityPrice(approvalQuotationPreferPO.getActivityPrice());
+		quotationPreferPO.setActivityProfit(approvalQuotationPreferPO.getActivityProfit());
 
 		quotationPreferDao.save(quotationPreferPO);
 

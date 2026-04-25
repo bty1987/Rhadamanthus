@@ -436,8 +436,8 @@ var QuotationDetail = (function() {
             var advancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
             var quotePrice = quo.preferParams["quotationPrefer.quotePrice"];
             var quoteArea = quo.preferParams["quotationPrefer.quoteArea"];
-            var activityPrice = quo.protation ? quo.protation.activityPrice : 0;
-            var activityProfit = quo.protation ? quo.protation.activityProfit : 0;
+            var activityPrice = quo.quotationPrefer ? quo.quotationPrefer.activityPrice : 0;
+            var activityProfit = quo.quotationPrefer ? quo.quotationPrefer.activityProfit : 0;
 
             _transDiscount = converyanceCost.find('.discountprice').attr('data-discount') == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT ? _discount : 1; // 车运费的折扣
             _manageDiscount = manageCost.find('.discountprice').attr('data-discount') == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? _discount : 1; // 管理费的折扣
@@ -1090,8 +1090,8 @@ var QuotationDetail = (function() {
             var _manageRate = parseFloat(manageCost.find('.discountprice .cell-wrap').text() == "" ? 0 : manageCost.find('.discountprice .cell-wrap').text()); // 获取管理费比例(根据报价版本获得)
             var _tranRate = parseFloat(converyanceCost.find('.unitprice .cell-wrap').text() == "" ? 0 : converyanceCost.find('.unitprice .cell-wrap').text()); // 获取车运费比例(根据报价版本获得)
             var _taxRate = parseFloat(taxCost.find('.discountprice .cell-wrap').text() == "" ? 0 : taxCost.find('.discountprice .cell-wrap').text()); // 获取税金比例(根据报价版本获得)
-            var activityPrice = quo.protation ? quo.protation.activityPrice : 0;
-            var activityProfit = quo.protation ? quo.protation.activityProfit : 0;
+            var activityPrice = quo.quotationPrefer ? quo.quotationPrefer.activityPrice : 0;
+            var activityProfit = quo.quotationPrefer ? quo.quotationPrefer.activityProfit : 0;
 
             var quotePrice = utils.accAdd(presignProduce.quotePrice, activityPrice);
             var _transfee = utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _tranRate);
@@ -1928,7 +1928,7 @@ var QuotationDetail = (function() {
                 var advancePrefer = com.focusPage('#advance').val();
                 var quoteArea = com.focusPage('#square').val();
                 var quotePrice = com.focusPage('#countQuotePrice').text();
-                var activityPrice = quo.protation ? quo.protation.activityPrice : 0;
+                var activityPrice = quo.quotationPrefer ? quo.quotationPrefer.activityPrice : 0;
 
                 quotePrice = utils.accSub(quotePrice, activityPrice);
 
@@ -5012,8 +5012,8 @@ var QuotationDetail = (function() {
                     var advancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
                     var quotePrice = quo.preferParams["quotationPrefer.quotePrice"];
                     var quoteArea = quo.preferParams["quotationPrefer.quoteArea"];
-                    var activityPrice = quo.protation ? quo.protation.activityPrice : 0;
-                    var activityProfit = quo.protation ? quo.protation.activityProfit : 0;
+                    var activityPrice = quo.quotationPrefer ? quo.quotationPrefer.activityPrice : 0;
+                    var activityProfit = quo.quotationPrefer ? quo.quotationPrefer.activityProfit : 0;
 
                     _transDiscount = converyanceCost.find('.discountprice').attr('data-discount') == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT ? _discount : 1; // 车运费折扣
                     _manageDiscount = manageCost.find('.discountprice').attr('data-discount') == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? _discount : 1; // 管理费折扣

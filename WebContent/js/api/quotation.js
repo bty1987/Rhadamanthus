@@ -443,14 +443,14 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "quotationPrefer",
-                args: ["preferPrice", "managePrefer", "advancePrefer", "discount", "manageDiscount", "quotePrice", "quoteArea"]
+                args: ["preferPrice", "managePrefer", "advancePrefer", "discount", "manageDiscount", "quotePrice", "quoteArea", "activityPrice", "activityProfit"]
             }]
         },
         updateQuotationPrefer: {
             url: "updateQuotationPrefer.do",
             type: "update",
             tranargs: {
-                args: ["quotationPrefer.preferPrice", "quotationPrefer.managePrefer", "quotationPrefer.advancePrefer", "quotationPrefer.discount", "quotationPrefer.manageDiscount", "quotationPrefer.quotePrice", "quotationPrefer.quoteArea", "quotation.totalPrice", "quotation.taxPrice"]
+                args: ["quotationPrefer.preferPrice", "quotationPrefer.managePrefer", "quotationPrefer.advancePrefer", "quotationPrefer.discount", "quotationPrefer.manageDiscount", "quotationPrefer.quotePrice", "quotationPrefer.quoteArea", "quotationPrefer.activityPrice", "quotationPrefer.activityProfit", "quotation.totalPrice", "quotation.taxPrice"]
             }
         },
         updateQuotationForInfo: {

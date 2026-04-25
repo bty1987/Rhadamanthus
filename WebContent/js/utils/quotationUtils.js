@@ -805,7 +805,7 @@ var quotationUtils = {
         var $extensionTaxPrice = quotationUtils.quotationDetail.extensionTaxPrice;
         var $extensionActivityTotal = quotationUtils.quotationDetail.extensionActivityTotal;
 
-        var $quotePrice = utils.accAdd($quotationPrefer.quotePrice, com.checkNull($protation.activityPrice, 0));
+        var $quotePrice = utils.accAdd($quotationPrefer.quotePrice, com.checkNull($quotationPrefer.activityPrice, 0));
         var $totalPrices = utils.changeThrDecimal(utils.accAdd(com.checkNull($quotation.totalPrice, 0), $extensionTotalPrice));
         var $managePrices = utils.changeThrDecimal(utils.accAdd(com.checkNull($quotation.managePrice, 0), $extensionManagePrice));
         var $taxPrices = utils.changeThrDecimal(utils.accAdd(com.checkNull($quotation.taxPrice, 0), $extensionTaxPrice));
@@ -819,7 +819,7 @@ var quotationUtils = {
         com.focusPage('#preferPrice', '#quotationSummary').html(com.checkNull($quotationPrefer.preferPrice, 0));
         com.focusPage('#managePrefer', '#quotationSummary').html(com.checkNull($quotationPrefer.managePrefer, 0));
         com.focusPage('#advancePrefer', '#quotationSummary').html(com.checkNull($quotationPrefer.advancePrefer, 0));
-        com.focusPage('#activityProfit', '#quotationSummary').html(com.checkNull($protation.activityProfit, 0));
+        com.focusPage('#activityProfit', '#quotationSummary').html(com.checkNull($quotationPrefer.activityProfit, 0));
         com.focusPage('#quotePrice', '#quotationSummary').html(com.checkNull($quotePrice, 0));
         com.focusPage('#quoteArea', "#quotationSummary").html(com.checkNull($quotation.decoration.house.innerArea, 0));
 
