@@ -1,9 +1,65 @@
-<div id="quotationAssignUserRuleItem" class="page-content">
+<div>
     <div class="row">
         <div class="col-xs-12">
-            <div id="condListQuotationAssignUserRuleItem" class="fl_search clearfix"></div>
-            <div id="resultListQuotationAssignUserRuleItem" class="clearfix tab-pane active"></div>
-            <div id="pagenationQuotationAssignUserRuleItem" class="fl-page-wrap clearfix"></div>
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+
+    <!-- 新增/编辑弹窗 -->
+    <div class="modal fade" id="itemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="modalTitle">规则项目</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" id="qauriid">
+                        <input type="hidden" id="qaurid"> <!-- 所属规则ID（新增时从父页面传入） -->
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="company">公司</label>
+                            <div class="col-sm-9">
+                                <select id="company" class="col-xs-10 col-sm-8 v_required"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="department">部门</label>
+                            <div class="col-sm-9">
+                                <select id="department" class="col-xs-10 col-sm-8"></select>
+                                <span class="help-block" style="margin-bottom: 0;">留空表示该公司所有部门</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">支持类型</label>
+                            <div class="col-sm-9">
+                                <label class="radio-inline">
+                                    <input type="radio" name="supportedType" value="-1"> 通用
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="supportedType" value="0"> 半包
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="supportedType" value="1"> 整装
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

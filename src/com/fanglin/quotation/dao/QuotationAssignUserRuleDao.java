@@ -29,7 +29,7 @@ public interface QuotationAssignUserRuleDao extends Dao<QuotationAssignUserRuleP
 	 * @return
 	 * @throws FLException 业务异常
 	 */
-	List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, Integer company) throws FLException;
+	List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException;
 
 	/**
 	 * 根据用户ID查询预算员规则

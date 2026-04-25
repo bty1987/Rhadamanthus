@@ -8,10 +8,7 @@ $(function() {
         items: {
             qaurid: com.focusPage('#qaurid'),
             user: com.focusPage('#user'),
-            company: com.focusPage('#company'),
-            department: com.focusPage('#department'),
             status: com.focusPage('#status'),
-            supportedType: com.focusPage('input[name="supportedType"]'),
             lastFinishTime: com.focusPage('#lastFinishTime')
         },
         btns: {
@@ -43,7 +40,7 @@ $(function() {
     );
 
     // 查询条件
-    searcher.condition(["quotation-assign-user-rule-company", "quotation-assign-user-rule-status", "quotation-assign-user-rule-userName"]);
+    searcher.condition(["quotation-assign-user-rule-status", "quotation-assign-user-rule-userName"]);
 
     // 顶部按钮
     searcher.button(function() {
@@ -70,36 +67,12 @@ $(function() {
         prop: "user.currentName",
         clazz: "blue"
     }, {
-        field: "company",
-        name: "公司",
-        prop: "company.name",
-        clazz: "grey"
-    }, {
-        field: "department",
-        name: "部门",
-        prop: function(v) {
-
-            // 部门ID为NULL表示该公司所有部门
-            return v.department ? v.department.name : "所有部门";
-        },
-        clazz: "grey"
-    }, {
         field: "status",
         name: "状态",
         prop: function(v) {
 
             // 使用 constant 进行枚举转换
             return constant.quotation().quotationAssignUserRule.status.keys[v.status];
-        },
-        clazz: "red" // 类型/状态使用 red
-    }, {
-        field: "supportedType",
-        name: "支持类型",
-        prop: function(v) {
-
-            // 使用 constant 进行枚举转换
-            var type = v.supportedType;
-            return constant.quotation().quotationAssignUserRule.supportedType.keys[type] || "未设置";
         },
         clazz: "red" // 类型/状态使用 red
     }, {
@@ -197,36 +170,6 @@ $(function() {
         );
     }
 
-    // 初始化公司下拉框
-    function initCompanySelect() {
-
-        com.post(api.system.queryCompany, {}, function(res) {
-
-            config.items.company.bindData(res.companys, "cid", "name", false);
-        }, null, false);
-    }
-
-    // 初始化部门下拉框（公司选择后加载）
-    function initDepartmentSelect(companyId) {
-
-        if (!companyId) {
-            config.items.department.empty().append('<option value="">全部部门</option>');
-            return;
-        }
-
-        // 使用正确的接口：api.communion.queryDepartment
-        com.post(api.communion.queryDepartment, {
-            "department.company.cid": companyId
-        }, function(res) {
-
-            if (res.deptList && res.deptList.length > 0) {
-                config.items.department.bindData(res.deptList, "did", "name", true);
-            } else {
-                config.items.department.empty().append('<option value="">无部门数据</option>');
-            }
-        }, null, false);
-    }
-
     // 初始化预算员输入框（typeahead）
     function initUserInput() {
 
@@ -251,16 +194,8 @@ $(function() {
 
     // 页面加载时初始化
     initSelectOptions();
-    initCompanySelect();
     initUserInput();
     initLastFinishTimePicker();
-
-    // 监听公司变化，联动部门
-    config.items.company.on('change', function() {
-
-        var companyId = $(this).val();
-        initDepartmentSelect(companyId);
-    });
 
     // 点击新增按钮
     $(document).on('click', '#addUserRuleBtn', function() {
@@ -279,10 +214,7 @@ $(function() {
         com.cleanTypeahead(config.items.user);
         config.data.selectedUid = null;
         config.items.user.prop('disabled', false); // 启用预算员输入框（新增模式）
-        config.items.company.val('');
-        config.items.department.empty().append('<option value="">全部部门</option>');
         config.items.status.val('1'); // 默认可用
-        config.items.supportedType.filter('[value="-1"]').prop('checked', true); // 默认通用
         config.items.lastFinishTime.val(''); // 清空最后完成时间
     }
 
@@ -304,25 +236,7 @@ $(function() {
         config.items.user.attr('data-typeahead-value', row.user.currentName);
         config.data.selectedUid = row.user.uid; // 保留兼容性
         config.items.user.prop('disabled', true); // 禁用预算员输入框（编辑模式不可修改人员）
-        config.items.company.val(row.company.cid);
-
-        // 初始化部门并选中
-        initDepartmentSelect(row.company.cid);
-        if (row.department) {
-            setTimeout(function() {
-
-                config.items.department.val(row.department.did);
-            }, 100);
-        }
-
         config.items.status.val(row.status);
-
-        // 设置支持类型选中
-        if (row.supportedType !== undefined && row.supportedType !== null) {
-            config.items.supportedType.filter('[value="' + row.supportedType + '"]').prop('checked', true);
-        } else {
-            config.items.supportedType.filter('[value="-1"]').prop('checked', true); // 默认通用
-        }
 
         // 设置最后完成时间
         config.items.lastFinishTime.val(row.lastFinishTime || '');
@@ -355,10 +269,7 @@ $(function() {
         var params = {
             "quotationAssignUserRule.qaurid": qaurid,
             "quotationAssignUserRule.user.userId": uid,
-            "quotationAssignUserRule.company.cid": config.items.company.val(),
-            "quotationAssignUserRule.department.did": config.items.department.val() || null,
             "quotationAssignUserRule.status": parseInt(config.items.status.val()),
-            "quotationAssignUserRule.supportedType": parseInt(config.items.supportedType.filter(':checked').val()),
             "quotationAssignUserRule.lastFinishTime": config.items.lastFinishTime.val() || null
         };
 
