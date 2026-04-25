@@ -483,9 +483,56 @@ SELECT * FROM quotation.quotationassignuserrule;
 SELECT * FROM quotation.quotationassignuserruletype;
 
 -- ============================================================================
--- 脚本执行完成
+|-- 脚本执行完成
+|-- ============================================================================
+|-- 执行时间: 约 1-2 秒
+|-- 影响范围: quotation 数据库
+|-- 回滚方式: 删除相关表后重新执行本脚本
+|-- ============================================================================
+
 -- ============================================================================
--- 执行时间: 约 1-2 秒
--- 影响范围: quotation 数据库
--- 回滚方式: 删除相关表后重新执行本脚本
+-- 表N: 预算员规则明细表 (quotationassignuserruleitem)
 -- ============================================================================
+-- 职责: 定义预算员在特定公司/部门下支持的装修类型
+-- 与 quotationassignuserrule 为多对一关系，一条规则可有多条明细
+-- ============================================================================
+
+DROP TABLE IF EXISTS quotation.quotationassignuserruleitem;
+
+CREATE TABLE quotation.quotationassignuserruleitem (
+    -- 主键
+    qauriid BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '明细ID (Quotation Assign User Rule Item ID)',
+
+    -- 关联预算员规则
+    qaurid BIGINT(20) NOT NULL COMMENT '预算员规则ID（关联 quotationassignuserrule.qaurid）',
+
+    -- 公司/部门维度
+    company INT(11) NOT NULL COMMENT '关联公司ID（关联 system.company.cid）',
+    department INT(11) DEFAULT NULL COMMENT '部门ID（NULL表示该公司所有部门，关联 communion.department.did）',
+
+    -- 支持的装修类型
+    supportedType INT(11) NOT NULL DEFAULT -1 COMMENT '支持的类型：-1通用，0半包，1整装',
+
+    -- 时间字段
+    createTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updateTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+
+    -- 主键约束
+    PRIMARY KEY (qauriid),
+
+    -- 外键约束
+    CONSTRAINT fk_item_rule FOREIGN KEY (qaurid) REFERENCES quotation.quotationassignuserrule (qaurid) ON DELETE CASCADE,
+
+    -- 索引：按规则查询明细
+    KEY idx_qaurid (qaurid),
+
+    -- 索引：按公司查询（用于可用预算员筛选）
+    KEY idx_company (company),
+
+    -- 索引：按部门查询
+    KEY idx_department (department),
+
+    -- 索引：按类型查询
+    KEY idx_supportedType (supportedType)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='预算员规则明细表（公司/部门/装修类型维度）';
