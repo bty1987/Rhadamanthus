@@ -149,6 +149,8 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 					query.add(query.getCriterion("supportedType", Integer.valueOf(data), op));
 				} else if ("userName".equals(field)) {
 					query.add(query.getCriterion("user.currentName", data, op));
+				} else if ("qaurid".equals(field)) {
+					query.add(query.getCriterion("userRule.qaurid", Long.valueOf(data), op));
 				}
 			}
 		}
