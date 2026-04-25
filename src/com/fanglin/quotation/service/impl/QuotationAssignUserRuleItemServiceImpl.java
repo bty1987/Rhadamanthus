@@ -28,6 +28,7 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("quotationAssignUserRuleItemService")
+@Transactional(readOnly = true)
 public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUserRuleItemService {
 
 	@Autowired
@@ -37,7 +38,6 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 	private QuotationAssignUserRuleDao quotationAssignUserRuleDao;
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public List<QuotationAssignUserRuleItemVO> queryQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO quotationAssignUserRuleItem) throws FLException {
 
 		long qaurid = quotationAssignUserRuleItem.getQaurid();
@@ -58,7 +58,6 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public List<QuotationAssignUserRuleItemVO> queryItemsByRuleId(long qaurid) throws FLException {
 
 		List<QuotationAssignUserRuleItemPO> itemPOs = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemByRuleId(qaurid);
@@ -77,7 +76,6 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException {
 
 		List<QuotationAssignUserRuleItemPO> itemPOs = quotationAssignUserRuleItemDao.pageQuotationAssignUserRuleItem(paging, filters);

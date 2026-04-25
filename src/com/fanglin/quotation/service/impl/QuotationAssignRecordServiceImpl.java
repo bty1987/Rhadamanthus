@@ -36,6 +36,7 @@ import com.fanglin.utils.Paging;
  * @version 1.0
  */
 @Service("quotationAssignRecordService")
+@Transactional(readOnly = true)
 public class QuotationAssignRecordServiceImpl implements QuotationAssignRecordService {
 
 	@Autowired

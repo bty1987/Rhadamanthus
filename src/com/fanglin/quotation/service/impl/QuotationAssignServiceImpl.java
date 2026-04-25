@@ -55,6 +55,7 @@ import com.fanglin.quotation.vo.QuotationVO;
  * @version 2.0
  */
 @Service("quotationAssignService")
+@Transactional(readOnly = true)
 public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Autowired

@@ -31,6 +31,7 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("quotationAssignRequestService")
+@Transactional(readOnly = true)
 public class QuotationAssignRequestServiceImpl implements QuotationAssignRequestService {
 
 	@Autowired
