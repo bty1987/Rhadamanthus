@@ -14,7 +14,6 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.quotation.vo.QuotationAssignUserRuleItemVO;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 import com.fanglin.utils.Paging;
 
@@ -39,15 +38,6 @@ import com.fanglin.utils.Paging;
  * @version 2.0
  */
 public interface QuotationAssignUserRuleService {
-
-	/**
-	 * 根据规则ID查询明细列表
-	 * 
-	 * @param quotationAssignUserRuleItem 预算员规则明细VO（包含 qaurid）
-	 * @return 明细VO列表
-	 * @throws FLException 业务异常
-	 */
-	List<QuotationAssignUserRuleItemVO> queryQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO quotationAssignUserRuleItem) throws FLException;
 
 	/**
 	 * 分页查询预算员规则列表
@@ -153,38 +143,5 @@ public interface QuotationAssignUserRuleService {
 	 * @throws FLException 业务异常
 	 */
 	int syncQuotationAssignUserRuleStatus() throws FLException;
-
-	/**
-	 * 分页查询预算规则明细列表（含预算员姓名）
-	 * 
-	 * @param paging 分页对象
-	 * @param filters 过滤条件（支持 company、supportedType、userName）
-	 * @throws FLException 业务异常
-	 */
-	void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException;
-
-	/**
-	 * 新增预算规则明细
-	 * 
-	 * @param itemVO 预算规则明细VO（含 userRule.qaurid、company.cid、department.did、supportedType）
-	 * @throws FLException 业务异常
-	 */
-	int createQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO itemVO) throws FLException;
-
-	/**
-	 * 更新预算规则明细
-	 * 
-	 * @param itemVO 预算规则明细VO（含 qauriid、company.cid、department.did、supportedType）
-	 * @throws FLException 业务异常
-	 */
-	int updateQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO itemVO) throws FLException;
-
-	/**
-	 * 删除预算规则明细
-	 * 
-	 * @param itemVO 预算规则明细VO（含 qauriid）
-	 * @throws FLException 业务异常
-	 */
-	int deleteQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO itemVO) throws FLException;
 
 }

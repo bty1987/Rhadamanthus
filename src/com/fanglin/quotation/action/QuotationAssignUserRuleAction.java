@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.quotation.service.QuotationAssignUserRuleItemService;
 import com.fanglin.quotation.service.QuotationAssignUserRuleService;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleItemVO;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
@@ -56,6 +57,9 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Autowired
 	private QuotationAssignUserRuleService quotationAssignUserRuleService;
 
+	@Autowired
+	private QuotationAssignUserRuleItemService quotationAssignUserRuleItemService;
+
 	/** 预算员规则对象（用于接收前端参数，含 items 列表） */
 	private QuotationAssignUserRuleVO quotationAssignUserRule;
 
@@ -83,7 +87,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Action(value = "queryQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignUserRuleItem() throws FLException {
 
-		quotationAssignUserRuleItems = quotationAssignUserRuleService.queryQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
+		quotationAssignUserRuleItems = quotationAssignUserRuleItemService.queryQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
 
 		return SUCCESS;
 	}
@@ -217,7 +221,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 		if (quotationAssignUserRuleItem != null && quotationAssignUserRuleItem.getQaurid() != null) {
 			getFilters().add(new Filter("qaurid", String.valueOf(quotationAssignUserRuleItem.getQaurid()), "eq"));
 		}
-		quotationAssignUserRuleService.pageQuotationAssignUserRuleItem(getPaging(), getFilters());
+		quotationAssignUserRuleItemService.pageQuotationAssignUserRuleItem(getPaging(), getFilters());
 		return SUCCESS;
 	}
 
@@ -232,7 +236,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 		if (quotationAssignUserRuleItem == null) {
 			return ERROR;
 		}
-		quotationAssignUserRuleService.createQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
+		quotationAssignUserRuleItemService.createQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
 		return SUCCESS;
 	}
 
@@ -247,7 +251,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 		if (quotationAssignUserRuleItem == null) {
 			return ERROR;
 		}
-		quotationAssignUserRuleService.updateQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
+		quotationAssignUserRuleItemService.updateQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
 		return SUCCESS;
 	}
 
@@ -262,7 +266,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 		if (quotationAssignUserRuleItem == null) {
 			return ERROR;
 		}
-		quotationAssignUserRuleService.deleteQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
+		quotationAssignUserRuleItemService.deleteQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
 		return SUCCESS;
 	}
 
