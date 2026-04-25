@@ -53,6 +53,20 @@ jQuery(function($) {
     com.datetime(com.focusPage("#con-dispatch-end-date"));
     com.datetime(com.focusPage("#con-salary-date"), "day");
 
+    // 默认隐藏试用期时间字段
+    com.focusPage(".probation", "#form").hide();
+
+    // 试用期选择控制
+    com.focusPage("#con-probation", "#form").on("change", function() {
+        if (com.focusPage(this).val() == "1") {
+            com.focusPage(".probation", "#form").show();
+        } else {
+            com.focusPage(".probation", "#form").hide();
+            com.focusPage("#con-probation-start-date", "#form").val("");
+            com.focusPage("#con-probation-end-date", "#form").val("");
+        }
+    });
+
     com.post(api.common.current, {}, function(res) {
 
         contractEdit.current = new Date(res.current);
@@ -124,12 +138,21 @@ jQuery(function($) {
             data["con-end-year"] = com.focusPage("#con-term-end-date").val().substr(0, 4);
             data["con-end-month"] = com.focusPage("#con-term-end-date").val().substr(5, 2);
             data["con-end-day"] = com.focusPage("#con-term-end-date").val().substr(8, 2);
-            data["con-start-year1"] = com.focusPage("#con-probation-start-date").val().substr(0, 4);
-            data["con-start-month1"] = com.focusPage("#con-probation-start-date").val().substr(5, 2);
-            data["con-start-day1"] = com.focusPage("#con-probation-start-date").val().substr(8, 2);
-            data["con-end-year1"] = com.focusPage("#con-probation-end-date").val().substr(0, 4);
-            data["con-end-month1"] = com.focusPage("#con-probation-end-date").val().substr(5, 2);
-            data["con-end-day1"] = com.focusPage("#con-probation-end-date").val().substr(8, 2);
+            if (com.focusPage("#con-probation", "#form").val() == "1" && com.focusPage("#con-probation-start-date").val()) {
+                data["con-start-year1"] = com.focusPage("#con-probation-start-date").val().substr(0, 4);
+                data["con-start-month1"] = com.focusPage("#con-probation-start-date").val().substr(5, 2);
+                data["con-start-day1"] = com.focusPage("#con-probation-start-date").val().substr(8, 2);
+                data["con-end-year1"] = com.focusPage("#con-probation-end-date").val().substr(0, 4);
+                data["con-end-month1"] = com.focusPage("#con-probation-end-date").val().substr(5, 2);
+                data["con-end-day1"] = com.focusPage("#con-probation-end-date").val().substr(8, 2);
+            } else {
+                data["con-start-year1"] = "";
+                data["con-start-month1"] = "";
+                data["con-start-day1"] = "";
+                data["con-end-year1"] = "";
+                data["con-end-month1"] = "";
+                data["con-end-day1"] = "";
+            }
             data["con-start-year2"] = com.focusPage("#con-dispatch-start-date").val().substr(0, 4);
             data["con-start-month2"] = com.focusPage("#con-dispatch-start-date").val().substr(5, 2);
             data["con-start-day2"] = com.focusPage("#con-dispatch-start-date").val().substr(8, 2);
@@ -157,6 +180,7 @@ jQuery(function($) {
                 delete data["con-work-day"];
                 delete data["con-user-householdType"];
             }
+
             console.log(data);
 
             var options = {
