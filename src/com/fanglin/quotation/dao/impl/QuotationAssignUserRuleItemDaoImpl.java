@@ -66,10 +66,7 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 
 		// 装修类型匹配：通用(-1) 或 指定类型
 		if (decorationType != null) {
-			criteria.add(Restrictions.or(
-				Restrictions.eq("supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT),
-				Restrictions.eq("supportedType", (int) decorationType.shortValue())
-			));
+			criteria.add(Restrictions.or(Restrictions.eq("supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT), Restrictions.eq("supportedType", (int) decorationType.shortValue())));
 		}
 
 		// 按预算员的最后完成时间升序排序
@@ -100,10 +97,7 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 
 		// 装修类型匹配：通用(-1) 或 指定类型
 		if (decorationType != null) {
-			criteria.add(Restrictions.or(
-				Restrictions.eq("supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT),
-				Restrictions.eq("supportedType", (int) decorationType.shortValue())
-			));
+			criteria.add(Restrictions.or(Restrictions.eq("supportedType", QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT), Restrictions.eq("supportedType", (int) decorationType.shortValue())));
 		}
 
 		// 跨公司排除：该用户不存在任何非待分配状态的规则
@@ -129,7 +123,6 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException {
 		PagingQuery<QuotationAssignUserRuleItemPO> query = pagingQuery(paging, QuotationAssignUserRuleItemPO.class);
 
