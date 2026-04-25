@@ -33,7 +33,7 @@ $(function() {
     var searcher = new Searcher();
 
     // 基础配置
-    searcher.base("condList", "pagenation", "resultList", api.quotation.pageQuotationAssignUserRuleItem);
+    searcher.base("condList1", "pagenation1", "resultList1", api.quotation.pageQuotationAssignUserRuleItem);
 
     // 查询条件：公司 + 支持类型 + 预算员姓名
     searcher.condition([
