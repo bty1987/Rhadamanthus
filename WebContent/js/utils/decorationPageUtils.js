@@ -311,6 +311,8 @@ $(function() {
 
         var $checkOriginal = $('<button></button>').attr("id", "checkOriginalBtn").addClass('btn btn-minier btn-yellow pull-right').css("margin-left", "3px").html("量房验证");
 
+        var $handoverBtn = $('<button></button>').attr("id", "handoverProfileBtn").addClass('btn btn-minier btn-primary pull-right').css("margin-left", "3px").html("交接单");
+
         var $show = conf.opt == null ? [] : conf.opt.show == null ? [] : conf.opt.show;
 
         var $OriginalPicture = $show.includes("OriginalPicture") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("现场图")), createDiv("inline pull-right", "checkOriginal").css("text-align", "right"), createDiv("inline pull-right", "OriginalUpload").css("text-align", "right")), createDiv().css("min-height", "150px").append(createUl("OriginalPicture", "ace-thumbnails"))))) : null;
@@ -427,6 +429,8 @@ $(function() {
         }
 
         com.focusPage("#checkOriginal").append($checkOriginal);
+
+        row1.find(".widget-header").first().append($handoverBtn);
 
         return [row1, row2];
     }

@@ -1312,6 +1312,12 @@ jQuery(function($) {
         showQRCode(2);
     });
 
+    // 交接单按钮
+    com.focusPage("#handoverProfileBtn").on("click", function() {
+
+        com.popup("交接单", api.index.quotationProfileIndex.url, null, null, false);
+    });
+
     decorationUtils.initBaseInfo(decorationDetail.orderId, api.decoration.queryDecorationForCommonByOrderId, function(decoration) {
 
         decorationDetail.items.orderId.val(decoration.orderId);
