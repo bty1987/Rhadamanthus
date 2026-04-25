@@ -77,6 +77,7 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException {
 
 		List<QuotationAssignUserRuleItemPO> itemPOs = quotationAssignUserRuleItemDao.pageQuotationAssignUserRuleItem(paging, filters);
