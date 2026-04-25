@@ -442,8 +442,6 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	public void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException {
-		int totalCount = pagingQueryCount(QuotationAssignUserRuleItemPO.class);
-		paging.setTotalRecords(totalCount);
 
 		List<QuotationAssignUserRuleItemPO> itemPOs = quotationAssignUserRuleItemDao.pageQuotationAssignUserRuleItem(paging, filters);
 		List<QuotationAssignUserRuleItemVO> itemVOs = new ArrayList<QuotationAssignUserRuleItemVO>();
@@ -452,6 +450,20 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 			QuotationAssignUserRuleItemVO itemVO = new QuotationAssignUserRuleItemVO(new CompanyVO(), new DepartmentVO());
 			itemVO.setUser(new UserBaseVO());
 			itemPO.ptv(itemVO);
+
+			// 填充所属规则基本信息（状态）
+			if (itemPO.getUserRule() != null) {
+				QuotationAssignUserRuleVO ruleVO = new QuotationAssignUserRuleVO();
+				ruleVO.setQaurid(itemPO.getUserRule().getQaurid());
+				ruleVO.setStatus(itemPO.getUserRule().getStatus());
+				itemVO.setUserRule(ruleVO);
+
+				// 填充预算员用户信息（从 userRule.user 取）
+				if (itemPO.getUserRule().getUser() != null) {
+					itemVO.getUser().ptv(itemPO.getUserRule().getUser());
+				}
+			}
+
 			itemVOs.add(itemVO);
 		}
 
