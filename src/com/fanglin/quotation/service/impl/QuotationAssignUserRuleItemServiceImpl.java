@@ -125,7 +125,7 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 
 		// 公司
 		if (itemVO.getCompany() != null && itemVO.getCompany().getCid() != null) {
-			itemPO.setCompany(CompanyServiceImpl.getCompany(itemVO.getCompany().getCid()));
+			itemPO.setCompany(new CompanyPO(CompanyServiceImpl.decode(itemVO.getCompany().getCid())));
 		}
 
 		// 部门（可选）
@@ -160,7 +160,7 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 
 		// 公司
 		if (itemVO.getCompany() != null && itemVO.getCompany().getCid() != null) {
-			itemPO.setCompany(CompanyServiceImpl.getCompany(itemVO.getCompany().getCid()));
+			itemPO.setCompany(new CompanyPO(CompanyServiceImpl.decode(itemVO.getCompany().getCid())));
 		}
 
 		// 部门（可选，允许清空）
