@@ -217,7 +217,6 @@ $(function() {
 
         com.post(apiMethod, data, function(res) {
             config.modals.itemModal.modal('hide');
-            com.focusPage('.modal-backdrop').remove();
             com.showAlert(com.info, isNew ? '新增成功' : '更新成功');
             searcher.doSearch();
         });
@@ -236,8 +235,10 @@ $(function() {
     }
 
     // Modal 关闭时清理残留蒙版（解决 popup4page 内 Bootstrap Modal 蒙版层叠问题）
+    // 注意: .modal-backdrop 由 Bootstrap 附加到 <body> 上，不在 .flpage.tab-pane.active 内，
+    // 因此不能用 com.focusPage() 查找，必须直接用 $() 在全局查找。
     config.modals.itemModal.on('hidden.bs.modal', function() {
-        com.focusPage('.modal-backdrop').remove();
+        $('.modal-backdrop').remove();
         $('body').removeClass('modal-open').css('padding-right', '');
     });
 
