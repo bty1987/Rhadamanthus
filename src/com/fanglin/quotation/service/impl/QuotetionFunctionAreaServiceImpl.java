@@ -221,11 +221,11 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 				quotetionFunctionAreaItemVO.setSubtype((short) quotationPricePO.getQuotationItem().getQuotationType().getId());
 
 				quotetionFunctionAreaItemVO.setIndex(sort++);
-			quotetionFunctionAreaItemVO.setContent(quotationItemPO.getComment());
-			quotetionFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
-			quotetionFunctionAreaItemVO.setFormula(quotationItemPO.getFormula());
+				quotetionFunctionAreaItemVO.setContent(quotationItemPO.getComment());
+				quotetionFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
+				quotetionFunctionAreaItemVO.setFormula(quotationItemPO.getFormula());
 
-			quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);
+				quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);
 			}
 
 			quotetionFunctionAreaVO.setQfaId(quotetionFunctionAreaPO.getQfaId());
