@@ -47,6 +47,7 @@ import com.fanglin.utils.Paging;
  * @version 2.0
  */
 @Service("quotationAssignUserRuleService")
+@Transactional(readOnly = true)
 public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRuleService {
 
 	@Autowired
