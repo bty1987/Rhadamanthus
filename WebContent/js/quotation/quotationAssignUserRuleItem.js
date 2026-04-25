@@ -205,7 +205,7 @@ $(function() {
         var qauriid = config.items.qauriid.val();
         var isNew = !qauriid;
 
-        var params = {
+        var data = {
             "quotationAssignUserRuleItem.qauriid": qauriid,
             "quotationAssignUserRuleItem.userRule.qaurid": config.data.parentQaurid,
             "quotationAssignUserRuleItem.company.cid": config.items.company.val(),
@@ -215,9 +215,10 @@ $(function() {
 
         var apiMethod = isNew ? api.quotation.createQuotationAssignUserRuleItem : api.quotation.updateQuotationAssignUserRuleItem;
 
-        com.post(apiMethod, params, function(res) {
-            com.showAlert(com.info, isNew ? '新增成功' : '更新成功');
+        com.post(apiMethod, data, function(res) {
             config.modals.itemModal.modal('hide');
+            com.focusPage('.modal-backdrop').remove();
+            com.showAlert(com.info, isNew ? '新增成功' : '更新成功');
             searcher.doSearch();
         });
     }
@@ -233,6 +234,12 @@ $(function() {
             });
         });
     }
+
+    // Modal 关闭时清理残留蒙版（解决 popup4page 内 Bootstrap Modal 蒙版层叠问题）
+    config.modals.itemModal.on('hidden.bs.modal', function() {
+        com.focusPage('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('padding-right', '');
+    });
 
     // 绑定保存按钮事件
     config.btns.saveBtn.on('click', saveItem);
