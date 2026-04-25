@@ -465,7 +465,8 @@
                                 "user.userid": v.userId,
                                 "user.name": v.currentName,
                                 "user.Mobile": v.phone,
-                                "user.Position": v.duty.name
+                                "user.Position": v.duty.name,
+                                "user.email": v.email
                             };
 
                             if (length) {
@@ -539,6 +540,7 @@
                                     "user.name": v.currentName,
                                     "user.Mobile": phone,
                                     "user.Position": v.duty.name,
+                                    "user.email": v.email,
                                     "dids": selectedDepts
                                 };
 

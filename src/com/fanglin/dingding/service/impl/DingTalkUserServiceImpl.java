@@ -94,6 +94,7 @@ public class DingTalkUserServiceImpl implements DingTalkUserService {
 		user.setPosition(usera.getPosition());
 		user.setDepartment(dids);
 		user.setJobnumber(usera.getUserid());
+		user.setEmail(usera.getEmail());
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 
@@ -124,6 +125,7 @@ public class DingTalkUserServiceImpl implements DingTalkUserService {
 		user.setPosition(usera.getPosition());
 		user.setDepartment(dids);
 		user.setJobnumber(usera.getUserid());
+		user.setEmail(usera.getEmail());
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 
