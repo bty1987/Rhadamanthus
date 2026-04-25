@@ -110,12 +110,12 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 	@Transactional(rollbackFor = Exception.class)
 	public int createQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO itemVO) throws FLException {
 		if (itemVO == null || itemVO.getUserRule() == null || itemVO.getUserRule().getQaurid() == null) {
-			throw new FLException("请选择预算员规则");
+			throw new FLException(0, "请选择预算员规则");
 		}
 
 		QuotationAssignUserRulePO rulePO = quotationAssignUserRuleDao.get(itemVO.getUserRule().getQaurid());
 		if (rulePO == null) {
-			throw new FLException("预算员规则不存在");
+			throw new FLException(0, "预算员规则不存在");
 		}
 
 		Timestamp now = DateUtil.getDateToTimestamp(new Date());
@@ -148,12 +148,12 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO itemVO) throws FLException {
 		if (itemVO == null || itemVO.getQauriid() == null) {
-			throw new FLException("规则明细ID不能为空");
+			throw new FLException(0, "规则明细ID不能为空");
 		}
 
 		QuotationAssignUserRuleItemPO itemPO = quotationAssignUserRuleItemDao.get(itemVO.getQauriid());
 		if (itemPO == null) {
-			throw new FLException("规则明细不存在");
+			throw new FLException(0, "规则明细不存在");
 		}
 
 		Timestamp now = DateUtil.getDateToTimestamp(new Date());
@@ -184,12 +184,12 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO itemVO) throws FLException {
 		if (itemVO == null || itemVO.getQauriid() == null) {
-			throw new FLException("规则明细ID不能为空");
+			throw new FLException(0, "规则明细ID不能为空");
 		}
 
 		QuotationAssignUserRuleItemPO itemPO = quotationAssignUserRuleItemDao.get(itemVO.getQauriid());
 		if (itemPO == null) {
-			throw new FLException("规则明细不存在");
+			throw new FLException(0, "规则明细不存在");
 		}
 
 		quotationAssignUserRuleItemDao.delete(itemPO);
