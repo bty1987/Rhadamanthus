@@ -153,6 +153,7 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 		constructionDao.update(constructionPO);
 
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "updateAcceptance", "{\"orderId\":\"" + orderId + "\",\"status\":\"2\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "updateAcceptance", "{\"orderId\":\"" + orderId + "\",\"status\":\"2\",\"event\":\"PROJECT_NODE_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
