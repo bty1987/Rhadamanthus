@@ -55,7 +55,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 	@Override
 	public List<SurveyTemplateVO> querySurveyTemplate(SurveyTemplateVO surveyTemplateVO, int company) {
 
-		List<SurveyTemplatePO> surveyTemplatePOs = surveyTemplateDao.querySurveyTemplate(company);
+		List<SurveyTemplatePO> surveyTemplatePOs = surveyTemplateDao.querySurveyTemplate(company, surveyTemplateVO.getName());
 		List<SurveyTemplateVO> surveyTemplateVOs = new ArrayList<SurveyTemplateVO>();
 
 		for (SurveyTemplatePO surveyTemplatePO : surveyTemplatePOs) {
