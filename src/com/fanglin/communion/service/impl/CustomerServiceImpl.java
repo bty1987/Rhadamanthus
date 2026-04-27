@@ -228,6 +228,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.setCompany(company);
 
 		customerPO.setPhone(phone);
+		customerPO.setIdentity(SensitiveDataHelper.encrypt(customerPO.getIdentity()));
 
 		customerDao.save(customerPO);
 
@@ -343,7 +344,7 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130028, "客户状态不可操作");
 		}
 
-		BeanUtil.copyProperties(customerVO, customerPO, "phone");
+		BeanUtil.copyProperties(customerVO, customerPO, "phone", "identity");
 
 		if (customerVO.getName() == null || customerVO.getName().trim().isEmpty()) {
 			customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
@@ -374,6 +375,10 @@ public class CustomerServiceImpl implements CustomerService {
 
 				customerPhoneDao.update(customerPhonePO);
 			}
+		}
+
+		if (customerVO.getIdentity() != null) {
+			customerPO.setIdentity(SensitiveDataHelper.encrypt(customerVO.getIdentity()));
 		}
 
 		customerDao.update(customerPO);
@@ -592,7 +597,7 @@ public class CustomerServiceImpl implements CustomerService {
 		JSONObject person = info.getJSONObject("person");
 
 		customerPO.setName(person.getString("personName"));
-		customerPO.setIdentity(person.getString("idCard"));
+		customerPO.setIdentity(SensitiveDataHelper.encrypt(person.getString("idCard")));
 		customerPO.setAddress(person.getString("address"));
 
 		customerPO.setPhone(SensitiveDataHelper.encrypt(person.getString("mobile")));
