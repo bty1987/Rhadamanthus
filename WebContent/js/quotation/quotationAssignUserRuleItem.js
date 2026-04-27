@@ -133,19 +133,20 @@ $(function() {
         }, null, false);
     }
 
-    // 初始化部门下拉框
+    // 初始化部门下拉框（固定为设计部类型，dept.type.dtid=2）
     function initDepartmentSelect(companyId) {
         if (!companyId) {
             config.items.department.empty().append('<option value="">全部部门</option>');
             return;
         }
         com.post(api.communion.queryDepartment, {
-            "department.company.cid": companyId
+            "department.company.cid": companyId,
+            "dept.type.dtid": 2
         }, function(res) {
             if (res.deptList && res.deptList.length > 0) {
                 config.items.department.bindData(res.deptList, "did", "name", true);
             } else {
-                config.items.department.empty().append('<option value="">无部门数据</option>');
+                config.items.department.empty().append('<option value="">无设计部数据</option>');
             }
         }, null, false);
     }
