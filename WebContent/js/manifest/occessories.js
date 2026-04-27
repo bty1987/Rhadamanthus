@@ -318,7 +318,7 @@ $(function() {
         _btns = [$checkAllBtn, $batchBalanceBtn];
     }
 
-    searcher.btns(_btns);
+    searcher.button(_btns);
 
     var linebtns = [{
         name: "到货",

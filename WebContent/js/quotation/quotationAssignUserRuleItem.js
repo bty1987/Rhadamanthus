@@ -37,9 +37,9 @@ $(function() {
 
     // 查询条件：公司 + 支持类型 + 预算员姓名
     searcher.condition([
-        "quotation-assignUserRuleItem-company",
-        "quotation-assignUserRuleItem-supportedType",
-        "quotation-assignUserRuleItem-userName"
+        "quotation-assign-user-rule-item-company",
+        "quotation-assign-user-rule-item-supportedType",
+        "quotation-assign-user-rule-item-userName"
     ]);
 
     // 固定筛选参数：只查询当前规则下的明细
