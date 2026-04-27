@@ -1305,7 +1305,7 @@ Condition.addupRule("quotation", {
 
     // 预算员规则 - 用户姓名
     "assign-user-rule-userName": {
-        label: "用户姓名",
+        label: "预算员",
         type: "text",
         submitConfig: {
             name: "userName",
@@ -1317,7 +1317,7 @@ Condition.addupRule("quotation", {
     // ==================== 预算员规则明细（Item）管理相关条件 ====================
 
     // 规则明细 - 公司
-    "quotation-assignUserRuleItem-company": {
+    "assign-user-rule-item-company": {
         label: "公司",
         type: "select",
         submitConfig: {
@@ -1334,8 +1334,8 @@ Condition.addupRule("quotation", {
     },
 
     // 规则明细 - 支持类型
-    "quotation-assignUserRuleItem-supportedType": {
-        label: "支持类型",
+    "assign-user-rule-item-supportedType": {
+        label: "业务类型",
         type: "select",
         submitConfig: {
             name: "supportedType",
@@ -1351,8 +1351,8 @@ Condition.addupRule("quotation", {
     },
 
     // 规则明细 - 预算员姓名
-    "quotation-assignUserRuleItem-userName": {
-        label: "预算员姓名",
+    "assign-user-rule-item-userName": {
+        label: "预算员",
         type: "text",
         submitConfig: {
             name: "userName",
