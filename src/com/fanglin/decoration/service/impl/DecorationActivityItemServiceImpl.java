@@ -47,6 +47,8 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.core.security.SensitiveDataHelper;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
@@ -82,6 +84,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Autowired
 	private WeChatAppService weChatAppService;
+
+	@Autowired
+	private com.fanglin.information.dao.MessageQueuingDao messageQueuingDao;
 
 	@Override
 	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO) {
@@ -506,6 +511,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityRecordDao.save(decorationActivityRecordPO);
 
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
+
+		// 生成消息队列数据
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationActivityItemPO.getOrderId(), "consumeDecorationActivityItem", "{\"orderId\":\"" + decorationActivityItemPO.getOrderId() + "\",\"daiId\":\"" + decorationActivityItemPO.getDaiId() + "\",\"status\":\"" + DecorationActivityItemPO.STATUS_VERIFY_INT + "\",\"userId\":\"" + userId + "\",\"event\":\"ACTIVITY_ITEM_VERIFIED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
