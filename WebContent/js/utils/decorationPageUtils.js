@@ -302,7 +302,7 @@ $(function() {
     function drawPicture(conf, stepPane) {
 
         var row1 = createDiv("row").css("min-height", "150px").append(createDiv("col-md-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent", "basePaymentWidget").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("方案状态")))))).appendTo(stepPane);
-        createDiv("col-md-12").append($('<h5></h5>').append($('<strong></strong>').addClass('clearfix col-md-3').html("合同方案: ").append($('<span></span>').attr('id', 'designStatus').addClass("label label-danger arrowed"))).append($('<strong></strong>').addClass('clearfix col-md-3').html("放线方案: ").append($('<span></span>').attr('id', 'prictureStatus').addClass("label label-danger arrowed")))).appendTo(row1);
+        createDiv("col-md-12").append($('<h5></h5>').attr("id", "pictureStatusRow").append($('<strong></strong>').addClass('clearfix col-md-3').html("合同方案: ").append($('<span></span>').attr('id', 'designStatus').addClass("label label-danger arrowed"))).append($('<strong></strong>').addClass('clearfix col-md-3').html("放线方案: ").append($('<span></span>').attr('id', 'prictureStatus').addClass("label label-danger arrowed")))).appendTo(row1);
 
         var $confirmDesign = $('<button></button>').attr("id", "confirmDesign").addClass('btn btn-minier btn-success pull-right').css("margin-left", "3px").html("确认合同方案");
         var $confirmDesignQRCode = $('<button></button>').attr("id", "confirmDesignQRCode").addClass('btn btn-minier btn-success pull-right icon-qrcode');
@@ -430,7 +430,7 @@ $(function() {
 
         com.focusPage("#checkOriginal").append($checkOriginal);
 
-        row1.find(".widget-header").first().append($handoverBtn);
+        com.focusPage("#pictureStatusRow").append($handoverBtn);
 
         return [row1, row2];
     }
