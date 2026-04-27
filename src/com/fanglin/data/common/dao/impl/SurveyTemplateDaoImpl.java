@@ -2,6 +2,8 @@ package com.fanglin.data.common.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -34,8 +36,15 @@ public class SurveyTemplateDaoImpl extends DaoImpl<SurveyTemplatePO> implements 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<SurveyTemplatePO> querySurveyTemplate(int company) {
-		return session().createCriteria(SurveyTemplatePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", SurveyTemplatePO.STATUS_ENABLE_INT)).list();
+	public List<SurveyTemplatePO> querySurveyTemplate(int company, String name) {
+
+		Criteria criteria = session().createCriteria(SurveyTemplatePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", SurveyTemplatePO.STATUS_ENABLE_INT));
+
+		if (name != null && !name.isEmpty()) {
+			criteria.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
+		}
+
+		return criteria.list();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {

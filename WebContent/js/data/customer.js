@@ -83,7 +83,7 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageCustomer);
 
-    searcher.condition(['customer-phone', 'customer-relationship', 'customer-type']);
+    searcher.condition(['customer-name', 'customer-phone', 'customer-relationship', 'customer-type']);
 
     searcher.history("customerPostData");
 
