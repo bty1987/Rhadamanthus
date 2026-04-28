@@ -13,6 +13,8 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleDao;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleItemDao;
@@ -36,6 +38,9 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 
 	@Autowired
 	private QuotationAssignUserRuleDao quotationAssignUserRuleDao;
+
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public List<QuotationAssignUserRuleItemVO> queryQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO quotationAssignUserRuleItem) throws FLException {
@@ -230,5 +235,63 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteItemsByRuleId(long qaurid) throws FLException {
 		quotationAssignUserRuleItemDao.deleteQuotationAssignUserRuleItemByRuleId(qaurid);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int createQuotationAssignUserRuleItemWithRule(QuotationAssignUserRuleItemVO itemVO) throws FLException {
+
+		// 校验：必须指定预算员
+		if (itemVO.getUser() == null || itemVO.getUser().getUserId() == null || itemVO.getUser().getUserId().trim().isEmpty()) {
+			throw new FLException(0, "请选择预算员");
+		}
+
+		// 校验：必须指定公司
+		if (itemVO.getCompany() == null || itemVO.getCompany().getCid() == null) {
+			throw new FLException(0, "公司信息不能为空");
+		}
+
+		String userId = itemVO.getUser().getUserId().trim();
+		int companyId = CompanyServiceImpl.decode(itemVO.getCompany().getCid());
+
+		// 查找或创建 UserRule
+		QuotationAssignUserRulePO rulePO = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(userId);
+		Timestamp now = DateUtil.getDateToTimestamp(new Date());
+
+		if (rulePO == null) {
+			// 自动创建 UserRule
+			UserPO userPO = userDao.queryUserByUserId(userId);
+			if (userPO == null) {
+				throw new FLException(0, "用户不存在: " + userId);
+			}
+
+			rulePO = new QuotationAssignUserRulePO();
+			rulePO.setUser(userPO);
+			rulePO.setStatus(QuotationAssignUserRulePO.STATUS_AVAILABLE_INT);
+			rulePO.setCurrentTaskCount(0);
+			rulePO.setCreateTime(now);
+			rulePO.setUpdateTime(now);
+			quotationAssignUserRuleDao.save(rulePO);
+		}
+
+		// 创建 Item
+		QuotationAssignUserRuleItemPO itemPO = new QuotationAssignUserRuleItemPO();
+		itemPO.setUserRule(rulePO);
+		itemPO.setCompany(new CompanyPO(companyId));
+
+		// 部门（可选）
+		if (itemVO.getDepartment() != null && itemVO.getDepartment().getDid() != null) {
+			DepartmentPO deptPO = new DepartmentPO();
+			deptPO.setDid(itemVO.getDepartment().getDid());
+			itemPO.setDepartment(deptPO);
+		}
+
+		// 支持类型
+		itemPO.setSupportedType(itemVO.getSupportedType() != null ? itemVO.getSupportedType() : QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT);
+		itemPO.setCreateTime(now);
+		itemPO.setUpdateTime(now);
+
+		quotationAssignUserRuleItemDao.save(itemPO);
+		return 0;
 	}
 }

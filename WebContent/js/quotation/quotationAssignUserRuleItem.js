@@ -10,7 +10,10 @@ $(function() {
             qaurid: com.focusPage('#qaurid'),
             company: com.focusPage('#company'),
             department: com.focusPage('#department'),
-            supportedType: com.focusPage('input[name="supportedType"]')
+            supportedType: com.focusPage('input[name="supportedType"]'),
+            budgetUser: com.focusPage('#budgetUser'),
+            userGroup: com.focusPage('#userGroup'),
+            companyGroup: com.focusPage('#companyGroup')
         },
         btns: {
             addBtn: null,
@@ -20,7 +23,9 @@ $(function() {
             isNew: true
         },
         data: {
-            parentQaurid: null // 从父页面传入的规则ID
+            parentQaurid: null, // 从父页面传入的规则ID
+            selectedUserId: null, // typeahead 选中的预算员 userId
+            isStandalone: false  // 是否独立页面模式
         }
     };
 
@@ -28,6 +33,9 @@ $(function() {
     if (params.quotationAssignUserRule && params.quotationAssignUserRule.qaurid) {
         config.data.parentQaurid = params.quotationAssignUserRule.qaurid;
     }
+
+    // 判断模式：有 parentQaurid = 子页面模式（从 UserRule 页面打开），无 = 独立页面模式
+    config.data.isStandalone = !config.data.parentQaurid;
 
     // 初始化 Searcher
     var searcher = new Searcher();
@@ -42,15 +50,17 @@ $(function() {
         "quotation-assign-user-rule-item-userName"
     ]);
 
-    // 固定筛选参数：只查询当前规则下的明细
-    searcher.param({
-        "quotationAssignUserRuleItem.qaurid": config.data.parentQaurid
-    });
+    // 固定筛选参数：子页面模式只查询当前规则下的明细；独立页面模式不过滤 qaurid
+    if (!config.data.isStandalone) {
+        searcher.param({
+            "quotationAssignUserRuleItem.qaurid": config.data.parentQaurid
+        });
+    }
 
     // 顶部按钮
     searcher.button(function() {
         var $addBtn = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addItemBtn').css('margin', '0px 3px');
-        $('<i></i>').addClass('icon-plus bigger-110').appendTo($addBtn);
+        $('<I></I>').addClass('icon-plus bigger-110').appendTo($addBtn);
         $('<span></span>').text('新增').appendTo($addBtn);
         config.btns.addBtn = $addBtn;
         return [$addBtn];
@@ -151,8 +161,29 @@ $(function() {
         }, null, false);
     }
 
+    // 初始化预算员输入框（typeahead，仅独立页面模式使用）
+    function initBudgetUserInput() {
+        com.initTypeahead(config.items.budgetUser,
+            api.personel.queryUserByPinyin,
+            "pinyinName",
+            {
+                "user.status": 0
+            },
+            "autoFillKeyValue",
+            "key",
+            "value",
+            function(list, key, value) {
+                return value;
+            });
+    }
+
     // 页面加载时初始化
     initCompanySelect();
+
+    // 独立页面模式初始化
+    if (config.data.isStandalone) {
+        initBudgetUserInput();
+    }
 
     // 监听公司变化，联动部门
     config.items.company.on('change', function() {
@@ -164,6 +195,19 @@ $(function() {
         resetForm();
         config.status.isNew = true;
         com.focusPage('#modalTitle').text('新增规则项目');
+
+        // 独立页面模式：显示预算员输入，隐藏公司选择
+        if (config.data.isStandalone) {
+            config.items.userGroup.show();
+            config.items.companyGroup.hide();
+            // 公司使用当前操作公司，并级联加载部门
+            config.items.company.val(params.company.cid);
+            initDepartmentSelect(params.company.cid);
+        } else {
+            config.items.userGroup.hide();
+            config.items.companyGroup.show();
+        }
+
         config.modals.itemModal.modal('show');
     });
 
@@ -174,6 +218,12 @@ $(function() {
         config.items.company.val('');
         config.items.department.empty().append('<option value="">全部部门</option>');
         config.items.supportedType.filter('[value="-1"]').prop('checked', true);
+
+        // 独立页面模式额外清理
+        if (config.data.isStandalone) {
+            com.cleanTypeahead(config.items.budgetUser);
+            config.data.selectedUserId = null;
+        }
     }
 
     // 编辑
@@ -194,6 +244,16 @@ $(function() {
             config.items.supportedType.filter('[value="-1"]').prop('checked', true);
         }
         com.focusPage('#modalTitle').text('编辑规则项目');
+
+        // 编辑模式下：隐藏预算员选择（已有的 Item 不需要改预算员），显示公司（只读）
+        if (config.data.isStandalone) {
+            config.items.userGroup.hide();
+            config.items.companyGroup.show();
+        } else {
+            config.items.userGroup.hide();
+            config.items.companyGroup.show();
+        }
+
         config.modals.itemModal.modal('show');
     }
 
@@ -206,6 +266,32 @@ $(function() {
         var qauriid = config.items.qauriid.val();
         var isNew = !qauriid;
 
+        // 独立页面模式 + 新增：使用 createQuotationAssignUserRuleItemWithRule 接口
+        if (config.data.isStandalone && isNew) {
+
+            // 使用 com.typeahead 获取选中的 userId
+            var userId = com.typeahead(config.items.budgetUser, null, false);
+            if (!userId) {
+                com.showAlert(com.warning, '请选择预算员');
+                return false;
+            }
+
+            var data = {
+                "quotationAssignUserRuleItem.user.userId": userId,
+                "quotationAssignUserRuleItem.company.cid": params.company.cid,
+                "quotationAssignUserRuleItem.department.did": config.items.department.val() || null,
+                "quotationAssignUserRuleItem.supportedType": parseInt(config.items.supportedType.filter(':checked').val())
+            };
+
+            com.post(api.quotation.createQuotationAssignUserRuleItemWithRule, data, function(res) {
+                config.modals.itemModal.modal('hide');
+                com.showAlert(com.info, '新增成功');
+                searcher.doSearch();
+            });
+            return;
+        }
+
+        // 子页面模式 或 编辑模式：使用原有接口
         var data = {
             "quotationAssignUserRuleItem.qauriid": qauriid,
             "quotationAssignUserRuleItem.userRule.qaurid": config.data.parentQaurid,
@@ -236,8 +322,6 @@ $(function() {
     }
 
     // Modal 关闭时清理残留蒙版（解决 popup4page 内 Bootstrap Modal 蒙版层叠问题）
-    // 注意: .modal-backdrop 由 Bootstrap 附加到 <body> 上，不在 .flpage.tab-pane.active 内，
-    // 因此不能用 com.focusPage() 查找，必须直接用 $() 在全局查找。
     config.modals.itemModal.on('hidden.bs.modal', function() {
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open').css('padding-right', '');

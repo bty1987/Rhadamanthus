@@ -23,7 +23,15 @@
                         <input type="hidden" id="qauriid">
                         <input type="hidden" id="qaurid"> <!-- 所属规则ID（新增时从父页面传入） -->
 
-                        <div class="form-group">
+                        <!-- 独立页面模式：选择预算员（子页面模式下隐藏） -->
+                        <div class="form-group" id="userGroup" style="display:none;">
+                            <label class="col-sm-3 control-label no-padding-right">预算员</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="budgetUser" class="col-xs-10 col-sm-8 v_required" placeholder="拼音/姓名搜索" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="companyGroup">
                             <label class="col-sm-3 control-label no-padding-right" for="company">公司</label>
                             <div class="col-sm-9">
                                 <select id="company" class="col-xs-10 col-sm-8 v_required"></select>

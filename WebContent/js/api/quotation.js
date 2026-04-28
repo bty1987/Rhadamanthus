@@ -2300,6 +2300,10 @@ $.extend(api, {
             url: "deleteQuotationAssignUserRuleItem.do"
         },
 
+        createQuotationAssignUserRuleItemWithRule: {
+            url: "createQuotationAssignUserRuleItemWithRule.do"
+        },
+
         // 分配操作
         assignQuotationAssign: {
             url: "assignQuotationAssign.do",

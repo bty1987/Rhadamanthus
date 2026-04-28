@@ -270,6 +270,21 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 独立页面新增预算员规则明细（自动查找/创建UserRule）
+	 */
+	@Action(value = "createQuotationAssignUserRuleItemWithRule", results = {
+		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
+		@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
+	}, params = { "contentType", "text/html" })
+	public String createQuotationAssignUserRuleItemWithRule() throws FLException {
+		if (quotationAssignUserRuleItem == null) {
+			return ERROR;
+		}
+		quotationAssignUserRuleItemService.createQuotationAssignUserRuleItemWithRule(quotationAssignUserRuleItem);
+		return SUCCESS;
+	}
+
 	// ==================== Getter & Setter ====================
 
 	public QuotationAssignUserRuleVO getQuotationAssignUserRule() {
