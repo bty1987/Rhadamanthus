@@ -41,6 +41,8 @@ import com.fanglin.decoration.po.DecorationServicePO;
 import com.fanglin.decoration.service.DecorationInfoService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -98,6 +100,9 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
 
 	@Autowired
 	private WeChatAppService weChatAppService;
@@ -350,9 +355,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 				customerSourcePO.setReferOrderId(decorationInfoVO.getReferOrderId());
 				customerSourceDao.update(customerSourcePO);
 
-				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId()), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
+			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId()), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
 
-				return 0;
+		// 生成消息提示数据
+			messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "referDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_ADDED\",\"source\":\"customerSource\"}"));
+
+			return 0;
 			}
 		}
 
@@ -369,9 +377,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 			customerOriginDao.update(customerOriginPO);
 
-			customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId()), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
+		customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId()), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
 
-			return 0;
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "referDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_ADDED\",\"source\":\"customerOrigin\"}"));
+
+		return 0;
 		}
 
 		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(decorationVO.getOrderId());
@@ -385,9 +396,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 		decorationInfoDao.saveOrUpdate(decorationInfoPO);
 
-		decorationOperateDao.save(new DecorationOperatePO().refer(decorationVO.getOrderId(), operater, String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId())));
+	decorationOperateDao.save(new DecorationOperatePO().refer(decorationVO.getOrderId(), operater, String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId())));
 
-		return 0;
+	// 生成消息提示数据
+	messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "referDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + (oldReferOrderId != null ? oldReferOrderId : "") + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_ADDED\",\"source\":\"decorationInfo\"}"));
+
+	return 0;
 	}
 
 	@Override
@@ -419,91 +433,109 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 				customerChancePO.getSource().setReferOrderId(null);
 				customerChanceDao.update(customerChancePO);
 
-				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
+			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
 
-				return 0;
-			}
-		}
-
-		CustomerChancePO customerChancePO1 = customerChanceDao.queryCustomerChance(decorationInfoVO.getReferOrderId());
-
-		if (customerChancePO1 != null) {
-			DecorationPO ccReferationPO = decorationDao.queryDecorationByOrderId(customerChancePO1.getSource().getReferOrderId());
-
-			if (ccReferationPO != null && customerChancePO1 != null && ccReferationPO.getOrderId().equals(decorationVO.getOrderId())) {
-
-				String oldReferOrderId = customerChancePO1.getSource().getReferOrderId();
-				customerChancePO1.getSource().setReferOrderId(null);
-				customerChanceDao.update(customerChancePO1);
-
-				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO1.getSource().getCsid(), customerChancePO1.getCcid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
-
-				return 0;
-			}
-		}
-
-		CustomerOriginPO customerOriginPO = customerOriginDao.queryCustomerOrigin(decorationVO.getOrderId());
-
-		if (customerOriginPO != null) {
-			DecorationPO coReferationPO = decorationDao.queryDecorationByOrderId(customerOriginPO.getReferOrderId());
-
-			if (coReferationPO != null && customerOriginPO != null && coReferationPO.getOrderId().equals(decorationInfoVO.getReferOrderId())) {
-
-				String oldReferOrderId = customerOriginPO.getReferOrderId();
-				customerOriginPO.setReferOrderId(null);
-
-				customerOriginDao.update(customerOriginPO);
-
-				customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
-
-				return 0;
-			}
-		}
-
-		CustomerOriginPO customerOriginPO1 = customerOriginDao.queryCustomerOrigin(decorationInfoVO.getReferOrderId());
-
-		if (customerOriginPO1 != null) {
-			DecorationPO coReferationPO = decorationDao.queryDecorationByOrderId(customerOriginPO1.getReferOrderId());
-
-			if (coReferationPO != null && customerOriginPO1 != null && coReferationPO.getOrderId().equals(decorationVO.getOrderId())) {
-
-				String oldReferOrderId = customerOriginPO1.getReferOrderId();
-				customerOriginPO1.setReferOrderId(null);
-
-				customerOriginDao.update(customerOriginPO1);
-
-				customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO1.getCsid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
-
-				return 0;
-			}
-		}
-
-		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(decorationVO.getOrderId());
-
-		if (decorationInfoPO != null && decorationInfoPO.getReferOrderId() != null && decorationInfoPO.getReferOrderId().equals(decorationInfoVO.getReferOrderId())) {
-			String oldReferOrderId = decorationInfoPO.getReferOrderId();
-			decorationInfoPO.setReferOrderId(null);
-
-			decorationInfoDao.update(decorationInfoPO);
-
-			decorationOperateDao.save(new DecorationOperatePO().unrefer(decorationVO.getOrderId(), operater, String.format("referOrderId: %s -> null", oldReferOrderId)));
+			// 生成消息提示数据
+			messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerSource\"}"));
 
 			return 0;
 		}
+	}
 
-		DecorationInfoPO decorationInfoPO1 = decorationInfoDao.queryDecorationInfoByOrderId(decorationInfoVO.getReferOrderId());
+	CustomerChancePO customerChancePO1 = customerChanceDao.queryCustomerChance(decorationInfoVO.getReferOrderId());
 
-		if (decorationInfoPO1 != null && decorationInfoPO1.getReferOrderId() != null && decorationInfoPO1.getReferOrderId().equals(decorationVO.getOrderId())) {
-			String oldReferOrderId = decorationInfoPO1.getReferOrderId();
-			decorationInfoPO1.setReferOrderId(null);
+	if (customerChancePO1 != null) {
+		DecorationPO ccReferationPO = decorationDao.queryDecorationByOrderId(customerChancePO1.getSource().getReferOrderId());
 
-			decorationInfoDao.update(decorationInfoPO1);
+		if (ccReferationPO != null && customerChancePO1 != null && ccReferationPO.getOrderId().equals(decorationVO.getOrderId())) {
 
-			decorationOperateDao.save(new DecorationOperatePO().unrefer(decorationInfoVO.getReferOrderId(), operater, String.format("referOrderId: %s -> null", oldReferOrderId)));
+			String oldReferOrderId = customerChancePO1.getSource().getReferOrderId();
+			customerChancePO1.getSource().setReferOrderId(null);
+			customerChanceDao.update(customerChancePO1);
+
+			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO1.getSource().getCsid(), customerChancePO1.getCcid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
+
+			// 生成消息提示数据
+			messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerSource\"}"));
 
 			return 0;
 		}
+	}
+
+	CustomerOriginPO customerOriginPO = customerOriginDao.queryCustomerOrigin(decorationVO.getOrderId());
+
+	if (customerOriginPO != null) {
+		DecorationPO coReferationPO = decorationDao.queryDecorationByOrderId(customerOriginPO.getReferOrderId());
+
+		if (coReferationPO != null && customerOriginPO != null && coReferationPO.getOrderId().equals(decorationInfoVO.getReferOrderId())) {
+
+			String oldReferOrderId = customerOriginPO.getReferOrderId();
+			customerOriginPO.setReferOrderId(null);
+
+			customerOriginDao.update(customerOriginPO);
+
+			customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
+
+			// 生成消息提示数据
+			messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerOrigin\"}"));
+
+			return 0;
+		}
+	}
+
+	CustomerOriginPO customerOriginPO1 = customerOriginDao.queryCustomerOrigin(decorationInfoVO.getReferOrderId());
+
+	if (customerOriginPO1 != null) {
+		DecorationPO coReferationPO = decorationDao.queryDecorationByOrderId(customerOriginPO1.getReferOrderId());
+
+		if (coReferationPO != null && customerOriginPO1 != null && coReferationPO.getOrderId().equals(decorationVO.getOrderId())) {
+
+			String oldReferOrderId = customerOriginPO1.getReferOrderId();
+			customerOriginPO1.setReferOrderId(null);
+
+			customerOriginDao.update(customerOriginPO1);
+
+			customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO1.getCsid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
+
+			// 生成消息提示数据
+			messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerOrigin\"}"));
+
+			return 0;
+		}
+	}
+
+	DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(decorationVO.getOrderId());
+
+	if (decorationInfoPO != null && decorationInfoPO.getReferOrderId() != null && decorationInfoPO.getReferOrderId().equals(decorationInfoVO.getReferOrderId())) {
+		String oldReferOrderId = decorationInfoPO.getReferOrderId();
+		decorationInfoPO.setReferOrderId(null);
+
+		decorationInfoDao.update(decorationInfoPO);
+
+		decorationOperateDao.save(new DecorationOperatePO().unrefer(decorationVO.getOrderId(), operater, String.format("referOrderId: %s -> null", oldReferOrderId)));
+
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"decorationInfo\"}"));
 
 		return 0;
+	}
+
+	DecorationInfoPO decorationInfoPO1 = decorationInfoDao.queryDecorationInfoByOrderId(decorationInfoVO.getReferOrderId());
+
+	if (decorationInfoPO1 != null && decorationInfoPO1.getReferOrderId() != null && decorationInfoPO1.getReferOrderId().equals(decorationVO.getOrderId())) {
+		String oldReferOrderId = decorationInfoPO1.getReferOrderId();
+		decorationInfoPO1.setReferOrderId(null);
+
+		decorationInfoDao.update(decorationInfoPO1);
+
+		decorationOperateDao.save(new DecorationOperatePO().unrefer(decorationInfoVO.getReferOrderId(), operater, String.format("referOrderId: %s -> null", oldReferOrderId)));
+
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"decorationInfo\"}"));
+
+		return 0;
+	}
+
+	return 0;
 	}
 }
