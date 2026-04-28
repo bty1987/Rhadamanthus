@@ -108,17 +108,19 @@ jQuery(function($) {
                 var totalAmount = 0;
 
                 $.each(res.occessoriesCharges, function(i, charge) {
-                    // tranargs 已将 price 和 surplus 从分转为元，num 保持原始整数值
+                    // tranargs 已将 price、surplus、num 从千分之一单位转为正常值
                     var price = charge.price || 0;
                     var surplus = charge.surplus || 0;
                     var num = charge.num || 0;
-                    var subtotal;
+                    var displayPrice, subtotal;
 
                     // 根据 isExceed 判断 surplus 是否参与运算
                     // isExceed == 0 (ISEXCEED_EXCEED_INT) 表示超阶，surplus 参与运算
                     if (isExceed == 0) {
-                        subtotal = (price + surplus) * num;
+                        displayPrice = price + surplus;
+                        subtotal = displayPrice * num;
                     } else {
+                        displayPrice = price;
                         subtotal = price * num;
                     }
 
@@ -127,7 +129,7 @@ jQuery(function($) {
                     var $row = $('<tr></tr>');
                     $row.append($('<td></td>').text(i + 1));
                     $row.append($('<td></td>').text(charge.name));
-                    $row.append($('<td></td>').text(price.toFixed(3)));
+                    $row.append($('<td></td>').text(displayPrice.toFixed(3)));
                     // 浮动额列：超阶时显示具体值，非超阶时显示"-"
                     if (isExceed == 0) {
                         $row.append($('<td></td>').text(surplus.toFixed(3)));
