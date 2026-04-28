@@ -55,4 +55,18 @@ public interface QuotationAssignUserRuleItemService {
 	 * 根据规则ID删除全部明细（Rule 删除时调用）
 	 */
 	void deleteItemsByRuleId(long qaurid) throws FLException;
+
+	/**
+	 * 独立页面创建规则明细（自动查找或创建 UserRule）
+	 * 
+	 * <p>
+	 * 根据用户ID查找已有的 UserRule，不存在则自动创建，然后在其下创建 Item
+	 * 公司使用操作公司（前端传入），不需要前端选公司
+	 * </p>
+	 * 
+	 * @param itemVO 明细信息（含 user.userId、department、supportedType、company.cid）
+	 * @return 0 表示成功
+	 * @throws FLException 业务异常
+	 */
+	int createQuotationAssignUserRuleItemWithRule(QuotationAssignUserRuleItemVO itemVO) throws FLException;
 }
