@@ -561,7 +561,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "occessoriesCharges",
-                args: ["price", "surplus"]
+                args: ["price", "surplus", "num"]
             }]
         },
         bindOccessories: {
