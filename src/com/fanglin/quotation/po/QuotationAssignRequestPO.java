@@ -22,8 +22,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.beans.BeanUtils;
+
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.vo.QuotationAssignRequestVO;
+import com.fanglin.system.po.CompanyPO;
 
 /**
  * 装修单预算分配请求表实体类
@@ -111,14 +115,14 @@ public class QuotationAssignRequestPO implements Serializable {
 	private String orderId;
 
 	/**
-	 * 关联公司ID
+	 * 关联公司
 	 */
-	private int company;
+	private CompanyPO company;
 
 	/**
-	 * 部门ID（NULL表示该公司所有部门）
+	 * 部门（NULL表示该公司所有部门）
 	 */
-	private Integer department;
+	private DepartmentPO department;
 
 	/**
 	 * 装修类型：1-半包，2-整装
@@ -232,40 +236,42 @@ public class QuotationAssignRequestPO implements Serializable {
 	}
 
 	/**
-	 * 获取公司ID
+	 * 获取关联公司
 	 * 
-	 * @return 公司ID
+	 * @return 公司对象
 	 */
-	@Column(name = "company", nullable = false)
-	public int getCompany() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "company", referencedColumnName = "cid")
+	public CompanyPO getCompany() {
 		return company;
 	}
 
 	/**
-	 * 设置公司ID
+	 * 设置关联公司
 	 * 
-	 * @param company 公司ID
+	 * @param company 公司对象
 	 */
-	public void setCompany(int company) {
+	public void setCompany(CompanyPO company) {
 		this.company = company;
 	}
 
 	/**
-	 * 获取部门ID
+	 * 获取部门
 	 * 
-	 * @return 部门ID
+	 * @return 部门对象（NULL表示该公司所有部门）
 	 */
-	@Column(name = "department")
-	public Integer getDepartment() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "department", referencedColumnName = "dId")
+	public DepartmentPO getDepartment() {
 		return department;
 	}
 
 	/**
-	 * 设置部门ID
+	 * 设置部门
 	 * 
-	 * @param department 部门ID
+	 * @param department 部门对象（NULL表示该公司所有部门）
 	 */
-	public void setDepartment(Integer department) {
+	public void setDepartment(DepartmentPO department) {
 		this.department = department;
 	}
 
@@ -468,28 +474,12 @@ public class QuotationAssignRequestPO implements Serializable {
 	 * @return 转换后的VO对象
 	 */
 	public QuotationAssignRequestVO ptv(QuotationAssignRequestVO vo) {
-		// 复制基本属性，排除需要特殊处理或类型不匹配的字段
-		com.fanglin.utils.BeanUtil.copyProperties(this, vo, "company", "department", "requestUser", "user");
+		BeanUtils.copyProperties(this, vo, "company", "department", "requestUser", "user");
 
-		// 公司：PO int -> VO CompanyVO（仅设置cid，名称需另行加载）
-		vo.setCompany(new com.fanglin.system.vo.CompanyVO(String.valueOf(company)));
-
-		// 部门：PO Integer -> VO DepartmentVO（仅设置did，名称需另行加载）
-		if (department != null) {
-			com.fanglin.communion.vo.DepartmentVO deptVO = new com.fanglin.communion.vo.DepartmentVO();
-			deptVO.setDid(department);
-			vo.setDepartment(deptVO);
-		}
-
-		// 请求人：使用UserBaseVO.setBaseInfo避免LAZY代理序列化异常
-		if (requestUser != null) {
-			vo.setRequestUser(new com.fanglin.personel.vo.UserBaseVO().setBaseInfo(requestUser));
-		}
-
-		// 预算员：同上
-		if (user != null) {
-			vo.setUser(new com.fanglin.personel.vo.UserBaseVO().setBaseInfo(user));
-		}
+		if (vo.getCompany() != null && getCompany() != null) getCompany().ptv(vo.getCompany());
+		if (vo.getDepartment() != null && getDepartment() != null) getDepartment().ptv(vo.getDepartment());
+		if (vo.getRequestUser() != null && getRequestUser() != null) vo.getRequestUser().setBaseInfo(getRequestUser());
+		if (vo.getUser() != null && getUser() != null) vo.getUser().setBaseInfo(getUser());
 
 		return vo;
 	}

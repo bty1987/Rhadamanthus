@@ -43,9 +43,9 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 		PagingQuery<QuotationAssignRequestPO> query = pagingQuery(paging, QuotationAssignRequestPO.class);
 
-		// 按公司筛选
+		// 按公司筛选（company现在是ManyToOne关联，需用company.cid匹配）
 		if (company != null) {
-			query.add(query.getCriterion("company", company, "eq"));
+			query.add(query.getCriterion("company.cid", company, "eq"));
 		}
 
 		// 处理动态过滤条件
@@ -105,11 +105,10 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(int company, Integer department, Short decorationType) {
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
-
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("company.cid", company)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
 		// 如果指定了部门，则匹配该部门或部门为NULL的请求
 		if (department != null) {
-			criteria.add(Restrictions.or(Restrictions.eq("department", department), Restrictions.isNull("department")));
+			criteria.add(Restrictions.or(Restrictions.eq("department.did", department), Restrictions.isNull("department")));
 		}
 
 		// 如果指定了装修类型，则匹配该类型或类型为NULL的请求

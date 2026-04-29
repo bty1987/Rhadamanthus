@@ -19,13 +19,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationAssignRequestDao;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.quotation.service.QuotationAssignRequestService;
 import com.fanglin.quotation.vo.QuotationAssignRequestVO;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -44,7 +50,12 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
-			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(new QuotationAssignRequestVO()));
+			QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
+			vo.setCompany(new CompanyVO());
+			vo.setDepartment(new DepartmentVO());
+			vo.setRequestUser(new UserBaseVO());
+			vo.setUser(new UserBaseVO());
+			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(vo));
 		}
 
 		// 设置分页结果
@@ -56,12 +67,15 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	public QuotationAssignRequestVO queryQuotationAssignRequestById(QuotationAssignRequestVO quotationAssignRequestVO) throws FLException {
 
 		QuotationAssignRequestPO quotationAssignRequestPO = quotationAssignRequestDao.get(quotationAssignRequestVO.getQarid());
-
 		if (quotationAssignRequestPO == null) {
 			return null;
 		}
-
-		return quotationAssignRequestPO.ptv(new QuotationAssignRequestVO());
+		QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
+		vo.setCompany(new CompanyVO());
+		vo.setDepartment(new DepartmentVO());
+		vo.setRequestUser(new UserBaseVO());
+		vo.setUser(new UserBaseVO());
+		return quotationAssignRequestPO.ptv(vo);
 	}
 
 	@Override
@@ -69,12 +83,15 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	public QuotationAssignRequestVO queryQuotationAssignRequestForPending(String orderId) throws FLException {
 
 		QuotationAssignRequestPO quotationAssignRequestPO = quotationAssignRequestDao.queryQuotationAssignRequestForPending(orderId);
-
 		if (quotationAssignRequestPO == null) {
 			return null;
 		}
-
-		return quotationAssignRequestPO.ptv(new QuotationAssignRequestVO());
+		QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
+		vo.setCompany(new CompanyVO());
+		vo.setDepartment(new DepartmentVO());
+		vo.setRequestUser(new UserBaseVO());
+		vo.setUser(new UserBaseVO());
+		return quotationAssignRequestPO.ptv(vo);
 	}
 
 	@Override
@@ -84,7 +101,12 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
-			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(new QuotationAssignRequestVO()));
+			QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
+			vo.setCompany(new CompanyVO());
+			vo.setDepartment(new DepartmentVO());
+			vo.setRequestUser(new UserBaseVO());
+			vo.setUser(new UserBaseVO());
+			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(vo));
 		}
 
 		return quotationAssignRequestVOs;
@@ -120,12 +142,12 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		// 使用 BeanUtil 复制基本属性（会跳过关联对象）
 		BeanUtil.copyProperties(quotationAssignRequestVO, quotationAssignRequestPO, "company", "department", "requestUser");
 
-		// 手动设置基本类型字段
-		quotationAssignRequestPO.setCompany(company);
+		// 手动设置关联对象（使用ID构造引用PO）
+		quotationAssignRequestPO.setCompany(new CompanyPO(company));
 
 		// Department 可能是 NULL（该公司所有部门）
 		if (quotationAssignRequestVO.getDepartment() != null) {
-			quotationAssignRequestPO.setDepartment(quotationAssignRequestVO.getDepartment().getDid());
+			quotationAssignRequestPO.setDepartment(new DepartmentPO(quotationAssignRequestVO.getDepartment().getDid()));
 		}
 
 		// RequestUser: 从UserBaseVO中提取uid，构造引用用UserPO
@@ -175,15 +197,15 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		// 使用 BeanUtil 复制基本属性（会跳过关联对象）
 		BeanUtil.copyProperties(quotationAssignRequestVO, quotationAssignRequestPO, "company", "department", "requestUser", "qarid", "orderId", "requestTime", "createTime");
 
-		// 如果 VO 中包含公司对象，更新公司ID
+		// 如果 VO 中包含公司对象，更新公司
 		if (quotationAssignRequestVO.getCompany() != null) {
 			int company = CompanyServiceImpl.decode(quotationAssignRequestVO.getCompany().getCid());
-			quotationAssignRequestPO.setCompany(company);
+			quotationAssignRequestPO.setCompany(new CompanyPO(company));
 		}
 
-		// 如果 VO 中包含部门对象，更新部门ID
+		// 如果 VO 中包含部门对象，更新部门
 		if (quotationAssignRequestVO.getDepartment() != null) {
-			quotationAssignRequestPO.setDepartment(quotationAssignRequestVO.getDepartment().getDid());
+			quotationAssignRequestPO.setDepartment(new DepartmentPO(quotationAssignRequestVO.getDepartment().getDid()));
 		} else {
 			// 如果部门对象为null，表示设置为"所有部门"
 			quotationAssignRequestPO.setDepartment(null);
