@@ -200,14 +200,10 @@ jQuery(function($) {
                     "quotationAssign.orderId": orderId
                 }, function(res) {
 
-                    if (res.errorCode == 0) {
-                        com.showAlert(com.info, "分配成功！已自动分配给预算员");
-                    } else {
-                        com.showAlert(com.warning, res.errorMsg || "分配失败，请查看分配记录了解详情");
-                    }
+                    com.showAlert(com.info, "分配成功！已自动分配给预算员");
                 }, function(res) {
 
-                    com.showAlert(com.error, res.errorMsg || "分配失败");
+                    com.showAlert(com.error, res.errorMsg || "分配失败，请查看分配记录了解详情");
                 });
             });
         });

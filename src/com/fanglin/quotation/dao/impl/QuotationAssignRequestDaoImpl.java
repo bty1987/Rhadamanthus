@@ -130,7 +130,10 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	@Override
 	public int countQuotationAssignRequest(int uid) {
 		// 统计该预算员进行中的任务数量（排除已完成 status=3）
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.lt("status", QuotationAssignRequestPO.STATUS_COMPLETED_INT)).add(Restrictions.eq("uid", uid));
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
+			.add(Restrictions.lt("status", QuotationAssignRequestPO.STATUS_COMPLETED_INT))
+			.createAlias("user", "u")
+			.add(Restrictions.eq("u.uid", uid));
 
 		Number count = (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
 		return count != null ? count.intValue() : 0;

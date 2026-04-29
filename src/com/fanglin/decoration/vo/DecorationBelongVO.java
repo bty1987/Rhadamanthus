@@ -43,6 +43,8 @@ public class DecorationBelongVO implements Serializable {
 
 	private Short defaultFlag;
 
+	private Long ccid;
+
 	public DecorationBelongVO() {
 		super();
 	}
@@ -141,6 +143,14 @@ public class DecorationBelongVO implements Serializable {
 
 	public void setDefaultFlag(Short defaultFlag) {
 		this.defaultFlag = defaultFlag;
+	}
+
+	public Long getCcid() {
+		return ccid;
+	}
+
+	public void setCcid(Long ccid) {
+		this.ccid = ccid;
 	}
 
 }

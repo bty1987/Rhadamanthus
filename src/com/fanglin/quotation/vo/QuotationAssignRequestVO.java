@@ -58,12 +58,7 @@ public class QuotationAssignRequestVO {
 	private Short status;
 
 	/**
-	 * 分配给的预算员用户ID
-	 */
-	private Integer uid;
-
-	/**
-	 * 分配给的预算员用户对象
+	 * 分配给的预算员用户对象（ManyToMany关联，包含uid等信息）
 	 */
 	private UserPO user;
 
@@ -159,14 +154,6 @@ public class QuotationAssignRequestVO {
 
 	public void setStatus(Short status) {
 		this.status = status;
-	}
-
-	public Integer getUid() {
-		return uid;
-	}
-
-	public void setUid(Integer uid) {
-		this.uid = uid;
 	}
 
 	public UserPO getUser() {

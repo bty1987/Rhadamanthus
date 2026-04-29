@@ -130,7 +130,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 
 		// RequestUser 可能是 NULL
 		if (quotationAssignRequestVO.getRequestUser() != null) {
-			quotationAssignRequestPO.setRequestUid(quotationAssignRequestVO.getRequestUser().getUid());
+			quotationAssignRequestPO.setRequestUser(quotationAssignRequestVO.getRequestUser());
 		}
 
 		// 设置默认值
@@ -187,9 +187,9 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 			quotationAssignRequestPO.setDepartment(null);
 		}
 
-		// 如果 VO 中包含请求人对象，更新请求人ID
+		// 如果 VO 中包含请求人对象，更新请求人
 		if (quotationAssignRequestVO.getRequestUser() != null) {
-			quotationAssignRequestPO.setRequestUid(quotationAssignRequestVO.getRequestUser().getUid());
+			quotationAssignRequestPO.setRequestUser(quotationAssignRequestVO.getRequestUser());
 		}
 
 		// 如果状态更新为已分配，设置分配时间

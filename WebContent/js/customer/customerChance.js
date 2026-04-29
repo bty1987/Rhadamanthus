@@ -797,6 +797,7 @@ jQuery(function($) {
 
                     com.post(api.decoration.tranDecorationBelong, {
                         "decorationBelong.orderId": rule.orderId,
+                        "decorationBelong.ccid": v.ccid,
                         "decorationBelongs[0].belonger.userId": v.belonger.userId,
                         "decorationBelongs[0].type": 0,
                         "decorationBelongs[1].belonger.userId": v.creater.userId,
@@ -1410,6 +1411,7 @@ jQuery(function($) {
 
             options["approvalDecorationBelong.orderId"] = customerChance.orderId;
             options["approvalDecorationBelong.belongType"] = 0;
+            options["approvalDecorationBelong.ccid"] = customerChance.chance.ccid;
 
             options["approvalDecorationBelongItems[0].orderId"] = customerChance.orderId;
             options["approvalDecorationBelongItems[0].userId"] = customerChance.chance.belonger.userId;

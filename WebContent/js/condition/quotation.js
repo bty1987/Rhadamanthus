@@ -1400,6 +1400,9 @@ Condition.addupRule("quotation", {
             }, {
                 key: "2",
                 value: "已分配"
+            }, {
+                key: "3",
+                value: "已完成"
             }],
             keyPath: "key",
             valuePath: "value"

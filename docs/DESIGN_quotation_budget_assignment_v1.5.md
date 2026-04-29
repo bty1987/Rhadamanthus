@@ -188,7 +188,7 @@ CREATE TABLE quotation.quotationassignrequest (
     priority SMALLINT(6) NOT NULL DEFAULT 5 COMMENT '优先级：1-最高，5-普通，9-最低',
     requestTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '请求加入队列的时间',
     requestUid INT(11) DEFAULT NULL COMMENT '请求人用户ID（设计师）',
-    status SMALLINT(6) NOT NULL DEFAULT 1 COMMENT '状态：1-待分配，2-已分配',
+    status SMALLINT(6) NOT NULL DEFAULT 1 COMMENT '状态：1-待分配，2-已分配，3-已完成（预算员交付完成）',
     assignTime TIMESTAMP NULL COMMENT '分配时间（status=2时有值）',
     remark VARCHAR(255) DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (qarid),
@@ -209,6 +209,7 @@ CREATE TABLE quotation.quotationassignrequest (
 - `status`: 状态
   - `1`: 待分配（在队列中等待）
   - `2`: 已分配（成功分配给预算员）
+  - `3`: 已完成（预算员交付完成）
 - `requestTime`: 请求加入队列的时间
 - `assignTime`: 实际分配时间（status=2时有值，status=1时为NULL）
 - `remark`: 备注信息
@@ -569,7 +570,7 @@ quotation/
 }
 ```
 
-### 3. 完成报价单
+### 3. 完成报价单（交付）
 
 **接口**: `POST /finishQuotationAssign.do`
 
@@ -579,6 +580,14 @@ quotation/
   "orderId": "1501020001"         // 装修单号
 }
 ```
+
+**处理逻辑**:
+1. 查找该装修单对应的 `quotationassignrequest` 记录（`status=2`）
+2. 将 request 记录的 `status` 更新为 `3`（已完成）
+3. 预算员的 `currentTaskCount` 减 1
+4. 若 `currentTaskCount` 变为 0，预算员状态自动切回 `1`（待分配）
+
+> **注意**: 仅 `status=2`（已分配）的请求可以执行交付操作变为 `status=3`。
 
 ### 4. 重新分配报价员
 
