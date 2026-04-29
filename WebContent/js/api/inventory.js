@@ -594,15 +594,12 @@ $.extend(api, {
         },
         balanceOccessories: {
             url: "balanceOccessories.do",
-            type: "update"
         },
         batchBalanceOccessories: {
             url: "batchBalanceOccessories.do",
-            type: "update"
         },
         rejectOccessories: {
             url: "rejectOccessories.do",
-            type: "update"
         },
         finishOccessories: {
             url: "finishOccessories.do"
@@ -616,7 +613,6 @@ $.extend(api, {
         },
         updateOccessoriesForRemark: {
             url: "updateOccessoriesForRemark.do",
-            type: "update"
         },
         deleteOccessories: {
             url: "deleteOccessories.do"

@@ -186,7 +186,7 @@ $(function() {
         }
     }, {
         field: "total",
-        name: "材料额",
+        name: "总额",
         prop: "total",
         clazz: "blue",
         dataset: occessories.total
@@ -212,7 +212,7 @@ $(function() {
         clazz: "blue"
     }, {
         field: "rbalance",
-        name: "结算材料额",
+        name: "材料额",
         prop: "rbalance",
         clazz: "blue"
     }, {
@@ -355,7 +355,6 @@ $(function() {
 
             params.manifest.status = v.status;
             params.manifest.oid = v.oid;
-            params.manifest.isExceed = v.isExceed;
 
             com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no, null, function() {
 
@@ -488,7 +487,6 @@ $(function() {
         handle: function(v) {
 
             params.manifest.oid = v.oid;
-            params.manifest.isExceed = v.isExceed;
             com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no);
 
             return false;

@@ -90,7 +90,7 @@ jQuery(function() {
     com.focusPage('select[name="isLift"]').bindData(occessories.occessoriesPath, "key", "value", false);
     com.focusPage('select[name="isExceed"]').bindData(occessoriesPathReverse, "key", "value", false);
     com.focusPage('select[name="isAttic"]').bindData(occessoriesPathReverse, "key", "value", false);
-    com.focusPage('select[name="loadFloor"]').bindData([{"key":"0","value":"负二"},{"key":"1","value":"负一"},{"key":"2","value":"一层"},{"key":"3","value":"二层"}], "key", "value", false);
+    com.focusPage('select[name="loadFloor"]').bindData(constant.inventory().occessories.loadFloor.datas, "key", "value", false);
 
     com.focusPage("#add").click(function() {
 
