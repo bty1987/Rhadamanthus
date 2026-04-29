@@ -52,7 +52,7 @@ jQuery(function($) {
     contractEdit.cover["sin-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
     contractEdit.cover["sin-sign-month"] = com.dateFormat(contractEdit.current, "MM");
     contractEdit.cover["sin-sign-day"] = com.dateFormat(contractEdit.current, "dd");
-
+    
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": contractEdit.decorationOrderId
     }, function(res) {
@@ -74,7 +74,6 @@ jQuery(function($) {
         com.focusPage("#con-proper-name", "#form").val(proper.name);
         com.focusPage("#con-village-name", "#form").val(village.name);
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
-        com.focusPage("#con-housetype", "#form").val(data.houseClass);
         
         com.focusPage("#con-company-no", "#form").val(customer.companyNo);
         com.focusPage("#con-company-name", "#form").val(customer.companyName);
@@ -121,11 +120,12 @@ jQuery(function($) {
         data["sin-customer-name"] = data["con-customer-name"];
 
         if (contractEdit.contractArgs.company == "1") {
-            delete data["con-customer-name"];
 
             data["sin-company-name"] = data["con-company-name"];
             data["sin-company-no"] = data["con-company-no"];
         }
+        
+        delete data["con-housetype"];
 
         com.showConfirm("请仔细认真检查合同填写内容", function() {
 

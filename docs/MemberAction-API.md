@@ -225,7 +225,8 @@ MemberOrderVO 关键字段:
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| pointOrderId | String | 目标积分订单号 |
+| orderId | String | 装修单号 |
+| pointOrderId | String | 券码唯一标识 |
 | uniqueId | String | 唯一标识 |
 
 MemberOrderItemVO 字段:
@@ -236,6 +237,7 @@ MemberOrderItemVO 字段:
 | name | String | 商品名称 |
 | point | Integer | 单项积分 |
 | num | Integer | 兑换数量 |
+| expireTime | timestamp | 有效期 | yyyy-MM-dd HH:mm:SS
 
 **响应参数**:
 
@@ -255,6 +257,13 @@ MemberOrderItemVO 字段:
 |--------|------|------|------|
 | memberOrder | MemberOrderVO | 是 | 目标订单信息 |
 | memberOrderItem | MemberOrderItemVO | 是 | 要移除的商品项 |
+
+MemberOrderVO 关键字段:
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| orderId | String | 装修单号 |
+| pointOrderId | String | 券码唯一标识 |
 
 字段同接口6。
 

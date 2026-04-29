@@ -1263,7 +1263,7 @@ var ExtensionDetail = (function() {
 
                 $.each(res.extensions, function(i, v) {
 
-                    if(v.atttype == constant.quotation().extension.ATTTYPE_ACTIVITY_INT)
+                    if(v.atttype == constant.quotation().extension.ATTTYPE_ACTIVITY_INT && params.quotation.extensionId != v.eid)
                         extensionDetail.activityTotal = utils.accAdd(extensionDetail.activityTotal, v.total);
                 });
             }, null, false);
