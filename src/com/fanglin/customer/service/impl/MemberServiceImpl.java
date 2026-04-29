@@ -903,7 +903,7 @@ public class MemberServiceImpl implements MemberService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItem(orderId, memberOrderItemVO.getNo());
+		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItem(orderId, memberOrderVO.getPointOrderId());
 
 		for (DecorationActivityItemPO decorationActivityItemPO : decorationActivityItemPOs) {
 
