@@ -368,6 +368,13 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		quotationAssignUserRuleDao.update(userRule);
 
+		// 3.5 将当前装修单的分配请求状态更新为"已完成"
+		QuotationAssignRequestPO currentRequest = quotationAssignRequestDao.queryActiveByOrderId(orderId);
+		if (currentRequest != null) {
+			currentRequest.setStatus(QuotationAssignRequestPO.STATUS_COMPLETED_INT);
+			quotationAssignRequestDao.update(currentRequest);
+		}
+
 		// 4. 如果预算员仍有任务，不触发反向分配
 		if (newStatus != QuotationAssignUserRulePO.STATUS_AVAILABLE_INT) {
 			return 1;
