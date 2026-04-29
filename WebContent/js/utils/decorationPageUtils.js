@@ -311,7 +311,7 @@ $(function() {
 
         var $checkOriginal = $('<button></button>').attr("id", "checkOriginalBtn").addClass('btn btn-minier btn-yellow pull-right').css("margin-left", "3px").html("量房验证");
 
-        var $handoverBtn = $('<button></button>').attr("id", "handoverProfileBtn").addClass('btn btn-minier btn-primary pull-right').css("margin-left", "3px").html("交接单");
+        var $handoverBtn = $('<button></button>').attr("id", "handoverProfileBtn").addClass('btn btn-minier btn-primary').css("margin-left", "3px").html("交接单");
 
         var $show = conf.opt == null ? [] : conf.opt.show == null ? [] : conf.opt.show;
 
