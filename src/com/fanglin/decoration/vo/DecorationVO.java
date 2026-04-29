@@ -70,6 +70,8 @@ public class DecorationVO implements Serializable {
 
 	private Short referType;
 
+	private Short brokerFlag;
+
 	private Timestamp createTime;
 
 	private Timestamp issueTime;
@@ -534,6 +536,14 @@ public class DecorationVO implements Serializable {
 
 	public void setReferType(Short referType) {
 		this.referType = referType;
+	}
+
+	public Short getBrokerFlag() {
+		return brokerFlag;
+	}
+
+	public void setBrokerFlag(Short brokerFlag) {
+		this.brokerFlag = brokerFlag;
 	}
 
 	public Integer getDiscount() {
