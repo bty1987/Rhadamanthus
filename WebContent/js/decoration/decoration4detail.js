@@ -1317,7 +1317,7 @@ jQuery(function($) {
 
         com.popup4page("#layerPopUp", api.index.quotationProfile4detailIndex.url, "交接单", null, null, function() {
 
-            params.quotation = { orderId: params.decoration.orderId, type: 2, profile: { type: 2 } };
+            params.quotation = { orderId: params.decoration.orderId, type: 0, profile: { type: 0 } };
         });
     });
 
