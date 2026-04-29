@@ -198,12 +198,6 @@ jQuery(function($) {
 
                 com.post(api.quotation.autoQuotationAssign, {
                     "quotationAssign.orderId": orderId
-                }, function(res) {
-
-                    com.showAlert(com.info, "分配成功！已自动分配给预算员");
-                }, function(res) {
-
-                    com.showAlert(com.error, res.errorMsg || "分配失败，请查看分配记录了解详情");
                 });
             });
         });
