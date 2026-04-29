@@ -468,12 +468,49 @@ public class QuotationAssignRequestPO implements Serializable {
 	 * @return 转换后的VO对象
 	 */
 	public QuotationAssignRequestVO ptv(QuotationAssignRequestVO vo) {
-		// 复制基本属性
-		com.fanglin.utils.BeanUtil.copyProperties(this, vo);
+		// 复制基本属性，排除需要特殊处理或类型不匹配的字段
+		com.fanglin.utils.BeanUtil.copyProperties(this, vo, "company", "department", "requestUser", "user", "requestTime", "assignTime", "finishTime", "createTime");
 
-		// 手动处理时间字段（PO: Timestamp -> VO: String）
+		// 公司：PO int -> VO CompanyVO（仅设置cid，名称需另行加载）
+		vo.setCompany(new com.fanglin.system.vo.CompanyVO(String.valueOf(company)));
+
+		// 部门：PO Integer -> VO DepartmentVO（仅设置did，名称需另行加载）
+		if (department != null) {
+			com.fanglin.communion.vo.DepartmentVO deptVO = new com.fanglin.communion.vo.DepartmentVO();
+			deptVO.setDid(department);
+			vo.setDepartment(deptVO);
+		}
+
+		// 请求人：创建轻量UserPO，仅复制安全字段（避免LAZY代理序列化异常）
+		if (requestUser != null) {
+			com.fanglin.personel.po.UserPO ru = new com.fanglin.personel.po.UserPO();
+			ru.setUid(requestUser.getUid());
+			ru.setCurrentName(requestUser.getCurrentName());
+			ru.setUserName(requestUser.getUserName());
+			vo.setRequestUser(ru);
+		}
+
+		// 预算员：同上，创建轻量UserPO
+		if (user != null) {
+			com.fanglin.personel.po.UserPO u = new com.fanglin.personel.po.UserPO();
+			u.setUid(user.getUid());
+			u.setCurrentName(user.getCurrentName());
+			u.setUserName(user.getUserName());
+			vo.setUser(u);
+		}
+
+		// 时间字段（PO: Timestamp -> VO: String）
+		if (requestTime != null) {
+			vo.setRequestTime(requestTime.toString());
+		}
+		if (assignTime != null) {
+			vo.setAssignTime(assignTime.toString());
+		}
 		if (finishTime != null) {
 			vo.setFinishTime(finishTime.toString());
+		}
+		if (createTime != null) {
+			vo.setCreateTime(createTime.toString());
 		}
 
 		return vo;
