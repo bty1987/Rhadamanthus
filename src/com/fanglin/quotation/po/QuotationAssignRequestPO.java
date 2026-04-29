@@ -481,22 +481,14 @@ public class QuotationAssignRequestPO implements Serializable {
 			vo.setDepartment(deptVO);
 		}
 
-		// 请求人：创建轻量UserPO，仅复制安全字段（避免LAZY代理序列化异常）
+		// 请求人：使用UserBaseVO.setBaseInfo避免LAZY代理序列化异常
 		if (requestUser != null) {
-			com.fanglin.personel.po.UserPO ru = new com.fanglin.personel.po.UserPO();
-			ru.setUid(requestUser.getUid());
-			ru.setCurrentName(requestUser.getCurrentName());
-			ru.setUserName(requestUser.getUserName());
-			vo.setRequestUser(ru);
+			vo.setRequestUser(new com.fanglin.personel.vo.UserBaseVO().setBaseInfo(requestUser));
 		}
 
-		// 预算员：同上，创建轻量UserPO
+		// 预算员：同上
 		if (user != null) {
-			com.fanglin.personel.po.UserPO u = new com.fanglin.personel.po.UserPO();
-			u.setUid(user.getUid());
-			u.setCurrentName(user.getCurrentName());
-			u.setUserName(user.getUserName());
-			vo.setUser(u);
+			vo.setUser(new com.fanglin.personel.vo.UserBaseVO().setBaseInfo(user));
 		}
 
 		return vo;
@@ -509,8 +501,8 @@ public class QuotationAssignRequestPO implements Serializable {
 	 * @return 转换后的PO对象
 	 */
 	public QuotationAssignRequestPO vtp(QuotationAssignRequestVO vo) {
-		// 复制基本属性，显式忽略关联对象字段
-		com.fanglin.utils.BeanUtil.copyProperties(vo, this);
+		// 复制基本属性，排除关联对象（UserBaseVO无法直接复制到UserPO）
+		com.fanglin.utils.BeanUtil.copyProperties(vo, this, "company", "department", "requestUser", "user");
 
 		return this;
 	}

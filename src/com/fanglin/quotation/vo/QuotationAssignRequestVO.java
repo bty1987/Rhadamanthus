@@ -3,7 +3,7 @@ package com.fanglin.quotation.vo;
 import java.sql.Timestamp;
 
 import com.fanglin.communion.vo.DepartmentVO;
-import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.CompanyVO;
 
 /**
@@ -52,7 +52,7 @@ public class QuotationAssignRequestVO {
 	/**
 	 * 请求人用户对象
 	 */
-	private UserPO requestUser;
+	private UserBaseVO requestUser;
 
 	/**
 	 * 状态: 1-待分配，2-已分配，3-已完成
@@ -62,7 +62,7 @@ public class QuotationAssignRequestVO {
 	/**
 	 * 分配给的预算员用户对象（ManyToMany关联，包含uid等信息）
 	 */
-	private UserPO user;
+	private UserBaseVO user;
 
 	/**
 	 * 分配时间
@@ -142,11 +142,11 @@ public class QuotationAssignRequestVO {
 		this.requestTime = requestTime;
 	}
 
-	public UserPO getRequestUser() {
+	public UserBaseVO getRequestUser() {
 		return requestUser;
 	}
 
-	public void setRequestUser(UserPO requestUser) {
+	public void setRequestUser(UserBaseVO requestUser) {
 		this.requestUser = requestUser;
 	}
 
@@ -158,11 +158,11 @@ public class QuotationAssignRequestVO {
 		this.status = status;
 	}
 
-	public UserPO getUser() {
+	public UserBaseVO getUser() {
 		return user;
 	}
 
-	public void setUser(UserPO user) {
+	public void setUser(UserBaseVO user) {
 		this.user = user;
 	}
 
