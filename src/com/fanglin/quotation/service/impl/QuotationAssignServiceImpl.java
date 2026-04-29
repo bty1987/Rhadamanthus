@@ -471,8 +471,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		} else {
 			request = new QuotationAssignRequestPO();
 			request.setOrderId(orderId);
-			request.setCompany(decoration.getCompany());
-			request.setDepartment(getDesignDeptId(decoration) != null ? getDesignDeptId(decoration) : 0);
+			request.setCompany(new com.fanglin.system.po.CompanyPO(decoration.getCompany()));
+			request.setDepartment(getDesignDeptId(decoration) != null ? new DepartmentPO(getDesignDeptId(decoration)) : null);
 			request.setDecorationType(decoration.getType());
 			request.setPriority(QuotationAssignRequestPO.PRIORITY_NORMAL_INT);
 			request.setCreateTime(new Timestamp(System.currentTimeMillis()));
