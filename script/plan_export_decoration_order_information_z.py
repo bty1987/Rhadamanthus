@@ -76,7 +76,11 @@ class Exporter(Util):
             if(d.type = 0, dm.servicePrice, if(d.type = 2, dh.servicePrice, 0)) AS `应收服务费`,
             if(d.type = 0, dm.materialPrice, if(d.type = 2, dh.materialPrice, 0)) AS `主材总额`,
             q.unachePrice AS `纯利`,
-            co.name AS `装修单公司`
+            co.name AS `装修单公司`,
+            IFNULL(pt.totalProfit, 0) AS `预签总额优惠`,
+            IFNULL(pt.manageProfit, 0) AS `预签管理优惠`,
+            IFNULL(pt.advanceProfit, 0) AS `预签特殊优惠`,
+            IFNULL(pt.activityProfit, 0) AS `预签活动优惠`
         """
 
         self.SQL_EXPORT_DECORATION_COLLECTER = """
@@ -89,6 +93,7 @@ class Exporter(Util):
                 LEFT JOIN decoration.decorationbelong AS db ON (d.orderId = db.orderId AND db.status = 0)
                 LEFT JOIN quotation.quotation AS q ON (d.orderId = q.orderId AND q.defaults = 1)
                 LEFT JOIN quotation.quotationprefer AS qp ON q.qid = qp.qid
+                LEFT JOIN quotation.protation AS pt ON q.qid = pt.qid AND pt.defaults = 1
                 LEFT JOIN communion.house AS h ON d.hid = h.hid 
                 LEFT JOIN communion.village AS v ON h.vid = v.vid 
                 LEFT JOIN communion.user AS supervisor ON d.svuid = supervisor.uid 
@@ -343,7 +348,8 @@ class Exporter(Util):
                 "方案设计", "折前总价", "差额", "业绩差额", "设计费", "设计费状态", "首付款", "收款时间", "券值", "券信息",
                 "首付二期款", "收款时间", "券值", "券信息", "二期款", "收款时间", "券值", "券信息", "尾款", "尾款时间",
                 "券值", "券信息", "违约金", "预付款余额", "净业绩", "复合业绩", "未付款金额", "措施费", "应收服务费", "税金比例",
-                "税金", "主材总额", "纯利", "装修单公司"
+                "税金", "主材总额", "纯利", "装修单公司",
+                "预签总额优惠", "预签管理优惠", "预签特殊优惠", "预签活动优惠"
             ]
 
             self.createTableHead(sheet, tableHead)
@@ -365,7 +371,7 @@ class Exporter(Util):
                     # Step 1: Update coupon and item fields
                     rows[14], rows[15], atttype = self.queryDecorationActivityItem(order_id)  # 券优惠, 物品: From activity item query
                     
-                    self.divNum(rows, [9, 10, 11, 12, 13, 14, 15, 18, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 35, 36, 37, 38, 41, 51, 52, 53, 54, 55])  # Convert numeric fields to appropriate format
+                    self.divNum(rows, [9, 10, 11, 12, 13, 14, 15, 18, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 35, 36, 37, 38, 41, 51, 52, 53, 54, 55, 57, 58, 59, 60])  # Convert numeric fields to appropriate format
                     
                     rate = rows[23] if rows[23] is not None else 0  # 比例: Handle null rate
 
@@ -484,10 +490,14 @@ class Exporter(Util):
                         rows[52], # 税金: From SQL (q.taxPrice) 80
                         rows[54], # 主材总额: From SQL (dm/dh.materialPrice)
                         rows[55], # 纯利: From SQL (q.unachePrice)
-                        rows[56]  # 装修单公司: From SQL (co.name)
+                        rows[56],  # 装修单公司: From SQL (co.name)
+                        rows[57],  # 预签总额优惠: From SQL (pt.totalProfit)
+                        rows[58],  # 预签管理优惠: From SQL (pt.manageProfit)
+                        rows[59],  # 预签特殊优惠: From SQL (pt.advanceProfit)
+                        rows[60],  # 预签活动优惠: From SQL (pt.activityProfit)
                     ]
                     
-                    test_list = [9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31, 32, 35, 36, 37, 38, 51, 52, 53, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 73, 74, 75, 76, 77, 78, 80, 81, 82]
+                    test_list = [9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31, 32, 35, 36, 37, 38, 51, 52, 53, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 73, 74, 75, 76, 77, 78, 80, 81, 82, 84, 85, 86, 87]
                     
                     self.rates(row, rate, test_list)
 
