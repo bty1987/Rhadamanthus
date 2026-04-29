@@ -128,9 +128,11 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 			quotationAssignRequestPO.setDepartment(quotationAssignRequestVO.getDepartment().getDid());
 		}
 
-		// RequestUser 可能是 NULL
-		if (quotationAssignRequestVO.getRequestUser() != null) {
-			quotationAssignRequestPO.setRequestUser(quotationAssignRequestVO.getRequestUser());
+		// RequestUser: 从UserBaseVO中提取uid，构造引用用UserPO
+		if (quotationAssignRequestVO.getRequestUser() != null && quotationAssignRequestVO.getRequestUser().getUid() != null) {
+			com.fanglin.personel.po.UserPO requestUserPO = new com.fanglin.personel.po.UserPO();
+			requestUserPO.setUid(quotationAssignRequestVO.getRequestUser().getUid());
+			quotationAssignRequestPO.setRequestUser(requestUserPO);
 		}
 
 		// 设置默认值
@@ -188,8 +190,10 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		}
 
 		// 如果 VO 中包含请求人对象，更新请求人
-		if (quotationAssignRequestVO.getRequestUser() != null) {
-			quotationAssignRequestPO.setRequestUser(quotationAssignRequestVO.getRequestUser());
+		if (quotationAssignRequestVO.getRequestUser() != null && quotationAssignRequestVO.getRequestUser().getUid() != null) {
+			com.fanglin.personel.po.UserPO requestUserPO = new com.fanglin.personel.po.UserPO();
+			requestUserPO.setUid(quotationAssignRequestVO.getRequestUser().getUid());
+			quotationAssignRequestPO.setRequestUser(requestUserPO);
 		}
 
 		// 如果状态更新为已分配，设置分配时间
