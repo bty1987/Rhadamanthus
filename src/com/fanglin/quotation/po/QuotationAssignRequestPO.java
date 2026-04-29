@@ -469,7 +469,7 @@ public class QuotationAssignRequestPO implements Serializable {
 	 */
 	public QuotationAssignRequestVO ptv(QuotationAssignRequestVO vo) {
 		// 复制基本属性，排除需要特殊处理或类型不匹配的字段
-		com.fanglin.utils.BeanUtil.copyProperties(this, vo, "company", "department", "requestUser", "user", "requestTime", "assignTime", "finishTime", "createTime");
+		com.fanglin.utils.BeanUtil.copyProperties(this, vo, "company", "department", "requestUser", "user");
 
 		// 公司：PO int -> VO CompanyVO（仅设置cid，名称需另行加载）
 		vo.setCompany(new com.fanglin.system.vo.CompanyVO(String.valueOf(company)));
@@ -497,20 +497,6 @@ public class QuotationAssignRequestPO implements Serializable {
 			u.setCurrentName(user.getCurrentName());
 			u.setUserName(user.getUserName());
 			vo.setUser(u);
-		}
-
-		// 时间字段（PO: Timestamp -> VO: String）
-		if (requestTime != null) {
-			vo.setRequestTime(requestTime.toString());
-		}
-		if (assignTime != null) {
-			vo.setAssignTime(assignTime.toString());
-		}
-		if (finishTime != null) {
-			vo.setFinishTime(finishTime.toString());
-		}
-		if (createTime != null) {
-			vo.setCreateTime(createTime.toString());
 		}
 
 		return vo;
