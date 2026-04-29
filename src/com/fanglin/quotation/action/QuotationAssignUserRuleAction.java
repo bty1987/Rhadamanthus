@@ -21,8 +21,6 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.Filter;
-import com.fanglin.utils.FormatUtil;
 import com.fanglin.quotation.service.QuotationAssignUserRuleItemService;
 import com.fanglin.quotation.service.QuotationAssignUserRuleService;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleItemVO;
@@ -213,34 +211,18 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	/**
 	 * 分页查询预算员规则明细列表
 	 */
-	@Action(value = "pageQuotationAssignUserRuleItem", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
-		@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "pageQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignUserRuleItem() throws FLException {
 
-		boolean hasQaurid = quotationAssignUserRuleItem != null && quotationAssignUserRuleItem.getQaurid() != null;
+		quotationAssignUserRuleItemService.pageQuotationAssignUserRuleItem(getPaging(), getFilters(), queryCompany());
 
-		if (hasQaurid) {
-			// 子页面模式：按规则ID过滤
-			getFilters().add(new Filter("qaurid", String.valueOf(quotationAssignUserRuleItem.getQaurid()), "eq"));
-		} else {
-			// 独立页面模式：自动根据当前用户所属公司过滤
-			int currentCompany = queryCompany();
-			getFilters().add(new Filter("company", FormatUtil.encodeCompany(currentCompany), "eq"));
-		}
-
-		quotationAssignUserRuleItemService.pageQuotationAssignUserRuleItem(getPaging(), getFilters());
 		return SUCCESS;
 	}
 
 	/**
 	 * 新增预算员规则明细
 	 */
-	@Action(value = "createQuotationAssignUserRuleItem", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
-		@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "createQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createQuotationAssignUserRuleItem() throws FLException {
 		if (quotationAssignUserRuleItem == null) {
 			return ERROR;
@@ -252,10 +234,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	/**
 	 * 更新预算员规则明细
 	 */
-	@Action(value = "updateQuotationAssignUserRuleItem", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
-		@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "updateQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationAssignUserRuleItem() throws FLException {
 		if (quotationAssignUserRuleItem == null) {
 			return ERROR;
@@ -267,10 +246,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	/**
 	 * 删除预算员规则明细
 	 */
-	@Action(value = "deleteQuotationAssignUserRuleItem", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
-		@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "deleteQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationAssignUserRuleItem() throws FLException {
 		if (quotationAssignUserRuleItem == null) {
 			return ERROR;
@@ -282,10 +258,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	/**
 	 * 独立页面新增预算员规则明细（自动查找/创建UserRule）
 	 */
-	@Action(value = "createQuotationAssignUserRuleItemWithRule", results = {
-		@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }),
-		@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "createQuotationAssignUserRuleItemWithRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createQuotationAssignUserRuleItemWithRule() throws FLException {
 		if (quotationAssignUserRuleItem == null) {
 			return ERROR;

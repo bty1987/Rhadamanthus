@@ -48,8 +48,7 @@ public interface QuotationAssignUserRuleItemDao extends Dao<QuotationAssignUserR
 	 * 查询匹配指定公司+部门+装修类型的可用预算员（通过Item关联）
 	 * 
 	 * <p>
-	 * 匹配逻辑：item.company = company AND (item.department = department OR item.department IS NULL)
-	 * AND (item.supportedType = decorationType OR item.supportedType = -1)
+	 * 匹配逻辑：item.company = company AND (item.department = department OR item.department IS NULL) AND (item.supportedType = decorationType OR item.supportedType = -1)
 	 * </p>
 	 * 
 	 * @param company 公司ID
@@ -82,7 +81,7 @@ public interface QuotationAssignUserRuleItemDao extends Dao<QuotationAssignUserR
 	 * @param filters 过滤条件（支持 company、supportedType、userName）
 	 * @throws FLException 业务异常
 	 */
-	List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException;
+	List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	/**
 	 * 删除规则下的所有明细

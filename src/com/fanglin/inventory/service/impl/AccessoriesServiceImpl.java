@@ -155,7 +155,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		}
 
 		if (accessoriesVO.getType() == AccessoriesPO.TYPE_COMMON_INT && Arith.add(constructionPO.getAccessoryTotal(), accessoriesVO.getTotal()) > constructionPO.getAccessoryLimit()) {
-			throw new FLException(260058, "辅料总额已达上限");
+			throw new FLException(260058, "辅料单总额已达上限");
 		}
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
