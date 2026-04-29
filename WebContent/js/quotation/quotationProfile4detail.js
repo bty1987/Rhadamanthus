@@ -53,6 +53,7 @@ jQuery(function($) {
             url = api.quotation.queryQuotationProfileByOrderId;
             args = {
                 "quotationProfile.orderId": params.quotation.orderId,
+                "quotationProfile.type": params.quotation.type,
             }
         }
 
