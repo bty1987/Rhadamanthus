@@ -209,10 +209,61 @@ public class DecorationBelongPO {
 ```
 
 ### 其他重要实体
+
+#### DecorationAdditionPO - 业务人员冗余快照
+```java
+@Entity @Table(name = "decorationaddition", catalog = "decoration")
+public class DecorationAdditionPO {
+    @Id private long daid;                       // 主键
+    private String orderId;                      // 关联订单号
+    private String designer;                     // 设计师姓名(冗余)
+    private String designDepartment;             // 设计部门(冗余)
+    private String designRegion;                 // 设计大区(冗余)
+    private String salesman;                     // 销售员姓名(冗余)
+    private String salesDepartment;              // 销售部门(冗余)
+    private String salesRegion;                  // 销售大区(冗余)
+    private Timestamp designProtectTime;         // 设计保护时间
+    private Timestamp salesProtectTime;          // 销售保护时间
+    private Timestamp issueTime;                 // 发布时间
+    private Timestamp meetTime;                  // 见面时间
+    private Timestamp belongTime;                // 归属时间
+    private short brokerFlag;                    // 经纪人标识 0-否 1-是
+    // ptv() 回填到 DecorationVO
+}
+```
+
+#### DecorationInfoPO - 非业务人员与推荐信息
+```java
+@Entity @Table(name = "decorationInfo", catalog = "decoration")
+public class DecorationInfoPO {
+    @Id private long diid;                       // 主键
+    private String orderId;                      // 关联订单号
+    private String referOrderId;                 // 推荐订单号
+    private String notSalesmanName;              // 非业务人员姓名
+    private String notSalesmanPhone;             // 非业务人员电话
+    private String notSalesmanContent;           // 非业务人员备注
+    private String backOrderName;                // 返单人员姓名
+    private String backOrderPhone;               // 返单人员电话
+    private String backOrderContent;             // 返单人员备注
+}
+```
+
+#### 表关联关系
+```
+DecorationPO (decoration)
+  ├── @ManyToOne → DecorationAdditionPO (decorationaddition)  [Hibernate FK关联]
+  ├── orderId ──→ DecorationInfoPO (decorationInfo)           [逻辑关联,无Hibernate FK]
+  ├── @ManyToOne → CustomerPO, HousePO, UserPO(designer/salesman/...)
+  └── orderId ──→ DecorationUserPO (decorationUser)           [逻辑关联,type区分人员类型]
+
+DecorationUserPO 人员类型常量:
+  TYPE_BUSI=0(业务), TYPE_DECO=1(装饰), TYPE_SERV=2(服务),
+  TYPE_CONT=3(合同), TYPE_SALES=4(销售), TYPE_OTHER=99(其他)
+```
+
 - **DecorationPicturePO** - 订单图片
 - **DecorationActivityPO** - 活动订单
 - **DecorationMeasurePO** - 测量记录
-- **DecorationAdditionPO** - 增项记录
 - **BackVisitPO** - 回访记录
 - **AuditRecordPO** - 审计记录
 

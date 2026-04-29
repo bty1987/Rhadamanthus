@@ -194,7 +194,7 @@ CREATE TABLE quotation.quotationassignrequest (
     requestUid INT(11) DEFAULT NULL COMMENT '请求人用户ID（设计师）',
 
     -- 分配状态
-    status SMALLINT(6) NOT NULL DEFAULT 1 COMMENT '状态：1-待分配（在队列中等待），2-已分配（成功分配给预算员）',
+    status SMALLINT(6) NOT NULL DEFAULT 1 COMMENT '状态：1-待分配（在队列中等待），2-已分配（成功分配给预算员），3-已完成（预算员交付完成）',
     assignTime TIMESTAMP NULL COMMENT '分配时间（status=2时有值，status=1时为NULL）',
 
     -- 备注

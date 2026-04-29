@@ -313,6 +313,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			decorationBelongPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationBelongPO.setOperater(approvalPO.getReceiver());
 			decorationBelongPO.setDefaultFlag(approvalDecorationBelongItemPO.getDefaultFlag());
+			decorationBelongPO.setCcid(approvalDecorationBelongPO.getCcid());
 			decorationBelongPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			decorationBelongPO.setType(belongType);

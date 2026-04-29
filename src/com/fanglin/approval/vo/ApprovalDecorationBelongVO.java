@@ -14,6 +14,8 @@ public class ApprovalDecorationBelongVO implements java.io.Serializable {
 
 	private Short mergeFlag;
 
+	private Long ccid;
+
 	public Integer getAdbId() {
 		return adbId;
 	}
@@ -52,6 +54,14 @@ public class ApprovalDecorationBelongVO implements java.io.Serializable {
 
 	public void setMergeFlag(Short mergeFlag) {
 		this.mergeFlag = mergeFlag;
+	}
+
+	public Long getCcid() {
+		return ccid;
+	}
+
+	public void setCcid(Long ccid) {
+		this.ccid = ccid;
 	}
 
 }

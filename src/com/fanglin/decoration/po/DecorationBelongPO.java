@@ -84,6 +84,8 @@ public class DecorationBelongPO implements Serializable {
 
 	private short defaultFlag;
 
+	private Long ccid;
+
 	public DecorationBelongPO() {
 		super();
 	}
@@ -217,6 +219,15 @@ public class DecorationBelongPO implements Serializable {
 
 	public short getDefaultFlag() {
 		return defaultFlag;
+	}
+
+	@Column(name = "ccid")
+	public Long getCcid() {
+		return ccid;
+	}
+
+	public void setCcid(Long ccid) {
+		this.ccid = ccid;
 	}
 
 	public DecorationBelongPO designer(String orderId, UserPO designer, UserPO operater) {

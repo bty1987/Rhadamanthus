@@ -178,13 +178,13 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		}
 
 		for (DecorationBelongVO decorationBelong : decorationBelongVOs) {
-			tranDecorationBelong(decorationPO.getOrderId(), decorationBelong.getType(), decorationBelong.getBelonger().getUserId());
+			tranDecorationBelong(decorationPO.getOrderId(), decorationBelong.getType(), decorationBelong.getBelonger().getUserId(), decorationBelongVO.getCcid());
 		}
 
 		return 0;
 	}
 
-	public int tranDecorationBelong(String orderId, Short type, String userId) throws FLException {
+	public int tranDecorationBelong(String orderId, Short type, String userId, Long ccid) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
@@ -235,6 +235,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		decorationBelongPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationBelongPO.setOperater(userPO);
 		decorationBelongPO.setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
+		decorationBelongPO.setCcid(ccid);
 
 		decorationBelongPO.setType(type);
 		decorationBelongPO.setStatus(DecorationBelongPO.STATUS_INVALID_INT);

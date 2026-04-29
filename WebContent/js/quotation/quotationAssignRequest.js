@@ -126,10 +126,24 @@ $(function() {
         name: "状态",
         prop: function(v) {
 
-            // 1-待分配，2-已分配
-            return v.status == 1 ? "待分配" : "已分配";
+            // 1-待分配，2-已分配，3-已完成
+            var statusMap = { 1: "待分配", 2: "已分配", 3: "已完成" };
+            return statusMap[v.status] || "未知";
         },
         clazz: "red"  // 类型/状态使用 red
+    }, {
+        field: "uid",
+        name: "预算员",
+        prop: function(v) {
+
+            // uid 为预算员用户ID(Integer)，待分配时为 null
+            // 优先取 user 对象(currentName)，否则显示 uid 数字
+            if (v.user && v.user.currentName) {
+                return v.user.currentName;
+            }
+            return v.uid ? v.uid : "-";
+        },
+        clazz: "blue"
     }, {
         field: "requestUser",
         name: "请求人",

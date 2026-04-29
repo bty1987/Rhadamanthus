@@ -73,4 +73,15 @@ public class ApprovalDecorationBelongPO implements java.io.Serializable {
 		this.mergeFlag = mergeFlag;
 	}
 
+	private Long ccid;
+
+	@Column(name = "ccid")
+	public Long getCcid() {
+		return ccid;
+	}
+
+	public void setCcid(Long ccid) {
+		this.ccid = ccid;
+	}
+
 }

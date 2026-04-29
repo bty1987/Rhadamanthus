@@ -15,10 +15,14 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.vo.QuotationAssignRequestVO;
 
 /**
@@ -132,9 +136,9 @@ public class QuotationAssignRequestPO implements Serializable {
 	private Timestamp requestTime;
 
 	/**
-	 * 请求人用户ID（设计师）
+	 * 请求人（设计师）
 	 */
-	private Integer requestUid;
+	private UserPO requestUser;
 
 	/**
 	 * 状态: 1-待分配(在队列中等待)，2-已分配(成功分配给预算员)，3-已完成(报价已交付)
@@ -142,9 +146,9 @@ public class QuotationAssignRequestPO implements Serializable {
 	private short status;
 
 	/**
-	 * 分配给的预算员用户ID（status=2时有值，status=1时为NULL）
+	 * 分配给的预算员（status=2时有值，status=1时为NULL）
 	 */
-	private Integer uid;
+	private UserPO user;
 
 	/**
 	 * 分配时间（status=2时有值，status=1时为NULL）
@@ -323,22 +327,23 @@ public class QuotationAssignRequestPO implements Serializable {
 	}
 
 	/**
-	 * 获取请求人用户ID
+	 * 获取请求人
 	 * 
-	 * @return 请求人用户ID
+	 * @return 请求人用户对象
 	 */
-	@Column(name = "requestUid")
-	public Integer getRequestUid() {
-		return requestUid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "requestUid", referencedColumnName = "uid")
+	public UserPO getRequestUser() {
+		return requestUser;
 	}
 
 	/**
-	 * 设置请求人用户ID
+	 * 设置请求人
 	 * 
-	 * @param requestUid 请求人用户ID
+	 * @param requestUser 请求人用户对象
 	 */
-	public void setRequestUid(Integer requestUid) {
-		this.requestUid = requestUid;
+	public void setRequestUser(UserPO requestUser) {
+		this.requestUser = requestUser;
 	}
 
 	/**
@@ -361,22 +366,23 @@ public class QuotationAssignRequestPO implements Serializable {
 	}
 
 	/**
-	 * 获取分配给的预算员用户ID
+	 * 获取分配给的预算员
 	 *
-	 * @return 预算员用户ID
+	 * @return 预算员用户对象
 	 */
-	@Column(name = "uid")
-	public Integer getUid() {
-		return uid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "uid", referencedColumnName = "uid")
+	public UserPO getUser() {
+		return user;
 	}
 
 	/**
-	 * 设置分配给的预算员用户ID
+	 * 设置分配给的预算员
 	 *
-	 * @param uid 预算员用户ID
+	 * @param user 预算员用户对象
 	 */
-	public void setUid(Integer uid) {
-		this.uid = uid;
+	public void setUser(UserPO user) {
+		this.user = user;
 	}
 
 	/**
