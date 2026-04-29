@@ -17,6 +17,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleItemDao;
 import com.fanglin.quotation.po.QuotationAssignUserRuleItemPO;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("quotationAssignUserRuleItemDao")
@@ -137,7 +138,7 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 				String data = filter.getData();
 				String op = filter.getOp();
 				if ("company".equals(field)) {
-					query.add(query.getCriterion("companyAlias.cid", Integer.valueOf(data), op));
+					query.add(query.getCriterion("companyAlias.cid", FormatUtil.decodeCompany(data), op));
 				} else if ("supportedType".equals(field)) {
 					query.add(query.getCriterion("supportedType", Integer.valueOf(data), op));
 				} else if ("userName".equals(field)) {
