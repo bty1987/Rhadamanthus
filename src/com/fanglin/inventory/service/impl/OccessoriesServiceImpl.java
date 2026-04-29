@@ -283,6 +283,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		// 更新外辅单总额、费用总额和结算额
 		occessoriesPO.setTotal(total);
 		occessoriesPO.setCharge(totalCharge);
+		occessoriesPO.setRcharge(totalCharge);
 		occessoriesPO.setRbalance(totalBalance);
 		occessoriesPO.setVbalance(totalBalance);
 
