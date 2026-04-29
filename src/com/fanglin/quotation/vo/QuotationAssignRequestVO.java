@@ -1,5 +1,7 @@
 package com.fanglin.quotation.vo;
 
+import java.sql.Timestamp;
+
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.vo.CompanyVO;
@@ -45,7 +47,7 @@ public class QuotationAssignRequestVO {
 	/**
 	 * 请求时间
 	 */
-	private String requestTime;
+	private Timestamp requestTime;
 
 	/**
 	 * 请求人用户对象
@@ -65,12 +67,12 @@ public class QuotationAssignRequestVO {
 	/**
 	 * 分配时间
 	 */
-	private String assignTime;
+	private Timestamp assignTime;
 
 	/**
 	 * 完成时间（报价交付时间）
 	 */
-	private String finishTime;
+	private Timestamp finishTime;
 
 	/**
 	 * 备注
@@ -80,7 +82,7 @@ public class QuotationAssignRequestVO {
 	/**
 	 * 创建时间
 	 */
-	private String createTime;
+	private Timestamp createTime;
 
 	// ==================== Getter & Setter ====================
 
@@ -132,11 +134,11 @@ public class QuotationAssignRequestVO {
 		this.priority = priority;
 	}
 
-	public String getRequestTime() {
+	public Timestamp getRequestTime() {
 		return requestTime;
 	}
 
-	public void setRequestTime(String requestTime) {
+	public void setRequestTime(Timestamp requestTime) {
 		this.requestTime = requestTime;
 	}
 
@@ -164,19 +166,19 @@ public class QuotationAssignRequestVO {
 		this.user = user;
 	}
 
-	public String getAssignTime() {
+	public Timestamp getAssignTime() {
 		return assignTime;
 	}
 
-	public void setAssignTime(String assignTime) {
+	public void setAssignTime(Timestamp assignTime) {
 		this.assignTime = assignTime;
 	}
 
-	public String getFinishTime() {
+	public Timestamp getFinishTime() {
 		return finishTime;
 	}
 
-	public void setFinishTime(String finishTime) {
+	public void setFinishTime(Timestamp finishTime) {
 		this.finishTime = finishTime;
 	}
 
@@ -188,11 +190,11 @@ public class QuotationAssignRequestVO {
 		this.remark = remark;
 	}
 
-	public String getCreateTime() {
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 }
