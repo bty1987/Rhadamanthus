@@ -504,7 +504,7 @@ $.extend(api, {
             url: "collectSalesPayments.do",
             type: "update",
             tranargs: {
-                args: ["salesReceipt.referMoney", "salesReceipt.realMoney", "salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
+                args: ["salesPayment.referMoney", "salesReceipt.referMoney", "salesReceipt.realMoney", "salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
             }
         },
         confirmSalesPayment: {
