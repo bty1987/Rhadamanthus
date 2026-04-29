@@ -47,6 +47,8 @@ public class DecorationAdditionPO implements Serializable {
 
 	private Timestamp belongTime;
 
+	private short brokerFlag;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "daid")
@@ -163,6 +165,15 @@ public class DecorationAdditionPO implements Serializable {
 		this.belongTime = belongTime;
 	}
 
+	@Column(name = "brokerFlag")
+	public short getBrokerFlag() {
+		return brokerFlag;
+	}
+
+	public void setBrokerFlag(short brokerFlag) {
+		this.brokerFlag = brokerFlag;
+	}
+
 	public void clearDesign() {
 		this.designer = "";
 		this.designDepartment = "";
@@ -207,6 +218,8 @@ public class DecorationAdditionPO implements Serializable {
 		if (decorationVO.getSalesman() != null && decorationVO.getSalesman().getDept() != null && getSalesDepartment() != null) decorationVO.getSalesman().getDept().setName(getSalesDepartment());
 		if (decorationVO.getDesigner() != null && decorationVO.getDesigner().getDept() != null && decorationVO.getDesigner().getDept().getFatherDept() != null && getDesignRegion() != null) decorationVO.getDesigner().getDept().getFatherDept().setName(getDesignRegion());
 		if (decorationVO.getSalesman() != null && decorationVO.getSalesman().getDept() != null && decorationVO.getSalesman().getDept().getFatherDept() != null && getSalesRegion() != null) decorationVO.getSalesman().getDept().getFatherDept().setName(getSalesRegion());
+
+		decorationVO.setBrokerFlag(getBrokerFlag());
 
 		return decorationVO;
 	}
