@@ -90,6 +90,7 @@
 | optimization/SEARCHER_FIX.md | Searcher 兼容性问题修复 (性能补丁导致) |
 | optimization/SEARCHER_CONSTANT_FIX.md | Searcher 常量获取失败问题修复 |
 | optimization/DOM_STRUCTURE_FIX_SUMMARY.md | 模块配置 DOM 结构修复 (菜单串位问题) |
+| QUOTATION_ASSIGN_REQUEST_FIX.md | pageQuotationAssignRequest JSONException 修复 |
 
 ## 五、优化/性能 (11)
 
