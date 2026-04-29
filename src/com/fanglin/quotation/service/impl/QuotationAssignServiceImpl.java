@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
@@ -421,8 +422,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		QuotationAssignRequestPO request = new QuotationAssignRequestPO();
 		request.setOrderId(orderId);
-		request.setCompany(company);
-		request.setDepartment(department);
+		request.setCompany(new com.fanglin.system.po.CompanyPO(company));
+		request.setDepartment(department != null ? new DepartmentPO(department) : null);
 		request.setDecorationType(decorationType);
 		request.setPriority(QuotationAssignRequestPO.PRIORITY_NORMAL_INT);
 		request.setCreateTime(new Timestamp(System.currentTimeMillis()));
