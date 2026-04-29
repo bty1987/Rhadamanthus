@@ -94,7 +94,7 @@ jQuery(function($) {
         var template = null;
 
         com.post(api.system.querySystemConfigByKey, {
-            "systemConfig.key": "QUOTATION_PROFILE_TEMPLATE_" + params.quotation.profile.type
+            "systemConfig.key": "QUOTATION_PROFILE_TEMPLATE"
         }, function(res) {
 
             template = res.systemConfig.value;
