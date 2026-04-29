@@ -23,7 +23,6 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationAssignRequestDao;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;

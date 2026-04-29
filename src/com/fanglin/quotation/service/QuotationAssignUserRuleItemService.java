@@ -29,7 +29,7 @@ public interface QuotationAssignUserRuleItemService {
 	/**
 	 * 分页查询预算规则明细列表（含预算员姓名）
 	 */
-	void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException;
+	void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	/**
 	 * 新增预算规则明细
@@ -60,8 +60,7 @@ public interface QuotationAssignUserRuleItemService {
 	 * 独立页面创建规则明细（自动查找或创建 UserRule）
 	 * 
 	 * <p>
-	 * 根据用户ID查找已有的 UserRule，不存在则自动创建，然后在其下创建 Item
-	 * 公司使用操作公司（前端传入），不需要前端选公司
+	 * 根据用户ID查找已有的 UserRule，不存在则自动创建，然后在其下创建 Item 公司使用操作公司（前端传入），不需要前端选公司
 	 * </p>
 	 * 
 	 * @param itemVO 明细信息（含 user.userId、department、supportedType、company.cid）

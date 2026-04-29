@@ -124,13 +124,15 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 	}
 
 	@Override
-	public List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException {
+	public List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, int company) throws FLException {
 		PagingQuery<QuotationAssignUserRuleItemPO> query = pagingQuery(paging, QuotationAssignUserRuleItemPO.class);
 
 		// 预先 alias，避免 N+1
 		query.alias("userRule", "userRule");
 		query.alias("userRule.user", "user");
 		query.alias("company", "companyAlias");
+
+		query.add(query.getCriterion("companyAlias.cid", company, "eq"));
 
 		if (filters != null) {
 			for (Filter filter : filters) {
