@@ -1315,7 +1315,7 @@ jQuery(function($) {
     // 交接单按钮
     com.focusPage("#handoverProfileBtn").on("click", function() {
 
-        com.popup4page("#layerPopUp", api.index.quotationProfile4detailIndex.url, "交接单", null, null, function() {
+        com.popup4page("#layerPopUp4detail", api.index.quotationProfile4detailIndex.url, "交接单", null, null, function() {
 
             params.quotation = { orderId: params.decoration.orderId, type: 0, profile: { type: 0 } };
         });
