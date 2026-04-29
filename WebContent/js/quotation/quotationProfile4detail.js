@@ -56,8 +56,10 @@ jQuery(function($) {
             }
         }
 
-        if (!url)
+        if (!url) {
+            com.closePopup();
             return false
+        }
 
         var isMake = true;
 
@@ -82,8 +84,11 @@ jQuery(function($) {
         if (!isMake)
             return false;
 
-        if (!params.quotation || !params.quotation.profile)
+        if (!params.quotation || !params.quotation.profile) {
+            com.showAlert(com.warning, "缺少配置参数");
+            com.closePopup();
             return false;
+        }
 
         var template = null;
 
@@ -96,6 +101,7 @@ jQuery(function($) {
 
         if (!template) {
             com.showAlert(com.error, "报价配置模板不存在");
+            com.closePopup();
             return false;
         }
 
