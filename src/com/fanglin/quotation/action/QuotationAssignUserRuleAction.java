@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.quotation.service.QuotationAssignUserRuleItemService;
 import com.fanglin.quotation.service.QuotationAssignUserRuleService;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleItemVO;
@@ -217,10 +218,18 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 		@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
 	}, params = { "contentType", "text/html" })
 	public String pageQuotationAssignUserRuleItem() throws FLException {
-		// 从前端 searcher.param 传入的 qaurid 构造为 Filter
-		if (quotationAssignUserRuleItem != null && quotationAssignUserRuleItem.getQaurid() != null) {
+
+		boolean hasQaurid = quotationAssignUserRuleItem != null && quotationAssignUserRuleItem.getQaurid() != null;
+
+		if (hasQaurid) {
+			// 子页面模式：按规则ID过滤
 			getFilters().add(new Filter("qaurid", String.valueOf(quotationAssignUserRuleItem.getQaurid()), "eq"));
+		} else {
+			// 独立页面模式：自动根据当前用户所属公司过滤
+			int currentCompany = queryCompany();
+			getFilters().add(new Filter("company", FormatUtil.encodeCompany(currentCompany), "eq"));
 		}
+
 		quotationAssignUserRuleItemService.pageQuotationAssignUserRuleItem(getPaging(), getFilters());
 		return SUCCESS;
 	}
