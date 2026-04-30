@@ -113,7 +113,7 @@ $.extend(api.index, {
         url: "/views/quotation/quotationAssignRequest.html"
     },
     quotationAssignRequestSelfIndex: {
-        url: "/views/quotation/quotationAssignRequestSelf.html"
+        url: "/views/quotation/quotationAssignRequest.html?mode=self"
     },
     quotationAssignConfigIndex: {
         url: "/views/quotation/quotationAssignConfig.html"
