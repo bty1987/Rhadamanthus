@@ -1,6 +1,7 @@
 package com.fanglin.customer.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class MemberOrderItemVO implements Serializable {
 
@@ -13,6 +14,8 @@ public class MemberOrderItemVO implements Serializable {
 	private Integer point;
 
 	private Integer num;
+
+	private Timestamp expireTime; // 有效期
 
 	public String getNo() {
 		return no;
@@ -44,6 +47,14 @@ public class MemberOrderItemVO implements Serializable {
 
 	public void setNum(Integer num) {
 		this.num = num;
+	}
+
+	public Timestamp getExpireTime() {
+		return expireTime;
+	}
+
+	public void setExpireTime(Timestamp expireTime) {
+		this.expireTime = expireTime;
 	}
 
 }
