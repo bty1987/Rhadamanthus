@@ -68,6 +68,8 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	private String uniqueId; // 唯一标识，用于区分不同活动物品对应的被推荐装修单号和推荐装修单号的对应关系
 
+	private Timestamp expireTime; // 有效期
+
 	public DecorationActivityItemVO() {
 		super();
 	}
@@ -307,6 +309,15 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	public void setUniqueId(String uniqueId) {
 		this.uniqueId = uniqueId;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getExpireTime() {
+		return expireTime;
+	}
+
+	public void setExpireTime(Timestamp expireTime) {
+		this.expireTime = expireTime;
 	}
 
 }
