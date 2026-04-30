@@ -118,31 +118,6 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	}
 
 	/**
-	 * 检查预算员在指定公司+装修类型下是否有匹配的规则明细
-	 * 
-	 * <p>
-	 * 匹配逻辑：item.supportedType == -1(通用) 或 == decorationType
-	 * </p>
-	 * 
-	 * @param userRule 预算员规则
-	 * @param company 公司ID
-	 * @param decorationType 装修类型
-	 * @return true=有匹配
-	 */
-	private boolean isTypeSupported(QuotationAssignUserRulePO userRule, int company, short decorationType) throws FLException {
-		List<QuotationAssignUserRuleItemPO> items = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemByRuleId(userRule.getQaurid());
-		for (QuotationAssignUserRuleItemPO item : items) {
-			if (item.getCompany() != null && item.getCompany().getCid() == company) {
-				int supportedType = item.getSupportedType();
-				if (supportedType == QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT || supportedType == (int) decorationType) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * 基于预算员的 items 进行三维度匹配（company + department + supportedType）
 	 * 
 	 * <p>
@@ -434,7 +409,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 6. 提取预算员适配的所有公司ID，一次查出全部待分配请求
-		java.util.List<Integer> companyList = new java.util.ArrayList<>();
+		java.util.List<Integer> companyList = new java.util.ArrayList<Integer>();
 		for (QuotationAssignUserRuleItemPO item : items) {
 			if (item.getCompany() != null) {
 				companyList.add(item.getCompany().getCid());
@@ -445,25 +420,26 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			return 1;
 		}
 
-		List<QuotationAssignRequestPO> pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueueByCompanies(companyList);
+		List<QuotationAssignRequestPO> pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueue(companyList);
 
 		// 7. 遍历队列，三维度匹配后分配第一个合适的任务
-		if (pendingQueue != null && !pendingQueue.isEmpty()) {
-			for (QuotationAssignRequestPO request : pendingQueue) {
-				boolean matched = isItemMatched(items, request);
+		if (pendingQueue == null || pendingQueue.isEmpty()) return 1;
 
-				if (matched) {
-					DecorationPO pendingDecoration = decorationDao.queryDecorationByOrderId(request.getOrderId());
-					if (pendingDecoration != null) {
-						assignToUser(request.getOrderId(), pendingDecoration, userRule, QuotationAssignRecordPO.ASSIGN_TYPE_REVERSE_AUTO_INT, null);
-						return 1; // 只分配一个任务，立即返回
-					} else {
-						// 装修单不存在，标记该请求为已分配（脏数据清理）
-						request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
-						quotationAssignRequestDao.update(request);
-						continue;
-					}
-				}
+		for (QuotationAssignRequestPO request : pendingQueue) {
+			boolean matched = isItemMatched(items, request);
+
+			if (!matched) continue;
+
+			DecorationPO pendingDecoration = decorationDao.queryDecorationByOrderId(request.getOrderId());
+
+			if (pendingDecoration != null) {
+				assignToUser(request.getOrderId(), pendingDecoration, userRule, QuotationAssignRecordPO.ASSIGN_TYPE_REVERSE_AUTO_INT, null);
+				return 1; // 只分配一个任务，立即返回
+			} else {
+				// 装修单不存在，标记该请求为已分配（脏数据清理）
+				request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
+				quotationAssignRequestDao.update(request);
+				continue;
 			}
 		}
 
