@@ -2321,7 +2321,7 @@ $.extend(api, {
             url: "manualQuotationAssign.do",
             validate: {
                 "quotationAssign.orderId": { required: true },
-                "quotationAssign.budgetUid": { required: true }
+                "quotationAssign.quoter.userId": { required: true }
             }
         },
         finishQuotationAssign: {

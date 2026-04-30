@@ -35,6 +35,7 @@ public class QuotationAssignVO {
 	private UserBaseVO quoter;
 
 	public QuotationAssignVO() {
+		this.quoter = new UserBaseVO();
 	}
 
 	public String getOrderId() {
