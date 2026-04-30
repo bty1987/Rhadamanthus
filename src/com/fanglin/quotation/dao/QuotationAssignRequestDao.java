@@ -78,7 +78,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param companies 公司ID列表
 	 * @return 待分配请求列表（status=1），按优先级和请求时间排序
 	 */
-	List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueueByCompanies(List<Integer> companies);
+	List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(List<Integer> companies);
 
 	/**
 	 * 根据装修单号查询活跃请求（非已完成状态，装修单唯一）

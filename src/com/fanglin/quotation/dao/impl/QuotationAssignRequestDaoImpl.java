@@ -149,10 +149,8 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueueByCompanies(List<Integer> companies) {
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
-			.add(Restrictions.in("company.cid", companies))
-			.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
+	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(List<Integer> companies) {
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.in("company.cid", companies)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
 
 		// 按优先级升序、请求时间升序排序
 		criteria.addOrder(org.hibernate.criterion.Order.asc("priority"));
@@ -166,10 +164,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	@Override
 	public int countQuotationAssignRequest(int uid) {
 		// 统计该预算员进行中的任务数量（排除已完成 status=3）
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
-			.add(Restrictions.lt("status", QuotationAssignRequestPO.STATUS_COMPLETED_INT))
-			.createAlias("user", "u")
-			.add(Restrictions.eq("u.uid", uid));
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.lt("status", QuotationAssignRequestPO.STATUS_COMPLETED_INT)).createAlias("user", "u").add(Restrictions.eq("u.uid", uid));
 
 		Number count = (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
 		return count != null ? count.intValue() : 0;
