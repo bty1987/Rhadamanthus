@@ -433,24 +433,23 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			return 1;
 		}
 
-		// 6. 提取预算员适配的所有公司ID，按公司分组查询待分配队列，再逐个匹配
-		java.util.Set<Integer> matchedCompanies = new java.util.HashSet<>();
+		// 6. 提取预算员适配的所有公司ID，一次查出全部待分配请求
+		java.util.List<Integer> companyList = new java.util.ArrayList<>();
 		for (QuotationAssignUserRuleItemPO item : items) {
 			if (item.getCompany() != null) {
-				matchedCompanies.add(item.getCompany().getCid());
+				companyList.add(item.getCompany().getCid());
 			}
 		}
 
-		for (Integer cid : matchedCompanies) {
-			// 不传 department 和 decorationType，查询该公司全部待分配请求
-			List<QuotationAssignRequestPO> pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueue(cid, null, null);
+		if (companyList.isEmpty()) {
+			return 1;
+		}
 
-			if (pendingQueue == null || pendingQueue.isEmpty()) {
-				continue;
-			}
+		List<QuotationAssignRequestPO> pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueueByCompanies(companyList);
 
+		// 7. 遍历队列，三维度匹配后分配第一个合适的任务
+		if (pendingQueue != null && !pendingQueue.isEmpty()) {
 			for (QuotationAssignRequestPO request : pendingQueue) {
-				// 三维度匹配：company + department + supportedType
 				boolean matched = isItemMatched(items, request);
 
 				if (matched) {
