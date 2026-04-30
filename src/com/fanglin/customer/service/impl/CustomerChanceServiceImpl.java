@@ -30,6 +30,7 @@ import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.MD5Helper;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerProfileDao;
@@ -67,7 +68,6 @@ import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
@@ -670,6 +670,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
 		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
+		decorationInfoVO.setCcid(customerChancePO.getCcid());
 
 		if (customerChancePO.getHouse() != null) {
 			HousePO housePO = customerChancePO.getHouse();
@@ -876,6 +877,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		DecorationInfoVO decorationInfoVO = new DecorationInfoVO();
 		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
 		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
+		decorationInfoVO.setCcid(customerChancePO.getCcid());
 
 		decorationService.tranDecoration(decorationVO, decorationInfoVO, company);
 

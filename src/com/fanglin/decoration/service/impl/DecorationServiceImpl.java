@@ -40,6 +40,7 @@ import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.ServiceNodePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.DecorationMeasureRuleDao;
@@ -102,7 +103,6 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.core.security.SensitiveDataHelper;
 
 @Service("decorationServiceO")
 @Transactional(readOnly = true)
@@ -1106,8 +1106,8 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationInfoDao.save(decorationInfoPO);
 
 		// 创建订单归属信息
-		decorationBelongDao.save(new DecorationBelongPO().designer(orderId, designer, operater));
-		decorationBelongDao.save(new DecorationBelongPO().salesman(orderId, salesman, operater));
+		decorationBelongDao.save(new DecorationBelongPO().designer(orderId, designer, operater, decorationInfoVO.getCcid()));
+		decorationBelongDao.save(new DecorationBelongPO().salesman(orderId, salesman, operater, decorationInfoVO.getCcid()));
 
 		// 创建附加信息
 		DecorationAdditionPO additionInfo = new DecorationAdditionPO();

@@ -46,6 +46,8 @@ public class DecorationInfoVO implements Serializable {
 
 	private Timestamp belongTime;
 
+	private Long ccid;
+
 	public Long getDiid() {
 		return diid;
 	}
@@ -156,6 +158,14 @@ public class DecorationInfoVO implements Serializable {
 
 	public void setBelongTime(Timestamp belongTime) {
 		this.belongTime = belongTime;
+	}
+
+	public Long getCcid() {
+		return ccid;
+	}
+
+	public void setCcid(Long ccid) {
+		this.ccid = ccid;
 	}
 
 }

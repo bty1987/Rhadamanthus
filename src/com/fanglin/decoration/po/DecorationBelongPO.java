@@ -84,7 +84,7 @@ public class DecorationBelongPO implements Serializable {
 
 	private short defaultFlag;
 
-	private Long ccid;
+	private long ccid;
 
 	public DecorationBelongPO() {
 		super();
@@ -222,15 +222,15 @@ public class DecorationBelongPO implements Serializable {
 	}
 
 	@Column(name = "ccid")
-	public Long getCcid() {
+	public long getCcid() {
 		return ccid;
 	}
 
-	public void setCcid(Long ccid) {
+	public void setCcid(long ccid) {
 		this.ccid = ccid;
 	}
 
-	public DecorationBelongPO designer(String orderId, UserPO designer, UserPO operater) {
+	public DecorationBelongPO designer(String orderId, UserPO designer, UserPO operater, Long ccid) {
 
 		setOrderId(orderId);
 
@@ -250,10 +250,12 @@ public class DecorationBelongPO implements Serializable {
 
 		if (designer.getDept().getBusitype() != null) setBusitype(designer.getDept().getBusitype());
 
+		if (ccid != null) setCcid(ccid);
+
 		return this;
 	}
 
-	public DecorationBelongPO salesman(String orderId, UserPO salesman, UserPO operater) {
+	public DecorationBelongPO salesman(String orderId, UserPO salesman, UserPO operater, Long ccid) {
 
 		setOrderId(orderId);
 
@@ -272,6 +274,8 @@ public class DecorationBelongPO implements Serializable {
 		setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		if (salesman.getDept().getBusitype() != null) setBusitype(salesman.getDept().getBusitype());
+
+		if (ccid != null) setCcid(ccid);
 
 		return this;
 	}
