@@ -487,6 +487,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140057, "装修活动奖品不可操作");
 		}
 
+		// 校验有效期：如果已过有效期则不允许核销
+		if (decorationActivityItemPO.getExpireTime() != null && decorationActivityItemPO.getExpireTime().before(new Date())) {
+			throw new FLException(140058, "活动奖品已过期，无法核销");
+		}
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
 
 		if (decorationPO == null) {
