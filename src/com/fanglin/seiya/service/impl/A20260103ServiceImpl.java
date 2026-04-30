@@ -45,11 +45,11 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
-import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.seiya.service.A20260103Service;
 
 @Service("A20260103Service")
@@ -327,15 +327,6 @@ public class A20260103ServiceImpl implements A20260103Service {
 	@Override
 	public void checkoverCustomerLead(String village, String houseNumber, String phone, Integer orgId) throws FLException {
 
-		// 参数验证
-		if (phone == null || phone.trim().isEmpty()) {
-			throw new FLException(400002, "客户电话不能为空");
-		}
-
-		if (village == null || village.trim().isEmpty() || houseNumber == null || houseNumber.trim().isEmpty()) {
-			throw new FLException(400003, "楼盘和楼号不能为空");
-		}
-
 		if (orgId == null) {
 			throw new FLException(400004, "公司标识不能为空");
 		}
@@ -363,9 +354,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		}
 
 		// 3. 参考DecorationService.checkOverDecoration逻辑，验证装修单是否存在
-		if (cid != 0 || hid != 0) {
-			decorationService.checkOverDecoration(cid, hid, orgId);
-		}
+		decorationService.checkOverDecoration(cid, hid, orgId);
 	}
 
 	@Override
@@ -430,8 +419,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 	}
 
 	/**
-	 * 通过电话号码查询客户信息
-	 * 先通过加密后的phone查询CustomerPhonePO获取cid，再查询客户详情
+	 * 通过电话号码查询客户信息 先通过加密后的phone查询CustomerPhonePO获取cid，再查询客户详情
 	 */
 	private CustomerVO findCustomerByPhone(String phone, Integer company) throws FLException {
 
