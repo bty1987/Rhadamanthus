@@ -313,6 +313,8 @@ $(function() {
 
         var $handoverBtn = $('<button></button>').attr("id", "handoverProfileBtn").addClass('btn btn-minier btn-primary').css("margin-left", "3px").html("交接单");
 
+        var $assignTalkBtn = $('<button></button>').attr("id", "assignTalkBtn").addClass('btn btn-minier btn-info').css("margin-left", "3px").html("分配沟通");
+
         var $show = conf.opt == null ? [] : conf.opt.show == null ? [] : conf.opt.show;
 
         var $OriginalPicture = $show.includes("OriginalPicture") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("现场图")), createDiv("inline pull-right", "checkOriginal").css("text-align", "right"), createDiv("inline pull-right", "OriginalUpload").css("text-align", "right")), createDiv().css("min-height", "150px").append(createUl("OriginalPicture", "ace-thumbnails"))))) : null;
@@ -430,7 +432,7 @@ $(function() {
 
         com.focusPage("#checkOriginal").append($checkOriginal);
 
-        com.focusPage("#projectPictureTitle").append($handoverBtn);
+        com.focusPage("#projectPictureTitle").append($handoverBtn).append($assignTalkBtn);
 
         return [row1, row2];
     }

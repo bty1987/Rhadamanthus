@@ -2208,6 +2208,18 @@ $.extend(api, {
             }
         },
 
+        // ==================== 分配沟通消息接口 ====================
+
+        queryQuotationAssignTalkByOrderId: {
+            url: "queryQuotationAssignTalkByOrderId.do",
+            result: "quotationAssignTalks"
+        },
+
+        sendQuotationAssignTalk: {
+            url: "sendQuotationAssignTalk.do",
+            result: "quotationAssignTalk"
+        },
+
         // ==================== 分配记录管理接口 ====================
 
         pageQuotationAssignRecord: {
