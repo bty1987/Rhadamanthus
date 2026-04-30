@@ -147,6 +147,22 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		return criteria.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueueByCompanies(List<Integer> companies) {
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class)
+			.add(Restrictions.in("company.cid", companies))
+			.add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
+
+		// 按优先级升序、请求时间升序排序
+		criteria.addOrder(org.hibernate.criterion.Order.asc("priority"));
+		criteria.addOrder(org.hibernate.criterion.Order.asc("requestTime"));
+
+		criteria.setMaxResults(50);
+
+		return criteria.list();
+	}
+
 	@Override
 	public int countQuotationAssignRequest(int uid) {
 		// 统计该预算员进行中的任务数量（排除已完成 status=3）
