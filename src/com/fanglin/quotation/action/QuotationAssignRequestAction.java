@@ -75,13 +75,13 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	/**
 	 * 预算员自助查询：分页查询当前登录预算员的分配请求
 	 * 
-	 * 自动注入当前登录用户的userId作为过滤条件
+	 * 通过 queryUserId() 获取当前登录用户，直接作为 Service 参数传递
 	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "pageQuotationAssignRequestSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageQuotationAssignRequestSelf() throws FLException {
+	@Action(value = "pageQuotationAssignRequestByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationAssignRequestByUserId() throws FLException {
 
 		String userId = queryUserId();
 
@@ -89,14 +89,7 @@ public class QuotationAssignRequestAction extends BaseListAction {
 			return ERROR;
 		}
 
-		// 将当前用户的userId注入为过滤条件
-		List<Filter> filters = getFilters();
-		if (filters == null) {
-			filters = new java.util.ArrayList<Filter>();
-		}
-		filters.add(new Filter("userId", userId, "eq"));
-
-		quotationAssignRequestService.pageQuotationAssignRequest(getPaging(), filters, queryCompany());
+		quotationAssignRequestService.pageQuotationAssignRequestByUserId(getPaging(), getFilters(), userId);
 
 		return SUCCESS;
 	}

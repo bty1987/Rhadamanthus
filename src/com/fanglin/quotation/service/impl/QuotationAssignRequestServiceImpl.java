@@ -62,6 +62,25 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	}
 
 	@Override
+	public void pageQuotationAssignRequestByUserId(Paging paging, List<Filter> filters, String userId) throws FLException {
+
+		List<QuotationAssignRequestPO> quotationAssignRequestPOs = quotationAssignRequestDao.pageQuotationAssignRequestByUserId(paging, filters, userId);
+
+		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
+
+		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
+			QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
+			vo.setCompany(new CompanyVO());
+			vo.setDepartment(new DepartmentVO());
+			vo.setRequestUser(new UserBaseVO());
+			vo.setUser(new UserBaseVO());
+			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(vo));
+		}
+
+		paging.setData(quotationAssignRequestVOs);
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public QuotationAssignRequestVO queryQuotationAssignRequestById(QuotationAssignRequestVO quotationAssignRequestVO) throws FLException {
 

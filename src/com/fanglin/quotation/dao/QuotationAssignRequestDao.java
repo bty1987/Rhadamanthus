@@ -49,6 +49,16 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	List<QuotationAssignRequestPO> pageQuotationAssignRequest(Paging paging, List<Filter> filters, Integer company);
 
 	/**
+	 * 根据预算员userId分页查询分配请求
+	 * 
+	 * @param paging 分页对象
+	 * @param filters 过滤条件
+	 * @param userId 预算员登录名
+	 * @return 分配请求列表
+	 */
+	List<QuotationAssignRequestPO> pageQuotationAssignRequestByUserId(Paging paging, List<Filter> filters, String userId);
+
+	/**
 	 * 查询待分配队列（按优先级和请求时间排序）
 	 * 
 	 * @param company 公司ID

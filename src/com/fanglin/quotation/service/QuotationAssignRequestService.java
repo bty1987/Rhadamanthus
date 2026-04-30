@@ -35,6 +35,15 @@ public interface QuotationAssignRequestService {
 	void pageQuotationAssignRequest(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
 	/**
+	 * 根据预算员userId分页查询分配请求
+	 * 
+	 * @param paging 分页对象
+	 * @param filters 过滤条件
+	 * @param userId 预算员登录名
+	 */
+	void pageQuotationAssignRequestByUserId(Paging paging, List<Filter> filters, String userId) throws FLException;
+
+	/**
 	 * 根据ID查询分配请求
 	 * 
 	 * @param quotationAssignRequestVO 包含qarid的VO对象
