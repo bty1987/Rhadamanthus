@@ -1,7 +1,9 @@
 package com.fanglin.customer.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -738,6 +740,14 @@ public class MemberServiceImpl implements MemberService {
 			decorationActivityItemPO.setCreater(creater);
 			decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
+			// 设置有效期：创建时间 + 活动有效天数
+			int validays = decorationActivityPO.getActivity().getValidays();
+			if (validays > 0) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.add(Calendar.DAY_OF_MONTH, validays);
+				decorationActivityItemPO.setExpireTime(new Timestamp(calendar.getTimeInMillis()));
+			}
+
 			// 设置 uniqueId，用于区分不同活动物品对应的被推荐装修单号和推荐装修单号的对应关系
 			decorationActivityItemPO.setUniqueId(memberOrderVO.getUniqueId());
 
@@ -837,6 +847,9 @@ public class MemberServiceImpl implements MemberService {
 
 		// 设置 uniqueId，用于区分不同活动物品对应的被推荐装修单号和推荐装修单号的对应关系
 		decorationActivityItemPO.setUniqueId(memberOrderVO.getUniqueId());
+
+		// 设置有效期
+		decorationActivityItemPO.setExpireTime(memberOrderItemVO.getExpireTime());
 
 		decorationActivityItemDao.save(decorationActivityItemPO);
 
