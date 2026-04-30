@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.service.QuotationAssignRequestService;
 import com.fanglin.quotation.vo.QuotationAssignRequestVO;
 
@@ -67,6 +68,35 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	public String pageQuotationAssignRequest() throws FLException {
 
 		quotationAssignRequestService.pageQuotationAssignRequest(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	/**
+	 * 预算员自助查询：分页查询当前登录预算员的分配请求
+	 * 
+	 * 自动注入当前登录用户的userId作为过滤条件
+	 * 
+	 * @return JSON 响应
+	 * @throws FLException 业务异常
+	 */
+	@Action(value = "pageQuotationAssignRequestSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationAssignRequestSelf() throws FLException {
+
+		String userId = queryUserId();
+
+		if (userId == null || userId.trim().isEmpty()) {
+			return ERROR;
+		}
+
+		// 将当前用户的userId注入为过滤条件
+		List<Filter> filters = getFilters();
+		if (filters == null) {
+			filters = new java.util.ArrayList<Filter>();
+		}
+		filters.add(new Filter("userId", userId, "eq"));
+
+		quotationAssignRequestService.pageQuotationAssignRequest(getPaging(), filters, queryCompany());
 
 		return SUCCESS;
 	}
