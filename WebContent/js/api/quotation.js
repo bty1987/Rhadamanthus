@@ -2176,8 +2176,8 @@ $.extend(api, {
         },
 
         // 预算员自助查询（后端自动注入当前用户userId过滤）
-        pageQuotationAssignRequestSelf: {
-            url: "pageQuotationAssignRequestSelf.do"
+        pageQuotationAssignRequestByUserId: {
+            url: "pageQuotationAssignRequestByUserId.do"
         },
 
         queryQuotationAssignRequestById: {

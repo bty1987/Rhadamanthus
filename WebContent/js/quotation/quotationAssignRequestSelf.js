@@ -4,9 +4,9 @@ $(function() {
 
     var searcher = new Searcher();
 
-    // 基础配置：使用 Self 接口（后端自动注入当前用户userId）
+    // 基础配置：使用 ByUserId 接口（后端自动注入当前用户userId）
     searcher.base("condList", "pagenation", "resultList",
-        api.quotation.pageQuotationAssignRequestSelf
+        api.quotation.pageQuotationAssignRequestByUserId
     );
 
     // 查询条件：只保留状态和装修单号（公司由后端自动注入）
