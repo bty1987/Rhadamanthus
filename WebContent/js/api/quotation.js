@@ -112,6 +112,9 @@ $.extend(api.index, {
     quotationAssignRequestIndex: {
         url: "/views/quotation/quotationAssignRequest.html"
     },
+    quotationAssignRequestSelfIndex: {
+        url: "/views/quotation/quotationAssignRequestSelf.html"
+    },
     quotationAssignConfigIndex: {
         url: "/views/quotation/quotationAssignConfig.html"
     },
@@ -2170,6 +2173,11 @@ $.extend(api, {
         pageQuotationAssignRequest: {
             url: "pageQuotationAssignRequest.do",
             demo: true
+        },
+
+        // 预算员自助查询（后端自动注入当前用户userId过滤）
+        pageQuotationAssignRequestSelf: {
+            url: "pageQuotationAssignRequestSelf.do"
         },
 
         queryQuotationAssignRequestById: {
