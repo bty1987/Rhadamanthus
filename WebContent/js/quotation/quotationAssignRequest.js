@@ -222,102 +222,12 @@ $(function() {
     // 渲染列表
     searcher.line("orderId", lineprops, linebtns).render();
 
-    // ==================== 沟通消息功能（管理模式和自助模式共用） ====================
+    // ==================== 沟通功能（popup4page加载独立页面） ====================
 
-    var talkModal = com.focusPage('#talkModal');
-    var talkOrderId = com.focusPage('#talkOrderId');
-    var talkOrderIdDisplay = com.focusPage('#talkOrderIdDisplay');
-    var talkMessageList = com.focusPage('#talkMessageList');
-    var talkContent = com.focusPage('#talkContent');
-    var sendTalkBtn = com.focusPage('#sendTalkBtn');
-
-    // 打开沟通弹窗
     function openTalkModal(orderId) {
-        talkOrderId.val(orderId);
-        talkOrderIdDisplay.text('装修单号：' + orderId);
-        talkContent.val('');
-        talkModal.modal('show');
-        loadTalkMessages(orderId);
+        params.quotationAssignTalk = { orderId: orderId };
+        com.popup4page("#layerPopUp4talkAssign", api.quotation.quotationAssignTalkIndex.url, "分配沟通");
     }
-
-    // 加载沟通消息列表
-    function loadTalkMessages(orderId) {
-        com.post(api.quotation.queryQuotationAssignTalkByOrderId, {
-            "quotationAssignTalk.orderId": orderId
-        }, function(res) {
-            var talks = res.quotationAssignTalks || [];
-            renderTalkMessages(talks);
-        }, function(res) {
-            talkMessageList.html('<div style="text-align:center;color:#999;padding:20px;">加载失败</div>');
-        });
-    }
-
-    // 渲染消息列表
-    function renderTalkMessages(talks) {
-        if (!talks || talks.length === 0) {
-            talkMessageList.html('<div style="text-align:center;color:#999;padding:20px;">暂无沟通记录</div>');
-            return;
-        }
-
-        var html = '';
-        for (var i = 0; i < talks.length; i++) {
-            var t = talks[i];
-            var senderName = t.sender ? (t.sender.currentName || t.sender.userName || '未知') : '未知';
-            var sendTime = t.sendTime || '';
-            var content = t.content || '';
-            var typeLabel = t.type == 1 ? '<span class="label label-info" style="font-size:10px;">设计师</span>' : '<span class="label label-success" style="font-size:10px;">预算员</span>';
-
-            html += '<div style="margin-bottom:10px;padding:8px;border-radius:4px;background:#fff;border:1px solid #ddd;">';
-            html += '  <div style="margin-bottom:4px;">';
-            html += '    <strong>' + senderName + '</strong> ' + typeLabel;
-            html += '    <span style="float:right;color:#999;font-size:12px;">' + sendTime + '</span>';
-            html += '  </div>';
-            html += '  <div style="color:#333;word-break:break-all;">' + content + '</div>';
-            html += '</div>';
-        }
-
-        talkMessageList.html(html);
-        // 自动滚动到底部
-        talkMessageList.scrollTop(talkMessageList[0].scrollHeight);
-    }
-
-    // 发送消息
-    function sendTalkMessage() {
-        var orderId = talkOrderId.val();
-        var content = talkContent.val().trim();
-
-        if (!orderId) {
-            com.showAlert(com.warning, '装修单号不能为空');
-            return;
-        }
-        if (!content) {
-            com.showAlert(com.warning, '消息内容不能为空');
-            return;
-        }
-
-        com.post(api.quotation.sendQuotationAssignTalk, {
-            "quotationAssignTalk.orderId": orderId,
-            "quotationAssignTalk.content": content
-        }, function(res) {
-            talkContent.val('');
-            loadTalkMessages(orderId);
-        }, function(res) {
-            com.showAlert(com.error, res.errorMsg || '发送失败');
-        });
-    }
-
-    // 发送按钮点击
-    sendTalkBtn.on('click', function() {
-        sendTalkMessage();
-    });
-
-    // 回车发送
-    talkContent.on('keydown', function(e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            sendTalkMessage();
-        }
-    });
 
     // ==================== 自助模式：跳过管理功能初始化 ====================
     if (isSelfMode) return;
