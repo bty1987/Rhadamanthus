@@ -142,6 +142,51 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		return false;
 	}
 
+	/**
+	 * 基于预算员的 items 进行三维度匹配（company + department + supportedType）
+	 * 
+	 * <p>
+	 * 匹配规则：
+	 * <ul>
+	 * <li>company 必须精确匹配</li>
+	 * <li>department：item 的 department 为 null 表示匹配所有部门，否则必须精确匹配</li>
+	 * <li>supportedType：值为 -1 表示通用（匹配所有类型），否则必须与请求的 decorationType 精确匹配</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param items 预算员的所有规则明细
+	 * @param request 待分配请求
+	 * @return true=有匹配的 item
+	 */
+	private boolean isItemMatched(List<QuotationAssignUserRuleItemPO> items, QuotationAssignRequestPO request) {
+
+		int requestCompany = request.getCompany() != null ? request.getCompany().getCid() : -1;
+		Integer requestDept = request.getDepartment() != null ? request.getDepartment().getDid() : null;
+		short requestType = request.getDecorationType();
+
+		for (QuotationAssignUserRuleItemPO item : items) {
+			// 公司必须匹配
+			if (item.getCompany() == null || item.getCompany().getCid() != requestCompany) {
+				continue;
+			}
+
+			// 部门匹配：item 的 department 为 null 表示该公司所有部门
+			if (item.getDepartment() != null) {
+				if (requestDept == null || item.getDepartment().getDid() != requestDept.intValue()) {
+					continue;
+				}
+			}
+
+			// 装修类型匹配：supportedType 为 -1 表示通用
+			int supportedType = item.getSupportedType();
+			if (supportedType == QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT || supportedType == (int) requestType) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	// ==================== 正向自动分配 ====================
 
 	@Override
@@ -348,7 +393,6 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 2. 根据预算员ID查询其规则（新模型：按 userId 查询唯一规则）
-		Integer company = decoration.getCompany();
 		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(budgetUid);
 
 		if (userRule == null) {
@@ -380,27 +424,42 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			return 1;
 		}
 
-		// ★ 跨公司验证已简化：新模型下每人只有一条 UserRule，status 即全局状态
-		// 不再需要遍历多个公司的 UserRule 记录（旧模型需要，因为每个公司一条 UserRule）
+		// ★ 新模型下每人只有一条 UserRule，status 即全局状态
+		// 反向分配匹配逻辑：基于预算员的 items（company + department + supportedType 三维度）匹配待分配请求
 
-		Integer department = getDesignDeptId(decoration);
+		// 5. 预加载预算员的所有 items
+		List<QuotationAssignUserRuleItemPO> items = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemByRuleId(userRule.getQaurid());
+		if (items == null || items.isEmpty()) {
+			return 1;
+		}
 
-		// 5. 查询待分配队列（不过滤类型，后续通过 items 匹配类型）
-		// 新模型下预算员可能支持多种类型，需要统一查询后逐个匹配
-		List<QuotationAssignRequestPO> pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueue(company, department, null);
+		// 6. 提取预算员适配的所有公司ID，按公司分组查询待分配队列，再逐个匹配
+		java.util.Set<Integer> matchedCompanies = new java.util.HashSet<>();
+		for (QuotationAssignUserRuleItemPO item : items) {
+			if (item.getCompany() != null) {
+				matchedCompanies.add(item.getCompany().getCid());
+			}
+		}
 
-		// 6. 遍历队列，通过 items 检查预算员是否支持该任务的装修类型
-		if (pendingQueue != null && !pendingQueue.isEmpty()) {
+		for (Integer cid : matchedCompanies) {
+			// 不传 department 和 decorationType，查询该公司全部待分配请求
+			List<QuotationAssignRequestPO> pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueue(cid, null, null);
+
+			if (pendingQueue == null || pendingQueue.isEmpty()) {
+				continue;
+			}
+
 			for (QuotationAssignRequestPO request : pendingQueue) {
+				// 三维度匹配：company + department + supportedType
+				boolean matched = isItemMatched(items, request);
 
-				boolean typeSupported = isTypeSupported(userRule, company, request.getDecorationType());
-
-				if (typeSupported) {
+				if (matched) {
 					DecorationPO pendingDecoration = decorationDao.queryDecorationByOrderId(request.getOrderId());
 					if (pendingDecoration != null) {
 						assignToUser(request.getOrderId(), pendingDecoration, userRule, QuotationAssignRecordPO.ASSIGN_TYPE_REVERSE_AUTO_INT, null);
-						break; // 只分配一个任务
+						return 1; // 只分配一个任务，立即返回
 					} else {
+						// 装修单不存在，标记该请求为已分配（脏数据清理）
 						request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
 						quotationAssignRequestDao.update(request);
 						continue;
