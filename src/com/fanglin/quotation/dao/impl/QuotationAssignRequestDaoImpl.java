@@ -80,6 +80,9 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 			} else if ("orderId".equals(field)) {
 				// 装修单号：模糊匹配
 				query.add(query.getCriterion("orderId", data, op));
+			} else if ("uid".equals(field)) {
+				// 预算员UID：精确匹配（user关联对象的uid字段）
+				query.add(query.getCriterion("user.uid", Integer.valueOf(data), op));
 			} else if ("company".equals(field)) {
 				// 公司：已在方法参数中处理，这里跳过
 				continue;
