@@ -151,6 +151,15 @@ $(function() {
 
             return false;
         }
+    }, {
+        // 查看任务按钮：弹窗显示该预算员负责的所有 request
+        name: "查看任务",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            viewUserTasks(v);
+            return false;
+        }
     }];
 
     // 配置行
@@ -334,5 +343,71 @@ $(function() {
 
     // 绑定保存按钮事件
     config.btns.saveBtn.on('click', saveUserRule);
+
+    // ==================== 查看任务功能 ====================
+
+    // 状态映射
+    var statusMap = { 0: "待分配", 1: "已分配", 2: "已完成", 3: "已取消" };
+
+    // 查看预算员当前负责的所有任务
+    function viewUserTasks(row) {
+
+        var userName = row.user ? row.user.currentName : "未知";
+        var uid = row.user ? row.user.uid : null;
+
+        if (!uid) {
+            com.showAlert(com.warning, '无法获取预算员信息');
+            return;
+        }
+
+        // 设置弹窗标题
+        com.focusPage('#taskUserName').text(userName);
+
+        // 清空列表
+        com.focusPage('#taskListBody').empty();
+        com.focusPage('#taskEmptyMsg').hide();
+
+        // 构造分页参数（查全部，每页100条，第一页）
+        var postData = {
+            "paging.page": 1,
+            "paging.rows": 100,
+            "filters[0].field": "uid",
+            "filters[0].data": uid,
+            "filters[0].op": "eq"
+        };
+
+        com.post(api.quotation.pageQuotationAssignRequest, postData, function(res) {
+
+            var rows = res.paging.data || [];
+
+            if (rows.length == 0) {
+                com.focusPage('#taskEmptyMsg').show();
+            } else {
+                var $body = com.focusPage('#taskListBody');
+                $.each(rows, function(i, item) {
+
+                    var statusText = statusMap[item.status] || "未知";
+                    var priorityText = { 1: "最高", 3: "高", 5: "普通", 7: "低", 9: "最低" }[item.priority] || "普通";
+                    var companyName = item.company ? item.company.name : "-";
+                    var decorationType = item.decorationType == 1 ? "半包" : (item.decorationType == 2 ? "整装" : "-");
+                    var requestUserName = item.requestUser ? item.requestUser.currentName : "-";
+
+                    var $tr = $('<tr></tr>');
+                    $('<td></td>').text(item.orderId || '-').appendTo($tr);
+                    $('<td></td>').text(companyName).appendTo($tr);
+                    $('<td></td>').text(decorationType).appendTo($tr);
+                    $('<td></td>').text(statusText).appendTo($tr);
+                    $('<td></td>').text(priorityText).appendTo($tr);
+                    $('<td></td>').text(requestUserName).appendTo($tr);
+                    $('<td></td>').text(item.assignTime || '-').appendTo($tr);
+
+                    $tr.appendTo($body);
+                });
+            }
+
+            // 显示弹窗
+            com.focusPage('#taskModal').modal('show');
+        });
+    }
 
 })
