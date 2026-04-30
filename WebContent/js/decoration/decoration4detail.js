@@ -1321,100 +1321,16 @@ jQuery(function($) {
         });
     });
 
-    // ==================== 分配沟通功能 ====================
+    // ==================== 分配沟通功能（popup4page加载独立页面） ====================
 
-    var decorationTalkModal = com.focusPage('#decorationTalkModal');
-    var decorationTalkOrderId = com.focusPage('#decorationTalkOrderId');
-    var decorationTalkOrderIdDisplay = com.focusPage('#decorationTalkOrderIdDisplay');
-    var decorationTalkMessageList = com.focusPage('#decorationTalkMessageList');
-    var decorationTalkContent = com.focusPage('#decorationTalkContent');
-    var decorationSendTalkBtn = com.focusPage('#decorationSendTalkBtn');
-
-    // 分配沟通按钮
     com.focusPage("#assignTalkBtn").on("click", function() {
         var orderId = decorationDetail.orderId;
         if (!orderId) {
             com.showAlert(com.warning, '装修单号不存在');
             return;
         }
-        decorationTalkOrderId.val(orderId);
-        decorationTalkOrderIdDisplay.text('装修单号：' + orderId);
-        decorationTalkContent.val('');
-        decorationTalkModal.modal('show');
-        loadDecorationTalkMessages(orderId);
-    });
-
-    // 加载沟通消息列表
-    function loadDecorationTalkMessages(orderId) {
-        com.post(api.quotation.queryQuotationAssignTalkByOrderId, {
-            "quotationAssignTalk.orderId": orderId
-        }, function(res) {
-            var talks = res.quotationAssignTalks || [];
-            renderDecorationTalkMessages(talks);
-        }, function(res) {
-            decorationTalkMessageList.html('<div style="text-align:center;color:#999;padding:20px;">加载失败</div>');
-        });
-    }
-
-    // 渲染消息列表
-    function renderDecorationTalkMessages(talks) {
-        if (!talks || talks.length === 0) {
-            decorationTalkMessageList.html('<div style="text-align:center;color:#999;padding:20px;">暂无沟通记录</div>');
-            return;
-        }
-        var html = '';
-        for (var i = 0; i < talks.length; i++) {
-            var t = talks[i];
-            var senderName = t.sender ? (t.sender.currentName || t.sender.userName || '未知') : '未知';
-            var sendTime = t.sendTime || '';
-            var content = t.content || '';
-            var typeLabel = t.type == 1 ? '<span class="label label-info" style="font-size:10px;">设计师</span>' : '<span class="label label-success" style="font-size:10px;">预算员</span>';
-            html += '<div style="margin-bottom:10px;padding:8px;border-radius:4px;background:#fff;border:1px solid #ddd;">';
-            html += '  <div style="margin-bottom:4px;">';
-            html += '    <strong>' + senderName + '</strong> ' + typeLabel;
-            html += '    <span style="float:right;color:#999;font-size:12px;">' + sendTime + '</span>';
-            html += '  </div>';
-            html += '  <div style="color:#333;word-break:break-all;">' + content + '</div>';
-            html += '</div>';
-        }
-        decorationTalkMessageList.html(html);
-        decorationTalkMessageList.scrollTop(decorationTalkMessageList[0].scrollHeight);
-    }
-
-    // 发送消息
-    function sendDecorationTalkMessage() {
-        var orderId = decorationTalkOrderId.val();
-        var content = decorationTalkContent.val().trim();
-        if (!orderId) {
-            com.showAlert(com.warning, '装修单号不能为空');
-            return;
-        }
-        if (!content) {
-            com.showAlert(com.warning, '消息内容不能为空');
-            return;
-        }
-        com.post(api.quotation.sendQuotationAssignTalk, {
-            "quotationAssignTalk.orderId": orderId,
-            "quotationAssignTalk.content": content
-        }, function(res) {
-            decorationTalkContent.val('');
-            loadDecorationTalkMessages(orderId);
-        }, function(res) {
-            com.showAlert(com.error, res.errorMsg || '发送失败');
-        });
-    }
-
-    // 发送按钮点击
-    decorationSendTalkBtn.on('click', function() {
-        sendDecorationTalkMessage();
-    });
-
-    // 回车发送
-    decorationTalkContent.on('keydown', function(e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            sendDecorationTalkMessage();
-        }
+        params.quotationAssignTalk = { orderId: orderId };
+        com.popup4page("#layerPopUp4talkDecoration", api.quotation.quotationAssignTalkIndex.url, "分配沟通");
     });
 
     decorationUtils.initBaseInfo(decorationDetail.orderId, api.decoration.queryDecorationForCommonByOrderId, function(decoration) {

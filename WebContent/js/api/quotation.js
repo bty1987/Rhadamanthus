@@ -127,6 +127,9 @@ $.extend(api.index, {
     },
     quotationProfile4detailIndex: {
         url: "/views/quotation/quotationProfile4detail.html"
+    },
+    quotationAssignTalkIndex: {
+        url: "/views/quotation/quotationAssignTalk.html"
     }
 });
 
