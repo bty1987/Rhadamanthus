@@ -29,6 +29,7 @@ import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.dao.CustomerChanceOrderDao;
 import com.fanglin.customer.dao.CustomerConfigRuleDao;
 import com.fanglin.customer.dao.CustomerDeptRuleDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
@@ -36,6 +37,7 @@ import com.fanglin.customer.dao.CustomerSourceRecordDao;
 import com.fanglin.customer.dao.CustomerUserRuleDao;
 import com.fanglin.customer.dao.CustomerUserRuleItemDao;
 import com.fanglin.customer.po.CustomerChancePO;
+import com.fanglin.customer.po.CustomerChanceOrderPO;
 import com.fanglin.customer.po.CustomerConfigRulePO;
 import com.fanglin.customer.po.CustomerDeptRulePO;
 import com.fanglin.customer.po.CustomerSourcePO;
@@ -79,6 +81,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
+
+	@Autowired
+	private CustomerChanceOrderDao customerChanceOrderDao;
 
 	@Autowired
 	private CustomerDeptRuleDao customerDeptRuleDao;
@@ -639,6 +644,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerChanceDao.save(customerChancePO);
 
+			customerChanceOrderDao.save(new CustomerChanceOrderPO(customerChancePO.getCcid(), customerChancePO.getOrderId()));
+
 			if (customerConfigRulePO != null) {
 				customerConfigRuleDao.update(customerConfigRulePO.setSurplus(customerConfigRulePO.getSurplus() - 1000));
 			}
@@ -689,6 +696,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerChanceDao.save(customerChancePO);
 
+			customerChanceOrderDao.save(new CustomerChanceOrderPO(customerChancePO.getCcid(), customerChancePO.getOrderId()));
+
 			customerChanceVO.setCcid(customerChancePO.getCcid());
 			customerChanceVO.setOrderId(customerChancePO.getOrderId());
 			if (customerChancePO.getBelonger() != null) {
@@ -734,6 +743,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setOrderId(orderId);
 
 			customerChanceDao.save(customerChancePO);
+
+			customerChanceOrderDao.save(new CustomerChanceOrderPO(customerChancePO.getCcid(), customerChancePO.getOrderId()));
 
 			customerChanceVO.setCcid(customerChancePO.getCcid());
 			customerChanceVO.setOrderId(customerChancePO.getOrderId());
@@ -788,6 +799,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setOrderId(orderId);
 
 			customerChanceDao.save(customerChancePO);
+
+			customerChanceOrderDao.save(new CustomerChanceOrderPO(customerChancePO.getCcid(), customerChancePO.getOrderId()));
 
 			customerChanceVO.setCcid(customerChancePO.getCcid());
 			customerChanceVO.setOrderId(customerChancePO.getOrderId());
