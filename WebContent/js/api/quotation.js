@@ -106,9 +106,7 @@ $.extend(api.index, {
     quotationAssignUserRuleItemIndex: {
         url: "/views/quotation/quotationAssignUserRuleItem.html"
     },
-    quotationAssignUserRuleAvailableIndex: {
-        url: "/views/quotation/quotationAssignUserRuleAvailable.html"
-    },
+
     quotationAssignRequestIndex: {
         url: "/views/quotation/quotationAssignRequest.html"
     },
