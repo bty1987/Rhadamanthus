@@ -1330,7 +1330,7 @@ jQuery(function($) {
             return;
         }
         params.quotationAssignTalk = { orderId: orderId };
-        com.popup4page("#layerPopUp4talkDecoration", api.quotation.quotationAssignTalkIndex.url, "分配沟通");
+        com.popup4page("#layerPopUp4talkDecoration", api.index.quotationAssignTalkIndex.url, "分配沟通");
     });
 
     decorationUtils.initBaseInfo(decorationDetail.orderId, api.decoration.queryDecorationForCommonByOrderId, function(decoration) {
