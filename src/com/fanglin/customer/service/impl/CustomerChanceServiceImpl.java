@@ -493,8 +493,6 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		messageService.sendMessage(belonger.getUserId(), creater.getUserId(), content, MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
 
-		messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "confirmCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"event\":\"CUSTOMER_CHANCE_CONFIRMED\"}"));
-
 		if (customerChancePO.getCno() == null) return;
 
 		SystemConfigPO url = systemConfigDao.querySystemConfig("qw_url");// 获取新系统URL
@@ -752,6 +750,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (CustomerChancePO.ISMEET_MEET_INT == customerChancePO.getIsMeet()) {
 			customerChancePO.setMeetTime(DateUtil.getDateToTimestamp(new Date()));
+
+			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "meetCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"event\":\"CUSTOMER_CHANCE_MEET\"}"));
 		}
 
 		if (!StringUtils.isEmpty(customerChance.getIsTrue())) {
