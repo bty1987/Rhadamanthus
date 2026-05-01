@@ -54,8 +54,8 @@ $(function() {
 
     // 查询条件：自助模式去掉公司条件
     var conditions = isSelfMode
-        ? ["quotation-assign-request-status", "quotation-assign-request-orderId"]
-        : ["quotation-assign-request-company", "quotation-assign-request-status", "quotation-assign-request-orderId"];
+        ? ["quotation-assign-request-status", "quotation-assign-request-orderId", "quotation-assign-request-requestTime", "quotation-assign-request-assignTime", "quotation-assign-request-finishTime"]
+        : ["quotation-assign-request-company", "quotation-assign-request-status", "quotation-assign-request-orderId", "quotation-assign-request-user", "quotation-assign-request-requestUser", "quotation-assign-request-requestTime", "quotation-assign-request-assignTime", "quotation-assign-request-finishTime"];
     searcher.condition(conditions);
 
     // 顶部按钮：自助模式无按钮

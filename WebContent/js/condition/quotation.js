@@ -1420,6 +1420,61 @@ Condition.addupRule("quotation", {
         }
     },
 
+    // 分配请求 - 预算员
+    "assign-request-user": {
+        label: "预算员",
+        type: "text",
+        submitConfig: {
+            name: "userName",
+            op: "cn",
+            validate: null
+        }
+    },
+
+    // 分配请求 - 请求人
+    "assign-request-requestUser": {
+        label: "请求人",
+        type: "text",
+        submitConfig: {
+            name: "requestUserName",
+            op: "cn",
+            validate: null
+        }
+    },
+
+    // 分配请求 - 分配时间
+    "assign-request-assignTime": {
+        label: "分配时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "assignTime",
+            op: "cn",
+            validate: null
+        }
+    },
+
+    // 分配请求 - 请求时间
+    "assign-request-requestTime": {
+        label: "请求时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "requestTime",
+            op: "cn",
+            validate: null
+        }
+    },
+
+    // 分配请求 - 完成时间
+    "assign-request-finishTime": {
+        label: "完成时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "finishTime",
+            op: "cn",
+            validate: null
+        }
+    },
+
     // ==================== 分配记录管理相关条件 ====================
 
     // 分配记录 - 公司
