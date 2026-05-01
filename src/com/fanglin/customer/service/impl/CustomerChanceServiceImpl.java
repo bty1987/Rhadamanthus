@@ -33,11 +33,13 @@ import com.fanglin.core.security.MD5Helper;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.dao.CustomerChanceOrderDao;
 import com.fanglin.customer.dao.CustomerProfileDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
 import com.fanglin.customer.dao.CustomerSourceRecordDao;
 import com.fanglin.customer.dao.CustomerUserRuleDao;
 import com.fanglin.customer.po.CustomerChancePO;
+import com.fanglin.customer.po.CustomerChanceOrderPO;
 import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.po.CustomerSourceRecordPO;
 import com.fanglin.customer.po.CustomerUserRulePO;
@@ -81,6 +83,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
+
+	@Autowired
+	private CustomerChanceOrderDao customerChanceOrderDao;
 
 	@Autowired
 	private CustomerSourceDao customerSourceDao;
@@ -701,6 +706,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerChanceDao.update(customerChancePO);
 
+		customerChanceOrderDao.save(new CustomerChanceOrderPO(customerChancePO.getCcid(), customerChancePO.getOrderId()));
+
 		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("客户资源转装修单,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, operater));
 
 		customerProfileDao.updateCustomerProfile(decorationVO.getOrderId(), customerChancePO.getCustomer().getCid(), customerSourcePO.getCsid());
@@ -805,6 +812,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
 
 		customerChanceDao.update(customerChancePO);
+
+		customerChanceOrderDao.save(new CustomerChanceOrderPO(customerChancePO.getCcid(), customerChancePO.getOrderId()));
 
 		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("客户机会完成,装修单号:%s,归属:%s(%s),部门:%s(%s),分区:%s(%s)", decorationPO.getOrderId(), customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, operater));
 
