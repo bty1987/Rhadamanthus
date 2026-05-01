@@ -226,7 +226,7 @@ $(function() {
 
     function openTalkModal(orderId) {
         params.quotationAssignTalk = { orderId: orderId };
-        com.popup4page("#layerPopUp4talkAssign", api.quotation.quotationAssignTalkIndex.url, "分配沟通");
+        com.popup4page("#layerPopUp4talkAssign", api.index.quotationAssignTalkIndex.url, "分配沟通");
     }
 
     // ==================== 自助模式：跳过管理功能初始化 ====================
