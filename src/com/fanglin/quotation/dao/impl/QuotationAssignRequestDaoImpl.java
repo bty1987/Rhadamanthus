@@ -64,7 +64,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		PagingQuery<QuotationAssignRequestPO> query = pagingQuery(paging, QuotationAssignRequestPO.class);
 
 		// 直接按userId过滤（user关联对象的userId字段）
-		query.add(query.getCriterion("user.userId", userId, "eq"));
+		query.add(query.getCriterion("user.userId", userId, "eq")).add(query.getCriterion("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT, "ne"));
 
 		// 处理动态过滤条件
 		queryFilterExcute(query, filters);
