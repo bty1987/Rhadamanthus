@@ -101,6 +101,23 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 			} else if ("uid".equals(field)) {
 				// 预算员UID：精确匹配（user关联对象的uid字段）
 				query.add(query.getCriterion("user.uid", Integer.valueOf(data), op));
+			} else if ("userName".equals(field)) {
+				// 预算员姓名：模糊匹配（user关联对象的currentName字段）
+				query.alias("user", "user");
+				query.add(query.getCriterion("user.currentName", data, op));
+			} else if ("requestUserName".equals(field)) {
+				// 请求人姓名：模糊匹配（requestUser关联对象的currentName字段）
+				query.alias("requestUser", "requestUser");
+				query.add(query.getCriterion("requestUser.currentName", data, op));
+			} else if ("assignTime".equals(field)) {
+				// 分配时间：范围查询
+				query.timeranges("assignTime", data);
+			} else if ("requestTime".equals(field)) {
+				// 请求时间：范围查询
+				query.timeranges("requestTime", data);
+			} else if ("finishTime".equals(field)) {
+				// 完成时间：范围查询
+				query.timeranges("finishTime", data);
 			} else if ("company".equals(field)) {
 				// 公司：已在方法参数中处理，这里跳过
 				continue;
