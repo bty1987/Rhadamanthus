@@ -1,6 +1,6 @@
 # A20260103Action 客户线索接入接口文档
 
-> 最后更新：2026-04-20
+> 最后更新：2026-05-02
 >
 > **控制器**: `com.fanglin.seiya.action.A20260103Action`
 >
@@ -325,9 +325,11 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 ### 核心流程
 
 ```
-参数验证 → 通过电话查询客户cid → 通过楼盘+楼号查询房屋hid
+参数验证 → 通过电话查询客户cid → 通过 houseService.queryHouseByNoAHnum 查询房屋hid
 → 调用 decorationService.checkOverDecoration(cid, hid, orgId)
 ```
+
+> **2026-05-02 变更**: 房屋查询从直接调用 `houseDao`（含手动加密 fallback）改为统一调用 `houseService.queryHouseByNoAHnum`，加密楼号逻辑由 Service 层内部处理。
 
 ---
 
@@ -634,6 +636,10 @@ Salesforce 端调用 ERP 接口的典型流程：
 ---
 
 ## 变更记录
+
+### 2026-05-02
+- updateDecorationForSF: 房屋查询从直接 houseDao 调用改为 houseService.queryHouseByNoAHnum 统一接口（加密楼号逻辑内置）
+- checkoverCustomerLead 核心流程同步更新
 
 ### 2026-04-20
 - 重新输出完整接口文档（覆盖所有9个接口方法）
