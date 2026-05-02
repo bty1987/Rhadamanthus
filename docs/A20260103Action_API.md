@@ -192,6 +192,7 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 | `contactInfo` | String | 否 | 联系方式（三方信息） |
 | `userId` | String | **是** | 操作人工号 |
 | `orgId` | Integer | **是** | 公司标识 |
+| `salesmanId` | String | 否 | 业务员userId（传则更新 customerchance.creater + customersource.creater） |
 
 ### 响应参数
 
@@ -207,9 +208,19 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 }
 ```
 
+### 更新规则（扩展）
+
+| 参数 | 更新规则 |
+|------|---------|
+| 楼盘+楼号 | 必须一起更新，缺一不可 |
+| house | 存在则关联，不存在则创建 |
+| customer | 存在则关联，不存在则创建 |
+| referOrderId / sourceInfo / contactInfo | 独立更新，互不影响 |
+| salesmanId | 传入时同时更新 customerchance.creater 和 customersource.creater |
+
 ### 异常场景
 
-#### Service 层异常（A20260103ServiceImpl, 4种）
+#### Service 层异常（A20260103ServiceImpl, 5种）
 
 | 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 |
 |:---:|:------:|:---------|:---------|:---------|
@@ -217,6 +228,7 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 | 2 | 400002 | 楼盘和楼号必须同时提供 | village 和 houseNumber 只传了一个 | ServiceImpl:118-122 |
 | 3 | 330075 | 客户线索不存在 | `customerChanceDao.queryCustomerChanceByCno() == null` | ServiceImpl:93-95 |
 | 4 | 190005 | 人员不存在 | `userService.queryUserByUserId() == null` | ServiceImpl:129-131 |
+| 5 | 190005 | 业务员不存在 | `salesmanId` 非空但 `userDao.queryUserByUserId() == null` | ServiceImpl:218-220 |
 
 > **注意**: 还会间接触发 `houseService.existHouse`、`customerService.existCustomer`、`customerSourceService.updateCustomerSourceForHouse`、`customerSourceService.updateCustomerSourceForCustomer` 等方法的异常。
 
