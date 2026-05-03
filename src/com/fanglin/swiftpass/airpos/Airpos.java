@@ -10,6 +10,7 @@ package com.fanglin.swiftpass.airpos;
  * @Describing	: 
  */
 
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.security.KeyFactory;
 import java.security.PublicKey;
@@ -66,16 +67,21 @@ public class Airpos {
 	private static String configFilePathName = "/swiftpass.properties";
 
 	static {
-		try {
-			try {
-				prop = EncryptConfigLoader.load(configFilePathName);
-			} catch (Throwable e) {
-				logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
-				prop = new Properties();
-				prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
-			}
+		InputStream is = SystemConfig.class.getResourceAsStream(configFilePathName);
 
-			if (prop != null) {
+		if (is == null) {
+			logger.warn("配置文件不存在: {}，swiftpass支付功能将不可用", configFilePathName);
+		} else {
+			try {
+				is.close();
+				try {
+					prop = EncryptConfigLoader.load(configFilePathName);
+				} catch (Throwable e) {
+					logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
+					prop = new Properties();
+					prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+				}
+
 				xingEpayPublickey = prop.getProperty("XINGEPAYPUBLICKEY");
 
 				swiftpass_query_url = "/api/openbill/queryBillInfo";
@@ -83,10 +89,9 @@ public class Airpos {
 				swiftpass_updateKey_url = "/api/openbill/updateMerchantChannelKey";
 
 				kingdee_callBack_publicKey = prop.getProperty("KINGDEECALLBACKPUBLICKEY");
+			} catch (Throwable e) {
+				logger.warn("swiftpass.properties 配置文件加载失败: {}", e.getMessage());
 			}
-
-		} catch (Throwable e) {
-			logger.warn("swiftpass.properties 配置文件未找到或加载失败，swiftpass支付功能将不可用: {}", e.getMessage());
 		}
 	}
 

@@ -2,6 +2,7 @@ package com.fanglin.yspay.union;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,26 +49,30 @@ public class Base implements Serializable {
 	private static Properties prop;
 
 	static {
-		try {
-			try {
-				prop = EncryptConfigLoader.load(configFilePathName);
-			} catch (Throwable e) {
-				logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
-				prop = new Properties();
-				prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
-			}
+		InputStream is = SystemConfig.class.getResourceAsStream(configFilePathName);
 
-			if (prop != null) {
+		if (is == null) {
+			logger.warn("配置文件不存在: {}，银盛支付功能将不可用", configFilePathName);
+		} else {
+			try {
+				is.close();
+				try {
+					prop = EncryptConfigLoader.load(configFilePathName);
+				} catch (Throwable e) {
+					logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
+					prop = new Properties();
+					prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+				}
+
 				CERTID = prop.getProperty("cert.id");
 				PFXPATH = prop.getProperty("pfx.path");
 				CRTPATH = prop.getProperty("crt.path");
-				APPSECRET=prop.g...t");
+				APPSECRET=***
 				PFXPWD = prop.getProperty("pfx.pwd");
 				HOST = prop.getProperty("host");
+			} catch (Throwable e) {
+				logger.warn("yinsheng.properties 配置文件加载失败: {}", e.getMessage());
 			}
-
-		} catch (Throwable e) {
-			logger.warn("yinsheng.properties 配置文件未找到或加载失败，银盛支付功能将不可用: {}", e.getMessage());
 		}
 	}
 
