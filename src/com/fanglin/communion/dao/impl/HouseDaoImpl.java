@@ -3,7 +3,6 @@ package com.fanglin.communion.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;

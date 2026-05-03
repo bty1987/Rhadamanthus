@@ -13,16 +13,15 @@ package com.fanglin.approval.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.approval.dao.ApprovalCustomerOriginDao;
 import com.fanglin.approval.po.ApprovalCustomerOriginAO;
-import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.approval.po.ApprovalCustomerOriginPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
@@ -66,7 +65,7 @@ public class ApprovalCustomerOriginDaoImpl extends DaoImpl<ApprovalCustomerOrigi
 			} else if ("phone".equals(field)) {
 				query.add(Restrictions.in("customerOrigin.phone", SensitiveDataHelper.getAllEncryptedForms(filter.getData())));
 			} else if ("createTime".equals(field)) {
-				query.timeranges("customerOrigin.createTime", filter.getData());	
+				query.timeranges("customerOrigin.createTime", filter.getData());
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("customerOrigin.status", Short.valueOf(filter.getData()), filter.getOp()));
 			} else if ("designer.userId".equals(field)) {
@@ -75,7 +74,7 @@ public class ApprovalCustomerOriginDaoImpl extends DaoImpl<ApprovalCustomerOrigi
 			} else if ("salesman.userId".equals(field)) {
 				query.alias("customerOrigin.salesman", "salesman");
 				query.add(query.getCriterion("salesman.userId", filter));
-			} 
+			}
 		}
 	}
 
