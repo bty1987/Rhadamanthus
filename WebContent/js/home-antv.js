@@ -304,12 +304,11 @@ $(function() {
         $('.breadcrumb').empty().append('<i class="fa fa-fw icon-home"></i>&nbsp;&nbsp;&nbsp;首页');
     });
 
-    $("#chatGptTab").click(function() {
-
-        $("#chatGptPage").load("/views/data/chatGpt.html");
-
-        $('.breadcrumb').empty().append('<i class="fa fa-fw icon-calendar"></i>&nbsp;&nbsp;&nbsp;chatGPT');
-    });
+    // GPT标签已隐藏
+    // $("#chatGptTab").click(function() {
+    //     $("#chatGptPage").load("/views/data/chatGpt.html");
+    //     $('.breadcrumb').empty().append('<i class="fa fa-fw icon-calendar"></i>&nbsp;&nbsp;&nbsp;chatGPT');
+    // });
 
     $("#worksheetTab").click(function() {
 
@@ -511,8 +510,8 @@ $(function() {
 
         $(".flpage.nav-tab").removeClass("active");
         $(".flpage.tab-pane").removeClass("active");
-        $("#home #homeNav.nav.nav-tabs .flpage.nav-tab:gt(3)").remove();
-        $("#home .flpage.tab-content div.flpage.tab-pane:gt(3)").remove();
+        $( "#home #homeNav.nav.nav-tabs .flpage.nav-tab:gt(2)" ).remove();
+        $( "#home .flpage.tab-content div.flpage.tab-pane:gt(2)" ).remove();
 
         $("#homeNav > #operateTab").removeClass("open");
         $("#homeNav > #homeTab").addClass("active");
