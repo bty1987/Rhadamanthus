@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fanglin.swiftpass.enums.KeySignTypeEnum;
 import com.fanglin.swiftpass.enums.RespSignAlgorithmEnum;
 import com.fanglin.utils.EncryptConfigLoader;
@@ -16,7 +19,9 @@ import com.fanglin.utils.EncryptConfigLoader;
  */
 public class Configure {
 
-	public static final String PROD_URL; // 开放银行平台生产环境地址
+	private static final Logger logger = LoggerFactory.getLogger(Configure.class);
+
+	public static String PROD_URL; // 开放银行平台生产环境地址
 
 	private static boolean devEnv; // 是否测试环境开关，true连接测试环境，false连接生产环境
 
@@ -69,7 +74,7 @@ public class Configure {
 			respSignSwitch = Boolean.parseBoolean(prop.getProperty("RESPSIGNSWITCH"));
 
 		} catch (Throwable e) {
-			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
+			logger.warn("swiftpass.properties 配置文件未找到或加载失败，swiftpass支付功能将不可用: {}", e.getMessage());
 		}
 	}
 
