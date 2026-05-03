@@ -26,6 +26,8 @@ public class ApprovalDecorationBelongPO implements java.io.Serializable {
 
 	private short mergeFlag;
 
+	private long ccid;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "adbId")
@@ -73,14 +75,12 @@ public class ApprovalDecorationBelongPO implements java.io.Serializable {
 		this.mergeFlag = mergeFlag;
 	}
 
-	private Long ccid;
-
 	@Column(name = "ccid")
-	public Long getCcid() {
+	public long getCcid() {
 		return ccid;
 	}
 
-	public void setCcid(Long ccid) {
+	public void setCcid(long ccid) {
 		this.ccid = ccid;
 	}
 
