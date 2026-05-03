@@ -84,7 +84,7 @@ public class QuotetionFunctionAreaItemServiceImpl implements QuotetionFunctionAr
 
 		QuotetionFunctionAreaPO quotetionFunctionAreaPO = quotetionFunctionAreaDao.get(quotetionFunctionAreaVO.getQfaId());
 
-		String table = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex());
+		String table = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTableName(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex());
 
 		for (QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO : quotetionFunctionAreaItemVOs) {
 			quotetionFunctionAreaItemDao.updateQuotetionFunctionAreaItemForIndex(table, quotetionFunctionAreaItemVO);
