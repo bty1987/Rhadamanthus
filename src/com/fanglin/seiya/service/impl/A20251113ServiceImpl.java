@@ -146,11 +146,12 @@ public class A20251113ServiceImpl implements A20251113Service {
 			throw new FLException(110000, "系统处理问题");
 		}
 
-		// if (response.getInteger("code") == 0 && response.getJSONObject("data") != null) {
-		// return exchangeAuthCode(response.getJSONObject("data").getString("accessToken"));
-		// }
+		JSONObject data = response.getJSONObject("data");
+		if (data == null || data.getString("phone") == null) {
+			throw new FLException(110000, "SSO登录失败，未获取到用户手机号");
+		}
 
-		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(response.getJSONObject("data").getString("phone"), "-1");
+		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(data.getString("phone"), "-1");
 
 		if (userPOs != null && userPOs.size() != 0) {
 
