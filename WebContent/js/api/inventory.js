@@ -283,7 +283,8 @@ $.extend(api, {
             url: "queryInventoryDrawing.do"
         },
         addInventoryDrawing: {
-            url: "addInventoryDrawing.do"
+            url: "addInventoryDrawing.do",
+            intercept: true
         },
         deleteInventoryDrawing: {
             url: "deleteInventoryDrawing.do"
