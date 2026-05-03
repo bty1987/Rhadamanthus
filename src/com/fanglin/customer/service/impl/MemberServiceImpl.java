@@ -147,8 +147,8 @@ public class MemberServiceImpl implements MemberService {
 					orderKeyList.add(member.getOrderId());
 				}
 			} else if (member.getPhone() != null) {
-				// 手机号查询
-				phoneList.add(SensitiveDataHelper.encrypt(member.getPhone()));
+				// 手机号查询（加入所有可能的加密形式：明文、旧Base64、新ENC(V1:)）
+				phoneList.addAll(SensitiveDataHelper.getAllEncryptedForms(member.getPhone()));
 				resultMap.put(member.getPhone(), new ArrayList<MemberVO>());
 			}
 		}
@@ -198,11 +198,12 @@ public class MemberServiceImpl implements MemberService {
 
 			for (CustomerPO customerPO : customers) {
 
-				List<Long> customerIdList = phoneToCustomerMap.get(customerPO.getPhone());
+				String plainPhone = SensitiveDataHelper.decrypt(customerPO.getPhone());
+				List<Long> customerIdList = phoneToCustomerMap.get(plainPhone);
 
 				if (customerIdList == null) {
 					customerIdList = new ArrayList<Long>();
-					phoneToCustomerMap.put(customerPO.getPhone(), customerIdList);
+					phoneToCustomerMap.put(plainPhone, customerIdList);
 				}
 
 				if (customerIdList.contains(customerPO.getCid())) continue;
@@ -214,11 +215,12 @@ public class MemberServiceImpl implements MemberService {
 
 			for (CustomerPhonePO customerPhone : customerPhones) {
 
-				List<Long> customerIdList = phoneToCustomerMap.get(customerPhone.getPhone());
+				String plainPhone = SensitiveDataHelper.decrypt(customerPhone.getPhone());
+				List<Long> customerIdList = phoneToCustomerMap.get(plainPhone);
 
 				if (customerIdList == null) {
 					customerIdList = new ArrayList<Long>();
-					phoneToCustomerMap.put(customerPhone.getPhone(), customerIdList);
+					phoneToCustomerMap.put(plainPhone, customerIdList);
 				}
 
 				if (customerIdList.contains(customerPhone.getCid())) continue;
@@ -271,9 +273,8 @@ public class MemberServiceImpl implements MemberService {
 				String originalPhone = member.getPhone();
 				if (originalPhone == null) continue;
 
-				String encodedPhone = SensitiveDataHelper.encrypt(originalPhone);
-
-				List<Long> customerIdList = phoneToCustomerMap.get(encodedPhone);
+				// phoneToCustomerMap 的 key 已是明文，直接用明文查找
+				List<Long> customerIdList = phoneToCustomerMap.get(originalPhone);
 				if (customerIdList == null) {
 					continue;
 				}
@@ -379,8 +380,8 @@ public class MemberServiceImpl implements MemberService {
 				// 装修单号查询模式 - 将在后续处理
 				queryOrderIds.add(member.getOrderId());
 			} else if (member.getPhone() != null) {
-				// 手机号查询模式
-				encodedPhoneList.add(SensitiveDataHelper.encrypt(member.getPhone()));
+				// 手机号查询模式（加入所有可能的加密形式）
+				encodedPhoneList.addAll(SensitiveDataHelper.getAllEncryptedForms(member.getPhone()));
 				resultMap.put(member.getPhone(), new ArrayList<MemberVO>());
 			} else {
 				throw new FLException(130021, "客户电话或装修单号不存在");

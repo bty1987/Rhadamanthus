@@ -9,6 +9,7 @@
 
 package com.fanglin.communion.dao.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.SQLQuery;
@@ -57,7 +58,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 
 		sql.append("select c.* ");
 		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
-		sql.append("where (c.pinyinAll like :pinyinAll or c.pinyinAB like :pinyinAB or c.name like :name) or (cp.phone = :phone and cp.status = :status) ");
+		sql.append("where (c.pinyinAll like :pinyinAll or c.pinyinAB like :pinyinAB or c.name like :name) or (cp.phone in (:phones) and cp.status = :status) ");
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			sql.append("and c.company =:company ");
@@ -70,9 +71,9 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 		query.setString("pinyinAll", likestr).setString("pinyinAB", likestr).setString("name", likestr).setShort("status", CustomerPhonePO.STATUS_ENABLE_INT).setInteger("limit", limit);
 
 		if (pinyinName != null && pinyinName.matches("1[3-9]\\d{9}")) {
-			query.setString("phone", SensitiveDataHelper.encrypt(pinyinName));
+			query.setParameterList("phones", SensitiveDataHelper.getAllEncryptedForms(pinyinName));
 		} else {
-			query.setString("phone", pinyinName);
+			query.setParameterList("phones", Arrays.asList(pinyinName));
 		}
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
@@ -110,7 +111,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 			} else if ("type".equals(field)) {
 				query.add(Restrictions.eq("type", Short.valueOf(data)));
 			} else if ("phone".equals(field)) {
-				query.add(Restrictions.eq("phone", SensitiveDataHelper.encrypt(data)));
+				query.add(Restrictions.in("phone", SensitiveDataHelper.getAllEncryptedForms(data)));
 			}
 		}
 	}

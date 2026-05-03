@@ -97,6 +97,57 @@ public class SensitiveDataHelper {
         return value.startsWith(ENCRYPT_PREFIX) && value.endsWith(ENCRYPT_SUFFIX);
     }
 
+    // ========== 查询辅助 ==========
+
+    /**
+     * 获取一个明文手机号所有可能的加密形式，用于数据库 IN 查询
+     *
+     * 返回: [明文, 旧Base64密文(如存在), 新ENC(V1:xxx)密文]
+     * 去重：如果新旧密钥相同则不会重复
+     *
+     * @param plaintext 明文手机号
+     * @return 所有可能出现在数据库中的加密形式列表
+     */
+    public static List<String> getAllEncryptedForms(String plaintext) {
+        List<String> forms = new java.util.ArrayList<String>();
+
+        if (plaintext == null || plaintext.trim().isEmpty()) {
+            forms.add(plaintext);
+            return forms;
+        }
+
+        plaintext = plaintext.trim();
+
+        // 1. 明文形式
+        forms.add(plaintext);
+
+        // 2. 旧格式 Base64 密文（用旧密钥加密，不加 ENC() 前缀）
+        try {
+            String legacyEncrypted = AESHelper.encrypt(
+                plaintext,
+                KeyManager.getLegacyKey(),
+                KeyManager.getLegacyIv()
+            );
+            if (!forms.contains(legacyEncrypted)) {
+                forms.add(legacyEncrypted);
+            }
+        } catch (Exception e) {
+            // 旧密钥不可用则跳过
+        }
+
+        // 3. 新格式 ENC(V1:xxx) 密文
+        try {
+            String newEncrypted = encrypt(plaintext);
+            if (!forms.contains(newEncrypted)) {
+                forms.add(newEncrypted);
+            }
+        } catch (Exception e) {
+            // 新加密不可用则跳过
+        }
+
+        return forms;
+    }
+
     // ========== 内部方法 ==========
 
     /**

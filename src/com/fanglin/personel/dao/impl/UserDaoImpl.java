@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -125,7 +126,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident) {
-		return session().createCriteria(UserPO.class).add(Restrictions.or(Restrictions.eq("phone", phone), Restrictions.eq("identity", ident))).add(Restrictions.eq("type", UserPO.TYPE_USER_INT)).list();
+		return session().createCriteria(UserPO.class).add(Restrictions.or(Restrictions.in("phone", SensitiveDataHelper.getAllEncryptedForms(phone)), Restrictions.in("identity", SensitiveDataHelper.getAllEncryptedForms(ident)))).add(Restrictions.eq("type", UserPO.TYPE_USER_INT)).list();
 	}
 
 	@Override

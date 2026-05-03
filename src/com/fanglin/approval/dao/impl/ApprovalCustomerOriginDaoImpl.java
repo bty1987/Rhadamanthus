@@ -62,11 +62,9 @@ public class ApprovalCustomerOriginDaoImpl extends DaoImpl<ApprovalCustomerOrigi
 				query.alias("customerOrigin.village", "village");
 				query.add(query.getCriterion("village.no", filter));
 			} else if ("houseNumber".equals(field)) {
-				Criterion plainCriterion = query.getCriterion("customerOrigin.houseNumber", filter);
-				Criterion encryptedCriterion = query.getCriterion("customerOrigin.houseNumber", SensitiveDataHelper.encrypt(filter.getData()), filter.getOp());
-				query.add(Restrictions.disjunction().add(plainCriterion).add(encryptedCriterion));
+				query.add(Restrictions.in("customerOrigin.houseNumber", SensitiveDataHelper.getAllEncryptedForms(filter.getData())));
 			} else if ("phone".equals(field)) {
-				query.add(query.getCriterion("customerOrigin.phone", filter));
+				query.add(Restrictions.in("customerOrigin.phone", SensitiveDataHelper.getAllEncryptedForms(filter.getData())));
 			} else if ("createTime".equals(field)) {
 				query.timeranges("customerOrigin.createTime", filter.getData());	
 			} else if ("status".equals(field)) {
