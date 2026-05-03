@@ -255,7 +255,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaVO.getQfaId());
 
-		String table = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex());
+		String table = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTableName(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex());
 
 		for (QuotationFunctionAreaItemVO quotationFunctionAreaItemVO : QuotationFunctionAreaItemVOs) {
 
