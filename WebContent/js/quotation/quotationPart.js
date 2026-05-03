@@ -1959,6 +1959,8 @@ var QuotationDetail = (function() {
                 quo.preferParams["quotationPrefer.manageDiscount"] = presignProduce ? presignProduce.manageDiscount : 0;
                 quo.preferParams["quotationPrefer.quoteArea"] = quoteArea;
                 quo.preferParams["quotationPrefer.quotePrice"] = quotePrice;
+                quo.preferParams["quotationPrefer.activityPrice"] = presignProduce ? com.checkNull(presignProduce.activityPrice, 0) : 0;
+                quo.preferParams["quotationPrefer.activityProfit"] = presignProduce ? com.checkNull(presignProduce.activityProfit, 0) : 0;
 
                 var perfer = {
                     "preferPrice": com.focusPage('#prefer').val(),
@@ -4833,7 +4835,11 @@ var QuotationDetail = (function() {
                     "quotationPrefer.manageDiscount": quotationPrefer.manageDiscount ? quotationPrefer.manageDiscount : 0,
                     "quotationPrefer.quotePrice": quotationPrefer.quotePrice ? quotationPrefer.quotePrice : 0,
                     "quotationPrefer.quoteArea": quotationPrefer.quoteArea ? quotationPrefer.quoteArea : 0,
+                    "quotationPrefer.activityPrice": quotationPrefer.activityPrice ? quotationPrefer.activityPrice : 0,
+                    "quotationPrefer.activityProfit": quotationPrefer.activityProfit ? quotationPrefer.activityProfit : 0,
                 }
+
+                quo.quotationPrefer = quotationPrefer;
 
                 quo.oldPrefer.quoteArea = quo.preferParams["quotationPrefer.quoteArea"];
                 com.focusPage('#presentPrefer').val(quotationPrefer.presignProduce && quotationPrefer.presignProduce.name ? quotationPrefer.presignProduce.name : "无");
