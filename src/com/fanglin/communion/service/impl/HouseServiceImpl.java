@@ -63,9 +63,6 @@ public class HouseServiceImpl implements HouseService {
 	public HouseVO queryHouseByNoAHnum(HouseVO houseVO, Integer company) throws FLException {
 
 		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
-		if (housePO == null) {
-			housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), SensitiveDataHelper.encrypt(houseVO.getHouseNumber()), company);
-		}
 
 		if (housePO == null) {
 			throw new FLException(320002, "房产不存在");
@@ -78,10 +75,7 @@ public class HouseServiceImpl implements HouseService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addHouse(HouseVO houseVO, Integer company) throws FLException {
 
-		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), SensitiveDataHelper.encrypt(houseVO.getHouseNumber()), company);
-		if (housePO == null) {
-			housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
-		}
+		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
 
 		if (housePO != null) {
 			throw new FLException(320001, "楼牌号已存在");
@@ -103,10 +97,7 @@ public class HouseServiceImpl implements HouseService {
 	@Transactional(rollbackFor = Exception.class)
 	public int existHouse(HouseVO houseVO, Integer company) {
 
-		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), SensitiveDataHelper.encrypt(houseVO.getHouseNumber()), company);
-		if (housePO == null) {
-			housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
-		}
+		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
 
 		if (housePO == null) {
 			housePO = new HousePO();

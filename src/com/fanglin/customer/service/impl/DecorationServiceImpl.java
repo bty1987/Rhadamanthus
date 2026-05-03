@@ -258,10 +258,10 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		if (decorationVO.getCustomerPhone() != null) {
-			phone = SensitiveDataHelper.encrypt(decorationVO.getCustomerPhone());
+			phone = decorationVO.getCustomerPhone();
 		}
 
-		List<CustomerPO> customerPOs = customerDao.queryCustomer(phone);
+		List<CustomerPO> customerPOs = customerDao.queryCustomer(SensitiveDataHelper.getAllEncryptedForms(phone));
 
 		if (customerPOs == null || customerPOs.isEmpty()) {
 			throw new FLException(330009, "无可绑定订单");

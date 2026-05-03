@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.SystemConfig;
 
 @Repository("customerPhoneDao")
@@ -77,7 +78,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 
 		sql.append("select cp.* ");
 		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
-		sql.append("where cp.phone =:phone and cp.defaults = 1 and cp.status = 0");
+		sql.append("where cp.phone in (:phones) and cp.defaults = 1 and cp.status = 0");
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			sql.append(" and c.company =:company ");
@@ -85,7 +86,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerPhonePO.class);
 
-		query.setString("phone", phone);
+		query.setParameterList("phones", SensitiveDataHelper.getAllEncryptedForms(phone));
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			query.setInteger("company", company);
@@ -97,8 +98,8 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 	@Override
 	public int countCustomerPhone(String phone) {
 
-		String sql = "select count(*) from communion.customerphone where phone  =:phone";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("phone", phone).uniqueResult();
+		String sql = "select count(*) from communion.customerphone where phone in (:phones)";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setParameterList("phones", SensitiveDataHelper.getAllEncryptedForms(phone)).uniqueResult();
 
 		return count.intValue();
 	}

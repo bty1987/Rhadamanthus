@@ -38,7 +38,7 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 
 	@Override
 	public CustomerSourcePO queryCustomerSource(int uid, String phone, int company) {
-		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).createAlias("creater", "creater").add(Restrictions.eq("creater.uid", uid)).add(Restrictions.eq("phone", phone)).add(Restrictions.eq("company", company)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
+		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).createAlias("creater", "creater").add(Restrictions.eq("creater.uid", uid)).add(Restrictions.in("phone", SensitiveDataHelper.getAllEncryptedForms(phone))).add(Restrictions.eq("company", company)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

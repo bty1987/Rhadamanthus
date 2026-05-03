@@ -197,7 +197,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		String phone = SensitiveDataHelper.encrypt(customerSourceVO.getPhone());
+		String phone = customerSourceVO.getPhone();
 
 		CustomerSourcePO customerSourcePP = customerSourceDao.queryCustomerSource(creater.getUid(), phone, company);
 

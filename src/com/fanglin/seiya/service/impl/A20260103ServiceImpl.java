@@ -423,9 +423,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 	 */
 	private CustomerVO findCustomerByPhone(String phone, Integer company) throws FLException {
 
-		String encodedPhone = SensitiveDataHelper.encrypt(phone);
-
-		List<CustomerPhonePO> phonePOs = customerPhoneDao.queryCustomerPhoneByPhone(encodedPhone, CustomerPhonePO.STATUS_ENABLE_INT, company);
+		List<CustomerPhonePO> phonePOs = customerPhoneDao.queryCustomerPhone(SensitiveDataHelper.getAllEncryptedForms(phone), CustomerPhonePO.STATUS_ENABLE_INT, null, company);
 
 		if (phonePOs == null || phonePOs.isEmpty()) {
 			return null;

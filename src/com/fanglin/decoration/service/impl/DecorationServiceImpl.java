@@ -366,7 +366,7 @@ public class DecorationServiceImpl implements DecorationService {
 			return;
 		}
 
-		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(SensitiveDataHelper.encrypt(customerPhone), CustomerPhonePO.STATUS_ENABLE_INT, null);
+		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhone(SensitiveDataHelper.getAllEncryptedForms(customerPhone), CustomerPhonePO.STATUS_ENABLE_INT, null, null);
 
 		filters.add(new Filter("decoration.customer.cid", (null != customerPhones && !customerPhones.isEmpty()) ? String.valueOf(customerPhones.get(0).getCid()) : "-1", "eq"));
 

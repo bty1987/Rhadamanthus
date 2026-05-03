@@ -178,9 +178,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public int checkCustomerForPhone(CustomerPhoneVO customerPhoneVO, Integer company) throws FLException {
 
-		String phone = SensitiveDataHelper.encrypt(customerPhoneVO.getPhone());
+		List<String> phones = SensitiveDataHelper.getAllEncryptedForms(customerPhoneVO.getPhone());
 
-		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(phone, customerPhoneVO.getStatus(), company);
+		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhone(phones, customerPhoneVO.getStatus(), null, company);
 
 		if (customerPhonePOs == null || customerPhonePOs.size() == 0) {
 			return 0;
@@ -206,9 +206,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addCustomer(CustomerVO customerVO, Integer company) throws FLException {
 
-		String phone = SensitiveDataHelper.encrypt(customerVO.getPhone());
+		List<String> phones = SensitiveDataHelper.getAllEncryptedForms(customerVO.getPhone());
 
-		if (customerPhoneDao.queryCustomerPhoneByPhone(phone, CustomerPhonePO.STATUS_ENABLE_INT, company).size() != 0) {
+		if (customerPhoneDao.queryCustomerPhone(phones, CustomerPhonePO.STATUS_ENABLE_INT, null, company).size() != 0) {
 			throw new FLException(130006, "客户电话已存在");
 		}
 
@@ -254,7 +254,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int existCustomer(CustomerVO customerVO, Integer company) {
 
-		String phone = customerVO.getPhone() != null && customerVO.getPhone().length() == 11 ? SensitiveDataHelper.encrypt(customerVO.getPhone()) : customerVO.getPhone();
+		String phone = customerVO.getPhone();
 
 		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhoneForDefault(phone, company);
 
@@ -299,9 +299,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addCustomerPhone(CustomerPhoneVO customerPhoneVO, Integer company) throws FLException {
 
-		String phone = SensitiveDataHelper.encrypt(customerPhoneVO.getPhone());
+		List<String> phones = SensitiveDataHelper.getAllEncryptedForms(customerPhoneVO.getPhone());
 
-		if (customerPhoneDao.queryCustomerPhoneByPhone(phone, CustomerPhonePO.STATUS_ENABLE_INT, company).size() != 0) {
+		if (customerPhoneDao.queryCustomerPhone(phones, CustomerPhonePO.STATUS_ENABLE_INT, null, company).size() != 0) {
 			throw new FLException(130006, "客户电话已存在");
 		}
 

@@ -42,7 +42,7 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 	@Override
 	public HousePO queryHouseByNoAHnum(String no, String houseNumber, Integer company) {
 
-		Criteria criteria = session().createCriteria(HousePO.class).createAlias("village", "village").add(Restrictions.eq(HousePO.COLUMN_VILLAGE_NO_STR, no)).add(Restrictions.eq(HousePO.COLUMN_HOUSENUMBER_STR, houseNumber));
+		Criteria criteria = session().createCriteria(HousePO.class).createAlias("village", "village").add(Restrictions.eq(HousePO.COLUMN_VILLAGE_NO_STR, no)).add(Restrictions.in(HousePO.COLUMN_HOUSENUMBER_STR, SensitiveDataHelper.getAllEncryptedForms(houseNumber)));
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			criteria.add(Restrictions.eq("company", company));
@@ -78,10 +78,7 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 			} else if ("orientation".equals(filter.getField())) {
 				query.add(Restrictions.eq("orientation", Short.valueOf(filter.getData())));
 			} else if ("houseNumber".equals(filter.getField())) {
-				Disjunction disjunction = Restrictions.disjunction();
-				disjunction.add(query.getCriterion("houseNumber", filter));
-				disjunction.add(Restrictions.eq("houseNumber", SensitiveDataHelper.encrypt(filter.getData())));
-				query.add(disjunction);
+				query.add(Restrictions.in("houseNumber", SensitiveDataHelper.getAllEncryptedForms(filter.getData())));
 			} else if ("status".equals(filter.getField())) {
 				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 			} else if ("buildingArea".equals(filter.getField())) {

@@ -464,10 +464,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		UserVO userVO = userInfoVO.getUser();
-		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(SensitiveDataHelper.encrypt(userVO.getPhone()), SensitiveDataHelper.encrypt(userVO.getIdentity()));
-		if (userPOs.size() == 0) {
-			userPOs = userDao.queryUserByPhoneAIdent(userVO.getPhone(), userVO.getIdentity());
-		}
+		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(userVO.getPhone(), userVO.getIdentity());
 
 		if (userPOs.size() > 0) {
 			throw new FLException(190006, "人员已存在");
