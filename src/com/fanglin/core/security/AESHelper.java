@@ -41,7 +41,7 @@ public class AESHelper {
 			byte[] encrypted = cipher.doFinal(content.getBytes("utf-8"));
 			return new BASE64Encoder().encode(encrypted); // 此处使用BASE64做转码。
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			// System.out.println(e.getMessage());
 			throw new FLException(110005, "系统处理问题");
 		}
 	}
@@ -69,7 +69,7 @@ public class AESHelper {
 
 			return new String(original, "utf-8");
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			// System.out.println(e.getMessage());
 			throw new FLException(110005, "系统处理问题");
 		}
 	}

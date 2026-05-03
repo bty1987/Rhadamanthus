@@ -11,7 +11,6 @@ package com.fanglin.postar.airpos;
  * @Describing	: 
  */
 
-import java.io.InputStream;
 import java.util.Date;
 import java.util.Properties;
 import java.util.TreeMap;
@@ -60,21 +59,16 @@ public class Airpos {
 	private static String configFilePathName = "/postar.properties";
 
 	static {
-		InputStream is = SystemConfig.class.getResourceAsStream(configFilePathName);
-
-		if (is == null) {
-			logger.warn("配置文件不存在: {}，postar支付功能将不可用", configFilePathName);
-		} else {
+		try {
 			try {
-				is.close();
-				try {
-					prop = EncryptConfigLoader.load(configFilePathName);
-				} catch (Throwable e) {
-					logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
-					prop = new Properties();
-					prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
-				}
+				prop = EncryptConfigLoader.load(configFilePathName);
+			} catch (Throwable e) {
+				logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
+				prop = new Properties();
+				prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			}
 
+			if (prop != null) {
 				publicKey = prop.getProperty("PUBLICKEY");
 				version = prop.getProperty("VERSION");
 				ip = prop.getProperty("IP");
@@ -86,9 +80,10 @@ public class Airpos {
 				postar_pay_url = String.format("%s%s", host, "/yyfsevr/order/pay");
 				postar_pos_pay_url = String.format("%s%s", host, "/yyfsevr/order/cashierPay");
 				postar_query_url = String.format("%s%s", host, "/yyfsevr/order/tradeQuery");
-			} catch (Throwable e) {
-				logger.warn("postar.properties 配置文件加载失败: {}", e.getMessage());
 			}
+
+		} catch (Throwable e) {
+			logger.warn("postar.properties 配置文件未找到或加载失败，postar支付功能将不可用: {}", e.getMessage());
 		}
 	}
 

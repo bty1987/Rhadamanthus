@@ -63,21 +63,16 @@ public class Configure {
 	private static String configFilePathName = "/swiftpass.properties";
 
 	static {
-		InputStream is = SystemConfig.class.getResourceAsStream(configFilePathName);
-
-		if (is == null) {
-			logger.warn("配置文件不存在: {}，swiftpass支付功能将不可用", configFilePathName);
-		} else {
+		try {
 			try {
-				is.close();
-				try {
-					prop = EncryptConfigLoader.load(configFilePathName);
-				} catch (Throwable e) {
-					logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
-					prop = new Properties();
-					prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
-				}
+				prop = EncryptConfigLoader.load(configFilePathName);
+			} catch (Throwable e) {
+				logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
+				prop = new Properties();
+				prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			}
 
+			if (prop != null) {
 				PROD_URL = prop.getProperty("PROD_URL");
 				devEnv = Boolean.parseBoolean(prop.getProperty("DEVENV"));
 				devUrl = prop.getProperty("DEVURL");
@@ -86,9 +81,10 @@ public class Configure {
 				respPubKey = prop.getProperty("RESPPUBKEY");
 				reqParamEncryptKey = prop.getProperty("REQPARAMENCRYPTKEY");
 				respSignSwitch = Boolean.parseBoolean(prop.getProperty("RESPSIGNSWITCH"));
-			} catch (Throwable e) {
-				logger.warn("swiftpass.properties 配置文件加载失败: {}", e.getMessage());
 			}
+
+		} catch (Throwable e) {
+			logger.warn("swiftpass.properties 配置文件未找到或加载失败，swiftpass支付功能将不可用: {}", e.getMessage());
 		}
 	}
 
