@@ -1104,14 +1104,15 @@ public class PaytranServiceImpl implements PaytranService {
 		} catch (FLException e) {
 			throw e;
 		} catch (InvocationTargetException e) {
-			if (e.getTargetException().getClass() == FLException.class) {
-				throw (FLException) e.getTargetException();
+			Throwable target = e.getTargetException();
+			if (target.getClass() == FLException.class) {
+				throw (FLException) target;
 			} else {
-				log.error(e.getMessage(), e);
-				throw new FLException(150073, "不支持其他支付平台");
+				log.error("Airpos.alipay反射调用异常: {}", target.getMessage(), target);
+				throw new FLException(150073, String.format("支付平台调用失败:%s", target.getMessage()));
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error("Airpos.alipay调用异常: {}", e.getMessage(), e);
 			throw new FLException(150073, "不支持其他支付平台");
 		}
 
