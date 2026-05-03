@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
@@ -42,7 +43,6 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
@@ -235,7 +235,8 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		decorationBelongPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationBelongPO.setOperater(userPO);
 		decorationBelongPO.setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
-		decorationBelongPO.setCcid(ccid);
+
+		if (ccid != null) decorationBelongPO.setCcid(ccid);
 
 		decorationBelongPO.setType(type);
 		decorationBelongPO.setStatus(DecorationBelongPO.STATUS_INVALID_INT);
