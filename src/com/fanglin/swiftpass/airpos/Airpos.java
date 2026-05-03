@@ -38,7 +38,7 @@ import com.fanglin.swiftpass.utils.Base64;
 import com.fanglin.swiftpass.utils.OpenSdk;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.SystemConfig;
+import com.fanglin.utils.EncryptConfigLoader;
 
 public class Airpos {
 
@@ -66,8 +66,7 @@ public class Airpos {
 
 	static {
 		try {
-			prop = new Properties();
-			prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			prop = EncryptConfigLoader.load(configFilePathName);
 
 			// respPubKey = prop.getProperty("RESPPUBKEY");
 			// bsPrivateKey = prop.getProperty("BSPRIVATEKEY");
@@ -81,7 +80,7 @@ public class Airpos {
 			kingdee_callBack_publicKey = prop.getProperty("KINGDEECALLBACKPUBLICKEY");
 
 		} catch (Throwable e) {
-			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
+			logger.warn("swiftpass.properties 配置文件未找到或加载失败，swiftpass支付功能将不可用: {}", e.getMessage());
 		}
 	}
 
