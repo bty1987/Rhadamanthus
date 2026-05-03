@@ -706,7 +706,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerChanceDao.update(customerChancePO);
 
-		customerChanceOrderDao.save(new CustomerChanceOrderPO(customerChancePO.getCcid(), customerChancePO.getOrderId()));
+		CustomerChanceOrderPO existOrder = customerChanceOrderDao.queryCustomerChanceOrder(customerChancePO.getCcid());
+		if (existOrder == null) {
+			customerChanceOrderDao.save(new CustomerChanceOrderPO(customerChancePO.getCcid(), customerChancePO.getOrderId()));
+		}
 
 		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("客户资源转装修单,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, operater));
 
