@@ -55,6 +55,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -205,7 +206,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源初审,客户名:%s,楼盘:%s %s %s %s. 业务部:%s,业务员:%s(%s),业务类型:%s,非提比例:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), belonger.getDept().getName(), belonger.getCurrentName(), belonger.getUserId(), busitype.getName(), busitype.getNotSalesmanRate());
+		String content = String.format("客源初审,客户名:%s,楼盘:%s %s %s %s. 业务部:%s,业务员:%s(%s),业务类型:%s,非提比例:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), SensitiveDataHelper.decrypt(housePO.getHouseNumber()), belonger.getDept().getName(), belonger.getCurrentName(), belonger.getUserId(), busitype.getName(), busitype.getNotSalesmanRate());
 
 		approvalPO = new ApprovalPO().init(sender, receiver, "", String.valueOf(csid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_SOURCE_INT, content, approvalVO.getComment(), company);
 
@@ -223,7 +224,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 
 		approvalCustomerSourceDao.save(approvalCustomerSourcePO);
 
-		String contents = String.format("客源初审提交,客户名:%s,楼盘:%s %s %s %s. 业务部:%s,业务员:%s(%s). 批注:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), belonger.getDept().getName(), belonger.getCurrentName(), belonger.getUserId(), approvalPO.getAnnotate());
+		String contents = String.format("客源初审提交,客户名:%s,楼盘:%s %s %s %s. 业务部:%s,业务员:%s(%s). 批注:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), SensitiveDataHelper.decrypt(housePO.getHouseNumber()), belonger.getDept().getName(), belonger.getCurrentName(), belonger.getUserId(), approvalPO.getAnnotate());
 
 		messageService.sendMessage(receiver.getUserId(), null, contents, MessagePO.TYPE_SEND_APPROVAL_INT, receiver.getCompany());
 
@@ -279,7 +280,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 
 		customerChanceDao.update(customerChancePO);
 
-		String content = String.format("客源初审通过,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
+		String content = String.format("客源初审通过,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), SensitiveDataHelper.decrypt(housePO.getHouseNumber()), approvalPO.getAnnotate());
 
 		messageService.sendMessage(approvalPO.getSender().getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, approvalPO.getSender().getCompany());
 
@@ -314,7 +315,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源初审拒绝,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
+		String content = String.format("客源初审拒绝,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), SensitiveDataHelper.decrypt(housePO.getHouseNumber()), approvalPO.getAnnotate());
 
 		messageService.sendMessage(approvalPO.getSender().getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, approvalPO.getSender().getCompany());
 
