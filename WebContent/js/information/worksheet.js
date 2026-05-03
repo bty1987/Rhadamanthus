@@ -255,12 +255,13 @@ $(function() {
 
     function init() {
 
-        var estab = $('<div></div>').addClass("col-xs-6").prependTo(com.focusPage("#workContent"));
-        var aTag = $('<a id="addWorksheet" href="#"></a>').addClass("btn btn-success btn-app btn-sm radius-4").appendTo(estab);
-        var iTag = $('<i></i>').addClass("icon-plus-sign bigger-230").appendTo(aTag);
-        var span = $('<span></span>').html("创建").appendTo(aTag);
+        // 隐藏"创建"按钮
+        // var estab = $('<div></div>').addClass("col-xs-6").prependTo(com.focusPage("#workContent"));
+        // var aTag = $('<a id="addWorksheet" href="#"></a>').addClass("btn btn-success btn-app btn-sm radius-4").appendTo(estab);
+        // var iTag = $('<i></I>').addClass("icon-plus-sign bigger-230").appendTo(aTag);
+        // var span = $('<span></span>').html("创建").appendTo(aTag);
 
-        var $widget = $('<div></div>').addClass("col-xs-6 col-md-6").prependTo(com.focusPage("#workContent"));
+        var $widget = $('<div></div>').addClass("col-xs-12 col-md-12").prependTo(com.focusPage("#workContent"));
         var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
         var $header = $('<div></div>').addClass("widget-header header-color-green").appendTo($box);
         var name = $('<h4></h4>').attr('id', 'worksheet4content').text("不仅仅是工单").appendTo($header);
