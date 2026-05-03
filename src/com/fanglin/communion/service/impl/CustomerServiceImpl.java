@@ -98,7 +98,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.ptv(customerVO);
 
 		customerVO.setAddress(customerPO.getAddress());
-		customerVO.setIdentity(customerPO.getIdentity());
+		customerVO.setIdentity(SensitiveDataHelper.decrypt(customerPO.getIdentity()));
 		customerVO.setWechat(customerPO.getWechat());
 		customerVO.setQq(customerPO.getQq());
 		customerVO.setEmail(customerPO.getEmail());
@@ -639,7 +639,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customerVO.setPhone(customerPO.getPhone());
 		customerVO.setAddress(customerPO.getAddress());
 		customerVO.setRelationshipType(customerPO.getRelationshipType());
-		customerVO.setIdentity(customerPO.getIdentity());
+		customerVO.setIdentity(SensitiveDataHelper.decrypt(customerPO.getIdentity()));
 
 		return 0;
 	}
