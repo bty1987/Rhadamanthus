@@ -130,12 +130,6 @@ jQuery(function($) {
                     $row.append($('<td></td>').text(i + 1));
                     $row.append($('<td></td>').text(charge.name));
                     $row.append($('<td></td>').text(displayPrice.toFixed(3)));
-                    // 浮动额列：超阶时显示具体值，非超阶时显示"-"
-                    if (isExceed == 0) {
-                        $row.append($('<td></td>').text(surplus.toFixed(3)));
-                    } else {
-                        $row.append($('<td></td>').text('-'));
-                    }
                     $row.append($('<td></td>').text(num));
                     $row.append($('<td></td>').addClass('red').text(subtotal.toFixed(3)));
 
@@ -146,7 +140,7 @@ jQuery(function($) {
                 com.focusPage('#chargeTotalRow').show();
             } else {
                 var $emptyRow = $('<tr></tr>');
-                $emptyRow.append($('<td></td>').attr('colspan', 6).addClass('text-center').text('暂无费用数据'));
+                $emptyRow.append($('<td></td>').attr('colspan', 5).addClass('text-center').text('暂无费用数据'));
                 com.focusPage('#chargeViewTableBody').append($emptyRow);
             }
 
