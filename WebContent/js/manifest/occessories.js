@@ -355,6 +355,7 @@ $(function() {
 
             params.manifest.status = v.status;
             params.manifest.oid = v.oid;
+            params.manifest.isExceed = v.isExceed;
 
             com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no, null, function() {
 
@@ -487,6 +488,7 @@ $(function() {
         handle: function(v) {
 
             params.manifest.oid = v.oid;
+            params.manifest.isExceed = v.isExceed;
             com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no);
 
             return false;
