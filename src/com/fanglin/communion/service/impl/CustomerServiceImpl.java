@@ -29,21 +29,21 @@ import com.fanglin.communion.po.CustomerAccountPO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.CustomerRecordPO;
-import com.fanglin.information.dao.MessageQueuingDao;
-import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.vo.CustomerPhoneVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.fadada.signature.Signature;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.PinYin4Util;
-import com.fanglin.core.security.SensitiveDataHelper;
 
 @Service("customerService")
 @Transactional(readOnly = true)
@@ -212,6 +212,8 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130006, "客户电话已存在");
 		}
 
+		String phone = SensitiveDataHelper.encrypt(customerVO.getPhone());
+
 		CustomerPO customerPO = new CustomerPO();
 
 		BeanUtil.copyProperties(customerVO, customerPO);
@@ -310,6 +312,8 @@ public class CustomerServiceImpl implements CustomerService {
 		if (customerPO == null) {
 			throw new FLException(130002, "客户信息不存在");
 		}
+
+		String phone = SensitiveDataHelper.encrypt(customerPhoneVO.getPhone());
 
 		CustomerPhonePO customerPhonePO = new CustomerPhonePO();
 
@@ -430,8 +434,7 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130021, "客户电话不存在");
 		}
 
-		if (customerPhonePO.getDefaults() == CustomerPhonePO.DEFAULTS_ENABLE_INT
-			&& customerPhoneVO.getStatus() == CustomerPhonePO.STATUS_DISABLE_INT) {
+		if (customerPhonePO.getDefaults() == CustomerPhonePO.DEFAULTS_ENABLE_INT && customerPhoneVO.getStatus() == CustomerPhonePO.STATUS_DISABLE_INT) {
 			throw new FLException(130024, "默认电话不能禁用，请先设置其他电话为默认");
 		}
 
@@ -664,8 +667,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	/**
-	 * 根据 customer 的 company* 字段计算 hash,
-	 * 用 cid + contentHash 查询, 存在则跳过, 不存在则新建 account 并设为默认
+	 * 根据 customer 的 company* 字段计算 hash, 用 cid + contentHash 查询, 存在则跳过, 不存在则新建 account 并设为默认
 	 */
 	private void matchOrCreateAccount(CustomerPO customerPO) {
 
