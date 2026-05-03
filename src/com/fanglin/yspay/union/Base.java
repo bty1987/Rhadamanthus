@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.utils.EncryptConfigLoader;
+import com.fanglin.utils.SystemConfig;
 import com.fanglin.yspay.utils.CertUtil;
 import com.fanglin.yspay.utils.DateUtil;
 import com.fanglin.yspay.utils.HttpUtil;
@@ -48,17 +49,25 @@ public class Base implements Serializable {
 
 	static {
 		try {
-			prop = EncryptConfigLoader.load(configFilePathName);
+			try {
+				prop = EncryptConfigLoader.load(configFilePathName);
+			} catch (Throwable e) {
+				logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
+				prop = new Properties();
+				prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			}
 
-			CERTID = prop.getProperty("cert.id");
-			PFXPATH = prop.getProperty("pfx.path");
-			CRTPATH = prop.getProperty("crt.path");
-			APPSECRET = prop.getProperty("app.secret");
-			PFXPWD = prop.getProperty("pfx.pwd");
-			HOST = prop.getProperty("host");
+			if (prop != null) {
+				CERTID = prop.getProperty("cert.id");
+				PFXPATH = prop.getProperty("pfx.path");
+				CRTPATH = prop.getProperty("crt.path");
+				APPSECRET=prop.g...t");
+				PFXPWD = prop.getProperty("pfx.pwd");
+				HOST = prop.getProperty("host");
+			}
 
 		} catch (Throwable e) {
-			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
+			logger.warn("yinsheng.properties 配置文件未找到或加载失败，银盛支付功能将不可用: {}", e.getMessage());
 		}
 	}
 

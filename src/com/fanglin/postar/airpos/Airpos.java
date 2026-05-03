@@ -15,6 +15,9 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
@@ -29,8 +32,11 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.EncryptConfigLoader;
+import com.fanglin.utils.SystemConfig;
 
 public class Airpos {
+
+	private static final Logger logger = LoggerFactory.getLogger(Airpos.class);
 
 	private static String publicKey;
 
@@ -54,22 +60,30 @@ public class Airpos {
 
 	static {
 		try {
-			prop = EncryptConfigLoader.load(configFilePathName);
+			try {
+				prop = EncryptConfigLoader.load(configFilePathName);
+			} catch (Throwable e) {
+				logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
+				prop = new Properties();
+				prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			}
 
-			publicKey = prop.getProperty("PUBLICKEY");
-			version = prop.getProperty("VERSION");
-			ip = prop.getProperty("IP");
+			if (prop != null) {
+				publicKey = prop.getProperty("PUBLICKEY");
+				version = prop.getProperty("VERSION");
+				ip = prop.getProperty("IP");
 
-			codepay_secret_key = prop.getProperty("SECRETKEY");
-			codepay_iv = prop.getProperty("IV");
+				codepay_secret_key = prop.getProperty("SECRETKEY");
+				codepay_iv = prop.getProperty("IV");
 
-			String host = prop.getProperty("HOST");
-			postar_pay_url = String.format("%s%s", host, "/yyfsevr/order/pay");
-			postar_pos_pay_url = String.format("%s%s", host, "/yyfsevr/order/cashierPay");
-			postar_query_url = String.format("%s%s", host, "/yyfsevr/order/tradeQuery");
+				String host = prop.getProperty("HOST");
+				postar_pay_url = String.format("%s%s", host, "/yyfsevr/order/pay");
+				postar_pos_pay_url = String.format("%s%s", host, "/yyfsevr/order/cashierPay");
+				postar_query_url = String.format("%s%s", host, "/yyfsevr/order/tradeQuery");
+			}
 
 		} catch (Throwable e) {
-			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
+			logger.warn("postar.properties 配置文件未找到或加载失败，postar支付功能将不可用: {}", e.getMessage());
 		}
 	}
 
