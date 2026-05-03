@@ -476,8 +476,13 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(130017, "房产不存在");
 		}
 
-		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getPhone() != null && !customerPO.getPhone().equals(SensitiveDataHelper.encrypt(customerChanceVO.getCustomer().getPhone()))) {
-			throw new FLException(130115, "客户电话不匹配");
+		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getPhone() != null) {
+			String inputPhone = customerChanceVO.getCustomer().getPhone();
+			String dbPhone = customerPO.getPhone();
+			String encrypted = SensitiveDataHelper.encrypt(inputPhone);
+			if (!dbPhone.equals(encrypted) && !dbPhone.equals(inputPhone)) {
+				throw new FLException(130115, "客户电话不匹配");
+			}
 		}
 
 		CustomerSourcePO customerSourcePO = customerChancePO.getSource();
