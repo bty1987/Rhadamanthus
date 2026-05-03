@@ -57,13 +57,12 @@ public class Base implements Serializable {
 				prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
 			}
 
-				CERTID = prop.getProperty("cert.id");
-				PFXPATH = prop.getProperty("pfx.path");
-				CRTPATH = prop.getProperty("crt.path");
-				APPSECRET = prop.getProperty("app.secret");
-				PFXPWD = prop.getProperty("pfx.pwd");
-				HOST = prop.getProperty("host");
-			}
+			CERTID = prop.getProperty("cert.id");
+			PFXPATH = prop.getProperty("pfx.path");
+			CRTPATH = prop.getProperty("crt.path");
+			APPSECRET = prop.getProperty("app.secret");
+			PFXPWD = prop.getProperty("pfx.pwd");
+			HOST = prop.getProperty("host");
 
 		} catch (Throwable e) {
 			logger.warn("yinsheng.properties 配置文件未找到或加载失败，银盛支付功能将不可用: {}", e.getMessage());
