@@ -39,6 +39,7 @@ import com.fanglin.swiftpass.utils.OpenSdk;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.EncryptConfigLoader;
+import com.fanglin.utils.SystemConfig;
 
 public class Airpos {
 
@@ -66,18 +67,23 @@ public class Airpos {
 
 	static {
 		try {
-			prop = EncryptConfigLoader.load(configFilePathName);
+			try {
+				prop = EncryptConfigLoader.load(configFilePathName);
+			} catch (Throwable e) {
+				logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
+				prop = new Properties();
+				prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			}
 
-			// respPubKey = prop.getProperty("RESPPUBKEY");
-			// bsPrivateKey = prop.getProperty("BSPRIVATEKEY");
-			// bsCheckoutPublickey = prop.getProperty("BSCHECKOUTPUBLICKEY");
-			xingEpayPublickey = prop.getProperty("XINGEPAYPUBLICKEY");
+			if (prop != null) {
+				xingEpayPublickey = prop.getProperty("XINGEPAYPUBLICKEY");
 
-			swiftpass_query_url = "/api/openbill/queryBillInfo";
-			swiftpass_wxpay_url = "/api/h5/token/genToken";
-			swiftpass_updateKey_url = "/api/openbill/updateMerchantChannelKey";
+				swiftpass_query_url = "/api/openbill/queryBillInfo";
+				swiftpass_wxpay_url = "/api/h5/token/genToken";
+				swiftpass_updateKey_url = "/api/openbill/updateMerchantChannelKey";
 
-			kingdee_callBack_publicKey = prop.getProperty("KINGDEECALLBACKPUBLICKEY");
+				kingdee_callBack_publicKey = prop.getProperty("KINGDEECALLBACKPUBLICKEY");
+			}
 
 		} catch (Throwable e) {
 			logger.warn("swiftpass.properties 配置文件未找到或加载失败，swiftpass支付功能将不可用: {}", e.getMessage());

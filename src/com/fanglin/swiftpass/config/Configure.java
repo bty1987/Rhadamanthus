@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.fanglin.swiftpass.enums.KeySignTypeEnum;
 import com.fanglin.swiftpass.enums.RespSignAlgorithmEnum;
 import com.fanglin.utils.EncryptConfigLoader;
+import com.fanglin.utils.SystemConfig;
 
 /**
  * 开放银行平台配置类
@@ -62,16 +63,24 @@ public class Configure {
 
 	static {
 		try {
-			prop = EncryptConfigLoader.load(configFilePathName);
+			try {
+				prop = EncryptConfigLoader.load(configFilePathName);
+			} catch (Throwable e) {
+				logger.info("EncryptConfigLoader加载失败，回退到原始方式: {}", e.getMessage());
+				prop = new Properties();
+				prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			}
 
-			PROD_URL = prop.getProperty("PROD_URL");
-			devEnv = Boolean.parseBoolean(prop.getProperty("DEVENV"));
-			devUrl = prop.getProperty("DEVURL");
-			keyId = prop.getProperty("KEYID");
-			priKey = prop.getProperty("PRIKEY");
-			respPubKey = prop.getProperty("RESPPUBKEY");
-			reqParamEncryptKey = prop.getProperty("REQPARAMENCRYPTKEY");
-			respSignSwitch = Boolean.parseBoolean(prop.getProperty("RESPSIGNSWITCH"));
+			if (prop != null) {
+				PROD_URL = prop.getProperty("PROD_URL");
+				devEnv = Boolean.parseBoolean(prop.getProperty("DEVENV"));
+				devUrl = prop.getProperty("DEVURL");
+				keyId = prop.getProperty("KEYID");
+				priKey = prop.getProperty("PRIKEY");
+				respPubKey = prop.getProperty("RESPPUBKEY");
+				reqParamEncryptKey = prop.getProperty("REQPARAMENCRYPTKEY");
+				respSignSwitch = Boolean.parseBoolean(prop.getProperty("RESPSIGNSWITCH"));
+			}
 
 		} catch (Throwable e) {
 			logger.warn("swiftpass.properties 配置文件未找到或加载失败，swiftpass支付功能将不可用: {}", e.getMessage());
