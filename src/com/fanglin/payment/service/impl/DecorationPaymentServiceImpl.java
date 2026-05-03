@@ -894,7 +894,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			decorationPaymentVO.getDecoration().getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
-		if (decorationPaymentVO.getDecoration().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(SensitiveDataHelper.encrypt(decorationPaymentVO.getDecoration().getCustomer().getPhone()))) {
+		if (decorationPaymentVO.getDecoration().getCustomer().getPhone() != null && !SensitiveDataHelper.decrypt(decorationPO.getCustomer().getPhone()).equals(decorationPaymentVO.getDecoration().getCustomer().getPhone())) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
 

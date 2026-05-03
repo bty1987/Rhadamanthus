@@ -135,7 +135,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 			decorationVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
-		if (decorationVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(SensitiveDataHelper.encrypt(decorationVO.getCustomer().getPhone()))) {
+		if (decorationVO.getCustomer().getPhone() != null && !SensitiveDataHelper.decrypt(decorationPO.getCustomer().getPhone()).equals(decorationVO.getCustomer().getPhone())) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
 

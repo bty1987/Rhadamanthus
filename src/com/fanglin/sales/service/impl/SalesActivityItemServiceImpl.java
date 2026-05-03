@@ -421,7 +421,7 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 			salesVO.getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
-		if (salesVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(SensitiveDataHelper.encrypt(salesVO.getCustomer().getPhone()))) {
+		if (salesVO.getCustomer().getPhone() != null && !SensitiveDataHelper.decrypt(decorationPO.getCustomer().getPhone()).equals(salesVO.getCustomer().getPhone())) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
 

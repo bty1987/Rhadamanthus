@@ -211,7 +211,7 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 			refundsVO.getSales().getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
-		if (refundsVO.getSales().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(SensitiveDataHelper.encrypt(refundsVO.getSales().getCustomer().getPhone()))) {
+		if (refundsVO.getSales().getCustomer().getPhone() != null && !SensitiveDataHelper.decrypt(decorationPO.getCustomer().getPhone()).equals(refundsVO.getSales().getCustomer().getPhone())) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
 

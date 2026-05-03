@@ -911,7 +911,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesPayment.getSales().getCustomer().setPhone(weChatPhoneInfoVO.getPhoneNumber());
 		}
 
-		if (salesPayment.getSales().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(SensitiveDataHelper.encrypt(salesPayment.getSales().getCustomer().getPhone()))) {
+		if (salesPayment.getSales().getCustomer().getPhone() != null && !SensitiveDataHelper.decrypt(decorationPO.getCustomer().getPhone()).equals(salesPayment.getSales().getCustomer().getPhone())) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
 
