@@ -479,8 +479,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getPhone() != null) {
 			String inputPhone = customerChanceVO.getCustomer().getPhone();
 			String dbPhone = customerPO.getPhone();
-			String encrypted = SensitiveDataHelper.encrypt(inputPhone);
-			if (!dbPhone.equals(encrypted) && !dbPhone.equals(inputPhone)) {
+			String decryptedDbPhone = SensitiveDataHelper.decrypt(dbPhone);
+			if (!decryptedDbPhone.equals(inputPhone)) {
 				throw new FLException(130115, "客户电话不匹配");
 			}
 		}
