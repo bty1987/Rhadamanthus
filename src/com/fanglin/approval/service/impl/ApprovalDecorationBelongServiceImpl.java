@@ -35,7 +35,9 @@ import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.dao.CustomerChanceOrderDao;
 import com.fanglin.customer.dao.CustomerSourceRecordDao;
+import com.fanglin.customer.po.CustomerChanceOrderPO;
 import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerSourceRecordPO;
 import com.fanglin.customer.service.DecorationService;
@@ -100,6 +102,9 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
+
+	@Autowired
+	private CustomerChanceOrderDao customerChanceOrderDao;
 
 	@Autowired
 	private CustomerSourceRecordDao customerSourceRecordDao;
@@ -329,10 +334,11 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		decorationDao.update(decorationPO);
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + approvalPO.getReceiver() + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + approvalPO.getReceiver() + "\",\"belongType\":" + belongType + ",\"event\":\"TEAM_SALESMAN_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		String approveBelongArgs = buildApproveBelongEventArgs(orderId, approvalPO.getReceiver(), belongType, decorationPO, approvalDecorationBelongPO.getCcid(), mergeFlag);
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs.replace("\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"", "\"event\":\"TEAM_SALESMAN_CHANGED\"")));
 		// 生成消息提示数据
-		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "approveForDecorationBelong", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + approvalPO.getReceiver() + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs));
 
 		// 完成关联的客户机会
 		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(orderId);
@@ -396,5 +402,24 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		submitApprovalForDecorationBelong(approvalVO, approvalDecorationBelongVO, approvalDecorationBelongItemVOs, designer.getUserId(), company, code, forms);
 
 		return 0;
+	}
+
+	private String buildApproveBelongEventArgs(String orderId, String userId, short belongType, DecorationPO decorationPO, Long ccid, short mergeFlag) {
+
+		String originOrderId = "";
+		String targetOrderId = orderId;
+
+		if (ccid != null && ccid > 0) {
+			List<CustomerChanceOrderPO> chanceOrders = customerChanceOrderDao.queryCustomerChanceOrderByOrderId(targetOrderId);
+
+			for (CustomerChanceOrderPO chanceOrder : chanceOrders) {
+				if (chanceOrder.getCcid() == ccid.longValue() && !chanceOrder.getOrderId().equals(targetOrderId)) {
+					originOrderId = chanceOrder.getOrderId();
+					break;
+				}
+			}
+		}
+
+		return "{\"orderId\":\"" + targetOrderId + "\",\"userId\":\"" + userId + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"originOrderId\":\"" + originOrderId + "\",\"targetOrderId\":\"" + targetOrderId + "\",\"mergeFlag\":" + mergeFlag + "}";
 	}
 }
