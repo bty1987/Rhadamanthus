@@ -57,6 +57,7 @@ import com.fanglin.fadada.bean.Contract;
 import com.fanglin.fadada.tools.FddEncryptTool;
 import com.fanglin.fadada.vo.SignatureVO;
 import com.fanglin.utils.EncryptConfigLoader;
+import com.fanglin.utils.SystemConfig;
 
 public class Signature {
 
@@ -78,10 +79,16 @@ public class Signature {
 
 	static {
 		try {
-			prop = EncryptConfigLoader.load(configFilePathName);
+			try {
+				prop = EncryptConfigLoader.load(configFilePathName);
+			} catch (Throwable e) {
+				logger.info("EncryptConfigLoader加载失败，回退到原始方式: " + e.getMessage());
+				prop = new Properties();
+				prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+			}
 
 			APPID = prop.getProperty("appid");
-			APPSECRET = prop.getProperty("secret");
+			APPSECRET=prop.getProperty("secret");
 			VERSION = "2.0";
 			HOST = prop.getProperty("host");
 
