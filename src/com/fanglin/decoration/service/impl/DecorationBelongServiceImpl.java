@@ -26,6 +26,8 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
+import com.fanglin.customer.dao.CustomerChanceOrderDao;
+import com.fanglin.customer.po.CustomerChanceOrderPO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
@@ -72,6 +74,9 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 	@Autowired
 	private MessageQueuingDao messageQueuingDao;
+
+	@Autowired
+	private CustomerChanceOrderDao customerChanceOrderDao;
 
 	@Override
 	public List<DecorationBelongVO> queryDecorationBelong(DecorationBelongVO decorationBelongVO) {
@@ -244,7 +249,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		decorationBelongDao.save(decorationBelongPO);
 
 		// 生成消息提示数据
-		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "tranDecorationBelong", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "tranDecorationBelong", buildBelongEventArgs(decorationPO, userPO, type, ccid, (short) 0)));
 
 		return 0;
 	}
@@ -320,7 +325,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		decorationDao.update(decorationPO);
 
 		// 生成消息提示数据
-		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "mergeDecorationBelong", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "mergeDecorationBelong", buildBelongEventArgs(decorationPO, userPO, type, null, (short) 1)));
 
 		return 0;
 	}
@@ -373,8 +378,27 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		decorationBelongDao.save(newBelongPO);
 
 		// 生成消息提示数据
-		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "confirmMergeDecorationBelong", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "confirmMergeDecorationBelong", buildBelongEventArgs(decorationPO, userPO, type, null, (short) 1)));
 
 		return 0;
+	}
+
+	private String buildBelongEventArgs(DecorationPO decorationPO, UserPO userPO, short type, Long ccid, short mergeFlag) {
+
+		String originOrderId = "";
+		String targetOrderId = decorationPO.getOrderId();
+
+		if (ccid != null && ccid > 0) {
+			List<CustomerChanceOrderPO> chanceOrders = customerChanceOrderDao.queryCustomerChanceOrderByOrderId(targetOrderId);
+
+			for (CustomerChanceOrderPO chanceOrder : chanceOrders) {
+				if (chanceOrder.getCcid() == ccid.longValue() && !chanceOrder.getOrderId().equals(targetOrderId)) {
+					originOrderId = chanceOrder.getOrderId();
+					break;
+				}
+			}
+		}
+
+		return "{\"orderId\":\"" + targetOrderId + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"originOrderId\":\"" + originOrderId + "\",\"targetOrderId\":\"" + targetOrderId + "\",\"mergeFlag\":" + mergeFlag + "}";
 	}
 }
