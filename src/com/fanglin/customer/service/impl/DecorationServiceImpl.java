@@ -261,10 +261,18 @@ public class DecorationServiceImpl implements DecorationService {
 			phone = decorationVO.getCustomerPhone();
 		}
 
-		List<CustomerPO> customerPOs = customerDao.queryCustomer(SensitiveDataHelper.getAllEncryptedForms(phone));
+		List<String> phoneForms = SensitiveDataHelper.getAllEncryptedForms(phone);
+
+		log.info(String.format("Binding Decoration phone=%s, encryptedForms=%s, orderId=%s", phone, phoneForms, decorationVO.getOrderId()));
+		System.out.println(String.format("[DEBUG] Binding Decoration phone=%s, encryptedForms=%s, orderId=%s", phone, phoneForms, decorationVO.getOrderId()));
+
+		List<CustomerPO> customerPOs = customerDao.queryCustomer(phoneForms);
+
+		log.info(String.format("Binding Decoration customerPOs.size=%d", customerPOs == null ? 0 : customerPOs.size()));
+		System.out.println(String.format("[DEBUG] Binding Decoration customerPOs.size=%d", customerPOs == null ? 0 : customerPOs.size()));
 
 		if (customerPOs == null || customerPOs.isEmpty()) {
-			throw new FLException(330009, "无可绑定订单");
+			throw new FLException(330009, "无可绑定订单-客户不存在");
 		}
 
 		CustomerPO customerPO = customerPOs.get(0);
@@ -273,10 +281,13 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(330009, "无可绑定订单");
 		}
 
-		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecoration(decorationVO.getOrderId(), SensitiveDataHelper.getAllEncryptedForms(phone));
+		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecoration(decorationVO.getOrderId(), phoneForms);
+
+		log.info(String.format("Binding Decoration decorationPO=%s", decorationPO == null ? "null" : decorationPO.getOrderId()));
+		System.out.println(String.format("[DEBUG] Binding Decoration decorationPO=%s", decorationPO == null ? "null" : decorationPO.getOrderId()));
 
 		if (decorationPO == null) {
-			throw new FLException(330009, "无可绑定订单");
+			throw new FLException(330009, "无可绑定订单-订单与客户不匹配");
 		}
 
 		if (cecorationDao.queryCusDecorationByOrderId(decorationVO.getOrderId(), unionId) != null) {
