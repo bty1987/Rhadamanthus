@@ -284,7 +284,6 @@ $.extend(api, {
         },
         addInventoryDrawing: {
             url: "addInventoryDrawing.do",
-            intercept: true
         },
         deleteInventoryDrawing: {
             url: "deleteInventoryDrawing.do"

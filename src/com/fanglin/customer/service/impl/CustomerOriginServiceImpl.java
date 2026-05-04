@@ -22,6 +22,7 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerOriginDao;
 import com.fanglin.customer.dao.CustomerOriginRecordDao;
@@ -47,7 +48,6 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
@@ -484,8 +484,12 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			throw new FLException(330001, "客源不存在");
 		}
 
+		if (customerOriginPO.getCustomer() == null || customerOriginPO.getHouse() == null) {
+			throw new FLException(330015, "客源未绑定");
+		}
+
 		// 验证客源状态：不能是初始或已绑定状态
-		if (java.util.Arrays.asList(CustomerOriginPO.STATUS_INIT_INT, CustomerOriginPO.STATUS_BIND_INT).contains(customerOriginPO.getStatus())) {
+		if (!java.util.Arrays.asList(CustomerOriginPO.STATUS_INIT_INT).contains(customerOriginPO.getStatus())) {
 			throw new FLException(330014, "客源状态不可操作");
 		}
 
