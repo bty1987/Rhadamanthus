@@ -861,7 +861,11 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationPO.ptvcascade(decorationVO);
 
-		if (decorationPO.getCustomer() != null && decorationVO.getCustomer() != null) decorationVO.getCustomer().initBank(decorationPO.getCustomer());
+		if (decorationPO.getCustomer() != null && decorationVO.getCustomer() != null) {
+
+			decorationVO.getCustomer().initBank(decorationPO.getCustomer());
+			decorationVO.getCustomer().setIdentity(SensitiveDataHelper.decrypt(decorationPO.getCustomer().getIdentity()));
+		}
 
 		if (decorationVO.getOrderTotalPrice() == null || decorationVO.getOrderTotalPrice() == 0) {
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
