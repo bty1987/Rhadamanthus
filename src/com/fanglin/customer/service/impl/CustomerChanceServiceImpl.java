@@ -611,6 +611,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerChanceDao.update(customerChancePO);
 
+		messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "issueCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"event\":\"CUSTOMER_CHANCE_ISSUED\"}"));
+
 		belonger = customerChancePO.getBelonger() == null ? issuer : customerChancePO.getBelonger();
 		dept = customerChancePO.getDepartment() == null ? issuer.getDept() : customerChancePO.getDepartment();
 		region = dept.getFatherDept() == null ? dept : dept.getFatherDept();
