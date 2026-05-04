@@ -86,22 +86,16 @@ public class CustomerPO implements Serializable {
 
 	private String authurl;
 
-	/** @deprecated 迁移至 CustomerAccountPO, 不再使用 */
 	private String companyNo;
 
-	/** @deprecated 迁移至 CustomerAccountPO, 不再使用 */
 	private String companyName;
 
-	/** @deprecated 迁移至 CustomerAccountPO, 不再使用 */
 	private String companyAddr;
 
-	/** @deprecated 迁移至 CustomerAccountPO, 不再使用 */
 	private String companyPhone;
 
-	/** @deprecated 迁移至 CustomerAccountPO, 不再使用 */
 	private String companyBank;
 
-	/** @deprecated 迁移至 CustomerAccountPO, 不再使用 */
 	private String companyBankno;
 
 	private short status;
@@ -418,8 +412,6 @@ public class CustomerPO implements Serializable {
 
 		BeanUtil.copyProperties(this, customerVO, "phone", "identity");
 
-		customerVO.setPhone(SensitiveDataHelper.decrypt(getPhone()));
-		customerVO.setIdentity(SensitiveDataHelper.decrypt(getIdentity()));
 		customerVO.setConfidentialInfo();
 
 		return customerVO;

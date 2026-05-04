@@ -334,7 +334,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		decorationDao.update(decorationPO);
 
 		// 生成消息队列数据
-		String approveBelongArgs = buildApproveBelongEventArgs(orderId, approvalPO.getReceiver(), belongType, decorationPO, approvalDecorationBelongPO.getCcid(), mergeFlag);
+		String approveBelongArgs = buildApproveBelongEventArgs(orderId, approvalPO.getReceiver().getUserId(), belongType, decorationPO, approvalDecorationBelongPO.getCcid(), mergeFlag);
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs));
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs.replace("\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"", "\"event\":\"TEAM_SALESMAN_CHANGED\"")));
 		// 生成消息提示数据

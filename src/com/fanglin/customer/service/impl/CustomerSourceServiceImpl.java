@@ -27,6 +27,7 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerChanceOrderDao;
@@ -36,8 +37,8 @@ import com.fanglin.customer.dao.CustomerSourceDao;
 import com.fanglin.customer.dao.CustomerSourceRecordDao;
 import com.fanglin.customer.dao.CustomerUserRuleDao;
 import com.fanglin.customer.dao.CustomerUserRuleItemDao;
-import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerChanceOrderPO;
+import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerConfigRulePO;
 import com.fanglin.customer.po.CustomerDeptRulePO;
 import com.fanglin.customer.po.CustomerSourcePO;
@@ -54,8 +55,8 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
-import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -69,7 +70,6 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.Paging;
 
 @Service("customerSourceService")
@@ -666,7 +666,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
 			dingTalkMessageService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
-			messageQueuingDao.save(new MessageQueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_AUTO_ASSIGNED\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_AUTO_ASSIGNED\"}"));
 
 			return;
 		}
@@ -710,7 +710,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			String message = String.format("新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()));
 
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
-			messageQueuingDao.save(new MessageQueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_REGION_ASSIGNED\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_REGION_ASSIGNED\"}"));
 			return;
 		}
 
@@ -761,7 +761,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
-			messageQueuingDao.save(new MessageQueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_DEPT_ASSIGNED\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_DEPT_ASSIGNED\"}"));
 
 			return;
 		}
@@ -818,7 +818,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
-			messageQueuingDao.save(new MessageQueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_USER_ASSIGNED\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_USER_ASSIGNED\"}"));
 			return;
 		}
 	}

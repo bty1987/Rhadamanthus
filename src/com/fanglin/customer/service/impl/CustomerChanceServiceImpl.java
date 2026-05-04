@@ -38,8 +38,8 @@ import com.fanglin.customer.dao.CustomerProfileDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
 import com.fanglin.customer.dao.CustomerSourceRecordDao;
 import com.fanglin.customer.dao.CustomerUserRuleDao;
-import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerChanceOrderPO;
+import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.po.CustomerSourceRecordPO;
 import com.fanglin.customer.po.CustomerUserRulePO;
@@ -754,14 +754,16 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			customerChancePO.setIsPhone(customerChance.getIsPhone());
 		}
 
+		if (customerChance.getIsMeet() != null && customerChance.getIsMeet() == CustomerChancePO.ISMEET_MEET_INT && customerChancePO.getIsMeet() != CustomerChancePO.ISMEET_MEET_INT) {
+			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "meetCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"event\":\"CUSTOMER_CHANCE_MEET\"}"));
+		}
+
 		if (!StringUtils.isEmpty(customerChance.getIsMeet())) {
 			customerChancePO.setIsMeet(customerChance.getIsMeet());
 		}
 
 		if (CustomerChancePO.ISMEET_MEET_INT == customerChancePO.getIsMeet()) {
 			customerChancePO.setMeetTime(DateUtil.getDateToTimestamp(new Date()));
-
-			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "meetCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"event\":\"CUSTOMER_CHANCE_MEET\"}"));
 		}
 
 		if (!StringUtils.isEmpty(customerChance.getIsTrue())) {
@@ -963,9 +965,11 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			customerPO = customerSourcePO.getCustomer();
 		}
 
-		if (customerPO == null) {
-			throw new FLException(330074, "客户不存在");
-		}
+		CustomerVO customerVO = new CustomerVO(customerChanceVO.getSource().getName(), customerChanceVO.getSource().getPhone());
+
+		customerService.existCustomer(customerVO, company);
+
+		customerPO = new CustomerPO(customerVO.getCid());
 
 		// 检查是否需要校验重复订单（isCheck=0 校验，isCheck=1 忽略）
 		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) {
