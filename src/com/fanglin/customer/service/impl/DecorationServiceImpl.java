@@ -15,6 +15,7 @@ import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerNoticeDao;
 import com.fanglin.customer.dao.DecorationDao;
@@ -34,7 +35,6 @@ import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
@@ -263,13 +263,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		List<String> phoneForms = SensitiveDataHelper.getAllEncryptedForms(phone);
 
-		log.info(String.format("Binding Decoration phone=%s, encryptedForms=%s, orderId=%s", phone, phoneForms, decorationVO.getOrderId()));
-		System.out.println(String.format("[DEBUG] Binding Decoration phone=%s, encryptedForms=%s, orderId=%s", phone, phoneForms, decorationVO.getOrderId()));
-
 		List<CustomerPO> customerPOs = customerDao.queryCustomer(phoneForms);
-
-		log.info(String.format("Binding Decoration customerPOs.size=%d", customerPOs == null ? 0 : customerPOs.size()));
-		System.out.println(String.format("[DEBUG] Binding Decoration customerPOs.size=%d", customerPOs == null ? 0 : customerPOs.size()));
 
 		if (customerPOs == null || customerPOs.isEmpty()) {
 			throw new FLException(330009, "无可绑定订单-客户不存在");
@@ -282,9 +276,6 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecoration(decorationVO.getOrderId(), phoneForms);
-
-		log.info(String.format("Binding Decoration decorationPO=%s", decorationPO == null ? "null" : decorationPO.getOrderId()));
-		System.out.println(String.format("[DEBUG] Binding Decoration decorationPO=%s", decorationPO == null ? "null" : decorationPO.getOrderId()));
 
 		if (decorationPO == null) {
 			throw new FLException(330009, "无可绑定订单-订单与客户不匹配");

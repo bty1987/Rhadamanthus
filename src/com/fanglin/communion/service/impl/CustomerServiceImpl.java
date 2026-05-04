@@ -256,7 +256,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int existCustomer(CustomerVO customerVO, Integer company) {
 
-		String phone = customerVO.getPhone();
+		String phone = SensitiveDataHelper.encrypt(customerVO.getPhone());
 
 		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhoneForDefault(phone, company);
 
