@@ -273,7 +273,7 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(330009, "无可绑定订单");
 		}
 
-		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecoration(decorationVO.getOrderId(), phone);
+		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecoration(decorationVO.getOrderId(), SensitiveDataHelper.getAllEncryptedForms(phone));
 
 		if (decorationPO == null) {
 			throw new FLException(330009, "无可绑定订单");

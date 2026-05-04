@@ -300,6 +300,11 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
+	public DecorationPO queryDecoration(String orderId, List<String> phones) {
+		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("customer", "customer").add(Restrictions.eq("orderId", orderId)).add(Restrictions.in("customer.phone", phones)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	public void changeDecorationForOrderId(String newOrderId, String oldOrderId) {
 
 		String sql = "update decoration.decoration set orderId = :newOrderId where orderId = :oldOrderId";
