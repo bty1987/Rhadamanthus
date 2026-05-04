@@ -834,7 +834,7 @@ public class MemberServiceImpl implements MemberService {
 		if (awardStockPO != null) decorationActivityItemPO.setAsid(awardStockPO.getAsId());
 
 		decorationActivityItemPO.setActivityItemName(memberOrderItemVO.getName());
-		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DELIVERY_INT);
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
 
 		decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
 		decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
