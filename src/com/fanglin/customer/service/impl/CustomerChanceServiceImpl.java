@@ -951,6 +951,11 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			housePO = customerSourcePO.getHouse();
 		}
 
+		// 检查 customer 是否存在
+		if (customerSourcePO.getCustomer() == null) {
+			throw new FLException(330074, "客户资源关联客户不存在");
+		}
+
 		// 检查是否需要校验重复订单（isCheck=0 校验，isCheck=1 忽略）
 		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) {
 			decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), housePO.getHid(), company);
