@@ -28,8 +28,19 @@ public class SystemConfig {
 	static {
 		try {
 			prop = EncryptConfigLoader.load(configFilePathName);
-		} catch (Throwable e){
-			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
+		} catch (Throwable e) {
+			// 兜底: EncryptConfigLoader 加载/解密失败时, 使用原有方式直接读取配置文件
+			try {
+				java.io.InputStream is = SystemConfig.class.getResourceAsStream(configFilePathName);
+				if (is == null) {
+					throw new RuntimeException("config-file cannot be load: " + configFilePathName);
+				}
+				prop = new Properties();
+				prop.load(is);
+				is.close();
+			} catch (Exception ex) {
+				throw new RuntimeException("config-file cannot be load: " + configFilePathName, ex);
+			}
 		}
 	}
 
