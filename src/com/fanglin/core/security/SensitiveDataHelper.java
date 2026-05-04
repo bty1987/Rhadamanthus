@@ -135,6 +135,11 @@ public class SensitiveDataHelper {
 		return forms;
 	}
 
+	public static void main(String[] args) {
+
+		System.out.println(SensitiveDataHelper.getAllEncryptedForms("15500081631"));
+	}
+
 	// ========== 内部方法 ==========
 
 	/**

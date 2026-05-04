@@ -436,8 +436,8 @@ var QuotationDetail = (function() {
             var advancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
             var quotePrice = quo.preferParams["quotationPrefer.quotePrice"];
             var quoteArea = quo.preferParams["quotationPrefer.quoteArea"];
-            var activityPrice = quo.quotationPrefer ? quo.quotationPrefer.activityPrice : 0;
-            var activityProfit = quo.quotationPrefer ? quo.quotationPrefer.activityProfit : 0;
+            var activityPrice = quo.preferParams["quotationPrefer.activityPrice"];
+            var activityProfit = quo.preferParams["quotationPrefer.activityProfit"];
 
             _transDiscount = converyanceCost.find('.discountprice').attr('data-discount') == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT ? _discount : 1; // 车运费的折扣
             _manageDiscount = manageCost.find('.discountprice').attr('data-discount') == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? _discount : 1; // 管理费的折扣
@@ -1959,8 +1959,6 @@ var QuotationDetail = (function() {
                 quo.preferParams["quotationPrefer.manageDiscount"] = presignProduce ? presignProduce.manageDiscount : 0;
                 quo.preferParams["quotationPrefer.quoteArea"] = quoteArea;
                 quo.preferParams["quotationPrefer.quotePrice"] = quotePrice;
-                quo.preferParams["quotationPrefer.activityPrice"] = presignProduce ? com.checkNull(presignProduce.activityPrice, 0) : 0;
-                quo.preferParams["quotationPrefer.activityProfit"] = presignProduce ? com.checkNull(presignProduce.activityProfit, 0) : 0;
 
                 var perfer = {
                     "preferPrice": com.focusPage('#prefer').val(),
@@ -5018,8 +5016,8 @@ var QuotationDetail = (function() {
                     var advancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
                     var quotePrice = quo.preferParams["quotationPrefer.quotePrice"];
                     var quoteArea = quo.preferParams["quotationPrefer.quoteArea"];
-                    var activityPrice = quo.quotationPrefer ? quo.quotationPrefer.activityPrice : 0;
-                    var activityProfit = quo.quotationPrefer ? quo.quotationPrefer.activityProfit : 0;
+                    var activityPrice = quo.preferParams["quotationPrefer.activityPrice"];
+                    var activityProfit = quo.preferParams["quotationPrefer.activityProfit"];
 
                     _transDiscount = converyanceCost.find('.discountprice').attr('data-discount') == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT ? _discount : 1; // 车运费折扣
                     _manageDiscount = manageCost.find('.discountprice').attr('data-discount') == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? _discount : 1; // 管理费折扣
