@@ -38,7 +38,18 @@ public class Kandle {
 
 	static {
 		try {
-			prop = EncryptConfigLoader.load(configFilePathName);
+			try {
+				prop = EncryptConfigLoader.load(configFilePathName);
+			} catch (Throwable e) {
+				// 兜底: EncryptConfigLoader 加载/解密失败时, 使用原有方式直接读取配置文件
+				java.io.InputStream is = Kandle.class.getResourceAsStream(configFilePathName);
+				if (is == null) {
+					throw new RuntimeException("config-file cannot be load: " + configFilePathName);
+				}
+				prop = new Properties();
+				prop.load(is);
+				is.close();
+			}
 
 			K3CLOUD_URL_STR = prop.getProperty("K3CLOUD_URL_STR");
 			dbid = prop.getProperty("KINGDEE.DBID");
@@ -47,7 +58,7 @@ public class Kandle {
 			lang = Integer.valueOf(prop.getProperty("KINGDEE.LANG"));
 
 		} catch (Throwable e) {
-			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
+			throw new RuntimeException("config-file cannot be load: " + configFilePathName, e);
 		}
 	}
 
