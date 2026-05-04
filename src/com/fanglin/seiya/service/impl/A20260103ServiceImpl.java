@@ -22,6 +22,7 @@ import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.po.CustomerPhonePO;
+import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.service.HouseService;
 import com.fanglin.communion.vo.CustomerPhoneVO;
@@ -341,11 +342,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		}
 
 		// 2. 通过楼盘+楼号查询房屋hid
-		VillageVO villageVO = new VillageVO(village);
-		HouseVO queryHouse = new HouseVO();
-		queryHouse.setVillage(villageVO);
-		queryHouse.setHouseNumber(houseNumber);
-		HouseVO houseVO = houseService.queryHouseByNoAHnum(queryHouse, orgId);
+		HouseVO houseVO = findHouse(village, houseNumber, orgId);
 
 		long hid = 0;
 
@@ -435,6 +432,23 @@ public class A20260103ServiceImpl implements A20260103Service {
 		customerVO.setCid(phonePO.getCid());
 
 		return customerService.queryCustomerById(customerVO);
+	}
+
+	/**
+	 * 通过楼盘编号和楼号查询房屋信息 直接使用houseDao查询，不依赖houseService
+	 */
+	private HouseVO findHouse(String villageNo, String houseNumber, Integer company) {
+
+		HousePO housePO = houseDao.queryHouseByNoAHnum(villageNo, houseNumber, company);
+
+		if (housePO == null) {
+			return null;
+		}
+
+		HouseVO houseVO = new HouseVO();
+		houseVO.setHid(housePO.getHid());
+
+		return houseVO;
 	}
 
 }
