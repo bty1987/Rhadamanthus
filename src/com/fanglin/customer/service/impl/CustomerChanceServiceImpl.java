@@ -951,14 +951,25 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			housePO = customerSourcePO.getHouse();
 		}
 
-		// 检查 customer 是否存在
-		if (customerSourcePO.getCustomer() == null) {
-			throw new FLException(330074, "客户资源关联客户不存在");
+		// 如果前端传了 customer.cid，优先使用前端传入的；否则使用 customerSource 关联的 customer
+		CustomerPO customerPO;
+		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getCid() != null && customerChanceVO.getCustomer().getCid() > 0) {
+			customerPO = customerDao.get(customerChanceVO.getCustomer().getCid());
+			if (customerPO == null) {
+				throw new FLException(330074, "客户不存在");
+			}
+			customerSourcePO.setCustomer(customerPO);
+		} else {
+			customerPO = customerSourcePO.getCustomer();
+		}
+
+		if (customerPO == null) {
+			throw new FLException(330074, "客户不存在");
 		}
 
 		// 检查是否需要校验重复订单（isCheck=0 校验，isCheck=1 忽略）
 		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) {
-			decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), housePO.getHid(), company);
+			decorationService.checkOverDecoration(customerPO.getCid(), housePO.getHid(), company);
 		}
 
 		// 设置客户来源状态为初审通过（STATUS_APPROVE_ONE_INT = 2）
@@ -966,7 +977,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerSourceDao.update(customerSourcePO);
 
 		// 设置客户机会信息（参照 approveForCustomerSource 的逻辑）
-		customerChancePO.setCustomer(customerSourcePO.getCustomer());
+		customerChancePO.setCustomer(customerPO);
 		customerChancePO.setHouse(housePO);
 		customerChancePO.setRate(customerChanceVO.getRate() != null ? customerChanceVO.getRate() : 0);
 
