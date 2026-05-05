@@ -175,18 +175,8 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 		if (approvalQuotationPreferPO.getType() == 1) {
 			// type=1: 活动优惠审批 — 校验 extension 活动类型总额 + 只更新 activityProfit, activityPrice
 
-			// 查询该报价关联的所有 extension，累加活动类型(atttype=4)的 total
-			long extensionActivityTotal = 0;
-			List<ExtensionPO> extensions = extensionDao.queryExtensionByOrderId(quotationPO.getOrderId());
-			for (ExtensionPO extension : extensions) {
-				if (extension.getAtttype() == ExtensionPO.ATTTYPE_ACTIVITY_INT) {
-					if (extension.getType() == ExtensionPO.TYPE_ADD_INT) {
-						extensionActivityTotal += extension.getTotal();
-					} else {
-						extensionActivityTotal -= extension.getTotal();
-					}
-				}
-			}
+			// 一步聚合查询活动类型(atttype=4)的总额
+			long extensionActivityTotal = extensionDao.amountExtensionByOrderId(quotationPO.getOrderId(), ExtensionPO.ATTTYPE_ACTIVITY_INT, null);
 
 			// 校验: 活动优惠额 不能大于 活动类型总额
 			if (approvalQuotationPreferPO.getActivityProfit() > extensionActivityTotal) {

@@ -28,6 +28,8 @@ public class ExtensionAction extends BaseListAction {
 
 	private ExtensionVO extension;
 
+	private Long amount;
+
 	@Action(value = "pageExtension", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageExtension() throws FLException {
 
@@ -92,6 +94,14 @@ public class ExtensionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "amountExtension", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountExtension() throws FLException {
+
+		amount = extensionService.amountExtensionByOrderId(extension.getOrderId(), extension.getAtttype(), extension.getType());
+
+		return SUCCESS;
+	}
+
 	public List<ExtensionVO> getExtensions() {
 		return extensions;
 	}
@@ -106,6 +116,14 @@ public class ExtensionAction extends BaseListAction {
 
 	public void setExtension(ExtensionVO extension) {
 		this.extension = extension;
+	}
+
+	public Long getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Long amount) {
+		this.amount = amount;
 	}
 
 }

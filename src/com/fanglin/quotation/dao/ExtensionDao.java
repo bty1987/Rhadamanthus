@@ -20,6 +20,8 @@ public interface ExtensionDao extends Dao<ExtensionPO> {
 
 	public ExtensionPO queryExtension(long qid, short type, short atttype);
 
+	public long amountExtensionByOrderId(String orderId, Short atttype, Short type);
+
 	public int deleteExtension(String orderId);
 
 }
