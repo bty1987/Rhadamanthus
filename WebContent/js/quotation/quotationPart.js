@@ -47,6 +47,7 @@ var QuotationDetail = (function() {
         machingType: {},
         typeness: {},
         oldPrefer: {},
+        currentSubmitType: 0, // 0=特批优惠审批, 1=活动优惠审批
         workTypes: null,
         defaults: null,
         quoteItemId: null,
@@ -73,6 +74,7 @@ var QuotationDetail = (function() {
                     com.focusPage('#manage').val(quo.preferParams["quotationPrefer.managePrefer"]);
                     com.focusPage('#advance').val(quo.preferParams["quotationPrefer.advancePrefer"]);
                     com.focusPage('#square').val(quo.preferParams["quotationPrefer.quoteArea"]);
+                    com.focusPage('#activityProfit', "#quotationPreferModal").val(quo.preferParams["quotationPrefer.activityProfit"]);
 
                     com.focusPage("#innerFloor").val(quo.houseParams["house.innerFloor"]);
                     com.focusPage("#isLift").val(quo.houseParams["house.isLift"]);
@@ -1976,6 +1978,9 @@ var QuotationDetail = (function() {
                 }
 
                 if (parseFloat(advancePrefer) > quo.oldPrefer.advancePrefer && parseFloat(advancePrefer) > quo.protation.advanceProfit) {
+
+                    quo.currentSubmitType = 0;
+
                     com.focusPage('#approveModal').modal("show");
 
                     return false;
@@ -2036,12 +2041,25 @@ var QuotationDetail = (function() {
                     "approvalQuotationPrefer.qid": quo.quotationid,
                     "approvalQuotationPrefer.qpid": quo.preferParams["quotationPrefer.qpid"],
                     "approvalQuotationPrefer.ppid": quo.preferParams["quotationPrefer.presignProduce.ppid"],
-                    "approvalQuotationPrefer.preferPrice": quo.preferParams["quotationPrefer.preferPrice"],
-                    "approvalQuotationPrefer.managePrefer": quo.preferParams["quotationPrefer.managePrefer"],
-                    "approvalQuotationPrefer.advancePrefer": quo.preferParams["quotationPrefer.advancePrefer"],
-                    "approvalQuotationPrefer.taxPrice": quo.basicParams["quotation.taxPrice"],
-                    "approvalQuotationPrefer.totalPrice": quo.basicParams["quotation.totalPrice"],
                 };
+
+                if (quo.currentSubmitType === 1) {
+                    // 活动优惠审批：传入 activityProfit, activityPrice, totalPrice, type
+                    params["approvalQuotationPrefer.activityProfit"] = com.focusPage('#activityProfit', "#quotationPreferModal").val();
+                    params["approvalQuotationPrefer.activityPrice"] = quo.preferParams["quotationPrefer.activityPrice"];
+                    params["approvalQuotationPrefer.totalPrice"] = quo.basicParams["quotation.totalPrice"];
+                    params["approvalQuotationPrefer.type"] = 1;
+                } else {
+                    // 特批优惠审批：传入原有的优惠参数
+                    params["approvalQuotationPrefer.preferPrice"] = quo.preferParams["quotationPrefer.preferPrice"];
+                    params["approvalQuotationPrefer.managePrefer"] = quo.preferParams["quotationPrefer.managePrefer"];
+                    params["approvalQuotationPrefer.advancePrefer"] = quo.preferParams["quotationPrefer.advancePrefer"];
+                    params["approvalQuotationPrefer.activityPrice"] = quo.preferParams["quotationPrefer.activityPrice"];
+                    params["approvalQuotationPrefer.activityProfit"] = quo.preferParams["quotationPrefer.activityProfit"];
+                    params["approvalQuotationPrefer.taxPrice"] = quo.basicParams["quotation.taxPrice"];
+                    params["approvalQuotationPrefer.totalPrice"] = quo.basicParams["quotation.totalPrice"];
+                    params["approvalQuotationPrefer.type"] = 0;
+                }
 
                 com.post(api.approval.submitApprovalForQuotationPrefer, params, function(res) {
 
@@ -2052,6 +2070,72 @@ var QuotationDetail = (function() {
                     quo.quoModals.$domainApproveModal.modal("hide");
                     quo.quoModals.$domainPreferModal.modal("hide");
                 });
+            });
+        },
+
+        handleActivityProfitSubmit: function() {
+
+            com.focusPage('#submitActivityProfitBtn').click(function() {
+
+                quo.currentSubmitType = 1;
+
+                // 保存旧值，用于取消时恢复
+                quo.oldPrefer.preferPrice = quo.preferParams["quotationPrefer.preferPrice"];
+                quo.oldPrefer.managePrefer = quo.preferParams["quotationPrefer.managePrefer"];
+                quo.oldPrefer.advancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
+                quo.oldPrefer.discount = quo.preferParams["quotationPrefer.discount"];
+                quo.oldPrefer.manageDiscount = quo.preferParams["quotationPrefer.manageDiscount"];
+                quo.oldPrefer.quotePrice = quo.preferParams["quotationPrefer.quotePrice"];
+                quo.oldPrefer.quoteArea = quo.preferParams["quotationPrefer.quoteArea"];
+                quo.oldPrefer.activityPrice = quo.preferParams["quotationPrefer.activityPrice"];
+                quo.oldPrefer.activityProfit = quo.preferParams["quotationPrefer.activityProfit"];
+
+                // 获取用户输入的活动优惠金额
+                var activityProfitInput = com.focusPage('#activityProfit', "#quotationPreferModal").val();
+
+                // 临时更新到全局参数，用于计算 totalPrice
+                quo.preferParams["quotationPrefer.activityProfit"] = activityProfitInput;
+
+                // 重新计算费用，验证优惠金额是否合理
+                if (!quo.calculateQuoFees()) {
+                    quo.oldQuotationPreferData();
+                    return false;
+                }
+
+                // 清空旧的审批人列表，重新加载
+                com.focusPage("#approveManSel", "#approveModal").empty();
+
+                com.post(api.approval.queryApproverByType, {
+                    "approver.type": 22
+                }, function(res) {
+
+                    $.each(res.approvers, function(i, v) {
+
+                        var comment = v.comment == null ? "" : v.comment;
+
+                        var approveManSel = com.focusPage("#approveManSel", "#approveModal");
+                        var $div = $('<div></div>').addClass("radio no-padding").attr("style", "margin-bottom:10px").appendTo(approveManSel);
+                        var $approvaler = $('<label></label>').appendTo($div);
+
+                        var $input = $('<input>').attr({
+                            "type": "radio",
+                            "name": "form-field-radio",
+                            "class": "ace",
+                            "uid": v.userBase.uid,
+                            "userId": v.userBase.userId
+                        }).appendTo($approvaler);
+
+                        var $span = $('<span></span>').addClass('lbl').appendTo($approvaler);
+                        var $name = $('<label></label>').attr('style', 'margin-left:10px;').text(v.userBase.currentName).appendTo($span);
+
+                        var $comment = $('<span></span>').addClass("lbl").text(comment).attr("style", "margin-left:15px").appendTo($approvaler);
+                    });
+
+                    // 显示审批弹窗
+                    com.focusPage("#approveModal").modal("show");
+                }, null, false);
+
+                return false;
             });
         },
 
@@ -2206,6 +2290,7 @@ var QuotationDetail = (function() {
                 this.handleInput();
             this.handlechange();
             this.submitApprovalPrefer();
+            this.handleActivityProfitSubmit();
         }
     };
 

@@ -23,8 +23,10 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationPreferDao;
+import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.QuotationPreferPO;
+import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("approvalQuotationPreferService")
@@ -48,6 +50,9 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private ExtensionDao extensionDao;
 
 	@Autowired
 	private DingTalkApprovalService approvalService;
@@ -97,7 +102,12 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("装修单号:%s,优惠额:%s,管理优惠额:%s特批优惠额:%s", orderId, approvalQuotationPreferVO.getPreferPrice() / 1000, approvalQuotationPreferVO.getManagePrefer() / 1000, approvalQuotationPreferVO.getAdvancePrefer() / 1000);
+		String content;
+		if (approvalQuotationPreferVO.getType() != null && approvalQuotationPreferVO.getType() == 1) {
+			content = String.format("装修单号:%s,活动优惠额:%s,总价:%s", orderId, approvalQuotationPreferVO.getActivityProfit() / 1000, approvalQuotationPreferVO.getTotalPrice() / 1000);
+		} else {
+			content = String.format("装修单号:%s,优惠额:%s,管理优惠额:%s特批优惠额:%s", orderId, approvalQuotationPreferVO.getPreferPrice() / 1000, approvalQuotationPreferVO.getManagePrefer() / 1000, approvalQuotationPreferVO.getAdvancePrefer() / 1000);
+		}
 
 		approvalPO = new ApprovalPO().init(sender, receiver, orderId, qpid, ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER‌_INT, content, approvalVO.getComment(), company);
 
@@ -162,11 +172,37 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 			throw new FLException(200005, "报价不能修改");
 		}
 
-		quotationPreferPO.setPreferPrice(approvalQuotationPreferPO.getPreferPrice());
-		quotationPreferPO.setManagePrefer(approvalQuotationPreferPO.getManagePrefer());
-		quotationPreferPO.setAdvancePrefer(approvalQuotationPreferPO.getAdvancePrefer());
-		quotationPreferPO.setActivityPrice(approvalQuotationPreferPO.getActivityPrice());
-		quotationPreferPO.setActivityProfit(approvalQuotationPreferPO.getActivityProfit());
+		if (approvalQuotationPreferPO.getType() == 1) {
+			// type=1: 活动优惠审批 — 校验 extension 活动类型总额 + 只更新 activityProfit, activityPrice
+
+			// 查询该报价关联的所有 extension，累加活动类型(atttype=4)的 total
+			long extensionActivityTotal = 0;
+			List<ExtensionPO> extensions = extensionDao.queryExtensionByOrderId(quotationPO.getOrderId());
+			for (ExtensionPO extension : extensions) {
+				if (extension.getAtttype() == ExtensionPO.ATTTYPE_ACTIVITY_INT) {
+					if (extension.getType() == ExtensionPO.TYPE_ADD_INT) {
+						extensionActivityTotal += extension.getTotal();
+					} else {
+						extensionActivityTotal -= extension.getTotal();
+					}
+				}
+			}
+
+			// 校验: 活动优惠额 不能大于 活动类型总额
+			if (approvalQuotationPreferPO.getActivityProfit() > extensionActivityTotal) {
+				throw new FLException(240005, "活动优惠额不能大于活动类型总额");
+			}
+
+			quotationPreferPO.setActivityProfit(approvalQuotationPreferPO.getActivityProfit());
+			quotationPreferPO.setActivityPrice(approvalQuotationPreferPO.getActivityPrice());
+		} else {
+			// type=0 (默认): 特批优惠审批 — 更新 preferPrice, managePrefer, advancePrefer, activityPrice, activityProfit
+			quotationPreferPO.setPreferPrice(approvalQuotationPreferPO.getPreferPrice());
+			quotationPreferPO.setManagePrefer(approvalQuotationPreferPO.getManagePrefer());
+			quotationPreferPO.setAdvancePrefer(approvalQuotationPreferPO.getAdvancePrefer());
+			quotationPreferPO.setActivityPrice(approvalQuotationPreferPO.getActivityPrice());
+			quotationPreferPO.setActivityProfit(approvalQuotationPreferPO.getActivityProfit());
+		}
 
 		quotationPreferDao.save(quotationPreferPO);
 
