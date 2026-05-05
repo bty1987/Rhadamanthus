@@ -183,6 +183,12 @@ public class ExtensionServiceImpl implements ExtensionService {
 		extensionDao.delete(extensionPO);
 	}
 
+	@Override
+	public long amountExtensionByOrderId(String orderId, Short atttype, Short type) {
+
+		return extensionDao.amountExtensionByOrderId(orderId, atttype, type);
+	}
+
 	private List<ExtensionVO> handleExtension(List<ExtensionPO> extensionPOs) {
 
 		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();

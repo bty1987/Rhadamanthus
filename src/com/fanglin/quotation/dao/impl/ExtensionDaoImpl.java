@@ -65,6 +65,32 @@ public class ExtensionDaoImpl extends DaoImpl<ExtensionPO> implements ExtensionD
 	}
 
 	@Override
+	public long amountExtensionByOrderId(String orderId, Short atttype, Short type) {
+
+		StringBuilder sql = new StringBuilder("select sum(case when type = 0 then total else -total end) from quotation.extension where orderId = :orderId");
+
+		if (atttype != null) {
+			sql.append(" and atttype = :atttype");
+		}
+		if (type != null) {
+			sql.append(" and type = :type");
+		}
+
+		org.hibernate.SQLQuery query = session().createSQLQuery(sql.toString()).setString("orderId", orderId);
+
+		if (atttype != null) {
+			query.setShort("atttype", atttype);
+		}
+		if (type != null) {
+			query.setShort("type", type);
+		}
+
+		Object result = query.uniqueResult();
+
+		return result != null ? ((Number) result).longValue() : 0L;
+	}
+
+	@Override
 	public int deleteExtension(String orderId) {
 
 		String sql = "delete from quotation.extension where orderId = :orderId";

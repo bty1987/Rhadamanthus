@@ -25,4 +25,6 @@ public interface ExtensionService {
 
 	public void deleteExtension(ExtensionVO extensionVO) throws FLException;
 
+	public long amountExtensionByOrderId(String orderId, Short atttype, Short type);
+
 }
