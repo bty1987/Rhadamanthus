@@ -27,6 +27,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
@@ -153,7 +154,7 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 		constructionDao.update(constructionPO);
 
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "updateAcceptance", "{\"orderId\":\"" + orderId + "\",\"status\":\"2\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "updateAcceptance", "{\"orderId\":\"" + orderId + "\",\"status\":\"2\",\"event\":\"PROJECT_NODE_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "updateAcceptance", "{\"orderId\":\"" + orderId + "\",\"status\":\"2\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
 
 		return 0;
 	}
