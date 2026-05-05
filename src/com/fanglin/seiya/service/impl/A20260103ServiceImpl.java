@@ -25,7 +25,6 @@ import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.service.HouseService;
-import com.fanglin.communion.vo.CustomerPhoneVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
@@ -48,9 +47,7 @@ import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.personel.vo.UserVO;
 import com.fanglin.seiya.service.A20260103Service;
 
 @Service("A20260103Service")
@@ -77,9 +74,6 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Autowired
 	private CustomerPhoneDao customerPhoneDao;
-
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	private CustomerDao customerDao;
@@ -135,12 +129,6 @@ public class A20260103ServiceImpl implements A20260103Service {
 		// 通过线索编号查询现有客户机会
 		CustomerChanceVO existingChance = queryCustomerChanceByCno(leadCode);
 
-		// 获取当前用户信息
-		UserVO creater = userService.queryUserByUserId(new UserVO(userId));
-		if (creater == null) {
-			throw new FLException(190005, "人员不存在");
-		}
-
 		// 获取操作人PO（用于记录CustomerSourceRecord）
 		UserPO operater = userDao.queryUserByUserId(userId);
 
@@ -186,13 +174,8 @@ public class A20260103ServiceImpl implements A20260103Service {
 				// 客户不存在，创建新客户
 				customerVO = new CustomerVO();
 				customerVO.setName(name != null ? name : "未知客户");
+				customerVO.setPhone(phone);
 				customerService.existCustomer(customerVO, orgId);
-
-				// 添加电话
-				CustomerPhoneVO customerPhoneVO = new CustomerPhoneVO();
-				customerPhoneVO.setCid(customerVO.getCid());
-				customerPhoneVO.setPhone(phone);
-				customerService.addCustomerPhone(customerPhoneVO, orgId);
 			}
 		}
 
