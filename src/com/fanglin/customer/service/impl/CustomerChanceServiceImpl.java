@@ -218,7 +218,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChancePO.ptv(customerChanceVO);
 
 		if (customerChancePO.getCustomer() != null) {
-			customerChanceVO.getSource().setPhone(customerChancePO.getCustomer().getPhone());
+			customerChanceVO.getSource().setPhone(SensitiveDataHelper.decrypt(customerChancePO.getCustomer().getPhone()));
 		}
 
 		CompanyPO companyPO = companyDao.get(customerChancePO.getCompany());
