@@ -42,6 +42,8 @@ public class ApprovalQuotationPreferPO implements Serializable {
 
 	private long taxPrice;
 
+	private short type;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "aqpid")
@@ -150,6 +152,15 @@ public class ApprovalQuotationPreferPO implements Serializable {
 
 	public void setTaxPrice(long taxPrice) {
 		this.taxPrice = taxPrice;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 }

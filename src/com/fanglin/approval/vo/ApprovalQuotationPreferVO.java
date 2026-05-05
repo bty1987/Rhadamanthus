@@ -30,6 +30,8 @@ public class ApprovalQuotationPreferVO implements Serializable {
 
 	private Long taxPrice;
 
+	private Short type;
+
 	public ApprovalQuotationPreferVO() {
 		super();
 	}
@@ -140,6 +142,14 @@ public class ApprovalQuotationPreferVO implements Serializable {
 
 	public void setTaxPrice(Long taxPrice) {
 		this.taxPrice = taxPrice;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 }

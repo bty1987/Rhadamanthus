@@ -17,6 +17,10 @@ public class MemberOrderItemVO implements Serializable {
 
 	private Timestamp expireTime; // 有效期
 
+	private Short isPrefer;
+
+	private Short isPayment;
+
 	public String getNo() {
 		return no;
 	}
@@ -55,6 +59,22 @@ public class MemberOrderItemVO implements Serializable {
 
 	public void setExpireTime(Timestamp expireTime) {
 		this.expireTime = expireTime;
+	}
+
+	public Short getIsPrefer() {
+		return isPrefer;
+	}
+
+	public void setIsPrefer(Short isPrefer) {
+		this.isPrefer = isPrefer;
+	}
+
+	public Short getIsPayment() {
+		return isPayment;
+	}
+
+	public void setIsPayment(Short isPayment) {
+		this.isPayment = isPayment;
 	}
 
 }
