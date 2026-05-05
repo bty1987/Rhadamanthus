@@ -181,7 +181,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		customerSourcePO.ptv(customerSourceVO);
 
 		if (customerSourcePO.getCustomer() != null) {
-			customerSourceVO.setPhone(SensitiveDataHelper.decrypt(customerSourcePO.getCustomer().getPhone()));
+			customerSourceVO.setPhone(SensitiveDataHelper.maskPhone(SensitiveDataHelper.decrypt(customerSourcePO.getCustomer().getPhone())));
 		}
 
 		return customerSourceVO;
@@ -275,7 +275,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		customerSourceDao.save(customerSourcePO);
 
-		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源创建,楼盘:%s,楼号:%s,电话:%s", villagePO != null ? villagePO.getName() : "", SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()), SensitiveDataHelper.decrypt(customerSourcePO.getPhone())), CustomerSourceRecordPO.TYPE_SPECIAL_INT, customerSourcePO.getCreater()));
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源创建,楼盘:%s,楼号:%s,电话:%s", villagePO != null ? villagePO.getName() : "", SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()), SensitiveDataHelper.maskPhone(SensitiveDataHelper.decrypt(customerSourcePO.getPhone()))), CustomerSourceRecordPO.TYPE_SPECIAL_INT, customerSourcePO.getCreater()));
 
 		customerSourceDao.flush();
 
@@ -313,7 +313,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		String villageName = customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "";
 		String houseNumber = SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber());
-		String phone = SensitiveDataHelper.decrypt(customerSourcePO.getPhone());
+		String phone = SensitiveDataHelper.maskPhone(SensitiveDataHelper.decrypt(customerSourcePO.getPhone()));
 
 		VillagePO villagePO = null;
 
@@ -357,7 +357,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		customerSourceDao.save(customerSourcePO);
 
-		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源更新,原楼盘:%s,原楼号:%s,原电话:%s,新楼盘:%s,新楼号%s,新电话%s", villageName, houseNumber, phone, customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "", SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()), SensitiveDataHelper.decrypt(customerSourcePO.getPhone())), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源更新,原楼盘:%s,原楼号:%s,原电话:%s,新楼盘:%s,新楼号%s,新电话%s", villageName, houseNumber, phone, customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "", SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()), SensitiveDataHelper.maskPhone(SensitiveDataHelper.decrypt(customerSourcePO.getPhone()))), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
 	}
 
 	@Override
