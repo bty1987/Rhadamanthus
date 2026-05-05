@@ -141,6 +141,14 @@ public class A20260103ServiceImpl implements A20260103Service {
 			throw new FLException(190005, "人员不存在");
 		}
 
+		// 获取操作人PO（用于记录CustomerSourceRecord）
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		// 获取现有CustomerSourcePO（用于比较旧值）
+		long csid = existingChance.getSource().getCsid();
+		long ccid = existingChance.getCcid();
+		CustomerSourcePO sourcePO = customerSourceDao.get(csid);
+
 		// 处理房屋信息（楼盘+楼号）
 		HouseVO houseVO = null;
 		if (village != null && !village.trim().isEmpty() && houseNumber != null && !houseNumber.trim().isEmpty()) {
@@ -190,36 +198,57 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 		// 更新房屋
 		if (houseVO != null && houseVO.getHid() != null) {
+			String oldVillageName = sourcePO.getVillage() != null ? sourcePO.getVillage().getName() : "";
+			String oldHouseNumber = sourcePO.getHouseNumber() != null ? sourcePO.getHouseNumber() : "";
+
 			CustomerSourceVO sourceVO = new CustomerSourceVO();
-			sourceVO.setCsid(existingChance.getSource().getCsid());
+			sourceVO.setCsid(csid);
 			sourceVO.setHouse(houseVO);
 			customerSourceService.updateCustomerSourceForHouse(sourceVO);
+
+			if (!String.valueOf(houseVO.getHid()).equals(String.valueOf(existingChance.getHouse().getHid()))) {
+				String newVillageName = houseVO.getVillage() != null ? houseVO.getVillage().getName() : village;
+				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(csid, ccid, String.format("Seiya更新房屋,原楼盘:%s,原楼号:%s,新楼盘:%s,新楼号:%s", oldVillageName, oldHouseNumber, newVillageName, houseNumber), CustomerSourceRecordPO.TYPE_COMMON_INT, operater));
+			}
 		}
 
 		// 更新客户
 		if (customerVO != null && customerVO.getCid() != null) {
+			String oldPhone = sourcePO.getPhone() != null ? sourcePO.getPhone() : "";
+			String oldCustomerName = sourcePO.getCustomer() != null ? sourcePO.getCustomer().getName() : "";
+
 			CustomerSourceVO sourceVO = new CustomerSourceVO();
-			sourceVO.setCsid(existingChance.getSource().getCsid());
+			sourceVO.setCsid(csid);
 			sourceVO.setCustomer(customerVO);
 			sourceVO.setPhone(phone);
 			customerSourceService.updateCustomerSourceForCustomer(sourceVO);
+
+			if (!String.valueOf(customerVO.getCid()).equals(String.valueOf(existingChance.getCustomer().getCid()))) {
+				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(csid, ccid, String.format("Seiya更新客户,原客户:%s,原电话:%s,新电话:%s", oldCustomerName, oldPhone, phone), CustomerSourceRecordPO.TYPE_COMMON_INT, operater));
+			}
 		}
 
 		// 更新referOrderId、source、contact（通过DAO直接更新）
 		if (referOrderId != null || sourceInfo != null || contactInfo != null) {
-			CustomerSourcePO sourcePO = customerSourceDao.get(existingChance.getSource().getCsid());
 			if (sourcePO != null) {
 				if (referOrderId != null && !referOrderId.trim().isEmpty()) {
 					String oldReferOrderId = sourcePO.getReferOrderId();
 					sourcePO.setReferOrderId(referOrderId);
-					UserPO operater = userDao.queryUserByUserId(userId);
-					customerSourceRecordDao.save(new CustomerSourceRecordPO().init(sourcePO.getCsid(), existingChance.getCcid(), String.format("referOrderId: %s -> %s", oldReferOrderId, referOrderId), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
+					customerSourceRecordDao.save(new CustomerSourceRecordPO().init(csid, ccid, String.format("referOrderId: %s -> %s", oldReferOrderId, referOrderId), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
 				}
 				if (sourceInfo != null && !sourceInfo.trim().isEmpty()) {
-					sourcePO.setSource(sourceInfo);
+					String oldSourceInfo = sourcePO.getSource() != null ? sourcePO.getSource() : "";
+					if (!oldSourceInfo.equals(sourceInfo)) {
+						sourcePO.setSource(sourceInfo);
+						customerSourceRecordDao.save(new CustomerSourceRecordPO().init(csid, ccid, String.format("Seiya更新来源,原来源:%s,新来源:%s", oldSourceInfo, sourceInfo), CustomerSourceRecordPO.TYPE_COMMON_INT, operater));
+					}
 				}
 				if (contactInfo != null && !contactInfo.trim().isEmpty()) {
-					sourcePO.setContact(contactInfo);
+					String oldContactInfo = sourcePO.getContact() != null ? sourcePO.getContact() : "";
+					if (!oldContactInfo.equals(contactInfo)) {
+						sourcePO.setContact(contactInfo);
+						customerSourceRecordDao.save(new CustomerSourceRecordPO().init(csid, ccid, String.format("Seiya更新联系人,原联系人:%s,新联系人:%s", oldContactInfo, contactInfo), CustomerSourceRecordPO.TYPE_COMMON_INT, operater));
+					}
 				}
 				customerSourceDao.save(sourcePO);
 			}
@@ -232,6 +261,10 @@ public class A20260103ServiceImpl implements A20260103Service {
 				throw new FLException(190005, "业务员不存在");
 			}
 
+			// 记录旧业务员信息
+			String oldSalesmanName = sourcePO.getCreater() != null ? sourcePO.getCreater().getCurrentName() : "";
+			String oldSalesmanId = sourcePO.getCreater() != null ? sourcePO.getCreater().getUserId() : "";
+
 			// 更新 customerchance.creater
 			CustomerChancePO chancePO = customerChanceDao.queryCustomerChanceByCno(leadCode);
 			if (chancePO != null) {
@@ -240,10 +273,14 @@ public class A20260103ServiceImpl implements A20260103Service {
 			}
 
 			// 更新 customersource.creater
-			CustomerSourcePO sourcePO2 = customerSourceDao.get(existingChance.getSource().getCsid());
-			if (sourcePO2 != null) {
-				sourcePO2.setCreater(salesmanPO);
-				customerSourceDao.save(sourcePO2);
+			if (sourcePO != null) {
+				sourcePO.setCreater(salesmanPO);
+				customerSourceDao.save(sourcePO);
+			}
+
+			// 记录业务员变更
+			if (!salesmanId.equals(oldSalesmanId)) {
+				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(csid, ccid, String.format("Seiya更新业务员,原业务员:%s(%s),新业务员:%s(%s)", oldSalesmanName, oldSalesmanId, salesmanPO.getCurrentName(), salesmanId), CustomerSourceRecordPO.TYPE_COMMON_INT, operater));
 			}
 		}
 	}
