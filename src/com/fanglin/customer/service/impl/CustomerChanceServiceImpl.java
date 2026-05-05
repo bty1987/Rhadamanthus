@@ -967,7 +967,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			customerPO = customerSourcePO.getCustomer();
 		}
 
-		CustomerVO customerVO = new CustomerVO(customerSourcePO.getName(), customerSourcePO.getPhone());
+		CustomerVO customerVO = new CustomerVO(customerSourcePO.getName(), SensitiveDataHelper.decrypt(customerSourcePO.getPhone()));
 
 		customerService.existCustomer(customerVO, company);
 
