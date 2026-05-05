@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.dao.HouseDao;
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.service.CustomerService;
@@ -37,7 +38,6 @@ import com.fanglin.customer.dao.CustomerSourceRecordDao;
 import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.po.CustomerSourceRecordPO;
-import com.fanglin.customer.service.CustomerSourceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
@@ -56,9 +56,6 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
-
-	@Autowired
-	private CustomerSourceService customerSourceService;
 
 	@Autowired
 	private CustomerSourceDao customerSourceDao;
@@ -136,6 +133,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		long csid = existingChance.getSource().getCsid();
 		long ccid = existingChance.getCcid();
 		CustomerSourcePO sourcePO = customerSourceDao.get(csid);
+		CustomerChancePO chancePO = customerChanceDao.queryCustomerChanceByCno(leadCode);
 
 		// 处理房屋信息（楼盘+楼号）
 		HouseVO houseVO = null;
@@ -179,32 +177,46 @@ public class A20260103ServiceImpl implements A20260103Service {
 			}
 		}
 
-		// 更新房屋
+		// 更新房屋（source + chance）
 		if (houseVO != null && houseVO.getHid() != null) {
 			String oldVillageName = sourcePO.getVillage() != null ? sourcePO.getVillage().getName() : "";
 			String oldHouseNumber = sourcePO.getHouseNumber() != null ? sourcePO.getHouseNumber() : "";
 
-			CustomerSourceVO sourceVO = new CustomerSourceVO();
-			sourceVO.setCsid(csid);
-			sourceVO.setHouse(houseVO);
-			customerSourceService.updateCustomerSourceForHouse(sourceVO);
+			HousePO housePO = houseDao.get(houseVO.getHid());
+			if (housePO != null) {
+				sourcePO.setHouse(housePO);
+				sourcePO.setVillage(housePO.getVillage());
+				sourcePO.setHouseNumber(housePO.getHouseNumber());
+				customerSourceDao.save(sourcePO);
+			}
+
+			if (chancePO != null && housePO != null) {
+				chancePO.setHouse(housePO);
+				customerChanceDao.save(chancePO);
+			}
 
 			if (!String.valueOf(houseVO.getHid()).equals(String.valueOf(existingChance.getHouse().getHid()))) {
-				String newVillageName = houseVO.getVillage() != null ? houseVO.getVillage().getName() : village;
+				String newVillageName = housePO != null && housePO.getVillage() != null ? housePO.getVillage().getName() : village;
 				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(csid, ccid, String.format("Seiya更新房屋,原楼盘:%s,原楼号:%s,新楼盘:%s,新楼号:%s", oldVillageName, oldHouseNumber, newVillageName, houseNumber), CustomerSourceRecordPO.TYPE_COMMON_INT, operater));
 			}
 		}
 
-		// 更新客户
+		// 更新客户（source + chance）
 		if (customerVO != null && customerVO.getCid() != null) {
 			String oldPhone = sourcePO.getPhone() != null ? sourcePO.getPhone() : "";
 			String oldCustomerName = sourcePO.getCustomer() != null ? sourcePO.getCustomer().getName() : "";
 
-			CustomerSourceVO sourceVO = new CustomerSourceVO();
-			sourceVO.setCsid(csid);
-			sourceVO.setCustomer(customerVO);
-			sourceVO.setPhone(phone);
-			customerSourceService.updateCustomerSourceForCustomer(sourceVO);
+			CustomerPO customerPO = customerDao.get(customerVO.getCid());
+			if (customerPO != null) {
+				sourcePO.setCustomer(customerPO);
+				sourcePO.setPhone(SensitiveDataHelper.encrypt(phone));
+				customerSourceDao.save(sourcePO);
+			}
+
+			if (chancePO != null && customerPO != null) {
+				chancePO.setCustomer(customerPO);
+				customerChanceDao.save(chancePO);
+			}
 
 			if (!String.valueOf(customerVO.getCid()).equals(String.valueOf(existingChance.getCustomer().getCid()))) {
 				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(csid, ccid, String.format("Seiya更新客户,原客户:%s,原电话:%s,新电话:%s", oldCustomerName, oldPhone, phone), CustomerSourceRecordPO.TYPE_COMMON_INT, operater));
@@ -249,7 +261,6 @@ public class A20260103ServiceImpl implements A20260103Service {
 			String oldSalesmanId = sourcePO.getCreater() != null ? sourcePO.getCreater().getUserId() : "";
 
 			// 更新 customerchance.creater
-			CustomerChancePO chancePO = customerChanceDao.queryCustomerChanceByCno(leadCode);
 			if (chancePO != null) {
 				chancePO.setCreater(salesmanPO);
 				customerChanceDao.save(chancePO);
