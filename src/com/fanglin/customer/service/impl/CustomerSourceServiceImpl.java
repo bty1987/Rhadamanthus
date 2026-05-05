@@ -264,7 +264,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman", "busitype", "phone"));
 
 		if (customerSourceVO.getPhone() != null) {
-			customerSourcePO.setPhone(phone);
+			customerSourcePO.setPhone(SensitiveDataHelper.encrypt(phone));
 		}
 
 		customerSourcePO.setCreater(creater);
@@ -275,7 +275,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		customerSourceDao.save(customerSourcePO);
 
-		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源创建,楼盘:%s,楼号:%s,电话:%s", villagePO != null ? villagePO.getName() : "", SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()), customerSourcePO.getPhone()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, customerSourcePO.getCreater()));
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源创建,楼盘:%s,楼号:%s,电话:%s", villagePO != null ? villagePO.getName() : "", SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()), SensitiveDataHelper.decrypt(customerSourcePO.getPhone())), CustomerSourceRecordPO.TYPE_SPECIAL_INT, customerSourcePO.getCreater()));
 
 		customerSourceDao.flush();
 
