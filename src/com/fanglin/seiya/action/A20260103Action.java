@@ -463,6 +463,11 @@ public class A20260103Action extends BaseListAction {
 
 		}
 
+		// 校验分配结果
+		if (result == null || result.getOrderId() == null) {
+			throw new FLException(400001, "分配失败,请检查分配规则");
+		}
+
 		// 封装 data 对象（包含请求参数和返回结果）
 		// 请求参数
 		this.data.put("leadCode", leadCode);
