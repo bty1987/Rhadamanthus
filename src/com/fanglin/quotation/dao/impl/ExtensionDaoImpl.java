@@ -76,7 +76,8 @@ public class ExtensionDaoImpl extends DaoImpl<ExtensionPO> implements ExtensionD
 			sql.append(" and type = :type");
 		}
 
-		org.hibernate.SQLQuery query = session().createSQLQuery(sql.toString()).setString("orderId", orderId);
+		org.hibernate.SQLQuery query = session().createSQLQuery(sql.toString());
+		query.setString("orderId", orderId);
 
 		if (atttype != null) {
 			query.setShort("atttype", atttype);
