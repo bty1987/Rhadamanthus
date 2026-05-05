@@ -135,6 +135,11 @@ public class A20260103ServiceImpl implements A20260103Service {
 		CustomerSourcePO sourcePO = customerSourceDao.get(csid);
 		CustomerChancePO chancePO = customerChanceDao.queryCustomerChanceByCno(leadCode);
 
+		// 验证客户机会状态 - 失效、完成、已结束状态不可操作
+		if (chancePO != null && Arrays.asList(CustomerChancePO.STATUS_DISABLE_INT, CustomerChancePO.STATUS_COMPLETE_INT, CustomerChancePO.STATUS_FINISH_INT).contains(chancePO.getStatus())) {
+			throw new FLException(330077, "客户机会不可操作");
+		}
+
 		// 处理房屋信息（楼盘+楼号）
 		HouseVO houseVO = null;
 		if (village != null && !village.trim().isEmpty() && houseNumber != null && !houseNumber.trim().isEmpty()) {
@@ -357,10 +362,21 @@ public class A20260103ServiceImpl implements A20260103Service {
 	}
 
 	@Override
-	public void checkoverCustomerLead(String village, String houseNumber, String phone, Integer orgId) throws FLException {
+	public void checkoverCustomerLead(String leadCode, String village, String houseNumber, String phone, Integer orgId) throws FLException {
 
 		if (orgId == null) {
 			throw new FLException(400004, "公司标识不能为空");
+		}
+
+		// 0. 如果传入了线索编号，验证客户机会状态
+		if (leadCode != null && !leadCode.trim().isEmpty()) {
+			CustomerChancePO chancePO = customerChanceDao.queryCustomerChanceByCno(leadCode);
+			if (chancePO == null) {
+				throw new FLException(330077, "客户机会不存在");
+			}
+			if (Arrays.asList(CustomerChancePO.STATUS_DISABLE_INT, CustomerChancePO.STATUS_COMPLETE_INT, CustomerChancePO.STATUS_FINISH_INT).contains(chancePO.getStatus())) {
+				throw new FLException(330077, "客户机会不可操作");
+			}
 		}
 
 		// 1. 通过电话查询客户cid

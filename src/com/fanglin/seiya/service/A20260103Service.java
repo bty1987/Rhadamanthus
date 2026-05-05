@@ -86,7 +86,7 @@ public interface A20260103Service {
 	 * @param orgId 公司ID
 	 * @throws FLException 如果存在装修单则抛出异常
 	 */
-	void checkoverCustomerLead(String village, String houseNumber, String phone, Integer orgId) throws FLException;
+	void checkoverCustomerLead(String leadCode, String village, String houseNumber, String phone, Integer orgId) throws FLException;
 
 	/**
 	 * 修改装修单的客户电话和楼盘楼号（SF专用）

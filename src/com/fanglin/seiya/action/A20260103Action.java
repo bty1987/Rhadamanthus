@@ -326,7 +326,7 @@ public class A20260103Action extends BaseListAction {
 		this.data = new HashMap<String, Object>();
 
 		// 调用 Service 层处理业务逻辑
-		a20260103Service.checkoverCustomerLead(village, houseNumber, phone, orgId);
+		a20260103Service.checkoverCustomerLead(leadCode, village, houseNumber, phone, orgId);
 
 		// 验证通过，无装修单存在
 		this.data.put("message", "验证通过，无装修单存在");
