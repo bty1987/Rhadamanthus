@@ -1173,6 +1173,8 @@ var QuotationDetail = (function() {
             quo.preferParams["quotationPrefer.manageDiscount"] = quo.oldPrefer.manageDiscount;
             quo.preferParams["quotationPrefer.quotePrice"] = quo.oldPrefer.quotePrice;
             quo.preferParams["quotationPrefer.quoteArea"] = quo.oldPrefer.quoteArea;
+            quo.preferParams["quotationPrefer.activityPrice"] = quo.oldPrefer.activityPrice;
+            quo.preferParams["quotationPrefer.activityProfit"] = quo.oldPrefer.activityProfit;
 
             quo.calculateQuoFees();
         },
@@ -1921,6 +1923,8 @@ var QuotationDetail = (function() {
                 quo.oldPrefer.manageDiscount = quo.preferParams["quotationPrefer.manageDiscount"];
                 quo.oldPrefer.quotePrice = quo.preferParams["quotationPrefer.quotePrice"];
                 quo.oldPrefer.quoteArea = quo.preferParams["quotationPrefer.quoteArea"];
+                quo.oldPrefer.activityPrice = quo.preferParams["quotationPrefer.activityPrice"];
+                quo.oldPrefer.activityProfit = quo.preferParams["quotationPrefer.activityProfit"];
 
                 var produce = com.focusPage('#produce').val();
                 var preferPrice = com.focusPage('#prefer').val();
