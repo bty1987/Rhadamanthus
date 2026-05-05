@@ -89,6 +89,30 @@ public class SensitiveDataHelper {
 		return value.startsWith(ENCRYPT_PREFIX) && value.endsWith(ENCRYPT_SUFFIX);
 	}
 
+	// ========== 脱敏展示 ==========
+
+	/**
+	 * 手机号脱敏：中间4位用****代替
+	 * 
+	 * 例如: 13812345678 → 138****5678
+	 * 
+	 * @param phone 明文手机号（已解密）
+	 * @return 脱敏后的手机号，空值或长度不足直接返回
+	 */
+	public static String maskPhone(String phone) {
+		if (phone == null || phone.trim().isEmpty()) {
+			return phone;
+		}
+
+		phone = phone.trim();
+
+		if (phone.length() < 7) {
+			return phone;
+		}
+
+		return phone.substring(0, 3) + "****" + phone.substring(7);
+	}
+
 	// ========== 查询辅助 ==========
 
 	/**
