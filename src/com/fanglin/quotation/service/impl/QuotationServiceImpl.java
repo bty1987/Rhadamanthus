@@ -377,6 +377,11 @@ public class QuotationServiceImpl implements QuotationService {
 			}
 		}
 
+		if (protationPO != null) {
+			quotationPreferPO.setActivityPrice(protationPO.getActivityPrice());
+			quotationPreferPO.setActivityProfit(protationPO.getActivityProfit());
+		}
+
 		quotationPreferDao.save(quotationPreferPO);
 
 		return 0;
