@@ -710,7 +710,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			String message = String.format("新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", customerSourcePO.getCreater().getCurrentName(), customerSourcePO.getCreater().getUserId(), customerSourcePO.getVillage().getName(), SensitiveDataHelper.decrypt(customerSourcePO.getHouseNumber()));
 
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
+
 			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_REGION_ASSIGNED\"}"));
+
 			return;
 		}
 
@@ -761,6 +763,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
+
 			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_DEPT_ASSIGNED\"}"));
 
 			return;
@@ -819,6 +822,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
 			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_USER_ASSIGNED\"}"));
+
 			return;
 		}
 	}

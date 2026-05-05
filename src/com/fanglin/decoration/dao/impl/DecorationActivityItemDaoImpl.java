@@ -49,9 +49,9 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	}
 
 	@Override
-	public long amountDecorationActivityItemForIsPayment(String orderId, short isPayment) {
+	public long amountDecorationActivityItem(String orderId, short isPayment) {
 
-		String sql = "select COALESCE(SUM(money*num), 0) as priceSum from decoration.decorationActivityitem where orderId =:orderId and type = 0 and isPayment =:isPayment and state = 0";
+		String sql = "select COALESCE(SUM(money*num), 0) as priceSum from decoration.decorationActivityitem where orderId =:orderId and type = 0 and isPayment =:isPayment and ((atttype = 0 and state = 0) or (atttype = 1 and state = 10))";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("isPayment", isPayment).uniqueResult();
 
 		return Arith.div(sqlQuery.longValue(), 1000000);

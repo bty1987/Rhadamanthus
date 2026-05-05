@@ -24,7 +24,7 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 
 	public List<DecorationActivityItemPO> queryDecorationActivityItem(String orderId, String no);
 
-	public long amountDecorationActivityItemForIsPayment(String orderId, short isPayment);
+	public long amountDecorationActivityItem(String orderId, short isPayment);
 
 	public long amountDecorationActivityItem(String orderId, Short type, List<Short> states, Short isPrefor, Short isPayment);
 
@@ -32,6 +32,7 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 
 	/**
 	 * 统计活动项目数量（使用 COUNT(*)）
+	 * 
 	 * @param orderId 订单号
 	 * @param type 活动类型（可选）
 	 * @param states 状态列表（可选）

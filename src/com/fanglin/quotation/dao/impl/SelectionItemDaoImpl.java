@@ -122,8 +122,9 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 
 		sql.append("INNER JOIN quotation.quotationfunctionarea qfa ON q.qid = qfa.quotationId ");
 		sql.append(String.format("INNER JOIN quotation.quotationfunctionareaitem%s qfai ON qfa.qfaid = qfai.quotationFunctionAreaId AND qfai.subtype not in (0, 1, 3)", index));
+		sql.append("LEFT JOIN quotation.extensionitem ei ON qfai.qfaiId = ei.quoteItemId and ei.type in (5) ");
 		sql.append("LEFT JOIN quotation.selectionitem si on si.orderId = q.orderId AND qfai.qfaiId = si.quoteid AND si.type = 0 ");
-		sql.append("WHERE qfa.qfaid = :qfaid AND q.defaults = 1 AND si.siid is null AND qfai.num != 0;");
+		sql.append("WHERE qfa.qfaid = :qfaid AND q.defaults = 1 AND si.siid is null AND qfai.num != 0 AND ei.eiid is null;");
 
 		BigInteger count = (BigInteger) session().createSQLQuery(sql.toString()).setLong("qfaid", quotationFunctionAreaId).uniqueResult();
 

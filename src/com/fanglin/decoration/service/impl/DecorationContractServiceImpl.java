@@ -777,7 +777,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		decorationAdditionDao.update(decorationAdditionPO);
 
-		long couponCut = decorationActivityItemDao.amountDecorationActivityItemForIsPayment(orderId, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
+		long couponCut = decorationActivityItemDao.amountDecorationActivityItem(orderId, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
 
 		decorationPO.setPrecontractPrice(Arith.sub(protationPO.getTotalPrice(), couponCut));
 		decorationPO.setPrecontractTime(DateUtil.getDateToTimestamp(new Date()));
