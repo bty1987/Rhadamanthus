@@ -1,7 +1,7 @@
 # MessageQueuing 消息队列使用指南
 
-> **版本**: v2.0
-> **更新日期**: 2026-05-02
+> **版本**: v2.1
+> **更新日期**: 2026-05-08
 > **表名**: `information.messagequeuing` / `information.messagecueing`
 
 ---
@@ -69,6 +69,7 @@
 | 预签合同 | `CUSTOMER_STATUS_CHANGED` | `CUSTOMER_STATUS_CHANGED` |
 | 归属审批通过 | `TEAM_DESIGNER_CHANGED`/`TEAM_SALESMAN_CHANGED` | `TEAM_DESIGNER_CHANGED`/`TEAM_SALESMAN_CHANGED` |
 | 转装修单 | `TRAN_DECORATION_ORDER_CHANGED` | `TRAN_DECORATION` |
+| 验收通过 | `PROJECT_STATUS_CHANGED` | `PROJECT_STATUS_CHANGED` |
 | 装饰收款 | — | `PAYMENT_COLLECTED`（仅Cueing） |
 | 通用收款 | — | `PAYMENT_COLLECTED`（仅Cueing） |
 
@@ -112,12 +113,12 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 
 | 序号 | 触发场景 | operation | event | PO类型 | 代码位置 |
 |:----:|---------|-----------|-------|--------|---------|
-| 1 | 创建订单 | `makeDecoration` | `DECORATION_CREATED` | Queuing | `DecorationServiceImpl:1133` |
-| 2 | 修改方案设计师 | `changeDecorationForAdvance` | `TEAM_PLAN_DESIGNER_CHANGED` | Queuing | `DecorationServiceImpl:1193` |
-| 3 | 更新客户信息 | `changeDecorationForAdvance` | `CUSTOMER_INFO_UPDATED` | Queuing | `DecorationServiceImpl:1216` |
-| 4 | 订单状态变更 | `changeDecorationForStatus` | `CUSTOMER_STATUS_CHANGED` | Queuing | `DecorationServiceImpl:1401` |
-| 5 | 订单作废 | `obsoleteDecoration` | `CUSTOMER_STATUS_CHANGED` | **双写** | `DecorationServiceImpl:1481/1483` |
-| 6 | 订单终止 | `terminalDecoration` | `CUSTOMER_STATUS_CHANGED` | **双写** | `DecorationServiceImpl:1618/1620` |
+| 1 | 创建订单 | `makeDecoration` | `DECORATION_CREATED` | Queuing | `DecorationServiceImpl:1137` |
+| 2 | 修改方案设计师 | `changeDecorationForAdvance` | `TEAM_PLAN_DESIGNER_CHANGED` | Queuing | `DecorationServiceImpl:1197` |
+| 3 | 更新客户信息 | `changeDecorationForAdvance` | `CUSTOMER_INFO_UPDATED` | Queuing | `DecorationServiceImpl:1220` |
+| 4 | 订单状态变更 | `changeDecorationForStatus` | `CUSTOMER_STATUS_CHANGED` | Queuing | `DecorationServiceImpl:1405` |
+| 5 | 订单作废 | `obsoleteDecoration` | `CUSTOMER_STATUS_CHANGED` | **双写** | `DecorationServiceImpl:1485/1487` |
+| 6 | 订单终止 | `terminalDecoration` | `CUSTOMER_STATUS_CHANGED` | **双写** | `DecorationServiceImpl:1622/1624` |
 
 ### 二、合同管理模块 (3个场景)
 
@@ -131,9 +132,9 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 
 | 序号 | 触发场景 | operation | event | PO类型 | 代码位置 |
 |:----:|---------|-----------|-------|--------|---------|
-| 1 | 归属转移 | `tranDecorationBelong` | `TEAM_DESIGNER_CHANGED` / `TEAM_SALESMAN_CHANGED` | Cueing | `DecorationBelongServiceImpl:246` |
-| 2 | 合并归属 | `mergeDecorationBelong` | `TEAM_DESIGNER_CHANGED` / `TEAM_SALESMAN_CHANGED` | Cueing | `DecorationBelongServiceImpl:322` |
-| 3 | 确认合并归属 | `confirmMergeDecorationBelong` | `TEAM_DESIGNER_CHANGED` / `TEAM_SALESMAN_CHANGED` | Cueing | `DecorationBelongServiceImpl:375` |
+| 1 | 归属转移 | `tranDecorationBelong` | `TEAM_DESIGNER_CHANGED` / `TEAM_SALESMAN_CHANGED` | Cueing | `DecorationBelongServiceImpl:252` |
+| 2 | 合并归属 | `mergeDecorationBelong` | `TEAM_DESIGNER_CHANGED` / `TEAM_SALESMAN_CHANGED` | Cueing | `DecorationBelongServiceImpl:328` |
+| 3 | 确认合并归属 | `confirmMergeDecorationBelong` | `TEAM_DESIGNER_CHANGED` / `TEAM_SALESMAN_CHANGED` | Cueing | `DecorationBelongServiceImpl:381` |
 
 > 根据 `belongType` 区分：`BELONGTYPE_DESIGN_INT` → `TEAM_DESIGNER_CHANGED`，其他 → `TEAM_SALESMAN_CHANGED`
 
@@ -141,7 +142,7 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 
 | 序号 | 触发场景 | operation | event | PO类型 | 代码位置 |
 |:----:|---------|-----------|-------|--------|---------|
-| 1 | 归属审批通过 | `approveForDecorationBelong` | `TEAM_DESIGNER_CHANGED` / `TEAM_SALESMAN_CHANGED` | **双写+额外** | `ApprovalDecorationBelongServiceImpl:331/332/334` |
+| 1 | 归属审批通过 | `approveForDecorationBelong` | `TEAM_DESIGNER_CHANGED` / `TEAM_SALESMAN_CHANGED` | **双写+额外** | `ApprovalDecorationBelongServiceImpl:338/339/341` |
 
 > 审批通过写3条：2条 Queuing（1条根据belongType动态 + 1条固定TEAM_SALESMAN_CHANGED）+ 1条 Cueing（根据belongType动态）
 
@@ -163,27 +164,28 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 ### 七、客户机会模块 (3个场景)
 
 | 序号 | 触发场景 | operation | event | PO类型 | 代码位置 |
-|:----:|---------|-----------|-------|--------|---------|
-| 1 | 转装修单 | `changeCustomerChance` | `TRAN_DECORATION_ORDER_CHANGED` | **双写** | `CustomerChanceServiceImpl:699/702` |
-| 2 | 到店确认(meet) | `meetCustomerChance` | `CUSTOMER_CHANCE_MEET` | Cueing | `CustomerChanceServiceImpl:761` |
+|:----:|---------|-----------|-------|--------|---------:|
+| 1 | 转装修单 | `changeCustomerChance` | `TRAN_DECORATION_ORDER_CHANGED` | **双写** | `CustomerChanceServiceImpl:701/704` |
+| 2 | 到店确认(meet) | `meetCustomerChance` | `CUSTOMER_CHANCE_MEET` | Cueing | `CustomerChanceServiceImpl:760` |
+| 3 | 客户机会下发 🆕 | `issueCustomerChance` | `CUSTOMER_CHANCE_ISSUED` | Cueing | `CustomerChanceServiceImpl:614` |
 
 > 转装修单：Queuing 写 `TRAN_DECORATION_ORDER_CHANGED`，Cueing 写 `TRAN_DECORATION`
 
 ### 八、客户资源分配模块 (4个场景)
 
 | 序号 | 触发场景 | operation | event | PO类型 | 代码位置 |
-|:----:|---------|-----------|-------|--------|---------|
-| 1 | 自动分配 | `addCustomerLead` | `CUSTOMER_CHANCE_AUTO_ASSIGNED` | Queuing | `CustomerSourceServiceImpl:669` |
-| 2 | 分区分配 | `addCustomerLead` | `CUSTOMER_CHANCE_REGION_ASSIGNED` | Queuing | `CustomerSourceServiceImpl:713` |
-| 3 | 部门分配 | `addCustomerLead` | `CUSTOMER_CHANCE_DEPT_ASSIGNED` | Queuing | `CustomerSourceServiceImpl:764` |
-| 4 | 设计师分配 | `addCustomerLead` | `CUSTOMER_CHANCE_USER_ASSIGNED` | Queuing | `CustomerSourceServiceImpl:821` |
+|:----:|---------|-----------|-------|--------|---------:|
+| 1 | 自动分配 | `addCustomerLead` | `CUSTOMER_CHANCE_AUTO_ASSIGNED` | Cueing | `CustomerSourceServiceImpl:669` |
+| 2 | 分区分配 | `addCustomerLead` | `CUSTOMER_CHANCE_REGION_ASSIGNED` | Cueing | `CustomerSourceServiceImpl:714` |
+| 3 | 部门分配 | `addCustomerLead` | `CUSTOMER_CHANCE_DEPT_ASSIGNED` | Cueing | `CustomerSourceServiceImpl:767` |
+| 4 | 设计师分配 | `addCustomerLead` | `CUSTOMER_CHANCE_USER_ASSIGNED` | Cueing | `CustomerSourceServiceImpl:824` |
 
 ### 九、客户管理模块 (2个场景) 🆕
 
 | 序号 | 触发场景 | operation | event | PO类型 | 代码位置 |
 |:----:|---------|-----------|-------|--------|---------|
-| 1 | 新增客户 | `addCustomer` | `CUSTOMER_CREATED` | Queuing | `CustomerServiceImpl:246` |
-| 2 | 更新客户 | `updateCustomer` | `CUSTOMER_UPDATED` | Queuing | `CustomerServiceImpl:387` |
+| 1 | 新增客户 | `addCustomer` | `CUSTOMER_CREATED` | Queuing | `CustomerServiceImpl:248` |
+| 2 | 更新客户 | `updateCustomer` | `CUSTOMER_UPDATED` | Queuing | `CustomerServiceImpl:391` |
 
 > orderId 为 `null`（客户不直接关联订单）
 
@@ -226,10 +228,10 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 ### 十四、验收模块 (1个场景) 🆕
 
 | 序号 | 触发场景 | operation | event | PO类型 | 代码位置 |
-|:----:|---------|-----------|-------|--------|---------|
-| 1 | 验收通过 | `updateAcceptance` | `PROJECT_STATUS_CHANGED` + `PROJECT_NODE_STATUS_CHANGED` | Queuing | `AcceptanceServiceImpl:155/156` |
+|:----:|---------|-----------|-------|--------|---------:|
+| 1 | 验收通过 | `updateAcceptance` | `PROJECT_STATUS_CHANGED` | **双写** | `AcceptanceServiceImpl:156/157` |
 
-> 验收通过同时写入两条消息
+> 验收通过同时写入 Queuing + Cueing 两条消息，event 均为 `PROJECT_STATUS_CHANGED`
 
 ### 十五、施工管理模块 (1个场景) 🆕
 
@@ -280,7 +282,7 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 
 ## Event 事件类型
 
-### 全量事件列表（32种）
+### 全量事件列表（33种）
 
 | Event 类型 | 说明 | PO类型 | 触发模块 |
 |-----------|------|--------|---------|
@@ -291,10 +293,11 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 | `CUSTOMER_CREATED` | 客户创建 | Queuing | 客户管理 🆕 |
 | `CUSTOMER_UPDATED` | 客户更新 | Queuing | 客户管理 🆕 |
 | `CUSTOMER_CHANCE_MEET` | 客户机会到店确认 | Cueing | 客户机会 🆕 |
-| `CUSTOMER_CHANCE_AUTO_ASSIGNED` | 客户机会自动分配 | Queuing | 客户资源 🆕 |
-| `CUSTOMER_CHANCE_REGION_ASSIGNED` | 客户机会分区分配 | Queuing | 客户资源 🆕 |
-| `CUSTOMER_CHANCE_DEPT_ASSIGNED` | 客户机会部门分配 | Queuing | 客户资源 🆕 |
-| `CUSTOMER_CHANCE_USER_ASSIGNED` | 客户机会设计师分配 | Queuing | 客户资源 🆕 |
+| `CUSTOMER_CHANCE_ISSUED` | 客户机会下发 | Cueing | 客户机会 🆕 |
+| `CUSTOMER_CHANCE_AUTO_ASSIGNED` | 客户机会自动分配 | Cueing | 客户资源 |
+| `CUSTOMER_CHANCE_REGION_ASSIGNED` | 客户机会分区分配 | Cueing | 客户资源 |
+| `CUSTOMER_CHANCE_DEPT_ASSIGNED` | 客户机会部门分配 | Cueing | 客户资源 |
+| `CUSTOMER_CHANCE_USER_ASSIGNED` | 客户机会设计师分配 | Cueing | 客户资源 |
 | `TEAM_PLAN_DESIGNER_CHANGED` | 方案设计师变更 | Queuing | 装饰订单 |
 | `TEAM_DESIGNER_CHANGED` | 设计师变更 | Queuing/Cueing | 订单归属、归属审批 |
 | `TEAM_SALESMAN_CHANGED` | 销售变更 | Queuing/Cueing | 订单归属、归属审批 |
@@ -310,7 +313,7 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 | `NODE_CREATED` | 施工节点创建 | Queuing | 施工节点 |
 | `NODE_UPDATED` | 施工节点更新 | Queuing | 施工节点 |
 | `PROJECT_NODE_STATUS_CHANGED` | 项目节点状态变更 | Queuing | 施工进度、验收 🆕 |
-| `PROJECT_STATUS_CHANGED` | 项目状态变更 | Queuing | 施工进度、验收 🆕 |
+| `PROJECT_STATUS_CHANGED` | 项目状态变更 | Queuing/Cueing | 施工进度、验收 🆕 |
 | `PROJECT_NODE_WORKER_ADDED` | 施工人员添加 | Queuing | 施工人员 🆕 |
 | `PROJECT_NODE_WORKER_REMOVED` | 施工人员移除 | Queuing | 施工人员 🆕 |
 | `SNAPLINE_DONE` | 放线完成 | Queuing | 放线 🆕 |
@@ -342,7 +345,8 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 | `collectPayment` | 通用收款 | Cueing |
 | `changeCustomerChance` | 转装修单 | 双写 |
 | `meetCustomerChance` | 到店确认 | Cueing |
-| `addCustomerLead` | 客户线索分配 | Queuing |
+| `issueCustomerChance` | 客户机会下发 | Cueing 🆕 |
+| `addCustomerLead` | 客户线索分配 | Cueing |
 | `addCustomer` | 新增客户 | Queuing |
 | `updateCustomer` | 更新客户 | Queuing |
 | `addVillage` | 新增楼盘 | Queuing |
@@ -353,7 +357,7 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 | `updateConstructionNodeForStatus` | 更新节点状态 | Queuing |
 | `beginConstructionSchedule` | 开工节点 | Queuing |
 | `finishConstructionSchedule` | 完工节点 | Queuing |
-| `updateAcceptance` | 验收通过 | Queuing |
+| `updateAcceptance` | 验收通过 | 双写 |
 | `updateConstruction` | 监理更换 | Queuing |
 | `pretreatDrawLine` | 放线预处理 | Queuing |
 | `successDrawLine` | 放线成功 | Queuing |
@@ -455,10 +459,10 @@ List<MessageQueuingPO> pendingByOp = messageQueuingDao.queryPendingMessageQueuin
 | 订单归属 | 3 | 6.4% |
 | 归属审批 | 1 | 2.1% |
 | 终端审批 | 1 | 2.1% |
-| 收款 | 2 | 4.3% |
-| 客户机会 | 2 | 4.3% |
-| 客户资源分配 | 4 | 8.5% |
-| 客户管理 | 2 | 4.3% |
+| 收款 | 2 | 4.2% |
+| 客户机会 | 3 | 6.3% |
+| 客户资源分配 | 4 | 8.3% |
+| 客户管理 | 2 | 4.2% |
 | 楼盘管理 | 3 | 6.4% |
 | 楼盘规则 | 1 | 2.1% |
 | 施工节点 | 3 | 6.4% |
@@ -470,14 +474,14 @@ List<MessageQueuingPO> pendingByOp = messageQueuingDao.queryPendingMessageQueuin
 | 结算入账 | 1 | 2.1% |
 | 活动项 | 1 | 2.1% |
 | 转介绍 | 2 | 4.3% |
-| **合计** | **47** | **100%** |
+| **合计** | **48** | **100%** |
 
 ### 按 PO 类型统计
 
 | 类型 | 数量 | 说明 |
 |------|------|------|
-| 仅 Queuing | ~30 | 主消息队列 |
-| 仅 Cueing | ~10 | 消息提示 |
+| 仅 Queuing | ~28 | 主消息队列 |
+| 仅 Cueing | ~13 | 消息提示 |
 | 双写 | ~7 | 同时写两张表 |
 
 ---
@@ -507,6 +511,30 @@ List<MessageQueuingPO> pendingByOp = messageQueuingDao.queryPendingMessageQueuin
 
 ## 变更记录
 
+### v2.1 (2026-05-08)
+
+**新增场景：**
+- 客户机会模块：新增 `issueCustomerChance`（CUSTOMER_CHANCE_ISSUED），Cueing 类型，位于 `CustomerChanceServiceImpl:614`
+
+**PO 类型修正：**
+- 客户资源分配模块：4个场景全部从 Queuing 修正为 Cueing（实际使用 `MessageCueuingPO`）
+- 验收模块：从 Queuing 修正为双写（Queuing + Cueing），event 统一为 `PROJECT_STATUS_CHANGED`
+- Event 列表：CUSTOMER_CHANCE_AUTO/REGION/DEPT/USER_ASSIGNED 从 Queuing 修正为 Cueing
+- Operation 列表：`addCustomerLead` 从 Queuing 修正为 Cueing，`updateAcceptance` 从 Queuing 修正为双写
+
+**行号修正：**
+- 装饰订单模块（DecorationServiceImpl）：1133→1137, 1193→1197, 1216→1220, 1401→1405, 1481/1483→1485/1487, 1618/1620→1622/1624
+- 订单归属模块（DecorationBelongServiceImpl）：246→252, 322→328, 375→381
+- 归属审批模块（ApprovalDecorationBelongServiceImpl）：331/332/334→338/339/341
+- 客户机会模块（CustomerChanceServiceImpl）：更新为 701/704, 760, 新增 614
+- 客户管理模块（CustomerServiceImpl）：246→248, 387→391
+- 验收模块（AcceptanceServiceImpl）：155/156→156/157
+
+**双写标记更新：**
+- 新增「验收通过」双写标记（PROJECT_STATUS_CHANGED）
+
+**统计更新：** 47 → 48 个场景，32 → 33 种事件
+
 ### v2.0 (2026-05-02)
 
 **架构变更：**
@@ -519,7 +547,7 @@ List<MessageQueuingPO> pendingByOp = messageQueuingDao.queryPendingMessageQueuin
 - 楼盘管理（ESTATE_CREATED/UPDATED）
 - 楼盘规则（BUILDING_RULE_CREATED/DELETED）
 - 施工进度（PROJECT_NODE_STATUS_CHANGED/PROJECT_STATUS_CHANGED）
-- 验收（PROJECT_STATUS_CHANGED/PROJECT_NODE_STATUS_CHANGED）
+- 验收（PROJECT_STATUS_CHANGED）
 - 施工管理（TEAM_SUPERVISOR_CHANGED）
 - 放线（SUPERVISOR_PRE_ASSIGNED/SNAPLINE_DONE/DRAWLINE_FINISHED）
 - 施工人员（PROJECT_NODE_WORKER_ADDED/REMOVED）
@@ -539,6 +567,8 @@ List<MessageQueuingPO> pendingByOp = messageQueuingDao.queryPendingMessageQueuin
 CUSTOMER_CREATED, CUSTOMER_UPDATED, CUSTOMER_CHANCE_MEET, CUSTOMER_CHANCE_AUTO_ASSIGNED, CUSTOMER_CHANCE_REGION_ASSIGNED, CUSTOMER_CHANCE_DEPT_ASSIGNED, CUSTOMER_CHANCE_USER_ASSIGNED, TEAM_SUPERVISOR_CHANGED, SUPERVISOR_PRE_ASSIGNED, TRAN_DECORATION_ORDER_CHANGED, TRAN_DECORATION, ESTATE_CREATED, ESTATE_UPDATED, BUILDING_RULE_CREATED, BUILDING_RULE_DELETED, PROJECT_NODE_STATUS_CHANGED, PROJECT_STATUS_CHANGED, PROJECT_NODE_WORKER_ADDED, PROJECT_NODE_WORKER_REMOVED, SNAPLINE_DONE, DRAWLINE_FINISHED, ACTIVITY_ITEM_VERIFIED, REFER_ADDED, REFER_DELETED
 
 **统计：** 从 19 个场景 → 47 个场景，从 10 种事件 → 32 种事件，从 9 个模块 → 20 个模块
+
+> v2.1 更新后：48 个场景，33 种事件（新增 CUSTOMER_CHANCE_ISSUED）
 
 ### v1.0 (2026-04-10)
 
