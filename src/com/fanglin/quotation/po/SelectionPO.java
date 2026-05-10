@@ -260,4 +260,26 @@ public class SelectionPO implements Serializable {
 		ptv(selectionVO);
 
 	}
+
+	/**
+	 * 反向赋值: SelectionVO -> SelectionPO
+	 * 将VO中的基本属性拷贝到PO(this)，并处理关联对象的赋值过程。
+	 * 排除关联对象(creater/splitter/traner)，需在Service层单独处理。
+	 */
+	public void set$ptv(SelectionVO selectionVO) {
+
+		BeanUtil.copyProperties(selectionVO, this, Arrays.asList("creater", "splitter", "traner", "decoration", "sid"));
+
+		if (selectionVO.getSplitter() != null && selectionVO.getSplitter().getUserId() != null) {
+			UserPO splitter = new UserPO();
+			splitter.setUserId(selectionVO.getSplitter().getUserId());
+			this.setSplitter(splitter);
+		}
+
+		if (selectionVO.getTraner() != null && selectionVO.getTraner().getUserId() != null) {
+			UserPO traner = new UserPO();
+			traner.setUserId(selectionVO.getTraner().getUserId());
+			this.setTraner(traner);
+		}
+	}
 }
