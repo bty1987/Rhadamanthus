@@ -29,7 +29,6 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.security.MD5Helper;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
@@ -497,35 +496,6 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		UserPO belonger = customerChancePO.getBelonger();
 
 		messageService.sendMessage(belonger.getUserId(), creater.getUserId(), content, MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
-
-		if (customerChancePO.getCno() == null) return;
-
-		SystemConfigPO url = systemConfigDao.querySystemConfig("qw_url");// 获取新系统URL
-
-		if (url == null) return;
-
-		SystemConfigPO appkey = systemConfigDao.querySystemConfig("qw_appkey");
-
-		if (appkey == null) return;
-
-		SystemConfigPO appsecret = systemConfigDao.querySystemConfig("qw_appsecret");
-
-		if (appsecret == null) return;
-
-		String timestamp = String.valueOf(System.currentTimeMillis());
-		String sign = MD5Helper.MD5(appkey.value("") + appsecret.value("") + timestamp).toLowerCase();
-
-		String fullUrl = new StringBuilder(url.value("")).append("?appKey=").append(appkey.value("")).append("&timestamp=").append(timestamp).append("&sign=").append(sign).toString();
-
-		JSONObject args = new JSONObject();
-		args.put("adornCode", customerChanceVO.getCno());
-		args.put("erpJhCode", String.valueOf(customerChanceVO.getCcid()));
-		args.put("statusName", "CONFIRM_DESIGNER_FINISHED");
-		args.put("statusTime", DateUtil.current("yyyy-MM-dd HH:mm:ss"));
-
-		JSONObject res = HttpUtil.httpPost(fullUrl, args);
-
-		log.info("Update status response: {}", res);
 	}
 
 	@Override
@@ -956,22 +926,19 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		// 如果前端传了 customer.cid，优先使用前端传入的；否则使用 customerSource 关联的 customer
-		CustomerPO customerPO;
-		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getCid() != null && customerChanceVO.getCustomer().getCid() > 0) {
-			customerPO = customerDao.get(customerChanceVO.getCustomer().getCid());
-			if (customerPO == null) {
-				throw new FLException(330074, "客户不存在");
-			}
-			customerSourcePO.setCustomer(customerPO);
-		} else {
-			customerPO = customerSourcePO.getCustomer();
+		CustomerPO customerPO = customerSourcePO.getCustomer();
+
+		if (customerPO == null) {
+			customerPO = customerChancePO.getCustomer();
 		}
 
-		CustomerVO customerVO = new CustomerVO(customerSourcePO.getName(), SensitiveDataHelper.decrypt(customerSourcePO.getPhone()));
+		if (customerPO == null) {
+			CustomerVO customerVO = new CustomerVO(customerSourcePO.getName(), SensitiveDataHelper.decrypt(customerSourcePO.getPhone()));
 
-		customerService.existCustomer(customerVO, company);
+			customerService.existCustomer(customerVO, company);
 
-		customerPO = new CustomerPO(customerVO.getCid());
+			customerPO = new CustomerPO(customerVO.getCid());
+		}
 
 		// 检查是否需要校验重复订单（isCheck=0 校验，isCheck=1 忽略）
 		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) {
@@ -979,6 +946,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		// 设置客户来源状态为初审通过（STATUS_APPROVE_ONE_INT = 2）
+		customerSourcePO.setCustomer(customerPO);
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_APPROVE_ONE_INT);
 		customerSourceDao.update(customerSourcePO);
 
