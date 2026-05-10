@@ -58,6 +58,11 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	private QuotationAssignRequestVO quotationAssignRequest;
 
 	/**
+	 * 公司ID（可选，null时使用当前用户公司）
+	 */
+	private Integer company;
+
+	/**
 	 * 分页查询分配请求列表
 	 * 
 	 * @return JSON 响应
@@ -66,7 +71,9 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignRequest() throws FLException {
 
-		quotationAssignRequestService.pageQuotationAssignRequest(getPaging(), getFilters(), queryCompany());
+		Integer companyParam = (company != null) ? company : queryCompany();
+
+		quotationAssignRequestService.pageQuotationAssignRequest(getPaging(), getFilters(), companyParam);
 
 		return SUCCESS;
 	}
@@ -173,5 +180,13 @@ public class QuotationAssignRequestAction extends BaseListAction {
 
 	public void setQuotationAssignRequest(QuotationAssignRequestVO quotationAssignRequest) {
 		this.quotationAssignRequest = quotationAssignRequest;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 }

@@ -43,8 +43,8 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 		PagingQuery<QuotationAssignRequestPO> query = pagingQuery(paging, QuotationAssignRequestPO.class);
 
-		// 按公司筛选（company现在是ManyToOne关联，需用company.cid匹配）
-		if (company != null) {
+		// 按公司筛选（company=0或null表示不过滤）
+		if (company != null && company > 0) {
 			query.add(query.getCriterion("company.cid", company, "eq"));
 		}
 

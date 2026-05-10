@@ -132,7 +132,10 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 		query.alias("userRule.user", "user");
 		query.alias("company", "companyAlias");
 
-		query.add(query.getCriterion("companyAlias.cid", company, "eq"));
+		// company=0 表示不过滤公司（跨公司查询）
+		if (company > 0) {
+			query.add(query.getCriterion("companyAlias.cid", company, "eq"));
+		}
 
 		if (filters != null) {
 			for (Filter filter : filters) {

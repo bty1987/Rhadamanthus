@@ -10,7 +10,8 @@ $(function() {
             requestModal: com.focusPage('#requestModal'),
             manualAssignModal: com.focusPage('#manualAssignModal'),
             autoAssignModal: com.focusPage('#autoAssignModal'),
-            finishAndAssignModal: com.focusPage('#finishAndAssignModal')
+            finishAndAssignModal: com.focusPage('#finishAndAssignModal'),
+            replaceModal: com.focusPage('#replaceModal')
         },
         items: {
             qarid: com.focusPage('#qarid'),
@@ -24,6 +25,8 @@ $(function() {
             // 手动分配相关
             manualAssignOrderId: com.focusPage('#manualAssignOrderId'),
             manualAssignBudgeter: com.focusPage('#manualAssignBudgeter'),
+            // 替换预算员相关
+            replaceBudgeter: com.focusPage('#replaceBudgeter'),
             // 正向自动分配相关
             autoAssignOrderId: com.focusPage('#autoAssignOrderId'),
             // 完成并分配相关
@@ -36,7 +39,8 @@ $(function() {
             keyword: null,
             currentRow: null,
             selectedRequestUid: null,
-            selectedManualAssignUid: null // 手动分配选中的预算员UID
+            selectedManualAssignUid: null, // 手动分配选中的预算员UID
+            selectedReplaceUid: null // 替换选中的新预算员UID
         }
     };
 
@@ -211,6 +215,16 @@ $(function() {
             return v.status == 1;
         }
     }, {
+        name: "替换",
+        clazz: "btn-inverse",
+        handle: function(v) {
+            openReplaceModal(v);
+            return false;
+        },
+        show: function(v) {
+            return v.status == 2;
+        }
+    }, {
         name: "沟通",
         clazz: "btn-primary",
         handle: function(v) {
@@ -294,6 +308,7 @@ $(function() {
     // 页面加载时初始化
     initRequestUserInput();
     initManualAssignBudgeterInput();
+    initReplaceBudgeterInput();
 
     // 监听公司变化，联动部门
     config.items.company.on('change', function() {
@@ -314,6 +329,24 @@ $(function() {
             "value",
             function(list, key, value) {
                 config.data.selectedManualAssignUid = key;
+                return value;
+            }
+        );
+    }
+
+    // ==================== 替换预算员相关初始化 ====================
+
+    function initReplaceBudgeterInput() {
+        com.initTypeahead(
+            config.items.replaceBudgeter,
+            api.personel.queryUserByPinyin,
+            "pinyinName",
+            { "user.status": 0 },
+            "autoFillKeyValue",
+            "key",
+            "value",
+            function(list, key, value) {
+                config.data.selectedReplaceUid = key;
                 return value;
             }
         );
@@ -341,6 +374,9 @@ $(function() {
 
     // 手动分配确认按钮点击事件
     com.focusPage('#confirmManualAssignBtn').on('click', confirmManualAssign);
+
+    // 替换预算员确认按钮点击事件
+    com.focusPage('#confirmReplaceBtn').on('click', confirmReplace);
 
     // 正向自动分配确认按钮点击事件
     com.focusPage('#confirmAutoAssignBtn').on('click', confirmAutoAssign);
@@ -530,6 +566,64 @@ $(function() {
             searcher.doSearch();
         }, function(res) {
             com.showAlert(com.error, res.errorMsg || '分配失败');
+        });
+    }
+
+    // ==================== 替换预算员功能 ====================
+
+    // 打开替换Modal
+    function openReplaceModal(row) {
+        com.focusPage('#replaceOrderIdDisplay').text(row.orderId);
+        com.focusPage('#replaceOrderId').val(row.orderId);
+
+        var companyName = row.company && row.company.name ? row.company.name : '未知';
+        com.focusPage('#replaceCompanyDisplay').text(companyName);
+
+        var decorationTypeText = row.decorationType == 1 ? '半包' : '整装';
+        com.focusPage('#replaceDecorationTypeDisplay').text(decorationTypeText);
+
+        // 显示当前预算员
+        var currentBudgeter = '-';
+        if (row.user && row.user.currentName) {
+            currentBudgeter = row.user.currentName;
+        } else if (row.uid) {
+            currentBudgeter = row.uid;
+        }
+        com.focusPage('#replaceCurrentBudgeterDisplay').text(currentBudgeter);
+
+        com.cleanTypeahead(config.items.replaceBudgeter);
+        config.data.selectedReplaceUid = null;
+
+        config.modals.replaceModal.modal('show');
+    }
+
+    // 确认替换
+    function confirmReplace() {
+        if (com.validate('replaceModal')) {
+            return false;
+        }
+
+        var orderId = com.focusPage('#replaceOrderId').val();
+        if (!orderId) {
+            com.showAlert(com.warning, '装修单号不能为空');
+            return false;
+        }
+
+        var newUid = config.data.selectedReplaceUid;
+        if (!newUid) {
+            com.showAlert(com.warning, '请选择新预算员');
+            return false;
+        }
+
+        com.post(api.quotation.reassignQuotationAssign, {
+            "quotationAssign.orderId": orderId,
+            "quotationAssign.quoter.userId": newUid
+        }, function(res) {
+            com.showAlert(com.info, '替换成功！已更新预算员和装修单报价员信息');
+            config.modals.replaceModal.modal('hide');
+            searcher.doSearch();
+        }, function(res) {
+            com.showAlert(com.error, res.errorMsg || '替换失败');
         });
     }
 

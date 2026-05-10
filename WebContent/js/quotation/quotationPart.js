@@ -4846,6 +4846,7 @@ var QuotationDetail = (function() {
 
                 com.focusPage('#orderId').text(res.decoration.orderId);
                 com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
+                com.focusPage('#mileage').text(res.decoration.house.village.mileage);
                 com.focusPage('#innerArea').text(res.decoration.house.innerArea);
 
                 quo.decoration = res.decoration;
