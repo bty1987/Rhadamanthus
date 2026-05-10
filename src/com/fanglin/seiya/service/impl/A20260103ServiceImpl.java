@@ -146,10 +146,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 			VillageVO villageVO = new VillageVO(village);
 
 			// 查询房屋是否存在
-			HouseVO queryHouse = new HouseVO();
-			queryHouse.setVillage(villageVO);
-			queryHouse.setHouseNumber(houseNumber);
-			houseVO = houseService.queryHouseByNoAHnum(queryHouse, orgId);
+			houseVO = findHouse(village, houseNumber, orgId);
 
 			// 不存在则创建
 			if (houseVO == null || houseVO.getHid() == null) {

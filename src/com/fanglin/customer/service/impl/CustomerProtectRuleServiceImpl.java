@@ -387,7 +387,7 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 		}
 
 		// 场景3: 不同岗位 + 过保护期 → 生成待确认的合尺归属(STATUS_CONFIRM)，等待客户确认
-		decorationBelongService.confirmMergeDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId);
+		// decorationBelongService.confirmMergeDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId);
 
 		return false;
 	}

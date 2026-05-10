@@ -29,8 +29,8 @@ import cn.hutool.crypto.asymmetric.KeyType;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fanglin.data.po.CustypePO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.po.CustypePO;
 import com.fanglin.payment.bean.Wxpay;
 import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.swiftpass.enums.ReqMethodEnum;
@@ -251,9 +251,15 @@ public class Airpos {
 				paytranPO.setStatus(PaytranPO.STATUS_FAIL_INT);
 				paytranPO.setRstcode(code);
 				paytranPO.setRstmsg(msg);
-			} else {
+			} else if ("SUCCESS".equals(data.getString("payStatus"))) {
 				paytranPO.setStatus(PaytranPO.STATUS_SUCCESS_INT);
 				paytranPO.setMsgId(data.getString("orderNo"));
+			} else {
+				logger.error("支付结果失败: url={}, params={}, response={}", swiftpass_query_url, JSONObject.toJSONString(params), response);
+
+				paytranPO.setStatus(PaytranPO.STATUS_FAIL_INT);
+				paytranPO.setRstcode(code);
+				paytranPO.setRstmsg(msg);
 			}
 		} else {
 

@@ -346,6 +346,18 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 			throw new FLException(190005, "人员不存在");
 		}
 
+		int count = decorationBelongDao.countDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_CONFIRM_INT);
+
+		if (count > 1) {
+			throw new FLException(140007, "装修归属不可操作");
+		}
+
+		count = decorationBelongDao.countDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_SALESMAN_INT, DecorationBelongPO.STATUS_CONFIRM_INT);
+
+		if (count > 1) {
+			throw new FLException(140007, "装修归属不可操作");
+		}
+
 		DepartmentPO dept = userPO.getDept();
 		DepartmentPO regn = userPO.getDept().getFatherDept();
 

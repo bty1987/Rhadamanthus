@@ -3231,6 +3231,18 @@
             $dbodyInner.append($input).append($list).appendTo($dbody);
 
             $domain.append($dhead).append(dv.type == constant.quotation().quotetionFunctionArea.TYPE_MANAGEMENT_INT ? null : $ul).append($dbody);
+            
+            var param = dv.quotationFunctionAreaParam ? dv.quotationFunctionAreaParam : {
+                "girth": 0,
+                "area": 0,
+                "height": 0,
+                "holeLength": 0,
+                "holeHeight": 0,
+                "windowLength": 0,
+                "windowHeight": 0,
+                "beamLength": 0,
+                "beamHeight": 0
+            };
 
             if (dv.quotetionFunctionAreaItems.length) {
 
@@ -3250,6 +3262,49 @@
                 $.each(_items, function(i, v) {
 
                     v.areaType = dv.type;
+
+                    v.formula = v.formula ? v.formula : "0";
+
+                    if (v.formula.indexOf("{") != -1 || v.formula.indexOf("}") != -1) {
+                        v.formula = com.format(v.formula, {
+                            "a": param.girth,
+                            "b": param.area,
+                            "c": param.height,
+                            "d": param.holeLength,
+                            "e": param.holeHeight,
+                            "f": param.windowLength,
+                            "g": param.windowHeight,
+                            "h": param.beamLength,
+                            "i": param.beamHeight,
+
+                            "o": 0, // 楼层
+                            "of": 1, // 有无电梯
+
+                            "u": com.focusPage('#taxCost').find('.num .cell-wrap').text(),// 税金
+                            "v": com.focusPage('#manageCost').find('.num .cell-wrap').text(),// 管理费
+                            "x": com.focusPage('#undisPrice').text(),// 不打折总额
+                            "y": com.focusPage('#disPrice').text(),// 打折总额
+                            "z": com.focusPage('#conveyanceCost').find('.num .cell-wrap').text(),// 车运费
+                            "k": 0, // 计价面积
+                            "j": 0
+                        });
+                    }
+
+                    if (v.formula.indexOf('~') != -1) {
+
+                        v.formula = v.formula.split('~')[1];
+                    }
+
+                    if (v.formula.indexOf('|') != -1) {
+
+                        var _pre = v.formula.split('|')[0];
+                        var _nex = v.formula.split('|')[1];
+
+                        v.formula = "Math.max(" + _pre + ", " + _nex + ")";
+                    }
+
+                    v.formula = v.qfaiId != null ? v.formula : utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula));
+                    v.num = utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula));
 
                     var $item = that.createQuote(i + 1, v).appendTo($list);
 

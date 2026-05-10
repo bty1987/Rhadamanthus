@@ -60,9 +60,6 @@ public class DecorationServiceImpl implements DecorationService {
 	private CustomerDao customerDao;
 
 	@Autowired
-	private CustomerNoticeDao customerNoticeDao;
-
-	@Autowired
 	private WeChatMessageService messageService;
 
 	@Autowired
@@ -70,6 +67,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private TalkingDao talkingDao;
+
+	@Autowired
+	private CustomerNoticeDao customerNoticeDao;
 
 	@Autowired
 	private WeChatAppService weChatAppService;
@@ -325,6 +325,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int sendMessage(String orderId, String name, String content) {
 
 		sendMessage(orderId, name, content, null, null);
@@ -333,6 +334,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int sendMessage(String orderId, String name, String content, String path) {
 
 		sendMessage(orderId, name, content, path, null);
@@ -341,6 +343,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int sendMessage(String orderId, String name, String content, String path, UserPO creater) {
 
 		List<DecorationPO> decorationPOs = cecorationDao.queryCusDecorationByOrderId(orderId);
@@ -355,6 +358,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int sendMessage(String key, String orderId, String name, String content, String path, UserPO creater) {
 
 		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);

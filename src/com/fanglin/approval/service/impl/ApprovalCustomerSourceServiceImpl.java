@@ -39,6 +39,7 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
@@ -55,7 +56,6 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.CityProperVO;
-import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -253,7 +253,11 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 			throw new FLException(330075, "客户机会不存在");
 		}
 
-		CustomerPO customerPO = customerDao.get(approvalCustomerSourcePO.getCid());
+		CustomerPO customerPO = customerSourcePO.getCustomer();
+
+		if (customerPO == null) {
+			customerPO = customerDao.get(approvalCustomerSourcePO.getCid());
+		}
 
 		if (customerPO == null) {
 			throw new FLException(130002, "客户不存在");
