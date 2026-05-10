@@ -37,9 +37,7 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 
 		PagingQuery<QuotationDO> query = pagingQuery(paging, QuotationDO.class);
 
-		query.alias("decoration", "decoration");
-
-		query.add(query.getCriterion("decoration.company", company, "eq"));
+		// if (company != null) query.alias("decoration", "decoration").add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 

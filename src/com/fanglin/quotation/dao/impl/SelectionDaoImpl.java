@@ -24,9 +24,7 @@ public class SelectionDaoImpl extends DaoImpl<SelectionPO> implements SelectionD
 
 		PagingQuery<SelectionDO> query = pagingQuery(paging, SelectionDO.class);
 
-		query.alias("decoration", "decoration");
-
-		query.add(query.getCriterion("decoration.company", company, "eq"));
+		// if (company != null) query.alias("decoration", "decoration").add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 

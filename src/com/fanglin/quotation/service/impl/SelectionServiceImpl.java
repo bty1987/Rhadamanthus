@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -33,7 +34,6 @@ import com.fanglin.quotation.vo.SelectionVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
@@ -70,6 +70,8 @@ public class SelectionServiceImpl implements SelectionService {
 
 	@Override
 	public void pageSelection(Paging paging, List<Filter> filters, Integer company) throws FLException {
+
+		if (filters.size() == 0) return;
 
 		List<SelectionDO> selectionDOs = selectionDao.pageSelection(paging, filters, company);
 		List<SelectionVO> selectionVOs = new ArrayList<SelectionVO>();
