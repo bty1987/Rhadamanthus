@@ -179,14 +179,6 @@ public class MemberServiceImpl implements MemberService {
 					String companyName = companyMap.get(companyId);
 					MemberVO resultMember = new MemberVO().init(decorationPO, companyName, companyId);
 
-					// 补充设置客户手机号
-					if (decorationPO.getCustomer() != null) {
-						List<CustomerPhonePO> phones = customerPhoneDao.queryCustomerPhoneByCid(decorationPO.getCustomer().getCid(), CustomerPhonePO.STATUS_ENABLE_INT);
-						if (phones != null && !phones.isEmpty()) {
-							resultMember.setPhone(SensitiveDataHelper.decrypt(phones.get(0).getPhone()));
-						}
-					}
-
 					resultMap.get(key).add(resultMember);
 				}
 			}
@@ -209,27 +201,6 @@ public class MemberServiceImpl implements MemberService {
 				if (customerIdList.contains(customerPO.getCid())) continue;
 
 				customerIdList.add(customerPO.getCid());
-			}
-
-			List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhone(phoneList, CustomerPhonePO.STATUS_ENABLE_INT, null, null);
-
-			for (CustomerPhonePO customerPhone : customerPhones) {
-
-				String plainPhone = SensitiveDataHelper.decrypt(customerPhone.getPhone());
-				List<Long> customerIdList = phoneToCustomerMap.get(plainPhone);
-
-				if (customerIdList == null) {
-					customerIdList = new ArrayList<Long>();
-					phoneToCustomerMap.put(plainPhone, customerIdList);
-				}
-
-				if (customerIdList.contains(customerPhone.getCid())) continue;
-
-				customerIdList.add(customerPhone.getCid());
-			}
-
-			for (CustomerPhonePO customerPhone : customerPhones) {
-				customerIds.add(customerPhone.getCid());
 			}
 
 			if (customerIds.isEmpty()) {

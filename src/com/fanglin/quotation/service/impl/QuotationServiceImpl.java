@@ -60,11 +60,11 @@ import com.fanglin.quotation.dao.QuotetionFunctionAreaParamDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.ProtationPO;
+import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.quotation.po.QuotationDO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaParamPO;
-import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.QuotationPreferPO;
 import com.fanglin.quotation.po.QuotationRecordPO;
@@ -177,7 +177,6 @@ public class QuotationServiceImpl implements QuotationService {
 		if (filters.size() == 0) return;
 
 		List<QuotationDO> quotationDOs = quotationDao.pageQuotation(paging, filters, company);
-
 		List<QuotationVO> quotationVOs = new ArrayList<QuotationVO>();
 
 		for (QuotationDO quotationDO : quotationDOs) {

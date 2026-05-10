@@ -38,9 +38,7 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 
 		PagingQuery<AddReduceDO> query = pagingQuery(paging, AddReduceDO.class);
 
-		query.alias("decoration", "decoration");
-
-		query.add(query.getCriterion("decoration.company", company, "eq"));
+		// if (company != null) query.alias("decoration", "decoration").add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 

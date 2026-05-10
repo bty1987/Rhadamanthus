@@ -63,7 +63,6 @@ public class ExtensionServiceImpl implements ExtensionService {
 		if (filters.size() == 0) return;
 
 		List<ExtensionDO> extensionDOs = extensionDao.pageExtension(paging, filters, company);
-
 		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
 
 		for (ExtensionDO extensionDO : extensionDOs) {
