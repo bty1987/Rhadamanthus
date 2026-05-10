@@ -214,7 +214,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignUserRuleItem() throws FLException {
 
-		quotationAssignUserRuleItemService.pageQuotationAssignUserRuleItem(getPaging(), getFilters(), queryCompany());
+		quotationAssignUserRuleItemService.pageQuotationAssignUserRuleItem(getPaging(), getFilters(), company);
 
 		return SUCCESS;
 	}

@@ -138,6 +138,69 @@
         </div>
     </div>
 
+    <!-- 替换预算员弹窗 -->
+    <div class="modal fade" id="replaceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">替换预算员</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" id="replaceOrderId">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">装修单号</label>
+                            <div class="col-sm-9">
+                                <span id="replaceOrderIdDisplay" class="form-control-static"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">公司</label>
+                            <div class="col-sm-9">
+                                <span id="replaceCompanyDisplay" class="form-control-static"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">装修类型</label>
+                            <div class="col-sm-9">
+                                <span id="replaceDecorationTypeDisplay" class="form-control-static"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">当前预算员</label>
+                            <div class="col-sm-9">
+                                <span id="replaceCurrentBudgeterDisplay" class="form-control-static" style="color:#d15b47;font-weight:bold;"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="replaceBudgeter">新预算员 <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="replaceBudgeter" class="col-xs-10 col-sm-8 v_required" placeholder="输入拼音或姓名搜索">
+                                <span class="help-block" style="margin-bottom: 0;">请输入新预算员姓名或拼音进行搜索</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="confirmReplaceBtn" class="btn btn-danger">
+                        <i class="icon-exchange"></i> 确认替换
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 正向自动分配弹窗 -->
     <div class="modal fade" id="autoAssignModal" tabindex="-1">
         <div class="modal-dialog">
