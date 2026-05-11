@@ -1,42 +1,39 @@
 /**
  * @File Name		: DingTalkCallbackServiceImpl.java
  * @Package   	: com.fanglin.dingding.service.impl
- * @Version		: 1.0
+ * @Version		: 3.0
  * @Date			: 2018-12-16
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	:
+ * @Describing	: 钉钉回调服务实现（v3: 反射调用，零业务引用，通用审批保留原逻辑）
  */
 
 package com.fanglin.dingding.service.impl;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptException;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.dingding.dao.DingTalkApprovalConfigDao;
+import com.fanglin.dingding.po.DingTalkApprovalConfigPO;
 import com.fanglin.dingding.service.DingTalkApprovalService;
 import com.fanglin.dingding.service.DingTalkCallbackService;
-import com.fanglin.decoration.service.DecorationAccountService;
-import com.fanglin.decoration.service.DecorationContractService;
-import com.fanglin.decoration.service.DecorationService;
-import com.fanglin.decoration.vo.DecorationAccountVO;
-import com.fanglin.decoration.vo.DecorationContractVO;
-import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 
 @Service("dingTalkCallbackService")
@@ -47,15 +44,6 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 	private SystemConfigDao systemConfigDao;
 
 	@Autowired
-	private DecorationService decorationService;
-
-	@Autowired
-	private DecorationAccountService decorationAccountService;
-
-	@Autowired
-	private DecorationContractService decorationContractService;
-
-	@Autowired
 	private DingTalkApprovalService dingTalkApprovalService;
 
 	@Autowired
@@ -64,12 +52,17 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 	@Autowired
 	private ApprovalDao approvalDao;
 
+	@Autowired
+	private DingTalkApprovalConfigDao dingTalkApprovalConfigDao;
+
+	@Autowired
+	private ApplicationContext applicationContext;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public Map<String, String> callback(String signature, String nonce, String timestamp, String encrypt) throws FLException {
 
 		String suiteKey = systemConfigDao.querySystemConfig("suiteKey").value("");
-		// String suiteSecret = systemConfigDao.querySystemConfig("suiteSecret").value("");
 		String encodingAesKey = systemConfigDao.querySystemConfig("encodingAesKey").value("");
 		String token = systemConfigDao.querySystemConfig("token").value("fanglinserver");
 
@@ -94,7 +87,6 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 		String event = response.getString("EventType");
 
 		if ("check_url".equals(event)) {
-
 			System.out.println(response.toJSONString());
 		}
 
@@ -104,44 +96,33 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 			String code = response.getString("processCode");
 			String type = response.getString("type");
 			String result = response.getString("result");
-
 			String no = response.getString("processInstanceId");
 
+			// ========== 专用审批：配置驱动 + 反射调用 ==========
+			if ("finish".equals(type)) {
+				DingTalkApprovalConfigPO config = dingTalkApprovalConfigDao.queryByProcessCode(code);
+
+				if (config != null) {
+
+					if (config.getHandleAgreeOnly().shortValue() == 1 && !"agree".equals(result)) {
+						// handleAgreeOnly 且非agree，跳过
+					} else {
+						String orderId = dingTalkApprovalService.getApproval(no, config.getFieldId());
+
+						System.out.println(response.toJSONString());
+						System.out.println(orderId);
+
+						invokeHandler(config, orderId, userId);
+					}
+				}
+			}
+
+			// ========== 通用审批：原逻辑完全保留 ==========
 			List<String> codes = new ArrayList<String>();
 
 			codes.add("PROC-EF6YJDXRN2-2EQFBYULQQ5CPGGVZAUU1-ME75EHVI-9"); // ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT
 			codes.add("PROC-9B7CBC59-96FB-4941-BF01-608DB3E37C5E"); // ApprovalPO.APPROVAL_TYPE_DECORATION_TERMINAL_INT
 			codes.add("PROC-5750A51A-05FE-42B8-BB5E-4FBA28B939B6"); // ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT
-
-			if ("PROC-EEA1011C-8ABD-47F1-983F-68F3D5EA1D4A".equals(code) && "finish".equals(type) && "agree".equals(result)) {
-
-				String orderId = dingTalkApprovalService.getApproval(no, "TextField-IG4N9OD3");
-
-				System.out.println(response.toJSONString());
-				System.out.println(orderId);
-
-				decorationContractService.resignDecorationContract(new DecorationContractVO(orderId), userId);
-			}
-
-			if ("PROC-94A6270F-10A1-45E4-B9A3-86EB39ED0D6E".equals(code) && "finish".equals(type) && "agree".equals(result)) {
-
-				String orderId = dingTalkApprovalService.getApproval(no, "TextField-IG4UCGW1");
-
-				System.out.println(response.toJSONString());
-				System.out.println(orderId);
-
-				decorationService.obsoleteDecoration(new DecorationVO(orderId), userId);
-			}
-
-			if ("PROC-B852629C-D4F7-44E1-A9E2-6E1F830E38CB".equals(code) && "finish".equals(type) && "agree".equals(result)) {
-
-				String orderId = dingTalkApprovalService.getApproval(no, "TextField-K2AD4O5B");
-
-				System.out.println(response.toJSONString());
-				System.out.println(orderId);
-
-				decorationAccountService.makeDecorationAccount(new DecorationAccountVO(orderId), userId);
-			}
 
 			if (codes.contains(code) && "finish".equals(type)) {
 
@@ -168,40 +149,41 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 		}
 	}
 
-	public static void main(String[] args) throws DingTalkEncryptException {
+	/**
+	 * 反射调用配置的 Spring Bean 方法
+	 * 约定方法签名: void methodName(XXXVo(orderId), String userId)
+	 */
+	private void invokeHandler(DingTalkApprovalConfigPO config, String orderId, String userId) throws FLException {
 
-		String url = "https://oapi.dingtalk.com/call_back/register_call_back?access_token=28d6292dae323d48aa4b5562febed204";
+		try {
+			// 按全限定类名从Spring容器获取Bean
+			Class<?> beanClass = Class.forName(config.getBeanClass());
+			Object bean = applicationContext.getBean(beanClass);
 
-		JSONObject params = new JSONObject();
+			// 构造VO参数
+			Class<?> voClazz = Class.forName(config.getVoClass());
+			Constructor<?> voConstructor = voClazz.getConstructor(String.class);
+			Object voInstance = voConstructor.newInstance(orderId);
 
-		JSONArray array = new JSONArray();
+			// 反射调用方法
+			Method method = beanClass.getMethod(config.getMethodName(), voClazz, String.class);
+			method.invoke(bean, voInstance, userId);
 
-		array.add("bpms_instance_change");
-
-		params.put("call_back_tag", array);
-		params.put("token", "fanglinserver");
-		params.put("aes_key", "1234567890123456789012345678901234567890123");
-		params.put("url", "http://223.100.27.233:30080/dtalkCallback.do");
-
-		JSONObject response = HttpHelper.httpPost(url, params);
-		System.out.println(response);
-
-		// DingTalkEncryptor dingTalkEncryptor = new DingTalkEncryptor("fanglinserver", "1234567890123456789012345678901234567890123", suiteKey);
-		// plainText = dingTalkEncryptor.getDecryptMsg(signature, timestamp, nonce, encrypt);
-
-		// DingTalkEncryptor dingTalkEncryptor = new DingTalkEncryptor("fanglinserver", "1234567890123456789012345678901234567890123", "ding3749e8fc3efe4a82");
-		// System.out.println(dingTalkEncryptor.getEncryptedMap("test", new Date().getTime(), "fanglinserver"));
-
-		url = "http://223.100.27.233:30080/dtalkCallback.do?signature=f265261f57281e2e5bf9fdbaea6be0e1f3414660&timestamp=1550996709595&nonce=mEBhVJN1";
-		// url = "http://223.100.27.233:30080/dtalkCallback.do";
-
-		params = new JSONObject();
-
-		params.put("encrypt", "vGRmkC7+A/yIxK3DrUnET596r7sjNYB5UTybm6j+eQ1w2BIFOzGGNQXpECeKYB6MGDSUXu9D7yvXQ9Ymvezv3IE4Y/KvyBTIq8eSYXE3cXNij8JCeiiNz+d8eLmvgu4e");
-		//
-		// JSONObject response = HttpHelper.httpPost(url, params);
-		// System.out.println(response);
-
+		} catch (ClassNotFoundException e) {
+			System.out.println(String.format("回调配置类未找到: %s", e.getMessage()));
+			throw new FLException(270011, String.format("回调配置类未找到: %s", config.getBeanClass()));
+		} catch (NoSuchMethodException e) {
+			System.out.println(String.format("回调配置方法未找到: %s.%s", config.getBeanClass(), config.getMethodName()));
+			throw new FLException(270012, String.format("回调配置方法未找到: %s.%s", config.getBeanClass(), config.getMethodName()));
+		} catch (java.lang.reflect.InvocationTargetException e) {
+			Throwable target = e.getTargetException();
+			if (target instanceof FLException) throw (FLException) target;
+			System.out.println(String.format("回调执行异常: %s", target.getMessage()));
+			throw new FLException(270013, String.format("回调执行异常: %s", target.getMessage()));
+		} catch (Exception e) {
+			System.out.println(String.format("回调反射异常: %s", e.getMessage()));
+			throw new FLException(270013, String.format("回调反射异常: %s", e.getMessage()));
+		}
 	}
 
 }
