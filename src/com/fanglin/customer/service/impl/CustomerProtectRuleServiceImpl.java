@@ -106,6 +106,8 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 	@Override
 	public CustomerProtectRuleVO checkCustomerProtectRule(CustomerProtectRuleVO customerProtectRuleVO, String userId, int company) throws FLException {
 
+		if (customerProtectRuleVO.getOrderId() == null) return customerProtectRuleVO;
+
 		List<Integer> companys = new ArrayList<Integer>(Arrays.asList(company));
 
 		List<DecorationMeasureRuleItemPO> measures = decorationMeasureRuleDao.queryDecorationMeasureRule(company);
