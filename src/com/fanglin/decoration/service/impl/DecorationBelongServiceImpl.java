@@ -270,6 +270,10 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 			throw new FLException(190005, "人员不存在");
 		}
 
+		if (decorationBelongDao.countDecorationBelong(orderId, type, DecorationBelongPO.STATUS_CONFIRM_INT) > 0) {
+			throw new FLException(140007, "装修归属不可操作");
+		}
+
 		DepartmentPO dept = userPO.getDept();
 		DepartmentPO regn = userPO.getDept().getFatherDept();
 
@@ -346,27 +350,36 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		int count = decorationBelongDao.countDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_CONFIRM_INT);
-
-		if (count > 1) {
-			throw new FLException(140007, "装修归属不可操作");
-		}
-
-		count = decorationBelongDao.countDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_SALESMAN_INT, DecorationBelongPO.STATUS_CONFIRM_INT);
-
-		if (count > 1) {
+		if (decorationBelongDao.countDecorationBelong(orderId, type, DecorationBelongPO.STATUS_CONFIRM_INT) > 0) {
 			throw new FLException(140007, "装修归属不可操作");
 		}
 
 		DepartmentPO dept = userPO.getDept();
 		DepartmentPO regn = userPO.getDept().getFatherDept();
 
-		// 将现有的有效归属(rate=1000)改为合尺比例(rate=500)
+		// 为现有有效归属生成合尺副本数据(rate=500, status=2待确认), 不直接修改原有数据
 		List<DecorationBelongPO> existBelongs = decorationBelongDao.queryDecorationBelong(orderId, type, DecorationBelongPO.STATUS_INVALID_INT);
 
 		for (DecorationBelongPO existBelong : existBelongs) {
-			existBelong.setRate(500);
-			decorationBelongDao.update(existBelong);
+
+			DecorationBelongPO copyBelongPO = new DecorationBelongPO();
+
+			copyBelongPO.setDepartment(existBelong.getDepartment());
+			copyBelongPO.setRegion(existBelong.getRegion());
+
+			if (existBelong.getBusitype() != null) copyBelongPO.setBusitype(existBelong.getBusitype());
+
+			copyBelongPO.setOrderId(existBelong.getOrderId());
+			copyBelongPO.setBelonger(existBelong.getBelonger());
+			copyBelongPO.setRate(500);
+			copyBelongPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			copyBelongPO.setOperater(userPO);
+			copyBelongPO.setDefaultFlag(existBelong.getDefaultFlag());
+
+			copyBelongPO.setType(type);
+			copyBelongPO.setStatus(DecorationBelongPO.STATUS_CONFIRM_INT);
+
+			decorationBelongDao.save(copyBelongPO);
 		}
 
 		// 新增新业务员的合尺归属记录，rate=500, status=2(待确认)
