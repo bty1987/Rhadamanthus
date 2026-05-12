@@ -135,6 +135,14 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 			return new CustomerProtectRuleVO();
 		}
 
+		// 当前用户已是装修单归属人（业务员/设计师），无需保护检查
+		if (decorationPO.getSalesman() != null && userId.equals(decorationPO.getSalesman().getUserId())) {
+			return customerProtectRuleVO;
+		}
+		if (decorationPO.getDesigner() != null && userId.equals(decorationPO.getDesigner().getUserId())) {
+			return customerProtectRuleVO;
+		}
+
 		customerProtectRuleVO.setOrderId(decorationPO.getOrderId());
 
 		// 标准VO，用于存储当前最大保护天数的规则
@@ -215,8 +223,11 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 				return customerProtectRuleVO;
 			}
 
-			// 异岗位：检查保护期
-			if (dutyRule != null) {
+			// 异岗位 + 无规则：不需要岗位保护，跳过
+			if (dutyRule == null) {
+				// 不return，前面4个规则可能已有匹配结果，交给最后的最大天数判断
+			} else {
+				// 异岗位：有规则，检查保护期
 				long daysPassed = DateUtil.diffDay(decorationPO.getCreateTime(), now);
 				int protectDays = dutyRule.getDays();
 				if (daysPassed < protectDays) {
@@ -227,10 +238,11 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 						maxRuleVO = dutyRule.ptv(new CustomerProtectRuleVO());
 						maxRuleVO.setMergeFlag((short) 1);
 					}
+				} else {
+					// 过保护期：前端走待确认合尺
+					customerProtectRuleVO.setMergeFlag((short) 2);
 				}
 			}
-			// 异岗位 + 过保护期/无规则：customerProtectRuleVO 已有 orderId，设置 mergeFlag=2 前端走待确认合尺
-			customerProtectRuleVO.setMergeFlag((short) 2);
 		}
 
 		// 如果有匹配的规则，返回最大天数的规则
