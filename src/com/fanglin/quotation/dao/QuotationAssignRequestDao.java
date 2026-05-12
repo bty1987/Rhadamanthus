@@ -81,6 +81,17 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(List<Integer> companies);
 
 	/**
+	 * 查询全部待分配队列（不过滤公司，全局扫描）
+	 * 
+	 * <p>
+	 * 用于反向分配全局匹配场景：遍历所有待分配请求，对每个请求查找所有可用预算员中最优人选
+	 * </p>
+	 * 
+	 * @return 待分配请求列表（status=1），按优先级和请求时间排序
+	 */
+	List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueueAll();
+
+	/**
 	 * 根据装修单号查询活跃请求（非已完成状态，装修单唯一）
 	 * 
 	 * <p>
