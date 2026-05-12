@@ -26,20 +26,20 @@ DB_CONFIG = {
 
 # ── SQL查询 ──
 SQL = """
-SELECT dc.orderId, dc.name, d.company, dc.download
+SELECT dc.orderId, dc.name, d.company, if(dc.path != null, concat('http://192.168.5.101/', dc.path), dc.download)
 FROM decoration.decoration d
 JOIN decoration.decorationcontract dc ON d.orderId = dc.orderId
 WHERE d.company IN (1, 12, 3)
-  AND dc.status = 4
+  AND dc.status in (3, 4)
   AND d.contractTime >= '2024-01-01 00:00:00'
-  AND d.contractTime < '2025-01-01 00:00:00'
+  AND d.contractTime < '2025-01-01 00:00:00' limit 10000
 """
 
 # 公司ID映射（可按需补充）
 COMPANY_MAP = {
     1: "方林",
-    3: "1918",
-    12: "方林装饰",
+    3: "屿林",
+    12: "爱林",
 }
 
 
@@ -121,7 +121,7 @@ if __name__ == "__main__":
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     parser = argparse.ArgumentParser(description="下载合同PDF")
-    parser.add_argument("--root", default=r"G:\合同", help="保存根目录")
+    parser.add_argument("--root", default=r"F:\合同", help="保存根目录")
     parser.add_argument("--host", help="数据库地址")
     parser.add_argument("--port", type=int, help="数据库端口")
     parser.add_argument("--user", help="数据库用户")

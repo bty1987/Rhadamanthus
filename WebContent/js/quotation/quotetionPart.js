@@ -3172,6 +3172,14 @@
             }).css({
                 "margin-bottom": "20px"
             });
+            
+            if (dv.quotetionFunctionAreaParam) {
+
+                $.each(dv.quotetionFunctionAreaParam, function(k, v) {
+
+                    $domain.attr("data-" + k, v ? v : "0");
+                });
+            }
 
             $dhead = $('<div></div>').addClass('widget-header');
             $dname = $('<h5></h5>').append($('<em></em>').text(dv.type == constant.quotation().quotetionFunctionArea.TYPE_MANAGEMENT_INT || dv.type == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT ? '' : dv.functionAreaOrder)).append('  ').append($('<strong></strong>').html(dv.name));
@@ -3232,7 +3240,7 @@
 
             $domain.append($dhead).append(dv.type == constant.quotation().quotetionFunctionArea.TYPE_MANAGEMENT_INT ? null : $ul).append($dbody);
             
-            var param = dv.quotationFunctionAreaParam ? dv.quotationFunctionAreaParam : {
+            var param = dv.quotetionFunctionAreaParam ? dv.quotetionFunctionAreaParam : {
                 "girth": 0,
                 "area": 0,
                 "height": 0,
