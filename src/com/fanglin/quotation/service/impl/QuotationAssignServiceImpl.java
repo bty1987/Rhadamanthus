@@ -394,47 +394,55 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			quotationAssignRequestDao.update(currentRequest);
 		}
 
-		// 4. 如果预算员仍有任务，不触发反向分配
-		if (newStatus != QuotationAssignUserRulePO.STATUS_AVAILABLE_INT) {
-			return 1;
+		// ========== 反向分配：全局匹配 ==========
+		triggerReverseAssign();
+
+		return 1;
+	}
+
+	// ==================== 私有辅助方法 ====================
+
+	/**
+	 * 反向分配：全局匹配
+	 * 
+	 * <p>
+	 * 查出所有待分配请求（status=PENDING），对每个请求查找所有可用预算员中最优人选进行分配。
+	 * 适用于交付完成、转交等场景——预算员释放后触发待分配队列的消费。
+	 * 每次调用最多分配一个任务即返回。
+	 * </p>
+	 */
+	private void triggerReverseAssign() throws FLException {
+
+		// 1. 查出所有待分配请求（status=PENDING），不过滤公司（全局扫描）
+		List<QuotationAssignRequestPO> pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueueAll();
+
+		if (pendingQueue == null || pendingQueue.isEmpty()) {
+			return;
 		}
 
-		// ★ 新模型下每人只有一条 UserRule，status 即全局状态
-		// 反向分配匹配逻辑：基于预算员的 items（company + department + supportedType 三维度）匹配待分配请求
-
-		// 5. 预加载预算员的所有 items
-		List<QuotationAssignUserRuleItemPO> items = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemByRuleId(userRule.getQaurid());
-		if (items == null || items.isEmpty()) {
-			return 1;
-		}
-
-		// 6. 提取预算员适配的所有公司ID，一次查出全部待分配请求
-		java.util.List<Integer> companyList = new java.util.ArrayList<Integer>();
-		for (QuotationAssignUserRuleItemPO item : items) {
-			if (item.getCompany() != null) {
-				companyList.add(item.getCompany().getCid());
-			}
-		}
-
-		if (companyList.isEmpty()) {
-			return 1;
-		}
-
-		List<QuotationAssignRequestPO> pendingQueue = quotationAssignRequestDao.queryQuotationAssignRequestForQueue(companyList);
-
-		// 7. 遍历队列，三维度匹配后分配第一个合适的任务
-		if (pendingQueue == null || pendingQueue.isEmpty()) return 1;
-
+		// 2. 遍历待分配队列，对每个请求查找所有可用预算员
 		for (QuotationAssignRequestPO request : pendingQueue) {
-			boolean matched = isItemMatched(items, request);
+			int requestCompany = request.getCompany() != null ? request.getCompany().getCid() : -1;
+			Integer requestDept = request.getDepartment() != null ? request.getDepartment().getDid() : null;
+			Short requestType = request.getDecorationType();
 
-			if (!matched) continue;
+			// 用 queryAvailableItemsForCrossCompanyAssign 查找所有状态为 AVAILABLE 且匹配该请求维度的预算员
+			// 该方法已内置：status=AVAILABLE、currentTaskCount=0、company匹配、department匹配、supportedType匹配、跨公司排除
+			// 结果按 lastFinishTime ASC 排序，第一个即为空闲最久的最优人选
+			List<QuotationAssignUserRuleItemPO> availableItems = quotationAssignUserRuleItemDao.queryAvailableItemsForCrossCompanyAssign(requestCompany, requestDept, requestType);
+
+			if (availableItems == null || availableItems.isEmpty()) {
+				continue; // 该请求暂无可用预算员，跳过，继续处理下一个请求
+			}
+
+			// 取第一个匹配的可用预算员（lastFinishTime 最早，即空闲最久的）
+			QuotationAssignUserRulePO bestMatch = availableItems.get(0).getUserRule();
 
 			DecorationPO pendingDecoration = decorationDao.queryDecorationByOrderId(request.getOrderId());
 
 			if (pendingDecoration != null) {
-				assignToUser(request.getOrderId(), pendingDecoration, userRule, QuotationAssignRecordPO.ASSIGN_TYPE_REVERSE_AUTO_INT, null);
-				return 1; // 只分配一个任务，立即返回
+				assignToUser(request.getOrderId(), pendingDecoration, bestMatch, QuotationAssignRecordPO.ASSIGN_TYPE_REVERSE_AUTO_INT, null);
+				return; // 每次只分配一个任务，立即返回
 			} else {
 				// 装修单不存在，标记该请求为已分配（脏数据清理）
 				request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
@@ -442,11 +450,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 				continue;
 			}
 		}
-
-		return 1;
 	}
-
-	// ==================== 私有辅助方法 ====================
 
 	/**
 	 * 创建待分配请求
@@ -646,6 +650,9 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		record.setAssignTime(new Timestamp(System.currentTimeMillis()));
 		record.setDecorationType(decoration.getType());
 		quotationAssignRecordDao.save(record);
+
+		// ========== 反向分配：全局匹配 ==========
+		triggerReverseAssign();
 
 		return 1;
 	}
