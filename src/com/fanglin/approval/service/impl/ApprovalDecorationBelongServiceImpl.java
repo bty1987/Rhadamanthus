@@ -255,6 +255,12 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelong(orderId, belongType, DecorationBelongPO.STATUS_INVALID_INT);
 
+		// 捕获失效人员的ccid
+		Long invalidCcid = null;
+		if (decorationBelongPOs != null && !decorationBelongPOs.isEmpty()) {
+			invalidCcid = decorationBelongPOs.get(0).getCcid();
+		}
+
 		if (mergeFlag == 1) {
 			// 合尺模式：将现有有效归属的rate从1000改为500，保留有效状态
 			for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
@@ -333,8 +339,8 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		decorationAdditionDao.update(decorationAdditionPO);
 		decorationDao.update(decorationPO);
 
-		// 生成消息队列数据
-		String approveBelongArgs = buildApproveBelongEventArgs(orderId, approvalPO.getReceiver().getUserId(), belongType, decorationPO, approvalDecorationBelongPO.getCcid(), mergeFlag);
+		// 生成消息队列数据：invalidCcid=失效人员ccid, approvalDecorationBelongPO.getCcid()=生效人员ccid
+		String approveBelongArgs = buildApproveBelongEventArgs(orderId, approvalPO.getReceiver().getUserId(), belongType, decorationPO, invalidCcid, approvalDecorationBelongPO.getCcid(), mergeFlag);
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs));
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs.replace("\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"", "\"event\":\"TEAM_SALESMAN_CHANGED\"")));
 		// 生成消息提示数据
@@ -404,22 +410,21 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		return 0;
 	}
 
-	private String buildApproveBelongEventArgs(String orderId, String userId, short belongType, DecorationPO decorationPO, Long ccid, short mergeFlag) {
+	private String buildApproveBelongEventArgs(String orderId, String userId, short belongType, DecorationPO decorationPO, Long invalidCcid, Long activeCcid, short mergeFlag) {
 
-		String originOrderId = "";
-		String targetOrderId = orderId;
+		String invalidOrderId = "";
+		String activeOrderId = "";
 
-		if (ccid != null && ccid > 0) {
-			List<CustomerChanceOrderPO> chanceOrders = customerChanceOrderDao.queryCustomerChanceOrderByOrderId(targetOrderId);
-
-			for (CustomerChanceOrderPO chanceOrder : chanceOrders) {
-				if (chanceOrder.getCcid() == ccid.longValue() && !chanceOrder.getOrderId().equals(targetOrderId)) {
-					originOrderId = chanceOrder.getOrderId();
-					break;
-				}
-			}
+		if (invalidCcid != null && invalidCcid > 0) {
+			CustomerChanceOrderPO chanceOrder = customerChanceOrderDao.queryCustomerChanceOrder(invalidCcid);
+			if (chanceOrder != null) invalidOrderId = chanceOrder.getOrderId();
 		}
 
-		return "{\"orderId\":\"" + targetOrderId + "\",\"userId\":\"" + userId + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"originOrderId\":\"" + originOrderId + "\",\"targetOrderId\":\"" + targetOrderId + "\",\"mergeFlag\":" + mergeFlag + "}";
+		if (activeCcid != null && activeCcid > 0) {
+			CustomerChanceOrderPO chanceOrder = customerChanceOrderDao.queryCustomerChanceOrder(activeCcid);
+			if (chanceOrder != null) activeOrderId = chanceOrder.getOrderId();
+		}
+
+		return "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"invalidOrderId\":\"" + invalidOrderId + "\",\"activeOrderId\":\"" + activeOrderId + "\",\"mergeFlag\":" + mergeFlag + "}";
 	}
 }

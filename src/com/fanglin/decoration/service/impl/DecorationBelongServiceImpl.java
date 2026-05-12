@@ -248,9 +248,6 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 		decorationBelongDao.save(decorationBelongPO);
 
-		// 生成消息提示数据
-		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "tranDecorationBelong", buildBelongEventArgs(decorationPO, userPO, type, ccid, (short) 0)));
-
 		return 0;
 	}
 
@@ -328,15 +325,12 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		decorationAdditionDao.update(decorationAdditionPO);
 		decorationDao.update(decorationPO);
 
-		// 生成消息提示数据
-		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "mergeDecorationBelong", buildBelongEventArgs(decorationPO, userPO, type, null, (short) 1)));
-
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int confirmMergeDecorationBelong(String orderId, Short type, String userId) throws FLException {
+	public int confirmMergeDecorationBelong(String orderId, Short type, String userId, Long ccid) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
@@ -359,6 +353,12 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 		// 为现有有效归属生成合尺副本数据(rate=500, status=2待确认), 不直接修改原有数据
 		List<DecorationBelongPO> existBelongs = decorationBelongDao.queryDecorationBelong(orderId, type, DecorationBelongPO.STATUS_INVALID_INT);
+
+		// 捕获失效人员的ccid
+		Long invalidCcid = null;
+		if (existBelongs != null && !existBelongs.isEmpty()) {
+			invalidCcid = existBelongs.get(0).getCcid();
+		}
 
 		for (DecorationBelongPO existBelong : existBelongs) {
 
@@ -400,30 +400,32 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		newBelongPO.setType(type);
 		newBelongPO.setStatus(DecorationBelongPO.STATUS_CONFIRM_INT);
 
+		if (ccid != null) newBelongPO.setCcid(ccid);
+
 		decorationBelongDao.save(newBelongPO);
 
-		// 生成消息提示数据
-		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "confirmMergeDecorationBelong", buildBelongEventArgs(decorationPO, userPO, type, null, (short) 1)));
+		// 生成消息提示数据：invalidCcid=失效人员ccid, ccid=生效人员ccid
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "confirmMergeDecorationBelong", buildBelongEventArgs(decorationPO, userPO, type, invalidCcid, ccid, (short) 1)));
 
 		return 0;
 	}
 
-	private String buildBelongEventArgs(DecorationPO decorationPO, UserPO userPO, short type, Long ccid, short mergeFlag) {
+	private String buildBelongEventArgs(DecorationPO decorationPO, UserPO userPO, short type, Long invalidCcid, Long activeCcid, short mergeFlag) {
 
-		String originOrderId = "";
-		String targetOrderId = decorationPO.getOrderId();
+		String orderId = decorationPO.getOrderId();
+		String invalidOrderId = "";
+		String activeOrderId = "";
 
-		if (ccid != null && ccid > 0) {
-			List<CustomerChanceOrderPO> chanceOrders = customerChanceOrderDao.queryCustomerChanceOrderByOrderId(targetOrderId);
-
-			for (CustomerChanceOrderPO chanceOrder : chanceOrders) {
-				if (chanceOrder.getCcid() == ccid.longValue() && !chanceOrder.getOrderId().equals(targetOrderId)) {
-					originOrderId = chanceOrder.getOrderId();
-					break;
-				}
-			}
+		if (invalidCcid != null && invalidCcid > 0) {
+			CustomerChanceOrderPO chanceOrder = customerChanceOrderDao.queryCustomerChanceOrder(invalidCcid);
+			if (chanceOrder != null) invalidOrderId = chanceOrder.getOrderId();
 		}
 
-		return "{\"orderId\":\"" + targetOrderId + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"originOrderId\":\"" + originOrderId + "\",\"targetOrderId\":\"" + targetOrderId + "\",\"mergeFlag\":" + mergeFlag + "}";
+		if (activeCcid != null && activeCcid > 0) {
+			CustomerChanceOrderPO chanceOrder = customerChanceOrderDao.queryCustomerChanceOrder(activeCcid);
+			if (chanceOrder != null) activeOrderId = chanceOrder.getOrderId();
+		}
+
+		return "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"invalidOrderId\":\"" + invalidOrderId + "\",\"activeOrderId\":\"" + activeOrderId + "\",\"mergeFlag\":" + mergeFlag + "}";
 	}
 }
