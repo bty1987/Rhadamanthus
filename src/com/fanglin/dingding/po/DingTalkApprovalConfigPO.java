@@ -16,9 +16,13 @@ public class DingTalkApprovalConfigPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -4567890123456789012L;
 
+	public static final short TYPE_GENERIC = 0;           // 通用审批：走 approve/refuse 逻辑
+	public static final short TYPE_SPECIALIZED = 1;        // 专用审批：走反射调用
+
 	public static final String COLUMN_PROCESSCODE_STR = "processCode";
 	public static final String COLUMN_ENABLED_STR = "enabled";
 	public static final String COLUMN_COMPANYID_STR = "companyId";
+	public static final String COLUMN_TYPE_STR = "type";
 
 	private long id;
 	private String processCode;
@@ -29,6 +33,7 @@ public class DingTalkApprovalConfigPO implements java.io.Serializable {
 	private String voClass;
 	private Short handleAgreeOnly;
 	private Short enabled;
+	private Short type;
 	private Integer companyId;
 	private Timestamp createTime;
 
@@ -70,7 +75,7 @@ public class DingTalkApprovalConfigPO implements java.io.Serializable {
 		this.fieldId = fieldId;
 	}
 
-	@Column(name = "beanClass", nullable = false, length = 200)
+	@Column(name = "beanClass", length = 200)
 	public String getBeanClass() {
 		return beanClass;
 	}
@@ -79,7 +84,7 @@ public class DingTalkApprovalConfigPO implements java.io.Serializable {
 		this.beanClass = beanClass;
 	}
 
-	@Column(name = "methodName", nullable = false, length = 100)
+	@Column(name = "methodName", length = 100)
 	public String getMethodName() {
 		return methodName;
 	}
@@ -113,6 +118,15 @@ public class DingTalkApprovalConfigPO implements java.io.Serializable {
 
 	public void setEnabled(Short enabled) {
 		this.enabled = enabled;
+	}
+
+	@Column(name = "type", nullable = false)
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	@Column(name = "companyId", nullable = false)
