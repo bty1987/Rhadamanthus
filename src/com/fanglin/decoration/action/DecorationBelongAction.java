@@ -99,7 +99,7 @@ public class DecorationBelongAction extends BaseListAction {
 
 		if (decorationBelongs != null && decorationBelongs.size() > 0) {
 			for (DecorationBelongVO belong : decorationBelongs) {
-				decorationBelongService.confirmMergeDecorationBelong(decorationBelong.getOrderId(), belong.getType(), belong.getBelonger().getUserId());
+				decorationBelongService.confirmMergeDecorationBelong(decorationBelong.getOrderId(), belong.getType(), belong.getBelonger().getUserId(), decorationBelong.getCcid());
 			}
 		}
 
