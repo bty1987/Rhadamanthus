@@ -13,7 +13,6 @@ package com.fanglin.dingding.service.impl;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -117,14 +116,11 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 				}
 			}
 
-			// ========== 通用审批：原逻辑完全保留 ==========
-			List<String> codes = new ArrayList<String>();
+		// ========== 通用审批：从配置表获取 codes ==========
+		if ("finish".equals(type)) {
+			List<String> codes = dingTalkApprovalConfigDao.queryEnabledGenericProcessCodes();
 
-			codes.add("PROC-EF6YJDXRN2-2EQFBYULQQ5CPGGVZAUU1-ME75EHVI-9"); // ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT
-			codes.add("PROC-9B7CBC59-96FB-4941-BF01-608DB3E37C5E"); // ApprovalPO.APPROVAL_TYPE_DECORATION_TERMINAL_INT
-			codes.add("PROC-5750A51A-05FE-42B8-BB5E-4FBA28B939B6"); // ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT
-
-			if (codes.contains(code) && "finish".equals(type)) {
+			if (codes.contains(code)) {
 
 				ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(no);
 
