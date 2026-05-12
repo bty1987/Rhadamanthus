@@ -117,22 +117,23 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 			}
 
 		// ========== 通用审批：从配置表获取 codes ==========
-		if ("finish".equals(type)) {
-			List<String> codes = dingTalkApprovalConfigDao.queryEnabledGenericProcessCodes();
+			if ("finish".equals(type)) {
+				List<String> codes = dingTalkApprovalConfigDao.queryEnabledGenericProcessCodes();
 
-			if (codes.contains(code)) {
+				if (codes.contains(code)) {
 
-				ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(no);
+					ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(no);
 
-				if (approvalPO != null) {
+					if (approvalPO != null) {
 
-					System.out.println(response.toJSONString());
-					System.out.println(approvalPO.getAid());
+						System.out.println(response.toJSONString());
+						System.out.println(approvalPO.getAid());
 
-					approvalPO.setPiid(null);
+						approvalPO.setPiid(null);
 
-					if ("agree".equals(result)) approvalService.approve(approvalPO);
-					else approvalService.refuse(approvalPO);
+						if ("agree".equals(result)) approvalService.approve(approvalPO);
+						else approvalService.refuse(approvalPO);
+					}
 				}
 			}
 		}
