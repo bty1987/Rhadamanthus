@@ -256,6 +256,10 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 		CustomerPO customerPO = customerSourcePO.getCustomer();
 
 		if (customerPO == null) {
+			customerPO = customerChancePO.getCustomer();
+		}
+
+		if (customerPO == null) {
 			customerPO = customerDao.get(approvalCustomerSourcePO.getCid());
 		}
 

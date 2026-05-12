@@ -116,7 +116,7 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 				}
 			}
 
-		// ========== 通用审批：从配置表获取 codes ==========
+			// ========== 通用审批：从配置表获取 codes ==========
 			if ("finish".equals(type)) {
 				List<String> codes = dingTalkApprovalConfigDao.queryEnabledGenericProcessCodes();
 
@@ -147,8 +147,7 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 	}
 
 	/**
-	 * 反射调用配置的 Spring Bean 方法
-	 * 约定方法签名: void methodName(XXXVo(orderId), String userId)
+	 * 反射调用配置的 Spring Bean 方法 约定方法签名: void methodName(XXXVo(orderId), String userId)
 	 */
 	private void invokeHandler(DingTalkApprovalConfigPO config, String orderId, String userId) throws FLException {
 

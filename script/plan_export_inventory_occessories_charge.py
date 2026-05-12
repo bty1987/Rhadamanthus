@@ -82,8 +82,8 @@ class Exporter(Util):
                 AND d.hid = h.hid
                 AND v.vid = h.vid
                 AND oi.gid = g.gid
-                AND o.createTime >= '%s 00:00:00'
-                AND o.createTime <= '%s 23:59:59'
+                AND o.receiveTime >= '%s 00:00:00'
+                AND o.receiveTime <= '%s 23:59:59'
                 %s
         """
 

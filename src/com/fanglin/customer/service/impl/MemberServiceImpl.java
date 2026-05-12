@@ -201,6 +201,8 @@ public class MemberServiceImpl implements MemberService {
 				if (customerIdList.contains(customerPO.getCid())) continue;
 
 				customerIdList.add(customerPO.getCid());
+
+				customerIds.add(customerPO.getCid());
 			}
 
 			if (customerIds.isEmpty()) {
@@ -216,6 +218,7 @@ public class MemberServiceImpl implements MemberService {
 			Map<Long, List<DecorationPO>> customerToDecorationMap = new HashMap<Long, List<DecorationPO>>();
 
 			for (DecorationPO decorationPO : decorationPOs) {
+
 				companyIds.add(decorationPO.getCompany());
 
 				Long customerId = decorationPO.getCustomer().getCid();
