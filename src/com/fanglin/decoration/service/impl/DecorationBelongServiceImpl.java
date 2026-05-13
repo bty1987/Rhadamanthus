@@ -248,6 +248,9 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 		decorationBelongDao.save(decorationBelongPO);
 
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "tranDecorationBelong", buildBelongEventArgs(decorationPO, userPO, type, ccid, ccid, (short) 0)));
+
 		return 0;
 	}
 
@@ -280,6 +283,12 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		for (DecorationBelongPO existBelong : existBelongs) {
 			existBelong.setRate(500);
 			decorationBelongDao.update(existBelong);
+		}
+
+		// 捕获失效人员的ccid
+		Long invalidCcid = null;
+		if (existBelongs != null && !existBelongs.isEmpty()) {
+			invalidCcid = existBelongs.get(0).getCcid();
 		}
 
 		// 新增新业务员的合尺归属记录，rate=500, status=0(有效)
@@ -324,6 +333,9 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 		decorationAdditionDao.update(decorationAdditionPO);
 		decorationDao.update(decorationPO);
+
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "mergeDecorationBelong", buildBelongEventArgs(decorationPO, userPO, type, null, invalidCcid, (short) 1)));
 
 		return 0;
 	}

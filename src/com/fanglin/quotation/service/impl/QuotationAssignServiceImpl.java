@@ -117,51 +117,6 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		return false;
 	}
 
-	/**
-	 * 基于预算员的 items 进行三维度匹配（company + department + supportedType）
-	 * 
-	 * <p>
-	 * 匹配规则：
-	 * <ul>
-	 * <li>company 必须精确匹配</li>
-	 * <li>department：item 的 department 为 null 表示匹配所有部门，否则必须精确匹配</li>
-	 * <li>supportedType：值为 -1 表示通用（匹配所有类型），否则必须与请求的 decorationType 精确匹配</li>
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param items 预算员的所有规则明细
-	 * @param request 待分配请求
-	 * @return true=有匹配的 item
-	 */
-	private boolean isItemMatched(List<QuotationAssignUserRuleItemPO> items, QuotationAssignRequestPO request) {
-
-		int requestCompany = request.getCompany() != null ? request.getCompany().getCid() : -1;
-		Integer requestDept = request.getDepartment() != null ? request.getDepartment().getDid() : null;
-		short requestType = request.getDecorationType();
-
-		for (QuotationAssignUserRuleItemPO item : items) {
-			// 公司必须匹配
-			if (item.getCompany() == null || item.getCompany().getCid() != requestCompany) {
-				continue;
-			}
-
-			// 部门匹配：item 的 department 为 null 表示该公司所有部门
-			if (item.getDepartment() != null) {
-				if (requestDept == null || item.getDepartment().getDid() != requestDept.intValue()) {
-					continue;
-				}
-			}
-
-			// 装修类型匹配：supportedType 为 -1 表示通用
-			int supportedType = item.getSupportedType();
-			if (supportedType == QuotationAssignUserRulePO.SUPPORTED_TYPE_ALL_INT || supportedType == (int) requestType) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	// ==================== 正向自动分配 ====================
 
 	@Override
@@ -406,9 +361,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	 * 反向分配：全局匹配
 	 * 
 	 * <p>
-	 * 查出所有待分配请求（status=PENDING），对每个请求查找所有可用预算员中最优人选进行分配。
-	 * 适用于交付完成、转交等场景——预算员释放后触发待分配队列的消费。
-	 * 每次调用最多分配一个任务即返回。
+	 * 查出所有待分配请求（status=PENDING），对每个请求查找所有可用预算员中最优人选进行分配。 适用于交付完成、转交等场景——预算员释放后触发待分配队列的消费。 每次调用最多分配一个任务即返回。
 	 * </p>
 	 */
 	private void triggerReverseAssign() throws FLException {
