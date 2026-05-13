@@ -458,12 +458,12 @@ var QuotationDetail = (function() {
             _dtaxfee = 0;
 
             if (_taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) {
-                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), preferPrice), managePrefer), advancePrefer), _taxRate));
+                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), preferPrice), managePrefer), advancePrefer), activityProfit), _taxRate));
                 _dtaxfee = utils.changeThrDecimal(utils.accMul(_taxfee, _manageDiscount));
             }
 
             if (_taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
-                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), _managefee), preferPrice), managePrefer), advancePrefer), _taxRate));
+                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), _managefee), preferPrice), managePrefer), advancePrefer), activityProfit), _taxRate));
                 _dtaxfee = _taxfee;
             }
 
@@ -861,13 +861,14 @@ var QuotationDetail = (function() {
                 var preferPrice = quo.preferParams["quotationPrefer.preferPrice"];
                 var managePrefer = quo.preferParams["quotationPrefer.managePrefer"];
                 var advancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
+                var activityProfit = quo.preferParams["quotationPrefer.activityProfit"];
 
                 if (v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
-                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), preferPrice), managePrefer), advancePrefer), _dtaxRate));
+                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), preferPrice), managePrefer), advancePrefer), activityProfit), _dtaxRate));
                 }
 
                 if (v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
-                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _dtransfee), _dmanagefee), preferPrice), managePrefer), advancePrefer), _dtaxRate));
+                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _dtransfee), _dmanagefee), preferPrice), managePrefer), advancePrefer), activityProfit), _dtaxRate));
                 }
 
                 var _ddtotal = utils.changeThrDecimal(utils.accAdd(_rtemPrice, utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dmanagefee), _dtaxfee), preferPrice), managePrefer), advancePrefer)));
@@ -1101,11 +1102,11 @@ var QuotationDetail = (function() {
             var _taxfee = 0;
 
             if (_taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
-                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), preferPrice), managePrefer), advancePrefer), _taxRate));
+                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), preferPrice), managePrefer), advancePrefer), activityProfit), _taxRate));
             }
 
             if (_taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
-                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), _managefee), preferPrice), managePrefer), advancePrefer), _taxRate));
+                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), _managefee), preferPrice), managePrefer), advancePrefer), activityProfit), _taxRate));
             }
 
             var _total = utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), _managefee), _taxfee), preferPrice), managePrefer), advancePrefer), activityProfit);
@@ -5126,12 +5127,12 @@ var QuotationDetail = (function() {
                     _dtaxfee = 0;
 
                     if (_taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
-                        _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), preferPrice), managePrefer), advancePrefer), _taxRate));
+                        _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), preferPrice), managePrefer), advancePrefer), activityProfit), _taxRate));
                         _dtaxfee = utils.changeThrDecimal(utils.accMul(_taxfee, _manageDiscount));
                     }
 
                     if (_taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
-                        _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), _managefee), preferPrice), managePrefer), advancePrefer), _taxRate));
+                        _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), _managefee), preferPrice), managePrefer), advancePrefer), activityProfit), _taxRate));
                         _dtaxfee = _taxfee
                     }
 
