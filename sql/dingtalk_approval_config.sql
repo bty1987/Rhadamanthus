@@ -1,6 +1,6 @@
 -- 钉钉审批回调配置表
 -- 数据驱动审批回调，通过 type 区分：专用审批(1)反射调用 / 通用审批(0)approve-refuse
-CREATE TABLE `dingtalk_approval_config` (
+CREATE TABLE `hades`.`dingtalkapprovalconfig` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `processCode`      VARCHAR(100)  NOT NULL                COMMENT '钉钉审批模板code',
   `name`             VARCHAR(100)  NOT NULL                COMMENT '配置名称',
@@ -19,7 +19,7 @@ CREATE TABLE `dingtalk_approval_config` (
 
 -- ========== 专用审批 (type=1)：通过反射调用 Spring Bean 方法 ==========
 -- 方法签名约定: void methodName(XXXVo(orderId), String userId) throws FLException
-INSERT INTO `dingtalk_approval_config` (`processCode`, `name`, `fieldId`, `beanClass`, `methodName`, `voClass`, `handleAgreeOnly`, `type`, `enabled`, `companyId`) VALUES
+INSERT INTO `hades`.`dingtalkapprovalconfig` (`processCode`, `name`, `fieldId`, `beanClass`, `methodName`, `voClass`, `handleAgreeOnly`, `type`, `enabled`, `companyId`) VALUES
 ('PROC-EEA1011C-8ABD-47F1-983F-68F3D5EA1D4A', '合同重签审批',
   'TextField-IG4N9OD3',
   'com.fanglin.decoration.service.impl.DecorationContractServiceImpl', 'resignDecorationContract',
@@ -39,7 +39,7 @@ INSERT INTO `dingtalk_approval_config` (`processCode`, `name`, `fieldId`, `beanC
   1, 1, 1, 0);
 
 -- ========== 通用审批 (type=0)：走 approve/refuse 逻辑，无需 beanClass/methodName ==========
-INSERT INTO `dingtalk_approval_config` (`processCode`, `name`, `fieldId`, `beanClass`, `methodName`, `voClass`, `handleAgreeOnly`, `type`, `enabled`, `companyId`) VALUES
+INSERT INTO `hades`.`dingtalkapprovalconfig` (`processCode`, `name`, `fieldId`, `beanClass`, `methodName`, `voClass`, `handleAgreeOnly`, `type`, `enabled`, `companyId`) VALUES
 ('PROC-EF6YJDXRN2-2EQFBYULQQ5CPGGVZAUU1-ME75EHVI-9', '主材退款审批',
   NULL, NULL, NULL, NULL,
   0, 0, 1, 0),
