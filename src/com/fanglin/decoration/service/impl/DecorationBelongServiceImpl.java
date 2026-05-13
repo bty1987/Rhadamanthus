@@ -425,19 +425,19 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 	private String buildBelongEventArgs(DecorationPO decorationPO, UserPO userPO, short type, Long invalidCcid, Long activeCcid, short mergeFlag) {
 
 		String orderId = decorationPO.getOrderId();
-		String invalidOrderId = "";
-		String activeOrderId = "";
+		String originOrderId = "";
+		String targetOrderId = "";
 
 		if (invalidCcid != null && invalidCcid > 0) {
 			CustomerChanceOrderPO chanceOrder = customerChanceOrderDao.queryCustomerChanceOrder(invalidCcid);
-			if (chanceOrder != null) invalidOrderId = chanceOrder.getOrderId();
+			if (chanceOrder != null) originOrderId = chanceOrder.getOrderId();
 		}
 
 		if (activeCcid != null && activeCcid > 0) {
 			CustomerChanceOrderPO chanceOrder = customerChanceOrderDao.queryCustomerChanceOrder(activeCcid);
-			if (chanceOrder != null) activeOrderId = chanceOrder.getOrderId();
+			if (chanceOrder != null) targetOrderId = chanceOrder.getOrderId();
 		}
 
-		return "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"invalidOrderId\":\"" + invalidOrderId + "\",\"activeOrderId\":\"" + activeOrderId + "\",\"mergeFlag\":" + mergeFlag + "}";
+		return "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"originOrderId\":\"" + originOrderId + "\",\"targetOrderId\":\"" + targetOrderId + "\",\"mergeFlag\":" + mergeFlag + "}";
 	}
 }

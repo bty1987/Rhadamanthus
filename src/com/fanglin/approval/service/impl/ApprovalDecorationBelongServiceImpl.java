@@ -1,188 +1,430 @@
 /**
- * @File Name		: DingTalkCallbackServiceImpl.java
- * @Package   	: com.fanglin.dingding.service.impl
- * @Version		: 3.0
- * @Date			: 2018-12-16
+ * @File Name		: ApprovalDecorationBelongServiceImpl.java
+ * @Package   	: com.fanglin.approval.service.impl
+ * @Version		: 1.0
+ * @Date			: 2015-11-13
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 钉钉回调服务实现（v3: 反射调用，零业务引用，通用审批保留原逻辑）
+ * @Describing	: 
  */
 
 package com.fanglin.approval.service.impl;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.dingtalk.oapi.lib.aes.DingTalkEncryptException;
-import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
+import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.dao.ApprovalDecorationBelongDao;
+import com.fanglin.approval.dao.ApprovalDecorationBelongItemDao;
+import com.fanglin.approval.po.ApprovalDecorationBelongItemPO;
+import com.fanglin.approval.po.ApprovalDecorationBelongPO;
 import com.fanglin.approval.po.ApprovalPO;
+import com.fanglin.approval.service.ApprovalDecorationBelongService;
+import com.fanglin.approval.vo.ApprovalDecorationBelongItemVO;
+import com.fanglin.approval.vo.ApprovalDecorationBelongVO;
+import com.fanglin.approval.vo.ApprovalVO;
+import com.fanglin.communion.dao.DepartmentDao;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.dingding.dao.DingTalkApprovalConfigDao;
-import com.fanglin.dingding.po.DingTalkApprovalConfigPO;
+import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.dao.CustomerChanceOrderDao;
+import com.fanglin.customer.dao.CustomerSourceRecordDao;
+import com.fanglin.customer.po.CustomerChanceOrderPO;
+import com.fanglin.customer.po.CustomerChancePO;
+import com.fanglin.customer.po.CustomerSourceRecordPO;
+import com.fanglin.customer.service.DecorationService;
+import com.fanglin.decoration.dao.DecorationAdditionDao;
+import com.fanglin.decoration.dao.DecorationBelongDao;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationAdditionPO;
+import com.fanglin.decoration.po.DecorationBelongPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.dingding.service.DingTalkApprovalService;
-import com.fanglin.dingding.service.DingTalkCallbackService;
-import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageCueuingPO;
+import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.po.MessageQueuingPO;
+import com.fanglin.information.service.MessageService;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.Arith;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
-@Service("dingTalkCallbackService")
+@Service("approvalDecorationBelongService")
 @Transactional(readOnly = true)
-public class ApprovalDecorationBelongServiceImpl implements DingTalkCallbackService {
-
-	@Autowired
-	private SystemConfigDao systemConfigDao;
-
-	@Autowired
-	private DingTalkApprovalService dingTalkApprovalService;
-
-	@Autowired
-	private com.fanglin.approval.service.ApprovalService approvalService;
+public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBelongService {
 
 	@Autowired
 	private ApprovalDao approvalDao;
 
 	@Autowired
-	private DingTalkApprovalConfigDao dingTalkApprovalConfigDao;
+	private ApprovalDecorationBelongDao approvalDecorationBelongDao;
 
 	@Autowired
-	private ApplicationContext applicationContext;
+	private ApprovalDecorationBelongItemDao approvalDecorationBelongItemDao;
+
+	@Autowired
+	private DecorationDao decorationDao;
+
+	@Autowired
+	private DecorationBelongDao decorationBelongDao;
+
+	@Autowired
+	private DecorationService decorationService;
+
+	@Autowired
+	private UserDao userDao;
+
+	@Autowired
+	private MessageService messageService;
+
+	@Autowired
+	private DecorationAdditionDao decorationAdditionDao;
+
+	@Autowired
+	private DingTalkApprovalService approvalService;
+
+	@Autowired
+	private DepartmentDao departmentDao;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
+
+	@Autowired
+	private CustomerChanceDao customerChanceDao;
+
+	@Autowired
+	private CustomerChanceOrderDao customerChanceOrderDao;
+
+	@Autowired
+	private CustomerSourceRecordDao customerSourceRecordDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, String> callback(String signature, String nonce, String timestamp, String encrypt) throws FLException {
+	public int submitApprovalForDecorationBelong(ApprovalVO approvalVO, ApprovalDecorationBelongVO approvalDecorationBelongVO, List<ApprovalDecorationBelongItemVO> approvalDecorationBelongItemVOs, String userId, int company, String code, String forms) throws FLException {
 
-		String suiteKey = systemConfigDao.querySystemConfig("suiteKey").value("");
-		String encodingAesKey = systemConfigDao.querySystemConfig("encodingAesKey").value("");
-		String token = systemConfigDao.querySystemConfig("token").value("fanglinserver");
+		StringBuffer oldBelongUserName = new StringBuffer();
+		StringBuffer oldBelongRate = new StringBuffer();
+		StringBuffer newBelongUserName = new StringBuffer();
+		StringBuffer newBelongRate = new StringBuffer();
 
-		DingTalkEncryptor dingTalkEncryptor;
-		String plainText;
+		int rateCount = 0;
+		int defaultCount = 0;
 
-		try {
-			dingTalkEncryptor = new DingTalkEncryptor(token, encodingAesKey, suiteKey);
-			plainText = dingTalkEncryptor.getDecryptMsg(signature, timestamp, nonce, encrypt);
-		} catch (DingTalkEncryptException e) {
-			System.out.println(e.getMessage());
-			throw new FLException(270009, "回调解密失败");
+		String orderId = approvalDecorationBelongVO.getOrderId();
+		Short belongType = approvalDecorationBelongVO.getBelongType();
+
+		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT, orderId);
+
+		if (approvalPO != null) {
+			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 
-		JSONObject response = JSON.parseObject(plainText);
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
-		if (response == null || !response.containsKey("EventType")) {
-			System.out.println(plainText);
-			throw new FLException(270009, "回调解密失败");
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
 		}
 
-		String event = response.getString("EventType");
+		List<Short> unstatus = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
+		List<Short> belongTypes = Arrays.asList(new Short[] { DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.BELONGTYPE_SALESMAN_INT });
 
-		if ("check_url".equals(event)) {
-			System.out.println(response.toJSONString());
+		if (!unstatus.contains(decorationPO.getStatus())) {
+			throw new FLException(140011, "订单已签订不可修改归属信息");
 		}
 
-		if ("bpms_instance_change".equals(event)) {
+		if (!belongTypes.contains(belongType)) {
+			throw new FLException(140014, "订单归属类型错误");
+		}
 
-			String userId = response.getString("staffId");
-			String code = response.getString("processCode");
-			String type = response.getString("type");
-			String result = response.getString("result");
-			String no = response.getString("processInstanceId");
+		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelong(orderId, belongType, DecorationBelongPO.STATUS_INVALID_INT);
 
-			// ========== 专用审批：配置驱动 + 反射调用 ==========
-			if ("finish".equals(type)) {
-				DingTalkApprovalConfigPO config = dingTalkApprovalConfigDao.queryByProcessCode(code);
+		for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
+			UserPO belongUserPO = decorationBelongPO.getBelonger();
 
-				if (config != null) {
+			oldBelongUserName.append(belongUserPO.getCurrentName());
+			oldBelongUserName.append(",");
 
-					if (config.getHandleAgreeOnly().shortValue() == 1 && !"agree".equals(result)) {
-						// handleAgreeOnly 且非agree，跳过
-					} else {
-						String orderId = dingTalkApprovalService.getApproval(no, config.getFieldId());
+			oldBelongRate.append(Arith.div(decorationBelongPO.getRate(), 1000.0));
+			oldBelongRate.append(",");
+		}
 
-						System.out.println(response.toJSONString());
-						System.out.println(orderId);
+		for (ApprovalDecorationBelongItemVO approvalDecorationBelongItemVO : approvalDecorationBelongItemVOs) {
 
-						invokeHandler(config, orderId, userId);
-					}
-				}
+			UserPO userPO = userDao.queryUserByUserId(approvalDecorationBelongItemVO.getUserId());
+
+			if (userPO == null) {
+				throw new FLException(190005, "人员不存在");
 			}
 
-			// ========== 通用审批：原逻辑完全保留 ==========
-			List<String> codes = new ArrayList<String>();
+			newBelongUserName.append(userPO.getCurrentName());
+			newBelongUserName.append(",");
 
-			codes.add("PROC-EF6YJDXRN2-2EQFBYULQQ5CPGGVZAUU1-ME75EHVI-9"); // ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT
-			codes.add("PROC-9B7CBC59-96FB-4941-BF01-608DB3E37C5E"); // ApprovalPO.APPROVAL_TYPE_DECORATION_TERMINAL_INT
-			codes.add("PROC-5750A51A-05FE-42B8-BB5E-4FBA28B939B6"); // ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT
+			newBelongRate.append(Arith.div(approvalDecorationBelongItemVO.getRate(), 1000.0));
+			newBelongRate.append(",");
 
-			if (codes.contains(code) && "finish".equals(type)) {
+			rateCount = Arith.add(rateCount, approvalDecorationBelongItemVO.getRate());
 
-				ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(no);
-
-				if (approvalPO != null) {
-
-					System.out.println(response.toJSONString());
-					System.out.println(approvalPO.getAid());
-
-					approvalPO.setPiid(null);
-
-					if ("agree".equals(result)) approvalService.approve(approvalPO);
-					else approvalService.refuse(approvalPO);
-				}
+			if (DecorationBelongPO.DEFAULTFLAG_TRUE_INT == approvalDecorationBelongItemVO.getDefaultFlag()) {
+				defaultCount++;
 			}
 		}
 
-		try {
-			return dingTalkEncryptor.getEncryptedMap("success", new Date().getTime(), nonce);
-		} catch (DingTalkEncryptException e) {
-			System.out.println(e.getMessage());
-			throw new FLException(270010, "回调加密失败");
+		if (rateCount != 1000) {
+			throw new FLException(140016, "订单归属人员比例和不为1");
 		}
+
+		if (defaultCount != 1) {
+			throw new FLException(140017, "订单归属需一个默认人员");
+		}
+
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
+		UserPO sender = userDao.queryUserByUserId(userId);
+
+		String content = String.format("装修单号:%s,类型:%s,现归属:%s比例:%s修改为归属:%s比例:%s", orderId, (approvalDecorationBelongVO.getBelongType() == 0 ? "设计" : approvalDecorationBelongVO.getBelongType() == 1 ? "业务" : "全部"), oldBelongUserName.toString(), oldBelongRate.toString(), newBelongUserName.toString(), newBelongRate.toString());
+
+		approvalPO = new ApprovalPO().init(sender, receiver, orderId, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT, content, approvalVO.getComment(), company);
+
+		approvalDao.save(approvalPO);
+
+		ApprovalDecorationBelongPO approvalDecorationBelongPO = new ApprovalDecorationBelongPO();
+
+		BeanUtil.copyProperties(approvalDecorationBelongVO, approvalDecorationBelongPO);
+		approvalDecorationBelongPO.setAid(approvalPO.getAid());
+
+		approvalDecorationBelongDao.save(approvalDecorationBelongPO);
+
+		for (ApprovalDecorationBelongItemVO approvalDecorationBelongItemVO : approvalDecorationBelongItemVOs) {
+
+			ApprovalDecorationBelongItemPO approvalDecorationBelongItemPO = new ApprovalDecorationBelongItemPO();
+
+			BeanUtil.copyProperties(approvalDecorationBelongItemVO, approvalDecorationBelongItemPO);
+
+			approvalDecorationBelongItemPO.setBuid(userDao.queryUserByUserId(approvalDecorationBelongItemVO.getUserId()).getUid());
+			approvalDecorationBelongItemPO.setAdbId(approvalDecorationBelongPO.getAdbId());
+			approvalDecorationBelongItemPO.setBdid(approvalDecorationBelongItemVO.getBdid());
+			approvalDecorationBelongItemPO.setBrid(approvalDecorationBelongItemVO.getBrid());
+
+			approvalDecorationBelongItemDao.save(approvalDecorationBelongItemPO);
+		}
+
+		messageService.sendMessage(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), approvalPO.getContents(), MessagePO.TYPE_SEND_APPROVAL_INT, company);
+
+		if (code != null && !"".equals(code)) {
+			String piid = approvalService.initiateApproval(code, userId, null, null, null, JSONArray.parseArray(forms), company);
+
+			approvalPO.setPiid(piid);
+
+			approvalDao.update(approvalPO);
+		}
+
+		return 0;
 	}
 
-	/**
-	 * 反射调用配置的 Spring Bean 方法 约定方法签名: void methodName(XXXVo(orderId), String userId)
-	 */
-	private void invokeHandler(DingTalkApprovalConfigPO config, String orderId, String userId) throws FLException {
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int approveForDecorationBelong(ApprovalPO approvalPO) throws FLException {
 
-		try {
-			// 按全限定类名从Spring容器获取Bean
-			Class<?> beanClass = Class.forName(config.getBeanClass());
-			Object bean = applicationContext.getBean(beanClass);
+		ApprovalDecorationBelongPO approvalDecorationBelongPO = approvalDecorationBelongDao.queryApprovalDecorationBelongByAId(approvalPO.getAid());
 
-			// 构造VO参数
-			Class<?> voClazz = Class.forName(config.getVoClass());
-			Constructor<?> voConstructor = voClazz.getConstructor(String.class);
-			Object voInstance = voConstructor.newInstance(orderId);
-
-			// 反射调用方法
-			Method method = beanClass.getMethod(config.getMethodName(), voClazz, String.class);
-			method.invoke(bean, voInstance, userId);
-
-		} catch (ClassNotFoundException e) {
-			System.out.println(String.format("回调配置类未找到: %s", e.getMessage()));
-			throw new FLException(270011, String.format("回调配置类未找到: %s", config.getBeanClass()));
-		} catch (NoSuchMethodException e) {
-			System.out.println(String.format("回调配置方法未找到: %s.%s", config.getBeanClass(), config.getMethodName()));
-			throw new FLException(270012, String.format("回调配置方法未找到: %s.%s", config.getBeanClass(), config.getMethodName()));
-		} catch (java.lang.reflect.InvocationTargetException e) {
-			Throwable target = e.getTargetException();
-			if (target instanceof FLException) throw (FLException) target;
-			System.out.println(String.format("回调执行异常: %s", target.getMessage()));
-			throw new FLException(270013, String.format("回调执行异常: %s", target.getMessage()));
-		} catch (Exception e) {
-			System.out.println(String.format("回调反射异常: %s", e.getMessage()));
-			throw new FLException(270013, String.format("回调反射异常: %s", e.getMessage()));
+		if (approvalDecorationBelongPO == null) {
+			throw new FLException(240003, "审批信息不完整");
 		}
+
+		String orderId = approvalDecorationBelongPO.getOrderId();
+		Short belongType = approvalDecorationBelongPO.getBelongType();
+		short mergeFlag = approvalDecorationBelongPO.getMergeFlag();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelong(orderId, belongType, DecorationBelongPO.STATUS_INVALID_INT);
+
+		// 捕获失效人员的ccid
+		Long invalidCcid = null;
+		if (decorationBelongPOs != null && !decorationBelongPOs.isEmpty()) {
+			invalidCcid = decorationBelongPOs.get(0).getCcid();
+		}
+
+		if (mergeFlag == 1) {
+			// 合尺模式：将现有有效归属的rate从1000改为500，保留有效状态
+			for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
+				decorationBelongPO.setRate(500);
+				decorationBelongDao.update(decorationBelongPO);
+			}
+		} else {
+			// 替换模式：将现有有效归属置为失效
+			for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
+				decorationBelongPO.setStatus(DecorationBelongPO.STATUS_EFFCTIVE_INT);
+				decorationBelongDao.update(decorationBelongPO);
+			}
+		}
+
+		List<ApprovalDecorationBelongItemPO> approvalDecorationBelongItemPOs = approvalDecorationBelongItemDao.queryApprovalDecorationBelongItemByAobId(approvalDecorationBelongPO.getAdbId());
+
+		DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(orderId);
+
+		if (mergeFlag != 1) {
+			if (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT) decorationAdditionPO.clearDesign();
+			else if (belongType == DecorationBelongPO.BELONGTYPE_SALESMAN_INT) decorationAdditionPO.clearSales();
+		}
+
+		for (ApprovalDecorationBelongItemPO approvalDecorationBelongItemPO : approvalDecorationBelongItemPOs) {
+
+			UserPO userPO = userDao.get(approvalDecorationBelongItemPO.getbuid());
+
+			DepartmentPO dept = departmentDao.get(approvalDecorationBelongItemPO.getBdid());
+			DepartmentPO regn = departmentDao.get(approvalDecorationBelongItemPO.getBrid());
+
+			if (userPO == null) {
+				throw new FLException(190005, "人员不存在");
+			}
+
+			DecorationBelongPO decorationBelongPO = new DecorationBelongPO();
+
+			decorationBelongPO.setDepartment(dept);
+			decorationBelongPO.setRegion(regn);
+
+			if (dept.getBusitype() != null) decorationBelongPO.setBusitype(dept.getBusitype());
+
+			if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType) {
+				decorationAdditionPO.setDesign(userPO.getCurrentName(), dept.getName(), regn.getName());
+			} else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType) {
+				decorationAdditionPO.setSales(userPO.getCurrentName(), dept.getName(), regn.getName());
+			}
+
+			if (mergeFlag != 1 && DecorationBelongPO.DEFAULTFLAG_TRUE_INT == approvalDecorationBelongItemPO.getDefaultFlag()) {
+				if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType) {
+					decorationPO.setDesigner(userPO);
+					decorationPO.setDesignDept(userPO.getDept());
+				} else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType) {
+					decorationPO.setSalesman(userPO);
+					decorationPO.setSalesDept(userPO.getDept());
+				}
+			}
+
+			decorationBelongPO.setOrderId(decorationPO.getOrderId());
+			decorationBelongPO.setBelonger(userPO);
+			decorationBelongPO.setRate(mergeFlag == 1 ? 500 : approvalDecorationBelongItemPO.getRate());
+			decorationBelongPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationBelongPO.setOperater(approvalPO.getReceiver());
+			decorationBelongPO.setDefaultFlag(approvalDecorationBelongItemPO.getDefaultFlag());
+			decorationBelongPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+
+			decorationBelongPO.setCcid(approvalDecorationBelongPO.getCcid());
+
+			decorationBelongPO.setType(belongType);
+			decorationBelongPO.setStatus(DecorationBelongPO.STATUS_INVALID_INT);
+
+			decorationBelongDao.save(decorationBelongPO);
+		}
+
+		decorationAdditionPO.setBelongTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationAdditionDao.update(decorationAdditionPO);
+		decorationDao.update(decorationPO);
+
+		// 生成消息队列数据：invalidCcid=失效人员ccid, approvalDecorationBelongPO.getCcid()=生效人员ccid
+		String approveBelongArgs = buildApproveBelongEventArgs(orderId, approvalPO.getReceiver().getUserId(), belongType, decorationPO, invalidCcid, approvalDecorationBelongPO.getCcid(), mergeFlag);
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs.replace("\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"", "\"event\":\"TEAM_SALESMAN_CHANGED\"")));
+		// 生成消息提示数据
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs));
+
+		// 完成关联的客户机会
+		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(orderId);
+		if (customerChancePO != null && customerChancePO.getStatus() == CustomerChancePO.STATUS_CONFIRM_INT) {
+			customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
+			customerChanceDao.update(customerChancePO);
+			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("客户机会完成(归属审批通过),装修单号:%s,归属:%s(%s),部门:%s(%s),分区:%s(%s)", orderId, customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, approvalPO.getReceiver()));
+		}
+
+		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int confirmForDecorationBelong(ApprovalPO approvalPO) throws FLException {
+
+		ApprovalDecorationBelongPO approvalDecorationBelongPO = approvalDecorationBelongDao.queryApprovalDecorationBelongByAId(approvalPO.getAid());
+
+		if (approvalDecorationBelongPO == null) {
+			throw new FLException(240003, "审批信息不完整");
+		}
+
+		decorationService.sendMessage(approvalDecorationBelongPO.getOrderId(), "装修归属确认", String.format("装修单:%s归属确认", approvalDecorationBelongPO.getOrderId()), "/page/approval/approval");
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int tranApprovalForDecorationBelong(String orderId, Short type, String userId, int company, String code, String forms) throws FLException {
+		return tranApprovalForDecorationBelong(orderId, type, userId, company, code, forms, (short) 0);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public int tranApprovalForDecorationBelong(String orderId, Short type, String userId, int company, String code, String forms, short mergeFlag) throws FLException {
+
+		UserPO designer = userDao.queryUserByUserId(userId);
+
+		ApprovalVO approvalVO = new ApprovalVO();
+
+		approvalVO.setReceiver(new UserBaseVO(designer.getUserId()));
+
+		ApprovalDecorationBelongVO approvalDecorationBelongVO = new ApprovalDecorationBelongVO();
+
+		approvalDecorationBelongVO.setOrderId(orderId);
+		approvalDecorationBelongVO.setBelongType(type);
+		approvalDecorationBelongVO.setMergeFlag(mergeFlag);
+
+		List<ApprovalDecorationBelongItemVO> approvalDecorationBelongItemVOs = new ArrayList<ApprovalDecorationBelongItemVO>();
+
+		ApprovalDecorationBelongItemVO approvalDecorationBelongItemVO = new ApprovalDecorationBelongItemVO();
+
+		approvalDecorationBelongItemVO.setOrderId(orderId);
+		approvalDecorationBelongItemVO.setBdid(designer.getDept().getDid());
+		approvalDecorationBelongItemVO.setBrid(designer.getDept().getFatherDept().getDid());
+		approvalDecorationBelongItemVO.setRate(1000);
+		approvalDecorationBelongItemVO.setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
+
+		approvalDecorationBelongItemVOs.add(approvalDecorationBelongItemVO);
+
+		submitApprovalForDecorationBelong(approvalVO, approvalDecorationBelongVO, approvalDecorationBelongItemVOs, designer.getUserId(), company, code, forms);
+
+		return 0;
+	}
+
+	private String buildApproveBelongEventArgs(String orderId, String userId, short belongType, DecorationPO decorationPO, Long invalidCcid, Long activeCcid, short mergeFlag) {
+
+		String originOrderId = "";
+		String targetOrderId = "";
+
+		if (invalidCcid != null && invalidCcid > 0) {
+			CustomerChanceOrderPO chanceOrder = customerChanceOrderDao.queryCustomerChanceOrder(invalidCcid);
+			if (chanceOrder != null) originOrderId = chanceOrder.getOrderId();
+		}
+
+		if (activeCcid != null && activeCcid > 0) {
+			CustomerChanceOrderPO chanceOrder = customerChanceOrderDao.queryCustomerChanceOrder(activeCcid);
+			if (chanceOrder != null) targetOrderId = chanceOrder.getOrderId();
+		}
+
+		return "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"originOrderId\":\"" + originOrderId + "\",\"targetOrderId\":\"" + targetOrderId + "\",\"mergeFlag\":" + mergeFlag + "}";
+	}
 }

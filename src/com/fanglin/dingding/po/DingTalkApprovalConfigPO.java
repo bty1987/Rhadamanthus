@@ -11,13 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "dingtalk_approval_config", catalog = "approval")
+@Table(name = "dingtalkapprovalconfig", catalog = "hades")
 public class DingTalkApprovalConfigPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -4567890123456789012L;
 
-	public static final short TYPE_GENERIC = 0;           // 通用审批：走 approve/refuse 逻辑
-	public static final short TYPE_SPECIALIZED = 1;        // 专用审批：走反射调用
+	public static final short TYPE_GENERIC = 0; // 通用审批：走 approve/refuse 逻辑
+	public static final short TYPE_SPECIALIZED = 1; // 专用审批：走反射调用
 
 	public static final String COLUMN_PROCESSCODE_STR = "processCode";
 	public static final String COLUMN_ENABLED_STR = "enabled";
