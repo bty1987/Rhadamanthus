@@ -51,9 +51,8 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		// 处理动态过滤条件
 		queryFilterExcute(query, filters);
 
-		// 按优先级升序、请求时间升序排序
-		query.asc("priority");
-		query.asc("requestTime");
+		// 按主键倒序
+		query.desc("qarid");
 
 		return query.list();
 	}
@@ -69,9 +68,8 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		// 处理动态过滤条件
 		queryFilterExcute(query, filters);
 
-		// 按优先级升序、请求时间升序排序
-		query.asc("priority");
-		query.asc("requestTime");
+		// 按主键倒序
+		query.desc("qarid");
 
 		return query.list();
 	}
@@ -119,8 +117,8 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 				// 完成时间：范围查询
 				query.timeranges("finishTime", data);
 			} else if ("company".equals(field)) {
-				// 公司：已在方法参数中处理，这里跳过
-				continue;
+				// 公司：通过filter动态筛选（支持跨公司查询）
+				query.add(query.getCriterion("company.cid", Integer.valueOf(data), op));
 			}
 		}
 	}
@@ -154,9 +152,8 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 			criteria.add(Restrictions.or(Restrictions.eq("decorationType", decorationType.shortValue()), Restrictions.isNull("decorationType")));
 		}
 
-		// 按优先级升序、请求时间升序排序
-		criteria.addOrder(org.hibernate.criterion.Order.asc("priority"));
-		criteria.addOrder(org.hibernate.criterion.Order.asc("requestTime"));
+		// 按主键倒序
+		criteria.addOrder(org.hibernate.criterion.Order.desc("qarid"));
 
 		// 限制结果集数量，避免一次性加载过多数据
 		criteria.setMaxResults(50);
@@ -169,9 +166,8 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(List<Integer> companies) {
 		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.in("company.cid", companies)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
 
-		// 按优先级升序、请求时间升序排序
-		criteria.addOrder(org.hibernate.criterion.Order.asc("priority"));
-		criteria.addOrder(org.hibernate.criterion.Order.asc("requestTime"));
+		// 按主键倒序
+		criteria.addOrder(org.hibernate.criterion.Order.desc("qarid"));
 
 		criteria.setMaxResults(50);
 
@@ -183,9 +179,8 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueueAll() {
 		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
 
-		// 按优先级升序、请求时间升序排序
-		criteria.addOrder(org.hibernate.criterion.Order.asc("priority"));
-		criteria.addOrder(org.hibernate.criterion.Order.asc("requestTime"));
+		// 按主键倒序
+		criteria.addOrder(org.hibernate.criterion.Order.desc("qarid"));
 
 		criteria.setMaxResults(100);
 
