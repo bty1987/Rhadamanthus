@@ -25,11 +25,11 @@ class Exporter(Util):
             CONCAT(v.name, h.houseNumber) AS `楼盘地址`,
             su.userId AS `监理工号`,
             su.currentName AS `监理姓名`,
-            o.floorNum AS `上料楼层`,
+            communion.kv('inventory', 'occessories', 'loadFloor', o.loadFloor) AS `上料楼层`,
             g.no AS `商品编号`,
             g.name AS `商品名称`,
             g.measurementUnit AS `商品单位`,
-            oi.num AS `数量`,
+            oi.num * 1000 AS `材料数量`,
             c.name AS `公司`,
             up.currentName AS `厂商`,
             cu.currentName AS `创建人`,
@@ -39,20 +39,21 @@ class Exporter(Util):
             o.balanceTime AS `结算时间`,
             communion.kv('inventory', 'occessories', 'status', o.status) AS `状态`,
             oi.vbalance AS `结算价`,
-            oi.sennum * oi.vbalance AS `结算金额`,
+            oi.num * oi.vbalance AS `结算金额`,
             communion.kv('inventory', 'occessories', 'isLift', o.isLift) AS `有无电梯`,
             communion.kv('inventory', 'occessories', 'isExceed', o.isExceed) AS `有无超阶`,
             communion.kv('inventory', 'occessories', 'isAttic', o.isAttic) AS `有无阁楼`,
             o.comment AS `外辅单备注`,
             o.content AS `厂商备注`,
             d.grade AS `装修单等级`,
-            oi.sennum * oi.vbalance AS `材料金额`,
-            oc.surplus AS `费用金额`,
-            oi.sennum * oi.vbalance AS `材料结算额`,
-            oc.surplus AS `费用结算额`,
+            0 AS `材料金额`,
+            0 AS `费用金额`,
+            0 AS `材料结算额`,
+            0 AS `费用结算额`,
             oc.name AS `费用名称`,
             oc.num AS `费用数量`,
-            oc.price AS `费用单价`
+            ocost.price AS `费用单价`,
+            oc.num * ocost.price AS `费用小计`
         """
 
         self.SELECT_SQL = u"""
@@ -63,6 +64,7 @@ class Exporter(Util):
                 inventory.occessories o,
                 inventory.occessoriesItem oi,
                 inventory.occessoriescharge oc,
+                inventory.occessoriescost ocost,
                 communion.company c,
                 communion.village v,
                 communion.house h,
@@ -74,6 +76,7 @@ class Exporter(Util):
                 o.oid = oi.oid
                 AND o.oid = oc.oid
                 AND oi.oiid = oc.oiid
+                AND ocost.oid = o.oid
                 AND o.spuid = up.uid
                 AND o.svuid = su.uid
                 AND o.cuid = cu.uid
@@ -100,7 +103,7 @@ class Exporter(Util):
 
     def rower(self, row):
     
-        self.divNum(row, [18, 19, 26, 27, 28, 29, 31])
+        self.divNum(row, [18, 19, 32, 33])
         
         return row
 
@@ -108,13 +111,13 @@ class Exporter(Util):
 
         tableheads = [
             u"外辅单号", u"装修单号", u"楼盘地址", u"监理工号", u"监理姓名", u"上料楼层",
-            u"商品编号", u"商品名称", u"商品单位", u"数量",
+            u"商品编号", u"商品名称", u"商品单位", u"材料数量",
             u"公司", u"厂商", u"创建人", u"创建时间", u"送货时间", u"到货时间", u"结算时间", u"状态",
             u"结算价", u"结算金额",
             u"有无电梯", u"有无超阶", u"有无阁楼",
             u"外辅单备注", u"厂商备注", u"装修单等级",
             u"材料金额", u"费用金额", u"材料结算额", u"费用结算额",
-            u"费用名称", u"费用数量", u"费用单价"
+            u"费用名称", u"费用数量", u"费用单价", u"费用小计"
         ]
     
         sql = self.sqler(args, company)
