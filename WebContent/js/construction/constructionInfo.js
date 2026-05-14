@@ -72,6 +72,7 @@ jQuery(function($) {
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html("验房");
             var $btnHandover = $('<a></a>').addClass('btn btn-minier btn-pink').html("交接");
             var $btnProfile = $('<a></a>').addClass('btn btn-minier btn-warning').html("画像");
+            var $btnResetDesign = $('<a></a>').addClass('btn btn-minier btn-danger').html("重置设计");
 
             var propertyArr = [
             ["装修单: ", v.decoration.orderId, "blue", function(btn) {
@@ -143,7 +144,7 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $btnDiv.append($btnView).append($btnService).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).append($btnHandover).append($btnProfile).appendTo($h3);
+            $btnDiv.append($btnView).append($btnService).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).append($btnHandover).append($btnProfile).append($btnResetDesign).appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function() {
@@ -197,6 +198,20 @@ jQuery(function($) {
             $btnService.click(function() {
 
                 viewDecorationService(v.decoration.orderId);
+            });
+
+            $btnResetDesign.click(function() {
+
+                com.showConfirm("确定要重置该订单的设计状态和确认状态吗？", function() {
+
+                    com.post(api.decoration.resetDecorationFordesignStatus, {
+                        "decoration.orderId": v.decoration.orderId
+                    }, function(res) {
+
+                        com.showAlert(com.info, "重置成功");
+                        searcher.doSearch();
+                    });
+                });
             });
 
             return $liLine;

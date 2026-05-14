@@ -369,6 +369,14 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "resetDecorationFordesignStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String resetDecorationFordesignStatus() throws FLException {
+
+		decorationService.resetDecorationFordesignStatus(decoration);
+
+		return SUCCESS;
+	}
+
 	public List<DecorationVO> getDecorations() {
 		return decorations;
 	}

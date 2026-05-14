@@ -119,6 +119,8 @@ jQuery(function($) {
 
     management.items.orderIdForHidden = com.focusPage("#orderIdForHidden");
 
+    management.items.orderIdForResetDesign = com.focusPage("#orderIdForResetDesign");
+
     management.decorationForOrderIdModal = com.focusPage("#decorationForOrderIdModal").on('hide.bs.modal', function(e) {
 
         com.cleanItems(management.items);
@@ -262,6 +264,12 @@ jQuery(function($) {
     });
 
     management.hiddenDecorationModal = com.focusPage("#hiddenDecorationModal").on('hide.bs.modal', function(e) {
+
+        com.cleanItems(management.items);
+        com.clearValidator();
+    });
+
+    management.resetDesignStatusModal = com.focusPage("#resetDesignStatusModal").on('hide.bs.modal', function(e) {
 
         com.cleanItems(management.items);
         com.clearValidator();
@@ -419,6 +427,11 @@ jQuery(function($) {
     com.focusPage("#hiddenDecoration").click(function() {
 
         management.hiddenDecorationModal.modal("show");
+    });
+
+    com.focusPage("#resetDecorationFordesignStatus").click(function() {
+
+        management.resetDesignStatusModal.modal("show");
     });
 
     // com.focusPage("#refundOrderForOrderId").click(function(){
@@ -944,6 +957,27 @@ jQuery(function($) {
             });
 
             management.hiddenDecorationModal.modal("hide");
+        });
+    });
+
+    com.focusPage("#saveResetDesignStatusBtn").click(function() {
+
+        if (com.validate("resetDesignStatusModal")) {
+            return false;
+        }
+
+        var orderId = management.items.orderIdForResetDesign.val();
+
+        com.showConfirm("确认要重置装修单 [" + orderId + "] 的设计状态吗?", function() {
+
+            com.post(api.decoration.resetDecorationFordesignStatus, {
+                "decoration.orderId": orderId
+            }, function(res) {
+
+                com.showAlert(com.info, "重置成功");
+            });
+
+            management.resetDesignStatusModal.modal("hide");
         });
     });
 
