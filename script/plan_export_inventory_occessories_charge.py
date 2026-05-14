@@ -29,7 +29,7 @@ class Exporter(Util):
             g.no AS `商品编号`,
             g.name AS `商品名称`,
             g.measurementUnit AS `商品单位`,
-            oi.num * 1000 AS `材料数量`,
+            oi.num AS `材料数量`,
             c.name AS `公司`,
             up.currentName AS `厂商`,
             cu.currentName AS `创建人`,
@@ -46,14 +46,14 @@ class Exporter(Util):
             o.comment AS `外辅单备注`,
             o.content AS `厂商备注`,
             d.grade AS `装修单等级`,
-            0 AS `材料金额`,
-            0 AS `费用金额`,
-            0 AS `材料结算额`,
-            0 AS `费用结算额`,
+            o.rbalance AS `材料金额`,
+            o.charge AS `费用金额`,
+            o.vbalance AS `材料结算额`,
+            o.rcharge AS `费用结算额`,
             oc.name AS `费用名称`,
             oc.num AS `费用数量`,
-            ocost.price AS `费用单价`,
-            oc.num * ocost.price AS `费用小计`
+            oc.price AS `费用单价`,
+            oc.num * oc.price AS `费用小计`
         """
 
         self.SELECT_SQL = u"""
@@ -64,7 +64,6 @@ class Exporter(Util):
                 inventory.occessories o,
                 inventory.occessoriesItem oi,
                 inventory.occessoriescharge oc,
-                inventory.occessoriescost ocost,
                 communion.company c,
                 communion.village v,
                 communion.house h,
@@ -76,7 +75,6 @@ class Exporter(Util):
                 o.oid = oi.oid
                 AND o.oid = oc.oid
                 AND oi.oiid = oc.oiid
-                AND ocost.oid = o.oid
                 AND o.spuid = up.uid
                 AND o.svuid = su.uid
                 AND o.cuid = cu.uid
@@ -103,7 +101,7 @@ class Exporter(Util):
 
     def rower(self, row):
     
-        self.divNum(row, [18, 19, 32, 33])
+        self.divNum(row, [9, 18, 19, 26, 27, 28, 29, 32, 33])
         
         return row
 
