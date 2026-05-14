@@ -1475,6 +1475,17 @@ Condition.addupRule("quotation", {
         }
     },
 
+    // 分配请求(设计) - 设计师
+    "assign-request-user-designer": {
+        label: "设计师",
+        type: "text",
+        submitConfig: {
+            name: "userName",
+            op: "cn",
+            validate: null
+        }
+    },
+
     // ==================== 分配记录管理相关条件 ====================
 
     // 分配记录 - 公司

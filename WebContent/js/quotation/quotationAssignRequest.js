@@ -1,8 +1,22 @@
 $(function() {
 
     // ==================== 模式检测 ====================
-    // 通过框架 params.urlLoadParams 判断是否为预算员自助模式
-    var isSelfMode = (params["urlLoadParams"] && params["urlLoadParams"].mode === 'self');
+    // 通过框架 params.urlLoadParams 判断模式
+    var urlParams = params["urlLoadParams"] || {};
+    var isSelfMode = urlParams.mode === 'self';
+    var typeParam = urlParams.type || 'budget';
+    var isDesignMode = typeParam === 'design';
+
+    // ==================== 模式标签配置 ====================
+    var modeLabels = {
+        userLabel: isDesignMode ? '设计师' : '预算员',
+        manualAssignTitle: isDesignMode ? '手动分配设计师' : '手动分配预算员',
+        replaceTitle: isDesignMode ? '替换设计师' : '替换预算员',
+        currentUserLabel: isDesignMode ? '当前设计师' : '当前预算员',
+        newUserLabel: isDesignMode ? '新设计师' : '新预算员',
+        userSearchPlaceholder: isDesignMode ? '请输入设计师姓名或拼音进行搜索' : '请输入预算员姓名或拼音进行搜索',
+        newUserSearchPlaceholder: isDesignMode ? '请输入新设计师姓名或拼音进行搜索' : '请输入新预算员姓名或拼音进行搜索'
+    };
 
     // ==================== 页面元素声明 ====================
     var config = {
@@ -56,10 +70,11 @@ $(function() {
 
     searcher.base("condList", "pagenation", "resultList", baseApi);
 
-    // 查询条件：自助模式去掉公司条件
+    // 查询条件：自助模式去掉公司条件，设计模式用设计师条件
+    var userConditionName = isDesignMode ? "quotation-assign-request-user-designer" : "quotation-assign-request-user";
     var conditions = isSelfMode
         ? ["quotation-assign-request-status", "quotation-assign-request-orderId", "quotation-assign-request-requestTime", "quotation-assign-request-assignTime", "quotation-assign-request-finishTime"]
-        : ["quotation-assign-request-company", "quotation-assign-request-status", "quotation-assign-request-orderId", "quotation-assign-request-user", "quotation-assign-request-requestUser", "quotation-assign-request-requestTime", "quotation-assign-request-assignTime", "quotation-assign-request-finishTime"];
+        : ["quotation-assign-request-company", "quotation-assign-request-status", "quotation-assign-request-orderId", userConditionName, "quotation-assign-request-requestUser", "quotation-assign-request-requestTime", "quotation-assign-request-assignTime", "quotation-assign-request-finishTime"];
     searcher.condition(conditions);
 
     // 顶部按钮：自助模式无按钮
@@ -139,7 +154,7 @@ $(function() {
         clazz: "red"
     }, {
         field: "uid",
-        name: "预算员",
+        name: modeLabels.userLabel,
         prop: function(v) {
             if (v.user && v.user.currentName) {
                 return v.user.currentName;
@@ -147,7 +162,7 @@ $(function() {
             return v.uid ? v.uid : "-";
         },
         clazz: "blue",
-        show: function() { return !isSelfMode; } // 自助模式不显示（预算员就是自己）
+        show: function() { return !isSelfMode; } // 自助模式不显示（就是自己）
     }, {
         field: "requestUser",
         name: "请求人",
@@ -235,6 +250,34 @@ $(function() {
 
     // 渲染列表
     searcher.line("orderId", lineprops, linebtns).render();
+
+    // ==================== 设计模式动态标签切换 ====================
+    if (isDesignMode) {
+        // 手动分配弹窗
+        com.focusPage('#manualAssignModal .modal-title').text(modeLabels.manualAssignTitle);
+        com.focusPage('label[for="manualAssignBudgeter"]').html(modeLabels.userLabel + ' <span class="required">*</span>');
+        com.focusPage('#manualAssignModal .help-block').text(modeLabels.userSearchPlaceholder);
+
+        // 替换弹窗
+        com.focusPage('#replaceModal .modal-title').text(modeLabels.replaceTitle);
+        var replaceLabels = com.focusPage('#replaceModal .modal-body label.control-label');
+        if (replaceLabels.length > 3) replaceLabels.eq(3).text(modeLabels.currentUserLabel);
+        com.focusPage('label[for="replaceBudgeter"]').html(modeLabels.newUserLabel + ' <span class="required">*</span>');
+        com.focusPage('#replaceModal .help-block').text(modeLabels.newUserSearchPlaceholder);
+
+        // 自动分配弹窗 - 替换"预算员"文本
+        com.focusPage('#autoAssignModal li').each(function(i, el) {
+            var $el = $(el);
+            $el.text($el.text().replace(/预算员/g, modeLabels.userLabel));
+        });
+
+        // 完成并分配弹窗 - 替换"预算员"文本
+        com.focusPage('#finishAndAssignModal li').each(function(i, el) {
+            var $el = $(el);
+            $el.text($el.text().replace(/预算员/g, modeLabels.userLabel));
+        });
+        com.focusPage('#finishAndAssignModal .help-block').text('输入' + modeLabels.userLabel + '刚完成报价的装修单号');
+    }
 
     // ==================== 沟通功能（popup4page加载独立页面） ====================
 
@@ -506,12 +549,12 @@ $(function() {
 
     // 自动分配
     function autoAssign(row) {
-        com.showConfirm('确认自动分配该装修单吗？系统将自动查找可用预算员进行分配。', function() {
+        com.showConfirm('确认自动分配该装修单吗？系统将自动查找可用' + modeLabels.userLabel + '进行分配。', function() {
             com.post(api.quotation.autoQuotationAssign, {
                 "quotationAssign.orderId": row.orderId
             }, function(res) {
                 if (res.errorCode == 0) {
-                    com.showAlert(com.info, '分配成功！已自动分配给预算员');
+                    com.showAlert(com.info, '分配成功！已自动分配给' + modeLabels.userLabel);
                 } else {
                     com.showAlert(com.warning, res.errorMsg || '分配失败，请查看分配记录了解详情');
                 }
@@ -553,7 +596,7 @@ $(function() {
 
         var budgetUid = config.data.selectedManualAssignUid;
         if (!budgetUid) {
-            com.showAlert(com.warning, '请选择预算员');
+            com.showAlert(com.warning, '请选择' + modeLabels.userLabel);
             return false;
         }
 
@@ -611,7 +654,7 @@ $(function() {
 
         var newUid = config.data.selectedReplaceUid;
         if (!newUid) {
-            com.showAlert(com.warning, '请选择新预算员');
+            com.showAlert(com.warning, '请选择' + modeLabels.userLabel);
             return false;
         }
 
@@ -619,7 +662,7 @@ $(function() {
             "quotationAssign.orderId": orderId,
             "quotationAssign.quoter.userId": newUid
         }, function(res) {
-            com.showAlert(com.info, '替换成功！已更新预算员和装修单报价员信息');
+            com.showAlert(com.info, '替换成功！已更新' + modeLabels.userLabel + '和装修单报价员信息');
             config.modals.replaceModal.modal('hide');
             searcher.doSearch();
         }, function(res) {
@@ -652,7 +695,7 @@ $(function() {
         }, function(res) {
             com.hideLoading();
             if (res.errorCode == 0) {
-                com.showAlert(com.info, '分配成功！已自动分配给预算员');
+                com.showAlert(com.info, '分配成功！已自动分配给' + modeLabels.userLabel);
             } else {
                 com.showAlert(com.warning, res.errorMsg || '分配失败，请查看分配记录了解详情');
             }
@@ -689,7 +732,7 @@ $(function() {
         }, function(res) {
             com.hideLoading();
             if (res.errorCode == 0) {
-                com.showAlert(com.info, '操作成功！预算员最后完成时间已更新，系统已自动分配下一个任务');
+                com.showAlert(com.info, '操作成功！' + modeLabels.userLabel + '最后完成时间已更新，系统已自动分配下一个任务');
             } else {
                 com.showAlert(com.warning, res.errorMsg || '操作完成，但无可用任务可分配');
             }
