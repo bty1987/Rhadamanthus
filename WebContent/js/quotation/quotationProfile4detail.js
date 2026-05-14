@@ -189,25 +189,6 @@ jQuery(function($) {
 
         var $execute = $('<div id="exDiv"></div>').appendTo(quotationProfileDetail.items.particulars);
         var $button = $('<button class="btn btn-primary pull-right" type="button" id="execute">保存</button>').appendTo($execute);
-        var $assignBtn = $('<button class="btn btn-info pull-right" type="button" id="autoAssignBtn" style="margin-right: 10px;">分配</button>').appendTo($execute);
-
-        // 自动分配按钮点击事件
-        com.focusPage("#autoAssignBtn", "#quotationProfileDetailModal").click(function() {
-
-            var orderId = params.quotation.orderId;
-
-            if (!orderId) {
-                com.showAlert(com.warning, "缺少装修单号，无法进行分配");
-                return false;
-            }
-
-            com.showConfirm("确认自动分配该装修单吗？系统将自动查找可用预算员进行分配。", function() {
-
-                com.post(api.quotation.autoQuotationAssign, {
-                    "quotationAssign.orderId": orderId
-                });
-            });
-        });
 
         com.focusPage("#execute", "#quotationProfileDetailModal").click(function() {
 
@@ -274,9 +255,18 @@ jQuery(function($) {
                 }
             });
 
-            com.showConfirm("是否提交报价配置信息", function() {
+            com.showConfirm("是否提交报价配置信息并自动分配?", function() {
 
-                com.post(api.quotation.handleQuotationProfile, options);
+                com.post(api.quotation.handleQuotationProfile, options, function(res) {
+
+                    var orderId = params.quotation.orderId;
+
+                    if (orderId) {
+                        com.post(api.quotation.autoQuotationAssign, {
+                            "quotationAssign.orderId": orderId
+                        });
+                    }
+                });
             });
         });
     }
