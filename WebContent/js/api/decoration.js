@@ -639,6 +639,9 @@ $.extend(api, {
         updateDecorationForSaleScale: {
             url: "updateDecorationForSaleScale.do"
         },
+        resetDecorationFordesignStatus: {
+            url: "resetDecorationFordesignStatus.do"
+        },
 
         queryDecorationInfoByOrderId: {
             url: "queryDecorationInfoByOrderId.do"

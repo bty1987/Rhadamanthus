@@ -114,4 +114,6 @@ public interface DecorationService {
 
 	public void updateDecorationForSaleScale(DecorationVO decorationVO) throws FLException;
 
+	public void resetDecorationFordesignStatus(DecorationVO decorationVO) throws FLException;
+
 }

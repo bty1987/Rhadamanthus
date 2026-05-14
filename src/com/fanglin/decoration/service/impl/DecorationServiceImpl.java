@@ -1740,6 +1740,26 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void resetDecorationFordesignStatus(DecorationVO decorationVO) throws FLException {
+
+		String orderId = decorationVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_INITIA_INT);
+		decorationPO.setSourceStatus(DecorationPO.STATUS_INITIA_INT);
+		decorationPO.setSdesignTime(null);
+		decorationPO.setEdesignTime(null);
+
+		decorationDao.update(decorationPO);
+	}
+
+	@Override
 	public void checkOverDecoration(long cid, long hid) throws FLException {
 
 		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByHid(hid);

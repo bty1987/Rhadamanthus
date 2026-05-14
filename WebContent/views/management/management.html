@@ -60,6 +60,11 @@
                 <span>隐藏装修单</span>
             </button>
 
+            <button id="resetDecorationFordesignStatus" class="btn btn-danger col-xs-2" style="margin: 2px;">
+                <i class="icon-undo"></i>
+                <span>重置设计状态</span>
+            </button>
+
         </div>
     </div>
 
@@ -979,6 +984,40 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="saveDecorationForPayScaleBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="resetDesignStatusModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">重置设计状态</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="orderIdForResetDesign">装修单号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="orderIdForResetDesign" class="col-xs-10 col-sm-5 v_required" maxlength='15' data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right"></label>
+                            <div class="col-sm-9">
+                                <span class="help-block">重置装修单的设计状态和确认状态为初始值，清空设计起止时间</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveResetDesignStatusBtn" class="btn btn-primary">确定</button>
                     <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>
