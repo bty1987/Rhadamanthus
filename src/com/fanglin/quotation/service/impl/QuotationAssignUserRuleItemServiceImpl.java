@@ -205,7 +205,7 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 	public void saveItems(QuotationAssignUserRulePO rulePO, List<QuotationAssignUserRuleItemVO> items, Timestamp currentTime) throws FLException {
 
 		if (items == null || items.isEmpty()) {
-			throw new FLException(0, "至少需要添加一条规则明细（公司/部门/业务类型）");
+			return; // 允许先创建人员规则，后续再添加 items
 		}
 
 		for (QuotationAssignUserRuleItemVO itemVO : items) {
