@@ -145,13 +145,39 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		// 从 VO 的关联对象中提取 ID
 		int company = CompanyServiceImpl.decode(quotationAssignRequestVO.getCompany().getCid());
 
-		// 检查同一 orderId 是否已存在活跃请求（非已完成），避免重复创建
+		// 检查同一 orderId 是否已存在活跃请求（非已完成）
 		QuotationAssignRequestPO existRequest = quotationAssignRequestDao.queryActiveByOrderId(quotationAssignRequestVO.getOrderId());
 		if (existRequest != null) {
+			// 已分配状态，不可操作
 			if (existRequest.getStatus() == QuotationAssignRequestPO.STATUS_ASSIGNED_INT) {
 				throw new FLException(0, "该装修单已分配报价员，请勿重复创建");
 			}
-			throw new FLException(0, "该装修单已存在待分配请求，请勿重复创建");
+
+			// 待分配状态：判断设计师（requestUser）是否相同
+			String existUid = existRequest.getRequestUser() != null ? existRequest.getRequestUser().getUid() : null;
+			String newUid = quotationAssignRequestVO.getRequestUser() != null ? quotationAssignRequestVO.getRequestUser().getUid() : null;
+
+			if (existUid != null && existUid.equals(newUid)) {
+				// 同一个设计师重复提交，拒绝
+				throw new FLException(0, "该装修单已存在待分配请求，请勿重复创建");
+			}
+
+			// 设计师不同，直接替换 requestUser
+			if (newUid != null) {
+				com.fanglin.personel.po.UserPO newUserPO = new com.fanglin.personel.po.UserPO();
+				newUserPO.setUid(newUid);
+				existRequest.setRequestUser(newUserPO);
+			}
+
+			// 更新请求时间
+			existRequest.setRequestTime(DateUtil.getDateToTimestamp(new Date()));
+
+			quotationAssignRequestDao.update(existRequest);
+
+			// 设置返回的ID
+			quotationAssignRequestVO.setQarid(existRequest.getQarid());
+
+			return 1;
 		}
 
 		// 创建 PO 对象
