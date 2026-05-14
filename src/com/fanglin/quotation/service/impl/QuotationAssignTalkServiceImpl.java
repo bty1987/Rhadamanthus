@@ -30,6 +30,8 @@ import com.fanglin.quotation.po.QuotationAssignRequestPO;
 import com.fanglin.quotation.po.QuotationAssignTalkPO;
 import com.fanglin.quotation.service.QuotationAssignTalkService;
 import com.fanglin.quotation.vo.QuotationAssignTalkVO;
+import com.fanglin.system.dao.RoleDao;
+import com.fanglin.system.po.RolePO;
 import com.fanglin.utils.DateUtil;
 
 /**
@@ -58,15 +60,47 @@ public class QuotationAssignTalkServiceImpl implements QuotationAssignTalkServic
 	@Autowired
 	private DingTalkMessageService dingTalkMessageService;
 
-	@Override
-	public List<QuotationAssignTalkVO> queryQuotationAssignTalkByOrderId(String orderId) throws FLException {
+	@Autowired
+	private RoleDao roleDao;
 
-		List<QuotationAssignTalkPO> talkPOs = quotationAssignTalkDao.queryQuotationAssignTalkByOrderId(orderId);
+	/**
+	 * 高级权限角色级别阈值：level <= 此值视为高级权限，可查看所有消息
+	 */
+	private static final short ADVANCED_ROLE_LEVEL = 1;
+
+	@Override
+	public List<QuotationAssignTalkVO> queryQuotationAssignTalkByOrderId(String orderId, String userId, Integer roleId) throws FLException {
+
+		// 判断是否高级权限（level <= ADVANCED_ROLE_LEVEL 或角色编号为 root）
+		boolean isAdvanced = false;
+		if (roleId != null && roleId > 0) {
+			RolePO rolePO = roleDao.get(roleId);
+			if (rolePO != null && (rolePO.getLevel() <= ADVANCED_ROLE_LEVEL || RolePO.SUPER_NO_STR.equals(rolePO.getNo()))) {
+				isAdvanced = true;
+			}
+		}
+
+		List<QuotationAssignTalkPO> talkPOs;
+
+		if (isAdvanced) {
+			// 高级权限：查看所有消息
+			talkPOs = quotationAssignTalkDao.queryQuotationAssignTalkByOrderId(orderId);
+		} else {
+			// 普通用户：只能看到自己是发送人或接收人的消息
+			UserPO currentUser = userDao.queryUserByUserId(userId);
+			if (currentUser == null) {
+				talkPOs = quotationAssignTalkDao.queryQuotationAssignTalkByOrderId(orderId);
+			} else {
+				talkPOs = quotationAssignTalkDao.queryQuotationAssignTalkByOrderIdAndUserId(orderId, currentUser.getUid());
+			}
+		}
+
 		List<QuotationAssignTalkVO> talkVOs = new ArrayList<QuotationAssignTalkVO>();
 
 		for (QuotationAssignTalkPO talkPO : talkPOs) {
 			QuotationAssignTalkVO vo = new QuotationAssignTalkVO();
 			vo.setSender(new UserBaseVO());
+			vo.setReceiver(new UserBaseVO());
 			talkVOs.add(talkPO.ptv(vo));
 		}
 
@@ -128,6 +162,7 @@ public class QuotationAssignTalkServiceImpl implements QuotationAssignTalkServic
 		talkPO.setContent(quotationAssignTalkVO.getContent());
 		talkPO.setType(type);
 		talkPO.setSender(senderPO);
+		talkPO.setReceiver(receiver);
 
 		// 设置时间
 		Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
@@ -150,6 +185,7 @@ public class QuotationAssignTalkServiceImpl implements QuotationAssignTalkServic
 		// 返回完整的VO
 		QuotationAssignTalkVO resultVO = new QuotationAssignTalkVO();
 		resultVO.setSender(new UserBaseVO());
+		resultVO.setReceiver(new UserBaseVO());
 		talkPO.ptv(resultVO);
 		resultVO.setQatid(talkPO.getQatid());
 
