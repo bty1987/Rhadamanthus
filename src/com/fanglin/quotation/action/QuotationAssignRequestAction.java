@@ -71,9 +71,8 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignRequest() throws FLException {
 
-		Integer companyParam = (company != null) ? company : queryCompany();
-
-		quotationAssignRequestService.pageQuotationAssignRequest(getPaging(), getFilters(), companyParam);
+		// company筛选通过filter条件传递（支持跨公司查询），不再强制使用当前用户公司
+		quotationAssignRequestService.pageQuotationAssignRequest(getPaging(), getFilters(), null);
 
 		return SUCCESS;
 	}
