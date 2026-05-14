@@ -85,6 +85,11 @@ public class QuotationAssignTalkPO implements Serializable {
 	private UserPO sender;
 
 	/**
+	 * 接收人
+	 */
+	private UserPO receiver;
+
+	/**
 	 * 消息内容
 	 */
 	private String content;
@@ -147,6 +152,16 @@ public class QuotationAssignTalkPO implements Serializable {
 		this.sender = sender;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "receiverUid", referencedColumnName = "uid")
+	public UserPO getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(UserPO receiver) {
+		this.receiver = receiver;
+	}
+
 	@Column(name = "content", nullable = false, length = 2000)
 	public String getContent() {
 		return content;
@@ -192,10 +207,13 @@ public class QuotationAssignTalkPO implements Serializable {
 	 * @return 转换后的VO对象
 	 */
 	public QuotationAssignTalkVO ptv(QuotationAssignTalkVO vo) {
-		BeanUtils.copyProperties(this, vo, "sender");
+		BeanUtils.copyProperties(this, vo, "sender", "receiver");
 
 		if (vo.getSender() != null && getSender() != null) {
 			vo.getSender().setBaseInfo(getSender());
+		}
+		if (vo.getReceiver() != null && getReceiver() != null) {
+			vo.getReceiver().setBaseInfo(getReceiver());
 		}
 
 		return vo;

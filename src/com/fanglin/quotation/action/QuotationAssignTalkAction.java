@@ -78,7 +78,7 @@ public class QuotationAssignTalkAction extends BaseListAction {
 			return ERROR;
 		}
 
-		quotationAssignTalks = quotationAssignTalkService.queryQuotationAssignTalkByOrderId(quotationAssignTalk.getOrderId());
+		quotationAssignTalks = quotationAssignTalkService.queryQuotationAssignTalkByOrderId(quotationAssignTalk.getOrderId(), queryUserId(), queryRoleId());
 
 		return SUCCESS;
 	}

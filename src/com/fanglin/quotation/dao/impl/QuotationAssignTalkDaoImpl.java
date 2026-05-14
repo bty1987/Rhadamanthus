@@ -41,4 +41,17 @@ public class QuotationAssignTalkDaoImpl extends DaoImpl<QuotationAssignTalkPO> i
 			.addOrder(Order.asc("sendTime"))
 			.list();
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<QuotationAssignTalkPO> queryQuotationAssignTalkByOrderIdAndUserId(String orderId, int uid) {
+		return createCriteria(QuotationAssignTalkPO.class)
+			.add(Restrictions.eq("orderId", orderId))
+			.add(Restrictions.or(
+				Restrictions.eq("sender.uid", uid),
+				Restrictions.eq("receiver.uid", uid)
+			))
+			.addOrder(Order.asc("sendTime"))
+			.list();
+	}
 }

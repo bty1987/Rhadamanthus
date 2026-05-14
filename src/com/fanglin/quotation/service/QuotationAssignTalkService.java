@@ -28,13 +28,17 @@ import com.fanglin.quotation.vo.QuotationAssignTalkVO;
 public interface QuotationAssignTalkService {
 
 	/**
-	 * 根据装修单号查询沟通消息列表
+	 * 根据装修单号查询沟通消息列表（权限过滤版）
+	 *
+	 * <p>普通用户只能看到自己作为发送人或接收人的消息；高级权限用户可查看所有消息</p>
 	 *
 	 * @param orderId 装修单号
+	 * @param userId 当前登录用户userId
+	 * @param roleId 当前登录用户roleId（用于判断权限级别，null视为普通用户）
 	 * @return 沟通消息列表
 	 * @throws FLException 业务异常
 	 */
-	List<QuotationAssignTalkVO> queryQuotationAssignTalkByOrderId(String orderId) throws FLException;
+	List<QuotationAssignTalkVO> queryQuotationAssignTalkByOrderId(String orderId, String userId, Integer roleId) throws FLException;
 
 	/**
 	 * 发送沟通消息

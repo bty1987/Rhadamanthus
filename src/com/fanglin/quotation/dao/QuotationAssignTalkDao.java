@@ -30,4 +30,13 @@ public interface QuotationAssignTalkDao extends Dao<QuotationAssignTalkPO> {
 	 * @return 消息列表
 	 */
 	List<QuotationAssignTalkPO> queryQuotationAssignTalkByOrderId(String orderId);
+
+	/**
+	 * 根据装修单号查询沟通消息列表，只返回当前用户作为发送人或接收人的消息
+	 *
+	 * @param orderId 装修单号
+	 * @param uid 当前用户uid
+	 * @return 消息列表
+	 */
+	List<QuotationAssignTalkPO> queryQuotationAssignTalkByOrderIdAndUserId(String orderId, int uid);
 }

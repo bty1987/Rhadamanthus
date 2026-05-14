@@ -28,6 +28,11 @@ public class QuotationAssignTalkVO {
 	private UserBaseVO sender;
 
 	/**
+	 * 接收人
+	 */
+	private UserBaseVO receiver;
+
+	/**
 	 * 消息内容
 	 */
 	private String content;
@@ -71,6 +76,14 @@ public class QuotationAssignTalkVO {
 
 	public void setSender(UserBaseVO sender) {
 		this.sender = sender;
+	}
+
+	public UserBaseVO getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(UserBaseVO receiver) {
+		this.receiver = receiver;
 	}
 
 	public String getContent() {
