@@ -171,40 +171,39 @@ class Exporter(Util):
             venderMaling = -venderMaling
 
         # 更新行数据
-        row[30] = salesRevenue    # 销售收入
-        row[31] = salesAmount     # 销售金额
-        row[33] = accountsPayable # 应付账款
+        row[29] = salesRevenue    # 销售收入
+        row[30] = salesAmount     # 销售金额
+        row[32] = accountsPayable # 应付账款
 
         # 结算利润 = 销售金额 - 销售成本
         settlementProfit = salesAmount - pbalance
-        row[34] = settlementProfit
+        row[33] = settlementProfit
 
         # 公司利润 = 销售收入 - 应付账款
         corporateProfit = salesRevenue - accountsPayable
-        row[35] = corporateProfit
+        row[34] = corporateProfit
 
         # 比例计算
         if salesAmount != 0:
-            row[37] = pbalance / float(salesAmount)  # 销售成本比例
-            row[38] = settlementProfit / float(salesAmount)  # 结算利润占比
-            row[40] = 1 - (allowance / float(salesAmount)) if salesAmount != 0 else 0  # 主材打折占比
+            row[36] = pbalance / float(salesAmount)  # 销售成本比例
+            row[37] = settlementProfit / float(salesAmount)  # 结算利润占比
+            row[39] = 1 - (allowance / float(salesAmount)) if salesAmount != 0 else 0  # 主材打折占比
         else:
+            row[36] = 0
             row[37] = 0
-            row[38] = 0
-            row[40] = 0
+            row[39] = 0
 
         # 公司利润占比
         base = salesAmount + (venderMaling if onetype == 0 else 0)
         if base != 0:
-            row[39] = corporateProfit / float(base)
+            row[38] = corporateProfit / float(base)
         else:
-            row[39] = 0
+            row[38] = 0
 
-        # 千倍处理: 收入(5), 成本(6), 应付(7), 利润(8), 销售收入(30), 销售金额(31), 应付账款(33), 结算利润(34), 公司利润(35)
-        self.divNum(row, [5, 6, 7, 8, 30, 31, 33, 34, 35])
+        # 千倍处理: 收入(5), 成本(6), 应付(7), 利润(8), 结算值(22), 销售总额(24), 折扣抹零(25), 供应商减免(26), 定金(27), 补款(28), 销售收入(29), 销售金额(30), 销售成本(31), 应付账款(32), 结算利润(33), 公司利润(34)
+        self.divNum(row, [5, 6, 7, 8, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34])
 
-        # 部门编号拆分: 现设计部(41), 现设计分区(43), 签约设计部(45), 签约设计分区(47)
-        self.divNum(row, [41, 43, 45, 47])
+
 
         return row
 
