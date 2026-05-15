@@ -42,7 +42,7 @@ public class AESHelper {
 			return new BASE64Encoder().encode(encrypted); // 此处使用BASE64做转码。
 		} catch (Exception e) {
 			// System.out.println(e.getMessage());
-			throw new FLException(110005, "系统处理问题");
+			throw new FLException(-3, "无操作权限");
 		}
 	}
 
@@ -70,7 +70,7 @@ public class AESHelper {
 			return new String(original, "utf-8");
 		} catch (Exception e) {
 			// System.out.println(e.getMessage());
-			throw new FLException(110005, "系统处理问题");
+			throw new FLException(-3, "无操作权限");
 		}
 	}
 
