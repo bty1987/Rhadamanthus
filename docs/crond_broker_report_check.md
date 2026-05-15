@@ -229,7 +229,7 @@ WHERE orderId = 'xxx'
 
 ```sql
 INSERT INTO information.messagequeuing (orderId, operation, args, createTime, status)
-VALUES ('xxx', 'brokerReportCheck', '{"orderId":"xxx","event":"BROKER_REPORT_MATCHED","clueNo":"CL20260512000001","clueId":123456}', NOW(), 0)
+VALUES ('xxx', 'brokerDecoration', '{"orderId":"xxx","event":"BROKER_REPORT_MATCHED","clueNo":"CL20260512000001","clueId":123456}', NOW(), 0)
 ```
 
 消息队列表 `information.messagequeuing` 结构：
@@ -237,7 +237,7 @@ VALUES ('xxx', 'brokerReportCheck', '{"orderId":"xxx","event":"BROKER_REPORT_MAT
 | 字段 | 值 | 说明 |
 |---|---|---|
 | `orderId` | 装修订单号 | 关联装修单 |
-| `operation` | `brokerReportCheck` | 操作标识 |
+| `operation` | `brokerDecoration` | 操作标识 |
 | `args` | JSON 字符串 | 含 orderId, event, clueNo, clueId |
 | `createTime` | `NOW()` | 创建时间 |
 | `status` | `0` | 未处理（由 `crond_message_queue_processor` 后续消费） |
@@ -258,7 +258,7 @@ VALUES ('xxx', 'brokerReportCheck', '{"orderId":"xxx","event":"BROKER_REPORT_MAT
 | `decoration.decorationaddition` | `orderId` | 关联键（与 decoration.orderId 对应） |
 | `decoration.decorationaddition` | `brokerFlag` | 经纪人报备标识（0=未报备，1=已报备） |
 | `information.messagequeuing` | `orderId` | 装修订单号，关联事件与装修单 |
-| `information.messagequeuing` | `operation` | 操作标识，值为 `brokerReportCheck` |
+| `information.messagequeuing` | `operation` | 操作标识，值为 `brokerDecoration` |
 | `information.messagequeuing` | `args` | JSON 参数，含 orderId/event/clueNo/clueId |
 | `information.messagequeuing` | `status` | 0=未处理，由消息队列处理器后续消费 |
 
