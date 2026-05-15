@@ -346,7 +346,48 @@ class BrokerReportChecker:
             logger.error(f"更新 brokerFlag 失败: orderId={order_id}, error={e}")
             return False
 
-    # ------ Step 4: 解密手机号 ------
+    # ------ Step 4: 插入消息队列事件 ------
+    def insert_message_queue(self, order_id, clue_no=None, clue_id=None):
+        """
+        向 information.messagequeuing 插入一条经纪人报备事件
+
+        :param order_id: 装修订单号
+        :param clue_no:  CRM 线索编号
+        :param clue_id:  CRM 线索ID
+        :return: 是否成功
+        """
+        try:
+            conn = self.get_connection()
+            cursor = conn.cursor()
+
+            # args 格式与现有 messagequeueing 一致: JSON 含 orderId + event
+            args_data = {
+                "orderId": order_id,
+                "event": "BROKER_REPORT_MATCHED"
+            }
+            if clue_no:
+                args_data["clueNo"] = clue_no
+            if clue_id:
+                args_data["clueId"] = clue_id
+
+            args_str = json.dumps(args_data, ensure_ascii=False)
+
+            sql = """
+                INSERT INTO information.messagequeuing (orderId, operation, args, createTime, status)
+                VALUES (%s, %s, %s, NOW(), 0)
+            """
+            cursor.execute(sql, (order_id, "brokerReportCheck", args_str))
+            conn.commit()
+            cursor.close()
+
+            logger.info(f"插入消息队列成功: orderId={order_id}, operation=brokerReportCheck, args={args_str}")
+            return True
+
+        except Exception as e:
+            logger.error(f"插入消息队列失败: orderId={order_id}, error={e}")
+            return False
+
+    # ------ Step 5: 解密手机号 ------
     def decrypt_phone(self, encrypted_phone):
         """解密客户手机号"""
         if not encrypted_phone:
@@ -430,6 +471,9 @@ class BrokerReportChecker:
                     # 4. 更新 decorationaddition.brokerFlag
                     if self.update_broker_flag(order_id, clue_no, clue_id):
                         update_count += 1
+
+                        # 5. 插入消息队列事件（由 crond_message_queue_processor 后续处理）
+                        self.insert_message_queue(order_id, clue_no, clue_id)
                 else:
                     logger.debug(f"无经纪人报备: orderId={order_id}")
 
