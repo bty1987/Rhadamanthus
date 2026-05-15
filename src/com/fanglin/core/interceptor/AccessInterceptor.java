@@ -68,6 +68,10 @@ public class AccessInterceptor extends AbstractInterceptor {
 				invocation.invoke();
 			} else if (operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_COMMON_INT) {
 
+				if ($authentication == null) {
+					throw new FLException(110005, "登陆超时");
+				}
+
 				String decryptString = AESHelper.decrypt($authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 
 				if (decryptString == null || "".equals(decryptString)) {

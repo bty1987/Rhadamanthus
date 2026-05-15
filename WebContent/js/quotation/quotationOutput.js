@@ -410,6 +410,7 @@ function printCustomerTable(subtype, orderType) {
     contentHtml += '</tbody>';
     contentHtml += '</table>';
 
+    /**
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
     contentHtml += '<td height="42"><p>备注</p>';
@@ -466,6 +467,7 @@ function printCustomerTable(subtype, orderType) {
     contentHtml += '</td>';
     contentHtml += '</tr>';
     contentHtml += '</tbody></table>';
+    */
 
     contentHtml += '<table style="font-size: 12px" width="100%" border="0" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody><tr>';

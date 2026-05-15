@@ -154,8 +154,8 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 			}
 
 			// 待分配状态：判断设计师（requestUser）是否相同
-			String existUid = existRequest.getRequestUser() != null ? existRequest.getRequestUser().getUid() : null;
-			String newUid = quotationAssignRequestVO.getRequestUser() != null ? quotationAssignRequestVO.getRequestUser().getUid() : null;
+			Integer existUid = existRequest.getRequestUser() != null ? existRequest.getRequestUser().getUid() : null;
+			Integer newUid = quotationAssignRequestVO.getRequestUser() != null ? quotationAssignRequestVO.getRequestUser().getUid() : null;
 
 			if (existUid != null && existUid.equals(newUid)) {
 				// 同一个设计师重复提交，拒绝
