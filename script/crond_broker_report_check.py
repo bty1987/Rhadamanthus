@@ -376,11 +376,11 @@ class BrokerReportChecker:
                 INSERT INTO information.messagequeuing (orderId, operation, args, createTime, status)
                 VALUES (%s, %s, %s, NOW(), 0)
             """
-            cursor.execute(sql, (order_id, "brokerReportCheck", args_str))
+            cursor.execute(sql, (order_id, "brokerDecoration", args_str))
             conn.commit()
             cursor.close()
 
-            logger.info(f"插入消息队列成功: orderId={order_id}, operation=brokerReportCheck, args={args_str}")
+            logger.info(f"插入消息队列成功: orderId={order_id}, operation=brokerDecoration, args={args_str}")
             return True
 
         except Exception as e:
