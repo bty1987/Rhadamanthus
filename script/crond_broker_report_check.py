@@ -54,10 +54,15 @@ API_SIGN_CONFIG = {
     'appSecret': 'TODO',               # TODO: 替换为 erp_contacts_sync 对应的密钥
 }
 
-# customer.phone AES 解密配置（手机号在 DB 中是 AES 加密存储）
+# customer.phone AES 解密配置
+# 密钥来源: conf/sysconfig.properties 中 encryptKey/encryptIv
+# 解密规则: 与 Java SensitiveDataHelper 一致，支持三层回退:
+#   1. 新格式 ENC(V1:base64密文) → 用当前密钥解密
+#   2. 旧格式（纯 Base64）→ 用同一密钥尝试解密
+#   3. 当作明文直接返回
 AES_CONFIG = {
-    'key': 'TODO',                     # TODO: 替换为 AES 解密密钥（16/24/32字节）
-    'iv': 'TODO',                      # TODO: 替换为 AES IV（通常与 key 相同或为空）
+    'key': 'b4d617b336124c63',      # encryptKey
+    'iv': 'b4d1a58a416957a5',       # encryptIv
 }
 
 # ============================================================
@@ -144,33 +149,70 @@ class ApiSignUtil:
 
 
 # ============================================================
-# AES 解密工具（用于解密 customer.phone）
+# AES 解密工具 — 与 Java SensitiveDataHelper 一致的三层回退解密
+# 规则:
+#   1. 新格式 ENC(V1:base64密文) → 去前缀后 AES/CBC/PKCS5Padding 解密
+#   2. 旧格式（纯 Base64）→ 尝试 AES 解密
+#   3. 当作明文直接返回
 # ============================================================
 class AesDecryptUtil:
 
-    @staticmethod
-    def decrypt(encrypted_text, key, iv):
-        """
-        AES 解密（兼容 Java SensitiveDataHelper 的加密方式）
+    ENCRYPT_PREFIX = "ENC("
+    ENCRYPT_SUFFIX = ")"
 
-        :param encrypted_text: Base64 编码的密文
-        :param key:            AES 密钥（字符串）
-        :param iv:             AES IV（字符串）
+    @staticmethod
+    def _aes_cbc_decrypt(base64_cipher, key, iv):
+        """
+        AES/CBC/PKCS5Padding 解密（与 Java AESHelper.decrypt 一致）
+        key 和 iv 使用 ASCII 编码
+        """
+        from Crypto.Cipher import AES
+        from Crypto.Util.Padding import unpad
+        import base64
+
+        key_bytes = key.encode('ascii')
+        iv_bytes = iv.encode('ascii')
+        cipher = AES.new(key_bytes, AES.MODE_CBC, iv_bytes)
+        decrypted = unpad(cipher.decrypt(base64.b64decode(base64_cipher)), AES.block_size)
+        return decrypted.decode('utf-8')
+
+    @classmethod
+    def decrypt(cls, encrypted_text, key, iv):
+        """
+        三层回退解密（与 Java SensitiveDataHelper.decrypt 完全一致）
+
+        :param encrypted_text: 可能是 ENC(V1:xxx)、纯Base64密文、或明文
+        :param key:            AES 密钥
+        :param iv:             AES IV
         :return: 明文字符串
         """
-        try:
-            from Crypto.Cipher import AES
-            from Crypto.Util.Padding import unpad
-            import base64
-
-            key_bytes = key.encode('utf-8')
-            iv_bytes = iv.encode('utf-8') if iv else key_bytes
-            cipher = AES.new(key_bytes, AES.MODE_CBC, iv_bytes)
-            decrypted = unpad(cipher.decrypt(base64.b64decode(encrypted_text)), AES.block_size)
-            return decrypted.decode('utf-8')
-        except Exception as e:
-            logger.warning(f"AES 解密失败: {e}, 原始值: {encrypted_text}")
+        if not encrypted_text or not encrypted_text.strip():
             return encrypted_text
+
+        encrypted_text = encrypted_text.strip()
+
+        # 第一层: 新格式 ENC(V1:base64密文)
+        if encrypted_text.startswith(cls.ENCRYPT_PREFIX) and encrypted_text.endswith(cls.ENCRYPT_SUFFIX):
+            try:
+                inner = encrypted_text[len(cls.ENCRYPT_PREFIX):-len(cls.ENCRYPT_SUFFIX)]
+                colon_idx = inner.find(':')
+                if colon_idx >= 0:
+                    # version = inner[:colon_idx]  # 当前只有 V1
+                    base64_data = inner[colon_idx + 1:]
+                    return cls._aes_cbc_decrypt(base64_data, key, iv)
+            except Exception as e:
+                logger.warning(f"新格式解密失败: {e}, 原始值: {encrypted_text}")
+                return encrypted_text
+
+        # 第二层: 旧格式（纯 Base64，快速排除短字符串和11位纯数字手机号）
+        if len(encrypted_text) >= 10 and not encrypted_text.isdigit():
+            try:
+                return cls._aes_cbc_decrypt(encrypted_text, key, iv)
+            except Exception:
+                pass  # 解密失败说明不是密文，当明文处理
+
+        # 第三层: 当作明文直接返回
+        return encrypted_text
 
 
 # ============================================================
@@ -389,27 +431,17 @@ class BrokerReportChecker:
 
     # ------ Step 5: 解密手机号 ------
     def decrypt_phone(self, encrypted_phone):
-        """解密客户手机号"""
+        """解密客户手机号（三层回退）"""
         if not encrypted_phone:
             return None
-        key = self.aes_config.get('key', '')
-        iv = self.aes_config.get('iv', '')
-        if not key or key == 'TODO':
-            # 未配置解密密钥，直接返回原值
-            logger.debug("AES 未配置，返回原始手机号")
-            return encrypted_phone
-        return AesDecryptUtil.decrypt(encrypted_phone, key, iv)
+        return AesDecryptUtil.decrypt(encrypted_phone, self.aes_config['key'], self.aes_config['iv'])
 
-    # ------ Step 5: 解密门牌号 ------
+    # ------ Step 6: 解密门牌号 ------
     def decrypt_house_number(self, encrypted_number):
-        """解密门牌号"""
+        """解密门牌号（三层回退）"""
         if not encrypted_number:
             return None
-        key = self.aes_config.get('key', '')
-        iv = self.aes_config.get('iv', '')
-        if not key or key == 'TODO':
-            return encrypted_number
-        return AesDecryptUtil.decrypt(encrypted_number, key, iv)
+        return AesDecryptUtil.decrypt(encrypted_number, self.aes_config['key'], self.aes_config['iv'])
 
     # ------ 主流程 ------
     def process_once(self):
