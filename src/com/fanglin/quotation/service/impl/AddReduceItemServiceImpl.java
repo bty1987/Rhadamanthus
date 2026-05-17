@@ -327,7 +327,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			addReduceItemPO.setQiid(quotationFunctionAreaItemPO.getQuotationItem().getQiid());
 		}
 
-		return quotationFunctionAreaId;
+		return quotationFunctionAreaItemPO.getQuotationFunctionArea().getQfaId();
 	}
 
 	private Long handleAddReduceItem(AddReduceItemPO addReduceItemPO, long quotationItemId, int vonum, int ponum) throws FLException {
