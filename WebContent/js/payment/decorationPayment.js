@@ -249,6 +249,8 @@ jQuery(function($) {
             var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
             var $btnCodepay = $('<a></a>').addClass('btn btn-minier btn-inverse').html('POS扫码');
             var $btnCollect = $('<a></a>').addClass('btn btn-minier').html('收款');
+            var $btnSettle = $('<a></a>').addClass('btn btn-minier btn-primary').html('落款');
+            var $btnWithdraw = $('<a></a>').addClass('btn btn-minier btn-warning').html('撤款');
             var $btnDetail = $('<a></a>').addClass('btn btn-minier btn-yellow hide').html('增减明细');
             var $btnRefund = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
@@ -302,6 +304,10 @@ jQuery(function($) {
                 $divBtnWrap.append($btnCodepay);
             if (decorationPayment.pageConfig.pageBtn.contains("collect"))
                 $divBtnWrap.append($btnCollect);
+            if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("settle"))
+                $divBtnWrap.append($btnSettle);
+            if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_CONFIRM_INT && v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("withdraw"))
+                $divBtnWrap.append($btnWithdraw);
             if (v.paymentStatus != constant.payment().decorationPayment.PAYMENTSTATUS_UNPAY_INT && decorationPayment.pageConfig.pageBtn.contains("print"))
                 $divBtnWrap.append($btnPrint);
             if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_PAY_INT && decorationPayment.pageConfig.pageBtn.contains("update"))
@@ -335,6 +341,42 @@ jQuery(function($) {
                     }, [0, 1]);
 
                 initCollect(v);
+            });
+
+            // 落款
+            $btnSettle.click(function() {
+
+                com.showConfirm("是否确认落款，落款将直接使用预付款余额抵扣：" + v.referMoney + "元", function() {
+
+                    var options = {
+                        "decorationPayment.dpid": v.dpid,
+                        "decorationPayment.decoration.orderId": v.decoration.orderId
+                    };
+
+                    com.post(api.payment.settleDecorationPayment, options, function(res) {
+
+                        com.showAlert(com.info, "落款成功，请打印收据。");
+                        searcherSearch();
+                    });
+                });
+            });
+
+            // 撤款
+            $btnWithdraw.click(function() {
+
+                com.showConfirm("是否确认撤款，撤款将退回预付款余额：" + v.referMoney + "元", function() {
+
+                    var options = {
+                        "decorationPayment.dpid": v.dpid,
+                        "decorationPayment.decoration.orderId": v.decoration.orderId
+                    };
+
+                    com.post(api.payment.withdrawDecorationPayment, options, function(res) {
+
+                        com.showAlert(com.info, "撤款成功。");
+                        searcherSearch();
+                    });
+                });
             });
 
             // 查看明细(只有增减项有)
