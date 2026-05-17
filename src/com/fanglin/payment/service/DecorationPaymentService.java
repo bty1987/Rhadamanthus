@@ -47,7 +47,11 @@ public interface DecorationPaymentService {
 
 	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<Long> ptids, String userId, Integer company) throws FLException;
 
+	public int settleDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws FLException;
+
 	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws FLException;
+
+	public int withdrawDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws FLException;
 
 	public int refundDecorationPaymentForDesign(DecorationPaymentVO decorationPayment, String userId, int company) throws FLException;
 

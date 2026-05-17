@@ -137,10 +137,26 @@ public class DecorationPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "settleDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String settleDecorationPayment() throws FLException, Exception {
+
+		decorationPaymentService.settleDecorationPayment(decorationPayment, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "refundDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String refundDecorationPayment() throws FLException, Exception {
 
 		decorationPaymentService.refundDecorationPayment(decorationPayment, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "withdrawDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String withdrawDecorationPayment() throws FLException, Exception {
+
+		decorationPaymentService.withdrawDecorationPayment(decorationPayment, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}

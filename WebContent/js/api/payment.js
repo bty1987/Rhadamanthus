@@ -234,6 +234,14 @@ $.extend(api, {
                 args: ["decorationPayment.cash", "decorationPayment.bank", "decorationPayment.checkv", "decorationPayment.advance", "decorationPayment.coupon"]
             }
         },
+        settleDecorationPayment: {
+            url: "settleDecorationPayment.do",
+            type: "update"
+        },
+        withdrawDecorationPayment: {
+            url: "withdrawDecorationPayment.do",
+            type: "update"
+        },
         refundDecorationPayment: {
             url: "refundDecorationPayment.do",
             type: "update",
