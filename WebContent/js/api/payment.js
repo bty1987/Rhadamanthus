@@ -524,6 +524,14 @@ $.extend(api, {
         cancelSalesPayment: {
             url: "cancelSalesPayment.do"
         },
+        settleSalesPayment: {
+            url: "settleSalesPayment.do",
+            type: "update"
+        },
+        withdrawSalesPayment: {
+            url: "withdrawSalesPayment.do",
+            type: "update"
+        },
         refundSalesPayment: {
             url: "refundSalesPayment.do",
             type: "update",

@@ -133,6 +133,24 @@ public class SalesPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "settleSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String settleSalesPayment() throws FLException, Exception {
+
+		int company = salesPayment.getBompany() != null ? CompanyServiceImpl.decode(salesPayment.getBompany()) : queryCompany();
+
+		salesPaymentService.settleSalesPayment(salesPayment, queryUserId(), company);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "withdrawSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String withdrawSalesPayment() throws FLException, Exception {
+
+		salesPaymentService.withdrawSalesPayment(salesPayment, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "collectSalesPayments", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectSalesPayments() throws FLException, Exception {
 
