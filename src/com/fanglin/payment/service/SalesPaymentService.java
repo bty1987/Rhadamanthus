@@ -53,4 +53,8 @@ public interface SalesPaymentService {
 
 	public void pushSalesPayment(SalesPaymentVO salesPayment) throws FLException;
 
+	public int settleSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException;
+
+	public int withdrawSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException;
+
 }

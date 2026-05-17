@@ -203,6 +203,8 @@ $(function() {
             var $btnSalesInfo = $('<a></a>').addClass('btn btn-minier btn-warning').html('销售单');
             var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
             var $btnCollect = $('<a></a>').addClass('btn btn-minier').html('收款');
+            var $btnSettle = $('<a></a>').addClass('btn btn-minier btn-primary').html('落款');
+            var $btnWithdraw = $('<a></a>').addClass('btn btn-minier btn-warning').html('撤款');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
             var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
             var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
@@ -275,6 +277,10 @@ $(function() {
                 $divBtnWrap.append($btnPosPush);
             if (salesPayment.pageConfig.pageBtn.contains("collect"))
                 $divBtnWrap.append($btnCollect);
+            if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("settle"))
+                $divBtnWrap.append($btnSettle);
+            if (v.status == constant.payment().materialPayment.STATUS_CONFIRM_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("withdraw"))
+                $divBtnWrap.append($btnWithdraw);
             if (v.status != constant.payment().materialPayment.STATUS_INIT_INT && salesPayment.pageConfig.pageBtn.contains("print"))
                 $divBtnWrap.append($btnPrint);
             if (v.status == constant.payment().materialPayment.STATUS_COLLECT_INT && salesPayment.pageConfig.pageBtn.contains("update"))
@@ -306,6 +312,42 @@ $(function() {
                 salesPayment.modals.collectModal.attr({
                     'spid': v.spid,
                     'sid': v.sales.sid
+                });
+            });
+
+            // 落款
+            $btnSettle.click(function() {
+
+                com.showConfirm("是否确认落款，落款将直接使用主材预付款余额抵扣：" + v.referMoney + "元", function() {
+
+                    var options = {
+                        "salesPayment.spid": v.spid,
+                        "salesPayment.sales.orderId": v.sales.orderId
+                    };
+
+                    com.post(api.payment.settleSalesPayment, options, function(res) {
+
+                        com.showAlert(com.info, "落款成功。");
+                        searcherSearch();
+                    });
+                });
+            });
+
+            // 撤款
+            $btnWithdraw.click(function() {
+
+                com.showConfirm("是否确认撤款，撤款将退回主材预付款余额：" + v.referMoney + "元", function() {
+
+                    var options = {
+                        "salesPayment.spid": v.spid,
+                        "salesPayment.sales.orderId": v.sales.orderId
+                    };
+
+                    com.post(api.payment.withdrawSalesPayment, options, function(res) {
+
+                        com.showAlert(com.info, "撤款成功。");
+                        searcherSearch();
+                    });
                 });
             });
 
