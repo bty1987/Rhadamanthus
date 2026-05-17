@@ -360,11 +360,15 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 			if (selectionItemPD == null) continue;
 
-			selectionItemPD.setAccounter(null);
-			selectionItemPD.setAccountTime(null);
-			selectionItemPD.setAccountStatus(SelectionItemPO.ACCOUNT_STATUS_INIT_INT);
+			SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemPD.getSiid());
 
-			selectionItemDao.update(selectionItemPD);
+			if (selectionItemPO == null) continue;
+
+			selectionItemPO.setAccounter(null);
+			selectionItemPO.setAccountTime(null);
+			selectionItemPO.setAccountStatus(SelectionItemPO.ACCOUNT_STATUS_INIT_INT);
+
+			selectionItemDao.update(selectionItemPO);
 
 			balanceSelectionItemDao.delete(balanceSelectionItemPO);
 		}

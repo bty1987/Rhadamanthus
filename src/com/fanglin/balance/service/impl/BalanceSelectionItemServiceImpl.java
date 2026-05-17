@@ -121,11 +121,17 @@ public class BalanceSelectionItemServiceImpl implements BalanceSelectionItemServ
 			throw new FLException(200038, "选材项不存在");
 		}
 
-		selectionItemPD.setAccounter(null);
-		selectionItemPD.setAccountTime(null);
-		selectionItemPD.setAccountStatus(SelectionItemPO.ACCOUNT_STATUS_PENDING_INT);
+		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemPD.getSiid());
 
-		selectionItemDao.update(selectionItemPD);
+		if (selectionItemPO == null) {
+			throw new FLException(200038, "选材项不存在");
+		}
+
+		selectionItemPO.setAccounter(null);
+		selectionItemPO.setAccountTime(null);
+		selectionItemPO.setAccountStatus(SelectionItemPO.ACCOUNT_STATUS_PENDING_INT);
+
+		selectionItemDao.update(selectionItemPO);
 
 		balanceSelectionItemDao.delete(balanceSelectionItemPO);
 
