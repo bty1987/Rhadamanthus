@@ -27,6 +27,7 @@ import com.fanglin.communion.service.DepartmentService;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.dao.DecorationBusitypeDao;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.dao.CompanyDao;
@@ -52,6 +53,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Autowired
 	private DepartmentTypeDao departmentTypeDao;
+
+	@Autowired
+	private DecorationBusitypeDao decorationBusitypeDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -206,10 +210,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 		departmentPO.setNo(String.format("%sD_%s", companyPO.getShortname(), FormatUtil.fillZero(count, "000")));
 
-		BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("dId", "no", "fatherDept", "type", "company", "aompany", "manager"));
+		BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("dId", "no", "fatherDept", "type", "company", "aompany", "manager", "busitype"));
 
 		if (departmentVO.getType() != null) {
 			departmentPO.setType(departmentTypeDao.get(departmentVO.getType().getDtid()));
+		}
+
+		if (departmentVO.getBusitype() != null && departmentVO.getBusitype().getDbid() != null) {
+			departmentPO.setBusitype(decorationBusitypeDao.get(departmentVO.getBusitype().getDbid()));
 		}
 
 		if (departmentVO.getFatherDept() != null && departmentVO.getFatherDept().getDid() != null) {
@@ -247,10 +255,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 			userPO = userDao.queryUserByUserId(departmentVO.getManager().getUserId());
 		}
 
-		BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("no", "fatherDept", "type", "company", "aompany", "status", "manager"));
+		BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("no", "fatherDept", "type", "company", "aompany", "status", "manager", "busitype"));
 
 		if (departmentVO.getType() != null) {
 			departmentPO.setType(departmentTypeDao.get(departmentVO.getType().getDtid()));
+		}
+
+		if (departmentVO.getBusitype() != null && departmentVO.getBusitype().getDbid() != null) {
+			departmentPO.setBusitype(decorationBusitypeDao.get(departmentVO.getBusitype().getDbid()));
+		} else {
+			departmentPO.setBusitype(null);
 		}
 
 		if (departmentVO.getFatherDept() != null && departmentVO.getFatherDept().getDid() != null) {
