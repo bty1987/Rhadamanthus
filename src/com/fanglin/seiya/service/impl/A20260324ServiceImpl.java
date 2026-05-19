@@ -208,7 +208,8 @@ public class A20260324ServiceImpl implements A20260324Service {
 			// 2. 查询父部门（如果提供）
 			DepartmentPO fatherDept = null;
 			if (parentCode != null && !parentCode.trim().isEmpty()) {
-				fatherDept = departmentDao.queryDepartmentByNo(parentCode);
+				fatherDept = departmentDao.get(Integer.parseInt(parentCode));
+
 				if (fatherDept == null) {
 					throw new FLException(511002, "父部门不存在: " + parentCode);
 				}
