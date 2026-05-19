@@ -18,6 +18,7 @@ import com.fanglin.inventory.service.OccessoriesChargeService;
 import com.fanglin.inventory.vo.OccessoriesChargeVO;
 import com.fanglin.inventory.vo.OccessoriesItemVO;
 import com.fanglin.inventory.vo.OccessoriesVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
 @Service("occessoriesChargeService")
@@ -102,6 +103,12 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 
 		occessoriesChargeDao.save(occessoriesChargePO);
 
+		// 重新计算外辅单 charge/rcharge
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesChargeVO.getOccessories().getOid());
+		if (occessoriesPO != null) {
+			recalcCharge(occessoriesPO);
+		}
+
 		return 0;
 	}
 
@@ -123,6 +130,12 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 
 		occessoriesChargeDao.update(occessoriesChargePO);
 
+		// 重新计算外辅单 charge/rcharge
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesChargePO.getOccessories().getOid());
+		if (occessoriesPO != null) {
+			recalcCharge(occessoriesPO);
+		}
+
 		return 0;
 	}
 
@@ -138,6 +151,12 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 
 		if (occessoriesChargePO != null) {
 			occessoriesChargeDao.delete(occessoriesChargePO);
+
+			// 重新计算外辅单 charge/rcharge
+			OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesChargePO.getOccessories().getOid());
+			if (occessoriesPO != null) {
+				recalcCharge(occessoriesPO);
+			}
 		}
 
 		return 0;
@@ -187,7 +206,44 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 			}
 		}
 
+		// 重新计算外辅单 charge/rcharge
+		recalcCharge(occessoriesPO);
+
 		return 0;
+	}
+
+	/**
+	 * 重新计算外辅单的 charge(费用总额) 并同步更新 rcharge(结算费用)。
+	 * 遍历所有 ChargePO，按 isExceed 判断 surplus 是否参与运算，汇总后更新外辅单。
+	 */
+	private void recalcCharge(OccessoriesPO occessoriesPO) {
+
+		long oid = occessoriesPO.getOid();
+
+		List<OccessoriesChargePO> allCharges = occessoriesChargeDao.queryOccessoriesChargeByOid(oid);
+
+		long totalCharge = 0;
+		if (allCharges != null) {
+			for (OccessoriesChargePO chargePO : allCharges) {
+				int price = chargePO.getPrice();
+				int surplus = chargePO.getSurplus();
+				int num = chargePO.getNum();
+
+				long chargeAmount;
+				if (occessoriesPO.getIsExceed() == OccessoriesPO.ISEXCEED_EXCEED_INT) {
+					chargeAmount = Arith.mul(Arith.add(price, surplus), num);
+				} else {
+					chargeAmount = Arith.mul(price, num);
+				}
+
+				totalCharge = Arith.add(totalCharge, chargeAmount);
+			}
+		}
+
+		occessoriesPO.setCharge(totalCharge);
+		occessoriesPO.setRcharge(totalCharge);
+
+		occessoriesDao.update(occessoriesPO);
 	}
 
 }
