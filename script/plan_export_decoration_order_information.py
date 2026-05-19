@@ -150,7 +150,7 @@ class Exporter(Util):
         
         self.SQL_QUERY_DECORATION_ACTIVITY_ITEM = """
             SELECT 
-                sum(dai.num * dai.money)/1000, dai.type, a.atttype
+                sum(dai.num * dai.money)/1000, dai.type, a.atttype, a.multiple
             FROM 
                 decoration.decorationactivityitem dai LEFT JOIN information.activity a on dai.aid = a.aid
             WHERE 
@@ -210,10 +210,11 @@ class Exporter(Util):
         thingCut = 0;
         
         atttype = -1
+        multiple = 0
 
         infos = self.executeQuerySQL(self.SQL_QUERY_DECORATION_ACTIVITY_ITEM % (orderId))
         
-        if not infos: return [couponCut, thingCut, atttype]
+        if not infos: return [couponCut, thingCut, atttype, multiple]
         
         for info in infos:
             
@@ -221,8 +222,9 @@ class Exporter(Util):
             if info[1] == 1: thingCut = info[0]
             
             atttype = info[2]
+            multiple = info[3]
 
-        return [couponCut, thingCut, atttype]
+        return [couponCut, thingCut, atttype, multiple]
 
     # 款项
     def queryDecorationPayment(self, orderId):
@@ -317,16 +319,15 @@ class Exporter(Util):
 
             startTime, endTime = args.split("-")
 
-            # 注释31天限制，支持导出整年数据
-            # checkFlag = self.controlTime(startTime, endTime)
-            #
-            # if checkFlag == False:
-            #     self.flag = False
-            #     self.updataSchedule(self.pthost, pid, {
-            #         "plan.status": 3,
-            #         "plan.info": '时间范围大于31天'
-            #     })
-            #     return False
+            checkFlag = self.controlTime(startTime, endTime)
+
+            if checkFlag == False:
+                self.flag = False
+                self.updataSchedule(self.pthost, pid, {
+                    "plan.status": 3,
+                    "plan.info": '时间范围大于31天'
+                })
+                return False
 
             sqlcount = self.SQL_EXPORT_DECORATION_COLLECTER % ("count(*)", startTime, endTime, self.company("d.company", company))
             count = self.count(sqlcount)
@@ -381,7 +382,7 @@ class Exporter(Util):
                     orderId = rows[0]  # 订单号
                     type = rows[7] # 订单类型
                     
-                    rows[15], rows[16], atttype = self.queryDecorationActivityItem(orderId)
+                    rows[15], rows[16], atttype, multiple = self.queryDecorationActivityItem(orderId)
                     rows[55] = self.queryQuotationUnache(orderId)
 
                     self.divNum(rows, [10, 11, 12, 13, 14, 15, 16, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 51, 52, 53, 54, 55])
@@ -394,7 +395,7 @@ class Exporter(Util):
                     orderTotalPrice = float(rows[13]) # 签单总额
                     notSalesPrice = float(rows[10]) # 非提金额  非业务人员提点金额=管理费/（管理费比例+非业务提点比例）*非业务提点比例
                     couponCut = float(rows[15]) # 券优惠
-                    thingCut = float(rows[16]) if atttype != 1 else (rows[16] + rows[14]/100) # 物品优惠
+                    thingCut = float(rows[16]) if atttype != 1 else (rows[16] + rows[14]*multiple/1000) # 物品优惠
 
                     rates = float(rows[24])
 

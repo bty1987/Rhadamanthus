@@ -108,6 +108,8 @@ public class ExtensionDaoImpl extends DaoImpl<ExtensionPO> implements ExtensionD
 			String data = filter.getData();
 			String op = filter.getOp();
 
+			query.alias("decoration", "decoration");
+
 			if (ExtensionPO.COLUMN_ORDERID_STR.equals(field)) {
 				query.add(query.getCriterion("decoration.orderId", data, op));
 			} else if ("villageId".equals(field)) {
