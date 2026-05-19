@@ -3116,8 +3116,8 @@
                 quote.cacsedeUpdateCpItem([$item]);
                 quo.calculateQuoFees();
 
-                // 隐藏更新工程量按钮
-                $item.find('.num .icon-circle-arrow-up').hide();
+                // 移除更新工程量按钮（下次参数变更时重新添加）
+                $item.find('.num .icon-circle-arrow-up').remove();
             });
         },
 
