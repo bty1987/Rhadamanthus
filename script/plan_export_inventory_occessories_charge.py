@@ -61,9 +61,9 @@ class Exporter(Util):
                 %s
             FROM
                 decoration.decoration d,
-                inventory.occessories o,
-                inventory.occessoriesItem oi,
-                inventory.occessoriescharge oc,
+                inventory.occessories o
+                LEFT JOIN inventory.occessoriescharge oc ON o.oid = oc.oid
+                LEFT JOIN inventory.occessoriesItem oi ON oc.oiid = oi.oiid,
                 communion.company c,
                 communion.village v,
                 communion.house h,
@@ -72,10 +72,7 @@ class Exporter(Util):
                 communion.user su,
                 communion.user cu
             WHERE
-                o.oid = oi.oid
-                AND o.oid = oc.oid
-                AND oi.oiid = oc.oiid
-                AND o.spuid = up.uid
+                o.spuid = up.uid
                 AND o.svuid = su.uid
                 AND o.cuid = cu.uid
                 AND d.company = c.cid
@@ -86,6 +83,10 @@ class Exporter(Util):
                 AND o.receiveTime >= '%s 00:00:00'
                 AND o.receiveTime <= '%s 23:59:59'
                 %s
+            GROUP BY
+                oc.ocid, oc.num
+            HAVING
+                oc.num IS NULL OR oc.num != 0
         """
 
     def sqler(self, timeargs, company):
