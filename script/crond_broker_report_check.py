@@ -33,25 +33,25 @@ from datetime import datetime, timedelta
 
 # 数据库配置
 DB_CONFIG = {
-    'host': '192.168.5.21',           # TODO: 替换为实际数据库地址
+    'host': 'rm-2ze6qgdw1vit531v3io.mysql.rds.aliyuncs.com',           # TODO: 替换为实际数据库地址
     'port': 3306,
     'user': 'root',                    # TODO: 替换为实际用户名
-    'password': 'Neusoft!',            # TODO: 替换为实际密码
+    'password': 'fanglin1918',            # TODO: 替换为实际密码
     'charset': 'utf8',
     'cursorclass': pymysql.cursors.DictCursor
 }
 
 # fl-sync 服务配置
 FL_SYNC_CONFIG = {
-    'base_url': 'http://TODO:PORT',    # TODO: 替换为 fl-sync 实际地址
+    'base_url': 'https://daily-gateway.fanglin.vip/open-api/sync/',    # TODO: 替换为 fl-sync 实际地址
     'broker_check_path': '/clue/brokerReportCheck',
     'timeout': 10,                     # 请求超时（秒）
 }
 
 # API 签名配置
 API_SIGN_CONFIG = {
-    'appId': 'erp_contacts_sync',      # 应用标识（文档中已指定）
-    'appSecret': 'TODO',               # TODO: 替换为 erp_contacts_sync 对应的密钥
+    'appId': 'erp_project_sync',      # 应用标识（文档中已指定）
+    'appSecret': 'af7nPP/AzXXBDArwOYtLZdui',               # TODO: 替换为 erp_contacts_sync 对应的密钥
 }
 
 # customer.phone AES 解密配置
@@ -264,13 +264,13 @@ class BrokerReportChecker:
                     c.phone AS encryptedPhone,
                     h.houseNumber AS encryptedHouseNumber,
                     v.name AS villageName
-                FROM decoration.decoration d
+                FROM customer.customerchance cc, decoration.decoration d
                 LEFT JOIN communion.customer c ON d.customerId = c.cid
                 LEFT JOIN communion.house h ON d.hid = h.hid
-                LEFT JOIN communion.village v ON h.villageId = v.vid
+                LEFT JOIN communion.village v ON h.vid = v.vid
                 WHERE d.createTime >= DATE_SUB(NOW(), INTERVAL 2 MINUTE)
                   AND d.createTime < DATE_SUB(NOW(), INTERVAL 1 MINUTE)
-                  AND d.status != 5
+                  AND d.orderId = cc.orderId
                 ORDER BY d.createTime ASC
                 LIMIT 200
             """
@@ -505,7 +505,7 @@ class BrokerReportChecker:
                         update_count += 1
 
                         # 5. 插入消息队列事件（由 crond_message_queue_processor 后续处理）
-                        self.insert_message_queue(order_id, clue_no, clue_id)
+                        # self.insert_message_queue(order_id, clue_no, clue_id)
                 else:
                     logger.debug(f"无经纪人报备: orderId={order_id}")
 
