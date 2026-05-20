@@ -98,7 +98,7 @@ $(function() {
         name: "拆单量",
         prop: function(v) {
 
-            return [2, 4].indexOf(v.selectionItem.type) != -1 ? -v.selectionItem.num : v.selectionItem.num;
+            return [2, 4, 14].indexOf(v.selectionItem.type) != -1 ? -v.selectionItem.num : v.selectionItem.num;
         },
         clazz: "blue"
     }, {
@@ -118,7 +118,7 @@ $(function() {
 
             var utility = utils.changeThrDecimal(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)))
 
-            return [2, 4].indexOf(v.selectionItem.type) != -1 ? -utility : utility;
+            return [2, 4, 14].indexOf(v.selectionItem.type) != -1 ? -utility : utility;
         },
         clazz: "blue"
     }, {
@@ -128,7 +128,7 @@ $(function() {
 
             var cost = utils.changeThrDecimal(utils.accMul(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)), parseFloat(v.selectionItem.postprice)));
 
-            return [2, 4].indexOf(v.selectionItem.type) != -1 ? -cost : cost;
+            return [2, 4, 14].indexOf(v.selectionItem.type) != -1 ? -cost : cost;
         },
         clazz: "blue"
     }, {
@@ -371,13 +371,13 @@ $(function() {
                 list: res.paging.data
             }, function(v) {
 
-                v.num = [2, 4].indexOf(v.selectionItem.type) != -1 ? -v.selectionItem.num : v.selectionItem.num;
+                v.num = [2, 4, 14].indexOf(v.selectionItem.type) != -1 ? -v.selectionItem.num : v.selectionItem.num;
 
                 var utility = utils.changeThrDecimal(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)));
-                v.utility = [2, 4].indexOf(v.selectionItem.type) != -1 ? -utility : utility;
+                v.utility = [2, 4, 14].indexOf(v.selectionItem.type) != -1 ? -utility : utility;
 
                 var cost = utils.changeThrDecimal(utils.accMul(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)), parseFloat(v.selectionItem.postprice)));
-                v.price = [2, 4].indexOf(v.selectionItem.type) != -1 ? -cost : cost;
+                v.price = [2, 4, 14].indexOf(v.selectionItem.type) != -1 ? -cost : cost;
 
                 v.selectionItem.status = constant.quotation().selectionItem.status.keys[v.selectionItem.status];
                 v.selectionItem.type = constant.quotation().selectionItem.type.keys[v.selectionItem.type];
@@ -432,13 +432,13 @@ $(function() {
                 list: res.paging.data
             }, function(v) {
 
-                v.num = [2, 4].indexOf(v.selectionItem.type) != -1 ? -v.selectionItem.num : v.selectionItem.num;
+                v.num = [2, 4, 14].indexOf(v.selectionItem.type) != -1 ? -v.selectionItem.num : v.selectionItem.num;
 
                 var utility = utils.changeThrDecimal(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)));
-                v.utility = [2, 4].indexOf(v.selectionItem.type) != -1 ? -utility : utility;
+                v.utility = [2, 4, 14].indexOf(v.selectionItem.type) != -1 ? -utility : utility;
 
                 var cost = utils.changeThrDecimal(utils.accMul(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)), parseFloat(v.selectionItem.postprice)));
-                v.price = [2, 4].indexOf(v.selectionItem.type) != -1 ? -cost : cost;
+                v.price = [2, 4, 14].indexOf(v.selectionItem.type) != -1 ? -cost : cost;
 
                 v.posttotal = utils.changeThrDecimal(utils.accMul(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.postprice)));
 

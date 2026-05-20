@@ -84,7 +84,7 @@ public class BalanceSelectionDaoImpl extends DaoImpl<BalanceSelectionPO> impleme
 	@Override
 	public long amountBalaceSelection(long bsid) {
 
-		String sql = "select sum(if(si.type in (2, 4),-(si.num-si.refnum),(si.num-si.refnum))*si.postprice) from balance.balanceselectionitem bsi, quotation.selectionitem si where bsi.bsid = :bsid and bsi.siid = si.siid";
+		String sql = "select sum(if(si.type in (2, 4, 14),-(si.num-si.refnum),(si.num-si.refnum))*si.postprice) from balance.balanceselectionitem bsi, quotation.selectionitem si where bsi.bsid = :bsid and bsi.siid = si.siid";
 
 		BigDecimal amount = (BigDecimal) session().createSQLQuery(sql).setLong("bsid", bsid).uniqueResult();
 
