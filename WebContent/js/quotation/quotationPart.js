@@ -281,6 +281,11 @@ var QuotationDetail = (function() {
 
                     com.focusPage('#manageRate').val(null);
                 }),
+                // 税金类型设置saveTrBtn
+                $taxRateModal: com.focusPage('#taxRateModal').on("show.bs.modal", function(a) {
+
+                    com.focusPage('#taxType').val(null);
+                }),
                 $quotationStatisticalModal: com.focusPage('#quotationStatisticalModal'),
                 statisticalNormedDataDiv: com.focusPage('#statisticalNormedDataDiv'),
                 $quotationRtemAddModal: com.focusPage('#quotationRtemUpgradeModal').on("show.bs.modal", function(a) {
@@ -1867,6 +1872,54 @@ var QuotationDetail = (function() {
             });
         },
 
+        // 税金类型弹窗保存按钮 saveTrBtn
+        saveTaxRate: function() {
+
+            com.focusPage('#saveTrBtn').click(function() {
+
+                if (com.validate('taxRateModal')) {
+                    return false;
+                }
+
+                var _taxId = com.focusPage('#taxCost').attr('qfaiId');
+                var _qfaId = com.focusPage('#taxCost').find('.cell.name').attr("data-qfaId");
+
+                var _taxDiscount = com.focusPage('#taxType').val();
+
+                // 更新税金行的折扣类型显示
+                com.focusPage('#taxCost').find('.discountprice').attr('data-discount', _taxDiscount);
+
+                // 更新税金类型名称显示
+                var _typeName = constant.data().quotationVersion.taxDiscount.keys[_taxDiscount];
+                com.focusPage('#taxCost').find('.cell.type .cell-wrap span').text(_typeName);
+
+                // 更新 basicParams 中的税金折扣类型
+                quo.basicParams["quotation.taxDiscount"] = _taxDiscount;
+
+                // 重新计算费用
+                quo.calculateQuoFees();
+                quo.quoModals.$taxRateModal.modal("hide");
+
+                // 提交到后端：更新税金项的折扣类型
+                var args = {
+                    "quotationFunctionAreaItem.qfaiId": _taxId,
+                    "quotationFunctionAreaItem.quotationFunctionAreaId": _qfaId,
+                    "quotationFunctionAreaItem.discount": _taxDiscount
+                };
+
+                var _params = $.extend(true, {}, args, quo.basicParams);
+
+                com.post(api.quotation.updateQuotationFunctionAreaItemForSpec, _params);
+
+                // 同步更新 quotation 表的 taxDiscount
+                var advanceParams = $.extend({}, {
+                    "quotation.taxDiscount": _taxDiscount
+                }, quo.basicParams);
+
+                com.post(api.quotation.updateQuotationForAdvance, advanceParams, function(res) {}, null, false);
+            });
+        },
+
         // 折扣窗体配置基数
         showDiscountBasePrice: function() {
 
@@ -2274,6 +2327,7 @@ var QuotationDetail = (function() {
             this.saveDomainTemplete();
             this.saveQuotesToDomain();
             this.saveManageRate();
+            this.saveTaxRate();
             this.deleteQuotesToDomain();
             this.showDiscountBasePrice();
             this.saveQuotationPrefer();
@@ -4489,9 +4543,17 @@ var QuotationDetail = (function() {
                     $item.attr('id', 'taxCost').attr('qfaiId', qv.qfaiId);
                     $btnCell = $('<div></div>').addClass('cell btns');
                     $btnCellWrap = $('<div></div>').addClass('cell-wrap');
-                    $btnset = $('<a></a>').css('visibility', 'hidden').append('<i class="bigger-125 icon-cog purple"></i>');
+                    $btnset = $('<a></a>').attr('href', 'javascript:void(0)')
+                        .append('<i class="bigger-125 icon-cog purple"></i>')
+                        .mouseenter(function() {
+                            com.showTip(this, "税金类型设置", "top");
+                        });
                     $btnCellWrap.append($btnset).appendTo($btnCell);
                     $item.append($btnCell);
+
+                    $btnset.click(function() {
+                        com.focusPage('#taxRateModal').modal('show');
+                    });
                 }
             }
 
@@ -4862,6 +4924,9 @@ var QuotationDetail = (function() {
                 com.focusPage('#manageRate').bindData(res.configs.manageRates);
             });
 
+            // 税金类型选择弹层初始化
+            com.focusPage('#taxType').bindData(constant.data().quotationVersion.taxDiscount.keys);
+
             // 根据报价ID 获取报价信息(同步ajax)
             com.post(api.quotation.queryQuotationById, {
                 "quotation.qid": quo.quotationid
@@ -4882,6 +4947,7 @@ var QuotationDetail = (function() {
                     "quotation.trafficPrice": quotation.trafficPrice, // 车运费
                     "quotation.taxPrice": quotation.taxPrice, // 税金
                     "quotation.taxRate": quotation.taxRate, // 税金比例
+                    "quotation.taxDiscount": quotation.taxDiscount, // 税金类型
                     "quotation.undisComPrice": quotation.undisComPrice, // 综合不打折总额
                     "quotation.disComPrice": quotation.disComPrice, // 综合打折总额
                     "quotation.consPrice": quotation.consPrice, // 工程总额
