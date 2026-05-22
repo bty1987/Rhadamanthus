@@ -34,6 +34,11 @@ import com.fanglin.secret.service.SecretService;
 @Transactional(readOnly=true)
 public class SecretServiceImpl implements SecretService {
 	
+	@Override
+	public String DECRYPT(String encryptedContent) {
+		return SensitiveDataHelper.decrypt(encryptedContent);
+	}
+	
 	@Autowired
 	private DecorationDao decorationDao;
 	

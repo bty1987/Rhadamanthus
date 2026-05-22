@@ -40,6 +40,18 @@ public class Secret1Action extends BaseAction {
 
 	private List<DecorationVO> AJIGRRVT;
 
+	private String QWERTYU;
+
+	private String ASDFGHJ;
+
+	// Action(value = "DECRYPT", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String DECRYPT() {
+
+		ASDFGHJ = secretService.DECRYPT(QWERTYU);
+
+		return SUCCESS;
+	}
+
 	// Action(value = "CVLIBHQMVWFSPQWU", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String CVLIBHQMVWFSPQWU() {
 
@@ -86,6 +98,22 @@ public class Secret1Action extends BaseAction {
 
 	public void setAJIGRRVT(List<DecorationVO> aJIGRRVT) {
 		AJIGRRVT = aJIGRRVT;
+	}
+
+	public String getQWERTYU() {
+		return QWERTYU;
+	}
+
+	public void setQWERTYU(String qWERTYU) {
+		QWERTYU = qWERTYU;
+	}
+
+	public String getASDFGHJ() {
+		return ASDFGHJ;
+	}
+
+	public void setASDFGHJ(String aSDFGHJ) {
+		ASDFGHJ = aSDFGHJ;
 	}
 
 }
