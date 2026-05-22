@@ -226,7 +226,15 @@ function subtractTable(type) {
     });
 
     contentHtml += '<tr>';
-    contentHtml += '<td width="5%" style="font-size: 15px;font-weight: bold;" align="center">预签计价合计</td>';
+    contentHtml += '<td width="5%" style="font-size: 15px;font-weight: bold;" align="center">合计(不含税)</td>';
+    contentHtml += '<td colspan="3" width="5%" align="center">' + utils.changeThrDecimal(utils.accSub(protation.protation.totalPrice, protation.protation.taxPrice)) + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td width="5%" style="font-size: 15px;font-weight: bold;" align="center">税金</td>';
+    contentHtml += '<td colspan="3" width="5%" align="center">' + protation.protation.taxPrice + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td width="5%" style="font-size: 15px;font-weight: bold;" align="center">预签合计(含税)</td>';
     contentHtml += '<td colspan="3" width="5%" align="center">' + protation.protation.totalPrice + '</td>';
     contentHtml += '</tr>';
     contentHtml += '</tbody></table>';
