@@ -396,7 +396,9 @@ jQuery(function($) {
 
             });
 
-            table1.datas.push(["预签计价合计", '', protation.protation.totalPrice]);
+            table1.datas.push(["合计(不含税)", '', utils.changeThrDecimal(utils.accSub(protation.protation.totalPrice, protation.protation.taxPrice))]);
+            table1.datas.push(["税金", '', protation.protation.taxPrice]);
+            table1.datas.push(["预签合计(含税)", '', protation.protation.totalPrice]);
         } else {
 
             table1.headers.push('', '');
