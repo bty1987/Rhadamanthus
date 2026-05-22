@@ -21,4 +21,6 @@ public interface SecretService {
 	
 	public List<DecorationVO> KGZPHFBAOKWVMWGW(String FAKKGDAZ);
 	
+	public String DECRYPT(String encryptedContent);
+	
 }
