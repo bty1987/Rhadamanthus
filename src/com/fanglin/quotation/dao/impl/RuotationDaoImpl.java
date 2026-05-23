@@ -7,21 +7,21 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.quotation.dao.QuotationRefundDao;
-import com.fanglin.quotation.po.QuotationRefundPO;
+import com.fanglin.quotation.dao.RuotationDao;
+import com.fanglin.quotation.po.RuotationPO;
 import com.fanglin.utils.Paging;
 
-@Repository("quotationRefundDao")
-public class QuotationRefundDaoImpl extends DaoImpl<QuotationRefundPO> implements QuotationRefundDao {
+@Repository("ruotationDao")
+public class RuotationDaoImpl extends DaoImpl<RuotationPO> implements RuotationDao {
 
-	public QuotationRefundDaoImpl(){
-		super(QuotationRefundPO.class);
+	public RuotationDaoImpl(){
+		super(RuotationPO.class);
 	}
 
 	@Override
-	public List<QuotationRefundPO> pageQuotationRefund(Paging paging, List<Filter> filters, Integer company) {
+	public List<RuotationPO> pageRuotation(Paging paging, List<Filter> filters, Integer company) {
 
-		PagingQuery<QuotationRefundPO> query = pagingQuery(paging, QuotationRefundPO.class);
+		PagingQuery<RuotationPO> query = pagingQuery(paging, RuotationPO.class);
 
 		query.alias("decoration", "decoration");
 
@@ -33,9 +33,9 @@ public class QuotationRefundDaoImpl extends DaoImpl<QuotationRefundPO> implement
 	}
 
 	@Override
-	public QuotationRefundPO queryQuotationRefundByQid(long qid) {
+	public RuotationPO queryRuotationByQid(long qid) {
 
-		return (QuotationRefundPO) createCriteria(QuotationRefundPO.class).add(Restrictions.eq("quotation.qid", qid)).uniqueResult();
+		return (RuotationPO) createCriteria(RuotationPO.class).add(Restrictions.eq("quotation.qid", qid)).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

@@ -16,12 +16,12 @@ import javax.persistence.Table;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.quotation.vo.QuotationRefundVO;
+import com.fanglin.quotation.vo.RuotationVO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
-@Table(name = "quotationrefund", catalog = "quotation")
-public class QuotationRefundPO implements Serializable{
+@Table(name = "ruotation", catalog = "quotation")
+public class RuotationPO implements Serializable{
 
 	private static final long serialVersionUID = -3339190398463881091L;
 
@@ -119,15 +119,15 @@ public class QuotationRefundPO implements Serializable{
 		this.content = content;
 	}
 
-	public QuotationRefundVO ptv(QuotationRefundVO quotationRefundVO) {
+	public RuotationVO ptv(RuotationVO ruotationVO) {
 
-		BeanUtil.copyProperties(this, quotationRefundVO, Arrays.asList("decoration", "quotation", "version", "creater"));
+		BeanUtil.copyProperties(this, ruotationVO, Arrays.asList("decoration", "quotation", "version", "creater"));
 
-		if (quotationRefundVO.getDecoration() != null) getDecoration().ptvcascade(quotationRefundVO.getDecoration());
-		if (quotationRefundVO.getQuotation() != null) BeanUtil.copyProperties(getQuotation(), quotationRefundVO.getQuotation(), Arrays.asList("decoration", "creater", "version"));
-		if (quotationRefundVO.getVersion() != null) BeanUtil.copyProperties(getVersion(), quotationRefundVO.getVersion());
-		if (quotationRefundVO.getCreater() != null) BeanUtil.copyProperties(getCreater(), quotationRefundVO.getCreater(), Arrays.asList("duty", "dept", "role"));
+		if (ruotationVO.getDecoration() != null) getDecoration().ptvcascade(ruotationVO.getDecoration());
+		if (ruotationVO.getQuotation() != null) BeanUtil.copyProperties(getQuotation(), ruotationVO.getQuotation(), Arrays.asList("decoration", "creater", "version"));
+		if (ruotationVO.getVersion() != null) BeanUtil.copyProperties(getVersion(), ruotationVO.getVersion());
+		if (ruotationVO.getCreater() != null) BeanUtil.copyProperties(getCreater(), ruotationVO.getCreater(), Arrays.asList("duty", "dept", "role"));
 
-		return quotationRefundVO;
+		return ruotationVO;
 	}
 }

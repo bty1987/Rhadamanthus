@@ -347,7 +347,7 @@ Condition.addupRule("quotation", {
     },
 
     // 报价-报退单
-    "quotationRefund-decoration-orderId": {
+    "ruotation-decoration-orderId": {
         label: "装修单号",
         type: "text",
         submitConfig: {

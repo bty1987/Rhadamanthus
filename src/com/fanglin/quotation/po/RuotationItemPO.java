@@ -13,18 +13,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.data.po.QuotationItemPO;
-import com.fanglin.quotation.vo.QuotationRefundItemVO;
+import com.fanglin.quotation.vo.RuotationItemVO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
-@Table(name = "quotationrefunditem", catalog = "quotation")
-public class QuotationRefundItemPO implements Serializable {
+@Table(name = "ruotationitem", catalog = "quotation")
+public class RuotationItemPO implements Serializable {
 
 	private static final long serialVersionUID = 8263037511645428514L;
 
 	private long qriid;
 
-	private QuotationRefundPO quotationRefund;
+	private RuotationPO ruotation;
 
 	private QuotationFunctionAreaPO quotationFunctionArea;
 
@@ -69,12 +69,12 @@ public class QuotationRefundItemPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "qrid", referencedColumnName = "qrid")
-	public QuotationRefundPO getQuotationRefund() {
-		return quotationRefund;
+	public RuotationPO getRuotation() {
+		return ruotation;
 	}
 
-	public void setQuotationRefund(QuotationRefundPO quotationRefund) {
-		this.quotationRefund = quotationRefund;
+	public void setRuotation(RuotationPO ruotation) {
+		this.ruotation = ruotation;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -215,15 +215,15 @@ public class QuotationRefundItemPO implements Serializable {
 		this.index = index;
 	}
 
-	public QuotationRefundItemVO ptv(QuotationRefundItemVO quotationRefundItemVO) {
+	public RuotationItemVO ptv(RuotationItemVO ruotationItemVO) {
 
-		BeanUtil.copyProperties(this, quotationRefundItemVO, Arrays.asList("quotationRefund", "quotationFunctionArea", "quotationItem"));
+		BeanUtil.copyProperties(this, ruotationItemVO, Arrays.asList("ruotation", "quotationFunctionArea", "quotationItem"));
 
-		if (quotationRefundItemVO.getQuotationRefund() != null) getQuotationRefund().ptv(quotationRefundItemVO.getQuotationRefund());
-		if (quotationRefundItemVO.getQuotationFunctionArea() != null) BeanUtil.copyProperties(getQuotationFunctionArea(), quotationRefundItemVO.getQuotationFunctionArea());
-		if (quotationRefundItemVO.getQuotationItem() != null) getQuotationItem().ptv(quotationRefundItemVO.getQuotationItem());
+		if (ruotationItemVO.getRuotation() != null) getRuotation().ptv(ruotationItemVO.getRuotation());
+		if (ruotationItemVO.getQuotationFunctionArea() != null) BeanUtil.copyProperties(getQuotationFunctionArea(), ruotationItemVO.getQuotationFunctionArea());
+		if (ruotationItemVO.getQuotationItem() != null) getQuotationItem().ptv(ruotationItemVO.getQuotationItem());
 
-		return quotationRefundItemVO;
+		return ruotationItemVO;
 
 	}
 }

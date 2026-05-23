@@ -31,11 +31,11 @@ $.extend(api.index, {
         url: "/views/quotation/quotationOutput.html"
     },
 
-    quotationRefundIndex: {
-        url: "/views/quotation/quotationRefundIndex.html"
+    ruotationIndex: {
+        url: "/views/quotation/ruotationIndex.html"
     },
-    quotationRefundPartIndex: {
-        url: "/views/quotation/quotationRefundPart.html"
+    ruotationPartIndex: {
+        url: "/views/quotation/ruotationPart.html"
     },
 
     addReduceIndex: {
@@ -1106,8 +1106,8 @@ $.extend(api, {
             }
         },
 
-        pageQuotationRefund: {
-            url: "pageQuotationRefund.do",
+        pageRuotation: {
+            url: "pageRuotation.do",
             demo: true,
             type: "query",
             tranargs: [{
@@ -1121,63 +1121,63 @@ $.extend(api, {
                 args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
-        queryQuotationRefundById: {
-            url: "queryQuotationRefundById.do",
+        queryRuotationById: {
+            url: "queryRuotationById.do",
             demo: true,
             type: "query",
             tranargs: [{
-                result: "quotationRefund",
+                result: "ruotation",
                 args: ["totalPrice"]
             }]
         },
-        addQuotationRefund: {
-            url: "addQuotationRefund.do",
+        addRuotation: {
+            url: "addRuotation.do",
             type: "update",
             tranargs: {
-                args: ["quotationRefund.totalPrice"],
+                args: ["ruotation.totalPrice"],
             }
         },
-        updateQuotationRefund: {
-            url: "updateQuotationRefund.do",
+        updateRuotation: {
+            url: "updateRuotation.do",
             type: "update",
             tranargs: {
-                args: ["quotationRefund.totalPrice"],
+                args: ["ruotation.totalPrice"],
             }
         },
-        deleteQuotationRefund: {
-            url: "deleteQuotationRefund.do"
+        deleteRuotation: {
+            url: "deleteRuotation.do"
         },
 
-        queryQuotationRefundItem: {
-            url: "queryQuotationRefundItem.do",
+        queryRuotationItem: {
+            url: "queryRuotationItem.do",
             demo: true,
             type: "query",
             tranargs: [{
-                result: "quotationRefundItems",
+                result: "ruotationItems",
                 args: ["unitPrice", "addPrice", "subPrice", "initNum", "num"]
             }]
         },
-        updateQuotationRefundItem: {
-            url: "updateQuotationRefundItem.do",
+        updateRuotationItem: {
+            url: "updateRuotationItem.do",
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["quotationRefund.totalPrice", "quotationRefundItem.unitPrice", "quotationRefundItem.addPrice", "quotationRefundItem.subPrice", "quotationRefundItem.initNum", "quotationRefundItem.num"],
+                args: ["ruotation.totalPrice", "ruotationItem.unitPrice", "ruotationItem.addPrice", "ruotationItem.subPrice", "ruotationItem.initNum", "ruotationItem.num"],
                 query: [{
-                    result: "quotationRefundItem",
+                    result: "ruotationItem",
                     args: ["unitPrice", "addPrice", "subPrice", "initNum", "num"]
                 }]
             }
         },
-        updateQuotationRefundItemForIndex: {
-            url: "updateQuotationRefundItemForIndex.do"
+        updateRuotationItemForIndex: {
+            url: "updateRuotationItemForIndex.do"
         },
-        deleteQuotationRefundItem: {
-            url: "deleteQuotationRefundItem.do",
+        deleteRuotationItem: {
+            url: "deleteRuotationItem.do",
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["quotationRefund.totalPrice"]
+                args: ["ruotation.totalPrice"]
             }
         },
 

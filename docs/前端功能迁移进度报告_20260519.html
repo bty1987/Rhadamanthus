@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>R项目前端功能迁移进度报告</title>
+<style>
+  @page { size: A4; margin: 20mm 15mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; color: #333; line-height: 1.8; padding: 30px 40px; font-size: 14px; }
+  h1 { text-align: center; font-size: 22px; padding-bottom: 8px; border-bottom: 2px solid #1a73e8; margin-bottom: 5px; color: #1a1a1a; }
+  .update-time { text-align: center; color: #888; font-size: 13px; margin-bottom: 30px; }
+
+  h2 { font-size: 17px; color: #1a73e8; margin: 28px 0 12px 0; padding-left: 10px; border-left: 4px solid #1a73e8; }
+  h3 { font-size: 15px; color: #333; margin: 20px 0 10px 0; padding-bottom: 6px; border-bottom: 1px solid #eee; }
+
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 16px 0; font-size: 13px; }
+  th { background: #1a73e8; color: #fff; padding: 8px 12px; text-align: center; font-weight: normal; }
+  td { padding: 8px 12px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+  tr:nth-child(even) td { background: #f8f9fa; }
+  tr:last-child td { font-weight: bold; background: #e8f0fe; }
+
+  .progress-label { font-size: 14px; font-weight: bold; color: #1a73e8; margin: 6px 0; }
+  ul { margin: 6px 0 6px 20px; }
+  li { margin: 3px 0; }
+  li.done { list-style: none; margin-left: -16px; }
+  li.done::before { content: "☑ "; color: #34a853; font-weight: bold; }
+  li.todo { list-style: none; margin-left: -16px; }
+  li.todo::before { content: "☐ "; color: #999; font-weight: bold; }
+  .sub { margin-left: 18px; font-size: 13px; color: #555; }
+
+  .bar-wrap { display: inline-block; width: 100px; height: 14px; background: #e0e0e0; border-radius: 3px; overflow: hidden; vertical-align: middle; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .bar-green { background: #34a853; }
+  .bar-blue { background: #1a73e8; }
+
+  .summary-box { background: #f0f4ff; border: 1px solid #c6d9f0; border-radius: 6px; padding: 14px 18px; margin: 16px 0; }
+  .summary-box p { margin: 4px 0; font-size: 13px; }
+  .summary-box .num { font-weight: bold; color: #1a73e8; font-size: 15px; }
+
+  .risk-box { background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px; padding: 14px 18px; margin: 16px 0; }
+  .risk-box p { margin: 4px 0; font-size: 13px; }
+  .risk-title { font-weight: bold; color: #e65100; margin-bottom: 6px; }
+
+  .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<h1>R项目前端功能迁移进度报告</h1>
+<p class="update-time">更新时间：2026-05-19</p>
+
+<!-- 一、迁移模块总览 -->
+<h2>一、迁移模块总览</h2>
+<table>
+  <tr><th>序号</th><th>负责人</th><th>模块</th><th>英文标识</th><th>当前阶段</th></tr>
+  <tr><td>1</td><td>阳姐</td><td>款项</td><td>payment</td><td>已完成(部分)</td></tr>
+  <tr><td>2</td><td>春宇</td><td>销售</td><td>sales</td><td>验证中</td></tr>
+  <tr><td>3</td><td>关总</td><td>装修</td><td>decoration</td><td>开发中</td></tr>
+  <tr><td>4</td><td>待定</td><td>报价</td><td>quotation</td><td>验证中</td></tr>
+</table>
+
+<!-- 二、各模块详细进度 -->
+<h2>二、各模块详细进度</h2>
+
+<h3>1. 款项模块 (payment) — 负责人：阳姐</h3>
+<p class="progress-label">当前进度：50%</p>
+<ul>
+  <li class="done">装修款(decorationPayment)迁移完成</li>
+  <li class="sub">装修款列表页、详情页、落款/撤款快捷操作</li>
+  <li class="sub">合同额/主材额提现弹窗功能</li>
+  <li class="todo">其他款项（销售款/预付款/工程款）迁移</li>
+  <li class="sub">共4种款项，已完成第1种</li>
+  <li class="sub">已有完整模板，后续可参考加速</li>
+</ul>
+
+<h3>2. 销售模块 (sales) — 负责人：春宇</h3>
+<p class="progress-label">当前进度：45%</p>
+<ul>
+  <li class="done">各模块代码调整</li>
+  <li class="todo">逐个页面和功能点验证</li>
+  <li class="sub">列表页功能验证</li>
+  <li class="sub">表单提交/审批流程验证</li>
+  <li class="sub">需逐步确认每个页面的交互逻辑</li>
+</ul>
+
+<h3>3. 装修模块 (decoration) — 负责人：关总</h3>
+<p class="progress-label">当前进度：45%</p>
+<ul>
+  <li class="done">装修单各页面列表已支持</li>
+  <li class="done">查看功能已调整</li>
+  <li class="todo">编辑/新增等操作功能迁移</li>
+  <li class="sub">大量操作通过跳转其他模块页面完成，主体工作量在列表和查看</li>
+  <li class="todo">各子模块（放线/核销等）联调</li>
+</ul>
+
+<h3>4. 报价模块 (quotation) — 负责人：待定</h3>
+<p class="progress-label">当前进度：45%</p>
+<ul>
+  <li class="done">各模块代码开发</li>
+  <li class="sub">报价优惠弹窗合并提交</li>
+  <li class="sub">报价预算员分配队列（预算/设计双模式）</li>
+  <li class="sub">税金计算逻辑、活动利润优惠等</li>
+  <li class="todo">逐个页面功能点验证</li>
+  <li class="sub">功能点最多，验证量最大</li>
+</ul>
+
+<!-- 三、整体进度汇总 -->
+<h2>三、整体进度汇总</h2>
+<table>
+  <tr><th>模块</th><th>代码开发</th><th>页面验证</th><th>整体评估</th></tr>
+  <tr>
+    <td>payment</td>
+    <td><span class="bar-wrap"><span class="bar-fill bar-green" style="width:25%"></span></span> 25%</td>
+    <td><span class="bar-wrap"><span class="bar-fill bar-blue" style="width:10%"></span></span> 10%</td>
+    <td><b>50%</b></td>
+  </tr>
+  <tr>
+    <td>sales</td>
+    <td><span class="bar-wrap"><span class="bar-fill bar-green" style="width:70%"></span></span> 70%</td>
+    <td><span class="bar-wrap"><span class="bar-fill bar-blue" style="width:10%"></span></span> 10%</td>
+    <td><b>45%</b></td>
+  </tr>
+  <tr>
+    <td>decoration</td>
+    <td><span class="bar-wrap"><span class="bar-fill bar-green" style="width:60%"></span></span> 60%</td>
+    <td><span class="bar-wrap"><span class="bar-fill bar-blue" style="width:10%"></span></span> 10%</td>
+    <td><b>45%</b></td>
+  </tr>
+  <tr>
+    <td>quotation</td>
+    <td><span class="bar-wrap"><span class="bar-fill bar-green" style="width:80%"></span></span> 80%</td>
+    <td><span class="bar-wrap"><span class="bar-fill bar-blue" style="width:10%"></span></span> 10%</td>
+    <td><b>45%</b></td>
+  </tr>
+  <tr>
+    <td><b>总体</b></td>
+    <td></td><td></td>
+    <td><b style="color:#1a73e8;font-size:16px;">45%</b></td>
+  </tr>
+</table>
+
+<!-- 四、关键判断 -->
+<h2>四、关键判断</h2>
+<div class="summary-box">
+  <p>1. 当前阶段：四个模块处于同一水位，代码基本就绪，验证是下一阶段重心</p>
+  <p>2. payment已有完整模板（装修款），后续3种款项可参考加速，预计完成速度递增</p>
+  <p>3. decoration主体工作量在列表和查看（已完成），编辑操作多跳转其他模块，剩余工作量可控</p>
+  <p>4. quotation功能点最多最复杂，验证阶段可能暴露较多问题，需重点关注</p>
+  <p>5. sales验证阶段需覆盖每个页面交互逻辑，返工量取决于原系统隐藏逻辑的多少</p>
+</div>
+
+<!-- 五、风险与建议 -->
+<h2>五、风险与建议</h2>
+<div class="risk-box">
+  <p class="risk-title">风险与建议</p>
+  <p>1. 验证阶段是当前瓶颈，四个模块均未完成端到端验证</p>
+  <p>2. 建议优先完成payment模块剩余款项，趁热打铁复用模板</p>
+  <p>3. quotation模块验证建议安排专人，避免成为最后收尾的短板</p>
+  <p>4. 建议建立验证checklist，标准化验证流程避免遗漏功能点</p>
+</div>
+
+</body>
+</html>
