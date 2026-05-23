@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.security.AESHelper;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.factory.service.SecretService;
 import com.fanglin.personel.dao.UserDao;
@@ -64,6 +65,11 @@ public class SecretServiceImpl implements SecretService {
 		}
 
 		return authentications;
+	}
+
+	@Override
+	public String DECRYPT(String encryptedContent) {
+		return SensitiveDataHelper.decrypt(encryptedContent);
 	}
 
 }
