@@ -1,21 +1,21 @@
 $(function() {
 
-    var quotationRefund = {
+    var ruotation = {
 
         items: {
-            replicaOrderId: com.focusPage("#replicaOrderId", "#addQuotationRefundModal"),
-            replicaQuotation: com.focusPage("#replicaQuotation", "#addQuotationRefundModal"),
-            comment: com.focusPage("#comment", "#addQuotationRefundModal")
+            replicaOrderId: com.focusPage("#replicaOrderId", "#addRuotationModal"),
+            replicaQuotation: com.focusPage("#replicaQuotation", "#addRuotationModal"),
+            comment: com.focusPage("#comment", "#addRuotationModal")
         },
 
         modals: {
-            addQuotationRefundModal: com.focusPage('#addQuotationRefundModal')
+            addRuotationModal: com.focusPage('#addRuotationModal')
         },
 
         pageConfig: null
     };
 
-    quotationRefund.items.replicaOrderId.on("blur", function() {
+    ruotation.items.replicaOrderId.on("blur", function() {
 
         var options = {
             "quotation.orderId": $(this).val(),
@@ -23,7 +23,7 @@ $(function() {
 
         com.post(api.quotation.queryQuotationByOrderId, options, function(res) {
 
-            quotationRefund.items.replicaQuotation.bindData(res.quotations, 'qid', 'name');
+            ruotation.items.replicaQuotation.bindData(res.quotations, 'qid', 'name');
         });
     });
 
@@ -34,9 +34,9 @@ $(function() {
         clazz: "btn-success",
         handle: function(v) {
 
-            params.quotation.quotationRefund = v;
+            params.quotation.ruotation = v;
 
-            com.switchPage(api.index.quotationRefundPartIndex.url);
+            com.switchPage(api.index.ruotationPartIndex.url);
         }
     };
 
@@ -45,9 +45,9 @@ $(function() {
         clazz: "btn-danger",
         handle: function(v) {
 
-            com.post(api.quotation.deleteQuotationRefund, {
-                "quotationRefund.qrid": v.qrid,
-                "quotationRefund.decoration.orderId": v.decoration.orderId
+            com.post(api.quotation.deleteRuotation, {
+                "ruotation.qrid": v.qrid,
+                "ruotation.decoration.orderId": v.decoration.orderId
             }, function(res) {
 
                 searcher.doSearch();
@@ -55,22 +55,22 @@ $(function() {
         }
     };
 
-    quotationRefund.pageConfig = getConfig(params['urlLoadParams'].depage, 9);
+    ruotation.pageConfig = getConfig(params['urlLoadParams'].depage, 9);
 
     var cardbtns = [];
 
-    if (quotationRefund.pageConfig.pageBtn.contains("view"))
+    if (ruotation.pageConfig.pageBtn.contains("view"))
         cardbtns.push(btnView);
 
-    if (quotationRefund.pageConfig.pageBtn.contains("delete"))
+    if (ruotation.pageConfig.pageBtn.contains("delete"))
         cardbtns.push(btnDelete);
 
-    searcher.base("condList", "pagenation", "resultList", quotationRefund.pageConfig.apiPage);
-    searcher.condition(quotationRefund.pageConfig.condArr);
-    searcher.history("quotationRefundPostData");
+    searcher.base("condList", "pagenation", "resultList", ruotation.pageConfig.apiPage);
+    searcher.condition(ruotation.pageConfig.condArr);
+    searcher.history("ruotationPostData");
 
     searcher.button([{
-        id: "createQuotationRefund",
+        id: "createRuotation",
         name: "创建",
         clazz: "btn-yellow",
         icon: "icon-plus"
@@ -87,7 +87,7 @@ $(function() {
         },
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("decorationOrderId");
+            return ruotation.pageConfig.propertyArr.contains("decorationOrderId");
         }
     }, {
         field: "name",
@@ -96,7 +96,7 @@ $(function() {
         clazz: "grey",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("decorationHouseVillageName");
+            return ruotation.pageConfig.propertyArr.contains("decorationHouseVillageName");
         },
         click: function(btn, v) {
 
@@ -109,7 +109,7 @@ $(function() {
         clazz: "grey",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("decorationHouseHouseNumber");
+            return ruotation.pageConfig.propertyArr.contains("decorationHouseHouseNumber");
         },
         click: function(btn, v) {
 
@@ -122,7 +122,7 @@ $(function() {
         clazz: "grey",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("decorationCustomerName");
+            return ruotation.pageConfig.propertyArr.contains("decorationCustomerName");
         },
         click: function(btn, v) {
 
@@ -135,7 +135,7 @@ $(function() {
         clazz: "grey",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("decorationDesignerCurrentName");
+            return ruotation.pageConfig.propertyArr.contains("decorationDesignerCurrentName");
         },
         click: function(btn, v) {
 
@@ -148,7 +148,7 @@ $(function() {
         clazz: "grey",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("decorationSalesmanCurrentName");
+            return ruotation.pageConfig.propertyArr.contains("decorationSalesmanCurrentName");
         },
         click: function(btn, v) {
 
@@ -161,7 +161,7 @@ $(function() {
         clazz: "blue",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("decorationHouseBuildArea");
+            return ruotation.pageConfig.propertyArr.contains("decorationHouseBuildArea");
         }
     }, {
         field: "decoration.status",
@@ -171,7 +171,7 @@ $(function() {
         clazz: "red",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("decorationStatus");
+            return ruotation.pageConfig.propertyArr.contains("decorationStatus");
         }
     }, {
         type: "newline"
@@ -182,7 +182,7 @@ $(function() {
         clazz: "grey",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("quotationName");
+            return ruotation.pageConfig.propertyArr.contains("quotationName");
         }
     }, {
         field: "version.name",
@@ -191,7 +191,7 @@ $(function() {
         clazz: "grey",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("version");
+            return ruotation.pageConfig.propertyArr.contains("version");
         }
     }, {
         field: "creater.currentName",
@@ -200,7 +200,7 @@ $(function() {
         clazz: "grey",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("creater");
+            return ruotation.pageConfig.propertyArr.contains("creater");
         },
         click: function(btn, v) {
 
@@ -213,7 +213,7 @@ $(function() {
         clazz: "green",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("createTime");
+            return ruotation.pageConfig.propertyArr.contains("createTime");
         }
     }, {
         field: "totalPrice",
@@ -222,7 +222,7 @@ $(function() {
         clazz: "blue",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("totalPrice");
+            return ruotation.pageConfig.propertyArr.contains("totalPrice");
         }
     }, {
         field: "content",
@@ -231,7 +231,7 @@ $(function() {
         clazz: "grey",
         show: function(v) {
 
-            return quotationRefund.pageConfig.propertyArr.contains("content");
+            return ruotation.pageConfig.propertyArr.contains("content");
         }
     }];
 
@@ -307,31 +307,31 @@ $(function() {
         return pageConfig;
     }
 
-    com.focusPage('#createQuotationRefund').click(function() {
+    com.focusPage('#createRuotation').click(function() {
 
-        quotationRefund.modals.addQuotationRefundModal.modal("show");
+        ruotation.modals.addRuotationModal.modal("show");
     });
 
-    com.focusPage('#saveQuotationRefundBtn').click(function() {
+    com.focusPage('#saveRuotationBtn').click(function() {
 
-        if (com.validate('addQuotationRefundModal')) {
+        if (com.validate('addRuotationModal')) {
             return false;
         }
 
         var params = {
-            "quotationRefund.quotation.qid": quotationRefund.items.replicaQuotation.val(),
-            "quotationRefund.decoration.orderId": quotationRefund.items.replicaOrderId.val(),
-            "quotationRefund.totalPrice": 0,
-            "quotationRefund.content": quotationRefund.items.comment.val(),
+            "ruotation.quotation.qid": ruotation.items.replicaQuotation.val(),
+            "ruotation.decoration.orderId": ruotation.items.replicaOrderId.val(),
+            "ruotation.totalPrice": 0,
+            "ruotation.content": ruotation.items.comment.val(),
         };
 
-        com.post(api.quotation.addQuotationRefund, params, function(res){
+        com.post(api.quotation.addRuotation, params, function(res){
 
             com.showAlert(com.info, "操作成功");
 
             searcher.doSearch();
 
-            quotationRefund.modals.addQuotationRefundModal.modal("hide");
+            ruotation.modals.addRuotationModal.modal("hide");
         });
     });
 });

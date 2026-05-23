@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 import com.fanglin.data.quotation.vo.QuotationItemVO;
 
-public class QuotationRefundItemVO implements Serializable {
+public class RuotationItemVO implements Serializable {
 
 	private static final long serialVersionUID = -827651832388248078L;
 
 	private Long qriid;
 
-	private QuotationRefundVO quotationRefund;
+	private RuotationVO ruotation;
 
 	private QuotationFunctionAreaVO quotationFunctionArea;
 
@@ -42,14 +42,14 @@ public class QuotationRefundItemVO implements Serializable {
 
 	private Integer index;
 
-	public QuotationRefundItemVO() {
+	public RuotationItemVO() {
 		super();
 	}
 
-	public QuotationRefundItemVO(QuotationRefundVO quotationRefund, QuotationFunctionAreaVO quotationFunctionArea, QuotationItemVO quotationItem) {
+	public RuotationItemVO(RuotationVO ruotation, QuotationFunctionAreaVO quotationFunctionArea, QuotationItemVO quotationItem) {
 		super();
 
-		this.quotationRefund = quotationRefund;
+		this.ruotation = ruotation;
 		this.quotationFunctionArea = quotationFunctionArea;
 		this.quotationItem = quotationItem;
 	}
@@ -62,12 +62,12 @@ public class QuotationRefundItemVO implements Serializable {
 		this.qriid = qriid;
 	}
 
-	public QuotationRefundVO getQuotationRefund() {
-		return quotationRefund;
+	public RuotationVO getRuotation() {
+		return ruotation;
 	}
 
-	public void setQuotationRefund(QuotationRefundVO quotationRefund) {
-		this.quotationRefund = quotationRefund;
+	public void setRuotation(RuotationVO ruotation) {
+		this.ruotation = ruotation;
 	}
 
 	public QuotationFunctionAreaVO getQuotationFunctionArea() {

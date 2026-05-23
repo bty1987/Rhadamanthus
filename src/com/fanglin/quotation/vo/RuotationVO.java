@@ -9,7 +9,7 @@ import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class QuotationRefundVO implements Serializable {
+public class RuotationVO implements Serializable {
 
 	private static final long serialVersionUID = 1363788411461486270L;
 
@@ -29,11 +29,11 @@ public class QuotationRefundVO implements Serializable {
 
 	private String content;
 
-	public QuotationRefundVO() {
+	public RuotationVO() {
 		super();
 	}
 
-	public QuotationRefundVO(DecorationVO decoration, QuotationVO quotation, QuotationVersionVO version, UserBaseVO creater) {
+	public RuotationVO(DecorationVO decoration, QuotationVO quotation, QuotationVersionVO version, UserBaseVO creater) {
 		super();
 
 		this.decoration = decoration;

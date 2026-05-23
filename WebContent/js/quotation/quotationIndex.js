@@ -758,7 +758,7 @@
 
             quotation.quotation = v;
             quotation.items.comment.val('');
-            quotation.modals.addQuotationRefundModal.modal("show");
+            quotation.modals.addRuotationModal.modal("show");
 
         }
     };

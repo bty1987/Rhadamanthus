@@ -1,9 +1,9 @@
-var QuotationRefundDetail = (function() {
+var RuotationDetail = (function() {
 
     var quoRefund = {
 
         quoteRefundId: null,
-        quotationRefund: null,
+        ruotation: null,
         orderId: null,
         decoration: null,
         quoteId: null,
@@ -26,9 +26,9 @@ var QuotationRefundDetail = (function() {
                     com.focusPage('.icon-chevron-up').parents().trigger('click');
                 }),
 
-                $btnSave: com.focusPage('#saveQuotationRefundBtn').bindClick(function() { // 保存退报单信息
+                $btnSave: com.focusPage('#saveRuotationBtn').bindClick(function() { // 保存退报单信息
 
-                    com.post(api.quotation.updateQuotationRefund, quoRefund.quoteRefundParams);
+                    com.post(api.quotation.updateRuotation, quoRefund.quoteRefundParams);
                 }, 2000),
 
                 $btnPrint: com.focusPage('#printBtn').bindClick(function() { // 打印退报单信息
@@ -38,7 +38,7 @@ var QuotationRefundDetail = (function() {
                 $btnBack: com.focusPage('#backBtn').click(function() { // 返回
                     com.showConfirm("当前页面存在重要数据, 是否进行当前操作", function() {
 
-                        com.switchPage(api.index.quotationRefundIndex.url);
+                        com.switchPage(api.index.ruotationIndex.url);
                         com.closePopover();
                     });
                 })
@@ -116,7 +116,7 @@ var QuotationRefundDetail = (function() {
 
             com.focusPage('#totalPrice').text(_total); // 显示到左侧的总价
 
-            quoRefund.quoteRefundParams["quotationRefund.totalPrice"] = _total;
+            quoRefund.quoteRefundParams["ruotation.totalPrice"] = _total;
         },
 
         // 计算功能区总价
@@ -199,19 +199,19 @@ var QuotationRefundDetail = (function() {
         nowEditDomain: null,
 
         // 获取功能区下的退报项信息
-        quotationRefundItems: function(qfaId) {
+        ruotationItems: function(qfaId) {
 
-            var quotationRefundItems = null;
+            var ruotationItems = null;
 
-            com.post(api.quotation.queryQuotationRefundItem, {
-                "quotationRefundItem.quotationRefund.qrid": quoRefund.quoteRefundId,
-                "quotationRefundItem.quotationFunctionArea.qfaId": qfaId
+            com.post(api.quotation.queryRuotationItem, {
+                "ruotationItem.ruotation.qrid": quoRefund.quoteRefundId,
+                "ruotationItem.quotationFunctionArea.qfaId": qfaId
             }, function(res) {
 
-                quotationRefundItems = res.quotationRefundItems;
+                ruotationItems = res.ruotationItems;
             }, null, false);
 
-            return quotationRefundItems;
+            return ruotationItems;
         },
 
         //初始化报价中的报价项信息
@@ -341,23 +341,23 @@ var QuotationRefundDetail = (function() {
                 var num = that.$nowLine.find('.num .cell-wrap .number').text();
 
                 var args = {
-                    "quotationRefundItem.qriid": that.$nowLine.attr('data-qriid'), // 退报项ID
-                    "quotationRefundItem.quotationRefund.qrid": quoRefund.quoteRefundId, // 退报单ID
-                    "quotationRefundItem.quotationFunctionArea.qfaId": that.$nowLine.find('.name').attr('data-qfaId'), //报价功能区ID
-                    "quotationRefundItem.quotationItem.qiid": that.$nowLine.attr('data-qiid'), //数据报价项ID
-                    "quotationRefundItem.itemName": that.$nowLine.find('.name .cell-wrap').text(), // 名称
-                    "quotationRefundItem.measurementUnit": that.$nowLine.find('.unit .cell-wrap').text(), // 单位
-                    "quotationRefundItem.workType": that.$nowLine.find('.worktype .cell-wrap').text(), // 工种
-                    "quotationRefundItem.unitPrice": that.$nowLine.find('.unitprice').attr('data-unitprice'), // 单价 
-                    "quotationRefundItem.addPrice": that.$nowLine.attr('data-addprice'), // 增补价
-                    "quotationRefundItem.subPrice": that.$nowLine.attr('data-subprice'), // 退减价
-                    "quotationRefundItem.formula": that.$nowLine.find('.formula .cell-wrap').text(), // 计算公式
-                    "quotationRefundItem.initNum": num, // 初始化数量
-                    "quotationRefundItem.num": num, // 数量
-                    "quotationRefundItem.type": that.$nowLine.find('.type').attr('data-type'), // 类型
-                    "quotationRefundItem.subtype": that.$nowLine.find('.num').attr('data-subtype'), // 工程, 主材
-                    "quotationRefundItem.content": that.$nowLine.prop('title'), // 说明
-                    "quotationRefundItem.index":  parseInt(that.$nowLine.find(".line .cell-wrap").text()) // 标识
+                    "ruotationItem.qriid": that.$nowLine.attr('data-qriid'), // 退报项ID
+                    "ruotationItem.ruotation.qrid": quoRefund.quoteRefundId, // 退报单ID
+                    "ruotationItem.quotationFunctionArea.qfaId": that.$nowLine.find('.name').attr('data-qfaId'), //报价功能区ID
+                    "ruotationItem.quotationItem.qiid": that.$nowLine.attr('data-qiid'), //数据报价项ID
+                    "ruotationItem.itemName": that.$nowLine.find('.name .cell-wrap').text(), // 名称
+                    "ruotationItem.measurementUnit": that.$nowLine.find('.unit .cell-wrap').text(), // 单位
+                    "ruotationItem.workType": that.$nowLine.find('.worktype .cell-wrap').text(), // 工种
+                    "ruotationItem.unitPrice": that.$nowLine.find('.unitprice').attr('data-unitprice'), // 单价 
+                    "ruotationItem.addPrice": that.$nowLine.attr('data-addprice'), // 增补价
+                    "ruotationItem.subPrice": that.$nowLine.attr('data-subprice'), // 退减价
+                    "ruotationItem.formula": that.$nowLine.find('.formula .cell-wrap').text(), // 计算公式
+                    "ruotationItem.initNum": num, // 初始化数量
+                    "ruotationItem.num": num, // 数量
+                    "ruotationItem.type": that.$nowLine.find('.type').attr('data-type'), // 类型
+                    "ruotationItem.subtype": that.$nowLine.find('.num').attr('data-subtype'), // 工程, 主材
+                    "ruotationItem.content": that.$nowLine.prop('title'), // 说明
+                    "ruotationItem.index":  parseInt(that.$nowLine.find(".line .cell-wrap").text()) // 标识
                 };
 
                 var fee = quoRefund.calculateNowQuoteItem(num, areaType, that.$nowLine);
@@ -366,12 +366,12 @@ var QuotationRefundDetail = (function() {
 
                 var params = $.extend({}, args, quoRefund.quoteRefundParams);
 
-                com.post(api.quotation.updateQuotationRefundItem, params, function(res) {
+                com.post(api.quotation.updateRuotationItem, params, function(res) {
 
                     // 选中左上角报价中的功能区ID 将总价格显示
                     com.focusPage('[data-qfaid="' + domain.nowEditDomain.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(fee);
 
-                    that.$nowLine.attr("data-qriid", res.quotationRefundItem.qriid);
+                    that.$nowLine.attr("data-qriid", res.ruotationItem.qriid);
                     that.$nowLine.find('.icon-circle-arrow-down').hide();
                 }, function(res) {
 
@@ -450,7 +450,7 @@ var QuotationRefundDetail = (function() {
 
                 var quotval = {
                     "qriid": "",
-                    "quotationRefund": {"qrid": quoRefund.quoteRefundId},
+                    "ruotation": {"qrid": quoRefund.quoteRefundId},
                     "quotationFunctionArea": {"qfaId": quotefaId},
                     "quotationItem": {"qiid": $this.attr('data-quotationItemId')},
                     "itemName": $this.attr('data-itemName'),
@@ -566,10 +566,10 @@ var QuotationRefundDetail = (function() {
                 quoRefund.calculateQuoFees();
 
                 var params = $.extend({}, quoRefund.quoteRefundParams, {
-                    "quotationRefundItem.qriid": qriid
+                    "ruotationItem.qriid": qriid
                 });
 
-                com.post(api.quotation.deleteQuotationRefundItem, params, function(res) {
+                com.post(api.quotation.deleteRuotationItem, params, function(res) {
 
                     $quoteItem.remove();
 
@@ -623,12 +623,12 @@ var QuotationRefundDetail = (function() {
             $movequote.find(".cell.line .cell-wrap").text(nowline);
 
             var params = {};
-            params["quotationRefundItems[" + 0 + "].qriid"] = $quote.attr('data-qriid');
-            params["quotationRefundItems[" + 0 + "].index"] = upline;
-            params["quotationRefundItems[" + 1 + "].qriid"] = $movequote.attr('data-qriid');
-            params["quotationRefundItems[" + 1 + "].index"] = nowline;
+            params["ruotationItems[" + 0 + "].qriid"] = $quote.attr('data-qriid');
+            params["ruotationItems[" + 0 + "].index"] = upline;
+            params["ruotationItems[" + 1 + "].qriid"] = $movequote.attr('data-qriid');
+            params["ruotationItems[" + 1 + "].index"] = nowline;
 
-            com.post(api.quotation.updateQuotationRefundItemForIndex, params);
+            com.post(api.quotation.updateRuotationItemForIndex, params);
         },
 
         init: function() {
@@ -708,12 +708,12 @@ var QuotationRefundDetail = (function() {
 
             var sum = 0;
 
-            var quotationRefundItems = domain.quotationRefundItems(dv.qfaId);
+            var ruotationItems = domain.ruotationItems(dv.qfaId);
 
-            if (quotationRefundItems) {
+            if (ruotationItems) {
 
                 // 功能区中的报价项
-                var _items = quotationRefundItems;
+                var _items = ruotationItems;
 
                 // 按照报价项主键顺序排序
                 _items = _items.sort(function(a, b) {
@@ -1034,9 +1034,9 @@ var QuotationRefundDetail = (function() {
     return {
         init: function() {
 
-            quoRefund.quoteRefundId = params.quotation.quotationRefund.qrid;
-            quoRefund.orderId = params.quotation.quotationRefund.decoration.orderId;
-            quoRefund.quoteId = params.quotation.quotationRefund.quotation.qid;
+            quoRefund.quoteRefundId = params.quotation.ruotation.qrid;
+            quoRefund.orderId = params.quotation.ruotation.decoration.orderId;
+            quoRefund.quoteId = params.quotation.ruotation.quotation.qid;
 
             // 初始化装修单信息
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
@@ -1049,20 +1049,20 @@ var QuotationRefundDetail = (function() {
             }, null, false);
 
             // 初始化退报单信息
-            com.post(api.quotation.queryQuotationRefundById, {
-                "quotationRefund.qrid": quoRefund.quoteRefundId
+            com.post(api.quotation.queryRuotationById, {
+                "ruotation.qrid": quoRefund.quoteRefundId
             }, function(data) {
 
-                var quotationRefund = data.quotationRefund;
+                var ruotation = data.ruotation;
 
                 // 将报价数据获取到全局变量中
                 quoRefund.quoteRefundParams = {
-                    "quotationRefund.qrid": quotationRefund.qrid, // 退报单Id
-                    "quotationRefund.totalPrice": quotationRefund.totalPrice, // 退报单总额
+                    "ruotation.qrid": ruotation.qrid, // 退报单Id
+                    "ruotation.totalPrice": ruotation.totalPrice, // 退报单总额
                 };
 
-                com.focusPage('#quotationName').text(quotationRefund.quotation.name); // 左上角显示报价名称
-                com.focusPage('#version').text(quotationRefund.version.name); // 左测显示报价版本
+                com.focusPage('#quotationName').text(ruotation.quotation.name); // 左上角显示报价名称
+                com.focusPage('#version').text(ruotation.version.name); // 左测显示报价版本
             }, null, false);
 
             com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {
@@ -1117,7 +1117,7 @@ var QuotationRefundDetail = (function() {
 
                     com.focusPage('#totalPrice').text(_total);
 
-                    quoRefund.quoteRefundParams["quotationRefund.totalPrice"] = _total;
+                    quoRefund.quoteRefundParams["ruotation.totalPrice"] = _total;
                 }
             }, null, false);
 
@@ -1130,5 +1130,5 @@ var QuotationRefundDetail = (function() {
 })();
 
 $(function() {
-    QuotationRefundDetail.init();
+    RuotationDetail.init();
 });
