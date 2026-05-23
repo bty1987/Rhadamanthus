@@ -14,7 +14,9 @@ package com.fanglin.factory.service;
 import java.util.List;
 
 public interface SecretService {
-	
+
 	public List<String> OXCKSFRD();
+
+	public String DECRYPT(String encrypte);
 
 }
