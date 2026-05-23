@@ -25,6 +25,10 @@ class Exporter(Util):
         
         self.key = "844dd1be967b6e9e"
         self.iv = "cdb421d038104126"
+        self.newKey = None
+        self.newIv = None
+        self.legacyKey = "b4d617b336124c63"
+        self.legacyIv = "b4d1a58a416957a5"
 
         self.colum = u"""
             r.orderId AS `装修单号`,
@@ -88,6 +92,43 @@ class Exporter(Util):
         aes = pyaes.AESModeOfOperationCBC(key_bytes, iv=iv_bytes)
         decrypted = aes.decrypt(encrypted_bytes)
         return self.unpad(decrypted).decode('utf-8')
+
+    def decryptSensitive(self, value):
+        """三层回退解密，参照系统中 SensitiveDataHelper.decrypt
+
+        1. 新格式 ENC(V1:base64密文) -> 用新密钥解密
+        2. 旧格式（纯Base64） -> 用旧密钥解密
+        3. 兜底 -> 当作明文直接返回
+        """
+        if value is None or str(value).strip() == '':
+            return value
+
+        value = str(value).strip()
+
+        # 第一层: 新格式 ENC(V1:xxx)
+        if value.startswith('ENC(') and value.endswith(')'):
+            inner = value[4:-1]
+            colonIndex = inner.find(':')
+            if colonIndex > 0:
+                version = inner[:colonIndex]
+                encryptedData = inner[colonIndex + 1:]
+                if version == 'V1' and self.newKey and self.newIv:
+                    try:
+                        return self.decrypt(encryptedData, self.newKey, self.newIv)
+                    except Exception:
+                        pass
+
+        # 第二层: 旧格式（纯Base64）
+        # 快速排除：11位纯数字是手机号明文
+        import re
+        if len(value) >= 10 and not re.match(r'^\d{11}$', value):
+            try:
+                return self.decrypt(value, self.legacyKey, self.legacyIv)
+            except Exception:
+                pass
+
+        # 第三层: 当作明文直接返回
+        return value
 
     def company(self, cloumCompany, company):
         if company != 0:
@@ -156,7 +197,7 @@ class Exporter(Util):
                 for i, v in enumerate(rows):
                     data = list(v)
                     
-                    data[7] = self.decrypt(data[7], self.key, self.iv)
+                    data[7] = self.decryptSensitive(data[7])
 
                     self.createTableHead(sheet, data, counts)
                     counts += 1
@@ -213,4 +254,6 @@ if __name__ == '__main__':
     company = sys.argv[3]
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
+    exporter.newKey = config.get("encryptKeyV1", None)
+    exporter.newIv = config.get("encryptIvV1", None)
     exporter.main(pid, args, company)
