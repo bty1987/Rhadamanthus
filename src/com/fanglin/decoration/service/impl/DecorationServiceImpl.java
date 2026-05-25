@@ -871,8 +871,8 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 		}
 
-		if (decorationVO.getDesigner() != null && decorationPO.getDesigner() != null) decorationVO.getDesigner().setPhone(decorationPO.getDesigner().getPhone());
-		if (decorationVO.getSupervisor() != null && decorationPO.getSupervisor() != null) decorationVO.getSupervisor().setPhone(decorationPO.getSupervisor().getPhone());
+		if (decorationVO.getDesigner() != null && decorationPO.getDesigner() != null) decorationVO.getDesigner().setPhone(SensitiveDataHelper.decrypt(decorationPO.getDesigner().getPhone()));
+		if (decorationVO.getSupervisor() != null && decorationPO.getSupervisor() != null) decorationVO.getSupervisor().setPhone(SensitiveDataHelper.decrypt(decorationPO.getSupervisor().getPhone()));
 
 		addition(decorationPO.getAddition(), decorationVO);
 
