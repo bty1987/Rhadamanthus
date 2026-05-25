@@ -53,6 +53,15 @@
             valuePath: "value"
         }
     },
+    "customerName": {
+        label: "客户名称",
+        type: "text",
+        submitConfig: {
+            name: "customerName",
+            op: "cn",
+            validate: null
+        }
+    },
     "service-orderId": {
         label: "装修单号",
         type: "text",
