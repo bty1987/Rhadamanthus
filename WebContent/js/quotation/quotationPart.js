@@ -4925,7 +4925,7 @@ var QuotationDetail = (function() {
             });
 
             // 税金类型选择弹层初始化
-            com.focusPage('#taxType').bindData(constant.data().quotationVersion.taxDiscount.keys);
+            com.focusPage('#taxType').bindData(constant.data().quotationVersion.taxDiscount.datas, 'key', 'value', false);
 
             // 根据报价ID 获取报价信息(同步ajax)
             com.post(api.quotation.queryQuotationById, {

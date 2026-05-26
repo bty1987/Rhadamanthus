@@ -287,19 +287,19 @@ class Exporter(Util):
 
         if infos[0][0] != None:
             data = list(infos[0])
-            return sumReferMoney = int(data[0])
+            sumReferMoney = int(data[0])
             
         infos = self.executeQuerySQL(self.SQL_QUERY_QUOTATION_UNACHE_SUM % (1, orderId))
         
         if infos[0][0] != None:
             data = list(infos[0])
-            return sumReferMoney = int(data[0])
+            sumReferMoney = int(data[0])
             
         infos = self.executeQuerySQL(self.SQL_QUERY_QUOTATION_UNACHE_SUM % (0, orderId))
         
         if infos[0][0] != None:
             data = list(infos[0])
-            return sumReferMoney = int(data[0])
+            sumReferMoney = int(data[0])
 
         return sumReferMoney
 

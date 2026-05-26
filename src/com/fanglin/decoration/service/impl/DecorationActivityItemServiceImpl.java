@@ -493,8 +493,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		}
 
 		// 校验是否重复核销：同一装修单orderId下不允许重复核销
-		long verifiedCount = decorationActivityItemDao.countDecorationActivityItem(decorationActivityItemPO.getOrderId(), null, Arrays.asList(DecorationActivityItemPO.STATUS_VERIFY_INT), null, null);
-		if (verifiedCount > 0) {
+		if (decorationActivityItemDao.countDecorationActivityItem(decorationActivityItemPO.getOrderId(), null, Arrays.asList(DecorationActivityItemPO.STATUS_VERIFY_INT), null, null) > 0) {
 			throw new FLException(140059, "当前装修单已核销过活动奖品，不可重复核销");
 		}
 
