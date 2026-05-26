@@ -48,6 +48,8 @@ public class WorkerSalaryVO implements Serializable {
 
 	private Short isCheck;
 
+	private Short isPlan;
+
 	private Short status;
 
 	private UserBaseVO user;
@@ -267,6 +269,14 @@ public class WorkerSalaryVO implements Serializable {
 
 	public void setIsCheck(Short isCheck) {
 		this.isCheck = isCheck;
+	}
+
+	public Short getIsPlan() {
+		return isPlan;
+	}
+
+	public void setIsPlan(Short isPlan) {
+		this.isPlan = isPlan;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")

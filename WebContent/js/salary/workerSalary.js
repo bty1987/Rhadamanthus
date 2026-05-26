@@ -264,6 +264,15 @@ jQuery(function($) {
         },
         clazz: "red"
     }, {
+        field: "isPlan",
+        name: "工费类型",
+        prop: "isPlan",
+        dataset: {
+            "0": "标准",
+            "1": "计划"
+        },
+        clazz: "red"
+    }, {
         field: "creater",
         name: "创建人",
         prop: "creater.userName",

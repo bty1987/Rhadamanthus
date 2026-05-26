@@ -31,7 +31,7 @@ jQuery(function($) {
     var seacher = new Searcher();
 
     seacher.base("condList", "pagenation", "resultList", api.data.pageDecorationBusitype);
-    seacher.condition(["data-decoration-busitype-name", "data-decoration-busitype-status"]);
+    seacher.condition(["data-decoration-busitype-name", "data-decoration-busitype-alias", "data-decoration-busitype-status", "data-decoration-busitype-outside", "data-decoration-busitype-isRefer", "data-decoration-busitype-isAward", "data-decoration-busitype-type"]);
     seacher.button([{
         id: "addDecorationBusitype",
         name: "添加",

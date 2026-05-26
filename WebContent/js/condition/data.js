@@ -1629,6 +1629,84 @@ Condition.addupRule("data", {
         }
     },
 
+    "decoration-busitype-alias": {
+        label: "上级",
+        type: "text",
+        submitConfig: {
+            name: "alias",
+            op: "cn",
+            validate: null
+        }
+    },
+
+    "decoration-busitype-outside": {
+        label: "三方标识",
+        type: "select",
+        submitConfig: {
+            name: "outside",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.data().decorationBusitype.outside.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "decoration-busitype-isRefer": {
+        label: "推荐标识",
+        type: "select",
+        submitConfig: {
+            name: "isRefer",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.data().decorationBusitype.isRefer.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "decoration-busitype-isAward": {
+        label: "奖励标识",
+        type: "select",
+        submitConfig: {
+            name: "isAward",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.data().decorationBusitype.isAward.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "decoration-busitype-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.data().decorationBusitype.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
     "constant-module": {
         label: "模块",
         type: "text",

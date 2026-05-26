@@ -39,6 +39,8 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 
 		queryFilterExcute(query, filters);
 
+		query.desc("pid");
+
 		return query.list();
 	}
 

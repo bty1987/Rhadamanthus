@@ -476,4 +476,25 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void planConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		if (constructionSchedulePO.getPlanStatus() != 0) {
+			throw new FLException(120025, "预估工费已确认,不可重复操作");
+		}
+
+		constructionSchedulePO.setPlanSalary(constructionScheduleVO.getPlanSalary());
+		constructionSchedulePO.setPlanTime(constructionScheduleVO.getPlanTime());
+		constructionSchedulePO.setPlanStatus((short) 1);
+
+		constructionScheduleDao.update(constructionSchedulePO);
+	}
+
 }

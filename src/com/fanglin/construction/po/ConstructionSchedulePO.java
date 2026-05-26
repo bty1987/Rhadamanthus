@@ -122,6 +122,12 @@ public class ConstructionSchedulePO implements Serializable {
 
 	private int fincheck;
 
+	private int planSalary;
+
+	private short planStatus;
+
+	private Timestamp planTime;
+
 	public ConstructionSchedulePO() {
 		super();
 	}
@@ -406,6 +412,33 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public void setFincheck(int fincheck) {
 		this.fincheck = fincheck;
+	}
+
+	@Column(name = "planSalary")
+	public int getPlanSalary() {
+		return planSalary;
+	}
+
+	public void setPlanSalary(int planSalary) {
+		this.planSalary = planSalary;
+	}
+
+	@Column(name = "planStatus")
+	public short getPlanStatus() {
+		return planStatus;
+	}
+
+	public void setPlanStatus(short planStatus) {
+		this.planStatus = planStatus;
+	}
+
+	@Column(name = "planTime")
+	public Timestamp getPlanTime() {
+		return planTime;
+	}
+
+	public void setPlanTime(Timestamp planTime) {
+		this.planTime = planTime;
 	}
 
 	@Column(name = "prenum")

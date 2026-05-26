@@ -87,6 +87,12 @@ public class ConstructionScheduleVO implements Serializable {
 
 	private Integer fincheck;
 
+	private Integer planSalary;
+
+	private Short planStatus;
+
+	private Timestamp planTime;
+
 	public ConstructionScheduleVO() {
 		super();
 	}
@@ -342,6 +348,31 @@ public class ConstructionScheduleVO implements Serializable {
 
 	public void setFincheck(Integer fincheck) {
 		this.fincheck = fincheck;
+	}
+
+	public Integer getPlanSalary() {
+		return planSalary;
+	}
+
+	public void setPlanSalary(Integer planSalary) {
+		this.planSalary = planSalary;
+	}
+
+	public Short getPlanStatus() {
+		return planStatus;
+	}
+
+	public void setPlanStatus(Short planStatus) {
+		this.planStatus = planStatus;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getPlanTime() {
+		return planTime;
+	}
+
+	public void setPlanTime(Timestamp planTime) {
+		this.planTime = planTime;
 	}
 
 	public Integer getPrenum() {

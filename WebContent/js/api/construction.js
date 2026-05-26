@@ -216,10 +216,10 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal", "prenum", "postnum"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal", "prenum", "postnum", "planSalary"]
             }, {
                 result: "paging-data-construction",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal", "planSalary"]
             }, {
                 result: "paging-data-decoration",
                 args: ["orderTotalPrice"]
@@ -232,14 +232,14 @@ $.extend(api, {
             url: "queryConstructionScheduleByOrderId.do",
             tranargs: [{
                 result: "constructionSchedules",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal", "planSalary"]
             }]
         },
         queryConstructionScheduleByCid: {
             url: "queryConstructionScheduleByCid.do",
             tranargs: [{
                 result: "constructionSchedules",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal", "planSalary"]
             }]
         },
         queryConstructionScheduleByCsid: {
@@ -274,6 +274,13 @@ $.extend(api, {
         },
         leaveConstructionSchedule: {
             url: "leaveConstructionSchedule.do"
+        },
+        planConstructionSchedule: {
+            url: "planConstructionSchedule.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionSchedule.planSalary"]
+            }
         },
 
         queryConstructionDrawingByOrderId: {

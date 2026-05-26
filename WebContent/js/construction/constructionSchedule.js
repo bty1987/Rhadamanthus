@@ -6,12 +6,14 @@ jQuery(function($) {
             updateNormModal: com.focusPage("#updateNormModal"),
             updateCaleModal: com.focusPage("#updateCaleModal"),
             updatePeriodModal: com.focusPage("#updatePeriodModal"),
+            planSalaryModal: com.focusPage("#planSalaryModal"),
         },
 
         btns: {
             updateCaleBtn: com.focusPage("#updateCaleBtn"),
             updateNormBtn: com.focusPage("#updateNormBtn"),
             updatePeriodBtn: com.focusPage("#updatePeriodBtn"),
+            planSalaryBtn: com.focusPage("#planSalaryBtn"),
         },
 
         items: {
@@ -26,7 +28,10 @@ jQuery(function($) {
             stacheck: com.focusPage("#stacheck", "#updateCaleModal"),
             fincheck: com.focusPage("#fincheck", "#updateCaleModal"),
 
-            period: com.focusPage("#period", "#updatePeriodModal")
+            period: com.focusPage("#period", "#updatePeriodModal"),
+
+            planSalary: com.focusPage("#planSalary", "#planSalaryModal"),
+            planTime: com.focusPage("#planTime", "#planSalaryModal"),
         },
 
         decorationStatus: {},
@@ -38,6 +43,7 @@ jQuery(function($) {
     constructionSchedule.btns.updateCaleBtn.bindClick(updateCaleBtn);
     constructionSchedule.btns.updateNormBtn.bindClick(updateNormBtn);
     constructionSchedule.btns.updatePeriodBtn.bindClick(updatePeriodBtn);
+    constructionSchedule.btns.planSalaryBtn.bindClick(planSalaryBtn);
 
     constructionSchedule.modals.updateNormModal.on("hide.bs.modal", function() {
 
@@ -52,6 +58,12 @@ jQuery(function($) {
     });
 
     constructionSchedule.modals.updatePeriodModal.on("hide.bs.modal", function() {
+
+        com.cleanItems(constructionSchedule.items);
+        com.closeTip();
+    });
+
+    constructionSchedule.modals.planSalaryModal.on("hide.bs.modal", function() {
 
         com.cleanItems(constructionSchedule.items);
         com.closeTip();
@@ -229,6 +241,21 @@ jQuery(function($) {
         name: "完工主材比例",
         prop: "fincheck",
         clazz: "blue"
+    }, {
+        field: "planSalary",
+        name: "预估工费",
+        prop: "planSalary",
+        clazz: "blue"
+    }, {
+        field: "planStatus",
+        name: "预估工费状态",
+        prop: "planStatus",
+        clazz: "red"
+    }, {
+        field: "planTime",
+        name: "预估时间",
+        prop: "planTime",
+        clazz: "green"
     }, ];
 
     var linebtns = [{
@@ -273,6 +300,25 @@ jQuery(function($) {
             constructionSchedule.items.period.val(v.period);
 
             constructionSchedule.modals.updatePeriodModal.modal("show");
+
+            return false;
+        }
+    }, {
+        name: "确认预估",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            if (v.planStatus != 0) {
+                com.showAlert(com.warning, "预估工费已确认,不可重复操作");
+                return false;
+            }
+
+            constructionSchedule.schedule = v;
+
+            constructionSchedule.items.planSalary.val(v.planSalary);
+            constructionSchedule.items.planTime.val(v.planTime);
+
+            constructionSchedule.modals.planSalaryModal.modal("show");
 
             return false;
         }
@@ -332,6 +378,24 @@ jQuery(function($) {
             com.showAlert(com.info, "操作成功");
 
             constructionSchedule.modals.updatePeriodModal.modal("hide");
+
+            searcher.doSearch();
+        });
+    }
+
+    function planSalaryBtn() {
+
+        var options = {
+            "constructionSchedule.csid": constructionSchedule.schedule.csid,
+            "constructionSchedule.planSalary": constructionSchedule.items.planSalary.val(),
+            "constructionSchedule.planTime": constructionSchedule.items.planTime.val(),
+        };
+
+        com.post(api.construction.planConstructionSchedule, options, function(res) {
+
+            com.showAlert(com.info, "预估工费确认成功");
+
+            constructionSchedule.modals.planSalaryModal.modal("hide");
 
             searcher.doSearch();
         });

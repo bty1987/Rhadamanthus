@@ -37,4 +37,6 @@ public interface ConstructionScheduleService {
 
 	public int resetConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;
 
+	public void planConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;
+
 }

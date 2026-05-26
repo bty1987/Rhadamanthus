@@ -56,11 +56,20 @@ public class DecorationBusitypeDaoImpl extends DaoImpl<DecorationBusitypePO> imp
 
 			if ("name".equals(field)) {
 				query.add(Restrictions.ilike("name", data, MatchMode.ANYWHERE));
+			} else if ("alias".equals(field)) {
+				query.add(Restrictions.ilike("alias", data, MatchMode.ANYWHERE));
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("outside".equals(field)) {
+				query.add(query.getCriterion("outside", Short.valueOf(data), op));
+			} else if ("isRefer".equals(field)) {
+				query.add(query.getCriterion("isRefer", Short.valueOf(data), op));
+			} else if ("isAward".equals(field)) {
+				query.add(query.getCriterion("isAward", Short.valueOf(data), op));
+			} else if ("type".equals(field)) {
+				query.add(query.getCriterion("type", Short.valueOf(data), op));
 			}
 		}
 	}
-
 
 }
