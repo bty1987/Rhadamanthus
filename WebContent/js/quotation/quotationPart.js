@@ -2040,7 +2040,10 @@ var QuotationDetail = (function() {
                     return false;
                 }
 
-                quo.calculateQuoFees();
+                if (!quo.calculateQuoFees()) {
+                    quo.oldQuotationPreferData();
+                    return false;
+                }
 
                 quote.editQuotePreferArea(quoteArea, com.focusPage("#innerFloor").val(), com.focusPage("#isLift").val());
 
@@ -2102,6 +2105,7 @@ var QuotationDetail = (function() {
                     params["approvalQuotationPrefer.activityProfit"] = com.focusPage('#activityProfit', "#quotationPreferModal").val();
                     params["approvalQuotationPrefer.activityPrice"] = quo.preferParams["quotationPrefer.activityPrice"];
                     params["approvalQuotationPrefer.totalPrice"] = quo.basicParams["quotation.totalPrice"];
+                    params["approvalQuotationPrefer.taxPrice"] = quo.basicParams["quotation.taxPrice"];
                     params["approvalQuotationPrefer.type"] = 1;
                 } else {
                     // 特批优惠审批：传入原有的优惠参数
@@ -2147,6 +2151,18 @@ var QuotationDetail = (function() {
                 // 获取用户输入的活动优惠金额
                 var activityProfitInput = com.focusPage('#activityProfit', "#quotationPreferModal").val();
 
+                // 校验活动优惠金额合理性
+                if (parseFloat(activityProfitInput) < 0) {
+                    com.showAlert(com.warning, "活动优惠不能为负数");
+                    return false;
+                }
+
+                var activityPrice = quo.quotationPrefer ? quo.quotationPrefer.activityPrice : 0;
+                if (parseFloat(activityProfitInput) > parseFloat(activityPrice)) {
+                    com.showAlert(com.warning, "活动优惠不能大于活动金额");
+                    return false;
+                }
+
                 // 临时更新到全局参数，用于计算 totalPrice
                 quo.preferParams["quotationPrefer.activityProfit"] = activityProfitInput;
 
@@ -2160,7 +2176,7 @@ var QuotationDetail = (function() {
                 com.focusPage("#approveManSel", "#approveModal").empty();
 
                 com.post(api.approval.queryApproverByType, {
-                    "approver.type": 22
+                    "approver.type": 26
                 }, function(res) {
 
                     $.each(res.approvers, function(i, v) {
