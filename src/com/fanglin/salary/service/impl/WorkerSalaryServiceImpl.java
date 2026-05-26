@@ -200,7 +200,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			long salaryTotal = Arith.add(constructionPO.getSalaryTotal(), workerSalaryVO.getMoney());
 
 			if (salaryTotal > constructionPO.getSalaryLimit()) {
-				throw new FLException(280007, "工费已达上限");
+				throw new FLException(280007, "工程单工费已达上限");
 			}
 
 			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(constructionPO.getDecoration().getOrderId());
@@ -208,7 +208,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			List<Short> twotypes = Arrays.asList(WorkerSalaryPO.TWOTYPE_SALARY_INT, WorkerSalaryPO.TWOTYPE_ADDITME_INT, WorkerSalaryPO.TWOTYPE_PROPER_INT);
 
 			if (twotypes.contains(workerSalaryVO.getTwotype()) && Arith.add(workerSalaryDao.amountWorkerSalary(cid, constructionSchedulePO.getNode().getCnid(), twotypes), workerSalaryVO.getMoney()) > Arith.add(normriceItemDao.amountNormriceItem(quotationPO.getQid(), constructionSchedulePO.getNode().getCnid()), constructionSchedulePO.getSalaryLimit())) {
-				throw new FLException(280007, "工费已达上限");
+				throw new FLException(280007, "工程节点工费已达上限");
 			}
 
 			constructionPO.setSalaryTotal(salaryTotal);
@@ -380,25 +380,25 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryPO.setCount(0);
 			workerSalaryPO.setIsAppr(WorkerSalaryPO.ISAPPR_APPR_INT);
 
-		workerSalaryDao.update(workerSalaryPO);
+			workerSalaryDao.update(workerSalaryPO);
 
-		// 更新 construction.salarytotal
-		if (workerSalaryPO.getCsid() != 0 && workerSalaryPO.getCid() != 0) {
-			ConstructionPO constructionPO = constructionDao.queryConstructionByCid(workerSalaryPO.getCid());
-			if (constructionPO != null) {
-				long salaryTotal = Arith.sub(constructionPO.getSalaryTotal(), workerSalaryPO.getMoney());
-				constructionPO.setSalaryTotal(salaryTotal);
-				constructionDao.update(constructionPO);
+			// 更新 construction.salarytotal
+			if (workerSalaryPO.getCsid() != 0 && workerSalaryPO.getCid() != 0) {
+				ConstructionPO constructionPO = constructionDao.queryConstructionByCid(workerSalaryPO.getCid());
+				if (constructionPO != null) {
+					long salaryTotal = Arith.sub(constructionPO.getSalaryTotal(), workerSalaryPO.getMoney());
+					constructionPO.setSalaryTotal(salaryTotal);
+					constructionDao.update(constructionPO);
+				}
+			}
+
+			if (workerSalaryPO.getDecoration() != null) {
+				workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
 			}
 		}
 
-		if (workerSalaryPO.getDecoration() != null) {
-			workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
-		}
+		return 0;
 	}
-
-	return 0;
-}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -456,25 +456,25 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryPO.setStatus(WorkerSalaryPO.STATUS_REPEAL_INT);
 			workerSalaryPO.setApprover(approver);
 
-		workerSalaryDao.update(workerSalaryPO);
+			workerSalaryDao.update(workerSalaryPO);
 
-		// 更新 construction.salarytotal
-		if (workerSalaryPO.getCsid() != 0 && workerSalaryPO.getCid() != 0) {
-			ConstructionPO constructionPO = constructionDao.queryConstructionByCid(workerSalaryPO.getCid());
-			if (constructionPO != null) {
-				long salaryTotal = Arith.sub(constructionPO.getSalaryTotal(), workerSalaryPO.getMoney());
-				constructionPO.setSalaryTotal(salaryTotal);
-				constructionDao.update(constructionPO);
+			// 更新 construction.salarytotal
+			if (workerSalaryPO.getCsid() != 0 && workerSalaryPO.getCid() != 0) {
+				ConstructionPO constructionPO = constructionDao.queryConstructionByCid(workerSalaryPO.getCid());
+				if (constructionPO != null) {
+					long salaryTotal = Arith.sub(constructionPO.getSalaryTotal(), workerSalaryPO.getMoney());
+					constructionPO.setSalaryTotal(salaryTotal);
+					constructionDao.update(constructionPO);
+				}
+			}
+
+			if (workerSalaryPO.getDecoration() != null) {
+				workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
 			}
 		}
 
-		if (workerSalaryPO.getDecoration() != null) {
-			workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
-		}
+		return 0;
 	}
-
-	return 0;
-}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
