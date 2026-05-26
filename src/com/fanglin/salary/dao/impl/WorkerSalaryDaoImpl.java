@@ -194,4 +194,13 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 			}
 		}
 	}
+
+	@Override
+	public long sumPlanWorkerSalary(long csid) {
+
+		String sql = "select sum(money) from salary.workersalary where csid = :csid and isPlan = :isPlan and status in (0, 1)";
+		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("csid", csid).setShort("isPlan", WorkerSalaryPO.ISPLAN_PLAN_INT).uniqueResult();
+
+		return count == null ? 0 : count.longValue();
+	}
 }

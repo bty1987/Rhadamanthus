@@ -185,6 +185,10 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(workerSalaryVO.getCsid());
 
+			if (constructionSchedulePO.getPlanStatus() == 2) {
+				throw new FLException(280008, "预估工费已锁定,不可创建工费");
+			}
+
 			if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_FINISH_INT) {
 				throw new FLException(280003, "施工环节未完工");
 			}
@@ -225,6 +229,19 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryPO.setSchedule(constructionSchedulePO.getSchedule());
 			workerSalaryPO.setCsid(workerSalaryVO.getCsid());
 			workerSalaryPO.setCnid(constructionSchedulePO.getNode().getCnid());
+
+			workerSalaryPO.setIsPlan(constructionSchedulePO.getPlanStatus() == 1 ? WorkerSalaryPO.ISPLAN_PLAN_INT : WorkerSalaryPO.ISPLAN_STANDARD_INT);
+
+			if (workerSalaryPO.getIsPlan() == WorkerSalaryPO.ISPLAN_PLAN_INT) {
+
+				long planSalary = constructionSchedulePO.getPlanSalary();
+				long planUsed = workerSalaryDao.sumPlanWorkerSalary(workerSalaryVO.getCsid());
+				long planAdd = Math.abs(workerSalaryVO.getMoney());
+
+				if (planSalary > 0 && Arith.add(planUsed, planAdd) > planSalary) {
+					throw new FLException(280009, "计划工费已超出预估工费限额");
+				}
+			}
 
 			workerSalaryPO.setCount(workerSalaryDao.countWorkerSalary(decorationPO.getOrderId(), workerSalaryPO.getCsid()) + 1);
 		}
