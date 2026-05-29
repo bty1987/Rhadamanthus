@@ -710,36 +710,36 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void configCustomerChance(CustomerChanceVO customerChance) throws FLException {
+	public void configCustomerChance(CustomerChanceVO customerChanceVO) throws FLException {
 
-		CustomerChancePO customerChancePO = customerChanceDao.get(customerChance.getCcid());
+		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());
 
 		if (customerChancePO == null) {
 			throw new FLException(330075, "客户机会不存在");
 		}
 
-		if (!StringUtils.isEmpty(customerChance.getIsGroup())) {
-			customerChancePO.setIsGroup(customerChance.getIsGroup());
+		if (!StringUtils.isEmpty(customerChanceVO.getIsGroup())) {
+			customerChancePO.setIsGroup(customerChanceVO.getIsGroup());
 		}
 
-		if (!StringUtils.isEmpty(customerChance.getIsPhone())) {
-			customerChancePO.setIsPhone(customerChance.getIsPhone());
+		if (!StringUtils.isEmpty(customerChanceVO.getIsPhone())) {
+			customerChancePO.setIsPhone(customerChanceVO.getIsPhone());
 		}
 
-		if (customerChance.getIsMeet() != null && customerChance.getIsMeet() == CustomerChancePO.ISMEET_MEET_INT && customerChancePO.getIsMeet() != CustomerChancePO.ISMEET_MEET_INT) {
+		if (customerChanceVO.getIsMeet() != null && customerChanceVO.getIsMeet() == CustomerChancePO.ISMEET_MEET_INT && customerChancePO.getIsMeet() != CustomerChancePO.ISMEET_MEET_INT) {
 			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "meetCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"event\":\"CUSTOMER_CHANCE_MEET\"}"));
 		}
 
-		if (!StringUtils.isEmpty(customerChance.getIsMeet())) {
-			customerChancePO.setIsMeet(customerChance.getIsMeet());
+		if (!StringUtils.isEmpty(customerChanceVO.getIsMeet())) {
+			customerChancePO.setIsMeet(customerChanceVO.getIsMeet());
 		}
 
 		if (CustomerChancePO.ISMEET_MEET_INT == customerChancePO.getIsMeet()) {
 			customerChancePO.setMeetTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 
-		if (!StringUtils.isEmpty(customerChance.getIsTrue())) {
-			customerChancePO.setIsTrue(customerChance.getIsTrue());
+		if (!StringUtils.isEmpty(customerChanceVO.getIsTrue())) {
+			customerChancePO.setIsTrue(customerChanceVO.getIsTrue());
 		}
 
 		customerChanceDao.update(customerChancePO);
