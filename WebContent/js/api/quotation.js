@@ -30,6 +30,9 @@ $.extend(api.index, {
     quotationOutputIndex: {
         url: "/views/quotation/quotationOutput.html"
     },
+    normriceItemIndex: {
+        url: "/views/quotation/normriceItem.html"
+    },
 
     ruotationIndex: {
         url: "/views/quotation/ruotationIndex.html"
@@ -1791,6 +1794,15 @@ $.extend(api, {
         deleteNormriceItem: {
             url: "deleteNormriceItem.do",
             intercept: true
+        },
+
+        queryNormriceItemByType: {
+            url: "queryNormriceItemByType.do",
+            type: "query",
+            tranargs: [{
+                result: "normriceItems",
+                args: ["trannum", "salary", "num"]
+            }]
         },
 
         queryNormtimeItem: {

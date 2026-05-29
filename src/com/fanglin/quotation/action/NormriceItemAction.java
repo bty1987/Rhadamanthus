@@ -39,6 +39,14 @@ public class NormriceItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryNormriceItemByType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryNormriceItemByType() {
+
+		normriceItems = normriceItemService.queryNormriceItemByType(normriceItem);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addNormriceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addNormriceItem() throws FLException {
 

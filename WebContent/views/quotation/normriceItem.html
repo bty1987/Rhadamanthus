@@ -1,0 +1,35 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-12">
+                    <form class="form-inline" role="form">
+                        <div class="form-group">
+                            <label class="control-label" for="orderId">装修单号:</label>
+                            <input type="text" id="orderId" class="form-control input-sm" placeholder="输入装修单号查询" maxlength="20" style="width: 200px;"/>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" id="queryBtn" class="btn btn-primary btn-sm">
+                                <i class="icon-search bigger-110"></i> 查询
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="space-6"></div>
+
+            <!-- 报价单信息 -->
+            <div id="quotationInfo" class="alert alert-info" style="display:none;">
+                <strong>报价单:</strong> <span id="quotationOrderId"></span>
+                <strong style="margin-left:15px;">状态:</strong> <span id="quotationStatus"></span>
+            </div>
+
+            <div id="normriceItemResultList" class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/quotation/normriceItem.js']);
+</script>
