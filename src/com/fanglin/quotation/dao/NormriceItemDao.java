@@ -9,6 +9,8 @@ public interface NormriceItemDao extends Dao<NormriceItemPO> {
 
 	public List<NormriceItemPO> queryNormriceItem(long qid);
 
+	public List<NormriceItemPO> queryNormriceItemByType(long qid, short type);
+
 	public NormriceItemPO queryNormriceItem(long sid, long quoteId, long npid, short type);
 
 	public int amountNormriceItem(long qid, long cnid);

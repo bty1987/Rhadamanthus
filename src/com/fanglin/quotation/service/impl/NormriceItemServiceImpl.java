@@ -59,6 +59,25 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 	}
 
 	@Override
+	public List<NormriceItemVO> queryNormriceItemByType(NormriceItemVO normriceItem) {
+
+		List<NormriceItemPO> normriceItemPOs = normriceItemDao.queryNormriceItemByType(normriceItem.getQid(), normriceItem.getType());
+		List<NormriceItemVO> normriceItemVOs = new ArrayList<NormriceItemVO>();
+
+		for (NormriceItemPO normriceItemPO : normriceItemPOs) {
+
+			NormriceItemVO normriceItemVO = new NormriceItemVO(new ConstructionNodeVO());
+
+			BeanUtil.copyProperties(normriceItemPO, normriceItemVO, Arrays.asList("constructionNode"));
+			BeanUtil.copyPropertie(normriceItemPO.getConstructionNode(), normriceItemVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+
+			normriceItemVOs.add(normriceItemVO);
+		}
+
+		return normriceItemVOs;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addNormriceItem(NormtionVO normtionVO, NormriceItemVO normriceItemVO) throws FLException {
 

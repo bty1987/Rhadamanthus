@@ -24,6 +24,12 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<NormriceItemPO> queryNormriceItemByType(long qid, short type) {
+		return createCriteria(NormriceItemPO.class).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("type", type)).add(Restrictions.eq("status", NormriceItemPO.STATUS_INIT_INT)).list();
+	}
+
+	@Override
 	public NormriceItemPO queryNormriceItem(long sid, long quoteId, long npid, short type) {
 		return (NormriceItemPO) session().createCriteria(NormriceItemPO.class).add(Restrictions.eq("sid", sid)).add(Restrictions.eq("quoteld", quoteId)).add(Restrictions.eq("npid", npid)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
 	}
