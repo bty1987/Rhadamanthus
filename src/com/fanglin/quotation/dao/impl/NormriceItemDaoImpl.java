@@ -114,4 +114,13 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 
 		return 0;
 	}
+
+	@Override
+	public int amountNormriceItemForSalary(long qid, long cnid) {
+
+		String sql = "select sum(if(atttype = 0, salary, -salary)*if(trannum = 0, 1, num/1000*trannum/1000)) from quotation.normriceitem where qid = :qid and cnid = :cnid and ((status = :statusInit and type != :typeQuota) or (status = :statusConfirmed and type = :typeQuota))";
+		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("qid", qid).setLong("cnid", cnid).setShort("statusInit", NormriceItemPO.STATUS_INIT_INT).setShort("statusConfirmed", NormriceItemPO.STATUS_CONFIRMED_INT).setShort("typeQuota", NormriceItemPO.TYPE_QUOTA_INT).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
+	}
 }
