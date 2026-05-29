@@ -26,7 +26,7 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<NormriceItemPO> queryNormriceItemByType(long qid, short type) {
-		return createCriteria(NormriceItemPO.class).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("type", type)).add(Restrictions.eq("status", NormriceItemPO.STATUS_INIT_INT)).list();
+		return createCriteria(NormriceItemPO.class).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("type", type)).add(Restrictions.in("status", new Short[]{NormriceItemPO.STATUS_INIT_INT, NormriceItemPO.STATUS_CONFIRMED_INT})).list();
 	}
 
 	@Override
