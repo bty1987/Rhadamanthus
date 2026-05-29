@@ -543,10 +543,8 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140004, "装修单状态不可操作");
 		}
 
-		List<Short> states = Arrays.asList(DecorationActivityItemPO.STATUS_INIT_INT, DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT, DecorationActivityItemPO.STATUS_UPGRADE_INT, DecorationActivityItemPO.STATUS_VERIFY_INT);
-
-		long couponCut = decorationActivityItemDao.amountDecorationActivityItem(orderId, DecorationActivityItemPO.TYPE_COUPON_INT, states, null, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
-		long thingCut = decorationActivityItemDao.amountDecorationActivityItem(orderId, DecorationActivityItemPO.TYPE_THING_INT, states, null, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
+		long couponCut = decorationActivityItemDao.amountDecorationActivityItem(orderId, DecorationActivityItemPO.TYPE_COUPON_INT, null, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
+		long thingCut = decorationActivityItemDao.amountDecorationActivityItem(orderId, DecorationActivityItemPO.TYPE_THING_INT, null, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
 
 		decorationPO.setCouponCut(couponCut);
 		decorationPO.setThingCut(thingCut);
@@ -655,10 +653,8 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	private void subDecorationForCut(DecorationPO decorationPO, DecorationActivityItemPO decorationActivityItemPO) {
 
-		List<Short> states = Arrays.asList(DecorationActivityItemPO.STATUS_INIT_INT, DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT, DecorationActivityItemPO.STATUS_UPGRADE_INT, DecorationActivityItemPO.STATUS_VERIFY_INT);
-
-		long couponCut = decorationActivityItemDao.amountDecorationActivityItem(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_COUPON_INT, states, null, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
-		long thingCut = decorationActivityItemDao.amountDecorationActivityItem(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_THING_INT, states, null, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
+		long couponCut = decorationActivityItemDao.amountDecorationActivityItem(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_COUPON_INT, null, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
+		long thingCut = decorationActivityItemDao.amountDecorationActivityItem(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_THING_INT, null, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
 
 		decorationPO.setCouponCut(couponCut);
 		decorationPO.setThingCut(thingCut);

@@ -203,7 +203,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		// 计算外辅费用总额和商品总额
 		long totalCharge = 0; // 费用总额
-		long totalGoodsAmount = 0; // 商品总额 = ∑(数量 × 单价)
+		long total = 0; // 商品总额 = ∑(数量 × 单价)
 		int totalBalance = 0; // 结算总额 = ∑(结算价)
 
 		for (OccessoriesItemVO occessoriesItemVO : OccessoriesItemVOs) {
@@ -226,6 +226,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 			int rbalance = occessoriesItemVO.getRbalance() != null ? occessoriesItemVO.getRbalance() : 0;
 			int num = occessoriesItemVO.getNum() != null ? occessoriesItemVO.getNum() : 0;
 			int itemBalance = Arith.mul(rbalance, num);
+
 			totalBalance = Arith.add(totalBalance, itemBalance);
 
 			// 设置 aoods 关联
@@ -235,50 +236,43 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 			occessoriesItemDao.save(occessoriesItemPO);
 
-			// 计算当前 item 的外辅费用总额
-			long itemCharge = 0;
+			// 累计商品总额：数量 × 单价（使用 Arith 精确运算）
+			total = Arith.add(total, Arith.mul(occessoriesItemPO.getNum(), occessoriesItemPO.getGoods().getSelling()));
 
-			// 保存外辅费用
-			if (occessoriesItemVO.getOccessoriesCharges() != null && occessoriesItemVO.getOccessoriesCharges().size() > 0) {
-				for (OccessoriesChargeVO occessoriesChargeVO : occessoriesItemVO.getOccessoriesCharges()) {
-					OccessoriesChargePO occessoriesChargePO = new OccessoriesChargePO();
-					occessoriesChargePO.setOccessories(occessoriesPO);
-					occessoriesChargePO.setOccessoriesItem(occessoriesItemPO);
-					occessoriesChargePO.setName(occessoriesChargeVO.getName());
-					occessoriesChargePO.setPrice(occessoriesChargeVO.getPrice());
-					occessoriesChargePO.setSurplus(occessoriesChargeVO.getSurplus() != null ? occessoriesChargeVO.getSurplus() : 0);
-					occessoriesChargePO.setNum(occessoriesChargeVO.getNum() != null ? occessoriesChargeVO.getNum() : 0);
-					occessoriesChargeDao.save(occessoriesChargePO);
+			if (occessoriesItemVO.getOccessoriesCharges() == null || occessoriesItemVO.getOccessoriesCharges().size() == 0) continue;
 
-					// 累计费用：根据 isExceed 判断 surplus 是否参与运算（使用 Arith 精确运算）
-					// isExceed == 0 时（超阶），surplus 参与运算；否则不参与
-					int price = occessoriesChargeVO.getPrice() != null ? occessoriesChargeVO.getPrice() : 0;
-					int surplus = occessoriesChargeVO.getSurplus() != null ? occessoriesChargeVO.getSurplus() : 0;
-					int inum = occessoriesChargeVO.getNum() != null ? occessoriesChargeVO.getNum() : 0;
+			long itemCharge = 0; // 计算当前 item 的外辅费用总额
 
-					long chargeAmount;
-					if (occessoriesPO.getIsExceed() == OccessoriesPO.ISEXCEED_EXCEED_INT) {// 超阶：surplus 参与运算
-						chargeAmount = Arith.mul(Arith.add(price, surplus), inum);
-					} else {
-						chargeAmount = Arith.mul(price, inum);
-					}
-					itemCharge = Arith.add(itemCharge, chargeAmount);
-					totalCharge = Arith.add(totalCharge, chargeAmount);
-				}
+			for (OccessoriesChargeVO occessoriesChargeVO : occessoriesItemVO.getOccessoriesCharges()) {
+
+				if (occessoriesChargeVO.getNum() == null || occessoriesChargeVO.getNum() == 0) continue;
+
+				OccessoriesChargePO occessoriesChargePO = new OccessoriesChargePO();
+				occessoriesChargePO.setOccessories(occessoriesPO);
+				occessoriesChargePO.setOccessoriesItem(occessoriesItemPO);
+				occessoriesChargePO.setName(occessoriesChargeVO.getName());
+				occessoriesChargePO.setPrice(occessoriesChargeVO.getPrice());
+				occessoriesChargePO.setSurplus(occessoriesChargeVO.getSurplus() != null ? occessoriesChargeVO.getSurplus() : 0);
+				occessoriesChargePO.setNum(occessoriesChargeVO.getNum() != null ? occessoriesChargeVO.getNum() : 0);
+				occessoriesChargeDao.save(occessoriesChargePO);
+
+				// 累计费用：根据 isExceed 判断 surplus 是否参与运算（使用 Arith 精确运算）
+				// isExceed == 0 时（超阶），surplus 参与运算；否则不参与
+				int price = occessoriesChargeVO.getPrice() != null ? occessoriesChargeVO.getPrice() : 0;
+				int surplus = occessoriesChargeVO.getSurplus() != null ? occessoriesChargeVO.getSurplus() : 0;
+				int inum = occessoriesChargeVO.getNum() != null ? occessoriesChargeVO.getNum() : 0;
+
+				long chargeAmount = Arith.mul(Arith.add(price, occessoriesPO.getIsExceed() == OccessoriesPO.ISEXCEED_EXCEED_INT ? surplus : 0), inum);
+
+				itemCharge = Arith.add(itemCharge, chargeAmount);
+				totalCharge = Arith.add(totalCharge, chargeAmount);
 			}
 
 			// 更新当前 item 的费用总额
 			occessoriesItemPO.setCharge(itemCharge);
 
-			// 累计商品总额：数量 × 单价（使用 Arith 精确运算）
-			long itemGoodsAmount = Arith.mul(occessoriesItemPO.getNum(), occessoriesItemPO.getGoods().getSelling());
-			totalGoodsAmount = Arith.add(totalGoodsAmount, itemGoodsAmount);
-
 			occessoriesItemDao.update(occessoriesItemPO);
 		}
-
-		// 计算外辅单总额：total = ∑(数量 × 单价)
-		long total = totalGoodsAmount;
 
 		// 更新外辅单总额、费用总额和结算额
 		occessoriesPO.setTotal(total);

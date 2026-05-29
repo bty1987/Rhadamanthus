@@ -12,6 +12,7 @@
 package com.fanglin.decoration.dao.impl;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.SQLQuery;
@@ -51,10 +52,54 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	@Override
 	public long amountDecorationActivityItem(String orderId, short isPayment) {
 
-		String sql = "select COALESCE(SUM(money*num), 0) as priceSum from decoration.decorationActivityitem where orderId =:orderId and type = 0 and isPayment =:isPayment and ((atttype = 0 and state = 0) or (atttype = 1 and state = 10))";
+		String sql = "SELECT COALESCE(SUM(money*num), 0) as priceSum FROM decoration.decorationActivityitem WHERE orderId =:orderId AND type = 0 AND isPayment =:isPayment AND ((atttype = 0 AND state = 0) OR (atttype = 1 AND state = 10))";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("isPayment", isPayment).uniqueResult();
 
 		return Arith.div(sqlQuery.longValue(), 1000000);
+	}
+
+	@Override
+	public long amountDecorationActivityItem(String orderId, Short type, Short isPrefor, Short isPayment) {
+
+		StringBuffer sql = new StringBuffer();
+
+		sql.append("SELECT COALESCE(SUM(money*num), 0) AS priceSum FROM decoration.decorationActivityitem WHERE orderId = :orderId AND ((atttype = 0 and state in :statues) OR (atttype = 1 and state = 10))");
+
+		if (type != null) {
+			sql.append(" AND type = :type");
+		}
+
+		if (isPrefor != null) {
+			sql.append(" AND isPrefor = :isPrefor");
+		}
+
+		if (isPayment != null) {
+			sql.append(" AND isPayment = :isPayment");
+		}
+
+		SQLQuery sqlQuery = session().createSQLQuery(sql.toString());
+
+		sqlQuery.setString("orderId", orderId);
+
+		if (type != null) {
+			sqlQuery.setShort("type", type);
+		}
+
+		if (isPrefor != null) {
+			sqlQuery.setShort("isPrefor", isPrefor);
+		}
+
+		if (isPayment != null) {
+			sqlQuery.setShort("isPayment", isPayment);
+		}
+
+		List<Short> states = Arrays.asList(DecorationActivityItemPO.STATUS_INIT_INT, DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT, DecorationActivityItemPO.STATUS_UPGRADE_INT, DecorationActivityItemPO.STATUS_VERIFY_INT);
+
+		sqlQuery.setParameterList("state", states);
+
+		BigDecimal amount = (BigDecimal) sqlQuery.uniqueResult();
+
+		return Arith.div(amount.longValue(), 1000000);
 	}
 
 	@Override
