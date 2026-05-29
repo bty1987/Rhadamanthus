@@ -4,7 +4,69 @@
             <div id="normriceItemInfo" class="alert alert-info">
                 <strong>装修单号:</strong> <span id="normriceItemOrderId"></span>
             </div>
+            <div style="margin-bottom: 10px;">
+                <button type="button" id="btnAddNormriceItem" class="btn btn-primary btn-sm">
+                    <i class="icon-plus"></i> 新增附加项
+                </button>
+            </div>
             <div id="normriceItemResultList" class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增附加项 Modal -->
+<div class="modal fade" id="addNormriceItemModal" tabindex="-1" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">新增附加项</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="addNormriceItemForm">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="niConstructionNode">施工节点</label>
+                        <div class="col-sm-9">
+                            <select id="niConstructionNode" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="niName">名称</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="niName" class="col-xs-10 col-sm-5 v_required" maxlength="15"/>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="niSalary">工费</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="niSalary" class="col-xs-10 col-sm-5 v_required" maxlength="15"/>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="niNum">数量</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="niNum" class="col-xs-10 col-sm-5" value="1" maxlength="15"/>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="niTrannum">转换量</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="niTrannum" class="col-xs-10 col-sm-5" value="1" maxlength="15"/>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSaveNormriceItem" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
         </div>
     </div>
 </div>
