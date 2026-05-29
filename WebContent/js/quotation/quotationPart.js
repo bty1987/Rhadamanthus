@@ -533,6 +533,8 @@ var QuotationDetail = (function() {
             quo.basicParams["quotation.disComPrice"] = utils.changeThrDecimal(_disComPrice);
             quo.basicParams["quotation.consPrice"] = utils.changeThrDecimal(_consPrice);
             quo.basicParams["quotation.comsPrice"] = utils.changeThrDecimal(_comsPrice);
+
+            return true;
         },
 
         calculateQuoFeesPost: function() {
