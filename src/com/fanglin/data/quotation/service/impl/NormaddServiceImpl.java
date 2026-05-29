@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.data.po.NormaddPO;
 import com.fanglin.data.quotation.dao.NormaddDao;
 import com.fanglin.data.quotation.service.NormaddService;
+import com.fanglin.data.quotation.service.QuotationNamingRuleService;
 import com.fanglin.data.quotation.vo.NormaddVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -24,6 +26,9 @@ public class NormaddServiceImpl implements NormaddService {
 
 	@Autowired
 	private NormaddDao normaddDao;
+
+	@Autowired
+	private QuotationNamingRuleService quotationNamingRuleService;
 
 	@Override
 	public void pageNormadd(Paging paging, List<Filter> filters, int company) {
@@ -71,6 +76,10 @@ public class NormaddServiceImpl implements NormaddService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addNormadd(NormaddVO normaddVO, int company) {
+
+		if (!quotationNamingRuleService.validateNormaddName(normaddVO.getName())) {
+			throw new FLException(200099, "附加费名称不在命名规则范围内");
+		}
 
 		NormaddPO normaddPO = new NormaddPO(new ConstructionNodePO());
 

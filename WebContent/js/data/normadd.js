@@ -27,6 +27,7 @@ jQuery(function($) {
 
     normadd.modals.addModal.on("hide.bs.modal", function() {
 
+        com.cleanTypeahead(normadd.items.name);
         com.cleanItems(normadd.items);
         com.clearValidator();
         com.closeTip();
@@ -46,6 +47,8 @@ jQuery(function($) {
 
         normadd.items.node.bindData(res.constructionNodes, "cnid", "name", false);
     }, null, false);
+
+    com.initTypeahead(normadd.items.name, api.data.queryQuotationNamingRuleByPinyin, "pinyinName", {"quotationNamingRule.type": 3}, "autoFillKeyValue", "key", "value", null);
 
     var displayFunc = (function() {
 
@@ -170,8 +173,14 @@ jQuery(function($) {
         }
         ;
 
+        var name = com.typeahead(normadd.items.name, "", true);
+        if (!name) {
+            com.showTips("name", "请从下拉列表中选择名称", "right");
+            return false;
+        }
+
         var options = {
-            'normadd.name': normadd.items.name.val(),
+            'normadd.name': name,
             "normadd.constructionNode.cnid": normadd.items.node.val(),
             'normadd.unit': normadd.items.unit.val(),
             'normadd.price': normadd.items.price.val(),

@@ -1,0 +1,67 @@
+<div id="quotationNamingRulePageContent">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div>
+			<div class="clearfix" id="resultList"></div>
+			<div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div>
+		</div>
+	</div>
+</div>
+
+<div id="layerAdd" style="display: none;">
+	<div class="row-fluid">
+		<form class="form-horizontal" novalidate="novalidate" id="form1">
+
+			<div class="widget-main">
+				<div class="row" style="margin:0px;">
+					<div class="col-md-11">
+						<div class="form-group">
+							<label class="col-md-4 control-label no-padding-right orange">名称</label>
+							<div class="col-md-8">
+								<input type="text" class="v_required" id="name" name="name" data-required="1" data-toggle="popover" data-trigger='manual' placeholder="规则名称" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label no-padding-right orange">拼音</label>
+							<div class="col-md-8">
+								<input type="text" id="pinyin" name="pinyin" data-toggle="popover" data-trigger='manual' placeholder="拼音（用于模糊搜索）" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label no-padding-right orange">类型</label>
+							<div class="col-md-8">
+								<select class="v_required col-md-7" id="type" name="type" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label no-padding-right">排序</label>
+							<div class="col-md-8">
+								<input type="text" class="v_number" id="sort" name="sort" data-required="1" data-toggle="popover" data-trigger='manual' placeholder="排序号" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label no-padding-right">备注</label>
+							<div class="col-md-8">
+								<input type="text" id="comment" name="comment" data-toggle="popover" data-trigger='manual' placeholder="备注说明" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-md-offset-11">
+								<a class="btn btn-success btn-sm" id="submitBtn">确定</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/quotationNamingRule.js']);
+</script>
