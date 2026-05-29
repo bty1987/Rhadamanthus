@@ -242,8 +242,9 @@ function printNromadd(schedule) {
     itemIndex = 0;
     total = 0;
 
-    com.post(api.quotation.queryNormriceItem, {
-        "normriceItem.qid": params.quotation.quotationId
+    com.post(api.quotation.queryNormriceItemByType, {
+        "normriceItem.qid": params.quotation.quotationId,
+        "normriceItem.type": 3
     }, function(res) {
 
         $.each(res.normriceItems, function(i, v) {
