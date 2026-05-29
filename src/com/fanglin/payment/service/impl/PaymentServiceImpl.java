@@ -30,12 +30,16 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.po.ConstructionNodePO;
+import com.fanglin.decoration.dao.DecorationActivityDao;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.dingding.service.DingTalkMessageService;
+import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.ActivityPO;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
@@ -106,6 +110,12 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Autowired
 	private ApprovalDao approvalDao;
+
+	@Autowired
+	private DecorationActivityDao decorationActivityDao;
+
+	@Autowired
+	private ActivityDao activityDao;
 
 	@Override
 	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company) throws FLException {
@@ -253,6 +263,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setCreater(user);
 		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		paymentPO.setUniqueid(paymentVO.getUniqueid());
+		paymentPO.setAid(queryAid(paymentPO.getOrderId(), paymentPO.getPaymentType(), decorationPO.getCompany()));
 
 		advancePaymentDao.saveOrUpdate(advancePaymentPO);
 		advanceReceiptDao.save(advanceReceiptPO);
@@ -412,6 +423,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setCreater(user);
 		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		paymentPO.setUniqueid(paymentVO.getUniqueid());
+		paymentPO.setAid(queryAid(paymentPO.getOrderId(), paymentPO.getPaymentType(), decorationPO.getCompany()));
 
 		paymentDao.save(paymentPO);
 		advancePaymentDao.update(advancePaymentPO);
@@ -498,6 +510,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setCreater(user);
 		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		paymentPO.setUniqueid(paymentVO.getUniqueid());
+		paymentPO.setAid(queryAid(paymentPO.getOrderId(), paymentPO.getPaymentType(), decorationPO.getCompany()));
 
 		paymentDao.save(paymentPO);
 		advancePaymentDao.update(advancePaymentPO);
@@ -567,6 +580,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setCreater(user);
 		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		paymentPO.setUniqueid(paymentVO.getUniqueid());
+		paymentPO.setAid(queryAid(paymentPO.getOrderId(), paymentPO.getPaymentType(), decorationPO.getCompany()));
 
 		paymentDao.save(paymentPO);
 		advancePaymentDao.update(advancePaymentPO);
@@ -607,6 +621,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setBalance(balance);
 		paymentPO.setUniqueid(String.valueOf(new Date().getTime()));
 		paymentPO.setCompany(decorationPO.getCompany());
+		paymentPO.setAid(queryAid(orderId, paymentType, decorationPO.getCompany()));
 
 		paymentDao.save(paymentPO);
 
@@ -762,5 +777,30 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		return paymentVO;
+	}
+
+	private long queryAid(String orderId, short paymentType, int company) {
+
+		long aid = 0;
+
+		if (PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT == paymentType) {
+
+			List<DecorationActivityPO> decorationActivityPOs = decorationActivityDao.queryDecorationActivityByOrderId(orderId);
+
+			if (decorationActivityPOs != null && decorationActivityPOs.size() > 0) {
+				DecorationActivityPO decorationActivityPO = decorationActivityPOs.get(0);
+				if (decorationActivityPO.getActivity() != null) {
+					aid = decorationActivityPO.getActivity().getAid();
+				}
+			}
+
+		} else if (PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT == paymentType) {
+
+			ActivityPO activityPO = activityDao.queryActivityForDefault(company, ActivityPO.TYPE_MATERIAL_INT);
+			aid = activityPO == null ? 0 : activityPO.getAid();
+
+		}
+
+		return aid;
 	}
 }

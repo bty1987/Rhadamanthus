@@ -26,6 +26,8 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationActivityService;
+import com.fanglin.payment.dao.PaymentDao;
+import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationActivityVO;
 import com.fanglin.information.dao.ActivityDao;
@@ -51,6 +53,9 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private PaymentDao paymentDao;
 
 	@Override
 	public List<DecorationActivityVO> queryDecorationActivityByOrderId(DecorationActivityVO decorationActivityVO) {
@@ -128,6 +133,8 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 
 		decorationActivityDao.save(decorationActivityPO);
 
+		paymentDao.updatePaymentForAid(decorationActivityPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, activityPO.getAid());
+
 		BeanUtil.copyProperties(decorationActivityPO, decorationActivityVO, Arrays.asList("activity"));
 
 		decorationActivityVO.setActivity(new ActivityVO());
@@ -162,6 +169,8 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 		if (!statuses.contains(decorationPO.getStatus())) {
 			throw new FLException(140003, "装修单已签约");
 		}
+
+		paymentDao.updatePaymentForAid(decorationActivityPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, 0);
 
 		decorationActivityDao.delete(decorationActivityPO);
 
