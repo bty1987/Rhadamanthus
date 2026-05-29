@@ -10,6 +10,7 @@ $(function() {
     var ATTTYPE_SUB_INT = 1;        // 扣除
 
     var orderId = params.quotation.orderId;
+    var currentQid = null;
 
     if (orderId) {
         com.focusPage('#normriceItemOrderId').text(orderId);
@@ -17,6 +18,64 @@ $(function() {
     } else {
         com.focusPage('#normriceItemInfo').removeClass("alert-info").addClass("alert-warning").html("缺少装修单号参数");
     }
+
+    // 初始化施工节点下拉
+    com.post(api.data.queryConstructionNode, {}, function(res) {
+        var $select = com.focusPage('#niConstructionNode');
+        $select.append('<option value="">请选择</option>');
+        $.each(res.constructionNodes, function(i, v) {
+            $select.append('<option value="' + v.cnid + '">' + v.name + '</option>');
+        });
+    }, null, false);
+
+    // 新增附加项按钮
+    com.focusPage('#btnAddNormriceItem').on('click', function() {
+        if (!currentQid) {
+            com.showAlert(com.warning, "报价信息未加载，无法新增");
+            return;
+        }
+        // 清空表单
+        com.focusPage('#niConstructionNode').val('');
+        com.focusPage('#niName').val('');
+        com.focusPage('#niSalary').val('');
+        com.focusPage('#niNum').val('1');
+        com.focusPage('#niTrannum').val('1');
+        com.focusPage('#addNormriceItemModal').modal('show');
+    });
+
+    // 保存按钮
+    com.focusPage('#btnSaveNormriceItem').on('click', function() {
+
+        if (com.validate("addNormriceItemForm"))
+            return false;
+
+        var cnid = com.focusPage('#niConstructionNode').val();
+        var name = com.focusPage('#niName').val();
+        var salary = com.focusPage('#niSalary').val();
+        var num = com.focusPage('#niNum').val() || 1;
+        var trannum = com.focusPage('#niTrannum').val() || 1;
+
+        var options = {
+            "normtion.qid": currentQid,
+            "normriceItem.constructionNode.cnid": cnid,
+            "normriceItem.name": name,
+            "normriceItem.num": num,
+            "normriceItem.trannum": trannum,
+            "normriceItem.salary": salary
+        };
+
+        com.post(api.quotation.addNormriceItem, options, function(res) {
+
+            com.showAlert(com.success, "附加项创建成功");
+            com.focusPage('#addNormriceItemModal').modal('hide');
+
+            // 刷新列表
+            queryData(orderId);
+
+        }, function(e) {
+            com.showAlert(com.warning, "创建附加项失败：" + (e || "未知错误"));
+        });
+    });
 
     function queryData(orderId) {
 
@@ -30,10 +89,10 @@ $(function() {
             }
 
             var quotation = res.quotations[0];
-            var qid = quotation.qid;
+            currentQid = quotation.qid;
 
             com.post(api.quotation.queryNormriceItemByType, {
-                "normriceItem.qid": qid,
+                "normriceItem.qid": currentQid,
                 "normriceItem.type": TYPE_QUOTA_INT
             }, function(res) {
 
