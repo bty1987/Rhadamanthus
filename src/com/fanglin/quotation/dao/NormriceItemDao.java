@@ -31,4 +31,6 @@ public interface NormriceItemDao extends Dao<NormriceItemPO> {
 
 	public int confirmNormriceItem(long npiid);
 
+	public int amountNormriceItemForSalary(long qid, long cnid);
+
 }
