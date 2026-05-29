@@ -2134,7 +2134,7 @@ var QuotationDetail = (function() {
 
         handleActivityProfitSubmit: function() {
 
-            com.focusPage('#submitActivityProfitBtn').click(function() {
+            com.focusPage('#submitActivityProfitBtn', '#quotationPreferModal').click(function() {
 
                 quo.currentSubmitType = 1;
 
