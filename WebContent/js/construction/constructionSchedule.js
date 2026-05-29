@@ -322,6 +322,17 @@ jQuery(function($) {
 
             return false;
         }
+    }, {
+        name: "附加项",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            params.quotation.orderId = v.decoration.orderId;
+
+            com.popup4page("#normriceItemPopUp", api.index.normriceItemIndex.url, "附加项");
+
+            return false;
+        }
     }];
 
     searcher.line("node.name", lineprops, linebtns).render();

@@ -1,15 +1,5 @@
 $(function() {
 
-    var normriceItem = {
-
-        items: {
-            orderId: com.focusPage('#orderId')
-        },
-        btns: {
-            queryBtn: com.focusPage('#queryBtn').on("click", queryData)
-        }
-    };
-
     // 附加项类型常量
     var TYPE_QUOTA_INT = 3;
 
@@ -19,41 +9,29 @@ $(function() {
     var ATTTYPE_COLLECTION_INT = 0; // 收取
     var ATTTYPE_SUB_INT = 1;        // 扣除
 
-    normriceItem.items.orderId.on("keydown", function(e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            queryData();
-        }
-    });
+    var orderId = params.quotation.orderId;
 
-    function queryData() {
+    if (orderId) {
+        com.focusPage('#normriceItemOrderId').text(orderId);
+        queryData(orderId);
+    } else {
+        com.focusPage('#normriceItemInfo').removeClass("alert-info").addClass("alert-warning").html("缺少装修单号参数");
+    }
 
-        var orderId = normriceItem.items.orderId.val();
+    function queryData(orderId) {
 
-        if (!orderId) {
-            com.showAlert(com.warning, "请输入装修单号");
-            return;
-        }
-
-        // 先通过装修单号查询报价单, 取第一个报价单的 qid
         com.post(api.quotation.queryQuotationByOrderId, {
             "quotation.orderId": orderId
         }, function(res) {
 
             if (!res.quotations || res.quotations.length == 0) {
-                com.showAlert(com.warning, "未找到该装修单的报价信息");
+                com.focusPage('#normriceItemResultList').html('<div class="alert alert-warning">未找到该装修单的报价信息</div>');
                 return;
             }
 
             var quotation = res.quotations[0];
             var qid = quotation.qid;
 
-            // 显示报价单信息
-            com.focusPage('#quotationInfo').show();
-            com.focusPage('#quotationOrderId').text(quotation.orderId);
-            com.focusPage('#quotationStatus').text(quotation.status == 0 ? "初始" : quotation.status == 1 ? "审核" : quotation.status == 2 ? "确认" : quotation.status);
-
-            // 查询附加项 (type=3)
             com.post(api.quotation.queryNormriceItemByType, {
                 "normriceItem.qid": qid,
                 "normriceItem.type": TYPE_QUOTA_INT
@@ -62,11 +40,11 @@ $(function() {
                 renderList(res.normriceItems || []);
 
             }, function(e) {
-                com.showAlert(com.error, "查询附加项失败: " + e.errorMsg);
+                com.focusPage('#normriceItemResultList').html('<div class="alert alert-danger">查询附加项失败</div>');
             });
 
         }, function(e) {
-            com.showAlert(com.error, "查询报价单失败: " + e.errorMsg);
+            com.focusPage('#normriceItemResultList').html('<div class="alert alert-danger">查询报价单失败</div>');
         });
     }
 
@@ -83,7 +61,6 @@ $(function() {
         var $thead = $('<thead></thead>');
         var $tbody = $('<tbody></tbody>');
 
-        // 表头
         $thead.append(
             '<tr>' +
             '<th class="center">序号</th>' +
@@ -106,15 +83,15 @@ $(function() {
             var normtypeName = v.normtype == NORMTYPE_ADD_INT ? "附加" : "工费";
             var atttypeName = v.atttype == ATTTYPE_SUB_INT ? "扣除" : "收取";
 
-            // 计算金额: 收取=+salary, 扣除=-salary; 转换量=0时按1算
             var salary = parseFloat(v.salary) || 0;
             var trannum = parseFloat(v.trannum) || 0;
             var num = parseFloat(v.num) || 0;
 
-            var amount = 0;
             if (v.atttype == ATTTYPE_SUB_INT) {
                 salary = -salary;
             }
+
+            var amount = 0;
             if (trannum == 0) {
                 amount = utils.changeThrDecimal(utils.accMul(1, utils.accMul(1, salary)));
             } else {
@@ -139,7 +116,6 @@ $(function() {
             $tbody.append(nodeRow);
         });
 
-        // 合计行
         $tbody.append(
             '<tr class="info">' +
             '<td colspan="9" class="text-right"><strong>合计</strong></td>' +
