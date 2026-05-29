@@ -1873,6 +1873,30 @@ $.extend(api, {
             url: "deleteNormadd.do"
         },
 
+        pageQuotationNamingRule: {
+            url: "pageQuotationNamingRule.do"
+        },
+        queryQuotationNamingRule: {
+            url: "queryQuotationNamingRule.do",
+            type: "query"
+        },
+        addQuotationNamingRule: {
+            url: "addQuotationNamingRule.do"
+        },
+        updateQuotationNamingRule: {
+            url: "updateQuotationNamingRule.do"
+        },
+        updateQuotationNamingRuleForStatus: {
+            url: "updateQuotationNamingRuleForStatus.do"
+        },
+        deleteQuotationNamingRule: {
+            url: "deleteQuotationNamingRule.do"
+        },
+        queryQuotationNamingRuleByPinyin: {
+            url: "queryQuotationNamingRuleByPinyin.do",
+            type: "query"
+        },
+
         pageNormpack: {
             url: "pageNormpack.do"
         },
