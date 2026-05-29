@@ -15,4 +15,6 @@ public interface NormriceItemService {
 	public int addNormriceItem(NormtionVO normtionVO, NormriceItemVO normriceItemsVO) throws FLException;
 
 	public int deleteNormriceItem(NormtionVO normtionVO, NormriceItemVO normriceItemsVO) throws FLException;
+
+	public int confirmNormriceItem(NormriceItemVO normriceItemVO) throws FLException;
 }

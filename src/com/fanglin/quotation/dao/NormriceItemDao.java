@@ -29,4 +29,6 @@ public interface NormriceItemDao extends Dao<NormriceItemPO> {
 
 	public int deleteNormriceItem(long qid, long sid, short type);
 
+	public int confirmNormriceItem(long npiid);
+
 }

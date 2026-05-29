@@ -38,6 +38,8 @@ public class NormriceItemVO implements Serializable {
 
 	private Integer num;
 
+	private Short status;
+
 	public NormriceItemVO() {
 		super();
 	}
@@ -167,6 +169,14 @@ public class NormriceItemVO implements Serializable {
 
 	public void setNum(Integer num) {
 		this.num = num;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 }

@@ -155,6 +155,23 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int confirmNormriceItem(NormriceItemVO normriceItemVO) throws FLException {
+
+		NormriceItemPO normriceItemPO = normriceItemDao.get(normriceItemVO.getNpiid());
+
+		if (normriceItemPO == null) {
+			return 0;
+		}
+
+		checkQuotationForStatusByEnabled(normriceItemPO.getQid());
+
+		normriceItemDao.confirmNormriceItem(normriceItemPO.getNpiid());
+
+		return 0;
+	}
+
 	private QuotationPO checkQuotationForStatusByEnabled(long qid) throws FLException {
 
 		QuotationPO quotationPO = quotationDao.get(qid);
