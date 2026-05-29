@@ -9,6 +9,9 @@ $(function() {
     var ATTTYPE_COLLECTION_INT = 0; // 收取
     var ATTTYPE_SUB_INT = 1;        // 扣除
 
+    var STATUS_INIT_INT = 0;
+    var STATUS_CONFIRMED_INT = 2;
+
     var orderId = params.quotation.orderId;
     var currentQid = null;
 
@@ -77,6 +80,19 @@ $(function() {
         });
     });
 
+    // 确认附加项 (事件委托, 因为按钮是动态生成的)
+    com.focusPage('#normriceItemResultList').on('click', '.btn-confirm-normriceitem', function() {
+        var npiid = $(this).data('npiid');
+        com.showConfirm("确认要确认该附加项吗?", function() {
+            com.post(api.quotation.confirmNormriceItem, {
+                "normriceItem.npiid": npiid
+            }, function(res) {
+                com.showAlert(com.success, "附加项已确认");
+                queryData(orderId);
+            });
+        });
+    });
+
     function queryData(orderId) {
 
         com.post(api.quotation.queryQuotationByOrderId, {
@@ -132,6 +148,8 @@ $(function() {
             '<th class="center">工费</th>' +
             '<th class="center">数量</th>' +
             '<th class="center">金额</th>' +
+            '<th class="center">状态</th>' +
+            '<th class="center">操作</th>' +
             '</tr>'
         );
 
@@ -159,6 +177,20 @@ $(function() {
 
             totalAmount = utils.accAdd(totalAmount, parseFloat(amount));
 
+            var statusName = "待确认";
+            var statusClass = "label-warning";
+            if (v.status == STATUS_CONFIRMED_INT) {
+                statusName = "已确认";
+                statusClass = "label-success";
+            }
+
+            var actionHtml = '';
+            if (v.status != STATUS_CONFIRMED_INT) {
+                actionHtml = '<button type="button" class="btn btn-minier btn-primary btn-confirm-normriceitem" data-npiid="' + v.npiid + '">确认</button>';
+            } else {
+                actionHtml = '<span class="label label-success arrowed-in">-</span>';
+            }
+
             var nodeRow = '<tr>' +
                 '<td class="center">' + (i + 1) + '</td>' +
                 '<td>' + (v.constructionNode ? v.constructionNode.name : '-') + '</td>' +
@@ -170,6 +202,8 @@ $(function() {
                 '<td class="center">' + v.salary + '</td>' +
                 '<td class="center">' + v.num + '</td>' +
                 '<td class="center">' + amount + '</td>' +
+                '<td class="center"><span class="label ' + statusClass + '">' + statusName + '</span></td>' +
+                '<td class="center">' + actionHtml + '</td>' +
                 '</tr>';
 
             $tbody.append(nodeRow);
@@ -179,6 +213,7 @@ $(function() {
             '<tr class="info">' +
             '<td colspan="9" class="text-right"><strong>合计</strong></td>' +
             '<td class="center"><strong>' + utils.changeThrDecimal(totalAmount) + '</strong></td>' +
+            '<td colspan="2"></td>' +
             '</tr>'
         );
 

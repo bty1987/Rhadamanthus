@@ -1795,6 +1795,10 @@ $.extend(api, {
             url: "deleteNormriceItem.do",
             intercept: true
         },
+        confirmNormriceItem: {
+            url: "confirmNormriceItem.do",
+            type: "update"
+        },
 
         queryNormriceItemByType: {
             url: "queryNormriceItemByType.do",

@@ -105,4 +105,13 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 
 		return 0;
 	}
+
+	@Override
+	public int confirmNormriceItem(long npiid) {
+
+		String sql = "update quotation.normriceitem set status = :status where npiid = :npiid";
+		session().createSQLQuery(sql).setLong("npiid", npiid).setShort("status", NormriceItemPO.STATUS_CONFIRMED_INT).executeUpdate();
+
+		return 0;
+	}
 }
