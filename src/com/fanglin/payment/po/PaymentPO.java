@@ -87,6 +87,8 @@ public class PaymentPO implements Serializable {
 
 	private Timestamp createTime;
 
+	private long aid;
+
 	private String uniqueid;
 
 	public PaymentPO() {
@@ -223,6 +225,15 @@ public class PaymentPO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "aid")
+	public long getAid() {
+		return aid;
+	}
+
+	public void setAid(long aid) {
+		this.aid = aid;
 	}
 
 	@Column(name = "uniqueid")

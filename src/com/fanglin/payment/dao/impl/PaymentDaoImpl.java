@@ -86,6 +86,12 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 		return (PaymentDO) session().createCriteria(PaymentDO.class).createAlias("advanceReceipt", "advanceReceipt").add(Restrictions.eq("advanceReceipt.arId", arId)).uniqueResult();
 	}
 
+	@Override
+	public int updatePaymentForAid(String orderId, short paymentType, long aid) {
+		String hql = "update PaymentPO set aid = :aid where orderId = :orderId and paymentType = :paymentType";
+		return session().createQuery(hql).setLong("aid", aid).setString("orderId", orderId).setShort("paymentType", paymentType).executeUpdate();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;

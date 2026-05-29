@@ -78,6 +78,8 @@ public class PaymentVO implements Serializable {
 
 	private String comment;
 
+	private Long aid;
+
 	private String uniqueid;
 
 	private Long arId;
@@ -312,6 +314,14 @@ public class PaymentVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Long getAid() {
+		return aid;
+	}
+
+	public void setAid(Long aid) {
+		this.aid = aid;
 	}
 
 	public String getUniqueid() {

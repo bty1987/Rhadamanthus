@@ -33,4 +33,6 @@ public interface PaymentDao extends Dao<PaymentPO> {
 
 	public PaymentDO queryPaymentByReceiptId(long arId);
 
+	public int updatePaymentForAid(String orderId, short paymentType, long aid);
+
 }
