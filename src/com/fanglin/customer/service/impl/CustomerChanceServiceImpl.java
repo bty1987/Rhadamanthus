@@ -933,6 +933,12 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		if (customerPO == null) {
+			List<CustomerPO> customerPOs = customerDao.queryCustomer(customerSourcePO.getPhone());
+
+			customerPO = customerPOs != null && customerPOs.size() > 0 ? customerPOs.get(0) : null;
+		}
+
+		if (customerPO == null) {
 			CustomerVO customerVO = new CustomerVO(customerSourcePO.getName(), SensitiveDataHelper.decrypt(customerSourcePO.getPhone()));
 
 			customerService.existCustomer(customerVO, company);
