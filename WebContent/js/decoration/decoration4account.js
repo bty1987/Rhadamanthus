@@ -1182,7 +1182,7 @@ $(function() {
         }
 
         if (accountBasic.taxDiscount == 2) {
-            _taxPrice = accountBasic.taxPrice;
+            _taxPrice = accountBasic.taxPrice * (accountBasic.manageDiscount == 1 ? accountBasic.discount / 10 : 1);
         }
         
         if ([0, 1].indexOf(accountBasic.type) != -1) { // 半包/整装
@@ -1389,6 +1389,10 @@ $(function() {
         var _taxPrice = taxPrice;
 
         if (busitype.taxDiscount == 1) {
+            _taxPrice = taxPrice * (busitype.manageDiscount == 1 ? discount / 10 : 1);
+        }
+
+        if (busitype.taxDiscount == 2) {
             _taxPrice = taxPrice * (busitype.manageDiscount == 1 ? discount / 10 : 1);
         }
 

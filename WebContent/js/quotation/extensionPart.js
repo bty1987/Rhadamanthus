@@ -306,7 +306,7 @@ var ExtensionDetail = (function() {
 
             if (extensionDetail.isCountManageDiscount.prop("checked")) {
                 managediscount = utils.changeTwoDecimal(utils.accMul(extensionDetail.discount, managePrice));
-                taxdiscount = extensionDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? utils.changeTwoDecimal(utils.accMul(extensionDetail.discount, taxPrice)) : taxPrice;
+                taxdiscount = utils.changeTwoDecimal(utils.accMul(extensionDetail.discount, taxPrice));
             } else {
                 managediscount = managePrice;
                 taxdiscount = taxPrice;

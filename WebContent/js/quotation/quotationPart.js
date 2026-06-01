@@ -469,7 +469,7 @@ var QuotationDetail = (function() {
 
             if (_taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
                 _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), _managefee), preferPrice), managePrefer), advancePrefer), activityProfit), _taxRate));
-                _dtaxfee = _taxfee;
+                _dtaxfee = utils.changeThrDecimal(utils.accMul(_taxfee, _manageDiscount));
             }
 
             _total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), _managefee), _taxfee), preferPrice), managePrefer), advancePrefer), activityProfit));
@@ -548,6 +548,25 @@ var QuotationDetail = (function() {
             _transfee = quo.basicParams["quotation.trafficPrice"];
             _managefee = quo.basicParams["quotation.managePrice"];
             _taxfee = quo.basicParams["quotation.taxPrice"];
+
+            var _taxDiscount = quo.basicParams["quotation.taxDiscount"];
+
+            var manageCost = com.focusPage('#manageCost');
+            var converyanceCost = com.focusPage('#conveyanceCost');
+            var _transDiscount = converyanceCost.find('.discountprice').attr('data-discount') == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT ? _discount : 1;
+            var _manageDiscount = manageCost.find('.discountprice').attr('data-discount') == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? _discount : 1;
+
+            var _dtransfee = utils.changeThrDecimal(utils.accMul(_transfee, _transDiscount));
+            var _dmanagefee = utils.changeThrDecimal(utils.accMul(_managefee, _manageDiscount));
+            var _dtaxfee = 0;
+
+            if (_taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) {
+                _dtaxfee = utils.changeThrDecimal(utils.accMul(_taxfee, _manageDiscount));
+            }
+
+            if (_taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
+                _dtaxfee = utils.changeThrDecimal(utils.accMul(_taxfee, _manageDiscount));
+            }
 
             preferPrice = quo.preferParams["quotationPrefer.preferPrice"];
             managePrefer = quo.preferParams["quotationPrefer.managePrefer"];
@@ -5218,7 +5237,7 @@ var QuotationDetail = (function() {
 
                     if (_taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
                         _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), _managefee), preferPrice), managePrefer), advancePrefer), activityProfit), _taxRate));
-                        _dtaxfee = _taxfee
+                        _dtaxfee = utils.changeThrDecimal(utils.accMul(_taxfee, _manageDiscount));
                     }
 
                     _total = utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), quotePrice), _transfee), _managefee), _taxfee), preferPrice), managePrefer), advancePrefer), activityProfit); // 未计算车运费之前的总价格+车运费+管理费=(未打折的总价格)
