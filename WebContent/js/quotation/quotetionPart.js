@@ -1657,11 +1657,13 @@
                                         "isRtem": 0
                                     };
 
-                                    if (rt.type == constant.data().quotationRtem.TYPE_CMPREH_INT) {
+                                    if (rt.type == constant.data().quotationRtem.TYPE_CMPREH_INT && cpWidget.length) {
                                         rtem["qfaid"] = cpWidget.attr("data-qfaid");
-                                        rtem["type"] = constant.quotation().quotationFunctionAreaItem.TYPE_COMMON_INT;
-                                        rtem["areaType"] = constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT;
+                                        rtem["type"] = constant.quotation().quotetionFunctionAreaItem.TYPE_COMMON_INT;
+                                        rtem["areaType"] = constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT;
                                         rtem["index"] = cpIndex + 1;
+                                    } else if (rt.type == constant.data().quotationRtem.TYPE_CMPREH_INT && !cpWidget.length) {
+                                        console.warn('[rtem] 模板添加: 综合功能区(dlevel=9998)不存在，跳过CMPREH类型rtem子项, qiid:', rt.target.qiid);
                                     }
 
                                     if (rt.type == constant.data().quotationRtem.TYPE_GENERRAL_INT && com.focusPage('.item[data-qiid="' + rt.target.qiid + '"]', $domain).length == 0) {
@@ -1671,17 +1673,22 @@
                                         rtem["index"] = windex + 1;
                                     }
 
+                                    // 跳过未成功设置 areaType 的 rtem（综合功能区不存在或类型不匹配）
+                                    if (rtem.areaType === undefined) {
+                                        return true;
+                                    }
+
                                     var item = null;
 
-                                    if (rtem.areaType == constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT) {
+                                    if (rtem.areaType == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT) {
                                         item = cpList.find('.fl-quo-item.item[data-qiid="' + rtem.qiid + '"]', cpWidget);
                                     } else {
                                         item = quolist.find('.fl-quo-item.item[data-qiid="' + rtem.qiid + '"]', $domain);
                                     }
 
-                                    if (!item.length && rtem.areaType == constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT) {
+                                    if (!item.length && rtem.areaType == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT) {
                                         item = painter.createQuote(rtem.index, rtem).appendTo(cpList);
-                                    } else if (!item.length && rtem.areaType != constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT) {
+                                    } else if (!item.length && rtem.areaType != constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT) {
                                         item = painter.createQuote(rtem.index, rtem).appendTo(quolist);
                                     }
 
@@ -2782,6 +2789,8 @@
                         _quortval["areaType"] = constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT;
 
                         quote.addQuoteRtem(_quortval);
+                    } else if (v.type == constant.data().quotationRtem.TYPE_CMPREH_INT && !cpWidget.length) {
+                        console.warn('[rtem] 综合功能区(dlevel=9998)不存在，跳过CMPREH类型rtem子项, qiid:', v.target.qiid);
                     }
 
                     if (v.type == constant.data().quotationRtem.TYPE_GENERRAL_INT) {

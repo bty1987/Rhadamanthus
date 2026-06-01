@@ -475,7 +475,7 @@
 
             if (addReduceDetail.isCountManageDiscount.prop("checked")) {
                 managediscount = utils.changeTwoDecimal(utils.accDiv(utils.accMul(addReduceDetail.discount, manageprice), 10));
-                managetaxprice = addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? utils.changeTwoDecimal(utils.accDiv(utils.accMul(addReduceDetail.discount, taxprice), 10)) : utils.changeTwoDecimal(taxprice);
+                managetaxprice = utils.changeTwoDecimal(utils.accDiv(utils.accMul(addReduceDetail.discount, taxprice), 10));
             } else if (!addReduceDetail.isCountManageDiscount.prop("checked")) {
                 managediscount = utils.changeTwoDecimal(manageprice);
                 managetaxprice = utils.changeTwoDecimal(taxprice);
