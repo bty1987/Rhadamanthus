@@ -24,6 +24,10 @@ public interface SelectionItemDao extends Dao<SelectionItemPO> {
 
 	public SelectionItemPO querySelectionItem(String orderId, long areaId, long quoteId, short type);
 
+	public SelectionItemPO querySelectionItem(long sid, long areaId, long quoteId, List<Short> types);
+
+	public SelectionItemPO querySelectionItem(String orderId, long areaId, long quoteId, List<Short> types);
+
 	public SelectionItemPO pickSelectionItem(String orderId, Long qiid);
 
 	public int checkSelectionItem(long quotationFunctionAreaId, short index);
