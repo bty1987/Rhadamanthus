@@ -111,6 +111,26 @@ $.extend(api, {
             url: "queryActivityForValid.do",
             demo: true
         },
+        addActivity: {
+            url: "addActivity.do",
+            type: "update",
+            tranargs: {
+                args: ["activity.multiple"]
+            }
+        },
+        updateActivity: {
+            url: "updateActivity.do",
+            type: "update",
+            tranargs: {
+                args: ["activity.multiple"]
+            }
+        },
+        updateActivityForStatus: {
+            url: "updateActivityForStatus.do"
+        },
+        updateActivityForDefault: {
+            url: "updateActivityForDefault.do"
+        },
         queryActivityItemByAid: {
             url: "queryActivityItemByAid.do",
             demo: true,
@@ -129,13 +149,6 @@ $.extend(api, {
                 args: ["money"]
             }]
         },
-        addActivity: {
-            url: "addActivity.do",
-            type: "update",
-            tranargs: {
-                args: ["activity.multiple"]
-            }
-        },
         addActivityItem: {
             url: "addActivityItem.do",
             type: "update",
@@ -146,15 +159,6 @@ $.extend(api, {
                     args: ["money", "integral"]
                 }]
             }
-        },
-        updateActivity: {
-            url: "updateActivity.do"
-        },
-        updateActivityForStatus: {
-            url: "updateActivityForStatus.do"
-        },
-        updateActivityForDefault: {
-            url: "updateActivityForDefault.do"
         },
         deleteActivityItem: {
             url: "deleteActivityItem.do"
