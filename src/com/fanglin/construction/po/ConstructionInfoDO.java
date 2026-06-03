@@ -67,6 +67,8 @@ public class ConstructionInfoDO implements Serializable {
 
 	private short handoverStatus;
 
+	private Timestamp handoverTime;
+
 	private Timestamp finishTime;
 
 	private Timestamp keyTime;
@@ -217,6 +219,15 @@ public class ConstructionInfoDO implements Serializable {
 
 	public void setHandoverStatus(short handoverStatus) {
 		this.handoverStatus = handoverStatus;
+	}
+
+	@Column(name = "handoverTime")
+	public Timestamp getHandoverTime() {
+		return handoverTime;
+	}
+
+	public void setHandoverTime(Timestamp handoverTime) {
+		this.handoverTime = handoverTime;
 	}
 
 	@Column(name = "finishTime")

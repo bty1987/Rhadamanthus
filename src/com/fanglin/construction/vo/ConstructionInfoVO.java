@@ -59,6 +59,8 @@ public class ConstructionInfoVO implements Serializable {
 
 	private Short handoverStatus;
 
+	private Timestamp handoverTime;
+
 	public ConstructionInfoVO() {
 		super();
 	}
@@ -267,6 +269,15 @@ public class ConstructionInfoVO implements Serializable {
 
 	public void setHandoverStatus(Short handoverStatus) {
 		this.handoverStatus = handoverStatus;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getHandoverTime() {
+		return handoverTime;
+	}
+
+	public void setHandoverTime(Timestamp handoverTime) {
+		this.handoverTime = handoverTime;
 	}
 
 }
