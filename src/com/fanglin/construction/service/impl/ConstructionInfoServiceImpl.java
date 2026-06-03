@@ -251,4 +251,20 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 
 		constructionInfoDao.update(constructionInfoPO);
 	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void handoverConstructionInfo(ConstructionInfoVO constructionInfoVO) throws FLException {
+
+		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(constructionInfoVO.getOrderId());
+
+		if (constructionInfoPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		constructionInfoPO.setHandoverStatus(constructionInfoVO.getHandoverStatus());
+		constructionInfoPO.setHandoverTime(new Timestamp(System.currentTimeMillis()));
+
+		constructionInfoDao.update(constructionInfoPO);
+	}
 }

@@ -23,4 +23,6 @@ public interface ConstructionInfoService {
 
 	public void checkConstructionInfo(ConstructionInfoVO constructionInfoVO) throws FLException;
 
+	public void handoverConstructionInfo(ConstructionInfoVO constructionInfoVO) throws FLException;
+
 }
