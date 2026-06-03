@@ -63,7 +63,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 
 		StringBuffer sql = new StringBuffer();
 
-		sql.append("SELECT COALESCE(SUM(money*num), 0) AS priceSum FROM decoration.decorationActivityitem WHERE orderId = :orderId AND ((atttype = 0 and state in :statues) OR (atttype = 1 and state = 10))");
+		sql.append("SELECT COALESCE(SUM(money*num), 0) AS priceSum FROM decoration.decorationActivityitem WHERE orderId = :orderId AND ((atttype = 0 and state in (:state)) OR (atttype = 1 and state = 10))");
 
 		if (type != null) {
 			sql.append(" AND type = :type");

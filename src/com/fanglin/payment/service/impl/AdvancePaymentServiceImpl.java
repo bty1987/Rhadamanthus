@@ -109,11 +109,15 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 
 		String orderId = advancePayment.getDecoration().getOrderId();
 
+		System.out.println(orderId);
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
+
+		System.out.println(decorationPO.getDoid());
 
 		AdvancePaymentPO advancePaymentPO = null;
 
