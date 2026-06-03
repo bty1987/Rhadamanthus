@@ -87,7 +87,7 @@ public class ConstructionInfoAction extends BaseListAction {
 	@Action(value = "handoverConstructionInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String handoverConstructionInfo() throws FLException {
 
-		constructionInfoService.updateConstructionInfoByOrderId(constructionInfo);
+		constructionInfoService.handoverConstructionInfo(constructionInfo);
 
 		return SUCCESS;
 	}
