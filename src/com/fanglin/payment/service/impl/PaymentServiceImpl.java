@@ -218,6 +218,8 @@ public class PaymentServiceImpl implements PaymentService {
 
 		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
 
+		advancePaymentDao.saveOrUpdate(advancePaymentPO);
+
 		long overBalance = 0;
 
 		if (!paymentTypes.contains(paymentType)) {
@@ -245,6 +247,8 @@ public class PaymentServiceImpl implements PaymentService {
 		advanceReceiptPO.setCollecterName(user.getUserName());
 		advanceReceiptPO.setConfirmerName("");
 
+		advanceReceiptDao.saveOrUpdate(advanceReceiptPO);
+
 		PaymentPO paymentPO = null;
 
 		if (paymentVO.getPid() != null) {
@@ -263,10 +267,8 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setCreater(user);
 		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		paymentPO.setUniqueid(paymentVO.getUniqueid());
-		paymentPO.setAid(queryAid(paymentPO.getOrderId(), paymentPO.getPaymentType(), decorationPO.getCompany()));
+		paymentPO.setAid(queryDecorationActivity(decorationPO.getOrderId(), paymentVO.getPaymentType(), decorationPO.getCompany()));
 
-		advancePaymentDao.saveOrUpdate(advancePaymentPO);
-		advanceReceiptDao.save(advanceReceiptPO);
 		paymentDao.saveOrUpdate(paymentPO);
 
 		paymentVO.setPid(paymentPO.getPid());
@@ -423,7 +425,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setCreater(user);
 		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		paymentPO.setUniqueid(paymentVO.getUniqueid());
-		paymentPO.setAid(queryAid(paymentPO.getOrderId(), paymentPO.getPaymentType(), decorationPO.getCompany()));
+		paymentPO.setAid(queryDecorationActivity(paymentPO.getOrderId(), paymentPO.getPaymentType(), decorationPO.getCompany()));
 
 		paymentDao.save(paymentPO);
 		advancePaymentDao.update(advancePaymentPO);
@@ -510,7 +512,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setCreater(user);
 		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		paymentPO.setUniqueid(paymentVO.getUniqueid());
-		paymentPO.setAid(queryAid(paymentPO.getOrderId(), paymentPO.getPaymentType(), decorationPO.getCompany()));
+		paymentPO.setAid(queryDecorationActivity(paymentPO.getOrderId(), paymentPO.getPaymentType(), decorationPO.getCompany()));
 
 		paymentDao.save(paymentPO);
 		advancePaymentDao.update(advancePaymentPO);
@@ -580,7 +582,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setCreater(user);
 		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		paymentPO.setUniqueid(paymentVO.getUniqueid());
-		paymentPO.setAid(queryAid(paymentPO.getOrderId(), paymentPO.getPaymentType(), decorationPO.getCompany()));
+		paymentPO.setAid(queryDecorationActivity(paymentPO.getOrderId(), paymentPO.getPaymentType(), decorationPO.getCompany()));
 
 		paymentDao.save(paymentPO);
 		advancePaymentDao.update(advancePaymentPO);
@@ -621,7 +623,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setBalance(balance);
 		paymentPO.setUniqueid(String.valueOf(new Date().getTime()));
 		paymentPO.setCompany(decorationPO.getCompany());
-		paymentPO.setAid(queryAid(orderId, paymentType, decorationPO.getCompany()));
+		paymentPO.setAid(queryDecorationActivity(orderId, paymentType, decorationPO.getCompany()));
 
 		paymentDao.save(paymentPO);
 
@@ -779,7 +781,7 @@ public class PaymentServiceImpl implements PaymentService {
 		return paymentVO;
 	}
 
-	private long queryAid(String orderId, short paymentType, int company) {
+	private long queryDecorationActivity(String orderId, short paymentType, int company) {
 
 		long aid = 0;
 

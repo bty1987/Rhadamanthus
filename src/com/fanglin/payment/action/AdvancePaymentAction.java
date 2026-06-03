@@ -31,47 +31,46 @@ import com.fanglin.payment.vo.AdvancePaymentVO;
 public class AdvancePaymentAction extends BaseListAction {
 
 	private static final long serialVersionUID = 2942569381438393302L;
-	
+
 	@Autowired
 	private AdvancePaymentService advancePaymentService;
-	
+
 	private AdvancePaymentVO advancePayment;
-	
+
 	private long balanceAdvance;
-	
+
 	private long projectAdvance;
-	
+
 	private long materialAdvance;
-	
+
 	private long zaterialAdvance;
-	
-	@Action(value="pageAdvancePayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+
+	@Action(value = "pageAdvancePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAdvancePayment() throws FLException {
-		
+
 		advancePaymentService.pageAdvancePayment(getPaging(), getFilters(), queryCompany());
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="queryAdvancePaymentByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryAdvancePaymentByOrderId() throws FLException{
-		
+
+	@Action(value = "queryAdvancePaymentByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAdvancePaymentByOrderId() throws FLException {
+
 		List<Long> advances = advancePaymentService.queryAdvancePaymentByOrderId(advancePayment);
-		
+
 		balanceAdvance = advances.get(0);
 		projectAdvance = advances.get(1);
 		materialAdvance = advances.get(2);
 		zaterialAdvance = advances.get(3);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="addAdvancePayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addAdvancePayment() throws FLException{
-		
+
+	@Action(value = "addAdvancePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addAdvancePayment() throws FLException {
+
 		advancePaymentService.addAdvancePayment(advancePayment);
-		
+
 		return SUCCESS;
 	}
 

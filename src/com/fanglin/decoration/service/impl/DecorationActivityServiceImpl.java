@@ -26,13 +26,13 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationActivityService;
-import com.fanglin.payment.dao.PaymentDao;
-import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationActivityVO;
 import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.po.ActivityPO;
 import com.fanglin.information.vo.ActivityVO;
+import com.fanglin.payment.dao.PaymentDao;
+import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
@@ -132,6 +132,7 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 		decorationActivityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationActivityDao.save(decorationActivityPO);
+		decorationActivityDao.flush();
 
 		paymentDao.updatePaymentForAid(decorationActivityPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, activityPO.getAid());
 
