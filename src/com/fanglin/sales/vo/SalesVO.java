@@ -9,6 +9,7 @@ import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class SalesVO implements Serializable {
@@ -20,6 +21,8 @@ public class SalesVO implements Serializable {
 	private String no;
 
 	private String orderId;
+
+	private DecorationVO decoration;
 
 	private UserBaseVO supplier;
 
@@ -161,6 +164,14 @@ public class SalesVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public UserBaseVO getSupplier() {
