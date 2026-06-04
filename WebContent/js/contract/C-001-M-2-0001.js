@@ -125,7 +125,7 @@ jQuery(function($) {
     }, function(res) {
 
         var quotation = res.quotation;
-        var preprice = parseInt(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, utils.accAdd(quotation.managePrice, quotation.taxDiscount == 1 ? quotation.taxPrice : 0)))));
+        var preprice = parseInt(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, utils.accAdd(quotation.managePrice, quotation.taxDiscount == 0 ? 0 : quotation.taxPrice)))));
 
         com.focusPage("#con-quotation-total", "#form").val(preprice);
 
