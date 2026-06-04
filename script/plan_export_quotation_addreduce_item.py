@@ -19,7 +19,7 @@ class Exporter(Util):
         self.pthost = pthost
         self.size = 400
 
-        self.colum = u"""
+        self.colum = """
             d.orderId AS `装修单号`,
             v.name AS `楼盘`,
             h.housenumber AS `楼号`,
@@ -28,12 +28,12 @@ class Exporter(Util):
             dd.name AS `设计部`,
             du.currentName AS `设计师`,
             sv.currentName AS `监理`,
-            d.projectStatus AS `工程状态`,
-            d.designStatus AS `合同方案确认状态`,
+            cn.name AS `工程状态`,
+            communion.kv('decoration', 'decoration', 'designStatus', d.designStatus) AS `合同方案确认状态`,
             d.sdesignTime AS `合同方案确认时间`,
-            ci.handoverStatus AS `预交会状态`,
+            communion.kv('construction', 'constructioninfo', 'handoverStatus', ci.handoverStatus) AS `预交会状态`,
             ci.handoverTime AS `交接时间`,
-            d.sourceStatus AS `放线方案确认状态`,
+            communion.kv('decoration', 'decoration', 'sourceStatus', d.sourceStatus) AS `放线方案确认状态`,
             d.edesignTime AS `放线方案确认时间`,
             qfa.functionAreaName AS `功能区`,
             ai.itemName AS `项目名`,
@@ -49,11 +49,12 @@ class Exporter(Util):
             co.name AS `公司`
         """
 
-        self.SELECT_SQL = u"""
+        self.SELECT_SQL = """
             SELECT
                 %s
             FROM
                 decoration.decoration d 
+                LEFT JOIN data.constructionnode cn on d.projectStatus = cn.cnid
                 LEFT JOIN communion.user sv ON d.svuid = sv.uid
                 LEFT JOIN construction.constructioninfo ci ON d.orderId = ci.orderId,
                 quotation.addreduce a
@@ -88,9 +89,9 @@ class Exporter(Util):
         startTime, endTime = timeargs.split("-")
 
         if company != 0:
-            companyId = u" AND d.company = %s" % (company)
+            companyId = " AND d.company = %s" % (company)
         else:
-            companyId = u" "
+            companyId = " "
 
         return self.SELECT_SQL % ("%s", self.timeColumn, startTime, self.timeColumn, endTime, companyId)
 
@@ -119,15 +120,15 @@ class Exporter(Util):
             self.timeColumn = "ci.handoverTime"
 
         tableheads = [
-            u"装修单号", u"楼盘", u"楼号", u"房屋类型", u"设计分区", u"设计部", u"设计师", u"监理",
-            u"工程状态", u"合同方案确认状态", u"合同方案确认时间", u"预交会状态", u"交接时间", u"放线方案确认状态", u"放线方案确认时间",
-            u"功能区", u"项目名", u"工种", u"单位", u"类型", u"类型", u"类型",
-            u"数量", u"折前单价", u"折前金额", u"实收额", u"公司"
+            "装修单号", "楼盘", "楼号", "房屋类型", "设计分区", "设计部", "设计师", "监理",
+            "工程状态", "合同方案确认状态", "合同方案确认时间", "预交会状态", "交接时间", "放线方案确认状态", "放线方案确认时间",
+            "功能区", "项目名", "工种", "单位", "类型", "类型", "类型",
+            "数量", "折前单价", "折前金额", "实收额", "公司"
         ]
 
         sql = self.sqler(args, company)
 
-        self.exporter(pid, args, u"增减项信息", tableheads, self.colum, sql, self.rower)
+        self.exporter(pid, args, "增减项信息", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 

@@ -74,58 +74,44 @@ jQuery(function($) {
             var $btnProfile = $('<a></a>').addClass('btn btn-minier btn-warning').html("画像");
             var $btnResetDesign = $('<a></a>').addClass('btn btn-minier btn-danger').html("重置设计");
 
-            var propertyArr = [
-            ["装修单: ", v.decoration.orderId, "blue", function(btn) {
+            var propertyArr = [["装修单: ", v.decoration.orderId, "blue", function(btn) {
 
                 tools.decoration.info(btn, v.decoration.orderId);
-            }],
-            ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
+            }], ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
 
                 tools.house.info(btn, v.decoration.house.hid);
-            }],
-            ["楼号: ", v.decoration.house.houseNumber, "grey"],
-            ["客户: ", v.decoration.customer.name, "grey", function(btn) {
+            }], ["楼号: ", v.decoration.house.houseNumber, "grey"], ["客户: ", v.decoration.customer.name, "grey", function(btn) {
 
                 tools.customer.info(btn, v.decoration.customer.cid);
-            }],
-            ["设计分区:", v.decoration.designer.dept.fatherDept.name, "grey", function(btn) {
+            }], ["设计分区:", v.decoration.designer.dept.fatherDept.name, "grey", function(btn) {
 
                 tools.department.info(btn, v.decoration.designer.dept.fatherDept.did);
-            }],
-            ["设计部:", v.decoration.designer.dept.name, "grey", function(btn) {
+            }], ["设计部:", v.decoration.designer.dept.name, "grey", function(btn) {
 
                 tools.department.info(btn, v.decoration.designer.dept.did);
-            }],
-            ["设计师:", v.decoration.designer.userName, "grey", function(btn) {
+            }], ["设计师:", v.decoration.designer.userName, "grey", function(btn) {
 
                 tools.personel.info(btn, v.decoration.designer.userId);
-            }],
-            ["业务员:", v.decoration.salesman ? v.decoration.salesman.currentName : "", "grey"],
-            ["方案设计:", v.decoration.escorter ? v.decoration.escorter.currentName : "", "grey"],
+            }], ["业务员:", v.decoration.salesman ? v.decoration.salesman.currentName : "", "grey"], //
+            ["方案设计:", v.decoration.escorter ? v.decoration.escorter.currentName : "", "grey"], //
             ["监理:", v.decoration.supervisor ? v.decoration.supervisor.userName : "", "grey", function(btn) {
 
                 tools.personel.info(btn, v.decoration.supervisor.userId);
-            }],
-            ["面积:", v.decoration.house.buildArea, "blue"],
-            ["合同额: ", v.decoration.orderTotalPrice, "blue"],
-            ["报价版本: ", v.decoration.version.name, "grey"],
-            ["签单时间: ", v.decoration.contractTime, "green"],
-            ["设计天数: ", v.designPeriod ? v.designPeriod + "天" : "", "blue"],
-            ["设计超期天数: ", v.designOverdueDays ? v.designOverdueDays + "天" : "", "blue"],
-            ["分配时间: ", v.issueTime, "green"],
-            ["初始设计完成时间: ", v.initDesignTime, "green"],
-            ["预计交钥匙时间: ", v.keyTime, "green"],
-            ["预计放线时间: ", v.drawlineTime, "green"],
-            ["预计完工时间: ", v.finishTime, "green"],
-            ["预计设计完成时间: ", v.designTime, "green"],
-            ["合同方案确认时间: ", v.decoration.sdesignTime, "green"],
-            ["放线方案确认时间: ", v.decoration.edesignTime, "green"],
-            ["装修类型: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
-            ["工程状态: ", constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus], "red"],
-            ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"],
-            ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
+            }], ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"], //
+            ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"], //
+            ["面积:", v.decoration.house.buildArea, "blue"], ["合同额: ", v.decoration.orderTotalPrice, "blue"], //
+            ["报价版本: ", v.decoration.version.name, "grey"], ["签单时间: ", v.decoration.contractTime, "green"], //
+            ["设计天数: ", v.designPeriod ? v.designPeriod + "天" : "", "blue"], //
+            ["设计超期天数: ", v.designOverdueDays ? v.designOverdueDays + "天" : "", "blue"], //
+            ["分配时间: ", v.issueTime, "green"], ["初始设计完成时间: ", v.initDesignTime, "green"], //
+            ["预计交钥匙时间: ", v.keyTime, "green"], ["预计放线时间: ", v.drawlineTime, "green"], //
+            ["预计完工时间: ", v.finishTime, "green"], ["预计设计完成时间: ", v.designTime, "green"], //
+            ["合同方案确认时间: ", v.decoration.sdesignTime, "green"], //
+            ["放线方案确认时间: ", v.decoration.edesignTime, "green"], //
+            ["装修类型: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"], //
+            ["工程状态: ", constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus], "red"], //
+            ["交接状态: ", constant.construction().constructionInfo.handoverStatus.keys[v.handoverStatus] || "-", "red"], //
             ["备注: ", v.comment, "grey"],
-            ["交接状态: ", constant.construction().constructionInfo.handoverStatus.keys[v.handoverStatus] || "-", "blue"],
             ];
 
             $.each(propertyArr, function(index, value) {
@@ -246,14 +232,14 @@ jQuery(function($) {
         options["constructionInfo.decoration.designStatus"] = constant.decoration().decoration.DESIGNSTATUS_END_INT;
         options["constructionInfo.isIssue"] = 0;
         options["constructionInfo.drawlineTime"] = com.dateFormat(current, "yyyy-MM-dd");
-        options["decoration.statuses"] = [0, 1, 2, 3, 4, 7];  // 排除废单(5)、终止(6)、完工(8)
+        options["decoration.statuses"] = [0, 1, 2, 3, 4, 7]; // 排除废单(5)、终止(6)、完工(8)
     }
 
     if (information.pageType == "done") {
         options["constructionInfo.decoration.houseType"] = "现房";
         options["constructionInfo.decoration.designStatus"] = constant.decoration().decoration.DESIGNSTATUS_END_INT;
         options["constructionInfo.isIssue"] = 0;
-        options["decoration.statuses"] = [0, 1, 2, 3, 4, 7];  // 排除废单(5)、终止(6)、完工(8)
+        options["decoration.statuses"] = [0, 1, 2, 3, 4, 7]; // 排除废单(5)、终止(6)、完工(8)
     }
 
     if (information.pageType == "issue") {
@@ -294,33 +280,7 @@ jQuery(function($) {
         }), function(res) {
 
             $.exceler({
-                column: [
-                ["装修单号", "decoration.orderId"],
-                ["楼盘地址", "decoration.house.houseNumber"],
-                ["面积", "decoration.house.buildArea"],
-                ["计划面积", "decoration.house.innerArea"],
-                ["设计分区", "decoration.designer.dept.fatherDept.name"],
-                ["设计部", "decoration.designer.dept.name"],
-                ["设计师", "decoration.designer.userName"],
-                ["业务员", "decoration.salesman.currentName"],
-                ["监理", "decoration.supervisor.userName"],
-                ["签单时间", "decoration.contractTime"],
-                ["合同额", "decoration.orderTotalPrice"],
-                ["预签合同额", "decoration.procontractPrice"],
-                ["折扣", "decoration.discount"],
-                ["设计天数", "designPeriod"],
-                ["设计超期天数", "designOverdueDays"],
-                ["分配时间", "issueTime"],
-                ["初始设计完成时间", "initDesignTime"],
-                ["预计交钥匙时间", "keyTime"],
-                ["预计放线时间", "drawlineTime"],
-                ["预计完工时间", 'finishTime'],
-                ["预计设计完成时间", 'designTime'],
-                ["合同方案确认时间", 'decoration.sdesignTime'],
-                ["放线方案确认时间", 'decoration.edesignTime'],
-                ["订单类型", "decoration.typeness"],
-                ["工程状态", "decoration.projectStatus"]
-                ],
+                column: [["装修单号", "decoration.orderId"], ["楼盘地址", "decoration.house.houseNumber"], ["面积", "decoration.house.buildArea"], ["计划面积", "decoration.house.innerArea"], ["设计分区", "decoration.designer.dept.fatherDept.name"], ["设计部", "decoration.designer.dept.name"], ["设计师", "decoration.designer.userName"], ["业务员", "decoration.salesman.currentName"], ["监理", "decoration.supervisor.userName"], ["签单时间", "decoration.contractTime"], ["合同额", "decoration.orderTotalPrice"], ["预签合同额", "decoration.procontractPrice"], ["折扣", "decoration.discount"], ["设计天数", "designPeriod"], ["设计超期天数", "designOverdueDays"], ["分配时间", "issueTime"], ["初始设计完成时间", "initDesignTime"], ["预计交钥匙时间", "keyTime"], ["预计放线时间", "drawlineTime"], ["预计完工时间", 'finishTime'], ["预计设计完成时间", 'designTime'], ["合同方案确认时间", 'decoration.sdesignTime'], ["放线方案确认时间", 'decoration.edesignTime'], ["订单类型", "decoration.typeness"], ["工程状态", "decoration.projectStatus"]],
                 list: res.paging.data
 
             }, function(v) {
