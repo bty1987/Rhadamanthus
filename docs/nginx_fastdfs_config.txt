@@ -1,0 +1,52 @@
+
+102的nginx配置如下:
+    upstream media {
+        server localhost:18081;
+    }
+
+    upstream server {
+        server localhost:8080;
+    }
+
+    upstream zoo101 {
+        server 192.168.5.101;
+    }
+
+    upstream zoo116 {
+        server 192.168.5.116;
+    }
+
+    server {
+
+        listen 80;
+        server_name fastdfs;
+
+        location ~ /(zoo) {
+            index index.html;
+
+            client_body_buffer_size 128k;
+            proxy_pass http://media;
+            proxy_intercept_errors on;
+            error_page 404 = @zoo1;
+        }
+
+        location @zoo1 {
+            proxy_pass http://192.168.5.101:18081;
+            proxy_intercept_errors on;
+            error_page 404 = @zoo2;
+        }
+
+        location @zoo2 {
+            proxy_pass http://192.168.5.116:18081;
+        }
+
+        location ~ /(zoo|upload|showImg|uploadImg|uploadOther|downloadFile|downloadDDImage|original) {
+            index index.html;
+
+            client_body_buffer_size 128k;
+            proxy_pass http://media;
+        }
+
+http://192.168.5.102/zoo/group8/M00/07/F3/wKgFd2oilNmAZ4dBAACqMm8c_pQ166_150_150.jpg
+http://192.168.5.101:18081/zoo/group8/M00/07/F3/wKgFd2oilNmAZ4dBAACqMm8c_pQ166_150_150.jpg
+http://192.168.5.116:18081/zoo/group8/M00/07/F3/wKgFd2oilNmAZ4dBAACqMm8c_pQ166_150_150.jpg
