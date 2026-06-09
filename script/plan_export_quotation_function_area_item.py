@@ -2,6 +2,7 @@
 # -*- coding:UTF-8 -*-
 
 from plan_util import *
+from openpyxl import Workbook
 
 class Exporter(Util):
 
@@ -71,6 +72,40 @@ class Exporter(Util):
 
         return companyId
 
+    def packXlsxFile(self, pid, workbook, zipfile=True, pwdfile=False):
+        """使用 openpyxl 保存 xlsx 格式, 打包上传(参照父类 packFile 逻辑)"""
+
+        self.cursor.execute("select t.name, p.args from information.plan p, communion.task t where p.pid = %s and p.tid = t.tid" % (pid))
+        info = self.cursor.fetchall()
+
+        filename = str(int(time.time() * 1000))
+        tmppath = tempfile.gettempdir()
+
+        if info and len(info) >= 0:
+            filename = info[0][0].replace('(', '-').replace(')', '') + '-' + info[0][1].replace('/', '')
+
+        xlsxpath = u"%s/%s.xlsx" % (tmppath, filename)
+        zippath = u"%s/%s.zip" % (tmppath, filename)
+
+        uploadpath = xlsxpath
+
+        workbook.save(xlsxpath)
+
+        if zipfile and not pwdfile:
+            os.system("zip -j %s %s" % (zippath, xlsxpath))
+            uploadpath = zippath
+
+        if zipfile and pwdfile:
+            os.system("zip -P %s -j %s %s" % (pid.zfill(8)[::-1], zippath, xlsxpath))
+            uploadpath = zippath
+
+        resultfilepath = self.uploudFile(uploadpath, self.media + u"uploadOther.do")
+
+        self.delFile(xlsxpath)
+        self.delFile(zippath)
+
+        return resultfilepath
+
     def main(self, type, pid, args, company):
 
         try:
@@ -127,14 +162,17 @@ class Exporter(Util):
                 "plan.status": 4
             })
 
-            workbook, sheet = self.createWorkbook("报价项信息")
+            # 使用 openpyxl 创建 xlsx 格式工作簿, 支持超过 65535 行
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = u"报价项信息"
 
             tableHead = [
                 "装修单号", "楼盘", "楼号", "设计分区", "设计部", "设计师", "监理", "功能区", "项目名", "工种",
                 "单位", "类型", "类型", "折扣", "数量", "折前单价", "折前金额", "实收额", "预签产品"
             ]
 
-            self.createTableHead(sheet, tableHead)
+            sheet.append(tableHead)
 
             count = 1
 
@@ -156,7 +194,7 @@ class Exporter(Util):
                         row[6] = row[6] if row[6] else "暂无"
                         row[16] = row[16] if row[14] or row[7] != "生成项目" else row[15]
 
-                        self.createTableHead(sheet, row, count)
+                        sheet.append(row)
                         count += 1
 
                     nowPage = nowPage + 1
@@ -170,7 +208,7 @@ class Exporter(Util):
                         "plan.status": 4
                     })
                     
-            resultfilepath = self.packFile(pid, workbook)
+            resultfilepath = self.packXlsxFile(pid, workbook)
 
             self.updataSchedule(self.pthost, pid, {
                 "plan.resultFilepath": resultfilepath
