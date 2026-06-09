@@ -72,40 +72,6 @@ class Exporter(Util):
 
         return companyId
 
-    def packXlsxFile(self, pid, workbook, zipfile=True, pwdfile=False):
-        """使用 openpyxl 保存 xlsx 格式, 打包上传(参照父类 packFile 逻辑)"""
-
-        self.cursor.execute("select t.name, p.args from information.plan p, communion.task t where p.pid = %s and p.tid = t.tid" % (pid))
-        info = self.cursor.fetchall()
-
-        filename = str(int(time.time() * 1000))
-        tmppath = tempfile.gettempdir()
-
-        if info and len(info) >= 0:
-            filename = info[0][0].replace('(', '-').replace(')', '') + '-' + info[0][1].replace('/', '')
-
-        xlsxpath = u"%s/%s.xlsx" % (tmppath, filename)
-        zippath = u"%s/%s.zip" % (tmppath, filename)
-
-        uploadpath = xlsxpath
-
-        workbook.save(xlsxpath)
-
-        if zipfile and not pwdfile:
-            os.system("zip -j %s %s" % (zippath, xlsxpath))
-            uploadpath = zippath
-
-        if zipfile and pwdfile:
-            os.system("zip -P %s -j %s %s" % (pid.zfill(8)[::-1], zippath, xlsxpath))
-            uploadpath = zippath
-
-        resultfilepath = self.uploudFile(uploadpath, self.media + u"uploadOther.do")
-
-        self.delFile(xlsxpath)
-        self.delFile(zippath)
-
-        return resultfilepath
-
     def main(self, type, pid, args, company):
 
         try:
