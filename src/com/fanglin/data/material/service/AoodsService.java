@@ -26,6 +26,8 @@ public interface AoodsService {
 
 	public int updateAoodsForNorm(AoodsVO aoodsVO) throws FLException;
 
+	public int updateAoodsForAdvance(AoodsVO aoodsVO) throws FLException;
+
 	public int updateKaoods(AoodsVO aoodsVO, GoodsVO goodsVO) throws FLException;
 
 	public int copyAoods(AoodsVO aoodsVO, int company) throws FLException;
