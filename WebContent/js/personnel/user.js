@@ -16,6 +16,7 @@
         postParam: {},
         userAdvanceItems: {},
         companysel: [],
+        departmentsel: [],
         task: {},
         rolesel: {},
         uid: null,
@@ -29,7 +30,8 @@
             advanceCancelBtn: com.focusPage("#advanceCancelBtn"),
 
             saveRoleBtn: com.focusPage("#saveRoleBtn").on("click", saveUserRole),
-            saveCompanyBtn: com.focusPage("#saveCompanyBtn").on("click", saveUserCompany)
+            saveCompanyBtn: com.focusPage("#saveCompanyBtn").on("click", saveUserCompany),
+            saveDepartmentBtn: com.focusPage("#saveDepartmentBtn").on("click", saveUserDepartment)
         },
 
         modals: {
@@ -38,6 +40,7 @@
 
             userAdvanceModal: com.focusPage("#userAdvanceModal"),
             userCompanyModal: com.focusPage("#userCompanyModal"),
+            userDepartmentModal: com.focusPage("#userDepartmentModal"),
             usertaskModal: com.focusPage("#taskModal"),
             userRoleModal: com.focusPage("#userRoleModal"),
             companyCopyModal: com.focusPage("#companyCopyModal")
@@ -57,6 +60,7 @@
             roleTran: com.focusPage("#roleTran"),
             company: com.focusPage("#company"),
             usercompany: com.focusPage("#usercompany", "#userCompanyModal"),
+            userdepartment: com.focusPage("#userdepartment", "#userDepartmentModal"),
             taskpermissions: com.focusPage("#taskpermissions"),
             oldcompany: com.focusPage("#oldcompany"),
 
@@ -224,6 +228,15 @@
 
     }, null, false);
 
+    com.post(api.communion.queryDepartment, {}, function(res) {
+
+        $.each(res.departments, function(i, v) {
+
+            user.departmentsel.push(v);
+        });
+
+    }, null, false);
+
     com.post(api.communion.queryTask, {
         "task.level": 0
     }, function(res) {
@@ -303,6 +316,7 @@
 
                     var $role = $('<a></a>').addClass('btn btn-minier btn-yellow').html('角色');
                     var $company = $('<a></a>').addClass('btn btn-minier btn-yellow').html('公司');
+                    var $department = $('<a></a>').addClass('btn btn-minier btn-yellow').html('部门');
                     var $btnRight = $('<a></a>').addClass('btn btn-minier btn-yellow').html('权配');
                     var $btnMacontrol = $('<a></a>').addClass('btn btn-minier btn-yellow').html('权限');
                     var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-pink').html('装修设计');
@@ -758,6 +772,56 @@
 
                     });
 
+                    $department.unbind().bind('click', function() {
+
+                        user.uid = v.uid;
+
+                        $("#departmentdiv").empty();
+
+                        var departmentname = [];
+
+                        var options = {
+                            "user.uid": v.uid
+                        };
+
+                        user.items.userdepartment.html("");
+
+                        user.modals.userDepartmentModal.modal("show");
+
+                        com.post(api.personel.queryUserDepartment, options, function(res) {
+
+                            $.each(res.userDepartments, function(i, va) {
+
+                                departmentname.push(va.department.name);
+                            });
+                        }, null, false);
+
+                        $.each(user.departmentsel, function(i, va) {
+
+                            var $div = $('<div class="tag"></div>');
+                            var $input = $('<input/>').attr({
+                                "type": "checkbox",
+                                "value": va.name,
+                                "name": "deptcheck",
+                                "id": va.did,
+                                "class": "ace"
+                            });
+                            var $span = $('<span></span>').addClass('lbl');
+                            var $spans = $('<span></span>').html(va.name);
+                            $div.append($input).append($span).append($spans).appendTo(com.focusPage("#departmentdiv"));
+                            if (departmentname.indexOf(va.name) != -1) {
+                                $input.attr("checked", true);
+                            }
+                        });
+
+                        departmentname && departmentname.length && $.each(departmentname, function(i, v) {
+
+                            var $div = $('<div></div>').appendTo(user.items.userdepartment);
+                            var $span = $('<span class="tag"></span>').html(v).appendTo($div);
+                        });
+
+                    });
+
                     $btnMacontrol.click(function() {
 
                         params["user.uid"] = v.uid;
@@ -876,6 +940,9 @@
 
                     if (user.pageConfig.pageBtn.contains("company"))
                         $divBtnWrap.append($company);
+
+                    if (user.pageConfig.pageBtn.contains("department"))
+                        $divBtnWrap.append($department);
 
                     if (user.pageConfig.pageBtn.contains("right"))
                         $divBtnWrap.append($btnRight);
@@ -1741,6 +1808,27 @@
         com.post(api.personel.updateUserCompany, params, function(res) {
 
             user.modals.userCompanyModal.modal("hide");
+        });
+    }
+
+    function saveUserDepartment() {
+
+        var $inputs = com.focusPage('input[name="deptcheck"]:checked');
+
+        var params = {
+            "user.uid": user.uid
+        };
+
+        $.each($inputs, function(i, v) {
+
+            var $input = $(v);
+
+            params["dids[" + i + "]"] = $input.attr('id');
+        });
+
+        com.post(api.personel.updateUserDepartment, params, function(res) {
+
+            user.modals.userDepartmentModal.modal("hide");
         });
     }
 

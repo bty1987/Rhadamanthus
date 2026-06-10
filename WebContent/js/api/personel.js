@@ -452,6 +452,13 @@ $.extend(api, {
             server: "communion"
         },
 
+        queryUserDepartment: {
+            url: "queryUserDepartment.do"
+        },
+        updateUserDepartment: {
+            url: "updateUserDepartment.do"
+        },
+
         PageUserRequire: {
             url: "pageUserRequire.do"
         },
