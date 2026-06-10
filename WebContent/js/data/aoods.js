@@ -26,8 +26,6 @@ $(function() {
             editAccessoriesType: com.focusPage("#editAccessoriesType", "#editLayer"),
             editSortType: com.focusPage("#editSortType", "#editLayer"),
             editNood: com.focusPage("#editNood", "#editLayer"),
-            editBcompany: com.focusPage("#editBcompany", "#editLayer"),
-            old: com.focusPage("#old", "#editLayer"),
             editAtttype: com.focusPage("#editAtttype", "#editLayer"),
             editBalance: com.focusPage("#editBalance", "#editLayer"),
             editSelling: com.focusPage("#editSelling", "#editLayer"),
@@ -37,6 +35,9 @@ $(function() {
             editNormnum: com.focusPage('#normnum', "#editLayer"),
             editStoreunit: com.focusPage('#storeunit', "#editLayer"),
             editStorenum: com.focusPage('#storenum', "#editLayer"),
+
+            advanceOld: com.focusPage("#advanceOld", "#advanceLayer"),
+            advanceBcompany: com.focusPage("#advanceBcompany", "#advanceLayer"),
 
             ccompany: com.focusPage("#ccompany", "#copyAoodsModal"),
             quotationVersion: com.focusPage("#quotationVersion", "#quotationVersionModal"),
@@ -49,6 +50,7 @@ $(function() {
         btns: {
             submitBtn: com.focusPage("#submitBtn", "#addLayer"),
             editBtn: com.focusPage("#editBtn", "#editLayer"),
+            advanceBtn: com.focusPage("#advanceBtn", "#advanceLayer"),
             copyBtn: com.focusPage("#copyBtn", "#copyAoodsModal"),
             confirmItemBtn: com.focusPage("#confirmItemBtn", "#quotationVersionModal"),
             aoodsImportBtn: com.focusPage("#aoodsImportBtn"),
@@ -58,6 +60,7 @@ $(function() {
         modals: {
             addLayer: com.focusPage("#addLayer"),
             editLayer: com.focusPage("#editLayer"),
+            advanceLayer: com.focusPage("#advanceLayer"),
             copyAoodsModal: com.focusPage("#copyAoodsModal"),
             quotationVersionModal: com.focusPage("#quotationVersionModal"),
             addQuotaionItemModal: com.focusPage("#addQuotaionItemModal"),
@@ -91,7 +94,7 @@ $(function() {
         aoods.items.bcompany.bindData(res.companys, 'cid', 'name', true);
         aoods.items.ccompany.bindData(res.companys, 'cid', 'name', true);
 
-        aoods.items.editBcompany.bindData(res.companys, 'cid', 'name', true);
+        aoods.items.advanceBcompany.bindData(res.companys, 'cid', 'name', true);
     });
 
     com.post(api.data.queryConstructionNode, {}, function(res) {
@@ -123,6 +126,11 @@ $(function() {
     aoods.btns.editBtn.click(function() {
 
         editAoods();
+    });
+
+    aoods.btns.advanceBtn.click(function() {
+
+        advanceAoods();
     });
 
     aoods.btns.copyBtn.click(function() {
@@ -312,8 +320,6 @@ $(function() {
 
             com.updateTypeahead(aoods.items.editNood, v.noods.nid, v.noods.name);
 
-            aoods.items.old.val(v.bompany);
-
             aoods.items.editName.val(v.name);
             aoods.items.editNood.val(v.noods.name);
             aoods.items.editBalance.val(v.balance);
@@ -324,6 +330,18 @@ $(function() {
             aoods.items.editConstructionNode.val(v.constructionNode.cnid);
 
             com.popup4model("#editLayer", "编辑");
+        }
+    }, {
+        name: "归属",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            aoods.aid = v.aid;
+            aoods.gid = v.goods.gid;
+
+            aoods.items.advanceOld.val(v.bompany);
+
+            com.popup4model("#advanceLayer", "归属公司");
         }
     }, {
         name: "成本",
@@ -451,7 +469,6 @@ $(function() {
             "aoods.noods.nid": com.typeahead(aoods.items.editNood),
             "aoods.accessoriesType.atid": aoods.items.editAccessoriesType.val(),
             "aoods.sortType.atid": aoods.items.editSortType.val(),
-            "aoods.bompany": aoods.items.editBcompany.val(),
             "aoods.atttype": aoods.items.editAtttype.val(),
             "aoods.balance": aoods.items.editBalance.val(),
             "aoods.selling": aoods.items.editSelling.val(),
@@ -464,6 +481,24 @@ $(function() {
         };
 
         com.post(api.data.updateAoods, options, function(res) {
+
+            com.closePopup();
+            searcher.doSearch();
+        });
+    }
+
+    function advanceAoods() {
+
+        if (com.validate("advanceAoods", "right")) {
+            return false;
+        }
+
+        var options = {
+            "aoods.aid": aoods.aid,
+            "aoods.bompany": aoods.items.advanceBcompany.val()
+        };
+
+        com.post(api.data.updateAoodsForAdvance, options, function(res) {
 
             com.closePopup();
             searcher.doSearch();

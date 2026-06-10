@@ -1165,6 +1165,9 @@ $.extend(api, {
         updateAoodsForNorm: {
             url: "updateAoodsForNorm.do"
         },
+        updateAoodsForAdvance: {
+            url: "updateAoodsForAdvance.do"
+        },
         copyAoods: {
             url: "copyAoods.do"
         },

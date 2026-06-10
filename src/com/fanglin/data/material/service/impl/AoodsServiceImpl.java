@@ -170,12 +170,6 @@ public class AoodsServiceImpl implements AoodsService {
 			throw new FLException(260056, "辅材不存在");
 		}
 
-		int cid = "".equals(aoodsVO.getBompany()) ? 0 : CompanyServiceImpl.decode(aoodsVO.getBompany());
-
-		if (aoodsPO.getBompany() != cid && aoodsDao.countAoods(aoodsVO.getGoods().getGid(), cid) > 0) {
-			throw new FLException(130029, "辅材已存在");
-		}
-
 		aoodsPO.setName(aoodsVO.getName());
 
 		aoodsPO.setAtttype(aoodsVO.getAtttype());
@@ -186,8 +180,6 @@ public class AoodsServiceImpl implements AoodsService {
 		aoodsPO.setNormunit(aoodsVO.getNormunit());
 		aoodsPO.setStorenum(aoodsVO.getStorenum());
 		aoodsPO.setStoreunit(aoodsVO.getStoreunit());
-
-		aoodsPO.setBompany(cid);
 
 		if (aoodsVO.getAccessoriesType() != null && aoodsVO.getAccessoriesType().getAtid() != null) aoodsPO.setAccessoriesType(new AccessoriesTypePO(aoodsVO.getAccessoriesType().getAtid()));
 		if (aoodsVO.getSortType() != null && aoodsVO.getSortType().getAtid() != null) aoodsPO.setSortType(new AccessoriesTypePO(aoodsVO.getSortType().getAtid()));
@@ -247,6 +239,29 @@ public class AoodsServiceImpl implements AoodsService {
 		}
 
 		aoodsPO.setNoods(noodsPO);
+
+		aoodsDao.update(aoodsPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateAoodsForAdvance(AoodsVO aoodsVO) throws FLException {
+
+		AoodsPO aoodsPO = aoodsDao.get(aoodsVO.getAid());
+
+		if (aoodsPO == null) {
+			throw new FLException(260056, "辅材不存在");
+		}
+
+		int cid = "".equals(aoodsVO.getBompany()) ? 0 : CompanyServiceImpl.decode(aoodsVO.getBompany());
+
+		if (aoodsPO.getBompany() != cid && aoodsDao.countAoods(aoodsPO.getGoods().getGid(), cid) > 0) {
+			throw new FLException(130029, "辅材已存在");
+		}
+
+		aoodsPO.setBompany(cid);
 
 		aoodsDao.update(aoodsPO);
 
