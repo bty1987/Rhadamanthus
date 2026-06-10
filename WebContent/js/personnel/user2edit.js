@@ -382,6 +382,9 @@ jQuery(function(a) {
     user.items.deptTypeSel = com.focusPage("#deptTypeSel", "#userinfo");
     user.items.deptTypeSel.bindData(user.deptType, "dtid", "name");
 
+    // 职位 typeahead: 按名称/拼音搜索所有启用状态的职位
+    com.initTypeahead('dutySel', api.system.queryDutyByName, "pinyinName", {"duty.status": 0}, "dutys", "did", "name", null);
+
     com.datetime(com.focusPage("#entryTime"));
     com.datetime(com.focusPage("#boardTime"));
     com.datetime(com.focusPage("#employTime"));
@@ -402,14 +405,6 @@ jQuery(function(a) {
     com.datetime(com.focusPage("#operationEndTime"));
 
     user.items.deptTypeSel.on("change", function(b, d) {
-
-        com.post(api.system.queryDutyByDtid, {
-            "duty.departmentType.dtid": $(this).val()
-        }, function(res) {
-
-            user.dutyTypeMap = res.dutys;
-            user.items.dutySel.bindData(user.dutyTypeMap, "did", "name");
-        }, null, false);
 
         com.post(api.communion.queryDepartmentByDtid, {
             "dept.type.dtid": $(this).val()
@@ -496,7 +491,7 @@ jQuery(function(a) {
             user.items.deptTypeSel.val($user.dept.type.dtid).trigger("change", function() {
 
                 user.items.deptSel.val($user.dept.did);
-                user.items.dutySel.val($user.duty.did);
+                com.updateTypeahead(user.items.dutySel, $user.duty.did, $user.duty.name);
             });
 
             user.items.levelSel.val($userInfo.level);
@@ -587,7 +582,7 @@ jQuery(function(a) {
 
                 "userInfo.user.loginId": user.items.loginId.val(),// 用户名
                 "userInfo.user.dept.did": user.items.deptSel.val(),// 部门ID
-                "userInfo.user.duty.did": user.items.dutySel.val(),// 职位ID
+                "userInfo.user.duty.did": com.typeahead("dutySel"),// 职位ID
                 "userInfo.level": user.items.levelSel.val(),
                 "userInfo.user.status": user.items.statusSel.val(),// 状态
                 "userInfo.employWay": user.items.employWaySel.val(),// 招聘渠道
