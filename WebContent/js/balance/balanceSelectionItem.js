@@ -425,7 +425,7 @@ $(function() {
                 ['结算值', 'totalprice'], //
                 ['合计金额', 'totalprice'], //
                 ['备注', 'selectionItem.comment'], //
-                ['面积', 'selectionItem.decoration.house.innerArea'], //
+                ['计价面积', 'selectionItem.decoration.house.innerArea'], //
                 ['标配/升级', ''], //
                 ['预签时间', 'selectionItem.decoration.procontracttime'], //
                 ],
