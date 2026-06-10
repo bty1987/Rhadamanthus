@@ -380,7 +380,18 @@ jQuery(function(a) {
     user.items.deptSel = com.focusPage("#deptSel", "#userinfo");
     user.items.dutySel = com.focusPage("#dutySel", "#userinfo");
     user.items.deptTypeSel = com.focusPage("#deptTypeSel", "#userinfo");
-    user.items.deptTypeSel.bindData(user.deptType, "dtid", "name");
+
+    // 部门类型 typeahead: 本地数据搜索，选中后级联加载部门列表
+    com.selectTypeahead(user.items.deptTypeSel, user.deptType, "dtid", "name", function(list, k, v) {
+
+        com.post(api.communion.queryDepartmentByDtid, {
+            "dept.type.dtid": k
+        }, function(res) {
+            user.items.deptSel.bindData(res.deptList, "did", "name");
+        }, null, false);
+
+        return v;
+    });
 
     // 职位 typeahead: 按名称/拼音搜索所有启用状态的职位
     com.initTypeahead('dutySel', api.system.queryDutyByName, "pinyinName", {"duty.status": 0}, "dutys", "did", "name", null);
@@ -403,17 +414,6 @@ jQuery(function(a) {
     com.datetime(com.focusPage("#educationEndTime"));
     com.datetime(com.focusPage("#operationBeginTime"));
     com.datetime(com.focusPage("#operationEndTime"));
-
-    user.items.deptTypeSel.on("change", function(b, d) {
-
-        com.post(api.communion.queryDepartmentByDtid, {
-            "dept.type.dtid": $(this).val()
-        }, function(res) {
-
-            user.items.deptSel.bindData(res.deptList, "did", "name");
-            d && d();
-        }, null, false)
-    }).trigger("change");
 
     // 编辑用户, 获取用户信息
     if (params.personel.userId) {
@@ -488,11 +488,16 @@ jQuery(function(a) {
             user.items.loginId.val($user.loginId).attr("disabled", "disabled");
             user.items.company.val($user.companys);
 
-            user.items.deptTypeSel.val($user.dept.type.dtid).trigger("change", function() {
+            com.updateTypeahead(user.items.deptTypeSel, $user.dept.type.dtid, $user.dept.type.name);
 
+            // 根据部门类型加载部门列表, 回填部门和职位
+            com.post(api.communion.queryDepartmentByDtid, {
+                "dept.type.dtid": $user.dept.type.dtid
+            }, function(res) {
+                user.items.deptSel.bindData(res.deptList, "did", "name");
                 user.items.deptSel.val($user.dept.did);
                 com.updateTypeahead(user.items.dutySel, $user.duty.did, $user.duty.name);
-            });
+            }, null, false);
 
             user.items.levelSel.val($userInfo.level);
             user.items.statusSel.val($user.status);
