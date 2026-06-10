@@ -75,10 +75,13 @@ $(function() {
 
     com.post(api.data.queryAccessoriesType, {}, function(res) {
 
-        aoods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
-        aoods.items.sortType.bindData(res.accessoriesTypes, 'atid', 'name', true);
-        aoods.items.editAccessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
-        aoods.items.editSortType.bindData(res.accessoriesTypes, 'atid', 'name', true);
+        var normals = res.accessoriesTypes.filter(function(item) { return item.type == 0; });
+        var sorts = res.accessoriesTypes.filter(function(item) { return item.type == 1; });
+
+        aoods.items.accessoriesType.bindData(normals, 'atid', 'name', true);
+        aoods.items.sortType.bindData(sorts, 'atid', 'name', true);
+        aoods.items.editAccessoriesType.bindData(normals, 'atid', 'name', true);
+        aoods.items.editSortType.bindData(sorts, 'atid', 'name', true);
     });
 
     com.initTypeahead('nood', api.data.queryNoodsByName, "noods.name", {}, "noodes", "nid", "name", null);
