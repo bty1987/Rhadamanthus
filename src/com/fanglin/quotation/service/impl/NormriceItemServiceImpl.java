@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.construction.dao.ConstructionScheduleDao;
+import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
@@ -38,6 +40,9 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
+
+	@Autowired
+	private ConstructionScheduleDao constructionScheduleDao;
 
 	@Override
 	public List<NormriceItemVO> queryNormriceItem(NormriceItemVO normriceItem) {
@@ -135,6 +140,9 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 			BeanUtil.copyPropertie(normriceItemPO.getConstructionNode(), normriceItemVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 		}
 
+		// 更新工程计划附加项状态
+		updateConstructionScheduleForAdditemStatus(quotationPO, normriceItemPO.getConstructionNode().getCnid());
+
 		return 0;
 	}
 
@@ -148,9 +156,14 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 			return 0;
 		}
 
-		checkQuotationForStatusByEnabled(normriceItemPO.getQid());
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normriceItemPO.getQid());
+
+		long cnid = normriceItemPO.getConstructionNode().getCnid();
 
 		normriceItemDao.delete(normriceItemPO);
+
+		// 更新工程计划附加项状态
+		updateConstructionScheduleForAdditemStatus(quotationPO, cnid);
 
 		return 0;
 	}
@@ -165,11 +178,56 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 			return 0;
 		}
 
-		checkQuotationForStatusByEnabled(normriceItemPO.getQid());
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normriceItemPO.getQid());
 
 		normriceItemDao.confirmNormriceItem(normriceItemPO.getNpiid());
 
+		// 更新工程计划附加项状态
+		updateConstructionScheduleForAdditemStatus(quotationPO, normriceItemPO.getConstructionNode().getCnid());
+
 		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int rejectNormriceItem(NormriceItemVO normriceItemVO) throws FLException {
+
+		NormriceItemPO normriceItemPO = normriceItemDao.get(normriceItemVO.getNpiid());
+
+		if (normriceItemPO == null) {
+			return 0;
+		}
+
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normriceItemPO.getQid());
+
+		normriceItemDao.rejectNormriceItem(normriceItemPO.getNpiid());
+
+		// 更新工程计划附加项状态
+		updateConstructionScheduleForAdditemStatus(quotationPO, normriceItemPO.getConstructionNode().getCnid());
+
+		return 0;
+	}
+
+	/**
+	 * 根据报价单和施工节点, 更新对应工程计划的附加项状态
+	 * 有status=0(待确认)的附加项 → additemStatus=1(待审)
+	 * 没有status=0的附加项 → additemStatus=0(无)
+	 */
+	private void updateConstructionScheduleForAdditemStatus(QuotationPO quotationPO, long cnid) {
+
+		if (quotationPO == null || quotationPO.getOrderId() == null) {
+			return;
+		}
+
+		ConstructionSchedulePO schedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(quotationPO.getOrderId(), cnid);
+
+		if (schedulePO == null) {
+			return;
+		}
+
+		int initCount = normriceItemDao.countInitNormriceItem(quotationPO.getQid(), cnid);
+
+		schedulePO.setAdditemStatus(initCount > 0 ? ConstructionSchedulePO.ADDITEMSTATUS_PENDING_INT : ConstructionSchedulePO.ADDITEMSTATUS_NONE_INT);
 	}
 
 	private QuotationPO checkQuotationForStatusByEnabled(long qid) throws FLException {

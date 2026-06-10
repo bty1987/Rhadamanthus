@@ -64,6 +64,9 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public static final short ISUPLOAD_UPLOAD_INT = 1;// 已传
 
+	public static final short ADDITEMSTATUS_NONE_INT = 0; // 无附加项待审
+	public static final short ADDITEMSTATUS_PENDING_INT = 1; // 附加项待审
+
 	private long csid;
 
 	private long cid;
@@ -103,6 +106,8 @@ public class ConstructionSchedulePO implements Serializable {
 	private short scheduleStatus;
 
 	private short isUpload;
+
+	private short additemStatus;
 
 	private int accessoryLimit;
 
@@ -335,6 +340,15 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public void setIsUpload(short isUpload) {
 		this.isUpload = isUpload;
+	}
+
+	@Column(name = "additemStatus")
+	public short getAdditemStatus() {
+		return additemStatus;
+	}
+
+	public void setAdditemStatus(short additemStatus) {
+		this.additemStatus = additemStatus;
 	}
 
 	@Column(name = "accessoryLimit")

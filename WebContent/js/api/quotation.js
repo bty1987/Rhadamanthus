@@ -1799,6 +1799,10 @@ $.extend(api, {
             url: "confirmNormriceItem.do",
             type: "update"
         },
+        rejectNormriceItem: {
+            url: "rejectNormriceItem.do",
+            type: "update"
+        },
 
         queryNormriceItemByType: {
             url: "queryNormriceItemByType.do",
