@@ -166,21 +166,68 @@ $(function() {
     initVillage(com.focusPage("#villageName2", "#updateForHouse"), com.focusPage("#rule2", "#updateForHouse"), null);
     initVillage(com.focusPage("#referVillage", "#customerSource"), null, null);
 
-    com.post(api.customer.queryCustomerDeptRuleByDid, {
+    // 查询用户所属部门(包含多部门)的业务类型规则
+    var _busitypeDeptMap = {}; // dbid -> deptDid 映射，供getRules使用
 
-        "customerDeptRule.department.did": params.userInfo.user.dept.did,
-    }, function(res) {
+    var _loadBusitypes = function(deptDids) {
 
         var busitypes = [];
+        var loaded = 0;
+        var total = deptDids.length;
 
-        $.each(res.customerDeptRules, function(i, v) {
+        if (total == 0) {
+            customerSource.items.businessType.bindData(busitypes, "dbid", "name", '请选择', null, "other").trigger("change");
+            return;
+        }
 
-            v.busitype.other = v.busitype.outside + "-" + v.busitype.isRefer;
+        $.each(deptDids, function(i, did) {
 
-            busitypes.push(v.busitype);
+            com.post(api.customer.queryCustomerDeptRuleByDid, {
+                "customerDeptRule.department.did": did,
+            }, function(res) {
+
+                $.each(res.customerDeptRules, function(j, v) {
+
+                    v.busitype.other = v.busitype.outside + "-" + v.busitype.isRefer;
+
+                    // 按dbid去重
+                    var exists = false;
+                    $.each(busitypes, function(k, b) {
+                        if (b.dbid == v.busitype.dbid) {
+                            exists = true;
+                            return false;
+                        }
+                    });
+
+                    if (!exists) {
+                        v.busitype._deptDid = did; // 记录来源部门did，供getRules使用
+                        _busitypeDeptMap[v.busitype.dbid] = did;
+                        busitypes.push(v.busitype);
+                    }
+                });
+
+                loaded++;
+
+                if (loaded == total) {
+                    customerSource.items.businessType.bindData(busitypes, "dbid", "name", '请选择', null, "other").trigger("change");
+                }
+            });
+        });
+    };
+
+    com.post(api.personel.queryUserDepartment, {
+        "user.uid": params.userInfo.user.uid,
+    }, function(res) {
+
+        var deptDids = [params.userInfo.user.dept.did]; // 默认包含主部门
+
+        $.each(res.userDepartments, function(i, v) {
+            if (v.department && v.department.did && deptDids.indexOf(v.department.did) == -1) {
+                deptDids.push(v.department.did);
+            }
         });
 
-        customerSource.items.businessType.bindData(busitypes, "dbid", "name", '请选择', null, "other").trigger("change");
+        _loadBusitypes(deptDids);
     });
 
     customerSource.items.businessType.change(function(e) {
@@ -536,6 +583,7 @@ $(function() {
         extraParams["customerSource.creater.userId"] = params.userInfo.user.userId;
     } else if (customerSource.depage == "dept") {
         extraParams["customerSource.creater.dept.no"] = params.userInfo.user.dept.no;
+        extraParams["customerSource.creater.uid"] = params.userInfo.user.uid;
     } else if (customerSource.depage == "region") {
         extraParams["customerSource.creater.dept.fatherDept.no"] = params.userInfo.user.dept.fatherDept.no;
     }
@@ -975,8 +1023,11 @@ $(function() {
         com.focusPage(".department", "#issueCustomerChanceModal").hide();
         com.focusPage(".region", "#issueCustomerChanceModal").hide();
 
+        // 优先使用busitype对应的多部门did，回退到主部门did
+        var deptDid = _busitypeDeptMap[busitype] || params.userInfo.user.dept.did;
+
         com.post(api.customer.queryCustomerDeptRuleByDbid, {
-            "customerDeptRule.department.did": params.userInfo.user.dept.did,
+            "customerDeptRule.department.did": deptDid,
             "customerDeptRule.busitype.dbid": busitype
         }, function(res) {
 

@@ -59,6 +59,8 @@ import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.dao.UserDepartmentDao;
+import com.fanglin.personel.po.UserDepartmentPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.CompanyDao;
@@ -119,6 +121,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	private UserDao userDao;
 
 	@Autowired
+	private UserDepartmentDao userDepartmentDao;
+
+	@Autowired
 	private CustomerDao customerDao;
 
 	@Autowired
@@ -151,7 +156,25 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		}
 
 		if (customerSource.getCreater() != null && customerSource.getCreater().getDept() != null && customerSource.getCreater().getDept().getNo() != null) {
-			filters.add(new Filter("user.dept", customerSource.getCreater().getDept().getNo(), "eq"));
+
+			// 支持多部门查询: 当uid存在时, 查询UserDepartment扩展部门列表
+			if (customerSource.getCreater().getUid() != null) {
+
+				List<String> deptNos = new ArrayList<String>();
+				deptNos.add(customerSource.getCreater().getDept().getNo());
+
+				List<UserDepartmentPO> userDepartments = userDepartmentDao.queryUserDepartment(customerSource.getCreater().getUid());
+
+				for (UserDepartmentPO ud : userDepartments) {
+					if (ud.getDepartment() != null && ud.getDepartment().getNo() != null && !deptNos.contains(ud.getDepartment().getNo())) {
+						deptNos.add(ud.getDepartment().getNo());
+					}
+				}
+
+				filters.add(new Filter("user.dept", deptNos, "in"));
+			} else {
+				filters.add(new Filter("user.dept", customerSource.getCreater().getDept().getNo(), "eq"));
+			}
 		}
 
 		List<CustomerSourcePO> customerSourcePOs = customerSourceDao.pageCustomerSource(paging, filters, company);

@@ -109,7 +109,11 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 			} else if ("user.userId".equals(field)) {
 				query.add(query.getCriterion("creater.userId", data, op));
 			} else if ("user.dept".equals(field)) {
-				query.add(query.getCriterion("dept.no", data, op));
+				if ("in".equals(op)) {
+					query.add(query.getCriterion("dept.no", filter.getRange(), op));
+				} else {
+					query.add(query.getCriterion("dept.no", data, op));
+				}
 			} else if ("user.dept.fatherDept".equals(field)) {
 				query.alias("dept.fatherDept", "fatherDept");
 				query.add(query.getCriterion("fatherDept.no", data, op));
