@@ -67,6 +67,8 @@ public class ConstructionScheduleVO implements Serializable {
 
 	private Short isUpload;
 
+	private Short additemStatus;
+
 	private ConstructionNodeVO node;
 
 	private Integer accessoryLimit;
@@ -268,6 +270,14 @@ public class ConstructionScheduleVO implements Serializable {
 
 	public void setIsUpload(Short isUpload) {
 		this.isUpload = isUpload;
+	}
+
+	public Short getAdditemStatus() {
+		return additemStatus;
+	}
+
+	public void setAdditemStatus(Short additemStatus) {
+		this.additemStatus = additemStatus;
 	}
 
 	public ConstructionNodeVO getNode() {

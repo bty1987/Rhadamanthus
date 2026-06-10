@@ -42,6 +42,8 @@ public class NormriceItemPO implements Serializable {
 
 	public static final short STATUS_CONFIRMED_INT = 2;
 
+	public static final short STATUS_REJECTED_INT = 3;
+
 	private long npiid;
 
 	private long qid;

@@ -83,6 +83,8 @@ $(function() {
                 "data-tnnum": tnnum,
                 "data-tsnum": tsnum,
                 "data-tntotal": tntotal,
+                "data-arnnum": 0,
+                "data-arsnum": 0,
             });
 
             var propertyArr = [[v ? v.goods.name : '', 'grey col-md-1', "oname"], [v ? v.normnum : '', 'blue col-md-1', ''], [v ? v.normunit : '', 'blue col-md-1', "tnunit"], [v ? v.storeunit : '', 'blue col-md-1', "tsunit"], [v ? v.num : '', 'blue col-md-1', 'onum'], [v ? ototal : '', 'blue col-md-1', "ototal"]];
@@ -242,7 +244,7 @@ $(function() {
             "addReduce.orderId": quotation.orderId
         }, function(res) {
 
-            rightTotal = utils.accAdd(rightTotal, handleRight(res.normoods));
+            rightTotal = utils.accAdd(rightTotal, handleRight(res.normoods, true));
         }, null, false);
 
         com.post(api.quotation.queryQuotationNormoodItem, {
@@ -352,7 +354,7 @@ $(function() {
         return total;
     }
 
-    function handleRight(data) {
+    function handleRight(data, isAddReduce) {
 
         var total = 0.0;
 
@@ -372,12 +374,44 @@ $(function() {
                 itemli.attr("data-tsnum", storenum);
                 itemli.attr("data-tntotal", tntotal);
 
-                itemli.find(".tnnum").text(normnum);
-                itemli.find(".tsnum").text(storenum);
+                if (isAddReduce) {
+                    var arnnum = utils.accAdd(parseFloat(itemli.attr("data-arnnum")), parseFloat(v.normnum));
+                    var arsnum = utils.accAdd(parseFloat(itemli.attr("data-arsnum")), parseFloat(v.storenum));
+                    itemli.attr("data-arnnum", arnnum);
+                    itemli.attr("data-arsnum", arsnum);
+                }
+
+                var tnnumDisplay = normnum;
+                var arnnumVal = parseFloat(itemli.attr("data-arnnum"));
+                if (arnnumVal != 0) {
+                    tnnumDisplay = normnum + "(" + (arnnumVal > 0 ? "+" : "") + arnnumVal + ")";
+                }
+                itemli.find(".tnnum").text(tnnumDisplay);
+
+                var tsnumDisplay = storenum;
+                var arsnumVal = parseFloat(itemli.attr("data-arsnum"));
+                if (arsnumVal != 0) {
+                    tsnumDisplay = storenum + "(" + (arsnumVal > 0 ? "+" : "") + arsnumVal + ")";
+                }
+                itemli.find(".tsnum").text(tsnumDisplay);
                 itemli.find(".tntotal").text(tntotal);
 
             } else {
                 paint.createItem(null, v, $div);
+
+                if (isAddReduce) {
+                    var newItemli = com.focusPage("#nid" + nid);
+                    if (newItemli && newItemli.length != 0) {
+                        newItemli.attr("data-arnnum", parseFloat(v.normnum));
+                        newItemli.attr("data-arsnum", parseFloat(v.storenum));
+                        var tnnumDisplay2 = parseFloat(v.normnum);
+                        tnnumDisplay2 = tnnumDisplay2 + "(" + (tnnumDisplay2 > 0 ? "+" : "") + tnnumDisplay2 + ")";
+                        newItemli.find(".tnnum").text(tnnumDisplay2);
+                        var tsnumDisplay2 = parseFloat(v.storenum);
+                        tsnumDisplay2 = tsnumDisplay2 + "(" + (tsnumDisplay2 > 0 ? "+" : "") + tsnumDisplay2 + ")";
+                        newItemli.find(".tsnum").text(tsnumDisplay2);
+                    }
+                }
             }
 
             total = utils.accAdd(total, utils.accMul(parseFloat(v.price), parseFloat(v.normnum)));

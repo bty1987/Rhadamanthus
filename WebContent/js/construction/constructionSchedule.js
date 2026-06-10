@@ -252,6 +252,15 @@ jQuery(function($) {
         prop: "planStatus",
         clazz: "red"
     }, {
+        field: "additemStatus",
+        name: "附加项状态",
+        prop: "additemStatus",
+        clazz: "red",
+        converter: {
+            0: "无",
+            1: "待审"
+        }
+    }, {
         field: "planTime",
         name: "预估时间",
         prop: "planTime",
