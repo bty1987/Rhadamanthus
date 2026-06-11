@@ -222,6 +222,12 @@
                     quo.items.trafficRate.val(null);
                 }),
 
+                // 税金比例设置
+                taxRateModal: com.focusPage('#taxRateModal').on("show.bs.modal", function(a) {
+
+                    com.focusPage('#taxRate').val(null);
+                }),
+
                 orderIdModal: com.focusPage('#orderIdModal').on("show.bs.modal", function(a) {
 
                     quo.items.orderIds.val(null);
@@ -1829,6 +1835,43 @@
             });
         },
 
+        // 税金比例设置保存
+        saveTaxRate: function() {
+
+            com.focusPage('#saveTaxRateBtn').click(function() {
+
+                if (com.validate("taxRateModal")) {
+                    return false;
+                }
+
+                var _taxId = com.focusPage('#taxCost').attr('qfaiId');
+                var _qfaId = com.focusPage('#taxCost').find('.cell.name').attr("data-qfaId");
+                var _taxRate = parseFloat(com.focusPage('#taxRate').val());
+
+                // 更新税金行比例显示
+                com.focusPage('#taxCost').find('.discountprice .cell-wrap').text(_taxRate);
+                com.focusPage('#taxCost').find('.totalprice-discount .cell-wrap').text(_taxRate);
+
+                // ("调用 统计车运费管理费总价折扣价")
+                quo.calculateQuoFees();
+
+                var option = $.extend({}, {
+                    "quotetionFunctionAreaItem.qfaiId": _taxId,
+                    "quotetionFunctionAreaItem.qfaid": _qfaId,
+                    "quotetionFunctionAreaItem.unitPrice": _taxRate
+                }, quo.basicParams);
+
+                com.post(api.quotation.updateQuotetionFunctionAreaItemForSpec, option, function(res) {
+
+                    quo.modals.taxRateModal.modal("hide");
+                }, null, false);
+
+                com.post(api.quotation.updateQuotetionForAdvance, quo.basicParams, function(res) {
+
+                }, null, false);
+            });
+        },
+
         // 折扣窗体配置基数
         showDiscountBasePrice: function() {
 
@@ -1942,6 +1985,7 @@
             this.saveQuotesToDomain();
             this.saveManageRate();
             this.saveconveyanceRate();
+            this.saveTaxRate();
             this.deleteQuotesToDomain();
             this.showDiscountBasePrice();
             this.saveOrderId();
@@ -3681,9 +3725,17 @@
                 $item.attr('id', 'taxCost').attr('qfaiId', qv.qfaiId);
                 $btnCell = $('<div></div>').addClass('cell btns');
                 $btnCellWrap = $('<div></div>').addClass('cell-wrap');
-                $btnset = $('<a></a>').css('visibility', 'hidden').append('<i class="bigger-125 icon-cog purple"></i>');
+                $btnset = $('<a></a>').attr('href', 'javascript:void(0)')
+                    .append('<i class="bigger-125 icon-cog purple"></i>')
+                    .mouseenter(function() {
+                        com.showTip(this, "税金比例设置", "top");
+                    });
                 $btnCellWrap.append($btnset).appendTo($btnCell);
                 $item.append($btnCell);
+
+                $btnset.click(function() {
+                    com.focusPage('#taxRateModal').modal('show');
+                });
             }
 
             $item.attr('data-qfaiid', qv.qfaiId);
