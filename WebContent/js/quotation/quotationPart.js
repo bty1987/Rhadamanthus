@@ -541,7 +541,7 @@ var QuotationDetail = (function() {
 
             var _discount = utils.accDiv(quo.basicParams['quotation.discount'], 10);
 
-            var _disPrice = 0, _undisPrice = 0, _transfee = 0, _managefee = 0, _taxfee = 0, quotePrice = 0, preferPrice = 0, managePrefer = 0, advancePrefer = 0, _total = 0, _dtotal = 0;
+            var _disPrice = 0, _undisPrice = 0, _transfee = 0, _managefee = 0, _taxfee = 0, quotePrice = 0, preferPrice = 0, managePrefer = 0, advancePrefer = 0, activityProfit = 0, activityPrice = 0, _total = 0, _dtotal = 0;
 
             _disPrice = quo.basicParams["quotation.disPrice"];
             _undisPrice = quo.basicParams["quotation.undisPrice"];
@@ -573,6 +573,9 @@ var QuotationDetail = (function() {
             advancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
             activityProfit = quo.preferParams["quotationPrefer.activityProfit"];
             quotePrice = quo.preferParams["quotationPrefer.quotePrice"];
+            activityPrice = quo.preferParams["quotationPrefer.activityPrice"];
+            
+            quotePrice = utils.accAdd(quotePrice, activityPrice);
 
             var cpWidget = com.focusPage('#functionAreaDetailList').find('.widget-box[data-dlevel="9998"]');
             var cpItems = cpWidget.find("li.fl-quo-item.item");

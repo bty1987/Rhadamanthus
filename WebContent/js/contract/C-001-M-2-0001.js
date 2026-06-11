@@ -131,7 +131,7 @@ jQuery(function($) {
 
         if (decoration.typeness != constant.decoration().decoration.TYPENESS_NEWFULLREDUCTION_INT) {
             com.focusPage("#con-quotation-total-undis", "#form").val(parseInt(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, quotation.trafficPrice))));
-            com.focusPage("#con-manage-total", "#form").val(parseInt(utils.accAdd(quotation.managePrice, quotation.taxDiscount == 1 ? quotation.taxPrice : 0)));
+            com.focusPage("#con-manage-total", "#form").val(parseInt(utils.accAdd(quotation.managePrice, quotation.taxDiscount == 0 ? 0 : quotation.taxPrice)));
         } else {
             com.focusPage(".total", "#form").hide();
         }

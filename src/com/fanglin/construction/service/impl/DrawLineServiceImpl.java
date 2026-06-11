@@ -213,7 +213,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		SystemConfigPO designFlag = systemConfigDao.querySystemConfig("DESIGN_STATUS_CHECK_INT", decorationPO.getCompany());
 
 		if (designFlag == null && decorationPO.getDesignStatus() != DecorationPO.DESIGNSTATUS_END_INT) {
-			throw new FLException(140092, "装修设计状态不可操作");
+			// throw new FLException(140092, "装修设计状态不可操作");
 		}
 
 		String orderId = decorationPO.getOrderId();

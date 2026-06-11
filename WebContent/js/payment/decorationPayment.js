@@ -350,13 +350,14 @@ jQuery(function($) {
 
                     var options = {
                         "decorationPayment.dpid": v.dpid,
-                        "decorationPayment.decoration.orderId": v.decoration.orderId
+                        "decorationPayment.decoration.orderId": v.decoration.orderId,
+                        "decorationPayment.comment": "",
                     };
 
                     com.post(api.payment.settleDecorationPayment, options, function(res) {
 
                         com.showAlert(com.info, "落款成功，请打印收据。");
-                        searcherSearch();
+                        searcher.doSearch();
                     });
                 });
             });
@@ -374,7 +375,7 @@ jQuery(function($) {
                     com.post(api.payment.withdrawDecorationPayment, options, function(res) {
 
                         com.showAlert(com.info, "撤款成功。");
-                        searcherSearch();
+                        searcher.doSearch();
                     });
                 });
             });
