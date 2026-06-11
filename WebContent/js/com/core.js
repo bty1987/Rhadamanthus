@@ -231,7 +231,7 @@
 
                 if (res.errorCode == 0) {
 
-                    if ((api.type == 'query' && api.tranargs) || (api.type == "update" && api.tranargs.query)) {
+                    if ((api.type == 'query' && api.tranargs) || (api.type == "update" && api.tranargs && api.tranargs.query)) {
 
                         var tranargs = api.tranargs.query ? api.tranargs.query : api.tranargs;
 

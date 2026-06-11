@@ -328,7 +328,7 @@ $(function() {
                     com.post(api.payment.settleSalesPayment, options, function(res) {
 
                         com.showAlert(com.info, "落款成功。");
-                        searcherSearch();
+                        searcher.doSearch();
                     });
                 });
             });
@@ -346,7 +346,7 @@ $(function() {
                     com.post(api.payment.withdrawSalesPayment, options, function(res) {
 
                         com.showAlert(com.info, "撤款成功。");
-                        searcherSearch();
+                        searcher.doSearch();
                     });
                 });
             });

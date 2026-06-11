@@ -21,10 +21,10 @@ public class ConstructionCostPO implements Serializable {
 	public static final String COLUMN_SORT_STR = "sort";
 
 	public static final short STATUS_INIT_SHORT = 0;
-	
-	public static final long ACCESSORY_DEFAULT_LONG = 99999000;
-	
-	public static final long SALARY_DEFAULT_LONG = 99999000;
+
+	public static final long ACCESSORY_DEFAULT_LONG = 999999000;
+
+	public static final long SALARY_DEFAULT_LONG = 999999000;
 
 	private long ccid;
 
@@ -43,11 +43,11 @@ public class ConstructionCostPO implements Serializable {
 	private short sort;
 
 	private int company;
-	
+
 	public ConstructionCostPO() {
 		super();
 	}
-	
+
 	public ConstructionCostPO(long ccid) {
 		super();
 		this.ccid = ccid;

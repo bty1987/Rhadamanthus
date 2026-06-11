@@ -443,7 +443,7 @@
 
             if (_taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
                 _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate));
-                _dtaxfee = _taxfee;
+                _dtaxfee = utils.changeThrDecimal(utils.accMul(_taxfee, _manageDiscount));
             }
 
             _total = utils.changeThrDecimal(utils.accAdd(_rtemPrice, utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxfee)));

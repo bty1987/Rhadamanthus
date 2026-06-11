@@ -40,16 +40,7 @@ jQuery(function($) {
         com.focusPage("#emergencyPhone").val(userProfile.emergencyPhone);
         com.focusPage("#picture").val(userProfile.userPhoto);
 
-        var imageurl = com.showImg(com.focusPage("#showImg"), userProfile.userPhoto, 150, 150, '', '', 3, {
-            "name": "oss-fanglin-erp"
-        });
-
-        com.focusPage("#infoPicture").attr("href", imageurl);
-
-        if (imageurl == "") {
-            com.focusPage("#infoPicture").attr("href", com.showImg(com.focusPage("#showImg"), userProfile.userPhoto, 150, 150, ''));
-        }
-
+        com.focusPage("#infoPicture").attr("href", com.showImg(com.focusPage("#showImg"), userProfile.userPhoto, 150, 150, ''));
     }
 
     com.focusPage("#reset").on("click", function() {
@@ -62,7 +53,7 @@ jQuery(function($) {
         if (com.validate("edit-basic")) {
             return false;
         }
-        parm = {
+        params = {
             "userInfo.user.userPhoto": com.focusPage("#picture").val(),
             "userInfo.user.userId": userid,
             "userInfo.user.phone": com.focusPage("#telephone").val(),
@@ -74,7 +65,7 @@ jQuery(function($) {
             "userInfo.email": com.focusPage("#email").val()
         };
 
-        com.post(api.personel.updateUserForBaseInfo, parm, function(res) {
+        com.post(api.personel.updateUserForBaseInfo, params, function(res) {
 
             userProfile.userPhoto = com.focusPage("#picture").val();
             userProfile.age = com.focusPage("#age").val();
