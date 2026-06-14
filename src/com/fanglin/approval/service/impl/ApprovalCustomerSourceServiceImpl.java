@@ -253,6 +253,10 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 			throw new FLException(330075, "客户机会不存在");
 		}
 
+		if (customerChancePO.getStatus() == CustomerChancePO.STATUS_DISABLE_INT || customerChancePO.getStatus() == CustomerChancePO.STATUS_COMPLETE_INT) {
+			throw new FLException(330077, "客户机会不可操作");
+		}
+
 		CustomerPO customerPO = customerSourcePO.getCustomer();
 
 		if (customerPO == null) {

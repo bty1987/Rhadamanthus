@@ -16,6 +16,7 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -54,7 +55,6 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
@@ -434,171 +434,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		return 0;
 	}
 
-	// 销售落款：直接用主材预付款余额扣减
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int settleSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException {
-
-		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
-
-		if (salesPayment == null) {
-			throw new FLException(150003, "款项不存在");
-		}
-
-		if (salesPayment.getStatus() != SalesPaymentPO.STATUS_INITIAL_INT) {
-			throw new FLException(150036, "款项状态不可操作");
-		}
-
-		SalesPO sales = salesPayment.getSales();
-
-		if (sales == null) {
-			throw new FLException(260021, "销售单不存在");
-		}
-
-		UserPO collecter = userDao.queryUserByUserId(userId);
-
-		if (collecter == null) {
-			throw new FLException(190005, "人员不存在");
-		}
-
-		long referMoney = salesPayment.getReferMoney();
-
-		// 检查主材预付款余额
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(sales.getOrderId());
-
-		if (advancePaymentPO == null) {
-			throw new FLException(150010, "预付款余额不足");
-		}
-
-		if (advancePaymentPO.getMaterialBalance() < referMoney) {
-			throw new FLException(150010, "预付款余额不足");
-		}
-
-		// 创建收款收据
-		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
-		salesReceiptPO.setType(SalesReceiptPO.TYPE_PAYMENT_INT);
-		salesReceiptPO.setAdvance(referMoney);
-		salesReceiptPO.setAdvanceType(SalesPaymentPO.ADVANCETYPE_MATERIAL_INT);
-		salesReceiptPO.setCash(SalesReceiptPO.COLUMN_MONEY_INT);
-		salesReceiptPO.setCashInfo("");
-		salesReceiptPO.setBank(SalesReceiptPO.COLUMN_MONEY_INT);
-		salesReceiptPO.setBankInfo("");
-		salesReceiptPO.setCheckv(SalesReceiptPO.COLUMN_MONEY_INT);
-		salesReceiptPO.setCheckvBank("");
-		salesReceiptPO.setCoupon(SalesReceiptPO.COLUMN_MONEY_INT);
-		salesReceiptPO.setCouponInfo("");
-		salesReceiptPO.setComment("销售落款");
-
-		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
-		salesReceiptPO.setCollecter(collecter);
-		salesReceiptPO.setCollecterName(collecter.getUserName());
-
-		salesReceiptDao.save(salesReceiptPO);
-
-		salesPayment.setSalesReceipt(salesReceiptPO);
-		salesPayment.setStatus(SalesPaymentPO.STATUS_PAIDFOR_INT);
-
-		if (sales.getPompany() == CompanyPO.TYPE_HEADQUARTER_INT) {
-			salesPayment.setCompany(company);
-			sales.setPompany(company);
-		} else {
-			salesPayment.setCompany(sales.getPompany());
-		}
-
-		salesPaymentDao.update(salesPayment);
-
-		// 更新销售单定金/补款状态
-		if (salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSIT_INT || salesPayment.getType() == SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT) {
-			sales.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT);
-			salesDao.update(sales);
-		} else if (salesPayment.getType() == SalesPaymentPO.TYPE_REPLENISHMENT_INT) {
-			sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
-			sales.setFullpayTime(new Timestamp(System.currentTimeMillis()));
-			salesDao.update(sales);
-		}
-
-		// 扣减主材预付款
-		paymentService.payPayment(new PaymentVO().trans(sales.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, referMoney, String.format("SS%s", salesReceiptPO.getSrId()), String.format("装修单号:%s,销售单:%s,主材预付款落款", sales.getOrderId(), sales.getNo())), userId);
-
-		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId()));
-
-		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材落款金额%.3f元", Arith.div(referMoney, 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()), collecter);
-
-		return 0;
-	}
-
-	// 销售撤款：退回到主材预付款余额
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int withdrawSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException {
-
-		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
-
-		if (salesPayment == null) {
-			throw new FLException(150003, "款项不存在");
-		}
-
-		if (salesPayment.getStatus() != SalesPaymentPO.STATUS_CONFIRMED_INT) {
-			throw new FLException(150036, "款项状态不可操作");
-		}
-
-		SalesPO sales = salesPayment.getSales();
-
-		if (sales == null) {
-			throw new FLException(260021, "销售单不存在");
-		}
-
-		UserPO collecter = userDao.queryUserByUserId(userId);
-
-		if (collecter == null) {
-			throw new FLException(190005, "人员不存在");
-		}
-
-		long referMoney = salesPayment.getReferMoney();
-
-		// 创建退款收据
-		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
-		salesReceiptPO.setType(SalesReceiptPO.TYPE_REFUND_INT);
-		salesReceiptPO.setAdvance(referMoney);
-		salesReceiptPO.setAdvanceType(SalesPaymentPO.ADVANCETYPE_MATERIAL_INT);
-		salesReceiptPO.setCash(SalesReceiptPO.COLUMN_MONEY_INT);
-		salesReceiptPO.setBank(SalesReceiptPO.COLUMN_MONEY_INT);
-		salesReceiptPO.setCheckv(SalesReceiptPO.COLUMN_MONEY_INT);
-		salesReceiptPO.setCoupon(SalesReceiptPO.COLUMN_MONEY_INT);
-		salesReceiptPO.setComment("销售撤款");
-
-		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
-		salesReceiptPO.setCollecter(collecter);
-		salesReceiptPO.setCollecterName(collecter.getUserName());
-
-		salesReceiptDao.save(salesReceiptPO);
-
-		// 更新销售款状态为初始
-		salesPayment.setSalesReceipt(salesReceiptPO);
-		salesPayment.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
-		salesPayment.setCompany(sales.getPompany());
-
-		salesPaymentDao.update(salesPayment);
-
-		// 退回到主材预付款余额
-		paymentService.returnPayment(new PaymentVO().trans(sales.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, referMoney, String.format("SW%s", salesReceiptPO.getSrId()), String.format("装修单号:%s,销售单:%s,主材预付款撤款", sales.getOrderId(), sales.getNo())), userId);
-
-		// 更新销售单定金/补款状态
-		if (salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSIT_INT || salesPayment.getType() == SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT) {
-			sales.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_UNPAY_SHORT);
-			salesDao.update(sales);
-		} else if (salesPayment.getType() == SalesPaymentPO.TYPE_REPLENISHMENT_INT) {
-			sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_UNPAY_SHORT);
-			salesDao.update(sales);
-		}
-
-		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId()));
-
-		decorationService.sendMessage(sales.getOrderId(), "主材单", String.format("主材撤款金额%.3f元", Arith.div(referMoney, 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()));
-
-		return 0;
-	}
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, String userId, Integer company) throws FLException {
@@ -733,6 +568,29 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
 		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()), collecter);
+
+		return 0;
+	}
+
+	// 销售落款：直接用主材预付款余额扣减
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int settleSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException {
+
+		SalesPaymentPO salesPaymentPO = salesPaymentDao.get(salesPaymentVO.getSpid());
+
+		if (salesPaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		SalesReceiptVO salesReceiptVO = new SalesReceiptVO();
+
+		salesReceiptVO.setAdvance(salesPaymentPO.getReferMoney());
+		salesReceiptVO.setRealMoney(salesPaymentPO.getReferMoney());
+
+		salesPaymentVO.setReferMoney(salesPaymentPO.getReferMoney());
+
+		collectSalesPayment(salesPaymentVO, salesReceiptVO, null, userId, company);
 
 		return 0;
 	}
@@ -964,6 +822,29 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
 		decorationService.sendMessage(sales.getOrderId(), "主材单", String.format("主材退款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()));
+
+		return 0;
+	}
+
+	// 销售撤款：退回到主材预付款余额
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int withdrawSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException {
+
+		SalesPaymentPO salesPaymentPO = salesPaymentDao.get(salesPaymentVO.getSpid());
+
+		if (salesPaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		SalesReceiptVO salesReceiptVO = new SalesReceiptVO();
+
+		salesReceiptVO.setAdvance(salesPaymentPO.getReferMoney());
+		salesReceiptVO.setRealMoney(salesPaymentPO.getReferMoney());
+
+		salesPaymentVO.setReferMoney(salesPaymentPO.getReferMoney());
+
+		refundSalesPayment(salesPaymentVO, salesReceiptVO, userId, company);
 
 		return 0;
 	}

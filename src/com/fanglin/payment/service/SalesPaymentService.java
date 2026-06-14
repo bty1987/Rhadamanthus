@@ -31,9 +31,13 @@ public interface SalesPaymentService {
 
 	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, String userId, Integer company) throws FLException;
 
+	public int settleSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException;
+
 	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, String userId, Integer company) throws FLException;
 
 	public int refundSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
+
+	public int withdrawSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException;
 
 	public int confirmSalesPayment(List<Long> spids, String userId) throws FLException;
 
@@ -52,9 +56,5 @@ public interface SalesPaymentService {
 	public void sendSalesPayment(SalesPaymentVO salesPayment) throws FLException;
 
 	public void pushSalesPayment(SalesPaymentVO salesPayment) throws FLException;
-
-	public int settleSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException;
-
-	public int withdrawSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException;
 
 }
