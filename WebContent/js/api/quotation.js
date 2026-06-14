@@ -1800,8 +1800,7 @@ $.extend(api, {
             type: "update"
         },
         rejectNormriceItem: {
-            url: "rejectNormriceItem.do",
-            type: "update"
+            url: "rejectNormriceItem.do"
         },
 
         queryNormriceItemByType: {
