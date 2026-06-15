@@ -209,9 +209,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 	}
 
 	/**
-	 * 根据报价单和施工节点, 更新对应工程计划的附加项状态
-	 * 有status=0(待确认)的附加项 → additemStatus=1(待审)
-	 * 没有status=0的附加项 → additemStatus=0(无)
+	 * 根据报价单和施工节点, 更新对应工程计划的附加项状态 有status=0(待确认)的附加项 → additemStatus=1(待审) 没有status=0的附加项 → additemStatus=0(无)
 	 */
 	private void updateConstructionScheduleForAdditemStatus(QuotationPO quotationPO, long cnid) {
 
@@ -225,7 +223,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 			return;
 		}
 
-		int initCount = normriceItemDao.countInitNormriceItem(quotationPO.getQid(), cnid);
+		int initCount = normriceItemDao.countNormoodItem(quotationPO.getQid(), cnid);
 
 		schedulePO.setAdditemStatus(initCount > 0 ? ConstructionSchedulePO.ADDITEMSTATUS_PENDING_INT : ConstructionSchedulePO.ADDITEMSTATUS_NONE_INT);
 	}

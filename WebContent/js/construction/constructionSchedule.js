@@ -249,16 +249,14 @@ jQuery(function($) {
         field: "planStatus",
         name: "预估工费状态",
         prop: "planStatus",
+        dataset: constant.construction().constructionSchedule.planStatus.keys,
         clazz: "red"
     }, {
         field: "additemStatus",
         name: "附加项状态",
         prop: "additemStatus",
+        dataset: constant.construction().constructionSchedule.additemStatus.keys,
         clazz: "red",
-        converter: {
-            0: "无",
-            1: "待审"
-        }
     }, {
         field: "planTime",
         name: "预估时间",
@@ -335,7 +333,7 @@ jQuery(function($) {
         handle: function(v) {
 
             params.quotation.orderId = v.decoration.orderId;
-            params.constructionNode = { cnid: v.cnid };
+            params.construction.constructionSchedule = v;
 
             com.popup4page("#normriceItemPopUp", api.index.normriceItemIndex.url, "附加项");
 

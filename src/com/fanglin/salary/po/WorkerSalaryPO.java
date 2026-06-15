@@ -96,6 +96,9 @@ public class WorkerSalaryPO implements Serializable {
 
 	public static final short ISCHECK_CHECK_INT = 1; // 确认
 
+	public static final short ISPLAN_STANDARD_INT = 0; // 标准
+	public static final short ISPLAN_PLAN_INT = 1; // 计划
+
 	private long wsid;
 
 	private DecorationPO decoration;
@@ -157,9 +160,6 @@ public class WorkerSalaryPO implements Serializable {
 	private short isPlan;
 
 	private int company;
-
-	public static final short ISPLAN_STANDARD_INT = 0; // 标准
-	public static final short ISPLAN_PLAN_INT = 1; // 计划
 
 	public WorkerSalaryPO init(UserPO worker, UserPO creater, String comment, int company) {
 

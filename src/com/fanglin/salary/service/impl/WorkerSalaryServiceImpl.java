@@ -230,9 +230,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryPO.setCsid(workerSalaryVO.getCsid());
 			workerSalaryPO.setCnid(constructionSchedulePO.getNode().getCnid());
 
-			workerSalaryPO.setIsPlan(constructionSchedulePO.getPlanStatus() == 1 ? WorkerSalaryPO.ISPLAN_PLAN_INT : WorkerSalaryPO.ISPLAN_STANDARD_INT);
+			workerSalaryPO.setIsPlan(constructionSchedulePO.getPlanStatus() == ConstructionSchedulePO.PLAN_STATUS_PLAN_INT ? WorkerSalaryPO.ISPLAN_PLAN_INT : WorkerSalaryPO.ISPLAN_STANDARD_INT);
 
-			if (workerSalaryPO.getIsPlan() == WorkerSalaryPO.ISPLAN_PLAN_INT) {
+			if (constructionSchedulePO.getPlanStatus() == ConstructionSchedulePO.PLAN_STATUS_PLAN_INT) {
 
 				long planSalary = constructionSchedulePO.getPlanSalary();
 				long planUsed = workerSalaryDao.sumPlanWorkerSalary(workerSalaryVO.getCsid());
