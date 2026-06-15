@@ -396,6 +396,7 @@ public class ConstructionSchedulePO implements Serializable {
 		this.salaryTotal = salaryTotal;
 	}
 
+	@Column(name = "precheck")
 	public int getPrecheck() {
 		return precheck;
 	}
@@ -404,6 +405,7 @@ public class ConstructionSchedulePO implements Serializable {
 		this.precheck = precheck;
 	}
 
+	@Column(name = "postcheck")
 	public int getPostcheck() {
 		return postcheck;
 	}
@@ -412,6 +414,7 @@ public class ConstructionSchedulePO implements Serializable {
 		this.postcheck = postcheck;
 	}
 
+	@Column(name = "stacheck")
 	public int getStacheck() {
 		return stacheck;
 	}
@@ -420,6 +423,7 @@ public class ConstructionSchedulePO implements Serializable {
 		this.stacheck = stacheck;
 	}
 
+	@Column(name = "fincheck")
 	public int getFincheck() {
 		return fincheck;
 	}

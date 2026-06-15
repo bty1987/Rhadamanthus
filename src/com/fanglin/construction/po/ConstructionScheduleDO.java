@@ -83,6 +83,8 @@ public class ConstructionScheduleDO implements Serializable {
 
 	private short isUpload;
 
+	private short additemStatus;
+
 	private int accessoryLimit;
 
 	private int salaryLimit;
@@ -288,6 +290,16 @@ public class ConstructionScheduleDO implements Serializable {
 		this.isUpload = isUpload;
 	}
 
+	@Column(name = "additemStatus")
+	public short getAdditemStatus() {
+		return additemStatus;
+	}
+
+	public void setAdditemStatus(short additemStatus) {
+		this.additemStatus = additemStatus;
+	}
+
+	@Column(name = "accessoryLimit")
 	public int getAccessoryLimit() {
 		return accessoryLimit;
 	}
@@ -296,6 +308,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.accessoryLimit = accessoryLimit;
 	}
 
+	@Column(name = "salaryLimit")
 	public int getSalaryLimit() {
 		return salaryLimit;
 	}
@@ -304,6 +317,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.salaryLimit = salaryLimit;
 	}
 
+	@Column(name = "accessoryTotal")
 	public int getAccessoryTotal() {
 		return accessoryTotal;
 	}
@@ -312,6 +326,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.accessoryTotal = accessoryTotal;
 	}
 
+	@Column(name = "salaryTotal")
 	public int getSalaryTotal() {
 		return salaryTotal;
 	}
@@ -320,6 +335,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.salaryTotal = salaryTotal;
 	}
 
+	@Column(name = "precheck")
 	public int getPrecheck() {
 		return precheck;
 	}
@@ -328,6 +344,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.precheck = precheck;
 	}
 
+	@Column(name = "postcheck")
 	public int getPostcheck() {
 		return postcheck;
 	}
@@ -336,6 +353,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.postcheck = postcheck;
 	}
 
+	@Column(name = "stacheck")
 	public int getStacheck() {
 		return stacheck;
 	}
@@ -344,6 +362,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.stacheck = stacheck;
 	}
 
+	@Column(name = "fincheck")
 	public int getFincheck() {
 		return fincheck;
 	}
@@ -352,6 +371,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.fincheck = fincheck;
 	}
 
+	@Column(name = "prenum")
 	public int getPrenum() {
 		return prenum;
 	}
@@ -360,6 +380,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.prenum = prenum;
 	}
 
+	@Column(name = "postnum")
 	public int getPostnum() {
 		return postnum;
 	}
@@ -368,6 +389,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.postnum = postnum;
 	}
 
+	@Column(name = "planSalary")
 	public int getPlanSalary() {
 		return planSalary;
 	}
@@ -376,6 +398,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.planSalary = planSalary;
 	}
 
+	@Column(name = "planStatus")
 	public short getPlanStatus() {
 		return planStatus;
 	}
@@ -384,6 +407,7 @@ public class ConstructionScheduleDO implements Serializable {
 		this.planStatus = planStatus;
 	}
 
+	@Column(name = "planTime")
 	public Timestamp getPlanTime() {
 		return planTime;
 	}
