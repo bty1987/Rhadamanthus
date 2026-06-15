@@ -11,6 +11,6 @@ public interface NormaddDao extends Dao<NormaddPO> {
 
 	public List<NormaddPO> pageNormadd(Paging paging, List<Filter> filters, int company);
 
-	public List<NormaddPO> queryNormadd(Short sort, int company);
+	public List<NormaddPO> queryNormadd(Long cnid, int company);
 
 }

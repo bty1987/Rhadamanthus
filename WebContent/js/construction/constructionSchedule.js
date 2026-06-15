@@ -335,6 +335,7 @@ jQuery(function($) {
         handle: function(v) {
 
             params.quotation.orderId = v.decoration.orderId;
+            params.constructionNode = { cnid: v.cnid };
 
             com.popup4page("#normriceItemPopUp", api.index.normriceItemIndex.url, "附加项");
 

@@ -33,12 +33,12 @@ public class NormaddDaoImpl extends DaoImpl<NormaddPO> implements NormaddDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<NormaddPO> queryNormadd(Short sort, int company) {
+	public List<NormaddPO> queryNormadd(Long cnid, int company) {
 
 		Criteria query = session().createCriteria(NormaddPO.class).add(Restrictions.eq("company", company));
 
-		if (sort != null) {
-			query.createAlias("constructionNode", "constructionNode").add(Restrictions.eq("constructionNode.sort", sort));
+		if (cnid != null) {
+			query.createAlias("constructionNode", "constructionNode").add(Restrictions.eq("constructionNode.cnid", cnid));
 		}
 
 		return query.list();
