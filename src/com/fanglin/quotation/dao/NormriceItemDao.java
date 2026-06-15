@@ -13,7 +13,11 @@ public interface NormriceItemDao extends Dao<NormriceItemPO> {
 
 	public NormriceItemPO queryNormriceItem(long sid, long quoteId, long npid, short type);
 
+	public int countNormoodItem(long qid, long cnid);
+
 	public int amountNormriceItem(long qid, long cnid);
+
+	public int amountNormriceItemForSalary(long qid, long cnid);
 
 	public int disabledNormriceItem(long qid);
 
@@ -32,9 +36,5 @@ public interface NormriceItemDao extends Dao<NormriceItemPO> {
 	public int confirmNormriceItem(long npiid);
 
 	public int rejectNormriceItem(long npiid);
-
-	public int amountNormriceItemForSalary(long qid, long cnid);
-
-	public int countInitNormriceItem(long qid, long cnid);
 
 }

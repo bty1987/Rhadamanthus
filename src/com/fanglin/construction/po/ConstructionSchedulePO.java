@@ -67,6 +67,10 @@ public class ConstructionSchedulePO implements Serializable {
 	public static final short ADDITEMSTATUS_NONE_INT = 0; // 无附加项待审
 	public static final short ADDITEMSTATUS_PENDING_INT = 1; // 附加项待审
 
+	public static final short PLAN_STATUS_PLAN_INT = 1;
+
+	public static final short PLAN_STATUS_INIT_INT = 0;
+
 	private long csid;
 
 	private long cid;

@@ -492,7 +492,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		constructionSchedulePO.setPlanSalary(constructionScheduleVO.getPlanSalary());
 		constructionSchedulePO.setPlanTime(new Timestamp(System.currentTimeMillis()));
-		constructionSchedulePO.setPlanStatus((short) 1);
+		constructionSchedulePO.setPlanStatus(ConstructionSchedulePO.PLAN_STATUS_PLAN_INT);
 
 		constructionScheduleDao.update(constructionSchedulePO);
 	}

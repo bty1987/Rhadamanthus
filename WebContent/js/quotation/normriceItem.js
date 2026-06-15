@@ -9,7 +9,7 @@ $(function() {
     var STATUS_REJECTED_INT = 3;
 
     var orderId = params.quotation.orderId;
-    var cnid = params.constructionNode ? params.constructionNode.cnid : null;
+    var cnid = params.construction.constructionSchedule ? params.construction.constructionSchedule.cnid : null;
     var currentQid = null;
 
     // normadd数据缓存
