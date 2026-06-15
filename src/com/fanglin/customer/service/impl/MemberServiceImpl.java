@@ -756,7 +756,6 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		long dpoints = 0;
-
 		long spoints = 0;
 
 		for (CppointPaymentPO payment : cppointPayments) {
