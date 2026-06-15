@@ -9,6 +9,7 @@ $(function() {
     var STATUS_REJECTED_INT = 3;
 
     var orderId = params.quotation.orderId;
+    var cnid = params.constructionNode ? params.constructionNode.cnid : null;
     var currentQid = null;
 
     // normadd数据缓存
@@ -22,7 +23,7 @@ $(function() {
     }
 
     // 初始化附加项下拉列表 (从 数据-附加项 加载)
-    com.post(api.data.queryNormadd, {}, function(res) {
+    com.post(api.data.queryNormadd, cnid ? { "normadd.constructionNode.cnid": cnid } : {}, function(res) {
         normaddData = res.normadds || [];
         var $select = com.focusPage('#niNormadd');
         $select.append('<option value="">请选择附加项</option>');
@@ -62,6 +63,10 @@ $(function() {
             "normriceItem.sid": sid,
             "normriceItem.num": num
         };
+
+        if (cnid) {
+            options["normriceItem.constructionNode.cnid"] = cnid;
+        }
 
         com.post(api.quotation.addNormriceItem, options, function(res) {
 

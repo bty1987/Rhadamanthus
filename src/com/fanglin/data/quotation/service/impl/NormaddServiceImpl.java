@@ -55,7 +55,13 @@ public class NormaddServiceImpl implements NormaddService {
 	@Override
 	public List<NormaddVO> queryNormadd(NormaddVO normaddVO, int company) {
 
-		List<NormaddPO> normaddPOs = normaddDao.queryNormadd(normaddVO.getConstructionNode().getSort(), company);
+		Long cnid = null;
+
+		if (normaddVO != null && normaddVO.getConstructionNode() != null) {
+			cnid = normaddVO.getConstructionNode().getCnid();
+		}
+
+		List<NormaddPO> normaddPOs = normaddDao.queryNormadd(cnid, company);
 		List<NormaddVO> normaddVOs = new ArrayList<NormaddVO>();
 
 		NormaddVO normadd;
