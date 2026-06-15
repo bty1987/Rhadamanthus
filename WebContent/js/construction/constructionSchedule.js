@@ -31,7 +31,6 @@ jQuery(function($) {
             period: com.focusPage("#period", "#updatePeriodModal"),
 
             planSalary: com.focusPage("#planSalary", "#planSalaryModal"),
-            planTime: com.focusPage("#planTime", "#planSalaryModal"),
         },
 
         decorationStatus: {},
@@ -325,7 +324,6 @@ jQuery(function($) {
             constructionSchedule.schedule = v;
 
             constructionSchedule.items.planSalary.val(v.planSalary);
-            constructionSchedule.items.planTime.val(v.planTime);
 
             constructionSchedule.modals.planSalaryModal.modal("show");
 
@@ -408,7 +406,6 @@ jQuery(function($) {
         var options = {
             "constructionSchedule.csid": constructionSchedule.schedule.csid,
             "constructionSchedule.planSalary": constructionSchedule.items.planSalary.val(),
-            "constructionSchedule.planTime": constructionSchedule.items.planTime.val(),
         };
 
         com.post(api.construction.planConstructionSchedule, options, function(res) {
