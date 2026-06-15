@@ -103,6 +103,12 @@ public class ConstructionScheduleDO implements Serializable {
 
 	private int postnum;
 
+	private int planSalary;
+
+	private short planStatus;
+
+	private Timestamp planTime;
+
 	public ConstructionScheduleDO() {
 		super();
 	}
@@ -360,6 +366,30 @@ public class ConstructionScheduleDO implements Serializable {
 
 	public void setPostnum(int postnum) {
 		this.postnum = postnum;
+	}
+
+	public int getPlanSalary() {
+		return planSalary;
+	}
+
+	public void setPlanSalary(int planSalary) {
+		this.planSalary = planSalary;
+	}
+
+	public short getPlanStatus() {
+		return planStatus;
+	}
+
+	public void setPlanStatus(short planStatus) {
+		this.planStatus = planStatus;
+	}
+
+	public Timestamp getPlanTime() {
+		return planTime;
+	}
+
+	public void setPlanTime(Timestamp planTime) {
+		this.planTime = planTime;
 	}
 
 	public ConstructionScheduleVO ptv(ConstructionScheduleVO constructionScheduleVO) {
