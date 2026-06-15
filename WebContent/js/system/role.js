@@ -294,8 +294,6 @@ jQuery(function($) {
                 role.rid = v.rid;
 
                 showCompanySelectionModal(v.rid, v.name);
-
-                $('#companyCopyModal').modal('show');
             });
 
             $btnTask.bind('click', function(rid) {
@@ -969,13 +967,10 @@ jQuery(function($) {
     function queryModuleNewByRoleId(roleId) {
         console.log('queryModuleNewByRoleId called with roleId:', roleId);
 
-        // 先显示弹窗，再加载数据
-        com.focusPage('#moduleNewModal').modal('show');
-
-        // 显示加载中状态
+        // 显示加载中状态(先填充 body, 避免 modal 动画期间 body 被 .empty() 重建导致 backdrop 残留)
         com.focusPage('#moduleNewTree').html('<div class="text-center" style="padding: 50px;"><i class="ace-icon fa fa-spinner fa-spin fa-2x"></i><p>正在加载模块数据...</p></div>');
 
-        // 获取一级模块数据
+        // 获取一级模块数据(数据就绪后再 show 弹窗, 避免动画期间重渲染)
         com.post(api.system.queryModule, {
             'module.system': 1,
             'module.level': 1
@@ -986,9 +981,12 @@ jQuery(function($) {
             } else {
                 com.focusPage('#moduleNewTree').html('<div class="text-center" style="padding: 50px; color: #999;">暂无模块数据</div>');
             }
+            // 数据渲染完成后再显示弹窗
+            com.focusPage('#moduleNewModal').modal('show');
         }, function(error) {
             console.error('API call failed:', error);
             com.focusPage('#moduleNewTree').html('<div class="text-center" style="padding: 50px; color: red;">加载失败，请重试</div>');
+            com.focusPage('#moduleNewModal').modal('show');
         });
     }
 
@@ -1730,31 +1728,37 @@ jQuery(function($) {
 
         // 加载公司列表
         com.post(api.system.queryCompany, {}, function(data) {
-            
+
             if (!data.companys || data.companys.length == 0) {
                 companyList.html('<div class="text-center text-muted">暂无可选公司</div>');
+                // 数据就绪后再 show 弹窗
+                com.focusPage('#companyCopyModal').modal('show');
                 return false;
             }
-                
+
             companyList.html("");
-            
+
             data.companys.forEach(function(company) {
                 var item = $('<div class="company-item"></div>').appendTo(companyList);
                 var label = $('<label class="checkbox-inline"></label>').appendTo(item);
                 var input = $('<input type="checkbox" class="ace company-checkbox" value="' + company.cid + '"></input>').appendTo(label);
                 var span = $('<span class="lbl">' + company.name + '</span>').appendTo(label);
-                
+
                 label.click(function(e){
-                    
+
                     $(this).find("input").prop("checked", "checked");
-                    
+
                     e.stopPropagation();
-                    
+
                     return false;
                 });
             });
+
+            // 数据就绪后再 show 弹窗
+            com.focusPage('#companyCopyModal').modal('show');
         }, function() {
             companyList.html('<div class="text-center text-danger">加载公司列表失败</div>');
+            com.focusPage('#companyCopyModal').modal('show');
         });
     }
 
@@ -1789,6 +1793,9 @@ jQuery(function($) {
 
         // 调用同步接口
         com.post(api.system.syncRoleModule, params, function(data) {
+            // 恢复按钮状态
+            $confirmBtn.prop('disabled', false).html('确认复制');
+
             if (data.errorCode == 0) {
                 com.showAlert(com.info, '模块复制成功！');
                 role.modals.companyCopyModal.modal('hide');
@@ -1806,9 +1813,6 @@ jQuery(function($) {
             console.error('模块复制失败:', error);
             com.showAlert(com.error, '模块复制失败，请重试');
             // 确保在失败时也恢复按钮状态
-            $confirmBtn.prop('disabled', false).html('确认复制');
-        }, function() {
-            // 恢复按钮状态 - complete回调在成功或失败后都会执行
             $confirmBtn.prop('disabled', false).html('确认复制');
         });
     }
@@ -1904,6 +1908,9 @@ jQuery(function($) {
 
         // 调用同步接口
         com.post(api.communion.syncRoleTask, params, function(data) {
+            // 恢复按钮状态
+            $confirmBtn.prop('disabled', false).html('确认复制');
+
             if (data.errorCode == 0) {
                 com.showAlert(com.info, '任务复制成功！');
                 role.modals.taskCopyModal.modal('hide');
@@ -1922,9 +1929,6 @@ jQuery(function($) {
             com.showAlert(com.error, '任务复制失败，请重试');
             // 确保在失败时也恢复按钮状态
             $confirmBtn.prop('disabled', false).html('确认复制');
-        }, function() {
-            // 恢复按钮状态 - complete回调在成功或失败后都会执行
-            $confirmBtn.prop('disabled', false).html('确认复制');
         });
     }
 
@@ -1932,6 +1936,18 @@ jQuery(function($) {
     com.focusPage('#taskCopyModal').on('hidden.bs.modal', function() {
         // 清理滚动事件监听器，避免内存泄漏
         com.focusPage('#taskCompanyList').off('wheel mousewheel DOMMouseScroll');
+    });
+
+    // ==================== 弹窗蒙层残留兜底 ====================
+    // Bootstrap 3 在 modal-body 动画期间被重渲染 / 重复 show / 异步 show 时机错乱时,
+    // 偶发"蒙层(.modal-backdrop)残留但 .modal 停在 display:none"的问题.
+    // 这里监听所有 modal 的 hidden.bs.modal, 兜底清理 body 的 modal 相关残留状态.
+    com.focusPage('.modal').on('hidden.bs.modal', function(e) {
+        // 若已无可见 modal, 清理 body 残留的 in 类与 backdrop
+        if (com.focusPage('.modal.in').length === 0 && com.focusPage('.modal').filter(':visible').length === 0) {
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+        }
     });
 
 });
