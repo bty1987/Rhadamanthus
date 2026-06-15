@@ -30,6 +30,7 @@ jQuery(function($) {
 
     if (contractEdit.contractArgs.type == "1") {
         com.focusPage(".undispatch", "#form").hide();
+        com.focusPage(".householdtype", "#form").hide();
     }
 
     if (contractEdit.contractArgs.type != "1" && contractEdit.contractArgs.type != "2") {
@@ -49,8 +50,6 @@ jQuery(function($) {
     com.datetime(com.focusPage("#con-term-end-date"));
     com.datetime(com.focusPage("#con-probation-start-date"));
     com.datetime(com.focusPage("#con-probation-end-date"));
-    com.datetime(com.focusPage("#con-dispatch-start-date"));
-    com.datetime(com.focusPage("#con-dispatch-end-date"));
     com.datetime(com.focusPage("#con-salary-date"), "day");
 
     // 默认隐藏试用期时间字段
@@ -91,7 +90,8 @@ jQuery(function($) {
         contractEdit.user = user;
 
         contractEdit.cover["cov-user-name"] = user.currentName;
-        contractEdit.cover["con-user-householdType"] = userInfo.householdType == 1 ? '非农业' : '农业';
+        com.focusPage("#con-user-householdType", "#form").bindData(constant.personel().userInfo.householdType.datas, "key", "value");
+        com.focusPage("#con-user-householdType", "#form").val(userInfo.householdType);
 
     });
 
@@ -113,6 +113,10 @@ jQuery(function($) {
             });
 
             data = $.extend({}, data, contractEdit.cover);
+
+            if (contractEdit.contractArgs.type != "1") {
+                data["con-user-householdType"] = com.focusPage("#con-user-householdType option:selected", "#form").text();
+            }
 
             console.log(data);
 
@@ -153,20 +157,7 @@ jQuery(function($) {
                 data["con-end-month1"] = "";
                 data["con-end-day1"] = "";
             }
-            data["con-start-year2"] = com.focusPage("#con-dispatch-start-date").val().substr(0, 4);
-            data["con-start-month2"] = com.focusPage("#con-dispatch-start-date").val().substr(5, 2);
-            data["con-start-day2"] = com.focusPage("#con-dispatch-start-date").val().substr(8, 2);
-            data["con-end-year2"] = com.focusPage("#con-dispatch-end-date").val().substr(0, 4);
-            data["con-end-month2"] = com.focusPage("#con-dispatch-end-date").val().substr(5, 2);
-            data["con-end-day2"] = com.focusPage("#con-dispatch-end-date").val().substr(8, 2);
-
             if (contractEdit.contractArgs.type != "1") {
-                delete data["con-start-year2"];
-                delete data["con-start-month2"];
-                delete data["con-start-day2"];
-                delete data["con-end-year2"];
-                delete data["con-end-month2"];
-                delete data["con-end-day2"];
                 delete data["con-company-name"];
             }
 
@@ -178,7 +169,6 @@ jQuery(function($) {
                 delete data["con-work-year"];
                 delete data["con-work-month"];
                 delete data["con-work-day"];
-                delete data["con-user-householdType"];
             }
 
             console.log(data);
