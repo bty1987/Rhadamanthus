@@ -293,6 +293,7 @@ public class MemberServiceImpl implements MemberService {
 			if (decorationPO == null) continue;
 
 			long amount = Math.abs(cppointDao.amountCppoint(orderId));
+			long amountMaterial = Math.abs(cppointDao.amountCppointForMaterial(orderId));
 
 			long dpoint = 0l;
 			long spoint = 0l;
@@ -302,7 +303,7 @@ public class MemberServiceImpl implements MemberService {
 			spoint = memberDao.amountMemberPointForMaterial(orderId);
 
 			long subDecorationPoint = Arith.sub(dpoint, amount);
-			long subMaterialPoint = Arith.sub(spoint, 0);
+			long subMaterialPoint = Arith.sub(spoint, amountMaterial);
 			memberPointVO.setDecorationPoint(Arith.mul(subDecorationPoint, 1l));
 			memberPointVO.setMaterialPoint(Arith.mul(subMaterialPoint, 1l));
 
@@ -670,14 +671,11 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		long amount = Math.abs(cppointDao.amountCppoint(orderId));
+		long amountMaterial = Math.abs(cppointDao.amountCppointForMaterial(orderId));
 
 		long totald = memberDao.amountMemberPointForDecoration(orderId);
 		long totals = memberDao.amountMemberPointForMaterial(orderId);
 		long totalo = Arith.mul(memberOrderVO.getSurplusPoint(), 1000000l);
-
-		if (Arith.add(Arith.sub(totald, amount), Arith.sub(totals, 0)) < Arith.mul(memberOrderVO.getPoint(), 1000000l)) {
-			throw new FLException(330049, "积分不足");
-		}
 
 		List<DecorationActivityPO> decorationActivityPOs = decorationActivityDao.queryDecorationActivityByOrderId(orderId);
 
@@ -741,7 +739,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		cppointPO.setDpoint(Arith.sub(totald, amount));
-		cppointPO.setSpoint(Arith.sub(totals, 0));
+		cppointPO.setSpoint(Arith.sub(totals, amountMaterial));
 		cppointPO.setOpoint(totalo);
 
 		cppointPO.setPoint(Arith.sub(Arith.add(cppointPO.getDpoint(), cppointPO.getSpoint()), Arith.mul(memberOrderVO.getPoint(), 1000000l)));

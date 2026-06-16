@@ -6,13 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.customer.dao.MemberDao;
-import com.fanglin.customer.po.GroupPO;
+import com.fanglin.customer.po.CppointPO;
 
 @Repository("memberDao")
-public class MemberDaoImpl extends DaoImpl<GroupPO> implements MemberDao {
+public class MemberDaoImpl extends DaoImpl<CppointPO> implements MemberDao {
 
 	public MemberDaoImpl() {
-		super(GroupPO.class);
+		super(CppointPO.class);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class MemberDaoImpl extends DaoImpl<GroupPO> implements MemberDao {
 	@Override
 	public long amountMemberPointForMaterial(String orderId) {
 
-		String sql = "select sum(if(sp.type in (2, 3, 8), sp.referMoney, -sp.refermoney))*min(if(sdi.status = 4, 1, 0)*a.multiple/1000) from payment.salespayment sp, sales.sales s, sales.salesdeliveryitem sdi, information.activity a where s.orderId = :orderId and s.sid = sp.sid and sp.status in (1, 2) and s.sid = sdi.sid and s.activityid = a.aid and a.atttype = 1";
+		String sql = "select CASE WHEN (select MIN(sdi.status) from sales.salesdeliveryitem sdi where sdi.sid in (select s2.sid from sales.sales s2 where s2.orderId = :orderId)) = 4 THEN sum(if(sp.type in (2, 3, 8), sp.referMoney, -sp.refermoney))*(a.multiple/1000) ELSE 0 END from payment.salespayment sp, sales.sales s, information.activity a where s.orderId = :orderId and s.sid = sp.sid and sp.status in (1, 2) and s.activityid = a.aid and a.atttype = 1";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 
 		return sqlQuery == null ? 0 : sqlQuery.longValue();

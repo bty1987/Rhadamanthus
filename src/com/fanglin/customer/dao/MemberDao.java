@@ -1,9 +1,9 @@
 package com.fanglin.customer.dao;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.customer.po.GroupPO;
+import com.fanglin.customer.po.CppointPO;
 
-public interface MemberDao extends Dao<GroupPO> {
+public interface MemberDao extends Dao<CppointPO> {
 
 	public long totalMemberPointForDecoration(String orderId);
 
