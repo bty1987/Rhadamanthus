@@ -44,4 +44,14 @@ public class CppointDaoImpl extends DaoImpl<CppointPO> implements CppointDao {
 
 		return Arith.div(amount.longValue(), 1000);
 	}
+
+	@Override
+	public long amountCppointForMaterial(String orderId) {
+
+		SQLQuery query = session().createSQLQuery("SELECT COALESCE(SUM(IF(type = 1, point, -point)), 0) AS priceSum FROM customer.cppointrecord WHERE orderId =:orderId and pointtype = 1");
+
+		BigDecimal amount = (BigDecimal) query.setString("orderId", orderId).uniqueResult();
+
+		return Arith.div(amount.longValue(), 1000);
+	}
 }
