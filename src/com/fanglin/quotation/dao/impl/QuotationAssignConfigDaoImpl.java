@@ -13,6 +13,7 @@ package com.fanglin.quotation.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -91,7 +92,16 @@ public class QuotationAssignConfigDaoImpl extends DaoImpl<QuotationAssignConfigP
 
 	@Override
 	public QuotationAssignConfigPO queryQuotationAssignConfig(int company, Integer department) {
-		return (QuotationAssignConfigPO) createCriteria(QuotationAssignConfigPO.class).createAlias("company", "company").createAlias("department", "department", CriteriaSpecification.LEFT_JOIN).add(Restrictions.eq("company.cid", company)).add(Restrictions.or(Restrictions.eq("department.did", department), Restrictions.isNull("department"))).setMaxResults(1).uniqueResult();
+		Criteria criteria = createCriteria(QuotationAssignConfigPO.class).createAlias("company", "company").createAlias("department", "department", CriteriaSpecification.LEFT_JOIN).add(Restrictions.eq("company.cid", company));
+
+		// department 为 null 时只匹配全公司级配置(department IS NULL)，避免生成 did = null 导致永远命不中
+		if (department != null) {
+			criteria.add(Restrictions.or(Restrictions.eq("department.did", department), Restrictions.isNull("department")));
+		} else {
+			criteria.add(Restrictions.isNull("department"));
+		}
+
+		return (QuotationAssignConfigPO) criteria.setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -103,7 +113,15 @@ public class QuotationAssignConfigDaoImpl extends DaoImpl<QuotationAssignConfigP
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationAssignConfigPO> queryQuotationAssignConfig(int company, Integer department, short status) {
-		return createCriteria(QuotationAssignConfigPO.class).createAlias("company", "company").createAlias("department", "department", CriteriaSpecification.LEFT_JOIN).add(Restrictions.eq("company.cid", company)).add(Restrictions.eq("enabled", status)).add(Restrictions.or(Restrictions.eq("department.did", department), Restrictions.isNull("department"))).list();
+		Criteria criteria = createCriteria(QuotationAssignConfigPO.class).createAlias("company", "company").createAlias("department", "department", CriteriaSpecification.LEFT_JOIN).add(Restrictions.eq("company.cid", company)).add(Restrictions.eq("enabled", status));
+
+		if (department != null) {
+			criteria.add(Restrictions.or(Restrictions.eq("department.did", department), Restrictions.isNull("department")));
+		} else {
+			criteria.add(Restrictions.isNull("department"));
+		}
+
+		return criteria.list();
 	}
 
 	@Override
