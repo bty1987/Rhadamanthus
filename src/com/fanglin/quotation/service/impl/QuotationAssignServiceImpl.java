@@ -137,10 +137,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(-1, "装修单不存在");
 		}
 
-		// 2. 检查是否已分配报价员（幂等：已分配则直接返回成功，避免重复提交报错）
+		// 2. 检查是否已分配报价员
 		String quoterUid = getQuoteterUid(decoration);
 		if (quoterUid != null) {
-			return 1;
+			throw new FLException(-1, "该装修单已分配报价员，无需重复分配");
 		}
 
 		// 3. 获取装修单类型和公司部门信息
