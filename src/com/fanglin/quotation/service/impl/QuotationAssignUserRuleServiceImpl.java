@@ -39,8 +39,7 @@ import com.fanglin.utils.Paging;
  * 预算员规则表 Service 实现类
  * 
  * <p>
- * 核心变更：UserRule 按人员维度（每人一条），公司/部门/类型通过 UserRuleItem 管理
- * Item 相关操作委托给 QuotationAssignUserRuleItemService
+ * 核心变更：UserRule 按人员维度（每人一条），公司/部门/类型通过 UserRuleItem 管理 Item 相关操作委托给 QuotationAssignUserRuleItemService
  * </p>
  * 
  * @author Claude AI
@@ -60,10 +59,10 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	private QuotationAssignUserRuleItemService quotationAssignUserRuleItemService;
 
 	@Autowired
-	private UserDao userDao;
+	private com.fanglin.quotation.dao.QuotationAssignRequestDao quotationAssignRequestDao;
 
 	@Autowired
-	private com.fanglin.quotation.dao.QuotationAssignRequestDao quotationAssignRequestDao;
+	private UserDao userDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -73,9 +72,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		List<QuotationAssignUserRuleVO> ruleVOs = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRulePO po : rulePOs) {
-			QuotationAssignUserRuleVO vo = po.ptv(new QuotationAssignUserRuleVO(new UserBaseVO()));
-			vo.setItems(quotationAssignUserRuleItemService.queryItemsByRuleId(po.getQaurid()));
-			ruleVOs.add(vo);
+			ruleVOs.add(po.ptv(new QuotationAssignUserRuleVO(new UserBaseVO())));
 		}
 
 		paging.setData(ruleVOs);
@@ -98,7 +95,8 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public List<QuotationAssignUserRuleVO> queryQuotationAssignUserRuleForAvaile(int company, Integer department, Short decorationType) throws FLException {
-		List<QuotationAssignUserRuleItemPO> itemPOs = quotationAssignUserRuleItemDao.queryAvailableItemsForAssign(company, department, decorationType);
+
+		List<QuotationAssignUserRuleItemPO> itemPOs = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemForAssign(company, department, decorationType);
 		List<QuotationAssignUserRuleVO> ruleVOs = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRuleItemPO itemPO : itemPOs) {

@@ -67,10 +67,33 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company) {
+
+		return session().createCriteria(WorkerSalaryPO.class).add(Restrictions.ge("createTime", beginTime)).add(Restrictions.le("createTime", finishTime)).add(Restrictions.eq("status", WorkerSalaryPO.STATUS_INIT_INT)).add(Restrictions.eq("company", company)).add(Restrictions.eq("cwsid", 0L)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company, int limit) {
+
+		return session().createCriteria(WorkerSalaryPO.class).add(Restrictions.ge("createTime", beginTime)).add(Restrictions.le("createTime", finishTime)).add(Restrictions.eq("status", WorkerSalaryPO.STATUS_INIT_INT)).add(Restrictions.eq("company", company)).add(Restrictions.eq("cwsid", 0L)).setMaxResults(limit).list();
+	}
+
+	@Override
 	public int amountWorkerSalary(long cid, long cnid, List<Short> twotypes) {
 
 		String sql = "select sum(if(type = 0, money, -money)) from salary.workersalary where cid =:cid and cnid = :cnid and twotype in :twotypes and status in (0, 1)";
 		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("cid", cid).setLong("cnid", cnid).setParameterList("twotypes", twotypes).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
+	}
+
+	@Override
+	public int amountWorkerSalaryForPlan(long csid, List<Short> twotypes) {
+
+		String sql = "select sum(money) from salary.workersalary where csid = :csid and isPlan = :isPlan and twotype in :twotypes and status in (0, 1)";
+		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("csid", csid).setParameterList("twotypes", twotypes).setShort("isPlan", WorkerSalaryPO.ISPLAN_PLAN_INT).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
 	}
@@ -109,33 +132,6 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 		session().createSQLQuery(sql).setTimestamp("beginTime", beginTime).setTimestamp("finishTime", finishTime).setInteger("company", company).setShort("status", WorkerSalaryPO.STATUS_PASS_INT).setShort("issend", WorkerSalaryPO.ISSEND_UNSEND_INT).executeUpdate();
 
 		return 0;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company) {
-
-		return session().createCriteria(WorkerSalaryPO.class)
-			.add(Restrictions.ge("createTime", beginTime))
-			.add(Restrictions.le("createTime", finishTime))
-			.add(Restrictions.eq("status", WorkerSalaryPO.STATUS_INIT_INT))
-			.add(Restrictions.eq("company", company))
-			.add(Restrictions.eq("cwsid", 0L))
-			.list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company, int limit) {
-
-		return session().createCriteria(WorkerSalaryPO.class)
-			.add(Restrictions.ge("createTime", beginTime))
-			.add(Restrictions.le("createTime", finishTime))
-			.add(Restrictions.eq("status", WorkerSalaryPO.STATUS_INIT_INT))
-			.add(Restrictions.eq("company", company))
-			.add(Restrictions.eq("cwsid", 0L))
-			.setMaxResults(limit)
-			.list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
@@ -195,12 +191,4 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 		}
 	}
 
-	@Override
-	public long sumPlanWorkerSalary(long csid) {
-
-		String sql = "select sum(money) from salary.workersalary where csid = :csid and isPlan = :isPlan and status in (0, 1)";
-		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("csid", csid).setShort("isPlan", WorkerSalaryPO.ISPLAN_PLAN_INT).uniqueResult();
-
-		return count == null ? 0 : count.longValue();
-	}
 }

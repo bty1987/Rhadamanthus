@@ -17,6 +17,15 @@ import com.fanglin.utils.Paging;
 public interface QuotationAssignUserRuleItemDao extends Dao<QuotationAssignUserRuleItemPO> {
 
 	/**
+	 * 分页查询预算规则明细列表
+	 * 
+	 * @param paging 分页对象
+	 * @param filters 过滤条件（支持 company、supportedType、userName）
+	 * @throws FLException 业务异常
+	 */
+	List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, int company) throws FLException;
+
+	/**
 	 * 根据规则ID查询所有明细
 	 * 
 	 * @param qaurid 规则ID
@@ -42,7 +51,7 @@ public interface QuotationAssignUserRuleItemDao extends Dao<QuotationAssignUserR
 	 * @return 明细列表
 	 * @throws FLException 业务异常
 	 */
-	List<QuotationAssignUserRuleItemPO> queryQuotationAssignUserRuleItemByUserIdAndCompany(String userId, int company) throws FLException;
+	List<QuotationAssignUserRuleItemPO> queryQuotationAssignUserRuleItemByUserId(String userId, int company) throws FLException;
 
 	/**
 	 * 查询匹配指定公司+部门+装修类型的可用预算员（通过Item关联）
@@ -57,7 +66,7 @@ public interface QuotationAssignUserRuleItemDao extends Dao<QuotationAssignUserR
 	 * @return 匹配的明细列表（关联的userRule已按lastFinishTime排序）
 	 * @throws FLException 业务异常
 	 */
-	List<QuotationAssignUserRuleItemPO> queryAvailableItemsForAssign(int company, Integer department, Short decorationType) throws FLException;
+	List<QuotationAssignUserRuleItemPO> queryQuotationAssignUserRuleItemForAssign(int company, Integer department, Short decorationType) throws FLException;
 
 	/**
 	 * 查询匹配指定公司+部门+装修类型的可用预算员（跨公司验证版本）
@@ -72,16 +81,7 @@ public interface QuotationAssignUserRuleItemDao extends Dao<QuotationAssignUserR
 	 * @return 匹配的明细列表
 	 * @throws FLException 业务异常
 	 */
-	List<QuotationAssignUserRuleItemPO> queryAvailableItemsForCrossCompanyAssign(int company, Integer department, Short decorationType) throws FLException;
-
-	/**
-	 * 分页查询预算规则明细列表
-	 * 
-	 * @param paging 分页对象
-	 * @param filters 过滤条件（支持 company、supportedType、userName）
-	 * @throws FLException 业务异常
-	 */
-	List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, int company) throws FLException;
+	List<QuotationAssignUserRuleItemPO> queryQuotationAssignUserRuleItemForCross(int company, Integer department, Short decorationType) throws FLException;
 
 	/**
 	 * 删除规则下的所有明细

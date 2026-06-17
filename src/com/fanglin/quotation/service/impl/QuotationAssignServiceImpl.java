@@ -170,7 +170,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 6. 查找可分配预算员
 		// 新模型：DAO 通过 UserRuleItem 子查询匹配 company+department+decorationType
 		// 跨公司验证：排除在其他公司有非待分配状态的预算员
-		List<QuotationAssignUserRuleItemPO> availableItems = quotationAssignUserRuleItemDao.queryAvailableItemsForCrossCompanyAssign(company, department, decorationType);
+		List<QuotationAssignUserRuleItemPO> availableItems = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemForCross(company, department, decorationType);
 
 		if (availableItems == null || availableItems.isEmpty()) {
 			return createPendingRequest(orderId, company, department, decorationType);
@@ -382,7 +382,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			// 用 queryAvailableItemsForCrossCompanyAssign 查找所有状态为 AVAILABLE 且匹配该请求维度的预算员
 			// 该方法已内置：status=AVAILABLE、currentTaskCount=0、company匹配、department匹配、supportedType匹配、跨公司排除
 			// 结果按 lastFinishTime ASC 排序，第一个即为空闲最久的最优人选
-			List<QuotationAssignUserRuleItemPO> availableItems = quotationAssignUserRuleItemDao.queryAvailableItemsForCrossCompanyAssign(requestCompany, requestDept, requestType);
+			List<QuotationAssignUserRuleItemPO> availableItems = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemForCross(requestCompany, requestDept, requestType);
 
 			if (availableItems == null || availableItems.isEmpty()) {
 				continue; // 该请求暂无可用预算员，跳过，继续处理下一个请求

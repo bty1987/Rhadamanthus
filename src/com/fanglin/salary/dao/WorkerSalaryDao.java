@@ -22,20 +22,20 @@ public interface WorkerSalaryDao extends Dao<WorkerSalaryPO> {
 
 	public List<WorkerSalaryPO> queryWorkerSalaryByCwsid(Long wsid);
 
+	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company);
+
+	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company, int limit);
+
 	public int countWorkerSalary(Long cid, Integer wuid);
 
 	public int countWorkerSalary(String orderId, Long csid);
 
 	public int amountWorkerSalary(long cid, long cnid, List<Short> twotypes);
 
+	public int amountWorkerSalaryForPlan(long csid, List<Short> twotypes);
+
 	public int updateWorkerSalary(String orderId, Long csid);
 
 	public int updateWorkerSalary(Timestamp beginTime, Timestamp finishTime, int company);
-
-	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company);
-
-	public List<WorkerSalaryPO> queryWorkerSalaryForAdopt(Timestamp beginTime, Timestamp finishTime, int company, int limit);
-
-	public long sumPlanWorkerSalary(long csid);
 
 }

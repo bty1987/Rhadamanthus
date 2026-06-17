@@ -28,6 +28,26 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 	}
 
 	@Override
+	public List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, int company) throws FLException {
+
+		PagingQuery<QuotationAssignUserRuleItemPO> query = pagingQuery(paging, QuotationAssignUserRuleItemPO.class);
+
+		// 预先 alias，避免 N+1
+		query.alias("userRule", "userRule").alias("userRule.user", "user").alias("company", "companyAlias");
+
+		// company=0 表示不过滤公司（跨公司查询）
+		if (company > 0) {
+			query.add(query.getCriterion("companyAlias.cid", company, "eq"));
+		}
+
+		queryFilterExcute(query, filters);
+
+		query.desc("createTime");
+
+		return query.list();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationAssignUserRuleItemPO> queryQuotationAssignUserRuleItemByRuleId(long qaurid) throws FLException {
 		return createCriteria(QuotationAssignUserRuleItemPO.class).createAlias("userRule", "userRule").add(Restrictions.eq("userRule.qaurid", qaurid)).list();
@@ -41,16 +61,17 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignUserRuleItemPO> queryQuotationAssignUserRuleItemByUserIdAndCompany(String userId, int company) throws FLException {
+	public List<QuotationAssignUserRuleItemPO> queryQuotationAssignUserRuleItemByUserId(String userId, int company) throws FLException {
 		return createCriteria(QuotationAssignUserRuleItemPO.class).createAlias("userRule", "userRule").createAlias("userRule.user", "user").createAlias("company", "company").add(Restrictions.eq("user.userId", userId)).add(Restrictions.eq("company.cid", company)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignUserRuleItemPO> queryAvailableItemsForAssign(int company, Integer department, Short decorationType) throws FLException {
+	public List<QuotationAssignUserRuleItemPO> queryQuotationAssignUserRuleItemForAssign(int company, Integer department, Short decorationType) throws FLException {
+
 		Criteria criteria = createCriteria(QuotationAssignUserRuleItemPO.class);
-		criteria.createAlias("userRule", "userRule");
-		criteria.createAlias("company", "company");
+
+		criteria.createAlias("userRule", "userRule").createAlias("company", "company");
 
 		// 预算员状态：仅待分配 + 空闲
 		criteria.add(Restrictions.eq("userRule.status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
@@ -78,10 +99,11 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationAssignUserRuleItemPO> queryAvailableItemsForCrossCompanyAssign(int company, Integer department, Short decorationType) throws FLException {
+	public List<QuotationAssignUserRuleItemPO> queryQuotationAssignUserRuleItemForCross(int company, Integer department, Short decorationType) throws FLException {
+
 		Criteria criteria = createCriteria(QuotationAssignUserRuleItemPO.class);
-		criteria.createAlias("userRule", "userRule");
-		criteria.createAlias("company", "company");
+
+		criteria.createAlias("userRule", "userRule").createAlias("company", "company");
 
 		// 预算员状态：仅待分配 + 空闲
 		criteria.add(Restrictions.eq("userRule.status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
@@ -117,44 +139,35 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 
 	@Override
 	public void deleteQuotationAssignUserRuleItemByRuleId(long qaurid) throws FLException {
+
 		List<QuotationAssignUserRuleItemPO> items = queryQuotationAssignUserRuleItemByRuleId(qaurid);
+
 		for (QuotationAssignUserRuleItemPO item : items) {
 			delete(item);
 		}
 	}
 
-	@Override
-	public List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, int company) throws FLException {
-		PagingQuery<QuotationAssignUserRuleItemPO> query = pagingQuery(paging, QuotationAssignUserRuleItemPO.class);
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		// 预先 alias，避免 N+1
-		query.alias("userRule", "userRule");
-		query.alias("userRule.user", "user");
-		query.alias("company", "companyAlias");
+		if (filters == null) return;
 
-		// company=0 表示不过滤公司（跨公司查询）
-		if (company > 0) {
-			query.add(query.getCriterion("companyAlias.cid", company, "eq"));
-		}
+		for (Filter filter : filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
-				if ("company".equals(field)) {
-					query.add(query.getCriterion("companyAlias.cid", FormatUtil.decodeCompany(data), op));
-				} else if ("supportedType".equals(field)) {
-					query.add(query.getCriterion("supportedType", Integer.valueOf(data), op));
-				} else if ("userName".equals(field)) {
-					query.add(query.getCriterion("user.currentName", data, op));
-				} else if ("qaurid".equals(field)) {
-					query.add(query.getCriterion("userRule.qaurid", Long.valueOf(data), op));
-				}
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("company".equals(field)) {
+				query.add(query.getCriterion("companyAlias.cid", FormatUtil.decodeCompany(data), op));
+			} else if ("supportedType".equals(field)) {
+				query.add(query.getCriterion("supportedType", Integer.valueOf(data), op));
+			} else if ("userName".equals(field)) {
+				query.add(query.getCriterion("user.currentName", data, op));
+			} else if ("qaurid".equals(field)) {
+				query.add(query.getCriterion("userRule.qaurid", Long.valueOf(data), op));
 			}
 		}
 
-		query.desc("createTime");
-		return query.list();
 	}
+
 }
