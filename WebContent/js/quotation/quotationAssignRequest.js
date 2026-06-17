@@ -24,7 +24,6 @@ $(function() {
             requestModal: com.focusPage('#requestModal'),
             manualAssignModal: com.focusPage('#manualAssignModal'),
             autoAssignModal: com.focusPage('#autoAssignModal'),
-            finishAndAssignModal: com.focusPage('#finishAndAssignModal'),
             replaceModal: com.focusPage('#replaceModal')
         },
         items: {
@@ -42,9 +41,7 @@ $(function() {
             // 替换预算员相关
             replaceBudgeter: com.focusPage('#replaceBudgeter'),
             // 正向自动分配相关
-            autoAssignOrderId: com.focusPage('#autoAssignOrderId'),
-            // 完成并分配相关
-            finishOrderId: com.focusPage('#finishOrderId')
+            autoAssignOrderId: com.focusPage('#autoAssignOrderId')
         },
         plugins: {},
         lists: {},
@@ -88,11 +85,6 @@ $(function() {
         name: '正向自动分配',
         clazz: 'btn-info',
         icon: 'icon-magic'
-    }, {
-        id: 'finishAndAssignBtn',
-        name: '交付',
-        clazz: 'btn-success',
-        icon: 'icon-ok-circle'
     }];
     searcher.button(buttons);
 
@@ -240,6 +232,16 @@ $(function() {
             return v.status == 2;
         }
     }, {
+        name: "交付",
+        clazz: "btn-success",
+        handle: function(v) {
+            finishRequest(v);
+            return false;
+        },
+        show: function(v) {
+            return v.status == 2;
+        }
+    }, {
         name: "沟通",
         clazz: "btn-primary",
         handle: function(v) {
@@ -270,13 +272,6 @@ $(function() {
             var $el = $(el);
             $el.text($el.text().replace(/预算员/g, modeLabels.userLabel));
         });
-
-        // 完成并分配弹窗 - 替换"预算员"文本
-        com.focusPage('#finishAndAssignModal li').each(function(i, el) {
-            var $el = $(el);
-            $el.text($el.text().replace(/预算员/g, modeLabels.userLabel));
-        });
-        com.focusPage('#finishAndAssignModal .help-block').text('输入' + modeLabels.userLabel + '刚完成报价的装修单号');
     }
 
     // ==================== 沟通功能（popup4page加载独立页面） ====================
@@ -407,11 +402,6 @@ $(function() {
         openAutoAssignModal();
     });
 
-    // 完成并分配按钮点击事件
-    com.focusPage('#finishAndAssignBtn', '#pagenation').on('click', function() {
-        openFinishAndAssignModal();
-    });
-
     // 保存按钮点击事件
     com.focusPage('#saveBtn').on('click', saveRequest);
 
@@ -423,9 +413,6 @@ $(function() {
 
     // 正向自动分配确认按钮点击事件
     com.focusPage('#confirmAutoAssignBtn').on('click', confirmAutoAssign);
-
-    // 完成并分配确认按钮点击事件
-    com.focusPage('#confirmFinishAndAssignBtn').on('click', confirmFinishAndAssign);
 
     // Modal关闭时清理表单
     config.modals.requestModal.on('hide.bs.modal', function() {
@@ -707,40 +694,27 @@ $(function() {
         });
     }
 
-    // ==================== 完成并分配功能 ====================
+    // ==================== 交付功能（行内，仅已分配状态） ====================
 
-    function openFinishAndAssignModal() {
-        config.items.finishOrderId.val('');
-        config.modals.finishAndAssignModal.modal('show');
-    }
+    // 行内交付：直接用当前行的装修单号触发完成并反向自动分配，无需弹窗输入
+    function finishRequest(row) {
+        com.showConfirm('确认交付装修单 <strong>' + row.orderId + '</strong> 吗？<br/>系统将更新' + modeLabels.userLabel + '完成时间，并自动分配下一个待分配任务。', function() {
+            com.showLoading('正在处理...');
 
-    function confirmFinishAndAssign() {
-        if (com.validate('finishAndAssignModal')) {
-            return false;
-        }
-
-        var orderId = config.items.finishOrderId.val();
-        if (!orderId || orderId.trim() === '') {
-            com.showAlert(com.warning, '请输入装修单号');
-            return false;
-        }
-
-        com.showLoading('正在处理...');
-
-        com.post(api.quotation.finishQuotationAssign, {
-            "quotationAssign.orderId": orderId.trim()
-        }, function(res) {
-            com.hideLoading();
-            if (res.errorCode == 0) {
-                com.showAlert(com.info, '操作成功！' + modeLabels.userLabel + '最后完成时间已更新，系统已自动分配下一个任务');
-            } else {
-                com.showAlert(com.warning, res.errorMsg || '操作完成，但无可用任务可分配');
-            }
-            config.modals.finishAndAssignModal.modal('hide');
-            searcher.doSearch();
-        }, function(res) {
-            com.hideLoading();
-            com.showAlert(com.error, res.errorMsg || '操作失败');
+            com.post(api.quotation.finishQuotationAssign, {
+                "quotationAssign.orderId": row.orderId
+            }, function(res) {
+                com.hideLoading();
+                if (res.errorCode == 0) {
+                    com.showAlert(com.info, '交付成功！' + modeLabels.userLabel + '最后完成时间已更新，系统已自动分配下一个任务');
+                } else {
+                    com.showAlert(com.warning, res.errorMsg || '操作完成，但无可用任务可分配');
+                }
+                searcher.doSearch();
+            }, function(res) {
+                com.hideLoading();
+                com.showAlert(com.error, res.errorMsg || '操作失败');
+            });
         });
     }
 
