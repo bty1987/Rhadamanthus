@@ -1186,7 +1186,7 @@ Condition.addupRule("quotation", {
     // ==================== 预算员分配配置相关条件 ====================
 
     // 预算配置 - 公司
-    "assign-config-company": {
+    "quotation-assign-config-company": {
         label: "公司",
         type: "select",
         submitConfig: {
@@ -1203,7 +1203,7 @@ Condition.addupRule("quotation", {
     },
 
     // 预算配置 - 启用状态
-    "assign-config-enabled": {
+    "quotation-assign-config-enabled": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -1222,7 +1222,7 @@ Condition.addupRule("quotation", {
     // ==================== 预算员规则管理相关条件 ====================
 
     // 预算员规则 - 公司
-    "assign-user-rule-company": {
+    "quotation-assign-user-rule-company": {
         label: "公司",
         type: "select",
         submitConfig: {
@@ -1239,7 +1239,7 @@ Condition.addupRule("quotation", {
     },
 
     // 预算员规则 - 状态
-    "assign-user-rule-status": {
+    "quotation-assign-user-rule-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -1256,7 +1256,7 @@ Condition.addupRule("quotation", {
     },
 
     // 预算员规则 - 用户姓名
-    "assign-user-rule-userName": {
+    "quotation-assign-user-rule-userName": {
         label: "预算员",
         type: "text",
         submitConfig: {
@@ -1269,7 +1269,7 @@ Condition.addupRule("quotation", {
     // ==================== 预算员规则明细（Item）管理相关条件 ====================
 
     // 规则明细 - 公司
-    "assign-user-rule-item-company": {
+    "quotation-assign-user-rule-item-company": {
         label: "公司",
         type: "select",
         submitConfig: {
@@ -1286,7 +1286,7 @@ Condition.addupRule("quotation", {
     },
 
     // 规则明细 - 支持类型
-    "assign-user-rule-item-supportedType": {
+    "quotation-assign-user-rule-item-supportedType": {
         label: "业务类型",
         type: "select",
         submitConfig: {
@@ -1303,7 +1303,7 @@ Condition.addupRule("quotation", {
     },
 
     // 规则明细 - 预算员姓名
-    "assign-user-rule-item-userName": {
+    "quotation-assign-user-rule-item-userName": {
         label: "预算员",
         type: "text",
         submitConfig: {
@@ -1316,7 +1316,7 @@ Condition.addupRule("quotation", {
     // ==================== 分配请求管理相关条件 ====================
 
     // 分配请求 - 公司
-    "assign-request-company": {
+    "quotation-assign-request-company": {
         label: "公司",
         type: "select",
         submitConfig: {
@@ -1333,7 +1333,7 @@ Condition.addupRule("quotation", {
     },
 
     // 分配请求 - 状态
-    "assign-request-status": {
+    "quotation-assign-request-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -1350,7 +1350,7 @@ Condition.addupRule("quotation", {
     },
 
     // 分配请求 - 装修单号
-    "assign-request-orderId": {
+    "quotation-assign-request-orderId": {
         label: "装修单号",
         type: "text",
         submitConfig: {
@@ -1361,7 +1361,7 @@ Condition.addupRule("quotation", {
     },
 
     // 分配请求 - 预算员
-    "assign-request-user": {
+    "quotation-assign-request-user": {
         label: "预算员",
         type: "text",
         submitConfig: {
@@ -1372,7 +1372,7 @@ Condition.addupRule("quotation", {
     },
 
     // 分配请求 - 请求人
-    "assign-request-requestUser": {
+    "quotation-assign-request-requestUser": {
         label: "请求人",
         type: "text",
         submitConfig: {
@@ -1383,7 +1383,7 @@ Condition.addupRule("quotation", {
     },
 
     // 分配请求 - 分配时间
-    "assign-request-assignTime": {
+    "quotation-assign-request-assignTime": {
         label: "分配时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -1394,7 +1394,7 @@ Condition.addupRule("quotation", {
     },
 
     // 分配请求 - 请求时间
-    "assign-request-requestTime": {
+    "quotation-assign-request-requestTime": {
         label: "请求时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -1405,7 +1405,7 @@ Condition.addupRule("quotation", {
     },
 
     // 分配请求 - 完成时间
-    "assign-request-finishTime": {
+    "quotation-assign-request-finishTime": {
         label: "完成时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -1416,7 +1416,7 @@ Condition.addupRule("quotation", {
     },
 
     // 分配请求(设计) - 设计师
-    "assign-request-user-designer": {
+    "quotation-assign-request-user-designer": {
         label: "设计师",
         type: "text",
         submitConfig: {
@@ -1429,7 +1429,7 @@ Condition.addupRule("quotation", {
     // ==================== 分配记录管理相关条件 ====================
 
     // 分配记录 - 公司
-    "assign-record-company": {
+    "quotation-assign-record-company": {
         label: "公司",
         type: "select",
         submitConfig: {
@@ -1446,7 +1446,7 @@ Condition.addupRule("quotation", {
     },
 
     // 分配记录 - 预算员
-    "assign-record-user": {
+    "quotation-assign-record-user": {
         label: "预算员",
         type: "text",
         submitConfig: {
@@ -1457,7 +1457,7 @@ Condition.addupRule("quotation", {
     },
 
     // 分配记录 - 装修单号
-    "assign-record-orderId": {
+    "quotation-assign-record-orderId": {
         label: "装修单号",
         type: "text",
         submitConfig: {

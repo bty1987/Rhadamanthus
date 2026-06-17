@@ -48,9 +48,9 @@ $(function() {
 
     // 查询条件：公司 + 支持类型 + 预算员姓名
     searcher.condition([
-        "assign-user-rule-item-company",
-        "assign-user-rule-item-supportedType",
-        "assign-user-rule-item-userName"
+        "quotation-assign-user-rule-item-company",
+        "quotation-assign-user-rule-item-supportedType",
+        "quotation-assign-user-rule-item-userName"
     ]);
 
     // 固定筛选参数：子页面模式只查询当前规则下的明细；独立页面模式不过滤 qaurid
