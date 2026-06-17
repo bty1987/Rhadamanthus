@@ -74,6 +74,10 @@ public class OccessoriesDaoImpl extends DaoImpl<OccessoriesPO> implements Occess
 				query.add(query.getCriterion("decoration.orderId", data, op));
 			} else if ("no".equals(field)) {
 				query.add(query.getCriterion("no", data, op));
+			} else if ("supplier".equals(field)) {
+				// 厂商：autofill 返回 uid，按 supplier.uid 精确匹配
+				query.alias("supplier", "supplier");
+				query.add(query.getCriterion("supplier.uid", Integer.valueOf(data), op));
 			} else if ("createTime".equals(field)) {
 				query.timeranges("createTime", data);
 			} else if ("deliveTime".equals(field)) {

@@ -193,6 +193,24 @@ Condition.addupRule("inventory", {
             valuePath: "value"
         }
     },
+    "occessories-supplier": {
+        label: "厂商",
+        type: "autofill",
+        submitConfig: {
+            name: "supplier",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.querySupplierByPinyin,
+            postData: {
+                "user.status": 0
+            },
+            listPath: "suppliers",
+            keyPath: "uid",
+            valuePath: "userName"
+        }
+    },
 
     /* ---------采购单-------- */
     "purchase-no": {
