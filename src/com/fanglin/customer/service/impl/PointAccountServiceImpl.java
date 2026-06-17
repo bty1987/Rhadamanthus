@@ -126,7 +126,7 @@ public class PointAccountServiceImpl implements PointAccountService {
 			pointAccountPO.setDecorationPoint(balance);
 
 			pointAccountDao.update(pointAccountPO);
-			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_ADDUP_INT, PointRecordPO.POINTTYPE_DECORATION_INT, 0, 0, 0, 0, 0, null, null, operater));
+			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_ADDUP_INT, PointRecordPO.POINTTYPE_DECORATION_INT, Arith.add(pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint()), pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint(), pointAccountPO.getOperatePoint(), decorationPoint, null, null, operater));
 		}
 
 		if (materialPoint != null && materialPoint != 0) {
@@ -136,7 +136,7 @@ public class PointAccountServiceImpl implements PointAccountService {
 			pointAccountPO.setMaterialPoint(balance);
 
 			pointAccountDao.update(pointAccountPO);
-			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_ADDUP_INT, PointRecordPO.POINTTYPE_DECORATION_INT, 0, 0, 0, 0, 0, null, null, operater));
+			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_ADDUP_INT, PointRecordPO.POINTTYPE_SALES_INT, Arith.add(pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint()), pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint(), pointAccountPO.getOperatePoint(), materialPoint, null, null, operater));
 		}
 
 		if (operatePoint != null && operatePoint != 0) {
@@ -146,7 +146,7 @@ public class PointAccountServiceImpl implements PointAccountService {
 			pointAccountPO.setOperatePoint(balance);
 
 			pointAccountDao.update(pointAccountPO);
-			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_ADDUP_INT, PointRecordPO.POINTTYPE_DECORATION_INT, 0, 0, 0, 0, 0, null, null, operater));
+			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_ADDUP_INT, PointRecordPO.POINTTYPE_OPOINT_INT, pointAccountPO.getOperatePoint(), pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint(), pointAccountPO.getOperatePoint(), operatePoint, null, null, operater));
 		}
 
 		return pointAccountVO;
@@ -179,7 +179,7 @@ public class PointAccountServiceImpl implements PointAccountService {
 			pointAccountPO.setDecorationPoint(balance);
 
 			pointAccountDao.update(pointAccountPO);
-			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_USERUP_INT, PointRecordPO.POINTTYPE_DECORATION_INT, balance, decorationPoint, decorationPoint, materialPoint, operatePoint, null, null, operater));
+			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_USERUP_INT, PointRecordPO.POINTTYPE_DECORATION_INT, Arith.add(pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint()), pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint(), pointAccountPO.getOperatePoint(), decorationPoint, null, null, operater));
 		}
 
 		if (materialPoint != null && materialPoint != 0) {
@@ -193,7 +193,7 @@ public class PointAccountServiceImpl implements PointAccountService {
 			pointAccountPO.setMaterialPoint(balance);
 
 			pointAccountDao.update(pointAccountPO);
-			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_USERUP_INT, PointRecordPO.POINTTYPE_SALES_INT, balance, materialPoint, decorationPoint, materialPoint, operatePoint, null, null, operater));
+			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_USERUP_INT, PointRecordPO.POINTTYPE_SALES_INT, Arith.add(pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint()), pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint(), pointAccountPO.getOperatePoint(), materialPoint, null, null, operater));
 		}
 
 		if (operatePoint != null && operatePoint != 0) {
@@ -203,7 +203,7 @@ public class PointAccountServiceImpl implements PointAccountService {
 			pointAccountPO.setOperatePoint(balance);
 
 			pointAccountDao.update(pointAccountPO);
-			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_USERUP_INT, PointRecordPO.POINTTYPE_OPOINT_INT, balance, operatePoint, decorationPoint, materialPoint, operatePoint, null, null, operater));
+			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_USERUP_INT, PointRecordPO.POINTTYPE_OPOINT_INT, pointAccountPO.getOperatePoint(), pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint(), pointAccountPO.getOperatePoint(), operatePoint, null, null, operater));
 		}
 
 		return pointAccountVO;
