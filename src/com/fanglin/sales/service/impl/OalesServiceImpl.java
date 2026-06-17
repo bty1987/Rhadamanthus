@@ -142,6 +142,11 @@ public class OalesServiceImpl implements OalesService {
 
 		BrandPO brandPO = brandDao.get(oalesVO.getBid());
 
+		UserPO supplier = brandPO.getSupplier();
+		if (oalesVO.getSupplier() != null && oalesVO.getSupplier().getUserId() != null && !"".equals(oalesVO.getSupplier().getUserId())) {
+			supplier = userDao.queryUserByUserId(oalesVO.getSupplier().getUserId());
+		}
+
 		String currentDate = DateUtil.current("yyMMdd").toString();
 
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_OALES_INT, currentDate, company);
@@ -159,7 +164,7 @@ public class OalesServiceImpl implements OalesService {
 		oalesPO.setChanner(channer);
 		oalesPO.setDept(channer.getDept());
 		oalesPO.setRegion(channer.getDept().getFatherDept());
-		oalesPO.setSupplier(brandPO.getSupplier());
+		oalesPO.setSupplier(supplier);
 
 		oalesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -218,6 +223,11 @@ public class OalesServiceImpl implements OalesService {
 			oalesPO.setChanner(channer);
 			oalesPO.setDept(channer.getDept());
 			oalesPO.setRegion(channer.getDept().getFatherDept());
+		}
+
+		if (oalesVO.getSupplier() != null && oalesVO.getSupplier().getUserId() != null && !"".equals(oalesVO.getSupplier().getUserId())) {
+			UserPO supplier = userDao.queryUserByUserId(oalesVO.getSupplier().getUserId());
+			oalesPO.setSupplier(supplier);
 		}
 
 		BeanUtil.copyProperties(oalesVO, oalesPO, Arrays.asList("decoration", "channer", "dept", "region", "supplier", "creater", "servicer", "checker", "materialer"));

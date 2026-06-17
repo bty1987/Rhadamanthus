@@ -17,6 +17,7 @@ jQuery(function($) {
             total: com.focusPage("#total", "#oalesModal"),
             comment: com.focusPage("#comment", "#oalesModal"),
             brandName: com.focusPage('#brandName', "#oalesModal"),
+            supplier: com.focusPage('#supplier', "#oalesModal"),
             service: com.focusPage('#service', "#oalesModal"),
             channer: com.focusPage('#channer', "#oalesModal"),
             atttype: com.focusPage("#atttype", "#oalesModal"),
@@ -36,6 +37,7 @@ jQuery(function($) {
 
         oid: null,
         bid: null,
+        suppliers: [],
         house: null,
         status: {},
         atttypes: {},
@@ -53,6 +55,9 @@ jQuery(function($) {
         com.cleanTypeahead("service");
         com.cleanTypeahead("channer");
         com.cleanTypeahead("materialer");
+        oales.items.supplier.empty();
+        oales.suppliers = [];
+        oales.bid = null;
         com.cleanItems(oales.items);
         com.closeTip();
     });
@@ -64,10 +69,67 @@ jQuery(function($) {
             if (val.bid == k) {
                 oales.bid = val.bid;
                 oales.items.brandName.val(val.name);
+                loadSupplier(val);
             }
         });
         return v;
     });
+
+    function loadSupplier(brand, supplier) {
+
+        oales.items.supplier.empty();
+        oales.suppliers = [];
+
+        if (!brand || !brand.bid) {
+            selectSupplier(supplier);
+            return;
+        }
+
+        com.post(api.communion.queryBrandSupplier, {
+            "brandSupplier.brand.bid": brand.bid
+        }, function(res) {
+
+            $.each(res.brandSuppliers || [], function(i, v) {
+                oales.suppliers[i] = v.supplier;
+            });
+        }, null, false);
+
+        oales.items.supplier.bindData(oales.suppliers, "userId", "currentName");
+
+        if (supplier && supplier.userId) {
+            selectSupplier(supplier);
+            return;
+        }
+
+        com.post(api.data.queryBrandByBid, {
+            "brand.bid": brand.bid
+        }, function(res) {
+
+            if (res.brand && res.brand.supplier && res.brand.supplier.userId) {
+                selectSupplier(res.brand.supplier);
+            }
+        });
+    }
+
+    function selectSupplier(supplier) {
+
+        if (!supplier || !supplier.userId) return;
+
+        var exist = false;
+
+        oales.items.supplier.find("option").each(function() {
+            if ($(this).attr("value") == supplier.userId) {
+                exist = true;
+                return false;
+            }
+        });
+
+        if (!exist) {
+            $('<option></option>').attr("value", supplier.userId).html(supplier.currentName || supplier.userId).appendTo(oales.items.supplier);
+        }
+
+        oales.items.supplier.val(supplier.userId);
+    }
 
     com.initTypeahead(oales.items.balanceOales, api.balance.queryBalanceOales, "balanceOales.name", {}, "balanceOaleses", "boid", function(v) {
 
@@ -398,10 +460,14 @@ jQuery(function($) {
         handle: function(v) {
 
             oales.oid = v.oid;
+            oales.bid = v.bid;
 
             oales.items.orderId.val(v.decoration.orderId);
             oales.items.brandName.val(v.brand);
             oales.items.atttype.val(v.atttype);
+            loadSupplier({
+                bid: v.bid
+            }, v.supplier);
 
             com.updateTypeahead(oales.items.service, v.servicer.userId, v.servicer.currentName);
             com.updateTypeahead(oales.items.channer, v.channer.userId, v.channer.currentName);
@@ -430,10 +496,14 @@ jQuery(function($) {
         handle: function(v) {
 
             oales.oid = v.oid;
+            oales.bid = v.bid;
 
             oales.items.orderId.val(v.decoration.orderId);
             oales.items.brandName.val(v.brand);
             oales.items.atttype.val(v.atttype);
+            loadSupplier({
+                bid: v.bid
+            }, v.supplier);
 
             com.updateTypeahead(oales.items.service, v.servicer.userId, v.servicer.currentName);
             com.updateTypeahead(oales.items.channer, v.channer.userId, v.channer.currentName);
@@ -461,10 +531,14 @@ jQuery(function($) {
         handle: function(v) {
 
             oales.oid = v.oid;
+            oales.bid = v.bid;
 
             oales.items.orderId.val(v.decoration.orderId);
             oales.items.brandName.val(v.brand);
             oales.items.atttype.val(v.atttype);
+            loadSupplier({
+                bid: v.bid
+            }, v.supplier);
 
             com.updateTypeahead(oales.items.service, v.servicer.userId, v.servicer.currentName);
             com.updateTypeahead(oales.items.channer, v.channer.userId, v.channer.currentName);
@@ -837,6 +911,10 @@ jQuery(function($) {
 
         if (com.typeahead("channer")) {
             options["oales.channer.userId"] = com.typeahead("channer")
+        }
+
+        if (oales.items.supplier.val()) {
+            options["oales.supplier.userId"] = oales.items.supplier.val();
         }
 
         if (com.typeahead("materialer")) {
