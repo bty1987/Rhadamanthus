@@ -4,41 +4,41 @@ import java.io.Serializable;
 
 import com.fanglin.communion.vo.CustomerVO;
 
-public class CppointVO implements Serializable {
+public class PointAccountVO implements Serializable {
 
 	private static final long serialVersionUID = 3516842388789272716L;
 
-	private Long cpid;
+	private Long accountId;
 
 	private CustomerVO customer;
 
 	private String orderId;
 
-	private Long dpoint;
+	private Long decorationPoint;
 
-	private Long spoint;
+	private Long materialPoint;
 
-	private Long opoint;
+	private Long operatePoint;
 
 	private Long point;
 
 	private Integer company;
 
-	public CppointVO() {
+	public PointAccountVO() {
 		super();
 	}
 
-	public CppointVO(CustomerVO customer) {
+	public PointAccountVO(CustomerVO customer) {
 		super();
 		this.customer = customer;
 	}
 
-	public Long getCpid() {
-		return cpid;
+	public Long getAccountId() {
+		return accountId;
 	}
 
-	public void setCpid(Long cpid) {
-		this.cpid = cpid;
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
 	}
 
 	public CustomerVO getCustomer() {
@@ -57,20 +57,20 @@ public class CppointVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public Long getDpoint() {
-		return dpoint;
+	public Long getDecorationPoint() {
+		return decorationPoint;
 	}
 
-	public void setDpoint(Long dpoint) {
-		this.dpoint = dpoint;
+	public void setDecorationPoint(Long decorationPoint) {
+		this.decorationPoint = decorationPoint;
 	}
 
-	public Long getSpoint() {
-		return spoint;
+	public Long getMaterialPoint() {
+		return materialPoint;
 	}
 
-	public void setSpoint(Long spoint) {
-		this.spoint = spoint;
+	public void setMaterialPoint(Long materialPoint) {
+		this.materialPoint = materialPoint;
 	}
 
 	public Integer getCompany() {
@@ -81,12 +81,12 @@ public class CppointVO implements Serializable {
 		this.company = company;
 	}
 
-	public Long getOpoint() {
-		return opoint;
+	public Long getOperatePoint() {
+		return operatePoint;
 	}
 
-	public void setOpoint(Long opoint) {
-		this.opoint = opoint;
+	public void setOperatePoint(Long operatePoint) {
+		this.operatePoint = operatePoint;
 	}
 
 	public Long getPoint() {

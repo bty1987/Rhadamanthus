@@ -1,14 +1,14 @@
 jQuery(function($) {
 
-    var cppointRecord = {
-        cpid: params.customer.cpid
+    var pointRecord = {
+        accountId: params.customer.accountId
     };
 
     var searcher = new Searcher();
 
-    searcher.base("condListCppointRecord", "pagenationCppointRecord", "resultListsCppointRecord", api.customer.queryCppointRecord);
+    searcher.base("condListPointRecord", "pagenationPointRecord", "resultListsPointRecord", api.customer.queryPointRecord);
     searcher.param({
-        "cppoint.cpid": cppointRecord.cpid
+        "pointAccount.accountId": pointRecord.accountId
     });
 
     var lineprops = [{

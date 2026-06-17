@@ -3,19 +3,19 @@ package com.fanglin.customer.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import com.fanglin.customer.po.CppointRecordPO;
+import com.fanglin.customer.po.PointRecordPO;
 import com.fanglin.payment.po.PaymentPO;
 
-public class CppointPaymentVO implements Serializable {
+public class PointPaymentVO implements Serializable {
 
 	private static final long serialVersionUID = -2914210283910878985L;
 
-	private Long cppid;
-	
-	private Long cpid;
-	
-	private CppointRecordPO cppointRecord;
-	
+	private Long paymentId;
+
+	private Long accountId;
+
+	private PointRecordPO pointRecord;
+
 	private PaymentPO payment;
 
 	private String no;
@@ -29,39 +29,39 @@ public class CppointPaymentVO implements Serializable {
 	private Long point;
 
 	private Timestamp createTime;
-	
-	public CppointPaymentVO() {
+
+	public PointPaymentVO() {
 		super();
 	}
 
-	public CppointPaymentVO(CppointRecordPO cppointRecord, PaymentPO payment) {
+	public PointPaymentVO(PointRecordPO pointRecord, PaymentPO payment) {
 		super();
-		this.cppointRecord = cppointRecord;
+		this.pointRecord = pointRecord;
 		this.payment = payment;
 	}
 
-	public Long getCppid() {
-		return cppid;
+	public Long getPaymentId() {
+		return paymentId;
 	}
 
-	public void setCppid(Long cppid) {
-		this.cppid = cppid;
+	public void setPaymentId(Long paymentId) {
+		this.paymentId = paymentId;
 	}
 
-	public Long getCpid() {
-		return cpid;
+	public Long getAccountId() {
+		return accountId;
 	}
 
-	public void setCpid(Long cpid) {
-		this.cpid = cpid;
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
 	}
 
-	public CppointRecordPO getCppointRecord() {
-		return cppointRecord;
+	public PointRecordPO getPointRecord() {
+		return pointRecord;
 	}
 
-	public void setCppointRecord(CppointRecordPO cppointRecord) {
-		this.cppointRecord = cppointRecord;
+	public void setPointRecord(PointRecordPO pointRecord) {
+		this.pointRecord = pointRecord;
 	}
 
 	public PaymentPO getPayment() {

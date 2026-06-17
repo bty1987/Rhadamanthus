@@ -1,59 +1,59 @@
 jQuery(function($) {
 
-    var cppoint = {
+    var pointAccount = {
 
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
-            addCppointBtn: com.focusPage("#addCppointBtn")
+            addPointAccountBtn: com.focusPage("#addPointAccountBtn")
         },
 
         modals: {
-            addCppointModal: com.focusPage("#addCppointModal"),
-            handleCppointModal: com.focusPage("#handleCppointModal"),
-            cppointRecordModal: com.focusPage("#cppointRecordModal"),
+            addPointAccountModal: com.focusPage("#addPointAccountModal"),
+            handlePointAccountModal: com.focusPage("#handlePointAccountModal"),
+            pointRecordModal: com.focusPage("#pointRecordModal"),
         },
 
         items: {
-            cppoint4decoration: com.focusPage("#cppoint4decoration"),
-            cppoint4sales: com.focusPage("#cppoint4sales"),
-            cppoint4operate: com.focusPage("#cppoint4operate"),
-            cppoint4orderId: com.focusPage("#cppoint4orderId"),
+            pointAccount4decoration: com.focusPage("#pointAccount4decoration"),
+            pointAccount4sales: com.focusPage("#pointAccount4sales"),
+            pointAccount4operate: com.focusPage("#pointAccount4operate"),
+            pointAccount4orderId: com.focusPage("#pointAccount4orderId"),
 
             type: com.focusPage("#type"),
             pointType: com.focusPage("#pointType"),
             point: com.focusPage("#point"),
 
-            cppointRecords: com.focusPage("#cppointRecords")
+            pointRecords: com.focusPage("#pointRecords")
         },
 
         cid: null,
         orderId: null
     };
 
-    cppoint.items.type.bindData(constant.customer().cppoint.type.datas, "key", "value");
-    cppoint.items.pointType.bindData(constant.customer().cppoint.cppointType.datas, "key", "value");
+    pointAccount.items.type.bindData(constant.customer().cppoint.type.datas, "key", "value");
+    pointAccount.items.pointType.bindData(constant.customer().cppoint.cppointType.datas, "key", "value");
 
-    cppoint.btns.saveBtn.on("click", saveData);
+    pointAccount.btns.saveBtn.on("click", saveData);
 
-    cppoint.modals.handleCppointModal.on('hide.bs.modal', function(e) {
+    pointAccount.modals.handlePointAccountModal.on('hide.bs.modal', function(e) {
 
         com.clearValidator();
-        com.cleanItems(cppoint.items);
+        com.cleanItems(pointAccount.items);
     });
 
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", api.customer.pageCppoint);
+    searcher.base("condList", "pagenation", "resultList", api.customer.pagePointAccount);
     searcher.condition(["customer-v-name"]);
 
     searcher.button([{
         name: "创建",
         clazz: "btn-primary",
-        id: "createCppoint",
+        id: "createPointAccount",
         icon: "icon-plus",
         handle: function() {
 
-            cppoint.modals.addCppointModal.modal("show");
+            pointAccount.modals.addPointAccountModal.modal("show");
         }
     }]);
 
@@ -112,19 +112,19 @@ jQuery(function($) {
         prop: "wechat",
         clazz: "grey"
     }, {
-        field: "dpoint",
+        field: "decorationPoint",
         name: "装修积分",
-        prop: "dpoint",
+        prop: "decorationPoint",
         clazz: "grey"
     }, {
-        field: "spoint",
+        field: "materialPoint",
         name: "主材积分",
-        prop: "spoint",
+        prop: "materialPoint",
         clazz: "grey"
     }, {
-        field: "opoint",
+        field: "operatePoint",
         name: "运营积分",
-        prop: "opoint",
+        prop: "operatePoint",
         clazz: "grey"
     }];
 
@@ -133,7 +133,7 @@ jQuery(function($) {
         clazz: "btn-warning",
         handle: function(v) {
 
-            handleCppoint(v);
+            handlePointAccount(v);
 
             return false;
         }
@@ -142,9 +142,9 @@ jQuery(function($) {
         clazz: "btn-inverse",
         handle: function(v) {
 
-            params.customer.cpid = v.cpid;
+            params.customer.accountId = v.accountId;
 
-            com.popup4page("#cppointRecordPopUp", "/views/customer/cppointRecord.html", "积分记录");
+            com.popup4page("#pointRecordPopUp", "/views/customer/pointRecord.html", "积分记录");
 
             return false;
         }
@@ -152,30 +152,30 @@ jQuery(function($) {
 
     searcher.line("customer.name", lineprops, linebtns).render();
 
-    com.focusPage('#createCppoint', '#pagenation').on("click", function() {
+    com.focusPage('#createPointAccount', '#pagenation').on("click", function() {
 
-        cppoint.modals.addCppointModal.modal("show");
+        pointAccount.modals.addPointAccountModal.modal("show");
     });
 
-    function handleCppoint(v) {
+    function handlePointAccount(v) {
 
-        cppoint.items.point.val(0);
+        pointAccount.items.point.val(0);
 
-        cppoint.cid = v.cid;
-        cppoint.orderId = v.orderId;
+        pointAccount.cid = v.cid;
+        pointAccount.orderId = v.orderId;
 
-        cppoint.modals.handleCppointModal.modal("show");
+        pointAccount.modals.handlePointAccountModal.modal("show");
     }
 
-    cppoint.btns.addCppointBtn.click(function() {
+    pointAccount.btns.addPointAccountBtn.click(function() {
 
-        if (com.validate('addCppointModal')) {
+        if (com.validate('addPointAccountModal')) {
             return false;
         }
 
-        var url = api.customer.createCppoint;
+        var url = api.customer.createPointAccount;
         var options = {
-            "cppoint.orderId": cppoint.items.cppoint4orderId.val(),
+            "pointAccount.orderId": pointAccount.items.pointAccount4orderId.val(),
         };
 
         com.post(url, options, function(e) {
@@ -183,42 +183,42 @@ jQuery(function($) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
 
-            cppoint.modals.addCppointModal.modal("hide");
+            pointAccount.modals.addPointAccountModal.modal("hide");
         });
     });
 
     function saveData() {
 
-        if (com.validate("handleCppointModal")) {
+        if (com.validate("handlePointAccountModal")) {
             return false;
         }
 
         var options = {
-            "cppoint.orderId": cppoint.orderId,
+            "pointAccount.orderId": pointAccount.orderId,
         }
 
-        var type = cppoint.items.type.val();
-        var pointType = cppoint.items.pointType.val();
+        var type = pointAccount.items.type.val();
+        var pointType = pointAccount.items.pointType.val();
 
-        var url = pointType == 0 ? api.customer.addupCppoint : api.customer.useupCppoint;
+        var url = pointType == 0 ? api.customer.grantPoint : api.customer.consumePoint;
 
         if (type == 0) {
-            options["cppoint.dpoint"] = cppoint.items.point.val();
+            options["pointAccount.decorationPoint"] = pointAccount.items.point.val();
         }
 
         if (type == 1) {
-            options["cppoint.spoint"] = cppoint.items.point.val();
+            options["pointAccount.materialPoint"] = pointAccount.items.point.val();
         }
 
         if (type == 2) {
-            options["cppoint.opoint"] = cppoint.items.point.val();
+            options["pointAccount.operatePoint"] = pointAccount.items.point.val();
         }
 
         com.post(url, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
-            cppoint.modals.handleCppointModal.modal("hide");
+            pointAccount.modals.handlePointAccountModal.modal("hide");
         });
     }
 });

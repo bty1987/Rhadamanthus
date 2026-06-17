@@ -802,27 +802,27 @@
 ## 积分
 
 
-> **类**: `api.customer.CppointAction`
+> **类**: `api.customer.PointAccountAction`
 
 
-#### 数据类型: `cppoint`
+#### 数据类型: `pointAccount`
 
 | 参数 | 说明 | 类型 |
 |------|------|------|
-| `cpid` | 积分ID | Long |
+| `accountId` | 积分ID | Long |
 | `cid` | 客户ID | Long |
-| `dpoint` | 装修积分 | Long |
-| `spoint` | 销售积分 | Long |
+| `decorationPoint` | 装修积分 | Long |
+| `materialPoint` | 销售积分 | Long |
 | `company` | 公司 | Integer |
 
 
-#### 数据类型: `cppointRecord`
+#### 数据类型: `pointRecord`
 
 | 参数 | 说明 | 类型 |
 |------|------|------|
-| `cprid` | 记录ID | Long |
+| `recordId` | 记录ID | Long |
 | `cid` | 客户ID | Long |
-| `cpid` | 积分ID | Long |
+| `accountId` | 积分ID | Long |
 | `type` | 类型 , 0: 累计 , 1: 消耗 | Short |
 | `pointType` | 积分类型 , 0: 装修 , 1: 销售 | Short |
 | `balance` | 剩余积分 | Long |
@@ -831,61 +831,61 @@
 | `operateTime` | 操作时间 | Timestamp |
 
 
-##### `查询` queryCppoint
+##### `查询` queryPointAccount
 
 获取客户积分信息
 
 **Requests:**
 
-- `cppoint.cid` (Long): 客户ID
+- `pointAccount.accountId` (Long): 客户ID
 
 ```json
 {
-    "cppoint.cid": 1
+    "pointAccount.accountId": 1
 }
 ```
 
 **Returns:**
 
-- `cppoint` (Object): 积分信息 , 类型 `cppoint`
+- `pointAccount` (Object): 积分信息 , 类型 `pointAccount`
 
 ```json
 {
-    "cppoint": {
-        "cpid": 1,
+    "pointAccount": {
+        "accountId": 1,
         "cid": 1,
-        "dpoint": 0,
-        "spoint": 0
+        "decorationPoint": 0,
+        "materialPoint": 0
     }
 }
 ```
 
 
-##### `查询` queryCppointRecord
+##### `查询` queryPointRecord
 
 获取客户积分记录
 
 **Requests:**
 
-- `cppoint.cid` (Long): 客户ID
+- `pointAccount.accountId` (Long): 客户ID
 
 ```json
 {
-    "cppoint.cid": 1
+    "pointAccount.accountId": 1
 }
 ```
 
 **Returns:**
 
-- `cppointRecords` (List): 积分记录信息列表 , 每条数据类型 `cppointRecord`
+- `pointRecords` (List): 积分记录信息列表 , 每条数据类型 `pointRecord`
 
 ```json
 {
-    "cppointRecords": [
+    "pointRecords": [
         {
-            "cprid": 1,
+            "recordId": 1,
             "cid": 1,
-            "cpid": 1,
+            "accountId": 1,
             "type": 0,
             "pointType": 0,
             "balance": 1000,
@@ -904,7 +904,7 @@
 ```
 
 
-##### `查询` createCppoint
+##### `查询` createPointAccount
 
 添加客户积分
 
@@ -912,16 +912,16 @@
 
 **Requests:**
 
-- `cppoint.cid` (Long): 客户ID
+- `pointAccount.accountId` (Long): 客户ID
 
 ```json
 {
-    "cppoint.cid": 1
+    "pointAccount.accountId": 1
 }
 ```
 
 
-##### `查询` addupCppoint
+##### `查询` grantPoint
 
 累计客户积分
 
@@ -931,19 +931,19 @@
 
 **Requests:**
 
-- `cppoint.cid` (Long): 客户ID
-- `cppoint.dpoint` (Long): 装修积分
-- `cppoint.spoint` (Long): 销售积分
+- `pointAccount.accountId` (Long): 客户ID
+- `pointAccount.decorationPoint` (Long): 装修积分
+- `pointAccount.materialPoint` (Long): 销售积分
 
 ```json
 {
-    "cppoint.cid": 1,
-    "cppoint.spoint": 1000
+    "pointAccount.accountId": 1,
+    "pointAccount.materialPoint": 1000
 }
 ```
 
 
-##### `查询` useupCppoint
+##### `查询` consumePoint
 
 消耗客户积分
 
@@ -955,14 +955,14 @@
 
 **Requests:**
 
-- `cppoint.cid` (Long): 客户ID
-- `cppoint.dpoint` (Long): 装修积分
-- `cppoint.spoint` (Long): 销售积分
+- `pointAccount.accountId` (Long): 客户ID
+- `pointAccount.decorationPoint` (Long): 装修积分
+- `pointAccount.materialPoint` (Long): 销售积分
 
 ```json
 {
-    "cppoint.cid": 1,
-    "cppoint.dpoint": 1000
+    "pointAccount.accountId": 1,
+    "pointAccount.decorationPoint": 1000
 }
 ```
 

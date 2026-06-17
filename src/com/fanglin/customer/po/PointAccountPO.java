@@ -15,12 +15,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.CustomerPO;
-import com.fanglin.customer.vo.CppointVO;
+import com.fanglin.customer.vo.PointAccountVO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "cppoint", catalog = "customer")
-public class CppointPO implements Serializable {
+public class PointAccountPO implements Serializable {
 
 	private static final long serialVersionUID = 6028304136209275173L;
 
@@ -28,35 +28,35 @@ public class CppointPO implements Serializable {
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
-	private long cpid;
+	private long accountId;
 
 	private CustomerPO customer;
 
 	private String orderId;
 
-	private long dpoint;
+	private long decorationPoint;
 
-	private long spoint;
+	private long materialPoint;
 
-	private long opoint;
+	private long operatePoint;
 
 	private long point;
 
 	private int company;
 
-	public CppointPO() {
+	public PointAccountPO() {
 		super();
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cpid")
-	public long getCpid() {
-		return cpid;
+	public long getAccountId() {
+		return accountId;
 	}
 
-	public void setCpid(long cpid) {
-		this.cpid = cpid;
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -79,30 +79,30 @@ public class CppointPO implements Serializable {
 	}
 
 	@Column(name = "dpoint")
-	public long getDpoint() {
-		return dpoint;
+	public long getDecorationPoint() {
+		return decorationPoint;
 	}
 
-	public void setDpoint(long dpoint) {
-		this.dpoint = dpoint;
+	public void setDecorationPoint(long decorationPoint) {
+		this.decorationPoint = decorationPoint;
 	}
 
 	@Column(name = "spoint")
-	public long getSpoint() {
-		return spoint;
+	public long getMaterialPoint() {
+		return materialPoint;
 	}
 
-	public void setSpoint(long spoint) {
-		this.spoint = spoint;
+	public void setMaterialPoint(long materialPoint) {
+		this.materialPoint = materialPoint;
 	}
 
 	@Column(name = "opoint")
-	public long getOpoint() {
-		return opoint;
+	public long getOperatePoint() {
+		return operatePoint;
 	}
 
-	public void setOpoint(long opoint) {
-		this.opoint = opoint;
+	public void setOperatePoint(long operatePoint) {
+		this.operatePoint = operatePoint;
 	}
 
 	@Column(name = "point")
@@ -123,12 +123,12 @@ public class CppointPO implements Serializable {
 		this.company = company;
 	}
 
-	public CppointVO ptv(CppointVO cppointVO) {
+	public PointAccountVO ptv(PointAccountVO pointAccountVO) {
 
-		BeanUtil.copyProperties(this, cppointVO, Arrays.asList("customer"));
+		BeanUtil.copyProperties(this, pointAccountVO, Arrays.asList("customer"));
 
-		if (cppointVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(cppointVO.getCustomer());
+		if (pointAccountVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(pointAccountVO.getCustomer());
 
-		return cppointVO;
+		return pointAccountVO;
 	}
 }

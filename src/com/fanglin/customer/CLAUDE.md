@@ -574,9 +574,9 @@ po/
 ├── VrecordPO.java                      - 客户记录
 ├── VscorePO.java                       - 客户评分
 ├── VscoreRecordPO.java                 - 评分记录
-├── CppointPO.java                      - 客户积分
-├── CppointRecordPO.java                - 积分记录
-├── CppointPaymentPO.java               - 积分支付
+├── PointAccountPO.java                 - 客户积分
+├── PointRecordPO.java                  - 积分记录
+├── PointPaymentPO.java                 - 积分支付
 ├── CirclePO.java                       - 客户圈子
 ├── CircleDrawingPO.java                - 圈子图片
 ├── ConsultionPO.java                   - 咨询

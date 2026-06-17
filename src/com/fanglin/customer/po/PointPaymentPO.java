@@ -16,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "cppointpayment", catalog = "customer")
-public class CppointPaymentPO implements Serializable {
+public class PointPaymentPO implements Serializable {
 
 	private static final long serialVersionUID = 74537976328553757L;
 
@@ -28,12 +28,12 @@ public class CppointPaymentPO implements Serializable {
 
 	public static final short STATUS_DISABLE_SHORT = 1; // 失效
 
-	private long cppid;
-	
-	private long cpid;
-	
-	private CppointRecordPO cppointRecord;
-	
+	private long paymentId;
+
+	private long accountId;
+
+	private PointRecordPO pointRecord;
+
 	private long pid;
 
 	private String no;
@@ -48,43 +48,43 @@ public class CppointPaymentPO implements Serializable {
 
 	private Timestamp createTime;
 
-	public CppointPaymentPO() {
+	public PointPaymentPO() {
 		super();
 	}
 
-	public CppointPaymentPO(CppointRecordPO cppointRecord) {
+	public PointPaymentPO(PointRecordPO pointRecord) {
 		super();
-		this.cppointRecord = cppointRecord;
+		this.pointRecord = pointRecord;
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cppid")
-	public long getCppid() {
-		return cppid;
+	public long getPaymentId() {
+		return paymentId;
 	}
 
-	public void setCppid(long cppid) {
-		this.cppid = cppid;
+	public void setPaymentId(long paymentId) {
+		this.paymentId = paymentId;
 	}
 
 	@Column(name = "cpid")
-	public long getCpid() {
-		return cpid;
+	public long getAccountId() {
+		return accountId;
 	}
 
-	public void setCpid(long cpid) {
-		this.cpid = cpid;
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "cprid", referencedColumnName = "cprid")
-	public CppointRecordPO getCppointRecord() {
-		return cppointRecord;
+	public PointRecordPO getPointRecord() {
+		return pointRecord;
 	}
 
-	public void setCppointRecord(CppointRecordPO cppointRecord) {
-		this.cppointRecord = cppointRecord;
+	public void setPointRecord(PointRecordPO pointRecord) {
+		this.pointRecord = pointRecord;
 	}
 
 	@Column(name = "pid")
@@ -149,5 +149,5 @@ public class CppointPaymentPO implements Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
+
 }

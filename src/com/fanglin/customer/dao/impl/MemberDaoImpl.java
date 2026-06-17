@@ -6,13 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.customer.dao.MemberDao;
-import com.fanglin.customer.po.CppointPO;
+import com.fanglin.customer.po.PointAccountPO;
 
 @Repository("memberDao")
-public class MemberDaoImpl extends DaoImpl<CppointPO> implements MemberDao {
+public class MemberDaoImpl extends DaoImpl<PointAccountPO> implements MemberDao {
 
 	public MemberDaoImpl() {
-		super(CppointPO.class);
+		super(PointAccountPO.class);
 	}
 
 	@Override

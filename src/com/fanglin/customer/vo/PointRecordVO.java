@@ -7,15 +7,15 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class CppointRecordVO implements Serializable {
+public class PointRecordVO implements Serializable {
 
 	private static final long serialVersionUID = -6923098417541930946L;
 
-	private Long cprid;
+	private Long recordId;
 
 	private Long cid;
 
-	private Long cpid;
+	private Long accountId;
 
 	private Short type;
 
@@ -27,31 +27,31 @@ public class CppointRecordVO implements Serializable {
 
 	private Long point;
 
-	private Long dpoint;
+	private Long decorationPoint;
 
-	private Long spoint;
+	private Long materialPoint;
 
-	private Long opoint;
+	private Long operatePoint;
 
 	private UserBaseVO operater;
 
 	private Timestamp operateTime;
 
-	public CppointRecordVO(UserBaseVO operater) {
+	public PointRecordVO(UserBaseVO operater) {
 		super();
 		this.operater = operater;
 	}
 
-	public CppointRecordVO() {
+	public PointRecordVO() {
 		super();
 	}
 
-	public Long getCprid() {
-		return cprid;
+	public Long getRecordId() {
+		return recordId;
 	}
 
-	public void setCprid(Long cprid) {
-		this.cprid = cprid;
+	public void setRecordId(Long recordId) {
+		this.recordId = recordId;
 	}
 
 	public Long getCid() {
@@ -62,12 +62,12 @@ public class CppointRecordVO implements Serializable {
 		this.cid = cid;
 	}
 
-	public Long getCpid() {
-		return cpid;
+	public Long getAccountId() {
+		return accountId;
 	}
 
-	public void setCpid(Long cpid) {
-		this.cpid = cpid;
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
 	}
 
 	public Short getType() {
@@ -110,28 +110,28 @@ public class CppointRecordVO implements Serializable {
 		this.point = point;
 	}
 
-	public Long getDpoint() {
-		return dpoint;
+	public Long getDecorationPoint() {
+		return decorationPoint;
 	}
 
-	public void setDpoint(Long dpoint) {
-		this.dpoint = dpoint;
+	public void setDecorationPoint(Long decorationPoint) {
+		this.decorationPoint = decorationPoint;
 	}
 
-	public Long getSpoint() {
-		return spoint;
+	public Long getMaterialPoint() {
+		return materialPoint;
 	}
 
-	public void setSpoint(Long spoint) {
-		this.spoint = spoint;
+	public void setMaterialPoint(Long materialPoint) {
+		this.materialPoint = materialPoint;
 	}
 
-	public Long getOpoint() {
-		return opoint;
+	public Long getOperatePoint() {
+		return operatePoint;
 	}
 
-	public void setOpoint(Long opoint) {
-		this.opoint = opoint;
+	public void setOperatePoint(Long operatePoint) {
+		this.operatePoint = operatePoint;
 	}
 
 	public UserBaseVO getOperater() {
