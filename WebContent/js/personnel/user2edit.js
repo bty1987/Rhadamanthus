@@ -381,14 +381,28 @@ jQuery(function(a) {
     user.items.dutySel = com.focusPage("#dutySel", "#userinfo");
     user.items.deptTypeSel = com.focusPage("#deptTypeSel", "#userinfo");
 
+    function initDeptByType(dtid, did, callback) {
+
+        if (!dtid) {
+            user.items.deptSel.bindData([], "did", "name");
+            callback && callback();
+            return;
+        }
+
+        com.post(api.communion.queryDepartmentByDtid, {
+            "dept.type.dtid": dtid
+        }, function(res) {
+            user.items.deptSel.bindData(res.deptList, "did", "name");
+
+            did && user.items.deptSel.val(did);
+            callback && callback(res.deptList);
+        }, null, false);
+    }
+
     // 部门类型 typeahead: 本地数据搜索，选中后级联加载部门列表
     com.selectTypeahead(user.items.deptTypeSel, user.deptType, "dtid", "name", function(list, k, v) {
 
-        com.post(api.communion.queryDepartmentByDtid, {
-            "dept.type.dtid": k
-        }, function(res) {
-            user.items.deptSel.bindData(res.deptList, "did", "name");
-        }, null, false);
+        initDeptByType(k);
 
         return v;
     });
@@ -490,14 +504,10 @@ jQuery(function(a) {
 
             com.updateTypeahead(user.items.deptTypeSel, $user.dept.type.dtid, $user.dept.type.name);
 
-            // 根据部门类型加载部门列表, 回填部门和职位
-            com.post(api.communion.queryDepartmentByDtid, {
-                "dept.type.dtid": $user.dept.type.dtid
-            }, function(res) {
-                user.items.deptSel.bindData(res.deptList, "did", "name");
-                user.items.deptSel.val($user.dept.did);
+            // 初始化部门类型后同步带出部门列表, 回填部门和职位
+            initDeptByType($user.dept.type.dtid, $user.dept.did, function() {
                 com.updateTypeahead(user.items.dutySel, $user.duty.did, $user.duty.name);
-            }, null, false);
+            });
 
             user.items.levelSel.val($userInfo.level);
             user.items.statusSel.val($user.status);
