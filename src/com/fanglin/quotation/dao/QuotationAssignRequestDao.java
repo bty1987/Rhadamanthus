@@ -131,4 +131,20 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 */
 	int countQuotationAssignRequest(int uid);
 
+	/**
+	 * 批量统计所有预算员当前进行中任务数量（按 uid 分组，排除已完成）
+	 * 
+	 * <p>
+	 * 用于状态同步场景：一次查询替代循环内逐个 count，消除 N+1。
+	 * 统计 status &lt; 3 的请求数量（即待分配 + 已分配），按预算员 uid 分组。
+	 * </p>
+	 * 
+	 * <p>
+	 * 返回结果每行格式为 [uid(Integer), count(Integer)]，未出现在结果中的 uid 视为 0。
+	 * </p>
+	 * 
+	 * @return 分组统计结果列表，每行 [uid, count]
+	 */
+	List<Object[]> countQuotationAssignRequestGroupByUid();
+
 }

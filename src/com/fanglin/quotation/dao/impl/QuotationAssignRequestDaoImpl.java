@@ -196,4 +196,21 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		return count != null ? count.intValue() : 0;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object[]> countQuotationAssignRequestGroupByUid() {
+		// 批量统计所有预算员进行中任务数（status < 3），按 uid 分组
+		// 一次查询替代循环内逐个 count，消除 N+1
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.lt("status", QuotationAssignRequestPO.STATUS_COMPLETED_INT)).createAlias("user", "u");
+
+		// 投影：分组键 uid + 计数，结果每行 [uid, count]
+		org.hibernate.criterion.ProjectionList projectionList = Projections.projectionList();
+		projectionList.add(Projections.groupProperty("u.uid"));
+		projectionList.add(Projections.rowCount());
+
+		criteria.setProjection(projectionList);
+
+		return criteria.list();
+	}
+
 }
