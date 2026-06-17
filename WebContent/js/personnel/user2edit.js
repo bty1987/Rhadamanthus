@@ -381,30 +381,19 @@ jQuery(function(a) {
     user.items.dutySel = com.focusPage("#dutySel", "#userinfo");
     user.items.deptTypeSel = com.focusPage("#deptTypeSel", "#userinfo");
 
-    function initDeptByType(dtid, did, callback) {
+    // 部门类型: 下拉选择, 选中后重置部门 typeahead 数据源
+    user.items.deptTypeSel.bindData(user.deptType, "dtid", "name");
 
-        if (!dtid) {
-            user.items.deptSel.bindData([], "did", "name");
-            callback && callback();
-            return;
-        }
+    // 部门 typeahead: 按部门类型 + 名称搜索部门
+    com.initTypeahead(user.items.deptSel, api.communion.queryDepartmentByName, "dept.name", {
+        "dept.type.dtid": ""
+    }, "deptList", "did", "name", null);
 
-        com.post(api.communion.queryDepartmentByDtid, {
-            "dept.type.dtid": dtid
-        }, function(res) {
-            user.items.deptSel.bindData(res.deptList, "did", "name");
+    user.items.deptTypeSel.on("change", function() {
 
-            did && user.items.deptSel.val(did);
-            callback && callback(res.deptList);
-        }, null, false);
-    }
-
-    // 部门类型 typeahead: 本地数据搜索，选中后级联加载部门列表
-    com.selectTypeahead(user.items.deptTypeSel, user.deptType, "dtid", "name", function(list, k, v) {
-
-        initDeptByType(k);
-
-        return v;
+        com.resetTypeahead(user.items.deptSel, null, {
+            "dept.type.dtid": $(this).val()
+        });
     });
 
     // 职位 typeahead: 按名称/拼音搜索所有启用状态的职位
@@ -502,12 +491,12 @@ jQuery(function(a) {
             user.items.loginId.val($user.loginId).attr("disabled", "disabled");
             user.items.company.val($user.companys);
 
-            com.updateTypeahead(user.items.deptTypeSel, $user.dept.type.dtid, $user.dept.type.name);
+            // 回填部门类型, 同步带出部门 typeahead 数据源
+            user.items.deptTypeSel.val($user.dept.type.dtid).trigger("change");
 
-            // 初始化部门类型后同步带出部门列表, 回填部门和职位
-            initDeptByType($user.dept.type.dtid, $user.dept.did, function() {
-                com.updateTypeahead(user.items.dutySel, $user.duty.did, $user.duty.name);
-            });
+            // 回填部门, 职位
+            com.updateTypeahead(user.items.deptSel, $user.dept.did, $user.dept.name);
+            com.updateTypeahead(user.items.dutySel, $user.duty.did, $user.duty.name);
 
             user.items.levelSel.val($userInfo.level);
             user.items.statusSel.val($user.status);
@@ -596,7 +585,7 @@ jQuery(function(a) {
                 "userInfo.comment": user.items.comment.val(),
 
                 "userInfo.user.loginId": user.items.loginId.val(),// 用户名
-                "userInfo.user.dept.did": user.items.deptSel.val(),// 部门ID
+                "userInfo.user.dept.did": com.typeahead(user.items.deptSel),// 部门ID
                 "userInfo.user.duty.did": com.typeahead(user.items.dutySel),// 职位ID
                 "userInfo.level": user.items.levelSel.val(),
                 "userInfo.user.status": user.items.statusSel.val(),// 状态
