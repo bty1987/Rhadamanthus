@@ -14,20 +14,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.customer.vo.CppointRecordVO;
+import com.fanglin.customer.vo.PointRecordVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "cppointRecord", catalog = "customer")
-public class CppointRecordPO implements Serializable {
+public class PointRecordPO implements Serializable {
 
 	private static final long serialVersionUID = -720172206554456050L;
 
 	public static final String COLUMN_CID_STR = "cid";
 
-	public static final String COLUMN_CPID_STR = "cpid";
+	public static final String COLUMN_ACCOUNTID_STR = "cpid";
 
 	public static final short TYPE_ADDUP_INT = 0;
 
@@ -43,11 +43,11 @@ public class CppointRecordPO implements Serializable {
 
 	public static final short STATUS_DISABLE_SHORT = 1; // 失效
 
-	private long cprid;
+	private long recordId;
 
 	private long cid;
 
-	private long cpid;
+	private long accountId;
 
 	private short type;
 
@@ -57,11 +57,11 @@ public class CppointRecordPO implements Serializable {
 
 	private long balance;
 
-	private long dpoint;
+	private long decorationPoint;
 
-	private long spoint;
+	private long materialPoint;
 
-	private long opoint;
+	private long operatePoint;
 
 	private long point;
 
@@ -73,11 +73,11 @@ public class CppointRecordPO implements Serializable {
 
 	private Timestamp operateTime;
 
-	public CppointRecordPO() {
+	public PointRecordPO() {
 		super();
 	}
 
-	public CppointRecordPO(UserPO operater) {
+	public PointRecordPO(UserPO operater) {
 		super();
 		this.operater = operater;
 	}
@@ -85,12 +85,12 @@ public class CppointRecordPO implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(name = "cprid")
-	public long getCprid() {
-		return cprid;
+	public long getRecordId() {
+		return recordId;
 	}
 
-	public void setCprid(long cprid) {
-		this.cprid = cprid;
+	public void setRecordId(long recordId) {
+		this.recordId = recordId;
 	}
 
 	@Column(name = "cid")
@@ -103,12 +103,12 @@ public class CppointRecordPO implements Serializable {
 	}
 
 	@Column(name = "cpid")
-	public long getCpid() {
-		return cpid;
+	public long getAccountId() {
+		return accountId;
 	}
 
-	public void setCpid(long cpid) {
-		this.cpid = cpid;
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
 	}
 
 	@Column(name = "type")
@@ -148,30 +148,30 @@ public class CppointRecordPO implements Serializable {
 	}
 
 	@Column(name = "dpoint")
-	public long getDpoint() {
-		return dpoint;
+	public long getDecorationPoint() {
+		return decorationPoint;
 	}
 
-	public void setDpoint(long dpoint) {
-		this.dpoint = dpoint;
+	public void setDecorationPoint(long decorationPoint) {
+		this.decorationPoint = decorationPoint;
 	}
 
 	@Column(name = "spoint")
-	public long getSpoint() {
-		return spoint;
+	public long getMaterialPoint() {
+		return materialPoint;
 	}
 
-	public void setSpoint(long spoint) {
-		this.spoint = spoint;
+	public void setMaterialPoint(long materialPoint) {
+		this.materialPoint = materialPoint;
 	}
 
 	@Column(name = "opoint")
-	public long getOpoint() {
-		return opoint;
+	public long getOperatePoint() {
+		return operatePoint;
 	}
 
-	public void setOpoint(long opoint) {
-		this.opoint = opoint;
+	public void setOperatePoint(long operatePoint) {
+		this.operatePoint = operatePoint;
 	}
 
 	@Column(name = "point")
@@ -220,20 +220,20 @@ public class CppointRecordPO implements Serializable {
 		this.operateTime = operateTime;
 	}
 
-	public CppointRecordPO init(long cid, long cpid, short type, short pointType, long balance,long dpoint,long spoint,long opoint, long point, String no, String orderId, UserPO operater) {
+	public PointRecordPO init(long cid, long accountId, short type, short pointType, long balance, long decorationPoint, long materialPoint, long operatePoint, long point, String no, String orderId, UserPO operater) {
 
 		this.setCid(cid);
-		this.setCpid(cpid);
+		this.setAccountId(accountId);
 
 		this.setType(type);
 		this.setPointType(pointType);
 
 		this.setBalance(balance);
 		this.setPoint(point);
-		this.setDpoint(dpoint);
-		this.setSpoint(spoint);
-		this.setOpoint(opoint);
-		
+		this.setDecorationPoint(decorationPoint);
+		this.setMaterialPoint(materialPoint);
+		this.setOperatePoint(operatePoint);
+
 		this.setNo(no);
 		this.setOrderId(orderId);
 
@@ -243,12 +243,12 @@ public class CppointRecordPO implements Serializable {
 		return this;
 	}
 
-	public CppointRecordVO ptv(CppointRecordVO cppointRecordVO) {
+	public PointRecordVO ptv(PointRecordVO pointRecordVO) {
 
-		BeanUtil.copyPropertie(this, cppointRecordVO, Arrays.asList("operater"));
+		BeanUtil.copyPropertie(this, pointRecordVO, Arrays.asList("operater"));
 
-		if (cppointRecordVO.getOperater() != null && getOperater() != null) cppointRecordVO.getOperater().setBaseInfo(getOperater());
+		if (pointRecordVO.getOperater() != null && getOperater() != null) pointRecordVO.getOperater().setBaseInfo(getOperater());
 
-		return cppointRecordVO;
+		return pointRecordVO;
 	}
 }

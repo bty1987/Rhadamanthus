@@ -143,23 +143,6 @@ $.extend(api, {
             server: "communion"
         },
 
-        // 积分模块api 5条
-        queryCppoint: {
-            url: "queryCppoint.do"
-        },
-        queryCppointRecord: {
-            url: "queryCppointRecord.do"
-        },
-        createCppoint: {
-            url: "createCppoint.do"
-        },
-        addupCppoint: {
-            url: "addupCppoint.do"
-        },
-        useupCppoint: {
-            url: "useupCppoint.do"
-        },
-
         // 任务
         pageTask: {
             url: "pageTask.do"

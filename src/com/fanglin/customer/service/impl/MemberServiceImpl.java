@@ -23,13 +23,13 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
-import com.fanglin.customer.dao.CppointDao;
-import com.fanglin.customer.dao.CppointPaymentDao;
-import com.fanglin.customer.dao.CppointRecordDao;
+import com.fanglin.customer.dao.PointAccountDao;
+import com.fanglin.customer.dao.PointPaymentDao;
+import com.fanglin.customer.dao.PointRecordDao;
 import com.fanglin.customer.dao.MemberDao;
-import com.fanglin.customer.po.CppointPO;
-import com.fanglin.customer.po.CppointPaymentPO;
-import com.fanglin.customer.po.CppointRecordPO;
+import com.fanglin.customer.po.PointAccountPO;
+import com.fanglin.customer.po.PointPaymentPO;
+import com.fanglin.customer.po.PointRecordPO;
 import com.fanglin.customer.service.MemberService;
 import com.fanglin.customer.vo.BasePaymentVO;
 import com.fanglin.customer.vo.MemberActivityVO;
@@ -109,13 +109,13 @@ public class MemberServiceImpl implements MemberService {
 	private ActivityDao activityDao;
 
 	@Autowired
-	private CppointDao cppointDao;
+	private PointAccountDao pointAccountDao;
 
 	@Autowired
-	private CppointRecordDao cppointRecordDao;
+	private PointRecordDao pointRecordDao;
 
 	@Autowired
-	private CppointPaymentDao cppointPaymentDao;
+	private PointPaymentDao pointPaymentDao;
 
 	@Autowired
 	private CompanyDao companyDao;
@@ -292,8 +292,8 @@ public class MemberServiceImpl implements MemberService {
 
 			if (decorationPO == null) continue;
 
-			long amount = Math.abs(cppointDao.amountCppoint(orderId));
-			long amountMaterial = Math.abs(cppointDao.amountCppointForMaterial(orderId));
+			long amount = Math.abs(pointAccountDao.amountDecorationPoint(orderId));
+			long amountMaterial = Math.abs(pointAccountDao.amountMaterialPoint(orderId));
 
 			long dpoint = 0l;
 			long spoint = 0l;
@@ -670,8 +670,8 @@ public class MemberServiceImpl implements MemberService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		long amount = Math.abs(cppointDao.amountCppoint(orderId));
-		long amountMaterial = Math.abs(cppointDao.amountCppointForMaterial(orderId));
+		long amount = Math.abs(pointAccountDao.amountDecorationPoint(orderId));
+		long amountMaterial = Math.abs(pointAccountDao.amountMaterialPoint(orderId));
 
 		long totald = memberDao.amountMemberPointForDecoration(orderId);
 		long totals = memberDao.amountMemberPointForMaterial(orderId);
@@ -727,46 +727,46 @@ public class MemberServiceImpl implements MemberService {
 			decorationActivityItemDao.save(decorationActivityItemPO);
 		}
 
-		CppointPO cppointPO = cppointDao.queryCppointByOrderId(orderId);
+		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(orderId);
 
-		if (cppointPO == null) {
+		if (pointAccountPO == null) {
 
-			cppointPO = new CppointPO();
+			pointAccountPO = new PointAccountPO();
 
-			cppointPO.setCustomer(decorationPO.getCustomer());
-			cppointPO.setOrderId(orderId);
-			cppointPO.setCompany(decorationPO.getCompany());
+			pointAccountPO.setCustomer(decorationPO.getCustomer());
+			pointAccountPO.setOrderId(orderId);
+			pointAccountPO.setCompany(decorationPO.getCompany());
 		}
 
-		cppointPO.setDpoint(Arith.sub(totald, amount));
-		cppointPO.setSpoint(Arith.sub(totals, amountMaterial));
-		cppointPO.setOpoint(totalo);
+		pointAccountPO.setDecorationPoint(Arith.sub(totald, amount));
+		pointAccountPO.setMaterialPoint(Arith.sub(totals, amountMaterial));
+		pointAccountPO.setOperatePoint(totalo);
 
-		cppointPO.setPoint(Arith.sub(Arith.add(cppointPO.getDpoint(), cppointPO.getSpoint()), Arith.mul(memberOrderVO.getPoint(), 1000000l)));
-		cppointDao.saveOrUpdate(cppointPO);
+		pointAccountPO.setPoint(Arith.sub(Arith.add(pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint()), Arith.mul(memberOrderVO.getPoint(), 1000000l)));
+		pointAccountDao.saveOrUpdate(pointAccountPO);
 
-		addCppointPayment(memberOrderVO, cppointPO, decorationActivityPO.getActivity().getMultiple());
+		addPointPayment(memberOrderVO, pointAccountPO, decorationActivityPO.getActivity().getMultiple());
 
-		List<CppointPaymentPO> cppointPayments = cppointPaymentDao.queryCppointPaymentByOrderId(memberOrderVO.getOrderId());
+		List<PointPaymentPO> pointPayments = pointPaymentDao.queryPointPaymentByOrderId(memberOrderVO.getOrderId());
 
-		if (cppointPayments == null) {
+		if (pointPayments == null) {
 			throw new FLException(140013, "积分不存在");
 		}
 
 		long dpoints = 0;
 		long spoints = 0;
 
-		for (CppointPaymentPO payment : cppointPayments) {
+		for (PointPaymentPO payment : pointPayments) {
 
-			if (CppointPaymentPO.TYPE_DECORATION_INT == payment.getType()) {
+			if (PointPaymentPO.TYPE_DECORATION_INT == payment.getType()) {
 				dpoints += payment.getPoint();
 			}
-			if (CppointPaymentPO.TYPE_MATERIAL_INT == payment.getType()) {
+			if (PointPaymentPO.TYPE_MATERIAL_INT == payment.getType()) {
 				spoints += payment.getPoint();
 			}
 		}
-		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, cppointPO.getPoint(), dpoints, spoints, cppointPO.getOpoint(), Arith.mul(memberOrderVO.getPoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
-		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, cppointPO.getOpoint(), dpoints, spoints, cppointPO.getOpoint(), Arith.mul(memberOrderVO.getOperatePoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
+		pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_USERUP_INT, PointRecordPO.POINTTYPE_DECORATION_INT, pointAccountPO.getPoint(), dpoints, spoints, pointAccountPO.getOperatePoint(), Arith.mul(memberOrderVO.getPoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
+		pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_USERUP_INT, PointRecordPO.POINTTYPE_OPOINT_INT, pointAccountPO.getOperatePoint(), dpoints, spoints, pointAccountPO.getOperatePoint(), Arith.mul(memberOrderVO.getOperatePoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
 
 		return 0;
 	}
@@ -840,9 +840,9 @@ public class MemberServiceImpl implements MemberService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		CppointPO cppointPO = cppointDao.queryCppointByOrderId(orderId);
+		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(orderId);
 
-		if (cppointPO == null) {
+		if (pointAccountPO == null) {
 			throw new FLException(330047, "积分不存在");
 		}
 
@@ -862,16 +862,16 @@ public class MemberServiceImpl implements MemberService {
 
 		long totalo = Arith.mul(memberOrderVO.getSurplusPoint(), 1000000l);
 
-		cppointPO.setOpoint(totalo);
+		pointAccountPO.setOperatePoint(totalo);
 
-		cppointPO.setPoint(Arith.add(cppointPO.getPoint(), Arith.mul(memberOrderVO.getPoint(), 1000000l)));
+		pointAccountPO.setPoint(Arith.add(pointAccountPO.getPoint(), Arith.mul(memberOrderVO.getPoint(), 1000000l)));
 
-		cppointDao.saveOrUpdate(cppointPO);
+		pointAccountDao.saveOrUpdate(pointAccountPO);
 
-		cancelCppointPayment(memberOrderVO);
+		cancelPointPayment(memberOrderVO);
 
-		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, cppointPO.getPoint(), cppointPO.getDpoint(), cppointPO.getSpoint(), cppointPO.getOpoint(), Arith.mul(memberOrderVO.getPoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
-		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, cppointPO.getOpoint(), cppointPO.getDpoint(), cppointPO.getSpoint(), cppointPO.getOpoint(), Arith.mul(memberOrderVO.getOperatePoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
+		pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_ADDUP_INT, PointRecordPO.POINTTYPE_DECORATION_INT, pointAccountPO.getPoint(), pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint(), pointAccountPO.getOperatePoint(), Arith.mul(memberOrderVO.getPoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
+		pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), PointRecordPO.TYPE_ADDUP_INT, PointRecordPO.POINTTYPE_OPOINT_INT, pointAccountPO.getOperatePoint(), pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint(), pointAccountPO.getOperatePoint(), Arith.mul(memberOrderVO.getOperatePoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
 
 		return 0;
 	}
@@ -944,13 +944,13 @@ public class MemberServiceImpl implements MemberService {
 		return 0;
 	}
 
-	private void addCppointPayment(MemberOrderVO memberOrderVO, CppointPO cppointPO, int multiple) throws FLException {
+	private void addPointPayment(MemberOrderVO memberOrderVO, PointAccountPO pointAccountPO, int multiple) throws FLException {
 
 		long totalPoints = Arith.mul(memberOrderVO.getPoint(), multiple);
 
-		CppointRecordPO cppointRecord = cppointRecordDao.queryCppointRecordByOrderId(memberOrderVO.getOrderId());
+		PointRecordPO pointRecord = pointRecordDao.queryPointRecordByOrderId(memberOrderVO.getOrderId());
 
-		List<CppointPaymentPO> cppointPayments = cppointPaymentDao.queryCppointPaymentByOrderId(memberOrderVO.getOrderId());
+		List<PointPaymentPO> pointPayments = pointPaymentDao.queryPointPaymentByOrderId(memberOrderVO.getOrderId());
 
 		List<BasePaymentVO> allPayments = getAllPaymentsByOrderId(memberOrderVO.getOrderId());
 
@@ -966,13 +966,13 @@ public class MemberServiceImpl implements MemberService {
 			paymentAvailableMap.put(basePayment.getPaymentId(), Arith.mul(basePayment.getReferMoney(), 1l));
 		}
 
-		if (cppointPayments != null) {
+		if (pointPayments != null) {
 
-			for (CppointPaymentPO cppointPayment : cppointPayments) {
+			for (PointPaymentPO pointPayment : pointPayments) {
 
-				Long paymentId = cppointPayment.getPid();
+				Long paymentId = pointPayment.getPid();
 
-				long usedPoints = cppointPayment.getPoint();
+				long usedPoints = pointPayment.getPoint();
 				Long currentUsed = paymentUsedMap.get(paymentId);
 
 				if (currentUsed == null) {
@@ -991,7 +991,7 @@ public class MemberServiceImpl implements MemberService {
 			}
 		}
 
-		List<CppointPaymentPO> newRecords = new ArrayList<CppointPaymentPO>();
+		List<PointPaymentPO> newRecords = new ArrayList<PointPaymentPO>();
 
 		for (BasePaymentVO basePayment : allPayments) {
 
@@ -1010,34 +1010,34 @@ public class MemberServiceImpl implements MemberService {
 
 			if (point > 0) {
 
-				CppointPaymentPO cppointPayment = new CppointPaymentPO();
-				cppointPayment.setCpid(cppointPO.getCpid());
-				cppointPayment.setCppointRecord(cppointRecord);
-				cppointPayment.setNo(memberOrderVO.getPointOrderId());
-				cppointPayment.setOrderId(memberOrderVO.getOrderId());
-				cppointPayment.setPid(basePayment.getPaymentId());
-				cppointPayment.setType(basePayment.getPaymentType());
-				cppointPayment.setPoint(point);
-				cppointPayment.setStatus(CppointPaymentPO.STATUS_ABLE_SHORT);
-				cppointPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				newRecords.add(cppointPayment);
+				PointPaymentPO pointPayment = new PointPaymentPO();
+				pointPayment.setAccountId(pointAccountPO.getAccountId());
+				pointPayment.setPointRecord(pointRecord);
+				pointPayment.setNo(memberOrderVO.getPointOrderId());
+				pointPayment.setOrderId(memberOrderVO.getOrderId());
+				pointPayment.setPid(basePayment.getPaymentId());
+				pointPayment.setType(basePayment.getPaymentType());
+				pointPayment.setPoint(point);
+				pointPayment.setStatus(PointPaymentPO.STATUS_ABLE_SHORT);
+				pointPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+				newRecords.add(pointPayment);
 
 				totalPoints -= point;
 				paymentAvailableMap.put(decorationPaymentId, availablePoints - point);
 			}
 		}
 
-		for (CppointPaymentPO record : newRecords) {
-			cppointPaymentDao.save(record);
+		for (PointPaymentPO record : newRecords) {
+			pointPaymentDao.save(record);
 		}
 
 	}
 
-	private void cancelCppointPayment(MemberOrderVO memberOrderVO) throws FLException {
+	private void cancelPointPayment(MemberOrderVO memberOrderVO) throws FLException {
 
-		cppointRecordDao.updateCppointRecordByNo(memberOrderVO.getPointOrderId());
+		pointRecordDao.updatePointRecordByNo(memberOrderVO.getPointOrderId());
 
-		cppointPaymentDao.updateCppointPaymentByNo(memberOrderVO.getPointOrderId());
+		pointPaymentDao.updatePointPaymentByNo(memberOrderVO.getPointOrderId());
 
 	}
 
@@ -1055,14 +1055,14 @@ public class MemberServiceImpl implements MemberService {
 
 		if (decorationPayments != null) {
 			for (DecorationPaymentPO dp : decorationPayments) {
-				allPayments.add(new BasePaymentVO(dp.getDpid(), dp.getReferMoney(), dp.getCreateTime(), CppointPaymentPO.TYPE_DECORATION_INT));
+				allPayments.add(new BasePaymentVO(dp.getDpid(), dp.getReferMoney(), dp.getCreateTime(), PointPaymentPO.TYPE_DECORATION_INT));
 			}
 		}
 
 		/*
 		 * List<Long> salesIds = new ArrayList<Long>(); List<Short> deposiTtypes = Arrays.asList(SalesPaymentPO.TYPE_DEPOSIT_INT, SalesPaymentPO.TYPE_REPLENISHMENT_INT, SalesPaymentPO.STATUS_PAIDFOR_INT);
 		 * 
-		 * List<SalesPO> salesList = salesDao.querySalesByOrderId(orderId); for(SalesPO sales : salesList){ salesIds.add(sales.getSid()); } // 查询主材支付记录 List<SalesPaymentPO> salesPayments = salesPaymentDao.querySalesPaymentBySids(salesIds, deposiTtypes); if (salesPayments != null) { for (SalesPaymentPO salesPayment : salesPayments) { allPayments.add(new BasePaymentVO(salesPayment.getSpid(), salesPayment.getReferMoney(), salesPayment.getCreateTime(), CppointPaymentPO.TYPE_MATERIAL_INT)); } }
+		 * List<SalesPO> salesList = salesDao.querySalesByOrderId(orderId); for(SalesPO sales : salesList){ salesIds.add(sales.getSid()); } // 查询主材支付记录 List<SalesPaymentPO> salesPayments = salesPaymentDao.querySalesPaymentBySids(salesIds, deposiTtypes); if (salesPayments != null) { for (SalesPaymentPO salesPayment : salesPayments) { allPayments.add(new BasePaymentVO(salesPayment.getSpid(), salesPayment.getReferMoney(), salesPayment.getCreateTime(), PointPaymentPO.TYPE_MATERIAL_INT)); } }
 		 */
 
 		// 按创建时间排序

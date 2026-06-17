@@ -891,45 +891,45 @@ $.extend(api, {
             url: "deleteRepairpay.do"
         },
 
-        pageCppoint: {
-            url: "pageCppoint.do",
+        pagePointAccount: {
+            url: "pagePointAccount.do",
             type: "query",
             tranargs: [{
-                result: "cppoint",
-                args: ["dpoint", "spoint", "opoint"]
+                result: "pointAccount",
+                args: ["decorationPoint", "materialPoint", "operatePoint"]
             }]
         },
-        queryCppoint: {
-            url: "queryCppoint.do",
+        queryPointAccount: {
+            url: "queryPointAccount.do",
             type: "query",
             tranargs: [{
-                result: "cppoint",
-                args: ["dpoint", "spoint", "opoint"]
+                result: "pointAccount",
+                args: ["decorationPoint", "materialPoint", "operatePoint"]
             }]
         },
-        queryCppointRecord: {
-            url: "queryCppointRecord.do",
+        queryPointRecord: {
+            url: "queryPointRecord.do",
             type: "query",
             tranargs: [{
-                result: "cppointRecords",
+                result: "pointRecords",
                 args: ["balance", "point"]
             }]
         },
-        createCppoint: {
-            url: "createCppoint.do"
+        createPointAccount: {
+            url: "createPointAccount.do"
         },
-        addupCppoint: {
-            url: "addupCppoint.do",
+        grantPoint: {
+            url: "grantPoint.do",
             type: "update",
             tranargs: {
-                args: ["cppoint.dpoint", "cppoint.spoint", "cppoint.opoint"]
+                args: ["pointAccount.decorationPoint", "pointAccount.materialPoint", "pointAccount.operatePoint"]
             }
         },
-        useupCppoint: {
-            url: "useupCppoint.do",
+        consumePoint: {
+            url: "consumePoint.do",
             type: "update",
             tranargs: {
-                args: ["cppoint.dpoint", "cppoint.spoint", "cppoint.opoint"]
+                args: ["pointAccount.decorationPoint", "pointAccount.materialPoint", "pointAccount.operatePoint"]
             }
         },
 

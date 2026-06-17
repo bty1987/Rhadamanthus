@@ -9,34 +9,34 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.customer.dao.CppointDao;
-import com.fanglin.customer.po.CppointPO;
+import com.fanglin.customer.dao.PointAccountDao;
+import com.fanglin.customer.po.PointAccountPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.Paging;
 
-@Repository("cppointDao")
-public class CppointDaoImpl extends DaoImpl<CppointPO> implements CppointDao {
+@Repository("pointAccountDao")
+public class PointAccountDaoImpl extends DaoImpl<PointAccountPO> implements PointAccountDao {
 
 	@Override
-	public List<CppointPO> pageCppoint(Paging paging, List<Filter> filters) {
+	public List<PointAccountPO> pagePointAccount(Paging paging, List<Filter> filters) {
 
-		PagingQuery<CppointPO> query = pagingQuery(paging, CppointPO.class);
+		PagingQuery<PointAccountPO> query = pagingQuery(paging, PointAccountPO.class);
 
 		return query.list();
 	}
 
 	@Override
-	public CppointPO queryCppoint(long cid) {
-		return (CppointPO) session().createCriteria(CppointPO.class).add(Restrictions.eq(CppointPO.COLUMN_CID_STR, cid)).uniqueResult();
+	public PointAccountPO queryPointAccount(long cid) {
+		return (PointAccountPO) session().createCriteria(PointAccountPO.class).add(Restrictions.eq(PointAccountPO.COLUMN_CID_STR, cid)).uniqueResult();
 	}
 
 	@Override
-	public CppointPO queryCppointByOrderId(String orderId) {
-		return (CppointPO) session().createCriteria(CppointPO.class).add(Restrictions.eq(CppointPO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
+	public PointAccountPO queryPointAccountByOrderId(String orderId) {
+		return (PointAccountPO) session().createCriteria(PointAccountPO.class).add(Restrictions.eq(PointAccountPO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
 	}
 
 	@Override
-	public long amountCppoint(String orderId) {
+	public long amountDecorationPoint(String orderId) {
 
 		SQLQuery query = session().createSQLQuery("SELECT COALESCE(SUM(IF(type = 1, point, -point)), 0) AS priceSum FROM customer.cppointrecord WHERE orderId =:orderId and pointtype = 0");
 
@@ -46,7 +46,7 @@ public class CppointDaoImpl extends DaoImpl<CppointPO> implements CppointDao {
 	}
 
 	@Override
-	public long amountCppointForMaterial(String orderId) {
+	public long amountMaterialPoint(String orderId) {
 
 		SQLQuery query = session().createSQLQuery("SELECT COALESCE(SUM(IF(type = 1, point, -point)), 0) AS priceSum FROM customer.cppointrecord WHERE orderId =:orderId and pointtype = 1");
 
