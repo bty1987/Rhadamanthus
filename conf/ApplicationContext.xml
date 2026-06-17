@@ -25,6 +25,7 @@
 			<list>
 				<value>classpath:jdbc.properties</value>
 				<value>classpath:sysconfig.properties</value>
+				<value>classpath:oss.properties</value>
 			</list>
 		</property>
 	</bean>
