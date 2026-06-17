@@ -1062,13 +1062,7 @@ Condition.addupRule("quotation", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "1",
-                value: "待分配"
-            }, {
-                key: "2",
-                value: "已分配"
-            }],
+            listPath: constant.quotation().quotationAssignRequest.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1086,19 +1080,7 @@ Condition.addupRule("quotation", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "1",
-                value: "最高"
-            }, {
-                key: "2",
-                value: "高"
-            }, {
-                key: "5",
-                value: "普通"
-            }, {
-                key: "9",
-                value: "最低"
-            }],
+            listPath: constant.quotation().quotationAssignRequest.priority.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1148,16 +1130,7 @@ Condition.addupRule("quotation", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "",
-                value: "全部"
-            }, {
-                key: "1",
-                value: "已启用"
-            }, {
-                key: "0",
-                value: "已禁用"
-            }],
+            listPath: constant.quotation().quotationAssignConfig.enabled.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1174,16 +1147,7 @@ Condition.addupRule("quotation", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "",
-                value: "全部"
-            }, {
-                key: "1",
-                value: "自动分配"
-            }, {
-                key: "0",
-                value: "手动分配"
-            }],
+            listPath: constant.quotation().quotationAssignConfig.autoAssign.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1202,19 +1166,7 @@ Condition.addupRule("quotation", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "",
-                value: "全部"
-            }, {
-                key: "1",
-                value: "可用"
-            }, {
-                key: "2",
-                value: "制作中"
-            }, {
-                key: "3",
-                value: "已停用"
-            }],
+            listPath: constant.quotation().quotationAssignUserRule.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1391,19 +1343,7 @@ Condition.addupRule("quotation", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "",
-                value: "全部"
-            }, {
-                key: "1",
-                value: "待分配"
-            }, {
-                key: "2",
-                value: "已分配"
-            }, {
-                key: "3",
-                value: "已完成"
-            }],
+            listPath: constant.quotation().quotationAssignRequest.status.datas,
             keyPath: "key",
             valuePath: "value"
         }

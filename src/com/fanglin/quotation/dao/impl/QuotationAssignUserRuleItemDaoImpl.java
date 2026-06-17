@@ -75,7 +75,7 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 
 		// 预算员状态：仅待分配 + 空闲
 		criteria.add(Restrictions.eq("userRule.status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
-		criteria.add(Restrictions.eq("userRule.currentTaskCount", 0));
+		criteria.add(Restrictions.eq("userRule.currentTaskCount", QuotationAssignUserRulePO.TASK_COUNT_NONE_INT));
 
 		// 公司匹配
 		criteria.add(Restrictions.eq("company.cid", company));
@@ -107,7 +107,7 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 
 		// 预算员状态：仅待分配 + 空闲
 		criteria.add(Restrictions.eq("userRule.status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
-		criteria.add(Restrictions.eq("userRule.currentTaskCount", 0));
+		criteria.add(Restrictions.eq("userRule.currentTaskCount", QuotationAssignUserRulePO.TASK_COUNT_NONE_INT));
 
 		// 公司匹配
 		criteria.add(Restrictions.eq("company.cid", company));

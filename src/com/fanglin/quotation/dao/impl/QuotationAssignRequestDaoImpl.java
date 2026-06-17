@@ -31,6 +31,10 @@ import com.fanglin.utils.Paging;
 @Repository("quotationAssignRequestDao")
 public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignRequestPO> implements QuotationAssignRequestDao {
 
+	private static final int QUEUE_MAX_RESULTS_INT = 50;
+
+	private static final int QUEUE_ALL_MAX_RESULTS_INT = 100;
+
 	/**
 	 * 构造函数
 	 */
@@ -156,7 +160,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		criteria.addOrder(org.hibernate.criterion.Order.desc("qarid"));
 
 		// 限制结果集数量，避免一次性加载过多数据
-		criteria.setMaxResults(50);
+		criteria.setMaxResults(QUEUE_MAX_RESULTS_INT);
 
 		return criteria.list();
 	}
@@ -169,7 +173,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		// 按主键倒序
 		criteria.addOrder(org.hibernate.criterion.Order.desc("qarid"));
 
-		criteria.setMaxResults(50);
+		criteria.setMaxResults(QUEUE_MAX_RESULTS_INT);
 
 		return criteria.list();
 	}
@@ -182,7 +186,7 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		// 按主键倒序
 		criteria.addOrder(org.hibernate.criterion.Order.desc("qarid"));
 
-		criteria.setMaxResults(100);
+		criteria.setMaxResults(QUEUE_ALL_MAX_RESULTS_INT);
 
 		return criteria.list();
 	}
