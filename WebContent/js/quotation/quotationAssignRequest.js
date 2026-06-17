@@ -70,10 +70,10 @@ $(function() {
     searcher.base("condList", "pagenation", "resultList", baseApi);
 
     // 查询条件：自助模式去掉公司条件，设计模式用设计师条件
-    var userConditionName = isDesignMode ? "assign-request-user-designer" : "assign-request-user";
+    var userConditionName = isDesignMode ? "quotation-assign-request-user-designer" : "quotation-assign-request-user";
     var conditions = isSelfMode
-        ? ["assign-request-status", "assign-request-orderId", "assign-request-requestTime", "assign-request-assignTime", "assign-request-finishTime"]
-        : ["assign-request-company", "assign-request-status", "assign-request-orderId", userConditionName, "assign-request-requestUser", "assign-request-requestTime", "assign-request-assignTime", "assign-request-finishTime"];
+        ? ["quotation-assign-request-status", "quotation-assign-request-orderId", "quotation-assign-request-requestTime", "quotation-assign-request-assignTime", "quotation-assign-request-finishTime"]
+        : ["quotation-assign-request-company", "quotation-assign-request-status", "quotation-assign-request-orderId", userConditionName, "quotation-assign-request-requestUser", "quotation-assign-request-requestTime", "quotation-assign-request-assignTime", "quotation-assign-request-finishTime"];
     searcher.condition(conditions);
 
     // 顶部按钮：自助模式无按钮

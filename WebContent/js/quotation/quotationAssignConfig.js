@@ -37,7 +37,7 @@ $(function() {
     );
 
     // 查询条件
-    searcher.condition(["assign-config-company", "assign-config-enabled"]);
+    searcher.condition(["quotation-assign-config-company", "quotation-assign-config-enabled"]);
 
     // 顶部按钮
     searcher.button(function() {
