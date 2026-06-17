@@ -51,12 +51,14 @@ $(function() {
     }, null, false);
 
     var url = api.inventory.pageOccessories;
-    var conditions = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-occessories-status', 'inventory-occessories-isEnter', 'inventory-occessories-isLift', 'inventory-accessories-createTime', ];
+    var conditions = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-occessories-status', 'inventory-occessories-isEnter', 'inventory-occessories-isLift', 'inventory-occessories-supplier', 'inventory-accessories-createTime', ];
     var options = {};
 
     if (occessories.pageType == "supplier") {
         url = api.inventory.pageOccessoriesForSupplier;
         options = $.extend({}, options, {});
+        // 厂商视角固定看自己的单，且 ForSupplier 已 alias supplier，移除厂商条件避免重复 alias
+        conditions = $.grep(conditions, function(c) { return c != 'inventory-occessories-supplier'; });
     } else if (occessories.pageType == "delive") {
         options = $.extend({}, options, {
             "occessories.status": 2
