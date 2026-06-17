@@ -22,6 +22,7 @@ var decorationUtils = {
         var $unpurchasedCategory = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($unpCategory);
 
         var $oalesTotal = 0;
+        var $oalesScaleTotal = 0;
         var $total = 0;
         var $coupon = 0;
         var $totalSalesAndMaterial = 0;
@@ -166,7 +167,7 @@ var decorationUtils = {
                 var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["总额:", v.total, "blue"], ["备注:", v.comment, "grey"]];
+                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["总额:", v.total, "blue"], ["计入配比:", constant.sales().oales.isScale.keys[v.isScale], "red"], ["计入积分:", constant.sales().oales.isActivity.keys[v.isActivity], "red"], ["备注:", v.comment, "grey"]];
 
                 $.each(propertyArr, function(index, value) {
 
@@ -197,6 +198,9 @@ var decorationUtils = {
                     $brandTotal.html(_total);
 
                     $oalesTotal = utils.changeThrDecimal($oalesTotal + v.total);
+                    if (v.isScale == 0) {
+                        $oalesScaleTotal = utils.changeThrDecimal($oalesScaleTotal + v.total);
+                    }
 
                 } else {
 
@@ -213,6 +217,9 @@ var decorationUtils = {
                     $liLine_2.append($h4_2).append($ulProperty_2).appendTo($uloalesBrand);
 
                     $oalesTotal = utils.changeThrDecimal($oalesTotal + v.total);
+                    if (v.isScale == 0) {
+                        $oalesScaleTotal = utils.changeThrDecimal($oalesScaleTotal + v.total);
+                    }
                 }
             });
         }
@@ -513,23 +520,25 @@ var decorationUtils = {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
 
-            var $h4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("总金额:" + $total));
+            var $h4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("总金额:" + utils.changeThrDecimal($total + $oalesTotal)));
+            var $salesTotalH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("场内总额:" + $total));
             var $couponPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("优惠券:" + $coupon));
-            var $TotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("实收额:" + ($total - $coupon)));
-            var $TotalNetReceiptsTotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("实收总额:" + $totalSalesAndMaterial));
+            var $TotalNetReceiptsTotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("场内实收总额:" + $totalSalesAndMaterial));
             var $TotalDepositPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("定金总额:" + ($totalDeposit)));
             var $oalesH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("外销总额:" + $oalesTotal));
+            var $oalesScaleH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("外销实收总额:" + $oalesScaleTotal));
             var $subsidy = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("补贴总额:" + $totalSubsidy));
 
-            $liLine.append($h4).append($couponPrice).append($TotalPrice).append($TotalNetReceiptsTotalPrice).append($TotalDepositPrice).append($oalesH4).append($subsidy).appendTo($ulbrand);
+            $liLine.append($h4).append($salesTotalH4).append($couponPrice).append($TotalNetReceiptsTotalPrice).append($TotalDepositPrice).append($oalesH4).append($oalesScaleH4).append($subsidy).appendTo($ulbrand);
         }
 
         function oalesTotalData() {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $oalesH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("外销总额:" + $oalesTotal));
+            var $oalesScaleH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("外销实收总额:" + $oalesScaleTotal));
 
-            $liLine.append($oalesH4).appendTo($uloalesBrand);
+            $liLine.append($oalesH4).append($oalesScaleH4).appendTo($uloalesBrand);
         }
 
         function drawLineCategory(list, div) {
