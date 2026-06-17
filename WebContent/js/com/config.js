@@ -20,11 +20,13 @@
 
     // 文件上传配置
     isAliOss: false,  // 是否启用阿里云 OSS 上传（false=本地上传，true=OSS上传）
+    uploadMode: 'sts', // OSS 上传模式：'sts'（STS临时凭证，推荐）| 'policy'（旧Policy签名，兼容）
 
     // OSS 图片显示配置（type=3 时使用）
     ossConfig: {
         bucket: '',            // OSS Bucket 名称（如：fanglin-erp）
         endpoint: '',          // OSS 端点（如：oss-cn-hangzhou.aliyuncs.com）
+        region: '',            // 地域（如：cn-hangzhou，STS直传必填）
         dir: '',               // 图片目录前缀（如：images/，可选）
         host: ''               // OSS 访问域名（可选，如：https://cdn.fanglin.com 或自动构建）
     },

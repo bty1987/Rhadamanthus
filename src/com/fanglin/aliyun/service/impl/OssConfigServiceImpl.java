@@ -13,12 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.HttpMethod;
 import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
+import com.fanglin.aliyun.config.OssProperties;
 import com.fanglin.aliyun.dao.OssConfigDao;
 import com.fanglin.aliyun.po.OssConfigPO;
 import com.fanglin.aliyun.service.OssConfigService;
@@ -34,6 +35,9 @@ public class OssConfigServiceImpl implements OssConfigService {
 
 	@Autowired
 	private OssConfigDao ossConfigDao;
+
+	@Autowired
+	private OssProperties ossProperties;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -51,7 +55,7 @@ public class OssConfigServiceImpl implements OssConfigService {
 
 			try {
 
-				ossClient = new OSSClient(ossConfigPO.getEndpoint(), ossConfigPO.getAccessKeyId(), ossConfigPO.getAccessKeySecret());
+				ossClient = new OSSClientBuilder().build(ossConfigPO.getEndpoint(), ossConfigPO.getAccessKeyId(), ossConfigPO.getAccessKeySecret());
 
 				long expireEndTime = System.currentTimeMillis() + ossConfigPO.getExpireTime() * 1000;
 				Date expiration = new Date(expireEndTime);
@@ -114,13 +118,13 @@ public class OssConfigServiceImpl implements OssConfigService {
 
 		try {
 
-			ossClient = new OSSClient(ossConfigPO.getEndpoint(), ossConfigPO.getAccessKeyId(), ossConfigPO.getAccessKeySecret());
+			ossClient = new OSSClientBuilder().build(ossConfigPO.getEndpoint(), ossConfigPO.getAccessKeyId(), ossConfigPO.getAccessKeySecret());
 
 			String objectName = String.format("%s%s", ossConfig.getDir(), ossConfig.getKey());
 
 			if (ossClient.doesObjectExist(ossConfig.getBucket(), objectName)) { // 判断图片信息
 
-				Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 10);
+				Date expiration = new Date(System.currentTimeMillis() + ossProperties.getPresignExpireSeconds() * 1000);
 				GeneratePresignedUrlRequest req = new GeneratePresignedUrlRequest(ossConfigPO.getBucket(), objectName, HttpMethod.GET);
 				if (ossConfig.getWidth() != null && ossConfig.getHeight() != null) {
 					String style = String.format("image/resize,m_fill,w_%s,h_%s", ossConfig.getWidth(), ossConfig.getHeight());

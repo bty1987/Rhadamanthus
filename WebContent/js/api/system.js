@@ -507,6 +507,9 @@ $.extend(api, {
         generatePostSignature: {
             url: "generatePostSignature.do"
         },
+        getOssStsToken: {
+            url: "getOssStsToken.do"
+        },
         getProgressiveImage: {
             url: "getProgressiveImage.do"
         }
