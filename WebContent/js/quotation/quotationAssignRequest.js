@@ -1,6 +1,8 @@
 $(function() {
 
-    // ==================== 模式检测 ====================
+	    var QAR = constant.quotation().quotationAssignRequest;
+
+	    // ==================== 模式检测 ====================
     // 通过框架 params.urlLoadParams 判断模式
     var urlParams = params["urlLoadParams"] || {};
     var isSelfMode = urlParams.mode === 'self';
@@ -68,10 +70,10 @@ $(function() {
     searcher.base("condList", "pagenation", "resultList", baseApi);
 
     // 查询条件：自助模式去掉公司条件，设计模式用设计师条件
-    var userConditionName = isDesignMode ? "quotation-assign-request-user-designer" : "quotation-assign-request-user";
+    var userConditionName = isDesignMode ? "assign-request-user-designer" : "assign-request-user";
     var conditions = isSelfMode
-        ? ["quotation-assign-request-status", "quotation-assign-request-orderId", "quotation-assign-request-requestTime", "quotation-assign-request-assignTime", "quotation-assign-request-finishTime"]
-        : ["quotation-assign-request-company", "quotation-assign-request-status", "quotation-assign-request-orderId", userConditionName, "quotation-assign-request-requestUser", "quotation-assign-request-requestTime", "quotation-assign-request-assignTime", "quotation-assign-request-finishTime"];
+        ? ["assign-request-status", "assign-request-orderId", "assign-request-requestTime", "assign-request-assignTime", "assign-request-finishTime"]
+        : ["assign-request-company", "assign-request-status", "assign-request-orderId", userConditionName, "assign-request-requestUser", "assign-request-requestTime", "assign-request-assignTime", "assign-request-finishTime"];
     searcher.condition(conditions);
 
     // 顶部按钮：自助模式无按钮
@@ -118,31 +120,23 @@ $(function() {
     }, {
         field: "decorationType",
         name: "装修类型",
-        prop: function(v) {
-            return v.decorationType == 1 ? "半包" : "整装";
-        },
+	        prop: function(v) {
+	            return QAR.decorationType.keys[v.decorationType] || "未知";
+	        },
         clazz: "red"
     }, {
         field: "priority",
         name: "优先级",
-        prop: function(v) {
-            var priorityMap = {
-                1: "最高",
-                3: "高",
-                5: "普通",
-                7: "低",
-                9: "最低"
-            };
-            return priorityMap[v.priority] || "未知";
-        },
+	        prop: function(v) {
+	            return QAR.priority.keys[v.priority] || "未知";
+	        },
         clazz: "red"
     }, {
         field: "status",
         name: "状态",
-        prop: function(v) {
-            var statusMap = { 1: "待分配", 2: "已分配", 3: "已完成" };
-            return statusMap[v.status] || "未知";
-        },
+	        prop: function(v) {
+	            return QAR.status.keys[v.status] || "未知";
+	        },
         clazz: "red"
     }, {
         field: "uid",
@@ -185,7 +179,7 @@ $(function() {
             return false;
         },
         show: function(v) {
-            return v.status == 1;
+            return v.status == QAR.STATUS_PENDING_INT;
         }
     }, {
         name: "手动分配",
@@ -195,7 +189,7 @@ $(function() {
             return false;
         },
         show: function(v) {
-            return v.status == 1;
+            return v.status == QAR.STATUS_PENDING_INT;
         }
     }, {
         name: "编辑",
@@ -219,7 +213,7 @@ $(function() {
             return false;
         },
         show: function(v) {
-            return v.status == 1;
+            return v.status == QAR.STATUS_PENDING_INT;
         }
     }, {
         name: "替换",
@@ -229,7 +223,7 @@ $(function() {
             return false;
         },
         show: function(v) {
-            return v.status == 2;
+            return v.status == QAR.STATUS_ASSIGNED_INT;
         }
     }, {
         name: "交付",
@@ -239,7 +233,7 @@ $(function() {
             return false;
         },
         show: function(v) {
-            return v.status == 2;
+            return v.status == QAR.STATUS_ASSIGNED_INT;
         }
     }, {
         name: "沟通",
@@ -289,23 +283,7 @@ $(function() {
     // 初始化Select数据
     config.items.decorationType.bindData(constant.quotation().quotationAssignRequest.decorationType.datas, "key", "value");
 
-    var priorityData = [{
-        key: 1,
-        value: "最高"
-    }, {
-        key: 3,
-        value: "高"
-    }, {
-        key: 5,
-        value: "普通"
-    }, {
-        key: 7,
-        value: "低"
-    }, {
-        key: 9,
-        value: "最低"
-    }];
-    config.items.priority.bindData(priorityData, "key", "value");
+	    config.items.priority.bindData(QAR.priority.datas, "key", "value");
 
     // 初始化公司下拉框
     com.post(api.system.queryCompany, {}, function(res) {
@@ -438,8 +416,8 @@ $(function() {
         config.items.orderId.val('');
         config.items.company.val('');
         config.items.department.empty().append('<option value="">所有部门</option>');
-        config.items.decorationType.val('1');
-        config.items.priority.val('5');
+	    config.items.decorationType.val(QAR.DECORATION_TYPE_HALF_INT);
+	    config.items.priority.val(QAR.PRIORITY_NORMAL_INT);
         com.cleanTypeahead(config.items.requestUser);
         config.data.selectedRequestUid = null;
         config.items.remark.val('');
@@ -560,8 +538,8 @@ $(function() {
         var companyName = row.company && row.company.name ? row.company.name : '未知';
         com.focusPage('#manualAssignCompanyDisplay').text(companyName);
 
-        var decorationTypeText = row.decorationType == 1 ? '半包' : '整装';
-        com.focusPage('#manualAssignDecorationTypeDisplay').text(decorationTypeText);
+	        var decorationTypeText = QAR.decorationType.keys[row.decorationType] || '未知';
+	        com.focusPage('#manualAssignDecorationTypeDisplay').text(decorationTypeText);
 
         com.cleanTypeahead(config.items.manualAssignBudgeter);
         config.data.selectedManualAssignUid = null;
@@ -609,8 +587,8 @@ $(function() {
         var companyName = row.company && row.company.name ? row.company.name : '未知';
         com.focusPage('#replaceCompanyDisplay').text(companyName);
 
-        var decorationTypeText = row.decorationType == 1 ? '半包' : '整装';
-        com.focusPage('#replaceDecorationTypeDisplay').text(decorationTypeText);
+	        var decorationTypeText = QAR.decorationType.keys[row.decorationType] || '未知';
+	        com.focusPage('#replaceDecorationTypeDisplay').text(decorationTypeText);
 
         // 显示当前预算员
         var currentBudgeter = '-';

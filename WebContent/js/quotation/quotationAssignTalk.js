@@ -1,6 +1,9 @@
 jQuery(function($) {
 
-    // ==================== 参数获取 ====================
+	    var QAT = constant.quotation().quotationAssignTalk;
+	    var KEY_ENTER_INT = 13;
+
+	    // ==================== 参数获取 ====================
     var orderId = params.quotationAssignTalk ? params.quotationAssignTalk.orderId : null;
 
     if (!orderId) {
@@ -43,7 +46,9 @@ jQuery(function($) {
             var senderName = t.sender ? (t.sender.currentName || t.sender.userName || '未知') : '未知';
             var sendTime = t.sendTime || '';
             var content = t.content || '';
-            var typeLabel = t.type == 1 ? '<span class="label label-info" style="font-size:10px;">设计师</span>' : '<span class="label label-success" style="font-size:10px;">预算员</span>';
+	            var typeText = QAT.type.keys[t.type] || '未知';
+	            var typeClazz = t.type == QAT.TYPE_DESIGNER_TO_BUDGETER_INT ? 'label-info' : 'label-success';
+	            var typeLabel = '<span class="label ' + typeClazz + '" style="font-size:10px;">' + typeText + '</span>';
 
             html += '<div style="margin-bottom:10px;padding:8px;border-radius:4px;background:#fff;border:1px solid #ddd;">';
             html += '  <div style="margin-bottom:4px;">';
@@ -84,7 +89,7 @@ jQuery(function($) {
     });
 
     talkContent.on('keydown', function(e) {
-        if (e.keyCode == 13) {
+        if (e.keyCode == KEY_ENTER_INT) {
             e.preventDefault();
             sendTalkMessage();
         }

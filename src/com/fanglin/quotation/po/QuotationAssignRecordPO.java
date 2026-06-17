@@ -37,7 +37,7 @@ import com.fanglin.quotation.vo.QuotationAssignRecordVO;
  * <li>qasrid: 记录ID（主键）</li>
  * <li>orderId: 装修单号</li>
  * <li>uid: 预算员用户ID（成功时有值，失败时为NULL）</li>
- * <li>assignType: 分配类型（1-正向自动，2-手动，3-反向自动）</li>
+		 * <li>assignType: 分配类型（1-正向自动，2-手动，3-反向自动，4-转交）</li>
  * <li>assignResult: 分配结果（0-失败，1-成功）</li>
  * <li>assignUid: 分配人用户ID（手动分配时有值）</li>
  * <li>assignTime: 分配时间</li>
@@ -85,6 +85,11 @@ public class QuotationAssignRecordPO implements Serializable {
 	 */
 	public static final Byte ASSIGN_RESULT_SUCCESS_INT = 1;
 
+	/**
+	 * 失败原因：暂无可用预算员
+	 */
+	public static final String FAIL_REASON_NO_AVAILABLE_BUDGETER_STR = "暂无可用预算员";
+
 	// ==================== 字段定义 ====================
 
 	/**
@@ -103,7 +108,7 @@ public class QuotationAssignRecordPO implements Serializable {
 	private Integer uid;
 
 	/**
-	 * 分配类型：1-正向自动（设计师发起），2-手动（预算经理手动派单），3-反向自动（预算员完成后自动分配）
+	 * 分配类型：1-正向自动（设计师发起），2-手动（预算经理手动派单），3-反向自动（预算员完成后自动分配），4-转交
 	 */
 	private short assignType;
 

@@ -1,6 +1,9 @@
 $(function() {
 
-    // ==================== 页面元素声明 ====================
+	    var QAUR = constant.quotation().quotationAssignUserRule;
+	    var DEPT_TYPE_DESIGN_INT = 2;
+
+	    // ==================== 页面元素声明 ====================
     var config = {
         modals: {
             itemModal: com.focusPage('#itemModal')
@@ -45,9 +48,9 @@ $(function() {
 
     // 查询条件：公司 + 支持类型 + 预算员姓名
     searcher.condition([
-        "quotation-assign-user-rule-item-company",
-        "quotation-assign-user-rule-item-supportedType",
-        "quotation-assign-user-rule-item-userName"
+        "assign-user-rule-item-company",
+        "assign-user-rule-item-supportedType",
+        "assign-user-rule-item-userName"
     ]);
 
     // 固定筛选参数：子页面模式只查询当前规则下的明细；独立页面模式不过滤 qaurid
@@ -81,7 +84,7 @@ $(function() {
         field: "userRule",
         name: "状态",
         prop: function(v) {
-            return constant.quotation().quotationAssignUserRule.status.keys[v.userRule.status];
+            return QAUR.status.keys[v.userRule.status];
         },
         clazz: "red"
     }, {
@@ -101,7 +104,7 @@ $(function() {
         name: "支持类型",
         prop: function(v) {
             var type = v.supportedType;
-            return constant.quotation().quotationAssignUserRule.supportedType.keys[type] || "未设置";
+            return QAUR.supportedType.keys[type] || "未设置";
         },
         clazz: "red"
     }, {
@@ -136,14 +139,25 @@ $(function() {
 
     // ==================== Modal 表单操作 ====================
 
-    // 初始化公司下拉框
-    function initCompanySelect() {
-        com.post(api.system.queryCompany, {}, function(res) {
-            config.items.company.bindData(res.companys, "cid", "name", false);
-        }, null, false);
-    }
+	    // 初始化公司下拉框
+	    function initCompanySelect() {
+	        com.post(api.system.queryCompany, {}, function(res) {
+	            config.items.company.bindData(res.companys, "cid", "name", false);
+	        }, null, false);
+	    }
 
-    // 初始化部门下拉框（固定为设计部类型，dept.type.dtid=2）
+	    // 初始化支持类型单选框
+	    function initSupportedTypeRadios() {
+	        var $group = com.focusPage('#supportedTypeGroup').empty();
+	        $.each(QAUR.supportedType.datas, function(i, data) {
+	            var $label = $('<label></label>').addClass('radio-inline');
+	            $('<input>').attr('type', 'radio').attr('name', 'supportedType').val(data.key).appendTo($label);
+	            $label.append(' ' + data.value).appendTo($group);
+	        });
+	        config.items.supportedType = com.focusPage('input[name="supportedType"]');
+	    }
+
+	    // 初始化部门下拉框（固定为设计部类型，dept.type.dtid=2）
     function initDepartmentSelect(companyId) {
         if (!companyId) {
             config.items.department.empty().append('<option value="">全部部门</option>');
@@ -151,7 +165,7 @@ $(function() {
         }
         com.post(api.communion.queryDepartment, {
             "department.company.cid": companyId,
-            "dept.type.dtid": 2
+            "dept.type.dtid": DEPT_TYPE_DESIGN_INT
         }, function(res) {
             if (res.deptList && res.deptList.length > 0) {
                 config.items.department.bindData(res.deptList, "did", "name", true);
@@ -177,8 +191,9 @@ $(function() {
             });
     }
 
-    // 页面加载时初始化
-    initCompanySelect();
+	    // 页面加载时初始化
+	    initCompanySelect();
+	    initSupportedTypeRadios();
 
     // 独立页面模式初始化
     if (config.data.isStandalone) {
@@ -217,7 +232,7 @@ $(function() {
         config.items.qaurid.val(config.data.parentQaurid);
         config.items.company.val('');
         config.items.department.empty().append('<option value="">全部部门</option>');
-        config.items.supportedType.filter('[value="-1"]').prop('checked', true);
+        config.items.supportedType.filter('[value="' + QAUR.SUPPORTED_TYPE_ALL_INT + '"]').prop('checked', true);
 
         // 独立页面模式额外清理
         if (config.data.isStandalone) {
@@ -241,7 +256,7 @@ $(function() {
         if (row.supportedType !== undefined && row.supportedType !== null) {
             config.items.supportedType.filter('[value="' + row.supportedType + '"]').prop('checked', true);
         } else {
-            config.items.supportedType.filter('[value="-1"]').prop('checked', true);
+            config.items.supportedType.filter('[value="' + QAUR.SUPPORTED_TYPE_ALL_INT + '"]').prop('checked', true);
         }
         com.focusPage('#modalTitle').text('编辑规则项目');
 

@@ -59,6 +59,8 @@ import com.fanglin.quotation.vo.QuotationVO;
 @Transactional(readOnly = true)
 public class QuotationAssignServiceImpl implements QuotationAssignService {
 
+	private static final String DEFAULT_QUOTATION_NAME_STR = "Auto Assign";
+
 	@Autowired
 	private DecorationDao decorationDao;
 
@@ -284,11 +286,11 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		if (oldUserRule != null) {
 			// 当前 request 仍归属旧预算员且 status=ASSIGNED，count 结果包含这一条，故需 -1 表示即将转出
 			int oldTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(oldUserRule.getUser().getUid()) - 1;
-			if (oldTaskCount < 0) {
-				oldTaskCount = 0;
+			if (oldTaskCount < QuotationAssignUserRulePO.TASK_COUNT_NONE_INT) {
+				oldTaskCount = QuotationAssignUserRulePO.TASK_COUNT_NONE_INT;
 			}
 			oldUserRule.setCurrentTaskCount(oldTaskCount);
-			if (oldTaskCount == 0) {
+			if (oldTaskCount == QuotationAssignUserRulePO.TASK_COUNT_NONE_INT) {
 				oldUserRule.setStatus(QuotationAssignUserRulePO.STATUS_AVAILABLE_INT);
 			}
 			quotationAssignUserRuleDao.update(oldUserRule);
@@ -349,8 +351,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		int currentTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(userRule.getUser().getUid());
 		userRule.setCurrentTaskCount(currentTaskCount);
 
-		// 更新状态：currentTaskCount > 0 制作中，否则待分配
-		short newStatus = currentTaskCount > 0 ? QuotationAssignUserRulePO.STATUS_BUSY_INT : QuotationAssignUserRulePO.STATUS_AVAILABLE_INT;
+		// 更新状态：currentTaskCount > QuotationAssignUserRulePO.TASK_COUNT_NONE_INT 制作中，否则待分配
+		short newStatus = currentTaskCount > QuotationAssignUserRulePO.TASK_COUNT_NONE_INT ? QuotationAssignUserRulePO.STATUS_BUSY_INT : QuotationAssignUserRulePO.STATUS_AVAILABLE_INT;
 		userRule.setStatus(newStatus);
 
 		quotationAssignUserRuleDao.update(userRule);
@@ -442,7 +444,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		record.setAssignResult(QuotationAssignRecordPO.ASSIGN_RESULT_FAILED_INT);
 		record.setAssignUid(null);
 		record.setAssignTime(new Timestamp(System.currentTimeMillis()));
-		record.setFailReason("暂无可用预算员");
+		record.setFailReason(QuotationAssignRecordPO.FAIL_REASON_NO_AVAILABLE_BUDGETER_STR);
 		record.setDecorationType(decorationType);
 		quotationAssignRecordDao.save(record);
 
@@ -487,7 +489,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		userRule.setCurrentTaskCount(currentTaskCount);
 
-		short newStatus = currentTaskCount > 0 ? QuotationAssignUserRulePO.STATUS_BUSY_INT : QuotationAssignUserRulePO.STATUS_AVAILABLE_INT;
+		short newStatus = currentTaskCount > QuotationAssignUserRulePO.TASK_COUNT_NONE_INT ? QuotationAssignUserRulePO.STATUS_BUSY_INT : QuotationAssignUserRulePO.STATUS_AVAILABLE_INT;
 		userRule.setStatus(newStatus);
 
 		// 4. 创建分配记录（成功）
@@ -506,7 +508,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		if (quotationPO != null) return 1;
 
 		QuotationVO quotationVO = new QuotationVO();
-		quotationVO.setName("Auto Assign");
+		quotationVO.setName(DEFAULT_QUOTATION_NAME_STR);
 		quotationVO.setOrderId(orderId);
 		quotationVO.setStyle(null);
 		quotationVO.setContent(null);
@@ -591,7 +593,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		if (oldUserRule != null) {
 			int oldTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(oldUserRule.getUser().getUid());
 			oldUserRule.setCurrentTaskCount(oldTaskCount);
-			if (oldTaskCount == 0) {
+			if (oldTaskCount == QuotationAssignUserRulePO.TASK_COUNT_NONE_INT) {
 				oldUserRule.setStatus(QuotationAssignUserRulePO.STATUS_AVAILABLE_INT);
 			}
 			quotationAssignUserRuleDao.update(oldUserRule);
@@ -600,7 +602,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 11. 更新新预算员任务数
 		int newTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(targetUserRule.getUser().getUid());
 		targetUserRule.setCurrentTaskCount(newTaskCount);
-		if (newTaskCount > 0) {
+		if (newTaskCount > QuotationAssignUserRulePO.TASK_COUNT_NONE_INT) {
 			targetUserRule.setStatus(QuotationAssignUserRulePO.STATUS_BUSY_INT);
 		}
 		quotationAssignUserRuleDao.update(targetUserRule);
