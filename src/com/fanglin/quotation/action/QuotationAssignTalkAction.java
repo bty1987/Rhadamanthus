@@ -26,11 +26,11 @@ import com.fanglin.quotation.vo.QuotationAssignTalkVO;
 
 /**
  * 报价分配沟通消息 Action 控制器
- *
+ * 
  * <p>
  * 职责：处理设计师和预算员之间的沟通消息 HTTP 请求
  * </p>
- *
+ * 
  * <p>
  * 主要功能：
  * </p>
@@ -38,7 +38,7 @@ import com.fanglin.quotation.vo.QuotationAssignTalkVO;
  * <li>根据装修单号查询沟通消息列表</li>
  * <li>发送沟通消息（同时触发钉钉通知）</li>
  * </ul>
- *
+ * 
  * @author Claude AI
  * @version 1.0
  */
@@ -64,19 +64,12 @@ public class QuotationAssignTalkAction extends BaseListAction {
 
 	/**
 	 * 根据装修单号查询沟通消息列表
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "queryQuotationAssignTalkByOrderId", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "excludeNullProperties", "true" }),
-			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "queryQuotationAssignTalkByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "excludeNullProperties", "true" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignTalkByOrderId() throws FLException {
-
-		if (quotationAssignTalk == null || quotationAssignTalk.getOrderId() == null) {
-			return ERROR;
-		}
 
 		quotationAssignTalks = quotationAssignTalkService.queryQuotationAssignTalkByOrderId(quotationAssignTalk.getOrderId(), queryUserId(), queryRoleId());
 
@@ -85,24 +78,16 @@ public class QuotationAssignTalkAction extends BaseListAction {
 
 	/**
 	 * 发送沟通消息
-	 *
+	 * 
 	 * <p>
-	 * 前端传递 quotationAssignTalk.orderId 和 quotationAssignTalk.content，
-	 * 后端自动从当前登录用户获取发送人信息
+	 * 前端传递 quotationAssignTalk.orderId 和 quotationAssignTalk.content， 后端自动从当前登录用户获取发送人信息
 	 * </p>
-	 *
+	 * 
 	 * @return JSON 响应
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "sendQuotationAssignTalk", results = {
-			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "excludeNullProperties", "true" }),
-			@Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" })
-	}, params = { "contentType", "text/html" })
+	@Action(value = "sendQuotationAssignTalk", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "excludeNullProperties", "true" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendQuotationAssignTalk() throws FLException {
-
-		if (quotationAssignTalk == null) {
-			return ERROR;
-		}
 
 		quotationAssignTalk = quotationAssignTalkService.sendQuotationAssignTalk(quotationAssignTalk, queryUserId());
 

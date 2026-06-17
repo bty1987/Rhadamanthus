@@ -71,7 +71,6 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignRequest() throws FLException {
 
-		// company筛选通过filter条件传递（支持跨公司查询），不再强制使用当前用户公司
 		quotationAssignRequestService.pageQuotationAssignRequest(getPaging(), getFilters(), null);
 
 		return SUCCESS;
@@ -88,13 +87,7 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignRequestByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignRequestByUserId() throws FLException {
 
-		String userId = queryUserId();
-
-		if (userId == null || userId.trim().isEmpty()) {
-			return ERROR;
-		}
-
-		quotationAssignRequestService.pageQuotationAssignRequestByUserId(getPaging(), getFilters(), userId);
+		quotationAssignRequestService.pageQuotationAssignRequestByUserId(getPaging(), getFilters(), queryUserId());
 
 		return SUCCESS;
 	}
@@ -107,10 +100,6 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "queryQuotationAssignRequestById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignRequestById() throws FLException {
-
-		if (quotationAssignRequest == null) {
-			return ERROR;
-		}
 
 		quotationAssignRequest = quotationAssignRequestService.queryQuotationAssignRequestById(quotationAssignRequest);
 
@@ -126,10 +115,6 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	@Action(value = "createQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createQuotationAssignRequest() throws FLException {
 
-		if (quotationAssignRequest == null) {
-			return ERROR;
-		}
-
 		quotationAssignRequestService.createQuotationAssignRequest(quotationAssignRequest);
 
 		return SUCCESS;
@@ -143,10 +128,6 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	 */
 	@Action(value = "updateQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationAssignRequest() throws FLException {
-
-		if (quotationAssignRequest == null) {
-			return ERROR;
-		}
 
 		quotationAssignRequestService.updateQuotationAssignRequest(quotationAssignRequest);
 
@@ -162,16 +143,10 @@ public class QuotationAssignRequestAction extends BaseListAction {
 	@Action(value = "deleteQuotationAssignRequest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationAssignRequest() throws FLException {
 
-		if (quotationAssignRequest == null) {
-			return ERROR;
-		}
-
 		quotationAssignRequestService.deleteQuotationAssignRequest(quotationAssignRequest);
 
 		return SUCCESS;
 	}
-
-	// ==================== Getter & Setter ====================
 
 	public QuotationAssignRequestVO getQuotationAssignRequest() {
 		return quotationAssignRequest;
