@@ -303,11 +303,11 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		List<QuotationAssignUserRulePO> pageData = filtered.subList(fromIndex, toIndex);
 
 		// 5. 转换为 VO
+		// 注意：列表页不返回 items 明细（前端仅展示状态/任务数等汇总列），
+		// items 详情由"项目"按钮打开子页面单独查询，避免在分页循环内逐条查询造成 N+1
 		List<QuotationAssignUserRuleVO> ruleVOs = new ArrayList<QuotationAssignUserRuleVO>();
 		for (QuotationAssignUserRulePO po : pageData) {
-			QuotationAssignUserRuleVO vo = po.ptv(new QuotationAssignUserRuleVO(new UserBaseVO()));
-			vo.setItems(quotationAssignUserRuleItemService.queryItemsByRuleId(po.getQaurid()));
-			ruleVOs.add(vo);
+			ruleVOs.add(po.ptv(new QuotationAssignUserRuleVO(new UserBaseVO())));
 		}
 
 		paging.setData(ruleVOs);
@@ -321,12 +321,23 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		List<QuotationAssignUserRulePO> allRules = quotationAssignUserRuleDao.queryAllQuotationAssignUserRule();
 		int updateCount = 0;
 
+		// 一次性查出所有预算员的活跃任务数（按 uid 分组），避免循环内逐个 count 造成 N+1
+		java.util.Map<Integer, Integer> taskCountMap = new java.util.HashMap<Integer, Integer>();
+		List<Object[]> groupResult = quotationAssignRequestDao.countQuotationAssignRequestGroupByUid();
+		if (groupResult != null) {
+			for (Object[] row : groupResult) {
+				Integer uid = (Integer) row[0];
+				Integer cnt = ((Number) row[1]).intValue();
+				taskCountMap.put(uid, cnt);
+			}
+		}
+
 		for (QuotationAssignUserRulePO rule : allRules) {
 
 			if (rule.getUser() == null) continue;
 
-			// 从分配队列统计该预算员的活跃任务数（status < 3）
-			int actualTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(rule.getUser().getUid());
+			// 从预算结果 Map 取活跃任务数（status < 3），未命中视为 0
+			int actualTaskCount = taskCountMap.containsKey(rule.getUser().getUid()) ? taskCountMap.get(rule.getUser().getUid()) : 0;
 			int storedTaskCount = rule.getCurrentTaskCount();
 
 			boolean needUpdate = false;
