@@ -1,8 +1,4 @@
 $(function() {
-
-	    var QAR = constant.quotation().quotationAssignRequest;
-	    var QAUR = constant.quotation().quotationAssignUserRule;
-
 	    // ==================== 页面元素声明 ====================
     var config = {
         modals: {
@@ -75,7 +71,7 @@ $(function() {
         prop: function(v) {
 
             // 使用 constant 进行枚举转换
-            return QAUR.status.keys[v.status];
+            return constant.quotation().quotationAssignUserRule.status.keys[v.status];
         },
         clazz: "red" // 类型/状态使用 red
     }, {
@@ -83,7 +79,7 @@ $(function() {
         name: "当前任务",
         prop: function(v) {
 
-            return v.currentTaskCount || QAUR.TASK_COUNT_NONE_INT;
+            return v.currentTaskCount || constant.quotation().quotationAssignUserRule.TASK_COUNT_NONE_INT;
         },
         clazz: "blue" // 数值类型使用 blue
     }, {
@@ -126,7 +122,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != QAUR.STATUS_AVAILABLE_INT;
+            return v.status != constant.quotation().quotationAssignUserRule.STATUS_AVAILABLE_INT;
         }
     }, {
         // 禁用按钮：仅在状态为1（可用）时显示
@@ -139,7 +135,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == QAUR.STATUS_AVAILABLE_INT;
+            return v.status == constant.quotation().quotationAssignUserRule.STATUS_AVAILABLE_INT;
         }
     }, {
         // 项目按钮：打开规则明细子页面
@@ -177,7 +173,7 @@ $(function() {
     function initSelectOptions() {
 
         // 状态下拉框
-        config.items.status.bindData(QAUR.status.datas, "key", // value: 1, 2, 3
+        config.items.status.bindData(constant.quotation().quotationAssignUserRule.status.datas, "key", // value: 1, 2, 3
         "value" // text: 可用, 制作中, 停止
         );
     }
@@ -226,7 +222,7 @@ $(function() {
         com.cleanTypeahead(config.items.user);
         config.data.selectedUid = null;
         config.items.user.prop('disabled', false); // 启用预算员输入框（新增模式）
-        config.items.status.val(QAUR.STATUS_AVAILABLE_INT); // 默认可用
+        config.items.status.val(constant.quotation().quotationAssignUserRule.STATUS_AVAILABLE_INT); // 默认可用
         config.items.lastFinishTime.val(''); // 清空最后完成时间
     }
 
@@ -317,7 +313,7 @@ $(function() {
 
             com.post(api.quotation.updateQuotationAssignUserRuleForStatus, {
                 "quotationAssignUserRule.qaurid": row.qaurid,
-"quotationAssignUserRule.status": QAUR.STATUS_AVAILABLE_INT
+"quotationAssignUserRule.status": constant.quotation().quotationAssignUserRule.STATUS_AVAILABLE_INT
 	            // 可用
             }, function(res) {
 
@@ -334,7 +330,7 @@ $(function() {
 
             com.post(api.quotation.updateQuotationAssignUserRuleForStatus, {
                 "quotationAssignUserRule.qaurid": row.qaurid,
-"quotationAssignUserRule.status": QAUR.STATUS_STOPPED_INT
+"quotationAssignUserRule.status": constant.quotation().quotationAssignUserRule.STATUS_STOPPED_INT
 	            // 停止
             }, function(res) {
 
@@ -378,7 +374,7 @@ $(function() {
             "filters[0].data": uid,
             "filters[0].op": "eq",
             "filters[1].field": "status",
-            "filters[1].data": String(QAR.STATUS_COMPLETED_INT),
+            "filters[1].data": String(constant.quotation().quotationAssignRequest.STATUS_COMPLETED_INT),
             "filters[1].op": "ne"
         };
 
@@ -392,10 +388,10 @@ $(function() {
                 var $body = com.focusPage('#taskListBody');
                 $.each(rows, function(i, item) {
 
-	                    var statusText = QAR.status.keys[item.status] || "未知";
-	                    var priorityText = QAR.priority.keys[item.priority] || "普通";
+	                    var statusText = constant.quotation().quotationAssignRequest.status.keys[item.status] || "未知";
+	                    var priorityText = constant.quotation().quotationAssignRequest.priority.keys[item.priority] || "普通";
 	                    var companyName = item.company ? item.company.name : "-";
-	                    var decorationType = QAR.decorationType.keys[item.decorationType] || "-";
+	                    var decorationType = constant.quotation().quotationAssignRequest.decorationType.keys[item.decorationType] || "-";
                     var requestUserName = item.requestUser ? item.requestUser.currentName : "-";
 
                     var $tr = $('<tr></tr>');

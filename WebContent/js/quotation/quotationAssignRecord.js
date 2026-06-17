@@ -1,7 +1,4 @@
 $(function() {
-
-	    var QREC = constant.quotation().quotationAssignRecord;
-
 	    // ==================== 页面元素声明 ====================
     var config = {
         modals: {},
@@ -67,7 +64,7 @@ $(function() {
         name: "装修类型",
         prop: function(v) {
 
-	            return QREC.decorationType.keys[v.decorationType] || "未知";
+	            return constant.quotation().quotationAssignRecord.decorationType.keys[v.decorationType] || "未知";
         },
         clazz: "grey"
     }, {
@@ -83,11 +80,11 @@ $(function() {
         name: "分配方式",
         prop: function(v) {
 
-	            return QREC.assignType.keys[v.assignType] || "未知";
+	            return constant.quotation().quotationAssignRecord.assignType.keys[v.assignType] || "未知";
         },
         clazz: function(v) {
 
-            return v.assignType == QREC.ASSIGN_TYPE_FORWARD_AUTO_INT || v.assignType == QREC.ASSIGN_TYPE_REVERSE_AUTO_INT ? "green" : "blue";
+            return v.assignType == constant.quotation().quotationAssignRecord.ASSIGN_TYPE_FORWARD_AUTO_INT || v.assignType == constant.quotation().quotationAssignRecord.ASSIGN_TYPE_REVERSE_AUTO_INT ? "green" : "blue";
         }
     }, {
         field: "assignTime",
@@ -106,10 +103,10 @@ $(function() {
 	        field: "assignResult",
 	        name: "状态",
 	        prop: function(v) {
-	            return QREC.assignResult.keys[v.assignResult] || "未知";
+	            return constant.quotation().quotationAssignRecord.assignResult.keys[v.assignResult] || "未知";
 	        },
 	        clazz: function(v) {
-	            return v.assignResult == QREC.ASSIGN_RESULT_SUCCESS_INT ? "green" : "grey";
+	            return v.assignResult == constant.quotation().quotationAssignRecord.ASSIGN_RESULT_SUCCESS_INT ? "green" : "grey";
 	        }
 	    }, {
         field: "createTime",
@@ -156,13 +153,13 @@ $(function() {
                 html += '<tr><th style="width: 150px;">装修单号</th><td>' + (record.orderId || '-') + '</td></tr>';
                 html += '<tr><th>公司</th><td>' + (record.company ? record.company.name : '-') + '</td></tr>';
                 html += '<tr><th>部门</th><td>' + (record.department ? record.department.name : '所有部门') + '</td></tr>';
-html += '<tr><th>装修类型</th><td>' + (QREC.decorationType.keys[record.decorationType] || '未知') + '</td></tr>';
+html += '<tr><th>装修类型</th><td>' + (constant.quotation().quotationAssignRecord.decorationType.keys[record.decorationType] || '未知') + '</td></tr>';
 	                html += '<tr><th>预算员</th><td>' + (record.budgetUser ? record.budgetUser.currentName : '-') + '</td></tr>';
-	                html += '<tr><th>分配方式</th><td>' + (QREC.assignType.keys[record.assignType] || '未知') + '</td></tr>';
+	                html += '<tr><th>分配方式</th><td>' + (constant.quotation().quotationAssignRecord.assignType.keys[record.assignType] || '未知') + '</td></tr>';
                 html += '<tr><th>分配时间</th><td>' + (record.assignTime || '-') + '</td></tr>';
                 html += '<tr><th>完成时间</th><td>' + (record.finishTime || '-') + '</td></tr>';
 
-	                html += '<tr><th>状态</th><td>' + (QREC.assignResult.keys[record.assignResult] || '未知') + '</td></tr>';
+	                html += '<tr><th>状态</th><td>' + (constant.quotation().quotationAssignRecord.assignResult.keys[record.assignResult] || '未知') + '</td></tr>';
 
                 html += '<tr><th>备注</th><td>' + (record.remark || '-') + '</td></tr>';
                 html += '<tr><th>创建时间</th><td>' + (record.createTime || '-') + '</td></tr>';

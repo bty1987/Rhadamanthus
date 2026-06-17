@@ -1,7 +1,4 @@
 $(function() {
-
-	    var QAR = constant.quotation().quotationAssignRequest;
-
 	    // ==================== 模式检测 ====================
     // 通过框架 params.urlLoadParams 判断模式
     var urlParams = params["urlLoadParams"] || {};
@@ -121,21 +118,21 @@ $(function() {
         field: "decorationType",
         name: "装修类型",
 	        prop: function(v) {
-	            return QAR.decorationType.keys[v.decorationType] || "未知";
+	            return constant.quotation().quotationAssignRequest.decorationType.keys[v.decorationType] || "未知";
 	        },
         clazz: "red"
     }, {
         field: "priority",
         name: "优先级",
 	        prop: function(v) {
-	            return QAR.priority.keys[v.priority] || "未知";
+	            return constant.quotation().quotationAssignRequest.priority.keys[v.priority] || "未知";
 	        },
         clazz: "red"
     }, {
         field: "status",
         name: "状态",
 	        prop: function(v) {
-	            return QAR.status.keys[v.status] || "未知";
+	            return constant.quotation().quotationAssignRequest.status.keys[v.status] || "未知";
 	        },
         clazz: "red"
     }, {
@@ -179,7 +176,7 @@ $(function() {
             return false;
         },
         show: function(v) {
-            return v.status == QAR.STATUS_PENDING_INT;
+            return v.status == constant.quotation().quotationAssignRequest.STATUS_PENDING_INT;
         }
     }, {
         name: "手动分配",
@@ -189,7 +186,7 @@ $(function() {
             return false;
         },
         show: function(v) {
-            return v.status == QAR.STATUS_PENDING_INT;
+            return v.status == constant.quotation().quotationAssignRequest.STATUS_PENDING_INT;
         }
     }, {
         name: "编辑",
@@ -213,7 +210,7 @@ $(function() {
             return false;
         },
         show: function(v) {
-            return v.status == QAR.STATUS_PENDING_INT;
+            return v.status == constant.quotation().quotationAssignRequest.STATUS_PENDING_INT;
         }
     }, {
         name: "替换",
@@ -223,7 +220,7 @@ $(function() {
             return false;
         },
         show: function(v) {
-            return v.status == QAR.STATUS_ASSIGNED_INT;
+            return v.status == constant.quotation().quotationAssignRequest.STATUS_ASSIGNED_INT;
         }
     }, {
         name: "交付",
@@ -233,7 +230,7 @@ $(function() {
             return false;
         },
         show: function(v) {
-            return v.status == QAR.STATUS_ASSIGNED_INT;
+            return v.status == constant.quotation().quotationAssignRequest.STATUS_ASSIGNED_INT;
         }
     }, {
         name: "沟通",
@@ -283,7 +280,7 @@ $(function() {
     // 初始化Select数据
     config.items.decorationType.bindData(constant.quotation().quotationAssignRequest.decorationType.datas, "key", "value");
 
-	    config.items.priority.bindData(QAR.priority.datas, "key", "value");
+	    config.items.priority.bindData(constant.quotation().quotationAssignRequest.priority.datas, "key", "value");
 
     // 初始化公司下拉框
     com.post(api.system.queryCompany, {}, function(res) {
@@ -416,8 +413,8 @@ $(function() {
         config.items.orderId.val('');
         config.items.company.val('');
         config.items.department.empty().append('<option value="">所有部门</option>');
-	    config.items.decorationType.val(QAR.DECORATION_TYPE_HALF_INT);
-	    config.items.priority.val(QAR.PRIORITY_NORMAL_INT);
+	    config.items.decorationType.val(constant.quotation().quotationAssignRequest.DECORATION_TYPE_HALF_INT);
+	    config.items.priority.val(constant.quotation().quotationAssignRequest.PRIORITY_NORMAL_INT);
         com.cleanTypeahead(config.items.requestUser);
         config.data.selectedRequestUid = null;
         config.items.remark.val('');
@@ -538,7 +535,7 @@ $(function() {
         var companyName = row.company && row.company.name ? row.company.name : '未知';
         com.focusPage('#manualAssignCompanyDisplay').text(companyName);
 
-	        var decorationTypeText = QAR.decorationType.keys[row.decorationType] || '未知';
+	        var decorationTypeText = constant.quotation().quotationAssignRequest.decorationType.keys[row.decorationType] || '未知';
 	        com.focusPage('#manualAssignDecorationTypeDisplay').text(decorationTypeText);
 
         com.cleanTypeahead(config.items.manualAssignBudgeter);
@@ -587,7 +584,7 @@ $(function() {
         var companyName = row.company && row.company.name ? row.company.name : '未知';
         com.focusPage('#replaceCompanyDisplay').text(companyName);
 
-	        var decorationTypeText = QAR.decorationType.keys[row.decorationType] || '未知';
+	        var decorationTypeText = constant.quotation().quotationAssignRequest.decorationType.keys[row.decorationType] || '未知';
 	        com.focusPage('#replaceDecorationTypeDisplay').text(decorationTypeText);
 
         // 显示当前预算员
