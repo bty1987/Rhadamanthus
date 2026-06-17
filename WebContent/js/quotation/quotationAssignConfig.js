@@ -1,6 +1,8 @@
 $(function() {
 
-    // ==================== 页面元素声明 ====================
+	    var QAC = constant.quotation().quotationAssignConfig;
+
+	    // ==================== 页面元素声明 ====================
     var config = {
         modals: {
             configModal: com.focusPage('#configModal')
@@ -35,7 +37,7 @@ $(function() {
     );
 
     // 查询条件
-    searcher.condition(["quotation-assign-config-company", "quotation-assign-config-enabled"]);
+    searcher.condition(["assign-config-company", "assign-config-enabled"]);
 
     // 顶部按钮
     searcher.button(function() {
@@ -76,7 +78,7 @@ $(function() {
         prop: function(v) {
 
             // 使用 constant 进行枚举转换
-            return constant.quotation().quotationAssignConfig.enabled.keys[v.enabled];
+            return QAC.enabled.keys[v.enabled];
         },
         clazz: "red"  // 类型/状态使用 red
     }, {
@@ -85,7 +87,7 @@ $(function() {
         prop: function(v) {
 
             // 使用 constant 进行枚举转换
-            return constant.quotation().quotationAssignConfig.autoAssign.keys[v.autoAssign];
+            return QAC.autoAssign.keys[v.autoAssign];
         },
         clazz: "red"  // 类型/状态使用 red
     }, {
@@ -119,7 +121,7 @@ $(function() {
             return false;
         },
         show: function(v){
-            return v.enabled == 0;
+            return v.enabled == QAC.ENABLED_DISABLED_INT;
         }
     }, {
         // 禁用按钮：仅在状态为1（启用）时显示
@@ -131,18 +133,18 @@ $(function() {
             return false;
         },
         show: function(v){
-            return v.enabled == 1;
+            return v.enabled == QAC.ENABLED_ENABLED_INT;
         }
     }, {
         name: function(v) {
 
             // 动态显示按钮文本
-            return v.autoAssign == 1 ? "切手动" : "切自动";
+            return v.autoAssign == QAC.AUTO_ASSIGN_AUTO_INT ? "切手动" : "切自动";
         },
         clazz: function(v) {
 
             // 动态显示按钮样式
-            return v.autoAssign == 1 ? "btn-grey" : "btn-info";
+            return v.autoAssign == QAC.AUTO_ASSIGN_AUTO_INT ? "btn-grey" : "btn-info";
         },
         handle: function(v) {
 
@@ -157,10 +159,10 @@ $(function() {
     // ==================== 初始化Select数据 ====================
 
     // 初始化状态下拉框（使用constant）
-    config.items.enabled.bindData(constant.quotation().quotationAssignConfig.enabled.datas, "key", "value");
+    config.items.enabled.bindData(QAC.enabled.datas, "key", "value");
 
     // 初始化分配方式下拉框（使用constant）
-    config.items.autoAssign.bindData(constant.quotation().quotationAssignConfig.autoAssign.datas, "key", "value");
+    config.items.autoAssign.bindData(QAC.autoAssign.datas, "key", "value");
 
     // 初始化公司下拉框（从API加载）
     com.post(api.system.queryCompany, {}, function(res) {
@@ -220,8 +222,8 @@ $(function() {
         // 重置表单
         config.items.company.val('');
         config.items.department.empty().append('<option value="">所有部门</option>');
-        config.items.enabled.val('1');
-        config.items.autoAssign.val('1');
+config.items.enabled.val(QAC.ENABLED_ENABLED_INT);
+	        config.items.autoAssign.val(QAC.AUTO_ASSIGN_AUTO_INT);
 
         config.modals.configModal.modal('show');
     }
@@ -267,8 +269,8 @@ $(function() {
     // 快捷切换状态（启用/禁用）
     function toggleStatus(row) {
 
-        var newStatus = row.enabled == 1 ? 0 : 1;
-        var statusText = newStatus == 1 ? "启用" : "禁用";
+var newStatus = row.enabled == QAC.ENABLED_ENABLED_INT ? QAC.ENABLED_DISABLED_INT : QAC.ENABLED_ENABLED_INT;
+	        var statusText = newStatus == QAC.ENABLED_ENABLED_INT ? "启用" : "禁用";
 
         com.showConfirm('确认要将该配置' + statusText + '吗？', function() {
 
@@ -286,8 +288,8 @@ $(function() {
     // 快捷切换分配方式（手动/自动）
     function toggleAssign(row) {
 
-        var newAssign = row.autoAssign == 1 ? 0 : 1;
-        var assignText = newAssign == 1 ? "自动分配" : "手动分配";
+var newAssign = row.autoAssign == QAC.AUTO_ASSIGN_AUTO_INT ? QAC.AUTO_ASSIGN_MANUAL_INT : QAC.AUTO_ASSIGN_AUTO_INT;
+	        var assignText = newAssign == QAC.AUTO_ASSIGN_AUTO_INT ? "自动分配" : "手动分配";
 
         com.showConfirm('确认要将该配置切换为' + assignText + '吗？', function() {
 

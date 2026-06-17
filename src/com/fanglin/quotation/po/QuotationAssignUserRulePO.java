@@ -25,6 +25,7 @@ import javax.persistence.Table;
 import org.springframework.beans.BeanUtils;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
 
@@ -46,7 +47,10 @@ public class QuotationAssignUserRulePO implements Serializable {
 
 	// ==================== 常量定义 ====================
 
-	/** 状态：待分配（可接收新任务） */
+	/** 状态：未设置 */
+	public static final short STATUS_UNSET_INT = 0;
+
+	/** 状态：可用（可接收新任务） */
 	public static final short STATUS_AVAILABLE_INT = 1;
 
 	/** 状态：制作中（正在处理任务） */
@@ -55,14 +59,20 @@ public class QuotationAssignUserRulePO implements Serializable {
 	/** 状态：停止（不再接收任务） */
 	public static final short STATUS_STOPPED_INT = 3;
 
+	/** 任务数量：无任务 */
+	public static final int TASK_COUNT_NONE_INT = 0;
+
 	/** 支持类型：通用（支持所有装修类型） */
 	public static final int SUPPORTED_TYPE_ALL_INT = -1;
 
 	/** 支持类型：半包 */
-	public static final int SUPPORTED_TYPE_HALF_INT = 0;
+	public static final int SUPPORTED_TYPE_HALF_INT = DecorationPO.TYPE_MIDPACK_INT;
 
 	/** 支持类型：整装 */
-	public static final int SUPPORTED_TYPE_FULL_INT = 1;
+	public static final int SUPPORTED_TYPE_FULL_INT = DecorationPO.TYPE_INCLUSIVE_INT;
+
+	/** 支持类型：全包 */
+	public static final int SUPPORTED_TYPE_HOLONOMY_INT = DecorationPO.TYPE_HOLONOMY_INT;
 
 	// ==================== 字段定义 ====================
 
@@ -72,7 +82,7 @@ public class QuotationAssignUserRulePO implements Serializable {
 	/** 预算员用户对象 */
 	private UserPO user;
 
-	/** 状态: 1-待分配，2-制作中，3-停止 */
+	/** 状态: 1-可用，2-制作中，3-停止 */
 	private short status;
 
 	/** 最后完成时间（用于自动分配排序） */

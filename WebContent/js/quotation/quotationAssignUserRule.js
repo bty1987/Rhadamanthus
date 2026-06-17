@@ -1,6 +1,9 @@
 $(function() {
 
-    // ==================== 页面元素声明 ====================
+	    var QAR = constant.quotation().quotationAssignRequest;
+	    var QAUR = constant.quotation().quotationAssignUserRule;
+
+	    // ==================== 页面元素声明 ====================
     var config = {
         modals: {
             userRuleModal: com.focusPage('#userRuleModal')
@@ -40,7 +43,7 @@ $(function() {
     );
 
     // 查询条件
-    searcher.condition(["quotation-assign-user-rule-status", "quotation-assign-user-rule-userName"]);
+    searcher.condition(["assign-user-rule-status", "assign-user-rule-userName"]);
 
     // 顶部按钮
     searcher.button(function() {
@@ -72,7 +75,7 @@ $(function() {
         prop: function(v) {
 
             // 使用 constant 进行枚举转换
-            return constant.quotation().quotationAssignUserRule.status.keys[v.status];
+            return QAUR.status.keys[v.status];
         },
         clazz: "red" // 类型/状态使用 red
     }, {
@@ -80,7 +83,7 @@ $(function() {
         name: "当前任务",
         prop: function(v) {
 
-            return v.currentTaskCount || 0;
+            return v.currentTaskCount || QAUR.TASK_COUNT_NONE_INT;
         },
         clazz: "blue" // 数值类型使用 blue
     }, {
@@ -123,7 +126,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != 1;
+            return v.status != QAUR.STATUS_AVAILABLE_INT;
         }
     }, {
         // 禁用按钮：仅在状态为1（可用）时显示
@@ -136,7 +139,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == 1;
+            return v.status == QAUR.STATUS_AVAILABLE_INT;
         }
     }, {
         // 项目按钮：打开规则明细子页面
@@ -174,7 +177,7 @@ $(function() {
     function initSelectOptions() {
 
         // 状态下拉框
-        config.items.status.bindData(constant.quotation().quotationAssignUserRule.status.datas, "key", // value: 1, 2, 3
+        config.items.status.bindData(QAUR.status.datas, "key", // value: 1, 2, 3
         "value" // text: 可用, 制作中, 停止
         );
     }
@@ -223,7 +226,7 @@ $(function() {
         com.cleanTypeahead(config.items.user);
         config.data.selectedUid = null;
         config.items.user.prop('disabled', false); // 启用预算员输入框（新增模式）
-        config.items.status.val('1'); // 默认可用
+        config.items.status.val(QAUR.STATUS_AVAILABLE_INT); // 默认可用
         config.items.lastFinishTime.val(''); // 清空最后完成时间
     }
 
@@ -314,8 +317,8 @@ $(function() {
 
             com.post(api.quotation.updateQuotationAssignUserRuleForStatus, {
                 "quotationAssignUserRule.qaurid": row.qaurid,
-                "quotationAssignUserRule.status": 1
-            // 1-可用
+"quotationAssignUserRule.status": QAUR.STATUS_AVAILABLE_INT
+	            // 可用
             }, function(res) {
 
                 com.showAlert(com.info, '启用成功');
@@ -331,8 +334,8 @@ $(function() {
 
             com.post(api.quotation.updateQuotationAssignUserRuleForStatus, {
                 "quotationAssignUserRule.qaurid": row.qaurid,
-                "quotationAssignUserRule.status": 3
-            // 3-停止
+"quotationAssignUserRule.status": QAUR.STATUS_STOPPED_INT
+	            // 停止
             }, function(res) {
 
                 com.showAlert(com.info, '禁用成功');
@@ -346,10 +349,7 @@ $(function() {
 
     // ==================== 查看任务功能 ====================
 
-    // 状态映射
-    var statusMap = { 1: "待分配", 2: "已分配", 3: "已完成" };
-
-    // 查看预算员当前负责的所有任务
+	    // 查看预算员当前负责的所有任务
     function viewUserTasks(row) {
 
         var userName = row.user ? row.user.currentName : "未知";
@@ -378,7 +378,7 @@ $(function() {
             "filters[0].data": uid,
             "filters[0].op": "eq",
             "filters[1].field": "status",
-            "filters[1].data": "3",
+            "filters[1].data": String(QAR.STATUS_COMPLETED_INT),
             "filters[1].op": "ne"
         };
 
@@ -392,10 +392,10 @@ $(function() {
                 var $body = com.focusPage('#taskListBody');
                 $.each(rows, function(i, item) {
 
-                    var statusText = statusMap[item.status] || "未知";
-                    var priorityText = { 1: "最高", 3: "高", 5: "普通", 7: "低", 9: "最低" }[item.priority] || "普通";
-                    var companyName = item.company ? item.company.name : "-";
-                    var decorationType = item.decorationType == 1 ? "半包" : (item.decorationType == 2 ? "整装" : "-");
+	                    var statusText = QAR.status.keys[item.status] || "未知";
+	                    var priorityText = QAR.priority.keys[item.priority] || "普通";
+	                    var companyName = item.company ? item.company.name : "-";
+	                    var decorationType = QAR.decorationType.keys[item.decorationType] || "-";
                     var requestUserName = item.requestUser ? item.requestUser.currentName : "-";
 
                     var $tr = $('<tr></tr>');

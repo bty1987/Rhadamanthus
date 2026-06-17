@@ -25,6 +25,7 @@ import javax.persistence.Table;
 import org.springframework.beans.BeanUtils;
 
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.vo.QuotationAssignRequestVO;
 import com.fanglin.system.po.CompanyPO;
@@ -44,9 +45,9 @@ import com.fanglin.system.po.CompanyPO;
  * <li>orderId: 装修单号（关联 decoration.orderId）</li>
  * <li>company: 公司ID</li>
  * <li>department: 部门ID（NULL表示该公司所有部门）</li>
- * <li>decorationType: 装修类型（0-半包，1-整装，2-全包，与DecorationPO.type一致）</li>
- * <li>priority: 优先级（1-最高，5-普通，9-最低）</li>
- * <li>status: 状态（1-待分配，2-已分配）</li>
+		 * <li>decorationType: 装修类型（0-半包，1-整装，2-全包，与DecorationPO.type一致）</li>
+		 * <li>priority: 优先级（1-最高，5-普通，9-最低）</li>
+		 * <li>status: 状态（1-待分配，2-已分配，3-已完成）</li>
  * <li>requestTime: 请求加入队列的时间</li>
  * <li>assignTime: 分配时间</li>
  * </ul>
@@ -63,6 +64,11 @@ public class QuotationAssignRequestPO implements Serializable {
 	// ==================== 常量定义 ====================
 
 	/**
+	 * 状态：未设置
+	 */
+	public static final Short STATUS_UNSET_INT = 0;
+
+	/**
 	 * 状态：待分配（在队列中等待）
 	 */
 	public static final Short STATUS_PENDING_INT = 1;
@@ -76,6 +82,11 @@ public class QuotationAssignRequestPO implements Serializable {
 	 * 状态：已完成（报价已交付）
 	 */
 	public static final Short STATUS_COMPLETED_INT = 3;
+
+	/**
+	 * 优先级：未设置
+	 */
+	public static final Short PRIORITY_UNSET_INT = 0;
 
 	/**
 	 * 优先级：最高
@@ -101,6 +112,21 @@ public class QuotationAssignRequestPO implements Serializable {
 	 * 优先级：最低
 	 */
 	public static final Short PRIORITY_LOWEST_INT = 9;
+
+	/**
+	 * 装修类型：半包
+	 */
+	public static final Short DECORATION_TYPE_HALF_INT = DecorationPO.TYPE_MIDPACK_INT;
+
+	/**
+	 * 装修类型：整装
+	 */
+	public static final Short DECORATION_TYPE_FULL_INT = DecorationPO.TYPE_INCLUSIVE_INT;
+
+	/**
+	 * 装修类型：全包
+	 */
+	public static final Short DECORATION_TYPE_HOLONOMY_INT = DecorationPO.TYPE_HOLONOMY_INT;
 
 	// ==================== 字段定义 ====================
 

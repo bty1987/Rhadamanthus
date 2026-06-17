@@ -58,6 +58,11 @@ public class QuotationAssignTalkPO implements Serializable {
 	// ==================== 常量定义 ====================
 
 	/**
+	 * 消息类型：未知
+	 */
+	public static final Short TYPE_UNKNOWN_INT = 0;
+
+	/**
 	 * 消息类型：设计师发给预算员
 	 */
 	public static final Short TYPE_DESIGNER_TO_BUDGETER_INT = 1;

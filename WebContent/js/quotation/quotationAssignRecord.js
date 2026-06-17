@@ -1,6 +1,8 @@
 $(function() {
 
-    // ==================== 页面元素声明 ====================
+	    var QREC = constant.quotation().quotationAssignRecord;
+
+	    // ==================== 页面元素声明 ====================
     var config = {
         modals: {},
         items: {},
@@ -24,7 +26,7 @@ $(function() {
     );
 
     // 查询条件
-    searcher.condition(["quotation-assign-record-company", "quotation-assign-record-user", "quotation-assign-record-orderId"]);
+    searcher.condition(["assign-record-company", "assign-record-user", "assign-record-orderId"]);
 
     // 顶部按钮（无操作按钮）
     searcher.button(function() {
@@ -65,8 +67,7 @@ $(function() {
         name: "装修类型",
         prop: function(v) {
 
-            // 1-半包，2-整装
-            return v.decorationType == 1 ? "半包" : "整装";
+	            return QREC.decorationType.keys[v.decorationType] || "未知";
         },
         clazz: "grey"
     }, {
@@ -82,12 +83,11 @@ $(function() {
         name: "分配方式",
         prop: function(v) {
 
-            // 1-自动分配，2-手动分配
-            return v.assignType == 1 ? "自动分配" : "手动分配";
+	            return QREC.assignType.keys[v.assignType] || "未知";
         },
         clazz: function(v) {
 
-            return v.assignType == 1 ? "green" : "blue";
+            return v.assignType == QREC.ASSIGN_TYPE_FORWARD_AUTO_INT || v.assignType == QREC.ASSIGN_TYPE_REVERSE_AUTO_INT ? "green" : "blue";
         }
     }, {
         field: "assignTime",
@@ -102,26 +102,16 @@ $(function() {
             return v.finishTime || "-";
         },
         clazz: "grey"
-    }, {
-        field: "assignStatus",
-        name: "状态",
-        prop: function(v) {
-
-            // 1-进行中，2-已完成，3-已取消
-            var statusMap = {
-                1: "进行中",
-                2: "已完成",
-                3: "已取消"
-            };
-            return statusMap[v.assignStatus] || "未知";
-        },
-        clazz: function(v) {
-
-            if (v.assignStatus == 1) return "orange"; // 进行中
-            if (v.assignStatus == 2) return "green"; // 已完成
-            return "grey"; // 已取消
-        }
-    }, {
+	    }, {
+	        field: "assignResult",
+	        name: "状态",
+	        prop: function(v) {
+	            return QREC.assignResult.keys[v.assignResult] || "未知";
+	        },
+	        clazz: function(v) {
+	            return v.assignResult == QREC.ASSIGN_RESULT_SUCCESS_INT ? "green" : "grey";
+	        }
+	    }, {
         field: "createTime",
         name: "创建时间",
         prop: "createTime",
@@ -166,14 +156,13 @@ $(function() {
                 html += '<tr><th style="width: 150px;">装修单号</th><td>' + (record.orderId || '-') + '</td></tr>';
                 html += '<tr><th>公司</th><td>' + (record.company ? record.company.name : '-') + '</td></tr>';
                 html += '<tr><th>部门</th><td>' + (record.department ? record.department.name : '所有部门') + '</td></tr>';
-                html += '<tr><th>装修类型</th><td>' + (record.decorationType == 1 ? '半包' : '整装') + '</td></tr>';
-                html += '<tr><th>预算员</th><td>' + (record.budgetUser ? record.budgetUser.currentName : '-') + '</td></tr>';
-                html += '<tr><th>分配方式</th><td>' + (record.assignType == 1 ? '自动分配' : '手动分配') + '</td></tr>';
+html += '<tr><th>装修类型</th><td>' + (QREC.decorationType.keys[record.decorationType] || '未知') + '</td></tr>';
+	                html += '<tr><th>预算员</th><td>' + (record.budgetUser ? record.budgetUser.currentName : '-') + '</td></tr>';
+	                html += '<tr><th>分配方式</th><td>' + (QREC.assignType.keys[record.assignType] || '未知') + '</td></tr>';
                 html += '<tr><th>分配时间</th><td>' + (record.assignTime || '-') + '</td></tr>';
                 html += '<tr><th>完成时间</th><td>' + (record.finishTime || '-') + '</td></tr>';
 
-                var statusMap = { 1: '进行中', 2: '已完成', 3: '已取消' };
-                html += '<tr><th>状态</th><td>' + (statusMap[record.assignStatus] || '未知') + '</td></tr>';
+	                html += '<tr><th>状态</th><td>' + (QREC.assignResult.keys[record.assignResult] || '未知') + '</td></tr>';
 
                 html += '<tr><th>备注</th><td>' + (record.remark || '-') + '</td></tr>';
                 html += '<tr><th>创建时间</th><td>' + (record.createTime || '-') + '</td></tr>';
