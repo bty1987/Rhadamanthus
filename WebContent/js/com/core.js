@@ -1792,11 +1792,134 @@
         // 3. 判断上传模式并执行
         if (config.isAliOss) {
             // ==================== OSS 上传模式 ====================
-            com._uploadifyOss(container, commonConfig, args, success, fail, complete);
+            if (config.uploadMode === 'sts') {
+                // STS 临时凭证直传（推荐，凭证隔离、安全）
+                com._uploadifySts(container, commonConfig, args, success, fail, complete);
+            } else {
+                // 旧 Policy 签名直传（并行灰度兼容）
+                com._uploadifyOss(container, commonConfig, args, success, fail, complete);
+            }
         } else {
             // ==================== 本地上传模式 ====================
             com._uploadifyLocal(container, commonConfig, uapi, exts, args, success, fail, complete);
         }
+    },
+
+    /**
+     * OSS STS 上传实现（私有方法，推荐）
+     *
+     * 流程：申请 STS 临时凭证 → 用 ali-oss SDK 浏览器直传（分片+断点续传）。
+     * 凭证默认 15 分钟有效，按用户目录隔离（dir 由后端按 userId 生成）。
+     *
+     * 依赖：assets/js/aliyun-oss-sdk.min.js（提供全局 OSS 对象）
+     * 降级：若未引入 ali-oss SDK，自动回退到后端 uploadFile.do 代理上传。
+     *
+     * @param {Object} container - 上传容器
+     * @param {Object} commonConfig - 公共配置
+     * @param {Object} ossArgs - 业务级 OSS 参数（可选 dir 覆盖等）
+     * @param {Function} success - 成功回调
+     * @param {Function} fail - 失败回调
+     * @param {Function} complete - 完成回调
+     */
+    _uploadifySts: function(container, commonConfig, ossArgs, success, fail, complete) {
+
+        // ali-oss SDK 未加载则降级到后端代理上传
+        if (typeof OSS === 'undefined') {
+            com._uploadifyLocal(container, commonConfig, api.common.uploadOther, commonConfig.fileTypeExts, ossArgs, success, fail, complete);
+            return;
+        }
+
+        container.html("").Huploadify({
+            'auto': true,
+            'fileTypeDesc': commonConfig.fileTypeDesc,
+            'fileTypeExts': commonConfig.fileTypeExts,
+            'fileSizeLimit': commonConfig.fileSizeLimit,
+            'height': commonConfig.height,
+            'buttonClass': commonConfig.buttonClass,
+            'buttonText': commonConfig.buttonText,
+
+            // 上传开始：先申请 STS 凭证再直传
+            'onUploadStart': function(file) {
+
+                com.post(api.upgrade.getOssStsToken, {}, function(data) {
+
+                    var sts = data.stsToken;
+
+                    // 用 STS 三元组构建 OSS 客户端
+                    var client = new OSS.Wrapper({
+                        region: sts.region,
+                        accessKeyId: sts.accessKeyId,
+                        accessKeySecret: sts.accessKeySecret,
+                        stsToken: sts.securityToken,
+                        bucket: sts.bucket
+                    });
+
+                    // 对象名：会话目录/日期/uuid.后缀，防冲突
+                    var suffix = file.name.substring(file.name.lastIndexOf('.') + 1);
+                    var dateStr = new Date().toISOString().slice(0, 10);
+                    var uuidStr = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        var r = Math.random() * 16 | 0;
+                        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                    });
+                    var objectKey = sts.dir + dateStr + '/' + uuidStr + '.' + suffix;
+
+                    // 分片上传（自动支持大文件与断点续传，单片 5MB）
+                    client.multipartUpload(objectKey, file, {
+                        partSize: 5 * 1024 * 1024,
+                        progress: function(p) {
+                            // p 为 0~1 进度，可在此更新进度条
+                        }
+                    }).then(function(result) {
+
+                        // 统一成功响应格式
+                        var result2 = {
+                            errorCode: 0,
+                            errorMsg: '上传成功',
+                            uploadPath: sts.host + '/' + objectKey,
+                            fileName: file.name,
+                            fileSize: file.size,
+                            fileType: file.type
+                        };
+
+                        if (typeof success === 'function')
+                            success(result2, file);
+
+                    }).catch(function(err) {
+
+                        com.showAlert(com.error, 'OSS上传失败: ' + (err.message || err.name));
+
+                        if (typeof fail === 'function')
+                            fail({
+                                errorCode: -1,
+                                errorMsg: err.message || err.name || 'OSS上传失败'
+                            });
+                    });
+
+                }, function(res) {
+
+                    com.showAlert(com.error, '获取STS凭证失败: ' + res.errorMsg);
+
+                    if (typeof fail === 'function')
+                        fail(res);
+                });
+            },
+
+            // 文件选择/校验错误
+            'onUploadError': function(file, errorCode) {
+
+                com.showAlert(com.error, '文件选择或验证失败');
+
+                if (typeof fail === 'function')
+                    fail({
+                        errorCode: errorCode,
+                        errorMsg: '文件选择或验证失败',
+                        file: file
+                    });
+
+                if (typeof complete === 'function')
+                    complete();
+            }
+        });
     },
 
     /**
