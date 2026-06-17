@@ -69,7 +69,6 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 				query.alias("user", "user");
 				query.add(query.getCriterion("user.currentName", data, op));
 			}
-			// company 过滤已移除，公司维度查询通过 UserRuleItem DAO 实现
 		}
 	}
 }
