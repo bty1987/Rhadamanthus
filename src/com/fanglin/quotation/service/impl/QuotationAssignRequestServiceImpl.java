@@ -202,10 +202,10 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		}
 
 		// 设置默认值
-		if (quotationAssignRequestPO.getPriority() == 0) {
+		if (quotationAssignRequestPO.getPriority() == QuotationAssignRequestPO.PRIORITY_UNSET_INT) {
 			quotationAssignRequestPO.setPriority(QuotationAssignRequestPO.PRIORITY_NORMAL_INT);
 		}
-		if (quotationAssignRequestPO.getStatus() == 0) {
+		if (quotationAssignRequestPO.getStatus() == QuotationAssignRequestPO.STATUS_UNSET_INT) {
 			quotationAssignRequestPO.setStatus(QuotationAssignRequestPO.STATUS_PENDING_INT);
 		}
 

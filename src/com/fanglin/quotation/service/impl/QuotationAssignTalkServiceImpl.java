@@ -66,16 +66,18 @@ public class QuotationAssignTalkServiceImpl implements QuotationAssignTalkServic
 	/**
 	 * 高级权限角色级别阈值：level <= 此值视为高级权限，可查看所有消息
 	 */
-	private static final short ADVANCED_ROLE_LEVEL = 1;
+	private static final short ADVANCED_ROLE_LEVEL_INT = 1;
+
+	private static final String DING_MESSAGE_TEMPLATE_STR = "【报价分配沟通】%s 发来消息：\n装修单号：%s\n内容：%s";
 
 	@Override
 	public List<QuotationAssignTalkVO> queryQuotationAssignTalkByOrderId(String orderId, String userId, Integer roleId) throws FLException {
 
-		// 判断是否高级权限（level <= ADVANCED_ROLE_LEVEL 或角色编号为 root）
+		// 判断是否高级权限（level <= ADVANCED_ROLE_LEVEL_INT 或角色编号为 root）
 		boolean isAdvanced = false;
 		if (roleId != null && roleId > 0) {
 			RolePO rolePO = roleDao.get(roleId);
-			if (rolePO != null && (rolePO.getLevel() <= ADVANCED_ROLE_LEVEL || RolePO.SUPER_NO_STR.equals(rolePO.getNo()))) {
+			if (rolePO != null && (rolePO.getLevel() <= ADVANCED_ROLE_LEVEL_INT || RolePO.SUPER_NO_STR.equals(rolePO.getNo()))) {
 				isAdvanced = true;
 			}
 		}
@@ -132,7 +134,7 @@ public class QuotationAssignTalkServiceImpl implements QuotationAssignTalkServic
 		QuotationAssignRequestPO requestPO = quotationAssignRequestDao.queryActiveByOrderId(quotationAssignTalkVO.getOrderId());
 
 		// 确定消息类型和接收人
-		short type = 0;
+			short type = QuotationAssignTalkPO.TYPE_UNKNOWN_INT;
 		UserPO receiver = null;
 		int company = senderPO.getCompany();
 
@@ -175,7 +177,7 @@ public class QuotationAssignTalkServiceImpl implements QuotationAssignTalkServic
 		// 发送钉钉消息通知接收人
 		if (receiver != null && receiver.getUserId() != null) {
 			try {
-				String dingMessage = String.format("【报价分配沟通】%s 发来消息：\n装修单号：%s\n内容：%s", senderPO.getCurrentName(), quotationAssignTalkVO.getOrderId(), quotationAssignTalkVO.getContent());
+					String dingMessage = String.format(DING_MESSAGE_TEMPLATE_STR, senderPO.getCurrentName(), quotationAssignTalkVO.getOrderId(), quotationAssignTalkVO.getContent());
 				dingTalkMessageService.sendDing(receiver.getUserId(), dingMessage, company);
 			} catch (Exception e) {
 				// 钉钉消息发送失败不影响主流程

@@ -135,7 +135,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 		rulePO.setUser(userPO);
 
 		// 设置默认值
-		if (rulePO.getStatus() == 0) {
+		if (rulePO.getStatus() == QuotationAssignUserRulePO.STATUS_UNSET_INT) {
 			rulePO.setStatus(QuotationAssignUserRulePO.STATUS_AVAILABLE_INT);
 		}
 
@@ -319,7 +319,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	public int syncQuotationAssignUserRuleStatus() throws FLException {
 
 		List<QuotationAssignUserRulePO> allRules = quotationAssignUserRuleDao.queryAllQuotationAssignUserRule();
-		int updateCount = 0;
+		int updateCount = QuotationAssignUserRulePO.TASK_COUNT_NONE_INT;
 
 		// 一次性查出所有预算员的活跃任务数（按 uid 分组），避免循环内逐个 count 造成 N+1
 		java.util.Map<Integer, Integer> taskCountMap = new java.util.HashMap<Integer, Integer>();
@@ -337,7 +337,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 			if (rule.getUser() == null) continue;
 
 			// 从预算结果 Map 取活跃任务数（status < 3），未命中视为 0
-			int actualTaskCount = taskCountMap.containsKey(rule.getUser().getUid()) ? taskCountMap.get(rule.getUser().getUid()) : 0;
+			int actualTaskCount = taskCountMap.containsKey(rule.getUser().getUid()) ? taskCountMap.get(rule.getUser().getUid()) : QuotationAssignUserRulePO.TASK_COUNT_NONE_INT;
 			int storedTaskCount = rule.getCurrentTaskCount();
 
 			boolean needUpdate = false;
@@ -350,7 +350,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 			// 根据任务数更新状态（不覆盖"停止"状态）
 			if (rule.getStatus() != QuotationAssignUserRulePO.STATUS_STOPPED_INT) {
-				short expectedStatus = actualTaskCount > 0 ? QuotationAssignUserRulePO.STATUS_BUSY_INT : QuotationAssignUserRulePO.STATUS_AVAILABLE_INT;
+				short expectedStatus = actualTaskCount > QuotationAssignUserRulePO.TASK_COUNT_NONE_INT ? QuotationAssignUserRulePO.STATUS_BUSY_INT : QuotationAssignUserRulePO.STATUS_AVAILABLE_INT;
 				if (rule.getStatus() != expectedStatus) {
 					rule.setStatus(expectedStatus);
 					needUpdate = true;
