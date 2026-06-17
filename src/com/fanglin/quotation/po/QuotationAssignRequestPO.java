@@ -44,7 +44,7 @@ import com.fanglin.system.po.CompanyPO;
  * <li>orderId: 装修单号（关联 decoration.orderId）</li>
  * <li>company: 公司ID</li>
  * <li>department: 部门ID（NULL表示该公司所有部门）</li>
- * <li>decorationType: 装修类型（1-半包，2-整装）</li>
+ * <li>decorationType: 装修类型（0-半包，1-整装，2-全包，与DecorationPO.type一致）</li>
  * <li>priority: 优先级（1-最高，5-普通，9-最低）</li>
  * <li>status: 状态（1-待分配，2-已分配）</li>
  * <li>requestTime: 请求加入队列的时间</li>
@@ -125,7 +125,7 @@ public class QuotationAssignRequestPO implements Serializable {
 	private DepartmentPO department;
 
 	/**
-	 * 装修类型：1-半包，2-整装
+	 * 装修类型：0-半包，1-整装，2-全包（与DecorationPO.type取值一致）
 	 */
 	private short decorationType;
 
@@ -278,7 +278,7 @@ public class QuotationAssignRequestPO implements Serializable {
 	/**
 	 * 获取装修类型
 	 * 
-	 * @return 装修类型（1-半包，2-整装）
+	 * @return 装修类型（0-半包，1-整装，2-全包，与DecorationPO.type一致）
 	 */
 	@Column(name = "decorationType", nullable = false)
 	public short getDecorationType() {
@@ -288,7 +288,7 @@ public class QuotationAssignRequestPO implements Serializable {
 	/**
 	 * 设置装修类型
 	 * 
-	 * @param decorationType 装修类型（1-半包，2-整装）
+	 * @param decorationType 装修类型（0-半包，1-整装，2-全包，与DecorationPO.type一致）
 	 */
 	public void setDecorationType(short decorationType) {
 		this.decorationType = decorationType;

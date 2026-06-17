@@ -282,7 +282,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 6. 释放旧预算员状态（新模型：按 userId 查询唯一规则）
 		QuotationAssignUserRulePO oldUserRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(oldBudgetUid);
 		if (oldUserRule != null) {
-			int oldTaskCount = oldUserRule.getCurrentTaskCount() - 1;
+			// 当前 request 仍归属旧预算员且 status=ASSIGNED，count 结果包含这一条，故需 -1 表示即将转出
+			int oldTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(oldUserRule.getUser().getUid()) - 1;
 			if (oldTaskCount < 0) {
 				oldTaskCount = 0;
 			}
@@ -317,10 +318,12 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(-1, "装修单不存在");
 		}
 
-		String budgetUid = getQuoteterUid(decoration);
-		if (budgetUid == null) {
+		// 统一通过 quoter 对象判空（避免 userId/uid 两个字段不一致带来的边界风险）
+		if (decoration.getQuoter() == null) {
 			throw new FLException(-1, "该装修单未分配报价员");
 		}
+
+		String budgetUid = decoration.getQuoter().getUserId();
 
 		// 2. 根据预算员ID查询其规则（新模型：按 userId 查询唯一规则）
 		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(budgetUid);
@@ -329,11 +332,21 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			return 1;
 		}
 
+		// 3.5 先将当前装修单的分配请求状态更新为"已完成"（必须先落库，count 才不会多算这一条）
+		QuotationAssignRequestPO currentRequest = quotationAssignRequestDao.queryActiveByOrderId(orderId);
+		if (currentRequest != null) {
+			currentRequest.setStatus(QuotationAssignRequestPO.STATUS_COMPLETED_INT);
+			currentRequest.setFinishTime(new Timestamp(System.currentTimeMillis()));
+			quotationAssignRequestDao.update(currentRequest);
+			// 强制 flush，保证后续 count 查询能感知状态变更（避免一级缓存未同步导致漏算）
+			quotationAssignRequestDao.flush();
+		}
+
 		// 3. 更新预算员的最后完成时间和任务数
 		userRule.setLastFinishTime(new Timestamp(System.currentTimeMillis()));
 
-		int currentTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(decoration.getQuoter().getUid());
-		currentTaskCount = Math.max(0, currentTaskCount - 1);
+		// count 在 request 状态置为已完成之后执行，自然不再包含当前这条，无需 -1
+		int currentTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(userRule.getUser().getUid());
 		userRule.setCurrentTaskCount(currentTaskCount);
 
 		// 更新状态：currentTaskCount > 0 制作中，否则待分配
@@ -341,13 +354,6 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		userRule.setStatus(newStatus);
 
 		quotationAssignUserRuleDao.update(userRule);
-
-		// 3.5 将当前装修单的分配请求状态更新为"已完成"
-		QuotationAssignRequestPO currentRequest = quotationAssignRequestDao.queryActiveByOrderId(orderId);
-		if (currentRequest != null) {
-			currentRequest.setStatus(QuotationAssignRequestPO.STATUS_COMPLETED_INT);
-			quotationAssignRequestDao.update(currentRequest);
-		}
 
 		// ========== 反向分配：全局匹配 ==========
 		triggerReverseAssign();
@@ -473,6 +479,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			request.setAssignTime(new Timestamp(System.currentTimeMillis()));
 			quotationAssignRequestDao.save(request);
 		}
+		// flush 保证后续 count 查询能命中刚写入的归属关系（避免新预算员 count 漏算、状态误判为 AVAILABLE）
+		quotationAssignRequestDao.flush();
 
 		// 3. 更新预算员状态（基于 request 统计 currentTaskCount）
 		int currentTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(userRule.getUser().getUid());
@@ -570,14 +578,18 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 8. 更新分配队列中的预算员
 		request.setUser(targetUserRule.getUser());
 		quotationAssignRequestDao.update(request);
+		// flush 保证新旧预算员的 count 都基于已落库的 user 归属
+		quotationAssignRequestDao.flush();
 
 		// 9. 更新装修单中的预算员
 		decoration.setQuoter(targetUserRule.getUser());
 		decorationDao.update(decoration);
 
 		// 10. 更新旧预算员任务数
+		// 注意：第 8 步已把 request.user 改为新预算员并落库，
+		// 因此这里 count 旧预算员的结果天然已排除当前这条请求，不能再 -1（否则会多扣）
 		if (oldUserRule != null) {
-			int oldTaskCount = Math.max(0, quotationAssignRequestDao.countQuotationAssignRequest(oldUserRule.getUser().getUid()) - 1);
+			int oldTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(oldUserRule.getUser().getUid());
 			oldUserRule.setCurrentTaskCount(oldTaskCount);
 			if (oldTaskCount == 0) {
 				oldUserRule.setStatus(QuotationAssignUserRulePO.STATUS_AVAILABLE_INT);

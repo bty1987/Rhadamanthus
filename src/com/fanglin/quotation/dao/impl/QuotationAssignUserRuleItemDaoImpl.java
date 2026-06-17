@@ -129,7 +129,8 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 		busyUsers.createAlias("busyRule.user", "busyUser");
 		busyUsers.add(Restrictions.ne("busyRule.status", QuotationAssignUserRulePO.STATUS_AVAILABLE_INT));
 		busyUsers.setProjection(Projections.property("busyUser.uid"));
-		criteria.add(Subqueries.propertyNotIn("userRule.user.uid", busyUsers));
+		// 仅在外层 user.uid 非 NULL 时参与 NOT IN 比较，避免 NULL 行在三值逻辑下被静默排除/误留
+		criteria.add(Restrictions.and(Restrictions.isNotNull("userRule.user.uid"), Subqueries.propertyNotIn("userRule.user.uid", busyUsers)));
 
 		// 按预算员的最后完成时间升序排序
 		criteria.addOrder(Order.asc("userRule.lastFinishTime"));
