@@ -66,6 +66,10 @@ $(function () {
         var td3 = $('<td style="border: 1px solid;"></td>').text("监理").appendTo(tr1);
         var td4 = $('<td style="border: 1px solid;"></td>').text(data.supervisor.currentName).appendTo(tr1);
 
+        var tr1b = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 15px;"></tr>').appendTo(table);
+        $('<td style="border: 1px solid;"></td>').text("外辅单号").appendTo(tr1b);
+        $('<td colspan="5" style="border: 1px solid;"></td>').text(data.no).appendTo(tr1b);
+
         var tr2 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 15px;"></tr>').appendTo(table);
         var td5 = $('<td style="border: 1px solid;"></td>').text("供应商").appendTo(tr2);
         var td6 = $('<td style="border: 1px solid;"></td>').text(data.supplier.currentName).appendTo(tr2);
