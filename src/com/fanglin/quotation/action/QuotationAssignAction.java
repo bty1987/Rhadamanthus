@@ -46,10 +46,6 @@ public class QuotationAssignAction extends BaseListAction {
 	@Action(value = "autoQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String autoQuotationAssign() throws FLException {
 
-		if (quotationAssign == null) {
-			return ERROR;
-		}
-
 		quotationAssignService.autoQuotationAssign(quotationAssign);
 
 		return SUCCESS;
@@ -63,10 +59,6 @@ public class QuotationAssignAction extends BaseListAction {
 	 */
 	@Action(value = "manualQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String manualQuotationAssign() throws FLException {
-
-		if (quotationAssign == null) {
-			return ERROR;
-		}
 
 		quotationAssignService.manualQuotationAssign(quotationAssign, queryUserId());
 
@@ -82,10 +74,6 @@ public class QuotationAssignAction extends BaseListAction {
 	@Action(value = "reassignQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String reassignQuotationAssign() throws FLException {
 
-		if (quotationAssign == null) {
-			return ERROR;
-		}
-
 		quotationAssignService.reassignQuotationAssign(quotationAssign, queryUserId());
 
 		return SUCCESS;
@@ -100,10 +88,6 @@ public class QuotationAssignAction extends BaseListAction {
 	@Action(value = "finishQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishQuotationAssign() throws FLException {
 
-		if (quotationAssign == null) {
-			return ERROR;
-		}
-
 		quotationAssignService.finishQuotationAssign(quotationAssign);
 
 		return SUCCESS;
@@ -117,10 +101,6 @@ public class QuotationAssignAction extends BaseListAction {
 	 */
 	@Action(value = "transferQuotationAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String transferQuotationAssign() throws FLException {
-
-		if (quotationAssign == null) {
-			return ERROR;
-		}
 
 		quotationAssignService.transferQuotationAssign(quotationAssign, queryUserId());
 

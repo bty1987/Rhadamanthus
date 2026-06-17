@@ -108,10 +108,6 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Action(value = "queryQuotationAssignUserRuleById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationAssignUserRuleById() throws FLException {
 
-		if (quotationAssignUserRule == null) {
-			return ERROR;
-		}
-
 		quotationAssignUserRule = quotationAssignUserRuleService.queryQuotationAssignUserRuleById(quotationAssignUserRule);
 
 		return SUCCESS;
@@ -122,10 +118,6 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	 */
 	@Action(value = "createQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createQuotationAssignUserRule() throws FLException {
-
-		if (quotationAssignUserRule == null) {
-			return ERROR;
-		}
 
 		quotationAssignUserRuleService.createQuotationAssignUserRule(quotationAssignUserRule);
 
@@ -138,10 +130,6 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Action(value = "updateQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationAssignUserRule() throws FLException {
 
-		if (quotationAssignUserRule == null) {
-			return ERROR;
-		}
-
 		quotationAssignUserRuleService.updateQuotationAssignUserRule(quotationAssignUserRule);
 
 		return SUCCESS;
@@ -152,10 +140,6 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	 */
 	@Action(value = "deleteQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationAssignUserRule() throws FLException {
-
-		if (quotationAssignUserRule == null) {
-			return ERROR;
-		}
 
 		quotationAssignUserRuleService.deleteQuotationAssignUserRule(quotationAssignUserRule);
 
@@ -224,10 +208,9 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	 */
 	@Action(value = "createQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createQuotationAssignUserRuleItem() throws FLException {
-		if (quotationAssignUserRuleItem == null) {
-			return ERROR;
-		}
+
 		quotationAssignUserRuleItemService.createQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
+
 		return SUCCESS;
 	}
 
@@ -236,10 +219,9 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	 */
 	@Action(value = "updateQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationAssignUserRuleItem() throws FLException {
-		if (quotationAssignUserRuleItem == null) {
-			return ERROR;
-		}
+
 		quotationAssignUserRuleItemService.updateQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
+
 		return SUCCESS;
 	}
 
@@ -248,10 +230,9 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	 */
 	@Action(value = "deleteQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationAssignUserRuleItem() throws FLException {
-		if (quotationAssignUserRuleItem == null) {
-			return ERROR;
-		}
+
 		quotationAssignUserRuleItemService.deleteQuotationAssignUserRuleItem(quotationAssignUserRuleItem);
+
 		return SUCCESS;
 	}
 
@@ -260,14 +241,11 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	 */
 	@Action(value = "createQuotationAssignUserRuleItemWithRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createQuotationAssignUserRuleItemWithRule() throws FLException {
-		if (quotationAssignUserRuleItem == null) {
-			return ERROR;
-		}
+
 		quotationAssignUserRuleItemService.createQuotationAssignUserRuleItemWithRule(quotationAssignUserRuleItem);
+
 		return SUCCESS;
 	}
-
-	// ==================== Getter & Setter ====================
 
 	public QuotationAssignUserRuleVO getQuotationAssignUserRule() {
 		return quotationAssignUserRule;
