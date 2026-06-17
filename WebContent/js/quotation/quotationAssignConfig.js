@@ -1,7 +1,4 @@
 $(function() {
-
-	    var QAC = constant.quotation().quotationAssignConfig;
-
 	    // ==================== 页面元素声明 ====================
     var config = {
         modals: {
@@ -78,7 +75,7 @@ $(function() {
         prop: function(v) {
 
             // 使用 constant 进行枚举转换
-            return QAC.enabled.keys[v.enabled];
+            return constant.quotation().quotationAssignConfig.enabled.keys[v.enabled];
         },
         clazz: "red"  // 类型/状态使用 red
     }, {
@@ -87,7 +84,7 @@ $(function() {
         prop: function(v) {
 
             // 使用 constant 进行枚举转换
-            return QAC.autoAssign.keys[v.autoAssign];
+            return constant.quotation().quotationAssignConfig.autoAssign.keys[v.autoAssign];
         },
         clazz: "red"  // 类型/状态使用 red
     }, {
@@ -121,7 +118,7 @@ $(function() {
             return false;
         },
         show: function(v){
-            return v.enabled == QAC.ENABLED_DISABLED_INT;
+            return v.enabled == constant.quotation().quotationAssignConfig.ENABLED_DISABLED_INT;
         }
     }, {
         // 禁用按钮：仅在状态为1（启用）时显示
@@ -133,18 +130,18 @@ $(function() {
             return false;
         },
         show: function(v){
-            return v.enabled == QAC.ENABLED_ENABLED_INT;
+            return v.enabled == constant.quotation().quotationAssignConfig.ENABLED_ENABLED_INT;
         }
     }, {
         name: function(v) {
 
             // 动态显示按钮文本
-            return v.autoAssign == QAC.AUTO_ASSIGN_AUTO_INT ? "切手动" : "切自动";
+            return v.autoAssign == constant.quotation().quotationAssignConfig.AUTO_ASSIGN_AUTO_INT ? "切手动" : "切自动";
         },
         clazz: function(v) {
 
             // 动态显示按钮样式
-            return v.autoAssign == QAC.AUTO_ASSIGN_AUTO_INT ? "btn-grey" : "btn-info";
+            return v.autoAssign == constant.quotation().quotationAssignConfig.AUTO_ASSIGN_AUTO_INT ? "btn-grey" : "btn-info";
         },
         handle: function(v) {
 
@@ -159,10 +156,10 @@ $(function() {
     // ==================== 初始化Select数据 ====================
 
     // 初始化状态下拉框（使用constant）
-    config.items.enabled.bindData(QAC.enabled.datas, "key", "value");
+    config.items.enabled.bindData(constant.quotation().quotationAssignConfig.enabled.datas, "key", "value");
 
     // 初始化分配方式下拉框（使用constant）
-    config.items.autoAssign.bindData(QAC.autoAssign.datas, "key", "value");
+    config.items.autoAssign.bindData(constant.quotation().quotationAssignConfig.autoAssign.datas, "key", "value");
 
     // 初始化公司下拉框（从API加载）
     com.post(api.system.queryCompany, {}, function(res) {
@@ -222,8 +219,8 @@ $(function() {
         // 重置表单
         config.items.company.val('');
         config.items.department.empty().append('<option value="">所有部门</option>');
-config.items.enabled.val(QAC.ENABLED_ENABLED_INT);
-	        config.items.autoAssign.val(QAC.AUTO_ASSIGN_AUTO_INT);
+config.items.enabled.val(constant.quotation().quotationAssignConfig.ENABLED_ENABLED_INT);
+	        config.items.autoAssign.val(constant.quotation().quotationAssignConfig.AUTO_ASSIGN_AUTO_INT);
 
         config.modals.configModal.modal('show');
     }
@@ -269,8 +266,8 @@ config.items.enabled.val(QAC.ENABLED_ENABLED_INT);
     // 快捷切换状态（启用/禁用）
     function toggleStatus(row) {
 
-var newStatus = row.enabled == QAC.ENABLED_ENABLED_INT ? QAC.ENABLED_DISABLED_INT : QAC.ENABLED_ENABLED_INT;
-	        var statusText = newStatus == QAC.ENABLED_ENABLED_INT ? "启用" : "禁用";
+var newStatus = row.enabled == constant.quotation().quotationAssignConfig.ENABLED_ENABLED_INT ? constant.quotation().quotationAssignConfig.ENABLED_DISABLED_INT : constant.quotation().quotationAssignConfig.ENABLED_ENABLED_INT;
+	        var statusText = newStatus == constant.quotation().quotationAssignConfig.ENABLED_ENABLED_INT ? "启用" : "禁用";
 
         com.showConfirm('确认要将该配置' + statusText + '吗？', function() {
 
@@ -288,8 +285,8 @@ var newStatus = row.enabled == QAC.ENABLED_ENABLED_INT ? QAC.ENABLED_DISABLED_IN
     // 快捷切换分配方式（手动/自动）
     function toggleAssign(row) {
 
-var newAssign = row.autoAssign == QAC.AUTO_ASSIGN_AUTO_INT ? QAC.AUTO_ASSIGN_MANUAL_INT : QAC.AUTO_ASSIGN_AUTO_INT;
-	        var assignText = newAssign == QAC.AUTO_ASSIGN_AUTO_INT ? "自动分配" : "手动分配";
+var newAssign = row.autoAssign == constant.quotation().quotationAssignConfig.AUTO_ASSIGN_AUTO_INT ? constant.quotation().quotationAssignConfig.AUTO_ASSIGN_MANUAL_INT : constant.quotation().quotationAssignConfig.AUTO_ASSIGN_AUTO_INT;
+	        var assignText = newAssign == constant.quotation().quotationAssignConfig.AUTO_ASSIGN_AUTO_INT ? "自动分配" : "手动分配";
 
         com.showConfirm('确认要将该配置切换为' + assignText + '吗？', function() {
 

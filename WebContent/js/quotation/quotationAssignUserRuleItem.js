@@ -1,7 +1,4 @@
-$(function() {
-
-	    var QAUR = constant.quotation().quotationAssignUserRule;
-	    var DEPT_TYPE_DESIGN_INT = 2;
+$(function() {	    var DEPT_TYPE_DESIGN_INT = 2;
 
 	    // ==================== 页面元素声明 ====================
     var config = {
@@ -84,7 +81,7 @@ $(function() {
         field: "userRule",
         name: "状态",
         prop: function(v) {
-            return QAUR.status.keys[v.userRule.status];
+            return constant.quotation().quotationAssignUserRule.status.keys[v.userRule.status];
         },
         clazz: "red"
     }, {
@@ -104,7 +101,7 @@ $(function() {
         name: "支持类型",
         prop: function(v) {
             var type = v.supportedType;
-            return QAUR.supportedType.keys[type] || "未设置";
+            return constant.quotation().quotationAssignUserRule.supportedType.keys[type] || "未设置";
         },
         clazz: "red"
     }, {
@@ -149,7 +146,7 @@ $(function() {
 	    // 初始化支持类型单选框
 	    function initSupportedTypeRadios() {
 	        var $group = com.focusPage('#supportedTypeGroup').empty();
-	        $.each(QAUR.supportedType.datas, function(i, data) {
+	        $.each(constant.quotation().quotationAssignUserRule.supportedType.datas, function(i, data) {
 	            var $label = $('<label></label>').addClass('radio-inline');
 	            $('<input>').attr('type', 'radio').attr('name', 'supportedType').val(data.key).appendTo($label);
 	            $label.append(' ' + data.value).appendTo($group);
@@ -232,7 +229,7 @@ $(function() {
         config.items.qaurid.val(config.data.parentQaurid);
         config.items.company.val('');
         config.items.department.empty().append('<option value="">全部部门</option>');
-        config.items.supportedType.filter('[value="' + QAUR.SUPPORTED_TYPE_ALL_INT + '"]').prop('checked', true);
+        config.items.supportedType.filter('[value="' + constant.quotation().quotationAssignUserRule.SUPPORTED_TYPE_ALL_INT + '"]').prop('checked', true);
 
         // 独立页面模式额外清理
         if (config.data.isStandalone) {
@@ -256,7 +253,7 @@ $(function() {
         if (row.supportedType !== undefined && row.supportedType !== null) {
             config.items.supportedType.filter('[value="' + row.supportedType + '"]').prop('checked', true);
         } else {
-            config.items.supportedType.filter('[value="' + QAUR.SUPPORTED_TYPE_ALL_INT + '"]').prop('checked', true);
+            config.items.supportedType.filter('[value="' + constant.quotation().quotationAssignUserRule.SUPPORTED_TYPE_ALL_INT + '"]').prop('checked', true);
         }
         com.focusPage('#modalTitle').text('编辑规则项目');
 
