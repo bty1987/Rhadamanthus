@@ -394,7 +394,7 @@ jQuery(function(a) {
     });
 
     // 职位 typeahead: 按名称/拼音搜索所有启用状态的职位
-    com.initTypeahead('dutySel', api.system.queryDutyByName, "pinyinName", {"duty.status": 0}, "dutys", "did", "name", null);
+    com.initTypeahead(user.items.dutySel, api.system.queryDutyByName, "pinyinName", {"duty.status": 0}, "dutys", "did", "name", null);
 
     com.datetime(com.focusPage("#entryTime"));
     com.datetime(com.focusPage("#boardTime"));
@@ -587,7 +587,7 @@ jQuery(function(a) {
 
                 "userInfo.user.loginId": user.items.loginId.val(),// 用户名
                 "userInfo.user.dept.did": user.items.deptSel.val(),// 部门ID
-                "userInfo.user.duty.did": com.typeahead("dutySel"),// 职位ID
+                "userInfo.user.duty.did": com.typeahead(user.items.dutySel),// 职位ID
                 "userInfo.level": user.items.levelSel.val(),
                 "userInfo.user.status": user.items.statusSel.val(),// 状态
                 "userInfo.employWay": user.items.employWaySel.val(),// 招聘渠道
