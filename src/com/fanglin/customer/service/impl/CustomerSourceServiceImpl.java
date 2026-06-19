@@ -639,6 +639,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 				customerUserRuleItemDao.save(customerUserRuleItemPO);
 			}
 
+			// type=6 面积轮训: 扣减明细机会数, 归0后由 SQL 的 chance>0 条件自动排除
+			if (customerUserRuleItemPO.getType() == CustomerUserRuleItemPO.TYPE_AREA_POLLING_INT) {
+				customerUserRuleItemPO.setChance(customerUserRuleItemPO.getChance() - 1);
+				customerUserRuleItemDao.update(customerUserRuleItemPO);
+			}
+
 			customerUserRulePO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			customerUserRuleDao.update(customerUserRulePO);

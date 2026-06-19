@@ -45,6 +45,8 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	public static final short TYPE_USER_INT = 5; // 人员规则（新增）
 
+	public static final short TYPE_AREA_POLLING_INT = 6; // 面积轮训（新增）
+
 	public static final short ISSURPLUS_ENABLE_INT = 0;
 
 	public static final short ISSURPLUS_NONE_INT = 1;
@@ -70,6 +72,8 @@ public class CustomerUserRuleItemPO implements Serializable {
 	private int uppval;
 
 	private int lowval;
+
+	private int chance;
 
 	private short priority;
 
@@ -175,6 +179,15 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	public void setLowval(int lowval) {
 		this.lowval = lowval;
+	}
+
+	@Column(name = "chance")
+	public int getChance() {
+		return chance;
+	}
+
+	public void setChance(int chance) {
+		this.chance = chance;
 	}
 
 	@Column(name = "priority")
