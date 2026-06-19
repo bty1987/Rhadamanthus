@@ -1094,6 +1094,26 @@ var decorationUtils = {
 
                 });
 
+                var $btnSettle = $("<a></a>").addClass("btn btn-minier btn-primary").html("落款").css("margin", "0px 3px");
+
+                $btnSettle.on("click", function() {
+
+                    com.showConfirm("是否确认落款，落款将直接使用预付款余额抵扣：" + v.referMoney + "元", function() {
+
+                        var options = {
+                            "decorationPayment.dpid": v.dpid,
+                            "decorationPayment.decoration.orderId": decorationDetail.orderId,
+                            "decorationPayment.comment": ""
+                        };
+
+                        com.post(api.payment.settleDecorationPayment, options, function(res) {
+
+                            com.showAlert(com.info, "落款成功，请打印收据。");
+                            decorationUtils.initPayment(decorationDetail, isDesign);
+                        });
+                    });
+                });
+
                 if (isDesign) {
                     if (v.paymentStatus == 2 && v.oneType == 0) {
                         if (v.twoType != 2) {
@@ -1104,6 +1124,10 @@ var decorationUtils = {
 
                 if ((v.twoType == 0 || v.twoType == 3) && v.paymentStatus == 0) {
                     $divBtnWrap.append($deleteBtn);
+                }
+
+                if (v.paymentStatus == 0 && v.oneType == 0) {
+                    $divBtnWrap.append($btnSettle);
                 }
 
                 $divBtnWrap.appendTo($h4);

@@ -70,6 +70,22 @@ jQuery(function() {
         }
     });
 
+    function querySalesPayment() {
+
+        com.focusPage('#resultLists').html("");
+
+        com.post(api.payment.querySalesPaymentBySid, {
+            "salesPayment.sales.sid": salesPayment.sid
+        }, function(listData) {
+
+            if (listData.salesPayments.length == 0) {
+                emptyData("resultLists");
+            } else {
+                createLine('resultLists', listData);
+            }
+        });
+    }
+
     function createLine(tableId, listData) {
 
         var $tableWrap = com.focusPage('#' + tableId);
@@ -85,6 +101,7 @@ jQuery(function() {
                 var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
 
                 var $btnRetrun = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
+                var $btnSettle = $('<a></a>').addClass('btn btn-minier btn-primary').html('落款');
 
                 var propertyArr = [["销售单号: ", v.sales.no, "blue"], ["品类: ", v.sales.category, "grey"], ["品牌: ", v.sales.brand.name, "grey"], ["应收额: ", v.referMoney, "blue"], ["收款时间: ", v.salesReceipt.collectTime, "grey"], ["确认时间: ", v.salesReceipt.confirmTime, "grey"], ["状态: ", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]];
 
@@ -124,6 +141,10 @@ jQuery(function() {
 
                 $btnDiv.append($btnRetrun);
 
+                if (v.status == 0) {
+                    $btnDiv.append($btnSettle);
+                }
+
                 if (v.type == 8 && salesPayment.type != "balance") {
                     $h3.append($small).append($btnDiv);
                 } else {
@@ -147,6 +168,23 @@ jQuery(function() {
                         approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 18);
                     });
 
+                });
+
+                $btnSettle.click(function() {
+
+                    com.showConfirm("是否确认落款，落款将直接使用主材预付款余额抵扣：" + v.referMoney + "元", function() {
+
+                        var options = {
+                            "salesPayment.spid": v.spid,
+                            "salesPayment.sales.orderId": v.sales.orderId
+                        };
+
+                        com.post(api.payment.settleSalesPayment, options, function(res) {
+
+                            com.showAlert(com.info, "落款成功。");
+                            querySalesPayment();
+                        });
+                    });
                 });
 
             });
