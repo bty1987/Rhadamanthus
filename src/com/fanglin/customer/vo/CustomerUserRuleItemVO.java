@@ -34,6 +34,8 @@ public class CustomerUserRuleItemVO implements Serializable {
 
 	private Integer lowval;
 
+	private Integer chance;
+
 	private Short priority;
 
 	private Short isSurplus;
@@ -146,6 +148,14 @@ public class CustomerUserRuleItemVO implements Serializable {
 
 	public void setLowval(Integer lowval) {
 		this.lowval = lowval;
+	}
+
+	public Integer getChance() {
+		return chance;
+	}
+
+	public void setChance(Integer chance) {
+		this.chance = chance;
 	}
 
 	public Short getPriority() {

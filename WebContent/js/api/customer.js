@@ -336,17 +336,17 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "customerUserRuleItems",
-                args: ["uppval", "lowval"]
+                args: ["uppval", "lowval", "chance"]
             }]
         },
         addCustomerUserRuleItem: {
             url: "addCustomerUserRuleItem.do",
             type: "update",
             tranargs: {
-                args: ["customerUserRuleItem.uppval", "customerUserRuleItem.lowval"],
+                args: ["customerUserRuleItem.uppval", "customerUserRuleItem.lowval", "customerUserRuleItem.chance"],
                 query: [{
                     result: "customerUserRuleItem",
-                    args: ["uppval", "lowval"]
+                    args: ["uppval", "lowval", "chance"]
                 }]
             }
         },

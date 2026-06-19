@@ -20,6 +20,7 @@ $(function() {
             cityProperSel: com.focusPage("#cityProperSel", "#customerUserRuleItem"),
             uppval: com.focusPage("#uppval", "#customerUserRuleItem"),
             lowval: com.focusPage("#lowval", "#customerUserRuleItem"),
+            chance: com.focusPage("#chance", "#customerUserRuleItem"),
             priority: com.focusPage("#priority", "#customerUserRuleItem"),
             isSurplus: com.focusPage("#isSurplus", "#addCustomerUserRuleItemModal"),
             isDelete: com.focusPage("#isDelete", "#addCustomerUserRuleItemModal"),
@@ -183,6 +184,11 @@ $(function() {
         prop: "lowval",
         clazz: "blue"
     }, {
+        fieId: "chance",
+        name: "机会数",
+        prop: "chance",
+        clazz: "blue"
+    }, {
         fieId: "priority",
         name: "优先级",
         prop: "priority",
@@ -239,6 +245,7 @@ $(function() {
         com.focusPage(".deptSel").hide();
         com.focusPage(".citySel").hide();
         com.focusPage(".cityProperSel").hide();
+        com.focusPage(".chance").hide();
 
         customerUserRuleItem.modals.addCustomerUserRuleItemModal.modal("show");
     });
@@ -253,6 +260,7 @@ $(function() {
             com.focusPage(".cityProperSel").hide();
             com.focusPage(".uppval").show();
             com.focusPage(".lowval").show();
+            com.focusPage(".chance").hide();
             com.focusPage("#isDelete").prop("checked", false);
         }
 
@@ -264,6 +272,7 @@ $(function() {
             com.focusPage(".cityProperSel").hide();
             com.focusPage(".uppval").hide();
             com.focusPage(".lowval").hide();
+            com.focusPage(".chance").hide();
             com.focusPage("#isDelete").prop("checked", true);
         }
 
@@ -275,6 +284,7 @@ $(function() {
             com.focusPage(".cityProperSel").hide();
             com.focusPage(".uppval").show();
             com.focusPage(".lowval").show();
+            com.focusPage(".chance").hide();
             com.focusPage("#isDelete").prop("checked", true);
         }
 
@@ -286,6 +296,7 @@ $(function() {
             com.focusPage(".cityProperSel").hide();
             com.focusPage(".uppval").show();
             com.focusPage(".lowval").show();
+            com.focusPage(".chance").hide();
             com.focusPage("#isDelete").prop("checked", true);
         }
 
@@ -297,7 +308,20 @@ $(function() {
             com.focusPage(".cityProperSel").show();
             com.focusPage(".uppval").show();
             com.focusPage(".lowval").show();
+            com.focusPage(".chance").hide();
             com.focusPage("#isDelete").prop("checked", true);
+        }
+
+        if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_AREA_POLLING_INT) {
+            com.focusPage(".companySel").hide();
+            com.focusPage(".deptype").hide();
+            com.focusPage(".deptSel").hide();
+            com.focusPage(".citySel").hide();
+            com.focusPage(".cityProperSel").hide();
+            com.focusPage(".uppval").show();
+            com.focusPage(".lowval").show();
+            com.focusPage(".chance").show();
+            com.focusPage("#isDelete").prop("checked", false);
         }
     });
 
@@ -315,6 +339,7 @@ $(function() {
             "customerUserRuleItem.type": customerUserRuleItem.items.type.val(),
             "customerUserRuleItem.uppval": customerUserRuleItem.items.uppval.val(),
             "customerUserRuleItem.lowval": customerUserRuleItem.items.lowval.val(),
+            "customerUserRuleItem.chance": customerUserRuleItem.items.chance.val(),
             "customerUserRuleItem.priority": customerUserRuleItem.items.priority.val(),
             "customerUserRuleItem.status": customerUserRuleItem.items.status.val(),
             "customerUserRuleItem.isSurplus": customerUserRuleItem.getProp[customerUserRuleItem.items.isSurplus.prop("checked")],
