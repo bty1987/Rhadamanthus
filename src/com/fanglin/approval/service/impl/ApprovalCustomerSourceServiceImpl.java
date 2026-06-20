@@ -257,14 +257,15 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 			throw new FLException(330077, "客户机会不可操作");
 		}
 
-		CustomerPO customerPO = customerSourcePO.getCustomer();
+		// 获取客户：优先级 1.审批关联客户(approvalCustomerSource.cid) -> 2.客源关联客户(customerSource.customer) -> 3.客户机会关联客户(customerChance.customer) 兜底
+		CustomerPO customerPO = customerDao.get(approvalCustomerSourcePO.getCid());
 
 		if (customerPO == null) {
-			customerPO = customerChancePO.getCustomer();
+			customerPO = customerSourcePO.getCustomer();
 		}
 
 		if (customerPO == null) {
-			customerPO = customerDao.get(approvalCustomerSourcePO.getCid());
+			customerPO = customerChancePO.getCustomer();
 		}
 
 		if (customerPO == null) {
