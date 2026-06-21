@@ -112,8 +112,9 @@
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/fadada/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/fadada/junit-4.12.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/aliyun-oss/jdom-1.1.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/aliyun-oss/aliyun-sdk-oss-2.5.0.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/fadada/bcprov-jdk15on-1.60.jar"/>
+	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/aliyun-oss/aliyun-java-sdk-core-4.6.3.jar"/>
+	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/aliyun-oss/aliyun-java-sdk-sts-3.1.0.jar"/>
+	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/aliyun-oss/aliyun-sdk-oss-3.17.4.jar"/>	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/fadada/bcprov-jdk15on-1.60.jar"/>
 	<classpathentry kind="src" path="target/generated-sources/annotations">
 		<attributes>
 			<attribute name="optional" value="true"/>
