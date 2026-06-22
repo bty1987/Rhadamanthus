@@ -10,6 +10,7 @@ import com.fanglin.approval.po.ApprovalCustomerSourceAO;
 import com.fanglin.approval.po.ApprovalCustomerSourcePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
@@ -53,7 +54,7 @@ public class ApprovalCustomerSourceDaoImpl extends DaoImpl<ApprovalCustomerSourc
 				query.alias("house", "house");
 				query.add(query.getCriterion("house.houseNumber", filter));
 			} else if ("phone".equals(field)) {
-				query.add(query.getCriterion("customerSource.phone", filter));
+				query.add(Restrictions.in("customerSource.phone", SensitiveDataHelper.getAllEncryptedForms(filter.getData())));
 			} else if ("name".equals(field)) {
 				query.add(query.getCriterion("customerSource.name", filter));
 			} else if ("user.userId".equals(field)) {

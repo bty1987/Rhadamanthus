@@ -93,7 +93,7 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 
 		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
 
-		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER‌_INT, qpid);
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER_INT, qpid);
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -109,7 +109,7 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 			content = String.format("装修单号:%s,优惠额:%s,管理优惠额:%s特批优惠额:%s", orderId, approvalQuotationPreferVO.getPreferPrice() / 1000, approvalQuotationPreferVO.getManagePrefer() / 1000, approvalQuotationPreferVO.getAdvancePrefer() / 1000);
 		}
 
-		approvalPO = new ApprovalPO().init(sender, receiver, orderId, qpid, ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER‌_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, orderId, qpid, ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 

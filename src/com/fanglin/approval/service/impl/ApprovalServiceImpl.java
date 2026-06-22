@@ -290,7 +290,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_PROTATION_PREFER_INT:
 				approvalProtationPreferService.approveForProtationPrefer(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER‌_INT:
+			case ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER_INT:
 				approvalQuotationPreferService.approveForQuotationPrefer(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_DECORATION_CONTRACT_INT:
@@ -309,6 +309,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public ApprovalPO refuse(ApprovalPO approvalPO) throws FLException {
 
 		if (approvalPO == null) {
@@ -345,7 +346,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_PROTATION_PREFER_INT:
 				approvalProtationPreferService.refuseForProtationPrefer(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER‌_INT:
+			case ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER_INT:
 				approvalQuotationPreferService.refuseForQuotationPrefer(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_DECORATION_TERMINAL_INT:
@@ -468,6 +469,60 @@ public class ApprovalServiceImpl implements ApprovalService {
 		approvalDao.update(approvalPO);
 
 		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int approve(ApprovalVO approvalVO, String userId) throws FLException {
+
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+
+		if (approvalPO == null) {
+			throw new FLException(240009, "审批信息不存在");
+		}
+
+		checkReceiver(approvalPO, userId);
+
+		approvalPO.setAnnotate(approvalVO.getAnnotate());
+
+		approve(approvalPO);
+
+		approvalDao.update(approvalPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int refuse(ApprovalVO approvalVO, String userId) throws FLException {
+
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+
+		if (approvalPO == null) {
+			throw new FLException(240009, "审批信息不存在");
+		}
+
+		checkReceiver(approvalPO, userId);
+
+		approvalPO.setAnnotate(approvalVO.getAnnotate());
+
+		refuse(approvalPO);
+
+		return 0;
+	}
+
+	/**
+	 * 校验当前用户是否为审批单的 receiver，防止水平越权审批他人单据。
+	 */
+	private void checkReceiver(ApprovalPO approvalPO, String userId) throws FLException {
+
+		if (approvalPO.getReceiver() == null) {
+			throw new FLException(240010, "审批单未指派审批人");
+		}
+
+		if (!approvalPO.getReceiver().getUserId().equals(userId)) {
+			throw new FLException(240010, "无权审批此审批单");
+		}
 	}
 
 }
