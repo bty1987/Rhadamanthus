@@ -118,6 +118,12 @@ com.exporter.export(data, filename);
 
 ## 重要开发原则
 
+### 🔴 Git 提交规则（默认）
+- **默认直接在 `master` 分支上工作并提交**，无需新建分支，除非用户明确要求走分支/PR 流程。
+- 用户说"提交并推送"时，直接 `git add` + `git commit` + `git push origin master`，不要先创建分支。
+- 仅当用户明确要求"建分支""发 PR""走 review"等，才按分支流程操作。
+- 提交前先 `git status` 核对暂存内容，**只纳入本次任务相关的文件**，不要把工作区遗留的 untracked 目录（如 `.agents/`、`project-libs/`）误带入提交。
+
 ### 🔴 直接修改原则
 修改现有功能必须直接修改原文件，禁止创建新文件实现相同功能。
 
