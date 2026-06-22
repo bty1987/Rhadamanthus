@@ -9,6 +9,7 @@ import com.fanglin.approval.dao.ApprovalCustomerOriginTDecorationDao;
 import com.fanglin.approval.po.ApprovalCustomerOriginTDecorationPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
@@ -52,7 +53,7 @@ public class ApprovalCustomerOriginTDecorationDaoImpl extends DaoImpl<ApprovalCu
 			} else if ("houseNumber".equals(field)) {
 				query.add(query.getCriterion("customerOrigin.houseNumber", filter));
 			} else if ("phone".equals(field)) {
-				query.add(query.getCriterion("customerOrigin.phone", filter));
+				query.add(Restrictions.in("customerOrigin.phone", SensitiveDataHelper.getAllEncryptedForms(filter.getData())));
 			} else if ("createTime".equals(field)) {
 				query.timeranges("customerOrigin.createTime", data);
 			} else if ("status".equals(field)) {

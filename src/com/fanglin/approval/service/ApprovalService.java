@@ -47,4 +47,14 @@ public interface ApprovalService {
 
 	public int callback(ApprovalVO approvalVO, String result) throws FLException;
 
+	/**
+	 * 带操作人身份校验的审批通过：仅当当前用户为审批单 receiver 时允许操作。
+	 */
+	public int approve(ApprovalVO approvalVO, String userId) throws FLException;
+
+	/**
+	 * 带操作人身份校验的审批拒绝：仅当当前用户为审批单 receiver 时允许操作。
+	 */
+	public int refuse(ApprovalVO approvalVO, String userId) throws FLException;
+
 }

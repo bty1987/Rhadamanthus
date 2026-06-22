@@ -10,6 +10,7 @@ import com.fanglin.approval.po.ApprovalSalesRefundAO;
 import com.fanglin.approval.po.ApprovalSalesRefundPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
@@ -54,7 +55,7 @@ public class ApprovalSalesRefundDaoImpl extends DaoImpl<ApprovalSalesRefundPO> i
 				query.add(query.getCriterion("house.houseNumber", filter));
 			} else if ("phone".equals(field)) {
 				query.alias("sales.customer", "customer");
-				query.add(query.getCriterion("customer.phone", filter));
+				query.add(Restrictions.in("customer.phone", SensitiveDataHelper.getAllEncryptedForms(filter.getData())));
 			} else if ("name".equals(field)) {
 				query.alias("sales.customer", "customer");
 				query.add(query.getCriterion("customer.name", filter));

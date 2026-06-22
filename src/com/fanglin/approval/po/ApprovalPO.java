@@ -66,7 +66,7 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public static final short APPROVAL_TYPE_CUSTOMER_CHANCE_INT = 21;
 
-	public static final short APPROVAL_TYPE_QUOTATION_PREFER‌_INT = 22;
+	public static final short APPROVAL_TYPE_QUOTATION_PREFER_INT = 22;
 
 	public static final short APPROVAL_TYPE_PROTATION_PREFER_INT = 23;
 
