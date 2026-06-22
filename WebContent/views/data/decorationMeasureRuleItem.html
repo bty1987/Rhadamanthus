@@ -1,0 +1,47 @@
+<div>
+
+	<div class="row">
+
+		<div class="col-md-12">
+			<div id="list"></div>
+			<div style="margin-top: 10px">
+				<div>
+					<a id="addBtn" class="btn btn-minier btn-primary pull-left" style="margin-right: 10px">
+						<i class="icon-plus bigger-110"></i>
+						<span>添加分公司</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="addItemModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">添加分公司</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-md-3 control-label no-padding-right orange" for="company">分公司</label>
+							<div class="col-md-9">
+								<select id="company" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer" style="text-align: center">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/decorationMeasureRuleItem.js']);
+</script>

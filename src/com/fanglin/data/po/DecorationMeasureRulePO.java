@@ -16,6 +16,10 @@ public class DecorationMeasureRulePO implements Serializable {
 
 	private static final long serialVersionUID = 5783409708080638787L;
 
+	public static final short STATUS_ENABLE_SHORT = 0;
+
+	public static final short STATUS_DISABLE_SHORT = 1;
+
 	private long dmrid;
 
 	private String name;

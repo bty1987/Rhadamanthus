@@ -2146,5 +2146,31 @@ Condition.addupRule("data", {
             keyPath: "key",
             valuePath: "value"
         }
+    },
+
+    "decorationMeasureRule-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "decorationMeasureRule-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{key: "0", value: "启用"}, {key: "1", value: "禁用"}],
+            keyPath: "key",
+            valuePath: "value"
+        }
     }
 });

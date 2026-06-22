@@ -2131,6 +2131,30 @@ $.extend(api, {
         queryDecorationMeasureRule: {
             url: "queryDecorationMeasureRule.do"
         },
+        pageDecorationMeasureRule: {
+            url: "pageDecorationMeasureRule.do"
+        },
+        addDecorationMeasureRule: {
+            url: "addDecorationMeasureRule.do"
+        },
+        updateDecorationMeasureRule: {
+            url: "updateDecorationMeasureRule.do"
+        },
+        updateDecorationMeasureRuleForStatus: {
+            url: "updateDecorationMeasureRuleForStatus.do"
+        },
+        deleteDecorationMeasureRule: {
+            url: "deleteDecorationMeasureRule.do"
+        },
+        queryDecorationMeasureRuleItem: {
+            url: "queryDecorationMeasureRuleItem.do"
+        },
+        addDecorationMeasureRuleItem: {
+            url: "addDecorationMeasureRuleItem.do"
+        },
+        deleteDecorationMeasureRuleItem: {
+            url: "deleteDecorationMeasureRuleItem.do"
+        },
 
         pageBankAccount: {
             url: "pageBankAccount.do"
