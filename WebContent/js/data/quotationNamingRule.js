@@ -123,7 +123,7 @@ $(function() {
     }];
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageQuotationNamingRule);
-    searcher.condition(["quotationNamingRule-name", "quotationNamingRule-type", "quotationNamingRule-status"]);
+    searcher.condition(["data-quotationNamingRule-name", "data-quotationNamingRule-type", "data-quotationNamingRule-status"]);
 
     searcher.button(function() {
 
