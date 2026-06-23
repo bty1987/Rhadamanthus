@@ -2771,13 +2771,79 @@
         displayFunc.init('resultList', data);
     }, "pagenation", pageConfig.postDataName, extraParam, false, null, function() {
 
-        if (pageConfig.hasExport != "" && pageConfig.hasExport != null) {
-            var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
-            var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
-            var $impspan = $('<span></span>').text('导出').appendTo($impa);
+        var btns = [];
 
-            return [$impa];
+        if (pageConfig.pageBtn.contains("create")) {
+            btns.push(createToolButton("create", "icon-plus-sign", "创建", "btn-default"));
         }
+
+        if (pageConfig.pageBtn.contains("createAdvance")) {
+            btns.push(createToolButton("createAdvance", "icon-hdd", "多单", "btn-info"));
+        }
+
+        if (pageConfig.pageBtn.contains("createCountry")) {
+            btns.push(createToolButton("createCountry", "icon-flag", "国补", "btn-warning"));
+        }
+
+        if (pageConfig.hasExport != "" && pageConfig.hasExport != null) {
+            btns.push(createToolButton("import", "icon-download-alt", "导出", "btn-success"));
+        }
+
+        return btns;
+    });
+
+    function createToolButton(name, icon, text, clazz) {
+
+        var $btn = $('<a></a>').addClass('btn btn-minier pull-left').addClass(clazz).attr('name', name).css("margin", "0px 3px");
+        var $icon = $('<i></i>').addClass(icon + ' bigger-110').appendTo($btn);
+        var $span = $('<span></span>').text(text).appendTo($btn);
+
+        return $btn;
+    }
+
+    function openCreateOrder(title, options) {
+
+        var urlLoadParams = $.extend({}, params.urlLoadParams);
+        var createParams = $.extend({}, urlLoadParams);
+        var restored = false;
+
+        delete createParams.maketype;
+        delete createParams.entrytype;
+
+        $.extend(createParams, options);
+
+        function restore() {
+
+            if (restored) return;
+
+            restored = true;
+            params.urlLoadParams = urlLoadParams;
+            searcher.doSearch();
+        }
+
+        com.popup4page("#layerPopUp", api.index.createOrderIndex.url, title, null, restore, function() {
+
+            params.urlLoadParams = createParams;
+        });
+    }
+
+    com.focusPage('a[name="create"]', '#pagenation').click(function() {
+
+        openCreateOrder("创建装修单", {});
+    });
+
+    com.focusPage('a[name="createAdvance"]', '#pagenation').click(function() {
+
+        openCreateOrder("创建多单", {
+            "maketype": "advance"
+        });
+    });
+
+    com.focusPage('a[name="createCountry"]', '#pagenation').click(function() {
+
+        openCreateOrder("创建国补", {
+            "entrytype": "country"
+        });
     });
 
     com.focusPage('a[name="import"]', '#pagenation').click(function() {

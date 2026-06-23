@@ -58,8 +58,8 @@ jQuery(function($) {
     orderEntry.orderItems.escorterId = com.focusPage("#escorterId");
     orderEntry.orderItems.materialerId = com.focusPage("#materialerId");
 
-    orderEntry.btns.saveBtn = com.focusPage("#saveBtn").on("click", createOrder);
-    orderEntry.btns.cancelBtn = com.focusPage("#cancelBtn").on("click", initCreate);
+    orderEntry.btns.saveBtn = com.focusPage("#createOrderSaveBtn").on("click", createOrder);
+    orderEntry.btns.cancelBtn = com.focusPage("#createOrderCancelBtn").on("click", initCreate);
 
     orderEntry.customerItems.customerName = com.focusPage("#customerName");
 
@@ -385,7 +385,7 @@ jQuery(function($) {
 
     function createOrder() {
 
-        var btn = com.focusPage("#saveBtn");
+        var btn = com.focusPage("#createOrderSaveBtn");
 
         var url = api.decoration.createDecoration;
 
