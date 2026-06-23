@@ -395,6 +395,7 @@ public class A20260103Action extends BaseListAction {
 		source.setName(name);
 		source.setPhone(phone);
 		source.setGender(gender);
+		source.setReferOrderId(referOrderId);
 
 		// 楼盘信息
 		source.setVillage(new VillageVO(village));
@@ -479,6 +480,7 @@ public class A20260103Action extends BaseListAction {
 		this.data.put("houseNumber", houseNumber);
 		this.data.put("buildArea", buildArea != null ? buildArea / 1000.0 : null);
 		this.data.put("busitype", busitype);
+		this.data.put("referOrderId", referOrderId);
 		this.data.put("userId", userId);
 		this.data.put("orgId", orgId);
 		this.data.put("designerId", designerId);
