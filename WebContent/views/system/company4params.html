@@ -17,17 +17,23 @@
                 <!-- 搜索框 -->
                 <div class="form-group">
                     <input type="text" id="searchInput" class="form-control input-sm"
-                           placeholder="搜索配置键、值或说明..." style="width: 300px;">
+                           placeholder="搜索配置项名称、配置键、说明或当前值..." style="width: 360px;">
                 </div>
 
                 <!-- 操作按钮 -->
                 <button id="addConfigBtn" class="btn btn-sm btn-success">
-                    <i class="icon-plus"></i> 新增配置
+                    <i class="icon-plus"></i> 新增自定义配置
                 </button>
 
                 <button id="refreshBtn" class="btn btn-sm btn-info">
                     <i class="icon-refresh"></i> 刷新
                 </button>
+            </div>
+
+            <!-- 提示 -->
+            <div class="alert alert-info" style="margin-top: 10px; margin-bottom: 0;">
+                <i class="icon-info-sign"></i>
+                下方列出当前系统支持的全部可配置项。<strong>蓝色</strong>为已配置的实际值，<strong>灰色「未配置」</strong>表示该项尚未设置，将使用系统默认值。点击「设置值」可新增配置，点击「编辑」可修改已有配置。
             </div>
         </div>
     </div>
@@ -61,17 +67,6 @@
                         <div class="col-sm-9">
                             <select id="configGroup" class="form-control">
                                 <option value="">请选择分组</option>
-                                <option value="decoration">装饰订单配置</option>
-                                <option value="quotation">报价管理配置</option>
-                                <option value="construction">施工管理配置</option>
-                                <option value="customer">客户管理配置</option>
-                                <option value="payment">支付管理配置</option>
-                                <option value="personel">人事管理配置</option>
-                                <option value="sales">主材销售配置</option>
-                                <option value="dingtalk">钉钉集成配置</option>
-                                <option value="wechat">微信集成配置</option>
-                                <option value="seiya">世雅集成配置</option>
-                                <option value="">其他配置</option>
                             </select>
                         </div>
                     </div>
@@ -80,9 +75,26 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right">配置键</label>
                         <div class="col-sm-9">
-                            <input type="text" id="configKey" class="form-control"
-                                   placeholder="输入配置键（如：manageRate）" maxlength="125">
-                            <small class="text-muted">建议使用字母、数字、下划线</small>
+                            <input type="text" id="configKey" class="form-control" maxlength="125">
+                            <small class="text-muted" id="configKeyDisplay">建议使用字母、数字、下划线</small>
+                        </div>
+                    </div>
+
+                    <!-- 配置名称(目录项自动填充,仅展示参考) -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">配置名称</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="configName" class="form-control"
+                                   placeholder="该配置项的中文名称(参考)" maxlength="64" readonly>
+                        </div>
+                    </div>
+
+                    <!-- 说明(目录项自动填充,仅展示参考) -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">说明</label>
+                        <div class="col-sm-9">
+                            <textarea id="configDesc" class="form-control" rows="2" readonly
+                                      style="background-color:#f5f5f5;"></textarea>
                         </div>
                     </div>
 
@@ -95,18 +107,21 @@
                         </div>
                     </div>
 
-                    <!-- 说明 -->
+                    <!-- 备注 -->
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right">说明</label>
+                        <label class="col-sm-3 control-label no-padding-right">备注</label>
                         <div class="col-sm-9">
                             <textarea id="configComment" class="form-control" rows="2"
-                                      placeholder="配置项说明" maxlength="125"></textarea>
+                                      placeholder="配置项备注说明" maxlength="125"></textarea>
                         </div>
                     </div>
                 </form>
             </div>
 
             <div class="modal-footer">
+                <button type="button" id="deleteBtn" class="btn btn-danger pull-left" style="display:none;">
+                    <i class="icon-trash"></i> 删除此配置
+                </button>
                 <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
                 <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
@@ -115,5 +130,5 @@
 </div>
 
 <script type="text/javascript">
-    $.loadScript(['js/system/companySystemConfig.js']);
+    $.loadScript(['js/system/systemConfigCatalog.js', 'js/system/company4params.js']);
 </script>

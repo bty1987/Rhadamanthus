@@ -114,6 +114,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 			throw new FLException(130013, "系统配置不存在");
 		}
 
+		systemConfigPO.setGroup(systemConfigVO.getGroup());
 		systemConfigPO.setValue(systemConfigVO.getValue());
 		systemConfigPO.setComment(systemConfigVO.getComment());
 
@@ -126,16 +127,23 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 	@Transactional(rollbackFor = Exception.class)
 	public void addSystemConfig(SystemConfigVO systemConfigVO, String userId) throws FLException {
 
-		SystemConfigPO systemConfigPOs = systemConfigDao.querySystemConfig(systemConfigVO.getKey());
+		int company = systemConfigVO.getCompany() == null ? 0 : systemConfigVO.getCompany();
 
-		if (systemConfigPOs != null) {
+		// 同公司下同 key 唯一(历史全局唯一查询保留,避免与老数据冲突)
+		SystemConfigPO existGlobal = systemConfigDao.querySystemConfig(systemConfigVO.getKey());
+
+		SystemConfigPO existCompany = systemConfigDao.querySystemConfig(systemConfigVO.getKey(), company);
+
+		if (existGlobal != null || existCompany != null) {
 			throw new FLException(110000, "系统处理问题");
 		}
 
 		SystemConfigPO systemConfigPO = new SystemConfigPO();
 
+		systemConfigPO.setGroup(systemConfigVO.getGroup());
 		systemConfigPO.setKey(systemConfigVO.getKey());
 		systemConfigPO.setValue(systemConfigVO.getValue());
+		systemConfigPO.setCompany(company);
 
 		systemConfigPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		systemConfigPO.setComment(systemConfigVO.getComment());
@@ -143,6 +151,21 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 		systemConfigPO.setCreater((userDao.queryUserByUserId(userId)));
 
 		systemConfigDao.save(systemConfigPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteSystemConfig(SystemConfigVO systemConfigVO) throws FLException {
+
+		SystemConfigPO systemConfigPO = systemConfigDao.get(systemConfigVO.getScid());
+
+		if (systemConfigPO == null) {
+			throw new FLException(130013, "系统配置不存在");
+		}
+
+		systemConfigDao.delete(systemConfigPO);
+
+		return 0;
 	}
 
 }
