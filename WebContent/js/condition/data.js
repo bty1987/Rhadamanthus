@@ -1056,6 +1056,72 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
+    "construction-node-process": {
+        label: "进度",
+        type: "select",
+        submitConfig: {
+            name: "process",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().constructionNode.process.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "construction-node-proset": {
+        label: "预派",
+        type: "select",
+        submitConfig: {
+            name: "proset",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().constructionNode.proset.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "construction-node-mark": {
+        label: "工程标识",
+        type: "select",
+        submitConfig: {
+            name: "mark",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().constructionNode.mark.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "construction-node-kino": {
+        label: "金蝶编号",
+        type: "text",
+        submitConfig: {
+            name: "kino",
+            op: "cn",
+            validate: null
+        }
+    },
+    "construction-node-kiname": {
+        label: "金蝶名称",
+        type: "text",
+        submitConfig: {
+            name: "kiname",
+            op: "cn",
+            validate: null
+        }
+    },
     "construction-cost-name": {
         label: "名称",
         type: "text",

@@ -259,7 +259,7 @@ jQuery(function($) {
         handle: function(v) {
 
             params.customer.cid = v.cid;
-            com.popup4page('#customerAccountPopUp', api.data.customerAccountIndex.url, "银行账户");
+            com.popup4page('#customerAccountPopUp', api.index.customerAccountIndex.url, "银行账户");
         }
     }];
 

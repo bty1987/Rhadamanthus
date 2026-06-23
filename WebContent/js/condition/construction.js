@@ -530,4 +530,20 @@ Condition.addupRule("construction", {
             valuePath: "value"
         }
     },
+    "constructionSchedule-planStatus": {
+        label: "预估工费状态",
+        type: "select",
+        submitConfig: {
+            name: "constructionSchedule.planStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.construction().constructionSchedule.planStatus.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });

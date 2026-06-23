@@ -73,10 +73,20 @@ public class ConstructionNodeDaoImpl extends DaoImpl<ConstructionNodePO> impleme
 			String op = filter.getOp();
 			String data = filter.getData();
 
-			if (field.equals("name")) {
+			if ("name".equals(field)) {
 				query.add(query.getCriterion("name", data, op));
-			} else if ("status".equals(filter.getField())) {
-				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+			} else if ("status".equals(field)) {
+				query.add(Restrictions.eq("status", Short.valueOf(data)));
+			} else if ("process".equals(field)) {
+				query.add(Restrictions.eq("process", Short.valueOf(data)));
+			} else if ("proset".equals(field)) {
+				query.add(Restrictions.eq("proset", Short.valueOf(data)));
+			} else if ("mark".equals(field)) {
+				query.add(Restrictions.eq("mark", Short.valueOf(data)));
+			} else if ("kino".equals(field)) {
+				query.add(query.getCriterion("kino", data, op));
+			} else if ("kiname".equals(field)) {
+				query.add(query.getCriterion("kiname", data, op));
 			}
 		}
 	}
