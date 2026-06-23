@@ -72,7 +72,6 @@ $(function() {
 
             com.clearValidator();
             com.cleanItems(quotationNamingRule.items);
-            com.closePopup();
 
             quotationNamingRule.qnrid = v.qnrid;
 
@@ -82,7 +81,7 @@ $(function() {
             quotationNamingRule.items.sort.val(v.sort);
             quotationNamingRule.items.comment.val(v.comment);
 
-            com.popup4model('#layerAdd', '编辑');
+            com.focusPage('#layerAdd').modal('show');
         }
     }, {
         name: "启用",
@@ -144,11 +143,10 @@ $(function() {
 
         com.clearValidator();
         com.cleanItems(quotationNamingRule.items);
-        com.closePopup();
 
         quotationNamingRule.qnrid = null;
 
-        com.popup4model('#layerAdd', '添加');
+        com.focusPage('#layerAdd').modal('show');
     });
 
     // 保存按钮
@@ -186,7 +184,7 @@ $(function() {
         com.post(url, options, function(res) {
 
             com.showAlert(com.info, quotationNamingRule.qnrid ? "更新成功" : "添加成功");
-            com.closePopup();
+            com.focusPage('#layerAdd').modal('hide');
             searcher.doSearch();
         });
     }

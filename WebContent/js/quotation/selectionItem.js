@@ -282,17 +282,25 @@ $(function() {
             if (selectionItem.pageConfig.pageBtn.contains("picture"))
                 $divBtnWrap.append($btnPicture);
 
-            (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || v.status == constant.quotation().selectionItem.STATUS_TRAN_INT || selectionItem.pageType == "expert" ? $btnCompile.show() : $btnCompile.hide();
-            [constant.quotation().selectionItem.STATUS_REVIEW_INT, constant.quotation().selectionItem.STATUS_BALANCE_INT, constant.quotation().selectionItem.STATUS_DISABLE_SHORT].indexOf(v.status) != -1 ? $btnRefnum.hide() : $btnRefnum.show();
-            (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || selectionItem.pageType == "expert" ? $btnRran.show() : $btnRran.hide();
-            v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? $btnCheck.show() : $btnCheck.hide();
-            v.status == constant.quotation().selectionItem.STATUS_CHECK_INT ? $btnConfirm.show() : $btnConfirm.hide();
-            v.status == constant.quotation().selectionItem.STATUS_CONFIRM_INT ? $btnFinish.show() : $btnFinish.hide();
-            v.status == constant.quotation().selectionItem.STATUS_FINISH_INT ? $btnReview.show() : $btnReview.hide();
-            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT ? $btnBalance.show() : $btnBalance.hide();
-            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? $btnReject.show() : $btnReject.hide();
-            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? $btnDel.hide() : $btnDel.show();
-            [constant.quotation().selectionItem.TYPE_ALONE_INT, constant.quotation().selectionItem.TYPE_ADDED_QUOTATION_SHORT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONADD_INT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONMINUS_INT, constant.quotation().selectionItem.TYPE_ADDED_ADDITEM_INT, constant.quotation().selectionItem.TYPE_ADDED_MINUSITEM_INT].indexOf(v.type) != -1 ? $btnAdded.hide() : $btnAdded.show();
+            // 显示/隐藏功能按钮: 避免jQuery .show()将<a>恢复成display:inline, 破坏.btn的inline-block样式
+            var showBtn = function($btn) {
+                $btn.css("display", "inline-block");
+            };
+            var hideBtn = function($btn) {
+                $btn.hide();
+            };
+
+            (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || v.status == constant.quotation().selectionItem.STATUS_TRAN_INT || selectionItem.pageType == "expert" ? showBtn($btnCompile) : hideBtn($btnCompile);
+            [constant.quotation().selectionItem.STATUS_REVIEW_INT, constant.quotation().selectionItem.STATUS_BALANCE_INT, constant.quotation().selectionItem.STATUS_DISABLE_SHORT].indexOf(v.status) != -1 ? hideBtn($btnRefnum) : showBtn($btnRefnum);
+            (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || selectionItem.pageType == "expert" ? showBtn($btnRran) : hideBtn($btnRran);
+            v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? showBtn($btnCheck) : hideBtn($btnCheck);
+            v.status == constant.quotation().selectionItem.STATUS_CHECK_INT ? showBtn($btnConfirm) : hideBtn($btnConfirm);
+            v.status == constant.quotation().selectionItem.STATUS_CONFIRM_INT ? showBtn($btnFinish) : hideBtn($btnFinish);
+            v.status == constant.quotation().selectionItem.STATUS_FINISH_INT ? showBtn($btnReview) : hideBtn($btnReview);
+            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT ? showBtn($btnBalance) : hideBtn($btnBalance);
+            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? showBtn($btnReject) : hideBtn($btnReject);
+            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? hideBtn($btnDel) : showBtn($btnDel);
+            [constant.quotation().selectionItem.TYPE_ALONE_INT, constant.quotation().selectionItem.TYPE_ADDED_QUOTATION_SHORT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONADD_INT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONMINUS_INT, constant.quotation().selectionItem.TYPE_ADDED_ADDITEM_INT, constant.quotation().selectionItem.TYPE_ADDED_MINUSITEM_INT].indexOf(v.type) != -1 ? hideBtn($btnAdded) : showBtn($btnAdded);
 
             $divBtnWrap.appendTo($h3);
 

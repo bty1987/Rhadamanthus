@@ -63,7 +63,7 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageConstructionNode);
 
-    searcher.condition(["data-construction-node-name", "data-construction-node-status"]);
+    searcher.condition(["data-construction-node-name", "data-construction-node-status", "data-construction-node-process", "data-construction-node-proset", "data-construction-node-mark", "data-construction-node-kino", "data-construction-node-kiname"]);
 
     searcher.history("constructionNodePostData");
 
