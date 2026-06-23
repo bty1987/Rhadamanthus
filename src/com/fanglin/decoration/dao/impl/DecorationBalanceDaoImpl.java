@@ -20,9 +20,11 @@ public class DecorationBalanceDaoImpl extends DaoImpl<DecorationBalancePO> imple
 	}
 
 	@Override
-	public List<DecorationBalancePO> pageDecorationForBalance(Paging paging, List<Filter> filters) throws FLException {
+	public List<DecorationBalancePO> pageDecorationForBalance(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<DecorationBalancePO> query = pagingQuery(paging, DecorationBalancePO.class);
+
+		query.add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 

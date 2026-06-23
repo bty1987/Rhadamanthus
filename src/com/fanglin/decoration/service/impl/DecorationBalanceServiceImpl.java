@@ -42,26 +42,32 @@ public class DecorationBalanceServiceImpl implements DecorationBalanceService {
 	private UserDao userDao;
 
 	@Override
-	public void pageDecorationForBalance(Paging paging, List<Filter> filters) throws FLException {
+	public void pageDecorationForBalance(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		if (filters.size() == 0) return;
 
-		List<DecorationBalancePO> decorationBalancePOs = decorationBalanceDao.pageDecorationForBalance(paging, filters);
-		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
+		List<DecorationBalancePO> decorationBalancePOs = decorationBalanceDao.pageDecorationForBalance(paging, filters, company);
+		List<DecorationBalanceVO> decorationBalanceVOs = new ArrayList<DecorationBalanceVO>();
 
 		for (DecorationBalancePO decorationBalancePO : decorationBalancePOs) {
-			DecorationVO decorationVO = new DecorationVO();
+			DecorationBalanceVO decorationBalanceVO = new DecorationBalanceVO(new DecorationVO(), new UserBaseVO(new DutyVO()));
 
-			decorationVO.setSupervisor(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setQuoter(new UserBaseVO());
+			BeanUtil.copyProperties(decorationBalancePO, decorationBalanceVO, Arrays.asList("decoration", "user"));
 
-			decorationBalancePO.getDecoration().ptvcascade(decorationVO);
+			decorationBalanceVO.getDecoration().setSupervisor(new UserBaseVO());
+			decorationBalanceVO.getDecoration().setEscorter(new UserBaseVO());
+			decorationBalanceVO.getDecoration().setQuoter(new UserBaseVO());
 
-			decorationVOs.add(decorationVO);
+			decorationBalancePO.getDecoration().ptvcascade(decorationBalanceVO.getDecoration());
+
+			if (decorationBalancePO.getUser() != null) {
+				decorationBalanceVO.getUser().setBaseInfo(decorationBalancePO.getUser());
+			}
+
+			decorationBalanceVOs.add(decorationBalanceVO);
 		}
 
-		paging.setData(decorationVOs);
+		paging.setData(decorationBalanceVOs);
 	}
 
 	@Override
@@ -97,11 +103,13 @@ public class DecorationBalanceServiceImpl implements DecorationBalanceService {
 		}
 
 		DecorationBalancePO decirationBalancePO = decorationBalanceDao.queryDecorationBalance(decorationPO.getDoid());
+		Timestamp balanceTime = new Timestamp(System.currentTimeMillis());
 
 		if (decirationBalancePO != null) {
 
 			decirationBalancePO.setBalance(decorationBalanceVO.getBalance());
 			decirationBalancePO.setUser(userPO);
+			decirationBalancePO.setBalanceTime(balanceTime);
 
 			decorationPO.setBalanceStatus(DecorationPO.BALANCESTATUS_CONDUCT_INT);
 
@@ -112,7 +120,7 @@ public class DecorationBalanceServiceImpl implements DecorationBalanceService {
 			DecorationBalancePO decorationBalance = new DecorationBalancePO();
 
 			decorationBalance.setBalance(decorationBalanceVO.getBalance());
-			decorationBalance.setBalanceTime(new Timestamp(System.currentTimeMillis()));
+			decorationBalance.setBalanceTime(balanceTime);
 			decorationBalance.setDecoration(decorationPO);
 			decorationBalance.setUser(userPO);
 

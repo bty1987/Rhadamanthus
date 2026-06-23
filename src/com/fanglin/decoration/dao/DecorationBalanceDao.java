@@ -10,7 +10,7 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationBalanceDao extends Dao<DecorationBalancePO> {
 
-	public List<DecorationBalancePO> pageDecorationForBalance(Paging paging, List<Filter> filters) throws FLException;
+	public List<DecorationBalancePO> pageDecorationForBalance(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	public DecorationBalancePO queryDecorationBalance(Long doid);
 

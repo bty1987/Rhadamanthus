@@ -30,7 +30,7 @@ public class DecorationBalanceAction extends BaseListAction {
 	@Action(value = "pageDecorationForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationForBalance() throws FLException {
 
-		decorationBalanceService.pageDecorationForBalance(getPaging(), getFilters());
+		decorationBalanceService.pageDecorationForBalance(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
