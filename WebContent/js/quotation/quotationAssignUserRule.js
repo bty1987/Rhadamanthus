@@ -79,7 +79,7 @@ $(function() {
         name: "当前任务",
         prop: function(v) {
 
-            return v.currentTaskCount || constant.quotation().quotationAssignUserRule.TASK_COUNT_NONE_INT;
+            return v.currentTaskCount;
         },
         clazz: "blue" // 数值类型使用 blue
     }, {
