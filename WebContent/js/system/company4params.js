@@ -2,7 +2,6 @@ $(function() {
 
 	// ==================== 应用状态 ====================
 	var app = {
-		currentCompany: params.company.cid,  // 当前公司ID
 		dbConfigMap: {},                      // key -> DB 配置记录(已落库的)
 		mergedConfigs: [],                    // catalog 与 DB 合并后的完整配置列表
 		groupedConfigs: {},                   // 按分组整理的配置
@@ -11,7 +10,6 @@ $(function() {
 
 		ui: {
 			statement: com.focusPage('#fl-statement'),
-			companySelect: com.focusPage('#companySelect'),
 			searchInput: com.focusPage('#searchInput'),
 			addBtn: com.focusPage('#addConfigBtn'),
 			refreshBtn: com.focusPage('#refreshBtn'),
@@ -42,9 +40,6 @@ $(function() {
 			"当前公司: " + params.company.name + " — 可在此查看并维护全部可配置项"
 		);
 
-		loadCompanyList();
-		app.ui.companySelect.val(app.currentCompany);
-
 		// 分组下拉填充(来源于目录分组定义)
 		renderGroupOptions();
 
@@ -53,28 +48,11 @@ $(function() {
 	}
 
 	// ==================== 数据加载 ====================
-	function loadCompanyList() {
-		com.post(api.system.queryCompany, {}, function(res) {
-			var html = '<option value="">请选择公司</option>';
-			$.each(res.companys, function(i, company) {
-				html += '<option value="' + company.cid + '">' + company.name + '</option>';
-			});
-			app.ui.companySelect.html(html);
-			app.ui.companySelect.val(app.currentCompany);
-		});
-	}
-
 	function loadConfigs() {
-		if (!app.currentCompany) {
-			app.ui.accordion.html('<div class="alert alert-info">请选择公司查看配置</div>');
-			return;
-		}
 
 		com.showLoading('正在加载配置...');
 
-		com.post(api.system.querySystemConfigByCid, {
-			"systemConfig.company": app.currentCompany
-		}, function(res) {
+		com.post(api.system.querySystemConfigByCid, {}, function(res) {
 			// 建立 key -> DB 配置 映射
 			app.dbConfigMap = {};
 			$.each(res.systemConfigs || [], function(i, config) {
@@ -281,10 +259,6 @@ $(function() {
 
 	// ==================== 事件绑定 ====================
 	function bindEvents() {
-		app.ui.companySelect.on('change', function() {
-			app.currentCompany = $(this).val();
-			loadConfigs();
-		});
 
 		// 搜索(防抖): 在合并后的完整列表上过滤
 		var searchTimeout;
@@ -449,7 +423,6 @@ $(function() {
 		var isEdit = app.editingConfig && app.editingConfig.configured && app.editingConfig.scid;
 
 		var options = {
-			"systemConfig.company": app.currentCompany,
 			"systemConfig.group": group,
 			"systemConfig.key": key,
 			"systemConfig.value": value,

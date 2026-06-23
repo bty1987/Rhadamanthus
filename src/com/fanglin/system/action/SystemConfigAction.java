@@ -72,6 +72,10 @@ public class SystemConfigAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
+		if (systemConfig == null) systemConfig = new SystemConfigVO();
+
+		systemConfig.setCompany(queryCompany());
+
 		systemConfigService.addSystemConfig(systemConfig, queryUserId());
 
 		return SUCCESS;
