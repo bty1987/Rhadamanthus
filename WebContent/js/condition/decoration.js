@@ -750,5 +750,36 @@ Condition.addupRule("decoration", {
             op: "between",
             validate: null
         }
+    },
+    "decorationAccount-isAffirm": {
+        label: "客户确认",
+        type: "select",
+        submitConfig: {
+            name: "decorationAccount.isAffirm",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": "0",
+                "value": "初始"
+            }, {
+                "key": "1",
+                "value": "确认"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "decorationAccount-name": {
+        label: "决算名称",
+        type: "text",
+        submitConfig: {
+            name: "decorationAccount.name",
+            op: "cn",
+            validate: null
+        }
     }
 });

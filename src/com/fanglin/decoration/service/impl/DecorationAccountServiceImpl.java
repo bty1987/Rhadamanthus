@@ -1,7 +1,9 @@
 package com.fanglin.decoration.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
@@ -29,6 +32,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.utils.Paging;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
@@ -67,13 +71,39 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 	private com.fanglin.information.dao.MessageQueuingDao messageQueuingDao;
 
 	@Override
+	public void pageDecorationAccount(Paging paging, List<Filter> filters, int company) throws FLException {
+
+		if (filters.size() == 0) return;
+
+		List<DecorationAccountPO> decorationAccountPOs = decorationAccountDao.pageDecorationAccount(paging, filters, company);
+		List<DecorationAccountVO> decorationAccountVOs = new ArrayList<DecorationAccountVO>();
+
+		for (DecorationAccountPO decorationAccountPO : decorationAccountPOs) {
+
+			DecorationAccountVO decorationAccountVO = new DecorationAccountVO();
+
+			decorationAccountVO.setDecoration(new DecorationVO());
+
+			BeanUtil.copyProperties(decorationAccountPO, decorationAccountVO, Arrays.asList("decoration"));
+
+			if (decorationAccountPO.getDecoration() != null) {
+				decorationAccountPO.getDecoration().ptvcascade(decorationAccountVO.getDecoration());
+			}
+
+			decorationAccountVOs.add(decorationAccountVO);
+		}
+
+		paging.setData(decorationAccountVOs);
+	}
+
+	@Override
 	public DecorationAccountVO queryDecorationAccount(DecorationAccountVO decorationAccountVO) {
 
 		DecorationAccountPO decorationAccountPO = decorationAccountDao.queryDecorationAccount(decorationAccountVO.getOrderId());
 
 		decorationAccountVO = new DecorationAccountVO();
 
-		BeanUtil.copyPropertie(decorationAccountPO, decorationAccountVO);
+		BeanUtil.copyProperties(decorationAccountPO, decorationAccountVO, Arrays.asList("decoration"));
 
 		return decorationAccountVO;
 	}
@@ -96,15 +126,15 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 		if (decorationAccountPO == null) {
 
-			decorationAccountPO = new DecorationAccountPO();
-			BeanUtil.copyPropertie(decorationAccountVO, decorationAccountPO);
+				decorationAccountPO = new DecorationAccountPO();
+				BeanUtil.copyProperties(decorationAccountVO, decorationAccountPO, Arrays.asList("decoration"));
 
-			decorationAccountDao.merge(decorationAccountPO);
-		} else {
+				decorationAccountDao.merge(decorationAccountPO);
+			} else {
 
-			BeanUtil.copyPropertie(decorationAccountVO, decorationAccountPO);
+				BeanUtil.copyProperties(decorationAccountVO, decorationAccountPO, Arrays.asList("decoration"));
 
-			decorationAccountDao.update(decorationAccountPO);
+				decorationAccountDao.update(decorationAccountPO);
 		}
 
 	}
@@ -112,6 +142,10 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void makeDecorationAccount(DecorationAccountVO decorationAccountVO, String userId) throws FLException {
+
+		if (decorationAccountVO == null || decorationAccountVO.getOrderId() == null) {
+			throw new FLException(140081, "决算信息不存在");
+		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationAccountVO.getOrderId());
 
@@ -121,6 +155,12 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 		if (decorationPO.getStatus() != DecorationPO.STATUS_SIGNED_INT) {
 			throw new FLException(140004, "装修单状态不可操作");
+		}
+
+		DecorationAccountPO decorationAccountPO = decorationAccountDao.queryDecorationAccount(decorationAccountVO.getOrderId());
+
+		if (decorationAccountPO == null) {
+			throw new FLException(140081, "决算信息不存在");
 		}
 
 		if (decorationPO.getPaySacle() < 99) {
@@ -169,6 +209,10 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 	@Transactional(rollbackFor = Exception.class)
 	public int affirmDecorationAccount(DecorationVO decorationVO, DecorationAccountVO decorationAccountVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException {
 
+		if (decorationVO == null || decorationVO.getCustomer() == null || decorationAccountVO == null || decorationAccountVO.getOrderId() == null) {
+			throw new FLException(140081, "决算信息不存在");
+		}
+
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330012, "验证失败,请重新验证");
 		}
@@ -202,6 +246,10 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 		if (decorationVO.getCustomer().getNo() != null && decorationService.queryDecoration(cecorationVO) == null) {
 			throw new FLException(130115, "装修单未绑定");
+		}
+
+		if (decorationAccountVO.getDaid() == null) {
+			throw new FLException(140081, "决算信息不存在");
 		}
 
 		DecorationAccountPO decorationAccountPO = decorationAccountDao.get(decorationAccountVO.getDaid());

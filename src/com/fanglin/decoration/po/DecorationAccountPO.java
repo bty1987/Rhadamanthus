@@ -7,8 +7,11 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -24,6 +27,8 @@ public class DecorationAccountPO implements Serializable {
 	public static final short ISAFFIRM_CONFIRMED_INT = 1;
 
 	private long daid;
+
+	private DecorationPO decoration;
 
 	private String orderId;
 
@@ -46,6 +51,10 @@ public class DecorationAccountPO implements Serializable {
 	private long materialPrice;
 
 	private long servicePrice;
+
+	private long projectPrice;
+
+	private long projectBase;
 
 	private int paidupMatching;
 
@@ -74,6 +83,16 @@ public class DecorationAccountPO implements Serializable {
 
 	public void setDaid(long daid) {
 		this.daid = daid;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "orderId", referencedColumnName = "orderId", insertable = false, updatable = false)
+	public DecorationPO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 
 	@Column(name = "name")
@@ -146,6 +165,24 @@ public class DecorationAccountPO implements Serializable {
 
 	public void setServicePrice(long servicePrice) {
 		this.servicePrice = servicePrice;
+	}
+
+	@Column(name = "projectPrice")
+	public long getProjectPrice() {
+		return projectPrice;
+	}
+
+	public void setProjectPrice(long projectPrice) {
+		this.projectPrice = projectPrice;
+	}
+
+	@Column(name = "projectBase")
+	public long getProjectBase() {
+		return projectBase;
+	}
+
+	public void setProjectBase(long projectBase) {
+		this.projectBase = projectBase;
 	}
 
 	@Column(name = "serviceRate")

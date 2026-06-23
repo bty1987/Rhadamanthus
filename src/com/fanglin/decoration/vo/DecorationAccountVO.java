@@ -9,6 +9,8 @@ public class DecorationAccountVO implements Serializable {
 
 	private Long daid;
 
+	private DecorationVO decoration;
+
 	private String name;
 
 	private String orderId;
@@ -30,6 +32,10 @@ public class DecorationAccountVO implements Serializable {
 	private Long materialPrice;
 
 	private Long servicePrice;
+
+	private Long projectPrice;
+
+	private Long projectBase;
 
 	private Integer paidupMatching;
 
@@ -64,6 +70,14 @@ public class DecorationAccountVO implements Serializable {
 
 	public void setDaid(Long daid) {
 		this.daid = daid;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public String getName() {
@@ -128,6 +142,22 @@ public class DecorationAccountVO implements Serializable {
 
 	public void setServicePrice(Long servicePrice) {
 		this.servicePrice = servicePrice;
+	}
+
+	public Long getProjectPrice() {
+		return projectPrice;
+	}
+
+	public void setProjectPrice(Long projectPrice) {
+		this.projectPrice = projectPrice;
+	}
+
+	public Long getProjectBase() {
+		return projectBase;
+	}
+
+	public void setProjectBase(Long projectBase) {
+		this.projectBase = projectBase;
 	}
 
 	public Integer getServiceRate() {
