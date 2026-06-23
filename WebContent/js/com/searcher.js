@@ -21,6 +21,15 @@ var Searcher = function() {
         lineprop: [],
         linevent: {},
 
+        viewMode: null,
+        defaultViewMode: null,
+        viewTitle: null,
+        viewModes: ["line", "card", "table"],
+        viewEnable: false,
+        preferEnable: true,
+        preferName: null,
+        lastData: null,
+
     };
 
     var searchCond = {
@@ -423,6 +432,9 @@ var Searcher = function() {
                 if (basicConf.historyName)
                     params[basicConf.historyName] = _params;
 
+                basicConf.lastData = result.paging.data || [];
+                renderViewSwitcher();
+
                 (result.paging.data && result.paging.data.length > 0) ? basicConf.displayFunc(result.paging.data) : emptyData();
             }, this), null, false);
         },
@@ -572,6 +584,9 @@ var Searcher = function() {
             if (basicConf.historyName)
                 params[basicConf.historyName] = _params;
 
+            basicConf.lastData = result[basicConf.resultName] || [];
+            renderViewSwitcher();
+
             (result[basicConf.resultName] && result[basicConf.resultName].length > 0) ? basicConf.displayFunc(result[basicConf.resultName]) : emptyData();
         }, this), null, false);
     };
@@ -696,7 +711,156 @@ var Searcher = function() {
         return "";
     }
 
-    return {
+    var searcherApi = null;
+
+    var getDefaultTitle = function(lineprop) {
+
+        if (!lineprop || !lineprop.length) {
+            return function() {
+                return "详情";
+            };
+        }
+
+        for (var i = 0; i < lineprop.length; i++) {
+
+            var prop = lineprop[i];
+
+            if (prop.type == "numbers" || prop.type == "checkbox")
+                continue;
+
+            if (prop.prop)
+                return prop.prop;
+        }
+
+        return function() {
+            return "详情";
+        };
+    };
+
+    var getPreferName = function() {
+
+        if (basicConf.preferName)
+            return basicConf.preferName;
+
+        if (basicConf.historyName)
+            return basicConf.historyName;
+
+        return window.location.pathname;
+    };
+
+    var renderViewSwitcher = function() {
+
+        if (!basicConf.viewEnable || !basicConf.$pager || !basicConf.$pager.length)
+            return false;
+
+        com.focusPage('.searcher-view-switcher', basicConf.$pager).remove();
+
+        var $group = $('<div></div>').addClass('searcher-view-switcher pull-left').css('margin', '0px 5px').prependTo(basicConf.$pager);
+
+        $.each([{
+            mode: "line",
+            name: "列表"
+        }, {
+            mode: "card",
+            name: "卡片"
+        }, {
+            mode: "table",
+            name: "表格"
+        }], function(i, v) {
+
+            $('<a></a>').addClass('btn btn-minier ' + (basicConf.viewMode == v.mode ? 'btn-primary' : 'btn-white')).css('margin', '0px 1px').text(v.name).appendTo($group).click(function() {
+
+                switchView(v.mode);
+            });
+        });
+    };
+
+    var applyViewMode = function(mode, render) {
+
+        if (!basicConf.viewEnable || !searcherApi || basicConf.viewModes.indexOf(mode) == -1)
+            return false;
+
+        basicConf.viewMode = mode;
+
+        if (mode == "card") {
+            searcherApi.card(basicConf.viewTitle, basicConf.lineprop, basicConf.linevent);
+        } else if (mode == "table") {
+            searcherApi.table(basicConf.lineprop, basicConf.linevent);
+        } else {
+            searcherApi.line(basicConf.viewTitle, basicConf.lineprop, basicConf.linevent);
+        }
+
+        basicConf.viewMode = mode;
+
+        renderViewSwitcher();
+
+        if (!render)
+            return true;
+
+        if (basicConf.lastData && basicConf.lastData.length) {
+            basicConf.displayFunc(basicConf.lastData);
+        } else {
+            emptyData();
+        }
+
+        return true;
+    };
+
+    var switchView = function(mode) {
+
+        if (basicConf.viewMode == mode)
+            return false;
+
+        if (!applyViewMode(mode, true))
+            return false;
+
+        saveUserPrefer(mode);
+    };
+
+    var loadUserPrefer = function(callback) {
+
+        if (!basicConf.viewEnable || !basicConf.preferEnable || !api.system || !api.system.queryUserPrefer) {
+            callback && callback();
+            return false;
+        }
+
+        try {
+            com.post(api.system.queryUserPrefer, {
+                "userPrefer.module": "searcher",
+                "userPrefer.page": getPreferName(),
+                "userPrefer.pkey": "viewMode"
+            }, function(res) {
+
+                var mode = res.userPrefer && res.userPrefer.pvalue;
+
+                if (mode && basicConf.viewModes.indexOf(mode) != -1) {
+                    applyViewMode(mode, false);
+                }
+
+                callback && callback();
+            }, null, false);
+        } catch (e) {
+            callback && callback();
+        }
+    };
+
+    var saveUserPrefer = function(mode) {
+
+        if (!basicConf.viewEnable || !basicConf.preferEnable || !api.system || !api.system.updateUserPrefer)
+            return false;
+
+        try {
+            com.post(api.system.updateUserPrefer, {
+                "userPrefer.module": "searcher",
+                "userPrefer.page": getPreferName(),
+                "userPrefer.pkey": "viewMode",
+                "userPrefer.pvalue": mode
+            });
+        } catch (e) {
+        }
+    };
+
+    searcherApi = {
         /**
          * 插件的初始化方法 params:
          * 
@@ -823,6 +987,10 @@ var Searcher = function() {
 
         line: function(title, lineprop, linevent) {
 
+            basicConf.viewEnable = true;
+            basicConf.defaultViewMode = basicConf.defaultViewMode || "line";
+            basicConf.viewMode = basicConf.viewMode || "line";
+            basicConf.viewTitle = title;
             basicConf.lineprop = lineprop;
             basicConf.linevent = linevent;
 
@@ -971,6 +1139,10 @@ var Searcher = function() {
 
         card: function(title, lineprop, linevent) {
 
+            basicConf.viewEnable = true;
+            basicConf.defaultViewMode = basicConf.defaultViewMode || "card";
+            basicConf.viewMode = basicConf.viewMode || "card";
+            basicConf.viewTitle = title;
             basicConf.lineprop = lineprop;
             basicConf.linevent = linevent;
 
@@ -1067,7 +1239,13 @@ var Searcher = function() {
                         } else if (button.type == "newline") {
                             $btntools = $('<div></div>').addClass("action-buttons").css("padding", "1px 0").appendTo($main);
                         } else {
-                            $('<a></a>').addClass('btn btn-minier ' + button.clazz).html(button.name).appendTo($btntools).click(function() {
+                            var btnName = typeof button.name == 'function' ? button.name(v) : button.name;
+
+                            if (btnName == null || btnName == undefined) {
+                                return true;
+                            }
+
+                            $('<a></a>').addClass('btn btn-minier ' + button.clazz).html(btnName).appendTo($btntools).click(function() {
 
                                 button.handle(v);
                             });
@@ -1144,6 +1322,10 @@ var Searcher = function() {
 
         table: function(lineprop, linevent) {
 
+            basicConf.viewEnable = true;
+            basicConf.defaultViewMode = basicConf.defaultViewMode || "table";
+            basicConf.viewMode = basicConf.viewMode || "table";
+            basicConf.viewTitle = basicConf.viewTitle || getDefaultTitle(lineprop);
             basicConf.lineprop = lineprop;
             basicConf.linevent = linevent;
 
@@ -1250,14 +1432,21 @@ var Searcher = function() {
                 });
             }
 
+            renderViewSwitcher();
+
             searchCond.renderConds(); // 初始化查询条件
 
             setTimeout(function() {
 
-                searchByPresentParams();
+                loadUserPrefer(function() {
 
-                if (callback)
-                    callback();
+                    renderViewSwitcher();
+
+                    searchByPresentParams();
+
+                    if (callback)
+                        callback();
+                });
             }, 500);
 
             return this;
@@ -1272,5 +1461,7 @@ var Searcher = function() {
                 searchByPresentParams()
             }, 500);
         }
-    }
+    };
+
+    return searcherApi;
 };
