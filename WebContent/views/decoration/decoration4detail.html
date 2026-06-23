@@ -374,6 +374,68 @@
                                     <input type="text" class="col-sm-6 v_phone" id="addphone">
                                     <button style="float: left;padding: 1px 8px;" class="btn btn-sm btn-primary" id="savePhoneBtn">添加</button>
                                 </div>
+                                <div class="row" id="customerAccountManage" style="margin-top: 30px;">
+                                    <h3 class="col-sm-12 control-label no-padding-right blue">账户管理</h3>
+                                    <div id="customerAccountList" class="col-sm-12 clearfix tab-pane active" style="margin-top: 5px"></div>
+
+                                    <div class="col-sm-12" id="customerAccountAddBtnWrap" style="margin-top: 10px;">
+                                        <button type="button" class="btn btn-sm btn-primary" id="addCustomerAccountBtn">添加账户</button>
+                                    </div>
+
+                                    <div id="customerAccountForm" class="col-sm-12" style="display: none; margin-top: 10px;">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-left orange" for="detailAccountType">
+                                                <b style="line-height: 30px">账户类型</b>
+                                            </label>
+                                            <select class="col-sm-6 v_required" id="detailAccountType" data-toggle="popover" data-trigger='manual'>
+                                                <option value="0">对私(个人)</option>
+                                                <option value="1">对公(企业)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-left" for="detailAccountNo">
+                                                <b style="line-height: 30px">证件号</b>
+                                            </label>
+                                            <input type="text" maxlength="64" class="col-sm-6" id="detailAccountNo">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-left orange" for="detailAccountName">
+                                                <b style="line-height: 30px">户名</b>
+                                            </label>
+                                            <input type="text" maxlength="128" class="col-sm-6 v_required" id="detailAccountName" data-toggle="popover" data-trigger='manual'>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-left" for="detailAccountPhone">
+                                                <b style="line-height: 30px">电话</b>
+                                            </label>
+                                            <input type="text" maxlength="64" class="col-sm-6" id="detailAccountPhone">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-left" for="detailAccountAddress">
+                                                <b style="line-height: 30px">地址</b>
+                                            </label>
+                                            <input type="text" maxlength="256" class="col-sm-6" id="detailAccountAddress">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-left orange" for="detailAccountBank">
+                                                <b style="line-height: 30px">开户行</b>
+                                            </label>
+                                            <input type="text" maxlength="128" class="col-sm-6 v_required" id="detailAccountBank" data-toggle="popover" data-trigger='manual'>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-left orange" for="detailAccountBankno">
+                                                <b style="line-height: 30px">银行账号</b>
+                                            </label>
+                                            <input type="text" maxlength="64" class="col-sm-6 v_required" id="detailAccountBankno" data-toggle="popover" data-trigger='manual'>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-3 col-sm-9">
+                                                <button type="button" class="btn btn-sm btn-primary" id="saveCustomerAccountBtn">保存</button>
+                                                <button type="button" class="btn btn-sm btn-default" id="cancelCustomerAccountBtn">取消</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1034,9 +1096,9 @@
 
 <div id="decorationActivityRecordPopUp" class="portlet box"></div>
 
-<div id="layerPopUp4detail" class="portlet box page-content"></div>
+    <div id="layerPopUp4detail" class="portlet box page-content"></div>
 
-<div id="layerPopUp4talkDecoration" class="portlet box page-content"></div>
+    <div id="layerPopUp4talkDecoration" class="portlet box page-content"></div>
 
 <script type="text/javascript">
     $.loadScript(['js/utils/kingdeeUtils.js', 'js/utils/decorationPageUtils.js', 'js/utils/decorationUtils.js', 'js/utils/materialUtils.js', 'js/utils/approvalUtils.js', 'js/utils/quotationUtils.js', 'js/decoration/decoration4detail.js', 'js/utils/houseUtils.js']);

@@ -1,240 +1,206 @@
-var customerAccount = {
+jQuery(function($) {
 
-    cid: null,
+    var customerAccount = {
 
-    items: {
+        cid: params.customer.cid,
+
         caid: null,
-        type: null,
-        no: null,
-        name: null,
-        phone: null,
-        address: null,
-        bank: null,
-        bankno: null
-    },
 
-    editMode: false
-};
+        editFlag: false,
 
-jQuery(document).ready(function() {
+        types: ["对私", "对公"],
 
-    customerAccount.cid = params.customer.cid;
+        defaultsArr: ["否", "是"],
 
-    // 绑定 DOM 元素
-    customerAccount.items.caid = $('#accountCaid');
-    customerAccount.items.type = $('#accountType');
-    customerAccount.items.no = $('#accountNo');
-    customerAccount.items.name = $('#accountName');
-    customerAccount.items.phone = $('#accountPhone');
-    customerAccount.items.address = $('#accountAddress');
-    customerAccount.items.bank = $('#accountBank');
-    customerAccount.items.bankno = $('#accountBankno');
+        btns: {
+            saveBtn: com.focusPage("#accountSaveBtn", "#customerAccountModal").on("click", saveAccount)
+        },
 
-    // 加载账户列表
-    queryAccounts();
+        modals: {
+            customerAccountModal: com.focusPage("#customerAccountModal").on("show.bs.modal", function() {
+                com.clearValidator();
+            })
+        },
 
-    // 添加按钮
-    $('#accountAddBtn').on('click', function() {
-        customerAccount.editMode = false;
-        clearForm();
-        $('#accountForm').show();
-        $('#accountAddBtnWrap').hide();
-    });
-
-    // 取消按钮
-    $('#accountCancelBtn').on('click', function() {
-        $('#accountForm').hide();
-        $('#accountAddBtnWrap').show();
-        clearForm();
-    });
-
-    // 保存按钮
-    $('#accountSaveBtn').on('click', function() {
-        saveAccount();
-    });
-});
-
-function queryAccounts() {
-
-    $('#accountList').empty();
-
-    com.post(api.communion.queryCustomerAccount, {
-        "customerAccount.cid": customerAccount.cid
-    }, function(res) {
-
-        var accounts = res.customerAccounts || [];
-
-        if (accounts.length == 0) {
-            $('#accountList').append('<div class="alert alert-info" style="margin:0">暂无银行账户</div>');
-            return;
+        items: {
+            type: com.focusPage("#accountType", "#customerAccountModal"),
+            no: com.focusPage("#accountNo", "#customerAccountModal"),
+            name: com.focusPage("#accountName", "#customerAccountModal"),
+            phone: com.focusPage("#accountPhone", "#customerAccountModal"),
+            address: com.focusPage("#accountAddress", "#customerAccountModal"),
+            bank: com.focusPage("#accountBank", "#customerAccountModal"),
+            bankno: com.focusPage("#accountBankno", "#customerAccountModal")
         }
-
-        $.each(accounts, function(i, v) {
-
-            var $panel = $('<div></div>').addClass('panel panel-default').css({'margin-bottom': '10px'});
-
-            // 标题栏
-            var $heading = $('<div></div>').addClass('panel-heading').css({
-                'padding': '8px 15px',
-                'display': 'flex',
-                'justify-content': 'space-between',
-                'align-items': 'center'
-            });
-
-            var typeLabel = v.type == 1 ? '对公' : '对私';
-            var defaultBadge = v.defaults == 1 ? ' <span class="label label-success">默认</span>' : '';
-            var statusBadge = v.status == 1 ? ' <span class="label label-danger">已停用</span>' : '';
-
-            $heading.append($('<strong></strong>').html(typeLabel + ' - ' + (v.name || '') + defaultBadge + statusBadge));
-
-            var $btnGroup = $('<div></div>');
-
-            if (v.defaults != 1) {
-                var $btnDefault = $('<a></a>').addClass('btn btn-minier btn-success').text('设为默认').css('margin-right', '5px');
-                $btnDefault.on('click', function() {
-                    setDefault(v.caid);
-                });
-                $btnGroup.append($btnDefault);
-            }
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').text('编辑').css('margin-right', '5px');
-            $btnEdit.on('click', function() {
-                editAccount(v);
-            });
-            $btnGroup.append($btnEdit);
-
-            if (v.defaults != 1) {
-                var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').text('删除');
-                $btnDel.on('click', function() {
-                    com.showConfirm('确认删除该账户?', function() {
-                        deleteAccount(v.caid);
-                    });
-                });
-                $btnGroup.append($btnDel);
-            }
-
-            $heading.append($btnGroup);
-            $panel.append($heading);
-
-            // 内容区
-            var $body = $('<div></div>').addClass('panel-body').css({'padding': '8px 15px'});
-
-            var infoHtml = '<div class="row">';
-            infoHtml += '<div class="col-sm-6"><strong>开户银行:</strong> <span class="grey">' + (v.bank || '') + '</span></div>';
-            infoHtml += '<div class="col-sm-6"><strong>银行账号:</strong> <span class="grey">' + (v.bankno || '') + '</span></div>';
-            infoHtml += '</div>';
-
-            if (v.no) {
-                infoHtml += '<div class="row" style="margin-top:4px"><div class="col-sm-6"><strong>证件号:</strong> <span class="grey">' + v.no + '</span></div>';
-            } else {
-                infoHtml += '<div class="row" style="margin-top:4px"><div class="col-sm-6">';
-            }
-            if (v.phone) {
-                infoHtml += '<div class="col-sm-6"><strong>电话:</strong> <span class="grey">' + v.phone + '</span></div>';
-            }
-            infoHtml += '</div>';
-
-            if (v.address) {
-                infoHtml += '<div class="row" style="margin-top:4px"><div class="col-sm-12"><strong>地址:</strong> <span class="grey">' + v.address + '</span></div></div>';
-            }
-
-            $body.html(infoHtml);
-            $panel.append($body);
-            $('#accountList').append($panel);
-        });
-    });
-}
-
-function editAccount(v) {
-
-    customerAccount.editMode = true;
-    clearForm();
-
-    customerAccount.items.caid.val(v.caid);
-    customerAccount.items.type.val(v.type);
-    customerAccount.items.no.val(v.no);
-    customerAccount.items.name.val(v.name);
-    customerAccount.items.phone.val(v.phone);
-    customerAccount.items.address.val(v.address);
-    customerAccount.items.bank.val(v.bank);
-    customerAccount.items.bankno.val(v.bankno);
-
-    $('#accountForm').show();
-    $('#accountAddBtnWrap').hide();
-}
-
-function saveAccount() {
-
-    var name = customerAccount.items.name.val();
-    var bank = customerAccount.items.bank.val();
-    var bankno = customerAccount.items.bankno.val();
-
-    if (!name) {
-        com.showAlert(com.warning, '请填写户名');
-        return;
-    }
-    if (!bank) {
-        com.showAlert(com.warning, '请填写开户银行');
-        return;
-    }
-    if (!bankno) {
-        com.showAlert(com.warning, '请填写银行账号');
-        return;
-    }
-
-    var data = {
-        "customerAccount.cid": customerAccount.cid,
-        "customerAccount.type": customerAccount.items.type.val(),
-        "customerAccount.no": customerAccount.items.no.val(),
-        "customerAccount.name": name,
-        "customerAccount.phone": customerAccount.items.phone.val(),
-        "customerAccount.address": customerAccount.items.address.val(),
-        "customerAccount.bank": bank,
-        "customerAccount.bankno": bankno
     };
 
-    var apiUrl;
-    if (customerAccount.editMode) {
-        data["customerAccount.caid"] = customerAccount.items.caid.val();
-        apiUrl = api.communion.updateCustomerAccount;
-    } else {
-        apiUrl = api.communion.addCustomerAccount;
-    }
+    var searcher = new Searcher();
 
-    com.post(apiUrl, data, function() {
-        $('#accountForm').hide();
-        $('#accountAddBtnWrap').show();
-        clearForm();
-        queryAccounts();
-    });
-}
+    // 默认账户不显示「设为默认」「删除」按钮(name 返回 null 即跳过渲染)
+    var linebtns = [{
+        name: function(v) {
 
-function deleteAccount(caid) {
+            return v.defaults == 1 ? null : "设为默认";
+        },
+        clazz: "btn-success",
+        handle: function(v) {
 
-    com.post(api.communion.deleteCustomerAccount, {
-        "customerAccount.caid": caid
-    }, function() {
-        queryAccounts();
-    });
-}
+            com.post(api.communion.setDefaultCustomerAccount, {
+                "customerAccount.caid": v.caid,
+                "customerAccount.cid": customerAccount.cid
+            }, function() {
 
-function setDefault(caid) {
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
 
-    com.post(api.communion.setDefaultCustomerAccount, {
-        "customerAccount.caid": caid,
+            return false;
+        }
+    }, {
+        name: "编辑",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            customerAccount.editFlag = true;
+            customerAccount.caid = v.caid;
+
+            customerAccount.items.type.val(v.type);
+            customerAccount.items.no.val(v.no);
+            customerAccount.items.name.val(v.name);
+            customerAccount.items.phone.val(v.phone);
+            customerAccount.items.address.val(v.address);
+            customerAccount.items.bank.val(v.bank);
+            customerAccount.items.bankno.val(v.bankno);
+
+            customerAccount.modals.customerAccountModal.modal("show");
+
+            return false;
+        }
+    }, {
+        name: function(v) {
+
+            return v.defaults == 1 ? null : "删除";
+        },
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            com.showConfirm("确认删除该账户?", function() {
+
+                com.post(api.communion.deleteCustomerAccount, {
+                    "customerAccount.caid": v.caid
+                }, function() {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            });
+        }
+    }];
+
+    searcher.base("accountCondList", "accountPagenation", "accountResultList", api.communion.queryCustomerAccount);
+
+    searcher.param({
         "customerAccount.cid": customerAccount.cid
-    }, function() {
-        queryAccounts();
     });
-}
 
-function clearForm() {
-    $('#accountCaid').val('');
-    $('#accountType').val('1');
-    $('#accountNo').val('');
-    $('#accountName').val('');
-    $('#accountPhone').val('');
-    $('#accountAddress').val('');
-    $('#accountBank').val('');
-    $('#accountBankno').val('');
-}
+    searcher.isPage(true);
+
+    searcher.result("customerAccounts");
+
+    searcher.button([{
+        id: "addCustomerAccount",
+        name: "添加账户",
+        clazz: "btn-primary",
+        icon: "icon-plus"
+    }]);
+
+    var lineprops = [{
+        fieId: "type",
+        name: "账户类型",
+        prop: "type",
+        clazz: "grey",
+        dataset: customerAccount.types
+    }, {
+        fieId: "name",
+        name: "户名",
+        prop: "name",
+        clazz: "blue"
+    }, {
+        fieId: "bank",
+        name: "开户银行",
+        prop: "bank",
+        clazz: "grey"
+    }, {
+        fieId: "bankno",
+        name: "银行账号",
+        prop: "bankno",
+        clazz: "grey"
+    }, {
+        fieId: "no",
+        name: "证件号",
+        prop: function(v) {
+
+            return v.no ? v.no : "---";
+        },
+        clazz: "grey"
+    }, {
+        fieId: "phone",
+        name: "联系电话",
+        prop: function(v) {
+
+            return v.phone ? v.phone : "---";
+        },
+        clazz: "grey"
+    }, {
+        fieId: "defaults",
+        name: "默认",
+        prop: "defaults",
+        clazz: "red",
+        dataset: customerAccount.defaultsArr
+    }];
+
+    searcher.line("bankno", lineprops, linebtns).render();
+
+    com.focusPage('#addCustomerAccount', '#accountPagenation').on("click", function() {
+
+        customerAccount.editFlag = false;
+
+        com.cleanItems(customerAccount.items);
+
+        customerAccount.items.type.val(1);
+
+        customerAccount.modals.customerAccountModal.modal("show");
+    });
+
+    // 保存(新增/更新)
+    function saveAccount() {
+
+        if (com.validate("customerAccountModal")) {
+            return false;
+        }
+
+        var url = api.communion.addCustomerAccount;
+
+        var options = {
+            "customerAccount.cid": customerAccount.cid,
+            "customerAccount.type": customerAccount.items.type.val(),
+            "customerAccount.no": customerAccount.items.no.val(),
+            "customerAccount.name": customerAccount.items.name.val(),
+            "customerAccount.phone": customerAccount.items.phone.val(),
+            "customerAccount.address": customerAccount.items.address.val(),
+            "customerAccount.bank": customerAccount.items.bank.val(),
+            "customerAccount.bankno": customerAccount.items.bankno.val()
+        };
+
+        if (customerAccount.editFlag) {
+            options["customerAccount.caid"] = customerAccount.caid;
+            url = api.communion.updateCustomerAccount;
+        }
+
+        com.post(url, options, function() {
+
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+            customerAccount.modals.customerAccountModal.modal("hide");
+        });
+    }
+});

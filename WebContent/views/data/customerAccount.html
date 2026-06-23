@@ -1,20 +1,27 @@
-<div class="page-content">
-	<div class="row">
-		<div class="col-md-12">
 
-			<div id="accountList"></div>
+<div class="row">
+	<div class="col-xs-12">
+		<div id="accountCondList" class="fl_search clearfix"></div><!--查询条件-->
+		<div id="accountResultList" class="clearfix tab-pane active"></div><!--查询结果-->
+		<div id="accountPagenation" class="fl-page-wrap clearfix"></div><!--分页-->
+	</div>
+</div>
 
-			<div class="hr hr-double" style="margin: 10px 0;"></div>
-
-			<div id="accountForm" style="display: none;">
+<div class="modal fade" id="customerAccountModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">银行账户</h4>
+			</div>
+			<div class="modal-body">
 				<form class="form-horizontal">
-					<input type="hidden" id="accountCaid">
 					<div class="form-group">
 						<label class="col-sm-3 control-label no-padding-right orange" for="accountType">账户类型</label>
 						<div class="col-sm-9">
-							<select class="col-xs-10 col-sm-6" id="accountType">
+							<select class="col-xs-10 col-sm-6 v_required" id="accountType" data-toggle="popover" data-trigger='manual'>
 								<option value="0">对私(个人)</option>
-								<option value="1" selected>对公(企业)</option>
+								<option value="1">对公(企业)</option>
 							</select>
 						</div>
 					</div>
@@ -27,7 +34,7 @@
 					<div class="form-group">
 						<label class="col-sm-3 control-label no-padding-right orange" for="accountName">户名</label>
 						<div class="col-sm-9">
-							<input type="text" id="accountName" maxlength="128" class="col-xs-10 col-sm-6 v_required">
+							<input type="text" id="accountName" maxlength="128" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'>
 						</div>
 					</div>
 					<div class="form-group">
@@ -45,28 +52,21 @@
 					<div class="form-group">
 						<label class="col-sm-3 control-label no-padding-right orange" for="accountBank">开户银行</label>
 						<div class="col-sm-9">
-							<input type="text" id="accountBank" maxlength="128" class="col-xs-10 col-sm-6 v_required">
+							<input type="text" id="accountBank" maxlength="128" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="col-sm-3 control-label no-padding-right orange" for="accountBankno">银行账号</label>
 						<div class="col-sm-9">
-							<input type="text" id="accountBankno" maxlength="64" class="col-xs-10 col-sm-6 v_required">
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-md-offset-3 col-md-9">
-							<a class="btn btn-success btn-sm" id="accountSaveBtn">保存</a>
-							<a class="btn btn-default btn-sm" id="accountCancelBtn">取消</a>
+							<input type="text" id="accountBankno" maxlength="64" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'>
 						</div>
 					</div>
 				</form>
 			</div>
-
-			<div class="form-group" id="accountAddBtnWrap" style="margin-top: 10px;">
-				<a class="btn btn-primary btn-sm" id="accountAddBtn">添加账户</a>
+			<div class="modal-footer">
+				<button type="button" id="accountSaveBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="accountCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 			</div>
-
 		</div>
 	</div>
 </div>
