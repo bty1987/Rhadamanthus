@@ -21,4 +21,6 @@ public interface SystemConfigService {
 
 	public void addSystemConfig(SystemConfigVO systemConfigVO, String userId) throws FLException;
 
+	public int deleteSystemConfig(SystemConfigVO systemConfigVO) throws FLException;
+
 }

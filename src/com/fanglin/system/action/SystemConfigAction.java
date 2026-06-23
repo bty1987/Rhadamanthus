@@ -89,6 +89,18 @@ public class SystemConfigAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "deleteSystemConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteSystemConfig() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		systemConfigService.deleteSystemConfig(systemConfig);
+
+		return SUCCESS;
+	}
+
 	public SystemConfigVO getSystemConfig() {
 		return systemConfig;
 	}
