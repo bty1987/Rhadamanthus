@@ -336,6 +336,36 @@ public class ModuleServiceImpl implements ModuleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateModule(ModuleVO moduleVO) throws FLException {
+
+		ModulePO modulePO = moduleDao.get(moduleVO.getMid());
+
+		if (modulePO == null) {
+			throw new FLException(230011, "模块不存在");
+		}
+
+		if (moduleVO.getFatherModule() != null && moduleVO.getFatherModule().getMid() != null) {
+
+			ModulePO fatherModulePO = moduleDao.get(moduleVO.getFatherModule().getMid());
+
+			if (fatherModulePO == null) {
+				throw new FLException(230011, "模块不存在");
+			}
+
+			modulePO.setFatherModule(fatherModulePO);
+		} else {
+			modulePO.setFatherModule(null);
+		}
+
+		BeanUtil.copyProperties(moduleVO, modulePO, Arrays.asList("mid", "fatherModule"));
+
+		moduleDao.update(modulePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int updateRoleModule(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> modules, int rid, String userId, Integer company) throws FLException {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());

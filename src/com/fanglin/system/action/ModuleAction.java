@@ -129,6 +129,18 @@ public class ModuleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateModule() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		moduleService.updateModule(module);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateRoleModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateRoleModule() throws FLException {
 

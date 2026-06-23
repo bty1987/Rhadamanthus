@@ -30,16 +30,31 @@
 			<div class="modal-body">
 				<form class="form-horizontal" role="form">
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
+						<label class="col-sm-3 control-label no-padding-right orange" for="moduleName">名称</label>
 						<div class="col-sm-9">
-							<input type="text" id="moduleName" class="col-xs-10 col-sm-5 v_required " data-toggle="popover" data-trigger='manual' maxlength='5'/>
+							<input type="text" id="moduleName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength='32'/>
 						</div>
 					</div>
 					<div class="space-4"></div>
 
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="moduleAlias">别名</label>
+						<div class="col-sm-9">
+							<input type="text" id="moduleAlias" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual' maxlength='32'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="icon">图标</label>
+						<label class="col-sm-3 control-label no-padding-right" for="moduleCode">模块标识</label>
+						<div class="col-sm-9">
+							<input type="text" id="moduleCode" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual' maxlength='64'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right orange" for="icon">图标</label>
 						<div class="col-sm-9">
 							<input type="text" id="icon" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'/>
 						</div>
@@ -49,13 +64,13 @@
 					<div class="form-group">
 						<label class="col-sm-3 control-label no-padding-right" for="url">地址</label>
 						<div class="col-sm-9">
-							<input type="text" id="url" class="col-xs-10 col-sm-5 v_required"  data-toggle="popover" data-trigger='manual'/>
+							<input type="text" id="url" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'/>
 						</div>
 					</div>
 					<div class="space-4"></div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="level">等级</label>
+						<label class="col-sm-3 control-label no-padding-right orange" for="level">等级</label>
 						<div class="col-sm-9">
 							<select class="col-xs-10 col-sm-5 v_required" id="level" data-toggle="popover" data-trigger='manual'>
 								<option value="1">1</option>
@@ -76,6 +91,14 @@
 						</div>
 					</div>
 
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="moduleOrder">排序</label>
+						<div class="col-sm-9">
+							<input type="text" id="moduleOrder" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
 					<div class="space-4"></div>
 
 				</form>
