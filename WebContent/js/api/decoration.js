@@ -27,6 +27,9 @@ $.extend(api.index, {
     decorationAccountOutputIndex: {
         url: "/views/decoration/decorationAccountOutput.html"
     },
+    decorationBalanceIndex: {
+        url: "/views/decoration/decorationBalance.html"
+    },
 
     decorationTimelineIndex: {
         url: "/views/decoration/decoration4timeline.html"
@@ -946,9 +949,12 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
+                args: ["balance"]
+            }, {
+                result: "paging-data-decoration",
                 args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
-                result: "paging-data-house",
+                result: "paging-data-decoration-house",
                 args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
