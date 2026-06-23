@@ -38,6 +38,8 @@ public interface ModuleService {
 
 	public int addModule(ModuleVO moduleVO) throws FLException;
 
+	public int updateModule(ModuleVO moduleVO) throws FLException;
+
 	public int updateRoleModule(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> moduleVOs, int rid, String userId, Integer company) throws FLException;
 
 	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> moduleVOs, int rid, String userId, Integer company) throws FLException;
