@@ -379,8 +379,6 @@ jQuery(function($) {
 
         com.cleanItems(decorationDetail.customerItems);
         clearCustomerAccount();
-        com.focusPage('#customerAccountForm', '#customerChangeModal').hide();
-        com.focusPage('#customerAccountAddBtnWrap', '#customerChangeModal').show();
         com.closeTip();
     });
 
@@ -750,8 +748,6 @@ jQuery(function($) {
         com.clearValidator();
         com.cleanItems(decorationDetail.customerItems);
         clearCustomerAccount();
-        com.focusPage('#customerAccountForm', '#customerChangeModal').hide();
-        com.focusPage('#customerAccountAddBtnWrap', '#customerChangeModal').show();
 
         com.focusPage(".companyitem", "#customerChangeModal").hide();
     });
@@ -793,21 +789,12 @@ jQuery(function($) {
 
     com.focusPage("#addCustomerAccountBtn", "#customerChangeModal").on("click", function() {
 
-        decorationDetail.customerAccount.editFlag = false;
-        decorationDetail.customerAccount.caid = null;
-
         clearCustomerAccount();
-
-        com.focusPage("#customerAccountForm", "#customerChangeModal").show();
-        com.focusPage("#customerAccountAddBtnWrap", "#customerChangeModal").hide();
     });
 
     com.focusPage("#cancelCustomerAccountBtn", "#customerChangeModal").on("click", function() {
 
         clearCustomerAccount();
-
-        com.focusPage("#customerAccountForm", "#customerChangeModal").hide();
-        com.focusPage("#customerAccountAddBtnWrap", "#customerChangeModal").show();
     });
 
     com.focusPage("#saveCustomerAccountBtn", "#customerChangeModal").on("click", function() {
@@ -1849,13 +1836,15 @@ jQuery(function($) {
         }, false);
     }
 
-    function queryCustomerAccount(cid) {
+    function queryCustomerAccount(cid, callback) {
 
         com.post(api.communion.queryCustomerAccount, {
             "customerAccount.cid": cid
         }, function(res) {
 
             showCustomerAccount(res.customerAccounts);
+
+            callback && callback(res.customerAccounts || []);
         }, null, false);
     }
 
@@ -1896,7 +1885,8 @@ jQuery(function($) {
                     "customerAccount.cid": decorationDetail.customer.cid
                 }, function() {
 
-                    refreshCustomerInformation(decorationDetail.customer.cid, 1);
+                    syncCustomerInfoByAccount(v);
+                    queryCustomerAccount(decorationDetail.customer.cid);
                 });
             });
         }
@@ -1946,10 +1936,24 @@ jQuery(function($) {
         $liLine.append($h3).append($ulProperty).appendTo($ul);
     }
 
+    function syncCustomerInfoByAccount(account) {
+
+        // 账户类型: 0=对私(个人), 1=对公(公司); 客户类型: 1=公司, 其他=个人
+        decorationDetail.customerItems.type.val(account.type == 1 ? 1 : 0).trigger('change');
+
+        decorationDetail.customerItems.companyNo.val(account.no || "");
+        decorationDetail.customerItems.companyName.val(account.name || "");
+        decorationDetail.customerItems.companyPhone.val(account.phone || "");
+        decorationDetail.customerItems.companyAddr.val(account.address || "");
+        decorationDetail.customerItems.companyBank.val(account.bank || "");
+        decorationDetail.customerItems.companyBankno.val(account.bankno || "");
+    }
+
     function editCustomerAccount(v) {
 
         decorationDetail.customerAccount.editFlag = true;
         decorationDetail.customerAccount.caid = v.caid;
+        decorationDetail.customerAccount.defaults = v.defaults;
 
         decorationDetail.customerAccountItems.type.val(v.type);
         decorationDetail.customerAccountItems.no.val(v.no);
@@ -1959,8 +1963,6 @@ jQuery(function($) {
         decorationDetail.customerAccountItems.bank.val(v.bank);
         decorationDetail.customerAccountItems.bankno.val(v.bankno);
 
-        com.focusPage('#customerAccountForm', '#customerChangeModal').show();
-        com.focusPage('#customerAccountAddBtnWrap', '#customerChangeModal').hide();
     }
 
     function saveCustomerAccount() {
@@ -1986,12 +1988,20 @@ jQuery(function($) {
             url = api.communion.updateCustomerAccount;
         }
 
-        com.post(url, options, function() {
+        com.post(url, options, function(res) {
+
+            queryCustomerAccount(decorationDetail.customer.cid, function(accounts) {
+
+                $.each(accounts, function(i, account) {
+
+                    if (account.defaults == 1) {
+                        syncCustomerInfoByAccount(account);
+                        return false;
+                    }
+                });
+            });
 
             clearCustomerAccount();
-            com.focusPage('#customerAccountForm', '#customerChangeModal').hide();
-            com.focusPage('#customerAccountAddBtnWrap', '#customerChangeModal').show();
-            refreshCustomerInformation(decorationDetail.customer.cid, 1);
         });
     }
 

@@ -379,61 +379,63 @@
                                     <div id="customerAccountList" class="col-sm-12 clearfix tab-pane active" style="margin-top: 5px"></div>
 
                                     <div class="col-sm-12" id="customerAccountAddBtnWrap" style="margin-top: 10px;">
-                                        <button type="button" class="btn btn-sm btn-primary" id="addCustomerAccountBtn">添加账户</button>
+                                        <button type="button" class="btn btn-sm btn-primary" id="addCustomerAccountBtn">新建账户</button>
                                     </div>
 
-                                    <div id="customerAccountForm" class="col-sm-12" style="display: none; margin-top: 10px;">
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-left orange" for="detailAccountType">
-                                                <b style="line-height: 30px">账户类型</b>
-                                            </label>
-                                            <select class="col-sm-6 v_required" id="detailAccountType" data-toggle="popover" data-trigger='manual'>
-                                                <option value="0">对私(个人)</option>
-                                                <option value="1">对公(企业)</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-left" for="detailAccountNo">
-                                                <b style="line-height: 30px">证件号</b>
-                                            </label>
-                                            <input type="text" maxlength="64" class="col-sm-6" id="detailAccountNo">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-left orange" for="detailAccountName">
-                                                <b style="line-height: 30px">户名</b>
-                                            </label>
-                                            <input type="text" maxlength="128" class="col-sm-6 v_required" id="detailAccountName" data-toggle="popover" data-trigger='manual'>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-left" for="detailAccountPhone">
-                                                <b style="line-height: 30px">电话</b>
-                                            </label>
-                                            <input type="text" maxlength="64" class="col-sm-6" id="detailAccountPhone">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-left" for="detailAccountAddress">
-                                                <b style="line-height: 30px">地址</b>
-                                            </label>
-                                            <input type="text" maxlength="256" class="col-sm-6" id="detailAccountAddress">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-left orange" for="detailAccountBank">
-                                                <b style="line-height: 30px">开户行</b>
-                                            </label>
-                                            <input type="text" maxlength="128" class="col-sm-6 v_required" id="detailAccountBank" data-toggle="popover" data-trigger='manual'>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-left orange" for="detailAccountBankno">
-                                                <b style="line-height: 30px">银行账号</b>
-                                            </label>
-                                            <input type="text" maxlength="64" class="col-sm-6 v_required" id="detailAccountBankno" data-toggle="popover" data-trigger='manual'>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-3 col-sm-9">
-                                                <button type="button" class="btn btn-sm btn-primary" id="saveCustomerAccountBtn">保存</button>
-                                                <button type="button" class="btn btn-sm btn-default" id="cancelCustomerAccountBtn">取消</button>
+                                    <div id="customerAccountForm" class="col-sm-12" style="margin-top: 10px;">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right orange" for="detailAccountType">账户类型</label>
+                                                <div class="col-sm-9">
+                                                    <select class="col-xs-10 col-sm-8 v_required" id="detailAccountType" data-toggle="popover" data-trigger='manual'>
+                                                        <option value="0">对私(个人)</option>
+                                                        <option value="1">对公(企业)</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right" for="detailAccountNo">证件号</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" maxlength="64" class="col-xs-10 col-sm-8" id="detailAccountNo">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right orange" for="detailAccountName">户名</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" maxlength="128" class="col-xs-10 col-sm-8 v_required" id="detailAccountName" data-toggle="popover" data-trigger='manual'>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right" for="detailAccountPhone">电话</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" maxlength="64" class="col-xs-10 col-sm-8" id="detailAccountPhone">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right" for="detailAccountAddress">地址</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" maxlength="256" class="col-xs-10 col-sm-8" id="detailAccountAddress">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right orange" for="detailAccountBank">开户行</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" maxlength="128" class="col-xs-10 col-sm-8 v_required" id="detailAccountBank" data-toggle="popover" data-trigger='manual'>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right orange" for="detailAccountBankno">银行账号</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" maxlength="64" class="col-xs-10 col-sm-8 v_required" id="detailAccountBankno" data-toggle="popover" data-trigger='manual'>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-3 col-sm-9">
+                                                    <button type="button" class="btn btn-sm btn-primary" id="saveCustomerAccountBtn">保存账户</button>
+                                                    <button type="button" class="btn btn-sm btn-default" id="cancelCustomerAccountBtn">清空</button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
