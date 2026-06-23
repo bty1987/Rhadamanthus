@@ -39,6 +39,14 @@ public class DecorationAccountAction extends BaseListAction {
 
 	private String company;
 
+	@Action(value = "pageDecorationAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationAccount() throws FLException {
+
+		decorationAccountService.pageDecorationAccount(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryDecorationAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationAccountAction() throws FLException {
 

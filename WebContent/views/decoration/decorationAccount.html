@@ -1,0 +1,57 @@
+<div id="decorationAccountContent">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div>
+            <div id="resultList" class="clearfix tab-pane active"></div>
+            <div id="pagenation" class="fl-page-wrap clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="accountItemModal" tabindex="-1">
+    <div class="modal-dialog" style="width: 80%;">
+        <div class="modal-content col-md-12">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+                <h4 class="modal-title">决算明细</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul id="accountItemList" class="item-list fl-table-list ui-sortable"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="QRcodeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content col-md-12">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+                <h4 class="modal-title">二维码</h4>
+            </div>
+            <div class="modal-body">
+                <div class="qrcode" id="QRcode" style="border: 0px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="layerPopUp"></div>
+
+<script type="text/javascript">
+    $.loadScript(['js/decoration/decorationAccount.js']);
+</script>

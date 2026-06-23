@@ -262,6 +262,7 @@ $(function() {
         balanceSum: 0,
         difference: 0,
         superRatio: 0,
+        materialAccountManual: false,
 
         name: "",
         discount: 0,
@@ -302,7 +303,10 @@ $(function() {
 
     decorationDetail.accountItems.materialAccount.blur(function() {
 
-        accountBasic.materialAccount = $(this).val();
+        accountBasic.materialAccount = parseFloat($(this).val()) || 0;
+        accountBasic.materialAccountManual = true;
+        accountSuper();
+        enableAccountBtns();
     });
 
     initTab();
@@ -676,46 +680,298 @@ $(function() {
 
     }, null, false);
 
-    com.post(api.decoration.queryDecorationAccount, {
-        "decorationAccount.orderId": decorationDetail.orderId
-    }, function(res) {
+    queryDecorationAccount();
 
-        var decorationAccount = res.decorationAccount;
+    function enableAccountBtns() {
 
-        if (!decorationAccount.daid)
-            return false;
+        decorationDetail.btns.updateBtn.removeAttr("disabled");
+        decorationDetail.btns.submission.removeAttr("disabled");
+    }
+
+    function findMatchingConfig(decorationAccount) {
+
+        var config = null;
+
+        $.each(accountBasic.machingType, function(i, v) {
+
+            if (decorationAccount.name == v.name && decorationAccount.typeness == v.typeness) {
+                config = v;
+                return false;
+            }
+        });
+
+        if (config) return config;
+
+        $.each(accountBasic.machingType, function(i, v) {
+
+            if (decorationAccount.typeness == v.typeness && decorationAccount.matching == v.matching && decorationAccount.serviceRate == v.serviceRate) {
+                config = v;
+                return false;
+            }
+        });
+
+        if (config) return config;
+
+        $.each(accountBasic.machingType, function(i, v) {
+
+            if (decorationAccount.typeness == v.typeness) {
+                config = v;
+                return false;
+            }
+        });
+
+        return config;
+    }
+
+    function applyDecorationAccount(decorationAccount) {
+
+        if (!decorationAccount || !decorationAccount.daid) return false;
+
+        var config = findMatchingConfig(decorationAccount);
+
+        if (config && config.dmid) {
+            $.extend(accountBasic, config);
+            decorationDetail.items.otherPaymentType.val(config.dmid);
+        }
 
         accountBasic.daid = decorationAccount.daid;
-
+        accountBasic.name = decorationAccount.name;
         accountBasic.dd = decorationAccount.discount;
-
         accountBasic.type = decorationAccount.type;
         accountBasic.typeness = decorationAccount.typeness;
         accountBasic.base = decorationAccount.discountBase;
         accountBasic.discount = decorationAccount.discount;
         accountBasic.material = decorationAccount.matching;
         accountBasic.service = decorationAccount.serviceRate;
-
-        // 设置查询返回的决算主材额,确保 accountSuper 使用查询结果而非计算值
         accountBasic.materialAccount = decorationAccount.materialPrice;
-
+        accountBasic.materialAccountManual = true;
+        accountBasic.accountServicePrice = decorationAccount.servicePrice;
+        accountBasic.projectPrice = decorationAccount.projectPrice;
+        accountBasic.projectBase = decorationAccount.projectBase;
+        accountBasic.flowerRatio = decorationAccount.paidupMatching;
+        accountBasic.balanceSum = decorationAccount.difference;
+        accountBasic.preferences = decorationAccount.coupon || 0;
+        accountBasic.internalCoupon = decorationAccount.internal || 0;
+        accountBasic.fulldel = decorationAccount.fulldel || 0;
+        accountBasic.cashback = decorationAccount.cashback || 0;
         accountBasic.cal = (decorationAccount.arcal == 0);
 
         decorationDetail.items.discountName.val(decorationAccount.name);
         decorationDetail.items.decorationType.val(decorationDetail.orderType[decorationDetail.orderTypeness]);
         decorationDetail.items.accountType.val(decorationDetail.orderType[decorationAccount.typeness]);
-        decorationDetail.items.preferences.val(decorationAccount.coupon);
-        decorationDetail.items.internalCoupon.val(decorationAccount.internal);
-        decorationDetail.items.fulldel.val(decorationAccount.fulldel);
-        decorationDetail.items.cashback.val(decorationAccount.cashback);
-
+        decorationDetail.items.calDiscountPrice.val(decorationAccount.discount);
+        decorationDetail.items.matching.prop("checked", accountBasic.cal);
+        decorationDetail.items.preferences.val(accountBasic.preferences);
+        decorationDetail.items.internalCoupon.val(accountBasic.internalCoupon);
+        decorationDetail.items.fulldel.val(accountBasic.fulldel);
+        decorationDetail.items.cashback.val(accountBasic.cashback);
         decorationDetail.items.comment.val(decorationAccount.comment);
+        decorationDetail.accountItems.materialAccount.val(decorationAccount.materialPrice);
+
+        accountSuper();
+        enableAccountBtns();
+
+        return true;
+    }
+
+    function queryDecorationAccount(callback) {
+
+        com.post(api.decoration.queryDecorationAccount, {
+            "decorationAccount.orderId": decorationDetail.orderId
+        }, function(res) {
+
+            var decorationAccount = res.decorationAccount;
+
+            if (!applyDecorationAccount(decorationAccount)) return false;
+
+            if (callback) callback(decorationAccount);
+        }, null, false);
+    }
+
+    function collectDecorationAccountOption() {
+
+        accountBasic.materialAccount = parseFloat(decorationDetail.accountItems.materialAccount.val()) || accountBasic.materialAccount || 0;
+        accountBasic.preferences = decorationDetail.items.preferences.val() ? decorationDetail.items.preferences.val() : 0;
+        accountBasic.internalCoupon = decorationDetail.items.internalCoupon.val() ? decorationDetail.items.internalCoupon.val() : 0;
+        accountBasic.fulldel = decorationDetail.items.fulldel.val() ? decorationDetail.items.fulldel.val() : 0;
+        accountBasic.cashback = decorationDetail.items.cashback.val() ? decorationDetail.items.cashback.val() : 0;
+        accountBasic.projectPrice = accountBasic.direct || 0;
+        accountBasic.projectBase = accountBasic.beforeTotal || 0;
+
+        return {
+            "decorationAccount.orderId": decorationDetail.orderId,
+            "decorationAccount.name": accountBasic.name,
+            "decorationAccount.type": accountBasic.type,
+            "decorationAccount.typeness": accountBasic.typeness,
+            "decorationAccount.arcal": accountBasic.cal ? 0 : 1,
+            "decorationAccount.matching": accountBasic.material,
+            "decorationAccount.discount": accountBasic.discount,
+            "decorationAccount.discountBase": accountBasic.base,
+            "decorationAccount.serviceRate": accountBasic.service,
+            "decorationAccount.materialPrice": accountBasic.materialAccount,
+            "decorationAccount.servicePrice": accountBasic.accountServicePrice,
+            "decorationAccount.projectPrice": accountBasic.projectPrice,
+            "decorationAccount.projectBase": accountBasic.projectBase,
+            "decorationAccount.paidupMatching": accountBasic.flowerRatio,
+            "decorationAccount.difference": accountBasic.balanceSum,
+            "decorationAccount.coupon": accountBasic.preferences,
+            "decorationAccount.internal": accountBasic.internalCoupon,
+            "decorationAccount.fulldel": accountBasic.fulldel,
+            "decorationAccount.cashback": accountBasic.cashback,
+            "decorationAccount.comment": decorationDetail.items.comment.val()
+        };
+    }
+
+    function buildDecorationAccountItems() {
+
+        var items = [];
+        var sort = 0;
+
+        function addItem(type, subtype, name, money, rate, content) {
+
+            items.push({
+                type: type,
+                subtype: subtype,
+                name: name,
+                sourceType: type,
+                sourceId: 0,
+                money: parseFloat(money) || 0,
+                rate: parseFloat(rate) || 0,
+                sort: sort++,
+                content: content == null ? "" : String(content),
+                comment: ""
+            });
+        }
+
+        addItem(0, 0, "起报价", decorationDetail.protationItems.quotePrice.text(), 0, decorationDetail.protationItems.quotePrice.text());
+        addItem(0, 1, "优惠价", decorationDetail.protationItems.preferPrice.text(), 0, decorationDetail.protationItems.preferPrice.text());
+        addItem(0, 2, "管理费", decorationDetail.protationItems.managePrice.text(), 0, decorationDetail.protationItems.managePrice.text());
+        addItem(0, 3, "面积", decorationDetail.protationItems.buildArea.text(), 0, decorationDetail.protationItems.buildArea.text());
+        addItem(0, 4, "总价", decorationDetail.protationItems.totalPrice.text(), 0, decorationDetail.protationItems.totalPrice.text());
+        addItem(0, 5, "合同额", decorationDetail.protationItems.precontractPrice.text(), 0, decorationDetail.protationItems.precontractPrice.text());
+
+        addItem(1, 0, "报价总额", decorationDetail.basicsItems.foldFrontTotalPrice.text(), 0, decorationDetail.basicsItems.foldFrontTotalPrice.text());
+        addItem(1, 1, "折前总价", decorationDetail.basicsItems.foldFrontTotal.text(), 0, decorationDetail.basicsItems.foldFrontTotal.text());
+        addItem(1, 2, "折前直接费", decorationDetail.basicsItems.foldFrontFee.text(), 0, decorationDetail.basicsItems.foldFrontFee.text());
+        addItem(1, 3, "管理费", decorationDetail.basicsItems.managePrice.text(), 0, decorationDetail.basicsItems.managePrice.text());
+        addItem(1, 4, "折扣", 0, decorationDetail.basicsItems.basdiscount.text(), decorationDetail.basicsItems.basdiscount.text());
+        addItem(1, 5, "打折项总额", decorationDetail.basicsItems.disPrice.text(), 0, decorationDetail.basicsItems.disPrice.text());
+        addItem(1, 6, "不打折项总额", decorationDetail.basicsItems.undisPrice.text(), 0, decorationDetail.basicsItems.undisPrice.text());
+        addItem(1, 7, "税金", decorationDetail.basicsItems.taxPrice.text(), 0, decorationDetail.basicsItems.taxPrice.text());
+
+        addItem(2, 0, "增项折前总价", decorationDetail.extensionItems.addFoldFrontTotal.text(), 0, decorationDetail.extensionItems.addFoldFrontTotal.text());
+        addItem(2, 1, "增项管理费", decorationDetail.extensionItems.addManagePrice.text(), 0, decorationDetail.extensionItems.addManagePrice.text());
+        addItem(2, 2, "增项总额", decorationDetail.extensionItems.addTotal.text(), 0, decorationDetail.extensionItems.addTotal.text());
+        addItem(2, 3, "减项折前总价", decorationDetail.extensionItems.minusFoldFrontTotal.text(), 0, decorationDetail.extensionItems.minusFoldFrontTotal.text());
+        addItem(2, 4, "减项管理费", decorationDetail.extensionItems.minusManagePrice.text(), 0, decorationDetail.extensionItems.minusManagePrice.text());
+        addItem(2, 5, "减项总额", decorationDetail.extensionItems.minusTotal.text(), 0, decorationDetail.extensionItems.minusTotal.text());
+
+        addItem(3, 0, "合同额", decorationDetail.contractItems.signPrice.text(), 0, decorationDetail.contractItems.signPrice.text());
+        addItem(3, 1, "优惠券", decorationDetail.contractItems.coupon.text(), 0, decorationDetail.contractItems.coupon.text());
+        addItem(3, 2, "服务费", decorationDetail.contractItems.servicePrice.text(), 0, decorationDetail.contractItems.servicePrice.text());
+        addItem(3, 3, "已收服务费", decorationDetail.contractItems.servicePaidup.text(), 0, decorationDetail.contractItems.servicePaidup.text());
+        addItem(3, 4, "合同已收", decorationDetail.contractItems.signFactDone.text(), 0, decorationDetail.contractItems.signFactDone.text());
+        addItem(3, 5, "合同未收", decorationDetail.contractItems.signFactOwing.text(), 0, decorationDetail.contractItems.signFactOwing.text());
+        addItem(3, 6, "合同实收", decorationDetail.contractItems.signFactPrice.text(), 0, decorationDetail.contractItems.signFactPrice.text());
+        addItem(3, 7, "主材配比", 0, decorationDetail.contractItems.mm.text(), decorationDetail.contractItems.mm.text());
+
+        addItem(4, 0, "配比总额", decorationDetail.materialItems.materialRatio.text(), 0, decorationDetail.materialItems.materialRatio.text());
+        addItem(4, 1, "总金额", decorationDetail.materialItems.materialTotal.text(), 0, decorationDetail.materialItems.materialTotal.text());
+        addItem(4, 2, "优惠券", decorationDetail.materialItems.materialCoupon.text(), 0, decorationDetail.materialItems.materialCoupon.text());
+        addItem(4, 3, "实收额", decorationDetail.materialItems.materialFactPrice.text(), 0, decorationDetail.materialItems.materialFactPrice.text());
+
+        addItem(5, 0, "外销总金额", decorationDetail.oalesItems.oalesTotal.text(), 0, decorationDetail.oalesItems.oalesTotal.text());
+        addItem(5, 1, "外销主材总额", decorationDetail.oalesItems.oalesMaterialTotal.text(), 0, decorationDetail.oalesItems.oalesMaterialTotal.text());
+
+        addItem(6, 0, "增项折前总价", decorationDetail.addReduceItems.addFoldFrontTotal.text(), 0, decorationDetail.addReduceItems.addFoldFrontTotal.text());
+        addItem(6, 1, "增项管理费", decorationDetail.addReduceItems.addManagePrice.text(), 0, decorationDetail.addReduceItems.addManagePrice.text());
+        addItem(6, 2, "增项配比总额", decorationDetail.addReduceItems.addMatch.text(), 0, decorationDetail.addReduceItems.addMatch.text());
+        addItem(6, 3, "增项非配比总额", decorationDetail.addReduceItems.addUncalPrice.text(), 0, decorationDetail.addReduceItems.addUncalPrice.text());
+        addItem(6, 4, "增项税金总额", decorationDetail.addReduceItems.addTaxPrice.text(), 0, decorationDetail.addReduceItems.addTaxPrice.text());
+        addItem(6, 5, "增项总额", decorationDetail.addReduceItems.addTotal.text(), 0, decorationDetail.addReduceItems.addTotal.text());
+        addItem(6, 6, "减项折前总价", decorationDetail.addReduceItems.minusFoldFrontTotal.text(), 0, decorationDetail.addReduceItems.minusFoldFrontTotal.text());
+        addItem(6, 7, "减项管理费", decorationDetail.addReduceItems.minusManagePrice.text(), 0, decorationDetail.addReduceItems.minusManagePrice.text());
+        addItem(6, 8, "减项配比总额", decorationDetail.addReduceItems.minusMatch.text(), 0, decorationDetail.addReduceItems.minusMatch.text());
+        addItem(6, 9, "减项非配比总额", decorationDetail.addReduceItems.minusUncalPrice.text(), 0, decorationDetail.addReduceItems.minusUncalPrice.text());
+        addItem(6, 10, "减项税金总额", decorationDetail.addReduceItems.minusTaxPrice.text(), 0, decorationDetail.addReduceItems.minusTaxPrice.text());
+        addItem(6, 11, "减项总额", decorationDetail.addReduceItems.minusTotal.text(), 0, decorationDetail.addReduceItems.minusTotal.text());
+        addItem(6, 12, "增减项差额", decorationDetail.addReduceItems.asDifference.text(), 0, decorationDetail.addReduceItems.asDifference.text());
+
+        addItem(7, 0, "合同预付款", decorationDetail.advanceItems.contractAdvance.text(), 0, decorationDetail.advanceItems.contractAdvance.text());
+        addItem(7, 1, "工程预付款", decorationDetail.advanceItems.constructionAdvance.text(), 0, decorationDetail.advanceItems.constructionAdvance.text());
+        addItem(7, 2, "主材预付款", decorationDetail.advanceItems.materialAdvance.text(), 0, decorationDetail.advanceItems.materialAdvance.text());
+        addItem(7, 3, "正林预付款", decorationDetail.advanceItems.zhenglinAdvance.text(), 0, decorationDetail.advanceItems.zhenglinAdvance.text());
+
+        addItem(8, 0, "决算折前总额", decorationDetail.accountItems.direct.text(), 0, decorationDetail.accountItems.direct.text());
+        addItem(8, 1, "决算直接费", decorationDetail.accountItems.beforeTotal.text(), 0, decorationDetail.accountItems.beforeTotal.text());
+        addItem(8, 2, "决算管理费", decorationDetail.accountItems.management.text(), 0, decorationDetail.accountItems.management.text());
+        addItem(8, 3, "决算实花配比", 0, decorationDetail.accountItems.flowerRatio.text(), decorationDetail.accountItems.flowerRatio.text());
+        addItem(8, 4, "决算主材额", decorationDetail.accountItems.materialAccount.val(), 0, decorationDetail.accountItems.materialAccount.val());
+        addItem(8, 5, "决算合同额", decorationDetail.accountItems.accountForehead.text(), 0, decorationDetail.accountItems.accountForehead.text());
+        addItem(8, 6, "决算服务费", decorationDetail.accountItems.accountServicePrice.text(), 0, decorationDetail.accountItems.accountServicePrice.text());
+        addItem(8, 7, "决算实花配比含外销", 0, decorationDetail.accountItems.flowerOalesRatio.text(), decorationDetail.accountItems.flowerOalesRatio.text());
+        addItem(8, 8, "金额差", decorationDetail.accountItems.difference.text(), 0, decorationDetail.accountItems.difference.text());
+        addItem(8, 9, "超配比", 0, decorationDetail.accountItems.superRatio.text(), decorationDetail.accountItems.superRatio.text());
+        addItem(8, 10, "税金", decorationDetail.accountItems.taxPrice.text(), 0, decorationDetail.accountItems.taxPrice.text());
+        addItem(8, 11, "差额不含预付款", decorationDetail.accountItems.balanceSum.text(), 0, decorationDetail.accountItems.balanceSum.text());
+        addItem(8, 12, "决算折前总额全", decorationDetail.accountItems.directC.text(), 0, decorationDetail.accountItems.directC.text());
+        addItem(8, 13, "应补款", decorationDetail.accountItems.fullPayment.text(), 0, decorationDetail.accountItems.fullPayment.text());
+        addItem(8, 14, "优惠券", decorationDetail.items.preferences.val(), 0, decorationDetail.items.preferences.val());
+        addItem(8, 15, "内部优惠券", decorationDetail.items.internalCoupon.val(), 0, decorationDetail.items.internalCoupon.val());
+        addItem(8, 16, "满送", decorationDetail.items.fulldel.val(), 0, decorationDetail.items.fulldel.val());
+        addItem(8, 17, "返现", decorationDetail.items.cashback.val(), 0, decorationDetail.items.cashback.val());
+
+        return items;
+    }
+
+    function saveDecorationAccountItems(callback) {
+
+        var items = buildDecorationAccountItems();
+        var options = {
+            "decorationAccountItem.orderId": decorationDetail.orderId,
+            "decorationAccountItem.daid": accountBasic.daid
+        };
+
+        $.each(items, function(i, item) {
+            options["decorationAccountItems[" + i + "].type"] = item.type;
+            options["decorationAccountItems[" + i + "].subtype"] = item.subtype;
+            options["decorationAccountItems[" + i + "].name"] = item.name;
+            options["decorationAccountItems[" + i + "].sourceType"] = item.sourceType;
+            options["decorationAccountItems[" + i + "].sourceId"] = item.sourceId;
+            options["decorationAccountItems[" + i + "].money"] = item.money;
+            options["decorationAccountItems[" + i + "].rate"] = item.rate;
+            options["decorationAccountItems[" + i + "].sort"] = item.sort;
+            options["decorationAccountItems[" + i + "].content"] = item.content;
+            options["decorationAccountItems[" + i + "].comment"] = item.comment;
+        });
+
+        com.post(api.decoration.updateDecorationAccountItem, options, function() {
+            if (callback) callback();
+        });
+    }
+
+    function saveDecorationAccount(showMessage, callback) {
+
+        if (com.validate('controls')) return false;
 
         accountSuper();
 
-        decorationDetail.accountItems.materialAccount.val(decorationAccount.materialPrice);
+        com.post(api.decoration.updateDecorationAccount, collectDecorationAccountOption(), function(res) {
 
-    }, null, false);
+            accountBasic.isPrint = true;
+
+            queryDecorationAccount(function() {
+
+                saveDecorationAccountItems(function() {
+
+                    if (showMessage) com.showAlert(com.info, "更新保存成功");
+                    if (callback) callback();
+                });
+            });
+        });
+
+        return true;
+    }
 
     decorationDetail.btns.calculateBtn.click(function() {
 
@@ -737,6 +993,14 @@ $(function() {
     decorationDetail.items.matching.click(function() {
 
         accountBasic.cal = decorationDetail.items.matching.prop("checked");
+        accountSuper();
+        enableAccountBtns();
+    });
+
+    decorationDetail.items.preferences.add(decorationDetail.items.internalCoupon).add(decorationDetail.items.fulldel).add(decorationDetail.items.cashback).blur(function() {
+
+        accountSuper();
+        enableAccountBtns();
     });
 
     decorationDetail.items.otherPaymentType.on("change", function() {
@@ -765,11 +1029,21 @@ $(function() {
             accountBasic.discount = config.discount;
         }
 
+        accountBasic.dd = accountBasic.discount;
+        accountBasic.name = config.name;
+        accountBasic.typeness = config.typeness;
+
+        decorationDetail.items.discountName.val(config.name);
+        decorationDetail.items.decorationType.val(decorationDetail.orderType[decorationDetail.orderTypeness]);
+        decorationDetail.items.accountType.val(decorationDetail.orderType[config.typeness]);
+
         if (config.discountType == constant.data().decorationMatching.DISCOUNTTYPE_ONLY_INT) {
             decorationDetail.items.calDiscountPrice.attr("readonly", "readonly");
         } else {
             decorationDetail.items.calDiscountPrice.removeAttr("readonly");
         }
+
+        enableAccountBtns();
 
         return false;
     });
@@ -787,6 +1061,7 @@ $(function() {
             "contractOutput": com.focusPage('input[id="contractOutput"]:checked').val(),
             "protationOutput": com.focusPage('input[id="protationOutput"]:checked').val(),
             "addOutput": com.focusPage('input[id="addOutput"]:checked').val(),
+            "extensionOutput": com.focusPage('input[id="extensionOutput"]:checked').val(),
             "signFactOutput": com.focusPage('input[id="signFactOutput"]:checked').val(),
             "materialOutput": com.focusPage('input[id="materialOutput"]:checked').val(),
             "addReduceOutput": com.focusPage('input[id="addReduceOutput"]:checked').val(),
@@ -819,35 +1094,7 @@ $(function() {
 
         com.showConfirm("确定要更新决算信息吗?", function() {
 
-            var option = {
-                "decorationAccount.orderId": decorationDetail.orderId,
-                "decorationAccount.name": accountBasic.name,
-                "decorationAccount.type": accountBasic.type,
-                "decorationAccount.typeness": accountBasic.typeness,
-                "decorationAccount.arcal": accountBasic.cal ? 0 : 1,
-                "decorationAccount.matching": accountBasic.material,
-                "decorationAccount.discount": accountBasic.discount,
-                "decorationAccount.discountBase": accountBasic.base,
-                "decorationAccount.serviceRate": accountBasic.service,
-                "decorationAccount.materialPrice": accountBasic.materialAccount,
-                "decorationAccount.servicePrice": accountBasic.accountServicePrice,
-                "decorationAccount.paidupMatching": accountBasic.flowerRatio,
-                "decorationAccount.difference": accountBasic.balanceSum,
-                "decorationAccount.coupon": accountBasic.preferences,
-                "decorationAccount.internal": accountBasic.internalCoupon,
-                "decorationAccount.fulldel": accountBasic.fulldel,
-                "decorationAccount.cashback": accountBasic.cashback,
-
-                "decorationAccount.comment": decorationDetail.items.comment.val()
-            };
-
-            com.post(api.decoration.updateDecorationAccount, option, function(res) {
-
-                com.showAlert(com.info, "更新保存成功");
-
-                accountBasic.isPrint = true;
-            });
-
+            saveDecorationAccount(true);
         });
     });
 
@@ -858,12 +1105,15 @@ $(function() {
 
         com.showConfirm("确定锁定新决算信息吗?", function() {
 
-            com.post(api.decoration.makeDecorationAccount, {
-                "decorationAccount.orderId": decorationDetail.orderId,
-                "approve": "agree"
-            }, function(res) {
+            saveDecorationAccount(false, function() {
 
-                com.showAlert(com.info, "锁定成功");
+                com.post(api.decoration.makeDecorationAccount, {
+                    "decorationAccount.orderId": decorationDetail.orderId,
+                    "approve": "agree"
+                }, function(res) {
+
+                    com.showAlert(com.info, "锁定成功");
+                });
             });
         });
     });
@@ -1172,6 +1422,11 @@ $(function() {
 
         var flag = accountBasic.cal ? 1 : 0;
 
+        if (decorationDetail.items.calDiscountPrice.val()) {
+            accountBasic.dd = decorationDetail.items.calDiscountPrice.val();
+            accountBasic.discount = decorationDetail.items.calDiscountPrice.val();
+        }
+
         beforeTotal = accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag;
         console.log(beforeTotal + "=" + accountBasic.undisPrice + "+" + accountBasic.disPrice + "+" + accountBasic.trafficPrice + "+" + (accountBasic.addCalPrice * flag) + "-" + (accountBasic.reduceCalPrice * flag));
 
@@ -1218,10 +1473,9 @@ $(function() {
         accountBasic.directC = Math.round(accountBasic.foldFrontTotal + accountBasic.addFoldFrontTotal - accountBasic.minusFoldFrontTotal + accountBasic.addPredisPrice - accountBasic.reducePredisPrice);
         accountBasic.fullPayment = Math.round(accountBasic.signFactOwing + accountBasic.addOwing - accountBasic.reduceOwing);
 
-        // 当已有决算记录时,使用查询结果而非计算值
-        if (accountBasic.daid) {
-            // materialAccount 保持查询结果值,不使用计算值
-            // accountBasic.materialAccount 保持查询返回的值
+        // 当已有决算记录或手动维护决算主材额时,使用输入值而非计算值
+        if (accountBasic.daid || accountBasic.materialAccountManual) {
+            accountBasic.materialAccount = parseFloat(decorationDetail.accountItems.materialAccount.val()) || accountBasic.materialAccount || 0;
         } else {
             accountBasic.materialAccount = Math.round(materialAccount);
         }
@@ -1245,8 +1499,8 @@ $(function() {
         decorationDetail.accountItems.direct.html(accountBasic.direct);
         decorationDetail.accountItems.beforeTotal.html(accountBasic.beforeTotal);
         decorationDetail.accountItems.management.html(accountBasic.management);
-        // 当已有决算记录时,不更新 materialAccount 显示值(保持查询结果)
-        if (!accountBasic.daid) {
+        // 当已有决算记录或手动维护决算主材额时,不覆盖输入值
+        if (!accountBasic.daid && !accountBasic.materialAccountManual) {
             decorationDetail.accountItems.materialAccount.val(accountBasic.materialAccount);
         }
 
@@ -1279,7 +1533,8 @@ $(function() {
      */
     function openAccountCalculator() {
         // 初始化顶部字段值
-        $('#calcMaterialAccount').val(decorationDetail.items.preferences.val() || 0);
+        accountCalculatorData.selectedScheme = null;
+        $('#calcMaterialAccount').val(decorationDetail.accountItems.materialAccount.val() || accountBasic.materialAccount || 0);
         $('#calcPreferences').val(decorationDetail.items.preferences.val() || 0);
         $('#calcInternalCoupon').val(decorationDetail.items.internalCoupon.val() || 0);
         $('#calcFulldel').val(decorationDetail.items.fulldel.val() || 0);
@@ -1496,7 +1751,7 @@ $(function() {
             var r = scheme.results;
             var busitype = scheme.busitype;
 
-            var dataRow = $('<div></div>').addClass('account-calc-row');
+            var dataRow = $('<div></div>').addClass('account-calc-row').attr('data-scheme-id', scheme.schemeId);
 
             // 业务类型列
             dataRow.append(createCalculatorCell(busitype.name, 'wide', false));
@@ -1523,9 +1778,15 @@ $(function() {
 
         $('#accountSchemesList').html(container);
 
-        // 绑定确认按钮事件
-        $('.selectSchemeBtn').on('click', function() {
+        // 绑定方案选择/确认事件
+        $('.account-calc-row[data-scheme-id]').on('click', function() {
+            chooseScheme($(this).data('scheme-id'));
+        });
+
+        $('.selectSchemeBtn').on('click', function(e) {
+            e.stopPropagation();
             var schemeId = $(this).data('scheme-id');
+            chooseScheme(schemeId);
             selectScheme(schemeId);
         });
     }
@@ -1557,10 +1818,12 @@ $(function() {
     }
 
     /**
-     * 选中方案
+     * 标记选中方案
      */
-    function selectScheme(schemeId) {
+    function chooseScheme(schemeId) {
+
         var scheme = null;
+
         $.each(accountCalculatorData.schemes, function(i, s) {
             if (s.schemeId === schemeId) {
                 scheme = s;
@@ -1568,9 +1831,22 @@ $(function() {
             }
         });
 
-        if (!scheme) return;
+        if (!scheme) return null;
 
         accountCalculatorData.selectedScheme = scheme;
+        $('.account-calc-row[data-scheme-id]').removeClass('alert-info');
+        $('.account-calc-row[data-scheme-id="' + schemeId + '"]').addClass('alert-info');
+
+        return scheme;
+    }
+
+    /**
+     * 选中方案并应用
+     */
+    function selectScheme(schemeId) {
+        var scheme = chooseScheme(schemeId);
+
+        if (!scheme) return;
 
         // 回填数据到功能模块
         var busitype = scheme.busitype;
@@ -1639,6 +1915,9 @@ $(function() {
         }
 
         // 更新优惠字段
+        accountBasic.materialAccount = parseFloat($('#calcMaterialAccount').val()) || 0;
+        accountBasic.materialAccountManual = true;
+        decorationDetail.accountItems.materialAccount.val(accountBasic.materialAccount);
         decorationDetail.items.preferences.val($('#calcPreferences').val() || 0);
         decorationDetail.items.internalCoupon.val($('#calcInternalCoupon').val() || 0);
         decorationDetail.items.fulldel.val($('#calcFulldel').val() || 0);

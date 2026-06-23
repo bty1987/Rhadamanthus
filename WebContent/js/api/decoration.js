@@ -21,6 +21,9 @@ $.extend(api.index, {
         url: "/views/decoration/decorationBelong4info.html"
     },
 
+    decorationAccountIndex: {
+        url: "/views/decoration/decorationAccount.html"
+    },
     decorationAccountOutputIndex: {
         url: "/views/decoration/decorationAccountOutput.html"
     },
@@ -826,19 +829,33 @@ $.extend(api, {
             url: "deleteAuditScale.do"
         },
 
+        pageDecorationAccount: {
+            url: "pageDecorationAccount.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["matching", "discount", "discountBase", "serviceRate", "materialPrice", "servicePrice", "projectPrice", "projectBase", "difference", "coupon", "internal", "fulldel", "cashback", "paidupMatching"]
+            }, {
+                result: "paging-data-decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-decoration-house",
+                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
+            }]
+        },
         queryDecorationAccount: {
             url: "queryDecorationAccount.do",
             type: "query",
             tranargs: [{
                 result: "decorationAccount",
-                args: ["matching", "discount", "discountBase", "serviceRate", "materialPrice", "servicePrice", "difference", "coupon", "fulldel", "cashback"]
+                args: ["matching", "discount", "discountBase", "serviceRate", "materialPrice", "servicePrice", "projectPrice", "projectBase", "difference", "coupon", "internal", "fulldel", "cashback"]
             }]
         },
         updateDecorationAccount: {
             url: "updateDecorationAccount.do",
             type: "update",
             tranargs: {
-                args: ["decorationAccount.matching", "decorationAccount.discount", "decorationAccount.discountBase", "decorationAccount.serviceRate", "decorationAccount.materialPrice", "decorationAccount.servicePrice", "decorationAccount.difference", "decorationAccount.coupon", "decorationAccount.fulldel", "decorationAccount.cashback", "decorationAccount.paidupMatching"]
+                args: ["decorationAccount.matching", "decorationAccount.discount", "decorationAccount.discountBase", "decorationAccount.serviceRate", "decorationAccount.materialPrice", "decorationAccount.servicePrice", "decorationAccount.projectPrice", "decorationAccount.projectBase", "decorationAccount.difference", "decorationAccount.coupon", "decorationAccount.internal", "decorationAccount.fulldel", "decorationAccount.cashback", "decorationAccount.paidupMatching"]
             }
         },
         makeDecorationAccount: {
@@ -849,6 +866,21 @@ $.extend(api, {
         },
         affirmDecorationAccount: {
             url: "affirmDecorationAccount.do"
+        },
+        queryDecorationAccountItem: {
+            url: "queryDecorationAccountItem.do",
+            type: "query",
+            tranargs: [{
+                result: "decorationAccountItems",
+                args: ["money", "rate"]
+            }]
+        },
+        updateDecorationAccountItem: {
+            url: "updateDecorationAccountItem.do",
+            type: "update",
+            tranargs: {
+                args: ["decorationAccountItems.money", "decorationAccountItems.rate"]
+            }
         },
 
         pageDecorationService: {
