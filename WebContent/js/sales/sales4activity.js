@@ -302,64 +302,77 @@ $(function() {
         }, null, false);
     }
 
-    var displayFunc = (function() {
+    function buildSalesActivityLineprops() {
 
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass("oid").append($('<small></small>').addClass('blue').html(v.activity.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var propertyArr = [["装修单号:", v.sales.orderId, "grey"], ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"], ["客户名:", v.sales.customer.name, "grey"], ["品类:", v.sales.category, "grey"], ["品牌:", v.sales.brand.name, "grey"], ["定金:", v.sales.depositpay, "blue"], ["补款:", v.sales.fullpay, "blue"], ["定金状态:", salesActivityItem.depositpayStatus[v.sales.depositpayStatus], "red"], ["补款状态:", salesActivityItem.fullpayStatus[v.sales.fullpayStatus], "red"], ["总额:", v.sales.total, "blue"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $liLine.append($h3).append($ulProperty);
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+        return [{
+            field: "orderId",
+            name: "装修单号",
+            prop: "sales.orderId",
+            clazz: "grey"
+        }, {
+            field: "address",
+            name: "楼盘地址",
+            prop: function(v) {
+                return v.sales.house.village.name + " " + v.sales.house.houseNumber;
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
+            clazz: "grey"
+        }, {
+            field: "customer",
+            name: "客户名",
+            prop: "sales.customer.name",
+            clazz: "grey"
+        }, {
+            field: "category",
+            name: "品类",
+            prop: "sales.category",
+            clazz: "grey"
+        }, {
+            field: "brand",
+            name: "品牌",
+            prop: "sales.brand.name",
+            clazz: "grey"
+        }, {
+            field: "depositpay",
+            name: "定金",
+            prop: "sales.depositpay",
+            clazz: "blue"
+        }, {
+            field: "fullpay",
+            name: "补款",
+            prop: "sales.fullpay",
+            clazz: "blue"
+        }, {
+            field: "depositpayStatus",
+            name: "定金状态",
+            prop: function(v) {
+                return salesActivityItem.depositpayStatus[v.sales.depositpayStatus];
+            },
+            clazz: "red"
+        }, {
+            field: "fullpayStatus",
+            name: "补款状态",
+            prop: function(v) {
+                return salesActivityItem.fullpayStatus[v.sales.fullpayStatus];
+            },
+            clazz: "red"
+        }, {
+            field: "total",
+            name: "总额",
+            prop: "sales.total",
+            clazz: "blue"
+        }];
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(["sales-activity-name", "sales-category-name", "sales-brand"], "condLists", api.sales.pageSalesActivity, function(data) {
+    searcher.base("condLists", "pagenations", "resultLists", api.sales.pageSalesActivity);
+    searcher.condition(["sales-activity-name", "sales-category-name", "sales-brand"]);
+    searcher.history("sales4activityPostData");
+    searcher.param(options);
+    searcher.line(function(v) {
+        return v.activity.name;
+    }, buildSalesActivityLineprops(), {}).render();
 
-        displayFunc.init('resultLists', data);
-    }, "pagenations", "sales4activityPostData", options, false, null, null, "resultLists");
 
     // 查询活动物品
     function querySalesActivityItem() {
