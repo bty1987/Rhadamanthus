@@ -12,9 +12,42 @@
     if (!config.intranet)
         config.communion = window.communion;
 
+    function initUserPrefer(userPrefers) {
+
+        params.user = params.user || {};
+        params.user.prefer = params.user.prefer || {};
+
+        $.each(userPrefers || [], function(i, v) {
+
+            params.user.prefer[v.module] = params.user.prefer[v.module] || {};
+            params.user.prefer[v.module][v.page] = params.user.prefer[v.module][v.page] || {};
+            params.user.prefer[v.module][v.page][v.pkey] = v.pvalue;
+        });
+    }
+
+    function loadUserPrefers() {
+
+        params.user = params.user || (params.userInfo && params.userInfo.user ? params.userInfo.user : {});
+        params.user.prefer = {};
+
+        if (!api.personel || !api.personel.queryUserPrefers)
+            return false;
+
+        com.post(api.personel.queryUserPrefers, {
+            "userPrefer.module": "searcher"
+        }, function(res) {
+
+            initUserPrefer(res.userPrefers);
+        }, null, false);
+    }
+
     com.post(api.personel.queryUserForSelfByUserId, {}, function(res) {
 
         params.userInfo = res.userInfo;
+        params.user = res.userInfo.user;
+        params.user.prefer = {};
+
+        loadUserPrefers();
 
         if (parent.window.isPC && (res.userInfo.user.extranet & 16) != 16) {
             alert('无使用该平台权限');
@@ -195,6 +228,8 @@
             }
             params.authentication = res.authentication;
             window.authentication = res.authentication;
+
+            loadUserPrefers();
 
             com.post(api.system.queryCompanyByCid, {
                 "company.cid": company.cid
