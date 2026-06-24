@@ -1200,6 +1200,9 @@ var Searcher = function() {
                             return true;
                         }
 
+                        if (value.type == "newline" || !value.prop)
+                            return true;
+
                         if (value.show && typeof value.show == 'function' && !value.show(v))
                             return true;
 
@@ -1345,6 +1348,9 @@ var Searcher = function() {
 
                 $.each(basicConf.lineprop, function(i, v) {
 
+                    if (v.type == "newline" || !v.prop)
+                        return true;
+
                     if (v.toolbar)
                         v.toolbar = "#" + basicConf.$resulter + "tools";
                     var headerTh = $('<th></th>').attr("lay-data", JSON.stringify(v)).appendTo(headerTr);
@@ -1361,6 +1367,9 @@ var Searcher = function() {
                     var $liLine = $('<tr></tr>').appendTo(dataTbody);
 
                     $.each(basicConf.lineprop, function(i, d) {
+
+                        if (d.type == "newline" || !d.prop)
+                            return true;
 
                         var info = "";
 
