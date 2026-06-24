@@ -1350,31 +1350,80 @@ var Searcher = function() {
 
                 var $tableWrap = com.focusPage('#' + basicConf.$resulter).html("");
 
+                com.focusPage('.searcher-table-more-menu').remove();
+
                 var table = $("<table></table>").attr("lay-filter", basicConf.$resulter).appendTo($tableWrap);
 
                 if (!data || data.length == 0) {
                     return this;
                 }
 
-                var hasLinevent = false;
+                var rowLinevents = [];
+                var maxLinevent = 0;
 
-                $.each(basicConf.linevent, function() {
-                    hasLinevent = true;
+                var visibleLinevents = function(v) {
 
-                    return false;
+                    var linevents = [];
+
+                    $.each(basicConf.linevent, function(k, button) {
+
+                        if (button.type == "newline")
+                            return true;
+
+                        if (button.show && !button.show(v))
+                            return true;
+
+                        var btnName = typeof button.name == 'function' ? button.name(v) : button.name;
+
+                        if (btnName == null || btnName == undefined)
+                            return true;
+
+                        linevents.push({
+                            key: k,
+                            button: button,
+                            name: btnName
+                        });
+                    });
+
+                    return linevents;
+                };
+
+                var renderLinevents = function($td, linevents, index) {
+
+                    var directLinevents = linevents.slice(0, 2);
+                    var moreLinevents = linevents.slice(2);
+
+                    $.each(directLinevents, function(i, linevent) {
+
+                        $('<a></a>').addClass('btn btn-minier ' + linevent.button.clazz + ' searcher-table-action').css('margin', '0px 1px').attr({
+                            "href": "javascript:void(0);",
+                            "data-index": index,
+                            "data-event": linevent.key,
+                            "data-resulter": basicConf.$resulter
+                        }).html(linevent.name).appendTo($td);
+                    });
+
+                    if (!moreLinevents.length)
+                        return false;
+
+                    $('<a></a>').addClass('btn btn-minier btn-white searcher-table-more').css('margin', '0px 1px').attr({
+                        "href": "javascript:void(0);",
+                        "data-index": index,
+                        "data-resulter": basicConf.$resulter
+                    }).html('更多 <i class="icon-angle-down"></i>').appendTo($td);
+                };
+
+                $.each(data, function(i, v) {
+
+                    rowLinevents[i] = visibleLinevents(v);
+                    maxLinevent = Math.max(maxLinevent, rowLinevents[i].length);
                 });
+
+                var hasLinevent = maxLinevent > 0;
 
                 // header handle
                 var headerThead = $("<thead></thead>");
                 var headerTr = $("<tr></tr>").appendTo(headerThead);
-
-                if (hasLinevent) {
-                    var indexTh = $('<th></th>').attr("lay-data", JSON.stringify({
-                        field: "__searcherIndex",
-                        hide: true
-                    })).appendTo(headerTr);
-                    $('<span></span>').html("").appendTo(indexTh);
-                }
 
                 $.each(basicConf.lineprop, function(i, v) {
 
@@ -1390,8 +1439,7 @@ var Searcher = function() {
                 if (hasLinevent) {
                     var toolsTh = $('<th></th>').attr("lay-data", JSON.stringify({
                         field: "__searcherTools",
-                        toolbar: "#" + basicConf.$resulter + "tools",
-                        width: 160,
+                        width: maxLinevent > 2 ? 180 : 140,
                         fixed: "right"
                     })).appendTo(headerTr);
                     $('<span></span>').html("功能").appendTo(toolsTh);
@@ -1405,9 +1453,6 @@ var Searcher = function() {
                 $.each(data, function(i, v) {
 
                     var $liLine = $('<tr></tr>').appendTo(dataTbody);
-
-                    if (hasLinevent)
-                        $('<td></td>').html(i).appendTo($liLine);
 
                     $.each(basicConf.lineprop, function(i, d) {
 
@@ -1424,39 +1469,93 @@ var Searcher = function() {
                         $('<td></td>').html(info).appendTo($liLine);
                     });
 
-                    if (hasLinevent)
-                        $('<td></td>').appendTo($liLine);
+                    if (hasLinevent) {
+                        var $tools = $('<td></td>').appendTo($liLine);
+
+                        renderLinevents($tools, rowLinevents[i] || [], i);
+                    }
                 });
-
-                // line buttons tools
-                var tools = $('<script type="text/html" id="' + basicConf.$resulter + 'tools">').appendTo($tableWrap);
-
-                if (hasLinevent) {
-                    $.each(basicConf.linevent, function(k, v) {
-
-                        $('<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="' + k + '"></a>').html(v.name).appendTo(tools);
-                    });
-                }
 
                 laytable.init(basicConf.$resulter, {
                     cellMinWidth: 80,
                     limit: 30
                 });
 
-                laytable.on('tool(' + basicConf.$resulter + ')', function(obj) {
+                var eventNamespace = '.searcherTable' + basicConf.$resulter.replace(/[^A-Za-z0-9]/g, '');
+                var closeNamespace = '.searcherTableClose' + basicConf.$resulter.replace(/[^A-Za-z0-9]/g, '');
 
-                    if (!basicConf.linevent[obj.event])
+                $(document).off('click' + eventNamespace, '.searcher-table-more').on('click' + eventNamespace, '.searcher-table-more', function(e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if ($(this).attr('data-resulter') != basicConf.$resulter)
+                        return true;
+
+                    com.focusPage('.searcher-table-more-menu').remove();
+
+                    var index = $(this).attr('data-index');
+                    var linevents = (rowLinevents[index] || []).slice(2);
+
+                    if (!linevents.length)
                         return false;
-                    if (!basicConf.linevent[obj.event].handle)
+
+                    var offset = $(this).offset();
+                    var $menu = $('<ul></ul>').addClass('dropdown-menu searcher-table-more-menu').css({
+                        "display": "block",
+                        "position": "absolute",
+                        "top": offset.top + $(this).outerHeight(),
+                        "left": offset.left,
+                        "z-index": 9999
+                    }).appendTo('body');
+
+                    $.each(linevents, function(i, linevent) {
+
+                        var $li = $('<li></li>').appendTo($menu);
+
+                        $('<a></a>').addClass('searcher-table-action').attr({
+                            "href": "javascript:void(0);",
+                            "data-index": index,
+                            "data-event": linevent.key,
+                            "data-resulter": basicConf.$resulter
+                        }).html(linevent.name).appendTo($li);
+                    });
+
+                    return false;
+                });
+
+                $(document).off('click' + eventNamespace, '.searcher-table-action').on('click' + eventNamespace, '.searcher-table-action', function(e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if ($(this).attr('data-resulter') != basicConf.$resulter)
+                        return true;
+
+                    var index = $(this).attr('data-index');
+                    var event = $(this).attr('data-event');
+                    var linevent = basicConf.linevent[event];
+                    var data = basicConf.lastData && basicConf.lastData[index] ? basicConf.lastData[index] : null;
+
+                    com.focusPage('.searcher-table-more-menu').remove();
+
+                    if (!linevent || !linevent.handle || !data)
                         return false;
 
-                    var row = obj.data || {};
-                    var data = basicConf.lastData && basicConf.lastData[row.__searcherIndex] ? basicConf.lastData[row.__searcherIndex] : row;
-
-                    if (basicConf.linevent[obj.event].show && !basicConf.linevent[obj.event].show(data))
+                    if (linevent.show && !linevent.show(data))
                         return false;
 
-                    basicConf.linevent[obj.event].handle(data);
+                    linevent.handle(data);
+
+                    return false;
+                });
+
+                $(document).off('click' + closeNamespace).on('click' + closeNamespace, function(e) {
+
+                    if ($(e.target).closest('.searcher-table-more-menu, .searcher-table-more').length)
+                        return true;
+
+                    com.focusPage('.searcher-table-more-menu').remove();
                 });
             }
 
