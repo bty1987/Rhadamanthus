@@ -1,6 +1,8 @@
 package com.fanglin.personel.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,20 @@ public class UserPreferServiceImpl implements UserPreferService {
         if (userPreferPO == null) return null;
 
         return convert(userPreferPO);
+    }
+
+    @Override
+    public List<UserPreferVO> queryUserPrefers(UserPreferVO userPreferVO, String userId, int company) throws FLException {
+
+        String module = userPreferVO == null ? null : userPreferVO.getModule();
+
+        List<UserPreferVO> userPreferVOs = new ArrayList<UserPreferVO>();
+
+        for (UserPreferPO userPreferPO : userPreferDao.queryUserPrefers(userId, module, company)) {
+            userPreferVOs.add(convert(userPreferPO));
+        }
+
+        return userPreferVOs;
     }
 
     @Override

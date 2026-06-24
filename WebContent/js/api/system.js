@@ -514,13 +514,6 @@ $.extend(api, {
         getOssStsToken: {
             url: "getOssStsToken.do"
         },
-        queryUserPrefer: {
-            url: "queryUserPrefer.do"
-        },
-        updateUserPrefer: {
-            url: "updateUserPrefer.do",
-            server: "communion"
-        },
         getProgressiveImage: {
             url: "getProgressiveImage.do"
         }

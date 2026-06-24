@@ -128,6 +128,14 @@ $.extend(api, {
         queryUserByUids: {
             url: "queryUserByUids.do"
         },
+        queryUserPrefer: {
+            url: "queryUserPrefer.do",
+            server: "communion"
+        },
+        queryUserPrefers: {
+            url: "queryUserPrefers.do",
+            server: "communion"
+        },
         addUser: {
             url: "addUser.do",
             server: "communion"
@@ -151,6 +159,10 @@ $.extend(api, {
         },
         updateUserForPhoto: {
             url: "updateUserForPhoto.do",
+            server: "communion"
+        },
+        updateUserPrefer: {
+            url: "updateUserPrefer.do",
             server: "communion"
         },
         quitUser: {

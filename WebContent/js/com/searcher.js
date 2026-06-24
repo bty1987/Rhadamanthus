@@ -748,6 +748,23 @@ var Searcher = function() {
         return window.location.pathname;
     };
 
+    var getUserPrefer = function(module, page, key) {
+
+        if (!params.user || !params.user.prefer)
+            return null;
+
+        return params.user.prefer[module] && params.user.prefer[module][page] && params.user.prefer[module][page][key];
+    };
+
+    var setUserPrefer = function(module, page, key, value) {
+
+        params.user = params.user || {};
+        params.user.prefer = params.user.prefer || {};
+        params.user.prefer[module] = params.user.prefer[module] || {};
+        params.user.prefer[module][page] = params.user.prefer[module][page] || {};
+        params.user.prefer[module][page][key] = value;
+    };
+
     var renderViewSwitcher = function() {
 
         if (!basicConf.viewEnable || !basicConf.$pager || !basicConf.$pager.length)
@@ -755,7 +772,10 @@ var Searcher = function() {
 
         com.focusPage('.searcher-view-switcher', basicConf.$pager).remove();
 
-        var $group = $('<div></div>').addClass('searcher-view-switcher pull-left').css('margin', '0px 5px').prependTo(basicConf.$pager);
+        var $pagerInfo = com.focusPage('.pager-info', basicConf.$pager);
+        var $group = $('<div></div>').addClass('searcher-view-switcher pull-right').css('margin', '0px 5px');
+
+        $pagerInfo.length ? $group.insertBefore($pagerInfo) : $group.appendTo(basicConf.$pager);
 
         $.each([{
             mode: "line",
@@ -819,38 +839,32 @@ var Searcher = function() {
 
     var loadUserPrefer = function(callback) {
 
-        if (!basicConf.viewEnable || !basicConf.preferEnable || !api.system || !api.system.queryUserPrefer) {
+        if (!basicConf.viewEnable || !basicConf.preferEnable) {
             callback && callback();
             return false;
         }
 
-        try {
-            com.post(api.system.queryUserPrefer, {
-                "userPrefer.module": "searcher",
-                "userPrefer.page": getPreferName(),
-                "userPrefer.pkey": "viewMode"
-            }, function(res) {
+        var mode = getUserPrefer("searcher", getPreferName(), "viewMode");
 
-                var mode = res.userPrefer && res.userPrefer.pvalue;
-
-                if (mode && basicConf.viewModes.indexOf(mode) != -1) {
-                    applyViewMode(mode, false);
-                }
-
-                callback && callback();
-            }, null, false);
-        } catch (e) {
-            callback && callback();
+        if (mode && basicConf.viewModes.indexOf(mode) != -1) {
+            applyViewMode(mode, false);
         }
+
+        callback && callback();
     };
 
     var saveUserPrefer = function(mode) {
 
-        if (!basicConf.viewEnable || !basicConf.preferEnable || !api.system || !api.system.updateUserPrefer)
+        if (!basicConf.viewEnable || !basicConf.preferEnable)
+            return false;
+
+        setUserPrefer("searcher", getPreferName(), "viewMode", mode);
+
+        if (!api.personel || !api.personel.updateUserPrefer)
             return false;
 
         try {
-            com.post(api.system.updateUserPrefer, {
+            com.post(api.personel.updateUserPrefer, {
                 "userPrefer.module": "searcher",
                 "userPrefer.page": getPreferName(),
                 "userPrefer.pkey": "viewMode",
