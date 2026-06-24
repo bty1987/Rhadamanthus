@@ -322,6 +322,7 @@ $(function() {
 
                     var options = {
                         "salesPayment.spid": v.spid,
+                        "salesPayment.advanceType": 3,
                         "salesPayment.sales.orderId": v.sales.orderId
                     };
 

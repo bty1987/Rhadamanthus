@@ -350,6 +350,7 @@ jQuery(function($) {
 
                     var options = {
                         "decorationPayment.dpid": v.dpid,
+                        "decorationPayment.advanceType": 1,
                         "decorationPayment.decoration.orderId": v.decoration.orderId,
                         "decorationPayment.comment": "",
                     };
