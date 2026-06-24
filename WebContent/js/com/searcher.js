@@ -1361,6 +1361,56 @@ var Searcher = function() {
                 var rowLinevents = [];
                 var maxLinevent = 0;
 
+                var getTableCellText = function(lineprop, v) {
+
+                    if (lineprop.show && typeof lineprop.show == 'function' && !lineprop.show(v))
+                        return "";
+
+                    var info = "";
+
+                    if (typeof lineprop.prop == 'function')
+                        info = lineprop.prop(v);
+                    else
+                        info = getElement(v, lineprop.prop.split('.'), lineprop.dataset);
+
+                    return info == null || info == undefined ? "" : info;
+                };
+
+                var getTextLength = function(text) {
+
+                    return String(text == null || text == undefined ? "" : text).replace(/[^\x00-\xff]/g, "aa").length;
+                };
+
+                var getTableWidth = function(lineprop, prop) {
+
+                    if (prop.width)
+                        return prop.width;
+
+                    if (prop.type == "checkbox")
+                        return 50;
+
+                    var field = prop.field || "";
+                    var maxLength = getTextLength(prop.name);
+                    var minWidth = 80;
+                    var maxWidth = 260;
+
+                    if (/time|date/i.test(field)) {
+                        minWidth = 140;
+                        maxWidth = 180;
+                    } else if (/no|orderid/i.test(field)) {
+                        minWidth = 120;
+                        maxWidth = 220;
+                    } else if (/comment|content|remark|remake|info|desc/i.test(field)) {
+                        maxWidth = 300;
+                    }
+
+                    $.each(data, function(i, row) {
+                        maxLength = Math.max(maxLength, getTextLength(getTableCellText(lineprop, row)));
+                    });
+
+                    return Math.max(minWidth, Math.min(maxLength * 8 + 40, maxWidth));
+                };
+
                 var visibleLinevents = function(v) {
 
                     var linevents = [];
@@ -1452,6 +1502,8 @@ var Searcher = function() {
                         prop.field = typeof prop.prop == 'string' ? prop.prop.replace(/[^A-Za-z0-9_]/g, '_') : "__searcherField" + i;
                     }
 
+                    prop.width = getTableWidth(v, prop);
+
                     tableProps.push({
                         source: v,
                         prop: prop
@@ -1490,16 +1542,7 @@ var Searcher = function() {
 
                     $.each(tableProps, function(i, d) {
 
-                        var info = "";
-
-                        if (!d.source.show || typeof d.source.show != 'function' || d.source.show(v)) {
-                            if (typeof d.source.prop == 'function')
-                                info = d.source.prop(v);
-                            else
-                                info = getElement(v, d.source.prop.split('.'), d.source.dataset);
-                        }
-
-                        $('<td></td>').html(info).appendTo($liLine);
+                        $('<td></td>').html(getTableCellText(d.source, v)).appendTo($liLine);
                     });
 
                     if (hasLinevent) {
