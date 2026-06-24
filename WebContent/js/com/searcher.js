@@ -36,7 +36,7 @@ var Searcher = function() {
 
         /**
          * 根据查询条件的编号列表初始化页面查询条件区域
-         * 
+         *
          * @params:
          * @conditions:数组(查询条编号的数组)
          * @searcherId:放查询条件的div的id
@@ -110,7 +110,7 @@ var Searcher = function() {
         },
         /**
          * 根据查询条件名和查询条件的规则创建一个查询条件的标签并返回
-         * 
+         *
          * @params:
          * @condName:查询条件编号
          * @condRule:
@@ -414,7 +414,7 @@ var Searcher = function() {
             return _params;
         },
         /**
-         * 
+         *
          * @param _params
          */
         getDataByPage: function(_params) {
@@ -439,7 +439,7 @@ var Searcher = function() {
             }, this), null, false);
         },
         /**
-         * 
+         *
          * @param page
          * @param rows
          * @param totalPage
@@ -459,7 +459,7 @@ var Searcher = function() {
         },
 
         /**
-         * 
+         *
          * @returns
          */
         init: function() {
@@ -592,7 +592,7 @@ var Searcher = function() {
     };
 
     /**
-     * 
+     *
      */
     var getParams = function() {
 
@@ -606,14 +606,14 @@ var Searcher = function() {
 
             var _inputType = $input.attr("data-type");
             var _postName = $input.attr("data-rqs");
-            
+
             var _rule = Condition.getRuleByCondName(val);
-            
+
             if(!_rule) {
                 console.log("Condition is not exist . " , val);
                 return true;
             }
-            
+
             var _reg = _rule.submitConfig.validate;
             var _alone = _rule.submitConfig.alone;
 
@@ -652,7 +652,7 @@ var Searcher = function() {
     };
 
     /**
-     * 
+     *
      */
     var searchByPresentParams = function() {
 
@@ -889,7 +889,7 @@ var Searcher = function() {
     searcherApi = {
         /**
          * 插件的初始化方法 params:
-         * 
+         *
          * @conditions: 查询条件编号的数组
          * @searcherId: 查询控件显示标签ID
          * @url: 分页查询路径
@@ -901,7 +901,7 @@ var Searcher = function() {
          * @resultName: 响应结果数据名称
          * @buttons: 表格按钮
          * @resulterId: 查询结果显示标签ID
-         * 
+         *
          */
         init: function(conditions, searcherId, url, displayFunc, pagerId, historyName, params, isPage, resultName, buttons, resulterId) {
 
@@ -1104,6 +1104,14 @@ var Searcher = function() {
                             return true;
                         }
 
+                        if (value.type == "custom" && value.render && typeof value.render == "function") {
+                            value.render($liLine, v, $ulProperty, $h3);
+                            return true;
+                        }
+
+                        if (value.type == "custom" && !value.prop)
+                            return true;
+
                         var $liProperty = $('<li></li>').appendTo($ulProperty);
 
                         var info = "";
@@ -1156,9 +1164,11 @@ var Searcher = function() {
                                 return true;
                             }
 
-                            $('<a></a>').addClass('btn btn-minier ' + button.clazz).html(btnName).appendTo($divBtnWrap).click(function() {
+                            var btnClazz = typeof button.clazz == 'function' ? button.clazz(v) : button.clazz;
 
-                                button.handle(v);
+                            $('<a></a>').addClass('btn btn-minier ' + btnClazz).html(btnName).appendTo($divBtnWrap).click(function() {
+
+                                button.handle(v, $(this));
                             });
                         }
 
@@ -1213,21 +1223,27 @@ var Searcher = function() {
 
                         if (value.type == "checkbox") {
 
-                            var props = {
-                                "type": "checkbox",
-                                "name": "check",
-                                "id": "check",
-                                "class": "ace ace-checkbox-2 searcher-checkbox",
-                            }
-
-                            props[value.field] = v[value.prop];
+                            var props = getCheckboxProps(value, v);
 
                             var $label = $('<label></label>').prependTo($title);
                             var $input = $('<input>').attr(props).appendTo($label);
                             var $span = $('<span></span>').css({
                                 "top": "-5px",
                                 "left": "-5px"
-                            }).addClass('lbl blue bigger-150').appendTo($label);
+                            }).addClass(value.lblClazz || 'lbl blue bigger-150').appendTo($label);
+
+                            if (value.checked && typeof value.checked == 'function')
+                                $input.prop("checked", value.checked(v));
+
+                            if (value.click && typeof value.click == 'function')
+                                $input.click(function() {
+                                    value.click($(this), v);
+                                });
+
+                            if (value.change && typeof value.change == 'function')
+                                $input.change(function() {
+                                    value.change($(this), v);
+                                });
 
                             return true;
                         }
@@ -1280,9 +1296,11 @@ var Searcher = function() {
                                 return true;
                             }
 
-                            $('<a></a>').addClass('btn btn-minier ' + button.clazz).html(btnName).appendTo($btntools).click(function() {
+                            var btnClazz = typeof button.clazz == 'function' ? button.clazz(v) : button.clazz;
 
-                                button.handle(v);
+                            $('<a></a>').addClass('btn btn-minier ' + btnClazz).html(btnName).appendTo($btntools).click(function() {
+
+                                button.handle(v, $(this));
                             });
                         }
                     });
@@ -1384,6 +1402,9 @@ var Searcher = function() {
                     if (lineprop.show && typeof lineprop.show == 'function' && !lineprop.show(v))
                         return "";
 
+                    if (lineprop.type == "checkbox")
+                        return "";
+
                     var info = "";
 
                     if (typeof lineprop.prop == 'function')
@@ -1463,7 +1484,10 @@ var Searcher = function() {
 
                     $.each(directLinevents, function(i, linevent) {
 
-                        $('<a></a>').addClass('btn btn-minier ' + linevent.button.clazz + ' searcher-table-action').css('margin', '0px 1px').attr({
+                        var data = basicConf.lastData && basicConf.lastData[index] ? basicConf.lastData[index] : null;
+                        var btnClazz = typeof linevent.button.clazz == 'function' ? linevent.button.clazz(data) : linevent.button.clazz;
+
+                        $('<a></a>').addClass('btn btn-minier ' + btnClazz + ' searcher-table-action').css('margin', '0px 1px').attr({
                             "href": "javascript:void(0);",
                             "data-index": index,
                             "data-event": linevent.key,
@@ -1492,7 +1516,7 @@ var Searcher = function() {
 
                 $.each(basicConf.lineprop, function(i, v) {
 
-                    if (v.type == "newline" || !v.prop)
+                    if (v.type == "newline" || (!v.prop && v.type != "checkbox"))
                         return true;
 
                     var visible = true;
@@ -1563,6 +1587,28 @@ var Searcher = function() {
                         var info = getTableCellText(d.source, v);
                         var clazz = typeof d.source.clazz == 'function' ? d.source.clazz(v) : d.source.clazz;
                         var $td = $('<td></td>').appendTo($liLine);
+
+                        if (d.source.type == "checkbox") {
+                            var props = getCheckboxProps(d.source, v);
+                            var $label = $('<label></label>').appendTo($td);
+                            var $input = $('<input>').attr(props).appendTo($label);
+                            $('<span></span>').addClass(d.source.lblClazz || 'lbl blue bigger-150').appendTo($label);
+
+                            if (d.source.checked && typeof d.source.checked == 'function')
+                                $input.prop("checked", d.source.checked(v));
+
+                            if (d.source.click && typeof d.source.click == 'function')
+                                $input.click(function() {
+                                    d.source.click($(this), v);
+                                });
+
+                            if (d.source.change && typeof d.source.change == 'function')
+                                $input.change(function() {
+                                    d.source.change($(this), v);
+                                });
+
+                            return true;
+                        }
 
                         if (clazz) {
                             $('<span></span>').addClass(clazz).html(info).appendTo($td);
@@ -1647,7 +1693,7 @@ var Searcher = function() {
                     if (linevent.show && !linevent.show(data))
                         return false;
 
-                    linevent.handle(data);
+                    linevent.handle(data, $(this));
 
                     return false;
                 });

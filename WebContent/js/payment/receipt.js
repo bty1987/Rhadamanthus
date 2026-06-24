@@ -19,75 +19,67 @@ jQuery(function ($) {
         com.closeTip();
     });
 
-    var displayFunc = (function () {
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildReceiptLineprops() {
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function (v) {
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.type == 0 ? "收款" : "退款"));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var propertyArr = [
-                ["装修单号:", v.orderId, "blue"],
-                ["款项类型:", receipt.paymentTypes[v.paymentType], "red"],
-                ["款项名称:", v.paymentName, "red"],
-                ["收据类型:", receipt.receiptTypes[v.receiptType], "red"],
-                ["名称:", v.name == "" ? "无" : v.name, "grey"],
-                ["金额:", v.money, "blue"],
-                ["收款时间:", v.collectTime, "green"]
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                if (value[3]) {
-                    $b.click(function() {
-                        value[3]($b);
-                    });
-                }
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $liLine.append($h3).append($ulProperty);
-
-            return $liLine;
-        };
-
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+        return [{
+            field: "orderId",
+            name: "装修单号",
+            prop: "orderId",
+            clazz: "blue"
+        }, {
+            field: "paymentType",
+            name: "款项类型",
+            prop: function(v) {
+                return receipt.paymentTypes[v.paymentType];
             },
-            drawLine: function (v) {
-                return creatLine(v);
-            }
-        }
-    })();
+            clazz: "red"
+        }, {
+            field: "paymentName",
+            name: "款项名称",
+            prop: "paymentName",
+            clazz: "red"
+        }, {
+            field: "receiptType",
+            name: "收据类型",
+            prop: function(v) {
+                return receipt.receiptTypes[v.receiptType];
+            },
+            clazz: "red"
+        }, {
+            field: "name",
+            name: "名称",
+            prop: function(v) {
+                return v.name == "" ? "无" : v.name;
+            },
+            clazz: "grey"
+        }, {
+            field: "money",
+            name: "金额",
+            prop: "money",
+            clazz: "blue"
+        }, {
+            field: "collectTime",
+            name: "收款时间",
+            prop: "collectTime",
+            clazz: "green"
+        }];
+    }
+
+    function buildReceiptButtons() {
+
+        var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+        $('<span></span>').text('导出').appendTo($impa);
+
+        return [$impa];
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(["payment-paymentType", "payment-receiptType", "payment-collectTime"], "condList", api.payment.pageReceipt, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "receiptPostData", null, false, null, function () {
-        var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
-        var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
-        var $impspan = $('<span></span>').text('导出').appendTo($impa);
-
-        return [$impa];
-    });
+    searcher.set("condList", "pagenation", "resultList", api.payment.pageReceipt, null, ["payment-paymentType", "payment-receiptType", "payment-collectTime"], "receiptPostData", null, false, buildReceiptButtons);
+    searcher.line(function(v) {
+        return v.type == 0 ? "收款" : "退款";
+    }, buildReceiptLineprops(), {}).render();
 
     com.focusPage('a[name="import"]', '#pagenation').click(function () {
         var setime = com.focusPage("#pluginss");

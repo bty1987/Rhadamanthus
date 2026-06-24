@@ -618,7 +618,7 @@ var paymentUtils = {
         var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
     },
 
-    drawHistoryData: function(paymentPageData, payment, div, type) {
+    getHistoryArr: function(paymentPageData, payment) {
 
         var styleArr = [];
 
@@ -630,6 +630,25 @@ var paymentUtils = {
         payment.advance != null && payment.advance != "0" ? styleArr.push(["预付款:", payment.advance, "blue"]) : true;
         payment.coupon != null && payment.coupon != "0" ? styleArr.push(["优惠券:", paymentUtils.splitCoupon(payment.coupon, payment.couponInfo, paymentPageData.couponTypeData), "blue"]) : true;
         payment.transfer != null && payment.transfer != "0" ? styleArr.push(["预付款转换:", payment.transfer, "blue"]) : true;
+
+        return styleArr;
+    },
+
+    getHistoryText: function(paymentPageData, payment) {
+
+        var styleArr = paymentUtils.getHistoryArr(paymentPageData, payment);
+        var infos = [];
+
+        $.each(styleArr, function(index, value) {
+            infos.push(value[0] + value[1]);
+        });
+
+        return infos.join(" ");
+    },
+
+    drawHistoryData: function(paymentPageData, payment, div, type) {
+
+        var styleArr = paymentUtils.getHistoryArr(paymentPageData, payment);
 
         var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo(div);
 

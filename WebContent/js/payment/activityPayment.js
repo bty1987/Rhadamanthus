@@ -168,134 +168,125 @@ jQuery(function($) {
     // 不同页面的不同参数
     activityPayment.pageConfig = paymentUtils.getConfig(activityPayment.type, 32);
 
-    var displayFunc = (function() {
 
-        var renderList = function(tableId, listData) {
+    function paymentPropertyText(propertyArr) {
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        var infos = [];
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+        $.each(propertyArr, function(index, value) {
+            infos.push(value[0] + value[1]);
+        });
 
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnCol = $('<a></a>').addClass('btn btn-minier btn-info').html('收款');
-            var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-pink').html('打印');
-
-            var propertyArr = paymentUtils.getPropertyArr(activityPayment, v, v, activityPayment.paymentStatusArray);
-
-            var _label = $('<label></label>');
-            var $input = $('<input>').attr({
-                "type": "checkbox",
-                "name": "apids"
-            }).addClass('ace ace-checkbox-2');
-            $input.attr({
-                "data-apid": v.apid,
-                "data-mno": v.mno,
-                "data-orderid": v.orderId,
-                "data-money": v.money,
-                "data-status": v.status
-            });
-
-            if (activityPayment.pageConfig.pageBtn.contains("batchCollect"))
-                $input.appendTo(_label);
-
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(activityPayment.paymentType[v.type]);
-
-            _label.append(_span).appendTo($h3);
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-
-                if (value[3]) {
-                    $b.click(function() {
-                        value[3]($b);
-                    });
-                }
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.appendTo($h3);
-            $liLine.append($h3).append($ulProperty);
-
-            if (activityPayment.pageConfig.pageBtn.contains("payway"))
-                paymentUtils.drawHistoryData(activityPayment, v, $liLine, "");
-
-            if (v.status == 0 && activityPayment.pageConfig.pageBtn.contains("collect"))
-                $divBtnWrap.append($btnCol);
-            if (v.status != 0 && activityPayment.pageConfig.pageBtn.contains("print"))
-                $divBtnWrap.append($btnPrint);
-
-            // 收款
-            $btnCol.click(function() {
-
-                activityPayment.apids.push(v.apid);
-                initCollect(v, false);
-            });
-
-            // 打印
-            $btnPrint.click(function() {
-
-                params.payment.activityPayment = v;
-                com.popup("专用收款收据__会员编号:" + v.mno, api.index.activityPaymentReceiptIndex.url, function() {
-
-                    parent.layer.getFrameIndex(window.name);
-                }, null, true);
-
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
-
-    var searcher = new Searcher();
-
-    var extraParams = {};
-    if (activityPayment.pageConfig.statusExtraParam != null && activityPayment.pageConfig.statusExtraParam.length > 0) {
-        extraParams["activityPayment.status"] = activityPayment.pageConfig.statusExtraParam[0];
+        return infos.join(" ");
     }
 
-    searcher.init(activityPayment.pageConfig.condArr, "condList", activityPayment.pageConfig.apiPage, function(data) {
+    function drawPaymentProperties($ulProperty, propertyArr) {
 
-        displayFunc.init('resultList', data);
-    }, "pagenation", "activityPaymentPostData" + activityPayment.type, extraParams, false, null, function() {
+        $.each(propertyArr, function(index, value) {
+
+            var $liProperty = $('<li></li>').appendTo($ulProperty);
+            $('<strong></strong>').html(value[0]).appendTo($liProperty);
+            var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+
+            if (value[3]) {
+                $b.click(function() {
+                    value[3]($b);
+                }).css("cursor", "pointer");
+            }
+        });
+    }
+
+    function getActivityPropertyArr(v) {
+
+        return paymentUtils.getPropertyArr(activityPayment, v, v, activityPayment.paymentStatusArray);
+    }
+
+    function buildActivityLineprops() {
+
+        var lineprops = [{
+            type: "checkbox",
+            name: "apids",
+            clazz: "ace ace-checkbox-2",
+            show: function() {
+                return activityPayment.pageConfig.pageBtn.contains("batchCollect");
+            },
+            attrs: function(v) {
+                return {
+                    "data-apid": v.apid,
+                    "data-mno": v.mno,
+                    "data-orderid": v.orderId,
+                    "data-money": v.money,
+                    "data-status": v.status
+                };
+            }
+        }, {
+            field: "paymentInfo",
+            name: "款项信息",
+            type: "custom",
+            prop: function(v) {
+                return paymentPropertyText(getActivityPropertyArr(v));
+            },
+            render: function($liLine, v, $ulProperty) {
+                drawPaymentProperties($ulProperty, getActivityPropertyArr(v));
+            }
+        }];
+
+        if (activityPayment.pageConfig.pageBtn.contains("payway")) {
+            lineprops.push({
+                field: "payway",
+                name: "收款方式",
+                type: "custom",
+                prop: function(v) {
+                    return paymentUtils.getHistoryText(activityPayment, v);
+                },
+                render: function($liLine, v) {
+                    paymentUtils.drawHistoryData(activityPayment, v, $liLine, "");
+                }
+            });
+        }
+
+        return lineprops;
+    }
+
+    function buildActivityLinebtns() {
+
+        return {
+            collect: {
+                name: "收款",
+                clazz: "btn-info",
+                show: function(v) {
+                    return v.status == 0 && activityPayment.pageConfig.pageBtn.contains("collect");
+                },
+                handle: function(v) {
+                    activityPayment.apids.push(v.apid);
+                    initCollect(v, false);
+                }
+            },
+            print: {
+                name: "打印",
+                clazz: "btn-pink",
+                show: function(v) {
+                    return v.status != 0 && activityPayment.pageConfig.pageBtn.contains("print");
+                },
+                handle: function(v) {
+                    params.payment.activityPayment = v;
+                    com.popup("专用收款收据__会员编号:" + v.mno, api.index.activityPaymentReceiptIndex.url, function() {
+                        parent.layer.getFrameIndex(window.name);
+                    }, null, true);
+                }
+            }
+        };
+    }
+
+    function buildActivityButtons() {
 
         var $batch = $('<a></a>').addClass('btn btn-minier pull-left btn-primary').attr('id', 'collects').css("margin", "0px 3px");
-        var $batchi = $('<i></i>').addClass('icon-money bigger-110').appendTo($batch);
-        var $batchspan = $('<span></span>').text('批量收款').appendTo($batch);
+        $('<i></i>').addClass('icon-money bigger-110').appendTo($batch);
+        $('<span></span>').text('批量收款').appendTo($batch);
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'createActivityPayment').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
 
         var btnParams = [];
 
@@ -305,8 +296,19 @@ jQuery(function($) {
             btnParams.push($adda);
 
         return btnParams;
+    }
 
-    }, 'resultList');
+    var searcher = new Searcher();
+
+    var extraParams = {};
+    if (activityPayment.pageConfig.statusExtraParam != null && activityPayment.pageConfig.statusExtraParam.length > 0) {
+        extraParams["activityPayment.status"] = activityPayment.pageConfig.statusExtraParam[0];
+    }
+
+    searcher.set("condList", "pagenation", "resultList", activityPayment.pageConfig.apiPage, extraParams, activityPayment.pageConfig.condArr, "activityPaymentPostData" + activityPayment.type, null, false, buildActivityButtons);
+    searcher.line(function(v) {
+        return activityPayment.paymentType[v.type];
+    }, buildActivityLineprops(), buildActivityLinebtns()).render();
 
     // 添加活动款
     function create() {

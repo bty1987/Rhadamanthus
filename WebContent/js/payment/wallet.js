@@ -60,7 +60,7 @@ jQuery(function ($) {
         wallet.phoneCode = null;
         wallet.bindOrupdate = null;
     });
-    
+
     wallet.modals.withdrawModal.on('hide.bs.modal', function () {
         com.closeTip();
         com.cleanItems(wallet.items);
@@ -77,150 +77,140 @@ jQuery(function ($) {
 
     com.initTypeahead('transferUser', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
 
-    var displayFunc = (function () {
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function bindWalletLine(v) {
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
+        wallet.currentWallet = v;
+        wallet.items.title.html("绑定信息");
+        wallet.bindOrupdate = "bind";
+        wallet.items.phone.attr("disabled", true);
+        wallet.items.phone.val(v.phone);
+        wallet.modals.bindModal.modal("show");
+    }
 
-        var creatLine = function (v) {
-            var $liLine = $('<li></li>').addClass('item-orange clearfix ');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.belonger.currentName));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+    function updateWalletLine(v) {
 
-            var $bind = $("<a></a>").addClass("btn btn-minier btn-info").html("绑定");
-            var $update = $("<a></a>").addClass("btn btn-minier btn-yellow").html("更新");
-            var $freeze = $("<a></a>").addClass("btn btn-minier btn-success").html("冻结");
-            var $unfreeze = $("<a></a>").addClass("btn btn-minier btn-warning").html("解冻");
-            var $withdraw = $("<a></a>").addClass("btn btn-minier btn-pink").html("提现");
-            var $transfer = $("<a></a>").addClass("btn btn-minier btn-danger").html("转账");
-            var $cards = $("<a></a>").addClass("btn btn-minier btn-purple").html("银行卡");
-            var $walletran = $("<a></a>").addClass("btn btn-minier btn-inverse").html("交易记录");
-            var $walletres = $("<a></a>").addClass("btn btn-minier btn-info").html("资源");
+        wallet.currentWallet = v;
+        wallet.items.title.html("更新信息");
+        wallet.bindOrupdate = "update";
+        wallet.items.phone.removeAttr("disabled");
+        wallet.items.phone.val(v.phone);
+        wallet.modals.bindModal.modal("show");
+    }
 
-            var propertyArr = [
-                ["编号:", v.no, "grey"],
-                ["电话:", v.phone, "blue"],
-                ["身份证:", v.identity, "blue"],
-                ["余额:", v.balance, "blue"],
-                ["类型:", wallet.types[v.type], "red"],
-                ["状态:", wallet.status[v.status], "red"]
-            ];
+    function freezeWalletLine(v) {
 
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
+        com.showConfirm("确认要冻结该账户吗?", function() {
+            com.post(api.payment.freezeWallet, {"wallet.wid": v.wid}, function() {
+                com.showAlert(com.info, "冻结成功");
+                searcher.doSearch();
             });
+        });
+    }
 
-            $divBtnWrap.append($bind).append($update).append($freeze).append($unfreeze).append($withdraw).append($transfer).append($cards).append($walletran).append($walletres);
-            $divBtnWrap.appendTo($h3);
+    function unfreezeWalletLine(v) {
 
-            $liLine.append($h3).append($ulProperty);
-
-            //绑定
-            $bind.click(function(){
-                wallet.currentWallet = v;
-                wallet.items.title.html("绑定信息");
-                wallet.bindOrupdate = "bind";
-                wallet.items.phone.attr("disabled", true);
-                wallet.items.phone.val(v.phone);
-                wallet.modals.bindModal.modal("show");
+        com.showConfirm("确认要解冻该账户吗?", function() {
+            com.post(api.payment.unfreezeWallet, {"wallet.wid": v.wid}, function() {
+                com.showAlert(com.info, "解冻成功");
+                searcher.doSearch();
             });
+        });
+    }
 
-            //更新
-            $update.click(function(){
-                wallet.currentWallet = v;
-                wallet.items.title.html("更新信息");
-                wallet.bindOrupdate = "update";
-                wallet.items.phone.removeAttr("disabled");
-                wallet.items.phone.val(v.phone);
-                wallet.modals.bindModal.modal("show");
-            });
+    function withdrawWalletLine(v) {
 
-            //冻结
-            $freeze.click(function(){
-                com.showConfirm("确认要冻结该账户吗?", function(res) {
-                    com.post(api.payment.freezeWallet, {"wallet.wid": v.wid}, function(res){
-                        com.showAlert(com.info, "冻结成功");
-                        searcher.doSearch();
-                    });
-                });
-            });
+        com.post(api.payment.queryWalletard, {"walletard.wid": v.wid}, function(res) {
+            wallet.currentWallet = v;
+            wallet.items.card.bindData(res.walletards, "wcid", "bankName");
+            wallet.modals.withdrawModal.modal("show");
+        });
+    }
 
-            //解冻
-            $unfreeze.click(function(){
-                com.showConfirm("确认要解冻该账户吗?", function(res) {
-                    com.post(api.payment.unfreezeWallet, {"wallet.wid": v.wid}, function(res){
-                        com.showAlert(com.info, "解冻成功");
-                        searcher.doSearch();
-                    });
-                });
-            });
+    function transferWalletLine(v) {
 
-            //提现
-            $withdraw.click(function(){
-                com.post(api.payment.queryWalletard, {"walletard.wid": v.wid}, function(res){
-                    wallet.currentWallet = v;
-                    wallet.items.card.bindData(res.walletards, "wcid", "bankName");
-                    wallet.modals.withdrawModal.modal("show");
-                });
-            });
+        wallet.currentWallet = v;
+        wallet.modals.transferModal.modal("show");
+    }
 
-            //转账
-            $transfer.click(function(){
-                wallet.currentWallet = v;
-                wallet.modals.transferModal.modal("show");
-            });
+    function cardsWalletLine(v) {
 
-            //银行卡
-            $cards.click(function(){
-                params.payment.wid = v.wid;
-                params.payment.phone = v.phone;
-                com.popup4page('#walletardPopup', api.index.walletardIndex.url, "银行卡");
-            });
+        params.payment.wid = v.wid;
+        params.payment.phone = v.phone;
+        com.popup4page('#walletardPopup', api.index.walletardIndex.url, "银行卡");
+    }
 
-            //交易记录
-            $walletran.click(function(){
-                params.payment.wid = v.wid;
-                com.popup4page('#walletranPopup', api.index.walletranIndex.url, "交易记录");
-            });
+    function walletranWalletLine(v) {
 
-            //资源
-            $walletres.click(function(){
-                params.payment.wid = v.wid;
-                com.popup4page('#walletranPopup', api.index.walletresIndex.url, "资源");
-            });
+        params.payment.wid = v.wid;
+        com.popup4page('#walletranPopup', api.index.walletranIndex.url, "交易记录");
+    }
 
-            return $liLine;
-        };
+    function walletresWalletLine(v) {
+
+        params.payment.wid = v.wid;
+        com.popup4page('#walletranPopup', api.index.walletresIndex.url, "资源");
+    }
+
+    function buildWalletLineprops() {
+
+        return [{
+            field: "no",
+            name: "编号",
+            prop: "no",
+            clazz: "grey"
+        }, {
+            field: "phone",
+            name: "电话",
+            prop: "phone",
+            clazz: "blue"
+        }, {
+            field: "identity",
+            name: "身份证",
+            prop: "identity",
+            clazz: "blue"
+        }, {
+            field: "balance",
+            name: "余额",
+            prop: "balance",
+            clazz: "blue"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) {
+                return wallet.types[v.type];
+            },
+            clazz: "red"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) {
+                return wallet.status[v.status];
+            },
+            clazz: "red"
+        }];
+    }
+
+    function buildWalletLinebtns() {
 
         return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return creatLine(v);
-            }
-        }
-    })();
+            bind: {name: "绑定", clazz: "btn-info", handle: bindWalletLine},
+            update: {name: "更新", clazz: "btn-yellow", handle: updateWalletLine},
+            freeze: {name: "冻结", clazz: "btn-success", handle: freezeWalletLine},
+            unfreeze: {name: "解冻", clazz: "btn-warning", handle: unfreezeWalletLine},
+            withdraw: {name: "提现", clazz: "btn-pink", handle: withdrawWalletLine},
+            transfer: {name: "转账", clazz: "btn-danger", handle: transferWalletLine},
+            cards: {name: "银行卡", clazz: "btn-purple", handle: cardsWalletLine},
+            walletran: {name: "交易记录", clazz: "btn-inverse", handle: walletranWalletLine},
+            walletres: {name: "资源", clazz: "btn-info", handle: walletresWalletLine}
+        };
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(["payment-wallet-belonger-name"], "condList", api.payment.pageWallet, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "walletPostData", null, false, null, null);
+    searcher.base("condList", "pagenation", "resultList", api.payment.pageWallet);
+    searcher.condition(["payment-wallet-belonger-name"]);
+    searcher.history("walletPostData");
+    searcher.line("belonger.currentName", buildWalletLineprops(), buildWalletLinebtns()).render();
 
     //绑定
     function bindWallet() {

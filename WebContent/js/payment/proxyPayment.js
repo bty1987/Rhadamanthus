@@ -136,120 +136,115 @@ jQuery(function($) {
     // 不同页面的不同参数
     proxyPayment.pageConfig = paymentUtils.getConfig(proxyPayment.type, 64);
 
-    var displayFunc = (function() {
 
-        var renderList = function(tableId, listData) {
+    function paymentPropertyText(propertyArr) {
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($tableWrap);
+        var infos = [];
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+        $.each(propertyArr, function(index, value) {
+            infos.push(value[0] + value[1]);
+        });
 
-                    creatLine(v).appendTo($ul);
-                });
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid');
-            var $label = $('<label></label>').appendTo($h3);
-
-            var $input = $('<input>').attr({
-                "type": "checkbox",
-                "name": "ppids",
-                "class": "ace ace-checkbox-2",
-                "ppid": v.ppid
-            }).val(v.arId);
-
-            if (proxyPayment.pageConfig.pageBtn.contains("selectall"))
-                $input.appendTo($label);
-
-            var $span = $('<span></span>').addClass('lbl blue bigger-150').html(v.name).appendTo($label);
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnCollect = $('<a></a>').addClass('btn btn-minier');
-
-            var propertyArr = paymentUtils.getPropertyArr(proxyPayment, v, v, proxyPayment.status);
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                if (value[3]) {
-                    $b.click(function() {
-                        value[3]($b);
-                    });
-                }
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.appendTo($h3);
-            $liLine.append($h3).append($ulProperty);
-
-            if (v.type == constant.payment().proxyPayment.TYPE_COLLECT_INT)
-                $btnCollect.text('收款').addClass("btn-info");
-            if (v.type == constant.payment().proxyPayment.TYPE_REFUND_INT)
-                $btnCollect.text('退款').addClass("btn-danger");
-
-            if (proxyPayment.pageConfig.pageBtn.contains("payway"))
-                paymentUtils.drawHistoryData(proxyPayment, v.proxyReceipt, $liLine, "");
-
-            if (v.type == constant.payment().proxyPayment.TYPE_COLLECT_INT && proxyPayment.pageConfig.pageBtn.contains("collect"))
-                $divBtnWrap.append($btnCollect);
-
-            // 收款点击显示模态框
-            $btnCollect.click(function() {
-
-                if (v.type == constant.payment().proxyPayment.TYPE_COLLECT_INT)
-                    paymentUtils.showPos(proxyPayment, {"paytran.pid": v.ppid}, [0, 1]);
-
-                initCollect(v);
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        }
-    })();
-
-    var searcher = new Searcher();
-
-    var extraParams = {};
-    if (proxyPayment.pageConfig.statusExtraParam != null && proxyPayment.pageConfig.statusExtraParam.length > 0) {
-        extraParams["proxyPayment.status"] = proxyPayment.pageConfig.statusExtraParam[0];
+        return infos.join(" ");
     }
 
-    searcher.init(proxyPayment.pageConfig.condArr, "condList", proxyPayment.pageConfig.apiPage, function(data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "proxyPaymentPostData" + proxyPayment.type, extraParams, false, null, function() {
+    function drawPaymentProperties($ulProperty, propertyArr) {
+
+        $.each(propertyArr, function(index, value) {
+
+            var $liProperty = $('<li></li>').appendTo($ulProperty);
+            $('<strong></strong>').html(value[0]).appendTo($liProperty);
+            var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+
+            if (value[3]) {
+                $b.click(function() {
+                    value[3]($b);
+                }).css("cursor", "pointer");
+            }
+        });
+    }
+
+    function getProxyPropertyArr(v) {
+
+        return paymentUtils.getPropertyArr(proxyPayment, v, v, proxyPayment.status);
+    }
+
+    function buildProxyLineprops() {
+
+        var lineprops = [{
+            type: "checkbox",
+            name: "ppids",
+            clazz: "ace ace-checkbox-2",
+            value: function(v) {
+                return v.arId;
+            },
+            show: function() {
+                return proxyPayment.pageConfig.pageBtn.contains("selectall");
+            },
+            attrs: function(v) {
+                return {
+                    "ppid": v.ppid
+                };
+            }
+        }, {
+            field: "paymentInfo",
+            name: "款项信息",
+            type: "custom",
+            prop: function(v) {
+                return paymentPropertyText(getProxyPropertyArr(v));
+            },
+            render: function($liLine, v, $ulProperty) {
+                drawPaymentProperties($ulProperty, getProxyPropertyArr(v));
+            }
+        }];
+
+        if (proxyPayment.pageConfig.pageBtn.contains("payway")) {
+            lineprops.push({
+                field: "payway",
+                name: "收款方式",
+                type: "custom",
+                prop: function(v) {
+                    return paymentUtils.getHistoryText(proxyPayment, v.proxyReceipt);
+                },
+                render: function($liLine, v) {
+                    paymentUtils.drawHistoryData(proxyPayment, v.proxyReceipt, $liLine, "");
+                }
+            });
+        }
+
+        return lineprops;
+    }
+
+    function buildProxyLinebtns() {
+
+        return {
+            collect: {
+                name: "收款",
+                clazz: "btn-info",
+                show: function(v) {
+                    return v.type == constant.payment().proxyPayment.TYPE_COLLECT_INT && proxyPayment.pageConfig.pageBtn.contains("collect");
+                },
+                handle: function(v) {
+                    paymentUtils.showPos(proxyPayment, {"paytran.pid": v.ppid}, [0, 1]);
+                    initCollect(v);
+                }
+            }
+        };
+    }
+
+    function buildProxyButtons() {
+
         var $createa = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'creates').css("margin", "0px 3px");
-        var $createi = $('<i></i>').addClass('icon-check bigger-110').appendTo($createa);
-        var $createspan = $('<span></span>').text('创建代付款').appendTo($createa);
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($createa);
+        $('<span></span>').text('创建代付款').appendTo($createa);
 
         var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
-        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
-        var $checkspan = $('<span></span>').text('全选').appendTo($checka);
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+        $('<span></span>').text('全选').appendTo($checka);
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('批量确认').appendTo($adda);
+        $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
+        $('<span></span>').text('批量确认').appendTo($adda);
 
         var btnParams = [];
 
@@ -261,7 +256,17 @@ jQuery(function($) {
             btnParams.push($adda);
 
         return btnParams;
-    });
+    }
+
+    var searcher = new Searcher();
+
+    var extraParams = {};
+    if (proxyPayment.pageConfig.statusExtraParam != null && proxyPayment.pageConfig.statusExtraParam.length > 0) {
+        extraParams["proxyPayment.status"] = proxyPayment.pageConfig.statusExtraParam[0];
+    }
+
+    searcher.set("condList", "pagenation", "resultList", proxyPayment.pageConfig.apiPage, extraParams, proxyPayment.pageConfig.condArr, "proxyPaymentPostData" + proxyPayment.type, null, false, buildProxyButtons);
+    searcher.line("name", buildProxyLineprops(), buildProxyLinebtns()).render();
 
     // 创建代付款窗口
     com.focusPage('a[name="creates"]', '#pagenation').click(function() {

@@ -96,160 +96,148 @@ jQuery(function($) {
         initBank();
     });
 
-    var displayFunc = (function() {
+    function cancelPaytran(v) {
 
-        var renderList = function(tableId, listData) {
+        com.post(api.payment.cancelPaytran, {
+            "paytran.ptid": v.ptid
+        }, function() {
+            com.showAlert(com.info, "撤销完成");
+            searcher.doSearch();
+        });
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function checkPaytran(v) {
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+        com.post(api.payment.checkPaytran, {
+            "paytran.ptid": v.ptid
+        }, function() {
+            com.showAlert(com.info, "验证完成");
+            searcher.doSearch();
+        });
+    }
 
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
+    function deletePaytran(v) {
 
-        var creatLine = function(v) {
+        com.post(api.payment.deletePaytran, {
+            "paytran.ptid": v.ptid
+        }, function() {
+            com.showAlert(com.info, "删除成功");
+            searcher.doSearch();
+        });
+    }
 
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(constant.payment().receipt.paymentType.keys[v.type]));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+    function codePaytran(v) {
 
-            var $cancel = $('<a></a>').addClass('btn btn-minier btn-danger').html('撤销');
-            var $check = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
-            var $delete = $('<a></a>').addClass('btn btn-minier btn-inverse').html('删除');
-            var $code = $('<a></a>').addClass('btn btn-minier btn-purple').html('收款码');
-            var $wechat = $('<a></a>').addClass('btn btn-minier btn-success').html('微信推送');
-            var $pos = $('<a></a>').addClass('btn btn-minier btn-warning').html('POS推送');
+        com.focusPage("#paytranCodeQrcodeModal").html("");
+        paymentUtils.initQrcode("paytran", "paytranCodeQrcodeModal");
+        var pid = v.type == '6' ? v.ptid : v.pid;
+        paymentUtils.showQRCode("paytranqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.orderId + "&paymentType=" + v.type + "&pid=" + pid + "&atttype=" + v.atttype, "paytranCodeQrcodeModal");
+    }
 
-            var propertyArr = [
-                ["装修单号:", v.orderId, "blue"],
-                ["业务类型:", v.atttype == 0 ? "装修" : "主材", "red"],
-                ["收据名称:", v.no, "blue"],
-                ["机器编号:", v.sn, "blue"],
-                ["状态:", constant.payment().paytran.status.keys[v.status] , "red"],
-                ["金额:", v.money, "green"],
-                ["创建人:", v.creater.currentName, "grey"],
-                ["创建时间:", v.createTime, "green"],
-                ["推送时间:", v.pushTime, "green"]
-            ];
+    function wechatPaytran(v) {
 
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
+        com.showConfirm("是否发送付款通知", function() {
+            com.post(api.payment.sendPaytran, {
+                "paytran.ptid": v.ptid
+            }, function() {
+                com.showAlert(com.info, "发送成功");
             });
+        });
+    }
 
-            $divBtnWrap.append($cancel).append($check).append($delete).append($code).append($wechat).append($pos);
+    function posPaytran(v) {
 
-            if (v.status == constant.payment().paytran.STATUS_INIT_INT) {
-                $divBtnWrap.appendTo($h3);
-            }
+        com.closeTip();
+        com.cleanItems(paytran.items);
+        paytran.currentPtid = v.ptid;
+        paytran.modals.posPayModal.modal("show");
+    }
 
-            $liLine.append($h3).append($ulProperty);
+    function buildPaytranLineprops() {
 
-            $cancel.click(function() {
+        return [{
+            field: "orderId",
+            name: "装修单号",
+            prop: "orderId",
+            clazz: "blue"
+        }, {
+            field: "atttype",
+            name: "业务类型",
+            prop: function(v) {
+                return v.atttype == 0 ? "装修" : "主材";
+            },
+            clazz: "red"
+        }, {
+            field: "no",
+            name: "收据名称",
+            prop: "no",
+            clazz: "blue"
+        }, {
+            field: "sn",
+            name: "机器编号",
+            prop: "sn",
+            clazz: "blue"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) {
+                return constant.payment().paytran.status.keys[v.status];
+            },
+            clazz: "red"
+        }, {
+            field: "money",
+            name: "金额",
+            prop: "money",
+            clazz: "green"
+        }, {
+            field: "creater",
+            name: "创建人",
+            prop: "creater.currentName",
+            clazz: "grey"
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "green"
+        }, {
+            field: "pushTime",
+            name: "推送时间",
+            prop: "pushTime",
+            clazz: "green"
+        }];
+    }
 
-                com.post(api.payment.cancelPaytran, {
-                    "paytran.ptid": v.ptid
-                }, function(res) {
-                    com.showAlert(com.info, "撤销完成");
-                    searcher.doSearch();
-                });
+    function buildPaytranLinebtns() {
 
-                return false;
-            });
-
-            $check.click(function() {
-
-                com.post(api.payment.checkPaytran, {
-                    "paytran.ptid": v.ptid
-                }, function(res) {
-
-                    com.showAlert(com.info, "验证完成");
-                    searcher.doSearch();
-                });
-
-                return false;
-            });
-
-            $delete.click(function() {
-
-                com.post(api.payment.deletePaytran, {"paytran.ptid": v.ptid}, function(res) {
-                    com.showAlert(com.info, "删除成功");
-                    searcher.doSearch();
-                });
-
-                return false;
-            });
-
-            $code.click(function() {
-
-                com.focusPage("#paytranCodeQrcodeModal").html("");
-                paymentUtils.initQrcode("paytran", "paytranCodeQrcodeModal"); // 收款码
-                var pid = v.type == '6' ? v.ptid : v.pid;
-                paymentUtils.showQRCode("paytranqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.orderId + "&paymentType=" + v.type + "&pid=" + pid + "&atttype="+v.atttype, "paytranCodeQrcodeModal");
-            });
-
-            $wechat.click(function() {
-
-                com.showConfirm("是否发送付款通知", function() {
-
-                    com.post(api.payment.sendPaytran, {
-                        "paytran.ptid": v.ptid
-                    }, function(res) {
-
-                        com.showAlert(com.info, "发送成功");
-                    });
-                });
-
-                return false;
-            });
-
-            $pos.click(function() {
-
-                com.closeTip();
-                com.cleanItems(paytran.items);
-                paytran.currentPtid = v.ptid;
-                paytran.modals.posPayModal.modal("show");
-            });
-
-            return $liLine;
+        var show = function(v) {
+            return v.status == constant.payment().paytran.STATUS_INIT_INT;
         };
 
         return {
-            init: function(tableId, listData) {
+            cancel: {name: "撤销", clazz: "btn-danger", show: show, handle: cancelPaytran},
+            check: {name: "验证", clazz: "btn-orange", show: show, handle: checkPaytran},
+            delete: {name: "删除", clazz: "btn-inverse", show: show, handle: deletePaytran},
+            code: {name: "收款码", clazz: "btn-purple", show: show, handle: codePaytran},
+            wechat: {name: "微信推送", clazz: "btn-success", show: show, handle: wechatPaytran},
+            pos: {name: "POS推送", clazz: "btn-warning", show: show, handle: posPaytran}
+        };
+    }
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
+    function buildPaytranButtons() {
 
-                return creatLine(v);
-            }
-        }
-    })();
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('创建转换款').appendTo($adda);
+
+        return [$adda];
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(["payment-orderId", "payment-point-sn", "payment-activity-creater-name", "payment-createTime", "payment-paymentType", "payment-point-status"], "condList", api.payment.pagePaytran, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "paytranPostData", null, false, null, function() {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('创建转换款').appendTo($adda);
-
-        return [$adda];
-    });
+    searcher.set("condList", "pagenation", "resultList", api.payment.pagePaytran, null, ["payment-orderId", "payment-point-sn", "payment-activity-creater-name", "payment-createTime", "payment-paymentType", "payment-point-status"], "paytranPostData", null, false, buildPaytranButtons);
+    searcher.line(function(v) {
+        return constant.payment().receipt.paymentType.keys[v.type];
+    }, buildPaytranLineprops(), buildPaytranLinebtns()).render();
 
     com.focusPage('a[name="add"]', '#pagenation').click(function() {
 

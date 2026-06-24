@@ -164,210 +164,215 @@ jQuery(function($) {
     // 不同页面的不同参数
     oalesPayment.pageConfig = paymentUtils.getConfig(oalesPayment.type, 65);
 
-    var displayFunc = (function() {
 
-        var renderList = function(tableId, listData) {
+    function paymentPropertyText(propertyArr) {
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        var infos = [];
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+        $.each(propertyArr, function(index, value) {
+            infos.push(value[0] + value[1]);
+        });
 
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
-            var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
-            var $btnCol = $('<a></a>').addClass('btn btn-minier').html('');
-            var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-pink').html('打印');
-            var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
-
-            var propertyArr = paymentUtils.getPropertyArr(oalesPayment, v, v.oales.decoration, oalesPayment.paymentStatusArray);
-
-            var _label = $('<label></label>');
-            var $input = $('<input>').attr({
-                "type": "checkbox",
-                "name": "opids"
-            }).addClass('ace ace-checkbox-2');
-            $input.attr({
-                "data-opid": v.opid,
-                "data-mno": v.mno,
-                "data-orderid": v.orderId,
-                "data-refermoney": v.referMoney,
-                "data-type": v.type,
-                "data-status": v.status
-            });
-
-            if (oalesPayment.pageConfig.pageBtn.contains("batchCollect") || oalesPayment.pageConfig.pageBtn.contains("selectall"))
-                $input.appendTo(_label);
-
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(oalesPayment.paymentType[v.type]);
-
-            _label.append(_span).appendTo($h3);
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-
-                if (value[3]) {
-                    $b.click(function() {
-
-                        value[3]($b);
-                    });
-                }
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.appendTo($h3);
-            $liLine.append($h3).append($ulProperty);
-
-            if (v.type == 0)
-                $btnCol.text('收款').addClass("btn-info");
-            if (v.type == 1)
-                $btnCol.text('退款').addClass("btn-danger");
-
-            if (oalesPayment.pageConfig.pageBtn.contains("payway"))
-                paymentUtils.drawHistoryData(oalesPayment, v, $liLine, "");
-
-            if (v.status == 0 && oalesPayment.pageConfig.pageBtn.contains("collect"))
-                $divBtnWrap.append($btnCol);
-            if (v.status != 0 && oalesPayment.pageConfig.pageBtn.contains("print"))
-                $divBtnWrap.append($btnPrint);
-            if (v.status == constant.payment().materialPayment.STATUS_COLLECT_INT && oalesPayment.pageConfig.pageBtn.contains("update"))
-                $divBtnWrap.append($btnUpdate);
-            if (v.type == 0 && v.status == constant.payment().materialPayment.STATUS_INIT_INT && oalesPayment.pageConfig.pageBtn.contains("posPush"))
-                $divBtnWrap.append($btnPosPush);
-            if (v.type == 0 && v.status == constant.payment().materialPayment.STATUS_INIT_INT && oalesPayment.pageConfig.pageBtn.contains("collectCode"))
-                $divBtnWrap.append($btnCode);
-
-            // 收款
-            $btnCol.click(function() {
-
-                oalesPayment.opids.push(v.opid);
-                initCollect(v, false);
-            });
-
-            // 打印
-            $btnPrint.click(function() {
-
-                params.payment.orId = v.oalesReceipt.orid;
-                params.payment.cid = v.oales.decoration.customer.cid;
-
-                com.popup("专用收款收据__装修单号: " + v.orderId, api.index.oalesPaymentReceiptIndex.url, function() {
-
-                    parent.layer.getFrameIndex(window.name);
-                }, null, true);
-            });
-
-            // 更新
-            $btnUpdate.click(function() {
-
-                // 应对批量收款的情况
-                var referMoney = utils.accAdd(utils.accAdd(v.oalesReceipt.cash, v.oalesReceipt.bank), v.oalesReceipt.checkv);
-                v.referMoney = referMoney;
-
-                initUpdate(v);
-
-            });
-
-            // 二维码
-            $btnCode.click(function() {
-
-                com.focusPage("#oalesCodeQrcodeModal").html("");
-                paymentUtils.initQrcode("oalesPayment", "oalesCodeQrcodeModal"); // 收款码
-                paymentUtils.showQRCode("oalesPaymentqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.orderId + "&paymentType=3" + "&pid=" + v.opid + "&atttype=1", "oalesCodeQrcodeModal");
-            });
-
-            // pos推送
-            $btnPosPush.click(function() {
-
-                var bankVal = com.typeahead(oalesPayment.htmlName + "paytranBankName");
-                var bankDiv = com.focusPage("#" + oalesPayment.htmlName + "paytranBankName");
-
-                if (bankVal == "" || bankDiv.val() == "") {
-                    com.showAlert(com.warning, "请使用匹配数据.");
-                    return false;
-                }
-
-                var options = {
-                    "paytran.orderId": v.orderId,
-                    "paytran.pid": v.opid,
-                    "paytran.type": constant.payment().receipt.PAYMENTTYPE_SALES_INT,
-                    "paytran.atttype": constant.payment().paytran.ATTTYPE_MATERIAL_INT,
-                    "paytran.no": com.typeahead(bankDiv),
-                    "paytran.sn": oalesPayment.posValues[bankVal].value, // 收据类型中pos的value值
-                    "paytran.money": v.referMoney,
-                    "paytran.way": 0
-                };
-
-                com.post(api.payment.addPaytran, options, function(res) {
-
-                    var sendOption = {
-                        "paytran.ptid": res.paytran.ptid,
-                        "paytran.way": 1
-                    };
-
-                    com.post(api.payment.posPay, sendOption, function(res) {
-
-                        com.showAlert(com.info, "推送成功");
-                    });
-                });
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
-
-    var searcher = new Searcher();
-
-    var extraParams = {};
-    if (oalesPayment.pageConfig.statusExtraParam != null && oalesPayment.pageConfig.statusExtraParam.length > 0) {
-        extraParams["oalesPayment.status"] = oalesPayment.pageConfig.statusExtraParam[0];
+        return infos.join(" ");
     }
 
-    searcher.init(oalesPayment.pageConfig.condArr, "condList", oalesPayment.pageConfig.apiPage, function(data) {
+    function drawPaymentProperties($ulProperty, propertyArr) {
 
-        displayFunc.init('resultList', data);
-    }, "pagenation", "oalesPaymentPostData" + oalesPayment.type, extraParams, false, null, function() {
+        $.each(propertyArr, function(index, value) {
+
+            var $liProperty = $('<li></li>').appendTo($ulProperty);
+            $('<strong></strong>').html(value[0]).appendTo($liProperty);
+            var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+
+            if (value[3]) {
+                $b.click(function() {
+                    value[3]($b);
+                }).css("cursor", "pointer");
+            }
+        });
+    }
+
+    function getOalesPropertyArr(v) {
+
+        return paymentUtils.getPropertyArr(oalesPayment, v, v.oales.decoration, oalesPayment.paymentStatusArray);
+    }
+
+    function collectOalesPaymentLine(v) {
+
+        oalesPayment.opids.push(v.opid);
+        initCollect(v, false);
+    }
+
+    function printOalesPaymentLine(v) {
+
+        params.payment.orId = v.oalesReceipt.orid;
+        params.payment.cid = v.oales.decoration.customer.cid;
+
+        com.popup("专用收款收据__装修单号: " + v.orderId, api.index.oalesPaymentReceiptIndex.url, function() {
+            parent.layer.getFrameIndex(window.name);
+        }, null, true);
+    }
+
+    function updateOalesPaymentLine(v) {
+
+        var referMoney = utils.accAdd(utils.accAdd(v.oalesReceipt.cash, v.oalesReceipt.bank), v.oalesReceipt.checkv);
+        v.referMoney = referMoney;
+
+        initUpdate(v);
+    }
+
+    function codeOalesPaymentLine(v) {
+
+        com.focusPage("#oalesCodeQrcodeModal").html("");
+        paymentUtils.initQrcode("oalesPayment", "oalesCodeQrcodeModal");
+        paymentUtils.showQRCode("oalesPaymentqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.orderId + "&paymentType=3" + "&pid=" + v.opid + "&atttype=1", "oalesCodeQrcodeModal");
+    }
+
+    function posPushOalesPaymentLine(v) {
+
+        var bankVal = com.typeahead(oalesPayment.htmlName + "paytranBankName");
+        var bankDiv = com.focusPage("#" + oalesPayment.htmlName + "paytranBankName");
+
+        if (bankVal == "" || bankDiv.val() == "") {
+            com.showAlert(com.warning, "请使用匹配数据.");
+            return false;
+        }
+
+        var options = {
+            "paytran.orderId": v.orderId,
+            "paytran.pid": v.opid,
+            "paytran.type": constant.payment().receipt.PAYMENTTYPE_SALES_INT,
+            "paytran.atttype": constant.payment().paytran.ATTTYPE_MATERIAL_INT,
+            "paytran.no": com.typeahead(bankDiv),
+            "paytran.sn": oalesPayment.posValues[bankVal].value,
+            "paytran.money": v.referMoney,
+            "paytran.way": 0
+        };
+
+        com.post(api.payment.addPaytran, options, function(res) {
+
+            var sendOption = {
+                "paytran.ptid": res.paytran.ptid,
+                "paytran.way": 1
+            };
+
+            com.post(api.payment.posPay, sendOption, function(res) {
+                com.showAlert(com.info, "推送成功");
+            });
+        });
+    }
+
+    function buildOalesLineprops() {
+
+        var lineprops = [{
+            type: "checkbox",
+            name: "opids",
+            clazz: "ace ace-checkbox-2",
+            show: function() {
+                return oalesPayment.pageConfig.pageBtn.contains("batchCollect") || oalesPayment.pageConfig.pageBtn.contains("selectall");
+            },
+            attrs: function(v) {
+                return {
+                    "data-opid": v.opid,
+                    "data-mno": v.mno,
+                    "data-orderid": v.orderId,
+                    "data-refermoney": v.referMoney,
+                    "data-type": v.type,
+                    "data-status": v.status
+                };
+            }
+        }, {
+            field: "paymentInfo",
+            name: "款项信息",
+            type: "custom",
+            prop: function(v) {
+                return paymentPropertyText(getOalesPropertyArr(v));
+            },
+            render: function($liLine, v, $ulProperty) {
+                drawPaymentProperties($ulProperty, getOalesPropertyArr(v));
+            }
+        }];
+
+        if (oalesPayment.pageConfig.pageBtn.contains("payway")) {
+            lineprops.push({
+                field: "payway",
+                name: "收款方式",
+                type: "custom",
+                prop: function(v) {
+                    return paymentUtils.getHistoryText(oalesPayment, v);
+                },
+                render: function($liLine, v) {
+                    paymentUtils.drawHistoryData(oalesPayment, v, $liLine, "");
+                }
+            });
+        }
+
+        return lineprops;
+    }
+
+    function buildOalesLinebtns() {
+
+        return {
+            collect: {
+                name: function(v) {
+                    return v.type == 0 ? "收款" : "退款";
+                },
+                clazz: function(v) {
+                    return v.type == 0 ? "btn-info" : "btn-danger";
+                },
+                show: function(v) {
+                    return v.status == 0 && oalesPayment.pageConfig.pageBtn.contains("collect");
+                },
+                handle: collectOalesPaymentLine
+            },
+            print: {
+                name: "打印",
+                clazz: "btn-pink",
+                show: function(v) {
+                    return v.status != 0 && oalesPayment.pageConfig.pageBtn.contains("print");
+                },
+                handle: printOalesPaymentLine
+            },
+            update: {
+                name: "更新",
+                clazz: "btn-success",
+                show: function(v) {
+                    return v.status == constant.payment().materialPayment.STATUS_COLLECT_INT && oalesPayment.pageConfig.pageBtn.contains("update");
+                },
+                handle: updateOalesPaymentLine
+            },
+            posPush: {
+                name: "推送",
+                clazz: "btn-danger",
+                show: function(v) {
+                    return v.type == 0 && v.status == constant.payment().materialPayment.STATUS_INIT_INT && oalesPayment.pageConfig.pageBtn.contains("posPush");
+                },
+                handle: posPushOalesPaymentLine
+            },
+            collectCode: {
+                name: "收款码",
+                clazz: "btn-success",
+                show: function(v) {
+                    return v.type == 0 && v.status == constant.payment().materialPayment.STATUS_INIT_INT && oalesPayment.pageConfig.pageBtn.contains("collectCode");
+                },
+                handle: codeOalesPaymentLine
+            }
+        };
+    }
+
+    function buildOalesButtons() {
 
         var $batch = $('<a></a>').addClass('btn btn-minier pull-left btn-primary').attr('id', 'collects').css("margin", "0px 3px");
-        var $batchi = $('<i></i>').addClass('icon-money bigger-110').appendTo($batch);
-        var $batchspan = $('<span></span>').text('批量收款').appendTo($batch);
+        $('<i></i>').addClass('icon-money bigger-110').appendTo($batch);
+        $('<span></span>').text('批量收款').appendTo($batch);
 
         var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
-        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
-        var $checkspan = $('<span></span>').text('全选').appendTo($checka);
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+        $('<span></span>').text('全选').appendTo($checka);
 
         var $confirma = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css("margin", "0px 3px");
-        var $confirmi = $('<i></i>').addClass('icon-money bigger-110').appendTo($confirma);
-        var $confirmspan = $('<span></span>').text('批量确认').appendTo($confirma);
+        $('<i></i>').addClass('icon-money bigger-110').appendTo($confirma);
+        $('<span></span>').text('批量确认').appendTo($confirma);
 
         var btnParams = [];
 
@@ -379,8 +384,19 @@ jQuery(function($) {
             btnParams.push($confirma);
 
         return btnParams;
+    }
 
-    }, 'resultList');
+    var searcher = new Searcher();
+
+    var extraParams = {};
+    if (oalesPayment.pageConfig.statusExtraParam != null && oalesPayment.pageConfig.statusExtraParam.length > 0) {
+        extraParams["oalesPayment.status"] = oalesPayment.pageConfig.statusExtraParam[0];
+    }
+
+    searcher.set("condList", "pagenation", "resultList", oalesPayment.pageConfig.apiPage, extraParams, oalesPayment.pageConfig.condArr, "oalesPaymentPostData" + oalesPayment.type, null, false, buildOalesButtons);
+    searcher.line(function(v) {
+        return oalesPayment.paymentType[v.type];
+    }, buildOalesLineprops(), buildOalesLinebtns()).render();
 
     // 要在searcher后面
     paymentUtils.pushPosBank(oalesPayment.type == "common", oalesPayment.bankUtil, com.focusPage("#condList", "#oalesPaymentList"), oalesPayment.htmlName);
@@ -402,7 +418,7 @@ jQuery(function($) {
         }, function(res) {
 
             oalesPayment.decoration = res.decoration;
-            
+
             if (!oalesPayment.profit)
                 oalesPayment.decoration.bompany = null;
         }, null, false);

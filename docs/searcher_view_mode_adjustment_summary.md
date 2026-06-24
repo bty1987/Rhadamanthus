@@ -1,6 +1,6 @@
 # Searcher 视图切换与 DisplayFunc 兼容调整总结
 
-> 日期：2026-06-24  
+> 日期：2026-06-24
 > 范围：`Searcher` 视图模式、`UserPrefer` 个性化配置、`table` 兼容增强、`sales.js` displayFunc 迁移试点
 
 ---
@@ -537,7 +537,61 @@ lineprops + linebtns
 
 ---
 
-## 10. 总结
+## 10. Payment 模块迁移与排除依据
+
+### 10.1 已纳入 Searcher 标准化的页面
+
+`WebContent/js/payment` 中使用 Searcher 分页或标准查询结果容器的页面，已按 `lineprops + linebtns + searcher.line(...).render()` 迁移：
+
+```text
+receipt.js
+paytran.js
+wallet.js
+activityPayment.js
+proxyPayment.js
+oalesPayment.js
+materialPayment.js
+servicePayment.js
+salesPayment.js
+decorationPayment.js
+payment.js
+```
+
+迁移时保留原页面的批量选择、批量确认、批量收款、合计、导出、打印、更新、收款码、POS 推送、微信推送、金蝶同步等按钮逻辑。
+
+### 10.2 Searcher 公共能力补充
+
+Payment 页面存在“收款方式历史”这类原 `displayFunc` 直接追加 DOM 的场景，因此 Searcher 增加了：
+
+- `lineprops` 的 `type: "custom"` 行级自定义渲染；
+- `line/card/table` 按钮 `clazz` 函数支持；
+- `handle(v, btn)` 当前按钮入参；
+- `card/table` checkbox 配置复用。
+
+`paymentUtils` 增加：
+
+```js
+getHistoryArr(...)
+getHistoryText(...)
+```
+
+用于 line 模式保留原历史 DOM，同时让 card/table 模式显示文本化收款方式。
+
+### 10.3 明确排除的 displayFunc
+
+以下文件仍保留 `displayFunc`，但不纳入本轮 payment Searcher 标准化范围：
+
+| 文件 | 排除依据 |
+|---|---|
+| `payment/customer.js` | 不是 Searcher 分页页；通过 `selectBtn` 按订单号一次性调用 `queryDecorationPaymentByOrderId`、`querySalesPaymentByOrderId`、`pageAdvancePayment`，分别渲染到 `decoration`、`sales`、`advance` 三个结果容器，属于客户收款聚合面板。 |
+| `payment/walletard.js` | 不是 Searcher 分页页；钱包页弹出的银行卡子列表，通过 `queryWalletard` 按 `params.payment.wid` 查询并渲染到 `walletardResultList`，依赖弹窗内绑定/解绑/删除后局部刷新。 |
+| `payment/walletran.js` | 不是 Searcher 分页页；钱包页弹出的交易记录子列表，通过 `queryWalletran` 按 `params.payment.wid` 查询并渲染到 `walletranResultList`，无分页器、无 Searcher 条件区。 |
+
+排除标准：本轮只迁移“Searcher 分页 / 标准结果列表页”；弹窗内局部子列表、一次性聚合查询、多容器展示页面保留自绘 `displayFunc`，避免为了视图切换改动其业务交互边界。
+
+---
+
+## 11. 总结
 
 本轮调整形成了一个重要经验：
 
