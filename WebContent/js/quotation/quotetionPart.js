@@ -748,7 +748,7 @@
                 }
 
                 if (v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
-                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _managefee), _dtaxRate));
+                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dmanagefee), _dtaxRate));
                 }
 
                 var _ddtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dmanagefee), _dtaxfee));

@@ -1,7 +1,7 @@
-package com.fanglin.system.service;
+package com.fanglin.personel.service;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.system.vo.UserPreferVO;
+import com.fanglin.personel.vo.UserPreferVO;
 
 public interface UserPreferService {
 

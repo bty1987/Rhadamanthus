@@ -1,11 +1,11 @@
-package com.fanglin.system.dao.impl;
+package com.fanglin.personel.dao.impl;
 
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.system.dao.UserPreferDao;
-import com.fanglin.system.po.UserPreferPO;
+import com.fanglin.personel.dao.UserPreferDao;
+import com.fanglin.personel.po.UserPreferPO;
 
 @Repository("userPreferDao")
 public class UserPreferDaoImpl extends DaoImpl<UserPreferPO> implements UserPreferDao {

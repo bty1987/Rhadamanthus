@@ -68,8 +68,8 @@ public class Signature {
 	private static String VERSION = "2.0";
 	private static String HOST = null;
 
-	private static String NOTIFY_URL_STR = "http://www.fanglin.cc";
-	private static String RETURN_URL_STR = "http://www.fanglin.cc"; // http://fanglin.vip:30080/communion/signatureCallback.do
+	private static String NOTIFY_URL_STR = "https://www.fanglin.cc";
+	private static String RETURN_URL_STR = "https://www.fanglin.cc"; // http://fanglin.vip:30080/communion/signatureCallback.do
 
 	// https://open.fadada.com/index.html#/portal/documentCenter/66RZRDRHPD/LA5RUYXPDXPVZVCE
 

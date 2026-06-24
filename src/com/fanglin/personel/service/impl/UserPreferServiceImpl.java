@@ -1,4 +1,4 @@
-package com.fanglin.system.service.impl;
+package com.fanglin.personel.service.impl;
 
 import java.sql.Timestamp;
 
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.system.dao.UserPreferDao;
-import com.fanglin.system.po.UserPreferPO;
-import com.fanglin.system.service.UserPreferService;
-import com.fanglin.system.vo.UserPreferVO;
+import com.fanglin.personel.dao.UserPreferDao;
+import com.fanglin.personel.po.UserPreferPO;
+import com.fanglin.personel.service.UserPreferService;
+import com.fanglin.personel.vo.UserPreferVO;
 
 @Service("userPreferService")
 @Transactional(readOnly = true)

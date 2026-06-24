@@ -1,4 +1,4 @@
-package com.fanglin.system.po;
+package com.fanglin.personel.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
