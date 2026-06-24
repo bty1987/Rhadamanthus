@@ -19,6 +19,37 @@ jQuery(function($) {
     var currentMethod = 'qrcode'; // 当前登录方式
     var currentAuthCode = null; // 当前授权码
     var params = {}; // 全局参数对象（用于存储securityCode等）
+
+    function getTemplateIndexUrl() {
+
+        var template = null;
+
+        try {
+            template = window.localStorage && window.localStorage.getItem("fl_template");
+        } catch (e) {
+        }
+
+        if (!template) {
+            var cookies = document.cookie.split(";");
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].replace(/^\s+|\s+$/g, "");
+
+                if (cookie.indexOf("templateStyle=") == 0) {
+                    template = cookie.substring("templateStyle=".length);
+                    break;
+                }
+            }
+        }
+
+        var urls = {
+            ace: "index.html",
+            metro: "index-metro.html",
+            clear: "index-clear.html"
+        };
+
+        return urls[template] || "index.html";
+    }
     
     function deleteAllCookies() {
         var cookies = document.cookie.split(';');
@@ -27,6 +58,10 @@ jQuery(function($) {
             var cookie = cookies[i];
             var eqPos = cookie.indexOf('=');
             var name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+
+            if (name == 'templateStyle') {
+                continue;
+            }
             
             // 删除cookie，需要指定路径
             document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
@@ -247,7 +282,7 @@ jQuery(function($) {
         // Demo 模式直接跳转
         if (config.demo) {
             setCookie("loginTime", new Date().getTime(), config.timeout);
-            window.location.href = "index.html?timestamp=" + new Date().getTime();
+            window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
             return;
         }
 
@@ -317,7 +352,7 @@ jQuery(function($) {
                             setCookie("versionCode", config.versionCode, config.timeout);
                             showLoginSuccess();
                             setTimeout(function() {
-                                window.location.href = "index.html?timestamp=" + new Date().getTime();
+                                window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
                             }, 1000);
                         } else {
                             // 其他错误（账号或密码错误）
@@ -767,7 +802,7 @@ jQuery(function($) {
 
         // 跳转到主页面
         setTimeout(function() {
-            window.location.href = "index.html?timestamp=" + new Date().getTime();
+            window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
         }, 2000);
     }
 

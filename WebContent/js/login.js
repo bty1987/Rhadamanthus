@@ -5,6 +5,37 @@ jQuery(function($) {
     var queryVode = '/queryVode.do';
     var params = {};
 
+    function getTemplateIndexUrl() {
+
+        var template = null;
+
+        try {
+            template = window.localStorage && window.localStorage.getItem("fl_template");
+        } catch (e) {
+        }
+
+        if (!template) {
+            var cookies = document.cookie.split(";");
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].replace(/^\s+|\s+$/g, "");
+
+                if (cookie.indexOf("templateStyle=") == 0) {
+                    template = cookie.substring("templateStyle=".length);
+                    break;
+                }
+            }
+        }
+
+        var urls = {
+            ace: "index.html",
+            metro: "index-metro.html",
+            clear: "index-clear.html"
+        };
+
+        return urls[template] || "index.html";
+    }
+
     // ========== 初始化配置 ==========
     initConfig();
 
@@ -212,7 +243,7 @@ jQuery(function($) {
                     var authentication = data.loginInfo.authentication.replace(/[\r\n]/g, "");
                     setCookie("authentication", authentication, config.timeout);
                     setCookie("loginTime", new Date().getTime(), config.timeout);
-                    window.location.href = "index.html?timestamp=" + new Date().getTime();
+                    window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
                 } else {
                     // 登录失败
                     var message = (data.loginInfo && data.loginInfo.message) || '登录失败';
@@ -289,7 +320,7 @@ jQuery(function($) {
                     var authentication = data.loginInfo.authentication.replace(/[\r\n]/g, "");
                     setCookie("authentication", authentication, config.timeout);
                     setCookie("loginTime", new Date().getTime(), config.timeout);
-                    window.location.href = "index.html?timestamp=" + new Date().getTime();
+                    window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
                 } else {
                     // 登录失败
                     var message = (data.loginInfo && data.loginInfo.message) || '登录失败';
@@ -309,7 +340,7 @@ jQuery(function($) {
         if (config.demo) {
             // Demo 模式直接跳转
             setCookie("loginTime", new Date().getTime(), config.timeout);
-            window.location.href = "index.html?timestamp=" + new Date().getTime();
+            window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
             return;
         }
 
@@ -375,7 +406,7 @@ jQuery(function($) {
                             setCookie("authentication", authentication, config.timeout);
                             setCookie("loginTime", new Date().getTime(), config.timeout);
                             setCookie("versionCode", config.versionCode, config.timeout);
-                            document.location.href = "index.html?timestamp=" + new Date().getTime();
+                            document.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
                         } else {
                             // 其他错误（账号或密码错误）
                             showError(data.errorMsg);

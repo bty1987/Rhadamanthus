@@ -17,6 +17,7 @@
     <script type="text/javascript">
 
         window.notOperate = false;
+        window.templateStyle = "metro";
 
         var isF5 = false;
         document.onkeydown = function (e) {
@@ -169,19 +170,24 @@
 
                     </li>
 
-                    <li class="dropdown hide"><!-- 皮肤 -->
+                    <li class="dropdown template-menu"><!-- 皮肤 -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="icon-sun" style="font-size: 20px;"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href='index.html' class="font-15" id="aceButton">
-                                    <i class="icon-star menu-ace"></i>ace
+                                <a href="#" class="font-15 template-switch" data-template="ace">
+                                    <i class="icon-star menu-ace"></i>多彩 Ace
                                 </a>
                             </li>
                             <li>
-                                <a href='index-clear.html' class="font-15" id="metroButton">
-                                    <i class="icon-heart menu-clear"></i> clear
+                                <a href="#" class="font-15 template-switch" data-template="metro">
+                                    <i class="icon-moon menu-metro"></i>暗黑 Metro
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="font-15 template-switch" data-template="clear">
+                                    <i class="icon-heart menu-clear"></i>明亮 Clear
                                 </a>
                             </li>
                         </ul>
@@ -342,6 +348,7 @@
     <script src="assets/altogether/js/jquery.huploadify.js"></script>
     <script src="assets/altogether/js/highcharts.js"></script>
 
+    <script src="assets/altogether/js/layui.js"></script>
     <script src="assets/altogether/js/layer.js"></script>
     <script src="assets/altogether/js/bringins.js"></script>
     <script src="assets/altogether/js/data-set.min.js"></script>
@@ -356,6 +363,7 @@
         }
 
         var jses = "";
+        jses += '<script src="js/com/memory.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/config.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/server.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/api.js?version=' + versionCode + '"><\/script>';
@@ -369,6 +377,9 @@
         jses += '<script src="js/com/condition.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/searcher.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/exporter.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/printer.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/constant.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/constant-optimizer.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/index.js?version=' + versionCode + '"><\/script>';
 
         if(!parent.window.isPC && !parent.window.isEncryption){
@@ -378,6 +389,7 @@
             document.write(jses);
         }else if(parent.window.isPC && parent.window.isEncryption){
 
+            win.evalNWBin(null, 'js/com/memory.bin');
             win.evalNWBin(null, 'js/com/config.bin');
             win.evalNWBin(null, 'js/com/load.bin');
             win.evalNWBin(null, 'js/com/version.bin');
@@ -389,8 +401,10 @@
             win.evalNWBin(null, 'js/com/condition.bin');
             win.evalNWBin(null, 'js/com/searcher.bin');
             win.evalNWBin(null, 'js/com/exporter.bin');
+            win.evalNWBin(null, 'js/com/constant.bin');
             win.evalNWBin(null, 'js/index.bin');
             win.evalNWBin(null, 'js/com/nw.bin');
+            win.evalNWBin(null, 'js/com/printer.bin');
         }
 
     </script>

@@ -146,6 +146,153 @@
     $(".messageList").attr("href", api.index.messageIndex.url + "?timestamp=" + new Date().getTime());
     $(".messageList").data("level", 1);
 
+    function getTemplateUrl(template) {
+
+        var templates = config.templates || {};
+        var target = templates[template] || templates[config.defaultTemplate || "ace"];
+
+        return target ? target.url : "index.html";
+    }
+
+    function getTemplateLocal() {
+
+        var template = null;
+
+        try {
+            template = window.localStorage && window.localStorage.getItem("fl_template");
+        } catch (e) {
+        }
+
+        if (!template) {
+            var cookies = document.cookie.split(";");
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].replace(/^\s+|\s+$/g, "");
+
+                if (cookie.indexOf("templateStyle=") == 0) {
+                    template = cookie.substring("templateStyle=".length);
+                    break;
+                }
+            }
+        }
+
+        return config.templates && config.templates[template] ? template : null;
+    }
+
+    function saveTemplateLocal(template) {
+
+        try {
+            window.localStorage && window.localStorage.setItem("fl_template", template);
+        } catch (e) {
+        }
+
+        com.setCookie("templateStyle", template, config.timeout);
+    }
+
+    function saveTemplateRemote(template) {
+
+        if (!api.personel || !api.personel.updateUserPrefer) {
+            return false;
+        }
+
+        com.post(api.personel.updateUserPrefer, {
+            "userPrefer.module": "index",
+            "userPrefer.page": "global",
+            "userPrefer.pkey": "templateStyle",
+            "userPrefer.pvalue": template
+        }, null, null, false);
+    }
+
+    function loadIndexPrefer() {
+
+        if (!api.personel || !api.personel.queryUserPrefers) {
+            return false;
+        }
+
+        var localTemplate = getTemplateLocal();
+        var remoteTemplate = null;
+
+        com.post(api.personel.queryUserPrefers, {
+            "userPrefer.module": "index"
+        }, function(res) {
+
+            initUserPrefer(res.userPrefers);
+
+            $.each(res.userPrefers || [], function(i, v) {
+
+                if (v.page == "global" && v.pkey == "templateStyle" && config.templates && config.templates[v.pvalue]) {
+                    remoteTemplate = v.pvalue;
+                    params.templateStyle = remoteTemplate;
+                    return false;
+                }
+            });
+        }, null, false);
+
+        if (!localTemplate && remoteTemplate && remoteTemplate != window.templateStyle) {
+            saveTemplateLocal(remoteTemplate);
+
+            isF5 = true;
+            window.location.href = getTemplateUrl(remoteTemplate) + "?timestamp=" + new Date().getTime();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    function activeTemplateMenu() {
+
+        var template = window.templateStyle || config.defaultTemplate || "ace";
+
+        $(".template-switch").removeClass("active").each(function() {
+
+            var $this = $(this);
+
+            if ($this.attr("data-template") == template) {
+                $this.addClass("active");
+            }
+        });
+    }
+
+    function switchTemplate(template) {
+
+        if (!template || template == window.templateStyle) {
+            return false;
+        }
+
+        saveTemplateLocal(template);
+        saveTemplateRemote(template);
+
+        isF5 = true;
+        window.location.href = getTemplateUrl(template) + "?timestamp=" + new Date().getTime();
+
+        return false;
+    }
+
+    if (loadIndexPrefer()) {
+        return false;
+    }
+
+    activeTemplateMenu();
+
+    $(".template-switch").on("click", function(e) {
+
+        e.preventDefault();
+
+        var template = $(this).attr("data-template");
+
+        if (!template || template == window.templateStyle) {
+            return false;
+        }
+
+        com.showConfirm("切换模板将刷新页面，当前打开的页面标签会关闭，是否继续？", function() {
+
+            switchTemplate(template);
+        });
+
+        return false;
+    });
+
     if (utils.isMobile()) {
         $("#faqInfo").parent().hide();
         $("#versionInfo").parent().hide();

@@ -18,6 +18,7 @@
     <script type="text/javascript">
 
         window.notOperate = false;
+        window.templateStyle = "clear";
 
         var isF5 = false;
         document.onkeydown = function (e) {
@@ -211,8 +212,8 @@
 
                     </li>
 
-                    <!-- 设置皮肤 隐藏-->
-                    <li class="dropdown hide">
+                    <!-- 设置皮肤 -->
+                    <li class="dropdown template-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <div class="skin-riot">
                                 <div class="clear-menu-nav">
@@ -223,13 +224,18 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li class="p-t-3">
-                                <a href='index.html' class="" id="aceButton">
-                                    <div class="ace-skin-button"></div>ace
+                                <a href="#" class="template-switch" data-template="ace">
+                                    <div class="ace-skin-button"></div>多彩 Ace
                                 </a>
                             </li>
                             <li class="p-t-3">
-                                <a href='index-metro.html' class="" id="metroButton">
-                                    <div class="metro-skin-button"></div>metro
+                                <a href="#" class="template-switch" data-template="metro">
+                                    <div class="metro-skin-button"></div>暗黑 Metro
+                                </a>
+                            </li>
+                            <li class="p-t-3">
+                                <a href="#" class="template-switch" data-template="clear">
+                                    <div class="clear-skin-button"></div>明亮 Clear
                                 </a>
                             </li>
                         </ul>
@@ -358,6 +364,7 @@
     <script src="assets/altogether/js/fuelux/fuelux.spinner.min.js"></script>
     <script src="assets/altogether/js/fuelux/fuelux.tree.js"></script>
 
+    <script src="assets/altogether/js/layui.js"></script>
     <script src="assets/altogether/js/layer.js"></script>
     <script src="assets/altogether/js/bringins.js"></script>
     <script src="assets/altogether/js/data-set.min.js"></script>
@@ -373,6 +380,7 @@
         }
         var jses = "";
 
+        jses += '<script src="js/com/memory.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/config.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/server.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/api.js?version=' + versionCode + '"><\/script>';
@@ -386,6 +394,9 @@
         jses += '<script src="js/com/condition.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/searcher.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/exporter.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/printer.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/constant.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/constant-optimizer.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/index.js?version=' + versionCode + '"><\/script>';
 
         if(!parent.window.isPC && !parent.window.isEncryption){
@@ -395,6 +406,7 @@
             document.write(jses);
         }else if(parent.window.isPC && parent.window.isEncryption){
 
+            win.evalNWBin(null, 'js/com/memory.bin');
             win.evalNWBin(null, 'js/com/config.bin');
             win.evalNWBin(null, 'js/com/load.bin');
             win.evalNWBin(null, 'js/com/version.bin');
@@ -406,8 +418,10 @@
             win.evalNWBin(null, 'js/com/condition.bin');
             win.evalNWBin(null, 'js/com/searcher.bin');
             win.evalNWBin(null, 'js/com/exporter.bin');
+            win.evalNWBin(null, 'js/com/constant.bin');
             win.evalNWBin(null, 'js/index.bin');
             win.evalNWBin(null, 'js/com/nw.bin');
+            win.evalNWBin(null, 'js/com/printer.bin');
         }
     </script>
 

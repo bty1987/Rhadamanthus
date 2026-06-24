@@ -10,6 +10,37 @@ jQuery(function (a) {
     var queryVode = '/queryVode.do';
     var params = {};
 
+    function getTemplateIndexUrl() {
+
+        var template = null;
+
+        try {
+            template = window.localStorage && window.localStorage.getItem("fl_template");
+        } catch (e) {
+        }
+
+        if (!template) {
+            var cookies = document.cookie.split(";");
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].replace(/^\s+|\s+$/g, "");
+
+                if (cookie.indexOf("templateStyle=") == 0) {
+                    template = cookie.substring("templateStyle=".length);
+                    break;
+                }
+            }
+        }
+
+        var urls = {
+            ace: "index.html",
+            metro: "index-metro.html",
+            clear: "index-clear.html"
+        };
+
+        return urls[template] || "index.html";
+    }
+
     $('#icon').attr('src', config.iconImg);
     $('#name').text(config.name);
     $('#ename').text(config.ename);
@@ -130,7 +161,7 @@ jQuery(function (a) {
                 setCookie("authentication", data.loginInfo.authentication.replace(/[\r\n]/g,""), config.timeout);
                 setCookie("loginTime", new Date().getTime(), config.timeout);
                 if (!parent.window.isPC) {
-                    window.location.href = "index.html?timestamp=" + new Date().getTime();
+                    window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
                 } else {
                     openChildWindow();
                 }
@@ -152,7 +183,7 @@ jQuery(function (a) {
                 setCookie("authentication", data.loginInfo.authentication.replace(/[\r\n]/g,""), config.timeout);
                 setCookie("loginTime", new Date().getTime(), config.timeout);
                 if (!parent.window.isPC) {
-                    window.location.href = "index.html?timestamp=" + new Date().getTime();
+                    window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
                 } else {
                     openChildWindow();
                 }
@@ -280,7 +311,7 @@ jQuery(function (a) {
                             setCookie("loginTime", new Date().getTime(), config.timeout);
 
                             if (!parent.window.isPC) {
-                                window.location.href = "index.html?timestamp=" + new Date().getTime();
+                                window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
                             } else {
                                 subwin.close();
                                 openChildWindow();
@@ -363,7 +394,7 @@ jQuery(function (a) {
 
         if (config.demo) {
             setCookie("loginTime", new Date().getTime(), config.timeout);
-            window.location.href = "index.html?timestamp=" + new Date().getTime();
+            window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
             return false;
         }
 
@@ -413,7 +444,7 @@ jQuery(function (a) {
                             setCookie("loginTime", new Date().getTime(), config.timeout);
                             setCookie("versionCode", config.versionCode, config.timeout);
                             if (!parent.window.isPC) {
-                                document.location.href = "index.html?timestamp=" + new Date().getTime();
+                                document.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
                             } else {
                                 openChildWindow();
                             }
