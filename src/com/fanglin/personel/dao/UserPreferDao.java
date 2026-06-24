@@ -1,7 +1,7 @@
-package com.fanglin.system.dao;
+package com.fanglin.personel.dao;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.system.po.UserPreferPO;
+import com.fanglin.personel.po.UserPreferPO;
 
 public interface UserPreferDao extends Dao<UserPreferPO> {
 
