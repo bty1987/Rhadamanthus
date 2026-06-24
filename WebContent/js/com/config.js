@@ -18,6 +18,22 @@
     backgroundImg: './images/bg_fanglin.jpg',
     shakingColor: '#197bb5', // 1918: #892f89 , ehome: #3d677c
 
+    defaultTemplate: 'ace',
+    templates: {
+        ace: {
+            name: '多彩',
+            url: 'index.html'
+        },
+        metro: {
+            name: '暗黑',
+            url: 'index-metro.html'
+        },
+        clear: {
+            name: '明亮',
+            url: 'index-clear.html'
+        }
+    },
+
     // 文件上传配置
     isAliOss: false,  // 是否启用阿里云 OSS 上传（false=本地上传，true=OSS上传）
     uploadMode: 'sts', // OSS 上传模式：'sts'（STS临时凭证，推荐）| 'policy'（旧Policy签名，兼容）

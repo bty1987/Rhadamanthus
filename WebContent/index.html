@@ -18,6 +18,7 @@
     <script type="text/javascript">
 
         window.notOperate = false;
+        window.templateStyle = "ace";
 
         var isF5 = false;
         document.onkeydown = function (e) {
@@ -127,24 +128,30 @@
                 </a>
             </div>
 
-            <!-- 设置皮肤 隐藏-->
-            <div class="navbar-header pull-right hide">
+            <!-- 设置皮肤 -->
+            <div class="navbar-header pull-right">
                 <ul style="margin: 0px 10px">
-                    <li class="dropdown" style="height: 45px;">
-                        <a data-toggle="dropdown" class="dropdown-toggle clear-menu-nav" id="clearButton" href="#">
+                    <li class="dropdown template-menu" style="height: 45px;">
+                        <a data-toggle="dropdown" class="dropdown-toggle clear-menu-nav" href="#">
                             <i class="icon-cog"></i>
                         </a>
                         <ul class="pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                             <li>
-                                <a href="index-clear.html">
-                                    <span class="mail-tag badge badge-grey"></span>
-                                    clear
+                                <a href="#" class="template-switch" data-template="ace">
+                                    <span class="mail-tag badge badge-info"></span>
+                                    多彩 Ace
                                 </a>
                             </li>
                             <li>
-                                <a href="index-metro.html">
+                                <a href="#" class="template-switch" data-template="metro">
                                     <span class="mail-tag badge badge-danger"></span>
-                                    metro
+                                    暗黑 Metro
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="template-switch" data-template="clear">
+                                    <span class="mail-tag badge badge-grey"></span>
+                                    明亮 Clear
                                 </a>
                             </li>
                         </ul>
