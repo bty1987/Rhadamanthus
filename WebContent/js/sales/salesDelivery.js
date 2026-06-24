@@ -77,6 +77,7 @@ $(function() {
         var option = {};
         option["salesDeliveryItems[0].sdiid"] = v.sdiid;
         com.post(api.sales.checkSalesDeliveryItem, option, function() {
+
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");
         });
@@ -87,6 +88,7 @@ $(function() {
         var option = {};
         option["salesDeliveryItems[0].sdiid"] = v.sdiid;
         com.post(api.sales.confirmSalesDeliveryItem, option, function() {
+
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");
         });
@@ -97,7 +99,9 @@ $(function() {
         var option = {};
         option["salesDeliveryItems[0].sdiid"] = v.sdiid;
         com.showConfirm('确认销售项配送完结?', function() {
+
             com.post(api.sales.finishSalesDeliveryItem, option, function() {
+
                 searcher.doSearch();
                 com.showAlert(com.info, "操作成功");
             });
@@ -126,27 +130,172 @@ $(function() {
     function buildDeliveryLineprops() {
 
         var propertyMap = {
-            salesno: {field: "salesno", name: "销售单号", prop: "sales.no", clazz: "blue"},
-            num: {field: "num", name: "数量", prop: "salesItem.num", clazz: "blue"},
-            createTime: {field: "createTime", name: "创建时间", prop: "createTime", clazz: "green"},
-            tranTime: {field: "tranTime", name: "配送时间", prop: "tranTime", clazz: "green"},
-            checkTime: {field: "checkTime", name: "审核时间", prop: "checkTime", clazz: "green"},
-            confirmTime: {field: "confirmTime", name: "确认时间", prop: "confirmTime", clazz: "green"},
-            finishTime: {field: "finishTime", name: "完结时间", prop: "finishTime", clazz: "green"},
-            creater: {field: "creater", name: "创建人", prop: "creater.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.creater.userId);}},
-            traner: {field: "traner", name: "配送人", prop: "traner.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.traner.userId);}},
-            checker: {field: "checker", name: "审核人", prop: "checker.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.checker.userId);}},
-            confirmer: {field: "confirmer", name: "确认人", prop: "confirmer.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.confirmer.userId);}},
-            finisher: {field: "finisher", name: "完结人", prop: "finisher.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.finisher.userId);}},
-            comment: {field: "comment", name: "备注", prop: "comment", clazz: "grey"},
-            brand: {field: "brand", name: "品牌", prop: function(v) {return v.salesItem.goods.brand;}, clazz: "grey", click: function($this, v) {tools.brand.info($this, v.sales.brand.bid);}},
-            category: {field: "category", name: "品类", prop: "salesItem.goods.category", clazz: "grey"},
-            status: {field: "status", name: "配送状态", prop: function(v) {return constant.sales().salesDeliveryItem.status.keys[v.status];}, clazz: "red"},
-            refundNum: {field: "refundNum", name: "退货数量", prop: function(v) {return utils.changeThrDecimal(v.salesItem.initnum - v.salesItem.num);}, clazz: "blue"},
-            trnum: {field: "trnum", name: "配送数量", prop: "salesItem.trnum", clazz: "blue"},
-            address: {field: "address", name: "楼盘地址", prop: function(v) {return v.sales.house.village.name + " " + v.sales.house.houseNumber;}, clazz: "grey"},
-            orderId: {field: "orderId", name: "装修单号", prop: "sales.orderId", clazz: "blue", click: function($this, v) {tools.decoration.info($this, v.sales.orderId);}},
-            protranTime: {field: "protranTime", name: "预计配送时间", prop: "protranTime", clazz: "green"}
+            salesno: {
+                field: "salesno",
+                name: "销售单号",
+                prop: "sales.no",
+                clazz: "blue"
+            },
+            num: {
+                field: "num",
+                name: "数量",
+                prop: "salesItem.num",
+                clazz: "blue"
+            },
+            createTime: {
+                field: "createTime",
+                name: "创建时间",
+                prop: "createTime",
+                clazz: "green"
+            },
+            tranTime: {
+                field: "tranTime",
+                name: "配送时间",
+                prop: "tranTime",
+                clazz: "green"
+            },
+            checkTime: {
+                field: "checkTime",
+                name: "审核时间",
+                prop: "checkTime",
+                clazz: "green"
+            },
+            confirmTime: {
+                field: "confirmTime",
+                name: "确认时间",
+                prop: "confirmTime",
+                clazz: "green"
+            },
+            finishTime: {
+                field: "finishTime",
+                name: "完结时间",
+                prop: "finishTime",
+                clazz: "green"
+            },
+            creater: {
+                field: "creater",
+                name: "创建人",
+                prop: "creater.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.creater.userId);
+                }
+            },
+            traner: {
+                field: "traner",
+                name: "配送人",
+                prop: "traner.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.traner.userId);
+                }
+            },
+            checker: {
+                field: "checker",
+                name: "审核人",
+                prop: "checker.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.checker.userId);
+                }
+            },
+            confirmer: {
+                field: "confirmer",
+                name: "确认人",
+                prop: "confirmer.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.confirmer.userId);
+                }
+            },
+            finisher: {
+                field: "finisher",
+                name: "完结人",
+                prop: "finisher.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.finisher.userId);
+                }
+            },
+            comment: {
+                field: "comment",
+                name: "备注",
+                prop: "comment",
+                clazz: "grey"
+            },
+            brand: {
+                field: "brand",
+                name: "品牌",
+                prop: function(v) {
+
+                    return v.salesItem.goods.brand;
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.brand.info($this, v.sales.brand.bid);
+                }
+            },
+            category: {
+                field: "category",
+                name: "品类",
+                prop: "salesItem.goods.category",
+                clazz: "grey"
+            },
+            status: {
+                field: "status",
+                name: "配送状态",
+                prop: function(v) {
+
+                    return constant.sales().salesDeliveryItem.status.keys[v.status];
+                },
+                clazz: "red"
+            },
+            refundNum: {
+                field: "refundNum",
+                name: "退货数量",
+                prop: function(v) {
+
+                    return utils.changeThrDecimal(v.salesItem.initnum - v.salesItem.num);
+                },
+                clazz: "blue"
+            },
+            trnum: {
+                field: "trnum",
+                name: "配送数量",
+                prop: "salesItem.trnum",
+                clazz: "blue"
+            },
+            address: {
+                field: "address",
+                name: "楼盘地址",
+                prop: function(v) {
+
+                    return v.sales.house.village.name + " " + v.sales.house.houseNumber;
+                },
+                clazz: "grey"
+            },
+            orderId: {
+                field: "orderId",
+                name: "装修单号",
+                prop: "sales.orderId",
+                clazz: "blue",
+                click: function($this, v) {
+
+                    tools.decoration.info($this, v.sales.orderId);
+                }
+            },
+            protranTime: {
+                field: "protranTime",
+                name: "预计配送时间",
+                prop: "protranTime",
+                clazz: "green"
+            }
         };
 
         var props = [{
@@ -156,6 +305,7 @@ $(function() {
             name: "salesDelivery",
             value: "sdiid",
             attrs: function(v) {
+
                 return {
                     "data-status": v.status,
                     "data-sdiid": v.sdiid,
@@ -164,11 +314,13 @@ $(function() {
             },
             lblClazz: "lbl blue bigger-150",
             checked: function(v) {
+
                 return false;
             }
         }];
 
         $.each(pageConfig.propertyArr, function(i, key) {
+
             propertyMap[key] && props.push(propertyMap[key]);
         });
 
@@ -178,19 +330,48 @@ $(function() {
     function buildDeliveryLinebtns() {
 
         var buttonMap = {
-            tran: {name: "配送", clazz: "btn-success", handle: deliveryTran},
-            check: {name: "审核", clazz: "btn-warning", handle: deliveryCheck},
-            confirm: {name: "确认", clazz: "btn-inverse", handle: deliveryConfirm},
-            finish: {name: "完结", clazz: "btn-danger", handle: deliveryFinish},
-            protranTime: {name: "编辑", clazz: "btn-danger", handle: deliveryEdit},
-            salesPicture: {name: "图片", clazz: "btn-danger", handle: deliveryPicture}
+            tran: {
+                name: "配送",
+                clazz: "btn-success",
+                handle: deliveryTran
+            },
+            check: {
+                name: "审核",
+                clazz: "btn-warning",
+                handle: deliveryCheck
+            },
+            confirm: {
+                name: "确认",
+                clazz: "btn-inverse",
+                handle: deliveryConfirm
+            },
+            finish: {
+                name: "完结",
+                clazz: "btn-danger",
+                handle: deliveryFinish
+            },
+            protranTime: {
+                name: "编辑",
+                clazz: "btn-danger",
+                handle: deliveryEdit
+            },
+            salesPicture: {
+                name: "图片",
+                clazz: "btn-danger",
+                handle: deliveryPicture
+            }
         };
 
         var btns = {};
 
-        btns["decoration"] = {name: "装修单", clazz: "btn-purple", handle: deliveryDecoration};
+        btns["decoration"] = {
+            name: "装修单",
+            clazz: "btn-purple",
+            handle: deliveryDecoration
+        };
 
         $.each(pageConfig.pageBtn, function(i, key) {
+
             buttonMap[key] && (btns[key] = buttonMap[key]);
         });
 
@@ -220,59 +401,112 @@ $(function() {
         $('<span></span>').text('完结').appendTo($addw);
 
         $checka.click(function() {
+
             checkAll();
         });
 
         $adda.click(function(e) {
+
             e.stopPropagation();
             var option = {};
             var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
-            if (!$inputs.length) {com.showAlert(com.warning, "请选择需要进行确认的配送项"); return false;}
+            if (!$inputs.length) {
+                com.showAlert(com.warning, "请选择需要进行确认的配送项");
+                return false;
+            }
             $.each($inputs, function(i, v) {
+
                 option["salesDeliveryItems[" + i + "].sdiid"] = $(v).attr('data-sdiid');
             });
             com.showConfirm('确定要将选中的配送项进行确认吗?', function() {
-                com.post(api.sales.confirmSalesDeliveryItem, option, function() {com.showAlert(com.info, "操作成功"); searcher.doSearch();});
-            }, function() {searcher.doSearch();});
+
+                com.post(api.sales.confirmSalesDeliveryItem, option, function() {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            }, function() {
+
+                searcher.doSearch();
+            });
         });
 
         $addp.click(function(e) {
+
             e.stopPropagation();
             var option = {};
             var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
-            if (!$inputs.length) {com.showAlert(com.warning, "请选择需要进行配送的配送项"); return false;}
+            if (!$inputs.length) {
+                com.showAlert(com.warning, "请选择需要进行配送的配送项");
+                return false;
+            }
             $.each($inputs, function(i, v) {
+
                 option["salesDeliveryItems[" + i + "].sdiid"] = $(v).attr('data-sdiid');
             });
             com.showConfirm('确定要将选中的配送项进行配送吗?', function() {
-                com.post(api.sales.tranSalesDeliveryItem, option, function() {com.showAlert(com.info, "操作成功"); searcher.doSearch();});
-            }, function() {searcher.doSearch();});
+
+                com.post(api.sales.tranSalesDeliveryItem, option, function() {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            }, function() {
+
+                searcher.doSearch();
+            });
         });
 
         $adds.click(function(e) {
+
             e.stopPropagation();
             var option = {};
             var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
-            if (!$inputs.length) {com.showAlert(com.warning, "请选择需要进行审核的配送项"); return;}
+            if (!$inputs.length) {
+                com.showAlert(com.warning, "请选择需要进行审核的配送项");
+                return;
+            }
             $.each($inputs, function(i, v) {
+
                 option["salesDeliveryItems[" + i + "].sdiid"] = $(v).attr('data-sdiid');
             });
             com.showConfirm('确定要将选中的配送项进行审核吗?', function() {
-                com.post(api.sales.checkSalesDeliveryItem, option, function() {com.showAlert(com.info, "操作成功"); searcher.doSearch();});
-            }, function() {searcher.doSearch();});
+
+                com.post(api.sales.checkSalesDeliveryItem, option, function() {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            }, function() {
+
+                searcher.doSearch();
+            });
         });
 
         $addw.click(function(e) {
+
             e.stopPropagation();
             var option = {};
             var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
-            if (!$inputs.length) {com.showAlert(com.warning, "请选择需要进行完结的配送项"); return;}
+            if (!$inputs.length) {
+                com.showAlert(com.warning, "请选择需要进行完结的配送项");
+                return;
+            }
             $.each($inputs, function(i, v) {
+
                 option["salesDeliveryItems[" + i + "].sdiid"] = $(v).attr('data-sdiid');
             });
             com.showConfirm('确定要将选中的配送项进行完结吗?', function() {
-                com.post(api.sales.finishSalesDeliveryItem, option, function() {com.showAlert(com.info, "操作成功"); searcher.doSearch();});
-            }, function() {searcher.doSearch();});
+
+                com.post(api.sales.finishSalesDeliveryItem, option, function() {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            }, function() {
+
+                searcher.doSearch();
+            });
         });
 
         if (salesDelivery.pageType == "check") {
@@ -291,7 +525,7 @@ $(function() {
 
         salesDelivery.extraParams["statuses[" + i + "]"] = v;
     });
-    
+
     if (salesDelivery.pageType == "init") {
         salesDelivery.extraParams["companyType"] = "company";
     } else if (salesDelivery.pageType == "tran") {
@@ -312,9 +546,9 @@ $(function() {
 
     searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, salesDelivery.extraParams, pageConfig.condArr, salesDelivery.postData, null, false, buildDeliveryButtons);
     searcher.line(function(v) {
+
         return v.salesItem.goods.name;
     }, buildDeliveryLineprops(), buildDeliveryLinebtns()).render();
-
 
     salesDelivery.btns.saveEditBtn.on('click', function() {
 
@@ -383,7 +617,7 @@ $(function() {
         salesDelivery.items.tranNum.val("");
         salesDelivery.modals.tranModal.modal("hide");
     });
-    
+
     function checkAll() {
 
         if (com.focusPage('input[type="checkbox"]').prop('checked')) {

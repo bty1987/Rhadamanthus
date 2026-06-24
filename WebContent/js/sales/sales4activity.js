@@ -313,6 +313,7 @@ $(function() {
             field: "address",
             name: "楼盘地址",
             prop: function(v) {
+
                 return v.sales.house.village.name + " " + v.sales.house.houseNumber;
             },
             clazz: "grey"
@@ -345,6 +346,7 @@ $(function() {
             field: "depositpayStatus",
             name: "定金状态",
             prop: function(v) {
+
                 return salesActivityItem.depositpayStatus[v.sales.depositpayStatus];
             },
             clazz: "red"
@@ -352,6 +354,7 @@ $(function() {
             field: "fullpayStatus",
             name: "补款状态",
             prop: function(v) {
+
                 return salesActivityItem.fullpayStatus[v.sales.fullpayStatus];
             },
             clazz: "red"
@@ -370,9 +373,9 @@ $(function() {
     searcher.history("sales4activityPostData");
     searcher.param(options);
     searcher.line(function(v) {
+
         return v.activity.name;
     }, buildSalesActivityLineprops(), {}).render();
-
 
     // 查询活动物品
     function querySalesActivityItem() {
@@ -874,9 +877,11 @@ $(function() {
             "salesActivityItem.content": salesActivityItem.items.salesActivityComment.val()
         };
 
-        if (salesActivityItem.url == api.sales.expendSalesActivityItem) ops["salesActivityItem.expendPrice"] = salesActivityItem.items.price.val();
+        if (salesActivityItem.url == api.sales.expendSalesActivityItem)
+            ops["salesActivityItem.expendPrice"] = salesActivityItem.items.price.val();
 
-        if (salesActivityItem.url == api.sales.discountSalesActivityItem) ops["salesActivityItem.discountPrice"] = salesActivityItem.items.price.val();
+        if (salesActivityItem.url == api.sales.discountSalesActivityItem)
+            ops["salesActivityItem.discountPrice"] = salesActivityItem.items.price.val();
 
         com.post(salesActivityItem.url, ops, function(res) {
 

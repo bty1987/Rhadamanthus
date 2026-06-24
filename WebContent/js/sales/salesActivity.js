@@ -112,7 +112,7 @@ $(function() {
     com.initTypeahead('uSupplier', api.personel.querySupplierByPinyin, "supplier.pinYin", {
         "user.status": 0
     }, "suppliers", "userId", "userName", null);
-    
+
     com.datetime(com.focusPage("#peliveryTime"));
 
     // 活动名
@@ -169,6 +169,7 @@ $(function() {
 
         params.sales.sales = v;
         com.popup4page("#layerPopUp", "views/sales/sales2add.html", "添项", '', function() {
+
             salesSearcher.doSearch();
         })
     }
@@ -179,6 +180,7 @@ $(function() {
         params.sales.dompany = sales.pageType;
 
         com.popup4page("#layerPopUp", "views/sales/salesItem.html", "项目", '', function() {
+
             salesSearcher.doSearch();
         })
     }
@@ -189,6 +191,7 @@ $(function() {
         params.sales.dompany = sales.pageType;
 
         com.popup4page("#layerPopUp", "views/sales/sales2supple.html", "补单", "", function() {
+
             salesSearcher.doSearch();
         });
     }
@@ -252,17 +255,21 @@ $(function() {
         sales.items.couponInf.val(v.couponInfo.substring(1, v.couponInfo.length - 1));
 
         com.post(api.ds.sales, {}, function(res) {
+
             sales.items.couponType.bindData(res.materialCouponTypes, 'key', 'value', false);
         }, null, false);
 
         com.popup4model('#layerAdd', '款项', function() {
+
             initLabel(v.depositpayStatus, v.fullpayStatus, v.total, v.depositpay, v.fullpay, '');
             sales.items.couponValue.val(0);
             sales.items.malingValue.val(0);
         }, function() {
+
             reductionLabel();
             salesSearcher.doSearch();
         }, function() {
+
             reductionLabel();
         });
     }
@@ -281,6 +288,7 @@ $(function() {
         params.sales.type = sales.pageType;
 
         com.popup4page("#layerPopUp", "views/sales/sales4activity.html", "活动", '', function() {
+
             salesSearcher.doSearch();
         });
     }
@@ -378,45 +386,284 @@ $(function() {
     function buildSalesLineprops() {
 
         var propertyMap = {
-            orderId: {field: "orderId", name: "装修单号", prop: "sales.orderId", clazz: "blue", click: function($this, v) {tools.decoration.info($this, v.sales.orderId);}},
-            address: {field: "address", name: "楼盘地址", prop: function(v) {return v.sales.house.village.name + " " + v.sales.house.houseNumber;}, clazz: "grey"},
-            customer: {field: "customer", name: "客户名", prop: "sales.customer.name", clazz: "grey", click: function($this, v) {tools.customer.info($this, v.sales.customer.cid);}},
-            salesman: {field: "salesman", name: "渠道", prop: "sales.salesman.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.sales.salesman.userId);}},
-            dept: {field: "dept", name: "部门", prop: "sales.salesman.dept.name", clazz: "grey", click: function($this, v) {tools.department.info($this, v.sales.dept.did);}},
-            region: {field: "region", name: "分区", prop: function(v) {return (v.sales.salesman.dept && v.sales.salesman.dept.fatherDept) ? v.sales.salesman.dept.fatherDept.name : "";}, clazz: "grey", click: function($this, v) {tools.department.info($this, v.sales.region.did);}},
-            creater: {field: "creater", name: "创建人", prop: "sales.creater.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.sales.creater.userId);}},
-            guider: {field: "guider", name: "导购", prop: "sales.guider.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.sales.guider.userId);}},
-            instorer: {field: "instorer", name: "驻店", prop: "sales.instorer.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.sales.instorer.userId);}},
-            guideDept: {field: "guideDept", name: "主材部", prop: "sales.guideDept.name", clazz: "grey", click: function($this, v) {tools.department.info($this, v.sales.guideDept.did);}},
-            category: {field: "category", name: "品类", prop: "sales.category", clazz: "grey"},
-            brand: {field: "brand", name: "品牌", prop: "sales.brand.name", clazz: "grey", click: function($this, v) {tools.brand.info($this, v.sales.brand.bid);}},
-            depositpay: {field: "depositpay", name: "定金", prop: "sales.depositpay", clazz: "blue"},
-            fullpay: {field: "fullpay", name: "补款", prop: "sales.fullpay", clazz: "blue"},
-            createTime: {field: "createTime", name: "创建时间", prop: "sales.createTime", clazz: "green"},
-            balanceTime: {field: "balanceTime", name: "结算时间", prop: "sales.balanceTime", clazz: "green"},
-            fullpayTime: {field: "fullpayTime", name: "补款时间", prop: "sales.fullpayTime", clazz: "green"},
-            affirmTime: {field: "affirmTime", name: "确认时间", prop: "sales.affirmTime", clazz: "green"},
-            isAffirm: {field: "isAffirm", name: "确认状态", prop: function(v) {return constant.sales().sales.isAffirm.keys[v.sales.isAffirm];}, clazz: "red"},
-            status: {field: "status", name: "状态", prop: function(v) {return constant.sales().sales.status.keys[v.sales.status];}, clazz: "red"},
-            finisher: {field: "finisher", name: "完结人", prop: "sales.finisher.currentName", clazz: "red", click: function($this, v) {tools.personel.info($this, v.sales.finisher.userId);}},
-            finishTime: {field: "finishTime", name: "完结时间", prop: "sales.finishTime", clazz: "green"},
-            balanceStatus: {field: "balanceStatus", name: "结算状态", prop: function(v) {return constant.sales().sales.balanceStatus.keys[v.sales.balanceStatus];}, clazz: "red"},
-            depositpayStatus: {field: "depositpayStatus", name: "定金状态", prop: function(v) {return constant.sales().sales.depositpayStatus.keys[v.sales.depositpayStatus];}, clazz: "red"},
-            fullpayStatus: {field: "fullpayStatus", name: "补款状态", prop: function(v) {return constant.sales().sales.fullpayStatus.keys[v.sales.fullpayStatus];}, clazz: "red"},
-            grade: {field: "grade", name: "等级", prop: "sales.grade", clazz: "red"},
-            total: {field: "total", name: "总额", prop: "sales.total", clazz: "blue"},
-            amount: {field: "amount", name: "当前总额", prop: "sales.amount", clazz: "blue"},
-            maling: {field: "maling", name: "抹零", prop: "sales.maling", clazz: "blue"},
-            venderMaling: {field: "venderMaling", name: "厂商抹零", prop: "sales.venderMaling", clazz: "blue"},
-            coupon: {field: "coupon", name: "券值", prop: "sales.coupon", clazz: "blue"},
-            couponInfo: {field: "couponInfo", name: "券信息", prop: "sales.couponInfo", clazz: "grey"},
-            comment: {field: "comment", name: "备注", prop: "sales.comment", clazz: "grey"},
-            salesType: {field: "salesType", name: "类型", prop: function(v) {return constant.sales().sales.type.keys[v.sales.type];}, clazz: "red"}
+            orderId: {
+                field: "orderId",
+                name: "装修单号",
+                prop: "sales.orderId",
+                clazz: "blue",
+                click: function($this, v) {
+
+                    tools.decoration.info($this, v.sales.orderId);
+                }
+            },
+            address: {
+                field: "address",
+                name: "楼盘地址",
+                prop: function(v) {
+
+                    return v.sales.house.village.name + " " + v.sales.house.houseNumber;
+                },
+                clazz: "grey"
+            },
+            customer: {
+                field: "customer",
+                name: "客户名",
+                prop: "sales.customer.name",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.customer.info($this, v.sales.customer.cid);
+                }
+            },
+            salesman: {
+                field: "salesman",
+                name: "渠道",
+                prop: "sales.salesman.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.sales.salesman.userId);
+                }
+            },
+            dept: {
+                field: "dept",
+                name: "部门",
+                prop: "sales.salesman.dept.name",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.department.info($this, v.sales.dept.did);
+                }
+            },
+            region: {
+                field: "region",
+                name: "分区",
+                prop: function(v) {
+
+                    return (v.sales.salesman.dept && v.sales.salesman.dept.fatherDept) ? v.sales.salesman.dept.fatherDept.name : "";
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.department.info($this, v.sales.region.did);
+                }
+            },
+            creater: {
+                field: "creater",
+                name: "创建人",
+                prop: "sales.creater.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.sales.creater.userId);
+                }
+            },
+            guider: {
+                field: "guider",
+                name: "导购",
+                prop: "sales.guider.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.sales.guider.userId);
+                }
+            },
+            instorer: {
+                field: "instorer",
+                name: "驻店",
+                prop: "sales.instorer.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.sales.instorer.userId);
+                }
+            },
+            guideDept: {
+                field: "guideDept",
+                name: "主材部",
+                prop: "sales.guideDept.name",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.department.info($this, v.sales.guideDept.did);
+                }
+            },
+            category: {
+                field: "category",
+                name: "品类",
+                prop: "sales.category",
+                clazz: "grey"
+            },
+            brand: {
+                field: "brand",
+                name: "品牌",
+                prop: "sales.brand.name",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.brand.info($this, v.sales.brand.bid);
+                }
+            },
+            depositpay: {
+                field: "depositpay",
+                name: "定金",
+                prop: "sales.depositpay",
+                clazz: "blue"
+            },
+            fullpay: {
+                field: "fullpay",
+                name: "补款",
+                prop: "sales.fullpay",
+                clazz: "blue"
+            },
+            createTime: {
+                field: "createTime",
+                name: "创建时间",
+                prop: "sales.createTime",
+                clazz: "green"
+            },
+            balanceTime: {
+                field: "balanceTime",
+                name: "结算时间",
+                prop: "sales.balanceTime",
+                clazz: "green"
+            },
+            fullpayTime: {
+                field: "fullpayTime",
+                name: "补款时间",
+                prop: "sales.fullpayTime",
+                clazz: "green"
+            },
+            affirmTime: {
+                field: "affirmTime",
+                name: "确认时间",
+                prop: "sales.affirmTime",
+                clazz: "green"
+            },
+            isAffirm: {
+                field: "isAffirm",
+                name: "确认状态",
+                prop: function(v) {
+
+                    return constant.sales().sales.isAffirm.keys[v.sales.isAffirm];
+                },
+                clazz: "red"
+            },
+            status: {
+                field: "status",
+                name: "状态",
+                prop: function(v) {
+
+                    return constant.sales().sales.status.keys[v.sales.status];
+                },
+                clazz: "red"
+            },
+            finisher: {
+                field: "finisher",
+                name: "完结人",
+                prop: "sales.finisher.currentName",
+                clazz: "red",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.sales.finisher.userId);
+                }
+            },
+            finishTime: {
+                field: "finishTime",
+                name: "完结时间",
+                prop: "sales.finishTime",
+                clazz: "green"
+            },
+            balanceStatus: {
+                field: "balanceStatus",
+                name: "结算状态",
+                prop: function(v) {
+
+                    return constant.sales().sales.balanceStatus.keys[v.sales.balanceStatus];
+                },
+                clazz: "red"
+            },
+            depositpayStatus: {
+                field: "depositpayStatus",
+                name: "定金状态",
+                prop: function(v) {
+
+                    return constant.sales().sales.depositpayStatus.keys[v.sales.depositpayStatus];
+                },
+                clazz: "red"
+            },
+            fullpayStatus: {
+                field: "fullpayStatus",
+                name: "补款状态",
+                prop: function(v) {
+
+                    return constant.sales().sales.fullpayStatus.keys[v.sales.fullpayStatus];
+                },
+                clazz: "red"
+            },
+            grade: {
+                field: "grade",
+                name: "等级",
+                prop: "sales.grade",
+                clazz: "red"
+            },
+            total: {
+                field: "total",
+                name: "总额",
+                prop: "sales.total",
+                clazz: "blue"
+            },
+            amount: {
+                field: "amount",
+                name: "当前总额",
+                prop: "sales.amount",
+                clazz: "blue"
+            },
+            maling: {
+                field: "maling",
+                name: "抹零",
+                prop: "sales.maling",
+                clazz: "blue"
+            },
+            venderMaling: {
+                field: "venderMaling",
+                name: "厂商抹零",
+                prop: "sales.venderMaling",
+                clazz: "blue"
+            },
+            coupon: {
+                field: "coupon",
+                name: "券值",
+                prop: "sales.coupon",
+                clazz: "blue"
+            },
+            couponInfo: {
+                field: "couponInfo",
+                name: "券信息",
+                prop: "sales.couponInfo",
+                clazz: "grey"
+            },
+            comment: {
+                field: "comment",
+                name: "备注",
+                prop: "sales.comment",
+                clazz: "grey"
+            },
+            salesType: {
+                field: "salesType",
+                name: "类型",
+                prop: function(v) {
+
+                    return constant.sales().sales.type.keys[v.sales.type];
+                },
+                clazz: "red"
+            }
         };
 
         var props = [];
 
         $.each(pageConfig.propertyArr, function(i, key) {
+
             propertyMap[key] && props.push(propertyMap[key]);
         });
 
@@ -426,30 +673,214 @@ $(function() {
     function buildSalesLinebtns() {
 
         var buttonMap = {
-            decoration: {name: "装修单", clazz: "btn-purple", handle: function(v) { decorationSales(v.sales || v); }},
-            ascription: {name: "归属", clazz: "btn-inverse", handle: function(v) { ascriptionSales(v.sales || v); }},
-            inventory: {name: "仓储", clazz: "btn-blue", handle: function(v) { inventorySales(v.sales || v); }},
-            sub: {name: "项目", clazz: "btn-success", handle: function(v) { salesItem(v.sales || v); }},
-            collect: {name: "收款", clazz: "btn-inverse", show: function(v) {var s = v.sales || v; return s.type != constant.sales().sales.TYPE_SUB_INT;}, handle: function(v) { collectSales(v.sales || v); }},
-            add: {name: "添项", clazz: "btn-yellow", show: function(v) {var s = v.sales || v; return s.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT;}, handle: function(v) { addSales(v.sales || v); }},
-            supplement: {name: "补单", clazz: "btn-primary", show: function(v) {var s = v.sales || v; return s.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT;}, handle: function(v) { supplementSales(v.sales || v); }},
-            refund: {name: "退货", clazz: "btn-danger", handle: function(v) { refundSales(v.sales || v); }},
-            send: {name: "推送", clazz: "btn-danger", handle: function(v) { sendSales(v.sales || v); }},
-            terminal: {name: "废单", clazz: "btn-danger", show: function(v) {var s = v.sales || v; return s.status != constant.sales().sales.STATUS_WAST_INT;}, handle: function(v) { terminalSales(v.sales || v); }},
-            print: {name: "打印", clazz: "btn-pink", show: function(v) {var s = v.sales || v; return s.status != constant.sales().sales.STATUS_WAST_INT;}, handle: function(v) { printSales(v.sales || v); }},
-            act: {name: "活动", clazz: "btn-grey", show: function(v) {var s = v.sales || v; return s.status != constant.sales().sales.STATUS_WAST_INT;}, handle: function(v) { actSales(v.sales || v); }},
-            money: {name: "款项", clazz: "btn-warning", show: function(v) {var s = v.sales || v; return s.status != constant.sales().sales.STATUS_WAST_INT && s.type != constant.sales().sales.TYPE_SUB_INT;}, handle: function(v) { moneySales(v.sales || v); }},
-            finish: {name: "完结", clazz: "btn-inverse", show: function(v) {var s = v.sales || v; return s.status != constant.sales().sales.STATUS_WAST_INT;}, handle: function(v) { finishSales(v.sales || v); }},
-            saledelivery: {name: "配送", clazz: "btn-primary", show: function(v) {var s = v.sales || v; return [0, 5].indexOf(s.status) != -1 && [1, 2].indexOf(s.fullpayStatus) != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT;}, handle: function(v) { deliveSales(v.sales || v); }},
-            prodelivery: {name: "预配送", clazz: "btn-primary", handle: function(v) { peliverySales(v.sales || v); }},
-            unpay: {name: "结算", clazz: "btn-primary", show: function(v) {var s = v.sales || v; return s.type == constant.sales().sales.TYPE_SUB_INT;}, handle: function(v) { unpaySales(v.sales || v); }},
-            picture: {name: "图片", clazz: "btn-search", handle: function(v) { pictureSales(v.sales || v); }},
-            satisfaction: {name: "满意度", clazz: "btn-purple", handle: function(v) { satisfactionSales(v.sales || v); }}
+            decoration: {
+                name: "装修单",
+                clazz: "btn-purple",
+                handle: function(v) {
+
+                    decorationSales(v.sales || v);
+                }
+            },
+            ascription: {
+                name: "归属",
+                clazz: "btn-inverse",
+                handle: function(v) {
+
+                    ascriptionSales(v.sales || v);
+                }
+            },
+            inventory: {
+                name: "仓储",
+                clazz: "btn-blue",
+                handle: function(v) {
+
+                    inventorySales(v.sales || v);
+                }
+            },
+            sub: {
+                name: "项目",
+                clazz: "btn-success",
+                handle: function(v) {
+
+                    salesItem(v.sales || v);
+                }
+            },
+            collect: {
+                name: "收款",
+                clazz: "btn-inverse",
+                show: function(v) {
+
+                    var s = v.sales || v;
+                    return s.type != constant.sales().sales.TYPE_SUB_INT;
+                },
+                handle: function(v) {
+
+                    collectSales(v.sales || v);
+                }
+            },
+            add: {
+                name: "添项",
+                clazz: "btn-yellow",
+                show: function(v) {
+
+                    var s = v.sales || v;
+                    return s.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT;
+                },
+                handle: function(v) {
+
+                    addSales(v.sales || v);
+                }
+            },
+            supplement: {
+                name: "补单",
+                clazz: "btn-primary",
+                show: function(v) {
+
+                    var s = v.sales || v;
+                    return s.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT;
+                },
+                handle: function(v) {
+
+                    supplementSales(v.sales || v);
+                }
+            },
+            refund: {
+                name: "退货",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    refundSales(v.sales || v);
+                }
+            },
+            send: {
+                name: "推送",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    sendSales(v.sales || v);
+                }
+            },
+            terminal: {
+                name: "废单",
+                clazz: "btn-danger",
+                show: function(v) {
+
+                    var s = v.sales || v;
+                    return s.status != constant.sales().sales.STATUS_WAST_INT;
+                },
+                handle: function(v) {
+
+                    terminalSales(v.sales || v);
+                }
+            },
+            print: {
+                name: "打印",
+                clazz: "btn-pink",
+                show: function(v) {
+
+                    var s = v.sales || v;
+                    return s.status != constant.sales().sales.STATUS_WAST_INT;
+                },
+                handle: function(v) {
+
+                    printSales(v.sales || v);
+                }
+            },
+            act: {
+                name: "活动",
+                clazz: "btn-grey",
+                show: function(v) {
+
+                    var s = v.sales || v;
+                    return s.status != constant.sales().sales.STATUS_WAST_INT;
+                },
+                handle: function(v) {
+
+                    actSales(v.sales || v);
+                }
+            },
+            money: {
+                name: "款项",
+                clazz: "btn-warning",
+                show: function(v) {
+
+                    var s = v.sales || v;
+                    return s.status != constant.sales().sales.STATUS_WAST_INT && s.type != constant.sales().sales.TYPE_SUB_INT;
+                },
+                handle: function(v) {
+
+                    moneySales(v.sales || v);
+                }
+            },
+            finish: {
+                name: "完结",
+                clazz: "btn-inverse",
+                show: function(v) {
+
+                    var s = v.sales || v;
+                    return s.status != constant.sales().sales.STATUS_WAST_INT;
+                },
+                handle: function(v) {
+
+                    finishSales(v.sales || v);
+                }
+            },
+            saledelivery: {
+                name: "配送",
+                clazz: "btn-primary",
+                show: function(v) {
+
+                    var s = v.sales || v;
+                    return [0, 5].indexOf(s.status) != -1 && [1, 2].indexOf(s.fullpayStatus) != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT;
+                },
+                handle: function(v) {
+
+                    deliveSales(v.sales || v);
+                }
+            },
+            prodelivery: {
+                name: "预配送",
+                clazz: "btn-primary",
+                handle: function(v) {
+
+                    peliverySales(v.sales || v);
+                }
+            },
+            unpay: {
+                name: "结算",
+                clazz: "btn-primary",
+                show: function(v) {
+
+                    var s = v.sales || v;
+                    return s.type == constant.sales().sales.TYPE_SUB_INT;
+                },
+                handle: function(v) {
+
+                    unpaySales(v.sales || v);
+                }
+            },
+            picture: {
+                name: "图片",
+                clazz: "btn-search",
+                handle: function(v) {
+
+                    pictureSales(v.sales || v);
+                }
+            },
+            satisfaction: {
+                name: "满意度",
+                clazz: "btn-purple",
+                handle: function(v) {
+
+                    satisfactionSales(v.sales || v);
+                }
+            }
         };
 
         var btns = {};
 
         $.each(pageConfig.pageBtn, function(i, key) {
+
             buttonMap[key] && (btns[key] = buttonMap[key]);
         });
 
@@ -462,9 +893,9 @@ $(function() {
     salesSearcher.condition(pageConfig.condArr);
     salesSearcher.history(sales.postData);
     salesSearcher.line(function(v) {
+
         return v.activity.name;
     }, buildSalesLineprops(), buildSalesLinebtns()).render();
-
 
     // 提交归属
     sales.btns.ascriptionBtn.on('click', function() {
@@ -633,7 +1064,7 @@ $(function() {
         }
 
         com.closePopup();
-        
+
         brandBalance(sales.sales.brand.bid);
         sales.modals.repositPaymentModal.modal('show');
 
