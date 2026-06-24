@@ -13,6 +13,38 @@ jQuery(function($) {
     };
 
     com.focusPage("#removePicture").on("click", removePicture);
+
+    var getUserPrefer = function(module, page, key) {
+
+        if (!params.user || !params.user.prefer)
+            return null;
+
+        return params.user.prefer[module] && params.user.prefer[module][page] && params.user.prefer[module][page][key];
+    };
+
+    var setUserPrefer = function(module, page, key, value) {
+
+        params.user = params.user || {};
+        params.user.prefer = params.user.prefer || {};
+        params.user.prefer[module] = params.user.prefer[module] || {};
+        params.user.prefer[module][page] = params.user.prefer[module][page] || {};
+        params.user.prefer[module][page][key] = value;
+    };
+
+    var saveUserPrefer = function() {
+
+        var value = com.focusPage("#searcherViewSwitcher").prop("checked") ? "1" : "0";
+
+        setUserPrefer("searcher", "global", "viewSwitcher", value);
+
+        com.post(api.personel.updateUserPrefer, {
+            "userPrefer.module": "searcher",
+            "userPrefer.page": "global",
+            "userPrefer.pkey": "viewSwitcher",
+            "userPrefer.pvalue": value
+        });
+    };
+
     var userid = -null;
     com.post(api.personel.queryUserForSelfByUserId, {}, function(res) {
 
@@ -41,6 +73,7 @@ jQuery(function($) {
         com.focusPage("#picture").val(userProfile.userPhoto);
 
         com.focusPage("#infoPicture").attr("href", com.showImg(com.focusPage("#showImg"), userProfile.userPhoto, 150, 150, ''));
+        com.focusPage("#searcherViewSwitcher").prop("checked", getUserPrefer("searcher", "global", "viewSwitcher") != "0");
     }
 
     com.focusPage("#reset").on("click", function() {
@@ -53,7 +86,7 @@ jQuery(function($) {
         if (com.validate("edit-basic")) {
             return false;
         }
-        params = {
+        var options = {
             "userInfo.user.userPhoto": com.focusPage("#picture").val(),
             "userInfo.user.userId": userid,
             "userInfo.user.phone": com.focusPage("#telephone").val(),
@@ -65,7 +98,7 @@ jQuery(function($) {
             "userInfo.email": com.focusPage("#email").val()
         };
 
-        com.post(api.personel.updateUserForBaseInfo, params, function(res) {
+        com.post(api.personel.updateUserForBaseInfo, options, function(res) {
 
             userProfile.userPhoto = com.focusPage("#picture").val();
             userProfile.age = com.focusPage("#age").val();
@@ -75,6 +108,9 @@ jQuery(function($) {
             userProfile.qq = com.focusPage("#qq").val();
             userProfile.wechat = com.focusPage("#wechat").val();
             userProfile.email = com.focusPage("#email").val();
+
+            saveUserPrefer();
+
             com.showAlert(com.info, "操作成功");
         });
     });

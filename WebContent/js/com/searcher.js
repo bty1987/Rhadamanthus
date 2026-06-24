@@ -765,12 +765,20 @@ var Searcher = function() {
         params.user.prefer[module][page][key] = value;
     };
 
+    var isViewSwitcherVisible = function() {
+
+        return getUserPrefer("searcher", "global", "viewSwitcher") != "0";
+    };
+
     var renderViewSwitcher = function() {
 
-        if (!basicConf.viewEnable || !basicConf.$pager || !basicConf.$pager.length)
+        if (!basicConf.$pager || !basicConf.$pager.length)
             return false;
 
         com.focusPage('.searcher-view-switcher', basicConf.$pager).remove();
+
+        if (!basicConf.viewEnable || !isViewSwitcherVisible())
+            return false;
 
         var $pagerInfo = com.focusPage('.pager-info', basicConf.$pager);
         var $group = $('<div></div>').addClass('searcher-view-switcher pull-right').css('margin', '0px 5px');
@@ -787,6 +795,9 @@ var Searcher = function() {
             mode: "table",
             name: "表格"
         }], function(i, v) {
+
+            if (basicConf.viewModes.indexOf(v.mode) == -1)
+                return true;
 
             $('<a></a>').addClass('btn btn-minier ' + (basicConf.viewMode == v.mode ? 'btn-primary' : 'btn-white')).css('margin', '0px 1px').text(v.name).appendTo($group).click(function() {
 
