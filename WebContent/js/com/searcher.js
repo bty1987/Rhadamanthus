@@ -1342,9 +1342,25 @@ var Searcher = function() {
                     return this;
                 }
 
+                var hasLinevent = false;
+
+                $.each(basicConf.linevent, function() {
+                    hasLinevent = true;
+
+                    return false;
+                });
+
                 // header handle
                 var headerThead = $("<thead></thead>");
                 var headerTr = $("<tr></tr>").appendTo(headerThead);
+
+                if (hasLinevent) {
+                    var indexTh = $('<th></th>').attr("lay-data", JSON.stringify({
+                        field: "__searcherIndex",
+                        hide: true
+                    })).appendTo(headerTr);
+                    $('<span></span>').html("").appendTo(indexTh);
+                }
 
                 $.each(basicConf.lineprop, function(i, v) {
 
@@ -1357,6 +1373,16 @@ var Searcher = function() {
                     var headerSpan = $('<span></span>').html(v.name).appendTo(headerTh);
                 });
 
+                if (hasLinevent) {
+                    var toolsTh = $('<th></th>').attr("lay-data", JSON.stringify({
+                        field: "__searcherTools",
+                        toolbar: "#" + basicConf.$resulter + "tools",
+                        width: 160,
+                        fixed: "right"
+                    })).appendTo(headerTr);
+                    $('<span></span>').html("功能").appendTo(toolsTh);
+                }
+
                 var dataTbody = $("<tbody></tbody>").appendTo(table);
 
                 table.append(headerThead).append(dataTbody);
@@ -1365,6 +1391,9 @@ var Searcher = function() {
                 $.each(data, function(i, v) {
 
                     var $liLine = $('<tr></tr>').appendTo(dataTbody);
+
+                    if (hasLinevent)
+                        $('<td></td>').html(i).appendTo($liLine);
 
                     $.each(basicConf.lineprop, function(i, d) {
 
@@ -1380,15 +1409,20 @@ var Searcher = function() {
 
                         $('<td></td>').html(info).appendTo($liLine);
                     });
+
+                    if (hasLinevent)
+                        $('<td></td>').appendTo($liLine);
                 });
 
                 // line buttons tools
                 var tools = $('<script type="text/html" id="' + basicConf.$resulter + 'tools">').appendTo($tableWrap);
 
-                $.each(basicConf.linevent, function(k, v) {
+                if (hasLinevent) {
+                    $.each(basicConf.linevent, function(k, v) {
 
-                    $('<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="' + k + '"></a>').html(v.name).appendTo(tools);
-                });
+                        $('<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="' + k + '"></a>').html(v.name).appendTo(tools);
+                    });
+                }
 
                 laytable.init(basicConf.$resulter, {
                     cellMinWidth: 80,
@@ -1402,7 +1436,13 @@ var Searcher = function() {
                     if (!basicConf.linevent[obj.event].handle)
                         return false;
 
-                    basicConf.linevent[obj.event].handle(obj.data);
+                    var row = obj.data || {};
+                    var data = basicConf.lastData && basicConf.lastData[row.__searcherIndex] ? basicConf.lastData[row.__searcherIndex] : row;
+
+                    if (basicConf.linevent[obj.event].show && !basicConf.linevent[obj.event].show(data))
+                        return false;
+
+                    basicConf.linevent[obj.event].handle(data);
                 });
             }
 
