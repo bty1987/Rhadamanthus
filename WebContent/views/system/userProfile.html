@@ -113,14 +113,15 @@
 										<h4 class="header blue bolder smaller">偏好设置</h4>
 
 										<div class="block clearfix form-group">
-											<label class="col-md-3 control-label no-padding-right" for="searcherViewSwitcher">视图切换</label>
+											<label class="col-md-3 control-label no-padding-right" for="searcherViewMode">默认视图</label>
 
 											<div class="col-md-5 block no-padding-right">
-												<label>
-													<input id="searcherViewSwitcher" type="checkbox" class="ace ace-switch ace-switch-5" />
-													<span class="lbl"></span>
-												</label>
-												<span class="help-inline">显示列表/卡片/表格切换按钮</span>
+												<div id="searcherViewMode" class="btn-group">
+													<button type="button" class="btn btn-minier btn-white" data-mode="line">列表</button>
+													<button type="button" class="btn btn-minier btn-white" data-mode="card">卡片</button>
+													<button type="button" class="btn btn-minier btn-white" data-mode="table">表格</button>
+												</div>
+												<span class="help-inline">设置分页列表默认显示方式</span>
 											</div>
 										</div>
 									</div>

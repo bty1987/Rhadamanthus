@@ -31,16 +31,29 @@ jQuery(function($) {
         params.user.prefer[module][page][key] = value;
     };
 
+    var setSearcherViewMode = function(mode) {
+
+        mode = mode || "line";
+
+        com.focusPage("#searcherViewMode button").removeClass("btn-primary").addClass("btn-white");
+        com.focusPage('#searcherViewMode button[data-mode="' + mode + '"]').removeClass("btn-white").addClass("btn-primary");
+    };
+
+    var getSearcherViewMode = function() {
+
+        return com.focusPage("#searcherViewMode button.btn-primary").attr("data-mode") || "line";
+    };
+
     var saveUserPrefer = function() {
 
-        var value = com.focusPage("#searcherViewSwitcher").prop("checked") ? "1" : "0";
+        var value = getSearcherViewMode();
 
-        setUserPrefer("searcher", "global", "viewSwitcher", value);
+        setUserPrefer("searcher", "global", "viewMode", value);
 
         com.post(api.personel.updateUserPrefer, {
             "userPrefer.module": "searcher",
             "userPrefer.page": "global",
-            "userPrefer.pkey": "viewSwitcher",
+            "userPrefer.pkey": "viewMode",
             "userPrefer.pvalue": value
         });
     };
@@ -73,8 +86,13 @@ jQuery(function($) {
         com.focusPage("#picture").val(userProfile.userPhoto);
 
         com.focusPage("#infoPicture").attr("href", com.showImg(com.focusPage("#showImg"), userProfile.userPhoto, 150, 150, ''));
-        com.focusPage("#searcherViewSwitcher").prop("checked", getUserPrefer("searcher", "global", "viewSwitcher") != "0");
+        setSearcherViewMode(getUserPrefer("searcher", "global", "viewMode") || "line");
     }
+
+    com.focusPage("#searcherViewMode button").on("click", function() {
+
+        setSearcherViewMode($(this).attr("data-mode"));
+    });
 
     com.focusPage("#reset").on("click", function() {
 
