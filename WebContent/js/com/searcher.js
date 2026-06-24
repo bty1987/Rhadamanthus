@@ -1350,7 +1350,7 @@ var Searcher = function() {
 
                 var $tableWrap = com.focusPage('#' + basicConf.$resulter).html("");
 
-                com.focusPage('.searcher-table-more-menu').remove();
+                $('.searcher-table-more-menu').remove();
 
                 var table = $("<table></table>").attr("lay-filter", basicConf.$resulter).appendTo($tableWrap);
 
@@ -1492,7 +1492,7 @@ var Searcher = function() {
                     if ($(this).attr('data-resulter') != basicConf.$resulter)
                         return true;
 
-                    com.focusPage('.searcher-table-more-menu').remove();
+                    $('.searcher-table-more-menu').remove();
 
                     var index = $(this).attr('data-index');
                     var linevents = (rowLinevents[index] || []).slice(2);
@@ -1537,7 +1537,7 @@ var Searcher = function() {
                     var linevent = basicConf.linevent[event];
                     var data = basicConf.lastData && basicConf.lastData[index] ? basicConf.lastData[index] : null;
 
-                    com.focusPage('.searcher-table-more-menu').remove();
+                    $('.searcher-table-more-menu').remove();
 
                     if (!linevent || !linevent.handle || !data)
                         return false;
@@ -1555,7 +1555,7 @@ var Searcher = function() {
                     if ($(e.target).closest('.searcher-table-more-menu, .searcher-table-more').length)
                         return true;
 
-                    com.focusPage('.searcher-table-more-menu').remove();
+                    $('.searcher-table-more-menu').remove();
                 });
             }
 
