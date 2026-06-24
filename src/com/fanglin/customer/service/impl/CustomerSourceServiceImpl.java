@@ -593,7 +593,6 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_AREA_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, 0, cpid);
 				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_TYPE_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, customerSourcePO.getCreater().getDept().getType().getDtid(), exporters);
 				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, customerSourcePO.getCreater().getDept().getDid(), cpid);
-				// 城区优先聚焦分支
 				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_CITY_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, 0, cpid);
 
 				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_COM_INT) {
@@ -612,7 +611,6 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 					throw new FLException(330081, "部门无设计师接单");
 				}
 
-				// 【新增】城区优先异常处理
 				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_CITY_INT) {
 					throw new FLException(330081, "城区无设计师接单");
 				}

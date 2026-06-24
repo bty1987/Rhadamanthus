@@ -587,6 +587,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		salesReceiptVO.setAdvance(salesPaymentPO.getReferMoney());
 		salesReceiptVO.setRealMoney(salesPaymentPO.getReferMoney());
+		salesReceiptVO.setAdvanceType(salesPaymentVO.getAdvanceType());
 
 		salesPaymentVO.setReferMoney(salesPaymentPO.getReferMoney());
 
