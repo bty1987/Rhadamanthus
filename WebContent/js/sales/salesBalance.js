@@ -117,8 +117,10 @@ $(function() {
         salesBalance.items.vbalanceValue.find('input[name="total"]').val(v.total);
 
         com.popup4model("#vbalanceValue", "厂结值", function() {
+
             salesBalance.sales = v;
         }, function() {
+
             com.clearValidator();
             com.cleanItems(salesBalance.items);
         });
@@ -137,13 +139,16 @@ $(function() {
         }
 
         com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行厂结吗?', function() {
+
             com.post(api.sales.vpostSalesBalance, {
                 "salesBalances[0].sbid": v.sbid
             }, function() {
+
                 com.showAlert(com.info, "厂结成功");
                 searcher.doSearch();
             });
         }, function() {
+
             searcher.doSearch();
         });
     }
@@ -159,8 +164,10 @@ $(function() {
         salesBalance.items.pbalanceValue.find('input[name="vbalanceValue"]').val(v.vbalance);
 
         com.popup4model("#pbalanceValue", "结算值", function() {
+
             salesBalance.sales = v;
         }, function() {
+
             com.clearValidator();
             com.cleanItems(salesBalance.items);
         });
@@ -174,13 +181,16 @@ $(function() {
         }
 
         com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行结算吗?', function() {
+
             com.post(api.sales.postSalesBalance, {
                 "salesBalances[0].sbid": v.sbid
             }, function() {
+
                 com.showAlert(com.info, "结算成功");
                 searcher.doSearch();
             });
         }, function() {
+
             searcher.doSearch();
         });
     }
@@ -206,6 +216,7 @@ $(function() {
         com.post(api.sales.rpreSalesBalance, {
             "salesBalance.sbid": v.sbid
         }, function() {
+
             com.showAlert(com.info, "更新为预结成功");
             searcher.doSearch();
         });
@@ -216,6 +227,7 @@ $(function() {
         com.post(api.sales.rejectSalesBalance, {
             "salesBalance.sbid": v.sbid
         }, function() {
+
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
@@ -230,26 +242,161 @@ $(function() {
     function buildBalanceLineprops() {
 
         var propertyMap = {
-            orderId: {field: "orderId", name: "装修单号", prop: "sales.orderId", clazz: "blue", click: function($this, v) {tools.decoration.info($this, v.sales.orderId);}},
-            address: {field: "address", name: "楼盘地址", prop: function(v) {return v.sales.house.village.name + " " + v.sales.house.houseNumber;}, clazz: "grey"},
-            depositpay: {field: "depositpay", name: "定金", prop: "sales.depositpay", clazz: "blue"},
-            fullpay: {field: "fullpay", name: "补款", prop: "sales.fullpay", clazz: "blue"},
-            prevalue: {field: "prevalue", name: "预结值", prop: "balance", clazz: "blue"},
-            preCreateTime: {field: "preCreateTime", name: "预结时间", prop: "createTime", clazz: "green"},
-            precreater: {field: "precreater", name: "预结人", prop: "creater.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.creater.userId);}},
-            vbalance: {field: "vbalance", name: "厂结值", prop: "vbalance", clazz: "blue"},
-            venderTime: {field: "venderTime", name: "厂结时间", prop: "venderTime", clazz: "green"},
-            pbalance: {field: "pbalance", name: "结算值", prop: "pbalance", clazz: "blue"},
-            balanceTime: {field: "balanceTime", name: "结算时间", prop: "postTime", clazz: "green"},
-            poster: {field: "poster", name: "结算人", prop: "poster.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.poster.userId);}},
-            grade: {field: "grade", name: "等级", prop: "sales.grade", clazz: "red"},
-            type: {field: "type", name: "类型", prop: function(v) {return constant.sales().salesBalance.type.keys[v.type];}, clazz: "red"},
-            voster: {field: "voster", name: "厂结人", prop: "voster.currentName", clazz: "red", click: function($this, v) {tools.personel.info($this, v.voster.userId);}},
-            "sales-creater": {field: "sales-creater", name: "创建人", prop: "sales.creater.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.sales.creater.userId);}},
-            maling: {field: "maling", name: "抹零", prop: function(v) {return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.maling;}, clazz: "blue"},
-            venderMaling: {field: "venderMaling", name: "厂商抹零", prop: function(v) {return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.venderMaling;}, clazz: "blue"},
-            coupon: {field: "coupon", name: "券值", prop: function(v) {return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.coupon;}, clazz: "blue"},
-            couponInfo: {field: "couponInfo", name: "券信息", prop: "sales.couponInfo", clazz: "grey"}
+            orderId: {
+                field: "orderId",
+                name: "装修单号",
+                prop: "sales.orderId",
+                clazz: "blue",
+                click: function($this, v) {
+
+                    tools.decoration.info($this, v.sales.orderId);
+                }
+            },
+            address: {
+                field: "address",
+                name: "楼盘地址",
+                prop: function(v) {
+
+                    return v.sales.house.village.name + " " + v.sales.house.houseNumber;
+                },
+                clazz: "grey"
+            },
+            depositpay: {
+                field: "depositpay",
+                name: "定金",
+                prop: "sales.depositpay",
+                clazz: "blue"
+            },
+            fullpay: {
+                field: "fullpay",
+                name: "补款",
+                prop: "sales.fullpay",
+                clazz: "blue"
+            },
+            prevalue: {
+                field: "prevalue",
+                name: "预结值",
+                prop: "balance",
+                clazz: "blue"
+            },
+            preCreateTime: {
+                field: "preCreateTime",
+                name: "预结时间",
+                prop: "createTime",
+                clazz: "green"
+            },
+            precreater: {
+                field: "precreater",
+                name: "预结人",
+                prop: "creater.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.creater.userId);
+                }
+            },
+            vbalance: {
+                field: "vbalance",
+                name: "厂结值",
+                prop: "vbalance",
+                clazz: "blue"
+            },
+            venderTime: {
+                field: "venderTime",
+                name: "厂结时间",
+                prop: "venderTime",
+                clazz: "green"
+            },
+            pbalance: {
+                field: "pbalance",
+                name: "结算值",
+                prop: "pbalance",
+                clazz: "blue"
+            },
+            balanceTime: {
+                field: "balanceTime",
+                name: "结算时间",
+                prop: "postTime",
+                clazz: "green"
+            },
+            poster: {
+                field: "poster",
+                name: "结算人",
+                prop: "poster.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.poster.userId);
+                }
+            },
+            grade: {
+                field: "grade",
+                name: "等级",
+                prop: "sales.grade",
+                clazz: "red"
+            },
+            type: {
+                field: "type",
+                name: "类型",
+                prop: function(v) {
+
+                    return constant.sales().salesBalance.type.keys[v.type];
+                },
+                clazz: "red"
+            },
+            voster: {
+                field: "voster",
+                name: "厂结人",
+                prop: "voster.currentName",
+                clazz: "red",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.voster.userId);
+                }
+            },
+            "sales-creater": {
+                field: "sales-creater",
+                name: "创建人",
+                prop: "sales.creater.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.sales.creater.userId);
+                }
+            },
+            maling: {
+                field: "maling",
+                name: "抹零",
+                prop: function(v) {
+
+                    return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.maling;
+                },
+                clazz: "blue"
+            },
+            venderMaling: {
+                field: "venderMaling",
+                name: "厂商抹零",
+                prop: function(v) {
+
+                    return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.venderMaling;
+                },
+                clazz: "blue"
+            },
+            coupon: {
+                field: "coupon",
+                name: "券值",
+                prop: function(v) {
+
+                    return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.coupon;
+                },
+                clazz: "blue"
+            },
+            couponInfo: {
+                field: "couponInfo",
+                name: "券信息",
+                prop: "sales.couponInfo",
+                clazz: "grey"
+            }
         };
 
         var props = [{
@@ -259,6 +406,7 @@ $(function() {
             name: "sbids",
             value: "sbid",
             attrs: function(v) {
+
                 return {
                     "data-sbid": v.sbid,
                     "data-status": v.status,
@@ -270,18 +418,105 @@ $(function() {
         }];
 
         $.each(pageConfig.propertyArr, function(i, key) {
+
             if (propertyMap[key]) {
                 props.push(propertyMap[key]);
                 return true;
             }
-            if (key == "salesBananceCoupon") {props.push({type: "newline"}); props.push({field: "salesBananceCoupon", name: "款项券", prop: "coupon", clazz: "blue"}); return true;}
-            if (key == "allowance") {props.push({field: "allowance", name: "补贴", prop: "allowance", clazz: "blue"}); return true;}
-            if (key == "total") {props.push({field: "total", name: "总价", prop: "total", clazz: "blue"}); return true;}
-            if (key == "oneType") {props.push({field: "oneType", name: "一类", prop: function(v) {return constant.sales().salesBalance.onetype.keys[v.onetype];}, clazz: "red"}); return true;}
-            if (key == "status") {props.push({field: "balanceStatus", name: "状态", prop: function(v) {return constant.sales().salesBalance.status.keys[v.status];}, clazz: "red"}); return true;}
-            if (key == "deliverStatus") {props.push({field: "deliverStatus", name: "配送状态", show: function(v) {return v.type == 0 && v.onetype == 0;}, prop: function(v) {return constant.sales().salesBalance.deliverStatus.keys[v.deliverStatus];}, clazz: "red"}); return true;}
-            if (key == "verifyStatus") {props.push({field: "verifyStatus", name: "审核状态", prop: function(v) {return constant.sales().salesBalance.verifyStatus.keys[v.verifyStatus];}, clazz: "red"}); return true;}
-            if (key == "confirmStatus") {props.push({field: "confirmStatus", name: "确认状态", prop: function(v) {return constant.sales().salesBalance.confirmStatus.keys[v.confirmStatus];}, clazz: "red"}); return true;}
+            if (key == "salesBananceCoupon") {
+                props.push({
+                    type: "newline"
+                });
+                props.push({
+                    field: "salesBananceCoupon",
+                    name: "款项券",
+                    prop: "coupon",
+                    clazz: "blue"
+                });
+                return true;
+            }
+            if (key == "allowance") {
+                props.push({
+                    field: "allowance",
+                    name: "补贴",
+                    prop: "allowance",
+                    clazz: "blue"
+                });
+                return true;
+            }
+            if (key == "total") {
+                props.push({
+                    field: "total",
+                    name: "总价",
+                    prop: "total",
+                    clazz: "blue"
+                });
+                return true;
+            }
+            if (key == "oneType") {
+                props.push({
+                    field: "oneType",
+                    name: "一类",
+                    prop: function(v) {
+
+                        return constant.sales().salesBalance.onetype.keys[v.onetype];
+                    },
+                    clazz: "red"
+                });
+                return true;
+            }
+            if (key == "status") {
+                props.push({
+                    field: "balanceStatus",
+                    name: "状态",
+                    prop: function(v) {
+
+                        return constant.sales().salesBalance.status.keys[v.status];
+                    },
+                    clazz: "red"
+                });
+                return true;
+            }
+            if (key == "deliverStatus") {
+                props.push({
+                    field: "deliverStatus",
+                    name: "配送状态",
+                    show: function(v) {
+
+                        return v.type == 0 && v.onetype == 0;
+                    },
+                    prop: function(v) {
+
+                        return constant.sales().salesBalance.deliverStatus.keys[v.deliverStatus];
+                    },
+                    clazz: "red"
+                });
+                return true;
+            }
+            if (key == "verifyStatus") {
+                props.push({
+                    field: "verifyStatus",
+                    name: "审核状态",
+                    prop: function(v) {
+
+                        return constant.sales().salesBalance.verifyStatus.keys[v.verifyStatus];
+                    },
+                    clazz: "red"
+                });
+                return true;
+            }
+            if (key == "confirmStatus") {
+                props.push({
+                    field: "confirmStatus",
+                    name: "确认状态",
+                    prop: function(v) {
+
+                        return constant.sales().salesBalance.confirmStatus.keys[v.confirmStatus];
+                    },
+                    clazz: "red"
+                });
+                return true;
+            }
         });
 
         return props;
@@ -290,21 +525,102 @@ $(function() {
     function buildBalanceLinebtns() {
 
         var buttonMap = {
-            decoration: {name: "装修单", clazz: "btn-purple", show: function(v) {return v.type != 4;}, handle: decorationBalance},
-            sub: {name: "子项", clazz: "btn-pink", show: function(v) {return v.type != 4;}, handle: subBalance},
-            payment: {name: "款项", clazz: "btn-danger", show: function(v) {return v.type != 4;}, handle: paymentBalance},
-            vbalancevalue: {name: "厂结值", clazz: "btn-yellow", show: function(v) {return v.type != 4;}, handle: vbalancevalueBalance},
-            status: {name: "反结", clazz: "btn-purple", show: function(v) {return v.type != 4;}, handle: statusBalance},
-            reject: {name: "驳回", clazz: "btn-purple", show: function(v) {return v.type != 4;}, handle: rejectBalance},
-            vbalance: {name: "厂结", clazz: "btn-success", show: function(v) {return v.type != 4;}, handle: vbalanceBalance},
-            balancevalue: {name: "结算值", clazz: "btn-warning", show: function(v) {return v.type != 4;}, handle: balancevalueBalance},
-            balance: {name: "结算", clazz: "btn-inverse", show: function(v) {return v.type != 4;}, handle: balanceBalance},
-            salesBalancePicture: {name: "图片", clazz: "btn-search", show: function(v) {return v.type != 4;}, handle: pictureBalance}
+            decoration: {
+                name: "装修单",
+                clazz: "btn-purple",
+                show: function(v) {
+
+                    return v.type != 4;
+                },
+                handle: decorationBalance
+            },
+            sub: {
+                name: "子项",
+                clazz: "btn-pink",
+                show: function(v) {
+
+                    return v.type != 4;
+                },
+                handle: subBalance
+            },
+            payment: {
+                name: "款项",
+                clazz: "btn-danger",
+                show: function(v) {
+
+                    return v.type != 4;
+                },
+                handle: paymentBalance
+            },
+            vbalancevalue: {
+                name: "厂结值",
+                clazz: "btn-yellow",
+                show: function(v) {
+
+                    return v.type != 4;
+                },
+                handle: vbalancevalueBalance
+            },
+            status: {
+                name: "反结",
+                clazz: "btn-purple",
+                show: function(v) {
+
+                    return v.type != 4;
+                },
+                handle: statusBalance
+            },
+            reject: {
+                name: "驳回",
+                clazz: "btn-purple",
+                show: function(v) {
+
+                    return v.type != 4;
+                },
+                handle: rejectBalance
+            },
+            vbalance: {
+                name: "厂结",
+                clazz: "btn-success",
+                show: function(v) {
+
+                    return v.type != 4;
+                },
+                handle: vbalanceBalance
+            },
+            balancevalue: {
+                name: "结算值",
+                clazz: "btn-warning",
+                show: function(v) {
+
+                    return v.type != 4;
+                },
+                handle: balancevalueBalance
+            },
+            balance: {
+                name: "结算",
+                clazz: "btn-inverse",
+                show: function(v) {
+
+                    return v.type != 4;
+                },
+                handle: balanceBalance
+            },
+            salesBalancePicture: {
+                name: "图片",
+                clazz: "btn-search",
+                show: function(v) {
+
+                    return v.type != 4;
+                },
+                handle: pictureBalance
+            }
         };
 
         var btns = {};
 
         $.each(pageConfig.pageBtn, function(i, key) {
+
             buttonMap[key] && (btns[key] = $.extend({}, buttonMap[key]));
         });
 
@@ -334,22 +650,27 @@ $(function() {
         $('<span></span>').text('结算单').appendTo($balanceEnd);
 
         $checka.click(function() {
+
             checkAll();
         });
 
         $addaExportSales.click(function() {
+
             pageSalesBalanceExport();
         });
 
         $adda.click(function() {
+
             vpostBalance();
         });
 
         $addaEnd.click(function() {
+
             postBalance();
         });
 
         $balanceEnd.click(function() {
+
             crebalance();
         });
 
@@ -378,7 +699,6 @@ $(function() {
 
     searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, salesBalanceParams, pageConfig.condArr, salesBalance.postData, null, false, buildBalanceButtons);
     searcher.line('sales.no', buildBalanceLineprops(), buildBalanceLinebtns()).render();
-
 
     salesBalance.btns.supplierSaveBtn.on('click', function() {
 
