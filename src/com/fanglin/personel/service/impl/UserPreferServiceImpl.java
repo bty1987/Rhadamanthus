@@ -87,11 +87,15 @@ public class UserPreferServiceImpl implements UserPreferService {
             throw new FLException(110000, "系统处理问题");
         }
 
-        if (update && "searcher".equals(userPreferVO.getModule()) && "viewMode".equals(userPreferVO.getPkey())) {
+        if (update && "searcher".equals(userPreferVO.getModule())) {
 
             String value = userPreferVO.getPvalue();
 
-            if (!"line".equals(value) && !"card".equals(value) && !"table".equals(value)) {
+            if ("viewMode".equals(userPreferVO.getPkey()) && !"line".equals(value) && !"card".equals(value) && !"table".equals(value)) {
+                throw new FLException(110000, "系统处理问题");
+            }
+
+            if ("viewSwitcher".equals(userPreferVO.getPkey()) && !"0".equals(value) && !"1".equals(value)) {
                 throw new FLException(110000, "系统处理问题");
             }
         }
