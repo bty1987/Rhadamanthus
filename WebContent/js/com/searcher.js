@@ -1420,20 +1420,54 @@ var Searcher = function() {
                 });
 
                 var hasLinevent = maxLinevent > 0;
-
-                // header handle
-                var headerThead = $("<thead></thead>");
-                var headerTr = $("<tr></tr>").appendTo(headerThead);
+                var tableProps = [];
 
                 $.each(basicConf.lineprop, function(i, v) {
 
                     if (v.type == "newline" || !v.prop)
                         return true;
 
-                    if (v.toolbar)
-                        v.toolbar = "#" + basicConf.$resulter + "tools";
-                    var headerTh = $('<th></th>').attr("lay-data", JSON.stringify(v)).appendTo(headerTr);
-                    var headerSpan = $('<span></span>').html(v.name).appendTo(headerTh);
+                    var visible = true;
+
+                    if (v.show && typeof v.show == 'function') {
+
+                        visible = false;
+
+                        $.each(data, function(j, row) {
+
+                            if (v.show(row)) {
+                                visible = true;
+
+                                return false;
+                            }
+                        });
+                    }
+
+                    if (!visible)
+                        return true;
+
+                    var prop = $.extend({}, v);
+
+                    if (!prop.field) {
+                        prop.field = typeof prop.prop == 'string' ? prop.prop.replace(/[^A-Za-z0-9_]/g, '_') : "__searcherField" + i;
+                    }
+
+                    tableProps.push({
+                        source: v,
+                        prop: prop
+                    });
+                });
+
+                // header handle
+                var headerThead = $("<thead></thead>");
+                var headerTr = $("<tr></tr>").appendTo(headerThead);
+
+                $.each(tableProps, function(i, v) {
+
+                    if (v.prop.toolbar)
+                        v.prop.toolbar = "#" + basicConf.$resulter + "tools";
+                    var headerTh = $('<th></th>').attr("lay-data", JSON.stringify(v.prop)).appendTo(headerTr);
+                    var headerSpan = $('<span></span>').html(v.prop.name).appendTo(headerTh);
                 });
 
                 if (hasLinevent) {
@@ -1454,17 +1488,16 @@ var Searcher = function() {
 
                     var $liLine = $('<tr></tr>').appendTo(dataTbody);
 
-                    $.each(basicConf.lineprop, function(i, d) {
-
-                        if (d.type == "newline" || !d.prop)
-                            return true;
+                    $.each(tableProps, function(i, d) {
 
                         var info = "";
 
-                        if (typeof d.prop == 'function')
-                            info = d.prop(v);
-                        else
-                            info = getElement(v, d.prop.split('.'), d.dataset);
+                        if (!d.source.show || typeof d.source.show != 'function' || d.source.show(v)) {
+                            if (typeof d.source.prop == 'function')
+                                info = d.source.prop(v);
+                            else
+                                info = getElement(v, d.source.prop.split('.'), d.source.dataset);
+                        }
 
                         $('<td></td>').html(info).appendTo($liLine);
                     });
