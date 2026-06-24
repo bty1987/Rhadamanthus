@@ -148,236 +148,176 @@ jQuery(function($) {
 	//不同页面的不同参数
 	servicePayment.pageConfig = paymentUtils.getConfig(servicePayment.type, 16);
 
-	var displayFunc  = (function(){
-		var renderList = function(tableId,listData){
-			var $tableWrap = com.focusPage('#' + tableId);
-			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-			if(listData && listData.length){
-				$.each(listData,function(i, v){
-					var $liLine = creatLine(v);
-					$liLine.appendTo($ul);
-				});
-				$ul.appendTo($tableWrap);
-			}
-		};
+    function paymentPropertyText(propertyArr) {
 
-		var creatLine = function(v){
-			var $liLine = $('<li></li>').addClass('item-orange clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid');
-			var $label = $('<label></label>').appendTo($h3);
+        var infos = [];
 
-			var $input = $('<input>').attr({"type": "checkbox", "name": "spids", "class": "ace ace-checkbox-2", "spid": v.spid}).val(v.arId);
-			if (servicePayment.pageConfig.pageBtn.contains("selectall")) $input.appendTo($label);
+        $.each(propertyArr, function(index, value) {
+            infos.push(value[0] + value[1]);
+        });
 
-			var $span = $('<span></span>').addClass('lbl blue bigger-150').html('服务款').appendTo($label);
-			if (!(["common", "pos"].contains(servicePayment.type))) $span.html(v.type == constant.payment().servicePayment.TYPE_COLLECT_INT ? '收款' : '退款');
-			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+        return infos.join(" ");
+    }
 
-			var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
-			var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
-			var $alipayBtnCode = $('<a></a>').addClass('btn btn-minier btn-info').html('二维收款');
-			var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
+    function drawPaymentProperties($ulProperty, propertyArr) {
 
-			var $btnService = $('<a></a>').addClass('btn btn-minier btn-success').html("服务费");
-            var $btnRefunds = $('<a></a>').addClass('btn btn-minier btn-warning').html("服务费退款");
+        $.each(propertyArr, function(index, value) {
 
-			var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-primary').html("打印");
-			var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
-			var $btnKingdee = $('<a></a>').addClass('btn btn-minier btn-yellow').html('同步金蝶');
+            var $liProperty = $('<li></li>').appendTo($ulProperty);
+            $('<strong></strong>').html(value[0]).appendTo($liProperty);
+            var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
 
-			var propertyArr = paymentUtils.getPropertyArr(servicePayment, v, v.decoration, servicePayment.paymentStatusArray);
+            if (value[3]) {
+                $b.click(function() {
+                    value[3]($b);
+                }).css("cursor", "pointer");
+            }
+        });
+    }
 
-			$.each(propertyArr, function (index,value) {
-				var $liProperty = $('<li></li>');
-				$('<strong></strong>').html(value[0]).appendTo($liProperty);
-				var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+    function getServicePropertyArr(v) {
 
-				if (value[3]) {
-					$b.click(function() {
-						value[3]($b);
-					});
-				}
+        return paymentUtils.getPropertyArr(servicePayment, v, v.decoration, servicePayment.paymentStatusArray);
+    }
 
-				$liProperty.appendTo($ulProperty);
-			});
+    function posPushServicePaymentLine(v) {
 
-			$divBtnWrap.appendTo($h3);
-			$liLine.append($h3).append($ulProperty);
+        var bankVal = com.typeahead(servicePayment.htmlName + "paytranBankName");
+        var bankDiv = com.focusPage("#" + servicePayment.htmlName + "paytranBankName");
 
-			if(servicePayment.pageConfig.pageBtn.contains("payway")) paymentUtils.drawHistoryData(servicePayment, v.serviceReceipt, $liLine, "");
+        if (bankVal == "" || bankDiv.val() == "") {
+            com.showAlert(com.warning, "请使用匹配数据.");
+            return false;
+        }
 
-			if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("posPush")) $divBtnWrap.append($btnPosPush);
-			if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("collectCode")) $divBtnWrap.append($btnCode);
-			if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("alipayCollectCode")) $divBtnWrap.append($alipayBtnCode);
-			if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("codePush")) $divBtnWrap.append($btnCodePush);
+        var options = {
+            "paytran.orderId": v.decoration.orderId,
+            "paytran.pid": v.spid,
+            "paytran.type": constant.payment().receipt.PAYMENTTYPE_SERVICE_INT,
+            "paytran.atttype": constant.payment().paytran.ATTTYPE_DECORATION_INT,
+            "paytran.no": com.typeahead(bankDiv),
+            "paytran.sn": servicePayment.posValues[bankVal].value,
+            "paytran.money": v.serviceMoney,
+            "paytran.way": 0
+        };
 
-			if (servicePayment.pageConfig.pageBtn.contains("serviceCollect")) $divBtnWrap.append($btnService);
-			if (servicePayment.pageConfig.pageBtn.contains("serviceRefund")) $divBtnWrap.append($btnRefunds);
-			if (v.status != constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
-			if (v.status == constant.payment().materialPayment.STATUS_COLLECT_INT && servicePayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
-			if (v.status == constant.payment().materialPayment.STATUS_CONFIRM_INT && servicePayment.pageConfig.pageBtn.contains("toKingdee")) $divBtnWrap.append($btnKingdee);
-
-			//服务费收款
-			$btnService.click(function(){
-				servicePayment.isCollect = 1;
-				var money = utils.accSub(v.servicePrice, v.servicePaidup);
-
-			    if(money <= 0){
-                    com.showAlert(com.error, "当前服务费已交满,不能重复交款!");
-                    return false;
-                }
-				paymentUtils.showPos(servicePayment, {"paytran.orderId": v.decoration.orderId, "paytran.atttype": servicePayment.atttype}, [0, 1]);
-				initCollect(v);
-			});
-
-			//退款
-            $btnRefunds.click(function(){
-				servicePayment.isCollect = 2;
-                if(v.servicePaidup == 0){
-                    com.showAlert(com.error, "当前服务费未交,不能退款!");
-                    return false;
-                }
-				initCollect(v);
+        com.post(api.payment.addPaytran, options, function(res) {
+            com.post(api.payment.posPay, {"paytran.ptid": res.paytran.ptid, "paytran.way": 1}, function(res) {
+                com.showAlert(com.info, "推送成功");
             });
+        });
+    }
 
-			//更新
-			$btnUpdate.click(function(){
-				servicePayment.isCollect = 3;
+    function codeServicePaymentLine(v) {
 
-				initUpdate(v);
-			});
+        com.focusPage("#" + servicePayment.type + "serviceCollectQrcodeModal").html("");
+        paymentUtils.initQrcode("collect", servicePayment.type + "serviceCollectQrcodeModal");
+        paymentUtils.showQRCode("collectqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.decoration.orderId + "&paymentType=4" + "&pid=" + v.spid + "&atttype=0", servicePayment.type + "serviceCollectQrcodeModal");
+    }
 
-			//打印
-			$btnPrint.click(function(){
-				params.payment.orderId = v.decoration.orderId;
-				params.payment.serId = v.serviceReceipt.srId;
-				params.payment.cid = v.decoration.customer.cid;
-				com.popup("专用收款收据__装修单号:" + v.decoration.orderId, api.index.servicePaymentReceiptIndex.url, function () {
-					parent.layer.getFrameIndex(window.name);
-				},null,true)
-			});
+    function alipayServicePaymentLine(v) {
 
-			// pos推送
-			$btnPosPush.click(function() {
-				var bankVal = com.typeahead(servicePayment.htmlName+"paytranBankName");
-				var bankDiv = com.focusPage("#"+servicePayment.htmlName+"paytranBankName");
+        var paytranId = 0;
+        var paytranMoney = v.serviceMoney;
 
-				if (bankVal == "" || bankDiv.val() == "") {
-					com.showAlert(com.warning, "请使用匹配数据.");
-					return false;
-				}
+        com.post(api.payment.queryPaytran, {"paytran.pid": v.spid, "paytran.type": 4, "paytran.orderId": v.decoration.orderId}, function(res) {
+            $.each(res.paytrans, function(i, pt) {
+                if (pt.status == 0) {
+                    paytranId = pt.ptid;
+                    paytranMoney = pt.money;
+                    return false;
+                }
+            });
+        }, null, false);
 
-				var options = {
-					"paytran.orderId": v.decoration.orderId,
-					"paytran.pid": v.spid,
-					"paytran.type": constant.payment().receipt.PAYMENTTYPE_SERVICE_INT,
-					"paytran.atttype": constant.payment().paytran.ATTTYPE_DECORATION_INT,
-					"paytran.no": com.typeahead(bankDiv),
-					"paytran.sn": servicePayment.posValues[bankVal].value, // 收据类型中pos的value值
-					"paytran.money": v.serviceMoney,
-					"paytran.way": 0
-				};
+        if (paytranMoney != v.serviceMoney) {
+            com.showAlert(com.error, "金额不正确.");
+            return false;
+        }
 
-				com.post(api.payment.addPaytran, options, function(res) {
-					var sendOption = {
-						"paytran.ptid": res.paytran.ptid,
-						"paytran.way": 1
-					};
+        com.post(api.payment.alipay, {
+            "wxpay.paymentOrderId": v.decoration.orderId,
+            "wxpay.paymentType": 4,
+            "wxpay.paymentAttrType": 0,
+            "wxpay.paymentMoney": paytranMoney,
+            "wxpay.userId": "alipay",
+            "wxpay.paymentid": v.spid,
+            "wxpay.paymentptid": paytranId,
+            "wxpay.unionId": v.decoration.customer.cid
+        }, function(data) {
+            servicePayment.modals.alipayCodepayModal.html("");
+            com.popup("二维收款", data.wxpay.url + "&mchNo=" + data.wxpay.mchNo + "&bizId=" + data.wxpay.bizId + "&isShort=true", null, null, false);
+        }, null, false);
+    }
 
-					com.post(api.payment.posPay, sendOption, function(res) {
-						com.showAlert(com.info, "推送成功");
-					});
-				});
-			});
+    function buildServiceLineprops() {
 
-			//二维码
-			$btnCode.click(function () {
-				com.focusPage("#"+servicePayment.type+"serviceCollectQrcodeModal").html("");
-				paymentUtils.initQrcode("collect", servicePayment.type+"serviceCollectQrcodeModal"); //收款码
-				paymentUtils.showQRCode("collectqrcode", "http://fanglin.vip/wx/wxpay?orderId="+v.decoration.orderId+"&paymentType=4"+"&pid="+v.spid+"&atttype=0", servicePayment.type+"serviceCollectQrcodeModal");
-			});
+        var lineprops = [{
+            type: "checkbox",
+            name: "spids",
+            clazz: "ace ace-checkbox-2",
+            value: function(v) { return v.arId; },
+            show: function() { return servicePayment.pageConfig.pageBtn.contains("selectall"); },
+            attrs: function(v) { return {"spid": v.spid}; }
+        }, {
+            field: "paymentInfo",
+            name: "款项信息",
+            type: "custom",
+            prop: function(v) { return paymentPropertyText(getServicePropertyArr(v)); },
+            render: function($liLine, v, $ulProperty) { drawPaymentProperties($ulProperty, getServicePropertyArr(v)); }
+        }];
 
-			// 二维收款
-			$alipayBtnCode.click(function() {
-				var paytranId = 0;
-				var paytranMoney = v.serviceMoney;
+        if (servicePayment.pageConfig.pageBtn.contains("payway")) {
+            lineprops.push({
+                field: "payway",
+                name: "收款方式",
+                type: "custom",
+                prop: function(v) { return paymentUtils.getHistoryText(servicePayment, v.serviceReceipt); },
+                render: function($liLine, v) { paymentUtils.drawHistoryData(servicePayment, v.serviceReceipt, $liLine, ""); }
+            });
+        }
 
-				var paytranOption = {
-					"paytran.pid": v.spid,
-					"paytran.type": 4,
-					"paytran.orderId": v.decoration.orderId
-				};
+        return lineprops;
+    }
 
-				com.post(api.payment.queryPaytran, paytranOption, function (res) {
-					var paytrans = res.paytrans;
+    function buildServiceLinebtns() {
 
-					$.each(paytrans, function (i, v) {
-						if (v.status == 0) {
-							paytranId = v.ptid;
-							paytranMoney = v.money;
-							return false;
-						}
-					});
-				}, null, false);
+        return {
+            posPush: {name: "推送", clazz: "btn-danger", show: function(v) { return v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("posPush"); }, handle: posPushServicePaymentLine},
+            collectCode: {name: "收款码", clazz: "btn-success", show: function(v) { return v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("collectCode"); }, handle: codeServicePaymentLine},
+            alipayCollectCode: {name: "二维收款", clazz: "btn-info", show: function(v) { return v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("alipayCollectCode"); }, handle: alipayServicePaymentLine},
+            codePush: {name: "微信推送", clazz: "btn-pink", show: function(v) { return v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("codePush"); }, handle: function(v) { com.showConfirm("是否发送付款通知", function() { com.post(api.payment.sendServicePayment, {"servicePayment.spid": v.spid}, function(res) { com.showAlert(com.info, "发送成功"); }); }); }},
+            serviceCollect: {name: "服务费", clazz: "btn-success", show: function() { return servicePayment.pageConfig.pageBtn.contains("serviceCollect"); }, handle: function(v) { servicePayment.isCollect = 1; if (utils.accSub(v.servicePrice, v.servicePaidup) <= 0) { com.showAlert(com.error, "当前服务费已交满,不能重复交款!"); return false; } paymentUtils.showPos(servicePayment, {"paytran.orderId": v.decoration.orderId, "paytran.atttype": servicePayment.atttype}, [0, 1]); initCollect(v); }},
+            serviceRefund: {name: "服务费退款", clazz: "btn-warning", show: function() { return servicePayment.pageConfig.pageBtn.contains("serviceRefund"); }, handle: function(v) { servicePayment.isCollect = 2; if (v.servicePaidup == 0) { com.showAlert(com.error, "当前服务费未交,不能退款!"); return false; } initCollect(v); }},
+            print: {name: "打印", clazz: "btn-primary", show: function(v) { return v.status != constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("print"); }, handle: function(v) { params.payment.orderId = v.decoration.orderId; params.payment.serId = v.serviceReceipt.srId; params.payment.cid = v.decoration.customer.cid; com.popup("专用收款收据__装修单号:" + v.decoration.orderId, api.index.servicePaymentReceiptIndex.url, function() { parent.layer.getFrameIndex(window.name); }, null, true); }},
+            update: {name: "更新", clazz: "btn-success", show: function(v) { return v.status == constant.payment().materialPayment.STATUS_COLLECT_INT && servicePayment.pageConfig.pageBtn.contains("update"); }, handle: function(v) { servicePayment.isCollect = 3; initUpdate(v); }},
+            kingdee: {name: "同步金蝶", clazz: "btn-yellow", show: function(v) { return v.status == constant.payment().materialPayment.STATUS_CONFIRM_INT && servicePayment.pageConfig.pageBtn.contains("toKingdee"); }, handle: function(v) { kingdeeUtils.payment(v, servicePayment.htmlName); }}
+        };
+    }
 
-				if (paytranMoney != v.serviceMoney) {
-					com.showAlert(com.error, "金额不正确.");
-					return false;
-				}
+    function buildServiceButtons() {
 
-				// 0: 预付款 , 1: 装修款 , 2: 主材款 , 3: 销售款 , 4: 服务款 , 5: 活动款 , 6: 转换款 7：代收款
-				var options = {
-					"wxpay.paymentOrderId": v.decoration.orderId,
-					"wxpay.paymentType": 4, //服务款
-					"wxpay.paymentAttrType": 0, //装修0or主材1
-					"wxpay.paymentMoney": paytranMoney,
-					"wxpay.userId": "alipay",
-					"wxpay.paymentid": v.spid,
-					"wxpay.paymentptid": paytranId,
-					"wxpay.unionId": v.decoration.customer.cid
-				};
+        var $createa = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createService').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($createa);
+        $('<span></span>').text('生成服务费').appendTo($createa);
+        var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+        $('<span></span>').text('全选').appendTo($checka);
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
+        $('<span></span>').text('批量确认').appendTo($adda);
+        var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+        $('<span></span>').text('导出').appendTo($impa);
 
-				com.post(api.payment.alipay, options, function (data) {
-
-					servicePayment.modals.alipayCodepayModal.html("");
-
-					var url = data.wxpay.url + "&mchNo=" + data.wxpay.mchNo + "&bizId=" + data.wxpay.bizId + "&isShort=true";
-
-					com.popup("二维收款", url, null, null, false);
-
-				}, null, false);
-			});
-
-			//微信推送
-			$btnCodePush.click(function () {
-				com.showConfirm("是否发送付款通知", function() {
-					com.post(api.payment.sendServicePayment, {"servicePayment.spid": v.spid}, function(res) {
-						com.showAlert(com.info, "发送成功");
-					});
-				});
-			});
-
-			// 同步金蝶
-			$btnKingdee.click(function() {
-
-				kingdeeUtils.payment(v, servicePayment.htmlName);
-			});
-
-			return $liLine;
-		};
-
-		return {
-			init : function(tableId,listData){
-				com.focusPage('#' + tableId).html(null);
-				renderList(tableId,listData);
-			},
-			drawLine : function(v){
-				return creatLine(v);
-			}
-		};
-	})();
+        var btnParams = [];
+        if (servicePayment.pageConfig.pageBtn.contains("createService")) btnParams.push($createa);
+        if (servicePayment.pageConfig.pageBtn.contains("selectall")) btnParams.push($checka);
+        if (servicePayment.pageConfig.pageBtn.contains("confirms")) btnParams.push($adda);
+        if (servicePayment.pageConfig.pageBtn.contains("export")) btnParams.push($impa);
+        return btnParams;
+    }
 
 	var searcher = new Searcher();
 
@@ -386,36 +326,10 @@ jQuery(function($) {
 		extraParams["servicePayment.status"] = servicePayment.pageConfig.statusExtraParam[0];
 	}
 
-	searcher.init(servicePayment.pageConfig.condArr, "condList", servicePayment.pageConfig.apiPage, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "servicePaymentPostData"+servicePayment.type, extraParams, false, null, function(){
-
-		var $createa = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createService').css("margin", "0px 3px");
-		var $createi = $('<i></i>').addClass('icon-check bigger-110').appendTo($createa);
-		var $createspan = $('<span></span>').text('生成服务费').appendTo($createa);
-
-		var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
-		var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
-		var $checkspan = $('<span></span>').text('全选').appendTo($checka);
-
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css("margin", "0px 3px");
-		var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
-		var $addspan = $('<span></span>').text('批量确认').appendTo($adda);
-
-		var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
-		var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
-		var $impspan = $('<span></span>').text('导出').appendTo($impa);
-
-		var btnParams = [];
-
-		if(servicePayment.pageConfig.pageBtn.contains("createService")) btnParams.push($createa);
-		if(servicePayment.pageConfig.pageBtn.contains("selectall")) btnParams.push($checka);
-		if(servicePayment.pageConfig.pageBtn.contains("confirms")) btnParams.push($adda);
-		if(servicePayment.pageConfig.pageBtn.contains("export")) btnParams.push($impa);
-
-		return btnParams;
-
-	}, "resultList");
+		searcher.set("condList", "pagenation", "resultList", servicePayment.pageConfig.apiPage, extraParams, servicePayment.pageConfig.condArr, "servicePaymentPostData" + servicePayment.type, null, false, buildServiceButtons);
+		searcher.line(function(v) {
+			return ["common", "pos"].contains(servicePayment.type) ? "服务款" : (v.type == constant.payment().servicePayment.TYPE_COLLECT_INT ? "收款" : "退款");
+		}, buildServiceLineprops(), buildServiceLinebtns()).render();
 
 	// 要在searcher后面
 	paymentUtils.pushPosBank(servicePayment.type == "create", servicePayment.bankUtil, com.focusPage("#condList", "#servicePaymentList"), servicePayment.htmlName);
