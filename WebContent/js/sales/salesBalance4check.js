@@ -63,284 +63,144 @@ $(function() {
 
     }, null, false);
 
-    var displayFunc = (function() {
+    function paymentCheck(v) {
 
-        $('input[type=checkbox][name=salesBalanceItem]').prop('checked', false);
-        var renderList = function(tableId, listData) {
+        params.sales.sales = v.sales;
+        params.sales.type = "balance";
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
+        com.popup4page("#viewPopUp", "views/sales/sales4payment.html", "收款");
+    }
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+    function subCheck(v) {
 
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $ulCheck = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid');
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+        params.sales.sales = v.sales;
+        params.sales.salesBalance = v;
 
-                    var $btnPayment = $('<a></a>').addClass('btn btn-minier btn-danger').html('款项');
-                    var $btnBalanceItem = $('<a></a>').addClass('btn btn-minier btn-pink').html('子项');
+        com.popup4page("#viewPopUp", "views/sales/salesItem4balance.html", "子项");
+    }
 
-                    var coupon = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.coupon;
-                    var maling = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.maling;
-                    var venderMaling = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.venderMaling;
-                    var propertyArr = [];
-                    var styleArr = [];
-                    var checkArr = [];
-                    var realSalesTotal = utils.changeThrDecimal(v.total - v.sales.venderMaling - v.sales.maling - v.sales.coupon);
-                    var accountPay = utils.changeThrDecimal(v.vbalance - v.sales.venderMaling);
-                    $.each(pageConfig.propertyArr, function(pi, pv) {
+    function buildBalanceCheckLineprops() {
 
-                        switch (pv) {
-                            case "orderId":
-                                propertyArr.push(["装修单号:", v.sales.orderId, "blue", tools.decoration.info, v.sales.orderId]);
-                                break;
-                            case "address":
-                                propertyArr.push(["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"]);
-                                break;
-                            case "salesman":
-                                propertyArr.push(["渠道:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
-                                break;
-                            case "dept":
-                                propertyArr.push(["归属部门:", v.dept.name, "grey", tools.department.info, v.dept.did]);
-                                break;
-                            case "region":
-                                propertyArr.push(["归属大区:", v.region.name, "grey", tools.department.info, v.region.did]);
-                                break;
-                            case "instorer":
-                                propertyArr.push(["驻店:", v.sales.instorer.currentName, "grey", tools.personel.info, v.sales.instorer.userId]);
-                                break;
-                            case "brand":
-                                propertyArr.push(["品牌:", v.sales.brand.name, "grey", tools.brand.info, v.sales.brand.bid]);
-                                break;
-                            case "depositpay":
-                                propertyArr.push(["定金:", v.sales.depositpay, "blue"]);
-                                break;
-                            case "fullpay":
-                                propertyArr.push(["补款:", v.sales.fullpay, "blue"]);
-                                break;
-                            case "prevalue":
-                                propertyArr.push(["预结值:", v.balance, "blue"]);
-                                break;
-                            case "precreater":
-                                propertyArr.push(["预结人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId]);
-                                break;
-                            case "pbalance":
-                                propertyArr.push(["结算值:", v.pbalance, "blue"]);
-                                break;
-                            case "balanceTime":
-                                propertyArr.push(["结算时间:", v.postTime, "green"]);
-                                break;
-                            case "poster":
-                                propertyArr.push(["结算人:", v.poster.currentName, "grey", tools.personel.info, v.poster.userId]);
-                                break;
-                            case "vbalance":
-                                propertyArr.push(["厂结值:", v.vbalance, "blue"]);
-                                break;
-                            case "grade":
-                                propertyArr.push(["等级:", v.sales.grade, "red"]);
-                                break;
-                            case "maling":
-                                propertyArr.push(["抹零:", maling, "blue"]);
-                                break;
-                            case "venderMaling":
-                                checkArr.push(["厂商抹零:", venderMaling, "green"]);
-                                break;
-                            case "coupon":
-                                propertyArr.push(["券值:", coupon, "blue"]);
-                                break;
-                            case "couponInfo":
-                                propertyArr.push(["券信息:", v.sales.couponInfo, "grey"]);
-                                break;
-                            case "type":
-                                propertyArr.push(["类型:", constant.sales().salesBalance.type.keys[v.type], "red"]);
-                                break;
-                            case "allowance":
-                                styleArr.push(["补贴:", v.allowance, "blue"]);
-                                break;
-                            case "salesBananceCoupon":
-                                styleArr.push(["结算券值:", v.coupon, "blue"]);
-                                break;
-                            case "total":
-                                styleArr.push(["总价:", v.total, "blue"]);
-                                break;
-                            case "preCreateTime":
-                                styleArr.push(["预结时间:", v.createTime, "green"]);
-                                break;
-                            case "venderTime":
-                                styleArr.push(["厂结时间:", v.venderTime, "green"]);
-                                break;
-                            case "oneType":
-                                styleArr.push(["一类:", constant.sales().salesBalance.onetype.keys[v.onetype], "red"]);
-                                break;
-                            case "status":
-                                styleArr.push(["状态:", constant.sales().salesBalance.status.keys[v.status], "red"]);
-                                break;
-                            case "realSalesTotal":
-                                checkArr.push(["实际销售额:", realSalesTotal, "blue"]);
-                                break;
-                            case "salesvtotal":
-                                checkArr.push(["销售收入厂商结算额:", v.total, "blue"]);
-                                break;
-                            case "salesvpay":
-                                checkArr.push(["销售成本厂商借款额:", v.vbalance, "green"]);
-                                break;
-                            case "accountPay":
-                                checkArr.push(["应付账款:", accountPay, "red"]);
-                                break;
-                        }
-                    });
-
-                    var $label = $('<label></label>').addClass('control-label').css({
-                        'color': 'grey',
-                        'font-size': '20px',
-                        "font-weight": "bold"
-                    });
-                    var _label = $('<label></label>');
-                    var $input = $('<input>').attr({
-                        'class': 'ace ace-checkbox-2',
-                        "type": "checkbox",
-                        "name": "salesBalanceItem",
-                        "data-sbid": v.sbid,
-                        "data-status": v.status,
-                        "data-vbalance": v.vbalance,
-                        "data-pbalance": v.pbalance,
-                        "data-bid": v.sales.brand.bid,
-                        "data-onetype": v.onetype,
-                        "data-type": v.type,
-                        "data-depositpay": v.sales.depositpay,
-                        "data-fullpay": v.sales.fullpay,
-                        "data-total": v.total,
-                        "data-allowance": v.allowance,
-                        "data-venderMaling": v.sales.venderMaling
-                    }).val(v.sbid)
-
-                    $input.click(function() {
-                        var $that = $(this);
-                        var sbid = $that.attr("data-sbid");
-                        var checked = $that.prop("checked");
-                        if (checked)
-                            !salesBalance.salesBalanceItem.contains(sbid) && salesBalance.salesBalanceItem.push(sbid);
-                        else
-                            salesBalance.salesBalanceItem.contains(sbid) && salesBalance.salesBalanceItem.splice(salesBalance.salesBalanceItem.indexOf(sbid), 1);
-                    });
-
-                    if (salesBalance.salesBalanceItem.contains(String(v.sbid)))
-                        $input.prop('checked', true).attr("checked", true);
-
-                    var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.sales.no);
-                    _label.append($input).append(_span).appendTo($label);
-
-                    $.each(propertyArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>').appendTo($ulProperty);
-
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                        if (value.length == 5) {
-                            $liProperty.click(function() {
-
-                                value[3]($liProperty, value[4]);
-
-                            }).css("cursor", "pointer");
-                        }
-                    });
-
-                    $.each(styleArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulStyle);
-                    });
-
-                    $.each(checkArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulCheck);
-                    });
-
-                    $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty).append($ulStyle).append($ulCheck);
-                    $.each(pageConfig.pageBtn, function(k, b) {
-
-                        switch (b) {
-                            case "sub":
-                                $btnDiv.append($btnBalanceItem);
-                                break;
-                            case "payment":
-                                $btnDiv.append($btnPayment);
-                                break;
-                        }
-                    });
-                    $label.appendTo($h3);
-                    $btnDiv.appendTo($h3);
-
-                    $btnPayment.click(function(e) {
-
-                        params.sales.sales = v.sales;
-                        params.sales.type = "balance";
-
-                        com.popup4page("#viewPopUp", "views/sales/sales4payment.html", "收款");
-                    });
-
-                    $btnBalanceItem.click(function(e) {
-
-                        params.sales.sales = v.sales;
-                        params.sales.salesBalance = v;
-
-                        com.popup4page("#viewPopUp", "views/sales/salesItem4balance.html", "子项");
-                    });
-
-                });
-
-                $ul.appendTo($tableWrap);
-            }
+        var propertyMap = {
+            orderId: {field: "orderId", name: "装修单号", prop: "sales.orderId", clazz: "blue", click: function($this, v) {tools.decoration.info($this, v.sales.orderId);}},
+            address: {field: "address", name: "楼盘地址", prop: function(v) {return v.sales.house.village.name + " " + v.sales.house.houseNumber;}, clazz: "grey"},
+            salesman: {field: "salesman", name: "渠道", prop: "salesman.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.salesman.userId);}},
+            dept: {field: "dept", name: "归属部门", prop: "dept.name", clazz: "grey", click: function($this, v) {tools.department.info($this, v.dept.did);}},
+            region: {field: "region", name: "归属大区", prop: "region.name", clazz: "grey", click: function($this, v) {tools.department.info($this, v.region.did);}},
+            instorer: {field: "instorer", name: "驻店", prop: "sales.instorer.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.sales.instorer.userId);}},
+            brand: {field: "brand", name: "品牌", prop: "sales.brand.name", clazz: "grey", click: function($this, v) {tools.brand.info($this, v.sales.brand.bid);}},
+            depositpay: {field: "depositpay", name: "定金", prop: "sales.depositpay", clazz: "blue"},
+            fullpay: {field: "fullpay", name: "补款", prop: "sales.fullpay", clazz: "blue"},
+            prevalue: {field: "prevalue", name: "预结值", prop: "balance", clazz: "blue"},
+            precreater: {field: "precreater", name: "预结人", prop: "creater.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.creater.userId);}},
+            pbalance: {field: "pbalance", name: "结算值", prop: "pbalance", clazz: "blue"},
+            balanceTime: {field: "balanceTime", name: "结算时间", prop: "postTime", clazz: "green"},
+            poster: {field: "poster", name: "结算人", prop: "poster.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.poster.userId);}},
+            vbalance: {field: "vbalance", name: "厂结值", prop: "vbalance", clazz: "blue"},
+            grade: {field: "grade", name: "等级", prop: "sales.grade", clazz: "red"},
+            maling: {field: "maling", name: "抹零", prop: function(v) {return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.maling;}, clazz: "blue"},
+            coupon: {field: "coupon", name: "券值", prop: function(v) {return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.coupon;}, clazz: "blue"},
+            couponInfo: {field: "couponInfo", name: "券信息", prop: "sales.couponInfo", clazz: "grey"},
+            type: {field: "type", name: "类型", prop: function(v) {return constant.sales().salesBalance.type.keys[v.type];}, clazz: "red"}
         };
-        return {
-            init: function(tableId, listData) {
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+        var props = [{
+            type: "checkbox",
+            field: "data-sbid",
+            prop: "sbid",
+            name: "salesBalanceItem",
+            value: "sbid",
+            attrs: function(v) {
+                return {
+                    "data-sbid": v.sbid,
+                    "data-status": v.status,
+                    "data-vbalance": v.vbalance,
+                    "data-pbalance": v.pbalance,
+                    "data-bid": v.sales.brand.bid,
+                    "data-onetype": v.onetype,
+                    "data-type": v.type,
+                    "data-depositpay": v.sales.depositpay,
+                    "data-fullpay": v.sales.fullpay,
+                    "data-total": v.total,
+                    "data-allowance": v.allowance,
+                    "data-venderMaling": v.sales.venderMaling
+                };
+            },
+            checked: function(v) {
+                return salesBalance.salesBalanceItem.contains(String(v.sbid));
+            },
+            click: function($input, v) {
+                var checked = $input.prop("checked");
+                if (checked)
+                    !salesBalance.salesBalanceItem.contains(v.sbid) && salesBalance.salesBalanceItem.push(v.sbid);
+                else
+                    salesBalance.salesBalanceItem.contains(v.sbid) && salesBalance.salesBalanceItem.splice(salesBalance.salesBalanceItem.indexOf(v.sbid), 1);
             }
+        }];
+
+        $.each(pageConfig.propertyArr, function(i, key) {
+            if (propertyMap[key]) {props.push(propertyMap[key]); return true;}
+            if (key == "venderMaling") {props.push({type: "newline"}); props.push({field: "venderMaling", name: "厂商抹零", prop: function(v) {return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.venderMaling;}, clazz: "green"}); return true;}
+            if (key == "allowance") {props.push({field: "allowance", name: "补贴", prop: "allowance", clazz: "blue"}); return true;}
+            if (key == "salesBananceCoupon") {props.push({field: "salesBananceCoupon", name: "结算券值", prop: "coupon", clazz: "blue"}); return true;}
+            if (key == "total") {props.push({field: "total", name: "总价", prop: "total", clazz: "blue"}); return true;}
+            if (key == "preCreateTime") {props.push({field: "preCreateTime", name: "预结时间", prop: "createTime", clazz: "green"}); return true;}
+            if (key == "venderTime") {props.push({field: "venderTime", name: "厂结时间", prop: "venderTime", clazz: "green"}); return true;}
+            if (key == "oneType") {props.push({field: "oneType", name: "一类", prop: function(v) {return constant.sales().salesBalance.onetype.keys[v.onetype];}, clazz: "red"}); return true;}
+            if (key == "status") {props.push({field: "balanceStatus", name: "状态", prop: function(v) {return constant.sales().salesBalance.status.keys[v.status];}, clazz: "red"}); return true;}
+            if (key == "realSalesTotal") {props.push({type: "newline"}); props.push({field: "realSalesTotal", name: "实际销售额", prop: function(v) {return utils.changeThrDecimal(v.total - v.sales.venderMaling - v.sales.maling - v.sales.coupon);}, clazz: "blue"}); return true;}
+            if (key == "salesvtotal") {props.push({field: "salesvtotal", name: "销售收入厂商结算额", prop: "total", clazz: "blue"}); return true;}
+            if (key == "salesvpay") {props.push({field: "salesvpay", name: "销售成本厂商借款额", prop: "vbalance", clazz: "green"}); return true;}
+            if (key == "accountPay") {props.push({field: "accountPay", name: "应付账款", prop: function(v) {return utils.changeThrDecimal(v.vbalance - v.sales.venderMaling);}, clazz: "red"}); return true;}
+        });
+
+        return props;
+    }
+
+    function buildBalanceCheckLinebtns() {
+
+        var buttonMap = {
+            sub: {name: "子项", clazz: "btn-pink", handle: subCheck},
+            payment: {name: "款项", clazz: "btn-danger", handle: paymentCheck}
         };
-    })();
 
-    var searcher = new Searcher();
+        var btns = {};
 
-    searcher.init(pageConfig.condArr, 'condList', pageConfig.apiPage, function(data) {
+        $.each(pageConfig.pageBtn, function(i, key) {
+            buttonMap[key] && (btns[key] = buttonMap[key]);
+        });
 
-        displayFunc.init('resultList', data);
+        return btns;
+    }
 
-    }, 'pagenation', "salesBalanceCheckPostData", null, false, null, function() {
+    function buildBalanceCheckButtons() {
 
         var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
-        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
-        var $checkspan = $('<span></span>').text('全选').appendTo($checka);
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+        $('<span></span>').text('全选').appendTo($checka);
 
         var $balanceEnd = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'balanceEnd').css("margin", "0px 3px");
-        var $balanceiEnd = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($balanceEnd);
-        var $balancespanEnd = $('<span></span>').text('对账').appendTo($balanceEnd);
+        $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($balanceEnd);
+        $('<span></span>').text('对账').appendTo($balanceEnd);
 
         $checka.click(function() {
-
             checkAll();
         });
 
         $balanceEnd.click(function() {
-
             salesBalance.modals.balanceSalesModal.modal("show");
         });
 
         return [$checka, $balanceEnd];
+    }
 
-    }, 'resultList');
+    var searcher = new Searcher();
+
+    var searcher = new Searcher();
+
+    searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, "salesBalanceCheckPostData", null, false, buildBalanceCheckButtons);
+    searcher.line('sales.no', buildBalanceCheckLineprops(), buildBalanceCheckLinebtns()).render();
+
 
     com.initTypeahead("balanceSales", api.balance.queryBalanceSales, "balanceSales.name", {}, "balanceSaleses", "bsid", function(v) {
 

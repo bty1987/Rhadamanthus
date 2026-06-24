@@ -711,6 +711,38 @@ var Searcher = function() {
         return "";
     }
 
+    var getPropValue = function(o, prop, dataset) {
+
+        if (typeof prop == 'function')
+            return prop(o);
+
+        if (!prop)
+            return "";
+
+        return getElement(o, prop.split('.'), dataset);
+    };
+
+    var getCheckboxProps = function(config, data) {
+
+        var attrs = typeof config.attrs == 'function' ? config.attrs(data) : (config.attrs || {});
+        var props = $.extend({}, attrs, {
+            "type": "checkbox",
+            "name": config.name || "check",
+            "id": config.id || "check",
+            "class": config.clazz || "ace ace-checkbox-2 searcher-checkbox"
+        });
+
+        if (config.field && config.prop)
+            props[config.field] = getPropValue(data, config.prop, config.dataset);
+
+        if (config.value)
+            props.value = getPropValue(data, config.value, config.dataset);
+        else if (config.prop)
+            props.value = getPropValue(data, config.prop, config.dataset);
+
+        return props;
+    };
+
     var searcherApi = null;
 
     var getDefaultTitle = function(lineprop) {
@@ -1024,18 +1056,24 @@ var Searcher = function() {
 
                         if (value.type == "checkbox") {
 
-                            var props = {
-                                "type": "checkbox",
-                                "name": "check",
-                                "id": "check",
-                                "class": "ace ace-checkbox-2 searcher-checkbox",
-                            }
-
-                            props[value.field] = getElement(v, value.prop.split('.'));
+                            var props = getCheckboxProps(value, v);
 
                             var $label = $('<label></label>').prependTo($h3);
-                            var $input = $('<input>').attr(props).val(v[value.prop]).appendTo($label);
-                            var $span = $('<span></span>').addClass('lbl blue bigger-150').appendTo($label);
+                            var $input = $('<input>').attr(props).appendTo($label);
+                            var $span = $('<span></span>').addClass(value.lblClazz || 'lbl blue bigger-150').appendTo($label);
+
+                            if (value.checked && typeof value.checked == 'function')
+                                $input.prop("checked", value.checked(v));
+
+                            if (value.click && typeof value.click == 'function')
+                                $input.click(function() {
+                                    value.click($(this), v);
+                                });
+
+                            if (value.change && typeof value.change == 'function')
+                                $input.change(function() {
+                                    value.change($(this), v);
+                                });
 
                             return true;
                         }

@@ -26,388 +26,96 @@ $(function () {
         manifest.storehouses = storehousesStatus;
     }, null, false);
 
-    var displayFunc = (function () {
+    function manifestSales(v) {
 
-        var renderList = function (tableId, listData) {
+        manifest.salesXG_params["sids[0]"] = v.sid;
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
+        if (v.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT) {
+            com.showAlert(com.warning, "此销售单补款未确认,无法转出库单");
+            return false;
+        }
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+        com.focusPage('#layerAdd').attr({'data-sid': v.sid});
+        com.popup4model('#layerAdd', "转出库单", "", function () {
+            com.clearValidator();
+            com.focusPage('#resultListItem').empty();
+            com.focusPage('input[name="manifestTime"]').val("");
+        }, function () {
+            viewSalesItems(v.sid);
+        });
+    }
 
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid');
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+    function buildManifestLineprops() {
 
-                    var $btnSwitch = $('<a></a>').addClass('btn btn-minier btn-yellow').html('出库');
-
-                    var propertyArr = [];
-                    $.each(pageConfig.propertyArr, function (pi, pv) {
-                        switch (pv) {
-                            case "orderId":
-                                propertyArr.push(["装修单号:", v.orderId, "blue", tools.decoration.info, v.orderId]);
-                                break;
-                            case "address":
-                                propertyArr.push(["楼盘地址:", (v.house.village.name + " " + v.house.houseNumber), "grey"]);
-                                break;
-                            case "customer":
-                                propertyArr.push(["客户名:", v.customer.name, "grey", tools.customer.info, v.customer.cid]);
-                                break;
-                            case "salesman":
-                                propertyArr.push(["渠道:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
-                                break;
-                            case "dept":
-                                propertyArr.push(["部门:", v.dept.name, "grey", tools.department.info, v.dept.did]);
-                                break;
-                            case "region":
-                                propertyArr.push(["分区:", v.region.name, "grey", tools.department.info, v.region.did]);
-                                break;
-                            case "guider":
-                                propertyArr.push(["导购:", v.guider.currentName, "grey", tools.personel.info, v.guider.userId]);
-                                break;
-                            case "instorer":
-                                propertyArr.push(["驻店:", v.instorer.currentName, "grey", tools.personel.info, v.instorer.userId]);
-                                break;
-                            case "guideDept":
-                                propertyArr.push(["主材部:", v.guideDept.name, "grey", tools.department.info, v.guideDept.did]);
-                                break;
-                            case "category":
-                                propertyArr.push(["品类:", v.category, "grey"]);
-                                break;
-                            case "brand":
-                                propertyArr.push(["品牌:", v.brand.name, "grey", tools.brand.info, v.brand.bid]);
-                                break;
-                            case "createTime":
-                                propertyArr.push(["创建时间:", v.createTime, "green"]);
-                                break;
-                            case "balanceTime":
-                                propertyArr.push(["结算时间:", v.balanceTime, "green"]);
-                                break;
-                            case "fullpayTime":
-                                propertyArr.push(["全款时间:", v.fullpayTime, "green"]);
-                                break;
-                            case "status":
-                                propertyArr.push(["状态:", constant.sales().sales.status.keys[v.status], "red"]);
-                                break;
-                            case "balanceStatus":
-                                propertyArr.push(["结算状态:", constant.sales().sales.balanceStatus.keys[v.balanceStatus], "red"]);
-
-                                break;
-                            case "grade":
-                                propertyArr.push(["等级:", v.grade, "red"]);
-                                break;
-                            case "total":
-                                propertyArr.push(["总额:", v.total, "blue"]);
-                                break;
-                            case "maling":
-                                propertyArr.push(["抹零:", v.maling, "blue"]);
-                                break;
-                            case "venderMaling":
-                                propertyArr.push(["厂商抹零:", v.venderMaling, "blue"]);
-                                break;
-                            case "coupon":
-                                propertyArr.push(["券值:", v.coupon, "blue"]);
-                                break;
-                            case "couponInfo":
-                                propertyArr.push(["券信息:", v.couponInfo, "grey"]);
-                                break;
-                            case "comment":
-                                propertyArr.push(["备注:", v.comment, "grey"]);
-                                break;
-                        }
-                    });
-
-
-                    var $label = $('<label></label>').addClass('control-label').css({
-                        'color': 'grey',
-                        'font-size': '20px',
-                        "font-weight": "bold"
-                    });
-
-                    var _label = $('<label></label>');
-
-                    var $input = $('<input>').attr({
-                        "type": "checkbox",
-                        "name": "sids",
-                        "class": "",
-                        "data-sid": v.sid,
-                        "data-no": v.no,
-                        "data-orderId": v.orderId,
-                        "data-fullPayStatus": v.fullpayStatus
-                    }).addClass('ace ace-checkbox-2');
-
-                    var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.no);
-
-                    _label.append($input).append(_span).appendTo($label);
-
-                    $.each(propertyArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>').appendTo($ulProperty);
-
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                        if (value.length == 5) {
-                            $liProperty.click(function() {
-
-                                value[3]($liProperty, value[4]);
-
-                            }).css("cursor", "pointer");
-                        }
-                    });
-
-                    $label.appendTo($h3);
-
-                    $.each(pageConfig.pageBtn, function (k, b) {
-                        switch (b) {
-                            case "delivery":
-                                $btnDiv.append($btnSwitch);
-                                break;
-                        }
-                    });
-
-                    $btnDiv.appendTo($h3);
-
-                    $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty);
-
-                    $btnSwitch.click(function () {
-
-                        manifest.salesXG_params["sids[0]"] = v.sid;
-
-                        if (v.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT) {
-                            com.showAlert(com.warning, "此销售单补款未确认,无法转出库单");
-                            return false;
-                        }
-
-                        com.focusPage('#layerAdd').attr({'data-sid': v.sid});
-                        com.popup4model('#layerAdd', "转出库单", "", function () {
-
-                            com.clearValidator();
-                            com.focusPage('#resultListItem').empty();
-                            com.focusPage('input[name="manifestTime"]').val("");
-                        }, function () {
-                            viewSalesItems(v.sid);
-                        });
-                    });
-                });
-
-                $ul.appendTo($tableWrap);
-            }
+        var propertyMap = {
+            orderId: {field: "orderId", name: "装修单号", prop: "orderId", clazz: "blue", click: function($this, v) {tools.decoration.info($this, v.orderId);}},
+            address: {field: "address", name: "楼盘地址", prop: function(v) {return v.house.village.name + " " + v.house.houseNumber;}, clazz: "grey"},
+            customer: {field: "customer", name: "客户名", prop: "customer.name", clazz: "grey", click: function($this, v) {tools.customer.info($this, v.customer.cid);}},
+            salesman: {field: "salesman", name: "渠道", prop: "salesman.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.salesman.userId);}},
+            dept: {field: "dept", name: "部门", prop: "dept.name", clazz: "grey", click: function($this, v) {tools.department.info($this, v.dept.did);}},
+            region: {field: "region", name: "分区", prop: "region.name", clazz: "grey", click: function($this, v) {tools.department.info($this, v.region.did);}},
+            guider: {field: "guider", name: "导购", prop: "guider.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.guider.userId);}},
+            instorer: {field: "instorer", name: "驻店", prop: "instorer.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.instorer.userId);}},
+            guideDept: {field: "guideDept", name: "主材部", prop: "guideDept.name", clazz: "grey", click: function($this, v) {tools.department.info($this, v.guideDept.did);}},
+            category: {field: "category", name: "品类", prop: "category", clazz: "grey"},
+            brand: {field: "brand", name: "品牌", prop: "brand.name", clazz: "grey", click: function($this, v) {tools.brand.info($this, v.brand.bid);}},
+            createTime: {field: "createTime", name: "创建时间", prop: "createTime", clazz: "green"},
+            balanceTime: {field: "balanceTime", name: "结算时间", prop: "balanceTime", clazz: "green"},
+            fullpayTime: {field: "fullpayTime", name: "全款时间", prop: "fullpayTime", clazz: "green"},
+            status: {field: "status", name: "状态", prop: function(v) {return constant.sales().sales.status.keys[v.status];}, clazz: "red"},
+            balanceStatus: {field: "balanceStatus", name: "结算状态", prop: function(v) {return constant.sales().sales.balanceStatus.keys[v.balanceStatus];}, clazz: "red"},
+            grade: {field: "grade", name: "等级", prop: "grade", clazz: "red"},
+            total: {field: "total", name: "总额", prop: "total", clazz: "blue"},
+            maling: {field: "maling", name: "抹零", prop: "maling", clazz: "blue"},
+            venderMaling: {field: "venderMaling", name: "厂商抹零", prop: "venderMaling", clazz: "blue"},
+            coupon: {field: "coupon", name: "券值", prop: "coupon", clazz: "blue"},
+            couponInfo: {field: "couponInfo", name: "券信息", prop: "couponInfo", clazz: "grey"},
+            comment: {field: "comment", name: "备注", prop: "comment", clazz: "grey"}
         };
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+
+        var props = [{
+            type: "checkbox",
+            field: "data-sid",
+            prop: "sid",
+            name: "sids",
+            value: "sid",
+            attrs: function(v) {
+                return {
+                    "data-sid": v.sid,
+                    "data-no": v.no,
+                    "data-orderId": v.orderId,
+                    "data-fullPayStatus": v.fullpayStatus
+                };
             }
+        }];
+
+        $.each(pageConfig.propertyArr, function(i, key) {
+            propertyMap[key] && props.push(propertyMap[key]);
+        });
+
+        return props;
+    }
+
+    function buildManifestLinebtns() {
+
+        var buttonMap = {
+            delivery: {name: "出库", clazz: "btn-yellow", handle: manifestSales}
         };
-    })();
 
-    var initList = (function () {
+        var btns = {};
 
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
+        $.each(pageConfig.pageBtn, function(i, key) {
+            buttonMap[key] && (btns[key] = buttonMap[key]);
+        });
 
-            if (listData.length == 0) {
+        return btns;
+    }
 
-                var $resultList = com.focusPage("#resultListItem").addClass('dz-default dz-message').html('');
-                var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
-                var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-                var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
-                return $resultList;
+    function buildManifestButtons() {
 
-            } else if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').attr({
-                        'data-discount': v.discount,
-                        'data-postDis': v.postDis
-                    });
-                    var $h3 = $('<h3></h3>').addClass('oid');
-
-                    var propertyArr = [
-                        ["商品品类:", v.goods.category, "grey", "category"],
-                        ["商品颜色:", v.color.name, "grey", "color"],
-                        ["商品规格:", v.format.info, "grey", "format"],
-                        ["售价:", v.selling, "blue", "selling"],
-                        ["折扣价:", v.disPrice, "blue", "disPrice"],
-                        ["折让价:", v.price, "blue", "price"],
-                        ["数量:", v.num, "blue", "num"],
-                        ["出库余数:", v.xgnum, "blue xg", "xgnum"],
-                        ["采购余数:", v.punum, "blue pu", "punum"],
-                        ["总价:", v.total, "blue", "total"],
-                        ["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "red", "rawCtype"],
-                        ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
-                        ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"],
-                        ["结算值:", v.cvalue, "blue", "cvalue"],
-                        ["备注:", v.comment, "grey", "comment"]
-                    ];
-
-                    var $label = $('<label></label>').addClass('control-label').css({
-                        'color': 'grey',
-                        'font-size': '20px',
-                        "font-weight": "bold",
-                        "width": "100%"
-                    });
-
-                    var div = $('<div></div>').css("margin-top", "10px");
-
-                    var $goods = $('<label></label>').html('商品名: ');
-                    var goodsName = $('<input type="text" id = "salesBalanceGoodsName' + v.siid + '">').appendTo($goods).val(v.goods.name).attr('data-typeahead-key', v.goods.gid);
-
-                    var $color = $('<label></label>').css({'margin-left': '10px'}).html('颜色: ');
-                    var goodsColor = $('<select id="color' + v.siid + '"></select>').css({'margin-left': '10px'}).appendTo($color);
-
-                    var $format = $('<label></label>').css({'margin-left': '10px'}).html('规格: ');
-                    var goodsFormat = $('<select id="format' + v.siid + '"></select>').css({'margin-left': '10px'}).appendTo($format);
-
-                    var inputSpan = $('<label></label>').css({'margin-left': '10px'}).html('售价: ');
-                    var inputNum = $('<input type="text" id="unitPrice' + v.siid + '">').addClass('unitPrice').appendTo(inputSpan).val(v.price);
-
-                    var inputSpanNum = $('<label></label>').css({'margin-left': '10px'}).html('数量: ');
-                    var inputNumber = $('<input type="text">').attr("id", "num" + v.siid).addClass('inputNumber').appendTo(inputSpanNum);
-
-                    var inputSpanOutStroehouse = $('<label></label>').css({'margin-left': '10px'}).html('出货仓库: ');
-                    var inputOutStroehouse = $('<select></select>').attr("id", "oshid" + v.siid).addClass('outStroehouse').appendTo(inputSpanOutStroehouse);
-
-                    inputOutStroehouse.bindData(manifest.storehouses, 'shid', 'name');
-
-                    var btnSpanSearchStroeStock = $('<label></label>').css({'font-weight': 'bold'});
-                    var btnSearchStroeStock = $('<button></button>').addClass('btn btn-xs btn-info btn-search').attr('name', 'search').css("margin", "0px 3px").html('库存').appendTo(btnSpanSearchStroeStock);
-
-                    var _label = $('<label></label>');
-
-                    //赋值颜色信息
-                    com.post(api.data.queryColorForEnableByGid, {"color.gid": v.goods.gid}, function (colorData) {
-                        if (colorData.colors.length == 0) return false;
-
-                        goodsColor.bindData(colorData.colors, "cid", "name");
-                        goodsColor.val(v.color.cid);
-                    });
-
-                    //赋值规格信息
-                    com.post(api.data.queryFormatForEnableByGid, {"format.gid": v.goods.gid}, function (formatData) {
-                        if (formatData.formats.length == 0) return false;
-
-                        goodsFormat.bindData(formatData.formats, "fid", "info");
-                        goodsFormat.val(v.format.fid);
-                    });
-
-                    var $input = $('<input>').attr({
-                        "type": "checkbox",
-                        "name": "siids",
-                        "class": "",
-                        "data-sid": v.sid,
-                        "data-siid": v.siid,
-                        "data-cid": v.color.cid,
-                        "data-fid": v.format.fid,
-                        "data-gid": v.goods.gid,
-                        "data-num": v.num,
-                        "data-price": v.price,
-                        'data-i': i
-                    }).addClass('ace ace-checkbox-2');
-
-                    $input.change(function () {
-                        if ($input.prop('checked')) {
-                            inputNumber.addClass("v_float_3");
-                            goodsName.addClass("v_required");
-                            inputNum.addClass("v_float_3");
-                        } else {
-                            inputNumber.removeClass("v_float_3");
-                            goodsName.removeClass("v_required");
-                            inputNum.removeClass("v_float_3");
-                        }
-                    });
-
-                    var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no);
-
-                    _label.append($input).append(_span).appendTo($label);
-
-                    $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
-                        $('<strong></strong>').attr('name', value[3]).html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-
-                    $label.appendTo($h3);
-
-                    div.append($goods).append($color).append($format).append(inputSpanNum).append(inputSpan).append(inputSpanOutStroehouse).append(btnSpanSearchStroeStock).appendTo($h3);
-
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
-
-                    //查询库存点击事件
-                    btnSearchStroeStock.click(function () {
-
-                        var options = {
-                            "goodsStorehouseStock.goods.gid": com.typeahead(goodsName),
-                            "goodsStorehouseStock.color.cid": goodsColor.val(),
-                            "goodsStorehouseStock.format.fid": goodsFormat.val(),
-                            "goodsStorehouseStock.storehouse.shid": inputOutStroehouse.val()
-                        };
-
-                        com.post(api.inventory.queryGoodsStorehouseStockByShidAGid, options, function (res) {
-                            if (res.goodsStorehouseStock.num == null) {
-                                com.showAlert(com.warning, "该仓库没有此商品");
-                            } else {
-                                com.showAlert(com.warning, "该仓库商品剩余库存:" + res.goodsStorehouseStock.num);
-                            }
-                        });
-                    });
-
-                    com.initTypeahead(goodsName, api.data.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name', function (list, k, res) {
-
-                        goodsColor.find('select').empty();
-                        goodsFormat.find('select').empty();
-
-                        //赋值颜色信息
-                        com.post(api.data.queryColorForEnableByGid, {"color.gid": k}, function (colorData) {
-                            if (colorData.colors.length != 0) {
-                                goodsColor.bindData(colorData.colors, "cid", "name");
-                            } else {
-                                com.showAlert(com.warning, "该商品暂无颜色信息,请录入");
-                            }
-                        });
-
-                        //赋值规格信息
-                        com.post(api.data.queryFormatForEnableByGid, {"format.gid": k}, function (formatData) {
-                            if (formatData.formats.length != 0) {
-                                goodsFormat.bindData(formatData.formats, "fid", "info");
-                            } else {
-                                com.showAlert(com.warning, "该商品暂无规格信息,请录入");
-                            }
-                        });
-
-                        return res;
-                    });
-
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            }
-        };
-    })();
-
-    var salesSwitchManifestForXGSearcher = new Searcher();
-
-    salesSwitchManifestForXGSearcher.init(pageConfig.condArr, 'condList', pageConfig.apiPage, function (data) {
-        com.focusPage('input[name="fullpayTime"]').parent('.inline').addClass('m-wrap m-ctrl-medium date-picker');
-        com.focusPage('input[name="fullpayTime"]').attr('readonly', true);
-        com.focusPage('input[name="fullpayTime"]').removeAttr('placeholder');
-
-        displayFunc.init('resultList', data);
-    }, 'pagenation', 'salesSwitchManifestForXGPostData', null, false, null, function () {
         var $adda = $('<a></a>').addClass('btn btn-minier pull-left btn-info').attr('name', 'collects').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-money bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('批量出库').appendTo($adda);
+        $('<i></i>').addClass('icon-money bigger-110').appendTo($adda);
+        $('<span></span>').text('批量出库').appendTo($adda);
 
         $adda.click(function () {
 
@@ -448,9 +156,20 @@ $(function () {
                 com.showAlert(com.warning, "请选择销售单");
             }
         });
-        return [$adda];
 
-    }, 'resultList');
+        return [$adda];
+    }
+
+    var salesSwitchManifestForXGSearcher = new Searcher();
+
+    var salesSwitchManifestForXGSearcher = new Searcher();
+
+    salesSwitchManifestForXGSearcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, 'salesSwitchManifestForXGPostData', null, false, buildManifestButtons);
+    salesSwitchManifestForXGSearcher.line('no', buildManifestLineprops(), buildManifestLinebtns()).render(function() {
+        com.focusPage('input[name="fullpayTime"]').parent('.inline').addClass('m-wrap m-ctrl-medium date-picker');
+        com.focusPage('input[name="fullpayTime"]').attr('readonly', true);
+        com.focusPage('input[name="fullpayTime"]').removeAttr('placeholder');
+    });
 
     manifest.btns.xgSaveBtn.on('click', function () {
         savePurchase(manifest.salesXG_params);

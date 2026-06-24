@@ -43,277 +43,249 @@ $(function() {
     salesDelivery.postData = "salesDeliveryFor" + salesDelivery.pageType + "PostData";
 
     initUploadBtn();
-    var displayFunc = (function() {
+    function deliveryDecoration(v) {
 
-        var renderList = function(tableId, listData) {
+        com.focusPage("text").css("line-height", "27px");
+        com.post(api.decoration.queryDecorationByOrderId, {
+            "decorationOrderId": v.sales.orderId
+        }, function(res) {
 
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+            var decorationInfo = res.decoration;
+            com.focusPage("#orderId").html(decorationInfo.orderId);
+            com.focusPage("#address").html(decorationInfo.house.village.name + '' + decorationInfo.house.houseNumber);
+            com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);
+            com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);
+            com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);
+            com.focusPage("#typeness").html(constant.decoration().decoration.typeness.keys[decorationInfo.typeness]);
+            com.focusPage("#projectStatus").html(constant.decoration().decoration.projectStatus.keys[decorationInfo.projectStatus]);
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+            salesDelivery.modals.decorationInfo.modal("show");
+        });
+    }
 
-                    creatLine(v).appendTo($ul);
-                });
+    function deliveryTran(v) {
 
-                $ul.appendTo($tableWrap);
-            }
+        salesDelivery.items.tranGoodsName.text(v.salesItem.goods.name);
+        salesDelivery.items.tranOrderNum.text(v.salesItem.num);
+        salesDelivery.items.tranNum.val('');
+        salesDelivery.currentSdiid = v.sdiid;
+        salesDelivery.modals.tranModal.modal("show");
+    }
+
+    function deliveryCheck(v) {
+
+        var option = {};
+        option["salesDeliveryItems[0].sdiid"] = v.sdiid;
+        com.post(api.sales.checkSalesDeliveryItem, option, function() {
+            searcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+        });
+    }
+
+    function deliveryConfirm(v) {
+
+        var option = {};
+        option["salesDeliveryItems[0].sdiid"] = v.sdiid;
+        com.post(api.sales.confirmSalesDeliveryItem, option, function() {
+            searcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+        });
+    }
+
+    function deliveryFinish(v) {
+
+        var option = {};
+        option["salesDeliveryItems[0].sdiid"] = v.sdiid;
+        com.showConfirm('确认销售项配送完结?', function() {
+            com.post(api.sales.finishSalesDeliveryItem, option, function() {
+                searcher.doSearch();
+                com.showAlert(com.info, "操作成功");
+            });
+        });
+    }
+
+    function deliveryEdit(v) {
+
+        salesDelivery.items.sdiid = v.sdiid;
+        if (v.protranTime != null) {
+            salesDelivery.items.protranTime.val(v.protranTime.substring(0, 10));
+        }
+        if (salesDelivery.pageType != 'init') {
+            salesDelivery.items.protranTime.attr("disabled", "disabled");
+        }
+        salesDelivery.items.comment.val(v.comment);
+        salesDelivery.modals.editModal.modal("show");
+    }
+
+    function deliveryPicture(v) {
+
+        salesDelivery.salesItem = v.salesItem;
+        managedrawing();
+    }
+
+    function buildDeliveryLineprops() {
+
+        var propertyMap = {
+            salesno: {field: "salesno", name: "销售单号", prop: "sales.no", clazz: "blue"},
+            num: {field: "num", name: "数量", prop: "salesItem.num", clazz: "blue"},
+            createTime: {field: "createTime", name: "创建时间", prop: "createTime", clazz: "green"},
+            tranTime: {field: "tranTime", name: "配送时间", prop: "tranTime", clazz: "green"},
+            checkTime: {field: "checkTime", name: "审核时间", prop: "checkTime", clazz: "green"},
+            confirmTime: {field: "confirmTime", name: "确认时间", prop: "confirmTime", clazz: "green"},
+            finishTime: {field: "finishTime", name: "完结时间", prop: "finishTime", clazz: "green"},
+            creater: {field: "creater", name: "创建人", prop: "creater.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.creater.userId);}},
+            traner: {field: "traner", name: "配送人", prop: "traner.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.traner.userId);}},
+            checker: {field: "checker", name: "审核人", prop: "checker.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.checker.userId);}},
+            confirmer: {field: "confirmer", name: "确认人", prop: "confirmer.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.confirmer.userId);}},
+            finisher: {field: "finisher", name: "完结人", prop: "finisher.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.finisher.userId);}},
+            comment: {field: "comment", name: "备注", prop: "comment", clazz: "grey"},
+            brand: {field: "brand", name: "品牌", prop: function(v) {return v.salesItem.goods.brand;}, clazz: "grey", click: function($this, v) {tools.brand.info($this, v.sales.brand.bid);}},
+            category: {field: "category", name: "品类", prop: "salesItem.goods.category", clazz: "grey"},
+            status: {field: "status", name: "配送状态", prop: function(v) {return constant.sales().salesDeliveryItem.status.keys[v.status];}, clazz: "red"},
+            refundNum: {field: "refundNum", name: "退货数量", prop: function(v) {return utils.changeThrDecimal(v.salesItem.initnum - v.salesItem.num);}, clazz: "blue"},
+            trnum: {field: "trnum", name: "配送数量", prop: "salesItem.trnum", clazz: "blue"},
+            address: {field: "address", name: "楼盘地址", prop: function(v) {return v.sales.house.village.name + " " + v.sales.house.houseNumber;}, clazz: "grey"},
+            orderId: {field: "orderId", name: "装修单号", prop: "sales.orderId", clazz: "blue", click: function($this, v) {tools.decoration.info($this, v.sales.orderId);}},
+            protranTime: {field: "protranTime", name: "预计配送时间", prop: "protranTime", clazz: "green"}
         };
 
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid');
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单');
-            var $btnTran = $('<a></a>').addClass('btn btn-minier btn-success').html('配送');
-            var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-warning').html('审核');
-            var $btnConfirm = $('<a></a>').addClass('btn btn-minier btn-inverse').html('确认');
-            var $btnFinish = $('<a></a>').addClass('btn btn-minier btn-danger').html('完结');
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-danger').html('编辑');
-            var $btnPicture = $('<a></a>').addClass('btn btn-minier btn-danger').html('图片');
-
-            var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.salesItem.goods.name);
-            var $label = $('<label></label>');
-            var $input = $('<input></input>').attr({
-                'class': 'ace ace-checkbox-2',
-                'name': 'salesDelivery',
-                'type': 'checkbox',
-                'data-status': v.status,
-                'data-sdiid': v.sdiid,
-                'data-num': v.num,
-            }).val(v.sdiid);
-
-            $h3.append($label.append($input).append($span));
-
-            var propertyArr = [];
-
-            $.each(pageConfig.propertyArr, function(pi, pv) {
-
-                switch (pv) {
-                    case "salesno":
-                        propertyArr.push(["销售单号:", v.sales.no, "blue"]);
-                        break;
-                    case "num":
-                        propertyArr.push(["数量:", v.salesItem.num, "blue"]);
-                        break;
-                    case "createTime":
-                        propertyArr.push(["创建时间:", v.createTime, "green"]);
-                        break;
-                    case "tranTime":
-                        propertyArr.push(["配送时间:", v.tranTime, "green"]);
-                        break;
-                    case "checkTime":
-                        propertyArr.push(["审核时间:", v.checkTime, "green"]);
-                        break;
-                    case "confirmTime":
-                        propertyArr.push(["确认时间:", v.confirmTime, "green"]);
-                        break;
-                    case "finishTime":
-                        propertyArr.push(["完结时间:", v.finishTime, "green"]);
-                        break;
-                    case "creater":
-                        propertyArr.push(["创建人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId]);
-                        break;
-                    case "traner":
-                        propertyArr.push(["配送人:", v.traner.currentName, "grey", tools.personel.info, v.traner.userId]);
-                        break;
-                    case "checker":
-                        propertyArr.push(["审核人:", v.checker.currentName, "grey", tools.personel.info, v.checker.userId]);
-                        break;
-                    case "confirmer":
-                        propertyArr.push(["确认人:", v.confirmer.currentName, "grey", tools.personel.info, v.confirmer.userId]);
-                        break;
-                    case "finisher":
-                        propertyArr.push(["完结人:", v.finisher.currentName, "grey", tools.personel.info, v.finisher.userId]);
-                        break;
-                    case "comment":
-                        propertyArr.push(["备注:", v.comment, "grey"]);
-                        break;
-                    case "brand":
-                        propertyArr.push(["品牌:", v.salesItem.goods.brand, "grey", tools.brand.info, v.sales.brand.bid]);
-                        break;
-                    case "category":
-                        propertyArr.push(["品类:", v.salesItem.goods.category, "grey"]);
-                        break;
-                    case "status":
-                        propertyArr.push(["配送状态:", constant.sales().salesDeliveryItem.status.keys[v.status], "red"]);
-                        break;
-                    case "refundNum":
-                        propertyArr.push(["退货数量:", utils.changeThrDecimal(v.salesItem.initnum - v.salesItem.num), "blue"]);
-                        break;
-                    case "trnum":
-                        propertyArr.push(["配送数量:", v.salesItem.trnum, "blue"]);
-                        break;
-                    case "address":
-                        propertyArr.push(["楼盘地址:", (v.sales.house.village.name + " " + v.sales.house.houseNumber), "grey"]);
-                        break;
-                    case "orderId":
-                        propertyArr.push(["装修单号:", v.sales.orderId, "blue", tools.decoration.info, v.sales.orderId]);
-                        break;
-                    case "protranTime":
-                        propertyArr.push(["预计配送时间:", v.protranTime, "green"]);
-                        break;
-                }
-            });
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>').appendTo($ulProperty);
-
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                if (value.length == 5) {
-                    $liProperty.click(function() {
-
-                        value[3]($liProperty, value[4]);
-
-                    }).css("cursor", "pointer");
-                }
-            });
-
-            $divBtnWrap.append($btnDecoration);
-
-            $.each(pageConfig.pageBtn, function(k, b) {
-
-                switch (b) {
-                    case "tran":
-                        $divBtnWrap.append($btnTran);
-                        break;
-                    case "check":
-                        $divBtnWrap.append($btnCheck);
-                        break;
-                    case "confirm":
-                        $divBtnWrap.append($btnConfirm);
-                        break;
-                    case "finish":
-                        $divBtnWrap.append($btnFinish);
-                        break;
-                    case "protranTime":
-                        $divBtnWrap.append($btnEdit);
-                        break;
-                    case "salesPicture":
-                        $divBtnWrap.append($btnPicture);
-                        break;
-                }
-            });
-
-            $divBtnWrap.appendTo($h3);
-            $liLine.append($h3).append($ulProperty);
-
-            $btnDecoration.click(function() {
-
-                com.focusPage("text").css("line-height", "27px");
-
-                com.post(api.decoration.queryDecorationByOrderId, {
-                    "decorationOrderId": v.sales.orderId
-                }, function(res) {
-
-                    var decorationInfo = res.decoration;
-
-                    com.focusPage("#orderId").html(decorationInfo.orderId);// 装修单号
-                    com.focusPage("#address").html(decorationInfo.house.village.name + '' + decorationInfo.house.houseNumber);// 装修楼盘地址
-                    com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);// 装修设计师
-                    com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);// 装修跟单员
-                    com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);// 装修监理
-                    com.focusPage("#typeness").html(constant.decoration().decoration.typeness.keys[decorationInfo.typeness]);
-                    com.focusPage("#projectStatus").html(constant.decoration().decoration.projectStatus.keys[decorationInfo.projectStatus]);
-
-                    salesDelivery.modals.decorationInfo.modal("show");
-                });
-            });
-
-            $btnTran.click(function(e) {
-
-                // 显示商品信息
-                salesDelivery.items.tranGoodsName.text(v.salesItem.goods.name);
-                salesDelivery.items.tranOrderNum.text(v.salesItem.num);
-
-                // 清空输入框
-                salesDelivery.items.tranNum.val('');
-
-                // 保存当前配送项ID
-                salesDelivery.currentSdiid = v.sdiid;
-
-                // 弹出配送数量填写modal
-                salesDelivery.modals.tranModal.modal("show");
-            });
-
-            $btnCheck.click(function(e) {
-
-                var option = {};
-                option["salesDeliveryItems[0].sdiid"] = v.sdiid;
-                com.post(api.sales.checkSalesDeliveryItem, option, function(e) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnConfirm.click(function(e) {
-
-                var option = {};
-                option["salesDeliveryItems[0].sdiid"] = v.sdiid;
-                com.post(api.sales.confirmSalesDeliveryItem, option, function(e) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnFinish.click(function(e) {
-
-                var option = {};
-                option["salesDeliveryItems[0].sdiid"] = v.sdiid;
-
-                com.showConfirm('确认销售项配送完结?', function() {
-
-                    com.post(api.sales.finishSalesDeliveryItem, option, function(e) {
-
-                        searcher.doSearch();
-                        com.showAlert(com.info, "操作成功");
-                    });
-                });
-            });
-
-            $btnEdit.click(function(e) {
-
-                salesDelivery.items.sdiid = v.sdiid;
-                if (v.protranTime != null) {
-                    salesDelivery.items.protranTime.val(v.protranTime.substring(0, 10));
-                }
-                if (salesDelivery.pageType != 'init') {
-                    salesDelivery.items.protranTime.attr("disabled", "disabled");
-                }
-                salesDelivery.items.comment.val(v.comment);
-                salesDelivery.modals.editModal.modal("show");
-            });
-
-            $btnPicture.click(function(e) {
-
-                salesDelivery.salesItem = v.salesItem;
-
-                managedrawing();
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+        var props = [{
+            type: "checkbox",
+            field: "data-sdiid",
+            prop: "sdiid",
+            name: "salesDelivery",
+            value: "sdiid",
+            attrs: function(v) {
+                return {
+                    "data-status": v.status,
+                    "data-sdiid": v.sdiid,
+                    "data-num": v.num
+                };
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            lblClazz: "lbl blue bigger-150",
+            checked: function(v) {
+                return false;
             }
+        }];
+
+        $.each(pageConfig.propertyArr, function(i, key) {
+            propertyMap[key] && props.push(propertyMap[key]);
+        });
+
+        return props;
+    }
+
+    function buildDeliveryLinebtns() {
+
+        var buttonMap = {
+            tran: {name: "配送", clazz: "btn-success", handle: deliveryTran},
+            check: {name: "审核", clazz: "btn-warning", handle: deliveryCheck},
+            confirm: {name: "确认", clazz: "btn-inverse", handle: deliveryConfirm},
+            finish: {name: "完结", clazz: "btn-danger", handle: deliveryFinish},
+            protranTime: {name: "编辑", clazz: "btn-danger", handle: deliveryEdit},
+            salesPicture: {name: "图片", clazz: "btn-danger", handle: deliveryPicture}
         };
-    })();
+
+        var btns = {};
+
+        btns["decoration"] = {name: "装修单", clazz: "btn-purple", handle: deliveryDecoration};
+
+        $.each(pageConfig.pageBtn, function(i, key) {
+            buttonMap[key] && (btns[key] = buttonMap[key]);
+        });
+
+        return btns;
+    }
+
+    function buildDeliveryButtons() {
+
+        var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+        $('<span></span>').text('全选').appendTo($checka);
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
+        $('<span></span>').text('确认').appendTo($adda);
+
+        var $addp = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-ok bigger-110').appendTo($addp);
+        $('<span></span>').text('配送').appendTo($addp);
+
+        var $adds = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-ok bigger-110').appendTo($adds);
+        $('<span></span>').text('审核').appendTo($adds);
+
+        var $addw = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-ok bigger-110').appendTo($addw);
+        $('<span></span>').text('完结').appendTo($addw);
+
+        $checka.click(function() {
+            checkAll();
+        });
+
+        $adda.click(function(e) {
+            e.stopPropagation();
+            var option = {};
+            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
+            if (!$inputs.length) {com.showAlert(com.warning, "请选择需要进行确认的配送项"); return false;}
+            $.each($inputs, function(i, v) {
+                option["salesDeliveryItems[" + i + "].sdiid"] = $(v).attr('data-sdiid');
+            });
+            com.showConfirm('确定要将选中的配送项进行确认吗?', function() {
+                com.post(api.sales.confirmSalesDeliveryItem, option, function() {com.showAlert(com.info, "操作成功"); searcher.doSearch();});
+            }, function() {searcher.doSearch();});
+        });
+
+        $addp.click(function(e) {
+            e.stopPropagation();
+            var option = {};
+            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
+            if (!$inputs.length) {com.showAlert(com.warning, "请选择需要进行配送的配送项"); return false;}
+            $.each($inputs, function(i, v) {
+                option["salesDeliveryItems[" + i + "].sdiid"] = $(v).attr('data-sdiid');
+            });
+            com.showConfirm('确定要将选中的配送项进行配送吗?', function() {
+                com.post(api.sales.tranSalesDeliveryItem, option, function() {com.showAlert(com.info, "操作成功"); searcher.doSearch();});
+            }, function() {searcher.doSearch();});
+        });
+
+        $adds.click(function(e) {
+            e.stopPropagation();
+            var option = {};
+            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
+            if (!$inputs.length) {com.showAlert(com.warning, "请选择需要进行审核的配送项"); return;}
+            $.each($inputs, function(i, v) {
+                option["salesDeliveryItems[" + i + "].sdiid"] = $(v).attr('data-sdiid');
+            });
+            com.showConfirm('确定要将选中的配送项进行审核吗?', function() {
+                com.post(api.sales.checkSalesDeliveryItem, option, function() {com.showAlert(com.info, "操作成功"); searcher.doSearch();});
+            }, function() {searcher.doSearch();});
+        });
+
+        $addw.click(function(e) {
+            e.stopPropagation();
+            var option = {};
+            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
+            if (!$inputs.length) {com.showAlert(com.warning, "请选择需要进行完结的配送项"); return;}
+            $.each($inputs, function(i, v) {
+                option["salesDeliveryItems[" + i + "].sdiid"] = $(v).attr('data-sdiid');
+            });
+            com.showConfirm('确定要将选中的配送项进行完结吗?', function() {
+                com.post(api.sales.finishSalesDeliveryItem, option, function() {com.showAlert(com.info, "操作成功"); searcher.doSearch();});
+            }, function() {searcher.doSearch();});
+        });
+
+        if (salesDelivery.pageType == "check") {
+            return [$checka, $adda];
+        } else if (salesDelivery.pageType == "init") {
+            return [$checka, $addp];
+        } else if (salesDelivery.pageType == "tran") {
+            return [$checka, $adds];
+        } else if (salesDelivery.pageType == "confirm") {
+            return [$checka, $addw];
+        }
+        return [];
+    }
 
     $.each(pageConfig.extraParam, function(i, v) {
 
@@ -336,197 +308,13 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.init(pageConfig.condArr, "condList", pageConfig.apiPage, function(data) {
+    var searcher = new Searcher();
 
-        displayFunc.init('resultList', data);
-    }, "pagenation", salesDelivery.postData, salesDelivery.extraParams, false, null, function() {
+    searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, salesDelivery.extraParams, pageConfig.condArr, salesDelivery.postData, null, false, buildDeliveryButtons);
+    searcher.line(function(v) {
+        return v.salesItem.goods.name;
+    }, buildDeliveryLineprops(), buildDeliveryLinebtns()).render();
 
-        var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
-        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
-        var $checkspan = $('<span></span>').text('全选').appendTo($checka);
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('确认').appendTo($adda);
-
-        var $addp = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($addp);
-        var $addspan = $('<span></span>').text('配送').appendTo($addp);
-
-        var $adds = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adds);
-        var $addspan = $('<span></span>').text('审核').appendTo($adds);
-
-        var $addw = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($addw);
-        var $addspan = $('<span></span>').text('完结').appendTo($addw);
-        
-        $checka.click(function() {
-
-            checkAll();
-        });
-
-        $adda.click(function(e) {
-
-            e.stopPropagation();
-
-            var option = {};
-
-            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
-
-            if (!$inputs.length) {
-
-                com.showAlert(com.warning, "请选择需要进行确认的配送项");
-
-                return false;
-            }
-
-            $.each($inputs, function(i, v) {
-
-                var $this = $(v);
-
-                option["salesDeliveryItems[" + i + "].sdiid"] = $this.attr('data-sdiid');
-            });
-
-            com.showConfirm('确定要将选中的配送项进行确认吗?', function(index, layero) {
-
-                com.post(api.sales.confirmSalesDeliveryItem, option, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
-                });
-
-            }, function() {
-
-                searcher.doSearch();
-            });
-        });
-
-        $addp.click(function(e) {
-
-            e.stopPropagation();
-
-            var option = {};
-
-            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
-
-            if (!$inputs.length) {
-
-                com.showAlert(com.warning, "请选择需要进行配送的配送项");
-
-                return false;
-            }
-
-            $.each($inputs, function(i, v) {
-
-                var $this = $(v);
-
-                option["salesDeliveryItems[" + i + "].sdiid"] = $this.attr('data-sdiid');
-            });
-
-            com.showConfirm('确定要将选中的配送项进行配送吗?', function(index, layero) {
-
-                com.post(api.sales.tranSalesDeliveryItem, option, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
-
-                });
-
-            }, function() {
-
-                searcher.doSearch();
-            });
-        });
-        $adds.click(function(e) {
-
-            e.stopPropagation();
-
-            var option = {};
-
-            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
-
-            if (!$inputs.length) {
-
-                com.showAlert(com.warning, "请选择需要进行审核的配送项");
-
-                return;
-
-            }
-
-            $.each($inputs, function(i, v) {
-
-                var $this = $(v);
-
-                option["salesDeliveryItems[" + i + "].sdiid"] = $this.attr('data-sdiid');
-            });
-
-            com.showConfirm('确定要将选中的配送项进行审核吗?', function(index, layero) {
-
-                com.post(api.sales.checkSalesDeliveryItem, option, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
-
-                });
-
-            }, function() {
-
-                searcher.doSearch();
-            });
-        });
-
-        $addw.click(function(e) {
-
-            e.stopPropagation();
-
-            var option = {};
-
-            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
-
-            if (!$inputs.length) {
-
-                com.showAlert(com.warning, "请选择需要进行完结的配送项");
-
-                return;
-
-            }
-
-            $.each($inputs, function(i, v) {
-
-                var $this = $(v);
-
-                option["salesDeliveryItems[" + i + "].sdiid"] = $this.attr('data-sdiid');
-            });
-
-            com.showConfirm('确定要将选中的配送项进行完结吗?', function(index, layero) {
-
-                com.post(api.sales.finishSalesDeliveryItem, option, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
-
-                });
-
-            }, function() {
-
-                searcher.doSearch();
-            });
-        });
-
-        if (salesDelivery.pageType == "check") {
-            return [$checka, $adda];
-        } else if (salesDelivery.pageType == "init") {
-            return [$checka, $addp];
-        } else if (salesDelivery.pageType == "tran") {
-            return [$checka, $adds];
-        } else if (salesDelivery.pageType == "confirm") {
-            return [$checka, $addw];
-        } else {
-            return [];
-        }
-
-    }, 'resultList');
 
     salesDelivery.btns.saveEditBtn.on('click', function() {
 

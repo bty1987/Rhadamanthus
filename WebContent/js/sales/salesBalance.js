@@ -87,407 +87,278 @@ $(function() {
 
     }, null, false);
 
-    var displayFunc = (function() {
-
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid');
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-
-                    var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单');
-                    var $btnVbalanceValue = $('<a></a>').addClass('btn btn-minier btn-yellow').html('厂结值');
-                    var $btnVbalance = $('<a></a>').addClass('btn btn-minier btn-success').html('厂结');
-                    var $btnBalanceValue = $('<a></a>').addClass('btn btn-minier btn-warning').html('结算值');
-                    var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-inverse').html('结算');
-                    var $btnPayment = $('<a></a>').addClass('btn btn-minier btn-danger').html('款项');
-                    var $btnBalanceItem = $('<a></a>').addClass('btn btn-minier btn-pink').html('子项');
-                    var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-purple').html('反结');
-                    var $btnReject = $('<a></a>').addClass('btn btn-minier btn-purple').html('驳回');
-                    var $picture = $('<a></a>').addClass('btn btn-minier btn-search').html('图片');
-
-                    var coupon = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.coupon;
-                    var maling = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.maling;
-                    var venderMaling = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.venderMaling;
-                    var propertyArr = [];
-                    var styleArr = [];
-                    $.each(pageConfig.propertyArr, function(pi, pv) {
-
-                        switch (pv) {
-                            case "orderId":
-                                propertyArr.push(["装修单号:", v.sales.orderId, "blue", tools.decoration.info, v.sales.orderId]);
-                                break;
-                            case "address":
-                                propertyArr.push(["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"]);
-                                break;
-                            case "salesman":
-                                propertyArr.push(["渠道:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
-                                if (v.salesman.dept)
-                                    propertyArr.push(["渠道部门:", v.salesman.dept.name, "grey", tools.department.info, v.salesman.dept.did]);
-                                if (v.salesman.dept && v.sales.salesman.dept.fatherDept)
-                                    propertyArr.push(["渠道大区:", v.salesman.dept.fatherDept.name, "grey", tools.department.info, v.salesman.dept.fatherDept.did]);
-                                break;
-                            case "dept":
-                                propertyArr.push(["归属部门:", v.dept.name, "grey", tools.department.info, v.dept.did]);
-                                break;
-                            case "region":
-                                propertyArr.push(["归属大区:", v.region.name, "grey", tools.department.info, v.region.did]);
-                                break;
-                            case "instorer":
-                                propertyArr.push(["驻店:", v.sales.instorer.currentName, "grey", tools.personel.info, v.sales.instorer.userId]);
-                                break;
-                            case "brand":
-                                propertyArr.push(["品牌:", v.brand ? v.brand.name : v.sales.brand.name, "grey", tools.brand.info, v.sales.brand.bid]);
-                                break;
-                            case "depositpay":
-                                propertyArr.push(["定金:", v.sales.depositpay, "blue"]);
-                                break;
-                            case "fullpay":
-                                propertyArr.push(["补款:", v.sales.fullpay, "blue"]);
-                                break;
-                            case "prevalue":
-                                propertyArr.push(["预结值:", v.balance, "blue"]);
-                                break;
-                            case "preCreateTime":
-                                propertyArr.push(["预结时间:", v.createTime, "green"]);
-                                break;
-                            case "precreater":
-                                propertyArr.push(["预结人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId]);
-                                break;
-                            case "vbalance":
-                                propertyArr.push(["厂结值:", v.vbalance, "blue"]);
-                                break;
-                            case "venderTime":
-                                propertyArr.push(["厂结时间:", v.venderTime, "green"]);
-                                break;
-                            case "pbalance":
-                                propertyArr.push(["结算值:", v.pbalance, "blue"]);
-                                break;
-                            case "balanceTime":
-                                propertyArr.push(["结算时间:", v.postTime, "green"]);
-                                break;
-                            case "poster":
-                                propertyArr.push(["结算人:", v.poster.currentName, "grey", tools.personel.info, v.poster.userId]);
-                                break;
-                            case "sales-creater":
-                                propertyArr.push(["创建人:", v.sales.creater.currentName, "grey", tools.personel.info, v.sales.creater.userId]);
-                                break;
-                            case "grade":
-                                propertyArr.push(["等级:", v.sales.grade, "red"]);
-                                break;
-                            case "maling":
-                                propertyArr.push(["抹零:", maling, "blue"]);
-                                break;
-                            case "venderMaling":
-                                propertyArr.push(["厂商抹零:", venderMaling, "blue"]);
-                                break;
-                            case "coupon":
-                                propertyArr.push(["券值:", coupon, "blue"]);
-                                break;
-                            case "couponInfo":
-                                propertyArr.push(["券信息:", v.sales.couponInfo, "grey"]);
-                                break;
-                            case "salesBananceCoupon":
-                                styleArr.push(["款项券:", v.coupon, "blue"]);
-                                break;
-                            case "type":
-                                propertyArr.push(["类型:", constant.sales().salesBalance.type.keys[v.type], "red"]);
-                                break;
-                            case "voster":
-                                propertyArr.push(["厂结人:", v.voster.currentName, "red", tools.personel.info, v.voster.userId]);
-                                break;
-                            case "allowance":
-                                styleArr.push(["补贴:", v.allowance, "blue"]);
-                                break;
-                            case "total":
-                                styleArr.push(["总价:", v.total, "blue"]);
-                                break;
-                            case "oneType":
-                                styleArr.push(["一类:", constant.sales().salesBalance.onetype.keys[v.onetype], "red"]);
-                                break;
-                            case "status":
-                                styleArr.push(["状态:", constant.sales().salesBalance.status.keys[v.status], "red"]);
-                                break;
-                            case "deliverStatus":
-                                if (v.type == 0 && v.onetype == 0) {
-                                    styleArr.push(["配送状态:", constant.sales().salesBalance.deliverStatus.keys[v.deliverStatus], "red"])
-                                }
-                                break;
-                            case "verifyStatus":
-                                styleArr.push(["审核状态:", constant.sales().salesBalance.verifyStatus.keys[v.verifyStatus], "red"]);
-                                break;
-                            case "confirmStatus":
-                                styleArr.push(["确认状态:", constant.sales().salesBalance.confirmStatus.keys[v.confirmStatus], "red"]);
-                                break;
-
-                        }
-                    });
-
-                    var $label = $('<label></label>').addClass('control-label').css({
-                        'color': 'grey',
-                        'font-size': '20px',
-                        "font-weight": "bold"
-                    });
-                    var _label = $('<label></label>');
-                    var $input = $('<input>').attr({
-                        "type": "checkbox",
-                        "name": "sbids",
-                        "class": "",
-                        "data-sbid": v.sbid,
-                        "data-status": v.status,
-                        "data-vbalance": v.vbalance,
-                        "data-pbalance": v.pbalance,
-                        "data-supplier": v.sales.supplier.uid
-                    }).addClass('ace ace-checkbox-2');
-                    var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.sales.no);
-                    _label.append($input).append(_span).appendTo($label);
-
-                    $.each(propertyArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>').appendTo($ulProperty);
-
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                        if (value.length == 5) {
-                            $liProperty.click(function() {
-
-                                value[3]($liProperty, value[4]);
-
-                            }).css("cursor", "pointer");
-                        }
-                    });
-                    $.each(styleArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulStyle);
-                    });
-
-                    $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty).append($ulStyle);
-
-                    $.each(pageConfig.pageBtn, function(k, b) {
-
-                        switch (b) {
-
-                            case "decoration":
-                                $btnDiv.append($btnDecoration);
-                                break;
-                            case "sub":
-                                $btnDiv.append($btnBalanceItem);
-                                break;
-                            case "payment":
-                                $btnDiv.append($btnPayment);
-                                break;
-                            case "vbalancevalue":
-                                $btnDiv.append($btnVbalanceValue);
-                                break;
-                            case "status":
-                                $btnDiv.append($btnStatus);
-                                break;
-                            case "reject":
-                                $btnDiv.append($btnReject);
-                                break;
-                            case "vbalance":
-                                $btnDiv.append($btnVbalance);
-                                break;
-                            case "balancevalue":
-                                $btnDiv.append($btnBalanceValue);
-                                break;
-                            case "balance":
-                                $btnDiv.append($btnBalance);
-                                break;
-                            case "salesBalancePicture":
-                                $btnDiv.append($picture);
-                                break;
-                        }
-                    });
-                    $label.appendTo($h3);
-
-                    if (v.type != 4) // 多次结算类型数据不显示操作功能按钮
-                        $btnDiv.appendTo($h3);
-
-                    // 装修单显示详情
-                    $btnDecoration.click(function() {
-
-                        com.focusPage("text").css("line-height", "27px");
-                        com.post(api.decoration.queryDecorationByOrderId, {
-                            "decorationOrderId": v.sales.orderId
-                        }, function(res) {
-
-                            var decorationInfo = res.decoration;
-
-                            com.focusPage("#orderId").html(decorationInfo.orderId); // 装修单号
-                            com.focusPage("#address").html(decorationInfo.house.village.name + '' + decorationInfo.house.houseNumber);// 装修楼盘地址
-                            com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);// 装修设计师
-                            com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);// 装修跟单员
-                            com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);// 装修监理
-                            com.focusPage("#typeness").html(constant.decoration().decoration.typeness.keys[decorationInfo.typeness]);
-                            com.focusPage("#projectStatus").html(constant.decoration().decoration.projectStatus.keys[decorationInfo.projectStatus]);
-
-                            salesBalance.modals.decorationInfo.modal("show");
-                        });
-
-                    });
-
-                    $btnVbalanceValue.click(function(e) {
-
-                        if (v.status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
-                            com.showAlert(com.warning, "非预结状态下不允许进行厂结");
-                            return false;
-                        }
-
-                        salesBalance.items.vbalanceValue.find('input[name="total"]').val(v.total);
-
-                        com.popup4model("#vbalanceValue", "厂结值", function() {
-
-                            salesBalance.sales = v;
-                        }, function() {
-
-                            com.clearValidator();
-                            com.cleanItems(salesBalance.items);
-                        });
-                    });
-
-                    $btnVbalance.click(function(e) {
-
-                        if (v.status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
-                            com.showAlert(com.warning, "非预结状态下不允许进行厂结");
-                            return false;
-                        }
-
-                        if (v.vbalance == 0) {
-                            com.showAlert(com.warning, "厂结值未填写 , 请检查");
-                            return false;
-                        }
-
-                        com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行厂结吗?', function(index, layero) {
-
-                            com.post(api.sales.vpostSalesBalance, {
-                                "salesBalances[0].sbid": v.sbid
-                            }, function(res) {
-
-                                com.showAlert(com.info, "厂结成功");
-                                searcher.doSearch();
-                            });
-
-                        }, function() {
-
-                            searcher.doSearch();
-                        });
-                    });
-
-                    $btnBalanceValue.click(function(e) {
-
-                        if (v.status != constant.sales().salesBalance.STATUS_VENDORBALANCE_INT) {
-                            com.showAlert(com.warning, "非厂结状态下不允许进行结算");
-                            return false;
-                        }
-
-                        salesBalance.items.pbalanceValue.find('input[name="balanceValue"]').val(v.balance);
-                        salesBalance.items.pbalanceValue.find('input[name="vbalanceValue"]').val(v.vbalance);
-
-                        com.popup4model("#pbalanceValue", "结算值", function() {
-
-                            salesBalance.sales = v;
-                        }, function() {
-
-                            com.clearValidator();
-                            com.cleanItems(salesBalance.items);
-                        });
-                    });
-
-                    $btnBalance.click(function(e) {
-
-                        if (v.status != constant.sales().salesBalance.STATUS_VENDORBALANCE_INT) {
-                            com.showAlert(com.warning, "非厂结状态下不允许进行结算");
-                            return false;
-                        }
-
-                        com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行结算吗?', function(index, layero) {
-
-                            com.post(api.sales.postSalesBalance, {
-                                "salesBalances[0].sbid": v.sbid
-                            }, function(res) {
-
-                                com.showAlert(com.info, "结算成功");
-                                searcher.doSearch();
-                            });
-
-                        }, function() {
-
-                            searcher.doSearch();
-                        });
-
-                    });
-
-                    $btnPayment.click(function(e) {
-
-                        params.sales.sales = v.sales;
-                        params.sales.type = "balance";
-
-                        com.popup4page("#viewPopUp", "views/sales/sales4payment.html?type=balance", "收款");
-                    });
-
-                    $btnBalanceItem.click(function(e) {
-
-                        params.sales.sales = v.sales;
-                        params.sales.salesBalance = v;
-
-                        com.popup4page("#viewPopUp", "views/sales/salesItem4balance.html", "子项");
-                    });
-
-                    $btnStatus.click(function(e) {
-
-                        com.post(api.sales.rpreSalesBalance, {
-                            "salesBalance.sbid": v.sbid
-                        }, function(res) {
-
-                            com.showAlert(com.info, "更新为预结成功");
-                            searcher.doSearch();
-                        });
-                    });
-
-                    $btnReject.click(function(e) {
-
-                        com.post(api.sales.rejectSalesBalance, {
-                            "salesBalance.sbid": v.sbid
-                        }, function(res) {
-
-                            com.showAlert(com.info, "操作成功");
-
-                            searcher.doSearch();
-                        });
-                    });
-
-                    $picture.click(function() {
-
-                        managedrawing(v);
-                        initUploadBtn(v);
-                    });
-                });
-
-                $ul.appendTo($tableWrap);
-            }
+    function decorationBalance(v) {
+
+        com.focusPage("text").css("line-height", "27px");
+        com.post(api.decoration.queryDecorationByOrderId, {
+            "decorationOrderId": v.sales.orderId
+        }, function(res) {
+
+            var decorationInfo = res.decoration;
+            com.focusPage("#orderId").html(decorationInfo.orderId);
+            com.focusPage("#address").html(decorationInfo.house.village.name + '' + decorationInfo.house.houseNumber);
+            com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);
+            com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);
+            com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);
+            com.focusPage("#typeness").html(constant.decoration().decoration.typeness.keys[decorationInfo.typeness]);
+            com.focusPage("#projectStatus").html(constant.decoration().decoration.projectStatus.keys[decorationInfo.projectStatus]);
+
+            salesBalance.modals.decorationInfo.modal("show");
+        });
+    }
+
+    function vbalancevalueBalance(v) {
+
+        if (v.status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
+            com.showAlert(com.warning, "非预结状态下不允许进行厂结");
+            return false;
+        }
+
+        salesBalance.items.vbalanceValue.find('input[name="total"]').val(v.total);
+
+        com.popup4model("#vbalanceValue", "厂结值", function() {
+            salesBalance.sales = v;
+        }, function() {
+            com.clearValidator();
+            com.cleanItems(salesBalance.items);
+        });
+    }
+
+    function vbalanceBalance(v) {
+
+        if (v.status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
+            com.showAlert(com.warning, "非预结状态下不允许进行厂结");
+            return false;
+        }
+
+        if (v.vbalance == 0) {
+            com.showAlert(com.warning, "厂结值未填写 , 请检查");
+            return false;
+        }
+
+        com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行厂结吗?', function() {
+            com.post(api.sales.vpostSalesBalance, {
+                "salesBalances[0].sbid": v.sbid
+            }, function() {
+                com.showAlert(com.info, "厂结成功");
+                searcher.doSearch();
+            });
+        }, function() {
+            searcher.doSearch();
+        });
+    }
+
+    function balancevalueBalance(v) {
+
+        if (v.status != constant.sales().salesBalance.STATUS_VENDORBALANCE_INT) {
+            com.showAlert(com.warning, "非厂结状态下不允许进行结算");
+            return false;
+        }
+
+        salesBalance.items.pbalanceValue.find('input[name="balanceValue"]').val(v.balance);
+        salesBalance.items.pbalanceValue.find('input[name="vbalanceValue"]').val(v.vbalance);
+
+        com.popup4model("#pbalanceValue", "结算值", function() {
+            salesBalance.sales = v;
+        }, function() {
+            com.clearValidator();
+            com.cleanItems(salesBalance.items);
+        });
+    }
+
+    function balanceBalance(v) {
+
+        if (v.status != constant.sales().salesBalance.STATUS_VENDORBALANCE_INT) {
+            com.showAlert(com.warning, "非厂结状态下不允许进行结算");
+            return false;
+        }
+
+        com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行结算吗?', function() {
+            com.post(api.sales.postSalesBalance, {
+                "salesBalances[0].sbid": v.sbid
+            }, function() {
+                com.showAlert(com.info, "结算成功");
+                searcher.doSearch();
+            });
+        }, function() {
+            searcher.doSearch();
+        });
+    }
+
+    function paymentBalance(v) {
+
+        params.sales.sales = v.sales;
+        params.sales.type = "balance";
+
+        com.popup4page("#viewPopUp", "views/sales/sales4payment.html?type=balance", "收款");
+    }
+
+    function subBalance(v) {
+
+        params.sales.sales = v.sales;
+        params.sales.salesBalance = v;
+
+        com.popup4page("#viewPopUp", "views/sales/salesItem4balance.html", "子项");
+    }
+
+    function statusBalance(v) {
+
+        com.post(api.sales.rpreSalesBalance, {
+            "salesBalance.sbid": v.sbid
+        }, function() {
+            com.showAlert(com.info, "更新为预结成功");
+            searcher.doSearch();
+        });
+    }
+
+    function rejectBalance(v) {
+
+        com.post(api.sales.rejectSalesBalance, {
+            "salesBalance.sbid": v.sbid
+        }, function() {
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
+    }
+
+    function pictureBalance(v) {
+
+        managedrawing(v);
+        initUploadBtn(v);
+    }
+
+    function buildBalanceLineprops() {
+
+        var propertyMap = {
+            orderId: {field: "orderId", name: "装修单号", prop: "sales.orderId", clazz: "blue", click: function($this, v) {tools.decoration.info($this, v.sales.orderId);}},
+            address: {field: "address", name: "楼盘地址", prop: function(v) {return v.sales.house.village.name + " " + v.sales.house.houseNumber;}, clazz: "grey"},
+            depositpay: {field: "depositpay", name: "定金", prop: "sales.depositpay", clazz: "blue"},
+            fullpay: {field: "fullpay", name: "补款", prop: "sales.fullpay", clazz: "blue"},
+            prevalue: {field: "prevalue", name: "预结值", prop: "balance", clazz: "blue"},
+            preCreateTime: {field: "preCreateTime", name: "预结时间", prop: "createTime", clazz: "green"},
+            precreater: {field: "precreater", name: "预结人", prop: "creater.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.creater.userId);}},
+            vbalance: {field: "vbalance", name: "厂结值", prop: "vbalance", clazz: "blue"},
+            venderTime: {field: "venderTime", name: "厂结时间", prop: "venderTime", clazz: "green"},
+            pbalance: {field: "pbalance", name: "结算值", prop: "pbalance", clazz: "blue"},
+            balanceTime: {field: "balanceTime", name: "结算时间", prop: "postTime", clazz: "green"},
+            poster: {field: "poster", name: "结算人", prop: "poster.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.poster.userId);}},
+            grade: {field: "grade", name: "等级", prop: "sales.grade", clazz: "red"},
+            type: {field: "type", name: "类型", prop: function(v) {return constant.sales().salesBalance.type.keys[v.type];}, clazz: "red"},
+            voster: {field: "voster", name: "厂结人", prop: "voster.currentName", clazz: "red", click: function($this, v) {tools.personel.info($this, v.voster.userId);}},
+            "sales-creater": {field: "sales-creater", name: "创建人", prop: "sales.creater.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.sales.creater.userId);}},
+            maling: {field: "maling", name: "抹零", prop: function(v) {return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.maling;}, clazz: "blue"},
+            venderMaling: {field: "venderMaling", name: "厂商抹零", prop: function(v) {return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.venderMaling;}, clazz: "blue"},
+            coupon: {field: "coupon", name: "券值", prop: function(v) {return v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? 0 : v.sales.coupon;}, clazz: "blue"},
+            couponInfo: {field: "couponInfo", name: "券信息", prop: "sales.couponInfo", clazz: "grey"}
         };
-        return {
-            init: function(tableId, listData) {
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+        var props = [{
+            type: "checkbox",
+            field: "data-sbid",
+            prop: "sbid",
+            name: "sbids",
+            value: "sbid",
+            attrs: function(v) {
+                return {
+                    "data-sbid": v.sbid,
+                    "data-status": v.status,
+                    "data-vbalance": v.vbalance,
+                    "data-pbalance": v.pbalance,
+                    "data-supplier": v.sales.supplier.uid
+                };
             }
+        }];
+
+        $.each(pageConfig.propertyArr, function(i, key) {
+            if (propertyMap[key]) {
+                props.push(propertyMap[key]);
+                return true;
+            }
+            if (key == "salesBananceCoupon") {props.push({type: "newline"}); props.push({field: "salesBananceCoupon", name: "款项券", prop: "coupon", clazz: "blue"}); return true;}
+            if (key == "allowance") {props.push({field: "allowance", name: "补贴", prop: "allowance", clazz: "blue"}); return true;}
+            if (key == "total") {props.push({field: "total", name: "总价", prop: "total", clazz: "blue"}); return true;}
+            if (key == "oneType") {props.push({field: "oneType", name: "一类", prop: function(v) {return constant.sales().salesBalance.onetype.keys[v.onetype];}, clazz: "red"}); return true;}
+            if (key == "status") {props.push({field: "balanceStatus", name: "状态", prop: function(v) {return constant.sales().salesBalance.status.keys[v.status];}, clazz: "red"}); return true;}
+            if (key == "deliverStatus") {props.push({field: "deliverStatus", name: "配送状态", show: function(v) {return v.type == 0 && v.onetype == 0;}, prop: function(v) {return constant.sales().salesBalance.deliverStatus.keys[v.deliverStatus];}, clazz: "red"}); return true;}
+            if (key == "verifyStatus") {props.push({field: "verifyStatus", name: "审核状态", prop: function(v) {return constant.sales().salesBalance.verifyStatus.keys[v.verifyStatus];}, clazz: "red"}); return true;}
+            if (key == "confirmStatus") {props.push({field: "confirmStatus", name: "确认状态", prop: function(v) {return constant.sales().salesBalance.confirmStatus.keys[v.confirmStatus];}, clazz: "red"}); return true;}
+        });
+
+        return props;
+    }
+
+    function buildBalanceLinebtns() {
+
+        var buttonMap = {
+            decoration: {name: "装修单", clazz: "btn-purple", show: function(v) {return v.type != 4;}, handle: decorationBalance},
+            sub: {name: "子项", clazz: "btn-pink", show: function(v) {return v.type != 4;}, handle: subBalance},
+            payment: {name: "款项", clazz: "btn-danger", show: function(v) {return v.type != 4;}, handle: paymentBalance},
+            vbalancevalue: {name: "厂结值", clazz: "btn-yellow", show: function(v) {return v.type != 4;}, handle: vbalancevalueBalance},
+            status: {name: "反结", clazz: "btn-purple", show: function(v) {return v.type != 4;}, handle: statusBalance},
+            reject: {name: "驳回", clazz: "btn-purple", show: function(v) {return v.type != 4;}, handle: rejectBalance},
+            vbalance: {name: "厂结", clazz: "btn-success", show: function(v) {return v.type != 4;}, handle: vbalanceBalance},
+            balancevalue: {name: "结算值", clazz: "btn-warning", show: function(v) {return v.type != 4;}, handle: balancevalueBalance},
+            balance: {name: "结算", clazz: "btn-inverse", show: function(v) {return v.type != 4;}, handle: balanceBalance},
+            salesBalancePicture: {name: "图片", clazz: "btn-search", show: function(v) {return v.type != 4;}, handle: pictureBalance}
         };
-    })();
+
+        var btns = {};
+
+        $.each(pageConfig.pageBtn, function(i, key) {
+            buttonMap[key] && (btns[key] = $.extend({}, buttonMap[key]));
+        });
+
+        return btns;
+    }
+
+    function buildBalanceButtons() {
+
+        var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+        $('<span></span>').text('全选').appendTo($checka);
+
+        var $addaExportSales = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importSalesBalance').css('margin-top', '0px 3px');
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($addaExportSales);
+        $('<span></span>').text('导出').appendTo($addaExportSales);
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'batchVendor').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($adda);
+        $('<span></span>').text('批量厂结').appendTo($adda);
+
+        var $addaEnd = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'batchSettlement').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($addaEnd);
+        $('<span></span>').text('批量结算').appendTo($addaEnd);
+
+        var $balanceEnd = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'balanceEnd').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-check bigger-110').appendTo($balanceEnd);
+        $('<span></span>').text('结算单').appendTo($balanceEnd);
+
+        $checka.click(function() {
+            checkAll();
+        });
+
+        $addaExportSales.click(function() {
+            pageSalesBalanceExport();
+        });
+
+        $adda.click(function() {
+            vpostBalance();
+        });
+
+        $addaEnd.click(function() {
+            postBalance();
+        });
+
+        $balanceEnd.click(function() {
+            crebalance();
+        });
+
+        if (salesBalance.pageType == "bdompany" || salesBalance.pageType == "bsupplier") {
+            return [$checka, $addaExportSales, $adda, $balanceEnd];
+        } else {
+            return [$checka, $addaExportSales, $adda, $addaEnd, $balanceEnd];
+        }
+    }
 
     var searcher = new Searcher();
 
@@ -497,64 +368,17 @@ $(function() {
         salesBalanceParams["salesBalance.sales.type"] = 1;
     }
 
-    searcher.init(pageConfig.condArr, 'condList', pageConfig.apiPage, function(data) {
+    var searcher = new Searcher();
 
-        displayFunc.init('resultList', data);
+    var salesBalanceParams = {}
 
-    }, 'pagenation', salesBalance.postData, salesBalanceParams, false, null, function() {
+    if (salesBalance.pageType.indexOf("allowance") != -1) {
+        salesBalanceParams["salesBalance.sales.type"] = 1;
+    }
 
-        var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
-        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
-        var $checkspan = $('<span></span>').text('全选').appendTo($checka);
+    searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, salesBalanceParams, pageConfig.condArr, salesBalance.postData, null, false, buildBalanceButtons);
+    searcher.line('sales.no', buildBalanceLineprops(), buildBalanceLinebtns()).render();
 
-        var $addaExportSales = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importSalesBalance').css('margin-top', '0px 3px');
-        var $addaExporti = $('<i></i>').addClass('icon-check bigger-110').appendTo($addaExportSales);
-        var $addaExportspan = $('<span></span>').text('导出').appendTo($addaExportSales);
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'batchVendor').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-check bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('批量厂结').appendTo($adda);
-
-        var $addaEnd = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'batchSettlement').css("margin", "0px 3px");
-        var $addiEnd = $('<i></i>').addClass('icon-check bigger-110').appendTo($addaEnd);
-        var $addspanEnd = $('<span></span>').text('批量结算').appendTo($addaEnd);
-
-        var $balanceEnd = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'balanceEnd').css("margin", "0px 3px");
-        var $balanceiEnd = $('<i></i>').addClass('icon-check bigger-110').appendTo($balanceEnd);
-        var $balancespanEnd = $('<span></span>').text('结算单').appendTo($balanceEnd);
-
-        $checka.click(function() {
-
-            checkAll();
-        });
-
-        $addaExportSales.click(function() {
-
-            pageSalesBalanceExport();
-        });
-
-        $adda.click(function() {
-
-            vpostBalance();
-        });
-
-        $addaEnd.click(function() {
-
-            postBalance();
-        });
-
-        $balanceEnd.click(function() {
-
-            crebalance();
-        });
-
-        if (salesBalance.pageType == "bdompany" || salesBalance.pageType == "bsupplier") {
-            return [$checka, $addaExportSales, $adda, $balanceEnd];
-        } else {
-            return [$checka, $addaExportSales, $adda, $addaEnd, $balanceEnd];
-        }
-
-    }, 'resultList');
 
     salesBalance.btns.supplierSaveBtn.on('click', function() {
 
