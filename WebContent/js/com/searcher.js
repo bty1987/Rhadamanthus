@@ -1522,7 +1522,15 @@ var Searcher = function() {
 
                     $.each(tableProps, function(i, d) {
 
-                        $('<td></td>').html(getTableCellText(d.source, v)).appendTo($liLine);
+                        var info = getTableCellText(d.source, v);
+                        var clazz = typeof d.source.clazz == 'function' ? d.source.clazz(v) : d.source.clazz;
+                        var $td = $('<td></td>').appendTo($liLine);
+
+                        if (clazz) {
+                            $('<span></span>').addClass(clazz).html(info).appendTo($td);
+                        } else {
+                            $td.html(info);
+                        }
                     });
 
                     if (hasLinevent) {

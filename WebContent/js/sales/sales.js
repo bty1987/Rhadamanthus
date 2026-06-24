@@ -94,8 +94,13 @@ $(function() {
 
         ascriptionBySid: null,
         name: {},
-        activity: "",
     };
+
+    if (sales.pageType == "activity") {
+        com.switchPage("views/sales/salesActivity.html");
+        return false;
+    }
+
     var pageConfig = drawNode.getConfig(params['urlLoadParams'].type);
     com.initTypeahead('uSalesman', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
@@ -134,550 +139,335 @@ $(function() {
     sales.postData = sales.pageType == "sales" ? sales.postData : ("salesFor" + pageConfig.postDataName);
 
     sales.btns.repositBtns.bindClick(repositBtnsData);
-    var displayFunc = (function() {
-
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    if (sales.pageType == "activity") {
-                        sales.activity = v.activity.name;
-                        v = v.sales;
-                    }
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid');
-                    var $small = $('<small></small>').addClass('blue').html(v.no);
-                    var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
-
-                    var $btnAdd = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('添项');
-                    var $btnSub = $('<a></a>').addClass(' btn btn-minier btn-success').html('项目');
-                    var $btnSupplement = $('<a></a>').addClass('btn btn-minier btn-primary').html('补单');
-                    var $btnMoney = $('<a></a>').addClass(' btn btn-minier btn-warning').html('款项');
-                    var $btnCollect = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('收款');
-                    var $btnRefund = $('<a></a>').addClass(' btn btn-minier btn-danger').html('退货');
-                    var $btnPrint = $('<a></a>').addClass(' btn btn-minier btn-pink').html('打印');
-                    var $btnAct = $('<a></a>').addClass(' btn btn-minier btn-grey').html('活动');
-                    var $btnActivity = $('<a></a>').addClass('btn btn-minier btn-warning').html('活动归属');
-                    var $btnDelivery = $('<a></a>').addClass('btn btn-minier btn-primary').html('配送');
-                    var $btnPelivery = $('<a></a>').addClass('btn btn-minier btn-primary').html('预配送');
-                    var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单');
-                    var $inventory = $('<a></a>').addClass('btn btn-minier btn-blue').html('仓储');
-                    var $ascription = $('<a></a>').addClass('btn btn-minier btn-inverse').html('归属');
-                    var $finish = $('<a></a>').addClass('btn btn-minier btn-inverse').html('完结');
-                    var $send = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
-                    var $terminal = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
-                    var $btnUnpay = $('<a></a>').addClass('btn btn-minier btn-primary').html('结算');
-                    var $picture = $('<a></a>').addClass('btn btn-minier btn-search').html('图片');
-                    var $satisfaction = $('<a></a>').addClass('btn btn-minier btn-purple').html('满意度');
-
-                    var propertyArr = [];
-                    $.each(pageConfig.propertyArr, function(pi, pv) {
-
-                        switch (pv) {
-                            case "orderId":
-                                propertyArr.push(["装修单号:", v.orderId, "blue", tools.decoration.info, v.orderId]);
-                                break;
-                            case "address":
-                                propertyArr.push(["楼盘地址:", (v.house.village.name + " " + v.house.houseNumber), "grey"]);
-                                break;
-                            case "customer":
-                                propertyArr.push(["客户名:", v.customer.name, "grey", tools.customer.info, v.customer.cid]);
-                                break;
-                            case "salesman":
-                                propertyArr.push(["渠道:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
-                                break;
-                            case "dept":
-                                propertyArr.push(["部门:", v.salesman.dept.name, "grey", tools.department.info, v.dept.did]);
-                                break;
-                            case "region":
-                                propertyArr.push(["分区:", (v.salesman.dept && v.salesman.dept.fatherDept) ? v.salesman.dept.fatherDept.name : "", "grey", tools.department.info, v.region.did]);
-                                break;
-                            case "creater":
-                                propertyArr.push(["创建人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId]);
-                                break;
-                            case "guider":
-                                propertyArr.push(["导购:", v.guider.currentName, "grey", tools.personel.info, v.guider.userId]);
-                                break;
-                            case "instorer":
-                                propertyArr.push(["驻店:", v.instorer.currentName, "grey", tools.personel.info, v.instorer.userId]);
-                                break;
-                            case "guideDept":
-                                propertyArr.push(["主材部:", v.guideDept.name, "grey", tools.department.info, v.guideDept.did]);
-                                break;
-                            case "category":
-                                propertyArr.push(["品类:", v.category, "grey"]);
-                                break;
-                            case "brand":
-                                propertyArr.push(["品牌:", v.brand.name, "grey", tools.brand.info, v.brand.bid]);
-                                break;
-                            case "depositpay":
-                                propertyArr.push(["定金:", v.depositpay, "blue"]);
-                                break;
-                            case "fullpay":
-                                propertyArr.push(["补款:", v.fullpay, "blue"]);
-                                break;
-                            case "createTime":
-                                propertyArr.push(["创建时间:", v.createTime, "green"]);
-                                break;
-                            case "balanceTime":
-                                propertyArr.push(["结算时间:", v.balanceTime, "green"]);
-                                break;
-                            case "fullpayTime":
-                                propertyArr.push(["补款时间:", v.fullpayTime, "green"]);
-                                break;
-                            case "affirmTime":
-                                propertyArr.push(["确认时间:", v.affirmTime, "green"]);
-                                break;
-                            case "isAffirm":
-                                propertyArr.push(["确认状态:", constant.sales().sales.isAffirm.keys[v.isAffirm], "red"]);
-                                break;
-                            case "status":
-                                propertyArr.push(["状态:", constant.sales().sales.status.keys[v.status], "red"]);
-                                break;
-                            case "finisher":
-                                propertyArr.push(["完结人:", v.finisher.currentName, "red", tools.personel.info, v.finisher.userId]);
-                                break;
-                            case "finishTime":
-                                propertyArr.push(["完结时间:", v.finishTime, "green"]);
-                                break;
-                            case "balanceStatus":
-                                propertyArr.push(["结算状态:", constant.sales().sales.balanceStatus.keys[v.balanceStatus], "red"]);
-                                break;
-                            case "depositpayStatus":
-                                propertyArr.push(["定金状态:", constant.sales().sales.depositpayStatus.keys[v.depositpayStatus], "red"]);
-                                break;
-                            case "fullpayStatus":
-                                propertyArr.push(["补款状态:", constant.sales().sales.fullpayStatus.keys[v.fullpayStatus], "red"]);
-                                break;
-                            case "grade":
-                                propertyArr.push(["等级:", v.grade, "red"]);
-                                break;
-                            case "total":
-                                propertyArr.push(["总额:", v.total, "blue"]);
-                                break;
-                            case "amount":
-                                propertyArr.push(["当前总额:", v.amount, "blue"]);
-                                break;
-                            case "maling":
-                                propertyArr.push(["抹零:", v.maling, "blue"]);
-                                break;
-                            case "venderMaling":
-                                propertyArr.push(["厂商抹零:", v.venderMaling, "blue"]);
-                                break;
-                            case "coupon":
-                                propertyArr.push(["券值:", v.coupon, "blue"]);
-                                break;
-                            case "couponInfo":
-                                propertyArr.push(["券信息:", v.couponInfo, "grey"]);
-                                break;
-                            case "comment":
-                                propertyArr.push(["备注:", v.comment, "grey"]);
-                                break;
-                            case "activety":
-                                propertyArr.push(["活动归属:", sales.activity, "grey"]);
-                                break;
-                            case "salesType":
-                                propertyArr.push(["类型:", constant.sales().sales.type.keys[v.type], "red"]);
-                                break;
-                        }
-                    });
-                    $.each(propertyArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>').appendTo($ulProperty);
-
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                        if (value.length == 5) {
-                            $liProperty.click(function() {
-
-                                value[3]($liProperty, value[4]);
-
-                            }).css("cursor", "pointer");
-                        }
-                    });
-
-                    $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty);
-                    $small.appendTo($h3);
-
-                    $.each(pageConfig.pageBtn, function(k, b) {
-
-                        switch (b) {
-                            case "decoration":
-                                $btnDiv.append($btnDecoration);
-                                break;
-                            case "ascription":
-                                $btnDiv.append($ascription);
-                                break;
-                            case "inventory":
-                                $btnDiv.append($inventory);
-                                break;
-                            case "sub":
-                                $btnDiv.append($btnSub);
-                                break;
-                            case "collect":
-                                if (v.type != constant.sales().sales.TYPE_SUB_INT) {
-                                    $btnDiv.append($btnCollect);
-                                }
-                                break;
-                            case "add":
-                                if (v.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
-                                    $btnDiv.append($btnAdd);
-                                }
-                                break;
-                            case "supplement":
-                                if (v.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
-                                    $btnDiv.append($btnSupplement);
-                                }
-                                break;
-                            case "refund":
-                                $btnDiv.append($btnRefund);
-                                break;
-                            case "send":
-                                $btnDiv.append($send);
-                                break;
-                            case "terminal":
-                                if (v.status != constant.sales().sales.STATUS_WAST_INT) {
-                                    $btnDiv.append($terminal);
-                                }
-                                break;
-                            case "print":
-                                if (v.status != constant.sales().sales.STATUS_WAST_INT) {
-                                    $btnDiv.append($btnPrint);
-                                }
-                                break;
-                            case "act":
-                                if (v.status != constant.sales().sales.STATUS_WAST_INT) {
-                                    $btnDiv.append($btnAct);
-                                }
-                                break;
-                            case "activity":
-                                if ([0, 5].indexOf(v.status) != -1) {
-                                    $btnDiv.append($btnActivity);
-                                }
-                                break;
-                            case "money":
-                                if (v.status != constant.sales().sales.STATUS_WAST_INT && v.type != constant.sales().sales.TYPE_SUB_INT) {
-                                    $btnDiv.append($btnMoney);
-                                }
-                                break;
-                            case "finish":
-                                if (v.status != constant.sales().sales.STATUS_WAST_INT) {
-                                    $btnDiv.append($finish);
-                                }
-                                break;
-                            case "saledelivery":
-                                if ([0, 5].indexOf(v.status) != -1 && [1, 2].indexOf(v.fullpayStatus) != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
-                                    $btnDiv.append($btnDelivery);
-                                }
-                                break;
-                            case "prodelivery":
-                                $btnDiv.append($btnPelivery);
-                                break;
-                            case "unpay":
-                                if (v.type == constant.sales().sales.TYPE_SUB_INT) {
-                                    $btnDiv.append($btnUnpay);
-                                }
-                                break;
-                            case "picture":
-                                $btnDiv.append($picture);
-                                break;
-                            case "satisfaction":
-                                $btnDiv.append($satisfaction);
-                                break;
-                        }
-                    });
-                    $btnDiv.appendTo($h3);
-
-                    // 归属修改
-                    $ascription.click(function() {
-
-                        sales.ascriptionBySid = v.sid;
-                        com.updateTypeahead("uSalesman", v.salesman.userId, v.salesman.currentName + "-" + v.salesman.dept.name);
-                        com.updateTypeahead("uInstorer", v.instorer.userId, v.instorer.currentName + "-" + v.instorer.dept.name);
-                        com.updateTypeahead("uGuider", v.guider.userId, v.guider.currentName + "-" + v.guider.dept.name);
-                        com.updateTypeahead("uSupplier", v.supplier.userId, v.supplier.currentName);
-                        sales.modals.ascription.modal("show");
-                    });
-
-                    $finish.click(function() {
-
-                        com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单更新为完结状态吗?', function() {
-
-                            com.post(api.sales.finishSales, {
-                                "sales.sid": v.sid
-                            }, function() {
-
-                                com.showAlert(com.info, "更新成功");
-                                salesSearcher.doSearch();
-
-                            });
-                        });
-                    });
-
-                    $inventory.click(function() {
-
-                        params.sales.sales = v;
-
-                        com.popup4page("#layerPopUp", "/views/sales/sales4inventory.html", "详情")
-                    });
-
-                    $btnAdd.click(function() {
-
-                        params.sales.sales = v;
-
-                        com.popup4page("#layerPopUp", "views/sales/sales2add.html", "添项", '', function() {
-
-                            salesSearcher.doSearch();
-                        })
-                    });
-
-                    $btnSub.click(function() {
-
-                        params.sales.sales = v;
-                        params.sales.dompany = sales.pageType;
-
-                        com.popup4page("#layerPopUp", "views/sales/salesItem.html", "项目", '', function() {
-
-                            salesSearcher.doSearch();
-                        })
-                    });
-
-                    // 补单按钮
-                    $btnSupplement.click(function() {
-
-                        params.sales.sales = v;
-                        params.sales.dompany = sales.pageType;
-
-                        com.popup4page("#layerPopUp", "views/sales/sales2supple.html", "补单", "", function() {
-
-                            salesSearcher.doSearch();
-                        });
-                    });
-
-                    $btnCollect.click(function() {
-
-                        params.sales.sales = v;
-                        params.sales.type = "sales";
-
-                        com.popup4page("#layerPopUp", "views/sales/sales4payment.html", "收款");
-                    });
-
-                    $btnUnpay.click(function() {
-
-                        com.post(api.sales.unpaySales, {
-                            "sales.sid": v.sid
-                        }, function() {
-
-                            com.showAlert(com.info, "更新成功");
-                            salesSearcher.doSearch();
-
-                        });
-
-                    });
-
-                    // 装修单显示详情
-                    $btnDecoration.click(function() {
-
-                        com.focusPage("text").css("line-height", "27px");
-                        com.post(api.decoration.queryDecorationByOrderId, {
-                            "decorationOrderId": v.orderId
-                        }, function(res) {
-
-                            var decorationInfo = res.decoration;
-                            com.focusPage("#orderId").html(decorationInfo.orderId);// 装修单号
-                            com.focusPage("#address").html(decorationInfo.house.village.name + '' + decorationInfo.house.houseNumber);// 装修楼盘地址
-                            com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);// 装修设计师
-                            com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);// 装修跟单员
-                            com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);// 装修监理
-
-                            com.focusPage("#typeness").html(constant.decoration().decoration.typeness.keys[decorationInfo.typeness]);
-                            com.focusPage("#projectStatus").html(constant.decoration().decoration.projectStatus.keys[decorationInfo.projectStatus]);
-
-                            sales.modals.decorationInfo.modal("show");
-                        });
-
-                    });
-
-                    // 款项
-                    $btnMoney.click(function() {
-
-                        sales.sales = v;
-                        if (v.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_APPROVAL_INT) {
-                            com.showAlert(com.warning, "款项正在审批中,无法进行操作");
-                            return false;
-                        }
-
-                        sales.items.layerAdd.attr("data-sid", v.sid);
-                        sales.items.total.val(v.total);
-                        sales.items.depositPayment.val();
-                        sales.items.realDepositPayment.val();
-                        sales.items.fullPayment.val();
-                        sales.items.realFullPayment.val();
-                        sales.items.maling.val(v.maling + v.venderMaling);
-                        sales.items.coupon.val(v.coupon);
-                        sales.items.couponInf.val(v.couponInfo.substring(1, v.couponInfo.length - 1));
-
-                        com.post(api.ds.sales, {}, function(res) {
-
-                            sales.items.couponType.bindData(res.materialCouponTypes, 'key', 'value', false);
-                        }, null, false);
-
-                        com.popup4model('#layerAdd', '款项', function() {
-
-                            initLabel(v.depositpayStatus, v.fullpayStatus, v.total, v.depositpay, v.fullpay, '');
-                            sales.items.couponValue.val(0);
-                            sales.items.malingValue.val(0);
-                        }, function() {
-
-                            reductionLabel();
-                            salesSearcher.doSearch();
-                        }, function() {
-
-                            reductionLabel();
-                        });
-                    });
-
-                    $btnRefund.click(function() {
-
-                        params.sales.sales = v;
-                        params.flag = "sales"
-
-                        com.popup4page("#layerPopUp", "views/sales/salesRefundsItem.html", "退货");
-
-                    });
-
-                    $btnAct.click(function() {
-
-                        params.sales.sales = v;
-                        params.sales.type = sales.pageType;
-
-                        com.popup4page("#layerPopUp", "views/sales/sales4activity.html", "活动", '', function() {
-
-                            salesSearcher.doSearch();
-                        });
-                    });
-
-                    // 活动归属
-                    $btnActivity.click(function() {
-
-                        activityName(v.activityId);
-
-                        sales.sales = v;
-
-                        com.post(api.information.queryActivityForValid, {
-                            "activity.type": 3
-                        }, function(res) {
-
-                            var activitys = res.activitys;
-                            var _activitys = [];
-
-                            for ( var i = 0; i < activitys.length; i++) {
-
-                                var _activity = activitys[i];
-                                _activitys.push({
-                                    aid: _activity.aid,
-                                    activityName: _activity.name,
-                                    money: _activitys.money
-                                });
-                            }
-                            sales.items.activityInfo.bindData(_activitys, "aid", "activityName", "money", false);
-                        });
-
-                        sales.modals.salesActivitysModal.modal("show");
-                    });
-
-                    $btnDelivery.click(function() {
-
-                        com.showConfirm('确认销售单(' + v.no + ')进行配送?', function() {
-
-                            com.post(api.sales.deliveSalesDeliveryItem, {
-                                "salesDeliveryItem.sales.sid": v.sid
-                            }, function() {
-
-                                com.showAlert(com.info, "操作成功");
-                                salesSearcher.doSearch();
-                            });
-                        });
-                    });
-
-                    $btnPelivery.click(function() {
-
-                        sales.sales = v;
-
-                        sales.modals.peliveryModal.modal("show");
-                    });
-
-                    $btnPrint.click(function() {
-
-                        printPayment(v.orderId, v.sid, v, "fullPay", "sales");
-
-                    });
-                    $send.click(function() {
-
-                        com.post(api.sales.sendSales, {
-                            "sales.sid": v.sid
-                        }, function() {
-
-                            com.showAlert(com.info, "推送成功");
-                        });
-                    });
-
-                    $terminal.click(function() {
-
-                        com.showConfirm('确认销售单(' + v.no + ')为废单?', function() {
-
-                            com.post(api.sales.terminalSales, {
-                                "sales.sid": v.sid
-                            }, function() {
-
-                                com.showAlert(com.info, "操作成功");
-                                salesSearcher.doSearch();
-                            });
-                        });
-                    });
-                    $picture.click(function() {
-
-                        managedrawing(v);
-                        initUploadBtn(v);
-                    });
-
-                    // 满意度
-                    $satisfaction.click(function() {
-
-                        params.sales.orderId = v.orderId;
-                        params.sales.sid = v.sid;
-                        params.sales.type = v.type;
-                        com.popup4page("#layerPopUp", "views/sales/salesProfile4detail.html", "满意度")
-                    });
+
+    function ascriptionSales(v) {
+
+        sales.ascriptionBySid = v.sid;
+        com.updateTypeahead("uSalesman", v.salesman.userId, v.salesman.currentName + "-" + v.salesman.dept.name);
+        com.updateTypeahead("uInstorer", v.instorer.userId, v.instorer.currentName + "-" + v.instorer.dept.name);
+        com.updateTypeahead("uGuider", v.guider.userId, v.guider.currentName + "-" + v.guider.dept.name);
+        com.updateTypeahead("uSupplier", v.supplier.userId, v.supplier.currentName);
+        sales.modals.ascription.modal("show");
+    }
+
+    function finishSales(v) {
+
+        com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单更新为完结状态吗?', function() {
+
+            com.post(api.sales.finishSales, {
+                "sales.sid": v.sid
+            }, function() {
+
+                com.showAlert(com.info, "更新成功");
+                salesSearcher.doSearch();
+            });
+        });
+    }
+
+    function inventorySales(v) {
+
+        params.sales.sales = v;
+        com.popup4page("#layerPopUp", "/views/sales/sales4inventory.html", "详情")
+    }
+
+    function addSales(v) {
+
+        params.sales.sales = v;
+        com.popup4page("#layerPopUp", "views/sales/sales2add.html", "添项", '', function() {
+            salesSearcher.doSearch();
+        })
+    }
+
+    function salesItem(v) {
+
+        params.sales.sales = v;
+        params.sales.dompany = sales.pageType;
+
+        com.popup4page("#layerPopUp", "views/sales/salesItem.html", "项目", '', function() {
+            salesSearcher.doSearch();
+        })
+    }
+
+    function supplementSales(v) {
+
+        params.sales.sales = v;
+        params.sales.dompany = sales.pageType;
+
+        com.popup4page("#layerPopUp", "views/sales/sales2supple.html", "补单", "", function() {
+            salesSearcher.doSearch();
+        });
+    }
+
+    function collectSales(v) {
+
+        params.sales.sales = v;
+        params.sales.type = "sales";
+
+        com.popup4page("#layerPopUp", "views/sales/sales4payment.html", "收款");
+    }
+
+    function unpaySales(v) {
+
+        com.post(api.sales.unpaySales, {
+            "sales.sid": v.sid
+        }, function() {
+
+            com.showAlert(com.info, "更新成功");
+            salesSearcher.doSearch();
+        });
+    }
+
+    function decorationSales(v) {
+
+        com.focusPage("text").css("line-height", "27px");
+        com.post(api.decoration.queryDecorationByOrderId, {
+            "decorationOrderId": v.orderId
+        }, function(res) {
+
+            var decorationInfo = res.decoration;
+            com.focusPage("#orderId").html(decorationInfo.orderId);
+            com.focusPage("#address").html(decorationInfo.house.village.name + '' + decorationInfo.house.houseNumber);
+            com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);
+            com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);
+            com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);
+            com.focusPage("#typeness").html(constant.decoration().decoration.typeness.keys[decorationInfo.typeness]);
+            com.focusPage("#projectStatus").html(constant.decoration().decoration.projectStatus.keys[decorationInfo.projectStatus]);
+
+            sales.modals.decorationInfo.modal("show");
+        });
+    }
+
+    function moneySales(v) {
+
+        sales.sales = v;
+
+        if (v.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_APPROVAL_INT) {
+            com.showAlert(com.warning, "款项正在审批中,无法进行操作");
+            return false;
+        }
+
+        sales.items.layerAdd.attr("data-sid", v.sid);
+        sales.items.total.val(v.total);
+        sales.items.depositPayment.val();
+        sales.items.realDepositPayment.val();
+        sales.items.fullPayment.val();
+        sales.items.realFullPayment.val();
+        sales.items.maling.val(v.maling + v.venderMaling);
+        sales.items.coupon.val(v.coupon);
+        sales.items.couponInf.val(v.couponInfo.substring(1, v.couponInfo.length - 1));
+
+        com.post(api.ds.sales, {}, function(res) {
+            sales.items.couponType.bindData(res.materialCouponTypes, 'key', 'value', false);
+        }, null, false);
+
+        com.popup4model('#layerAdd', '款项', function() {
+            initLabel(v.depositpayStatus, v.fullpayStatus, v.total, v.depositpay, v.fullpay, '');
+            sales.items.couponValue.val(0);
+            sales.items.malingValue.val(0);
+        }, function() {
+            reductionLabel();
+            salesSearcher.doSearch();
+        }, function() {
+            reductionLabel();
+        });
+    }
+
+    function refundSales(v) {
+
+        params.sales.sales = v;
+        params.flag = "sales"
+
+        com.popup4page("#layerPopUp", "views/sales/salesRefundsItem.html", "退货");
+    }
+
+    function actSales(v) {
+
+        params.sales.sales = v;
+        params.sales.type = sales.pageType;
+
+        com.popup4page("#layerPopUp", "views/sales/sales4activity.html", "活动", '', function() {
+            salesSearcher.doSearch();
+        });
+    }
+
+    function activitySales(v) {
+
+        activityName(v.activityId);
+        sales.sales = v;
+
+        com.post(api.information.queryActivityForValid, {
+            "activity.type": 3
+        }, function(res) {
+
+            var activitys = res.activitys;
+            var _activitys = [];
+
+            for ( var i = 0; i < activitys.length; i++) {
+
+                var _activity = activitys[i];
+                _activitys.push({
+                    aid: _activity.aid,
+                    activityName: _activity.name,
+                    money: _activitys.money
                 });
-
-                $ul.appendTo($tableWrap);
             }
+            sales.items.activityInfo.bindData(_activitys, "aid", "activityName", "money", false);
+        });
+
+        sales.modals.salesActivitysModal.modal("show");
+    }
+
+    function deliveSales(v) {
+
+        com.showConfirm('确认销售单(' + v.no + ')进行配送?', function() {
+
+            com.post(api.sales.deliveSalesDeliveryItem, {
+                "salesDeliveryItem.sales.sid": v.sid
+            }, function() {
+
+                com.showAlert(com.info, "操作成功");
+                salesSearcher.doSearch();
+            });
+        });
+    }
+
+    function peliverySales(v) {
+
+        sales.sales = v;
+        sales.modals.peliveryModal.modal("show");
+    }
+
+    function printSales(v) {
+
+        printPayment(v.orderId, v.sid, v, "fullPay", "sales");
+    }
+
+    function sendSales(v) {
+
+        com.post(api.sales.sendSales, {
+            "sales.sid": v.sid
+        }, function() {
+
+            com.showAlert(com.info, "推送成功");
+        });
+    }
+
+    function terminalSales(v) {
+
+        com.showConfirm('确认销售单(' + v.no + ')为废单?', function() {
+
+            com.post(api.sales.terminalSales, {
+                "sales.sid": v.sid
+            }, function() {
+
+                com.showAlert(com.info, "操作成功");
+                salesSearcher.doSearch();
+            });
+        });
+    }
+
+    function pictureSales(v) {
+
+        managedrawing(v);
+        initUploadBtn(v);
+    }
+
+    function satisfactionSales(v) {
+
+        params.sales.orderId = v.orderId;
+        params.sales.sid = v.sid;
+        params.sales.type = v.type;
+        com.popup4page("#layerPopUp", "views/sales/salesProfile4detail.html", "满意度")
+    }
+
+    function buildSalesLineprops() {
+
+        var propertyMap = {
+            orderId: {field: "orderId", name: "装修单号", prop: "orderId", clazz: "blue", click: function($this, v) {tools.decoration.info($this, v.orderId);}},
+            address: {field: "address", name: "楼盘地址", prop: function(v) {return v.house.village.name + " " + v.house.houseNumber;}, clazz: "grey"},
+            customer: {field: "customer", name: "客户名", prop: "customer.name", clazz: "grey", click: function($this, v) {tools.customer.info($this, v.customer.cid);}},
+            salesman: {field: "salesman", name: "渠道", prop: "salesman.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.salesman.userId);}},
+            dept: {field: "dept", name: "部门", prop: "salesman.dept.name", clazz: "grey", click: function($this, v) {tools.department.info($this, v.dept.did);}},
+            region: {field: "region", name: "分区", prop: function(v) {return (v.salesman.dept && v.salesman.dept.fatherDept) ? v.salesman.dept.fatherDept.name : "";}, clazz: "grey", click: function($this, v) {tools.department.info($this, v.region.did);}},
+            creater: {field: "creater", name: "创建人", prop: "creater.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.creater.userId);}},
+            guider: {field: "guider", name: "导购", prop: "guider.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.guider.userId);}},
+            instorer: {field: "instorer", name: "驻店", prop: "instorer.currentName", clazz: "grey", click: function($this, v) {tools.personel.info($this, v.instorer.userId);}},
+            guideDept: {field: "guideDept", name: "主材部", prop: "guideDept.name", clazz: "grey", click: function($this, v) {tools.department.info($this, v.guideDept.did);}},
+            category: {field: "category", name: "品类", prop: "category", clazz: "grey"},
+            brand: {field: "brand", name: "品牌", prop: "brand.name", clazz: "grey", click: function($this, v) {tools.brand.info($this, v.brand.bid);}},
+            depositpay: {field: "depositpay", name: "定金", prop: "depositpay", clazz: "blue"},
+            fullpay: {field: "fullpay", name: "补款", prop: "fullpay", clazz: "blue"},
+            createTime: {field: "createTime", name: "创建时间", prop: "createTime", clazz: "green"},
+            balanceTime: {field: "balanceTime", name: "结算时间", prop: "balanceTime", clazz: "green"},
+            fullpayTime: {field: "fullpayTime", name: "补款时间", prop: "fullpayTime", clazz: "green"},
+            affirmTime: {field: "affirmTime", name: "确认时间", prop: "affirmTime", clazz: "green"},
+            isAffirm: {field: "isAffirm", name: "确认状态", prop: function(v) {return constant.sales().sales.isAffirm.keys[v.isAffirm];}, clazz: "red"},
+            status: {field: "status", name: "状态", prop: function(v) {return constant.sales().sales.status.keys[v.status];}, clazz: "red"},
+            finisher: {field: "finisher", name: "完结人", prop: "finisher.currentName", clazz: "red", click: function($this, v) {tools.personel.info($this, v.finisher.userId);}},
+            finishTime: {field: "finishTime", name: "完结时间", prop: "finishTime", clazz: "green"},
+            balanceStatus: {field: "balanceStatus", name: "结算状态", prop: function(v) {return constant.sales().sales.balanceStatus.keys[v.balanceStatus];}, clazz: "red"},
+            depositpayStatus: {field: "depositpayStatus", name: "定金状态", prop: function(v) {return constant.sales().sales.depositpayStatus.keys[v.depositpayStatus];}, clazz: "red"},
+            fullpayStatus: {field: "fullpayStatus", name: "补款状态", prop: function(v) {return constant.sales().sales.fullpayStatus.keys[v.fullpayStatus];}, clazz: "red"},
+            grade: {field: "grade", name: "等级", prop: "grade", clazz: "red"},
+            total: {field: "total", name: "总额", prop: "total", clazz: "blue"},
+            amount: {field: "amount", name: "当前总额", prop: "amount", clazz: "blue"},
+            maling: {field: "maling", name: "抹零", prop: "maling", clazz: "blue"},
+            venderMaling: {field: "venderMaling", name: "厂商抹零", prop: "venderMaling", clazz: "blue"},
+            coupon: {field: "coupon", name: "券值", prop: "coupon", clazz: "blue"},
+            couponInfo: {field: "couponInfo", name: "券信息", prop: "couponInfo", clazz: "grey"},
+            comment: {field: "comment", name: "备注", prop: "comment", clazz: "grey"},
+            salesType: {field: "salesType", name: "类型", prop: function(v) {return constant.sales().sales.type.keys[v.type];}, clazz: "red"}
         };
 
-        return {
-            init: function(tableId, listData) {
+        var props = [];
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            }
+        $.each(pageConfig.propertyArr, function(i, key) {
+            propertyMap[key] && props.push(propertyMap[key]);
+        });
+
+        return props;
+    }
+
+    function buildSalesLinebtns() {
+
+        var buttonMap = {
+            decoration: {name: "装修单", clazz: "btn-purple", handle: decorationSales},
+            ascription: {name: "归属", clazz: "btn-inverse", handle: ascriptionSales},
+            inventory: {name: "仓储", clazz: "btn-blue", handle: inventorySales},
+            sub: {name: "项目", clazz: "btn-success", handle: salesItem},
+            collect: {name: "收款", clazz: "btn-inverse", show: function(v) {return v.type != constant.sales().sales.TYPE_SUB_INT;}, handle: collectSales},
+            add: {name: "添项", clazz: "btn-yellow", show: function(v) {return v.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT;}, handle: addSales},
+            supplement: {name: "补单", clazz: "btn-primary", show: function(v) {return v.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT;}, handle: supplementSales},
+            refund: {name: "退货", clazz: "btn-danger", handle: refundSales},
+            send: {name: "推送", clazz: "btn-danger", handle: sendSales},
+            terminal: {name: "废单", clazz: "btn-danger", show: function(v) {return v.status != constant.sales().sales.STATUS_WAST_INT;}, handle: terminalSales},
+            print: {name: "打印", clazz: "btn-pink", show: function(v) {return v.status != constant.sales().sales.STATUS_WAST_INT;}, handle: printSales},
+            act: {name: "活动", clazz: "btn-grey", show: function(v) {return v.status != constant.sales().sales.STATUS_WAST_INT;}, handle: actSales},
+            activity: {name: "活动归属", clazz: "btn-warning", show: function(v) {return [0, 5].indexOf(v.status) != -1;}, handle: activitySales},
+            money: {name: "款项", clazz: "btn-warning", show: function(v) {return v.status != constant.sales().sales.STATUS_WAST_INT && v.type != constant.sales().sales.TYPE_SUB_INT;}, handle: moneySales},
+            finish: {name: "完结", clazz: "btn-inverse", show: function(v) {return v.status != constant.sales().sales.STATUS_WAST_INT;}, handle: finishSales},
+            saledelivery: {name: "配送", clazz: "btn-primary", show: function(v) {return [0, 5].indexOf(v.status) != -1 && [1, 2].indexOf(v.fullpayStatus) != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT;}, handle: deliveSales},
+            prodelivery: {name: "预配送", clazz: "btn-primary", handle: peliverySales},
+            unpay: {name: "结算", clazz: "btn-primary", show: function(v) {return v.type == constant.sales().sales.TYPE_SUB_INT;}, handle: unpaySales},
+            picture: {name: "图片", clazz: "btn-search", handle: pictureSales},
+            satisfaction: {name: "满意度", clazz: "btn-purple", handle: satisfactionSales}
         };
-    })();
+
+        var btns = {};
+
+        $.each(pageConfig.pageBtn, function(i, key) {
+            buttonMap[key] && (btns[key] = buttonMap[key]);
+        });
+
+        return btns;
+    }
 
     var salesSearcher = new Searcher();
 
-    salesSearcher.init(pageConfig.condArr, "condList", pageConfig.apiPage, function(data) {
-
-        displayFunc.init('resultList', data);
-
-    }, "pagenation", sales.postData, null, false, null);
+    salesSearcher.base("condList", "pagenation", "resultList", pageConfig.apiPage);
+    salesSearcher.condition(pageConfig.condArr);
+    salesSearcher.history(sales.postData);
+    salesSearcher.line("no", buildSalesLineprops(), buildSalesLinebtns()).render();
 
     // 提交归属
     sales.btns.ascriptionBtn.on('click', function() {
