@@ -350,6 +350,179 @@ $(function() {
         return lineprops;
     }
 
+    function buildSalesPaymentLinebtns() {
+
+        return {
+            decorationInfo: {
+                name: "装修单",
+                clazz: "btn-yellow",
+                show: function() {
+
+                    return salesPayment.pageConfig.pageBtn.contains("decorationInfo");
+                },
+                handle: function(v, btn) {
+
+                    tools.decoration.info(btn, v.sales.orderId);
+                }
+            },
+            salesInfo: {
+                name: "销售单",
+                clazz: "btn-warning",
+                show: function() {
+
+                    return salesPayment.pageConfig.pageBtn.contains("salesInfo");
+                },
+                handle: function(v, btn) {
+
+                    tools.sales.info(btn, v.sales.sid);
+                }
+            },
+            posPush: {
+                name: "推送",
+                clazz: "btn-danger",
+                show: function(v) {
+
+                    return v.status == constant.payment().materialPayment.STATUS_INIT_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("posPush");
+                },
+                handle: posPushSalesPaymentLine
+            },
+            collect: {
+                name: function(v) {
+
+                    return salesPayment.collectType.indexOf(v.type) != -1 ? "收款" : "退款";
+                },
+                clazz: function(v) {
+
+                    return salesPayment.collectType.indexOf(v.type) != -1 ? "btn-info" : "btn-danger";
+                },
+                show: function() {
+
+                    return salesPayment.pageConfig.pageBtn.contains("collect");
+                },
+                handle: collectSalesPaymentLine
+            },
+            settle: {
+                name: "落款",
+                clazz: "btn-primary",
+                show: function(v) {
+
+                    return v.status == constant.payment().materialPayment.STATUS_INIT_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("settle");
+                },
+                handle: settleSalesPaymentLine
+            },
+            withdraw: {
+                name: "撤款",
+                clazz: "btn-warning",
+                show: function(v) {
+
+                    return v.status == constant.payment().materialPayment.STATUS_CONFIRM_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("withdraw");
+                },
+                handle: withdrawSalesPaymentLine
+            },
+            print: {
+                name: "打印",
+                clazz: "btn-info",
+                show: function(v) {
+
+                    return v.status != constant.payment().materialPayment.STATUS_INIT_INT && salesPayment.pageConfig.pageBtn.contains("print");
+                },
+                handle: printPayment
+            },
+            update: {
+                name: "更新",
+                clazz: "btn-success",
+                show: function(v) {
+
+                    return v.status == constant.payment().materialPayment.STATUS_COLLECT_INT && salesPayment.pageConfig.pageBtn.contains("update");
+                },
+                handle: function(v) {
+
+                    v.referMoney = utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(v.salesReceipt.cash, v.salesReceipt.bank), v.salesReceipt.checkv), v.salesReceipt.coupon), v.salesReceipt.advance);
+                    initUpdate(v);
+                }
+            },
+            collectCode: {
+                name: "收款码",
+                clazz: "btn-success",
+                show: function(v) {
+
+                    return v.status == constant.payment().materialPayment.STATUS_INIT_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("collectCode");
+                },
+                handle: codeSalesPaymentLine
+            },
+            alipayCollectCode: {
+                name: "二维收款",
+                clazz: "btn-info",
+                show: function(v) {
+
+                    return v.status == constant.payment().materialPayment.STATUS_INIT_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("alipayCollectCode");
+                },
+                handle: alipaySalesPaymentLine
+            },
+            codePush: {
+                name: "微信推送",
+                clazz: "btn-pink",
+                show: function(v) {
+
+                    return v.status == constant.payment().materialPayment.STATUS_INIT_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("codePush");
+                },
+                handle: function(v) {
+
+                    com.showConfirm("是否发送付款通知", function() {
+
+                        com.post(api.payment.sendSalesPayment, {
+                            "salesPayment.spid": v.spid
+                        }, function(res) {
+
+                            com.showAlert(com.info, "发送成功");
+                        });
+                    });
+                }
+            },
+            check: {
+                name: "验证",
+                clazz: "btn-orange",
+                show: function(v) {
+
+                    return v.status == constant.payment().materialPayment.STATUS_INIT_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("check");
+                },
+                handle: checkSalesPaymentLine
+            },
+            kingdee: {
+                name: "同步金蝶",
+                clazz: "btn-yellow",
+                show: function(v) {
+
+                    return v.status == constant.payment().materialPayment.STATUS_CONFIRM_INT && salesPayment.pageConfig.pageBtn.contains("toKingdee");
+                },
+                handle: function(v) {
+
+                    kingdeeUtils.salesPayment(v, salesPayment.htmlName);
+                }
+            },
+            customerPush: {
+                name: "客户推送",
+                clazz: "btn-warning",
+                show: function(v) {
+
+                    return v.isAffirm == constant.payment().decorationPayment.ISAFFIRM_INIT_SHORT && salesPayment.pageConfig.pageBtn.contains("customerPush");
+                },
+                handle: function(v) {
+
+                    com.showConfirm("是否推送给客户", function() {
+
+                        com.post(api.payment.pushSalesPayment, {
+                            "salesPayment.spid": v.spid
+                        }, function(res) {
+
+                            com.showAlert(com.info, "发送成功");
+                        });
+                    });
+                }
+            }
+        };
+    }
+
     function buildSalesPaymentButtons() {
 
         var btnParams = [];
