@@ -1,3 +1,25 @@
+:root {
+	--fl-primary: #428bca;
+	--fl-primary-dark: #357ebd;
+	--fl-primary-light: #66ccff;
+	--fl-success: #82af6f;
+	--fl-danger: #d15b47;
+	--fl-warning: #f0ad4e;
+	--fl-info: #5bc0de;
+	--fl-border: #e5e5e5;
+	--fl-border-light: #ebeef5;
+	--fl-bg: #f9f9f9;
+	--fl-bg-hover: #f5f7fa;
+	--fl-text: #555;
+	--fl-text-light: #999;
+	--fl-radius-sm: 4px;
+	--fl-radius-md: 8px;
+	--fl-radius-lg: 12px;
+	--fl-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+	--fl-shadow-hover: 0 4px 16px 0 rgba(0, 0, 0, 0.1);
+	--fl-transition: 0.2s ease;
+}
+
 body,ul,li,tr,td,p,a,b,i,button,label,strong,span {
 	padding: 0px;
 	margin: 0px;
@@ -243,10 +265,10 @@ h4 {
 	border-radius: 12px;
 	cursor: pointer;
 	outline: none;
-	border: 1px solid #00CCCC;
-	-webkit-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	-moz-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	box-shadow: 0 0 10px rgba(0, 204, 204, .6);
+	border: 1px solid var(--fl-primary);
+	-webkit-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	-moz-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	box-shadow: 0 0 8px rgba(66, 139, 202, .5);
 }
 
 .search_label2 {
@@ -263,11 +285,11 @@ h4 {
 	border-radius: 12px;
 	cursor: pointer;
 	outline: none;
-	border: 1px solid #00CCCC;
+	border: 1px solid var(--fl-primary);
 	margin: 0px 10px;
-	-webkit-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	-moz-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	box-shadow: 0 0 10px rgba(0, 204, 204, .6);
+	-webkit-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	-moz-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	box-shadow: 0 0 8px rgba(66, 139, 202, .5);
 }
 
 .search_label3 {
@@ -282,10 +304,10 @@ h4 {
 	border-radius: 12px;
 	cursor: pointer;
 	outline: none;
-	border: 1px solid #00CCCC;
-	-webkit-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	-moz-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	box-shadow: 0 0 10px rgba(0, 204, 204, .6);
+	border: 1px solid var(--fl-primary);
+	-webkit-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	-moz-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	box-shadow: 0 0 8px rgba(66, 139, 202, .5);
 }
 
 .search_line {
@@ -394,10 +416,20 @@ h4 {
 }
 
 .breadcrumb {
-	border-bottom: 1px solid #f1f1fb;
+	background: var(--fl-bg-hover);
+	border-bottom: 1px solid var(--fl-border-light);
 	margin-bottom: 10px;
-	padding: 10px 10px;
+	padding: 10px 16px;
 	border-radius: 0px;
+}
+
+.breadcrumb > li {
+	transition: color var(--fl-transition);
+}
+
+.breadcrumb > .active {
+	color: var(--fl-text);
+	font-weight: 600;
 }
 
 .col-md-12 {
@@ -603,13 +635,11 @@ h4 {
 }
 
 .label-primary,.badge-primary {
-	background-color: #6699cc;
-	!
-	important;
+	background-color: #6699cc !important;
 }
 
 .white {
-	color: white;;
+	color: white;
 }
 
 .title_text {
@@ -1847,7 +1877,7 @@ h4 {
 
 .tree img {
 	display: inline;
-	veritcal-align: middle
+	vertical-align: middle
 }
 /* tree end*/
 /* wizard-steps */
@@ -1868,7 +1898,7 @@ h4 {
 
 .wizard-steps li .step {
 	border: 4px solid #ced1d6;
-	olor: #546474;
+	color: #546474;
 	font-size: 15px;
 	border-radius: 100%;
 	background-color: #FFF;
@@ -2302,6 +2332,19 @@ h4 {
 		endColorstr='#ffececec', GradientType=0 );
 }
 /* table end */
+
+.table tbody tr {
+	transition: background-color var(--fl-transition);
+}
+
+.table tbody tr:hover {
+	background-color: var(--fl-bg-hover);
+}
+
+.table tbody tr:hover > td {
+	background-color: var(--fl-bg-hover);
+}
+
 /* grid */
 .grid2,.grid3,.grid4 {
 	-webkit-box-sizing: border-box;
@@ -2335,12 +2378,17 @@ h4 {
 /* grid end*/
 .widget-box {
 	padding: 0;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-	margin: 3px 0;
-	border-bottom: 1px solid #CCC;
-	border-right: 1px solid #CCC;
-	border-left: 1px solid #CCC;
+	-webkit-box-shadow: var(--fl-shadow);
+	box-shadow: var(--fl-shadow);
+	margin: 8px 0;
+	border: 1px solid var(--fl-border-light);
+	border-radius: var(--fl-radius-md);
+	transition: box-shadow var(--fl-transition);
+}
+
+.widget-box:hover {
+	-webkit-box-shadow: var(--fl-shadow-hover);
+	box-shadow: var(--fl-shadow-hover);
 }
 
 @media only screen and (max-width: 767px) {
@@ -3019,10 +3067,10 @@ input[type=radio].replaced {
 
 .panel input:focus,.panel textarea:focus,.panel select:focus,.widget-body input:focus,.widget-body select:focus,.widget-body textarea:focus
 	{
-	border-color: #66ccff;
+	border-color: var(--fl-primary);
 	outline: 0;
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
-		rgba(102, 204, 255, 0.6);
+		rgba(66, 139, 202, 0.5);
 }
 
 #quoCondList input {
@@ -3078,15 +3126,15 @@ textarea {
 }
 
 input:focus,select:focus,textarea:focus {
-	border-color: rgba(82, 168, 236, 0.8);
+	border-color: var(--fl-primary);
 	outline: 0;
 	outline: thin dotted \9;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
-		rgba(82, 168, 236, 0.6);
+		rgba(66, 139, 202, 0.5);
 	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
-		rgba(82, 168, 236, 0.6);
+		rgba(66, 139, 202, 0.5);
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
-		rgba(82, 168, 236, 0.6)
+		rgba(66, 139, 202, 0.5);
 }
 
 .clearfix .pull-right .inline select:focus,.clearfix .pull-right .inline input:focus
@@ -3094,20 +3142,20 @@ input:focus,select:focus,textarea:focus {
 	border-radius: 12px;
 	cursor: pointer;
 	outline: none;
-	border: 1px solid #00CCCC;
-	-webkit-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	-moz-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	box-shadow: 0 0 10px rgba(0, 204, 204, .6);
+	border: 1px solid var(--fl-primary);
+	-webkit-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	-moz-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	box-shadow: 0 0 8px rgba(66, 139, 202, .5);
 }
 
 .inline input:focus,.inline select:focus {
 	border-radius: 12px;
 	cursor: pointer;
 	outline: none;
-	border: 1px solid #00CCCC;
-	-webkit-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	-moz-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	box-shadow: 0 0 10px rgba(0, 204, 204, .6);
+	border: 1px solid var(--fl-primary);
+	-webkit-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	-moz-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	box-shadow: 0 0 8px rgba(66, 139, 202, .5);
 }
 
 #quoCondList .inline {
@@ -3144,10 +3192,10 @@ input:focus,select:focus,textarea:focus {
 	border-radius: 12px;
 	cursor: pointer;
 	outline: none;
-	border: 1px solid #00CCCC;
-	-webkit-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	-moz-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	box-shadow: 0 0 10px rgba(0, 204, 204, .6);
+	border: 1px solid var(--fl-primary);
+	-webkit-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	-moz-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	box-shadow: 0 0 8px rgba(66, 139, 202, .5);
 }
 
 .fl-page-select {
@@ -3162,10 +3210,10 @@ input:focus,select:focus,textarea:focus {
 	border-radius: 12px;
 	cursor: pointer;
 	outline: none;
-	border: 1px solid #00CCCC;
-	-webkit-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	-moz-box-shadow: 0 0 10px rgba(0, 204, 204, .6);
-	box-shadow: 0 0 10px rgba(0, 204, 204, .6);
+	border: 1px solid var(--fl-primary);
+	-webkit-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	-moz-box-shadow: 0 0 8px rgba(66, 139, 202, .5);
+	box-shadow: 0 0 8px rgba(66, 139, 202, .5);
 }
 
 .clearfix .pull-right .btn {
@@ -3188,8 +3236,20 @@ input:focus,select:focus,textarea:focus {
 
 .btn-primary {
 	color: #fff;
-	background-color: #428bca;
-	border-color: #357ebd;
+	background-color: var(--fl-primary);
+	border-color: var(--fl-primary-dark);
+	transition: background-color var(--fl-transition), border-color var(--fl-transition), box-shadow var(--fl-transition);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+	background-color: var(--fl-primary-dark);
+	border-color: var(--fl-primary-dark);
+}
+
+.btn-success, .btn-info, .btn-warning, .btn-danger {
+	transition: background-color var(--fl-transition), border-color var(--fl-transition), box-shadow var(--fl-transition);
 }
 
 #resultList {
@@ -3243,10 +3303,10 @@ input:focus,select:focus,textarea:focus {
 
 .modal-body input:focus,.modal-body textarea:focus,.modal-body select:focus,#edit-password input:focus,#edit-password select:focus
 	{
-	border-color: #66ccff;
+	border-color: var(--fl-primary);
 	outline: 0;
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
-		rgba(102, 204, 255, 0.6);
+		rgba(66, 139, 202, 0.5);
 }
 
 .modal-body input::-moz-placeholder {
@@ -4122,6 +4182,25 @@ input:focus,select:focus,textarea:focus {
 	font-size: 18px;
 	font-weight: normal;
 	margin-right: 2px;
+}
+
+.nav-list > li > a {
+	transition: background-color var(--fl-transition), color var(--fl-transition);
+}
+
+.nav-list > li.active > a {
+	background-color: rgba(66, 139, 202, 0.12);
+	border-left: 3px solid var(--fl-primary);
+	color: var(--fl-primary-dark);
+	font-weight: 600;
+}
+
+.nav-list > li > a:hover {
+	background-color: var(--fl-bg-hover);
+}
+
+.nav-list > li.open > a {
+	background-color: rgba(66, 139, 202, 0.08);
 }
 
 .bootstrap-timepicker-widget table td input {

@@ -1,0 +1,152 @@
+:root {
+	--fl-primary: #428bca;
+	--fl-primary-dark: #357ebd;
+	--fl-primary-light: #5bc0de;
+	--fl-success: #82af6f;
+	--fl-danger: #d15b47;
+	--fl-warning: #f0ad4e;
+	--fl-info: #5bc0de;
+	--fl-border: #444;
+	--fl-border-light: #3a3a3a;
+	--fl-bg: #2c2c2c;
+	--fl-bg-hover: #3a3a3a;
+	--fl-text: #ccc;
+	--fl-text-light: #888;
+	--fl-radius-sm: 4px;
+	--fl-radius-md: 8px;
+	--fl-radius-lg: 12px;
+	--fl-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+	--fl-shadow-hover: 0 4px 16px 0 rgba(0, 0, 0, 0.4);
+	--fl-transition: 0.2s ease;
+}
+
+.widget-box {
+	border: 1px solid var(--fl-border-light);
+	border-radius: var(--fl-radius-md);
+	box-shadow: var(--fl-shadow);
+	margin: 8px 0;
+	transition: box-shadow var(--fl-transition), border-color var(--fl-transition);
+}
+
+.widget-box:hover {
+	box-shadow: var(--fl-shadow-hover);
+	border-color: var(--fl-primary);
+}
+
+.widget-box.transparent {
+	border: 0;
+	box-shadow: none;
+	border-radius: 5px;
+}
+
+.table tbody tr {
+	transition: background-color var(--fl-transition);
+}
+
+.table tbody tr:hover {
+	background-color: var(--fl-bg-hover);
+}
+
+.table tbody tr:hover > td {
+	background-color: var(--fl-bg-hover);
+}
+
+.table tbody tr:hover > td,
+.table tbody tr:hover {
+	background-color: rgba(66, 139, 202, 0.12) !important;
+}
+
+.btn-primary {
+	transition: background-color var(--fl-transition), border-color var(--fl-transition), box-shadow var(--fl-transition);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+	background-color: var(--fl-primary-dark);
+	border-color: var(--fl-primary-dark);
+}
+
+.btn-success, .btn-info, .btn-warning, .btn-danger {
+	transition: background-color var(--fl-transition), border-color var(--fl-transition), box-shadow var(--fl-transition);
+}
+
+input:focus, select:focus, textarea:focus {
+	border-color: var(--fl-primary);
+	outline: 0;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(66, 139, 202, 0.6);
+}
+
+.breadcrumb {
+	background: var(--fl-bg-hover);
+	border-bottom: 1px solid var(--fl-border-light);
+	padding: 10px 16px;
+	border-radius: 0px;
+}
+
+.breadcrumb > li {
+	color: var(--fl-text);
+	transition: color var(--fl-transition);
+}
+
+.breadcrumb > .active {
+	color: #fff;
+	font-weight: 600;
+}
+
+.breadcrumb > li a {
+	color: var(--fl-primary-light);
+}
+
+.nav-list > li > a,
+.page-sidebar-menu > li > a {
+	transition: background-color var(--fl-transition), border-color var(--fl-transition), color var(--fl-transition);
+}
+
+.nav-list > li.active > a,
+.page-sidebar-menu > li.active > a {
+	border-left: 3px solid var(--fl-primary);
+	background-color: rgba(66, 139, 202, 0.2) !important;
+	font-weight: 600;
+}
+
+.nav-list > li > a:hover,
+.page-sidebar-menu > li > a:hover {
+	background-color: rgba(66, 139, 202, 0.1);
+}
+
+#fl-container {
+	min-width: 100%;
+}
+
+.content-header {
+	margin-top: 10px;
+}
+
+.flloading:after {
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+.flloading:before {
+	color: #fff;
+}
+
+.removePage {
+	color: #888;
+	transition: color var(--fl-transition);
+}
+
+.removePage:hover {
+	color: #fff;
+}
+
+.nav-tabs > li > a,
+.nav-tabs > li > a:hover {
+	transition: background-color var(--fl-transition), border-color var(--fl-transition);
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+	border-bottom-color: transparent;
+}
