@@ -869,643 +869,343 @@
     /**
      * 回调函数比速提供 init(tableId, result.list)方法 tableId ,用来显示的div的id result.list 列表的json数组
      */
-    var displayFunc = (function() {
+    /**
+     * Searcher 标准化改造: 将原 displayFunc IIFE 的 renderList / creatLine 逻辑
+     * 拆分为 buildDecorationLineprops / buildDecorationLinebtns, 借助 searcher.line(...).render() 渲染。
+     * IIFE 内其余业务函数 (viewDecoration*, modalDrawLineModal, signOrder 等) 全部上提到模块作用域, 保持原语义。
+     */
 
-        var renderList = function(tableId, listData) {
+    function buildDecorationPropertyArr(v) {
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        var propertyArr = [];
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+        $.each(pageConfig.propertyArr, function(pi, pv) {
 
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+            switch (pv) {
+                case "address":
+                    propertyArr.push(["楼盘地址:", (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey"]);
+                    break;
+                case "villageName":
+                    propertyArr.push(["楼盘:", (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name, "grey", tools.village.info, v.house.village.no]);
+                    break;
+                case "houseNumber":
+                    if ([constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_TERMINATION_INT, constant.decoration().decoration.STATUS_FINAL_INT].contains(v.status)) {
+                        propertyArr.push(["楼号:", (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey", tools.house.info, v.house.hid]);
+                    }
+                    break;
+                case "customerName":
+                    propertyArr.push(["客户名:", v.customer.name, "grey", tools.customer.info, v.customer.cid]);
+                    break;
+                case "designDepartment":
+                    propertyArr.push(["设计部:", v.designer.dept.name, "grey", tools.decoration.belong, v.orderId]);
+                    break;
+                case "designerName":
+                    propertyArr.push(["设计师:", v.designer.currentName, "grey", tools.decoration.belong, v.orderId]);
+                    break;
+                case "escorterName":
+                    propertyArr.push(["方案设计:", v.escorter ? v.escorter.currentName : '', "grey", tools.personel.info, v.escorter ? v.escorter.userId : '']);
+                    break;
+                case "salesmanDepartment":
+                    propertyArr.push(["业务部:", v.salesman.dept.name, "grey", tools.department.info, v.salesman.dept.did]);
+                    break;
+                case "salesmanName":
+                    propertyArr.push(["业务员:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
+                    break;
+                case "decorationBusitype":
+                    propertyArr.push(["业务类型:", order.busitype[v.busitype], "red"]);
+                    break;
+                case "materialerName":
+                    propertyArr.push(["跟单员:", v.materialer ? v.materialer.currentName : '', "grey", tools.personel.info, v.materialer ? v.materialer.userId : '']);
+                    break;
+                case "supervisorName":
+                    propertyArr.push(["监理:", v.supervisor.currentName, "grey", tools.personel.info, v.supervisor.userId]);
+                    break;
+                case "houseArea":
+                    propertyArr.push(["派尺面积:", v.house.buildArea, "blue"]);
+                    break;
+                case "quoteArea":
+                    propertyArr.push(["计价面积:", v.house.innerArea, "blue"]);
+                    break;
+                case "discount":
+                    propertyArr.push(["折扣:", com.checkNull(v.discount, 10), "blue"]);
+                    break;
+                case "precontractPrice":
+                    var _text = $("<text>预签额:</text>");
+                    var _info = null;
 
-                    var btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
+                    if (v.precontractPrice != 0) {
+                        _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
 
-                    var btnProfile = $('<a></a>').addClass('btn btn-minier btn-success').html('画像');
-                    var btnService = $('<a></a>').addClass('btn btn-minier btn-success').html('服务');
-                    var btnRefer = $('<a></a>').addClass('btn btn-minier btn-success').html('推荐');
-                    var btnRevie = $('<a></a>').addClass('btn btn-minier btn-success').html('回访');
-                    var btnInfo = $('<a></a>').addClass('btn btn-minier btn-success').html('详情');
-                    var btnScal = $('<a></a>').addClass('btn btn-minier btn-success').html('扣款');
+                            netPerformancep(_text, v);
+                        });
+                    }
+                    propertyArr.push([_text, v.precontractPrice, "blue", _info]);
+                    break;
+                case "orderTotalPrice":
+                    var _text = $("<text>签单额:</text>");
+                    var _info = null;
 
-                    var btnLine = $('<a></a>').addClass('btn btn-minier btn-warning').html('放线');
-                    var btnProLine = $('<a></a>').addClass('btn btn-minier btn-warning').html('预放线');
-                    var btnContract = $('<a></a>').addClass('btn btn-minier btn-inverse').html('合同');
-                    var btnContractc = $('<a></a>').addClass('btn btn-minier btn-inverse').html('合同');
+                    if ([constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_TERMINATION_INT, constant.decoration().decoration.STATUS_FINAL_INT].contains(v.status)) {
+                        _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
 
-                    var btnProsign = $('<a></a>').addClass('btn btn-minier btn-pink').html('预签单');
-                    var btnPrice = $('<a></a>').addClass('btn btn-minier btn-pink').html('报价单');
-                    var btnExtension = $('<a></a>').addClass('btn btn-minier btn-pink').html('扩展项');
-                    var btnNormood = $('<a></a>').addClass('btn btn-minier btn-pink').html('定额单');
-                    var btnSelect = $('<a></a>').addClass('btn btn-minier btn-pink').html('选材项');
-                    var btnAddReduce = $('<a></a>').addClass('btn btn-minier btn-pink').html('增减项');
-                    var btnAddReduceD = $('<a></a>').addClass('btn btn-minier btn-pink').html('增减项');
-                    var btnAddReduceM = $('<a></a>').addClass('btn btn-minier btn-pink').html('增减项');
-                    var btnConstruction = $('<a></a>').addClass('btn btn-minier btn-pink').html('工程单');
+                            netPerformanceo(_text, v);
+                        });
+                    }
+                    propertyArr.push([_text, v.orderTotalPrice, "blue", _info]);
+                    break;
+                case "quotationPrice":
+                    var _text = $("<text>报价额:</text>");
+                    var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
 
-                    var btnDctivity = $('<a></a>').addClass('btn btn-minier btn-inverse').html('装修活动');
-                    var btnSctivity = $('<a></a>').addClass('btn btn-minier btn-inverse').html('销售活动');
+                        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+                            "quotation.orderId": v.orderId
+                        }, function(res) {
 
-                    var btnPcontract = $('<a></a>').addClass('btn btn-minier btn-danger').html('预签');
-                    var btnSign = $('<a></a>').addClass('btn btn-minier btn-danger').html('签约');
+                            var quotation = res.quotation;
 
-                    var btnResign = $('<a></a>').addClass('btn btn-minier btn-danger').html('重签');
-                    var btnCal = $('<a></a>').addClass('btn btn-minier btn-danger').html('决算');
-                    var btnBalance = $('<a></a>').addClass('btn btn-minier btn-danger').html('内决');
-                    var btnRepair = $('<a></a>').addClass('btn btn-minier btn-danger').html('保修');
-                    var btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
-                    var btnAerminal = $('<a></a>').addClass('btn btn-minier btn-danger').html('终止');
-                    var btnTerminal = $('<a></a>').addClass('btn btn-minier btn-danger').html('终止');
+                            beforeTotal = utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice), quotation.managePrice), quotation.taxPrice);
 
-                    var btnTerminalStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('工程终止');
+                            com.showTip(_text, "折前总价:" + utils.changeThrDecimal(beforeTotal));
 
-                    var btnHidden = $('<a></a>').addClass('btn btn-minier btn-info').html('隐藏');
-
-                    var propertyArr = [];
-                    $.each(pageConfig.propertyArr, function(pi, pv) {
-
-                        switch (pv) {
-                            case "address":
-                                propertyArr.push(["楼盘地址:", (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey"]);
-                                break;
-                            case "villageName":
-                                propertyArr.push(["楼盘:", (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name, "grey", tools.village.info, v.house.village.no]);
-                                break;
-                            case "houseNumber":// 2, 3, 4, 6, 7
-                                if ([constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_TERMINATION_INT, constant.decoration().decoration.STATUS_FINAL_INT].contains(v.status)) {
-                                    propertyArr.push(["楼号:", (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey", tools.house.info, v.house.hid]);
-                                }
-                                break;
-                            case "customerName":
-                                propertyArr.push(["客户名:", v.customer.name, "grey", tools.customer.info, v.customer.cid]);
-                                break;
-                            case "designDepartment":
-                                propertyArr.push(["设计部:", v.designer.dept.name, "grey", tools.decoration.belong, v.orderId]);
-                                break;
-                            case "designerName":
-                                propertyArr.push(["设计师:", v.designer.currentName, "grey", tools.decoration.belong, v.orderId]);
-                                break;
-                            case "escorterName":
-                                propertyArr.push(["方案设计:", v.escorter ? v.escorter.currentName : '', "grey", tools.personel.info, v.escorter ? v.escorter.userId : '']);
-                                break;
-                            case "salesmanDepartment":
-                                propertyArr.push(["业务部:", v.salesman.dept.name, "grey", tools.department.info, v.salesman.dept.did]);
-                                break;
-                            case "salesmanName":
-                                propertyArr.push(["业务员:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
-                                break;
-                            case "decorationBusitype":
-                                propertyArr.push(["业务类型:", order.busitype[v.busitype], "red"]);
-                                break;
-                            case "materialerName":
-                                propertyArr.push(["跟单员:", v.materialer ? v.materialer.currentName : '', "grey", tools.personel.info, v.materialer ? v.materialer.userId : '']);
-                                break;
-                            case "supervisorName":
-                                propertyArr.push(["监理:", v.supervisor.currentName, "grey", tools.personel.info, v.supervisor.userId]);
-                                break;
-                            case "houseArea":
-                                propertyArr.push(["派尺面积:", v.house.buildArea, "blue"]);
-                                break;
-                            case "quoteArea":
-                                propertyArr.push(["计价面积:", v.house.innerArea, "blue"]);
-                                break;
-                            case "discount":
-                                propertyArr.push(["折扣:", com.checkNull(v.discount, 10), "blue"]);
-                                break;
-                            case "precontractPrice":
-                                var _text = $("<text>预签额:</text>");
-                                var _info = null;
-
-                                if (v.precontractPrice != 0) {
-                                    _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                                        netPerformancep(_text, v);
-                                    });
-                                }
-                                propertyArr.push([_text, v.precontractPrice, "blue", _info]);
-                                break;
-                            case "orderTotalPrice":
-                                var _text = $("<text>签单额:</text>");
-                                var _info = null;
-
-                                if ([constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_TERMINATION_INT, constant.decoration().decoration.STATUS_FINAL_INT].contains(v.status)) {
-                                    _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                                        netPerformanceo(_text, v);
-                                    });
-                                }
-                                propertyArr.push([_text, v.orderTotalPrice, "blue", _info]);
-                                break;
-                            case "quotationPrice":
-
-                                var _text = $("<text>报价额:</text>");
-                                var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                                    com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-                                        "quotation.orderId": v.orderId
-                                    }, function(res) {
-
-                                        var quotation = res.quotation;
-
-                                        beforeTotal = utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice), quotation.managePrice), quotation.taxPrice);
-
-                                        com.showTip(_text, "折前总价:" + utils.changeThrDecimal(beforeTotal));
-
-                                    });
-                                });
-
-                                propertyArr.push([_text, v.quotationPrice, "blue", _info]);
-                                break;
-                            case "couponCut":
-                                var _text = $("<text>券优惠:</text>");
-                                var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                                    couponCut(_text, v.orderId);
-                                });
-                                propertyArr.push([_text, v.couponCut, "blue", _info]);
-                                break;
-                            case "factPrice":
-                                propertyArr.push(["实收额:", v.factPrice, "blue"]);
-                                break;
-                            case "createTime":
-                                propertyArr.push(["创建时间:", v.createTime, "green"]);
-                                break;
-                            case "issueTime":
-                                propertyArr.push(["派尺时间:", v.issueTime, "green"]);
-                                break;
-                            case "meetTime":
-                                propertyArr.push(["到店时间:", v.meetTime, "green"]);
-                                break;
-                            case "measureTime":
-                                propertyArr.push(["量房时间:", v.measureTime, "green"]);
-                                break;
-                            case "belongTime":
-                                propertyArr.push(["变更时间:", v.belongTime, "green"]);
-                                break;
-                            case "depositTime":
-                                propertyArr.push(["定金时间:", v.depositTime, "green"]);
-                                break;
-                            case "precontractTime":
-                                propertyArr.push(["预签时间:", v.precontractTime, "green"]);
-                                break;
-                            case "contractTime":
-                                propertyArr.push(["签单时间:", v.contractTime, "green"]);
-                                break;
-                            case "recontractTime":
-                                propertyArr.push(["重签时间:", v.recontractTime, "green"]);
-                                break;
-                            case "accountTime":
-                                propertyArr.push(["决算时间:", v.accountTime, "green"]);
-                                break;
-                            case "balanceTime":
-                                propertyArr.push(["内决时间:", v.balanceTime, "green"]);
-                                break;
-                            case "terminalTime":
-                                propertyArr.push(["终止时间:", v.terminalTime, "green"]);
-                                break;
-                            case "sdesignTime":
-                                propertyArr.push(["确认合同方案时间:", v.sdesignTime, "green"]);
-                                propertyArr.push(["确认放线方案时间:", v.edesignTime, "green"]);
-                                break;
-                            case "decorationType":
-                                propertyArr.push(["类型:", order.typeness[v.typeness], "red"]);
-                                break;
-                            case "decorationStatus":
-                                var _text = $("<text>状态:</text>");
-                                var _info = $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                                    tools.communion.assistance("decoration_status_information");
-                                });
-                                propertyArr.push([_text, order.decorationStatus[v.status], "red", _info]);
-                                break;
-                            case "sourceStatus":
-                                var _text = $("<text>确认状态:</text>");
-                                var _info = $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                                    tools.communion.assistance("decoration_source_status_informa");
-                                });
-                                propertyArr.push([_text, order.sourceStatus[v.sourceStatus], "red", _info]);
-                                break;
-                            case "projectStatus":
-                                var _text = $("<text>工程状态:</text>");
-                                var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                                    // projectInfo(_text, v.orderId);‌
-                                    projectInfo(_text, v.orderId);
-                                });
-                                propertyArr.push([_text, order.projectStatusArr[v.projectStatus], "red", _info]);
-                                break;
-                            case "repairStatus":
-                                propertyArr.push(["保修状态:", order.repairStatus[v.repairStatus], "red"]);
-                                break;
-                            case "designStatus":
-                                var _text = $("<text>设计状态:</text>");
-                                var _info = $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                                    tools.communion.assistance("decoration_design_status_informa");
-                                });
-                                propertyArr.push([_text, order.designStatusArr[v.designStatus], "red", _info]);
-                                break;
-                            case "balanceStatus":
-                                propertyArr.push(["内决状态:", order.balanceStatus[v.balanceStatus], "red"]);
-                                break;
-                            case "saleScale":
-                                var _text = $("<text>销售比例:</text>");
-                                var _info = $('<i class="icon-circle-arrow-down icon-rotate-180 blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                                    com.showConfirm("确定更新销售配比吗", function() {
-
-                                        var options = {
-                                            "decoration.orderId": v.orderId
-                                        };
-
-                                        com.post(api.decoration.updateDecorationForSaleScale, options, function() {
-
-                                            com.showAlert(com.info, "操作成功");
-                                        }, null, false);
-                                    });
-                                });
-                                if (v.saleScale != 1918) {
-                                    propertyArr.push([_text, v.saleScale, "blue", _info]);
-                                }
-                                break;
-                            case "payScale":
-                                var _text = $("<text>付款比例:</text>");
-                                var _info = $('<i class="icon-circle-arrow-down icon-rotate-180 blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                                    com.showConfirm("确定更新付款配比吗", function() {
-
-                                        var options = {
-                                            "decoration.orderId": v.orderId
-                                        };
-
-                                        com.post(api.decoration.updateDecorationForPayScale, options, function() {
-
-                                            com.showAlert(com.info, "操作成功");
-                                        }, null, false);
-                                    });
-                                });
-                                propertyArr.push([_text, v.paySacle, "blue", _info]);
-                                break;
-                            case "houseClass":
-                                propertyArr.push(["房屋类型:", v.houseClass, "red"]);
-                                break;
-                            case "houseType":
-                                propertyArr.push(["房屋类别:", v.houseType, "red"]);
-                                break;
-                        }
+                        });
                     });
 
-                    $.each(propertyArr, function(index, value) {
+                    propertyArr.push([_text, v.quotationPrice, "blue", _info]);
+                    break;
+                case "couponCut":
+                    var _text = $("<text>券优惠:</text>");
+                    var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
 
-                        var $liProperty = $('<li></li>').appendTo($ulProperty);
-
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                        if (value.length == 4)
-                            $('<span></span>').html(value[3]).appendTo($liProperty);
-
-                        if (value.length == 5) {
-                            $liProperty.click(function() {
-
-                                value[3]($liProperty, value[4]);
-
-                            }).css("cursor", "pointer");
-                        }
+                        couponCut(_text, v.orderId);
                     });
+                    propertyArr.push([_text, v.couponCut, "blue", _info]);
+                    break;
+                case "factPrice":
+                    propertyArr.push(["实收额:", v.factPrice, "blue"]);
+                    break;
+                case "createTime":
+                    propertyArr.push(["创建时间:", v.createTime, "green"]);
+                    break;
+                case "issueTime":
+                    propertyArr.push(["派尺时间:", v.issueTime, "green"]);
+                    break;
+                case "meetTime":
+                    propertyArr.push(["到店时间:", v.meetTime, "green"]);
+                    break;
+                case "measureTime":
+                    propertyArr.push(["量房时间:", v.measureTime, "green"]);
+                    break;
+                case "belongTime":
+                    propertyArr.push(["变更时间:", v.belongTime, "green"]);
+                    break;
+                case "depositTime":
+                    propertyArr.push(["定金时间:", v.depositTime, "green"]);
+                    break;
+                case "precontractTime":
+                    propertyArr.push(["预签时间:", v.precontractTime, "green"]);
+                    break;
+                case "contractTime":
+                    propertyArr.push(["签单时间:", v.contractTime, "green"]);
+                    break;
+                case "recontractTime":
+                    propertyArr.push(["重签时间:", v.recontractTime, "green"]);
+                    break;
+                case "accountTime":
+                    propertyArr.push(["决算时间:", v.accountTime, "green"]);
+                    break;
+                case "balanceTime":
+                    propertyArr.push(["内决时间:", v.balanceTime, "green"]);
+                    break;
+                case "terminalTime":
+                    propertyArr.push(["终止时间:", v.terminalTime, "green"]);
+                    break;
+                case "sdesignTime":
+                    propertyArr.push(["确认合同方案时间:", v.sdesignTime, "green"]);
+                    propertyArr.push(["确认放线方案时间:", v.edesignTime, "green"]);
+                    break;
+                case "decorationType":
+                    propertyArr.push(["类型:", order.typeness[v.typeness], "red"]);
+                    break;
+                case "decorationStatus":
+                    var _text = $("<text>状态:</text>");
+                    var _info = $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
 
-                    btnView.click(function() {
-
-                        viewDecorationDetail(v);
+                        tools.communion.assistance("decoration_status_information");
                     });
+                    propertyArr.push([_text, order.decorationStatus[v.status], "red", _info]);
+                    break;
+                case "sourceStatus":
+                    var _text = $("<text>确认状态:</text>");
+                    var _info = $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
 
-                    btnPrice.click(function() {
-
-                        viewDecorationQuotateIndex(v.orderId, v.type, v.typeness);
+                        tools.communion.assistance("decoration_source_status_informa");
                     });
+                    propertyArr.push([_text, order.sourceStatus[v.sourceStatus], "red", _info]);
+                    break;
+                case "projectStatus":
+                    var _text = $("<text>工程状态:</text>");
+                    var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
 
-                    btnNormood.click(function() {
-
-                        viewNormPart(v.orderId);
+                        projectInfo(_text, v.orderId);
                     });
+                    propertyArr.push([_text, order.projectStatusArr[v.projectStatus], "red", _info]);
+                    break;
+                case "repairStatus":
+                    propertyArr.push(["保修状态:", order.repairStatus[v.repairStatus], "red"]);
+                    break;
+                case "designStatus":
+                    var _text = $("<text>设计状态:</text>");
+                    var _info = $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
 
-                    btnSelect.click(function() {
-
-                        viewSelection(v.orderId);
+                        tools.communion.assistance("decoration_design_status_informa");
                     });
+                    propertyArr.push([_text, order.designStatusArr[v.designStatus], "red", _info]);
+                    break;
+                case "balanceStatus":
+                    propertyArr.push(["内决状态:", order.balanceStatus[v.balanceStatus], "red"]);
+                    break;
+                case "saleScale":
+                    var _text = $("<text>销售比例:</text>");
+                    var _info = $('<i class="icon-circle-arrow-down icon-rotate-180 blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
 
-                    btnRevie.click(function() {
-
-                        viewDecorationBackVisitIndex(v.orderId);
-                    });
-
-                    btnLine.click(function() {
-
-                        modalDrawLineModal(v);
-                    });
-                    btnProLine.click(function() {
-
-                        pretreat(v);
-                    });
-
-                    btnContract.click(function() {
-
-                        modalAgreementModal(v.orderId, v.customer.cid, v, "advance");
-                    });
-
-                    btnContractc.click(function() {
-
-                        modalAgreementModal(v.orderId, v.customer.cid, v, "design");
-                    });
-
-                    btnAddReduce.click(function() {
-
-                        viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness, null);
-                    });
-
-                    btnAddReduceD.click(function() {
-
-                        viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness, 1);
-                    });
-
-                    btnAddReduceM.click(function() {
-
-                        viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness, 2);
-                    });
-
-                    btnConstruction.click(function() {
-
-                        viewConschePart(v.orderId);
-                    });
-
-                    btnInfo.click(function() {
-
-                        viewDecorationTimelineIndex(v.orderId);
-                    });
-
-                    btnScal.click(function() {
-
-                        viewDecorationInAudit(v.orderId);
-                    });
-
-                    btnExtension.click(function() {
-
-                        viewExtension(v.orderId);
-                    });
-
-                    btnCal.click(function() {
-
-                        viewDecorationFinalSettlement(v.orderId, v.typeness, v.status);
-                    });
-
-                    btnProfile.click(function() {
-
-                        viewDecorationProfile(v.orderId);
-                    });
-
-                    btnService.click(function() {
-
-                        viewDecorationService(v.orderId);
-                    });
-
-                    btnRefer.click(function() {
-
-                        viewDecorationRefer(v.orderId);
-                    });
-
-                    btnDctivity.click(function() {
-
-                        viewDecorationActivity(v.orderId);
-                    });
-
-                    btnSctivity.click(function() {
-
-                        viewSalesActivity(v.orderId);
-                    });
-
-                    btnDelete.click(function() {
-
-                        obsoleteOrder(v.orderId);
-                    });
-                    // 签订合同
-                    btnSign.click(function() {
-
-                        signOrder(v.orderId, v.customer.cid, v.orderTotalPrice, v.notSalesmanRate, v.couponCut, v.thingCut);
-
-                    });
-
-                    // 合同终止1
-                    btnAerminal.click(function() {
-
-                        aerminalOrder(v.orderId, v.status, v.precontractPrice);
-                        approvalUtils.initqueryApprovalUser("approveTerminalManSel", 19);
-                    });
-
-                    // 合同终止（积分）
-                    btnTerminal.click(function() {
-
-                        terminalOrder(v.orderId, v.status, v.precontractPrice);
-                    });
-
-                    btnResign.click(function() {
-
-                        resignOrder(v.orderId);
-                    });
-
-                    // 预签
-                    btnProsign.click(function() {
-
-                        params.quotation.orderId = v.orderId;
-
-                        com.switchPage("views/quotation/protationIndex.html");
-                    });
-                    btnPcontract.click(function() {
-
-                        com.showConfirm("确定进行预签", function() {
+                        com.showConfirm("确定更新销售配比吗", function() {
 
                             var options = {
                                 "decoration.orderId": v.orderId
                             };
 
-                            com.post(api.decoration.presignDecorationContract, options, function() {
+                            com.post(api.decoration.updateDecorationForSaleScale, options, function() {
 
-                                com.switchPage("/views/decoration/decoration.html");
+                                com.showAlert(com.info, "操作成功");
                             }, null, false);
                         });
                     });
+                    if (v.saleScale != 1918) {
+                        propertyArr.push([_text, v.saleScale, "blue", _info]);
+                    }
+                    break;
+                case "payScale":
+                    var _text = $("<text>付款比例:</text>");
+                    var _info = $('<i class="icon-circle-arrow-down icon-rotate-180 blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
 
-                    btnBalance.click(function() {
+                        com.showConfirm("确定更新付款配比吗", function() {
 
-                        balanceOrder(v.orderId);
+                            var options = {
+                                "decoration.orderId": v.orderId
+                            };
+
+                            com.post(api.decoration.updateDecorationForPayScale, options, function() {
+
+                                com.showAlert(com.info, "操作成功");
+                            }, null, false);
+                        });
                     });
-
-                    btnRepair.click(function() {
-
-                        repairOrder(v.orderId);
-                    });
-
-                    btnTerminalStatus.click(function() {
-
-                        terminalStatus(v.orderId);
-                    });
-
-                    btnHidden.click(function() {
-
-                        hiddenOrder(v.orderId);
-                    });
-
-                    $.each(pageConfig.pageBtn, function(k, b) {
-
-                        switch (b) {
-                            case "view":// 查看
-                                $divBtnWrap.append(btnView);
-                                break;
-                            case "prosign":// 预签 (1 ,2)
-                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnProsign);
-                                }
-                                break;
-                            case "pcontract":// 预签合同 (1 ,2)
-                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnPcontract);
-                                }
-                                break;
-                            case "revie":// 回访
-                                $divBtnWrap.append(btnRevie);
-                                break;
-                            case "proline":// 放线
-                                $divBtnWrap.append(btnProLine);
-                                break;
-                            case "line":// 放线
-                                $divBtnWrap.append(btnLine);
-                                break;
-                            case "contract":// 合同 (0, 1, 2, 3, 4, 7, 8)
-                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status % 10) != -1) {
-                                    $divBtnWrap.append(btnContract);
-                                }
-                                break;
-                            case "contractc":// 合同(设计) (0, 1, 2, 3, 4, 7, 8)
-                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status % 10) != -1) {
-                                    $divBtnWrap.append(btnContractc);
-                                }
-                                break;
-                            case "scal":// 扣款
-                                $divBtnWrap.append(btnScal);
-                                break;
-                            case "price":// 报价 (0, 1, 2, 4)
-                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_RESIGNED_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnPrice);
-                                }
-                                break;
-                            case "extension":// 扩展项 (0, 1, 2, 3, 4, 8)
-                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnExtension);
-                                }
-                                break;
-                            case "normPart":// 定额
-                                $divBtnWrap.append(btnNormood);
-                                break;
-                            case "selection":// 选材
-                                $divBtnWrap.append(btnSelect);
-                                break;
-                            case "btnAddReduce":// 增减项 (3, 7, 8)
-                                if ([constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnAddReduce);
-                                }
-                                break;
-                            case "btnAddReduceD":// 增减项 (3, 7, 8)
-                                if ([constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnAddReduceD);
-                                }
-                                break;
-                            case "btnAddReduceM":// 增减项 (3, 7, 8)
-                                if ([constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnAddReduceM);
-                                }
-                                break;
-                            case "consche":// 工程单 (0, 1, 2, 3, 4, 8)
-                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnConstruction);
-                                }
-                                break;
-                            case "info":// 信息周
-                                $divBtnWrap.append(btnInfo);
-                                break;
-                            case "cal":// 决算 (3, 7, 8)
-                                if ([constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnCal);
-                                }
-                                break;
-                            case "profile":// 画像
-                                $divBtnWrap.append(btnProfile);
-                                break;
-                            case "services":// 服务
-                                $divBtnWrap.append(btnService);
-                                break;
-                            case "refer":// 推荐
-                                $divBtnWrap.append(btnRefer);
-                                break;
-                            case "activity":// 活动物品
-                                $divBtnWrap.append(btnDctivity);
-                                break;
-                            case "sctivity":// 活动物品
-                                $divBtnWrap.append(btnSctivity);
-                                break;
-                            case "delete":// 废单 (3, 5, 6)
-                                if (v.status != constant.decoration().decoration.STATUS_SIGNED_INT && v.status != constant.decoration().decoration.STATUS_WASTE_INT && v.status != constant.decoration().decoration.STATUS_TERMINATION_INT) {
-                                    $divBtnWrap.append(btnDelete);
-                                }
-                                break;
-                            case "sign":// 签订合同 (1, 2, 4)
-                                if ([constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_RESIGNED_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnSign);
-                                }
-                                break;
-                            case "terminal":// 合同终止 (2, 3)
-                                if ([constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnAerminal);
-                                }
-                                break;
-                            case "terminal1":// 合同终止 (32, 33)
-                                if ([constant.decoration().decoration.STATUS_PROSIGNTERMINABLE_INT, constant.decoration().decoration.STATUS_SIGNEDTERMINABLE_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnTerminal);
-                                }
-                                break;
-                            case "resign":// 重新签合同 (3)
-                                if (v.status == constant.decoration().decoration.STATUS_SIGNED_INT) {
-                                    $divBtnWrap.append(btnResign);
-                                }
-                                break;
-                            case "balance":// 重新签合同
-                                $divBtnWrap.append(btnBalance);
-                                break;
-                            case "repair":// 保修
-                                $divBtnWrap.append(btnRepair);
-                                break;
-                            case "terminalStatus":// 工程终止
-                                $divBtnWrap.append(btnTerminalStatus);
-                                break;
-                            case "hidden":// 隐藏/显示
-                                $divBtnWrap.append(btnHidden);
-                                break;
-                        }
-                    });
-                    $divBtnWrap.appendTo($h3);
-                    $liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
+                    propertyArr.push([_text, v.paySacle, "blue", _info]);
+                    break;
+                case "houseClass":
+                    propertyArr.push(["房屋类型:", v.houseClass, "red"]);
+                    break;
+                case "houseType":
+                    propertyArr.push(["房屋类别:", v.houseType, "red"]);
+                    break;
             }
+        });
+
+        return propertyArr;
+    }
+
+    function drawDecorationPropertyArr($ulProperty, propertyArr) {
+
+        $.each(propertyArr, function(index, value) {
+
+            var $liProperty = $('<li></li>').appendTo($ulProperty);
+
+            $('<strong></strong>').html(value[0]).appendTo($liProperty);
+            $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+            if (value.length == 4)
+                $('<span></span>').html(value[3]).appendTo($liProperty);
+
+            if (value.length == 5) {
+                $liProperty.click(function() {
+
+                    value[3]($liProperty, value[4]);
+
+                }).css("cursor", "pointer");
+            }
+        });
+    }
+
+    function buildDecorationLineprops() {
+
+        return [{
+            field: "decorationInfo",
+            name: "装修单信息",
+            type: "custom",
+            prop: function(v) {
+                return decorationUtils.propertyText(buildDecorationPropertyArr(v));
+            },
+            render: function($liLine, v, $ulProperty) {
+                drawDecorationPropertyArr($ulProperty, buildDecorationPropertyArr(v));
+            }
+        }];
+    }
+
+    function buildDecorationLinebtns() {
+
+        return {
+            view: {name: "查看", clazz: "btn-yellow", show: function(v) { return pageConfig.pageBtn.contains("view"); }, handle: function(v) { viewDecorationDetail(v); }},
+            prosign: {name: "预签单", clazz: "btn-pink", show: function(v) { return pageConfig.pageBtn.contains("prosign") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1; }, handle: function(v) {
+                params.quotation.orderId = v.orderId;
+                com.switchPage("views/quotation/protationIndex.html");
+            }},
+            pcontract: {name: "预签", clazz: "btn-danger", show: function(v) { return pageConfig.pageBtn.contains("pcontract") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1; }, handle: function(v) {
+                com.showConfirm("确定进行预签", function() {
+                    var options = {"decoration.orderId": v.orderId};
+                    com.post(api.decoration.presignDecorationContract, options, function() {
+                        com.switchPage("/views/decoration/decoration.html");
+                    }, null, false);
+                });
+            }},
+            revie: {name: "回访", clazz: "btn-success", show: function() { return pageConfig.pageBtn.contains("revie"); }, handle: function(v) { viewDecorationBackVisitIndex(v.orderId); }},
+            proline: {name: "预放线", clazz: "btn-warning", show: function() { return pageConfig.pageBtn.contains("proline"); }, handle: function(v) { pretreat(v); }},
+            line: {name: "放线", clazz: "btn-warning", show: function() { return pageConfig.pageBtn.contains("line"); }, handle: function(v) { modalDrawLineModal(v); }},
+            contract: {name: "合同", clazz: "btn-inverse", show: function(v) { return pageConfig.pageBtn.contains("contract") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status % 10) != -1; }, handle: function(v) { modalAgreementModal(v.orderId, v.customer.cid, v, "advance"); }},
+            contractc: {name: "合同", clazz: "btn-inverse", show: function(v) { return pageConfig.pageBtn.contains("contractc") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status % 10) != -1; }, handle: function(v) { modalAgreementModal(v.orderId, v.customer.cid, v, "design"); }},
+            scal: {name: "扣款", clazz: "btn-success", show: function() { return pageConfig.pageBtn.contains("scal"); }, handle: function(v) { viewDecorationInAudit(v.orderId); }},
+            price: {name: "报价单", clazz: "btn-pink", show: function(v) { return pageConfig.pageBtn.contains("price") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_RESIGNED_INT].indexOf(v.status) != -1; }, handle: function(v) { viewDecorationQuotateIndex(v.orderId, v.type, v.typeness); }},
+            extension: {name: "扩展项", clazz: "btn-pink", show: function(v) { return pageConfig.pageBtn.contains("extension") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1; }, handle: function(v) { viewExtension(v.orderId); }},
+            normPart: {name: "定额单", clazz: "btn-pink", show: function() { return pageConfig.pageBtn.contains("normPart"); }, handle: function(v) { viewNormPart(v.orderId); }},
+            selection: {name: "选材项", clazz: "btn-pink", show: function() { return pageConfig.pageBtn.contains("selection"); }, handle: function(v) { viewSelection(v.orderId); }},
+            btnAddReduce: {name: "增减项", clazz: "btn-pink", show: function(v) { return pageConfig.pageBtn.contains("btnAddReduce") && [constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1; }, handle: function(v) { viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness, null); }},
+            btnAddReduceD: {name: "增减项", clazz: "btn-pink", show: function(v) { return pageConfig.pageBtn.contains("btnAddReduceD") && [constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1; }, handle: function(v) { viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness, 1); }},
+            btnAddReduceM: {name: "增减项", clazz: "btn-pink", show: function(v) { return pageConfig.pageBtn.contains("btnAddReduceM") && [constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1; }, handle: function(v) { viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness, 2); }},
+            consche: {name: "工程单", clazz: "btn-pink", show: function(v) { return pageConfig.pageBtn.contains("consche") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1; }, handle: function(v) { viewConschePart(v.orderId); }},
+            info: {name: "详情", clazz: "btn-success", show: function() { return pageConfig.pageBtn.contains("info"); }, handle: function(v) { viewDecorationTimelineIndex(v.orderId); }},
+            cal: {name: "决算", clazz: "btn-danger", show: function(v) { return pageConfig.pageBtn.contains("cal") && [constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1; }, handle: function(v) { viewDecorationFinalSettlement(v.orderId, v.typeness, v.status); }},
+            profile: {name: "画像", clazz: "btn-success", show: function() { return pageConfig.pageBtn.contains("profile"); }, handle: function(v) { viewDecorationProfile(v.orderId); }},
+            services: {name: "服务", clazz: "btn-success", show: function() { return pageConfig.pageBtn.contains("services"); }, handle: function(v) { viewDecorationService(v.orderId); }},
+            refer: {name: "推荐", clazz: "btn-success", show: function() { return pageConfig.pageBtn.contains("refer"); }, handle: function(v) { viewDecorationRefer(v.orderId); }},
+            activity: {name: "装修活动", clazz: "btn-inverse", show: function() { return pageConfig.pageBtn.contains("activity"); }, handle: function(v) { viewDecorationActivity(v.orderId); }},
+            sctivity: {name: "销售活动", clazz: "btn-inverse", show: function() { return pageConfig.pageBtn.contains("sctivity"); }, handle: function(v) { viewSalesActivity(v.orderId); }},
+            delete: {name: "废单", clazz: "btn-danger", show: function(v) { return pageConfig.pageBtn.contains("delete") && v.status != constant.decoration().decoration.STATUS_SIGNED_INT && v.status != constant.decoration().decoration.STATUS_WASTE_INT && v.status != constant.decoration().decoration.STATUS_TERMINATION_INT; }, handle: function(v) { obsoleteOrder(v.orderId); }},
+            sign: {name: "签约", clazz: "btn-danger", show: function(v) { return pageConfig.pageBtn.contains("sign") && [constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_RESIGNED_INT].indexOf(v.status) != -1; }, handle: function(v) { signOrder(v.orderId, v.customer.cid, v.orderTotalPrice, v.notSalesmanRate, v.couponCut, v.thingCut); }},
+            terminal: {name: "终止", clazz: "btn-danger", show: function(v) { return pageConfig.pageBtn.contains("terminal") && [constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT].indexOf(v.status) != -1; }, handle: function(v) {
+                aerminalOrder(v.orderId, v.status, v.precontractPrice);
+                approvalUtils.initqueryApprovalUser("approveTerminalManSel", 19);
+            }},
+            terminal1: {name: "终止", clazz: "btn-danger", show: function(v) { return pageConfig.pageBtn.contains("terminal1") && [constant.decoration().decoration.STATUS_PROSIGNTERMINABLE_INT, constant.decoration().decoration.STATUS_SIGNEDTERMINABLE_INT].indexOf(v.status) != -1; }, handle: function(v) { terminalOrder(v.orderId, v.status, v.precontractPrice); }},
+            resign: {name: "重签", clazz: "btn-danger", show: function(v) { return pageConfig.pageBtn.contains("resign") && v.status == constant.decoration().decoration.STATUS_SIGNED_INT; }, handle: function(v) { resignOrder(v.orderId); }},
+            balance: {name: "内决", clazz: "btn-danger", show: function() { return pageConfig.pageBtn.contains("balance"); }, handle: function(v) { balanceOrder(v.orderId); }},
+            repair: {name: "保修", clazz: "btn-danger", show: function() { return pageConfig.pageBtn.contains("repair"); }, handle: function(v) { repairOrder(v.orderId); }},
+            terminalStatus: {name: "工程终止", clazz: "btn-danger", show: function() { return pageConfig.pageBtn.contains("terminalStatus"); }, handle: function(v) { terminalStatus(v.orderId); }},
+            hidden: {name: "隐藏", clazz: "btn-info", show: function() { return pageConfig.pageBtn.contains("hidden"); }, handle: function(v) { hiddenOrder(v.orderId); }}
         };
+    }
+
+
         // 查看
-        var viewDecorationDetail = function(v) {
+    var viewDecorationDetail = function(v) {
 
             params.decoration.decoration = v;
 
@@ -1526,7 +1226,7 @@
         };
 
         // 报价
-        var viewDecorationQuotateIndex = function(orderId, type, typeness) {
+    var viewDecorationQuotateIndex = function(orderId, type, typeness) {
 
             params.quotation.orderId = orderId;
             params.quotation.orderType = type;
@@ -1538,7 +1238,7 @@
         };
 
         // 定额
-        var viewNormPart = function(orderId) {
+    var viewNormPart = function(orderId) {
 
             params.quotation.editFlg = false;
             params.quotation.orderId = orderId;
@@ -1549,7 +1249,7 @@
         };
 
         // 工程
-        var viewConschePart = function(orderId) {
+    var viewConschePart = function(orderId) {
 
             params.construction.orderId = orderId;
             params.urlLoadParams.type = "views"
@@ -1558,7 +1258,7 @@
             // com.switchPage(api.index.normPart.url);
         };
 
-        var viewSelection = function(orderId) {
+    var viewSelection = function(orderId) {
 
             params.quotation.orderId = orderId;
 
@@ -1568,7 +1268,7 @@
         };
 
         // 回访
-        var viewDecorationBackVisitIndex = function(orderId) {
+    var viewDecorationBackVisitIndex = function(orderId) {
 
             params.decoration.orderId = orderId;
 
@@ -1578,7 +1278,7 @@
             // com.popup4page("#layerPopUp", api.index.backVisitIndex.url, "装修单回访: " + orderId);
         };
 
-        function initPlan() {
+    function initPlan() {
 
             if (order.calendarFlag)
                 return false;
@@ -1685,7 +1385,7 @@
             }));
         }
         // 放线
-        var modalDrawLineModal = function(v) {
+    var modalDrawLineModal = function(v) {
 
             var designPeriod = 0;
             var constructionPeriod = 0;
@@ -1838,7 +1538,7 @@
             });
         };
 
-        var pretreat = function(v) {
+    var pretreat = function(v) {
 
             com.cleanTypeahead("supervisor");
 
@@ -1938,7 +1638,7 @@
         }
 
         // 合同
-        var modalAgreementModal = function(orderId, cid, data, pagetype) {
+    var modalAgreementModal = function(orderId, cid, data, pagetype) {
 
             params.decoration.orderId = orderId;
             params.decoration.cid = cid;
@@ -1952,7 +1652,7 @@
         };
 
         // 扩展项
-        var viewExtension = function(orderId) {
+    var viewExtension = function(orderId) {
 
             params.quotation.orderId = orderId;
 
@@ -1961,7 +1661,7 @@
             com.switchPage(api.index.extensionIndex.url);
         };
         // 增减项
-        var viewDecorationInDecreaseIndex = function(orderId, type, typeness, atttype) {
+    var viewDecorationInDecreaseIndex = function(orderId, type, typeness, atttype) {
 
             params.quotation.orderId = orderId;
             params.quotation.decorationType = type;
@@ -1975,7 +1675,7 @@
             com.switchPage(api.index.addReduceIndex.url);
         };
         // 扣款
-        var viewDecorationInAudit = function(orderId) {
+    var viewDecorationInAudit = function(orderId) {
 
             params.decoration.orderId = orderId;
             params.decoration.auditStatusType = 'select';
@@ -1986,7 +1686,7 @@
             // com.popup4page("#layerPopUp", api.index.auditRecordIndex.url, "装修单扣款: " + orderId);
         };
         // 时间轴
-        var viewDecorationTimelineIndex = function(orderId) {
+    var viewDecorationTimelineIndex = function(orderId) {
 
             params.decoration.orderId = orderId;
 
@@ -1997,7 +1697,7 @@
         };
 
         // 券优惠
-        var couponCut = function(btn, orderId) {
+    var couponCut = function(btn, orderId) {
 
             com.post(api.decoration.queryDecorationActivityItem, {
                 "decoration.orderId": orderId
@@ -2041,7 +1741,7 @@
         };
 
         // 工程信息
-        var projectInfo = function(btn, orderId) {
+    var projectInfo = function(btn, orderId) {
 
             com.post(api.construction.queryConstructionInfoByOrderId, {
                 "constructionInfo.orderId": orderId
@@ -2055,7 +1755,7 @@
         };
 
         // 签单额净业绩
-        var netPerformanceo = function(btn, decoration) {
+    var netPerformanceo = function(btn, decoration) {
 
             var quotation = {};
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {
@@ -2121,7 +1821,7 @@
         };
 
         // 预签额净业绩
-        var netPerformancep = function(btn, decoration) {
+    var netPerformancep = function(btn, decoration) {
 
             var quotation = {};
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {
@@ -2187,7 +1887,7 @@
         };
 
         // 决算
-        function viewDecorationFinalSettlement(orderId, typeness, status) {
+    function viewDecorationFinalSettlement(orderId, typeness, status) {
 
             params.quotation.orderId = orderId;
             params.decoration.orderId = orderId;
@@ -2202,7 +1902,7 @@
         }
 
         // 画像
-        function viewDecorationProfile(orderId) {
+    function viewDecorationProfile(orderId) {
 
             params.customer.orderId = orderId;
             params.customer.profile = {
@@ -2214,7 +1914,7 @@
         }
 
         // 服务
-        function viewDecorationService(orderId) {
+    function viewDecorationService(orderId) {
 
             params.decoration.orderId = orderId;
 
@@ -2225,7 +1925,7 @@
         }
 
         // 推荐
-        function viewDecorationRefer(orderId) {
+    function viewDecorationRefer(orderId) {
 
             // params.decoration.orderId = orderId;
             // params.historyPage = api.index.decorationIndex.url;
@@ -2237,7 +1937,7 @@
         }
 
         // 活动物品
-        function viewDecorationActivity(orderId) {
+    function viewDecorationActivity(orderId) {
 
             params.decoration.orderId = orderId;
 
@@ -2254,7 +1954,7 @@
             com.popup4page("#layerPopUp", api.index.decorationActivityItemIndex.url, "装修活动");
         }
 
-        function viewSalesActivity(orderId) {
+    function viewSalesActivity(orderId) {
 
             params.sales.type = "advance";
             params.sales.sales = {
@@ -2265,7 +1965,7 @@
         }
 
         // 废单
-        function obsoleteOrder(orderId) {
+    function obsoleteOrder(orderId) {
 
             params.decoration.orderId = orderId;
 
@@ -2282,7 +1982,7 @@
         }
 
         // 隐藏/显示
-        function hiddenOrder(orderId) {
+    function hiddenOrder(orderId) {
 
             params.decoration.orderId = orderId;
 
@@ -2299,7 +1999,7 @@
         }
 
         // 签订合同
-        function signOrder(orderId, customerId, orderTotalPrice, notSalesmanRate, coupon, thing) {
+    function signOrder(orderId, customerId, orderTotalPrice, notSalesmanRate, coupon, thing) {
 
             order.signItems.conpany.val(0);
             var cId = params.decoration.customerId;
@@ -2394,7 +2094,7 @@
         }
 
         // 合同终止审批
-        function aerminalOrder(orderId, status, precontractPrice, rowId) {
+    function aerminalOrder(orderId, status, precontractPrice, rowId) {
 
             params.decoration.orderId = orderId;
 
@@ -2560,7 +2260,7 @@
         }
 
         // 合同终止（积分）
-        function terminalOrder(orderId, status, precontractPrice, rowId) {
+    function terminalOrder(orderId, status, precontractPrice, rowId) {
 
             params.decoration.orderId = orderId;
             params.decoration.rowId = rowId;
@@ -2625,7 +2325,7 @@
         }
 
         // 重签合同
-        function resignOrder(orderId, rowId) {
+    function resignOrder(orderId, rowId) {
 
             params.decoration.orderId = orderId;
             params.decoration.rowId = rowId;
@@ -2643,7 +2343,7 @@
         }
 
         // 预签
-        function prosignOrder(orderId, precontractPrice) {
+    function prosignOrder(orderId, precontractPrice) {
 
             order.infoItems.prosignPrice.val(precontractPrice);
             order.prosignModal.modal("show");
@@ -2669,7 +2369,7 @@
             });
         }
 
-        function balanceOrder(orderId) {
+    function balanceOrder(orderId) {
 
             com.showConfirm("确认要内决吗?", function() {
 
@@ -2684,7 +2384,7 @@
                 });
             });
         }
-        function repairOrder(orderId) {
+    function repairOrder(orderId) {
 
             order.repairModal.modal("show");
             com.focusPage("#saveBtnRepair").unbind('click').on("click", function() {
@@ -2708,7 +2408,7 @@
             });
         }
 
-        function terminalStatus(orderId) {
+    function terminalStatus(orderId) {
 
             order.updateTerminalStatusModal.modal("show");
 
@@ -2743,14 +2443,7 @@
             });
         }
 
-        return {
-            init: function(tableId, listData) {
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            }
-        };
-    })();
     // 额外参数 控制装修-通用-设计/业务 状态 签约/决算
     var extraParam = {};
     var pageName = params['urlLoadParams'].depage;
@@ -2766,10 +2459,13 @@
 
     var searcher = new Searcher();
 
-    searcher.init(pageConfig.condArr, "condList", pageConfig.apiPage, function(data) {
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage, extraParam, pageConfig.condArr, pageConfig.postDataName, null, false, buildDecorationButtons);
 
-        displayFunc.init('resultList', data);
-    }, "pagenation", pageConfig.postDataName, extraParam, false, null, function() {
+    searcher.line(function(v) {
+        return v.orderId;
+    }, buildDecorationLineprops(), buildDecorationLinebtns()).render();
+
+    function buildDecorationButtons() {
 
         var btns = [];
 
@@ -2790,7 +2486,7 @@
         }
 
         return btns;
-    });
+    }
 
     function createToolButton(name, icon, text, clazz) {
 
