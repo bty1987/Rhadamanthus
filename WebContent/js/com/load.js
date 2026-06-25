@@ -26,14 +26,19 @@ $.extend($,{
             $.loadScript(filenames, relative, frame, zquery);
 
         } else {
-            
+
             filename = filenames.shift();
-            
+
             if(relative) filename = relative + filename;
             if(!zquery) zquery = $;
-            
+
+            console.log('[diag] loadScript fetching:', filename, 'remaining:', filenames.length);
+
             zquery.getScript(filename, function () {
+                console.log('[diag] getScript success:', filename);
                 $.loadScript(filenames, relative, frame, zquery);
+            }).fail(function(jqxhr, settings, exception) {
+                console.error('[diag] getScript FAIL:', filename, 'status:', jqxhr.status, 'exception:', exception);
             })
         }
     }
