@@ -774,7 +774,13 @@ var com = {
         opearteTab.before(tabLi.append(taba));
         $(".flpage.tab-content").append(tabPane);
 
-        tabPane.load(page);
+        console.log('[diag] tab inserted, tabLi in DOM:', tabLi.closest('body').length, 'tabPane in DOM:', tabPane.closest('body').length, 'tabPane classes:', tabPane.attr('class'));
+
+        tabPane.load(page, function(response, status, xhr) {
+            console.log('[diag] tabPane.load complete, status:', status, 'xhr status:', xhr ? xhr.status : 'N/A', 'response length:', response ? response.length : 0);
+            console.log('[diag] tabPane visible:', tabPane.is(':visible'), 'height:', tabPane.height(), 'width:', tabPane.width());
+            console.log('[diag] tabPane parent visible:', tabPane.parent().is(':visible'), 'parent height:', tabPane.parent().height());
+        });
 
         tabDel.on("click", function() {
 
