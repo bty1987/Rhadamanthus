@@ -164,12 +164,12 @@ jQuery(function($) {
     // 不同页面的不同参数
     oalesPayment.pageConfig = paymentUtils.getConfig(oalesPayment.type, 65);
 
-
     function paymentPropertyText(propertyArr) {
 
         var infos = [];
 
         $.each(propertyArr, function(index, value) {
+
             infos.push(value[0] + value[1]);
         });
 
@@ -186,6 +186,7 @@ jQuery(function($) {
 
             if (value[3]) {
                 $b.click(function() {
+
                     value[3]($b);
                 }).css("cursor", "pointer");
             }
@@ -209,6 +210,7 @@ jQuery(function($) {
         params.payment.cid = v.oales.decoration.customer.cid;
 
         com.popup("专用收款收据__装修单号: " + v.orderId, api.index.oalesPaymentReceiptIndex.url, function() {
+
             parent.layer.getFrameIndex(window.name);
         }, null, true);
     }
@@ -257,6 +259,7 @@ jQuery(function($) {
             };
 
             com.post(api.payment.posPay, sendOption, function(res) {
+
                 com.showAlert(com.info, "推送成功");
             });
         });
@@ -269,9 +272,11 @@ jQuery(function($) {
             name: "opids",
             clazz: "ace ace-checkbox-2",
             show: function() {
+
                 return oalesPayment.pageConfig.pageBtn.contains("batchCollect") || oalesPayment.pageConfig.pageBtn.contains("selectall");
             },
             attrs: function(v) {
+
                 return {
                     "data-opid": v.opid,
                     "data-mno": v.mno,
@@ -286,9 +291,11 @@ jQuery(function($) {
             name: "款项信息",
             type: "custom",
             prop: function(v) {
+
                 return paymentPropertyText(getOalesPropertyArr(v));
             },
             render: function($liLine, v, $ulProperty) {
+
                 drawPaymentProperties($ulProperty, getOalesPropertyArr(v));
             }
         }];
@@ -299,9 +306,11 @@ jQuery(function($) {
                 name: "收款方式",
                 type: "custom",
                 prop: function(v) {
+
                     return paymentUtils.getHistoryText(oalesPayment, v);
                 },
                 render: function($liLine, v) {
+
                     paymentUtils.drawHistoryData(oalesPayment, v, $liLine, "");
                 }
             });
@@ -315,12 +324,15 @@ jQuery(function($) {
         return {
             collect: {
                 name: function(v) {
+
                     return v.type == 0 ? "收款" : "退款";
                 },
                 clazz: function(v) {
+
                     return v.type == 0 ? "btn-info" : "btn-danger";
                 },
                 show: function(v) {
+
                     return v.status == 0 && oalesPayment.pageConfig.pageBtn.contains("collect");
                 },
                 handle: collectOalesPaymentLine
@@ -329,6 +341,7 @@ jQuery(function($) {
                 name: "打印",
                 clazz: "btn-pink",
                 show: function(v) {
+
                     return v.status != 0 && oalesPayment.pageConfig.pageBtn.contains("print");
                 },
                 handle: printOalesPaymentLine
@@ -337,6 +350,7 @@ jQuery(function($) {
                 name: "更新",
                 clazz: "btn-success",
                 show: function(v) {
+
                     return v.status == constant.payment().materialPayment.STATUS_COLLECT_INT && oalesPayment.pageConfig.pageBtn.contains("update");
                 },
                 handle: updateOalesPaymentLine
@@ -345,6 +359,7 @@ jQuery(function($) {
                 name: "推送",
                 clazz: "btn-danger",
                 show: function(v) {
+
                     return v.type == 0 && v.status == constant.payment().materialPayment.STATUS_INIT_INT && oalesPayment.pageConfig.pageBtn.contains("posPush");
                 },
                 handle: posPushOalesPaymentLine
@@ -353,6 +368,7 @@ jQuery(function($) {
                 name: "收款码",
                 clazz: "btn-success",
                 show: function(v) {
+
                     return v.type == 0 && v.status == constant.payment().materialPayment.STATUS_INIT_INT && oalesPayment.pageConfig.pageBtn.contains("collectCode");
                 },
                 handle: codeOalesPaymentLine
@@ -395,6 +411,7 @@ jQuery(function($) {
 
     searcher.set("condList", "pagenation", "resultList", oalesPayment.pageConfig.apiPage, extraParams, oalesPayment.pageConfig.condArr, "oalesPaymentPostData" + oalesPayment.type, null, false, buildOalesButtons);
     searcher.line(function(v) {
+
         return oalesPayment.paymentType[v.type];
     }, buildOalesLineprops(), buildOalesLinebtns()).render();
 

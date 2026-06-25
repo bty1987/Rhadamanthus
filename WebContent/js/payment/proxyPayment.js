@@ -75,11 +75,13 @@ jQuery(function($) {
 
     // 隐藏触发
     proxyPayment.modals.createProxyPaymentModal.on('hide.bs.modal', function() {
+
         com.closeTip();
         com.cleanItems(proxyPayment.items);
     });
 
     proxyPayment.modals.collectModal.on('hide.bs.modal', function() {
+
         proxyPayment.bankGrade = [];
         proxyPayment.checkvGrade = [];
 
@@ -136,12 +138,12 @@ jQuery(function($) {
     // 不同页面的不同参数
     proxyPayment.pageConfig = paymentUtils.getConfig(proxyPayment.type, 64);
 
-
     function paymentPropertyText(propertyArr) {
 
         var infos = [];
 
         $.each(propertyArr, function(index, value) {
+
             infos.push(value[0] + value[1]);
         });
 
@@ -158,6 +160,7 @@ jQuery(function($) {
 
             if (value[3]) {
                 $b.click(function() {
+
                     value[3]($b);
                 }).css("cursor", "pointer");
             }
@@ -176,12 +179,15 @@ jQuery(function($) {
             name: "ppids",
             clazz: "ace ace-checkbox-2",
             value: function(v) {
+
                 return v.arId;
             },
             show: function() {
+
                 return proxyPayment.pageConfig.pageBtn.contains("selectall");
             },
             attrs: function(v) {
+
                 return {
                     "ppid": v.ppid
                 };
@@ -191,9 +197,11 @@ jQuery(function($) {
             name: "款项信息",
             type: "custom",
             prop: function(v) {
+
                 return paymentPropertyText(getProxyPropertyArr(v));
             },
             render: function($liLine, v, $ulProperty) {
+
                 drawPaymentProperties($ulProperty, getProxyPropertyArr(v));
             }
         }];
@@ -204,9 +212,11 @@ jQuery(function($) {
                 name: "收款方式",
                 type: "custom",
                 prop: function(v) {
+
                     return paymentUtils.getHistoryText(proxyPayment, v.proxyReceipt);
                 },
                 render: function($liLine, v) {
+
                     paymentUtils.drawHistoryData(proxyPayment, v.proxyReceipt, $liLine, "");
                 }
             });
@@ -222,10 +232,14 @@ jQuery(function($) {
                 name: "收款",
                 clazz: "btn-info",
                 show: function(v) {
+
                     return v.type == constant.payment().proxyPayment.TYPE_COLLECT_INT && proxyPayment.pageConfig.pageBtn.contains("collect");
                 },
                 handle: function(v) {
-                    paymentUtils.showPos(proxyPayment, {"paytran.pid": v.ppid}, [0, 1]);
+
+                    paymentUtils.showPos(proxyPayment, {
+                        "paytran.pid": v.ppid
+                    }, [0, 1]);
                     initCollect(v);
                 }
             }
@@ -270,11 +284,13 @@ jQuery(function($) {
 
     // 创建代付款窗口
     com.focusPage('a[name="creates"]', '#pagenation').click(function() {
+
         proxyPayment.modals.createProxyPaymentModal.modal("show");
     });
 
     // 全选
     com.focusPage('a[name="checks"]', '#pagenation').click(function() {
+
         paymentUtils.checkAll();
     });
 
@@ -297,6 +313,7 @@ jQuery(function($) {
         com.showConfirm("确定要将符合条件的所有收款项目,置为已确认状态吗?", function(result) {
 
             com.post(api.payment.confirmProxyPayment, options, function(res) {
+
                 searcher.doSearch();
                 com.showAlert(com.info, "确认成功")
             });
@@ -318,6 +335,7 @@ jQuery(function($) {
         };
 
         com.post(url, options, function(res) {
+
             com.showAlert(com.info, "创建成功");
             searcher.doSearch();
             proxyPayment.modals.createProxyPaymentModal.modal("hide");
@@ -336,7 +354,7 @@ jQuery(function($) {
         proxyPayment.items.referMoney.val(payment.referMoney).attr("disabled", "disabled");
         proxyPayment.items.comment.removeAttr("disabled");
 
-        var type = payment.type ; // 0: 收款类型 , 1: 退款类型
+        var type = payment.type; // 0: 收款类型 , 1: 退款类型
 
         if (proxyPayment.pageConfig.paytypes.contains("cash"))
             paymentUtils.initCash(proxyPayment);
@@ -346,7 +364,7 @@ jQuery(function($) {
             paymentUtils.initCheckv(proxyPayment);
 
         // 根据等级在数组中筛选出符合要求的用于显示
-        //paymentUtils.initBankGrade(proxyPayment, grade);
+        // paymentUtils.initBankGrade(proxyPayment, grade);
         proxyPayment.bankGrade = proxyPayment.bankUtil;
         proxyPayment.checkvGrade = proxyPayment.checkvUtil;
 

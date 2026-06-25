@@ -168,12 +168,12 @@ jQuery(function($) {
     // 不同页面的不同参数
     activityPayment.pageConfig = paymentUtils.getConfig(activityPayment.type, 32);
 
-
     function paymentPropertyText(propertyArr) {
 
         var infos = [];
 
         $.each(propertyArr, function(index, value) {
+
             infos.push(value[0] + value[1]);
         });
 
@@ -190,6 +190,7 @@ jQuery(function($) {
 
             if (value[3]) {
                 $b.click(function() {
+
                     value[3]($b);
                 }).css("cursor", "pointer");
             }
@@ -208,9 +209,11 @@ jQuery(function($) {
             name: "apids",
             clazz: "ace ace-checkbox-2",
             show: function() {
+
                 return activityPayment.pageConfig.pageBtn.contains("batchCollect");
             },
             attrs: function(v) {
+
                 return {
                     "data-apid": v.apid,
                     "data-mno": v.mno,
@@ -224,9 +227,11 @@ jQuery(function($) {
             name: "款项信息",
             type: "custom",
             prop: function(v) {
+
                 return paymentPropertyText(getActivityPropertyArr(v));
             },
             render: function($liLine, v, $ulProperty) {
+
                 drawPaymentProperties($ulProperty, getActivityPropertyArr(v));
             }
         }];
@@ -237,9 +242,11 @@ jQuery(function($) {
                 name: "收款方式",
                 type: "custom",
                 prop: function(v) {
+
                     return paymentUtils.getHistoryText(activityPayment, v);
                 },
                 render: function($liLine, v) {
+
                     paymentUtils.drawHistoryData(activityPayment, v, $liLine, "");
                 }
             });
@@ -255,9 +262,11 @@ jQuery(function($) {
                 name: "收款",
                 clazz: "btn-info",
                 show: function(v) {
+
                     return v.status == 0 && activityPayment.pageConfig.pageBtn.contains("collect");
                 },
                 handle: function(v) {
+
                     activityPayment.apids.push(v.apid);
                     initCollect(v, false);
                 }
@@ -266,11 +275,14 @@ jQuery(function($) {
                 name: "打印",
                 clazz: "btn-pink",
                 show: function(v) {
+
                     return v.status != 0 && activityPayment.pageConfig.pageBtn.contains("print");
                 },
                 handle: function(v) {
+
                     params.payment.activityPayment = v;
                     com.popup("专用收款收据__会员编号:" + v.mno, api.index.activityPaymentReceiptIndex.url, function() {
+
                         parent.layer.getFrameIndex(window.name);
                     }, null, true);
                 }
@@ -307,6 +319,7 @@ jQuery(function($) {
 
     searcher.set("condList", "pagenation", "resultList", activityPayment.pageConfig.apiPage, extraParams, activityPayment.pageConfig.condArr, "activityPaymentPostData" + activityPayment.type, null, false, buildActivityButtons);
     searcher.line(function(v) {
+
         return activityPayment.paymentType[v.type];
     }, buildActivityLineprops(), buildActivityLinebtns()).render();
 
