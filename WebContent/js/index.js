@@ -305,7 +305,7 @@
     }, function(res) {
 
         var companysel = $('#companysel').html("");
-        // var moreCompany = $("#moreCompany").html("");
+        var moreCompany = $("#moreCompany").html("");
 
         var companyGroup = null;
         var companys = [];
