@@ -242,7 +242,7 @@
     }, function(res) {
 
         var companysel = $('#companysel').html("");
-        var moreCompany = $("#moreCompany").html("");
+        var moreCompany = $("#moreCompanyList").html("");
 
         var companyGroup = null;
         var companys = [];
@@ -287,14 +287,12 @@
             companys.push(v.company);
         });
 
-        if ($.fn.typeahead && $('#typeaheadCompany').length) {
-            com.selectTypeahead($('#typeaheadCompany'), companys, "cid", "name", function(list, k, v) {
+        com.selectTypeahead($('#typeaheadCompany'), companys, "cid", "name", function(list, k, v) {
 
-                changeCompany({
-                    "cid": k
-                });
+            changeCompany({
+                "cid": k
             });
-        }
+        });
     }, null, false);
 
     function changeCompany(company) {
