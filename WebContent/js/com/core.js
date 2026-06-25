@@ -778,8 +778,10 @@ var com = {
 
         tabPane.load(page, function(response, status, xhr) {
             console.log('[diag] tabPane.load complete, status:', status, 'xhr status:', xhr ? xhr.status : 'N/A', 'response length:', response ? response.length : 0);
+            console.log('[diag] scripts in response:', response ? (response.match(/<script/g) || []).length : 0, 'loadScript calls:', response ? (response.match(/\$\.loadScript/g) || []).length : 0);
             console.log('[diag] tabPane visible:', tabPane.is(':visible'), 'height:', tabPane.height(), 'width:', tabPane.width());
             console.log('[diag] tabPane parent visible:', tabPane.parent().is(':visible'), 'parent height:', tabPane.parent().height());
+            console.log('[diag] tabPane children:', tabPane.children().length, 'html length:', tabPane.html().length);
         });
 
         tabDel.on("click", function() {
