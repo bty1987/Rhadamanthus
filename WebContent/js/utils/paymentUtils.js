@@ -523,6 +523,7 @@ var paymentUtils = {
 
     // 获取收款类型的基础信息 info信息是分页显示信息的, util和cash,bank,checkv是下拉框信息(下拉框不显示禁用)
     getReceiptType: function(payment) {
+
         payment.cash = [];
         payment.bank = [];
         payment.checkv = [];
@@ -640,6 +641,7 @@ var paymentUtils = {
         var infos = [];
 
         $.each(styleArr, function(index, value) {
+
             infos.push(value[0] + value[1]);
         });
 
@@ -837,15 +839,18 @@ var paymentUtils = {
                     propertyArr.push(["操作金额:", v.recharge, "blue"]);
                     break;
                 case "balance":
-                    if(v.status == 0) break;
+                    if (v.status == 0)
+                        break;
                     propertyArr.push(["余额:", v.balance, "blue"]);
                     break;
                 case "materialPrice":
-                    if(v.status == 0) break;
+                    if (v.status == 0)
+                        break;
                     propertyArr.push(["主材金额:", v.materialPrice, "blue"]);
                     break;
                 case "advanceMoney":
-                    if(v.status == 0) break;
+                    if (v.status == 0)
+                        break;
                     propertyArr.push(["预付款金额:", v.advanceMoney, "blue"]);
                     break;
                 case "servicePrice":
@@ -895,11 +900,13 @@ var paymentUtils = {
                     propertyArr.push(["销售确认时间:", com.checkNull(v.sales.affirmTime, "暂无"), "green"]);
                     break;
                 case "salesRefunds-isAffirm":
-                    if(v.salesRefunds == null) break;
+                    if (v.salesRefunds == null)
+                        break;
                     propertyArr.push(["退货确认:", payment.isAffirms[v.salesRefunds.isAffirm], "red"]);
                     break;
                 case "salesRefunds-affirmTime":
-                    if(v.salesRefunds == null) break;
+                    if (v.salesRefunds == null)
+                        break;
                     propertyArr.push(["退货确认时间:", com.checkNull(v.salesRefunds.affirmTime, "暂无"), "green"]);
                     break;
                 case "status":
