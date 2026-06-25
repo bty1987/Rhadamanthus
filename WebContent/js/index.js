@@ -246,10 +246,10 @@
 
         var companyGroup = null;
         var companys = [];
+        var index = 5; // 下拉默认显示五项 , 公司数量超过五个时第五项显示更多公司
+        var companyIndex = res.userCompanys.length > index ? index - 1 : index;
 
         $.each(res.userCompanys, function(i, v) {
-
-            var index = 5; // 显示前五个公司信息
 
             if (i % 3 == 0)
                 companyGroup = $("<div></div>").addClass("form-group").appendTo(moreCompany);
@@ -261,7 +261,7 @@
                 return changeCompany(v.company);
             });
 
-            if (i < index) {
+            if (i < companyIndex) {
 
                 var $li = $('<li></li>').appendTo(companysel);
                 var $a = $('<a></a>').attr('data-cid', v.company.cid).text(v.company.name).appendTo($li);
@@ -272,20 +272,20 @@
                 });
             }
 
-            if (i == index) {
-
-                var $di = $('<li class="divider"></li>').appendTo(companysel);
-                var $li = $('<li></li>').appendTo(companysel);
-                var $a = $('<a></a>').text("更多公司").appendTo($li);
-
-                $a.click(function(e) {
-
-                    com.popup4model($('#layerCompany'), '切换公司');
-                });
-            }
-
             companys.push(v.company);
         });
+
+        if (res.userCompanys.length > index) {
+
+            var $di = $('<li class="divider"></li>').appendTo(companysel);
+            var $li = $('<li></li>').appendTo(companysel);
+            var $a = $('<a></a>').text("更多公司").appendTo($li);
+
+            $a.click(function(e) {
+
+                com.popup4model($('#layerCompany'), '切换公司');
+            });
+        }
 
         com.selectTypeahead($('#typeaheadCompany'), companys, "cid", "name", function(list, k, v) {
 
