@@ -581,7 +581,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerChanceDao.update(customerChancePO);
 
-		messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "issueCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"event\":\"CUSTOMER_CHANCE_ISSUED\"}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "issueCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"event\":\"CUSTOMER_CHANCE_ISSUED\"" + buildLeadnoArgs(customerChancePO) + "}"));
 
 		belonger = customerChancePO.getBelonger() == null ? issuer : customerChancePO.getBelonger();
 		dept = customerChancePO.getDepartment() == null ? issuer.getDept() : customerChancePO.getDepartment();
@@ -668,10 +668,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		if (!decorationVO.getOrderId().equals(originalOrderId)) {
 			customerChancePO.setOrderId(decorationVO.getOrderId());
 
-			messageQueuingDao.save(new MessageQueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originalOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION_ORDER_CHANGED\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + "}"));
+			messageQueuingDao.save(new MessageQueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originalOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION_ORDER_CHANGED\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + buildLeadnoArgs(customerChancePO) + "}"));
 		}
 
-		messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originalOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originalOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + buildLeadnoArgs(customerChancePO) + "}"));
 
 		customerChancePO.setOrderId(decorationVO.getOrderId());
 		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
@@ -727,7 +727,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		if (customerChanceVO.getIsMeet() != null && customerChanceVO.getIsMeet() == CustomerChancePO.ISMEET_MEET_INT && customerChancePO.getIsMeet() != CustomerChancePO.ISMEET_MEET_INT) {
-			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "meetCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"event\":\"CUSTOMER_CHANCE_MEET\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "meetCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"event\":\"CUSTOMER_CHANCE_MEET\"" + buildLeadnoArgs(customerChancePO) + "}"));
 		}
 
 		if (!StringUtils.isEmpty(customerChanceVO.getIsMeet())) {
@@ -980,5 +980,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		log.info("客户机会直接初审成功, ccid={}, sourceStatus={}, chanceStatus={}", customerChancePO.getCcid(), customerSourcePO.getStatus(), customerChancePO.getStatus());
+	}
+
+	private String buildLeadnoArgs(CustomerChancePO customerChancePO) {
+		String leadno = customerChancePO.getLeadno();
+		return (leadno != null && !leadno.isEmpty()) ? ",\"customerNo\":\"" + leadno + "\"" : "";
 	}
 }
