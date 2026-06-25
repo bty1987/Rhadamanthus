@@ -366,6 +366,268 @@ jQuery(function($) {
         return lineprops;
     }
 
+    function buildPaymentLinebtns() {
+
+        return {
+            posPush: {
+                name: "推送",
+                clazz: "btn-danger",
+                show: function(v) {
+
+                    return v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("posPush");
+                },
+                handle: posPushPaymentLine
+            },
+            collect: {
+                name: "收款",
+                clazz: "btn-primary",
+                show: function() {
+
+                    return payment.pageConfig.pageBtn.contains("collect");
+                },
+                handle: function(v) {
+
+                    v.decoration.paymentType = "收款";
+                    payment.typeUpdate = 0;
+                    payment.currentOrderId = v.decoration.orderId;
+                    paymentUtils.showPos(payment, {
+                        "paytran.orderId": v.decoration.orderId,
+                        "paytran.atttype": payment.atttype
+                    }, [0, 1]);
+                    initCollect(v.decoration);
+                }
+            },
+            withdraw: {
+                name: "提款",
+                clazz: "btn-warning",
+                show: function() {
+
+                    return payment.pageConfig.pageBtn.contains("withdraw");
+                },
+                handle: function(v) {
+
+                    v.decoration.paymentType = "提款";
+                    payment.typeUpdate = 1;
+                    com.post(api.payment.queryAdvancePaymentByOrderId, {
+                        "advancePayment.decoration.orderId": v.decoration.orderId
+                    }, function(res) {
+
+                        initCollect(v.decoration, res);
+                    });
+                }
+            },
+            approveWithdrawBalance: {
+                name: "合同额提现",
+                clazz: "btn-inverse",
+                show: function() {
+
+                    return payment.pageConfig.pageBtn.contains("approveWithdrawBalance");
+                },
+                handle: function(v) {
+
+                    com.cleanItems([payment.items.withdrawAmount, payment.items.withdrawComment, payment.items.withdrawApprovalComment]);
+                    payment.currentOrderId = v.decoration.orderId;
+                    payment.currentWithdrawType = 0;
+                    com.focusPage("#approveWithdrawTitle", "#payment").html("合同额提现审批");
+                    com.post(api.payment.queryAdvancePaymentByOrderId, {
+                        "advancePayment.decoration.orderId": v.decoration.orderId
+                    }, function(res) {
+
+                        payment.advancePayment = res;
+                        payment.items.withdrawBalance.val(res.balanceAdvance);
+                    });
+                    approvalUtils.initqueryApprovalUser("withdrawApprover", 26);
+                    payment.modals.approveWithdrawModal.modal("show");
+                }
+            },
+            approveWithdrawMaterial: {
+                name: "主材额提现",
+                clazz: "btn-purple",
+                show: function() {
+
+                    return payment.pageConfig.pageBtn.contains("approveWithdrawMaterial");
+                },
+                handle: function(v) {
+
+                    com.cleanItems([payment.items.withdrawAmount, payment.items.withdrawComment, payment.items.withdrawApprovalComment]);
+                    payment.currentOrderId = v.decoration.orderId;
+                    payment.currentWithdrawType = 2;
+                    com.focusPage("#approveWithdrawTitle", "#payment").html("主材额提现审批");
+                    com.post(api.payment.queryAdvancePaymentByOrderId, {
+                        "advancePayment.decoration.orderId": v.decoration.orderId
+                    }, function(res) {
+
+                        payment.advancePayment = res;
+                        payment.items.withdrawBalance.val(res.materialAdvance);
+                    });
+                    approvalUtils.initqueryApprovalUser("withdrawApprover", 26);
+                    payment.modals.approveWithdrawModal.modal("show");
+                }
+            },
+            decorationInfo: {
+                name: "装修单",
+                clazz: "btn-yellow",
+                show: function(v) {
+
+                    return v.status != constant.payment().payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("decorationInfo");
+                },
+                handle: function(v, btn) {
+
+                    tools.decoration.info(btn, v.decoration.orderId);
+                }
+            },
+            print: {
+                name: "打印",
+                clazz: "btn-info",
+                show: function(v) {
+
+                    return v.status != constant.payment().payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("print");
+                },
+                handle: function(v) {
+
+                    params.payment.pid = v.pid;
+                    params.payment.orderId = v.decoration.orderId;
+                    params.payment.cid = v.customer.cid;
+                    params.payment.profit = payment.profit;
+                    com.popup("专用收款收据__装修单号:" + v.decoration.orderId, api.index.paymentReceiptIndex.url, function() {
+
+                        parent.layer.getFrameIndex(window.name);
+                    }, null, true);
+                }
+            },
+            update: {
+                name: "更新",
+                clazz: "btn-success",
+                show: function(v) {
+
+                    return v.status == constant.payment().payment.STATUS_PAID_INT && v.type != constant.payment().advancePayment.TYPE_PAYED_INT && v.transfer == 0 && payment.pageConfig.pageBtn.contains("update");
+                },
+                handle: function(v) {
+
+                    payment.typeUpdate = 2;
+                    v.grade = "allGrade";
+                    initUpdate(v);
+                }
+            },
+            collectCode: {
+                name: "收款码",
+                clazz: "btn-success",
+                show: function(v) {
+
+                    return v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("collectCode");
+                },
+                handle: function(v) {
+
+                    com.focusPage("#" + payment.type + "collectCodeQrcodeModal").html("");
+                    paymentUtils.initQrcode("collect", payment.type + "collectCodeQrcodeModal");
+                    var atttype = v.paymentType == 2 ? constant.payment().paytran.ATTTYPE_MATERIAL_INT : constant.payment().paytran.ATTTYPE_DECORATION_INT;
+                    paymentUtils.showQRCode("collectqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.decoration.orderId + "&paymentType=0" + "&pid=" + v.pid + "&atttype=" + atttype, payment.type + "collectCodeQrcodeModal");
+                }
+            },
+            alipayCollectCode: {
+                name: "二维收款",
+                clazz: "btn-info",
+                show: function(v) {
+
+                    return v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("alipayCollectCode");
+                },
+                handle: function(v) {
+
+                    var paytranId = 0;
+                    var paytranMoney = v.recharge;
+                    com.post(api.payment.queryPaytran, {
+                        "paytran.pid": v.pid,
+                        "paytran.type": 0,
+                        "paytran.orderId": v.decoration.orderId
+                    }, function(res) {
+
+                        $.each(res.paytrans, function(i, pt) {
+
+                            if (pt.status == 0) {
+                                paytranId = pt.ptid;
+                                paytranMoney = pt.money;
+                                return false;
+                            }
+                        });
+                    }, null, false);
+                    if (paytranMoney != v.recharge) {
+                        com.showAlert(com.error, "金额不正确.");
+                        return false;
+                    }
+                    com.post(api.payment.alipay, {
+                        "wxpay.paymentOrderId": v.decoration.orderId,
+                        "wxpay.paymentType": 0,
+                        "wxpay.paymentAttrType": v.paymentType == 2 ? 1 : 0,
+                        "wxpay.paymentMoney": paytranMoney,
+                        "wxpay.userId": "alipay",
+                        "wxpay.paymentid": v.pid,
+                        "wxpay.paymentptid": paytranId,
+                        "wxpay.unionId": v.decoration.customer.cid
+                    }, function(data) {
+
+                        payment.modals.alipayCodepayModal.html("");
+                        com.popup("二维收款", data.wxpay.url + "&mchNo=" + data.wxpay.mchNo + "&bizId=" + data.wxpay.bizId + "&isShort=true", null, null, false);
+                    }, null, false);
+                }
+            },
+            codePush: {
+                name: "微信推送",
+                clazz: "btn-pink",
+                show: function(v) {
+
+                    return v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("codePush");
+                },
+                handle: function(v) {
+
+                    com.showConfirm("是否发送付款通知", function() {
+
+                        com.post(api.payment.sendPayment, {
+                            "payment.pid": v.pid
+                        }, function(res) {
+
+                            com.showAlert(com.info, "发送成功");
+                        });
+                    });
+                }
+            },
+            check: {
+                name: "验证",
+                clazz: "btn-orange",
+                show: function(v) {
+
+                    return v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("check");
+                },
+                handle: function(v) {
+
+                    com.showConfirm("是否验证收款信息?", function(result) {
+
+                        com.post(api.payment.checkPaytran, {
+                            "paytran.pid": v.pid,
+                            "paytran.type": constant.payment().receipt.PAYMENTTYPE_ADVANCE_INT,
+                            "paytran.atttype": v.paymentType == 2 ? constant.payment().paytran.ATTTYPE_MATERIAL_INT : constant.payment().paytran.ATTTYPE_DECORATION_INT
+                        }, function(res) {
+
+                            searcher.doSearch();
+                            com.showAlert(com.info, "验证成功");
+                        });
+                    });
+                }
+            },
+            kingdee: {
+                name: "同步金蝶",
+                clazz: "btn-yellow",
+                show: function(v) {
+
+                    return v.status == constant.payment().payment.STATUS_CONFIRMED_INT && payment.pageConfig.pageBtn.contains("toKingdee");
+                },
+                handle: function(v) {
+
+                    kingdeeUtils.payment(v, payment.htmlName);
+                }
+            }
+        };
+    }
+
     function buildPaymentButtons() {
 
         var btnParams = [];
