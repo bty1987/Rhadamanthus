@@ -82,6 +82,11 @@ public class A20260103Action extends BaseListAction {
 	private String leadCode;
 
 	/**
+	 * 客户编号 - 对应 customerChance.leadno
+	 */
+	private String customerNo;
+
+	/**
 	 * 尺源编码 - 对应 source.no
 	 */
 	private String adornCode;
@@ -364,6 +369,9 @@ public class A20260103Action extends BaseListAction {
 		// 1. 客户机会编号
 		customerChanceVO.setCno(leadCode);
 
+		// 1.1 客户编号
+		customerChanceVO.setLeadno(customerNo);
+
 		// 2. 业务类型
 		if (busitype == null) {
 			busitype = "电商信息流客源";
@@ -472,6 +480,7 @@ public class A20260103Action extends BaseListAction {
 		// 封装 data 对象（包含请求参数和返回结果）
 		// 请求参数
 		this.data.put("leadCode", leadCode);
+		this.data.put("customerNo", customerNo);
 		this.data.put("adornCode", adornCode);
 		this.data.put("name", name);
 		this.data.put("phone", phone);
@@ -800,6 +809,15 @@ public class A20260103Action extends BaseListAction {
 
 	public void setLeadCode(String leadCode) {
 		this.leadCode = leadCode;
+	}
+
+	@JSON(serialize = false)
+	public String getCustomerNo() {
+		return customerNo;
+	}
+
+	public void setCustomerNo(String customerNo) {
+		this.customerNo = customerNo;
 	}
 
 	@JSON(serialize = false)
