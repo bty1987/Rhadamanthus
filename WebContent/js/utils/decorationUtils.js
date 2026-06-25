@@ -2991,5 +2991,49 @@ var decorationUtils = {
 
             com.popup("打印预签", api.index.protationOutputIndex.url, null, null, true);
         });
+    },
+
+    // 将 propertyArr([[label, value, clazz, ?click]]) 拼成 "label1 value1 label2 value2" 文本
+    // 用于 Searcher table/card 模式下展示行级字段摘要
+    propertyText: function(propertyArr) {
+
+        var infos = [];
+
+        $.each(propertyArr || [], function(index, value) {
+
+            infos.push(value[0] + value[1]);
+        });
+
+        return infos.join(" ");
+    },
+
+    // 将 propertyArr([[label, value, clazz, ?click, ?clickArg]]) 渲染到 $ulProperty 容器
+    // 与 displayFunc 内 propertyArr 渲染逻辑保持一致:
+    // - 第 3 元素为 clazz (颜色样式)
+    // - 第 4 元素存在时, 点击 <b> 触发 click($b)
+    // - 第 5 元素存在时, 点击 <li> 触发 click($li, clickArg)
+    drawProperties: function($ulProperty, propertyArr) {
+
+        $.each(propertyArr || [], function(index, value) {
+
+            var $liProperty = $('<li></li>').appendTo($ulProperty);
+
+            $('<strong></strong>').html(value[0]).appendTo($liProperty);
+            var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+
+            if (value[3] && typeof value[3] == 'function') {
+                $b.click(function() {
+
+                    value[3]($b);
+                }).css("cursor", "pointer");
+            }
+
+            if (value[4] !== undefined && typeof value[3] == 'function') {
+                $liProperty.click(function() {
+
+                    value[3]($liProperty, value[4]);
+                }).css("cursor", "pointer");
+            }
+        });
     }
 }

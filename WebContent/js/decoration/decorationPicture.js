@@ -39,15 +39,7 @@ jQuery(function($) {
 
             var $uploadBtn = $('<a></a>').addClass('uploadify-button btn btn-minier btn-primary').html('上传合同方案').appendTo($divBtnWrap);
 
-            var propertyArr = [["名称:", v.name, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>').attr('id', 'imageData' + v.iid);
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
+            decorationUtils.drawProperties($ulProperty, [["名称:", v.name, "grey"]]);
 
             $liLine.append($h3).append($ulProperty).append($ulPicture);
             $uploadBtn.click(function() {
@@ -72,15 +64,51 @@ jQuery(function($) {
         };
     })();
 
+    function buildPictureLineprops() {
+
+        return [{
+            field: "pictureInfo",
+            name: "图片信息",
+            type: "custom",
+            prop: function(v) {
+                return "名称:" + v.name;
+            },
+            render: function($liLine, v, $ulProperty) {
+
+                var $liProperty = $('<li></li>').attr('id', 'imageData' + v.iid).appendTo($ulProperty);
+                $('<strong></strong>').html("名称:").appendTo($liProperty);
+                $('<b></b>').html(v.name).addClass("grey").appendTo($liProperty);
+
+                // 追加图片缩略图容器
+                var $ulPicture = $('<div></div>').attr('style', 'min-height: 150px;');
+                $('<ul></ul>').addClass('ace-thumbnails').attr('id', 'imageDataUL' + v.iid).appendTo($ulPicture);
+                $liLine.append($ulPicture);
+            }
+        }];
+    }
+
+    function buildPictureLinebtns() {
+
+        return {
+            upload: {
+                name: "上传合同方案",
+                clazz: "uploadify-button btn-primary",
+                handle: function(v) {
+                    vrecord.iid = v.iid;
+                    $input.click();
+                }
+            }
+        };
+    }
+
     var searcher = new Searcher();
 
-    searcher.init([], "condListas", api.data.queryInspect, function(data) {
-
-        displayFunc.init('resultListas', data);
-    }, "pagenationas", "vrecordPostData", {
+    searcher.set("condListas", "pagenationas", "resultListas", api.data.queryInspect, {
         "inspect.status": 0
-
-    }, true, "inspects", null);
+    }, [], "vrecordPostData", "inspects", true);
+    searcher.line(function(v) {
+        return v.name;
+    }, buildPictureLineprops(), buildPictureLinebtns()).render();
 
     var url = 'uploadImg.do';
 

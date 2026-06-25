@@ -608,3 +608,70 @@ getHistoryText(...)
 ```
 
 `sales.js` 是该路径的第一个复杂试点。后续迁移其他复杂页面时，可以沿用同样模式。
+
+
+## 12. Decoration 模块迁移记录
+
+依据 `docs/decoration_searcher_migration_plan.md`，对 `WebContent/js/decoration/*.js` 中
+仍使用 `displayFunc` IIFE 的 7 个标准分页页完成 Searcher 标准化迁移。
+
+### 12.1 迁移范围
+
+| 文件 | apiPage | 迁移策略 |
+|---|---|---|
+| `audit.js` | `pageAudit` | propertyArr + 4 行按钮 -> `buildAuditLineprops/buildAuditLinebtns` |
+| `decoration4belong.js` | `pageDecorationForBelong` | propertyArr + 3 行按钮 -> `buildBelongLineprops/buildBelongLinebtns` |
+| `decorationMeasure.js` | `pageDecorationMeasure` | propertyArr(含点击 tools.info) + 1 行按钮 |
+| `decorationMeasure4apply.js` | `pageDecorationMeasureForApplay` | propertyArr(含点击) + 3 行按钮(更新/量尺/重置) |
+| `decorationMeasure4setup.js` | `pageDecorationMeasure` | propertyArr(含点击) + 2 行按钮(编辑/重置) |
+| `decorationPicture.js` | `queryInspect` | 行内图片缩略图容器, 用 `custom` lineprop render 追加 `$ulPicture` |
+| `decoration.js` | `pageConfig.apiPage` | pageConfig 驱动, propertyArr/pageBtn 全部由 `buildDecorationPropertyArr` + `buildDecorationLinebtns` 动态生成, IIFE 内 30+ 业务函数(viewDecoration*/signOrder/terminalOrder 等)全部上提到模块作用域 |
+
+排除迁移（非 Searcher 分页页）：
+
+| 文件 | 排除依据 |
+|---|---|
+| `audit4record.js` | 审核详情子页, 一次性拉取局部渲染到 `auditR/auditS`, 无分页 |
+| `decorationBelong.js` | 归属详情子页, 前端动态 `append(displayFunc(addRow))` 增行, 强依赖局部 DOM |
+
+### 12.2 跨模块 helper 放置规则（关键决策）
+
+- payment 迁移时把 `paymentPropertyText/drawPaymentProperties` 作为**各文件内本地函数**实现；
+- decoration 迁移沿用 `propertyText/drawProperties`，但按用户要求**不进 `core.js`**，
+  也**不进 `paymentUtils.js`**（与 payment 无关）。
+- 最终落点：`WebContent/js/utils/decorationUtils.js`，新增两个方法：
+  - `decorationUtils.propertyText(propertyArr)` —— 将 `[[label,value,...]]` 拼成 table 模式摘要文本；
+  - `decorationUtils.drawProperties($ulProperty, propertyArr)` —— 将 propertyArr 渲染到 `<ul>`，
+    支持第 3 元素 clazz、第 4 元素 `$b` 点击、第 5 元素 `$li` 点击（兼容 decoration.js 既有用法）。
+- paymentUtils.js 同期新增的同名方法已回滚，保持各 utils 职责单一。
+
+### 12.3 decoration.js 复杂度处理（P2）
+
+`decoration.js` 原 `displayFunc` IIFE 体量大、强耦合数据库 `decorationFunctionRight`：
+
+1. `renderList/creatLine` 的字段构造（`switch(pv)` 30+ 分支）与按钮显隐（`switch(b)` 30+ 分支）
+   被重写为：
+   - `buildDecorationPropertyArr(v)` —— 复刻原 switch，产出 propertyArr；
+   - `drawDecorationPropertyArr($ulProperty, propertyArr)` —— 复刻原渲染（含 4/5 元素的 `_info` 图标点击与 li 点击）；
+   - `buildDecorationLineprops()` —— 单个 `custom` lineprop，`prop` 走 `propertyText`，`render` 走 `drawDecorationPropertyArr`；
+   - `buildDecorationLinebtns()` —— 33 个按钮，每个 `show` 复刻原 status 判定，`handle` 调用原 helper。
+2. IIFE 内业务函数（`viewDecorationDetail/viewDecorationQuotateIndex/modalDrawLineModal/
+   signOrder/aerminalOrder/terminalOrder/resignOrder/...` 共 30+ 个）**全部保留**，
+   通过 Python 脚本将声明行缩进由 8 空格降为 4 空格，整体上提到 `$(function(){})` 模块作用域，
+   避免任何 `ReferenceError`。
+3. 原 `searcher.init(condArr, "condList", apiPage, function(data){ displayFunc.init(...) }, "pagenation",
+   postDataName, extraParam, false, null, function(){ ...buttons... })` 改写为：
+   - `searcher.set("condList", "pagenation", "resultList", apiPage, extraParam, condArr, postDataName, null, false, buildDecorationButtons)`；
+   - `searcher.line(function(v){return v.orderId}, buildDecorationLineprops(), buildDecorationLinebtns()).render()`；
+   - 原 buttons 回调体提取为独立 `buildDecorationButtons()` 函数。
+
+### 12.4 验证
+
+- `node --check` 全部通过（8 个文件：7 个 decoration 页 + decorationUtils.js）。
+- `findstr /s /n displayFunc WebContent/js/decoration/*.js` 仅余排除项：
+  `audit4record.js`、`decorationBelong.js`；`decorationMeasure*.js/decorationPicture.js`
+  残留的 `var displayFunc = (function(){` 是迁移后保留的局部 IIFE（仅含 `creatLine` 给 `drawLine:` 接口，
+  供原 `displayFunc.init` 调用——已被 `searcher.set+line` 取代，无外部调用方）。
+- `decorationUtils.propertyText/drawProperties` 在 7 个页面中被正确引用，无 `com.*` 残留。
+- 行尾与编码：所有改动文件保持与 HEAD 一致的 CRLF + UTF-8(BOM)（decoration.js 带 BOM），
+  `git diff --check` 无空白告警。
