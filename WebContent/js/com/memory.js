@@ -87,9 +87,10 @@
             // 拦截setTimeout (轻量级)
             var originalSetTimeout = window.setTimeout;
             window.setTimeout = function(callback, delay) {
-                var timerId = originalSetTimeout.call(this, function() {
+                var args = Array.prototype.slice.call(arguments, 2);
+                var timerId = originalSetTimeout.call(window, function() {
                     try {
-                        callback.apply(this, arguments);
+                        callback.apply(null, args);
                     } finally {
                         self.globalResources.timers.delete(timerId);
                     }
@@ -114,13 +115,12 @@
             // 拦截setInterval (轻量级)
             var originalSetInterval = window.setInterval;
             window.setInterval = function(callback, interval) {
-                var intervalId = originalSetInterval.call(this, function() {
+                var args = Array.prototype.slice.call(arguments, 2);
+                var intervalId = originalSetInterval.call(window, function() {
                     try {
-                        callback.apply(this, arguments);
+                        callback.apply(null, args);
                     } catch (error) {
                         console.error('Interval error:', error);
-                        self.globalResources.intervals.delete(intervalId);
-                        clearInterval(intervalId);
                     }
                 }, interval);
 
@@ -150,46 +150,27 @@
 
             // 拦截jQuery ajax - 只管理业务请求
             var originalAjax = $.ajax;
-            $.ajax = function(url, options) {
-                // 处理参数重载
-                if (typeof url === 'object') {
-                    options = url;
+            $.ajax = function() {
+                var url, options;
+                if (typeof arguments[0] === 'object') {
+                    options = arguments[0];
                     url = options.url;
-                } else if (typeof options === 'undefined') {
-                    options = {};
                 } else {
-                    options.url = url;
+                    url = arguments[0];
+                    options = arguments[1] || {};
                 }
 
-                // 判断是否为业务请求
-                if (!self.shouldManageAjaxRequest(url, options)) {
-                    // 非业务请求，直接调用原始方法
-                    return originalAjax.call(this, url, options);
-                }
+                var xhr = originalAjax.apply(this, arguments);
 
-                // 业务请求，需要管理
-                var xhr = originalAjax.call(this, url, options);
-
-                if (xhr && xhr.abort) {
+                if (xhr && xhr.abort && self.shouldManageAjaxRequest(url, options)) {
                     self.globalResources.ajaxRequests.add(xhr);
                     self.trackResource('ajaxRequest', {
                         xhr: xhr,
-                        options: options,
                         url: url,
                         pageId: self.currentPageId
                     });
 
-                    // 包装完成回调
-                    var originalComplete = options.complete;
-                    if (originalComplete) {
-                        options.complete = function(xhr, status) {
-                            self.globalResources.ajaxRequests.delete(xhr);
-                            return originalComplete.call(this, xhr, status);
-                        };
-                    }
-
-                    // jQuery的success/error/complete处理
-                    if (xhr && xhr.always) {
+                    if (xhr.always) {
                         var originalAlways = xhr.always;
                         xhr.always = function() {
                             self.globalResources.ajaxRequests.delete(xhr);
