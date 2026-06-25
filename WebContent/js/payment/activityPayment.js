@@ -168,40 +168,6 @@ jQuery(function($) {
     // 不同页面的不同参数
     activityPayment.pageConfig = paymentUtils.getConfig(activityPayment.type, 32);
 
-    function paymentPropertyText(propertyArr) {
-
-        var infos = [];
-
-        $.each(propertyArr, function(index, value) {
-
-            infos.push(value[0] + value[1]);
-        });
-
-        return infos.join(" ");
-    }
-
-    function drawPaymentProperties($ulProperty, propertyArr) {
-
-        $.each(propertyArr, function(index, value) {
-
-            var $liProperty = $('<li></li>').appendTo($ulProperty);
-            $('<strong></strong>').html(value[0]).appendTo($liProperty);
-            var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-
-            if (value[3]) {
-                $b.click(function() {
-
-                    value[3]($b);
-                }).css("cursor", "pointer");
-            }
-        });
-    }
-
-    function getActivityPropertyArr(v) {
-
-        return paymentUtils.getPropertyArr(activityPayment, v, v, activityPayment.paymentStatusArray);
-    }
-
     function buildActivityLineprops() {
 
         var lineprops = [{
@@ -222,19 +188,8 @@ jQuery(function($) {
                     "data-status": v.status
                 };
             }
-        }, {
-            field: "paymentInfo",
-            name: "款项信息",
-            type: "custom",
-            prop: function(v) {
-
-                return paymentPropertyText(getActivityPropertyArr(v));
-            },
-            render: function($liLine, v, $ulProperty) {
-
-                drawPaymentProperties($ulProperty, getActivityPropertyArr(v));
-            }
-        }];
+        }]
+            .concat(paymentUtils.getPropertyLineprops(activityPayment, activityPayment.paymentStatusArray));
 
         if (activityPayment.pageConfig.pageBtn.contains("payway")) {
             lineprops.push({

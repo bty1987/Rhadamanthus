@@ -156,40 +156,6 @@ jQuery(function($) {
     // 不同页面的不同参数
     servicePayment.pageConfig = paymentUtils.getConfig(servicePayment.type, 16);
 
-    function paymentPropertyText(propertyArr) {
-
-        var infos = [];
-
-        $.each(propertyArr, function(index, value) {
-
-            infos.push(value[0] + value[1]);
-        });
-
-        return infos.join(" ");
-    }
-
-    function drawPaymentProperties($ulProperty, propertyArr) {
-
-        $.each(propertyArr, function(index, value) {
-
-            var $liProperty = $('<li></li>').appendTo($ulProperty);
-            $('<strong></strong>').html(value[0]).appendTo($liProperty);
-            var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-
-            if (value[3]) {
-                $b.click(function() {
-
-                    value[3]($b);
-                }).css("cursor", "pointer");
-            }
-        });
-    }
-
-    function getServicePropertyArr(v) {
-
-        return paymentUtils.getPropertyArr(servicePayment, v, v.decoration, servicePayment.paymentStatusArray);
-    }
-
     function posPushServicePaymentLine(v) {
 
         var bankVal = com.typeahead(servicePayment.htmlName + "paytranBankName");
@@ -292,19 +258,8 @@ jQuery(function($) {
                     "spid": v.spid
                 };
             }
-        }, {
-            field: "paymentInfo",
-            name: "款项信息",
-            type: "custom",
-            prop: function(v) {
-
-                return paymentPropertyText(getServicePropertyArr(v));
-            },
-            render: function($liLine, v, $ulProperty) {
-
-                drawPaymentProperties($ulProperty, getServicePropertyArr(v));
-            }
-        }];
+        }]
+            .concat(paymentUtils.getPropertyLineprops(servicePayment, servicePayment.paymentStatusArray));
 
         if (servicePayment.pageConfig.pageBtn.contains("payway")) {
             lineprops.push({
@@ -313,11 +268,11 @@ jQuery(function($) {
                 type: "custom",
                 prop: function(v) {
 
-                    return paymentUtils.getHistoryText(servicePayment, v.serviceReceipt);
+                    return paymentUtils.getHistoryText(servicePayment, v);
                 },
                 render: function($liLine, v) {
 
-                    paymentUtils.drawHistoryData(servicePayment, v.serviceReceipt, $liLine, "");
+                    paymentUtils.drawHistoryData(servicePayment, v, $liLine, "");
                 }
             });
         }

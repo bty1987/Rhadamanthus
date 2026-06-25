@@ -17,15 +17,69 @@ jQuery(function($) {
     function buildBelongLineprops() {
 
         return [{
-            field: "belongInfo",
-            name: "归属信息",
-            type: "custom",
+            field: "address",
+            name: "楼盘地址",
             prop: function(v) {
-                return decorationUtils.propertyText(getBelongPropertyArr(v));
+
+                return v.house.village.name + " " + v.house.houseNumber;
             },
-            render: function($liLine, v, $ulProperty) {
-                decorationUtils.drawProperties($ulProperty, getBelongPropertyArr(v));
-            }
+            clazz: "grey"
+        }, {
+            field: "customer",
+            name: "客户名",
+            prop: "customer.name",
+            clazz: "grey"
+        }, {
+            field: "designDepartment",
+            name: "设计部",
+            prop: "designer.dept.name",
+            clazz: "grey"
+        }, {
+            field: "designer",
+            name: "设计师",
+            prop: "designer.currentName",
+            clazz: "grey"
+        }, {
+            field: "salesmanDepartment",
+            name: "业务部",
+            prop: "salesman.dept.name",
+            clazz: "grey"
+        }, {
+            field: "salesman",
+            name: "业务员",
+            prop: "salesman.currentName",
+            clazz: "grey"
+        }, {
+            field: "houseArea",
+            name: "面积",
+            prop: "house.buildArea",
+            clazz: "blue"
+        }, {
+            field: "orderTotalPrice",
+            name: "合同报价",
+            prop: "orderTotalPrice",
+            clazz: "blue"
+        }, {
+            field: "measureTime",
+            name: "量房时间",
+            prop: "measureTime",
+            clazz: "green"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) {
+
+                return decorationBelong.decorationType[v.type];
+            },
+            clazz: "red"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) {
+
+                return decorationBelong.decorationOrderStatus[v.status];
+            },
+            clazz: "red"
         }];
     }
 
