@@ -875,281 +875,462 @@
      * IIFE 内其余业务函数 (viewDecoration*, modalDrawLineModal, signOrder 等) 全部上提到模块作用域, 保持原语义。
      */
 
-    function buildDecorationPropertyArr(v) {
-
-        var propertyArr = [];
-
-        $.each(pageConfig.propertyArr, function(pi, pv) {
-
-            switch (pv) {
-                case "address":
-                    propertyArr.push(["楼盘地址:", (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey"]);
-                    break;
-                case "villageName":
-                    propertyArr.push(["楼盘:", (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name, "grey", tools.village.info, v.house.village.no]);
-                    break;
-                case "houseNumber":
-                    if ([constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_TERMINATION_INT, constant.decoration().decoration.STATUS_FINAL_INT].contains(v.status)) {
-                        propertyArr.push(["楼号:", (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey", tools.house.info, v.house.hid]);
-                    }
-                    break;
-                case "customerName":
-                    propertyArr.push(["客户名:", v.customer.name, "grey", tools.customer.info, v.customer.cid]);
-                    break;
-                case "designDepartment":
-                    propertyArr.push(["设计部:", v.designer.dept.name, "grey", tools.decoration.belong, v.orderId]);
-                    break;
-                case "designerName":
-                    propertyArr.push(["设计师:", v.designer.currentName, "grey", tools.decoration.belong, v.orderId]);
-                    break;
-                case "escorterName":
-                    propertyArr.push(["方案设计:", v.escorter ? v.escorter.currentName : '', "grey", tools.personel.info, v.escorter ? v.escorter.userId : '']);
-                    break;
-                case "salesmanDepartment":
-                    propertyArr.push(["业务部:", v.salesman.dept.name, "grey", tools.department.info, v.salesman.dept.did]);
-                    break;
-                case "salesmanName":
-                    propertyArr.push(["业务员:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
-                    break;
-                case "decorationBusitype":
-                    propertyArr.push(["业务类型:", order.busitype[v.busitype], "red"]);
-                    break;
-                case "materialerName":
-                    propertyArr.push(["跟单员:", v.materialer ? v.materialer.currentName : '', "grey", tools.personel.info, v.materialer ? v.materialer.userId : '']);
-                    break;
-                case "supervisorName":
-                    propertyArr.push(["监理:", v.supervisor.currentName, "grey", tools.personel.info, v.supervisor.userId]);
-                    break;
-                case "houseArea":
-                    propertyArr.push(["派尺面积:", v.house.buildArea, "blue"]);
-                    break;
-                case "quoteArea":
-                    propertyArr.push(["计价面积:", v.house.innerArea, "blue"]);
-                    break;
-                case "discount":
-                    propertyArr.push(["折扣:", com.checkNull(v.discount, 10), "blue"]);
-                    break;
-                case "precontractPrice":
-                    var _text = $("<text>预签额:</text>");
-                    var _info = null;
-
-                    if (v.precontractPrice != 0) {
-                        _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                            netPerformancep(_text, v);
-                        });
-                    }
-                    propertyArr.push([_text, v.precontractPrice, "blue", _info]);
-                    break;
-                case "orderTotalPrice":
-                    var _text = $("<text>签单额:</text>");
-                    var _info = null;
-
-                    if ([constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_TERMINATION_INT, constant.decoration().decoration.STATUS_FINAL_INT].contains(v.status)) {
-                        _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                            netPerformanceo(_text, v);
-                        });
-                    }
-                    propertyArr.push([_text, v.orderTotalPrice, "blue", _info]);
-                    break;
-                case "quotationPrice":
-                    var _text = $("<text>报价额:</text>");
-                    var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-                            "quotation.orderId": v.orderId
-                        }, function(res) {
-
-                            var quotation = res.quotation;
-
-                            beforeTotal = utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice), quotation.managePrice), quotation.taxPrice);
-
-                            com.showTip(_text, "折前总价:" + utils.changeThrDecimal(beforeTotal));
-
-                        });
-                    });
-
-                    propertyArr.push([_text, v.quotationPrice, "blue", _info]);
-                    break;
-                case "couponCut":
-                    var _text = $("<text>券优惠:</text>");
-                    var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                        couponCut(_text, v.orderId);
-                    });
-                    propertyArr.push([_text, v.couponCut, "blue", _info]);
-                    break;
-                case "factPrice":
-                    propertyArr.push(["实收额:", v.factPrice, "blue"]);
-                    break;
-                case "createTime":
-                    propertyArr.push(["创建时间:", v.createTime, "green"]);
-                    break;
-                case "issueTime":
-                    propertyArr.push(["派尺时间:", v.issueTime, "green"]);
-                    break;
-                case "meetTime":
-                    propertyArr.push(["到店时间:", v.meetTime, "green"]);
-                    break;
-                case "measureTime":
-                    propertyArr.push(["量房时间:", v.measureTime, "green"]);
-                    break;
-                case "belongTime":
-                    propertyArr.push(["变更时间:", v.belongTime, "green"]);
-                    break;
-                case "depositTime":
-                    propertyArr.push(["定金时间:", v.depositTime, "green"]);
-                    break;
-                case "precontractTime":
-                    propertyArr.push(["预签时间:", v.precontractTime, "green"]);
-                    break;
-                case "contractTime":
-                    propertyArr.push(["签单时间:", v.contractTime, "green"]);
-                    break;
-                case "recontractTime":
-                    propertyArr.push(["重签时间:", v.recontractTime, "green"]);
-                    break;
-                case "accountTime":
-                    propertyArr.push(["决算时间:", v.accountTime, "green"]);
-                    break;
-                case "balanceTime":
-                    propertyArr.push(["内决时间:", v.balanceTime, "green"]);
-                    break;
-                case "terminalTime":
-                    propertyArr.push(["终止时间:", v.terminalTime, "green"]);
-                    break;
-                case "sdesignTime":
-                    propertyArr.push(["确认合同方案时间:", v.sdesignTime, "green"]);
-                    propertyArr.push(["确认放线方案时间:", v.edesignTime, "green"]);
-                    break;
-                case "decorationType":
-                    propertyArr.push(["类型:", order.typeness[v.typeness], "red"]);
-                    break;
-                case "decorationStatus":
-                    var _text = $("<text>状态:</text>");
-                    var _info = $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                        tools.communion.assistance("decoration_status_information");
-                    });
-                    propertyArr.push([_text, order.decorationStatus[v.status], "red", _info]);
-                    break;
-                case "sourceStatus":
-                    var _text = $("<text>确认状态:</text>");
-                    var _info = $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                        tools.communion.assistance("decoration_source_status_informa");
-                    });
-                    propertyArr.push([_text, order.sourceStatus[v.sourceStatus], "red", _info]);
-                    break;
-                case "projectStatus":
-                    var _text = $("<text>工程状态:</text>");
-                    var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                        projectInfo(_text, v.orderId);
-                    });
-                    propertyArr.push([_text, order.projectStatusArr[v.projectStatus], "red", _info]);
-                    break;
-                case "repairStatus":
-                    propertyArr.push(["保修状态:", order.repairStatus[v.repairStatus], "red"]);
-                    break;
-                case "designStatus":
-                    var _text = $("<text>设计状态:</text>");
-                    var _info = $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                        tools.communion.assistance("decoration_design_status_informa");
-                    });
-                    propertyArr.push([_text, order.designStatusArr[v.designStatus], "red", _info]);
-                    break;
-                case "balanceStatus":
-                    propertyArr.push(["内决状态:", order.balanceStatus[v.balanceStatus], "red"]);
-                    break;
-                case "saleScale":
-                    var _text = $("<text>销售比例:</text>");
-                    var _info = $('<i class="icon-circle-arrow-down icon-rotate-180 blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                        com.showConfirm("确定更新销售配比吗", function() {
-
-                            var options = {
-                                "decoration.orderId": v.orderId
-                            };
-
-                            com.post(api.decoration.updateDecorationForSaleScale, options, function() {
-
-                                com.showAlert(com.info, "操作成功");
-                            }, null, false);
-                        });
-                    });
-                    if (v.saleScale != 1918) {
-                        propertyArr.push([_text, v.saleScale, "blue", _info]);
-                    }
-                    break;
-                case "payScale":
-                    var _text = $("<text>付款比例:</text>");
-                    var _info = $('<i class="icon-circle-arrow-down icon-rotate-180 blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-
-                        com.showConfirm("确定更新付款配比吗", function() {
-
-                            var options = {
-                                "decoration.orderId": v.orderId
-                            };
-
-                            com.post(api.decoration.updateDecorationForPayScale, options, function() {
-
-                                com.showAlert(com.info, "操作成功");
-                            }, null, false);
-                        });
-                    });
-                    propertyArr.push([_text, v.paySacle, "blue", _info]);
-                    break;
-                case "houseClass":
-                    propertyArr.push(["房屋类型:", v.houseClass, "red"]);
-                    break;
-                case "houseType":
-                    propertyArr.push(["房屋类别:", v.houseType, "red"]);
-                    break;
-            }
-        });
-
-        return propertyArr;
-    }
-
-    function drawDecorationPropertyArr($ulProperty, propertyArr) {
-
-        $.each(propertyArr, function(index, value) {
-
-            var $liProperty = $('<li></li>').appendTo($ulProperty);
-
-            $('<strong></strong>').html(value[0]).appendTo($liProperty);
-            $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-            if (value.length == 4)
-                $('<span></span>').html(value[3]).appendTo($liProperty);
-
-            if (value.length == 5) {
-                $liProperty.click(function() {
-
-                    value[3]($liProperty, value[4]);
-
-                }).css("cursor", "pointer");
-            }
-        });
-    }
-
     function buildDecorationLineprops() {
 
-        return [{
-            field: "decorationInfo",
-            name: "装修单信息",
-            type: "custom",
-            prop: function(v) {
-                return decorationUtils.propertyText(buildDecorationPropertyArr(v));
+        var propertyMap = {
+            address: {
+                field: "address",
+                name: "楼盘地址",
+                prop: function(v) {
+
+                    return (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber);
+                },
+                clazz: "grey"
             },
-            render: function($liLine, v, $ulProperty) {
-                drawDecorationPropertyArr($ulProperty, buildDecorationPropertyArr(v));
+            villageName: {
+                field: "villageName",
+                name: "楼盘",
+                prop: function(v) {
+
+                    return (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name;
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.village.info($this, v.house.village.no);
+                }
+            },
+            houseNumber: {
+                field: "houseNumber",
+                name: "楼号",
+                prop: function(v) {
+
+                    return v.house.houseNumber == null ? " " : v.house.houseNumber;
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.house.info($this, v.house.hid);
+                },
+                show: function(v) {
+
+                    return [constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_TERMINATION_INT, constant.decoration().decoration.STATUS_FINAL_INT].contains(v.status);
+                }
+            },
+            customerName: {
+                field: "customerName",
+                name: "客户名",
+                prop: "customer.name",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.customer.info($this, v.customer.cid);
+                }
+            },
+            designDepartment: {
+                field: "designDepartment",
+                name: "设计部",
+                prop: "designer.dept.name",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.decoration.belong($this, v.orderId);
+                }
+            },
+            designerName: {
+                field: "designerName",
+                name: "设计师",
+                prop: "designer.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.decoration.belong($this, v.orderId);
+                }
+            },
+            escorterName: {
+                field: "escorterName",
+                name: "方案设计",
+                prop: function(v) {
+
+                    return v.escorter ? v.escorter.currentName : '';
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.escorter ? v.escorter.userId : '');
+                }
+            },
+            salesmanDepartment: {
+                field: "salesmanDepartment",
+                name: "业务部",
+                prop: "salesman.dept.name",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.department.info($this, v.salesman.dept.did);
+                }
+            },
+            salesmanName: {
+                field: "salesmanName",
+                name: "业务员",
+                prop: "salesman.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.salesman.userId);
+                }
+            },
+            decorationBusitype: {
+                field: "decorationBusitype",
+                name: "业务类型",
+                prop: function(v) {
+
+                    return order.busitype[v.busitype];
+                },
+                clazz: "red"
+            },
+            materialerName: {
+                field: "materialerName",
+                name: "跟单员",
+                prop: function(v) {
+
+                    return v.materialer ? v.materialer.currentName : '';
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.materialer ? v.materialer.userId : '');
+                }
+            },
+            supervisorName: {
+                field: "supervisorName",
+                name: "监理",
+                prop: "supervisor.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.supervisor.userId);
+                }
+            },
+            houseArea: {
+                field: "houseArea",
+                name: "派尺面积",
+                prop: "house.buildArea",
+                clazz: "blue"
+            },
+            quoteArea: {
+                field: "quoteArea",
+                name: "计价面积",
+                prop: "house.innerArea",
+                clazz: "blue"
+            },
+            discount: {
+                field: "discount",
+                name: "折扣",
+                prop: function(v) {
+
+                    return com.checkNull(v.discount, 10);
+                },
+                clazz: "blue"
+            },
+            precontractPrice: {
+                field: "precontractPrice",
+                name: "预签额",
+                prop: "precontractPrice",
+                clazz: "blue",
+                click: function($this, v) {
+
+                    if (v.precontractPrice != 0) {
+
+                        netPerformancep($this, v);
+                    }
+                }
+            },
+            orderTotalPrice: {
+                field: "orderTotalPrice",
+                name: "签单额",
+                prop: "orderTotalPrice",
+                clazz: "blue",
+                click: function($this, v) {
+
+                    if ([constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_TERMINATION_INT, constant.decoration().decoration.STATUS_FINAL_INT].contains(v.status)) {
+
+                        netPerformanceo($this, v);
+                    }
+                }
+            },
+            quotationPrice: {
+                field: "quotationPrice",
+                name: "报价额",
+                prop: "quotationPrice",
+                clazz: "blue",
+                click: function($this, v) {
+
+                    com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+                        "quotation.orderId": v.orderId
+                    }, function(res) {
+
+                        var quotation = res.quotation;
+
+                        beforeTotal = utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice), quotation.managePrice), quotation.taxPrice);
+
+                        com.showTip($this, "折前总价:" + utils.changeThrDecimal(beforeTotal));
+
+                    });
+                }
+            },
+            couponCut: {
+                field: "couponCut",
+                name: "券优惠",
+                prop: "couponCut",
+                clazz: "blue",
+                click: function($this, v) {
+
+                    couponCut($this, v.orderId);
+                }
+            },
+            factPrice: {
+                field: "factPrice",
+                name: "实收额",
+                prop: "factPrice",
+                clazz: "blue"
+            },
+            createTime: {
+                field: "createTime",
+                name: "创建时间",
+                prop: "createTime",
+                clazz: "green"
+            },
+            issueTime: {
+                field: "issueTime",
+                name: "派尺时间",
+                prop: "issueTime",
+                clazz: "green"
+            },
+            meetTime: {
+                field: "meetTime",
+                name: "到店时间",
+                prop: "meetTime",
+                clazz: "green"
+            },
+            measureTime: {
+                field: "measureTime",
+                name: "量房时间",
+                prop: "measureTime",
+                clazz: "green"
+            },
+            belongTime: {
+                field: "belongTime",
+                name: "变更时间",
+                prop: "belongTime",
+                clazz: "green"
+            },
+            depositTime: {
+                field: "depositTime",
+                name: "定金时间",
+                prop: "depositTime",
+                clazz: "green"
+            },
+            precontractTime: {
+                field: "precontractTime",
+                name: "预签时间",
+                prop: "precontractTime",
+                clazz: "green"
+            },
+            contractTime: {
+                field: "contractTime",
+                name: "签单时间",
+                prop: "contractTime",
+                clazz: "green"
+            },
+            recontractTime: {
+                field: "recontractTime",
+                name: "重签时间",
+                prop: "recontractTime",
+                clazz: "green"
+            },
+            accountTime: {
+                field: "accountTime",
+                name: "决算时间",
+                prop: "accountTime",
+                clazz: "green"
+            },
+            balanceTime: {
+                field: "balanceTime",
+                name: "内决时间",
+                prop: "balanceTime",
+                clazz: "green"
+            },
+            terminalTime: {
+                field: "terminalTime",
+                name: "终止时间",
+                prop: "terminalTime",
+                clazz: "green"
+            },
+            sdesignTime: {
+                field: "sdesignTime",
+                name: "确认合同方案时间",
+                prop: "sdesignTime",
+                clazz: "green"
+            },
+            edesignTime: {
+                field: "edesignTime",
+                name: "确认放线方案时间",
+                prop: "edesignTime",
+                clazz: "green"
+            },
+            decorationType: {
+                field: "decorationType",
+                name: "类型",
+                prop: function(v) {
+
+                    return order.typeness[v.typeness];
+                },
+                clazz: "red"
+            },
+            decorationStatus: {
+                field: "decorationStatus",
+                name: "状态",
+                prop: function(v) {
+
+                    return order.decorationStatus[v.status];
+                },
+                clazz: "red",
+                click: function($this, v) {
+
+                    tools.communion.assistance("decoration_status_information");
+                }
+            },
+            sourceStatus: {
+                field: "sourceStatus",
+                name: "确认状态",
+                prop: function(v) {
+
+                    return order.sourceStatus[v.sourceStatus];
+                },
+                clazz: "red",
+                click: function($this, v) {
+
+                    tools.communion.assistance("decoration_source_status_informa");
+                }
+            },
+            projectStatus: {
+                field: "projectStatus",
+                name: "工程状态",
+                prop: function(v) {
+
+                    return order.projectStatusArr[v.projectStatus];
+                },
+                clazz: "red",
+                click: function($this, v) {
+
+                    projectInfo($this, v.orderId);
+                }
+            },
+            repairStatus: {
+                field: "repairStatus",
+                name: "保修状态",
+                prop: function(v) {
+
+                    return order.repairStatus[v.repairStatus];
+                },
+                clazz: "red"
+            },
+            designStatus: {
+                field: "designStatus",
+                name: "设计状态",
+                prop: function(v) {
+
+                    return order.designStatusArr[v.designStatus];
+                },
+                clazz: "red",
+                click: function($this, v) {
+
+                    tools.communion.assistance("decoration_design_status_informa");
+                }
+            },
+            balanceStatus: {
+                field: "balanceStatus",
+                name: "内决状态",
+                prop: function(v) {
+
+                    return order.balanceStatus[v.balanceStatus];
+                },
+                clazz: "red"
+            },
+            saleScale: {
+                field: "saleScale",
+                name: "销售比例",
+                prop: "saleScale",
+                clazz: "blue",
+                show: function(v) {
+
+                    return v.saleScale != 1918;
+                },
+                click: function($this, v) {
+
+                    com.showConfirm("确定更新销售配比吗", function() {
+
+                        var options = {
+                            "decoration.orderId": v.orderId
+                        };
+
+                        com.post(api.decoration.updateDecorationForSaleScale, options, function() {
+
+                            com.showAlert(com.info, "操作成功");
+                        }, null, false);
+                    });
+                }
+            },
+            payScale: {
+                field: "payScale",
+                name: "付款比例",
+                prop: "paySacle",
+                clazz: "blue",
+                click: function($this, v) {
+
+                    com.showConfirm("确定更新付款配比吗", function() {
+
+                        var options = {
+                            "decoration.orderId": v.orderId
+                        };
+
+                        com.post(api.decoration.updateDecorationForPayScale, options, function() {
+
+                            com.showAlert(com.info, "操作成功");
+                        }, null, false);
+                    });
+                }
+            },
+            houseClass: {
+                field: "houseClass",
+                name: "房屋类型",
+                prop: "houseClass",
+                clazz: "red"
+            },
+            houseType: {
+                field: "houseType",
+                name: "房屋类别",
+                prop: "houseType",
+                clazz: "red"
             }
-        }];
+        };
+
+        // pageConfig.propertyArr 配置中, sdesignTime 会同时产出两个字段(合同方案时间 + 放线方案时间)
+        var props = [];
+        $.each(pageConfig.propertyArr, function(i, key) {
+
+            if (key == "sdesignTime") {
+                propertyMap["sdesignTime"] && props.push(propertyMap["sdesignTime"]);
+                propertyMap["edesignTime"] && props.push(propertyMap["edesignTime"]);
+                return true;
+            }
+            propertyMap[key] && props.push(propertyMap[key]);
+        });
+
+        return props;
     }
+
 
     function buildDecorationLinebtns() {
 

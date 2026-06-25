@@ -138,40 +138,6 @@ jQuery(function($) {
     // 不同页面的不同参数
     proxyPayment.pageConfig = paymentUtils.getConfig(proxyPayment.type, 64);
 
-    function paymentPropertyText(propertyArr) {
-
-        var infos = [];
-
-        $.each(propertyArr, function(index, value) {
-
-            infos.push(value[0] + value[1]);
-        });
-
-        return infos.join(" ");
-    }
-
-    function drawPaymentProperties($ulProperty, propertyArr) {
-
-        $.each(propertyArr, function(index, value) {
-
-            var $liProperty = $('<li></li>').appendTo($ulProperty);
-            $('<strong></strong>').html(value[0]).appendTo($liProperty);
-            var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-
-            if (value[3]) {
-                $b.click(function() {
-
-                    value[3]($b);
-                }).css("cursor", "pointer");
-            }
-        });
-    }
-
-    function getProxyPropertyArr(v) {
-
-        return paymentUtils.getPropertyArr(proxyPayment, v, v, proxyPayment.status);
-    }
-
     function buildProxyLineprops() {
 
         var lineprops = [{
@@ -192,19 +158,8 @@ jQuery(function($) {
                     "ppid": v.ppid
                 };
             }
-        }, {
-            field: "paymentInfo",
-            name: "款项信息",
-            type: "custom",
-            prop: function(v) {
-
-                return paymentPropertyText(getProxyPropertyArr(v));
-            },
-            render: function($liLine, v, $ulProperty) {
-
-                drawPaymentProperties($ulProperty, getProxyPropertyArr(v));
-            }
-        }];
+        }]
+            .concat(paymentUtils.getPropertyLineprops(proxyPayment, proxyPayment.status));
 
         if (proxyPayment.pageConfig.pageBtn.contains("payway")) {
             lineprops.push({
@@ -213,11 +168,11 @@ jQuery(function($) {
                 type: "custom",
                 prop: function(v) {
 
-                    return paymentUtils.getHistoryText(proxyPayment, v.proxyReceipt);
+                    return paymentUtils.getHistoryText(proxyPayment, v);
                 },
                 render: function($liLine, v) {
 
-                    paymentUtils.drawHistoryData(proxyPayment, v.proxyReceipt, $liLine, "");
+                    paymentUtils.drawHistoryData(proxyPayment, v, $liLine, "");
                 }
             });
         }

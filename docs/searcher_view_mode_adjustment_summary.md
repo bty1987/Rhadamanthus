@@ -625,7 +625,7 @@ getHistoryText(...)
 | `decorationMeasure4apply.js` | `pageDecorationMeasureForApplay` | propertyArr(含点击) + 3 行按钮(更新/量尺/重置) |
 | `decorationMeasure4setup.js` | `pageDecorationMeasure` | propertyArr(含点击) + 2 行按钮(编辑/重置) |
 | `decorationPicture.js` | `queryInspect` | 行内图片缩略图容器, 用 `custom` lineprop render 追加 `$ulPicture` |
-| `decoration.js` | `pageConfig.apiPage` | pageConfig 驱动, propertyArr/pageBtn 全部由 `buildDecorationPropertyArr` + `buildDecorationLinebtns` 动态生成, IIFE 内 30+ 业务函数(viewDecoration*/signOrder/terminalOrder 等)全部上提到模块作用域 |
+| `decoration.js` | `pageConfig.apiPage` | pageConfig 驱动, propertyArr/pageBtn 全部由 `buildDecorationLineprops` 的 `propertyMap` + `buildDecorationLinebtns` 动态生成, IIFE 内 30+ 业务函数(viewDecoration*/signOrder/terminalOrder 等)全部上提到模块作用域 |
 
 排除迁移（非 Searcher 分页页）：
 
@@ -636,14 +636,11 @@ getHistoryText(...)
 
 ### 12.2 跨模块 helper 放置规则（关键决策）
 
-- payment 迁移时把 `paymentPropertyText/drawPaymentProperties` 作为**各文件内本地函数**实现；
-- decoration 迁移沿用 `propertyText/drawProperties`，但按用户要求**不进 `core.js`**，
-  也**不进 `paymentUtils.js`**（与 payment 无关）。
-- 最终落点：`WebContent/js/utils/decorationUtils.js`，新增两个方法：
-  - `decorationUtils.propertyText(propertyArr)` —— 将 `[[label,value,...]]` 拼成 table 模式摘要文本；
-  - `decorationUtils.drawProperties($ulProperty, propertyArr)` —— 将 propertyArr 渲染到 `<ul>`，
-    支持第 3 元素 clazz、第 4 元素 `$b` 点击、第 5 元素 `$li` 点击（兼容 decoration.js 既有用法）。
-- paymentUtils.js 同期新增的同名方法已回滚，保持各 utils 职责单一。
+- payment 迁移时把字段拼装收敛到 `paymentUtils.getPropertyLineprops(payment, statusArr)`，
+  返回**标准 lineprop 数组**（每个字段一个独立 `{field, name, prop, clazz, click?, show?}`），
+  不再使用 `type: "custom"` 的整行拼字符串方式（详见 12.5）。
+- decoration 迁移没有跨文件复用的 propertyArr 文本拼接需求，
+  `decorationUtils.propertyText/drawProperties` 已移除，保持 utils 职责单一。
 
 ### 12.3 decoration.js 复杂度处理（P2）
 
@@ -651,9 +648,9 @@ getHistoryText(...)
 
 1. `renderList/creatLine` 的字段构造（`switch(pv)` 30+ 分支）与按钮显隐（`switch(b)` 30+ 分支）
    被重写为：
-   - `buildDecorationPropertyArr(v)` —— 复刻原 switch，产出 propertyArr；
-   - `drawDecorationPropertyArr($ulProperty, propertyArr)` —— 复刻原渲染（含 4/5 元素的 `_info` 图标点击与 li 点击）；
-   - `buildDecorationLineprops()` —— 单个 `custom` lineprop，`prop` 走 `propertyText`，`render` 走 `drawDecorationPropertyArr`；
+   - `buildDecorationLineprops()` —— 内部维护 `propertyMap`（40+ 个标准 lineprop），
+     按 `pageConfig.propertyArr` 顺序 `$.each` 取出对应 lineprop 推入数组；
+     `sdesignTime` 键同时产出 `sdesignTime` 和 `edesignTime` 两个 lineprop；
    - `buildDecorationLinebtns()` —— 33 个按钮，每个 `show` 复刻原 status 判定，`handle` 调用原 helper。
 2. IIFE 内业务函数（`viewDecorationDetail/viewDecorationQuotateIndex/modalDrawLineModal/
    signOrder/aerminalOrder/terminalOrder/resignOrder/...` 共 30+ 个）**全部保留**，
@@ -665,13 +662,51 @@ getHistoryText(...)
    - `searcher.line(function(v){return v.orderId}, buildDecorationLineprops(), buildDecorationLinebtns()).render()`；
    - 原 buttons 回调体提取为独立 `buildDecorationButtons()` 函数。
 
-### 12.4 验证
+### 12.4 Payment 模块 propertyMap 标准化（本轮新增）
 
-- `node --check` 全部通过（8 个文件：7 个 decoration 页 + decorationUtils.js）。
+`sales.js` 表格显示正常、而 `payment.js`/`decoration.js` 表格字段挤成一列的根因：
+原实现用单个 `type: "custom"` lineprop，其 `prop(v)` 返回整行字段的拼接字符串，
+Searcher 的 table 模式只会对该 `prop(v)` 调用一次并把结果当作**一个单元格**，
+因此整行字段塌缩成一列文本。
+
+修复方式（对齐 `sales.js`）：
+
+1. `paymentUtils.getPropertyArr(payment, v, decoration, statusArr)` 改为
+   `paymentUtils.getPropertyLineprops(payment, statusArr)`，返回标准 lineprop 数组。
+   每个 case 由 `propertyArr.push([label, value, clazz, clickFn])` 改写为
+   `propertyMap[key] = { field, name, prop (string|fn), clazz, click?, show? }`，
+   最后按 `pageConfig.propertyArr` 顺序挑选。
+2. **关键：行级业务对象按页类型在 `prop/click` 内部解析**。新增内部函数：
+
+   ```js
+   function deco(v) {
+       switch (payment.htmlName) {
+           case "activity":
+           case "proxy":  return v;
+           case "material": return v.material;
+           case "sales":    return v.sales;
+           case "oales":    return v.oales.decoration;
+           default:         return v.decoration;
+       }
+   }
+   ```
+
+   等价于旧实现外部传入的 `decoration` 参数，但**按行取值**，避免在 lineprop 构建期
+   （尚无 `v`）引用 `v.decoration` 导致运行时塌缩。
+3. 8 个 payment 页面的 `buildXxxLineprops()` 调用统一改为
+   `paymentUtils.getPropertyLineprops(ctx, statusArr)`（去掉第二个 `v.decoration`/`v.sales`/`v.material`/`v.oales.decoration` 实参）。
+4. **保留的合法 custom lineprop**：仅 `payway`（收款方式历史）一处，
+   `prop` 走 `getHistoryText`、`render` 走 `drawHistoryData`，
+   因为它需要在 line/card 模式渲染自定义 DOM（`<ul>` 列表），不是纯文本字段。
+   decoration 模块**无任何** `type: "custom"` 残留。
+
+### 12.5 验证
+
+- `node --check` 全部通过（17 个文件：8 payment + 7 decoration + paymentUtils + decorationUtils）。
 - `findstr /s /n displayFunc WebContent/js/decoration/*.js` 仅余排除项：
-  `audit4record.js`、`decorationBelong.js`；`decorationMeasure*.js/decorationPicture.js`
-  残留的 `var displayFunc = (function(){` 是迁移后保留的局部 IIFE（仅含 `creatLine` 给 `drawLine:` 接口，
-  供原 `displayFunc.init` 调用——已被 `searcher.set+line` 取代，无外部调用方）。
-- `decorationUtils.propertyText/drawProperties` 在 7 个页面中被正确引用，无 `com.*` 残留。
-- 行尾与编码：所有改动文件保持与 HEAD 一致的 CRLF + UTF-8(BOM)（decoration.js 带 BOM），
-  `git diff --check` 无空白告警。
+  `audit4record.js`、`decorationBelong.js`。
+- `findstr type:"custom"`：decoration 模块 0 处；payment 模块仅余 `payway` 合法一处。
+- `paymentUtils.getPropertyLineprops` 签名由 `(payment, decoration, statusArr)` 收敛为
+  `(payment, statusArr)`；8 个 payment 调用点全部更新，无 `v.decoration` 残留实参。
+- 行尾与编码：所有改动文件保持 CRLF（decoration.js 带 UTF-8 BOM，其余 noBOM，与 HEAD 一致），
+  `git -c core.whitespace=cr-at-eol diff --check` 无空白告警。

@@ -736,213 +736,495 @@ var paymentUtils = {
         return pageConfig;
     },
 
-    getPropertyArr: function(payment, v, decoration, statusArr) {
+    getPropertyLineprops: function(payment, statusArr) {
 
-        var propertyArr = [];
-        $.each(payment.pageConfig.propertyArr, function(pi, pv) {
+        // 按页类型解析当前行数据中"装修/销售/主材/活动"业务对象, 等价于旧实现传入的 decoration 参数
+        function deco(v) {
 
-            switch (pv) {
-                case "mno":
-                    propertyArr.push(["会员号:", v.mno, "grey"]);
-                    break;
-                case "orderId":
-                    var orderId = decoration.orderId ? decoration.orderId : "无";
-                    propertyArr.push(["装修单号:", orderId, "blue", function(btn) {
+            switch (payment.htmlName) {
+                case "activity":
+                case "proxy":
+                    return v;
+                case "material":
+                    return v.material;
+                case "sales":
+                    return v.sales;
+                case "oales":
+                    return v.oales.decoration;
+                default:
+                    return v.decoration;
+            }
+        }
 
-                        tools.decoration.info(btn, orderId);
-                    }]);
-                    break;
-                case "materialNo":
-                    propertyArr.push(["主材号:", decoration.no, "blue"]);
-                    break;
-                case "salesNo":
-                    propertyArr.push(["销售单号:", decoration.no, "blue", function(btn) {
+        var propertyMap = {
+            mno: {
+                field: "mno",
+                name: "会员号",
+                prop: "mno",
+                clazz: "grey"
+            },
+            orderId: {
+                field: "orderId",
+                name: "装修单号",
+                prop: function(v) {
 
-                        tools.sales.info(btn, decoration.sid);
-                    }]);
-                    break;
-                case "customerName":
-                    propertyArr.push(["客户:", decoration.customer.name, "grey", function(btn) {
+                    var orderId = deco(v).orderId;
+                    return orderId ? orderId : "无";
+                },
+                clazz: "blue",
+                click: function($this, v) {
 
-                        tools.customer.info(btn, decoration.customer.cid);
-                    }]);
-                    break;
-                case "address":
-                    propertyArr.push(["地址:", v.address, "grey"]);
-                    break;
-                case "village":
-                    propertyArr.push(["楼盘:", decoration.house.village.name, "grey", function(btn) {
+                    var orderId = deco(v).orderId;
+                    tools.decoration.info($this, orderId ? orderId : "无");
+                }
+            },
+            materialNo: {
+                field: "materialNo",
+                name: "主材号",
+                prop: function(v) {
 
-                        tools.village.info(btn, decoration.house.village.no);
-                    }]);
-                    break;
-                case "house":
-                    propertyArr.push(["楼号:", decoration.house.houseNumber, "grey", function(btn) {
+                    return deco(v).no;
+                },
+                clazz: "blue"
+            },
+            salesNo: {
+                field: "salesNo",
+                name: "销售单号",
+                prop: function(v) {
 
-                        tools.house.info(btn, decoration.house.hid);
-                    }]);
-                    break;
-                case "designerName":
-                    propertyArr.push(["设计师:", decoration.designer.currentName, "grey", function(btn) {
+                    return deco(v).no;
+                },
+                clazz: "blue",
+                click: function($this, v) {
 
-                        tools.personel.info(btn, decoration.designer.userId);
-                    }]);
-                    break;
-                case "designDepartment":
-                    propertyArr.push(["设计部:", decoration.designer.dept.name, "grey", function(btn) {
+                    tools.sales.info($this, deco(v).sid);
+                }
+            },
+            customerName: {
+                field: "customerName",
+                name: "客户",
+                prop: "customer.name",
+                clazz: "grey",
+                click: function($this, v) {
 
-                        tools.department.info(btn, decoration.designer.dept.did);
-                    }]);
-                    break;
-                case "grade":
-                    propertyArr.push(["等级:", decoration.grade, "red"]);
-                    break;
-                case "salesGrade":
-                    propertyArr.push(["销售单等级:", decoration.grade, "red"]);
-                    break;
-                case "creater":
-                    propertyArr.push(["创建人:", v.creater.currentName, "grey", function(btn) {
+                    tools.customer.info($this, deco(v).customer.cid);
+                }
+            },
+            address: {
+                field: "address",
+                name: "地址",
+                prop: "address",
+                clazz: "grey"
+            },
+            village: {
+                field: "village",
+                name: "楼盘",
+                prop: function(v) {
 
-                        tools.personel.info(btn, v.creater.userId);
-                    }]);
-                    break;
-                case "createTime":
-                    propertyArr.push(["创建时间:", v.createTime, "green"]);
-                    break;
-                case "type":
-                    propertyArr.push(["类型:", payment.paymentType[v.type], "red"]);
-                    break;
-                case "category":
-                    propertyArr.push(["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"]);
-                    break;
-                case "brand":
-                    var brand = payment.htmlName == "sales" ? decoration.brand.name : v.brand;
-                    propertyArr.push(["品牌:", brand == null || brand == "" ? "---" : brand, "grey"]);
-                    break;
-                case "referMoney":
-                    var referMoney = payment.htmlName == "activity" ? v.money : v.referMoney;
-                    propertyArr.push(["应收金额:", referMoney, "blue"]);
-                    break;
-                case "contractBalance":
-                    propertyArr.push(["合同预付款:", v.balance, "blue"]);
-                    break;
-                case "materialBalance":
-                    propertyArr.push(["主材预付款:", v.materialBalance, "blue"]);
-                    break;
-                case "collectType":
-                    propertyArr.push(["收款类型:", payment.typeData[v.type], "red"]);
-                    break;
-                case "paymentTypeData":
-                    propertyArr.push(["预付款类型:", payment.paymentTypeData[v.paymentType], "red"]);
-                    break;
-                case "recharge":
-                    propertyArr.push(["操作金额:", v.recharge, "blue"]);
-                    break;
-                case "balance":
-                    if (v.status == 0)
-                        break;
-                    propertyArr.push(["余额:", v.balance, "blue"]);
-                    break;
-                case "materialPrice":
-                    if (v.status == 0)
-                        break;
-                    propertyArr.push(["主材金额:", v.materialPrice, "blue"]);
-                    break;
-                case "advanceMoney":
-                    if (v.status == 0)
-                        break;
-                    propertyArr.push(["预付款金额:", v.advanceMoney, "blue"]);
-                    break;
-                case "servicePrice":
-                    var servicePrice = ["common", "pos"].contains(payment.type) ? v.servicePrice : v.serviceMoney;
-                    propertyArr.push(["服务费:", servicePrice, "blue"]);
-                    break;
-                case "projectPrice":
-                    propertyArr.push(["工程造价:", v.projectPrice, "blue"]);
-                    break;
-                case "managePrice":
-                    propertyArr.push(["管理费:", v.managePrice, "blue"]);
-                    break;
-                case "collectUser":
+                    return deco(v).house.village.name;
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.village.info($this, deco(v).house.village.no);
+                }
+            },
+            house: {
+                field: "house",
+                name: "楼号",
+                prop: function(v) {
+
+                    return deco(v).house.houseNumber;
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.house.info($this, deco(v).house.hid);
+                }
+            },
+            designerName: {
+                field: "designerName",
+                name: "设计师",
+                prop: function(v) {
+
+                    return deco(v).designer.currentName;
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, deco(v).designer.userId);
+                }
+            },
+            designDepartment: {
+                field: "designDepartment",
+                name: "设计部",
+                prop: function(v) {
+
+                    return deco(v).designer.dept.name;
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.department.info($this, deco(v).designer.dept.did);
+                }
+            },
+            grade: {
+                field: "grade",
+                name: "等级",
+                prop: function(v) {
+
+                    return deco(v).grade;
+                },
+                clazz: "red"
+            },
+            salesGrade: {
+                field: "salesGrade",
+                name: "销售单等级",
+                prop: function(v) {
+
+                    return deco(v).grade;
+                },
+                clazz: "red"
+            },
+            creater: {
+                field: "creater",
+                name: "创建人",
+                prop: "creater.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.creater.userId);
+                }
+            },
+            createTime: {
+                field: "createTime",
+                name: "创建时间",
+                prop: "createTime",
+                clazz: "green"
+            },
+            type: {
+                field: "type",
+                name: "类型",
+                prop: function(v) {
+
+                    return payment.paymentType[v.type];
+                },
+                clazz: "red"
+            },
+            category: {
+                field: "category",
+                name: "品类",
+                prop: function(v) {
+
+                    return v.category == null || v.category == "" ? "---" : v.category;
+                },
+                clazz: "grey"
+            },
+            brand: {
+                field: "brand",
+                name: "品牌",
+                prop: function(v) {
+
+                    var brand = payment.htmlName == "sales" ? deco(v).brand.name : v.brand;
+                    return brand == null || brand == "" ? "---" : brand;
+                },
+                clazz: "grey"
+            },
+            referMoney: {
+                field: "referMoney",
+                name: "应收金额",
+                prop: function(v) {
+
+                    return payment.htmlName == "activity" ? v.money : v.referMoney;
+                },
+                clazz: "blue"
+            },
+            contractBalance: {
+                field: "contractBalance",
+                name: "合同预付款",
+                prop: "balance",
+                clazz: "blue"
+            },
+            materialBalance: {
+                field: "materialBalance",
+                name: "主材预付款",
+                prop: "materialBalance",
+                clazz: "blue"
+            },
+            collectType: {
+                field: "collectType",
+                name: "收款类型",
+                prop: function(v) {
+
+                    return payment.typeData[v.type];
+                },
+                clazz: "red"
+            },
+            paymentTypeData: {
+                field: "paymentTypeData",
+                name: "预付款类型",
+                prop: function(v) {
+
+                    return payment.paymentTypeData[v.paymentType];
+                },
+                clazz: "red"
+            },
+            recharge: {
+                field: "recharge",
+                name: "操作金额",
+                prop: "recharge",
+                clazz: "blue"
+            },
+            balance: {
+                field: "balance",
+                name: "余额",
+                prop: "balance",
+                clazz: "blue",
+                show: function(v) {
+
+                    return v.status != 0;
+                }
+            },
+            materialPrice: {
+                field: "materialPrice",
+                name: "主材金额",
+                prop: "materialPrice",
+                clazz: "blue",
+                show: function(v) {
+
+                    return v.status != 0;
+                }
+            },
+            advanceMoney: {
+                field: "advanceMoney",
+                name: "预付款金额",
+                prop: "advanceMoney",
+                clazz: "blue",
+                show: function(v) {
+
+                    return v.status != 0;
+                }
+            },
+            servicePrice: {
+                field: "servicePrice",
+                name: "服务费",
+                prop: function(v) {
+
+                    return ["common", "pos"].contains(payment.type) ? v.servicePrice : v.serviceMoney;
+                },
+                clazz: "blue"
+            },
+            projectPrice: {
+                field: "projectPrice",
+                name: "工程造价",
+                prop: "projectPrice",
+                clazz: "blue"
+            },
+            managePrice: {
+                field: "managePrice",
+                name: "管理费",
+                prop: "managePrice",
+                clazz: "blue"
+            },
+            collectUser: {
+                field: "collectUser",
+                name: "收款人",
+                prop: function(v) {
+
                     var obj = ["sales", "service", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     var collecter = ["payment"].contains(payment.htmlName) ? obj.collectUser : obj.collecter;
-                    propertyArr.push(["收款人:", collecter != null ? collecter.currentName : "暂无", "grey", function(btn) {
+                    return collecter != null ? collecter.currentName : "暂无";
+                },
+                clazz: "grey",
+                click: function($this, v) {
 
-                        tools.personel.info(btn, collecter.userId);
-                    }]);
-                    break;
-                case "collectTime":
                     var obj = ["sales", "service", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
-                    propertyArr.push(["收款时间:", obj.collectTime, "green"]);
-                    break;
-                case "confirmUser":
+                    var collecter = ["payment"].contains(payment.htmlName) ? obj.collectUser : obj.collecter;
+                    collecter && tools.personel.info($this, collecter.userId);
+                }
+            },
+            collectTime: {
+                field: "collectTime",
+                name: "收款时间",
+                prop: function(v) {
+
+                    var obj = ["sales", "service", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    return obj.collectTime;
+                },
+                clazz: "green"
+            },
+            confirmUser: {
+                field: "confirmUser",
+                name: "确认人",
+                prop: function(v) {
+
                     var obj = ["sales", "service", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     var confirmer = ["payment"].contains(payment.htmlName) ? obj.confirmUser : obj.confirmer;
-                    propertyArr.push(["确认人:", confirmer != null && confirmer.currentName != null ? confirmer.currentName : "暂无", "grey", function(btn) {
+                    return confirmer != null && confirmer.currentName != null ? confirmer.currentName : "暂无";
+                },
+                clazz: "grey",
+                click: function($this, v) {
 
-                        tools.personel.info(btn, confirmer.userId);
-                    }]);
-                    break;
-                case "confirmTime":
                     var obj = ["sales", "service", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
-                    propertyArr.push(["确认时间:", obj.confirmTime, "green"]);
-                    break;
-                case "isAffirm":
-                    propertyArr.push(["客户确认:", payment.isAffirms[v.isAffirm], "red"]);
-                    break;
-                case "affirmTime":
-                    propertyArr.push(["客户确认时间:", com.checkNull(v.affirmTime, "暂无"), "green"]);
-                    break;
-                case "sales-isAffirm":
-                    propertyArr.push(["销售确认:", payment.isAffirms[v.sales.isAffirm], "red"]);
-                    break;
-                case "sales-affirmTime":
-                    propertyArr.push(["销售确认时间:", com.checkNull(v.sales.affirmTime, "暂无"), "green"]);
-                    break;
-                case "salesRefunds-isAffirm":
-                    if (v.salesRefunds == null)
-                        break;
-                    propertyArr.push(["退货确认:", payment.isAffirms[v.salesRefunds.isAffirm], "red"]);
-                    break;
-                case "salesRefunds-affirmTime":
-                    if (v.salesRefunds == null)
-                        break;
-                    propertyArr.push(["退货确认时间:", com.checkNull(v.salesRefunds.affirmTime, "暂无"), "green"]);
-                    break;
-                case "status":
-                    var status = ["payment", "sales", "service", "activity", "proxy", "oales"].contains(payment.htmlName) ? statusArr[v.status] : statusArr[v.paymentStatus];
-                    propertyArr.push(["状态:", status, "red"]);
-                    break;
-                case "comment":
-                    var obj = ["sales", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
-                    propertyArr.push(["备注:", obj.comment, "grey"]);
-                    break;
-                case "salesDept":
-                    propertyArr.push(["渠道部门:", decoration.dept.name, "grey", function(btn) {
+                    var confirmer = ["payment"].contains(payment.htmlName) ? obj.confirmUser : obj.confirmer;
+                    confirmer && tools.personel.info($this, confirmer.userId);
+                }
+            },
+            confirmTime: {
+                field: "confirmTime",
+                name: "确认时间",
+                prop: function(v) {
 
-                        tools.department.info(btn, decoration.dept.did);
-                    }]);
-                    break;
-                case "title":
-                    propertyArr.push(["标题:", v.title, "grey"]);
-                    break;
-                case "name":
-                    propertyArr.push(["姓名:", v.name, "grey"]);
-                    break;
-                case "phone":
-                    propertyArr.push(["电话:", v.phone.substring(0, 3) + "****" + v.phone.substr(v.phone.length - 4), "grey"]);
-                    break;
-                case "realMoney":
+                    var obj = ["sales", "service", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    return obj.confirmTime;
+                },
+                clazz: "green"
+            },
+            isAffirm: {
+                field: "isAffirm",
+                name: "客户确认",
+                prop: function(v) {
+
+                    return payment.isAffirms[v.isAffirm];
+                },
+                clazz: "red"
+            },
+            affirmTime: {
+                field: "affirmTime",
+                name: "客户确认时间",
+                prop: function(v) {
+
+                    return com.checkNull(v.affirmTime, "暂无");
+                },
+                clazz: "green"
+            },
+            "sales-isAffirm": {
+                field: "sales-isAffirm",
+                name: "销售确认",
+                prop: function(v) {
+
+                    return payment.isAffirms[v.sales.isAffirm];
+                },
+                clazz: "red"
+            },
+            "sales-affirmTime": {
+                field: "sales-affirmTime",
+                name: "销售确认时间",
+                prop: function(v) {
+
+                    return com.checkNull(v.sales.affirmTime, "暂无");
+                },
+                clazz: "green"
+            },
+            "salesRefunds-isAffirm": {
+                field: "salesRefunds-isAffirm",
+                name: "退货确认",
+                prop: function(v) {
+
+                    return payment.isAffirms[v.salesRefunds.isAffirm];
+                },
+                clazz: "red",
+                show: function(v) {
+
+                    return v.salesRefunds != null;
+                }
+            },
+            "salesRefunds-affirmTime": {
+                field: "salesRefunds-affirmTime",
+                name: "退货确认时间",
+                prop: function(v) {
+
+                    return com.checkNull(v.salesRefunds.affirmTime, "暂无");
+                },
+                clazz: "green",
+                show: function(v) {
+
+                    return v.salesRefunds != null;
+                }
+            },
+            status: {
+                field: "status",
+                name: "状态",
+                prop: function(v) {
+
+                    return ["payment", "sales", "service", "activity", "proxy", "oales"].contains(payment.htmlName) ? statusArr[v.status] : statusArr[v.paymentStatus];
+                },
+                clazz: "red"
+            },
+            comment: {
+                field: "comment",
+                name: "备注",
+                prop: function(v) {
+
+                    var obj = ["sales", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    return obj.comment;
+                },
+                clazz: "grey"
+            },
+            salesDept: {
+                field: "salesDept",
+                name: "渠道部门",
+                prop: function(v) {
+
+                    return deco(v).dept.name;
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.department.info($this, deco(v).dept.did);
+                }
+            },
+            title: {
+                field: "title",
+                name: "标题",
+                prop: "title",
+                clazz: "grey"
+            },
+            name: {
+                field: "name",
+                name: "姓名",
+                prop: "name",
+                clazz: "grey"
+            },
+            phone: {
+                field: "phone",
+                name: "电话",
+                prop: function(v) {
+
+                    return v.phone.substring(0, 3) + "****" + v.phone.substr(v.phone.length - 4);
+                },
+                clazz: "grey"
+            },
+            realMoney: {
+                field: "realMoney",
+                name: "实收额",
+                prop: function(v) {
+
                     var obj = ["sales", "service", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
-                    propertyArr.push(["实收额:", obj.realMoney, "blue"]);
-                    break;
-                case "isexpire":
-                    propertyArr.push(["过期标识:", payment.isexpires[v.isexpire], "red"]);
-                    break;
+                    return obj.realMoney;
+                },
+                clazz: "blue"
+            },
+            isexpire: {
+                field: "isexpire",
+                name: "过期标识",
+                prop: function(v) {
+
+                    return payment.isexpires[v.isexpire];
+                },
+                clazz: "red"
             }
+        };
+
+        var props = [];
+        $.each(payment.pageConfig.propertyArr, function(i, key) {
+
+            propertyMap[key] && props.push(propertyMap[key]);
         });
-        return propertyArr;
+
+        return props;
     },
+
 
     // 获取验证码
     getCode: function($id, wallet, phone) {

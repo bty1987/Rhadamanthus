@@ -80,98 +80,132 @@ jQuery(function($) {
     measure.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas, "key", "value");
 
 
-    var displayFunc = (function() {
-
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            decorationUtils.drawProperties($ulProperty, getMeasurePropertyArr(v));
-
-            $divBtnWrap.append($('<a></a>').addClass('btn btn-minier btn-success').html('编辑')).appendTo($h3);
-            $divBtnWrap.append($('<a></a>').addClass('btn btn-minier btn-inverse').html('重置')).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            measure: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
-
-    function getMeasurePropertyArr(v) {
-
-        return [["装修单: ", v.decoration.orderId, "blue", function(btn) {
-
-            tools.decoration.info(btn, v.decoration.orderId);
-        }], ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
-
-            tools.house.info(btn, v.decoration.house.hid);
-        }], ["楼号: ", v.decoration.house.houseNumber, "grey"], ["客户: ", v.decoration.customer.name, "grey", function(btn) {
-
-            tools.customer.info(btn, v.decoration.customer.cid);
-        }], ["设计师: ", v.decoration.designer.currentName, "grey", function(btn) {
-
-            tools.personel.info(btn, v.decoration.designer.userId);
-        }], ["监理: ", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey", function(btn) {
-
-            tools.personel.info(btn, v.decoration.supervisor.userId);
-        }], ["面积: ", v.decoration.house.buildArea, "blue"],
-
-            ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
-            ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"],
-            ["合同额: ", v.decoration.orderTotalPrice, "blue"], ["报价版本: ", v.decoration.version.name, "grey"],
-            ["申请人: ", v.appler.currentName, "grey", function(btn) {
-
-                tools.personel.info(btn, v.appler.userId);
-            }],
-            ["量尺时间: ", v.actualTime, "green"],
-            ["开始时间: ", v.startTime, "green"],
-            ["结束时间: ", v.endTime, "green"],
-            ["状态: ", constant.decoration().measure.status.keys[v.status], "red"],
-            ["描述: ", v.content, "grey"]];
-    }
-
     function buildMeasureLineprops() {
 
         return [{
-            field: "measureInfo",
-            name: "量房信息",
-            type: "custom",
-            prop: function(v) {
-                return decorationUtils.propertyText(getMeasurePropertyArr(v));
-            },
-            render: function($liLine, v, $ulProperty) {
-                decorationUtils.drawProperties($ulProperty, getMeasurePropertyArr(v));
+            field: "orderId",
+            name: "装修单",
+            prop: "decoration.orderId",
+            clazz: "blue",
+            click: function($this, v) {
+
+                tools.decoration.info($this, v.decoration.orderId);
             }
+        }, {
+            field: "village",
+            name: "楼盘",
+            prop: function(v) {
+
+                return v.decoration.house.village.name;
+            },
+            clazz: "grey",
+            click: function($this, v) {
+
+                tools.house.info($this, v.decoration.house.hid);
+            }
+        }, {
+            field: "houseNumber",
+            name: "楼号",
+            prop: "decoration.house.houseNumber",
+            clazz: "grey"
+        }, {
+            field: "customer",
+            name: "客户",
+            prop: "decoration.customer.name",
+            clazz: "grey",
+            click: function($this, v) {
+
+                tools.customer.info($this, v.decoration.customer.cid);
+            }
+        }, {
+            field: "designer",
+            name: "设计师",
+            prop: "decoration.designer.currentName",
+            clazz: "grey",
+            click: function($this, v) {
+
+                tools.personel.info($this, v.decoration.designer.userId);
+            }
+        }, {
+            field: "supervisor",
+            name: "监理",
+            prop: function(v) {
+
+                return v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName;
+            },
+            clazz: "grey",
+            click: function($this, v) {
+
+                tools.personel.info($this, v.decoration.supervisor.userId);
+            }
+        }, {
+            field: "houseArea",
+            name: "面积",
+            prop: "decoration.house.buildArea",
+            clazz: "blue"
+        }, {
+            field: "typeness",
+            name: "装修业务",
+            prop: function(v) {
+
+                return constant.decoration().decoration.typeness.keys[v.decoration.typeness];
+            },
+            clazz: "red"
+        }, {
+            field: "status",
+            name: "装修状态",
+            prop: function(v) {
+
+                return constant.decoration().decoration.status.keys[v.decoration.status];
+            },
+            clazz: "red"
+        }, {
+            field: "orderTotalPrice",
+            name: "合同额",
+            prop: "decoration.orderTotalPrice",
+            clazz: "blue"
+        }, {
+            field: "version",
+            name: "报价版本",
+            prop: "decoration.version.name",
+            clazz: "grey"
+        }, {
+            field: "appler",
+            name: "申请人",
+            prop: "appler.currentName",
+            clazz: "grey",
+            click: function($this, v) {
+
+                tools.personel.info($this, v.appler.userId);
+            }
+        }, {
+            field: "actualTime",
+            name: "量尺时间",
+            prop: "actualTime",
+            clazz: "green"
+        }, {
+            field: "startTime",
+            name: "开始时间",
+            prop: "startTime",
+            clazz: "green"
+        }, {
+            field: "endTime",
+            name: "结束时间",
+            prop: "endTime",
+            clazz: "green"
+        }, {
+            field: "measureStatus",
+            name: "状态",
+            prop: function(v) {
+
+                return constant.decoration().measure.status.keys[v.status];
+            },
+            clazz: "red"
+        }, {
+            field: "content",
+            name: "描述",
+            prop: "content",
+            clazz: "grey"
         }];
     }
 

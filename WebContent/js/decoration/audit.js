@@ -23,14 +23,87 @@ jQuery(function($) {
     function buildAuditLineprops() {
 
         return [{
-            field: "auditInfo",
-            name: "审核信息",
-            type: "custom",
+            field: "address",
+            name: "楼盘地址",
             prop: function(v) {
-                return decorationUtils.propertyText(getAuditPropertyArr(v));
+
+                return v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber;
             },
-            render: function($liLine, v, $ulProperty) {
-                decorationUtils.drawProperties($ulProperty, getAuditPropertyArr(v));
+            clazz: "grey"
+        }, {
+            field: "customer",
+            name: "客户",
+            prop: "decoration.customer.name",
+            clazz: "grey"
+        }, {
+            field: "designer",
+            name: "设计师",
+            prop: "decoration.designer.currentName",
+            clazz: "grey"
+        }, {
+            field: "designDepartment",
+            name: "设计部",
+            prop: "decoration.designer.dept.name",
+            clazz: "grey"
+        }, {
+            field: "houseArea",
+            name: "面积",
+            prop: "decoration.house.buildArea",
+            clazz: "blue"
+        }, {
+            field: "measureTime",
+            name: "量房时间",
+            prop: "decoration.measureTime",
+            clazz: "green"
+        }, {
+            field: "contractTime",
+            name: "签单时间",
+            prop: "decoration.contractTime",
+            clazz: "green"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) {
+
+                return audit.type[v.decoration.type];
+            },
+            clazz: "red"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) {
+
+                return audit.decorationStatus[v.decoration.status];
+            },
+            clazz: "red"
+        }, {
+            field: "auditStatus",
+            name: "审核状态",
+            prop: function(v) {
+
+                return v.auditer ? '已审核' : '未审核';
+            },
+            clazz: "red"
+        }, {
+            field: "auditer",
+            name: "审核人",
+            prop: function(v) {
+
+                return v.auditer ? v.auditer.currentName : "";
+            },
+            clazz: "grey",
+            show: function(v) {
+
+                return v.auditer != null;
+            }
+        }, {
+            field: "auditTime",
+            name: "审核时间",
+            prop: "auditTime",
+            clazz: "green",
+            show: function(v) {
+
+                return v.auditer != null;
             }
         }];
     }

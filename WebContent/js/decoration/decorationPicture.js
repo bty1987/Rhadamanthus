@@ -10,80 +10,13 @@ jQuery(function($) {
     var currentOrderId = null; // 当前订单ID
     var pictureList = []; // 图片列表
 
-    var displayFunc = (function() {
-
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (!listData || listData.length == 0)
-                return false;
-
-            $.each(listData, function(i, v) {
-
-                creatLine(v).appendTo($ul);
-            });
-
-            $ul.appendTo($tableWrap);
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulPicture = $('<div></div>').attr('style', 'min-height: 150px;');
-            var $ul = $('<ul></ul>').addClass('ace-thumbnails').attr('id', 'imageDataUL' + v.iid).appendTo($ulPicture);
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').appendTo($h3);
-
-            var $uploadBtn = $('<a></a>').addClass('uploadify-button btn btn-minier btn-primary').html('上传合同方案').appendTo($divBtnWrap);
-
-            decorationUtils.drawProperties($ulProperty, [["名称:", v.name, "grey"]]);
-
-            $liLine.append($h3).append($ulProperty).append($ulPicture);
-            $uploadBtn.click(function() {
-
-                vrecord.iid = v.iid;
-                $input.click();
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
-
     function buildPictureLineprops() {
 
         return [{
-            field: "pictureInfo",
-            name: "图片信息",
-            type: "custom",
-            prop: function(v) {
-                return "名称:" + v.name;
-            },
-            render: function($liLine, v, $ulProperty) {
-
-                var $liProperty = $('<li></li>').attr('id', 'imageData' + v.iid).appendTo($ulProperty);
-                $('<strong></strong>').html("名称:").appendTo($liProperty);
-                $('<b></b>').html(v.name).addClass("grey").appendTo($liProperty);
-
-                // 追加图片缩略图容器
-                var $ulPicture = $('<div></div>').attr('style', 'min-height: 150px;');
-                $('<ul></ul>').addClass('ace-thumbnails').attr('id', 'imageDataUL' + v.iid).appendTo($ulPicture);
-                $liLine.append($ulPicture);
-            }
+            field: "name",
+            name: "名称",
+            prop: "name",
+            clazz: "grey"
         }];
     }
 

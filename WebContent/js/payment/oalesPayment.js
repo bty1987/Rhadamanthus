@@ -164,40 +164,6 @@ jQuery(function($) {
     // 不同页面的不同参数
     oalesPayment.pageConfig = paymentUtils.getConfig(oalesPayment.type, 65);
 
-    function paymentPropertyText(propertyArr) {
-
-        var infos = [];
-
-        $.each(propertyArr, function(index, value) {
-
-            infos.push(value[0] + value[1]);
-        });
-
-        return infos.join(" ");
-    }
-
-    function drawPaymentProperties($ulProperty, propertyArr) {
-
-        $.each(propertyArr, function(index, value) {
-
-            var $liProperty = $('<li></li>').appendTo($ulProperty);
-            $('<strong></strong>').html(value[0]).appendTo($liProperty);
-            var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-
-            if (value[3]) {
-                $b.click(function() {
-
-                    value[3]($b);
-                }).css("cursor", "pointer");
-            }
-        });
-    }
-
-    function getOalesPropertyArr(v) {
-
-        return paymentUtils.getPropertyArr(oalesPayment, v, v.oales.decoration, oalesPayment.paymentStatusArray);
-    }
-
     function collectOalesPaymentLine(v) {
 
         oalesPayment.opids.push(v.opid);
@@ -286,19 +252,8 @@ jQuery(function($) {
                     "data-status": v.status
                 };
             }
-        }, {
-            field: "paymentInfo",
-            name: "款项信息",
-            type: "custom",
-            prop: function(v) {
-
-                return paymentPropertyText(getOalesPropertyArr(v));
-            },
-            render: function($liLine, v, $ulProperty) {
-
-                drawPaymentProperties($ulProperty, getOalesPropertyArr(v));
-            }
-        }];
+        }]
+            .concat(paymentUtils.getPropertyLineprops(oalesPayment, oalesPayment.paymentStatusArray));
 
         if (oalesPayment.pageConfig.pageBtn.contains("payway")) {
             lineprops.push({
