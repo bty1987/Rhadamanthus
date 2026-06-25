@@ -932,6 +932,27 @@ var decorationUtils = {
                 var totalLi = $("<li></li>").appendTo(ul);
                 var totalState = $("<strong></strong>").text("合计:").appendTo(totalLi);
                 var totalSpan = $("<span></span>").addClass("blue").attr("id", "total_" + item.saiid).text(utils.accMul(item.money, item.num)).appendTo(totalLi);
+                var createTimeLi = $("<li></li>").appendTo(ul);
+                var createTimeState = $("<strong></strong>").text("创建时间:").appendTo(createTimeLi);
+                var createTimeSpan = $("<span></span>").addClass("green").attr("id", "createTime_" + item.saiid).text(com.checkNull(item.createTime)).appendTo(createTimeLi);
+                var operateTimeLi = $("<li></li>").appendTo(ul);
+                var operateTimeState = $("<strong></strong>").text("首次操作时间:").appendTo(operateTimeLi);
+                var operateTimeSpan = $("<span></span>").addClass("green").attr("id", "operateTime_" + item.saiid).text(com.checkNull(item.operateTime)).appendTo(operateTimeLi);
+                var refundTimeLi = $("<li></li>").appendTo(ul);
+                var refundTimeState = $("<strong></strong>").text("二次操作时间:").appendTo(refundTimeLi);
+                var refundTimeSpan = $("<span></span>").addClass("green").attr("id", "refundTime_" + item.saiid).text(com.checkNull(item.refundTime)).appendTo(refundTimeLi);
+                var affirmTimeLi = $("<li></li>").appendTo(ul);
+                var affirmTimeState = $("<strong></strong>").text("首次确认时间:").appendTo(affirmTimeLi);
+                var affirmTimeSpan = $("<span></span>").addClass("green").attr("id", "affirmTime_" + item.saiid).text(com.checkNull(item.affirmTime)).appendTo(affirmTimeLi);
+                var checkTimeLi = $("<li></li>").appendTo(ul);
+                var checkTimeState = $("<strong></strong>").text("二次确认时间:").appendTo(checkTimeLi);
+                var checkTimeSpan = $("<span></span>").addClass("green").attr("id", "checkTime_" + item.saiid).text(com.checkNull(item.checkTime)).appendTo(checkTimeLi);
+                var contentLi = $("<li></li>").appendTo(ul);
+                var contentState = $("<strong></strong>").text("备注:").appendTo(contentLi);
+                var contentSpan = $("<span></span>").addClass("blue").attr("id", "content_" + item.saiid).text(com.checkNull(item.content)).appendTo(contentLi);
+                var commentLi = $("<li></li>").appendTo(ul);
+                var commentState = $("<strong></strong>").text("说明:").appendTo(commentLi);
+                var commentSpan = $("<span></span>").addClass("blue").attr("id", "comment_" + item.saiid).text(com.checkNull(item.comment)).appendTo(commentLi);
 
                 var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetBody);
             }
@@ -1102,6 +1123,7 @@ var decorationUtils = {
 
                         var options = {
                             "decorationPayment.dpid": v.dpid,
+                            "decoration.advanceType": 1,
                             "decorationPayment.decoration.orderId": decorationDetail.orderId,
                             "decorationPayment.comment": ""
                         };
