@@ -189,20 +189,6 @@
         com.setCookie("templateStyle", template, config.timeout);
     }
 
-    function saveTemplateRemote(template) {
-
-        if (!api.personel || !api.personel.updateUserPrefer) {
-            return false;
-        }
-
-        com.post(api.personel.updateUserPrefer, {
-            "userPrefer.module": "index",
-            "userPrefer.page": "global",
-            "userPrefer.pkey": "templateStyle",
-            "userPrefer.pvalue": template
-        }, null, null, false);
-    }
-
     function loadIndexPrefer() {
 
         if (!api.personel || !api.personel.queryUserPrefers) {
@@ -240,58 +226,9 @@
         return false;
     }
 
-    function activeTemplateMenu() {
-
-        var template = window.templateStyle || config.defaultTemplate || "ace";
-
-        $(".template-switch").removeClass("active").each(function() {
-
-            var $this = $(this);
-
-            if ($this.attr("data-template") == template) {
-                $this.addClass("active");
-            }
-        });
-    }
-
-    function switchTemplate(template) {
-
-        if (!template || template == window.templateStyle) {
-            return false;
-        }
-
-        saveTemplateLocal(template);
-        saveTemplateRemote(template);
-
-        isF5 = true;
-        window.location.href = getTemplateUrl(template) + "?timestamp=" + new Date().getTime();
-
-        return false;
-    }
-
     if (loadIndexPrefer()) {
         return false;
     }
-
-    activeTemplateMenu();
-
-    $(".template-switch").on("click", function(e) {
-
-        e.preventDefault();
-
-        var template = $(this).attr("data-template");
-
-        if (!template || template == window.templateStyle) {
-            return false;
-        }
-
-        com.showConfirm("切换模板将刷新页面，当前打开的页面标签会关闭，是否继续？", function() {
-
-            switchTemplate(template);
-        });
-
-        return false;
-    });
 
     if (utils.isMobile()) {
         $("#faqInfo").parent().hide();
@@ -350,12 +287,14 @@
             companys.push(v.company);
         });
 
-        com.selectTypeahead($('#typeaheadCompany'), companys, "cid", "name", function(list, k, v) {
+        if ($.fn.typeahead && $('#typeaheadCompany').length) {
+            com.selectTypeahead($('#typeaheadCompany'), companys, "cid", "name", function(list, k, v) {
 
-            changeCompany({
-                "cid": k
+                changeCompany({
+                    "cid": k
+                });
             });
-        });
+        }
     }, null, false);
 
     function changeCompany(company) {

@@ -44,18 +44,75 @@ jQuery(function($) {
         return com.focusPage("#searcherViewMode button.btn-primary").attr("data-mode") || "line";
     };
 
+    var setTemplateStyle = function(template) {
+
+        template = config.templates && config.templates[template] ? template : (window.templateStyle || config.defaultTemplate || "ace");
+
+        com.focusPage("#templateStyle button").removeClass("btn-primary").addClass("btn-white");
+        com.focusPage('#templateStyle button[data-template="' + template + '"]').removeClass("btn-white").addClass("btn-primary");
+    };
+
+    var getTemplateStyle = function() {
+
+        var template = com.focusPage("#templateStyle button.btn-primary").attr("data-template") || window.templateStyle || config.defaultTemplate || "ace";
+
+        return config.templates && config.templates[template] ? template : "ace";
+    };
+
+    var getTemplateUrl = function(template) {
+
+        var templates = config.templates || {};
+        var target = templates[template] || templates[config.defaultTemplate || "ace"];
+
+        return target ? target.url : "index.html";
+    };
+
+    var saveTemplateLocal = function(template) {
+
+        try {
+            window.localStorage && window.localStorage.setItem("fl_template", template);
+        } catch (e) {
+        }
+
+        com.setCookie("templateStyle", template, config.timeout);
+    };
+
+    var switchTemplate = function(template) {
+
+        saveTemplateLocal(template);
+
+        if (typeof isF5 != "undefined") {
+            isF5 = true;
+        }
+
+        window.location.href = getTemplateUrl(template) + "?timestamp=" + new Date().getTime();
+    };
+
     var saveUserPrefer = function() {
 
-        var value = getSearcherViewMode();
+        var viewMode = getSearcherViewMode();
+        var templateStyle = getTemplateStyle();
 
-        setUserPrefer("searcher", "global", "viewMode", value);
+        setUserPrefer("searcher", "global", "viewMode", viewMode);
+        setUserPrefer("index", "global", "templateStyle", templateStyle);
 
         com.post(api.personel.updateUserPrefer, {
             "userPrefer.module": "searcher",
             "userPrefer.page": "global",
             "userPrefer.pkey": "viewMode",
-            "userPrefer.pvalue": value
+            "userPrefer.pvalue": viewMode
         });
+
+        com.post(api.personel.updateUserPrefer, {
+            "userPrefer.module": "index",
+            "userPrefer.page": "global",
+            "userPrefer.pkey": "templateStyle",
+            "userPrefer.pvalue": templateStyle
+        });
+
+        saveTemplateLocal(templateStyle);
+
+        return templateStyle;
     };
 
     var userid = -null;
@@ -87,11 +144,17 @@ jQuery(function($) {
 
         com.focusPage("#infoPicture").attr("href", com.showImg(com.focusPage("#showImg"), userProfile.userPhoto, 150, 150, ''));
         setSearcherViewMode(getUserPrefer("searcher", "global", "viewMode") || "line");
+        setTemplateStyle(getUserPrefer("index", "global", "templateStyle") || window.templateStyle || config.defaultTemplate || "ace");
     }
 
     com.focusPage("#searcherViewMode button").on("click", function() {
 
         setSearcherViewMode($(this).attr("data-mode"));
+    });
+
+    com.focusPage("#templateStyle button").on("click", function() {
+
+        setTemplateStyle($(this).attr("data-template"));
     });
 
     com.focusPage("#reset").on("click", function() {
@@ -127,9 +190,16 @@ jQuery(function($) {
             userProfile.wechat = com.focusPage("#wechat").val();
             userProfile.email = com.focusPage("#email").val();
 
-            saveUserPrefer();
+            var templateStyle = saveUserPrefer();
 
-            com.showAlert(com.info, "操作成功");
+            if (templateStyle != window.templateStyle) {
+                com.showConfirm("操作成功, 切换模板将刷新页面, 是否继续?", function() {
+
+                    switchTemplate(templateStyle);
+                });
+            } else {
+                com.showAlert(com.info, "操作成功");
+            }
         });
     });
 
