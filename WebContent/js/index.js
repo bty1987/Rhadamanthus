@@ -550,12 +550,16 @@ $(function() {
     params.homeLoader = false;
 
     var loadHomePage = function() {
+        console.log('[diag] loadHomePage called, config:', !!config, 'homeLoader:', params.homeLoader, 'fl-container:', $('#fl-container').length);
 
         if (config && !params.homeLoader) {
             $('#navbar').fadeIn();
             $('#main-container').fadeIn();
             com.switchPage('home-antv.html', true);
             params.homeLoader = true;
+            setTimeout(function() {
+                console.log('[diag] after switchPage, #homeNav:', $('#homeNav').length, '#operateTab:', $('#operateTab').length, '.flpage.tab-content:', $('.flpage.tab-content').length);
+            }, 1000);
         }
 
         $(".navbar-logo").fadeIn();
@@ -563,18 +567,36 @@ $(function() {
     };
 
     if (typeof Pace !== 'undefined') {
+        console.log('[diag] Pace available, running:', Pace.running);
         Pace.on('hide', loadHomePage);
         if (!Pace.running) {
             loadHomePage();
         }
         setTimeout(function() {
             if (!params.homeLoader) {
+                console.log('[diag] 5s fallback triggered');
                 loadHomePage();
             }
         }, 5000);
     } else {
+        console.log('[diag] Pace not available');
         loadHomePage();
     }
+
+    // Diagnostic: check page state after 8 seconds
+    setTimeout(function() {
+        console.log('=== DIAGNOSTIC SNAPSHOT ===');
+        console.log('templateStyle:', window.templateStyle);
+        console.log('params.homeLoader:', params.homeLoader);
+        console.log('#fl-container exists:', $('#fl-container').length);
+        console.log('#fl-container children:', $('#fl-container').children().length);
+        console.log('#homeNav exists:', $('#homeNav').length);
+        console.log('#operateTab exists:', $('#operateTab').length);
+        console.log('.flpage.tab-content exists:', $('.flpage.tab-content').length);
+        console.log('ul.nav-list items:', $('ul.nav-list li').length);
+        console.log('Pace running:', typeof Pace !== 'undefined' ? Pace.running : 'N/A');
+        console.log('=== END SNAPSHOT ===');
+    }, 8000);
 
     // $(".main-content").slimscroll({
     // height: '95vh',
@@ -722,6 +744,8 @@ $(function() {
             var mid = $this.attr("mid");
             var module = $this.attr("module");
 
+            console.log('[diag] menu click, href:', hrefStr, 'mid:', mid, 'module:', module);
+
             if (module && (!constant[module] || !constant[module]["update"])) {
                 Constant().module(module);
             }
@@ -750,6 +774,8 @@ $(function() {
                     }, function(res) {
 
                         var module = res.module
+
+                        console.log('[diag] checkModule response, module:', !!module, 'url:', module ? module.url : 'N/A');
 
                         if (module) {
 

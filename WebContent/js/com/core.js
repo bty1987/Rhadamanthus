@@ -1,4 +1,4 @@
-﻿var com = {
+var com = {
     /**
      * 提醒信息弹窗等级
      */
@@ -698,7 +698,12 @@
         if (notTab) {
             container = "fl-container";
         }
+
+        console.log('[diag] switchPage, url:', url, 'container:', container, 'exists:', $('#' + container).length);
+
         $("#" + container).load(url, data, function(response, status, xhr) {
+
+            console.log('[diag] switchPage load complete, status:', status, 'response length:', response ? response.length : 0);
 
             callback && callback(response, status, xhr);
         });
@@ -711,6 +716,8 @@
      * @param features 显示内容
      */
     loadPage: function(page, $features) {
+
+        console.log('[diag] loadPage called, page:', page, '#homeNav:', $('#homeNav').length, '#operateTab:', $('#operateTab').length, '.flpage.tab-content:', $('.flpage.tab-content').length);
 
         if (!page)
             return false;
