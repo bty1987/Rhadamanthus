@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     Api().init('js/api/');
     Validator().init();
@@ -549,7 +549,7 @@
 
     params.homeLoader = false;
 
-    Pace.on('hide', function() {
+    var loadHomePage = function() {
 
         if (config && !params.homeLoader) {
             $('#navbar').fadeIn();
@@ -560,7 +560,21 @@
 
         $(".navbar-logo").fadeIn();
         $("#navbar").fadeIn();
-    });
+    };
+
+    if (typeof Pace !== 'undefined') {
+        Pace.on('hide', loadHomePage);
+        if (!Pace.running) {
+            loadHomePage();
+        }
+        setTimeout(function() {
+            if (!params.homeLoader) {
+                loadHomePage();
+            }
+        }, 5000);
+    } else {
+        loadHomePage();
+    }
 
     // $(".main-content").slimscroll({
     // height: '95vh',
