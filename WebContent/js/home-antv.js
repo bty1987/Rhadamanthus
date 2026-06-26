@@ -291,14 +291,6 @@ $(function() {
     com.showImg($("#personalPic"), params.userInfo.user.userPhoto, 180, 180, '');
     com.showImg($("#userImg"), params.userInfo.user.userPhoto, 30, 30, '');
 
-    com.post(api.common.wmCode, {}, function(res) {
-
-        var img = new Image();
-        img.src = res.watermark;
-        url = 'url("' + img.src + '")';
-        $("#fl-container").css('background-size', '300px').css('background-image', url).css('bottom', '0');
-    }, null, false);
-
     $("#homeTab").click(function() {
 
         $('.breadcrumb').empty().append('<i class="fa fa-fw icon-home"></i>&nbsp;&nbsp;&nbsp;首页');
