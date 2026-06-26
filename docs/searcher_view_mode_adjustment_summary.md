@@ -811,4 +811,34 @@ Searcher 的 table 模式只会对该 `prop(v)` 调用一次并把结果当作**
 - `findstr /s /n displayFunc WebContent/js/personnel/*.js`：0 命中。
 - `findstr /s /n searcher.init WebContent/js/personnel/*.js`：仅 `user2export.js`（导出页，不在范围）。
 
+## 15. Approval 模块迁移记录
+
+### 15.1 迁移范围
+
+| 批次 | 难度 | 文件 | 特征 |
+|------|------|------|------|
+| P0 | 🟢 | `approval4user.js` | 4属性内联 + 删除按钮 + 添加按钮，typeahead |
+| P1 | 🟡 | `process.js` | 4属性内联 + 编辑/状态开关/删除 + 添加按钮 |
+| P2 | 🔴 | `approval4common.js` | 配置驱动(getConfig)，getPropertyArr 大型 switch，pageConfig-gated 审批按钮 |
+
+### 15.2 未迁移文件
+
+- `approval4track.js` — 已使用 `searcher.base` 新式 API，无需迁移。
+- `approvalFunction.js / process2create.js` — 非列表页（表单管理/流程创建）。
+
+### 15.3 关键技术点
+
+1. **配置驱动 lineprops**：approval4common.js 的 `getPropertyArr(v)` 大型 switch 迁移到 `buildApprovalCommonLineprops()`，将 `[label, value, clazz, click?]` 数组项转为标准 lineprop 对象 `{field, name, prop, clazz, click?}`。`constant.*.keys[...]` 状态映射用 `prop: function(v)` 实现。
+2. **属性点击事件**：`approval.receiver.currentName` 原通过 propertyArr 第 4 元素 click 回调查看接收人信息，迁移后用 lineprop 的 `click: function(v, $b)` 属性实现。
+3. **配置驱动按钮**：approval4common.js 的通过/拒绝按钮通过 `pageConfig.pageBtn.contains("pass"/"refuse")` 条件 + linebtn 的 `show` 回调实现双重控制（show 回调处理 `!v.piid && status && type != 'send'` 状态条件）。
+4. **审批弹层逻辑保留**：approval4common.js 的 `approveModal`、`proapprove()`、`approve()` 函数保留在顶层，按钮 handle 调用 `proapprove()` 触发弹层。
+5. **状态开关**：process.js 的 ace-switch 统一为 `{type: "switch", init: v.status == 0, handle}`，状态属性 "启用/禁用" 用 `prop: function(v)` 实现。
+6. **typeName 作用域修正**：approval4common.js 原在 displayFunc IIFE 内修改 `typeName`（decoration/origin → customerOrigin），迁移后将 typeName 赋值与重映射前置到顶层声明处。
+
+### 15.4 验证
+
+- `node --check` 全部通过(3 个文件)。
+- `findstr /s /n displayFunc WebContent/js/approval/*.js`：0 命中。
+- `findstr /s /n searcher.init WebContent/js/approval/*.js`：0 命中。
+
 
