@@ -1,90 +1,87 @@
 jQuery(function($) {
 
-	var displayFunc  = (function(){
+	function buildVustomerLineprops() {
 
-		var renderList = function(tableId,listData){
-			var $tableWrap = com.focusPage('#' + tableId);
-			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+		return [{
+			field: "name",
+			name: "客户名称",
+			prop: "name",
+			clazz: "grey"
+		}, {
+			field: "address",
+			name: "客户地址",
+			prop: "address",
+			clazz: "grey"
+		}, {
+			field: "orderId",
+			name: "装修单号",
+			prop: "orderId",
+			clazz: "grey"
+		}, {
+			field: "referrer",
+			name: "推荐人",
+			prop: "referrer",
+			clazz: "grey"
+		}, {
+			field: "referphone",
+			name: "推荐人电话",
+			prop: "referphone",
+			clazz: "blue"
+		}, {
+			field: "createTime",
+			name: "创建时间",
+			prop: "createTime",
+			clazz: "grey"
+		}, {
+			field: "contractPrice",
+			name: "合同额",
+			prop: "contractPrice",
+			clazz: "blue"
+		}, {
+			field: "status",
+			name: "状态",
+			prop: function(v) { return constant.customer().vustomer.status.keys[v.status]; },
+			clazz: "red"
+		}, {
+			field: "comment",
+			name: "说明",
+			prop: "comment",
+			clazz: "grey"
+		}];
+	}
 
-			if(listData && listData.length){
-				$.each(listData,function(i, v){
-					var $liLine = creatLine(v);
+	function buildVustomerLinebtns() {
 
-					$liLine.appendTo($ul);
-				});
-				$ul.appendTo($tableWrap);
-			}
-		};
-
-		var creatLine = function(v){
-
-			var $liLine = $('<li></li>').addClass('item-orange clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.phone));
-			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-yellow').html('积分');
-			var $free = $('<a></a>').addClass('btn btn-minier btn-success').html('释放');
-
-			$btnDel.click(function(){
-
-				params.customer.unionId = v.unionId;
-				params.customer.id = 2;
-				com.popup4page("#vscoreRecordPopUp", api.index.vscoreRecord.url, "积分");
-
-			});
-
-			$free.click(function(){
-				release(v.vid);
-			});
-
-			var propertyArr = [
-				["客户名称:", v.name, "grey"],
-				["客户地址:", v.address, "grey"],
-				["装修单号:", v.orderId, "grey"],
-                ["推荐人:", v.referrer, "grey"],
-                ["推荐人电话:", v.referphone, "blue"],
-				["创建时间:", v.createTime, "grey"],
-				["合同额:", v.contractPrice, "blue"],
-				["状态:", constant.customer().vustomer.status.keys[v.status], "red"],
-				["说明:", v.comment, "grey"]
-			];
-
-			$.each(propertyArr, function (index, value) {
-				var $liProperty = $('<li></li>');
-				$('<strong></strong>').html(value[0]).appendTo($liProperty);
-				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-				$liProperty.appendTo($ulProperty);
-			});
-
-			if(v.status == constant.customer().vustomer.STATUS_EFFECTIVE_INT){
-				$divBtnWrap.append($btnDel).append($free).appendTo($h3);
-			}
-			if(v.status == constant.customer().vustomer.STATUS_INVALID_INT){
-				$divBtnWrap.appendTo($h3);
-			}
-
-			$liLine.append($h3).append($ulProperty);
-
-			return $liLine;
-		};
+		var showFunc = function(v) { return v.status == constant.customer().vustomer.STATUS_EFFECTIVE_INT; };
 
 		return {
-			init : function(tableId,listData){
-				com.focusPage('#' + tableId).html(null);
-				renderList(tableId,listData);
+			score: {
+				name: "积分",
+				clazz: "btn-yellow",
+				show: showFunc,
+				handle: function(v) {
+
+					params.customer.unionId = v.unionId;
+					params.customer.id = 2;
+					com.popup4page("#vscoreRecordPopUp", api.index.vscoreRecord.url, "积分");
+				}
 			},
-			drawLine : function(v){
-				return creatLine(v);
+			release: {
+				name: "释放",
+				clazz: "btn-success",
+				show: showFunc,
+				handle: function(v) {
+
+					release(v.vid);
+				}
 			}
 		};
-	})();
+	}
 
 	var searcher = new Searcher();
 
-	searcher.init(["customer-v-name"], "condList", api.customer.pageVustomer, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "vustomerPostData",null, false, null, null);
+	searcher.set("condList", "pagenation", "resultList", api.customer.pageVustomer, null, ["customer-v-name"], "vustomerPostData", null, false, null);
+	searcher.line("phone", buildVustomerLineprops(), buildVustomerLinebtns()).render();
 
 	function updateVustomer(vid, orderId){
 		var options = {};

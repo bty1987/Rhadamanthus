@@ -1,100 +1,67 @@
-
 jQuery(function($) {
 
-	var vrecord = {
-		modals:{
-			vrecordModal: com.focusPage("#vrecordModal")
-		},
-		items: {
-			comment: com.focusPage("#comment")
-		},
-		vid: params.customer.vid
-	};
+    var vrecord = {
+        modals: {
+            vrecordModal: com.focusPage("#vrecordModal")
+        },
+        items: {
+            comment: com.focusPage("#comment")
+        },
+        vid: params.customer.vid
+    };
 
-	vrecord.modals.vrecordModal.on("hide.bs.modal", function () {
-		com.cleanItems(vrecord.items);
-		com.clearValidator();
-	});
+    vrecord.modals.vrecordModal.on("hide.bs.modal", function() {
 
-	var displayFunc  = (function(){
+        com.cleanItems(vrecord.items);
+        com.clearValidator();
+    });
 
-		var renderList = function(tableId,listData){
-			var $tableWrap = com.focusPage('#' + tableId);
-			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildVrecordLineprops() {
 
-			if(listData && listData.length){
-				$.each(listData,function(i, v){
-					var $liLine = creatLine(v);
+        return [{
+            field: "creater.userName",
+            name: "操作人",
+            prop: "creater.userName",
+            clazz: "grey"
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "grey"
+        }];
+    }
 
-					$liLine.appendTo($ul);
-				});
+    var searcher = new Searcher();
 
-				$ul.appendTo($tableWrap);
-			}
-		};
+    searcher.set("condListas", "pagenationas", "resultListas", api.customer.queryVrecordByVid, {
+        "vrecord.vid": vrecord.vid
+    }, [], "vrecordPostData", "vrecords", true, null);
+    searcher.line("comment", buildVrecordLineprops(), {}).render();
 
-		var creatLine = function(v){
+    //添加
+    com.focusPage("#add").click(function() {
 
-			var $liLine = $('<li></li>').addClass('item-orange clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.comment));
-			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+        vrecord.modals.vrecordModal.modal("show");
+    });
 
-			var propertyArr = [
-				["操作人:", v.creater.userName, "grey"],
-				["创建时间:", v.createTime, "grey"]
-			];
+    //保存
+    com.focusPage("#saveBtn").click(function() {
 
-			$.each(propertyArr, function (index, value) {
-				var $liProperty = $('<li></li>');
-				$('<strong></strong>').html(value[0]).appendTo($liProperty);
-				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-				$liProperty.appendTo($ulProperty);
-			});
+        if (com.validate("form")) {
+            return false;
+        }
 
-			$divBtnWrap.appendTo($h3);
+        var options = {
+            "vrecord.vid": vrecord.vid,
+            "vrecord.comment": vrecord.items.comment.val()
+        };
 
-			$liLine.append($h3).append($ulProperty);
+        com.post(api.customer.addVrecord, options, function(res) {
 
-			return $liLine;
-		};
+            searcher.doSearch();
+            com.showAlert(com.info, "保存成功");
+        });
 
-		return {
-			init : function(tableId,listData){
-				com.focusPage('#' + tableId).html(null);
-				renderList(tableId,listData);
-			},
-			drawLine : function(v){
-				return creatLine(v);
-			}
-		};
-	})();
-
-	var searcher = new Searcher();
-
-	searcher.init([], "condListas", api.customer.queryVrecordByVid, function(data){
-		displayFunc.init('resultListas', data);
-	}, "pagenationas", "vrecordPostData", {"vrecord.vid":vrecord.vid}, true, "vrecords", null);
-
-	//添加
-	com.focusPage("#add").click(function(){
-		vrecord.modals.vrecordModal.modal("show");
-	});
-
-	//保存
-	com.focusPage("#saveBtn").click(function(){
-		if(com.validate("form")){
-			return false;
-		}
-		
-		var options = {
-			"vrecord.vid":vrecord.vid,
-			"vrecord.comment":vrecord.items.comment.val()
-		};
-		com.post(api.customer.addVrecord, options, function(res){
-			searcher.doSearch();
-			com.showAlert(com.info, "保存成功");
-		});
-		vrecord.modals.vrecordModal.modal("hide");
-	});
+        vrecord.modals.vrecordModal.modal("hide");
+    });
 });

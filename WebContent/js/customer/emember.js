@@ -1,91 +1,62 @@
 $(function () {
 
-    var displayFunc = (function () {
+    function buildEmemberLineprops() {
 
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "unionId",
+            name: "微信号",
+            prop: "unionId",
+            clazz: "grey"
+        }, {
+            field: "no",
+            name: "会员编号",
+            prop: "no",
+            clazz: "grey"
+        }, {
+            field: "name",
+            name: "姓名",
+            prop: "name",
+            clazz: "grey"
+        }, {
+            field: "address",
+            name: "地址",
+            prop: "address",
+            clazz: "grey"
+        }, {
+            field: "ticket",
+            name: "票号",
+            prop: "ticket",
+            clazz: "grey"
+        }, {
+            field: "registerTime",
+            name: "注册时间",
+            prop: "registerTime",
+            clazz: "green"
+        }];
+    }
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-        var creatLine=function (v) {
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $label = $('<label></label>').addClass('control-label').css({
-                'color': 'grey',
-                'font-size': '20px',
-                "font-weight": "bold"
-            });
-
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-            
-            var _label = $('<label></label>');
-
-            var propertyArr = [
-                ["微信号:", v.unionId, "grey"],
-                ["会员编号:", v.no, "grey"],
-                ["姓名:", v.name, "grey"],
-                ["地址:", v.address, "grey"],
-                ["票号:", v.ticket, "grey"],
-                ["注册时间:", v.registerTime, "green"]
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-                $label.appendTo($h3);
-            });
-
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.phone);
-
-            _label.append(_span).appendTo($label);
-
-            $divBtnWrap.append($btnDel).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnDel.click(function(){
-            	com.showConfirm("确认要删除当前表单吗?", function(res) {
-                    com.post(api.customer.deleteEmember, {"emember.emid": v.emid}, function(res){
-                    	seacher.doSearch();
-                    });
-                });
-            });
-            
-            return $liLine;
-        };
-        
-        
+    function buildEmemberLinebtns() {
 
         return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
-            },
-            drawLine : function(v){
-                return creatLine(v);
+            del: {
+                name: "删除",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    com.showConfirm("确认要删除当前表单吗?", function(res) {
+
+                        com.post(api.customer.deleteEmember, {"emember.emid": v.emid}, function(res){
+
+                            searcher.doSearch();
+                        });
+                    });
+                }
             }
         };
-    })();
+    }
 
-    var seacher = new Searcher();
+    var searcher = new Searcher();
 
-    seacher.init(["customer-member-no","customer-member-phone"], "condList", api.customer.pageEmember, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "ememeberPostData", null, false, null, function () {
-
-    });
+    searcher.set("condList", "pagenation", "resultList", api.customer.pageEmember, null, ["customer-member-no","customer-member-phone"], "ememeberPostData", null, false, null);
+    searcher.line(function(v) { return v.name + " " + v.phone; }, buildEmemberLineprops(), buildEmemberLinebtns()).render();
 });

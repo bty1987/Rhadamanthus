@@ -29,113 +29,120 @@ $(function(){
 
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"duty":"", "user.status":0}, "userBases", "uid", "currentName", null);
 
-    var displayFunc  = (function(){
+    function buildVustomerAdvanceLineprops() {
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "name",
+            name: "客户名称",
+            prop: "name",
+            clazz: "grey"
+        }, {
+            field: "address",
+            name: "客户地址",
+            prop: "address",
+            clazz: "grey"
+        }, {
+            field: "orderId",
+            name: "装修单号",
+            prop: "orderId",
+            clazz: "grey"
+        }, {
+            field: "belonger.userName",
+            name: "归属人",
+            prop: "belonger.userName",
+            clazz: "grey"
+        }, {
+            field: "referrer",
+            name: "推荐人",
+            prop: "referrer",
+            clazz: "grey"
+        }, {
+            field: "referphone",
+            name: "推荐人电话",
+            prop: "referphone",
+            clazz: "blue"
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "grey"
+        }, {
+            field: "contractPrice",
+            name: "合同额",
+            prop: "contractPrice",
+            clazz: "blue"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return constant.customer().vustomerAdvance.status.keys[v.status]; },
+            clazz: "red"
+        }, {
+            field: "comment",
+            name: "说明",
+            prop: "comment",
+            clazz: "grey"
+        }];
+    }
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v){
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.phone));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnBind = $('<a></a>').addClass('btn btn-minier btn-yellow').html('绑定');
-            var $btnRecord = $('<a></a>').addClass('btn btn-minier btn-success').html('记录');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-warning').html('积分');
-            var $edit = $('<a></a>').addClass("btn btn-minier btn-inverse").html("归属");
-
-
-            var propertyArr = [
-                ["客户名称:", v.name, "grey"],
-                ["客户地址:", v.address, "grey"],
-                ["装修单号:", v.orderId, "grey"],
-                ["归属人:", v.belonger.userName, "grey"],
-                ["推荐人:", v.referrer, "grey"],
-                ["推荐人电话:", v.referphone, "blue"],
-                ["创建时间:", v.createTime, "grey"],
-                ["合同额:", v.contractPrice, "blue"],
-                ["状态:", constant.customer().vustomerAdvance.status.keys[v.status], "red"],
-                ["说明:", v.comment, "grey"]
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-                $divBtnWrap.append($btnBind).append($btnRecord).append($btnDel).append($edit).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnBind.click(function(){
-                vustomer.vid = v.vid;
-                com.focusPage("#orderId").val("");
-
-                if(v.orderId != null){
-                    vustomer.items.orderId.val(v.orderId);
-                    vustomer.items.orderId.attr('readonly',"readonly");
-                }else{
-                    vustomer.items.orderId.removeAttr('readonly');
-                }
-
-                vustomer.modals.bindOrderModal.modal("show");
-
-                com.clearValidator();
-
-            });
-
-            $btnRecord.click(function(){
-                params.customer.vid = v.vid;
-                com.popup4page("#vscoreRecordPopUp", api.index.vrecord.url, "记录");
-            });
-
-            $btnDel.click(function(){
-                params.customer.unionId = v.unionId;
-                params.customer.id = 1;
-                com.popup4page("#vscoreRecordPopUp", api.index.vscoreRecord.url, "积分");
-            });
-
-            $edit.click(function(){
-                vustomer.vid = v.vid;
-                vustomer.modals.belongerModal.modal("show");
-                com.updateTypeahead("belonger", v.belonger.uid, com.checkNull(v.belonger.userName,''));
-            });
-
-            return $liLine;
-        };
+    function buildVustomerAdvanceLinebtns() {
 
         return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+            bind: {
+                name: "绑定",
+                clazz: "btn-yellow",
+                handle: function(v) {
+
+                    vustomer.vid = v.vid;
+                    com.focusPage("#orderId").val("");
+
+                    if (v.orderId != null) {
+                        vustomer.items.orderId.val(v.orderId);
+                        vustomer.items.orderId.attr('readonly', "readonly");
+                    } else {
+                        vustomer.items.orderId.removeAttr('readonly');
+                    }
+
+                    vustomer.modals.bindOrderModal.modal("show");
+
+                    com.clearValidator();
+                }
             },
-            drawLine : function(v){
-                return creatLine(v);
+            record: {
+                name: "记录",
+                clazz: "btn-success",
+                handle: function(v) {
+
+                    params.customer.vid = v.vid;
+                    com.popup4page("#vscoreRecordPopUp", api.index.vrecord.url, "记录");
+                }
+            },
+            score: {
+                name: "积分",
+                clazz: "btn-warning",
+                handle: function(v) {
+
+                    params.customer.unionId = v.unionId;
+                    params.customer.id = 1;
+                    com.popup4page("#vscoreRecordPopUp", api.index.vscoreRecord.url, "积分");
+                }
+            },
+            belonger: {
+                name: "归属",
+                clazz: "btn-inverse",
+                handle: function(v) {
+
+                    vustomer.vid = v.vid;
+                    vustomer.modals.belongerModal.modal("show");
+                    com.updateTypeahead("belonger", v.belonger.uid, com.checkNull(v.belonger.userName, ''));
+                }
             }
         };
-    })();
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(["customer-v-name"], "condList", api.customer.pageVustomerForAdvance, function(data){
-        displayFunc.init('resultList', data);
-    }, "pagenation", "vustomerPostData",null, false, null, null);
+    searcher.set("condList", "pagenation", "resultList", api.customer.pageVustomerForAdvance, null, ["customer-v-name"], "vustomerPostData", null, false, null);
+    searcher.line("phone", buildVustomerAdvanceLineprops(), buildVustomerAdvanceLinebtns()).render();
 
     function changeBelonger(){
         if(com.validate('belongerModal')){

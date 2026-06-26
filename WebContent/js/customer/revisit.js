@@ -31,92 +31,64 @@ $(function () {
     revisits.items.type.bindData(constant.customer().revisit.type.datas,"key","value");
     revisits.items.gladness.bindData(constant.customer().revisit.status.datas,"key","value");
 
-      var displayFunc = (function () {
+    function buildRevisitLineprops() {
 
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "rid",
+            name: "回访id",
+            prop: "rid",
+            clazz: "grey"
+        }, {
+            field: "decoration.orderId",
+            name: "装修单号",
+            prop: "decoration.orderId",
+            clazz: "grey"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) { return constant.customer().revisit.type.keys[v.type]; },
+            clazz: "red"
+        }, {
+            field: "ident",
+            name: "引用id",
+            prop: "ident",
+            clazz: "grey"
+        }, {
+            field: "creater.currentName",
+            name: "操作人",
+            prop: "creater.currentName",
+            clazz: "grey"
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "grey"
+        }, {
+            field: "gladness",
+            name: "满意度",
+            prop: function(v) { return constant.customer().revisit.status.keys[v.gladness]; },
+            clazz: "red"
+        }, {
+            field: "content",
+            name: "内容",
+            prop: "content",
+            clazz: "grey"
+        }];
+    }
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
-        var creatLine=function (v) {
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+    function buildRevisitButtons() {
 
-            var $label = $('<label></label>').addClass('control-label').css({
-                'color': 'grey',
-                'font-size': '20px',
-                "font-weight": "bold"
-            });
-            com.post(api.ds.customer, {}, function (res) {
-            	revisit.gladness = res.revisitGladness.split('key', 'value');
-            	
-            }, null, false);
-            
-            var _label = $('<label></label>');
-
-            var propertyArr = [
-                ["回访id:", v.rid, "grey"],
-                ["装修单号:", v.decoration.orderId, "grey"],
-                ["类型:", constant.customer().revisit.type.keys[v.type], "red"],
-                ["引用id:", v.ident, "grey"],
-                ["操作人:", v.creater.currentName, "grey"],
-                ["创建时间:", v.createTime, "grey"],
-                ["满意度: ", constant.customer().revisit.status.keys[v.gladness], "red"],
-                ["内容:", v.content, "grey"],
-            ];
-           
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-                $label.appendTo($h3);
-            });
-
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.decoration.orderId);
-
-            _label.append(_span).appendTo($label);
-
-            $divBtnWrap.appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            return $liLine;
-        };
-
-        return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
-            },
-            drawLine : function(v){
-                return creatLine(v);
-            }
-        };
-    })();
-
-    var seacher = new Searcher();
-
-    seacher.init(["customer-service-orderId","customer-service-revisit-type"], "condList", api.customer.pageRevisit, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "revisitPostData", null, false, null, function () {
-    	
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'visitRevisit').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.customer.pageRevisit, null, ["customer-service-orderId", "customer-service-revisit-type"], "revisitPostData", null, false, buildRevisitButtons);
+    searcher.line("decoration.orderId", buildRevisitLineprops(), {}).render();
     
     com.focusPage("#visitRevisit").click(function() {
     	 
@@ -147,7 +119,7 @@ $(function () {
             }
             com.post(api.customer.visitRevisit ,options ,function(res){
                 com.showAlert(com.info, "操作成功");
-                seacher.doSearch();
+                searcher.doSearch();
             });
        revisits.modals.addModal.modal("hide");
     }
