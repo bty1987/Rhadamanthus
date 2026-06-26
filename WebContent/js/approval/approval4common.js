@@ -21,113 +21,229 @@
 
     var typeName = params['urlLoadParams'].depage;
 
+    if (typeName == "decoration" || typeName == "origin") {
+        typeName = "customerOrigin";
+    }
+
     approvalCustomerSource.pageConfig = getConfig(params['urlLoadParams'].depage);
 
-    var displayFunc = (function() {
+    function buildApprovalCommonLineprops() {
 
-        var renderList = function(tableId, listData) {
+        var props = [];
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+        $.each(approvalCustomerSource.pageConfig.propertyArr, function(pi, pv) {
 
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
+            switch (pv) {
+                case "approval.sender.currentName":
+                    props.push({field: "approval.sender.currentName", name: "申请人", prop: "approval.sender.currentName", clazz: "grey"});
+                    break;
+                case "approval.receiver.currentName":
+                    props.push({field: "approval.receiver.currentName", name: "审批人", prop: "approval.receiver.currentName", clazz: "grey", click: function(v, $b) {
+
+                        tools.personel.info($b, v.approval.receiver.userId);
+                    }});
+                    break;
+                case "approval.createTime":
+                    props.push({field: "approval.createTime", name: "提交时间", prop: "approval.createTime", clazz: "green"});
+                    break;
+                case "approval.approvalTime":
+                    props.push({field: "approval.approvalTime", name: "审批时间", prop: "approval.approvalTime", clazz: "green"});
+                    break;
+                case "approval.status":
+                    props.push({field: "approval.status", name: "审批状态", prop: function(v) { return constant.approval().approval.status.keys[v.approval.status]; }, clazz: "red"});
+                    break;
+                case "approval.contents":
+                    props.push({field: "approval.contents", name: "说明", prop: "approval.contents", clazz: "grey"});
+                    break;
+                case "approval.comment":
+                    props.push({field: "approval.comment", name: "备注", prop: "approval.comment", clazz: "grey"});
+                    break;
+                case "approval.annotate":
+                    props.push({field: "approval.annotate", name: "批注", prop: "approval.annotate", clazz: "green"});
+                    break;
+                case "source.name":
+                    props.push({field: "source.name", name: "姓名", prop: "source.name", clazz: "green"});
+                    break;
+                case "source.gender":
+                    props.push({field: "source.gender", name: "性别", prop: "source.gender", clazz: "green"});
+                    break;
+                case "source.purpose":
+                    props.push({field: "source.purpose", name: "目的", prop: "source.purpose", clazz: "green"});
+                    break;
+                case "source.intention":
+                    props.push({field: "source.intention", name: "意向", prop: "source.intention", clazz: "green"});
+                    break;
+                case "source.price":
+                    props.push({field: "source.price", name: "需求价格", prop: "source.price", clazz: "green"});
+                    break;
+                case "source.grade":
+                    props.push({field: "source.grade", name: "等级", prop: "source.grade", clazz: "grey"});
+                    break;
+                case "source.village.name":
+                    props.push({field: "source.village.name", name: "楼盘名", prop: "source.village.name", clazz: "grey"});
+                    break;
+                case "source.houseNumber":
+                    props.push({field: "source.houseNumber", name: "楼牌号", prop: "source.houseNumber", clazz: "blue"});
+                    break;
+                case "source.buildArea":
+                    props.push({field: "source.buildArea", name: "建筑面积", prop: "source.buildArea", clazz: "blue"});
+                    break;
+                case "source.freeArea":
+                    props.push({field: "source.freeArea", name: "赠送面积", prop: "source.freeArea", clazz: "blue"});
+                    break;
+                case "source.innerArea":
+                    props.push({field: "source.innerArea", name: "套内面积", prop: "source.innerArea", clazz: "blue"});
+                    break;
+                case "source.totalArea":
+                    props.push({field: "source.totalArea", name: "总面积", prop: "source.totalArea", clazz: "blue"});
+                    break;
+                case "source.status":
+                    props.push({field: "source.status", name: "状态", prop: function(v) { return constant.customer().customerOrigine.status.keys[v.source.status]; }, clazz: "red"});
+                    break;
+                case "source.phone":
+                    props.push({field: "source.phone", name: "客源电话", prop: "source.phone", clazz: "blue"});
+                    break;
+                case "customerOrigin.name":
+                    props.push({field: "customerOrigin.name", name: "姓名", prop: "customerOrigin.name", clazz: "green"});
+                    break;
+                case "customerOrigin.gender":
+                    props.push({field: "customerOrigin.gender", name: "性别", prop: "customerOrigin.gender", clazz: "green"});
+                    break;
+                case "customerOrigin.purpose":
+                    props.push({field: "customerOrigin.purpose", name: "目的", prop: "customerOrigin.purpose", clazz: "green"});
+                    break;
+                case "customerOrigin.intention":
+                    props.push({field: "customerOrigin.intention", name: "意向", prop: "customerOrigin.intention", clazz: "green"});
+                    break;
+                case "customerOrigin.price":
+                    props.push({field: "customerOrigin.price", name: "需求价格", prop: "customerOrigin.price", clazz: "green"});
+                    break;
+                case "customerOrigin.grade":
+                    props.push({field: "customerOrigin.grade", name: "等级", prop: "customerOrigin.grade", clazz: "grey"});
+                    break;
+                case "customerOrigin.village.name":
+                    props.push({field: "customerOrigin.village.name", name: "楼盘名", prop: "customerOrigin.village.name", clazz: "grey"});
+                    break;
+                case "customerOrigin.houseNumber":
+                    props.push({field: "customerOrigin.houseNumber", name: "楼牌号", prop: "customerOrigin.houseNumber", clazz: "blue"});
+                    break;
+                case "customerOrigin.buildArea":
+                    props.push({field: "customerOrigin.buildArea", name: "建筑面积", prop: "customerOrigin.buildArea", clazz: "blue"});
+                    break;
+                case "customerOrigin.freeArea":
+                    props.push({field: "customerOrigin.freeArea", name: "赠送面积", prop: "customerOrigin.freeArea", clazz: "blue"});
+                    break;
+                case "customerOrigin.innerArea":
+                    props.push({field: "customerOrigin.innerArea", name: "套内面积", prop: "customerOrigin.innerArea", clazz: "blue"});
+                    break;
+                case "customerOrigin.totalArea":
+                    props.push({field: "customerOrigin.totalArea", name: "总面积", prop: "customerOrigin.totalArea", clazz: "blue"});
+                    break;
+                case "customerOrigin.status":
+                    props.push({field: "customerOrigin.status", name: "状态", prop: function(v) { return constant.customer().customerOrigine.status.keys[v.customerOrigin.status]; }, clazz: "red"});
+                    break;
+                case "customerOrigin.phone":
+                    props.push({field: "customerOrigin.phone", name: "客源电话", prop: "customerOrigin.phone", clazz: "blue"});
+                    break;
+                case "sales.customer.name":
+                    props.push({field: "sales.customer.name", name: "姓名", prop: "sales.customer.name", clazz: "blue"});
+                    break;
+                case "sales.customer.gender":
+                    props.push({field: "sales.customer.gender", name: "性别", prop: "sales.customer.gender", clazz: "grey"});
+                    break;
+                case "sales.customer.phone":
+                    props.push({field: "sales.customer.phone", name: "客户电话", prop: "sales.customer.phone", clazz: "grey"});
+                    break;
+                case "sales.orderId":
+                    props.push({field: "sales.orderId", name: "装修单号", prop: "sales.orderId", clazz: "grey"});
+                    break;
+                case "sales.category":
+                    props.push({field: "sales.category", name: "商品品类", prop: "sales.category", clazz: "grey"});
+                    break;
+                case "sales.brand":
+                    props.push({field: "sales.brand", name: "商品品牌", prop: "sales.brand.name", clazz: "grey"});
+                    break;
+                case "sales.salesman.currentName":
+                    props.push({field: "sales.salesman.currentName", name: "渠道", prop: "sales.salesman.currentName", clazz: "grey"});
+                    break;
+                case "sales.dept.name":
+                    props.push({field: "sales.dept.name", name: "部门", prop: "sales.dept.name", clazz: "grey"});
+                    break;
+                case "sales.region.name":
+                    props.push({field: "sales.region.name", name: "分区", prop: "sales.region.name", clazz: "grey"});
+                    break;
+                case "sales.house.village.name":
+                    props.push({field: "sales.house.village.name", name: "楼盘", prop: "sales.house.village.name", clazz: "grey"});
+                    break;
+                case "sales.house.houseNumber":
+                    props.push({field: "sales.house.houseNumber", name: "楼号", prop: "sales.house.houseNumber", clazz: "grey"});
+                    break;
+                case "sales.total":
+                    props.push({field: "sales.total", name: "总额", prop: "sales.total", clazz: "grey"});
+                    break;
+                case "sales.amount":
+                    props.push({field: "sales.amount", name: "当前总额", prop: "sales.amount", clazz: "grey"});
+                    break;
+                case "sales.maling":
+                    props.push({field: "sales.maling", name: "抹零", prop: "sales.maling", clazz: "grey"});
+                    break;
+                case "refund":
+                    props.push({field: "refund", name: "退款", prop: "refund", clazz: "grey"});
+                    break;
+                case "type":
+                    props.push({field: "type", name: "类型", prop: function(v) { return constant.sales().refunds.type.keys[v.type]; }, clazz: "red"});
+                    break;
+                case "sales.status":
+                    props.push({field: "sales.status", name: "状态", prop: function(v) { return constant.sales().refunds.status.keys[v.sales.status]; }, clazz: "red"});
+                    break;
             }
+        });
+
+        return props;
+    }
+
+    function buildApprovalCommonLinebtns() {
+
+        var btns = {};
+
+        var showFunc = function(v) {
+
+            return !v.piid && [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.approval.status) != -1 && params.urlLoadParams.type != 'send';
         };
 
-        if (typeName == "decoration" || typeName == "origin") {
+        if (approvalCustomerSource.pageConfig.pageBtn.contains("pass")) {
+            btns.pass = {
+                name: "通过",
+                clazz: "btn-success",
+                show: showFunc,
+                handle: function(v) {
 
-            typeName = "customerOrigin";
+                    proapprove(v.approval.aid, api.approval.approveApproval, "通过");
+                }
+            };
         }
 
-        var creatLine = function(v) {
+        if (approvalCustomerSource.pageConfig.pageBtn.contains("refuse")) {
+            btns.refuse = {
+                name: "拒绝",
+                clazz: "btn-danger",
+                show: showFunc,
+                handle: function(v) {
 
-            var $liLine = $('<li></li>').addClass('item-orange clearfix ');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(constant.approval().approval.type.keys[v.type]));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $pass = $("<a></a>").addClass("btn btn-minier btn-success").html("通过");
-            var $refuse = $("<a></a>").addClass("btn btn-minier btn-danger").html("拒绝");
-
-            var propertyArr = getPropertyArr(v);
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-
-                if (value[3]) {
-                    $b.click(function() {
-
-                        value[3]($b);
-                    });
+                    proapprove(v.approval.aid, api.approval.refuseApproval, "拒绝");
                 }
+            };
+        }
 
-                $liProperty.appendTo($ulProperty);
-            });
-
-            if (!v.piid && [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.approval.status) != -1 && params.urlLoadParams.type != 'send') {
-                if (approvalCustomerSource.pageConfig.pageBtn.contains("pass")) {
-                    $divBtnWrap.append($pass);
-                }
-                if (approvalCustomerSource.pageConfig.pageBtn.contains("refuse")) {
-                    $divBtnWrap.append($refuse);
-                }
-            }
-            $divBtnWrap.appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            // 通过
-            $pass.click(function() {
-
-                approvalCustomerSource.aid = v.approval.aid;
-                approvalCustomerSource.submitUrl = api.approval.approveApproval;
-                approvalCustomerSource.items.annotate.val("");
-                approvalCustomerSource.items.result.text("通过");
-                approvalCustomerSource.modals.approveModal.modal("show");
-
-            });
-
-            // 拒绝
-            $refuse.click(function() {
-
-                approvalCustomerSource.aid = v.approval.aid;
-                approvalCustomerSource.submitUrl = api.approval.refuseApproval;
-                approvalCustomerSource.items.annotate.val("");
-                approvalCustomerSource.items.result.text("拒绝");
-                approvalCustomerSource.modals.approveModal.modal("show");
-            });
-
-            return $liLine;
-        };
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-
-    })();
+        return btns;
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(approvalCustomerSource.pageConfig.condArr, "condList", approvalCustomerSource.pageConfig.apiPage, function(data) {
-
-        displayFunc.init("resultList", data);
-    }, "pagenation", approvalCustomerSource.pageConfig.postDataName, {
+    searcher.set("condList", "pagenation", "resultList", approvalCustomerSource.pageConfig.apiPage, {
         "user": params['urlLoadParams'].depage
-    }, false, null);
+    }, approvalCustomerSource.pageConfig.condArr, approvalCustomerSource.pageConfig.postDataName, null, false, null);
+    searcher.line(function(v) { return constant.approval().approval.type.keys[v.type]; }, buildApprovalCommonLineprops(), buildApprovalCommonLinebtns()).render();
 
     approvalCustomerSource.btns.submitBtn.on("click", approve);
 
@@ -228,180 +344,7 @@
 
     function getPropertyArr(v) {
 
-        var propertyArr = [];
-
-        $.each(approvalCustomerSource.pageConfig.propertyArr, function(pi, pv) {
-
-            switch (pv) {
-                case "approval.sender.currentName":
-                    propertyArr.push(["申请人:", v.approval.sender.currentName, "grey"]);
-                    break;
-                case "approval.receiver.currentName":
-                    propertyArr.push(["审批人: ", v.approval.receiver.currentName, "grey", function(btn) {
-
-                        tools.personel.info(btn, v.approval.receiver.userId);
-                    }]);
-
-                    break;
-                case "approval.createTime":
-                    propertyArr.push(["提交时间: ", v.approval.createTime, "green"]);
-                    break;
-                case "approval.approvalTime":
-                    propertyArr.push(["审批时间: ", v.approval.approvalTime, "green"]);
-                    break;
-                case "approval.status":
-                    propertyArr.push(["审批状态: ", constant.approval().approval.status.keys[v.approval.status], "red"]);
-
-                    break;
-                case "approval.contents":
-                    propertyArr.push(["说明: ", v.approval.contents, "grey"]);
-                    break;
-                case "approval.comment":
-                    propertyArr.push(["备注:", v.approval.comment, "grey"]);
-                    break;
-                case "approval.annotate":
-                    propertyArr.push(["批注: ", v.approval.annotate, "green"]);
-                    break;
-                case "source.name":
-                    propertyArr.push(["姓名: ", v.source.name, "green"]);
-                    break;
-                case "source.gender":
-                    propertyArr.push(["性别: ", v.source.gender, "green"]);
-                    break;
-                case "source.purpose":
-                    propertyArr.push(["目的: ", v.source.purpose, "green"]);
-                    break;
-                case "source.intention":
-                    propertyArr.push(["意向: ", v.source.intention, "green"]);
-                    break;
-                case "source.price":
-                    propertyArr.push(["需求价格: ", v.source.price, "green"]);
-                    break;
-                case "source.grade":
-                    propertyArr.push(["等级", v.source.grade, "grey"]);
-                    break;
-                case "source.village.name":
-                    propertyArr.push(["楼盘名: ", v.source.village.name, "grey"]);
-                    break;
-                case "source.houseNumber":
-                    propertyArr.push(["楼牌号: ", v.source.houseNumber, "blue"]);
-                    break;
-                case "source.buildArea":
-                    propertyArr.push(["建筑面积: ", v.source.buildArea, "blue"]);
-                    break;
-                case "source.freeArea":
-                    propertyArr.push(["赠送面积: ", v.source.freeArea, "blue"]);
-                    break;
-                case "source.innerArea":
-                    propertyArr.push(["套内面积: ", v.source.innerArea, "blue"]);
-                    break;
-                case "source.totalArea":
-                    propertyArr.push(["总面积: ", v.source.totalArea, "blue"]);
-                    break;
-                case "source.status":
-                    propertyArr.push(["状态: ", constant.customer().customerOrigine.status.keys[v.source.status], "red"]);
-                    break;
-                case "source.phone":
-                    propertyArr.push(["客源电话: ", v.source.phone, "blue"]);
-                    break;
-                case "customerOrigin.name":
-                    propertyArr.push(["姓名: ", v.customerOrigin.name, "green"]);
-                    break;
-                case "customerOrigin.gender":
-                    propertyArr.push(["性别: ", v.customerOrigin.gender, "green"]);
-                    break;
-                case "customerOrigin.purpose":
-                    propertyArr.push(["目的: ", v.customerOrigin.purpose, "green"]);
-                    break;
-                case "customerOrigin.intention":
-                    propertyArr.push(["意向: ", v.customerOrigin.intention, "green"]);
-                    break;
-                case "customerOrigin.price":
-                    propertyArr.push(["需求价格: ", v.customerOrigin.price, "green"]);
-                    break;
-                case "customerOrigin.grade":
-                    propertyArr.push(["等级", v.customerOrigin.grade, "grey"]);
-                    break;
-                case "customerOrigin.village.name":
-                    propertyArr.push(["楼盘名: ", v.customerOrigin.village.name, "grey"]);
-                    break;
-                case "customerOrigin.houseNumber":
-                    propertyArr.push(["楼牌号: ", v.customerOrigin.houseNumber, "blue"]);
-                    break;
-                case "customerOrigin.buildArea":
-                    propertyArr.push(["建筑面积: ", v.customerOrigin.buildArea, "blue"]);
-                    break;
-                case "customerOrigin.freeArea":
-                    propertyArr.push(["赠送面积: ", v.customerOrigin.freeArea, "blue"]);
-                    break;
-                case "customerOrigin.innerArea":
-                    propertyArr.push(["套内面积: ", v.customerOrigin.innerArea, "blue"]);
-                    break;
-                case "customerOrigin.totalArea":
-                    propertyArr.push(["总面积: ", v.customerOrigin.totalArea, "blue"]);
-                    break;
-                case "customerOrigin.status":
-                    propertyArr.push(["状态: ", constant.customer().customerOrigine.status.keys[v.customerOrigin.status], "red"]);
-                    break;
-                case "customerOrigin.phone":
-                    propertyArr.push(["客源电话: ", v.customerOrigin.phone, "blue"]);
-                    break;
-                case "sales.customer.name":
-                    propertyArr.push(["姓名: ", v.sales.customer.name, "blue"]);
-                    break;
-                case "sales.customer.gender":
-                    propertyArr.push(["性别: ", v.sales.customer.gender, "grey"]);
-                    break;
-                case "sales.customer.phone":
-                    propertyArr.push(["客户电话: ", v.sales.customer.phone, "grey"]);
-                    break;
-                case "sales.orderId":
-                    propertyArr.push(["装修单号: ", v.sales.orderId, "grey"]);
-                    break;
-                case "sales.category":
-                    propertyArr.push(["商品品类: ", v.sales.category, "grey"]);
-                    break;
-                case "sales.brand":
-                    propertyArr.push(["商品品牌: ", v.sales.brand.name, "grey"]);
-                    break;
-                case "sales.salesman.currentName":
-                    propertyArr.push(["渠道: ", v.sales.salesman.currentName, "grey"]);
-                    break;
-                case "sales.dept.name":
-                    propertyArr.push(["部门: ", v.sales.dept.name, "grey"]);
-                    break;
-                case "sales.region.name":
-                    propertyArr.push(["分区: ", v.sales.region.name, "grey"]);
-                    break;
-                case "sales.house.village.name":
-                    propertyArr.push(["楼盘: ", v.sales.house.village.name, "grey"]);
-                    break;
-                case "sales.house.houseNumber":
-                    propertyArr.push(["楼号: ", v.sales.house.houseNumber, "grey"]);
-                    break;
-                case "sales.total":
-                    propertyArr.push(["总额: ", v.sales.total, "grey"]);
-                    break;
-                case "sales.amount":
-                    propertyArr.push(["当前总额: ", v.sales.amount, "grey"]);
-                    break;
-                case "sales.maling":
-                    propertyArr.push(["抹零: ", v.sales.maling, "grey"]);
-                    break;
-                case "refund":
-                    propertyArr.push(["退款: ", v.refund, "grey"]);
-                    break;
-                case "type":
-                    propertyArr.push(["类型: ", constant.sales().refunds.type.keys[v.type], "red"]);
-                    break;
-                case "sales.status":
-                    propertyArr.push(["状态: ", constant.sales().refunds.status.keys[v.sales.status], "red"]);
-                    break;
-
-            }
-        });
-
-        return propertyArr;
+        return buildApprovalCommonLineprops();
     }
 
 });
