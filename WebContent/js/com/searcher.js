@@ -799,12 +799,39 @@ var Searcher = function() {
 
     var renderViewSwitcher = function() {
 
-        if (!basicConf.$pager || !basicConf.$pager.length)
+        if (!basicConf.viewEnable || !basicConf.$resulter)
             return false;
 
-        com.focusPage('.searcher-view-switcher', basicConf.$pager).remove();
+        com.focusPage('.searcher-view-switcher').remove();
 
-        return false;
+        var $resulter = com.focusPage('#' + basicConf.$resulter);
+        if (!$resulter || !$resulter.length)
+            return false;
+
+        var modeLabels = {
+            line: "列表",
+            card: "卡片",
+            table: "表格"
+        };
+
+        var $switcher = $('<div></div>').addClass('searcher-view-switcher').css('margin', '0 0 8px');
+        var $btnGroup = $('<div></div>').addClass('btn-group').appendTo($switcher);
+
+        $.each(basicConf.viewModes, function(i, mode) {
+
+            var $btn = $('<button></button>').attr({
+                'type': 'button',
+                'data-mode': mode
+            }).addClass('btn btn-minier ' + (basicConf.viewMode == mode ? 'btn-primary' : 'btn-white')).html(modeLabels[mode] || mode).appendTo($btnGroup);
+
+            $btn.on('click', function() {
+                switchView(mode);
+            });
+        });
+
+        $resulter.before($switcher);
+
+        return true;
     };
 
     var applyViewMode = function(mode, render) {
@@ -843,10 +870,7 @@ var Searcher = function() {
         if (basicConf.viewMode == mode)
             return false;
 
-        if (!applyViewMode(mode, true))
-            return false;
-
-        saveUserPrefer(mode);
+        applyViewMode(mode, true);
     };
 
     var loadUserPrefer = function(callback) {
@@ -863,27 +887,6 @@ var Searcher = function() {
         }
 
         callback && callback();
-    };
-
-    var saveUserPrefer = function(mode) {
-
-        if (!basicConf.viewEnable || !basicConf.preferEnable)
-            return false;
-
-        setUserPrefer("searcher", getPreferName(), "viewMode", mode);
-
-        if (!api.personel || !api.personel.updateUserPrefer)
-            return false;
-
-        try {
-            com.post(api.personel.updateUserPrefer, {
-                "userPrefer.module": "searcher",
-                "userPrefer.page": getPreferName(),
-                "userPrefer.pkey": "viewMode",
-                "userPrefer.pvalue": mode
-            });
-        } catch (e) {
-        }
     };
 
     searcherApi = {

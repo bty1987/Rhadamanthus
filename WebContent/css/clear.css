@@ -3227,7 +3227,7 @@ input:focus,select:focus,textarea:focus {
 	border-radius: 3px;
 }
 
-.btn-xs,.btn-minier {
+.btn-xs,.btn-mini,.btn-minier {
 	padding: 5px 10px;
 	font-size: 12px;
 	line-height: 1.4;

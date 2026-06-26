@@ -1442,6 +1442,12 @@ textarea[readonly] {
     background: #79ceff75;
 }
 
+.btn-mini {
+    padding: 0 6px;
+    font-size: 10.5px;
+    border-radius: 3px;
+}
+
 .quotation-base-price-radio {
     display: inline-block !important;
     margin-left: 10px !important;
