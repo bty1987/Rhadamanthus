@@ -514,20 +514,83 @@ $(function() {
         return false;
     });
 
-    $('.flpage.nav-tab').bind({
-        contextmenu: function() {
+    var $contextMenu = $('<ul class="dropdown-menu tab-context-menu"></ul>').css({
+        'position': 'fixed',
+        'z-index': 9999,
+        'display': 'none',
+        'min-width': '120px'
+    }).appendTo('body');
 
+    $('<li><a href="javascript:void(0)" data-action="refresh"><i class="icon-refresh"></i> 刷新</a></li>').appendTo($contextMenu);
+    $('<li><a href="javascript:void(0)" data-action="close"><i class="icon-remove"></i> 关闭</a></li>').appendTo($contextMenu);
+
+    $('#homeNav').on('contextmenu', '.flpage.nav-tab', function(e) {
+
+        e.preventDefault();
+
+        var $tab = $(this);
+
+        if (!$tab.attr('data-page')) {
+            $contextMenu.hide();
             return false;
-        },
-        mousedown: function(e) {
-
-            if (3 == e.which) {
-                $("#dropdown").css({
-                    'top': 1,
-                    'left': e.pageX - 190
-                }).addClass('show'); // 右击
-            }
         }
+
+        $contextMenu.data('tab', $tab);
+        $contextMenu.css({
+            'top': e.clientY,
+            'left': e.clientX,
+            'display': 'block'
+        });
+
+        return false;
+    });
+
+    $contextMenu.on('click', 'a[data-action]', function(e) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        var action = $(this).attr('data-action');
+        var $tab = $contextMenu.data('tab');
+
+        $contextMenu.hide();
+
+        if (!$tab || !$tab.length)
+            return;
+
+        var _pageId = $tab.find('a').attr('href');
+        var _page = $(_pageId);
+        var page = $tab.attr('data-page');
+
+        if (action == 'close') {
+
+            if ($tab.hasClass("active")) {
+                params['urlLoadParams'] = com.splitUrl($tab.prev().attr('data-page'));
+                $tab.prev('li.flpage').addClass('active');
+                _page.prev('div.flpage').addClass('active');
+            }
+
+            $tab.remove();
+            _page.remove();
+
+        } else if (action == 'refresh') {
+
+            var mask = $("<div></div>").addClass("tab-mask").appendTo(_page);
+            var maskh1 = $("<h1></h1>").css({
+                "position": "absolute",
+                "top": "30%",
+                "left": "45%"
+            }).appendTo(mask);
+            var maskicon = $("<i></i>").addClass("icon-spinner icon-spin bigger-450").appendTo(maskh1);
+
+            setTimeout(function() {
+                _page.load(page);
+            }, 1200);
+        }
+    });
+
+    $(document).on('click', function() {
+        $contextMenu.hide();
     });
     $('#calendarTab').removeClass('active');
     $('#calendarPage').removeClass('in active');
