@@ -6,6 +6,42 @@ $(function() {
 
     var interval = null;
 
+    var setWatermark = function(userName, userId) {
+
+        var text = userName;
+        if (userId) {
+            text += ' ' + userId;
+        }
+
+        text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+        var style = window.templateStyle || 'ace';
+        var color = (style === 'dark' || style === 'metro')
+            ? 'rgba(255,255,255,0.08)'
+            : 'rgba(0,0,0,0.06)';
+
+        var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140">' +
+            '<text x="120" y="70" fill="' + color + '" font-size="16" ' +
+            'font-family="Microsoft Yahei, sans-serif" text-anchor="middle" ' +
+            'transform="rotate(-25, 120, 70)">' + text + '</text></svg>';
+
+        var dataUri = 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '")';
+
+        $('.watermark-overlay').remove();
+        $('<div class="watermark-overlay"></div>').css({
+            'position': 'fixed',
+            'top': 0,
+            'left': 0,
+            'width': '100%',
+            'height': '100%',
+            'pointer-events': 'none',
+            'z-index': 9999,
+            'background-image': dataUri,
+            'background-repeat': 'repeat'
+        }).appendTo('body');
+    };
+
     params.authentication = window.authentication;
     params.loginTime = window.loginTime;
 
@@ -89,6 +125,8 @@ $(function() {
         com.showImg($("#userImg"), res.userInfo.user.userPhoto, 30, 30, '');
         com.showImg($("#userImgleft"), res.userInfo.user.userPhoto, 30, 30, '');
         com.showImg($("#userImgtop"), res.userInfo.user.userPhoto, 60, 60, '');
+
+        setWatermark(res.userInfo.user.currentName, res.userInfo.user.userId);
 
         com.post(api.system.queryCompanyByCid, {
             "company.cid": res.userInfo.user.companys
