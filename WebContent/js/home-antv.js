@@ -523,6 +523,39 @@ $(function() {
 
     $('<li><a href="javascript:void(0)" data-action="refresh"><i class="icon-refresh"></i> 刷新</a></li>').appendTo($contextMenu);
     $('<li><a href="javascript:void(0)" data-action="close"><i class="icon-remove"></i> 关闭</a></li>').appendTo($contextMenu);
+    $('<li class="divider"></li>').appendTo($contextMenu);
+    $('<li><a href="javascript:void(0)" data-action="closeLeft"><i class="icon-chevron-left"></i> 关闭左侧所有</a></li>').appendTo($contextMenu);
+    $('<li><a href="javascript:void(0)" data-action="closeRight"><i class="icon-chevron-right"></i> 关闭右侧所有</a></li>').appendTo($contextMenu);
+    $('<li><a href="javascript:void(0)" data-action="closeOthers"><i class="icon-ban-circle"></i> 关闭其他</a></li>').appendTo($contextMenu);
+    $('<li><a href="javascript:void(0)" data-action="closeAll"><i class="icon-trash"></i> 关闭所有</a></li>').appendTo($contextMenu);
+
+    var closeTabSet = function($tabs) {
+
+        $tabs.each(function() {
+            var $t = $(this);
+            var _pageId = $t.find('a').attr('href');
+            $(_pageId).remove();
+            $t.remove();
+        });
+    };
+
+    var activateTab = function($tab) {
+
+        var _pageId = $tab.find('a').attr('href');
+        var _pane = $(_pageId);
+
+        $(".flpage.nav-tab").removeClass("active");
+        $(".flpage.tab-pane").removeClass("active");
+        $tab.addClass("active");
+        _pane.addClass("active");
+
+        params['urlLoadParams'] = com.splitUrl($tab.attr('data-page'));
+
+        var temp = [];
+        if (_pane.attr('parentText')) temp.push(_pane.attr('parentText'));
+        if (_pane.attr('text')) temp.push(_pane.attr('text'));
+        $.breadcrumb(_pane.attr('icon'), temp);
+    };
 
     $('#homeNav').on('contextmenu', '.flpage.nav-tab', function(e) {
 
@@ -586,6 +619,35 @@ $(function() {
             setTimeout(function() {
                 _page.load(page);
             }, 1200);
+
+        } else if (action == 'closeLeft') {
+
+            var $leftTabs = $tab.prevAll('.flpage.nav-tab[data-page]');
+            var activeInSet = $leftTabs.filter('.active').length > 0;
+            closeTabSet($leftTabs);
+            if (activeInSet) activateTab($tab);
+
+        } else if (action == 'closeRight') {
+
+            var $rightTabs = $tab.nextAll('.flpage.nav-tab[data-page]');
+            var activeInSet = $rightTabs.filter('.active').length > 0;
+            closeTabSet($rightTabs);
+            if (activeInSet) activateTab($tab);
+
+        } else if (action == 'closeOthers') {
+
+            var $otherTabs = $('#homeNav .flpage.nav-tab[data-page]').not($tab);
+            closeTabSet($otherTabs);
+            if (!$tab.hasClass("active")) activateTab($tab);
+
+        } else if (action == 'closeAll') {
+
+            closeTabSet($('#homeNav .flpage.nav-tab[data-page]'));
+            $(".flpage.nav-tab").removeClass("active");
+            $(".flpage.tab-pane").removeClass("active");
+            $("#homeTab").addClass("active");
+            $("#homePage").addClass("active");
+            $.breadcrumb('icon-home', ['首页']);
         }
     });
 
