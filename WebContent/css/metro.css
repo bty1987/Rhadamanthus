@@ -1,27 +1,668 @@
 :root {
 	--fl-primary: #428bca;
 	--fl-primary-dark: #357ebd;
+	--fl-primary-light: #5bc0de;
 	--fl-success: #82af6f;
 	--fl-danger: #d15b47;
 	--fl-warning: #f0ad4e;
 	--fl-info: #5bc0de;
-	--fl-border: #e5e5e5;
-	--fl-border-light: #ebeef5;
-	--fl-bg: #f9f9f9;
-	--fl-bg-hover: #f5f7fa;
-	--fl-text: #555;
-	--fl-text-light: #999;
+	--fl-border: #444;
+	--fl-border-light: #3a3a3a;
+	--fl-bg: #2c2c2c;
+	--fl-bg-hover: #3a3a3a;
+	--fl-text: #ccc;
+	--fl-text-light: #888;
 	--fl-radius-sm: 4px;
 	--fl-radius-md: 8px;
 	--fl-radius-lg: 12px;
-	--fl-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
-	--fl-shadow-hover: 0 4px 16px 0 rgba(0, 0, 0, 0.1);
+	--fl-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+	--fl-shadow-hover: 0 4px 16px 0 rgba(0, 0, 0, 0.4);
 	--fl-transition: 0.2s ease;
 }
 
 html, body, ul, li, a, span,d {
     margin: 0px;
     padding: 0px;
+}
+
+body {
+    background-color: var(--fl-bg) !important;
+    color: var(--fl-text) !important;
+}
+
+.page-container {
+    background-color: var(--fl-bg) !important;
+}
+
+.main-content {
+    background-color: var(--fl-bg) !important;
+}
+
+.page-sidebar {
+    background-color: #252525 !important;
+    border-right: 1px solid var(--fl-border) !important;
+}
+
+.page-sidebar-menu > li > a,
+.nav-list > li > a,
+.navigation > li > a {
+    color: var(--fl-text) !important;
+    border-bottom: 1px solid var(--fl-border-light) !important;
+    transition: background-color var(--fl-transition), color var(--fl-transition);
+}
+
+.page-sidebar-menu > li > a:hover,
+.nav-list > li > a:hover,
+.navigation > li > a:hover {
+    background-color: rgba(66, 139, 202, 0.15) !important;
+    color: #fff !important;
+}
+
+.page-sidebar-menu > li.active > a,
+.nav-list > li.active > a,
+.navigation > li.active > a {
+    background-color: rgba(66, 139, 202, 0.25) !important;
+    border-left: 3px solid var(--fl-primary) !important;
+    color: #fff !important;
+}
+
+.breadcrumbs {
+    background-color: #333 !important;
+    border-bottom: 1px solid var(--fl-border) !important;
+}
+
+.breadcrumb > li {
+    color: var(--fl-text) !important;
+}
+
+.breadcrumb > .active {
+    color: #fff !important;
+}
+
+.breadcrumb > li a {
+    color: var(--fl-primary-light) !important;
+}
+
+.widget-box {
+    background-color: #333 !important;
+}
+
+.widget-header {
+    background-color: #3a3a3a !important;
+    border-bottom: 1px solid var(--fl-border) !important;
+    color: var(--fl-text) !important;
+}
+
+.widget-header h4 {
+    color: var(--fl-text) !important;
+}
+
+.widget-body {
+    background-color: #333 !important;
+    color: var(--fl-text) !important;
+}
+
+.widget-main {
+    background-color: #333 !important;
+    color: var(--fl-text) !important;
+}
+
+.table {
+    background-color: #333 !important;
+    color: var(--fl-text) !important;
+}
+
+.table th {
+    background-color: #3a3a3a !important;
+    color: #fff !important;
+    border-bottom: 1px solid var(--fl-border) !important;
+}
+
+.table td {
+    background-color: #333 !important;
+    color: var(--fl-text) !important;
+    border-top: 1px solid var(--fl-border-light) !important;
+}
+
+.table-striped tbody > tr:nth-child(odd) > td {
+    background-color: #2c2c2c !important;
+}
+
+.table-striped tbody > tr:nth-child(even) > td {
+    background-color: #333 !important;
+}
+
+.table-hover tbody tr:hover > td {
+    background-color: rgba(66, 139, 202, 0.15) !important;
+}
+
+input, select, textarea {
+    background-color: #2a2a2a !important;
+    color: var(--fl-text) !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--fl-primary) !important;
+    box-shadow: 0 0 8px rgba(66, 139, 202, 0.3) !important;
+}
+
+input[disabled], select[disabled], textarea[disabled] {
+    background-color: #222 !important;
+    color: var(--fl-text-light) !important;
+}
+
+input[readonly], select[readonly], textarea[readonly] {
+    background-color: #222 !important;
+    color: var(--fl-text-light) !important;
+}
+
+.modal-content {
+    background-color: #333 !important;
+    color: var(--fl-text) !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--fl-border) !important;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--fl-border) !important;
+}
+
+.dropdown-menu {
+    background-color: #333 !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+.dropdown-menu > li > a {
+    color: var(--fl-text) !important;
+}
+
+.dropdown-menu > li > a:hover {
+    background-color: var(--fl-bg-hover) !important;
+    color: #fff !important;
+}
+
+.well {
+    background-color: #2a2a2a !important;
+    border: 1px solid var(--fl-border) !important;
+    color: var(--fl-text) !important;
+}
+
+.panel {
+    background-color: #333 !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+.panel-body {
+    background-color: #333 !important;
+    color: var(--fl-text) !important;
+}
+
+.tab-content {
+    background-color: #333 !important;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid var(--fl-border) !important;
+}
+
+.nav-tabs > li > a {
+    background-color: #2a2a2a !important;
+    color: var(--fl-text) !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+.nav-tabs > li.active > a {
+    background-color: #333 !important;
+    color: #fff !important;
+    border-bottom-color: #333 !important;
+}
+
+.pagination > li > a {
+    background-color: #333 !important;
+    color: var(--fl-text) !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+.pagination > li > a:hover {
+    background-color: var(--fl-bg-hover) !important;
+    color: #fff !important;
+}
+
+.pagination > .active > a {
+    background-color: var(--fl-primary) !important;
+    color: #fff !important;
+    border-color: var(--fl-primary) !important;
+}
+
+.breadcrumb {
+    background-color: #333 !important;
+}
+
+.btn-default {
+    background-color: #3a3a3a !important;
+    color: var(--fl-text) !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+.btn-default:hover {
+    background-color: var(--fl-bg-hover) !important;
+    color: #fff !important;
+}
+
+.flpage.tab-content {
+    background-color: var(--fl-bg) !important;
+}
+
+.layui-table {
+    background-color: #333 !important;
+    color: var(--fl-text) !important;
+}
+
+.layui-table thead tr {
+    background-color: #3a3a3a !important;
+}
+
+.layui-table thead th {
+    background-color: #3a3a3a !important;
+    color: #fff !important;
+}
+
+.layui-table tbody tr:hover {
+    background-color: rgba(66, 139, 202, 0.15) !important;
+}
+
+.layui-layer-content {
+    background-color: #333 !important;
+    color: var(--fl-text) !important;
+}
+
+#pagenation, #hpagenation {
+    background-color: #333 !important;
+}
+
+.form-control {
+    background-color: #2a2a2a !important;
+    color: var(--fl-text) !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+/* metro .m-wrap inputs (style-metro.css 中的浅色背景) */
+input.m-wrap, select.m-wrap, textarea.m-wrap,
+input[type="text"].m-wrap, input[type="password"].m-wrap,
+input[type="date"].m-wrap, input[type="datetime"].m-wrap,
+input[type="datetime-local"].m-wrap, input[type="email"].m-wrap,
+input[type="number"].m-wrap, input[type="search"].m-wrap,
+input[type="tel"].m-wrap, input[type="time"].m-wrap,
+input[type="url"].m-wrap, input[type="month"].m-wrap,
+input[type="week"].m-wrap, input[type="color"].m-wrap {
+    background-color: #2a2a2a !important;
+    color: var(--fl-text) !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+input.m-wrap[disabled], select.m-wrap[disabled], textarea.m-wrap[disabled] {
+    background-color: #222 !important;
+    color: var(--fl-text-light) !important;
+}
+
+input.m-wrap[readonly], select.m-wrap[readonly], textarea.m-wrap[readonly] {
+    background-color: #222 !important;
+    color: var(--fl-text-light) !important;
+}
+
+/* chosen 下拉选择器 (chosen.min.css 中的白色背景) */
+.chosen-container .chosen-drop {
+    background-color: #333 !important;
+    border: 1px solid var(--fl-border) !important;
+    box-shadow: var(--fl-shadow) !important;
+}
+
+.chosen-container-single .chosen-single {
+    background-color: #2a2a2a !important;
+    background-image: none !important;
+    color: var(--fl-text) !important;
+    border: 1px solid var(--fl-border) !important;
+    box-shadow: none !important;
+}
+
+.chosen-container-single .chosen-single span {
+    color: var(--fl-text) !important;
+}
+
+.chosen-container-single .chosen-default {
+    color: var(--fl-text-light) !important;
+}
+
+.chosen-container .chosen-results {
+    background-color: #2a2a2a !important;
+    color: var(--fl-text) !important;
+}
+
+.chosen-container .chosen-results li {
+    color: var(--fl-text) !important;
+}
+
+.chosen-container .chosen-results li:hover,
+.chosen-container .chosen-results li.highlighted {
+    background-color: rgba(66, 139, 202, 0.3) !important;
+    color: #fff !important;
+}
+
+.chosen-container .chosen-results li.no-results {
+    background-color: #333 !important;
+    color: var(--fl-text-light) !important;
+}
+
+.chosen-container-single .chosen-search input[type="text"] {
+    background-color: #2a2a2a !important;
+    color: var(--fl-text) !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+.chosen-container-multi .chosen-choices {
+    background-color: #2a2a2a !important;
+    background-image: none !important;
+    color: var(--fl-text) !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice {
+    background-color: #3a3a3a !important;
+    background-image: none !important;
+    color: var(--fl-text) !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+.chosen-container-active.chosen-with-drop .chosen-single {
+    background-color: #2a2a2a !important;
+    border-color: var(--fl-primary) !important;
+}
+
+/* datepicker 日期选择器 */
+.datepicker {
+    background-color: #333 !important;
+    color: var(--fl-text) !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+.datepicker table tr td, .datepicker table tr th {
+    background-color: transparent !important;
+    color: var(--fl-text) !important;
+}
+
+.datepicker table tr td.day:hover {
+    background-color: rgba(66, 139, 202, 0.2) !important;
+    color: #fff !important;
+}
+
+.datepicker table tr td.active,
+.datepicker table tr td.active:hover,
+.datepicker table tr td.active.disabled,
+.datepicker table tr td.active.disabled:hover {
+    background-color: var(--fl-primary) !important;
+    color: #fff !important;
+}
+
+.datepicker table tr td.today,
+.datepicker table tr td.today:hover {
+    background-color: rgba(240, 173, 78, 0.3) !important;
+    color: #fff !important;
+}
+
+.datepicker table tr td.old,
+.datepicker table tr td.new {
+    color: var(--fl-text-light) !important;
+}
+
+.datepicker table tr td.disabled,
+.datepicker table tr td.disabled:hover {
+    color: #555 !important;
+}
+
+.datepicker thead tr:first-child th:hover,
+.datepicker tfoot tr th:hover {
+    background-color: rgba(66, 139, 202, 0.2) !important;
+}
+
+/* navbar 头部导航条 */
+.header.navbar {
+    background-color: #1a1a1a !important;
+    border-bottom: 1px solid var(--fl-border) !important;
+}
+
+.navbar-inner {
+    background-color: #1a1a1a !important;
+    background-image: none !important;
+    filter: none !important;
+}
+
+.navbar-inner .nav > li > a {
+    color: #ccc !important;
+}
+
+.navbar-inner .nav > li > a:hover,
+.navbar-inner .nav > li.open > a {
+    background-color: rgba(66, 139, 202, 0.2) !important;
+    color: #fff !important;
+}
+
+.navbar-inner .nav > li > a .badge {
+    background-color: var(--fl-danger) !important;
+}
+
+/* widget 工具栏 */
+.widget-toolbar {
+    color: var(--fl-text) !important;
+}
+
+.widget-toolbar a, .widget-toolbar .icon {
+    color: var(--fl-text-light) !important;
+}
+
+.widget-toolbar a:hover {
+    color: #fff !important;
+}
+
+/* 表格附加样式 */
+.table-bordered {
+    border: 1px solid var(--fl-border) !important;
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid var(--fl-border-light) !important;
+}
+
+/* layui 弹层及组件 */
+.layui-layer {
+    background-color: #333 !important;
+    box-shadow: var(--fl-shadow-hover) !important;
+}
+
+.layui-layer-title {
+    background-color: #3a3a3a !important;
+    color: #fff !important;
+    border-bottom: 1px solid var(--fl-border) !important;
+}
+
+.layui-layer-btn {
+    background-color: #3a3a3a !important;
+    border-top: 1px solid var(--fl-border) !important;
+}
+
+.layui-layer-btn .layui-layer-btn0 {
+    background-color: var(--fl-primary) !important;
+    border-color: var(--fl-primary) !important;
+    color: #fff !important;
+}
+
+.layui-layer-btn .layui-layer-btn1 {
+    background-color: #3a3a3a !important;
+    border-color: var(--fl-border) !important;
+    color: var(--fl-text) !important;
+}
+
+.layui-form-label {
+    color: var(--fl-text) !important;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    background-color: #2a2a2a !important;
+    color: var(--fl-text) !important;
+    border-color: var(--fl-border) !important;
+}
+
+.layui-btn-primary {
+    background-color: #3a3a3a !important;
+    border: 1px solid var(--fl-border) !important;
+    color: var(--fl-text) !important;
+}
+
+.layui-btn-primary:hover {
+    border-color: var(--fl-primary) !important;
+    color: #fff !important;
+}
+
+.layui-form-select dl {
+    background-color: #333 !important;
+    border: 1px solid var(--fl-border) !important;
+}
+
+.layui-form-select dl dd {
+    color: var(--fl-text) !important;
+}
+
+.layui-form-select dl dd:hover {
+    background-color: rgba(66, 139, 202, 0.3) !important;
+    color: #fff !important;
+}
+
+.layui-form-select dl dd.layui-this {
+    background-color: var(--fl-primary) !important;
+    color: #fff !important;
+}
+
+/* 标签/徽章 */
+.label, .badge {
+    color: #fff !important;
+}
+
+.label-default, .badge-default {
+    background-color: #555 !important;
+}
+
+/* 提示框 */
+.alert {
+    background-color: #3a3a3a !important;
+    border: 1px solid var(--fl-border) !important;
+    color: var(--fl-text) !important;
+}
+
+/* 进度条容器 */
+.progress {
+    background-color: #222 !important;
+    box-shadow: none !important;
+}
+
+/* 列表组 */
+.list-group-item {
+    background-color: #333 !important;
+    border: 1px solid var(--fl-border-light) !important;
+    color: var(--fl-text) !important;
+}
+
+.list-group-item:hover {
+    background-color: var(--fl-bg-hover) !important;
+    color: #fff !important;
+}
+
+/* popover/tooltip */
+.popover {
+    background-color: #333 !important;
+    border: 1px solid var(--fl-border) !important;
+    box-shadow: var(--fl-shadow) !important;
+}
+
+.popover-title {
+    background-color: #3a3a3a !important;
+    border-bottom: 1px solid var(--fl-border) !important;
+    color: var(--fl-text) !important;
+}
+
+.tooltip-inner {
+    background-color: #1a1a1a !important;
+    color: #fff !important;
+}
+
+/* 文字高亮颜色 - 用于不同类型内容的差异化显示 */
+.text-muted, .muted {
+    color: var(--fl-text-light) !important;
+}
+
+.text-primary { color: var(--fl-primary-light) !important; }
+.text-success { color: var(--fl-success) !important; }
+.text-info { color: var(--fl-info) !important; }
+.text-warning { color: var(--fl-warning) !important; }
+.text-danger { color: var(--fl-danger) !important; }
+
+/* 链接颜色 */
+a, .tabbable a, #pagenation a, #hpagenation a, #pagenationMaterial a {
+    color: var(--fl-primary-light) !important;
+}
+
+a:hover, .tabbable a:hover, #pagenation a:hover, #hpagenation a:hover, #pagenationMaterial a:hover {
+    color: #fff !important;
+}
+
+/* 普通文字 (h4、label 等) */
+h1, h2, h3, h4, h5, h6 {
+    color: #fff !important;
+}
+
+label {
+    color: var(--fl-text) !important;
+}
+
+label .blue {
+    color: var(--fl-primary-light) !important;
+}
+
+#homePage h4 {
+    color: #fff !important;
+}
+
+#sidebar a {
+    color: var(--fl-text) !important;
+}
+
+#sidebar a:hover {
+    color: #fff !important;
+}
+
+/* 分页器文字 */
+#pagenation .blue, #hpagenation .blue, #pagenationMaterial .blue, #quoPagenation .blue {
+    color: var(--fl-text-light) !important;
+}
+
+/* 滚动条样式 - 暗黑主题适配 */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #666;
 }
 
 .widget-box {
@@ -3613,4 +4254,103 @@ input[readonly].lock-error-input{
     border: 1px solid #ddd;
     border-left-width: 3px;
     border-left-color: #ddd;
+}
+
+.btn-minier {
+    padding: 0 4px;
+    line-height: 18px;
+    border-width: 2px;
+    font-size: 12px;
+}
+.btn.btn-white {
+    border-width: 1px;
+    border-color: #CCC;
+    color: #444 !important;
+    text-shadow: none !important;
+    background-color: #FFF !important;
+}
+.btn.btn-white:hover, .btn.btn-white:focus {
+    background-color: #ebebeb !important;
+}
+.searcher-table-action {
+    display: inline-block;
+    margin: 0 1px;
+}
+.searcher-table-more {
+    display: inline-block;
+    margin: 0 1px;
+}
+.searcher-table-more-menu {
+    min-width: 120px;
+    padding: 5px 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+    list-style: none;
+}
+.searcher-table-more-menu > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    color: #333;
+    text-decoration: none;
+}
+.searcher-table-more-menu > li > a:hover {
+    background-color: #f5f5f5;
+}
+.layui-table-cell .searcher-table-action,
+.layui-table-cell .searcher-table-more {
+    white-space: nowrap;
+}
+
+.btn.btn-app {
+    display: inline-block;
+    width: 100px;
+    font-size: 18px;
+    font-weight: normal;
+    color: #FFF;
+    text-align: center;
+    text-shadow: 0 -1px -1px rgba(0, 0, 0, 0.2) !important;
+    border: 0;
+    border-radius: var(--fl-radius-lg);
+    padding: 12px 0 8px;
+    margin: 2px;
+    line-height: 1.7;
+    position: relative;
+}
+.btn.btn-app > [class*="icon"] {
+    display: block;
+    font-size: 42px;
+    margin: 0 0 4px;
+    line-height: 36px;
+    min-width: 0;
+    padding: 0;
+}
+.btn.btn-app.no-radius {
+    border-radius: 0;
+}
+.btn-app,
+.btn-app.btn-default,
+.btn-app.no-hover:hover {
+    background-color: #abbac3;
+}
+.btn-app.btn-success { background-color: #87b87f; }
+.btn-app.btn-info { background-color: #6fb3e0; }
+.btn-app.btn-warning { background-color: #ffb752; }
+.btn-app.btn-danger { background-color: #d15b47; }
+.btn-app.btn-primary { background-color: var(--fl-primary); }
+.btn-app.btn-purple { background-color: #9585bf; }
+.btn-app.btn-pink { background-color: #d6487e; }
+.btn-app.btn-inverse { background-color: #555; }
+.btn-app.btn-grey { background-color: #a0a0a0; }
+.btn-app.btn-light { background-color: #eef5f9; color: #555; }
+.btn-app.btn-yellow { background-color: #f9d020; color: #555; }
+.btn.btn-app.btn-fastlink {
+    color: var(--fl-primary) !important;
+    background-color: transparent !important;
+    text-shadow: none !important;
+}
+.btn.btn-app.btn-fastlink > i {
+    font-size: 30px !important;
 }

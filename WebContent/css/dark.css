@@ -127,6 +127,13 @@ input:focus, select:focus, textarea:focus {
 	background-color: rgba(0, 0, 0, 0.7);
 }
 
+.btn.btn-app.btn-fastlink {
+    color: var(--fl-primary-light) !important;
+}
+.btn.btn-app.btn-fastlink:hover {
+    color: #fff !important;
+}
+
 .flloading:before {
 	color: #fff;
 }

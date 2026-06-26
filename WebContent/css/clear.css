@@ -4790,3 +4790,95 @@ h3 {
     border-left-width: 3px;
     border-left-color: #e8b110;
 }
+.btn.btn-white {
+    border-width: 1px;
+    border-color: #CCC;
+    color: #444 !important;
+    text-shadow: none !important;
+    background-color: #FFF !important;
+}
+.btn.btn-white:hover, .btn.btn-white:focus {
+    background-color: #ebebeb !important;
+}
+.searcher-table-action {
+    display: inline-block;
+    margin: 0 1px;
+}
+.searcher-table-more {
+    display: inline-block;
+    margin: 0 1px;
+}
+.searcher-table-more-menu {
+    min-width: 120px;
+    padding: 5px 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+    list-style: none;
+}
+.searcher-table-more-menu > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    color: #333;
+    text-decoration: none;
+}
+.searcher-table-more-menu > li > a:hover {
+    background-color: #f5f5f5;
+}
+.layui-table-cell .searcher-table-action,
+.layui-table-cell .searcher-table-more {
+    white-space: nowrap;
+}
+
+.btn.btn-app {
+    display: inline-block;
+    width: 100px;
+    font-size: 18px;
+    font-weight: normal;
+    color: #FFF;
+    text-align: center;
+    text-shadow: 0 -1px -1px rgba(0, 0, 0, 0.2) !important;
+    border: 0;
+    border-radius: var(--fl-radius-lg);
+    padding: 12px 0 8px;
+    margin: 2px;
+    line-height: 1.7;
+    position: relative;
+}
+.btn.btn-app > [class*="icon"] {
+    display: block;
+    font-size: 42px;
+    margin: 0 0 4px;
+    line-height: 36px;
+    min-width: 0;
+    padding: 0;
+}
+.btn.btn-app.no-radius {
+    border-radius: 0;
+}
+.btn-app,
+.btn-app.btn-default,
+.btn-app.no-hover:hover {
+    background-color: #abbac3;
+}
+.btn-app.btn-success { background-color: #87b87f; }
+.btn-app.btn-info { background-color: #6fb3e0; }
+.btn-app.btn-warning { background-color: #ffb752; }
+.btn-app.btn-danger { background-color: #d15b47; }
+.btn-app.btn-primary { background-color: var(--fl-primary); }
+.btn-app.btn-purple { background-color: #9585bf; }
+.btn-app.btn-pink { background-color: #d6487e; }
+.btn-app.btn-inverse { background-color: #555; }
+.btn-app.btn-grey { background-color: #a0a0a0; }
+.btn-app.btn-light { background-color: #eef5f9; color: #555; }
+.btn-app.btn-yellow { background-color: #f9d020; color: #555; }
+.btn.btn-app.btn-fastlink {
+    color: var(--fl-primary) !important;
+    background-color: transparent !important;
+    text-shadow: none !important;
+}
+.btn.btn-app.btn-fastlink > i {
+    font-size: 30px !important;
+}
