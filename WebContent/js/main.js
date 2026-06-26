@@ -405,8 +405,16 @@ function setWatermark(userName, userId) {
 
     var dataUri = 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '")';
 
-    $('#fl-container').css({
+    $('.watermark-overlay').remove();
+    $('<div class="watermark-overlay"></div>').css({
+        'position': 'fixed',
+        'top': 0,
+        'left': 0,
+        'width': '100%',
+        'height': '100%',
+        'pointer-events': 'none',
+        'z-index': 9999,
         'background-image': dataUri,
         'background-repeat': 'repeat'
-    });
+    }).appendTo('body');
 }
