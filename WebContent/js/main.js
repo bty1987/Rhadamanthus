@@ -103,6 +103,8 @@ $(function() {
 
         com.showImg($("#personalPic"), res.user.userPhoto, 180, 180, '');
         com.showImg($("#userImg"), res.user.userPhoto, 30, 30, '');
+
+        setWatermark(res.user.currentName, res.user.userId);
     });
 
     loadNotices();
@@ -379,4 +381,32 @@ function createMenu(data) {
         e.preventDefault();
     });
 
+}
+
+function setWatermark(userName, userId) {
+
+    var text = userName;
+    if (userId) {
+        text += ' ' + userId;
+    }
+
+    text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+               .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+    var style = window.templateStyle || 'ace';
+    var color = (style === 'dark' || style === 'metro')
+        ? 'rgba(255,255,255,0.08)'
+        : 'rgba(0,0,0,0.06)';
+
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140">' +
+        '<text x="120" y="70" fill="' + color + '" font-size="16" ' +
+        'font-family="Microsoft Yahei, sans-serif" text-anchor="middle" ' +
+        'transform="rotate(-25, 120, 70)">' + text + '</text></svg>';
+
+    var dataUri = 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '")';
+
+    $('#fl-container').css({
+        'background-image': dataUri,
+        'background-repeat': 'repeat'
+    });
 }
