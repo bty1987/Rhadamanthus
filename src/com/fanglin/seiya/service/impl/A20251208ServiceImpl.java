@@ -28,11 +28,13 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DutyPO;
 import com.fanglin.construction.dao.AcceptanceDao;
 import com.fanglin.construction.dao.ConstructerDao;
+import com.fanglin.construction.dao.ConstructionCostDao;
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.po.AcceptancePO;
 import com.fanglin.construction.po.ConstructerPO;
+import com.fanglin.construction.po.ConstructionCostPO;
 import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
@@ -48,6 +50,8 @@ import com.fanglin.customer.service.DecorationService;
 import com.fanglin.customer.service.SurveyService;
 import com.fanglin.customer.vo.SurveyVO;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
+import com.fanglin.data.common.service.ConstructionNodeService;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
@@ -114,6 +118,9 @@ public class A20251208ServiceImpl implements A20251208Service {
 	private ConstructionNodeDao constructionNodeDao;
 
 	@Autowired
+	private ConstructionNodeService constructionNodeService;
+
+	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
 
 	@Autowired
@@ -151,6 +158,9 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 	@Autowired
 	private AcceptanceDao acceptanceDao;
+
+	@Autowired
+	private ConstructionCostDao constructionCostDao;
 
 	@Autowired
 	private RoleDao roleDao;
@@ -748,6 +758,24 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void syncConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		constructionSchedulePO.setPrecheck(constructionScheduleVO.getPrecheck());
+		constructionSchedulePO.setPostcheck(constructionScheduleVO.getPostcheck());
+		constructionSchedulePO.setStacheck(constructionScheduleVO.getStacheck());
+		constructionSchedulePO.setFincheck(constructionScheduleVO.getFincheck());
+
+		constructionScheduleDao.saveOrUpdate(constructionSchedulePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void addConstructerForPlatforPm(ConstructerVO constructerVO, String createrId) throws FLException {
 
 		Long cid = constructerVO.getCid();
@@ -936,6 +964,43 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void syncConstructionForPlatforPm(ConstructionVO constructionVO) throws FLException {
+
+		String orderId = constructionVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(decorationPO.getHouse().getBuildArea(), decorationPO.getCompany());
+
+		SystemConfigPO accessoryLimit = systemConfigDao.querySystemConfig("accessoryLimit", decorationPO.getCompany());
+		SystemConfigPO salaryLimit = systemConfigDao.querySystemConfig("salaryLimit", decorationPO.getCompany());
+		SystemConfigPO salaryLimitTotal = systemConfigDao.querySystemConfig("WORKER_SALARY_LIMIT_TOTAL_INT", decorationPO.getCompany());
+
+		if (constructionCostPO == null) {
+			constructionPO.setAccessoryLimit(accessoryLimit == null ? ConstructionCostPO.ACCESSORY_DEFAULT_LONG : Long.valueOf(accessoryLimit.getValue()));
+			constructionPO.setSalaryLimit(salaryLimit == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(salaryLimit.getValue()));
+			constructionPO.setSalaryLimitTotal(salaryLimitTotal == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(salaryLimitTotal.getValue()));
+		} else {
+			constructionPO.setAccessoryLimit(constructionCostPO.getAccessory());
+			constructionPO.setSalaryLimit(constructionCostPO.getSalary());
+			constructionPO.setSalaryLimitTotal(constructionCostPO.getSalary());
+		}
+
+		constructionDao.update(constructionPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int updateAcceptanceForPlatforPm(AcceptanceVO acceptanceVO) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(acceptanceVO.getOrderId());
@@ -989,5 +1054,18 @@ public class A20251208ServiceImpl implements A20251208Service {
 		constructionDao.update(constructionPO);
 
 		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void syncConstructionNodeForPlatforPm(ConstructionNodeVO constructionNodeVO) throws FLException {
+
+		ConstructionNodePO constructionNodePO = constructionNodeVO.getCnid() == null ? null : constructionNodeDao.get(constructionNodeVO.getCnid());
+
+		if (constructionNodePO == null) {
+			constructionNodeService.addConstructionNode(constructionNodeVO);
+		} else {
+			constructionNodeService.updateConstructionNode(constructionNodeVO);
+		}
 	}
 }
