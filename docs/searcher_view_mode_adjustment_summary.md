@@ -842,3 +842,58 @@ Searcher 的 table 模式只会对该 `prop(v)` 调用一次并把结果当作**
 - `findstr /s /n searcher.init WebContent/js/approval/*.js`：0 命中。
 
 
+## 16. Customer 模块迁移记录
+
+### 16.1 迁移范围
+
+| 批次 | 难度 | 文件 | 特征 |
+|------|------|------|------|
+| P0 简单 | 🟢 | `consultion.js` | 3 属性，无按钮 |
+| P0 简单 | 🟢 | `vustomerShared.js` | 9 属性，1 认领按钮 |
+| P0 简单 | 🟢 | `emember.js` | 6 属性，1 删除按钮 |
+| P0 中等 | 🟡 | `complain.js` | 8 属性，3 状态条件按钮(投诉/完成/关闭) |
+| P0 中等 | 🟡 | `crowd.js` | 3 属性，4 orderId 条件按钮(编辑/绑定/添加用户/解绑) |
+| P0 中等 | 🟡 | `vustomer.js` | 9 属性，2 状态按钮(评分/发布) |
+| P0 中等 | 🟡 | `vustomerAdvance.js` | 10 属性，4 按钮(绑定/记录/评分/归属) |
+| P0 中等 | 🟡 | `revisit.js` | 8 属性，无行按钮，仅添加按钮 |
+| P0 复杂 | 🔴 | `crowdUser.js` | 3 属性，1 删除按钮，specialParams orderId |
+| P0 复杂 | 🔴 | `aepair.js` | 12 属性(6 状态枚举)，9 按钮 |
+| P0 复杂 | 🔴 | `vscoreRecord.js` | 双分支(`vscore.id==2`)，共享 `buildVscoreRecordLineprops()` |
+| P0 复杂 | 🔴 | `feedback.js` | img lineprop + 13 属性 + 7 按钮，条件标题 |
+| P1 高复杂 | 🔴 | `consultion2create.js` | drawNode.getConfig 驱动，多按钮，右侧详情视图 |
+| P1 高复杂 | 🔴 | `customerOrigine.js` | 本地 getConfig，getPropertyArr 大型 switch，二维码按钮，12+ 状态+配置条件按钮 |
+| 子记录页 | 🟢 | `feedbackRecord.js` | searcher.init 子记录页，仅展示 |
+| 子记录页 | 🟢 | `vrecord.js` | searcher.init 子记录页，仅展示 |
+| 子记录页 | 🟡 | `feedbackComplaint.js` | 主列表已迁移，searcher1 子列表 displayFunc 迁移 |
+
+### 16.2 排除迁移（非 Searcher 分页）
+
+| 文件 | 排除依据 |
+|------|---------|
+| `repair.js` | 自定义 renderList，无 Searcher |
+| `repairPay.js` | 自定义 renderList，无 Searcher |
+| `customerOrigineRecord.js` | 自定义 renderList 局部渲染，无 Searcher |
+
+### 16.3 关键技术点
+
+1. **pageConfig 双驱动（customerOrigine.js / consultion2create.js）**：`drawNode.getConfig(depage)` 与本地 `getConfig(page)` 都会从 `decorationFunctionRight / customerOriginFunctionRight` 后端配置生成 `condArr / pageBtn / apiPage / propertyArr`。迁移后字段由 `buildCustomerOrigineLineprops()` 按 `pageConfig.propertyArr` 顺序动态生成，按钮由 `buildCustomerOrigineLinebtns()` 按 `pageConfig.pageBtn.contains(...)` 动态产出。
+
+2. **状态 + 配置双重按钮显隐（customerOrigine.js）**：原 creatLine 中同时使用 `v.status == STATUS_INIT_INT` 等状态判定与 `pageConfig.pageBtn.contains(...)` 配置判定来控制 12+ 个按钮。迁移后两者收敛为单一 `show: function(v)` 回调（返回 `状态条件 && 配置条件`），其中配置条件已通过 `if (pageBtn.contains(...))` 在构建 btns 对象时静态过滤，避免运行时重复判断。
+
+3. **二维码按钮（customerOrigine.js）**：原 `$btnCode` 手动 `qrcode()` 渲染到 `#code` 容器并弹出 `codeModal`。迁移后保留为普通 linebtn，handle 内部完整复刻 qrcode 渲染逻辑（未使用 `{type:"qrcode"}` lineprop，因为该类型是行内缩略图，与弹窗语义不同）。
+
+4. **属性点击事件迁移（customerOrigine.js）**：原 propertyArr 第 4 元素 click 回调（查看 creater/belonger/designer/salesman/department/region 详情）迁移为 lineprop 的 `click: function(btn, v)`，统一调用 `tools.personel.info(btn, userId)` / `tools.department.info(btn, did)`。
+
+5. **orderId 前缀条件按钮（consultion2create.js）**：原根据 `v.orderId.substr(0,2)=="00"` 和 `v.orderId.substr(0,4)=="EX00"` 决定显示合同信息/付款信息/增减项信息按钮。迁移后付款信息和增减项信息按钮的 `show` 回调返回 `orderId.substr(0,2)=="00" || orderId.substr(0,4)=="EX00"`，合同信息按钮单独返回 `orderId.substr(0,2)=="00"`。
+
+6. **子记录页双 Searcher（feedbackComplaint.js）**：该文件有两个 Searcher —— 主列表 `searcher`（查询投诉）已使用 `searcher.set().line().render()`，子列表 `searcher1`（查询反馈记录）原使用 `displayFunc`。迁移后 `searcher1` 也改为 `searcher1.set().line().render()`，使用独立的 `buildFeedbackComplaintRecordLineprops()`。
+
+7. **拼写修正**：aepair.js / revisit.js / emember.js / crowdUser.js 中原有的 `seacher` 拼写错误在迁移过程中统一修正为 `searcher`。
+
+### 16.4 验证
+
+- `node --check` 全部通过（41 个文件）。
+- `findstr /s /n displayFunc WebContent/js/customer/*.js`：3 命中，均为排除文件（`customerOrigineRecord.js`、`repair.js`、`repairPay.js`，均无 Searcher）。
+- `findstr /s /n searcher.init WebContent/js/customer/*.js`：0 命中。
+
+

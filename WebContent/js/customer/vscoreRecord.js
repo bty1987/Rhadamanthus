@@ -16,165 +16,89 @@ jQuery(function($){
         com.clearValidator();
     });
 
+    function buildVscoreRecordLineprops() {
+
+        return [{
+            field: "score",
+            name: "积分操作",
+            prop: "score",
+            clazz: "grey"
+        }, {
+            field: "operateTime",
+            name: "操作时间",
+            prop: "operateTime",
+            clazz: "green"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) { return constant.customer().vscoreRecord.type.keys[v.type]; },
+            clazz: "red"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return constant.customer().vscoreRecord.status.keys[v.status]; },
+            clazz: "red"
+        }];
+    }
+
+    function check(){
+        com.post(api.customer.queryVscoreByUnionId, {"vscore.unionId": vscore.unionId}, function(res){
+            com.focusPage("#result").html(res.vscore.score == null ? 0 : res.vscore.score);
+        });
+    }
+
     if(vscore.id == 2){
-
-        var displayFunc = (function(){
-
-            var renderList = function(tableId, listData){
-                var $tableWrap = com.focusPage('#' + tableId);
-                var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-                if(listData && listData.length){
-                    $.each(listData, function(i, v){
-                        var $liLine = creatLine(v);
-
-                        $liLine.appendTo($ul);
-                    });
-                    $ul.appendTo($tableWrap);
-                }
-            };
-
-        var creatLine = function(v){
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html("操作人:"+com.checkNull(v.operater.currentName,'')));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var propertyArr = [
-                ["积分操作:", v.score, "grey"],
-                ["操作时间:", v.operateTime, "green"],
-                ["类型:", constant.customer().vscoreRecord.type.keys[v.type],'red'],
-                ["状态:", constant.customer().vscoreRecord.status.keys[v.status], 'red']
-            ];
-
-            $.each(propertyArr ,function(index, value){
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            if(v.status == constant.customer().vscoreRecord.STATUS_INIT_INT){
-                $divBtnWrap.appendTo($h3);
-            }else if(v.status == constant.customer().vscoreRecord.STATUS_ADOPT_INT || v.status == constant.customer().vscoreRecord.STATUS_REFUSE_INT){
-                $divBtnWrap;
-            }
-
-            $liLine.append($h3).append($ulProperty);
-
-            return $liLine;
-        };
-            return {
-                init : function(tableId,listData){
-                    com.focusPage('#' + tableId).html(null);
-                    renderList(tableId,listData);
-                },
-                drawLine : function(v){
-                    return creatLine(v);
-                }
-            };
-        })();
 
         var searcher = new Searcher();
         check();
 
-        searcher.init(["customer-vscoreRecord-type"], "condListas", api.customer.pageVscoreRecordByUnionId, function(data){
-            displayFunc.init('resultListas', data);
-        },"pagenationas", "VscoreRecordPostData", {"unionId" : vscore.unionId}, false, null, function(){
-        });
+        searcher.set("condListas", "pagenationas", "resultListas", api.customer.pageVscoreRecordByUnionId, {"unionId": vscore.unionId}, ["customer-vscoreRecord-type"], "VscoreRecordPostData", null, false, null);
+        searcher.line(function(v) { return "操作人:" + com.checkNull(v.operater.currentName, ''); }, buildVscoreRecordLineprops(), {}).render();
 
-        function check(){
-            com.post(api.customer.queryVscoreByUnionId, {"vscore.unionId" :  vscore.unionId}, function(res){
-
-                com.focusPage("#result").html(res.vscore.score == null ? 0 : res.vscore.score);
-            });
-        }
     }else{
 
         vscore.vscoreSaveBtn = com.focusPage("#vscoreSaveBtn").on('click', vscoreSaveBtn);
-        var displayFunc = (function(){
 
-            var renderList = function(tableId, listData){
-                var $tableWrap = com.focusPage('#' + tableId);
-                var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        function buildVscoreRecordLinebtns() {
 
-                if(listData && listData.length){
-                    $.each(listData, function(i, v){
-                        var $liLine = creatLine(v);
+            var showFunc = function(v) { return v.status == constant.customer().vscoreRecord.STATUS_INIT_INT; };
 
-                        $liLine.appendTo($ul);
-                    });
-                    $ul.appendTo($tableWrap);
-                }
-            };
-
-            var creatLine = function(v){
-
-                var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html("操作人:"+com.checkNull(v.operater.currentName,'')));
-                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-                var $btnPass = $('<a></a>').addClass('btn btn-minier btn-yellow').html('通过');
-                var $btndown = $('<a></a>').addClass('btn btn-minier btn-success').html('拒绝');
-
-                $btnPass.click(function(){
-                    alterPass(v);
-                });
-
-                $btndown.click(function(){
-                    alterdown(v);
-                });
-
-                var propertyArr = [
-                    ["积分操作:", v.score, "grey"],
-                    ["操作时间:", v.operateTime, "green"],
-                    ["类型:", constant.customer().vscoreRecord.type.keys[v.type],'red'],
-                    ["状态:", constant.customer().vscoreRecord.status.keys[v.status], 'red']
-                ];
-
-                $.each(propertyArr ,function(index, value){
-                    var $liProperty = $('<li></li>');
-                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                    $liProperty.appendTo($ulProperty);
-                });
-
-                if(v.status == constant.customer().vscoreRecord.STATUS_INIT_INT){
-                    $divBtnWrap.append($btnPass).append($btndown).appendTo($h3);
-                }else if(v.status == constant.customer().vscoreRecord.STATUS_ADOPT_INT || v.status == constant.customer().vscoreRecord.STATUS_REFUSE_INT){
-                    $divBtnWrap;
-                }
-
-                $liLine.append($h3).append($ulProperty);
-
-                return $liLine;
-            };
             return {
-                init : function(tableId,listData){
-                    com.focusPage('#' + tableId).html(null);
-                    renderList(tableId,listData);
+                pass: {
+                    name: "通过",
+                    clazz: "btn-yellow",
+                    show: showFunc,
+                    handle: function(v) {
+
+                        alterPass(v);
+                    }
                 },
-                drawLine : function(v){
-                    return creatLine(v);
+                refuse: {
+                    name: "拒绝",
+                    clazz: "btn-success",
+                    show: showFunc,
+                    handle: function(v) {
+
+                        alterdown(v);
+                    }
                 }
             };
-        })();
+        }
+
+        function buildVscoreRecordButtons() {
+
+            var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addVscore').css("margin", "0px 3px");
+            $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+            $('<span></span>').text('添加积分').appendTo($adda);
+
+            return [$adda];
+        }
 
         var searcher = new Searcher();
         check();
 
-        searcher.init(["vscoreRecordType"], "condListas", api.customer.pageVscoreRecordByUnionId, function(data){
-            displayFunc.init('resultListas', data);
-        },"pagenationas", "VscoreRecordPostData", {"unionId" : vscore.unionId}, false, null, function(){
-            
-            var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addVscore').css("margin", "0px 3px");
-            var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-            var $addspan = $('<span></span>').text('添加积分').appendTo($adda);
-
-            return [$adda];
-        });
+        searcher.set("condListas", "pagenationas", "resultListas", api.customer.pageVscoreRecordByUnionId, {"unionId": vscore.unionId}, ["vscoreRecordType"], "VscoreRecordPostData", null, false, buildVscoreRecordButtons);
+        searcher.line(function(v) { return "操作人:" + com.checkNull(v.operater.currentName, ''); }, buildVscoreRecordLineprops(), buildVscoreRecordLinebtns()).render();
 
         com.focusPage('#addVscore').click(function(){
             vscore.modals.vscoreModal.modal("show");
@@ -214,12 +138,6 @@ jQuery(function($){
                 searcher.doSearch();
             });
             vscore.modals.vscoreModal.modal("hide");
-        }
-
-        function check(){
-            com.post(api.customer.queryVscoreByUnionId, {"vscore.unionId": vscore.unionId}, function(res){
-                com.focusPage("#result").html(res.vscore.score == null ? 0 : res.vscore.score);
-            });
         }
     }
 

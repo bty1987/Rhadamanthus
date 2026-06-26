@@ -52,92 +52,130 @@ $(function() {
 
     consultion.decorationInfo.empty();
 
-    var displayFunc = (function() {
-        var renderList = function(tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
+    function buildConsultion2CreateLineprops() {
+
+        return [{
+            field: "house.village",
+            name: "楼盘地址",
+            prop: function(v) {
+                return (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber);
+            },
+            clazz: "grey"
+        }, {
+            field: "customer.name",
+            name: "客户名",
+            prop: "customer.name",
+            clazz: "grey"
+        }, {
+            field: "designer.dept.name",
+            name: "设计部",
+            prop: "designer.dept.name",
+            clazz: "grey"
+        }, {
+            field: "designer.currentName",
+            name: "设计师",
+            prop: "designer.currentName",
+            clazz: "grey"
+        }, {
+            field: "salesman.dept.name",
+            name: "业务部",
+            prop: "salesman.dept.name",
+            clazz: "grey"
+        }, {
+            field: "salesman.currentName",
+            name: "业务员",
+            prop: "salesman.currentName",
+            clazz: "grey"
+        }, {
+            field: "house.buildArea",
+            name: "面积",
+            prop: "house.buildArea",
+            clazz: "blue"
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "green"
+        }, {
+            field: "typeness",
+            name: "类型",
+            prop: function(v) { return constant.decoration().decoration.typeness.keys[v.typeness]; },
+            clazz: "red"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return constant.decoration().decoration.status.keys[v.status]; },
+            clazz: "red"
+        }, {
+            field: "designStatus",
+            name: "设计状态",
+            prop: function(v) { return constant.decoration().decoration.designStatus.keys[v.designStatus]; },
+            clazz: "red"
+        }, {
+            field: "sourceStatus",
+            name: "确认状态",
+            prop: function(v) { return constant.decoration().decoration.sourceStatus.keys[v.sourceStatus]; },
+            clazz: "red"
+        }, {
+            field: "projectStatus",
+            name: "工程状态",
+            prop: function(v) { return consultion.projectStatusArr[v.projectStatus]; },
+            clazz: "red"
+        }];
+    }
+
+    function buildConsultion2CreateLinebtns() {
+
+        var btns = {};
+
+        btns.contractDetail = {
+            name: "合同信息",
+            clazz: "btn-yellow",
+            show: function(v) { return v.orderId.substr(0, 2) == "00"; },
+            handle: function(v) {
+                decorationPaymentDrawRecord(v.orderId, 1);
             }
         };
 
-        var creatLine = function(v) {
-            var $liLine = $('<li></li>').addClass('item-orange clearfix ');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+        btns.paymentDetail = {
+            name: "付款信息",
+            clazz: "btn-success",
+            show: function(v) { return v.orderId.substr(0, 2) == "00" || v.orderId.substr(0, 4) == "EX00"; },
+            handle: function(v) {
+                decorationPaymentDrawRecord(v.orderId, 2);
+            }
+        };
 
-            var $btnContractDetail = $("<a></a>").addClass("btn btn-minier btn-yellow").html("合同信息");
-            var $btnPaymentDetail = $("<a></a>").addClass("btn btn-minier btn-success").html("付款信息");
-            var $btnExtensionDetail = $("<a></a>").addClass("btn btn-minier btn-warning").html("增减项信息");
+        btns.extensionDetail = {
+            name: "增减项信息",
+            clazz: "btn-warning",
+            show: function(v) { return v.orderId.substr(0, 2) == "00" || v.orderId.substr(0, 4) == "EX00"; },
+            handle: function(v) {
+                decorationPaymentDrawRecord(v.orderId, 3);
+            }
+        };
 
-            var $btnView = $("<a></a>").addClass("btn btn-minier btn-yellow").html("查看");
-            var $btnBind = $("<a></a>").addClass("btn btn-minier btn-success").html("绑定");
-
-            var propertyArr = [["楼盘地址: ", (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey"], ["客户名: ", v.customer.name, "grey"], ["设计部: ", v.designer.dept.name, "grey"], ["设计师: ", v.designer.currentName, "grey"], ["业务部: ", v.salesman.dept.name, "grey"], ["业务员: ", v.salesman.currentName, "grey"], ["面积: ", v.house.buildArea, "blue"], ["创建时间: ", v.createTime, "green"], ["类型: ", constant.decoration().decoration.typeness.keys[v.typeness], "red"],[ "状态: ", constant.decoration().decoration.status.keys[v.status], "red" ], ["设计状态: ", constant.decoration().decoration.designStatus.keys[v.designStatus], "red"], ["确认状态: ", constant.decoration().decoration.sourceStatus.keys[v.sourceStatus], "red"], ["工程状态: ", consultion.projectStatusArr[v.projectStatus], "red"]];
-
-            $.each(propertyArr, function(index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            // 点击查看
-            $btnView.click(function() {
+        btns.view = {
+            name: "查看",
+            clazz: "btn-yellow",
+            handle: function(v) {
                 viewDecorationDetail(v.orderId, v.type, v.typeness, v.version == null ? null : v.version.versionId, v.notSalesmanRate, consultion.decorationOrderStatus[v.status]);
-            });
+            }
+        };
 
-            // 点击 绑定
-            $btnBind.click(function() {
+        btns.bind = {
+            name: "绑定",
+            clazz: "btn-success",
+            handle: function(v) {
                 com.focusPage("#notTitle").css("display", "none");
                 consultion.decorationInfo.empty();
                 drawDecorationInfo(v);
                 queryAllDetailInfo();
-            });
-
-            $btnContractDetail.click(function() {
-                decorationPaymentDrawRecord(v.orderId, 1);
-            });
-
-            $btnPaymentDetail.click(function() {
-                decorationPaymentDrawRecord(v.orderId, 2);
-            });
-
-            $btnExtensionDetail.click(function() {
-                decorationPaymentDrawRecord(v.orderId, 3);
-            });
-
-            if (v.orderId.substr(0, 2) == "00") {
-                $divBtnWrap.append($btnContractDetail).append($btnPaymentDetail).append($btnExtensionDetail);
-            }
-
-            if (v.orderId.substr(0, 4) == "EX00") {
-                $divBtnWrap.append($btnPaymentDetail).append($btnExtensionDetail);
-            }
-
-            $divBtnWrap.append($btnView).append($btnBind);
-
-            $divBtnWrap.appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            return $liLine;
-        };
-        return {
-            init: function(tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-                return creatLine(v);
             }
         };
-    })();
+
+        return btns;
+    }
 
     pageSearcherInit(consultion.searcher);
 
@@ -377,8 +415,7 @@ $(function() {
     }
 
     function pageSearcherInit(searcher) {
-        searcher.init(pageConfig.condArr, "condList", pageConfig.apiPage, function(data) {
-            displayFunc.init("resultList", data);
-        }, "pagenation", pageConfig.postDataName, null, false, null, null);
+        searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage, params[pageConfig.postDataName], pageConfig.condArr, pageConfig.postDataName, null, false, null);
+        searcher.line("orderId", buildConsultion2CreateLineprops(), buildConsultion2CreateLinebtns()).render();
     }
 });

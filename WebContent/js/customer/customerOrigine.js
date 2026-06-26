@@ -302,349 +302,584 @@ $(function() {
     // 不同页面的不同参数
     customerOrigine.pageConfig = getConfig(params['urlLoadParams'].depage);
 
-    var displayFunc = (function() {
+    function buildCustomerOrigineLineprops() {
 
-        var renderList = function(tableId, listData) {
+        var props = [];
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+        $.each(customerOrigine.pageConfig.propertyArr, function(pi, pv) {
 
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
+            switch (pv) {
+                case "customerPhone":
+                    props.push({
+                        field: "phone",
+                        name: "客户电话",
+                        prop: "phone",
+                        clazz: "grey"
+                    });
+                    break;
+                case "gender":
+                    props.push({
+                        field: "gender",
+                        name: "性别",
+                        prop: "gender",
+                        clazz: "grey"
+                    });
+                    break;
+                case "purpose":
+                    props.push({
+                        field: "purpose",
+                        name: "目的",
+                        prop: "purpose",
+                        clazz: "grey"
+                    });
+                    break;
+                case "intention":
+                    props.push({
+                        field: "intention",
+                        name: "风格意向",
+                        prop: "intention",
+                        clazz: "grey"
+                    });
+                    break;
+                case "price":
+                    props.push({
+                        field: "price",
+                        name: "预计装修价格",
+                        prop: "price",
+                        clazz: "blue"
+                    });
+                    break;
+                case "grade":
+                    props.push({
+                        field: "grade",
+                        name: "客户等级",
+                        prop: "grade",
+                        clazz: "grey"
+                    });
+                    break;
+                case "creater":
+                    props.push({
+                        field: "creater",
+                        name: "创建人",
+                        prop: "creater.currentName",
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.personel.info(btn, v.creater.userId);
+                        }
+                    });
+                    break;
+                case "createTime":
+                    props.push({
+                        field: "createTime",
+                        name: "创建时间",
+                        prop: "createTime",
+                        clazz: "green"
+                    });
+                    break;
+                case "belonger":
+                    props.push({
+                        field: "belonger",
+                        name: "归属人",
+                        prop: "belonger.currentName",
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.personel.info(btn, v.belonger.userId);
+                        }
+                    });
+                    break;
+                case "department":
+                    props.push({
+                        field: "department",
+                        name: "归属部门",
+                        prop: "department.name",
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.department.info(btn, v.department.did);
+                        }
+                    });
+                    break;
+                case "region":
+                    props.push({
+                        field: "region",
+                        name: "归属分区",
+                        prop: "region.name",
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.department.info(btn, v.region.did);
+                        }
+                    });
+                    break;
+                case "designer":
+                    props.push({
+                        field: "designer",
+                        name: "归属设计",
+                        prop: function(v) { return com.checkNull(v.designer.currentName, '无'); },
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.personel.info(btn, v.designer.userId);
+                        }
+                    });
+                    break;
+                case "salesman":
+                    props.push({
+                        field: "salesman",
+                        name: "归属业务",
+                        prop: function(v) { return com.checkNull(v.salesman.currentName, '无'); },
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.personel.info(btn, v.salesman.userId);
+                        }
+                    });
+                    break;
+                case "decorationBusitype":
+                    props.push({
+                        field: "decorationBusitype",
+                        name: "业务类型",
+                        prop: function(v) { return com.checkNull(customerOrigine.decorationBusitypeList[v.decorationBusitype.dbid], '无'); },
+                        clazz: "grey"
+                    });
+                    break;
+                case "village":
+                    props.push({
+                        field: "village",
+                        name: "楼盘名",
+                        prop: function(v) { return com.checkNull(v.village.name, '无'); },
+                        clazz: "grey"
+                    });
+                    break;
+                case "houseNumber":
+                    props.push({
+                        field: "houseNumber",
+                        name: "楼牌号",
+                        prop: "houseNumber",
+                        clazz: "blue"
+                    });
+                    break;
+                case "buildArea":
+                    props.push({
+                        field: "buildArea",
+                        name: "建筑面积",
+                        prop: "buildArea",
+                        clazz: "blue"
+                    });
+                    break;
+                case "freeArea":
+                    props.push({
+                        field: "freeArea",
+                        name: "赠送面积",
+                        prop: "freeArea",
+                        clazz: "blue"
+                    });
+                    break;
+                case "totalArea":
+                    props.push({
+                        field: "totalArea",
+                        name: "总面积",
+                        prop: "totalArea",
+                        clazz: "blue"
+                    });
+                    break;
+                case "innerArea":
+                    props.push({
+                        field: "innerArea",
+                        name: "计价面积",
+                        prop: "innerArea",
+                        clazz: "blue"
+                    });
+                    break;
+                case "orderId":
+                    props.push({
+                        field: "orderId",
+                        name: "装修单号",
+                        prop: function(v) { return com.checkNull(v.orderId, '无'); },
+                        clazz: "blue"
+                    });
+                    break;
+                case "status":
+                    props.push({
+                        field: "status",
+                        name: "状态",
+                        prop: function(v) { return constant.customer().customerOrigine.status.keys[v.status]; },
+                        clazz: "red"
+                    });
+                    break;
+                case "source":
+                    props.push({
+                        field: "source",
+                        name: "来源方",
+                        prop: "source",
+                        clazz: "grey"
+                    });
+                    break;
+                case "contact":
+                    props.push({
+                        field: "contact",
+                        name: "对接人",
+                        prop: "contact",
+                        clazz: "grey"
+                    });
+                    break;
+                case "referOrderId":
+                    props.push({
+                        field: "referOrderId",
+                        name: "推荐单号",
+                        prop: "referOrderId",
+                        clazz: "blue"
+                    });
+                    break;
+                case "comment":
+                    props.push({
+                        field: "comment",
+                        name: "备注",
+                        prop: function(v) { return com.checkNull(v.comment, '无'); },
+                        clazz: "grey"
+                    });
+                    break;
             }
+        });
+
+        return props;
+    }
+
+    function buildCustomerOrigineLinebtns() {
+
+        var btns = {};
+
+        var pageBtn = customerOrigine.pageConfig.pageBtn;
+
+        var showInit = function(v) {
+            return pageBtn.contains("edit") || pageBtn.contains("bind") || pageBtn.contains("firstApprove") || pageBtn.contains("directFirst") || pageBtn.contains("free");
         };
 
-        var creatLine = function(v) {
+        var showCommit = function(v) {
+            return pageBtn.contains("code") || pageBtn.contains("confirm");
+        };
 
-            var $liLine = $('<li></li>').addClass('item-orange clearfix ');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+        var showConfirmRefuse = function(v) {
+            return pageBtn.contains("approve") || pageBtn.contains("directTran");
+        };
 
-            var $btnCode = $("<a></a>").addClass("btn btn-minier btn-info").html("二维码");
-            var $btnView = $("<a></a>").addClass("btn btn-minier btn-yellow").html("编辑");
-            var $btnBind = $("<a></a>").addClass("btn btn-minier btn-success").html("绑定");
-            var $release = $("<a></a>").addClass("btn btn-minier btn-warning").html("释放");
-            var $record = $("<a></a>").addClass("btn btn-minier btn-pink").html("记录");
-            var $firstApprove = $("<a></a>").addClass("btn btn-minier btn-blue").html("初审");
-            var $backout = $("<a></a>").addClass("btn btn-minier btn-danger").html("撤销");
-            var $confirm = $("<a></a>").addClass("btn btn-minier btn-inverse").html("确认");
-            var $btnApproval = $("<a></a>").addClass("btn btn-minier btn-success").html("审批");
-            var $directFirst = $("<a></a>").addClass("btn btn-minier btn-primary").html("直接初审");
-            var $directTran = $("<a></a>").addClass("btn btn-minier btn-purple").html("直接转单");
-            var $belonger = $("<a></a>").addClass("btn btn-minier btn-yellow").html("归属");
-            var $btnclaim = $("<a></a>").addClass("btn btn-minier btn-yellow").html("认领");
+        var showBackoutStatus = function(v) {
+            return [constant.customer().customerOrigine.STATUS_COMMIT_INT, constant.customer().customerOrigine.STATUS_CONFIRM_INT, constant.customer().customerOrigine.STATUS_REFUSE_INT].contains(v.status);
+        };
 
-            var propertyArr = getPropertyArr(v);
+        if (pageBtn.contains("edit")) {
+            btns.view = {
+                name: "编辑",
+                clazz: "btn-yellow",
+                show: function(v) { return v.status == constant.customer().customerOrigine.STATUS_INIT_INT; },
+                handle: function(v) {
 
-            $.each(propertyArr, function(index, value) {
+                    customerOrigine.currentCustomerOrigine = v;
 
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                    customerOrigine.items.villageNo.attr("readOnly", "readOnly");
+                    customerOrigine.items.houseNumber.attr("readOnly", "readOnly");
+                    customerOrigine.items.name.attr("readOnly", "readOnly");
+                    customerOrigine.items.phone.attr("readOnly", "readOnly");
+                    customerOrigine.items.totalArea.attr("readOnly", "readOnly");
 
-                if (value[3]) {
-                    $b.click(function() {
+                    editcustomerOrigin(v);
+                }
+            };
+        }
 
-                        value[3]($b);
+        if (pageBtn.contains("bind")) {
+            btns.bind = {
+                name: "绑定",
+                clazz: "btn-success",
+                show: function(v) { return v.status == constant.customer().customerOrigine.STATUS_INIT_INT; },
+                handle: function(v) {
+
+                    customerOrigine.currentCustomerOrigine = v;
+                    v.designer != null ? com.updateTypeahead("designer", v.designer.userId, v.designer.currentName) : com.cleanTypeahead("designer");
+                    v.salesman != null ? com.updateTypeahead("salesmanBind", v.salesman.userId, v.salesman.currentName) : com.cleanTypeahead("salesmanBind");
+                    v.decorationBusitype != null ? customerOrigine.items.decorationBusitype.val(v.decorationBusitype.dbid) : "";
+                    com.updateTypeahead('villageNoBind', v.village.no, v.village.name + "-" + v.village.cityProper.name);
+                    customerOrigine.items.houseNumberBind.val(v.houseNumber);
+                    customerOrigine.items.nameBind.val(v.name);
+                    customerOrigine.items.phoneBind.val(v.phone);
+                    customerOrigine.modals.bindAllInfoModal.modal("show");
+                }
+            };
+        }
+
+        if (pageBtn.contains("firstApprove")) {
+            btns.firstApprove = {
+                name: "初审",
+                clazz: "btn-blue",
+                show: function(v) { return v.status == constant.customer().customerOrigine.STATUS_INIT_INT; },
+                handle: function(v) {
+
+                    initqueryApprovalUserForCheckbox("firstApproveMan", 17);
+                    customerOrigine.currentCustomerOrigine = v;
+                    customerOrigine.modals.commitFirstApprove.modal("show");
+                }
+            };
+        }
+
+        if (pageBtn.contains("directFirst")) {
+            btns.directFirst = {
+                name: "直接初审",
+                clazz: "btn-primary",
+                show: function(v) { return v.status == constant.customer().customerOrigine.STATUS_INIT_INT; },
+                handle: function(v) {
+
+                    com.showConfirm("是否确认直接初审该客源？", function() {
+
+                        com.post(api.customer.approveCustomerOrigin, {
+                            "customerOrigin.csid": v.csid
+                        }, function(res) {
+
+                            if (res.errorCode == 0) {
+                                com.showAlert(com.info, "直接初审成功！");
+                                searcher.doSearch();
+                            } else {
+                                com.showAlert(com.error, "直接初审失败：" + res.errorMsg);
+                            }
+                        });
                     });
                 }
+            };
+        }
 
-                $liProperty.appendTo($ulProperty);
-            });
+        if (pageBtn.contains("free")) {
+            btns.release = {
+                name: "释放",
+                clazz: "btn-warning",
+                show: function(v) { return v.status == constant.customer().customerOrigine.STATUS_INIT_INT; },
+                handle: function(v) {
 
-            if (v.status == constant.customer().customerOrigine.STATUS_INIT_INT) {
-                if (customerOrigine.pageConfig.pageBtn.contains("edit"))
-                    $divBtnWrap.append($btnView);
-                if (customerOrigine.pageConfig.pageBtn.contains("bind"))
-                    $divBtnWrap.append($btnBind);
-                if (customerOrigine.pageConfig.pageBtn.contains("firstApprove"))
-                    $divBtnWrap.append($firstApprove);
-                if (customerOrigine.pageConfig.pageBtn.contains("directFirst"))
-                    $divBtnWrap.append($directFirst);
-                if (customerOrigine.pageConfig.pageBtn.contains("free"))
-                    $divBtnWrap.append($release);
-            } else if (v.status == constant.customer().customerOrigine.STATUS_COMMIT_INT) {
-                if (customerOrigine.pageConfig.pageBtn.contains("code"))
-                    $divBtnWrap.append($btnCode);
-                if (customerOrigine.pageConfig.pageBtn.contains("confirm"))
-                    $divBtnWrap.append($confirm);
-            } else if ([constant.customer().customerOrigine.STATUS_CONFIRM_INT, constant.customer().customerOrigine.STATUS_REFUSE_INT].contains(v.status)) {
-                if (customerOrigine.pageConfig.pageBtn.contains("approve"))
-                    $divBtnWrap.append($btnApproval);
-                if (customerOrigine.pageConfig.pageBtn.contains("directTran"))
-                    $divBtnWrap.append($directTran);
-            }
-
-            if ([constant.customer().customerOrigine.STATUS_COMMIT_INT, constant.customer().customerOrigine.STATUS_CONFIRM_INT, constant.customer().customerOrigine.STATUS_REFUSE_INT].contains(v.status)) {
-                if (customerOrigine.pageConfig.pageBtn.contains("backout"))
-                    $divBtnWrap.append($backout);
-            }
-
-            if (customerOrigine.pageConfig.pageBtn.contains("record"))
-                $divBtnWrap.append($record);
-            if (customerOrigine.pageConfig.pageBtn.contains("belonger"))
-                $divBtnWrap.append($belonger);
-            if (customerOrigine.pageConfig.pageBtn.contains("btnclaim"))
-                $divBtnWrap.append($btnclaim);
-
-            $divBtnWrap.appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            // 二维码
-            $btnCode.click(function() {
-
-                com.focusPage('#code').html("");
-
-                com.focusPage('#code').qrcode({
-                    render: "canvas",
-                    width: 150,
-                    height: 150,
-                    text: "http://fanglin.vip/wx/origine?csid=" + v.csid
-                });
-
-                customerOrigine.modals.codeModal.modal('show');
-            });
-
-            // 编辑
-            $btnView.click(function() {
-
-                customerOrigine.currentCustomerOrigine = v;
-
-                customerOrigine.items.villageNo.attr("readOnly", "readOnly");
-                customerOrigine.items.houseNumber.attr("readOnly", "readOnly");
-                customerOrigine.items.name.attr("readOnly", "readOnly");
-                customerOrigine.items.phone.attr("readOnly", "readOnly");
-                customerOrigine.items.totalArea.attr("readOnly", "readOnly");
-
-                editcustomerOrigin(v);
-            });
-
-            $record.click(function() {
-
-                params.customer.csid = v.csid;
-                com.popup4page('#customerRecordPopup', api.index.customerOriginRecord.url, "记录内容");
-            });
-
-            $release.click(function() {
-
-                if (v.belonger.userId == null) {
-                    com.showAlert(com.warning, "无归属人信息!");
-                    return false;
+                    if (v.belonger.userId == null) {
+                        com.showAlert(com.warning, "无归属人信息!");
+                        return false;
+                    }
+                    release(v.csid);
                 }
-                release(v.csid);
-            });
+            };
+        }
 
-            // 绑定信息
-            $btnBind.click(function() {
+        if (pageBtn.contains("code")) {
+            btns.code = {
+                name: "二维码",
+                clazz: "btn-info",
+                show: function(v) { return v.status == constant.customer().customerOrigine.STATUS_COMMIT_INT; },
+                handle: function(v) {
 
-                customerOrigine.currentCustomerOrigine = v;
-                v.designer != null ? com.updateTypeahead("designer", v.designer.userId, v.designer.currentName) : com.cleanTypeahead("designer");
-                v.salesman != null ? com.updateTypeahead("salesmanBind", v.salesman.userId, v.salesman.currentName) : com.cleanTypeahead("salesmanBind");
-                v.decorationBusitype != null ? customerOrigine.items.decorationBusitype.val(v.decorationBusitype.dbid) : "";
-                com.updateTypeahead('villageNoBind', v.village.no, v.village.name + "-" + v.village.cityProper.name);
-                customerOrigine.items.houseNumberBind.val(v.houseNumber);
-                customerOrigine.items.nameBind.val(v.name);
-                customerOrigine.items.phoneBind.val(v.phone);
-                customerOrigine.modals.bindAllInfoModal.modal("show");
-            });
+                    com.focusPage('#code').html("");
 
-            // 提交客源初审审批
-            $firstApprove.click(function() {
+                    com.focusPage('#code').qrcode({
+                        render: "canvas",
+                        width: 150,
+                        height: 150,
+                        text: "http://fanglin.vip/wx/origine?csid=" + v.csid
+                    });
 
-                initqueryApprovalUserForCheckbox("firstApproveMan", 17);
-                customerOrigine.currentCustomerOrigine = v;
-                customerOrigine.modals.commitFirstApprove.modal("show");
-            });
+                    customerOrigine.modals.codeModal.modal('show');
+                }
+            };
+        }
 
-            // 直接初审（不走审批流程）
-            $directFirst.click(function() {
+        if (pageBtn.contains("confirm")) {
+            btns.confirm = {
+                name: "确认",
+                clazz: "btn-inverse",
+                show: function(v) { return v.status == constant.customer().customerOrigine.STATUS_COMMIT_INT; },
+                handle: function(v) {
 
-                com.showConfirm("是否确认直接初审该客源？", function() {
+                    com.showConfirm("确认客源信息", function() {
 
-                    com.post(api.customer.approveCustomerOrigin, {
-                        "customerOrigin.csid": v.csid
-                    }, function(res) {
+                        com.post(api.customer.confirmCustomerOrigin, {
+                            "customerOrigin.csid": v.csid
+                        }, function(res) {
 
-                        if (res.errorCode == 0) {
-                            com.showAlert(com.info, "直接初审成功！");
                             searcher.doSearch();
+                            com.showAlert(com.info, "确认成功!");
+                        });
+                    });
+                }
+            };
+        }
+
+        if (pageBtn.contains("approve")) {
+            btns.approval = {
+                name: "审批",
+                clazz: "btn-success",
+                show: function(v) {
+                    return [constant.customer().customerOrigine.STATUS_CONFIRM_INT, constant.customer().customerOrigine.STATUS_REFUSE_INT].contains(v.status);
+                },
+                handle: function(v) {
+
+                    initqueryApprovalUserForCheckbox("approveMan", 14);
+                    customerOrigine.currentCustomerOrigine = v;
+                    customerOrigine.items.villageNoDesiger.prop("disabled", true);
+                    customerOrigine.items.houseNumberApprove.attr("disabled", "disabled");
+                    customerOrigine.items.nameApprove.attr("disabled", "disabled");
+                    customerOrigine.items.phoneApprove.attr("disabled", "disabled");
+
+                    v.salesman != null ? com.updateTypeahead("salesman", v.salesman.userId, v.salesman.currentName) : com.cleanTypeahead("salesman");
+                    v.decorationBusitype != null ? customerOrigine.items.salesmanType.val(v.decorationBusitype.dbid) : "";
+                    com.updateTypeahead('villageNoDesiger', v.village.no, v.village.name + "-" + v.village.cityProper.name);
+                    customerOrigine.items.houseNumberApprove.val(v.houseNumber);
+                    customerOrigine.items.nameApprove.val(v.name);
+                    customerOrigine.items.phoneApprove.val(v.phone);
+                    customerOrigine.modals.commitApproveModal.modal("show");
+                }
+            };
+        }
+
+        if (pageBtn.contains("directTran")) {
+            btns.directTran = {
+                name: "直接转单",
+                clazz: "btn-purple",
+                show: function(v) {
+                    return [constant.customer().customerOrigine.STATUS_CONFIRM_INT, constant.customer().customerOrigine.STATUS_REFUSE_INT].contains(v.status);
+                },
+                handle: function(v) {
+
+                    customerOrigine.currentCustomerOrigine = v;
+                    com.clearValidator();
+
+                    // 填充楼盘信息
+                    if (v.village != null) {
+                        com.updateTypeahead('directVillageNoDesiger', v.village.no, v.village.name + "-" + v.village.cityProper.name);
+                    } else {
+                        com.cleanTypeahead('directVillageNoDesiger');
+                    }
+
+                    // 填充楼牌号
+                    customerOrigine.items.directHouseNumberApprove.val(v.houseNumber != null ? v.houseNumber : '');
+
+                    // 填充姓名和电话
+                    customerOrigine.items.directNameApprove.val(v.name != null ? v.name : '');
+                    customerOrigine.items.directPhoneApprove.val(v.phone != null ? v.phone : '');
+
+                    // 填充业务员
+                    if (v.salesman != null) {
+                        com.updateTypeahead("directSalesman", v.salesman.userId, v.salesman.currentName);
+                    } else {
+                        com.cleanTypeahead("directSalesman");
+                    }
+
+                    // 填充业务类型
+                    if (v.decorationBusitype != null) {
+                        customerOrigine.items.directSalesmanType.val(v.decorationBusitype.dbid);
+                    } else {
+                        customerOrigine.items.directSalesmanType.val('');
+                    }
+
+                    // 填充房屋类别 (期房/现房)
+                    if (v.houseType != null) {
+                        customerOrigine.items.directHouseType.val(v.houseType);
+                    } else {
+                        customerOrigine.items.directHouseType.val('期房'); // 默认值
+                    }
+
+                    // 填充房屋类型
+                    if (v.houseClass != null) {
+                        customerOrigine.items.directHouseClass.val(v.houseClass);
+                    } else {
+                        customerOrigine.items.directHouseClass.val('');
+                    }
+
+                    // 填充订单类型 - 使用 decorationTypes 映射
+                    if (v.decorationBusitype != null) {
+                        var typeValue = null;
+                        $.each(customerOrigine.decorationAtttypes, function(i, attType) {
+                            if (attType.dbid == v.decorationBusitype.dbid && attType.status == 0) {
+                                typeValue = attType.key;
+                                return false; // 找到后退出循环
+                            }
+                        });
+                        if (typeValue != null) {
+                            customerOrigine.items.directOrderType.val(typeValue);
                         } else {
-                            com.showAlert(com.error, "直接初审失败：" + res.errorMsg);
+                            customerOrigine.items.directOrderType.val('');
                         }
-                    });
-                });
-            });
-
-            // 撤销
-            $backout.click(function() {
-
-                com.showConfirm("是否确认撤销客源", function() {
-
-                    com.post(api.customer.cancelCustomerOrigin, {
-                        "customerOrigin.csid": v.csid
-                    }, function(res) {
-
-                        searcher.doSearch();
-                        com.showAlert(com.info, "撤销成功!");
-                    });
-                });
-            });
-
-            // 确认
-            $confirm.click(function() {
-
-                com.showConfirm("确认客源信息", function() {
-
-                    com.post(api.customer.confirmCustomerOrigin, {
-                        "customerOrigin.csid": v.csid
-                    }, function(res) {
-
-                        searcher.doSearch();
-                        com.showAlert(com.info, "确认成功!");
-                    });
-                });
-            });
-
-            // 审批
-            $btnApproval.click(function() {
-
-                initqueryApprovalUserForCheckbox("approveMan", 14);
-                customerOrigine.currentCustomerOrigine = v;
-                customerOrigine.items.villageNoDesiger.prop("disabled", true);
-                customerOrigine.items.houseNumberApprove.attr("disabled", "disabled");
-                customerOrigine.items.nameApprove.attr("disabled", "disabled");
-                customerOrigine.items.phoneApprove.attr("disabled", "disabled");
-
-                v.salesman != null ? com.updateTypeahead("salesman", v.salesman.userId, v.salesman.currentName) : com.cleanTypeahead("salesman");
-                v.decorationBusitype != null ? customerOrigine.items.salesmanType.val(v.decorationBusitype.dbid) : "";
-                com.updateTypeahead('villageNoDesiger', v.village.no, v.village.name + "-" + v.village.cityProper.name);
-                customerOrigine.items.houseNumberApprove.val(v.houseNumber);
-                customerOrigine.items.nameApprove.val(v.name);
-                customerOrigine.items.phoneApprove.val(v.phone);
-                customerOrigine.modals.commitApproveModal.modal("show");
-            });
-
-            // 直接转单（不走审批流程）
-            $directTran.click(function() {
-
-                customerOrigine.currentCustomerOrigine = v;
-                com.clearValidator();
-
-                // 参考 $btnApproval 的表单填充逻辑
-                // 填充楼盘信息
-                if (v.village != null) {
-                    com.updateTypeahead('directVillageNoDesiger', v.village.no, v.village.name + "-" + v.village.cityProper.name);
-                } else {
-                    com.cleanTypeahead('directVillageNoDesiger');
-                }
-
-                // 填充楼牌号
-                customerOrigine.items.directHouseNumberApprove.val(v.houseNumber != null ? v.houseNumber : '');
-
-                // 填充姓名和电话
-                customerOrigine.items.directNameApprove.val(v.name != null ? v.name : '');
-                customerOrigine.items.directPhoneApprove.val(v.phone != null ? v.phone : '');
-
-                // 填充业务员
-                if (v.salesman != null) {
-                    com.updateTypeahead("directSalesman", v.salesman.userId, v.salesman.currentName);
-                } else {
-                    com.cleanTypeahead("directSalesman");
-                }
-
-                // 填充业务类型
-                if (v.decorationBusitype != null) {
-                    customerOrigine.items.directSalesmanType.val(v.decorationBusitype.dbid);
-                } else {
-                    customerOrigine.items.directSalesmanType.val('');
-                }
-
-                // 填充房屋类别 (期房/现房)
-                if (v.houseType != null) {
-                    customerOrigine.items.directHouseType.val(v.houseType);
-                } else {
-                    customerOrigine.items.directHouseType.val('期房'); // 默认值
-                }
-
-                // 填充房屋类型
-                if (v.houseClass != null) {
-                    customerOrigine.items.directHouseClass.val(v.houseClass);
-                } else {
-                    customerOrigine.items.directHouseClass.val('');
-                }
-
-                // 填充订单类型 - 使用 decorationTypes 映射
-                if (v.decorationBusitype != null) {
-                    // decorationTypes[v.key] = v.type，所以需要遍历查找匹配的 key
-                    var typeValue = null;
-                    $.each(customerOrigine.decorationAtttypes, function(i, attType) {
-                        if (attType.dbid == v.decorationBusitype.dbid && attType.status == 0) {
-                            typeValue = attType.key;
-                            return false; // 找到后退出循环
-                        }
-                    });
-                    if (typeValue != null) {
-                        customerOrigine.items.directOrderType.val(typeValue);
                     } else {
                         customerOrigine.items.directOrderType.val('');
                     }
-                } else {
-                    customerOrigine.items.directOrderType.val('');
+
+                    // 填充订单状态 (资源类型)
+                    if (v.resourceType != null) {
+                        customerOrigine.items.directResourceType.val(v.resourceType);
+                    } else {
+                        customerOrigine.items.directResourceType.val('');
+                    }
+
+                    customerOrigine.modals.directTranModal.modal("show");
                 }
+            };
+        }
 
-                // 填充订单状态 (资源类型)
-                if (v.resourceType != null) {
-                    customerOrigine.items.directResourceType.val(v.resourceType);
-                } else {
-                    customerOrigine.items.directResourceType.val('');
+        if (pageBtn.contains("backout")) {
+            btns.backout = {
+                name: "撤销",
+                clazz: "btn-danger",
+                show: function(v) {
+                    return [constant.customer().customerOrigine.STATUS_COMMIT_INT, constant.customer().customerOrigine.STATUS_CONFIRM_INT, constant.customer().customerOrigine.STATUS_REFUSE_INT].contains(v.status);
+                },
+                handle: function(v) {
+
+                    com.showConfirm("是否确认撤销客源", function() {
+
+                        com.post(api.customer.cancelCustomerOrigin, {
+                            "customerOrigin.csid": v.csid
+                        }, function(res) {
+
+                            searcher.doSearch();
+                            com.showAlert(com.info, "撤销成功!");
+                        });
+                    });
                 }
+            };
+        }
 
-                customerOrigine.modals.directTranModal.modal("show");
-            });
+        if (pageBtn.contains("record")) {
+            btns.record = {
+                name: "记录",
+                clazz: "btn-pink",
+                handle: function(v) {
 
-            // 编辑归属人
-            $belonger.click(function() {
+                    params.customer.csid = v.csid;
+                    com.popup4page('#customerRecordPopup', api.index.customerOriginRecord.url, "记录内容");
+                }
+            };
+        }
 
-                customerOrigine.csid = v.csid;
-                com.updateTypeahead("belonger", v.belonger.userId, com.checkNull(v.belonger.userName, ''));
-                customerOrigine.modals.customerorigineforbelonger.modal("show");
-            });
+        if (pageBtn.contains("belonger")) {
+            btns.belonger = {
+                name: "归属",
+                clazz: "btn-yellow",
+                handle: function(v) {
 
-            // 认领
-            $btnclaim.click(function() {
+                    customerOrigine.csid = v.csid;
+                    com.updateTypeahead("belonger", v.belonger.userId, com.checkNull(v.belonger.userName, ''));
+                    customerOrigine.modals.customerorigineforbelonger.modal("show");
+                }
+            };
+        }
 
-                btnclaim(v);
-            });
+        if (pageBtn.contains("btnclaim")) {
+            btns.claim = {
+                name: "认领",
+                clazz: "btn-yellow",
+                handle: function(v) {
 
-            return $liLine;
-        };
-        return {
-            init: function(tableId, listData) {
+                    btnclaim(v);
+                }
+            };
+        }
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
+        return btns;
+    }
 
-                return creatLine(v);
-            }
-        };
-    })();
-
-    var searcher = new Searcher();
-
-    searcher.init(customerOrigine.pageConfig.condArr, "condList", customerOrigine.pageConfig.apiPage, function(data) {
-
-        displayFunc.init("resultList", data);
-    }, "pagenation", customerOrigine.pageConfig.postDataName, {
-        "user": params['urlLoadParams'].depage
-    }, false, null, function() {
+    function buildCustomerOrigineButtons() {
 
         if (customerOrigine.pageConfig.pageBtn.contains("created")) {
             var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'add').css("margin", "0px 3px");
@@ -654,7 +889,15 @@ $(function() {
             return [$adda];
         }
 
-    });
+        return [];
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", customerOrigine.pageConfig.apiPage, {
+        "user": params['urlLoadParams'].depage
+    }, customerOrigine.pageConfig.condArr, customerOrigine.pageConfig.postDataName, null, false, buildCustomerOrigineButtons);
+    searcher.line("name", buildCustomerOrigineLineprops(), buildCustomerOrigineLinebtns()).render();
 
     com.focusPage("#add").click(function() {
 
@@ -1126,112 +1369,5 @@ $(function() {
         }, null, false);
 
         return pageConfig;
-    }
-
-    function getPropertyArr(v) {
-
-        var propertyArr = [];
-        $.each(customerOrigine.pageConfig.propertyArr, function(pi, pv) {
-
-            switch (pv) {
-                case "customerPhone":
-                    propertyArr.push(["客户电话:", v.phone, "grey"]);
-                    break;
-                case "gender":
-                    propertyArr.push(["性别:", v.gender, "grey"]);
-                    break;
-                case "purpose":
-                    propertyArr.push(["目的: ", v.purpose, "grey"]);
-                    break;
-                case "intention":
-                    propertyArr.push(["风格意向: ", v.intention, "grey"]);
-                    break;
-                case "price":
-                    propertyArr.push(["预计装修价格: ", v.price, "blue"]);
-                    break;
-                case "grade":
-                    propertyArr.push(["客户等级: ", v.grade, "grey"]);
-                    break;
-                case "creater":
-                    propertyArr.push(["创建人: ", v.creater.currentName, "grey", function(btn) {
-
-                        tools.personel.info(btn, v.creater.userId);
-                    }]);
-                    break;
-                case "createTime":
-                    propertyArr.push(["创建时间: ", v.createTime, "green"]);
-                    break;
-                case "belonger":
-                    propertyArr.push(["归属人: ", v.belonger.currentName, "grey", function(btn) {
-
-                        tools.personel.info(btn, v.belonger.userId);
-                    }]);
-                    break;
-                case "department":
-                    propertyArr.push(["归属部门: ", v.department.name, "grey", function(btn) {
-
-                        tools.department.info(btn, v.department.did);
-                    }]);
-                    break;
-                case "region":
-                    propertyArr.push(["归属分区: ", v.region.name, "grey", function(btn) {
-
-                        tools.department.info(btn, v.region.did);
-                    }]);
-                    break;
-                case "designer":
-                    propertyArr.push(["归属设计: ", com.checkNull(v.designer.currentName, '无'), "grey", function(btn) {
-
-                        tools.personel.info(btn, v.designer.userId);
-                    }]);
-                    break;
-                case "salesman":
-                    propertyArr.push(["归属业务: ", com.checkNull(v.salesman.currentName, '无'), "grey", function(btn) {
-
-                        tools.personel.info(btn, v.salesman.userId);
-                    }]);
-                    break;
-                case "decorationBusitype":
-                    propertyArr.push(["业务类型: ", com.checkNull(customerOrigine.decorationBusitypeList[v.decorationBusitype.dbid], '无'), "grey"]);
-                    break;
-                case "village":
-                    propertyArr.push(["楼盘名: ", com.checkNull(v.village.name, '无'), "grey"]);
-                    break;
-                case "houseNumber":
-                    propertyArr.push(["楼牌号: ", v.houseNumber, "blue"]);
-                    break;
-                case "buildArea":
-                    propertyArr.push(["建筑面积: ", v.buildArea, "blue"]);
-                    break;
-                case "freeArea":
-                    propertyArr.push(["赠送面积: ", v.freeArea, "blue"]);
-                    break;
-                case "totalArea":
-                    propertyArr.push(["总面积: ", v.totalArea, "blue"]);
-                    break;
-                case "innerArea":
-                    propertyArr.push(["计价面积: ", v.innerArea, "blue"]);
-                    break;
-                case "orderId":
-                    propertyArr.push(["装修单号: ", com.checkNull(v.orderId, '无'), "blue"]);
-                    break;
-                case "status":
-                    propertyArr.push(["状态: ", constant.customer().customerOrigine.status.keys[v.status], "red"]);
-                    break;
-                case "source":
-                    propertyArr.push(["来源方: ", v.source, "grey"]);
-                    break;
-                case "contact":
-                    propertyArr.push(["对接人: ", v.contact, "grey"]);
-                    break;
-                case "referOrderId":
-                    propertyArr.push(["推荐单号: ", v.referOrderId, "blue"]);
-                    break;
-                case "comment":
-                    propertyArr.push(["备注: ", com.checkNull(v.comment, '无'), "grey"]);
-                    break;
-            }
-        });
-        return propertyArr;
     }
 });

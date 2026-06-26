@@ -24,94 +24,79 @@ $(function(){
         com.clearValidator();
     });
 
-    var displayFunc = (function () {
+    function buildCrowdLineprops() {
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
-                    creatLine(v).appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
+        return [{
+            field: "opengid",
+            name: "群编号",
+            prop: "opengid",
+            clazz: "grey"
+        }, {
+            field: "orderId",
+            name: "装修单号",
+            prop: "orderId",
+            clazz: "grey"
+        }, {
+            field: "content",
+            name: "说明",
+            prop: "content",
+            clazz: "grey"
+        }];
+    }
 
-        var creatLine=function(v){
-            var $liLine=$('<li></li>').addClass('item-orange clearfix ');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+    function buildCrowdLinebtns() {
 
-            var $btnView= $("<a></a>").addClass("btn btn-minier btn-yellow").html("编辑");
-            var $btnbind = $("<a></a>").addClass("btn btn-minier btn-success").html("绑定");
-            var $btnAddUser= $("<a></a>").addClass("btn btn-minier btn-success").html("群成员");
-            var $btnunbind= $("<a></a>").addClass("btn btn-minier btn-warning").html("解绑");
-
-            var propertyArr = [
-                ["群编号: ", v.opengid, "grey"],
-                ["装修单号: ", v.orderId, "grey"],
-                ["说明: ", v.content, "grey"]
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $btnView.click(function(){
-                group.gid = v.gid;
-
-                group.items.name.val(v.name);
-                group.items.content.val(v.content);
-
-                group.modals.updateOrderModal.modal("show");
-
-            });
-
-            $btnbind.click(function(){
-                group.gid = v.gid;
-                group.opengid = v.opengid;
-
-                group.modals.bindOrderModal.modal("show");
-            });
-
-            $btnunbind.click(function(){
-                bindGrop(v.gid);
-            });
-
-            $btnAddUser.click(function(){
-                params.customer.orderId = v.orderId;
-                com.popup4page('#crowdUserPopUp', api.index.crowdUser.url, '群成员')
-            });
-
-            if(v.orderId == null){
-                $divBtnWrap.append($btnView).append($btnbind).appendTo($h3);
-            }else{
-                $divBtnWrap.append($btnView).append($btnAddUser).append($btnunbind).appendTo($h3);
-            }
-
-            $liLine.append($h3).append($ulProperty);
-
-            return $liLine;
-        };
         return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+
+                    group.gid = v.gid;
+
+                    group.items.name.val(v.name);
+                    group.items.content.val(v.content);
+
+                    group.modals.updateOrderModal.modal("show");
+                }
             },
-            drawLine : function(v){
-                return creatLine(v);
+            bind: {
+                name: "绑定",
+                clazz: "btn-success",
+                show: function(v) { return v.orderId == null; },
+                handle: function(v) {
+
+                    group.gid = v.gid;
+                    group.opengid = v.opengid;
+
+                    group.modals.bindOrderModal.modal("show");
+                }
+            },
+            addUser: {
+                name: "群成员",
+                clazz: "btn-success",
+                show: function(v) { return v.orderId != null; },
+                handle: function(v) {
+
+                    params.customer.orderId = v.orderId;
+                    com.popup4page('#crowdUserPopUp', api.index.crowdUser.url, '群成员');
+                }
+            },
+            unbind: {
+                name: "解绑",
+                clazz: "btn-warning",
+                show: function(v) { return v.orderId != null; },
+                handle: function(v) {
+
+                    bindGrop(v.gid);
+                }
             }
         };
-    })();
+    }
 
     var searcher = new Searcher();
-    searcher.init(['customer-group-name', 'customer-group-orderId'], "condList" , api.customer.pageGroup, function(res){
-        displayFunc.init("resultList",res);
-    },"pagenation");
+    searcher.set("condList", "pagenation", "resultList", api.customer.pageGroup, null, ['customer-group-name', 'customer-group-orderId'], null, null, false, null);
+    searcher.line("name", buildCrowdLineprops(), buildCrowdLinebtns()).render();
 
     function bindgroup (){
         

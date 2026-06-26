@@ -31,154 +31,174 @@ $(function() {
 
     });
 
-    var displayFunc = (function() {
+    function buildFeedbackLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            type: "img",
+            prop: "picture"
+        }, {
+            field: "orderId",
+            name: "装修单号",
+            prop: "orderId",
+            clazz: "blue",
+            click: function(v, $b) {
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+                tools.decoration.info($b, v.orderId);
+            }
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "green"
+        }, {
+            field: "phone",
+            name: "电话",
+            prop: "phone",
+            clazz: "grey"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) { return constant.customer().feedback.status.keys[v.type]; },
+            clazz: "red"
+        }, {
+            field: "company",
+            name: "公司",
+            prop: "company",
+            clazz: "grey"
+        }, {
+            field: "content",
+            name: "说明",
+            prop: "content",
+            clazz: "grey"
+        }, {
+            field: "receiver.userName",
+            name: "接收人",
+            prop: "receiver.userName",
+            clazz: "grey"
+        }, {
+            field: "receiveTime",
+            name: "接收时间",
+            prop: "receiveTime",
+            clazz: "grey"
+        }, {
+            field: "handler.userName",
+            name: "处理人",
+            prop: "handler.userName",
+            clazz: "grey"
+        }, {
+            field: "handleTime",
+            name: "处理时间",
+            prop: "handleTime",
+            clazz: "grey"
+        }, {
+            field: "finisher.userName",
+            name: "完成人",
+            prop: "finisher.userName",
+            clazz: "grey"
+        }, {
+            field: "finishTime",
+            name: "完成时间",
+            prop: "finishTime",
+            clazz: "grey"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return constant.customer().feedback.feedbackStatus.keys[v.status]; },
+            clazz: "grey"
+        }];
+    }
 
-            if (!listData || listData.length == 0)
-                return false;
+    function buildFeedbackLinebtns() {
 
-            $.each(listData, function(i, v) {
-
-                creatLine(v).appendTo($ul);
-            });
-            $ul.appendTo($tableWrap);
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix ');
-
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').text(v.type == constant.customer.feedback.STATUS_FEEDBACK_INT ? "反馈" : v.type == constant.customer.feedback.STATUS_COMPLAINT_INT ? "投诉" : "维修"));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $urldiv = $('<div id="photo" style="float: left; border: 1px solid #ccc;"></div>').addClass('divimg').css("width", "75px").css("height", "75px").css("margin-right", "10px").appendTo($liLine);
-            var img = $('<img/>');
-            var imgA = $('<a></a>').attr("display", "none").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo($urldiv);
-
-            var $drawingedit = $('<a></a>').addClass('btn btn-minier btn-warning').html('图片');
-
-            com.showImg(img, v.picture, 75, 75, '', null, 0);
-
-            var $btnView = $("<a></a>").addClass("btn btn-minier btn-yellow").html("记录");
-            var $btnbind = $("<a></a>").addClass("btn btn-minier btn-success").html("接收");
-            var $btnDone = $("<a></a>").addClass("btn btn-minier btn-success").html("完成");
-            var $btnPlaint = $("<a></a>").addClass("btn btn-minier btn-danger").html("投诉");
-            var $btnGuarantee = $("<a></a>").addClass("btn btn-minier btn-danger").html("维修");
-            var $btnBackVisit = $("<a></a>").addClass("btn btn-minier btn-danger").html("回访");
-            
-            var propertyArr = [["装修单号:", v.orderId, "blue", function(btn) {
-
-                tools.decoration.info(btn, v.orderId);
-            }], ["创建时间: ", v.createTime, "green"], ["电话:", v.phone, "grey"], ["类型:", constant.customer().feedback.status.keys[v.type], "red"], ["公司:", v.company, "grey"], ["说明: ", v.content, "grey"], ["接收人: ", v.receiver.userName, "grey"], ["接收时间: ", v.receiveTime, "grey"], ["处理人: ", v.handler.userName, "grey"], ["处理时间: ", v.handleTime, "grey"], ["完成人", v.finisher.userName, "grey"], ["完成时间: ", v.finishTime, "grey"], ["状态: ", constant.customer().feedback.feedbackStatus.keys[v.status], "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b style="float: right"></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-
-                if (value[3]) {
-                    $b.click(function() {
-
-                        value[3]($b);
-                    });
-                }
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($drawingedit).appendTo($h3);
-
-            $divBtnWrap.append($btnView).append($btnbind).append($btnDone).append($btnPlaint).append($btnGuarantee).append($btnBackVisit).appendTo($h3);
-
-            $drawingedit.click(function() {
-
-                manageDrawing(v.fid);
-            });
-
-            $btnbind.click(function() {
-
-                balanceOrder(v.fid);
-            });
-
-            $btnDone.click(function() {
-
-                finishFeedback(v.fid);
-            });
-
-            $btnGuarantee.click(function() {
-
-                params.fid = v.fid;
-                params.decoration.orderId = v.orderId;
-                params.customer.vid = v.fid;
-                params.historyPage = "/views/customer/feedback.html";
-
-                com.switchPage(api.index.feedbackGuarantee.url);
-            });
-            
-            $btnPlaint.click(function() {
-
-                params.customer.vid = v.fid;
-                params.decoration.orderId = v.orderId;
-                params.historyPage = "/views/customer/feedback.html";
-
-                com.switchPage(api.index.feedComplaint.url);
-            });
-            
-            $btnBackVisit.click(function() {
-
-                params.fid = v.fid;
-                params.decoration.orderId = v.orderId;
-                
-                params.historyPage = "/views/customer/feedback.html";
-
-                com.switchPage("/views/customer/feedbackBackVisit.html");
-            });
-
-            
-            
-            $btnView.click(function() {
-
-                params.customer.vid = v.fid;
-
-                com.popup4page("#feedBackRecordPopUp", api.index.feedRecord.url, "记录");
-            });
-
-            $liLine.append($h3).append($ulProperty);
-
-            return $liLine;
-        };
         return {
-            init: function(tableId, listData) {
+            drawing: {
+                name: "图片",
+                clazz: "btn-warning",
+                handle: function(v) {
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+                    manageDrawing(v.fid);
+                }
             },
-            drawLine: function(v) {
+            record: {
+                name: "记录",
+                clazz: "btn-yellow",
+                handle: function(v) {
 
-                return creatLine(v);
+                    params.customer.vid = v.fid;
+
+                    com.popup4page("#feedBackRecordPopUp", api.index.feedRecord.url, "记录");
+                }
+            },
+            receive: {
+                name: "接收",
+                clazz: "btn-success",
+                handle: function(v) {
+
+                    balanceOrder(v.fid);
+                }
+            },
+            done: {
+                name: "完成",
+                clazz: "btn-success",
+                handle: function(v) {
+
+                    finishFeedback(v.fid);
+                }
+            },
+            complaint: {
+                name: "投诉",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    params.customer.vid = v.fid;
+                    params.decoration.orderId = v.orderId;
+                    params.historyPage = "/views/customer/feedback.html";
+
+                    com.switchPage(api.index.feedComplaint.url);
+                }
+            },
+            guarantee: {
+                name: "维修",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    params.fid = v.fid;
+                    params.decoration.orderId = v.orderId;
+                    params.customer.vid = v.fid;
+                    params.historyPage = "/views/customer/feedback.html";
+
+                    com.switchPage(api.index.feedbackGuarantee.url);
+                }
+            },
+            backVisit: {
+                name: "回访",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    params.fid = v.fid;
+                    params.decoration.orderId = v.orderId;
+
+                    params.historyPage = "/views/customer/feedback.html";
+
+                    com.switchPage("/views/customer/feedbackBackVisit.html");
+                }
             }
         };
-    })();
+    }
+
+    function buildFeedbackButtons() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addFeedback').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type', 'customer-feedback-company', 'customer-feedback-status', 'customer-feedback-handler', 'customer-feedback-receiver', 'customer-feedback-handleTime', 'customer-feedback-receiveTime'], "condList", api.customer.pageFeedback, function(res) {
-
-        displayFunc.init("resultList", res);
-    }, "pagenation", "groupUserPostData", null, false, null, function() {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addFeedback').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        return [$adda];
-    });
+    searcher.set("condList", "pagenation", "resultList", api.customer.pageFeedback, null, ['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type', 'customer-feedback-company', 'customer-feedback-status', 'customer-feedback-handler', 'customer-feedback-receiver', 'customer-feedback-handleTime', 'customer-feedback-receiveTime'], "groupUserPostData", null, false, buildFeedbackButtons);
+    searcher.line(function(v) { return v.type == constant.customer.feedback.STATUS_FEEDBACK_INT ? "反馈" : v.type == constant.customer.feedback.STATUS_COMPLAINT_INT ? "投诉" : "维修"; }, buildFeedbackLineprops(), buildFeedbackLinebtns()).render();
 
     com.focusPage('#addFeedback', '#pagenation').click(function() {
 

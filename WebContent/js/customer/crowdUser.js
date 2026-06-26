@@ -27,81 +27,53 @@ jQuery(function ($) {
 
     com.initTypeahead('userSel', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0", "departmentType.name": ""}, "autoFillKeyValue", "key", "value", null);
 
-    var displayFunc = (function () {
+    function buildCrowdUserLineprops() {
 
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "user.userId",
+            name: "编号",
+            prop: "user.userId",
+            clazz: "grey"
+        }, {
+            field: "user.duty.name",
+            name: "职位",
+            prop: "user.duty.name",
+            clazz: "grey"
+        }, {
+            field: "content",
+            name: "说明",
+            prop: "content",
+            clazz: "grey"
+        }];
+    }
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function (v) {
-            var userBase = v.user;
-
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + userBase.currentName));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-
-            var propertyArr = [
-                ["编号:", userBase.userId, "grey"],
-                ["职位:", userBase.duty.name, "grey"],
-                ["说明:", v.content, "grey"]
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnDel).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-
-            $btnDel.bindClick(function () {
-                deleteGroupUser(v.duid);
-            });
-
-            return $liLine;
-        };
+    function buildCrowdUserLinebtns() {
 
         return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return creatLine(v);
+            del: {
+                name: "删除",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    deleteGroupUser(v.duid);
+                }
             }
         };
-    })();
+    }
+
+    function buildCrowdUserButtons() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addGroupUser').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    }
 
     var searcher = new Searcher();
 
-    searcher.init([], "condListas", api.decoration.queryDecorationUser, function (data) {
-        displayFunc.init('resultListas', data);
-    }, "pagenationas", "groupUserPostData", {"decorationUser.orderId": approve.gorderId}, false, null, function () {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addGroupUser').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        return [$adda];
-    });
+    searcher.set("condListas", "pagenationas", "resultListas", api.decoration.queryDecorationUser, {"decorationUser.orderId": approve.gorderId}, [], "groupUserPostData", null, false, buildCrowdUserButtons);
+    searcher.line("user.currentName", buildCrowdUserLineprops(), buildCrowdUserLinebtns()).render();
 
     com.focusPage('#addGroupUser', '#pagenationas').click(function () {
         approve.editFlg = false;

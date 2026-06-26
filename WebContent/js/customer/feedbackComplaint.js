@@ -250,70 +250,44 @@ jQuery(function($) {
         com.switchPage(params.historyPage);
     });
 
-    var displayFunc = (function() {
+    function buildFeedbackComplaintRecordLineprops() {
 
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.feedback.orderId));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var propertyArr = [["装修单号:", v.feedback.orderId, "grey"], ["处理人:", v.handler.userName, "grey"], ["状态:", v.feedback.status = "2" ? "处理" : v.feedback.status = "3" ? "完成" : v.feedback.status = "1" ? "接收" : "初始", "grey"], ["处理时间:", v.operateTime, "grey"], ["备注:", v.comment, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+        return [{
+            fieId: "feedback.orderId",
+            name: "装修单号",
+            prop: "feedback.orderId",
+            clazz: "grey"
+        }, {
+            fieId: "handler.userName",
+            name: "处理人",
+            prop: "handler.userName",
+            clazz: "grey"
+        }, {
+            fieId: "status",
+            name: "状态",
+            prop: function(v) {
+                return v.feedback.status = "2" ? "处理" : v.feedback.status = "3" ? "完成" : v.feedback.status = "1" ? "接收" : "初始";
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
+            clazz: "grey"
+        }, {
+            fieId: "operateTime",
+            name: "处理时间",
+            prop: "operateTime",
+            clazz: "grey"
+        }, {
+            fieId: "comment",
+            name: "备注",
+            prop: "comment",
+            clazz: "grey"
+        }];
+    }
 
     var searcher1 = new Searcher();
 
-    searcher1.init([], "condListas1", api.customer.queryFeedbackRecord, function(data) {
-
-        displayFunc.init('resultListas1', data);
-    }, "pagenationFeedbackComplaint1", "vrecordPostData", {
+    searcher1.set("condListas1", "pagenationFeedbackComplaint1", "resultListas1", api.customer.queryFeedbackRecord, {
         "feedbackRecord.feedback.fid": complaint.vid
-    }, true, "feedbackRecords", null);
+    }, [], "vrecordPostData", "feedbackRecords", true, null);
+    searcher1.line("feedback.orderId", buildFeedbackComplaintRecordLineprops(), {}).render();
 
     var searcher = new Searcher();
 

@@ -33,154 +33,168 @@ $(function () {
     }, "autoFillKeyValue", "key", "value", null);
 
 
-    var displayFunc = (function () {
+    function buildAepairLineprops() {
 
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "creater.currentName",
+            name: "创建人",
+            prop: "creater.currentName",
+            clazz: "grey"
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "green"
+        }, {
+            field: "updater.currentName",
+            name: "操作人",
+            prop: "updater.currentName",
+            clazz: "grey"
+        }, {
+            field: "updateTime",
+            name: "操作时间",
+            prop: "updateTime",
+            clazz: "green"
+        }, {
+            field: "repaier.currentName",
+            name: "维修人",
+            prop: "repaier.currentName",
+            clazz: "grey"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return constant.customer().aepair.status.keys[v.status]; },
+            clazz: "red"
+        }, {
+            field: "onestate",
+            name: "水",
+            prop: function(v) { return constant.customer().aepair.oneState.keys[v.onestate]; },
+            clazz: "red"
+        }, {
+            field: "twostate",
+            name: "电",
+            prop: function(v) { return constant.customer().aepair.twoState.keys[v.twostate]; },
+            clazz: "red"
+        }, {
+            field: "thrstate",
+            name: "瓦",
+            prop: function(v) { return constant.customer().aepair.thrState.keys[v.thrstate]; },
+            clazz: "red"
+        }, {
+            field: "forstate",
+            name: "木",
+            prop: function(v) { return constant.customer().aepair.forState.keys[v.forstate]; },
+            clazz: "red"
+        }, {
+            field: "fivstate",
+            name: "油",
+            prop: function(v) { return constant.customer().aepair.fivState.keys[v.fivstate]; },
+            clazz: "red"
+        }, {
+            field: "comment",
+            name: "说明",
+            prop: "comment",
+            clazz: "grey"
+        }];
+    }
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-        var creatLine = function (v) {
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnSend = $('<a></a>').addClass('btn btn-minier btn-blue').html('发送');
-            var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
-            var $btnPay = $('<a></a>').addClass('btn btn-minier btn-purple').html('维修款');
-            var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
-            var $btnReceive = $('<a></a>').addClass('btn btn-minier btn-danger').html('领取');
-            var $btnDelive = $('<a></a>').addClass('btn btn-minier btn-pink').html('分配');
-            var $btnTran = $('<a></a>').addClass('btn btn-minier btn-warning').html('转交');
-            var $btnFinish = $('<a></a>').addClass('btn btn-minier btn-inverse').html('完工');
-            var $btnClose = $('<a></a>').addClass('btn btn-minier btn-yellow').html('关闭');
-
-            var $label = $('<label></label>').addClass('control-label').css({
-                'color': 'grey',
-                'font-size': '20px',
-                "font-weight": "bold"
-            });
-
-            var _label = $('<label></label>');
-
-            var propertyArr = [
-                ["创建人:", v.creater.currentName, "grey"],
-                ["创建时间:", v.createTime, "green"],
-                ["操作人:", v.updater.currentName, "grey"],
-                ["操作时间:", v.updateTime, "green"],
-                ["维修人:", v.repaier.currentName, "grey"],
-                ["状态:", constant.customer().aepair.status.keys[v.status], "red"],
-                ["水:", constant.customer().aepair.oneState.keys[v.onestate], "red"],
-                ["电:", constant.customer().aepair.twoState.keys[v.twostate], "red"],
-                ["瓦:", constant.customer().aepair.thrState.keys[v.thrstate], "red"],
-                ["木:", constant.customer().aepair.forState.keys[v.forstate], "red"],
-                ["油:", constant.customer().aepair.fivState.keys[v.fivstate], "red"],
-                ["说明:", v.comment, "grey"]
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-                $label.appendTo($h3);
-            });
-
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.comment);
-
-            _label.append(_span).appendTo($label);
-
-            $divBtnWrap.append($btnSend).append($btnView).append($btnUpdate).append($btnReceive).append($btnDelive).append($btnTran).append($btnFinish).append($btnClose).append($btnPay).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-            
-            $btnSend.click(function () {
-                var option = {
-                    "code": "1b0c4d577a692ccbea1020147d2d851e1db9f9055d204872a3c76c9edab27204",
-                    "aepair.aid": v.aid
-                };
-                com.post(api.customer.sendAepair, option, function () {
-                    com.showAlert(com.info, '发送成功');
-                });
-            });
-
-            $btnView.click(function () {
-                params.customer.aid = v.aid;
-                com.popup4page('#repairPopUp', api.index.repair.url, '维修单');
-            });
-
-            $btnPay.click(function () {
-                params.customer.aid = v.aid;
-                com.popup4page('#repairPayPopUp', api.index.repairPay.url, '维修款');
-            });
-
-            $btnUpdate.click(function () {
-                aepair.aid = v.aid;
-                aepair.modals.updateAepairModal.modal("show");
-            });
-
-            $btnReceive.click(function () {
-                receiveFunction(v.aid);
-            });
-
-            $btnDelive.click(function () {
-                com.focusPage("#tranModal").html("分配报修信息");
-                aepair.aid = v.aid;
-                aepair.type = "delive";
-                aepair.modals.tranAepairModal.modal("show");
-            });
-
-            $btnTran.click(function () {
-                com.focusPage("#tranModal").html("转交报修信息");
-                aepair.aid = v.aid;
-                aepair.type = null;
-                aepair.modals.tranAepairModal.modal("show");
-            });
-
-            $btnFinish.click(function () {
-                finishFunction(v.aid);
-            });
-
-            $btnClose.click(function () {
-                closeFunction(v.aid);
-            });
-
-            return $liLine;
-        };
+    function buildAepairLinebtns() {
 
         return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            send: {
+                name: "发送",
+                clazz: "btn-blue",
+                handle: function(v) {
+
+                    var option = {
+                        "code": "1b0c4d577a692ccbea1020147d2d851e1db9f9055d204872a3c76c9edab27204",
+                        "aepair.aid": v.aid
+                    };
+                    com.post(api.customer.sendAepair, option, function () {
+                        com.showAlert(com.info, '发送成功');
+                    });
+                }
             },
-            drawLine: function (v) {
-                return creatLine(v);
+            view: {
+                name: "查看",
+                clazz: "btn-yellow",
+                handle: function(v) {
+
+                    params.customer.aid = v.aid;
+                    com.popup4page('#repairPopUp', api.index.repair.url, '维修单');
+                }
+            },
+            pay: {
+                name: "维修款",
+                clazz: "btn-purple",
+                handle: function(v) {
+
+                    params.customer.aid = v.aid;
+                    com.popup4page('#repairPayPopUp', api.index.repairPay.url, '维修款');
+                }
+            },
+            update: {
+                name: "更新",
+                clazz: "btn-success",
+                handle: function(v) {
+
+                    aepair.aid = v.aid;
+                    aepair.modals.updateAepairModal.modal("show");
+                }
+            },
+            receive: {
+                name: "领取",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    receiveFunction(v.aid);
+                }
+            },
+            delive: {
+                name: "分配",
+                clazz: "btn-pink",
+                handle: function(v) {
+
+                    com.focusPage("#tranModal").html("分配报修信息");
+                    aepair.aid = v.aid;
+                    aepair.type = "delive";
+                    aepair.modals.tranAepairModal.modal("show");
+                }
+            },
+            tran: {
+                name: "转交",
+                clazz: "btn-warning",
+                handle: function(v) {
+
+                    com.focusPage("#tranModal").html("转交报修信息");
+                    aepair.aid = v.aid;
+                    aepair.type = null;
+                    aepair.modals.tranAepairModal.modal("show");
+                }
+            },
+            finish: {
+                name: "完工",
+                clazz: "btn-inverse",
+                handle: function(v) {
+
+                    finishFunction(v.aid);
+                }
+            },
+            close: {
+                name: "关闭",
+                clazz: "btn-yellow",
+                handle: function(v) {
+
+                    closeFunction(v.aid);
+                }
             }
         };
-    })();
+    }
 
-    var seacher = new Searcher();
+    var searcher = new Searcher();
 
-    seacher.init(["customer-service-creater-name", "customer-service-updater-name", "customer-aepair-status"], "condListData", api.customer.pageAepair, function (data) {
-        displayFunc.init('resultListData', data);
-    }, "pagenationData", "aepairPostData", null, false, null, function () {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-success').attr('name', 'add').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        return [];
-    }, "resultListData");
+    searcher.set("condListData", "pagenationData", "resultListData", api.customer.pageAepair, null, ["customer-service-creater-name", "customer-service-updater-name", "customer-aepair-status"], "aepairPostData", null, false, null);
+    searcher.line("comment", buildAepairLineprops(), buildAepairLinebtns()).render();
 
     function updateFunction() {
 
@@ -195,7 +209,7 @@ $(function () {
         com.post(api.customer.updateAepair, options, function (res) {
             com.showAlert(com.info, '操作成功');
             aepair.modals.updateAepairModal.modal("hide");
-            seacher.doSearch();
+            searcher.doSearch();
         });
     }
 
@@ -204,7 +218,7 @@ $(function () {
         com.showConfirm("确认要领取吗", function () {
             com.post(api.customer.receiveAepair, {"aepair.aid": aid}, function (res) {
                 com.showAlert(com.info, '领取成功');
-                seacher.doSearch();
+                searcher.doSearch();
             });
         });
 
@@ -225,13 +239,13 @@ $(function () {
             com.post(api.customer.deliveAepair, options, function (res) {
                 com.showAlert(com.info, '分配成功');
                 aepair.modals.tranAepairModal.modal("hide");
-                seacher.doSearch();
+                searcher.doSearch();
             });
         } else {
             com.post(api.customer.tranAepair, options, function (res) {
                 com.showAlert(com.info, '转交成功');
                 aepair.modals.tranAepairModal.modal("hide");
-                seacher.doSearch();
+                searcher.doSearch();
             });
         }
 
@@ -242,7 +256,7 @@ $(function () {
         com.showConfirm("确认要完工吗", function () {
             com.post(api.customer.finishAepair, {"aepair.aid": aid}, function (res) {
                 com.showAlert(com.info, '操作成功');
-                seacher.doSearch();
+                searcher.doSearch();
             });
         });
 
@@ -253,7 +267,7 @@ $(function () {
         com.showConfirm("确认要关闭吗", function () {
             com.post(api.customer.closeAepair, {"aepair.aid": aid}, function (res) {
                 com.showAlert(com.info, '关闭成功');
-                seacher.doSearch();
+                searcher.doSearch();
             });
         });
 
