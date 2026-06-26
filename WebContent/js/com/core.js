@@ -755,10 +755,8 @@ var com = {
         }
 
         var opearteTab = $("#homeNav > #operateTab");
-        var tabDel = $('<div class="removePage"><i class="icon-remove"></i></div>');
-        var tabRefresh = $('<div class="removePage"><i class="icon-refresh"></i></div>');
         var tabLi = $('<li class="flpage nav-tab active" data-page="' + page + '"></li>');
-        var taba = $('<a data-toggle="tab" href="#' + menuId + '" id="tab_' + menuId + '">' + $features.attr("menuText") + '</a>').append(tabRefresh).append(tabDel);
+        var taba = $('<a data-toggle="tab" href="#' + menuId + '" id="tab_' + menuId + '">' + $features.attr("menuText") + '</a>');
         var tabPane = $('<div id="' + menuId + '" class="flpage tab-pane in active"></div>').attr({
             'icon': $features.attr('icon'),
             'helpKey': $features.attr('helpKey'),
@@ -766,68 +764,20 @@ var com = {
             'parentText': $($features.parents('li').find('a:first')).attr("menuText")
         });
 
-        var tabClose = $("#dropdown");
-
         $(".flpage.nav-tab").removeClass("active");
         $(".flpage.tab-pane").removeClass("active");
 
         opearteTab.before(tabLi.append(taba));
         $(".flpage.tab-content").append(tabPane);
 
-        console.log('[diag] tab inserted, tabLi in DOM:', tabLi.closest('body').length, 'tabPane in DOM:', tabPane.closest('body').length, 'tabPane classes:', tabPane.attr('class'));
-
-        tabPane.load(page, function(response, status, xhr) {
-            console.log('[diag] tabPane.load complete, status:', status, 'xhr status:', xhr ? xhr.status : 'N/A', 'response length:', response ? response.length : 0);
-            console.log('[diag] scripts in response:', response ? (response.match(/<script/g) || []).length : 0, 'loadScript calls:', response ? (response.match(/\$\.loadScript/g) || []).length : 0);
-            console.log('[diag] tabPane visible:', tabPane.is(':visible'), 'height:', tabPane.height(), 'width:', tabPane.width());
-            console.log('[diag] tabPane parent visible:', tabPane.parent().is(':visible'), 'parent height:', tabPane.parent().height());
-            console.log('[diag] tabPane children:', tabPane.children().length, 'html length:', tabPane.html().length);
-        });
-
-        tabDel.on("click", function() {
-
-            var _btn = $(this);
-            var _tab = _btn.parents('li.flpage');
-
-            var _pageId = _btn.parent("a").attr("href");
-            var _page = $(_pageId);
-
-            if (_tab.hasClass("active")) {
-                params['urlLoadParams'] = com.splitUrl(_tab.prev().attr('data-page'));
-
-                _tab.prev('li.flpage').addClass('active');
-                _page.prev('div.flpage').addClass('active');
-            }
-
-            _tab.remove();
-            _page.remove();
-        });
+        tabPane.load(page);
 
         taba.on("click", function() {
 
-            tabClose.removeClass('show');
             params['urlLoadParams'] = com.splitUrl(page);
             breadcrumb(tabPane);
 
             layer.closeAll("tips");
-        });
-
-        tabRefresh.on("click", function() {
-
-            var target = $($(this).parent().attr("href"));
-
-            var mask = $("<div></div>").addClass("tab-mask").appendTo(target);
-            var maskh1 = $("<h1></h1>").css({
-                "position": "absolute",
-                "top": "30%",
-                "left": "45%"
-            }).appendTo(mask);
-            var maskicon = $("<i></i>").addClass("icon-spinner icon-spin bigger-450").appendTo(maskh1);
-
-            setTimeout(function() {
-
-                tabPane.load(page);
-            }, 1200);
         });
 
         breadcrumb(tabPane);
