@@ -272,297 +272,448 @@
         return "";
     });
 
-    var displayFunc = (function() {
+    var binding = {
 
-        var renderList = function(tableId, listData) {
+        $dialog: com.focusPage('#moduleModal'),
+        postConf: {
+            "user.userId": null,
+            path: null,
+            name: null
+        },
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        openDesignDialog: function(userId) { // 设计权限配置
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+            var $dialog = this.$dialog;
+            showDepaermentModal("设计部");
+            com.post(api.right.queryDecorationDesignDepartmentRightByUserId, {
+                "user.userId": userId
+            }, function(data) {
 
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                if (data.dids.length) {
+                    $.each(data.dids, function(i, v) {
 
-                    var $urldiv = $('<div style="border: 1px solid #ccc ;float :left;"></div>').css("width", "75px").css("height", "75px").css("margin-right", "10px");
-                    var img = $('<img />').css("margin-right", "20px").appendTo($urldiv);
-                    com.showImg(img, v.userPhoto, 75, 75, '', null, 0);
+                        $wrap.find('input[value="' + v + '"]').prop('checked', true);
+                    });
+                }
+            }, null, false);
+            $dialog.modal("show");
+            this.postConf.path = api.right.updateDecorationDesignDepartmentRight;
+            this.postConf.name = "dids";
+            this.postConf["user.userId"] = userId;
+        },
 
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+        openSalesDialog: function(userId) { // 业务权限配置
 
-                    var $qrcode = $('<a></a>').addClass('btn btn-minier btn-yellow').html('二维码');
+            var $dialog = this.$dialog;
+            showDepaermentModal("");
+            com.post(api.right.queryDecorationSalesmanDepartmentRightByUserId, {
+                "user.userId": userId
+            }, function(data) {
 
-                    var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html('查看');
-                    var $btnDetail = $('<a></a>').addClass('btn btn-minier btn-info').html('汇总');
-                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
-                    var $btnPartner = $('<a></a>').addClass('btn btn-minier btn-info').html('合作');
+                if (data.dids.length) {
+                    $.each(data.dids, function(i, v) {
 
-                    var $addDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('添加钉钉');
-                    var $updateDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('同步钉钉');
-                    var $deleteDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('删除钉钉');
+                        $wrap.find('input[value="' + v + '"]').prop('checked', true);
+                    });
+                }
+            }, null, false);
+            $dialog.modal("show");
+            this.postConf.path = api.right.updateDecorationSalesmanDepartmentRight;
+            this.postConf.name = "dids";
+            this.postConf["user.userId"] = userId;
+        },
 
-                    var $usersalary = $('<a></a>').addClass('btn btn-minier btn-pink').html('薪资');
-                    var $btnContract = $('<a></a>').addClass('btn btn-minier btn-pink').html('合同');
-                    var $userexception = $('<a></a>').addClass('btn btn-minier btn-pink').html('经历');
-                    var $btnlookEducation = $('<a></a>').addClass('btn btn-minier btn-pink').html('教育');
-                    var $btnlookOperation = $('<a></a>').addClass('btn btn-minier btn-pink').html('工作');
-                    var $btnPicture = $('<a></a>').addClass('btn btn-minier btn-pink').html('资料');
+        openOrderDialog: function(userId) { // 订单权限配置
 
-                    var $btnOffjob = $('<a></a>').addClass('btn btn-minier btn-danger').html('离职');
-                    var $btnTransfer = $('<a></a>').addClass('btn btn-minier btn-danger').html('调职');
-                    var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-danger').html('打印');
+            var $dialog = this.$dialog;
+            var list = [{
+                key: "-1",
+                value: "全部"
+            }], userList;
+            var $list = $('.modal-body', $dialog);
+            $list.empty();
 
-                    var $role = $('<a></a>').addClass('btn btn-minier btn-yellow').html('角色');
-                    var $company = $('<a></a>').addClass('btn btn-minier btn-yellow').html('公司');
-                    var $department = $('<a></a>').addClass('btn btn-minier btn-yellow').html('部门');
-                    var $btnRight = $('<a></a>').addClass('btn btn-minier btn-yellow').html('权配');
-                    var $btnMacontrol = $('<a></a>').addClass('btn btn-minier btn-yellow').html('权限');
-                    var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-pink').html('装修设计');
-                    var $btnSales = $('<a></a>').addClass('btn btn-minier btn-pink').html('装修业务');
-                    var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-pink').html('装修状态');
-                    var $btnHouse = $('<a></a>').addClass('btn btn-minier btn-pink').html('房源权配');
-                    var $btnCustomer = $('<a></a>').addClass('btn btn-minier btn-pink').html('客源权配');
-                    var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('重置密码');
-                    var $defaultPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('默认密码');
-                    var $btnlogout = $('<a></a>').addClass('btn btn-minier btn-danger').html('登出');
-                    var $btnSyncRight = $('<a></a>').addClass('btn btn-minier btn-info').html('同步权限');
+            list = list.concat(constant.decoration().decoration.status.datas);
 
-                    var propertyArr = userUtils.getPropertyArr(user.pageConfig.propertyArr, v);
+            com.post(api.right.queryDecorationStatusRightByUserId, {
+                "user.userId": userId
+            }, function(data) {
 
-                    $.each(propertyArr, function(index, value) {
+                userList = data.statuses;
+            }, null, false);
 
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
+            list && list.length && $.each(list, function(i, v) {
+
+                var $label = $('<label  style="margin-right:20px;display: inline-block;min-width: 25%;"></label>');
+                var $input = $('<input>').attr({
+                    "type": "checkbox",
+                    "name": "module",
+                    "class": "ace"
+                }).val(v.key);
+                var $span = $('<span></span>').addClass('lbl').html(v.value);
+                $label.append($input).append($span).appendTo($list);
+            });
+
+            userList && userList.length && $.each(userList, function(i, v) {
+
+                com.focusPage('input[name="module"][value="' + v + '"]', $list).prop('checked', true);
+            });
+
+            $dialog.modal("show");
+
+            this.postConf.path = api.right.updateDecorationStatusRight;
+            this.postConf.name = "statuses";
+            this.postConf["user.userId"] = userId;
+
+        },
+
+        openHouseDialog: function(userId) { // 房源权配
+
+            var $dialog = this.$dialog;
+            showDepaermentModal("置业房产");
+            com.post(api.right.queryHouseSourceDepartmentRightByUserId, {
+                "user.userId": userId
+            }, function(data) {
+
+                if (data.dids.length) {
+                    $.each(data.dids, function(i, v) {
+
+                        $wrap.find('input[value="' + v + '"]').prop('checked', true);
+                    });
+                }
+            }, null, false);
+            $dialog.modal("show");
+            this.postConf.path = api.right.updateHouseSourceDepartmentRight;
+            this.postConf.name = "dids";
+            this.postConf["user.userId"] = userId;
+        },
+
+        openCustomerDialog: function(userId) { // 客源权配
+
+            var $dialog = this.$dialog;
+            showDepaermentModal("");
+            com.post(api.right.queryCustomerSourceDepartmentRightByUserId, {
+                "user.userId": userId
+            }, function(data) {
+
+                if (data.dids.length) {
+                    $.each(data.dids, function(i, v) {
+
+                        $wrap.find('input[value="' + v + '"]').prop('checked', true);
+                    });
+                }
+            }, null, false);
+            $dialog.modal("show");
+            this.postConf.path = api.right.updateCustomerSourceDepartmentRight;
+            this.postConf.name = "dids";
+            this.postConf["user.userId"] = userId;
+        },
+
+        // 登出
+        openlogoutDialog: function(userId) {
+
+            com._post_(api.home.library, {
+                "api": "system.login.logout",
+                "userId": userId,
+                "redis": 0
+            }, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+            });
+        },
+
+        setAdvance: function() {
+
+            var $dialog = this.$dialog;
+            var postConf = this.postConf;
+
+            com.focusPage('button[name="saveBtn"]').click(function() {
+
+                var list = $('input[name="module"]:checked', $dialog);
+
+                var params = {
+                    "user.userId": postConf["user.userId"]
+                };
+
+                if (!list.length || list.length == 0)
+                    return false;
+
+                $.each(list, function(i, v) {
+
+                    var $v = $(this).val();
+                    params[postConf.name + "[" + i + "]"] = $v;
+                    if ($v == -1 || $v == '全部')
+                        return false;
+                });
+
+                com.post(postConf.path, params, function(data) {
+
+                    $dialog.modal("hide");
+                });
+            });
+        }
+    };
+
+    function buildUserLineprops() {
+
+        var props = [];
+
+        if (user.pageConfig.propertyArr.contains("picture")) {
+            props.push({
+                type: "img",
+                prop: "userPhoto"
+            });
+        }
+
+        props.push({
+            field: "userName",
+            name: "用户名",
+            prop: "userName",
+            clazz: "blue"
+        });
+
+        $.each(user.pageConfig.propertyArr, function(i, pv) {
+
+            if (pv == "picture")
+                return;
+
+            switch (pv) {
+                case "userId":
+                    props.push({field: "userId", name: "员工编号", prop: "userId", clazz: "grey"});
+                    break;
+                case "loginId":
+                    props.push({field: "loginId", name: "用户名", prop: "loginId", clazz: "grey"});
+                    break;
+                case "dept":
+                    props.push({field: "dept.name", name: "部门", prop: "dept.name", clazz: "grey"});
+                    break;
+                case "duty":
+                    props.push({field: "duty.name", name: "职位", prop: "duty.name", clazz: "grey"});
+                    break;
+                case "role":
+                    props.push({field: "role.name", name: "角色", prop: "role.name", clazz: "grey"});
+                    break;
+                case "phone":
+                    props.push({field: "phone", name: "联系方式", prop: "phone", clazz: "grey"});
+                    break;
+                case "identity":
+                    props.push({field: "identity", name: "身份证", prop: function(v) { return v.identity ? v.identity.replace(/(\d{6})\d{8}(\w{4})/, '$1********$2') : ""; }, clazz: "grey"});
+                    break;
+                case "status":
+                    props.push({field: "status", name: "状态", prop: function(v) { return constant.personel().user.status.keys[v.status]; }, clazz: "red"});
+                    break;
+            }
+        });
+
+        return props;
+    }
+
+    function buildUserLinebtns() {
+
+        var btns = {};
+
+        if (user.pageConfig.pageBtn.contains("qrcode")) {
+            btns.qrcode = {
+                name: "二维码",
+                clazz: "btn-yellow",
+                show: function(v) { return v.status == constant.personel.user.STATUS_ONJOB_INT; },
+                handle: function(v) {
+
+                    user.items.Qrcode.html("").qrcode({
+                        render: "canvas",
+                        width: 150,
+                        height: 150,
+                        text: "fanglinserver:" + v.userId
                     });
 
-                    $qrcode.click(function() {
+                    user.modals.qrcodeModal.modal('show');
+                }
+            };
+        }
 
-                        user.items.Qrcode.html("").qrcode({
-                            render: "canvas", // 也可以替换为table
-                            width: 150,
-                            height: 150,
-                            text: "fanglinserver:" + v.userId
-                        });
+        if (user.pageConfig.pageBtn.contains("view")) {
+            btns.view = {
+                name: "查看",
+                clazz: "btn-info",
+                handle: function(v) {
 
-                        user.modals.qrcodeModal.modal('show');
-                    });
+                    params.personel.userId = v.userId;
+                    params.personel.isExpert = user.isExpert;
+                    com.popup4page("#layerPopUp", api.index.userViewIndex.url, "查看");
+                }
+            };
+        }
 
-                    // 查看
-                    $btnCheck.click(function() {
+        if (user.pageConfig.pageBtn.contains("total")) {
+            btns.total = {
+                name: "汇总",
+                clazz: "btn-info",
+                handle: function(v) {
 
-                        params.personel.userId = v.userId;
-                        params.personel.isExpert = user.isExpert;
-                        com.popup4page("#layerPopUp", api.index.userViewIndex.url, "查看");
+                    params.personel.userId = v.userId;
+                    params.personel.uid = v.uid;
+                    params.personel.isExpert = user.isExpert;
 
-                    });
+                    com.popup4page("#layerPopUp", api.index.userDetail.url, "人员信息");
+                }
+            };
+        }
 
-                    $btnEdit.click(function() {
+        if (user.pageConfig.pageBtn.contains("edit")) {
+            btns.edit = {
+                name: "编辑",
+                clazz: "btn-info",
+                handle: function(v) {
 
-                        params.personel.userId = v.userId;
-                        params.type = 1;
-                        params.personel.isExpert = user.isExpert;
-                        com.popup4page("#layerPopUp", api.index.userEditIndex.url, "编辑");
-                    });
+                    params.personel.userId = v.userId;
+                    params.type = 1;
+                    params.personel.isExpert = user.isExpert;
+                    com.popup4page("#layerPopUp", api.index.userEditIndex.url, "编辑");
+                }
+            };
+        }
 
-                    $btnPartner.click(function() {
+        if (user.pageConfig.pageBtn.contains("partner")) {
+            btns.partner = {
+                name: "合作",
+                clazz: "btn-info",
+                handle: function(v) {
 
-                        params.personel.partner = {
-                            "uid": v.uid
+                    params.personel.partner = {
+                        "uid": v.uid
+                    }
+
+                    com.popup4page("#userPartnerPopUp", api.index.userPartnerIndex.url, "合作");
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("addDD")) {
+            btns.addDD = {
+                name: "添加钉钉",
+                clazz: "btn-inverse",
+                show: function(v) { return v.status == constant.personel.user.STATUS_ONJOB_INT; },
+                handle: function(v) {
+
+                    com.focusPage('#ddModal').modal('show');
+
+                    com.focusPage('#tree3').html("");
+                    com.focusPage("#tree3").removeData("tree");
+                    com.focusPage("#tree3").unbind('click');
+                    var deptList = null;
+
+                    com.post(api.dd.queryDingTalkDepartment, {}, function(res) {
+
+                        deptList = res.departments;
+                    }, null, false);
+
+                    if (deptList == null) {
+                        return false;
+                    }
+
+                    var deptObj = {
+                        '1': {
+                            name: params.company.name,
+                            type: 'folder',
+                            id: params.company.no
                         }
+                    }, didList = [];
+                    // 获取所有叶子节点
+                    $.each(deptList, function(i, va) {
 
-                        com.popup4page("#userPartnerPopUp", api.index.userPartnerIndex.url, "合作");
+                        didList.push(va.id);
                     });
 
-                    // 添加点击事件
-                    $addDD.unbind().bind('click', function() {
+                    $.each(deptList, function(i, va) {
 
-                        com.focusPage('#ddModal').modal('show');
-
-                        com.focusPage('#tree3').html("");
-                        com.focusPage("#tree3").removeData("tree");
-                        com.focusPage("#tree3").unbind('click');
-                        var deptList = null;
-
-                        com.post(api.dd.queryDingTalkDepartment, {}, function(res) {
-
-                            deptList = res.departments;
-                        }, null, false);
-
-                        if (deptList == null) {
-                            return false;
+                        if (va.parentid && didList.indexOf(va.parentid) != -1) {
+                            didList.splice(didList.indexOf(va.parentid), 1);
                         }
+                    });
 
-                        var deptObj = {
-                            '1': {
-                                name: params.company.name,
-                                type: 'folder',
-                                id: params.company.no
-                            }
-                        }, didList = [];
-                        // 获取所有叶子节点
-                        $.each(deptList, function(i, v) {
+                    // splice为删除了父类的id,余下的在didlist中的id为子节点的id
+                    com.focusPage('#tree3').ace_tree({
+                        dataSource: {
+                            data: function(options, callback) {
 
-                            didList.push(v.id);
-                        });
+                                var $data = null;
+                                if (!("type" in options)) {
+                                    $data = deptObj;// the root tree
+                                    callback({
+                                        data: $data
+                                    });
+                                    return;
+                                } else if ("type" in options && options.type == "folder") {
+                                    if ("children" in options) {
+                                        $data = options.children;
+                                    } else {
+                                        $data = getDeptByDid(options.id);
+                                    }
+                                }
 
-                        $.each(deptList, function(i, v) {
+                                if ($data != null) {
+                                    setTimeout(function() {
 
-                            if (v.parentid && didList.indexOf(v.parentid) != -1) {
-                                didList.splice(didList.indexOf(v.parentid), 1);
-                            }
-                        });
-
-                        // splice为删除了父类的id,余下的在didlist中的id为子节点的id
-                        com.focusPage('#tree3').ace_tree({
-                            dataSource: {
-                                data: function(options, callback) {
-
-                                    var $data = null;
-                                    if (!("type" in options)) {
-                                        $data = deptObj;// the root tree
                                         callback({
                                             data: $data
                                         });
-                                        return;
-                                    } else if ("type" in options && options.type == "folder") {
-                                        if ("children" in options) {
-                                            $data = options.children;
-                                        } else {
-                                            $data = getDeptByDid(options.id);
-                                        }
-                                    }
-
-                                    if ($data != null) {
-                                        setTimeout(function() {
-
-                                            callback({
-                                                data: $data
-                                            });
-                                        }, parseInt(Math.random() * 500) + 200);
-                                    }
-                                }
-                            },
-                            loadingHTML: '<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
-                            'open-icon': 'icon-minus',
-                            'close-icon': 'icon-plus',
-                            'selectable': true,// 可选
-                            'multiSelect': true, // 多选
-                            'selected-icon': null,
-                            'unselected-icon': null,
-                            folderSelect: true,
-                            cacheItems: false
-                        }).on('selected', function(evt, opt) {
-
-                        });
-
-                        var getDeptByDid = function(did) {
-
-                            var depts = {};
-                            $.each(deptList, function(i, v) {
-
-                                if (v.parentid == did) {
-                                    depts[v.id] = {
-                                        name: v.name,
-                                        type: didList.indexOf(v.id) == -1 ? 'folder' : 'item',
-                                        id: v.id
-                                    }
-                                }
-                            });
-                            return depts;
-                        };
-
-                        com.focusPage('#savebtn').unbind().bind('click', function() {
-
-                            var items = com.focusPage('#tree3').tree('selectedItems');
-                            var length = items.length;
-                            com.focusPage('#ddModal').modal("hide");
-                            var params = {
-                                "user.userid": v.userId,
-                                "user.name": v.currentName,
-                                "user.Mobile": v.phone,
-                                "user.Position": v.duty.name,
-                                "user.email": v.email
-                            };
-
-                            if (length) {
-                                for ( var i = 0; i < length; i++) {
-                                    params["dids" + "[" + i + "]"] = items[i].id;
+                                    }, parseInt(Math.random() * 500) + 200);
                                 }
                             }
+                        },
+                        loadingHTML: '<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
+                        'open-icon': 'icon-minus',
+                        'close-icon': 'icon-plus',
+                        'selectable': true,// 可选
+                        'multiSelect': true, // 多选
+                        'selected-icon': null,
+                        'unselected-icon': null,
+                        folderSelect: true,
+                        cacheItems: false
+                    }).on('selected', function(evt, opt) {
 
-                            com.post(api.dd.queryDingTalkUser, {
-                                "user.userid": v.userId
-                            }, function(res) {
-
-                                if (res.user && res.user.userid != null) {
-                                    com.post(api.dd.updateDingTalkUser, params, function(data) {
-
-                                        if ($.trim(data.errcode) == $.trim(0)) {
-                                            com.showAlert(com.info, "更新成功");
-                                        } else {
-                                            com.showAlert(com.error, "更新失败");
-                                        }
-                                    });
-                                } else {
-                                    com.post(api.dd.addDingTalkUser, params, function(data) {
-
-                                        if ($.trim(data.errcode) == $.trim(0)) {
-                                            com.showAlert(com.info, "创建成功");
-                                        } else {
-                                            com.showAlert(com.error, "创建失败");
-                                        }
-                                    });
-                                }
-                            }, null, false);
-                        });
-
-                        com.focusPage('#cancel').click(function() {
-
-                            com.focusPage("#tree3").removeData("tree");
-                        });
                     });
 
-                    com.focusPage('#closeM').click(function() {
+                    var getDeptByDid = function(did) {
 
-                        com.focusPage("#tree3").removeData("tree");
-                    });
-                    // 同步钉钉信息
-                    $updateDD.click(function() {
+                        var depts = {};
+                        $.each(deptList, function(i, va) {
 
-                        var btn = $(this);
-                        var span = btn.find('span');
-                        btn.find('i').remove();
-                        var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
-                        span.prepend(loading);
-                        var message = "<p>确定要将该员工信息同步到钉钉吗?</p>";
-                        com.showConfirm(message, function(result) {
-
-                            var selectedDepts = [];
-                            var phone;
-                            com.post(api.dd.queryDingTalkUser, {
-                                "user.userid": v.userId
-                            }, function(res) {
-
-                                selectedDepts = res.user.department;
-                                phone = res.user.mobile;
-                                if (selectedDepts == null) {
-                                    com.showAlert(com.error, "该员工还没有添加到钉钉部门");
-                                    return;
+                            if (va.parentid == did) {
+                                depts[va.id] = {
+                                    name: va.name,
+                                    type: didList.indexOf(va.id) == -1 ? 'folder' : 'item',
+                                    id: va.id
                                 }
+                            }
+                        });
+                        return depts;
+                    };
 
-                                var params = {
-                                    "user.userid": v.userId,
-                                    "user.name": v.currentName,
-                                    "user.Mobile": phone,
-                                    "user.Position": v.duty.name,
-                                    "user.email": v.email,
-                                    "dids": selectedDepts
-                                };
+                    com.focusPage('#savebtn').unbind().bind('click', function() {
 
+                        var items = com.focusPage('#tree3').tree('selectedItems');
+                        var length = items.length;
+                        com.focusPage('#ddModal').modal("hide");
+                        var params = {
+                            "user.userid": v.userId,
+                            "user.name": v.currentName,
+                            "user.Mobile": v.phone,
+                            "user.Position": v.duty.name,
+                            "user.email": v.email
+                        };
+
+                        if (length) {
+                            for ( var i = 0; i < length; i++) {
+                                params["dids" + "[" + i + "]"] = items[i].id;
+                            }
+                        }
+
+                        com.post(api.dd.queryDingTalkUser, {
+                            "user.userid": v.userId
+                        }, function(res) {
+
+                            if (res.user && res.user.userid != null) {
                                 com.post(api.dd.updateDingTalkUser, params, function(data) {
 
                                     if ($.trim(data.errcode) == $.trim(0)) {
@@ -571,660 +722,551 @@
                                         com.showAlert(com.error, "更新失败");
                                     }
                                 });
-                            }, null, false);
-                        });
+                            } else {
+                                com.post(api.dd.addDingTalkUser, params, function(data) {
+
+                                    if ($.trim(data.errcode) == $.trim(0)) {
+                                        com.showAlert(com.info, "创建成功");
+                                    } else {
+                                        com.showAlert(com.error, "创建失败");
+                                    }
+                                });
+                            }
+                        }, null, false);
                     });
 
-                    $usersalary.click(function() {
+                    com.focusPage('#cancel').click(function() {
 
-                        params.salary.belonger = {
-                            userId: v.userId
-                        };
-
-                        com.popup4page("#layerPopUp", "views/salary/salary4common.html", "薪资信息");
+                        com.focusPage("#tree3").removeData("tree");
                     });
+                }
+            };
+        }
 
-                    $btnlookEducation.click(function() {
+        if (user.pageConfig.pageBtn.contains("syncDD")) {
+            btns.syncDD = {
+                name: "同步钉钉",
+                clazz: "btn-inverse",
+                show: function(v) { return v.status == constant.personel.user.STATUS_ONJOB_INT; },
+                handle: function(v) {
 
-                        params.personel.uid = v.uid;
+                    var message = "<p>确定要将该员工信息同步到钉钉吗?</p>";
+                    com.showConfirm(message, function(result) {
 
-                        com.popup4page("#layerPopUp", api.index.userEducation.url, "教育信息");
-                    });
+                        var selectedDepts = [];
+                        var phone;
+                        com.post(api.dd.queryDingTalkUser, {
+                            "user.userid": v.userId
+                        }, function(res) {
 
-                    $btnlookOperation.click(function() {
+                            selectedDepts = res.user.department;
+                            phone = res.user.mobile;
+                            if (selectedDepts == null) {
+                                com.showAlert(com.error, "该员工还没有添加到钉钉部门");
+                                return;
+                            }
 
-                        params.personel.uid = v.uid;
+                            var params = {
+                                "user.userid": v.userId,
+                                "user.name": v.currentName,
+                                "user.Mobile": phone,
+                                "user.Position": v.duty.name,
+                                "user.email": v.email,
+                                "dids": selectedDepts
+                            };
 
-                        com.popup4page("#layerPopUp", api.index.userOperation.url, "工作信息");
-                    });
+                            com.post(api.dd.updateDingTalkUser, params, function(data) {
 
-                    $btnDetail.click(function() {
-
-                        params.personel.userId = v.userId;
-                        params.personel.uid = v.uid;
-                        params.personel.isExpert = user.isExpert;
-
-                        com.popup4page("#layerPopUp", api.index.userDetail.url, "人员信息");
-                    });
-
-                    $btnPrint.click(function() {
-
-                        params.personel.userId = v.userId;
-                        params.personel.uid = v.uid;
-
-                        com.popup("方林装饰应聘登记表", api.index.userPrint.url, null, null, true);
-                    });
-
-                    $btnPicture.click(function() {
-
-                        user.modals.pictureModal.modal("show");
-
-                        params.personel.userId = v.userId;
-                        params.personel.uid = v.uid;
-
-                        initUser(v);
-                    });
-
-                    $btnOffjob.click(function() {
-
-                        com.post(api.personel.quitUser, {
-                            "userId": v.userId,
-                            "approve": "agree"
-                        }, function(v) {
-
-                            com.showAlert(com.info, "离职成功");
-
-                            userSeacher.doSearch();
-                        });
-                    });
-
-                    $btnTransfer.click(function() {
-
-                        user.modals.transferModal.modal("show");
-
-                        params.personel.userId = v.userId;
-
-                        transfer(v);
-
-                        return false;
-                    });
-
-                    $btnContract.click(function() {
-
-                        params.personel.userId = v.userId;
-                        params.personel.uid = v.uid;
-                        params.historyPage = api.index.userIndex.url;
-
-                        // com.popup4page("#layerPopUp", api.index.userContract.url, "合同信息");
-                        com.switchPage(api.index.userContract.url);
-                    });
-
-                    // 删除点击事件
-                    $deleteDD.click(function() {
-
-                        var btn = $(this);
-                        var span = btn.find('span');
-                        btn.find('i').remove();
-                        var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
-                        span.prepend(loading);
-                        var message = "<p>确定要删除该员工吗?</p>";
-                        com.showConfirm(message, function(result) {
-
-                            com.post(api.dd.queryDingTalkUser, {
-                                "user.userid": v.userId
-                            }, function(res) {
-
-                                if (res.user.name != null) {
-                                    com.post(api.dd.deleteDingTalkUser, {
-                                        "user.userid": v.userId
-                                    }, function(data) {
-
-                                        if ($.trim(data.errcode) == $.trim(0)) {
-                                            com.showAlert(com.info, "删除成功");
-                                        } else {
-                                            com.showAlert(com.error, "删除失败");
-                                        }
-                                    });
+                                if ($.trim(data.errcode) == $.trim(0)) {
+                                    com.showAlert(com.info, "更新成功");
                                 } else {
-                                    com.showAlert(com.error, "钉钉中没有该用户, 无法删除");
+                                    com.showAlert(com.error, "更新失败");
                                 }
                             });
-                        });
-                    });
-
-                    $userexception.unbind().bind('click', function() {
-
-                        params.personel.uid = v.uid;
-                        com.popup4page("#layerPopUp", api.index.userExperience.url, "工作经历");
-                    });
-
-                    $role.unbind().bind('click', function() {
-
-                        user.uid = v.uid;
-
-                        var options = {
-                            "user.uid": v.uid
-                        };
-
-                        user.items.userrole.html("");
-                        user.items.selectrole.html("");
-
-                        user.modals.userRoleModal.modal("show");
-
-                        com.post(api.personel.queryUserRole, options, function(res) {
-
-                            $.each(res.userRoles, function(i, va) {
-
-                                var $div = $('<div></div>').appendTo(user.items.userrole);
-                                var $span = $('<span class="tag"></span>').html(va.role.name).appendTo($div);
-                            });
-                        });
-
-                    });
-
-                    $company.unbind().bind('click', function() {
-
-                        user.uid = v.uid;
-
-                        $("#companydiv").empty();
-
-                        var companyname = [];
-
-                        var options = {
-                            "user.uid": v.uid
-                        };
-
-                        user.items.usercompany.html("");
-
-                        user.modals.userCompanyModal.modal("show");
-
-                        com.post(api.personel.queryUserCompany, options, function(res) {
-
-                            $.each(res.userCompanys, function(i, va) {
-
-                                companyname.push(va.company.name);
-                            });
                         }, null, false);
+                    });
+                }
+            };
+        }
 
-                        $.each(user.companysel, function(i, va) {
+        if (user.pageConfig.pageBtn.contains("delDD")) {
+            btns.delDD = {
+                name: "删除钉钉",
+                clazz: "btn-inverse",
+                show: function(v) { return v.status == constant.personel.user.STATUS_ONJOB_INT; },
+                handle: function(v) {
 
-                            var $div = $('<div class="tag"></div>');
-                            var $input = $('<input/>').attr({
-                                "type": "checkbox",
-                                "value": va.name,
-                                "name": "corporab",
-                                "id": va.cid,
-                                "class": "ace"
-                            });
-                            var $span = $('<span></span>').addClass('lbl');
-                            var $spans = $('<span></span>').html(va.name);
-                            $div.append($input).append($span).append($spans).appendTo(com.focusPage("#companydiv"));
-                            if (companyname.indexOf(va.name) != -1) {
-                                $input.attr("checked", true);
+                    var message = "<p>确定要删除该员工吗?</p>";
+                    com.showConfirm(message, function(result) {
+
+                        com.post(api.dd.queryDingTalkUser, {
+                            "user.userid": v.userId
+                        }, function(res) {
+
+                            if (res.user.name != null) {
+                                com.post(api.dd.deleteDingTalkUser, {
+                                    "user.userid": v.userId
+                                }, function(data) {
+
+                                    if ($.trim(data.errcode) == $.trim(0)) {
+                                        com.showAlert(com.info, "删除成功");
+                                    } else {
+                                        com.showAlert(com.error, "删除失败");
+                                    }
+                                });
+                            } else {
+                                com.showAlert(com.error, "钉钉中没有该用户, 无法删除");
                             }
                         });
-
-                        companyname && companyname.length && $.each(companyname, function(i, v) {
-
-                            var $div = $('<div></div>').appendTo(user.items.usercompany);
-                            var $span = $('<span class="tag"></span>').html(v).appendTo($div);
-                        });
-
                     });
-
-                    $department.unbind().bind('click', function() {
-
-                        user.uid = v.uid;
-
-                        $("#departmentdiv").empty();
-
-                        var departmentname = [];
-
-                        var options = {
-                            "user.uid": v.uid
-                        };
-
-                        user.items.userdepartment.html("");
-
-                        user.modals.userDepartmentModal.modal("show");
-
-                        com.post(api.personel.queryUserDepartment, options, function(res) {
-
-                            $.each(res.userDepartments, function(i, va) {
-
-                                departmentname.push(va.department.name);
-                            });
-                        }, null, false);
-
-                        $.each(user.departmentsel, function(i, va) {
-
-                            var $div = $('<div class="tag"></div>');
-                            var $input = $('<input/>').attr({
-                                "type": "checkbox",
-                                "value": va.name,
-                                "name": "deptcheck",
-                                "id": va.did,
-                                "class": "ace"
-                            });
-                            var $span = $('<span></span>').addClass('lbl');
-                            var $spans = $('<span></span>').html(va.name);
-                            $div.append($input).append($span).append($spans).appendTo(com.focusPage("#departmentdiv"));
-                            if (departmentname.indexOf(va.name) != -1) {
-                                $input.attr("checked", true);
-                            }
-                        });
-
-                        departmentname && departmentname.length && $.each(departmentname, function(i, v) {
-
-                            var $div = $('<div></div>').appendTo(user.items.userdepartment);
-                            var $span = $('<span class="tag"></span>').html(v).appendTo($div);
-                        });
-
-                    });
-
-                    $btnMacontrol.click(function() {
-
-                        params["user.uid"] = v.uid;
-                        com.popup4page("#layerPopUp", api.index.macontrol.url, "权限");
-                    });
-
-                    $btnRight.click(function() {
-
-                        dialogUserAdvanceIndex(v.userId);
-                    });
-
-                    $btnDesigne.click(function() {
-
-                        binding.openDesignDialog(v.userId);
-                    });
-
-                    $btnSales.unbind().bind('click', function() {
-
-                        binding.openSalesDialog(v.userId);
-                    });
-
-                    $btnStatus.click(function() {
-
-                        binding.openOrderDialog(v.userId);
-                    });
-
-                    $btnHouse.click(function() {
-
-                        binding.openHouseDialog(v.userId);
-                    });
-
-                    $btnCustomer.click(function() {
-
-                        binding.openCustomerDialog(v.userId);
-                    });
-
-                    $resetPassword.click(function() {
-
-                        resetPassword(v.userId, v.userName);
-                    });
-
-                    $defaultPassword.click(function() {
-
-                        defaultPassword(v.userId, v.userName);
-                    });
-
-                    $btnlogout.click(function() {
-
-                        binding.openlogoutDialog(v.userId);
-                    });
-
-                    // 同步权限按钮点击事件
-                    $btnSyncRight.click(function() {
-
-                        user.uid = v.uid;
-                        user.userId = v.userId;
-
-                        showCompanySelectionModal(v.uid, v.currentName);
-
-                        user.modals.companyCopyModal.modal('show');
-                    });
-
-                    if (user.pageConfig.pageBtn.contains("qrcode") && v.status == constant.personel.user.STATUS_ONJOB_INT)
-                        $divBtnWrap.append($qrcode);
-
-                    if (user.pageConfig.pageBtn.contains("view"))
-                        $divBtnWrap.append($btnCheck);
-
-                    if (user.pageConfig.pageBtn.contains("total"))
-                        $divBtnWrap.append($btnDetail);
-
-                    if (user.pageConfig.pageBtn.contains("edit"))
-                        $divBtnWrap.append($btnEdit);
-
-                    if (user.pageConfig.pageBtn.contains("partner"))
-                        $divBtnWrap.append($btnPartner);
-
-                    if (user.pageConfig.pageBtn.contains("addDD") && v.status == constant.personel.user.STATUS_ONJOB_INT)
-                        $divBtnWrap.append($addDD);
-
-                    if (user.pageConfig.pageBtn.contains("syncDD") && v.status == constant.personel.user.STATUS_ONJOB_INT)
-                        $divBtnWrap.append($updateDD);
-
-                    if (user.pageConfig.pageBtn.contains("delDD") && v.status == constant.personel.user.STATUS_ONJOB_INT)
-                        $divBtnWrap.append($deleteDD);
-
-                    if (user.pageConfig.pageBtn.contains("salary"))
-                        $divBtnWrap.append($usersalary);
-
-                    if (user.pageConfig.pageBtn.contains("contract"))
-                        $divBtnWrap.append($btnContract);
-
-                    if (user.pageConfig.pageBtn.contains("experience"))
-                        $divBtnWrap.append($userexception);
-
-                    if (user.pageConfig.pageBtn.contains("education"))
-                        $divBtnWrap.append($btnlookEducation);
-
-                    if (user.pageConfig.pageBtn.contains("job"))
-                        $divBtnWrap.append($btnlookOperation);
-
-                    if (user.pageConfig.pageBtn.contains("data"))
-                        $divBtnWrap.append($btnPicture);
-
-                    if (user.pageConfig.pageBtn.contains("leave"))
-                        $divBtnWrap.append($btnOffjob);
-
-                    if (user.pageConfig.pageBtn.contains("transferred"))
-                        $divBtnWrap.append($btnTransfer);
-
-                    if (user.pageConfig.pageBtn.contains("print"))
-                        $divBtnWrap.append($btnPrint);
-
-                    if (user.pageConfig.pageBtn.contains("role"))
-                        $divBtnWrap.append($role);
-
-                    if (user.pageConfig.pageBtn.contains("company"))
-                        $divBtnWrap.append($company);
-
-                    if (user.pageConfig.pageBtn.contains("department"))
-                        $divBtnWrap.append($department);
-
-                    if (user.pageConfig.pageBtn.contains("right"))
-                        $divBtnWrap.append($btnRight);
-
-                    if (user.pageConfig.pageBtn.contains("macontrol"))
-                        $divBtnWrap.append($btnMacontrol);
-
-                    if (user.pageConfig.pageBtn.contains("design"))
-                        $divBtnWrap.append($btnDesigne);
-
-                    if (user.pageConfig.pageBtn.contains("sales"))
-                        $divBtnWrap.append($btnSales);
-
-                    if (user.pageConfig.pageBtn.contains("status"))
-                        $divBtnWrap.append($btnStatus);
-
-                    if (user.pageConfig.pageBtn.contains("house"))
-                        $divBtnWrap.append($btnHouse);
-
-                    if (user.pageConfig.pageBtn.contains("customer"))
-                        $divBtnWrap.append($btnCustomer);
-
-                    if (user.pageConfig.pageBtn.contains("reset"))
-                        $divBtnWrap.append($resetPassword);
-
-                    if (user.pageConfig.pageBtn.contains("default"))
-                        $divBtnWrap.append($defaultPassword);
-
-                    if (user.pageConfig.pageBtn.contains("exit"))
-                        $divBtnWrap.append($btnlogout);
-
-                    if (user.pageConfig.pageBtn.contains("syncRight"))
-                        $divBtnWrap.append($btnSyncRight);
-
-                    if (user.pageConfig.propertyArr.contains("picture")) {
-                        $liLine.append($urldiv);
-                    }
-
-                    $divBtnWrap.appendTo($h3);
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var binding = {
-
-            $dialog: com.focusPage('#moduleModal'),
-            postConf: {
-                "user.userId": null,
-                path: null,
-                name: null
-            },
-
-            openDesignDialog: function(userId) { // 设计权限配置
-
-                var $dialog = this.$dialog;
-                showDepaermentModal("设计部");
-                com.post(api.right.queryDecorationDesignDepartmentRightByUserId, {
-                    "user.userId": userId
-                }, function(data) {
-
-                    if (data.dids.length) {
-                        $.each(data.dids, function(i, v) {
-
-                            $wrap.find('input[value="' + v + '"]').prop('checked', true);
-                        });
-                    }
-                }, null, false);
-                $dialog.modal("show");
-                this.postConf.path = api.right.updateDecorationDesignDepartmentRight;
-                this.postConf.name = "dids";
-                this.postConf["user.userId"] = userId;
-            },
-
-            openSalesDialog: function(userId) { // 业务权限配置
-
-                var $dialog = this.$dialog;
-                showDepaermentModal("");
-                com.post(api.right.queryDecorationSalesmanDepartmentRightByUserId, {
-                    "user.userId": userId
-                }, function(data) {
-
-                    if (data.dids.length) {
-                        $.each(data.dids, function(i, v) {
-
-                            $wrap.find('input[value="' + v + '"]').prop('checked', true);
-                        });
-                    }
-                }, null, false);
-                $dialog.modal("show");
-                this.postConf.path = api.right.updateDecorationSalesmanDepartmentRight;
-                this.postConf.name = "dids";
-                this.postConf["user.userId"] = userId;
-            },
-
-            openOrderDialog: function(userId) { // 订单权限配置
-
-                var $dialog = this.$dialog;
-                var list = [{
-                    key: "-1",
-                    value: "全部"
-                }], userList;
-                var $list = $('.modal-body', $dialog);
-                $list.empty();
-
-                list = list.concat(constant.decoration().decoration.status.datas);
-
-                com.post(api.right.queryDecorationStatusRightByUserId, {
-                    "user.userId": userId
-                }, function(data) {
-
-                    userList = data.statuses;
-                }, null, false);
-
-                list && list.length && $.each(list, function(i, v) {
-
-                    var $label = $('<label  style="margin-right:20px;display: inline-block;min-width: 25%;"></label>');
-                    var $input = $('<input>').attr({
-                        "type": "checkbox",
-                        "name": "module",
-                        "class": "ace"
-                    }).val(v.key);
-                    var $span = $('<span></span>').addClass('lbl').html(v.value);
-                    $label.append($input).append($span).appendTo($list);
-                });
-
-                userList && userList.length && $.each(userList, function(i, v) {
-
-                    com.focusPage('input[name="module"][value="' + v + '"]', $list).prop('checked', true);
-                });
-
-                $dialog.modal("show");
-
-                this.postConf.path = api.right.updateDecorationStatusRight;
-                this.postConf.name = "statuses";
-                this.postConf["user.userId"] = userId;
-
-            },
-
-            openHouseDialog: function(userId) { // 房源权配
-
-                var $dialog = this.$dialog;
-                showDepaermentModal("置业房产");
-                com.post(api.right.queryHouseSourceDepartmentRightByUserId, {
-                    "user.userId": userId
-                }, function(data) {
-
-                    if (data.dids.length) {
-                        $.each(data.dids, function(i, v) {
-
-                            $wrap.find('input[value="' + v + '"]').prop('checked', true);
-                        });
-                    }
-                }, null, false);
-                $dialog.modal("show");
-                this.postConf.path = api.right.updateHouseSourceDepartmentRight;
-                this.postConf.name = "dids";
-                this.postConf["user.userId"] = userId;
-            },
-
-            openCustomerDialog: function(userId) { // 客源权配
-
-                var $dialog = this.$dialog;
-                showDepaermentModal("");
-                com.post(api.right.queryCustomerSourceDepartmentRightByUserId, {
-                    "user.userId": userId
-                }, function(data) {
-
-                    if (data.dids.length) {
-                        $.each(data.dids, function(i, v) {
-
-                            $wrap.find('input[value="' + v + '"]').prop('checked', true);
-                        });
-                    }
-                }, null, false);
-                $dialog.modal("show");
-                this.postConf.path = api.right.updateCustomerSourceDepartmentRight;
-                this.postConf.name = "dids";
-                this.postConf["user.userId"] = userId;
-            },
-
-            // 登出
-            openlogoutDialog: function(userId) {
-
-                com._post_(api.home.library, {
-                    "api": "system.login.logout",
-                    "userId": userId,
-                    "redis": 0
-                }, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                });
-            },
-
-            setAdvance: function() {
-
-                var $dialog = this.$dialog;
-                var postConf = this.postConf;
-
-                com.focusPage('button[name="saveBtn"]').click(function() {
-
-                    var list = $('input[name="module"]:checked', $dialog);
-
-                    var params = {
-                        "user.userId": postConf["user.userId"]
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("salary")) {
+            btns.salary = {
+                name: "薪资",
+                clazz: "btn-pink",
+                handle: function(v) {
+
+                    params.salary.belonger = {
+                        userId: v.userId
                     };
 
-                    if (!list.length || list.length == 0)
-                        return false;
-
-                    $.each(list, function(i, v) {
-
-                        var $v = $(this).val();
-                        params[postConf.name + "[" + i + "]"] = $v;
-                        if ($v == -1 || $v == '全部')
-                            return false;
-                    });
-
-                    com.post(postConf.path, params, function(data) {
-
-                        $dialog.modal("hide");
-                    });
-                });
-            }
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            setAdvance: function() {
-
-                binding.setAdvance();
-            }
+                    com.popup4page("#layerPopUp", "views/salary/salary4common.html", "薪资信息");
+                }
+            };
         }
-    })();
 
-    var userSeacher = new Searcher();
+        if (user.pageConfig.pageBtn.contains("contract")) {
+            btns.contract = {
+                name: "合同",
+                clazz: "btn-pink",
+                handle: function(v) {
 
-    userSeacher.init(user.pageConfig.condArr, "condList", user.pageConfig.apiPage, function(data) {
+                    params.personel.userId = v.userId;
+                    params.personel.uid = v.uid;
+                    params.historyPage = api.index.userIndex.url;
 
-        displayFunc.init('resultList', data);
-    }, "pagenation", user.pageType + "UserPostData", null, false, null, function() {
+                    com.switchPage(api.index.userContract.url);
+                }
+            };
+        }
 
-        var $addaS = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addUserSimple').css("margin", "0px 3px");
-        var $addiS = $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
-        var $addspanS = $('<span></span>').text('添加-简化').appendTo($addaS);
+        if (user.pageConfig.pageBtn.contains("experience")) {
+            btns.experience = {
+                name: "经历",
+                clazz: "btn-pink",
+                handle: function(v) {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addUser').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+                    params.personel.uid = v.uid;
+                    com.popup4page("#layerPopUp", api.index.userExperience.url, "工作经历");
+                }
+            };
+        }
 
-        var $importa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
-        var $importi = $('<i></i>').addClass('icon-upload bigger-110').appendTo($importa);
-        var $importspan = $('<span></span>').text('上传').appendTo($importa);
+        if (user.pageConfig.pageBtn.contains("education")) {
+            btns.education = {
+                name: "教育",
+                clazz: "btn-pink",
+                handle: function(v) {
 
-        var $exporta = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'export').css("margin", "0px 3px");
-        var $exporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
-        var $exportspan = $('<span></span>').text('导出').appendTo($exporta);
+                    params.personel.uid = v.uid;
+
+                    com.popup4page("#layerPopUp", api.index.userEducation.url, "教育信息");
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("job")) {
+            btns.job = {
+                name: "工作",
+                clazz: "btn-pink",
+                handle: function(v) {
+
+                    params.personel.uid = v.uid;
+
+                    com.popup4page("#layerPopUp", api.index.userOperation.url, "工作信息");
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("data")) {
+            btns.data = {
+                name: "资料",
+                clazz: "btn-pink",
+                handle: function(v) {
+
+                    user.modals.pictureModal.modal("show");
+
+                    params.personel.userId = v.userId;
+                    params.personel.uid = v.uid;
+
+                    initUser(v);
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("leave")) {
+            btns.leave = {
+                name: "离职",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    com.post(api.personel.quitUser, {
+                        "userId": v.userId,
+                        "approve": "agree"
+                    }, function(v) {
+
+                        com.showAlert(com.info, "离职成功");
+
+                        userSeacher.doSearch();
+                    });
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("transferred")) {
+            btns.transferred = {
+                name: "调职",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    user.modals.transferModal.modal("show");
+
+                    params.personel.userId = v.userId;
+
+                    transfer(v);
+
+                    return false;
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("print")) {
+            btns.print = {
+                name: "打印",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    params.personel.userId = v.userId;
+                    params.personel.uid = v.uid;
+
+                    com.popup("方林装饰应聘登记表", api.index.userPrint.url, null, null, true);
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("role")) {
+            btns.role = {
+                name: "角色",
+                clazz: "btn-yellow",
+                handle: function(v) {
+
+                    user.uid = v.uid;
+
+                    var options = {
+                        "user.uid": v.uid
+                    };
+
+                    user.items.userrole.html("");
+                    user.items.selectrole.html("");
+
+                    user.modals.userRoleModal.modal("show");
+
+                    com.post(api.personel.queryUserRole, options, function(res) {
+
+                        $.each(res.userRoles, function(i, va) {
+
+                            var $div = $('<div></div>').appendTo(user.items.userrole);
+                            var $span = $('<span class="tag"></span>').html(va.role.name).appendTo($div);
+                        });
+                    });
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("company")) {
+            btns.company = {
+                name: "公司",
+                clazz: "btn-yellow",
+                handle: function(v) {
+
+                    user.uid = v.uid;
+
+                    $("#companydiv").empty();
+
+                    var companyname = [];
+
+                    var options = {
+                        "user.uid": v.uid
+                    };
+
+                    user.items.usercompany.html("");
+
+                    user.modals.userCompanyModal.modal("show");
+
+                    com.post(api.personel.queryUserCompany, options, function(res) {
+
+                        $.each(res.userCompanys, function(i, va) {
+
+                            companyname.push(va.company.name);
+                        });
+                    }, null, false);
+
+                    $.each(user.companysel, function(i, va) {
+
+                        var $div = $('<div class="tag"></div>');
+                        var $input = $('<input/>').attr({
+                            "type": "checkbox",
+                            "value": va.name,
+                            "name": "corporab",
+                            "id": va.cid,
+                            "class": "ace"
+                        });
+                        var $span = $('<span></span>').addClass('lbl');
+                        var $spans = $('<span></span>').html(va.name);
+                        $div.append($input).append($span).append($spans).appendTo(com.focusPage("#companydiv"));
+                        if (companyname.indexOf(va.name) != -1) {
+                            $input.attr("checked", true);
+                        }
+                    });
+
+                    companyname && companyname.length && $.each(companyname, function(i, v) {
+
+                        var $div = $('<div></div>').appendTo(user.items.usercompany);
+                        var $span = $('<span class="tag"></span>').html(v).appendTo($div);
+                    });
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("department")) {
+            btns.department = {
+                name: "部门",
+                clazz: "btn-yellow",
+                handle: function(v) {
+
+                    user.uid = v.uid;
+
+                    $("#departmentdiv").empty();
+
+                    var departmentname = [];
+
+                    var options = {
+                        "user.uid": v.uid
+                    };
+
+                    user.items.userdepartment.html("");
+
+                    user.modals.userDepartmentModal.modal("show");
+
+                    com.post(api.personel.queryUserDepartment, options, function(res) {
+
+                        $.each(res.userDepartments, function(i, va) {
+
+                            departmentname.push(va.department.name);
+                        });
+                    }, null, false);
+
+                    $.each(user.departmentsel, function(i, va) {
+
+                        var $div = $('<div class="tag"></div>');
+                        var $input = $('<input/>').attr({
+                            "type": "checkbox",
+                            "value": va.name,
+                            "name": "deptcheck",
+                            "id": va.did,
+                            "class": "ace"
+                        });
+                        var $span = $('<span></span>').addClass('lbl');
+                        var $spans = $('<span></span>').html(va.name);
+                        $div.append($input).append($span).append($spans).appendTo(com.focusPage("#departmentdiv"));
+                        if (departmentname.indexOf(va.name) != -1) {
+                            $input.attr("checked", true);
+                        }
+                    });
+
+                    departmentname && departmentname.length && $.each(departmentname, function(i, v) {
+
+                        var $div = $('<div></div>').appendTo(user.items.userdepartment);
+                        var $span = $('<span class="tag"></span>').html(v).appendTo($div);
+                    });
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("right")) {
+            btns.right = {
+                name: "权配",
+                clazz: "btn-yellow",
+                handle: function(v) {
+
+                    dialogUserAdvanceIndex(v.userId);
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("macontrol")) {
+            btns.macontrol = {
+                name: "权限",
+                clazz: "btn-yellow",
+                handle: function(v) {
+
+                    params["user.uid"] = v.uid;
+                    com.popup4page("#layerPopUp", api.index.macontrol.url, "权限");
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("design")) {
+            btns.design = {
+                name: "装修设计",
+                clazz: "btn-pink",
+                handle: function(v) {
+
+                    binding.openDesignDialog(v.userId);
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("sales")) {
+            btns.sales = {
+                name: "装修业务",
+                clazz: "btn-pink",
+                handle: function(v) {
+
+                    binding.openSalesDialog(v.userId);
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("status")) {
+            btns.status = {
+                name: "装修状态",
+                clazz: "btn-pink",
+                handle: function(v) {
+
+                    binding.openOrderDialog(v.userId);
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("house")) {
+            btns.house = {
+                name: "房源权配",
+                clazz: "btn-pink",
+                handle: function(v) {
+
+                    binding.openHouseDialog(v.userId);
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("customer")) {
+            btns.customer = {
+                name: "客源权配",
+                clazz: "btn-pink",
+                handle: function(v) {
+
+                    binding.openCustomerDialog(v.userId);
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("reset")) {
+            btns.resetPassword = {
+                name: "重置密码",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    resetPassword(v.userId, v.userName);
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("default")) {
+            btns.defaultPassword = {
+                name: "默认密码",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    defaultPassword(v.userId, v.userName);
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("exit")) {
+            btns.logout = {
+                name: "登出",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    binding.openlogoutDialog(v.userId);
+                }
+            };
+        }
+
+        if (user.pageConfig.pageBtn.contains("syncRight")) {
+            btns.syncRight = {
+                name: "同步权限",
+                clazz: "btn-info",
+                handle: function(v) {
+
+                    user.uid = v.uid;
+                    user.userId = v.userId;
+
+                    showCompanySelectionModal(v.uid, v.currentName);
+
+                    user.modals.companyCopyModal.modal('show');
+                }
+            };
+        }
+
+        return btns;
+    }
+
+    function buildUserButtons() {
 
         var btns = [];
 
-        if (user.pageConfig.pageBtn.contains("simplifyAdd"))
+        if (user.pageConfig.pageBtn.contains("simplifyAdd")) {
+            var $addaS = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addUserSimple').css("margin", "0px 3px");
+            $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
+            $('<span></span>').text('添加-简化').appendTo($addaS);
             btns.push($addaS);
+        }
 
-        if (user.pageConfig.pageBtn.contains("add"))
+        if (user.pageConfig.pageBtn.contains("add")) {
+            var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addUser').css("margin", "0px 3px");
+            $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+            $('<span></span>').text('添加').appendTo($adda);
             btns.push($adda);
+        }
 
-        if (user.pageConfig.pageBtn.contains("uploading"))
+        if (user.pageConfig.pageBtn.contains("uploading")) {
+            var $importa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+            $('<i></i>').addClass('icon-upload bigger-110').appendTo($importa);
+            $('<span></span>').text('上传').appendTo($importa);
             btns.push($importa);
+        }
 
-        if (user.pageConfig.pageBtn.contains("export"))
+        if (user.pageConfig.pageBtn.contains("export")) {
+            var $exporta = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'export').css("margin", "0px 3px");
+            $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
+            $('<span></span>').text('导出').appendTo($exporta);
             btns.push($exporta);
+        }
 
         return btns;
-    });
+    }
 
-    displayFunc.setAdvance();
+    var userSeacher = new Searcher();
+
+    userSeacher.set("condList", "pagenation", "resultList", user.pageConfig.apiPage, null, user.pageConfig.condArr, user.pageType + "UserPostData", null, false, buildUserButtons);
+    userSeacher.line("userName", buildUserLineprops(), buildUserLinebtns()).render();
+
+    binding.setAdvance();
 
     com.focusPage('a[name="addUser"]', '#pagenation').click(function() {
 

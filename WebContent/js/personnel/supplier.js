@@ -111,132 +111,144 @@
 
     supplier.btns.advanceSaveBtn.on("click", saveAdvance);
 
-    var displayFunc = (function() {
+    function buildSupplierLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "userId",
+            name: "编号",
+            prop: "userId",
+            clazz: "grey"
+        }, {
+            field: "loginId",
+            name: "用户名",
+            prop: "loginId",
+            clazz: "grey"
+        }, {
+            field: "dept.name",
+            name: "部门",
+            prop: "dept.name",
+            clazz: "grey"
+        }, {
+            field: "duty.name",
+            name: "职位",
+            prop: "duty.name",
+            clazz: "grey"
+        }, {
+            field: "phone",
+            name: "联系方式",
+            prop: "phone",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildSupplierLinebtns() {
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+        var btns = {};
 
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+        btns.view = {
+            name: "查看",
+            clazz: "btn-blue",
+            handle: function(v) {
 
-                    var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-blue').html('查看');
-                    var $btnContract = $('<a></a>').addClass('btn btn-minier btn-success').html('合同');
-                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-                    var $btnContractservice = $('<a></a>').addClass('btn btn-minier btn-success').html('服务费');
-                    var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
-                    var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('重置密码');
-                    var $defaultPassword = $('<a></a>').addClass('btn btn-minier btn-warning').html('默认密码');
+                com.focusPage("text").css("line-height", "27px");
+                com.post(api.personel.queryUserInfoByUserId, {
+                    "userInfo.user.userId": v.userId
+                }, function(res) {
 
-                    var propertyArr = [["编号:", v.userId, "grey"], ["用户名:", v.loginId, "grey"], ["部门:", v.dept.name, "grey"], ["职位:", v.duty.name, "grey"], ["联系方式:", v.phone, "grey"]];
-
-                    $.each(propertyArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-
-                    // 查看
-                    $btnCheck.click(function() {
-
-                        com.focusPage("text").css("line-height", "27px");
-                        com.post(api.personel.queryUserInfoByUserId, {
-                            "userInfo.user.userId": v.userId
-                        }, function(res) {
-
-                            bindUserInfo(res.userInfo);
-                            com.focusPage("#checkUserInfo").modal('show');
-                        });
-                    });
-
-                    com.focusPage('#closeM').click(function() {
-
-                        com.focusPage("#tree3").removeData("tree");
-                    });
-
-                    $btnContract.click(function() {
-
-                        params.personel.userId = v.userId;
-                        params.personel.uid = v.uid;
-                        params.historyPage = "/views/personnel/supplier.html";
-
-                        com.switchPage("/views/personnel/supplierContract.html");
-                    });
-                    $btnContractservice.click(function() {
-                         params.personel.uid = v.uid;
-                         com.popup4page('#layerPopUp', api.index.supplierContractService.url, "厂商服务费");
-                    });
-                    // 编辑
-                    $btnEdit.click(function() {
-
-                        com.focusPage("#addSupplierModal").find("h4").html("编辑厂商");
-                        com.focusPage("#addSupplierModal").find(".form-group").addClass("hide");
-                        com.focusPage(".show").removeClass("hide");
-                        supplier.items.userName.val(v.userName);
-                        supplier.items.phone.val(v.phone);
-                        supplier.items.oldUserId.val(v.oldUserId);
-                        supplier.supplierUid = v.uid;
-                        supplier.modals.addSupplierModal.modal("show");
-                    });
-
-                    $btnRight.click(function() {
-
-                        showAdvance(v.userId);
-                    });
-
-                    $resetPassword.click(function() {
-
-                        resetPassword(v.userId, v.userName);
-                    });
-
-                    $defaultPassword.click(function() {
-
-                        defaultPassword(v.userId, v.userName);
-                    });
-
-                    if (supplier.pageType == 'manage') {
-                        $divBtnWrap.append($btnEdit).append($btnContractservice).append($btnRight).append($resetPassword).append($defaultPassword).appendTo($h3);
-                    } else {
-                        $divBtnWrap.append($btnContract).append($btnEdit).append($btnContractservice).appendTo($h3);
-                    }
-
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
+                    bindUserInfo(res.userInfo);
+                    com.focusPage("#checkUserInfo").modal('show');
                 });
-
-                $ul.appendTo($tableWrap);
             }
         };
-        return {
-            init: function(tableId, listData) {
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            }
+        function editHandle(v) {
+
+            com.focusPage("#addSupplierModal").find("h4").html("编辑厂商");
+            com.focusPage("#addSupplierModal").find(".form-group").addClass("hide");
+            com.focusPage(".show").removeClass("hide");
+            supplier.items.userName.val(v.userName);
+            supplier.items.phone.val(v.phone);
+            supplier.items.oldUserId.val(v.oldUserId);
+            supplier.supplierUid = v.uid;
+            supplier.modals.addSupplierModal.modal("show");
         }
-    })();
-    var _condArr = ['personel-userId', 'personel-userName', 'personel-userstatus', 'personel-phone'];
 
-    var seacher = new Searcher();
+        if (supplier.pageType == 'manage') {
+            btns.edit = {name: "编辑", clazz: "btn-yellow", handle: editHandle};
+            btns.contractService = {
+                name: "服务费",
+                clazz: "btn-success",
+                handle: function(v) {
 
-    seacher.init(_condArr, "condList", api.personel.pageSupplier, function(data) {
+                    params.personel.uid = v.uid;
+                    com.popup4page('#layerPopUp', api.index.supplierContractService.url, "厂商服务费");
+                }
+            };
+            btns.right = {
+                name: "权配",
+                clazz: "btn-success",
+                handle: function(v) {
 
-        displayFunc.init('resultList', data);
-    }, "pagenation", "supplierPostData", null, false, null, function() {
+                    showAdvance(v.userId);
+                }
+            };
+            btns.resetPassword = {
+                name: "重置密码",
+                clazz: "btn-danger",
+                handle: function(v) {
+
+                    resetPassword(v.userId, v.userName);
+                }
+            };
+            btns.defaultPassword = {
+                name: "默认密码",
+                clazz: "btn-warning",
+                handle: function(v) {
+
+                    defaultPassword(v.userId, v.userName);
+                }
+            };
+        } else {
+            btns.contract = {
+                name: "合同",
+                clazz: "btn-success",
+                handle: function(v) {
+
+                    params.personel.userId = v.userId;
+                    params.personel.uid = v.uid;
+                    params.historyPage = "/views/personnel/supplier.html";
+
+                    com.switchPage("/views/personnel/supplierContract.html");
+                }
+            };
+            btns.edit = {name: "编辑", clazz: "btn-yellow", handle: editHandle};
+            btns.contractService = {
+                name: "服务费",
+                clazz: "btn-success",
+                handle: function(v) {
+
+                    params.personel.uid = v.uid;
+                    com.popup4page('#layerPopUp', api.index.supplierContractService.url, "厂商服务费");
+                }
+            };
+        }
+
+        return btns;
+    }
+
+    function buildSupplierButtons() {
 
         var $addaS = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addSupplier').css("margin", "0px 3px");
-        var $addiS = $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
-        var $addspanS = $('<span></span>').text('添加').appendTo($addaS);
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
+        $('<span></span>').text('添加').appendTo($addaS);
 
         return [$addaS];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.personel.pageSupplier, null, ['personel-userId', 'personel-userName', 'personel-userstatus', 'personel-phone'], "supplierPostData", null, false, buildSupplierButtons);
+    searcher.line("userName", buildSupplierLineprops(), buildSupplierLinebtns()).render();
 
     com.focusPage('a[name="addSupplier"]', '#pagenation').click(function() {
 
@@ -276,7 +288,7 @@
             com.showAlert(com.info, "操作成功");
             supplier.modals.addSupplierModal.modal("hide");
 
-            seacher.doSearch();
+            searcher.doSearch();
         });
     }
 

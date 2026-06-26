@@ -28,139 +28,136 @@
         user.deptType = res.departmentTypes;
     }, null, false);
 
-    var displayFunc = (function() {
+    function buildUserBaseLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "userId",
+            name: "员工编号",
+            prop: "userId",
+            clazz: "grey"
+        }, {
+            field: "loginId",
+            name: "用户名",
+            prop: "loginId",
+            clazz: "grey"
+        }, {
+            field: "dept.name",
+            name: "部门",
+            prop: "dept.name",
+            clazz: "grey"
+        }, {
+            field: "duty.name",
+            name: "职位",
+            prop: "duty.name",
+            clazz: "grey"
+        }, {
+            field: "role.name",
+            name: "角色",
+            prop: "role.name",
+            clazz: "grey"
+        }, {
+            field: "phone",
+            name: "联系方式",
+            prop: "phone",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildUserBaseLinebtns() {
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+        return {
+            view: {
+                name: "查看",
+                clazz: "btn-blue",
+                handle: function(v) {
 
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-                    var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-blue').html('查看');
-                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
-                    var $userexception = $('<a></a>').addClass('btn btn-minier btn-pink').html('工作经历');
+                    com.focusPage("text").css("line-height", "27px");
+                    com.post(api.personel.queryUserInfoByUserId, {
+                        "userInfo.user.userId": v.userId
+                    }, function(res) {
 
-                    var propertyArr = [["员工编号:", v.userId, "grey"], ["用户名:", v.loginId, "grey"], ["部门:", v.dept.name, "grey"], ["职位:", v.duty.name, "grey"], ["角色:", v.role.name, "grey"], ["联系方式:", v.phone, "grey"]];
-
-                    $.each(propertyArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
+                        bindUserInfo(res.userInfo);
+                        com.focusPage("#checkUserInfo").modal('show');
                     });
+                }
+            },
+            edit: {
+                name: "编辑",
+                clazz: "btn-success",
+                handle: function(v) {
 
-                    // 查看
-                    $btnCheck.click(function() {
+                    params.personel.userId = v.userId;
+                    com.popup4page("#layerPopUp", api.index.userEditIndex.url, "编辑", null, function() {
 
-                        com.focusPage("text").css("line-height", "27px");
-                        com.post(api.personel.queryUserInfoByUserId, {
-                            "userInfo.user.userId": v.userId
-                        }, function(res) {
-
-                            bindUserInfo(res.userInfo);
-                            com.focusPage("#checkUserInfo").modal('show');
-                        });
+                        userSeacher.doSearch();
                     });
+                }
+            },
+            exception: {
+                name: "工作经历",
+                clazz: "btn-pink",
+                handle: function(v) {
 
-                    $btnEdit.click(function() {
+                    com.focusPage('#userExpModal').modal('show');
+                    com.focusPage('#userException').html("");
 
-                        params.personel.userId = v.userId;
-                        com.popup4page("#layerPopUp", api.index.userEditIndex.url, "编辑", null, function() {
+                    var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-                            userSeacher.doSearch();
-                        });
-                    });
+                    var userExperiences = null;
 
-                    com.focusPage('#closeM').click(function() {
+                    com.post(api.personel.queryUserExperienceByUid, {
+                        "userExperience.uid": v.uid
+                    }, function(res) {
 
-                        com.focusPage("#tree3").removeData("tree");
-                    });
+                        userExperiences = res.userExperiences;
+                    }, null, false);
 
-                    $userexception.unbind().bind('click', function() {
+                    if (userExperiences && userExperiences.length) {
+                        $.each(userExperiences, function(ind, val) {
 
-                        com.focusPage('#userExpModal').modal('show');
-                        com.focusPage('#userException').html("");
+                            var $liLi = $('<li></li>').addClass('item-blue clearfix');
+                            var $ulPro = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                            var $h2 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + val.type));
 
-                        var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+                            var ecperienceArr = [["类型:", val.type, "red"], ["备注:", val.comment, "grey"], ["调动时间:", val.createTime, "green"]];
 
-                        var userExperiences = null;
+                            $.each(ecperienceArr, function(index, value) {
 
-                        com.post(api.personel.queryUserExperienceByUid, {
-                            "userExperience.uid": v.uid
-                        }, function(res) {
+                                var $liPro = $('<li></li>');
+                                $('<strong></strong>').html(value[0]).appendTo($liPro);
+                                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPro);
+                                $liPro.appendTo($ulPro);
+                            });
 
-                            userExperiences = res.userExperiences;
-                        }, null, false);
-
-                        if (userExperiences && userExperiences.length) {
-                            $.each(userExperiences, function(ind, val) {
-
-                                var $liLi = $('<li></li>').addClass('item-blue clearfix');
-                                var $ulPro = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                                var $h2 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + val.type));
-
-                                var ecperienceArr = [["类型:", val.type, "red"], ["备注:", val.comment, "grey"], ["调动时间:", val.createTime, "green"]];
-
-                                $.each(ecperienceArr, function(index, value) {
-
-                                    var $liPro = $('<li></li>');
-                                    $('<strong></strong>').html(value[0]).appendTo($liPro);
-                                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPro);
-                                    $liPro.appendTo($ulPro);
-                                });
-
-                                $liLi.append($h2).append($ulPro).appendTo($uli)
-                            })
-                        }
-                        $uli.appendTo(com.focusPage('#userException'));
-                    });
-
-                    $divBtnWrap.append($btnCheck).append($btnEdit).append($userexception).appendTo($h3);
-
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
+                            $liLi.append($h2).append($ulPro).appendTo($uli)
+                        })
+                    }
+                    $uli.appendTo(com.focusPage('#userException'));
+                }
             }
         };
-        return {
-            init: function(tableId, listData) {
+    }
+    function buildUserBaseButtons() {
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            }
-        }
-    })();
-    var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity', 'phone'];
+        var $addaS = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addUserSimple').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
+        $('<span></span>').text('添加-简化').appendTo($addaS);
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addUser').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
+
+        var $importa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-upload bigger-110').appendTo($importa);
+        $('<span></span>').text('上传').appendTo($importa);
+
+        return [$addaS, $adda, $importa];
+    }
 
     var userSeacher = new Searcher();
 
-    userSeacher.init(_condArr, "condList", api.personel.pageUser, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "userPostData", null, false, null, function() {
-
-        var $addaS = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addUserSimple').css("margin", "0px 3px");
-        var $addiS = $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
-        var $addspanS = $('<span></span>').text('添加-简化').appendTo($addaS);
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addUser').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        var $importa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
-        var $importi = $('<i></i>').addClass('icon-upload bigger-110').appendTo($importa);
-        var $importspan = $('<span></span>').text('上传').appendTo($importa);
-
-        return [$addaS, $adda, $importa];
-    });
+    userSeacher.set("condList", "pagenation", "resultList", api.personel.pageUser, null, ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity', 'phone'], "userPostData", null, false, buildUserBaseButtons);
+    userSeacher.line("userName", buildUserBaseLineprops(), buildUserBaseLinebtns()).render();
 
     com.focusPage('a[name="addUser"]', '#pagenation').click(function() {
 

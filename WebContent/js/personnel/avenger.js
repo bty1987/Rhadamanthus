@@ -45,79 +45,70 @@
 
     avenger.btns.advanceSaveBtn.on("click", saveAdvance);
 
-    var displayFunc = (function() {
+    function buildAvengerLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "userId",
+            name: "编号",
+            prop: "userId",
+            clazz: "grey"
+        }, {
+            field: "loginId",
+            name: "用户名",
+            prop: "loginId",
+            clazz: "grey"
+        }, {
+            field: "dept.name",
+            name: "部门",
+            prop: "dept.name",
+            clazz: "grey"
+        }, {
+            field: "duty.name",
+            name: "职位",
+            prop: "duty.name",
+            clazz: "grey"
+        }, {
+            field: "phone",
+            name: "联系方式",
+            prop: "phone",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildAvengerLinebtns() {
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+        return {
+            right: {
+                name: "权配",
+                clazz: "btn-success",
+                handle: function(v) {
 
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+                    showAdvance(v.userId);
+                }
+            },
+            resetPassword: {
+                name: "重置密码",
+                clazz: "btn-danger",
+                handle: function(v) {
 
-                    var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
-                    var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('重置密码');
-                    var $defaultPassword = $('<a></a>').addClass('btn btn-minier btn-warning').html('默认密码');
+                    resetPassword(v.userId, v.userName);
+                }
+            },
+            defaultPassword: {
+                name: "默认密码",
+                clazz: "btn-warning",
+                handle: function(v) {
 
-                    var propertyArr = [["编号:", v.userId, "grey"], ["用户名:", v.loginId, "grey"], ["部门:", v.dept.name, "grey"], ["职位:", v.duty.name, "grey"], ["联系方式:", v.phone, "grey"]];
-
-                    $.each(propertyArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-
-                    com.focusPage('#closeM').click(function() {
-
-                        com.focusPage("#tree3").removeData("tree");
-                    });
-
-                    $btnRight.click(function() {
-
-                        showAdvance(v.userId);
-                    });
-
-                    $resetPassword.click(function() {
-
-                        resetPassword(v.userId, v.userName);
-                    });
-
-                    $defaultPassword.click(function() {
-
-                        defaultPassword(v.userId, v.userName);
-                    });
-
-                    $divBtnWrap.append($btnRight).append($resetPassword).append($defaultPassword).appendTo($h3);
-
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
+                    defaultPassword(v.userId, v.userName);
+                }
             }
         };
-        return {
-            init: function(tableId, listData) {
+    }
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            }
-        }
-    })();
-    var _condArr = ['personel-userId', 'personel-userName', 'personel-userstatus', 'personel-phone'];
+    var searcher = new Searcher();
 
-    var seacher = new Searcher();
-
-    seacher.init(_condArr, "condList", api.personel.pageAvenger, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "avengerPostData", null, false, null);
+    searcher.set("condList", "pagenation", "resultList", api.personel.pageAvenger, null, ['personel-userId', 'personel-userName', 'personel-userstatus', 'personel-phone'], "avengerPostData", null, false, null);
+    searcher.line("userName", buildAvengerLineprops(), buildAvengerLinebtns()).render();
 
     function showAdvance(userId) {
 

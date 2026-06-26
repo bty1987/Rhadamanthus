@@ -65,129 +65,132 @@
         "user.status": 0
     }, "autoFillKeyValue", "key", "value");
 
-    var displayFunc = (function() {
+    function buildDepartmentLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "no",
+            name: "编号",
+            prop: "no",
+            clazz: "grey"
+        }, {
+            field: "fatherDept.name",
+            name: "所属分区",
+            prop: function(v) { return v.fatherDept.name == null ? '无' : v.fatherDept.name; },
+            clazz: "grey"
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "green"
+        }, {
+            field: "kino",
+            name: "金蝶编号",
+            prop: function(v) { return com.checkNull(v.kino, "无"); },
+            clazz: "grey"
+        }, {
+            field: "kiname",
+            name: "金蝶名称",
+            prop: function(v) { return com.checkNull(v.kiname, "无"); },
+            clazz: "grey"
+        }, {
+            field: "manager.userName",
+            name: "管理人员",
+            prop: function(v) { return com.checkNull(v.manager.userName, "无"); },
+            clazz: "grey"
+        }, {
+            field: "isdet",
+            name: "是否定岗",
+            prop: function(v) { return com.checkNull(v.isdet == 1 ? "定岗" : "开放"); },
+            clazz: "red"
+        }, {
+            field: "limit",
+            name: "人员数量上限",
+            prop: "limit",
+            clazz: "blue"
+        }, {
+            field: "comment",
+            name: "描述",
+            prop: function(v) { return v.comment == "" ? '无' : v.comment; },
+            clazz: "grey"
+        }, {
+            field: "code",
+            name: "code",
+            prop: function(v) { return v.code == null ? '无' : v.code; },
+            clazz: "grey"
+        }, {
+            field: "busitype.name",
+            name: "业务类型",
+            prop: function(v) { return com.checkNull(v.busitype && v.busitype.name ? v.busitype.name : '无'); },
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+    function buildDepartmentLinebtns() {
 
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
+        var btns = {};
 
-        var creatLine = function(v) {
+        if (type == 'dutment') {
+            btns.dutment = {
+                name: "定岗",
+                clazz: "btn-blue",
+                handle: function(v) {
 
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $btnPartner = $('<a></a>').addClass('btn btn-minier btn-warning').html('合作');
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $updateDD = $('<a></a>').addClass('btn btn-minier btn-success').html('同步钉钉');
+                    params.deptId = v.did;
+                    params.name = v.name;
+                    params.type = 0;
+                    params.typeId = v.type.dtid;
 
-            var $btnStatus = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $span = $('<span></span>').addClass('lbl isOrNot');
-            var $btnDutment = $('<a></a>').addClass('btn btn-minier btn-blue').html('定岗');
+                    com.popup4page("#layersPopUp", "views/personnel/dutment.html", "定岗信息", null);
+                }
+            };
+        } else {
+            btns.partner = {
+                name: "合作",
+                clazz: "btn-warning",
+                handle: function(v) {
 
-            var propertyArr = [["编号:", v.no, "grey"], ["所属分区:", v.fatherDept.name == null ? '无' : v.fatherDept.name, "grey"], ["创建时间:", v.createTime, "green"], ["金蝶编号:", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"], ["管理人员:", com.checkNull(v.manager.userName, "无"), "grey"], ["是否定岗:", com.checkNull(v.isdet == 1 ? "定岗" : "开放"), "red"], ["人员数量上限:", v.limit, "blue"], ["描述:", v.comment == "" ? '无' : v.comment, "grey"], ["code:", v.code == null ? '无' : v.code, "grey"], ["业务类型:", com.checkNull(v.busitype && v.busitype.name ? v.busitype.name : '无'), "grey"]];
+                    params.personel.did = v.did;
 
-            $.each(propertyArr, function(index, value) {
+                    com.popup4page("#departmentPartnerPopUp", api.index.departmentPartnerIndex.url, "合作");
+                }
+            };
+            btns.edit = {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
 
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
+                    edit(v);
+                }
+            };
+            btns.status = {
+                type: "switch",
+                init: function(v) { return v.status; },
+                handle: function(v, checked) {
 
-            $btnStatus.append($statusSwitch).append($span);
+                    updateStatus(v.did, checked ? 1 : 0);
+                }
+            };
+        }
 
-            if (type == 'dutment') {
-                $divBtnWrap.append($btnDutment).appendTo($h3);
-            } else {
-                $divBtnWrap.append($btnPartner).append($btnEdit).append($updateDD).append($btnStatus).appendTo($h3);
-            }
+        return btns;
+    }
 
-            $liLine.append($h3).append($ulProperty);
-
-            $btnEdit.click(function() {
-
-                edit(v);
-            });
-
-            $btnPartner.click(function() {
-
-                params.personel.did = v.did;
-
-                com.popup4page("#departmentPartnerPopUp", api.index.departmentPartnerIndex.url, "合作");
-            });
-
-            v.status && $statusSwitch.prop("checked", true);
-
-            $statusSwitch.on("click", function() {
-
-                $statusSwitch.prop("checked") ? (updateStatus(v.did, 1, function() {
-
-                    $statusSwitch.prop("checked")
-                })) : (updateStatus(v.did, 0, function() {
-
-                    $statusSwitch.removeAttr("checked")
-                }));
-            });
-
-            $btnDutment.click(function() {
-
-                params.deptId = v.did;
-                params.name = v.name;
-                params.type = 0;
-                params.typeId = v.type.dtid;
-
-                com.popup4page("#layersPopUp", "views/personnel/dutment.html", "定岗信息", null);
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
-
-    var searcher = new Searcher();
-
-    var condArr = ['personel-dept-name', 'personel-dept-status', 'personel-dept-type', 'personel-dept-isdet'];
-    var postData = type == 'dept' ? 'designDeptPostData' : 'dutmentDeptPostData';
-
-    searcher.init(condArr, "condList", api.communion.pageDepartment, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", postData, null, false, null, function() {
+    function buildDepartmentButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'adddepartment').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
 
         if (type == 'dutment')
             return [];
         else
             return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.communion.pageDepartment, null, ['personel-dept-name', 'personel-dept-status', 'personel-dept-type', 'personel-dept-isdet'], postData, null, false, buildDepartmentButtons);
+    searcher.line("name", buildDepartmentLineprops(), buildDepartmentLinebtns()).render();
 
     $('a[name="adddepartment"]', com.focusPage('#pagenation')).click(function() {
 

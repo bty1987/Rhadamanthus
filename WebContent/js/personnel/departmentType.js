@@ -20,49 +20,19 @@ jQuery(function($) {
 	
 	com.focusPage('#fl-statement').statement("部门", "类型");
 
-	var displayFunc  = (function(){
-		var renderList = function(tableId,listData){
-			var $tableWrap = com.focusPage('#' + tableId);
-			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-			if(listData && listData.length){
-				$.each(listData,function(i, v){
-					var $liLine = creatLine(v);
-					$liLine.appendTo($ul);
-				});
-				$ul.appendTo($tableWrap);
-			}
-		};
-		var creatLine = function(v){
-			var $liLine = $('<li></li>').addClass('item-orange clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-
-			$liLine.append($h3)
-			return $liLine;
-		};
-
-		return {
-			init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-				renderList(tableId,listData);
-			},
-			drawLine : function(v){
-				return creatLine(v);
-			}
-		}
-	})();
-
-	var searcher = new Searcher();
-
-	searcher.init([], "condList", api.communion.pageDepartmentType, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "departmentTypePostData", null, false, null, function(){
+	function buildDepartmentTypeButtons() {
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'departmentTypeModal').css("margin", "0px 3px");
-		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+		$('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+		$('<span></span>').text('添加').appendTo($adda);
 
-		return [];
-	});
+		return [$adda];
+	}
+
+	var departmentTypeSearcher = new Searcher();
+
+	departmentTypeSearcher.set("condList", "pagenation", "resultList", api.communion.pageDepartmentType, null, [], "departmentTypePostData", null, false, buildDepartmentTypeButtons);
+	departmentTypeSearcher.line("name", [], {}).render();
 
 	$('a[name="departmentTypeModal"]', com.focusPage('#pagenation')).click(function(){
 		departmentType.modal.modal("show");
@@ -76,7 +46,7 @@ jQuery(function($) {
 		
 		com.post(api.communion.addDepartmentType, {'departmentType.name': departmentType.items.departmentTypeName.val()}, function(res){
 			departmentType.modal.modal("hide");
-			searcher.doSearch();
+			departmentTypeSearcher.doSearch();
 		});
 
 	}
