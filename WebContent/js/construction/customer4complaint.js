@@ -65,109 +65,100 @@ jQuery(function($) {
         com.clearValidator();
     });
 
-    var displayFunc = (function() {
+    function buildCustomer4complaintLineprops() {
 
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("处理");
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
-
-            var disposeStatus;
-            if (v.status == constant.construction().customer4complaint.COMPLAINT_STATUS_TYPE_INIT_INT) {
-                disposeStatus = "未处理";
-            } else if (v.status == constant.construction().customer4complaint.COMPLAINT_STATUS_TYPE_HANDLE_INT) {
-                disposeStatus = "已处理";
-            }
-
-            var propertyArr = [
-                ["客户名:", v.customerName, "grey"],
-                ["创建人:", v.createrName, "grey"],
-                ["操作人:", v.operaterName, "grey"],
-                ["等级:", constant.construction().customerServiceComplaint.levelDict.keys[v.level], null],
-                ["类型:", constant.construction().customerServiceComplaint.typeDict.keys[v.type], "red "],
-                ["时间:", v.createTime, "green "],
-                ["备注:", v.des, "grey"],
-                ["状态:", disposeStatus, "grey"],
-                ["处理信息:", v.handle, "grey"]
-            ];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnEdit.click(function() {
-
-                dialogCustomerServiceComplaintHandle(v);
-            });
-            $btnDel.click(function() {
-
-                if (v.status == constant.construction().customer4complaint.COMPLAINT_STATUS_TYPE_HANDLE_INT) {
-                    com.showAlert(com.warning, "当前信息已处理，不能删除");
-                    return;
+        return [{
+            field: "customerName",
+            name: "客户名",
+            prop: "customerName",
+            clazz: "grey"
+        }, {
+            field: "createrName",
+            name: "创建人",
+            prop: "createrName",
+            clazz: "grey"
+        }, {
+            field: "operaterName",
+            name: "操作人",
+            prop: "operaterName",
+            clazz: "grey"
+        }, {
+            field: "level",
+            name: "等级",
+            prop: function(v) { return constant.construction().customerServiceComplaint.levelDict.keys[v.level]; },
+            clazz: ""
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) { return constant.construction().customerServiceComplaint.typeDict.keys[v.type]; },
+            clazz: "red"
+        }, {
+            field: "createTime",
+            name: "时间",
+            prop: "createTime",
+            clazz: "green"
+        }, {
+            field: "des",
+            name: "备注",
+            prop: "des",
+            clazz: "grey"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) {
+                if (v.status == constant.construction().customer4complaint.COMPLAINT_STATUS_TYPE_INIT_INT) {
+                    return "未处理";
+                } else if (v.status == constant.construction().customer4complaint.COMPLAINT_STATUS_TYPE_HANDLE_INT) {
+                    return "已处理";
                 }
-                removeRow(v.cscId);
-            });
+            },
+            clazz: "grey"
+        }, {
+            field: "handle",
+            name: "处理信息",
+            prop: "handle",
+            clazz: "grey"
+        }];
+    }
 
-            return $liLine;
-        };
+    function buildCustomer4complaintLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            edit: {
+                name: "处理",
+                clazz: "btn-primary",
+                handle: function(v) {
+                    dialogCustomerServiceComplaintHandle(v);
+                }
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            del: {
+                name: "删除",
+                clazz: "btn-danger",
+                show: function(v) {
+                    return v.status != constant.construction().customer4complaint.COMPLAINT_STATUS_TYPE_HANDLE_INT;
+                },
+                handle: function(v) {
+                    removeRow(v.cscId);
+                }
             }
-        }
-    })();
+        };
+    }
 
-    var searcher = new Searcher();
-    searcher.init([], "condList", api.construction.pageCustomerServiceComplaint, function(list) {
-
-        displayFunc.init('resultList', list);
-    }, "pagenation", "searcherPostData", {
-        "customerServiceComplaint.orderId": params.construction.orderId
-    }, false, null, function() {
+    function buildCustomer4complaintButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.construction.pageCustomerServiceComplaint, {
+        "customerServiceComplaint.orderId": params.construction.orderId
+    }, [], "searcherPostData", null, false, buildCustomer4complaintButtons);
+    searcher.line("orderId", buildCustomer4complaintLineprops(), buildCustomer4complaintLinebtns()).render();
 
     com.focusPage('#add', '#pagenation').click(function() {
 

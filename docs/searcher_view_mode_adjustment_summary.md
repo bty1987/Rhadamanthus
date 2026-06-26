@@ -897,3 +897,58 @@ Searcher 的 table 模式只会对该 `prop(v)` 调用一次并把结果当作**
 - `findstr /s /n searcher.init WebContent/js/customer/*.js`：0 命中。
 
 
+## 17. Construction 模块迁移记录
+
+### 17.1 迁移范围
+
+| 批次 | 难度 | 文件 | 特征 |
+|------|------|------|------|
+| P0 简单 | 🟢 | `acceptance.js` | 11 属性(含 click)，1 验收按钮 |
+| P0 简单 | 🟢 | `inspection.js` | 11 属性(含 click)，1 记录按钮 |
+| P0 简单 | 🟢 | `customer.js` | 12 属性(含 click)，1 施工节点按钮 |
+| P0 简单 | 🟢 | `drawline4user.js` | 12 属性(含 click)，1 人员部署按钮 |
+| P0 简单 | 🟢 | `customer4feedback.js` | 5 属性，2 按钮(编辑/删除)，添加按钮 |
+| P0 简单 | 🟢 | `customer4guarantee.js` | 3 属性，2 按钮(编辑/删除)，添加按钮 |
+| P0 简单 | 🟢 | `inspection4record.js` | 5 属性，2 按钮(编辑/删除)，添加+返回按钮 |
+| P0 简单 | 🟢 | `supervision4rework.js` | 3 属性，3 按钮(图纸/编辑/删除)，添加按钮 |
+| P0 中等 | 🟡 | `supervision.js` | 11 属性(含 click)，7 按钮(信息/施工节点/增减项/扣款/定额材料/定额工费/定额工时)，修复 `seacher`→`searcher` 拼写 |
+| P0 中等 | 🟡 | `allocation.js` | 11 属性(含 click)，3 按钮(质检/信息/施工节点) |
+| P0 中等 | 🟡 | `customer4complaint.js` | 9 属性，2 按钮(处理/删除，删除带状态判断)，添加按钮 |
+| P0 中等 | 🟡 | `accessory.js` | 8 属性，1 更新按钮，添加按钮(非分页 `isPage:false`) |
+| P1 高复杂 | 🔴 | `constructionInfo.js` | 29 属性(含 click)，9 按钮(记录/服务/打印/施工计划/预派监理/验房/交接/画像/重置设计)，导出按钮，pageType 分支 options |
+| P1 高复杂 | 🔴 | `drawline4apply.js` | 13 属性(含 click)，5 按钮(信息/预放线/更新/放线/重置)，申请信息弹窗+日历组件 |
+
+### 17.2 排除迁移
+
+| 文件 | 排除依据 |
+|------|---------|
+| `drawline4setup.js` | 按 `v.group.gid` 分组渲染到多个 `#group{gid}` 容器，与 Searcher 单 ul 结构不兼容 |
+| `construction.js` `constructionDiary.js` `constructionRecord.js` `constructionSchedule.js` `qualiter.js` `constructionPlan.js` `qualiter4detail.js` | 已用新式 `searcher.base()`，无 displayFunc |
+| `acceptance4detail.js` `allocation4detail.js` `customer4detail.js` `supervision4detail.js` `supervision4drawing.js` `constructionNode2print.js` `constructionPlan2print.js` `workerSalary2print.js` `normtion.js` | 详情/打印子页或非列表页 |
+
+### 17.3 关键技术点
+
+1. **属性 click 迁移**：construction 模块大量使用 propertyArr 第 4 元素 click（调用 `tools.decoration.info / tools.house.info / tools.customer.info / tools.personel.info / tools.department.info`），统一转为 lineprop 的 `click: function(btn, v)`。
+
+2. **拼写修正**：`supervision.js` 的 `seacher` → `searcher`（与 customer 模块 aepair.js 同类问题）。
+
+3. **状态条件按钮**：`customer4complaint.js` 的删除按钮需 `show: function(v)` 判断 `v.status != COMPLAINT_STATUS_TYPE_HANDLE_INT`，原本是在 click 中拦截后 `com.showAlert`，迁移后前置为 `show` 回调，已处理状态不再渲染删除按钮。
+
+4. **导出按钮**：`constructionInfo.js` 的导出按钮 builder 提取为 `buildConstructionInfoButtons()`，保留原 `com.focusPage("#export").click(...)` 事件绑定。
+
+5. **pageType 分支**：`constructionInfo.js` 的 `options` 按 `pageType`（plan/done/issue/contract）动态构建查询参数，迁移后作为 `searcher.set` 的 `params` 参数传入。
+
+6. **非分页查询**：`accessory.js` 使用 `isPage:false`（第 9 参）。
+
+7. **定额工费/工时弹窗**：`supervision.js` 的定额工费/定额工时按钮需先 `com.post` 查询 quotationId 再设置 `params.quotation` 并打开模态框，迁移后完整保留在 linebtn 的 handle 中。
+
+8. **drawline4setup.js 分组渲染排除**：该文件按 `v.group.gid` 分组渲染到多个 widget-box 容器，属于自定义布局，与 Searcher 的单 ul 列表结构不兼容，与 decoration 模块排除的同类页面一致。
+
+### 17.4 验证
+
+- `node --check` 全部通过（31 个文件）。
+- `findstr /s /n displayFunc WebContent/js/construction/*.js`：0 命中。
+- `findstr /s /n searcher.init WebContent/js/construction/*.js`：0 命中。
+- `findstr /s /n seacher WebContent/js/construction/*.js`：0 命中（拼写全部修正）。
+
+

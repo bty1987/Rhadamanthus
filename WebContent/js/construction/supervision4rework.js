@@ -29,89 +29,74 @@ jQuery(function($) {
 
     com.datetime(rework.items.createTime);
 
-    var displayFunc = (function() {
+    function buildSupervision4reworkLineprops() {
 
-        var renderList = function(tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "createrName",
+            name: "创建人",
+            prop: "createrName",
+            clazz: "grey"
+        }, {
+            field: "createTime",
+            name: "返工时间",
+            prop: "createTime",
+            clazz: "green"
+        }, {
+            field: "reworkDes",
+            name: "返工说明",
+            prop: "reworkDes",
+            clazz: "grey"
+        }];
+    }
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').css('padding-top', '2px');
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix col-xs-6').css('padding-top', '2px');
-
-            var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("图纸");
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
-
-            var propertyArr = [["创建人:", v.createrName, "grey"], ["返工时间:", v.createTime, "green "], ["返工说明:", v.reworkDes, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $liLine.append($ulProperty);
-            $divBtnWrap.append($btnView).append($btnEdit).append($btnDel).appendTo($liLine);
-
-            $btnView.click(function() {
-                viewSupervisionReworkDrawingIndex(v.rwId);
-            });
-
-            $btnEdit.click(function() {
-                rework.editFlag = true;
-                rework.items.createTime.val(v.createTime);
-                rework.items.reworkDes.val(v.reworkDes);
-
-                rework["rework.rwId"] = v.rwId;
-
-                rework.modals.modal.modal("show");
-            });
-
-            $btnDel.click(function() {
-                removeRow(v.rwId);
-            });
-
-            return $liLine;
-        };
+    function buildSupervision4reworkLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            view: {
+                name: "图纸",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    viewSupervisionReworkDrawingIndex(v.rwId);
+                }
             },
-            drawLine: function(v) {
-                return creatLine(v);
+            edit: {
+                name: "编辑",
+                clazz: "btn-primary",
+                handle: function(v) {
+                    rework.editFlag = true;
+                    rework.items.createTime.val(v.createTime);
+                    rework.items.reworkDes.val(v.reworkDes);
+
+                    rework["rework.rwId"] = v.rwId;
+
+                    rework.modals.modal.modal("show");
+                }
+            },
+            del: {
+                name: "删除",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    removeRow(v.rwId);
+                }
             }
         };
-    })();
+    }
 
-    var searcher = new Searcher();
-    searcher.init([], "condList", api.construction.pageReworkByOrderId, function(list) {
-        displayFunc.init('resultList', list);
-    }, "pagenation", "supervisionReworkPostData", {
-        "rework.orderId": params.construction.orderId
-    }, false, null, function() {
+    function buildSupervision4reworkButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.construction.pageReworkByOrderId, {
+        "rework.orderId": params.construction.orderId
+    }, [], "supervisionReworkPostData", null, false, buildSupervision4reworkButtons);
+    searcher.line("", buildSupervision4reworkLineprops(), buildSupervision4reworkLinebtns()).render();
 
     com.focusPage('#add', '#pagenation').click(function() {
         rework.editFlag = false;

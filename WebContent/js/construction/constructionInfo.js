@@ -38,183 +38,272 @@ jQuery(function($) {
     information.items.isCheck.bindData(constant.construction().constructionInfo.isCheck.datas, "key", "value");
     information.items.handoverStatus.bindData(constant.construction().constructionInfo.handoverStatus.datas, "key", "value");
 
-    var displayFunc = (function() {
+    function buildConstructionInfoLineprops() {
 
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (!listData || listData.length == 0)
-                return false;
-
-            $.each(listData, function(i, v) {
-
-                creatLine(v).appendTo($ul);
-            });
-
-            $ul.appendTo($tableWrap);
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.decoration.orderId));
-
-            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $invalid = $('<div></div>').addClass('pull-right');
-            var $btnView = $("<a></a>").addClass("btn btn-minier btn-yellow").html("记录");
-            var $btnService = $('<a></a>').addClass('btn btn-minier btn-purple').html("服务");
-            var $btnConplanPrint = $('<a></a>').addClass('btn btn-minier btn-success').html("打印");
-            var $btnConplan = $('<a></a>').addClass('btn btn-minier btn-warning').html("施工计划");
-            var $btnProLine = $('<a></a>').addClass('btn btn-minier btn-inverse').html("预派监理");
-            var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html("验房");
-            var $btnHandover = $('<a></a>').addClass('btn btn-minier btn-pink').html("交接");
-            var $btnProfile = $('<a></a>').addClass('btn btn-minier btn-warning').html("画像");
-            var $btnResetDesign = $('<a></a>').addClass('btn btn-minier btn-danger').html("重置设计");
-
-            var propertyArr = [["装修单: ", v.decoration.orderId, "blue", function(btn) {
-
+        return [{
+            field: "decoration.orderId",
+            name: "装修单",
+            prop: "decoration.orderId",
+            clazz: "blue",
+            click: function(btn, v) {
                 tools.decoration.info(btn, v.decoration.orderId);
-            }], ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
-
+            }
+        }, {
+            field: "decoration.house.village.name",
+            name: "楼盘",
+            prop: "decoration.house.village.name",
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.house.info(btn, v.decoration.house.hid);
-            }], ["楼号: ", v.decoration.house.houseNumber, "grey"], ["客户: ", v.decoration.customer.name, "grey", function(btn) {
-
+            }
+        }, {
+            field: "decoration.house.houseNumber",
+            name: "楼号",
+            prop: "decoration.house.houseNumber",
+            clazz: "grey"
+        }, {
+            field: "decoration.customer.name",
+            name: "客户",
+            prop: "decoration.customer.name",
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.customer.info(btn, v.decoration.customer.cid);
-            }], ["设计分区:", v.decoration.designer.dept.fatherDept.name, "grey", function(btn) {
-
+            }
+        }, {
+            field: "decoration.designer.dept.fatherDept.name",
+            name: "设计分区",
+            prop: "decoration.designer.dept.fatherDept.name",
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.department.info(btn, v.decoration.designer.dept.fatherDept.did);
-            }], ["设计部:", v.decoration.designer.dept.name, "grey", function(btn) {
-
+            }
+        }, {
+            field: "decoration.designer.dept.name",
+            name: "设计部",
+            prop: "decoration.designer.dept.name",
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.department.info(btn, v.decoration.designer.dept.did);
-            }], ["设计师:", v.decoration.designer.userName, "grey", function(btn) {
-
+            }
+        }, {
+            field: "decoration.designer.userName",
+            name: "设计师",
+            prop: "decoration.designer.userName",
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.personel.info(btn, v.decoration.designer.userId);
-            }], ["业务员:", v.decoration.salesman ? v.decoration.salesman.currentName : "", "grey"], //
-            ["方案设计:", v.decoration.escorter ? v.decoration.escorter.currentName : "", "grey"], //
-            ["监理:", v.decoration.supervisor ? v.decoration.supervisor.userName : "", "grey", function(btn) {
-
+            }
+        }, {
+            field: "decoration.salesman.currentName",
+            name: "业务员",
+            prop: function(v) { return v.decoration.salesman ? v.decoration.salesman.currentName : ""; },
+            clazz: "grey"
+        }, {
+            field: "decoration.escorter.currentName",
+            name: "方案设计",
+            prop: function(v) { return v.decoration.escorter ? v.decoration.escorter.currentName : ""; },
+            clazz: "grey"
+        }, {
+            field: "decoration.supervisor.userName",
+            name: "监理",
+            prop: function(v) { return v.decoration.supervisor ? v.decoration.supervisor.userName : ""; },
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.personel.info(btn, v.decoration.supervisor.userId);
-            }], ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"], //
-            ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"], //
-            ["面积:", v.decoration.house.buildArea, "blue"], ["合同额: ", v.decoration.orderTotalPrice, "blue"], //
-            ["报价版本: ", v.decoration.version.name, "grey"], ["签单时间: ", v.decoration.contractTime, "green"], //
-            ["设计天数: ", v.designPeriod ? v.designPeriod + "天" : "", "blue"], //
-            ["设计超期天数: ", v.designOverdueDays ? v.designOverdueDays + "天" : "", "blue"], //
-            ["分配时间: ", v.issueTime, "green"], ["初始设计完成时间: ", v.initDesignTime, "green"], //
-            ["预计交钥匙时间: ", v.keyTime, "green"], ["预计放线时间: ", v.drawlineTime, "green"], //
-            ["预计完工时间: ", v.finishTime, "green"], ["预计设计完成时间: ", v.designTime, "green"], //
-            ["合同方案确认时间: ", v.decoration.sdesignTime, "green"], //
-            ["放线方案确认时间: ", v.decoration.edesignTime, "green"], //
-            ["装修类型: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"], //
-            ["工程状态: ", constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus], "red"], //
-            ["交接状态: ", constant.construction().constructionInfo.handoverStatus.keys[v.handoverStatus] || "-", "red"], //
-            ["备注: ", v.comment, "grey"],
-            ];
+            }
+        }, {
+            field: "decoration.status",
+            name: "装修状态",
+            prop: function(v) { return constant.decoration().decoration.status.keys[v.decoration.status]; },
+            clazz: "red"
+        }, {
+            field: "decoration.typeness",
+            name: "装修业务",
+            prop: function(v) { return constant.decoration().decoration.typeness.keys[v.decoration.typeness]; },
+            clazz: "red"
+        }, {
+            field: "decoration.house.buildArea",
+            name: "面积",
+            prop: "decoration.house.buildArea",
+            clazz: "blue"
+        }, {
+            field: "decoration.orderTotalPrice",
+            name: "合同额",
+            prop: "decoration.orderTotalPrice",
+            clazz: "blue"
+        }, {
+            field: "decoration.version.name",
+            name: "报价版本",
+            prop: "decoration.version.name",
+            clazz: "grey"
+        }, {
+            field: "decoration.contractTime",
+            name: "签单时间",
+            prop: "decoration.contractTime",
+            clazz: "green"
+        }, {
+            field: "designPeriod",
+            name: "设计天数",
+            prop: function(v) { return v.designPeriod ? v.designPeriod + "天" : ""; },
+            clazz: "blue"
+        }, {
+            field: "designOverdueDays",
+            name: "设计超期天数",
+            prop: function(v) { return v.designOverdueDays ? v.designOverdueDays + "天" : ""; },
+            clazz: "blue"
+        }, {
+            field: "issueTime",
+            name: "分配时间",
+            prop: "issueTime",
+            clazz: "green"
+        }, {
+            field: "initDesignTime",
+            name: "初始设计完成时间",
+            prop: "initDesignTime",
+            clazz: "green"
+        }, {
+            field: "keyTime",
+            name: "预计交钥匙时间",
+            prop: "keyTime",
+            clazz: "green"
+        }, {
+            field: "drawlineTime",
+            name: "预计放线时间",
+            prop: "drawlineTime",
+            clazz: "green"
+        }, {
+            field: "finishTime",
+            name: "预计完工时间",
+            prop: "finishTime",
+            clazz: "green"
+        }, {
+            field: "designTime",
+            name: "预计设计完成时间",
+            prop: "designTime",
+            clazz: "green"
+        }, {
+            field: "decoration.sdesignTime",
+            name: "合同方案确认时间",
+            prop: "decoration.sdesignTime",
+            clazz: "green"
+        }, {
+            field: "decoration.edesignTime",
+            name: "放线方案确认时间",
+            prop: "decoration.edesignTime",
+            clazz: "green"
+        }, {
+            field: "decoration.typeness",
+            name: "装修类型",
+            prop: function(v) { return constant.decoration().decoration.typeness.keys[v.decoration.typeness]; },
+            clazz: "red"
+        }, {
+            field: "decoration.projectStatus",
+            name: "工程状态",
+            prop: function(v) { return constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus]; },
+            clazz: "red"
+        }, {
+            field: "handoverStatus",
+            name: "交接状态",
+            prop: function(v) { return constant.construction().constructionInfo.handoverStatus.keys[v.handoverStatus] || "-"; },
+            clazz: "red"
+        }, {
+            field: "comment",
+            name: "备注",
+            prop: "comment",
+            clazz: "grey"
+        }];
+    }
 
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                if (value[3]) {
-                    $b.click(function() {
-
-                        value[3]($b);
-                    });
-                }
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $btnDiv.append($btnView).append($btnService).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).append($btnHandover).append($btnProfile).append($btnResetDesign).appendTo($h3);
-            $liLine.append($h3).append($ulProperty);
-
-            $btnView.click(function() {
-
-                params.orderId = v.decoration.orderId;
-
-                com.popup4page("#stockRecordPopUp", api.index.constructionRecordIndex.url, "记录");
-            });
-
-            $btnConplanPrint.click(function() {
-
-                params.construction = v;
-
-                com.popup("工程施工进度计划表", api.index.constructionPlan2print.url, null, null, true);
-            });
-
-            $btnProLine.click(function() {
-
-                pretreat(v);
-            });
-
-            $btnConplan.click(function() {
-
-                params.construction = v;
-
-                com.popup4page("#stockRecordPopUp", "/views/construction/constructionPlan.html", "计划");
-            });
-
-            $btnCheck.click(function() {
-
-                information.info = v;
-
-                information.modals.checkModal.modal("show");
-            });
-
-            $btnHandover.click(function() {
-
-                information.info = v;
-
-                // 设置当前交接状态
-                com.focusPage("#handoverStatus").val(v.handoverStatus || 0);
-
-                information.modals.handoverModal.modal("show");
-            });
-
-            $btnProfile.click(function() {
-
-                viewDecorationProfile(v.decoration.orderId);
-            });
-
-            $btnService.click(function() {
-
-                viewDecorationService(v.decoration.orderId);
-            });
-
-            $btnResetDesign.click(function() {
-
-                com.showConfirm("确定要重置该订单的设计状态和确认状态吗？", function() {
-
-                    com.post(api.decoration.resetDecorationFordesignStatus, {
-                        "decoration.orderId": v.decoration.orderId
-                    }, function(res) {
-
-                        com.showAlert(com.info, "重置成功");
-                        searcher.doSearch();
-                    });
-                });
-            });
-
-            return $liLine;
-        };
+    function buildConstructionInfoLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            view: {
+                name: "记录",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    params.orderId = v.decoration.orderId;
+                    com.popup4page("#stockRecordPopUp", api.index.constructionRecordIndex.url, "记录");
+                }
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            service: {
+                name: "服务",
+                clazz: "btn-purple",
+                handle: function(v) {
+                    viewDecorationService(v.decoration.orderId);
+                }
+            },
+            conplanPrint: {
+                name: "打印",
+                clazz: "btn-success",
+                handle: function(v) {
+                    params.construction = v;
+                    com.popup("工程施工进度计划表", api.index.constructionPlan2print.url, null, null, true);
+                }
+            },
+            conplan: {
+                name: "施工计划",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    params.construction = v;
+                    com.popup4page("#stockRecordPopUp", "/views/construction/constructionPlan.html", "计划");
+                }
+            },
+            proLine: {
+                name: "预派监理",
+                clazz: "btn-inverse",
+                handle: function(v) {
+                    pretreat(v);
+                }
+            },
+            check: {
+                name: "验房",
+                clazz: "btn-info",
+                handle: function(v) {
+                    information.info = v;
+                    information.modals.checkModal.modal("show");
+                }
+            },
+            handover: {
+                name: "交接",
+                clazz: "btn-pink",
+                handle: function(v) {
+                    information.info = v;
+                    com.focusPage("#handoverStatus").val(v.handoverStatus || 0);
+                    information.modals.handoverModal.modal("show");
+                }
+            },
+            profile: {
+                name: "画像",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    viewDecorationProfile(v.decoration.orderId);
+                }
+            },
+            resetDesign: {
+                name: "重置设计",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    com.showConfirm("确定要重置该订单的设计状态和确认状态吗？", function() {
+                        com.post(api.decoration.resetDecorationFordesignStatus, {
+                            "decoration.orderId": v.decoration.orderId
+                        }, function(res) {
+                            com.showAlert(com.info, "重置成功");
+                            searcher.doSearch();
+                        });
+                    });
+                }
             }
         };
-    })();
+    }
+
+    function buildConstructionInfoButtons() {
+
+        var $exporta = $('<a></a>').addClass('btn btn-minier btn-inverse').attr('id', 'export').css("margin", "0px 3px");
+        var $exporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
+        var $exportspan = $('<span></span>').text('导出').appendTo($exporta);
+
+        return [$exporta];
+    }
 
     var searcher = new Searcher();
 
@@ -251,17 +340,8 @@ jQuery(function($) {
         options["constructionInfo.isIssue"] = 0;
     }
 
-    searcher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-supervisor', 'decoration-houseType', 'decoration-designStatus', 'decoration-statuses', 'decoration-projectStatus', "construction-info-keyTime", "construction-info-drawlineTime", "construction-info-finishTime", "construction-info-designTime", "construction-info-issueTime", "decoration-sdesignTime", "decoration-edesignTime", "construction-info-isIssue", "construction-info-isCheck", ], "condList", api.construction.pageConstructionInfo, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "constructionInfoPostData", options, false, null, function() {
-
-        var $exporta = $('<a></a>').addClass('btn btn-minier btn-inverse').attr('id', 'export').css("margin", "0px 3px");
-        var $exporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
-        var $exportspan = $('<span></span>').text('导出').appendTo($exporta);
-
-        return [$exporta];
-    }, 'resultList');
+    searcher.set("condList", "pagenation", "resultList", api.construction.pageConstructionInfo, options, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-supervisor', 'decoration-houseType', 'decoration-designStatus', 'decoration-statuses', 'decoration-projectStatus', "construction-info-keyTime", "construction-info-drawlineTime", "construction-info-finishTime", "construction-info-designTime", "construction-info-issueTime", "decoration-sdesignTime", "decoration-edesignTime", "construction-info-isIssue", "construction-info-isCheck"], "constructionInfoPostData", null, false, buildConstructionInfoButtons);
+    searcher.line("decoration.orderId", buildConstructionInfoLineprops(), buildConstructionInfoLinebtns()).render();
 
     com.focusPage("#export").click(function() {
 

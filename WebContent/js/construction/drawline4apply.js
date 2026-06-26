@@ -94,123 +94,141 @@ jQuery(function($) {
         drawline.items.drawLineGroup.bindData(res.drawLineGroups, 'gid', 'name');
     });
 
-    var displayFunc = (function() {
+    function buildDrawline4applyLineprops() {
 
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html("信息");
-            var $pretreatBtn = $('<a></a>').addClass('btn btn-minier btn-info').html('预放线');
-            var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-purple').html("更新");
-            var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-success').html('放线');
-            var $btnReset = $('<a></a>').addClass('btn btn-minier btn-inverse').html('重置');
-
-            var propertyArr = [["装修单: ", v.decoration.orderId, "blue", function(btn) {
-
+        return [{
+            field: "decoration.orderId",
+            name: "装修单",
+            prop: "decoration.orderId",
+            clazz: "blue",
+            click: function(btn, v) {
                 tools.decoration.info(btn, v.decoration.orderId);
-            }], ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
-
+            }
+        }, {
+            field: "decoration.house.village.name",
+            name: "楼盘",
+            prop: "decoration.house.village.name",
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.house.info(btn, v.decoration.house.hid);
-            }], ["楼号: ", v.decoration.house.houseNumber, "grey"], ["客户: ", v.decoration.customer.name, "grey", function(btn) {
-
+            }
+        }, {
+            field: "decoration.house.houseNumber",
+            name: "楼号",
+            prop: "decoration.house.houseNumber",
+            clazz: "grey"
+        }, {
+            field: "decoration.customer.name",
+            name: "客户",
+            prop: "decoration.customer.name",
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.customer.info(btn, v.decoration.customer.cid);
-            }], ["设计师: ", v.decoration.designer.currentName, "grey", function(btn) {
-
+            }
+        }, {
+            field: "decoration.designer.currentName",
+            name: "设计师",
+            prop: "decoration.designer.currentName",
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.personel.info(btn, v.decoration.designer.userId);
-            }], ["监理: ", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey", function(btn) {
-
+            }
+        }, {
+            field: "decoration.supervisor.currentName",
+            name: "监理",
+            prop: function(v) { return v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName; },
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.personel.info(btn, v.decoration.supervisor.userId);
-            }], ["面积: ", v.decoration.house.buildArea, "blue"], ["合同额: ", v.decoration.orderTotalPrice, "blue"], ["报价版本: ", v.decoration.version.name, "grey"], ["申请人: ", v.appler.currentName, "grey", function(btn) {
-
+            }
+        }, {
+            field: "decoration.house.buildArea",
+            name: "面积",
+            prop: "decoration.house.buildArea",
+            clazz: "blue"
+        }, {
+            field: "decoration.orderTotalPrice",
+            name: "合同额",
+            prop: "decoration.orderTotalPrice",
+            clazz: "blue"
+        }, {
+            field: "decoration.version.name",
+            name: "报价版本",
+            prop: "decoration.version.name",
+            clazz: "grey"
+        }, {
+            field: "appler.currentName",
+            name: "申请人",
+            prop: "appler.currentName",
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.personel.info(btn, v.decoration.designer.userId);
-            }], ["申请时间: ", v.applayTime, "green"], ["放线次数: ", v.count, "blue"], ["描述: ", v.content, "grey"]];
+            }
+        }, {
+            field: "applayTime",
+            name: "申请时间",
+            prop: "applayTime",
+            clazz: "green"
+        }, {
+            field: "count",
+            name: "放线次数",
+            prop: "count",
+            clazz: "blue"
+        }, {
+            field: "content",
+            name: "描述",
+            prop: "content",
+            clazz: "grey"
+        }];
+    }
 
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                if (value[3]) {
-                    $b.click(function() {
-
-                        value[3]($b);
-                    });
-                }
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnInfo).append($pretreatBtn).append($btnUpdate).append($btnDraw).append($btnReset).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnInfo.click(function() {
-
-                viewConstructionInfo(v.decoration.orderId);
-            });
-
-            $pretreatBtn.click(function() {
-
-                pretreat(v);
-            });
-
-            $btnUpdate.click(function() {
-
-                showUpdate(v);
-            });
-
-            $btnDraw.click(function() {
-
-                showEdit(v);
-            });
-
-            $btnReset.click(function() {
-
-                reset(v.dlid);
-            });
-
-            return $liLine;
-        };
+    function buildDrawline4applyLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            info: {
+                name: "信息",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    viewConstructionInfo(v.decoration.orderId);
+                }
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            pretreat: {
+                name: "预放线",
+                clazz: "btn-info",
+                handle: function(v) {
+                    pretreat(v);
+                }
+            },
+            update: {
+                name: "更新",
+                clazz: "btn-purple",
+                handle: function(v) {
+                    showUpdate(v);
+                }
+            },
+            draw: {
+                name: "放线",
+                clazz: "btn-success",
+                handle: function(v) {
+                    showEdit(v);
+                }
+            },
+            reset: {
+                name: "重置",
+                clazz: "btn-inverse",
+                handle: function(v) {
+                    reset(v.dlid);
+                }
             }
         };
-    })();
+    }
 
     var searcher = new Searcher();
-    searcher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'construction-drawLine-status', 'construction-drawLine-applayTime', 'construction-drawLine-actualDate'], "condList", api.construction.pageDrawLine, function(data) {
 
-        displayFunc.init('resultList', data);
-    }, "pagenation", "drawLineApplyPostData", {
+    searcher.set("condList", "pagenation", "resultList", api.construction.pageDrawLine, {
         "drawLine.status": constant.construction.drawLine.STATUS_QUEUE_INT
-    });
+    }, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'construction-drawLine-status', 'construction-drawLine-applayTime', 'construction-drawLine-actualDate'], "drawLineApplyPostData", null, true, null);
+    searcher.line("decoration.orderId", buildDrawline4applyLineprops(), buildDrawline4applyLinebtns()).render();
 
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
 
