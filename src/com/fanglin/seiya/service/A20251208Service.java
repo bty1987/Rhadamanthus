@@ -5,6 +5,7 @@ import com.fanglin.construction.vo.ConstructerVO;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserVO;
 
@@ -22,7 +23,9 @@ public interface A20251208Service {
 
 	public int beginConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException;
 
-	public int finishConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException;
+	public void finishConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionSchedule, String userId) throws FLException;
+
+	public void syncConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionSchedule) throws FLException;
 
 	public void addConstructerForPlatforPm(ConstructerVO constructer, String createrId) throws FLException;
 
@@ -30,5 +33,9 @@ public interface A20251208Service {
 
 	public int beginConstructionForPlatforPm(ConstructionVO construction, String queryUserId, int queryCompany) throws FLException;
 
+	public void syncConstructionForPlatforPm(ConstructionVO construction) throws FLException;
+
 	public int updateAcceptanceForPlatforPm(AcceptanceVO acceptanceVO) throws FLException;
+
+	public void syncConstructionNodeForPlatforPm(ConstructionNodeVO constructionNodeVO) throws FLException;
 }

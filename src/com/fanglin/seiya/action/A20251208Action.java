@@ -24,6 +24,7 @@ import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.seiya.service.A20251208Service;
@@ -54,6 +55,8 @@ public class A20251208Action extends BaseListAction {
 	private String userId;
 
 	private AcceptanceVO acceptance;
+
+	private ConstructionNodeVO constructionNode;
 
 	@Action(value = "saveOrUpdateUserForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String saveOrUpdateUserForPlatforPm() throws FLException {
@@ -106,6 +109,14 @@ public class A20251208Action extends BaseListAction {
 
 		return SUCCESS;
 	}
+
+	@Action(value = "syncConstructionScheduleForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncConstructionScheduleForPlatforPm() throws FLException {
+
+		a20251208Service.syncConstructionScheduleForPlatforPm(constructionSchedule);
+
+		return SUCCESS;
+	}
 	
 	@Action(value = "addConstructerForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructerForPlatforPm() throws FLException {
@@ -131,10 +142,26 @@ public class A20251208Action extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "syncConstructionForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncConstructionForPlatforPm() throws FLException {
+
+		a20251208Service.syncConstructionForPlatforPm(construction);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateAcceptanceForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAcceptanceForPlatforPm() throws FLException {
 
 		a20251208Service.updateAcceptanceForPlatforPm(acceptance);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "syncConstructionNodeForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncConstructionNodeForPlatforPm() throws FLException {
+
+		a20251208Service.syncConstructionNodeForPlatforPm(constructionNode);
 
 		return SUCCESS;
 	}
@@ -201,6 +228,14 @@ public class A20251208Action extends BaseListAction {
 
 	public void setAcceptance(AcceptanceVO acceptance) {
 		this.acceptance = acceptance;
+	}
+
+	public ConstructionNodeVO getConstructionNode() {
+		return constructionNode;
+	}
+
+	public void setConstructionNode(ConstructionNodeVO constructionNode) {
+		this.constructionNode = constructionNode;
 	}
 
 }
