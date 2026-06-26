@@ -42,66 +42,64 @@ $(function () {
     com.datetime(com.focusPage("#startTime"));
     com.datetime(com.focusPage("#endTime"));
 
-    var displayFunc = (function () {
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildPerformanceLineprops() {
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.user.userName));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-                    var type = {
-                        "0": "任务",
-                        "1": "代码",
-                        "2": "文档",
-                        "3": "测试用例",
-                        "4": "bug",
-                        "5": "延期",
-                        "6": "失误",
-                        "7": "考勤",
-                        "8": "加班"
-                    };
-                    var level = {
-                        "0": "低级",
-                        "1": "中级",
-                        "2": "高级"
-                    };
-                    var propertyArr = [
-                        ["员工:", v.user.userName, "grey"],
-                        ["类型:", type[v.type], "grey"],
-                        ["得分:", v.value, "grey"],
-                        ["等级:", level[v.level], "grey"],
-                        ["开始时间:", v.startTime, "grey"],
-                        ["结束时间:", v.endTime, "grey"],
-                        ["工作:", v.work, "grey"],
-                        ["说明:", v.content, "grey"]
-                    ];
+        return [{
+            field: "user.userName",
+            name: "员工",
+            prop: "user.userName",
+            clazz: "grey"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) { return performanceType[v.type]; },
+            clazz: "grey"
+        }, {
+            field: "value",
+            name: "得分",
+            prop: "value",
+            clazz: "grey"
+        }, {
+            field: "level",
+            name: "等级",
+            prop: function(v) { return performanceLevel[v.level]; },
+            clazz: "grey"
+        }, {
+            field: "startTime",
+            name: "开始时间",
+            prop: "startTime",
+            clazz: "grey"
+        }, {
+            field: "endTime",
+            name: "结束时间",
+            prop: "endTime",
+            clazz: "grey"
+        }, {
+            field: "work",
+            name: "工作",
+            prop: "work",
+            clazz: "grey"
+        }, {
+            field: "content",
+            name: "说明",
+            prop: "content",
+            clazz: "grey"
+        }];
+    }
 
-                    $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
+    function buildPerformanceButtons() {
 
-                    $divBtnWrap.appendTo($h3);
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addperformance').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
 
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
+        return [$adda];
+    }
 
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            }
-        }
-    })();
+    var performanceSeacher = new Searcher();
+
+    performanceSeacher.set("condList", "pagenation", "resultList", api.personel.pagePerformance, null, ['personel-userName', 'personel-performance-type', 'personel-performance-startTime', "personel-performance-endTime"], "selectUser", null, false, buildPerformanceButtons);
+    performanceSeacher.line("user.userName", buildPerformanceLineprops(), {}).render();
 
     function saveData(){
         if(com.validate('performanceModal')){
@@ -130,20 +128,8 @@ $(function () {
 
     var _condArr = ['personel-userName', 'personel-performance-type', 'personel-performance-startTime', "personel-performance-endTime"];
 
-    var performanceSeacher = new Searcher();
-
-    performanceSeacher.init(_condArr, "condList", api.personel.pagePerformance, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "selectUser", null, false, null, function () {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addperformance').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        return [$adda];
-    });
     com.focusPage('[name="addperformance"]', '#pagenation').on("click", function () {  // 选择器 [属性名="属性值"] 匿名函数
-        
+
         performance.modal.modal("show");
     });
 });

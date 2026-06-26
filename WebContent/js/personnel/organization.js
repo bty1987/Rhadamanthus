@@ -69,65 +69,40 @@ $(function() {
         return depts;
     };
 
-    var displayFunc = (function() {
+    function buildOrganizationLineprops() {
 
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-
-                $.each(listData, function(i, v) {
-
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-                    var propertyArr = [["员工编号:", v.userId, "grey"], ["用户名:", v.loginId, "grey"], ["部门:", v.dept.name, "grey"], ["职位:", v.duty.name, "grey"], ["角色:", v.role.name, "grey"], ["联系方式:", v.phone, "grey"]];
-
-                    $.each(propertyArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-        // 查看
-        var viewUser = function(userId) {
-
-            params.personel.userId = userId;
-            com.switchPage(api.index.userEdit.url);
-        };
-        // 添加
-        var addUser = function() {
-
-            params.personel.userId = null;
-            com.switchPage(api.index.userEdit.url);
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            initAddUser: function() {
-
-                com.focusPage('a[name="addUser"]', '#pagenation').click(function() {
-
-                    addUser();
-                });
-            }
-        }
-    })();
+        return [{
+            field: "userId",
+            name: "员工编号",
+            prop: "userId",
+            clazz: "grey"
+        }, {
+            field: "loginId",
+            name: "用户名",
+            prop: "loginId",
+            clazz: "grey"
+        }, {
+            field: "dept.name",
+            name: "部门",
+            prop: "dept.name",
+            clazz: "grey"
+        }, {
+            field: "duty.name",
+            name: "职位",
+            prop: "duty.name",
+            clazz: "grey"
+        }, {
+            field: "role.name",
+            name: "角色",
+            prop: "role.name",
+            clazz: "grey"
+        }, {
+            field: "phone",
+            name: "联系方式",
+            prop: "phone",
+            clazz: "grey"
+        }];
+    }
 
     var _condArr = [];
     var userSeacher = new Searcher();
@@ -171,13 +146,11 @@ $(function() {
 
     }).on('selected', function(evt, opt) {
 
-        userSeacher.init(_condArr, "condList", api.personel.pageUser, function(data) {
-
-            displayFunc.init('resultList', data);
-        }, "pagenation", "menuPostData", {
+        userSeacher.set("condList", "pagenation", "resultList", api.personel.pageUser, {
             'filters[0].data': opt.info[0].no,
             'filters[0].field': 'no',
             'filters[0].op': 'eq'
-        });
+        }, _condArr, "menuPostData", null, false, null);
+        userSeacher.line("userName", buildOrganizationLineprops(), {}).render();
     });
 });

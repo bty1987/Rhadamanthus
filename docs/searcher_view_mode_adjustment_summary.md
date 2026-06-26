@@ -767,3 +767,48 @@ Searcher 的 table 模式只会对该 `prop(v)` 调用一次并把结果当作**
 - `findstr /s /n displayFunc WebContent/js/data/*.js` 仅余排除项：`chainpage.js`、`cormrice.js`、`goods4view.js`、`paymentScale.js`、`soods2create.js`。
 - `findstr /s /n searcher.init WebContent/js/data/*.js`：0 命中(排除非 data 模块文件)。
 
+## 14. Personnel 模块迁移记录
+
+### 14.1 迁移范围
+
+| 批次 | 难度 | 文件 | 特征 |
+|------|------|------|------|
+| P0-简单 | 🟢 | `departmentType.js` | 无属性、无按钮，仅 h3 |
+| P0-简单 | 🟢 | `user4base.js` | 3按钮(查看/编辑/工作经历) |
+| P0-中等 | 🟡 | `avenger.js` | 3按钮(权配/重置密码/默认密码) |
+| P0-中等 | 🟡 | `merchant.js` | 同 avenger |
+| P0-中等 | 🟡 | `duty.js` | 状态开关 + 定岗信息按钮 |
+| P0-中等 | 🟡 | `department.js` | 状态开关 + type条件按钮(定岗/合作/编辑) |
+| P0-复杂 | 🟠 | `instorer.js` | pageType条件按钮 + 位掩码 extranet advance |
+| P0-复杂 | 🟠 | `supplier.js` | 同 instorer + 合同/服务费按钮 |
+| P0-复杂 | 🟠 | `performance.js` | 内联 type/level 映射 |
+| P0-复杂 | 🟠 | `userRequire.js` | 3审批按钮(通过/拒绝/完成) |
+| P1-高复杂 | 🔴 | `user4advance.js` | binding 对象 + 位掩码 extranet + setAdvance + pageType 条件按钮 |
+| P1-高复杂 | 🔴 | `user4right.js` | binding 对象 + setAdvance + 10个权配按钮 |
+| P1-高复杂 | 🔴 | `user.js` | 配置驱动(userUtils.getConfig)、img、qrcode、钉钉集成、syncRight |
+
+### 14.2 额外迁移
+
+`organization.js` — 原为树节点选中后触发 `searcher.init` 的懒加载页面，本轮一并迁移：将 `displayFunc` IIFE 替换为 `buildOrganizationLineprops()`，并在 `ace_tree` 的 `selected` 事件中改用 `userSeacher.set(...).line(...).render()`。
+
+### 14.3 未迁移文件
+
+`user2export.js` — 使用 `searcher.init` 旧式 API 但非标准 item-list（导出页面，多步表单），不在本轮迁移范围。
+
+### 14.4 关键技术点
+
+1. **binding 对象提取**：user4advance.js / user4right.js / user.js 的 `binding` 对象原嵌套在 `displayFunc` IIFE 内，迁移后提取为顶层变量，`displayFunc.setAdvance()` 改为 `binding.setAdvance()`。
+2. **配置驱动按钮**：user.js 通过 `user.pageConfig.pageBtn.contains(...)` 动态决定按钮，迁移后通过 `buildUserLinebtns()` 中的 if 判断实现，使用 linebtn 的 `show` 回调处理条件显示（如钉钉按钮仅在职状态显示）。
+3. **图片属性**：user.js 的用户头像原通过 `$urldiv` + `com.showImg()` 渲染，迁移后使用 `{type: "img", prop: "userPhoto"}` lineprop，Searcher 自动处理。
+4. **状态开关**：duty.js / department.js 的 `ace-switch` 手动实现，迁移后统一为 `{type: "switch", init, handle}` 标准格式。
+5. **pageType 分支**：department.js、instorer.js、supplier.js、user4advance.js 的按钮组根据 `pageType` 在 `buildXxxLinebtns()` 内 if 判断动态构建。
+6. **拼写修正**：avenger.js、instorer.js、merchant.js、supplier.js、userRequire.js、performance.js 中 `seacher` → `searcher`。
+7. **userRequire.js 变量引用**：`seacher.doSearch()` 在 saveData/currency/refuse/complete 4处改为 `searcher.doSearch()`。
+
+### 14.5 验证
+
+- `node --check` 全部通过(14 个文件，含 organization.js)。
+- `findstr /s /n displayFunc WebContent/js/personnel/*.js`：0 命中。
+- `findstr /s /n searcher.init WebContent/js/personnel/*.js`：仅 `user2export.js`（导出页，不在范围）。
+
+

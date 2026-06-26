@@ -1,107 +1,58 @@
 ﻿$(function() {
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法 tableId ,用来显示的div的id result.list 列表的json数组
-     */
-    var displayFunc = (function() {
+    function buildDutyLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) { // 页面中的一条数据
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name + (v.code ? ' <span class="grey">[' + v.code + ']</span>' : '')));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnDutment = $('<a></a>').addClass('btn btn-minier btn-blue').html('定岗信息');
-
-            // 启用禁用
-            var $btnStatus = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-
-            $btnStatus.append($statusSwitch).append($span);
-
-            $divBtnWrap.append($btnEdit).append($btnDutment).append($btnStatus).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            // 编辑按钮的点击事件
-            $btnEdit.click(function() {
-
-                edit(v);
-            });
-
-            $btnDutment.click(function() {
-
-                params.did = v.did;
-                params.type = 1;
-                com.popup4page("#layerPopUp", api.index.dutment.url, "定岗信息", null, function() {
-
-                    dutySeacher.doSearch();
-                });
-            });
-
-            !v.status && $statusSwitch.prop("checked", true);
-            $statusSwitch.switchBtn("status-lbl").on("click", function() {
-
-                $statusSwitch.prop("checked") ? (updateStatus(v.did, 0, function() {
-
-                    $statusSwitch.removeAttr("checked")
-                })) : (updateStatus(v.did, 1, function() {
-
-                    $statusSwitch.prop("checked")
-                }));
-            });
-
-            return $liLine;
-        };
+    function buildDutyLinebtns() {
 
         return {
-            init: function(tableId, listData) {
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+                    edit(v);
+                }
             },
-            drawLine: function(v) {
+            dutment: {
+                name: "定岗信息",
+                clazz: "btn-blue",
+                handle: function(v) {
 
-                return creatLine(v);
+                    params.did = v.did;
+                    params.type = 1;
+                    com.popup4page("#layerPopUp", api.index.dutment.url, "定岗信息", null, function() {
+
+                        dutySeacher.doSearch();
+                    });
+                }
+            },
+            status: {
+                type: "switch",
+                init: function(v) { return !v.status; },
+                handle: function(v, checked) {
+
+                    updateStatus(v.did, checked ? 0 : 1);
+                }
             }
         };
-    })();
+    }
+
+    function buildDutyButtons() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addDuty').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    }
 
     var dutySeacher = new Searcher();
 
-    dutySeacher.init(["personel-duty-name"], "condList", api.system.pageDuty, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "dutyPostData", null, false, null, function() {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addDuty').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span ></span>').text('添加').appendTo($adda);
-
-        return [$adda];
-    });
+    dutySeacher.set("condList", "pagenation", "resultList", api.system.pageDuty, null, ["personel-duty-name"], "dutyPostData", null, false, buildDutyButtons);
+    dutySeacher.line(function(v) { return v.name + (v.code ? ' [' + v.code + ']' : ''); }, buildDutyLineprops(), buildDutyLinebtns()).render();
 
     // 定义全局变量 json
     var duty = {
@@ -196,16 +147,14 @@
     });
 
     // 启用禁用功能
-    function updateStatus(id, status, failcallBack) {
+    function updateStatus(id, status) {
 
         com.post(api.system.updateDutyForStatus, {
             "duty.did": id,
             "duty.status": status
         }, function() {
 
-        }, function() {
-
-            failcallBack && failcallBack();
+            dutySeacher.doSearch();
         });
     }
 
