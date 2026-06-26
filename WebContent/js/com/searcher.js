@@ -1552,6 +1552,14 @@ var Searcher = function() {
                     });
                 });
 
+                for (var ti = tableProps.length - 1; ti >= 0; ti--) {
+                    if (tableProps[ti].prop.type !== "checkbox" && !tableProps[ti].prop.fixed) {
+                        tableProps[ti].prop.minWidth = tableProps[ti].prop.width;
+                        delete tableProps[ti].prop.width;
+                        break;
+                    }
+                }
+
                 // header handle
                 var headerThead = $("<thead></thead>");
                 var headerTr = $("<tr></tr>").appendTo(headerThead);
