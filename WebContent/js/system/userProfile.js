@@ -39,24 +39,12 @@ jQuery(function($) {
         com.focusPage('#searcherViewMode button[data-mode="' + mode + '"]').removeClass("btn-white").addClass("btn-primary");
     };
 
-    var getSearcherViewMode = function() {
-
-        return com.focusPage("#searcherViewMode button.btn-primary").attr("data-mode") || "line";
-    };
-
     var setTemplateStyle = function(template) {
 
         template = config.templates && config.templates[template] ? template : (window.templateStyle || config.defaultTemplate || "ace");
 
         com.focusPage("#templateStyle button").removeClass("btn-primary").addClass("btn-white");
         com.focusPage('#templateStyle button[data-template="' + template + '"]').removeClass("btn-white").addClass("btn-primary");
-    };
-
-    var getTemplateStyle = function() {
-
-        var template = com.focusPage("#templateStyle button.btn-primary").attr("data-template") || window.templateStyle || config.defaultTemplate || "ace";
-
-        return config.templates && config.templates[template] ? template : "ace";
     };
 
     var getTemplateUrl = function(template) {
@@ -86,33 +74,6 @@ jQuery(function($) {
         }
 
         window.location.href = getTemplateUrl(template) + "?timestamp=" + new Date().getTime();
-    };
-
-    var saveUserPrefer = function() {
-
-        var viewMode = getSearcherViewMode();
-        var templateStyle = getTemplateStyle();
-
-        setUserPrefer("searcher", "global", "viewMode", viewMode);
-        setUserPrefer("index", "global", "templateStyle", templateStyle);
-
-        com.post(api.personel.updateUserPrefer, {
-            "userPrefer.module": "searcher",
-            "userPrefer.page": "global",
-            "userPrefer.pkey": "viewMode",
-            "userPrefer.pvalue": viewMode
-        });
-
-        com.post(api.personel.updateUserPrefer, {
-            "userPrefer.module": "index",
-            "userPrefer.page": "global",
-            "userPrefer.pkey": "templateStyle",
-            "userPrefer.pvalue": templateStyle
-        });
-
-        saveTemplateLocal(templateStyle);
-
-        return templateStyle;
     };
 
     var userid = -null;
@@ -149,12 +110,35 @@ jQuery(function($) {
 
     com.focusPage("#searcherViewMode button").on("click", function() {
 
-        setSearcherViewMode($(this).attr("data-mode"));
+        var mode = $(this).attr("data-mode");
+
+        setSearcherViewMode(mode);
+        setUserPrefer("searcher", "global", "viewMode", mode);
+
+        com.post(api.personel.updateUserPrefer, {
+            "userPrefer.module": "searcher",
+            "userPrefer.page": "global",
+            "userPrefer.pkey": "viewMode",
+            "userPrefer.pvalue": mode
+        });
     });
 
     com.focusPage("#templateStyle button").on("click", function() {
 
-        setTemplateStyle($(this).attr("data-template"));
+        var template = $(this).attr("data-template");
+
+        setTemplateStyle(template);
+        setUserPrefer("index", "global", "templateStyle", template);
+
+        com.post(api.personel.updateUserPrefer, {
+            "userPrefer.module": "index",
+            "userPrefer.page": "global",
+            "userPrefer.pkey": "templateStyle",
+            "userPrefer.pvalue": template
+        }, function() {
+
+            switchTemplate(template);
+        });
     });
 
     com.focusPage("#reset").on("click", function() {
@@ -190,16 +174,7 @@ jQuery(function($) {
             userProfile.wechat = com.focusPage("#wechat").val();
             userProfile.email = com.focusPage("#email").val();
 
-            var templateStyle = saveUserPrefer();
-
-            if (templateStyle != window.templateStyle) {
-                com.showConfirm("操作成功, 切换模板将刷新页面, 是否继续?", function() {
-
-                    switchTemplate(templateStyle);
-                });
-            } else {
-                com.showAlert(com.info, "操作成功");
-            }
+            com.showAlert(com.info, "操作成功");
         });
     });
 

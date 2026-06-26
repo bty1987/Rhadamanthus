@@ -4249,6 +4249,11 @@ input[readonly].lock-error-input{
     border-left-color: #ddd;
 }
 
+.btn-mini {
+    padding: 0 6px;
+    font-size: 10.5px;
+    border-radius: 3px;
+}
 .btn-minier {
     padding: 0 4px;
     line-height: 18px;
