@@ -710,3 +710,60 @@ Searcher 的 table 模式只会对该 `prop(v)` 调用一次并把结果当作**
   `(payment, statusArr)`；8 个 payment 调用点全部更新，无 `v.decoration` 残留实参。
 - 行尾与编码：所有改动文件保持 CRLF（decoration.js 带 UTF-8 BOM，其余 noBOM，与 HEAD 一致），
   `git -c core.whitespace=cr-at-eol diff --check` 无空白告警。
+
+
+## 13. Data 模块迁移记录
+
+依据 decoration / payment 迁移经验，对 `WebContent/js/data/` 下仍使用 `displayFunc` 的 19 个标准分页页完成 Searcher 标准化迁移。
+
+### 13.1 迁移范围
+
+| 文件 | apiPage | 迁移策略 |
+|---|---|---|
+| `category.js` | pageCategory | propertyArr 6 字段 + 1 编辑按钮 → `buildCategoryLineprops/buildCategoryLinebtns` |
+| `label.js` | pageLabel | propertyArr 2 字段 + status switch + 编辑 → `buildLabelLineprops/buildLabelLinebtns` |
+| `drawlineGroup.js` | pageDrawlineGroup | propertyArr 1 字段(show) + status switch + 编辑 → `buildGroupLineprops/buildGroupLinebtns` |
+| `flowpath.js` | pageFlowpath | propertyArr 4 字段 + 3 按钮(修改/节点/删除) → `buildFlowpathLineprops/buildFlowpathLinebtns` |
+| `aoodsCost.js` | pageAoodsCost | propertyArr 6 字段(含 constructionCost 嵌套) + 删除 → `buildAoodsCostLineprops/buildAoodsCostLinebtns` |
+| `aoodsCharge.js` | pageAoodsCharge | propertyArr 6 字段(constant 映射) + 编辑/删除 → `buildAoodsChargeLineprops/buildAoodsChargeLinebtns` |
+| `instorer.js` | pageInstorer | propertyArr 3 字段 + status switch + 编辑 → `buildInstorerLineprops/buildInstorerLinebtns` |
+| `constructionCost.js` | pageConstructionCost | propertyArr 6 字段 + status switch + 编辑 → `buildConstructionCostLineprops/buildConstructionCostLinebtns` |
+| `constructionPace.js` | pageConstructionPace | propertyArr 5 字段 + 编辑/节点按钮(无 status API,移除 switch) → `buildPaceLineprops/buildPaceLinebtns` |
+| `constructionPeriod.js` | pageConstructionPeriod | propertyArr 4 字段 + 编辑/节点按钮(同上) → `buildPeriodLineprops/buildPeriodLinebtns` |
+| `normadd.js` | pageNormadd | propertyArr 4 字段 + status switch + 删除 → `buildNormaddLineprops/buildNormaddLinebtns` |
+| `normpack.js` | pageNormpack | propertyArr 1 字段 + status switch + 项目/删除 → `buildNormpackLineprops/buildNormpackLinebtns` |
+| `supplier.js` | pageSupplier | propertyArr 3 字段 + 驻店/编辑 + status switch → `buildSupplierLineprops/buildSupplierLinebtns` |
+| `talking.js` | pageTalking | propertyArr 4 字段 + 更新/status switch/删除 → `buildTalkingLineprops/buildTalkingLinebtns` |
+| `taskParam.js` | communion.pageTaskParam | propertyArr 14 字段 + pageType 分支(status/编辑/删除 仅非 task 模式) → `buildTaskParamLineprops/buildTaskParamLinebtns` |
+| `userLabel.js` | personel.pageUser | propertyArr 6 字段(嵌套 dept/duty/role) + 编辑/标签 → `buildUserLabelLineprops/buildUserLabelLinebtns` |
+| `decorationMeasureRule.js` | pageDecorationMeasureRule | propertyArr 2 字段 + status switch + 修改/明细/删除 → `buildMeasureRuleLineprops/buildMeasureRuleLinebtns` |
+| `receiptType.js` | pageReceiptType | propertyArr 11 字段 + custom lineprop(receiptTypeItems 动态) + status switch + 修改/单据 → `buildReceiptTypeLineprops/buildReceiptTypeLinebtns` |
+| `village.js` | pageVillage | img lineprop + propertyArr 9 字段 + status switch + pageType 分支(village:5按钮 / houseLayout:1按钮) → `buildVillageLineprops/buildVillageLinebtns` |
+| `soods.js` | pageSoods | qrcode+img lineprop + propertyArr 10 字段 + pageType 分支(basic:项目/图片 / 非:项目/编辑/status/删除) + pager 4按钮(导出/批量更新/启用/禁用) → `buildSoodsLineprops/buildSoodsLinebtns` |
+
+### 13.2 排除迁移（非 Searcher 分页）
+
+| 文件 | 排除依据 |
+|---|---|
+| `chainpage.js` | `com.post(api.data.queryChainPage)` 一次性拉取, 无分页器、无 Searcher 条件区 |
+| `goods4view.js` | `com.post` 一次性拉取, 自绘 `flex-table` 表格(非 item-list 结构) |
+| `cormrice.js` | `com.post(api.data.queryCormriceByQcid)` 按 `qcid` 一次性拉取, 无分页 |
+| `paymentScale.js` | `com.post(api.data.queryPaymentScale)` 按 `cid` 一次性拉取 |
+| `soods2create.js` | `com.post(api.data.querySoodsItemByQiid)` 一次性拉取, 弹窗子列表 |
+
+### 13.3 关键技术点
+
+1. **status switch 统一使用 `linebtns.type = "switch"`**：`init(v)` 返回初始选中状态, `handle(v, checked)` 执行状态切换; 替代了原先各文件内手写的 `$statusSwitch.switchBtn().on("click")` 模式。
+2. **constructionPace / constructionPeriod 无 ForStatus API**：原代码中 status switch 虽有 UI 但无对应后端接口(点击无实际效果), 迁移时直接移除 switch。
+3. **receiptType 动态 receiptTypeItems**：使用 `type: "custom"` lineprop, `prop(v)` 返回文本摘要(供 card/table 模式), `render($liLine, v, $ulProperty)` 向 line 模式追加 `<strong>/<b>` DOM。
+4. **village 行内图片**：使用 `type: "img"` lineprop, Searcher 自动渲染 75×75 缩略图。
+5. **soods 二维码+图片**：分别使用 `type: "qrcode"` 和 `type: "img"` lineprop, Searcher 自动渲染。
+6. **pageType 分支**：taskParam、village、soods 等文件的按钮组根据 `pageType` 动态构建 `linebtns/buttons`。
+7. **flowpath 残留 `displayFunc.init()`**：更新回调中的 `displayFunc.init()` 已改为 `searcher.doSearch()`。
+
+### 13.4 验证
+
+- `node --check` 全部通过(19 个文件)。
+- `findstr /s /n displayFunc WebContent/js/data/*.js` 仅余排除项：`chainpage.js`、`cormrice.js`、`goods4view.js`、`paymentScale.js`、`soods2create.js`。
+- `findstr /s /n searcher.init WebContent/js/data/*.js`：0 命中(排除非 data 模块文件)。
+

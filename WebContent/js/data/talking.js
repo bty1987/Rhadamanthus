@@ -32,112 +32,76 @@ $(function() {
         talking.talkingStatus = res.talkingStatus.split("key", "value");
     }, null, false);
 
-    var displayFunc = (function() {
+    function buildTalkingLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "name",
+            name: "名称",
+            prop: "name",
+            clazz: "grey"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) { return talking.talkingType[v.type]; },
+            clazz: "grey"
+        }, {
+            field: "content",
+            name: "内容",
+            prop: "content",
+            clazz: "grey"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return talking.talkingStatus[v.status]; },
+            clazz: "red"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildTalkingLinebtns() {
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass("oid").append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $invalid = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-
-            var $btnUpdate = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('更新');
-            var $btnDelete = $('<a></a>').addClass(' btn btn-minier btn-success').html('删除');
-
-            $invalid.append($statusSwitch).append($span);
-            $divBtnWrap.append($btnUpdate).append($invalid).appendTo($h3);
-
-            var propertyArr = [["名称:", v.name, "grey"], ["类型:", talking.talkingType[v.type], "grey"], ["内容:", v.content, "grey"], ["状态 :", talking.talkingStatus[v.status], "red"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnDelete.click(function() {
-
-                com.showConfirm("是否确认删除", function() {
-
-                    deleteTalking(v.tid);
-                });
-            });
-
-            !v.status ? $statusSwitch.prop("checked", true) : $statusSwitch.prop("checked", false);
-
-            $invalid.click(function() {
-
-                var cvalue = $statusSwitch.prop("checked") ? 0 : 1;
-
-                updateTalkingForStatus(v.tid, cvalue);
-            });
-
-            $btnUpdate.click(function() {
-
-                talking.editFlg = false;
-                talking.items.tid = v.tid;
-                talking.items.name.val(v.name);
-                talking.items.type.val(v.type);
-                talking.items.content.val(v.content);
-
-                talking.modals.talkingModal.modal("show");
-            });
-
-            return $liLine;
-        };
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            update: {
+                name: "更新",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    talking.editFlg = false;
+                    talking.items.tid = v.tid;
+                    talking.items.name.val(v.name);
+                    talking.items.type.val(v.type);
+                    talking.items.content.val(v.content);
+                    talking.modals.talkingModal.modal("show");
+                }
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            status: {
+                type: "switch",
+                init: function(v) { return !v.status; },
+                handle: function(v, checked) { updateTalkingForStatus(v.tid, checked ? 0 : 1); }
+            },
+            delete: {
+                name: "删除",
+                clazz: "btn-success",
+                handle: function(v) {
+                    com.showConfirm("是否确认删除", function() {
+                        deleteTalking(v.tid);
+                    });
+                }
             }
         };
-    })();
+    }
+
+    function buildTalkingButtons() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addTalking').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(["data-talking-name", "data-talking-type", "data-talking-status"], "creatLine", api.data.pageTalking, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pageTalking", "pageTalkingPost", null, false, null, function(res) {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addTalking').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        return [$adda];
-    }, "resultList");
+    searcher.set("creatLine", "pageTalking", "resultList", api.data.pageTalking, null, ["data-talking-name", "data-talking-type", "data-talking-status"], "pageTalkingPost", null, false, buildTalkingButtons);
+    searcher.line("name", buildTalkingLineprops(), buildTalkingLinebtns()).render();
 
     com.focusPage("#addTalking").click(function() {
 

@@ -50,105 +50,60 @@ $(function() {
         },
     });
 
-    var displayFunc = (function() {
+    function buildInstorerLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "sid",
+            name: "厂商ID",
+            prop: "sid",
+            clazz: "blue"
+        }, {
+            field: "loginId",
+            name: "登陆名",
+            prop: "loginId",
+            clazz: "grey"
+        }, {
+            field: "isLogin",
+            name: "登陆状态",
+            prop: function(v) { return v.isLogin == 0 ? "禁用" : "启用"; },
+            clazz: "red"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.currentName));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
-
-            var $btnStatus = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-
-            var propertyArr = [["厂商ID:", v.sid, "blue "], ["登陆名:", v.loginId, "grey"], ["登陆状态:", v.isLogin == 0 ? "禁用" : "启用", "red "]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $btnStatus.append($statusSwitch).append($span);
-
-            $divBtnWrap.append($btnEdit).append($btnStatus).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnEdit.click(function() {
-
-                instorer.$nowLine = v.sid;
-                editInstorer(v);
-            });
-
-            v.isLogin && $statusSwitch.prop("checked", true);
-            $statusSwitch.switchBtn("status-lbl").on("click", function() {
-
-                $statusSwitch.prop("checked") ? (updateStatus(v.sid, 1, function() {
-
-                    $statusSwitch.removeAttr("checked")
-                })) : (updateStatus(v.sid, 0, function() {
-
-                    $statusSwitch.prop("checked")
-                }));
-            });
-
-            return $liLine;
-        };
+    function buildInstorerLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            edit: {
+                name: "编辑",
+                clazz: "btn-success",
+                handle: function(v) {
+                    instorer.$nowLine = v.sid;
+                    editInstorer(v);
+                }
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            status: {
+                type: "switch",
+                init: function(v) { return v.isLogin; },
+                handle: function(v, checked) { updateStatus(v.sid, checked ? 1 : 0, null); }
             }
-        }
-    })();
+        };
+    }
+
+    function buildInstorerButtons() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    }
 
     var _condArr = [];
 
     var searcher = new Searcher();
 
-    searcher.init(_condArr, "condList", api.data.pageInstorer, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "materialModelPostData", null, false, null, function() {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        return [$adda];
-    });
+    searcher.set("condList", "pagenation", "resultList", api.data.pageInstorer, null, _condArr, "materialModelPostData", null, false, buildInstorerButtons);
+    searcher.line("currentName", buildInstorerLineprops(), buildInstorerLinebtns()).render();
 
     $('a[name="add"]', com.focusPage('#pagenation')).click(function() {
 

@@ -45,87 +45,66 @@ $(function() {
         com.closePopup();
     });
 
-    var displayFunc = (function() {
+    function buildAoodsChargeLineprops() {
 
-        var renderList = function(tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "name",
+            name: "费用名称",
+            prop: "name",
+            clazz: "grey"
+        }, {
+            field: "price",
+            name: "价格",
+            prop: "price",
+            clazz: "blue"
+        }, {
+            field: "surplus",
+            name: "浮动额",
+            prop: "surplus",
+            clazz: "blue"
+        }, {
+            field: "type",
+            name: "费用类型",
+            prop: function(v) { return constant.data.aoodsCharge.type.keys[v.type]; },
+            clazz: "red"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return constant.data.aoodsCharge.status.keys[v.status]; },
+            clazz: "red"
+        }, {
+            field: "sort",
+            name: "排序",
+            prop: "sort",
+            clazz: "blue"
+        }];
+    }
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-
-            var propertyArr = [
-                ["费用名称: ", v.name, "grey"],
-                ["价格: ", v.price, "blue"],
-                ["浮动额: ", v.surplus, "blue"],
-                ["费用类型: ", constant.data.aoodsCharge.type.keys[v.type], "red"],
-                ["状态: ", constant.data.aoodsCharge.status.keys[v.status], "red"],
-                ["排序: ", v.sort, "blue"]
-            ];
-
-            $.each(propertyArr, function(index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            // 编辑按钮
-            $btnEdit.click(function() {
-                editData(v);
-            });
-
-            // 删除按钮
-            $btnDel.click(function() {
-                com.post(api.data.deleteAoodsCharge, {
-                    "aoodsCharge.acid": v.acid
-                }, function() {
-                    com.showAlert(com.info, "删除成功");
-                    searcher.doSearch();
-                });
-            });
-
-            return $liLine;
-        };
+    function buildAoodsChargeLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-                return creatLine(v);
+            edit: {name: "编辑", clazz: "btn-yellow", handle: function(v) { editData(v); }},
+            delete: {
+                name: "删除",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    com.post(api.data.deleteAoodsCharge, {
+                        "aoodsCharge.acid": v.acid
+                    }, function() {
+                        com.showAlert(com.info, "删除成功");
+                        searcher.doSearch();
+                    });
+                }
             }
-        }
-    })();
+        };
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(null, "condListCharge", api.data.pageAoodsCharge, function(data) {
-        displayFunc.init('resultListCharge', data);
-    }, "pagenationCharge", "aoodsChargePostData", {
+    searcher.set("condListCharge", "pagenationCharge", "resultListCharge", api.data.pageAoodsCharge, {
         "aoodsCharge.aoods.aid": aoodsCharge.aid
-    }, false, null, null, "resultListCharge");
+    }, null, "aoodsChargePostData", null, false);
+    searcher.line("name", buildAoodsChargeLineprops(), buildAoodsChargeLinebtns()).render();
 
     // 添加按钮
     aoodsCharge.btns.addBtn.click(function() {

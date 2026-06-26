@@ -121,147 +121,142 @@ $(function() {
         }
     });
 
-    var displayFunc = (function() {
+    function buildVillageLineprops() {
 
-        var renderList = function(tableId, listData) {
+        var lineprops = [{
+            field: "img",
+            name: "图片",
+            type: "img",
+            prop: "url"
+        }, {
+            field: "parentVillage",
+            name: "上级楼盘",
+            prop: function(v) { return com.checkNull(v.parentVillage && v.parentVillage.name, "暂无"); },
+            clazz: "grey"
+        }, {
+            field: "no",
+            name: "楼盘编号",
+            prop: "no",
+            clazz: "grey"
+        }, {
+            field: "city",
+            name: "所在城市",
+            prop: "cityProper.city.name",
+            clazz: "grey"
+        }, {
+            field: "cityProper",
+            name: "所在城区",
+            prop: "cityProper.name",
+            clazz: "grey"
+        }, {
+            field: "developer",
+            name: "开发商",
+            prop: function(v) { return v.developer ? v.developer : "-"; },
+            clazz: "grey"
+        }, {
+            field: "salesPhone",
+            name: "售楼电话",
+            prop: function(v) { return v.salesPhone ? v.salesPhone : "-"; },
+            clazz: "grey"
+        }, {
+            field: "deliveryTime",
+            name: "交房时间",
+            prop: "deliveryTime",
+            clazz: "green"
+        }, {
+            field: "mileage",
+            name: "公里数",
+            prop: "mileage",
+            clazz: "grey"
+        }, {
+            field: "content",
+            name: "说明",
+            prop: "content",
+            clazz: "grey"
+        }];
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return lineprops;
+    }
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+    function buildVillageLinebtns() {
 
-                    creatLine(v).appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
+        var btns = {
+            status: {
+                type: "switch",
+                init: function(v) { return v.status == 0; },
+                handle: function(v, checked) { updateStatus(v.no, checked ? 0 : 1); }
             }
         };
 
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-
-            var $urldiv = $('<div style="border: 1px solid #ccc ;float :left;"></div>').css("width", "75px").css("height", "75px").css("margin-right", "10px");
-            var img = $('<img />').css("margin-right", "20px").appendTo($urldiv);
-            var url = com.showImg(img, v.url, 75, 75, '', null, 0);
-
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $btnRule = $('<a></a>').addClass('btn btn-minier btn-yellow').html('规则');
-            var $btnPosition = $('<a></a>').addClass('btn btn-minier btn-yellow').html('位置');
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
-            var $drawingedit = $('<a></a>').addClass('btn btn-minier btn-warning').html('管理图片');
-            var $houseLayout = $("<a></a>").addClass("btn btn-minier btn-danger").html("户型");
-
-            var $btnStatus = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-
-            var propertyArr = [["上级楼盘:", com.checkNull(v.parentVillage && v.parentVillage.name, "暂无"), "grey"], ["楼盘编号:", v.no, "grey"], ["所在城市:", v.cityProper.city.name, "grey"], ["所在城区:", v.cityProper.name, "grey"], ["开发商:", v.developer ? v.developer : "-", "grey"], ["售楼电话:", v.salesPhone ? v.salesPhone : "-", "grey"], ["交房时间:", v.deliveryTime, "green"], ["公里数:", v.mileage, "grey"], ["说明:", v.content, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $btnStatus.append($statusSwitch).append($span);
-
-            if (village.pageType == "village") {
-                $divBtnWrap.append($btnRule).append($btnPosition).append($btnEdit).append($drawingedit).append($btnStatus).appendTo($h3);
-            } else {
-                $divBtnWrap.append($houseLayout).appendTo($h3);
-            }
-
-            $liLine.append($urldiv).append($h3).append($ulProperty);
-
-            $btnEdit.click(function() {
-
-                editVillage(v);
-            });
-
-            $btnRule.click(function() {
-
-                params.vid = v.vid;
-
-                params.data.village = v;
-
-                com.popup4page("#villagePopUp1", api.index.village4rule.url, "规则");
-            });
-
-            $btnPosition.click(function() {
-
-                editPosition(v);
-            });
-
-            $drawingedit.click(function() {
-
-                village.vid = v.vid;
-                village.no = v.no;
-
-                managedrawing(v.vid);
-            });
-
-            $houseLayout.click(function() {
-
-                params.vid = v.vid;
-
-                params.data.village = v;
-
-                com.popup4page("#villagePopUp", "/views/data/houseLayout.html", "户型");
-            });
-
-            $statusSwitch.prop("checked", v.status == 0 ? true : false).switchBtn("status-lbl").on("click", function() {
-
-                updateStatus(v.no, $statusSwitch.prop("checked") ? 0 : 1);
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
+        if (village.pageType == "village") {
+            btns.rule = {
+                name: "规则",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    params.vid = v.vid;
+                    params.data.village = v;
+                    com.popup4page("#villagePopUp1", api.index.village4rule.url, "规则");
+                }
+            };
+            btns.position = {
+                name: "位置",
+                clazz: "btn-yellow",
+                handle: function(v) { editPosition(v); }
+            };
+            btns.edit = {
+                name: "编辑",
+                clazz: "btn-success",
+                handle: function(v) { editVillage(v); }
+            };
+            btns.drawing = {
+                name: "管理图片",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    village.vid = v.vid;
+                    village.no = v.no;
+                    managedrawing(v.vid);
+                }
+            };
+        } else {
+            btns.houseLayout = {
+                name: "户型",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    params.vid = v.vid;
+                    params.data.village = v;
+                    com.popup4page("#villagePopUp", "/views/data/houseLayout.html", "户型");
+                }
+            };
         }
-    })();
+
+        return btns;
+    }
+
+    function buildVillageButtons() {
+
+        if (village.pageType == "houseLayout") {
+            return [];
+        }
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    }
 
     var searcher = new Searcher();
 
     // 扩展查询条件：楼盘名称、城市、开发商、状态、交付时间范围
-    searcher.init([
+    searcher.set("condList", "pagenation", "resultList", api.data.pageVillage, null, [
         'data-village-name',
         'system-city',
         'data-village-developer',
         'data-village-status',
         'data-village-delivery-start',
         'data-village-delivery-end'
-    ], "condList", api.data.pageVillage, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "villagePostData", null, false, null, function() {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        if (village.pageType == "houseLayout") {
-            return [];
-        } else {
-            return [$adda];
-        }
-    });
+    ], "villagePostData", null, false, buildVillageButtons);
+    searcher.line(function(v) { return ' ' + v.name; }, buildVillageLineprops(), buildVillageLinebtns()).render();
 
     // 启用禁用功能
     function updateStatus(id, status) {

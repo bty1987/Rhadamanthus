@@ -53,102 +53,78 @@ jQuery(function($) {
         constructionCost.costStatus = res.costStatus.split("key", "value");
     },null ,false);
 
-    var displayFunc  = (function(){
+    function buildConstructionCostLineprops() {
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "areaLeft",
+            name: "起始面积",
+            prop: "areaLeft",
+            clazz: "blue"
+        }, {
+            field: "areaRight",
+            name: "终止面积",
+            prop: "areaRight",
+            clazz: "blue"
+        }, {
+            field: "accessory",
+            name: "辅料额",
+            prop: "accessory",
+            clazz: "blue"
+        }, {
+            field: "salary",
+            name: "工费额",
+            prop: "salary",
+            clazz: "blue"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return constructionCost.costStatus[v.status]; },
+            clazz: "red"
+        }, {
+            field: "sort",
+            name: "排序",
+            prop: "sort",
+            clazz: "blue"
+        }];
+    }
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid')
-            var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
-            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-            var $invalid = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-            var $btnUpdate= $("<a></a>").addClass("btn btn-minier btn-yellow").html("编辑");
-
-            var propertyArr = [
-                ["起始面积: ", v.areaLeft, "blue"],
-                ["终止面积: ", v.areaRight, "blue"],
-                ["辅料额: ", v.accessory, "blue"],
-                ["工费额: ", v.salary, "blue"],
-                ["状态: ", constructionCost.costStatus[v.status], "red"],
-                ["排序: ", v.sort, "blue"],
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-
-            $invalid.append($statusSwitch).append($span);
-            $liLine.append($h3).append($ulProperty);
-            $btnDiv.append($invalid).append($btnUpdate);
-            $h3.append($title).append($btnDiv);
-
-            $btnUpdate.click(function(){
-
-                constructionCost.ccid = v.ccid;
-                constructionCost.items.uName.val(v.name);
-                constructionCost.items.uAreaLeft.val(v.areaLeft);
-                constructionCost.items.uAeaRight.val(v.areaRight);
-                constructionCost.items.uAccessory.val(v.accessory);
-                constructionCost.items.uSalary.val(v.salary);
-                constructionCost.modals.updateModal.modal("show");
-            });
-
-            !v.status && $statusSwitch.prop("checked", true);
-
-            $invalid.click(function(){
-                var cvalue = $statusSwitch.prop("checked") ? 0:1;
-
-                updataStatus(v.ccid, cvalue);
-            });
-
-            return $liLine;
-        };
+    function buildConstructionCostLinebtns() {
 
         return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+            status: {
+                type: "switch",
+                init: function(v) { return !v.status; },
+                handle: function(v, checked) { updataStatus(v.ccid, checked ? 0 : 1); }
             },
-            drawLine : function(v){
-                return creatLine(v);
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    constructionCost.ccid = v.ccid;
+                    constructionCost.items.uName.val(v.name);
+                    constructionCost.items.uAreaLeft.val(v.areaLeft);
+                    constructionCost.items.uAeaRight.val(v.areaRight);
+                    constructionCost.items.uAccessory.val(v.accessory);
+                    constructionCost.items.uSalary.val(v.salary);
+                    constructionCost.modals.updateModal.modal("show");
+                }
             }
-        }
-    })();
+        };
+    }
+
+    function buildConstructionCostButtons() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addConstructionCost').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(["data-construction-cost-name"], "condList", api.data.pageConstructionCost, function(data){
-        displayFunc.init('resultList', data);
-    }, "pagenation", "constructionCostPostData",null, false, null, function(){
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addConstructionCost').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        return [$adda];
-    });
+    searcher.set("condList", "pagenation", "resultList", api.data.pageConstructionCost, null, ["data-construction-cost-name"], "constructionCostPostData", null, false, buildConstructionCostButtons);
+    searcher.line(function(v) { return ' ' + v.name; }, buildConstructionCostLineprops(), buildConstructionCostLinebtns()).render();
 
     com.focusPage('#addConstructionCost').click(function(){
         constructionCost.modals.addModal.modal("show");
