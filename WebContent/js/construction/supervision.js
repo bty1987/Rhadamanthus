@@ -60,192 +60,179 @@
     constructionNodes.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas, "key", "value");
     constructionNodes.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas, "key", "value");
 
-    var displayFunc = (function() {
+    function buildSupervisionLineprops() {
 
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
+        return [{
+            field: "orderId",
+            name: "装修单",
+            prop: "orderId",
+            clazz: "blue",
+            click: function(btn, v) {
+                tools.decoration.info(btn, v.orderId);
             }
-        };
+        }, {
+            field: "house.village.name",
+            name: "楼盘",
+            prop: "house.village.name",
+            clazz: "grey",
+            click: function(btn, v) {
+                tools.house.info(btn, v.house.hid);
+            }
+        }, {
+            field: "house.houseNumber",
+            name: "楼号",
+            prop: "house.houseNumber",
+            clazz: "grey"
+        }, {
+            field: "customer.name",
+            name: "客户",
+            prop: "customer.name",
+            clazz: "grey",
+            click: function(btn, v) {
+                tools.customer.info(btn, v.customer.cid);
+            }
+        }, {
+            field: "designer.userName",
+            name: "设计师",
+            prop: "designer.userName",
+            clazz: "grey",
+            click: function(btn, v) {
+                tools.personel.info(btn, v.designer.userId);
+            }
+        }, {
+            field: "supervisor.userName",
+            name: "监理",
+            prop: function(v) { return v.supervisor ? v.supervisor.userName : ""; },
+            clazz: "grey",
+            click: function(btn, v) {
+                tools.personel.info(btn, v.supervisor.userId);
+            }
+        }, {
+            field: "orderTotalPrice",
+            name: "总价",
+            prop: "orderTotalPrice",
+            clazz: "blue"
+        }, {
+            field: "house.buildArea",
+            name: "面积",
+            prop: "house.buildArea",
+            clazz: "blue"
+        }, {
+            field: "orderTotalPrice",
+            name: "合同额",
+            prop: "orderTotalPrice",
+            clazz: "blue"
+        }, {
+            field: "version.name",
+            name: "报价版本",
+            prop: "version.name",
+            clazz: "grey"
+        }, {
+            field: "projectStatus",
+            name: "进度",
+            prop: function(v) { return constant.decoration().decoration.projectStatus.keys[v.projectStatus]; },
+            clazz: "red"
+        }];
+    }
 
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html("信息");
-            var $btnView = $('<a></a>').addClass('btn btn-minier btn-success').html("施工节点");
-            var $btnAddReduce = $('<a></a>').addClass('btn btn-minier btn-warning').html('增减项');
-//            var $btnRe = $('<a></a>').addClass('btn btn-minier btn-inverse').html('返工');
-            var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-info').html('扣款');
-            var $btnQuota = $('<a></a>').addClass('btn btn-minier btn-purple').html("定额材料");
-            var $btnQuopt = $('<a></a>').addClass('btn btn-minier btn-danger').html('定额工费');
-            var $btnNormtime = $('<a></a>').addClass('btn btn-minier btn-pink').html('定额工时');
-
-            var propertyArr = [
-                ["装修单: ", v.orderId, "blue", function(btn) {
-
-                    tools.decoration.info(btn, v.orderId);
-                }],
-                ["楼盘: ", v.house.village.name, "grey", function(btn) {
-
-                    tools.house.info(btn, v.house.hid);
-                }],
-                ["楼号: ", v.house.houseNumber, "grey"],
-                ["客户: ", v.customer.name, "grey", function(btn) {
-
-                    tools.customer.info(btn, v.customer.cid);
-                }],
-                ["设计师:", v.designer.userName, "grey", function(btn) {
-
-                    tools.personel.info(btn, v.designer.userId);
-                }],
-                ["监理:", v.supervisor ? v.supervisor.userName : "", "grey", function(btn) {
-
-                    tools.personel.info(btn, v.supervisor.userId);
-                }],
-                ["总价:", v.orderTotalPrice, "blue"],
-                ["面积:", v.house.buildArea, "blue"],
-                ["合同额: ", v.orderTotalPrice, "blue"],
-                ["报价版本: ", v.version.name, "grey"],
-                ["进度:", constant.decoration().decoration.projectStatus.keys[v.projectStatus], "red"]
-            ];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-
-                if (value[3]) {
-                    $b.click(function() {
-
-                        value[3]($b);
-                    });
-                }
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnQuota).append($btnQuopt).append($btnNormtime).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnView.click(function() {
-
-                viewSupervisionDetail(v.orderId, v.customer.cid);
-            });
-
-            $btnInfo.click(function() {
-
-                viewConstructionInfo(v.orderId);
-            });
-
-            $btnAddReduce.click(function() {
-
-                viewAddReduceIndex(v.orderId, v.type);
-            });
-
-//            $btnRe.click(function() {
-//
-//                viewReworkIndex(v.orderId);
-//            });
-
-            $btnMoney.click(function() {
-
-                viewDelGold(v.orderId);
-            });
-
-            $btnQuota.click(function() {
-
-                params.quotation.orderId = v.orderId;
-
-                com.popup4page("#stockRecordPopUp", "/views/construction/normtion.html", "定额材料");
-            });
-
-            $btnQuopt.click(function() {
-
-                constructionNodes.quotationDetail = {};
-
-                com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-                    "quotation.orderId": v.orderId
-                }, function(res) {
-
-                    constructionNodes.quotationDetail.quotation = res.quotation;
-                }, null, false);
-
-                var quotationId = constructionNodes.quotationDetail.quotation.qid;
-
-                params.quotation.orderId = v.orderId;
-                params.quotation.orderType = v.type;
-                params.quotation.quotationId = quotationId;
-                params.quotation.subtype = [1];
-                params.quotation.showType = {
-                    itemtype: 4
-                };
-                params.quotation.pageType = constructionNodes.pageType;
-
-                constructionNodes.modals.printQuotationCNModal.modal("show");
-            });
-
-            $btnNormtime.click(function() {
-
-                constructionNodes.quotationDetail = {};
-
-                com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-                    "quotation.orderId": v.orderId
-                }, function(res) {
-
-                    constructionNodes.quotationDetail.quotation = res.quotation;
-                }, null, false);
-
-                var quotationId = constructionNodes.quotationDetail.quotation.qid;
-
-                params.quotation.orderId = v.orderId;
-                params.quotation.orderType = v.type;
-                params.quotation.quotationId = quotationId;
-                params.quotation.subtype = [1];
-                params.quotation.showType = {
-                    itemtype: 5
-                };
-                params.quotation.pageType = constructionNodes.pageType;
-
-                constructionNodes.modals.printNormtimeCNModal.modal("show");
-            });
-
-            return $liLine;
-        };
+    function buildSupervisionLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            info: {
+                name: "信息",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    viewConstructionInfo(v.orderId);
+                }
             },
-            drawLine: function(v) {
+            view: {
+                name: "施工节点",
+                clazz: "btn-success",
+                handle: function(v) {
+                    viewSupervisionDetail(v.orderId, v.customer.cid);
+                }
+            },
+            addReduce: {
+                name: "增减项",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    viewAddReduceIndex(v.orderId, v.type);
+                }
+            },
+            money: {
+                name: "扣款",
+                clazz: "btn-info",
+                handle: function(v) {
+                    viewDelGold(v.orderId);
+                }
+            },
+            quota: {
+                name: "定额材料",
+                clazz: "btn-purple",
+                handle: function(v) {
+                    params.quotation.orderId = v.orderId;
+                    com.popup4page("#stockRecordPopUp", "/views/construction/normtion.html", "定额材料");
+                }
+            },
+            quopt: {
+                name: "定额工费",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    constructionNodes.quotationDetail = {};
 
-                return creatLine(v);
+                    com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+                        "quotation.orderId": v.orderId
+                    }, function(res) {
+                        constructionNodes.quotationDetail.quotation = res.quotation;
+                    }, null, false);
+
+                    var quotationId = constructionNodes.quotationDetail.quotation.qid;
+
+                    params.quotation.orderId = v.orderId;
+                    params.quotation.orderType = v.type;
+                    params.quotation.quotationId = quotationId;
+                    params.quotation.subtype = [1];
+                    params.quotation.showType = {
+                        itemtype: 4
+                    };
+                    params.quotation.pageType = constructionNodes.pageType;
+
+                    constructionNodes.modals.printQuotationCNModal.modal("show");
+                }
+            },
+            normtime: {
+                name: "定额工时",
+                clazz: "btn-pink",
+                handle: function(v) {
+                    constructionNodes.quotationDetail = {};
+
+                    com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+                        "quotation.orderId": v.orderId
+                    }, function(res) {
+                        constructionNodes.quotationDetail.quotation = res.quotation;
+                    }, null, false);
+
+                    var quotationId = constructionNodes.quotationDetail.quotation.qid;
+
+                    params.quotation.orderId = v.orderId;
+                    params.quotation.orderType = v.type;
+                    params.quotation.quotationId = quotationId;
+                    params.quotation.subtype = [1];
+                    params.quotation.showType = {
+                        itemtype: 5
+                    };
+                    params.quotation.pageType = constructionNodes.pageType;
+
+                    constructionNodes.modals.printNormtimeCNModal.modal("show");
+                }
             }
         };
-    })();
+    }
 
-    var seacher = new Searcher();
+    var searcher = new Searcher();
 
-    seacher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-projectStatus'], "supervisionCondList", api.construction.pageConstruction, function(list) {
-
-        displayFunc.init('supervisionResultList', list);
-    }, "supervisionPagenation", "supervisionSeacherPostData", null, false, null, null, "supervisionResultList");
+    searcher.set("supervisionCondList", "supervisionPagenation", "supervisionResultList", api.construction.pageConstruction, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-projectStatus'], "supervisionSeacherPostData", null, false, null);
+    searcher.line("orderId", buildSupervisionLineprops(), buildSupervisionLinebtns()).render();
 
     function viewSupervisionDetail(orderId, cid) {
 

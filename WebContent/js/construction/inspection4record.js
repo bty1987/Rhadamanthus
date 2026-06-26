@@ -30,79 +30,57 @@ jQuery(function ($) {
 
     com.datetime(record.items.startTime, "time");
     com.datetime(record.items.endTime, "time");
-    var displayFunc = (function () {
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildInspection4recordLineprops() {
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
+        return [{
+            field: "orderAddr",
+            name: "楼盘地址",
+            prop: "orderAddr",
+            clazz: "grey"
+        }, {
+            field: "operaterName",
+            name: "操作人",
+            prop: "operaterName",
+            clazz: "grey"
+        }, {
+            field: "startTime",
+            name: "开始时间",
+            prop: "startTime",
+            clazz: "green"
+        }, {
+            field: "endTime",
+            name: "结束时间",
+            prop: "endTime",
+            clazz: "green"
+        }, {
+            field: "recordDes",
+            name: "备注",
+            prop: "recordDes",
+            clazz: "grey"
+        }];
+    }
 
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function (v) {
-            var that = this;
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
-
-            var propertyArr = [
-                ["楼盘地址:", v.orderAddr, "grey"],
-                ["操作人:", v.operaterName, "grey"],
-                ["开始时间:", v.startTime, "green "],
-                ["结束时间:", v.endTime, "green"],
-                ["备注:", v.recordDes, "grey"]
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnEdit.click(function () {
-                editRecord(v);
-            });
-
-            $btnDel.click(function () {
-                delRecord(v.irId);
-            });
-
-            return $liLine;
-        };
+    function buildInspection4recordLinebtns() {
 
         return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            edit: {
+                name: "编辑",
+                clazz: "btn-primary",
+                handle: function(v) {
+                    editRecord(v);
+                }
             },
-            drawLine: function (v) {
-                return creatLine(v);
+            del: {
+                name: "删除",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    delRecord(v.irId);
+                }
             }
         };
-    })();
+    }
 
-    var searcher = new Searcher();
-    searcher.init([], "condList", api.construction.pageInspectionRecordByOrderId, function (list) {
-        displayFunc.init('resultList', list);
-    }, "pagenation", "inspectionRecordPostData", {
-        "inspectionRecord.orderId": params.construction.orderId
-    }, false, null, function () {
+    function buildInspection4recordButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -113,7 +91,14 @@ jQuery(function ($) {
         var $addspan = $('<span></span>').text('返回').appendTo($addb);
 
         return [$addb, $adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.construction.pageInspectionRecordByOrderId, {
+        "inspectionRecord.orderId": params.construction.orderId
+    }, [], "inspectionRecordPostData", null, false, buildInspection4recordButtons);
+    searcher.line("orderId", buildInspection4recordLineprops(), buildInspection4recordLinebtns()).render();
 
     com.focusPage('a[name="add"]', '#pagenation').click(function () {
         record.editFlag = false;

@@ -37,102 +37,87 @@ jQuery(function ($) {
 
     backVisit.items.backVisitType.bindData(constant.construction().customer4feedback.backVisitTypeData.datas,"key","value");
 
-    var displayFunc = (function () {
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildCustomer4feedbackLineprops() {
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
+        return [{
+            field: "orderAddr",
+            name: "楼盘地址",
+            prop: "orderAddr",
+            clazz: "grey"
+        }, {
+            field: "customerName",
+            name: "客户名",
+            prop: "customerName",
+            clazz: "grey"
+        }, {
+            field: "backVisitTime",
+            name: "时间",
+            prop: "backVisitTime",
+            clazz: "green"
+        }, {
+            field: "backVisitType",
+            name: "类型",
+            prop: function(v) { return constant.construction().customer4feedback.backVisitTypeData.keys[v.backVisitType]; },
+            clazz: "red"
+        }, {
+            field: "backVisitDes",
+            name: "备注",
+            prop: "backVisitDes",
+            clazz: "grey"
+        }];
+    }
 
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function (v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
-
-            var propertyArr = [
-                ["楼盘地址:", v.orderAddr, "grey"],
-                ["客户名:", v.customerName, "grey"],
-                ["时间:", v.backVisitTime, "green"],
-                ["类型:", constant.construction().customer4feedback.backVisitTypeData.keys[v.backVisitType], "red "],
-                ["备注:", v.backVisitDes, "grey"]
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnEdit.click(function () {
-                backVisit.editFlag = true;
-                var row = v;
-
-                backVisit.items.orderId.val(params.construction.orderId);
-                backVisit.items.orderAddr.val(params.construction.orderAddr);
-                backVisit.items.customerName.val(params.construction.customerName);
-                backVisit.items.backVisitTime.val(row.backVisitTime);
-                backVisit.items.backVisitType.val(row.backVisitType);
-                backVisit.items.backVisitDes.val(row.backVisitDes);
-
-                backVisit["customerServiceBackVisit.csbvId"] = row.csbvId;
-
-                backVisit.items.orderId.attr('disabled', true);
-                backVisit.items.orderAddr.attr("disabled", true);
-                backVisit.items.customerName.attr('disabled', true);
-
-                backVisit.modals.modal.modal("show");
-            });
-
-            $btnDel.click(function () {
-                removeRow(v.csbvId);
-            });
-
-            return $liLine;
-        };
+    function buildCustomer4feedbackLinebtns() {
 
         return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            edit: {
+                name: "编辑",
+                clazz: "btn-primary",
+                handle: function(v) {
+                    backVisit.editFlag = true;
+                    var row = v;
+
+                    backVisit.items.orderId.val(params.construction.orderId);
+                    backVisit.items.orderAddr.val(params.construction.orderAddr);
+                    backVisit.items.customerName.val(params.construction.customerName);
+                    backVisit.items.backVisitTime.val(row.backVisitTime);
+                    backVisit.items.backVisitType.val(row.backVisitType);
+                    backVisit.items.backVisitDes.val(row.backVisitDes);
+
+                    backVisit["customerServiceBackVisit.csbvId"] = row.csbvId;
+
+                    backVisit.items.orderId.attr('disabled', true);
+                    backVisit.items.orderAddr.attr("disabled", true);
+                    backVisit.items.customerName.attr('disabled', true);
+
+                    backVisit.modals.modal.modal("show");
+                }
             },
-            drawLine: function (v) {
-                return creatLine(v);
+            del: {
+                name: "删除",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    removeRow(v.csbvId);
+                }
             }
         };
-    })();
+    }
 
-    var searcher = new Searcher();
-    searcher.init([], "condList", api.construction.pageCustomerServiceBackVisit, function (list) {
-        displayFunc.init('resultList', list);
-    }, "pagenation", "customerServiceBackVisitPostData", {
-        "customerServiceBackVisit.orderId": params.construction.orderId
-    }, false, null, function () {
+    function buildCustomer4feedbackButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'Add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.construction.pageCustomerServiceBackVisit, {
+        "customerServiceBackVisit.orderId": params.construction.orderId
+    }, [], "customerServiceBackVisitPostData", null, false, buildCustomer4feedbackButtons);
+    searcher.line("orderId", buildCustomer4feedbackLineprops(), buildCustomer4feedbackLinebtns()).render();
 
     com.focusPage('#Add', '#pagenation').click(function () {
         backVisit.editFlag = false;
