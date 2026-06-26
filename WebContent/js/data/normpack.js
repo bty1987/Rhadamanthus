@@ -33,127 +33,74 @@ jQuery(function($) {
         normpack.status = res.costStatus.split("key", "value");
     }, null, false);
 
-    var displayFunc = (function() {
+    function buildNormpackLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "status",
+            name: "状态",
+            prop: function(v) { return normpack.status[v.status]; },
+            clazz: "red"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid');
-            var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
-            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-            var $invalid = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-yellow').html('删除');
-            var $btnProject = $('<a></a>').addClass('btn btn-minier btn-purple').html('项目');
-
-            var propertyArr = [["状态: ", normpack.status[v.status], "red"], ];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $invalid.append($statusSwitch).append($span);
-            $liLine.append($h3).append($ulProperty);
-            $btnDiv.append($invalid).append($btnProject);
-            $h3.append($title).append($btnDiv);
-
-            !v.status && $statusSwitch.prop("checked", true);
-
-            $btnDelete.click(function() {
-
-                com.showConfirm("是否确认删除", function() {
-
-                    com.post(api.data.deleteNormpack, {
-                        "normpack.npid": v.npid
-                    }, function() {
-
-                        searcher.doSearch();
-                        com.showAlert(com.info, "操作成功");
-                    });
-                });
-            })
-
-            $btnProject.click(function() {
-
-                params.data.normpack = v;
-                com.popup4page("#layerPopUp", "views/data/normpackItem.html", "项目", null, function() {
-
-                    com.closePopup();
-                    searcher.doSearch();
-                });
-            });
-
-            $invalid.click(function() {
-
-                var cvalue = $statusSwitch.prop("checked") ? 0 : 1;
-
-                var options = {
-                    "normpack.npid": v.npid,
-                    "normpack.status": cvalue
-                }
-
-                com.post(api.data.updateNormpackForStatus, options, function(res) {
-
-                    cvalue == 0 ? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
-                    searcher.doSearch();
-                });
-            });
-
-            return $liLine;
-        };
+    function buildNormpackLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            status: {
+                type: "switch",
+                init: function(v) { return !v.status; },
+                handle: function(v, checked) {
+                    var cvalue = checked ? 0 : 1;
+                    com.post(api.data.updateNormpackForStatus, {
+                        "normpack.npid": v.npid,
+                        "normpack.status": cvalue
+                    }, function(res) {
+                        cvalue == 0 ? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
+                        searcher.doSearch();
+                    });
+                }
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            project: {
+                name: "项目",
+                clazz: "btn-purple",
+                handle: function(v) {
+                    params.data.normpack = v;
+                    com.popup4page("#layerPopUp", "views/data/normpackItem.html", "项目", null, function() {
+                        com.closePopup();
+                        searcher.doSearch();
+                    });
+                }
+            },
+            delete: {
+                name: "删除",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    com.showConfirm("是否确认删除", function() {
+                        com.post(api.data.deleteNormpack, {
+                            "normpack.npid": v.npid
+                        }, function() {
+                            searcher.doSearch();
+                            com.showAlert(com.info, "操作成功");
+                        });
+                    });
+                }
             }
-        }
-    })();
+        };
+    }
+
+    function buildNormpackButtons() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addItemBtn').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(["data-quotation-normpack-name", "data-quotation-normpack-status"], "condList", api.data.pageNormpack, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "addItemPostData", null, false, null, function() {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addItemBtn').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        return [$adda];
-    });
+    searcher.set("condList", "pagenation", "resultList", api.data.pageNormpack, null, ["data-quotation-normpack-name", "data-quotation-normpack-status"], "addItemPostData", null, false, buildNormpackButtons);
+    searcher.line(function(v) { return ' ' + v.name; }, buildNormpackLineprops(), buildNormpackLinebtns()).render();
 
     com.focusPage('#addItemBtn').click(function() {
 

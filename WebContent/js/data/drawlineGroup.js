@@ -27,82 +27,41 @@ $(function(){
     $.extend(com.validator, group.validator);
     group.savebtn = com.focusPage("#groupadd").on("click", saveData);
 
-    var displayFunc  = (function(){
+    function buildGroupLineprops() {
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "content",
+            name: "说明",
+            prop: "content",
+            clazz: "grey",
+            show: function(v) { return !!v.content; }
+        }];
+    }
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnPosition = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnStatus = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-            if(v.content) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html('说明 ').appendTo($liProperty);
-                $('<b></b>').html(v.content).addClass("grey").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-
-            }
-            $btnStatus.append($statusSwitch).append($span);
-
-            $divBtnWrap.append($btnPosition).append($btnStatus).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-
-
-            $btnPosition.click(function(){
-                update(v);
-            });
-
-            !v.status && $statusSwitch.prop("checked", true);
-            $statusSwitch.switchBtn("status-lbl").on("click",function() {
-                $statusSwitch.prop("checked") ? (updateStatus(v.gid, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.gid, 1,function(){$statusSwitch.prop("checked")}));
-            });
-
-            return $liLine;
-        };
+    function buildGroupLinebtns() {
 
         return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+            status: {
+                type: "switch",
+                init: function(v) { return !v.status; },
+                handle: function(v, checked) { updateStatus(v.gid, checked ? 0 : 1, null); }
             },
-            drawLine : function(v){
-                return creatLine(v);
-            }
-        }
-    })();
+            edit: {name: "编辑", clazz: "btn-yellow", handle: function(v) { update(v); }}
+        };
+    }
 
-    var searcher = new Searcher();
-    searcher.init(['data-drawline-group-name'], "condList", api.data.pageDrawlineGroup, function(data){
-        displayFunc.init('resultList', data);
-    }, "pagenation", "groupPostData", null, false, null, function(){
+    function buildGroupButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addGroup').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+    searcher.set("condList", "pagenation", "resultList", api.data.pageDrawlineGroup, null, ['data-drawline-group-name'], "groupPostData", null, false, buildGroupButtons);
+    searcher.line(function(v) { return ' ' + v.name; }, buildGroupLineprops(), buildGroupLinebtns()).render();
 
     function popoverInit(){
         com.focusPage("[data-toggle='popover']").popover({

@@ -66,146 +66,161 @@ $(function($) {
         (['2', '3'].contains(typeVal)) ? com.focusPage("#banknoDiv").css("display", "block") : com.focusPage("#banknoDiv").css("display", "none");
     });
 
-    var displayFunc = (function() {
+    function buildReceiptTypeLineprops() {
 
-        var renderList = function(tableId, listData) {
+        var lineprops = [{
+            field: "no",
+            name: "键值",
+            prop: "no",
+            clazz: "grey"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) { return receiptType.types[v.type]; },
+            clazz: "red"
+        }, {
+            field: "fund",
+            name: "资金类型",
+            prop: function(v) { return receiptType.funds[v.fund]; },
+            clazz: "red"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return v.status == 1 ? "启用" : "禁用"; },
+            clazz: "red"
+        }, {
+            field: "grade",
+            name: "等级",
+            prop: function(v) { return com.checkNull(v.grade, "无"); },
+            clazz: "red"
+        }, {
+            field: "kino",
+            name: "金蝶编号",
+            prop: function(v) { return com.checkNull(v.kino, "无"); },
+            clazz: "grey"
+        }, {
+            field: "kiname",
+            name: "金蝶名称",
+            prop: function(v) { return com.checkNull(v.kiname, "无"); },
+            clazz: "grey"
+        }, {
+            field: "kibalance",
+            name: "结算方式",
+            prop: function(v) { return com.checkNull(v.kibalance, "无"); },
+            clazz: "grey"
+        }, {
+            field: "bankno",
+            name: "银行账号",
+            prop: function(v) { return com.checkNull(v.bankno, "无"); },
+            clazz: "blue"
+        }, {
+            field: "assistant",
+            name: "辅核项",
+            prop: function(v) { return com.checkNull(v.assistant, "无"); },
+            clazz: "grey"
+        }, {
+            field: "value",
+            name: "POS值",
+            prop: function(v) { return com.checkNull(v.value, "无"); },
+            clazz: "grey"
+        }];
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        // 动态 receiptTypeItems,按行渲染为独立 lineprop(用 custom + render)
+        lineprops.push({
+            field: "receiptTypeItems",
+            name: "收款项",
+            type: "custom",
+            prop: function(v) {
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $btnuptl = $('<a></a>').addClass('btn btn-minier btn-yellow').html('修改');
-            var $btnAdd = $('<a></a>').addClass('btn btn-minier btn-success').html('单据');
-
-            if (receiptType.pageType == "common") {
-                $divBtnWrap.append($btnuptl).append($btnAdd).appendTo($h3);
-            } else {
-                $divBtnWrap.append($btnAdd).appendTo($h3);
-            }
-
-            var propertyArr = [["键值:", v.no, "grey"], ["类型:", receiptType.types[v.type], "red"], ["资金类型:", receiptType.funds[v.fund], "red"], ["状态:", v.status == 1 ? "启用" : "禁用", "red"], ["等级:", com.checkNull(v.grade, "无"), "red"], ["金蝶编号:", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"], ["结算方式:", com.checkNull(v.kibalance, "无"), "grey"], ["银行账号:", com.checkNull(v.bankno, "无"), "blue"], ["辅核项:", com.checkNull(v.assistant, "无"), "grey"], ["POS值:", com.checkNull(v.value, "无"), "grey"]];
-
-            if (v.receiptTypeItems != null && v.receiptTypeItems.length > 0) {
-                $.each(v.receiptTypeItems, function(i, v) {
-
-                    propertyArr.push([receiptType.paymentTypes[v.type] + receiptType.paytypes[v.paytype] + ":", v.name, "grey"])
-                });
-            }
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            var $btnStatus = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-
-            $btnStatus.append($statusSwitch).append($span);
-
-            $divBtnWrap.append($btnuptl).append($btnAdd).append($btnStatus).appendTo($h3);
-            $liLine.append($h3).append($ulProperty);
-
-            v.status == 1 && $statusSwitch.prop("checked", true);
-            $statusSwitch.switchBtn("status-lbl").on("click", function() {
-
-                $statusSwitch.prop("checked") ? (updateStatus(v.rtId, 1, function() {
-
-                    $statusSwitch.removeAttr("checked")
-                })) : (updateStatus(v.rtId, 0, function() {
-
-                    $statusSwitch.prop("checked")
-                }));
-            });
-
-            $btnuptl.click(function() {
-
-                receiptType.items.rtId.val(v.rtId);
-                receiptType.items.name.val(v.name);
-                receiptType.items.type.val(v.type);
-                receiptType.items.fund.val(v.fund);
-                receiptType.items.grade.val(v.grade);
-                receiptType.items.kino.val(v.kino);
-                receiptType.items.kiname.val(v.kiname);
-                receiptType.items.kibalance.val(v.kibalance);
-                receiptType.items.bankno.val(v.bankno);
-                receiptType.items.assistant.val(v.assistant);
-                receiptType.items.value.val(v.value);
-                editFlg = false;
-
-                if (['2', '3'].contains(receiptType.items.type.val())) {
-                    com.focusPage("#banknoDiv").css("display", "block");
-                }
-
-                receiptType.modal.receiptTypeModal.modal("show");
-            });
-
-            $btnAdd.click(function() {
-
-                receiptType.currentRtid = v.rtId;
-                receiptType.currentNo = v.no;
-                receiptType.modal.receiptTypeItemModal.modal("show");
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+                if (!v.receiptTypeItems || v.receiptTypeItems.length == 0) return "";
+                return $.map(v.receiptTypeItems, function(item) {
+                    return receiptType.paymentTypes[item.type] + receiptType.paytypes[item.paytype] + ": " + item.name;
+                }).join("  ");
             },
-            drawLine: function(v) {
+            render: function($liLine, v, $ulProperty) {
 
-                return creatLine(v);
+                if (!v.receiptTypeItems || v.receiptTypeItems.length == 0) return;
+
+                $.each(v.receiptTypeItems, function(i, item) {
+
+                    var $liProperty = $('<li></li>').appendTo($ulProperty);
+                    $('<strong></strong>').html(receiptType.paymentTypes[item.type] + receiptType.paytypes[item.paytype] + ":").appendTo($liProperty);
+                    $('<b></b>').html(item.name).addClass("grey").appendTo($liProperty);
+                });
             }
-        }
-    })();
+        });
 
-    var searcher = new Searcher();
-    var _condArr = ["data-receiptType-name", "data-receiptType-type", "data-receiptType-status", "data-receiptType-fund", "data-receiptType-grade", "data-receiptType-kino", "data-receiptType-kiname", "data-receiptType-kibalance", "data-receiptType-bankno", "data-receiptType-assistant", "data-receiptType-value"];
+        return lineprops;
+    }
 
-    searcher.init(_condArr, "condList", api.data.pageReceiptType, function(data) {
+    function buildReceiptTypeLinebtns() {
 
-        displayFunc.init('resultList', data);
-    }, "pagenation", "ReceiptTypePostData", null, false, null, function() {
+        var btns = {
+            status: {
+                type: "switch",
+                init: function(v) { return v.status == 1; },
+                handle: function(v, checked) { updateStatus(v.rtId, checked ? 1 : 0, null); }
+            },
+            update: {
+                name: "修改",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    receiptType.items.rtId.val(v.rtId);
+                    receiptType.items.name.val(v.name);
+                    receiptType.items.type.val(v.type);
+                    receiptType.items.fund.val(v.fund);
+                    receiptType.items.grade.val(v.grade);
+                    receiptType.items.kino.val(v.kino);
+                    receiptType.items.kiname.val(v.kiname);
+                    receiptType.items.kibalance.val(v.kibalance);
+                    receiptType.items.bankno.val(v.bankno);
+                    receiptType.items.assistant.val(v.assistant);
+                    receiptType.items.value.val(v.value);
+                    editFlg = false;
+
+                    if (['2', '3'].contains(receiptType.items.type.val())) {
+                        com.focusPage("#banknoDiv").css("display", "block");
+                    }
+
+                    receiptType.modal.receiptTypeModal.modal("show");
+                }
+            },
+            add: {
+                name: "单据",
+                clazz: "btn-success",
+                handle: function(v) {
+                    receiptType.currentRtid = v.rtId;
+                    receiptType.currentNo = v.no;
+                    receiptType.modal.receiptTypeItemModal.modal("show");
+                }
+            }
+        };
+
+        return btns;
+    }
+
+    function buildReceiptTypeButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success').attr('name', 'add').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
 
-        $adda.click(function () {
+        $adda.click(function() {
             editFlg = true;
-            receiptType.modal.receiptTypeModal.modal("show")
+            receiptType.modal.receiptTypeModal.modal("show");
         });
 
         if (receiptType.pageType == "common") {
             return [$adda];
-        } else {
-            return [];
         }
-    });
+        return [];
+    }
+
+    var searcher = new Searcher();
+    var _condArr = ["data-receiptType-name", "data-receiptType-type", "data-receiptType-status", "data-receiptType-fund", "data-receiptType-grade", "data-receiptType-kino", "data-receiptType-kiname", "data-receiptType-kibalance", "data-receiptType-bankno", "data-receiptType-assistant", "data-receiptType-value"];
+
+    searcher.set("condList", "pagenation", "resultList", api.data.pageReceiptType, null, _condArr, "ReceiptTypePostData", null, false, buildReceiptTypeButtons);
+    searcher.line("name", buildReceiptTypeLineprops(), buildReceiptTypeLinebtns()).render();
 
     function saveData() {
 

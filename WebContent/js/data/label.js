@@ -18,76 +18,48 @@ $(function(){
         })
     },null,false);
 
-    var displayFunc = (function(){
-        var renderList = function(tableId, listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildLabelLineprops() {
 
-            if(listData && listData.length){
-                $.each(listData, function(i, v){
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right cation-buttons');
+        return [{
+            field: "type",
+            name: "类型",
+            prop: function(v) { return type[v.type]; },
+            clazz: "grey"
+        }, {
+            field: "scale",
+            name: "比例",
+            prop: "scale",
+            clazz: "blue"
+        }];
+    }
 
-                    var $btnDel = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').attr("checked", v.status == 0 ? true : false);
-                    var $btnView= $("<a></a>").addClass("btn btn-minier btn-yellow").html("编辑");
-                    var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
-
-                    var labelArr = [
-                        ["类型:", type[v.type] , "grey"],
-                        ["比例:", v.scale, "blue"]
-                    ];
-
-                    $.each(labelArr, function(index, value){
-                       var $liLabel = $('<li></li>');
-                       $('<strong></strong>').html(value[0]).appendTo($liLabel);
-                        $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liLabel);
-                        $liLabel.appendTo($ulProperty)
-                    });
-
-                    $divBtnWrap.append($btnDel).append($btnSpan).append($btnView).appendTo($h3);
-
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
-
-                    $btnDel.click(function(){
-                        var cvalue = $btnDel.prop("checked");
-                        if(cvalue){
-                            cvalue = 0;
-                        }else{
-                            cvalue = 1;
-                        }
-                        updatastatus(v.lid, cvalue);
-                    });
-
-                    $btnView.click(function(){
-                        editlabel(v);
-                    })
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
+    function buildLabelLinebtns() {
 
         return {
-            init : function(tableId, listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            }
-        }
-    })();
+            status: {
+                type: "switch",
+                init: function(v) { return v.status == 0; },
+                handle: function(v, checked) {
+                    updatastatus(v.lid, checked ? 0 : 1);
+                }
+            },
+            edit: {name: "编辑", clazz: "btn-yellow", handle: function(v) { editlabel(v); }}
+        };
+    }
+
+    function buildLabelButtons() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addlabel').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    }
 
     var labelSearcher = new Searcher();
 
-    labelSearcher.init(["personel-label-name"], "condList", api.data.pageLabel, function(data){
-        displayFunc.init('resultList',data);
-    },'pagenation', "label", null, false, null, function(){
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addlabel').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        return [$adda];
-    });
+    labelSearcher.set("condList", "pagenation", "resultList", api.data.pageLabel, null, ["personel-label-name"], "label", null, false, buildLabelButtons);
+    labelSearcher.line("name", buildLabelLineprops(), buildLabelLinebtns()).render();
 
     com.focusPage('a[name="addlabel"]', '#pagenation').click(function(){
         com.focusPage("#labelName").val("");

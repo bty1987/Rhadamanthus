@@ -29,100 +29,62 @@ jQuery(function($) {
     flowpath.btns.withdrawBtn.bindClick(saveData);
     flowpath.btns.updateBtn.bindClick(updateData);
 
-    var displayFunc = (function() {
+    var statusMap = {
+        "0": "启用",
+        "1": "禁用"
+    };
 
-        var renderList = function(tableId, listData) {
+    function buildFlowpathLineprops() {
 
-            var $tableWrap = com.focusPage('#' + tableId);
+        return [{
+            field: "no",
+            name: "编号",
+            prop: "no",
+            clazz: "grey"
+        }, {
+            field: "keyword",
+            name: "关键字",
+            prop: "keyword",
+            clazz: "grey"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: "type",
+            clazz: "grey"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return statusMap[v.status]; },
+            clazz: "red"
+        }];
+    }
 
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-
-                $.each(listData, function(i, v) {
-
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var errlog = $('<a></a>').addClass('btn btn-minier btn-danger').html('修改');
-            var $btncancel = $('<a></a>').addClass('btn btn-minier btn-warning').html('删除');
-            var $btnliuc = $('<a></a>').addClass('btn btn-minier btn-success').html('节点');
-
-            var status = {
-                "0": "启用",
-                "1": "禁用",
-            };
-
-            var propertyArr = [["编号:", v.no, "grey"], ["关键字:", v.keyword, "grey"], ["类型:", v.type, "grey"], ["状态:", status[v.status], "red"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append(errlog).append($btnliuc).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-            errlog.click(function() {
-
-                flowpath.updateFlowpath.modal("show");
-            });
-
-            $btncancel.click(function() {
-
-                deleteFlowpath(v);
-            });
-            $btnliuc.click(function() {
-
-                node(v);
-            });
-
-            return $liLine;
-        };
+    function buildFlowpathLinebtns() {
 
         return {
-            init: function(tableId, listData) {
+            update: {name: "修改", clazz: "btn-danger", handle: function(v) { flowpath.updateFlowpath.modal("show"); }},
+            node: {name: "节点", clazz: "btn-success", handle: function(v) { node(v); }},
+            delete: {name: "删除", clazz: "btn-warning", handle: function(v) { deleteFlowpath(v); }}
+        };
+    }
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        }
-    })();
-
-    var searcher = new Searcher();
-    searcher.init(null, "condList", api.data.pageFlowpath, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "flowpathPostData", null, false, null, function() {
+    function buildFlowpathButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addSoodsModal').css({
             'margin-left': '4px'
         });
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
         $adda.click(function() {
 
             flowpath.addFlowpath.modal("show");
         });
         return [$adda];
-    }, "resultList");
+    }
+
+    var searcher = new Searcher();
+    searcher.set("condList", "pagenation", "resultList", api.data.pageFlowpath, null, null, "flowpathPostData", null, false, buildFlowpathButtons);
+    searcher.line("name", buildFlowpathLineprops(), buildFlowpathLinebtns()).render();
 
     function saveData() {
 
@@ -157,7 +119,6 @@ jQuery(function($) {
 
         com.post(api.data.updateFlowpath, option, function(e) {
 
-            displayFunc.init();
             com.showAlert(com.info, "操作成功");
             flowpath.updateFlowpath.modal("hide");
             searcher.doSearch();

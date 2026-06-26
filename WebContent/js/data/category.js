@@ -52,81 +52,65 @@ jQuery(function($) {
 
     $.extend(com.validator, category.validator);
 
-    var displayFunc = (function() {
+    function buildCategoryLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "type",
+            name: "类型",
+            prop: function(v) { return constant.data().category.type.keys[v.type]; },
+            clazz: "red"
+        }, {
+            field: "isCoupon",
+            name: "券标识",
+            prop: function(v) { return constant.data().category.isCoupon.keys[v.isCoupon]; },
+            clazz: "red"
+        }, {
+            field: "isCount",
+            name: "统计标识",
+            prop: function(v) { return constant.data().category.isCount.keys[v.isCount]; },
+            clazz: "red"
+        }, {
+            field: "isLimit",
+            name: "选材控制",
+            prop: function(v) { return constant.data().category.isLimit.keys[v.isLimit]; },
+            clazz: "red"
+        }, {
+            field: "kino",
+            name: "金蝶编号",
+            prop: function(v) { return com.checkNull(v.kino, "无"); },
+            clazz: "grey"
+        }, {
+            field: "kiname",
+            name: "金蝶名称",
+            prop: function(v) { return com.checkNull(v.kiname, "无"); },
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (!listData || listData.length == 0)
-                return false;
-            
-            $.each(listData, function(i, v) {
-
-                creatLine(v).appendTo($ul);
-            });
-
-            $ul.appendTo($tableWrap);
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no + " " + v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-
-            var propertyArr = [["类型: ", constant.data().category.type.keys[v.type], "red"], ["券标识: ", constant.data().category.isCoupon.keys[v.isCoupon], "red"], ["统计标识: ", constant.data().category.isCount.keys[v.isCount], "red"], ["选材控制: ", constant.data().category.isLimit.keys[v.isLimit], "red"], ["金蝶编号: ", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称: ", com.checkNull(v.kiname, "无"), "grey"], ];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnEdit).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnEdit.click(function() {
-
-                editCategory(v);
-            });
-
-            return $liLine;
-        };
+    function buildCategoryLinebtns() {
 
         return {
-            init: function(tableId, listData) {
+            edit: {name: "编辑", clazz: "btn-yellow", handle: function(v) { editCategory(v); }}
+        };
+    }
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        }
-    })();
-
-    var searcher = new Searcher();
-
-    searcher.init(["data-category-name", "data-category-isCoupon", "data-category-isCount"], "condList", api.data.pageCategory, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "categoryPostData", null, false, null, function() {
+    function buildCategoryButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    });
+    }
+
+    var _condArr = ["data-category-name", "data-category-isCoupon", "data-category-isCount"];
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.data.pageCategory, null, _condArr, "categoryPostData", null, false, buildCategoryButtons);
+    searcher.line(function(v) {
+
+        return v.no + " " + v.name;
+    }, buildCategoryLineprops(), buildCategoryLinebtns()).render();
 
     com.focusPage('a[name="add"]', '#pagenation').click(function() {
 

@@ -50,116 +50,78 @@ jQuery(function($) {
 
     com.initTypeahead(normadd.items.name, api.data.queryQuotationNamingRuleByPinyin, "pinyinName", {"quotationNamingRule.type": 3}, "autoFillKeyValue", "key", "value", null);
 
-    var displayFunc = (function() {
+    function buildNormaddLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "constructionNode",
+            name: "工程节点",
+            prop: "constructionNode.name",
+            clazz: "grey"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return normadd.status[v.status]; },
+            clazz: "red"
+        }, {
+            field: "unit",
+            name: "单位",
+            prop: "unit",
+            clazz: "grey"
+        }, {
+            field: "price",
+            name: "单价",
+            prop: "price",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid');
-            var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
-            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-            var $invalid = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-yellow').html('删除');
-
-            var propertyArr = [["工程节点: ", v.constructionNode.name, "grey"], ["状态: ", normadd.status[v.status], "red"], ["单位: ", v.unit, "grey"], ["单价: ", v.price, "grey"], ];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $invalid.append($statusSwitch).append($span);
-            $liLine.append($h3).append($ulProperty);
-            $btnDiv.append($invalid);
-            $h3.append($title).append($btnDiv);
-
-            !v.status && $statusSwitch.prop("checked", true);
-
-            $btnDelete.click(function() {
-
-                com.showConfirm("是否确认删除", function() {
-
-                    com.post(api.data.deleteNormadd, {
-                        "normadd.naid": v.naid
-                    }, function() {
-
-                        searcher.doSearch();
-                        com.showAlert(com.info, "操作成功");
-                    });
-                });
-            })
-
-            $invalid.click(function() {
-
-                var cvalue = $statusSwitch.prop("checked") ? 0 : 1;
-
-                var options = {
-                    "normadd.naid": v.naid,
-                    "normadd.status": cvalue
-                }
-
-                com.post(api.data.updateNormaddForStatus, options, function(res) {
-
-                    cvalue == 0 ? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
-                    searcher.doSearch();
-                });
-            });
-
-            return $liLine;
-        };
+    function buildNormaddLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            status: {
+                type: "switch",
+                init: function(v) { return !v.status; },
+                handle: function(v, checked) {
+                    var cvalue = checked ? 0 : 1;
+                    com.post(api.data.updateNormaddForStatus, {
+                        "normadd.naid": v.naid,
+                        "normadd.status": cvalue
+                    }, function(res) {
+                        cvalue == 0 ? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
+                        searcher.doSearch();
+                    });
+                }
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            delete: {
+                name: "删除",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    com.showConfirm("是否确认删除", function() {
+                        com.post(api.data.deleteNormadd, {
+                            "normadd.naid": v.naid
+                        }, function() {
+                            searcher.doSearch();
+                            com.showAlert(com.info, "操作成功");
+                        });
+                    });
+                }
             }
-        }
-    })();
+        };
+    }
+
+    function buildNormaddButtons() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'normaddBtn').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(["data-quotation-normadd-name", "data-quotation-normadd-status"], "condList", api.data.pageNormadd, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "normaddPostData", null, false, null, function() {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'normaddBtn').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        return [$adda];
-    });
+    searcher.set("condList", "pagenation", "resultList", api.data.pageNormadd, null, ["data-quotation-normadd-name", "data-quotation-normadd-status"], "normaddPostData", null, false, buildNormaddButtons);
+    searcher.line(function(v) { return ' ' + v.name; }, buildNormaddLineprops(), buildNormaddLinebtns()).render();
 
     com.focusPage('#normaddBtn').click(function() {
 
