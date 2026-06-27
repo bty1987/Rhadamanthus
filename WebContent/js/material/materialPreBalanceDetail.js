@@ -28,110 +28,134 @@ jQuery(function($) {
 	var options = {};
 	options["materialItem.mid"] = materialOrderPreBalancePostData["materialOrderPreBalance.msoId"];
 
-	var displayFunc  = (function(){
+	function buildMaterialPreBalanceDetailLineprops() {
 
-		var renderList = function(tableId,listData){
-			var $tableWrap = com.focusPage('#' + tableId);
-			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+		var showModel = function(v) { return v.packageName == "" || v.packageName == null; };
+		var showPackage = function(v) { return v.packageName != "" && v.packageName != null && v.brand == "-"; };
+		var showPackageItem = function(v) { return v.packageName != "" && v.packageName != null && v.brand != "-"; };
 
-			if(listData && listData.length){
-				$.each(listData,function(i, v){
-					var $liLine = $('<li></li>').addClass('item-orange clearfix');
-					var $h3 = $('<h3></h3>').addClass('oid');
-					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-					var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
-					var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+		return [{
+			field: "no",
+			name: "型号",
+			prop: "no",
+			clazz: "grey",
+			show: function(v) { return showModel(v) || showPackageItem(v); }
+		}, {
+			field: "category",
+			name: "品类",
+			prop: "category",
+			clazz: "grey",
+			show: function(v) { return showModel(v) || showPackageItem(v); }
+		}, {
+			field: "brand",
+			name: "品牌",
+			prop: "brand",
+			clazz: "grey",
+			show: function(v) { return showModel(v) || showPackageItem(v); }
+		}, {
+			field: "measurementUnit",
+			name: "单位",
+			prop: "measurementUnit",
+			clazz: "grey",
+			show: function(v) { return showModel(v) || showPackageItem(v); }
+		}, {
+			field: "salePrice",
+			name: "折扣价",
+			prop: "salePrice",
+			clazz: "blue",
+			show: function(v) { return showModel(v) || showPackageItem(v); }
+		}, {
+			field: "price",
+			name: "售价",
+			prop: "price",
+			clazz: "blue",
+			show: function(v) { return showModel(v) || showPackageItem(v); }
+		}, {
+			field: "num",
+			name: "数量",
+			prop: "num",
+			clazz: "blue",
+			show: function(v) { return showModel(v) || showPackageItem(v); }
+		}, {
+			field: "total",
+			name: "总价",
+			prop: "total",
+			clazz: "blue",
+			show: function(v) { return showModel(v) || showPackage(v); }
+		}, {
+			field: "prePoint",
+			name: "结算值",
+			prop: "prePoint",
+			clazz: "blue",
+			show: function(v) { return showModel(v) || showPackage(v); }
+		}, {
+			field: "profit",
+			name: "利润",
+			prop: function(v) { return profitInit(v); },
+			clazz: "blue",
+			show: function(v) { return showModel(v) || showPackage(v); }
+		}, {
+			field: "comment",
+			name: "说明",
+			prop: "comment",
+			clazz: "grey",
+			show: function(v) { return showModel(v) || showPackageItem(v); }
+		}, {
+			field: "name",
+			name: "名称",
+			prop: "name",
+			clazz: "grey",
+			show: showPackageItem
+		}];
+	}
 
-					var $btnValue = $('<a></a>').addClass('btn btn-minier btn-yellow');
-					var $btnCal = $('<a></a>').addClass('btn btn-minier btn-success').html('计算方式');
-
-					var propertyArr = [];
-
-					if(v.packageName == "" || v.packageName == null){
-					//if(v.level == 0 && v.isLeaf == true){
-						v.calcType == 0 ? $btnValue.html('底价') : $btnValue.html('点位');
-						$divBtnWrap.append($btnValue).append($btnCal);
-
-						$h3.append($('<small></small>').addClass('blue').html(v.name));
-
-						propertyArr = [
-							["型号:", v.no, "grey"],
-							["品类:", v.category, "grey"],
-							["品牌:", v.brand, "grey"],
-							["单位:", v.measurementUnit, "grey"],
-							["折扣价:", v.salePrice, "blue"],
-							["售价:", v.price, "blue"],
-							["数量:", v.num, "blue"],
-							["总价:", v.total, "blue"],
-							["结算值:", v.prePoint, "blue"],
-							["利润:", profitInit(v), "blue"],
-							["说明:", v.comment, "grey"],
-						];
-					}else if(v.packageName != "" && v.packageName != null && v.brand == "-"){
-					//}else if(v.level == 0 && v.isLeaf == false){
-						$btnValue.html('点位');
-						$divBtnWrap.append($btnValue);
-
-						$h3.append($('<small></small>').addClass('blue').html("套餐 " + v.name));
-
-						propertyArr = [
-							["总价:", v.total, "blue"],
-							["结算值:", v.prePoint, "blue"],
-							["利润:", profitInit(v), "blue"],
-						];
-					}else{
-						materialOrderPreBalanceDetail.packages[v.packageName] ? materialOrderPreBalanceDetail.packages[v.packageName].push(v) : (materialOrderPreBalanceDetail.packages[v.packageName] = [v]);
-
-						propertyArr = [
-						    ["名称:", v.name, "grey"],
-							["型号:", v.no, "grey"],
-							["品类:", v.category, "grey"],
-							["品牌:", v.brand, "grey"],
-							["单位:", v.measurementUnit, "grey"],
-							["折扣价:", v.salePrice, "blue"],
-							["售价:", v.price, "blue"],
-							["数量:", v.num, "blue"],
-							["说明:", v.comment, "grey"],
-						];
-					}
-
-					$.each(propertyArr, function (index,value) {
-						var $liProperty = $('<li></li>');
-						$('<strong></strong>').html(value[0]).appendTo($liProperty);
-						$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-						$liProperty.appendTo($ulProperty);
-					});
-
-					$btnValue.click(function(){
-						dialogMaterialSubOrderItemBalanceModal(v);
-					});
-
-					$btnCal.click(function(){
-						changeCalcType(v);
-					});
-
-					$divBtnWrap.appendTo($h3);
-
-					$liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
-				});
-
-				$ul.appendTo($tableWrap);
-			}
-		};
+	function buildMaterialPreBalanceDetailLinebtns() {
 
 		return {
-			init : function(tableId,listData){
-				com.focusPage('#' + tableId).html(null);
-				renderList(tableId,listData);
+			value: {
+				name: function(v) {
+					if (v.packageName == "" || v.packageName == null) {
+						return v.calcType == 0 ? '底价' : '点位';
+					}
+					return '点位';
+				},
+				clazz: "btn-yellow",
+				show: function(v) { return v.packageName == "" || v.packageName == null || (v.packageName != "" && v.packageName != null && v.brand == "-"); },
+				handle: function(v) {
+					dialogMaterialSubOrderItemBalanceModal(v);
+				}
+			},
+			cal: {
+				name: "计算方式",
+				clazz: "btn-success",
+				show: function(v) { return v.packageName == "" || v.packageName == null; },
+				handle: function(v) {
+					changeCalcType(v);
+				}
 			}
 		};
-	})();
+	}
 
 	var searcher = new Searcher();
 
-	searcher.init([], "condList", api.material.queryMaterialItemByMid, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", null, options, true, "materialItems");
+	searcher.set("condList", "pagenation", "resultList", api.material.queryMaterialItemByMid, options, [], null, "materialItems", true, null);
+	searcher.line(function(v) {
+		if (v.packageName == "" || v.packageName == null) {
+			return v.name;
+		} else if (v.packageName != "" && v.packageName != null && v.brand == "-") {
+			return "套餐 " + v.name;
+		}
+		return v.name;
+	}, buildMaterialPreBalanceDetailLineprops(), buildMaterialPreBalanceDetailLinebtns()).render();
+
+	// 收集套餐子项 (原 creatLine 副作用)
+	com.post(api.material.queryMaterialItemByMid, options, function(res) {
+		$.each(res.materialItems, function(i, v) {
+			if (v.packageName != "" && v.packageName != null && v.brand != "-") {
+				materialOrderPreBalanceDetail.packages[v.packageName] ? materialOrderPreBalanceDetail.packages[v.packageName].push(v) : (materialOrderPreBalanceDetail.packages[v.packageName] = [v]);
+			}
+		});
+	}, null, false);
 
 	com.focusPage('#import').click(function(){
 

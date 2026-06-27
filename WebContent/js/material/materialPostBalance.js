@@ -33,187 +33,233 @@ $(function(){
      * tableId ，用来显示的div的id
      * result.list 列表的json数组
      **/
-    var displayFunc  = (function(){
+    function buildMaterialPostBalanceLineprops() {
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);//取到画table的div
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "material.orderId",
+            name: "装修单号",
+            prop: "material.orderId",
+            clazz: "blue"
+        }, {
+            field: "material.house",
+            name: "楼盘地址",
+            prop: function(v) { return v.material.house.village.name + " " + v.material.house.houseNumber; },
+            clazz: "grey"
+        }, {
+            field: "material.brand",
+            name: "品牌",
+            prop: "material.brand",
+            clazz: "grey"
+        }, {
+            field: "material.salesman.currentName",
+            name: "业务员",
+            prop: function(v) { return v.material.salesman.currentName ? v.material.salesman.currentName : '---'; },
+            clazz: "grey"
+        }, {
+            field: "material.region.name",
+            name: "归属大区",
+            prop: function(v) { return v.material.region.name ? v.material.region.name : '---'; },
+            clazz: "grey"
+        }, {
+            field: "material.department.name",
+            name: "归属部门",
+            prop: function(v) { return v.material.department.name ? v.material.department.name : '---'; },
+            clazz: "grey"
+        }, {
+            field: "total",
+            name: "总价",
+            prop: "total",
+            clazz: "blue"
+        }, {
+            field: "material.total",
+            name: "子订单总价",
+            prop: "material.total",
+            clazz: "blue"
+        }, {
+            field: "material.coupon",
+            name: "券值",
+            prop: "material.coupon",
+            clazz: "blue"
+        }, {
+            field: "material.couponInfo",
+            name: "券信息",
+            prop: function(v) { return v.material.couponInfo ? v.material.couponInfo : '---'; },
+            clazz: "grey"
+        }, {
+            field: "instorer.currentName",
+            name: "主材驻店",
+            prop: function(v) { return v.instorer.currentName ? v.instorer.currentName : '---'; },
+            clazz: "grey"
+        }, {
+            field: "balance",
+            name: "预结值",
+            prop: "balance",
+            clazz: "blue"
+        }, {
+            field: "balanceTime",
+            name: "预结时间",
+            prop: "balanceTime",
+            clazz: "green"
+        }, {
+            field: "creater.currentName",
+            name: "预结人",
+            prop: "creater.currentName",
+            clazz: "grey"
+        }, {
+            field: "vbalance",
+            name: "厂结值",
+            prop: "vbalance",
+            clazz: "blue"
+        }, {
+            field: "vbalanceTime",
+            name: "厂结时间",
+            prop: "vbalanceTime",
+            clazz: "green"
+        }, {
+            field: "post",
+            name: "结算值",
+            prop: "post",
+            clazz: "blue"
+        }, {
+            field: "postTime",
+            name: "结算时间",
+            prop: function(v) { return v.postTime ? v.postTime : '---'; },
+            clazz: "green"
+        }, {
+            field: "poster.currentName",
+            name: "结算人",
+            prop: function(v) { return v.poster.currentName ? v.poster.currentName : '---'; },
+            clazz: "grey"
+        }, {
+            field: "material.maling",
+            name: "抹零",
+            prop: "material.maling",
+            clazz: "blue"
+        }, {
+            field: "material.venderMaling",
+            name: "厂商抹零",
+            prop: "material.venderMaling",
+            clazz: "blue"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return v.status == 0 ? '预结' : v.status == 1 ? '厂结' : v.status == 2 ? '结算' : '---'; },
+            clazz: "red"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) { return v.type == 0 ? '购货' : v.type == 1 ? '预结退货' : '结算退货'; },
+            clazz: "red"
+        }];
+    }
 
-            if(listData && listData.length){
-                //遍历listData
-            	
-                $.each(listData,function(i, v){
-                
-                    var $liLine = creatLine(v);
+    function buildMaterialPostBalanceLinebtns() {
 
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.material.no   ));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $btnSupBalance = $('<a></a>').addClass('btn btn-minier btn-yellow').html('厂结值');
-            var $btnSupPost = $('<a></a>').addClass('btn btn-minier btn-success').html('厂结');
-            var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-warning').html('结算值');
-            var $btnPost = $('<a></a>').addClass('btn btn-minier btn-inverse').html('结算');
-            //var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
-            var lable = v.type == 0 ? '收款' : '退款';
-            var $btnCharge = $('<a></a>').addClass('btn btn-minier btn-danger').html(lable);
-            var propertyArr = [
-                ["装修单号：",v.material.orderId,"blue"],
-                ["楼盘地址：",v.material.house.village.name + " " + v.material.house.houseNumber,"grey"],
-                ["品牌: ",v.material.brand,"grey"],
-                ["业务员：",v.material.salesman.currentName ? v.material.salesman.currentName : '---',"grey"],
-                ["归属大区: ",v.material.region.name ? v.material.region.name : '---',"grey"],
-                ["归属部门：",v.material.department.name ? v.material.department.name :'---',"grey"],
-                ["总价：",v.total,"blue"],
-                ["子订单总价：",v.material.total,"blue"],
-                ["券值：",v.material.coupon,"blue"],
-                ["券信息：",v.material.couponInfo ? v.material.couponInfo : '---',"grey"],
-                ["主材驻店:", v.instorer.currentName ?  v.instorer.currentName : '---' , "grey"],
-                ["预结值：",v.balance,"blue"],
-                ["预结时间 :", v.balanceTime , "green"],
-                ["预结人:", v.creater.currentName , "grey"],
-                ["厂结值:", v.vbalance , "blue"],
-                ["厂结时间:", v.vbalanceTime , "green"],
-                ["结算值：",v.post,"blue"],
-                ["结算时间：",v.postTime ? v.postTime : '---',"green"],
-                ["结算人  :", v.poster.currentName ? v.poster.currentName : '---' , "grey"],
-                ["抹零：",v.material.maling,"blue"],
-                ["厂商抹零：",v.material.venderMaling,"blue"],
-                ["状态:", v.status == 0 ? '预结': v.status== 1 ? '厂结' : v.status== 2 ? '结算' : '---' , "red"],
-                ["类型:", v.type == 0 ? '购货' : v.type == 1 ? '预结退货' : '结算退货' , "red"],
-
-            ];
-
-            $.each(propertyArr, function (index,value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnSupBalance).append($btnSupPost).append($btnBalance).append($btnPost).append($btnSub).append($btnCharge).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-            //点击厂结值
-            $btnSupBalance.click(function(){
-                if(v.status==0){
-                    materialOrderPostBalance.total = v.total;
-                    materialOrderPostBalance.msobId = v.mbid;
-                    materialOrderPostBalance.smodal.modal("show");
-                }else{
-                    com.showAlert(com.warning,"非预结状态下不允许进行厂结");
+        return {
+            supBalance: {
+                name: "厂结值",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    if (v.status == 0) {
+                        materialOrderPostBalance.total = v.total;
+                        materialOrderPostBalance.msobId = v.mbid;
+                        materialOrderPostBalance.smodal.modal("show");
+                    } else {
+                        com.showAlert(com.warning, "非预结状态下不允许进行厂结");
+                    }
                 }
-
-            });
-            //点击结算值
-            $btnBalance.click(function(){
-                if(v.status==1){
-                    materialOrderPostBalance.preTotal = utils.accSub(v.total,v.balance);
-                    materialOrderPostBalance.vbalance = v.vbalance;
-                    materialOrderPostBalance.msobId = v.mbid;
-                    materialOrderPostBalance.modal.modal("show");
-                }else{
-                    com.showAlert(com.warning,"非厂结状态下不允许进行结算");
+            },
+            supPost: {
+                name: "厂结",
+                clazz: "btn-success",
+                handle: function(v) {
+                    if (v.status == 0 && v.vbalance != 0) {
+                        vpostMaterialSubOrderBalance(v.mbid);
+                    } else if (v.status == 0 && v.vbalance == 0) {
+                        com.showAlert(com.warning, "厂结值未填写，请检查");
+                    } else if (v.status != 0) {
+                        com.showAlert(com.warning, "非预结状态下不允许进行厂结");
+                    }
                 }
-
-            });
-            //厂结
-            $btnSupPost.click(function(){
-                if(v.status==0 && v.vbalance!=0){
-                    vpostMaterialSubOrderBalance(v.mbid);
-                }else if(v.status==0 && v.vbalance==0){
-                    com.showAlert(com.warning,"厂结值未填写，请检查");
-                }else if(v.status!=0){
-                    com.showAlert(com.warning,"非预结状态下不允许进行厂结");
+            },
+            balance: {
+                name: "结算值",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    if (v.status == 1) {
+                        materialOrderPostBalance.preTotal = utils.accSub(v.total, v.balance);
+                        materialOrderPostBalance.vbalance = v.vbalance;
+                        materialOrderPostBalance.msobId = v.mbid;
+                        materialOrderPostBalance.modal.modal("show");
+                    } else {
+                        com.showAlert(com.warning, "非厂结状态下不允许进行结算");
+                    }
                 }
-
-            });
-            //结算
-            $btnPost.click(function(){
-                if(v.status==1 && v.post!=0){
-                    postMaterialSubOrderBalance(v.mbid);
-                }else if(v.status==1 && v.post==0){
-                    com.showAlert(com.warning,"结算值未填写，请检查");
-                }else if(v.status!=1){
-                    com.showAlert(com.warning,"非厂结状态下不允许进行结算");
+            },
+            post: {
+                name: "结算",
+                clazz: "btn-inverse",
+                handle: function(v) {
+                    if (v.status == 1 && v.post != 0) {
+                        postMaterialSubOrderBalance(v.mbid);
+                    } else if (v.status == 1 && v.post == 0) {
+                        com.showAlert(com.warning, "结算值未填写，请检查");
+                    } else if (v.status != 1) {
+                        com.showAlert(com.warning, "非厂结状态下不允许进行结算");
+                    }
                 }
-
-            });
-
-            $btnCharge.click(function(){
-                params.historyPage = api.index.materialPostBalanceIndex.url;
-                materialSubOrderPostData["materialSubOrder.msoId"] = v.material.mid;
-                materialSubOrderPostData["materialSubOrderPostBalance.mpId"] = v.mpId;
-                materialSubOrderPostData["materialSubOrderPostBalance.type"] = v.type;
-                com.switchPage(api.index.materialCollectionIndex.url);
-            });
-
-
-            //收款
-
-            //订单是退货状态的时候 才显示退货按钮  显示退货信息 隐藏子项按钮
-            if(v.type == 1 || v.type == 2){
-
-                var $btnReject = $('<a></a>').addClass('btn btn-minier btn-pink').html('退货');
-
-                $divBtnWrap.append($btnReject);
-                $btnReject.click(function(){
-                	v.type == 1 ? params['materialOrderPostBalance.type'] = 1 : params['materialOrderPostBalance.type'] = 2;
-                    params['materialSubOrder.msoId'] = v.material.mid;
-                    params['idents[0]'] = v.ident;
-                    com.switchPage('views/material/materialPostBalanceDetail.html');
-                });
-            }else{
-                var $btnSub = $('<a></a>').addClass('btn btn-minier btn-purple').html('子项');
-                $divBtnWrap.append($btnSub);
-                $btnSub.click(function(){
+            },
+            charge: {
+                name: function(v) { return v.type == 0 ? '收款' : '退款'; },
+                clazz: "btn-danger",
+                handle: function(v) {
+                    params.historyPage = api.index.materialPostBalanceIndex.url;
+                    materialSubOrderPostData["materialSubOrder.msoId"] = v.material.mid;
+                    materialSubOrderPostData["materialSubOrderPostBalance.mpId"] = v.mpId;
+                    materialSubOrderPostData["materialSubOrderPostBalance.type"] = v.type;
+                    com.switchPage(api.index.materialCollectionIndex.url);
+                }
+            },
+            sub: {
+                name: "子项",
+                clazz: "btn-purple",
+                show: function(v) { return v.type != 1 && v.type != 2; },
+                handle: function(v) {
                     params['materialOrderPostBalance.type'] = 0;
                     params['materialSubOrder.msoId'] = v.material.mid;
                     com.switchPage('views/material/materialPostBalanceDetail.html');
-                });
-            }
-
-            return $liLine;
-        };
-
-        return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                }
             },
-            drawLine : function(v){
-                return creatLine(v);
+            reject: {
+                name: "退货",
+                clazz: "btn-pink",
+                show: function(v) { return v.type == 1 || v.type == 2; },
+                handle: function(v) {
+                    v.type == 1 ? params['materialOrderPostBalance.type'] = 1 : params['materialOrderPostBalance.type'] = 2;
+                    params['materialSubOrder.msoId'] = v.material.mid;
+                    params['idents[0]'] = v.ident;
+                    com.switchPage('views/material/materialPostBalanceDetail.html');
+                }
             }
         };
-    })();
-   //侯骅峰4.7增加品牌，预结时间，厂结时间，结算时间，楼盘地址查询字段(?添加业务员)
-    var _condArr = ['material-orderId','material-no','material-brand', 'material-orderAddr', 'material-region-name', 'material-dept-name', 'material-balance-status', 'material-balance-type' ,'material-fullpayTime', 'material-prebalanceTime','material-vbalanceTime','material-postBalanceTime'];
+    }
 
-    var searcher = new Searcher();
-    //seacher方法分页显示数据
-    searcher.init( _condArr, "condList", api.material.pageMaterialBalance, function(data){
-        //提供init方法
-        displayFunc.init('resultList', data);
-    }, "pagenation", "materialOrderPostBalancePostData", null, false, null, function (){
-        //增加导出按钮
+    function buildMaterialPostBalanceButtons() {
 
-        var $exportAnchor = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name','export').css("margin", "0px 3px");
+        var $exportAnchor = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'export').css("margin", "0px 3px");
         var $exprotIcon = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exportAnchor);
         var $exportText = $('<span></span>').text('导出').appendTo($exportAnchor);
-        $exportAnchor.click(function(){
+        $exportAnchor.click(function() {
             exportation();
         });
- 
+
         return [$exportAnchor];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialBalance, null, ['material-orderId', 'material-no', 'material-brand', 'material-orderAddr', 'material-region-name', 'material-dept-name', 'material-balance-status', 'material-balance-type', 'material-fullpayTime', 'material-prebalanceTime', 'material-vbalanceTime', 'material-postBalanceTime'], "materialOrderPostBalancePostData", null, false, buildMaterialPostBalanceButtons);
+    searcher.line("material.no", buildMaterialPostBalanceLineprops(), buildMaterialPostBalanceLinebtns()).render();
     //厂结值 点保存//
     function updateMaterialSubOrderBalanceForVBalance(){
         if (!com.validate('smodal')) {

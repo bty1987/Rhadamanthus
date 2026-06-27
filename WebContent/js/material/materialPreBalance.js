@@ -38,112 +38,120 @@ jQuery(function($) {
 
 	materialOrderPreBalance.materialOrderPreBalanceItems.caclType.bindData(materialOrderPreBalance.caclTypeData, "id", "name");
 
-	var displayFunc  = (function(){
+	function buildMaterialPreBalanceLineprops() {
 
-		var renderList = function(tableId,listData){
-			var $tableWrap = com.focusPage('#' + tableId);
-			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+		return [{
+			type: "checkbox",
+			field: "msoId",
+			name: "msoIds",
+			prop: "arId",
+			clazz: "ace ace-checkbox-2"
+		}, {
+			field: "house.village",
+			name: "楼盘地址",
+			prop: function(v) { return v.house.village.name + " " + v.house.houseNumber; },
+			clazz: "grey"
+		}, {
+			field: "brand",
+			name: "品牌",
+			prop: "brand",
+			clazz: "grey"
+		}, {
+			field: "customer.name",
+			name: "客户名",
+			prop: "customer.name",
+			clazz: "grey"
+		}, {
+			field: "salesman.currentName",
+			name: "业务员",
+			prop: "salesman.currentName",
+			clazz: "grey"
+		}, {
+			field: "total",
+			name: "总价",
+			prop: "total",
+			clazz: "blue"
+		}, {
+			field: "maling",
+			name: "抹零",
+			prop: "maling",
+			clazz: "blue"
+		}, {
+			field: "venderMaling",
+			name: "厂商抹零",
+			prop: "venderMaling",
+			clazz: "blue"
+		}, {
+			field: "coupon",
+			name: "券值",
+			prop: "coupon",
+			clazz: "blue"
+		}, {
+			field: "couponInfo",
+			name: "券信息",
+			prop: function(v) { return v.couponInfo ? v.couponInfo : '---'; },
+			clazz: "grey"
+		}, {
+			field: "createTime",
+			name: "创建时间",
+			prop: "createTime",
+			clazz: "green"
+		}, {
+			field: "fullpayTime",
+			name: "补款时间",
+			prop: "fullpayTime",
+			clazz: "green"
+		}, {
+			field: "comment",
+			name: "备注",
+			prop: function(v) { return v.comment ? v.comment : '---'; },
+			clazz: "grey"
+		}];
+	}
 
-			if(listData && listData.length){
-				$.each(listData,function(i, v){
-                        var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                        var $h3 = $('<h3></h3>').addClass('oid');
-                        var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                        var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
-                        var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-                        var $btnItem = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子项');
-                        //var $btnValue = $('<a></a>').addClass('btn btn-minier btn-success').html('结算值');
-                        var $btnMaling = $('<a></a>').addClass('btn btn-minier btn-success').html('抹零');
-                        var propertyArr = [
-                            //侯骅峰于2017.4.7添加品牌 总价 券值 券信息 备注五个显示字段
-                            ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
-                            //添加品牌字段
-                            ["品牌：",v.brand,"grey"],
-                            ["客户名:", v.customer.name, "grey"],
-                            ["业务员:", v.salesman.currentName, "grey"],
-                            //["点位:", v.point, "blue"],
-                            //["底价:", v.base, "blue"],
-                            //添加总价字段
-                            ["总价：",v.total,"blue"],
-                            ["抹零:", v.maling, "blue"],
-                            ["厂商抹零:", v.venderMaling, "blue"],
-                            //添加券值
-                            ["券值: ",v.coupon,"blue"],
-                            //添加券信息
-                            ["券信息: ",v.couponInfo ? v.couponInfo : '---',"grey"],
-                            ["创建时间:", v.createTime, "green"],
-                            ["补款时间:", v.fullpayTime , "green"],
-                            //添加备注
-                            ["备注：",v.comment ? v.comment : '---',"grey"],
-                        ];
-                        var $label = $('<label></label>');
-                        var $input = $('<input>').attr({
-                            "type": "checkbox",
-                            "name": "msoIds",
-                            "class": "ace ace-checkbox-2",
-                            "msoId": v.mid,
-                            "packageFlag": v.packageFlag,
-                        }).val(v.arId);
-                        var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.no);
-                        //固定的写法?
-                        $.each(propertyArr, function (index,value) {
-                            var $liProperty = $('<li></li>');
-                            $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                            $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                            $liProperty.appendTo($ulProperty);
-                        });
-
-                        $label.append($input).append($span).appendTo($h3);
-                        //子项
-                        $btnItem.click(function(){
-                            viewMaterialOrderBalanceDetailIndex(v.mid);
-                        });
-                        //结算值
-                        //$btnValue.click(function(){
-                        //    dialogMaterialOrderPreBalanceBacl(v);
-                        //});
-                        //抹零
-                        $btnMaling.click(function(){
-                            dialogMaterialOrderMaling(v);
-                        });
-
-                        $divBtnWrap.append($btnItem).append($btnMaling).appendTo($h3);
-
-                        $liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
-					});
-				$ul.appendTo($tableWrap);
-			}
-		};
+	function buildMaterialPreBalanceLinebtns() {
 
 		return {
-			init : function(tableId,listData){
-				com.focusPage('#' + tableId).html(null);
-				renderList(tableId,listData);
+			item: {
+				name: "子项",
+				clazz: "btn-primary",
+				handle: function(v) {
+					viewMaterialOrderBalanceDetailIndex(v.mid);
+				}
+			},
+			maling: {
+				name: "抹零",
+				clazz: "btn-warning",
+				handle: function(v) {
+					dialogMaterialOrderMaling(v);
+				}
 			}
 		};
-	})();
+	}
 
-	var searcher = new Searcher();
-	searcher.init(["material-orderId", "material-no", "material-village", "material-salesman","material-brand", "material-fullpayTime"], "condList", api.material.pageMaterialForPreBalance, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "materialOrderPreBalancePostData", null, false, null, function(){
+	function buildMaterialPreBalanceButtons() {
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'prebalances').css("margin", "0px 3px");
-    	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
-    	var $addspan = $('<span></span>').text('预结').appendTo($adda);
-    	$adda.click(function(){
-    		preBalance();
-    	});
-    	var $passa = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'passbalances').css("margin", "0px 3px");
-    	var $passi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($passa);
-    	var $passspan = $('<span></span>').text('完结').appendTo($passa);
-    	$passa.click(function(){
-    		passBalance();
-    	});
+		var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
+		var $addspan = $('<span></span>').text('预结').appendTo($adda);
+		$adda.click(function() {
+			preBalance();
+		});
+		var $passa = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'passbalances').css("margin", "0px 3px");
+		var $passi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($passa);
+		var $passspan = $('<span></span>').text('完结').appendTo($passa);
+		$passa.click(function() {
+			passBalance();
+		});
 
-    	return [$adda, $passa];
-	});
+		return [$adda, $passa];
+	}
+
+	var searcher = new Searcher();
+
+	searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialForPreBalance, null, ["material-orderId", "material-no", "material-village", "material-salesman", "material-brand", "material-fullpayTime"], "materialOrderPreBalancePostData", null, false, buildMaterialPreBalanceButtons);
+	searcher.line("no", buildMaterialPreBalanceLineprops(), buildMaterialPreBalanceLinebtns()).render();
+
 	//点预结
 	function preBalance(){
 		//复选框选中的对象

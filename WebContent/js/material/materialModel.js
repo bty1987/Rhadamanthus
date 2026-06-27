@@ -1,92 +1,66 @@
 $(function () {
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
-    var displayFunc = (function () {
+    function buildMaterialModelLineprops() {
 
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "materialModelNo",
+            name: "编号",
+            prop: "materialModelNo",
+            clazz: "grey"
+        }, {
+            field: "materialTypeName",
+            name: "品类",
+            prop: "materialTypeName",
+            clazz: "grey"
+        }, {
+            field: "materialBrandName",
+            name: "品牌",
+            prop: "materialBrandName",
+            clazz: "grey"
+        }, {
+            field: "measurementUnitName",
+            name: "单位",
+            prop: "measurementUnitName",
+            clazz: "grey"
+        }, {
+            field: "materialPurchasePrice",
+            name: "进价",
+            prop: "materialPurchasePrice",
+            clazz: "blue"
+        }, {
+            field: "materialUnitPrice",
+            name: "标价",
+            prop: "materialUnitPrice",
+            clazz: "blue"
+        }, {
+            field: "discount",
+            name: "折扣",
+            prop: "discount",
+            clazz: "blue"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return v.status == 0 ? '启用' : '禁用'; },
+            clazz: "red"
+        }];
+    }
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function (v) {
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.materialModelName));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
-
-            var propertyArr = [
-                ["编号:", v.materialModelNo, "grey"],
-                ["品类:", v.materialTypeName, "grey"],
-                ["品牌:", v.materialBrandName, "grey"],
-                ["单位:", v.measurementUnitName, "grey"],
-                ["进价:", v.materialPurchasePrice, "blue"],
-                ["标价:", v.materialUnitPrice, "blue"],
-                ["折扣:", v.discount, "blue"],
-                ["状态:", v.status == 0 ? '启用' : '禁用', v.status == 0 ? 'red' : "red"],
-//                ["计算方式:", "1" == v.calcType ? "点位" : "0" == v.calcType ? "底价" : "", "1" == v.calcType ? "label label-success arrowed" : "0" == v.calcType ? "label label-danger arrowed" : ""],
-//                ["计算值:", "1" == v.calcType ? v.point: "0" == v.calcType ? v.base : "", "blue"]
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnDelete).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnEdit.click(function () {
-                materialModel.$nowLine = $liLine;
-                editMaterial(v);
-            });
-
-            $btnDelete.click(function () {
-                com.showConfirm("确定删除吗?", function () {
-                    deleteMaterial(v.mmId);
-                });
-            });
-
-            return $liLine;
-        };
+    function buildMaterialModelLinebtns() {
 
         return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return creatLine(v);
+            delete: {
+                name: "删除",
+                clazz: "btn-success",
+                handle: function(v) {
+                    com.showConfirm("确定删除吗?", function () {
+                        deleteMaterial(v.mmId);
+                    });
+                }
             }
         };
-    })();
+    }
 
-    var _condArr = ['data-model-no', 'data-model-name', 'data-model-category', 'data-model-brand'];
-
-    var searcher = new Searcher();
-
-    searcher.init(_condArr, "condList", api.material.pageMaterialModel, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "materialModelPostData", null, false, null, function () {
+    function buildMaterialModelButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -97,7 +71,12 @@ $(function () {
         var $impspan = $('<span></span>').text('导出').appendTo($impa);
 
         return [$adda, $impa];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialModel, null, ['data-model-no', 'data-model-name', 'data-model-category', 'data-model-brand'], "materialModelPostData", null, false, buildMaterialModelButtons);
+    searcher.line("materialModelName", buildMaterialModelLineprops(), buildMaterialModelLinebtns()).render();
 
     var materialModel = {
         $nowLine: null,

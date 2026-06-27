@@ -95,77 +95,73 @@ jQuery(function($) {
 		});
 	});
 	
-	var displayFunc  = (function(){
+    function buildMaterialBalanceValueLineprops() {
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "materialModelNo",
+            name: "型号",
+            prop: "materialModelNo",
+            clazz: "grey"
+        }, {
+            field: "materialTypeName",
+            name: "品类",
+            prop: "materialTypeName",
+            clazz: "grey"
+        }, {
+            field: "materialBrandName",
+            name: "品牌",
+            prop: "materialBrandName",
+            clazz: "grey"
+        }, {
+            field: "measurementUnitName",
+            name: "单位",
+            prop: "measurementUnitName",
+            clazz: "grey"
+        }, {
+            field: "materialPurchasePrice",
+            name: "进价",
+            prop: "materialPurchasePrice",
+            clazz: "blue"
+        }, {
+            field: "materialUnitPrice",
+            name: "标价",
+            prop: "materialUnitPrice",
+            clazz: "blue"
+        }, {
+            field: "discount",
+            name: "折扣",
+            prop: "discount",
+            clazz: "blue"
+        }, {
+            field: "calcType",
+            name: "计算方式",
+            prop: function(v) { return "1" == v.calcType ? "点位" : "0" == v.calcType ? "底价" : ""; },
+            clazz: function(v) { return "1" == v.calcType ? "label label-success arrowed" : "0" == v.calcType ? "label label-danger arrowed" : ""; }
+        }, {
+            field: "calcValue",
+            name: "计算值",
+            prop: function(v) { return "1" == v.calcType ? v.point : "0" == v.calcType ? v.base : ""; },
+            clazz: "blue"
+        }];
+    }
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.materialModelName));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
-
-            var propertyArr = [
-                ["型号:", v.materialModelNo, "grey"],
-                ["品类:", v.materialTypeName, "grey"],
-                ["品牌:", v.materialBrandName, "grey"],
-                ["单位:", v.measurementUnitName, "grey"],
-                ["进价:", v.materialPurchasePrice, "blue"],
-                ["标价:", v.materialUnitPrice, "blue"],
-                ["折扣:", v.discount, "blue"],
-                ["计算方式:", "1" == v.calcType ? "点位" : "0" == v.calcType ? "底价" : "", "1" == v.calcType ? "label label-success arrowed" : "0" == v.calcType ? "label label-danger arrowed" : ""],
-                ["计算值:", "1" == v.calcType ? v.point: "0" == v.calcType ? v.base : "", "blue"]
-            ];
-
-            $.each(propertyArr, function (index,value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnEdit).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnEdit.click(function(){
-            	editBalanceValue(v);
-            });
-
-            return $liLine;
-        };
+    function buildMaterialBalanceValueLinebtns() {
 
         return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
-            },
-            drawLine : function(v){
-                return creatLine(v);
+            edit: {
+                name: "编辑",
+                clazz: "btn-primary",
+                handle: function(v) {
+                    editBalanceValue(v);
+                }
             }
         };
-    })();
+    }
 
-    var seacher = new Searcher();
+    var searcher = new Searcher();
 
-    seacher.init(['data-model-name', 'material-category-name', 'material-brand-name'], "condList", api.material.pageMaterialModel, function(data){
-        displayFunc.init('resultList', data);
-    }, "pagenation", "materialBalanceValuePostData");
+    searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialModel, null, ['data-model-name', 'material-category-name', 'material-brand-name'], "materialBalanceValuePostData", null, false, null);
+    searcher.line("materialModelName", buildMaterialBalanceValueLineprops(), buildMaterialBalanceValueLinebtns()).render();
     
     function editBalanceValue(v){
     	
@@ -236,7 +232,7 @@ jQuery(function($) {
     	}
     	
     	com.post(url, options, function(res){
-    		seacher.doSearch();
+    		searcher.doSearch();
     	});
     	
     	materialModel.modal.modal("hide");

@@ -18,69 +18,63 @@ jQuery(function($) {
 
     com.focusPage('#fl-statement').statement("主材订单", "订单信息列表");
 
-    var displayFunc = (function() {
+    function buildDecorationMaterialLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "house.village",
+            name: "楼盘地址",
+            prop: function(v) { return v.house.village.name + " " + v.house.houseNumber; },
+            clazz: "grey"
+        }, {
+            field: "customer.name",
+            name: "客户名",
+            prop: "customer.name",
+            clazz: "grey"
+        }, {
+            field: "designer.dept.name",
+            name: "设计部",
+            prop: "designer.dept.name",
+            clazz: "grey"
+        }, {
+            field: "designer.currentName",
+            name: "设计师",
+            prop: "designer.currentName",
+            clazz: "grey"
+        }, {
+            field: "supervisor.currentName",
+            name: "监理",
+            prop: "supervisor.currentName",
+            clazz: "grey"
+        }, {
+            field: "salesman.currentName",
+            name: "业务员",
+            prop: "salesman.currentName",
+            clazz: "grey"
+        }, {
+            field: "house.buildArea",
+            name: "面积",
+            prop: "house.buildArea",
+            clazz: "blue"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-                    var $btnSub = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子订单');
-                    var $btnSale = $('<a></a>').addClass('btn btn-minier btn-success').html('销售订单');
-
-                    var propertyArr = [["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"], ["客户名:", v.customer.name, "grey"], ["设计部:", v.designer.dept.name, "grey"], ["设计师:", v.designer.currentName, "grey"], ["监理:", v.supervisor.currentName, "grey"], ["业务员:", v.salesman.currentName, "grey"], ["面积:", v.house.buildArea, "blue"]];
-
-                    $.each(propertyArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-
-                    $btnSub.click(function() {
-
-                        viewMaterialIndex(v);
-                    });
-
-                    $btnSale.click(function() {
-
-                        viewMaterialSaleOrderIndex(v);
-                    });
-
-                    $divBtnWrap.append($btnSub).appendTo($h3);
-
-                    $liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
+    function buildDecorationMaterialLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            sub: {
+                name: "子订单",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    viewMaterialIndex(v);
+                }
             }
         };
-    })();
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-salesman"], "condList", api.decoration.pageDecorationForGeneral, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", materialOrderPostData);
+    searcher.set("condList", "pagenation", "resultList", api.decoration.pageDecorationForGeneral, null, ["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-salesman"], materialOrderPostData, null, true, null);
+    searcher.line("orderId", buildDecorationMaterialLineprops(), buildDecorationMaterialLinebtns()).render();
 
     function viewMaterialIndex(v) {
 

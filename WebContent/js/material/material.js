@@ -140,134 +140,161 @@ jQuery(function($) {
 
     });
 
-    var displayFunc = (function() {
+    function buildMaterialLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "category",
+            name: "品类",
+            prop: "category",
+            clazz: "grey"
+        }, {
+            field: "brand",
+            name: "品牌",
+            prop: "brand",
+            clazz: "grey"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) { return material.materialSaleOrderTypeData[v.type]; },
+            clazz: "red"
+        }, {
+            field: "total",
+            name: "总价",
+            prop: "total",
+            clazz: "blue"
+        }, {
+            field: "distotal",
+            name: "折扣总价",
+            prop: "distotal",
+            clazz: "blue"
+        }, {
+            field: "depositPayment",
+            name: "定金",
+            prop: "depositPayment",
+            clazz: "blue"
+        }, {
+            field: "fullPayment",
+            name: "补款",
+            prop: "fullPayment",
+            clazz: "blue"
+        }, {
+            field: "maling",
+            name: "抹零",
+            prop: "maling",
+            clazz: "blue"
+        }, {
+            field: "venderMaling",
+            name: "厂商抹零",
+            prop: "venderMaling",
+            clazz: "blue"
+        }, {
+            field: "coupon",
+            name: "券额",
+            prop: "coupon",
+            clazz: "blue"
+        }, {
+            field: "couponInfo",
+            name: "券信息",
+            prop: "couponInfo",
+            clazz: "grey"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return material.materialStatus[v.status]; },
+            clazz: "red"
+        }, {
+            field: "comment",
+            name: "备注",
+            prop: "comment",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildMaterialLinebtns() {
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-                    var $btnAdd = $('<a></a>').addClass('btn btn-minier btn-yellow').html('添项');
-                    var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
-                    var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-warning').html('款项');
-                    var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-inverse').html('收款');
-                    var $btnMend = $('<a></a>').addClass('btn btn-minier btn-danger').html('补货');
-                    var $btnRefund = $('<a></a>').addClass('btn btn-minier btn-pink').html('退货');
-                    // var $btnSend = $('<a></a>').addClass('btn btn-minier btn-grey').html('送货');
-                    var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-purple').html('打印');
-                    var $btnDel = $('<a></a>').addClass('btn btn-minier btn-yellow').html('删除');
-                    var $btnAti = $('<a></a>').addClass('btn btn-minier btn-grey').html('活动');
-
-                    var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["类型:", material.materialSaleOrderTypeData[v.type], "red"], ["总价:", v.total, "blue"], ["折扣总价：", v.distotal, "blue"], ["定金:", v.depositPayment, "blue"], ["补款:", v.fullPayment, "blue"], ["抹零:", v.maling, "blue"], ["厂商抹零:", v.venderMaling, "blue"], ["券额:", v.coupon, "blue"], ["券信息:", v.couponInfo, "grey"], ["状态:", material.materialStatus[v.status], "red"], ["备注:", v.comment, "grey"], ];
-
-                    $.each(propertyArr, function(index, value) {
-
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-
-                    $btnAdd.click(function() {
-
-                        viewMaterialSubOrderAddIndex(v);
-                    });
-
-                    $btnSub.click(function() {
-
-                        viewMaterialSubOrderDetailIndex(v);
-                    });
-
-                    $btnMoney.click(function() {
-
-                        dialogMaterialSubOrderMoney(v);
-                    });
-
-                    $btnCollect.click(function() {
-
-                        viewMaterialSubOrderCollection(v.mid);
-                    });
-
-                    $btnMend.click(function() {
-
-                        viewMaterialSubOrderMendIndex(v);
-                    });
-
-                    $btnRefund.click(function() {
-
-                        viewMaterialSubOrderRefundIndex(v.mid);
-                    });
-
-                    // $btnSend.click(function () {
-                    // deliverMaterialSubOrder(v.mid);
-                    // });
-
-                    $btnPrint.click(function() {
-
-                        receiptMaterialSubOrder(v.mid);
-                    });
-
-                    $btnDel.click(function() {
-
-                        deleteMaterialSubOrder(v.mid);
-                    });
-
-                    $btnAti.click(function() {
-
-                        viewMaterialActivityIndex(v);
-                    });
-
-                    if ([0, 1, 2, 3, 4, 5].indexOf(v.status) != -1) {
-
-                        v.fullStatus == 0 && $divBtnWrap.append($btnAdd);
-                        v.fullStatus == 3 && $divBtnWrap.append($btnMend);
-
-                        $divBtnWrap.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnPrint).append($btnAti).appendTo($h3);
-                    } else {
-                        $divBtnWrap.append($btnSub).append($btnCollect).append($btnRefund).appendTo($h3);
-                    }
-
-                    $liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
+        var inMainStatus = function(v) { return [0, 1, 2, 3, 4, 5].indexOf(v.status) != -1; };
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            add: {
+                name: "添项",
+                clazz: "btn-yellow",
+                show: function(v) { return inMainStatus(v) && v.fullStatus == 0; },
+                handle: function(v) {
+                    viewMaterialSubOrderAddIndex(v);
+                }
+            },
+            mend: {
+                name: "补货",
+                clazz: "btn-danger",
+                show: function(v) { return inMainStatus(v) && v.fullStatus == 3; },
+                handle: function(v) {
+                    viewMaterialSubOrderMendIndex(v);
+                }
+            },
+            sub: {
+                name: "子项",
+                clazz: "btn-success",
+                handle: function(v) {
+                    viewMaterialSubOrderDetailIndex(v);
+                }
+            },
+            money: {
+                name: "款项",
+                clazz: "btn-warning",
+                show: inMainStatus,
+                handle: function(v) {
+                    dialogMaterialSubOrderMoney(v);
+                }
+            },
+            collect: {
+                name: "收款",
+                clazz: "btn-inverse",
+                handle: function(v) {
+                    viewMaterialSubOrderCollection(v.mid);
+                }
+            },
+            refund: {
+                name: "退货",
+                clazz: "btn-pink",
+                handle: function(v) {
+                    viewMaterialSubOrderRefundIndex(v.mid);
+                }
+            },
+            print: {
+                name: "打印",
+                clazz: "btn-purple",
+                show: inMainStatus,
+                handle: function(v) {
+                    receiptMaterialSubOrder(v.mid);
+                }
+            },
+            ati: {
+                name: "活动",
+                clazz: "btn-grey",
+                show: inMainStatus,
+                handle: function(v) {
+                    viewMaterialActivityIndex(v);
+                }
             }
         };
-    })();
+    }
 
-    var searcher = new Searcher();
-    var orderId = params.orderId;
-
-    searcher.init([], "condList", materialUrl, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", materialOrderPostData, {
-        "material.orderId": orderId
-    }, false, null, function() {
+    function buildMaterialButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('返回').appendTo($adda);
 
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+    var orderId = params.orderId;
+
+    searcher.set("condList", "pagenation", "resultList", materialUrl, {
+        "material.orderId": orderId
+    }, [], materialOrderPostData, null, false, buildMaterialButtons);
+    searcher.line("no", buildMaterialLineprops(), buildMaterialLinebtns()).render();
 
     com.focusPage('a[name="back"]', '#pagenation').click(function() {
 
