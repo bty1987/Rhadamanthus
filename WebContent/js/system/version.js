@@ -27,114 +27,91 @@ $(function () {
         com.clearValidator();
     });
     
-    var displayFunc = (function () {
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildVersionLineprops() {
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    creatLine(v).appendTo($ul);
-                });
+        return [{
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "grey"
+        }, {
+            field: "comment",
+            name: "更新内容",
+            prop: "comment",
+            clazz: "grey"
+        }];
+    }
 
-                $ul.appendTo($tableWrap);
-            }
-        }
-
-        var creatLine = function (v) {
-            
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnEnabled = $('<a></a>').addClass('btn btn-minier btn-success').html('已启用');
-            var $btnDisabled = $('<a></a>').addClass('btn btn-minier btn-danger').html('已禁用');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-warning').html('删除');
-
-            var propertyArr = [
-                ["创建时间:", v.createTime, "grey"],
-                ["更新内容:", v.comment, "grey"]
-            ];
-
-            //循环出li中的属性
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnEdit);
-            v.status == 0 ? $divBtnWrap.append($btnEnabled) : $divBtnWrap.append($btnDisabled);
-            $divBtnWrap.append($btnDel).appendTo($h3);
-            $liLine.append($h3).append($ulProperty);
-
-            $btnEdit.click(function () {
-
-                version.vid = v.vid;
-                
-                com.cleanItems(version.items);
-                
-                version.items.no.val(v.no);
-                version.items.createTime.val(v.createTime);
-                version.items.comment.val(v.comment);
-                
-                version.versionModal.modal("show");
-            });
-
-            $btnEnabled.click(function () {
-                updateStatus(v.vid, 1);
-            })
-            
-            $btnDisabled.click(function () {
-                updateStatus(v.vid, 0);
-            })
-
-            $btnDel.click(function () {
-                com.showConfirm("是否确定删除", function () {
-                    com.post(api.upgrade.deleteVersion, {"version.vid": v.vid}, function (res) {
-                        com.showAlert(com.info, "操作成功");
-                        versionSeacher.doSearch();
-                    });
-                });
-            });
-
-            return $liLine;
-        };
+    function buildVersionLinebtns() {
 
         return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return creatLine(v);
-            }
-        }
-    })();
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    version.vid = v.vid;
 
-    var versionSeacher = new Searcher();
-    versionSeacher.init([], "condList", api.upgrade.pageVersion, function (list) {
-        displayFunc.init('resultList', list);
-    }, "pagenation", "versionSeacherPostData", null, false, null, function () {
+                    com.cleanItems(version.items);
+
+                    version.items.no.val(v.no);
+                    version.items.createTime.val(v.createTime);
+                    version.items.comment.val(v.comment);
+
+                    version.versionModal.modal("show");
+                }
+            },
+            enabled: {
+                name: "已启用",
+                clazz: "btn-success",
+                show: function(v) { return v.status == 0; },
+                handle: function(v) {
+                    updateStatus(v.vid, 1);
+                }
+            },
+            disabled: {
+                name: "已禁用",
+                clazz: "btn-danger",
+                show: function(v) { return v.status != 0; },
+                handle: function(v) {
+                    updateStatus(v.vid, 0);
+                }
+            },
+            del: {
+                name: "删除",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    com.showConfirm("是否确定删除", function() {
+                        com.post(api.upgrade.deleteVersion, { "version.vid": v.vid }, function(res) {
+                            com.showAlert(com.info, "操作成功");
+                            versionSeacher.doSearch();
+                        });
+                    });
+                }
+            }
+        };
+    }
+
+    function buildVersionButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        $adda.click(function () {
+        $adda.click(function() {
             version.vid = null;
-            
+
             com.cleanItems(version.items);
-            
+
             version.versionModal.modal("show");
         });
 
         return [$adda];
-    });
+    }
+
+    var versionSeacher = new Searcher();
+
+    versionSeacher.set("condList", "pagenation", "resultList", api.upgrade.pageVersion, null, [], "versionSeacherPostData", null, false, buildVersionButtons);
+    versionSeacher.line("no", buildVersionLineprops(), buildVersionLinebtns()).render();
 
     function saveData() {
         

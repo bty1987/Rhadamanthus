@@ -219,239 +219,205 @@ jQuery(function($) {
         });
     }, null, false);
 
-    var displayFunc = (function() {
-
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $chainPage = $('<a></a>').addClass('btn btn-minier btn-yellow').html('外链配置');
-            var $btnModule = $('<a></a>').addClass('btn btn-minier btn-success hide').html('模块配置');
-            var $btnModuleNew = $('<a></a>').addClass('btn btn-minier btn-purple').html('模块配置');
-            var $btnCopyModule = $('<a></a>').addClass('btn btn-minier btn-default').html('模块复制');
-            var $btnTask = $('<a></a>').addClass('btn btn-minier btn-danger').html('任务配置');
-            var $btnCopyTask = $('<a></a>').addClass('btn btn-minier btn-default').html('任务复制');
-            var $officeModule = $('<a></a>').addClass('btn btn-minier btn-info').html('办公配置');
-            var $btnOperation = $('<a></a>').addClass('btn btn-minier btn-warning').html('操作配置');
-            var $btnChart = $('<a></a>').addClass('btn btn-minier btn-pink').html('图表配置');
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-inverse').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-
-            var propertyArr = [["编号:", v.no, "grey"], ["描述:", v.content, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            if (role.pageType == "advance") {
-                $divBtnWrap.append($chainPage).append($btnModule).append($btnModuleNew).append($btnCopyModule).append($btnTask).append($btnCopyTask).append($officeModule).append($btnOperation).append($btnChart).append($btnEdit).append($btnDel).appendTo($h3);
-            } else {
-                $divBtnWrap.append($btnModule).append($btnModuleNew).append($btnCopyModule).append($btnTask).append($btnCopyTask).appendTo($h3);
-            }
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnModule.click(function() {
-
-                role.rid = v.rid;
-
-                queryModuleByRoleId(v.rid, 1);
-
-                role.modals.moduleModal.modal('show');
-            });
-
-            $btnModuleNew.click(function() {
-
-                role.rid = v.rid;
-
-                queryModuleNewByRoleId(v.rid);
-            });
-
-            $btnCopyModule.click(function() {
-
-                role.rid = v.rid;
-
-                showCompanySelectionModal(v.rid, v.name);
-            });
-
-            $btnTask.bind('click', function(rid) {
-
-                role.rid = v.rid;
-
-                role.items.taskPermList.html("");
-
-                com.focusPage("input[type='checkbox']", "#taskList").prop("checked", false);
-
-                com.post(api.communion.queryTaskByRid, {
-                    "role.rid": v.rid
-                }, function(res) {
-
-                    $.each(res.tasks, function(i, v) {
-
-                        var $div = $('<div></div>').appendTo(role.items.taskPermList);
-                        var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
-
-                        com.focusPage("#" + v.tid, "#taskList").prop("checked", true);
-                    });
-                });
-
-                role.modals.taskModal.modal("show");
-
-            });
-
-            $btnCopyTask.click(function() {
-
-                role.rid = v.rid;
-
-                showTaskCopySelectionModal();
-
-            });
-
-            $officeModule.click(function() {
-
-                role.rid = v.rid;
-
-                queryModuleByRoleId(v.rid, 2);
-
-                role.modals.moduleModal.modal('show');
-            });
-
-            $btnOperation.click(function() {
-
-                role.rid = v.rid;
-
-                role.items.currentOperation.html("");
-
-                com.focusPage("input[type='checkbox']", "#operation").prop("checked", false);
-
-                // 获取角色的操作
-                com.post(api.system.queryOperationByRid, {
-                    'operation.system': 1,
-                    "role.rid": v.rid
-                }, function(data) {
-
-                    if (data.operations.length) {
-                        $.each(data.operations, function(i, v) {
-
-                            var $div = $('<div></div>').appendTo(role.items.currentOperation);
-                            var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
-
-                            com.focusPage("#" + v.oid, "#operation").prop("checked", true);
-
-                        });
-                    }
-                }, null, false);
-
-                role.modals.operationModal.modal('show');
-            });
-
-            $btnEdit.unbind().bind('click', function() {
-
-                editRole(v.rid, v.no, v.name, v.content);
-            });
-
-            $btnDel.click(function() {
-
-                deleteRole(v.rid);
-            });
-
-            $chainPage.click(function() {
-
-                role.rid = v.rid;
-
-                role.items.currentchainPage.html("");
-                role.items.chainList.find("input[type='checkbox']").attr("checked", false);
-
-                com.post(api.right.queryRoleChainPageByRid, {
-                    "roleChainPage.rid": v.rid
-                }, function(res) {
-
-                    $.each(res.chainPages, function(i, v) {
-
-                        var $div = $('<div></div>').appendTo(role.items.currentchainPage);
-                        var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
-
-                        role.items.chainList.find("input[cpid='" + v.cpid + "']").click();
-                    });
-                });
-
-                role.modals.chainPageModal.modal("show");
-            });
-
-            $btnChart.click(function() {
-
-                role.rid = v.rid;
-
-                role.items.currentchartPage.html("");
-                role.items.chartList.find("input[type='checkbox']").attr("checked", false);
-
-                com.post(api.data.queryChartByRid, {
-                    "role.rid": v.rid
-                }, function(res) {
-
-                    $.each(res.charts, function(i, v) {
-
-                        var $div = $('<div></div>').appendTo(role.items.currentchartPage);
-                        var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
-
-                        role.items.chartList.find("input[cid='" + v.cid + "']").click();
-                    });
-                });
-
-                role.modals.chartPageModal.modal("show");
-            });
-
-            return $liLine;
-        };
+    function buildRoleLineprops() {
+
+        return [{
+            field: "no",
+            name: "编号",
+            prop: "no",
+            clazz: "grey"
+        }, {
+            field: "content",
+            name: "描述",
+            prop: "content",
+            clazz: "grey"
+        }];
+    }
+
+    function buildRoleLinebtns() {
+
+        var isAdvance = function(v) { return role.pageType == "advance"; };
 
         return {
-            init: function(tableId, listData) {
+            chainPage: {
+                name: "外链配置",
+                clazz: "btn-yellow",
+                show: isAdvance,
+                handle: function(v) {
+                    role.rid = v.rid;
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+                    role.items.currentchainPage.html("");
+                    role.items.chainList.find("input[type='checkbox']").attr("checked", false);
+
+                    com.post(api.right.queryRoleChainPageByRid, {
+                        "roleChainPage.rid": v.rid
+                    }, function(res) {
+
+                        $.each(res.chainPages, function(i, v) {
+
+                            var $div = $('<div></div>').appendTo(role.items.currentchainPage);
+                            var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
+
+                            role.items.chainList.find("input[cpid='" + v.cpid + "']").click();
+                        });
+                    });
+
+                    role.modals.chainPageModal.modal("show");
+                }
             },
-            drawLine: function(v) {
+            moduleNew: {
+                name: "模块配置",
+                clazz: "btn-purple",
+                handle: function(v) {
+                    role.rid = v.rid;
+                    queryModuleNewByRoleId(v.rid);
+                }
+            },
+            copyModule: {
+                name: "模块复制",
+                clazz: "btn-default",
+                handle: function(v) {
+                    role.rid = v.rid;
+                    showCompanySelectionModal(v.rid, v.name);
+                }
+            },
+            task: {
+                name: "任务配置",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    role.rid = v.rid;
 
-                return creatLine(v);
+                    role.items.taskPermList.html("");
+
+                    com.focusPage("input[type='checkbox']", "#taskList").prop("checked", false);
+
+                    com.post(api.communion.queryTaskByRid, {
+                        "role.rid": v.rid
+                    }, function(res) {
+
+                        $.each(res.tasks, function(i, v) {
+
+                            var $div = $('<div></div>').appendTo(role.items.taskPermList);
+                            var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
+
+                            com.focusPage("#" + v.tid, "#taskList").prop("checked", true);
+                        });
+                    });
+
+                    role.modals.taskModal.modal("show");
+                }
+            },
+            copyTask: {
+                name: "任务复制",
+                clazz: "btn-default",
+                handle: function(v) {
+                    role.rid = v.rid;
+                    showTaskCopySelectionModal();
+                }
+            },
+            officeModule: {
+                name: "办公配置",
+                clazz: "btn-info",
+                show: isAdvance,
+                handle: function(v) {
+                    role.rid = v.rid;
+                    queryModuleByRoleId(v.rid, 2);
+                    role.modals.moduleModal.modal('show');
+                }
+            },
+            operation: {
+                name: "操作配置",
+                clazz: "btn-warning",
+                show: isAdvance,
+                handle: function(v) {
+                    role.rid = v.rid;
+
+                    role.items.currentOperation.html("");
+
+                    com.focusPage("input[type='checkbox']", "#operation").prop("checked", false);
+
+                    com.post(api.system.queryOperationByRid, {
+                        'operation.system': 1,
+                        "role.rid": v.rid
+                    }, function(data) {
+
+                        if (data.operations.length) {
+                            $.each(data.operations, function(i, v) {
+
+                                var $div = $('<div></div>').appendTo(role.items.currentOperation);
+                                var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
+
+                                com.focusPage("#" + v.oid, "#operation").prop("checked", true);
+
+                            });
+                        }
+                    }, null, false);
+
+                    role.modals.operationModal.modal('show');
+                }
+            },
+            chart: {
+                name: "图表配置",
+                clazz: "btn-pink",
+                show: isAdvance,
+                handle: function(v) {
+                    role.rid = v.rid;
+
+                    role.items.currentchartPage.html("");
+                    role.items.chartList.find("input[type='checkbox']").attr("checked", false);
+
+                    com.post(api.data.queryChartByRid, {
+                        "role.rid": v.rid
+                    }, function(res) {
+
+                        $.each(res.charts, function(i, v) {
+
+                            var $div = $('<div></div>').appendTo(role.items.currentchartPage);
+                            var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
+
+                            role.items.chartList.find("input[cid='" + v.cid + "']").click();
+                        });
+                    });
+
+                    role.modals.chartPageModal.modal("show");
+                }
+            },
+            edit: {
+                name: "编辑",
+                clazz: "btn-inverse",
+                show: isAdvance,
+                handle: function(v) {
+                    editRole(v.rid, v.no, v.name, v.content);
+                }
+            },
+            del: {
+                name: "删除",
+                clazz: "btn-danger",
+                show: isAdvance,
+                handle: function(v) {
+                    deleteRole(v.rid);
+                }
             }
+        };
+    }
+
+    function buildRoleButtons() {
+
+        if (role.pageType != "advance") {
+            return [];
         }
-    })();
-
-    var searcher = new Searcher();
-
-    searcher.init(["system-role-no", "system-role-name"], "condList", api.system.pageRole, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "rolePostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addRole').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        return role.pageType == "advance" ? [$adda] : [];
-    });
+        return [$adda];
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.system.pageRole, null, ["system-role-no", "system-role-name"], "rolePostData", null, false, buildRoleButtons);
+    searcher.line("name", buildRoleLineprops(), buildRoleLinebtns()).render();
 
     com.focusPage('[name="addRole"]', com.focusPage('#pagenation')).click(function() {
 
