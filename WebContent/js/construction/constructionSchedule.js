@@ -114,7 +114,7 @@ jQuery(function($) {
         prop: "decoration.orderTotalPrice",
         clazz: "blue"
     }, {
-        field: "orderTotalPrice",
+        field: "contractPrice",
         name: "合同额",
         prop: "decoration.orderTotalPrice",
         clazz: "blue"
@@ -298,7 +298,7 @@ jQuery(function($) {
         clazz: "btn-danger",
         handle: function(v) {
 
-            if (v.planStatus != 0) {
+            if (v.planStatus != 0) { // 0 = 未确认（planStatus 枚举值）
                 com.showAlert(com.warning, "预估工费已确认,不可重复操作");
                 return false;
             }
@@ -327,78 +327,50 @@ jQuery(function($) {
 
     searcher.line("node.name", lineprops, linebtns).render();
 
-    function updateCaleBtn() {
+    // 提交工厂：统一构造 csid + 各字段参数，成功后关闭对应 modal 并刷新列表
+    function buildSubmit(apiName, modalName, fields, successMsg) {
 
-        var options = {
-            "constructionSchedule.csid": constructionSchedule.schedule.csid,
-            "constructionSchedule.precheck": constructionSchedule.items.precheck.val(),
-            "constructionSchedule.postcheck": constructionSchedule.items.postcheck.val(),
-            "constructionSchedule.stacheck": constructionSchedule.items.stacheck.val(),
-            "constructionSchedule.fincheck": constructionSchedule.items.fincheck.val(),
+        return function() {
+
+            var options = {
+                "constructionSchedule.csid": constructionSchedule.schedule.csid
+            };
+
+            $.each(fields, function(key, $item) {
+                options["constructionSchedule." + key] = $item.val();
+            });
+
+            com.post(api.construction[apiName], options, function(res) {
+
+                com.showAlert(com.info, successMsg);
+
+                constructionSchedule.modals[modalName].modal("hide");
+
+                searcher.doSearch();
+            });
         };
-
-        com.post(api.construction.updateConstructionScheduleForScal, options, function(res) {
-
-            com.showAlert(com.info, "操作成功");
-
-            constructionSchedule.modals.updateCaleModal.modal("hide");
-
-            searcher.doSearch();
-        });
     }
 
-    function updateNormBtn() {
+    var updateCaleBtn = buildSubmit("updateConstructionScheduleForScal", "updateCaleModal", {
+        precheck: constructionSchedule.items.precheck,
+        postcheck: constructionSchedule.items.postcheck,
+        stacheck: constructionSchedule.items.stacheck,
+        fincheck: constructionSchedule.items.fincheck
+    }, "操作成功");
 
-        var options = {
-            "constructionSchedule.csid": constructionSchedule.schedule.csid,
-            "constructionSchedule.accessoryLimit": constructionSchedule.items.accessoryLimit.val(),
-            "constructionSchedule.salaryLimit": constructionSchedule.items.salaryLimit.val(),
-            "constructionSchedule.accessoryTotal": constructionSchedule.items.accessoryTotal.val(),
-            "constructionSchedule.salaryTotal": constructionSchedule.items.salaryTotal.val(),
-        };
+    var updateNormBtn = buildSubmit("updateConstructionScheduleForNorm", "updateNormModal", {
+        accessoryLimit: constructionSchedule.items.accessoryLimit,
+        salaryLimit: constructionSchedule.items.salaryLimit,
+        accessoryTotal: constructionSchedule.items.accessoryTotal,
+        salaryTotal: constructionSchedule.items.salaryTotal
+    }, "操作成功");
 
-        com.post(api.construction.updateConstructionScheduleForNorm, options, function(res) {
+    var updatePeriodBtn = buildSubmit("updateConstructionScheduleForPeriod", "updatePeriodModal", {
+        period: constructionSchedule.items.period
+    }, "操作成功");
 
-            com.showAlert(com.info, "操作成功");
-
-            constructionSchedule.modals.updateNormModal.modal("hide");
-
-            searcher.doSearch();
-        });
-    }
-
-    function updatePeriodBtn() {
-
-        var options = {
-            "constructionSchedule.csid": constructionSchedule.schedule.csid,
-            "constructionSchedule.period": constructionSchedule.items.period.val(),
-        };
-
-        com.post(api.construction.updateConstructionScheduleForPeriod, options, function(res) {
-
-            com.showAlert(com.info, "操作成功");
-
-            constructionSchedule.modals.updatePeriodModal.modal("hide");
-
-            searcher.doSearch();
-        });
-    }
-
-    function planSalaryBtn() {
-
-        var options = {
-            "constructionSchedule.csid": constructionSchedule.schedule.csid,
-            "constructionSchedule.planSalary": constructionSchedule.items.planSalary.val(),
-        };
-
-        com.post(api.construction.planConstructionSchedule, options, function(res) {
-
-            com.showAlert(com.info, "预估工费确认成功");
-
-            constructionSchedule.modals.planSalaryModal.modal("hide");
-
-            searcher.doSearch();
-        });
-    }
+    var planSalaryBtn = buildSubmit("planConstructionSchedule", "planSalaryModal", {
+        planSalary: constructionSchedule.items.planSalary
+    }, "预估工费确认成功");
 
 });
