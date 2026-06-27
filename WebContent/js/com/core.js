@@ -755,8 +755,9 @@ var com = {
         }
 
         var opearteTab = $("#homeNav > #operateTab");
+        var tabDel = $('<div class="removePage"><i class="icon-remove"></i></div>');
         var tabLi = $('<li class="flpage nav-tab active" data-page="' + page + '"></li>');
-        var taba = $('<a data-toggle="tab" href="#' + menuId + '" id="tab_' + menuId + '">' + $features.attr("menuText") + '</a>');
+        var taba = $('<a data-toggle="tab" href="#' + menuId + '" id="tab_' + menuId + '">' + $features.attr("menuText") + '</a>').append(tabDel);
         var tabPane = $('<div id="' + menuId + '" class="flpage tab-pane in active"></div>').attr({
             'icon': $features.attr('icon'),
             'helpKey': $features.attr('helpKey'),
@@ -771,6 +772,25 @@ var com = {
         $(".flpage.tab-content").append(tabPane);
 
         tabPane.load(page);
+
+        tabDel.on("click", function() {
+
+            var _btn = $(this);
+            var _tab = _btn.parents('li.flpage');
+
+            var _pageId = _btn.parent("a").attr("href");
+            var _page = $(_pageId);
+
+            if (_tab.hasClass("active")) {
+                params['urlLoadParams'] = com.splitUrl(_tab.prev().attr('data-page'));
+
+                _tab.prev('li.flpage').addClass('active');
+                _page.prev('div.flpage').addClass('active');
+            }
+
+            _tab.remove();
+            _page.remove();
+        });
 
         taba.on("click", function() {
 
