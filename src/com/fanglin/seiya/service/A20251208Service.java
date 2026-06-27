@@ -23,7 +23,7 @@ public interface A20251208Service {
 
 	public int beginConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException;
 
-	public void finishConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionSchedule, String userId) throws FLException;
+	public int finishConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionSchedule, String userId) throws FLException;
 
 	public void syncConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionSchedule) throws FLException;
 
