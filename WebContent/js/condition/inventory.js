@@ -208,7 +208,8 @@ Condition.addupRule("inventory", {
             },
             listPath: "suppliers",
             keyPath: "uid",
-            valuePath: "userName"
+            valuePath: "userName",
+            query: "supplier.pinYin"
         }
     },
 
