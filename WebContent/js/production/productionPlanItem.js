@@ -51,92 +51,79 @@ $(function(){
         return v;
     });
 
-    var displayFunc = (function(){
+    function buildProductionPlanItemLineprops() {
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "typeno",
+            name: "类型编号",
+            prop: "typeno",
+            clazz: "blue"
+        }, {
+            field: "height",
+            name: "高",
+            prop: "height",
+            clazz: "blue"
+        }, {
+            field: "width",
+            name: "宽",
+            prop: "width",
+            clazz: "blue"
+        }, {
+            field: "thick",
+            name: "厚",
+            prop: "thick",
+            clazz: "blue"
+        }, {
+            field: "color",
+            name: "颜色",
+            prop: "color",
+            clazz: "grey"
+        }, {
+            field: "num",
+            name: "数量",
+            prop: "num",
+            clazz: "blue"
+        }, {
+            field: "comment",
+            name: "备注",
+            prop: "comment",
+            clazz: "grey"
+        }];
+    }
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v){
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid');
-            var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
-            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-            var $btnDel = $('<a></a>').addClass(' btn btn-minier btn-danger').html('删除');
-
-            var propertyArr = [
-                ["类型编号:", v.typeno, "blue"],
-                ["高:",v.height,"blue"],
-                ["宽:",v.width,"blue"],
-                ["厚:",v.thick,"blue"],
-                ["颜色:",v.color,"grey"],
-                ["数量:",v.num,"blue"],
-                ["备注:",v.comment,"grey"],
-            ];
-
-            $.each(propertyArr, function (index,value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            if (productionPlanItem.params.status == 0) {
-                $btnDiv.append($btnDel);
-            }
-            $h3.append($title).append($btnDiv);
-            $liLine.append($h3).append($ulProperty);
-
-            $btnDel.click(function(){
-                com.showConfirm("确定删除吗?", function() {
-                    com.post(api.production.deleteProductionPlanItem, {"productionPlanItem.ppiid": v.ppiid}, function(){
-                        searcher.doSearch();
-                        com.showAlert(com.info, "操作成功");
-                    });
-                });
-            });
-
-            return $liLine;
-        };
+    function buildProductionPlanItemLinebtns() {
 
         return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
-            },
-            drawLine : function(v){
-                return creatLine(v);
+            del: {
+                name: "删除",
+                clazz: "btn-danger",
+                show: function(v) { return productionPlanItem.params.status == 0; },
+                handle: function(v) {
+                    com.showConfirm("确定删除吗?", function() {
+                        com.post(api.production.deleteProductionPlanItem, { "productionPlanItem.ppiid": v.ppiid }, function() {
+                            searcher.doSearch();
+                            com.showAlert(com.info, "操作成功");
+                        });
+                    });
+                }
             }
         };
-    })();
+    }
 
-    var searcher  = new Searcher();
-
-    searcher.init([],'condList',api.production.pageProductionPlanItemByPpid,function (data) {
-        displayFunc.init('itemResultList', data);
-    },"itemPagenation","productionPlanItemPostData",{"productionPlanItem.productionPlan.ppid" :productionPlanItem.params.ppid},false,null,function () {
+    function buildProductionPlanItemButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addProductionPlanItem');
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        hidBtn($adda,productionPlanItem.params.status);
+        hidBtn($adda, productionPlanItem.params.status);
         return [$adda];
-    },'itemResultList');
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set('condList', 'itemPagenation', 'itemResultList', api.production.pageProductionPlanItemByPpid, { "productionPlanItem.productionPlan.ppid": productionPlanItem.params.ppid }, [], "productionPlanItemPostData", null, false, buildProductionPlanItemButtons);
+    searcher.line("name", buildProductionPlanItemLineprops(), buildProductionPlanItemLinebtns()).render();
 
     com.focusPage("#addProductionPlanItem").click(function() {
         productionPlanItem.modals.productionPlanItemModal.modal("show");

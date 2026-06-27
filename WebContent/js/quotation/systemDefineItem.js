@@ -59,123 +59,101 @@ $(function() {
         com.cleanItems("addItemModal");
     });
 
-    var displayFunc = (function() {
+    function buildSystemDefineItemLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "no",
+            name: "编号",
+            prop: "no",
+            clazz: "blue"
+        }, {
+            field: "bigCategory.name",
+            name: "大类",
+            prop: "bigCategory.name",
+            clazz: "red"
+        }, {
+            field: "unit.name",
+            name: "单位",
+            prop: "unit.name",
+            clazz: "red"
+        }, {
+            field: "workType.name",
+            name: "工种",
+            prop: "workType.name",
+            clazz: "red"
+        }, {
+            field: "addPrice",
+            name: "增补价",
+            prop: "addPrice",
+            clazz: "blue"
+        }, {
+            field: "unitPrice",
+            name: "原单价",
+            prop: "unitPrice",
+            clazz: "blue"
+        }, {
+            field: "subPrice",
+            name: "退减价",
+            prop: "subPrice",
+            clazz: "blue"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) { // 页面中的一条数据
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
-
-            // 启用禁用
-            var $btnStatus = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-            // 是否打折
-            var $btnDiscount = $('<div></div>').addClass('pull-right');
-            var $discountSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $dspan = $('<span></span>').addClass('lbl discount-lbl');
-
-            var propertyArr = [["编号:", v.no, "blue"], ["大类:", v.bigCategory.name, "red"], ["单位:", v.unit.name, "red"], ["工种:", v.workType.name, "red"], ["增补价:", v.addPrice, "blue"], ["原单价:", v.unitPrice, "blue"], ["退减价:", v.subPrice, "blue"], ];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $btnStatus.append($statusSwitch).append($span);
-            $btnDiscount.append($discountSwitch).append($dspan);
-
-            $divBtnWrap.append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            // 编辑按钮的点击事件
-            $btnDelete.click(function() {
-
-                remove(v.sdiid);
-            });
-
-            $btnEdit.click(function() {
-
-                edit(v);
-            });
-
-            v.status && $statusSwitch.prop("checked", true);
-            $statusSwitch.switchBtn("status-lbl").on("click", function() {
-
-                updateStatus(v.sdiid, $statusSwitch.prop("checked") ? 1 : 0, function() {
-
-                    $statusSwitch.removeAttr("checked");
-                });
-            });
-
-            v.discount && $discountSwitch.prop("checked", true);
-            $discountSwitch.switchBtn("discount-lbl").on("click", function() {
-
-                updateDiscount(v.sdiid, $discountSwitch.prop("checked") ? 1 : 0, function() {
-
-                    $discountSwitch.removeAttr("checked");
-                });
-            });
-
-            return $liLine;
-        };
+    function buildSystemDefineItemLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    edit(v);
+                }
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            del: {
+                name: "删除",
+                clazz: "btn-success",
+                handle: function(v) {
+                    remove(v.sdiid);
+                }
+            },
+            status: {
+                name: "状态",
+                type: "switch",
+                clazz: "status-lbl",
+                init: function(v) {
+                    return v.status;
+                },
+                handle: function(v, check) {
+                    updateStatus(v.sdiid, check ? 1 : 0, null);
+                }
+            },
+            discount: {
+                name: "打折",
+                type: "switch",
+                clazz: "discount-lbl",
+                init: function(v) {
+                    return v.discount;
+                },
+                handle: function(v, check) {
+                    updateDiscount(v.sdiid, check ? 1 : 0, null);
+                }
             }
         };
-    })();
+    }
 
-    var _condArr = ['data-quotation-item-name', 'data-quotation-bigcategory', 'quotation-worktype'];
-
-    var searcher = new Searcher();
-
-    searcher.init(_condArr, "condList", api.quotation.pageSystemDefineItem, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "SystemDefineItemPostData", null, false, null, function() {
+    function buildSystemDefineItemButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addSystemDefineItem').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.quotation.pageSystemDefineItem, null, ['data-quotation-item-name', 'data-quotation-bigcategory', 'quotation-worktype'], "SystemDefineItemPostData", null, false, buildSystemDefineItemButtons);
+    searcher.line("name", buildSystemDefineItemLineprops(), buildSystemDefineItemLinebtns()).render();
 
     // 编辑
     function edit(row) {

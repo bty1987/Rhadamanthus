@@ -27,181 +27,159 @@ $(function(){
     });
 
 
-    var displayFunc  = (function(){
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildProductionPlanLineprops() {
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
+        var props = [];
 
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v){
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid');
-            var $title = $('<small></small>').addClass('blue').html(' ' + v.no);
-            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-            var $btnSub = $('<a></a>').addClass('btn btn-minier btn-yellow').html('计划项');
-            var $btnPrograss = $('<a></a>').addClass('btn btn-minier btn-success').html('生产进度');
-            var $btnUpload = $('<a></a>').addClass('btn btn-minier btn-warning').html('上传');
-            var $btnFinish = $('<a></a>').addClass('btn btn-minier btn-inverse').html('完结');
-
-            var remainDate = productionUtils.dateDiffer(v.createTime, v.timeLimit);//计算剩余工期
-            var remainDay = "";  //显示剩余工期
-
-            if(v.status == 1){
-                remainDay = "订单已结束";
-            }else if(remainDate < 0){
-                remainDay = "已超过期限"+Math.abs(remainDate)+"天";
-            }else {
-                remainDay = "剩余工期"+Math.abs(remainDate)+"天"
-            }
-
-            var propertyArr = [];
-
-            $.each(pageConfig.propertyArr, function (pi, pv) {
-                switch (pv) {
-                    case "productionNo":
-                        propertyArr.push(["生产单号:",v.production.pno,"blue"]);
-                        break;
-                    case "orderId":
-                        propertyArr.push(["装修单号:", v.production.orderId, "blue"]);
-                        break;
-                    case "address":
-                        propertyArr.push(["楼盘地址:", v.production.house.village.name + " " + v.production.house.houseNumber, "grey"]);
-                        break;
-                    case "creater":
-                        propertyArr.push(["创建人:", v.creater.userName, "grey"]);
-                        break;
-                    case "createTime":
-                        propertyArr.push(["创建时间:", v.createTime , "green"]);
-                        break;
-                    case "finishTime":
-                        propertyArr.push(["完结时间:",v.finishTime,"green"]);
-                        break;
-                    case "status":
-                        propertyArr.push(["状态:", v.status == 0 ? "初始" : "完结", "red"]);
-                        break;
-                    case "timeLimit":
-                        propertyArr.push(["工期:", v.timeLimit, "green"]);
-                        break;
-                    case "remainingTime":
-                        propertyArr.push(["订单剩余时间:",remainDay,(remainDate < 5 ? "red":"green")]);
-                        break;
-                }
-            });
-
-            $.each(propertyArr, function (index,value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $.each(pageConfig.pageBtn, function (k, b) {
-                switch (b) {
-                    case "btnPlanItem"://外协项
-                        $btnDiv.append($btnSub);
-                        break;
-                    case "btnProgetass"://生产进度
-                        $btnDiv.append($btnPrograss);
-                        break;
-                    case "btnUpload"://上传
-                        $btnDiv.append($btnUpload);
-                        break;
-                    case "btnFinish"://完结
-                        if (v.status == 0) {
-                            $btnDiv.append($btnFinish);
-                        }
-                        break;
-                }
-                $h3.append($title).append($btnDiv);
-            });
-
-           $liLine.append($h3).append($ulProperty);
-
-            $btnSub.click(function () {
-                params["productionPlan.ppid"] = v.ppid;
-                params["productionPlan.status"] = v.status;
-                com.popup4page("#productionPlanPopUp", "views/production/productionPlanItem.html", "计划子项");
-            });
-
-            $btnPrograss.click(function () {
-                params.differentiate = productionPlan.differentiate;
-                params["productionPlan.ppid"] = v.ppid;
-                params["productionPlan.status"] = v.status;
-                com.switchPage(api.index.productionPlanDetailIndex.url);
-
-            });
-
-            $btnUpload.click(function(){
-
-                //删除createLine画出来的上一个元素防止叠加
-                productionPlan.modals.layerImport.modal("show").find('.infobox').remove();
-                var $line = com.focusPage('#download');
-
-                if(v.path){
-                    productionUtils.createLine(v.path, v.no, $line);
-                }
-
-                com.focusPage('#importProductionPlanExcel').removeClass('hide');
-
-                if(v.status == 1||v.status == 2){
-                    com.focusPage("#importProductionPlanExcel").addClass('hide');
-                }
-
-                com.uploadify("#importProductionPlanExcel", "上传文件", api.common.uploadOther, 'btn btn-success blue ', "*.xlsx", {'uploadType': 2}, 1, function(data){
-
-                    var option = {
-                        "productionPlan.ppid": v.ppid,
-                        "productionPlan.path": data.resUrl,
-                        "productionPlan.filesize": data.filesize
-                    };
-
-                    com.post(api.production.updateProductionPlan,option,function(res){
-                        com.showAlert(com.info, "操作成功");
-                        $line.find(".infobox").remove();
-                        productionUtils.createLine(v.path, v.no, $line);
-                        searcher.doSearch();
+        $.each(pageConfig.propertyArr, function(pi, pv) {
+            switch (pv) {
+                case "productionNo":
+                    props.push({ field: "production.pno", name: "生产单号", prop: "production.pno", clazz: "blue" });
+                    break;
+                case "orderId":
+                    props.push({ field: "production.orderId", name: "装修单号", prop: "production.orderId", clazz: "blue" });
+                    break;
+                case "address":
+                    props.push({
+                        field: "production.house",
+                        name: "楼盘地址",
+                        prop: function(v) { return v.production.house.village.name + " " + v.production.house.houseNumber; },
+                        clazz: "grey"
                     });
-                });
-            });
-
-            $btnFinish.click(function () {
-                productionPlan.ppid = v.ppid;
-                productionPlan.modals.productionPlanFinishModal.modal("show");
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
-            },
-            drawLine : function(v){
-                return creatLine(v);
+                    break;
+                case "creater":
+                    props.push({ field: "creater.userName", name: "创建人", prop: "creater.userName", clazz: "grey" });
+                    break;
+                case "createTime":
+                    props.push({ field: "createTime", name: "创建时间", prop: "createTime", clazz: "green" });
+                    break;
+                case "finishTime":
+                    props.push({ field: "finishTime", name: "完结时间", prop: "finishTime", clazz: "green" });
+                    break;
+                case "status":
+                    props.push({
+                        field: "status",
+                        name: "状态",
+                        prop: function(v) { return v.status == 0 ? "初始" : "完结"; },
+                        clazz: "red"
+                    });
+                    break;
+                case "timeLimit":
+                    props.push({ field: "timeLimit", name: "工期", prop: "timeLimit", clazz: "green" });
+                    break;
+                case "remainingTime":
+                    props.push({
+                        field: "remainingTime",
+                        name: "订单剩余时间",
+                        prop: function(v) {
+                            var remainDate = productionUtils.dateDiffer(v.createTime, v.timeLimit);
+                            if (v.status == 1) {
+                                return "订单已结束";
+                            } else if (remainDate < 0) {
+                                return "已超过期限" + Math.abs(remainDate) + "天";
+                            } else {
+                                return "剩余工期" + Math.abs(remainDate) + "天";
+                            }
+                        },
+                        clazz: function(v) {
+                            var remainDate = productionUtils.dateDiffer(v.createTime, v.timeLimit);
+                            return remainDate < 5 ? "red" : "green";
+                        }
+                    });
+                    break;
             }
-        };
-    })();
+        });
 
-    var searcher  = new Searcher();
+        return props;
+    }
 
-    searcher.init( pageConfig.condArr,'_condList', pageConfig.apiPage,function (data) {
-        displayFunc.init('_resultList', data);
-    },"_pagenation",pageConfig.postDataName,null,false,null,null,"_resultList");
+    function buildProductionPlanLinebtns() {
+
+        var btns = {};
+
+        $.each(pageConfig.pageBtn, function(k, b) {
+            switch (b) {
+                case "btnPlanItem":
+                    btns.sub = {
+                        name: "计划项",
+                        clazz: "btn-yellow",
+                        handle: function(v) {
+                            params["productionPlan.ppid"] = v.ppid;
+                            params["productionPlan.status"] = v.status;
+                            com.popup4page("#productionPlanPopUp", "views/production/productionPlanItem.html", "计划子项");
+                        }
+                    };
+                    break;
+                case "btnProgetass":
+                    btns.prograss = {
+                        name: "生产进度",
+                        clazz: "btn-success",
+                        handle: function(v) {
+                            params.differentiate = productionPlan.differentiate;
+                            params["productionPlan.ppid"] = v.ppid;
+                            params["productionPlan.status"] = v.status;
+                            com.switchPage(api.index.productionPlanDetailIndex.url);
+                        }
+                    };
+                    break;
+                case "btnUpload":
+                    btns.upload = {
+                        name: "上传",
+                        clazz: "btn-warning",
+                        handle: function(v) {
+                            productionPlan.modals.layerImport.modal("show").find('.infobox').remove();
+                            var $line = com.focusPage('#download');
+
+                            if (v.path) {
+                                productionUtils.createLine(v.path, v.no, $line);
+                            }
+
+                            com.focusPage('#importProductionPlanExcel').removeClass('hide');
+
+                            if (v.status == 1 || v.status == 2) {
+                                com.focusPage("#importProductionPlanExcel").addClass('hide');
+                            }
+
+                            com.uploadify("#importProductionPlanExcel", "上传文件", api.common.uploadOther, 'btn btn-success blue ', "*.xlsx", { 'uploadType': 2 }, 1, function(data) {
+
+                                var option = {
+                                    "productionPlan.ppid": v.ppid,
+                                    "productionPlan.path": data.resUrl,
+                                    "productionPlan.filesize": data.filesize
+                                };
+
+                                com.post(api.production.updateProductionPlan, option, function(res) {
+                                    com.showAlert(com.info, "操作成功");
+                                    $line.find(".infobox").remove();
+                                    productionUtils.createLine(v.path, v.no, $line);
+                                    searcher.doSearch();
+                                });
+                            });
+                        }
+                    };
+                    break;
+                case "btnFinish":
+                    btns.finish = {
+                        name: "完结",
+                        clazz: "btn-inverse",
+                        show: function(v) { return v.status == 0; },
+                        handle: function(v) {
+                            productionPlan.ppid = v.ppid;
+                            productionPlan.modals.productionPlanFinishModal.modal("show");
+                        }
+                    };
+                    break;
+            }
+        });
+
+        return btns;
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set('_condList', '_pagenation', '_resultList', pageConfig.apiPage, null, pageConfig.condArr, pageConfig.postDataName, null, false, null);
+    searcher.line("no", buildProductionPlanLineprops(), buildProductionPlanLinebtns()).render();
 
     com.focusPage("#confirmBtn").click(function(){
         productionPlan.modals.layerImport.modal("hide");
