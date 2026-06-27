@@ -165,7 +165,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.quotation.pageFunctionArea, null, _condArr, "functionAreaPostData", null, false, buildFunctionAreaButtons);
+    searcher.set("condList", "pagenation", "resultList", api.quotation.pageFunctionArea, null, _condArr, "functionAreaPostData", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     // 功能区添加按钮

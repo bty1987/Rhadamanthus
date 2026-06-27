@@ -100,7 +100,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("creatLine", "pageTalking", "resultList", api.data.pageTalking, null, ["data-talking-name", "data-talking-type", "data-talking-status"], "pageTalkingPost", null, false, buildTalkingButtons);
+    searcher.set("creatLine", "pageTalking", "resultList", api.data.pageTalking, null, ["data-talking-name", "data-talking-type", "data-talking-status"], "pageTalkingPost", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage("#addTalking").click(function() {

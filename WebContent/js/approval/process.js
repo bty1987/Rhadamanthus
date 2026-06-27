@@ -90,7 +90,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.approval.pageProcess, null, ["approval-process-no", "approval-process-name", "approval-process-status"], "processPostData", null, false, buildProcessButtons);
+    searcher.set("condList", "pagenation", "resultList", api.approval.pageProcess, null, ["approval-process-no", "approval-process-name", "approval-process-status"], "processPostData", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage("#addProcess").click(function() {

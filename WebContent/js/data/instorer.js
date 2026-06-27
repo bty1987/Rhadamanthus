@@ -102,7 +102,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.data.pageInstorer, null, _condArr, "materialModelPostData", null, false, buildInstorerButtons);
+    searcher.set("condList", "pagenation", "resultList", api.data.pageInstorer, null, _condArr, "materialModelPostData", null, false, buttons);
     searcher.line("currentName", lineprops, linebtns).render();
 
     $('a[name="add"]', com.focusPage('#pagenation')).click(function() {

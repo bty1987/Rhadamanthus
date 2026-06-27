@@ -106,7 +106,7 @@ jQuery(function($) {
     var _condArr = ["data-category-name", "data-category-isCoupon", "data-category-isCount"];
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.data.pageCategory, null, _condArr, "categoryPostData", null, false, buildCategoryButtons);
+    searcher.set("condList", "pagenation", "resultList", api.data.pageCategory, null, _condArr, "categoryPostData", null, false, buttons);
     searcher.line(function(v) {
 
         return v.no + " " + v.name;

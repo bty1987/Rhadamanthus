@@ -154,7 +154,7 @@ jQuery(function($) {
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageConstructionAccessory, {
         "constructionAccessory.cid": accessory.cid
-    }, [], "constructionAccessoryPostDate", null, false, buildAccessoryButtons);
+    }, [], "constructionAccessoryPostDate", null, false, buttons);
     searcher.line("aoods.goods.name", lineprops, linebtns).render();
 
     com.focusPage("#addConstructionAccessory").click(function() {

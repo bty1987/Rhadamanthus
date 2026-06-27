@@ -103,7 +103,7 @@ $(function(){
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.data.pageSupplier, null, _condArr, "materialModelPostData", null, false, buildSupplierButtons);
+    searcher.set("condList", "pagenation", "resultList", api.data.pageSupplier, null, _condArr, "materialModelPostData", null, false, buttons);
     searcher.line("currentName", lineprops, linebtns).render();
 
     //添加按钮

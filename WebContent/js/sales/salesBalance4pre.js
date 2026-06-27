@@ -367,7 +367,7 @@ $(function() {
 
     var salesPreBalance = new Searcher();
 
-    salesPreBalance.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, salesPre.postData, null, false, buildSalesPreButtons);
+    salesPreBalance.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, salesPre.postData, null, false, buttons);
     salesPreBalance.line('no', lineprops, linebtns).render();
 
     salesPre.btns.preSaveBtn.on('click', function() {

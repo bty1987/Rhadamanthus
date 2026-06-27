@@ -219,7 +219,7 @@ $(function($) {
     var searcher = new Searcher();
     var _condArr = ["data-receiptType-name", "data-receiptType-type", "data-receiptType-status", "data-receiptType-fund", "data-receiptType-grade", "data-receiptType-kino", "data-receiptType-kiname", "data-receiptType-kibalance", "data-receiptType-bankno", "data-receiptType-assistant", "data-receiptType-value"];
 
-    searcher.set("condList", "pagenation", "resultList", api.data.pageReceiptType, null, _condArr, "ReceiptTypePostData", null, false, buildReceiptTypeButtons);
+    searcher.set("condList", "pagenation", "resultList", api.data.pageReceiptType, null, _condArr, "ReceiptTypePostData", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     function saveData() {

@@ -165,7 +165,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.system.pageCompany, null, ["system-company-name", "system-company-status", "system-company-atttype"], "companyPostData", null, false, buildCompanyButtons);
+    searcher.set("condList", "pagenation", "resultList", api.system.pageCompany, null, ["system-company-name", "system-company-status", "system-company-atttype"], "companyPostData", null, false, buttons);
     searcher.line(function(v) { return v.no + " " + v.name; }, lineprops, linebtns).render();
 
     // 编辑

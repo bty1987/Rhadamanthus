@@ -448,7 +448,7 @@ jQuery(function($) {
         extraParams["servicePayment.status"] = servicePayment.pageConfig.statusExtraParam[0];
     }
 
-    searcher.set("condList", "pagenation", "resultList", servicePayment.pageConfig.apiPage, extraParams, servicePayment.pageConfig.condArr, "servicePaymentPostData" + servicePayment.type, null, false, buildServiceButtons);
+    searcher.set("condList", "pagenation", "resultList", servicePayment.pageConfig.apiPage, extraParams, servicePayment.pageConfig.condArr, "servicePaymentPostData" + servicePayment.type, null, false, buttons);
     searcher.line(function(v) {
 
         return ["common", "pos"].contains(servicePayment.type) ? "服务款" : (v.type == constant.payment().servicePayment.TYPE_COLLECT_INT ? "收款" : "退款");

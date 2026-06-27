@@ -100,7 +100,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialModelForAdvance, null, ['data-model-no', 'data-model-name', 'data-model-category', 'data-model-brand'], "materialModelAdvancePostData", null, false, buildMaterialModelAdvanceButtons);
+    searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialModelForAdvance, null, ['data-model-no', 'data-model-name', 'data-model-category', 'data-model-brand'], "materialModelAdvancePostData", null, false, buttons);
     searcher.line("materialModelName", lineprops, linebtns).render();
 
     var materialModel = {

@@ -122,7 +122,7 @@ $(function(){
 
     var searcher = new Searcher();
 
-    searcher.set('condList', 'itemPagenation', 'itemResultList', api.production.pageProductionPlanItemByPpid, { "productionPlanItem.productionPlan.ppid": productionPlanItem.params.ppid }, [], "productionPlanItemPostData", null, false, buildProductionPlanItemButtons);
+    searcher.set('condList', 'itemPagenation', 'itemResultList', api.production.pageProductionPlanItemByPpid, { "productionPlanItem.productionPlan.ppid": productionPlanItem.params.ppid }, [], "productionPlanItemPostData", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage("#addProductionPlanItem").click(function() {

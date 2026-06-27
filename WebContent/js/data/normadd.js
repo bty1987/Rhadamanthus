@@ -120,7 +120,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.data.pageNormadd, null, ["data-quotation-normadd-name", "data-quotation-normadd-status"], "normaddPostData", null, false, buildNormaddButtons);
+    searcher.set("condList", "pagenation", "resultList", api.data.pageNormadd, null, ["data-quotation-normadd-name", "data-quotation-normadd-status"], "normaddPostData", null, false, buttons);
     searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#normaddBtn').click(function() {

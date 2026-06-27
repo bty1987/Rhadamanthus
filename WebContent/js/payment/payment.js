@@ -674,7 +674,7 @@ jQuery(function($) {
         extraParams["payment.company"] = payment.depage;
     }
 
-    searcher.set("condList", "pagenation", "resultList", payment.pageConfig.apiPage, extraParams, payment.pageConfig.condArr, "paymentPostData" + payment.type, null, false, buildPaymentButtons);
+    searcher.set("condList", "pagenation", "resultList", payment.pageConfig.apiPage, extraParams, payment.pageConfig.condArr, "paymentPostData" + payment.type, null, false, buttons);
     searcher.line(function(v) {
 
         return v.decoration ? v.decoration.orderId : v.orderId;

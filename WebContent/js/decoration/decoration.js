@@ -2638,14 +2638,6 @@ $(function() {
         extraParam["companyType"] = pageConfig.companyType[0];
     }
 
-    var searcher = new Searcher();
-
-    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage, extraParam, pageConfig.condArr, pageConfig.postDataName, null, false, buildDecorationButtons);
-
-    searcher.line(function(v) {
-        return v.orderId;
-    }, lineprops, linebtns).render();
-
     var buttons = (function() {
 
         var btns = [];
@@ -2668,6 +2660,14 @@ $(function() {
 
         return btns;
     })();
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage, extraParam, pageConfig.condArr, pageConfig.postDataName, null, false, buttons);
+
+    searcher.line(function(v) {
+        return v.orderId;
+    }, lineprops, linebtns).render();
 
     function createToolButton(name, icon, text, clazz) {
 

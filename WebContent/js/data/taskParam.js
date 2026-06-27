@@ -223,7 +223,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("taskParamCondList", "taskParamPagenation", "taskParamResultList", api.communion.pageTaskParam, null, ['data-taskParam-module'], "taskParamPostData", null, false, buildTaskParamButtons);
+    searcher.set("taskParamCondList", "taskParamPagenation", "taskParamResultList", api.communion.pageTaskParam, null, ['data-taskParam-module'], "taskParamPostData", null, false, buttons);
     searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#addTaskParam').click(function() {

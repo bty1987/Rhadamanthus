@@ -570,7 +570,7 @@ $(function() {
         extraParams["salesPayment.types"] = "[" + salesPayment.pageConfig.typeExtraParam.toString() + "]";
     }
 
-    searcher.set("condList", "pagenation", "resultList", salesPayment.pageConfig.apiPage, extraParams, salesPayment.pageConfig.condArr, "salesPaymentPostData" + salesPayment.pageFlag, null, false, buildSalesPaymentButtons);
+    searcher.set("condList", "pagenation", "resultList", salesPayment.pageConfig.apiPage, extraParams, salesPayment.pageConfig.condArr, "salesPaymentPostData" + salesPayment.pageFlag, null, false, buttons);
     searcher.line(function(v) {
 
         return salesPayment.salesPaymentTypeData[v.type];

@@ -95,7 +95,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("periodCondList", "periodPagenation", "periodResultList", api.data.pageConstructionPeriod, null, ["data-construction-period-name"], "constructionPeriodPostData", null, false, buildPeriodButtons);
+    searcher.set("periodCondList", "periodPagenation", "periodResultList", api.data.pageConstructionPeriod, null, ["data-construction-period-name"], "constructionPeriodPostData", null, false, buttons);
     searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#addConstructionPeriod').click(function() {

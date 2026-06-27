@@ -896,7 +896,7 @@ $(function() {
 
     searcher.set("condList", "pagenation", "resultList", customerOrigine.pageConfig.apiPage, {
         "user": params['urlLoadParams'].depage
-    }, customerOrigine.pageConfig.condArr, customerOrigine.pageConfig.postDataName, null, false, buildCustomerOrigineButtons);
+    }, customerOrigine.pageConfig.condArr, customerOrigine.pageConfig.postDataName, null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage("#add").click(function() {

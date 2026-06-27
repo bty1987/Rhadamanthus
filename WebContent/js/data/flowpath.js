@@ -83,7 +83,7 @@ jQuery(function($) {
     })();
 
     var searcher = new Searcher();
-    searcher.set("condList", "pagenation", "resultList", api.data.pageFlowpath, null, null, "flowpathPostData", null, false, buildFlowpathButtons);
+    searcher.set("condList", "pagenation", "resultList", api.data.pageFlowpath, null, null, "flowpathPostData", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     function saveData() {

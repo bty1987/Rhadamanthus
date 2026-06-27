@@ -255,7 +255,7 @@ $(function() {
         'data-village-status',
         'data-village-delivery-start',
         'data-village-delivery-end'
-    ], "villagePostData", null, false, buildVillageButtons);
+    ], "villagePostData", null, false, buttons);
     searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     // 启用禁用功能

@@ -234,7 +234,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.payment.pagePaytran, null, ["payment-orderId", "payment-point-sn", "payment-activity-creater-name", "payment-createTime", "payment-paymentType", "payment-point-status"], "paytranPostData", null, false, buildPaytranButtons);
+    searcher.set("condList", "pagenation", "resultList", api.payment.pagePaytran, null, ["payment-orderId", "payment-point-sn", "payment-activity-creater-name", "payment-createTime", "payment-paymentType", "payment-point-status"], "paytranPostData", null, false, buttons);
     searcher.line(function(v) {
         return constant.payment().receipt.paymentType.keys[v.type];
     }, lineprops, linebtns).render();

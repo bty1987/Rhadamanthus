@@ -147,7 +147,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.system.pageRole, null, ["roleName"], "rolePostData", null, false, buildRole4baseButtons);
+    searcher.set("condList", "pagenation", "resultList", api.system.pageRole, null, ["roleName"], "rolePostData", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
     
     com.focusPage('[name="addRole"]', com.focusPage('#pagenation')).click(function(){

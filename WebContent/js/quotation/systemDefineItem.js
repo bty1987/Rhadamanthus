@@ -152,7 +152,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.quotation.pageSystemDefineItem, null, ['data-quotation-item-name', 'data-quotation-bigcategory', 'quotation-worktype'], "SystemDefineItemPostData", null, false, buildSystemDefineItemButtons);
+    searcher.set("condList", "pagenation", "resultList", api.quotation.pageSystemDefineItem, null, ['data-quotation-item-name', 'data-quotation-bigcategory', 'quotation-worktype'], "SystemDefineItemPostData", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     // 编辑

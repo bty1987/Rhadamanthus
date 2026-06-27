@@ -157,7 +157,7 @@ jQuery(function($) {
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageCustomerServiceComplaint, {
         "customerServiceComplaint.orderId": params.construction.orderId
-    }, [], "searcherPostData", null, false, buildCustomer4complaintButtons);
+    }, [], "searcherPostData", null, false, buttons);
     searcher.line("orderId", lineprops, linebtns).render();
 
     com.focusPage('#add', '#pagenation').click(function() {

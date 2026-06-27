@@ -97,7 +97,7 @@ jQuery(function($){
         var searcher = new Searcher();
         check();
 
-        searcher.set("condListas", "pagenationas", "resultListas", api.customer.pageVscoreRecordByUnionId, {"unionId": vscore.unionId}, ["vscoreRecordType"], "VscoreRecordPostData", null, false, buildVscoreRecordButtons);
+        searcher.set("condListas", "pagenationas", "resultListas", api.customer.pageVscoreRecordByUnionId, {"unionId": vscore.unionId}, ["vscoreRecordType"], "VscoreRecordPostData", null, false, buttons);
         searcher.line(function(v) { return "操作人:" + com.checkNull(v.operater.currentName, ''); }, lineprops, linebtns).render();
 
         com.focusPage('#addVscore').click(function(){

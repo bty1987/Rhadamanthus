@@ -130,7 +130,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.market.pageEperson, null, ["market-city", "market-person-name"], "epersonPostData", null, false, buildEpersonButtons);
+    searcher.set("condList", "pagenation", "resultList", api.market.pageEperson, null, ["market-city", "market-person-name"], "epersonPostData", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     // 添加

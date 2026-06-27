@@ -60,7 +60,7 @@ $(function(){
     })();
 
     var searcher = new Searcher();
-    searcher.set("condList", "pagenation", "resultList", api.data.pageDrawlineGroup, null, ['data-drawline-group-name'], "groupPostData", null, false, buildGroupButtons);
+    searcher.set("condList", "pagenation", "resultList", api.data.pageDrawlineGroup, null, ['data-drawline-group-name'], "groupPostData", null, false, buttons);
     searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     function popoverInit(){

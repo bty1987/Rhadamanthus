@@ -97,7 +97,7 @@ jQuery(function ($) {
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageInspectionRecordByOrderId, {
         "inspectionRecord.orderId": params.construction.orderId
-    }, [], "inspectionRecordPostData", null, false, buildInspection4recordButtons);
+    }, [], "inspectionRecordPostData", null, false, buttons);
     searcher.line("orderId", lineprops, linebtns).render();
 
     com.focusPage('a[name="add"]', '#pagenation').click(function () {

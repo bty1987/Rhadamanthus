@@ -186,7 +186,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.salary.pageWorkerBalance, null, ['salary-jober', 'salary-salaryWorkduty'], "workerBalancePostData", null, false, buildWorkerBalanceButtons);
+    searcher.set("condList", "pagenation", "resultList", api.salary.pageWorkerBalance, null, ['salary-jober', 'salary-salaryWorkduty'], "workerBalancePostData", null, false, buttons);
     searcher.line("user.currentName", lineprops, linebtns).render();
 
     //转款

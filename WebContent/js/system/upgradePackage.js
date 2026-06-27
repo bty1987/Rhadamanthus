@@ -120,7 +120,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.upgrade.pageUpgrade, null, ['system-upgrade-version', 'system-upgrade-createTime'], "upgradePostData", null, false, buildUpgradePackageButtons);
+    searcher.set("condList", "pagenation", "resultList", api.upgrade.pageUpgrade, null, ['system-upgrade-version', 'system-upgrade-createTime'], "upgradePostData", null, false, buttons);
     searcher.line("no", lineprops, linebtns).render();
 
     function saveData() {

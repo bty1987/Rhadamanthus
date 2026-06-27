@@ -76,7 +76,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.payment.pageReceipt, null, ["payment-paymentType", "payment-receiptType", "payment-collectTime"], "receiptPostData", null, false, buildReceiptButtons);
+    searcher.set("condList", "pagenation", "resultList", api.payment.pageReceipt, null, ["payment-paymentType", "payment-receiptType", "payment-collectTime"], "receiptPostData", null, false, buttons);
     searcher.line(function(v) {
         return v.type == 0 ? "收款" : "退款";
     }, lineprops, {}).render();

@@ -110,7 +110,7 @@ $(function () {
 
     var versionSeacher = new Searcher();
 
-    versionSeacher.set("condList", "pagenation", "resultList", api.upgrade.pageVersion, null, [], "versionSeacherPostData", null, false, buildVersionButtons);
+    versionSeacher.set("condList", "pagenation", "resultList", api.upgrade.pageVersion, null, [], "versionSeacherPostData", null, false, buttons);
     versionSeacher.line("no", lineprops, linebtns).render();
 
     function saveData() {

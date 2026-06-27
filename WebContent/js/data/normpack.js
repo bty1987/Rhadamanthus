@@ -99,7 +99,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.data.pageNormpack, null, ["data-quotation-normpack-name", "data-quotation-normpack-status"], "addItemPostData", null, false, buildNormpackButtons);
+    searcher.set("condList", "pagenation", "resultList", api.data.pageNormpack, null, ["data-quotation-normpack-name", "data-quotation-normpack-status"], "addItemPostData", null, false, buttons);
     searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#addItemBtn').click(function() {

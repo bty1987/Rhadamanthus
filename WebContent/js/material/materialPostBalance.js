@@ -258,7 +258,7 @@ $(function(){
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialBalance, null, ['material-orderId', 'material-no', 'material-brand', 'material-orderAddr', 'material-region-name', 'material-dept-name', 'material-balance-status', 'material-balance-type', 'material-fullpayTime', 'material-prebalanceTime', 'material-vbalanceTime', 'material-postBalanceTime'], "materialOrderPostBalancePostData", null, false, buildMaterialPostBalanceButtons);
+    searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialBalance, null, ['material-orderId', 'material-no', 'material-brand', 'material-orderAddr', 'material-region-name', 'material-dept-name', 'material-balance-status', 'material-balance-type', 'material-fullpayTime', 'material-prebalanceTime', 'material-vbalanceTime', 'material-postBalanceTime'], "materialOrderPostBalancePostData", null, false, buttons);
     searcher.line("material.no", lineprops, linebtns).render();
     //厂结值 点保存//
     function updateMaterialSubOrderBalanceForVBalance(){

@@ -191,7 +191,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.balance.pageBalanceAccount, null, ["balance-account-name", "balance-account-type", "balance-account-status"], "accountPostData", null, false, buildBalanceAccountButtons);
+    searcher.set("condList", "pagenation", "resultList", api.balance.pageBalanceAccount, null, ["balance-account-name", "balance-account-type", "balance-account-status"], "accountPostData", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage('#addBalanceAccount', '#pagenation').click(function() {

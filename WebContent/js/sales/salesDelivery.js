@@ -544,7 +544,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, salesDelivery.extraParams, pageConfig.condArr, salesDelivery.postData, null, false, buildDeliveryButtons);
+    searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, salesDelivery.extraParams, pageConfig.condArr, salesDelivery.postData, null, false, buttons);
     searcher.line(function(v) {
 
         return v.salesItem.goods.name;

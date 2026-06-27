@@ -325,7 +325,7 @@ $(function() {
 
     var salesSwitchPurchaseSearcher = new Searcher();
 
-    salesSwitchPurchaseSearcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, 'salesSwitchPurchasePostData', null, false, buildPurchaseButtons);
+    salesSwitchPurchaseSearcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, 'salesSwitchPurchasePostData', null, false, buttons);
     salesSwitchPurchaseSearcher.line('no', lineprops, linebtns).render(function() {
 
         com.focusPage('input[name="fullpayTime"]').parent('.inline').addClass('m-wrap m-ctrl-medium date-picker');

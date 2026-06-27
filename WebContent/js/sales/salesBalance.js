@@ -697,7 +697,7 @@ $(function() {
         salesBalanceParams["salesBalance.sales.type"] = 1;
     }
 
-    searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, salesBalanceParams, pageConfig.condArr, salesBalance.postData, null, false, buildBalanceButtons);
+    searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, salesBalanceParams, pageConfig.condArr, salesBalance.postData, null, false, buttons);
     searcher.line('sales.no', lineprops, linebtns).render();
 
     salesBalance.btns.supplierSaveBtn.on('click', function() {

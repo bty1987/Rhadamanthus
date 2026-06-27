@@ -132,7 +132,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.set("condList", "pagenation", "resultList", api.system.pageCityProper, null, ["system-cityProper-name", "system-region", "system-city"], "cityProperPostData", null, false, buildCityProperButtons);
+	searcher.set("condList", "pagenation", "resultList", api.system.pageCityProper, null, ["system-cityProper-name", "system-region", "system-city"], "cityProperPostData", null, false, buttons);
 	searcher.line("name", lineprops, linebtns).render();
 		
 	com.focusPage('[name="addCityProper"]', com.focusPage('#pagenation')).click(function(){

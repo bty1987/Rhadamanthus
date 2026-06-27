@@ -58,7 +58,7 @@ $(function(){
 
     var labelSearcher = new Searcher();
 
-    labelSearcher.set("condList", "pagenation", "resultList", api.data.pageLabel, null, ["personel-label-name"], "label", null, false, buildLabelButtons);
+    labelSearcher.set("condList", "pagenation", "resultList", api.data.pageLabel, null, ["personel-label-name"], "label", null, false, buttons);
     labelSearcher.line("name", lineprops, linebtns).render();
 
     com.focusPage('a[name="addlabel"]', '#pagenation').click(function(){

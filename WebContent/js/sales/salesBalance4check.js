@@ -477,7 +477,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, "salesBalanceCheckPostData", null, false, buildBalanceCheckButtons);
+    searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, "salesBalanceCheckPostData", null, false, buttons);
     searcher.line('sales.no', lineprops, linebtns).render();
 
     com.initTypeahead("balanceSales", api.balance.queryBalanceSales, "balanceSales.name", {}, "balanceSaleses", "bsid", function(v) {

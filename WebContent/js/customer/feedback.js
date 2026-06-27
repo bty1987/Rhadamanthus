@@ -197,7 +197,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.customer.pageFeedback, null, ['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type', 'customer-feedback-company', 'customer-feedback-status', 'customer-feedback-handler', 'customer-feedback-receiver', 'customer-feedback-handleTime', 'customer-feedback-receiveTime'], "groupUserPostData", null, false, buildFeedbackButtons);
+    searcher.set("condList", "pagenation", "resultList", api.customer.pageFeedback, null, ['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type', 'customer-feedback-company', 'customer-feedback-status', 'customer-feedback-handler', 'customer-feedback-receiver', 'customer-feedback-handleTime', 'customer-feedback-receiveTime'], "groupUserPostData", null, false, buttons);
     searcher.line(function(v) { return v.type == constant.customer.feedback.STATUS_FEEDBACK_INT ? "反馈" : v.type == constant.customer.feedback.STATUS_COMPLAINT_INT ? "投诉" : "维修"; }, lineprops, linebtns).render();
 
     com.focusPage('#addFeedback', '#pagenation').click(function() {

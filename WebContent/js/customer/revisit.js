@@ -87,7 +87,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.customer.pageRevisit, null, ["customer-service-orderId", "customer-service-revisit-type"], "revisitPostData", null, false, buildRevisitButtons);
+    searcher.set("condList", "pagenation", "resultList", api.customer.pageRevisit, null, ["customer-service-orderId", "customer-service-revisit-type"], "revisitPostData", null, false, buttons);
     searcher.line("decoration.orderId", lineprops, {}).render();
     
     com.focusPage("#visitRevisit").click(function() {

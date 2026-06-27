@@ -98,7 +98,7 @@ $(function () {
 
     var performanceSeacher = new Searcher();
 
-    performanceSeacher.set("condList", "pagenation", "resultList", api.personel.pagePerformance, null, ['personel-userName', 'personel-performance-type', 'personel-performance-startTime', "personel-performance-endTime"], "selectUser", null, false, buildPerformanceButtons);
+    performanceSeacher.set("condList", "pagenation", "resultList", api.personel.pagePerformance, null, ['personel-userName', 'personel-performance-type', 'personel-performance-startTime', "personel-performance-endTime"], "selectUser", null, false, buttons);
     performanceSeacher.line("user.userName", lineprops, {}).render();
 
     function saveData(){
