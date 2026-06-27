@@ -56,32 +56,14 @@ jQuery(function($) {
     drawline.btns.deployedBtn.bindClick(deployed);
     drawline.btns.saveSuccessBtn.bindClick(saveSuccess);
 
-    drawline.modals.setupModal.on("hide.bs.modal", function() {
+    // 所有 modal 关闭时统一清空输入、typeahead 与提示
+    $.each([drawline.modals.setupModal, drawline.modals.editModal, drawline.modals.applyModal, drawline.modals.constructionInfoModal], function(i, $modal) {
 
-        com.cleanItems(drawline.items);
-        com.cleanTypeahead("supervisor");
-        com.closeTip();
-    });
-
-    drawline.modals.editModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(drawline.items);
-        com.cleanTypeahead("supervisor");
-        com.closeTip();
-    });
-
-    drawline.modals.applyModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(drawline.items);
-        com.cleanTypeahead("supervisor");
-        com.closeTip();
-    });
-
-    drawline.modals.constructionInfoModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(drawline.items);
-        com.cleanTypeahead("supervisor");
-        com.closeTip();
+        $modal.on("hide.bs.modal", function() {
+            com.cleanItems(drawline.items);
+            com.cleanTypeahead("supervisor");
+            com.closeTip();
+        });
     });
 
     com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {

@@ -190,6 +190,7 @@ jQuery(function($) {
 
                     if (v.user) {
 
+                        // schedule 为工程节点 sort 值，7/8/9/11/12 对应 qualiter1-5（质检各阶段）
                         if (v.schedule == 7) {
                             com.updateTypeahead("qualiter1", v.user.userId, v.user.userName);
                         }

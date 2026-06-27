@@ -52,28 +52,13 @@ jQuery(function($) {
     drawline.btns.updateBtn.bindClick(updateData);
     drawline.btns.saveSuccessBtn.bindClick(saveSuccess);
 
-    drawline.modals.constructionInfoModal.on("hide.bs.modal", function() {
+    // 所有 modal 关闭时统一清空输入与提示
+    $.each([drawline.modals.constructionInfoModal, drawline.modals.applyModal, drawline.modals.editModal, drawline.modals.updateModal], function(i, $modal) {
 
-        com.cleanItems(drawline.items);
-        com.closeTip();
-    });
-
-    drawline.modals.applyModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(drawline.items);
-        com.closeTip();
-    });
-
-    drawline.modals.editModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(drawline.items);
-        com.closeTip();
-    });
-
-    drawline.modals.updateModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(drawline.items);
-        com.closeTip();
+        $modal.on("hide.bs.modal", function() {
+            com.cleanItems(drawline.items);
+            com.closeTip();
+        });
     });
 
     com.datetime(drawline.items.applayTime);
