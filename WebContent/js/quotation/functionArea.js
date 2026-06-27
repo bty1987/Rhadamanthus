@@ -75,126 +75,98 @@
         }
     });
 
-    var displayFunc = (function() {
+    function buildFunctionAreaLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "no",
+            name: "编号",
+            prop: "no",
+            clazz: "grey"
+        }, {
+            field: "version.no",
+            name: "报价版本",
+            prop: "version.no",
+            clazz: "grey"
+        }, {
+            field: "functionAreaType",
+            name: "类型",
+            prop: "functionAreaType",
+            clazz: "red"
+        }, {
+            field: "total",
+            name: "总价",
+            prop: "total",
+            clazz: "blue"
+        }, {
+            field: "functionAreaOrder",
+            name: "排序",
+            prop: "functionAreaOrder",
+            clazz: "blue"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return constant.data().functionArea.status.keys[v.status]; },
+            clazz: "red"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnOtem = $('<a></a>').addClass('btn btn-minier btn-pink').html('量房参数');
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
-            var $btnAssign = $('<a></a>').addClass('btn btn-minier btn-warning').html('分配报价项');
-
-            var $btnStatus = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-
-            var propertyArr = [["编号: ", v.no, "grey"], ["报价版本: ", v.version.no, "grey"], ["类型: ", v.functionAreaType, "red"], ["总价: ", v.total, "blue"], ["排序: ", v.functionAreaOrder, "blue"], ["状态: ", constant.data().functionArea.status.keys[v.status], "red"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $btnStatus.append($statusSwitch).append($span);
-
-            $divBtnWrap.append($btnOtem).append($btnEdit).append($btnAssign).append($btnStatus).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnOtem.click(function() {
-
-                params.data.functionArea = v;
-
-                functionAreaOtem(v);
-            });
-
-            $btnEdit.click(function() {
-
-                com.showConfirm("功能区的类型修改,会清空以前包含的报价项,是否确认修改?", function() {
-
-                    editFunctionArea(v);
-                });
-            });
-
-            $btnAssign.click(function() {
-
-                params.data.functionArea = v;
-
-                com.popup4page("#functionAreaItemPopUp", "/views/quotation/functionAreaItem.html", "功能区-报价项");
-            });
-
-            $btnDel.click(function() {
-
-                removeFunctionArea(v.faid);
-            });
-
-            !v.status && $statusSwitch.prop("checked", true);
-            $statusSwitch.switchBtn("status-lbl").on("click", function() {
-
-                $statusSwitch.prop("checked") ? (updateFunctionAreaStatus(v.faid, 0, function() {
-
-                    $statusSwitch.removeAttr("checked");
-                })) : (updateFunctionAreaStatus(v.faid, 1, function() {
-
-                    $statusSwitch.prop("checked");
-                }));
-            });
-
-            return $liLine;
-        };
+    function buildFunctionAreaLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            otem: {
+                name: "量房参数",
+                clazz: "btn-pink",
+                handle: function(v) {
+                    params.data.functionArea = v;
+                    functionAreaOtem(v);
+                }
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    com.showConfirm("功能区的类型修改,会清空以前包含的报价项,是否确认修改?", function() {
+                        editFunctionArea(v);
+                    });
+                }
+            },
+            assign: {
+                name: "分配报价项",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    params.data.functionArea = v;
+                    com.popup4page("#functionAreaItemPopUp", "/views/quotation/functionAreaItem.html", "功能区-报价项");
+                }
+            },
+            status: {
+                name: "状态",
+                type: "switch",
+                clazz: "status-lbl",
+                init: function(v) {
+                    return !v.status;
+                },
+                handle: function(v, check) {
+                    updateFunctionAreaStatus(v.faid, check ? 0 : 1, null);
+                }
             }
         };
-    })();
+    }
 
-    var _condArr = ['data-quotation-functionArea-name', 'data-quotation-version'];
-
-    var searcher = new Searcher();
-    searcher.init(_condArr, "condList", api.quotation.pageFunctionArea, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "functionAreaPostData", null, false, null, function() {
+    function buildFunctionAreaButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addFunctionArea').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    });
+    }
+
+    var _condArr = ['data-quotation-functionArea-name', 'data-quotation-version'];
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.quotation.pageFunctionArea, null, _condArr, "functionAreaPostData", null, false, buildFunctionAreaButtons);
+    searcher.line("name", buildFunctionAreaLineprops(), buildFunctionAreaLinebtns()).render();
 
     // 功能区添加按钮
     com.focusPage('a[name="addFunctionArea"]', '#pagenation').on('click', function() {
