@@ -56,24 +56,6 @@ CREATE TABLE `backvisit` (
   KEY `indexone` (`orderId`, `createTime`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=335 DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='设计师回访记录表';
 
-DROP TABLE IF EXISTS `company`;
-CREATE TABLE `company` (
-  `cid` int(11) NOT NULL AUTO_INCREMENT,
-  `no` varchar(16) NOT NULL,
-  `code` varchar(10) NULL DEFAULT '',
-  `name` varchar(16) NOT NULL,
-  `shortname` varchar(8) NULL DEFAULT '',
-  `fullname` varchar(32) NOT NULL,
-  `address` varchar(64) NOT NULL,
-  `corporation` varchar(8) NOT NULL,
-  `phone` varchar(16) NOT NULL,
-  `doid` int(11) NULL,
-  `soid` int(11) NULL,
-  `atttype` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: 集团 , 1: 装修 , 2: 家居 , 3: 工程 , 4: 建材 , 5: 房产 , 6: 科技 , 7: 其他',
-  `status` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`cid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='公司表';
-
 DROP TABLE IF EXISTS `decoration`;
 CREATE TABLE `decoration` (
   `doid` int(11) unsigned NOT NULL AUTO_INCREMENT,
