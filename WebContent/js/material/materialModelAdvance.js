@@ -1,107 +1,87 @@
 $(function () {
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法 tableId ，用来显示的div的id result.list 列表的json数组
-     */
-    var displayFunc = (function () {
+    function buildMaterialModelAdvanceLineprops() {
 
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "materialModelNo",
+            name: "编号",
+            prop: "materialModelNo",
+            clazz: "grey"
+        }, {
+            field: "materialTypeName",
+            name: "品类",
+            prop: "materialTypeName",
+            clazz: "grey"
+        }, {
+            field: "materialBrandName",
+            name: "品牌",
+            prop: "materialBrandName",
+            clazz: "grey"
+        }, {
+            field: "measurementUnitName",
+            name: "单位",
+            prop: "measurementUnitName",
+            clazz: "grey"
+        }, {
+            field: "materialPurchasePrice",
+            name: "进价",
+            prop: "materialPurchasePrice",
+            clazz: "blue"
+        }, {
+            field: "materialUnitPrice",
+            name: "标价",
+            prop: "materialUnitPrice",
+            clazz: "blue"
+        }, {
+            field: "discount",
+            name: "折扣",
+            prop: "discount",
+            clazz: "blue"
+        }, {
+            field: "calcType",
+            name: "计算方式",
+            prop: function(v) { return "1" == v.calcType ? "点位" : "0" == v.calcType ? "底价" : ""; },
+            clazz: function(v) { return "1" == v.calcType ? "label label-success arrowed" : "0" == v.calcType ? "label label-danger arrowed" : ""; }
+        }, {
+            field: "calcValue",
+            name: "计算值",
+            prop: function(v) { return "1" == v.calcType ? v.point : "0" == v.calcType ? v.base : ""; },
+            clazz: "blue"
+        }];
+    }
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function (v) {
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.materialModelName));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnAdvance = $('<a></a>').addClass('btn btn-minier btn-success').html('高级');
-            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-warning').html('删除');
-
-            var $btnStatus = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type": "checkbox"});
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-            var propertyArr = [
-                ["编号:", v.materialModelNo, "grey"],
-                ["品类:", v.materialTypeName, "grey"],
-                ["品牌:", v.materialBrandName, "grey"],
-                ["单位:", v.measurementUnitName, "grey"],
-                ["进价:", v.materialPurchasePrice, "blue"],
-                ["标价:", v.materialUnitPrice, "blue"],
-                ["折扣:", v.discount, "blue"],
-                ["计算方式:", "1" == v.calcType ? "点位" : "0" == v.calcType ? "底价" : "", "1" == v.calcType ? "label label-success arrowed" : "0" == v.calcType ? "label label-danger arrowed" : ""],
-                ["计算值:", "1" == v.calcType ? v.point : "0" == v.calcType ? v.base : "", "blue"]
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $btnStatus.append($statusSwitch).append($span);
-
-            $divBtnWrap.append($btnEdit).append($btnAdvance).append($btnStatus).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnEdit.click(function () {
-                editMaterial(v);
-            });
-
-            $btnAdvance.click(function () {
-                advanceMaterial(v);
-            });
-
-            $btnDelete.click(function () {
-                com.showConfirm("确定删除吗?", function () {
-                    deleteMaterial(v.mmId);
-                });
-            });
-
-            !v.status && $statusSwitch.prop("checked", true);
-            $statusSwitch.switchBtn("status-lbl").on("click", function () {
-                $statusSwitch.prop("checked") ? (updateStatus(v.mmId, 0, function () {
-                    $statusSwitch.removeAttr("checked");
-                })) : (updateStatus(v.mmId, 1, function () {
-                    $statusSwitch.prop("checked");
-                }));
-            });
-
-            return $liLine;
-        };
+    function buildMaterialModelAdvanceLinebtns() {
 
         return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    editMaterial(v);
+                }
             },
-            drawLine: function (v) {
-                return creatLine(v);
+            advance: {
+                name: "高级",
+                clazz: "btn-success",
+                handle: function(v) {
+                    advanceMaterial(v);
+                }
+            },
+            status: {
+                name: "状态",
+                type: "switch",
+                clazz: "status-lbl",
+                init: function(v) {
+                    return !v.status;
+                },
+                handle: function(v, check) {
+                    updateStatus(v.mmId, check ? 0 : 1, null);
+                }
             }
         };
-    })();
+    }
 
-    var _condArr = ['data-model-no', 'data-model-name', 'data-model-category', 'data-model-brand'];
-
-    var searcher = new Searcher();
-
-    searcher.init(_condArr, "condList", api.material.pageMaterialModelForAdvance, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "materialModelAdvancePostData", null, false, null, function () {
+    function buildMaterialModelAdvanceButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -116,7 +96,12 @@ $(function () {
         var $importspan = $('<span></span>').text('上传').appendTo($importa);
 
         return [$adda, $exporta, $importa];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialModelForAdvance, null, ['data-model-no', 'data-model-name', 'data-model-category', 'data-model-brand'], "materialModelAdvancePostData", null, false, buildMaterialModelAdvanceButtons);
+    searcher.line("materialModelName", buildMaterialModelAdvanceLineprops(), buildMaterialModelAdvanceLinebtns()).render();
 
     var materialModel = {
         $nowLine: null,
