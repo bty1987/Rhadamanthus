@@ -1025,3 +1025,109 @@ Searcher 的 table 模式只会对该 `prop(v)` 调用一次并把结果当作**
 - `grep -rn "searcher\.init" WebContent/js/salary/*.js`：1 命中，为排除文件 `designerSalary.js` 死代码注释块。
 
 
+## 20. 剩余模块批量迁移记录（market/building/material/system/store/manifest/quotation/production）
+
+本轮对剩余 8 个模块进行批量迁移，按模块记录如下。
+
+### 20.1 market 模块（5 文件）
+
+| 文件 | 特征 |
+|------|------|
+| `card.js` | img lineprop 头像缩略图 + 7 属性 + 编辑/照片墙按钮 |
+| `ecase.js` | 10 属性 + 编辑/图片/状态开关(type:switch) + 添加按钮 |
+| `ecity.js` | 3 属性 + 添加按钮 |
+| `ecustomer.js` | 5 属性（城市映射 prop fn） |
+| `eperson.js` | img lineprop 头像 + 6 属性 + 编辑按钮 + 添加按钮 |
+
+排除：`eopinions.js`（`seacher` 拼写但已用新式 base API）；其余非列表页。
+
+### 20.2 building 模块（7 文件）
+
+| 文件 | 特征 |
+|------|------|
+| `building.js` | 11 属性 + 查看/更改支付方式/生成款项/合同终止按钮 + 添加/创建代理人按钮 |
+| `buildingCustomer.js` | 11 属性 + 编辑/绑定房源/跟进记录/状态开关(type:switch) |
+| `buildingHouse.js` | 11 属性 + 申请审核/图片/查看/绑定客源/跟进记录/状态开关（多个 show 状态条件） |
+| `buildingHouse4advance.js` | 11 属性 + 图片/查看/转移房源/绑定客源/跟进记录/通过/驳回/收钥匙人/状态开关（status 0-4 多分支） |
+| `buildingHouse4query.js` | 11 属性 + 查看按钮 |
+| `buildingNode.js` | 2 属性 + 编辑/状态开关(type:switch) + 添加按钮 |
+| `buildingRecord.js` | 7 属性 + 函数标题（currenFlag 房源/客源分支） |
+
+### 20.3 material 模块（10 文件）
+
+| 文件 | 特征 |
+|------|------|
+| `decorationMaterial.js` | 7 属性 + 子订单按钮 |
+| `materialCollection.js` | 双分支行(rowShow) + newline + 动态支付方式字段（show 条件） |
+| `materialModel.js` | 8 属性 + 删除按钮 + 添加/导出按钮 |
+| `materialModelAdvance.js` | 9 属性 + 编辑/高级/状态开关(type:switch) + 添加/导出/上传按钮 |
+| `materialBalanceValue.js` | 9 属性（calcType 函数 clazz） + 编辑按钮，修复 seacher->searcher |
+| `materialRefund.js` | 3 分支条件渲染(packageName/brand) + checkbox + 函数标题 |
+| `materialPreBalance.js` | checkbox + 13 属性 + 子项/抹零按钮 + 预结/完结按钮 |
+| `materialPostBalance.js` | 22 属性 + 8 按钮（厂结值/厂结/结算值/结算/收款/子项/退货，status+type 条件） + 导出 |
+| `materialPreBalanceDetail.js` | 3 分支条件渲染 + 套餐副作用收集 + 函数标题 |
+| `material.js` | 13 属性 + 8 按钮（添项/补货/子项/款项/收款/退货/打印/活动，fullStatus+status 条件） |
+
+排除：`materialPostBalanceDetail.js`（自定义 displayFunc，无 Searcher）。
+
+### 20.4 system 模块（10 文件）
+
+| 文件 | 特征 |
+|------|------|
+| `city.js` | 3 属性 + 编辑/删除/位置按钮 + 添加按钮 |
+| `cityProper.js` | 3 属性 + 合作/编辑/删除/位置按钮 + 添加按钮 |
+| `company.js` | 11 属性 + 编辑/组织/状态开关(type:switch) + 添加按钮 |
+| `password2reset.js` | 6 属性 + 重置密码按钮 + 添加按钮 |
+| `region.js` | 函数标题 + 编辑/删除按钮 + 添加按钮 |
+| `role.js` | 2 属性 + 11 按钮（pageType advance 条件） + 添加按钮（条件返回） |
+| `role4base.js` | 2 属性 + 模块配置/操作配置/编辑/删除/外链配置按钮 + 添加按钮 |
+| `systemConfig.js` | 3 属性 + 函数标题(KEY/Value) + 更新按钮 |
+| `upgradePackage.js` | 6 属性 + 上线/下线(show status)/删除按钮 + 添加按钮，修复 seacher->searcher |
+| `version.js` | 2 属性 + 编辑/已启用/已禁用(show status)/删除按钮 + 添加按钮 |
+
+排除：`company4config.js`（自定义表格 displayFunc + 多 Searcher）。
+
+### 20.5 store 模块（1 文件）
+
+| 文件 | 特征 |
+|------|------|
+| `morder.js` | 6 属性（JSON.parse address） + 发货/收货/订单项按钮（status 条件） |
+
+排除：`coupon.js`/`mbrand.js`/`mcategory.js`/`mgoods.js`/`muser.js`（flex-table 自定义表格布局，与 Searcher line 模式不兼容）。
+
+### 20.6 manifest 模块（全部排除）
+
+3 个文件（`manifest.js`/`manifestTemplate.js`/`manifestTemplateItem2add.js`）均使用 flex-table 自定义表格布局，与 Searcher line 模式不兼容，全部排除。
+
+### 20.7 quotation 模块（1 文件）
+
+| 文件 | 特征 |
+|------|------|
+| `systemDefineItem.js` | 7 属性 + 编辑/删除/状态开关/打折开关(type:switch x2) + 添加按钮 |
+
+排除（高风险大型文件，需单独细致处理）：`functionArea.js`(583行)、`selectionItem.js`(1322行)、`addReduceIndex.js`(1151行)、`protationPart.js`(1708行)、`quotetionPart.js`(4257行)。这些文件含嵌套 Searcher、自定义渲染、复杂业务逻辑，机械迁移风险高，建议后续单独处理。
+
+### 20.8 production 模块（2 文件）
+
+| 文件 | 特征 |
+|------|------|
+| `productionPlan.js` | pageConfig 驱动 lineprops/pageBtn + 计划项/生产进度/上传/完结按钮(status 条件) |
+| `productionPlanItem.js` | 7 属性 + 删除按钮(status 条件) + 添加按钮(hidBtn 条件) |
+
+排除：`quoteItem.js`（flex-table 自定义表格布局）。
+
+### 20.9 排除迁移汇总（本轮）
+
+| 排除类型 | 文件 | 依据 |
+|---------|------|------|
+| 无 Searcher | sales/sales4inventory.js, report 3 文件, payment 3 文件(customer/walletard/walletran) | 自定义 displayFunc，无 new Searcher |
+| flex-table 自定义表格 | store 5 文件, manifest 3 文件, production quoteItem.js | flex-table 表格布局与 Searcher line 模式不兼容 |
+| 高风险大型文件 | quotation 5 文件(functionArea/selectionItem/addReduceIndex/protationPart/quotetionPart) | 嵌套 Searcher + 复杂业务逻辑，机械迁移风险高 |
+| 自定义表格 displayFunc | system company4config.js | 多 Searcher + 表格 displayFunc |
+
+### 20.10 验证
+
+各模块 `node --check` 全部通过，`displayFunc`/`searcher.init` 残留均为排除文件（flex-table / 自定义 displayFunc / 高风险大型文件）。
+
+
+
