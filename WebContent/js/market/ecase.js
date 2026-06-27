@@ -209,7 +209,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.market.pageEcase, null, ["market-ecase-city", "market-designer", "market-supervisor", "market-picture-type", "market-style", "market-houseType", "market-area"], "casePostData", null, false, buildEcaseButtons);
+    searcher.set("condList", "pagenation", "resultList", api.market.pageEcase, null, ["market-ecase-city", "market-designer", "market-supervisor", "market-picture-type", "market-style", "market-houseType", "market-area"], "casePostData", null, false, buttons);
     searcher.line("villageName", lineprops, linebtns).render();
 
     // 添加

@@ -121,7 +121,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.personel.PageUserRequire, null, [], "userRequirePostData_test_", null, false, buildUserRequireButtons);
+    searcher.set("condList", "pagenation", "resultList", api.personel.PageUserRequire, null, [], "userRequirePostData_test_", null, false, buttons);
     searcher.line("creater.userName", lineprops, linebtns).render();
 
     com.focusPage('[name="addplan"]', '#pagenation').on("click", function () {  // 选择器 [属性名="属性值"] 匿名函数

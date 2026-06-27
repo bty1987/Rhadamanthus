@@ -340,7 +340,7 @@ $(function() {
 
     var salesSwitchManifestForXGSearcher = new Searcher();
 
-    salesSwitchManifestForXGSearcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, 'salesSwitchManifestForXGPostData', null, false, buildManifestButtons);
+    salesSwitchManifestForXGSearcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, 'salesSwitchManifestForXGPostData', null, false, buttons);
     salesSwitchManifestForXGSearcher.line('no', lineprops, linebtns).render(function() {
 
         com.focusPage('input[name="fullpayTime"]').parent('.inline').addClass('m-wrap m-ctrl-medium date-picker');

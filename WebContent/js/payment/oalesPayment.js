@@ -364,7 +364,7 @@ jQuery(function($) {
         extraParams["oalesPayment.status"] = oalesPayment.pageConfig.statusExtraParam[0];
     }
 
-    searcher.set("condList", "pagenation", "resultList", oalesPayment.pageConfig.apiPage, extraParams, oalesPayment.pageConfig.condArr, "oalesPaymentPostData" + oalesPayment.type, null, false, buildOalesButtons);
+    searcher.set("condList", "pagenation", "resultList", oalesPayment.pageConfig.apiPage, extraParams, oalesPayment.pageConfig.condArr, "oalesPaymentPostData" + oalesPayment.type, null, false, buttons);
     searcher.line(function(v) {
 
         return oalesPayment.paymentType[v.type];

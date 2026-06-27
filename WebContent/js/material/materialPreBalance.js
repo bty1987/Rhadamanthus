@@ -149,7 +149,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialForPreBalance, null, ["material-orderId", "material-no", "material-village", "material-salesman", "material-brand", "material-fullpayTime"], "materialOrderPreBalancePostData", null, false, buildMaterialPreBalanceButtons);
+	searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialForPreBalance, null, ["material-orderId", "material-no", "material-village", "material-salesman", "material-brand", "material-fullpayTime"], "materialOrderPreBalancePostData", null, false, buttons);
 	searcher.line("no", lineprops, linebtns).render();
 
 	//点预结

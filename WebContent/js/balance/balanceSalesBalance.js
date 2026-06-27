@@ -340,7 +340,7 @@ $(function() {
 
     searcher.set("bsbcondList", "bsbpagenation", "bsbresultList", api.balance.pageBalanceSalesBalance, {
         "balanceSalesBalance.bsid": balanceSalesBalance.bsid
-    }, ["balance-salesBalance-sales-orderId"], "balanceSalesBalancePostData", null, false, buildBalanceSalesBalanceButtons);
+    }, ["balance-salesBalance-sales-orderId"], "balanceSalesBalancePostData", null, false, buttons);
     searcher.line("salesBalance.sales.no", lineprops, linebtns).render();
 
     function exports1() {

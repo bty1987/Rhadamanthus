@@ -94,7 +94,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.set("condList", "pagenation", "resultList", api.building.pageBuildingNode, null, ['building-node-type'], "buildingNodePostData", null, false, buildBuildingNodeButtons);
+	searcher.set("condList", "pagenation", "resultList", api.building.pageBuildingNode, null, ['building-node-type'], "buildingNodePostData", null, false, buttons);
 	searcher.line("name", lineprops, linebtns).render();
 
 	//添加

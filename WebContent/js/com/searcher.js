@@ -922,6 +922,7 @@ var Searcher = function() {
             basicConf.$resulter = resulterId ? resulterId : "resultList";
 
             buttons && typeof buttons == "function" && (basicConf.buttons = buttons());
+            buttons && $.isArray(buttons) && (basicConf.buttons = buttons);
 
             !isPage && paging.init(); // 绑定上一页下一页事件
 
@@ -952,6 +953,7 @@ var Searcher = function() {
             basicConf.$resulter = resulterId ? resulterId : "resultList";
 
             buttons && typeof buttons == "function" && (basicConf.buttons = buttons());
+            buttons && $.isArray(buttons) && (basicConf.buttons = buttons);
 
             return this;
         },
@@ -999,7 +1001,7 @@ var Searcher = function() {
 
             buttons && typeof buttons == "function" && (basicConf.buttons = buttons());
 
-            buttons && typeof $.isArray(buttons) && ($.each(buttons, function(i, b) {
+            buttons && $.isArray(buttons) && ($.each(buttons, function(i, b) {
 
                 var $adda = $('<a></a>').addClass('btn btn-minier ' + b.clazz + ' pull-left').attr('id', b.id).attr("name", b.id).css("margin", "0px 3px");
                 var $addi = $('<i></i>').addClass('bigger-110 ' + b.icon).appendTo($adda);
@@ -1742,7 +1744,7 @@ var Searcher = function() {
 
         render: function(callback) {
 
-            basicConf.buttons && typeof basicConf.buttons == "function" && (basicConf.buttons = buttons());
+            basicConf.buttons && typeof basicConf.buttons == "function" && (basicConf.buttons = basicConf.buttons());
 
             !basicConf.isPage && paging.init(); // 绑定上一页下一页事件
 

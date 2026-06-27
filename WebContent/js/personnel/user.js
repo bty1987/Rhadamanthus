@@ -1263,7 +1263,7 @@ $(function() {
 
     var userSeacher = new Searcher();
 
-    userSeacher.set("condList", "pagenation", "resultList", user.pageConfig.apiPage, null, user.pageConfig.condArr, user.pageType + "UserPostData", null, false, buildUserButtons);
+    userSeacher.set("condList", "pagenation", "resultList", user.pageConfig.apiPage, null, user.pageConfig.condArr, user.pageType + "UserPostData", null, false, buttons);
     userSeacher.line("userName", lineprops, linebtns).render();
 
     binding.setAdvance();

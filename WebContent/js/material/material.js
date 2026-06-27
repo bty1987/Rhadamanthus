@@ -293,7 +293,7 @@ jQuery(function($) {
 
     searcher.set("condList", "pagenation", "resultList", materialUrl, {
         "material.orderId": orderId
-    }, [], materialOrderPostData, null, false, buildMaterialButtons);
+    }, [], materialOrderPostData, null, false, buttons);
     searcher.line("no", lineprops, linebtns).render();
 
     com.focusPage('a[name="back"]', '#pagenation').click(function() {

@@ -516,7 +516,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", selectionItem.pageConfig.apiPage, selectionItem.status, selectionItem.pageConfig.condArr, selectionItem.postData, null, false, buildSelectionItemButtons);
+    searcher.set("condList", "pagenation", "resultList", selectionItem.pageConfig.apiPage, selectionItem.status, selectionItem.pageConfig.condArr, selectionItem.postData, null, false, buttons);
     searcher.line("goods.name", lineprops, linebtns).render();
 
     function pageExportStoreImport() {

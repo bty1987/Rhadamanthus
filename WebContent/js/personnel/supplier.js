@@ -247,7 +247,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.personel.pageSupplier, null, ['personel-userId', 'personel-userName', 'personel-userstatus', 'personel-phone'], "supplierPostData", null, false, buildSupplierButtons);
+    searcher.set("condList", "pagenation", "resultList", api.personel.pageSupplier, null, ['personel-userId', 'personel-userName', 'personel-userstatus', 'personel-phone'], "supplierPostData", null, false, buttons);
     searcher.line("userName", lineprops, linebtns).render();
 
     com.focusPage('a[name="addSupplier"]', '#pagenation').click(function() {

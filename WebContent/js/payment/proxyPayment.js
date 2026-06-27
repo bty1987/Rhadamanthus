@@ -234,7 +234,7 @@ jQuery(function($) {
         extraParams["proxyPayment.status"] = proxyPayment.pageConfig.statusExtraParam[0];
     }
 
-    searcher.set("condList", "pagenation", "resultList", proxyPayment.pageConfig.apiPage, extraParams, proxyPayment.pageConfig.condArr, "proxyPaymentPostData" + proxyPayment.type, null, false, buildProxyButtons);
+    searcher.set("condList", "pagenation", "resultList", proxyPayment.pageConfig.apiPage, extraParams, proxyPayment.pageConfig.condArr, "proxyPaymentPostData" + proxyPayment.type, null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     // 创建代付款窗口

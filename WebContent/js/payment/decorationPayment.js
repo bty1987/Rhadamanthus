@@ -648,7 +648,7 @@ jQuery(function($) {
         extraParams["decorationPayment.oneType"] = decorationPayment.pageConfig.typeExtraParam[0];
     }
 
-    searcher.set("condList", "pagenation", "resultList", decorationPayment.pageConfig.apiPage, extraParams, decorationPayment.pageConfig.condArr, "decorationPaymentPostData" + decorationPayment.type, null, false, buildDecorationPaymentButtons);
+    searcher.set("condList", "pagenation", "resultList", decorationPayment.pageConfig.apiPage, extraParams, decorationPayment.pageConfig.condArr, "decorationPaymentPostData" + decorationPayment.type, null, false, buttons);
     searcher.line("paymentType", lineprops, linebtns).render();
 
     // 要在searcher后面

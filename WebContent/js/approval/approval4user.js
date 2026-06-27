@@ -91,7 +91,7 @@ jQuery(function($) {
      */
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.approval.pageApprover, null, ["approval-approver-username", "approval-type"], "approvalUserPostData", null, false, buildApprovalUserButtons);
+    searcher.set("condList", "pagenation", "resultList", api.approval.pageApprover, null, ["approval-approver-username", "approval-type"], "approvalUserPostData", null, false, buttons);
     searcher.line("userBase.currentName", lineprops, linebtns).render();
 
     /**

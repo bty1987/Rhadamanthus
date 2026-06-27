@@ -97,7 +97,7 @@ jQuery(function ($) {
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageCustomerServiceGuarantee, {
         "customerServiceGuarantee.orderId": params.construction.orderId
-    }, [], "searcherPostData", null, false, buildCustomer4guaranteeButtons);
+    }, [], "searcherPostData", null, false, buttons);
     searcher.line("orderId", lineprops, linebtns).render();
 
     com.focusPage('#add', '#pagenation').click(function () {

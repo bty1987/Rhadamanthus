@@ -272,7 +272,7 @@ jQuery(function($) {
         extraParams["activityPayment.status"] = activityPayment.pageConfig.statusExtraParam[0];
     }
 
-    searcher.set("condList", "pagenation", "resultList", activityPayment.pageConfig.apiPage, extraParams, activityPayment.pageConfig.condArr, "activityPaymentPostData" + activityPayment.type, null, false, buildActivityButtons);
+    searcher.set("condList", "pagenation", "resultList", activityPayment.pageConfig.apiPage, extraParams, activityPayment.pageConfig.condArr, "activityPaymentPostData" + activityPayment.type, null, false, buttons);
     searcher.line(function(v) {
 
         return activityPayment.paymentType[v.type];

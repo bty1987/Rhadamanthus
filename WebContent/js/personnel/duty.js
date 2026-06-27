@@ -51,7 +51,7 @@ $(function() {
 
     var dutySeacher = new Searcher();
 
-    dutySeacher.set("condList", "pagenation", "resultList", api.system.pageDuty, null, ["personel-duty-name"], "dutyPostData", null, false, buildDutyButtons);
+    dutySeacher.set("condList", "pagenation", "resultList", api.system.pageDuty, null, ["personel-duty-name"], "dutyPostData", null, false, buttons);
     dutySeacher.line(function(v) { return v.name + (v.code ? ' [' + v.code + ']' : ''); }, lineprops, linebtns).render();
 
     // 定义全局变量 json

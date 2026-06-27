@@ -102,7 +102,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("paceCondList", "pacePagenation", "paceResultList", api.data.pageConstructionPace, null, ["data-constructionPace-name"], "constructionPacePostData", null, false, buildPaceButtons);
+    searcher.set("paceCondList", "pacePagenation", "paceResultList", api.data.pageConstructionPace, null, ["data-constructionPace-name"], "constructionPacePostData", null, false, buttons);
     searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#addConstructionPace').click(function() {

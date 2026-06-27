@@ -60,7 +60,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.personel.pageUser, null, ["userId", "userName"], "resetPwdPostData", null, false, buildPassword2resetButtons);
+    searcher.set("condList", "pagenation", "resultList", api.personel.pageUser, null, ["userId", "userName"], "resetPwdPostData", null, false, buttons);
     searcher.line("userName", lineprops, linebtns).render();
 
     function resetPassword(userId, userName){

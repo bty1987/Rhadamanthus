@@ -95,7 +95,7 @@ jQuery(function($) {
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageReworkByOrderId, {
         "rework.orderId": params.construction.orderId
-    }, [], "supervisionReworkPostData", null, false, buildSupervision4reworkButtons);
+    }, [], "supervisionReworkPostData", null, false, buttons);
     searcher.line("", lineprops, linebtns).render();
 
     com.focusPage('#add', '#pagenation').click(function() {

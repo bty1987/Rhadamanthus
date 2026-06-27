@@ -327,7 +327,7 @@ jQuery(function($) {
 		extraParams["materialPayment.paymentTypes"] = "["+materialPayment.pageConfig.typeExtraParam.toString()+"]";
 	}
 
-		searcher.set("condList", "pagenation", "resultList", materialPayment.pageConfig.apiPage, extraParams, materialPayment.pageConfig.condArr, "materialPaymentPostData" + materialPayment.type, null, false, buildMaterialButtons);
+		searcher.set("condList", "pagenation", "resultList", materialPayment.pageConfig.apiPage, extraParams, materialPayment.pageConfig.condArr, "materialPaymentPostData" + materialPayment.type, null, false, buttons);
 		searcher.line(function(v) {
 			return materialPayment.materialPaymentTypeData[v.paymentType];
 		}, lineprops, linebtns).render();

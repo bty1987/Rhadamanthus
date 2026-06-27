@@ -263,7 +263,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.set("condList", "pagenation", "resultList", api.building.pageBuilding, null, ["buildingNo"], "buildingPostData", null, false, buildBuildingButtons);
+	searcher.set("condList", "pagenation", "resultList", api.building.pageBuilding, null, ["buildingNo"], "buildingPostData", null, false, buttons);
 	searcher.line("no", lineprops, linebtns).render();
 
 	// 添加

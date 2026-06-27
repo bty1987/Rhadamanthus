@@ -50,7 +50,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.market.pageEcity, null, ["market-city"], "ecityPostData", null, false, buildEcityButtons);
+    searcher.set("condList", "pagenation", "resultList", api.market.pageEcity, null, ["market-city"], "ecityPostData", null, false, buttons);
     searcher.line("city", lineprops, {}).render();
 
     // 添加

@@ -116,7 +116,7 @@ jQuery(function ($) {
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageCustomerServiceBackVisit, {
         "customerServiceBackVisit.orderId": params.construction.orderId
-    }, [], "customerServiceBackVisitPostData", null, false, buildCustomer4feedbackButtons);
+    }, [], "customerServiceBackVisitPostData", null, false, buttons);
     searcher.line("orderId", lineprops, linebtns).render();
 
     com.focusPage('#Add', '#pagenation').click(function () {

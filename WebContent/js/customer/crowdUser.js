@@ -72,7 +72,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condListas", "pagenationas", "resultListas", api.decoration.queryDecorationUser, {"decorationUser.orderId": approve.gorderId}, [], "groupUserPostData", null, false, buildCrowdUserButtons);
+    searcher.set("condListas", "pagenationas", "resultListas", api.decoration.queryDecorationUser, {"decorationUser.orderId": approve.gorderId}, [], "groupUserPostData", null, false, buttons);
     searcher.line("user.currentName", lineprops, linebtns).render();
 
     com.focusPage('#addGroupUser', '#pagenationas').click(function () {

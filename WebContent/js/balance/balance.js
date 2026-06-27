@@ -254,7 +254,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.balance.pageBalance, null, ["balance-balance-no", "balance-balance-type", "balance-balance-status", "balance-balance-isPay"], "balancePostData", null, false, buildBalanceButtons);
+    searcher.set("condList", "pagenation", "resultList", api.balance.pageBalance, null, ["balance-balance-no", "balance-balance-type", "balance-balance-status", "balance-balance-isPay"], "balancePostData", null, false, buttons);
     searcher.line("no", lineprops, linebtns).render();
 
     com.focusPage("#addBalance").click(function() {

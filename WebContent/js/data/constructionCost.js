@@ -123,7 +123,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.data.pageConstructionCost, null, ["data-construction-cost-name"], "constructionCostPostData", null, false, buildConstructionCostButtons);
+    searcher.set("condList", "pagenation", "resultList", api.data.pageConstructionCost, null, ["data-construction-cost-name"], "constructionCostPostData", null, false, buttons);
     searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#addConstructionCost').click(function(){

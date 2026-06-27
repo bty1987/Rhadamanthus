@@ -156,7 +156,7 @@ $(function() {
 
     var userSeacher = new Searcher();
 
-    userSeacher.set("condList", "pagenation", "resultList", api.personel.pageUser, null, ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity', 'phone'], "userPostData", null, false, buildUserBaseButtons);
+    userSeacher.set("condList", "pagenation", "resultList", api.personel.pageUser, null, ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity', 'phone'], "userPostData", null, false, buttons);
     userSeacher.line("userName", lineprops, linebtns).render();
 
     com.focusPage('a[name="addUser"]', '#pagenation').click(function() {
