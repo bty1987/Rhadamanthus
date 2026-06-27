@@ -5,10 +5,10 @@ jQuery(function($) {
         constructionSchedules: {},
 
         status: {},
-        onetype: {},
-        towtype: {},
+        oneTypeMap: {},
+        twoTypeMap: {},
 
-        twotypes: [],
+        twoTypes: [],
 
         validator: {
             salary: {
@@ -24,10 +24,10 @@ jQuery(function($) {
     com.post(api.ds.salary, {}, function(res) {
 
         supervision4detail.status = res.status.split("key", "value");
-        supervision4detail.onetype = res.SalaryTwoType.split("key", "oneType");
-        supervision4detail.towtype = res.SalaryTwoType.split("key", "name");
+        supervision4detail.oneTypeMap = res.SalaryTwoType.split("key", "oneType");
+        supervision4detail.twoTypeMap = res.SalaryTwoType.split("key", "name");
 
-        supervision4detail.twotypes = res.SalaryTwoType;
+        supervision4detail.twoTypes = res.SalaryTwoType;
     }, null, false);
 
     $.extend(com.validator, supervision4detail.validator);
@@ -349,7 +349,7 @@ jQuery(function($) {
 
                 var workerSalary = $('<div></div>').prop("id", "salary" + i);
 
-                workerSalary.append(addspan('10', '姓名  : ', v.user.userName)).append(addspan('40', '创建时间  : ', v.createTime)).append(addspan('40', '薪资  : ', v.money)).append(addspan('40', '类型  : ', supervision4detail.towtype[v.twotype])).append(addspan('40', '状态  : ', supervision4detail.status[v.status])).append($('<button>删除</button>').addClass("btn btn-xs btn-danger pull-right").css("margin-left", "35px").attr("id", "deleteBtn" + i).click(function() {
+                workerSalary.append(addspan('10', '姓名  : ', v.user.userName)).append(addspan('40', '创建时间  : ', v.createTime)).append(addspan('40', '薪资  : ', v.money)).append(addspan('40', '类型  : ', supervision4detail.twoTypeMap[v.twotype])).append(addspan('40', '状态  : ', supervision4detail.status[v.status])).append($('<button>删除</button>').addClass("btn btn-xs btn-danger pull-right").css("margin-left", "35px").attr("id", "deleteBtn" + i).click(function() {
 
                     var data = {
                         "workerSalary.wsId": v.wsId
@@ -378,7 +378,7 @@ jQuery(function($) {
             var $item = $('<span></span>').addClass('inline').appendTo(salaryDivTh);
             var salaryTypeS = $('<select></select>').attr("id", "salaryType").css("width", "320px").css("height", "30px").appendTo($item);
 
-            $.each(supervision4detail.twotypes, function(i, v) {
+            $.each(supervision4detail.twoTypes, function(i, v) {
 
                 if (v.status != 0)
                     return true;
@@ -444,7 +444,7 @@ jQuery(function($) {
         }
 
         options["workerSalary.money"] = com.focusPage('#salary').val();
-        options["workerSalary.onetype"] = supervision4detail.onetype[com.focusPage("#salaryType").val()];
+        options["workerSalary.onetype"] = supervision4detail.oneTypeMap[com.focusPage("#salaryType").val()];
         options["workerSalary.twotype"] = com.focusPage("#salaryType").val();
         options["workerSalary.comment"] = com.focusPage("#comment").val();
 
