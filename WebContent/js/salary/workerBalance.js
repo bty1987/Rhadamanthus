@@ -78,126 +78,100 @@ $(function () {
         deposit.statusBalance=data.statusBalance.split("key", "value");
     }, null, false);
 
-    var displayFunc = (function () {
+    function buildWorkerBalanceLineprops() {
 
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "salary",
+            name: "工费",
+            prop: "salary",
+            clazz: "blue"
+        }, {
+            field: "user.dept.name",
+            name: "部门",
+            prop: "user.dept.name",
+            clazz: "grey"
+        }, {
+            field: "user.duty.name",
+            name: "工种",
+            prop: "user.duty.name",
+            clazz: "grey"
+        }, {
+            field: "deposit",
+            name: "质保金",
+            prop: "deposit",
+            clazz: "blue"
+        }, {
+            field: "toplimit",
+            name: "质保金上限",
+            prop: "toplimit",
+            clazz: "blue"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return deposit.statusBalance[v.status]; },
+            clazz: "red"
+        }];
+    }
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
-        var creatLine = function (v) {
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $collectbtn = $('<a></a>').addClass('btn btn-minier btn-warning').html('收取质保金');
-            var $drawbtn = $('<a></a>').addClass('btn btn-minier btn-inverse').html('提现质保金');
-            var $cutbtn = $('<a></a>').addClass('btn btn-minier btn-yellow').html('扣款');
-            var $pushbtn = $('<a></a>').addClass('btn btn-minier btn-success').html('发放');
-            var $updatebtn = $('<a></a>').addClass('btn btn-minier btn-danger').html('更新上限');
-
-            var $label = $('<label></label>').addClass('control-label').css({
-                'color': 'grey',
-                'font-size': '20px',
-                "font-weight": "bold"
-            });
-
-            var _label = $('<label></label>');
-
-            var propertyArr = [
-                ["工费:", v.salary, "blue"],
-                ["部门:", v.user.dept.name, "grey"],
-                ["工种:", v.user.duty.name, "grey"],
-                ["质保金:", v.deposit, "blue"],
-                ["质保金上限:", v.toplimit, "blue"],
-                ["状态:", deposit.statusBalance[v.status], "red"],
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-                $label.appendTo($h3);
-            });
-
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.user.currentName);
-
-            _label.append(_span).appendTo($label);
-
-            $divBtnWrap.append($cutbtn).append($pushbtn).append($collectbtn).append($drawbtn).append($updatebtn).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            //扣款工费
-            $cutbtn.click(function () {
-                deposit.uid = v.user.userId;
-                com.popup4model('#workerLabor', "扣款", function () {
-                    com.cleanItems(deposit.items);
-                    deposit.items.workerUserLabor.val(v.user.currentName);
-                });
-            });
-
-            //发放工费
-            $pushbtn.click(function () {
-                deposit.uid = v.user.userId;
-                com.popup4model('#workerSalary', "发放", function () {
-                    com.cleanItems(deposit.items);
-                    deposit.items.workerUser.val(v.user.currentName);
-                });
-            });
-
-            //收取质保金
-            $collectbtn.click(function () {
-                deposit.uid = v.user.userId;
-                com.popup4model('#workerBalance', "收取质保金", function () {
-                    com.cleanItems(deposit.items);
-                });
-            });
-
-            //提现质保金
-            $drawbtn.click(function () {
-                deposit.uid = v.user.userId;
-                com.popup4model('#workerGold', "提现质保金", function () {
-                    com.cleanItems(deposit.items);
-                });
-            });
-
-            //更新质保金上限
-            $updatebtn.click(function () {
-                com.popup4model('#updateBalance', "更新上限", function () {
-                    com.cleanItems(deposit.items);
-                    deposit.wbid = v.wbid;
-                });
-            });
-
-            return $liLine;
-        };
+    function buildWorkerBalanceLinebtns() {
 
         return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            cut: {
+                name: "扣款",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    deposit.uid = v.user.userId;
+                    com.popup4model('#workerLabor', "扣款", function () {
+                        com.cleanItems(deposit.items);
+                        deposit.items.workerUserLabor.val(v.user.currentName);
+                    });
+                }
             },
-            drawLine: function (v) {
-                return creatLine(v);
+            push: {
+                name: "发放",
+                clazz: "btn-success",
+                handle: function(v) {
+                    deposit.uid = v.user.userId;
+                    com.popup4model('#workerSalary', "发放", function () {
+                        com.cleanItems(deposit.items);
+                        deposit.items.workerUser.val(v.user.currentName);
+                    });
+                }
+            },
+            collect: {
+                name: "收取质保金",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    deposit.uid = v.user.userId;
+                    com.popup4model('#workerBalance', "收取质保金", function () {
+                        com.cleanItems(deposit.items);
+                    });
+                }
+            },
+            draw: {
+                name: "提现质保金",
+                clazz: "btn-inverse",
+                handle: function(v) {
+                    deposit.uid = v.user.userId;
+                    com.popup4model('#workerGold', "提现质保金", function () {
+                        com.cleanItems(deposit.items);
+                    });
+                }
+            },
+            update: {
+                name: "更新上限",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    com.popup4model('#updateBalance', "更新上限", function () {
+                        com.cleanItems(deposit.items);
+                        deposit.wbid = v.wbid;
+                    });
+                }
             }
         };
-    })();
+    }
 
-
-    var searcher = new Searcher();
-
-    searcher.init(['salary-jober', 'salary-salaryWorkduty'], "condList", api.salary.pageWorkerBalance, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "workerBalancePostData", null, false, null, function () {
+    function buildWorkerBalanceButtons() {
 
         var $tranbtn = $('<a></a>').addClass('btn btn-minier btn-pink').attr('name', 'tran').css("margin", "0px 3px");
         var $tranbtni = $('<i></i>').addClass('icon-money bigger-110').appendTo($tranbtn);
@@ -208,7 +182,12 @@ $(function () {
         var $addsalaryspan = $('<span></span>').text('添加').appendTo($addsalary);
 
         return [$tranbtn, $addsalary];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.salary.pageWorkerBalance, null, ['salary-jober', 'salary-salaryWorkduty'], "workerBalancePostData", null, false, buildWorkerBalanceButtons);
+    searcher.line("user.currentName", buildWorkerBalanceLineprops(), buildWorkerBalanceLinebtns()).render();
 
     //转款
     com.focusPage('a[name="tran"]').on('click', function () {

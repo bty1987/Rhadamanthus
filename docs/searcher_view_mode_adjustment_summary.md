@@ -994,3 +994,34 @@ Searcher 的 table 模式只会对该 `prop(v)` 调用一次并把结果当作**
 - `grep -rn "searcher\.init" WebContent/js/balance/*.js`：0 命中。
 
 
+## 19. Salary 模块迁移记录
+
+### 19.1 迁移范围
+
+| 批次 | 难度 | 文件 | 特征 |
+|------|------|------|------|
+| P0 中等 | 🟡 | `workerBalance.js` | 6 属性、5 行按钮(扣款/发放/收取质保金/提现质保金/更新上限)、2 工具按钮(转款/添加)、`com.popup4model` 弹窗模式 |
+
+### 19.2 排除迁移
+
+| 文件 | 排除依据 |
+|------|---------|
+| `designerSalary.js` | 整个文件被 `/* ... */` 注释掉，是死代码 |
+| `workerSalary4frame.js` | 自定义 `flex-table` 表格布局（表头行 + 数据行 + 序号列），与 Searcher 标准 line/card/table 视图结构均不兼容，与 construction 模块的 `drawline4setup.js`（分组渲染）同类处理 |
+| `decorationSalary.js` `materialSalary.js` `salary.js` `salary4common.js` `withhold.js` `workerSalary.js` `workerSalary4query.js` | 无 displayFunc/searcher.init，已用新式 API 或非列表页 |
+
+### 19.3 关键技术点
+
+1. **popup4model 保留**：workerBalance.js 的 5 个行按钮原用 `com.popup4model`（非标准弹窗方法，注意拼写是 `model` 不是 `modal`/`page`），迁移时保留原调用方式，仅做结构转换。
+
+2. **标题渲染简化**：原 creatLine 中标题 `$h3` 里嵌套了 `<label class="control-label"><label><span>v.user.currentName</span></label></label>` 结构（自定义粗体大号样式），迁移后用 `line("user.currentName", ...)` 标准化标题渲染（样式由 Searcher 统一为 `<small class="blue">`）。
+
+3. **按钮顺序**：原代码 `$divBtnWrap.append($cutbtn).append($pushbtn).append($collectbtn).append($drawbtn).append($updatebtn)` 的顺序（扣款/发放/收取质保金/提现质保金/更新上限）在迁移后的 linebtns 对象中保持一致。
+
+### 19.4 验证
+
+- `node --check` 全部通过（10 个文件）。
+- `grep -rn "displayFunc" WebContent/js/salary/*.js`：2 命中，均为排除文件（`designerSalary.js` 死代码注释块、`workerSalary4frame.js` flex-table 自定义布局）。
+- `grep -rn "searcher\.init" WebContent/js/salary/*.js`：1 命中，为排除文件 `designerSalary.js` 死代码注释块。
+
+
