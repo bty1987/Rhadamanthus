@@ -76,119 +76,103 @@ jQuery(function($) {
         "user.status": 0
     }, "suppliers", "userId", "currentName", null);
 
-    var displayFunc = (function() {
+    function buildBalanceAccountLineprops() {
 
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (!listData || listData.length == 0)
-                return false;
-
-            $.each(listData, function(i, v) {
-                creatLine(v).appendTo($ul);
-            });
-
-            $ul.appendTo($tableWrap);
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass("oid").append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $invalid = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
-            var $span = $('<span></span>').addClass('lbl status-lbl');
-            var $btnWithdraw = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('提款');
-
-            $invalid.append($statusSwitch).append($span);
-            $divBtnWrap.append($invalid).append($btnWithdraw).appendTo($h3);
-
-            var propertyArr = [//
-            ["地址:", v.address, "grey"], //
-            ["电话:", v.phone, "grey"], //
-            ["银行:", v.bank, "grey"], //
-            ["卡号:", v.bankno, "grey"], //
-            ["归属人:", v.belonger.userName, "grey", function(btn) {
-
+        return [{
+            field: "address",
+            name: "地址",
+            prop: "address",
+            clazz: "grey"
+        }, {
+            field: "phone",
+            name: "电话",
+            prop: "phone",
+            clazz: "grey"
+        }, {
+            field: "bank",
+            name: "银行",
+            prop: "bank",
+            clazz: "grey"
+        }, {
+            field: "bankno",
+            name: "卡号",
+            prop: "bankno",
+            clazz: "grey"
+        }, {
+            field: "belonger.userName",
+            name: "归属人",
+            prop: "belonger.userName",
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.personel.info(btn, v.belonger.userId);
-            }], //
-            ["创建人:", v.creater.currentName, "grey", function(btn) {
-
+            }
+        }, {
+            field: "creater.currentName",
+            name: "创建人",
+            prop: "creater.currentName",
+            clazz: "grey",
+            click: function(btn, v) {
                 tools.personel.info(btn, v.creater.userId);
-            }], //
-            ["创建时间:", v.createTime, "grey"], //
-            ["应付额:", v.referMoney, "grey"], //
-            ["实付额:", v.realMoney, "grey"], //
-            ["余额:", v.surplus, "grey"], //
-            ["类型:", constant.balance().balanceAccount.type.keys[v.type], "red"], //
-            ["状态:", constant.balance().balanceAccount.status.keys[v.status], "red"], //
-            ];
+            }
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "grey"
+        }, {
+            field: "referMoney",
+            name: "应付额",
+            prop: "referMoney",
+            clazz: "grey"
+        }, {
+            field: "realMoney",
+            name: "实付额",
+            prop: "realMoney",
+            clazz: "grey"
+        }, {
+            field: "surplus",
+            name: "余额",
+            prop: "surplus",
+            clazz: "grey"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) { return constant.balance().balanceAccount.type.keys[v.type]; },
+            clazz: "red"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return constant.balance().balanceAccount.status.keys[v.status]; },
+            clazz: "red"
+        }];
+    }
 
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-
-                if (value[3]) {
-
-                    $b.click(function() {
-
-                        value[3]($b);
-                    });
-                }
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            !v.status && $statusSwitch.prop("checked", true);
-
-            $invalid.click(function() {
-
-                var cvalue = $statusSwitch.prop("checked") ? 0 : 1;
-
-                updatastatus(v.baid, cvalue);
-            });
-
-            $btnWithdraw.click(function() {
-
-                balanceAccount.baid = v.baid;
-                balanceAccount.modals.withdrawModal.modal("show");
-            });
-
-            return $liLine;
-        };
+    function buildBalanceAccountLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            status: {
+                name: "状态",
+                type: "switch",
+                clazz: "status-lbl",
+                init: function(v) {
+                    return !v.status;
+                },
+                handle: function(v, check) {
+                    updatastatus(v.baid, check ? 0 : 1);
+                }
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            withdraw: {
+                name: "提款",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    balanceAccount.baid = v.baid;
+                    balanceAccount.modals.withdrawModal.modal("show");
+                }
             }
         };
-    })();
+    }
 
-    var searcher = new Searcher();
-
-    searcher.init(["balance-account-name", "balance-account-type", "balance-account-status"], "condList", api.balance.pageBalanceAccount, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "accountPostData", null, false, null, function() {
+    function buildBalanceAccountButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBalanceAccount').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -203,7 +187,12 @@ jQuery(function($) {
         var $caddspan = $('<span></span>').text('添加出纳').appendTo($cadda);
 
         return [$adda, $badda, $cadda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.balance.pageBalanceAccount, null, ["balance-account-name", "balance-account-type", "balance-account-status"], "accountPostData", null, false, buildBalanceAccountButtons);
+    searcher.line("name", buildBalanceAccountLineprops(), buildBalanceAccountLinebtns()).render();
 
     com.focusPage('#addBalanceAccount', '#pagenation').click(function() {
 

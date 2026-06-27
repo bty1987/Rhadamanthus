@@ -952,3 +952,45 @@ Searcher 的 table 模式只会对该 `prop(v)` 调用一次并把结果当作**
 - `findstr /s /n seacher WebContent/js/construction/*.js`：0 命中（拼写全部修正）。
 
 
+## 18. Balance 模块迁移记录
+
+### 18.1 迁移范围
+
+| 批次 | 难度 | 文件 | 特征 |
+|------|------|------|------|
+| P0 中等 | 🟡 | `balanceAccount.js` | 12 属性(含 click)、状态开关(ace-switch)、提款按钮、3 个添加按钮(添加结算账户/添加结算/添加出纳) |
+| P1 高复杂 | 🔴 | `balance.js` | 12 属性(含 click)、checkbox 多选(selectList 收集 bid)、6 行按钮(结算/出纳/结算明细/分摊明细/结算销售/结算扣款)、付款批量按钮 |
+| P1 高复杂 | 🔴 | `balanceSalesBalance.js` | 8 属性(含 click) + newline + 13 计算明细字段、checkbox 多选、解绑行按钮、5 工具按钮(明细打印/利润打印/导出/全选/解绑)、两个导出函数 |
+
+### 18.2 排除迁移
+
+| 文件 | 排除依据 |
+|------|---------|
+| `balanceCutpay.js` `balanceSelectionRecord.js` | 已用新式 `searcher.base()`/`searcher.set()` + `line().render()` |
+| `balance2account.js` `balance2balance.js` `balanceApport.js` `balanceDccount.js` `balanceDccountDetail.js` `balanceDetail.js` `balanceOales.js` `balanceOales4balance.js` `balanceOalesItem.js` `balanceSales.js` `balanceSales4balance.js` `balanceSelection.js` `balanceSelection2print.js` `balanceSelection4balance.js` `balanceSelectionItem.js` `balanceSales2print.js` `balanceCutpay2print.js` | 子页/详情/打印页或无 Searcher 分页 |
+
+### 18.3 关键技术点
+
+1. **状态开关（balanceAccount.js）**：原 ace-switch + `$invalid.click` 手动切换并调用 `updatastatus(baid, cvalue)`，迁移为 linebtn 的 `{type:"switch", clazz:"status-lbl", init: !v.status, handle}`，handle 内调用 `updatastatus(v.baid, check ? 0 : 1)`。
+
+2. **checkbox 多选（balance.js）**：原行首 checkbox 收集 `balance.selectList`，迁移为 lineprop 的 `{type:"checkbox", field:"id", name:"balance", prop:"bid", clazz:"ace ace-checkbox-2", checked:function(v), click:function($input,v)}`。`checked` 回调根据 `selectList.contains(String(v.bid))` 设置初始选中状态，`click` 回调维护 selectList 增删。
+
+3. **checkbox 多选（balanceSalesBalance.js）**：迁移为 `{type:"checkbox", field:"bsbid", name:"多选", prop:"bsbid", clazz:"ace ace-checkbox-2"}`，配合工具栏全选按钮（`checkAll()` 通过 `com.focusPage('input[type="checkbox"]')` 批量操作）和解绑按钮（`unbind()` 通过 `:checked` 选择器收集 bsbid）。
+
+4. **第二行明细（balanceSalesBalance.js）**：原 creatLine 中渲染两个 `$ulProperty`（基础属性 + 计算明细）。迁移方案：在 lineprops 中插入 `{type:"newline"}` 分隔符，将 13 个计算字段作为带 `prop: function(v)` 的 lineprop 放在 newline 之后。复杂财务计算逻辑（venderMaling/allowance/salesRevenue/accountsPayable 等三分支）提取到独立 `calcSalesBalance(v)` 辅助函数，返回对象供各 lineprop 的 prop 函数引用，避免重复计算。
+
+5. **按钮条件显隐（balanceSalesBalance.js）**：解绑行按钮用 `show: function(v)` 判断 `balanceSalesBalance.balanceSales.status == STATUS_INIT_INT`；工具栏的全选/解绑按钮在 buttons builder 中根据 status `.hide()`；明细打印/利润打印按钮根据 `balanceSales.status == STATUS_INIT_INT || depage == 'material'` `.hide()`。
+
+6. **批量付款按钮（balance.js）**：原 buttons builder 中的 `$checka` 带 click 事件（收集 selectList 调用 `payedBalance`），迁移后提取为 `buildBalanceButtons()` 函数，保留 click 事件绑定。
+
+7. **属性 click 业务 bug 保留**：balance.js 中结算人/付款人 click 回调误用 `v.creater.userId`（应为 `v.balancer.userId`/`v.payeder.userId`），本次迁移保留原逻辑不做业务修正，仅做结构转换。
+
+8. **两个导出函数保留**：balanceSalesBalance.js 的 `exports()` 和 `exports1()` 几乎完全重复（仅 column 格式不同），本次迁移保留不动，不在结构迁移范围内重构。
+
+### 18.4 验证
+
+- `node --check` 全部通过（22 个文件）。
+- `grep -rn "displayFunc" WebContent/js/balance/*.js`：0 命中。
+- `grep -rn "searcher\.init" WebContent/js/balance/*.js`：0 命中。
+
+
