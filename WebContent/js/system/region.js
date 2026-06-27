@@ -31,71 +31,39 @@ jQuery(function($) {
 	
 	$.extend(com.validator, region.validator);
 	
-	var displayFunc  = (function(){
+	function buildRegionLinebtns() {
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+		return {
+			edit: {
+				name: "编辑",
+				clazz: "btn-yellow",
+				handle: function(v) {
+					editRegion(v.rid, v.no, v.name);
+				}
+			},
+			del: {
+				name: "删除",
+				clazz: "btn-success",
+				handle: function(v) {
+					deleteRegion(v.rid);
+				}
+			}
+		};
+	}
 
-            if(listData && listData.length){ 
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
+	function buildRegionButtons() {
 
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v){
-        	
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no + " " + v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
-
-            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
-            
-            $liLine.append($h3).append($ulProperty);
-            
-            $btnEdit.click(function(){
-            	editRegion(v.rid, v.no, v.name);
-            });
-            
-            $btnDel.click(function(){
-            	deleteRegion(v.rid);
-            });
-            
-            return $liLine;
-        };
-      
-        return {
-            init : function(tableId,listData){
-				com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
-            },
-            drawLine : function(v){
-                return creatLine(v);
-            }
-        };
-    })();
-	
-	var searcher = new Searcher();
-	
-	searcher.init(["system-region-name"], "condList", api.system.pageRegion, function(data){         
-		displayFunc.init('resultList', data);
-	}, "pagenation", "regionPostData", null, false, null, function(){
-		
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addRegion').css("margin", "0px 3px");
-    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
-    	
-    	return [$adda];
-	});
+		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+		return [$adda];
+	}
+
+	var searcher = new Searcher();
+
+	searcher.set("condList", "pagenation", "resultList", api.system.pageRegion, null, ["system-region-name"], "regionPostData", null, false, buildRegionButtons);
+	searcher.line(function(v) { return v.no + " " + v.name; }, [], buildRegionLinebtns()).render();
 		
 	com.focusPage('[name="addRegion"]', com.focusPage('#pagenation')).click(function(){
 		editFlg = false;

@@ -63,115 +63,92 @@ jQuery(function($) {
         });
     });
 
-    var displayFunc  = (function(){
+    function buildRole4baseLineprops() {
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        return [{
+            field: "no",
+            name: "编号",
+            prop: "no",
+            clazz: "grey"
+        }, {
+            field: "content",
+            name: "描述",
+            prop: "content",
+            clazz: "grey"
+        }];
+    }
 
-            if(listData && listData.length){ 
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
+    function buildRole4baseLinebtns() {
 
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v){
-            
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnModule = $('<a></a>').addClass('btn btn-minier btn-success').html('模块配置');
-            var $btnOperation = $('<a></a>').addClass('btn btn-minier btn-warning').html('操作配置');
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-inverse').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-            
-            var propertyArr = [
-               ["编号:", v.no, "grey"],
-               ["描述:", v.content, "grey"]
-           ];
-
-           $.each(propertyArr, function (index,value) {
-               var $liProperty = $('<li></li>');
-               $('<strong></strong>').html(value[0]).appendTo($liProperty);
-               $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-               $liProperty.appendTo($ulProperty);
-           });
-
-            $divBtnWrap.append($chainPage).append($btnModule).append($btnOperation).append($btnEdit).append($btnDel).appendTo($h3);
-            
-            $liLine.append($h3).append($ulProperty);
-
-            $btnModule.click(function(){
-                queryModuleByRoleId(v.rid);
-                role.moduleModal.attr('data-roleid', v.rid).modal('show');
-            });
-
-            $btnOperation.click(function(){
-                queryOperationByRoleId(v.rid);
-                role.operationModal.attr('data-roleid', v.rid).modal('show');
-            });
-            
-            $btnEdit.unbind().bind('click',function(){
-                editRole(v.rid, v.no, v.name, v.content);
-            });
-            
-            $btnDel.click(function(){
-                deleteRole(v.rid);
-            });
-
-            $chainPage.click(function(){
-                
-                role.rid = v.rid;
-                
-                role.roleItems.currentchainPage.html("");
-                role.roleItems.chainList.find("input[type='checkbox']").attr("checked", false);
-                
-                com.post(api.right.queryRoleChainPageByRid, {"roleChainPage.rid": v.rid}, function(res){
-                    
-                    $.each(res.chainPages, function(i, v){
-                        var $div=$('<div></div>').appendTo(role.roleItems.currentchainPage);
-                        var $span=$('<span class="tag"></span>').html(v.name).appendTo($div);
-                        
-                        role.roleItems.chainList.find("input[cpid='" + v.cpid + "']").click();
-                    });
-                });
-
-                role.chainPageModal.modal("show");
-            });
-
-            return $liLine;
-        };
-      
         return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+            module: {
+                name: "模块配置",
+                clazz: "btn-success",
+                handle: function(v) {
+                    queryModuleByRoleId(v.rid);
+                    role.moduleModal.attr('data-roleid', v.rid).modal('show');
+                }
             },
-            drawLine : function(v){
-                return creatLine(v);
+            operation: {
+                name: "操作配置",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    queryOperationByRoleId(v.rid);
+                    role.operationModal.attr('data-roleid', v.rid).modal('show');
+                }
+            },
+            edit: {
+                name: "编辑",
+                clazz: "btn-inverse",
+                handle: function(v) {
+                    editRole(v.rid, v.no, v.name, v.content);
+                }
+            },
+            del: {
+                name: "删除",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    deleteRole(v.rid);
+                }
+            },
+            chainPage: {
+                name: "外链配置",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    role.rid = v.rid;
+
+                    role.roleItems.currentchainPage.html("");
+                    role.roleItems.chainList.find("input[type='checkbox']").attr("checked", false);
+
+                    com.post(api.right.queryRoleChainPageByRid, { "roleChainPage.rid": v.rid }, function(res) {
+
+                        $.each(res.chainPages, function(i, v) {
+                            var $div = $('<div></div>').appendTo(role.roleItems.currentchainPage);
+                            var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
+
+                            role.roleItems.chainList.find("input[cpid='" + v.cpid + "']").click();
+                        });
+                    });
+
+                    role.chainPageModal.modal("show");
+                }
             }
-        }
-    })();
-    
-    var searcher = new Searcher();
-    
-    searcher.init(["roleName"], "condList", api.system.pageRole, function(data){
-        displayFunc.init('resultList', data);
-    }, "pagenation", "rolePostData", null, false, null, function(){
-        
+        };
+    }
+
+    function buildRole4baseButtons() {
+
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addRole').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
-        
+
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.system.pageRole, null, ["roleName"], "rolePostData", null, false, buildRole4baseButtons);
+    searcher.line("name", buildRole4baseLineprops(), buildRole4baseLinebtns()).render();
     
     com.focusPage('[name="addRole"]', com.focusPage('#pagenation')).click(function(){
         role.editFlg = false;

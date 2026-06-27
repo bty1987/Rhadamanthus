@@ -54,90 +54,67 @@ jQuery(function($) {
     com.post(api.system.queryRegion, {}, function(res){
         city.cityItems.regionSel.bindData(res.regions, "rid", "name");
     });
-    
-    var displayFunc  = (function(){
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    function buildCityLineprops() {
 
-            if(listData && listData.length){ 
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
+        return [{
+            field: "province",
+            name: "省份",
+            prop: "province",
+            clazz: "grey"
+        }, {
+            field: "no",
+            name: "编号",
+            prop: "no",
+            clazz: "grey"
+        }, {
+            field: "region.name",
+            name: "所属大区",
+            prop: "region.name",
+            clazz: "grey"
+        }];
+    }
 
-                    $liLine.appendTo($ul);
-                });
+    function buildCityLinebtns() {
 
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v){
-            
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
-            var $btnPosition = $('<a></a>').addClass('btn btn-minier btn-warning').html('位置');
-            
-            var propertyArr = [
-               ["省份:", v.province, "grey"],
-               ["编号:", v.no, "grey"],
-               ["所属大区:", v.region.name, "grey"],
-           ];
-
-           $.each(propertyArr, function (index,value) {
-               var $liProperty = $('<li></li>');
-               $('<strong></strong>').html(value[0]).appendTo($liProperty);
-               $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-               $liProperty.appendTo($ulProperty);
-           });
-
-            $divBtnWrap.append($btnEdit).append($btnDel).append($btnPosition).appendTo($h3);
-            
-            $liLine.append($h3).append($ulProperty);
-            
-            $btnEdit.click(function(){
-                editCity(v.cid, v.no, v.name, v.province, v.region.rid);
-            });
-            
-            $btnDel.click(function(){
-                deleteCity(v.cid);
-            });
-            
-            $btnPosition.click(function () {
-                editPosition(v);
-            });
-            
-            return $liLine;
-        };
-      
         return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    editCity(v.cid, v.no, v.name, v.province, v.region.rid);
+                }
             },
-            drawLine : function(v){
-                return creatLine(v);
+            del: {
+                name: "删除",
+                clazz: "btn-success",
+                handle: function(v) {
+                    deleteCity(v.cid);
+                }
+            },
+            position: {
+                name: "位置",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    editPosition(v);
+                }
             }
-        }
-    })();
-    
-    var searcher = new Searcher();
-    
-    searcher.init(["system-city-name", "system-region"], "condList", api.system.pageCity, function(data){
-        displayFunc.init('resultList', data);
-    }, "pagenation", "cityPostData", null, false, null, function(){
-        
+        };
+    }
+
+    function buildCityButtons() {
+
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCity').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
-        
+
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.system.pageCity, null, ["system-city-name", "system-region"], "cityPostData", null, false, buildCityButtons);
+    searcher.line("name", buildCityLineprops(), buildCityLinebtns()).render();
     
     com.focusPage('[name="addCity"]', com.focusPage('#pagenation')).click(function(){
         

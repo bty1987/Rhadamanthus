@@ -21,125 +21,107 @@ jQuery(function($) {
         com.clearValidator();
     });
 
-    var displayFunc = (function() {
+    function buildUpgradePackageLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "no",
+            name: "最新版本",
+            prop: "no",
+            clazz: "grey"
+        }, {
+            field: "trialno",
+            name: "适用版本",
+            prop: "trialno",
+            clazz: "grey"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return v.status == 0 ? "初始" : v.status == 1 ? "上线" : "下线"; },
+            clazz: "red"
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "grey"
+        }, {
+            field: "content",
+            name: "版本说明",
+            prop: "content",
+            clazz: "grey"
+        }, {
+            field: "path",
+            name: "路径",
+            prop: "path",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnOn = $('<a></a>').addClass('btn btn-minier btn-success').html('上线');
-            var $btnOff = $('<a></a>').addClass('btn btn-minier btn-yellow').html('下线');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-
-            var propertyArr = [["最新版本:", v.no, "grey"], ["适用版本:", v.trialno, "grey"], ["状态:", v.status == 0 ? "初始" : v.status == 1 ? "上线" : "下线", "red"], ["创建时间:", v.createTime, "grey"], ["版本说明:", v.content, "grey"], ["路径:", v.path, "grey"], ];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append(v.status == 1 ? $btnOff : $btnOn).append($btnDel).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnOn.click(function() {
-
-                com.showConfirm("是否上线版本: " + v.no, function() {
-
-                    com.post(api.upgrade.updateUpgradeForStatus, {
-                        "upgrade.ugid": v.ugid,
-                        "upgrade.status": 1
-                    }, function() {
-
-                        seacher.doSearch();
-                    });
-                });
-            });
-
-            $btnOff.click(function() {
-
-                com.showConfirm("是否下线版本: " + v.no, function() {
-
-                    com.post(api.upgrade.updateUpgradeForStatus, {
-                        "upgrade.ugid": v.ugid,
-                        "upgrade.status": 2
-                    }, function() {
-
-                        seacher.doSearch();
-                    });
-                });
-            });
-
-            $btnDel.click(function() {
-
-                com.showConfirm("是否确定删除", function() {
-
-                    com.post(api.upgrade.deleteUpgrade, {
-                        "upgrade.ugid": v.ugid
-                    }, function() {
-
-                        seacher.doSearch();
-                    });
-                });
-            });
-
-            return $liLine;
-        };
+    function buildUpgradePackageLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            on: {
+                name: "上线",
+                clazz: "btn-success",
+                show: function(v) { return v.status != 1; },
+                handle: function(v) {
+                    com.showConfirm("是否上线版本: " + v.no, function() {
+                        com.post(api.upgrade.updateUpgradeForStatus, {
+                            "upgrade.ugid": v.ugid,
+                            "upgrade.status": 1
+                        }, function() {
+                            searcher.doSearch();
+                        });
+                    });
+                }
             },
-            drawLine: function(v) {
-
-                return creatLine(v);
+            off: {
+                name: "下线",
+                clazz: "btn-yellow",
+                show: function(v) { return v.status == 1; },
+                handle: function(v) {
+                    com.showConfirm("是否下线版本: " + v.no, function() {
+                        com.post(api.upgrade.updateUpgradeForStatus, {
+                            "upgrade.ugid": v.ugid,
+                            "upgrade.status": 2
+                        }, function() {
+                            searcher.doSearch();
+                        });
+                    });
+                }
+            },
+            del: {
+                name: "删除",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    com.showConfirm("是否确定删除", function() {
+                        com.post(api.upgrade.deleteUpgrade, {
+                            "upgrade.ugid": v.ugid
+                        }, function() {
+                            searcher.doSearch();
+                        });
+                    });
+                }
             }
-        }
-    })();
+        };
+    }
 
-    var seacher = new Searcher();
-
-    seacher.init(['system-upgrade-version', 'system-upgrade-createTime'], "condList", api.upgrade.pageUpgrade, function(list) {
-
-        displayFunc.init('resultList', list);
-    }, "pagenation", "upgradePostData", null, false, null, function() {
+    function buildUpgradePackageButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addUpgrade').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         $adda.click(function() {
-
             upgrade.modal.modal("show")
         });
 
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.upgrade.pageUpgrade, null, ['system-upgrade-version', 'system-upgrade-createTime'], "upgradePostData", null, false, buildUpgradePackageButtons);
+    searcher.line("no", buildUpgradePackageLineprops(), buildUpgradePackageLinebtns()).render();
 
     function saveData() {
 
@@ -161,7 +143,7 @@ jQuery(function($) {
             com.showAlert(com.info, '添加成功');
             com.cleanItems(upgrade.items);
 
-            seacher.doSearch();
+            searcher.doSearch();
         });
 
         upgrade.modal.modal("hide");
