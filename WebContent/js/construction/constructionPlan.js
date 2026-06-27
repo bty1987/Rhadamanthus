@@ -6,7 +6,7 @@
 
         modals: {
             constructionPlanModal: com.focusPage("#constructionPlanModal"),
-            editconstructionPlanModal: com.focusPage("#editConstructionPlanModal")
+            editConstructionPlanModal: com.focusPage("#editConstructionPlanModal")
         },
 
         btns: {
@@ -196,7 +196,7 @@
 
             com.cleanItems(constructionPlan.items);
             constructionPlan.cpid = v.cpid;
-            constructionPlan.items.comnum.val(v.comnum), constructionPlan.items.connum.val(v.connum), constructionPlan.items.prenum.val(v.prenum), constructionPlan.items.postnum.val(v.postnum), constructionPlan.items.content.val(v.content), constructionPlan.items.editcomment.val(v.comment), constructionPlan.modals.editconstructionPlanModal.modal("show");
+            constructionPlan.items.comnum.val(v.comnum), constructionPlan.items.connum.val(v.connum), constructionPlan.items.prenum.val(v.prenum), constructionPlan.items.postnum.val(v.postnum), constructionPlan.items.content.val(v.content), constructionPlan.items.editcomment.val(v.comment), constructionPlan.modals.editConstructionPlanModal.modal("show");
 
             return false;
         }
@@ -311,7 +311,7 @@
 
             searcher.doSearch();
 
-            constructionPlan.modals.editconstructionPlanModal.modal("hide");
+            constructionPlan.modals.editConstructionPlanModal.modal("hide");
         });
 
     });

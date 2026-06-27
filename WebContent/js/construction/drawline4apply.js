@@ -230,7 +230,7 @@ jQuery(function($) {
     }, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'construction-drawLine-status', 'construction-drawLine-applayTime', 'construction-drawLine-actualDate'], "drawLineApplyPostData", null, true, null);
     searcher.line("decoration.orderId", lineprops, linebtns).render();
 
-    com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
+    com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
 
     function showUpdate(v) {
 
@@ -297,7 +297,7 @@ jQuery(function($) {
         var start = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + drawline.items.startTime.val());
         var end = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + drawline.items.endTime.val());
 
-        if (start == NaN || end == NaN || start >= end) {
+        if (isNaN(start) || isNaN(end) || start >= end) {
             com.showAlert(com.info, "起始时间和结束时间非法");
             return false;
         }
