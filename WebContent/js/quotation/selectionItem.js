@@ -133,444 +133,391 @@ $(function() {
 
     selectionItem.pageConfig = getConfig(params['urlLoadParams'].type, 8);
 
-    var displayFunc = (function() {
+    function buildSelectionItemLineprops() {
 
-        $('input[type=checkbox][name=selectionItem]').prop('checked', false);
-
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid');
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $_ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnCompile = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnRefnum = $('<a></a>').addClass('btn btn-minier btn-yellow').html('退货');
-            var $btnRran = $('<a></a>').addClass('btn btn-minier btn-purple').html('配送');
-            var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-purple').html('审核');
-            var $btnConfirm = $('<a></a>').addClass('btn btn-minier btn-purple').html('确认');
-            var $btnFinish = $('<a></a>').addClass('btn btn-minier btn-purple').html('完结');
-            var $btnReview = $('<a></a>').addClass('btn btn-minier btn-pink').html('核对');
-            var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-pink').html('申请');
-            var $btnReject = $('<a></a>').addClass('btn btn-minier btn-pink').html('驳回');
-            var $btnAccount = $('<a></a>').addClass('btn btn-minier btn-pink').html('对账');
-            var $btnSelect = $('<a></a>').addClass('btn btn-minier btn-pink').html('选材单');
-            var $btnAdded = $('<a></a>').addClass('btn btn-minier btn-pink').html('补量');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-            var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-success').html('打印');
-            var $btnPicture = $('<a></a>').addClass('btn btn-minier btn-success').html('图片');
-
-            var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.goods.name);
-            var $label = $('<label></label>');
-            var $input = $('<input></input>').attr({
-                'class': 'ace ace-checkbox-2',
-                'name': 'selectionItem',
-                'type': 'checkbox',
-                'data-status': v.status,
-                'data-num': v.num,
-                'data-refnum': v.refnum,
-                'data-postprice': v.postprice,
-                'data-brand': v.goods.bid,
-                'data-accountStatus': v.accountStatus,
-                'id': v.siid,
-            }).val(v.siid);
-
-            $input.click(function() {
-
-                var $that = $(this);
-                var siid = $that.attr("id");
+        return [{
+            type: "checkbox",
+            field: "siid",
+            name: "selectionItem",
+            prop: "siid",
+            clazz: "ace ace-checkbox-2",
+            attrs: function(v) {
+                return {
+                    'data-status': v.status,
+                    'data-num': v.num,
+                    'data-refnum': v.refnum,
+                    'data-postprice': v.postprice,
+                    'data-brand': v.goods.bid,
+                    'data-accountStatus': v.accountStatus
+                };
+            },
+            checked: function(v) {
+                return selectionItem.selectList.contains(String(v.siid));
+            },
+            click: function($input, v) {
+                var siid = $input.attr("id");
 
                 if (selectionItem.selectList.length > 30) {
                     com.showAlert(com.warning, "选材项已达数量上限");
                     return false;
                 }
 
-                var checked = $that.prop("checked");
+                var checked = $input.prop("checked");
 
                 if (checked)
                     !selectionItem.selectList.contains(siid) && selectionItem.selectList.push(siid);
                 else
                     selectionItem.selectList.contains(siid) && selectionItem.selectList.splice(selectionItem.selectList.indexOf(siid), 1);
-            });
-
-            if (selectionItem.selectList.contains(String(v.siid)))
-                $input.prop('checked', true).attr("checked", true);
-
-            $h3.append($label.append($input).append($span));
-
-            var propertyArr = getPropertyArr(v);
-            var propertyArrDecoration = getPropertyArrDecoration(v);
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                if (value[3])
-                    $(value[3]).appendTo($liProperty);
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $.each(propertyArrDecoration, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($_ulProperty);
-            });
-
-            if (selectionItem.pageConfig.pageBtn.contains("compile"))
-                $divBtnWrap.append($btnCompile);
-
-            if (selectionItem.pageConfig.pageBtn.contains("refnumBtn"))
-                $divBtnWrap.append($btnRefnum);
-
-            if (selectionItem.pageConfig.pageBtn.contains("rran"))
-                $divBtnWrap.append($btnRran);
-
-            if (selectionItem.pageConfig.pageBtn.contains("check"))
-                $divBtnWrap.append($btnCheck);
-
-            if (selectionItem.pageConfig.pageBtn.contains("confirm"))
-                $divBtnWrap.append($btnConfirm);
-
-            if (selectionItem.pageConfig.pageBtn.contains("finish"))
-                $divBtnWrap.append($btnFinish);
-
-            if (selectionItem.pageConfig.pageBtn.contains("review"))
-                $divBtnWrap.append($btnReview);
-
-            if (selectionItem.pageConfig.pageBtn.contains("balance"))
-                $divBtnWrap.append($btnBalance);
-
-            if (selectionItem.pageConfig.pageBtn.contains("reject"))
-                $divBtnWrap.append($btnReject);
-
-            if (selectionItem.pageConfig.pageBtn.contains("account"))
-                $divBtnWrap.append($btnAccount);
-
-            if (selectionItem.pageConfig.pageBtn.contains("select"))
-                $divBtnWrap.append($btnSelect);
-
-            if (selectionItem.pageConfig.pageBtn.contains("added"))
-                $divBtnWrap.append($btnAdded);
-
-            if (selectionItem.pageConfig.pageBtn.contains("delete"))
-                $divBtnWrap.append($btnDel);
-
-            if (selectionItem.pageConfig.pageBtn.contains("print"))
-                $divBtnWrap.append($btnPrint);
-
-            if (selectionItem.pageConfig.pageBtn.contains("picture"))
-                $divBtnWrap.append($btnPicture);
-
-            // 显示/隐藏功能按钮: 避免jQuery .show()将<a>恢复成display:inline, 破坏.btn的inline-block样式
-            var showBtn = function($btn) {
-                $btn.css("display", "inline-block");
-            };
-            var hideBtn = function($btn) {
-                $btn.hide();
-            };
-
-            (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || v.status == constant.quotation().selectionItem.STATUS_TRAN_INT || selectionItem.pageType == "expert" ? showBtn($btnCompile) : hideBtn($btnCompile);
-            [constant.quotation().selectionItem.STATUS_REVIEW_INT, constant.quotation().selectionItem.STATUS_BALANCE_INT, constant.quotation().selectionItem.STATUS_DISABLE_SHORT].indexOf(v.status) != -1 ? hideBtn($btnRefnum) : showBtn($btnRefnum);
-            (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || selectionItem.pageType == "expert" ? showBtn($btnRran) : hideBtn($btnRran);
-            v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? showBtn($btnCheck) : hideBtn($btnCheck);
-            v.status == constant.quotation().selectionItem.STATUS_CHECK_INT ? showBtn($btnConfirm) : hideBtn($btnConfirm);
-            v.status == constant.quotation().selectionItem.STATUS_CONFIRM_INT ? showBtn($btnFinish) : hideBtn($btnFinish);
-            v.status == constant.quotation().selectionItem.STATUS_FINISH_INT ? showBtn($btnReview) : hideBtn($btnReview);
-            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT ? showBtn($btnBalance) : hideBtn($btnBalance);
-            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? showBtn($btnReject) : hideBtn($btnReject);
-            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? hideBtn($btnDel) : showBtn($btnDel);
-            [constant.quotation().selectionItem.TYPE_ALONE_INT, constant.quotation().selectionItem.TYPE_ADDED_QUOTATION_SHORT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONADD_INT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONMINUS_INT, constant.quotation().selectionItem.TYPE_ADDED_ADDITEM_INT, constant.quotation().selectionItem.TYPE_ADDED_MINUSITEM_INT].indexOf(v.type) != -1 ? hideBtn($btnAdded) : showBtn($btnAdded);
-
-            $divBtnWrap.appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty).append($_ulProperty);
-
-            $btnCompile.click(function(e) {
-
-                selectionItem.parameters.siid = v.siid;
-
-                selectionItem.title.text("编辑");
-
-                selectionItem.dcomment.show();
-                selectionItem.items.comment.val(v.comment);
-
-                selectionItem.modals.updateSelectionItemModal.modal("show");
-            });
-
-            $btnRefnum.click(function(e) {
-
-                selectionItem.parameters.status = v.status;
-                selectionItem.parameters.siid = v.siid;
-                selectionItem.parameters.num = v.num;
-
-                selectionItem.modals.refundSelectionItemModal.modal('show');
-            });
-
-            $btnAdded.click(function(e) {
-
-                selectionItem.parameters.siid = v.siid;
-                selectionItem.parameters.num = v.num;
-                selectionItem.parameters.type = v.type;
-
-                selectionItem.modals.addedSelectionItemModal.modal('show');
-            });
-
-            $btnRran.click(function(e) {
-
-                com.post(api.quotation.tranSelectionItem, {
-                    "selectionItems[0].siid": v.siid
-                }, function(res) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnCheck.click(function(e) {
-
-                var option = {
-                    "selectionItems[0].siid": v.siid,
-                    "selectionItems[0].checker": null,
-                };
-
-                if (selectionItem.escorter) {
-                    option["selectionItem.checker.uid"] = v.decoration.materialer.uid;
-                }
-
-                com.post(api.quotation.checkSelectionItem, option, function(e) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnConfirm.click(function(e) {
-
-                com.post(api.quotation.confirmSelectionItem, {
-                    "selectionItems[0].siid": v.siid
-                }, function(e) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnFinish.click(function(e) {
-
-                com.post(api.quotation.finishSelectionItem, {
-                    "selectionItems[0].siid": v.siid
-                }, function(e) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnReview.click(function(e) {
-
-                com.post(api.quotation.reviewSelectionItem, {
-                    "selectionItems[0].siid": v.siid
-                }, function(e) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnBalance.click(function(e) {
-
-                com.post(api.quotation.balanceSelectionItem, {
-                    "selectionItems[0].siid": v.siid
-                }, function(e) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnSelect.click(function(e) {
-
-                params.quotation.orderId = v.decoration.orderId;
-                params.historyPage = api.index.selectionItemIndex.url;
-
-                com.switchPage(api.index.selectionPartIndex.url);
-            });
-
-            $btnDel.click(function(e) {
-
-                com.post(api.quotation.deleteSelectionItem, {
-                    "selection.sid": v.selection.sid,
-                    "selectionItem.siid": v.siid,
-                }, function(e) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnReject.click(function(e) {
-
-                com.post(api.quotation.rejectSelectionItem, {
-                    "selectionItem.siid": v.siid
-                }, function(e) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnAccount.click(function(e) {
-
-                com.post(api.quotation.accountSelectionItem, {
-                    "selectionItem.siid": v.siid
-                }, function(e) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnPrint.click(function(e) {
-
-                com.post(api.quotation.querySelectionByOrderId, {
-                    "selection.orderId": v.decoration.orderId
-                }, function(res) {
-
-                    params.quotation.supplierPage = selectionItem.pageType == "supplier" ? true : false;
-                    params.selection = res.selection;
-
-                    com.popup("打印选材", api.index.selectionOutputIndex.url, null, null, true);
-                }, null, false);
-            });
-
-            $btnPicture.click(function(e) {
-
-                managedrawing(v);
-                initUploadBtn(v);
-                selectionItem.modals.pictureModal.modal('show');
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
             }
-        };
-    })();
+        }, {
+            type: "custom",
+            render: function($liLine, v, $ulProperty, $h3) {
 
-    var searcher = new Searcher();
+                var propertyArr = getPropertyArr(v);
+                var propertyArrDecoration = getPropertyArrDecoration(v);
 
-    searcher.init(selectionItem.pageConfig.condArr, "condList", selectionItem.pageConfig.apiPage, function(data) {
+                $.each(propertyArr, function(index, value) {
 
-        displayFunc.init('resultList', data);
-    }, "pagenation", selectionItem.postData, selectionItem.status, false, null, function() {
+                    var $liProperty = $('<li></li>');
+                    if (typeof value[0] == "string") {
+                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    } else {
+                        $(value[0]).appendTo($liProperty);
+                    }
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                    if (value[3])
+                        $(value[3]).appendTo($liProperty);
+
+                    $liProperty.appendTo($ulProperty);
+                });
+
+                var $_ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($liLine);
+
+                $.each(propertyArrDecoration, function(index, value) {
+
+                    var $liProperty = $('<li></li>').appendTo($_ulProperty);
+                    if (typeof value[0] == "string") {
+                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    } else {
+                        $(value[0]).appendTo($liProperty);
+                    }
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                });
+            }
+        }];
+    }
+
+    function buildSelectionItemLinebtns() {
+
+        var pageBtn = selectionItem.pageConfig.pageBtn;
+        var btns = {};
+
+        var showBtn = function(v, $btn) { return true; };
+
+        if (pageBtn.contains("compile")) {
+            btns.compile = {
+                name: "编辑",
+                clazz: "btn-yellow",
+                show: function(v) {
+                    return (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || v.status == constant.quotation().selectionItem.STATUS_TRAN_INT || selectionItem.pageType == "expert";
+                },
+                handle: function(v) {
+                    selectionItem.parameters.siid = v.siid;
+                    selectionItem.title.text("编辑");
+                    selectionItem.dcomment.show();
+                    selectionItem.items.comment.val(v.comment);
+                    selectionItem.modals.updateSelectionItemModal.modal("show");
+                }
+            };
+        }
+
+        if (pageBtn.contains("refnumBtn")) {
+            btns.refnum = {
+                name: "退货",
+                clazz: "btn-yellow",
+                show: function(v) {
+                    return [constant.quotation().selectionItem.STATUS_REVIEW_INT, constant.quotation().selectionItem.STATUS_BALANCE_INT, constant.quotation().selectionItem.STATUS_DISABLE_SHORT].indexOf(v.status) == -1;
+                },
+                handle: function(v) {
+                    selectionItem.parameters.status = v.status;
+                    selectionItem.parameters.siid = v.siid;
+                    selectionItem.parameters.num = v.num;
+                    selectionItem.modals.refundSelectionItemModal.modal('show');
+                }
+            };
+        }
+
+        if (pageBtn.contains("rran")) {
+            btns.rran = {
+                name: "配送",
+                clazz: "btn-purple",
+                show: function(v) {
+                    return (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || selectionItem.pageType == "expert";
+                },
+                handle: function(v) {
+                    com.post(api.quotation.tranSelectionItem, {
+                        "selectionItems[0].siid": v.siid
+                    }, function(res) {
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                }
+            };
+        }
+
+        if (pageBtn.contains("check")) {
+            btns.check = {
+                name: "审核",
+                clazz: "btn-purple",
+                show: function(v) {
+                    return v.status == constant.quotation().selectionItem.STATUS_TRAN_INT;
+                },
+                handle: function(v) {
+                    var option = {
+                        "selectionItems[0].siid": v.siid,
+                        "selectionItems[0].checker": null,
+                    };
+
+                    if (selectionItem.escorter) {
+                        option["selectionItem.checker.uid"] = v.decoration.materialer.uid;
+                    }
+
+                    com.post(api.quotation.checkSelectionItem, option, function(e) {
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                }
+            };
+        }
+
+        if (pageBtn.contains("confirm")) {
+            btns.confirm = {
+                name: "确认",
+                clazz: "btn-purple",
+                show: function(v) {
+                    return v.status == constant.quotation().selectionItem.STATUS_CHECK_INT;
+                },
+                handle: function(v) {
+                    com.post(api.quotation.confirmSelectionItem, {
+                        "selectionItems[0].siid": v.siid
+                    }, function(e) {
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                }
+            };
+        }
+
+        if (pageBtn.contains("finish")) {
+            btns.finish = {
+                name: "完结",
+                clazz: "btn-purple",
+                show: function(v) {
+                    return v.status == constant.quotation().selectionItem.STATUS_CONFIRM_INT;
+                },
+                handle: function(v) {
+                    com.post(api.quotation.finishSelectionItem, {
+                        "selectionItems[0].siid": v.siid
+                    }, function(e) {
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                }
+            };
+        }
+
+        if (pageBtn.contains("review")) {
+            btns.review = {
+                name: "核对",
+                clazz: "btn-pink",
+                show: function(v) {
+                    return v.status == constant.quotation().selectionItem.STATUS_FINISH_INT;
+                },
+                handle: function(v) {
+                    com.post(api.quotation.reviewSelectionItem, {
+                        "selectionItems[0].siid": v.siid
+                    }, function(e) {
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                }
+            };
+        }
+
+        if (pageBtn.contains("balance")) {
+            btns.balance = {
+                name: "申请",
+                clazz: "btn-pink",
+                show: function(v) {
+                    return v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT;
+                },
+                handle: function(v) {
+                    com.post(api.quotation.balanceSelectionItem, {
+                        "selectionItems[0].siid": v.siid
+                    }, function(e) {
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                }
+            };
+        }
+
+        if (pageBtn.contains("reject")) {
+            btns.reject = {
+                name: "驳回",
+                clazz: "btn-pink",
+                show: function(v) {
+                    return v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT;
+                },
+                handle: function(v) {
+                    com.post(api.quotation.rejectSelectionItem, {
+                        "selectionItem.siid": v.siid
+                    }, function(e) {
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                }
+            };
+        }
+
+        if (pageBtn.contains("account")) {
+            btns.account = {
+                name: "对账",
+                clazz: "btn-pink",
+                handle: function(v) {
+                    com.post(api.quotation.accountSelectionItem, {
+                        "selectionItem.siid": v.siid
+                    }, function(e) {
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                }
+            };
+        }
+
+        if (pageBtn.contains("select")) {
+            btns.select = {
+                name: "选材单",
+                clazz: "btn-pink",
+                handle: function(v) {
+                    params.quotation.orderId = v.decoration.orderId;
+                    params.historyPage = api.index.selectionItemIndex.url;
+                    com.switchPage(api.index.selectionPartIndex.url);
+                }
+            };
+        }
+
+        if (pageBtn.contains("added")) {
+            btns.added = {
+                name: "补量",
+                clazz: "btn-pink",
+                show: function(v) {
+                    return [constant.quotation().selectionItem.TYPE_ALONE_INT, constant.quotation().selectionItem.TYPE_ADDED_QUOTATION_SHORT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONADD_INT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONMINUS_INT, constant.quotation().selectionItem.TYPE_ADDED_ADDITEM_INT, constant.quotation().selectionItem.TYPE_ADDED_MINUSITEM_INT].indexOf(v.type) == -1;
+                },
+                handle: function(v) {
+                    selectionItem.parameters.siid = v.siid;
+                    selectionItem.parameters.num = v.num;
+                    selectionItem.parameters.type = v.type;
+                    selectionItem.modals.addedSelectionItemModal.modal('show');
+                }
+            };
+        }
+
+        if (pageBtn.contains("delete")) {
+            btns.del = {
+                name: "删除",
+                clazz: "btn-danger",
+                show: function(v) {
+                    return !(v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT);
+                },
+                handle: function(v) {
+                    com.post(api.quotation.deleteSelectionItem, {
+                        "selection.sid": v.selection.sid,
+                        "selectionItem.siid": v.siid,
+                    }, function(e) {
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                }
+            };
+        }
+
+        if (pageBtn.contains("print")) {
+            btns.print = {
+                name: "打印",
+                clazz: "btn-success",
+                handle: function(v) {
+                    com.post(api.quotation.querySelectionByOrderId, {
+                        "selection.orderId": v.decoration.orderId
+                    }, function(res) {
+                        params.quotation.supplierPage = selectionItem.pageType == "supplier" ? true : false;
+                        params.selection = res.selection;
+                        com.popup("打印选材", api.index.selectionOutputIndex.url, null, null, true);
+                    }, null, false);
+                }
+            };
+        }
+
+        if (pageBtn.contains("picture")) {
+            btns.picture = {
+                name: "图片",
+                clazz: "btn-success",
+                handle: function(v) {
+                    managedrawing(v);
+                    initUploadBtn(v);
+                    selectionItem.modals.pictureModal.modal('show');
+                }
+            };
+        }
+
+        return btns;
+    }
+
+    function buildSelectionItemButtons() {
 
         var btns = [];
 
-        var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'checks').css("margin", "0px 3px");
-        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
-        var $checkspan = $('<span></span>').text('全选').appendTo($checka);
-
-        var $checkaExportSelects = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'import');
-        var $checkExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($checkaExportSelects);
-        var $checkExportspan = $('<span></span>').text('导出').appendTo($checkaExportSelects);
-        // 导出单击事件
-        $checkaExportSelects.click(function() {
-
-            pageExportStoreImport();
-        });
-
         if (selectionItem.pageConfig.pageBtn.contains("checkAll")) {
+            var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'checks').css("margin", "0px 3px");
+            var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+            var $checkspan = $('<span></span>').text('全选').appendTo($checka);
             btns.push($checka);
         }
 
         if (selectionItem.pageConfig.pageBtn.contains("export")) {
+            var $checkaExportSelects = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'import');
+            var $checkExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($checkaExportSelects);
+            var $checkExportspan = $('<span></span>').text('导出').appendTo($checkaExportSelects);
+            $checkaExportSelects.click(function() {
+                pageExportStoreImport();
+            });
             btns.push($checkaExportSelects);
         }
 
-        if (selectionItem.pageConfig.pageBtn.contains("batchDelivery")) {
-            var $a = createbtn("batchDelivery", "批量配送", "btn-success");
-            btns.push($a);
-        }
-
-        if (selectionItem.pageConfig.pageBtn.contains("batchBalance")) {
-            var $a = createbtn("batchBalance", "批量申请", "btn-info");
-            btns.push($a);
-        }
-
-        if (selectionItem.pageConfig.pageBtn.contains("batchCheck")) {
-            var $a = createbtn("batchCheck", "批量审核", "btn-warning");
-            btns.push($a);
-        }
-
-        if (selectionItem.pageConfig.pageBtn.contains("batchConfirm")) {
-            var $a = createbtn("batchConfirm", "批量确认", "btn-inverse");
-            btns.push($a);
-        }
-
-        if (selectionItem.pageConfig.pageBtn.contains("batchFinish")) {
-            var $a = createbtn("batchFinish", "批量完结", "btn-danger");
-            btns.push($a);
-        }
-
-        if (selectionItem.pageConfig.pageBtn.contains("batchReview")) {
-            var $a = createbtn("batchReview", "批量核对", "btn-pink");
-            btns.push($a);
-        }
-
-        if (selectionItem.pageConfig.pageBtn.contains("batchCrn")) {
-            var $a = createbtn("batchCrn", "对账", "btn-pink");
-            btns.push($a);
-        }
-
-        if (selectionItem.pageConfig.pageBtn.contains("batchSelc")) {
-            var $a = createbtn("batchSelc", "厂商对账", "btn-pink");
-            btns.push($a);
-        }
-
-        function createbtn(id, text, color) {
-
-            var $a = $('<a></a>').addClass('btn btn-minier pull-left ' + color).attr({
-                'id': id,
-                'style': 'margin: 0px 3px;'
-            });
+        var createbtn = function(id, text, color) {
+            var $a = $('<a></a>').addClass('btn btn-minier pull-left ' + color).attr({ 'id': id, 'style': 'margin: 0px 3px;' });
             var $i = $('<i></i>').addClass('icon-plus bigger-110').appendTo($a);
             var $span = $('<span></span>').text(text).appendTo($i);
-
             return $a;
-        }
+        };
+
+        if (selectionItem.pageConfig.pageBtn.contains("batchDelivery")) btns.push(createbtn("batchDelivery", "批量配送", "btn-success"));
+        if (selectionItem.pageConfig.pageBtn.contains("batchBalance")) btns.push(createbtn("batchBalance", "批量申请", "btn-info"));
+        if (selectionItem.pageConfig.pageBtn.contains("batchCheck")) btns.push(createbtn("batchCheck", "批量审核", "btn-warning"));
+        if (selectionItem.pageConfig.pageBtn.contains("batchConfirm")) btns.push(createbtn("batchConfirm", "批量确认", "btn-inverse"));
+        if (selectionItem.pageConfig.pageBtn.contains("batchFinish")) btns.push(createbtn("batchFinish", "批量完结", "btn-danger"));
+        if (selectionItem.pageConfig.pageBtn.contains("batchReview")) btns.push(createbtn("batchReview", "批量核对", "btn-pink"));
+        if (selectionItem.pageConfig.pageBtn.contains("batchCrn")) btns.push(createbtn("batchCrn", "对账", "btn-pink"));
+        if (selectionItem.pageConfig.pageBtn.contains("batchSelc")) btns.push(createbtn("batchSelc", "厂商对账", "btn-pink"));
 
         return btns;
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", selectionItem.pageConfig.apiPage, selectionItem.status, selectionItem.pageConfig.condArr, selectionItem.postData, null, false, buildSelectionItemButtons);
+    searcher.line("goods.name", buildSelectionItemLineprops(), buildSelectionItemLinebtns()).render();
 
     function pageExportStoreImport() {
 
