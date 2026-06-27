@@ -154,102 +154,101 @@ jQuery(function($) {
 		});
 	});
 
-	var displayFunc  = (function(){
+	function buildBuildingLineprops() {
 
-		var renderList = function(tableId,listData){
-			var $tableWrap = com.focusPage('#' + tableId);
-			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+		return [{
+			field: "buildingHouse.house",
+			name: "楼盘地址",
+			prop: function(v) { return v.buildingHouse.house.village.name + " " + v.buildingHouse.house.houseNumber; },
+			clazz: "grey"
+		}, {
+			field: "buildingHouse.customer.name",
+			name: "房源所属人",
+			prop: "buildingHouse.customer.name",
+			clazz: "grey"
+		}, {
+			field: "buildingCustomer.customer.name",
+			name: "客源姓名",
+			prop: "buildingCustomer.customer.name",
+			clazz: "grey"
+		}, {
+			field: "buildingHouseAgent.name",
+			name: "房源代理人",
+			prop: "buildingHouseAgent.name",
+			clazz: "grey"
+		}, {
+			field: "buildingCustomerAgent.name",
+			name: "客源代理人",
+			prop: "buildingCustomerAgent.name",
+			clazz: "grey"
+		}, {
+			field: "signingTime",
+			name: "签约时间",
+			prop: "signingTime",
+			clazz: "green"
+		}, {
+			field: "tradePrice",
+			name: "成交价格",
+			prop: "tradePrice",
+			clazz: "blue"
+		}, {
+			field: "downpayment",
+			name: "首付款",
+			prop: "downpayment",
+			clazz: "blue"
+		}, {
+			field: "loanPrice",
+			name: "贷款金额",
+			prop: "loanPrice",
+			clazz: "blue"
+		}, {
+			field: "payType",
+			name: "支付方式",
+			prop: function(v) { return building.payType[v.payType]; },
+			clazz: "grey"
+		}, {
+			field: "balanceStatus",
+			name: "结算状态",
+			prop: function(v) { return building.balanceStatus[v.balanceStatus]; },
+			clazz: "red"
+		}];
+	}
 
-			if(listData && listData.length){
-				$.each(listData,function(i, v){
-					var $liLine = creatLine(v);
-
-					$liLine.appendTo($ul);
-				});
-
-				$ul.appendTo($tableWrap);
-			}
-		};
-
-		var creatLine = function(v){
-
-			var that = this;
-			var $liLine = $('<li></li>').addClass('item-orange clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
-			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
-			var $btnType= $('<a></a>').addClass('btn btn-minier btn-success').html("更改支付方式");
-			var $btnMoney= $('<a></a>').addClass('btn btn-minier btn-warning').html("生成款项");
-			var $btnEnd= $('<a></a>').addClass('btn btn-minier btn-inverse').html("合同终止");
-
-			var propertyArr = [
-				["楼盘地址:", v.buildingHouse.house.village.name + " " + v.buildingHouse.house.houseNumber , "grey"],
-				["房源所属人:", v.buildingHouse.customer.name, "grey"],
-				["客源姓名:", v.buildingCustomer.customer.name, "grey"],
-				["房源代理人:", v.buildingHouseAgent.name, "grey"],
-				["客源代理人:", v.buildingCustomerAgent.name, "grey"],
-				["签约时间:", v.signingTime, "green"],
-				["成交价格:", v.tradePrice, "blue"],
-				["首付款:", v.downpayment, "blue"],
-				["贷款金额:", v.loanPrice, "blue"],
-				["支付方式:", building.payType[v.payType], "grey"],
-				["结算状态:", building.balanceStatus[v.balanceStatus], "red"]
-			];
-
-			$.each(propertyArr, function (index,value) {
-				var $liProperty = $('<li></li>');
-				$('<strong></strong>').html(value[0]).appendTo($liProperty);
-				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-				$liProperty.appendTo($ulProperty);
-			});
-
-			$divBtnWrap.append($btnView).append($btnType).append($btnMoney).append($btnEnd).appendTo($h3);
-
-			$liLine.append($h3).append($ulProperty);
-
-			$btnView.click(function(){
-				buildingDetail(v);
-			});
-
-			// 更改支付方式
-			$btnType.unbind("click");
-			$btnType.click(function(){
-				// 这里目前关于支付方式更改是涉及到的贷款服务费没有处理,页面用该有一个生成款项的入口
-				updatePayType(v.bid);
-			});
-
-			// 生成款项
-			$btnMoney.click(function(){
-				// 还没写
-			});
-
-			// 合同终止
-			$btnEnd.click(function(){
-				// 这里应该弹出退款框,合同终止的情况下将中介费,贷款服务费退还
-				buildingEnd(v.bid);
-			});
-
-			return $liLine;
-		};
+	function buildBuildingLinebtns() {
 
 		return {
-			init : function(tableId,listData){
-				com.focusPage('#' + tableId).html(null);
-				renderList(tableId,listData);
+			view: {
+				name: "查看",
+				clazz: "btn-yellow",
+				handle: function(v) {
+					buildingDetail(v);
+				}
 			},
-			drawLine : function(v){
-				return creatLine(v);
+			type: {
+				name: "更改支付方式",
+				clazz: "btn-success",
+				handle: function(v) {
+					updatePayType(v.bid);
+				}
+			},
+			money: {
+				name: "生成款项",
+				clazz: "btn-warning",
+				handle: function(v) {
+					// 还没写
+				}
+			},
+			end: {
+				name: "合同终止",
+				clazz: "btn-inverse",
+				handle: function(v) {
+					buildingEnd(v.bid);
+				}
 			}
-		}
-	})();
+		};
+	}
 
-	var searcher = new Searcher();
-
-	searcher.init(["buildingNo"], "condList", api.building.pageBuilding, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "buildingPostData",null, false, null, function(){
+	function buildBuildingButtons() {
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addBuilding').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -260,7 +259,12 @@ jQuery(function($) {
 		var $addspan = $('<span></span>').text('创建代理人').appendTo($addb);
 
 		return [$adda, $addb];
-	});
+	}
+
+	var searcher = new Searcher();
+
+	searcher.set("condList", "pagenation", "resultList", api.building.pageBuilding, null, ["buildingNo"], "buildingPostData", null, false, buildBuildingButtons);
+	searcher.line("no", buildBuildingLineprops(), buildBuildingLinebtns()).render();
 
 	// 添加
 	com.focusPage('a[name="addBuilding"]', '#pagenation').click(function(){

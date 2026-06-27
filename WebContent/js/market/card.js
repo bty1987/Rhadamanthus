@@ -30,123 +30,101 @@ jQuery(function($) {
 
     initUploadBtn();
 
-    var displayFunc = (function() {
+    function buildCardLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            type: "img",
+            prop: "userPhoto"
+        }, {
+            field: "cuser.unionId",
+            name: "微信用户",
+            prop: "cuser.unionId",
+            clazz: "grey"
+        }, {
+            field: "phone",
+            name: "手机号",
+            prop: "phone",
+            clazz: "grey"
+        }, {
+            field: "wechat",
+            name: "微信号",
+            prop: "wechat",
+            clazz: "grey"
+        }, {
+            field: "industry",
+            name: "行业",
+            prop: "industry",
+            clazz: "grey"
+        }, {
+            field: "profession",
+            name: "职业",
+            prop: "profession",
+            clazz: "grey"
+        }, {
+            field: "address",
+            name: "地址",
+            prop: "address",
+            clazz: "grey"
+        }, {
+            field: "info",
+            name: "个人简介",
+            prop: "info",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $photo = $('<div></div>').css({
-                        "width": "75px",
-                        "height": "75px",
-                        "padding": "10px",
-                        "float": "left"
-                    });
-                    var img = $('<img />').appendTo($photo);
-                    com.showImg(img, v.userPhoto, 75, 75, '', null, 0);
-
-                    var $liLine = creatLine(v);
-
-                    $ul.append($photo).append($liLine);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix').css({
-                "padding-left": "90px"
-            });
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.userName));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html("编辑");
-            var $btnDrawing = $('<a></a>').addClass('btn btn-minier btn-success').html("照片墙");
-
-            var propertyArr = [["微信用户:", v.cuser.unionId, "grey"], ["手机号:", v.phone, "grey"], ["微信号:", v.wechat, "grey"], ["行业:", v.industry, "grey"], ["职业:", v.profession, "grey"], ["地址:", v.address, "grey"], ["个人简介:", v.info, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnEdit).append($btnDrawing).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            // 编辑
-            $btnEdit.click(function() {
-
-                businessCard.items.userName.val(v.userName);
-                businessCard.items.phone.val(v.phone);
-                businessCard.items.wechat.val(v.wechat);
-                businessCard.items.industry.val(v.industry);
-                businessCard.items.profession.val(v.profession);
-                businessCard.items.address.val(v.address);
-                businessCard.items.info.val(v.info);
-                businessCard.items.caid = v.caid;
-                businessCard.items.userPhoto.html("");
-                if (v.userPhoto != "") {
-                    appendGalleryElement("userPhoto", v.userPhoto, 0);
-                    com.popup4photos("#userPhoto");
-                }
-                businessCard.modal.modal("show");
-            });
-
-            // 图片
-            $btnDrawing.click(function() {
-
-                com.focusPage("#cardPhoto").html("");
-                com.post(api.market.queryCardPhotoByCaid, {
-                    "cardPhoto.caid": v.caid
-                }, function(data) {
-
-                    var cardPhotos = data.cardPhotos;
-                    if (cardPhotos && cardPhotos.length) {
-                        $.each(cardPhotos, function(i, d) {
-
-                            appendGalleryElement("cardPhoto", d.url, 0);
-                        });
-                        com.popup4photos("#cardPhoto");
-                    }
-                }, null, false);
-
-                com.focusPage("#cardPhotoModal").modal("show");
-            });
-
-            return $liLine;
-        };
+    function buildCardLinebtns() {
 
         return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    businessCard.items.userName.val(v.userName);
+                    businessCard.items.phone.val(v.phone);
+                    businessCard.items.wechat.val(v.wechat);
+                    businessCard.items.industry.val(v.industry);
+                    businessCard.items.profession.val(v.profession);
+                    businessCard.items.address.val(v.address);
+                    businessCard.items.info.val(v.info);
+                    businessCard.items.caid = v.caid;
+                    businessCard.items.userPhoto.html("");
+                    if (v.userPhoto != "") {
+                        appendGalleryElement("userPhoto", v.userPhoto, 0);
+                        com.popup4photos("#userPhoto");
+                    }
+                    businessCard.modal.modal("show");
+                }
             },
-            drawLine: function(v) {
+            drawing: {
+                name: "照片墙",
+                clazz: "btn-success",
+                handle: function(v) {
+                    com.focusPage("#cardPhoto").html("");
+                    com.post(api.market.queryCardPhotoByCaid, {
+                        "cardPhoto.caid": v.caid
+                    }, function(data) {
 
-                return creatLine(v);
+                        var cardPhotos = data.cardPhotos;
+                        if (cardPhotos && cardPhotos.length) {
+                            $.each(cardPhotos, function(i, d) {
+
+                                appendGalleryElement("cardPhoto", d.url, 0);
+                            });
+                            com.popup4photos("#cardPhoto");
+                        }
+                    }, null, false);
+
+                    com.focusPage("#cardPhotoModal").modal("show");
+                }
             }
-        }
-    })();
+        };
+    }
 
     var searcher = new Searcher();
-    var conditionList = ["market-customer-name", "market-phone", "market-industry"];
 
-    searcher.init(conditionList, "condList", api.market.pageCard, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "casePostData", null, false, null);
+    searcher.set("condList", "pagenation", "resultList", api.market.pageCard, null, ["market-customer-name", "market-phone", "market-industry"], "casePostData", null, false, null);
+    searcher.line("userName", buildCardLineprops(), buildCardLinebtns()).render();
 
     function updateCardData() {
 

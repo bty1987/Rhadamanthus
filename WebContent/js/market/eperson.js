@@ -49,110 +49,89 @@ jQuery(function($) {
 
     initUploadBtn();
 
-    var displayFunc = (function() {
+    function buildEpersonLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            type: "img",
+            prop: "imgUrl"
+        }, {
+            field: "cityId",
+            name: "城市",
+            prop: function(v) { return eperson.ecityItem[v.cityId]; },
+            clazz: "grey"
+        }, {
+            field: "name",
+            name: "姓名",
+            prop: "name",
+            clazz: "grey"
+        }, {
+            field: "phone",
+            name: "电话",
+            prop: "phone",
+            clazz: "grey"
+        }, {
+            field: "experience",
+            name: "经验",
+            prop: function(v) { return v.experience + "年"; },
+            clazz: "blue"
+        }, {
+            field: "type",
+            name: "职位",
+            prop: function(v) { return eperson.type[v.type]; },
+            clazz: "red"
+        }, {
+            field: "info",
+            name: "简介",
+            prop: "info",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var that = this;
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $urldiv = $('<div style="border: 1px solid #ccc ;float :left;"></div>').css("width", "75px").css("height", "75px").css("margin-right", "10px");
-            var img = $('<img />').css("margin-right", "20px").appendTo($urldiv);
-            var url = com.showImg(img, v.imgUrl, 75, 75, '', null, 0);
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html("编辑");
-
-            var propertyArr = [["城市:", eperson.ecityItem[v.cityId], "grey"], ["姓名:", v.name, "grey"], ["电话:", v.phone, "grey"], ["经验:", v.experience + "年", "blue"], ["职位:", eperson.type[v.type], "red"], ["简介:", v.info, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-
-                if (index == propertyArr.length - 1) {
-                    $liProperty.addClass("col-sm-12").css("padding-left", "85px").css("margin-top", "-15px");
-                }
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnEdit).appendTo($h3);
-
-            $liLine.append($urldiv).append($h3).append($ulProperty);
-
-            // 编辑
-            $btnEdit.click(function() {
-
-                eperson.items.imgUrl.html("");
-
-                com.updateTypeahead('city', v.cityId, eperson.ecityItem[v.cityId]);
-
-                eperson.items.name.val(v.name);
-                eperson.items.phone.val(v.phone);
-                eperson.items.experience.val(v.experience);
-                eperson.items.type.val(v.type);
-                eperson.items.info.val(v.info);
-                eperson.items.path.val(v.imgUrl);
-
-                eperson.euid = v.euid;
-                eperson.editFlag = true;
-
-                if (v.imgUrl != "") {
-                    appendGalleryElement("imgUrl", v.imgUrl, 0);
-                    com.popup4photos("#imgUrl");
-                }
-
-                com.focusPage("#epersonModal").modal("show");
-            });
-
-            return $liLine;
-        };
+    function buildEpersonLinebtns() {
 
         return {
-            init: function(tableId, listData) {
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    eperson.items.imgUrl.html("");
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
+                    com.updateTypeahead('city', v.cityId, eperson.ecityItem[v.cityId]);
 
-                return creatLine(v);
+                    eperson.items.name.val(v.name);
+                    eperson.items.phone.val(v.phone);
+                    eperson.items.experience.val(v.experience);
+                    eperson.items.type.val(v.type);
+                    eperson.items.info.val(v.info);
+                    eperson.items.path.val(v.imgUrl);
+
+                    eperson.euid = v.euid;
+                    eperson.editFlag = true;
+
+                    if (v.imgUrl != "") {
+                        appendGalleryElement("imgUrl", v.imgUrl, 0);
+                        com.popup4photos("#imgUrl");
+                    }
+
+                    com.focusPage("#epersonModal").modal("show");
+                }
             }
-        }
-    })();
+        };
+    }
 
-    var searcher = new Searcher();
-    var conditionList = ["market-city", "market-person-name"];
-
-    searcher.init(conditionList, "condList", api.market.pageEperson, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "epersonPostData", null, false, null, function() {
+    function buildEpersonButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addeperson').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.market.pageEperson, null, ["market-city", "market-person-name"], "epersonPostData", null, false, buildEpersonButtons);
+    searcher.line("name", buildEpersonLineprops(), buildEpersonLinebtns()).render();
 
     // 添加
     com.focusPage('a[name="addeperson"]', '#pagenation').click(function() {

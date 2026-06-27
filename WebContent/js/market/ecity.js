@@ -19,74 +19,39 @@ jQuery(function($) {
         com.clearValidator();
     });
 
-    var displayFunc = (function() {
+    function buildEcityLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "city",
+            name: "名称",
+            prop: "city",
+            clazz: "grey"
+        }, {
+            field: "y",
+            name: "经度",
+            prop: "y",
+            clazz: "grey"
+        }, {
+            field: "x",
+            name: "纬度",
+            prop: "x",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var that = this;
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.city));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var propertyArr = [["名称:", v.city, "grey"], ["经度:", v.y, "grey"], ["纬度:", v.x, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $liLine.append($h3).append($ulProperty);
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        }
-    })();
-
-    var searcher = new Searcher();
-    var conditionList = ["market-city"];
-
-    searcher.init(conditionList, "condList", api.market.pageEcity, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "ecityPostData", null, false, null, function() {
+    function buildEcityButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addEcity').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.market.pageEcity, null, ["market-city"], "ecityPostData", null, false, buildEcityButtons);
+    searcher.line("city", buildEcityLineprops(), {}).render();
 
     // 添加
     com.focusPage('a[name="addEcity"]', '#pagenation').click(function() {

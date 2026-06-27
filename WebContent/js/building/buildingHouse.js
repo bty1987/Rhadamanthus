@@ -131,188 +131,181 @@ jQuery(function($) {
         }, false);
     });
 
-    var displayFunc = (function() {
+    function buildBuildingHouseLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "type",
+            name: "房源类型",
+            prop: function(v) { return buildingHouse.hsType[v.type]; },
+            clazz: "red"
+        }, {
+            field: "house.type",
+            name: "房屋类型",
+            prop: function(v) { return buildingHouse.houseType[v.house.type]; },
+            clazz: "red"
+        }, {
+            field: "house.village.name",
+            name: "楼盘地址",
+            prop: "house.village.name",
+            clazz: "grey"
+        }, {
+            field: "house.buildArea",
+            name: "面积",
+            prop: function(v) { return v.house.buildArea + "平"; },
+            clazz: "blue"
+        }, {
+            field: "totalPrice",
+            name: "总价",
+            prop: function(v) { return toMoney(v.totalPrice) + "元"; },
+            clazz: "blue"
+        }, {
+            field: "decorateDegree",
+            name: "装修程度",
+            prop: function(v) { return buildingHouse.decorateDegree[v.decorateDegree]; },
+            clazz: "grey"
+        }, {
+            field: "house.houseType",
+            name: "户型",
+            prop: "house.houseType",
+            clazz: "grey"
+        }, {
+            field: "house.orientation",
+            name: "房屋朝向",
+            prop: function(v) { return buildingHouse.orientation[v.house.orientation]; },
+            clazz: "grey"
+        }, {
+            field: "discussType",
+            name: "商议类型",
+            prop: function(v) { return buildingHouse.discussType[v.discussType]; },
+            clazz: "red"
+        }, {
+            field: "rentType",
+            name: "交租方式",
+            prop: function(v) { return buildingHouse.rentType[v.rentType]; },
+            clazz: "grey"
+        }, {
+            field: "housingGrade",
+            name: "房源等级",
+            prop: "housingGrade",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var that = this;
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-yellow').html("申请审核");
-            var $btnDrawing = $('<a></a>').addClass('btn btn-minier btn-success').html("图片");
-            var $btnAll = $('<a></a>').addClass('btn btn-minier btn-warning').html("查看");
-            var $btnBind = $('<a></a>').addClass('btn btn-minier btn-inverse').html("绑定客源");
-            var $btnRecord = $('<a></a>').addClass('btn btn-minier btn-danger').html("跟进记录");
-            var $btnStatus = $('<input />').attr("type", "checkbox").addClass('ace ace-switch ace-switch-5').prop("id", v.hsid);
-            if (v.status == 0 || v.status == 3 || v.status == 4) {
-                $btnStatus.attr("checked", true);
-            } else if (v.status == 1 || v.status == 2) {
-                $btnStatus.attr("checked", false);
-            }
-            var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
-
-            var propertyArr = [["房源类型:", buildingHouse.hsType[v.type], "red"], ["房屋类型:", buildingHouse.houseType[v.house.type], "red"], ["楼盘地址:", v.house.village.name, "grey"], ["面积:", v.house.buildArea + "平", "blue"], ["总价:", toMoney(v.totalPrice) + "元", "blue"], ["装修程度:", buildingHouse.decorateDegree[v.decorateDegree], "grey"], ["户型:", v.house.houseType, "grey"], ["房屋朝向:", buildingHouse.orientation[v.house.orientation], "grey"], ["商议类型:", buildingHouse.discussType[v.discussType], "red"], ["交租方式:", buildingHouse.rentType[v.rentType], "grey"], ["房源等级:", v.housingGrade, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            if (v.status == 4) {
-                $divBtnWrap.append($btnCheck);
-            }
-            $divBtnWrap.append($btnDrawing).append($btnAll);
-            if (v.status == 3) {
-                $divBtnWrap.append($btnBind);
-            }
-            if (v.status == 1 || v.status == 3) {
-                $divBtnWrap.append($btnRecord);
-            }
-            if (v.status != 0 && v.status != 1) {
-                $divBtnWrap.append($btnStatus).append($btnSpan);
-            }
-            $divBtnWrap.appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            // 申请审核
-            $btnCheck.click(function() {
-
-                if (v.status == 4) {
-                    var options = {};
-                    options["buildingHouse.hsid"] = v.hsid;
-                    options["buildingHouse.status"] = 0;
-                    com.post(api.building.updateBuildingHouseForStatus, options, function(res) {
-
-                        com.showAlert(com.info, "申请成功");
-                        searcher.doSearch();
-                    });
-                } else {
-                    com.showAlert(com.warning, "当前房源信息状态不符合");
-                }
-            });
-
-            // 图片
-            $btnDrawing.click(function() {
-
-                com.focusPage("#buildingHouseDrawing").html("");
-                com.post(api.building.queryBuildingDrawing, {
-                    "buildingDrawing.sid": v.hsid,
-                    "buildingDrawing.type": 0
-                }, function(data) {
-
-                    var buildingHousePics = data.buildingDrawings;
-                    if (buildingHousePics && buildingHousePics.length) {
-                        $.each(buildingHousePics, function(i, d) {
-
-                            appendGalleryElement("buildingHouseDrawing", d.bdid, d.drawingUrl, d.drawingType, "", api.building.deleteBuildingDrawing, v.hsid, api.building.updateBuildingHouseForPath);
-                        });
-                        com.popup4photos("#buildingHouseDrawing");
-                    }
-                }, null, false);
-
-                initUploadBtn(v.hsid);
-                buildingHouse.modals.houseHouseDrawingPage.modal("show");
-            });
-
-            // 查看 可以看见房源的所有信息 包括图片 和上传图片
-            $btnAll.click(function() {
-
-                params.building.buildingHouse = v;
-                params.building.page = "buildingHouse";
-
-                com.popup4page("#stockRecordPopUp", api.index.buildingHouseDetail.url, "查看");
-            });
-
-            // 绑定客源
-            $btnBind.click(function() {
-
-                if (v.status != 3) {
-                    com.showAlert(com.warning, "当前房源状态不符合,不能绑定客源");
-                    return false;
-                }
-
-                deleteData();
-
-                buildingHouse.buildItems.hsNo.val(v.no);
-                buildingHouse.hsid = v.hsid;
-                buildingHouse.buildItems.hsNo.prop("readOnly", true);
-
-                buildingHouse.modals.buildingModal.modal("show");
-            });
-
-            // 跟进记录
-            $btnRecord.click(function() {
-
-                params.building.buildingHouse = v;
-                params.building.flag = true;
-
-                com.popup4page("#stockRecordPopUp", api.index.buildingRecord.url, "跟进记录");
-            });
-
-            // 启用禁用
-            $btnStatus.click(function() {
-
-                var checkedFlag = $btnStatus.prop("checked");
-                if (checkedFlag) {
-                    com.focusPage("#" + v.hsid).prop("checked", false);
-                    updateBuildingHouseStatus(v.hsid, 2);
-                } else {
-                    if (v.status != 1) {
-                        updateBuildingHouseStatus(v.hsid, 0);
-                    } else {
-                        com.showAlert(com.warning, "当前房源已签约不能修改状态");
-                    }
-                }
-            });
-
-            return $liLine;
-        };
+    function buildBuildingHouseLinebtns() {
 
         return {
-            init: function(tableId, listData) {
+            check: {
+                name: "申请审核",
+                clazz: "btn-yellow",
+                show: function(v) { return v.status == 4; },
+                handle: function(v) {
+                    if (v.status == 4) {
+                        var options = {};
+                        options["buildingHouse.hsid"] = v.hsid;
+                        options["buildingHouse.status"] = 0;
+                        com.post(api.building.updateBuildingHouseForStatus, options, function(res) {
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+                            com.showAlert(com.info, "申请成功");
+                            searcher.doSearch();
+                        });
+                    } else {
+                        com.showAlert(com.warning, "当前房源信息状态不符合");
+                    }
+                }
             },
-            drawLine: function(v) {
+            drawing: {
+                name: "图片",
+                clazz: "btn-success",
+                handle: function(v) {
+                    com.focusPage("#buildingHouseDrawing").html("");
+                    com.post(api.building.queryBuildingDrawing, {
+                        "buildingDrawing.sid": v.hsid,
+                        "buildingDrawing.type": 0
+                    }, function(data) {
 
-                return creatLine(v);
+                        var buildingHousePics = data.buildingDrawings;
+                        if (buildingHousePics && buildingHousePics.length) {
+                            $.each(buildingHousePics, function(i, d) {
+
+                                appendGalleryElement("buildingHouseDrawing", d.bdid, d.drawingUrl, d.drawingType, "", api.building.deleteBuildingDrawing, v.hsid, api.building.updateBuildingHouseForPath);
+                            });
+                            com.popup4photos("#buildingHouseDrawing");
+                        }
+                    }, null, false);
+
+                    initUploadBtn(v.hsid);
+                    buildingHouse.modals.houseHouseDrawingPage.modal("show");
+                }
+            },
+            view: {
+                name: "查看",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    params.building.buildingHouse = v;
+                    params.building.page = "buildingHouse";
+
+                    com.popup4page("#stockRecordPopUp", api.index.buildingHouseDetail.url, "查看");
+                }
+            },
+            bind: {
+                name: "绑定客源",
+                clazz: "btn-inverse",
+                show: function(v) { return v.status == 3; },
+                handle: function(v) {
+                    if (v.status != 3) {
+                        com.showAlert(com.warning, "当前房源状态不符合,不能绑定客源");
+                        return false;
+                    }
+
+                    deleteData();
+
+                    buildingHouse.buildItems.hsNo.val(v.no);
+                    buildingHouse.hsid = v.hsid;
+                    buildingHouse.buildItems.hsNo.prop("readOnly", true);
+
+                    buildingHouse.modals.buildingModal.modal("show");
+                }
+            },
+            record: {
+                name: "跟进记录",
+                clazz: "btn-danger",
+                show: function(v) { return v.status == 1 || v.status == 3; },
+                handle: function(v) {
+                    params.building.buildingHouse = v;
+                    params.building.flag = true;
+
+                    com.popup4page("#stockRecordPopUp", api.index.buildingRecord.url, "跟进记录");
+                }
+            },
+            status: {
+                name: "状态",
+                type: "switch",
+                clazz: "status-lbl",
+                show: function(v) { return v.status != 0 && v.status != 1; },
+                init: function(v) {
+                    return v.status == 0 || v.status == 3 || v.status == 4;
+                },
+                handle: function(v, check) {
+                    if (check) {
+                        updateBuildingHouseStatus(v.hsid, 2);
+                    } else {
+                        if (v.status != 1) {
+                            updateBuildingHouseStatus(v.hsid, 0);
+                        } else {
+                            com.showAlert(com.warning, "当前房源已签约不能修改状态");
+                        }
+                    }
+                }
             }
-        }
-    })();
+        };
+    }
 
     var searcher = new Searcher();
-    var conditionList = ["building-buildingHouse-no", "building-houseType", "building-buildingHouse-type", "building-village", "building-Area", "building-totalPrice", "building-roomNum", "building-orientation", "building-decorateDegree", "building-allowLoan", "building-housingGrade", "building-rentType", "building-status"];
 
-    searcher.init(conditionList, "CondList", api.building.pageBuildingHouseForFollower, function(data) {
-
-        displayFunc.init('ResultList', data);
-    }, "Pagenation", "buildingHousePostData", {
+    searcher.set("CondList", "Pagenation", "ResultList", api.building.pageBuildingHouseForFollower, {
         "filter[0].field": "buildingHouse"
-    }, false, null, null);
+    }, ["building-buildingHouse-no", "building-houseType", "building-buildingHouse-type", "building-village", "building-Area", "building-totalPrice", "building-roomNum", "building-orientation", "building-decorateDegree", "building-allowLoan", "building-housingGrade", "building-rentType", "building-status"], "buildingHousePostData", null, false, null);
+    searcher.line("no", buildBuildingHouseLineprops(), buildBuildingHouseLinebtns()).render();
 
     // 更新房源状态
     function updateBuildingHouseStatus(hsid, cvalue) {

@@ -166,213 +166,211 @@ jQuery(function($) {
         com.clearValidator();
     });
 
-    var displayFunc = (function() {
+    function buildBuildingCustomerLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "type",
+            name: "客户类型",
+            prop: function(v) { return buildingCustomer.csType[v.type]; },
+            clazz: "red"
+        }, {
+            field: "customer.name",
+            name: "客户名",
+            prop: "customer.name",
+            clazz: "grey"
+        }, {
+            field: "customer.phone",
+            name: "联系电话",
+            prop: "customer.phone",
+            clazz: "grey"
+        }, {
+            field: "purpose",
+            name: "目的",
+            prop: "purpose",
+            clazz: "grey"
+        }, {
+            field: "price",
+            name: "需求总价",
+            prop: "price",
+            clazz: "blue"
+        }, {
+            field: "area",
+            name: "需求面积",
+            prop: "area",
+            clazz: "blue"
+        }, {
+            field: "familyType",
+            name: "需求户型",
+            prop: function(v) { return v.familyType + "室"; },
+            clazz: "grey"
+        }, {
+            field: "orientation",
+            name: "朝向",
+            prop: function(v) { return buildingCustomer.orientation[v.orientation]; },
+            clazz: "grey"
+        }, {
+            field: "conditions",
+            name: "意向备注",
+            prop: "conditions",
+            clazz: "grey"
+        }, {
+            field: "grade",
+            name: "客户等级",
+            prop: "grade",
+            clazz: "grey"
+        }, {
+            field: "comment",
+            name: "备注",
+            prop: "comment",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var that = this;
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("编辑");
-            var $btnBind = $('<a></a>').addClass('btn btn-minier btn-success').html("绑定房源");
-            var $btnStatus = $('<input />').attr("type", "checkbox").addClass('ace ace-switch ace-switch-5').prop("id", v.csid).attr("checked", v.status == 0 ? true : false);
-            var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
-            var $btnRecord = $('<a></a>').addClass('btn btn-minier btn-warning').html("跟进记录");
-
-            var propertyArr = [["客户类型:", buildingCustomer.csType[v.type], "red"], ["客户名:", v.customer.name, "grey"], ["联系电话:", v.customer.phone, "grey"], ["目的:", v.purpose, "grey"], ["需求总价:", v.price, "blue"], ["需求面积:", v.area, "blue"], ["需求户型:", v.familyType + "室", "grey"], ["朝向:", buildingCustomer.orientation[v.orientation], "grey"], ["意向备注:", v.conditions, "grey"], ["客户等级:", v.grade, "grey"], ["备注:", v.comment, "grey"]];
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnView).append($btnBind).append($btnRecord).append($btnStatus).append($btnSpan).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            // 启用禁用
-            $btnStatus.click(function() {
-
-                var cvalue = $btnStatus.prop("checked");
-                if (cvalue) {
-                    cvalue = 0;
-                } else {
-                    cvalue = 1;
-                }
-
-                if (cvalue == 0) {
-                    com.focusPage("#" + v.csid).attr("checked", false);
-                    updateBuildingCustomerStatus(v.csid, cvalue);
-                } else if (cvalue == 1) {
-                    updateBuildingCustomerStatus(v.csid, cvalue);
-                }
-            });
-
-            // 编辑
-            $btnView.click(function() {
-
-                buildingCustomer.editFlag = true;
-                buildingCustomer["buildingCustomer.csid"] = v.csid;
-                buildingCustomer.csStatus = v.status;
-
-                com.focusPage("#cancelBtn").css("display", "none");
-
-                // 绑定数据
-                com.post(api.building.queryBuildingCustomerByCsid, {
-                    "buildingCustomer.csid": v.csid
-                }, function(res) {
-
-                    var buildingCustomers = res.buildingCustomer;
-                    buildingCustomer.items.csType.prop("disabled", true);
-
-                    buildingCustomer.items.csType.val(buildingCustomers.type);
-                    buildingCustomer.items.purpose.val(buildingCustomers.purpose);
-                    var _tagOne = com.focusPage('#intention').data('tag');
-
-                    if (_tagOne) {
-                        while (_tagOne.values.length > 0) {
-                            _tagOne.remove(0)
-                        }
-                        if (buildingCustomers.intention && buildingCustomers.intention != "") {
-                            var intentionList = buildingCustomers.intention.split(",");
-                            if (intentionList.length) {
-                                $.each(intentionList, function(i, v) {
-
-                                    _tagOne.fladd(v, v);
-                                });
-                            }
-                        }
-                    }
-                    buildingCustomer.items.priceLow.val(buildingCustomers.price.split(",")[0]);
-                    buildingCustomer.items.priceHigh.val(buildingCustomers.price.split(",")[1]);
-                    buildingCustomer.items.areaLow.val(buildingCustomers.area.split(",")[0]);
-                    buildingCustomer.items.areaHigh.val(buildingCustomers.area.split(",")[1]);
-                    buildingCustomer.items.familyType.val(buildingCustomers.familyType);
-                    buildingCustomer.items.orientation.val(buildingCustomers.orientation);
-                    var _tag = com.focusPage('#conditions').data('tag');
-
-                    if (_tag) {
-                        while (_tag.values.length > 0) {
-                            _tag.remove(0)
-                        }
-
-                        if (buildingCustomers.conditions && buildingCustomers.conditions != "") {
-                            var conditionList = buildingCustomers.conditions.split(",");
-                            if (conditionList.length) {
-                                $.each(conditionList, function(i, v) {
-
-                                    _tag.fladd(v, v);
-                                });
-                            }
-                        }
-                    }
-                    buildingCustomer.items.grade.val(buildingCustomers.grade);
-                    buildingCustomer.items.comment.val(buildingCustomers.comment);
-
-                    buildingCustomer.customerItems.customerName.val(buildingCustomers.customer.name);
-                    // 证件类型需要判断
-                    if (buildingCustomers.customer.identity != null && buildingCustomers.customer.identity != "") {
-                        buildingCustomer.customerItems.cardType.val("身份证");
-                        buildingCustomer.customerItems.cardNum.val(buildingCustomers.customer.identity);
-                    } else if (buildingCustomers.customer.officer != null && buildingCustomers.customer.officer != "") {
-                        buildingCustomer.customerItems.cardType.val("军官证");
-                        buildingCustomer.customerItems.cardNum.val(buildingCustomers.customer.officer);
-                    } else if (buildingCustomers.customer.passport != null && buildingCustomers.customer.passport != "") {
-                        buildingCustomer.customerItems.cardType.val("护照");
-                        buildingCustomer.customerItems.cardNum.val(buildingCustomers.customer.passport);
-                    }
-
-                    if (buildingCustomers.customer.gender == "女") {
-                        buildingCustomer.customerItems.gender.prop("checked", true);
-                    }
-
-                    if (buildingCustomers.customer.gender == "男") {
-                        buildingCustomer.customerItems.gender.prop("checked", false);
-                    }
-
-                    buildingCustomer.customerItems.qq.val(buildingCustomers.customer.qq);
-                    buildingCustomer.customerItems.wechat.val(buildingCustomers.customer.wechat);
-                    buildingCustomer.customerItems.email.val(buildingCustomers.customer.email);
-                    buildingCustomer.customerItems.relationshipType.val(buildingCustomers.customer.relationshipType);
-                    buildingCustomer.customerItems.address.val(buildingCustomers.customer.address);
-                    buildingCustomer.customerItems.phone.val(buildingCustomers.customer.phone);
-                }, null, false);
-
-                readOnlyCustomerFlag(true);
-
-                buildingCustomer.modals.buildingCustomerModal.modal("show");
-            });
-
-            // 绑定房源
-            $btnBind.click(function() {
-
-                if (v.status != 0) {
-                    com.showAlert(com.warning, "当前客源已签约或已失效,不能绑定房源");
-                    return false;
-                }
-
-                deleteData();
-
-                buildingCustomer.buildItems.csNo.val(v.no);
-                buildingCustomer.csid = v.csid;
-                buildingCustomer.buildItems.csNo.prop("readOnly", true);
-
-                buildingCustomer.modals.buildingModal.modal("show");
-            });
-
-            // 跟进记录
-            $btnRecord.click(function() {
-
-                params.building.buildingCustomer = v;
-                params.building.flag = false;
-
-                com.popup4page("#stockRecordPopUp", api.index.buildingRecord.url, "跟进记录");
-            });
-
-            return $liLine;
-        };
+    function buildBuildingCustomerLinebtns() {
 
         return {
-            init: function(tableId, listData) {
+            view: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    buildingCustomer.editFlag = true;
+                    buildingCustomer["buildingCustomer.csid"] = v.csid;
+                    buildingCustomer.csStatus = v.status;
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+                    com.focusPage("#cancelBtn").css("display", "none");
+
+                    // 绑定数据
+                    com.post(api.building.queryBuildingCustomerByCsid, {
+                        "buildingCustomer.csid": v.csid
+                    }, function(res) {
+
+                        var buildingCustomers = res.buildingCustomer;
+                        buildingCustomer.items.csType.prop("disabled", true);
+
+                        buildingCustomer.items.csType.val(buildingCustomers.type);
+                        buildingCustomer.items.purpose.val(buildingCustomers.purpose);
+                        var _tagOne = com.focusPage('#intention').data('tag');
+
+                        if (_tagOne) {
+                            while (_tagOne.values.length > 0) {
+                                _tagOne.remove(0)
+                            }
+                            if (buildingCustomers.intention && buildingCustomers.intention != "") {
+                                var intentionList = buildingCustomers.intention.split(",");
+                                if (intentionList.length) {
+                                    $.each(intentionList, function(i, v) {
+
+                                        _tagOne.fladd(v, v);
+                                    });
+                                }
+                            }
+                        }
+                        buildingCustomer.items.priceLow.val(buildingCustomers.price.split(",")[0]);
+                        buildingCustomer.items.priceHigh.val(buildingCustomers.price.split(",")[1]);
+                        buildingCustomer.items.areaLow.val(buildingCustomers.area.split(",")[0]);
+                        buildingCustomer.items.areaHigh.val(buildingCustomers.area.split(",")[1]);
+                        buildingCustomer.items.familyType.val(buildingCustomers.familyType);
+                        buildingCustomer.items.orientation.val(buildingCustomers.orientation);
+                        var _tag = com.focusPage('#conditions').data('tag');
+
+                        if (_tag) {
+                            while (_tag.values.length > 0) {
+                                _tag.remove(0)
+                            }
+
+                            if (buildingCustomers.conditions && buildingCustomers.conditions != "") {
+                                var conditionList = buildingCustomers.conditions.split(",");
+                                if (conditionList.length) {
+                                    $.each(conditionList, function(i, v) {
+
+                                        _tag.fladd(v, v);
+                                    });
+                                }
+                            }
+                        }
+                        buildingCustomer.items.grade.val(buildingCustomers.grade);
+                        buildingCustomer.items.comment.val(buildingCustomers.comment);
+
+                        buildingCustomer.customerItems.customerName.val(buildingCustomers.customer.name);
+                        // 证件类型需要判断
+                        if (buildingCustomers.customer.identity != null && buildingCustomers.customer.identity != "") {
+                            buildingCustomer.customerItems.cardType.val("身份证");
+                            buildingCustomer.customerItems.cardNum.val(buildingCustomers.customer.identity);
+                        } else if (buildingCustomers.customer.officer != null && buildingCustomers.customer.officer != "") {
+                            buildingCustomer.customerItems.cardType.val("军官证");
+                            buildingCustomer.customerItems.cardNum.val(buildingCustomers.customer.officer);
+                        } else if (buildingCustomers.customer.passport != null && buildingCustomers.customer.passport != "") {
+                            buildingCustomer.customerItems.cardType.val("护照");
+                            buildingCustomer.customerItems.cardNum.val(buildingCustomers.customer.passport);
+                        }
+
+                        if (buildingCustomers.customer.gender == "女") {
+                            buildingCustomer.customerItems.gender.prop("checked", true);
+                        }
+
+                        if (buildingCustomers.customer.gender == "男") {
+                            buildingCustomer.customerItems.gender.prop("checked", false);
+                        }
+
+                        buildingCustomer.customerItems.qq.val(buildingCustomers.customer.qq);
+                        buildingCustomer.customerItems.wechat.val(buildingCustomers.customer.wechat);
+                        buildingCustomer.customerItems.email.val(buildingCustomers.customer.email);
+                        buildingCustomer.customerItems.relationshipType.val(buildingCustomers.customer.relationshipType);
+                        buildingCustomer.customerItems.address.val(buildingCustomers.customer.address);
+                        buildingCustomer.customerItems.phone.val(buildingCustomers.customer.phone);
+                    }, null, false);
+
+                    readOnlyCustomerFlag(true);
+
+                    buildingCustomer.modals.buildingCustomerModal.modal("show");
+                }
             },
-            drawLine: function(v) {
+            bind: {
+                name: "绑定房源",
+                clazz: "btn-success",
+                handle: function(v) {
+                    if (v.status != 0) {
+                        com.showAlert(com.warning, "当前客源已签约或已失效,不能绑定房源");
+                        return false;
+                    }
 
-                return creatLine(v);
+                    deleteData();
+
+                    buildingCustomer.buildItems.csNo.val(v.no);
+                    buildingCustomer.csid = v.csid;
+                    buildingCustomer.buildItems.csNo.prop("readOnly", true);
+
+                    buildingCustomer.modals.buildingModal.modal("show");
+                }
+            },
+            record: {
+                name: "跟进记录",
+                clazz: "btn-warning",
+                handle: function(v) {
+                    params.building.buildingCustomer = v;
+                    params.building.flag = false;
+
+                    com.popup4page("#stockRecordPopUp", api.index.buildingRecord.url, "跟进记录");
+                }
+            },
+            status: {
+                name: "状态",
+                type: "switch",
+                clazz: "status-lbl",
+                init: function(v) {
+                    return v.status == 0;
+                },
+                handle: function(v, check) {
+                    updateBuildingCustomerStatus(v.csid, check ? 0 : 1);
+                }
             }
-        }
-    })();
+        };
+    }
 
     var searcher = new Searcher();
 
-    searcher.init(["building-customer-no", "building-custumerName"], "CondList", api.building.pageBuildingCustomer, function(data) {
-
-        displayFunc.init('ResultList', data);
-    }, "Pagenation", "buildingCustomerPostData", null, false, null, null);
+    searcher.set("CondList", "Pagenation", "Resultlist", api.building.pageBuildingCustomer, null, ["building-customer-no", "building-custumerName"], "buildingCustomerPostData", null, false, null);
+    searcher.line("no", buildBuildingCustomerLineprops(), buildBuildingCustomerLinebtns()).render();
 
     // 编辑OR添加
     function updateBuildingCustomer() {
