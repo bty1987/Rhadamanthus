@@ -380,6 +380,7 @@ jQuery(function($) {
 
             $.each(supervision4detail.twoTypes, function(i, v) {
 
+                // status == 0 为启用，非 0 表示禁用，跳过不加入可选项
                 if (v.status != 0)
                     return true;
 
@@ -466,6 +467,7 @@ jQuery(function($) {
 
         var paneDiv = $("<div></div>").addClass("step-pane").attr("id", "step" + schedule).attr("flag", "step").attr("data-schedule", schedule).attr("data-csid", csid).appendTo(paneId);
 
+        // schedule == 3 表示当前进行中的工程节点，默认激活显示
         if (schedule == 3) {
             paneDiv.removeClass("step-pane");
             paneDiv.attr("class", "active");

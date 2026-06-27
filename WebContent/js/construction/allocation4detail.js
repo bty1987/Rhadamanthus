@@ -242,6 +242,7 @@ $(function() {
     }
 
     // 添加初始完结按钮
+    // status: 0=初始, 1=开工, 2=完工
     function updatastatusDiv(status, statusDiv) {
 
         var statusDiv = com.focusPage("#" + statusDiv + "Status").html("");
@@ -255,6 +256,7 @@ $(function() {
         }
     }
 
+    // checkout: 0=验证, 1=通过
     function updatePaymentStatus(checkout, statusDiv) {
 
         var statusDiv = com.focusPage("#" + statusDiv + "paymentStatus").html("");
@@ -266,6 +268,7 @@ $(function() {
         }
     }
 
+    // workStatus: 0=初始, 1=进场, 2=离场
     function updateEnterStatus(workStatus, statusDiv) {
 
         var statusDiv = com.focusPage("#" + statusDiv + "enterStatus").html("");

@@ -518,6 +518,10 @@ jQuery(function($) {
 
     function update() {
 
+        if (com.validate("updateConstructionModal")) {
+            return false;
+        }
+
         var options = {
             "construction.cid": construction.cid,
             "construction.accessoryLimit": construction.updateItems.accessoryLimit.val(),
