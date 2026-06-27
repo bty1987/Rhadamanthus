@@ -55,77 +55,6 @@ jQuery(function($) {
         });
     }, null, false);
 
-    var displayFunc = (function() {
-
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var that = this;
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var noVal;
-            buildingRecord.currenFlag == true ? noVal = v.buildingHouse.no : noVal = v.buildingCustomer.no;
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(noVal));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            // var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            // var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("无效记录");
-
-            var v_name;
-            var h_number;
-            v.buildingHouse.house.village.name == null ? v_name = "" : v_name = v.buildingHouse.house.village.name;
-            v.buildingHouse.house.houseNumber == null ? h_number = "" : h_number = v.buildingHouse.house.houseNumber;
-
-            var propertyArr = [["记录类型:", buildingRecord.recordType[v.type], "red"], ["楼盘名:", v_name + " " + h_number, "grey"], ["客户名:", v.buildingCustomer.customer.name, "grey"], ["联系方式:", buildingRecord.pattern[v.pattern], "grey"], ["记录时间:", v.operatTime, "green"], ["记录信息:", v.comment, "grey"], ["操作人:", v.operater.userName, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            // $divBtnWrap.append($btnView);
-
-            $liLine.append($h3).append($ulProperty);
-
-            // $btnView.click(function(){
-            // //暂时没写
-            // //viewAcceptanceDetailIndex(v.orderId);
-            // });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        }
-    })();
-
     var brField;
     var brOptionId;
 
@@ -142,14 +71,57 @@ jQuery(function($) {
         com.focusPage('#fl-statement').statement("客源", "跟进记录");
     }
 
-    var searcher = new Searcher();
-    searcher.init([], "condList", api.building.queryBuildingRecord, function(data) {
+    function buildBuildingRecordLineprops() {
 
-        displayFunc.init('resultList', data);
-    }, "pagenation", "buildingRecordPostData", {
+        return [{
+            field: "type",
+            name: "记录类型",
+            prop: function(v) { return buildingRecord.recordType[v.type]; },
+            clazz: "red"
+        }, {
+            field: "village",
+            name: "楼盘名",
+            prop: function(v) {
+                var v_name = v.buildingHouse.house.village.name == null ? "" : v.buildingHouse.house.village.name;
+                var h_number = v.buildingHouse.house.houseNumber == null ? "" : v.buildingHouse.house.houseNumber;
+                return v_name + " " + h_number;
+            },
+            clazz: "grey"
+        }, {
+            field: "buildingCustomer.customer.name",
+            name: "客户名",
+            prop: "buildingCustomer.customer.name",
+            clazz: "grey"
+        }, {
+            field: "pattern",
+            name: "联系方式",
+            prop: function(v) { return buildingRecord.pattern[v.pattern]; },
+            clazz: "grey"
+        }, {
+            field: "operatTime",
+            name: "记录时间",
+            prop: "operatTime",
+            clazz: "green"
+        }, {
+            field: "comment",
+            name: "记录信息",
+            prop: "comment",
+            clazz: "grey"
+        }, {
+            field: "operater.userName",
+            name: "操作人",
+            prop: "operater.userName",
+            clazz: "grey"
+        }];
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.building.queryBuildingRecord, {
         "filters[0].data": brOptionId,
         "filters[0].field": brField
-    }, true, "buildingRecords", null);
+    }, [], "buildingRecordPostData", "buildingRecords", true, null);
+    searcher.line(function(v) { return buildingRecord.currenFlag == true ? v.buildingHouse.no : v.buildingCustomer.no; }, buildBuildingRecordLineprops(), {}).render();
 
     // 添加
     com.focusPage("#addBuildingRecord").click(function() {

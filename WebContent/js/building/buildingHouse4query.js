@@ -57,85 +57,91 @@ jQuery(function($) {
 
     }, null, false);
 
-    var displayFunc = (function() {
+    function buildBuildingHouse4queryLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "type",
+            name: "房源类型",
+            prop: function(v) { return buildingHouse.hsType[v.type]; },
+            clazz: "red"
+        }, {
+            field: "house.type",
+            name: "房屋类型",
+            prop: function(v) { return buildingHouse.houseType[v.house.type]; },
+            clazz: "red"
+        }, {
+            field: "house.village.name",
+            name: "楼盘地址",
+            prop: "house.village.name",
+            clazz: "grey"
+        }, {
+            field: "house.buildArea",
+            name: "面积",
+            prop: function(v) { return v.house.buildArea + "平"; },
+            clazz: "blue"
+        }, {
+            field: "totalPrice",
+            name: "总价",
+            prop: function(v) { return toMoney(v.totalPrice) + "元"; },
+            clazz: "blue"
+        }, {
+            field: "decorateDegree",
+            name: "装修程度",
+            prop: function(v) { return buildingHouse.decorateDegree[v.decorateDegree]; },
+            clazz: "grey"
+        }, {
+            field: "house.houseType",
+            name: "户型",
+            prop: "house.houseType",
+            clazz: "grey"
+        }, {
+            field: "house.orientation",
+            name: "房屋朝向",
+            prop: function(v) { return buildingHouse.orientation[v.house.orientation]; },
+            clazz: "grey"
+        }, {
+            field: "discussType",
+            name: "商议类型",
+            prop: function(v) { return buildingHouse.discussType[v.discussType]; },
+            clazz: "red"
+        }, {
+            field: "rentType",
+            name: "交租方式",
+            prop: function(v) { return buildingHouse.rentType[v.rentType]; },
+            clazz: "grey"
+        }, {
+            field: "housingGrade",
+            name: "房源等级",
+            prop: "housingGrade",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var that = this;
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnAll = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
-            var propertyArr = [["房源类型:", buildingHouse.hsType[v.type], "red"], ["房屋类型:", buildingHouse.houseType[v.house.type], "red"], ["楼盘地址:", v.house.village.name, "grey"], ["面积:", v.house.buildArea + "平", "blue"], ["总价:", toMoney(v.totalPrice) + "元", "blue"], ["装修程度:", buildingHouse.decorateDegree[v.decorateDegree], "grey"], ["户型:", v.house.houseType, "grey"], ["房屋朝向:", buildingHouse.orientation[v.house.orientation], "grey"], ["商议类型:", buildingHouse.discussType[v.discussType], "red"], ["交租方式:", buildingHouse.rentType[v.rentType], "grey"], ["房源等级:", v.housingGrade, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnAll).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            // 查看 可以看见房源的所有信息 包括图片 和上传图片
-            $btnAll.click(function() {
-
-                params.building.buildingHouse = v;
-                params.building.manageFlag = false;
-                params.build.page = "query";
-
-                com.popup4page("#stockRecordPopUp", api.index.buildingHouseDetail.url, "查看");
-            });
-
-            return $liLine;
-        };
+    function buildBuildingHouse4queryLinebtns() {
 
         return {
-            init: function(tableId, listData) {
+            view: {
+                name: "查看",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    params.building.buildingHouse = v;
+                    params.building.manageFlag = false;
+                    params.build.page = "query";
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
+                    com.popup4page("#stockRecordPopUp", api.index.buildingHouseDetail.url, "查看");
+                }
             }
-        }
-    })();
+        };
+    }
 
     var searcher = new Searcher();
-    var conditionList = ["building-buildingHouse-no", "building-houseType", "building-buildingHouse-type", "building-village", "building-Area", "building-totalPrice", "building-roomNum", "building-orientation", "building-decorateDegree", "building-allowLoan", "building-housingGrade", "building-rentType"];
 
-    searcher.init(conditionList, "condList", api.building.pageBuildingHouse, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "buildingHouseQueryPostData", {
+    searcher.set("condList", "pagenation", "resultList", api.building.pageBuildingHouse, {
         "filters[0].field": "status",
         "filters[0].data": 3,
         "filters[0].op": "eq"
-    }, false, null, null);
+    }, ["building-buildingHouse-no", "building-houseType", "building-buildingHouse-type", "building-village", "building-Area", "building-totalPrice", "building-roomNum", "building-orientation", "building-decorateDegree", "building-allowLoan", "building-housingGrade", "building-rentType"], "buildingHouseQueryPostData", null, false, null);
+    searcher.line("no", buildBuildingHouse4queryLineprops(), buildBuildingHouse4queryLinebtns()).render();
 
     // 转换金额
     function toMoney(num) {

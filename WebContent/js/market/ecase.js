@@ -60,179 +60,157 @@ jQuery(function($) {
         })
     }, null, false);
 
-    var displayFunc = (function() {
+    function buildEcaseLineprops() {
 
-        var renderList = function(tableId, listData) {
+        return [{
+            field: "cityId",
+            name: "城市",
+            prop: function(v) { return decorationCase.ecityItem[v.cityId]; },
+            clazz: "grey"
+        }, {
+            field: "villageName",
+            name: "楼盘名称",
+            prop: "villageName",
+            clazz: "grey"
+        }, {
+            field: "designer.name",
+            name: "设计师",
+            prop: function(v) { return v.designer.name == null ? "无" : v.designer.name; },
+            clazz: "grey"
+        }, {
+            field: "supervisor.name",
+            name: "监理",
+            prop: function(v) { return v.supervisor.name == null ? "无" : v.supervisor.name; },
+            clazz: "grey"
+        }, {
+            field: "style",
+            name: "风格",
+            prop: "style",
+            clazz: "red"
+        }, {
+            field: "type",
+            name: "类型",
+            prop: function(v) { return decorationCase.type[v.type]; },
+            clazz: "red"
+        }, {
+            field: "houseType",
+            name: "户型",
+            prop: "houseType",
+            clazz: "red"
+        }, {
+            field: "area",
+            name: "面积",
+            prop: function(v) { return v.area + "平"; },
+            clazz: "blue"
+        }, {
+            field: "cycle",
+            name: "周期",
+            prop: function(v) { return v.cycle + "天"; },
+            clazz: "blue"
+        }, {
+            field: "comment",
+            name: "说明",
+            prop: "comment",
+            clazz: "grey"
+        }];
+    }
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var that = this;
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.villageName));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html("编辑");
-            var $btnDrawing = $('<a></a>').addClass('btn btn-minier btn-success').html("图片");
-            var $btnStatus = $('<input />').attr("type", "checkbox").addClass('ace ace-switch ace-switch-5').prop("id", v.hsid);
-
-            if (v.status == 0) {
-                $btnStatus.attr("checked", false);
-            } else if (v.status == 1) {
-                $btnStatus.attr("checked", true);
-            }
-
-            var $btnSpan = $('<span></span>').addClass("lbl display-lbl");
-
-            var designerName;
-            var supervisorName;
-
-            if (v.designer.name == null) {
-                designerName = "无";
-            } else {
-                designerName = v.designer.name;
-            }
-
-            if (v.supervisor.name == null) {
-                supervisorName = "无";
-            } else {
-                supervisorName = v.supervisor.name;
-            }
-
-            var propertyArr = [["城市:", decorationCase.ecityItem[v.cityId], "grey"], ["楼盘名称:", v.villageName, "grey"], ["设计师:", designerName, "grey"], ["监理:", supervisorName, "grey"], ["风格:", v.style, "red"], ["类型:", decorationCase.type[v.type], "red"], ["户型:", v.houseType, "red"], ["面积:", v.area + "平", "blue"], ["周期:", v.cycle + "天", "blue"], ["说明:", v.comment, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnEdit).append($btnDrawing).append($btnStatus).append($btnSpan).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            // 编辑
-            $btnEdit.click(function() {
-
-                decorationCase.items.type.unbind("change");
-
-                cycleChange(decorationCase.items.type, v.cycle);
-
-                com.focusPage("#validateDiv").attr("style", "display:none");
-                com.cleanTypeahead('designer');
-                com.cleanTypeahead('supervisor');
-
-                if (v.type == 0) {
-                    decorationCase.items.cycle.attr("disabled", "disabled");
-                } else if (v.type == 1) {
-                    decorationCase.items.cycle.removeAttr("disabled");
-                }
-
-                com.updateTypeahead('city', v.cityId, decorationCase.ecityItem[v.cityId]);
-
-                if (v.designer.name != null) {
-                    com.updateTypeahead('designer', v.designer.euid, v.designer.name);
-                }
-
-                if (v.supervisor.name != null) {
-                    com.updateTypeahead('supervisor', v.supervisor.euid, v.supervisor.name);
-                }
-
-                decorationCase.items.villageName.val(v.villageName);
-                decorationCase.items.style.val(v.style);
-                decorationCase.items.type.val(v.type);
-                decorationCase.items.room.val(v.houseType.substring(0, 2));
-                decorationCase.items.livingRoom.val(v.houseType.substring(2));
-                decorationCase.items.area.val(v.area);
-                decorationCase.items.cycle.val(v.cycle);
-                decorationCase.items.comment.val(v.comment);
-                decorationCase.cid = v.cid;
-                decorationCase.editFlag = true;
-
-                com.focusPage("#caseModal").modal("show");
-            });
-
-            // 图片
-            $btnDrawing.click(function() {
-
-                com.focusPage("#epicture").html("");
-                com.post(api.market.queryEpictureByCid, {
-                    "epicture.cid": v.cid,
-                    "epicture.type": 0
-                }, function(data) {
-
-                    var pictures = data.epictures;
-                    if (pictures && pictures.length) {
-                        $.each(pictures, function(i, d) {
-
-                            appendGalleryElement("epicture", d.epid, d.url, 0, "", api.market.deleteEpicture, v.cid, api.market.updateEcase);
-                        });
-                        com.popup4photos("#epicture");
-                    }
-                }, null, false);
-
-                initUploadBtn(v.cid);
-                com.focusPage("#epicturePage").modal("show");
-            });
-
-            // 启用禁用
-            $btnStatus.click(function() {
-
-                var checkedFlag = $btnStatus.prop("checked");
-                if (checkedFlag) {
-                    com.focusPage("#" + v.cid).prop("checked", false);
-                    updateCaseStatus(v.cid, 1);
-                } else {
-                    updateCaseStatus(v.cid, 0);
-                }
-            });
-
-            return $liLine;
-        };
+    function buildEcaseLinebtns() {
 
         return {
-            init: function(tableId, listData) {
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    decorationCase.items.type.unbind("change");
 
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
+                    cycleChange(decorationCase.items.type, v.cycle);
+
+                    com.focusPage("#validateDiv").attr("style", "display:none");
+                    com.cleanTypeahead('designer');
+                    com.cleanTypeahead('supervisor');
+
+                    if (v.type == 0) {
+                        decorationCase.items.cycle.attr("disabled", "disabled");
+                    } else if (v.type == 1) {
+                        decorationCase.items.cycle.removeAttr("disabled");
+                    }
+
+                    com.updateTypeahead('city', v.cityId, decorationCase.ecityItem[v.cityId]);
+
+                    if (v.designer.name != null) {
+                        com.updateTypeahead('designer', v.designer.euid, v.designer.name);
+                    }
+
+                    if (v.supervisor.name != null) {
+                        com.updateTypeahead('supervisor', v.supervisor.euid, v.supervisor.name);
+                    }
+
+                    decorationCase.items.villageName.val(v.villageName);
+                    decorationCase.items.style.val(v.style);
+                    decorationCase.items.type.val(v.type);
+                    decorationCase.items.room.val(v.houseType.substring(0, 2));
+                    decorationCase.items.livingRoom.val(v.houseType.substring(2));
+                    decorationCase.items.area.val(v.area);
+                    decorationCase.items.cycle.val(v.cycle);
+                    decorationCase.items.comment.val(v.comment);
+                    decorationCase.cid = v.cid;
+                    decorationCase.editFlag = true;
+
+                    com.focusPage("#caseModal").modal("show");
+                }
             },
-            drawLine: function(v) {
+            drawing: {
+                name: "图片",
+                clazz: "btn-success",
+                handle: function(v) {
+                    com.focusPage("#epicture").html("");
+                    com.post(api.market.queryEpictureByCid, {
+                        "epicture.cid": v.cid,
+                        "epicture.type": 0
+                    }, function(data) {
 
-                return creatLine(v);
+                        var pictures = data.epictures;
+                        if (pictures && pictures.length) {
+                            $.each(pictures, function(i, d) {
+
+                                appendGalleryElement("epicture", d.epid, d.url, 0, "", api.market.deleteEpicture, v.cid, api.market.updateEcase);
+                            });
+                            com.popup4photos("#epicture");
+                        }
+                    }, null, false);
+
+                    initUploadBtn(v.cid);
+                    com.focusPage("#epicturePage").modal("show");
+                }
+            },
+            status: {
+                name: "状态",
+                type: "switch",
+                clazz: "display-lbl",
+                init: function(v) {
+                    return v.status == 1;
+                },
+                handle: function(v, check) {
+                    updateCaseStatus(v.cid, check ? 1 : 0);
+                }
             }
-        }
-    })();
+        };
+    }
 
-    var searcher = new Searcher();
-    var conditionList = ["market-ecase-city", "market-designer", "market-supervisor", "market-picture-type", "market-style", "market-houseType", "market-area"];
-
-    searcher.init(conditionList, "condList", api.market.pageEcase, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "casePostData", null, false, null, function() {
+    function buildEcaseButtons() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCase').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    });
+    }
+
+    var searcher = new Searcher();
+
+    searcher.set("condList", "pagenation", "resultList", api.market.pageEcase, null, ["market-ecase-city", "market-designer", "market-supervisor", "market-picture-type", "market-style", "market-houseType", "market-area"], "casePostData", null, false, buildEcaseButtons);
+    searcher.line("villageName", buildEcaseLineprops(), buildEcaseLinebtns()).render();
 
     // 添加
     com.focusPage('a[name="addCase"]', '#pagenation').click(function() {
