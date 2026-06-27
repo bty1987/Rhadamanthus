@@ -44,7 +44,7 @@ $(function() {
     constructionNodes.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas, "key", "value");
     constructionNodes.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas, "key", "value");
 
-    function buildAllocationLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderId",
@@ -117,9 +117,9 @@ $(function() {
             prop: function(v) { return constant.decoration().decoration.projectStatus.keys[v.projectStatus]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildAllocationLinebtns() {
+    var linebtns = (function() {
 
         return {
             qualiter: {
@@ -145,12 +145,12 @@ $(function() {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageConstruction, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-projectStatus'], "workerAllocationSeacherPostData", null, true, null);
-    searcher.line("orderId", buildAllocationLineprops(), buildAllocationLinebtns()).render();
+    searcher.line("orderId", lineprops, linebtns).render();
 
     function viewworkerAllocationDetail(orderId) {
 

@@ -166,7 +166,7 @@ jQuery(function($) {
         com.clearValidator();
     });
 
-    function buildBuildingCustomerLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "type",
@@ -224,9 +224,9 @@ jQuery(function($) {
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildBuildingCustomerLinebtns() {
+    var linebtns = (function() {
 
         return {
             view: {
@@ -365,12 +365,12 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("CondList", "Pagenation", "Resultlist", api.building.pageBuildingCustomer, null, ["building-customer-no", "building-custumerName"], "buildingCustomerPostData", null, false, null);
-    searcher.line("no", buildBuildingCustomerLineprops(), buildBuildingCustomerLinebtns()).render();
+    searcher.line("no", lineprops, linebtns).render();
 
     // 编辑OR添加
     function updateBuildingCustomer() {

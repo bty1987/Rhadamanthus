@@ -52,7 +52,7 @@ $(function() {
 
     consultion.decorationInfo.empty();
 
-    function buildConsultion2CreateLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "house.village",
@@ -122,9 +122,9 @@ $(function() {
             prop: function(v) { return consultion.projectStatusArr[v.projectStatus]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildConsultion2CreateLinebtns() {
+    var linebtns = (function() {
 
         var btns = {};
 
@@ -175,7 +175,7 @@ $(function() {
         };
 
         return btns;
-    }
+    })();
 
     pageSearcherInit(consultion.searcher);
 
@@ -416,6 +416,6 @@ $(function() {
 
     function pageSearcherInit(searcher) {
         searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage, params[pageConfig.postDataName], pageConfig.condArr, pageConfig.postDataName, null, false, null);
-        searcher.line("orderId", buildConsultion2CreateLineprops(), buildConsultion2CreateLinebtns()).render();
+        searcher.line("orderId", lineprops, linebtns).render();
     }
 });

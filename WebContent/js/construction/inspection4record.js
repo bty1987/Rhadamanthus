@@ -30,7 +30,7 @@ jQuery(function ($) {
 
     com.datetime(record.items.startTime, "time");
     com.datetime(record.items.endTime, "time");
-    function buildInspection4recordLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderAddr",
@@ -58,9 +58,9 @@ jQuery(function ($) {
             prop: "recordDes",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildInspection4recordLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -78,9 +78,9 @@ jQuery(function ($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildInspection4recordButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -91,14 +91,14 @@ jQuery(function ($) {
         var $addspan = $('<span></span>').text('返回').appendTo($addb);
 
         return [$addb, $adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageInspectionRecordByOrderId, {
         "inspectionRecord.orderId": params.construction.orderId
     }, [], "inspectionRecordPostData", null, false, buildInspection4recordButtons);
-    searcher.line("orderId", buildInspection4recordLineprops(), buildInspection4recordLinebtns()).render();
+    searcher.line("orderId", lineprops, linebtns).render();
 
     com.focusPage('a[name="add"]', '#pagenation').click(function () {
         record.editFlag = false;

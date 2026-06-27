@@ -121,7 +121,7 @@ $(function() {
         }
     });
 
-    function buildVillageLineprops() {
+    var lineprops = (function() {
 
         var lineprops = [{
             field: "img",
@@ -176,9 +176,9 @@ $(function() {
         }];
 
         return lineprops;
-    }
+    })();
 
-    function buildVillageLinebtns() {
+    var linebtns = (function() {
 
         var btns = {
             status: {
@@ -230,9 +230,9 @@ $(function() {
         }
 
         return btns;
-    }
+    })();
 
-    function buildVillageButtons() {
+    var buttons = (function() {
 
         if (village.pageType == "houseLayout") {
             return [];
@@ -243,7 +243,7 @@ $(function() {
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -256,7 +256,7 @@ $(function() {
         'data-village-delivery-start',
         'data-village-delivery-end'
     ], "villagePostData", null, false, buildVillageButtons);
-    searcher.line(function(v) { return ' ' + v.name; }, buildVillageLineprops(), buildVillageLinebtns()).render();
+    searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     // 启用禁用功能
     function updateStatus(id, status) {

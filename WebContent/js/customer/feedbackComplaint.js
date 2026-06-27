@@ -250,7 +250,7 @@ jQuery(function($) {
         com.switchPage(params.historyPage);
     });
 
-    function buildFeedbackComplaintRecordLineprops() {
+    var lineprops = (function() {
 
         return [{
             fieId: "feedback.orderId",
@@ -280,14 +280,14 @@ jQuery(function($) {
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
     var searcher1 = new Searcher();
 
     searcher1.set("condListas1", "pagenationFeedbackComplaint1", "resultListas1", api.customer.queryFeedbackRecord, {
         "feedbackRecord.feedback.fid": complaint.vid
     }, [], "vrecordPostData", "feedbackRecords", true, null);
-    searcher1.line("feedback.orderId", buildFeedbackComplaintRecordLineprops(), {}).render();
+    searcher1.line("feedback.orderId", lineprops, {}).render();
 
     var searcher = new Searcher();
 

@@ -16,7 +16,7 @@ jQuery(function($) {
         com.clearValidator();
     });
 
-    function buildVrecordLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "creater.userName",
@@ -29,14 +29,14 @@ jQuery(function($) {
             prop: "createTime",
             clazz: "grey"
         }];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condListas", "pagenationas", "resultListas", api.customer.queryVrecordByVid, {
         "vrecord.vid": vrecord.vid
     }, [], "vrecordPostData", "vrecords", true, null);
-    searcher.line("comment", buildVrecordLineprops(), {}).render();
+    searcher.line("comment", lineprops, {}).render();
 
     //添加
     com.focusPage("#add").click(function() {

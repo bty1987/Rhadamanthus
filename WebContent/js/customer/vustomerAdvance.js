@@ -29,7 +29,7 @@ $(function(){
 
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"duty":"", "user.status":0}, "userBases", "uid", "currentName", null);
 
-    function buildVustomerAdvanceLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "name",
@@ -82,9 +82,9 @@ $(function(){
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildVustomerAdvanceLinebtns() {
+    var linebtns = (function() {
 
         return {
             bind: {
@@ -137,12 +137,12 @@ $(function(){
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.customer.pageVustomerForAdvance, null, ["customer-v-name"], "vustomerPostData", null, false, null);
-    searcher.line("phone", buildVustomerAdvanceLineprops(), buildVustomerAdvanceLinebtns()).render();
+    searcher.line("phone", lineprops, linebtns).render();
 
     function changeBelonger(){
         if(com.validate('belongerModal')){

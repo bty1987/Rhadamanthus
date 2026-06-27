@@ -1,7 +1,7 @@
 
 jQuery(function($) {
 
-    function buildPassword2resetLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "userId",
@@ -34,9 +34,9 @@ jQuery(function($) {
             prop: "phone",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildPassword2resetLinebtns() {
+    var linebtns = (function() {
 
         return {
             reset: {
@@ -47,21 +47,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildPassword2resetButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addAction').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.personel.pageUser, null, ["userId", "userName"], "resetPwdPostData", null, false, buildPassword2resetButtons);
-    searcher.line("userName", buildPassword2resetLineprops(), buildPassword2resetLinebtns()).render();
+    searcher.line("userName", lineprops, linebtns).render();
 
     function resetPassword(userId, userName){
         com.showConfirm("是否确定重置(" + userName + ")的密码", function(){

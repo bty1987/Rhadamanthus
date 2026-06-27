@@ -308,7 +308,7 @@ jQuery(function($) {
             com.popup("二维收款", data.wxpay.url + "&mchNo=" + data.wxpay.mchNo + "&bizId=" + data.wxpay.bizId + "&isShort=true", null, null, false);
         }, null, false);
     }
-    function buildDecorationPaymentLineprops() {
+    var lineprops = (function() {
 
         var lineprops = [{
             type: "checkbox",
@@ -348,9 +348,9 @@ jQuery(function($) {
         }
 
         return lineprops;
-    }
+    })();
 
-    function buildDecorationPaymentLinebtns() {
+    var linebtns = (function() {
 
         return {
             addreduce: {
@@ -614,9 +614,9 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildDecorationPaymentButtons() {
+    var buttons = (function() {
 
         var btnParams = [];
         var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
@@ -635,7 +635,7 @@ jQuery(function($) {
         if (decorationPayment.pageConfig.pageBtn.contains("export"))
             btnParams.push($impa);
         return btnParams;
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -649,7 +649,7 @@ jQuery(function($) {
     }
 
     searcher.set("condList", "pagenation", "resultList", decorationPayment.pageConfig.apiPage, extraParams, decorationPayment.pageConfig.condArr, "decorationPaymentPostData" + decorationPayment.type, null, false, buildDecorationPaymentButtons);
-    searcher.line("paymentType", buildDecorationPaymentLineprops(), buildDecorationPaymentLinebtns()).render();
+    searcher.line("paymentType", lineprops, linebtns).render();
 
     // 要在searcher后面
     paymentUtils.pushPosBank(decorationPayment.type == "common", decorationPayment.bankUtil, com.focusPage("#condList", "#decorationPaymentList"), decorationPayment.htmlName);

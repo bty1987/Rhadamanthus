@@ -133,7 +133,7 @@ $(function() {
 
     selectionItem.pageConfig = getConfig(params['urlLoadParams'].type, 8);
 
-    function buildSelectionItemLineprops() {
+    var lineprops = (function() {
 
         return [{
             type: "checkbox",
@@ -206,9 +206,9 @@ $(function() {
                 });
             }
         }];
-    }
+    })();
 
-    function buildSelectionItemLinebtns() {
+    var linebtns = (function() {
 
         var pageBtn = selectionItem.pageConfig.pageBtn;
         var btns = {};
@@ -472,9 +472,9 @@ $(function() {
         }
 
         return btns;
-    }
+    })();
 
-    function buildSelectionItemButtons() {
+    var buttons = (function() {
 
         var btns = [];
 
@@ -512,12 +512,12 @@ $(function() {
         if (selectionItem.pageConfig.pageBtn.contains("batchSelc")) btns.push(createbtn("batchSelc", "厂商对账", "btn-pink"));
 
         return btns;
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", selectionItem.pageConfig.apiPage, selectionItem.status, selectionItem.pageConfig.condArr, selectionItem.postData, null, false, buildSelectionItemButtons);
-    searcher.line("goods.name", buildSelectionItemLineprops(), buildSelectionItemLinebtns()).render();
+    searcher.line("goods.name", lineprops, linebtns).render();
 
     function pageExportStoreImport() {
 

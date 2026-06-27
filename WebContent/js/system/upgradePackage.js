@@ -21,7 +21,7 @@ jQuery(function($) {
         com.clearValidator();
     });
 
-    function buildUpgradePackageLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "no",
@@ -54,9 +54,9 @@ jQuery(function($) {
             prop: "path",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildUpgradePackageLinebtns() {
+    var linebtns = (function() {
 
         return {
             on: {
@@ -103,9 +103,9 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildUpgradePackageButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addUpgrade').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -116,12 +116,12 @@ jQuery(function($) {
         });
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.upgrade.pageUpgrade, null, ['system-upgrade-version', 'system-upgrade-createTime'], "upgradePostData", null, false, buildUpgradePackageButtons);
-    searcher.line("no", buildUpgradePackageLineprops(), buildUpgradePackageLinebtns()).render();
+    searcher.line("no", lineprops, linebtns).render();
 
     function saveData() {
 

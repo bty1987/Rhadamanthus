@@ -2,7 +2,7 @@ $(function() {
 
     var label = {};
 
-    function buildUserLabelLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "userId",
@@ -35,9 +35,9 @@ $(function() {
             prop: "phone",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildUserLabelLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -55,14 +55,14 @@ $(function() {
                 handle: function(v) { labelling(v); }
             }
         };
-    }
+    })();
 
     var _condArr = ['personel-userId', 'personel-userName', 'personel-deptType'];
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.personel.pageUser, null, _condArr, "selectUser", null, false);
-    searcher.line(function(v) { return ' ' + v.userName; }, buildUserLabelLineprops(), buildUserLabelLinebtns()).render();
+    searcher.line(function(v) { return ' ' + v.userName; }, lineprops, linebtns).render();
 
     function labelling(v) {
 

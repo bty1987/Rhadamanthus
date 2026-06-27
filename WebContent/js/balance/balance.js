@@ -48,7 +48,7 @@ jQuery(function($) {
         balance.items.cccount.bindData(res.balanceAccountes, "baid", "name");
     }, null, false);
 
-    function buildBalanceLineprops() {
+    var lineprops = (function() {
 
         return [{
             type: "checkbox",
@@ -141,9 +141,9 @@ jQuery(function($) {
             prop: function(v) { return constant.balance().balance.isPay.keys[v.isPay]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildBalanceLinebtns() {
+    var linebtns = (function() {
 
         return {
             payBalance: {
@@ -219,9 +219,9 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildBalanceButtons() {
+    var buttons = (function() {
 
         var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'checks').css("margin", "0px 3px");
         var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
@@ -250,12 +250,12 @@ jQuery(function($) {
         });
 
         return [$checka];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.balance.pageBalance, null, ["balance-balance-no", "balance-balance-type", "balance-balance-status", "balance-balance-isPay"], "balancePostData", null, false, buildBalanceButtons);
-    searcher.line("no", buildBalanceLineprops(), buildBalanceLinebtns()).render();
+    searcher.line("no", lineprops, linebtns).render();
 
     com.focusPage("#addBalance").click(function() {
 

@@ -30,7 +30,7 @@ jQuery(function($) {
 
     initUploadBtn();
 
-    function buildCardLineprops() {
+    var lineprops = (function() {
 
         return [{
             type: "img",
@@ -71,9 +71,9 @@ jQuery(function($) {
             prop: "info",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildCardLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -119,12 +119,12 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.market.pageCard, null, ["market-customer-name", "market-phone", "market-industry"], "casePostData", null, false, null);
-    searcher.line("userName", buildCardLineprops(), buildCardLinebtns()).render();
+    searcher.line("userName", lineprops, linebtns).render();
 
     function updateCardData() {
 

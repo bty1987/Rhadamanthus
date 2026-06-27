@@ -95,7 +95,7 @@ jQuery(function($) {
 		});
 	});
 	
-    function buildMaterialBalanceValueLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "materialModelNo",
@@ -143,9 +143,9 @@ jQuery(function($) {
             prop: function(v) { return "1" == v.calcType ? v.point : "0" == v.calcType ? v.base : ""; },
             clazz: "blue"
         }];
-    }
+    })();
 
-    function buildMaterialBalanceValueLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -156,12 +156,12 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialModel, null, ['data-model-name', 'material-category-name', 'material-brand-name'], "materialBalanceValuePostData", null, false, null);
-    searcher.line("materialModelName", buildMaterialBalanceValueLineprops(), buildMaterialBalanceValueLinebtns()).render();
+    searcher.line("materialModelName", lineprops, linebtns).render();
     
     function editBalanceValue(v){
     	

@@ -238,7 +238,7 @@ jQuery(function($) {
         }, null, false);
     }
 
-    function buildServiceLineprops() {
+    var lineprops = (function() {
 
         var lineprops = [{
             type: "checkbox",
@@ -278,9 +278,9 @@ jQuery(function($) {
         }
 
         return lineprops;
-    }
+    })();
 
-    function buildServiceLinebtns() {
+    var linebtns = (function() {
 
         return {
             posPush: {
@@ -412,9 +412,9 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildServiceButtons() {
+    var buttons = (function() {
 
         var $createa = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createService').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-check bigger-110').appendTo($createa);
@@ -439,7 +439,7 @@ jQuery(function($) {
         if (servicePayment.pageConfig.pageBtn.contains("export"))
             btnParams.push($impa);
         return btnParams;
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -452,7 +452,7 @@ jQuery(function($) {
     searcher.line(function(v) {
 
         return ["common", "pos"].contains(servicePayment.type) ? "服务款" : (v.type == constant.payment().servicePayment.TYPE_COLLECT_INT ? "收款" : "退款");
-    }, buildServiceLineprops(), buildServiceLinebtns()).render();
+    }, lineprops, linebtns).render();
 
     // 要在searcher后面
     paymentUtils.pushPosBank(servicePayment.type == "create", servicePayment.bankUtil, com.focusPage("#condList", "#servicePaymentList"), servicePayment.htmlName);

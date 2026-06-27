@@ -94,7 +94,7 @@ jQuery(function($) {
         drawline.items.drawLineGroup.bindData(res.drawLineGroups, 'gid', 'name');
     });
 
-    function buildDrawline4applyLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "decoration.orderId",
@@ -180,9 +180,9 @@ jQuery(function($) {
             prop: "content",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildDrawline4applyLinebtns() {
+    var linebtns = (function() {
 
         return {
             info: {
@@ -221,14 +221,14 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageDrawLine, {
         "drawLine.status": constant.construction.drawLine.STATUS_QUEUE_INT
     }, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'construction-drawLine-status', 'construction-drawLine-applayTime', 'construction-drawLine-actualDate'], "drawLineApplyPostData", null, true, null);
-    searcher.line("decoration.orderId", buildDrawline4applyLineprops(), buildDrawline4applyLinebtns()).render();
+    searcher.line("decoration.orderId", lineprops, linebtns).render();
 
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
 

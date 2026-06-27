@@ -57,7 +57,7 @@ jQuery(function($) {
 
     }, null, false);
 
-    function buildBuildingHouse4queryLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "type",
@@ -115,9 +115,9 @@ jQuery(function($) {
             prop: "housingGrade",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildBuildingHouse4queryLinebtns() {
+    var linebtns = (function() {
 
         return {
             view: {
@@ -132,7 +132,7 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -141,7 +141,7 @@ jQuery(function($) {
         "filters[0].data": 3,
         "filters[0].op": "eq"
     }, ["building-buildingHouse-no", "building-houseType", "building-buildingHouse-type", "building-village", "building-Area", "building-totalPrice", "building-roomNum", "building-orientation", "building-decorateDegree", "building-allowLoan", "building-housingGrade", "building-rentType"], "buildingHouseQueryPostData", null, false, null);
-    searcher.line("no", buildBuildingHouse4queryLineprops(), buildBuildingHouse4queryLinebtns()).render();
+    searcher.line("no", lineprops, linebtns).render();
 
     // 转换金额
     function toMoney(num) {

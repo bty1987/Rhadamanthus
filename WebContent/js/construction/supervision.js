@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var constructionNodes = {
 
@@ -60,7 +60,7 @@
     constructionNodes.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas, "key", "value");
     constructionNodes.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas, "key", "value");
 
-    function buildSupervisionLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderId",
@@ -133,9 +133,9 @@
             prop: function(v) { return constant.decoration().decoration.projectStatus.keys[v.projectStatus]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildSupervisionLinebtns() {
+    var linebtns = (function() {
 
         return {
             info: {
@@ -227,12 +227,12 @@
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("supervisionCondList", "supervisionPagenation", "supervisionResultList", api.construction.pageConstruction, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-projectStatus'], "supervisionSeacherPostData", null, false, null);
-    searcher.line("orderId", buildSupervisionLineprops(), buildSupervisionLinebtns()).render();
+    searcher.line("orderId", lineprops, linebtns).render();
 
     function viewSupervisionDetail(orderId, cid) {
 

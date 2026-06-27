@@ -66,7 +66,7 @@ jQuery(function($) {
 		cityProper.items.regionSel.bindData(res.regions, "rid", "name", false).trigger("change");
 	});
 	
-	function buildCityProperLineprops() {
+	var lineprops = (function() {
 
         return [{
             field: "no",
@@ -84,9 +84,9 @@ jQuery(function($) {
             prop: "city.name",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildCityProperLinebtns() {
+    var linebtns = (function() {
 
         return {
             partner: {
@@ -119,21 +119,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildCityProperButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCityProper').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
 	var searcher = new Searcher();
 
 	searcher.set("condList", "pagenation", "resultList", api.system.pageCityProper, null, ["system-cityProper-name", "system-region", "system-city"], "cityProperPostData", null, false, buildCityProperButtons);
-	searcher.line("name", buildCityProperLineprops(), buildCityProperLinebtns()).render();
+	searcher.line("name", lineprops, linebtns).render();
 		
 	com.focusPage('[name="addCityProper"]', com.focusPage('#pagenation')).click(function(){
 		editFlg = false;

@@ -33,7 +33,7 @@ $(function () {
     }, "autoFillKeyValue", "key", "value", null);
 
 
-    function buildAepairLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "creater.currentName",
@@ -96,9 +96,9 @@ $(function () {
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildAepairLinebtns() {
+    var linebtns = (function() {
 
         return {
             send: {
@@ -189,12 +189,12 @@ $(function () {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condListData", "pagenationData", "resultListData", api.customer.pageAepair, null, ["customer-service-creater-name", "customer-service-updater-name", "customer-aepair-status"], "aepairPostData", null, false, null);
-    searcher.line("comment", buildAepairLineprops(), buildAepairLinebtns()).render();
+    searcher.line("comment", lineprops, linebtns).render();
 
     function updateFunction() {
 

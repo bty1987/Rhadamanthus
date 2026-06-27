@@ -1,4 +1,4 @@
-﻿jQuery(function($) {
+jQuery(function($) {
 
     var department = {
 
@@ -65,7 +65,7 @@
         "user.status": 0
     }, "autoFillKeyValue", "key", "value");
 
-    function buildDepartmentLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "no",
@@ -123,9 +123,9 @@
             prop: function(v) { return com.checkNull(v.busitype && v.busitype.name ? v.busitype.name : '无'); },
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildDepartmentLinebtns() {
+    var linebtns = (function() {
 
         var btns = {};
 
@@ -173,9 +173,9 @@
         }
 
         return btns;
-    }
+    })();
 
-    function buildDepartmentButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'adddepartment').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -185,12 +185,12 @@
             return [];
         else
             return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.communion.pageDepartment, null, ['personel-dept-name', 'personel-dept-status', 'personel-dept-type', 'personel-dept-isdet'], postData, null, false, buildDepartmentButtons);
-    searcher.line("name", buildDepartmentLineprops(), buildDepartmentLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     $('a[name="adddepartment"]', com.focusPage('#pagenation')).click(function() {
 

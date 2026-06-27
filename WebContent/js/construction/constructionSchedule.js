@@ -44,35 +44,19 @@ jQuery(function($) {
     constructionSchedule.btns.updatePeriodBtn.bindClick(updatePeriodBtn);
     constructionSchedule.btns.planSalaryBtn.bindClick(planSalaryBtn);
 
-    constructionSchedule.modals.updateNormModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(constructionSchedule.items);
-        com.closeTip();
-    });
-
-    constructionSchedule.modals.updateCaleModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(constructionSchedule.items);
-        com.closeTip();
-    });
-
-    constructionSchedule.modals.updatePeriodModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(constructionSchedule.items);
-        com.closeTip();
-    });
-
-    constructionSchedule.modals.planSalaryModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(constructionSchedule.items);
-        com.closeTip();
+    // 所有 modal 关闭时统一清空输入与提示
+    $.each(constructionSchedule.modals, function(key, $modal) {
+        $modal.on("hide.bs.modal", function() {
+            com.cleanItems(constructionSchedule.items);
+            com.closeTip();
+        });
     });
 
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.construction.pageConstructionSchedule);
     searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "construction-supervisor", "decoration-projectStatus", "construction-schedule-createTime", "construction-schedule-startTime", "construction-schedule-endTime", "construction-schedule-enterTime", "construction-schedule-leaveTime", "constructionSchedule-cid", "constructionSchedule-status", "constructionSchedule-planStatus", "constructionSchedule-node-cnid"]);
-    searcher.history("constructoinSchedulePostData");
+    searcher.history("constructionSchedulePostData");
 
     var lineprops = [{
         field: "decoration.orderId",

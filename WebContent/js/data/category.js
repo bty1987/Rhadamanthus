@@ -52,7 +52,7 @@ jQuery(function($) {
 
     $.extend(com.validator, category.validator);
 
-    function buildCategoryLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "type",
@@ -85,23 +85,23 @@ jQuery(function($) {
             prop: function(v) { return com.checkNull(v.kiname, "无"); },
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildCategoryLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {name: "编辑", clazz: "btn-yellow", handle: function(v) { editCategory(v); }}
         };
-    }
+    })();
 
-    function buildCategoryButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var _condArr = ["data-category-name", "data-category-isCoupon", "data-category-isCount"];
     var searcher = new Searcher();
@@ -110,7 +110,7 @@ jQuery(function($) {
     searcher.line(function(v) {
 
         return v.no + " " + v.name;
-    }, buildCategoryLineprops(), buildCategoryLinebtns()).render();
+    }, lineprops, linebtns).render();
 
     com.focusPage('a[name="add"]', '#pagenation').click(function() {
 

@@ -66,7 +66,7 @@ $(function($) {
         (['2', '3'].contains(typeVal)) ? com.focusPage("#banknoDiv").css("display", "block") : com.focusPage("#banknoDiv").css("display", "none");
     });
 
-    function buildReceiptTypeLineprops() {
+    var lineprops = (function() {
 
         var lineprops = [{
             field: "no",
@@ -151,9 +151,9 @@ $(function($) {
         });
 
         return lineprops;
-    }
+    })();
 
-    function buildReceiptTypeLinebtns() {
+    var linebtns = (function() {
 
         var btns = {
             status: {
@@ -197,9 +197,9 @@ $(function($) {
         };
 
         return btns;
-    }
+    })();
 
-    function buildReceiptTypeButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success').attr('name', 'add').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -214,13 +214,13 @@ $(function($) {
             return [$adda];
         }
         return [];
-    }
+    })();
 
     var searcher = new Searcher();
     var _condArr = ["data-receiptType-name", "data-receiptType-type", "data-receiptType-status", "data-receiptType-fund", "data-receiptType-grade", "data-receiptType-kino", "data-receiptType-kiname", "data-receiptType-kibalance", "data-receiptType-bankno", "data-receiptType-assistant", "data-receiptType-value"];
 
     searcher.set("condList", "pagenation", "resultList", api.data.pageReceiptType, null, _condArr, "ReceiptTypePostData", null, false, buildReceiptTypeButtons);
-    searcher.line("name", buildReceiptTypeLineprops(), buildReceiptTypeLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     function saveData() {
 

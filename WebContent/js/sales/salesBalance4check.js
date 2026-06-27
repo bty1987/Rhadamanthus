@@ -79,7 +79,7 @@ $(function() {
         com.popup4page("#viewPopUp", "views/sales/salesItem4balance.html", "子项");
     }
 
-    function buildBalanceCheckLineprops() {
+    var lineprops = (function() {
 
         var propertyMap = {
             orderId: {
@@ -423,9 +423,9 @@ $(function() {
         });
 
         return props;
-    }
+    })();
 
-    function buildBalanceCheckLinebtns() {
+    var linebtns = (function() {
 
         var buttonMap = {
             sub: {
@@ -448,9 +448,9 @@ $(function() {
         });
 
         return btns;
-    }
+    })();
 
-    function buildBalanceCheckButtons() {
+    var buttons = (function() {
 
         var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
@@ -471,14 +471,14 @@ $(function() {
         });
 
         return [$checka, $balanceEnd];
-    }
+    })();
 
     var searcher = new Searcher();
 
     var searcher = new Searcher();
 
     searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, "salesBalanceCheckPostData", null, false, buildBalanceCheckButtons);
-    searcher.line('sales.no', buildBalanceCheckLineprops(), buildBalanceCheckLinebtns()).render();
+    searcher.line('sales.no', lineprops, linebtns).render();
 
     com.initTypeahead("balanceSales", api.balance.queryBalanceSales, "balanceSales.name", {}, "balanceSaleses", "bsid", function(v) {
 

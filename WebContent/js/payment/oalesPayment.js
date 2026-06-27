@@ -231,7 +231,7 @@ jQuery(function($) {
         });
     }
 
-    function buildOalesLineprops() {
+    var lineprops = (function() {
 
         var lineprops = [{
             type: "checkbox",
@@ -272,9 +272,9 @@ jQuery(function($) {
         }
 
         return lineprops;
-    }
+    })();
 
-    function buildOalesLinebtns() {
+    var linebtns = (function() {
 
         return {
             collect: {
@@ -329,9 +329,9 @@ jQuery(function($) {
                 handle: codeOalesPaymentLine
             }
         };
-    }
+    })();
 
-    function buildOalesButtons() {
+    var buttons = (function() {
 
         var $batch = $('<a></a>').addClass('btn btn-minier pull-left btn-primary').attr('id', 'collects').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-money bigger-110').appendTo($batch);
@@ -355,7 +355,7 @@ jQuery(function($) {
             btnParams.push($confirma);
 
         return btnParams;
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -368,7 +368,7 @@ jQuery(function($) {
     searcher.line(function(v) {
 
         return oalesPayment.paymentType[v.type];
-    }, buildOalesLineprops(), buildOalesLinebtns()).render();
+    }, lineprops, linebtns).render();
 
     // 要在searcher后面
     paymentUtils.pushPosBank(oalesPayment.type == "common", oalesPayment.bankUtil, com.focusPage("#condList", "#oalesPaymentList"), oalesPayment.htmlName);

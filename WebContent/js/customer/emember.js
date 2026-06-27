@@ -1,6 +1,6 @@
 $(function () {
 
-    function buildEmemberLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "unionId",
@@ -33,9 +33,9 @@ $(function () {
             prop: "registerTime",
             clazz: "green"
         }];
-    }
+    })();
 
-    function buildEmemberLinebtns() {
+    var linebtns = (function() {
 
         return {
             del: {
@@ -53,10 +53,10 @@ $(function () {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.customer.pageEmember, null, ["customer-member-no","customer-member-phone"], "ememeberPostData", null, false, null);
-    searcher.line(function(v) { return v.name + " " + v.phone; }, buildEmemberLineprops(), buildEmemberLinebtns()).render();
+    searcher.line(function(v) { return v.name + " " + v.phone; }, lineprops, linebtns).render();
 });

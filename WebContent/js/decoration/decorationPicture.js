@@ -10,7 +10,7 @@ jQuery(function($) {
     var currentOrderId = null; // 当前订单ID
     var pictureList = []; // 图片列表
 
-    function buildPictureLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "name",
@@ -18,9 +18,9 @@ jQuery(function($) {
             prop: "name",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildPictureLinebtns() {
+    var linebtns = (function() {
 
         return {
             upload: {
@@ -32,7 +32,7 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -41,7 +41,7 @@ jQuery(function($) {
     }, [], "vrecordPostData", "inspects", true);
     searcher.line(function(v) {
         return v.name;
-    }, buildPictureLineprops(), buildPictureLinebtns()).render();
+    }, lineprops, linebtns).render();
 
     var url = 'uploadImg.do';
 

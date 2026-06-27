@@ -1,4 +1,4 @@
-﻿jQuery(function($) {
+jQuery(function($) {
 
     var approvalCustomerSource = {
         aid: null,
@@ -27,7 +27,7 @@
 
     approvalCustomerSource.pageConfig = getConfig(params['urlLoadParams'].depage);
 
-    function buildApprovalCommonLineprops() {
+    var lineprops = (function() {
 
         var props = [];
 
@@ -200,9 +200,9 @@
         });
 
         return props;
-    }
+    })();
 
-    function buildApprovalCommonLinebtns() {
+    var linebtns = (function() {
 
         var btns = {};
 
@@ -236,14 +236,14 @@
         }
 
         return btns;
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", approvalCustomerSource.pageConfig.apiPage, {
         "user": params['urlLoadParams'].depage
     }, approvalCustomerSource.pageConfig.condArr, approvalCustomerSource.pageConfig.postDataName, null, false, null);
-    searcher.line(function(v) { return constant.approval().approval.type.keys[v.type]; }, buildApprovalCommonLineprops(), buildApprovalCommonLinebtns()).render();
+    searcher.line(function(v) { return constant.approval().approval.type.keys[v.type]; }, lineprops, linebtns).render();
 
     approvalCustomerSource.btns.submitBtn.on("click", approve);
 
@@ -344,7 +344,7 @@
 
     function getPropertyArr(v) {
 
-        return buildApprovalCommonLineprops();
+        return lineprops;
     }
 
 });

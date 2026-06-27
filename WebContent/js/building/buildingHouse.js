@@ -131,7 +131,7 @@ jQuery(function($) {
         }, false);
     });
 
-    function buildBuildingHouseLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "type",
@@ -189,9 +189,9 @@ jQuery(function($) {
             prop: "housingGrade",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildBuildingHouseLinebtns() {
+    var linebtns = (function() {
 
         return {
             check: {
@@ -298,14 +298,14 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("CondList", "Pagenation", "ResultList", api.building.pageBuildingHouseForFollower, {
         "filter[0].field": "buildingHouse"
     }, ["building-buildingHouse-no", "building-houseType", "building-buildingHouse-type", "building-village", "building-Area", "building-totalPrice", "building-roomNum", "building-orientation", "building-decorateDegree", "building-allowLoan", "building-housingGrade", "building-rentType", "building-status"], "buildingHousePostData", null, false, null);
-    searcher.line("no", buildBuildingHouseLineprops(), buildBuildingHouseLinebtns()).render();
+    searcher.line("no", lineprops, linebtns).render();
 
     // 更新房源状态
     function updateBuildingHouseStatus(hsid, cvalue) {

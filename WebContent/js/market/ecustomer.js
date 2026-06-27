@@ -11,7 +11,7 @@ jQuery(function($) {
         })
     }, null, false);
 
-    function buildEcustomerLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "cityId",
@@ -39,10 +39,10 @@ jQuery(function($) {
             prop: function(v) { return v.area + "平"; },
             clazz: "blue"
         }];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.market.pageEcustomer, null, ["market-city", "market-customer-name"], "ecustomerPostData", null, false, null);
-    searcher.line("name", buildEcustomerLineprops(), {}).render();
+    searcher.line("name", lineprops, {}).render();
 });

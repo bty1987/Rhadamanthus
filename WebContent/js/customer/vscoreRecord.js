@@ -16,7 +16,7 @@ jQuery(function($){
         com.clearValidator();
     });
 
-    function buildVscoreRecordLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "score",
@@ -39,7 +39,7 @@ jQuery(function($){
             prop: function(v) { return constant.customer().vscoreRecord.status.keys[v.status]; },
             clazz: "red"
         }];
-    }
+    })();
 
     function check(){
         com.post(api.customer.queryVscoreByUnionId, {"vscore.unionId": vscore.unionId}, function(res){
@@ -53,13 +53,13 @@ jQuery(function($){
         check();
 
         searcher.set("condListas", "pagenationas", "resultListas", api.customer.pageVscoreRecordByUnionId, {"unionId": vscore.unionId}, ["customer-vscoreRecord-type"], "VscoreRecordPostData", null, false, null);
-        searcher.line(function(v) { return "操作人:" + com.checkNull(v.operater.currentName, ''); }, buildVscoreRecordLineprops(), {}).render();
+        searcher.line(function(v) { return "操作人:" + com.checkNull(v.operater.currentName, ''); }, lineprops, {}).render();
 
     }else{
 
         vscore.vscoreSaveBtn = com.focusPage("#vscoreSaveBtn").on('click', vscoreSaveBtn);
 
-        function buildVscoreRecordLinebtns() {
+        var linebtns = (function() {
 
             var showFunc = function(v) { return v.status == constant.customer().vscoreRecord.STATUS_INIT_INT; };
 
@@ -83,22 +83,22 @@ jQuery(function($){
                     }
                 }
             };
-        }
+        })();
 
-        function buildVscoreRecordButtons() {
+        var buttons = (function() {
 
             var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addVscore').css("margin", "0px 3px");
             $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
             $('<span></span>').text('添加积分').appendTo($adda);
 
             return [$adda];
-        }
+        })();
 
         var searcher = new Searcher();
         check();
 
         searcher.set("condListas", "pagenationas", "resultListas", api.customer.pageVscoreRecordByUnionId, {"unionId": vscore.unionId}, ["vscoreRecordType"], "VscoreRecordPostData", null, false, buildVscoreRecordButtons);
-        searcher.line(function(v) { return "操作人:" + com.checkNull(v.operater.currentName, ''); }, buildVscoreRecordLineprops(), buildVscoreRecordLinebtns()).render();
+        searcher.line(function(v) { return "操作人:" + com.checkNull(v.operater.currentName, ''); }, lineprops, linebtns).render();
 
         com.focusPage('#addVscore').click(function(){
             vscore.modals.vscoreModal.modal("show");

@@ -50,7 +50,7 @@ jQuery(function($) {
 
     com.initTypeahead(normadd.items.name, api.data.queryQuotationNamingRuleByPinyin, "pinyinName", {"quotationNamingRule.type": 3}, "autoFillKeyValue", "key", "value", null);
 
-    function buildNormaddLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "constructionNode",
@@ -73,9 +73,9 @@ jQuery(function($) {
             prop: "price",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildNormaddLinebtns() {
+    var linebtns = (function() {
 
         return {
             status: {
@@ -107,21 +107,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildNormaddButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'normaddBtn').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.data.pageNormadd, null, ["data-quotation-normadd-name", "data-quotation-normadd-status"], "normaddPostData", null, false, buildNormaddButtons);
-    searcher.line(function(v) { return ' ' + v.name; }, buildNormaddLineprops(), buildNormaddLinebtns()).render();
+    searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#normaddBtn').click(function() {
 

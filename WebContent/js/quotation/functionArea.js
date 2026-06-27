@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     com.focusPage('#fl-statement').statement("子功能区", "报价项配置");
 
@@ -75,7 +75,7 @@
         }
     });
 
-    function buildFunctionAreaLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "no",
@@ -108,9 +108,9 @@
             prop: function(v) { return constant.data().functionArea.status.keys[v.status]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildFunctionAreaLinebtns() {
+    var linebtns = (function() {
 
         return {
             otem: {
@@ -150,23 +150,23 @@
                 }
             }
         };
-    }
+    })();
 
-    function buildFunctionAreaButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addFunctionArea').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var _condArr = ['data-quotation-functionArea-name', 'data-quotation-version'];
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.quotation.pageFunctionArea, null, _condArr, "functionAreaPostData", null, false, buildFunctionAreaButtons);
-    searcher.line("name", buildFunctionAreaLineprops(), buildFunctionAreaLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     // 功能区添加按钮
     com.focusPage('a[name="addFunctionArea"]', '#pagenation').on('click', function() {

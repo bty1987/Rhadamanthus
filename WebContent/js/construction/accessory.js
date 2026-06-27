@@ -75,7 +75,7 @@ jQuery(function($) {
         return v;
     });
 
-    function buildAccessoryLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "aoods.goods.no",
@@ -123,9 +123,9 @@ jQuery(function($) {
             prop: function(v) { return constant.construction().constructionAccessory.isCheckup.keys[v.checkup]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildAccessoryLinebtns() {
+    var linebtns = (function() {
 
         return {
             update: {
@@ -139,23 +139,23 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildAccessoryButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addConstructionAccessory').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageConstructionAccessory, {
         "constructionAccessory.cid": accessory.cid
     }, [], "constructionAccessoryPostDate", null, false, buildAccessoryButtons);
-    searcher.line("aoods.goods.name", buildAccessoryLineprops(), buildAccessoryLinebtns()).render();
+    searcher.line("aoods.goods.name", lineprops, linebtns).render();
 
     com.focusPage("#addConstructionAccessory").click(function() {
         accessory.modals.addModal.modal("show");

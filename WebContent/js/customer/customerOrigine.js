@@ -302,7 +302,7 @@ $(function() {
     // 不同页面的不同参数
     customerOrigine.pageConfig = getConfig(params['urlLoadParams'].depage);
 
-    function buildCustomerOrigineLineprops() {
+    var lineprops = (function() {
 
         var props = [];
 
@@ -545,9 +545,9 @@ $(function() {
         });
 
         return props;
-    }
+    })();
 
-    function buildCustomerOrigineLinebtns() {
+    var linebtns = (function() {
 
         var btns = {};
 
@@ -877,9 +877,9 @@ $(function() {
         }
 
         return btns;
-    }
+    })();
 
-    function buildCustomerOrigineButtons() {
+    var buttons = (function() {
 
         if (customerOrigine.pageConfig.pageBtn.contains("created")) {
             var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'add').css("margin", "0px 3px");
@@ -890,14 +890,14 @@ $(function() {
         }
 
         return [];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", customerOrigine.pageConfig.apiPage, {
         "user": params['urlLoadParams'].depage
     }, customerOrigine.pageConfig.condArr, customerOrigine.pageConfig.postDataName, null, false, buildCustomerOrigineButtons);
-    searcher.line("name", buildCustomerOrigineLineprops(), buildCustomerOrigineLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage("#add").click(function() {
 

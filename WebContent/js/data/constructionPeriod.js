@@ -32,7 +32,7 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    function buildPeriodLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "name",
@@ -55,9 +55,9 @@ jQuery(function($) {
             prop: "period",
             clazz: "blue"
         }];
-    }
+    })();
 
-    function buildPeriodLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -82,21 +82,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildPeriodButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addConstructionPeriod').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("periodCondList", "periodPagenation", "periodResultList", api.data.pageConstructionPeriod, null, ["data-construction-period-name"], "constructionPeriodPostData", null, false, buildPeriodButtons);
-    searcher.line(function(v) { return ' ' + v.name; }, buildPeriodLineprops(), buildPeriodLinebtns()).render();
+    searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#addConstructionPeriod').click(function() {
 

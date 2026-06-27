@@ -35,7 +35,7 @@ $(function() {
         }
     }
 
-    function buildPurchaseLineprops() {
+    var lineprops = (function() {
 
         var propertyMap = {
             orderId: {
@@ -246,9 +246,9 @@ $(function() {
         });
 
         return props;
-    }
+    })();
 
-    function buildPurchaseLinebtns() {
+    var linebtns = (function() {
 
         var buttonMap = {
             purchase: {
@@ -266,9 +266,9 @@ $(function() {
         });
 
         return btns;
-    }
+    })();
 
-    function buildPurchaseButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier pull-left btn-info').attr('name', 'collects').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-money bigger-110').appendTo($adda);
@@ -319,14 +319,14 @@ $(function() {
         });
 
         return [];
-    }
+    })();
 
     var salesSwitchPurchaseSearcher = new Searcher();
 
     var salesSwitchPurchaseSearcher = new Searcher();
 
     salesSwitchPurchaseSearcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, 'salesSwitchPurchasePostData', null, false, buildPurchaseButtons);
-    salesSwitchPurchaseSearcher.line('no', buildPurchaseLineprops(), buildPurchaseLinebtns()).render(function() {
+    salesSwitchPurchaseSearcher.line('no', lineprops, linebtns).render(function() {
 
         com.focusPage('input[name="fullpayTime"]').parent('.inline').addClass('m-wrap m-ctrl-medium date-picker');
         com.focusPage('input[name="fullpayTime"]').attr('readonly', true);

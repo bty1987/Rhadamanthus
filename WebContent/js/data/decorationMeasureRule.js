@@ -26,7 +26,7 @@ $(function($) {
         decorationMeasureRule.editFlg = false;
     });
 
-    function buildMeasureRuleLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "comment",
@@ -39,9 +39,9 @@ $(function($) {
             prop: function(v) { return v.status == 0 ? "启用" : "禁用"; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildMeasureRuleLinebtns() {
+    var linebtns = (function() {
 
         return {
             status: {
@@ -95,21 +95,21 @@ $(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildMeasureRuleButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addItemBtn').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.data.pageDecorationMeasureRule, null, ["decorationMeasureRule-name", "decorationMeasureRule-status"], "decorationMeasureRulePostData", null, false, buildMeasureRuleButtons);
-    searcher.line(function(v) { return ' ' + v.name; }, buildMeasureRuleLineprops(), buildMeasureRuleLinebtns()).render();
+    searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#addItemBtn').click(function() {
 

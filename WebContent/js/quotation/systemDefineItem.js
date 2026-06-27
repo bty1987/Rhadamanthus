@@ -59,7 +59,7 @@ $(function() {
         com.cleanItems("addItemModal");
     });
 
-    function buildSystemDefineItemLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "no",
@@ -97,9 +97,9 @@ $(function() {
             prop: "subPrice",
             clazz: "blue"
         }];
-    }
+    })();
 
-    function buildSystemDefineItemLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -139,21 +139,21 @@ $(function() {
                 }
             }
         };
-    }
+    })();
 
-    function buildSystemDefineItemButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addSystemDefineItem').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.quotation.pageSystemDefineItem, null, ['data-quotation-item-name', 'data-quotation-bigcategory', 'quotation-worktype'], "SystemDefineItemPostData", null, false, buildSystemDefineItemButtons);
-    searcher.line("name", buildSystemDefineItemLineprops(), buildSystemDefineItemLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     // 编辑
     function edit(row) {

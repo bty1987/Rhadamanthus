@@ -69,7 +69,7 @@ $(function() {
         return depts;
     };
 
-    function buildOrganizationLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "userId",
@@ -102,7 +102,7 @@ $(function() {
             prop: "phone",
             clazz: "grey"
         }];
-    }
+    })();
 
     var _condArr = [];
     var userSeacher = new Searcher();
@@ -151,6 +151,6 @@ $(function() {
             'filters[0].field': 'no',
             'filters[0].op': 'eq'
         }, _condArr, "menuPostData", null, false, null);
-        userSeacher.line("userName", buildOrganizationLineprops(), {}).render();
+        userSeacher.line("userName", lineprops, {}).render();
     });
 });

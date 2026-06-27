@@ -140,7 +140,7 @@ jQuery(function($) {
 
     });
 
-    function buildMaterialLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "category",
@@ -208,9 +208,9 @@ jQuery(function($) {
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildMaterialLinebtns() {
+    var linebtns = (function() {
 
         var inMainStatus = function(v) { return [0, 1, 2, 3, 4, 5].indexOf(v.status) != -1; };
 
@@ -277,16 +277,16 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildMaterialButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('返回').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
     var orderId = params.orderId;
@@ -294,7 +294,7 @@ jQuery(function($) {
     searcher.set("condList", "pagenation", "resultList", materialUrl, {
         "material.orderId": orderId
     }, [], materialOrderPostData, null, false, buildMaterialButtons);
-    searcher.line("no", buildMaterialLineprops(), buildMaterialLinebtns()).render();
+    searcher.line("no", lineprops, linebtns).render();
 
     com.focusPage('a[name="back"]', '#pagenation').click(function() {
 

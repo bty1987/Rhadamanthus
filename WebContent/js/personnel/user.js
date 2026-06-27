@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var user = {
         statusType: [],
@@ -454,7 +454,7 @@
         }
     };
 
-    function buildUserLineprops() {
+    var lineprops = (function() {
 
         var props = [];
 
@@ -506,9 +506,9 @@
         });
 
         return props;
-    }
+    })();
 
-    function buildUserLinebtns() {
+    var linebtns = (function() {
 
         var btns = {};
 
@@ -1224,9 +1224,9 @@
         }
 
         return btns;
-    }
+    })();
 
-    function buildUserButtons() {
+    var buttons = (function() {
 
         var btns = [];
 
@@ -1259,12 +1259,12 @@
         }
 
         return btns;
-    }
+    })();
 
     var userSeacher = new Searcher();
 
     userSeacher.set("condList", "pagenation", "resultList", user.pageConfig.apiPage, null, user.pageConfig.condArr, user.pageType + "UserPostData", null, false, buildUserButtons);
-    userSeacher.line("userName", buildUserLineprops(), buildUserLinebtns()).render();
+    userSeacher.line("userName", lineprops, linebtns).render();
 
     binding.setAdvance();
 

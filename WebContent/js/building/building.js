@@ -154,7 +154,7 @@ jQuery(function($) {
 		});
 	});
 
-	function buildBuildingLineprops() {
+	var lineprops = (function() {
 
 		return [{
 			field: "buildingHouse.house",
@@ -212,9 +212,9 @@ jQuery(function($) {
 			prop: function(v) { return building.balanceStatus[v.balanceStatus]; },
 			clazz: "red"
 		}];
-	}
+	})();
 
-	function buildBuildingLinebtns() {
+	var linebtns = (function() {
 
 		return {
 			view: {
@@ -246,9 +246,9 @@ jQuery(function($) {
 				}
 			}
 		};
-	}
+	})();
 
-	function buildBuildingButtons() {
+	var buttons = (function() {
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addBuilding').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -259,12 +259,12 @@ jQuery(function($) {
 		var $addspan = $('<span></span>').text('创建代理人').appendTo($addb);
 
 		return [$adda, $addb];
-	}
+	})();
 
 	var searcher = new Searcher();
 
 	searcher.set("condList", "pagenation", "resultList", api.building.pageBuilding, null, ["buildingNo"], "buildingPostData", null, false, buildBuildingButtons);
-	searcher.line("no", buildBuildingLineprops(), buildBuildingLinebtns()).render();
+	searcher.line("no", lineprops, linebtns).render();
 
 	// 添加
 	com.focusPage('a[name="addBuilding"]', '#pagenation').click(function(){

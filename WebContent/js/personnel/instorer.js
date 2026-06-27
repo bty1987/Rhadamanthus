@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var instorer = {
 
@@ -112,7 +112,7 @@
 
     instorer.btns.advanceSaveBtn.on("click", saveAdvance);
 
-    function buildInstorerLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "userId",
@@ -140,9 +140,9 @@
             prop: "phone",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildInstorerLinebtns() {
+    var linebtns = (function() {
 
         var btns = {};
 
@@ -221,21 +221,21 @@
         }
 
         return btns;
-    }
+    })();
 
-    function buildInstorerButtons() {
+    var buttons = (function() {
 
         var $addaS = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addInstorer').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
         $('<span></span>').text('添加').appendTo($addaS);
 
         return [$addaS];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.personel.pageInstorer, null, ['personel-userId', 'personel-userName', 'personel-userstatus', 'personel-phone'], "instorerPostData", null, false, buildInstorerButtons);
-    searcher.line("userName", buildInstorerLineprops(), buildInstorerLinebtns()).render();
+    searcher.line("userName", lineprops, linebtns).render();
 
     com.focusPage('a[name="addInstorer"]', '#pagenation').click(function() {
 

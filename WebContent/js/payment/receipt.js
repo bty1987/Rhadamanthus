@@ -19,7 +19,7 @@ jQuery(function ($) {
         com.closeTip();
     });
 
-    function buildReceiptLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderId",
@@ -63,23 +63,23 @@ jQuery(function ($) {
             prop: "collectTime",
             clazz: "green"
         }];
-    }
+    })();
 
-    function buildReceiptButtons() {
+    var buttons = (function() {
 
         var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
         $('<span></span>').text('导出').appendTo($impa);
 
         return [$impa];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.payment.pageReceipt, null, ["payment-paymentType", "payment-receiptType", "payment-collectTime"], "receiptPostData", null, false, buildReceiptButtons);
     searcher.line(function(v) {
         return v.type == 0 ? "收款" : "退款";
-    }, buildReceiptLineprops(), {}).render();
+    }, lineprops, {}).render();
 
     com.focusPage('a[name="import"]', '#pagenation').click(function () {
         var setime = com.focusPage("#pluginss");

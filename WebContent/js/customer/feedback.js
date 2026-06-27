@@ -31,7 +31,7 @@ $(function() {
 
     });
 
-    function buildFeedbackLineprops() {
+    var lineprops = (function() {
 
         return [{
             type: "img",
@@ -106,9 +106,9 @@ $(function() {
             prop: function(v) { return constant.customer().feedback.feedbackStatus.keys[v.status]; },
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildFeedbackLinebtns() {
+    var linebtns = (function() {
 
         return {
             drawing: {
@@ -184,21 +184,21 @@ $(function() {
                 }
             }
         };
-    }
+    })();
 
-    function buildFeedbackButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addFeedback').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.customer.pageFeedback, null, ['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type', 'customer-feedback-company', 'customer-feedback-status', 'customer-feedback-handler', 'customer-feedback-receiver', 'customer-feedback-handleTime', 'customer-feedback-receiveTime'], "groupUserPostData", null, false, buildFeedbackButtons);
-    searcher.line(function(v) { return v.type == constant.customer.feedback.STATUS_FEEDBACK_INT ? "反馈" : v.type == constant.customer.feedback.STATUS_COMPLAINT_INT ? "投诉" : "维修"; }, buildFeedbackLineprops(), buildFeedbackLinebtns()).render();
+    searcher.line(function(v) { return v.type == constant.customer.feedback.STATUS_FEEDBACK_INT ? "反馈" : v.type == constant.customer.feedback.STATUS_COMPLAINT_INT ? "投诉" : "维修"; }, lineprops, linebtns).render();
 
     com.focusPage('#addFeedback', '#pagenation').click(function() {
 

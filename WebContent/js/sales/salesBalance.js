@@ -239,7 +239,7 @@ $(function() {
         initUploadBtn(v);
     }
 
-    function buildBalanceLineprops() {
+    var lineprops = (function() {
 
         var propertyMap = {
             orderId: {
@@ -520,9 +520,9 @@ $(function() {
         });
 
         return props;
-    }
+    })();
 
-    function buildBalanceLinebtns() {
+    var linebtns = (function() {
 
         var buttonMap = {
             decoration: {
@@ -625,9 +625,9 @@ $(function() {
         });
 
         return btns;
-    }
+    })();
 
-    function buildBalanceButtons() {
+    var buttons = (function() {
 
         var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
@@ -679,7 +679,7 @@ $(function() {
         } else {
             return [$checka, $addaExportSales, $adda, $addaEnd, $balanceEnd];
         }
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -698,7 +698,7 @@ $(function() {
     }
 
     searcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, salesBalanceParams, pageConfig.condArr, salesBalance.postData, null, false, buildBalanceButtons);
-    searcher.line('sales.no', buildBalanceLineprops(), buildBalanceLinebtns()).render();
+    searcher.line('sales.no', lineprops, linebtns).render();
 
     salesBalance.btns.supplierSaveBtn.on('click', function() {
 

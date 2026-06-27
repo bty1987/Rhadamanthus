@@ -49,7 +49,7 @@ jQuery(function($) {
 
     initUploadBtn();
 
-    function buildEpersonLineprops() {
+    var lineprops = (function() {
 
         return [{
             type: "img",
@@ -85,9 +85,9 @@ jQuery(function($) {
             prop: "info",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildEpersonLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -117,21 +117,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildEpersonButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addeperson').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.market.pageEperson, null, ["market-city", "market-person-name"], "epersonPostData", null, false, buildEpersonButtons);
-    searcher.line("name", buildEpersonLineprops(), buildEpersonLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     // 添加
     com.focusPage('a[name="addeperson"]', '#pagenation').click(function() {

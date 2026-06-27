@@ -1,4 +1,4 @@
-﻿$(function(){
+$(function(){
 
     var system = {
             
@@ -20,7 +20,7 @@
         scid: null,
     };
 
-    function buildSystemConfigLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "createName",
@@ -38,9 +38,9 @@
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildSystemConfigLinebtns() {
+    var linebtns = (function() {
 
         return {
             draw: {
@@ -51,12 +51,12 @@
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.system.pageSystemConfig, null, ['system-config', 'system-company'], null, null, false, null);
-    searcher.line(function(v) { return "KEY :  " + v.key + "      Value :  " + v.value; }, buildSystemConfigLineprops(), buildSystemConfigLinebtns()).render();
+    searcher.line(function(v) { return "KEY :  " + v.key + "      Value :  " + v.value; }, lineprops, linebtns).render();
 
     //编辑
     function edit(row){

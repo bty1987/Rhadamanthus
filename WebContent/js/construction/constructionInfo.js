@@ -38,7 +38,7 @@ jQuery(function($) {
     information.items.isCheck.bindData(constant.construction().constructionInfo.isCheck.datas, "key", "value");
     information.items.handoverStatus.bindData(constant.construction().constructionInfo.handoverStatus.datas, "key", "value");
 
-    function buildConstructionInfoLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "decoration.orderId",
@@ -212,9 +212,9 @@ jQuery(function($) {
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildConstructionInfoLinebtns() {
+    var linebtns = (function() {
 
         return {
             view: {
@@ -294,16 +294,16 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildConstructionInfoButtons() {
+    var buttons = (function() {
 
         var $exporta = $('<a></a>').addClass('btn btn-minier btn-inverse').attr('id', 'export').css("margin", "0px 3px");
         var $exporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
         var $exportspan = $('<span></span>').text('导出').appendTo($exporta);
 
         return [$exporta];
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -341,7 +341,7 @@ jQuery(function($) {
     }
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageConstructionInfo, options, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-supervisor', 'decoration-houseType', 'decoration-designStatus', 'decoration-statuses', 'decoration-projectStatus', "construction-info-keyTime", "construction-info-drawlineTime", "construction-info-finishTime", "construction-info-designTime", "construction-info-issueTime", "decoration-sdesignTime", "decoration-edesignTime", "construction-info-isIssue", "construction-info-isCheck"], "constructionInfoPostData", null, false, buildConstructionInfoButtons);
-    searcher.line("decoration.orderId", buildConstructionInfoLineprops(), buildConstructionInfoLinebtns()).render();
+    searcher.line("decoration.orderId", lineprops, linebtns).render();
 
     com.focusPage("#export").click(function() {
 

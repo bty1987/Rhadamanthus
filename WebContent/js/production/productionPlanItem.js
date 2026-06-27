@@ -51,7 +51,7 @@ $(function(){
         return v;
     });
 
-    function buildProductionPlanItemLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "typeno",
@@ -89,9 +89,9 @@ $(function(){
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildProductionPlanItemLinebtns() {
+    var linebtns = (function() {
 
         return {
             del: {
@@ -108,9 +108,9 @@ $(function(){
                 }
             }
         };
-    }
+    })();
 
-    function buildProductionPlanItemButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addProductionPlanItem');
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -118,12 +118,12 @@ $(function(){
 
         hidBtn($adda, productionPlanItem.params.status);
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set('condList', 'itemPagenation', 'itemResultList', api.production.pageProductionPlanItemByPpid, { "productionPlanItem.productionPlan.ppid": productionPlanItem.params.ppid }, [], "productionPlanItemPostData", null, false, buildProductionPlanItemButtons);
-    searcher.line("name", buildProductionPlanItemLineprops(), buildProductionPlanItemLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage("#addProductionPlanItem").click(function() {
         productionPlanItem.modals.productionPlanItemModal.modal("show");

@@ -127,7 +127,7 @@ $(function() {
         managedrawing();
     }
 
-    function buildDeliveryLineprops() {
+    var lineprops = (function() {
 
         var propertyMap = {
             salesno: {
@@ -325,9 +325,9 @@ $(function() {
         });
 
         return props;
-    }
+    })();
 
-    function buildDeliveryLinebtns() {
+    var linebtns = (function() {
 
         var buttonMap = {
             tran: {
@@ -376,9 +376,9 @@ $(function() {
         });
 
         return btns;
-    }
+    })();
 
-    function buildDeliveryButtons() {
+    var buttons = (function() {
 
         var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
@@ -519,7 +519,7 @@ $(function() {
             return [$checka, $addw];
         }
         return [];
-    }
+    })();
 
     $.each(pageConfig.extraParam, function(i, v) {
 
@@ -548,7 +548,7 @@ $(function() {
     searcher.line(function(v) {
 
         return v.salesItem.goods.name;
-    }, buildDeliveryLineprops(), buildDeliveryLinebtns()).render();
+    }, lineprops, linebtns).render();
 
     salesDelivery.btns.saveEditBtn.on('click', function() {
 

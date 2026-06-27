@@ -19,7 +19,7 @@ jQuery(function($) {
         com.clearValidator();
     });
 
-    function buildEcityLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "city",
@@ -37,21 +37,21 @@ jQuery(function($) {
             prop: "x",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildEcityButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addEcity').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.market.pageEcity, null, ["market-city"], "ecityPostData", null, false, buildEcityButtons);
-    searcher.line("city", buildEcityLineprops(), {}).render();
+    searcher.line("city", lineprops, {}).render();
 
     // 添加
     com.focusPage('a[name="addEcity"]', '#pagenation').click(function() {

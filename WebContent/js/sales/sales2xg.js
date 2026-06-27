@@ -51,7 +51,7 @@ $(function() {
         });
     }
 
-    function buildManifestLineprops() {
+    var lineprops = (function() {
 
         var propertyMap = {
             orderId: {
@@ -262,9 +262,9 @@ $(function() {
         });
 
         return props;
-    }
+    })();
 
-    function buildManifestLinebtns() {
+    var linebtns = (function() {
 
         var buttonMap = {
             delivery: {
@@ -282,9 +282,9 @@ $(function() {
         });
 
         return btns;
-    }
+    })();
 
-    function buildManifestButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier pull-left btn-info').attr('name', 'collects').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-money bigger-110').appendTo($adda);
@@ -334,14 +334,14 @@ $(function() {
         });
 
         return [$adda];
-    }
+    })();
 
     var salesSwitchManifestForXGSearcher = new Searcher();
 
     var salesSwitchManifestForXGSearcher = new Searcher();
 
     salesSwitchManifestForXGSearcher.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, 'salesSwitchManifestForXGPostData', null, false, buildManifestButtons);
-    salesSwitchManifestForXGSearcher.line('no', buildManifestLineprops(), buildManifestLinebtns()).render(function() {
+    salesSwitchManifestForXGSearcher.line('no', lineprops, linebtns).render(function() {
 
         com.focusPage('input[name="fullpayTime"]').parent('.inline').addClass('m-wrap m-ctrl-medium date-picker');
         com.focusPage('input[name="fullpayTime"]').attr('readonly', true);

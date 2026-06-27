@@ -34,7 +34,7 @@ jQuery(function($) {
         "1": "禁用"
     };
 
-    function buildFlowpathLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "no",
@@ -57,18 +57,18 @@ jQuery(function($) {
             prop: function(v) { return statusMap[v.status]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildFlowpathLinebtns() {
+    var linebtns = (function() {
 
         return {
             update: {name: "修改", clazz: "btn-danger", handle: function(v) { flowpath.updateFlowpath.modal("show"); }},
             node: {name: "节点", clazz: "btn-success", handle: function(v) { node(v); }},
             delete: {name: "删除", clazz: "btn-warning", handle: function(v) { deleteFlowpath(v); }}
         };
-    }
+    })();
 
-    function buildFlowpathButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addSoodsModal').css({
             'margin-left': '4px'
@@ -80,11 +80,11 @@ jQuery(function($) {
             flowpath.addFlowpath.modal("show");
         });
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
     searcher.set("condList", "pagenation", "resultList", api.data.pageFlowpath, null, null, "flowpathPostData", null, false, buildFlowpathButtons);
-    searcher.line("name", buildFlowpathLineprops(), buildFlowpathLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     function saveData() {
 

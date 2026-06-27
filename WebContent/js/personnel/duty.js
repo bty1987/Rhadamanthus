@@ -1,11 +1,11 @@
-﻿$(function() {
+$(function() {
 
-    function buildDutyLineprops() {
+    var lineprops = (function() {
 
         return [];
-    }
+    })();
 
-    function buildDutyLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -38,21 +38,21 @@
                 }
             }
         };
-    }
+    })();
 
-    function buildDutyButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addDuty').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var dutySeacher = new Searcher();
 
     dutySeacher.set("condList", "pagenation", "resultList", api.system.pageDuty, null, ["personel-duty-name"], "dutyPostData", null, false, buildDutyButtons);
-    dutySeacher.line(function(v) { return v.name + (v.code ? ' [' + v.code + ']' : ''); }, buildDutyLineprops(), buildDutyLinebtns()).render();
+    dutySeacher.line(function(v) { return v.name + (v.code ? ' [' + v.code + ']' : ''); }, lineprops, linebtns).render();
 
     // 定义全局变量 json
     var duty = {

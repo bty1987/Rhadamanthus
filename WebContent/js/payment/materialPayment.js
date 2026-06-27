@@ -192,7 +192,7 @@ jQuery(function($) {
         initUpdate(v);
     }
 
-    function buildMaterialLineprops() {
+    var lineprops = (function() {
 
         var lineprops = [{
             type: "checkbox",
@@ -232,9 +232,9 @@ jQuery(function($) {
         }
 
         return lineprops;
-    }
+    })();
 
-    function buildMaterialLinebtns() {
+    var linebtns = (function() {
 
         return {
             decoration: {
@@ -276,9 +276,9 @@ jQuery(function($) {
                 handle: updateMaterialPaymentLine
             }
         };
-    }
+    })();
 
-    function buildMaterialButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'collects').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-money bigger-110').appendTo($adda);
@@ -314,7 +314,7 @@ jQuery(function($) {
             btnParams.push($impa);
 
         return btnParams;
-    }
+    })();
 
 	var searcher = new Searcher();
 
@@ -330,7 +330,7 @@ jQuery(function($) {
 		searcher.set("condList", "pagenation", "resultList", materialPayment.pageConfig.apiPage, extraParams, materialPayment.pageConfig.condArr, "materialPaymentPostData" + materialPayment.type, null, false, buildMaterialButtons);
 		searcher.line(function(v) {
 			return materialPayment.materialPaymentTypeData[v.paymentType];
-		}, buildMaterialLineprops(), buildMaterialLinebtns()).render();
+		}, lineprops, linebtns).render();
 
 	// 初始化模态框
 	function initCollect(payment, isCollects){

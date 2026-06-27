@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var merchant = {
 
@@ -47,7 +47,7 @@
 
     merchant.btns.advanceSaveBtn.on("click", saveAdvance);
 
-    function buildMerchantLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "userId",
@@ -75,9 +75,9 @@
             prop: "phone",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildMerchantLinebtns() {
+    var linebtns = (function() {
 
         return {
             right: {
@@ -105,12 +105,12 @@
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.personel.pageMerchant, null, ['personel-userId', 'personel-userName', 'personel-userstatus', 'personel-phone'], "merchantPostData", null, false, null);
-    searcher.line("userName", buildMerchantLineprops(), buildMerchantLinebtns()).render();
+    searcher.line("userName", lineprops, linebtns).render();
 
     function showAdvance(userId) {
 

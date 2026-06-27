@@ -55,7 +55,7 @@ jQuery(function($) {
         city.cityItems.regionSel.bindData(res.regions, "rid", "name");
     });
 
-    function buildCityLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "province",
@@ -73,9 +73,9 @@ jQuery(function($) {
             prop: "region.name",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildCityLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -100,21 +100,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildCityButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCity').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.system.pageCity, null, ["system-city-name", "system-region"], "cityPostData", null, false, buildCityButtons);
-    searcher.line("name", buildCityLineprops(), buildCityLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
     
     com.focusPage('[name="addCity"]', com.focusPage('#pagenation')).click(function(){
         

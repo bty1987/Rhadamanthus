@@ -65,7 +65,7 @@ jQuery(function($) {
         com.clearValidator();
     });
 
-    function buildCustomer4complaintLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "customerName",
@@ -119,9 +119,9 @@ jQuery(function($) {
             prop: "handle",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildCustomer4complaintLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -142,23 +142,23 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildCustomer4complaintButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageCustomerServiceComplaint, {
         "customerServiceComplaint.orderId": params.construction.orderId
     }, [], "searcherPostData", null, false, buildCustomer4complaintButtons);
-    searcher.line("orderId", buildCustomer4complaintLineprops(), buildCustomer4complaintLinebtns()).render();
+    searcher.line("orderId", lineprops, linebtns).render();
 
     com.focusPage('#add', '#pagenation').click(function() {
 

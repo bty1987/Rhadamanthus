@@ -6,7 +6,7 @@ jQuery(function($) {
         editFlg: false
     };
 
-    function buildComplainLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "creater.currentName",
@@ -49,9 +49,9 @@ jQuery(function($) {
             prop: function(v) { return constant.customer().complain.complainStatus.keys[v.gladness]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildComplainLinebtns() {
+    var linebtns = (function() {
 
         return {
             complaint: {
@@ -88,11 +88,11 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.customer.pageComplain, null, ["customer-service-orderId", "customer-service-creater-name", "customer-service-updater-name", "customer-complain-status", "customer-complain-level"], "complainPostData", null, false, null);
-    searcher.line("decoration.orderId", buildComplainLineprops(), buildComplainLinebtns()).render();
+    searcher.line("decoration.orderId", lineprops, linebtns).render();
 
 })

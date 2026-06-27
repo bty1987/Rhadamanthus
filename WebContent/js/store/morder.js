@@ -21,7 +21,7 @@ jQuery(function($) {
         morder.status = res.status.split("key", "value");
     }, null, false);
 
-    function buildMorderLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "address.name",
@@ -57,9 +57,9 @@ jQuery(function($) {
             prop: function(v) { return morder.status[v.status]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildMorderLinebtns() {
+    var linebtns = (function() {
 
         return {
             deliver: {
@@ -91,12 +91,12 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.store.pageMorder, null, ['store-morder-no', "store-morder-status"], "Morder", null, false, null);
-    searcher.line("no", buildMorderLineprops(), buildMorderLinebtns()).render();
+    searcher.line("no", lineprops, linebtns).render();
 
     function updateStatus(oid, status) {
 

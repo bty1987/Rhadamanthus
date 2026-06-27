@@ -16,7 +16,7 @@ jQuery(function($) {
         com.clearValidator();
     });
 
-    function buildFeedbackRecordLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "feedback.orderId",
@@ -46,14 +46,14 @@ jQuery(function($) {
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condListas", "pagenationas", "resultListas", api.customer.queryFeedbackRecord, {
         "feedbackRecord.feedback.fid": vrecord.vid
     }, [], "vrecordPostData", "feedbackRecords", true, null);
-    searcher.line("feedback.orderId", buildFeedbackRecordLineprops(), {}).render();
+    searcher.line("feedback.orderId", lineprops, {}).render();
 
     // 添加
     com.focusPage("#add").click(function() {

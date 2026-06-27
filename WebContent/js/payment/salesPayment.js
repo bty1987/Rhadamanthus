@@ -306,7 +306,7 @@ $(function() {
         });
     }
 
-    function buildSalesPaymentLineprops() {
+    var lineprops = (function() {
 
         var lineprops = [{
             type: "checkbox",
@@ -348,9 +348,9 @@ $(function() {
         }
 
         return lineprops;
-    }
+    })();
 
-    function buildSalesPaymentLinebtns() {
+    var linebtns = (function() {
 
         return {
             decorationInfo: {
@@ -521,9 +521,9 @@ $(function() {
                 }
             }
         };
-    }
+    })();
 
-    function buildSalesPaymentButtons() {
+    var buttons = (function() {
 
         var btnParams = [];
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'collects').css("margin", "0px 3px");
@@ -552,7 +552,7 @@ $(function() {
         if (salesPayment.pageConfig.pageBtn.contains("export"))
             btnParams.push($impa);
         return btnParams;
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -574,7 +574,7 @@ $(function() {
     searcher.line(function(v) {
 
         return salesPayment.salesPaymentTypeData[v.type];
-    }, buildSalesPaymentLineprops(), buildSalesPaymentLinebtns()).render();
+    }, lineprops, linebtns).render();
 
     // 要在searcher后面
     paymentUtils.pushPosBank(salesPayment.type == "common", salesPayment.bankUtil, com.focusPage("#condList", "#salesPaymentList"), salesPayment.htmlName);

@@ -76,7 +76,7 @@ jQuery(function($) {
         "user.status": 0
     }, "suppliers", "userId", "currentName", null);
 
-    function buildBalanceAccountLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "address",
@@ -145,9 +145,9 @@ jQuery(function($) {
             prop: function(v) { return constant.balance().balanceAccount.status.keys[v.status]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildBalanceAccountLinebtns() {
+    var linebtns = (function() {
 
         return {
             status: {
@@ -170,9 +170,9 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildBalanceAccountButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBalanceAccount').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -187,12 +187,12 @@ jQuery(function($) {
         var $caddspan = $('<span></span>').text('添加出纳').appendTo($cadda);
 
         return [$adda, $badda, $cadda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.balance.pageBalanceAccount, null, ["balance-account-name", "balance-account-type", "balance-account-status"], "accountPostData", null, false, buildBalanceAccountButtons);
-    searcher.line("name", buildBalanceAccountLineprops(), buildBalanceAccountLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage('#addBalanceAccount', '#pagenation').click(function() {
 

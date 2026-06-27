@@ -31,7 +31,7 @@ $(function () {
     revisits.items.type.bindData(constant.customer().revisit.type.datas,"key","value");
     revisits.items.gladness.bindData(constant.customer().revisit.status.datas,"key","value");
 
-    function buildRevisitLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "rid",
@@ -74,21 +74,21 @@ $(function () {
             prop: "content",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildRevisitButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'visitRevisit').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.customer.pageRevisit, null, ["customer-service-orderId", "customer-service-revisit-type"], "revisitPostData", null, false, buildRevisitButtons);
-    searcher.line("decoration.orderId", buildRevisitLineprops(), {}).render();
+    searcher.line("decoration.orderId", lineprops, {}).render();
     
     com.focusPage("#visitRevisit").click(function() {
     	 

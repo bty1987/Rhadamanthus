@@ -8,7 +8,7 @@ jQuery(function($) {
         com.focusPage("#processcomment").empty();
     });
 
-    function buildProcessLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "name",
@@ -31,9 +31,9 @@ jQuery(function($) {
             prop: function(v) { return v.status == 0 ? "启用" : "禁用"; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildProcessLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -77,21 +77,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildProcessButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addProcess').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.approval.pageProcess, null, ["approval-process-no", "approval-process-name", "approval-process-status"], "processPostData", null, false, buildProcessButtons);
-    searcher.line("name", buildProcessLineprops(), buildProcessLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage("#addProcess").click(function() {
 

@@ -1,4 +1,4 @@
-﻿
+
 jQuery(function($) {
 
     /**
@@ -38,7 +38,7 @@ jQuery(function($) {
     approve.items.type.bindData(constant.approval().approval.type.datas, "key", "value", false);
     approve.approvalType = constant.approval().approval.type.keys;
 
-    function buildApprovalUserLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "userBase.userId",
@@ -61,9 +61,9 @@ jQuery(function($) {
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildApprovalUserLinebtns() {
+    var linebtns = (function() {
 
         return {
             del: {
@@ -75,16 +75,16 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildApprovalUserButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addApprovalUser').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     /**
      * searcher声明过程
@@ -92,7 +92,7 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.approval.pageApprover, null, ["approval-approver-username", "approval-type"], "approvalUserPostData", null, false, buildApprovalUserButtons);
-    searcher.line("userBase.currentName", buildApprovalUserLineprops(), buildApprovalUserLinebtns()).render();
+    searcher.line("userBase.currentName", lineprops, linebtns).render();
 
     /**
      * 自定义按钮绑定事件
