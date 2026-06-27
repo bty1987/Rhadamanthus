@@ -10,7 +10,7 @@ jQuery(function($) {
             saveBtn: com.focusPage("#saveBtn"),
             updateBtn: com.focusPage("#updateBtn"),
 
-            seveSuccessBtn: com.focusPage("#seveSuccess"),
+            saveSuccessBtn: com.focusPage("#saveSuccess"),
         },
 
         modals: {
@@ -20,7 +20,7 @@ jQuery(function($) {
             updateModal: com.focusPage("#updateModal"),
 
             constructionInfoModal: com.focusPage("#constructionInfoModal"),
-            contructionNodeModal: com.focusPage("#contructionNodeModal"),
+            constructionNodeModal: com.focusPage("#constructionNodeModal"),
         },
 
         items: {
@@ -43,14 +43,14 @@ jQuery(function($) {
             isCeremony: com.focusPage("#isCeremony"),
             comment: com.focusPage("#comment"),
 
-            contructionNodes: com.focusPage("#contructionNodes", "#contructionNodeModal"),
+            constructionNodes: com.focusPage("#constructionNodes", "#constructionNodeModal"),
         }
     };
 
     drawline.btns.saveInfoBtn.bindClick(saveInfoData);
     drawline.btns.saveBtn.bindClick(saveData);
     drawline.btns.updateBtn.bindClick(updateData);
-    drawline.btns.seveSuccessBtn.bindClick(seveSuccess);
+    drawline.btns.saveSuccessBtn.bindClick(saveSuccess);
 
     drawline.modals.constructionInfoModal.on("hide.bs.modal", function() {
 
@@ -376,8 +376,8 @@ jQuery(function($) {
         drawline.dlid = v.dlid;
         drawline.orderId = v.decoration.orderId;
 
-        drawline.modals.contructionNodeModal.modal("show");
-        drawline.items.contructionNodes.html("");
+        drawline.modals.constructionNodeModal.modal("show");
+        drawline.items.constructionNodes.html("");
 
         var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
@@ -444,7 +444,7 @@ jQuery(function($) {
             $liLi.append($h3).append($ulPro).appendTo($uli);
         });
 
-        $uli.appendTo(drawline.items.contructionNodes);
+        $uli.appendTo(drawline.items.constructionNodes);
 
         var period = null;
 
@@ -464,7 +464,7 @@ jQuery(function($) {
 
             $.each(res.constructionPeriodNodes, function(i, v) {
 
-                com.focusPage("input.timeLimits[cnid='" + v.constructionNode.cnid + "']", "#contructionNodes").val(v.period);
+                com.focusPage("input.timeLimits[cnid='" + v.constructionNode.cnid + "']", "#constructionNodes").val(v.period);
             });
         });
     }
@@ -530,13 +530,13 @@ jQuery(function($) {
         });
     }
 
-    function seveSuccess() {
+    function saveSuccess() {
 
-        if (com.validate("contructionNodeModal")) {
+        if (com.validate("constructionNodeModal")) {
             return false;
         }
 
-        var $inputs = com.focusPage('input[name="sorts"]:checked', '#contructionNodes');
+        var $inputs = com.focusPage('input[name="sorts"]:checked', '#constructionNodes');
 
         var option = {
             "drawLine.decoration.orderId": drawline.orderId
@@ -554,7 +554,7 @@ jQuery(function($) {
         com.post(api.construction.pretreatDrawLine, option, function(res) {
 
             com.showAlert(com.info, "放线成功");
-            drawline.modals.contructionNodeModal.modal("hide");
+            drawline.modals.constructionNodeModal.modal("hide");
             searcher.doSearch();
         });
     }
