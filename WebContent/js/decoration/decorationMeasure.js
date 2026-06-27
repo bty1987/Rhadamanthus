@@ -78,7 +78,7 @@ jQuery(function($) {
     drawline.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas, "key", "value");
     drawline.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas, "key", "value");
 
-    function buildMeasureLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderId",
@@ -203,9 +203,9 @@ jQuery(function($) {
             prop: "content",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildMeasureLinebtns() {
+    var linebtns = (function() {
 
         return {
             qeasure: {name: "量房单", clazz: "btn-warning", handle: function(v) {
@@ -213,7 +213,7 @@ jQuery(function($) {
                 com.popup4page("#layerPopUp", api.index.qeasure4detailIndex.url, "量房单");
             }}
         };
-    }
+    })();
 
     var searcher = new Searcher();
     searcher.set("condList", "pagenation", "resultList", api.decoration.pageDecorationMeasure, {
@@ -221,7 +221,7 @@ jQuery(function($) {
     }, ['decoration-orderId', 'decoration-measure-status', 'decoration-measure-actualDate'], "drawLineApplyPostData");
     searcher.line(function(v) {
         return v.decoration.orderId;
-    }, buildMeasureLineprops(), buildMeasureLinebtns()).render();
+    }, lineprops, linebtns).render();
 
     // com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
 

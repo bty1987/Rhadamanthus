@@ -1,6 +1,6 @@
 jQuery(function ($) {
 
-    function buildAcceptanceLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderId",
@@ -76,9 +76,9 @@ jQuery(function ($) {
             prop: function(v) { return constant.decoration().decoration.projectStatus.keys[v.projectStatus]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildAcceptanceLinebtns() {
+    var linebtns = (function() {
 
         return {
             view: {
@@ -89,12 +89,12 @@ jQuery(function ($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageConstructionForAcceptance, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'construction-supervisor', 'decoration-projectStatus', 'construction-acceptanceFlag'], "acceptanceSeacherSeacherPostData", null, true, null);
-    searcher.line("orderId", buildAcceptanceLineprops(), buildAcceptanceLinebtns()).render();
+    searcher.line("orderId", lineprops, linebtns).render();
 
     function viewAcceptanceDetailIndex(orderId) {
         params.construction.orderId = orderId;

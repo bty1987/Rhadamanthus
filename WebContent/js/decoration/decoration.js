@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var order = {
         saveBtn: null,
@@ -875,7 +875,7 @@
      * IIFE 内其余业务函数 (viewDecoration*, modalDrawLineModal, signOrder 等) 全部上提到模块作用域, 保持原语义。
      */
 
-    function buildDecorationLineprops() {
+    var lineprops = (function() {
 
         var propertyMap = {
             address: {
@@ -1329,10 +1329,10 @@
         });
 
         return props;
-    }
+    })();
 
 
-    function buildDecorationLinebtns() {
+    var linebtns = (function() {
 
         return {
             view: {name: "查看", clazz: "btn-yellow", show: function(v) { return pageConfig.pageBtn.contains("view"); }, handle: function(v) { viewDecorationDetail(v); }},
@@ -1382,7 +1382,7 @@
             terminalStatus: {name: "工程终止", clazz: "btn-danger", show: function() { return pageConfig.pageBtn.contains("terminalStatus"); }, handle: function(v) { terminalStatus(v.orderId); }},
             hidden: {name: "隐藏", clazz: "btn-info", show: function() { return pageConfig.pageBtn.contains("hidden"); }, handle: function(v) { hiddenOrder(v.orderId); }}
         };
-    }
+    })();
 
 
         // 查看
@@ -2644,9 +2644,9 @@
 
     searcher.line(function(v) {
         return v.orderId;
-    }, buildDecorationLineprops(), buildDecorationLinebtns()).render();
+    }, lineprops, linebtns).render();
 
-    function buildDecorationButtons() {
+    var buttons = (function() {
 
         var btns = [];
 
@@ -2667,7 +2667,7 @@
         }
 
         return btns;
-    }
+    })();
 
     function createToolButton(name, icon, text, clazz) {
 

@@ -10,7 +10,7 @@ $(function() {
         constructionNodes[2] = "完工";
     }, null, false);
 
-    function buildInspectionLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderId",
@@ -86,9 +86,9 @@ $(function() {
             prop: function(v) { return constant.construction.constructionSchedule.status.keys[v.projectStatus]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildInspectionLinebtns() {
+    var linebtns = (function() {
 
         return {
             view: {
@@ -99,12 +99,12 @@ $(function() {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageConstruction, params.inspectionPostData, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'construction-supervisor', 'decoration-projectStatus'], "inspectionSeacherSeacherPostData", null, true, null);
-    searcher.line("orderId", buildInspectionLineprops(), buildInspectionLinebtns()).render();
+    searcher.line("orderId", lineprops, linebtns).render();
 
     function viewRecord(orderId, orderAddr) {
 

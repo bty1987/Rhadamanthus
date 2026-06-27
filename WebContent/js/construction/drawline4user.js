@@ -54,7 +54,7 @@ jQuery(function($) {
         drawline.items.conpany.bindData(res.companys, "cid", "name", false);
     });
 
-    function buildDrawline4userLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderId",
@@ -132,9 +132,9 @@ jQuery(function($) {
             prop: function(v) { return constant.decoration().decoration.status.keys[v.status]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildDrawline4userLinebtns() {
+    var linebtns = (function() {
 
         return {
             deploy: {
@@ -145,12 +145,12 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageConstruction, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer'], "drawLinePersonPostData", null, true, null);
-    searcher.line("orderId", buildDrawline4userLineprops(), buildDrawline4userLinebtns()).render();
+    searcher.line("orderId", lineprops, linebtns).render();
 
     function showSetup(v) {
 

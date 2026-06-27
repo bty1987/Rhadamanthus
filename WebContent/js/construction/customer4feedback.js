@@ -37,7 +37,7 @@ jQuery(function ($) {
 
     backVisit.items.backVisitType.bindData(constant.construction().customer4feedback.backVisitTypeData.datas,"key","value");
 
-    function buildCustomer4feedbackLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderAddr",
@@ -65,9 +65,9 @@ jQuery(function ($) {
             prop: "backVisitDes",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildCustomer4feedbackLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -101,23 +101,23 @@ jQuery(function ($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildCustomer4feedbackButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'Add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageCustomerServiceBackVisit, {
         "customerServiceBackVisit.orderId": params.construction.orderId
     }, [], "customerServiceBackVisitPostData", null, false, buildCustomer4feedbackButtons);
-    searcher.line("orderId", buildCustomer4feedbackLineprops(), buildCustomer4feedbackLinebtns()).render();
+    searcher.line("orderId", lineprops, linebtns).render();
 
     com.focusPage('#Add', '#pagenation').click(function () {
         backVisit.editFlag = false;

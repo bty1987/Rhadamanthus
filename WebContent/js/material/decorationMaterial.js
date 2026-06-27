@@ -18,7 +18,7 @@ jQuery(function($) {
 
     com.focusPage('#fl-statement').statement("主材订单", "订单信息列表");
 
-    function buildDecorationMaterialLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "house.village",
@@ -56,9 +56,9 @@ jQuery(function($) {
             prop: "house.buildArea",
             clazz: "blue"
         }];
-    }
+    })();
 
-    function buildDecorationMaterialLinebtns() {
+    var linebtns = (function() {
 
         return {
             sub: {
@@ -69,12 +69,12 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.decoration.pageDecorationForGeneral, null, ["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-salesman"], materialOrderPostData, null, true, null);
-    searcher.line("orderId", buildDecorationMaterialLineprops(), buildDecorationMaterialLinebtns()).render();
+    searcher.line("orderId", lineprops, linebtns).render();
 
     function viewMaterialIndex(v) {
 

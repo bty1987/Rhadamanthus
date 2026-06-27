@@ -30,7 +30,7 @@ $(function () {
         "1": "培训"
     };
 
-    function buildUserRequireLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "creater.userName",
@@ -78,9 +78,9 @@ $(function () {
             prop: function(v) { return typeMap[v.type]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildUserRequireLinebtns() {
+    var linebtns = (function() {
 
         return {
             approve: {
@@ -108,21 +108,21 @@ $(function () {
                 }
             }
         };
-    }
+    })();
 
-    function buildUserRequireButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addplan').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.personel.PageUserRequire, null, [], "userRequirePostData_test_", null, false, buildUserRequireButtons);
-    searcher.line("creater.userName", buildUserRequireLineprops(), buildUserRequireLinebtns()).render();
+    searcher.line("creater.userName", lineprops, linebtns).render();
 
     com.focusPage('[name="addplan"]', '#pagenation').on("click", function () {  // 选择器 [属性名="属性值"] 匿名函数
         userRequire.modal.modal("show");

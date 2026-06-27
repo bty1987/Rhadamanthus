@@ -71,7 +71,7 @@ jQuery(function($) {
         com.focusPage('#fl-statement').statement("客源", "跟进记录");
     }
 
-    function buildBuildingRecordLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "type",
@@ -113,7 +113,7 @@ jQuery(function($) {
             prop: "operater.userName",
             clazz: "grey"
         }];
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -121,7 +121,7 @@ jQuery(function($) {
         "filters[0].data": brOptionId,
         "filters[0].field": brField
     }, [], "buildingRecordPostData", "buildingRecords", true, null);
-    searcher.line(function(v) { return buildingRecord.currenFlag == true ? v.buildingHouse.no : v.buildingCustomer.no; }, buildBuildingRecordLineprops(), {}).render();
+    searcher.line(function(v) { return buildingRecord.currenFlag == true ? v.buildingHouse.no : v.buildingCustomer.no; }, lineprops, {}).render();
 
     // 添加
     com.focusPage("#addBuildingRecord").click(function() {

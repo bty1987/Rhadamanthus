@@ -22,7 +22,7 @@ jQuery(function($) {
 	materialSubOrderRefundPostData["materialRefund.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
 	materialSubOrderRefundPostData["materialRefund.customer.name"] = materialSubOrderPostData["materialSubOrder.customerName"];
 	
-	function buildMaterialRefundLineprops() {
+	var lineprops = (function() {
 
 		var showModel = function(v) {
 			return v.packageName == "" || v.packageName == null;
@@ -104,7 +104,7 @@ jQuery(function($) {
 			clazz: "grey",
 			show: showPackageItem
 		}];
-	}
+	})();
 
 	var searcher = new Searcher();
 
@@ -116,7 +116,7 @@ jQuery(function($) {
 			return "套餐 " + v.packageName;
 		}
 		return v.name;
-	}, buildMaterialRefundLineprops(), {}).render();
+	}, lineprops, {}).render();
 
 	// 收集套餐子项 (原 creatLine 副作用)
  searcher.doSearch && (function(){

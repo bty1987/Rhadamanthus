@@ -153,7 +153,7 @@ jQuery(function($) {
         paytran.modals.posPayModal.modal("show");
     }
 
-    function buildPaytranLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderId",
@@ -205,9 +205,9 @@ jQuery(function($) {
             prop: "pushTime",
             clazz: "green"
         }];
-    }
+    })();
 
-    function buildPaytranLinebtns() {
+    var linebtns = (function() {
 
         var show = function(v) {
             return v.status == constant.payment().paytran.STATUS_INIT_INT;
@@ -221,23 +221,23 @@ jQuery(function($) {
             wechat: {name: "微信推送", clazz: "btn-success", show: show, handle: wechatPaytran},
             pos: {name: "POS推送", clazz: "btn-warning", show: show, handle: posPaytran}
         };
-    }
+    })();
 
-    function buildPaytranButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('创建转换款').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.payment.pagePaytran, null, ["payment-orderId", "payment-point-sn", "payment-activity-creater-name", "payment-createTime", "payment-paymentType", "payment-point-status"], "paytranPostData", null, false, buildPaytranButtons);
     searcher.line(function(v) {
         return constant.payment().receipt.paymentType.keys[v.type];
-    }, buildPaytranLineprops(), buildPaytranLinebtns()).render();
+    }, lineprops, linebtns).render();
 
     com.focusPage('a[name="add"]', '#pagenation').click(function() {
 

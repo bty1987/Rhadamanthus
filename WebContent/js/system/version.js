@@ -27,7 +27,7 @@ $(function () {
         com.clearValidator();
     });
     
-    function buildVersionLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "createTime",
@@ -40,9 +40,9 @@ $(function () {
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildVersionLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -89,9 +89,9 @@ $(function () {
                 }
             }
         };
-    }
+    })();
 
-    function buildVersionButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -106,12 +106,12 @@ $(function () {
         });
 
         return [$adda];
-    }
+    })();
 
     var versionSeacher = new Searcher();
 
     versionSeacher.set("condList", "pagenation", "resultList", api.upgrade.pageVersion, null, [], "versionSeacherPostData", null, false, buildVersionButtons);
-    versionSeacher.line("no", buildVersionLineprops(), buildVersionLinebtns()).render();
+    versionSeacher.line("no", lineprops, linebtns).render();
 
     function saveData() {
         

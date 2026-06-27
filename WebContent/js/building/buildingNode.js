@@ -42,7 +42,7 @@ jQuery(function($) {
         });
     }, null, false);
 
-	function buildBuildingNodeLineprops() {
+	var lineprops = (function() {
 
 		return [{
 			field: "type",
@@ -55,9 +55,9 @@ jQuery(function($) {
 			prop: "name",
 			clazz: "grey"
 		}];
-	}
+	})();
 
-	function buildBuildingNodeLinebtns() {
+	var linebtns = (function() {
 
 		return {
 			view: {
@@ -81,21 +81,21 @@ jQuery(function($) {
 				}
 			}
 		};
-	}
+	})();
 
-	function buildBuildingNodeButtons() {
+	var buttons = (function() {
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addBuildingNode').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
 		return [$adda];
-	}
+	})();
 
 	var searcher = new Searcher();
 
 	searcher.set("condList", "pagenation", "resultList", api.building.pageBuildingNode, null, ['building-node-type'], "buildingNodePostData", null, false, buildBuildingNodeButtons);
-	searcher.line("name", buildBuildingNodeLineprops(), buildBuildingNodeLinebtns()).render();
+	searcher.line("name", lineprops, linebtns).render();
 
 	//添加
 	com.focusPage('a[name="addBuildingNode"]', '#pagenation').click(function(){

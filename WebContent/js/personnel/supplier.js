@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var supplier = {
 
@@ -111,7 +111,7 @@
 
     supplier.btns.advanceSaveBtn.on("click", saveAdvance);
 
-    function buildSupplierLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "userId",
@@ -139,9 +139,9 @@
             prop: "phone",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildSupplierLinebtns() {
+    var linebtns = (function() {
 
         var btns = {};
 
@@ -234,21 +234,21 @@
         }
 
         return btns;
-    }
+    })();
 
-    function buildSupplierButtons() {
+    var buttons = (function() {
 
         var $addaS = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addSupplier').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
         $('<span></span>').text('添加').appendTo($addaS);
 
         return [$addaS];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.personel.pageSupplier, null, ['personel-userId', 'personel-userName', 'personel-userstatus', 'personel-phone'], "supplierPostData", null, false, buildSupplierButtons);
-    searcher.line("userName", buildSupplierLineprops(), buildSupplierLinebtns()).render();
+    searcher.line("userName", lineprops, linebtns).render();
 
     com.focusPage('a[name="addSupplier"]', '#pagenation').click(function() {
 

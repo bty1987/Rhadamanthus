@@ -31,7 +31,7 @@ jQuery(function ($) {
 
     com.datetime(guarantee.items.guaranteeTime);
 
-    function buildCustomer4guaranteeLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "customerName",
@@ -49,9 +49,9 @@ jQuery(function ($) {
             prop: "guaranteeDes",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildCustomer4guaranteeLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -82,23 +82,23 @@ jQuery(function ($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildCustomer4guaranteeButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageCustomerServiceGuarantee, {
         "customerServiceGuarantee.orderId": params.construction.orderId
     }, [], "searcherPostData", null, false, buildCustomer4guaranteeButtons);
-    searcher.line("orderId", buildCustomer4guaranteeLineprops(), buildCustomer4guaranteeLinebtns()).render();
+    searcher.line("orderId", lineprops, linebtns).render();
 
     com.focusPage('#add', '#pagenation').click(function () {
         guarantee.editFlag = false;

@@ -302,7 +302,7 @@ $(function() {
         }, null, false);
     }
 
-    function buildSalesActivityLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderId",
@@ -364,7 +364,7 @@ $(function() {
             prop: "sales.total",
             clazz: "blue"
         }];
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -375,7 +375,7 @@ $(function() {
     searcher.line(function(v) {
 
         return v.activity.name;
-    }, buildSalesActivityLineprops(), {}).render();
+    }, lineprops, {}).render();
 
     // 查询活动物品
     function querySalesActivityItem() {

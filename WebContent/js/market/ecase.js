@@ -60,7 +60,7 @@ jQuery(function($) {
         })
     }, null, false);
 
-    function buildEcaseLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "cityId",
@@ -113,9 +113,9 @@ jQuery(function($) {
             prop: "comment",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildEcaseLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -196,21 +196,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildEcaseButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCase').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.market.pageEcase, null, ["market-ecase-city", "market-designer", "market-supervisor", "market-picture-type", "market-style", "market-houseType", "market-area"], "casePostData", null, false, buildEcaseButtons);
-    searcher.line("villageName", buildEcaseLineprops(), buildEcaseLinebtns()).render();
+    searcher.line("villageName", lineprops, linebtns).render();
 
     // 添加
     com.focusPage('a[name="addCase"]', '#pagenation').click(function() {

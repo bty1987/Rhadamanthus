@@ -63,7 +63,7 @@ jQuery(function($) {
         });
     });
 
-    function buildRole4baseLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "no",
@@ -76,9 +76,9 @@ jQuery(function($) {
             prop: "content",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildRole4baseLinebtns() {
+    var linebtns = (function() {
 
         return {
             module: {
@@ -134,21 +134,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildRole4baseButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addRole').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.system.pageRole, null, ["roleName"], "rolePostData", null, false, buildRole4baseButtons);
-    searcher.line("name", buildRole4baseLineprops(), buildRole4baseLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
     
     com.focusPage('[name="addRole"]', com.focusPage('#pagenation')).click(function(){
         role.editFlg = false;

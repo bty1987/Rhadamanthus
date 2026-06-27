@@ -168,7 +168,7 @@ jQuery(function($) {
     // 不同页面的不同参数
     activityPayment.pageConfig = paymentUtils.getConfig(activityPayment.type, 32);
 
-    function buildActivityLineprops() {
+    var lineprops = (function() {
 
         var lineprops = [{
             type: "checkbox",
@@ -208,9 +208,9 @@ jQuery(function($) {
         }
 
         return lineprops;
-    }
+    })();
 
-    function buildActivityLinebtns() {
+    var linebtns = (function() {
 
         return {
             collect: {
@@ -243,9 +243,9 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildActivityButtons() {
+    var buttons = (function() {
 
         var $batch = $('<a></a>').addClass('btn btn-minier pull-left btn-primary').attr('id', 'collects').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-money bigger-110').appendTo($batch);
@@ -263,7 +263,7 @@ jQuery(function($) {
             btnParams.push($adda);
 
         return btnParams;
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -276,7 +276,7 @@ jQuery(function($) {
     searcher.line(function(v) {
 
         return activityPayment.paymentType[v.type];
-    }, buildActivityLineprops(), buildActivityLinebtns()).render();
+    }, lineprops, linebtns).render();
 
     // 添加活动款
     function create() {

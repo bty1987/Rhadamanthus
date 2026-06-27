@@ -24,7 +24,7 @@ $(function(){
         com.clearValidator();
     });
 
-    function buildCrowdLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "opengid",
@@ -42,9 +42,9 @@ $(function(){
             prop: "content",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildCrowdLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -92,11 +92,11 @@ $(function(){
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
     searcher.set("condList", "pagenation", "resultList", api.customer.pageGroup, null, ['customer-group-name', 'customer-group-orderId'], null, null, false, null);
-    searcher.line("name", buildCrowdLineprops(), buildCrowdLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     function bindgroup (){
         

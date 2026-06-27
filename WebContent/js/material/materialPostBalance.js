@@ -33,7 +33,7 @@ $(function(){
      * tableId ，用来显示的div的id
      * result.list 列表的json数组
      **/
-    function buildMaterialPostBalanceLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "material.orderId",
@@ -151,9 +151,9 @@ $(function(){
             prop: function(v) { return v.type == 0 ? '购货' : v.type == 1 ? '预结退货' : '结算退货'; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildMaterialPostBalanceLinebtns() {
+    var linebtns = (function() {
 
         return {
             supBalance: {
@@ -242,9 +242,9 @@ $(function(){
                 }
             }
         };
-    }
+    })();
 
-    function buildMaterialPostBalanceButtons() {
+    var buttons = (function() {
 
         var $exportAnchor = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'export').css("margin", "0px 3px");
         var $exprotIcon = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exportAnchor);
@@ -254,12 +254,12 @@ $(function(){
         });
 
         return [$exportAnchor];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialBalance, null, ['material-orderId', 'material-no', 'material-brand', 'material-orderAddr', 'material-region-name', 'material-dept-name', 'material-balance-status', 'material-balance-type', 'material-fullpayTime', 'material-prebalanceTime', 'material-vbalanceTime', 'material-postBalanceTime'], "materialOrderPostBalancePostData", null, false, buildMaterialPostBalanceButtons);
-    searcher.line("material.no", buildMaterialPostBalanceLineprops(), buildMaterialPostBalanceLinebtns()).render();
+    searcher.line("material.no", lineprops, linebtns).render();
     //厂结值 点保存//
     function updateMaterialSubOrderBalanceForVBalance(){
         if (!com.validate('smodal')) {

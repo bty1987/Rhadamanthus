@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var avenger = {
 
@@ -45,7 +45,7 @@
 
     avenger.btns.advanceSaveBtn.on("click", saveAdvance);
 
-    function buildAvengerLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "userId",
@@ -73,9 +73,9 @@
             prop: "phone",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildAvengerLinebtns() {
+    var linebtns = (function() {
 
         return {
             right: {
@@ -103,12 +103,12 @@
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.personel.pageAvenger, null, ['personel-userId', 'personel-userName', 'personel-userstatus', 'personel-phone'], "avengerPostData", null, false, null);
-    searcher.line("userName", buildAvengerLineprops(), buildAvengerLinebtns()).render();
+    searcher.line("userName", lineprops, linebtns).render();
 
     function showAdvance(userId) {
 

@@ -18,7 +18,7 @@ $(function() {
         com.focusPage('select[name="constructionCost"]').bindData(res.constructionCostVOs, 'ccid', 'name', true);
     });
 
-    function buildAoodsCostLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "areaLeft",
@@ -51,9 +51,9 @@ $(function() {
             prop: "numLimit",
             clazz: "blue"
         }];
-    }
+    })();
 
-    function buildAoodsCostLinebtns() {
+    var linebtns = (function() {
 
         return {
             delete: {
@@ -69,14 +69,14 @@ $(function() {
                 }
             }
         };
-    }
+    })();
 
     var costsearcher = new Searcher();
 
     costsearcher.set("condListCost", "pagenationCost", "resultListCost", api.data.pageAoodsCost, {
         "aoodsCost.aoods.aid": aoodsCost.aid
     }, null, "aoodsCostPostData", null, false);
-    costsearcher.line("aoods.goods.name", buildAoodsCostLineprops(), buildAoodsCostLinebtns()).render();
+    costsearcher.line("aoods.goods.name", lineprops, linebtns).render();
 
     aoodsCost.btns.addBtn.click(function() {
         com.popup4mini('#miniPopUp', '#addAoodsCost', "添加");

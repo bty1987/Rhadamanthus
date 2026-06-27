@@ -45,7 +45,7 @@ $(function() {
         com.closePopup();
     });
 
-    function buildAoodsChargeLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "name",
@@ -78,9 +78,9 @@ $(function() {
             prop: "sort",
             clazz: "blue"
         }];
-    }
+    })();
 
-    function buildAoodsChargeLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {name: "编辑", clazz: "btn-yellow", handle: function(v) { editData(v); }},
@@ -97,14 +97,14 @@ $(function() {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condListCharge", "pagenationCharge", "resultListCharge", api.data.pageAoodsCharge, {
         "aoodsCharge.aoods.aid": aoodsCharge.aid
     }, null, "aoodsChargePostData", null, false);
-    searcher.line("name", buildAoodsChargeLineprops(), buildAoodsChargeLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     // 添加按钮
     aoodsCharge.btns.addBtn.click(function() {

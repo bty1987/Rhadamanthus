@@ -1,6 +1,6 @@
 jQuery(function($) {
 
-    function buildCustomerLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderId",
@@ -81,9 +81,9 @@ jQuery(function($) {
             prop: function(v) { return constant.decoration().decoration.projectStatus.keys[v.projectStatus]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildCustomerLinebtns() {
+    var linebtns = (function() {
 
         return {
             view: {
@@ -94,12 +94,12 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("customerServiceCondList", "customerServicePagenation", "customerServiceResultList", api.construction.pageConstruction, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-projectStatus'], "customerServiceSeacherPostData", null, false, null);
-    searcher.line("orderId", buildCustomerLineprops(), buildCustomerLinebtns()).render();
+    searcher.line("orderId", lineprops, linebtns).render();
 
     function viewCustomerServiceDetailIndex(orderId) {
 

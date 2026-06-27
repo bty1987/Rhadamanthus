@@ -312,7 +312,7 @@ jQuery(function($) {
             });
         });
     }
-    function buildPaymentLineprops() {
+    var lineprops = (function() {
 
         var lineprops = [{
             type: "checkbox",
@@ -364,9 +364,9 @@ jQuery(function($) {
         }
 
         return lineprops;
-    }
+    })();
 
-    function buildPaymentLinebtns() {
+    var linebtns = (function() {
 
         return {
             posPush: {
@@ -626,9 +626,9 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildPaymentButtons() {
+    var buttons = (function() {
 
         var btnParams = [];
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createAdvance').css("margin", "0px 3px");
@@ -657,7 +657,7 @@ jQuery(function($) {
         if (payment.pageConfig.pageBtn.contains("createPayment"))
             btnParams.push($collecta);
         return btnParams;
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -678,7 +678,7 @@ jQuery(function($) {
     searcher.line(function(v) {
 
         return v.decoration ? v.decoration.orderId : v.orderId;
-    }, buildPaymentLineprops(), buildPaymentLinebtns()).render();
+    }, lineprops, linebtns).render();
 
     // 要在searcher后面
     paymentUtils.pushPosBank(payment.type == "check", payment.bankUtil, com.focusPage("#condList", "#paymentList"), payment.htmlName);

@@ -50,7 +50,7 @@ $(function() {
         },
     });
 
-    function buildInstorerLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "sid",
@@ -68,9 +68,9 @@ $(function() {
             prop: function(v) { return v.isLogin == 0 ? "禁用" : "启用"; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildInstorerLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -87,23 +87,23 @@ $(function() {
                 handle: function(v, checked) { updateStatus(v.sid, checked ? 1 : 0, null); }
             }
         };
-    }
+    })();
 
-    function buildInstorerButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var _condArr = [];
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.data.pageInstorer, null, _condArr, "materialModelPostData", null, false, buildInstorerButtons);
-    searcher.line("currentName", buildInstorerLineprops(), buildInstorerLinebtns()).render();
+    searcher.line("currentName", lineprops, linebtns).render();
 
     $('a[name="add"]', com.focusPage('#pagenation')).click(function() {
 

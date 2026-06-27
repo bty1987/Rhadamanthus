@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var user = {
         statusType: [],
@@ -28,7 +28,7 @@
         user.deptType = res.departmentTypes;
     }, null, false);
 
-    function buildUserBaseLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "userId",
@@ -61,9 +61,9 @@
             prop: "phone",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildUserBaseLinebtns() {
+    var linebtns = (function() {
 
         return {
             view: {
@@ -136,8 +136,8 @@
                 }
             }
         };
-    }
-    function buildUserBaseButtons() {
+    })();
+    var buttons = (function() {
 
         var $addaS = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addUserSimple').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
@@ -152,12 +152,12 @@
         $('<span></span>').text('上传').appendTo($importa);
 
         return [$addaS, $adda, $importa];
-    }
+    })();
 
     var userSeacher = new Searcher();
 
     userSeacher.set("condList", "pagenation", "resultList", api.personel.pageUser, null, ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity', 'phone'], "userPostData", null, false, buildUserBaseButtons);
-    userSeacher.line("userName", buildUserBaseLineprops(), buildUserBaseLinebtns()).render();
+    userSeacher.line("userName", lineprops, linebtns).render();
 
     com.focusPage('a[name="addUser"]', '#pagenation').click(function() {
 

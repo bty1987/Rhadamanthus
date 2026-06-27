@@ -28,7 +28,7 @@ jQuery(function($) {
 	var options = {};
 	options["materialItem.mid"] = materialOrderPreBalancePostData["materialOrderPreBalance.msoId"];
 
-	function buildMaterialPreBalanceDetailLineprops() {
+	var lineprops = (function() {
 
 		var showModel = function(v) { return v.packageName == "" || v.packageName == null; };
 		var showPackage = function(v) { return v.packageName != "" && v.packageName != null && v.brand == "-"; };
@@ -107,9 +107,9 @@ jQuery(function($) {
 			clazz: "grey",
 			show: showPackageItem
 		}];
-	}
+	})();
 
-	function buildMaterialPreBalanceDetailLinebtns() {
+	var linebtns = (function() {
 
 		return {
 			value: {
@@ -134,7 +134,7 @@ jQuery(function($) {
 				}
 			}
 		};
-	}
+	})();
 
 	var searcher = new Searcher();
 
@@ -146,7 +146,7 @@ jQuery(function($) {
 			return "套餐 " + v.name;
 		}
 		return v.name;
-	}, buildMaterialPreBalanceDetailLineprops(), buildMaterialPreBalanceDetailLinebtns()).render();
+	}, lineprops, linebtns).render();
 
 	// 收集套餐子项 (原 creatLine 副作用)
 	com.post(api.material.queryMaterialItemByMid, options, function(res) {

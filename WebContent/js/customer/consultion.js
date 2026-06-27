@@ -1,6 +1,6 @@
 $(function () {
 
-    function buildConsultionLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "decoration.orderId",
@@ -18,10 +18,10 @@ $(function () {
             prop: "creater.currentName",
             clazz: "grey"
         }];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.customer.pageConsultion, null, ["customer-service-orderId"], "consultionPostData", null, false, null);
-    searcher.line("comment", buildConsultionLineprops(), {}).render();
+    searcher.line("comment", lineprops, {}).render();
 });

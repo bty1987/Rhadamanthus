@@ -31,7 +31,7 @@ jQuery(function($) {
 	
 	$.extend(com.validator, region.validator);
 	
-	function buildRegionLinebtns() {
+	var linebtns = (function() {
 
 		return {
 			edit: {
@@ -49,21 +49,21 @@ jQuery(function($) {
 				}
 			}
 		};
-	}
+	})();
 
-	function buildRegionButtons() {
+	var buttons = (function() {
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addRegion').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
 		return [$adda];
-	}
+	})();
 
 	var searcher = new Searcher();
 
-	searcher.set("condList", "pagenation", "resultList", api.system.pageRegion, null, ["system-region-name"], "regionPostData", null, false, buildRegionButtons);
-	searcher.line(function(v) { return v.no + " " + v.name; }, [], buildRegionLinebtns()).render();
+	searcher.set("condList", "pagenation", "resultList", api.system.pageRegion, null, ["system-region-name"], "regionPostData", null, false, buttons);
+	searcher.line(function(v) { return v.no + " " + v.name; }, [], linebtns).render();
 		
 	com.focusPage('[name="addRegion"]', com.focusPage('#pagenation')).click(function(){
 		editFlg = false;

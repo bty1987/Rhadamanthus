@@ -158,7 +158,7 @@ jQuery(function($) {
         }, false);
     });
 
-    function buildBuildingHouse4advanceLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "type",
@@ -216,9 +216,9 @@ jQuery(function($) {
             prop: "housingGrade",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildBuildingHouse4advanceLinebtns() {
+    var linebtns = (function() {
 
         return {
             drawing: {
@@ -380,12 +380,12 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("CondList", "Pagenation", "ResultList", api.building.pageBuildingHouseForAdvance, null, ["building-buildingHouse-no", "building-houseType", "building-buildingHouse-type", "building-village", "building-Area", "building-totalPrice", "building-roomNum", "building-orientation", "building-decorateDegree", "building-allowLoan", "building-housingGrade", "building-rentType", "building-status"], "buildingHouseAdvancePostData", null, false, null);
-    searcher.line("no", buildBuildingHouse4advanceLineprops(), buildBuildingHouse4advanceLinebtns()).render();
+    searcher.line("no", lineprops, linebtns).render();
 
     // 更新房源归属
     function updateFollowUser() {

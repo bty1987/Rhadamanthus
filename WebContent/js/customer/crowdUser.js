@@ -27,7 +27,7 @@ jQuery(function ($) {
 
     com.initTypeahead('userSel', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0", "departmentType.name": ""}, "autoFillKeyValue", "key", "value", null);
 
-    function buildCrowdUserLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "user.userId",
@@ -45,9 +45,9 @@ jQuery(function ($) {
             prop: "content",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildCrowdUserLinebtns() {
+    var linebtns = (function() {
 
         return {
             del: {
@@ -59,21 +59,21 @@ jQuery(function ($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildCrowdUserButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addGroupUser').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condListas", "pagenationas", "resultListas", api.decoration.queryDecorationUser, {"decorationUser.orderId": approve.gorderId}, [], "groupUserPostData", null, false, buildCrowdUserButtons);
-    searcher.line("user.currentName", buildCrowdUserLineprops(), buildCrowdUserLinebtns()).render();
+    searcher.line("user.currentName", lineprops, linebtns).render();
 
     com.focusPage('#addGroupUser', '#pagenationas').click(function () {
         approve.editFlg = false;

@@ -71,7 +71,7 @@ $(function() {
         });
     }
 
-    function buildSalesPreLineprops() {
+    var lineprops = (function() {
 
         var propertyMap = {
             orderId: {
@@ -260,9 +260,9 @@ $(function() {
         });
 
         return props;
-    }
+    })();
 
-    function buildSalesPreLinebtns() {
+    var linebtns = (function() {
 
         var buttonMap = {
             details: {
@@ -290,9 +290,9 @@ $(function() {
         });
 
         return btns;
-    }
+    })();
 
-    function buildSalesPreButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
@@ -363,12 +363,12 @@ $(function() {
         });
 
         return salesPre.pageType == "predompany" ? [] : [$adda, $addaEnd];
-    }
+    })();
 
     var salesPreBalance = new Searcher();
 
     salesPreBalance.set('condList', 'pagenation', 'resultList', pageConfig.apiPage, null, pageConfig.condArr, salesPre.postData, null, false, buildSalesPreButtons);
-    salesPreBalance.line('no', buildSalesPreLineprops(), buildSalesPreLinebtns()).render();
+    salesPreBalance.line('no', lineprops, linebtns).render();
 
     salesPre.btns.preSaveBtn.on('click', function() {
 

@@ -32,7 +32,7 @@ $(function() {
         talking.talkingStatus = res.talkingStatus.split("key", "value");
     }, null, false);
 
-    function buildTalkingLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "name",
@@ -55,9 +55,9 @@ $(function() {
             prop: function(v) { return talking.talkingStatus[v.status]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildTalkingLinebtns() {
+    var linebtns = (function() {
 
         return {
             update: {
@@ -87,21 +87,21 @@ $(function() {
                 }
             }
         };
-    }
+    })();
 
-    function buildTalkingButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addTalking').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("creatLine", "pageTalking", "resultList", api.data.pageTalking, null, ["data-talking-name", "data-talking-type", "data-talking-status"], "pageTalkingPost", null, false, buildTalkingButtons);
-    searcher.line("name", buildTalkingLineprops(), buildTalkingLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage("#addTalking").click(function() {
 

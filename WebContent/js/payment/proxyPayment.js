@@ -138,7 +138,7 @@ jQuery(function($) {
     // 不同页面的不同参数
     proxyPayment.pageConfig = paymentUtils.getConfig(proxyPayment.type, 64);
 
-    function buildProxyLineprops() {
+    var lineprops = (function() {
 
         var lineprops = [{
             type: "checkbox",
@@ -178,9 +178,9 @@ jQuery(function($) {
         }
 
         return lineprops;
-    }
+    })();
 
-    function buildProxyLinebtns() {
+    var linebtns = (function() {
 
         return {
             collect: {
@@ -199,9 +199,9 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildProxyButtons() {
+    var buttons = (function() {
 
         var $createa = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'creates').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-check bigger-110').appendTo($createa);
@@ -225,7 +225,7 @@ jQuery(function($) {
             btnParams.push($adda);
 
         return btnParams;
-    }
+    })();
 
     var searcher = new Searcher();
 
@@ -235,7 +235,7 @@ jQuery(function($) {
     }
 
     searcher.set("condList", "pagenation", "resultList", proxyPayment.pageConfig.apiPage, extraParams, proxyPayment.pageConfig.condArr, "proxyPaymentPostData" + proxyPayment.type, null, false, buildProxyButtons);
-    searcher.line("name", buildProxyLineprops(), buildProxyLinebtns()).render();
+    searcher.line("name", lineprops, linebtns).render();
 
     // 创建代付款窗口
     com.focusPage('a[name="creates"]', '#pagenation').click(function() {

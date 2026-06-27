@@ -80,7 +80,7 @@ jQuery(function($) {
     measure.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas, "key", "value");
 
 
-    function buildMeasureLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "orderId",
@@ -178,22 +178,22 @@ jQuery(function($) {
             prop: "content",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildMeasureLinebtns() {
+    var linebtns = (function() {
 
         return {
             update: {name: "更新", clazz: "btn-purple", handle: function(v) { showUpdate(v); }},
             draw: {name: "量尺", clazz: "btn-success", handle: function(v) { showEdit(v); }},
             reset: {name: "重置", clazz: "btn-inverse", handle: function(v) { reset(v.dmid); }}
         };
-    }
+    })();
 
     var searcher = new Searcher();
     searcher.set("condList", "pagenation", "resultList", api.decoration.pageDecorationMeasureForApplay, {"decorationMeasure.status": constant.decoration.measure.STATUS_QUEUE_INT}, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-measure-status', 'decoration-measure-applayTime', 'decoration-measure-actualDate'], "measureApplyPostData");
     searcher.line(function(v) {
         return v.decoration.orderId;
-    }, buildMeasureLineprops(), buildMeasureLinebtns()).render();
+    }, lineprops, linebtns).render();
 
 //    com.focusPage("#condList").append('<button id="showmeasureApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
 

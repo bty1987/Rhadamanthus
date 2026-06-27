@@ -1,6 +1,6 @@
 jQuery(function($) {
 
-	function buildVustomerLineprops() {
+	var lineprops = (function() {
 
 		return [{
 			field: "name",
@@ -48,9 +48,9 @@ jQuery(function($) {
 			prop: "comment",
 			clazz: "grey"
 		}];
-	}
+	})();
 
-	function buildVustomerLinebtns() {
+	var linebtns = (function() {
 
 		var showFunc = function(v) { return v.status == constant.customer().vustomer.STATUS_EFFECTIVE_INT; };
 
@@ -76,12 +76,12 @@ jQuery(function($) {
 				}
 			}
 		};
-	}
+	})();
 
 	var searcher = new Searcher();
 
 	searcher.set("condList", "pagenation", "resultList", api.customer.pageVustomer, null, ["customer-v-name"], "vustomerPostData", null, false, null);
-	searcher.line("phone", buildVustomerLineprops(), buildVustomerLinebtns()).render();
+	searcher.line("phone", lineprops, linebtns).render();
 
 	function updateVustomer(vid, orderId){
 		var options = {};

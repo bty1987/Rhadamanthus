@@ -383,7 +383,7 @@ $(function() {
         com.popup4page("#layerPopUp", "views/sales/salesProfile4detail.html", "满意度")
     }
 
-    function buildSalesLineprops() {
+    var lineprops = (function() {
 
         var propertyMap = {
             orderId: {
@@ -668,9 +668,9 @@ $(function() {
         });
 
         return props;
-    }
+    })();
 
-    function buildSalesLinebtns() {
+    var linebtns = (function() {
 
         var buttonMap = {
             decoration: {
@@ -885,7 +885,7 @@ $(function() {
         });
 
         return btns;
-    }
+    })();
 
     var salesSearcher = new Searcher();
 
@@ -895,7 +895,7 @@ $(function() {
     salesSearcher.line(function(v) {
 
         return v.activity.name;
-    }, buildSalesLineprops(), buildSalesLinebtns()).render();
+    }, lineprops, linebtns).render();
 
     // 提交归属
     sales.btns.ascriptionBtn.on('click', function() {

@@ -29,7 +29,7 @@ jQuery(function($) {
 
     com.datetime(rework.items.createTime);
 
-    function buildSupervision4reworkLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "createrName",
@@ -47,9 +47,9 @@ jQuery(function($) {
             prop: "reworkDes",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildSupervision4reworkLinebtns() {
+    var linebtns = (function() {
 
         return {
             view: {
@@ -80,23 +80,23 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildSupervision4reworkButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageReworkByOrderId, {
         "rework.orderId": params.construction.orderId
     }, [], "supervisionReworkPostData", null, false, buildSupervision4reworkButtons);
-    searcher.line("", buildSupervision4reworkLineprops(), buildSupervision4reworkLinebtns()).render();
+    searcher.line("", lineprops, linebtns).render();
 
     com.focusPage('#add', '#pagenation').click(function() {
         rework.editFlag = false;

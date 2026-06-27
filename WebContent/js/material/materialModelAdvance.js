@@ -1,6 +1,6 @@
 $(function () {
 
-    function buildMaterialModelAdvanceLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "materialModelNo",
@@ -48,9 +48,9 @@ $(function () {
             prop: function(v) { return "1" == v.calcType ? v.point : "0" == v.calcType ? v.base : ""; },
             clazz: "blue"
         }];
-    }
+    })();
 
-    function buildMaterialModelAdvanceLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -79,9 +79,9 @@ $(function () {
                 }
             }
         };
-    }
+    })();
 
-    function buildMaterialModelAdvanceButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -96,12 +96,12 @@ $(function () {
         var $importspan = $('<span></span>').text('上传').appendTo($importa);
 
         return [$adda, $exporta, $importa];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialModelForAdvance, null, ['data-model-no', 'data-model-name', 'data-model-category', 'data-model-brand'], "materialModelAdvancePostData", null, false, buildMaterialModelAdvanceButtons);
-    searcher.line("materialModelName", buildMaterialModelAdvanceLineprops(), buildMaterialModelAdvanceLinebtns()).render();
+    searcher.line("materialModelName", lineprops, linebtns).render();
 
     var materialModel = {
         $nowLine: null,

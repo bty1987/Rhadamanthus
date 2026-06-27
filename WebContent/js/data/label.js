@@ -18,7 +18,7 @@ $(function(){
         })
     },null,false);
 
-    function buildLabelLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "type",
@@ -31,9 +31,9 @@ $(function(){
             prop: "scale",
             clazz: "blue"
         }];
-    }
+    })();
 
-    function buildLabelLinebtns() {
+    var linebtns = (function() {
 
         return {
             status: {
@@ -45,21 +45,21 @@ $(function(){
             },
             edit: {name: "编辑", clazz: "btn-yellow", handle: function(v) { editlabel(v); }}
         };
-    }
+    })();
 
-    function buildLabelButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addlabel').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var labelSearcher = new Searcher();
 
     labelSearcher.set("condList", "pagenation", "resultList", api.data.pageLabel, null, ["personel-label-name"], "label", null, false, buildLabelButtons);
-    labelSearcher.line("name", buildLabelLineprops(), buildLabelLinebtns()).render();
+    labelSearcher.line("name", lineprops, linebtns).render();
 
     com.focusPage('a[name="addlabel"]', '#pagenation').click(function(){
         com.focusPage("#labelName").val("");

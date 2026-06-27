@@ -38,7 +38,7 @@ jQuery(function($) {
 
 	materialOrderPreBalance.materialOrderPreBalanceItems.caclType.bindData(materialOrderPreBalance.caclTypeData, "id", "name");
 
-	function buildMaterialPreBalanceLineprops() {
+	var lineprops = (function() {
 
 		return [{
 			type: "checkbox",
@@ -107,9 +107,9 @@ jQuery(function($) {
 			prop: function(v) { return v.comment ? v.comment : '---'; },
 			clazz: "grey"
 		}];
-	}
+	})();
 
-	function buildMaterialPreBalanceLinebtns() {
+	var linebtns = (function() {
 
 		return {
 			item: {
@@ -127,9 +127,9 @@ jQuery(function($) {
 				}
 			}
 		};
-	}
+	})();
 
-	function buildMaterialPreBalanceButtons() {
+	var buttons = (function() {
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'prebalances').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
@@ -145,12 +145,12 @@ jQuery(function($) {
 		});
 
 		return [$adda, $passa];
-	}
+	})();
 
 	var searcher = new Searcher();
 
 	searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialForPreBalance, null, ["material-orderId", "material-no", "material-village", "material-salesman", "material-brand", "material-fullpayTime"], "materialOrderPreBalancePostData", null, false, buildMaterialPreBalanceButtons);
-	searcher.line("no", buildMaterialPreBalanceLineprops(), buildMaterialPreBalanceLinebtns()).render();
+	searcher.line("no", lineprops, linebtns).render();
 
 	//点预结
 	function preBalance(){

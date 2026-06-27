@@ -46,7 +46,7 @@ $(function(){
         },
     });
 
-    function buildSupplierLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "sid",
@@ -64,9 +64,9 @@ $(function(){
             prop: function(v) { return v.isLogin == 0 ? "禁用" : "启用"; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildSupplierLinebtns() {
+    var linebtns = (function() {
 
         return {
             user: {
@@ -88,23 +88,23 @@ $(function(){
                 handle: function(v, checked) { updateStatus(v.sid, checked ? 1 : 0, null); }
             }
         };
-    }
+    })();
 
-    function buildSupplierButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var _condArr = [];
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.data.pageSupplier, null, _condArr, "materialModelPostData", null, false, buildSupplierButtons);
-    searcher.line("currentName", buildSupplierLineprops(), buildSupplierLinebtns()).render();
+    searcher.line("currentName", lineprops, linebtns).render();
 
     //添加按钮
     $('a[name="add"]',com.focusPage('#pagenation')).click(function(){

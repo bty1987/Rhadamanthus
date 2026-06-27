@@ -42,7 +42,7 @@ $(function () {
     com.datetime(com.focusPage("#startTime"));
     com.datetime(com.focusPage("#endTime"));
 
-    function buildPerformanceLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "user.userName",
@@ -85,21 +85,21 @@ $(function () {
             prop: "content",
             clazz: "grey"
         }];
-    }
+    })();
 
-    function buildPerformanceButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addperformance').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var performanceSeacher = new Searcher();
 
     performanceSeacher.set("condList", "pagenation", "resultList", api.personel.pagePerformance, null, ['personel-userName', 'personel-performance-type', 'personel-performance-startTime', "personel-performance-endTime"], "selectUser", null, false, buildPerformanceButtons);
-    performanceSeacher.line("user.userName", buildPerformanceLineprops(), {}).render();
+    performanceSeacher.line("user.userName", lineprops, {}).render();
 
     function saveData(){
         if(com.validate('performanceModal')){

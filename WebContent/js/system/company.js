@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var company = {
 
@@ -58,7 +58,7 @@
 
     $.extend(com.validator, company.validator); // 将多个对象合并成一个对象
 
-    function buildCompanyLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "no",
@@ -116,9 +116,9 @@
             prop: function(v) { return constant.system().company.block.keys[v.block]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildCompanyLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -149,16 +149,16 @@
                 }
             }
         };
-    }
+    })();
 
-    function buildCompanyButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCompany').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     com.initTypeahead('drganization', api.system.queryOrganization, "organization.name", {}, 'organizations', 'oid', 'name', null);
     com.initTypeahead('srganization', api.system.queryOrganization, "organization.name", {}, 'organizations', 'oid', 'name', null);
@@ -166,7 +166,7 @@
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.system.pageCompany, null, ["system-company-name", "system-company-status", "system-company-atttype"], "companyPostData", null, false, buildCompanyButtons);
-    searcher.line(function(v) { return v.no + " " + v.name; }, buildCompanyLineprops(), buildCompanyLinebtns()).render();
+    searcher.line(function(v) { return v.no + " " + v.name; }, lineprops, linebtns).render();
 
     // 编辑
     function edit(row) {

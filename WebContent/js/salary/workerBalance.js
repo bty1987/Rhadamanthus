@@ -78,7 +78,7 @@ $(function () {
         deposit.statusBalance=data.statusBalance.split("key", "value");
     }, null, false);
 
-    function buildWorkerBalanceLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "salary",
@@ -111,9 +111,9 @@ $(function () {
             prop: function(v) { return deposit.statusBalance[v.status]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildWorkerBalanceLinebtns() {
+    var linebtns = (function() {
 
         return {
             cut: {
@@ -169,9 +169,9 @@ $(function () {
                 }
             }
         };
-    }
+    })();
 
-    function buildWorkerBalanceButtons() {
+    var buttons = (function() {
 
         var $tranbtn = $('<a></a>').addClass('btn btn-minier btn-pink').attr('name', 'tran').css("margin", "0px 3px");
         var $tranbtni = $('<i></i>').addClass('icon-money bigger-110').appendTo($tranbtn);
@@ -182,12 +182,12 @@ $(function () {
         var $addsalaryspan = $('<span></span>').text('添加').appendTo($addsalary);
 
         return [$tranbtn, $addsalary];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.salary.pageWorkerBalance, null, ['salary-jober', 'salary-salaryWorkduty'], "workerBalancePostData", null, false, buildWorkerBalanceButtons);
-    searcher.line("user.currentName", buildWorkerBalanceLineprops(), buildWorkerBalanceLinebtns()).render();
+    searcher.line("user.currentName", lineprops, linebtns).render();
 
     //转款
     com.focusPage('a[name="tran"]').on('click', function () {

@@ -72,7 +72,7 @@ $(function() {
         }, null, false)
     };
 
-    function buildTaskParamLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "module",
@@ -145,9 +145,9 @@ $(function() {
             prop: function(v) { return taskParam.taskParamIsmain[v.ismain]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildTaskParamLinebtns() {
+    var linebtns = (function() {
 
         var btns = {};
 
@@ -206,9 +206,9 @@ $(function() {
         }
 
         return btns;
-    }
+    })();
 
-    function buildTaskParamButtons() {
+    var buttons = (function() {
 
         if (taskParam.pageType == "task") {
             return [];
@@ -219,12 +219,12 @@ $(function() {
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("taskParamCondList", "taskParamPagenation", "taskParamResultList", api.communion.pageTaskParam, null, ['data-taskParam-module'], "taskParamPostData", null, false, buildTaskParamButtons);
-    searcher.line(function(v) { return ' ' + v.name; }, buildTaskParamLineprops(), buildTaskParamLinebtns()).render();
+    searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#addTaskParam').click(function() {
         taskParam.editFlg = true;

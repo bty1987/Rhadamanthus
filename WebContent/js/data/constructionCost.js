@@ -53,7 +53,7 @@ jQuery(function($) {
         constructionCost.costStatus = res.costStatus.split("key", "value");
     },null ,false);
 
-    function buildConstructionCostLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "areaLeft",
@@ -86,9 +86,9 @@ jQuery(function($) {
             prop: "sort",
             clazz: "blue"
         }];
-    }
+    })();
 
-    function buildConstructionCostLinebtns() {
+    var linebtns = (function() {
 
         return {
             status: {
@@ -110,21 +110,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildConstructionCostButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addConstructionCost').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.data.pageConstructionCost, null, ["data-construction-cost-name"], "constructionCostPostData", null, false, buildConstructionCostButtons);
-    searcher.line(function(v) { return ' ' + v.name; }, buildConstructionCostLineprops(), buildConstructionCostLinebtns()).render();
+    searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#addConstructionCost').click(function(){
         constructionCost.modals.addModal.modal("show");

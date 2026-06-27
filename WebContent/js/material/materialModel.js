@@ -1,6 +1,6 @@
 $(function () {
 
-    function buildMaterialModelLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "materialModelNo",
@@ -43,9 +43,9 @@ $(function () {
             prop: function(v) { return v.status == 0 ? '启用' : '禁用'; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildMaterialModelLinebtns() {
+    var linebtns = (function() {
 
         return {
             delete: {
@@ -58,9 +58,9 @@ $(function () {
                 }
             }
         };
-    }
+    })();
 
-    function buildMaterialModelButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -71,12 +71,12 @@ $(function () {
         var $impspan = $('<span></span>').text('导出').appendTo($impa);
 
         return [$adda, $impa];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.material.pageMaterialModel, null, ['data-model-no', 'data-model-name', 'data-model-category', 'data-model-brand'], "materialModelPostData", null, false, buildMaterialModelButtons);
-    searcher.line("materialModelName", buildMaterialModelLineprops(), buildMaterialModelLinebtns()).render();
+    searcher.line("materialModelName", lineprops, linebtns).render();
 
     var materialModel = {
         $nowLine: null,

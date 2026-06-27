@@ -68,7 +68,7 @@ jQuery(function($) {
         com.focusPage("#couponType").bindData(materialSubOrderCollection.couponType, 'no', 'value');
     }, null, false);
 
-    function buildMaterialCollectionLineprops() {
+    var lineprops = (function() {
 
         var rowShow = function(v) {
             return materialSubOrderCollection.paymentType == 0 || materialSubOrderCollection.flag == true || materialSubOrderCollection.queryMpid == v.mpId;
@@ -169,12 +169,12 @@ jQuery(function($) {
             clazz: "blue",
             show: function(v) { return rowShow(v) && v.coupon != null && v.coupon != "0"; }
         }];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.payment.queryMaterialPaymentByMid, materialSubOrderCollectionPostData, [], null, "materialPayments", true, null);
-    searcher.line(function(v) { return constant.payment().materialPayment.paymentType.keys[v.paymentType]; }, buildMaterialCollectionLineprops(), {}).render();
+    searcher.line(function(v) { return constant.payment().materialPayment.paymentType.keys[v.paymentType]; }, lineprops, {}).render();
 
     com.focusPage('#back').click(function() {
 

@@ -33,7 +33,7 @@ jQuery(function($) {
         normpack.status = res.costStatus.split("key", "value");
     }, null, false);
 
-    function buildNormpackLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "status",
@@ -41,9 +41,9 @@ jQuery(function($) {
             prop: function(v) { return normpack.status[v.status]; },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildNormpackLinebtns() {
+    var linebtns = (function() {
 
         return {
             status: {
@@ -86,21 +86,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildNormpackButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addItemBtn').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.data.pageNormpack, null, ["data-quotation-normpack-name", "data-quotation-normpack-status"], "addItemPostData", null, false, buildNormpackButtons);
-    searcher.line(function(v) { return ' ' + v.name; }, buildNormpackLineprops(), buildNormpackLinebtns()).render();
+    searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#addItemBtn').click(function() {
 

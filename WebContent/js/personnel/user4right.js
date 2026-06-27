@@ -1,4 +1,4 @@
-﻿jQuery(function($) {
+jQuery(function($) {
 	var userAdvance = {
 		postData: {},
 		postParam: {},
@@ -361,7 +361,7 @@
 		}
 	};
 
-	function buildUserRightLineprops() {
+	var lineprops = (function() {
 
 		return [{
 			field: "userId",
@@ -394,9 +394,9 @@
 			prop: "phone",
 			clazz: "grey"
 		}];
-	}
+	})();
 
-	function buildUserRightLinebtns() {
+	var linebtns = (function() {
 
 		return {
 			company: {
@@ -534,12 +534,12 @@
 				}
 			}
 		};
-	}
+	})();
 
 	var userAdvanceSeacher = new Searcher();
 
 	userAdvanceSeacher.set("condList", "pagenation", "resultList", api.personel.pageUser, null, ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity', 'phone'], "userAdvancePostData", null, false, null);
-	userAdvanceSeacher.line("userName", buildUserRightLineprops(), buildUserRightLinebtns()).render();
+	userAdvanceSeacher.line("userName", lineprops, linebtns).render();
 
 	binding.setAdvance();
 

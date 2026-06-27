@@ -27,7 +27,7 @@ $(function(){
     $.extend(com.validator, group.validator);
     group.savebtn = com.focusPage("#groupadd").on("click", saveData);
 
-    function buildGroupLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "content",
@@ -36,9 +36,9 @@ $(function(){
             clazz: "grey",
             show: function(v) { return !!v.content; }
         }];
-    }
+    })();
 
-    function buildGroupLinebtns() {
+    var linebtns = (function() {
 
         return {
             status: {
@@ -48,20 +48,20 @@ $(function(){
             },
             edit: {name: "编辑", clazz: "btn-yellow", handle: function(v) { update(v); }}
         };
-    }
+    })();
 
-    function buildGroupButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addGroup').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
     searcher.set("condList", "pagenation", "resultList", api.data.pageDrawlineGroup, null, ['data-drawline-group-name'], "groupPostData", null, false, buildGroupButtons);
-    searcher.line(function(v) { return ' ' + v.name; }, buildGroupLineprops(), buildGroupLinebtns()).render();
+    searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     function popoverInit(){
         com.focusPage("[data-toggle='popover']").popover({

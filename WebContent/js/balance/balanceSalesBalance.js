@@ -82,7 +82,7 @@ $(function() {
         };
     }
 
-    function buildBalanceSalesBalanceLineprops() {
+    var lineprops = (function() {
 
         return [{
             type: "checkbox",
@@ -219,9 +219,9 @@ $(function() {
             },
             clazz: "blue"
         }];
-    }
+    })();
 
-    function buildBalanceSalesBalanceLinebtns() {
+    var linebtns = (function() {
 
         var showUnbound = function(v) {
             return balanceSalesBalance.balanceSales.status == constant.balance().balanceSales.STATUS_INIT_INT;
@@ -266,9 +266,9 @@ $(function() {
                 }
             }
         };
-    }
+    })();
 
-    function buildBalanceSalesBalanceButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addBalance').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -334,14 +334,14 @@ $(function() {
         }
 
         return [$adda, $profitPrint, $export, $checka, $unbinda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("bsbcondList", "bsbpagenation", "bsbresultList", api.balance.pageBalanceSalesBalance, {
         "balanceSalesBalance.bsid": balanceSalesBalance.bsid
     }, ["balance-salesBalance-sales-orderId"], "balanceSalesBalancePostData", null, false, buildBalanceSalesBalanceButtons);
-    searcher.line("salesBalance.sales.no", buildBalanceSalesBalanceLineprops(), buildBalanceSalesBalanceLinebtns()).render();
+    searcher.line("salesBalance.sales.no", lineprops, linebtns).render();
 
     function exports1() {
 

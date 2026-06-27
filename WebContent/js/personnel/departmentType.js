@@ -20,18 +20,18 @@ jQuery(function($) {
 	
 	com.focusPage('#fl-statement').statement("部门", "类型");
 
-	function buildDepartmentTypeButtons() {
+	var buttons = (function() {
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'departmentTypeModal').css("margin", "0px 3px");
 		$('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
 		$('<span></span>').text('添加').appendTo($adda);
 
 		return [$adda];
-	}
+	})();
 
 	var departmentTypeSearcher = new Searcher();
 
-	departmentTypeSearcher.set("condList", "pagenation", "resultList", api.communion.pageDepartmentType, null, [], "departmentTypePostData", null, false, buildDepartmentTypeButtons);
+	departmentTypeSearcher.set("condList", "pagenation", "resultList", api.communion.pageDepartmentType, null, [], "departmentTypePostData", null, false, buttons);
 	departmentTypeSearcher.line("name", [], {}).render();
 
 	$('a[name="departmentTypeModal"]', com.focusPage('#pagenation')).click(function(){

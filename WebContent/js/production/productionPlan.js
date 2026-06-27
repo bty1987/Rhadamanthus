@@ -28,7 +28,7 @@ $(function(){
 
 
 
-    function buildProductionPlanLineprops() {
+    var lineprops = (function() {
 
         var props = [];
 
@@ -92,9 +92,9 @@ $(function(){
         });
 
         return props;
-    }
+    })();
 
-    function buildProductionPlanLinebtns() {
+    var linebtns = (function() {
 
         var btns = {};
 
@@ -174,12 +174,12 @@ $(function(){
         });
 
         return btns;
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set('_condList', '_pagenation', '_resultList', pageConfig.apiPage, null, pageConfig.condArr, pageConfig.postDataName, null, false, null);
-    searcher.line("no", buildProductionPlanLineprops(), buildProductionPlanLinebtns()).render();
+    searcher.line("no", lineprops, linebtns).render();
 
     com.focusPage("#confirmBtn").click(function(){
         productionPlan.modals.layerImport.modal("hide");

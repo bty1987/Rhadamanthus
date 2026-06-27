@@ -33,7 +33,7 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    function buildPaceLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "name",
@@ -61,9 +61,9 @@ jQuery(function($) {
             prop: "designPeriod",
             clazz: "blue"
         }];
-    }
+    })();
 
-    function buildPaceLinebtns() {
+    var linebtns = (function() {
 
         return {
             edit: {
@@ -89,21 +89,21 @@ jQuery(function($) {
                 }
             }
         };
-    }
+    })();
 
-    function buildPaceButtons() {
+    var buttons = (function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addConstructionPace').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.set("paceCondList", "pacePagenation", "paceResultList", api.data.pageConstructionPace, null, ["data-constructionPace-name"], "constructionPacePostData", null, false, buildPaceButtons);
-    searcher.line(function(v) { return ' ' + v.name; }, buildPaceLineprops(), buildPaceLinebtns()).render();
+    searcher.line(function(v) { return ' ' + v.name; }, lineprops, linebtns).render();
 
     com.focusPage('#addConstructionPace').click(function() {
 

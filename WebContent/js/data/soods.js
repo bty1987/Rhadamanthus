@@ -81,7 +81,7 @@ $(function() {
 
     com.initTypeahead('goodsName', api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", null);
 
-    function buildSoodsLineprops() {
+    var lineprops = (function() {
 
         var lineprops = [{
             field: "qrcode",
@@ -146,9 +146,9 @@ $(function() {
         }];
 
         return lineprops;
-    }
+    })();
 
-    function buildSoodsLinebtns() {
+    var linebtns = (function() {
 
         var btns = {
             project: {
@@ -213,7 +213,7 @@ $(function() {
         }
 
         return btns;
-    }
+    })();
 
     var searcher = new Searcher();
     var condCodeArrs = ["data-soods-name", "data-soods-category", "data-soods-brand", "data-soods-status"];
@@ -276,7 +276,7 @@ $(function() {
             return [$impa, $upda, $starta, $stopa];
         }
     });
-    searcher.line(function(v) { return v.goods.name; }, buildSoodsLineprops(), buildSoodsLinebtns()).render();
+    searcher.line(function(v) { return v.goods.name; }, lineprops, linebtns).render();
 
     function batchUpdateStatus(status) {
 

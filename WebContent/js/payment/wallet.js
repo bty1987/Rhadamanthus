@@ -172,7 +172,7 @@ jQuery(function($) {
         com.popup4page('#walletranPopup', api.index.walletresIndex.url, "资源");
     }
 
-    function buildWalletLineprops() {
+    var lineprops = (function() {
 
         return [{
             field: "no",
@@ -211,9 +211,9 @@ jQuery(function($) {
             },
             clazz: "red"
         }];
-    }
+    })();
 
-    function buildWalletLinebtns() {
+    var linebtns = (function() {
 
         return {
             bind: {
@@ -262,14 +262,14 @@ jQuery(function($) {
                 handle: walletresWalletLine
             }
         };
-    }
+    })();
 
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.payment.pageWallet);
     searcher.condition(["payment-wallet-belonger-name"]);
     searcher.history("walletPostData");
-    searcher.line("belonger.currentName", buildWalletLineprops(), buildWalletLinebtns()).render();
+    searcher.line("belonger.currentName", lineprops, linebtns).render();
 
     // 绑定
     function bindWallet() {
