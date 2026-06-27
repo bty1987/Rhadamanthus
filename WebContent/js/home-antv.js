@@ -521,7 +521,6 @@ $(function() {
         'min-width': '120px'
     }).appendTo('body');
 
-    $('<li><a href="javascript:void(0)" data-action="refresh"><i class="icon-refresh"></i> 刷新</a></li>').appendTo($contextMenu);
     $('<li><a href="javascript:void(0)" data-action="close"><i class="icon-remove"></i> 关闭</a></li>').appendTo($contextMenu);
     $('<li class="divider"></li>').appendTo($contextMenu);
     $('<li><a href="javascript:void(0)" data-action="closeLeft"><i class="icon-chevron-left"></i> 关闭左侧所有</a></li>').appendTo($contextMenu);
@@ -605,20 +604,6 @@ $(function() {
 
             $tab.remove();
             _page.remove();
-
-        } else if (action == 'refresh') {
-
-            var mask = $("<div></div>").addClass("tab-mask").appendTo(_page);
-            var maskh1 = $("<h1></h1>").css({
-                "position": "absolute",
-                "top": "30%",
-                "left": "45%"
-            }).appendTo(mask);
-            var maskicon = $("<i></i>").addClass("icon-spinner icon-spin bigger-450").appendTo(maskh1);
-
-            setTimeout(function() {
-                _page.load(page);
-            }, 1200);
 
         } else if (action == 'closeLeft') {
 
