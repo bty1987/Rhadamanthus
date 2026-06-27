@@ -53,7 +53,7 @@ jQuery(function($) {
 
     drawline.btns.saveBtn.bindClick(saveData);
     drawline.btns.saveInfoBtn.bindClick(saveInfoData);
-    drawline.btns.deployedBtn.bindClick(deploved);
+    drawline.btns.deployedBtn.bindClick(deployed);
     drawline.btns.seveSuccessBtn.bindClick(seveSuccess);
 
     drawline.modals.setupModal.on("hide.bs.modal", function() {
@@ -364,7 +364,7 @@ jQuery(function($) {
         drawline.modals.editModal.modal("hide");
     }
 
-    function deploved() {
+    function deployed() {
 
         if (com.validate("setupModal")) {
             return false;
