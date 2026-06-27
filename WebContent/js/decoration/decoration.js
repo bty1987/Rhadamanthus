@@ -40,7 +40,7 @@ $(function() {
             status: com.focusPage("#repairStatus"),
         },
         nodeItems: {
-            contructionNodes: com.focusPage("#contructionNodes", "#contructionNodeModal"),
+            constructionNodes: com.focusPage("#constructionNodes", "#constructionNodeModal"),
         },
         constructionItems: {
             terminalStatus: com.focusPage("#terminalStatus", "#updateTerminalStatusModal")
@@ -91,7 +91,7 @@ $(function() {
     order.decorationModal = com.focusPage("#decorationModal");
     order.agreementModal = com.focusPage("#agreementModal");
     order.drawLineModal = com.focusPage("#drawLineModal");
-    order.contructionNodeModal = com.focusPage("#contructionNodeModal");
+    order.constructionNodeModal = com.focusPage("#constructionNodeModal");
     order.refundContractModal = com.focusPage("#refundContractModal");
     order.terminalContractModal = com.focusPage("#terminalContractModal");
     order.customerInfoModal = com.focusPage("#customerInfoModal");
@@ -354,13 +354,13 @@ $(function() {
         });
     });
 
-    com.focusPage("#seveSuccess").on("click", function() {
+    com.focusPage("#saveSuccess").on("click", function() {
 
-        if (com.validate("contructionNodeModal")) {
+        if (com.validate("constructionNodeModal")) {
             return false;
         }
 
-        var $inputs = com.focusPage('input[name="sorts"]:checked', '#contructionNodes');
+        var $inputs = com.focusPage('input[name="sorts"]:checked', '#constructionNodes');
 
         var option = {
             "drawLine.decoration.orderId": params.decoration.orderId,
@@ -380,7 +380,7 @@ $(function() {
 
             com.showAlert(com.info, "放线成功");
 
-            order.contructionNodeModa.modal("hide");
+            order.constructionNodeModal.modal("hide");
         });
     });
 
@@ -1725,8 +1725,8 @@ $(function() {
 
             params.decoration.orderId = v.orderId;
 
-            order.contructionNodeModal.modal("show");
-            order.nodeItems.contructionNodes.html("");
+            order.constructionNodeModal.modal("show");
+            order.nodeItems.constructionNodes.html("");
 
             var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
@@ -1793,7 +1793,7 @@ $(function() {
                 $liLi.append($h3).append($ulPro).appendTo($uli);
             });
 
-            $uli.appendTo(order.nodeItems.contructionNodes);
+            $uli.appendTo(order.nodeItems.constructionNodes);
 
             var period = null;
 
@@ -1813,7 +1813,7 @@ $(function() {
 
                 $.each(res.constructionPeriodNodes, function(i, v) {
 
-                    com.focusPage("input.timeLimits[cnid='" + v.constructionNode.cnid + "']", "#contructionNodes").val(v.period);
+                    com.focusPage("input.timeLimits[cnid='" + v.constructionNode.cnid + "']", "#constructionNodes").val(v.period);
                 });
             });
         }

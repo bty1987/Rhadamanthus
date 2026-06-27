@@ -8,7 +8,7 @@ jQuery(function($) {
             saveInfoBtn: com.focusPage("#saveInfoBtn"),
             saveBtn: com.focusPage("#saveBtn"),
             deployedBtn: com.focusPage("#deployedBtn"),
-            seveSuccessBtn: com.focusPage("#seveSuccess"),
+            saveSuccessBtn: com.focusPage("#saveSuccess"),
         },
 
         modals: {
@@ -16,7 +16,7 @@ jQuery(function($) {
             editModal: com.focusPage("#editModal"),
             applyModal: com.focusPage("#applyModal"),
             constructionInfoModal: com.focusPage("#constructionInfoModal"),
-            contructionNodeModal: com.focusPage("#contructionNodeModal"),
+            constructionNodeModal: com.focusPage("#constructionNodeModal"),
         },
 
         items: {
@@ -38,7 +38,7 @@ jQuery(function($) {
             designTime: com.focusPage("#designTime"),
             isCeremony: com.focusPage("#isCeremony"),
             comment: com.focusPage("#comment"),
-            contructionNodes: com.focusPage("#contructionNodes"),
+            constructionNodes: com.focusPage("#constructionNodes"),
 
             status: com.focusPage("#status")
         },
@@ -54,7 +54,7 @@ jQuery(function($) {
     drawline.btns.saveBtn.bindClick(saveData);
     drawline.btns.saveInfoBtn.bindClick(saveInfoData);
     drawline.btns.deployedBtn.bindClick(deployed);
-    drawline.btns.seveSuccessBtn.bindClick(seveSuccess);
+    drawline.btns.saveSuccessBtn.bindClick(saveSuccess);
 
     drawline.modals.setupModal.on("hide.bs.modal", function() {
 
@@ -390,8 +390,8 @@ jQuery(function($) {
 
         drawline.dlid = v.dlid;
 
-        drawline.modals.contructionNodeModal.modal("show");
-        drawline.items.contructionNodes.html("");
+        drawline.modals.constructionNodeModal.modal("show");
+        drawline.items.constructionNodes.html("");
 
         var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
@@ -469,7 +469,7 @@ jQuery(function($) {
             $liLi.append($h3).append($ulPro).appendTo($uli);
         });
 
-        $uli.appendTo(drawline.items.contructionNodes);
+        $uli.appendTo(drawline.items.constructionNodes);
 
         var pace = null;
 
@@ -489,10 +489,10 @@ jQuery(function($) {
 
             $.each(res.constructionPaceNodes, function(i, v) {
 
-                com.focusPage("input[cnid='" + v.node.cnid + "'][prenum]", "#contructionNodes").attr("prenum", v.prenum);
-                com.focusPage("input[cnid='" + v.node.cnid + "'][postnum]", "#contructionNodes").attr("postnum", v.postnum);
+                com.focusPage("input[cnid='" + v.node.cnid + "'][prenum]", "#constructionNodes").attr("prenum", v.prenum);
+                com.focusPage("input[cnid='" + v.node.cnid + "'][postnum]", "#constructionNodes").attr("postnum", v.postnum);
 
-                com.focusPage("input.timeLimits[cnid='" + v.node.cnid + "']", "#contructionNodes").val(v.connum);
+                com.focusPage("input.timeLimits[cnid='" + v.node.cnid + "']", "#constructionNodes").val(v.connum);
             });
 
         }, null, false);
@@ -503,10 +503,10 @@ jQuery(function($) {
 
             $.each(res.constructionPlans, function(i, v) {
 
-                com.focusPage("input[cnid='" + v.node.cnid + "'][prenum]", "#contructionNodes").attr("prenum", v.prenum);
-                com.focusPage("input[cnid='" + v.node.cnid + "'][postnum]", "#contructionNodes").attr("postnum", v.postnum);
+                com.focusPage("input[cnid='" + v.node.cnid + "'][prenum]", "#constructionNodes").attr("prenum", v.prenum);
+                com.focusPage("input[cnid='" + v.node.cnid + "'][postnum]", "#constructionNodes").attr("postnum", v.postnum);
 
-                com.focusPage("input.timeLimits[cnid='" + v.node.cnid + "']", "#contructionNodes").val(v.connum);
+                com.focusPage("input.timeLimits[cnid='" + v.node.cnid + "']", "#constructionNodes").val(v.connum);
             });
         });
     }
@@ -516,13 +516,13 @@ jQuery(function($) {
         initPlan();
     });
 
-    function seveSuccess() {
+    function saveSuccess() {
 
-        if (com.validate("contructionNodeModal")) {
+        if (com.validate("constructionNodeModal")) {
             return false;
         }
 
-        var $inputs = com.focusPage('input[name="sorts"]:checked', '#contructionNodes');
+        var $inputs = com.focusPage('input[name="sorts"]:checked', '#constructionNodes');
 
         var option = {
             "drawLine.dlid": drawline.dlid
@@ -547,7 +547,7 @@ jQuery(function($) {
         com.post(api.construction.successDrawLine, option, function(res) {
 
             com.showAlert(com.info, "放线成功");
-            drawline.modals.contructionNodeModal.modal("hide");
+            drawline.modals.constructionNodeModal.modal("hide");
             searcher.doSearch();
         });
     }

@@ -6,7 +6,7 @@ jQuery(function($) {
         projectStatus: {},
 
         modals: {
-            contructionNodeModal: com.focusPage("#contructionNodeModal"),
+            constructionNodeModal: com.focusPage("#constructionNodeModal"),
             checkModal: com.focusPage("#checkModal"),
             handoverModal: com.focusPage("#handoverModal"),
         },
@@ -17,7 +17,7 @@ jQuery(function($) {
         },
 
         nodeItems: {
-            contructionNodes: com.focusPage("#contructionNodes", "#contructionNodeModal"),
+            constructionNodes: com.focusPage("#constructionNodes", "#constructionNodeModal"),
         },
 
         items: {
@@ -399,8 +399,8 @@ jQuery(function($) {
 
         params.decoration.orderId = v.decoration.orderId;
 
-        information.modals.contructionNodeModal.modal("show");
-        information.nodeItems.contructionNodes.html("");
+        information.modals.constructionNodeModal.modal("show");
+        information.nodeItems.constructionNodes.html("");
 
         var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
@@ -472,7 +472,7 @@ jQuery(function($) {
             $liLi.append($h3).append($ulPro).appendTo($uli);
         });
 
-        $uli.appendTo(information.nodeItems.contructionNodes);
+        $uli.appendTo(information.nodeItems.constructionNodes);
 
         var pace = null;
 
@@ -492,13 +492,13 @@ jQuery(function($) {
 
             $.each(res.constructionPaceNodes, function(i, v) {
 
-                com.focusPage("input[cnid='" + v.node.cnid + "'][prenum]", "#contructionNodes").attr("prenum", v.prenum);
-                com.focusPage("input[cnid='" + v.node.cnid + "'][postnum]", "#contructionNodes").attr("postnum", v.postnum);
+                com.focusPage("input[cnid='" + v.node.cnid + "'][prenum]", "#constructionNodes").attr("prenum", v.prenum);
+                com.focusPage("input[cnid='" + v.node.cnid + "'][postnum]", "#constructionNodes").attr("postnum", v.postnum);
 
-                com.focusPage("input.timeLimits[cnid='" + v.node.cnid + "']", "#contructionNodes").val(v.period);
+                com.focusPage("input.timeLimits[cnid='" + v.node.cnid + "']", "#constructionNodes").val(v.period);
 
                 // 默认勾选复选框
-                com.focusPage("input[type='checkbox'][cnid='" + v.node.cnid + "']", "#contructionNodes").prop('checked', true);
+                com.focusPage("input[type='checkbox'][cnid='" + v.node.cnid + "']", "#constructionNodes").prop('checked', true);
             });
 
         }, null, false);
@@ -509,21 +509,21 @@ jQuery(function($) {
 
             $.each(res.constructionPlans, function(i, v) {
 
-                com.focusPage("input.timeLimits[cnid='" + v.cnid + "']", "#contructionNodes").val(v.connum);
+                com.focusPage("input.timeLimits[cnid='" + v.cnid + "']", "#constructionNodes").val(v.connum);
 
                 // 默认勾选已有施工计划的复选框
-                com.focusPage("input[type='checkbox'][cnid='" + v.cnid + "']", "#contructionNodes").prop('checked', true);
+                com.focusPage("input[type='checkbox'][cnid='" + v.cnid + "']", "#constructionNodes").prop('checked', true);
             });
         });
     };
 
-    com.focusPage("#seveSuccess").on("click", function() {
+    com.focusPage("#saveSuccess").on("click", function() {
 
-        if (com.validate("contructionNodeModal")) {
+        if (com.validate("constructionNodeModal")) {
             return false;
         }
 
-        var $inputs = com.focusPage('input[name="sorts"]:checked', '#contructionNodes');
+        var $inputs = com.focusPage('input[name="sorts"]:checked', '#constructionNodes');
 
         var option = {
             "drawLine.decoration.orderId": params.decoration.orderId,
@@ -547,7 +547,7 @@ jQuery(function($) {
 
             searcher.doSearch();
 
-            information.contructionNodeModal.modal("hide");
+            information.constructionNodeModal.modal("hide");
         });
     });
 
