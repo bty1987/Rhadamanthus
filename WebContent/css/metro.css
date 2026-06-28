@@ -1484,6 +1484,32 @@ input:focus,select:focus,textarea:focus{
     margin-bottom: 3px;
     margin-right: 2px;
 }
+/* quotation xxxPart 页面:左下角固定按钮栏暗色主题适配 */
+/* HTML 内联写死 background-color:white,metro 暗色主题下用主题色覆盖,消除白色色块 */
+/* 注:normtionPart/protationPart/quotetionPart 比其它 Part 多一层 col-xs-12 包裹,故用后代选择器 */
+/* selectionPart 容器是 #selectionModule(无 page-content class),单独补一条 */
+.page-content .col-md-3[style*="position:fixed"],
+.page-content .col-md-3[style*="position: fixed"],
+#selectionModule .col-md-3[style*="position:fixed"],
+#selectionModule .col-md-3[style*="position: fixed"] {
+    background-color: var(--fl-bg) !important;
+    border-top: 1px solid var(--fl-border-light);
+    padding-top: 8px;
+}
+/* 右侧功能区面板:暗色主题下左侧分隔线改用主题边框色 */
+.page-content .col-md-9[style*="border-color: #c1c1c1"],
+#selectionModule .col-md-9[style*="border-color: #c1c1c1"] {
+    border-color: var(--fl-border-light) !important;
+}
+/* 左侧信息面板:恢复可识别的卡片底色与边框,使左右栏视觉边界清晰,消除布局错位感 */
+/* 仅作用于 Part 页面左栏的 widget-box.transparent,不影响全局透明 widget-box */
+.page-content > .row > .col-md-3 .widget-box.transparent,
+.page-content > .row > .col-xs-12 > .col-md-3 .widget-box.transparent,
+#selectionModule > .col-xs-12 > .col-md-3 .widget-box.transparent {
+    background-color: #333;
+    border: 1px solid var(--fl-border-light);
+    border-radius: var(--fl-radius-md);
+}
 #addReduceDetailed .widget-body-inner{
     margin-top: 43px;
     margin-left: 12px;
