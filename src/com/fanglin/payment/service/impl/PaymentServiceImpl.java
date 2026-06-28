@@ -234,7 +234,7 @@ public class PaymentServiceImpl implements PaymentService {
 		overBalance = Arith.add(balance, recharge);
 
 		// 原子增加余额(数据库层), 替代 read-modify-write 避免并发丢更新
-		advancePaymentDao.increaseBalanceByType(advancePaymentPO.getApId(), paymentType, recharge);
+		advancePaymentDao.increaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge);
 
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
@@ -395,7 +395,7 @@ public class PaymentServiceImpl implements PaymentService {
 		long overBalance = 0;
 
 		// 提现需扣减余额, 原子SQL含余额校验: 受影响行数为0表示余额不足
-		if (advancePaymentDao.decreaseBalanceByType(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
+		if (advancePaymentDao.decreaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
 			throw new FLException(150010, "预付款余额不足");
 		}
 
@@ -483,7 +483,7 @@ public class PaymentServiceImpl implements PaymentService {
 		long overBalance = 0;
 
 		// 付款需扣减余额, 原子SQL含余额校验: 受影响行数为0表示余额不足
-		if (advancePaymentDao.decreaseBalanceByType(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
+		if (advancePaymentDao.decreaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
 			throw new FLException(150010, "预付款余额不足");
 		}
 
@@ -560,7 +560,7 @@ public class PaymentServiceImpl implements PaymentService {
 		long overBalance = Arith.add(balance, recharge);
 
 		// 退款需增加余额, 原子SQL完成数据库层更新
-		advancePaymentDao.increaseBalanceByType(advancePaymentPO.getApId(), paymentType, recharge);
+		advancePaymentDao.increaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge);
 
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));

@@ -47,9 +47,28 @@ public class QuotationAssignRequestVO {
 	private Short priority;
 
 	/**
+	 * 分配给的预算员用户对象（ManyToMany关联，包含uid等信息）
+	 */
+	private UserBaseVO user;
+
+	/**
+	 * 创建时间
+	 */
+	private Timestamp createTime;
+
+	/**
+	 * 分配时间
+	 */
+	private Timestamp assignTime;
+
+	/**
+	 * 完成时间（报价交付时间）
+	 */
+	private Timestamp finishTime;
+
+	/**
 	 * 请求时间
 	 */
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp requestTime;
 
 	/**
@@ -63,32 +82,9 @@ public class QuotationAssignRequestVO {
 	private Short status;
 
 	/**
-	 * 分配给的预算员用户对象（ManyToMany关联，包含uid等信息）
-	 */
-	private UserBaseVO user;
-
-	/**
-	 * 分配时间
-	 */
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
-	private Timestamp assignTime;
-
-	/**
-	 * 完成时间（报价交付时间）
-	 */
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
-	private Timestamp finishTime;
-
-	/**
 	 * 备注
 	 */
 	private String remark;
-
-	/**
-	 * 创建时间
-	 */
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
-	private Timestamp createTime;
 
 	// ==================== Getter & Setter ====================
 
@@ -140,14 +136,6 @@ public class QuotationAssignRequestVO {
 		this.priority = priority;
 	}
 
-	public Timestamp getRequestTime() {
-		return requestTime;
-	}
-
-	public void setRequestTime(Timestamp requestTime) {
-		this.requestTime = requestTime;
-	}
-
 	public UserBaseVO getRequestUser() {
 		return requestUser;
 	}
@@ -172,6 +160,25 @@ public class QuotationAssignRequestVO {
 		this.user = user;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getRequestTime() {
+		return requestTime;
+	}
+
+	public void setRequestTime(Timestamp requestTime) {
+		this.requestTime = requestTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getAssignTime() {
 		return assignTime;
 	}
@@ -180,6 +187,7 @@ public class QuotationAssignRequestVO {
 		this.assignTime = assignTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getFinishTime() {
 		return finishTime;
 	}
@@ -194,13 +202,5 @@ public class QuotationAssignRequestVO {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
 	}
 }

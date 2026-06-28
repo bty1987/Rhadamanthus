@@ -27,6 +27,7 @@ jQuery(function($) {
     decorationBusitype.items.outside.bindData(constant.data().decorationBusitype.outside.datas, "key", "value");
     decorationBusitype.items.isRefer.bindData(constant.data().decorationBusitype.isRefer.datas, "key", "value");
     decorationBusitype.items.isAward.bindData(constant.data().decorationBusitype.isAward.datas, "key", "value");
+    decorationBusitype.items.type.bindData(constant.data().decorationBusitype.type.datas, "key", "value");
 
     var seacher = new Searcher();
 

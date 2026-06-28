@@ -50,16 +50,21 @@ public class AdvancePaymentDaoImpl extends DaoImpl<AdvancePaymentPO> implements 
 	// 0=balance, 1=projectBalance, 2=materialBalance, 3=zhenglinBalance (见 CustomerPO.BALANCE_TYPE_*_INT)
 	private String balanceColumn(short paymentType) {
 		switch (paymentType) {
-			case 0: return "balance";
-			case 1: return "projectBalance";
-			case 2: return "materialBalance";
-			case 3: return "zhenglinBalance";
-			default: return null;
+			case 0:
+				return "balance";
+			case 1:
+				return "projectBalance";
+			case 2:
+				return "materialBalance";
+			case 3:
+				return "zhenglinBalance";
+			default:
+				return null;
 		}
 	}
 
 	@Override
-	public int increaseBalanceByType(int apId, short paymentType, long delta) {
+	public int increaseAdvancePayment(int apId, short paymentType, long delta) {
 
 		String column = balanceColumn(paymentType);
 		if (column == null) return 0;
@@ -69,7 +74,7 @@ public class AdvancePaymentDaoImpl extends DaoImpl<AdvancePaymentPO> implements 
 	}
 
 	@Override
-	public int decreaseBalanceByType(int apId, short paymentType, long delta) {
+	public int decreaseAdvancePayment(int apId, short paymentType, long delta) {
 
 		String column = balanceColumn(paymentType);
 		if (column == null) return 0;

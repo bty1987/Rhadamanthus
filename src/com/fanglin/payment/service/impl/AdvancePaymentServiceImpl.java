@@ -175,11 +175,11 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 
 		if (types.contains(type)) {
 			// 收款/退款: 原子增加余额
-			advancePaymentDao.increaseBalanceByType(advancePaymentPO.getApId(), paymentType, recharge);
+			advancePaymentDao.increaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge);
 			overBalance = Arith.add(balance, recharge);
 		} else {
 			// 付款: 原子扣减余额, 受影响行数为0表示余额不足
-			if (advancePaymentDao.decreaseBalanceByType(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
+			if (advancePaymentDao.decreaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
 				throw new FLException(150010, "预付款余额不足");
 			}
 			overBalance = Arith.sub(balance, recharge);

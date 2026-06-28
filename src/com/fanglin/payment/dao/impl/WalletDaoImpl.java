@@ -14,17 +14,17 @@ import com.fanglin.utils.Paging;
 @Repository("walletDao")
 public class WalletDaoImpl extends DaoImpl<WalletPO> implements WalletDao {
 
-	public WalletDaoImpl(){
+	public WalletDaoImpl() {
 		super(WalletPO.class);
 	}
 
 	@Override
 	public List<WalletPO> pageWallet(Paging paging, List<Filter> filters) {
-		
+
 		PagingQuery<WalletPO> query = pagingQuery(paging, WalletPO.class);
-		
+
 		queryFilterExcute(query, filters);
-		
+
 		return query.list();
 	}
 
@@ -34,30 +34,30 @@ public class WalletDaoImpl extends DaoImpl<WalletPO> implements WalletDao {
 	}
 
 	@Override
-	public int decreaseBalance(long wid, long delta) {
+	public int decreaseWallet(long wid, long delta) {
 		String sql = "update payment.wallet set balance = balance - :delta where wid = :wid and balance >= :delta";
 		return session().createSQLQuery(sql).setLong("delta", delta).setLong("wid", wid).executeUpdate();
 	}
 
 	@Override
-	public int increaseBalance(long wid, long delta) {
+	public int increaseWallet(long wid, long delta) {
 		String sql = "update payment.wallet set balance = balance + :delta where wid = :wid";
 		return session().createSQLQuery(sql).setLong("delta", delta).setLong("wid", wid).executeUpdate();
 	}
-	
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null){
-			
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters != null) {
+
 			query.alias("belonger", "belonger");
-			
-			for(Filter filter: filters){
-				
+
+			for (Filter filter : filters) {
+
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				
-				if("belonger".equals(field)){
+
+				if ("belonger".equals(field)) {
 					query.add(query.getCriterion("belonger.userId", data, op));
 				} else if ("phone".equals(field)) {
 					query.add(query.getCriterion(field, data, op));
