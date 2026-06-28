@@ -721,7 +721,7 @@ var com = {
 
         if (!page)
             return false;
-        if ($('.flpage.nav-tab').length > 10) {
+        if ($('.flpage.nav-tab').length > config.pageTabLimit) {
             com.showAlert(com.warning, "页面标签加载过多!");
             return false;
         }

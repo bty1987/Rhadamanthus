@@ -13,6 +13,7 @@
     addreduceDiscount: 8.8,
     spacing: 5,
     planTimeLimit: 5,
+    pageTabLimit: 15, // 页面标签（Tab）数量上限
     prefix: '', // 使用在获取二维码路径
     iconImg: './images/icon_fanglin.png',
     backgroundImg: './images/bg_fanglin.jpg',
