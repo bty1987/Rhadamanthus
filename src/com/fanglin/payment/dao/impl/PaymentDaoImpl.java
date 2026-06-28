@@ -82,6 +82,17 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 	}
 
 	@Override
+	public long balancePayment(String orderId, Short paymentType) {
+
+		// 对账核算基线: 收款(1)/退回(3)为正, 提现(0)/付款(2)为负; 仅计入已收款(1)/已确认(2), 排除初始(0)/已撤销(3)
+		String sql = "SELECT SUM(IF(p.type in (1, 3), p.recharge, -p.recharge)) FROM payment.payment p WHERE p.orderId = :orderId AND p.paymentType = :paymentType AND p.status IN (1, 2)";
+
+		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("paymentType", paymentType).uniqueResult();
+
+		return sqlQuery == null ? 0L : sqlQuery.longValue();
+	}
+
+	@Override
 	public PaymentDO queryPaymentByReceiptId(long arId) {
 		return (PaymentDO) session().createCriteria(PaymentDO.class).createAlias("advanceReceipt", "advanceReceipt").add(Restrictions.eq("advanceReceipt.arId", arId)).uniqueResult();
 	}
