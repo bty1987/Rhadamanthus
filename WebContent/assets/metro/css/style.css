@@ -1905,16 +1905,7 @@ General list for item with image
 
     padding: 7px 0 5px 0px;
     list-style: none;
-    border-top: 1px solid white;
-    /*border-bottom: 1px solid #e5e5e5;*/
     font-size: 12px;
-}
-
-.item-list li:first-child {
-    /*border-bottom: 1px solid #e5e5e5;*/
-}
-.item-list li:last-child {
-    /*border-top: none;*/
 }
 
 .item-list li .label {
