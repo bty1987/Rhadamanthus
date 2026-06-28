@@ -76,7 +76,7 @@ jQuery(function($) {
         window.location.href = getTemplateUrl(template) + "?timestamp=" + new Date().getTime();
     };
 
-    var userid = -null;
+    var userid = null;
     com.post(api.personel.queryUserForSelfByUserId, {}, function(res) {
 
         userProfile.userPhoto = res.userInfo.user.userPhoto;
@@ -151,9 +151,16 @@ jQuery(function($) {
         if (com.validate("edit-basic")) {
             return false;
         }
+
+        var saveUserId = userid || (params.userInfo && params.userInfo.user ? params.userInfo.user.userId : null);
+        if (!saveUserId) {
+            com.showAlert(com.warning, "用户信息加载中，请稍后再试");
+            return false;
+        }
+
         var options = {
             "userInfo.user.userPhoto": com.focusPage("#picture").val(),
-            "userInfo.user.userId": userid,
+            "userInfo.user.userId": saveUserId,
             "userInfo.user.phone": com.focusPage("#telephone").val(),
             "userInfo.age": com.focusPage("#age").val(),
             "userInfo.emergencyMan": com.focusPage("#emergencyMan").val(),
