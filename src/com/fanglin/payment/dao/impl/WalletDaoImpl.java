@@ -32,6 +32,18 @@ public class WalletDaoImpl extends DaoImpl<WalletPO> implements WalletDao {
 	public WalletPO queryWalletByNo(String no) {
 		return (WalletPO) session().createCriteria(WalletPO.class).add(Restrictions.eq("no", no)).uniqueResult();
 	}
+
+	@Override
+	public int decreaseBalance(long wid, long delta) {
+		String sql = "update payment.wallet set balance = balance - :delta where wid = :wid and balance >= :delta";
+		return session().createSQLQuery(sql).setLong("delta", delta).setLong("wid", wid).executeUpdate();
+	}
+
+	@Override
+	public int increaseBalance(long wid, long delta) {
+		String sql = "update payment.wallet set balance = balance + :delta where wid = :wid";
+		return session().createSQLQuery(sql).setLong("delta", delta).setLong("wid", wid).executeUpdate();
+	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
