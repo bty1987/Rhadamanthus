@@ -50,7 +50,11 @@ $(function() {
 	// ==================== 数据加载 ====================
 	function loadConfigs() {
 
-		com.showLoading('正在加载配置...');
+		// 捕获 loadIndex: showLoading 内部用 layer.msg({icon:16}) 创建,
+		// 实际弹层 type 为 "dialog" 而非 "loading",
+		// 故 com.hideLoading() 无参调用会走 layer.closeAll('loading') 关不掉它。
+		// 必须传入返回的 index 用 layer.close(index) 精确关闭。
+		var loadIndex = com.showLoading('正在加载配置...');
 
 		com.post(api.system.querySystemConfigByCid, {}, function(res) {
 			// 建立 key -> DB 配置 映射
@@ -64,9 +68,9 @@ $(function() {
 			groupConfigs();
 			renderAccordion();
 
-			com.hideLoading();
+			com.hideLoading(loadIndex);
 		}, function(err) {
-			com.hideLoading();
+			com.hideLoading(loadIndex);
 			com.showAlert(com.error, '加载配置失败: ' + (err.errorMsg || '未知错误'));
 		});
 	}
@@ -435,14 +439,14 @@ $(function() {
 
 		var apiUrl = isEdit ? api.system.updateSystemConfig : api.system.addSystemConfig;
 
-		com.showLoading('正在保存...');
+		var loadIndex = com.showLoading('正在保存...');
 		com.post(apiUrl, options, function(res) {
-			com.hideLoading();
+			com.hideLoading(loadIndex);
 			com.showAlert(com.info, '保存成功');
 			app.ui.modal.modal('hide');
 			loadConfigs();
 		}, function(err) {
-			com.hideLoading();
+			com.hideLoading(loadIndex);
 			com.showAlert(com.error, '保存失败: ' + (err.errorMsg || '未知错误'));
 		});
 	}
