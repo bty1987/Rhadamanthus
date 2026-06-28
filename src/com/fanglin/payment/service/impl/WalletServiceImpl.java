@@ -17,7 +17,6 @@ import com.fanglin.payment.po.WalletranPO;
 import com.fanglin.payment.service.WalletService;
 import com.fanglin.payment.vo.WalletVO;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -193,21 +192,16 @@ public class WalletServiceImpl implements WalletService {
 			throw new FLException(150055, "钱包状态不可操作");
 		}
 		
-		if (walletPO.getBalance() < wallet.getAmount()) {
+		// 原子扣款(含余额校验): 受影响行数为 0 表示余额不足
+		if (walletDao.decreaseBalance(walletPO.getWid(), wallet.getAmount()) == 0) {
 			throw new FLException(10000, "余额不足");
 		}
 		
+		// 原子加款到收款方
+		walletDao.increaseBalance(talletPO.getWid(), wallet.getAmount());
+		
 		//生成交易记录
 		createWalletran(walletPO, talletPO, wallet.getAmount(), WalletranPO.TYPE_CONSUME_INT, "消费");
-		
-		long walletMoney = Arith.sub(walletPO.getBalance(), wallet.getAmount());
-		long talletMoney = Arith.add(talletPO.getBalance(), wallet.getAmount());
-		
-		walletPO.setBalance(walletMoney);
-		talletPO.setBalance(talletMoney);
-		
-		walletDao.update(walletPO);
-		walletDao.update(talletPO);
 		
 		//TODO 获取sn
 		String sn = "";
@@ -231,15 +225,12 @@ public class WalletServiceImpl implements WalletService {
 			throw new FLException(150055, "钱包状态不可操作");
 		}
 		
-		//生成交易记录
-		createWalletran(walletPO, null, wallet.getAmount(), WalletranPO.TYPE_RECHARGE_INT, "充值");
-		
-		long walletMoney = Arith.add(walletPO.getBalance(), wallet.getAmount());
+		// 原子加款
+		walletDao.increaseBalance(walletPO.getWid(), wallet.getAmount());
 		//TODO 银行卡要减钱
 		
-		walletPO.setBalance(walletMoney);
-		
-		walletDao.update(walletPO);
+		//生成交易记录
+		createWalletran(walletPO, null, wallet.getAmount(), WalletranPO.TYPE_RECHARGE_INT, "充值");
 		
 		//TODO 获取sn
 		String sn = "";
@@ -264,19 +255,14 @@ public class WalletServiceImpl implements WalletService {
 			throw new FLException(150055, "钱包状态不可操作");
 		}
 		
-		if (walletPO.getBalance() < wallet.getAmount()) {
+		// 原子扣款(含余额校验): 受影响行数为 0 表示余额不足
+		if (walletDao.decreaseBalance(walletPO.getWid(), wallet.getAmount()) == 0) {
 			throw new FLException(10000, "余额不足");
 		}
+		//TODO 银行卡要加钱
 		
 		//生成交易记录
 		createWalletran(walletPO, null, wallet.getAmount(), WalletranPO.TYPE_WITHDRAW_INT, "提现");
-		
-		long walletMoney = Arith.sub(walletPO.getBalance(), wallet.getAmount());
-		//TODO 银行卡要加钱
-		
-		walletPO.setBalance(walletMoney);
-		
-		walletDao.update(walletPO);
 		
 		//TODO 获取sn
 		String sn = "";
@@ -317,21 +303,16 @@ public class WalletServiceImpl implements WalletService {
 			throw new FLException(150055, "钱包状态不可操作");
 		}
 		
-		if (walletPO.getBalance() < wallet.getAmount()) {
+		// 原子扣款(含余额校验): 受影响行数为 0 表示余额不足
+		if (walletDao.decreaseBalance(walletPO.getWid(), wallet.getAmount()) == 0) {
 			throw new FLException(10000, "余额不足");
 		}
 		
+		// 原子加款到收款方
+		walletDao.increaseBalance(talletPO.getWid(), wallet.getAmount());
+		
 		//生成交易记录
 		createWalletran(walletPO, talletPO, wallet.getAmount(), WalletranPO.TYPE_TRANSFER_INT, "转账");
-		
-		long walletMoney = Arith.sub(walletPO.getBalance(), wallet.getAmount());
-		long talletMoney = Arith.add(talletPO.getBalance(), wallet.getAmount());
-		
-		walletPO.setBalance(walletMoney);
-		talletPO.setBalance(talletMoney);
-		
-		walletDao.update(walletPO);
-		walletDao.update(talletPO);
 		
 		return wallet;
 		

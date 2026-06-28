@@ -46,6 +46,38 @@ public class AdvancePaymentDaoImpl extends DaoImpl<AdvancePaymentPO> implements 
 		return (AdvancePaymentPO) session().createCriteria(AdvancePaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).uniqueResult();
 	}
 
+	// 按款项类型映射余额列名(白名单, 防注入)
+	// 0=balance, 1=projectBalance, 2=materialBalance, 3=zhenglinBalance (见 CustomerPO.BALANCE_TYPE_*_INT)
+	private String balanceColumn(short paymentType) {
+		switch (paymentType) {
+			case 0: return "balance";
+			case 1: return "projectBalance";
+			case 2: return "materialBalance";
+			case 3: return "zhenglinBalance";
+			default: return null;
+		}
+	}
+
+	@Override
+	public int increaseBalanceByType(int apId, short paymentType, long delta) {
+
+		String column = balanceColumn(paymentType);
+		if (column == null) return 0;
+
+		String sql = String.format("update payment.advancepayment set %s = %s + :delta where apId = :apId", column, column);
+		return session().createSQLQuery(sql).setLong("delta", delta).setInteger("apId", apId).executeUpdate();
+	}
+
+	@Override
+	public int decreaseBalanceByType(int apId, short paymentType, long delta) {
+
+		String column = balanceColumn(paymentType);
+		if (column == null) return 0;
+
+		String sql = String.format("update payment.advancepayment set %s = %s - :delta where apId = :apId and %s >= :delta", column, column, column);
+		return session().createSQLQuery(sql).setLong("delta", delta).setInteger("apId", apId).executeUpdate();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;
