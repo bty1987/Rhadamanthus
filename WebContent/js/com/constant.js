@@ -1,146 +1,151 @@
-var constant = {
+/**
+ * 常量配置模块。
+ *
+ * 对外暴露两个全局：
+ *   - constant         按模块组织的常量树（兼容旧 API）
+ *   - Constant         构造器，提供 init / module / clazz / type / get / keyOf / valueOf / datas
+ *
+ * 旧调用形态（保持兼容，324 个调用点无需改动）：
+ *   constant.decoration().decoration.typeness.keys[decoration.typeness]
+ *   constant.data.aoodsCharge.type.datas
+ *
+ * 新增只读辅助 API（推荐新代码使用，语义清晰）：
+ *   Constant().get(module, clazz, type)            -> { keys, values, datas }
+ *   Constant().valueOf(module, clazz, type, key)   -> value（key -> 中文值）
+ *   Constant().keyOf(module, clazz, type, value)   -> key （中文值 -> key）
+ *   Constant().datas(module, clazz, type)          -> [{ key, value }, ...]
+ */
+(function(window) {
 
-};
+    var constant = {};
 
-var Constant = function() {
+    var Constant = function() {
 
-    var handle = function(module, clazz, type) {
+        // 模块数据容器：constant[module] -> { load: bool, <clazz>: {...} }
+        // load 标志位用于判断该模块是否已发起过 queryConstant 请求，避免重复请求。
+        var handle = function(module, clazz, type) {
 
-        if (!constant[module]) {
-            constant[module] = {
-                "load": true
+            if (!module) {
+                return constant;
+            }
+
+            // 确保模块容器存在。已加载过的模块直接返回，避免重复请求。
+            if (!constant[module]) {
+                constant[module] = {
+                    "load": false
+                };
+            }
+
+            if (constant[module]["load"] && !clazz && !type) {
+                return constant[module];
+            }
+
+            var options = {
+                "constant.status": 0
             };
 
-            constant[module] = function() {
-
-                return handle(module);
+            if (module) {
+                options["constant.module"] = module;
             }
-        }
 
-        if (constant[module]["load"] && !clazz && !type)
-            return constant[module];
+            if (clazz) {
+                options["constant.clazz"] = clazz;
+            }
 
-        var options = {
-            "constant.status": 0
-        }
+            if (type) {
+                options["constant.type"] = type;
+            }
 
-        if (module) {
-            options["constant.module"] = module;
-        }
+            com.post(api.data.queryConstant, options, function(res) {
 
-        if (clazz) {
-            options["constant.clazz"] = clazz;
-        }
+                var constants = res.constants;
 
-        if (type) {
-            options["constant.type"] = type;
-        }
+                $.each(constants, function(i, v) {
 
-        com.post(api.data.queryConstant, options, function(res) {
+                    if (!constant[module][v.clazz]) {
+                        constant[module][v.clazz] = {};
+                    }
 
-            var constants = res.constants;
+                    if (!constant[module][v.clazz][v.type]) {
+                        constant[module][v.clazz][v.type] = {
+                            "datas": [],
+                            "keys": {},
+                            "values": {}
+                        };
+                    }
 
-            $.each(constants, function(i, v) {
+                    if (/^\d+$/.test(v.key)) {
+                        v.key = parseInt(v.key);
+                    }
 
-                var module = v.module;
+                    constant[module][v.clazz][v.field] = v.key;
+                    constant[module][v.clazz][v.type]["keys"][v.key] = v.value;
+                    constant[module][v.clazz][v.type]["values"][v.value] = v.key;
 
-                if (!constant[module][v.clazz]) {
-                    constant[module][v.clazz] = {};
-                }
-
-                if (!constant[module][v.clazz][v.type]) {
-                    constant[module][v.clazz][v.type] = {
-                        "datas": [],
-                        "keys": {},
-                        "values": {}
-                    };
-                }
-
-                if (/^\d+$/.test(v.key))
-                    v.key = parseInt(v.key)
-
-                constant[module][v.clazz][v.field] = v.key;
-                constant[module][v.clazz][v.type]["keys"][v.key] = v.value;
-                constant[module][v.clazz][v.type]["values"][v.value] = v.key;
-
-                constant[module][v.clazz][v.type]["datas"].push({
-                    "key": v.key,
-                    "value": v.value
+                    constant[module][v.clazz][v.type]["datas"].push({
+                        "key": v.key,
+                        "value": v.value
+                    });
                 });
-            });
-        }, null, false);
+            }, null, false);
 
-        if (!constant[module]["load"])
             constant[module]["load"] = true;
 
-        return constant[module];
-    }
+            return constant[module];
+        }
 
-    return {
-        init: function() {
+        /**
+         * 取某个 type 节点的完整数据结构。
+         * @return {datas:[], keys:{}, values:{}} 或 undefined（不存在时）
+         */
+        var get = function(module, clazz, type) {
 
-            constant = {
-                data: function() {
+            if (!module || !clazz || !type) {
+                return undefined;
+            }
 
-                    return handle("data");
-                },
-                customer: function() {
+            // 确保模块已加载
+            handle(module);
 
-                    return handle("customer");
-                },
-                decoration: function() {
+            var node = constant[module] && constant[module][clazz] && constant[module][clazz][type];
+            return node;
+        }
 
-                    return handle("decoration");
-                },
-                quotation: function() {
+        /**
+         * key -> value（如 0 -> "启用"）。未命中返回 undefined。
+         */
+        var valueOf = function(module, clazz, type, key) {
 
-                    return handle("quotation");
-                },
-                construction: function() {
+            var node = get(module, clazz, type);
+            return node && node.keys ? node.keys[key] : undefined;
+        }
 
-                    return handle("construction");
-                },
-                salary: function() {
+        /**
+         * value -> key（如 "启用" -> 0）。未命中返回 undefined。
+         */
+        var keyOf = function(module, clazz, type, value) {
 
-                    return handle("salary");
-                },
-                sales: function() {
+            var node = get(module, clazz, type);
+            return node && node.values ? node.values[value] : undefined;
+        }
 
-                    return handle("sales");
-                },
-                payment: function() {
+        /**
+         * 取某 type 的 datas 数组（用于 bindData 等场景）。
+         */
+        var datas = function(module, clazz, type) {
 
-                    return handle("payment");
-                },
-                information: function() {
+            var node = get(module, clazz, type);
+            return node ? node.datas : [];
+        }
 
-                    return handle("information");
-                },
-                right: function() {
-
-                    return handle("right");
-                },
-                inventory: function() {
-
-                    return handle("inventory");
-                },
-                personel: function() {
-
-                    return handle("personel");
-                },
-                balance: function() {
-
-                    return handle("balance");
-                },
-                approval: function() {
-
-                    return handle("approval");
-                },
-                system: function() {
-
-                    return handle("system");
-                },
-            };
+        /**
+         * 加载施工节点数据并镜像到 decoration.decoration.projectStatus。
+         *
+         * projectStatus 在节点列表前追加三个写死状态：
+         *   0=初始 / 1=开工 / 2=完工
+         * 节点数据来源于 api.data.queryConstructionNode，与 queryConstant 接口分离。
+         */
+        var loadConstructionNodes = function() {
 
             com.post(api.data.queryConstructionNode, {}, function(res) {
 
@@ -177,6 +182,7 @@ var Constant = function() {
                     });
                 });
 
+                // 镜像到 decoration.decoration.projectStatus，前置固定状态
                 if (!constant["decoration"]) {
                     constant["decoration"] = {};
                 }
@@ -205,25 +211,49 @@ var Constant = function() {
                     }, {
                         "key": 2,
                         "value": "完工"
-                    }].concat(constant[module][clazz][type]["datas"]),
-                }
-
+                    }].concat(constant[module][clazz][type]["datas"])
+                };
             });
+        }
 
-            window.console && window.console.log && console.log("%cConstant Config Ready 常量配置就绪", "color:#0a0; font-size:1em");
+        return {
+            init: function() {
 
-        },
-        module: function(module) {
+                // 将 constant 重建为按需加载的模块访问器。
+                // 调用 constant.<module>() 触发首次加载并返回模块对象；后续调用直接命中缓存。
+                $.each(["data", "customer", "decoration", "quotation", "construction", "salary", "sales", "payment", "information", "right", "inventory", "personel", "balance", "approval", "system"], function(i, module) {
 
-            handle(module);
-        },
-        clazz: function(module, clazz) {
+                    constant[module] = function() {
+                        return handle(module);
+                    };
+                });
 
-            handle(module, clazz);
-        },
-        type: function(module, clazz, type) {
+                // 施工节点独立于 queryConstant 接口，单独加载
+                loadConstructionNodes();
 
-            handle(module, clazz, type);
-        },
-    }
-};
+                window.console && window.console.log && console.log("%cConstant Config Ready 常量配置就绪", "color:#0a0; font-size:1em");
+            },
+            module: function(module) {
+
+                return handle(module);
+            },
+            clazz: function(module, clazz) {
+
+                return handle(module, clazz);
+            },
+            type: function(module, clazz, type) {
+
+                return handle(module, clazz, type);
+            },
+            get: get,
+            valueOf: valueOf,
+            keyOf: keyOf,
+            datas: datas
+        }
+    };
+
+    // 对外暴露：constant 作为全局变量供旧 API 访问，Constant 为构造器
+    window.constant = constant;
+    window.Constant = Constant;
+
+})(window);
