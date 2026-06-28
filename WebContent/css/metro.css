@@ -277,7 +277,6 @@ input[readonly], select[readonly], textarea[readonly] {
 }
 
 #pagenation, #hpagenation {
-    background-color: #333 !important;
 }
 
 .form-control {
