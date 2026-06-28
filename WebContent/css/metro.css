@@ -84,7 +84,6 @@ body {
 }
 
 .widget-box {
-    background-color: #333 !important;
 }
 
 .widget-header {
@@ -98,12 +97,10 @@ body {
 }
 
 .widget-body {
-    background-color: #333 !important;
     color: var(--fl-text) !important;
 }
 
 .widget-main {
-    background-color: #333 !important;
     color: var(--fl-text) !important;
 }
 
@@ -1172,7 +1169,6 @@ input:focus,select:focus,textarea:focus{
 }
 #homePage .widget-box.transparent .widget-body {
     border:0;
-    background: #ffffff;
 }
 .widget-box.transparent .widget-body {
     border:0;
@@ -3283,7 +3279,6 @@ label {
     width:210px;
     height:66px;
     color:#555;
-    background-color:#FFF;
     box-shadow:none;
     border-radius:0;
     margin:-1px 0 0 -1px;
@@ -4351,4 +4346,74 @@ input[readonly].lock-error-input{
 }
 .btn.btn-app.btn-fastlink > i {
     font-size: 30px !important;
+}
+
+/* =============================================================
+   独立滚动布局 (参考 ace 模板实现)
+   - 左侧菜单 (.page-sidebar) 与右侧主窗口 (#fl-container)
+     各自拥有独立的滚动条,互不影响。
+   - 仅在桌面宽度 (>=980px) 生效;窄屏沿用原有的抽屉式菜单。
+   ============================================================= */
+@media (min-width: 980px) {
+
+    /* 锁定窗口滚动,避免整页一起滚动 */
+    html, body {
+        height: 100% !important;
+        overflow: hidden !important;
+    }
+
+    /* 顶部导航条固定高度,作为两栏的顶部基准 */
+    .header.navbar.navbar-fixed-top {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 5000;
+    }
+
+    /* 左侧菜单:固定在顶部导航下方,独立滚动 */
+    .page-sidebar {
+        position: fixed !important;
+        top: 42px;          /* 顶部导航高度 */
+        bottom: 0;
+        left: 0;
+        width: 225px;
+        margin: 0 !important;
+        overflow: hidden;   /* 滚动交给内部的 slimscroll / 菜单容器 */
+        z-index: 1029;
+    }
+
+    /* 菜单容器自身滚动(无 slimscroll 时由原生滚动条接管) */
+    .page-sidebar-menu {
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    /* 右侧主窗口:固定在顶部导航下方,菜单右侧,独立滚动 */
+    .main-content {
+        position: fixed !important;
+        top: 42px;          /* 顶部导航高度 */
+        bottom: 0;
+        left: 225px;        /* 左侧菜单宽度 */
+        right: 0;
+        margin: 0 !important;
+        min-height: 0 !important;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* 面包屑固定在主窗口顶部,不随内容滚动 */
+    .main-content > .breadcrumbs {
+        flex: 0 0 auto;
+    }
+
+    /* 实际内容区独立滚动 */
+    #fl-container {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: relative;
+    }
 }
