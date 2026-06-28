@@ -2,6 +2,8 @@ package com.fanglin.quotation.vo;
 
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.CompanyVO;
@@ -47,6 +49,7 @@ public class QuotationAssignRequestVO {
 	/**
 	 * 请求时间
 	 */
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp requestTime;
 
 	/**
@@ -67,11 +70,13 @@ public class QuotationAssignRequestVO {
 	/**
 	 * 分配时间
 	 */
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp assignTime;
 
 	/**
 	 * 完成时间（报价交付时间）
 	 */
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp finishTime;
 
 	/**
@@ -82,6 +87,7 @@ public class QuotationAssignRequestVO {
 	/**
 	 * 创建时间
 	 */
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp createTime;
 
 	// ==================== Getter & Setter ====================
