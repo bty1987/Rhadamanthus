@@ -26,15 +26,13 @@ public interface AdvancePaymentDao extends Dao<AdvancePaymentPO> {
 	public AdvancePaymentPO queryAdvancePaymentByOrderId(String orderId);
 
 	/**
-	 * 原子增加指定类型余额: UPDATE payment.advancepayment SET {field} = {field} + :delta WHERE apId = :apId
-	 * paymentType 取值见 CustomerPO.BALANCE_TYPE_*_INT (0/1/2/3 分别对应 balance/projectBalance/materialBalance/zhenglinBalance)
+	 * 原子增加指定类型余额: UPDATE payment.advancepayment SET {field} = {field} + :delta WHERE apId = :apId paymentType 取值见 CustomerPO.BALANCE_TYPE_*_INT (0/1/2/3 分别对应 balance/projectBalance/materialBalance/zhenglinBalance)
 	 */
-	public int increaseBalanceByType(int apId, short paymentType, long delta);
+	public int increaseAdvancePayment(int apId, short paymentType, long delta);
 
 	/**
-	 * 原子扣减指定类型余额(含余额校验): UPDATE payment.advancepayment SET {field} = {field} - :delta WHERE apId = :apId AND {field} >= :delta
-	 * 返回受影响行数, 0 表示余额不足
+	 * 原子扣减指定类型余额(含余额校验): UPDATE payment.advancepayment SET {field} = {field} - :delta WHERE apId = :apId AND {field} >= :delta 返回受影响行数, 0 表示余额不足
 	 */
-	public int decreaseBalanceByType(int apId, short paymentType, long delta);
+	public int decreaseAdvancePayment(int apId, short paymentType, long delta);
 
 }

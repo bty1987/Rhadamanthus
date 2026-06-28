@@ -14,14 +14,13 @@ public interface WalletDao extends Dao<WalletPO> {
 	public WalletPO queryWalletByNo(String no);
 
 	/**
-	 * 原子扣减余额: UPDATE payment.wallet SET balance = balance - :delta WHERE wid = :wid AND balance >= :delta
-	 * 返回受影响行数, 0 表示余额不足
+	 * 原子扣减余额: UPDATE payment.wallet SET balance = balance - :delta WHERE wid = :wid AND balance >= :delta 返回受影响行数, 0 表示余额不足
 	 */
-	public int decreaseBalance(long wid, long delta);
+	public int decreaseWallet(long wid, long delta);
 
 	/**
 	 * 原子增加余额: UPDATE payment.wallet SET balance = balance + :delta WHERE wid = :wid
 	 */
-	public int increaseBalance(long wid, long delta);
+	public int increaseWallet(long wid, long delta);
 
 }
