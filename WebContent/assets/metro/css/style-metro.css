@@ -49,6 +49,7 @@ select:focus {
   background-image: none;
   filter: none;
   border: 0;
+  padding: 3px 3px;
   text-shadow: none;
   font-family: "Segoe UI", Helvetica, Arial, sans-serif;
   font-size: 14px;
