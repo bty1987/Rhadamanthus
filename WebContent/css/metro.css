@@ -1497,9 +1497,16 @@ input:focus,select:focus,textarea:focus{
     padding-top: 8px;
 }
 /* 右侧功能区面板:暗色主题下左侧分隔线改用主题边框色 */
+/* metro 基于 Bootstrap 2(默认 content-box),border-left 会额外撑出 1px, */
+/* 导致 col-md-3(25%) + col-md-9(75%+1px) > 100%,右栏被挤换行(串行)。 */
+/* 改用 border-box 把 1px 边框内含进 75% 宽度,左 25% + 右 75% = 100%,恢复并排, */
+/* 同时父级内容区与子级 col-xs-12 宽度一致。 */
 .page-content .col-md-9[style*="border-color: #c1c1c1"],
 #selectionModule .col-md-9[style*="border-color: #c1c1c1"] {
     border-color: var(--fl-border-light) !important;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 /* 左侧信息面板:恢复可识别的卡片底色与边框,使左右栏视觉边界清晰,消除布局错位感 */
 /* 仅作用于 Part 页面左栏的 widget-box.transparent,不影响全局透明 widget-box */
