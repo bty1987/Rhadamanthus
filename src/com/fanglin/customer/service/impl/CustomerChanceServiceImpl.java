@@ -988,7 +988,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 	}
 
 	private String buildLeadnoArgs(CustomerChancePO customerChancePO) {
-		String leadno = customerChancePO.getLeadno();
-		return (leadno != null && !leadno.isEmpty()) ? ",\"customerNo\":\"" + leadno + "\"" : "";
+		String customerno = customerChancePO.getCustomerno();
+		return (customerno != null && !customerno.isEmpty()) ? ",\"customerNo\":\"" + customerno + "\"" : "";
 	}
 }

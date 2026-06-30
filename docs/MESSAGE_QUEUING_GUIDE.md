@@ -181,21 +181,21 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 > 转装修单：Queuing 写 `TRAN_DECORATION_ORDER_CHANGED`，Cueing 写 `TRAN_DECORATION`
 > 📌 v2.2 行号修正：701/704→671/674，760→730，614→584（整体前移约30行）
 
-#### 🔑 customerNo 字段（leadno 映射）
+#### 🔑 customerNo 字段（customerno 映射）
 
-本模块 3 个场景的 args JSON 中均会动态拼接 `customerNo` 字段，来源于 `customerchance.leadno`，由私有方法 `buildLeadnoArgs(CustomerChancePO)`（`CustomerChanceServiceImpl:985-988`）生成：
+本模块 3 个场景的 args JSON 中均会动态拼接 `customerNo` 字段，来源于 `customerchance.customerno`，由私有方法 `buildLeadnoArgs(CustomerChancePO)`（`CustomerChanceServiceImpl:985-988`）生成：
 
 ```java
 private String buildLeadnoArgs(CustomerChancePO customerChancePO) {
-    String leadno = customerChancePO.getLeadno();
-    return (leadno != null && !leadno.isEmpty()) ? ",\"customerNo\":\"" + leadno + "\"" : "";
+    String customerno = customerChancePO.getCustomerno();
+    return (customerno != null && !customerno.isEmpty()) ? ",\"customerNo\":\"" + customerno + "\"" : "";
 }
 ```
 
 | 条件 | args 中的表现 |
 |------|--------------|
-| `leadno` 非空且非空串 | 追加 `,"customerNo":"<leadno值>"` |
-| `leadno` 为 null 或空串 | **不出现** `customerNo` 字段 |
+| `customerno` 非空且非空串 | 追加 `,"customerNo":"<customerno值>"` |
+| `customerno` 为 null 或空串 | **不出现** `customerNo` 字段 |
 
 **args 示例**（以 `issueCustomerChance` 为例）：
 
@@ -208,7 +208,7 @@ private String buildLeadnoArgs(CustomerChancePO customerChancePO) {
 }
 ```
 
-> ⚠️ **字段命名差异**：数据库列名为 `leadno`（全小写无分隔），args JSON 中为 `customerNo`（驼峰），消费端解析时需注意此映射。
+> ⚠️ **字段命名差异**：数据库列名为 `customerno`（全小写无分隔），args JSON 中为 `customerNo`（驼峰），消费端解析时需注意此映射。
 > ⚠️ **覆盖范围**：仅本模块 4 处消息（含转装修单双写的 Queuing+Cueing）携带 `customerNo`；客户资源分配（`addCustomerLead`）、收款、施工等其他模块的 args **不含**此字段。
 
 ### 八、客户资源分配模块 (4个场景)
@@ -568,11 +568,11 @@ messageQueuingDao.save(new MessageDueuingPO().init(orderId, "operation", "{...\"
 
 ### 2.1 args 中 customerNo 字段的来源与覆盖范围（v2.2 补充）
 
-args JSON 中的 `customerNo` 字段映射自数据库列 `customerchance.leadno`，由 `CustomerChanceServiceImpl#buildLeadnoArgs`（`CustomerChanceServiceImpl:985-988`）动态拼接：
+args JSON 中的 `customerNo` 字段映射自数据库列 `customerchance.customerno`，由 `CustomerChanceServiceImpl#buildLeadnoArgs`（`CustomerChanceServiceImpl:985-988`）动态拼接：
 
 - **仅客户机会模块**的 4 处消息会携带该字段：`issueCustomerChance`（Cueing）、`changeCustomerChance` 双写（Queuing + Cueing）、`meetCustomerChance`（Cueing）。
-- `leadno` 为 null/空串时该字段**不出现**在 args 中（消费端需按"字段可能缺失"处理）。
-- **命名差异**：DB 列 `leadno` ↔ args `customerNo`，请勿混淆。
+- `customerno` 为 null/空串时该字段**不出现**在 args 中（消费端需按"字段可能缺失"处理）。
+- **命名差异**：DB 列 `customerno` ↔ args `customerNo`，请勿混淆。
 - 客户资源分配（`addCustomerLead` 的 4 个 ASSIGNED 事件）、收款、施工等其他模块的 args **不含** `customerNo`。
 
 ### 3. 已注释的消息
@@ -586,6 +586,15 @@ args JSON 中的 `customerNo` 字段映射自数据库列 `customerchance.leadno
 ---
 
 ## 变更记录
+
+### v2.2.1 (2026-06-30)
+
+**字段重命名：**
+- `customerchance` 表列名 `leadno` 重命名为 `customerno`，对应 Java 字段 / getter / setter 一并更新（`CustomerChancePO`、`CustomerChanceVO`、`A20260103Action` 调用处）。
+- 消息队列 `customerNo` 字段的来源由 `customerchance.leadno` 改为 `customerchance.customerno`（args JSON 中的 `customerNo` 键名不变）。
+- 前端 `WebContent/js/customer/customerChance.js` 列定义 `leadno` 改为 `customerno`。
+- 同步执行 SQL 脚本：`sql/rename_customerchance_leadno_to_customerno.sql`。
+- `buildLeadnoArgs` 私有方法名作为内部实现细节保留，未改名。
 
 ### v2.2 (2026-06-30)
 

@@ -360,9 +360,9 @@ jQuery(function($) {
         prop: "cno",
         clazz: "blue"
     }, {
-        field: "leadno",
+        field: "customerno",
         name: "客户编号",
-        prop: "leadno",
+        prop: "customerno",
         clazz: "blue"
     }, {
         field: "source",

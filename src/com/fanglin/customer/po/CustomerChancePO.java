@@ -125,7 +125,7 @@ public class CustomerChancePO implements Serializable {
 
 	private String cno;
 
-	private String leadno;
+	private String customerno;
 
 	private int company;
 
@@ -461,13 +461,13 @@ public class CustomerChancePO implements Serializable {
 		this.cno = cno;
 	}
 
-	@Column(name = "leadno")
-	public String getLeadno() {
-		return leadno;
+	@Column(name = "customerno")
+	public String getCustomerno() {
+		return customerno;
 	}
 
-	public void setLeadno(String leadno) {
-		this.leadno = leadno;
+	public void setCustomerno(String customerno) {
+		this.customerno = customerno;
 	}
 
 	public CustomerChanceVO ptv(CustomerChanceVO customerChanceVO) {

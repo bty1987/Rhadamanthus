@@ -82,7 +82,7 @@ public class A20260103Action extends BaseListAction {
 	private String leadCode;
 
 	/**
-	 * 客户编号 - 对应 customerChance.leadno
+	 * 客户编号 - 对应 customerChance.customerno
 	 */
 	private String customerNo;
 
@@ -370,7 +370,7 @@ public class A20260103Action extends BaseListAction {
 		customerChanceVO.setCno(leadCode);
 
 		// 1.1 客户编号
-		customerChanceVO.setLeadno(customerNo);
+		customerChanceVO.setCustomerno(customerNo);
 
 		// 2. 业务类型
 		if (busitype == null) {
