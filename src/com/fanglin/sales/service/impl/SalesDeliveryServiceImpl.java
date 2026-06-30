@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
@@ -69,6 +71,9 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 	@Autowired
 	private SalesBalanceDao salesBalanceDao;
+
+	@Autowired
+	private BrandDao brandDao;
 
 	@Override
 	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, List<Short> statuses, String companyType) throws FLException {
@@ -345,6 +350,9 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 			salesDeliveryItemPO.setSales(salesPO);
 			salesDeliveryItemPO.setCompany(salesItemPO.getGoods().getCompany());
+
+			salesDeliveryItemPO.setGoods(salesItemPO.getGoods());
+			salesDeliveryItemPO.setBrand(brandDao.get(salesItemPO.getGoods().getBid()));
 
 			salesDeliveryItemDao.save(salesDeliveryItemPO);
 
