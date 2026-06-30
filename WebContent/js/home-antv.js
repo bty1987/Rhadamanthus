@@ -521,6 +521,7 @@ $(function() {
         'min-width': '120px'
     }).appendTo('body');
 
+    $('<li><a href="javascript:void(0)" data-action="refresh"><i class="icon-refresh"></i> 刷新</a></li>').appendTo($contextMenu);
     $('<li><a href="javascript:void(0)" data-action="close"><i class="icon-remove"></i> 关闭</a></li>').appendTo($contextMenu);
     $('<li class="divider"></li>').appendTo($contextMenu);
     $('<li><a href="javascript:void(0)" data-action="closeLeft"><i class="icon-chevron-left"></i> 关闭左侧所有</a></li>').appendTo($contextMenu);
@@ -594,7 +595,16 @@ $(function() {
         var _page = $(_pageId);
         var page = $tab.attr('data-page');
 
-        if (action == 'close') {
+        if (action == 'refresh') {
+
+            if (!$tab.hasClass("active")) {
+                activateTab($tab);
+            }
+
+            _page.load(page);
+            layer.closeAll("tips");
+
+        } else if (action == 'close') {
 
             if ($tab.hasClass("active")) {
                 params['urlLoadParams'] = com.splitUrl($tab.prev().attr('data-page'));
