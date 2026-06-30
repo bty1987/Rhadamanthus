@@ -1,8 +1,10 @@
 # A20260103Action 客户线索接入接口文档
 
-> 最后更新：2026-05-02
+> 最后更新：2026-06-30
 >
 > **控制器**: `com.fanglin.seiya.action.A20260103Action`
+>
+> **源文件**: `src/com/fanglin/seiya/action/A20260103Action.java`
 >
 > **Service**: `com.fanglin.seiya.service.impl.A20260103ServiceImpl`
 >
@@ -40,7 +42,7 @@
 ## 1. addCustomerLead - 添加客户线索
 
 **路径**: `/addCustomerLead`
-**方法位置**: `A20260103Action.java:340-486`
+**方法位置**: `A20260103Action.java:351-507`
 
 接收外部系统（如 Salesforce）传入的客户线索信息, 转换为 ERP 客户机会并创建, 支持客户线索的自动分配和设计师指派。
 
@@ -58,13 +60,14 @@
 | 参数名 | 类型 | 必填 | 说明 | 示例值 |
 |--------|------|:----:|------|--------|
 | `leadCode` | String | 否 | 线索编码（对应 customerChance.cno） | `"LEAD202603140001"` |
+| `customerNo` | String | 否 | 客户编号（对应 customerChance.leadno） | `"CUST202603140001"` |
 | `adornCode` | String | 否 | 尺源编码（对应 source.no） | `"ADORN202603140001"` |
 | `name` | String | **是** | 客户名称 | `"张三"` |
 | `phone` | String | **是** | 客户电话（11位） | `"13800138000"` |
 | `gender` | String | 否 | 客户性别 | `"男"` / `"女"` |
 | `village` | String | 否 | 楼盘名称 | `"方林世纪城"` |
 | `houseNumber` | String | 否 | 楼号 | `"1-101"` |
-| `buildArea` | Integer | 否 | 建筑面积（单位：千分之一平方米，即 分㎡, 传 120000 表示 120.000㎡） | `120000` |
+| `buildArea` | Integer | 否 | 建筑面积（单位：千分之一平方米，即 ‰㎡, 传 120000 表示 120.000㎡） | `120000` |
 | `busitype` | String | 否 | 业务类型名称（默认：`"电商信息流客源"`） | `"电商信息流客源"` |
 | `userId` | String | **是** | 创建人工号 | `"FL-123456"` |
 | `orgId` | Integer | **是** | 公司标识（AES加密后的公司ID） | `1` |
@@ -92,6 +95,7 @@
   "condition": null,
   "data": {
     "leadCode": "LEAD202603140001",
+    "customerNo": "CUST202603140001",
     "adornCode": "ADORN202603140001",
     "name": "张三",
     "phone": "13800138000",
@@ -100,6 +104,7 @@
     "houseNumber": "1-101",
     "buildArea": 120.0,
     "busitype": "电商信息流客源",
+    "referOrderId": "FL2603140001",
     "userId": "FL-123456",
     "orgId": 1,
     "designerId": "FL-789012",
@@ -129,15 +134,16 @@
 
 ### 异常场景
 
-#### 接口层异常（Action, 4种）
+#### 接口层异常（Action, 5种）
 
 | 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 |
 |:---:|:------:|:---------|:---------|:---------|
-| 1 | 400001 | 客户名称不能为空 | `name == null \|\| name.trim().isEmpty()` | A20260103Action:347-349 |
-| 2 | 400002 | 客户电话不能为空 | `phone == null \|\| phone.trim().isEmpty()` | A20260103Action:350-352 |
-| 3 | 400004 | 公司标识不能为空 | `orgId == null` | A20260103Action:353-355 |
-| 4 | 190005 | 人员不存在 | `userService.queryUserByUserId() == null` | A20260103Action:369-371 |
-| 5 | 130061 | 业务类型不存在 | `decorationBusitypeService.queryByName() == null` | A20260103Action:377-379 |
+| 1 | 400001 | 客户名称不能为空 | `name == null \|\| name.trim().isEmpty()` | A20260103Action:357-359 |
+| 2 | 400002 | 客户电话不能为空 | `phone == null \|\| phone.trim().isEmpty()` | A20260103Action:360-362 |
+| 3 | 400004 | 公司标识不能为空 | `orgId == null` | A20260103Action:363-365 |
+| 4 | 190005 | 人员不存在 | `userService.queryUserByUserId() == null` | A20260103Action:382-384 |
+| 5 | 130061 | 业务类型不存在 | `decorationBusitypeService.queryByName() == null` | A20260103Action:390-392 |
+| 6 | 400001 | 分配失败,请检查分配规则 | `result == null \|\| result.getOrderId() == null` | A20260103Action:476-478 |
 
 #### 服务层异常（addCustomerChance 调用, 约18种）
 
@@ -166,7 +172,7 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 ## 2. updateCustomerLead - 更新客户线索
 
 **路径**: `/updateCustomerLead`
-**方法位置**: `A20260103Action.java:238-253`
+**方法位置**: `A20260103Action.java:249-263`
 
 通过线索编号更新现有客户线索信息。
 
@@ -208,27 +214,17 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 }
 ```
 
-### 更新规则（扩展）
-
-| 参数 | 更新规则 |
-|------|---------|
-| 楼盘+楼号 | 必须一起更新，缺一不可 |
-| house | 存在则关联，不存在则创建 |
-| customer | 存在则关联，不存在则创建 |
-| referOrderId / sourceInfo / contactInfo | 独立更新，互不影响 |
-| salesmanId | 传入时同时更新 customerchance.creater 和 customersource.creater |
-
 ### 异常场景
 
 #### Service 层异常（A20260103ServiceImpl, 5种）
 
-| 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 |
-|:---:|:------:|:---------|:---------|:---------|
-| 1 | 400001 | 线索编号不能为空 | `leadCode == null \|\| leadCode.trim().isEmpty()` | ServiceImpl:113-115 |
-| 2 | 400002 | 楼盘和楼号必须同时提供 | village 和 houseNumber 只传了一个 | ServiceImpl:118-122 |
-| 3 | 330075 | 客户线索不存在 | `customerChanceDao.queryCustomerChanceByCno() == null` | ServiceImpl:93-95 |
-| 4 | 190005 | 人员不存在 | `userService.queryUserByUserId() == null` | ServiceImpl:129-131 |
-| 5 | 190005 | 业务员不存在 | `salesmanId` 非空但 `userDao.queryUserByUserId() == null` | ServiceImpl:218-220 |
+| 序号 | 错误码 | 错误信息 | 触发条件 |
+|:---:|:------:|:---------|:---------|
+| 1 | 400001 | 线索编号不能为空 | `leadCode == null \|\| leadCode.trim().isEmpty()` |
+| 2 | 400002 | 楼盘和楼号必须同时提供 | village 和 houseNumber 只传了一个 |
+| 3 | 330075 | 客户线索不存在 | `customerChanceDao.queryCustomerChanceByCno() == null` |
+| 4 | 190005 | 人员不存在 | `userService.queryUserByUserId() == null` |
+| 5 | 190005 | 业务员不存在 | `salesmanId` 非空但 `userDao.queryUserByUserId() == null` |
 
 > **注意**: 还会间接触发 `houseService.existHouse`、`customerService.existCustomer`、`customerSourceService.updateCustomerSourceForHouse`、`customerSourceService.updateCustomerSourceForCustomer` 等方法的异常。
 
@@ -237,7 +233,7 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 ## 3. queryCustomerLead - 查询客户线索
 
 **路径**: `/queryCustomerLead`
-**方法位置**: `A20260103Action.java:266-300`
+**方法位置**: `A20260103Action.java:277-310`
 
 查询装修单信息, 支持三种查询方式。
 
@@ -286,17 +282,17 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 
 ### 异常场景
 
-| 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 |
-|:---:|:------:|:---------|:---------|:---------|
-| 1 | 400003 | 请提供查询条件：orderId 或 楼盘+楼号 或 电话 | 三种查询条件都未提供 | ServiceImpl:249 |
-| 2 | 140013 | 订单不存在 | 根据查询条件未找到装修单 | ServiceImpl:253 |
+| 序号 | 错误码 | 错误信息 | 触发条件 |
+|:---:|:------:|:---------|:---------|
+| 1 | 400003 | 请提供查询条件：orderId 或 楼盘+楼号 或 电话 | 三种查询条件都未提供 |
+| 2 | 140013 | 订单不存在 | 根据查询条件未找到装修单 |
 
 ---
 
 ## 4. checkoverCustomerLead - 验证装修单是否存在
 
 **路径**: `/checkoverCustomerLead`
-**方法位置**: `A20260103Action.java:317-330`
+**方法位置**: `A20260103Action.java:328-340`
 
 通过客户电话和楼盘 + 楼号查询是否存在有效装修单。参考 `DecorationService.checkOverDecoration` 逻辑。
 
@@ -304,6 +300,7 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|:----:|------|
+| `leadCode` | String | 否 | 线索编码 |
 | `phone` | String | **是** | 客户电话 |
 | `village` | String | **是** | 楼盘名称 |
 | `houseNumber` | String | **是** | 楼号 |
@@ -327,12 +324,12 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 
 ### 异常场景
 
-| 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 |
-|:---:|:------:|:---------|:---------|:---------|
-| 1 | 400002 | 客户电话不能为空 | `phone` 为空 | ServiceImpl:297 |
-| 2 | 400003 | 楼盘和楼号不能为空 | `village` 或 `houseNumber` 为空 | ServiceImpl:300 |
-| 3 | 400004 | 公司标识不能为空 | `orgId` 为空 | ServiceImpl:304 |
-| 4 | 140063 | 装修单已存在 | 同客户+同房屋存在有效装修单 | DecorationService（间接） |
+| 序号 | 错误码 | 错误信息 | 触发条件 |
+|:---:|:------:|:---------|:---------|
+| 1 | 400002 | 客户电话不能为空 | `phone` 为空 |
+| 2 | 400003 | 楼盘和楼号不能为空 | `village` 或 `houseNumber` 为空 |
+| 3 | 400004 | 公司标识不能为空 | `orgId` 为空 |
+| 4 | 140063 | 装修单已存在 | 同客户+同房屋存在有效装修单 |
 
 ### 核心流程
 
@@ -348,7 +345,7 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 ## 5. updateDecorationForSF - SF更新装修单
 
 **路径**: `/updateDecorationForSF`
-**方法位置**: `A20260103Action.java:765-780`
+**方法位置**: `A20260103Action.java:787-801`
 
 通过装修单号(orderId)修改装修单的客户电话和楼盘楼号。客户不存在则创建, 存在则更新; 房屋不存在则创建, 存在则更新。
 
@@ -379,18 +376,18 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 
 ### 异常场景
 
-| 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 |
-|:---:|:------:|:---------|:---------|:---------|
-| 1 | 400001 | 装修单号不能为空 | `orderId` 为空 | ServiceImpl:341 |
-| 2 | 400004 | 公司标识不能为空 | `orgId` 为空 | ServiceImpl:345 |
-| 3 | 140013 | 订单不存在 | `decorationDao.queryDecorationByOrderId() == null` | ServiceImpl:353 |
+| 序号 | 错误码 | 错误信息 | 触发条件 |
+|:---:|:------:|:---------|:---------|
+| 1 | 400001 | 装修单号不能为空 | `orderId` 为空 |
+| 2 | 400004 | 公司标识不能为空 | `orgId` 为空 |
+| 3 | 140013 | 订单不存在 | `decorationDao.queryDecorationByOrderId() == null` |
 
 ---
 
 ## 6. queryDepartmentByNameForSF - 查询部门列表
 
 **路径**: `/queryDepartmentByNameForSF`
-**方法位置**: `A20260103Action.java:501-542`
+**方法位置**: `A20260103Action.java:523-563`
 
 查询部门列表, 返回简化格式（id + name）。SF（Salesforce）专用。
 
@@ -401,6 +398,8 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 | `orgId` | Integer | **是** | 公司标识 |
 | `deptType` | String | 否 | 部门类型（1: 设计分区, 2: 设计部门） |
 | `deptName` | String | 否 | 部门名称（支持模糊匹配。为空时按类型查询全部） |
+
+> `deptName` 为空 → 调用 `queryDepartmentByDtid`；非空 → 调用 `queryDepartmentByName`
 
 ### 响应参数
 
@@ -429,7 +428,7 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 ## 7. queryUserByPinyinForSF - 根据拼音查询用户
 
 **路径**: `/queryUserByPinyinForSF`
-**方法位置**: `A20260103Action.java:555-599`
+**方法位置**: `A20260103Action.java:577-620`
 
 根据拼音查询用户列表, 返回简化格式。SF（Salesforce）专用。
 
@@ -480,7 +479,7 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 ## 8. queryCustomerDeptRuleByDbidForSF - 查询客户部门规则
 
 **路径**: `/queryCustomerDeptRuleByDbidForSF`
-**方法位置**: `A20260103Action.java:612-674`
+**方法位置**: `A20260103Action.java:634-695`
 
 根据用户工号查询该用户所属部门的客户分配规则类型。SF（Salesforce）专用。
 
@@ -517,19 +516,19 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 
 | 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 |
 |:---:|:------:|:---------|:---------|:---------|
-| 1 | 400004 | 公司标识不能为空 | `orgId` 为空 | Action:620 |
-| 2 | 190005 | 用户工号不能为空 | `userId` 为空 | Action:622 |
-| 3 | 130061 | 业务类型不存在 | busitype 名称查不到 | Action:638 |
-| 4 | 190005 | 人员不存在 | `userService.queryUserByUserId() == null` | Action:645 |
-| 5 | 190005 | 用户未关联部门 | `creater.getDept() == null` | Action:654 |
-| 6 | 130062 | 部门规则不存在 | `customerDeptRuleVO == null` | Action:665 |
+| 1 | 400004 | 公司标识不能为空 | `orgId` 为空 | Action:640-642 |
+| 2 | 190005 | 用户工号不能为空 | `userId` 为空 | Action:643-645 |
+| 3 | 130061 | 业务类型不存在 | busitype 名称查不到 | Action:659-661 |
+| 4 | 190005 | 人员不存在 | `userService.queryUserByUserId() == null` | Action:664-668 |
+| 5 | 190005 | 用户未关联部门 | `creater.getDept() == null` | Action:674-676 |
+| 6 | 130062 | 部门规则不存在 | `customerDeptRuleVO == null` | Action:686-688 |
 
 ---
 
 ## 9. queryCompanyForSF - 查询公司列表
 
 **路径**: `/queryCompanyForSF`
-**方法位置**: `A20260103Action.java:687-747`
+**方法位置**: `A20260103Action.java:709-768`
 
 根据用户工号和业务类型查询客户公司规则列表, 返回可分配的公司信息。SF（Salesforce）专用。
 
@@ -540,7 +539,7 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 | `orgId` | Integer | **是** | 公司标识 |
 | `userId` | String | **是** | 用户工号 |
 | `busitype` | String | 否 | 业务类型名称 |
-| `buildArea` | Integer | 否 | 建筑面积（用于面积段规则匹配） |
+| `buildArea` | Integer | 否 | 建筑面积（用于面积段规则匹配, 作为 uppval） |
 | `cpid` | Integer | 否 | 客户电话ID |
 
 ### 响应参数
@@ -569,10 +568,10 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 
 | 序号 | 错误码 | 错误信息 | 触发条件 | 代码位置 |
 |:---:|:------:|:---------|:---------|:---------|
-| 1 | 400004 | 公司标识不能为空 | `orgId` 为空 | Action:694 |
-| 2 | 190005 | 用户工号不能为空 | `userId` 为空 | Action:697 |
-| 3 | 190005 | 人员不存在 | `userService.queryUserByUserId() == null` | Action:704 |
-| 4 | 190005 | 用户未关联部门 | `creater.getDept() == null` | Action:719 |
+| 1 | 400004 | 公司标识不能为空 | `orgId` 为空 | Action:715-717 |
+| 2 | 190005 | 用户工号不能为空 | `userId` 为空 | Action:718-720 |
+| 3 | 190005 | 人员不存在 | `userService.queryUserByUserId() == null` | Action:725-727 |
+| 4 | 190005 | 用户未关联部门 | `creater.getDept() == null` | Action:740-742 |
 
 ---
 
@@ -585,6 +584,7 @@ curl -X POST "http://erp.example.com/addCustomerLead.do" \
 | 400001 | 客户名称不能为空 | 参数验证 | addCustomerLead | name为空 |
 | 400001 | 线索编号不能为空 | 参数验证 | updateCustomerLead | leadCode为空 |
 | 400001 | 装修单号不能为空 | 参数验证 | updateDecorationForSF | orderId为空 |
+| 400001 | 分配失败,请检查分配规则 | 分配结果 | addCustomerLead | result或orderId为空 |
 | 400002 | 客户电话不能为空 | 参数验证 | addCustomerLead, checkoverCustomerLead | phone为空 |
 | 400002 | 楼盘和楼号必须同时提供 | 参数验证 | updateCustomerLead | village和houseNumber只传了一个 |
 | 400003 | 请提供查询条件 | 参数验证 | queryCustomerLead | 无查询条件 |
@@ -648,6 +648,13 @@ Salesforce 端调用 ERP 接口的典型流程：
 ---
 
 ## 变更记录
+
+### 2026-06-30
+- 同步源码方法行号漂移（各方法行号对齐 `A20260103Action.java` 最新版本）
+- addCustomerLead：补充 `customerNo`、`referOrderId`、`sourceInfo`、`contactInfo` 入参，补充 `400001 分配失败` 异常项
+- queryCustomerDeptRuleByDbidForSF：同步异常代码位置
+- queryCompanyForSF：同步异常代码位置
+- 删除重复过时文档 `SEIYA_CUSTOMER_LEAD_API.md`（已由本文档统一覆盖）
 
 ### 2026-05-02
 - updateDecorationForSF: 房屋查询从直接 houseDao 调用改为 houseService.queryHouseByNoAHnum 统一接口（加密楼号逻辑内置）
