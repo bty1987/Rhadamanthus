@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.BrandPO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.sales.vo.SalesDeliveryItemVO;
 import com.fanglin.utils.BeanUtil;
@@ -34,6 +36,10 @@ public class SalesDeliveryItemPO implements Serializable {
 	public static final String COLUMN_SIID_LONG = "salesItem.siid";
 
 	public static final String COLUMN_GOODSNAME_STR = "goods.name";
+
+	public static final String COLUMN_GID_LONG = "goods.gid";
+
+	public static final String COLUMN_BID_LONG = "brand.bid";
 
 	public static final String COLUMN_CREATEID_STR = "creater.userId";
 
@@ -71,6 +77,10 @@ public class SalesDeliveryItemPO implements Serializable {
 
 	private SalesItemPO salesItem;
 
+	private GoodsPO goods;
+
+	private BrandPO brand;
+
 	private short status;
 
 	private Timestamp createTime;
@@ -103,11 +113,13 @@ public class SalesDeliveryItemPO implements Serializable {
 		super();
 	}
 
-	public SalesDeliveryItemPO(long sdiid, SalesPO sales, SalesItemPO salesItem, short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, Timestamp protranTime, UserPO creater, UserPO traner, UserPO checker, UserPO confirmer, UserPO finisher, String comment, int company) {
+	public SalesDeliveryItemPO(long sdiid, SalesPO sales, SalesItemPO salesItem, GoodsPO goods, BrandPO brand, short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, Timestamp protranTime, UserPO creater, UserPO traner, UserPO checker, UserPO confirmer, UserPO finisher, String comment, int company) {
 		super();
 		this.sdiid = sdiid;
 		this.sales = sales;
 		this.salesItem = salesItem;
+		this.goods = goods;
+		this.brand = brand;
 		this.status = status;
 		this.createTime = createTime;
 		this.tranTime = tranTime;
@@ -153,6 +165,28 @@ public class SalesDeliveryItemPO implements Serializable {
 
 	public void setSalesItem(SalesItemPO salesItem) {
 		this.salesItem = salesItem;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "gid", referencedColumnName = "gid")
+	public GoodsPO getGoods() {
+		return goods;
+	}
+
+	public SalesDeliveryItemPO setGoods(GoodsPO goods) {
+		this.goods = goods;
+		return this;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bid", referencedColumnName = "bid")
+	public BrandPO getBrand() {
+		return brand;
+	}
+
+	public SalesDeliveryItemPO setBrand(BrandPO brand) {
+		this.brand = brand;
+		return this;
 	}
 
 	@Column(name = "status")
@@ -289,13 +323,16 @@ public class SalesDeliveryItemPO implements Serializable {
 
 	public SalesDeliveryItemVO ptv(SalesDeliveryItemVO salesDeliveryItemVO) {
 
-		BeanUtil.copyPropertie(this, salesDeliveryItemVO, Arrays.asList("sales", "salesItem", "creater", "traner", "checker", "confirmer", "finisher", "balancer"));
+		BeanUtil.copyPropertie(this, salesDeliveryItemVO, Arrays.asList("sales", "salesItem", "goods", "brand", "creater", "traner", "checker", "confirmer", "finisher", "balancer"));
 
 		if (salesDeliveryItemVO.getCreater() != null && getCreater() != null) salesDeliveryItemVO.getCreater().setBaseInfo(getCreater());
 		if (salesDeliveryItemVO.getTraner() != null && getTraner() != null) salesDeliveryItemVO.getTraner().setBaseInfo(getTraner());
 		if (salesDeliveryItemVO.getChecker() != null && getChecker() != null) salesDeliveryItemVO.getChecker().setBaseInfo(getChecker());
 		if (salesDeliveryItemVO.getConfirmer() != null && getConfirmer() != null) salesDeliveryItemVO.getConfirmer().setBaseInfo(getConfirmer());
 		if (salesDeliveryItemVO.getFinisher() != null && getFinisher() != null) salesDeliveryItemVO.getFinisher().setBaseInfo(getFinisher());
+
+		if (salesDeliveryItemVO.getGoods() != null && getGoods() != null) getGoods().ptv(salesDeliveryItemVO.getGoods());
+		if (salesDeliveryItemVO.getBrand() != null && getBrand() != null) getBrand().ptv(salesDeliveryItemVO.getBrand());
 
 		if (salesDeliveryItemVO.getSalesItem() != null && getSalesItem() != null) getSalesItem().ptv(salesDeliveryItemVO.getSalesItem());
 		if (salesDeliveryItemVO.getSales() != null) getSales().ptv(salesDeliveryItemVO.getSales());

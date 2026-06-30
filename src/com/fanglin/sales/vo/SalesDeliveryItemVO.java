@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class SalesDeliveryItemVO implements Serializable {
@@ -18,6 +20,10 @@ public class SalesDeliveryItemVO implements Serializable {
 	private SalesVO sales;
 
 	private SalesItemVO salesItem;
+
+	private GoodsVO goods;
+
+	private BrandVO brand;
 
 	private Short status;
 
@@ -52,11 +58,13 @@ public class SalesDeliveryItemVO implements Serializable {
 	public SalesDeliveryItemVO() {
 		super();
 	}
-	public SalesDeliveryItemVO(Long sdiid, SalesVO sales, SalesItemVO salesItem, Short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, Timestamp protranTime, UserBaseVO creater, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finisher, String comment, Integer company) {
+	public SalesDeliveryItemVO(Long sdiid, SalesVO sales, SalesItemVO salesItem, GoodsVO goods, BrandVO brand, Short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, Timestamp protranTime, UserBaseVO creater, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finisher, String comment, Integer company) {
 		super();
 		this.sdiid = sdiid;
 		this.sales = sales;
 		this.salesItem = salesItem;
+		this.goods = goods;
+		this.brand = brand;
 		this.status = status;
 		this.createTime = createTime;
 		this.tranTime = tranTime;
@@ -106,6 +114,22 @@ public class SalesDeliveryItemVO implements Serializable {
 
 	public void setSalesItem(SalesItemVO salesItem) {
 		this.salesItem = salesItem;
+	}
+
+	public GoodsVO getGoods() {
+		return goods;
+	}
+
+	public void setGoods(GoodsVO goods) {
+		this.goods = goods;
+	}
+
+	public BrandVO getBrand() {
+		return brand;
+	}
+
+	public void setBrand(BrandVO brand) {
+		this.brand = brand;
 	}
 
 	public Short getStatus() {

@@ -194,6 +194,8 @@ CREATE TABLE `salesdeliveryitem` (
   `sdiid` int(11) NOT NULL AUTO_INCREMENT COMMENT '配送项ID',
   `sid` int(11) NOT NULL COMMENT '销售单',
   `siid` int(11) NOT NULL COMMENT '销售项',
+  `gid` int(11) NOT NULL DEFAULT 0 COMMENT '商品ID',
+  `bid` int(11) NOT NULL DEFAULT 0 COMMENT '品牌ID',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态',
   `createtime` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `protranTime` timestamp NULL DEFAULT NULL,
