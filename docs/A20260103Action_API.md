@@ -60,7 +60,7 @@
 | 参数名 | 类型 | 必填 | 说明 | 示例值 |
 |--------|------|:----:|------|--------|
 | `leadCode` | String | 否 | 线索编码（对应 customerChance.cno） | `"LEAD202603140001"` |
-| `customerNo` | String | 否 | 客户编号（对应 customerChance.leadno） | `"CUST202603140001"` |
+| `customerNo` | String | 否 | 客户编号（对应 customerChance.customerno） | `"CUST202603140001"` |
 | `adornCode` | String | 否 | 尺源编码（对应 source.no） | `"ADORN202603140001"` |
 | `name` | String | **是** | 客户名称 | `"张三"` |
 | `phone` | String | **是** | 客户电话（11位） | `"13800138000"` |

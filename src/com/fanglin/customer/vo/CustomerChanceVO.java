@@ -19,7 +19,7 @@ public class CustomerChanceVO implements Serializable {
 
 	private String cno;
 
-	private String leadno;
+	private String customerno;
 
 	private String orderId;
 
@@ -121,12 +121,12 @@ public class CustomerChanceVO implements Serializable {
 		this.cno = cno;
 	}
 
-	public String getLeadno() {
-		return leadno;
+	public String getCustomerno() {
+		return customerno;
 	}
 
-	public void setLeadno(String leadno) {
-		this.leadno = leadno;
+	public void setCustomerno(String customerno) {
+		this.customerno = customerno;
 	}
 
 	public String getOrderId() {
