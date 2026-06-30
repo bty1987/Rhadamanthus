@@ -453,6 +453,11 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330075, "客户机会不存在");
 		}
 
+		// 仅允许 初始(0) / 审批通过(2) 的客源进行确认, 防止已完成(4)/失效(1)/已确认(3)等状态被回退
+		if (!Arrays.asList(CustomerChancePO.STATUS_INIT_INT, CustomerChancePO.STATUS_APPROVE_INT).contains(customerChancePO.getStatus())) {
+			throw new FLException(330077, "客户机会不可操作");
+		}
+
 		CustomerPO customerPO = customerChancePO.getCustomer();
 
 		if (customerPO == null) {
