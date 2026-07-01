@@ -189,7 +189,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.communion.pageDepartment, null, ['personel-dept-name', 'personel-dept-status', 'personel-dept-type', 'personel-dept-isdet'], postData, null, false, buttons);
+    searcher.set("condList", "pagenation", "resultList", api.communion.pageDepartment, null, ['personel-dept-name', 'personel-dept-status', 'personel-dept-type', 'personel-dept-isdet'], "departmentPostData", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     $('a[name="adddepartment"]', com.focusPage('#pagenation')).click(function() {
