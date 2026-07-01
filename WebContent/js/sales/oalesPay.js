@@ -52,7 +52,7 @@ jQuery(function($) {
         };
 
         searcher.base("condList", "pagenation", "resultList", url);
-        searcher.condition(['sales-oales-no', 'sales-oales-orderId', 'sales-oales-createTime', 'sales-oales-status', 'sales-oales-type', 'sales-oales-brand', 'sales-oales-category', 'sales-oalesPay-payTime', 'sales-oales-checkTime', 'sales-oales-confirmTime', 'sales-oales-confirmTime']);
+        searcher.condition(['sales-oales-no', 'sales-oales-orderId', 'sales-oales-status', 'sales-oales-type', 'sales-oales-brand', 'sales-oales-category', 'sales-oales-region', 'sales-oales-dept', 'sales-oales-createTime', 'sales-oales-confirmTime', 'sales-oales-checkTime', 'sales-oalesPay-name', 'sales-oalesPay-type', 'sales-oalesPay-creater', 'sales-oalesPay-createTime', 'sales-oalesPay-payTime', 'sales-oalesPay-supplier', 'sales-oalesPay-materialer', 'sales-oalesPay-servicer', 'sales-oalesPay-channer', 'sales-oalesPay-comment']);
         searcher.history("oalsePayPostData");
 
         searcher.button([{
