@@ -64,8 +64,37 @@ public class OalesPayDaoImpl extends DaoImpl<OalesPayPO> implements OalesPayDao 
 
 			String field = filter.getField();
 			String data = filter.getData();
+			String op = filter.getOp();
 
-			if ("payTime".equals(field)) {
+			// 外销单关联人员
+			if ("oales.supplier.userId".equals(field)) {
+				query.alias("oales.supplier", "supplier");
+				query.add(query.getCriterion("supplier.userId", data, op));
+			} else if ("oales.materialer.userId".equals(field)) {
+				query.alias("oales.materialer", "materialer");
+				query.add(query.getCriterion("materialer.userId", data, op));
+			} else if ("oales.servicer.userId".equals(field)) {
+				query.alias("oales.servicer", "servicer");
+				query.add(query.getCriterion("servicer.userId", data, op));
+			} else if ("oales.channer.userId".equals(field)) {
+				query.alias("oales.channer", "channer");
+				query.add(query.getCriterion("channer.userId", data, op));
+			}
+			// 付款单本身字段
+			else if ("name".equals(field)) {
+				query.add(query.getCriterion("name", data, op));
+			} else if ("comment".equals(field)) {
+				query.add(query.getCriterion("comment", data, op));
+			} else if ("type".equals(field)) {
+				query.add(query.getCriterion("type", Short.valueOf(data), op));
+			} else if ("money".equals(field)) {
+				query.add(query.getCriterion("money", Long.valueOf(data), op));
+			} else if ("creater.userId".equals(field)) {
+				query.alias("creater", "creater");
+				query.add(query.getCriterion("creater.userId", data, op));
+			} else if ("createTime".equals(field)) {
+				query.timeranges("createTime", data);
+			} else if ("payTime".equals(field)) {
 				query.timeranges("payTime", data);
 			}
 		}

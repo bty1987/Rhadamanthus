@@ -981,4 +981,142 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
+    "oalesPay-name": {
+        label: "付款名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "oalesPay-comment": {
+        label: "付款备注",
+        type: "text",
+        submitConfig: {
+            name: "comment",
+            op: "cn",
+            validate: null
+        }
+    },
+    "oalesPay-type": {
+        label: "付款类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.sales().oalespay.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "oalesPay-createTime": {
+        label: "付款创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "cn",
+            validata: null
+        }
+    },
+    "oalesPay-creater": {
+        label: "付款创建人",
+        type: "autofill",
+        submitConfig: {
+            name: "creater.userId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "oalesPay-supplier": {
+        label: "厂商",
+        type: "autofill",
+        submitConfig: {
+            name: "oales.supplier.userId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "oalesPay-materialer": {
+        label: "主材员",
+        type: "autofill",
+        submitConfig: {
+            name: "oales.materialer.userId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "oalesPay-servicer": {
+        label: "服务管家",
+        type: "autofill",
+        submitConfig: {
+            name: "oales.servicer.userId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "oalesPay-channer": {
+        label: "渠道",
+        type: "autofill",
+        submitConfig: {
+            name: "oales.channer.userId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });
