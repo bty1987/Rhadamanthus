@@ -160,7 +160,13 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 		DecorationAccountPO decorationAccountPO = decorationAccountDao.queryDecorationAccount(decorationAccountVO.getOrderId());
 
 		if (decorationAccountPO == null) {
-			throw new FLException(140081, "决算信息不存在");
+			decorationAccountPO = new DecorationAccountPO();
+			decorationAccountPO.setOrderId(decorationAccountVO.getOrderId());
+			decorationAccountPO.setType(decorationPO.getType());
+			decorationAccountPO.setTypeness(decorationPO.getTypeness());
+			decorationAccountPO.setIsAffirm(DecorationAccountPO.ISAFFIRM_INIT_INT);
+
+			decorationAccountDao.merge(decorationAccountPO);
 		}
 
 		if (decorationPO.getPaySacle() < 99) {
