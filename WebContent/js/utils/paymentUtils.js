@@ -803,7 +803,10 @@ var paymentUtils = {
             customerName: {
                 field: "customerName",
                 name: "客户",
-                prop: "customer.name",
+                prop: function(v) {
+
+                    return deco(v).customer.name;
+                },
                 clazz: "grey",
                 click: function($this, v) {
 
@@ -813,7 +816,11 @@ var paymentUtils = {
             address: {
                 field: "address",
                 name: "地址",
-                prop: "address",
+                prop: function(v) {
+
+                    var house = deco(v).house;
+                    return house && house.village ? $.trim([house.village.name, house.houseNumber].join(" ")) : "";
+                },
                 clazz: "grey"
             },
             village: {
