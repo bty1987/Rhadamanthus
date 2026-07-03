@@ -194,10 +194,10 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public String syncDepartment(String code, String name, Integer type, String parentCode, String orgCode, Integer status, String leaderCode, String posts, Integer orderValue) throws FLException {
+	public String syncDepartment(Integer deptId, String code, String name, Integer type, String parentCode, String orgCode, Integer status, String leaderCode, String posts, Integer orderValue) throws FLException {
 
 		try {
-			logger.info("同步部门信息: code={}, name={}, type={}, parentCode={}, orgCode={}, status={}, leaderCode={}, orderValue={}", code, name, type, parentCode, orgCode, status, leaderCode, orderValue);
+			logger.info("同步部门信息: deptId={}, code={}, name={}, type={}, parentCode={}, orgCode={}, status={}, leaderCode={}, orderValue={}", deptId, code, name, type, parentCode, orgCode, status, leaderCode, orderValue);
 
 			// 1. 获取部门类型
 			DepartmentTypePO departmentType = departmentTypeDao.get(type);
@@ -227,11 +227,17 @@ public class A20260324ServiceImpl implements A20260324Service {
 			// 4. 状态转换：1启用→1，2禁用→0（注意：与duty相反）
 			short deptStatus = (status != null && status == 1) ? DepartmentPO.STATUS_ENABLE_INT : DepartmentPO.STATUS_DISABLE_INT;
 
-			// 5. 判断是新增还是更新
+			// 5. 判断是新增还是更新（优先级：deptId 主键 → code 编码）
 			DepartmentPO deptPO = null;
 
-			if (code != null && !code.trim().isEmpty()) {
-				// code 有值，尝试通过编码查找现有部门进行更新
+			if (deptId != null) {
+				// deptId 有值，优先通过主键查找现有部门进行更新
+				deptPO = departmentDao.get(deptId);
+				if (deptPO == null) {
+					logger.warn("根据deptId未找到部门，视为新增: deptId={}", deptId);
+				}
+			} else if (code != null && !code.trim().isEmpty()) {
+				// deptId 未提供但 code 有值，通过编码查找现有部门进行更新
 				deptPO = departmentDao.queryDepartmentByNo(code);
 				if (deptPO != null) {
 				} else {

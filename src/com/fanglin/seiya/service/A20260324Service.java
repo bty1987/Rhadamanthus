@@ -21,6 +21,9 @@ public interface A20260324Service {
 	/**
 	 * 同步部门信息（支持新增/更新/逻辑删除）
 	 * 
+	 * 更新定位优先级：deptId（部门主键did）优先 → code 兜底；两者均为空时视为新增。
+	 * 
+	 * @param deptId 部门主键ID（更新时提供，优先级高于code，新增时为null）
 	 * @param code 部门编码（更新时提供，新增时为null，如：DEPT9526）
 	 * @param name 部门名称
 	 * @param type 部门类型ID
@@ -33,7 +36,7 @@ public interface A20260324Service {
 	 * @return 部门ID（did）的字符串形式
 	 * @throws FLException 业务异常
 	 */
-	public String syncDepartment(String code, String name, Integer type, String parentCode, String orgCode, Integer status, String leaderCode, String posts, Integer orderValue) throws FLException;
+	public String syncDepartment(Integer deptId, String code, String name, Integer type, String parentCode, String orgCode, Integer status, String leaderCode, String posts, Integer orderValue) throws FLException;
 
 	/**
 	 * 同步用户信息（支持新增/更新）
