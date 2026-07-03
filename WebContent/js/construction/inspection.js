@@ -103,7 +103,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.construction.pageConstruction, params.inspectionPostData, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'construction-supervisor', 'decoration-projectStatus'], "inspectionSeacherSeacherPostData", null, true, null);
+    searcher.set("condList", "pagenation", "resultList", api.construction.pageConstruction, params.inspectionPostData, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'construction-supervisor', 'decoration-projectStatus'], "inspectionSeacherSeacherPostData", null, false, null);
     searcher.line("orderId", lineprops, linebtns).render();
 
     function viewRecord(orderId, orderAddr) {

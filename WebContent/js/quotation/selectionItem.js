@@ -143,6 +143,7 @@ $(function() {
             clazz: "ace ace-checkbox-2",
             attrs: function(v) {
                 return {
+                    'id': v.siid,
                     'data-status': v.status,
                     'data-num': v.num,
                     'data-refnum': v.refnum,
