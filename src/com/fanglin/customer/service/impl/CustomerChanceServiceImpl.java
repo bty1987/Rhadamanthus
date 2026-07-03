@@ -673,10 +673,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		if (!decorationVO.getOrderId().equals(originalOrderId)) {
 			customerChancePO.setOrderId(decorationVO.getOrderId());
 
-			messageQueuingDao.save(new MessageQueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originalOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION_ORDER_CHANGED\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + buildLeadnoArgs(customerChancePO) + "}"));
+			messageQueuingDao.save(new MessageQueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION_ORDER_CHANGED\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + buildLeadnoArgs(customerChancePO) + "}"));
 		}
 
-		messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originalOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + buildLeadnoArgs(customerChancePO) + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + buildLeadnoArgs(customerChancePO) + "}"));
 
 		customerChancePO.setOrderId(decorationVO.getOrderId());
 		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
@@ -855,6 +855,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(130017, "房产不存在");
 		}
 
+		String orderId = customerChancePO.getOrderId();
+
 		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid(), company);
 
 		DecorationVO decorationVO = new DecorationVO();
@@ -894,6 +896,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
 		messageService.sendMessage(salesman.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, salesman.getCompany());
+
+		messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "tranCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"originOrderId\":\"" + orderId + ",\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"event\":\"CUSTOMER_CHANCE_ISSUED\"" + buildLeadnoArgs(customerChancePO) + "}"));
 
 		log.info("客户机会直接转装修单成功, ccid={}, orderId={}", customerChancePO.getCcid(), decorationVO.getOrderId());
 	}

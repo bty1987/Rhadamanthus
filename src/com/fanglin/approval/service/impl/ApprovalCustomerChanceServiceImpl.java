@@ -43,6 +43,8 @@ import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -77,6 +79,9 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 
 	@Autowired
 	private MessageService messageService;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
 
 	@Override
 	public ApprovalCustomerChanceVO queryApprovalCustomerChance(ApprovalVO approvalVO) throws FLException {
@@ -203,6 +208,8 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
 		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
 
+		String orderId = customerChancePO.getOrderId();
+
 		decorationService.tranDecoration(decorationVO, decorationInfoVO, approvalPO.getSender().getCompany());
 
 		customerSourcePO.setOrderId(decorationVO.getOrderId());
@@ -228,6 +235,8 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 
 		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());
 		messageService.sendMessage(salesman.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, salesman.getCompany());
+
+		messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "tranCustomerChance", "{\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + ",\"originOrderId\":\"" + orderId + ",\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"event\":\"CUSTOMER_CHANCE_ISSUED\",\"customerNo\":\"" + customerChancePO.getCustomerno() + "\"}"));
 
 		return 0;
 	}
