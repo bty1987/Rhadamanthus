@@ -109,7 +109,7 @@ jQuery(function($) {
             return false;
         }
 
-        var belongInfos = com.focusPage('.item-orange');
+        var belongInfos = com.focusPage('.item-orange', "#belongResultList");
 
         for ( var i = 0; i < belongInfos.length; i++) {
             var $v = $(belongInfos[i]);
@@ -148,14 +148,14 @@ jQuery(function($) {
 
         var current = "";
 
-        $.each(com.focusPage('.item-orange'), function(i, v) {
+        $.each(com.focusPage('.item-orange', "#belongResultList"), function(i, v) {
 
             var $v = $(v);
 
             var info = $v.data();
 
-            var $belongRate = utils.changeTwoDecimal($v.attr('belongRate'));
-            var $defaultFlag = $v.attr('defaultFlag');
+            var $belongRate = utils.changeTwoDecimal($v.attr('belongrate'));
+            var $defaultFlag = $v.attr('defaultflag');
 
             options["approvalDecorationBelongItems[" + num + "].orderId"] = decorationBelong.orderId;
             options["approvalDecorationBelongItems[" + num + "].userId"] = $v.attr("belongUserId");
