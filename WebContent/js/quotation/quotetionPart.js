@@ -65,6 +65,8 @@
 
             trafficRate: com.focusPage("#trafficRate", "#trafficRateModal"),
 
+            taxType: com.focusPage("#taxType", "#taxRateModal"),
+
             orderIds: com.focusPage("#orderIds", "#orderIdModal"),
         },
 
@@ -225,6 +227,9 @@
                 // 税金比例设置
                 taxRateModal: com.focusPage('#taxRateModal').on("show.bs.modal", function(a) {
 
+                    var taxDiscount = com.focusPage('#taxCost').find('.discountprice').attr('data-discount');
+
+                    quo.items.taxType.val(taxDiscount);
                     com.focusPage('#taxRate').val(null);
                 }),
 
@@ -1510,9 +1515,14 @@
                 var manageDiscount = matching.attr("data-manageDiscount");
                 var taxDiscount = matching.attr("data-taxDiscount");
 
+                quo.basicParams['quotetion.trafficDiscount'] = trafficDiscount;
+                quo.basicParams['quotetion.manageDiscount'] = manageDiscount;
+                quo.basicParams['quotetion.taxDiscount'] = taxDiscount;
+
                 com.focusPage('#conveyanceCost').find('.discountprice').attr('data-discount', trafficDiscount);
                 com.focusPage('#manageCost').find('.discountprice').attr('data-discount', manageDiscount);
                 com.focusPage('#taxCost').find('.discountprice').attr('data-discount', taxDiscount);
+                com.focusPage('#taxCost').find('.cell.type .cell-wrap').text(constant.data().quotationVersion.taxDiscount.keys[taxDiscount]);
 
                 com.focusPage('#sumquoDiscount').text(quo.basicParams['quotetion.discount']);
 
@@ -1526,13 +1536,13 @@
                     com.focusPage('[data-qfaid="' + $domain.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(dfee);
                 });
 
-                var params = $.extend({}, {
-                    "quotation.trafficDiscount": trafficDiscount,
-                    "quotation.manageDiscount": manageDiscount,
-                    "quotation.taxDiscount": taxDiscount,
-                }, quo.basicParams);
+                var params = $.extend({}, quo.basicParams, {
+                    "quotetion.trafficDiscount": trafficDiscount,
+                    "quotetion.manageDiscount": manageDiscount,
+                    "quotetion.taxDiscount": taxDiscount,
+                });
 
-                com.post(api.quotation.updateQuotationForAdvance, params, function(res) {
+                com.post(api.quotation.updateQuotetionForAdvance, params, function(res) {
 
                     quo.modals.discountModal.modal("hide");
                 });
@@ -1847,10 +1857,15 @@
                 var _taxId = com.focusPage('#taxCost').attr('qfaiId');
                 var _qfaId = com.focusPage('#taxCost').find('.cell.name').attr("data-qfaId");
                 var _taxRate = parseFloat(com.focusPage('#taxRate').val());
+                var _taxDiscount = com.focusPage('#taxType').val();
 
                 // 更新税金行比例显示
                 com.focusPage('#taxCost').find('.discountprice .cell-wrap').text(_taxRate);
                 com.focusPage('#taxCost').find('.totalprice-discount .cell-wrap').text(_taxRate);
+                com.focusPage('#taxCost').find('.discountprice').attr('data-discount', _taxDiscount);
+                com.focusPage('#taxCost').find('.cell.type .cell-wrap').text(constant.data().quotationVersion.taxDiscount.keys[_taxDiscount]);
+
+                quo.basicParams["quotetion.taxDiscount"] = _taxDiscount;
 
                 // ("调用 统计车运费管理费总价折扣价")
                 quo.calculateQuoFees();
@@ -1858,7 +1873,8 @@
                 var option = $.extend({}, {
                     "quotetionFunctionAreaItem.qfaiId": _taxId,
                     "quotetionFunctionAreaItem.qfaid": _qfaId,
-                    "quotetionFunctionAreaItem.unitPrice": _taxRate
+                    "quotetionFunctionAreaItem.unitPrice": _taxRate,
+                    "quotetionFunctionAreaItem.discount": _taxDiscount
                 }, quo.basicParams);
 
                 com.post(api.quotation.updateQuotetionFunctionAreaItemForSpec, option, function(res) {
@@ -3539,7 +3555,7 @@
 
             if (qv.type == constant.quotation().quotetionFunctionAreaItem.TYPE_TAX_INT) {
                 _dcp = _unitPrice;
-                _typeName = "管理";
+                _typeName = constant.data().quotationVersion.taxDiscount.keys[qv.discount];
                 _num = 1;
             }
 
@@ -4022,11 +4038,14 @@
                     "quotetion.totalPrice": data.quotetion.totalPrice, // 报价总额
                     "quotetion.manageRate": data.quotetion.manageRate, // 管理费比例
                     "quotetion.managePrice": data.quotetion.managePrice, // 管理费
+                    "quotetion.manageDiscount": data.quotetion.manageDiscount, // 管理费类型
                     "quotetion.trafficPrice": data.quotetion.trafficPrice, // 车运费
+                    "quotetion.trafficDiscount": data.quotetion.trafficDiscount, // 车运费类型
                     "quotetion.basePrice": data.quotetion.basePrice, // 基数
                     "quotetion.costPrice": data.quotetion.costPrice, // 基数
                     "quotetion.taxPrice": data.quotetion.taxPrice, // 税金
                     "quotetion.taxRate": data.quotetion.taxRate, // 税金比例
+                    "quotetion.taxDiscount": data.quotetion.taxDiscount, // 税金类型
                     "quotetion.consPrice": data.quotetion.consPrice,
                     "quotetion.comsPrice": data.quotetion.comsPrice,
                     "quotetion.updateTime": data.quotetion.updateTime
@@ -4047,6 +4066,8 @@
 
                 com.focusPage('#quotetionVersion').text(res.quotationVersion.name);
             });
+
+            quo.items.taxType.bindData(constant.data().quotationVersion.taxDiscount.datas, 'key', 'value', false);
 
             com.post(api.data.queryPaymentTypeByName, {
                 "paymentType.name": "服务费",
