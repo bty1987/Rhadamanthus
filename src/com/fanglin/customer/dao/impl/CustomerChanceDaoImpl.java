@@ -100,16 +100,24 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 				query.alias("source", "source");
 
 				if (field.contains("creater")) {
-					query.alias("source.creater", "designer");
+					query.alias("source.creater", "sourceCreater");
 				}
+
+				if (field.contains("dept")) {
+					query.alias("sourceCreater.dept", "sourceCreaterDept");
+				}
+			}
+
+			if (field.contains("belonger")) {
+				query.alias("belonger", "designer");
 
 				if (field.contains("dept")) {
 					query.alias("designer.dept", "designerDept");
 				}
 			}
 
-			if (field.contains("belonger")) {
-				query.alias("belonger", "salesman");
+			if (field.contains("creater")) {
+				query.alias("creater", "salesman");
 
 				if (field.contains("dept")) {
 					query.alias("salesman.dept", "salesmanDept");
@@ -127,8 +135,8 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
 			} else if ("user.userId".equals(field)) {
-				query.alias("belonger", "belonger");
-				query.add(query.getCriterion("belonger.userId", data, op));
+				query.alias("belonger", "designer");
+				query.add(query.getCriterion("designer.userId", data, op));
 			} else if ("user.dept".equals(field)) {
 				query.add(query.getCriterion("department.no", data, op));
 			} else if ("user.dept.fatherDept".equals(field)) {
@@ -144,12 +152,16 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 			} else if ("source.houseAttr".equals(field)) {
 				query.add(query.getCriterion("source.houseAttr", Short.valueOf(data), op));
 			} else if ("source.creater".equals(field)) {
-				query.add(query.getCriterion("designer.userId", data, op));
+				query.add(query.getCriterion("sourceCreater.userId", data, op));
 			} else if ("source.creater.dept".equals(field)) {
-				query.add(query.getCriterion("designerDept.no", data, op));
+				query.add(query.getCriterion("sourceCreaterDept.no", data, op));
 			} else if ("belonger".equals(field)) {
-				query.add(query.getCriterion("salesman.userId", data, op));
+				query.add(query.getCriterion("designer.userId", data, op));
 			} else if ("belonger.dept".equals(field)) {
+				query.add(query.getCriterion("designerDept.no", data, op));
+			} else if ("creater".equals(field)) {
+				query.add(query.getCriterion("salesman.userId", data, op));
+			} else if ("creater.dept".equals(field)) {
 				query.add(query.getCriterion("salesmanDept.no", data, op));
 			} else if ("customer.phone".equals(field)) {
 				query.add(query.getCriterion("customer.phone", data, op));
