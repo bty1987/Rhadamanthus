@@ -168,11 +168,11 @@ jQuery(function($) {
                 type: "custom",
                 prop: function(v) {
 
-                    return paymentUtils.getHistoryText(proxyPayment, v);
+                    return paymentUtils.getHistoryText(proxyPayment, v.proxyReceipt);
                 },
                 render: function($liLine, v) {
 
-                    paymentUtils.drawHistoryData(proxyPayment, v, $liLine, "");
+                    paymentUtils.drawHistoryData(proxyPayment, v.proxyReceipt, $liLine, "");
                 }
             });
         }
