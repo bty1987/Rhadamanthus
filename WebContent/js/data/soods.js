@@ -84,6 +84,11 @@ $(function() {
     var lineprops = (function() {
 
         var lineprops = [{
+            type: "checkbox",
+            name: "sids",
+            prop: "sid",
+            clazz: "ace ace-checkbox-2"
+        }, {
             field: "qrcode",
             name: "二维码",
             type: "qrcode",
