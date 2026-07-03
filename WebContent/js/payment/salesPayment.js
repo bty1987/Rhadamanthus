@@ -338,11 +338,11 @@ $(function() {
                 type: "custom",
                 prop: function(v) {
 
-                    return paymentUtils.getHistoryText(salesPayment, v);
+                    return paymentUtils.getHistoryText(salesPayment, v.salesReceipt);
                 },
                 render: function($liLine, v) {
 
-                    paymentUtils.drawHistoryData(salesPayment, v, $liLine, "");
+                    paymentUtils.drawHistoryData(salesPayment, v.salesReceipt, $liLine, "");
                 }
             });
         }

@@ -268,11 +268,11 @@ jQuery(function($) {
                 type: "custom",
                 prop: function(v) {
 
-                    return paymentUtils.getHistoryText(servicePayment, v);
+                    return paymentUtils.getHistoryText(servicePayment, v.serviceReceipt);
                 },
                 render: function($liLine, v) {
 
-                    paymentUtils.drawHistoryData(servicePayment, v, $liLine, "");
+                    paymentUtils.drawHistoryData(servicePayment, v.serviceReceipt, $liLine, "");
                 }
             });
         }
