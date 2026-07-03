@@ -305,6 +305,11 @@ $(function() {
     var lineprops = (function() {
 
         return [{
+            type: "checkbox",
+            name: "saiids",
+            prop: "saiid",
+            clazz: "ace ace-checkbox-2"
+        }, {
             field: "orderId",
             name: "装修单号",
             prop: "sales.orderId",
