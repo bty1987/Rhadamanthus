@@ -117,6 +117,11 @@ jQuery(function($) {
             prop: function(v) { return constant.decoration().decoration.status.keys[v.decoration.status]; },
             clazz: "red"
         }, {
+            field: "decoration.designStatus",
+            name: "设计完成状态",
+            prop: function(v) { return constant.decoration().decoration.designStatus.keys[v.decoration.designStatus]; },
+            clazz: "red"
+        }, {
             field: "decoration.typeness",
             name: "装修业务",
             prop: function(v) { return constant.decoration().decoration.typeness.keys[v.decoration.typeness]; },
@@ -360,7 +365,7 @@ jQuery(function($) {
         }), function(res) {
 
             $.exceler({
-                column: [["装修单号", "decoration.orderId"], ["楼盘地址", "decoration.house.houseNumber"], ["面积", "decoration.house.buildArea"], ["计划面积", "decoration.house.innerArea"], ["设计分区", "decoration.designer.dept.fatherDept.name"], ["设计部", "decoration.designer.dept.name"], ["设计师", "decoration.designer.userName"], ["业务员", "decoration.salesman.currentName"], ["监理", "decoration.supervisor.userName"], ["签单时间", "decoration.contractTime"], ["合同额", "decoration.orderTotalPrice"], ["预签合同额", "decoration.procontractPrice"], ["折扣", "decoration.discount"], ["设计天数", "designPeriod"], ["设计超期天数", "designOverdueDays"], ["分配时间", "issueTime"], ["初始设计完成时间", "initDesignTime"], ["预计交钥匙时间", "keyTime"], ["预计放线时间", "drawlineTime"], ["预计完工时间", 'finishTime'], ["预计设计完成时间", 'designTime'], ["合同方案确认时间", 'decoration.sdesignTime'], ["放线方案确认时间", 'decoration.edesignTime'], ["订单类型", "decoration.typeness"], ["工程状态", "decoration.projectStatus"]],
+                column: [["装修单号", "decoration.orderId"], ["楼盘地址", "decoration.house.houseNumber"], ["面积", "decoration.house.buildArea"], ["计划面积", "decoration.house.innerArea"], ["设计分区", "decoration.designer.dept.fatherDept.name"], ["设计部", "decoration.designer.dept.name"], ["设计师", "decoration.designer.userName"], ["业务员", "decoration.salesman.currentName"], ["监理", "decoration.supervisor.userName"], ["签单时间", "decoration.contractTime"], ["合同额", "decoration.orderTotalPrice"], ["预签合同额", "decoration.procontractPrice"], ["折扣", "decoration.discount"], ["设计天数", "designPeriod"], ["设计超期天数", "designOverdueDays"], ["分配时间", "issueTime"], ["初始设计完成时间", "initDesignTime"], ["预计交钥匙时间", "keyTime"], ["预计放线时间", "drawlineTime"], ["预计完工时间", 'finishTime'], ["预计设计完成时间", 'designTime'], ["合同方案确认时间", 'decoration.sdesignTime'], ["放线方案确认时间", 'decoration.edesignTime'], ["设计完成状态", "decoration.designStatus"], ["订单类型", "decoration.typeness"], ["工程状态", "decoration.projectStatus"]],
                 list: res.paging.data
 
             }, function(v) {
@@ -387,6 +392,7 @@ jQuery(function($) {
                 v.finishTime = (v.finishTime == null ? "" : v.finishTime);
                 v.decoration.sdesignTime = (v.decoration.sdesignTime == null ? "" : v.decoration.sdesignTime);
                 v.decoration.edesignTime = (v.decoration.edesignTime == null ? "" : v.decoration.edesignTime);
+                v.decoration.designStatus = constant.decoration().decoration.designStatus.keys[v.decoration.designStatus];
                 v.decoration.typeness = constant.decoration().decoration.typeness.keys[v.decoration.typeness];
                 v.decoration.projectStatus = constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus];
             });

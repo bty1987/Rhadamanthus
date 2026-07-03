@@ -1309,7 +1309,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "quotetion",
-                args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "trafficRate", "trafficPrice", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "taxPrice", "taxRate"]
+                args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "taxPrice", "taxRate", "taxDiscount"]
             }]
         },
         queryQuotetionByNo: {
@@ -1317,7 +1317,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "quotetion",
-                args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "trafficRate", "trafficPrice", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "taxPrice", "taxRate"]
+                args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "taxPrice", "taxRate", "taxDiscount"]
             }]
         },
         addQuotetion: {
@@ -1330,7 +1330,7 @@ $.extend(api, {
             url: "updateQuotetionForAdvance.do",
             type: "update",
             tranargs: {
-                args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.basePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate"]
+                args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.manageDiscount", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.trafficDiscount", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.basePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate", "quotetion.taxDiscount"]
             }
         },
         deleteQuotetion: {
@@ -1445,7 +1445,7 @@ $.extend(api, {
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.basePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate", "quotetionFunctionAreaItem.unitPrice", "quotetionFunctionAreaItem.addPrice", "quotetionFunctionAreaItem.subPrice", "quotetionFunctionAreaItem.num"],
+                args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.manageDiscount", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.trafficDiscount", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.basePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate", "quotetion.taxDiscount", "quotetionFunctionAreaItem.unitPrice", "quotetionFunctionAreaItem.addPrice", "quotetionFunctionAreaItem.subPrice", "quotetionFunctionAreaItem.num"],
             }
         },
         updateQuotetionFunctionAreaItemForIndex: {
@@ -1457,7 +1457,7 @@ $.extend(api, {
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.basePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate", "quotetionFunctionAreaItem.unitPrice", "quotetionFunctionAreaItem.addPrice", "quotetionFunctionAreaItem.subPrice"],
+                args: ["quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.manageDiscount", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.trafficDiscount", "quotetion.costPrice", "quotetion.unachePrice", "quotetion.basePrice", "quotetion.consPrice", "quotetion.comsPrice", "quotetion.taxPrice", "quotetion.taxRate", "quotetion.taxDiscount", "quotetionFunctionAreaItem.unitPrice", "quotetionFunctionAreaItem.addPrice", "quotetionFunctionAreaItem.subPrice", "quotetionFunctionAreaItem.discount"],
             }
         },
         deleteQuotetionFunctionAreaItem: {
