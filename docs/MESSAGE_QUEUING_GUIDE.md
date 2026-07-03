@@ -1,7 +1,7 @@
 # MessageQueuing 消息队列使用指南
 
-> **版本**: v2.2
-> **更新日期**: 2026-06-30
+> **版本**: v2.3
+> **更新日期**: 2026-07-03
 > **表名**: `information.messagequeuing` / `information.messagecueing` / `information.messagedueuing`
 
 ---
@@ -170,20 +170,35 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 > **注意**: 原有的 `CUSTOMER_STATUS_CHANGED` 事件已被注释掉（见 `DecorationPaymentServiceImpl:692`、`PaymentServiceImpl:324`）。
 > 📌 v2.2 行号修正：DecorationPayment 545/552→563/570，注释行 674→692；Payment 269→285，注释行 308→324。
 
-### 七、客户机会模块 (3个场景)
+### 七、客户机会模块 (5个场景)
 
 | 序号 | 触发场景 | operation | event | PO类型 | 代码位置 |
 |:----:|---------|-----------|-------|--------|---------:|
-| 1 | 转装修单 | `changeCustomerChance` | `TRAN_DECORATION_ORDER_CHANGED` | **双写** | `CustomerChanceServiceImpl:671/674` |
-| 2 | 到店确认(meet) | `meetCustomerChance` | `CUSTOMER_CHANCE_MEET` | Cueing | `CustomerChanceServiceImpl:730` |
-| 3 | 客户机会下发 🆕 | `issueCustomerChance` | `CUSTOMER_CHANCE_ISSUED` | Cueing | `CustomerChanceServiceImpl:584` |
+| 1 | 转装修单 | `changeCustomerChance` | `TRAN_DECORATION_ORDER_CHANGED` | **双写** | `CustomerChanceServiceImpl:676/679` |
+| 2 | 到店确认(meet) | `meetCustomerChance` | `CUSTOMER_CHANCE_MEET` | Cueing | `CustomerChanceServiceImpl:735` |
+| 3 | 客户机会下发 | `issueCustomerChance` | `CUSTOMER_CHANCE_ISSUED` | Cueing | `CustomerChanceServiceImpl:589` |
+| 4 | 直转装修单 🆕 | `tranCustomerChance` | `CUSTOMER_CHANCE_ISSUED` | Cueing | `CustomerChanceServiceImpl:900` |
+| 5 | 审批通过转装修单 🆕 | `tranCustomerChance` | `CUSTOMER_CHANCE_ISSUED` | Cueing | `ApprovalCustomerChanceServiceImpl:239` |
 
 > 转装修单：Queuing 写 `TRAN_DECORATION_ORDER_CHANGED`，Cueing 写 `TRAN_DECORATION`
-> 📌 v2.2 行号修正：701/704→671/674，760→730，614→584（整体前移约30行）
+> 📌 v2.3 变更：
+> - 新增序号 4、5（`tranCustomerChance`，Cueing，`CUSTOMER_CHANCE_ISSUED`），分别在 `CustomerChanceServiceImpl#tranCustomerChance` 和 `ApprovalCustomerChanceServiceImpl#tranCustomerChance` 末尾写入。
+> - `changeCustomerChance` 双写的 args 中字段名 `originalOrderId` → **`originOrderId`**（与其他场景统一）。
+> - 行号修正：701/704→676/679，760→735，614→589。
 
 #### 🔑 customerNo 字段（customerno 映射）
 
-本模块 3 个场景的 args JSON 中均会动态拼接 `customerNo` 字段，来源于 `customerchance.customerno`，由私有方法 `buildLeadnoArgs(CustomerChancePO)`（`CustomerChanceServiceImpl:985-988`）生成：
+本模块各场景的 args JSON 中均会包含 `customerNo` 字段，来源于 `customerchance.customerno`：
+
+| 场景 | `customerNo` 来源 | 拼接方式 |
+|------|------------------|---------|
+| `changeCustomerChance`（双写） | `buildLeadnoArgs()` | `customerno` 为 null/空串时**不出现**该字段 |
+| `meetCustomerChance` | `buildLeadnoArgs()` | 同上 |
+| `issueCustomerChance` | `buildLeadnoArgs()` | 同上 |
+| `tranCustomerChance`（直转） | `buildLeadnoArgs()` | 同上 |
+| `tranCustomerChance`（审批通过转） 🆕 | **直接拼接** | 无 null 判断，**始终出现**该字段（即使值为空串） |
+
+`buildLeadnoArgs`（`CustomerChanceServiceImpl`）实现：
 
 ```java
 private String buildLeadnoArgs(CustomerChancePO customerChancePO) {
@@ -195,7 +210,7 @@ private String buildLeadnoArgs(CustomerChancePO customerChancePO) {
 | 条件 | args 中的表现 |
 |------|--------------|
 | `customerno` 非空且非空串 | 追加 `,"customerNo":"<customerno值>"` |
-| `customerno` 为 null 或空串 | **不出现** `customerNo` 字段 |
+| `customerno` 为 null 或空串 | **不出现** `customerNo` 字段（仅 `buildLeadnoArgs` 路径） |
 
 **args 示例**（以 `issueCustomerChance` 为例）：
 
@@ -208,8 +223,23 @@ private String buildLeadnoArgs(CustomerChancePO customerChancePO) {
 }
 ```
 
+**args 示例**（`tranCustomerChance` 直转 / 审批通过转，包含订单变更前/后编号）：
+
+```json
+{
+  "ccid": 12345,
+  "csid": 67890,
+  "originOrderId": "DD20260630001",
+  "orderId": "DD20260701001",
+  "event": "CUSTOMER_CHANCE_ISSUED",
+  "customerNo": "CUST20260630001"
+}
+```
+
 > ⚠️ **字段命名差异**：数据库列名为 `customerno`（全小写无分隔），args JSON 中为 `customerNo`（驼峰），消费端解析时需注意此映射。
-> ⚠️ **覆盖范围**：仅本模块 4 处消息（含转装修单双写的 Queuing+Cueing）携带 `customerNo`；客户资源分配（`addCustomerLead`）、收款、施工等其他模块的 args **不含**此字段。
+> ⚠️ **`originOrderId` vs `originalOrderId`**：v2.3 起 `changeCustomerChance` 双写场景的 args 中字段已由 `originalOrderId` 统一为 `originOrderId`，与 `tranCustomerChance` 场景一致。消费端应按 `originOrderId` 解析。
+> ⚠️ **覆盖范围**：仅客户机会模块的消息携带 `customerNo`（含本模块 5 个场景的全部 6 处写入）；客户资源分配（`addCustomerLead`）、收款、施工等其他模块的 args **不含**此字段。
+> ⚠️ **拼接方式差异**：`tranCustomerChance`（审批通过转，`ApprovalCustomerChanceServiceImpl:239`）采用直接拼接 `customerNo`，**不做 null/空串判断**，该字段恒出现（可能为空串）。其余 5 处走 `buildLeadnoArgs`，customerno 为空时该字段缺失。
 
 ### 八、客户资源分配模块 (4个场景)
 
@@ -339,7 +369,7 @@ private String buildLeadnoArgs(CustomerChancePO customerChancePO) {
 | `CUSTOMER_CREATED` | 客户创建 | Queuing | 客户管理 🆕 |
 | `CUSTOMER_UPDATED` | 客户更新 | Queuing | 客户管理 🆕 |
 | `CUSTOMER_CHANCE_MEET` | 客户机会到店确认 | Cueing | 客户机会 🆕 |
-| `CUSTOMER_CHANCE_ISSUED` | 客户机会下发 | Cueing | 客户机会 🆕 |
+| `CUSTOMER_CHANCE_ISSUED` | 客户机会下发 | Cueing | 客户机会、客户机会审批 🆕 |
 | `CUSTOMER_CHANCE_AUTO_ASSIGNED` | 客户机会自动分配 | Cueing | 客户资源 |
 | `CUSTOMER_CHANCE_REGION_ASSIGNED` | 客户机会分区分配 | Cueing | 客户资源 |
 | `CUSTOMER_CHANCE_DEPT_ASSIGNED` | 客户机会部门分配 | Cueing | 客户资源 |
@@ -391,7 +421,8 @@ private String buildLeadnoArgs(CustomerChancePO customerChancePO) {
 | `collectPayment` | 通用收款 | Cueing |
 | `changeCustomerChance` | 转装修单 | 双写 |
 | `meetCustomerChance` | 到店确认 | Cueing |
-| `issueCustomerChance` | 客户机会下发 | Cueing 🆕 |
+| `issueCustomerChance` | 客户机会下发 | Cueing |
+| `tranCustomerChance` | 直转/审批通过转装修单 | Cueing 🆕 |
 | `addCustomerLead` | 客户线索分配 | Cueing |
 | `addCustomer` | 新增客户 | Queuing |
 | `updateCustomer` | 更新客户 | Queuing |
@@ -495,6 +526,7 @@ messageQueuingDao.save(new MessageDueuingPO().init(orderId, "operation", "{...\"
 | 收款 | `payment/service/impl/DecorationPaymentServiceImpl.java` |
 | 通用收款 | `payment/service/impl/PaymentServiceImpl.java` |
 | 客户机会 | `customer/service/impl/CustomerChanceServiceImpl.java` |
+| 客户机会审批 | `approval/service/impl/ApprovalCustomerChanceServiceImpl.java` 🆕 |
 | 客户资源 | `customer/service/impl/CustomerSourceServiceImpl.java` |
 | 客户管理 | `communion/service/impl/CustomerServiceImpl.java` |
 | 楼盘管理 | `communion/service/impl/VillageServiceImpl.java` |
@@ -517,34 +549,34 @@ messageQueuingDao.save(new MessageDueuingPO().init(orderId, "operation", "{...\"
 
 | 模块 | 场景数量 | 占比 |
 |------|---------|------|
-| 装饰订单 | 6 | 12.8% |
-| 合同管理 | 3 | 6.4% |
-| 订单归属 | 3 | 6.4% |
-| 归属审批 | 1 | 2.1% |
-| 终端审批 | 1 | 2.1% |
-| 收款 | 2 | 4.2% |
-| 客户机会 | 3 | 6.3% |
-| 客户资源分配 | 4 | 8.3% |
-| 客户管理 | 2 | 4.2% |
-| 楼盘管理 | 3 | 6.4% |
-| 楼盘规则 | 1 | 2.1% |
-| 施工节点 | 3 | 6.4% |
-| 施工进度 | 3 | 6.4% |
-| 验收 | 1 | 2.1% |
-| 施工管理 | 1 | 2.1% |
-| 放线 | 4 | 8.5% |
-| 施工人员 | 2 | 4.3% |
-| 结算入账 | 1 | 2.1% |
-| 活动项 | 1 | 2.1% |
-| 转介绍 | 2 | 4.3% |
-| **合计** | **48** | **100%** |
+| 装饰订单 | 6 | 12.0% |
+| 合同管理 | 3 | 6.0% |
+| 订单归属 | 3 | 6.0% |
+| 归属审批 | 1 | 2.0% |
+| 终端审批 | 1 | 2.0% |
+| 收款 | 2 | 4.0% |
+| 客户机会 | 5 | 10.0% |
+| 客户资源分配 | 4 | 8.0% |
+| 客户管理 | 2 | 4.0% |
+| 楼盘管理 | 3 | 6.0% |
+| 楼盘规则 | 1 | 2.0% |
+| 施工节点 | 3 | 6.0% |
+| 施工进度 | 3 | 6.0% |
+| 验收 | 1 | 2.0% |
+| 施工管理 | 1 | 2.0% |
+| 放线 | 4 | 8.0% |
+| 施工人员 | 2 | 4.0% |
+| 结算入账 | 1 | 2.0% |
+| 活动项 | 1 | 2.0% |
+| 转介绍 | 2 | 4.0% |
+| **合计** | **50** | **100%** |
 
 ### 按 PO 类型统计
 
 | 类型 | 数量 | 说明 |
 |------|------|------|
 | 仅 Queuing | ~28 | 主消息队列 |
-| 仅 Cueing | ~13 | 消息提示 |
+| 仅 Cueing | ~15 | 消息提示（含 v2.3 新增 2 处 `tranCustomerChance`） |
 | 双写 | ~7 | 同时写两张表 |
 
 ---
@@ -570,9 +602,10 @@ messageQueuingDao.save(new MessageDueuingPO().init(orderId, "operation", "{...\"
 
 args JSON 中的 `customerNo` 字段映射自数据库列 `customerchance.customerno`，由 `CustomerChanceServiceImpl#buildLeadnoArgs`（`CustomerChanceServiceImpl:985-988`）动态拼接：
 
-- **仅客户机会模块**的 4 处消息会携带该字段：`issueCustomerChance`（Cueing）、`changeCustomerChance` 双写（Queuing + Cueing）、`meetCustomerChance`（Cueing）。
-- `customerno` 为 null/空串时该字段**不出现**在 args 中（消费端需按"字段可能缺失"处理）。
+- **仅客户机会模块**的消息会携带该字段，覆盖本模块 5 个场景共 6 处写入：`issueCustomerChance`（Cueing）、`changeCustomerChance` 双写（Queuing + Cueing）、`meetCustomerChance`（Cueing）、`tranCustomerChance` 直转（Cueing）、`tranCustomerChance` 审批通过转（Cueing）。
+- 其中 5 处走 `buildLeadnoArgs`，`customerno` 为 null/空串时该字段**不出现**（消费端需按"字段可能缺失"处理）；`tranCustomerChance` 审批通过转（`ApprovalCustomerChanceServiceImpl:239`）采用直接拼接，**恒出现**该字段（可能为空串）。
 - **命名差异**：DB 列 `customerno` ↔ args `customerNo`，请勿混淆。
+- **字段统一**（v2.3）：`changeCustomerChance` 双写的 args 中 `originalOrderId` 已重命名为 `originOrderId`，与 `tranCustomerChance` 一致。
 - 客户资源分配（`addCustomerLead` 的 4 个 ASSIGNED 事件）、收款、施工等其他模块的 args **不含** `customerNo`。
 
 ### 3. 已注释的消息
@@ -586,6 +619,24 @@ args JSON 中的 `customerNo` 字段映射自数据库列 `customerchance.custom
 ---
 
 ## 变更记录
+
+### v2.3 (2026-07-03)
+
+**新增场景（`tranCustomerChance` operation）：**
+- 客户机会模块新增 2 处 Cueing 写入，event 均为 `CUSTOMER_CHANCE_ISSUED`：
+  - `CustomerChanceServiceImpl:900`（`tranCustomerChance` 方法：客户机会直接转装修单）
+  - `ApprovalCustomerChanceServiceImpl:239`（审批通过后转装修单）
+- 两处 args 中均携带 `originOrderId`（变更前订单号）、`orderId`（变更后订单号）、`ccid`、`csid`、`event`、`customerNo`。
+- 区别：前者通过 `buildLeadnoArgs` 拼接 `customerNo`（customerno 为空时缺失）；后者直接拼接，**恒出现** `customerNo`（可能为空串）。
+- 新增"客户机会审批"模块到「使用模块」清单（`ApprovalCustomerChanceServiceImpl.java`）。
+
+**字段重命名：**
+- `changeCustomerChance` 双写（Queuing + Cueing）的 args 中，`originalOrderId` → **`originOrderId`**，与 `tranCustomerChance` 场景统一。消费端需相应调整解析键名。
+
+**行号同步：**
+- 客户机会模块（CustomerChanceServiceImpl）：671/674→676/679，730→735，584→589。
+
+**统计更新：** 场景数 48 → 50（客户机会 3→5），事件类型维持 33 种（`CUSTOMER_CHANCE_ISSUED` 触发点扩展到客户机会审批模块），Cueing 写入 13→15。
 
 ### v2.2.1 (2026-06-30)
 
