@@ -2794,7 +2794,9 @@ var decorationUtils = {
                 "quotePrice": 1,
                 "preferPrice": 0,
                 "managePrice": 0,
-                "manageProfit": 0
+                "manageProfit": 0,
+                "activityPrice": 0,
+                "activityProfit": 0
             };
 
             com.post(api.quotation.queryProtationForDefaultByOrderId, {
@@ -2859,24 +2861,29 @@ var decorationUtils = {
             var dtrafficPrice = utils.accMul(quotation.trafficPrice, trafficDiscount);
             var notSalesmanRate = quotation.decoration.notSalesmanRate;
 
+            // 活动加价(加入报价单价) / 活动优惠(作为扣减项), 来自 protation
+            var activityPrice = com.checkNull(protation.activityPrice, 0);
+            var activityProfit = com.checkNull(protation.activityProfit, 0);
+            var _quotePrice = utils.accAdd(quotePrice, activityPrice);
+
             if (quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
-                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotePrice), quotation.trafficPrice), preferPrice), managePrefer), advancePrefer), quotation.taxRate));
+                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), _quotePrice), quotation.trafficPrice), preferPrice), managePrefer), advancePrefer), activityProfit), quotation.taxRate));
                 dtaxPrice = utils.changeThrDecimal(utils.accMul(taxPrice, manageDiscount));
             }
 
             if (quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
-                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotePrice), quotation.trafficPrice), quotation.managePrice), preferPrice), managePrefer), advancePrefer), quotation.taxRate));
+                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), _quotePrice), quotation.trafficPrice), quotation.managePrice), preferPrice), managePrefer), advancePrefer), activityProfit), quotation.taxRate));
                 dtaxPrice = taxPrice;
             }
 
             if (quotation.basePrice && quotation.basePrice != 0) {
 
-                var total = utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotePrice), quotation.trafficPrice);
+                var total = utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), _quotePrice), quotation.trafficPrice);
                 var remainder = total % quotation.basePrice;
-                totalPrice = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total, remainder), discount), remainder), dmanagePrice), dtaxPrice), preferPrice), managePrefer), advancePrefer));
+                totalPrice = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total, remainder), discount), remainder), dmanagePrice), dtaxPrice), preferPrice), managePrefer), advancePrefer), activityProfit));
             } else {
 
-                totalPrice = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(quotation.disPrice, discount), quotation.undisPrice), quotePrice), dtrafficPrice), dmanagePrice), dtaxPrice), preferPrice), managePrefer), advancePrefer));
+                totalPrice = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(quotation.disPrice, discount), quotation.undisPrice), _quotePrice), dtrafficPrice), dmanagePrice), dtaxPrice), preferPrice), managePrefer), advancePrefer), activityProfit));
             }
 
             totalPrice = utils.accAdd(totalPrice, !(notSalesmanRate > 0 && notSalesmanRate < 1) ? notSalesmanRate : 0);
