@@ -93,7 +93,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.construction.pageConstructionForAcceptance, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'construction-supervisor', 'decoration-projectStatus', 'construction-acceptanceFlag'], "acceptanceSeacherSeacherPostData", null, true, null);
+    searcher.set("condList", "pagenation", "resultList", api.construction.pageConstructionForAcceptance, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'construction-supervisor', 'decoration-projectStatus', 'construction-acceptanceFlag'], "acceptanceSeacherSeacherPostData", null, false, null);
     searcher.line("orderId", lineprops, linebtns).render();
 
     function viewAcceptanceDetailIndex(orderId) {

@@ -1123,7 +1123,7 @@ var decorationUtils = {
 
                         var options = {
                             "decorationPayment.dpid": v.dpid,
-                            "decoration.advanceType": 1,
+                            "decorationPayment.advanceType": 1,
                             "decorationPayment.decoration.orderId": decorationDetail.orderId,
                             "decorationPayment.comment": ""
                         };
