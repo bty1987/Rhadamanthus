@@ -728,7 +728,7 @@ var Searcher = function() {
         var props = $.extend({}, attrs, {
             "type": "checkbox",
             "name": config.name || "check",
-            "id": config.id || "check",
+            "id": config.id || attrs.id || "check",
             "class": config.clazz || "ace ace-checkbox-2 searcher-checkbox"
         });
 

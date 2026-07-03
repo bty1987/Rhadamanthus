@@ -149,7 +149,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.construction.pageConstruction, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer'], "drawLinePersonPostData", null, true, null);
+    searcher.set("condList", "pagenation", "resultList", api.construction.pageConstruction, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer'], "drawLinePersonPostData", null, false, null);
     searcher.line("orderId", lineprops, linebtns).render();
 
     function showSetup(v) {

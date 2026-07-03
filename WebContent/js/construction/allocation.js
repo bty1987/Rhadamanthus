@@ -149,7 +149,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.construction.pageConstruction, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-projectStatus'], "workerAllocationSeacherPostData", null, true, null);
+    searcher.set("condList", "pagenation", "resultList", api.construction.pageConstruction, null, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-projectStatus'], "workerAllocationSeacherPostData", null, false, null);
     searcher.line("orderId", lineprops, linebtns).render();
 
     function viewworkerAllocationDetail(orderId) {
