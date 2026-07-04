@@ -266,6 +266,7 @@ $(function() {
             house.items.oldhouseNumber.val(b.houseNumber);
             house.items.type.val(b.type);
             house.items.buildArea.val(b.buildArea);
+            house.items.freeArea.val(b.freeArea);
             house.items.innerArea.val(b.innerArea);
             house.items.maxFloor.val(b.maxFloor);
             house.items.through.val(b.through);
@@ -330,6 +331,9 @@ $(function() {
         options["house.floor"] = house.items.floor.val().trim();
         options["house.door"] = house.items.door.val().trim();
         options["house.type"] = house.items.type.val();
+        if (house.items.buildArea.val() != "") options["house.buildArea"] = house.items.buildArea.val();
+        if (house.items.freeArea.val() != "") options["house.freeArea"] = house.items.freeArea.val();
+        if (house.items.innerArea.val() != "") options["house.innerArea"] = house.items.innerArea.val();
         options["house.maxFloor"] = house.items.maxFloor.val();
         options["house.through"] = house.items.through.val();
         options["house.orientation"] = house.items.orientation.val();
