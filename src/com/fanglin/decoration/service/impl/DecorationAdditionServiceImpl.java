@@ -209,6 +209,14 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		saleTotal = salesPaymentDao.amountSalesPayment(orderId);
 
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
+
+		// 上游 collectPayment 等通过 increaseAdvancePayment 原生SQL更新余额, 绕过Hibernate,
+		// 若同一事务内 advancePaymentPO 仍在Session缓存中, 这里会读到旧值导致 saleScale 计算错误.
+		// refresh 强制从DB重新加载, 保证读到原子SQL更新后的最新余额.
+		if (advancePaymentPO != null) {
+			advancePaymentDao.refresh(advancePaymentPO);
+		}
+
 		saleTotal = Arith.add(saleTotal, advancePaymentPO != null ? advancePaymentPO.getMaterialBalance() : 0);
 
 		saleTotal = Arith.add(saleTotal, oalesDao.amountOales(orderId, OalesPO.ISSCALE_SCALE_INT));
