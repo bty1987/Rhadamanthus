@@ -212,7 +212,7 @@ jQuery(function($) {
 
     searcher.set("condList", "pagenation", "resultList", api.construction.pageDrawLine, {
         "drawLine.status": constant.construction.drawLine.STATUS_QUEUE_INT
-    }, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'construction-drawLine-status', 'construction-drawLine-applayTime', 'construction-drawLine-actualDate'], "drawLineApplyPostData", null, true, null);
+    }, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'construction-drawLine-status', 'construction-drawLine-applayTime', 'construction-drawLine-actualDate'], "drawLineApplyPostData", null, false, null);
     searcher.line("decoration.orderId", lineprops, linebtns).render();
 
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
