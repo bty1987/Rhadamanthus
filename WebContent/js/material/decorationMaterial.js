@@ -73,7 +73,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.decoration.pageDecorationForGeneral, null, ["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-salesman"], materialOrderPostData, null, true, null);
+    searcher.set("condList", "pagenation", "resultList", api.decoration.pageDecorationForGeneral, null, ["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-salesman"], materialOrderPostData, null, false, null);
     searcher.line("orderId", lineprops, linebtns).render();
 
     function viewMaterialIndex(v) {
