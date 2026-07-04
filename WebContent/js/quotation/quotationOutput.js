@@ -496,7 +496,7 @@ function printWorkTable(workType) {
         $.each(items, function(j, qv) {
 
             var itemKey = qv.quotationItemId && qv.quotationItemId != 0 ? qv.quotationItemId : [qv.itemName, qv.typestr, qv.measurementUnit].join('-');
-            var key = [qv.areaName, qv.suptype, itemKey].join('-');
+            var key = [qv.suptype, itemKey].join('-');
 
             if (mergeMap[key]) {
                 mergeMap[key].num = utils.changeThrDecimal(utils.accAdd(mergeMap[key].num, qv.num));
@@ -512,8 +512,7 @@ function printWorkTable(workType) {
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
     contentHtml += '<td width="8%" align="center">序号</td>';
-    contentHtml += '<td width="22%" align="center">工种</td>';
-    contentHtml += '<td width="30%" align="center">项目名称</td>';
+    contentHtml += '<td width="52%" align="center">项目名称</td>';
     contentHtml += '<td width="10%" align="center">单位</td>';
     contentHtml += '<td width="10%" align="center">数量</td>';
     contentHtml += '<td width="10%" align="center">增加量</td>';
@@ -547,8 +546,7 @@ function printWorkTable(workType) {
 
             contentHtml += '<tr bgcolor="#FFFFFF">';
             contentHtml += '<td width="8%" align="center">' + (itemIndex + 1) + '</td>';
-            contentHtml += '<td width="22%" align="center">' + qv.areaName + '</td>';
-            contentHtml += '<td width="30%" align="center">' + qv.itemName + "(" + qv.typestr + ")" + '</td>';
+            contentHtml += '<td width="52%" align="center">' + qv.itemName + "(" + qv.typestr + ")" + '</td>';
             contentHtml += '<td width="10%" align="center">' + qv.measurementUnit + '</td>';
             contentHtml += '<td width="10%" align="center">' + qv.num + '</td>';
             contentHtml += '<td width="10%" align="center"></td>';

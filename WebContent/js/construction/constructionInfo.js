@@ -284,6 +284,14 @@ jQuery(function($) {
                     viewDecorationProfile(v.decoration.orderId);
                 }
             },
+            constructionTag: {
+                name: "工程标签",
+                clazz: "btn-inverse",
+                handle: function(v) {
+                    params.constructionProfile = { orderId: v.decoration.orderId, type: 4, profile: { type: 4 } };
+                    com.popup4page("#layerPopUp", api.index.constructionProfile4detailIndex.url, "工程标签");
+                }
+            },
             resetDesign: {
                 name: "重置设计",
                 clazz: "btn-danger",

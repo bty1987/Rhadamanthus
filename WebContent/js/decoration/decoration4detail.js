@@ -1346,7 +1346,25 @@ jQuery(function($) {
 
         com.popup4page("#layerPopUp4detail", api.index.quotationProfile4detailIndex.url, "交接单", null, null, function() {
 
-            params.quotation = { orderId: params.decoration.orderId, type: 0, profile: { type: 0 } };
+            params.quotation = { orderId: params.decoration.orderId, type: 3, profile: { type: 3 } };
+        });
+    });
+
+    // 报价标签按钮
+    com.focusPage("#quotationTagProfileBtn").on("click", function() {
+
+        com.popup4page("#layerPopUp4detail", api.index.quotationProfile4detailIndex.url, "报价标签", null, null, function() {
+
+            params.quotation = { orderId: params.decoration.orderId, type: 4, profile: { type: 4 } };
+        });
+    });
+
+    // 放线标签按钮
+    com.focusPage("#drawlineTagProfileBtn").on("click", function() {
+
+        com.popup4page("#layerPopUp4detail", api.index.drawlineProfile4detailIndex.url, "放线标签", null, null, function() {
+
+            params.drawlineProfile = { orderId: params.decoration.orderId, type: 4, profile: { type: 4 } };
         });
     });
 

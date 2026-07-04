@@ -313,6 +313,10 @@ $(function() {
 
         var $handoverBtn = $('<button></button>').attr("id", "handoverProfileBtn").addClass('btn btn-minier btn-primary').css("margin-left", "3px").html("交接单");
 
+        var $quotationTagBtn = $('<button></button>').attr("id", "quotationTagProfileBtn").addClass('btn btn-minier btn-purple').css("margin-left", "3px").html("报价标签");
+
+        var $drawlineTagBtn = $('<button></button>').attr("id", "drawlineTagProfileBtn").addClass('btn btn-minier btn-pink').css("margin-left", "3px").html("放线标签");
+
         var $assignTalkBtn = $('<button></button>').attr("id", "assignTalkBtn").addClass('btn btn-minier btn-info').css("margin-left", "3px").html("分配沟通");
 
         var $show = conf.opt == null ? [] : conf.opt.show == null ? [] : conf.opt.show;
@@ -432,7 +436,10 @@ $(function() {
 
         com.focusPage("#checkOriginal").append($checkOriginal);
 
-        com.focusPage("#CADProjectTitle").append($handoverBtn).append($assignTalkBtn);
+        // 放线标签按钮挂在放线方案标题旁
+        com.focusPage("#projectPictureTitle").append($drawlineTagBtn);
+
+        com.focusPage("#CADProjectTitle").append($handoverBtn).append($quotationTagBtn).append($assignTalkBtn);
 
         return [row1, row2];
     }

@@ -37,7 +37,12 @@ public class QuotationProfilePO implements Serializable {
 	public static final short STATUS_FINISH_INT = 2;
 
 	public static final short TYPE_DEMAND_INT = 1;
+
 	public static final short TYPE_MATERIAL_INT = 2;
+
+	public static final short TYPE_HANDOVER_INT = 3;
+
+	public static final short TYPE_TAG_INT = 4;
 
 	private long qpid;
 
