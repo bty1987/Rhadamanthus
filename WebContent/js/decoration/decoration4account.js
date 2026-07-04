@@ -55,6 +55,7 @@ $(function() {
         oalesItems: {
             oalesTotal: com.focusPage("#oalesTotal", "#decorationAccountContent"),
             oalesMaterialTotal: com.focusPage("#oalesMaterialTotal", "#decorationAccountContent"),
+            oalesScaleTotal: com.focusPage("#oalesScaleTotal", "#decorationAccountContent"),
         },
         addReduceItems: {
             addFoldFrontTotal: com.focusPage("#addFoldFrontTotal", "#decorationAccountContent"),
@@ -172,6 +173,7 @@ $(function() {
 
         oalesTotal: 0,
         oalesMaterialTotal: 0,
+        oalesScaleTotal: 0,
 
         addPredisPrice: 0,
         addPredisManagePrice: 0,
@@ -654,8 +656,18 @@ $(function() {
 
     }, null, false);
 
+    // 仅汇总需配比(isScale=0)的外销单金额, 用于决算实花配比(含外销)计算
+    com.post(api.sales.amountOales, {
+        "oales.decoration.orderId": decorationDetail.orderId,
+        "oales.isScale": 0
+    }, function(res) {
+
+        accountBasic.oalesScaleTotal = res.amount || 0;
+    }, null, false);
+
     decorationDetail.oalesItems.oalesTotal.html(accountBasic.oalesTotal);
     decorationDetail.oalesItems.oalesMaterialTotal.html(utils.accAdd(accountBasic.oalesTotal, accountBasic.materialTotal));
+    decorationDetail.oalesItems.oalesScaleTotal.html(accountBasic.oalesScaleTotal);
 
     queryAddReduce();
 
@@ -882,6 +894,7 @@ $(function() {
 
         addItem(5, 0, "外销总金额", decorationDetail.oalesItems.oalesTotal.text(), 0, decorationDetail.oalesItems.oalesTotal.text());
         addItem(5, 1, "外销主材总额", decorationDetail.oalesItems.oalesMaterialTotal.text(), 0, decorationDetail.oalesItems.oalesMaterialTotal.text());
+        addItem(5, 2, "外销配比总额", decorationDetail.oalesItems.oalesScaleTotal.text(), 0, decorationDetail.oalesItems.oalesScaleTotal.text());
 
         addItem(6, 0, "增项折前总价", decorationDetail.addReduceItems.addFoldFrontTotal.text(), 0, decorationDetail.addReduceItems.addFoldFrontTotal.text());
         addItem(6, 1, "增项管理费", decorationDetail.addReduceItems.addManagePrice.text(), 0, decorationDetail.addReduceItems.addManagePrice.text());
@@ -1469,7 +1482,7 @@ $(function() {
         accountBasic.management = Math.round(management);
         accountBasic.taxment = Math.round(taxment);
         accountBasic.flowerRatio = utils.changeThrDecimal(accountBasic.materialTotal / accountBasic.direct);
-        accountBasic.flowerOalesRatio = utils.changeThrDecimal(utils.accDiv(utils.accAdd(accountBasic.oalesTotal, accountBasic.materialTotal), accountBasic.direct));
+        accountBasic.flowerOalesRatio = utils.changeThrDecimal(utils.accDiv(utils.accAdd(accountBasic.oalesScaleTotal, accountBasic.materialTotal), accountBasic.direct));
         accountBasic.directC = Math.round(accountBasic.foldFrontTotal + accountBasic.addFoldFrontTotal - accountBasic.minusFoldFrontTotal + accountBasic.addPredisPrice - accountBasic.reducePredisPrice);
         accountBasic.fullPayment = Math.round(accountBasic.signFactOwing + accountBasic.addOwing - accountBasic.reduceOwing);
 
