@@ -75,15 +75,15 @@ $.extend(api.index, {
 
 $.extend(api, {
     decoration: {
-        pageBackVisitByOrderId: {
-            url: "pageBackVisitByOrderId.do"
+        pageDecorationBackVisitByOrderId: {
+            url: "pageDecorationBackVisitByOrderId.do"
         },
-        queryBackVisitByOrderId: {
-            url: "queryBackVisitByOrderId.do",
+        queryDecorationBackVisitByOrderId: {
+            url: "queryDecorationBackVisitByOrderId.do",
             demo: true
         },
-        addBackVisit: {
-            url: "addBackVisit.do"
+        addDecorationBackVisit: {
+            url: "addDecorationBackVisit.do"
         },
 
         queryDecorationActivityByOrderId: {
