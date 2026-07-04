@@ -91,6 +91,7 @@ $(function() {
     order.decorationModal = com.focusPage("#decorationModal");
     order.agreementModal = com.focusPage("#agreementModal");
     order.drawLineModal = com.focusPage("#drawLineModal");
+    order.drawlineScheduleModal = com.focusPage("#drawlineScheduleModal");
     order.constructionNodeModal = com.focusPage("#constructionNodeModal");
     order.refundContractModal = com.focusPage("#refundContractModal");
     order.terminalContractModal = com.focusPage("#terminalContractModal");
@@ -112,6 +113,11 @@ $(function() {
 
         com.cleanItems(order.infoItems);
         com.closeTip();
+    });
+
+    order.drawlineScheduleModal.on('hidden.bs.modal', function(e) {
+
+        com.focusPage('#drawlineScheduleCalendar').fullCalendar('destroy');
     });
 
     // 合同终止
@@ -1566,6 +1572,47 @@ $(function() {
             }));
         }
         // 放线
+    function initDrawlineSchedule() {
+
+        com.focusPage('#drawlineScheduleCalendar').fullCalendar('destroy');
+        com.focusPage('#drawlineScheduleCalendar').fullCalendar('today');
+
+        com.focusPage('#drawlineScheduleCalendar').fullCalendar($.extend(com.calendardefault, {
+            events: function(start, end, callback) {
+
+                var startTime = com.dateFormat(new Date(start));
+                var endTime = com.dateFormat(new Date(end));
+
+                var options = {
+                    "drawLine.startTime": startTime,
+                    "drawLine.endTime": endTime
+                };
+
+                com.post(api.construction.countDrawLine, options, function(res) {
+
+                    var counts = res.count;
+                    var events = [];
+
+                    for ( var i in counts) {
+
+                        var _ = counts[i];
+                        var _date = _[1] + "";
+
+                        var event = {
+                            title: _[0] + _[2] + "个",
+                            start: new Date(_date.substr(0, 4), _date.substr(4, 2) - 1, _date.substr(6, 2)),
+                            allDay: true
+                        };
+
+                        events.push(event);
+                    }
+
+                    callback(events);
+                });
+            }
+        }));
+    }
+
     var modalDrawLineModal = function(v) {
 
             var designPeriod = 0;
@@ -2658,6 +2705,8 @@ $(function() {
             btns.push(createToolButton("import", "icon-download-alt", "导出", "btn-success"));
         }
 
+        btns.push(createToolButton("drawlineSchedule", "icon-calendar", "放线排期", "btn-yellow"));
+
         return btns;
     })();
 
@@ -2721,6 +2770,16 @@ $(function() {
         openCreateOrder("创建国补", {
             "entrytype": "country"
         });
+    });
+
+    com.focusPage('a[name="drawlineSchedule"]', '#pagenation').click(function() {
+
+        order.drawlineScheduleModal.modal("show");
+    });
+
+    order.drawlineScheduleModal.on('shown.bs.modal', function(e) {
+
+        initDrawlineSchedule();
     });
 
     com.focusPage('a[name="import"]', '#pagenation').click(function() {
