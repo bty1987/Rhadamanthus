@@ -82,14 +82,20 @@ public class HouseServiceImpl implements HouseService {
 		}
 
 		housePO = new HousePO();
+
 		BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village", "houseNumber"));
+
 		housePO.setHouseNumber(SensitiveDataHelper.encrypt(houseVO.getHouseNumber()));
 
 		VillagePO villagePO = villageDao.get(houseVO.getVillage().getNo());
+
 		housePO.setVillage(villagePO);
 		housePO.setCompany(company);
+
 		houseDao.save(housePO);
+
 		BeanUtil.copyProperties(housePO, houseVO, Arrays.asList("village"));
+
 		return 0;
 	}
 
@@ -100,15 +106,21 @@ public class HouseServiceImpl implements HouseService {
 		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
 
 		if (housePO == null) {
+
 			housePO = new HousePO();
+
 			BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village", "houseNumber"));
+
 			housePO.setHouseNumber(SensitiveDataHelper.encrypt(houseVO.getHouseNumber()));
 
 			VillagePO villagePO = villageDao.get(houseVO.getVillage().getNo());
+
 			housePO.setVillage(villagePO);
 			housePO.setCompany(company);
 			housePO.setInnerArea(0);
+
 			houseDao.save(housePO);
+
 			BeanUtil.copyProperties(housePO, houseVO, Arrays.asList("village"));
 		}
 
@@ -127,7 +139,10 @@ public class HouseServiceImpl implements HouseService {
 			throw new FLException(320002, "房产不存在");
 		}
 
-		BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village", "hid", "company", "no", "houseNumber", "built", "unit", "floor", "door"));
+		BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village", "hid", "company", "no", "houseNumber", "built", "unit", "floor", "door", "buildArea", "innerArea"));
+
+		if (houseVO.getBuildArea() != null && houseVO.getBuildArea() != 0) housePO.setBuildArea(houseVO.getBuildArea());
+		if (houseVO.getInnerArea() != null && houseVO.getInnerArea() != 0) housePO.setInnerArea(houseVO.getInnerArea());
 
 		houseDao.update(housePO);
 
@@ -135,5 +150,4 @@ public class HouseServiceImpl implements HouseService {
 
 		return 0;
 	}
-
 }
