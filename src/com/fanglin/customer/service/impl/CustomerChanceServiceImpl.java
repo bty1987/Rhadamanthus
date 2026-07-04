@@ -912,7 +912,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330075, "客户机会不存在");
 		}
 
-		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_INIT_INT) {
+		// 直接初审支持反复操作: 允许初始(0)和已审批(2)状态, 其他状态(失效1/确认3/完成4/废单5)禁止
+		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_INIT_INT && customerChancePO.getStatus() != CustomerChancePO.STATUS_APPROVE_INT) {
 			throw new FLException(330077, "客户机会不可操作");
 		}
 

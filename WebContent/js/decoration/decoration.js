@@ -1580,6 +1580,17 @@ $(function() {
         com.focusPage('#drawlineScheduleCalendar').fullCalendar($.extend(com.calendardefault, {
             events: function(start, end, callback) {
 
+                var dates = {};
+                var startDate = new Date(start);
+                var endDate = new Date(end);
+
+                var currentDate = startDate;
+
+                while (currentDate <= end) {
+                    dates[com.dateFormat(currentDate, "yyyyMMdd")] = 0;
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+
                 var startTime = com.dateFormat(new Date(start));
                 var endTime = com.dateFormat(new Date(end));
 
@@ -1591,21 +1602,29 @@ $(function() {
                 com.post(api.construction.countDrawLine, options, function(res) {
 
                     var counts = res.count;
-                    var events = [];
 
                     for ( var i in counts) {
 
                         var _ = counts[i];
                         var _date = _[1] + "";
 
+                        if (!isNaN(dates[_date])) {
+                            dates[_date] += _[2];
+                        }
+                    }
+
+                    var events = [];
+
+                    $.each(dates, function(i, v) {
+
                         var event = {
-                            title: _[0] + _[2] + "个",
-                            start: new Date(_date.substr(0, 4), _date.substr(4, 2) - 1, _date.substr(6, 2)),
+                            title: "剩余" + (20 - v > 0 ? 20 - v : 0) + "户",
+                            start: new Date(i.substr(0, 4), i.substr(4, 2) - 1, i.substr(6, 2)),
                             allDay: true
                         };
 
                         events.push(event);
-                    }
+                    });
 
                     callback(events);
                 });
