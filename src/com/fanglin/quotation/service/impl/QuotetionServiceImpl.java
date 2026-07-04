@@ -282,6 +282,9 @@ public class QuotetionServiceImpl implements QuotetionService {
 		QuotetionPO quotetionTO = new QuotetionPO();
 
 		quotetionTO.ptp(quotationSO.getVersion(), quotationSO.getName(), userPO.getUid(), updateTime);
+		quotetionTO.setManageDiscount(quotationSO.getManageDiscount());
+		quotetionTO.setTrafficDiscount(quotationSO.getTrafficDiscount());
+		quotetionTO.setTaxDiscount(quotationSO.getTaxDiscount());
 
 		quotetionDao.save(quotetionTO);
 
@@ -321,6 +324,9 @@ public class QuotetionServiceImpl implements QuotetionService {
 		QuotetionPO quotetionTO = new QuotetionPO();
 
 		quotetionTO.ptp(quotetionSO.getVersion(), quotetionSO.getName(), userPO.getUid(), updateTime);
+		quotetionTO.setManageDiscount(quotetionSO.getManageDiscount());
+		quotetionTO.setTrafficDiscount(quotetionSO.getTrafficDiscount());
+		quotetionTO.setTaxDiscount(quotetionSO.getTaxDiscount());
 
 		quotetionDao.save(quotetionTO);
 
@@ -361,6 +367,9 @@ public class QuotetionServiceImpl implements QuotetionService {
 		quotetionPO.setVersion(quotetionSO.getVersion());
 		quotetionPO.setDiscount(quotetionSO.getDiscount());
 		quotetionPO.setTotalPrice(quotetionSO.getTotalPrice());
+		quotetionPO.setManageDiscount(quotetionSO.getManageDiscount());
+		quotetionPO.setTrafficDiscount(quotetionSO.getTrafficDiscount());
+		quotetionPO.setTaxDiscount(quotetionSO.getTaxDiscount());
 
 		quotetionDao.save(quotetionPO);
 
