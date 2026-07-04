@@ -770,66 +770,66 @@ $.extend(api, {
             }
         },
 
-        pageAudit: {
-            url: "pageAudit.do",
+        pageDecorationAudit: {
+            url: "pageDecorationAudit.do",
             type: "query",
             tranargs: [{
                 result: "paging-data",
                 args: ["unitprice", "num", "discount"]
             }]
         },
-        applyAudit: {
-            url: "applyAudit.do"
+        applyDecorationAudit: {
+            url: "applyDecorationAudit.do"
         },
-        queryAuditRecordByOrderId: {
-            url: "queryAuditRecordByOrderId.do",
+        queryDecorationAuditRecordByOrderId: {
+            url: "queryDecorationAuditRecordByOrderId.do",
             type: "query",
             tranargs: [{
                 result: "auditRecords",
                 args: ["unitprice", "num", "discount"]
             }]
         },
-        addAuditRecord: {
-            url: "addAuditRecord.do",
+        addDecorationAuditRecord: {
+            url: "addDecorationAuditRecord.do",
             type: "update",
             tranargs: {
                 args: ["auditRecord.unitprice", "auditRecord.num", "auditRecord.discount"]
             }
         },
-        updateAuditRecord: {
-            url: "updateAuditRecord.do",
+        updateDecorationAuditRecord: {
+            url: "updateDecorationAuditRecord.do",
             type: "update",
             tranargs: {
                 args: ["auditRecord.unitprice", "auditRecord.num", "auditRecord.discount"]
             }
         },
-        queryAuditScaleByArid: {
-            url: "queryAuditScaleByArid.do",
+        queryDecorationAuditScaleByArid: {
+            url: "queryDecorationAuditScaleByArid.do",
             type: "query",
             tranargs: [{
                 result: "auditScales",
                 args: ["money"]
             }]
         },
-        makeAuditScale: {
-            url: "makeAuditScale.do",
+        makeDecorationAuditScale: {
+            url: "makeDecorationAuditScale.do",
             type: "update",
             tranargs: {
                 args: ["auditScales.money"]
             }
         },
-        addAuditScale: {
-            url: "addAuditScale.do",
+        addDecorationAuditScale: {
+            url: "addDecorationAuditScale.do",
             type: "update",
             tranargs: {
                 args: ["auditScale.money"]
             }
         },
-        updateAuditScaleForStatus: {
-            url: "updateAuditScaleForStatus.do"
+        updateDecorationAuditScaleForStatus: {
+            url: "updateDecorationAuditScaleForStatus.do"
         },
-        deleteAuditScale: {
-            url: "deleteAuditScale.do"
+        deleteDecorationAuditScale: {
+            url: "deleteDecorationAuditScale.do"
         },
 
         pageDecorationAccount: {

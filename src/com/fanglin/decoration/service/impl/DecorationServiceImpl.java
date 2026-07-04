@@ -50,7 +50,7 @@ import com.fanglin.data.po.DecorationMeasureRuleItemPO;
 import com.fanglin.data.po.PaymentTypePO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
-import com.fanglin.decoration.dao.AuditDao;
+import com.fanglin.decoration.dao.DecorationAuditDao;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -58,7 +58,7 @@ import com.fanglin.decoration.dao.DecorationInfoDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.DecorationServiceDao;
 import com.fanglin.decoration.dao.DecorationUserDao;
-import com.fanglin.decoration.po.AuditPO;
+import com.fanglin.decoration.po.DecorationAuditPO;
 import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationInfoPO;
@@ -166,7 +166,7 @@ public class DecorationServiceImpl implements DecorationService {
 	private HouseDao houseDao;
 
 	@Autowired
-	private AuditDao auditDao;
+	private DecorationAuditDao decorationAuditDao;
 
 	@Autowired
 	private DecorationReceiptDao decorationReceiptDao;
@@ -1131,7 +1131,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationServiceDao.makeDecorationService(ServiceNodePO.SERVICE_TYPE_DECORTAION_INT, orderId, decorationPO.getDesigner().getUid()); // 服务节点
 
-		auditDao.save(new AuditPO(decorationPO)); // 预算审核
+		decorationAuditDao.save(new DecorationAuditPO(decorationPO)); // 预算审核
 
 		// 生成装修单创建事件
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "makeDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"DECORATION_CREATED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
