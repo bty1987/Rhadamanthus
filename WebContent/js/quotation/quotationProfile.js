@@ -89,6 +89,12 @@ jQuery(function($) {
         prop: "status",
         clazz: "red",
         dataset: constant.customer().survey.status.keys
+    }, {
+        fieId: "type",
+        name: "用途",
+        prop: "type",
+        clazz: "blue",
+        dataset: constant.quotation().quotationProfile.type.keys
     }];
 
     var linebtns = [{
