@@ -93,8 +93,11 @@ jQuery(function($) {
 
         var template = null;
 
+        // 根据用途 type 选择对应的模板配置 key: 标签(type=4)用独立模板, 其他复用交接模板
+        var templateKey = params.quotation.profile.type == 4 ? "QUOTATION_TAG_PROFILE_TEMPLATE" : "QUOTATION_PROFILE_TEMPLATE";
+
         com.post(api.system.querySystemConfigByKey, {
-            "systemConfig.key": "QUOTATION_PROFILE_TEMPLATE"
+            "systemConfig.key": templateKey
         }, function(res) {
 
             template = res.systemConfig.value;
@@ -259,9 +262,11 @@ jQuery(function($) {
 
                 com.post(api.quotation.handleQuotationProfile, options, function(res) {
 
+                    // 仅交接单(type=3)触发预算员自动分配,标签(type=4)等其他用途只保存
                     var orderId = params.quotation.orderId;
+                    var profileType = params.quotation.profile.type;
 
-                    if (orderId) {
+                    if (orderId && profileType == 3) {
                         com.post(api.quotation.autoQuotationAssign, {
                             "quotationAssign.orderId": orderId
                         }, function(data) {

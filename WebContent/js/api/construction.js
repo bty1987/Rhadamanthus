@@ -91,6 +91,12 @@ $.extend(api.index, {
     constructionRecordIndex: {
         url: "/views/construction/constructionRecord.html"
     },
+    constructionProfile4detailIndex: {
+        url: "/views/construction/constructionProfile4detail.html"
+    },
+    drawlineProfile4detailIndex: {
+        url: "/views/construction/drawlineProfile4detail.html"
+    },
 });
 
 $.extend(api, {
@@ -634,6 +640,52 @@ $.extend(api, {
         },
         queryConstructionRecordByOrderId: {
             url: "queryConstructionRecordByOrderId.do"
+        },
+
+        // -------- 工程单画像/标签 -------------------------
+        pageConstructionProfile: {
+            url: "pageConstructionProfile.do"
+        },
+        queryConstructionProfileByCid: {
+            url: "queryConstructionProfileByCid.do"
+        },
+        queryConstructionProfileByOrderId: {
+            url: "queryConstructionProfileByOrderId.do"
+        },
+        queryConstructionProfileByCpid: {
+            url: "queryConstructionProfileByCpid.do"
+        },
+        addConstructionProfile: {
+            url: "addConstructionProfile.do"
+        },
+        makeConstructionProfile: {
+            url: "makeConstructionProfile.do"
+        },
+        handleConstructionProfile: {
+            url: "handleConstructionProfile.do"
+        },
+
+        // -------- 放线单画像/标签 -------------------------
+        pageDrawlineProfile: {
+            url: "pageDrawlineProfile.do"
+        },
+        queryDrawlineProfileByDlid: {
+            url: "queryDrawlineProfileByDlid.do"
+        },
+        queryDrawlineProfileByOrderId: {
+            url: "queryDrawlineProfileByOrderId.do"
+        },
+        queryDrawlineProfileByDpid: {
+            url: "queryDrawlineProfileByDpid.do"
+        },
+        addDrawlineProfile: {
+            url: "addDrawlineProfile.do"
+        },
+        makeDrawlineProfile: {
+            url: "makeDrawlineProfile.do"
+        },
+        handleDrawlineProfile: {
+            url: "handleDrawlineProfile.do"
         }
 
     }
