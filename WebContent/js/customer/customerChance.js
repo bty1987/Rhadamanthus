@@ -165,6 +165,9 @@ jQuery(function($) {
 
         depage: params['urlLoadParams'].depage,
         detype: params['urlLoadParams'].detype,
+
+        // service 页面: 复用 depage 为空的显示逻辑, 但功能只显示不校验
+        service: params['urlLoadParams'].depage == "service",
     };
 
     com.post(api.system.querySystemConfigByKey, {
@@ -528,7 +531,7 @@ jQuery(function($) {
         dataset: constant.customer().customerChance.isCheck.keys,
         show: function(v) {
 
-            return customerChance.depage == null;
+            return customerChance.depage == null || customerChance.depage == "service";
         }
     }, {
         field: "fineTime",
@@ -573,7 +576,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (customerChance.depage == null || customerChance.depage == "manage");
+            return (customerChance.depage == null || customerChance.depage == "service" || customerChance.depage == "manage");
         }
     }, {
         field: "source.houseAttr",
@@ -723,7 +726,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return customerChance.depage == null && v.isCheck == constant.customer().customerChance.ISCHECK_CHECK_INT && customerChance.detype == null;
+            return (customerChance.depage == null || customerChance.depage == "service") && v.isCheck == constant.customer().customerChance.ISCHECK_CHECK_INT && customerChance.detype == null;
         }
     }, {
         name: "不匹配",
@@ -931,7 +934,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && (customerChance.depage == "user" || customerChance.depage == "designer") && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2 && customerChance.detype == null;
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == constant.customer().customerChance.STATUS_APPROVE_INT) && (customerChance.depage == "user" || customerChance.depage == "designer") && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2 && customerChance.detype == null;
         },
     }, {
         name: "审批",
@@ -1009,7 +1012,7 @@ jQuery(function($) {
         },
         show: function(res) {
 
-            return !customerChance.depage || customerChance.depage == "manage";
+            return !customerChance.depage || customerChance.depage == "service" || customerChance.depage == "manage";
         }
     }, {
         name: "画像",
@@ -1100,7 +1103,7 @@ jQuery(function($) {
 
     function issue() {
 
-        if (com.validate("issueModal")) {
+        if (!customerChance.service && com.validate("issueModal")) {
             return false;
         }
 
@@ -1217,7 +1220,7 @@ jQuery(function($) {
     // 提交审批
     function approval() {
 
-        if (com.validate("approveModal")) {
+        if (!customerChance.service && com.validate("approveModal")) {
             return false;
         }
 
@@ -1259,7 +1262,7 @@ jQuery(function($) {
     // 直接审核确认函数（新弹窗的提交函数）
     function directApproveConfirm() {
 
-        if (com.validate("directApproveModal")) {
+        if (!customerChance.service && com.validate("directApproveModal")) {
             return false;
         }
 
@@ -1281,18 +1284,18 @@ jQuery(function($) {
     // 直接初审确认函数
     function directFirstApproveConfirm() {
 
-        if (com.validate("directFirstApproveModal")) {
+        if (!customerChance.service && com.validate("directFirstApproveModal")) {
             return false;
         }
 
-        var hid = checkHouse(customerChance.directFirstApproveItems);
+        var hid = customerChance.service ? null : checkHouse(customerChance.directFirstApproveItems);
 
-        if (!hid)
+        if (!customerChance.service && !hid)
             return false;
 
-        var cid = checkCustomer(customerChance.directFirstApproveItems);
+        var cid = customerChance.service ? null : checkCustomer(customerChance.directFirstApproveItems);
 
-        if (!cid)
+        if (!customerChance.service && !cid)
             return false;
 
         var option = {
@@ -1316,16 +1319,16 @@ jQuery(function($) {
 
     function update() {
 
-        if (com.validate("updateModal")) {
+        if (!customerChance.service && com.validate("updateModal")) {
             return false;
         }
 
-        var hid = checkHouse(customerChance.updateItems);
+        var hid = customerChance.service ? null : checkHouse(customerChance.updateItems);
 
-        if (!hid)
+        if (!customerChance.service && !hid)
             return false;
 
-        var cid = checkCustomer(customerChance.updateItems);
+        var cid = customerChance.service ? null : checkCustomer(customerChance.updateItems);
 
         var option = {
             "customerChance.ccid": customerChance.ccid,
@@ -1350,7 +1353,7 @@ jQuery(function($) {
     // 提交初审
     function firstApproval() {
 
-        if (com.validate("firstApproveModal")) {
+        if (!customerChance.service && com.validate("firstApproveModal")) {
             return false;
         }
 
@@ -1396,7 +1399,7 @@ jQuery(function($) {
 
     function belongApproval() {
 
-        if (com.validate("belongApproveModal")) {
+        if (!customerChance.service && com.validate("belongApproveModal")) {
             return false;
         }
 
