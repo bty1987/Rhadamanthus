@@ -1461,8 +1461,8 @@ $(function() {
 
             params.historyPage = api.index.decorationIndex.url;
 
-            com.switchPage(api.index.backVisitIndex.url);
-            // com.popup4page("#layerPopUp", api.index.backVisitIndex.url, "装修单回访: " + orderId);
+            com.switchPage(api.index.decorationBackVisitIndex.url);
+            // com.popup4page("#layerPopUp", api.index.decorationBackVisitIndex.url, "装修单回访: " + orderId);
         };
 
     function initPlan() {
@@ -1929,8 +1929,8 @@ $(function() {
 
             params.historyPage = api.index.decorationIndex.url;
 
-            com.switchPage(api.index.auditRecordIndex.url);
-            // com.popup4page("#layerPopUp", api.index.auditRecordIndex.url, "装修单扣款: " + orderId);
+            com.switchPage(api.index.decorationAuditRecordIndex.url);
+            // com.popup4page("#layerPopUp", api.index.decorationAuditRecordIndex.url, "装修单扣款: " + orderId);
         };
         // 时间轴
     var viewDecorationTimelineIndex = function(orderId) {

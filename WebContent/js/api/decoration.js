@@ -34,18 +34,18 @@ $.extend(api.index, {
     decorationTimelineIndex: {
         url: "/views/decoration/decoration4timeline.html"
     },
-    backVisitIndex: {
-        url: "/views/decoration/backVisit.html"
+    decorationBackVisitIndex: {
+        url: "/views/decoration/decorationBackVisit.html"
     },
     createOrderIndex: {
         url: "/views/decoration/decoration2create.html"
     },
 
-    auditIndex: {
-        url: "/views/decoration/audit.html"
+    decorationAuditIndex: {
+        url: "/views/decoration/decoration4audit.html"
     },
-    auditRecordIndex: {
-        url: "/views/decoration/audit4record.html"
+    decorationAuditRecordIndex: {
+        url: "/views/decoration/decorationAuditRecord.html"
     },
 
     decorationServiceIndex: {
