@@ -264,7 +264,7 @@ $(function() {
         params.decoration.orderId = orderId;
         params.decoration.auditStatusType = "select";
 
-        com.popup4page("#stockRecordPopUp", "/views/decoration/audit4record.html", "扣款");
+        com.popup4page("#stockRecordPopUp", "/views/decoration/decorationAuditRecord.html", "扣款");
     }
 
     function viewConstructionInfo(orderId) {

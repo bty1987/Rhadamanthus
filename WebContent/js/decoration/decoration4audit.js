@@ -85,9 +85,9 @@ jQuery(function($) {
             params.decoration.deptId = deptId;
             params.decoration.auditStatusType = "admin";
 
-            params.historyPage = api.index.auditIndex.url;
+            params.historyPage = api.index.decorationAuditIndex.url;
 
-            com.switchPage(api.index.auditRecordIndex.url);
+            com.switchPage(api.index.decorationAuditRecordIndex.url);
         };
 
         return {
@@ -159,7 +159,7 @@ jQuery(function($) {
             type: "addreduce"
         }];
 
-        params.historyPage = api.index.auditIndex.url;
+        params.historyPage = api.index.decorationAuditIndex.url;
 
         com.switchPage(api.index.decorationDetailIndex.url);
     };
