@@ -1041,58 +1041,70 @@ $(function() {
             },
             precontractPrice: {
                 field: "precontractPrice",
-                name: "预签额",
-                prop: "precontractPrice",
-                clazz: "blue",
-                click: function($this, v) {
+                type: "custom",
+                render: function($liLine, v, $ulProperty) {
+
+                    var $li = $('<li></li>').appendTo($ulProperty);
+                    $('<strong></strong>').html("预签额: ").appendTo($li);
+                    $('<b></b>').html(v.precontractPrice).addClass("blue").appendTo($li);
 
                     if (v.precontractPrice != 0) {
-
-                        netPerformancep($this, v);
+                        $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').appendTo($li).click(function() {
+                            netPerformancep($(this), v);
+                        });
                     }
                 }
             },
             orderTotalPrice: {
                 field: "orderTotalPrice",
-                name: "签单额",
-                prop: "orderTotalPrice",
-                clazz: "blue",
-                click: function($this, v) {
+                type: "custom",
+                render: function($liLine, v, $ulProperty) {
+
+                    var $li = $('<li></li>').appendTo($ulProperty);
+                    $('<strong></strong>').html("签单额: ").appendTo($li);
+                    $('<b></b>').html(v.orderTotalPrice).addClass("blue").appendTo($li);
 
                     if ([constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_TERMINATION_INT, constant.decoration().decoration.STATUS_FINAL_INT].contains(v.status)) {
-
-                        netPerformanceo($this, v);
+                        $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').appendTo($li).click(function() {
+                            netPerformanceo($(this), v);
+                        });
                     }
                 }
             },
             quotationPrice: {
                 field: "quotationPrice",
-                name: "报价额",
-                prop: "quotationPrice",
-                clazz: "blue",
-                click: function($this, v) {
+                type: "custom",
+                render: function($liLine, v, $ulProperty) {
 
-                    com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-                        "quotation.orderId": v.orderId
-                    }, function(res) {
+                    var $li = $('<li></li>').appendTo($ulProperty);
+                    var $text = $('<strong>报价额: </strong>').appendTo($li);
+                    $('<b></b>').html(v.quotationPrice).addClass("blue").appendTo($li);
+                    $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').appendTo($li).click(function() {
 
-                        var quotation = res.quotation;
+                        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+                            "quotation.orderId": v.orderId
+                        }, function(res) {
 
-                        beforeTotal = utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice), quotation.managePrice), quotation.taxPrice);
+                            var quotation = res.quotation;
 
-                        com.showTip($this, "折前总价:" + utils.changeThrDecimal(beforeTotal));
+                            beforeTotal = utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice), quotation.managePrice), quotation.taxPrice);
 
+                            com.showTip($text, "折前总价:" + utils.changeThrDecimal(beforeTotal));
+                        });
                     });
                 }
             },
             couponCut: {
                 field: "couponCut",
-                name: "券优惠",
-                prop: "couponCut",
-                clazz: "blue",
-                click: function($this, v) {
+                type: "custom",
+                render: function($liLine, v, $ulProperty) {
 
-                    couponCut($this, v.orderId);
+                    var $li = $('<li></li>').appendTo($ulProperty);
+                    $('<strong></strong>').html("券优惠: ").appendTo($li);
+                    $('<b></b>').html(v.couponCut).addClass("blue").appendTo($li);
+                    $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').appendTo($li).click(function() {
+                        couponCut($(this), v.orderId);
+                    });
                 }
             },
             factPrice: {
@@ -1196,41 +1208,41 @@ $(function() {
             },
             decorationStatus: {
                 field: "decorationStatus",
-                name: "状态",
-                prop: function(v) {
+                type: "custom",
+                render: function($liLine, v, $ulProperty) {
 
-                    return order.decorationStatus[v.status];
-                },
-                clazz: "red",
-                click: function($this, v) {
-
-                    tools.communion.assistance("decoration_status_information");
+                    var $li = $('<li></li>').appendTo($ulProperty);
+                    $('<strong></strong>').html("状态: ").appendTo($li);
+                    $('<b></b>').html(order.decorationStatus[v.status]).addClass("red").appendTo($li);
+                    $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').appendTo($li).click(function() {
+                        tools.communion.assistance("decoration_status_information");
+                    });
                 }
             },
             sourceStatus: {
                 field: "sourceStatus",
-                name: "确认状态",
-                prop: function(v) {
+                type: "custom",
+                render: function($liLine, v, $ulProperty) {
 
-                    return order.sourceStatus[v.sourceStatus];
-                },
-                clazz: "red",
-                click: function($this, v) {
-
-                    tools.communion.assistance("decoration_source_status_informa");
+                    var $li = $('<li></li>').appendTo($ulProperty);
+                    $('<strong></strong>').html("确认状态: ").appendTo($li);
+                    $('<b></b>').html(order.sourceStatus[v.sourceStatus]).addClass("red").appendTo($li);
+                    $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').appendTo($li).click(function() {
+                        tools.communion.assistance("decoration_source_status_informa");
+                    });
                 }
             },
             projectStatus: {
                 field: "projectStatus",
-                name: "工程状态",
-                prop: function(v) {
+                type: "custom",
+                render: function($liLine, v, $ulProperty) {
 
-                    return order.projectStatusArr[v.projectStatus];
-                },
-                clazz: "red",
-                click: function($this, v) {
-
-                    projectInfo($this, v.orderId);
+                    var $li = $('<li></li>').appendTo($ulProperty);
+                    $('<strong></strong>').html("工程状态: ").appendTo($li);
+                    $('<b></b>').html(order.projectStatusArr[v.projectStatus]).addClass("red").appendTo($li);
+                    $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').appendTo($li).click(function() {
+                        projectInfo($(this), v.orderId);
+                    });
                 }
             },
             repairStatus: {
@@ -1244,15 +1256,15 @@ $(function() {
             },
             designStatus: {
                 field: "designStatus",
-                name: "设计状态",
-                prop: function(v) {
+                type: "custom",
+                render: function($liLine, v, $ulProperty) {
 
-                    return order.designStatusArr[v.designStatus];
-                },
-                clazz: "red",
-                click: function($this, v) {
-
-                    tools.communion.assistance("decoration_design_status_informa");
+                    var $li = $('<li></li>').appendTo($ulProperty);
+                    $('<strong></strong>').html("设计状态: ").appendTo($li);
+                    $('<b></b>').html(order.designStatusArr[v.designStatus]).addClass("red").appendTo($li);
+                    $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').appendTo($li).click(function() {
+                        tools.communion.assistance("decoration_design_status_informa");
+                    });
                 }
             },
             balanceStatus: {
@@ -1266,45 +1278,53 @@ $(function() {
             },
             saleScale: {
                 field: "saleScale",
-                name: "销售比例",
-                prop: "saleScale",
-                clazz: "blue",
+                type: "custom",
                 show: function(v) {
 
                     return v.saleScale != 1918;
                 },
-                click: function($this, v) {
+                render: function($liLine, v, $ulProperty) {
 
-                    com.showConfirm("确定更新销售配比吗", function() {
+                    var $li = $('<li></li>').appendTo($ulProperty);
+                    $('<strong></strong>').html("销售比例: ").appendTo($li);
+                    $('<b></b>').html(v.saleScale).addClass("blue").appendTo($li);
+                    $('<i class="icon-circle-arrow-down icon-rotate-180 blue" style="padding-left: 2px; cursor: pointer"></i>').appendTo($li).click(function() {
 
-                        var options = {
-                            "decoration.orderId": v.orderId
-                        };
+                        com.showConfirm("确定更新销售配比吗", function() {
 
-                        com.post(api.decoration.updateDecorationForSaleScale, options, function() {
+                            var options = {
+                                "decoration.orderId": v.orderId
+                            };
 
-                            com.showAlert(com.info, "操作成功");
-                        }, null, false);
+                            com.post(api.decoration.updateDecorationForSaleScale, options, function() {
+
+                                com.showAlert(com.info, "操作成功");
+                            }, null, false);
+                        });
                     });
                 }
             },
             payScale: {
                 field: "payScale",
-                name: "付款比例",
-                prop: "paySacle",
-                clazz: "blue",
-                click: function($this, v) {
+                type: "custom",
+                render: function($liLine, v, $ulProperty) {
 
-                    com.showConfirm("确定更新付款配比吗", function() {
+                    var $li = $('<li></li>').appendTo($ulProperty);
+                    $('<strong></strong>').html("付款比例: ").appendTo($li);
+                    $('<b></b>').html(v.paySacle).addClass("blue").appendTo($li);
+                    $('<i class="icon-circle-arrow-down icon-rotate-180 blue" style="padding-left: 2px; cursor: pointer"></i>').appendTo($li).click(function() {
 
-                        var options = {
-                            "decoration.orderId": v.orderId
-                        };
+                        com.showConfirm("确定更新付款配比吗", function() {
 
-                        com.post(api.decoration.updateDecorationForPayScale, options, function() {
+                            var options = {
+                                "decoration.orderId": v.orderId
+                            };
 
-                            com.showAlert(com.info, "操作成功");
-                        }, null, false);
+                            com.post(api.decoration.updateDecorationForPayScale, options, function() {
+
+                                com.showAlert(com.info, "操作成功");
+                            }, null, false);
+                        });
                     });
                 }
             },
