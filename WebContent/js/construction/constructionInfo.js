@@ -390,6 +390,7 @@ jQuery(function($) {
                 v.keyTime = (v.keyTime == null ? "" : v.keyTime);
                 v.drawlineTime = (v.drawlineTime == null ? "" : v.drawlineTime);
                 v.finishTime = (v.finishTime == null ? "" : v.finishTime);
+                v.designTime = (v.designTime == null ? "" : v.designTime);
                 v.decoration.sdesignTime = (v.decoration.sdesignTime == null ? "" : v.decoration.sdesignTime);
                 v.decoration.edesignTime = (v.decoration.edesignTime == null ? "" : v.decoration.edesignTime);
                 v.decoration.designStatus = constant.decoration().decoration.designStatus.keys[v.decoration.designStatus];

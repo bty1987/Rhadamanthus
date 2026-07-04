@@ -488,6 +488,27 @@ function printWorkTable(workType) {
     var index = 0;
     var contentHtml = '';
 
+    function mergeWorkItems(items) {
+
+        var mergeItems = [];
+        var mergeMap = {};
+
+        $.each(items, function(j, qv) {
+
+            var itemKey = qv.quotationItemId && qv.quotationItemId != 0 ? qv.quotationItemId : [qv.itemName, qv.typestr, qv.measurementUnit].join('-');
+            var key = [qv.areaName, qv.suptype, itemKey].join('-');
+
+            if (mergeMap[key]) {
+                mergeMap[key].num = utils.changeThrDecimal(utils.accAdd(mergeMap[key].num, qv.num));
+            } else {
+                mergeMap[key] = $.extend({}, qv);
+                mergeItems.push(mergeMap[key]);
+            }
+        });
+
+        return mergeItems;
+    }
+
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
     contentHtml += '<td width="8%" align="center">序号</td>';
@@ -522,7 +543,7 @@ function printWorkTable(workType) {
         contentHtml += '</td>';
         contentHtml += '</tr>';
 
-        $.each(v, function(j, qv) {
+        $.each(mergeWorkItems(v), function(j, qv) {
 
             contentHtml += '<tr bgcolor="#FFFFFF">';
             contentHtml += '<td width="8%" align="center">' + (itemIndex + 1) + '</td>';

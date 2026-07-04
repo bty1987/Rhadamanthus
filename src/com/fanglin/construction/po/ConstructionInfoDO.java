@@ -55,6 +55,8 @@ public class ConstructionInfoDO implements Serializable {
 
 	private Timestamp issueTime;
 
+	private Timestamp initDesignTime;
+
 	private short ishovel;
 
 	private short iskey;
@@ -155,6 +157,15 @@ public class ConstructionInfoDO implements Serializable {
 
 	public void setIssueTime(Timestamp issueTime) {
 		this.issueTime = issueTime;
+	}
+
+	@Column(name = "initDesignTime")
+	public Timestamp getInitDesignTime() {
+		return initDesignTime;
+	}
+
+	public void setInitDesignTime(Timestamp initDesignTime) {
+		this.initDesignTime = initDesignTime;
 	}
 
 	@Column(name = "cid")
