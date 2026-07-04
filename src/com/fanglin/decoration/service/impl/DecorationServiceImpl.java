@@ -1690,7 +1690,10 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(140004, "装修单状态不可操作");
 		}
 
-		if (decorationVO.getNotSalesmanRate() != null) {
+		// 签约/决算状态下不可修改房屋类别/房屋类型/非提点金额
+		boolean locked = decorationPO.getStatus() == DecorationPO.STATUS_SIGNED_INT || decorationPO.getStatus() == DecorationPO.STATUS_FINAL_INT;
+
+		if (decorationVO.getNotSalesmanRate() != null && !locked) {
 
 			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 
@@ -1703,7 +1706,8 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
 		}
 
-		if (type != null && typeness != null) {
+		if (type != null && typeness != null && !locked) {
+
 			serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单: %s, 原业务: %s, 现业务: %s.", orderId, decorationPO.getTypeness(), decorationVO.getTypeness())));
 
 			decorationPO.setType(type);
