@@ -1614,22 +1614,24 @@ $(function() {
                 var startTime = com.dateFormat(new Date(start));
                 var endTime = com.dateFormat(new Date(end));
 
+                // 放线排期展示的是 constructionInfo.actuaTime 维度的排期容量(每天20户),
+                // countDrawLine 按 drawline.actualTime 统计的是已放线数据, 与排期日历语义不符.
                 var options = {
-                    "drawLine.startTime": startTime,
-                    "drawLine.endTime": endTime
+                    "constructionInfo.startTime": startTime,
+                    "constructionInfo.endTime": endTime
                 };
 
-                com.post(api.construction.countDrawLine, options, function(res) {
+                com.post(api.construction.countConstructionInfo, options, function(res) {
 
                     var counts = res.count;
 
                     for ( var i in counts) {
 
                         var _ = counts[i];
-                        var _date = _[1] + "";
+                        var _date = _[0] + "";
 
                         if (!isNaN(dates[_date])) {
-                            dates[_date] += _[2];
+                            dates[_date] += _[1];
                         }
                     }
 
