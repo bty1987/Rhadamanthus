@@ -231,7 +231,7 @@ $(function() {
         // 生成人员扣款
         var makeAuditRecord = function(total, arid) {
 
-            com.post(api.decoration.makeAuditScale, makeAuditScalesPostdata(0, arid, auditRecord.designerId, auditRecord.deptId, ((utils.accMul(total, perCharge["designer"])) / 10), 0), function(res) {
+            com.post(api.decoration.makeDecorationAuditScale, makeAuditScalesPostdata(0, arid, auditRecord.designerId, auditRecord.deptId, ((utils.accMul(total, perCharge["designer"])) / 10), 0), function(res) {
 
                 com.showAlert(com.info, "生成人员成功");
                 initPage();
@@ -305,7 +305,7 @@ $(function() {
 
     function initPage() {
 
-        com.post(api.decoration.queryAuditRecordByOrderId, {
+        com.post(api.decoration.queryDecorationAuditRecordByOrderId, {
             "auditRecord.audit.decoration.orderId": auditRecord.decorationOrderId
         }, function(res) {
 
@@ -341,7 +341,7 @@ $(function() {
 
             var type = auditRecordPage.changeAuditRecordModel.attr("type");
             if (type == "addR") {
-                com.post(api.decoration.addAuditRecord, makeAuditRecordPostParam(null, auditRecord.aid, auditRecordPage.comment.val(), auditRecordPage.untiPrice.val(), auditRecordPage.num.val(), auditRecordPage.discount.val(), null, auditRecord.decorationOrderId), function(res) {
+                com.post(api.decoration.addDecorationAuditRecord, makeAuditRecordPostParam(null, auditRecord.aid, auditRecordPage.comment.val(), auditRecordPage.untiPrice.val(), auditRecordPage.num.val(), auditRecordPage.discount.val(), null, auditRecord.decorationOrderId), function(res) {
 
                     com.showAlert(com.info, "添加成功");
                     auditRecordPage.changeAuditRecordModel.modal("hide");
@@ -354,7 +354,7 @@ $(function() {
                     com.showAlert(com.error, e.errorMsg);
                 });
             } else if (type == "change") {
-                com.post(api.decoration.updateAuditRecord, makeAuditRecordPostParam(auditRecordPage.changeAuditRecordModel.attr("arid"), auditRecord.aid, auditRecordPage.comment.val(), auditRecordPage.untiPrice.val(), auditRecordPage.num.val(), auditRecordPage.discount.val()), function(res) {
+                com.post(api.decoration.updateDecorationAuditRecord, makeAuditRecordPostParam(auditRecordPage.changeAuditRecordModel.attr("arid"), auditRecord.aid, auditRecordPage.comment.val(), auditRecordPage.untiPrice.val(), auditRecordPage.num.val(), auditRecordPage.discount.val()), function(res) {
 
                     com.showAlert(com.info, "修改成功");
                     auditRecordPage.changeAuditRecordModel.modal("hide");
@@ -387,7 +387,7 @@ $(function() {
                 return false;
             }
 
-            com.post(api.decoration.addAuditScale, makeAuditScalePostdata(null, auditScale.arid, com.typeahead("userId"), auditScalePage.deptId.val(), auditScalePage.money.val(), 0), function(res) {
+            com.post(api.decoration.addDecorationAuditScale, makeAuditScalePostdata(null, auditScale.arid, com.typeahead("userId"), auditScalePage.deptId.val(), auditScalePage.money.val(), 0), function(res) {
 
                 com.showAlert(com.info, "添加成功");
                 auditScalePage.auditScaleModel.modal("hide");
@@ -487,7 +487,7 @@ $(function() {
             com.showConfirm("确认提交扣款信息?", function() {
 
                 // 如果为ture
-                com.post(api.decoration.updateAuditScaleForStatus, makeAuditScalePostdata(asid, null, null, null, null, null, 1), function(res) {
+                com.post(api.decoration.updateDecorationAuditScaleForStatus, makeAuditScalePostdata(asid, null, null, null, null, null, 1), function(res) {
 
                     com.showAlert(com.info, "操作成功");
                     initPages(auditScale.arid);
@@ -499,7 +499,7 @@ $(function() {
 
             com.showConfirm("确认删除审核记录?", function() {
 
-                com.post(api.decoration.deleteAuditScale, makeAuditScalePostdata(asid), function(res) {
+                com.post(api.decoration.deleteDecorationAuditScale, makeAuditScalePostdata(asid), function(res) {
 
                     com.showAlert(com.info, "删除成功");
                     initPages(auditScale.arid);
@@ -521,7 +521,7 @@ $(function() {
 
     function initPages(arid) {
 
-        com.post(api.decoration.queryAuditScaleByArid, makeAuditScalePostdata(null, arid), function(res) {
+        com.post(api.decoration.queryDecorationAuditScaleByArid, makeAuditScalePostdata(null, arid), function(res) {
 
             auditScalePage.add.css('visibility', 'visible');
             auditScale.arid = arid;

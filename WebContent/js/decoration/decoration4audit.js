@@ -104,7 +104,7 @@ jQuery(function($) {
     })();
     var _condArr = ['decoration-orderId', 'decoration-village', 'decoration-designer', 'decoration-supervisor', 'decoration-design-dept', 'decoration-createTime', 'decoration-signTime', 'decoration-auditTime', 'decoration-status', 'decoration-auditStatus', 'decoration-auditor'];
     var searcher = new Searcher();
-    searcher.init(_condArr, "condList", api.decoration.pageAudit, function(data) {
+    searcher.init(_condArr, "condList", api.decoration.pageDecorationAudit, function(data) {
 
         displayFunc.init('resultList', data);
     }, "pagenation");
@@ -113,7 +113,7 @@ jQuery(function($) {
 
         com.showConfirm("确认审核吗?", function() {
 
-            com.post(api.decoration.applyAudit, {
+            com.post(api.decoration.applyDecorationAudit, {
                 "audit.aid": aid
             }, function(res) {
 
