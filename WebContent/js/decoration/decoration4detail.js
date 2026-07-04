@@ -790,7 +790,7 @@ jQuery(function($) {
     com.focusPage("#addCustomerAccountBtn", "#customerChangeModal").on("click", function() {
 
         clearCustomerAccount();
-        com.focusPage("#customerAccountForm", "#customerChangeModal").show();
+        com.focusPage("#customerAccountForm", "#customerChangeModal").removeClass("hide");
     });
 
     com.focusPage("#cancelCustomerAccountBtn", "#customerChangeModal").on("click", function() {
@@ -1964,7 +1964,7 @@ jQuery(function($) {
         decorationDetail.customerAccountItems.bank.val(v.bank);
         decorationDetail.customerAccountItems.bankno.val(v.bankno);
 
-        com.focusPage("#customerAccountForm", "#customerChangeModal").show();
+        com.focusPage("#customerAccountForm", "#customerChangeModal").removeClass("hide");
     }
 
     function saveCustomerAccount() {
@@ -2015,7 +2015,7 @@ jQuery(function($) {
         com.cleanItems(decorationDetail.customerAccountItems);
         decorationDetail.customerAccountItems.type.val(1);
 
-        com.focusPage("#customerAccountForm", "#customerChangeModal").hide();
+        com.focusPage("#customerAccountForm", "#customerChangeModal").addClass("hide");
     }
 
     function showPhone(tableId, listData) {
