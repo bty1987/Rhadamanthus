@@ -47,7 +47,7 @@ $(function(){
         };
 
         var getList = function(){
-            com.post(api.decoration.queryBackVisitByOrderId, basicConf.postParams, function(data){
+            com.post(api.decoration.queryDecorationBackVisitByOrderId, basicConf.postParams, function(data){
                 painter.renderList(data.backVisits);
             });
         };
@@ -114,7 +114,7 @@ $(function(){
                 }
             });
 
-            com.post(api.decoration.addBackVisit, a, successCallback);
+            com.post(api.decoration.addDecorationBackVisit, a, successCallback);
         }
     }
     
