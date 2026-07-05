@@ -263,14 +263,17 @@ jQuery(function($) {
                 if (supervision4detail.pageType)
                     return false;
 
-                // 传递上下文给工费弹窗子页面, 通过 popup4page 加载
+                // 传递上下文给工费子页面 (workerSalary4detail.js 读取)
                 params.workerSalary = {
                     csid: workerInfo.csid,
                     userId: workerInfo.user.userId,
                     orderId: params.construction.orderId
                 };
 
-                com.popup4page("#workerSalaryPopUp", "/views/salary/workerSalary4detail.html", "工人工费信息");
+                // 用 Bootstrap modal 加载工费子页面 (避免 popup4page 双层 iframe 嵌套冲突)
+                com.focusPage("#workerSalaryList").load("/views/salary/workerSalary4detail.html", function() {
+                    com.focusPage("#guaranteeModal").modal("show");
+                });
             });
 
             profileDiv.appendTo(com.focusPage("#" + csid + "WorkerInfos"));
