@@ -799,6 +799,15 @@ $(function() {
                     actSales(v.sales || v);
                 }
             },
+            activity: {
+                name: "活动归属",
+                clazz: "btn-warning",
+                show: function(v) {
+
+                    return [0, 5].indexOf(v.status) != -1;
+                },
+                handle: activitySales
+            },
             money: {
                 name: "款项",
                 clazz: "btn-warning",
