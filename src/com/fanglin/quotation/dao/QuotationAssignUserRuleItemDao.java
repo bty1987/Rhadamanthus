@@ -23,7 +23,7 @@ public interface QuotationAssignUserRuleItemDao extends Dao<QuotationAssignUserR
 	 * @param filters 过滤条件（支持 company、supportedType、userName）
 	 * @throws FLException 业务异常
 	 */
-	List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, int company) throws FLException;
+	List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException;
 
 	/**
 	 * 根据规则ID查询所有明细

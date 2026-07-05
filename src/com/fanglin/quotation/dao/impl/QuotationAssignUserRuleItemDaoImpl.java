@@ -17,7 +17,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.QuotationAssignUserRuleItemDao;
 import com.fanglin.quotation.po.QuotationAssignUserRuleItemPO;
 import com.fanglin.quotation.po.QuotationAssignUserRulePO;
-import com.fanglin.utils.FormatUtil;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Paging;
 
 @Repository("quotationAssignUserRuleItemDao")
@@ -28,17 +28,12 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 	}
 
 	@Override
-	public List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, int company) throws FLException {
+	public List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException {
 
 		PagingQuery<QuotationAssignUserRuleItemPO> query = pagingQuery(paging, QuotationAssignUserRuleItemPO.class);
 
 		// 预先 alias，避免 N+1
 		query.alias("userRule", "userRule").alias("userRule.user", "user").alias("company", "companyAlias");
-
-		// company=0 表示不过滤公司（跨公司查询）
-		if (company > 0) {
-			query.add(query.getCriterion("companyAlias.cid", company, "eq"));
-		}
 
 		queryFilterExcute(query, filters);
 
@@ -148,7 +143,7 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 		}
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;
 
@@ -159,7 +154,7 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 			String op = filter.getOp();
 
 			if ("company".equals(field)) {
-				query.add(query.getCriterion("companyAlias.cid", FormatUtil.decodeCompany(data), op));
+				query.add(query.getCriterion("companyAlias.cid", CompanyServiceImpl.decode(data), op));
 			} else if ("supportedType".equals(field)) {
 				query.add(query.getCriterion("supportedType", Integer.valueOf(data), op));
 			} else if ("userName".equals(field)) {

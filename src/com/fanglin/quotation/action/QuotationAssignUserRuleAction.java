@@ -97,7 +97,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignUserRule() throws FLException {
 
-		quotationAssignUserRuleService.pageQuotationAssignUserRule(getPaging(), getFilters());
+		quotationAssignUserRuleService.pageQuotationAssignUserRule(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -198,7 +198,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignUserRuleItem() throws FLException {
 
-		quotationAssignUserRuleItemService.pageQuotationAssignUserRuleItem(getPaging(), getFilters(), company);
+		quotationAssignUserRuleItemService.pageQuotationAssignUserRuleItem(getPaging(), getFilters());
 
 		return SUCCESS;
 	}

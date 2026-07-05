@@ -29,7 +29,7 @@ public interface QuotationAssignUserRuleItemService {
 	/**
 	 * 分页查询预算规则明细列表（含预算员姓名）
 	 */
-	void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, int company) throws FLException;
+	void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException;
 
 	/**
 	 * 新增预算规则明细
