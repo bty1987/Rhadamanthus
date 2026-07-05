@@ -396,6 +396,49 @@ $(function() {
                 name: "券信息",
                 prop: "sales.couponInfo",
                 clazz: "grey"
+            },
+            brand: {
+                field: "brand",
+                name: "品牌",
+                prop: function(v) {
+
+                    return v.brand ? v.brand.name : v.sales.brand.name;
+                },
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.brand.info($this, v.sales.brand.bid);
+                }
+            },
+            region: {
+                field: "region",
+                name: "归属大区",
+                prop: "region.name",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.department.info($this, v.region.did);
+                }
+            },
+            dept: {
+                field: "dept",
+                name: "归属部门",
+                prop: "dept.name",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.department.info($this, v.dept.did);
+                }
+            },
+            instorer: {
+                field: "instorer",
+                name: "驻店",
+                prop: "sales.instorer.currentName",
+                clazz: "grey",
+                click: function($this, v) {
+
+                    tools.personel.info($this, v.sales.instorer.userId);
+                }
             }
         };
 
@@ -421,6 +464,39 @@ $(function() {
 
             if (propertyMap[key]) {
                 props.push(propertyMap[key]);
+                return true;
+            }
+            if (key == "salesman") {
+                props.push({
+                    field: "salesman",
+                    name: "渠道",
+                    prop: "salesman.currentName",
+                    clazz: "grey",
+                    click: function($this, v) {
+
+                        tools.personel.info($this, v.salesman.userId);
+                    }
+                });
+                props.push({
+                    field: "salesmanDept",
+                    name: "渠道部门",
+                    prop: "salesman.dept.name",
+                    clazz: "grey",
+                    click: function($this, v) {
+
+                        tools.department.info($this, v.salesman.dept.did);
+                    }
+                });
+                props.push({
+                    field: "salesmanRegion",
+                    name: "渠道大区",
+                    prop: "salesman.dept.fatherDept.name",
+                    clazz: "grey",
+                    click: function($this, v) {
+
+                        tools.department.info($this, v.salesman.dept.fatherDept.did);
+                    }
+                });
                 return true;
             }
             if (key == "salesBananceCoupon") {
