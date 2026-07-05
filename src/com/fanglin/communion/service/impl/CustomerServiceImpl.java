@@ -391,7 +391,7 @@ public class CustomerServiceImpl implements CustomerService {
 		messageQueuingDao.save(new MessageQueuingPO().init(null, "updateCustomer", "{\"cid\":" + customerPO.getCid() + ",\"no\":\"" + customerPO.getNo() + "\",\"event\":\"CUSTOMER_UPDATED\"}"));
 
 		// 比对该客户所有 account, 无完全匹配则新建
-		matchOrCreateAccount(customerPO);
+		matchCustomerAccount(customerPO);
 
 		BeanUtil.copyProperties(customerPO, customerVO);
 
@@ -419,7 +419,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customerDao.update(customerPO);
 
 		// 比对该客户所有 account, 无完全匹配则新建
-		matchOrCreateAccount(customerPO);
+		matchCustomerAccount(customerPO);
 
 		return 0;
 	}
@@ -669,7 +669,7 @@ public class CustomerServiceImpl implements CustomerService {
 	/**
 	 * 根据 customer 的 company* 字段计算 hash, 用 cid + contentHash 查询, 存在则跳过, 不存在则新建 account 并设为默认
 	 */
-	private void matchOrCreateAccount(CustomerPO customerPO) {
+	private void matchCustomerAccount(CustomerPO customerPO) {
 
 		String no = customerPO.getCompanyNo();
 		String name = customerPO.getCompanyName();
