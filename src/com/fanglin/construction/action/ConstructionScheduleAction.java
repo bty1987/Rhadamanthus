@@ -159,6 +159,22 @@ public class ConstructionScheduleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "addConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addConstructionSchedule() throws FLException {
+
+		constructionScheduleService.addConstructionSchedule(constructionSchedule);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteConstructionSchedule() throws FLException {
+
+		constructionScheduleService.deleteConstructionSchedule(constructionSchedule);
+
+		return SUCCESS;
+	}
+
 	public ConstructionScheduleVO getConstructionSchedule() {
 		return constructionSchedule;
 	}

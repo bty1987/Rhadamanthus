@@ -61,7 +61,7 @@ Condition.addupRule("construction", {
         label: "进度",
         type: "select",
         submitConfig: {
-            name: "construction.schedule",
+            name: "construction.cnid",
             op: "eq",
             validate: null
         },

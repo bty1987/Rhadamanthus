@@ -39,4 +39,8 @@ public interface ConstructionScheduleService {
 
 	public void planConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;
 
+	public void addConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;
+
+	public void deleteConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;
+
 }
