@@ -924,7 +924,7 @@ $.extend(api, {
                 args: [],
                 query: [{
                     result: "quotation",
-                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "basePrice", "costPrice", "unachePrice", "consPrice", "comsPrice", "undisComPrice", "disComPrice", "notSalesmanRate", "taxPrice", "taxRate", "taxDiscount"]
+                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "basePrice", "costPrice", "unachePrice", "consPrice", "comsPrice", "undisComPrice", "disComPrice", "notSalesmanRate", "taxPrice", "taxRate"]
                 }]
             }
         },
@@ -935,7 +935,7 @@ $.extend(api, {
                 args: [],
                 query: [{
                     result: "quotation",
-                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "basePrice", "costPrice", "unachePrice", "consPrice", "comsPrice", "undisComPrice", "disComPrice", "notSalesmanRate", "taxPrice", "taxRate", "taxDiscount"]
+                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "basePrice", "costPrice", "unachePrice", "consPrice", "comsPrice", "undisComPrice", "disComPrice", "notSalesmanRate", "taxPrice", "taxRate"]
                 }]
             }
         },
@@ -946,7 +946,7 @@ $.extend(api, {
                 args: [],
                 query: [{
                     result: "quotation",
-                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "basePrice", "costPrice", "unachePrice", "consPrice", "comsPrice", "undisComPrice", "disComPrice", "notSalesmanRate", "taxPrice", "taxRate", "taxDiscount"]
+                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "basePrice", "costPrice", "unachePrice", "consPrice", "comsPrice", "undisComPrice", "disComPrice", "notSalesmanRate", "taxPrice", "taxRate"]
                 }]
             }
         },
@@ -1309,7 +1309,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "quotetion",
-                args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "taxPrice", "taxRate", "taxDiscount"]
+                args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "taxPrice", "taxRate"]
             }]
         },
         queryQuotetionByNo: {
@@ -1317,7 +1317,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "quotetion",
-                args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "taxPrice", "taxRate", "taxDiscount"]
+                args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "taxPrice", "taxRate"]
             }]
         },
         addQuotetion: {
@@ -1343,7 +1343,7 @@ $.extend(api, {
                 args: [],
                 query: [{
                     result: "quotetion",
-                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "notSalesmanRate", "taxPrice", "taxRate", "taxDiscount"]
+                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "notSalesmanRate", "taxPrice", "taxRate"]
                 }]
             }
         },
@@ -1354,7 +1354,7 @@ $.extend(api, {
                 args: [],
                 query: [{
                     result: "quotetion",
-                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "notSalesmanRate", "taxPrice", "taxRate", "taxDiscount"]
+                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "notSalesmanRate", "taxPrice", "taxRate"]
                 }]
             }
         },
@@ -1365,7 +1365,7 @@ $.extend(api, {
                 args: [],
                 query: [{
                     result: "quotetion",
-                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "notSalesmanRate", "taxPrice", "taxRate", "taxDiscount"]
+                    args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "manageDiscount", "trafficRate", "trafficPrice", "trafficDiscount", "costPrice", "unachePrice", "basePrice", "consPrice", "comsPrice", "notSalesmanRate", "taxPrice", "taxRate"]
                 }]
             }
         },
