@@ -87,31 +87,36 @@ ConstructionNodePO.sort  --拷贝-->  ConstructionSchedulePO.schedule
 
 ### 3.1 字段设计
 
+> **⚠️ 方案修订（2026-06-27）：放弃新增 sort 字段，复用现有 schedule 字段。**
+> 经分析，schedule 字段的"漂移问题"本质是**语义认知错误**，而非字段本身缺陷。
+> 将 schedule 的语义从"node.sort 的实时镜像"重新定义为"独立排序快照（创建时初始化自
+> node.sort，之后独立维护）"，即可解决两个痛点，且零数据库迁移、零新增字段。
+> 详见 3.1.1 节。
+
+#### 3.1.1 方案对比与决策
+
+| 维度 | 方案X（新增 sort） | 方案Y（复用 schedule）✅ 采纳 |
+|---|---|---|
+| 数据库改动 | 两表加列 + 回填 232 万行 | **零** |
+| PO/VO 改动 | 5 个文件加字段 | **零** |
+| 解决痛点A（node.sort漂移） | sort 独立维护 | schedule 重定义为独立快照，不跟随 node 变 |
+| 解决痛点B（独立维护） | sort 手填 | schedule 独立维护 |
+| 下游 PO 影响 | 6 处改 getSort() | **零**（拷贝逻辑不变） |
+| 风险 | 中（DDL + 大表回填） | **低**（纯代码语义调整） |
+
+**核心理解**：原方案认为"schedule 与 node.sort 错位 = bug"，但实际上这是**期望的行为**——
+schedule 是创建时的快照，node 后续调整不应影响已创建的业务记录。所谓"漂移"不是字段缺陷，
+而是我们错误地把它当成了"实时镜像"。
+
 ```
-ConstructionSchedulePO（重构后）
+ConstructionSchedulePO（复用方案, 不新增字段）
 ├── csid            (PK, 不变)
 ├── cid / orderId   (关联工程, 不变)
-├── node (cnid)     ← 来源标记: 来自标准 node 时填, 凭空创建时为 NULL
-├── sort            ← 【新增】独立排序: 初始=创建时的 node.sort, 之后独立维护
-├── name            ← 节点名: 来自 node 则拷贝, 自定义则手填
-├── schedule        ← 【废弃】过渡期保留兼容, 最终删除 (阶段5)
+├── node (cnid)     ← 来源标记: 始终指向标准 node (决策3确定从node选择, cnid非空)
+├── schedule        ← 【语义重定义】独立排序快照: 初始=node.sort, 之后独立维护
+├── name            ← 节点名: 来自 node 则拷贝
 └── ... (其他业务字段不变)
 ```
-
-### 3.2 字段语义对照
-
-| 字段 | 类型 | 含义 | 可空 | 痛点A解决 | 痛点B解决 |
-|---|---|---|---|---|---|
-| `node.cnid` | long | 来源标记（来自哪个标准节点） | ✅ 可空 | 永久指向原始 node，稳定 | 凭空创建=null，明确"自定义节点" |
-| `sort`（新增） | short | 独立排序序号 | ❌ | 创建时拷贝 node.sort，之后**不再跟随 node 变化** | 凭空创建时手填，完全自治 |
-| `schedule`（废弃） | short | 旧排序快照 | — | 过渡期保留，供回滚兜底 | 最终删除 |
-
-### 3.3 设计原则
-
-- **排序**用 `sort`（独立维护，创建后不变）
-- **节点标识/业务判断**用 `cnid`（稳定主键）或 `csid`（本表主键）
-- **不再用 schedule 数值做任何业务判断**
-- 凭空创建的 schedule：`cnid=NULL`、`sort` 手填、`name` 手填
 
 ---
 
@@ -152,108 +157,23 @@ ConstructionSchedulePO（重构后）
 
 ---
 
-## 五、分阶段实施计划
+## 五、分阶段实施计划（复用 schedule 方案，2026-06-27 修订）
 
-> 原则：每阶段独立可上线、可回滚。前阶段不依赖后阶段。
+> **重大修订**：放弃新增 sort 字段（方案 X），改为复用 schedule 字段（方案 Y）。
+> 原阶段 1（加字段+数据迁移）**取消**——零数据库改动。
+> 后续阶段保留，但去除所有"加 sort 字段"相关内容。
 
-## 五、分阶段实施计划（基于最终决策修订）
+| 阶段 | 内容 | 风险 | 原方案对照 |
+|---|---|---|---|
+| ~~1 加字段~~ | **取消**（复用 schedule，无需新字段） | — | 原阶段1取消 |
+| **1 切查询条件** | DAO 的 `eq("schedule",x)` 改用 cnid；前端 API 参数 schedule→cnid | 高 | 原阶段4 |
+| **2 修 ConstructionPO bug + CRUD** | condition 筛选 bug 修复；新增 schedule 选择式增删 | 中 | 原阶段3 |
+| **3 清理误用** | 魔法数字改 cnid/status；scheduleInfos 改造；DOM id 改 csid | 中 | 原阶段2+4合并 |
+| ~~5 删字段~~ | **取消**（schedule 字段保留，语义已重定义） | — | 原阶段5取消 |
 
-> 原则：每阶段独立可上线、可回滚。决策 9 选 D——分次推进，间隔观察。
-> 决策 7 选 C——schedule 字段长期保留标废弃，**原阶段 5（删字段）取消**。
+### 阶段 1：切换查询条件（高风险）
 
-### 阶段 1：加字段 + 数据初始化（低风险）
-
-**目标**：`constructionschedule` 和 `construction` 两表各加 `sort` 列，用现有 schedule 值回填，不改业务逻辑。
-
-**数据库迁移**：
-```sql
--- constructionschedule 表（215万行，分批回填）
-ALTER TABLE construction.constructionschedule ADD COLUMN sort SMALLINT NULL AFTER schedule;
-UPDATE construction.constructionschedule SET sort = schedule WHERE sort IS NULL;  -- 分批，每次 5 万
-ALTER TABLE construction.constructionschedule MODIFY COLUMN sort SMALLINT NOT NULL;
-CREATE INDEX idx_constructionschedule_sort ON construction.constructionschedule(cid, sort);
-
--- construction 表（17万行）
-ALTER TABLE construction.construction ADD COLUMN sort INT NULL AFTER schedule;
-UPDATE construction.construction SET sort = schedule WHERE sort IS NULL;
-ALTER TABLE construction.construction MODIFY COLUMN sort INT NOT NULL;
-```
-
-**代码改动**：
-- `ConstructionSchedulePO.java`：加 `private short sort;` + `@Column(name="sort")` + `COLUMN_SORT_STR`
-- `ConstructionSchedulePO.init():499`：新增 `setSort(node.getSort())`（保留 `setSchedule` 兼容）
-- `ConstructionPO.java`：加 `private int sort;` + `@Column(name="sort")`
-- `construction/vo/ConstructionScheduleVO.java`：加 `sort` 字段
-- `ConstructionVO`（如存在）：加 `sort` 字段
-- ptv 自动拷贝（BeanUtil 按名匹配）
-
-**风险**：低。215 万行回填需评估窗口（建议低峰期，分批 UPDATE）。
-
-**回滚**：`ALTER TABLE ... DROP COLUMN sort`（两张表）。
-
----
-
-### 阶段 2：切换读取源（中风险）
-
-**目标**：后端读取改用 `getSort()`，前端排序改用 `sort`，DOM id 改用 `csid`。schedule 仅写入不再读取。
-
-**后端改动**：
-- 6 个影子 PO 拷贝点：`cs.getSchedule()` → `cs.getSort()`
-  - `ConstructerRecordServiceImpl:99`、`WorkerSalaryServiceImpl:229`
-  - `AccessoriesServiceImpl:171,184`、`ConstructionServiceImpl(customer):274`
-- `DecorationAdditionServiceImpl:134`：`cs.getSchedule()` → `cs.getSort()`（范围比较，不可用 cnid）
-- `customer/ConstructionServiceImpl:85-86`：map key 查询改 `cs.getSort()`
-- `ConstructionScheduleServiceImpl:243` + `A20251208ServiceImpl:655`：`constructionPO.setSchedule` → 同时 `setSort`
-
-**前端改动**：
-- 排序：`a.schedule - b.schedule` → `a.sort - b.sort`（customer4detail:13、supervision4detail:47）
-- **DOM id 改 csid**（决策 2）：supervision4detail / customer4detail / allocation4detail 中所有
-  `#step` + schedule、`data-schedule`、`schedule + "NavTab"` 等改为 `#step` + csid、`data-csid`、
-  `csid + "NavTab"`。涉及约 30+ 处 DOM 选择器，需逐文件排查替换。
-- 显示用 schedule 数值的地方改读 sort
-
-**不改动**：DAO 查询、API 参数名、魔法数字（留给阶段 3-4）。
-
-**风险**：中。DOM id 大面积重写，需重点回归 supervision4detail 的步骤切换、tab 切换、上传按钮等交互。
-
-**回滚**：前端改回 schedule、后端改回 getSchedule。
-
----
-
-### 阶段 3：修复 ConstructionPO 既有 bug + 新增 schedule CRUD（中风险）
-
-**目标**：(a) 修复 `construction.schedule` 筛选 bug；(b) 新增 schedule 选择式新增/删除。
-
-**(a) ConstructionPO bug 修复**：
-- `condition/construction.js:60-74`：参数名 `construction.schedule` → `construction.cnid`
-- `ConstructionDaoImpl:103-104`：删除 schedule 分支，复用:100 已有的 cnid 分支
-- 前端若有读 `construction.schedule` 的列表显示，改读 `construction.sort`
-
-**(b) 新增 CRUD 接口**（决策 3：从标准 node 选择）：
-- `addConstructionSchedule` 接口：
-  - 入参：orderId、cnid（必填，来自选择的 node）
-  - 逻辑：查 node → 填充 sort/name → 校验该订单是否已有此 cnid → save
-  - **cnid 始终非空**（决策 3 确定，不存在纯自定义节点）
-- `deleteConstructionSchedule` 接口：
-  - 入参：csid
-  - 校验：status == INIT 方可删；有关联 workerSalary/constructer 的拒绝（抛 FLException）
-- `ConstructionScheduleAction`：加 2 个 @Action
-- `ConstructionScheduleService` / `Impl`：加 2 个方法
-- 前端：在 constructionSchedule 页面或 supervision4detail 加"添加节点"（弹窗选 node）/"删除"按钮
-
-**业务规则**：
-- 添加：候选 = 该公司 node 表中当前订单未包含的节点
-- 删除：仅 status==INIT 可删；有下游关联数据拒绝删除
-
-**风险**：中。新增功能 + condition bug 修复，需测试筛选 + 创建/删除流程。
-
-**回滚**：下线新接口；condition 改回 `construction.schedule`。
-
----
-
-### 阶段 4：切换查询条件 + scheduleInfos 改造（高风险）
-
-**目标**：DAO 的 schedule 查询改用 cnid；scheduleInfos 改按 cnid 查；supervision4detail 魔法数字 3 改用 status 判断。
+**目标**：DAO 的 schedule 查询改用 cnid，废弃 schedule 查询重载。
 
 **后端改动**：
 - `ConstructionScheduleDaoImpl:49-50,59-60`：废弃 2 个 schedule 重载，内部转调 cnid 重载（:54-55,64-65）
@@ -261,6 +181,53 @@ ALTER TABLE construction.construction MODIFY COLUMN sort INT NOT NULL;
   - `ConstructionScheduleServiceImpl:126`、`ConstructionDrawingServiceImpl:128,160`
   - `ConstructionDiaryDrawingServiceImpl:118`
 - 前端 API 参数：`"constructionSchedule.schedule"` → `"constructionSchedule.cnid"`
+
+**风险**：高。查询逻辑变化，需全面回归：
+- 监理详情（supervision4detail）按节点查询 schedule/drawing/constructer
+- 分配详情（allocation4detail）按节点查询
+- 施工日志图纸（constructionDiaryDrawing）
+
+**回滚**：DAO 恢复 schedule 重载。
+
+---
+
+### 阶段 2：修复 ConstructionPO 既有 bug + 新增 schedule CRUD（中风险）
+
+**目标**：(a) 修复 `construction.schedule` 筛选 bug；(b) 新增 schedule 选择式新增/删除。
+
+**(a) ConstructionPO bug 修复**：
+- `condition/construction.js:60-74`：参数名 `construction.schedule` → `construction.cnid`
+- `ConstructionDaoImpl:103-104`：删除 schedule 分支，复用:100 已有的 cnid 分支
+
+**(b) 新增 CRUD 接口**（决策 3：从标准 node 选择）：
+- `addConstructionSchedule` 接口：
+  - 入参：orderId、cnid（必填，来自选择的 node）
+  - 逻辑：查 node → 用 node.sort 初始化 schedule 字段 + 填充 name → 校验该订单是否已有此 cnid → save
+  - **cnid 始终非空**（决策 3 确定）
+  - schedule 字段此时就是"独立排序"，初始化后不再跟随 node 变化
+- `deleteConstructionSchedule` 接口：
+  - 入参：csid
+  - 校验：status == INIT 方可删；有关联 workerSalary/constructer 的拒绝（抛 FLException）
+- `ConstructionScheduleAction`：加 2 个 @Action
+- `ConstructionScheduleService` / `Impl`：加 2 个方法
+- 前端：在 constructionSchedule 页面或 supervision4detail 加"添加节点"（弹窗选 node）/"删除"按钮
+
+**风险**：中。新增功能 + condition bug 修复，需测试筛选 + 创建/删除流程。
+
+**回滚**：下线新接口；condition 改回 `construction.schedule`。
+
+---
+
+### 阶段 3：清理误用 + scheduleInfos 改造（中风险）
+
+**目标**：消除前端对 schedule 数值的硬编码依赖；DOM id 改 csid；scheduleInfos 改按 cnid 查。
+
+**前端改动**：
+- **DOM id 改 csid**（决策 2）：supervision4detail / customer4detail / allocation4detail 中所有
+  `#step` + schedule、`data-schedule`、`schedule + "NavTab"` 改为 `#step` + csid、`data-csid`、
+  `csid + "NavTab"`。涉及约 30+ 处 DOM 选择器。
+- 排序保持用 schedule（语义已是"独立排序快照"，适合排序）
+- 显示 schedule 数值的地方：保持或改为显示 node.name（更友好）
 
 **scheduleInfos 改造**（决策 6）：
 - `decorationUtils.js:2497` 的静态数组废弃
@@ -270,24 +237,17 @@ ALTER TABLE construction.construction MODIFY COLUMN sort INT NOT NULL;
 **魔法数字 3 修复**（决策 5）：
 - `supervision4detail.js:471`：`if (schedule == 3)` → `if (v.status == STATUS_BEGIN)` 或等效状态判断
 
-**风险**：高。查询逻辑 + 显示映射双重变化，需全面回归：
-- 监理详情按节点查询 schedule/drawing/constructer
-- 分配详情按节点查询
-- 施工日志图纸
-- 工期时间线（decoration4timeline）
+**不改动**：魔法数字 7/8/9/11/12（决策 4，独立专项）
 
-**回滚**：DAO 恢复 schedule 重载；scheduleInfos 恢复静态数组。
+**风险**：中。DOM id 大面积重写，需重点回归步骤切换、tab 切换、上传按钮等交互。
+
+**回滚**：前端改回原 schedule DOM 拼接；scheduleInfos 恢复静态数组。
 
 ---
 
-### 阶段 5：（取消）
+### 阶段 4：（取消）
 
-决策 7 选 C——schedule 字段**长期保留**，标 `@Deprecated`，新代码不再读写。
-原"删除字段"阶段取消，避免不可回滚的 DDL。
-
-**废弃标注**：
-- `ConstructionSchedulePO.schedule` / `ConstructionPO.schedule` 加 `@Deprecated`
-- Javadoc 注释："改用 sort 字段，本字段保留兼容，勿新增读取"
+schedule 字段保留，语义已重定义为"独立排序快照"。无需删除。
 
 ---
 
@@ -374,13 +334,13 @@ ALTER TABLE construction.construction MODIFY COLUMN sort INT NOT NULL;
 
 | 阶段 | 风险等级 | 回滚方式 | 建议观察期 |
 |---|---|---|---|
-| 1 加字段（两表） | 低 | DROP COLUMN | 上线即生效 |
-| 2 切读取源 + DOM改csid | 中 | 前后端改回 schedule | 1 周 |
-| 3 修ConstructionPO bug + CRUD | 中 | 下线接口；condition改回 | 2 周 |
-| 4 切查询 + scheduleInfos + 魔法数3 | 高 | DAO 恢复 schedule 重载 | 2 周 |
-| 5 标 @Deprecated（不删字段） | 低 | 移除注解 | 即时 |
+| ~~1 加字段~~ | — | — | **已取消** |
+| 1 切查询条件 | 高 | DAO 恢复 schedule 重载 | 2 周 |
+| 2 修bug + CRUD | 中 | 下线接口；condition改回 | 2 周 |
+| 3 清理误用 + scheduleInfos | 中 | 前端改回 schedule DOM | 1 周 |
+| ~~5 删字段~~ | — | — | **已取消** |
 
-> 决策 7 选 C，无删字段的不可逆操作。整个重构**全程可回滚**。
+> 复用 schedule 方案：**零数据库改动，全程可回滚**。
 
 ---
 
