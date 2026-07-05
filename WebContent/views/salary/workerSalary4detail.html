@@ -1,0 +1,55 @@
+<div>
+	<div class="row">
+		<div class="col-xs-12">
+			<h3 class="header smaller lighter blue">
+				<i class="icon-list"></i>
+				<span>工人工费列表</span>
+			</h3>
+			<div id="workerSalaryList" class="form-horizontal"></div>
+		</div>
+	</div>
+
+	<div class="hr hr32 hr-dotted"></div>
+
+	<h3 class="header smaller lighter blue">
+		<i class="icon-edit"></i>
+		<span>添加工费</span>
+	</h3>
+
+	<form class="form-horizontal" id="workerSalaryForm">
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right" for="salary">工费</label>
+			<div class="col-sm-4">
+				<input type="text" id="salary" class="col-xs-10 col-sm-10 v_salary" data-toggle="popover" data-trigger="manual" />
+				<span style="color: red; padding-left: 10px;"><b>* 扣款项请输入负数, 如: -123</b></span>
+			</div>
+		</div>
+		<div class="space-4"></div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right orange" for="salaryType">类型</label>
+			<div class="col-sm-4">
+				<select id="salaryType" class="col-xs-10 col-sm-10"></select>
+			</div>
+		</div>
+		<div class="space-4"></div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right" for="comment">备注</label>
+			<div class="col-sm-6">
+				<textarea id="comment" maxlength="256" class="col-xs-10 col-sm-10" rows="3"></textarea>
+			</div>
+		</div>
+		<div class="space-4"></div>
+
+		<div class="form-group">
+			<div class="col-sm-12" style="text-align: center;">
+				<button type="button" id="saveBtn" class="btn btn-sm btn-primary"><b>保存</b></button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/salary/workerSalary4detail.js']);
+</script>

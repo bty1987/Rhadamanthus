@@ -4,33 +4,8 @@ jQuery(function($) {
 
         constructionSchedules: {},
 
-        status: {},
-        oneTypeMap: {},
-        twoTypeMap: {},
-
-        twoTypes: [],
-
-        validator: {
-            salary: {
-                type: "v_salary",
-                regex: /^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/,
-                errorMsg: "请正确输入工人工费，小数点后最多保留3位"
-            }
-        },
-
         pageType: params.urlLoadParams.type,
     };
-
-    com.post(api.ds.salary, {}, function(res) {
-
-        supervision4detail.status = res.status.split("key", "value");
-        supervision4detail.oneTypeMap = res.SalaryTwoType.split("key", "oneType");
-        supervision4detail.twoTypeMap = res.SalaryTwoType.split("key", "name");
-
-        supervision4detail.twoTypes = res.SalaryTwoType;
-    }, null, false);
-
-    $.extend(com.validator, supervision4detail.validator);
 
     com.post(api.construction.queryConstructionScheduleByOrderId, {
         "constructionSchedule.orderId": params.construction.orderId
@@ -288,152 +263,20 @@ jQuery(function($) {
                 if (supervision4detail.pageType)
                     return false;
 
-                var options = {
-                    "workerSalary.csid": workerInfo.csid,
-                    "workerSalary.user.userId": workerInfo.user.userId
+                // 传递上下文给工费弹窗子页面, 通过 popup4page 加载
+                params.workerSalary = {
+                    csid: workerInfo.csid,
+                    userId: workerInfo.user.userId,
+                    orderId: params.construction.orderId
                 };
 
-                queryConstructerSalary(options);
+                com.popup4page("#workerSalaryPopUp", "/views/salary/workerSalary4detail.html", "工人工费信息");
             });
 
             profileDiv.appendTo(com.focusPage("#" + csid + "WorkerInfos"));
         }
 
         return true;
-    }
-
-    // 查询工人工费
-    function queryConstructerSalary(options) {
-
-        if (com.focusPage('#workerSalaryList').children()) {
-            com.focusPage('#workerSalaryList').empty();
-        }
-
-        var quotation = null;
-
-        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-            'quotation.orderId': params.construction.orderId
-        }, function(res) {
-
-            quotation = res.quotation;
-        }, null, false);
-
-        com.post(api.quotation.makeNormtion, {
-            "normtion.qid": quotation.qid,
-            "normtion.orderId": params.construction.orderId,
-        }, function(res) {
-
-        }, null, false);
-
-        com.post(api.salary.queryWorkerSalary, options, function(res) {
-
-            $.each(res.workerSalarys, function(i, v) {
-
-                var workerSalary = $('<div></div>').prop("id", "salary" + i);
-
-                workerSalary.append(addspan('10', '姓名  : ', v.user.userName)).append(addspan('40', '创建时间  : ', v.createTime)).append(addspan('40', '薪资  : ', v.money)).append(addspan('40', '类型  : ', supervision4detail.twoTypeMap[v.twotype])).append(addspan('40', '状态  : ', supervision4detail.status[v.status])).append($('<button>删除</button>').addClass("btn btn-xs btn-danger pull-right").css("margin-left", "35px").attr("id", "deleteBtn" + i).click(function() {
-
-                    var data = {
-                        "workerSalary.wsId": v.wsId
-                    };
-                    com.post(api.salary.deleteWorkerSalary, data, function() {
-
-                        com.focusPage("#salary" + i).remove();
-                    }, function(res) {
-
-                        com.showAlert(com.error, "工费状态不可操作!");
-                    });
-                })).append('<hr/>');
-
-                workerSalary.appendTo(com.focusPage("#workerSalaryList"))
-            });
-
-            var salaryDiv = $('<div></div>').addClass("form-group").css("height", "50px").css("margin-bottom", "0px");
-            var salaryDivT = $('<div></div>').addClass("col-sm-9").appendTo(salaryDiv);
-            var salaryLabelT = $('<label><b>添加工费</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for", "form-field-1").attr("for", "salary").appendTo(salaryDivT);
-            var salaryInputT = $('<input type="text" />').addClass("col-xs-10 col-sm-9 v_salary").attr("id", "salary").attr("data-toggle", "popover").attr("data-trigger", "manual").css("width", "320px").css("height", "30px").appendTo(salaryDivT);
-            var salaryText = $('<span><b>* 扣款项请输入负数, 如: -123 !!!</b></span>').css("color", "red").css("margin-left", "-50px").appendTo(salaryDiv);
-
-            var salaryDiv3 = $('<div></div>').addClass("form-group").css("height", "50px").css("margin", "0px");
-            var salaryDivTh = $('<div></div>').addClass("col-sm-9").appendTo(salaryDiv3);
-            var salaryType = $('<label><b>类型</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for", "form-field-1").attr("for", "salaryType").appendTo(salaryDivTh);
-            var $item = $('<span></span>').addClass('inline').appendTo(salaryDivTh);
-            var salaryTypeS = $('<select></select>').attr("id", "salaryType").css("width", "320px").css("height", "30px").appendTo($item);
-
-            $.each(supervision4detail.twoTypes, function(i, v) {
-
-                // status == 0 为启用，非 0 表示禁用，跳过不加入可选项
-                if (v.status != 0)
-                    return true;
-
-                $('<option></option>').attr("value", v.key).html(v.name).appendTo(salaryTypeS);
-            });
-
-            var salaryDiv4 = $('<div></div>').addClass("form-group").css("height", "80px").css("margin", "0px 0px 15px 0px");
-            var salaryDivF = $('<div></div>').addClass("col-sm-9").appendTo(salaryDiv4);
-            var salaryBz = $('<label><b>备注</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for", "form-field-1").attr("for", "comment").appendTo(salaryDivF);
-            var salaryBzInp = $('<textarea></textarea>').attr("id", "comment").attr("maxlength", "256").css("width", "320px").appendTo(salaryDivF);
-
-            var salaryDivFi = $('<div></div>').addClass("col-sm-9").css("width", "850px").css("padding-top", "20px").css("text-align", "center").css("height", "50px").appendTo(salaryDiv4);
-            var salaryBtn = $('<button><b>保存</b></button>').addClass("btn btn-sm  btn-primary").attr("id", "saveBtn").appendTo(salaryDivFi).click(function() {
-
-                saveData(options);
-            });
-
-            salaryDiv.appendTo(com.focusPage("#workerSalaryList"));
-            salaryDiv3.appendTo(com.focusPage("#workerSalaryList"));
-            salaryDiv4.appendTo(com.focusPage("#workerSalaryList"));
-
-            com.focusPage('#guaranteeModal').modal('show');
-        }, null, false);
-
-    }
-
-    function addspan(px, name, value) {
-
-        var $10pxdiv = $('<div></div>').css({
-            'display': 'inline-block',
-            'margin-left': '10px'
-        });
-        var $40pxdiv = $('<div></div>').css({
-            'display': 'inline-block',
-            'margin-left': '40px'
-        });
-        var $nameSpan = $('<b></b>').html(name);
-        var $valueSpan = $('<span></span>').text(value);
-
-        if (px == '40') {
-            return $40pxdiv.append($nameSpan).append($valueSpan);
-        } else if (px == '10') {
-            return $10pxdiv.append($nameSpan).append($valueSpan);
-        }
-    }
-
-    // 添加工人工费
-    function saveData(options) {
-
-        var url = api.salary.addWorkerSalary;
-
-        if (com.validate("workerSalaryList")) {
-            return false;
-        }
-
-        var salary = com.focusPage('#salary').val();
-
-        if (salary >= 0) {
-            options["workerSalary.type"] = 0;
-        } else {
-            options["workerSalary.type"] = 1;
-        }
-
-        options["workerSalary.money"] = com.focusPage('#salary').val();
-        options["workerSalary.onetype"] = supervision4detail.oneTypeMap[com.focusPage("#salaryType").val()];
-        options["workerSalary.twotype"] = com.focusPage("#salaryType").val();
-        options["workerSalary.comment"] = com.focusPage("#comment").val();
-
-        com.post(url, options);
-
-        com.focusPage('#guaranteeModal').modal('hide');
     }
 
     // 画节点信息轴
