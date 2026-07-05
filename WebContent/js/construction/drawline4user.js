@@ -19,6 +19,15 @@ jQuery(function($) {
 
         decorationStatus: {},
         constructionNodes: {},
+
+        // 质检阶段对应的节点 sort 值, 从后端动态获取(按节点名匹配), 替代硬编码 7/8/9/11/12
+        qualiterSchedules: {
+            qualiter1: 0, // 水暖质检
+            qualiter2: 0, // 电工质检
+            qualiter3: 0, // 瓦工质检
+            qualiter4: 0, // 木工质检
+            qualiter5: 0  // 油工质检
+        },
     };
 
     drawline.btns.deployedBtn.bindClick(deployed);
@@ -34,6 +43,31 @@ jQuery(function($) {
         com.cleanTypeahead("qualiter5");
         com.closeTip();
     });
+
+    // 质检阶段与节点名称的对应关系
+    var qualiterNodeNames = {
+        qualiter1: "水暖",
+        qualiter2: "电工",
+        qualiter3: "瓦工",
+        qualiter4: "木工",
+        qualiter5: "油工"
+    };
+
+    // 加载当前公司施工节点, 按名称匹配出各质检阶段的 sort 值
+    com.post(api.data.queryConstructionNode, {}, function(res) {
+
+        var nodeMap = {};
+
+        $.each(res.constructionNodes, function(i, node) {
+            nodeMap[node.name] = node.sort;
+        });
+
+        $.each(qualiterNodeNames, function(key, name) {
+            if (nodeMap[name] !== undefined) {
+                drawline.qualiterSchedules[key] = nodeMap[name];
+            }
+        });
+    }, null, false);
 
     com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {
         "departmentType.name": "工程部",
@@ -190,22 +224,12 @@ jQuery(function($) {
 
                     if (v.user) {
 
-                        // schedule 为工程节点 sort 值，7/8/9/11/12 对应 qualiter1-5（质检各阶段）
-                        if (v.schedule == 7) {
-                            com.updateTypeahead("qualiter1", v.user.userId, v.user.userName);
-                        }
-                        if (v.schedule == 8) {
-                            com.updateTypeahead("qualiter2", v.user.userId, v.user.userName);
-                        }
-                        if (v.schedule == 9) {
-                            com.updateTypeahead("qualiter3", v.user.userId, v.user.userName);
-                        }
-                        if (v.schedule == 11) {
-                            com.updateTypeahead("qualiter4", v.user.userId, v.user.userName);
-                        }
-                        if (v.schedule == 12) {
-                            com.updateTypeahead("qualiter5", v.user.userId, v.user.userName);
-                        }
+                        // 按 schedule(node.sort) 反查对应哪个质检阶段, 动态匹配替代硬编码 7/8/9/11/12
+                        $.each(drawline.qualiterSchedules, function(key, schedule) {
+                            if (v.schedule == schedule && schedule != 0) {
+                                com.updateTypeahead(key, v.user.userId, v.user.userName);
+                            }
+                        });
                     } else {
                         com.cleanTypeahead("qualiter1");
                         com.cleanTypeahead("qualiter2");
@@ -234,19 +258,19 @@ jQuery(function($) {
             "construction.supervisor.userId": com.typeahead("supervisor"),
 
             "qualiters[0].user.userId": com.typeahead("qualiter1"),
-            "qualiters[0].schedule": 7,
+            "qualiters[0].schedule": drawline.qualiterSchedules.qualiter1,
 
             "qualiters[1].user.userId": com.typeahead("qualiter2"),
-            "qualiters[1].schedule": 8,
+            "qualiters[1].schedule": drawline.qualiterSchedules.qualiter2,
 
             "qualiters[2].user.userId": com.typeahead("qualiter3"),
-            "qualiters[2].schedule": 9,
+            "qualiters[2].schedule": drawline.qualiterSchedules.qualiter3,
 
             "qualiters[3].user.userId": com.typeahead("qualiter4"),
-            "qualiters[3].schedule": 11,
+            "qualiters[3].schedule": drawline.qualiterSchedules.qualiter4,
 
             "qualiters[4].user.userId": com.typeahead("qualiter5"),
-            "qualiters[4].schedule": 12
+            "qualiters[4].schedule": drawline.qualiterSchedules.qualiter5
         };
 
         if (drawline.items.conpany.val()) {
