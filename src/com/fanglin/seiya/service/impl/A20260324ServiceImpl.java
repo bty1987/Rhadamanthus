@@ -340,7 +340,7 @@ public class A20260324ServiceImpl implements A20260324Service {
 				deptPO.setType(departmentType);
 
 				// 防御: 父部门不能是部门自身(否则 Hibernate 同一持久化对象会被误改状态)
-				if (fatherDept != null && fatherDept.getDid().equals(deptPO.getDid())) {
+				if (fatherDept != null && fatherDept.getDid() == deptPO.getDid()) {
 					logger.warn("父部门did与当前部门did相同, 忽略父部门设置: did={}", deptPO.getDid());
 				} else if (fatherDept != null) {
 					deptPO.setFatherDept(fatherDept);

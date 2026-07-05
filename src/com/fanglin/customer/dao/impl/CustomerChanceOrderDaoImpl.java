@@ -18,17 +18,13 @@ public class CustomerChanceOrderDaoImpl extends DaoImpl<CustomerChanceOrderPO> i
 
 	@Override
 	public CustomerChanceOrderPO queryCustomerChanceOrder(long ccid) {
-		return (CustomerChanceOrderPO) session().createCriteria(CustomerChanceOrderPO.class)
-				.add(Restrictions.eq("ccid", ccid))
-				.uniqueResult();
+		return (CustomerChanceOrderPO) session().createCriteria(CustomerChanceOrderPO.class).add(Restrictions.eq("ccid", ccid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<CustomerChanceOrderPO> queryCustomerChanceOrderByOrderId(String orderId) {
-		return session().createCriteria(CustomerChanceOrderPO.class)
-				.add(Restrictions.eq("orderId", orderId))
-				.list();
+		return session().createCriteria(CustomerChanceOrderPO.class).add(Restrictions.eq("orderId", orderId)).list();
 	}
 
 }
