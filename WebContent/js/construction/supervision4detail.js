@@ -89,7 +89,7 @@ jQuery(function($) {
 
     function initWizardSept(schedule, csid) {
 
-        addActive(schedule);
+        addActive(csid);
 
         var args = {
             "constructionSchedule.orderId": params.construction.orderId,
@@ -107,12 +107,12 @@ jQuery(function($) {
 
             if (schedule == constructionSchedule.schedule) {
 
-                com.focusPage("#" + schedule + "StartTime").val(constructionSchedule.startTime);
-                com.focusPage("#" + schedule + "EndTime").val(constructionSchedule.endTime);
-                com.focusPage("#" + schedule + "LeaveTime").val(constructionSchedule.leaveTime);
-                com.focusPage("#" + schedule + "EnterTime").val(constructionSchedule.enterTime);
+                com.focusPage("#" + csid + "StartTime").val(constructionSchedule.startTime);
+                com.focusPage("#" + csid + "EndTime").val(constructionSchedule.endTime);
+                com.focusPage("#" + csid + "LeaveTime").val(constructionSchedule.leaveTime);
+                com.focusPage("#" + csid + "EnterTime").val(constructionSchedule.enterTime);
 
-                var otherename = schedule;
+                var otherename = csid;
                 var otherStatus = constructionSchedule.status;
 
                 var otherSuccessBtn = com.focusPage("#" + otherename + "Success");
@@ -137,7 +137,7 @@ jQuery(function($) {
                         com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, args, function(res) {
 
                             var constructionSchedule = res.constructionSchedule;
-                            com.focusPage("#" + schedule + "EnterTime").val(constructionSchedule.enterTime);
+                            com.focusPage("#" + csid + "EnterTime").val(constructionSchedule.enterTime);
                         });
                     });
 
@@ -160,7 +160,7 @@ jQuery(function($) {
                         com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, args, function(res) {
 
                             var constructionSchedule = res.constructionSchedule;
-                            com.focusPage("#" + schedule + "LeaveTime").val(constructionSchedule.leaveTime);
+                            com.focusPage("#" + csid + "LeaveTime").val(constructionSchedule.leaveTime);
                         });
                     });
 
@@ -191,22 +191,22 @@ jQuery(function($) {
 
                 var drawings = res.constructionDrawings;
 
-                com.focusPage("#" + schedule + "Gallery").html("");
+                com.focusPage("#" + csid + "Gallery").html("");
 
                 for ( var i = 0; i < drawings.length; i++) {
                     var drawing = drawings[i];
 
-                    appendGalleryElement(schedule + "Gallery", drawing.cdId, drawing.drawingUrl, drawing.type, "", api.construction.deleteConstructionDrawing);
+                    appendGalleryElement(csid + "Gallery", drawing.cdId, drawing.drawingUrl, drawing.type, "", api.construction.deleteConstructionDrawing);
                 }
-                com.popup4photos("#" + schedule + "Gallery");
+                com.popup4photos("#" + csid + "Gallery");
             });
 
             initUploadBtn(constructionSchedule.schedule, constructionSchedule.csid);
 
-            com.focusPage('#' + schedule + "Drawing").removeClass("active");
+            com.focusPage('#' + csid + "Drawing").removeClass("active");
 
-            if (com.focusPage('#' + schedule + "NavTab" + ' li:last-of-type').hasClass("active")) {
-                com.focusPage('#' + schedule + "Drawing").addClass("active");
+            if (com.focusPage('#' + csid + "NavTab" + ' li:last-of-type').hasClass("active")) {
+                com.focusPage('#' + csid + "Drawing").addClass("active");
             }
             return false;
         });
@@ -218,7 +218,7 @@ jQuery(function($) {
         if (supervision4detail.pageType)
             return false;
 
-        com.uploadify("#" + schedule + "Upload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
+        com.uploadify("#" + csid + "Upload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
             'uploadType': 0
         }, 1, function(data) {
 
@@ -243,9 +243,9 @@ jQuery(function($) {
 
                 var drawing = res.constructionDrawing;
 
-                appendGalleryElement(schedule + "Gallery", drawing.cdId, data.resUrl, 0, "", api.construction.deleteConstructionDrawing);
+                appendGalleryElement(csid + "Gallery", drawing.cdId, data.resUrl, 0, "", api.construction.deleteConstructionDrawing);
 
-                com.popup4photos("#" + schedule + "Gallery");
+                com.popup4photos("#" + csid + "Gallery");
             });
         });
     }
@@ -275,10 +275,10 @@ jQuery(function($) {
     // 查询施工人员
     function queryConstructer(constructers, schedule, csid) {
 
-        com.focusPage("#" + schedule + "WorkerInfos").html("");
+        com.focusPage("#" + csid + "WorkerInfos").html("");
 
         if (constructers.length == 0) {
-            $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo(com.focusPage("#" + schedule + "WorkerInfos"));
+            $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo(com.focusPage("#" + csid + "WorkerInfos"));
 
             return false;
         }
@@ -314,7 +314,7 @@ jQuery(function($) {
                 queryConstructerSalary(options);
             });
 
-            profileDiv.appendTo(com.focusPage("#" + schedule + "WorkerInfos"));
+            profileDiv.appendTo(com.focusPage("#" + csid + "WorkerInfos"));
         }
 
         return true;
@@ -457,7 +457,7 @@ jQuery(function($) {
     // 画节点信息轴
     function constructionNode(stepul, schedule, csid, name) {
 
-        var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).attr("data-schedule", schedule).attr("data-csid", csid).addClass("complete").appendTo(stepul);
+        var stepLi = $("<li></li>").attr("data-targe", "#step" + csid).attr("data-schedule", schedule).attr("data-csid", csid).addClass("complete").appendTo(stepul);
         var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
         var stepSpan = $("<span></span>").addClass("title").html(name).appendTo(stepLi);
     }
@@ -465,7 +465,7 @@ jQuery(function($) {
     // 画节点下面的面板
     function constructionPane(paneId, schedule, csid, name, status) {
 
-        var paneDiv = $("<div></div>").addClass("step-pane").attr("id", "step" + schedule).attr("flag", "step").attr("data-schedule", schedule).attr("data-csid", csid).appendTo(paneId);
+        var paneDiv = $("<div></div>").addClass("step-pane").attr("id", "step" + csid).attr("flag", "step").attr("data-schedule", schedule).attr("data-csid", csid).appendTo(paneId);
 
         // status == 1 (STATUS_BEGIN) 表示进行中的节点, 默认激活显示
         if (status == 1) {
@@ -475,15 +475,15 @@ jQuery(function($) {
 
         var paneDivTwo = $("<div></div>").addClass("row").appendTo(paneDiv);
         var paneDivThree = $("<div></div>").addClass("tabbable").appendTo(paneDivTwo);
-        var paneul = $("<ul></ul>").addClass("nav nav-tabs").attr("id", schedule + "NavTab").appendTo(paneDivThree);
+        var paneul = $("<ul></ul>").addClass("nav nav-tabs").attr("id", csid + "NavTab").appendTo(paneDivThree);
         var paneli = $("<li></li>").addClass("active").appendTo(paneul);
-        var panelia = $("<a></a>").attr("data-toggle", "tab").attr("href", "#" + schedule + "Info").html("信息").appendTo(paneli);
+        var panelia = $("<a></a>").attr("data-toggle", "tab").attr("href", "#" + csid + "Info").html("信息").appendTo(paneli);
 
         var paneliTwo = $("<li></li>").addClass("").appendTo(paneul);
-        var paneliTwoa = $("<a></a>").attr("data-toggle", "tab").attr("href", "#" + schedule + "Drawing").html("施工图片").appendTo(paneliTwo);
+        var paneliTwoa = $("<a></a>").attr("data-toggle", "tab").attr("href", "#" + csid + "Drawing").html("施工图片").appendTo(paneliTwo);
 
         var paneTabContent = $("<div></div>").addClass("tab-content").appendTo(paneDivThree);
-        var paneTabTwo = $("<div></div>").addClass("tab-pane in active").attr("id", schedule + "Info").appendTo(paneTabContent);
+        var paneTabTwo = $("<div></div>").addClass("tab-pane in active").attr("id", csid + "Info").appendTo(paneTabContent);
         var paneTabForm = $("<form></form>").addClass("form-horizontal").appendTo(paneTabTwo);
 
         var paneTabThree = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
@@ -494,46 +494,46 @@ jQuery(function($) {
         // 开工时间
         var paneStartTime = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
         var paneStartTimeTwo = $("<div></div>").addClass("col-sm-12").appendTo(paneStartTime);
-        var paneSTlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", schedule + "StartTime").html("开工时间").appendTo(paneStartTimeTwo);
+        var paneSTlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "StartTime").html("开工时间").appendTo(paneStartTimeTwo);
         var paneSTThree = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
-        var paneSTInput = $("<input/>").attr("id", schedule + "StartTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneSTThree);
+        var paneSTInput = $("<input/>").attr("id", csid + "StartTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneSTThree);
 
         // 完工时间
-        var paneETlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", schedule + "EndTime").html("完工时间").appendTo(paneStartTimeTwo);
+        var paneETlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "EndTime").html("完工时间").appendTo(paneStartTimeTwo);
         var paneETFour = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
-        var paneETInput = $("<input/>").attr("id", schedule + "EndTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneETFour);
+        var paneETInput = $("<input/>").attr("id", csid + "EndTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneETFour);
 
         // 状态
         var paneSpace = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
         var paneStatus = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
         var paneStatusTwo = $("<div></div>").addClass("col-sm-12").appendTo(paneStatus);
-        var paneStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", schedule + "Status").html(name + "状态").appendTo(paneStatusTwo);
-        var paaneStatusTh = $("<div></div>").attr("id", schedule + "Status").addClass("col-sm-6").appendTo(paneStatusTwo);
+        var paneStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "Status").html(name + "状态").appendTo(paneStatusTwo);
+        var paaneStatusTh = $("<div></div>").attr("id", csid + "Status").addClass("col-sm-6").appendTo(paneStatusTwo);
         var paneSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
 
         // 进场时间
         var paneStartTime = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
         var paneStartTimeTwo = $("<div></div>").addClass("col-sm-12").appendTo(paneStartTime);
-        var paneSTlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", schedule + "EnterTime").html("进场时间").appendTo(paneStartTimeTwo);
+        var paneSTlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "EnterTime").html("进场时间").appendTo(paneStartTimeTwo);
         var paneSTThree = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
-        var paneSTInput = $("<input/>").attr("id", schedule + "EnterTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneSTThree);
+        var paneSTInput = $("<input/>").attr("id", csid + "EnterTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneSTThree);
 
         // 离场时间
-        var paneETlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", schedule + "LeaveTime").html("离场时间").appendTo(paneStartTimeTwo);
+        var paneETlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "LeaveTime").html("离场时间").appendTo(paneStartTimeTwo);
         var paneETFour = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
-        var paneETInput = $("<input/>").attr("id", schedule + "LeaveTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneETFour);
+        var paneETInput = $("<input/>").attr("id", csid + "LeaveTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneETFour);
 
-        // 离场按钮
-        var enterBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-info").html("进场").attr("style", "margin-right:5px").attr("id", schedule + "Success").appendTo(paneStartTimeTwo);
         // 进场按钮
-        var leaveBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-info").html("离场").attr("style", "margin-right:5px").attr("id", schedule + "Leave").appendTo(paneStartTimeTwo);
+        var enterBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-info").html("进场").attr("style", "margin-right:5px").attr("id", csid + "Success").appendTo(paneStartTimeTwo);
+        // 离场按钮
+        var leaveBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-info").html("离场").attr("style", "margin-right:5px").attr("id", csid + "Leave").appendTo(paneStartTimeTwo);
 
-        // 状态
+        // 进场状态
         var panewSpace = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
         var panewStatus = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
         var panewStatusTwo = $("<div></div>").addClass("col-sm-12").appendTo(panewStatus);
-        var panewStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", schedule + "enterStatus").html("进厂状态").appendTo(panewStatusTwo);
-        var paanewStatusTh = $("<div></div>").attr("id", schedule + "enterStatus").addClass("col-sm-6").appendTo(panewStatusTwo);
+        var panewStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "enterStatus").html("进厂状态").appendTo(panewStatusTwo);
+        var paanewStatusTh = $("<div></div>").attr("id", csid + "enterStatus").addClass("col-sm-6").appendTo(panewStatusTwo);
         var panewSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
 
         // 工人信息
@@ -543,21 +543,21 @@ jQuery(function($) {
         var paneWorkerSpan = $("<span></span>").html("工人信息").appendTo(paneWorkerH3);
 
         var paneWorkerContent = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
-        var paneWorkerInfo = $("<div></div>").addClass("tab-pane in active").attr("id", schedule + "WorkerInfos").appendTo(paneWorkerContent);
+        var paneWorkerInfo = $("<div></div>").addClass("tab-pane in active").attr("id", csid + "WorkerInfos").appendTo(paneWorkerContent);
         var paneSpaceTh = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
 
         // 施工图片信息
-        var paneDrawing = $("<div></div>").addClass("tab-pane in").attr("id", schedule + "Drawing").appendTo(paneTabContent);
+        var paneDrawing = $("<div></div>").addClass("tab-pane in").attr("id", csid + "Drawing").appendTo(paneTabContent);
         var paneDrawingRow = $("<div></div>").addClass("row").appendTo(paneDrawing);
         var paneDrawingRowOne = $("<div></div>").addClass("col-xs-12").appendTo(paneDrawingRow);
         var paneDrawingRowTwo = $("<div></div>").addClass("row-fluid").appendTo(paneDrawingRowOne);
-        var paneDrawingRowUl = $("<ul></ul>").addClass("ace-thumbnails").attr("id", schedule + "Gallery").appendTo(paneDrawingRowTwo);
+        var paneDrawingRowUl = $("<ul></ul>").addClass("ace-thumbnails").attr("id", csid + "Gallery").appendTo(paneDrawingRowTwo);
 
         var paneDrawingRowT = $("<div></div>").addClass("row").appendTo(paneDrawing);
         var paneDrawingRowTOne = $("<div></div>").addClass("hr hr32 hr-dotted").appendTo(paneDrawingRowT);
         var paneDrawingRowTTwo = $("<div></div>").addClass("col-xs-12").appendTo(paneDrawingRowT);
         var paneDrawingRowTh = $("<div></div>").addClass("pull-left inline").appendTo(paneDrawingRowTTwo);
-        var paneDrawingRowFour = $("<div></div>").attr("id", schedule + "Upload").appendTo(paneDrawingRowTh);
+        var paneDrawingRowFour = $("<div></div>").attr("id", csid + "Upload").appendTo(paneDrawingRowTh);
         var paneDrawingRowInp = $("<input />").attr("type", "text").addClass("hidden").attr("id", "picture").appendTo(paneDrawingRowTh);
 
         // 上传按钮
@@ -567,16 +567,16 @@ jQuery(function($) {
 
     }
 
-    function addActive(schedule) {
+    function addActive(csid) {
 
         var con = supervision4detail.constructionSchedules;
         $.each(con, function(i, v) {
 
-            com.focusPage("#step" + v.schedule).removeClass("active");
-            com.focusPage("#step" + v.schedule).addClass("step-pane");
+            com.focusPage("#step" + v.csid).removeClass("active");
+            com.focusPage("#step" + v.csid).addClass("step-pane");
         });
-        com.focusPage("#step" + schedule).removeClass("step-pane");
-        com.focusPage("#step" + schedule).addClass("active");
+        com.focusPage("#step" + csid).removeClass("step-pane");
+        com.focusPage("#step" + csid).addClass("active");
     }
 
     function updateEnterStatus(workStatus, statusDiv) {
@@ -594,7 +594,7 @@ jQuery(function($) {
 
     function updataStatus(schedule, csid, status) {
 
-        var statusDiv = com.focusPage("#" + schedule + "Status").html("");
+        var statusDiv = com.focusPage("#" + csid + "Status").html("");
 
         if (status == 0) {
             $("<span></span>").addClass("label label-grey").text("初始").appendTo(statusDiv);
