@@ -2726,6 +2726,13 @@ var decorationUtils = {
                 com.focusPage('input[value="16"]', '#printQuotationModal #types').prop("checked", true);
                 com.focusPage('input[value="0"]', '#printQuotationModal #itemtypes').prop("checked", true);
                 com.focusPage('input[value="1"]', '#printQuotationModal #itemtypes').prop("checked", true);
+            } else if (layout.val() == 4) {
+                // 工种类: 内容默认勾选 基础(1)/成本(8)/管理(16), 种类默认勾选 管理(0)/工程(1)
+                com.focusPage('input[value="1"]', '#printQuotationModal #types').prop("checked", true);
+                com.focusPage('input[value="8"]', '#printQuotationModal #types').prop("checked", true);
+                com.focusPage('input[value="16"]', '#printQuotationModal #types').prop("checked", true);
+                com.focusPage('input[value="0"]', '#printQuotationModal #itemtypes').prop("checked", true);
+                com.focusPage('input[value="1"]', '#printQuotationModal #itemtypes').prop("checked", true);
             }
 
         });
