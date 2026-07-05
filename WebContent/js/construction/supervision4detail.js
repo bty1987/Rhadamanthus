@@ -54,7 +54,7 @@ jQuery(function($) {
         $.each(constructionSchedule, function(i, v) {
 
             constructionNode("#stepId", v.schedule, v.csid, v.node.name);
-            constructionPane("#step-container", v.schedule, v.csid, v.node.name);
+            constructionPane("#step-container", v.schedule, v.csid, v.node.name, v.status);
             params.construction.cid = v.cid;
         });
 
@@ -463,12 +463,12 @@ jQuery(function($) {
     }
 
     // 画节点下面的面板
-    function constructionPane(paneId, schedule, csid, name) {
+    function constructionPane(paneId, schedule, csid, name, status) {
 
         var paneDiv = $("<div></div>").addClass("step-pane").attr("id", "step" + schedule).attr("flag", "step").attr("data-schedule", schedule).attr("data-csid", csid).appendTo(paneId);
 
-        // schedule == 3 表示当前进行中的工程节点，默认激活显示
-        if (schedule == 3) {
+        // status == 1 (STATUS_BEGIN) 表示进行中的节点, 默认激活显示
+        if (status == 1) {
             paneDiv.removeClass("step-pane");
             paneDiv.attr("class", "active");
         }
