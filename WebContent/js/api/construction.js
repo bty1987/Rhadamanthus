@@ -288,6 +288,14 @@ $.extend(api, {
                 args: ["constructionSchedule.planSalary"]
             }
         },
+        addConstructionSchedule: {
+            url: "addConstructionSchedule.do",
+            type: "create"
+        },
+        deleteConstructionSchedule: {
+            url: "deleteConstructionSchedule.do",
+            type: "del"
+        },
 
         queryConstructionDrawingByOrderId: {
             url: "queryConstructionDrawingByOrderId.do"

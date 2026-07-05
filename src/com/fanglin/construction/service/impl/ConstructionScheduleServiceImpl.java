@@ -504,4 +504,59 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionScheduleDao.update(constructionSchedulePO);
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void addConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		// 校验工程是否存在
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(constructionScheduleVO.getOrderId());
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		// 校验标准节点是否存在 (决策3: 从标准 node 选择, cnid 必填)
+		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionScheduleVO.getNode().getCnid());
+
+		if (constructionNodePO == null) {
+			throw new FLException(120034, "工程节点不存在");
+		}
+
+		// 校验该订单是否已存在相同节点的 schedule (按 orderId + cnid 查重)
+		ConstructionSchedulePO existing = constructionScheduleDao.queryConstructionScheduleByOrderId(constructionScheduleVO.getOrderId(), constructionNodePO.getCnid());
+
+		if (existing != null) {
+			throw new FLException(120036, "工程环节已存在");
+		}
+
+		// 用 node 信息初始化 schedule (schedule 字段 = node.sort 快照, 之后独立维护)
+		ConstructionSchedulePO constructionSchedulePO = new ConstructionSchedulePO(constructionPO.getCid(), constructionScheduleVO.getOrderId()).init(constructionNodePO);
+
+		constructionSchedulePO.setStatus(ConstructionSchedulePO.STATUS_INIT_INT);
+		constructionSchedulePO.setCheckout(ConstructionSchedulePO.CHECKOUT_VALID_INT);
+		constructionSchedulePO.setWorkStatus(ConstructionSchedulePO.WORKSTATUS_INIT_INT);
+
+		constructionScheduleDao.save(constructionSchedulePO);
+
+		constructionScheduleVO.setCsid(constructionSchedulePO.getCsid());
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		// 仅初始状态可删除 (已开工/完工的不可删)
+		if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_INIT_INT) {
+			throw new FLException(120030, "工程环节已开工, 不可删除");
+		}
+
+		constructionScheduleDao.deleteById(constructionSchedulePO.getCsid());
+	}
+
 }

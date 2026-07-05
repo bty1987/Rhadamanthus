@@ -101,6 +101,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 			}
 
 			if ("construction.schedule".equals(field)) {
+				// 旧路径: 前端 condition 已改用 construction.cnid, 此分支保留兼容历史调用
 				query.add(query.getCriterion("schedule", Integer.parseInt(data), op));
 			} else if ("construction.process".equals(field)) {
 				query.add(query.getCriterion("process", Short.parseShort(data), op));
