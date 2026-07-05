@@ -109,63 +109,15 @@ jQuery(function($) {
 
                 com.focusPage("#" + csid + "StartTime").val(constructionSchedule.startTime);
                 com.focusPage("#" + csid + "EndTime").val(constructionSchedule.endTime);
-                com.focusPage("#" + csid + "LeaveTime").val(constructionSchedule.leaveTime);
                 com.focusPage("#" + csid + "EnterTime").val(constructionSchedule.enterTime);
+                com.focusPage("#" + csid + "LeaveTime").val(constructionSchedule.leaveTime);
 
-                var otherename = csid;
-                var otherStatus = constructionSchedule.status;
+                updateStatus(schedule, csid, constructionSchedule.status);
+                updateEnterStatus(constructionSchedule.workStatus, csid);
 
-                var otherSuccessBtn = com.focusPage("#" + otherename + "Success");
-                var leaveSuccessBtn = com.focusPage("#" + otherename + "Leave");
-
-                updataStatus(schedule, csid, constructionSchedule.status);
-                updateEnterStatus(constructionSchedule.workStatus, otherename);
-
-                otherSuccessBtn.click(function() {
-
-                    if (supervision4detail.pageType)
-                        return false;
-
-                    var options = {
-                        "constructionSchedule.csid": constructionSchedule.csid
-                    };
-
-                    com.post(api.construction.enterConstructionSchedule, options, function(res) {
-
-                        com.showAlert(com.info, "操作成功");
-                        updateEnterStatus(1, otherename);
-                        com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, args, function(res) {
-
-                            var constructionSchedule = res.constructionSchedule;
-                            com.focusPage("#" + csid + "EnterTime").val(constructionSchedule.enterTime);
-                        });
-                    });
-
-                    return false;
-                });
-
-                leaveSuccessBtn.click(function() {
-
-                    if (supervision4detail.pageType)
-                        return false;
-
-                    var options = {
-                        "constructionSchedule.csid": constructionSchedule.csid
-                    };
-
-                    com.post(api.construction.leaveConstructionSchedule, options, function(res) {
-
-                        com.showAlert(com.info, "操作成功");
-                        updateEnterStatus(2, otherename);
-                        com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, args, function(res) {
-
-                            var constructionSchedule = res.constructionSchedule;
-                            com.focusPage("#" + csid + "LeaveTime").val(constructionSchedule.leaveTime);
-                        });
-                    });
-
-                    return false;
-                });
+                // 进场/离场按钮: 先 off 解绑避免重复绑定, 再 click 绑定
+                bindEnterLeaveBtn("#" + csid + "Success", api.construction.enterConstructionSchedule, 1, csid, args);
+                bindEnterLeaveBtn("#" + csid + "Leave", api.construction.leaveConstructionSchedule, 2, csid, args);
 
                 var options = {
                     "constructer.orderId": params.construction.orderId,
@@ -208,6 +160,36 @@ jQuery(function($) {
             if (com.focusPage('#' + csid + "NavTab" + ' li:last-of-type').hasClass("active")) {
                 com.focusPage('#' + csid + "Drawing").addClass("active");
             }
+            return false;
+        });
+    }
+
+    // 进场/离场按钮绑定工厂: off 先解绑避免重复绑定, 再 click 绑定
+    function bindEnterLeaveBtn(selector, apiName, workStatus, csid, args) {
+
+        com.focusPage(selector).off("click").on("click", function() {
+
+            if (supervision4detail.pageType)
+                return false;
+
+            var options = {
+                "constructionSchedule.csid": constructionSchedule.csid
+            };
+
+            com.post(apiName, options, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+                updateEnterStatus(workStatus, csid);
+                com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, args, function(res) {
+
+                    var schedule = res.constructionSchedule;
+                    // workStatus 1=进场刷新 enterTime, 2=离场刷新 leaveTime
+                    var timeField = workStatus == 1 ? "enterTime" : "leaveTime";
+                    var domField = workStatus == 1 ? "EnterTime" : "LeaveTime";
+                    com.focusPage("#" + csid + domField).val(schedule[timeField]);
+                });
+            });
+
             return false;
         });
     }
@@ -579,30 +561,29 @@ jQuery(function($) {
         com.focusPage("#step" + csid).addClass("active");
     }
 
-    function updateEnterStatus(workStatus, statusDiv) {
+    // 状态显示通用函数: status 0/1/2 对应不同 label 文字
+    // labels = [label0, label1, label2], styles = [class0, class1, class2]
+    function renderStatus(status, container, labels, styles) {
 
-        var statusDiv = com.focusPage("#" + statusDiv + "enterStatus").html("");
+        com.focusPage("#" + container).html("");
 
-        if (workStatus == 0) {
-            $("<span></span>").addClass("label label-grey").text("初始").appendTo(statusDiv);
-        } else if (workStatus == 1) {
-            $("<span></span>").addClass("label label-info").text("进场").appendTo(statusDiv);
-        } else if (workStatus == 2) {
-            $("<span></span>").addClass("label label-success").text("离场").appendTo(statusDiv);
+        if (status >= 0 && status <= 2) {
+            $("<span></span>").addClass("label " + styles[status]).text(labels[status]).appendTo(com.focusPage("#" + container));
         }
     }
 
-    function updataStatus(schedule, csid, status) {
+    function updateEnterStatus(workStatus, csid) {
 
-        var statusDiv = com.focusPage("#" + csid + "Status").html("");
+        renderStatus(workStatus, csid + "enterStatus",
+            ["初始", "进场", "离场"],
+            ["label label-grey", "label label-info", "label label-success"]);
+    }
 
-        if (status == 0) {
-            $("<span></span>").addClass("label label-grey").text("初始").appendTo(statusDiv);
-        } else if (status == 1) {
-            $("<span></span>").addClass("label label-info").text("开工").appendTo(statusDiv);
-        } else {
-            $("<span></span>").addClass("label label-success").text("完工").appendTo(statusDiv);
-        }
+    function updateStatus(schedule, csid, status) {
+
+        renderStatus(status, csid + "Status",
+            ["初始", "开工", "完工"],
+            ["label label-grey", "label label-info", "label label-success"]);
     }
 
 });
