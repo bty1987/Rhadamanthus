@@ -1344,6 +1344,19 @@ jQuery(function($) {
     // 交接单按钮
     com.focusPage("#handoverProfileBtn").on("click", function() {
 
+        var template = null;
+
+        com.post(api.system.querySystemConfigByKey, {
+            "systemConfig.key": "QUOTATION_PROFILE_TEMPLATE"
+        }, function(res) {
+            template = res.systemConfig.value;
+        }, null, false);
+
+        if (!template) {
+            com.showAlert(com.error, "交接单模板未配置");
+            return;
+        }
+
         com.popup4page("#layerPopUp4detail", api.index.quotationProfile4detailIndex.url, "交接单", null, null, function() {
 
             params.quotation = { orderId: params.decoration.orderId, type: 3, profile: { type: 3 } };
@@ -1353,6 +1366,19 @@ jQuery(function($) {
     // 报价标签按钮
     com.focusPage("#quotationTagProfileBtn").on("click", function() {
 
+        var template = null;
+
+        com.post(api.system.querySystemConfigByKey, {
+            "systemConfig.key": "QUOTATION_TAG_PROFILE_TEMPLATE"
+        }, function(res) {
+            template = res.systemConfig.value;
+        }, null, false);
+
+        if (!template) {
+            com.showAlert(com.error, "报价标签模板未配置");
+            return;
+        }
+
         com.popup4page("#layerPopUp4detail", api.index.quotationProfile4detailIndex.url, "报价标签", null, null, function() {
 
             params.quotation = { orderId: params.decoration.orderId, type: 4, profile: { type: 4 } };
@@ -1361,6 +1387,19 @@ jQuery(function($) {
 
     // 放线标签按钮
     com.focusPage("#drawlineTagProfileBtn").on("click", function() {
+
+        var template = null;
+
+        com.post(api.system.querySystemConfigByKey, {
+            "systemConfig.key": "DRAWLINE_TAG_PROFILE_TEMPLATE"
+        }, function(res) {
+            template = res.systemConfig.value;
+        }, null, false);
+
+        if (!template) {
+            com.showAlert(com.error, "放线标签模板未配置");
+            return;
+        }
 
         com.popup4page("#layerPopUp4detail", api.index.drawlineProfile4detailIndex.url, "放线标签", null, null, function() {
 

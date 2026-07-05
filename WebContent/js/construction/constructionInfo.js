@@ -288,6 +288,20 @@ jQuery(function($) {
                 name: "工程标签",
                 clazz: "btn-inverse",
                 handle: function(v) {
+
+                    var template = null;
+
+                    com.post(api.system.querySystemConfigByKey, {
+                        "systemConfig.key": "CONSTRUCTION_TAG_PROFILE_TEMPLATE"
+                    }, function(res) {
+                        template = res.systemConfig.value;
+                    }, null, false);
+
+                    if (!template) {
+                        com.showAlert(com.error, "工程标签模板未配置");
+                        return false;
+                    }
+
                     params.constructionProfile = { orderId: v.decoration.orderId, type: 4, profile: { type: 4 } };
                     com.popup4page("#layerPopUp", api.index.constructionProfile4detailIndex.url, "工程标签");
                 }
