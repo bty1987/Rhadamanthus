@@ -58,7 +58,6 @@ jQuery(function($) {
         }
 
         if (!url) {
-            com.closePopup();
             return false
         }
 
@@ -87,7 +86,6 @@ jQuery(function($) {
 
         if (!params.drawlineProfile || !params.drawlineProfile.profile) {
             com.showAlert(com.warning, "缺少配置参数");
-            com.closePopup();
             return false;
         }
 
@@ -105,7 +103,6 @@ jQuery(function($) {
 
         if (!template) {
             com.showAlert(com.error, "放线配置模板不存在");
-            com.closePopup();
             return false;
         }
 
