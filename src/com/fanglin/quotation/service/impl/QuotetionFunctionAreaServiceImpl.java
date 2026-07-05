@@ -224,6 +224,8 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 				quotetionFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 				quotetionFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
 				quotetionFunctionAreaItemVO.setFormula(quotationItemPO.getFormula());
+				// 复制公式表达式用于功能区参数更新后计算工程量(与 queryQuotetionFunctionAreaByQid 保持一致)
+				quotetionFunctionAreaItemVO.setExpres(quotationItemPO.getFormula());
 
 				quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);
 			}
