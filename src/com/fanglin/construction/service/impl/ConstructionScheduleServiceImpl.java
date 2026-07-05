@@ -123,7 +123,14 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	@Override
 	public ConstructionScheduleVO queryConstructionScheduleByOrderIdASchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
 
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(constructionScheduleVO.getOrderId(), constructionScheduleVO.getSchedule());
+		ConstructionSchedulePO constructionSchedulePO = null;
+
+		// 优先用 csid 主键查询; csid 为空时回退到 orderId + schedule (兼容旧调用方)
+		if (constructionScheduleVO.getCsid() != null && constructionScheduleVO.getCsid() != 0) {
+			constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+		} else {
+			constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(constructionScheduleVO.getOrderId(), constructionScheduleVO.getSchedule());
+		}
 
 		if (constructionSchedulePO == null) {
 			throw new FLException(120024, "工程环节不存在");
