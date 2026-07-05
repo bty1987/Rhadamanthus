@@ -17,7 +17,7 @@ import com.fanglin.utils.Paging;
  * 预算员规则表 DAO 实现类（人员维度）
  * 
  * <p>
- * 核心变更：company/department/supportedType 已移到 UserRuleItem， 所有按这些维度查询的方法均通过 UserRuleItem 子查询实现
+ * 核心变更：company/department/supportedType 已移到 UserRuleItem，预算员规则列表按用户所属公司查询
  * </p>
  * 
  * @author Claude AI
@@ -31,9 +31,14 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 	}
 
 	@Override
-	public List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters) throws FLException {
+	public List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<QuotationAssignUserRulePO> query = pagingQuery(paging, QuotationAssignUserRulePO.class);
+
+		if (company > 0) {
+			query.alias("user", "user");
+			query.add(query.getCriterion("user.company", company, "eq"));
+		}
 
 		queryFilterExcute(query, filters);
 
