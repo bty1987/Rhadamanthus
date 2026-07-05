@@ -30,7 +30,7 @@ jQuery(function($) {
         workerSalary4detail.twoTypes = res.SalaryTwoType;
 
         // 填充类型下拉: 仅 status==0 (启用) 的选项
-        var $select = com.focusPage("#salaryType");
+        var $select = com.focusPage("#ws4dSalaryType");
         $.each(res.SalaryTwoType, function(i, v) {
 
             if (v.status != 0)
@@ -40,14 +40,14 @@ jQuery(function($) {
         });
     }, null, false);
 
-    com.focusPage("#saveBtn").bindClick(saveData);
+    com.focusPage("#ws4dSaveBtn").bindClick(saveData);
 
     // 查询并渲染工费列表
     queryWorkerSalaryList();
 
     function queryWorkerSalaryList() {
 
-        var $list = com.focusPage("#workerSalaryList").html("");
+        var $list = com.focusPage("#ws4dList").html("");
 
         var options = {
             "workerSalary.csid": ctx.csid,
@@ -105,12 +105,12 @@ jQuery(function($) {
 
     function saveData() {
 
-        if (com.validate("workerSalaryForm")) {
+        if (com.validate("ws4dForm")) {
             return false;
         }
 
-        var salary = com.focusPage("#salary").val();
-        var twotype = com.focusPage("#salaryType").val();
+        var salary = com.focusPage("#ws4dSalary").val();
+        var twotype = com.focusPage("#ws4dSalaryType").val();
 
         var options = {
             "workerSalary.csid": ctx.csid,
@@ -119,14 +119,14 @@ jQuery(function($) {
             "workerSalary.type": salary >= 0 ? 0 : 1,
             "workerSalary.onetype": workerSalary4detail.oneTypeMap[twotype],
             "workerSalary.twotype": twotype,
-            "workerSalary.comment": com.focusPage("#comment").val()
+            "workerSalary.comment": com.focusPage("#ws4dComment").val()
         };
 
         com.post(api.salary.addWorkerSalary, options, function() {
 
             com.showAlert(com.info, "操作成功");
-            com.focusPage("#salary").val("");
-            com.focusPage("#comment").val("");
+            com.focusPage("#ws4dSalary").val("");
+            com.focusPage("#ws4dComment").val("");
             queryWorkerSalaryList();
         });
     }
