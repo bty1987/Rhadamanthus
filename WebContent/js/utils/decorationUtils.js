@@ -2003,6 +2003,10 @@ var decorationUtils = {
 
     initConstructionScheduleInfo: function() {
 
+        // ⚠️ 本方法为死代码(无调用方), 其依赖的 scheduleInfos 数组是写死的 9 项,
+        // 无法覆盖生产 sort 取值(0-25)且各公司不同, 已废弃。
+        // 节点中文名应通过 res.constructionSchedule.node.name 获取。
+
         var options = {};
 
         options["constructionSchedule.orderId"] = orderId.decoration.orderId;
