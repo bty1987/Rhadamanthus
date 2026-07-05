@@ -924,37 +924,47 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		// 如果前端传了 house.hid，优先使用前端传入的（支持直接初审时修改楼盘/楼号）
-		HousePO housePO;
+		HousePO housePO = null;
+
 		if (customerChanceVO.getHouse() != null && customerChanceVO.getHouse().getHid() != null && customerChanceVO.getHouse().getHid() > 0) {
 			housePO = houseDao.get(customerChanceVO.getHouse().getHid());
-			if (housePO == null) {
-				throw new FLException(330074, "房产不存在");
-			}
-			customerSourcePO.setHouse(housePO);
-		} else {
+		}
+
+		if (housePO == null) {
 			housePO = customerSourcePO.getHouse();
 		}
 
-		// 如果前端传了 customer.cid，优先使用前端传入的；否则使用 customerSource 关联的 customer
-		CustomerPO customerPO = customerSourcePO.getCustomer();
+		if (housePO == null) {
+			housePO = customerChancePO.getHouse();
+		}
+
+		if (housePO == null) {
+			throw new FLException(130017, "房产不存在");
+		}
+
+		customerSourcePO.setHouse(housePO);
+		customerChancePO.setHouse(housePO);
+
+		CustomerPO customerPO = null;
+
+		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getCid() != null) {
+			customerPO = customerDao.get(customerChanceVO.getCustomer().getCid());
+		}
+
+		if (customerPO == null) {
+			customerPO = customerSourcePO.getCustomer();
+		}
 
 		if (customerPO == null) {
 			customerPO = customerChancePO.getCustomer();
 		}
 
 		if (customerPO == null) {
-			List<CustomerPO> customerPOs = customerDao.queryCustomer(customerSourcePO.getPhone());
-
-			customerPO = customerPOs != null && customerPOs.size() > 0 ? customerPOs.get(0) : null;
+			throw new FLException(130002, "客户不存在");
 		}
 
-		if (customerPO == null) {
-			CustomerVO customerVO = new CustomerVO(customerSourcePO.getName(), SensitiveDataHelper.decrypt(customerSourcePO.getPhone()));
-
-			customerService.existCustomer(customerVO, company);
-
-			customerPO = new CustomerPO(customerVO.getCid());
-		}
+		customerSourcePO.setCustomer(customerPO);
+		customerChancePO.setCustomer(customerPO);
 
 		// 检查是否需要校验重复订单（isCheck=0 校验，isCheck=1 忽略）
 		if (customerChancePO.getIsCheck() == CustomerChancePO.ISCHECK_CHECK_INT) {
@@ -962,13 +972,12 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		// 设置客户来源状态为初审通过（STATUS_APPROVE_ONE_INT = 2）
-		customerSourcePO.setCustomer(customerPO);
+
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_APPROVE_ONE_INT);
 		customerSourceDao.update(customerSourcePO);
 
 		// 设置客户机会信息（参照 approveForCustomerSource 的逻辑）
-		customerChancePO.setCustomer(customerPO);
-		customerChancePO.setHouse(housePO);
+
 		customerChancePO.setRate(customerChanceVO.getRate() != null ? customerChanceVO.getRate() : 0);
 
 		if (customerChanceVO.getBusitype() != null && customerChanceVO.getBusitype().getDbid() != null && customerChanceVO.getBusitype().getDbid() > 0) {
