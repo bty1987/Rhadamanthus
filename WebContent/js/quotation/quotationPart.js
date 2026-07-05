@@ -3804,6 +3804,8 @@ var QuotationDetail = (function() {
                 expres = "Math.max(" + _pre + ", " + _nex + ")";
             }
 
+            expres = expres.replace(/\!\s*\(/g, "Math.ceil(");
+
             var formula = {
                 "formula": expres,
                 "num": utils.changeThrDecimal(isNaN(eval(expres)) ? 0 : eval(expres))
@@ -4229,6 +4231,8 @@ var QuotationDetail = (function() {
 
                         v.formula = "Math.max(" + _pre + ", " + _nex + ")";
                     }
+
+                    v.formula = v.formula.replace(/\!\s*\(/g, "Math.ceil(");
 
                     v.formula = v.qfaiId != null ? v.formula : utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula));
                     v.num = utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula));
