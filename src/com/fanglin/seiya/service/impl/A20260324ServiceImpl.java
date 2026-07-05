@@ -205,7 +205,7 @@ public class A20260324ServiceImpl implements A20260324Service {
 				throw new FLException(511001, "部门类型不存在: " + type);
 			}
 
-			// 2. 查询父部门（如果提供）
+			// 2. 查询父部门（如果提供）—— parent_code 传的是父部门 did
 			DepartmentPO fatherDept = null;
 			if (parentCode != null && !parentCode.trim().isEmpty()) {
 				fatherDept = departmentDao.get(Integer.parseInt(parentCode));
@@ -224,8 +224,11 @@ public class A20260324ServiceImpl implements A20260324Service {
 				}
 			}
 
-			// 4. 状态转换：1启用→1，2禁用→0（注意：与duty相反）
-			short deptStatus = (status != null && status == 1) ? DepartmentPO.STATUS_ENABLE_INT : DepartmentPO.STATUS_DISABLE_INT;
+			// 4. 状态转换：1启用→1，2禁用→0（注意：与duty相反）。status 为 null 时不更新状态
+			Short deptStatus = null;
+			if (status != null) {
+				deptStatus = (status == 1) ? DepartmentPO.STATUS_ENABLE_INT : DepartmentPO.STATUS_DISABLE_INT;
+			}
 
 			// 5. 判断是新增还是更新（优先级：deptId 主键 → code 编码）
 			DepartmentPO deptPO = null;
@@ -272,7 +275,8 @@ public class A20260324ServiceImpl implements A20260324Service {
 				deptPO.setFatherDept(fatherDept);
 				deptPO.setCompany(companyId);
 				deptPO.setAompany(companyId); // 业绩公司默认与公司相同
-				deptPO.setStatus(deptStatus);
+				// 新增部门: status 未传时默认启用
+				deptPO.setStatus(deptStatus != null ? deptStatus : DepartmentPO.STATUS_ENABLE_INT);
 				deptPO.setManager(manager);
 
 				// 生成拼音
@@ -334,9 +338,14 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 				deptPO.setName(name);
 				deptPO.setType(departmentType);
-				if (fatherDept != null) {
+
+				// 防御: 父部门不能是部门自身(否则 Hibernate 同一持久化对象会被误改状态)
+				if (fatherDept != null && fatherDept.getDid().equals(deptPO.getDid())) {
+					logger.warn("父部门did与当前部门did相同, 忽略父部门设置: did={}", deptPO.getDid());
+				} else if (fatherDept != null) {
 					deptPO.setFatherDept(fatherDept);
 				}
+
 				if (manager != null) {
 					deptPO.setManager(manager);
 				}
@@ -347,7 +356,10 @@ public class A20260324ServiceImpl implements A20260324Service {
 					deptPO.setAompany(companyId);
 				}
 
-				deptPO.setStatus(deptStatus);
+				// 仅当显式传入了 status 时才更新部门状态, 避免未传状态时把部门误禁用
+				if (deptStatus != null) {
+					deptPO.setStatus(deptStatus);
+				}
 
 				// 更新拼音
 				deptPO.setPinyin(generatePinyin(name));
