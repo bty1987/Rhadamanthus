@@ -1293,18 +1293,24 @@ jQuery(function($) {
         if (!customerChance.service && !hid)
             return false;
 
-        var cid = customerChance.service ? null : checkCustomer(customerChance.directFirstApproveItems);
+        // 电话非必填: 填写内容调用 existCustomer 获取 cid, 没内容直接忽略 cid 信息
+        var phone = customerChance.directFirstApproveItems.phone.val();
+        var cid = "";
 
-        if (!customerChance.service && !cid)
-            return false;
+        if (!customerChance.service && phone) {
+            cid = checkCustomer(customerChance.directFirstApproveItems);
+        }
 
         var option = {
             "customerChance.ccid": customerChance.ccid,
             "customerChance.house.hid": hid,
-            "customerChance.customer.cid": cid,
             "customerChance.busitype.dbid": customerChance.directFirstApproveItems.busitype.val(),
             "customerChance.rate": 0
         };
+
+        if (cid) {
+            option["customerChance.customer.cid"] = cid;
+        }
 
         com.post(api.customer.approveCustomerChance, option, function(res) {
 
