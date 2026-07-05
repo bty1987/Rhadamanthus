@@ -803,8 +803,9 @@ $(function() {
                 name: "活动归属",
                 clazz: "btn-warning",
                 show: function(v) {
-
-                    return [0, 5].indexOf(v.status) != -1;
+                    
+                    var s = v.sales || v;
+                    return [0, 5].indexOf(s.status) != -1;
                 },
                 handle: activitySales
             },
