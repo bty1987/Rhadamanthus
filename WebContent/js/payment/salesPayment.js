@@ -155,8 +155,8 @@ $(function() {
         "value": "主材预付款"
     }], 'key', 'value');
 
-    salesPayment.btns.collectBtn.bindClick(collect);
-    salesPayment.btns.refundBtn.bindClick(collect);
+    salesPayment.btns.collectBtn.bindClick(collect, 3000);
+    salesPayment.btns.refundBtn.bindClick(collect, 3000);
 
     salesPayment.btns.createPaytran.unbind().click(function() {
 

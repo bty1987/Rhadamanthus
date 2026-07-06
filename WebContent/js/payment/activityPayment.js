@@ -148,8 +148,8 @@ jQuery(function($) {
     com.selectTypeahead("couponType", activityPayment.activityCouponType, 'key', 'value', null);
     com.selectTypeahead("bankName", activityPayment.bankUtil, "key", "value", null);
 
-    activityPayment.btns.collectBtn.bindClick(collect);
-    activityPayment.btns.saveBtn.bindClick(create);
+    activityPayment.btns.collectBtn.bindClick(collect, 3000);
+    activityPayment.btns.saveBtn.bindClick(create, 3000);
 
     activityPayment.btns.createPaytran.unbind().click(function() {
 

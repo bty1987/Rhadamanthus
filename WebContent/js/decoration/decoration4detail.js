@@ -1209,7 +1209,7 @@ jQuery(function($) {
         }
 
         decorationDetail.quotationTotalPriceModal.modal("hide");
-    });
+    }, 3000);
 
     // 生成服务款
     com.focusPage("#saveGenerateCreateServicetBtn").bindClick(function(res) {
@@ -1231,7 +1231,7 @@ jQuery(function($) {
             searcher.doSearch();
         });
         decorationDetail.createServicetModal.modal("hide");
-    });
+    }, 3000);
 
     com.focusPage('#btnBack').on("click", function() {
 

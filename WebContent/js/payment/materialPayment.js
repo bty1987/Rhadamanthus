@@ -146,9 +146,9 @@ jQuery(function($) {
 		return false;
 	});
 
-	materialPayment.btns.collectBtn.bindClick(collect);
+	materialPayment.btns.collectBtn.bindClick(collect, 3000);
 
-	materialPayment.btns.refundBtn.bindClick(collect);
+	materialPayment.btns.refundBtn.bindClick(collect, 3000);
 
 	materialPayment.btns.createPaytran.unbind().click(function(){
 		paymentUtils.pushPos(materialPayment, materialPayment.payment.material.orderId);
