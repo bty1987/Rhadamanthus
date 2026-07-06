@@ -385,36 +385,72 @@ function createMenu(data) {
 
 function setWatermark(userName, userId) {
 
+    // 用 canvas 画水印再 toDataURL('image/png'),替代 SVG Data URI。
+    // PNG Data URI 浏览器兼容性远好于 SVG(IE9+/所有 win7 浏览器),
+    // 且字体回退由 canvas 原生处理,规避 SVG <text> 在 win7 上中文乱码/不渲染的问题。
     var text = userName;
     if (userId) {
         text += ' ' + userId;
     }
 
-    text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-               .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-
     var style = window.templateStyle || 'ace';
-    var color = (style === 'dark' || style === 'metro')
-        ? 'rgba(255,255,255,0.08)'
-        : 'rgba(0,0,0,0.06)';
+    var dark = (style === 'dark' || style === 'metro');
 
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140">' +
-        '<text x="120" y="70" fill="' + color + '" font-size="16" ' +
-        'font-family="Microsoft Yahei, sans-serif" text-anchor="middle" ' +
-        'transform="rotate(-25, 120, 70)">' + text + '</text></svg>';
+    var canvas = document.createElement('canvas');
+    canvas.width = 240;
+    canvas.height = 140;
+    var ctx = canvas.getContext('2d');
 
-    var dataUri = 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '")';
+    // win7 上 Microsoft Yahei 不一定可用,回退到 SimSun(宋体),与后端 WMCodeUtil 保持一致。
+    ctx.font = '16px "Microsoft Yahei", "Microsoft YaHei", SimSun, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.translate(120, 70);
+    ctx.rotate(-25 * Math.PI / 180);
 
-    $('.watermark-overlay').remove();
-    $('<div class="watermark-overlay"></div>').css({
-        'position': 'fixed',
-        'top': 0,
-        'left': 0,
-        'width': '100%',
-        'height': '100%',
-        'pointer-events': 'none',
-        'z-index': 9999,
-        'background-image': dataUri,
-        'background-repeat': 'repeat'
-    }).appendTo('body');
+    // rgba 半透明颜色:亮色模板用黑,深色模板用白,平铺不叠加变深。
+    ctx.fillStyle = dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+    ctx.fillText(text, 0, 0);
+
+    var dataUri;
+    try {
+        dataUri = canvas.toDataURL('image/png');
+    } catch (e) {
+        return;
+    }
+
+    var applyWatermark = function() {
+        $('.watermark-overlay').remove();
+        $('<div class="watermark-overlay"></div>').css({
+            'position': 'fixed',
+            'top': 0,
+            'left': 0,
+            'width': '100%',
+            'height': '100%',
+            'pointer-events': 'none',
+            'z-index': 9999,
+            'background-image': 'url(' + dataUri + ')',
+            'background-repeat': 'repeat'
+        }).appendTo('body');
+    };
+
+    applyWatermark();
+
+    // 防删除:用户在控制台 .remove() 掉水印后立即重建。
+    if (window.MutationObserver) {
+        var mo = new MutationObserver(function(records) {
+            var removed = false;
+            for (var i = 0; i < records.length; i++) {
+                for (var j = 0; j < records[i].removedNodes.length; j++) {
+                    if (records[i].removedNodes[j] &&
+                        records[i].removedNodes[j].className === 'watermark-overlay') {
+                        removed = true;
+                    }
+                }
+            }
+            if (removed && $('.watermark-overlay').length === 0) {
+                applyWatermark();
+            }
+        });
+        mo.observe(document.body, { childList: true });
+    }
 }
