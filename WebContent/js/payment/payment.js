@@ -158,7 +158,7 @@ jQuery(function($) {
         return false;
     });
 
-    payment.btns.collectBtn.bindClick(collect);
+    payment.btns.collectBtn.bindClick(collect, 3000);
 
     // 审批提款提交
     payment.btns.approveWithdrawBtn.on('click', function() {
