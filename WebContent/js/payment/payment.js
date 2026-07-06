@@ -163,6 +163,18 @@ jQuery(function($) {
     // 审批提款提交
     payment.btns.approveWithdrawBtn.on('click', function() {
 
+        var $btn = $(this);
+
+        // 防重复点击:提交期间置灰 3 秒,期间再点不触发请求。
+        if ($btn.hasClass('disabled') || $btn.attr('disabled')) {
+            return false;
+        }
+        $btn.button('loading');
+
+        setTimeout(function() {
+            $btn.button('reset');
+        }, 3000);
+
         if (com.validate("approveWithdrawModal", "#payment")) {
             return false;
         }
@@ -228,7 +240,7 @@ jQuery(function($) {
             searcher.doSearch();
             payment.modals.createModal.modal("hide");
         });
-    });
+    }, 3000);
 
     payment.btns.confirmBtn.bindClick(function() {
 
@@ -248,7 +260,7 @@ jQuery(function($) {
             searcher.doSearch();
             payment.modals.createCollectPaymentModal.modal("hide");
         });
-    });
+    }, 3000);
 
     // 切换合同和主材预付款
     payment.items.advanceType.on("change", function() {

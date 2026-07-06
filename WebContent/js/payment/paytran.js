@@ -266,7 +266,7 @@ jQuery(function($) {
             searcher.doSearch();
             paytran.modals.createPaytranModal.modal("hide");
         });
-    });
+    }, 3000);
 
     paytran.btns.posConfirmBtn.bindClick(function() {
 
@@ -279,6 +279,6 @@ jQuery(function($) {
 
             com.showAlert(com.info, "推送成功");
         });
-    });
+    }, 3000);
 
 });

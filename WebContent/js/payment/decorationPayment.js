@@ -186,9 +186,9 @@ jQuery(function($) {
         "value": "合同"
     }], 'key', 'value');
 
-    decorationPayment.btns.collectBtn.bindClick(collect);
+    decorationPayment.btns.collectBtn.bindClick(collect, 3000);
 
-    decorationPayment.btns.refundBtn.bindClick(collect);
+    decorationPayment.btns.refundBtn.bindClick(collect, 3000);
 
     decorationPayment.btns.createPaytran.unbind().click(function() {
 

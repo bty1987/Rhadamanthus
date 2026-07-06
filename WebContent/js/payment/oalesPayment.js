@@ -152,8 +152,8 @@ jQuery(function($) {
     com.initTypeahead('brand', api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "name", "name", null);
     com.selectTypeahead("bankName", oalesPayment.bankUtil, "key", "value", null);
 
-    oalesPayment.btns.collectBtn.bindClick(collect);
-    oalesPayment.btns.refundBtn.bindClick(collect);
+    oalesPayment.btns.collectBtn.bindClick(collect, 3000);
+    oalesPayment.btns.refundBtn.bindClick(collect, 3000);
 
     oalesPayment.btns.createPaytran.unbind().click(function() {
 

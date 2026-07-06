@@ -125,9 +125,9 @@ jQuery(function($) {
         return false;
     });
 
-    proxyPayment.btns.collectBtn.bindClick(collect);
+    proxyPayment.btns.collectBtn.bindClick(collect, 3000);
 
-    proxyPayment.btns.refundBtn.bindClick(collect);
+    proxyPayment.btns.refundBtn.bindClick(collect, 3000);
 
     proxyPayment.btns.createPaytran.unbind().click(function() {
 
@@ -295,7 +295,7 @@ jQuery(function($) {
             searcher.doSearch();
             proxyPayment.modals.createProxyPaymentModal.modal("hide");
         });
-    });
+    }, 3000);
 
     // 收款-初始化模态框
     function initCollect(payment) {
