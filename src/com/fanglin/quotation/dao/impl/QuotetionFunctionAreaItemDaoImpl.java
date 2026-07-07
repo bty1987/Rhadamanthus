@@ -24,8 +24,8 @@ public class QuotetionFunctionAreaItemDaoImpl extends DaoImpl<QuotetionFunctionA
 	}
 
 	@Override
-	public QuotetionFunctionAreaItemPO queryQuotetionFunctionAreaItemForTypeByQuotetionFunctionAreaId(Class<?> clazz, Long quotetionFunctionAreaId, Short type) {
-		return (QuotetionFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("quotetionFunctionArea.qfaId", quotetionFunctionAreaId)).add(Restrictions.eq("type", type)).uniqueResult();
+	public QuotetionFunctionAreaItemPO queryQuotetionFunctionAreaItem(Class<?> clazz, long quotetionFunctionAreaId, short type) {
+		return (QuotetionFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("qfaid", quotetionFunctionAreaId)).add(Restrictions.eq("type", type)).uniqueResult();
 	}
 
 	@Override
