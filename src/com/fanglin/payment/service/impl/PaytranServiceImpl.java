@@ -8,19 +8,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.data.common.dao.CustypeDao;
-import com.fanglin.data.po.CustypePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.data.common.dao.CustypeDao;
 import com.fanglin.data.common.dao.PaymentTypeDao;
+import com.fanglin.data.po.CustypePO;
 import com.fanglin.data.po.PaymentTypePO;
 import com.fanglin.data.po.ReceiptTypePO;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -73,8 +75,6 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service("paytranService")
 @Transactional(readOnly = true)
@@ -581,7 +581,7 @@ public class PaytranServiceImpl implements PaytranService {
 					atttype = 2;
 				}
 
-				long oldBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, atttype);
+				long oldBalance = AdvancePaymentServiceImpl.getBalance(advancePaymentPO, atttype);
 				long balance = Arith.add(oldBalance, money);
 
 				PaymentPO paymentPO = new PaymentPO(oderId, balance, money, PaymentPO.PAYMENT_TYPE_COLLECTION_INT, atttype, PaymentPO.PAYMENT_STATUS_INIT_INT, decorationPO.getCompany(), DateUtil.getDateToTimestamp(new Date()), String.valueOf(new Date().getTime()));
@@ -950,7 +950,7 @@ public class PaytranServiceImpl implements PaytranService {
 					atttype = 2;
 				}
 
-				long oldBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, atttype);
+				long oldBalance = AdvancePaymentServiceImpl.getBalance(advancePaymentPO, atttype);
 				long balance = Arith.add(oldBalance, money);
 
 				PaymentPO paymentPO = new PaymentPO(oderId, balance, money, PaymentPO.PAYMENT_TYPE_COLLECTION_INT, atttype, PaymentPO.PAYMENT_STATUS_INIT_INT, decorationPO.getCompany(), DateUtil.getDateToTimestamp(new Date()), String.valueOf(new Date().getTime()));
