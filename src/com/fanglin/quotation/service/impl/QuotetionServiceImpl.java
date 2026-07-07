@@ -220,19 +220,19 @@ public class QuotetionServiceImpl implements QuotetionService {
 		QuotetionFunctionAreaPO quotetionFunctionAreaPO = quotetionFunctionAreaDao.queryQuotetionFunctionAreaForTypeByQuotetionId(quotetionVO.getQid(), QuotetionFunctionAreaPO.TYPE_MANAGEMENT_INT);
 
 		if (quotetionVO.getTrafficDiscount() != null) {
-			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemForTypeByQuotetionFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId(), QuotetionFunctionAreaItemPO.TYPE_TRAFFIC_INT);
+			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItem(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId(), QuotetionFunctionAreaItemPO.TYPE_TRAFFIC_INT);
 			quotetionFunctionAreaItemPO.setDiscount(quotetionVO.getTrafficDiscount());
 			quotetionFunctionAreaItemDao.update(quotetionFunctionAreaItemPO);
 		}
 
 		if (quotetionVO.getManageDiscount() != null) {
-			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemForTypeByQuotetionFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId(), QuotetionFunctionAreaItemPO.TYPE_MANAGE_INT);
+			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItem(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId(), QuotetionFunctionAreaItemPO.TYPE_MANAGE_INT);
 			quotetionFunctionAreaItemPO.setDiscount(quotetionVO.getManageDiscount());
 			quotetionFunctionAreaItemDao.update(quotetionFunctionAreaItemPO);
 		}
 
 		if (quotetionVO.getTaxDiscount() != null) {
-			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemForTypeByQuotetionFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId(), QuotetionFunctionAreaItemPO.TYPE_TAX_INT);
+			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItem(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId(), QuotetionFunctionAreaItemPO.TYPE_TAX_INT);
 			quotetionFunctionAreaItemPO.setDiscount(quotetionVO.getTaxDiscount());
 			quotetionFunctionAreaItemDao.update(quotetionFunctionAreaItemPO);
 		}
