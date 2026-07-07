@@ -230,7 +230,7 @@ $(function() {
 
     com.post(api.communion.queryDepartment, {}, function(res) {
 
-        $.each(res.departments, function(i, v) {
+        $.each(res.deptList, function(i, v) {
 
             user.departmentsel.push(v);
         });

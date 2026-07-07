@@ -107,7 +107,7 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 		}
 
 		// 4. 校验余额是否充足(不预扣,只校验)
-		long balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
+		long balance = AdvancePaymentServiceImpl.getBalance(advancePaymentPO, paymentType);
 		if (balance < amount) {
 			throw new FLException(150010, "预付款余额不足");
 		}
@@ -178,13 +178,13 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 			throw new FLException(150010, "预付款余额不足");
 		}
 
-		long currentBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
+		long currentBalance = AdvancePaymentServiceImpl.getBalance(advancePaymentPO, paymentType);
 		if (currentBalance < amount) {
 			throw new FLException(150010, "预付款余额不足");
 		}
 
 		long overBalance = Arith.sub(currentBalance, amount);
-		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, overBalance);
+		AdvancePaymentServiceImpl.setBalance(advancePaymentPO, paymentType, overBalance);
 		advancePaymentDao.update(advancePaymentPO);
 
 		// 4. 创建预付款收据

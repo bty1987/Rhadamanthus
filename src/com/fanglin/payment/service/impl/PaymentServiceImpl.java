@@ -216,7 +216,7 @@ public class PaymentServiceImpl implements PaymentService {
 		// 合同预付款 主材预付款
 		List<Short> paymentTypes = Arrays.asList(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT);
 
-		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
+		balance = AdvancePaymentServiceImpl.getBalance(advancePaymentPO, paymentType);
 
 		advancePaymentDao.saveOrUpdate(advancePaymentPO);
 
@@ -233,14 +233,11 @@ public class PaymentServiceImpl implements PaymentService {
 
 		overBalance = Arith.add(balance, recharge);
 
-		// 原子增加余额(数据库层), 替代 read-modify-write 避免并发丢更新
-		advancePaymentDao.increaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge);
-
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 
-		// 余额更新已由数据库层原子SQL完成, 不再修改 advancePaymentPO 内存字段(避免脏检查回写覆盖原子更新)
-		// overBalance 仅用于 paymentPO(款项流水)的余额快照
+		// 设置当前款项类型的预付款(advancePayment)的余额
+		AdvancePaymentServiceImpl.setBalance(advancePaymentPO, paymentType, overBalance);
 
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status", "type"));
@@ -390,12 +387,11 @@ public class PaymentServiceImpl implements PaymentService {
 		long recharge = gatherPayment(paymentVO);
 		Short paymentType = paymentVO.getPaymentType();
 
-		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
+		balance = AdvancePaymentServiceImpl.getBalance(advancePaymentPO, paymentType);
 
 		long overBalance = 0;
 
-		// 提现需扣减余额, 原子SQL含余额校验: 受影响行数为0表示余额不足
-		if (advancePaymentDao.decreaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
+		if (balance < recharge) {
 			throw new FLException(150010, "预付款余额不足");
 		}
 
@@ -404,8 +400,9 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 
-		// 余额更新已由数据库层原子SQL完成, 不再修改 advancePaymentPO 内存字段(避免脏检查回写覆盖原子更新)
-		// overBalance 仅用于 paymentPO(款项流水)的余额快照
+		AdvancePaymentServiceImpl.setBalance(advancePaymentPO, paymentType, overBalance);
+
+		advancePaymentDao.update(advancePaymentPO);
 
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status", "type"));
@@ -478,12 +475,11 @@ public class PaymentServiceImpl implements PaymentService {
 		long recharge = gatherPayment(paymentVO);
 		Short paymentType = paymentVO.getPaymentType();
 
-		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
+		balance = AdvancePaymentServiceImpl.getBalance(advancePaymentPO, paymentType);
 
 		long overBalance = 0;
 
-		// 付款需扣减余额, 原子SQL含余额校验: 受影响行数为0表示余额不足
-		if (advancePaymentDao.decreaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
+		if (balance < recharge) {
 			throw new FLException(150010, "预付款余额不足");
 		}
 
@@ -492,8 +488,9 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 
-		// 余额更新已由数据库层原子SQL完成, 不再修改 advancePaymentPO 内存字段(避免脏检查回写覆盖原子更新)
-		// overBalance 仅用于 paymentPO(款项流水)的余额快照
+		AdvancePaymentServiceImpl.setBalance(advancePaymentPO, paymentType, overBalance);
+
+		advancePaymentDao.update(advancePaymentPO);
 
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
@@ -554,19 +551,17 @@ public class PaymentServiceImpl implements PaymentService {
 
 		Short paymentType = paymentVO.getPaymentType();
 
-		long balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
+		long balance = AdvancePaymentServiceImpl.getBalance(advancePaymentPO, paymentType);
 		long recharge = gatherPayment(paymentVO);
 
 		long overBalance = Arith.add(balance, recharge);
 
-		// 退款需增加余额, 原子SQL完成数据库层更新
-		advancePaymentDao.increaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge);
+		AdvancePaymentServiceImpl.setBalance(advancePaymentPO, paymentType, overBalance);
+
+		advancePaymentDao.update(advancePaymentPO);
 
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-
-		// 余额更新已由数据库层原子SQL完成, 不再修改 advancePaymentPO 内存字段(避免脏检查回写覆盖原子更新)
-		// overBalance 仅用于 paymentPO(款项流水)的余额快照
 
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
@@ -620,7 +615,7 @@ public class PaymentServiceImpl implements PaymentService {
 			advancePaymentPO.setDecoration(decorationPO);
 		}
 
-		long oldBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
+		long oldBalance = AdvancePaymentServiceImpl.getBalance(advancePaymentPO, paymentType);
 		long balance = Arith.add(oldBalance, recharge);
 
 		PaymentPO paymentPO = new PaymentPO();
