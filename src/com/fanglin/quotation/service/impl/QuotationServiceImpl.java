@@ -61,6 +61,7 @@ import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.ProtationPO;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;
+import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.quotation.po.QuotationDO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
@@ -170,6 +171,9 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Autowired
 	private com.fanglin.quotation.dao.QuotationAssignRequestDao quotationAssignRequestDao;
+
+	@Autowired
+	private com.fanglin.quotation.dao.QuotationAssignUserRuleDao quotationAssignUserRuleDao;
 
 	@Override
 	public void pageQuotation(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -734,9 +738,29 @@ public class QuotationServiceImpl implements QuotationService {
 		// 更新分配队列为已完成
 		QuotationAssignRequestPO assignRequest = quotationAssignRequestDao.queryQuotationAssignRequestForAssigned(quotationPO.getOrderId());
 		if (assignRequest != null) {
+			UserPO assignedUser = assignRequest.getUser();
 			assignRequest.setStatus(QuotationAssignRequestPO.STATUS_COMPLETED_INT);
 			assignRequest.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 			quotationAssignRequestDao.update(assignRequest);
+			quotationAssignRequestDao.flush();
+
+			if (assignedUser != null) {
+				QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(assignedUser.getUserId());
+
+				if (userRule != null) {
+					int currentTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(assignedUser.getUid());
+					userRule.setCurrentTaskCount(currentTaskCount);
+					userRule.setLastFinishTime(assignRequest.getFinishTime());
+
+					if (userRule.getStatus() != QuotationAssignUserRulePO.STATUS_STOPPED_INT) {
+						short status = currentTaskCount > QuotationAssignUserRulePO.TASK_COUNT_NONE_INT ? QuotationAssignUserRulePO.STATUS_BUSY_INT : QuotationAssignUserRulePO.STATUS_AVAILABLE_INT;
+						userRule.setStatus(status);
+					}
+
+					userRule.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+					quotationAssignUserRuleDao.update(userRule);
+				}
+			}
 		}
 
 		UserPO designer = decorationPO.getDesigner();

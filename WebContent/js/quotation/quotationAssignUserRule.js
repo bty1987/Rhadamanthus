@@ -345,7 +345,7 @@ $(function() {
 
     // ==================== 查看任务功能 ====================
 
-	    // 查看预算员当前负责的所有任务
+    // 查看预算员当前负责的所有任务
     function viewUserTasks(row) {
 
         var userName = row.user ? row.user.currentName : "未知";
@@ -364,7 +364,7 @@ $(function() {
         com.focusPage('#taskEmptyMsg').hide();
 
         // 构造分页参数（查全部，每页100条，第一页）
-        // 只查活跃任务(status<3)：与 currentTaskCount 统计口径一致
+        // 只查已分配且未完成任务(status=2)：与 currentTaskCount 统计口径一致
         // company=0 表示不过滤公司（跨公司查看）
         var postData = {
             "paging.page": 1,
@@ -374,8 +374,8 @@ $(function() {
             "filters[0].data": uid,
             "filters[0].op": "eq",
             "filters[1].field": "status",
-            "filters[1].data": String(constant.quotation().quotationAssignRequest.STATUS_COMPLETED_INT),
-            "filters[1].op": "ne"
+            "filters[1].data": String(constant.quotation().quotationAssignRequest.STATUS_ASSIGNED_INT),
+            "filters[1].op": "eq"
         };
 
         com.post(api.quotation.pageQuotationAssignRequest, postData, function(res) {

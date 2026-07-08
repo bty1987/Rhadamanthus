@@ -68,6 +68,8 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 	@Transactional(rollbackFor = Exception.class)
 	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company) throws FLException {
 
+		syncQuotationAssignUserRuleStatus();
+
 		List<QuotationAssignUserRulePO> rulePOs = quotationAssignUserRuleDao.pageQuotationAssignUserRule(paging, filters, company);
 		List<QuotationAssignUserRuleVO> ruleVOs = new ArrayList<QuotationAssignUserRuleVO>();
 
@@ -336,7 +338,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 			if (rule.getUser() == null) continue;
 
-			// 从预算结果 Map 取活跃任务数（status < 3），未命中视为 0
+			// 从预算结果 Map 取已分配且未完成任务数（status = 2），未命中视为 0
 			int actualTaskCount = taskCountMap.containsKey(rule.getUser().getUid()) ? taskCountMap.get(rule.getUser().getUid()) : QuotationAssignUserRulePO.TASK_COUNT_NONE_INT;
 			int storedTaskCount = rule.getCurrentTaskCount();
 

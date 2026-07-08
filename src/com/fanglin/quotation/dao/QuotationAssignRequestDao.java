@@ -120,10 +120,10 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	QuotationAssignRequestPO queryQuotationAssignRequestForAssigned(String orderId);
 
 	/**
-	 * 根据预算员用户ID查询当前进行中任务数量（排除已完成）
+	 * 根据预算员用户ID查询当前进行中任务数量
 	 * 
 	 * <p>
-	 * 统计 status &lt; 3 的请求数量（即待分配 + 已分配）
+	 * 统计 status = 2 的请求数量（即已分配且未完成）
 	 * </p>
 	 * 
 	 * @param uid 预算员用户ID
@@ -132,11 +132,11 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	int countQuotationAssignRequest(int uid);
 
 	/**
-	 * 批量统计所有预算员当前进行中任务数量（按 uid 分组，排除已完成）
+	 * 批量统计所有预算员当前进行中任务数量（按 uid 分组）
 	 * 
 	 * <p>
 	 * 用于状态同步场景：一次查询替代循环内逐个 count，消除 N+1。
-	 * 统计 status &lt; 3 的请求数量（即待分配 + 已分配），按预算员 uid 分组。
+	 * 统计 status = 2 的请求数量（即已分配且未完成），按预算员 uid 分组。
 	 * </p>
 	 * 
 	 * <p>
