@@ -132,10 +132,10 @@ public interface QuotationAssignUserRuleService {
 	 * 同步所有预算员的任务数和状态（根据分配队列实时数据）
 	 * 
 	 * <p>
-	 * 遍历所有预算员规则，根据分配队列中 status &lt; 3 的记录数更新：
+	 * 遍历所有预算员规则，根据分配队列中 status = 2 的记录数更新：
 	 * </p>
 	 * <ul>
-	 * <li>currentTaskCount = 该预算员在分配队列中活跃记录数（status &lt; 3）</li>
+	 * <li>currentTaskCount = 该预算员已分配且未完成的记录数（status = 2）</li>
 	 * <li>如果 currentTaskCount &gt; 0，则 status = 制作中(2)</li>
 	 * <li>如果 currentTaskCount = 0 且 status != 停止(3)，则 status = 待分配(1)</li>
 	 * </ul>

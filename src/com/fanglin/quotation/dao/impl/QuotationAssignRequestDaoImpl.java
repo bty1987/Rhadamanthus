@@ -193,8 +193,8 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	@Override
 	public int countQuotationAssignRequest(int uid) {
-		// 统计该预算员进行中的任务数量（排除已完成 status=3）
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.lt("status", QuotationAssignRequestPO.STATUS_COMPLETED_INT)).createAlias("user", "u").add(Restrictions.eq("u.uid", uid));
+		// 统计该预算员已分配且未完成的任务数量
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).createAlias("user", "u").add(Restrictions.eq("u.uid", uid));
 
 		Number count = (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
 		return count != null ? count.intValue() : 0;
@@ -203,9 +203,9 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object[]> countQuotationAssignRequestGroupByUid() {
-		// 批量统计所有预算员进行中任务数（status < 3），按 uid 分组
+		// 批量统计所有预算员已分配且未完成的任务数（status = 2），按 uid 分组
 		// 一次查询替代循环内逐个 count，消除 N+1
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.lt("status", QuotationAssignRequestPO.STATUS_COMPLETED_INT)).createAlias("user", "u");
+		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).createAlias("user", "u");
 
 		// 投影：分组键 uid + 计数，结果每行 [uid, count]
 		org.hibernate.criterion.ProjectionList projectionList = Projections.projectionList();
