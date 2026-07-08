@@ -141,6 +141,11 @@ public class QuotationAssignRequestPO implements Serializable {
 	private String orderId;
 
 	/**
+	 * 装修单
+	 */
+	private DecorationPO decoration;
+
+	/**
 	 * 关联公司
 	 */
 	private CompanyPO company;
@@ -259,6 +264,26 @@ public class QuotationAssignRequestPO implements Serializable {
 	 */
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	/**
+	 * 获取装修单
+	 *
+	 * @return 装修单对象
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "orderId", referencedColumnName = "orderId", insertable = false, updatable = false)
+	public DecorationPO getDecoration() {
+		return decoration;
+	}
+
+	/**
+	 * 设置装修单
+	 *
+	 * @param decoration 装修单对象
+	 */
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 
 	/**
@@ -500,11 +525,12 @@ public class QuotationAssignRequestPO implements Serializable {
 	 * @return 转换后的VO对象
 	 */
 	public QuotationAssignRequestVO ptv(QuotationAssignRequestVO vo) {
-		BeanUtils.copyProperties(this, vo, "company", "department", "requestUser", "user");
+		BeanUtils.copyProperties(this, vo, "company", "department", "requestUser", "user", "decoration");
 
 		if (vo.getCompany() != null && getCompany() != null) getCompany().ptv(vo.getCompany());
 		if (vo.getDepartment() != null && getDepartment() != null) getDepartment().ptv(vo.getDepartment());
 		if (vo.getRequestUser() != null && getRequestUser() != null) vo.getRequestUser().setBaseInfo(getRequestUser());
+		if (vo.getRequestUser() != null && getRequestUser() == null && getDecoration() != null && getDecoration().getDesigner() != null) vo.getRequestUser().setBaseInfo(getDecoration().getDesigner());
 		if (vo.getUser() != null && getUser() != null) vo.getUser().setBaseInfo(getUser());
 
 		return vo;
@@ -518,7 +544,7 @@ public class QuotationAssignRequestPO implements Serializable {
 	 */
 	public QuotationAssignRequestPO vtp(QuotationAssignRequestVO vo) {
 		// 复制基本属性，排除关联对象（UserBaseVO无法直接复制到UserPO）
-		com.fanglin.utils.BeanUtil.copyProperties(vo, this, "company", "department", "requestUser", "user");
+		com.fanglin.utils.BeanUtil.copyProperties(vo, this, "company", "department", "requestUser", "user", "decoration");
 
 		return this;
 	}
