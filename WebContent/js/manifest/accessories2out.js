@@ -19,26 +19,20 @@ jQuery(function($) {
     }, function(res) {
 
 //        orderInfo('orderInfo', res.decoration);
-        
+
         drawdecoration(res.decoration);
         customerItems(res.decoration);
-        
-    }, null, false);
 
-    com.post(api.inventory.queryStorehouseForSelf, {}, function(res) {
-
-        $.each(res.storehouses, function(i, v) {
-
-            accessories.storehouses.push(v);
-        });
     }, null, false);
 
     com.post(api.inventory.queryAccessoriesItemByAid, {
         "accessoriesItem.aid": accessories.aid
     }, function(res) {
 
+        accessories.storehouses = res.storehouses || [];
+
         for ( var i = 0; i < res.accessoriesItems.length; i++) {
-            autoAddline(res.accessoriesItems[i])
+            autoAddline(res.accessoriesItems[i]);
         }
     });
 
@@ -161,20 +155,8 @@ jQuery(function($) {
         $line.find('.outprice').text(item.selling);
 
         $line.find('.storehouse select').bindData(accessories.storehouses, "shid", "name");
-
-        com.post(api.data.queryColorForEnableByGid, {
-            "color.gid": item.goods.gid
-        }, function(data) {
-
-            $line.find('.color select').bindData(data.colors, "cid", "name");
-        }, null, false);
-
-        com.post(api.data.queryFormatForEnableByGid, {
-            "format.gid": item.goods.gid
-        }, function(data) {
-
-            $line.find('.format select').bindData(data.formats, "fid", "info");
-        }, null, false);
+        $line.find('.color select').bindData(item.colors || [], "cid", "name");
+        $line.find('.format select').bindData(item.formats || [], "fid", "info");
     }
 
     function orderInfo(tableId, v) {
@@ -213,7 +195,7 @@ jQuery(function($) {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计师: ' + decoration.designer.currentName)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info);
     }
-    
+
     function customerItems(decoration) {
 
         var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").appendTo(com.focusPage('#orderInfo'));

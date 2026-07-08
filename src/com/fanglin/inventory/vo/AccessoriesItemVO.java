@@ -1,6 +1,7 @@
 package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.fanglin.data.material.vo.ColorVO;
 import com.fanglin.data.material.vo.FormatVO;
@@ -21,6 +22,10 @@ public class AccessoriesItemVO implements Serializable {
 	private ColorVO color;
 
 	private FormatVO format;
+
+	private List<ColorVO> colors;
+
+	private List<FormatVO> formats;
 
 	private StorehouseVO storehouse;
 
@@ -105,6 +110,22 @@ public class AccessoriesItemVO implements Serializable {
 
 	public void setFormat(FormatVO format) {
 		this.format = format;
+	}
+
+	public List<ColorVO> getColors() {
+		return colors;
+	}
+
+	public void setColors(List<ColorVO> colors) {
+		this.colors = colors;
+	}
+
+	public List<FormatVO> getFormats() {
+		return formats;
+	}
+
+	public void setFormats(List<FormatVO> formats) {
+		this.formats = formats;
 	}
 
 	public StorehouseVO getStorehouse() {

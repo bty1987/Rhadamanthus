@@ -13,8 +13,11 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.service.AccessoriesItemService;
 import com.fanglin.inventory.service.AccessoriesService;
+import com.fanglin.inventory.service.StorehouseService;
 import com.fanglin.inventory.vo.AccessoriesItemVO;
 import com.fanglin.inventory.vo.AccessoriesVO;
+import com.fanglin.inventory.vo.StorehouseVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -26,11 +29,16 @@ public class AccessoriesAction extends BaseListAction {
 	@Autowired
 	private AccessoriesService accessoriesService;
 
+	@Autowired
+	private StorehouseService storehouseService;
+
 	private AccessoriesVO accessories;
 
 	private List<AccessoriesVO> accessoriess;
 
 	private List<AccessoriesItemVO> accessoriesItems;
+
+	private List<StorehouseVO> storehouses;
 
 	private AccessoriesItemVO accessoriesItem;
 
@@ -120,17 +128,19 @@ public class AccessoriesAction extends BaseListAction {
 	}
 
 	@Action(value = "queryAccessoriesItemByAid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAccessoriesItemByAid() {
+	public String queryAccessoriesItemByAid() throws FLException {
 
 		accessoriesItems = accessoriesItemService.queryAccessoriesItemByAid(accessoriesItem);
+		storehouses = storehouseService.queryStorehouseByUserId(new UserBaseVO(queryUserId()));
 
 		return SUCCESS;
 	}
 
 	@Action(value = "queryAccessoriesItemByAids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAccessoriesItemByAids() {
+	public String queryAccessoriesItemByAids() throws FLException {
 
 		accessoriesItems = accessoriesItemService.queryAccessoriesItemByAids(aids);
+		storehouses = storehouseService.queryStorehouseByUserId(new UserBaseVO(queryUserId()));
 
 		return SUCCESS;
 	}
@@ -189,6 +199,14 @@ public class AccessoriesAction extends BaseListAction {
 
 	public void setAccessoriesItems(List<AccessoriesItemVO> accessoriesItems) {
 		this.accessoriesItems = accessoriesItems;
+	}
+
+	public List<StorehouseVO> getStorehouses() {
+		return storehouses;
+	}
+
+	public void setStorehouses(List<StorehouseVO> storehouses) {
+		this.storehouses = storehouses;
 	}
 
 	public AccessoriesItemVO getAccessoriesItem() {
