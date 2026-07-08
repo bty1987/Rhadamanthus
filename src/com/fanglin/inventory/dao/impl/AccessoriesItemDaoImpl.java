@@ -3,7 +3,7 @@ package com.fanglin.inventory.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -21,21 +21,27 @@ public class AccessoriesItemDaoImpl extends DaoImpl<AccessoriesItemPO> implement
 	@Override
 	public List<?> queryAccessoriesItem(String orderId) {
 
-		String sql = "select {acsitem.*} from inventory.accessories acs, inventory.accessoriesitem acsitem where acs.orderId = :orderId and acs.aid = acsitem.aid";
+		String hql = "select distinct acsitem from AccessoriesItemPO acsitem left join fetch acsitem.goods left join fetch acsitem.colors left join fetch acsitem.formats, AccessoriesPO acs where acs.orderId = :orderId and acs.aid = acsitem.aid";
 
-		return session().createSQLQuery(sql).addEntity("acsitem", AccessoriesItemPO.class).setString("orderId", orderId).list();
+		return session().createQuery(hql).setString("orderId", orderId).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<AccessoriesItemPO> queryAccessoriesItem(long aid) {
-		return session().createCriteria(AccessoriesItemPO.class).add(Restrictions.eq(AccessoriesItemPO.COLUMN_AOID_STR, aid)).list();
+		String hql = "select distinct acsitem from AccessoriesItemPO acsitem left join fetch acsitem.goods left join fetch acsitem.colors left join fetch acsitem.formats where acsitem.aid = :aid";
+		Query query = session().createQuery(hql).setLong("aid", aid);
+
+		return query.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<AccessoriesItemPO> queryAccessoriesItem(List<Long> aids) {
-		return session().createCriteria(AccessoriesItemPO.class).add(Restrictions.in(AccessoriesItemPO.COLUMN_AOID_STR, aids)).list();
+		String hql = "select distinct acsitem from AccessoriesItemPO acsitem left join fetch acsitem.goods left join fetch acsitem.colors left join fetch acsitem.formats where acsitem.aid in (:aids)";
+		Query query = session().createQuery(hql).setParameterList("aids", aids);
+
+		return query.list();
 	}
 
 	@Override

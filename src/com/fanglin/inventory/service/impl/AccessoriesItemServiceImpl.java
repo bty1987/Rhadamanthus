@@ -1,8 +1,6 @@
 package com.fanglin.inventory.service.impl;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,15 +11,9 @@ import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.po.ConstructionAccessoryPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.data.material.dao.ColorDao;
-import com.fanglin.data.material.dao.FormatDao;
 import com.fanglin.data.material.dao.NoodsDao;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
-import com.fanglin.data.material.vo.ColorVO;
-import com.fanglin.data.material.vo.FormatVO;
 import com.fanglin.data.material.vo.GoodsVO;
-import com.fanglin.data.po.ColorPO;
-import com.fanglin.data.po.FormatPO;
 import com.fanglin.data.po.NoodsPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
@@ -70,12 +62,6 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 	@Autowired
 	private NoodsDao noodsDao;
 
-	@Autowired
-	private ColorDao colorDao;
-
-	@Autowired
-	private FormatDao formatDao;
-
 	@Override
 	public List<AccessoriesItemVO> queryAccessoriesItemByAid(AccessoriesItemVO accessoriesItemVO) {
 
@@ -85,8 +71,6 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
 			accessoriesItemVOs.add(accessoriesItemPO.ptv(new AccessoriesItemVO(new GoodsVO(new AccessoriesTypeVO(new WorkTypeVO())))));
 		}
-
-		fillOptions(accessoriesItemVOs);
 
 		return accessoriesItemVOs;
 	}
@@ -100,8 +84,6 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
 			accessoriesItemVOs.add(accessoriesItemPO.ptv(new AccessoriesItemVO(new GoodsVO())));
 		}
-
-		fillOptions(accessoriesItemVOs);
 
 		return accessoriesItemVOs;
 	}
@@ -117,50 +99,6 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		}
 
 		return accessoriesItemVOs;
-	}
-
-	private void fillOptions(List<AccessoriesItemVO> accessoriesItemVOs) {
-
-		if (accessoriesItemVOs == null || accessoriesItemVOs.size() == 0) return;
-
-		List<Long> gids = new ArrayList<Long>();
-		Map<Long, List<ColorVO>> colorMap = new HashMap<Long, List<ColorVO>>();
-		Map<Long, List<FormatVO>> formatMap = new HashMap<Long, List<FormatVO>>();
-
-		for (AccessoriesItemVO accessoriesItemVO : accessoriesItemVOs) {
-
-			if (accessoriesItemVO.getGoods() == null || accessoriesItemVO.getGoods().getGid() == null) continue;
-
-			Long gid = accessoriesItemVO.getGoods().getGid();
-
-			if (colorMap.containsKey(gid)) continue;
-
-			gids.add(gid);
-			colorMap.put(gid, new ArrayList<ColorVO>());
-			formatMap.put(gid, new ArrayList<FormatVO>());
-		}
-
-		if (gids.size() == 0) return;
-
-		for (ColorPO colorPO : colorDao.queryColorForEnableByGids(gids)) {
-			List<ColorVO> colors = colorMap.get(colorPO.getGid());
-			if (colors != null) colors.add(colorPO.ptv(new ColorVO()));
-		}
-
-		for (FormatPO formatPO : formatDao.queryFormatForEnableByGids(gids)) {
-			List<FormatVO> formats = formatMap.get(formatPO.getGid());
-			if (formats != null) formats.add(formatPO.ptv(new FormatVO()));
-		}
-
-		for (AccessoriesItemVO accessoriesItemVO : accessoriesItemVOs) {
-
-			if (accessoriesItemVO.getGoods() == null || accessoriesItemVO.getGoods().getGid() == null) continue;
-
-			Long gid = accessoriesItemVO.getGoods().getGid();
-
-			accessoriesItemVO.setColors(colorMap.get(gid));
-			accessoriesItemVO.setFormats(formatMap.get(gid));
-		}
 	}
 
 	@Override
