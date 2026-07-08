@@ -3,7 +3,10 @@ package com.fanglin.inventory.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +15,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
+
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.po.ColorPO;
+import com.fanglin.data.po.FormatPO;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.inventory.vo.AccessoriesItemVO;
 import com.fanglin.utils.BeanUtil;
@@ -37,6 +48,10 @@ public class AccessoriesItemPO implements Serializable {
 	private long nid;
 
 	private GoodsPO goods;
+
+	private Set<ColorPO> colors;
+
+	private Set<FormatPO> formats;
 
 	private int selling;
 
@@ -89,6 +104,30 @@ public class AccessoriesItemPO implements Serializable {
 
 	public void setGoods(GoodsPO goods) {
 		this.goods = goods;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "gid", referencedColumnName = "gid", insertable = false, updatable = false)
+	@Where(clause = "status = 0")
+	@OrderBy("cid ASC")
+	public Set<ColorPO> getColors() {
+		return colors;
+	}
+
+	public void setColors(Set<ColorPO> colors) {
+		this.colors = colors;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "gid", referencedColumnName = "gid", insertable = false, updatable = false)
+	@Where(clause = "status = 0")
+	@OrderBy("fid ASC")
+	public Set<FormatPO> getFormats() {
+		return formats;
+	}
+
+	public void setFormats(Set<FormatPO> formats) {
+		this.formats = formats;
 	}
 
 	@Column(name = "selling")
@@ -186,7 +225,7 @@ public class AccessoriesItemPO implements Serializable {
 
 	public AccessoriesItemPO init(long aid, AccessoriesItemVO accessoriesItemVO) {
 
-		BeanUtil.copyProperties(accessoriesItemVO, this, Arrays.asList("goods"));
+		BeanUtil.copyProperties(accessoriesItemVO, this, Arrays.asList("goods", "colors", "formats"));
 
 		setAid(aid);
 
@@ -199,11 +238,40 @@ public class AccessoriesItemPO implements Serializable {
 
 	public AccessoriesItemVO ptv(AccessoriesItemVO accessoriesItemVO) {
 
-		BeanUtil.copyProperties(this, accessoriesItemVO, Arrays.asList("goods"));
+		BeanUtil.copyProperties(this, accessoriesItemVO, Arrays.asList("goods", "colors", "formats"));
 
 		if (accessoriesItemVO.getGoods() != null && getGoods() != null) getGoods().ptv(accessoriesItemVO.getGoods());
 
+		accessoriesItemVO.setColors(ptc(getColors()));
+		accessoriesItemVO.setFormats(ptf(getFormats()));
+
 		return accessoriesItemVO;
+	}
+
+	private List<ColorVO> ptc(Set<ColorPO> colorPOs) {
+
+		if (colorPOs == null || colorPOs.size() == 0) return null;
+
+		List<ColorVO> colorVOs = new ArrayList<ColorVO>();
+
+		for (ColorPO colorPO : colorPOs) {
+			colorVOs.add(colorPO.ptv(new ColorVO()));
+		}
+
+		return colorVOs;
+	}
+
+	private List<FormatVO> ptf(Set<FormatPO> formatPOs) {
+
+		if (formatPOs == null || formatPOs.size() == 0) return null;
+
+		List<FormatVO> formatVOs = new ArrayList<FormatVO>();
+
+		for (FormatPO formatPO : formatPOs) {
+			formatVOs.add(formatPO.ptv(new FormatVO()));
+		}
+
+		return formatVOs;
 	}
 
 }
