@@ -106,6 +106,8 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 				query.add(Restrictions.eq("status", Short.valueOf(data)));
 			} else if ("planStatus".equals(field)) {
 				query.add(Restrictions.eq("planStatus", Short.valueOf(data)));
+			} else if ("additemStatus".equals(field)) {
+				query.add(Restrictions.eq("additemStatus", Short.valueOf(data)));
 			}
 		}
 	}
