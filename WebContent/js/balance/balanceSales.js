@@ -28,12 +28,16 @@ jQuery(function($) {
 
         status: {},
 
+        suppliers: [],
+
         depage: params['urlLoadParams'].depage,
     };
 
     balanceSales.modals.createBalanceSalesModal.on("hide.bs.modal", function() {
 
-        com.focusPage('option[selected="selected"]').remove();
+        com.cleanTypeahead("brand");
+        balanceSales.items.supplier.empty();
+        balanceSales.suppliers = [];
         com.clearValidator();
         com.cleanItems(balanceSales.items);
     });
@@ -671,15 +675,23 @@ jQuery(function($) {
 
     function supplier(v) {
 
-        com.post(api.data.queryBrandByBid, {
-            "brand.bid": v.bid
+        balanceSales.items.supplier.empty();
+        balanceSales.suppliers = [];
+
+        if (!v || !v.bid) return false;
+
+        com.post(api.communion.queryBrandSupplier, {
+            "brandSupplier.brand.bid": v.bid
         }, function(res) {
 
-            if (res.brand.supplier != null || res.brand.supplier != "") {
-                $('<option selected="selected"></option>').attr("value", res.brand.supplier.uid).html(res.brand.supplier.currentName).appendTo(com.focusPage("#supplier"));
-            }
-        });
-        
+            $.each(res.brandSuppliers || [], function(i, brandSupplier) {
+
+                if (brandSupplier.supplier) {
+                    balanceSales.suppliers.push(brandSupplier.supplier);
+                }
+            });
+        }, null, false);
+
         balanceSales.items.supplier.bindData(balanceSales.suppliers, "uid", "currentName");
     }
 });
