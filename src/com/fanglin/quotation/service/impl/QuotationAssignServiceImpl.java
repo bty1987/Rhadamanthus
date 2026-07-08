@@ -103,6 +103,13 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	}
 
 	/**
+	 * 获取分配请求人，默认使用装修单设计师。
+	 */
+	private UserPO getRequestUser(DecorationPO decoration) {
+		return decoration.getDesigner();
+	}
+
+	/**
 	 * 检查预算员在指定公司下是否有匹配的规则明细
 	 * 
 	 * @param userRule 预算员规则
@@ -166,7 +173,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		// 5. 如果是手动模式，直接进入待分配队列
 		if (config.getAutoAssign() != QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT) {
-			return createPendingRequest(orderId, company, department, decorationType);
+			return createPendingRequest(decoration, company, department, decorationType);
 		}
 
 		// 6. 查找可分配预算员
@@ -175,7 +182,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		List<QuotationAssignUserRuleItemPO> availableItems = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemForCross(company, department, decorationType);
 
 		if (availableItems == null || availableItems.isEmpty()) {
-			return createPendingRequest(orderId, company, department, decorationType);
+			return createPendingRequest(decoration, company, department, decorationType);
 		}
 
 		// 7. DAO 已通过 item 查询完成类型匹配和排序（按 lastFinishTime ASC）
@@ -416,7 +423,9 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	/**
 	 * 创建待分配请求
 	 */
-	private int createPendingRequest(String orderId, Integer company, Integer department, Short decorationType) throws FLException {
+	private int createPendingRequest(DecorationPO decoration, Integer company, Integer department, Short decorationType) throws FLException {
+
+		String orderId = decoration.getOrderId();
 
 		QuotationAssignRequestPO existRequest = quotationAssignRequestDao.queryActiveByOrderId(orderId);
 		if (existRequest != null) {
@@ -434,6 +443,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		request.setPriority(QuotationAssignRequestPO.PRIORITY_NORMAL_INT);
 		request.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		request.setRequestTime(new Timestamp(System.currentTimeMillis()));
+		request.setRequestUser(getRequestUser(decoration));
 		request.setStatus(QuotationAssignRequestPO.STATUS_PENDING_INT);
 		quotationAssignRequestDao.save(request);
 
@@ -465,6 +475,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		if (request != null) {
 			request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
 			request.setUser(userRule.getUser());
+			if (request.getRequestUser() == null) request.setRequestUser(getRequestUser(decoration));
 			request.setAssignTime(new Timestamp(System.currentTimeMillis()));
 			quotationAssignRequestDao.update(request);
 		} else {
@@ -478,6 +489,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			request.setRequestTime(new Timestamp(System.currentTimeMillis()));
 			request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
 			request.setUser(userRule.getUser());
+			request.setRequestUser(getRequestUser(decoration));
 			request.setAssignTime(new Timestamp(System.currentTimeMillis()));
 			quotationAssignRequestDao.save(request);
 		}

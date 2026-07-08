@@ -392,7 +392,7 @@ $(function() {
 	                    var priorityText = constant.quotation().quotationAssignRequest.priority.keys[item.priority] || "普通";
 	                    var companyName = item.company ? item.company.name : "-";
 	                    var decorationType = constant.quotation().quotationAssignRequest.decorationType.keys[item.decorationType] || "-";
-                    var requestUserName = item.requestUser ? item.requestUser.currentName : "-";
+                    var requestUserName = item.requestUser && item.requestUser.currentName ? item.requestUser.currentName : "-";
 
                     var $tr = $('<tr></tr>');
                     $('<td></td>').text(item.orderId || '-').appendTo($tr);
