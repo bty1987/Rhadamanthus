@@ -583,6 +583,16 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150003, "款项不存在");
 		}
 
+		SalesPO salesPO = salesPaymentPO.getSales();
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		if (salesPO.getIsAffirm() != SalesPO.ISAFFIRM_AFFIRM_INT || salesPO.getAffirmTime() == null) {
+			throw new FLException(260022, "销售单未客户确认,不可落款");
+		}
+
 		SalesReceiptVO salesReceiptVO = new SalesReceiptVO();
 
 		salesReceiptVO.setAdvance(salesPaymentPO.getReferMoney());
