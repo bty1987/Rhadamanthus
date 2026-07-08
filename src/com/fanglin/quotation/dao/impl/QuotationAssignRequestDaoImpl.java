@@ -12,6 +12,9 @@ package com.fanglin.quotation.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -46,7 +49,6 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	public List<QuotationAssignRequestPO> pageQuotationAssignRequest(Paging paging, List<Filter> filters, Integer company) {
 
 		PagingQuery<QuotationAssignRequestPO> query = pagingQuery(paging, QuotationAssignRequestPO.class);
-		fetchQuotationAssignRequest(query);
 
 		// 按公司筛选（company=0或null表示不过滤）
 		if (company != null && company > 0) {
@@ -66,7 +68,6 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 	public List<QuotationAssignRequestPO> pageQuotationAssignRequestByUserId(Paging paging, List<Filter> filters, String userId) {
 
 		PagingQuery<QuotationAssignRequestPO> query = pagingQuery(paging, QuotationAssignRequestPO.class);
-		fetchQuotationAssignRequest(query);
 
 		// 直接按userId过滤（user关联对象的userId字段）
 		query.add(query.getCriterion("user.userId", userId, "eq")).add(query.getCriterion("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT, "ne"));
@@ -78,6 +79,93 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 		query.desc("qarid");
 
 		return query.list();
+	}
+
+	@Override
+	public QuotationAssignRequestPO queryQuotationAssignRequestForActive(String orderId) {
+		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.lt("status", QuotationAssignRequestPO.STATUS_COMPLETED_INT)).uniqueResult();
+	}
+
+	@Override
+	public QuotationAssignRequestPO queryQuotationAssignRequestForPending(String orderId) {
+		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT)).uniqueResult();
+	}
+
+	@Override
+	public QuotationAssignRequestPO queryQuotationAssignRequestForAssigned(String orderId) {
+		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(int company, Integer department, Short decorationType) {
+
+		Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("company.cid", company)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
+
+		// 如果指定了部门，则匹配该部门或部门为NULL的请求
+		if (department != null) {
+			criteria.add(Restrictions.or(Restrictions.eq("department.did", department), Restrictions.isNull("department")));
+		}
+
+		// 如果指定了装修类型，则匹配该类型或类型为NULL的请求
+		if (decorationType != null) {
+			criteria.add(Restrictions.or(Restrictions.eq("decorationType", decorationType.shortValue()), Restrictions.isNull("decorationType")));
+		}
+
+		// 按主键倒序
+		criteria.addOrder(Order.desc("qarid")).setMaxResults(QUEUE_MAX_RESULTS_INT);
+
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(List<Integer> companies) {
+
+		Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.in("company.cid", companies)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
+
+		criteria.addOrder(Order.desc("qarid")).setMaxResults(QUEUE_MAX_RESULTS_INT);
+
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueueAll() {
+
+		Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
+
+		criteria.addOrder(Order.desc("qarid")).setMaxResults(QUEUE_ALL_MAX_RESULTS_INT);
+
+		return criteria.list();
+	}
+
+	@Override
+	public int countQuotationAssignRequest(int uid) {
+		// 统计该预算员已分配且未完成的任务数量
+		Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).createAlias("user", "u").add(Restrictions.eq("u.uid", uid));
+
+		Number count = (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
+		return count != null ? count.intValue() : 0;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Object[]> countQuotationAssignRequest() {
+
+		// 批量统计所有预算员已分配且未完成的任务数（status = 2），按 uid 分组
+		// 一次查询替代循环内逐个 count，消除 N+1
+		Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).createAlias("user", "u");
+
+		// 投影：分组键 uid + 计数，结果每行 [uid, count]
+		ProjectionList projectionList = Projections.projectionList();
+
+		projectionList.add(Projections.groupProperty("u.uid"));
+		projectionList.add(Projections.rowCount());
+
+		criteria.setProjection(projectionList);
+
+		return criteria.list();
 	}
 
 	/**
@@ -127,107 +215,6 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 				query.add(query.getCriterion("company.cid", Integer.valueOf(data), op));
 			}
 		}
-	}
-
-	private void fetchQuotationAssignRequest(TopQuery<QuotationAssignRequestPO> query) {
-		query.fetch("company").fetch("decoration").fetch("decoration.designer");
-	}
-
-	private void fetchQuotationAssignRequest(org.hibernate.Criteria criteria) {
-		criteria.setFetchMode("company", org.hibernate.FetchMode.JOIN).setFetchMode("decoration", org.hibernate.FetchMode.JOIN).setFetchMode("decoration.designer", org.hibernate.FetchMode.JOIN);
-	}
-
-	@Override
-	public QuotationAssignRequestPO queryActiveByOrderId(String orderId) {
-		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.lt("status", QuotationAssignRequestPO.STATUS_COMPLETED_INT)).uniqueResult();
-	}
-
-	@Override
-	public QuotationAssignRequestPO queryQuotationAssignRequestForPending(String orderId) {
-		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT)).uniqueResult();
-	}
-
-	@Override
-	public QuotationAssignRequestPO queryQuotationAssignRequestForAssigned(String orderId) {
-		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).uniqueResult();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(int company, Integer department, Short decorationType) {
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("company.cid", company)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
-		fetchQuotationAssignRequest(criteria);
-		// 如果指定了部门，则匹配该部门或部门为NULL的请求
-		if (department != null) {
-			criteria.add(Restrictions.or(Restrictions.eq("department.did", department), Restrictions.isNull("department")));
-		}
-
-		// 如果指定了装修类型，则匹配该类型或类型为NULL的请求
-		if (decorationType != null) {
-			criteria.add(Restrictions.or(Restrictions.eq("decorationType", decorationType.shortValue()), Restrictions.isNull("decorationType")));
-		}
-
-		// 按主键倒序
-		criteria.addOrder(org.hibernate.criterion.Order.desc("qarid"));
-
-		// 限制结果集数量，避免一次性加载过多数据
-		criteria.setMaxResults(QUEUE_MAX_RESULTS_INT);
-
-		return criteria.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueue(List<Integer> companies) {
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.in("company.cid", companies)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
-		fetchQuotationAssignRequest(criteria);
-
-		// 按主键倒序
-		criteria.addOrder(org.hibernate.criterion.Order.desc("qarid"));
-
-		criteria.setMaxResults(QUEUE_MAX_RESULTS_INT);
-
-		return criteria.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<QuotationAssignRequestPO> queryQuotationAssignRequestForQueueAll() {
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT));
-		fetchQuotationAssignRequest(criteria);
-
-		// 按主键倒序
-		criteria.addOrder(org.hibernate.criterion.Order.desc("qarid"));
-
-		criteria.setMaxResults(QUEUE_ALL_MAX_RESULTS_INT);
-
-		return criteria.list();
-	}
-
-	@Override
-	public int countQuotationAssignRequest(int uid) {
-		// 统计该预算员已分配且未完成的任务数量
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).createAlias("user", "u").add(Restrictions.eq("u.uid", uid));
-
-		Number count = (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
-		return count != null ? count.intValue() : 0;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Object[]> countQuotationAssignRequestGroupByUid() {
-		// 批量统计所有预算员已分配且未完成的任务数（status = 2），按 uid 分组
-		// 一次查询替代循环内逐个 count，消除 N+1
-		org.hibernate.Criteria criteria = createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).createAlias("user", "u");
-
-		// 投影：分组键 uid + 计数，结果每行 [uid, count]
-		org.hibernate.criterion.ProjectionList projectionList = Projections.projectionList();
-		projectionList.add(Projections.groupProperty("u.uid"));
-		projectionList.add(Projections.rowCount());
-
-		criteria.setProjection(projectionList);
-
-		return criteria.list();
 	}
 
 }

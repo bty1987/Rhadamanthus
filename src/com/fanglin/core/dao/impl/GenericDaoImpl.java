@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -167,8 +166,6 @@ public abstract class GenericDaoImpl implements GenericDao {
 
 		Map<String, Alias> aliases = null;
 
-		Map<String, FetchMode> fetches = null;
-
 		int maxResults;
 
 		public TopQuery(int maxResults, Class<T> clazz, String cacheRegion) {
@@ -245,16 +242,6 @@ public abstract class GenericDaoImpl implements GenericDao {
 			return this;
 		}
 
-		public TopQuery<T> fetch(String field) {
-			if (fetches == null) {
-				fetches = new HashMap<String, FetchMode>();
-			}
-
-			fetches.put(field, FetchMode.JOIN);
-
-			return this;
-		}
-
 		@SuppressWarnings("unchecked")
 		public List<T> list() {
 
@@ -270,14 +257,6 @@ public abstract class GenericDaoImpl implements GenericDao {
 		protected Criteria criteria(boolean sortable) {
 
 			Criteria criteria = createCriteria(clazz);
-
-			if (fetches != null) {
-				Set<String> fetchKeys = fetches.keySet();
-
-				for (String key : fetchKeys) {
-					criteria.setFetchMode(key, fetches.get(key));
-				}
-			}
 
 			if (criterions != null) {
 				if (aliases != null) {

@@ -101,7 +101,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * @param orderId 装修单号
 	 * @return 活跃请求（status=1或2），如果不存在则返回null
 	 */
-	QuotationAssignRequestPO queryActiveByOrderId(String orderId);
+	QuotationAssignRequestPO queryQuotationAssignRequestForActive(String orderId);
 
 	/**
 	 * 根据装修单号查询待分配请求（status=1）
@@ -135,8 +135,7 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * 批量统计所有预算员当前进行中任务数量（按 uid 分组）
 	 * 
 	 * <p>
-	 * 用于状态同步场景：一次查询替代循环内逐个 count，消除 N+1。
-	 * 统计 status = 2 的请求数量（即已分配且未完成），按预算员 uid 分组。
+	 * 用于状态同步场景：一次查询替代循环内逐个 count，消除 N+1。 统计 status = 2 的请求数量（即已分配且未完成），按预算员 uid 分组。
 	 * </p>
 	 * 
 	 * <p>
@@ -145,6 +144,6 @@ public interface QuotationAssignRequestDao extends Dao<QuotationAssignRequestPO>
 	 * 
 	 * @return 分组统计结果列表，每行 [uid, count]
 	 */
-	List<Object[]> countQuotationAssignRequestGroupByUid();
+	List<Object[]> countQuotationAssignRequest();
 
 }

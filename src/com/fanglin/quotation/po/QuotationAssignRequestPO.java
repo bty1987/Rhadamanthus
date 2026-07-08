@@ -45,9 +45,9 @@ import com.fanglin.system.po.CompanyPO;
  * <li>orderId: 装修单号（关联 decoration.orderId）</li>
  * <li>company: 公司ID</li>
  * <li>department: 部门ID（NULL表示该公司所有部门）</li>
-		 * <li>decorationType: 装修类型（0-半包，1-整装，2-全包，与DecorationPO.type一致）</li>
-		 * <li>priority: 优先级（1-最高，5-普通，9-最低）</li>
-		 * <li>status: 状态（1-待分配，2-已分配，3-已完成）</li>
+ * <li>decorationType: 装修类型（0-半包，1-整装，2-全包，与DecorationPO.type一致）</li>
+ * <li>priority: 优先级（1-最高，5-普通，9-最低）</li>
+ * <li>status: 状态（1-待分配，2-已分配，3-已完成）</li>
  * <li>requestTime: 请求加入队列的时间</li>
  * <li>assignTime: 分配时间</li>
  * </ul>
@@ -268,7 +268,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取装修单
-	 *
+	 * 
 	 * @return 装修单对象
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -279,7 +279,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置装修单
-	 *
+	 * 
 	 * @param decoration 装修单对象
 	 */
 	public void setDecoration(DecorationPO decoration) {
@@ -415,7 +415,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置状态
-	 *
+	 * 
 	 * @param status 状态
 	 */
 	public void setStatus(short status) {
@@ -424,7 +424,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取分配给的预算员
-	 *
+	 * 
 	 * @return 预算员用户对象
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -435,7 +435,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 设置分配给的预算员
-	 *
+	 * 
 	 * @param user 预算员用户对象
 	 */
 	public void setUser(UserPO user) {
@@ -444,7 +444,7 @@ public class QuotationAssignRequestPO implements Serializable {
 
 	/**
 	 * 获取分配时间
-	 *
+	 * 
 	 * @return 分配时间
 	 */
 	@Column(name = "assignTime")
@@ -521,31 +521,20 @@ public class QuotationAssignRequestPO implements Serializable {
 	/**
 	 * PO 转 VO
 	 * 
-	 * @param vo VO对象
+	 * @param quotationAssignRequestVO VO对象
 	 * @return 转换后的VO对象
 	 */
-	public QuotationAssignRequestVO ptv(QuotationAssignRequestVO vo) {
-		BeanUtils.copyProperties(this, vo, "company", "department", "requestUser", "user", "decoration");
+	public QuotationAssignRequestVO ptv(QuotationAssignRequestVO quotationAssignRequestVO) {
 
-		if (vo.getCompany() != null && getCompany() != null) getCompany().ptv(vo.getCompany());
-		if (vo.getDepartment() != null && getDepartment() != null) getDepartment().ptv(vo.getDepartment());
-		if (vo.getRequestUser() != null && getRequestUser() != null) vo.getRequestUser().setBaseInfo(getRequestUser());
-		if (vo.getRequestUser() != null && getRequestUser() == null && getDecoration() != null && getDecoration().getDesigner() != null) vo.getRequestUser().setBaseInfo(getDecoration().getDesigner());
-		if (vo.getUser() != null && getUser() != null) vo.getUser().setBaseInfo(getUser());
+		BeanUtils.copyProperties(this, quotationAssignRequestVO, "company", "department", "requestUser", "user", "decoration");
 
-		return vo;
+		if (quotationAssignRequestVO.getCompany() != null && getCompany() != null) getCompany().ptv(quotationAssignRequestVO.getCompany());
+		if (quotationAssignRequestVO.getDepartment() != null && getDepartment() != null) getDepartment().ptv(quotationAssignRequestVO.getDepartment());
+		if (quotationAssignRequestVO.getRequestUser() != null && getRequestUser() != null) quotationAssignRequestVO.getRequestUser().setBaseInfo(getRequestUser());
+		if (quotationAssignRequestVO.getRequestUser() != null && getRequestUser() == null && getDecoration() != null && getDecoration().getDesigner() != null) quotationAssignRequestVO.getRequestUser().setBaseInfo(getDecoration().getDesigner());
+		if (quotationAssignRequestVO.getUser() != null && getUser() != null) quotationAssignRequestVO.getUser().setBaseInfo(getUser());
+
+		return quotationAssignRequestVO;
 	}
 
-	/**
-	 * VO 转 PO
-	 * 
-	 * @param vo VO对象
-	 * @return 转换后的PO对象
-	 */
-	public QuotationAssignRequestPO vtp(QuotationAssignRequestVO vo) {
-		// 复制基本属性，排除关联对象（UserBaseVO无法直接复制到UserPO）
-		com.fanglin.utils.BeanUtil.copyProperties(vo, this, "company", "department", "requestUser", "user", "decoration");
-
-		return this;
-	}
 }

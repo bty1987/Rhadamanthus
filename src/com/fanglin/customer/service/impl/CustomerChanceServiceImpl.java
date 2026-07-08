@@ -960,7 +960,11 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户不存在");
+			CustomerVO customerVO = new CustomerVO(customerSourcePO.getName(), SensitiveDataHelper.decrypt(customerSourcePO.getPhone()));
+
+			customerService.existCustomer(customerVO, company);
+
+			customerPO = new CustomerPO(customerVO.getCid());
 		}
 
 		customerSourcePO.setCustomer(customerPO);

@@ -36,11 +36,11 @@ import com.fanglin.utils.DateUtil;
 
 /**
  * 报价分配沟通消息 Service 实现类
- *
+ * 
  * <p>
  * 职责：处理设计师和预算员之间的沟通消息，包括消息持久化和钉钉消息通知
  * </p>
- *
+ * 
  * @author Claude AI
  * @version 1.0
  */
@@ -131,10 +131,10 @@ public class QuotationAssignTalkServiceImpl implements QuotationAssignTalkServic
 		}
 
 		// 查询该装修单的分配请求，获取设计师和预算员信息
-		QuotationAssignRequestPO requestPO = quotationAssignRequestDao.queryActiveByOrderId(quotationAssignTalkVO.getOrderId());
+		QuotationAssignRequestPO requestPO = quotationAssignRequestDao.queryQuotationAssignRequestForActive(quotationAssignTalkVO.getOrderId());
 
 		// 确定消息类型和接收人
-			short type = QuotationAssignTalkPO.TYPE_UNKNOWN_INT;
+		short type = QuotationAssignTalkPO.TYPE_UNKNOWN_INT;
 		UserPO receiver = null;
 		int company = senderPO.getCompany();
 
@@ -177,7 +177,7 @@ public class QuotationAssignTalkServiceImpl implements QuotationAssignTalkServic
 		// 发送钉钉消息通知接收人
 		if (receiver != null && receiver.getUserId() != null) {
 			try {
-					String dingMessage = String.format(DING_MESSAGE_TEMPLATE_STR, senderPO.getCurrentName(), quotationAssignTalkVO.getOrderId(), quotationAssignTalkVO.getContent());
+				String dingMessage = String.format(DING_MESSAGE_TEMPLATE_STR, senderPO.getCurrentName(), quotationAssignTalkVO.getOrderId(), quotationAssignTalkVO.getContent());
 				dingTalkMessageService.sendDing(receiver.getUserId(), dingMessage, company);
 			} catch (Exception e) {
 				// 钉钉消息发送失败不影响主流程

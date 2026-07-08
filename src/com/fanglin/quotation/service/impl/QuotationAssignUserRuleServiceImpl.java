@@ -325,7 +325,7 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 		// 一次性查出所有预算员的活跃任务数（按 uid 分组），避免循环内逐个 count 造成 N+1
 		java.util.Map<Integer, Integer> taskCountMap = new java.util.HashMap<Integer, Integer>();
-		List<Object[]> groupResult = quotationAssignRequestDao.countQuotationAssignRequestGroupByUid();
+		List<Object[]> groupResult = quotationAssignRequestDao.countQuotationAssignRequest();
 		if (groupResult != null) {
 			for (Object[] row : groupResult) {
 				Integer uid = (Integer) row[0];
