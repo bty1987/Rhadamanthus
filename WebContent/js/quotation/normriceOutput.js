@@ -1,3 +1,5 @@
+var NORMRICE_ITEM_STATUS_CONFIRMED_INT = 2;
+
 function printHeader(headStr) {
 
     var quotation = quotationUtils.quotationDetail.quotation;
@@ -39,7 +41,15 @@ function printHeader(headStr) {
     return headHtml;
 }
 
-function printNormrice(schedule) {
+function addPrintAmount(amountInfo, amount) {
+
+    if (!amountInfo)
+        return;
+
+    amountInfo.total = utils.accAdd(amountInfo.total || 0, amount || 0);
+}
+
+function printNormrice(schedule, amountInfo) {
 
     var index = 0;
     var contentHtml = '';
@@ -135,6 +145,8 @@ function printNormrice(schedule) {
     contentHtml += '<td width="8%" align="center">' + normtotal + '</td>';
     contentHtml += '</tr>';
 
+    addPrintAmount(amountInfo, normtotal);
+
     return contentHtml;
 }
 
@@ -226,7 +238,7 @@ function printNormriceForWorker(schedule) {
     return contentHtml;
 }
 
-function printNromadd(schedule) {
+function printNromadd(schedule, amountInfo) {
 
     var contentHtml = '';
 
@@ -239,8 +251,8 @@ function printNromadd(schedule) {
     contentHtml += '</td>';
     contentHtml += '</tr>';
 
-    itemIndex = 0;
-    total = 0;
+    var itemIndex = 0;
+    var total = 0;
 
     com.post(api.quotation.queryNormriceItemByType, {
         "normriceItem.qid": params.quotation.quotationId,
@@ -248,6 +260,9 @@ function printNromadd(schedule) {
     }, function(res) {
 
         $.each(res.normriceItems, function(i, v) {
+
+            if (v.status != NORMRICE_ITEM_STATUS_CONFIRMED_INT)
+                return true;
 
             if (v.constructionNode.sort != schedule)
                 return true;
@@ -287,6 +302,30 @@ function printNromadd(schedule) {
     contentHtml += '<td width="9%" align="center"></td>';
     contentHtml += '<td width="9%" align="center">总额</td>';
     contentHtml += '<td width="8%" align="center">' + total + '</td>';
+    contentHtml += '</tr>';
+
+    addPrintAmount(amountInfo, total);
+
+    return contentHtml;
+}
+
+function printAllTotal(amountInfo) {
+
+    var contentHtml = '';
+
+    contentHtml += '<tr bgcolor="#FFFFFF">';
+    contentHtml += '<td height="12" colspan="8" width="8%" align="center"></td>';
+    contentHtml += '</tr>';
+
+    contentHtml += '<tr bgcolor="#FFFFFF">';
+    contentHtml += '<td width="8%" align="center"></td>';
+    contentHtml += '<td width="12%" align="center"></td>';
+    contentHtml += '<td width="20%" align="center"></td>';
+    contentHtml += '<td width="9%" align="center"></td>';
+    contentHtml += '<td width="9%" align="center"></td>';
+    contentHtml += '<td width="9%" align="center"></td>';
+    contentHtml += '<td width="9%" align="center">所有项目总额</td>';
+    contentHtml += '<td width="8%" align="center">' + (amountInfo.total || 0) + '</td>';
     contentHtml += '</tr>';
 
     return contentHtml;
@@ -398,17 +437,24 @@ jQuery(function($) {
 function generatePrintPage(type, subtype, workType, company, orderType, showType) {
 
     var html = "";
+    var amountInfo = {
+        total: 0
+    };
 
     if (type == 1) {
         html += printHeader(company + "定额工费项目单");
-        html += printNormrice(workType);
+        html += printNormrice(workType, amountInfo);
     } else if (type == 2) {
         html += printHeader(company + "定额工费项目单");
         html += printNormriceForWorker(workType);
     }
 
     if ((subtype & 8) == 8) {
-        html += printNromadd(workType);
+        html += printNromadd(workType, amountInfo);
+    }
+
+    if (type == 1) {
+        html += printAllTotal(amountInfo);
     }
 
     html += printFooter();

@@ -546,4 +546,20 @@ Condition.addupRule("construction", {
             valuePath: "value"
         }
     },
+    "constructionSchedule-additemStatus": {
+        label: "附加项状态",
+        type: "select",
+        submitConfig: {
+            name: "constructionSchedule.additemStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.construction().constructionSchedule.additemStatus.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });
