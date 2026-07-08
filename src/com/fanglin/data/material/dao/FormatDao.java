@@ -16,6 +16,8 @@ public interface FormatDao extends Dao<FormatPO> {
 
 	public List<FormatPO> queryFormatForEnableByGid(long gid);
 
+	public List<FormatPO> queryFormatForEnableByGids(List<Long> gids);
+
 	public FormatPO queryFormatByInfo(long gid, String info);
 
 	public int batchSaveFormat(long gid, long gpid);

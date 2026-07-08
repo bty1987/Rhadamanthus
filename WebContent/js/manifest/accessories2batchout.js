@@ -2,25 +2,18 @@ jQuery(function($) {
 
     var accessories = {
         items: {},
-        record: {}
+        record: {},
+        storehouses: []
     };
-
-    com.post(api.inventory.queryStorehouseForSelf, {}, function(res) {
-
-        var storehousesStatus = [];
-
-        $.each(res.storehouses, function(i, v) {
-            if (v.status == 0) {
-                storehousesStatus.push(v);
-            }
-        });
-
-        accessories.storehouses = storehousesStatus;
-    }, null, false);
 
     var _params = params.mainfest.aids;
 
     com.post(api.inventory.queryAccessoriesItemByAids, _params, function(res) {
+
+        accessories.storehouses = $.grep(res.storehouses || [], function(v) {
+            return v.status == 0;
+        });
+
         for ( var i = 0; i < res.accessoriesItems.length; i++) {
             autoAddline(i, res.accessoriesItems[i]);
         }
@@ -122,21 +115,13 @@ jQuery(function($) {
                 $input = $('<input>').prop({
                     'type': 'text',
                     'autocomplete': 'off'
-                }).addClass('editable');
+                }).addClass('editable v_float_3');
                 $cell.append($input);
             }
 
             if (v.hasSelect) {
                 var $select = $('<select class="v_required"></select>');
                 $cell.append($select);
-            }
-
-            if (v.hasInput) {
-                var $input = $('<input>').prop({
-                    'type': 'text',
-                    'autocomplete': 'off'
-                }).addClass('editable v_float_3');
-                $cell.append($input);
             }
 
             $cell.appendTo($lineInfoWrap);
@@ -150,33 +135,23 @@ jQuery(function($) {
 
     function autoAddline(index, item) {
 
-        addline(1 + i).appendTo(com.focusPage('#list'));
+        var $line = addline(index + 1).appendTo(com.focusPage('#list'));
+        var $lineInfoWrap = $line.find('div.content');
 
-        var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type(' + (index + 1) + ') div.content');
-
-        com.focusPage('#list li:nth-of-type(' + (index + 1) + ')').attr({
+        $line.attr({
             'data-gid': item.goods.gid,
             'data-aiid': item.aiid
         });
 
-        $lineInfoWrap1.find('div.no').text(res.accessoriesItems[i].goods.no);
-        $lineInfoWrap1.find('div.name').text(res.accessoriesItems[i].goods.name);
-        $lineInfoWrap1.find('div.measurementUnit').text(res.accessoriesItems[i].goods.measurementUnit);
-        $lineInfoWrap1.find('div.number').text(res.accessoriesItems[i].num);
+        $lineInfoWrap.find('div.no').text(item.goods.no);
+        $lineInfoWrap.find('div.name').text(item.goods.name);
+        $lineInfoWrap.find('div.measurementUnit').text(item.goods.measurementUnit);
+        $lineInfoWrap.find('div.outprice input').val(item.selling);
+        $lineInfoWrap.find('div.number').text(item.num);
 
         $line.find('.storehouse select').bindData(accessories.storehouses, "shid", "name");
-
-        com.post(api.data.queryColorForEnableByGid, {
-            "color.gid": res.accessoriesItems[i].goods.gid
-        }, function(data) {
-            $lineInfoWrap1.find('.color select').bindData(data.colors, "cid", "name");
-        });
-
-        com.post(api.data.queryFormatForEnableByGid, {
-            "format.gid": res.accessoriesItems[i].goods.gid
-        }, function(data) {
-            $lineInfoWrap1.find('.format select').bindData(data.formats, "fid", "info");
-        })
+        $line.find('.color select').bindData(item.colors || [], "cid", "name");
+        $line.find('.format select').bindData(item.formats || [], "fid", "info");
 
     }
 });

@@ -43,6 +43,12 @@ public class FormatDaoImpl extends DaoImpl<FormatPO> implements FormatDao {
 		return session().createCriteria(FormatPO.class).add(Restrictions.eq(FormatPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(FormatPO.COLUMN_STATUS_STR, FormatPO.STATUS_ENABLE_INT)).list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<FormatPO> queryFormatForEnableByGids(List<Long> gids) {
+		return session().createCriteria(FormatPO.class).add(Restrictions.in(FormatPO.COLUMN_GID_STR, gids)).add(Restrictions.eq(FormatPO.COLUMN_STATUS_STR, FormatPO.STATUS_ENABLE_INT)).list();
+	}
+
 	@Override
 	public FormatPO queryFormatByInfo(long gid, String info) {
 		return (FormatPO) session().createCriteria(FormatPO.class).add(Restrictions.eq(FormatPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(FormatPO.COLUMN_INFO_STR, info)).uniqueResult();
