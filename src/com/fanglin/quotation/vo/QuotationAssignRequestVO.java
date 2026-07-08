@@ -88,6 +88,25 @@ public class QuotationAssignRequestVO {
 
 	// ==================== Getter & Setter ====================
 
+	public QuotationAssignRequestVO() {
+		super();
+	}
+
+	public QuotationAssignRequestVO(DepartmentVO department, UserBaseVO user, UserBaseVO requestUser) {
+		super();
+		this.department = department;
+		this.user = user;
+		this.requestUser = requestUser;
+	}
+
+	public QuotationAssignRequestVO(CompanyVO company, DepartmentVO department, UserBaseVO user, UserBaseVO requestUser) {
+		super();
+		this.company = company;
+		this.department = department;
+		this.user = user;
+		this.requestUser = requestUser;
+	}
+
 	public Long getQarid() {
 		return qarid;
 	}

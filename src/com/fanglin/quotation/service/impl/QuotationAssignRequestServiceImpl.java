@@ -42,30 +42,16 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	@Autowired
 	private QuotationAssignRequestDao quotationAssignRequestDao;
 
-	private QuotationAssignRequestVO ptv(QuotationAssignRequestPO quotationAssignRequestPO) {
-
-		QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-		vo.setCompany(new CompanyVO());
-		vo.setDepartment(new DepartmentVO());
-		vo.setRequestUser(new UserBaseVO());
-		vo.setUser(new UserBaseVO());
-
-		quotationAssignRequestPO.ptv(vo);
-
-		return vo;
-	}
-
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public void pageQuotationAssignRequest(Paging paging, List<Filter> filters, Integer company) throws FLException {
+
 		List<QuotationAssignRequestPO> quotationAssignRequestPOs = quotationAssignRequestDao.pageQuotationAssignRequest(paging, filters, company);
 		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
-			quotationAssignRequestVOs.add(ptv(quotationAssignRequestPO));
+			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(new QuotationAssignRequestVO(new CompanyVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
-		// 设置分页结果
 		paging.setData(quotationAssignRequestVOs);
 	}
 
@@ -73,46 +59,44 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	public void pageQuotationAssignRequestByUserId(Paging paging, List<Filter> filters, String userId) throws FLException {
 
 		List<QuotationAssignRequestPO> quotationAssignRequestPOs = quotationAssignRequestDao.pageQuotationAssignRequestByUserId(paging, filters, userId);
-
 		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
-			quotationAssignRequestVOs.add(ptv(quotationAssignRequestPO));
+			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(new QuotationAssignRequestVO(new CompanyVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(quotationAssignRequestVOs);
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public QuotationAssignRequestVO queryQuotationAssignRequestById(QuotationAssignRequestVO quotationAssignRequestVO) throws FLException {
 
 		QuotationAssignRequestPO quotationAssignRequestPO = quotationAssignRequestDao.get(quotationAssignRequestVO.getQarid());
-		if (quotationAssignRequestPO == null) {
-			return null;
-		}
-		return ptv(quotationAssignRequestPO);
+
+		if (quotationAssignRequestPO == null) return null;
+
+		return quotationAssignRequestPO.ptv(new QuotationAssignRequestVO(new CompanyVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO()));
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public QuotationAssignRequestVO queryQuotationAssignRequestForPending(String orderId) throws FLException {
 
 		QuotationAssignRequestPO quotationAssignRequestPO = quotationAssignRequestDao.queryQuotationAssignRequestForPending(orderId);
-		if (quotationAssignRequestPO == null) {
-			return null;
-		}
-		return ptv(quotationAssignRequestPO);
+
+		if (quotationAssignRequestPO == null) return null;
+
+		return quotationAssignRequestPO.ptv(new QuotationAssignRequestVO(new CompanyVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO()));
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public List<QuotationAssignRequestVO> queryQuotationAssignRequestForQueue(int company, Integer department, short decorationType) throws FLException {
+
 		List<QuotationAssignRequestPO> quotationAssignRequestPOs = quotationAssignRequestDao.queryQuotationAssignRequestForQueue(company, department, decorationType);
 		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
-			quotationAssignRequestVOs.add(ptv(quotationAssignRequestPO));
+			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(new QuotationAssignRequestVO(new CompanyVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return quotationAssignRequestVOs;
@@ -134,7 +118,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		int company = CompanyServiceImpl.decode(quotationAssignRequestVO.getCompany().getCid());
 
 		// 检查同一 orderId 是否已存在活跃请求（非已完成）
-		QuotationAssignRequestPO existRequest = quotationAssignRequestDao.queryActiveByOrderId(quotationAssignRequestVO.getOrderId());
+		QuotationAssignRequestPO existRequest = quotationAssignRequestDao.queryQuotationAssignRequestForActive(quotationAssignRequestVO.getOrderId());
 		if (existRequest != null) {
 			// 已分配状态，不可操作
 			if (existRequest.getStatus() == QuotationAssignRequestPO.STATUS_ASSIGNED_INT) {

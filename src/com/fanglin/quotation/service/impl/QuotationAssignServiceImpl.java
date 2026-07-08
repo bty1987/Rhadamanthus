@@ -342,7 +342,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 3.5 先将当前装修单的分配请求状态更新为"已完成"（必须先落库，count 才不会多算这一条）
-		QuotationAssignRequestPO currentRequest = quotationAssignRequestDao.queryActiveByOrderId(orderId);
+		QuotationAssignRequestPO currentRequest = quotationAssignRequestDao.queryQuotationAssignRequestForActive(orderId);
 		if (currentRequest != null) {
 			currentRequest.setStatus(QuotationAssignRequestPO.STATUS_COMPLETED_INT);
 			currentRequest.setFinishTime(new Timestamp(System.currentTimeMillis()));
@@ -427,7 +427,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		String orderId = decoration.getOrderId();
 
-		QuotationAssignRequestPO existRequest = quotationAssignRequestDao.queryActiveByOrderId(orderId);
+		QuotationAssignRequestPO existRequest = quotationAssignRequestDao.queryQuotationAssignRequestForActive(orderId);
 		if (existRequest != null) {
 			if (existRequest.getStatus() == QuotationAssignRequestPO.STATUS_ASSIGNED_INT) {
 				throw new FLException(-1, "该装修单已分配报价员，无需重复分配");
@@ -471,7 +471,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		decorationDao.update(decoration);
 
 		// 2. 更新或创建分配请求（status=2 已分配，绑定预算员 uid）
-		QuotationAssignRequestPO request = quotationAssignRequestDao.queryActiveByOrderId(orderId);
+		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequestForActive(orderId);
 		if (request != null) {
 			request.setStatus(QuotationAssignRequestPO.STATUS_ASSIGNED_INT);
 			request.setUser(userRule.getUser());
