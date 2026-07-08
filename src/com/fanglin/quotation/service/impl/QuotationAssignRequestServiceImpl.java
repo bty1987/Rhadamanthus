@@ -23,9 +23,6 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.decoration.dao.DecorationDao;
-import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationAssignRequestDao;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;
@@ -45,9 +42,6 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	@Autowired
 	private QuotationAssignRequestDao quotationAssignRequestDao;
 
-	@Autowired
-	private DecorationDao decorationDao;
-
 	private QuotationAssignRequestVO ptv(QuotationAssignRequestPO quotationAssignRequestPO) {
 
 		QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
@@ -57,13 +51,6 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		vo.setUser(new UserBaseVO());
 
 		quotationAssignRequestPO.ptv(vo);
-
-		if (quotationAssignRequestPO.getRequestUser() == null) {
-			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationAssignRequestPO.getOrderId());
-			UserPO designer = decorationPO != null ? decorationPO.getDesigner() : null;
-
-			if (designer != null) vo.getRequestUser().setBaseInfo(designer);
-		}
 
 		return vo;
 	}
