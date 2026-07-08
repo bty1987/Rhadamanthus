@@ -215,6 +215,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_END_INT);
 			decorationPO.setSourceStatus(DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT);
 			decorationPO.setSdesignTime(DateUtil.getDateToTimestamp(new Date()));
+			messageService.sendMessage(designer.getUserId(), null, String.format("装修单: %s , 地址: %s , 合同设计方案客户已确认通过 , 持续关注客户服务及放线开工推进 .", orderId, houseAddr), MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
 		} else if ((decorationInfoVO.getSourceStatus() % 10) == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
 
 			decorationPO.setDesignStatus(decorationInfoVO.getSourceStatus());

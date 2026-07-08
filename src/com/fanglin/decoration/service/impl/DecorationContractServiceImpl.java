@@ -55,6 +55,8 @@ import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessageQueuingPO;
+import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.dao.UserDao;
@@ -141,6 +143,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Autowired
 	private MessageQueuingDao messageQueuingDao;
+
+	@Autowired
+	private MessageService messageService;
 
 	@Override
 	public List<DecorationContractVO> queryDecorationContractByOrderId(DecorationContractVO decorationContract) throws FLException {
@@ -586,6 +591,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		if (decorationPO.getDesignStatus() == DecorationPO.DESIGNSTATUS_INITIA_INT) {
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_CONDUCT_INT);
+			messageService.sendMessage(decorationPO.getDesigner().getUserId(), null, String.format("装修单: %s , 地址: %s %s , 合同签署完成 , 设计状态已进入设计中 , 请持续关注设计推进 .", orderId, decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber()), MessagePO.TYPE_SEND_PERSONEL_INT, decorationPO.getDesigner().getCompany());
 		}
 
 		if (!resignFlag) {

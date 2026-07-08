@@ -890,6 +890,7 @@ jQuery(function($) {
             }
 
             customerChance.approveItems.busitype.val(v.busitype.dbid);
+            customerChance.approveItems.phone.val("");
 
             approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
 
@@ -927,6 +928,7 @@ jQuery(function($) {
             }
 
             customerChance.directFirstApproveItems.busitype.val(v.busitype.dbid);
+            customerChance.directFirstApproveItems.phone.val("");
 
             customerChance.modals.directFirstApproveModal.modal("show");
 
