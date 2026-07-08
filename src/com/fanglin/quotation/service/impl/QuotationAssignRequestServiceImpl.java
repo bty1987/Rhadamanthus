@@ -23,6 +23,9 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationAssignRequestDao;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;
@@ -42,6 +45,29 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	@Autowired
 	private QuotationAssignRequestDao quotationAssignRequestDao;
 
+	@Autowired
+	private DecorationDao decorationDao;
+
+	private QuotationAssignRequestVO ptv(QuotationAssignRequestPO quotationAssignRequestPO) {
+
+		QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
+		vo.setCompany(new CompanyVO());
+		vo.setDepartment(new DepartmentVO());
+		vo.setRequestUser(new UserBaseVO());
+		vo.setUser(new UserBaseVO());
+
+		quotationAssignRequestPO.ptv(vo);
+
+		if (quotationAssignRequestPO.getRequestUser() == null) {
+			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationAssignRequestPO.getOrderId());
+			UserPO designer = decorationPO != null ? decorationPO.getDesigner() : null;
+
+			if (designer != null) vo.getRequestUser().setBaseInfo(designer);
+		}
+
+		return vo;
+	}
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void pageQuotationAssignRequest(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -49,12 +75,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
-			QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-			vo.setCompany(new CompanyVO());
-			vo.setDepartment(new DepartmentVO());
-			vo.setRequestUser(new UserBaseVO());
-			vo.setUser(new UserBaseVO());
-			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(vo));
+			quotationAssignRequestVOs.add(ptv(quotationAssignRequestPO));
 		}
 
 		// 设置分页结果
@@ -69,12 +90,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
-			QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-			vo.setCompany(new CompanyVO());
-			vo.setDepartment(new DepartmentVO());
-			vo.setRequestUser(new UserBaseVO());
-			vo.setUser(new UserBaseVO());
-			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(vo));
+			quotationAssignRequestVOs.add(ptv(quotationAssignRequestPO));
 		}
 
 		paging.setData(quotationAssignRequestVOs);
@@ -88,12 +104,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		if (quotationAssignRequestPO == null) {
 			return null;
 		}
-		QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-		vo.setCompany(new CompanyVO());
-		vo.setDepartment(new DepartmentVO());
-		vo.setRequestUser(new UserBaseVO());
-		vo.setUser(new UserBaseVO());
-		return quotationAssignRequestPO.ptv(vo);
+		return ptv(quotationAssignRequestPO);
 	}
 
 	@Override
@@ -104,12 +115,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		if (quotationAssignRequestPO == null) {
 			return null;
 		}
-		QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-		vo.setCompany(new CompanyVO());
-		vo.setDepartment(new DepartmentVO());
-		vo.setRequestUser(new UserBaseVO());
-		vo.setUser(new UserBaseVO());
-		return quotationAssignRequestPO.ptv(vo);
+		return ptv(quotationAssignRequestPO);
 	}
 
 	@Override
@@ -119,12 +125,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		List<QuotationAssignRequestVO> quotationAssignRequestVOs = new ArrayList<QuotationAssignRequestVO>();
 
 		for (QuotationAssignRequestPO quotationAssignRequestPO : quotationAssignRequestPOs) {
-			QuotationAssignRequestVO vo = new QuotationAssignRequestVO();
-			vo.setCompany(new CompanyVO());
-			vo.setDepartment(new DepartmentVO());
-			vo.setRequestUser(new UserBaseVO());
-			vo.setUser(new UserBaseVO());
-			quotationAssignRequestVOs.add(quotationAssignRequestPO.ptv(vo));
+			quotationAssignRequestVOs.add(ptv(quotationAssignRequestPO));
 		}
 
 		return quotationAssignRequestVOs;
