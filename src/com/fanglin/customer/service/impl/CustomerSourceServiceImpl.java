@@ -518,6 +518,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		CustomerChancePO customerChancePO = new CustomerChancePO();
 
 		customerChancePO.setCno(customerChanceVO.getCno());
+		customerChancePO.setCustomerno(customerChanceVO.getCustomerno());
 		customerChancePO.setSource(customerSourcePO);
 		customerChancePO.setIssuer(issuer);
 		customerChancePO.setIssueTime(DateUtil.getDateToTimestamp(new Date()));

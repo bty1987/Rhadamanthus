@@ -820,6 +820,10 @@ public class A20260103Action extends BaseListAction {
 		this.customerNo = customerNo;
 	}
 
+	public void setCustomerno(String customerno) {
+		this.customerNo = customerno;
+	}
+
 	@JSON(serialize = false)
 	public String getAdornCode() {
 		return adornCode;
