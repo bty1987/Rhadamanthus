@@ -24,6 +24,8 @@ public interface DecorationPictureDao extends Dao<DecorationPicturePO> {
 
 	public int countDecorationPicture(String orderId, Integer type);
 
+	public int countDecorationPictureForValid(String orderId, Integer type);
+
 	public int batchDecorationPicture(List<Long> dpids, short status);
 
 	public int batchDecorationPicture(String orderId, List<Long> dpids, short status);

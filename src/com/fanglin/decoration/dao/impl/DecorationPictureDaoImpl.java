@@ -54,6 +54,15 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 	}
 
 	@Override
+	public int countDecorationPictureForValid(String orderId, Integer type) {
+
+		String sql = "select count(*) from decoration.decorationpicture where orderId = :orderId and type = :type and status in (:status)";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setInteger("type", type).setParameterList("status", new Short[] {DecorationPicturePO.STATUS_ENABLE_INT, DecorationPicturePO.STATUS_CONFIRM_SHOW_INT}).uniqueResult();
+
+		return count.intValue();
+	}
+
+	@Override
 	public int batchDecorationPicture(List<Long> dpids, short status) {
 
 		if (dpids == null || dpids.isEmpty()) {

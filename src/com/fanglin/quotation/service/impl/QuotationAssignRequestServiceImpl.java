@@ -23,6 +23,8 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.dao.DecorationPictureDao;
+import com.fanglin.decoration.po.DecorationPicturePO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationAssignRequestDao;
 import com.fanglin.quotation.po.QuotationAssignRequestPO;
@@ -41,6 +43,16 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 
 	@Autowired
 	private QuotationAssignRequestDao quotationAssignRequestDao;
+
+	@Autowired
+	private DecorationPictureDao decorationPictureDao;
+
+	private void checkCadPicture(String orderId) throws FLException {
+
+		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
+			throw new FLException(110017, "工程文件CAD不能为空");
+		}
+	}
 
 	@Override
 	public void pageQuotationAssignRequest(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -113,6 +125,8 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		if (quotationAssignRequestVO.getCompany() == null) {
 			throw new FLException(0, "公司信息不能为空");
 		}
+
+		checkCadPicture(quotationAssignRequestVO.getOrderId());
 
 		// 从 VO 的关联对象中提取 ID
 		int company = CompanyServiceImpl.decode(quotationAssignRequestVO.getCompany().getCid());
