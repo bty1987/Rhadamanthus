@@ -23,6 +23,7 @@ import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.quotation.service.QuotationAssignUserRuleItemService;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleItemVO;
 import com.fanglin.quotation.vo.QuotationAssignUserRuleVO;
+import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.system.vo.CompanyVO;
@@ -41,6 +42,9 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private CompanyDao companyDao;
 
 	@Override
 	public List<QuotationAssignUserRuleItemVO> queryQuotationAssignUserRuleItem(QuotationAssignUserRuleItemVO quotationAssignUserRuleItem) throws FLException {
@@ -129,7 +133,8 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 
 		// 公司
 		if (itemVO.getCompany() != null && itemVO.getCompany().getCid() != null) {
-			itemPO.setCompany(new CompanyPO(CompanyServiceImpl.decode(itemVO.getCompany().getCid())));
+			CompanyPO companyPO = companyDao.get(CompanyServiceImpl.decode(itemVO.getCompany().getCid()));
+			if (companyPO != null) itemPO.setCompany(companyPO);
 		}
 
 		// 部门（可选）
@@ -164,7 +169,8 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 
 		// 公司
 		if (itemVO.getCompany() != null && itemVO.getCompany().getCid() != null) {
-			itemPO.setCompany(new CompanyPO(CompanyServiceImpl.decode(itemVO.getCompany().getCid())));
+			CompanyPO companyPO = companyDao.get(CompanyServiceImpl.decode(itemVO.getCompany().getCid()));
+			if (companyPO != null) itemPO.setCompany(companyPO);
 		}
 
 		// 部门（可选，允许清空）
@@ -216,7 +222,8 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 
 			QuotationAssignUserRuleItemPO itemPO = new QuotationAssignUserRuleItemPO();
 			itemPO.setUserRule(rulePO);
-			itemPO.setCompany(new CompanyPO(CompanyServiceImpl.decode(itemVO.getCompany().getCid())));
+			CompanyPO companyPO = companyDao.get(CompanyServiceImpl.decode(itemVO.getCompany().getCid()));
+			if (companyPO != null) itemPO.setCompany(companyPO);
 
 			// Department 可能为 NULL（公司级）
 			if (itemVO.getDepartment() != null && itemVO.getDepartment().getDid() != null) {
@@ -277,7 +284,8 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 		// 创建 Item
 		QuotationAssignUserRuleItemPO itemPO = new QuotationAssignUserRuleItemPO();
 		itemPO.setUserRule(rulePO);
-		itemPO.setCompany(new CompanyPO(companyId));
+		CompanyPO companyPO = companyDao.get(companyId);
+		if (companyPO != null) itemPO.setCompany(companyPO);
 
 		// 部门（可选）
 		if (itemVO.getDepartment() != null && itemVO.getDepartment().getDid() != null) {
