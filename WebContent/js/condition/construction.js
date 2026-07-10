@@ -498,7 +498,7 @@ Condition.addupRule("construction", {
             valuePath: "value"
         }
     },
-    "constructionSchedule-node-cnid": {
+    "schedule-node-cnid": {
         label: "施工节点",
         type: "select",
         submitConfig: {
@@ -514,7 +514,7 @@ Condition.addupRule("construction", {
             valuePath: "name"
         }
     },
-    "constructionSchedule-status": {
+    "schedule-status": {
         label: "计划状态",
         type: "select",
         submitConfig: {
@@ -530,8 +530,8 @@ Condition.addupRule("construction", {
             valuePath: "value"
         }
     },
-    "constructionSchedule-planStatus": {
-        label: "预估工费状态",
+    "schedule-planStatus": {
+        label: "预估状态",
         type: "select",
         submitConfig: {
             name: "constructionSchedule.planStatus",
@@ -546,8 +546,8 @@ Condition.addupRule("construction", {
             valuePath: "value"
         }
     },
-    "constructionSchedule-additemStatus": {
-        label: "附加项状态",
+    "schedule-additemStatus": {
+        label: "附加状态",
         type: "select",
         submitConfig: {
             name: "constructionSchedule.additemStatus",
