@@ -35,6 +35,10 @@ public class DecorationBusitypePO implements Serializable {
 
 	public static final short ISAWARD_AWARD_DEPT_INT = 2;
 
+	public static final short ISMEMBER_COMMON_INT = 0;
+
+	public static final short ISMEMBER_MEMBER_INT = 1;
+
 	public static final short TYPE_COMMON_INT = 0;
 
 	public static final short TYPE_ORIGIN_INT = 1;
@@ -58,6 +62,8 @@ public class DecorationBusitypePO implements Serializable {
 	private short isRefer;
 
 	private short isAward;
+
+	private short isMember;
 
 	private short type;
 
@@ -164,6 +170,15 @@ public class DecorationBusitypePO implements Serializable {
 
 	public void setIsAward(short isAward) {
 		this.isAward = isAward;
+	}
+
+	@Column(name = "isMember")
+	public short getIsMember() {
+		return isMember;
+	}
+
+	public void setIsMember(short isMember) {
+		this.isMember = isMember;
 	}
 
 	@Column(name = "type")

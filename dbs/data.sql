@@ -307,6 +307,7 @@ CREATE TABLE `decorationbusitype` (
   `outside` tinyint(1) NOT NULL,
   `isRefer` tinyint(1) NOT NULL DEFAULT 0 COMMENT '推荐标识 0: 无 , 1: 推荐',
   `isAward` tinyint(1) NOT NULL DEFAULT 0 COMMENT '奖励标识 0: 奖励 , 1: 无',
+  `isMember` tinyint(1) NOT NULL DEFAULT 0 COMMENT '会员标识 0: 通用 , 1: 会员',
   `sort` int(10) NULL,
   `type` tinyint(1) NULL DEFAULT 0,
   `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '状态,0启用,1禁用',

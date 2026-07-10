@@ -1756,6 +1756,23 @@ Condition.addupRule("data", {
         }
     },
 
+    "decoration-busitype-isMember": {
+        label: "会员标识",
+        type: "select",
+        submitConfig: {
+            name: "isMember",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: [{key: 0, value: "通用"}, {key: 1, value: "会员"}],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
     "decoration-busitype-type": {
         label: "类型",
         type: "select",

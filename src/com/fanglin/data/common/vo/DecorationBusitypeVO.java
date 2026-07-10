@@ -24,6 +24,8 @@ public class DecorationBusitypeVO implements Serializable {
 
 	private Short isAward;
 
+	private Short isMember;
+
 	private Short type;
 
 	private Short status;
@@ -122,6 +124,14 @@ public class DecorationBusitypeVO implements Serializable {
 
 	public void setIsAward(Short isAward) {
 		this.isAward = isAward;
+	}
+
+	public Short getIsMember() {
+		return isMember;
+	}
+
+	public void setIsMember(Short isMember) {
+		this.isMember = isMember;
 	}
 
 	public Short getType() {
