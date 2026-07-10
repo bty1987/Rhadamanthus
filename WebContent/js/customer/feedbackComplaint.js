@@ -250,43 +250,72 @@ jQuery(function($) {
         com.switchPage(params.historyPage);
     });
 
-    var lineprops = (function() {
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("feedbackComplaint");
 
-        return [{
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
+    var recordPropertyMap = {
+        "orderId": {
             fieId: "feedback.orderId",
             name: "装修单号",
             prop: "feedback.orderId",
             clazz: "grey"
-        }, {
+        },
+        "handler": {
             fieId: "handler.userName",
             name: "处理人",
             prop: "handler.userName",
             clazz: "grey"
-        }, {
+        },
+        "status": {
             fieId: "status",
             name: "状态",
             prop: function(v) {
                 return v.feedback.status = "2" ? "处理" : v.feedback.status = "3" ? "完成" : v.feedback.status = "1" ? "接收" : "初始";
             },
             clazz: "grey"
-        }, {
+        },
+        "operateTime": {
             fieId: "operateTime",
             name: "处理时间",
             prop: "operateTime",
             clazz: "grey"
-        }, {
+        },
+        "comment": {
             fieId: "comment",
             name: "备注",
             prop: "comment",
             clazz: "grey"
-        }];
+        }
+    };
+
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(recordPropertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (recordPropertyMap[key]) props.push(recordPropertyMap[key]);
+        });
+        return props;
     })();
 
     var searcher1 = new Searcher();
 
-    searcher1.set("condListas1", "pagenationFeedbackComplaint1", "resultListas1", api.customer.queryFeedbackRecord, {
+    searcher1.set("condListas1", "pagenationFeedbackComplaint1", "resultListas1", pageConfig.apiPage || api.customer.queryFeedbackRecord, {
         "feedbackRecord.feedback.fid": complaint.vid
-    }, [], "vrecordPostData", "feedbackRecords", true, null);
+    }, pageConfig.condArr, "vrecordPostData", "feedbackRecords", true, null);
     searcher1.line("feedback.orderId", lineprops, {}).render();
 
     var searcher = new Searcher();
@@ -315,7 +344,7 @@ jQuery(function($) {
 
             complaint.items.orderId1.val(v.orderId);
             complaint.items.source1.val(v.source);
-            complaint.items.upgradeSource1.val(v.upgradeSource);
+            complaint.items.upgradeSource1.val(v.upgrade);
             complaint.items.phone1.val(v.phone);
             complaint.items.upgrade1.val(v.upgrade);
             complaint.items.urgency1.val(v.urgency);
@@ -326,7 +355,8 @@ jQuery(function($) {
 
             complaint.modals.updateFeedbackComplaintModal.modal("show");
             return false;
-        }
+        },
+        show: function() { return btnVisible("edit"); }
     }, {
         name: "投诉部门",
         clazz: "btn-danger",
@@ -337,7 +367,8 @@ jQuery(function($) {
             params.customer.deptType = v.deptType;
 
             com.popup4page("#feedbackComplaintPopUp", "/views/customer/feedbackComplaintDept.html", "投诉部门");
-        }
+        },
+        show: function() { return btnVisible("complaintDept"); }
     }, {
         name: "完成",
         clazz: "btn-success",
@@ -346,7 +377,8 @@ jQuery(function($) {
             complaint.fcid = v.fcid;
             finishFeedback(v.fcid);
             return false;
-        }
+        },
+        show: function() { return btnVisible("finish"); }
     }, {
         name: "图片",
         clazz: "btn-warning",
@@ -356,69 +388,98 @@ jQuery(function($) {
             managedrawing(v);
             uploadDrawing(v);
             return false;
-        }
+        },
+        show: function() { return btnVisible("drawing"); }
     }];
 
-    searcher.set("condListas", "pagenationFeedbackComplaint", "resultListas", api.customer.queryFeedbackComplaint, {
+    searcher.set("condListas", "pagenationFeedbackComplaint", "resultListas", pageConfig.apiPage || api.customer.queryFeedbackComplaint, {
         "feedbackComplaint.fid": complaint.vid
     }, null, null, "feedbackComplaints", true);
 
-    var lineprops = [{
-        fieId: "orderId",
-        name: "装修单号",
-        prop: "orderId",
-        clazz: "blue"
-    }, {
-        fieId: "source",
-        name: "渠道",
-        prop: "source",
-        clazz: "grey",
-        dataset: constant.customer().feedbackComplaint.source.keys
-    }, {
-        fieId: "upgradeSource",
-        name: "升级渠道",
-        prop: "upgradeSource",
-        clazz: "blue",
-        dataset: constant.customer().feedbackGuarantee.upgradeSource.keys
-    }, {
-        fieId: "phone",
-        name: "电话",
-        prop: "phone",
-        clazz: "grey"
-    }, {
-        fieId: "upgrade",
-        name: "是否升级",
-        prop: "upgrade",
-        clazz: "red",
-        dataset: constant.customer().feedbackComplaint.upgrade.keys
-    }, {
-        fieId: "urgency",
-        name: "紧急程度",
-        prop: "urgency",
-        clazz: "green",
-        dataset: constant.customer().feedbackComplaint.urgency.keys
-    }, {
-        fieId: "deptType",
-        name: "部门类型",
-        prop: "deptType",
-        clazz: "red"
-    }, {
-        fieId: "content",
-        name: "问题总述",
-        prop: "content",
-        clazz: "green",
-    }, {
-        fieId: "appeal",
-        name: "客户诉求",
-        prop: "appeal",
-        clazz: "red",
-    }, {
-        fieId: "results",
-        name: "处理结果",
-        prop: "results",
-        clazz: "red",
-        dataset: constant.customer().feedbackComplaint.results.keys
-    }];
+    var mainPropertyMap = {
+        "orderId": {
+            fieId: "orderId",
+            name: "装修单号",
+            prop: "orderId",
+            clazz: "blue"
+        },
+        "source": {
+            fieId: "source",
+            name: "渠道",
+            prop: "source",
+            clazz: "grey",
+            dataset: constant.customer().feedbackComplaint.source.keys
+        },
+        "upgradeSource": {
+            fieId: "upgradeSource",
+            name: "升级渠道",
+            prop: "upgradeSource",
+            clazz: "blue",
+            dataset: constant.customer().feedbackGuarantee.upgradeSource.keys
+        },
+        "phone": {
+            fieId: "phone",
+            name: "电话",
+            prop: "phone",
+            clazz: "grey"
+        },
+        "upgrade": {
+            fieId: "upgrade",
+            name: "是否升级",
+            prop: "upgrade",
+            clazz: "red",
+            dataset: constant.customer().feedbackComplaint.upgrade.keys
+        },
+        "urgency": {
+            fieId: "urgency",
+            name: "紧急程度",
+            prop: "urgency",
+            clazz: "green",
+            dataset: constant.customer().feedbackComplaint.urgency.keys
+        },
+        "deptType": {
+            fieId: "deptType",
+            name: "部门类型",
+            prop: "deptType",
+            clazz: "red"
+        },
+        "content": {
+            fieId: "content",
+            name: "问题总述",
+            prop: "content",
+            clazz: "green",
+        },
+        "appeal": {
+            fieId: "appeal",
+            name: "客户诉求",
+            prop: "appeal",
+            clazz: "red",
+        },
+        "results": {
+            fieId: "results",
+            name: "处理结果",
+            prop: "results",
+            clazz: "red",
+            dataset: constant.customer().feedbackComplaint.results.keys
+        }
+    };
+
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(mainPropertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (mainPropertyMap[key]) props.push(mainPropertyMap[key]);
+        });
+        return props;
+    })();
 
     searcher.line("appeal", lineprops, linebtns).render();
 

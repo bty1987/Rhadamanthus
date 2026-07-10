@@ -16,29 +16,57 @@ jQuery(function($){
         com.clearValidator();
     });
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("vscoreRecord");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
     var lineprops = (function() {
 
-        return [{
-            field: "score",
-            name: "积分操作",
-            prop: "score",
-            clazz: "grey"
-        }, {
-            field: "operateTime",
-            name: "操作时间",
-            prop: "operateTime",
-            clazz: "green"
-        }, {
-            field: "type",
-            name: "类型",
-            prop: function(v) { return constant.customer().vscoreRecord.type.keys[v.type]; },
-            clazz: "red"
-        }, {
-            field: "status",
-            name: "状态",
-            prop: function(v) { return constant.customer().vscoreRecord.status.keys[v.status]; },
-            clazz: "red"
-        }];
+        var propertyMap = {
+            "score": {
+                field: "score",
+                name: "积分操作",
+                prop: "score",
+                clazz: "grey"
+            },
+            "operateTime": {
+                field: "operateTime",
+                name: "操作时间",
+                prop: "operateTime",
+                clazz: "green"
+            },
+            "type": {
+                field: "type",
+                name: "类型",
+                prop: function(v) { return constant.customer().vscoreRecord.type.keys[v.type]; },
+                clazz: "red"
+            },
+            "status": {
+                field: "status",
+                name: "状态",
+                prop: function(v) { return constant.customer().vscoreRecord.status.keys[v.status]; },
+                clazz: "red"
+            }
+        };
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
     })();
 
     function check(){
@@ -52,7 +80,7 @@ jQuery(function($){
         var searcher = new Searcher();
         check();
 
-        searcher.set("condListas", "pagenationas", "resultListas", api.customer.pageVscoreRecordByUnionId, {"unionId": vscore.unionId}, ["customer-vscoreRecord-type"], "VscoreRecordPostData", null, false, null);
+        searcher.set("condListas", "pagenationas", "resultListas", pageConfig.apiPage || api.customer.pageVscoreRecordByUnionId, {"unionId": vscore.unionId}, pageConfig.condArr.length > 0 ? pageConfig.condArr : ["customer-vscoreRecord-type"], "VscoreRecordPostData", null, false, null);
         searcher.line(function(v) { return "操作人:" + com.checkNull(v.operater.currentName, ''); }, lineprops, {}).render();
 
     }else{
@@ -67,7 +95,7 @@ jQuery(function($){
                 pass: {
                     name: "通过",
                     clazz: "btn-yellow",
-                    show: showFunc,
+                    show: function(v) { return btnVisible("pass") && showFunc(v); },
                     handle: function(v) {
 
                         alterPass(v);
@@ -76,7 +104,7 @@ jQuery(function($){
                 refuse: {
                     name: "拒绝",
                     clazz: "btn-success",
-                    show: showFunc,
+                    show: function(v) { return btnVisible("refuse") && showFunc(v); },
                     handle: function(v) {
 
                         alterdown(v);
@@ -97,7 +125,7 @@ jQuery(function($){
         var searcher = new Searcher();
         check();
 
-        searcher.set("condListas", "pagenationas", "resultListas", api.customer.pageVscoreRecordByUnionId, {"unionId": vscore.unionId}, ["vscoreRecordType"], "VscoreRecordPostData", null, false, buttons);
+        searcher.set("condListas", "pagenationas", "resultListas", pageConfig.apiPage || api.customer.pageVscoreRecordByUnionId, {"unionId": vscore.unionId}, pageConfig.condArr.length > 0 ? pageConfig.condArr : ["vscoreRecordType"], "VscoreRecordPostData", null, false, buttons);
         searcher.line(function(v) { return "操作人:" + com.checkNull(v.operater.currentName, ''); }, lineprops, linebtns).render();
 
         com.focusPage('#addVscore').click(function(){

@@ -373,11 +373,20 @@ jQuery(function($) {
         })
     }
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("droup");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", api.customer.pageDroup);
+    searcher.base("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageDroup);
     searcher.history("droupPostData");
-    searcher.condition(['customer-droup-orderId', 'customer-v-name', 'customer-droup-status', 'customer-droup-updateTime', 'customer-droup-handleTime', 'customer-droup-isHandle', 'customer-droup-type']);
+    searcher.condition(pageConfig.condArr.length > 0 ? pageConfig.condArr : ['customer-droup-orderId', 'customer-v-name', 'customer-droup-status', 'customer-droup-updateTime', 'customer-droup-handleTime', 'customer-droup-isHandle', 'customer-droup-type']);
 
     searcher.button([{
         id: "bindDroup",
@@ -386,77 +395,108 @@ jQuery(function($) {
         icon: "icon-plus"
     }]);
 
-    var lineprops = [{
-        fieId: "name",
-        name: "客户名称",
-        prop: "decoration.customer.name",
-        clazz: "grey"
-    }, {
-        field: "orderId",
-        name: "装修单号",
-        prop: "decoration.orderId",
-        clazz: "grey",
-        click: function(btn, v) {
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "name": {
+            fieId: "name",
+            name: "客户名称",
+            prop: "decoration.customer.name",
+            clazz: "grey"
+        },
+        "orderId": {
+            field: "orderId",
+            name: "装修单号",
+            prop: "decoration.orderId",
+            clazz: "grey",
+            click: function(btn, v) {
 
-            tools.decoration.info(btn, v.decoration.orderId);
-        }
-    }, {
-        fieId: "villageName",
-        name: "楼盘",
-        prop: "decoration.house.village.name",
-        clazz: "grey"
-    }, {
-        fieId: "houseNumber",
-        name: "楼号",
-        prop: "decoration.house.houseNumber",
-        clazz: "grey"
-    }, {
-        fieId: "designer",
-        name: "设计师",
-        prop: "decoration.designer.currentName",
-        clazz: "grey",
-        click: function(btn, v) {
+                tools.decoration.info(btn, v.decoration.orderId);
+            }
+        },
+        "villageName": {
+            fieId: "villageName",
+            name: "楼盘",
+            prop: "decoration.house.village.name",
+            clazz: "grey"
+        },
+        "houseNumber": {
+            fieId: "houseNumber",
+            name: "楼号",
+            prop: "decoration.house.houseNumber",
+            clazz: "grey"
+        },
+        "designer": {
+            fieId: "designer",
+            name: "设计师",
+            prop: "decoration.designer.currentName",
+            clazz: "grey",
+            click: function(btn, v) {
 
-            tools.personel.info(btn, v.decoration.designer.userId);
-        }
-    }, {
-        fieId: "salesman",
-        name: "业务员",
-        prop: "decoration.salesman.currentName",
-        clazz: "grey",
-        click: function(btn, v) {
+                tools.personel.info(btn, v.decoration.designer.userId);
+            }
+        },
+        "salesman": {
+            fieId: "salesman",
+            name: "业务员",
+            prop: "decoration.salesman.currentName",
+            clazz: "grey",
+            click: function(btn, v) {
 
-            tools.personel.info(btn, v.decoration.salesman.userId);
+                tools.personel.info(btn, v.decoration.salesman.userId);
+            }
+        },
+        "updateTime": {
+            field: "updateTime",
+            name: "更新时间",
+            prop: "updateTime",
+            clazz: "green"
+        },
+        "handleTime": {
+            field: "handleTime",
+            name: "处理时间",
+            prop: "handleTime",
+            clazz: "green"
+        },
+        "type": {
+            fieId: "type",
+            name: "类型",
+            prop: "type",
+            clazz: "red",
+            dataset: constant.customer().droup.dType.keys
+        },
+        "status": {
+            fieId: "status",
+            name: "状态",
+            prop: "status",
+            clazz: "red",
+            dataset: constant.customer().droup.status.keys
+        },
+        "isHandle": {
+            fieId: "isHandle",
+            name: "处理状态",
+            prop: "isHandle",
+            clazz: "red",
+            dataset: constant.customer().droup.type.keys
         }
-    }, {
-        field: "updateTime",
-        name: "更新时间",
-        prop: "updateTime",
-        clazz: "green"
-    }, {
-        field: "handleTime",
-        name: "处理时间",
-        prop: "handleTime",
-        clazz: "green"
-    }, {
-        fieId: "type",
-        name: "类型",
-        prop: "type",
-        clazz: "red",
-        dataset: constant.customer().droup.dType.keys
-    }, {
-        fieId: "status",
-        name: "状态",
-        prop: "status",
-        clazz: "red",
-        dataset: constant.customer().droup.status.keys
-    }, {
-        fieId: "isHandle",
-        name: "处理状态",
-        prop: "isHandle",
-        clazz: "red",
-        dataset: constant.customer().droup.type.keys
-    }];
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
+    })();
 
     var linebtns = [{
         name: "对话",
@@ -467,7 +507,8 @@ jQuery(function($) {
             droup.orderId = v.decoration.orderId;
             show(v);
             return false;
-        }
+        },
+        show: function() { return btnVisible("chat"); }
     }, {
         name: "删除",
         clazz: "btn-danger",
@@ -483,7 +524,8 @@ jQuery(function($) {
                 searcher.doSearch();
             });
             return false;
-        }
+        },
+        show: function() { return btnVisible("del"); }
     }, {
         name: "添加人员",
         clazz: "btn-success",
@@ -491,7 +533,8 @@ jQuery(function($) {
 
             droup.did = v.did;
             droup.modals.addModal.modal("show");
-        }
+        },
+        show: function() { return btnVisible("addUser"); }
     }];
 
     searcher.line(function(v) {
