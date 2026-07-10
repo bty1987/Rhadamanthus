@@ -6,12 +6,16 @@ REM ========================================
 
 setlocal enabledelayedexpansion
 
-REM 设置项目路径
-set PROJECT_DIR=%~dp0
-set SRC_DIR=%PROJECT_DIR%src
-set BUILD_DIR=%PROJECT_DIR%build
+REM 设置项目路径 (脚本在 bins\build\, 项目根取上两级)
+set PROJECT_DIR=%~dp0..\..
+pushd "%PROJECT_DIR%"
+set PROJECT_DIR=%CD%
+popd
+set SRC_DIR=%PROJECT_DIR%\src
+set BUILD_DIR=%PROJECT_DIR%\target\build
 set CLASSES_DIR=%BUILD_DIR%\classes
-set LIB_DIR=%PROJECT_DIR%WebContent\WEB-INF\lib
+set LIB_DIR=%PROJECT_DIR%\WebContent\WEB-INF\lib
+set PRIV_LIB_DIR=%PROJECT_DIR%\project-libs
 set JAR_OUTPUT=%BUILD_DIR%\decoration-module.jar
 
 echo ========================================
@@ -54,6 +58,12 @@ if exist "%LIB_DIR%" (
     echo 已添加 WEB-INF/lib 目录下的 JAR 文件
 ) else (
     echo 警告: 未找到 %LIB_DIR% 目录
+)
+if exist "%PRIV_LIB_DIR%" (
+    for %%f in ("%PRIV_LIB_DIR%\*.jar") do (
+        set CLASSPATH=!CLASSPATH!;%%f
+    )
+    echo 已添加 project-libs 目录下的私有 JAR 文件
 )
 echo.
 

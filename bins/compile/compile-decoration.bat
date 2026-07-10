@@ -5,9 +5,12 @@ setlocal enabledelayedexpansion
 echo 🚀 开始编译 decoration 模块...
 echo.
 
-REM 设置变量
-set PROJECT_DIR=%~dp0
-set BUILD_DIR=%PROJECT_DIR%build
+REM 设置变量 (脚本在 bins\compile\, 项目根取上两级)
+set PROJECT_DIR=%~dp0..\..
+pushd "%PROJECT_DIR%"
+set PROJECT_DIR=%CD%
+popd
+set BUILD_DIR=%PROJECT_DIR%\target\build
 set CLASSES_DIR=%BUILD_DIR%\classes
 set JAR_OUTPUT=%BUILD_DIR%\decoration-module.jar
 
@@ -36,10 +39,10 @@ mkdir "%CLASSES_DIR%"
 REM 设置 CLASSPATH
 echo 第3步: 配置依赖路径
 set CLASSPATH=%CLASSES_DIR%
-for %%j in ("%PROJECT_DIR%project-libs\*.jar") do (
+for %%j in ("%PROJECT_DIR%WebContent\WEB-INF\lib\*.jar") do (
     set CLASSPATH=!CLASSPATH!;%%j
 )
-for %%j in ("%PROJECT_DIR%build\lib\*.jar") do (
+for %%j in ("%PROJECT_DIR%project-libs\*.jar") do (
     set CLASSPATH=!CLASSPATH!;%%j
 )
 
@@ -171,4 +174,4 @@ echo 源文件列表: %SOURCES_LIST%
 echo.
 echo ========================================
 echo 完成！
-pause
+pause

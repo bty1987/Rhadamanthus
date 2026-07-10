@@ -4,9 +4,12 @@ setlocal enabledelayedexpansion
 echo 🚀 开始完整编译项目...
 echo.
 
-REM 设置变量
-set PROJECT_DIR=%~dp0
-set BUILD_DIR=%PROJECT_DIR%build
+REM 设置变量 (脚本在 bins\compile\, 项目根取上两级)
+set PROJECT_DIR=%~dp0..\..
+pushd "%PROJECT_DIR%"
+set PROJECT_DIR=%CD%
+popd
+set BUILD_DIR=%PROJECT_DIR%\target\build
 set CLASSES_DIR=%BUILD_DIR%\classes
 set JAR_OUTPUT=%BUILD_DIR%\decoration-module.jar
 set ALL_SOURCES=%BUILD_DIR%\all-sources.txt
@@ -192,4 +195,4 @@ goto :END
 
 :END
 echo.
-pause
+pause
