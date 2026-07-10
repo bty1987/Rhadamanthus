@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.dao.DecorationPictureDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.po.DecorationPicturePO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationAssignConfigDao;
@@ -63,6 +65,9 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private DecorationPictureDao decorationPictureDao;
 
 	@Autowired
 	private QuotationAssignConfigDao quotationAssignConfigDao;
@@ -109,6 +114,13 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		return decoration.getDesigner();
 	}
 
+	private void checkCadPicture(String orderId) throws FLException {
+
+		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
+			throw new FLException(110017, "工程文件CAD不能为空");
+		}
+	}
+
 	/**
 	 * 检查预算员在指定公司下是否有匹配的规则明细
 	 * 
@@ -145,6 +157,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		if (decoration == null) {
 			throw new FLException(-1, "装修单不存在");
 		}
+
+		checkCadPicture(orderId);
 
 		// 2. 检查是否已分配报价员
 		String quoterUid = getQuoteterUid(decoration);
@@ -221,6 +235,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		if (decoration == null) {
 			throw new FLException(-1, "装修单不存在");
 		}
+
+		checkCadPicture(orderId);
 
 		// 2. 查询预算员规则（新模型：按 userId 查询唯一规则）
 		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(quotationAssignVO.getQuoter().getUserId());
@@ -327,12 +343,17 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(-1, "装修单不存在");
 		}
 
-		// 统一通过 quoter 对象判空（避免 userId/uid 两个字段不一致带来的边界风险）
-		if (decoration.getQuoter() == null) {
+		QuotationAssignRequestPO currentRequest = quotationAssignRequestDao.queryQuotationAssignRequestForAssigned(orderId);
+
+		if (currentRequest == null) {
+			return 1;
+		}
+
+		if (currentRequest.getUser() == null) {
 			throw new FLException(-1, "该装修单未分配报价员");
 		}
 
-		String budgetUid = decoration.getQuoter().getUserId();
+		String budgetUid = currentRequest.getUser().getUserId();
 
 		// 2. 根据预算员ID查询其规则（新模型：按 userId 查询唯一规则）
 		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(budgetUid);
@@ -342,14 +363,11 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		// 3.5 先将当前装修单的分配请求状态更新为"已完成"（必须先落库，count 才不会多算这一条）
-		QuotationAssignRequestPO currentRequest = quotationAssignRequestDao.queryQuotationAssignRequestForActive(orderId);
-		if (currentRequest != null) {
-			currentRequest.setStatus(QuotationAssignRequestPO.STATUS_COMPLETED_INT);
-			currentRequest.setFinishTime(new Timestamp(System.currentTimeMillis()));
-			quotationAssignRequestDao.update(currentRequest);
-			// 强制 flush，保证后续 count 查询能感知状态变更（避免一级缓存未同步导致漏算）
-			quotationAssignRequestDao.flush();
-		}
+		currentRequest.setStatus(QuotationAssignRequestPO.STATUS_COMPLETED_INT);
+		currentRequest.setFinishTime(new Timestamp(System.currentTimeMillis()));
+		quotationAssignRequestDao.update(currentRequest);
+		// 强制 flush，保证后续 count 查询能感知状态变更（避免一级缓存未同步导致漏算）
+		quotationAssignRequestDao.flush();
 
 		// 3. 更新预算员的最后完成时间和任务数
 		userRule.setLastFinishTime(new Timestamp(System.currentTimeMillis()));

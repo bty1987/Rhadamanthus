@@ -36,6 +36,7 @@ import com.fanglin.data.quotation.dao.PresignPriceDao;
 import com.fanglin.data.quotation.dao.PresignProduceDao;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.data.quotation.dao.QuotationPriceDao;
+import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
@@ -60,8 +61,6 @@ import com.fanglin.quotation.dao.QuotetionFunctionAreaParamDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.ProtationPO;
-import com.fanglin.quotation.po.QuotationAssignRequestPO;
-import com.fanglin.quotation.po.QuotationAssignUserRulePO;
 import com.fanglin.quotation.po.QuotationDO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
@@ -140,6 +139,9 @@ public class QuotationServiceImpl implements QuotationService {
 	private QuotationPriceDao quotationPriceDao;
 
 	@Autowired
+	private QuotationVersionDao quotationVersionDao;
+
+	@Autowired
 	private PresignProduceDao presignProduceDao;
 
 	@Autowired
@@ -168,12 +170,6 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Autowired
 	private com.fanglin.dingding.service.DingTalkMessageService dingTalkMessageService;
-
-	@Autowired
-	private com.fanglin.quotation.dao.QuotationAssignRequestDao quotationAssignRequestDao;
-
-	@Autowired
-	private com.fanglin.quotation.dao.QuotationAssignUserRuleDao quotationAssignUserRuleDao;
 
 	@Override
 	public void pageQuotation(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -273,23 +269,17 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		QuotationVersionPO versionPO = decorationPO.getVersion();
+		QuotationVersionPO versionPO = quotationVersionDao.queryQuotationVersionForDefault(company, decorationPO.getType(), QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT);
 
-		SystemConfigPO keeprice = systemConfigDao.querySystemConfig("PROTATION_KEEPRICE_DAYS_INT", company);
+		if (versionPO == null) {
+			versionPO = quotationVersionDao.queryQuotationVersionForDefault(company, QuotationVersionPO.TYPE_COMMON_INT, QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT);
+		}
 
 		PresignProducePO presignPO = null;
 		ProtationPO protationPO = protationDao.queryProtationForDefaultByOrderId(orderId);
 
 		if (protationPO != null) {
 			presignPO = presignProduceDao.get(protationPO.getPpid());
-		}
-
-		if (protationPO != null && protationPO.getVersion() != null && DateUtil.diffDay(decorationPO.getPrecontractTime(), DateUtil.getDateToTimestamp(new Date())) <= (keeprice == null ? 365 : Integer.parseInt(keeprice.value("365")))) {
-			versionPO = protationPO.getVersion();
-		}
-
-		if (presignPO != null && protationPO.getVersion() != null && DateUtil.diffDay(decorationPO.getPrecontractTime(), DateUtil.getDateToTimestamp(new Date())) > (keeprice == null ? 365 : Integer.parseInt(keeprice.value("365")))) {
-			versionPO = presignPO.getVersion();
 		}
 
 		if (versionPO == null) {
@@ -730,38 +720,12 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(140013, "订单不存在");
 		}
 
+		quotationVO.setOrderId(quotationPO.getOrderId());
+
 		quotationPO.setAttstatus(QuotationPO.ATTSTATUS_FINISH_INT);
 		quotationPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 
 		quotationDao.update(quotationPO);
-
-		// 更新分配队列为已完成
-		QuotationAssignRequestPO assignRequest = quotationAssignRequestDao.queryQuotationAssignRequestForAssigned(quotationPO.getOrderId());
-		if (assignRequest != null) {
-			UserPO assignedUser = assignRequest.getUser();
-			assignRequest.setStatus(QuotationAssignRequestPO.STATUS_COMPLETED_INT);
-			assignRequest.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
-			quotationAssignRequestDao.update(assignRequest);
-			quotationAssignRequestDao.flush();
-
-			if (assignedUser != null) {
-				QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(assignedUser.getUserId());
-
-				if (userRule != null) {
-					int currentTaskCount = quotationAssignRequestDao.countQuotationAssignRequest(assignedUser.getUid());
-					userRule.setCurrentTaskCount(currentTaskCount);
-					userRule.setLastFinishTime(assignRequest.getFinishTime());
-
-					if (userRule.getStatus() != QuotationAssignUserRulePO.STATUS_STOPPED_INT) {
-						short status = currentTaskCount > QuotationAssignUserRulePO.TASK_COUNT_NONE_INT ? QuotationAssignUserRulePO.STATUS_BUSY_INT : QuotationAssignUserRulePO.STATUS_AVAILABLE_INT;
-						userRule.setStatus(status);
-					}
-
-					userRule.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
-					quotationAssignUserRuleDao.update(userRule);
-				}
-			}
-		}
 
 		UserPO designer = decorationPO.getDesigner();
 

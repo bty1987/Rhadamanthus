@@ -23,7 +23,9 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.quotation.service.QuotationAssignService;
 import com.fanglin.quotation.service.QuotationService;
+import com.fanglin.quotation.vo.QuotationAssignVO;
 import com.fanglin.quotation.vo.QuotationVO;
 
 @ParentPackage("base")
@@ -35,6 +37,9 @@ public class QuotationAction extends BaseListAction {
 
 	@Autowired
 	private QuotationService quotationService;
+
+	@Autowired
+	private QuotationAssignService quotationAssignService;
 
 	private QuotationVO quotation;
 
@@ -208,6 +213,10 @@ public class QuotationAction extends BaseListAction {
 	public String finishQuotation() throws FLException {
 
 		quotationService.finishQuotation(quotation, queryUserId());
+
+		QuotationAssignVO quotationAssign = new QuotationAssignVO();
+		quotationAssign.setOrderId(quotation.getOrderId());
+		quotationAssignService.finishQuotationAssign(quotationAssign);
 
 		return SUCCESS;
 	}
