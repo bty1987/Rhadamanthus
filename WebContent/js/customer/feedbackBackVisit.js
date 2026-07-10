@@ -241,6 +241,15 @@ jQuery(function($) {
     }
     var searcher = new Searcher();
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("feedbackBackVisit");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
     var linebtns = [{
         name: "图片",
         handle: function(v) {
@@ -249,107 +258,143 @@ jQuery(function($) {
             managedrawing(v);
             uploadDrawing(v);
             return false;
-        }
+        },
+        show: function() { return btnVisible("drawing"); }
     }];
 
-    searcher.set("condListas", "pagenationFeedbackBackVisit", "resultListas", api.customer.queryFeedbackBackVisit, {
+    searcher.set("condListas", "pagenationFeedbackBackVisit", "resultListas", pageConfig.apiPage || api.customer.queryFeedbackBackVisit, {
         "feedbackBackVisit.fid": params.fid
     }, null, null, "feedbackBackVisits", true);
 
-    var lineprops = [{
-        fieId: "fid",
-        name: "反馈ID",
-        prop: "fid",
-        clazz: "red"
-    }, {
-        fieId: "pleased",
-        name: "维修满意度",
-        prop: "pleased",
-        clazz: "red",
-        dataset: constant.customer().feedbackBackVisit.pleased.keys
-    }, {
-        fieId: "result",
-        name: "维修结果",
-        prop: "result",
-        clazz: "red",
-        dataset: constant.customer().feedbackBackVisit.result.keys
-    }, {
-        fieId: "praiser.userName",
-        name: "受表扬工人",
-        prop: "praiser.userName",
-        clazz: "grey"
-    }, {
-        fieId: "praiseType",
-        name: "表扬形式",
-        prop: "praiseType",
-        clazz: "red",
-        dataset: constant.customer().feedbackBackVisit.praiseType.keys
-    }, {
-        fieId: "praiseTime",
-        name: "表扬日期",
-        prop: "praiseTime",
-        clazz: "green"
-    }, {
-        fieId: "finishTime",
-        name: "整体完工日期",
-        prop: "finishTime",
-        clazz: "green"
-    }, {
-        fieId: "workDays",
-        name: "维修周期",
-        prop: "workDays",
-        clazz: "blue"
-    }, {
-        fieId: "complaint",
-        name: "回访内容",
-        prop: "complaint",
-        clazz: "grey"
-    }, {
-        fieId: "praise",
-        name: "表扬内容",
-        prop: "praise",
-        clazz: "grey"
-    }, {
-        fieId: "openWords",
-        name: "开头语",
-        prop: "openWords",
-        clazz: "red",
-        dataset: constant.customer().feedbackBackVisit.openWords.keys
-    }, {
-        fieId: "contactSoonFlag",
-        name: "24h内有无人员联系您",
-        prop: "contactSoonFlag",
-        clazz: "red",
-        dataset: constant.customer().feedbackBackVisit.contactSoonFlag.keys
-    }, {
-        fieId: "refuseComment",
-        name: "拒绝评价原因",
-        prop: "refuseComment",
-        clazz: "grey"
-    }, {
-        fieId: "perforFlag",
-        name: "师傅是否按时上的门",
-        prop: "perforFlag",
-        clazz: "red",
-        dataset: constant.customer().feedbackBackVisit.perforFlag.keys
-    }, {
-        fieId: "resultFlag",
-        name: "报修是否解决",
-        prop: "resultFlag",
-        clazz: "red",
-        dataset: constant.customer().feedbackBackVisit.resultFlag.keys
-    }, {
-        fieId: "resultComment",
-        name: "未解决问题的记录",
-        prop: "resultComment",
-        clazz: "grey"
-    }, {
-        fieId: "contactFlag",
-        name: "事后有无人员联系您",
-        prop: "contactFlag",
-        clazz: "red",
-        dataset: constant.customer().feedbackBackVisit.contactFlag.keys
-    }];
+    var propertyMap = {
+        "fid": {
+            fieId: "fid",
+            name: "反馈ID",
+            prop: "fid",
+            clazz: "red"
+        },
+        "pleased": {
+            fieId: "pleased",
+            name: "维修满意度",
+            prop: "pleased",
+            clazz: "red",
+            dataset: constant.customer().feedbackBackVisit.pleased.keys
+        },
+        "result": {
+            fieId: "result",
+            name: "维修结果",
+            prop: "result",
+            clazz: "red",
+            dataset: constant.customer().feedbackBackVisit.result.keys
+        },
+        "praiser": {
+            fieId: "praiser.userName",
+            name: "受表扬工人",
+            prop: "praiser.userName",
+            clazz: "grey"
+        },
+        "praiseType": {
+            fieId: "praiseType",
+            name: "表扬形式",
+            prop: "praiseType",
+            clazz: "red",
+            dataset: constant.customer().feedbackBackVisit.praiseType.keys
+        },
+        "praiseTime": {
+            fieId: "praiseTime",
+            name: "表扬日期",
+            prop: "praiseTime",
+            clazz: "green"
+        },
+        "finishTime": {
+            fieId: "finishTime",
+            name: "整体完工日期",
+            prop: "finishTime",
+            clazz: "green"
+        },
+        "workDays": {
+            fieId: "workDays",
+            name: "维修周期",
+            prop: "workDays",
+            clazz: "blue"
+        },
+        "complaint": {
+            fieId: "complaint",
+            name: "回访内容",
+            prop: "complaint",
+            clazz: "grey"
+        },
+        "praise": {
+            fieId: "praise",
+            name: "表扬内容",
+            prop: "praise",
+            clazz: "grey"
+        },
+        "openWords": {
+            fieId: "openWords",
+            name: "开头语",
+            prop: "openWords",
+            clazz: "red",
+            dataset: constant.customer().feedbackBackVisit.openWords.keys
+        },
+        "contactSoonFlag": {
+            fieId: "contactSoonFlag",
+            name: "24h内有无人员联系您",
+            prop: "contactSoonFlag",
+            clazz: "red",
+            dataset: constant.customer().feedbackBackVisit.contactSoonFlag.keys
+        },
+        "refuseComment": {
+            fieId: "refuseComment",
+            name: "拒绝评价原因",
+            prop: "refuseComment",
+            clazz: "grey"
+        },
+        "perforFlag": {
+            fieId: "perforFlag",
+            name: "师傅是否按时上的门",
+            prop: "perforFlag",
+            clazz: "red",
+            dataset: constant.customer().feedbackBackVisit.perforFlag.keys
+        },
+        "resultFlag": {
+            fieId: "resultFlag",
+            name: "报修是否解决",
+            prop: "resultFlag",
+            clazz: "red",
+            dataset: constant.customer().feedbackBackVisit.resultFlag.keys
+        },
+        "resultComment": {
+            fieId: "resultComment",
+            name: "未解决问题的记录",
+            prop: "resultComment",
+            clazz: "grey"
+        },
+        "contactFlag": {
+            fieId: "contactFlag",
+            name: "事后有无人员联系您",
+            prop: "contactFlag",
+            clazz: "red",
+            dataset: constant.customer().feedbackBackVisit.contactFlag.keys
+        }
+    };
+
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
+    })();
 
     searcher.line("", lineprops, linebtns).render();
 

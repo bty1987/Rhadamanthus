@@ -113,6 +113,15 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("feedbackComplaintDept");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
     var linebtns = [{
         name: "删除",
         clazz: "btn-danger",
@@ -125,10 +134,11 @@ jQuery(function($) {
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
             });
-        }
+        },
+        show: function() { return btnVisible("del"); }
     }];
 
-    searcher.set("condList2", "pagenationFeedbackComplaintDept2", "resultLists2", api.customer.queryFeedbackComplaintDept, {
+    searcher.set("condList2", "pagenationFeedbackComplaintDept2", "resultLists2", pageConfig.apiPage || api.customer.queryFeedbackComplaintDept, {
         "feedbackComplaintDept.fcid": complaintDept.fcid
     }, null, null, "feedbackComplaintDepts", true);
 
@@ -139,37 +149,61 @@ jQuery(function($) {
         icon: "icon-plus"
     }]);
 
-    var lineprops = [{
-        fieId: "dept.name",
-        name: "部门",
-        prop: "dept.name",
-        clazz: "green"
-    }, {
-        fieId: "duty.name",
-        name: "职务",
-        prop: "duty.name",
-        clazz: "grey"
-    }, {
-        fieId: "dutyUser.userName",
-        name: "责任人",
-        prop: "dutyUser.userName",
-        clazz: "green"
-    }, {
-        fieId: "firstLevel.name",
-        name: "一级分类",
-        prop: "firstLevel.name",
-        clazz: "red"
-    }, {
-        fieId: "secondary.name",
-        name: "二级分类",
-        prop: "secondary.name",
-        clazz: "red"
-    }, {
-        fieId: "problemType.name",
-        name: "问题类型",
-        prop: "problemType.name",
-        clazz: "red"
-    }];
+    var propertyMap = {
+        "dept": {
+            fieId: "dept.name",
+            name: "部门",
+            prop: "dept.name",
+            clazz: "green"
+        },
+        "duty": {
+            fieId: "duty.name",
+            name: "职务",
+            prop: "duty.name",
+            clazz: "grey"
+        },
+        "dutyUser": {
+            fieId: "dutyUser.userName",
+            name: "责任人",
+            prop: "dutyUser.userName",
+            clazz: "green"
+        },
+        "firstLevel": {
+            fieId: "firstLevel.name",
+            name: "一级分类",
+            prop: "firstLevel.name",
+            clazz: "red"
+        },
+        "secondary": {
+            fieId: "secondary.name",
+            name: "二级分类",
+            prop: "secondary.name",
+            clazz: "red"
+        },
+        "problemType": {
+            fieId: "problemType.name",
+            name: "问题类型",
+            prop: "problemType.name",
+            clazz: "red"
+        }
+    };
+
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
+    })();
 
     searcher.line("dept.name", lineprops, linebtns).render();
 

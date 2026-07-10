@@ -123,7 +123,16 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.base("condListCustomerUserRuleItem", "pagenationCustomerUserRuleItem", "resultListCustomerUserRuleItem", api.customer.queryCustomerUserRuleItem);
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("customerUserRuleItem");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
+    searcher.base("condListCustomerUserRuleItem", "pagenationCustomerUserRuleItem", "resultListCustomerUserRuleItem", pageConfig.apiPage || api.customer.queryCustomerUserRuleItem);
 
     searcher.param({
         "customerUserRuleItem.curid": params.customer.curid
@@ -140,84 +149,116 @@ $(function() {
 
     searcher.history("addCustomerUserRuleItemPostData");
 
-    var lineprops = [{
-        fieId: "type",
-        name: "类型",
-        prop: "type",
-        clazz: "red",
-        dataset: constant.customer().customerUserRuleItem.type.keys
-    }, {
-        fieId: "departmentType.name",
-        name: "部门类型",
-        prop: "departmentType.name",
-        clazz: "grey",
-        show: function(v) {
+    // 字段定义映射: key 对应配置 propertyArr 中的 value (注意: 带 show 的字段为业务条件显示, 保留原逻辑)
+    var propertyMap = {
+        "type": {
+            fieId: "type",
+            name: "类型",
+            prop: "type",
+            clazz: "red",
+            dataset: constant.customer().customerUserRuleItem.type.keys
+        },
+        "departmentType": {
+            fieId: "departmentType.name",
+            name: "部门类型",
+            prop: "departmentType.name",
+            clazz: "grey",
+            show: function(v) {
 
-            return v.type == constant.customer().customerUserRuleItem.TYPE_DEPT_TYPE_INT;
-        }
-    }, {
-        fieId: "department.name",
-        name: "部门",
-        prop: "department.name",
-        clazz: "grey",
-        show: function(v) {
+                return v.type == constant.customer().customerUserRuleItem.TYPE_DEPT_TYPE_INT;
+            }
+        },
+        "department": {
+            fieId: "department.name",
+            name: "部门",
+            prop: "department.name",
+            clazz: "grey",
+            show: function(v) {
 
-            return v.type == constant.customer().customerUserRuleItem.TYPE_DEPT_INT;
-        }
-    }, {
-        fieId: "cityProper.name",
-        name: "城区",
-        prop: "cityProper.name",
-        clazz: "grey",
-        show: function(v) {
+                return v.type == constant.customer().customerUserRuleItem.TYPE_DEPT_INT;
+            }
+        },
+        "cityProper": {
+            fieId: "cityProper.name",
+            name: "城区",
+            prop: "cityProper.name",
+            clazz: "grey",
+            show: function(v) {
 
-            return v.type == constant.customer().customerUserRuleItem.TYPE_CITY_PROPER_INT;
+                return v.type == constant.customer().customerUserRuleItem.TYPE_CITY_PROPER_INT;
+            }
+        },
+        "uppval": {
+            fieId: "uppval",
+            name: "起始值",
+            prop: "uppval",
+            clazz: "blue"
+        },
+        "lowval": {
+            fieId: "lowval",
+            name: "终止值",
+            prop: "lowval",
+            clazz: "blue"
+        },
+        "chance": {
+            fieId: "chance",
+            name: "机会数",
+            prop: "chance",
+            clazz: "blue"
+        },
+        "priority": {
+            fieId: "priority",
+            name: "优先级",
+            prop: "priority",
+            clazz: "red",
+            dataset: constant.customer().customerUserRuleItem.priority.keys
+        },
+        "isSurplus": {
+            fieId: "isSurplus",
+            name: "是否减剩余数",
+            prop: "isSurplus",
+            clazz: "red",
+            dataset: constant.customer().customerUserRuleItem.isSurplus.keys
+        },
+        "isDelete": {
+            fieId: "isDelete",
+            name: "是否删除",
+            prop: "isDelete",
+            clazz: "red",
+            dataset: constant.customer().customerUserRuleItem.isDelete.keys
+        },
+        "status": {
+            fieId: "status",
+            name: "状态",
+            prop: "status",
+            clazz: "red",
+            dataset: constant.customer().customerUserRuleItem.status.keys
+        },
+        "handleTime": {
+            field: "handleTime",
+            name: "操作时间",
+            prop: "handleTime",
+            clazz: "green"
         }
-    }, {
-        fieId: "uppval",
-        name: "起始值",
-        prop: "uppval",
-        clazz: "blue"
-    }, {
-        fieId: "lowval",
-        name: "终止值",
-        prop: "lowval",
-        clazz: "blue"
-    }, {
-        fieId: "chance",
-        name: "机会数",
-        prop: "chance",
-        clazz: "blue"
-    }, {
-        fieId: "priority",
-        name: "优先级",
-        prop: "priority",
-        clazz: "red",
-        dataset: constant.customer().customerUserRuleItem.priority.keys
-    }, {
-        fieId: "isSurplus",
-        name: "是否减剩余数",
-        prop: "isSurplus",
-        clazz: "red",
-        dataset: constant.customer().customerUserRuleItem.isSurplus.keys
-    }, {
-        fieId: "isDelete",
-        name: "是否删除",
-        prop: "isDelete",
-        clazz: "red",
-        dataset: constant.customer().customerUserRuleItem.isDelete.keys
-    }, {
-        fieId: "status",
-        name: "状态",
-        prop: "status",
-        clazz: "red",
-        dataset: constant.customer().customerUserRuleItem.status.keys
-    }, {
-        field: "handleTime",
-        name: "操作时间",
-        prop: "handleTime",
-        clazz: "green"
-    }];
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
+    })();
 
     var linebtns = [{
         name: "删除",
@@ -231,7 +272,8 @@ $(function() {
                 searcher.doSearch();
                 return false;
             });
-        }
+        },
+        show: function() { return btnVisible("del"); }
     }];
 
     searcher.line("name", lineprops, linebtns).render();

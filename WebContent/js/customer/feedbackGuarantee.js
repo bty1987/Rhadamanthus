@@ -307,83 +307,123 @@ $(function() {
     // 维修列表
     var searcher = new Searcher();
 
-    searcher.base("condList", "contracts", "pagenation", api.customer.queryFeedbackGuarantee);
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("feedbackGuarantee");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
+    searcher.base("condList", "contracts", "pagenation", pageConfig.apiPage || api.customer.queryFeedbackGuarantee);
     searcher.param({
         "feedbackGuarantee.fid": params.fid
     });
     searcher.result("feedbackGuarantees").isPage(true);
     searcher.history("addCustomerUserRuleItemPostData");
 
-    var lineprops = [{
-        fieId: "fid",
-        name: "反馈ID",
-        prop: "fid",
-        clazz: "red"
-    }, {
-        fieId: "orderId",
-        name: "装修单号",
-        prop: "orderId",
-        clazz: "grey"
-    }, {
-        fieId: "source",
-        name: "渠道",
-        prop: "source",
-        clazz: "blue",
-        dataset: constant.customer().feedbackGuarantee.source.keys
-    }, {
-        fieId: "upgradeSource",
-        name: "升级渠道",
-        prop: "upgradeSource",
-        clazz: "blue",
-        dataset: constant.customer().feedbackGuarantee.upgradeSource.keys
-    }, {
-        fieId: "phone",
-        name: "电话",
-        prop: "phone",
-        clazz: "blue"
-    }, {
-        fieId: "cutomerType",
-        name: "客户类型",
-        prop: "cutomerType",
-        clazz: "red",
-        dataset: constant.customer().feedbackGuarantee.cutomerType.keys
-    }, {
-        fieId: "deptType",
-        name: "部门类型",
-        prop: "deptType",
-        clazz: "red"
-    }, {
-        fieId: "workType",
-        name: "工种",
-        prop: "workType",
-        clazz: "red"
-    }, {
-        fieId: "brands",
-        name: "品牌",
-        prop: "brands",
-        clazz: "grey"
-    }, {
-        fieId: "reportedDate",
-        name: "报修日期",
-        prop: "reportedDate",
-        clazz: "green"
-    }, {
-        fieId: "renovationYear",
-        name: "装修年份",
-        prop: "renovationYear",
-        clazz: "grey"
-    }, {
-        fieId: "repairResult",
-        name: "维修结果",
-        prop: "repairResult",
-        clazz: "grey",
-        dataset: constant.customer().feedbackGuarantee.repairResult.keys
-    }, {
-        fieId: "content",
-        name: "内容",
-        prop: "content",
-        clazz: "grey"
-    }];
+    var propertyMap = {
+        "fid": {
+            fieId: "fid",
+            name: "反馈ID",
+            prop: "fid",
+            clazz: "red"
+        },
+        "orderId": {
+            fieId: "orderId",
+            name: "装修单号",
+            prop: "orderId",
+            clazz: "grey"
+        },
+        "source": {
+            fieId: "source",
+            name: "渠道",
+            prop: "source",
+            clazz: "blue",
+            dataset: constant.customer().feedbackGuarantee.source.keys
+        },
+        "upgradeSource": {
+            fieId: "upgradeSource",
+            name: "升级渠道",
+            prop: "upgradeSource",
+            clazz: "blue",
+            dataset: constant.customer().feedbackGuarantee.upgradeSource.keys
+        },
+        "phone": {
+            fieId: "phone",
+            name: "电话",
+            prop: "phone",
+            clazz: "blue"
+        },
+        "cutomerType": {
+            fieId: "cutomerType",
+            name: "客户类型",
+            prop: "cutomerType",
+            clazz: "red",
+            dataset: constant.customer().feedbackGuarantee.cutomerType.keys
+        },
+        "deptType": {
+            fieId: "deptType",
+            name: "部门类型",
+            prop: "deptType",
+            clazz: "red"
+        },
+        "workType": {
+            fieId: "workType",
+            name: "工种",
+            prop: "workType",
+            clazz: "red"
+        },
+        "brands": {
+            fieId: "brands",
+            name: "品牌",
+            prop: "brands",
+            clazz: "grey"
+        },
+        "reportedDate": {
+            fieId: "reportedDate",
+            name: "报修日期",
+            prop: "reportedDate",
+            clazz: "green"
+        },
+        "renovationYear": {
+            fieId: "renovationYear",
+            name: "装修年份",
+            prop: "renovationYear",
+            clazz: "grey"
+        },
+        "repairResult": {
+            fieId: "repairResult",
+            name: "维修结果",
+            prop: "repairResult",
+            clazz: "grey",
+            dataset: constant.customer().feedbackGuarantee.repairResult.keys
+        },
+        "content": {
+            fieId: "content",
+            name: "内容",
+            prop: "content",
+            clazz: "grey"
+        }
+    };
+
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
+    })();
 
     var linebtns = [{
         name: "图片",
@@ -394,6 +434,7 @@ $(function() {
             managedrawing(v.fgid);
             initUploadBtn(v.fgid);
         },
+        show: function() { return btnVisible("drawing"); }
     }, {
         name: "编辑",
         clazz: "btn-red",
@@ -402,6 +443,7 @@ $(function() {
 
             editGuarantee(v);
         },
+        show: function() { return btnVisible("edit"); }
     }];
 
     searcher.line("", lineprops, linebtns).render();

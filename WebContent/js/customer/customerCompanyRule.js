@@ -49,9 +49,18 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerCompanyRule);
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("customerCompanyRule");
 
-    searcher.condition(['customer-customerCompanyRule-type', 'customer-customerCompanyRule-uppval', 'customer-customerCompanyRule-lowval']);
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
+    searcher.base("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageCustomerCompanyRule);
+
+    searcher.condition(pageConfig.condArr.length > 0 ? pageConfig.condArr : ['customer-customerCompanyRule-type', 'customer-customerCompanyRule-uppval', 'customer-customerCompanyRule-lowval']);
 
     searcher.button([{
         id: "addServiceNode",
@@ -62,39 +71,64 @@ jQuery(function($) {
 
     searcher.history("customerCompanyRuleData");
 
-    var lineprops = [{
-        field: "companyName",
-        name: "公司",
-        prop: "company.name",
-        clazz: "grey",
-    }, {
-        field: "deptName",
-        name: "部门",
-        prop: "dept.name",
-        clazz: "grey",
-        show: function(v){
-            
-           return v.dept && v.dept.name; 
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "companyName": {
+            field: "companyName",
+            name: "公司",
+            prop: "company.name",
+            clazz: "grey",
         },
-    }, {
-        field: "type",
-        name: "类型",
-        prop: "type",
-        clazz: "red",
-        dataset: customerCompanyRule.type
-    }, {
-        field: "uppval",
-        name: "起始值",
-        prop: "uppval",
-        clazz: "blue",
-        dataset: customerCompanyRule.uppval
-    }, {
-        field: "lowval",
-        name: "终止值",
-        prop: "lowval",
-        clazz: "blue",
-        dataset: customerCompanyRule.lowval
-    }];
+        "deptName": {
+            field: "deptName",
+            name: "部门",
+            prop: "dept.name",
+            clazz: "grey",
+            show: function(v){
+
+               return v.dept && v.dept.name;
+            },
+        },
+        "type": {
+            field: "type",
+            name: "类型",
+            prop: "type",
+            clazz: "red",
+            dataset: customerCompanyRule.type
+        },
+        "uppval": {
+            field: "uppval",
+            name: "起始值",
+            prop: "uppval",
+            clazz: "blue",
+            dataset: customerCompanyRule.uppval
+        },
+        "lowval": {
+            field: "lowval",
+            name: "终止值",
+            prop: "lowval",
+            clazz: "blue",
+            dataset: customerCompanyRule.lowval
+        }
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
+    })();
 
     var linebtns = [{
         name: "删除",
@@ -103,6 +137,7 @@ jQuery(function($) {
 
             remove(v.ccrid);
         },
+        show: function() { return btnVisible("del"); }
     }, ];
 
     searcher.line(function(v){
