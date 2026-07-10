@@ -48,10 +48,19 @@ jQuery(function($) {
 
     drawInfo();
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("customerDeptRule");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerDeptRule);
-    searcher.condition(['customer-customerDeptRule-name', 'customer-customerDeptRule-type', 'customer-customerDeptRule-atttype']);
+    searcher.base("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageCustomerDeptRule);
+    searcher.condition(pageConfig.condArr.length > 0 ? pageConfig.condArr : ['customer-customerDeptRule-name', 'customer-customerDeptRule-type', 'customer-customerDeptRule-atttype']);
     searcher.history("customerDeptRulePostData");
 
     searcher.button([{
@@ -61,52 +70,80 @@ jQuery(function($) {
         icon: "icon-plus"
     }]);
 
-    var lineprops = [{
-        fieId: "name",
-        name: "名称",
-        prop: "name",
-        clazz: "blue"
-    }, {
-        field: "type",
-        name: "类型",
-        prop: "type",
-        clazz: "red",
-        dataset: constant.customer().customerDeptRule.type.keys
-    }, {
-        field: "atttype",
-        name: "类型",
-        prop: "atttype",
-        clazz: "red",
-        dataset: constant.customer().customerDeptRule.atttype.keys,
-    }, {
-        field: "busitype",
-        name: "业务类型",
-        prop: "busitype.name",
-        clazz: "red"
-    }, {
-        field: "department.status",
-        name: "部门状态",
-        prop: "department.status",
-        clazz: "red",
-        dataset: constant.personel().dept.status.keys
-    }, {
-        field: "focus",
-        name: "聚焦",
-        prop: "focus",
-        clazz: "red",
-        dataset: constant.customer().customerDeptRule.focus.keys,
-    }, {
-        field: "creater",
-        name: "创建人",
-        prop: "creater.currentName",
-        clazz: "grey"
-    }, {
-        field: "createTime",
-        name: "创建时间",
-        prop: "createTime",
-        clazz: "green"
-    }];
-    
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "name": {
+            fieId: "name",
+            name: "名称",
+            prop: "name",
+            clazz: "blue"
+        },
+        "type": {
+            field: "type",
+            name: "类型",
+            prop: "type",
+            clazz: "red",
+            dataset: constant.customer().customerDeptRule.type.keys
+        },
+        "atttype": {
+            field: "atttype",
+            name: "类型",
+            prop: "atttype",
+            clazz: "red",
+            dataset: constant.customer().customerDeptRule.atttype.keys
+        },
+        "busitype": {
+            field: "busitype",
+            name: "业务类型",
+            prop: "busitype.name",
+            clazz: "red"
+        },
+        "deptStatus": {
+            field: "department.status",
+            name: "部门状态",
+            prop: "department.status",
+            clazz: "red",
+            dataset: constant.personel().dept.status.keys
+        },
+        "focus": {
+            field: "focus",
+            name: "聚焦",
+            prop: "focus",
+            clazz: "red",
+            dataset: constant.customer().customerDeptRule.focus.keys
+        },
+        "creater": {
+            field: "creater",
+            name: "创建人",
+            prop: "creater.currentName",
+            clazz: "grey"
+        },
+        "createTime": {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "green"
+        }
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
+    })();
+
     var linebtns = [{
         name: "删除",
         clazz: "btn-warning",
@@ -114,6 +151,7 @@ jQuery(function($) {
 
             remove(v.cdrid);
         },
+        show: function() { return btnVisible("del"); }
     }, ];
 
     searcher.line("name", lineprops, linebtns).render();
