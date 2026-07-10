@@ -113,9 +113,18 @@ $(function() {
         }
     });
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("customerCityProperRule");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
     // 初始化搜索器
     var searcher = new Searcher();
-    searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerCityProperRule);
+    searcher.base("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageCustomerCityProperRule);
     searcher.result("customerCityProperRules");
     searcher.button([{
         id: "addCustomerCityProperRule",
@@ -125,76 +134,104 @@ $(function() {
     }]);
     searcher.history("addCustomerCityProperRulePostData");
     // 配置查询条件
-    searcher.condition(["customer-customerCityProperRule-type", "customer-customerCityProperRule-status", "customer-customerCityProperRule-city"]);
+    searcher.condition(pageConfig.condArr.length > 0 ? pageConfig.condArr : ["customer-customerCityProperRule-type", "customer-customerCityProperRule-status", "customer-customerCityProperRule-city"]);
 
-    // 列表显示字段
-    var lineprops = [{
-        fieId: "type",
-        name: "类型",
-        prop: "type",
-        clazz: "red",
-        dataset: {
-            "0": "城区→公司",
-            "1": "城区→部门",
-            "2": "城区→设计师"
-        }
-    }, {
-        fieId: "city.name",
-        name: "城区",
-        prop: "city.name",
-        clazz: "blue"
-    }, {
-        fieId: "busitype.name",
-        name: "业务类型",
-        prop: "busitype.name",
-        clazz: "purple"
-    }, {
-        fieId: "targetCompany.name",
-        name: "目标公司",
-        prop: "targetCompany.name",
-        clazz: "grey",
-        show: function(v) {
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "type": {
+            fieId: "type",
+            name: "类型",
+            prop: "type",
+            clazz: "red",
+            dataset: {
+                "0": "城区→公司",
+                "1": "城区→部门",
+                "2": "城区→设计师"
+            }
+        },
+        "city": {
+            fieId: "city.name",
+            name: "城区",
+            prop: "city.name",
+            clazz: "blue"
+        },
+        "busitype": {
+            fieId: "busitype.name",
+            name: "业务类型",
+            prop: "busitype.name",
+            clazz: "purple"
+        },
+        "targetCompany": {
+            fieId: "targetCompany.name",
+            name: "目标公司",
+            prop: "targetCompany.name",
+            clazz: "grey",
+            show: function(v) {
 
-            return v.type == TYPE_COMPANY_INT;
-        }
-    }, {
-        fieId: "department.name",
-        name: "部门",
-        prop: "department.name",
-        clazz: "grey",
-        show: function(v) {
+                return v.type == TYPE_COMPANY_INT;
+            }
+        },
+        "department": {
+            fieId: "department.name",
+            name: "部门",
+            prop: "department.name",
+            clazz: "grey",
+            show: function(v) {
 
-            return v.type == TYPE_DEPT_INT;
-        }
-    }, {
-        fieId: "user.currentName",
-        name: "设计师",
-        prop: "user.currentName",
-        clazz: "grey",
-        show: function(v) {
+                return v.type == TYPE_DEPT_INT;
+            }
+        },
+        "user": {
+            fieId: "user.currentName",
+            name: "设计师",
+            prop: "user.currentName",
+            clazz: "grey",
+            show: function(v) {
 
-            return v.type == TYPE_USER_INT;
+                return v.type == TYPE_USER_INT;
+            }
+        },
+        "priority": {
+            fieId: "priority",
+            name: "优先级",
+            prop: "priority",
+            clazz: "red"
+        },
+        "status": {
+            fieId: "status",
+            name: "状态",
+            prop: "status",
+            clazz: "red",
+            dataset: {
+                "0": "启用",
+                "1": "禁用"
+            }
+        },
+        "comment": {
+            fieId: "comment",
+            name: "备注",
+            prop: "comment",
+            clazz: "grey"
         }
-    }, {
-        fieId: "priority",
-        name: "优先级",
-        prop: "priority",
-        clazz: "red"
-    }, {
-        fieId: "status",
-        name: "状态",
-        prop: "status",
-        clazz: "red",
-        dataset: {
-            "0": "启用",
-            "1": "禁用"
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
         }
-    }, {
-        fieId: "comment",
-        name: "备注",
-        prop: "comment",
-        clazz: "grey"
-    }];
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
+    })();
 
     // 列表操作按钮
     var linebtns = [{
@@ -205,14 +242,15 @@ $(function() {
             com.showConfirm("确认删除该规则吗？", function() {
 
                 com.post(api.customer.deleteCustomerCityProperRule, {
-                    "customerCityProperRule.ccrid": v.ccrid
+                    "customerCityProperRule.ccrrid": v.ccrid
                 }, function(res) {
 
                     searcher.doSearch();
                 });
             });
             return false;
-        }
+        },
+        show: function() { return btnVisible("del"); }
     }];
 
     searcher.line("city.name", lineprops, linebtns).render();
