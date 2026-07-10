@@ -73,7 +73,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerUserRule);
+    searcher.base("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageCustomerUserRule);
 
     searcher.condition(["customer-customerUserRule-user", "customer-customerUserRule-creater", "customer-customerUserRule-createTime", "customer-customerUserRule-finishTime", "customer-customerUserRule-status"]);
 
@@ -119,6 +119,15 @@ $(function() {
     }]);
 
     searcher.history(customerUserRule.depage + "customerUserRulePostData");
+
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("customerUserRule");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
 
     var lineprops = [{
         fieId: "userId",
@@ -303,7 +312,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && customerUserRule.depage == null;
+            return btnVisible("edit") && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && customerUserRule.depage == null;
         }
     }, {
         name: "项目",
@@ -318,7 +327,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && customerUserRule.depage == null;
+            return btnVisible("item") && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && customerUserRule.depage == null;
         }
     }, {
         name: "失效",
@@ -340,7 +349,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && customerUserRule.depage == null;
+            return btnVisible("disable") && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && customerUserRule.depage == null;
         }
     }, {
         name: "开始接单",
@@ -381,7 +390,7 @@ $(function() {
         },
         show: function(v) {
 
-            return (v.status == 1 || v.status == 2 || v.status == 3 || v.status == 5);
+            return btnVisible("start") && (v.status == 1 || v.status == 2 || v.status == 3 || v.status == 5);
         }
     }, {
         name: "停止接单",
@@ -418,7 +427,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT;
+            return btnVisible("stop") && v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT;
         }
     }, {
         name: "状态",
