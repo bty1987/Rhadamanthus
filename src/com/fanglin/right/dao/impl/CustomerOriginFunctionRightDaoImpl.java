@@ -18,16 +18,16 @@ public class CustomerOriginFunctionRightDaoImpl extends DaoImpl<CustomerOriginFu
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CustomerOriginFunctionRightPO> queryCustomerOriginFunctionRight(String name) {
-		return session().createCriteria(CustomerOriginFunctionRightPO.class).add(Restrictions.eq("name", name)).list();
+	public List<CustomerOriginFunctionRightPO> queryCustomerOriginFunctionRight(String name, Integer company) {
+		return session().createCriteria(CustomerOriginFunctionRightPO.class).add(Restrictions.eq("name", name)).add(Restrictions.eq("company", company)).list();
 	}
 
 	@Override
-	public int deleteCustomerOriginFunctionRightByName(String name) {
-		
-		String sql = "delete from platform.customerOriginfunctionright where name = :name";
-		session().createSQLQuery(sql).setString("name", name).executeUpdate();
-		
+	public int deleteCustomerOriginFunctionRightByName(String name, Integer company) {
+
+		String sql = "delete from platform.customerOriginfunctionright where name = :name and company = :company";
+		session().createSQLQuery(sql).setString("name", name).setInteger("company", company).executeUpdate();
+
 		return 0;
 	}
 	

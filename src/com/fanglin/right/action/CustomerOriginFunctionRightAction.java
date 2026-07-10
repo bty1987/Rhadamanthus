@@ -33,7 +33,7 @@ public class CustomerOriginFunctionRightAction extends BaseListAction {
 	@Action(value="queryCustomerOriginFunctionRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryCustomerOriginFunctionRight() throws FLException{
 		
-		customerOriginFunctionRights = customerOriginFunctionRightService.queryCustomerOriginFunctionRight(customerOriginFunctionRight);
+		customerOriginFunctionRights = customerOriginFunctionRightService.queryCustomerOriginFunctionRight(customerOriginFunctionRight, queryCompany());
 		
 		return SUCCESS;
 	}

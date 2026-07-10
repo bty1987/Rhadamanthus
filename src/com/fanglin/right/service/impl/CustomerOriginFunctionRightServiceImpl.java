@@ -28,9 +28,9 @@ public class CustomerOriginFunctionRightServiceImpl implements CustomerOriginFun
 	private CustomerOriginFunctionDao customerOriginFunctionDao;
 	
 	@Override
-	public List<CustomerOriginFunctionRightVO> queryCustomerOriginFunctionRight(CustomerOriginFunctionRightVO customerOriginFunctionRightVO) {
-		
-		List<CustomerOriginFunctionRightPO> customerOriginFunctionRightPOs = customerOriginFunctionRightDao.queryCustomerOriginFunctionRight(customerOriginFunctionRightVO.getName());
+	public List<CustomerOriginFunctionRightVO> queryCustomerOriginFunctionRight(CustomerOriginFunctionRightVO customerOriginFunctionRightVO, int company) {
+
+		List<CustomerOriginFunctionRightPO> customerOriginFunctionRightPOs = customerOriginFunctionRightDao.queryCustomerOriginFunctionRight(customerOriginFunctionRightVO.getName(), company);
 		List<CustomerOriginFunctionRightVO> customerOriginFunctionRightVOs = new ArrayList<CustomerOriginFunctionRightVO>();
 		
 		for(CustomerOriginFunctionRightPO customerOriginFunctionRightPO : customerOriginFunctionRightPOs){
@@ -51,7 +51,7 @@ public class CustomerOriginFunctionRightServiceImpl implements CustomerOriginFun
 	@Transactional(rollbackFor = Exception.class)
 	public void updateCustomerOriginFunctionRight(CustomerOriginFunctionRightVO customerOriginFunctionRightVO, List<Long> cfids, int company) {
 		
-		customerOriginFunctionRightDao.deleteCustomerOriginFunctionRightByName(customerOriginFunctionRightVO.getName());
+		customerOriginFunctionRightDao.deleteCustomerOriginFunctionRightByName(customerOriginFunctionRightVO.getName(), company);
 		
 		for (Long cfid : cfids) {
 			CustomerOriginFunctionRightPO customerOriginFunctionRightPO = new CustomerOriginFunctionRightPO();
