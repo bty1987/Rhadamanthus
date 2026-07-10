@@ -4,6 +4,11 @@ jQuery(function($) {
 
         dbid: null,
 
+        isMember: {
+            datas: [{key: 0, value: "通用"}, {key: 1, value: "会员"}],
+            keys: {"0": "通用", "1": "会员"}
+        },
+
         btns: {
             addDecorationBusitypeBtn: com.focusPage("#addDecorationBusitypeBtn").on("click", saveData)
         },
@@ -18,6 +23,7 @@ jQuery(function($) {
             outside: com.focusPage("#outside", "#decorationBusitypeModal"),
             isRefer: com.focusPage("#isRefer", "#decorationBusitypeModal"),
             isAward: com.focusPage("#isAward", "#decorationBusitypeModal"),
+            isMember: com.focusPage("#isMember", "#decorationBusitypeModal"),
             type: com.focusPage("#type", "#decorationBusitypeModal"),
             notSalesmanRate: com.focusPage("#notSalesmanRate", "#decorationBusitypeModal"),
         },
@@ -27,12 +33,13 @@ jQuery(function($) {
     decorationBusitype.items.outside.bindData(constant.data().decorationBusitype.outside.datas, "key", "value");
     decorationBusitype.items.isRefer.bindData(constant.data().decorationBusitype.isRefer.datas, "key", "value");
     decorationBusitype.items.isAward.bindData(constant.data().decorationBusitype.isAward.datas, "key", "value");
+    decorationBusitype.items.isMember.bindData(decorationBusitype.isMember.datas, "key", "value");
     decorationBusitype.items.type.bindData(constant.data().decorationBusitype.type.datas, "key", "value");
 
     var seacher = new Searcher();
 
     seacher.base("condList", "pagenation", "resultList", api.data.pageDecorationBusitype);
-    seacher.condition(["data-decoration-busitype-name", "data-decoration-busitype-alias", "data-decoration-busitype-status", "data-decoration-busitype-outside", "data-decoration-busitype-isRefer", "data-decoration-busitype-isAward", "data-decoration-busitype-type"]);
+    seacher.condition(["data-decoration-busitype-name", "data-decoration-busitype-alias", "data-decoration-busitype-status", "data-decoration-busitype-outside", "data-decoration-busitype-isRefer", "data-decoration-busitype-isAward", "data-decoration-busitype-isMember", "data-decoration-busitype-type"]);
     seacher.button([{
         id: "addDecorationBusitype",
         name: "添加",
@@ -66,6 +73,12 @@ jQuery(function($) {
         clazz: "red",
         dataset: constant.data().decorationBusitype.isAward.keys
     }, {
+        field: "isMember",
+        name: "会员标识",
+        prop: "isMember",
+        clazz: "red",
+        dataset: decorationBusitype.isMember.keys
+    }, {
         field: "type",
         name: "类型",
         prop: "type",
@@ -96,6 +109,7 @@ jQuery(function($) {
             decorationBusitype.items.outside.val(v.outside);
             decorationBusitype.items.isRefer.val(v.isRefer);
             decorationBusitype.items.isAward.val(v.isAward);
+            decorationBusitype.items.isMember.val(v.isMember);
             decorationBusitype.items.type.val(v.type);
             decorationBusitype.items.notSalesmanRate.val(v.notSalesmanRate);
 
@@ -131,6 +145,13 @@ jQuery(function($) {
         decorationBusitype.dbid = null;
 
         decorationBusitype.items.name.val(null);
+        decorationBusitype.items.alias.val(null);
+        decorationBusitype.items.outside.val(0);
+        decorationBusitype.items.isRefer.val(0);
+        decorationBusitype.items.isAward.val(0);
+        decorationBusitype.items.isMember.val(0);
+        decorationBusitype.items.type.val(0);
+        decorationBusitype.items.notSalesmanRate.val(0);
         decorationBusitype.modals.decorationBusitypeModal.modal("show");
     });
 
@@ -146,6 +167,7 @@ jQuery(function($) {
             "decorationBusitype.outside": decorationBusitype.items.outside.val(),
             "decorationBusitype.isRefer": decorationBusitype.items.isRefer.val(),
             "decorationBusitype.isAward": decorationBusitype.items.isAward.val(),
+            "decorationBusitype.isMember": decorationBusitype.items.isMember.val(),
             "decorationBusitype.type": decorationBusitype.items.type.val(),
             "decorationBusitype.notSalesmanRate": decorationBusitype.items.notSalesmanRate.val(),
         };

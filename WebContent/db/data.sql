@@ -92,6 +92,7 @@ DROP TABLE IF EXISTS `decorationbusitype`;
 CREATE TABLE `decorationbusitype` (
   `dbid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(36) NOT NULL COMMENT '名称',
+  `isMember` tinyint(1) NOT NULL DEFAULT '0' COMMENT '会员标识 0: 通用 , 1: 会员',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态,0启用,1禁用',
   `company` int(11) NOT NULL COMMENT '公司',
   PRIMARY KEY (`dbid`)
