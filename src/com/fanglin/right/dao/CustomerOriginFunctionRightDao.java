@@ -6,9 +6,9 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.right.po.CustomerOriginFunctionRightPO;
 
 public interface CustomerOriginFunctionRightDao extends Dao<CustomerOriginFunctionRightPO> {
-	
-	public List<CustomerOriginFunctionRightPO> queryCustomerOriginFunctionRight(String name);
 
-	public int deleteCustomerOriginFunctionRightByName(String name);
+	public List<CustomerOriginFunctionRightPO> queryCustomerOriginFunctionRight(String name, Integer company);
+
+	public int deleteCustomerOriginFunctionRightByName(String name, Integer company);
 
 }

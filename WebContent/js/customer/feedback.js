@@ -31,81 +31,119 @@ $(function() {
 
     });
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("feedback");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
     var lineprops = (function() {
 
-        return [{
-            type: "img",
-            prop: "picture"
-        }, {
-            field: "orderId",
-            name: "装修单号",
-            prop: "orderId",
-            clazz: "blue",
-            click: function(v, $b) {
+        var propertyMap = {
+            "picture": {
+                type: "img",
+                prop: "picture"
+            },
+            "orderId": {
+                field: "orderId",
+                name: "装修单号",
+                prop: "orderId",
+                clazz: "blue",
+                click: function(v, $b) {
 
-                tools.decoration.info($b, v.orderId);
+                    tools.decoration.info($b, v.orderId);
+                }
+            },
+            "createTime": {
+                field: "createTime",
+                name: "创建时间",
+                prop: "createTime",
+                clazz: "green"
+            },
+            "phone": {
+                field: "phone",
+                name: "电话",
+                prop: "phone",
+                clazz: "grey"
+            },
+            "type": {
+                field: "type",
+                name: "类型",
+                prop: function(v) { return constant.customer().feedback.status.keys[v.type]; },
+                clazz: "red"
+            },
+            "company": {
+                field: "company",
+                name: "公司",
+                prop: "company",
+                clazz: "grey"
+            },
+            "content": {
+                field: "content",
+                name: "说明",
+                prop: "content",
+                clazz: "grey"
+            },
+            "receiver": {
+                field: "receiver.userName",
+                name: "接收人",
+                prop: "receiver.userName",
+                clazz: "grey"
+            },
+            "receiveTime": {
+                field: "receiveTime",
+                name: "接收时间",
+                prop: "receiveTime",
+                clazz: "grey"
+            },
+            "handler": {
+                field: "handler.userName",
+                name: "处理人",
+                prop: "handler.userName",
+                clazz: "grey"
+            },
+            "handleTime": {
+                field: "handleTime",
+                name: "处理时间",
+                prop: "handleTime",
+                clazz: "grey"
+            },
+            "finisher": {
+                field: "finisher.userName",
+                name: "完成人",
+                prop: "finisher.userName",
+                clazz: "grey"
+            },
+            "finishTime": {
+                field: "finishTime",
+                name: "完成时间",
+                prop: "finishTime",
+                clazz: "grey"
+            },
+            "status": {
+                field: "status",
+                name: "状态",
+                prop: function(v) { return constant.customer().feedback.feedbackStatus.keys[v.status]; },
+                clazz: "grey"
             }
-        }, {
-            field: "createTime",
-            name: "创建时间",
-            prop: "createTime",
-            clazz: "green"
-        }, {
-            field: "phone",
-            name: "电话",
-            prop: "phone",
-            clazz: "grey"
-        }, {
-            field: "type",
-            name: "类型",
-            prop: function(v) { return constant.customer().feedback.status.keys[v.type]; },
-            clazz: "red"
-        }, {
-            field: "company",
-            name: "公司",
-            prop: "company",
-            clazz: "grey"
-        }, {
-            field: "content",
-            name: "说明",
-            prop: "content",
-            clazz: "grey"
-        }, {
-            field: "receiver.userName",
-            name: "接收人",
-            prop: "receiver.userName",
-            clazz: "grey"
-        }, {
-            field: "receiveTime",
-            name: "接收时间",
-            prop: "receiveTime",
-            clazz: "grey"
-        }, {
-            field: "handler.userName",
-            name: "处理人",
-            prop: "handler.userName",
-            clazz: "grey"
-        }, {
-            field: "handleTime",
-            name: "处理时间",
-            prop: "handleTime",
-            clazz: "grey"
-        }, {
-            field: "finisher.userName",
-            name: "完成人",
-            prop: "finisher.userName",
-            clazz: "grey"
-        }, {
-            field: "finishTime",
-            name: "完成时间",
-            prop: "finishTime",
-            clazz: "grey"
-        }, {
-            field: "status",
-            name: "状态",
-            prop: function(v) { return constant.customer().feedback.feedbackStatus.keys[v.status]; },
-            clazz: "grey"
-        }];
+        };
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
     })();
 
     var linebtns = (function() {
@@ -117,7 +155,8 @@ $(function() {
                 handle: function(v) {
 
                     manageDrawing(v.fid);
-                }
+                },
+                show: function() { return btnVisible("drawing"); }
             },
             record: {
                 name: "记录",
@@ -127,7 +166,8 @@ $(function() {
                     params.customer.vid = v.fid;
 
                     com.popup4page("#feedBackRecordPopUp", api.index.feedRecord.url, "记录");
-                }
+                },
+                show: function() { return btnVisible("record"); }
             },
             receive: {
                 name: "接收",
@@ -135,7 +175,8 @@ $(function() {
                 handle: function(v) {
 
                     balanceOrder(v.fid);
-                }
+                },
+                show: function() { return btnVisible("receive"); }
             },
             done: {
                 name: "完成",
@@ -143,7 +184,8 @@ $(function() {
                 handle: function(v) {
 
                     finishFeedback(v.fid);
-                }
+                },
+                show: function() { return btnVisible("done"); }
             },
             complaint: {
                 name: "投诉",
@@ -155,7 +197,8 @@ $(function() {
                     params.historyPage = "/views/customer/feedback.html";
 
                     com.switchPage(api.index.feedComplaint.url);
-                }
+                },
+                show: function() { return btnVisible("complaint"); }
             },
             guarantee: {
                 name: "维修",
@@ -168,7 +211,8 @@ $(function() {
                     params.historyPage = "/views/customer/feedback.html";
 
                     com.switchPage(api.index.feedbackGuarantee.url);
-                }
+                },
+                show: function() { return btnVisible("guarantee"); }
             },
             backVisit: {
                 name: "回访",
@@ -181,7 +225,8 @@ $(function() {
                     params.historyPage = "/views/customer/feedback.html";
 
                     com.switchPage("/views/customer/feedbackBackVisit.html");
-                }
+                },
+                show: function() { return btnVisible("backVisit"); }
             }
         };
     })();
@@ -197,7 +242,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.customer.pageFeedback, null, ['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type', 'customer-feedback-company', 'customer-feedback-status', 'customer-feedback-handler', 'customer-feedback-receiver', 'customer-feedback-handleTime', 'customer-feedback-receiveTime'], "groupUserPostData", null, false, buttons);
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageFeedback, null, pageConfig.condArr.length > 0 ? pageConfig.condArr : ['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type', 'customer-feedback-company', 'customer-feedback-status', 'customer-feedback-handler', 'customer-feedback-receiver', 'customer-feedback-handleTime', 'customer-feedback-receiveTime'], "groupUserPostData", null, false, buttons);
     searcher.line(function(v) { return v.type == constant.customer.feedback.STATUS_FEEDBACK_INT ? "反馈" : v.type == constant.customer.feedback.STATUS_COMPLAINT_INT ? "投诉" : "维修"; }, lineprops, linebtns).render();
 
     com.focusPage('#addFeedback', '#pagenation').click(function() {

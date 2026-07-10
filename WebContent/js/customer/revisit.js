@@ -31,49 +31,75 @@ $(function () {
     revisits.items.type.bindData(constant.customer().revisit.type.datas,"key","value");
     revisits.items.gladness.bindData(constant.customer().revisit.status.datas,"key","value");
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("revisit");
+
     var lineprops = (function() {
 
-        return [{
-            field: "rid",
-            name: "回访id",
-            prop: "rid",
-            clazz: "grey"
-        }, {
-            field: "decoration.orderId",
-            name: "装修单号",
-            prop: "decoration.orderId",
-            clazz: "grey"
-        }, {
-            field: "type",
-            name: "类型",
-            prop: function(v) { return constant.customer().revisit.type.keys[v.type]; },
-            clazz: "red"
-        }, {
-            field: "ident",
-            name: "引用id",
-            prop: "ident",
-            clazz: "grey"
-        }, {
-            field: "creater.currentName",
-            name: "操作人",
-            prop: "creater.currentName",
-            clazz: "grey"
-        }, {
-            field: "createTime",
-            name: "创建时间",
-            prop: "createTime",
-            clazz: "grey"
-        }, {
-            field: "gladness",
-            name: "满意度",
-            prop: function(v) { return constant.customer().revisit.status.keys[v.gladness]; },
-            clazz: "red"
-        }, {
-            field: "content",
-            name: "内容",
-            prop: "content",
-            clazz: "grey"
-        }];
+        var propertyMap = {
+            "rid": {
+                field: "rid",
+                name: "回访id",
+                prop: "rid",
+                clazz: "grey"
+            },
+            "orderId": {
+                field: "decoration.orderId",
+                name: "装修单号",
+                prop: "decoration.orderId",
+                clazz: "grey"
+            },
+            "type": {
+                field: "type",
+                name: "类型",
+                prop: function(v) { return constant.customer().revisit.type.keys[v.type]; },
+                clazz: "red"
+            },
+            "ident": {
+                field: "ident",
+                name: "引用id",
+                prop: "ident",
+                clazz: "grey"
+            },
+            "creater": {
+                field: "creater.currentName",
+                name: "操作人",
+                prop: "creater.currentName",
+                clazz: "grey"
+            },
+            "createTime": {
+                field: "createTime",
+                name: "创建时间",
+                prop: "createTime",
+                clazz: "grey"
+            },
+            "gladness": {
+                field: "gladness",
+                name: "满意度",
+                prop: function(v) { return constant.customer().revisit.status.keys[v.gladness]; },
+                clazz: "red"
+            },
+            "content": {
+                field: "content",
+                name: "内容",
+                prop: "content",
+                clazz: "grey"
+            }
+        };
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
     })();
 
     var buttons = (function() {
@@ -87,7 +113,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.customer.pageRevisit, null, ["customer-service-orderId", "customer-service-revisit-type"], "revisitPostData", null, false, buttons);
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageRevisit, null, pageConfig.condArr.length > 0 ? pageConfig.condArr : ["customer-service-orderId", "customer-service-revisit-type"], "revisitPostData", null, false, buttons);
     searcher.line("decoration.orderId", lineprops, {}).render();
     
     com.focusPage("#visitRevisit").click(function() {
