@@ -5,6 +5,9 @@
 RENAME TABLE `customer`.`customeroriginfunction` TO `customer`.`customerfunction`;
 RENAME TABLE `platform`.`customeroriginfunctionright` TO `platform`.`customerfunctionright`;
 
+create table `customer`.`customerfunction` like `customer`.`customeroriginfunction`;
+create table `platform`.`customerfunctionright` like `platform`.`customeroriginfunctionright`;
+
 -- ======================================================================
 -- customerFunction 扩展: 为 vustomer / feedback / revisit 三个客户模块
 -- 列表页新增可配置种子数据

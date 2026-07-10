@@ -47,13 +47,6 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 	@Autowired
 	private DecorationPictureDao decorationPictureDao;
 
-	private void checkCadPicture(String orderId) throws FLException {
-
-		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
-			throw new FLException(110017, "工程文件CAD不能为空");
-		}
-	}
-
 	@Override
 	public void pageQuotationAssignRequest(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
@@ -126,7 +119,9 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 			throw new FLException(0, "公司信息不能为空");
 		}
 
-		checkCadPicture(quotationAssignRequestVO.getOrderId());
+		if (decorationPictureDao.countDecorationPictureForValid(quotationAssignRequestVO.getOrderId(), DecorationPicturePO.TYPE_CAD_INT) == 0) {
+			throw new FLException(110017, "工程文件CAD不能为空");
+		}
 
 		// 从 VO 的关联对象中提取 ID
 		int company = CompanyServiceImpl.decode(quotationAssignRequestVO.getCompany().getCid());

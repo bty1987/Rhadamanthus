@@ -282,6 +282,16 @@ public class QuotationServiceImpl implements QuotationService {
 			presignPO = presignProduceDao.get(protationPO.getPpid());
 		}
 
+		SystemConfigPO keeprice = systemConfigDao.querySystemConfig("PROTATION_KEEPRICE_DAYS_INT", company);
+
+		if (protationPO != null && protationPO.getVersion() != null && DateUtil.diffDay(decorationPO.getPrecontractTime(), DateUtil.getDateToTimestamp(new Date())) <= (keeprice == null ? 365 : Integer.parseInt(keeprice.value("365")))) {
+			versionPO = protationPO.getVersion();
+		}
+
+		if (presignPO != null && protationPO.getVersion() != null && DateUtil.diffDay(decorationPO.getPrecontractTime(), DateUtil.getDateToTimestamp(new Date())) > (keeprice == null ? 365 : Integer.parseInt(keeprice.value("365")))) {
+			versionPO = presignPO.getVersion();
+		}
+
 		if (versionPO == null) {
 			throw new FLException(200022, "报价版本不存在");
 		}

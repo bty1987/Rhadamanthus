@@ -94,34 +94,6 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	private QuotationService quotationService;
 
 	/**
-	 * 安全获取报价员ID
-	 */
-	private String getQuoteterUid(DecorationPO decoration) {
-		return decoration.getQuoter() != null ? decoration.getQuoter().getUserId() : null;
-	}
-
-	/**
-	 * 安全获取设计部门ID
-	 */
-	private Integer getDesignDeptId(DecorationPO decoration) {
-		return decoration.getDesignDept() != null ? decoration.getDesignDept().getDid() : null;
-	}
-
-	/**
-	 * 获取分配请求人，默认使用装修单设计师。
-	 */
-	private UserPO getRequestUser(DecorationPO decoration) {
-		return decoration.getDesigner();
-	}
-
-	private void checkCadPicture(String orderId) throws FLException {
-
-		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
-			throw new FLException(110017, "工程文件CAD不能为空");
-		}
-	}
-
-	/**
 	 * 检查预算员在指定公司下是否有匹配的规则明细
 	 * 
 	 * @param userRule 预算员规则
@@ -158,7 +130,9 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(-1, "装修单不存在");
 		}
 
-		checkCadPicture(orderId);
+		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
+			throw new FLException(110017, "工程文件CAD不能为空");
+		}
 
 		// 2. 检查是否已分配报价员
 		String quoterUid = getQuoteterUid(decoration);
@@ -236,7 +210,9 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(-1, "装修单不存在");
 		}
 
-		checkCadPicture(orderId);
+		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
+			throw new FLException(110017, "工程文件CAD不能为空");
+		}
 
 		// 2. 查询预算员规则（新模型：按 userId 查询唯一规则）
 		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(quotationAssignVO.getQuoter().getUserId());
@@ -652,5 +628,26 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		triggerReverseAssign();
 
 		return 1;
+	}
+
+	/**
+	 * 安全获取报价员ID
+	 */
+	private String getQuoteterUid(DecorationPO decoration) {
+		return decoration.getQuoter() != null ? decoration.getQuoter().getUserId() : null;
+	}
+
+	/**
+	 * 安全获取设计部门ID
+	 */
+	private Integer getDesignDeptId(DecorationPO decoration) {
+		return decoration.getDesignDept() != null ? decoration.getDesignDept().getDid() : null;
+	}
+
+	/**
+	 * 获取分配请求人，默认使用装修单设计师。
+	 */
+	private UserPO getRequestUser(DecorationPO decoration) {
+		return decoration.getDesigner();
 	}
 }

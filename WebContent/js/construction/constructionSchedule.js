@@ -64,7 +64,7 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", pageConfig.apiPage || api.construction.pageConstructionSchedule);
-    searcher.condition(pageConfig.condArr.length > 0 ? pageConfig.condArr : ["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "construction-supervisor", "decoration-projectStatus", "construction-schedule-createTime", "construction-schedule-startTime", "construction-schedule-endTime", "construction-schedule-enterTime", "construction-schedule-leaveTime", "constructionSchedule-cid", "constructionSchedule-status", "constructionSchedule-planStatus", "constructionSchedule-additemStatus", "constructionSchedule-node-cnid"]);
+    searcher.condition(pageConfig.condArr.length > 0 ? pageConfig.condArr : ["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "construction-supervisor", "decoration-projectStatus", "construction-schedule-createTime", "construction-schedule-startTime", "construction-schedule-endTime", "construction-schedule-enterTime", "construction-schedule-leaveTime", "construction-schedule-cid", "construction-schedule-status", "construction-schedule-planStatus", "construction-schedule-additemStatus", "construction-schedule-node-cnid"]);
     searcher.history("constructionSchedulePostData");
 
     // 字段定义映射: key 对应配置 propertyArr 中的 value
