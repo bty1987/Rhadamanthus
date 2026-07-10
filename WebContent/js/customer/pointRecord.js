@@ -5,7 +5,7 @@ jQuery(function($) {
     };
 
     // 获取页面控制参数(按公司差异化配置)
-    var pageConfig = customerOriginPage.getConfig("pointRecord");
+    var pageConfig = customerPage.getConfig("pointRecord");
 
     var searcher = new Searcher();
 

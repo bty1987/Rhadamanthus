@@ -2,7 +2,7 @@ package com.fanglin.customer.vo;
 
 import java.io.Serializable;
 
-public class CustomerOriginFunctionVO implements Serializable {
+public class CustomerFunctionVO implements Serializable {
 
 	private static final long serialVersionUID = 2527558478141212348L;
 

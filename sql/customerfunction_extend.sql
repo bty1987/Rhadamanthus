@@ -1,8 +1,15 @@
 -- ======================================================================
--- customerOriginFunction 扩展: 为 vustomer / feedback / revisit 三个客户模块
+-- 表重命名: customerOriginFunction → customerFunction (生产库迁移)
+-- 上线时需先执行此段, 把已有表名改为新名称(保留全部数据)
+-- ======================================================================
+RENAME TABLE `customer`.`customeroriginfunction` TO `customer`.`customerfunction`;
+RENAME TABLE `platform`.`customeroriginfunctionright` TO `platform`.`customerfunctionright`;
+
+-- ======================================================================
+-- customerFunction 扩展: 为 vustomer / feedback / revisit 三个客户模块
 -- 列表页新增可配置种子数据
 --
--- 复用现有 customerOriginFunction / customerOriginFunctionRight 结构
+-- 复用现有 customerFunction / customerFunctionRight 结构
 -- name 列: 页面标识(对应前端 getConfig 传入的页面名)
 -- key  列: 配置类型(apiPage / condArr / propertyArr / pageBtn)
 -- value列: 配置值(api 路径 / 条件键 / 字段键 / 按钮键)
@@ -11,7 +18,7 @@
 -- ======================================================================
 
 -- -------------------- vustomer (客户管理) --------------------
-INSERT INTO `customer`.`customeroriginfunction` (`name`,`key`,`value`,`type`,`subtype`,`status`,`sort`,`comment`) VALUES
+INSERT INTO `customer`.`customerfunction` (`name`,`key`,`value`,`type`,`subtype`,`status`,`sort`,`comment`) VALUES
 ('vustomer','vustomer','vustomer',0,0,0,7,'客户管理页面'),
 ('vustomer','apiPage','api.customer.pageVustomer',1,0,0,1,'客户管理分页接口'),
 ('vustomer','condArr','customer-v-name',2,1,0,1,'客户名称'),
@@ -28,7 +35,7 @@ INSERT INTO `customer`.`customeroriginfunction` (`name`,`key`,`value`,`type`,`su
 ('vustomer','pageBtn','release',4,1,0,2,'释放');
 
 -- -------------------- feedback (反馈/投诉/维修) --------------------
-INSERT INTO `customer`.`customeroriginfunction` (`name`,`key`,`value`,`type`,`subtype`,`status`,`sort`,`comment`) VALUES
+INSERT INTO `customer`.`customerfunction` (`name`,`key`,`value`,`type`,`subtype`,`status`,`sort`,`comment`) VALUES
 ('feedback','feedback','feedback',0,0,0,8,'反馈管理页面'),
 ('feedback','apiPage','api.customer.pageFeedback',1,0,0,1,'反馈分页接口'),
 ('feedback','condArr','customer-feedback-orderId',2,1,0,1,'装修单号'),
@@ -61,7 +68,7 @@ INSERT INTO `customer`.`customeroriginfunction` (`name`,`key`,`value`,`type`,`su
 ('feedback','pageBtn','backVisit',4,1,0,7,'回访');
 
 -- -------------------- revisit (回访) --------------------
-INSERT INTO `customer`.`customeroriginfunction` (`name`,`key`,`value`,`type`,`subtype`,`status`,`sort`,`comment`) VALUES
+INSERT INTO `customer`.`customerfunction` (`name`,`key`,`value`,`type`,`subtype`,`status`,`sort`,`comment`) VALUES
 ('revisit','revisit','revisit',0,0,0,9,'回访管理页面'),
 ('revisit','apiPage','api.customer.pageRevisit',1,0,0,1,'回访分页接口'),
 ('revisit','condArr','customer-service-orderId',2,1,0,1,'装修单号'),
@@ -84,24 +91,24 @@ INSERT INTO `customer`.`customeroriginfunction` (`name`,`key`,`value`,`type`,`su
 -- 此处将 company=30 的 (name, cfid) 组合复制到所有公司, 确保上线后每家公司配置不变。
 -- 跳过已有 company=30 的记录, 避免重复。
 -- ======================================================================
-INSERT INTO `platform`.`customeroriginfunctionright` (`name`, `cfid`, `company`)
+INSERT INTO `platform`.`customerfunctionright` (`name`, `cfid`, `company`)
 SELECT s.name, s.cfid, co.cid
-FROM `platform`.`customeroriginfunctionright` s
+FROM `platform`.`customerfunctionright` s
 JOIN `communion`.`company` co ON co.cid != 30
 WHERE s.company = 30
   AND NOT EXISTS (
-    SELECT 1 FROM `platform`.`customeroriginfunctionright` t
+    SELECT 1 FROM `platform`.`customerfunctionright` t
     WHERE t.name = s.name AND t.cfid = s.cfid AND t.company = co.cid
   );
 
 -- -------------------- 二、新增 3 个页面(vustomer/feedback/revisit): 为所有公司初始化
 -- ======================================================================
-INSERT INTO `platform`.`customeroriginfunctionright` (`name`, `cfid`, `company`)
+INSERT INTO `platform`.`customerfunctionright` (`name`, `cfid`, `company`)
 SELECT f.name, f.cfid, co.cid
-FROM `customer`.`customeroriginfunction` f
+FROM `customer`.`customerfunction` f
 JOIN `communion`.`company` co
 WHERE f.name IN ('vustomer', 'feedback', 'revisit') AND f.`type` != 0
   AND NOT EXISTS (
-    SELECT 1 FROM `platform`.`customeroriginfunctionright` t
+    SELECT 1 FROM `platform`.`customerfunctionright` t
     WHERE t.name = f.name AND t.cfid = f.cfid AND t.company = co.cid
   );

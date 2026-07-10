@@ -11,11 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.customer.po.CustomerOriginFunctionPO;
+import com.fanglin.customer.po.CustomerFunctionPO;
 
 @Entity
-@Table(name = "customeroriginfunctionright", catalog = "platform")
-public class CustomerOriginFunctionRightPO implements Serializable {
+@Table(name = "customerfunctionright", catalog = "platform")
+public class CustomerFunctionRightPO implements Serializable {
 
 	private static final long serialVersionUID = 1649622284592882932L;
 
@@ -23,17 +23,17 @@ public class CustomerOriginFunctionRightPO implements Serializable {
 
 	private String name;
 
-	private CustomerOriginFunctionPO customerOriginFunction;
+	private CustomerFunctionPO customerFunction;
 
 	private int company;
 
-	public CustomerOriginFunctionRightPO() {
+	public CustomerFunctionRightPO() {
 		super();
 	}
 
-	public CustomerOriginFunctionRightPO(CustomerOriginFunctionPO customerOriginFunction) {
+	public CustomerFunctionRightPO(CustomerFunctionPO customerFunction) {
 		super();
-		this.customerOriginFunction = customerOriginFunction;
+		this.customerFunction = customerFunction;
 	}
 
 	@Id
@@ -58,13 +58,13 @@ public class CustomerOriginFunctionRightPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cfid", referencedColumnName = "cfid")
-	public CustomerOriginFunctionPO getCustomerOriginFunction() {
-		return customerOriginFunction;
+	public CustomerFunctionPO getCustomerFunction() {
+		return customerFunction;
 	}
 
-	public void setCustomerOriginFunction(
-			CustomerOriginFunctionPO customerOriginFunction) {
-		this.customerOriginFunction = customerOriginFunction;
+	public void setCustomerFunction(
+			CustomerFunctionPO customerFunction) {
+		this.customerFunction = customerFunction;
 	}
 
 	@Column(name = "company")

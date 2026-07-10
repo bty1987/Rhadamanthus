@@ -7,7 +7,7 @@ $(function() {
     };
 
     // 获取页面控制参数(按公司差异化配置)
-    var pageConfig = customerOriginPage.getConfig("customerSourceRecord");
+    var pageConfig = customerPage.getConfig("customerSourceRecord");
 
     var searcher = new Searcher();
 

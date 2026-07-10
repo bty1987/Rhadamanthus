@@ -34,8 +34,8 @@ CREATE TABLE `chainpage` (
   PRIMARY KEY (`cpid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact;
 
-DROP TABLE IF EXISTS `customeroriginfunctionright`;
-CREATE TABLE `customeroriginfunctionright` (
+DROP TABLE IF EXISTS `customerfunctionright`;
+CREATE TABLE `customerfunctionright` (
   `cfrid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NULL,
   `cfid` int(11) NULL,
@@ -113,7 +113,7 @@ DROP TABLE IF EXISTS `decorationstatusright`;
 CREATE TABLE `decorationstatusright` (
   `dosrId` int(20) NOT NULL AUTO_INCREMENT,
   `uId` int(11) NOT NULL,
-  `status` tinyint(2) NULL DEFAULT 0 COMMENT '-1全部,0初始,1定金,2已签约,3重签合同,4废单,5合
+  `status` tinyint(2) NULL DEFAULT 0 COMMENT '-1全部,0初始,1定金,2已签约,3重签合同,4废单,5合
 同终止,6就算,7已完工',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`dosrId`),

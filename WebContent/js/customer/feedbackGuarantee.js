@@ -308,7 +308,7 @@ $(function() {
     var searcher = new Searcher();
 
     // 获取页面控制参数(按公司差异化配置)
-    var pageConfig = customerOriginPage.getConfig("feedbackGuarantee");
+    var pageConfig = customerPage.getConfig("feedbackGuarantee");
 
     // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
     function btnVisible(key) {

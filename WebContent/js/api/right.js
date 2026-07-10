@@ -109,11 +109,11 @@ $.extend(api, {
             url: "updateConstructionFunctionRight.do"
         },
 
-        queryCustomerOriginFunctionRight: {
-            url: "queryCustomerOriginFunctionRight.do"
+        queryCustomerFunctionRight: {
+            url: "queryCustomerFunctionRight.do"
         },
-        updateCustomerOriginFunctionRight: {
-            url: "updateCustomerOriginFunctionRight.do"
+        updateCustomerFunctionRight: {
+            url: "updateCustomerFunctionRight.do"
         },
 
         querySalesDeliveryStatusRight: {

@@ -1,6 +1,6 @@
-var customerOriginPage = {};
+var customerPage = {};
 $(function () {
-    customerOriginPage = {
+    customerPage = {
         // 依据页面名(及当前公司)返回前端页面配置对象
         // 与 customerOrigine.js 内联 getConfig 逻辑一致, 抽出供客源/客户模块各页面复用
         // 返回: { apiPage, pageBtn[], condArr[], propertyArr[], postDataName, extraParam[] }
@@ -46,18 +46,18 @@ $(function () {
                 return "";
             }
 
-            com.post(api.right.queryCustomerOriginFunctionRight, {
-                "customerOriginFunctionRight.name": page
+            com.post(api.right.queryCustomerFunctionRight, {
+                "customerFunctionRight.name": page
             }, function (res) {
 
-                var rights = res.customerOriginFunctionRights.sort(function (a, b) {
+                var rights = res.customerFunctionRights.sort(function (a, b) {
 
-                    return a.customerOriginFunction.sort - b.customerOriginFunction.sort;
+                    return a.customerFunction.sort - b.customerFunction.sort;
                 });
 
                 $.each(rights, function (i, v) {
 
-                    var data = v.customerOriginFunction;
+                    var data = v.customerFunction;
 
                     if (data.type == 1)
                         data.value = getApi({

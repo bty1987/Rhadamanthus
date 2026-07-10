@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "customerOriginfunction", catalog = "customer")
-public class CustomerOriginFunctionPO implements Serializable {
+public class CustomerFunctionPO implements Serializable {
 
 	private static final long serialVersionUID = -6902241747925298925L;
 

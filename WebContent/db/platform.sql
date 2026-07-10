@@ -9,8 +9,8 @@ CREATE TABLE `approvalfunctionright` (
   PRIMARY KEY (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批-功能权限';
 
-DROP TABLE IF EXISTS `customeroriginfunctionright`;
-CREATE TABLE `customeroriginfunctionright` (
+DROP TABLE IF EXISTS `customerfunctionright`;
+CREATE TABLE `customerfunctionright` (
   `cfrid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL DEFAULT '',
   `cfid` int(11) NOT NULL,
