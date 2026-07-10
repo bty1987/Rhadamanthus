@@ -24,24 +24,51 @@ $(function(){
         com.clearValidator();
     });
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("crowd");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
     var lineprops = (function() {
 
-        return [{
-            field: "opengid",
-            name: "群编号",
-            prop: "opengid",
-            clazz: "grey"
-        }, {
-            field: "orderId",
-            name: "装修单号",
-            prop: "orderId",
-            clazz: "grey"
-        }, {
-            field: "content",
-            name: "说明",
-            prop: "content",
-            clazz: "grey"
-        }];
+        var propertyMap = {
+            "opengid": {
+                field: "opengid",
+                name: "群编号",
+                prop: "opengid",
+                clazz: "grey"
+            },
+            "orderId": {
+                field: "orderId",
+                name: "装修单号",
+                prop: "orderId",
+                clazz: "grey"
+            },
+            "content": {
+                field: "content",
+                name: "说明",
+                prop: "content",
+                clazz: "grey"
+            }
+        };
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
     })();
 
     var linebtns = (function() {
@@ -58,12 +85,13 @@ $(function(){
                     group.items.content.val(v.content);
 
                     group.modals.updateOrderModal.modal("show");
-                }
+                },
+                show: function() { return btnVisible("edit"); }
             },
             bind: {
                 name: "绑定",
                 clazz: "btn-success",
-                show: function(v) { return v.orderId == null; },
+                show: function(v) { return btnVisible("bind") && v.orderId == null; },
                 handle: function(v) {
 
                     group.gid = v.gid;
@@ -75,7 +103,7 @@ $(function(){
             addUser: {
                 name: "群成员",
                 clazz: "btn-success",
-                show: function(v) { return v.orderId != null; },
+                show: function(v) { return btnVisible("addUser") && v.orderId != null; },
                 handle: function(v) {
 
                     params.customer.orderId = v.orderId;
@@ -85,7 +113,7 @@ $(function(){
             unbind: {
                 name: "解绑",
                 clazz: "btn-warning",
-                show: function(v) { return v.orderId != null; },
+                show: function(v) { return btnVisible("unbind") && v.orderId != null; },
                 handle: function(v) {
 
                     bindGrop(v.gid);
@@ -95,7 +123,7 @@ $(function(){
     })();
 
     var searcher = new Searcher();
-    searcher.set("condList", "pagenation", "resultList", api.customer.pageGroup, null, ['customer-group-name', 'customer-group-orderId'], null, null, false, null);
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageGroup, null, pageConfig.condArr.length > 0 ? pageConfig.condArr : ['customer-group-name', 'customer-group-orderId'], null, null, false, null);
     searcher.line("name", lineprops, linebtns).render();
 
     function bindgroup (){

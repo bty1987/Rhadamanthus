@@ -27,24 +27,51 @@ jQuery(function ($) {
 
     com.initTypeahead('userSel', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0", "departmentType.name": ""}, "autoFillKeyValue", "key", "value", null);
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("crowdUser");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
     var lineprops = (function() {
 
-        return [{
-            field: "user.userId",
-            name: "编号",
-            prop: "user.userId",
-            clazz: "grey"
-        }, {
-            field: "user.duty.name",
-            name: "职位",
-            prop: "user.duty.name",
-            clazz: "grey"
-        }, {
-            field: "content",
-            name: "说明",
-            prop: "content",
-            clazz: "grey"
-        }];
+        var propertyMap = {
+            "userId": {
+                field: "user.userId",
+                name: "编号",
+                prop: "user.userId",
+                clazz: "grey"
+            },
+            "duty": {
+                field: "user.duty.name",
+                name: "职位",
+                prop: "user.duty.name",
+                clazz: "grey"
+            },
+            "content": {
+                field: "content",
+                name: "说明",
+                prop: "content",
+                clazz: "grey"
+            }
+        };
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
     })();
 
     var linebtns = (function() {
@@ -56,7 +83,8 @@ jQuery(function ($) {
                 handle: function(v) {
 
                     deleteGroupUser(v.duid);
-                }
+                },
+                show: function() { return btnVisible("del"); }
             }
         };
     })();
@@ -72,7 +100,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condListas", "pagenationas", "resultListas", api.decoration.queryDecorationUser, {"decorationUser.orderId": approve.gorderId}, [], "groupUserPostData", null, false, buttons);
+    searcher.set("condListas", "pagenationas", "resultListas", pageConfig.apiPage || api.decoration.queryDecorationUser, {"decorationUser.orderId": approve.gorderId}, pageConfig.condArr, "groupUserPostData", null, false, buttons);
     searcher.line("user.currentName", lineprops, linebtns).render();
 
     com.focusPage('#addGroupUser', '#pagenationas').click(function () {

@@ -43,8 +43,17 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", api.customer.pagePointAccount);
-    searcher.condition(["customer-v-name"]);
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = customerOriginPage.getConfig("pointAccount");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
+    searcher.base("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pagePointAccount);
+    searcher.condition(pageConfig.condArr.length > 0 ? pageConfig.condArr : ["customer-v-name"]);
 
     searcher.button([{
         name: "创建",
@@ -57,76 +66,107 @@ jQuery(function($) {
         }
     }]);
 
-    var lineprops = [{
-        field: "orderId",
-        name: "装修单号",
-        prop: "orderId",
-        clazz: "grey"
-    }, {
-        field: "customer.name",
-        name: "客户",
-        prop: "customer.name",
-        clazz: "grey",
-        click: function(btn, v) {
+    var propertyMap = {
+        "orderId": {
+            field: "orderId",
+            name: "装修单号",
+            prop: "orderId",
+            clazz: "grey"
+        },
+        "customer": {
+            field: "customer.name",
+            name: "客户",
+            prop: "customer.name",
+            clazz: "grey",
+            click: function(btn, v) {
 
-            tools.customer.info(btn, v.customer.cid);
+                tools.customer.info(btn, v.customer.cid);
+            }
+        },
+        "gender": {
+            field: "customer.gender",
+            name: "性别",
+            prop: "customer.gender",
+            clazz: "grey"
+        },
+        "identity": {
+            field: "customer.identity",
+            name: "身份证号",
+            prop: "customer.identity",
+            clazz: "grey"
+        },
+        "officer": {
+            field: "customer.officer",
+            name: "军官证",
+            prop: "customer.officer",
+            clazz: "grey"
+        },
+        "passport": {
+            field: "customer.passport",
+            name: "护照",
+            prop: "customer.passport",
+            clazz: "grey"
+        },
+        "relationshipType": {
+            field: "customer.relationshipType",
+            name: "客户关系",
+            prop: "customer.relationshipType",
+            clazz: "grey"
+        },
+        "email": {
+            field: "customer.email",
+            name: "邮箱",
+            prop: "customer.email",
+            clazz: "grey"
+        },
+        "qq": {
+            field: "customer.qq",
+            name: "QQ",
+            prop: "customer.qq",
+            clazz: "grey"
+        },
+        "wechat": {
+            field: "wechat",
+            name: "微信",
+            prop: "wechat",
+            clazz: "grey"
+        },
+        "decorationPoint": {
+            field: "decorationPoint",
+            name: "装修积分",
+            prop: "decorationPoint",
+            clazz: "grey"
+        },
+        "materialPoint": {
+            field: "materialPoint",
+            name: "主材积分",
+            prop: "materialPoint",
+            clazz: "grey"
+        },
+        "operatePoint": {
+            field: "operatePoint",
+            name: "运营积分",
+            prop: "operatePoint",
+            clazz: "grey"
         }
-    }, {
-        field: "customer.gender",
-        name: "性别",
-        prop: "customer.gender",
-        clazz: "grey"
-    }, {
-        field: "customer.identity",
-        name: "身份证号",
-        prop: "customer.identity",
-        clazz: "grey"
-    }, {
-        field: "customer.officer",
-        name: "军官证",
-        prop: "customer.officer",
-        clazz: "grey"
-    }, {
-        field: "customer.passport",
-        name: "护照",
-        prop: "customer.passport",
-        clazz: "grey"
-    }, {
-        field: "customer.relationshipType",
-        name: "客户关系",
-        prop: "customer.relationshipType",
-        clazz: "grey"
-    }, {
-        field: "customer.email",
-        name: "邮箱",
-        prop: "customer.email",
-        clazz: "grey"
-    }, {
-        field: "customer.qq",
-        name: "QQ",
-        prop: "customer.qq",
-        clazz: "grey"
-    }, {
-        field: "wechat",
-        name: "微信",
-        prop: "wechat",
-        clazz: "grey"
-    }, {
-        field: "decorationPoint",
-        name: "装修积分",
-        prop: "decorationPoint",
-        clazz: "grey"
-    }, {
-        field: "materialPoint",
-        name: "主材积分",
-        prop: "materialPoint",
-        clazz: "grey"
-    }, {
-        field: "operatePoint",
-        name: "运营积分",
-        prop: "operatePoint",
-        clazz: "grey"
-    }];
+    };
+
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
+    })();
 
     var linebtns = [{
         name: "操作积分",
@@ -136,7 +176,8 @@ jQuery(function($) {
             handlePointAccount(v);
 
             return false;
-        }
+        },
+        show: function() { return btnVisible("handle"); }
     }, {
         name: "积分记录",
         clazz: "btn-inverse",
@@ -147,7 +188,8 @@ jQuery(function($) {
             com.popup4page("#pointRecordPopUp", "/views/customer/pointRecord.html", "积分记录");
 
             return false;
-        }
+        },
+        show: function() { return btnVisible("record"); }
     }];
 
     searcher.line("customer.name", lineprops, linebtns).render();
