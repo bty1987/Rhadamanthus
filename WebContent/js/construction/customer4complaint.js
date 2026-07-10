@@ -65,44 +65,60 @@ jQuery(function($) {
         com.clearValidator();
     });
 
-    var lineprops = (function() {
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = constructionPage.getConfig("customer4complaint");
 
-        return [{
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "customerName": {
             field: "customerName",
             name: "客户名",
             prop: "customerName",
             clazz: "grey"
-        }, {
+        },
+        "createrName": {
             field: "createrName",
             name: "创建人",
             prop: "createrName",
             clazz: "grey"
-        }, {
+        },
+        "operaterName": {
             field: "operaterName",
             name: "操作人",
             prop: "operaterName",
             clazz: "grey"
-        }, {
+        },
+        "level": {
             field: "level",
             name: "等级",
             prop: function(v) { return constant.construction().customerServiceComplaint.levelDict.keys[v.level]; },
             clazz: ""
-        }, {
+        },
+        "type": {
             field: "type",
             name: "类型",
             prop: function(v) { return constant.construction().customerServiceComplaint.typeDict.keys[v.type]; },
             clazz: "red"
-        }, {
+        },
+        "createTime": {
             field: "createTime",
             name: "时间",
             prop: "createTime",
             clazz: "green"
-        }, {
+        },
+        "des": {
             field: "des",
             name: "备注",
             prop: "des",
             clazz: "grey"
-        }, {
+        },
+        "status": {
             field: "status",
             name: "状态",
             prop: function(v) {
@@ -113,12 +129,31 @@ jQuery(function($) {
                 }
             },
             clazz: "grey"
-        }, {
+        },
+        "handle": {
             field: "handle",
             name: "处理信息",
             prop: "handle",
             clazz: "grey"
-        }];
+        }
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function() {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
     })();
 
     var linebtns = (function() {
@@ -129,13 +164,16 @@ jQuery(function($) {
                 clazz: "btn-primary",
                 handle: function(v) {
                     dialogCustomerServiceComplaintHandle(v);
+                },
+                show: function() {
+                    return btnVisible("edit");
                 }
             },
             del: {
                 name: "删除",
                 clazz: "btn-danger",
                 show: function(v) {
-                    return v.status != constant.construction().customer4complaint.COMPLAINT_STATUS_TYPE_HANDLE_INT;
+                    return btnVisible("del") && (v.status != constant.construction().customer4complaint.COMPLAINT_STATUS_TYPE_HANDLE_INT);
                 },
                 handle: function(v) {
                     removeRow(v.cscId);
@@ -155,9 +193,9 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.construction.pageCustomerServiceComplaint, {
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.construction.pageCustomerServiceComplaint, {
         "customerServiceComplaint.orderId": params.construction.orderId
-    }, [], "searcherPostData", null, false, buttons);
+    }, pageConfig.condArr, "searcherPostData", null, false, buttons);
     searcher.line("orderId", lineprops, linebtns).render();
 
     com.focusPage('#add', '#pagenation').click(function() {

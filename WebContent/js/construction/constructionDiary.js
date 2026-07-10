@@ -28,55 +28,91 @@ jQuery(function($) {
         construction.constructionNodes[2] = "完工";
     }, null, false);
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = constructionPage.getConfig("constructionDiary");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
     var searcher = new Searcher();
 
-    searcher.base("diaryCondList", "diaryPagenation", "diaryResultList", api.construction.pageConstructionDiary);
+    searcher.base("diaryCondList", "diaryPagenation", "diaryResultList", pageConfig.apiPage || api.construction.pageConstructionDiary);
 
-    searcher.condition(["decoration-orderId", "construction-diary-isUpload"]);
+    searcher.condition(pageConfig.condArr.length > 0 ? pageConfig.condArr : ["decoration-orderId", "construction-diary-isUpload"]);
 
-    var lineprops = [{
-        field: "decoration",
-        name: "装修单",
-        prop: "decoration.orderId",
-        clazz: "blue",
-        click: function(btn, v) {
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "decoration": {
+            field: "decoration",
+            name: "装修单",
+            prop: "decoration.orderId",
+            clazz: "blue",
+            click: function(btn, v) {
 
-            tools.decoration.info(btn, v.decoration.orderId);
+                tools.decoration.info(btn, v.decoration.orderId);
+            }
+        },
+        "atttype": {
+            field: "atttype",
+            name: "类型",
+            prop: "atttype",
+            dataset: constant.construction().constructionDiary.atttype.keys,
+            clazz: "red"
+        },
+        "cnid": {
+            field: "cnid",
+            name: "工程状态",
+            prop: "cnid",
+            dataset: construction.constructionNodes,
+            clazz: "red"
+        },
+        "isUpload": {
+            field: "isUpload",
+            name: "是否上传图片",
+            prop: "isUpload",
+            dataset: constant.construction().constructionDiary.isUpload.keys,
+            clazz: "red"
+        },
+        "creater": {
+            field: "creater",
+            name: "创建人",
+            prop: "creater.userName",
+            clazz: "grey"
+        },
+        "content": {
+            field: "content",
+            name: "内容",
+            prop: "content",
+            clazz: "grey"
+        },
+        "createTime": {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "green"
         }
-    }, {
-        field: "atttype",
-        name: "类型",
-        prop: "atttype",
-        dataset: constant.construction().constructionDiary.atttype.keys,
-        clazz: "red"
-    }, {
-        field: "cnid",
-        name: "工程状态",
-        prop: "cnid",
-        dataset: construction.constructionNodes,
-        clazz: "red"
-    }, {
-        field: "isUpload",
-        name: "是否上传图片",
-        prop: "isUpload",
-        dataset: constant.construction().constructionDiary.isUpload.keys,
-        clazz: "red"
-    }, {
-        field: "creater",
-        name: "创建人",
-        prop: "creater.userName",
-        clazz: "grey"
-    }, {
-        field: "content",
-        name: "内容",
-        prop: "content",
-        clazz: "grey"
-    }, {
-        field: "createTime",
-        name: "创建时间",
-        prop: "createTime",
-        clazz: "green"
-    }];
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
+    })();
 
     var linebtns = [{
         name: "图片",
@@ -84,6 +120,9 @@ jQuery(function($) {
         handle: function(v) {
             managedrawing(v.cdid);
             initUploadBtn(v);
+        },
+        show: function() {
+            return btnVisible("picture");
         }
     }];
     com.uploadify("#path", "图片", api.common.uploadOther, 'btn btn-success blue ', '*.jpg;*.jpeg;*.gif;*.png', {

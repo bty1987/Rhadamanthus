@@ -694,6 +694,13 @@ $.extend(api, {
         },
         handleDrawlineProfile: {
             url: "handleDrawlineProfile.do"
+        },
+
+        queryConstructionFunction: {
+            url: "queryConstructionFunction.do"
+        },
+        queryConstructionFunctionByName: {
+            url: "queryConstructionFunctionByName.do"
         }
 
     }

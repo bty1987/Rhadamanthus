@@ -79,9 +79,18 @@ jQuery(function($) {
         drawline.items.drawLineGroup.bindData(res.drawLineGroups, 'gid', 'name');
     });
 
-    var lineprops = (function() {
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = constructionPage.getConfig("drawline4apply");
 
-        return [{
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "orderId": {
             field: "decoration.orderId",
             name: "装修单",
             prop: "decoration.orderId",
@@ -89,7 +98,8 @@ jQuery(function($) {
             click: function(btn, v) {
                 tools.decoration.info(btn, v.decoration.orderId);
             }
-        }, {
+        },
+        "village": {
             field: "decoration.house.village.name",
             name: "楼盘",
             prop: "decoration.house.village.name",
@@ -97,12 +107,14 @@ jQuery(function($) {
             click: function(btn, v) {
                 tools.house.info(btn, v.decoration.house.hid);
             }
-        }, {
+        },
+        "houseNumber": {
             field: "decoration.house.houseNumber",
             name: "楼号",
             prop: "decoration.house.houseNumber",
             clazz: "grey"
-        }, {
+        },
+        "customer": {
             field: "decoration.customer.name",
             name: "客户",
             prop: "decoration.customer.name",
@@ -110,7 +122,8 @@ jQuery(function($) {
             click: function(btn, v) {
                 tools.customer.info(btn, v.decoration.customer.cid);
             }
-        }, {
+        },
+        "designer": {
             field: "decoration.designer.currentName",
             name: "设计师",
             prop: "decoration.designer.currentName",
@@ -118,7 +131,8 @@ jQuery(function($) {
             click: function(btn, v) {
                 tools.personel.info(btn, v.decoration.designer.userId);
             }
-        }, {
+        },
+        "supervisor": {
             field: "decoration.supervisor.currentName",
             name: "监理",
             prop: function(v) { return v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName; },
@@ -126,22 +140,26 @@ jQuery(function($) {
             click: function(btn, v) {
                 tools.personel.info(btn, v.decoration.supervisor.userId);
             }
-        }, {
+        },
+        "buildArea": {
             field: "decoration.house.buildArea",
             name: "面积",
             prop: "decoration.house.buildArea",
             clazz: "blue"
-        }, {
+        },
+        "orderTotalPrice": {
             field: "decoration.orderTotalPrice",
             name: "合同额",
             prop: "decoration.orderTotalPrice",
             clazz: "blue"
-        }, {
+        },
+        "version": {
             field: "decoration.version.name",
             name: "报价版本",
             prop: "decoration.version.name",
             clazz: "grey"
-        }, {
+        },
+        "appler": {
             field: "appler.currentName",
             name: "申请人",
             prop: "appler.currentName",
@@ -149,22 +167,43 @@ jQuery(function($) {
             click: function(btn, v) {
                 tools.personel.info(btn, v.decoration.designer.userId);
             }
-        }, {
+        },
+        "applayTime": {
             field: "applayTime",
             name: "申请时间",
             prop: "applayTime",
             clazz: "green"
-        }, {
+        },
+        "count": {
             field: "count",
             name: "放线次数",
             prop: "count",
             clazz: "blue"
-        }, {
+        },
+        "content": {
             field: "content",
             name: "描述",
             prop: "content",
             clazz: "grey"
-        }];
+        }
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function() {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
     })();
 
     var linebtns = (function() {
@@ -175,6 +214,9 @@ jQuery(function($) {
                 clazz: "btn-yellow",
                 handle: function(v) {
                     viewConstructionInfo(v.decoration.orderId);
+                },
+                show: function() {
+                    return btnVisible("info");
                 }
             },
             pretreat: {
@@ -182,6 +224,9 @@ jQuery(function($) {
                 clazz: "btn-info",
                 handle: function(v) {
                     pretreat(v);
+                },
+                show: function() {
+                    return btnVisible("pretreat");
                 }
             },
             update: {
@@ -189,6 +234,9 @@ jQuery(function($) {
                 clazz: "btn-purple",
                 handle: function(v) {
                     showUpdate(v);
+                },
+                show: function() {
+                    return btnVisible("update");
                 }
             },
             draw: {
@@ -196,6 +244,9 @@ jQuery(function($) {
                 clazz: "btn-success",
                 handle: function(v) {
                     showEdit(v);
+                },
+                show: function() {
+                    return btnVisible("draw");
                 }
             },
             reset: {
@@ -203,6 +254,9 @@ jQuery(function($) {
                 clazz: "btn-inverse",
                 handle: function(v) {
                     reset(v.dlid);
+                },
+                show: function() {
+                    return btnVisible("reset");
                 }
             }
         };
@@ -210,9 +264,9 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.construction.pageDrawLine, {
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.construction.pageDrawLine, {
         "drawLine.status": constant.construction.drawLine.STATUS_QUEUE_INT
-    }, ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'construction-drawLine-status', 'construction-drawLine-applayTime', 'construction-drawLine-actualDate'], "drawLineApplyPostData", null, false, null);
+    }, pageConfig.condArr.length > 0 ? pageConfig.condArr : ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'construction-drawLine-status', 'construction-drawLine-applayTime', 'construction-drawLine-actualDate'], "drawLineApplyPostData", null, false, null);
     searcher.line("decoration.orderId", lineprops, linebtns).render();
 
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" class="btn btn-xs btn-yellow btn-search">申请信息</button>');

@@ -29,24 +29,53 @@ jQuery(function($) {
 
     com.datetime(rework.items.createTime);
 
-    var lineprops = (function() {
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = constructionPage.getConfig("supervision4rework");
 
-        return [{
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "createrName": {
             field: "createrName",
             name: "创建人",
             prop: "createrName",
             clazz: "grey"
-        }, {
+        },
+        "createTime": {
             field: "createTime",
             name: "返工时间",
             prop: "createTime",
             clazz: "green"
-        }, {
+        },
+        "reworkDes": {
             field: "reworkDes",
             name: "返工说明",
             prop: "reworkDes",
             clazz: "grey"
-        }];
+        }
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function() {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
     })();
 
     var linebtns = (function() {
@@ -57,6 +86,9 @@ jQuery(function($) {
                 clazz: "btn-yellow",
                 handle: function(v) {
                     viewSupervisionReworkDrawingIndex(v.rwId);
+                },
+                show: function() {
+                    return btnVisible("view");
                 }
             },
             edit: {
@@ -70,6 +102,9 @@ jQuery(function($) {
                     rework["rework.rwId"] = v.rwId;
 
                     rework.modals.modal.modal("show");
+                },
+                show: function() {
+                    return btnVisible("edit");
                 }
             },
             del: {
@@ -77,6 +112,9 @@ jQuery(function($) {
                 clazz: "btn-danger",
                 handle: function(v) {
                     removeRow(v.rwId);
+                },
+                show: function() {
+                    return btnVisible("del");
                 }
             }
         };
@@ -93,9 +131,9 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.construction.pageReworkByOrderId, {
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.construction.pageReworkByOrderId, {
         "rework.orderId": params.construction.orderId
-    }, [], "supervisionReworkPostData", null, false, buttons);
+    }, pageConfig.condArr, "supervisionReworkPostData", null, false, buttons);
     searcher.line("", lineprops, linebtns).render();
 
     com.focusPage('#add', '#pagenation').click(function() {

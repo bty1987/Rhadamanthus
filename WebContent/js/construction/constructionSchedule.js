@@ -52,201 +52,258 @@ jQuery(function($) {
         });
     });
 
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = constructionPage.getConfig("constructionSchedule");
+
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", api.construction.pageConstructionSchedule);
-    searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "construction-supervisor", "decoration-projectStatus", "construction-schedule-createTime", "construction-schedule-startTime", "construction-schedule-endTime", "construction-schedule-enterTime", "construction-schedule-leaveTime", "constructionSchedule-cid", "constructionSchedule-status", "constructionSchedule-planStatus", "constructionSchedule-additemStatus", "constructionSchedule-node-cnid"]);
+    searcher.base("condList", "pagenation", "resultList", pageConfig.apiPage || api.construction.pageConstructionSchedule);
+    searcher.condition(pageConfig.condArr.length > 0 ? pageConfig.condArr : ["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "construction-supervisor", "decoration-projectStatus", "construction-schedule-createTime", "construction-schedule-startTime", "construction-schedule-endTime", "construction-schedule-enterTime", "construction-schedule-leaveTime", "constructionSchedule-cid", "constructionSchedule-status", "constructionSchedule-planStatus", "constructionSchedule-additemStatus", "constructionSchedule-node-cnid"]);
     searcher.history("constructionSchedulePostData");
 
-    var lineprops = [{
-        field: "decoration.orderId",
-        name: "装修单",
-        prop: "decoration.orderId",
-        clazz: "blue",
-        click: function(btn, v) {
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "orderId": {
+            field: "decoration.orderId",
+            name: "装修单",
+            prop: "decoration.orderId",
+            clazz: "blue",
+            click: function(btn, v) {
 
-            tools.decoration.info(btn, v.decoration.orderId);
-        }
-    }, {
-        field: "village",
-        name: "楼盘",
-        prop: "decoration.house.village.name",
-        clazz: "grey",
-        click: function(btn, v) {
+                tools.decoration.info(btn, v.decoration.orderId);
+            }
+        },
+        "village": {
+            field: "village",
+            name: "楼盘",
+            prop: "decoration.house.village.name",
+            clazz: "grey",
+            click: function(btn, v) {
 
-            tools.house.info(btn, v.decoration.house.hid);
-        }
-    }, {
-        field: "houseNumber",
-        name: "楼号",
-        prop: "decoration.house.houseNumber",
-        clazz: "grey"
-    }, {
-        field: "customer",
-        name: "客户",
-        prop: "decoration.customer.name",
-        clazz: "grey",
-        click: function(btn, v) {
+                tools.house.info(btn, v.decoration.house.hid);
+            }
+        },
+        "houseNumber": {
+            field: "houseNumber",
+            name: "楼号",
+            prop: "decoration.house.houseNumber",
+            clazz: "grey"
+        },
+        "customer": {
+            field: "customer",
+            name: "客户",
+            prop: "decoration.customer.name",
+            clazz: "grey",
+            click: function(btn, v) {
 
-            tools.customer.info(btn, v.decoration.customer.cid);
-        }
-    }, {
-        field: "designer",
-        name: "设计师",
-        prop: "decoration.designer.userName",
-        clazz: "grey",
-        click: function(btn, v) {
+                tools.customer.info(btn, v.decoration.customer.cid);
+            }
+        },
+        "designer": {
+            field: "designer",
+            name: "设计师",
+            prop: "decoration.designer.userName",
+            clazz: "grey",
+            click: function(btn, v) {
 
-            tools.personel.info(btn, v.decoration.designer.userId);
-        }
-    }, {
-        field: "construction.supervisor",
-        name: "监理",
-        prop: "construction.supervisor.userName",
-        clazz: "grey",
-        click: function(btn, v) {
+                tools.personel.info(btn, v.decoration.designer.userId);
+            }
+        },
+        "supervisor": {
+            field: "construction.supervisor",
+            name: "监理",
+            prop: "construction.supervisor.userName",
+            clazz: "grey",
+            click: function(btn, v) {
 
-            tools.personel.info(btn, v.supervisor.userId);
+                tools.personel.info(btn, v.supervisor.userId);
+            }
+        },
+        "orderTotalPrice": {
+            field: "orderTotalPrice",
+            name: "总价",
+            prop: "decoration.orderTotalPrice",
+            clazz: "blue"
+        },
+        "contractPrice": {
+            field: "contractPrice",
+            name: "合同额",
+            prop: "decoration.orderTotalPrice",
+            clazz: "blue"
+        },
+        "version": {
+            field: "version",
+            name: "报价版本",
+            prop: "decoration.version.name",
+            clazz: "grey"
+        },
+        "buildArea": {
+            field: "buildArea",
+            name: "面积",
+            prop: "decoration.house.buildArea",
+            clazz: "blue"
+        },
+        "projectStatus": {
+            field: "projectStatus",
+            name: "工程状态",
+            prop: "decoration.projectStatus",
+            dataset: constant.decoration().decoration.projectStatus.keys,
+            clazz: "red"
+        },
+        "isUpload": {
+            field: "isUpload",
+            name: "是否上传图片",
+            prop: "isUpload",
+            dataset: constant.construction().constructionDiary.isUpload.keys,
+            clazz: "red"
+        },
+        "contractTime": {
+            field: "contractTime",
+            name: "签约时间",
+            prop: "decoration.contractTime",
+            clazz: "green"
+        },
+        "proStartTime": {
+            field: "proStartTime",
+            name: "预计开工时间",
+            prop: "proStartTime",
+            clazz: "green"
+        },
+        "proEndTime": {
+            field: "proEndTime",
+            name: "预计完工时间",
+            prop: "proEndTime",
+            clazz: "green"
+        },
+        "prenum": {
+            field: "prenum",
+            name: "前置间隔天数",
+            prop: "prenum",
+            clazz: "green"
+        },
+        "postnum": {
+            field: "postnum",
+            name: "后置间隔天数",
+            prop: "postnum",
+            clazz: "green"
+        },
+        "startTime": {
+            field: "startTime",
+            name: "开工时间",
+            prop: "startTime",
+            clazz: "green"
+        },
+        "endTime": {
+            field: "endTime",
+            name: "完工时间",
+            prop: "endTime",
+            clazz: "green"
+        },
+        "period": {
+            field: "period",
+            name: "工期",
+            prop: "period",
+            clazz: "blue"
+        },
+        "accessoryLimit": {
+            field: "accessoryLimit",
+            name: "材料浮动限额",
+            prop: "accessoryLimit",
+            clazz: "blue"
+        },
+        "salaryLimit": {
+            field: "salaryLimit",
+            name: "工费浮动限额",
+            prop: "salaryLimit",
+            clazz: "blue"
+        },
+        "accessoryTotal": {
+            field: "accessoryTotal",
+            name: "材料总额限额",
+            prop: "accessoryTotal",
+            clazz: "blue"
+        },
+        "salaryTotal": {
+            field: "salaryTotal",
+            name: "工费总额限额",
+            prop: "salaryTotal",
+            clazz: "blue"
+        },
+        "precheck": {
+            field: "precheck",
+            name: "开工装修比例",
+            prop: "precheck",
+            clazz: "blue"
+        },
+        "postcheck": {
+            field: "postcheck",
+            name: "完工装修比例",
+            prop: "postcheck",
+            clazz: "blue"
+        },
+        "stacheck": {
+            field: "stacheck",
+            name: "开工主材比例",
+            prop: "stacheck",
+            clazz: "blue"
+        },
+        "fincheck": {
+            field: "fincheck",
+            name: "完工主材比例",
+            prop: "fincheck",
+            clazz: "blue"
+        },
+        "planSalary": {
+            field: "planSalary",
+            name: "预估工费",
+            prop: "planSalary",
+            clazz: "blue"
+        },
+        "planStatus": {
+            field: "planStatus",
+            name: "预估工费状态",
+            prop: "planStatus",
+            dataset: constant.construction().constructionSchedule.planStatus.keys,
+            clazz: "red"
+        },
+        "additemStatus": {
+            field: "additemStatus",
+            name: "附加项状态",
+            prop: "additemStatus",
+            dataset: constant.construction().constructionSchedule.additemStatus.keys,
+            clazz: "red"
+        },
+        "planTime": {
+            field: "planTime",
+            name: "预估时间",
+            prop: "planTime",
+            clazz: "green"
         }
-    }, {
-        field: "orderTotalPrice",
-        name: "总价",
-        prop: "decoration.orderTotalPrice",
-        clazz: "blue"
-    }, {
-        field: "contractPrice",
-        name: "合同额",
-        prop: "decoration.orderTotalPrice",
-        clazz: "blue"
-    }, {
-        field: "version",
-        name: "报价版本",
-        prop: "decoration.version.name",
-        clazz: "grey"
-    }, {
-        field: "buildArea",
-        name: "面积",
-        prop: "decoration.house.buildArea",
-        clazz: "blue"
-    }, {
-        field: "projectStatus",
-        name: "工程状态",
-        prop: "decoration.projectStatus",
-        dataset: constant.decoration().decoration.projectStatus.keys,
-        clazz: "red"
-    }, {
-        field: "isUpload",
-        name: "是否上传图片",
-        prop: "isUpload",
-        dataset: constant.construction().constructionDiary.isUpload.keys,
-        clazz: "red"
-    }, {
-        field: "contractTime",
-        name: "签约时间",
-        prop: "decoration.contractTime",
-        clazz: "green"
-    }, {
-        type: "newline",
-    }, {
-        field: "proStartTime",
-        name: "预计开工时间",
-        prop: "proStartTime",
-        clazz: "green"
-    }, {
-        field: "proEndTime",
-        name: "预计完工时间",
-        prop: "proEndTime",
-        clazz: "green"
-    }, {
-        field: "prenum",
-        name: "前置间隔天数",
-        prop: "prenum",
-        clazz: "green"
-    }, {
-        field: "postnum",
-        name: "后置间隔天数",
-        prop: "postnum",
-        clazz: "green"
-    }, {
-        field: "startTime",
-        name: "开工时间",
-        prop: "startTime",
-        clazz: "green"
-    }, {
-        field: "endTime",
-        name: "完工时间",
-        prop: "endTime",
-        clazz: "green"
-    }, {
-        field: "period",
-        name: "工期",
-        prop: "period",
-        clazz: "blue"
-    }, {
-        type: "newline",
-    }, {
-        field: "accessoryLimit",
-        name: "材料浮动限额",
-        prop: "accessoryLimit",
-        clazz: "blue"
-    }, {
-        field: "salaryLimit",
-        name: "工费浮动限额",
-        prop: "salaryLimit",
-        clazz: "blue"
-    }, {
-        field: "accessoryTotal",
-        name: "材料总额限额",
-        prop: "accessoryTotal",
-        clazz: "blue"
-    }, {
-        field: "salaryTotal",
-        name: "工费总额限额",
-        prop: "salaryTotal",
-        clazz: "blue"
-    }, {
-        field: "precheck",
-        name: "开工装修比例",
-        prop: "precheck",
-        clazz: "blue"
-    }, {
-        field: "postcheck",
-        name: "完工装修比例",
-        prop: "postcheck",
-        clazz: "blue"
-    }, {
-        field: "stacheck",
-        name: "开工主材比例",
-        prop: "stacheck",
-        clazz: "blue"
-    }, {
-        field: "fincheck",
-        name: "完工主材比例",
-        prop: "fincheck",
-        clazz: "blue"
-    }, {
-        field: "planSalary",
-        name: "预估工费",
-        prop: "planSalary",
-        clazz: "blue"
-    }, {
-        field: "planStatus",
-        name: "预估工费状态",
-        prop: "planStatus",
-        dataset: constant.construction().constructionSchedule.planStatus.keys,
-        clazz: "red"
-    }, {
-        field: "additemStatus",
-        name: "附加项状态",
-        prop: "additemStatus",
-        dataset: constant.construction().constructionSchedule.additemStatus.keys,
-        clazz: "red",
-    }, {
-        field: "planTime",
-        name: "预估时间",
-        prop: "planTime",
-        clazz: "green"
-    }, ];
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function () {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
+    })();
 
     var linebtns = [{
         name: "更新定额",
@@ -263,6 +320,9 @@ jQuery(function($) {
             constructionSchedule.modals.updateNormModal.modal("show");
 
             return false;
+        },
+        show: function() {
+            return btnVisible("updateNorm");
         }
     }, {
         name: "更新比例",
@@ -279,6 +339,9 @@ jQuery(function($) {
             constructionSchedule.modals.updateCaleModal.modal("show");
 
             return false;
+        },
+        show: function() {
+            return btnVisible("updateCale");
         }
     }, {
         name: "更新工期",
@@ -292,6 +355,9 @@ jQuery(function($) {
             constructionSchedule.modals.updatePeriodModal.modal("show");
 
             return false;
+        },
+        show: function() {
+            return btnVisible("updatePeriod");
         }
     }, {
         name: "确认预估",
@@ -310,6 +376,9 @@ jQuery(function($) {
             constructionSchedule.modals.planSalaryModal.modal("show");
 
             return false;
+        },
+        show: function() {
+            return btnVisible("planSalary");
         }
     }, {
         name: "附加项",
@@ -322,6 +391,9 @@ jQuery(function($) {
             com.popup4page("#normriceItemPopUp", api.index.normriceItemIndex.url, "附加项");
 
             return false;
+        },
+        show: function() {
+            return btnVisible("additem");
         }
     }];
 
