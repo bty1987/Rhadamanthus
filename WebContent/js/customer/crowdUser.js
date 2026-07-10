@@ -28,7 +28,7 @@ jQuery(function ($) {
     com.initTypeahead('userSel', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0", "departmentType.name": ""}, "autoFillKeyValue", "key", "value", null);
 
     // 获取页面控制参数(按公司差异化配置)
-    var pageConfig = customerOriginPage.getConfig("crowdUser");
+    var pageConfig = customerPage.getConfig("crowdUser");
 
     // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
     function btnVisible(key) {

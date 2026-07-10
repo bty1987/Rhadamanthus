@@ -17,7 +17,7 @@ jQuery(function($){
     });
 
     // 获取页面控制参数(按公司差异化配置)
-    var pageConfig = customerOriginPage.getConfig("vscoreRecord");
+    var pageConfig = customerPage.getConfig("vscoreRecord");
 
     // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
     function btnVisible(key) {

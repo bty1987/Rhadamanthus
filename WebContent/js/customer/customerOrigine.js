@@ -300,7 +300,7 @@ $(function() {
     });
 
     // 不同页面的不同参数
-    customerOrigine.pageConfig = customerOriginPage.getConfig(params['urlLoadParams'].depage);
+    customerOrigine.pageConfig = customerPage.getConfig(params['urlLoadParams'].depage);
 
     var lineprops = (function() {
 

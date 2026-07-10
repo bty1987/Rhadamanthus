@@ -32,7 +32,7 @@ $(function () {
     revisits.items.gladness.bindData(constant.customer().revisit.status.datas,"key","value");
 
     // 获取页面控制参数(按公司差异化配置)
-    var pageConfig = customerOriginPage.getConfig("revisit");
+    var pageConfig = customerPage.getConfig("revisit");
 
     var lineprops = (function() {
 

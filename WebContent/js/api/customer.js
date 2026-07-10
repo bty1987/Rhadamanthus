@@ -176,8 +176,8 @@ $.extend(api, {
             url: "addCustomerOriginRecord.do"
         },
 
-        queryCustomerOriginFunction: {
-            url: "queryCustomerOriginFunction.do"
+        queryCustomerFunction: {
+            url: "queryCustomerFunction.do"
         },
 
         pageCustomerCompanyRule: {

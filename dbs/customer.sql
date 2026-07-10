@@ -345,8 +345,8 @@ CREATE TABLE `customerorigin` (
   PRIMARY KEY (`coid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=835 DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact;
 
-DROP TABLE IF EXISTS `customeroriginfunction`;
-CREATE TABLE `customeroriginfunction` (
+DROP TABLE IF EXISTS `customerfunction`;
+CREATE TABLE `customerfunction` (
   `cfid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `key` varchar(64) NOT NULL,

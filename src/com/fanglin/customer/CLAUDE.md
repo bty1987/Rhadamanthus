@@ -502,7 +502,7 @@ customerprotectrule (保护规则)
 ```
 action/
 ├── CustomerOriginAction.java           - 客户来源管理
-├── CustomerOriginFunctionAction.java   - 客户来源功能
+├── CustomerFunctionAction.java   - 客户来源功能
 ├── CustomerOriginRecordAction.java     - 客户来源记录
 ├── CustomerProfileAction.java          - 客户档案
 ├── CustomerProfileItemAction.java      - 档案明细
@@ -533,7 +533,7 @@ action/
 ```
 po/
 ├── CustomerOriginPO.java               - 客户来源
-├── CustomerOriginFunctionPO.java       - 客户来源功能
+├── CustomerFunctionPO.java       - 客户来源功能
 ├── CustomerOriginRecordPO.java         - 客户来源记录
 ├── CustomerProfilePO.java              - 客户档案
 ├── CustomerProfileItemPO.java          - 档案明细

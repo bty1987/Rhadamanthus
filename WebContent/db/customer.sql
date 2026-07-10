@@ -177,8 +177,8 @@ CREATE TABLE `customerorigin` (
   PRIMARY KEY (`coid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='¿ÍÔ´±í';
 
-DROP TABLE IF EXISTS `customeroriginfunction`;
-CREATE TABLE `customeroriginfunction` (
+DROP TABLE IF EXISTS `customerfunction`;
+CREATE TABLE `customerfunction` (
   `cfid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `key` varchar(64) NOT NULL,
