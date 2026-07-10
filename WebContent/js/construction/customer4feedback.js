@@ -37,34 +37,65 @@ jQuery(function ($) {
 
     backVisit.items.backVisitType.bindData(constant.construction().customer4feedback.backVisitTypeData.datas,"key","value");
 
-    var lineprops = (function() {
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = constructionPage.getConfig("customer4feedback");
 
-        return [{
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "orderAddr": {
             field: "orderAddr",
             name: "楼盘地址",
             prop: "orderAddr",
             clazz: "grey"
-        }, {
+        },
+        "customerName": {
             field: "customerName",
             name: "客户名",
             prop: "customerName",
             clazz: "grey"
-        }, {
+        },
+        "backVisitTime": {
             field: "backVisitTime",
             name: "时间",
             prop: "backVisitTime",
             clazz: "green"
-        }, {
+        },
+        "backVisitType": {
             field: "backVisitType",
             name: "类型",
             prop: function(v) { return constant.construction().customer4feedback.backVisitTypeData.keys[v.backVisitType]; },
             clazz: "red"
-        }, {
+        },
+        "backVisitDes": {
             field: "backVisitDes",
             name: "备注",
             prop: "backVisitDes",
             clazz: "grey"
-        }];
+        }
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function() {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
     })();
 
     var linebtns = (function() {
@@ -91,6 +122,9 @@ jQuery(function ($) {
                     backVisit.items.customerName.attr('disabled', true);
 
                     backVisit.modals.modal.modal("show");
+                },
+                show: function() {
+                    return btnVisible("edit");
                 }
             },
             del: {
@@ -98,6 +132,9 @@ jQuery(function ($) {
                 clazz: "btn-danger",
                 handle: function(v) {
                     removeRow(v.csbvId);
+                },
+                show: function() {
+                    return btnVisible("del");
                 }
             }
         };
@@ -114,9 +151,9 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.construction.pageCustomerServiceBackVisit, {
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.construction.pageCustomerServiceBackVisit, {
         "customerServiceBackVisit.orderId": params.construction.orderId
-    }, [], "customerServiceBackVisitPostData", null, false, buttons);
+    }, pageConfig.condArr, "customerServiceBackVisitPostData", null, false, buttons);
     searcher.line("orderId", lineprops, linebtns).render();
 
     com.focusPage('#Add', '#pagenation').click(function () {

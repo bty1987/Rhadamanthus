@@ -31,24 +31,53 @@ jQuery(function ($) {
 
     com.datetime(guarantee.items.guaranteeTime);
 
-    var lineprops = (function() {
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = constructionPage.getConfig("customer4guarantee");
 
-        return [{
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "customerName": {
             field: "customerName",
             name: "客户名",
             prop: "customerName",
             clazz: "grey"
-        }, {
+        },
+        "guaranteeTime": {
             field: "guaranteeTime",
             name: "时间",
             prop: "guaranteeTime",
             clazz: "grey"
-        }, {
+        },
+        "guaranteeDes": {
             field: "guaranteeDes",
             name: "备注",
             prop: "guaranteeDes",
             clazz: "grey"
-        }];
+        }
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function() {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
     })();
 
     var linebtns = (function() {
@@ -72,6 +101,9 @@ jQuery(function ($) {
                     guarantee.items.guaranteeTime.attr("disabled", true);
 
                     guarantee.modals.modal.modal("show");
+                },
+                show: function() {
+                    return btnVisible("edit");
                 }
             },
             del: {
@@ -79,6 +111,9 @@ jQuery(function ($) {
                 clazz: "btn-danger",
                 handle: function(v) {
                     removeRow(v.csgId);
+                },
+                show: function() {
+                    return btnVisible("del");
                 }
             }
         };
@@ -95,9 +130,9 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.construction.pageCustomerServiceGuarantee, {
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.construction.pageCustomerServiceGuarantee, {
         "customerServiceGuarantee.orderId": params.construction.orderId
-    }, [], "searcherPostData", null, false, buttons);
+    }, pageConfig.condArr, "searcherPostData", null, false, buttons);
     searcher.line("orderId", lineprops, linebtns).render();
 
     com.focusPage('#add', '#pagenation').click(function () {

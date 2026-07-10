@@ -75,54 +75,89 @@ jQuery(function($) {
         return v;
     });
 
-    var lineprops = (function() {
+    // 获取页面控制参数(按公司差异化配置)
+    var pageConfig = constructionPage.getConfig("accessory");
 
-        return [{
+    // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
+    function btnVisible(key) {
+
+        return pageConfig.pageBtn.length == 0 || pageConfig.pageBtn.contains(key);
+    }
+
+    // 字段定义映射: key 对应配置 propertyArr 中的 value
+    var propertyMap = {
+        "goodsNo": {
             field: "aoods.goods.no",
             name: "商品编号",
             prop: "aoods.goods.no",
             clazz: "grey"
-        }, {
+        },
+        "category": {
             field: "aoods.goods.category",
             name: "品类",
             prop: "aoods.goods.category",
             clazz: "grey"
-        }, {
+        },
+        "brand": {
             field: "aoods.goods.brand",
             name: "品牌",
             prop: "aoods.goods.brand",
             clazz: "grey"
-        }, {
+        },
+        "measurementUnit": {
             field: "aoods.goods.measurementUnit",
             name: "单位",
             prop: "aoods.goods.measurementUnit",
             clazz: "red"
-        }, {
+        },
+        "accessoriesType": {
             field: "aoods.accessoriesType.name",
             name: "辅类名称",
             prop: "aoods.accessoriesType.name",
             clazz: "grey"
-        }, {
+        },
+        "numLimit": {
             field: "numLimit",
             name: "数量限制",
             prop: "numLimit",
             clazz: "blue"
-        }, {
+        },
+        "num": {
             field: "num",
             name: "数量",
             prop: "num",
             clazz: "blue"
-        }, {
+        },
+        "total": {
             field: "total",
             name: "总额",
             prop: "total",
             clazz: "blue"
-        }, {
+        },
+        "checkup": {
             field: "checkup",
             name: "验证标识",
             prop: function(v) { return constant.construction().constructionAccessory.isCheckup.keys[v.checkup]; },
             clazz: "red"
-        }];
+        }
+    };
+
+    // 根据配置 propertyArr 组装列定义, 配置为空则使用全部默认列
+    var lineprops = (function() {
+
+        if (pageConfig.propertyArr.length == 0) {
+
+            var all = [];
+            $.each(propertyMap, function (key, prop) { all.push(prop); });
+            return all;
+        }
+
+        var props = [];
+        $.each(pageConfig.propertyArr, function (i, key) {
+
+            if (propertyMap[key]) props.push(propertyMap[key]);
+        });
+        return props;
     })();
 
     var linebtns = (function() {
@@ -136,6 +171,9 @@ jQuery(function($) {
 
                     accessory.items.numLimit.val(v.numLimit);
                     accessory.modals.updateModal.modal("show");
+                },
+                show: function() {
+                    return btnVisible("update");
                 }
             }
         };
@@ -152,9 +190,9 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.construction.pageConstructionAccessory, {
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.construction.pageConstructionAccessory, {
         "constructionAccessory.cid": accessory.cid
-    }, [], "constructionAccessoryPostDate", null, false, buttons);
+    }, pageConfig.condArr, "constructionAccessoryPostDate", null, false, buttons);
     searcher.line("aoods.goods.name", lineprops, linebtns).render();
 
     com.focusPage("#addConstructionAccessory").click(function() {
