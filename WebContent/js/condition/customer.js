@@ -119,9 +119,9 @@
             validate: null
         },
         dataSource: {
-            url: api.ds.customer,
-            postData: {},
-            listPath: "aepair_status",
+            url: null,
+            postData: null,
+            listPath: constant.customer().aepair.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1087,9 +1087,9 @@
             validate: null
         },
         dataSource: {
-            url: api.ds.customer,
-            postData: {},
-            listPath: "surveyStatus",
+            url: null,
+            postData: null,
+            listPath: constant.customer().survey.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1130,9 +1130,9 @@
             validate: null
         },
         dataSource: {
-            url: api.ds.customer,
-            postData: {},
-            listPath: "droupStatus",
+            url: null,
+            postData: null,
+            listPath: constant.customer().droup.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1146,9 +1146,9 @@
             validate: null
         },
         dataSource: {
-            url: api.ds.customer,
-            postData: {},
-            listPath: "droupIsHandle",
+            url: null,
+            postData: null,
+            listPath: constant.customer().droup.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1162,9 +1162,9 @@
             validate: null
         },
         dataSource: {
-            url: api.ds.customer,
-            postData: {},
-            listPath: "droupType",
+            url: null,
+            postData: null,
+            listPath: constant.customer().droup.dType.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1248,11 +1248,9 @@
             validate: null
         },
         dataSource: {
-            url: api.ds.customer,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "companyType",
+            url: null,
+            postData: null,
+            listPath: constant.customer().customerCompanyRule.type.datas,
             keyPath: "key",
             valuePath: "value"
         }

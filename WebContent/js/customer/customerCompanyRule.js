@@ -20,11 +20,8 @@ jQuery(function($) {
         },
     };
 
-    com.post(api.ds.customer, {}, function(res) {
-
-        com.focusPage("#customerCompanyRuleType").bindData(res.companyType, "key", "value");
-        customerCompanyRule.type = res.companyType.split("key", "value");
-    }, null, false);
+    com.focusPage("#customerCompanyRuleType").bindData(constant.customer().customerCompanyRule.type.datas, "key", "value");
+    customerCompanyRule.type = constant.customer().customerCompanyRule.type.keys;
 
     customerCompanyRule.modals.customerCompanyRuleModal.on('show.bs.modal', function() {
 

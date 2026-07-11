@@ -70,21 +70,18 @@ jQuery(function($) {
 
     complaint.items.upgradeSource.val(0);
 
-    com.post(api.ds.customer, {}, function(res) {
+    $.each(constant.customer().feedbackComplaint.deptType.datas, function(i, v) {
 
-        $.each(res.complaintDeptType, function(i, v) {
+        var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#‌choiceDeptType"));
+        var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="complaintDeptType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
 
-            var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#‌choiceDeptType"));
-            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="complaintDeptType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
+    });
 
-        });
+    $.each(constant.customer().feedbackComplaint.deptType.datas, function(i, v) {
 
-        $.each(res.complaintDeptType, function(i, v) {
+        var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#‌choiceDeptType1"));
+        var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="complaintDeptType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
 
-            var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#‌choiceDeptType1"));
-            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="complaintDeptType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
-
-        });
     });
 
     com.post(api.decoration.queryDecorationByOrderId, {
