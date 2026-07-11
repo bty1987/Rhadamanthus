@@ -25,13 +25,7 @@ jQuery(function($) {
 
     var queryVpaymentByVrid = api.information.queryVpaymentByVrid;
 
-    com.post(api.ds.information, {}, function(res) {
-        for ( var i = 0; i < res.vpayment.length; i++) {
-            var paymentType = res.vpayment[i];
-            receipt.paymentTypeData[paymentType.key] = paymentType.value;
-        }
-
-    }, null, false);
+    receipt.paymentTypeData = constant.information().vpayment.type.keys;
 
     com.post(queryVpaymentByVrid, {
         "vpayment.vreceipt.vrid": params.infomation.vpayment.vrid

@@ -7,12 +7,8 @@ $(function () {
         type : {}
     };
 
-    com.post(api.ds.information, {}, function(res){
-
-        stockRecord.type = res.StockType.split("key", "value");
-        stockRecord.subtype = res.awardRecordSubtype.split("key", "value");
-
-    }, null, false);
+    stockRecord.type = constant.information().awardRecord.type.keys;
+    stockRecord.subtype = constant.information().awardRecord.subtype.keys;
 
     var displayFunc = (function () {
 
