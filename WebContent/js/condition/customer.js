@@ -30,9 +30,9 @@
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.data,
-            postData: {},
-            listPath: "relationshipType",
+            url: null,
+            postData: null,
+            listPath: constant.customer().customer.relationshipType.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -46,9 +46,9 @@
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "customerType",
+            url: null,
+            postData: null,
+            listPath: constant.customer().customer.customerType.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1007,9 +1007,9 @@
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "vscoreRecordtype",
+            url: null,
+            postData: null,
+            listPath: constant.customer().vscoreRecord.type.datas,
             keyPath: "key",
             valuePath: "value"
         }

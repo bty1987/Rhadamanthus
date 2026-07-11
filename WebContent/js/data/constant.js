@@ -26,10 +26,7 @@ jQuery(function($) {
         cid: null,
     };
 
-    com.post(api.ds.data, {}, function(res) {
-
-        constants.items.status.bindData(res.constantStatus, "key", "value");
-    });
+    constants.items.status.bindData(constant.data().common.status.datas, "key", "value");
 
     var searcher = new Searcher();
 
@@ -186,7 +183,7 @@ jQuery(function($) {
         };
 
         if (constants.cid) {
-            params["contant.cid"] = constants.cid;
+            params["constant.cid"] = constants.cid;
 
             url = api.data.updateConstant
         } else {

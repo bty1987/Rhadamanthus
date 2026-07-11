@@ -98,9 +98,7 @@ jQuery(function($) {
 		buildingCustomer.items.csType.bindData(res.csType,"key", "value");
 	}, null, false);
 
-	com.post(api.ds.data, {}, function(res){
-		buildingCustomer.customerItems.relationshipType.bindData(res.relationshipType, "key", "value");
-	});
+	buildingCustomer.customerItems.relationshipType.bindData(constant.customer().customer.relationshipType.datas, "key", "value");
 
 	// 检查电话号是否已存在
 	buildingCustomer.customerItems.phone = com.focusPage("#phone").on("blur", function(){

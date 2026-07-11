@@ -38,7 +38,7 @@ public class ConstantAction extends BaseListAction {
 	}
 
 	@Action(value = "queryConstant", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCategory() throws FLException {
+	public String queryConstant() throws FLException {
 
 		constants = constantService.queryConstant(constant);
 
@@ -58,7 +58,7 @@ public class ConstantAction extends BaseListAction {
 	}
 
 	@Action(value = "updateConstant", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateBrand() throws FLException {
+	public String updateConstant() throws FLException {
 
 		constantService.updateConstant(constant);
 
@@ -66,7 +66,7 @@ public class ConstantAction extends BaseListAction {
 	}
 
 	@Action(value = "updateConstantForStatus", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateCustomerForBase() throws FLException {
+	public String updateConstantForStatus() throws FLException {
 
 		constantService.updateConstantForStatus(constant);
 
@@ -74,7 +74,7 @@ public class ConstantAction extends BaseListAction {
 	}
 
 	@Action(value = "deleteConstant", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteBrandByBIds() throws FLException {
+	public String deleteConstant() throws FLException {
 
 		constantService.deleteConstant(constant);
 

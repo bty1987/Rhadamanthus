@@ -35,9 +35,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "serviceNodeType",
+            url: null,
+            postData: null,
+            listPath: constant.data().serviceNode.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -474,9 +474,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "Status",
+            url: null,
+            postData: null,
+            listPath: constant.data().common.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -500,9 +500,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "Status",
+            url: null,
+            postData: null,
+            listPath: constant.data().common.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -941,9 +941,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "status",
+            url: null,
+            postData: null,
+            listPath: constant.data().common.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -987,9 +987,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
+            url: null,
             postData: null,
-            listPath: "status",
+            listPath: constant.data().common.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1049,9 +1049,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
+            url: null,
             postData: null,
-            listPath: "status",
+            listPath: constant.data().common.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1151,9 +1151,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "taskIsShow",
+            url: null,
+            postData: null,
+            listPath: constant.data().task.isShow.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1168,9 +1168,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "taskStatus",
+            url: null,
+            postData: null,
+            listPath: constant.data().common.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1185,9 +1185,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "taskLevel",
+            url: null,
+            postData: null,
+            listPath: constant.data().task.level.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1220,9 +1220,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "chartType",
+            url: null,
+            postData: null,
+            listPath: constant.data().chart.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1236,9 +1236,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "chartLevel",
+            url: null,
+            postData: null,
+            listPath: constant.data().chart.level.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1262,9 +1262,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "contractStatus",
+            url: null,
+            postData: null,
+            listPath: constant.data().common.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1303,9 +1303,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "signetStatus",
+            url: null,
+            postData: null,
+            listPath: constant.data().signet.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1319,9 +1319,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.data,
-            postData: {},
-            listPath: "signetType",
+            url: null,
+            postData: null,
+            listPath: constant.data().signet.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1344,9 +1344,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "talkingType",
+            url: null,
+            postData: null,
+            listPath: constant.data().talking.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1360,9 +1360,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "talkingStatus",
+            url: null,
+            postData: null,
+            listPath: constant.data().common.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1407,9 +1407,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
-            postData: {},
-            listPath: "chatingType",
+            url: null,
+            postData: null,
+            listPath: constant.data().chating.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1677,9 +1677,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
+            url: null,
             postData: null,
-            listPath: "status",
+            listPath: constant.data().common.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1835,9 +1835,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
+            url: null,
             postData: null,
-            listPath: "surveyTemplateStatus",
+            listPath: constant.data().surveyTemplate.status.datas,
             keyPath: "key",
             valuePath: "value"
         }

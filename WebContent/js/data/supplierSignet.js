@@ -44,12 +44,9 @@ jQuery(function($) {
         type: {}
     }
 
-    com.post(api.ds.data, {}, function(res) {
-
-        signet.status = res.signetStatus.split("key", "value");
-        signet.type = res.signetType.split("key", "value");
-        signet.items.type.bindData(res.signetType, "key", "value");
-    }, null, false);
+    signet.status = constant.data().signet.status.keys;
+    signet.type = constant.data().signet.type.keys;
+    signet.items.type.bindData(constant.data().signet.type.datas, "key", "value");
 
     com.post(api.system.queryCompany, {
         "company.atttype": 1

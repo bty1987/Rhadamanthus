@@ -33,10 +33,7 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    com.post(api.ds.data, {}, function(res) {
-
-        normadd.status = res.costStatus.split("key", "value");
-    }, null, false);
+    normadd.status = constant.data().common.status.keys;
 
     com.post(api.common.queryMeasurementUnit, {}, function(res) {
 

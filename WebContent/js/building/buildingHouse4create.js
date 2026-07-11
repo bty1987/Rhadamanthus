@@ -173,9 +173,7 @@ jQuery(function($) {
 		buildingHouse.houseItems.doorrule.bindData(res.buildrule,"key", "value");
 	}, null, false);
 
-	com.post(api.ds.data, {}, function(res){
-		buildingHouse.customerItems.relationshipType.bindData(res.relationshipType, "key", "value");
-	}, null, false);
+	buildingHouse.customerItems.relationshipType.bindData(constant.customer().customer.relationshipType.datas, "key", "value");
 
 	com.initTypeahead('followId', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 	com.initTypeahead('keyerId', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");

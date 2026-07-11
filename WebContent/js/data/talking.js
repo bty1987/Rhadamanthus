@@ -25,12 +25,9 @@ $(function() {
         com.cleanItems(talking.items);
     });
 
-    com.post(api.ds.data, {}, function(res) {
-
-        talking.items.type.bindData(res.talkingType, "key", "value");
-        talking.talkingType = res.talkingType.split("key", "value");
-        talking.talkingStatus = res.talkingStatus.split("key", "value");
-    }, null, false);
+    talking.items.type.bindData(constant.data().talking.type.datas, "key", "value");
+    talking.talkingType = constant.data().talking.type.keys;
+    talking.talkingStatus = constant.data().common.status.keys;
 
     var lineprops = (function() {
 

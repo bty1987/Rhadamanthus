@@ -49,9 +49,7 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    com.post(api.ds.data, {}, function(res){
-        constructionCost.costStatus = res.costStatus.split("key", "value");
-    },null ,false);
+    constructionCost.costStatus = constant.data().common.status.keys;
 
     var lineprops = (function() {
 

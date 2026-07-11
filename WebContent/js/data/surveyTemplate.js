@@ -46,10 +46,7 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    com.post(api.ds.data, {}, function(res) {
-
-        surveyTemplate.status = res.surveyTemplateStatus.split("key", "value");
-    }, null, false);
+    surveyTemplate.status = constant.data().common.status.keys;
 
     var searcher = new Searcher();
 

@@ -28,10 +28,7 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    com.post(api.ds.data, {}, function(res) {
-
-        normpack.status = res.costStatus.split("key", "value");
-    }, null, false);
+    normpack.status = constant.data().common.status.keys;
 
     var lineprops = (function() {
 
