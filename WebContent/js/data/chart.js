@@ -12,11 +12,8 @@ jQuery(function($) {
 
     }
 
-    com.post(api.ds.data, {}, function(res) {
-
-        chart.dataset.type = res.chartType.split("key", "value");
-        chart.dataset.level = res.chartLevel.split("key", "value");
-    }, null, false);
+    chart.dataset.type = constant.data().chart.type.keys;
+    chart.dataset.level = constant.data().chart.level.keys;
 
     var searcher = new Searcher();
 

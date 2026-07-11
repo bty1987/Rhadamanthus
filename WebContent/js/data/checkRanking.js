@@ -17,9 +17,7 @@ jQuery(function ($) {
 
     checkuserlabel.check = com.focusPage("#check").on('click', checkuser);
 
-    com.post(api.ds.data, {}, function (res) {
-        checkuserlabel.labeltype = res.labeltype
-    }, null, false);
+    checkuserlabel.labeltype = constant.data().label.type.datas;
 
     displayline();
 

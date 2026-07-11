@@ -208,13 +208,10 @@ jQuery(function($) {
 
     }, null, false);
 
-    com.post(api.ds.data, {}, function(data) {
+    $.each(constant.customer().customer.relationshipType.datas, function(i, val) {
 
-        $.each(data.relationshipType, function(i, val) {
-
-            buildingHouseDetail.relationshipType[i] = val.value;
-        });
-    }, null, false);
+        buildingHouseDetail.relationshipType[val.key] = val.value;
+    });
 
     // 查询房源信息
     com.post(api.building.queryBuildingHouseByHsid, {

@@ -30,16 +30,12 @@ jQuery(function ($) {
         com.closeTip();
     });
 
-    com.post(api.ds.data, {}, function (res) {
+    chating.status = constant.data().common.status.keys;
+    chating.type = constant.data().chating.type.keys;
+    chating.atttype = constant.data().chating.atttype.keys;
 
-        chating.status = res.chatingStatus.split("key", "value");
-        chating.type = res.chatingType.split("key", "value");
-        chating.atttype = res.chatingAtttype.split("key", "value");
-
-        chating.items.type.bindData(res.chatingType, "key", "value");
-        chating.items.atttype.bindData(res.chatingAtttype, "key", "value");
-
-    }, null, false);
+    chating.items.type.bindData(constant.data().chating.type.datas, "key", "value");
+    chating.items.atttype.bindData(constant.data().chating.atttype.datas, "key", "value");
 
     var searcher = new Searcher();
 

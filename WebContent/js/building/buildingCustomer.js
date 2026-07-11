@@ -129,16 +129,13 @@ jQuery(function($) {
         });
     }, null, false);
 
-    com.post(api.ds.data, {}, function(res) {
+    var relationshipTypes = constant.customer().customer.relationshipType.datas;
+    if (relationshipTypes && relationshipTypes.length) {
+        $.each(relationshipTypes, function(i, v) {
 
-        var relationshipTypes = res.relationshipType;
-        if (relationshipTypes && relationshipTypes.length) {
-            $.each(relationshipTypes, function(i, v) {
-
-                $('<option></option>').attr("value", v.key).html(v.value).appendTo(com.focusPage("#relationshipType"));
-            });
-        }
-    });
+            $('<option></option>').attr("value", v.key).html(v.value).appendTo(com.focusPage("#relationshipType"));
+        });
+    }
 
     com.focusPage("#hsNo").on("blur", function() {
 

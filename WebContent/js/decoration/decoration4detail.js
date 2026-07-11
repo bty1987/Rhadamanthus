@@ -159,23 +159,19 @@ jQuery(function($) {
     decorationDetail.btnViewFlg = params.decoration.btnViewFlg == false ? true : false;
     decorationDetail.btnViewFlg == false ? com.focusPage('#btnDisplay').removeAttr("style", "display: none;") : com.focusPage('#btnDisplay').attr("style", "display: none;");
 
-    com.post(api.ds.data, {}, function(res) {
+    decorationDetail.relationshipTypes = [];
+    $.each(constant.customer().customer.relationshipType.datas, function(i, k) {
 
-        decorationDetail.relationshipTypes = [];
-        $.each(res.relationshipType, function(i, k) {
+        decorationDetail.relationshipTypes.push(k.key);
+    });
 
-            decorationDetail.relationshipTypes.push(k.key);
-        });
+    $.each(constant.customer().customer.customerType.datas, function(i, v) {
 
-        $.each(res.customerType, function(i, v) {
+        decorationDetail.customerTypes[v.key] = v.value;
+    });
 
-            decorationDetail.customerTypes[v.key] = v.value;
-        });
-
-        decorationDetail.customerItems.type.bindData(res.customerType, "key", "value", false);
-        decorationDetail.customerItems.relationshipType.bindData(decorationDetail.relationshipTypes, "key", "value", false);
-
-    }, null, false);
+    decorationDetail.customerItems.type.bindData(constant.customer().customer.customerType.datas, "key", "value", false);
+    decorationDetail.customerItems.relationshipType.bindData(decorationDetail.relationshipTypes, "key", "value", false);
 
     decorationDetail.houseItems.no = com.focusPage("#no");
     decorationDetail.houseItems.rule = com.focusPage("#rule");

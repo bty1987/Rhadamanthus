@@ -140,9 +140,9 @@ Condition.addupRule("approval", {
         },
         //dataSource是下拉框
         dataSource: {
-            url: api.ds.data,
+            url: null,
             postData: null,
-            listPath: "status",
+            listPath: constant.data().common.status.datas,
             keyPath: "key",
             valuePath: "value"
         }

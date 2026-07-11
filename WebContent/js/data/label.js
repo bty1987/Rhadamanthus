@@ -10,13 +10,11 @@ $(function(){
     createlabel.items.scale = com.focusPage("#labelscale");
     createlabel.items.yes = com.focusPage("#yes").switchBtn("isOrNot");
 
-    com.post(api.ds.data,{}, function(res){
-        com.focusPage("#type").bindData(res.labeltype,"key","value");
-        createlabel.items.type.bindData(res.labeltype,"key","value");
-        $.each(res.labeltype,function(i,v){
-            type[v.key]=v.value;
-        })
-    },null,false);
+    com.focusPage("#type").bindData(constant.data().label.type.datas,"key","value");
+    createlabel.items.type.bindData(constant.data().label.type.datas,"key","value");
+    $.each(constant.data().label.type.datas,function(i,v){
+        type[v.key]=v.value;
+    });
 
     var lineprops = (function() {
 
@@ -66,9 +64,7 @@ $(function(){
         com.focusPage("#labelModal").modal("show");
     });
 
-    com.post(api.ds.data, {}, function(res){
-        com.focusPage("#type").bindData(res.labeltype, 'key', 'value');
-    });
+    com.focusPage("#type").bindData(constant.data().label.type.datas, 'key', 'value');
 
     function updatastatus(labelId, cvalue){
         var options = {};

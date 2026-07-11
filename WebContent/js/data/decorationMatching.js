@@ -41,11 +41,8 @@ jQuery(function($) {
 
     };
 
-    com.post(api.ds.data, {}, function(res) {
-
-        decorationMatching.decorationMatchingVision = res.visionType.split("key", "value");
-        decorationMatching.visionData = res.visionType;
-    }, null, false);
+    decorationMatching.decorationMatchingVision = constant.data().decorationMatching.vision.keys;
+    decorationMatching.visionData = constant.data().decorationMatching.vision.datas;
 
     com.post(api.data.queryDecorationAtttype, {}, function(res) {
 

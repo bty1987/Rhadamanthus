@@ -46,17 +46,15 @@ $(function() {
         com.cleanItems(taskParam.items);
     });
 
-    com.post(api.ds.data, {}, function(res) {
-        taskParam.items.type.bindData(res.taskParamType, "key", "value");
-        taskParam.items.module.bindData(res.taskParamModule, "module", "name");
-        taskParam.items.ismain.bindData(res.taskParamIsmain, "key", "value");
-        taskParam.items.oneType.bindData(res.taskParamOneType, "key", "value");
-        taskParam.taskParamType = res.taskParamType.split("key", "value");
-        taskParam.taskParamModule = res.taskParamModule.split("module", "name");
-        taskParam.taskParamIsmain = res.taskParamIsmain.split("key", "value");
-        taskParam.taskParamOneType = res.taskParamOneType.split("key", "value");
-        taskParam.taskParamStatus = res.taskParamStatus.split("key", "value");
-    }, null, false);
+    taskParam.items.type.bindData(constant.data().taskParam.type.datas, "key", "value");
+    taskParam.items.module.bindData(constant.data().taskParam.module.datas, "key", "value");
+    taskParam.items.ismain.bindData(constant.data().taskParam.ismain.datas, "key", "value");
+    taskParam.items.oneType.bindData(constant.data().taskParam.oneType.datas, "key", "value");
+    taskParam.taskParamType = constant.data().taskParam.type.keys;
+    taskParam.taskParamModule = constant.data().taskParam.module.keys;
+    taskParam.taskParamIsmain = constant.data().taskParam.ismain.keys;
+    taskParam.taskParamOneType = constant.data().taskParam.oneType.keys;
+    taskParam.taskParamStatus = constant.data().common.status.keys;
 
     if (taskParam.pageType != "task") {
         com.post(api.communion.queryTaskParam, {

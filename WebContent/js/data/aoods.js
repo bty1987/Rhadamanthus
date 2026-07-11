@@ -106,11 +106,8 @@ $(function() {
         aoods.items.constructionNode.bindData(res.constructionNodes, "cnid", "name", true);
     });
 
-    com.post(api.ds.data, {}, function(res) {
-
-        aoods.items.atttype.bindData(res.aoodsAtttype, "key", "value", false);
-        aoods.items.editAtttype.bindData(res.aoodsAtttype, "key", "value", false);
-    });
+    aoods.items.atttype.bindData(constant.data().aoods.atttype.datas, "key", "value", false);
+    aoods.items.editAtttype.bindData(constant.data().aoods.atttype.datas, "key", "value", false);
     
     com.post(api.common.queryMeasurementUnit, {}, function(res) {
 

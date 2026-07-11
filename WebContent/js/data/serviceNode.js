@@ -27,17 +27,11 @@
         },
     };
 
-    com.post(api.ds.data, {}, function(res) {
+    com.focusPage("#serviceNodeType").bindData(constant.data().serviceNode.type.datas, "key", "value");
+    serviceNode.type = constant.data().serviceNode.type.keys;
 
-        com.focusPage("#serviceNodeType").bindData(res.serviceNodeType, "key", "value");
-        serviceNode.type = res.serviceNodeType.split("key", "value");
-    }, null, false);
-
-    com.post(api.ds.data, {}, function(res) {
-
-        com.focusPage("#serviceNodeAttnode").bindData(res.attnode, "key", "value");
-        serviceNode.attnode = res.attnode.split("key", "value");
-    }, null, false);
+    com.focusPage("#serviceNodeAttnode").bindData(constant.data().serviceNode.attnode.datas, "key", "value");
+    serviceNode.attnode = constant.data().serviceNode.attnode.keys;
 
     serviceNode.modals.serviceNodeModal.on('show.bs.modal', function() {
 

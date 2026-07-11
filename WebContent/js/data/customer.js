@@ -67,14 +67,11 @@ jQuery(function($) {
         com.focusPage(".companyitem", "#customerModal").hide();
     });
 
-    com.post(api.ds.data, {}, function(res) {
+    customer.items.relationshipType.bindData(constant.customer().customer.relationshipType.datas, "key", "value");
+    customer.items.type.bindData(constant.customer().customer.customerType.datas, "key", "value");
+    $.each(constant.customer().customer.customerType.datas, function(i, v) {
 
-        customer.items.relationshipType.bindData(res.relationshipType, "key", "value");
-        customer.items.type.bindData(res.customerType, "key", "value");
-        $.each(res.customerType, function(i, v) {
-
-            customer.customerTypes[v.key] = v.value;
-        })
+        customer.customerTypes[v.key] = v.value;
     });
 
     customer.items.type = com.focusPage("#type").bindData(constant.customer().customer.customerType.datas, "key", "value").prop("disabled", false);

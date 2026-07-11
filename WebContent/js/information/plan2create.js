@@ -57,12 +57,10 @@ jQuery(function ($) {
         plan2create.items.taskPlan.bindData(task, "keyWord", "name", false, null, "tid");
     }, null, false);
 
-    com.post(api.ds.data, {}, function (res) {
-        plan2create.taskParam.taskParamModule = res.taskParamModule.split("module", "name");
-        plan2create.taskParam.taskPlanType = res.taskParamType.split("key", "value");
-        plan2create.taskParam.taskParamIsmain = res.taskParamIsmain.split("key", "value");
-        plan2create.taskParam.taskParamOneType = res.taskParamOneType.split("key", "value")
-    }, null, false);
+    plan2create.taskParam.taskParamModule = constant.data().taskParam.module.keys;
+    plan2create.taskParam.taskPlanType = constant.data().taskParam.type.keys;
+    plan2create.taskParam.taskParamIsmain = constant.data().taskParam.ismain.keys;
+    plan2create.taskParam.taskParamOneType = constant.data().taskParam.oneType.keys;
 
     plan2create.items.taskPlan.change(function() {
         com.focusPage("#referquery").empty();
