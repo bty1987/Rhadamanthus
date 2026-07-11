@@ -109,19 +109,13 @@ jQuery(function($) {
         }
     });
 
-    com.post(api.ds.building, {}, function(res) {
+    buildingHouseDetail.housingGrade = constant.building().buildingCustomer.grade.keys;
 
-        buildingHouseDetail.housingGrade = res.grade.split("key", "value");
+    buildingHouseDetail.items.housingGrade.bindData(constant.building().buildingCustomer.grade.datas, "key", "value", false);
 
-        buildingHouseDetail.items.housingGrade.bindData(res.grade, "key", "value", false);
-    });
+    buildingHouseDetail.history = constant.building().buildingHouse.history.keys;
 
-    com.post(api.ds.building, {}, function(res) {
-
-        buildingHouseDetail.history = res.history.split("key", "value");
-
-        buildingHouseDetail.items.history.bindData(res.history, "key", "value", false);
-    });
+    buildingHouseDetail.items.history.bindData(constant.building().buildingHouse.history.datas, "key", "value", false);
 
     com.focusPage('#backBtn').on(ace.click_event, function() {
 
@@ -132,81 +126,77 @@ jQuery(function($) {
         }
     });
 
-    com.post(api.ds.building, {}, function(res) {
+    buildingHouseDetail.items.discussType.bindData(constant.building().buildingHouse.discussType.datas, "key", "value");
+    buildingHouseDetail.items.decorateDegree.bindData(constant.building().buildingHouse.decorateDegree.datas, "key", "value");
+    buildingHouseDetail.items.elevator.bindData(constant.building().buildingHouse.elevator.datas, "key", "value");
+    buildingHouseDetail.items.onlyHousing.bindData(constant.building().buildingHouse.onlyHousing.datas, "key", "value");
+    buildingHouseDetail.items.allowLoan.bindData(constant.building().buildingHouse.allowLoan.datas, "key", "value");
+    buildingHouseDetail.items.beingLoan.bindData(constant.building().buildingHouse.beingLoan.datas, "key", "value");
+    buildingHouseDetail.items.sourceType.bindData(constant.building().buildingHouse.sourceType.datas, "key", "value");
+    buildingHouseDetail.items.allowLoan.bindData(constant.building().buildingHouse.allowLoan.datas, "key", "value");
+    buildingHouseDetail.items.beingLoan.bindData(constant.building().buildingHouse.beingLoan.datas, "key", "value");
+    buildingHouseDetail.items.rentType.bindData(constant.building().buildingHouse.rentType.datas, "key", "value");
 
-        buildingHouseDetail.items.discussType.bindData(res.discussType, "key", "value");
-        buildingHouseDetail.items.decorateDegree.bindData(res.decorateDegree, "key", "value");
-        buildingHouseDetail.items.elevator.bindData(res.elevator, "key", "value");
-        buildingHouseDetail.items.onlyHousing.bindData(res.onlyHousing, "key", "value");
-        buildingHouseDetail.items.allowLoan.bindData(res.allowLoan, "key", "value");
-        buildingHouseDetail.items.beingLoan.bindData(res.beingLoan, "key", "value");
-        buildingHouseDetail.items.sourceType.bindData(res.sourceType, "key", "value");
-        buildingHouseDetail.items.allowLoan.bindData(res.allowLoan, "key", "value");
-        buildingHouseDetail.items.beingLoan.bindData(res.beingLoan, "key", "value");
-        buildingHouseDetail.items.rentType.bindData(res.rentType, "key", "value");
+    $.each(constant.building().buildingHouse.type.datas, function(i, va) {
 
-        $.each(res.hsType, function(i, va) {
+        buildingHouseDetail.hsType[va.key] = va.value;
+    });
+    $.each(constant.building().house.houseType.datas, function(i, val) {
 
-            buildingHouseDetail.hsType[va.key] = va.value;
-        });
-        $.each(res.houseType, function(i, val) {
+        buildingHouseDetail.houseType[val.key] = val.value;
+    });
+    $.each(constant.building().buildingHouse.discussType.datas, function(i, val) {
 
-            buildingHouseDetail.houseType[val.key] = val.value;
-        });
-        $.each(res.discussType, function(i, val) {
+        buildingHouseDetail.discussType[val.key] = val.value;
+    });
+    $.each(constant.building().buildingHouse.decorateDegree.datas, function(i, val) {
 
-            buildingHouseDetail.discussType[val.key] = val.value;
-        });
-        $.each(res.decorateDegree, function(i, val) {
+        buildingHouseDetail.decorateDegree[val.key] = val.value;
+    });
+    $.each(constant.building().buildingHouse.elevator.datas, function(i, val) {
 
-            buildingHouseDetail.decorateDegree[val.key] = val.value;
-        });
-        $.each(res.elevator, function(i, val) {
+        buildingHouseDetail.elevator[val.key] = val.value;
+    });
+    $.each(constant.building().buildingHouse.onlyHousing.datas, function(i, val) {
 
-            buildingHouseDetail.elevator[val.key] = val.value;
-        });
-        $.each(res.onlyHousing, function(i, val) {
+        buildingHouseDetail.onlyHousing[val.key] = val.value;
+    });
+    $.each(constant.building().buildingHouse.sourceType.datas, function(i, va) {
 
-            buildingHouseDetail.onlyHousing[val.key] = val.value;
-        });
-        $.each(res.sourceType, function(i, va) {
+        buildingHouseDetail.sourceType[va.key] = va.value;
+    });
+    $.each(constant.building().house.waterVapour.datas, function(i, val) {
 
-            buildingHouseDetail.sourceType[va.key] = va.value;
-        });
-        $.each(res.waterVapour, function(i, val) {
+        buildingHouseDetail.waterVapour[val.key] = val.value;
+    });
+    $.each(constant.building().house.parlourType.datas, function(i, val) {
 
-            buildingHouseDetail.waterVapour[val.key] = val.value;
-        });
-        $.each(res.parlourType, function(i, val) {
+        buildingHouseDetail.parlourType[val.key] = val.value;
+    });
+    $.each(constant.building().house.heatingType.datas, function(i, val) {
 
-            buildingHouseDetail.parlourType[val.key] = val.value;
-        });
-        $.each(res.heatingType, function(i, val) {
+        buildingHouseDetail.heatingType[val.key] = val.value;
+    });
+    $.each(constant.building().house.through.datas, function(i, val) {
 
-            buildingHouseDetail.heatingType[val.key] = val.value;
-        });
-        $.each(res.through, function(i, val) {
+        buildingHouseDetail.through[val.key] = val.value;
+    });
+    $.each(constant.building().buildingHouse.allowLoan.datas, function(i, val) {
 
-            buildingHouseDetail.through[val.key] = val.value;
-        });
-        $.each(res.allowLoan, function(i, val) {
+        buildingHouseDetail.allowLoan[val.key] = val.value;
+    });
+    $.each(constant.building().buildingHouse.beingLoan.datas, function(i, val) {
 
-            buildingHouseDetail.allowLoan[val.key] = val.value;
-        });
-        $.each(res.beingLoan, function(i, val) {
+        buildingHouseDetail.beingLoan[val.key] = val.value;
+    });
+    $.each(constant.building().house.orientation.datas, function(i, v) {
 
-            buildingHouseDetail.beingLoan[val.key] = val.value;
-        });
-        $.each(res.orientation, function(i, v) {
+        buildingHouseDetail.orientation[v.key] = v.value;
+    });
+    $.each(constant.building().buildingHouse.rentType.datas, function(i, v) {
 
-            buildingHouseDetail.orientation[v.key] = v.value;
-        });
-        $.each(res.rentType, function(i, v) {
-
-            buildingHouseDetail.rentType[v.key] = v.value;
-        });
-
-    }, null, false);
+        buildingHouseDetail.rentType[v.key] = v.value;
+    });
 
     $.each(constant.customer().customer.relationshipType.datas, function(i, val) {
 

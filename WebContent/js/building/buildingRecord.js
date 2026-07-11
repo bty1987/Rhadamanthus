@@ -40,20 +40,17 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    com.post(api.ds.building, {}, function(res) {
+    buildingRecord.items.brType.bindData(constant.building().buildingRecord.type.datas, "key", "value");
+    buildingRecord.items.pattern.bindData(constant.building().buildingRecord.pattern.datas, "key", "value");
 
-        buildingRecord.items.brType.bindData(res.recordType, "key", "value");
-        buildingRecord.items.pattern.bindData(res.pattern, "key", "value");
+    $.each(constant.building().buildingRecord.type.datas, function(i, v) {
 
-        $.each(res.recordType, function(i, v) {
+        buildingRecord.recordType[i] = v.value;
+    });
+    $.each(constant.building().buildingRecord.pattern.datas, function(i, d) {
 
-            buildingRecord.recordType[i] = v.value;
-        });
-        $.each(res.pattern, function(i, d) {
-
-            buildingRecord.pattern[i] = d.value;
-        });
-    }, null, false);
+        buildingRecord.pattern[i] = d.value;
+    });
 
     var brField;
     var brOptionId;

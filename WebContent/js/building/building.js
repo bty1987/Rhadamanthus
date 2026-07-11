@@ -80,26 +80,21 @@ jQuery(function($) {
 	com.initTypeahead('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
 	com.initTypeahead('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
 
-	com.post(api.ds.building, {}, function (res) {
-		building.cardType = res.cardType.split("key", "value");
+	building.cardType = constant.building().building.cardType.keys;
 
-		building.customerItems.cardType.bindData(res.cardType, "key", "value", false);
+	building.customerItems.cardType.bindData(constant.building().building.cardType.datas, "key", "value", false);
+
+	building.items.payType.bindData(constant.building().building.payType.datas, "key", "value");
+	building.items.balanceStatus.bindData(constant.building().building.balanceStatus.datas, "key", "value");
+	building.items.payTypes.bindData(constant.building().building.payType.datas, "key", "value");
+
+	$.each(constant.building().building.payType.datas, function (i,v) {
+		building.payType[i] = v.value;
 	});
 
-	com.post(api.ds.building, {}, function(res){
-		building.items.payType.bindData(res.payType,"key", "value");
-		building.items.balanceStatus.bindData(res.balanceStatus,"key", "value");
-		building.items.payTypes.bindData(res.payType,"key", "value");
-
-		$.each(res.payType, function (i,v) {
-			building.payType[i] = v.value;
-		});
-
-		$.each(res.balanceStatus, function (i,v) {
-			building.balanceStatus[i] = v.value;
-		});
-
-	}, null, false);
+	$.each(constant.building().building.balanceStatus.datas, function (i,v) {
+		building.balanceStatus[i] = v.value;
+	});
 
 	var relationshipTypes = constant.customer().customer.relationshipType.datas;
 	if(relationshipTypes && relationshipTypes.length){

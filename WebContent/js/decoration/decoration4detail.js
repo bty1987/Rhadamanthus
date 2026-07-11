@@ -216,13 +216,10 @@ jQuery(function($) {
     decorationDetail.houseItems.floorrule = com.focusPage("#floorrule");
     decorationDetail.houseItems.doorrule = com.focusPage("#doorrule");
 
-    com.post(api.ds.building, {}, function(res) {
-
-        decorationDetail.houseItems.builtrule.bindData(res.buildrule, "key", "value");
-        decorationDetail.houseItems.unitrule.bindData(res.buildrule, "key", "value");
-        decorationDetail.houseItems.floorrule.bindData(res.buildrule, "key", "value");
-        decorationDetail.houseItems.doorrule.bindData(res.buildrule, "key", "value");
-    }, null, false);
+    decorationDetail.houseItems.builtrule.bindData(constant.building().building.buildrule.datas, "key", "value");
+    decorationDetail.houseItems.unitrule.bindData(constant.building().building.buildrule.datas, "key", "value");
+    decorationDetail.houseItems.floorrule.bindData(constant.building().building.buildrule.datas, "key", "value");
+    decorationDetail.houseItems.doorrule.bindData(constant.building().building.buildrule.datas, "key", "value");
 
     // 申请活动
     decorationDetail.activity.activity = com.focusPage("#activity").on("change", function() {

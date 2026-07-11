@@ -28,34 +28,30 @@ jQuery(function($) {
         validator: null
     };
 
-    com.post(api.ds.building, {}, function(res) {
+    $.each(constant.building().buildingHouse.type.datas, function(i, va) {
 
-        $.each(res.hsType, function(i, va) {
+        buildingHouse.hsType[va.key] = va.value;
+    });
+    $.each(constant.building().house.houseType.datas, function(i, va) {
 
-            buildingHouse.hsType[va.key] = va.value;
-        });
-        $.each(res.houseType, function(i, va) {
+        buildingHouse.houseType[va.key] = va.value;
+    });
+    $.each(constant.building().buildingHouse.discussType.datas, function(i, val) {
 
-            buildingHouse.houseType[va.key] = va.value;
-        });
-        $.each(res.discussType, function(i, val) {
+        buildingHouse.discussType[val.key] = val.value;
+    });
+    $.each(constant.building().buildingHouse.decorateDegree.datas, function(i, val) {
 
-            buildingHouse.discussType[val.key] = val.value;
-        });
-        $.each(res.decorateDegree, function(i, val) {
+        buildingHouse.decorateDegree[val.key] = val.value;
+    });
+    $.each(constant.building().house.orientation.datas, function(i, v) {
 
-            buildingHouse.decorateDegree[val.key] = val.value;
-        });
-        $.each(res.orientation, function(i, v) {
+        buildingHouse.orientation[v.key] = v.value;
+    });
+    $.each(constant.building().buildingHouse.rentType.datas, function(i, v) {
 
-            buildingHouse.orientation[v.key] = v.value;
-        });
-        $.each(res.rentType, function(i, v) {
-
-            buildingHouse.rentType[v.key] = v.value;
-        });
-
-    }, null, false);
+        buildingHouse.rentType[v.key] = v.value;
+    });
 
     var lineprops = (function() {
 

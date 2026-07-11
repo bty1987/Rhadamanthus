@@ -168,13 +168,10 @@ $(function() {
         customerOrigine.items.decorationBusitype1.bindData(decorationBusitypes, 'dbid', 'name');
     }, null, false);
 
-    com.post(api.ds.building, {}, function(res) {
-
-        customerOrigine.items.builtrule.bindData(res.buildruleOne, "key", "value");
-        customerOrigine.items.unitrule.bindData(res.buildruleTwo, "key", "value");
-        customerOrigine.items.floorrule.bindData(res.buildruleTwo, "key", "value");
-        customerOrigine.items.doorrule.bindData(res.buildruleThr, "key", "value");
-    }, null, false);
+    customerOrigine.items.builtrule.bindData(constant.building().building.buildruleOne.datas, "key", "value");
+    customerOrigine.items.unitrule.bindData(constant.building().building.buildruleTwo.datas, "key", "value");
+    customerOrigine.items.floorrule.bindData(constant.building().building.buildruleTwo.datas, "key", "value");
+    customerOrigine.items.doorrule.bindData(constant.building().building.buildruleThr.datas, "key", "value");
 
     customerOrigine.items.houseClass.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
     customerOrigine.items.resourceType.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');

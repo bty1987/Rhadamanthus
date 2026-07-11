@@ -81,22 +81,16 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 
-	com.post(api.ds.building, {}, function (res) {
-		buildingCustomer.cardType = res.cardType.split("key", "value");
+	buildingCustomer.cardType = constant.building().building.cardType.keys;
 
-		buildingCustomer.customerItems.cardType.bindData(res.cardType, "key", "value", false);
-	});
+	buildingCustomer.customerItems.cardType.bindData(constant.building().building.cardType.datas, "key", "value", false);
 
-	com.post(api.ds.building, {}, function (res) {
-		buildingCustomer.grade = res.grade.split("key", "value");
+	buildingCustomer.grade = constant.building().buildingCustomer.grade.keys;
 
-		buildingCustomer.items.grade.bindData(res.grade, "key", "value", false);
-	});
+	buildingCustomer.items.grade.bindData(constant.building().buildingCustomer.grade.datas, "key", "value", false);
 
-	com.post(api.ds.building, {}, function(res){
-		buildingCustomer.items.orientation.bindData(res.orientation,"key", "value");
-		buildingCustomer.items.csType.bindData(res.csType,"key", "value");
-	}, null, false);
+	buildingCustomer.items.orientation.bindData(constant.building().house.orientation.datas,"key", "value");
+	buildingCustomer.items.csType.bindData(constant.building().buildingCustomer.type.datas,"key", "value");
 
 	buildingCustomer.customerItems.relationshipType.bindData(constant.customer().customer.relationshipType.datas, "key", "value");
 
