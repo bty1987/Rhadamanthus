@@ -221,7 +221,7 @@
 
                 // 将 constant 重建为按需加载的模块访问器。
                 // 调用 constant.<module>() 触发首次加载并返回模块对象；后续调用直接命中缓存。
-                $.each(["data", "customer", "decoration", "quotation", "construction", "salary", "sales", "payment", "information", "right", "inventory", "personel", "balance", "approval", "system"], function(i, module) {
+                $.each(["data", "customer", "decoration", "quotation", "construction", "salary", "sales", "payment", "information", "right", "inventory", "personel", "balance", "approval", "system", "building"], function(i, module) {
 
                     constant[module] = function() {
                         return handle(module);

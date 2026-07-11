@@ -317,20 +317,17 @@ jQuery(function($) {
 
     com.focusPage('#fl-statement').statement("装修单", "录入订单");
 
-    com.post(api.ds.building, {}, function(res) {
-
-        orderEntry.houseItems.type.bindData(res.houseType, "key", "value");
-        orderEntry.houseItems.through.bindData(res.through, "key", "value");
-        orderEntry.houseItems.orientation.bindData(res.orientation, "key", "value");
-        orderEntry.houseItems.waterVapour.bindData(res.waterVapour, "key", "value");
-        orderEntry.houseItems.parlourType.bindData(res.parlourType, "key", "value");
-        orderEntry.houseItems.islift.bindData(res.elevator, "key", "value");
-        orderEntry.houseItems.heatingType.bindData(res.heatingType, "key", "value");
-        orderEntry.houseItems.builtrule.bindData(res.buildrule, "key", "value");
-        orderEntry.houseItems.unitrule.bindData(res.buildrule, "key", "value");
-        orderEntry.houseItems.floorrule.bindData(res.buildrule, "key", "value");
-        orderEntry.houseItems.doorrule.bindData(res.buildrule, "key", "value");
-    }, null, false);
+    orderEntry.houseItems.type.bindData(constant.building().house.houseType.datas, "key", "value");
+    orderEntry.houseItems.through.bindData(constant.building().house.through.datas, "key", "value");
+    orderEntry.houseItems.orientation.bindData(constant.building().house.orientation.datas, "key", "value");
+    orderEntry.houseItems.waterVapour.bindData(constant.building().house.waterVapour.datas, "key", "value");
+    orderEntry.houseItems.parlourType.bindData(constant.building().house.parlourType.datas, "key", "value");
+    orderEntry.houseItems.islift.bindData(constant.building().buildingHouse.elevator.datas, "key", "value");
+    orderEntry.houseItems.heatingType.bindData(constant.building().house.heatingType.datas, "key", "value");
+    orderEntry.houseItems.builtrule.bindData(constant.building().building.buildrule.datas, "key", "value");
+    orderEntry.houseItems.unitrule.bindData(constant.building().building.buildrule.datas, "key", "value");
+    orderEntry.houseItems.floorrule.bindData(constant.building().building.buildrule.datas, "key", "value");
+    orderEntry.houseItems.doorrule.bindData(constant.building().building.buildrule.datas, "key", "value");
 
     com.focusPage("#createCustomerSaveBtn").on("click", createCustomer);
 

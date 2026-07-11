@@ -47,9 +47,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {},
-            listPath: "payType",
+            url: null,
+            postData: null,
+            listPath: constant.building().building.payType.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -87,9 +87,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {"timestamp": new Date().getTime()},
-            listPath: "roomNum",
+            url: null,
+            postData: null,
+            listPath: constant.building().house.roomNum.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -103,9 +103,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {"timestamp": new Date().getTime()},
-            listPath: "orientation",
+            url: null,
+            postData: null,
+            listPath: constant.building().house.orientation.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -119,9 +119,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {"timestamp": new Date().getTime()},
-            listPath: "waterVapour",
+            url: null,
+            postData: null,
+            listPath: constant.building().house.waterVapour.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -135,9 +135,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {"timestamp": new Date().getTime()},
-            listPath: "parlourType",
+            url: null,
+            postData: null,
+            listPath: constant.building().house.parlourType.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -151,9 +151,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {"timestamp": new Date().getTime()},
-            listPath: "heatingType",
+            url: null,
+            postData: null,
+            listPath: constant.building().house.heatingType.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -167,9 +167,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {"timestamp": new Date().getTime()},
-            listPath: "houseType",
+            url: null,
+            postData: null,
+            listPath: constant.building().house.houseType.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -183,9 +183,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {"timestamp": new Date().getTime()},
-            listPath: "through",
+            url: null,
+            postData: null,
+            listPath: constant.building().house.through.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -199,9 +199,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {"timestamp": new Date().getTime()},
-            listPath: "status",
+            url: null,
+            postData: null,
+            listPath: constant.building().building.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -215,9 +215,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {"timestamp": new Date().getTime()},
-            listPath: "area",
+            url: null,
+            postData: null,
+            listPath: constant.building().buildingCustomer.area.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -231,9 +231,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {},
-            listPath: "unitPrice",
+            url: null,
+            postData: null,
+            listPath: constant.building().buildingHouse.unitPrice.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -247,9 +247,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {},
-            listPath: "totalPrice",
+            url: null,
+            postData: null,
+            listPath: constant.building().buildingHouse.totalPrice.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -279,9 +279,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {},
-            listPath: "hsType",
+            url: null,
+            postData: null,
+            listPath: constant.building().buildingHouse.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -295,9 +295,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {},
-            listPath: "decorateDegree",
+            url: null,
+            postData: null,
+            listPath: constant.building().buildingHouse.decorateDegree.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -311,9 +311,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {},
-            listPath: "allowLoan",
+            url: null,
+            postData: null,
+            listPath: constant.building().buildingHouse.allowLoan.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -327,9 +327,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {},
-            listPath: "grade",
+            url: null,
+            postData: null,
+            listPath: constant.building().buildingCustomer.grade.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -343,9 +343,9 @@ Condition.addupRule("building", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {},
-            listPath: "rentType",
+            url: null,
+            postData: null,
+            listPath: constant.building().buildingHouse.rentType.datas,
             keyPath: "key",
             valuePath: "value"
         }

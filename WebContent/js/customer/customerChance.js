@@ -178,23 +178,20 @@ jQuery(function($) {
             customerChance.profitflag = res.systemConfig.value;
     });
 
-    com.post(api.ds.building, {}, function(res) {
+    customerChance.approveItems.builtrule.bindData(constant.building().building.buildruleOne.datas, "key", "value");
+    customerChance.approveItems.unitrule.bindData(constant.building().building.buildruleTwo.datas, "key", "value");
+    customerChance.approveItems.floorrule.bindData(constant.building().building.buildruleTwo.datas, "key", "value");
+    customerChance.approveItems.doorrule.bindData(constant.building().building.buildruleThr.datas, "key", "value");
 
-        customerChance.approveItems.builtrule.bindData(res.buildruleOne, "key", "value");
-        customerChance.approveItems.unitrule.bindData(res.buildruleTwo, "key", "value");
-        customerChance.approveItems.floorrule.bindData(res.buildruleTwo, "key", "value");
-        customerChance.approveItems.doorrule.bindData(res.buildruleThr, "key", "value");
+    customerChance.updateItems.builtrule.bindData(constant.building().building.buildruleOne.datas, "key", "value");
+    customerChance.updateItems.unitrule.bindData(constant.building().building.buildruleTwo.datas, "key", "value");
+    customerChance.updateItems.floorrule.bindData(constant.building().building.buildruleTwo.datas, "key", "value");
+    customerChance.updateItems.doorrule.bindData(constant.building().building.buildruleThr.datas, "key", "value");
 
-        customerChance.updateItems.builtrule.bindData(res.buildruleOne, "key", "value");
-        customerChance.updateItems.unitrule.bindData(res.buildruleTwo, "key", "value");
-        customerChance.updateItems.floorrule.bindData(res.buildruleTwo, "key", "value");
-        customerChance.updateItems.doorrule.bindData(res.buildruleThr, "key", "value");
-
-        customerChance.directFirstApproveItems.builtrule.bindData(res.buildruleOne, "key", "value");
-        customerChance.directFirstApproveItems.unitrule.bindData(res.buildruleTwo, "key", "value");
-        customerChance.directFirstApproveItems.floorrule.bindData(res.buildruleTwo, "key", "value");
-        customerChance.directFirstApproveItems.doorrule.bindData(res.buildruleThr, "key", "value");
-    });
+    customerChance.directFirstApproveItems.builtrule.bindData(constant.building().building.buildruleOne.datas, "key", "value");
+    customerChance.directFirstApproveItems.unitrule.bindData(constant.building().building.buildruleTwo.datas, "key", "value");
+    customerChance.directFirstApproveItems.floorrule.bindData(constant.building().building.buildruleTwo.datas, "key", "value");
+    customerChance.directFirstApproveItems.doorrule.bindData(constant.building().building.buildruleThr.datas, "key", "value");
 
     function initVillage(items, args) {
 

@@ -71,45 +71,41 @@ jQuery(function($) {
     com.initTypeahead('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
     com.initTypeahead('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
 
-    com.post(api.ds.building, {}, function(res) {
+    buildingHouse.buildItems.payType.bindData(constant.building().building.payType.datas, "key", "value");
+    buildingHouse.buildItems.balanceStatus.bindData(constant.building().building.balanceStatus.datas, "key", "value");
 
-        buildingHouse.buildItems.payType.bindData(res.payType, "key", "value");
-        buildingHouse.buildItems.balanceStatus.bindData(res.balanceStatus, "key", "value");
+    $.each(constant.building().buildingHouse.type.datas, function(i, va) {
 
-        $.each(res.hsType, function(i, va) {
+        buildingHouse.hsType[va.key] = va.value;
+    });
+    $.each(constant.building().house.houseType.datas, function(i, va) {
 
-            buildingHouse.hsType[va.key] = va.value;
-        });
-        $.each(res.houseType, function(i, va) {
+        buildingHouse.houseType[va.key] = va.value;
+    });
+    $.each(constant.building().buildingHouse.discussType.datas, function(i, val) {
 
-            buildingHouse.houseType[va.key] = va.value;
-        });
-        $.each(res.discussType, function(i, val) {
+        buildingHouse.discussType[val.key] = val.value;
+    });
+    $.each(constant.building().buildingHouse.decorateDegree.datas, function(i, val) {
 
-            buildingHouse.discussType[val.key] = val.value;
-        });
-        $.each(res.decorateDegree, function(i, val) {
+        buildingHouse.decorateDegree[val.key] = val.value;
+    });
+    $.each(constant.building().building.payType.datas, function(i, v) {
 
-            buildingHouse.decorateDegree[val.key] = val.value;
-        });
-        $.each(res.payType, function(i, v) {
+        buildingHouse.payType[v.key] = v.value;
+    });
+    $.each(constant.building().building.balanceStatus.datas, function(i, v) {
 
-            buildingHouse.payType[v.key] = v.value;
-        });
-        $.each(res.balanceStatus, function(i, v) {
+        buildingHouse.balanceStatus[v.key] = v.value;
+    });
+    $.each(constant.building().house.orientation.datas, function(i, v) {
 
-            buildingHouse.balanceStatus[v.key] = v.value;
-        });
-        $.each(res.orientation, function(i, v) {
+        buildingHouse.orientation[v.key] = v.value;
+    });
+    $.each(constant.building().buildingHouse.rentType.datas, function(i, v) {
 
-            buildingHouse.orientation[v.key] = v.value;
-        });
-        $.each(res.rentType, function(i, v) {
-
-            buildingHouse.rentType[v.key] = v.value;
-        });
-
-    }, null, false);
+        buildingHouse.rentType[v.key] = v.value;
+    });
 
     com.focusPage("#csNo").on("blur", function() {
 

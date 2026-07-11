@@ -129,13 +129,10 @@ $(function() {
 
     function bindData(e) {
 
-        com.post(api.ds.building, {}, function(res) {
-
-            e.builtrule.bindData(res.buildruleOne, "key", "value");
-            e.unitrule.bindData(res.buildruleTwo, "key", "value");
-            e.floorrule.bindData(res.buildruleTwo, "key", "value");
-            e.doorrule.bindData(res.buildruleThr, "key", "value");
-        });
+        e.builtrule.bindData(constant.building().building.buildruleOne.datas, "key", "value");
+        e.unitrule.bindData(constant.building().building.buildruleTwo.datas, "key", "value");
+        e.floorrule.bindData(constant.building().building.buildruleTwo.datas, "key", "value");
+        e.doorrule.bindData(constant.building().building.buildruleThr.datas, "key", "value");
     }
 
     function initVillage(containId, ruleId, args) {

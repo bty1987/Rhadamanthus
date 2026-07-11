@@ -5103,10 +5103,7 @@ var QuotationDetail = (function() {
                 quo.workTypes = res.workTypes;
             }, null, false);
 
-            com.post(api.ds.building, {}, function(res) {
-
-                com.focusPage("#isLift").bindData(res.elevator, "key", "value");
-            }, null, false);
+            com.focusPage("#isLift").bindData(constant.building().buildingHouse.elevator.datas, "key", "value");
 
             // 通过报价ID获取报价项中的功能区
             com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {

@@ -130,48 +130,40 @@ jQuery(function($) {
 	buildingHouse.btns.cancelBtn.on("click", deleteDate);
 	buildingHouse.btns.createCustomerSaveBtn.on("click", createCustomer);
 
-	com.post(api.ds.building, {}, function (res) {
-		buildingHouse.history = res.history.split("key", "value");
+	buildingHouse.history = constant.building().buildingHouse.history.keys;
 
-		buildingHouse.items.history.bindData(res.history, "key", "value", false);
-	});
+	buildingHouse.items.history.bindData(constant.building().buildingHouse.history.datas, "key", "value", false);
 
-	com.post(api.ds.building, {}, function (res) {
-		buildingHouse.cardType = res.cardType;
+	buildingHouse.cardType = constant.building().building.cardType.datas;
 
-		buildingHouse.customerItems.cardType.bindData(res.cardType, "key", "value", false);
-	});
+	buildingHouse.customerItems.cardType.bindData(constant.building().building.cardType.datas, "key", "value", false);
 
-	com.post(api.ds.building, {}, function (res) {
-		buildingHouse.housingGrade = res.grade.split("key", "value");
+	buildingHouse.housingGrade = constant.building().buildingCustomer.grade.keys;
 
-		buildingHouse.items.housingGrade.bindData(res.grade, "key", "value", false);
-	});
+	buildingHouse.items.housingGrade.bindData(constant.building().buildingCustomer.grade.datas, "key", "value", false);
 
-	com.post(api.ds.building, {}, function(res){
-		buildingHouse.items.hsType.bindData(res.hsType, "key", "value");
-		buildingHouse.items.discussType.bindData(res.discussType, "key", "value");
-		buildingHouse.items.decorateDegree.bindData(res.decorateDegree, "key", "value");
-		buildingHouse.items.elevator.bindData(res.elevator, "key", "value");
-		buildingHouse.items.onlyHousing.bindData(res.onlyHousing, "key", "value");
-		buildingHouse.items.allowLoan.bindData(res.allowLoan, "key", "value");
-		buildingHouse.items.beingLoan.bindData(res.beingLoan, "key", "value");
-		buildingHouse.items.sourceType.bindData(res.sourceType, "key", "value");
-		buildingHouse.items.allowLoan.bindData(res.allowLoan, "key", "value");
-		buildingHouse.items.beingLoan.bindData(res.beingLoan, "key", "value");
-		buildingHouse.items.rentType.bindData(res.rentType, "key", "value");
+	buildingHouse.items.hsType.bindData(constant.building().buildingHouse.type.datas, "key", "value");
+	buildingHouse.items.discussType.bindData(constant.building().buildingHouse.discussType.datas, "key", "value");
+	buildingHouse.items.decorateDegree.bindData(constant.building().buildingHouse.decorateDegree.datas, "key", "value");
+	buildingHouse.items.elevator.bindData(constant.building().buildingHouse.elevator.datas, "key", "value");
+	buildingHouse.items.onlyHousing.bindData(constant.building().buildingHouse.onlyHousing.datas, "key", "value");
+	buildingHouse.items.allowLoan.bindData(constant.building().buildingHouse.allowLoan.datas, "key", "value");
+	buildingHouse.items.beingLoan.bindData(constant.building().buildingHouse.beingLoan.datas, "key", "value");
+	buildingHouse.items.sourceType.bindData(constant.building().buildingHouse.sourceType.datas, "key", "value");
+	buildingHouse.items.allowLoan.bindData(constant.building().buildingHouse.allowLoan.datas, "key", "value");
+	buildingHouse.items.beingLoan.bindData(constant.building().buildingHouse.beingLoan.datas, "key", "value");
+	buildingHouse.items.rentType.bindData(constant.building().buildingHouse.rentType.datas, "key", "value");
 
-		buildingHouse.houseItems.orientation.bindData(res.orientation, "key", "value");
-		buildingHouse.houseItems.type.bindData(res.houseType, "key", "value");
-		buildingHouse.houseItems.waterVapour.bindData(res.waterVapour, "key", "value");
-		buildingHouse.houseItems.heatingType.bindData(res.heatingType, "key", "value");
-		buildingHouse.houseItems.through.bindData(res.through, "key", "value");
-		buildingHouse.houseItems.parlourType.bindData(res.parlourType, "key", "value");
-		buildingHouse.houseItems.builtrule.bindData(res.buildrule,"key", "value");
-		buildingHouse.houseItems.unitrule.bindData(res.buildrule,"key", "value");
-		buildingHouse.houseItems.floorrule.bindData(res.buildrule,"key", "value");
-		buildingHouse.houseItems.doorrule.bindData(res.buildrule,"key", "value");
-	}, null, false);
+	buildingHouse.houseItems.orientation.bindData(constant.building().house.orientation.datas, "key", "value");
+	buildingHouse.houseItems.type.bindData(constant.building().house.houseType.datas, "key", "value");
+	buildingHouse.houseItems.waterVapour.bindData(constant.building().house.waterVapour.datas, "key", "value");
+	buildingHouse.houseItems.heatingType.bindData(constant.building().house.heatingType.datas, "key", "value");
+	buildingHouse.houseItems.through.bindData(constant.building().house.through.datas, "key", "value");
+	buildingHouse.houseItems.parlourType.bindData(constant.building().house.parlourType.datas, "key", "value");
+	buildingHouse.houseItems.builtrule.bindData(constant.building().building.buildrule.datas,"key", "value");
+	buildingHouse.houseItems.unitrule.bindData(constant.building().building.buildrule.datas,"key", "value");
+	buildingHouse.houseItems.floorrule.bindData(constant.building().building.buildrule.datas,"key", "value");
+	buildingHouse.houseItems.doorrule.bindData(constant.building().building.buildrule.datas,"key", "value");
 
 	buildingHouse.customerItems.relationshipType.bindData(constant.customer().customer.relationshipType.datas, "key", "value");
 

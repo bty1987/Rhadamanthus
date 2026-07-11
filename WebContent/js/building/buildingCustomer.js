@@ -90,44 +90,35 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    com.post(api.ds.building, {}, function(res) {
+    buildingCustomer.grade = constant.building().buildingCustomer.grade.keys;
 
-        buildingCustomer.grade = res.grade.split("key", "value");
+    buildingCustomer.items.grade.bindData(constant.building().buildingCustomer.grade.datas, "key", "value", false);
 
-        buildingCustomer.items.grade.bindData(res.grade, "key", "value", false);
+    buildingCustomer.cardType = constant.building().building.cardType.keys;
+
+    buildingCustomer.customerItems.cardType.bindData(constant.building().building.cardType.datas, "key", "value", false);
+
+    buildingCustomer.items.orientation.bindData(constant.building().house.orientation.datas, "key", "value");
+    buildingCustomer.items.csType.bindData(constant.building().buildingCustomer.type.datas, "key", "value");
+    buildingCustomer.buildItems.payType.bindData(constant.building().building.payType.datas, "key", "value");
+    buildingCustomer.buildItems.balanceStatus.bindData(constant.building().building.balanceStatus.datas, "key", "value");
+
+    $.each(constant.building().house.orientation.datas, function(i, v) {
+
+        buildingCustomer.orientation[v.key] = v.value;
     });
+    $.each(constant.building().buildingCustomer.type.datas, function(i, v) {
 
-    com.post(api.ds.building, {}, function(res) {
-
-        buildingCustomer.cardType = res.cardType.split("key", "value");
-
-        buildingCustomer.customerItems.cardType.bindData(res.cardType, "key", "value", false);
+        buildingCustomer.csType[v.key] = v.value;
     });
+    $.each(constant.building().building.payType.datas, function(i, v) {
 
-    com.post(api.ds.building, {}, function(res) {
+        buildingCustomer.payType[v.key] = v.value;
+    });
+    $.each(constant.building().building.balanceStatus.datas, function(i, v) {
 
-        buildingCustomer.items.orientation.bindData(res.orientation, "key", "value");
-        buildingCustomer.items.csType.bindData(res.csType, "key", "value");
-        buildingCustomer.buildItems.payType.bindData(res.payType, "key", "value");
-        buildingCustomer.buildItems.balanceStatus.bindData(res.balanceStatus, "key", "value");
-
-        $.each(res.orientation, function(i, v) {
-
-            buildingCustomer.orientation[v.key] = v.value;
-        });
-        $.each(res.csType, function(i, v) {
-
-            buildingCustomer.csType[v.key] = v.value;
-        });
-        $.each(res.payType, function(i, v) {
-
-            buildingCustomer.payType[v.key] = v.value;
-        });
-        $.each(res.balanceStatus, function(i, v) {
-
-            buildingCustomer.balanceStatus[v.key] = v.value;
-        });
-    }, null, false);
+        buildingCustomer.balanceStatus[v.key] = v.value;
+    });
 
     var relationshipTypes = constant.customer().customer.relationshipType.datas;
     if (relationshipTypes && relationshipTypes.length) {

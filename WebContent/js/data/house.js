@@ -90,29 +90,26 @@ $(function() {
         validatehouse()
     });
 
-    com.post(api.ds.building, {}, function(res) {
+    house.items.type.bindData(constant.building().house.houseType.datas, "key", "value");
+    house.items.through.bindData(constant.building().house.through.datas, "key", "value");
+    house.items.orientation.bindData(constant.building().house.orientation.datas, "key", "value");
+    house.items.waterVapour.bindData(constant.building().house.waterVapour.datas, "key", "value");
+    house.items.parlourType.bindData(constant.building().house.parlourType.datas, "key", "value");
+    house.items.heatingType.bindData(constant.building().house.heatingType.datas, "key", "value");
+    house.items.islift.bindData(constant.building().buildingHouse.elevator.datas, "key", "value");
+    house.items.builtrule.bindData(constant.building().building.buildrule.datas, "key", "value");
+    house.items.unitrule.bindData(constant.building().building.buildrule.datas, "key", "value");
+    house.items.floorrule.bindData(constant.building().building.buildrule.datas, "key", "value");
+    house.items.doorrule.bindData(constant.building().building.buildrule.datas, "key", "value");
 
-        house.items.type.bindData(res.houseType, "key", "value");
-        house.items.through.bindData(res.through, "key", "value");
-        house.items.orientation.bindData(res.orientation, "key", "value");
-        house.items.waterVapour.bindData(res.waterVapour, "key", "value");
-        house.items.parlourType.bindData(res.parlourType, "key", "value");
-        house.items.heatingType.bindData(res.heatingType, "key", "value");
-        house.items.islift.bindData(res.elevator, "key", "value");
-        house.items.builtrule.bindData(res.buildrule, "key", "value");
-        house.items.unitrule.bindData(res.buildrule, "key", "value");
-        house.items.floorrule.bindData(res.buildrule, "key", "value");
-        house.items.doorrule.bindData(res.buildrule, "key", "value");
-
-        house.type = res.houseType.split("key", "value");
-        house.houseType = res.houseType.split("key", "value");// 房产类型
-        house.orientation = res.orientation.split("key", "value");// 房屋朝向
-        house.waterVapour = res.waterVapour.split("key", "value");// 水气设施
-        house.parlourType = res.parlourType.split("key", "value");// 客厅类型
-        house.heatingType = res.heatingType.split("key", "value");// 供暖类型
-        house.through = res.through.split("key", "value");// 是否越层
-        house.elevator = res.elevator.split("key", "value");// 有无电梯
-    }, null, false);
+    house.type = constant.building().house.houseType.keys;
+    house.houseType = constant.building().house.houseType.keys;// 房产类型
+    house.orientation = constant.building().house.orientation.keys;// 房屋朝向
+    house.waterVapour = constant.building().house.waterVapour.keys;// 水气设施
+    house.parlourType = constant.building().house.parlourType.keys;// 客厅类型
+    house.heatingType = constant.building().house.heatingType.keys;// 供暖类型
+    house.through = constant.building().house.through.keys;// 是否越层
+    house.elevator = constant.building().buildingHouse.elevator.keys;// 有无电梯
 
     com.initTypeahead('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, key, value) {
 

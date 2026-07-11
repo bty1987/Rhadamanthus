@@ -144,11 +144,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.building,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "area",
+            url: null,
+            postData: null,
+            listPath: constant.building().buildingCustomer.area.datas,
             keyPath: "key",
             valuePath: "value"
         }

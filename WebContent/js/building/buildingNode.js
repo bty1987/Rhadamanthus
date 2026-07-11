@@ -35,12 +35,10 @@ jQuery(function($) {
 		com.closeTip();
 	});
 
-	com.post(api.ds.building, {}, function(res){
-        com.focusPage("#buildingNodeType").bindData(res.payType, "key", "value");
-        $.each(res.payType,function (i,val) {
-        	buildingNodeType[val.key] = val.value;
-        });
-    }, null, false);
+	com.focusPage("#buildingNodeType").bindData(constant.building().building.payType.datas, "key", "value");
+    $.each(constant.building().building.payType.datas,function (i,val) {
+    	buildingNodeType[val.key] = val.value;
+    });
 
 	var lineprops = (function() {
 
