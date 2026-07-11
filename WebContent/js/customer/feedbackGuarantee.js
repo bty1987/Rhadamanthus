@@ -75,44 +75,40 @@ $(function() {
     feedbackGuarantee.items.upgradeSource.val(0);
     feedbackGuarantee.items.repairResult.val(3);
 
-    com.post(api.ds.customer, {}, function(res) {
+    $.each(constant.customer().feedbackGuarantee.deptType.datas, function(i, v) {
 
-        $.each(res.deptType, function(i, v) {
+        var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#‌choiceDeptType"));
+        var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="deptType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
+    });
 
-            var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#‌choiceDeptType"));
-            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="deptType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
-        });
+    $.each(constant.customer().feedbackGuarantee.plumberType.datas, function(i, v) {
 
-        $.each(res.plumberType, function(i, v) {
+        var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#plumber"));
+        var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="workType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
+    });
 
-            var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#plumber"));
-            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="workType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
-        });
+    $.each(constant.customer().feedbackGuarantee.electricianType.datas, function(i, v) {
 
-        $.each(res.electricianType, function(i, v) {
+        var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#electrician"));
+        var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="workType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
+    });
 
-            var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#electrician"));
-            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="workType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
-        });
+    $.each(constant.customer().feedbackGuarantee.tilerType.datas, function(i, v) {
 
-        $.each(res.tilerType, function(i, v) {
+        var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#tiler"));
+        var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="workType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
+    });
 
-            var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#tiler"));
-            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="workType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
-        });
+    $.each(constant.customer().feedbackGuarantee.carpenterType.datas, function(i, v) {
 
-        $.each(res.carpenterType, function(i, v) {
+        var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#carpenter"));
+        var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="workType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
+    });
 
-            var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#carpenter"));
-            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="workType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
-        });
+    $.each(constant.customer().feedbackGuarantee.painterType.datas, function(i, v) {
 
-        $.each(res.painterType, function(i, v) {
-
-            var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#painter"));
-            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="workType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
-        });
-
+        var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#painter"));
+        var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="workType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
     });
 
     feedbackGuarantee.btns.backBtn.on("click", function() {
