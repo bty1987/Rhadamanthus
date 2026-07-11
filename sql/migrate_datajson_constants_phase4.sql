@@ -1,5 +1,5 @@
 -- ============================================================
--- 阶段4：签章/图表/谈单/辅材/聊天域常量数据迁移
+-- 阶段4：签章/图表/谈单/辅材/聊天域常量数据迁移（field 语义化修正版）
 -- 将 data.json 中的 signet*/chart*/talking*/aoodsAtttype/chating* 迁入 communion.constant
 --
 -- 说明：
@@ -11,77 +11,77 @@
 --   - chatingStatus（启用/禁用）复用 data.common.status，此处不建
 --   - talkingStatus（启用/禁用）复用 data.common.status，阶段1已处理
 --
--- 可重入：DELETE + INSERT
+-- field 命名规范：{类别前缀}_{含义}_{类型后缀}
+--   - 数字 key 用 _INT，字符串 key 用 _STR
+--   - PO 已有常量名优先沿用（如 SignetPO.STATUS_INIT_INT）
+--   - PO 无常量或 PO 常量缺失的项，按规则补造
+--   - field 在前端被用作常量标识符（constant.js: constant[module][clazz][field]=key），
+--     便于前端以 constant.data().signet.STATUS_INIT_INT 形式做值比较
+--
+-- 本脚本为 field 修正版：数据已通过初版 DELETE+INSERT 入生产库，
+-- 此处改为 UPDATE 精确修正 field 列，可重入。
 -- ============================================================
 
 USE `communion`;
 
 -- ============ data.signet.status（签章状态） ============
-DELETE FROM `constant` WHERE `module`='data' AND `clazz`='signet' AND `type`='status';
-INSERT INTO `constant` (`name`,`module`,`clazz`,`type`,`field`,`key`,`value`,`status`) VALUES
-('初始','data','signet','status','status','0','初始',0),
-('注册','data','signet','status','status','1','注册',0),
-('认证','data','signet','status','status','2','认证',0),
-('确认','data','signet','status','status','3','确认',0),
-('签章','data','signet','status','status','4','签章',0),
-('作废','data','signet','status','status','5','作废',0);
+-- 沿用 SignetPO 常量名；PO 缺 key=4（签章）常量，补造 STATUS_SIGN_INT
+UPDATE `constant` SET `field`='STATUS_INIT_INT'    WHERE `module`='data' AND `clazz`='signet' AND `type`='status' AND `key`='0';
+UPDATE `constant` SET `field`='STATUS_REGIST_INT'  WHERE `module`='data' AND `clazz`='signet' AND `type`='status' AND `key`='1';
+UPDATE `constant` SET `field`='STATUS_AUTH_INT'    WHERE `module`='data' AND `clazz`='signet' AND `type`='status' AND `key`='2';
+UPDATE `constant` SET `field`='STATUS_CONFIRM_INT' WHERE `module`='data' AND `clazz`='signet' AND `type`='status' AND `key`='3';
+UPDATE `constant` SET `field`='STATUS_SIGN_INT'    WHERE `module`='data' AND `clazz`='signet' AND `type`='status' AND `key`='4';
+UPDATE `constant` SET `field`='STATUS_CANCEL_INT'  WHERE `module`='data' AND `clazz`='signet' AND `type`='status' AND `key`='5';
 
 -- ============ data.signet.type（签章类型） ============
-DELETE FROM `constant` WHERE `module`='data' AND `clazz`='signet' AND `type`='type';
-INSERT INTO `constant` (`name`,`module`,`clazz`,`type`,`field`,`key`,`value`,`status`) VALUES
-('合同','data','signet','type','type','0','合同',0),
-('款项','data','signet','type','type','1','款项',0),
-('人资','data','signet','type','type','2','人资',0),
-('厂商','data','signet','type','type','3','厂商',0);
+-- SignetPO 无 type 取值常量，按含义补造
+UPDATE `constant` SET `field`='TYPE_CONTRACT_INT' WHERE `module`='data' AND `clazz`='signet' AND `type`='type' AND `key`='0';
+UPDATE `constant` SET `field`='TYPE_PAYMENT_INT'  WHERE `module`='data' AND `clazz`='signet' AND `type`='type' AND `key`='1';
+UPDATE `constant` SET `field`='TYPE_HR_INT'       WHERE `module`='data' AND `clazz`='signet' AND `type`='type' AND `key`='2';
+UPDATE `constant` SET `field`='TYPE_VENDER_INT'   WHERE `module`='data' AND `clazz`='signet' AND `type`='type' AND `key`='3';
 
 -- ============ data.chart.type（图表类型） ============
-DELETE FROM `constant` WHERE `module`='data' AND `clazz`='chart' AND `type`='type';
-INSERT INTO `constant` (`name`,`module`,`clazz`,`type`,`field`,`key`,`value`,`status`) VALUES
-('装修','data','chart','type','type','1','装修',0),
-('销售','data','chart','type','type','2','销售',0),
-('工程','data','chart','type','type','3','工程',0),
-('款项','data','chart','type','type','4','款项',0);
+-- ChartPO 无取值常量，按含义补造
+UPDATE `constant` SET `field`='TYPE_DECORATION_INT'    WHERE `module`='data' AND `clazz`='chart' AND `type`='type' AND `key`='1';
+UPDATE `constant` SET `field`='TYPE_SALES_INT'         WHERE `module`='data' AND `clazz`='chart' AND `type`='type' AND `key`='2';
+UPDATE `constant` SET `field`='TYPE_CONSTRUCTION_INT'  WHERE `module`='data' AND `clazz`='chart' AND `type`='type' AND `key`='3';
+UPDATE `constant` SET `field`='TYPE_PAYMENT_INT'       WHERE `module`='data' AND `clazz`='chart' AND `type`='type' AND `key`='4';
 
 -- ============ data.chart.level（图表等级） ============
-DELETE FROM `constant` WHERE `module`='data' AND `clazz`='chart' AND `type`='level';
-INSERT INTO `constant` (`name`,`module`,`clazz`,`type`,`field`,`key`,`value`,`status`) VALUES
-('集团','data','chart','level','level','0','集团',0),
-('公司','data','chart','level','level','1','公司',0),
-('大区','data','chart','level','level','2','大区',0),
-('部门','data','chart','level','level','3','部门',0);
+-- ChartPO 无取值常量，按含义补造
+UPDATE `constant` SET `field`='LEVEL_GROUP_INT'   WHERE `module`='data' AND `clazz`='chart' AND `type`='level' AND `key`='0';
+UPDATE `constant` SET `field`='LEVEL_COMPANY_INT' WHERE `module`='data' AND `clazz`='chart' AND `type`='level' AND `key`='1';
+UPDATE `constant` SET `field`='LEVEL_REGION_INT'  WHERE `module`='data' AND `clazz`='chart' AND `type`='level' AND `key`='2';
+UPDATE `constant` SET `field`='LEVEL_DEPT_INT'    WHERE `module`='data' AND `clazz`='chart' AND `type`='level' AND `key`='3';
 
 -- ============ data.talking.type（谈单类型） ============
-DELETE FROM `constant` WHERE `module`='data' AND `clazz`='talking' AND `type`='type';
-INSERT INTO `constant` (`name`,`module`,`clazz`,`type`,`field`,`key`,`value`,`status`) VALUES
-('工程补充条款','data','talking','type','type','0','工程补充条款',0),
-('工程追加条款','data','talking','type','type','1','工程追加条款',0),
-('未含项目','data','talking','type','type','2','未含项目',0),
-('工程活动优惠','data','talking','type','type','3','工程活动优惠',0),
-('主材活动优惠','data','talking','type','type','4','主材活动优惠',0),
-('其他','data','talking','type','type','5','其他',0),
-('主材打印说明','data','talking','type','type','6','主材打印说明',0),
-('决算打印说明','data','talking','type','type','7','决算打印说明',0),
-('国补打印说明','data','talking','type','type','8','国补打印说明',0),
-('结算销售打印','data','talking','type','type','9','结算销售打印',0);
+-- TalkingPO 仅有 status 取值常量，type 无常量；按 value 关键词补造
+UPDATE `constant` SET `field`='TYPE_SUPPLEMENTAL_INT'           WHERE `module`='data' AND `clazz`='talking' AND `type`='type' AND `key`='0';
+UPDATE `constant` SET `field`='TYPE_ADDITIONAL_INT'             WHERE `module`='data' AND `clazz`='talking' AND `type`='type' AND `key`='1';
+UPDATE `constant` SET `field`='TYPE_UNINCLUDED_INT'             WHERE `module`='data' AND `clazz`='talking' AND `type`='type' AND `key`='2';
+UPDATE `constant` SET `field`='TYPE_ENGINEERINGPROMO_INT'       WHERE `module`='data' AND `clazz`='talking' AND `type`='type' AND `key`='3';
+UPDATE `constant` SET `field`='TYPE_MATERIALPROMO_INT'          WHERE `module`='data' AND `clazz`='talking' AND `type`='type' AND `key`='4';
+UPDATE `constant` SET `field`='TYPE_OTHER_INT'                  WHERE `module`='data' AND `clazz`='talking' AND `type`='type' AND `key`='5';
+UPDATE `constant` SET `field`='TYPE_MATERIALPRINT_INT'          WHERE `module`='data' AND `clazz`='talking' AND `type`='type' AND `key`='6';
+UPDATE `constant` SET `field`='TYPE_FINALPRINT_INT'             WHERE `module`='data' AND `clazz`='talking' AND `type`='type' AND `key`='7';
+UPDATE `constant` SET `field`='TYPE_NATIONALSUBSIDYPRINT_INT'   WHERE `module`='data' AND `clazz`='talking' AND `type`='type' AND `key`='8';
+UPDATE `constant` SET `field`='TYPE_SETTLEPRINT_INT'            WHERE `module`='data' AND `clazz`='talking' AND `type`='type' AND `key`='9';
 
 -- ============ data.aoods.atttype（辅材归属类型） ============
-DELETE FROM `constant` WHERE `module`='data' AND `clazz`='aoods' AND `type`='atttype';
-INSERT INTO `constant` (`name`,`module`,`clazz`,`type`,`field`,`key`,`value`,`status`) VALUES
-('标准','data','aoods','atttype','atttype','0','标准',0),
-('外辅','data','aoods','atttype','atttype','1','外辅',0);
+-- AoodsPO 仅有列名常量 COLUMN_STATUS_ATTTYPE，无取值常量，按含义补造
+UPDATE `constant` SET `field`='ATTTYPE_STANDARD_INT' WHERE `module`='data' AND `clazz`='aoods' AND `type`='atttype' AND `key`='0';
+UPDATE `constant` SET `field`='ATTTYPE_EXTERNAL_INT' WHERE `module`='data' AND `clazz`='aoods' AND `type`='atttype' AND `key`='1';
 
 -- ============ data.chating.type（聊天类型） ============
-DELETE FROM `constant` WHERE `module`='data' AND `clazz`='chating' AND `type`='type';
-INSERT INTO `constant` (`name`,`module`,`clazz`,`type`,`field`,`key`,`value`,`status`) VALUES
-('文本','data','chating','type','type','0','文本',0),
-('应用','data','chating','type','type','2','应用',0);
+-- ChatingPO 无取值常量，按含义补造（注意：无 key=1）
+UPDATE `constant` SET `field`='TYPE_TEXT_INT' WHERE `module`='data' AND `clazz`='chating' AND `type`='type' AND `key`='0';
+UPDATE `constant` SET `field`='TYPE_APP_INT'  WHERE `module`='data' AND `clazz`='chating' AND `type`='type' AND `key`='2';
 
 -- ============ data.chating.atttype（聊天归属类型） ============
-DELETE FROM `constant` WHERE `module`='data' AND `clazz`='chating' AND `type`='atttype';
-INSERT INTO `constant` (`name`,`module`,`clazz`,`type`,`field`,`key`,`value`,`status`) VALUES
-('客户','data','chating','atttype','atttype','0','客户',0),
-('装修','data','chating','atttype','atttype','1','装修',0),
-('主材','data','chating','atttype','atttype','2','主材',0),
-('工程','data','chating','atttype','atttype','3','工程',0),
-('款项','data','chating','atttype','atttype','4','款项',0),
-('其他','data','chating','atttype','atttype','5','其他',0);
+-- ChatingPO 无取值常量，按含义补造
+UPDATE `constant` SET `field`='ATTTYPE_CUSTOMER_INT'      WHERE `module`='data' AND `clazz`='chating' AND `type`='atttype' AND `key`='0';
+UPDATE `constant` SET `field`='ATTTYPE_DECORATION_INT'    WHERE `module`='data' AND `clazz`='chating' AND `type`='atttype' AND `key`='1';
+UPDATE `constant` SET `field`='ATTTYPE_MATERIAL_INT'      WHERE `module`='data' AND `clazz`='chating' AND `type`='atttype' AND `key`='2';
+UPDATE `constant` SET `field`='ATTTYPE_CONSTRUCTION_INT'  WHERE `module`='data' AND `clazz`='chating' AND `type`='atttype' AND `key`='3';
+UPDATE `constant` SET `field`='ATTTYPE_PAYMENT_INT'       WHERE `module`='data' AND `clazz`='chating' AND `type`='atttype' AND `key`='4';
+UPDATE `constant` SET `field`='ATTTYPE_OTHER_INT'         WHERE `module`='data' AND `clazz`='chating' AND `type`='atttype' AND `key`='5';

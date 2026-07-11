@@ -164,9 +164,9 @@ Condition.addupRule("information", {
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.information,
-            postData: {},
-            listPath: "awardStockType",
+            url: null,
+            postData: null,
+            listPath: constant.information().awardStock.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -180,9 +180,9 @@ Condition.addupRule("information", {
             validate: null
         },
         dataSource: {
-            url: api.ds.information,
-            postData: {},
-            listPath: "awardSubtype",
+            url: null,
+            postData: null,
+            listPath: constant.information().awardStock.subtype.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -196,9 +196,9 @@ Condition.addupRule("information", {
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.information,
-            postData: {},
-            listPath: "awardStoreRoom",
+            url: null,
+            postData: null,
+            listPath: constant.information().awardStock.storeroom.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -212,9 +212,9 @@ Condition.addupRule("information", {
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.information,
-            postData: {},
-            listPath: "awardStatus",
+            url: null,
+            postData: null,
+            listPath: constant.information().awardStock.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -247,9 +247,9 @@ Condition.addupRule("information", {
             validate: null
         },
         dataSource: {
-            url: api.ds.information,
-            postData: {},
-            listPath: "StockType",
+            url: null,
+            postData: null,
+            listPath: constant.information().awardRecord.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -263,9 +263,9 @@ Condition.addupRule("information", {
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.information,
-            postData: {},
-            listPath: "awardStockOneType",
+            url: null,
+            postData: null,
+            listPath: constant.information().awardRecord.onetype.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -279,9 +279,9 @@ Condition.addupRule("information", {
             validate: null
         },
         dataSource: {
-            url: api.ds.information,
-            postData: {},
-            listPath: "awardRecordSubtype",
+            url: null,
+            postData: null,
+            listPath: constant.information().awardRecord.subtype.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -339,9 +339,9 @@ Condition.addupRule("information", {
         // 校验规则
         },
         dataSource: { // 从后台取数据的各种配置
-            url: api.ds.information, // 获取数据要调用的接口
+            url: null, // 获取数据要调用的接口
             postData: null, // 获取数据时的请求参数
-            listPath: "activityTypes", // 响应list的json路径
+            listPath: constant.information().activity.type.datas, // 响应list的json路径
             keyPath: "key", // 用来向后台提交的字段的json路径
             valuePath: "value" // 用来在页面显示的字段的json路径
         }
@@ -422,9 +422,9 @@ Condition.addupRule("information", {
             validate: null
         },
         dataSource: {
-            url: api.ds.information,
-            postData: {},
-            listPath: "planStatus",
+            url: null,
+            postData: null,
+            listPath: constant.information().plan.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -448,9 +448,9 @@ Condition.addupRule("information", {
             validate: null
         },
         dataSource: {
-            url: api.ds.information,
-            postData: {},
-            listPath: "worksheetStatus",
+            url: null,
+            postData: null,
+            listPath: constant.information().worksheet.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -500,9 +500,9 @@ Condition.addupRule("information", {
             validate: null
         },
         dataSource: {
-            url: api.ds.information,
-            postData: {},
-            listPath: "awardPurchaseStatus",
+            url: null,
+            postData: null,
+            listPath: constant.information().awardPurchase.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -579,9 +579,9 @@ Condition.addupRule("information", {
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.information,
-            postData: {},
-            listPath: "awardStockType",
+            url: null,
+            postData: null,
+            listPath: constant.information().awardStock.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
