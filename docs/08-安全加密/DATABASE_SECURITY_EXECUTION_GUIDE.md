@@ -2,7 +2,7 @@
 
 > 版本：v1.0
 > 创建日期：2026-04-11
-> SQL脚本：`docs/sql/database_security_implementation.sql`
+> SQL脚本：`sql/security/database_security_implementation.sql`
 
 ---
 
@@ -43,10 +43,10 @@ mysql -h rr-2ze11ccr650aw2c79oo.mysql.rds.aliyuncs.com -u fanglin1918 -p
 
 ```bash
 # 方式A：在MySQL命令行中执行
-source D:/GIT/Rhadamanthus/docs/sql/database_security_implementation.sql
+source D:/GIT/Rhadamanthus/sql/security/database_security_implementation.sql
 
 # 方式B：使用管道执行
-mysql -h rr-2ze11ccr650aw2c79oo.mysql.rds.aliyuncs.com -u fanglin1918 -p < D:/GIT/Rhadamanthus/docs/sql/database_security_implementation.sql
+mysql -h rr-2ze11ccr650aw2c79oo.mysql.rds.aliyuncs.com -u fanglin1918 -p < D:/GIT/Rhadamanthus/sql/security/database_security_implementation.sql
 
 # 方式C：分阶段执行（推荐）
 ```
