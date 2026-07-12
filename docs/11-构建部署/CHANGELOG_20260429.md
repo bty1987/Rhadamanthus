@@ -37,7 +37,7 @@ ALTER TABLE decoration.decorationaddition ADD COLUMN brokerFlag smallint DEFAULT
 ## 三、特权购 paymenttype atttype=1 数据生成
 
 > 提交: `ab054938`
-> 文件: `sql/insert_paymenttype_tequangou_atttype1.sql`
+> 文件: `sqls/insert_paymenttype_tequangou_atttype1.sql`
 
 ### 背景
 

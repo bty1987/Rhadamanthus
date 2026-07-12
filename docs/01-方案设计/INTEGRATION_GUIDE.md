@@ -18,7 +18,7 @@
 
 ```bash
 # 执行数据库脚本
-mysql -u root -p < sql/add_quotation_budget_assignment.sql
+mysql -u root -p < sqls/add_quotation_budget_assignment.sql
 
 # 验证表创建
 mysql -u root -p -e "USE quotation; SHOW TABLES LIKE '%quotation%';"

@@ -101,7 +101,7 @@
 
 ## 三、数据库脚本
 
-脚本路径：`sql/migrate_datajson_to_constant.sql`（见第五节阶段产出）。
+脚本路径：`sqls/migrate_datajson_to_constant.sql`（见第五节阶段产出）。
 
 ### 3.1 表结构（已存在，仅备查）
 
@@ -296,7 +296,7 @@ taskParam.taskParamModule = constant.data().taskParam.module.keys;
 
 ### 阶段 1：通用状态类（启用/禁用，量大同质，风险最低）
 
-**数据**（SQL 脚本 `sql/migrate_datajson_constants_phase1.sql`）：
+**数据**（SQL 脚本 `sqls/migrate_datajson_constants_phase1.sql`）：
 `data.common.status`、`data.contract.status`、`data.cost.status`、`data.task.status`、`data.talking.status`、`data.taskParam.status`、`data.surveyTemplate.status`、`data.chating.status`、`data.constant.status`。
 
 **前端**：
@@ -378,4 +378,4 @@ taskParam.taskParamModule = constant.data().taskParam.module.keys;
 | 后端 DAO | `src/com/fanglin/communion/dao/impl/ConstantDaoImpl.java` |
 | PO | `src/com/fanglin/communion/po/ConstantPO.java` |
 | 建表脚本 | `dbs/communion.sql` |
-| 数据样例参考 | `sql/aoodsCharge_constants.sql`、`sql/add_normtime_status_constant.sql` |
+| 数据样例参考 | `sqls/aoodsCharge_constants.sql`、`sqls/add_normtime_status_constant.sql` |

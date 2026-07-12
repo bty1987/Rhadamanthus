@@ -133,7 +133,7 @@
 | SQL_COPY_CONSTRUCTIONNODE_DATA.md | 复制 constructionnode 数据 SQL 语句 |
 | crond_broker_report_check.md | 经纪人报备保护检查脚本（定时任务） |
 
-> 注：纯 `.sql` 数据脚本（quotationassign_constant_data.sql、北京分公司数据创建SQL.sql）已移至项目根 `sql/` 目录。
+> 注：纯 `.sql` 数据脚本（quotationassign_constant_data.sql、北京分公司数据创建SQL.sql）已移至项目根 `sqls/` 目录。
 
 ## 十、指南/手册 · `10-指南手册/`
 
