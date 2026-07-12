@@ -6,7 +6,7 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 电子签印章/签名管理 VO（厂商中立）。
+ * @Describing	: 
  */
 
 package com.fanglin.fadada.vo;

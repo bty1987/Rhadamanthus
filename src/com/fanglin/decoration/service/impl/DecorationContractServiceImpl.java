@@ -147,7 +147,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	@Autowired
 	private MessageService messageService;
 
-
 	@Override
 	public List<DecorationContractVO> queryDecorationContractByOrderId(DecorationContractVO decorationContract) throws FLException {
 

@@ -48,7 +48,6 @@ public class UserContractServiceImpl implements UserContractService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
-
 	@Override
 	public List<UserContractVO> queryUserContract(UserContractVO userContractVO) {
 
