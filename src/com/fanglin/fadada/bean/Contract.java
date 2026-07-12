@@ -1,16 +1,16 @@
 /**
  * @File Name		: Contract.java
- * @Package   	: com.fanglin.elecsign.bean
+ * @Package   	: com.fanglin.fadada.bean
  * @Version		: 1.0
  * @Date			: 2019-11-4
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 电子签合同数据契约（厂商中立）。从 com.fanglin.fadada.bean 迁入 elecsign 包，
+ * @Describing	: 电子签合同数据契约（厂商中立）。
  *               使 ElecsignService 不再依赖 fadada 包。
  */
 
-package com.fanglin.elecsign.bean;
+package com.fanglin.fadada.bean;
 
 public interface Contract {
 

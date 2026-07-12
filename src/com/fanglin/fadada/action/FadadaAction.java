@@ -17,13 +17,12 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.elecsign.service.ElecsignService;
-import com.fanglin.elecsign.vo.SignatureVO;
+import com.fanglin.fadada.signature.Signature;
+import com.fanglin.fadada.vo.SignatureVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -32,9 +31,6 @@ public class FadadaAction extends BaseListAction {
 
 	private static final long serialVersionUID = 1988424215935977023L;
 
-	@Autowired
-	private ElecsignService elecsignService;
-
 	private SignatureVO signature;
 
 	private List<SignatureVO> signatures;
@@ -42,7 +38,7 @@ public class FadadaAction extends BaseListAction {
 	@Action(value = "pollingSignature", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pollingSignature() throws FLException {
 
-		signatures = elecsignService.query(signature);
+		signatures = Signature.query(signature);
 
 		return SUCCESS;
 	}
@@ -50,7 +46,7 @@ public class FadadaAction extends BaseListAction {
 	@Action(value = "defaultSignature", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String defaultSignature() throws FLException {
 
-		elecsignService.defaults(signature);
+		Signature.defaults(signature);
 
 		return SUCCESS;
 	}
@@ -58,7 +54,7 @@ public class FadadaAction extends BaseListAction {
 	@Action(value = "addSignature", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSignature() throws FLException {
 
-		signature = elecsignService.add(signature);
+		signature = Signature.add(signature);
 
 		return SUCCESS;
 	}
@@ -66,7 +62,7 @@ public class FadadaAction extends BaseListAction {
 	@Action(value = "deleteSignature", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteSignature() throws FLException {
 
-		elecsignService.delete(signature);
+		Signature.delete(signature);
 
 		return SUCCESS;
 	}

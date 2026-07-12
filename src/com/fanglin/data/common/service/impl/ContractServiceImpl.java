@@ -14,7 +14,7 @@ import com.fanglin.data.common.dao.ContractDao;
 import com.fanglin.data.common.service.ContractService;
 import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.po.ContractPO;
-import com.fanglin.elecsign.service.ElecsignService;
+import com.fanglin.fadada.signature.Signature;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
@@ -29,9 +29,6 @@ public class ContractServiceImpl implements ContractService {
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
-
-	@Autowired
-	private ElecsignService elecsignService;
 
 	@Override
 	public void pageContract(Paging paging, List<Filter> filters, int company) {
@@ -106,7 +103,7 @@ public class ContractServiceImpl implements ContractService {
 
 		contractPO.setCompany(company);
 
-		elecsignService.template(contractVO.getNo(), null, contractVO.getUrl());
+		Signature.template(contractVO.getNo(), null, contractVO.getUrl());
 
 		contractDao.save(contractPO);
 

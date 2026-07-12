@@ -23,7 +23,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.decoration.po.DecorationContractPO;
-import com.fanglin.elecsign.service.ElecsignService;
+import com.fanglin.fadada.signature.Signature;
 import com.fanglin.personel.dao.UserContractDao;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserContractPO;
@@ -48,8 +48,6 @@ public class UserContractServiceImpl implements UserContractService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
-	@Autowired
-	private ElecsignService elecsignService;
 
 	@Override
 	public List<UserContractVO> queryUserContract(UserContractVO userContractVO) {
@@ -111,7 +109,7 @@ public class UserContractServiceImpl implements UserContractService {
 			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 			url = String.format("%s/signature.html?cid=%d&type=2&module=personel", isv.getValue(), userPO.getUid());
 		} else if (type == DecorationContractPO.TYPE_SIGN_INT && status == DecorationContractPO.STATUS_VALID_INT) {
-			url = elecsignService.extsign(userPO.getSignNo(), userContractPO);
+			url = Signature.extsign(userPO.getSignNo(), userContractPO);
 		} else if (type == DecorationContractPO.TYPE_VIEW_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			url = userContractPO.getViewpdf();
 		} else if (type == DecorationContractPO.TYPE_DOWNLOAD_INT && status == DecorationContractPO.STATUS_SIGN_INT) {
@@ -132,7 +130,7 @@ public class UserContractServiceImpl implements UserContractService {
 			throw new FLException(190028, "合同不存在");
 		}
 
-		return elecsignService.view(userContractPO);
+		return Signature.view(userContractPO);
 	}
 
 	@Override
@@ -148,7 +146,7 @@ public class UserContractServiceImpl implements UserContractService {
 			throw new FLException(190029, "合同不可操作");
 		}
 
-		elecsignService.autosign(signetVO.getSignno(), signetVO.getKeyword(), userContractPO, signetVO.getSignid());
+		Signature.autosign(signetVO.getSignno(), signetVO.getKeyword(), userContractPO, signetVO.getSignid());
 
 		userContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -172,7 +170,7 @@ public class UserContractServiceImpl implements UserContractService {
 
 		UserPO userPO = userDao.get(userContractPO.getUid());
 
-		return elecsignService.extsign(userPO.getSignNo(), userContractPO);
+		return Signature.extsign(userPO.getSignNo(), userContractPO);
 	}
 
 	@Override
@@ -195,7 +193,7 @@ public class UserContractServiceImpl implements UserContractService {
 
 		JSONObject params = JSONObject.parseObject(data);
 
-		elecsignService.generate(userContractPO, params, null);
+		Signature.generate(userContractPO, params, null);
 
 		return 0;
 	}

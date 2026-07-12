@@ -10,9 +10,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.elecsign.service.ElecsignService;
-import com.fanglin.elecsign.bean.Contract;
+import com.fanglin.fadada.bean.Contract;
 import com.fanglin.fadada.signature.Signature;
-import com.fanglin.elecsign.vo.SignatureVO;
+import com.fanglin.fadada.vo.SignatureVO;
 
 /**
  * 法大大电子签实现。

@@ -35,8 +35,7 @@ import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.elecsign.enums.ElecsignProvider;
-import com.fanglin.elecsign.service.ElecsignService;
+import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.personel.dao.UserDao;
@@ -67,9 +66,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private CountingService countingService;
-
-	@Autowired
-	private ElecsignService elecsignService;
 
 	@Autowired
 	private UserDao userDao;
@@ -511,8 +507,7 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		if (customerPO.getSignno() == null || "".equals(customerPO.getSignno())) {
-			customerPO.setSignno(elecsignService.register(customerPO.getNo()));
-			customerPO.setProvider(ElecsignProvider.FADADA.code()); // 记录账号所属厂商，存量默认法大大
+			customerPO.setSignno(Signature.register(customerPO.getNo()));
 		}
 
 		customerDao.update(customerPO);
@@ -560,8 +555,7 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		if (customerPO.getSignno() == null || "".equals(customerPO.getSignno())) {
-			customerPO.setSignno(elecsignService.register(customerPO.getNo()));
-			customerPO.setProvider(ElecsignProvider.FADADA.code()); // 记录账号所属厂商，存量默认法大大
+			customerPO.setSignno(Signature.register(customerPO.getNo()));
 		}
 
 		if (customerPO.getAuthurl() != null && !"".equals(customerPO.getAuthurl())) {
@@ -576,9 +570,9 @@ public class CustomerServiceImpl implements CustomerService {
 			type = 1;
 		}
 
-		JSONObject info = elecsignService.authenticate(customerPO.getSignno(), customerPO.getName(), SensitiveDataHelper.decrypt(customerPO.getPhone()), authno, type);
+		JSONObject info = Signature.authenticate(customerPO.getSignno(), customerPO.getName(), SensitiveDataHelper.decrypt(customerPO.getPhone()), authno, type);
 
-		String redirect = elecsignService.decode(info.getString("url"));
+		String redirect = Signature.decode(info.getString("url"));
 
 		customerPO.setToken(info.getString("transactionNo"));
 
@@ -601,7 +595,7 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130028, "客户状态不可操作");
 		}
 
-		JSONObject info = elecsignService.person(customerPO.getToken());
+		JSONObject info = Signature.person(customerPO.getToken());
 
 		JSONObject person = info.getJSONObject("person");
 
@@ -663,7 +657,7 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130002, "客户信息不存在");
 		}
 
-		elecsignService.signature(customerPO.getSignno(), imgbase);
+		Signature.signature(customerPO.getSignno(), imgbase);
 
 		customerPO.setSignPath(customerVO.getSignPath());
 

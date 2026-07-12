@@ -15,8 +15,7 @@ import com.fanglin.data.common.service.SupplierSignetService;
 import com.fanglin.data.common.vo.SupplierSignetVO;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.data.po.SupplierSignetPO;
-import com.fanglin.elecsign.enums.ElecsignProvider;
-import com.fanglin.elecsign.service.ElecsignService;
+import com.fanglin.fadada.signature.Signature;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -27,9 +26,6 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 
 	@Autowired
 	private SupplierSignetDao supplierSignetDao;
-
-	@Autowired
-	private ElecsignService elecsignService;
 
 	@Override
 	public void pageSupplierSignet(Paging paging, List<Filter> filters, SupplierSignetVO supplierSignetVO, int company) {
@@ -131,11 +127,10 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 
 		signetPO.setNo(supplierSignetPO.getNo());
 
-		elecsignService.register(signetPO);
+		Signature.register(signetPO);
 
 		supplierSignetPO.setStatus(SignetPO.STATUS_REGIST_INT);
 		supplierSignetPO.setSignno(signetPO.getSignno());
-		supplierSignetPO.setProvider(ElecsignProvider.FADADA.code()); // 记录账号所属厂商，存量默认法大大
 
 		supplierSignetDao.update(supplierSignetPO);
 
@@ -161,7 +156,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 		signetPO.setSignno(supplierSignetPO.getSignno());
 		signetPO.setName(supplierSignetPO.getName());
 
-		String path = elecsignService.authenticate(signetPO);
+		String path = Signature.authenticate(signetPO);
 
 		supplierSignetPO.setStatus(SignetPO.STATUS_AUTH_INT);
 		supplierSignetPO.setToken(signetPO.getToken());
@@ -192,7 +187,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 
 		signetPO.setToken(supplierSignetPO.getToken());
 
-		elecsignService.company(signetPO);
+		Signature.company(signetPO);
 
 		supplierSignetPO.setStatus(SignetPO.STATUS_CONFIRM_INT);
 
@@ -214,7 +209,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		elecsignService.signature(supplierSignetPO.getSignno(), supplierSignetVO.getData());
+		Signature.signature(supplierSignetPO.getSignno(), supplierSignetVO.getData());
 
 		return 0;
 	}
@@ -238,7 +233,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 		signetPO.setToken(supplierSignetPO.getToken());
 		signetPO.setSignno(supplierSignetPO.getSignno());
 
-		String path = elecsignService.beforeauto(signetPO);
+		String path = Signature.beforeauto(signetPO);
 
 		supplierSignetVO.setPath(path);
 
