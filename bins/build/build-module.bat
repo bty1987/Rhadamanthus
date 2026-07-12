@@ -95,7 +95,12 @@ goto :module_compile
 if not exist "%CLASSES_DIR%" mkdir "%CLASSES_DIR%"
 set ALL_SOURCES=%PROJECT_DIR%\target\all-sources.txt
 dir /s /b "%SRC_DIR%\*.java" > "%ALL_SOURCES%"
-"!JAVAC_EXE!" -encoding UTF-8 -nowarn -Xlint:none -d "%CLASSES_DIR%" -cp "%CP%" @"%ALL_SOURCES%" 2>"%PROJECT_DIR%\target\compile-errors.log"
+REM full compile: classpath must NOT contain target\classes itself
+REM (stale .class in target\classes can shadow fresh source and cause spurious errors)
+set CP_FULL=%CONF_DIR%
+for %%j in ("%LIB_DIR%\*.jar") do set CP_FULL=!CP_FULL!;%%j
+for %%j in ("%PRIV_LIB_DIR%\*.jar") do set CP_FULL=!CP_FULL!;%%j
+"!JAVAC_EXE!" -encoding UTF-8 -nowarn -Xlint:none -d "%CLASSES_DIR%" -cp "%CP_FULL%" @"%ALL_SOURCES%" 2>"%PROJECT_DIR%\target\compile-errors.log"
 if errorlevel 1 (
     echo [X] full compile failed, see target\compile-errors.log
     type "%PROJECT_DIR%\target\compile-errors.log"
@@ -142,11 +147,13 @@ set MOD_CLASS_COUNT=0
 for /r "%MOD_CLASSES%" %%f in (*.class) do set /a MOD_CLASS_COUNT+=1
 echo       !MOD_CLASS_COUNT! class files
 
-REM ---- step6: package jar (module classes only) ----
+REM ---- step6: package jar (module classes only, no manifest) ----
 echo [6/6] package fanglin-!MODULE!-!VERSION!.jar ...
 if exist "%JAR_OUTPUT%" del "%JAR_OUTPUT%"
 pushd "%MOD_CLASSES%"
-"!JAR_EXE!" cf "%JAR_OUTPUT%" com\fanglin\!MODULE!
+REM 用 M(不生成MANIFEST.MF), 模拟第三方zip工具重打包, 兼容Tomcat加载
+REM (jar cf生成的manifest会导致部分Tomcat环境无法识别class, zip重打包则正常)
+"!JAR_EXE!" cfM "%JAR_OUTPUT%" com\fanglin\!MODULE!
 popd
 
 if not exist "%JAR_OUTPUT%" (
