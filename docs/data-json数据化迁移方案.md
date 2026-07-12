@@ -377,5 +377,5 @@ taskParam.taskParamModule = constant.data().taskParam.module.keys;
 | 后端 Service | `src/com/fanglin/communion/service/impl/ConstantServiceImpl.java` |
 | 后端 DAO | `src/com/fanglin/communion/dao/impl/ConstantDaoImpl.java` |
 | PO | `src/com/fanglin/communion/po/ConstantPO.java` |
-| 建表脚本 | `WebContent/db/communion.sql:264` |
+| 建表脚本 | `dbs/communion.sql` |
 | 数据样例参考 | `sql/aoodsCharge_constants.sql`、`sql/add_normtime_status_constant.sql` |

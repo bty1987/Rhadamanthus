@@ -1,9 +1,9 @@
 # Approval 审批模块前后台评估报告
 
 > 评估日期：2026-06-22
-> 评估范围：`src/com/fanglin/approval`（后端）+ `WebContent/{views,js,db}` 中的 approval 相关文件（前端）
+> 评估范围：`src/com/fanglin/approval`（后端）+ `WebContent/{views,js}` 中的 approval 相关文件（前端）
 > 评估方式：静态代码审查（自动 + 人工），关键结论已用脚本/源码复核
-> 数据库表数：28 张（`WebContent/db/approval.sql`）
+> 数据库表数：28 张（`dbs/approval.sql`）
 
 ---
 
@@ -441,7 +441,7 @@ public static final short APPROVAL_TYPE_QUOTATION_PREFER‌_INT = 22;
 | 审批主实体 | `src/com/fanglin/approval/po/ApprovalPO.java` |
 | 通用 Action | `src/com/fanglin/approval/action/ApprovalAction.java` |
 | 钉钉集成入口 | `src/com/fanglin/approval/action/ApprovalCommonAction.java` |
-| 数据库表结构 | `WebContent/db/approval.sql`（28 张表） |
+| 数据库表结构 | `dbs/approval.sql`（28 张表） |
 | 前端 API 注册 | `WebContent/js/api/approval.js`（60 个 API） |
 | 前端通用审批引擎 | `WebContent/js/approval/approval4common.js`（407 行） |
 | 前端审批跟踪 | `WebContent/js/approval/approval4track.js`（313 行） |
