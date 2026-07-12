@@ -75,7 +75,9 @@ echo.
 
 REM ---- step3: build CLASSPATH ----
 echo [3/7] build CLASSPATH...
-set CP=%CLASSES_DIR%;%CONF_DIR%
+REM full compile: classpath must NOT contain target\classes itself
+REM (stale .class in target\classes can shadow fresh source and cause spurious errors)
+set CP=%CONF_DIR%
 for %%j in ("%LIB_DIR%\*.jar") do set CP=!CP!;%%j
 for %%j in ("%PRIV_LIB_DIR%\*.jar") do set CP=!CP!;%%j
 echo [v] CLASSPATH ready
