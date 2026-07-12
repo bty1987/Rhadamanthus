@@ -53,9 +53,9 @@ import com.fadada.sdk.verify.model.req.FindPersonCertParams;
 import com.fadada.sdk.verify.model.req.PersonVerifyUrlParams;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.SignetPO;
-import com.fanglin.fadada.bean.Contract;
+import com.fanglin.elecsign.bean.Contract;
 import com.fanglin.fadada.tools.FddEncryptTool;
-import com.fanglin.fadada.vo.SignatureVO;
+import com.fanglin.elecsign.vo.SignatureVO;
 import com.fanglin.utils.EncryptConfigLoader;
 import com.fanglin.utils.SystemConfig;
 

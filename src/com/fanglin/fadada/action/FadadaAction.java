@@ -23,7 +23,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.elecsign.service.ElecsignService;
-import com.fanglin.fadada.vo.SignatureVO;
+import com.fanglin.elecsign.vo.SignatureVO;
 
 @ParentPackage("base")
 @Namespace("/")
