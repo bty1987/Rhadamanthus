@@ -38,29 +38,35 @@ jQuery(function($) {
         });
     }
 
-    // ===== 字段列表渲染 =====
+    // ===== 字段列表渲染(表格) =====
     function renderFields() {
 
-        var $list = com.focusPage("#fieldList").empty();
+        var $body = com.focusPage("#fieldBody").empty();
 
+        com.focusPage("#fieldTable").toggle(form.fields.length > 0);
         com.focusPage("#notfield").toggle(form.fields.length === 0);
 
         $.each(form.fields, function(i, field) {
-            var $li = $('<li></li>').addClass("item-blue").css({ "padding": "8px", "margin": "4px 0", "border": "1px solid #ddd", "border-radius": "4px" });
 
-            $('<div></div>').html(
-                "<strong>" + field.fieldLabel + " (" + field.fieldKey + ")</strong>" +
-                " <span class='label label-warning'>" + (controlMap[field.controlType] || field.controlType) + "</span>" +
-                (field.required == 1 ? " <span class='label label-important'>必填</span>" : "") +
-                " <span class='label label-info'>排序" + field.sortOrder + "</span>"
-            ).appendTo($li);
+            var $tr = $('<tr></tr>');
 
-            var $btnGroup = $('<div></div>').css("margin-top", "5px");
-            $('<button></button>').addClass("btn btn-minier btn-yellow").text("编辑").on("click", function() { editField(i); }).appendTo($btnGroup);
-            $('<button></button>').addClass("btn btn-minier btn-danger").text("删除").css("margin-left", "5px").on("click", function() { deleteField(i); }).appendTo($btnGroup);
+            $('<td></td>').text(field.sortOrder).appendTo($tr);
+            $('<td></td>').text(field.fieldKey).appendTo($tr);
+            $('<td></td>').text(field.fieldLabel).appendTo($tr);
+            $('<td></td>').html("<span class='label label-warning'>" + (controlMap[field.controlType] || field.controlType) + "</span>").appendTo($tr);
+            $('<td></td>').html(field.required == 1 ? "<span class='label label-important'>是</span>" : "否").appendTo($tr);
 
-            $btnGroup.appendTo($li);
-            $list.append($li);
+            var detail = field.defaultValue ? "默认:" + field.defaultValue + " " : "";
+            detail += field.dataSource ? "<br/>数据源:" + field.dataSource.substring(0, 30) : "";
+            detail += field.validateRule ? "<br/>验证:" + field.validateRule : "";
+            $('<td></td>').addClass("small muted").html(detail || "-").appendTo($tr);
+
+            var $btnTd = $('<td></td>');
+            $('<button></button>').addClass("btn btn-minier btn-yellow").html('<i class="icon-edit"></i>').attr("title", "编辑").on("click", function() { editField(i); }).appendTo($btnTd);
+            $('<button></button>').addClass("btn btn-minier btn-danger").html('<i class="icon-trash"></i>').css("margin-left", "3px").attr("title", "删除").on("click", function() { deleteField(i); }).appendTo($btnTd);
+            $btnTd.appendTo($tr);
+
+            $body.append($tr);
         });
     }
 

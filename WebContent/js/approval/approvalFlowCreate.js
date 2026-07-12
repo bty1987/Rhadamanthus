@@ -51,30 +51,34 @@ jQuery(function($) {
         });
     }
 
-    // ===== 节点列表渲染 =====
+    // ===== 节点列表渲染(表格) =====
     function renderNodes() {
 
-        var $list = com.focusPage("#nodeList").empty();
+        var $body = com.focusPage("#nodeBody").empty();
 
+        com.focusPage("#nodeTable").toggle(flow.nodes.length > 0);
         com.focusPage("#notnode").toggle(flow.nodes.length === 0);
 
         $.each(flow.nodes, function(i, node) {
-            var $li = $('<li></li>').addClass("item-blue").css({ "padding": "8px", "margin": "4px 0", "border": "1px solid #ddd", "border-radius": "4px" });
 
-            $('<div></div>').html(
-                "<strong>节点" + node.nodeSeq + ": " + node.nodeName + "</strong>" +
-                " <span class='label label-warning'>" + (nodeTypeMap[node.nodeType] || node.nodeType) + "</span>" +
-                " <span class='label label-info'>" + (ruleMap[node.approverRule] || node.approverRule) + "</span>" +
-                (node.passRatio ? " <span class='label label-success'>比例" + node.passRatio + "</span>" : "")
-            ).appendTo($li);
+            var $tr = $('<tr></tr>');
 
-            var $btnGroup = $('<div></div>').css("margin-top", "5px");
+            $('<td></td>').text(node.nodeSeq).appendTo($tr);
+            $('<td></td>').text(node.nodeName).appendTo($tr);
+            $('<td></td>').html("<span class='label label-warning'>" + (nodeTypeMap[node.nodeType] || node.nodeType) + "</span>").appendTo($tr);
+            $('<td></td>').html("<span class='label label-info'>" + (ruleMap[node.approverRule] || node.approverRule) + "</span>").appendTo($tr);
 
-            $('<button></button>').addClass("btn btn-minier btn-yellow").text("编辑").on("click", function() { editNode(i); }).appendTo($btnGroup);
-            $('<button></button>').addClass("btn btn-minier btn-danger").text("删除").css("margin-left", "5px").on("click", function() { deleteNode(i); }).appendTo($btnGroup);
+            var detail = node.passRatio ? "比例:" + node.passRatio + " " : "";
+            detail += node.approverData ? "审批人:" + node.approverData.substring(0, 30) : "";
+            detail += node.postHandler ? (detail ? "<br/>" : "") + "后置:" + node.postHandler.substring(0, 30) : "";
+            $('<td></td>').addClass("small muted").html(detail || "-").appendTo($tr);
 
-            $btnGroup.appendTo($li);
-            $list.append($li);
+            var $btnTd = $('<td></td>');
+            $('<button></button>').addClass("btn btn-minier btn-yellow").html('<i class="icon-edit"></i>').attr("title", "编辑").on("click", function() { editNode(i); }).appendTo($btnTd);
+            $('<button></button>').addClass("btn btn-minier btn-danger").html('<i class="icon-trash"></i>').css("margin-left", "3px").attr("title", "删除").on("click", function() { deleteNode(i); }).appendTo($btnTd);
+            $btnTd.appendTo($tr);
+
+            $body.append($tr);
         });
     }
 

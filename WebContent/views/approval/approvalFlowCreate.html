@@ -3,60 +3,72 @@
 
         <form class="form-horizontal" id="flowForm">
             <div class="form-group">
-                <label class="col-sm-2 control-label orange" for="code">流程编码</label>
+                <label class="col-sm-2 control-label no-padding-right orange" for="code">流程编码</label>
                 <div class="col-sm-4">
-                    <input type="text" id="code" class="col-sm-12 v_required" maxlength="64" placeholder="如 DECORATION_CONTRACT" />
+                    <input type="text" id="code" class="col-xs-12 v_required" maxlength="64" placeholder="如 DECORATION_CONTRACT" />
                 </div>
-                <label class="col-sm-2 control-label orange" for="name">流程名称</label>
+                <label class="col-sm-2 control-label no-padding-right orange" for="name">流程名称</label>
                 <div class="col-sm-4">
-                    <input type="text" id="name" class="col-sm-12 v_required" maxlength="100" />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-2 control-label orange" for="businessType">业务类型</label>
-                <div class="col-sm-4">
-                    <select id="businessType" class="col-sm-12 v_required">
-                        <option value="24">装饰合同</option>
-                        <option value="5">装修退款</option>
-                        <option value="6">主材退款</option>
-                        <option value="10">销售退款</option>
-                        <option value="3">装修归属</option>
-                        <option value="22">报价优惠</option>
-                        <option value="4">报价折扣</option>
-                        <option value="19">装修终审</option>
-                        <option value="26">预付款提现</option>
-                    </select>
-                </div>
-                <label class="col-sm-2 control-label" for="version">版本</label>
-                <div class="col-sm-4">
-                    <input type="number" id="version" class="col-sm-12" value="1" min="1" />
+                    <input type="text" id="name" class="col-xs-12 v_required" maxlength="100" />
                 </div>
             </div>
+            <div class="space-4"></div>
 
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="comment">说明</label>
+                <label class="col-sm-2 control-label no-padding-right orange" for="businessType">业务类型</label>
+                <div class="col-sm-4">
+                    <select id="businessType" class="col-xs-12 v_required"></select>
+                </div>
+                <label class="col-sm-2 control-label no-padding-right" for="version">版本</label>
+                <div class="col-sm-4">
+                    <input type="number" id="version" class="col-xs-12" value="1" min="1" />
+                </div>
+            </div>
+            <div class="space-4"></div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="comment">说明</label>
                 <div class="col-sm-10">
-                    <textarea id="comment" class="col-sm-12" rows="2" maxlength="255"></textarea>
+                    <textarea id="comment" class="col-xs-12" rows="2" maxlength="255"></textarea>
                 </div>
             </div>
         </form>
 
-        <hr />
+        <div class="hr hr- dotted"></div>
 
-        <div class="col-xs-12">
-            <h4 class="header lighter blue">审批节点配置</h4>
-            <div class="alert alert-info">
-                <p><strong>节点类型:</strong> 串行(单人顺序) | 并签(全通过) | 或签(任一通过) | 会签(按比例)</p>
-                <p><strong>审批人规则:</strong> 指定人(approverData 填 ["userId1","userId2"])</p>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="page-header">
+                    <h4 class="header lighter blue">审批节点配置 <small>拖动排序,至少配置一个节点</small></h4>
+                </div>
+
+                <table class="table table-striped table-bordered" id="nodeTable" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-1">顺序</th>
+                            <th class="col-xs-3">节点名称</th>
+                            <th class="col-xs-2">节点类型</th>
+                            <th class="col-xs-2">审批人规则</th>
+                            <th class="col-xs-3">审批人/比例/后置</th>
+                            <th class="col-xs-1">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="nodeBody"></tbody>
+                </table>
+
+                <div id="notnode" class="alert alert-info center">
+                    <i class="icon-info-circle"></i> 暂无节点,请点击下方按钮添加
+                </div>
+
+                <div class="clearfix" style="margin: 10px 0;">
+                    <button type="button" id="addNodeBtn" class="btn btn-warning btn-sm pull-left">
+                        <i class="icon-plus"></i> 添加节点
+                    </button>
+                    <button type="button" id="submitBtn" class="btn btn-primary btn-sm pull-right">
+                        <i class="icon-save"></i> 保存流程
+                    </button>
+                </div>
             </div>
-            <div id="notnode" class="alert alert-warning center" style="display:none;">无节点信息,请添加</div>
-            <ul class="item-list fl-table-list" id="nodeList"></ul>
-        </div>
-
-        <div class="col-xs-12">
-            <button type="button" id="addNodeBtn" class="btn btn-warning btn-sm"><i class="icon-plus"></i> 添加节点</button>
-            <button type="button" id="submitBtn" class="btn btn-primary pull-right">保存流程</button>
         </div>
 
     </div>
@@ -75,32 +87,38 @@
                     <input type="hidden" id="nodeIndex" />
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label orange">节点顺序</label>
-                        <div class="col-sm-3"><input type="number" id="nodeSeq" class="col-sm-12 v_required" min="1" /></div>
-                        <label class="col-sm-3 control-label orange">节点名称</label>
-                        <div class="col-sm-6"><input type="text" id="nodeName" class="col-sm-12 v_required" maxlength="100" placeholder="如:部门经理审批" /></div>
+                        <label class="col-sm-3 control-label no-padding-right orange">节点顺序</label>
+                        <div class="col-sm-3">
+                            <input type="number" id="nodeSeq" class="col-xs-12 v_required" min="1" />
+                        </div>
+                        <label class="col-sm-3 control-label no-padding-right orange">节点名称</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="nodeName" class="col-xs-12 v_required" maxlength="100" placeholder="如:部门经理审批" />
+                        </div>
                     </div>
+                    <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label orange">节点类型</label>
+                        <label class="col-sm-3 control-label no-padding-right orange">节点类型</label>
                         <div class="col-sm-3">
-                            <select id="nodeType" class="col-sm-12">
+                            <select id="nodeType" class="col-xs-12">
                                 <option value="1">串行</option>
                                 <option value="2">并签(全通过)</option>
                                 <option value="3">或签(任一通过)</option>
                                 <option value="4">会签(按比例)</option>
                             </select>
                         </div>
-                        <label class="col-sm-3 control-label" id="ratioLabel" style="display:none;">通过比例</label>
+                        <label class="col-sm-3 control-label no-padding-right" id="ratioLabel" style="display:none;">通过比例</label>
                         <div class="col-sm-3" id="ratioWrap" style="display:none;">
-                            <input type="text" id="passRatio" class="col-sm-12" placeholder="0~1, 如 0.5" />
+                            <input type="text" id="passRatio" class="col-xs-12" placeholder="0~1, 如 0.5" />
                         </div>
                     </div>
+                    <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label orange">审批人规则</label>
+                        <label class="col-sm-3 control-label no-padding-right orange">审批人规则</label>
                         <div class="col-sm-3">
-                            <select id="approverRule" class="col-sm-12">
+                            <select id="approverRule" class="col-xs-12">
                                 <option value="0">指定人</option>
                                 <option value="1">直属上级</option>
                                 <option value="2">部门负责人</option>
@@ -109,28 +127,33 @@
                                 <option value="5">表达式</option>
                             </select>
                         </div>
-                        <label class="col-sm-3 control-label orange">超时(小时)</label>
-                        <div class="col-sm-3"><input type="number" id="timeoutHours" class="col-sm-12" min="0" /></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label orange">审批人数据</label>
-                        <div class="col-sm-9">
-                            <textarea id="approverData" class="col-sm-12" rows="3" placeholder='指定人规则填 JSON 数组,如 ["U001","U002"]'></textarea>
+                        <label class="col-sm-3 control-label no-padding-right">超时(小时)</label>
+                        <div class="col-sm-3">
+                            <input type="number" id="timeoutHours" class="col-xs-12" min="0" />
                         </div>
                     </div>
+                    <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">后置处理器</label>
+                        <label class="col-sm-3 control-label no-padding-right orange">审批人数据</label>
                         <div class="col-sm-9">
-                            <input type="text" id="postHandler" class="col-sm-12" placeholder="beanClass#methodName,如 com.fanglin.xxx.XxxServiceImpl#doSomething" />
+                            <textarea id="approverData" class="col-xs-12" rows="3" placeholder='指定人规则填 JSON 数组,如 ["U001","U002"]'></textarea>
                         </div>
                     </div>
+                    <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">驳回策略</label>
+                        <label class="col-sm-3 control-label no-padding-right">后置处理器</label>
                         <div class="col-sm-9">
-                            <select id="rejectStrategy" class="col-sm-6">
+                            <input type="text" id="postHandler" class="col-xs-12" placeholder="beanClass#methodName" />
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">驳回策略</label>
+                        <div class="col-sm-9">
+                            <select id="rejectStrategy" class="col-xs-6">
                                 <option value="0">整体驳回</option>
                                 <option value="1">回退上一节点</option>
                                 <option value="2">回退发起人</option>
@@ -139,8 +162,9 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer" style="text-align:center;">
+            <div class="modal-footer">
                 <button type="button" id="saveNodeBtn" class="btn btn-primary">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>

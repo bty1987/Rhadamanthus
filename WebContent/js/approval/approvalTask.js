@@ -17,37 +17,33 @@ jQuery(function($) {
 
     var nodeTypeMap = { 1: "串行", 2: "并签", 3: "或签", 4: "会签" };
 
-    // ===== 加载待办列表 =====
+    // ===== 加载待办列表(表格) =====
     function loadTodoList() {
 
         com.post(api.approval.queryApprovalTodoTask, {}, function(res) {
 
-            var $list = com.focusPage("#taskList").empty();
+            var $body = com.focusPage("#taskBody").empty();
             var tasks = res.tasks || [];
 
-            if (tasks.length === 0) {
-                $('<div></div>').addClass("alert alert-info center").text("暂无待办任务").appendTo($list);
-                return;
-            }
+            com.focusPage("#taskTable").toggle(tasks.length > 0);
+            com.focusPage("#notTask").toggle(tasks.length === 0);
 
             $.each(tasks, function(i, t) {
-                var $item = $('<div></div>').css({ "padding": "12px", "margin": "8px 0", "border": "1px solid #ddd", "border-radius": "4px", "background": "#fafafa" });
 
-                $('<h5></h5>').html(
-                    "<strong>任务 #" + t.taskId + "</strong>" +
-                    " <span class='label label-primary'>" + (nodeTypeMap[t.nodeType] || t.nodeType) + "</span>" +
-                    " 节点" + t.nodeSeq +
-                    " 审批单:" + t.aid
-                ).appendTo($item);
+                var $tr = $('<tr></tr>');
 
-                $('<p></p>').addClass("muted small").text("分配时间:" + (t.assignTime || "")).appendTo($item);
+                $('<td></td>').html("<strong>#" + t.taskId + "</strong>").appendTo($tr);
+                $('<td></td>').text(t.aid).appendTo($tr);
+                $('<td></td>').text(t.nodeSeq).appendTo($tr);
+                $('<td></td>').html("<span class='label label-primary'>" + (nodeTypeMap[t.nodeType] || t.nodeType) + "</span>").appendTo($tr);
+                $('<td></td>').addClass("small muted").text(t.assignTime || "-").appendTo($tr);
 
-                var $btnGroup = $('<div></div>').css("margin-top", "8px");
-                $('<button></button>').addClass("btn btn-minier btn-success").html('<i class="icon-check"></i> 审批').on("click", function() { openTaskModal(t); }).appendTo($btnGroup);
-                $('<button></button>').addClass("btn btn-minier btn-info").html('<i class="icon-reorder"></i> 轨迹').css("margin-left", "5px").on("click", function() { openTraceModal(t.aid); }).appendTo($btnGroup);
+                var $btnTd = $('<td></td>');
+                $('<button></button>').addClass("btn btn-minier btn-success").html('<i class="icon-check"></i> 审批').on("click", function() { openTaskModal(t); }).appendTo($btnTd);
+                $('<button></button>').addClass("btn btn-minier btn-info").html('<i class="icon-reorder"></i> 轨迹').css("margin-left", "5px").on("click", function() { openTraceModal(t.aid); }).appendTo($btnTd);
+                $btnTd.appendTo($tr);
 
-                $btnGroup.appendTo($item);
-                $list.append($item);
+                $body.append($tr);
             });
         });
     }
@@ -64,36 +60,32 @@ jQuery(function($) {
         task.modal.modal("show");
     }
 
-    // ===== 打开轨迹弹窗 =====
+    // ===== 打开轨迹弹窗(表格) =====
     function openTraceModal(aid) {
 
         com.post(api.approval.queryApprovalTaskTrace, { "task.aid": aid }, function(res) {
 
-            var $list = com.focusPage("#traceList").empty();
+            var $body = com.focusPage("#traceBody").empty();
             var tasks = res.tasks || [];
 
             if (tasks.length === 0) {
-                $('<li></li>').addClass("alert alert-info").text("暂无轨迹").appendTo($list);
+                $('<tr></tr>').html('<td colspan="6" class="alert alert-info center">暂无轨迹</td>').appendTo($body);
+                task.traceModal.modal("show");
                 return;
             }
 
             $.each(tasks, function(i, t) {
-                var $li = $('<li></li>').css({ "padding": "8px", "margin": "4px 0", "border-left": "3px solid #428bca", "list-style": "none" });
 
-                $('<div></div>').html(
-                    "节点" + t.nodeSeq + " " + statusMap[t.status] +
-                    " 审批人:" + (t.assigneeId || "-") +
-                    (t.transferTo ? " → 转交 " + t.transferTo : "")
-                ).appendTo($li);
+                var $tr = $('<tr></tr>');
 
-                if (t.comment) {
-                    $('<div></div>').addClass("muted small").text("批注:" + t.comment).appendTo($li);
-                }
-                if (t.actionTime) {
-                    $('<div></div>').addClass("muted small").text("时间:" + t.actionTime).appendTo($li);
-                }
+                $('<td></td>').text(t.nodeSeq).appendTo($tr);
+                $('<td></td>').html(statusMap[t.status] || t.status).appendTo($tr);
+                $('<td></td>').text(t.assigneeId || "-").appendTo($tr);
+                $('<td></td>').text(t.transferTo || "-").appendTo($tr);
+                $('<td></td>').addClass("small").text(t.comment || "-").appendTo($tr);
+                $('<td></td>').addClass("small muted").text(t.actionTime || "-").appendTo($tr);
 
-                $list.append($li);
+                $body.append($tr);
             });
 
             task.traceModal.modal("show");
