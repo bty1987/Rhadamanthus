@@ -14,6 +14,7 @@ import com.fanglin.approval.dao.ApprovalDecorationContractDao;
 import com.fanglin.approval.po.ApprovalDecorationContractPO;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalDecorationContractService;
+import com.fanglin.approval.service.ApprovalFlowEngineService;
 import com.fanglin.approval.vo.ApprovalDecorationContractVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
@@ -53,6 +54,9 @@ public class ApprovalDecorationContractServiceImpl implements ApprovalDecoration
 
 	@Autowired
 	private DingTalkApprovalService approvalService;
+
+	@Autowired(required = false)
+	private ApprovalFlowEngineService approvalFlowEngineService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -98,7 +102,12 @@ public class ApprovalDecorationContractServiceImpl implements ApprovalDecoration
 
 		approvalDecorationContractDao.save(approvalDecorationContractPO);
 
-		if (code != null && !"".equals(code)) {
+		// 审批渠道互斥:配了本地流程定义走新引擎(纯本地流转),未配置则走钉钉(保持原行为)。
+		// 二者不可并行,避免同一单据在钉钉端和本地引擎同时流转产生状态混乱。
+		if (approvalFlowEngineService != null
+			&& approvalFlowEngineService.hasFlow(ApprovalPO.APPROVAL_TYPE_DECORATION_CONTRACT_INT, company)) {
+			approvalFlowEngineService.startFlow(approvalPO);
+		} else if (code != null && !"".equals(code)) {
 			String piid = approvalService.initiateApproval(code, userId, null, null, null, JSONArray.parseArray(forms), company);
 
 			approvalPO.setPiid(piid);
