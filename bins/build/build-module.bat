@@ -147,13 +147,13 @@ set MOD_CLASS_COUNT=0
 for /r "%MOD_CLASSES%" %%f in (*.class) do set /a MOD_CLASS_COUNT+=1
 echo       !MOD_CLASS_COUNT! class files
 
-REM ---- step6: package jar (module classes only, no manifest) ----
+REM ---- step6: package jar (module classes only) ----
 echo [6/6] package fanglin-!MODULE!-!VERSION!.jar ...
 if exist "%JAR_OUTPUT%" del "%JAR_OUTPUT%"
 pushd "%MOD_CLASSES%"
-REM 用 M(不生成MANIFEST.MF), 模拟第三方zip工具重打包, 兼容Tomcat加载
-REM (jar cf生成的manifest会导致部分Tomcat环境无法识别class, zip重打包则正常)
-"!JAR_EXE!" cfM "%JAR_OUTPUT%" com\fanglin\!MODULE!
+REM 打包com目录(含com/和com/fanglin/目录条目 + 标准MANIFEST.MF)
+REM MOD_CLASSES里只有目标模块的class, 所以打包com不会包含其它模块
+"!JAR_EXE!" cf "%JAR_OUTPUT%" com
 popd
 
 if not exist "%JAR_OUTPUT%" (
