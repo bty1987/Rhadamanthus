@@ -116,11 +116,11 @@ jQuery(function($) {
             nodeSeq: parseInt(flow.items.nodeSeq.val()),
             nodeName: flow.items.nodeName.val(),
             nodeType: parseInt(flow.items.nodeType.val()),
-            passRatio: flow.items.passRatio.val() || null,
+            passRatio: flow.items.passRatio.val() || "",
             approverRule: parseInt(flow.items.approverRule.val()),
-            timeoutHours: flow.items.timeoutHours.val() || null,
+            timeoutHours: flow.items.timeoutHours.val() || "",
             approverData: flow.items.approverData.val(),
-            postHandler: flow.items.postHandler.val() || null,
+            postHandler: flow.items.postHandler.val() || "",
             rejectStrategy: parseInt(flow.items.rejectStrategy.val()),
             status: 0
         };
@@ -150,9 +150,24 @@ jQuery(function($) {
             "flow.name": com.focusPage("#name").val(),
             "flow.businessType": parseInt(com.focusPage("#businessType").val()),
             "flow.version": parseInt(com.focusPage("#version").val() || 1),
-            "flow.comment": com.focusPage("#comment").val(),
-            "flowNodes": JSON.stringify(flow.nodes)
+            "flow.comment": com.focusPage("#comment").val()
         };
+
+        // 嵌套 List 参数:展开成 flowNodes[0].nodeName=xxx 形式(与 process2create.js 一致),
+        // 不能用 JSON.stringify(会变成字符串,Struts2 无法转换成 List)
+        $.each(flow.nodes, function(i, node) {
+            options["flowNodes[" + i + "].nodeSeq"] = node.nodeSeq;
+            options["flowNodes[" + i + "].nodeName"] = node.nodeName;
+            options["flowNodes[" + i + "].nodeType"] = node.nodeType;
+            options["flowNodes[" + i + "].approverRule"] = node.approverRule;
+            options["flowNodes[" + i + "].approverData"] = node.approverData;
+            options["flowNodes[" + i + "].rejectStrategy"] = node.rejectStrategy;
+            options["flowNodes[" + i + "].status"] = node.status;
+            // 选填字段:有值才传,避免 "null" 字符串污染
+            if (node.passRatio) options["flowNodes[" + i + "].passRatio"] = node.passRatio;
+            if (node.timeoutHours) options["flowNodes[" + i + "].timeoutHours"] = node.timeoutHours;
+            if (node.postHandler) options["flowNodes[" + i + "].postHandler"] = node.postHandler;
+        });
 
         var apiUrl = api.approval.addApprovalFlow;
 
