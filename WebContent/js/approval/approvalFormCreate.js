@@ -103,9 +103,9 @@ jQuery(function($) {
             controlType: parseInt(form.items.controlType.val()),
             sortOrder: parseInt(form.items.sortOrder.val() || 0),
             required: parseInt(form.items.required.val()),
-            defaultValue: form.items.defaultValue.val() || null,
-            dataSource: form.items.dataSource.val() || null,
-            validateRule: form.items.validateRule.val() || null,
+            defaultValue: form.items.defaultValue.val() || "",
+            dataSource: form.items.dataSource.val() || "",
+            validateRule: form.items.validateRule.val() || "",
             status: 0
         };
 
@@ -127,10 +127,31 @@ jQuery(function($) {
         var options = {
             "form.code": com.focusPage("#code").val(),
             "form.name": com.focusPage("#name").val(),
-            "form.flowId": com.focusPage("#flowId").val() || null,
-            "form.comment": com.focusPage("#comment").val(),
-            "formFields": JSON.stringify(form.fields)
+            "form.comment": com.focusPage("#comment").val()
         };
+
+        // flowId 选填,有值才传(避免传 null 被 jQuery 序列化成 "null" 字符串)
+        var flowIdVal = com.focusPage("#flowId").val();
+        if (flowIdVal) {
+            options["form.flowId"] = flowIdVal;
+        }
+
+        // 嵌套 List 参数:直接传数组对象(与 process2create.js 一致),
+        // jQuery $.param 展开成 formFields[0].fieldKey=xxx&formFields[0].fieldLabel=yyy,
+        // Struts2 OGNL 自动组装成 List<ApprovalFormFieldVO>。
+        // 不能用 JSON.stringify(会变成字符串,Struts2 无法转换)。
+        $.each(form.fields, function(i, field) {
+            options["formFields[" + i + "].fieldKey"] = field.fieldKey;
+            options["formFields[" + i + "].fieldLabel"] = field.fieldLabel;
+            options["formFields[" + i + "].controlType"] = field.controlType;
+            options["formFields[" + i + "].sortOrder"] = field.sortOrder;
+            options["formFields[" + i + "].required"] = field.required;
+            options["formFields[" + i + "].status"] = field.status;
+            // 选填字段:有值才传,避免 "null" 字符串污染
+            if (field.defaultValue) options["formFields[" + i + "].defaultValue"] = field.defaultValue;
+            if (field.dataSource) options["formFields[" + i + "].dataSource"] = field.dataSource;
+            if (field.validateRule) options["formFields[" + i + "].validateRule"] = field.validateRule;
+        });
 
         var apiUrl = api.approval.addApprovalForm;
 
