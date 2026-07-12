@@ -38,8 +38,7 @@ import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.elecsign.enums.ElecsignProvider;
-import com.fanglin.elecsign.service.ElecsignService;
+import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.personel.dao.DutmentDao;
 import com.fanglin.personel.dao.UserCompanyDao;
@@ -135,9 +134,6 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserOperationDao userOperationDao;
-
-	@Autowired
-	private ElecsignService elecsignService;
 
 	@Override
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, Integer company) throws FLException {
@@ -1318,8 +1314,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (userPO.getSignNo() == null || "".equals(userPO.getSignNo())) {
-			userPO.setSignNo(elecsignService.register(FormatUtil.fillZero(userPO.getUid(), "00000000")));
-			userPO.setProvider(ElecsignProvider.FADADA.code()); // 记录账号所属厂商，存量默认法大大
+			userPO.setSignNo(Signature.register(FormatUtil.fillZero(userPO.getUid(), "00000000")));
 		}
 
 		userDao.update(userPO);
@@ -1371,9 +1366,9 @@ public class UserServiceImpl implements UserService {
 
 		Short type = 0;
 
-		JSONObject info = elecsignService.authenticate(userPO.getSignNo(), userPO.getUserName(), userPO.getPhone(), userPO.getIdentity(), type);
+		JSONObject info = Signature.authenticate(userPO.getSignNo(), userPO.getUserName(), userPO.getPhone(), userPO.getIdentity(), type);
 
-		redirect = elecsignService.decode(info.getString("url"));
+		redirect = Signature.decode(info.getString("url"));
 
 		userPO.setToken(info.getString("transactionNo"));
 
@@ -1396,7 +1391,7 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190014, "人员状态不可操作");
 		}
 
-		JSONObject info = elecsignService.person(userPO.getToken());
+		JSONObject info = Signature.person(userPO.getToken());
 
 		JSONObject person = info.getJSONObject("person");
 
@@ -1430,7 +1425,7 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		elecsignService.signature(userPO.getSignNo(), imgbase);
+		Signature.signature(userPO.getSignNo(), imgbase);
 
 		userDao.update(userPO);
 

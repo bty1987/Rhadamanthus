@@ -22,7 +22,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.elecsign.bean.Contract;
+import com.fanglin.fadada.bean.Contract;
 
 @Entity
 @Table(name = "userContract", catalog = "communion")

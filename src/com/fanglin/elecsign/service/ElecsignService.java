@@ -6,8 +6,8 @@ import java.util.List;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.elecsign.bean.Contract;
-import com.fanglin.elecsign.vo.SignatureVO;
+import com.fanglin.fadada.bean.Contract;
+import com.fanglin.fadada.vo.SignatureVO;
 import com.fanglin.data.po.SignetPO;
 
 /**

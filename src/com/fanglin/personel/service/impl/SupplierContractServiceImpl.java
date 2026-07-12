@@ -17,7 +17,7 @@ import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.data.common.vo.SupplierSignetVO;
 import com.fanglin.decoration.po.DecorationContractPO;
-import com.fanglin.elecsign.service.ElecsignService;
+import com.fanglin.fadada.signature.Signature;
 import com.fanglin.personel.dao.SupplierContractDao;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.SupplierContractPO;
@@ -38,8 +38,6 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 	@Autowired
 	private UserDao userDao;
 
-	@Autowired
-	private ElecsignService elecsignService;
 
 	@Override
 	public List<SupplierContractVO> querySupplierContract(SupplierContractVO supplierContractVO) {
@@ -78,7 +76,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 			throw new FLException(190028, "合同不存在");
 		}
 
-		return elecsignService.view(supplierContractPO);
+		return Signature.view(supplierContractPO);
 	}
 
 	@Override
@@ -94,7 +92,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 			throw new FLException(190029, "合同不可操作");
 		}
 
-		elecsignService.autosign(signetVO.getSignno(), signetVO.getKeyword(), supplierContractPO, signetVO.getSignid());
+		Signature.autosign(signetVO.getSignno(), signetVO.getKeyword(), supplierContractPO, signetVO.getSignid());
 
 		supplierContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -116,7 +114,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 			throw new FLException(190029, "合同不可操作");
 		}
 
-		return elecsignService.extsign(supplierSignetVO.getSignno(), supplierContractPO);
+		return Signature.extsign(supplierSignetVO.getSignno(), supplierContractPO);
 	}
 
 	@Override
@@ -157,7 +155,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 		JSONObject params = JSONObject.parseObject(data);
 		JSONArray tables = JSON.parseArray(table);
 
-		elecsignService.generate(supplierContractPO, params, tables);
+		Signature.generate(supplierContractPO, params, tables);
 
 		supplierContractDao.update(supplierContractPO);
 
