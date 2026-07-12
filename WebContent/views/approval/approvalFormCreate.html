@@ -1,0 +1,118 @@
+<div class="row">
+    <div class="col-xs-12">
+
+        <form class="form-horizontal" id="formForm">
+            <div class="form-group">
+                <label class="col-sm-2 control-label orange" for="code">表单编码</label>
+                <div class="col-sm-4">
+                    <input type="text" id="code" class="col-sm-12 v_required" maxlength="64" placeholder="如 DECORATION_CONTRACT_FORM" />
+                </div>
+                <label class="col-sm-2 control-label orange" for="name">表单名称</label>
+                <div class="col-sm-4">
+                    <input type="text" id="name" class="col-sm-12 v_required" maxlength="100" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="flowId">关联流程ID</label>
+                <div class="col-sm-4">
+                    <input type="number" id="flowId" class="col-sm-12" placeholder="approvalFlow.flowId" />
+                </div>
+                <label class="col-sm-2 control-label" for="comment">说明</label>
+                <div class="col-sm-4">
+                    <input type="text" id="comment" class="col-sm-12" maxlength="255" />
+                </div>
+            </div>
+        </form>
+
+        <hr />
+
+        <div class="col-xs-12">
+            <h4 class="header lighter blue">字段配置</h4>
+            <div class="alert alert-info">
+                <p><strong>控件类型:</strong> 1文本 2文本域 3数字 4下拉 5日期 6用户选择 7部门选择 8附件</p>
+                <p><strong>验证规则:</strong> require(必填) integer(整数) float(小数) phone(手机号),逗号分隔</p>
+                <p><strong>下拉数据源:</strong> 逗号分隔值 或 beanClass#method 动态获取</p>
+            </div>
+            <div id="notfield" class="alert alert-warning center" style="display:none;">无字段信息,请添加</div>
+            <ul class="item-list fl-table-list" id="fieldList"></ul>
+        </div>
+
+        <div class="col-xs-12">
+            <button type="button" id="addFieldBtn" class="btn btn-warning btn-sm"><i class="icon-plus"></i> 添加字段</button>
+            <button type="button" id="submitBtn" class="btn btn-primary pull-right">保存表单</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- 字段编辑弹窗 -->
+<div class="modal fade" id="fieldModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title">字段配置</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="fieldFormField">
+                    <input type="hidden" id="fieldIndex" />
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label orange">字段键</label>
+                        <div class="col-sm-3"><input type="text" id="fieldKey" class="col-sm-12 v_required" maxlength="50" placeholder="英文,如 discountRate" /></div>
+                        <label class="col-sm-3 control-label orange">字段标签</label>
+                        <div class="col-sm-3"><input type="text" id="fieldLabel" class="col-sm-12 v_required" maxlength="100" placeholder="中文,如 降点比例" /></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label orange">控件类型</label>
+                        <div class="col-sm-3">
+                            <select id="controlType" class="col-sm-12">
+                                <option value="1">文本</option>
+                                <option value="2">文本域</option>
+                                <option value="3">数字</option>
+                                <option value="4">下拉</option>
+                                <option value="5">日期</option>
+                                <option value="6">用户选择</option>
+                                <option value="7">部门选择</option>
+                                <option value="8">附件</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-3 control-label">排序</label>
+                        <div class="col-sm-3"><input type="number" id="sortOrder" class="col-sm-12" value="0" min="0" /></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">必填</label>
+                        <div class="col-sm-3">
+                            <select id="required" class="col-sm-12">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-3 control-label">默认值</label>
+                        <div class="col-sm-3"><input type="text" id="defaultValue" class="col-sm-12" /></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">下拉数据源</label>
+                        <div class="col-sm-9"><input type="text" id="dataSource" class="col-sm-12" placeholder="逗号分隔 或 beanClass#method" /></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">验证规则</label>
+                        <div class="col-sm-9"><input type="text" id="validateRule" class="col-sm-12" placeholder="require,integer,float,phone 逗号分隔" /></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="text-align:center;">
+                <button type="button" id="saveFieldBtn" class="btn btn-primary">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/approval/approvalFormCreate.js']);
+</script>

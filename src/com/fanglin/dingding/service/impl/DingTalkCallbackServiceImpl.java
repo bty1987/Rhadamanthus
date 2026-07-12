@@ -27,7 +27,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptException;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
 import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.dao.ApprovalTaskDao;
 import com.fanglin.approval.po.ApprovalPO;
+import com.fanglin.approval.service.ApprovalFlowEngineService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.dao.DingTalkApprovalConfigDao;
 import com.fanglin.dingding.po.DingTalkApprovalConfigPO;
@@ -50,6 +52,12 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 
 	@Autowired
 	private ApprovalDao approvalDao;
+
+	@Autowired(required = false)
+	private ApprovalTaskDao approvalTaskDao;
+
+	@Autowired(required = false)
+	private ApprovalFlowEngineService approvalFlowEngineService;
 
 	@Autowired
 	private DingTalkApprovalConfigDao dingTalkApprovalConfigDao;
@@ -131,8 +139,25 @@ public class DingTalkCallbackServiceImpl implements DingTalkCallbackService {
 
 						approvalPO.setPiid(null);
 
-						if ("agree".equals(result)) approvalService.approve(approvalPO);
-						else approvalService.refuse(approvalPO);
+						// 流程引擎优先:已接入新引擎(有 task)的单据,按 assignee 匹配 task 推进节点流转,
+						// 实现"钉钉端审批 → 本地引擎流转";匹配失败或未接入引擎则回退老逻辑。
+						if (approvalTaskDao != null && approvalFlowEngineService != null
+							&& approvalTaskDao.hasTask(approvalPO.getAid())) {
+
+							boolean handled;
+							if ("agree".equals(result)) {
+								handled = approvalFlowEngineService.agreeByAssignee(approvalPO.getAid(), userId, "钉钉审批通过");
+							} else {
+								handled = approvalFlowEngineService.refuseByAssignee(approvalPO.getAid(), userId, "钉钉审批拒绝");
+							}
+
+							if (!handled) {
+								System.out.println(String.format("钉钉回调未匹配到待办任务(aid=%d, userId=%s),跳过", approvalPO.getAid(), userId));
+							}
+						} else {
+							if ("agree".equals(result)) approvalService.approve(approvalPO);
+							else approvalService.refuse(approvalPO);
+						}
 					}
 				}
 			}

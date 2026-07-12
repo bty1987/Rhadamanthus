@@ -9,7 +9,22 @@ $.extend(api.index, {
         url: "views/approval/process2create.html"
     },
     approvalCustomerSharedIndex: {
-        url: "views/approval/approvalCustomerShared.html"
+        url: "/views/approval/approvalCustomerShared.html"
+    },
+    approvalFlowIndex: {
+        url: "views/approval/approvalFlow.html"
+    },
+    createApprovalFlowIndex: {
+        url: "views/approval/approvalFlowCreate.html"
+    },
+    approvalFormIndex: {
+        url: "views/approval/approvalForm.html"
+    },
+    createApprovalFormIndex: {
+        url: "views/approval/approvalFormCreate.html"
+    },
+    approvalTaskIndex: {
+        url: "views/approval/approvalTask.html"
     }
 
 });
@@ -326,6 +341,79 @@ $.extend(api, {
         queryApprovalFunction: {
             url: "queryApprovalFunction.do"
         },
+
+        // ====== P2-P3 新引擎端点 ======
+
+        // 流程定义管理
+        pageApprovalFlow: {
+            url: "pageApprovalFlow.do",
+            demo: true
+        },
+        queryApprovalFlowByFlowId: {
+            url: "queryApprovalFlowByFlowId.do"
+        },
+        queryApprovalFlowNode: {
+            url: "queryApprovalFlowNode.do"
+        },
+        addApprovalFlow: {
+            url: "addApprovalFlow.do"
+        },
+        updateApprovalFlow: {
+            url: "updateApprovalFlow.do"
+        },
+        updateApprovalFlowForStatus: {
+            url: "updateApprovalFlowForStatus.do"
+        },
+        deleteApprovalFlow: {
+            url: "deleteApprovalFlow.do"
+        },
+
+        // 任务操作(引擎流转)
+        agreeApprovalTask: {
+            url: "agreeApprovalTask.do"
+        },
+        refuseApprovalTask: {
+            url: "refuseApprovalTask.do"
+        },
+        transferApprovalTask: {
+            url: "transferApprovalTask.do"
+        },
+        queryApprovalTaskTrace: {
+            url: "queryApprovalTaskTrace.do"
+        },
+        queryApprovalTodoTask: {
+            url: "queryApprovalTodoTask.do"
+        },
+
+        // 表单定义管理
+        pageApprovalForm: {
+            url: "pageApprovalForm.do",
+            demo: true
+        },
+        queryApprovalFormByFormId: {
+            url: "queryApprovalFormByFormId.do"
+        },
+        queryApprovalFormByFlowId: {
+            url: "queryApprovalFormByFlowId.do"
+        },
+        queryApprovalFormField: {
+            url: "queryApprovalFormField.do"
+        },
+        addApprovalForm: {
+            url: "addApprovalForm.do"
+        },
+        updateApprovalForm: {
+            url: "updateApprovalForm.do"
+        },
+        updateApprovalFormForStatus: {
+            url: "updateApprovalFormForStatus.do"
+        },
+        deleteApprovalForm: {
+            url: "deleteApprovalForm.do"
+        },
+        queryApprovalFormData: {
+            url: "queryApprovalFormData.do"
+        }
 
     }
 });

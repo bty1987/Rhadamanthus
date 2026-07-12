@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.dao.ApprovalTaskDao;
+import com.fanglin.approval.engine.ApprovalHandlerRegistry;
+import com.fanglin.approval.engine.ApprovalNodeHandler;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalCustomerChanceService;
 import com.fanglin.approval.service.ApprovalCustomerOriginService;
@@ -57,6 +60,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Autowired
 	private ApprovalDao approvalDao;
+
+	@Autowired(required = false)
+	private ApprovalTaskDao approvalTaskDao;
+
+	@Autowired(required = false)
+	private ApprovalHandlerRegistry approvalHandlerRegistry;
 
 	@Autowired
 	private ApprovalDecorationActivityService approvalDecorationActivityService;
@@ -232,6 +241,23 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 		short type = approvalPO.getType();
 
+		// 流程引擎守卫:已接入流程引擎(有任务记录)的审批单,后置业务由引擎 finalizeApproval 触发,
+		// 此处只更新状态,跳过老 switch 分发,避免重复触发后置业务(钉钉通用审批回调也会走到这里)。
+		if (approvalTaskDao != null && approvalTaskDao.hasTask(approvalPO.getAid())) {
+			approvalDao.update(approvalPO);
+			return approvalPO;
+		}
+
+		// SPI 短路:已迁移到 ApprovalNodeHandler 的业务类型走新分发,未命中走下方遗留 switch
+		if (approvalHandlerRegistry != null) {
+			ApprovalNodeHandler handler = approvalHandlerRegistry.lookup(type);
+			if (handler != null) {
+				handler.onApprove(approvalPO);
+				approvalDao.update(approvalPO);
+				return approvalPO;
+			}
+		}
+
 		switch (type) {
 			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT:
 				// approvalDecorationCustomerService.approvalForCustomer(approvalPO);
@@ -317,6 +343,26 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 
 		short type = approvalPO.getType();
+
+		// 流程引擎守卫:已接入流程引擎的审批单,后置业务由引擎处理,此处只更新状态,跳过老 switch。
+		if (approvalTaskDao != null && approvalTaskDao.hasTask(approvalPO.getAid())) {
+			approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
+			approvalDao.update(approvalPO);
+			return approvalPO;
+		}
+
+		// SPI 短路:已迁移到 ApprovalNodeHandler 的业务类型走新分发,未命中走下方遗留 switch
+		if (approvalHandlerRegistry != null) {
+			ApprovalNodeHandler handler = approvalHandlerRegistry.lookup(type);
+			if (handler != null) {
+				handler.onRefuse(approvalPO);
+				approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
+				approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
+				approvalDao.update(approvalPO);
+				return approvalPO;
+			}
+		}
 
 		switch (type) {
 			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
@@ -483,6 +529,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 		checkReceiver(approvalPO, userId);
 
+		// 守卫:已接入流程引擎(有任务记录)的审批单,必须经 ApprovalTaskAction 走节点流转,
+		// 禁止走老的单 receiver approve,否则会在首节点就误触发后置业务。
+		if (approvalTaskDao != null && approvalTaskDao.hasTask(approvalPO.getAid())) {
+			throw new FLException(240060, "该审批单已接入流程引擎,请通过任务接口审批");
+		}
+
 		approvalPO.setAnnotate(approvalVO.getAnnotate());
 
 		approve(approvalPO);
@@ -503,6 +555,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 
 		checkReceiver(approvalPO, userId);
+
+		// 守卫:已接入流程引擎的审批单,必须经 ApprovalTaskAction 走节点流转。
+		if (approvalTaskDao != null && approvalTaskDao.hasTask(approvalPO.getAid())) {
+			throw new FLException(240060, "该审批单已接入流程引擎,请通过任务接口审批");
+		}
 
 		approvalPO.setAnnotate(approvalVO.getAnnotate());
 
