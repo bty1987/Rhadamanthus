@@ -3,7 +3,7 @@
 ## ✅ 已完成工作
 
 ### 1. 数据库表结构
-- ✅ **SQL 脚本**: `sql/add_normtime_table.sql`
+- ✅ **SQL 脚本**: `sqls/add_normtime_table.sql`
   - `data.normtime` - 标准工期定额表
   - `quotation.normtimeitem` - 报价单工期明细表
 
@@ -38,7 +38,7 @@
 - ✅ **查询条件配置**: 已添加到 `WebContent/js/condition/data.js` (新增 4 个查询条件)
 
 ### 4. 数据库常量数据
-- ✅ **SQL 脚本**: `sql/add_normtime_status_constant.sql` (新建)
+- ✅ **SQL 脚本**: `sqls/add_normtime_status_constant.sql` (新建)
   - 定义了 normtime.status 字段的数据字典常量（0: 有效, 1: 无效）
 
 ---
@@ -97,7 +97,7 @@ ATTTYPE_SUB_INT = 1         // 扣减
 
 ### 1. 执行数据库脚本
 ```bash
-mysql -u用户名 -p密码 < sql/add_normtime_table.sql
+mysql -u用户名 -p密码 < sqls/add_normtime_table.sql
 ```
 
 ### 2. 编译项目
@@ -308,7 +308,7 @@ DAO 层执行 SQL 查询 → 返回结果
 ```
 
 ### 常量数据配置
-**SQL 脚本**: `sql/add_normtime_status_constant.sql`
+**SQL 脚本**: `sqls/add_normtime_status_constant.sql`
 
 ```sql
 INSERT INTO `constant` (`name`, `module`, `clazz`, `type`, `field`, `key`, `value`, `status`)

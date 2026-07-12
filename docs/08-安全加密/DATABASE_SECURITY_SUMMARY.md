@@ -111,7 +111,7 @@
 
 ### 步骤2：创建脱敏视图
 
-**脚本文件**：`sql/security/01_masked_views.sql`
+**脚本文件**：`sqls/security/01_masked_views.sql`
 
 **执行内容**：
 ```sql
@@ -148,7 +148,7 @@ user_v
 
 ### 步骤3：创建新用户
 
-**脚本文件**：`sql/security/03_create_users.sql` (v1.3)
+**脚本文件**：`sqls/security/03_create_users.sql` (v1.3)
 
 **创建用户清单**：
 
@@ -168,7 +168,7 @@ user_v
 
 ### 步骤4：配置用户权限
 
-**脚本文件**：`sql/security/03_create_users.sql` + `sql/security/05_fix_communion_permissions.sql`
+**脚本文件**：`sqls/security/03_create_users.sql` + `sqls/security/05_fix_communion_permissions.sql`
 
 **权限配置策略**：
 
@@ -211,7 +211,7 @@ GRANT SELECT ON communion.house_v TO 'BI'@'%';
 
 ### 步骤5：配置 IP 限制
 
-**脚本文件**：`sql/security/04_ip_restriction.sql`
+**脚本文件**：`sqls/security/04_ip_restriction.sql`
 
 **执行内容**：
 
@@ -359,11 +359,11 @@ GRANT SELECT ON `communion`.`house_v` TO 'BI'@'%'
 
 | 文档 | 路径 | 说明 |
 |-----|------|------|
-| 脱敏视图脚本 | sql/security/01_masked_views.sql | 创建4个脱敏视图 |
-| 敏感表权限控制 | sql/security/02_sensitive_table_permissions.sql | 权限控制说明 |
-| 用户创建脚本 | sql/security/03_create_users.sql | 创建7个新用户 |
-| IP 限制脚本 | sql/security/04_ip_restriction.sql | 配置 IP 限制 |
-| 权限修正脚本 | sql/security/05_fix_communion_permissions.sql | 修正权限配置 |
+| 脱敏视图脚本 | sqls/security/01_masked_views.sql | 创建4个脱敏视图 |
+| 敏感表权限控制 | sqls/security/02_sensitive_table_permissions.sql | 权限控制说明 |
+| 用户创建脚本 | sqls/security/03_create_users.sql | 创建7个新用户 |
+| IP 限制脚本 | sqls/security/04_ip_restriction.sql | 配置 IP 限制 |
+| 权限修正脚本 | sqls/security/05_fix_communion_permissions.sql | 修正权限配置 |
 | SQL 审计指南 | docs/08-安全加密/RDS_SQL_AUDIT_GUIDE.md | RDS 审计配置指南 |
 | 执行指南 | docs/08-安全加密/DATABASE_SECURITY_EXECUTION_GUIDE.md | 详细执行步骤 |
 | 本文档 | docs/08-安全加密/DATABASE_SECURITY_SUMMARY.md | 完整总结报告 |

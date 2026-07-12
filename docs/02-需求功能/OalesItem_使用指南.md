@@ -26,7 +26,7 @@
 - `src/com/fanglin/sales/action/OalesItemAction.java` - Action 控制器
 
 #### 5. 数据库
-- `sql/create_oalesitem_table.sql` - 建表 SQL 语句
+- `sqls/create_oalesitem_table.sql` - 建表 SQL 语句
 
 ### 前端文件
 
@@ -382,7 +382,7 @@ var priceYuan = (priceFen / 100).toFixed(2);  // 前端：500.50元
 ### Step 1: 执行数据库建表
 ```bash
 # 使用数据库查询工具
-D:/Python/Python38/python.exe .claude/skills/simple_query.py test "$(cat sql/create_oalesitem_table.sql)" sales
+D:/Python/Python38/python.exe .claude/skills/simple_query.py test "$(cat sqls/create_oalesitem_table.sql)" sales
 ```
 
 ### Step 2: 验证后端接口

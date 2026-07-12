@@ -668,7 +668,7 @@ quotation/
    - 新增 `idx_assignType` 索引（quotationassignrecord表）
 
 5. **SQL脚本**：
-   - 完整的建表脚本：`sql/add_quotation_budget_assignment.sql`
+   - 完整的建表脚本：`sqls/add_quotation_budget_assignment.sql`
    - 包含详细注释和示例数据
    - 包含索引说明和使用场景
 
@@ -1453,7 +1453,7 @@ $(function() {
 
 ```sql
 -- 执行建表脚本
-source sql/add_quotation_budget_assignment.sql;
+source sqls/add_quotation_budget_assignment.sql;
 
 -- 验证表创建
 USE quotation;
@@ -1923,7 +1923,7 @@ INSERT INTO `communion`.`constant` (`name`, `module`, `clazz`, `type`, `field`, 
 #### Git Pull 差异对比
 
 **Commit**: `1be98239` → `f019b49a`
-**文件**: `sql/add_quotation_budget_assignment.sql`
+**文件**: `sqls/add_quotation_budget_assignment.sql`
 **变更**: 7 insertions(+), 6 deletions(-)
 
 #### 差异分析
@@ -2023,7 +2023,7 @@ constant.quotation().quotationAssignConfig.enabled.datas[1]  // 返回 "启用"
 
 #### 相关文件更新
 
-- ✅ `sql/add_quotation_budget_assignment.sql` - 已更新为正确版本
+- ✅ `sqls/add_quotation_budget_assignment.sql` - 已更新为正确版本
 - ✅ `docs/DESIGN_quotation_budget_assignment_v1.5.md` - 本文档已更新规范说明
 - ✅ `WebContent/js/quotation/quotationAssignConfig.js` - 前端代码无需修改
 

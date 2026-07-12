@@ -644,7 +644,7 @@ args JSON 中的 `customerNo` 字段映射自数据库列 `customerchance.custom
 - `customerchance` 表列名 `leadno` 重命名为 `customerno`，对应 Java 字段 / getter / setter 一并更新（`CustomerChancePO`、`CustomerChanceVO`、`A20260103Action` 调用处）。
 - 消息队列 `customerNo` 字段的来源由 `customerchance.leadno` 改为 `customerchance.customerno`（args JSON 中的 `customerNo` 键名不变）。
 - 前端 `WebContent/js/customer/customerChance.js` 列定义 `leadno` 改为 `customerno`。
-- 同步执行 SQL 脚本：`sql/rename_customerchance_leadno_to_customerno.sql`。
+- 同步执行 SQL 脚本：`sqls/rename_customerchance_leadno_to_customerno.sql`。
 - `buildLeadnoArgs` 私有方法名作为内部实现细节保留，未改名。
 
 ### v2.2 (2026-06-30)

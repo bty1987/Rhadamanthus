@@ -67,7 +67,7 @@ public void setIsCheck(Short isCheck) {
 ### 3. 数据库修改
 
 #### 3.1 SQL 脚本文件
-**文件路径**: `sql/add_customerchance_ischeck.sql`
+**文件路径**: `sqls/add_customerchance_ischeck.sql`
 
 #### 3.2 SQL 内容
 ```sql
@@ -141,7 +141,7 @@ String hql = "FROM CustomerChancePO WHERE isCheck = 1";
 ## 注意事项
 
 1. **默认值**: 所有新创建的 CustomerChancePO 对象，isCheck 字段默认为 0（验证状态）
-2. **数据库字段**: 需要执行 SQL 脚本 `sql/add_customerchance_ischeck.sql` 来添加数据库字段
+2. **数据库字段**: 需要执行 SQL 脚本 `sqls/add_customerchance_ischeck.sql` 来添加数据库字段
 3. **现有数据**: SQL 脚本会将现有数据的 isCheck 字段初始化为 0
 4. **索引优化**: 已为 isCheck 字段创建索引，提高查询性能
 
@@ -150,7 +150,7 @@ String hql = "FROM CustomerChancePO WHERE isCheck = 1";
 ### 修改的文件
 1. `src/com/fanglin/customer/po/CustomerChancePO.java`
 2. `src/com/fanglin/customer/vo/CustomerChanceVO.java`
-3. `sql/add_customerchance_ischeck.sql`（新建）
+3. `sqls/add_customerchance_ischeck.sql`（新建）
 
 ### 可能影响的代码
 - CustomerChanceAction.java（控制器）
@@ -184,7 +184,7 @@ String hql = "FROM CustomerChancePO WHERE isCheck = 1";
 2. **数据库部署**
    ```bash
    # 执行 SQL 脚本
-   mysql -u root -p customer < sql/add_customerchance_ischeck.sql
+   mysql -u root -p customer < sqls/add_customerchance_ischeck.sql
    ```
 
 3. **验证**
