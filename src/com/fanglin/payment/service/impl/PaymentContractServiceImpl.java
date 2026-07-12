@@ -20,8 +20,8 @@ import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.fadada.signature.Signature;
 import com.fanglin.fadada.bean.Contract;
+import com.fanglin.fadada.signature.Signature;
 import com.fanglin.payment.dao.PaymentContractDao;
 import com.fanglin.payment.po.PaymentContractPO;
 import com.fanglin.payment.service.PaymentContractService;
@@ -59,7 +59,6 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 
 	@Autowired
 	private DecorationService decorationService;
-
 
 	@Override
 	public void pagePaymentContract(Paging paging, List<Filter> filters) {

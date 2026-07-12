@@ -38,7 +38,6 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 	@Autowired
 	private UserDao userDao;
 
-
 	@Override
 	public List<SupplierContractVO> querySupplierContract(SupplierContractVO supplierContractVO) {
 
