@@ -20,6 +20,8 @@ public class SignetPO implements Serializable, Signet {
 
 	public static final String COLUMN_COMPANY_STR = "company";
 
+	public static final String COLUMN_PROVIDER_STR = "provider";
+
 	public static final short STATUS_INIT_INT = 0;
 
 	public static final short STATUS_REGIST_INT = 1;
@@ -53,6 +55,8 @@ public class SignetPO implements Serializable, Signet {
 	private short type;
 	
 	private int company;
+
+	private Short provider; // 电子签厂商：1=法大大 2=e签宝（见 ElecsignProvider），存量默认1
 
 	public SignetPO() {
 		super();
@@ -121,6 +125,15 @@ public class SignetPO implements Serializable, Signet {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "provider")
+	public Short getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Short provider) {
+		this.provider = provider;
 	}
 
 	@Column(name = "signid")

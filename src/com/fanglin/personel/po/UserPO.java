@@ -138,6 +138,8 @@ public class UserPO implements Serializable {
 
 	private String signNo;
 
+	private Short provider; // 电子签厂商：1=法大大 2=e签宝（见 ElecsignProvider），存量默认1
+
 	private String token;
 
 	public UserPO() {
@@ -404,6 +406,15 @@ public class UserPO implements Serializable {
 
 	public void setSignNo(String signNo) {
 		this.signNo = signNo;
+	}
+
+	@Column(name = "provider")
+	public Short getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Short provider) {
+		this.provider = provider;
 	}
 
 	@Column(name = "token")

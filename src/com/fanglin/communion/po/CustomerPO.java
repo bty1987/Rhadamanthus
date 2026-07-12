@@ -82,6 +82,8 @@ public class CustomerPO implements Serializable {
 
 	private String signno;
 
+	private Short provider; // 电子签厂商：1=法大大 2=e签宝（见 ElecsignProvider），存量默认1
+
 	private String token;
 
 	private String authurl;
@@ -308,6 +310,15 @@ public class CustomerPO implements Serializable {
 
 	public void setSignno(String signno) {
 		this.signno = signno;
+	}
+
+	@Column(name = "provider")
+	public Short getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Short provider) {
+		this.provider = provider;
 	}
 
 	@Column(name = "token")

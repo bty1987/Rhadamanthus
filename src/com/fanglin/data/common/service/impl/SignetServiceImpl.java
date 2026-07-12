@@ -14,7 +14,8 @@ import com.fanglin.data.common.dao.SignetDao;
 import com.fanglin.data.common.service.SignetService;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.data.po.SignetPO;
-import com.fanglin.fadada.signature.Signature;
+import com.fanglin.elecsign.enums.ElecsignProvider;
+import com.fanglin.elecsign.service.ElecsignService;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -25,6 +26,9 @@ public class SignetServiceImpl implements SignetService {
 
 	@Autowired
 	private SignetDao signetDao;
+
+	@Autowired
+	private ElecsignService elecsignService;
 
 	@Override
 	public void pageSignet(Paging paging, List<Filter> filters, int company) {
@@ -120,9 +124,10 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		Signature.register(signetPO);
+		elecsignService.register(signetPO);
 
 		signetPO.setStatus(SignetPO.STATUS_REGIST_INT);
+		signetPO.setProvider(ElecsignProvider.FADADA.code()); // 记录账号所属厂商，存量默认法大大
 
 		signetDao.update(signetPO);
 
@@ -143,7 +148,7 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		String path = Signature.authenticate(signetPO);
+		String path = elecsignService.authenticate(signetPO);
 
 		signetPO.setStatus(SignetPO.STATUS_AUTH_INT);
 
@@ -168,7 +173,7 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		Signature.company(signetPO);
+		elecsignService.company(signetPO);
 
 		signetPO.setStatus(SignetPO.STATUS_CONFIRM_INT);
 
@@ -190,7 +195,7 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		Signature.signature(signetPO.getSignno(), signetVO.getData());
+		elecsignService.signature(signetPO.getSignno(), signetVO.getData());
 
 		return 0;
 	}
@@ -208,7 +213,7 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		String path = Signature.beforeauto(signetPO);
+		String path = elecsignService.beforeauto(signetPO);
 
 		signetVO.setPath(path);
 
