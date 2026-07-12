@@ -1,7 +1,26 @@
 <div class="row">
     <div class="col-xs-12">
-        <h3 class="header lighter blue">我的待办任务</h3>
-        <div id="taskList" class="clearfix"></div>
+        <div class="page-header">
+            <h3 class="header lighter blue">我的待办任务</h3>
+        </div>
+
+        <table class="table table-striped table-bordered" id="taskTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th class="col-xs-1">任务ID</th>
+                    <th class="col-xs-1">审批单</th>
+                    <th class="col-xs-1">节点</th>
+                    <th class="col-xs-2">节点类型</th>
+                    <th class="col-xs-3">分配时间</th>
+                    <th class="col-xs-4">操作</th>
+                </tr>
+            </thead>
+            <tbody id="taskBody"></tbody>
+        </table>
+
+        <div id="notTask" class="alert alert-info center">
+            <i class="icon-info-circle"></i> 暂无待办任务
+        </div>
     </div>
 </div>
 
@@ -16,23 +35,23 @@
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group" id="transferGroup" style="display:none;">
-                        <label class="col-sm-3 control-label orange">转交给</label>
+                        <label class="col-sm-3 control-label no-padding-right orange">转交给</label>
                         <div class="col-sm-9">
-                            <input type="text" id="transferTo" class="col-sm-12" placeholder="目标用户 userId" />
+                            <input type="text" id="transferTo" class="col-xs-12" placeholder="目标用户 userId" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">批注</label>
+                        <label class="col-sm-3 control-label no-padding-right">批注</label>
                         <div class="col-sm-9">
-                            <textarea id="taskComment" maxlength="500" class="col-sm-12" rows="3"></textarea>
+                            <textarea id="taskComment" maxlength="500" class="col-xs-12" rows="3"></textarea>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer" style="text-align:center;">
-                <button class="btn btn-success" id="agreeBtn">通过</button>
-                <button class="btn btn-danger" id="refuseBtn">拒绝</button>
-                <button class="btn btn-warning" id="transferBtn">转交</button>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="agreeBtn"><i class="icon-check"></i> 通过</button>
+                <button class="btn btn-danger" id="refuseBtn"><i class="icon-remove"></i> 拒绝</button>
+                <button class="btn btn-warning" id="transferBtn"><i class="icon-share"></i> 转交</button>
                 <button class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
@@ -48,7 +67,19 @@
                 <h4 class="modal-title">审批轨迹</h4>
             </div>
             <div class="modal-body">
-                <ul class="item-list" id="traceList"></ul>
+                <table class="table table-striped table-bordered" id="traceTable">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-1">节点</th>
+                            <th class="col-xs-2">状态</th>
+                            <th class="col-xs-2">审批人</th>
+                            <th class="col-xs-2">转交</th>
+                            <th class="col-xs-3">批注</th>
+                            <th class="col-xs-2">时间</th>
+                        </tr>
+                    </thead>
+                    <tbody id="traceBody"></tbody>
+                </table>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-default" data-dismiss="modal">关闭</button>
