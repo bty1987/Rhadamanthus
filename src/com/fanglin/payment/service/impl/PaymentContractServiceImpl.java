@@ -21,7 +21,7 @@ import com.fanglin.data.po.SignetPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.elecsign.service.ElecsignService;
-import com.fanglin.fadada.bean.Contract;
+import com.fanglin.elecsign.bean.Contract;
 import com.fanglin.payment.dao.PaymentContractDao;
 import com.fanglin.payment.po.PaymentContractPO;
 import com.fanglin.payment.service.PaymentContractService;

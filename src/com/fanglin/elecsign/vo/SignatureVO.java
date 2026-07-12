@@ -1,15 +1,15 @@
 /**
  * @File Name		: SignatureVO.java
- * @Package   	: com.fanglin.fadada.vo
+ * @Package   	: com.fanglin.elecsign.vo
  * @Version		: 1.0
  * @Date			: 2021-9-1
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	: 电子签印章/签名管理 VO（厂商中立）。从 com.fanglin.fadada.vo 迁入 elecsign 包。
  */
 
-package com.fanglin.fadada.vo;
+package com.fanglin.elecsign.vo;
 
 import java.io.Serializable;
 
