@@ -51,7 +51,7 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.fadada.signature.Signature;
+import com.fanglin.elecsign.service.ElecsignService;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessageQueuingPO;
@@ -147,6 +147,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	@Autowired
 	private MessageService messageService;
 
+	@Autowired
+	private ElecsignService elecsignService;
+
 	@Override
 	public List<DecorationContractVO> queryDecorationContractByOrderId(DecorationContractVO decorationContract) throws FLException {
 
@@ -169,7 +172,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140067, "合同不存在");
 		}
 
-		return Signature.view(decorationContractPO);
+		return elecsignService.view(decorationContractPO);
 	}
 
 	@Override
@@ -229,7 +232,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 			url = String.format("%s/signature.html?cid=%d&name=%s", isv.getValue(), decorationPO.getCustomer().getCid(), decorationPO.getCustomer().getName());
 		} else if (type == DecorationContractPO.TYPE_SIGN_INT && status == DecorationContractPO.STATUS_VALID_INT) {
-			url = Signature.extsign(decorationPO.getCustomer().getSignno(), decorationContractPO);
+			url = elecsignService.extsign(decorationPO.getCustomer().getSignno(), decorationContractPO);
 		} else if (type == DecorationContractPO.TYPE_VIEW_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			url = decorationContractPO.getViewpdf();
 		} else if (type == DecorationContractPO.TYPE_DOWNLOAD_INT && status == DecorationContractPO.STATUS_SIGN_INT) {
@@ -288,7 +291,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		JSONArray tables = JSON.parseArray(table);
 
-		Signature.generate(decorationContractPO, params, tables);
+		elecsignService.generate(decorationContractPO, params, tables);
 
 		return 0;
 	}
@@ -332,7 +335,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		JSONArray tables = JSON.parseArray(table);
 
-		Signature.generate(decorationContractPO, params, tables);
+		elecsignService.generate(decorationContractPO, params, tables);
 
 		return 0;
 	}
@@ -353,7 +356,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
-		Signature.autosign(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO, signetPO.getSignid());
+		elecsignService.autosign(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO, signetPO.getSignid());
 
 		decorationContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -377,7 +380,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
-		return Signature.extsign(customerPO.getSignno(), decorationContractPO);
+		return elecsignService.extsign(customerPO.getSignno(), decorationContractPO);
 	}
 
 	@Override
@@ -457,7 +460,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
-		Signature.filing(decorationContractPO);
+		elecsignService.filing(decorationContractPO);
 
 		UserPO filinner = userDao.queryUserByUserId(userId);
 

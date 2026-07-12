@@ -20,8 +20,8 @@ import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.elecsign.service.ElecsignService;
 import com.fanglin.fadada.bean.Contract;
-import com.fanglin.fadada.signature.Signature;
 import com.fanglin.payment.dao.PaymentContractDao;
 import com.fanglin.payment.po.PaymentContractPO;
 import com.fanglin.payment.service.PaymentContractService;
@@ -59,6 +59,9 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 
 	@Autowired
 	private DecorationService decorationService;
+
+	@Autowired
+	private ElecsignService elecsignService;
 
 	@Override
 	public void pagePaymentContract(Paging paging, List<Filter> filters) {
@@ -166,7 +169,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 			url = String.format("%s/signature.html?cid=%d", isv.getValue(), decorationPO.getCustomer().getCid());
 		} else if (type == PaymentContractPO.TYPE_SIGN_INT && status == PaymentContractPO.STATUS_VALID_INT) {
-			url = Signature.extsign(decorationPO.getCustomer().getSignno(), (Contract) paymentContractPO);
+			url = elecsignService.extsign(decorationPO.getCustomer().getSignno(), (Contract) paymentContractPO);
 		} else if (type == PaymentContractPO.TYPE_VIEW_INT && status == PaymentContractPO.STATUS_VALID_INT) {
 			url = paymentContractPO.getViewpdf();
 		} else if (type == PaymentContractPO.TYPE_DOWNLOAD_INT && status == PaymentContractPO.STATUS_SIGN_INT) {
@@ -188,7 +191,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 
 		}
 
-		return Signature.view(paymentContractPO);
+		return elecsignService.view(paymentContractPO);
 	}
 
 	@Override
@@ -207,7 +210,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 			throw new FLException(150066, "合同状态不可操作");
 		}
 
-		Signature.autosign(signetPO.getSignno(), signetPO.getKeyword(), paymentContractPO, signetPO.getSignid(), Signature.KEYWORD_STRATEGY_LAST_STR);
+		elecsignService.autosign(signetPO.getSignno(), signetPO.getKeyword(), paymentContractPO, signetPO.getSignid(), elecsignService.KEYWORD_STRATEGY_LAST_STR);
 
 		paymentContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -231,7 +234,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
-		return Signature.extsign(customerPO.getSignno(), paymentContractPO);
+		return elecsignService.extsign(customerPO.getSignno(), paymentContractPO);
 	}
 
 	@Override
@@ -251,7 +254,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 
 		paymentContractVO.setPcid(paymentContractPO.getPcid());
 
-		Signature.upload(paymentContractPO, paymentContractVO.getViewpdf());
+		elecsignService.upload(paymentContractPO, paymentContractVO.getViewpdf());
 
 		return paymentContractVO;
 	}
@@ -316,7 +319,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 			throw new FLException(150066, "合同状态不可操作");
 		}
 
-		Signature.filing(paymentContractPO);
+		elecsignService.filing(paymentContractPO);
 
 		UserPO filinner = userDao.queryUserByUserId(userId);
 
