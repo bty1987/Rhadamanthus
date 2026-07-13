@@ -55,9 +55,12 @@ jQuery(function($) {
     // ===== 节点列表渲染(纵向流程图卡片) =====
     function renderNodes() {
 
-        var $canvas = $("#flowCanvas").empty();
+        var $canvas = $("#flowCanvas");
+        console.log("[approvalFlowCreate] #flowCanvas 长度:", $canvas.length, "内容前:", $canvas.html());
 
-        $("#flowCanvas").toggle(flow.nodes.length > 0);
+        $canvas.empty();
+
+        $("#flowCanvas").show();
         $("#notnode").toggle(flow.nodes.length === 0);
 
         $.each(flow.nodes, function(i, node) {
@@ -105,6 +108,8 @@ jQuery(function($) {
 
             $canvas.append($node);
         });
+
+        console.log("[approvalFlowCreate] #flowCanvas 渲染后长度:", $canvas.length, "子节点数:", $canvas.children().length, "内容:", $canvas.html().substring(0, 200));
     }
 
     // ===== 添加 / 编辑节点 =====
