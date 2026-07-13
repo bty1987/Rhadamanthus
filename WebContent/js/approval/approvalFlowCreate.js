@@ -47,6 +47,7 @@ jQuery(function($) {
         com.post(api.approval.queryApprovalFlowNode, { "flow.flowId": flow.data.flowId }, function(res) {
 
             flow.nodes = res.flowNodes || [];
+            console.log("[approvalFlowCreate] 加载节点:", flow.nodes.length, "条", flow.nodes);
             renderNodes();
         });
     }
@@ -54,10 +55,10 @@ jQuery(function($) {
     // ===== 节点列表渲染(纵向流程图卡片) =====
     function renderNodes() {
 
-        var $canvas = com.focusPage("#flowCanvas").empty();
+        var $canvas = $("#flowCanvas").empty();
 
-        com.focusPage("#flowCanvas").toggle(flow.nodes.length > 0);
-        com.focusPage("#notnode").toggle(flow.nodes.length === 0);
+        $("#flowCanvas").toggle(flow.nodes.length > 0);
+        $("#notnode").toggle(flow.nodes.length === 0);
 
         $.each(flow.nodes, function(i, node) {
 
