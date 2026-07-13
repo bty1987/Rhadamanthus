@@ -1,61 +1,6 @@
 <div class="row">
     <div class="col-xs-12">
 
-        <style>
-        /* 审批流程图样式(纵向卡片+连接线) */
-        .flow-canvas { padding: 10px 0; min-height: 60px; }
-        .flow-node {
-            position: relative;
-            background: #fff;
-            border: 1px solid #d4d4d4;
-            border-radius: 6px;
-            padding: 12px 16px;
-            margin: 0 auto 32px auto;
-            max-width: 460px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-        }
-        .flow-node::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: -28px;
-            width: 2px;
-            height: 24px;
-            background: #bbb;
-            transform: translateX(-50%);
-        }
-        .flow-node::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: -34px;
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 8px solid #bbb;
-            transform: translateX(-50%);
-        }
-        .flow-node:last-child::after, .flow-node:last-child::before { display: none; }
-        .flow-node-header { display: flex; align-items: center; margin-bottom: 6px; }
-        .flow-node-seq {
-            display: inline-block;
-            background: #428bca;
-            color: #fff;
-            border-radius: 50%;
-            width: 22px; height: 22px;
-            line-height: 22px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: bold;
-            margin-right: 8px;
-        }
-        .flow-node-name { font-weight: bold; font-size: 14px; color: #333; flex: 1; }
-        .flow-node-body { font-size: 12px; color: #666; line-height: 1.8; }
-        .flow-node-actions { position: absolute; top: 8px; right: 10px; }
-        .flow-node-actions .btn { padding: 2px 6px; font-size: 11px; }
-        </style>
-
         <form class="form-horizontal" id="flowForm">
             <div class="form-group">
                 <label class="col-sm-2 control-label no-padding-right orange" for="code">流程编码</label>

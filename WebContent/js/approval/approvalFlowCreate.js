@@ -1,5 +1,23 @@
 jQuery(function($) {
 
+    // 动态注入流程图样式(不放在 HTML 片段里,避免 jQuery.load 解析 <style> 时丢失后续 DOM)
+    if (!$("#flowNodeStyle").length) {
+        var styleHtml = "<style id='flowNodeStyle'>"
+            + ".flow-canvas { padding: 10px 0; min-height: 60px; }"
+            + ".flow-node { position: relative; background: #fff; border: 1px solid #d4d4d4; border-radius: 6px; padding: 12px 16px; margin: 0 auto 32px auto; max-width: 460px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }"
+            + ".flow-node::after { content: ''; position: absolute; left: 50%; bottom: -28px; width: 2px; height: 24px; background: #bbb; transform: translateX(-50%); }"
+            + ".flow-node::before { content: ''; position: absolute; left: 50%; bottom: -34px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid #bbb; transform: translateX(-50%); }"
+            + ".flow-node:last-child::after, .flow-node:last-child::before { display: none; }"
+            + ".flow-node-header { display: flex; align-items: center; margin-bottom: 6px; }"
+            + ".flow-node-seq { display: inline-block; background: #428bca; color: #fff; border-radius: 50%; width: 22px; height: 22px; line-height: 22px; text-align: center; font-size: 12px; font-weight: bold; margin-right: 8px; }"
+            + ".flow-node-name { font-weight: bold; font-size: 14px; color: #333; flex: 1; }"
+            + ".flow-node-body { font-size: 12px; color: #666; line-height: 1.8; }"
+            + ".flow-node-actions { position: absolute; top: 8px; right: 10px; }"
+            + ".flow-node-actions .btn { padding: 2px 6px; font-size: 11px; }"
+            + "</style>";
+        $("head").append(styleHtml);
+    }
+
     var flow = {
         data: params.approval.flow,
         nodes: [],
@@ -54,27 +72,10 @@ jQuery(function($) {
     // ===== 节点列表渲染(纵向流程图卡片) =====
     function renderNodes() {
 
-        // 诊断:三种方式查找 #flowCanvas
-        var $byDollar = $("#flowCanvas");
-        var $byFocusPage = com.focusPage("#flowCanvas");
-        var $byBody = $("#flowCanvas", document);
-        console.log("[diag] $():", $byDollar.length, " com.focusPage:", $byFocusPage.length, " body内:", $byBody.length);
+        var $canvas = com.focusPage("#flowCanvas").empty();
 
-        // 选用能找到元素的方式
-        var $canvas = $byDollar.length > 0 ? $byDollar : ($byFocusPage.length > 0 ? $byFocusPage : $byBody);
-
-        if ($canvas.length === 0) {
-            console.log("[diag] 三种方式都找不到 #flowCanvas, 遍历所有该id元素:", $("[id='flowCanvas']").length);
-            $("[id='flowCanvas']").each(function(i, el) {
-                console.log("[diag] 找到元素#" + i, "tag:", el.tagName, "parent:", $(el).parent().attr("class") || $(el).parent().attr("id"), "可见:", $(el).is(":visible"));
-            });
-            // 兜底:用全局选择器
-            $canvas = $("[id='flowCanvas']");
-        }
-
-        $canvas.empty();
-        $canvas.show();
-        $("[id='notnode']").toggle(flow.nodes.length === 0);
+        com.focusPage("#flowCanvas").show();
+        com.focusPage("#notnode").toggle(flow.nodes.length === 0);
 
         $.each(flow.nodes, function(i, node) {
 
