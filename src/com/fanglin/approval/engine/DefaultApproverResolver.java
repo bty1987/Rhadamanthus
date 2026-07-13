@@ -81,20 +81,16 @@ public class DefaultApproverResolver implements ApproverResolver {
 	}
 
 	/**
-	 * 直属上级规则:查发起人所属部门的负责人(此处复用部门负责人逻辑,
-	 * 若组织模型有明确的上下级关系可在此扩展查询 superior 字段)。
+	 * 直属上级规则:查发起人所属部门的负责人(此处复用部门负责人逻辑, 若组织模型有明确的上下级关系可在此扩展查询 superior 字段)。
 	 */
 	private List<String> resolveLeader(String senderId) throws FLException {
 		return resolveDeptManager(senderId);
 	}
 
 	/**
-	 * 部门负责人规则:取发起人 dept 的负责人。
-	 * 当前 DepartmentPO 若无明确的 leader 字段,降级为返回发起人所在部门的第一个启用用户。
+	 * 部门负责人规则:取发起人 dept 的负责人。 当前 DepartmentPO 若无明确的 leader 字段,降级为返回发起人所在部门的第一个启用用户。
 	 */
 	private List<String> resolveDeptManager(String senderId) throws FLException {
-
-		List<String> result = new ArrayList<String>();
 
 		UserPO sender = userDao.queryUserByUserId(senderId);
 		if (sender == null || sender.getDept() == null) {
