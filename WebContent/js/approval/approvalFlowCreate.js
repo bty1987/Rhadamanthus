@@ -54,10 +54,27 @@ jQuery(function($) {
     // ===== 节点列表渲染(纵向流程图卡片) =====
     function renderNodes() {
 
-        var $canvas = com.focusPage("#flowCanvas").empty();
+        // 诊断:三种方式查找 #flowCanvas
+        var $byDollar = $("#flowCanvas");
+        var $byFocusPage = com.focusPage("#flowCanvas");
+        var $byBody = $("#flowCanvas", document);
+        console.log("[diag] $():", $byDollar.length, " com.focusPage:", $byFocusPage.length, " body内:", $byBody.length);
 
-        com.focusPage("#flowCanvas").show();
-        com.focusPage("#notnode").toggle(flow.nodes.length === 0);
+        // 选用能找到元素的方式
+        var $canvas = $byDollar.length > 0 ? $byDollar : ($byFocusPage.length > 0 ? $byFocusPage : $byBody);
+
+        if ($canvas.length === 0) {
+            console.log("[diag] 三种方式都找不到 #flowCanvas, 遍历所有该id元素:", $("[id='flowCanvas']").length);
+            $("[id='flowCanvas']").each(function(i, el) {
+                console.log("[diag] 找到元素#" + i, "tag:", el.tagName, "parent:", $(el).parent().attr("class") || $(el).parent().attr("id"), "可见:", $(el).is(":visible"));
+            });
+            // 兜底:用全局选择器
+            $canvas = $("[id='flowCanvas']");
+        }
+
+        $canvas.empty();
+        $canvas.show();
+        $("[id='notnode']").toggle(flow.nodes.length === 0);
 
         $.each(flow.nodes, function(i, node) {
 
