@@ -57,6 +57,14 @@ public class ApprovalFormAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryApprovalForm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryApprovalForm() throws FLException {
+
+		forms = approvalFormService.queryApprovalForm(queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryApprovalFormByFormId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryApprovalFormByFormId() throws FLException {
 
