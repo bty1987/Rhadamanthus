@@ -147,4 +147,76 @@ Condition.addupRule("approval", {
             valuePath: "value"
         }
     },
+
+    // ====== 流程定义查询条件 ======
+    "flow-code": {
+        label: "编码",
+        type: "text",
+        submitConfig: {
+            name: "code",
+            op: "cn",
+            validate: null
+        }
+    },
+    "flow-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "flow-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().common.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // ====== 表单定义查询条件 ======
+    "form-code": {
+        label: "编码",
+        type: "text",
+        submitConfig: {
+            name: "code",
+            op: "cn",
+            validate: null
+        }
+    },
+    "form-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "form-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().common.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });
