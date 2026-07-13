@@ -16,20 +16,19 @@
 --   * 整装主材配送完结时间  (候选: inventory.occessories.deliveTime 或 material.material.status=9 时间)
 --   * 开户行 / 开户账号    (仅法人客户 CustomerPO.companyBank/companyBankno 有值, 普通装修单无)
 -- =============================================================================
-
 SELECT
     -- ==================== 基础信息 ====================
     c.name                         AS `公司`,              -- communion.company.name (d.company=c.cid, 实测为明文cid无需decode)
     d.orderId                      AS `装修单号`,
-    d.typeness                     AS `订单类型`,          -- 区别于 d.type(0中包/1包料/2大包), typeness 是业务订单类型
+    communion.kv('decoration', 'decoration', 'typeness', d.typeness) AS `订单类型`,          -- 区别于 d.type(0中包/1包料/2大包), typeness 是业务订单类型
     da.designRegion                AS `区域`,              -- decorationaddition.designRegion 设计区域快照字符串
     v.name                         AS `楼盘`,              -- communion.village.name
     h.houseNumber                  AS `楼号`,              -- communion.house.houseNumber (门牌/楼号)
-    d.status                       AS `订单状态`,          -- 0初始/1定金/2预签/3签约/4重签/5废单/6终止/7决算/8完工/20待审/30可终止...
+    communion.kv('decoration', 'decoration', 'status', d.status) AS `订单状态`,          -- 0初始/1定金/2预签/3签约/4重签/5废单/6终止/7决算/8完工/20待审/30可终止...
     d.measureTime                  AS `派尺时间`,          -- decoration.measureTime
     cc.readTime                    AS `已读时间`,          -- customer.customerchance.readTime (cc.orderId=d.orderId)
-    h.buildArea                    AS `派尺面积`,          -- communion.house.buildArea (放大1000倍, 130000=130㎡)
-    h.quoteArea                    AS `计价面积`,          -- communion.house.quoteArea (放大1000倍, 注意: 生产数据多为0)
+    h.buildArea/1000               AS `派尺面积`,          -- communion.house.buildArea (放大1000倍, 130000=130㎡)
+    h.innerarea/1000               AS `计价面积`,          -- communion.house.quoteArea (放大1000倍, 注意: 生产数据多为0)
     d.houseClass                   AS `房屋类别`,
     d.houseType                    AS `房屋类型`,
 
@@ -56,23 +55,23 @@ SELECT
     NULL                           AS `开户账号`,
 
     d.terminalTime                 AS `终止时间`,
-    d.paySacle                     AS `工程付款比例`,      -- 注意拼写 Sacle
+    d.paySacle/1000                     AS `工程付款比例`,      -- 注意拼写 Sacle
 
     -- ==================== 主材/服务费 (按 type 分布三张子表, COALESCE 合并) ====================
     -- type=0 中包(decorationmidpack)  : 有 materialRate/materialPrice/materialPaidup/serviceRate/servicePrice/servicePaidup
     -- type=1 包料(decorationinclusive): 仅有 materialPaidup, 无其它金额
     -- type=2 大包(decorationholonomy) : 有 materialPrice/materialPaidup/serviceRate/servicePrice/servicePaidup (无materialRate)
-    COALESCE(mid.materialRate,  NULL)  AS `主材额百分比`,  -- 仅中包有此字段
-    COALESCE(mid.materialPrice, hol.materialPrice)               AS `主材总额`,
-    COALESCE(mid.materialPaidup, inc.materialPaidup, hol.materialPaidup) AS `实收主材额`,
-    COALESCE(mid.servicePrice, hol.servicePrice)                  AS `服务费`,
-    COALESCE(mid.servicePaidup, hol.servicePaidup)                AS `实收服务费`,
-    COALESCE(mid.serviceRate, hol.serviceRate)                    AS `服务费百分比`,
+    COALESCE(mid.materialRate,  NULL)/1000  AS `主材额百分比`,  -- 仅中包有此字段
+    COALESCE(mid.materialPrice, hol.materialPrice)/1000               AS `主材总额`,
+    COALESCE(mid.materialPaidup, inc.materialPaidup, hol.materialPaidup)/1000 AS `实收主材额`,
+    COALESCE(mid.servicePrice, hol.servicePrice)/1000                  AS `服务费`,
+    COALESCE(mid.servicePaidup, hol.servicePaidup)/1000                AS `实收服务费`,
+    COALESCE(mid.serviceRate, hol.serviceRate)/1000                    AS `服务费百分比`,
 
     -- ==================== 设计相关 ====================
-    ci.designPeriod                AS `设计天数`,          -- construction.constructioninfo.designPeriod (放大1000倍)
+    ci.designPeriod/1000                AS `设计天数`,          -- construction.constructioninfo.designPeriod (放大1000倍)
     ci.designTime                  AS `预计设计完成时间`,  -- constructioninfo.designTime (随微改/大改顺延)
-    d.designStatus                 AS `设计状态`,          -- 0待设计/1设计中/2已完成/11微改/21大改
+    communion.kv('decoration', 'decoration', 'designStatus', d.designStatus) AS `设计状态`,          -- 0待设计/1设计中/2已完成/11微改/21大改
     -- 微改/大改: 从 decorationService 表统计, comment 字段格式 "装修单: {orderId}, 设计方案确认, {11|21}"
     --   11 = 微改, 21 = 大改; finishTime = 该次确认完成时间
     (SELECT MAX(ds.finishTime) FROM decoration.decorationservice ds
@@ -84,7 +83,7 @@ SELECT
     (SELECT COUNT(*) FROM decoration.decorationservice ds
        WHERE ds.orderId = d.orderId AND ds.type = 1 AND ds.comment LIKE '%, 21') AS `大改次数`,
     d.sdesignTime                  AS `合同方案确认时间`,  -- 客户合同确认时写入
-    ci.designOverdueDays           AS `设计超期天数`,      -- constructioninfo.designOverdueDays (累积)
+    ci.designOverdueDays/1000           AS `设计超期天数`,      -- constructioninfo.designOverdueDays (累积)
     d.edesignTime                  AS `放线方案确认时间`,  -- 客户放线确认时写入
     d.recontractTime               AS `重签时间`,
 
@@ -97,7 +96,7 @@ SELECT
 
     -- ==================== 施工人员/状态 ====================
     supervisor.currentName         AS `交付监理`,          -- construction.construction.supervisor(suid) 关联的监理人员姓名
-    d.projectStatus                AS `工程状态`,          -- 0初始/1开工/2完工
+    communion.kv('decoration', 'decoration', 'projectStatus', d.projectStatus) AS `工程状态`,          -- 0初始/1开工/2完工
 
     -- ==================== 各工种时间 (constructionschedule 按节点 name 匹配) ====================
     -- 节点 name 取自 data.constructionnode, 生产数据确认: 力工=槽工, 无"油漆"变体
@@ -113,11 +112,14 @@ SELECT
 
     -- ==================== 决算/内决/保修 ====================
     d.accountTime                  AS `决算时间`,          -- decoration.accountTime
-    dac.affirmTime                 AS `内决时间`,          -- decorationaccount.affirmTime (内决确认时间)
-    dac.isAffirm                   AS `内决状态`,          -- decorationaccount.isAffirm (0未确认/1已确认)
-    d.repairStatus                 AS `保修状态`           -- decoration.repairStatus
+    db.balanceTime                 AS `内决时间`,          -- decorationaccount.affirmTime (内决确认时间)
+    communion.kv('decoration', 'decoration', 'balancestatus', d.balancestatus) AS `内决状态`,          -- decorationaccount.isAffirm (0未确认/1已确认)
+    communion.kv('decoration', 'decoration', 'repairStatus', d.repairStatus) AS `保修状态`           -- decoration.repairStatus
 
-FROM decoration.decoration d
+FROM customer.customerchance cc
+
+-- 客户商机 (已读时间)
+LEFT JOIN decoration.decoration d      ON cc.orderId = d.orderId
 
 -- 公司
 LEFT JOIN communion.company c        ON c.cid   = d.company
@@ -125,8 +127,7 @@ LEFT JOIN communion.company c        ON c.cid   = d.company
 -- 装修附加信息 (到店时间/区域快照)
 LEFT JOIN decoration.decorationaddition da ON da.orderId = d.orderId
 
--- 客户商机 (已读时间)
-LEFT JOIN customer.customerchance cc      ON cc.orderId = d.orderId
+
 
 -- 房屋/楼盘
 LEFT JOIN communion.house h              ON h.hid  = d.hid
@@ -170,12 +171,14 @@ LEFT JOIN construction.constructionschedule cs_oil
       AND cs_oil.cnid IN (SELECT cnid FROM data.constructionnode WHERE name = '油工')
 
 -- 决算单 (内决)
-LEFT JOIN decoration.decorationaccount dac ON dac.orderId = d.orderId
+LEFT JOIN decoration.decorationbalance db ON db.doid = d.doid
 
 -- 主材/服务费子表 (按 type 分布, 全部 LEFT JOIN 用 COALESCE 合并)
 LEFT JOIN decoration.decorationmidpack mid  ON mid.orderId = d.orderId   -- type=0 中包
 LEFT JOIN decoration.decorationinclusive inc ON inc.orderId = d.orderId  -- type=1 包料
 LEFT JOIN decoration.decorationholonomy hol ON hol.orderId = d.orderId   -- type=2 大包
+
+order by cc.ccid desc
 
 -- =============================================================================
 -- 使用说明:
