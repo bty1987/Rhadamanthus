@@ -1,32 +1,8 @@
 <div class="row">
     <div class="col-xs-12">
-        <div class="page-header">
-            <h3 class="header lighter blue">流程定义管理</h3>
-        </div>
-
-        <div class="clearfix" style="margin-bottom: 10px;">
-            <button type="button" id="addApprovalFlow" class="btn btn-primary btn-sm pull-right">
-                <i class="icon-plus"></i> 添加流程
-            </button>
-        </div>
-
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th class="col-xs-3">流程名称</th>
-                    <th class="col-xs-2">编码</th>
-                    <th class="col-xs-2">业务类型</th>
-                    <th class="col-xs-1">版本</th>
-                    <th class="col-xs-1">状态</th>
-                    <th class="col-xs-3">操作</th>
-                </tr>
-            </thead>
-            <tbody id="flowBody"></tbody>
-        </table>
-
-        <div id="notFlow" class="alert alert-info center" style="display:none;">
-            <i class="icon-info-circle"></i> 暂无流程定义
-        </div>
+        <div id="condList" class="fl_search clearfix"></div>
+        <div id="resultList" class="clearfix tab-pane active"></div>
+        <div id="pagenation" class="fl-page-wrap clearfix"></div>
     </div>
 </div>
 

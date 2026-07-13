@@ -53,19 +53,6 @@ public class ApprovalFormServiceImpl implements ApprovalFormService {
 	}
 
 	@Override
-	public List<ApprovalFormVO> queryApprovalForm(int company) {
-
-		List<ApprovalFormPO> formPOs = approvalFormDao.queryApprovalForm(company);
-		List<ApprovalFormVO> formVOs = new ArrayList<ApprovalFormVO>();
-
-		for (ApprovalFormPO formPO : formPOs) {
-			formVOs.add(formPOToVO(formPO));
-		}
-
-		return formVOs;
-	}
-
-	@Override
 	public ApprovalFormVO queryApprovalFormByFormId(ApprovalFormVO formVO) throws FLException {
 
 		ApprovalFormPO formPO = approvalFormDao.get(formVO.getFormId());

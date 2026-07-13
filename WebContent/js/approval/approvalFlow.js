@@ -10,77 +10,93 @@ jQuery(function($) {
         23: "优惠", 24: "装饰合同", 25: "客户机会停用", 26: "预付款提现"
     };
 
-    // ===== 加载流程列表(不分页) =====
-    function loadFlowList() {
+    var lineprops = (function() {
+        return [{
+            field: "name",
+            name: "流程名称",
+            prop: "name",
+            clazz: "grey"
+        }, {
+            field: "code",
+            name: "编码",
+            prop: "code",
+            clazz: "blue"
+        }, {
+            field: "businessType",
+            name: "业务类型",
+            prop: function(v) { return businessTypeMap[v.businessType] || v.businessType; },
+            clazz: "grey"
+        }, {
+            field: "version",
+            name: "版本",
+            prop: "version",
+            clazz: "grey"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: function(v) { return v.status == 0 ? "启用" : "禁用"; },
+            clazz: "red"
+        }];
+    })();
 
-        com.post(api.approval.queryApprovalFlow, {}, function(res) {
-
-            var $body = com.focusPage("#flowBody").empty();
-            var flows = res.flows || [];
-
-            com.focusPage("#notFlow").toggle(flows.length === 0);
-
-            $.each(flows, function(i, v) {
-
-                var $tr = $('<tr></tr>');
-
-                $('<td></td>').text(v.name).appendTo($tr);
-                $('<td></td>').addClass("blue").text(v.code).appendTo($tr);
-                $('<td></td>').text(businessTypeMap[v.businessType] || v.businessType).appendTo($tr);
-                $('<td></td>').text(v.version).appendTo($tr);
-                $('<td></td>').html(v.status == 0
-                    ? "<span class='label label-success'>启用</span>"
-                    : "<span class='label label-default'>禁用</span>").appendTo($tr);
-
-                var $btnTd = $('<td></td>');
-
-                $('<button></button>').addClass("btn btn-minier btn-yellow")
-                    .html('<i class="icon-edit"></i> 编辑')
-                    .on("click", function() {
-                        params.approval.flow = v;
-                        com.popup4page("#layerPopUp", api.index.createApprovalFlowIndex.url, "编辑流程", null, function() {
-                            loadFlowList();
+    var linebtns = (function() {
+        return {
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+                    params.approval.flow = v;
+                    com.popup4page("#layerPopUp", api.index.createApprovalFlowIndex.url, "编辑流程", null, function() {
+                        searcher.doSearch();
+                    });
+                }
+            },
+            status: {
+                type: "switch",
+                init: function(v) { return v.status == 0; },
+                handle: function(v, checked) {
+                    com.post(api.approval.updateApprovalFlowForStatus, {
+                        "flow.flowId": v.flowId,
+                        "flow.status": v.status == 0 ? 1 : 0
+                    }, function(res) {
+                        searcher.doSearch();
+                    });
+                }
+            },
+            del: {
+                name: "删除",
+                clazz: "btn-danger",
+                handle: function(v) {
+                    com.showConfirm("确认删除该流程定义?关联的节点将一并删除。", function() {
+                        com.post(api.approval.deleteApprovalFlow, {
+                            "flow.flowId": v.flowId
+                        }, function(res) {
+                            com.showAlert(com.info, "删除成功");
+                            searcher.doSearch();
                         });
-                    }).appendTo($btnTd);
+                    });
+                }
+            }
+        };
+    })();
 
-                $('<button></button>').addClass("btn btn-minier " + (v.status == 0 ? "btn-warning" : "btn-success"))
-                    .css("margin-left", "3px")
-                    .text(v.status == 0 ? "禁用" : "启用")
-                    .on("click", function() {
-                        com.post(api.approval.updateApprovalFlowForStatus, {
-                            "flow.flowId": v.flowId,
-                            "flow.status": v.status == 0 ? 1 : 0
-                        }, function() {
-                            loadFlowList();
-                        });
-                    }).appendTo($btnTd);
+    var buttons = (function() {
+        var $add = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addApprovalFlow').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-plus bigger-110').appendTo($add);
+        $('<span></span>').text('添加流程').appendTo($add);
+        return [$add];
+    })();
 
-                $('<button></button>').addClass("btn btn-minier btn-danger")
-                    .css("margin-left", "3px")
-                    .html('<i class="icon-trash"></i> 删除')
-                    .on("click", function() {
-                        com.showConfirm("确认删除该流程定义?关联的节点将一并删除。", function() {
-                            com.post(api.approval.deleteApprovalFlow, {
-                                "flow.flowId": v.flowId
-                            }, function() {
-                                com.showAlert(com.info, "删除成功");
-                                loadFlowList();
-                            });
-                        });
-                    }).appendTo($btnTd);
+    var searcher = new Searcher();
 
-                $btnTd.appendTo($tr);
-                $body.append($tr);
-            });
-        });
-    }
+    searcher.set("condList", "pagenation", "resultList", api.approval.pageApprovalFlow, null, ["approval-flow-code", "approval-flow-name", "approval-flow-status"], "approvalFlowPostData", null, false, buttons);
 
-    loadFlowList();
+    searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage("#addApprovalFlow").click(function() {
         params.approval.flow = null;
         com.popup4page("#layerPopUp", api.index.createApprovalFlowIndex.url, "添加流程", null, function() {
-            loadFlowList();
+            searcher.doSearch();
         });
     });
 

@@ -57,18 +57,6 @@ public class ApprovalFormDaoImpl extends DaoImpl<ApprovalFormPO> implements Appr
 			.uniqueResult();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<ApprovalFormPO> queryApprovalForm(int company) {
-
-		return session().createCriteria(ApprovalFormPO.class)
-			.add(Restrictions.or(
-				Restrictions.eq("company", company),
-				Restrictions.eq("company", 0)))
-			.addOrder(Order.asc("code"))
-			.list();
-	}
-
 	public void queryFilterExcute(List<Filter> filters, PagingQuery<ApprovalFormPO> query) {
 
 		if (filters == null || filters.isEmpty()) {

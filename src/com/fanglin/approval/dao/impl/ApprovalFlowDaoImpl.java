@@ -59,18 +59,6 @@ public class ApprovalFlowDaoImpl extends DaoImpl<ApprovalFlowPO> implements Appr
 			.uniqueResult();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<ApprovalFlowPO> queryApprovalFlow(int company) {
-
-		return session().createCriteria(ApprovalFlowPO.class)
-			.add(Restrictions.or(
-				Restrictions.eq("company", company),
-				Restrictions.eq("company", 0)))
-			.addOrder(Order.asc("businessType"))
-			.list();
-	}
-
 	public void queryFilterExcute(List<Filter> filters, PagingQuery<ApprovalFlowPO> query) {
 
 		if (filters == null || filters.isEmpty()) {

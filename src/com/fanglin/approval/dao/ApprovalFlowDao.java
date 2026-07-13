@@ -26,9 +26,4 @@ public interface ApprovalFlowDao extends Dao<ApprovalFlowPO> {
 
 	public ApprovalFlowPO queryApprovalFlow(String code, int company, int version);
 
-	/**
-	 * 查询公司下全部流程定义(不分页,按 businessType 升序)。
-	 */
-	public List<ApprovalFlowPO> queryApprovalFlow(int company);
-
 }

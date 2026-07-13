@@ -349,9 +349,6 @@ $.extend(api, {
             url: "pageApprovalFlow.do",
             demo: true
         },
-        queryApprovalFlow: {
-            url: "queryApprovalFlow.do"
-        },
         queryApprovalFlowByFlowId: {
             url: "queryApprovalFlowByFlowId.do"
         },
@@ -392,9 +389,6 @@ $.extend(api, {
         pageApprovalForm: {
             url: "pageApprovalForm.do",
             demo: true
-        },
-        queryApprovalForm: {
-            url: "queryApprovalForm.do"
         },
         queryApprovalFormByFormId: {
             url: "queryApprovalFormByFormId.do"
