@@ -876,9 +876,7 @@ $(function() {
      * 回调函数比速提供 init(tableId, result.list)方法 tableId ,用来显示的div的id result.list 列表的json数组
      */
     /**
-     * Searcher 标准化改造: 将原 displayFunc IIFE 的 renderList / creatLine 逻辑
-     * 拆分为 buildDecorationLineprops / buildDecorationLinebtns, 借助 searcher.line(...).render() 渲染。
-     * IIFE 内其余业务函数 (viewDecoration*, modalDrawLineModal, signOrder 等) 全部上提到模块作用域, 保持原语义。
+     * Searcher 标准化改造: 将原 displayFunc IIFE 的 renderList / creatLine 逻辑 拆分为 buildDecorationLineprops / buildDecorationLinebtns, 借助 searcher.line(...).render() 渲染。 IIFE 内其余业务函数 (viewDecoration*, modalDrawLineModal, signOrder 等) 全部上提到模块作用域, 保持原语义。
      */
 
     var lineprops = (function() {
@@ -2025,7 +2023,7 @@ $(function() {
 
         // 签单额净业绩
     var netPerformanceo = function(btn, decoration) {
-
+        
             var quotation = {};
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 "quotation.orderId": decoration.orderId
@@ -2078,11 +2076,11 @@ $(function() {
 
                 decorationActivity = (res.decorationActivitys && res.decorationActivitys.length > 0) ? res.decorationActivitys[0] : {};
             }, null, false);
-
+            
             if (decorationActivity && decorationActivity.activity && decorationActivity.activity.atttype == 1) {
-                couponCut = utils.accAdd(couponCut, decoration.pactPrice);
+                couponCut = utils.accAdd(couponCut, decoration.factPrice);
             }
-
+            
             // 净业绩 = 签单额-非业务人员提点金额-优惠券-赠送礼品-线上活动签约额-非计入业绩
             var netPerformance = utils.accSub(utils.accSub(utils.accSub(decoration.orderTotalPrice, notpoint), couponCut), thingCut);
 
