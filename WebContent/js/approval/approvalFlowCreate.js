@@ -8,7 +8,7 @@ jQuery(function($) {
             + ".flow-node::after { content: ''; position: absolute; left: 50%; bottom: -28px; width: 2px; height: 24px; background: #bbb; transform: translateX(-50%); }"
             + ".flow-node::before { content: ''; position: absolute; left: 50%; bottom: -34px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid #bbb; transform: translateX(-50%); }"
             + ".flow-node:last-child::after, .flow-node:last-child::before { display: none; }"
-            + ".flow-node-header { display: flex; align-items: center; margin-bottom: 6px; }"
+            + ".flow-node-header { display: flex; align-items: center; margin-bottom: 6px; padding-right: 70px; }"
             + ".flow-node-seq { display: inline-block; background: #428bca; color: #fff; border-radius: 50%; width: 22px; height: 22px; line-height: 22px; text-align: center; font-size: 12px; font-weight: bold; margin-right: 8px; }"
             + ".flow-node-name { font-weight: bold; font-size: 14px; color: #333; flex: 1; }"
             + ".flow-node-body { font-size: 12px; color: #666; line-height: 1.8; }"
