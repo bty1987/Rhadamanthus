@@ -47,7 +47,6 @@ jQuery(function($) {
         com.post(api.approval.queryApprovalFlowNode, { "flow.flowId": flow.data.flowId }, function(res) {
 
             flow.nodes = res.flowNodes || [];
-            console.log("[approvalFlowCreate] 加载节点:", flow.nodes.length, "条", flow.nodes);
             renderNodes();
         });
     }
@@ -55,13 +54,10 @@ jQuery(function($) {
     // ===== 节点列表渲染(纵向流程图卡片) =====
     function renderNodes() {
 
-        var $canvas = $("#flowCanvas");
-        console.log("[approvalFlowCreate] #flowCanvas 长度:", $canvas.length, "内容前:", $canvas.html());
+        var $canvas = com.focusPage("#flowCanvas").empty();
 
-        $canvas.empty();
-
-        $("#flowCanvas").show();
-        $("#notnode").toggle(flow.nodes.length === 0);
+        com.focusPage("#flowCanvas").show();
+        com.focusPage("#notnode").toggle(flow.nodes.length === 0);
 
         $.each(flow.nodes, function(i, node) {
 
@@ -108,8 +104,6 @@ jQuery(function($) {
 
             $canvas.append($node);
         });
-
-        console.log("[approvalFlowCreate] #flowCanvas 渲染后长度:", $canvas.length, "子节点数:", $canvas.children().length, "内容:", $canvas.html().substring(0, 200));
     }
 
     // ===== 添加 / 编辑节点 =====
