@@ -50,20 +50,33 @@ jQuery(function($) {
 
             var $tr = $('<tr></tr>');
 
-            $('<td></td>').text(field.sortOrder).appendTo($tr);
-            $('<td></td>').text(field.fieldKey).appendTo($tr);
+            $('<td></td>').html("<strong>" + field.sortOrder + "</strong>").appendTo($tr);
+            $('<td></td>').addClass("blue").text(field.fieldKey).appendTo($tr);
             $('<td></td>').text(field.fieldLabel).appendTo($tr);
             $('<td></td>').html("<span class='label label-warning'>" + (controlMap[field.controlType] || field.controlType) + "</span>").appendTo($tr);
-            $('<td></td>').html(field.required == 1 ? "<span class='label label-important'>是</span>" : "否").appendTo($tr);
+            $('<td></td>').html(field.required == 1 ? "<span class='label label-important'>必填</span>" : "<span class='muted'>否</span>").appendTo($tr);
 
-            var detail = field.defaultValue ? "默认:" + field.defaultValue + " " : "";
-            detail += field.dataSource ? "<br/>数据源:" + field.dataSource.substring(0, 30) : "";
-            detail += field.validateRule ? "<br/>验证:" + field.validateRule : "";
-            $('<td></td>').addClass("small muted").html(detail || "-").appendTo($tr);
+            // 详情列:默认值/数据源/验证规则,分行显示
+            var detailHtml = "";
+            if (field.defaultValue) {
+                detailHtml += "<div class='small'><span class='muted'>默认:</span> " + field.defaultValue + "</div>";
+            }
+            if (field.dataSource) {
+                detailHtml += "<div class='small'><span class='muted'>数据源:</span> " + field.dataSource.substring(0, 40) + "</div>";
+            }
+            if (field.validateRule) {
+                detailHtml += "<div class='small'><span class='muted'>验证:</span> " + field.validateRule + "</div>";
+            }
+            $('<td></td>').html(detailHtml || "<span class='muted'>-</span>").appendTo($tr);
 
-            var $btnTd = $('<td></td>');
-            $('<button></button>').addClass("btn btn-minier btn-yellow").html('<i class="icon-edit"></i>').attr("title", "编辑").on("click", function() { editField(i); }).appendTo($btnTd);
-            $('<button></button>').addClass("btn btn-minier btn-danger").html('<i class="icon-trash"></i>').css("margin-left", "3px").attr("title", "删除").on("click", function() { deleteField(i); }).appendTo($btnTd);
+            var $btnTd = $('<td></td>').css("white-space", "nowrap");
+            $('<button></button>').addClass("btn btn-minier btn-yellow")
+                .html('<i class="icon-edit"></i> 编辑')
+                .on("click", function() { editField(i); }).appendTo($btnTd);
+            $('<button></button>').addClass("btn btn-minier btn-danger")
+                .html('<i class="icon-trash"></i>')
+                .css("margin-left", "3px").attr("title", "删除")
+                .on("click", function() { deleteField(i); }).appendTo($btnTd);
             $btnTd.appendTo($tr);
 
             $body.append($tr);
