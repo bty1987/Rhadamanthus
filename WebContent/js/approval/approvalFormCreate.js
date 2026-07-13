@@ -6,36 +6,114 @@ jQuery(function($) {
         selectedIndex: null
     };
 
-    // 控件类型定义(含图标/颜色)
+    // popup 子页 DOM 在 layer 容器内,统一用 com.focusPage(基于 active tab scope)
+
+    // 基础控件定义(含图标/颜色)
     var controlDefs = [
-        { type: 1, name: "文本",     icon: "icon-font",       color: "btn-info" },
-        { type: 2, name: "文本域",   icon: "icon-align-left",  color: "btn-info" },
-        { type: 3, name: "数字",     icon: "icon-asterisk",    color: "btn-success" },
-        { type: 4, name: "下拉",     icon: "icon-chevron-down", color: "btn-warning" },
-        { type: 5, name: "日期",     icon: "icon-calendar",    color: "btn-warning" },
-        { type: 6, name: "用户选择", icon: "icon-user",        color: "btn-primary" },
-        { type: 7, name: "部门选择", icon: "icon-group",       color: "btn-primary" },
-        { type: 8, name: "附件",     icon: "icon-paperclip",   color: "btn-danger" }
+        { type: 1, name: "文本",      icon: "icon-font",        color: "btn-info" },
+        { type: 2, name: "文本域",    icon: "icon-align-left",   color: "btn-info" },
+        { type: 3, name: "数字",      icon: "icon-asterisk",     color: "btn-success" },
+        { type: 4, name: "下拉",      icon: "icon-chevron-down", color: "btn-warning" },
+        { type: 5, name: "日期",      icon: "icon-calendar",     color: "btn-warning" },
+        { type: 6, name: "用户选择",  icon: "icon-user",         color: "btn-primary" },
+        { type: 7, name: "部门选择",  icon: "icon-group",        color: "btn-primary" },
+        { type: 8, name: "附件",      icon: "icon-paperclip",    color: "btn-danger" }
     ];
     var controlMap = {};
     $.each(controlDefs, function(i, c) { controlMap[c.type] = c; });
 
-    // ===== 1. 渲染控件库 =====
+    // 业务控件类型 → 前端分组的映射(processRefer.type)
+    var referGroupMap = {
+        "query":     { label: "查询类",   icon: "icon-search",     color: "btn-success" },
+        "filling":   { label: "自动填充", icon: "icon-magic",      color: "btn-primary" },
+        "condition": { label: "条件校验", icon: "icon-check-sign", color: "btn-purple" }
+    };
+    // processRefer.type → approvalFormField.controlType 的映射
+    var referControlTypeMap = {
+        "query": 6,     // 用户选择(选装修单)
+        "filling": 1,   // 文本(只读填充)
+        "select": 4,    // 下拉
+        "text": 1,      // 文本
+        "textarea": 2,  // 文本域
+        "datetime": 5,  // 日期
+        "upload": 8,    // 附件
+        "condition": 3  // 数字(条件阈值)
+    };
+
+    // ===== 1. 渲染控件库(基础控件 + 业务控件) =====
     function renderControlLib() {
 
         var $lib = com.focusPage("#controlLib");
-        if ($lib.length === 0) $lib = $("#controlLib");
+
+        // 1a. 基础控件
+        $('<h6></h6>').addClass("header lighter grey").html('<i class="icon-th-large"></i> 基础控件').appendTo($lib);
 
         $.each(controlDefs, function(i, c) {
-            var $btn = $('<a></a>')
-                .addClass("btn btn-sm " + c.color)
-                .css({ "width": "90%", "margin": "3px 5%", "text-align": "left", "padding": "6px 10px" })
-                .attr("data-type", c.type);
-            $('<i></i>').addClass(c.icon).css("margin-right", "6px").appendTo($btn);
-            $('<span></span>').text(c.name).appendTo($btn);
-            $btn.on("click", function() { addField(c.type); });
+            var $btn = makeControlBtn(c.icon, c.color, c.name, false);
+            $btn.on("click", function() { addField(c.type, null, null); });
             $lib.append($btn);
         });
+
+        // 1b. 业务控件(从 processRefer 动态加载)
+        $('<h6></h6>').addClass("header lighter grey")
+            .css("margin-top", "15px")
+            .html('<i class="icon-building"></i> 业务控件')
+            .appendTo($lib);
+        $('<p></p>').addClass("muted small").text("字段键自动绑定业务字段").appendTo($lib);
+
+        com.post(api.approval.queryProcessRefer, {}, function(res) {
+
+            var refers = res.processRefers || [];
+
+            // 按 type 分组
+            var grouped = {};
+            $.each(refers, function(i, r) {
+                if (!grouped[r.type]) grouped[r.type] = [];
+                grouped[r.type].push(r);
+            });
+
+            // 按分组的顺序渲染
+            var groupOrder = ["query", "filling", "condition", "select", "text", "textarea", "datetime", "upload"];
+            $.each(groupOrder, function(gi, type) {
+
+                if (!grouped[type]) return;
+                var group = referGroupMap[type];
+
+                if (group) {
+                    // query/filling/condition 有分组标题
+                    $('<div></div>').addClass("small muted")
+                        .css({ "margin-top": "8px", "margin-bottom": "2px" })
+                        .text(group.label).appendTo($lib);
+                }
+
+                $.each(grouped[type], function(i, r) {
+
+                    var icon = group ? group.icon : "icon-pencil";
+                    var color = group ? group.color : "btn-default";
+
+                    var $btn = makeControlBtn(icon, color, r.name, true);
+                    $btn.attr("data-refer-id", r.id).attr("data-refer-type", r.type).attr("data-refer-name", r.name);
+                    $btn.on("click", function() {
+                        var controlType = referControlTypeMap[r.type] || 1;
+                        addField(controlType, r.id, r.name);
+                    });
+                    $lib.append($btn);
+                });
+            });
+        });
+    }
+
+    function makeControlBtn(icon, color, name, isBiz) {
+
+        var $btn = $('<a></a>')
+            .addClass("btn btn-xs " + color)
+            .css({ "width": "95%", "margin": "2px 2.5%", "text-align": "left", "padding": "4px 8px", "font-size": "12px" });
+        $('<i></i>').addClass(icon).css("margin-right", "4px").appendTo($btn);
+        $('<span></span>').text(name).appendTo($btn);
+        if (isBiz) {
+            $('<i></i>').addClass("icon-link pull-right").css("opacity", "0.6").appendTo($btn);
+        }
+        return $btn;
     }
 
     // ===== 2. 加载关联流程下拉 =====
@@ -44,34 +122,35 @@ jQuery(function($) {
         com.post(api.approval.pageApprovalFlow, { "paging.page": 1, "paging.rows": 999 }, function(res) {
             var flows = res.paging.data || [];
             var $sel = com.focusPage("#flowId");
-            if ($sel.length === 0) $sel = $("#flowId");
 
             $.each(flows, function(i, f) {
                 if (f.status == 0) {
-                    $('<option></option>').val(f.flowId)
-                        .text(f.name + " (" + f.code + ")")
-                        .appendTo($sel);
+                    $('<option></option>').val(f.flowId).text(f.name + " (" + f.code + ")").appendTo($sel);
                 }
             });
         });
     }
 
     // ===== 3. 添加字段 =====
-    function addField(controlType) {
+    // controlType: 前端控件类型(1-8)
+    // referId: 业务字段标识(来自 processRefer.id, 如 "orderId"), null 表示基础控件
+    // referName: 业务字段中文名(来自 processRefer.name, 如 "装修单号")
+    function addField(controlType, referId, referName) {
 
-        var c = controlMap[controlType];
+        var c = controlMap[controlType] || controlDefs[0];
         var seq = form.fields.length;
 
         var field = {
-            fieldKey: "field_" + (seq + 1),
-            fieldLabel: c.name + "字段",
+            fieldKey: referId || ("field_" + (seq + 1)),
+            fieldLabel: referName || (c.name + "字段"),
             controlType: controlType,
             sortOrder: seq,
-            required: 0,
+            required: referId ? 1 : 0,
             defaultValue: "",
             dataSource: "",
             validateRule: "",
-            status: 0
+            status: 0,
+            referId: referId || ""
         };
 
         form.fields.push(field);
@@ -83,13 +162,9 @@ jQuery(function($) {
     function renderPreview() {
 
         var $preview = com.focusPage("#formPreview");
-        if ($preview.length === 0) $preview = $("#formPreview");
-
         $preview.empty();
 
-        var $empty = com.focusPage("#notfield");
-        if ($empty.length === 0) $empty = $("#notfield");
-        $empty.toggle(form.fields.length === 0);
+        com.focusPage("#notfield").toggle(form.fields.length === 0);
 
         $.each(form.fields, function(i, field) {
             var c = controlMap[field.controlType] || controlDefs[0];
@@ -115,6 +190,12 @@ jQuery(function($) {
             var labelText = field.fieldLabel || "(未命名)";
             if (field.required == 1) labelText = '<span class="red">*</span>' + labelText;
             $label.append(labelText);
+
+            // 业务字段标记
+            if (field.referId) {
+                $('<i></i>').addClass("icon-link").css({ "margin-left": "3px", "color": "#999", "font-size": "10px" })
+                    .attr("title", "业务字段: " + field.referId).appendTo($label);
+            }
             $label.appendTo($row);
 
             // 控件渲染
@@ -123,8 +204,7 @@ jQuery(function($) {
             $ctrl.appendTo($row);
 
             $row.on("click", function() {
-                var idx = parseInt($(this).attr("data-index"));
-                selectField(idx);
+                selectField(parseInt($(this).attr("data-index")));
             });
 
             $preview.append($row);
@@ -135,26 +215,28 @@ jQuery(function($) {
     function renderControl(field) {
 
         var val = field.defaultValue || "";
+        var isBiz = !!field.referId;
+        var placeholder = isBiz ? "自动填充" : "";
 
         switch (field.controlType) {
-            case 2: // 文本域
-                return $('<textarea></textarea>').addClass("col-xs-12").attr("disabled", "disabled").val(val);
-            case 3: // 数字
+            case 2:
+                return $('<textarea></textarea>').addClass("col-xs-12").attr("disabled", "disabled").attr("placeholder", placeholder).val(val);
+            case 3:
                 return $('<input type="number">').addClass("col-xs-12").attr("disabled", "disabled").val(val);
-            case 4: // 下拉
+            case 4:
                 var $sel = $('<select></select>').addClass("col-xs-12").attr("disabled", "disabled");
                 $('<option></option>').text(val || "请选择").appendTo($sel);
                 return $sel;
-            case 5: // 日期
+            case 5:
                 return $('<input type="text">').addClass("col-xs-12").attr("disabled", "disabled").attr("placeholder", "YYYY-MM-DD").val(val);
-            case 6: // 用户选择
-                return $('<input type="text">').addClass("col-xs-12").attr("disabled", "disabled").attr("placeholder", "选择用户").val(val);
-            case 7: // 部门选择
+            case 6:
+                return $('<input type="text">').addClass("col-xs-12").attr("disabled", "disabled").attr("placeholder", isBiz ? "选择装修单" : "选择用户").val(val);
+            case 7:
                 return $('<input type="text">').addClass("col-xs-12").attr("disabled", "disabled").attr("placeholder", "选择部门").val(val);
-            case 8: // 附件
+            case 8:
                 return $('<button></button>').addClass("btn btn-minier btn-danger").attr("disabled", "disabled").html('<i class="icon-upload"></i> 上传');
-            default: // 文本
-                return $('<input type="text">').addClass("col-xs-12").attr("disabled", "disabled").val(val);
+            default:
+                return $('<input type="text">').addClass("col-xs-12").attr("disabled", "disabled").attr("placeholder", placeholder).val(val);
         }
     }
 
@@ -175,7 +257,7 @@ jQuery(function($) {
         com.focusPage("#propForm").show();
 
         com.focusPage("#fieldIndex").val(index);
-        com.focusPage("#fieldKey").val(field.fieldKey);
+        com.focusPage("#fieldKey").val(field.fieldKey).prop("disabled", !!field.referId);
         com.focusPage("#fieldLabel").val(field.fieldLabel);
         com.focusPage("#required").prop("checked", field.required == 1);
         com.focusPage("#defaultValue").val(field.defaultValue);
@@ -208,7 +290,6 @@ jQuery(function($) {
         form.fields.splice(idx, 1);
         form.selectedIndex = null;
 
-        // 重排序号
         $.each(form.fields, function(i, f) { f.sortOrder = i; });
 
         renderPreview();
