@@ -118,6 +118,59 @@ public class ApprovalFlowEngineServiceImpl implements ApprovalFlowEngineService 
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public long startGeneralFlow(String flowCode, String senderId, int company, Map<String, String> formData) throws FLException {
+
+		// 1. 按 flowCode 查启用的流程定义(通用审批按 code 查,不按 businessType)
+		ApprovalFlowPO flow = approvalFlowDao.queryApprovalFlow(flowCode, company, 1);
+		if (flow == null) {
+			// 兜底:查 company=0 的通用流程
+			flow = approvalFlowDao.queryApprovalFlow(flowCode, 0, 1);
+		}
+		if (flow == null) {
+			throw new FLException(240040, "未找到通用审批流程定义(code=" + flowCode + ")");
+		}
+
+		List<ApprovalFlowNodePO> nodes = approvalFlowNodeDao.queryApprovalFlowNodeByFlowId(flow.getFlowId());
+		if (nodes == null || nodes.isEmpty()) {
+			throw new FLException(240041, "流程定义无可用节点(flowId=" + flow.getFlowId() + ")");
+		}
+
+		// 2. 引擎自动创建 ApprovalPO(无业务单据)
+		UserPO sender = userDao.queryUserByUserId(senderId);
+		if (sender == null) {
+			throw new FLException(240043, "发起人不存在(userId=" + senderId + ")");
+		}
+
+		ApprovalPO approvalPO = new ApprovalPO();
+		approvalPO.setSender(sender);
+		approvalPO.setReceiver(null);
+		approvalPO.setOrderId(null);
+		approvalPO.setIdent(flowCode);
+		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_GENERAL_INT);
+		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
+		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
+		approvalPO.setCompany(company);
+		approvalPO.setContents("通用审批: " + flow.getName());
+
+		approvalDao.save(approvalPO);
+
+		// 3. 存表单数据(若携带)
+		if (approvalFormDataService != null && formData != null && !formData.isEmpty()) {
+			com.fanglin.approval.po.ApprovalFormPO formPO = approvalFormDao.queryApprovalFormByFlowId(flow.getFlowId());
+			if (formPO != null) {
+				approvalFormDataService.saveFormData(approvalPO.getAid(), formPO.getFormId(), formData, null);
+			}
+		}
+
+		// 4. 激活首节点
+		activateNode(approvalPO, flow, nodes, 0);
+
+		return approvalPO.getAid();
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void agreeTask(long taskId, String userId, String comment) throws FLException {
 
 		ApprovalTaskPO task = approvalTaskDao.get(taskId);
