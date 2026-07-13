@@ -51,45 +51,58 @@ jQuery(function($) {
         });
     }
 
-    // ===== 节点列表渲染(表格) =====
+    // ===== 节点列表渲染(纵向流程图卡片) =====
     function renderNodes() {
 
-        var $body = com.focusPage("#nodeBody").empty();
+        var $canvas = com.focusPage("#flowCanvas").empty();
 
-        com.focusPage("#nodeTable").toggle(flow.nodes.length > 0);
+        com.focusPage("#flowCanvas").toggle(flow.nodes.length > 0);
         com.focusPage("#notnode").toggle(flow.nodes.length === 0);
 
         $.each(flow.nodes, function(i, node) {
 
-            var $tr = $('<tr></tr>');
+            var $node = $('<div></div>').addClass("flow-node");
 
-            $('<td></td>').html("<strong>" + node.nodeSeq + "</strong>").appendTo($tr);
-            $('<td></td>').text(node.nodeName).appendTo($tr);
-            $('<td></td>').html("<span class='label label-warning'>" + (nodeTypeMap[node.nodeType] || node.nodeType) + "</span>" +
-                (node.passRatio ? " <span class='label label-success'>比例" + node.passRatio + "</span>" : "")).appendTo($tr);
-            $('<td></td>').html("<span class='label label-info'>" + (ruleMap[node.approverRule] || node.approverRule) + "</span>").appendTo($tr);
+            // 卡片头部:序号圆圈 + 节点名 + 标签
+            var $header = $('<div></div>').addClass("flow-node-header");
+            $('<span></span>').addClass("flow-node-seq").text(node.nodeSeq).appendTo($header);
+            $('<span></span>').addClass("flow-node-name").text(node.nodeName).appendTo($header);
+            $('<span></span>').addClass("label label-warning")
+                .css("margin-left", "4px")
+                .text(nodeTypeMap[node.nodeType] || node.nodeType)
+                .appendTo($header);
+            if (node.passRatio) {
+                $('<span></span>').addClass("label label-success")
+                    .css("margin-left", "2px").text("比例" + node.passRatio).appendTo($header);
+            }
+            $header.appendTo($node);
 
-            // 详情列:审批人 + 后置处理器,分行显示
-            var detailHtml = "";
+            // 卡片内容:审批人规则/审批人/后置处理器
+            var bodyHtml = "<div class='flow-node-body'>";
+            bodyHtml += "<span class='muted'>规则:</span> " + (ruleMap[node.approverRule] || node.approverRule);
             if (node.approverData) {
-                detailHtml += "<div class='small'><span class='muted'>审批人:</span> " + node.approverData.substring(0, 40) + "</div>";
+                bodyHtml += "<br/><span class='muted'>审批人:</span> " + node.approverData;
+            }
+            if (node.timeoutHours) {
+                bodyHtml += "<br/><span class='muted'>超时:</span> " + node.timeoutHours + "小时";
             }
             if (node.postHandler) {
-                detailHtml += "<div class='small'><span class='muted'>后置:</span> " + node.postHandler.substring(0, 40) + "</div>";
+                bodyHtml += "<br/><span class='muted'>后置:</span> " + node.postHandler;
             }
-            $('<td></td>').html(detailHtml || "<span class='muted'>-</span>").appendTo($tr);
+            bodyHtml += "</div>";
+            $node.append(bodyHtml);
 
-            var $btnTd = $('<td></td>').css("white-space", "nowrap");
+            // 操作按钮(绝对定位右上角)
+            var $actions = $('<div></div>').addClass("flow-node-actions");
             $('<button></button>').addClass("btn btn-minier btn-yellow")
-                .html('<i class="icon-edit"></i> 编辑')
-                .on("click", function() { editNode(i); }).appendTo($btnTd);
+                .html('<i class="icon-edit"></i>').attr("title", "编辑")
+                .on("click", function() { editNode(i); }).appendTo($actions);
             $('<button></button>').addClass("btn btn-minier btn-danger")
-                .html('<i class="icon-trash"></i>')
-                .css("margin-left", "3px").attr("title", "删除")
-                .on("click", function() { deleteNode(i); }).appendTo($btnTd);
-            $btnTd.appendTo($tr);
+                .html('<i class="icon-trash"></i>').css("margin-left", "2px").attr("title", "删除")
+                .on("click", function() { deleteNode(i); }).appendTo($actions);
+            $actions.appendTo($node);
 
-            $body.append($tr);
+            $canvas.append($node);
         });
     }
 
