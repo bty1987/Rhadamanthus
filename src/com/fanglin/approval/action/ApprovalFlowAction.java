@@ -47,6 +47,14 @@ public class ApprovalFlowAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryApprovalFlow", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryApprovalFlow() throws FLException {
+
+		flows = approvalFlowService.queryApprovalFlow(queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryApprovalFlowByFlowId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryApprovalFlowByFlowId() throws FLException {
 

@@ -24,4 +24,9 @@ public interface ApprovalFormDao extends Dao<ApprovalFormPO> {
 	/** 按编码 + 公司查询 */
 	public ApprovalFormPO queryApprovalForm(String code, int company);
 
+	/**
+	 * 查询公司下全部表单定义(不分页,按 code 升序)。
+	 */
+	public List<ApprovalFormPO> queryApprovalForm(int company);
+
 }
