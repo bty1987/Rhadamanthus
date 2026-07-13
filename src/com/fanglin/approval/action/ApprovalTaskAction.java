@@ -9,7 +9,9 @@
 
 package com.fanglin.approval.action;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -17,6 +19,8 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import com.alibaba.fastjson.JSONObject;
 
 import com.fanglin.approval.service.ApprovalFlowEngineService;
 import com.fanglin.approval.vo.ApprovalTaskVO;
@@ -42,6 +46,29 @@ public class ApprovalTaskAction extends BaseListAction {
 	private String transferTo;
 
 	private String comment;
+
+	private String code;
+
+	private String forms;
+
+	private long aid;
+
+	@Action(value = "startGeneralApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String startGeneralApproval() throws FLException {
+
+		Map<String, String> formData = new HashMap<String, String>();
+
+		if (forms != null && !forms.isEmpty()) {
+			JSONObject jsonObj = JSONObject.parseObject(forms);
+			for (Map.Entry<String, Object> entry : jsonObj.entrySet()) {
+				formData.put(entry.getKey(), entry.getValue() == null ? "" : entry.getValue().toString());
+			}
+		}
+
+		aid = approvalFlowEngineService.startGeneralFlow(code, queryUserId(), queryCompany(), formData);
+
+		return SUCCESS;
+	}
 
 	@Action(value = "agreeApprovalTask", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String agreeApprovalTask() throws FLException {
@@ -123,6 +150,30 @@ public class ApprovalTaskAction extends BaseListAction {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getForms() {
+		return forms;
+	}
+
+	public void setForms(String forms) {
+		this.forms = forms;
+	}
+
+	public long getAid() {
+		return aid;
+	}
+
+	public void setAid(long aid) {
+		this.aid = aid;
 	}
 
 }

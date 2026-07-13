@@ -44,6 +44,18 @@ public interface ApprovalFlowEngineService {
 	public int startFlow(ApprovalPO approvalPO, Map<String, String> formData) throws FLException;
 
 	/**
+	 * 通用审批发起:不依赖业务单据,引擎自动创建 ApprovalPO 并激活首节点。
+	 * 用于请假、报销、用车等非业务审批场景。
+	 *
+	 * @param flowCode 流程定义编码(如 GENERAL_LEAVE)
+	 * @param senderId 发起人 userId
+	 * @param company  公司ID
+	 * @param formData 表单数据(fieldKey→fieldValue),可为 null
+	 * @return 审批单 aid
+	 */
+	public long startGeneralFlow(String flowCode, String senderId, int company, Map<String, String> formData) throws FLException;
+
+	/**
 	 * 审批通过:处理指定任务,判定节点完成状态,推进流程或终结。
 	 *
 	 * @param taskId    任务ID

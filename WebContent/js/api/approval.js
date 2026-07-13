@@ -372,6 +372,9 @@ $.extend(api, {
         agreeApprovalTask: {
             url: "agreeApprovalTask.do"
         },
+        startGeneralApproval: {
+            url: "startGeneralApproval.do"
+        },
         refuseApprovalTask: {
             url: "refuseApprovalTask.do"
         },
