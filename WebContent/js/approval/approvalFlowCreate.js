@@ -63,19 +63,30 @@ jQuery(function($) {
 
             var $tr = $('<tr></tr>');
 
-            $('<td></td>').text(node.nodeSeq).appendTo($tr);
+            $('<td></td>').html("<strong>" + node.nodeSeq + "</strong>").appendTo($tr);
             $('<td></td>').text(node.nodeName).appendTo($tr);
-            $('<td></td>').html("<span class='label label-warning'>" + (nodeTypeMap[node.nodeType] || node.nodeType) + "</span>").appendTo($tr);
+            $('<td></td>').html("<span class='label label-warning'>" + (nodeTypeMap[node.nodeType] || node.nodeType) + "</span>" +
+                (node.passRatio ? " <span class='label label-success'>比例" + node.passRatio + "</span>" : "")).appendTo($tr);
             $('<td></td>').html("<span class='label label-info'>" + (ruleMap[node.approverRule] || node.approverRule) + "</span>").appendTo($tr);
 
-            var detail = node.passRatio ? "比例:" + node.passRatio + " " : "";
-            detail += node.approverData ? "审批人:" + node.approverData.substring(0, 30) : "";
-            detail += node.postHandler ? (detail ? "<br/>" : "") + "后置:" + node.postHandler.substring(0, 30) : "";
-            $('<td></td>').addClass("small muted").html(detail || "-").appendTo($tr);
+            // 详情列:审批人 + 后置处理器,分行显示
+            var detailHtml = "";
+            if (node.approverData) {
+                detailHtml += "<div class='small'><span class='muted'>审批人:</span> " + node.approverData.substring(0, 40) + "</div>";
+            }
+            if (node.postHandler) {
+                detailHtml += "<div class='small'><span class='muted'>后置:</span> " + node.postHandler.substring(0, 40) + "</div>";
+            }
+            $('<td></td>').html(detailHtml || "<span class='muted'>-</span>").appendTo($tr);
 
-            var $btnTd = $('<td></td>');
-            $('<button></button>').addClass("btn btn-minier btn-yellow").html('<i class="icon-edit"></i>').attr("title", "编辑").on("click", function() { editNode(i); }).appendTo($btnTd);
-            $('<button></button>').addClass("btn btn-minier btn-danger").html('<i class="icon-trash"></i>').css("margin-left", "3px").attr("title", "删除").on("click", function() { deleteNode(i); }).appendTo($btnTd);
+            var $btnTd = $('<td></td>').css("white-space", "nowrap");
+            $('<button></button>').addClass("btn btn-minier btn-yellow")
+                .html('<i class="icon-edit"></i> 编辑')
+                .on("click", function() { editNode(i); }).appendTo($btnTd);
+            $('<button></button>').addClass("btn btn-minier btn-danger")
+                .html('<i class="icon-trash"></i>')
+                .css("margin-left", "3px").attr("title", "删除")
+                .on("click", function() { deleteNode(i); }).appendTo($btnTd);
             $btnTd.appendTo($tr);
 
             $body.append($tr);
