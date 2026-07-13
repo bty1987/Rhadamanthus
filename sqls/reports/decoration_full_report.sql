@@ -4,42 +4,41 @@
 -- 涉及数据库: decoration / construction / communion / customer / data
 -- MySQL 5.6  (列名大小写不敏感，本 SQL 统一按生产库小写写法)
 --
+-- 主表驱动说明:
+--   主表为 customer.customerchance (客户商机),业务类型及之前的字段优先从 cc 表取值;
+--   cc 表无的字段(订单类型/状态/派尺时间/房屋类别类型/设计师/业务员/业务部/各时间节点等)仍 JOIN decoration.decoration 获取。
+--
 -- 字段值单位说明 (重要):
 --   * 面积类字段 (buildArea/quoteArea)        : 放大 1000 倍的整数, 130000 = 130 ㎡
 --   * 金额类字段 (materialPrice/servicePrice等): 放大 1000 倍的整数, 184499000 = 184499 元
 --   * 百分比类字段 (materialRate/serviceRate) : 整数, 100 = 100%
 --   * 工期类字段 (timeLimit/designPeriod)     : 放大 1000 倍的整数, 80000 = 80 天
 --   * 比例类字段 (paySacle)                   : 整数, 含义见业务定义
---
--- 暂留 NULL 的字段 (待业务确认来源后补充):
---   * 基装主材点收完结时间  (候选: inventory.occessories.receiveTime 或 material.material.status=9 时间)
---   * 整装主材配送完结时间  (候选: inventory.occessories.deliveTime 或 material.material.status=9 时间)
---   * 开户行 / 开户账号    (仅法人客户 CustomerPO.companyBank/companyBankno 有值, 普通装修单无)
 -- =============================================================================
 SELECT
-    -- ==================== 基础信息 ====================
-    c.name                         AS `公司`,              -- communion.company.name (d.company=c.cid, 实测为明文cid无需decode)
-    d.orderId                      AS `装修单号`,
-    communion.kv('decoration', 'decoration', 'typeness', d.typeness) AS `订单类型`,          -- 区别于 d.type(0中包/1包料/2大包), typeness 是业务订单类型
-    da.designRegion                AS `区域`,              -- decorationaddition.designRegion 设计区域快照字符串
+    -- ==================== 基础信息 (主表 customerchance 驱动) ====================
+    c.name                         AS `公司`,              -- communion.company.name (cc.company=c.cid, 实测为明文cid无需decode)
+    cc.orderId                     AS `装修单号`,
+    communion.kv('decoration', 'decoration', 'typeness', d.typeness) AS `订单类型`,          -- 区别于 d.type(0中包/1包料/2大包), typeness 是业务订单类型 [cc表无此字段,仍取d]
+    cc_region.name                 AS `区域`,              -- communion.department.name (cc.rdid=region.did) 客户商机关联的区域部门
     v.name                         AS `楼盘`,              -- communion.village.name
     h.houseNumber                  AS `楼号`,              -- communion.house.houseNumber (门牌/楼号)
-    communion.kv('decoration', 'decoration', 'status', d.status) AS `订单状态`,          -- 0初始/1定金/2预签/3签约/4重签/5废单/6终止/7决算/8完工/20待审/30可终止...
-    d.measureTime                  AS `派尺时间`,          -- decoration.measureTime
-    cc.readTime                    AS `已读时间`,          -- customer.customerchance.readTime (cc.orderId=d.orderId)
+    communion.kv('decoration', 'decoration', 'status', d.status) AS `订单状态`,          -- 0初始/1定金/2预签/3签约/4重签/5废单/6终止/7决算/8完工/20待审/30可终止... [cc表无此字段,仍取d]
+    d.measureTime                  AS `派尺时间`,          -- decoration.measureTime [cc表无此字段,仍取d]
+    cc.readTime                    AS `已读时间`,          -- customer.customerchance.readTime
     h.buildArea/1000               AS `派尺面积`,          -- communion.house.buildArea (放大1000倍, 130000=130㎡)
     h.innerarea/1000               AS `计价面积`,          -- communion.house.quoteArea (放大1000倍, 注意: 生产数据多为0)
-    d.houseClass                   AS `房屋类别`,
-    d.houseType                    AS `房屋类型`,
+    d.houseClass                   AS `房屋类别`,          -- [cc表无此字段,仍取d]
+    d.houseType                    AS `房屋类型`,          -- [cc表无此字段,仍取d]
 
     -- ==================== 设计/业务归属 ====================
     dd_parent.name                 AS `设计中心`,          -- 设计部(dd)的父部门(fatherDept) = 设计中心/大区
-    dd.name                        AS `设计部`,            -- communion.department.name (d.ddid=dd.did)
-    designer.currentName           AS `设计师`,            -- communion.user.currentName (d.dsuid=designer.uid)
+    dd.name                        AS `设计部`,            -- communion.department.name (cc.ddid=dd.did)
+    designer.currentName           AS `设计师`,            -- communion.user.currentName (d.dsuid=designer.uid) [cc表无此字段,仍取d]
     sd_parent.name                 AS `业务中心`,          -- 业务部(sd)的父部门(fatherDept) = 业务中心/大区
-    sd.name                        AS `业务部`,            -- communion.department.name (d.sdid=sd.did)
-    salesman.currentName           AS `业务员`,            -- communion.user.currentName (d.smuid=salesman.uid)
-    bt.name                        AS `业务类型`,          -- data.decorationbusitype.name (d.busitype=bt.dbid)
+    sd.name                        AS `业务部`,            -- communion.department.name (d.sdid=sd.did) [cc表无此字段,仍取d]
+    salesman.currentName           AS `业务员`,            -- communion.user.currentName (d.smuid=salesman.uid) [cc表无此字段,仍取d]
+    bt.name                        AS `业务类型`,          -- data.decorationbusitype.name (cc.dbid=bt.dbid)
 
     -- ==================== 关键时间节点 ====================
     d.createTime                   AS `创建时间`,
@@ -48,14 +47,13 @@ SELECT
     d.contractTime                 AS `签单时间`,
     d.precontractTime              AS `预签时间`,
 
-    -- ==================== 开户行(暂留NULL) ====================
-    -- 普通装修单客户无开户行信息, 仅法人客户 CustomerPO.companyBank/companyBankno 有值
-    -- 如需取值: LEFT JOIN communion.customer cust ON cust.cid = d.customerId, 取 cust.companyBank / cust.companyBankno
-    NULL                           AS `开户行`,
-    NULL                           AS `开户账号`,
+    -- ==================== 开户行/账号 (cc.cid → communion.customer) ====================
+    -- 生产实测 76万客户中约 9.2万有值(非仅法人客户), 取 companyBank/companyBankno
+    cust.companyBank               AS `开户行`,          -- communion.customer.companyBank (cc.cid=cust.cid)
+    cust.companyBankno             AS `开户账号`,        -- communion.customer.companyBankno
 
     d.terminalTime                 AS `终止时间`,
-    d.paySacle/1000                     AS `工程付款比例`,      -- 注意拼写 Sacle
+    d.paySacle/1000                AS `工程付款比例`,      -- 注意拼写 Sacle
 
     -- ==================== 主材/服务费 (按 type 分布三张子表, COALESCE 合并) ====================
     -- type=0 中包(decorationmidpack)  : 有 materialRate/materialPrice/materialPaidup/serviceRate/servicePrice/servicePaidup
@@ -88,7 +86,7 @@ SELECT
     d.recontractTime               AS `重签时间`,
 
     -- ==================== 施工工期/时间 ====================
-    ci.timeLimit                   AS `工期`,              -- constructioninfo.timeLimit (放大1000倍, 80天=80000)
+    ci.timeLimit/1000              AS `工期`,              -- constructioninfo.timeLimit (放大1000倍, 80天=80000 → /1000)
     ci.keyTime                     AS `预计交钥匙时间`,    -- constructioninfo.keyTime
     cs_drawline.preStartTime       AS `预计放线时间`,      -- constructionschedule 放线节点(name='放线') 的 preStartTime
     cs.preEndTime                  AS `预计完工时间`,      -- construction.construction.preEndTime
@@ -106,9 +104,13 @@ SELECT
     cs_oil.endTime                 AS `油工完工时间`,      -- 油工节点 endTime (name='油工')
     cs.endTime                     AS `工程竣工时间`,      -- construction.construction.endTime (实际竣工)
 
-    -- ==================== 主材点收/配送 (暂留NULL待确认) ====================
-    NULL                           AS `基装主材点收完结时间`,
-    NULL                           AS `整装主材配送完结时间`,
+    -- ==================== 主材点收/配送 ====================
+    -- 基装主材点收完结: sales.sales 按 orderId 聚合取 MAX(finishTime)
+    --   生产实测: sales 表 146w 行, 74w 有 finishTime; 一个 orderId 平均对应多条 sales 记录(主材按品类分单)
+    sales_finish.maxFinishTime     AS `基装主材点收完结时间`,  -- MAX(sales.sales.finishTime) GROUP BY orderId
+    -- 整装主材配送完结: quotation.selectionitem 按 orderId 聚合取 MAX(tranTime)
+    --   生产实测: selectionitem 表 185w 行, 174w 有 tranTime; 一个装修单对应多条选材明细(品类分项), 取最晚配送时间
+    sel_tran.maxTranTime           AS `整装主材配送完结时间`,  -- MAX(quotation.selectionitem.tranTime) GROUP BY orderId
 
     -- ==================== 决算/内决/保修 ====================
     d.accountTime                  AS `决算时间`,          -- decoration.accountTime
@@ -118,34 +120,40 @@ SELECT
 
 FROM customer.customerchance cc
 
--- 客户商机 (已读时间)
+-- 客户商机 (主表)
 LEFT JOIN decoration.decoration d      ON cc.orderId = d.orderId
 
--- 公司
-LEFT JOIN communion.company c        ON c.cid   = d.company
+-- 客户 (开户行/账号, cc.cid)
+LEFT JOIN communion.customer cust    ON cust.cid = cc.cid
+
+-- 公司 (cc.company 明文 cid)
+LEFT JOIN communion.company c        ON c.cid   = cc.company
 
 -- 装修附加信息 (到店时间/区域快照)
-LEFT JOIN decoration.decorationaddition da ON da.orderId = d.orderId
+LEFT JOIN decoration.decorationaddition da ON da.orderId = cc.orderId
 
 
 
--- 房屋/楼盘
-LEFT JOIN communion.house h              ON h.hid  = d.hid
+-- 房屋/楼盘 (cc.hid)
+LEFT JOIN communion.house h              ON h.hid  = cc.hid
 LEFT JOIN communion.village v            ON v.vid  = h.vid
 
--- 人员: 设计师/业务员/监理
+-- 人员: 设计师/业务员/监理 [cc表无对应字段,仍取d]
 LEFT JOIN communion.user designer        ON designer.uid = d.dsuid
 LEFT JOIN communion.user salesman        ON salesman.uid = d.smuid
 LEFT JOIN communion.user supervisor      ON supervisor.uid = d.svuid
 
--- 部门: 设计部+父部门(设计中心) / 业务部+父部门(业务中心)
-LEFT JOIN communion.department dd        ON dd.did  = d.ddid
+-- 区域部门 (cc.rdid 客户商机关联的区域部门)
+LEFT JOIN communion.department cc_region ON cc_region.did = cc.rdid
+
+-- 部门: 设计部(cc.ddid)+父部门(设计中心) / 业务部(取d.sdid)+父部门(业务中心)
+LEFT JOIN communion.department dd        ON dd.did  = cc.ddid
 LEFT JOIN communion.department dd_parent ON dd_parent.did = dd.fdid
 LEFT JOIN communion.department sd        ON sd.did  = d.sdid
 LEFT JOIN communion.department sd_parent ON sd_parent.did = sd.fdid
 
--- 业务类型
-LEFT JOIN data.decorationbusitype bt     ON bt.dbid = d.busitype
+-- 业务类型 (cc.dbid)
+LEFT JOIN data.decorationbusitype bt     ON bt.dbid = cc.dbid
 
 -- 施工信息 (设计天数/工期/放线/交钥匙/超期)
 LEFT JOIN construction.constructioninfo ci ON ci.orderId = d.orderId
@@ -172,6 +180,22 @@ LEFT JOIN construction.constructionschedule cs_oil
 
 -- 决算单 (内决)
 LEFT JOIN decoration.decorationbalance db ON db.doid = d.doid
+
+-- 主材销售 (基装主材点收完结时间 = 该装修单所有 sales.sales.finishTime 的最大值)
+LEFT JOIN (
+    SELECT orderId, MAX(finishTime) AS maxFinishTime
+    FROM sales.sales
+    WHERE finishTime IS NOT NULL
+    GROUP BY orderId
+) sales_finish ON sales_finish.orderId = d.orderId
+
+-- 选材明细 (整装主材配送完结时间 = 该装修单所有 quotation.selectionitem.tranTime 的最大值)
+LEFT JOIN (
+    SELECT orderId, MAX(tranTime) AS maxTranTime
+    FROM quotation.selectionitem
+    WHERE tranTime IS NOT NULL
+    GROUP BY orderId
+) sel_tran ON sel_tran.orderId = d.orderId
 
 -- 主材/服务费子表 (按 type 分布, 全部 LEFT JOIN 用 COALESCE 合并)
 LEFT JOIN decoration.decorationmidpack mid  ON mid.orderId = d.orderId   -- type=0 中包
