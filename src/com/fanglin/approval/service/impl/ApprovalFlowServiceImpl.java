@@ -54,19 +54,6 @@ public class ApprovalFlowServiceImpl implements ApprovalFlowService {
 	}
 
 	@Override
-	public List<ApprovalFlowVO> queryApprovalFlow(int company) {
-
-		List<ApprovalFlowPO> flowPOs = approvalFlowDao.queryApprovalFlow(company);
-		List<ApprovalFlowVO> flowVOs = new ArrayList<ApprovalFlowVO>();
-
-		for (ApprovalFlowPO flowPO : flowPOs) {
-			flowVOs.add(flowPOToVO(flowPO));
-		}
-
-		return flowVOs;
-	}
-
-	@Override
 	public ApprovalFlowVO queryApprovalFlowByFlowId(ApprovalFlowVO flowVO) throws FLException {
 
 		ApprovalFlowPO flowPO = approvalFlowDao.get(flowVO.getFlowId());

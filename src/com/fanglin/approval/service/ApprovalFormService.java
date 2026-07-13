@@ -19,9 +19,6 @@ public interface ApprovalFormService {
 
 	public void pageApprovalForm(Paging paging, List<Filter> filters, int company);
 
-	/** 查询公司下全部表单定义(不分页) */
-	public List<ApprovalFormVO> queryApprovalForm(int company);
-
 	public ApprovalFormVO queryApprovalFormByFormId(ApprovalFormVO formVO) throws FLException;
 
 	/** 按流程定义ID查询关联的表单 */

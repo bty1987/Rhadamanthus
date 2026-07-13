@@ -19,9 +19,6 @@ public interface ApprovalFlowService {
 
 	public void pageApprovalFlow(Paging paging, List<Filter> filters, int company);
 
-	/** 查询公司下全部流程定义(不分页) */
-	public List<ApprovalFlowVO> queryApprovalFlow(int company);
-
 	public ApprovalFlowVO queryApprovalFlowByFlowId(ApprovalFlowVO flowVO) throws FLException;
 
 	/** 查询流程下的全部节点定义 */
