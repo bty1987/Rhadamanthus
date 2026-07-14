@@ -1,13 +1,5 @@
 jQuery(function($) {
 
-    // 覆盖 ace-switch-5 的 YES/NO 文字为 是/否
-    if (!$("#approvalSwitchStyle").length) {
-        $("head").append("<style id='approvalSwitchStyle'>"
-            + "#resultList input[type=checkbox].ace.ace-switch.ace-switch-5+.lbl::before {"
-            + "content: '是\\a0\\a0\\a0\\a0\\a0\\a0\\a0\\a0\\a0\\a0否' !important;"
-            + "}</style>");
-    }
-
     // 业务审批类型映射(对应 ApprovalPO.APPROVAL_TYPE_*)
     var businessTypeMap = {
         1: "客户信息", 2: "小区", 3: "装修归属", 4: "报价折扣", 5: "装修退款",
