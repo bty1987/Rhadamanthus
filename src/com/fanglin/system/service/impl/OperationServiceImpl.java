@@ -275,6 +275,53 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void collectOperation(String userId, Integer roleId, Integer company, String operation) throws FLException {
+
+		// 四要素不齐,跳过(只对已登录、信息完整的请求收集)
+		if (userId == null || roleId == null || company == null || operation == null) return;
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) throw new FLException(220005, "员工不存在");
+
+		// 1. operation 不存在则创建(through=1 收集期放行, type=0 留给关闸后校验)
+		OperationPO operationPO = operationDao.queryOperationByOperation(operation);
+
+		if (operationPO == null) {
+
+			operationPO = new OperationPO();
+
+			operationPO.setOperation(operation);
+			operationPO.setName(operation);
+			operationPO.setThrough(OperationPO.THROUGH_PASS_INT);
+			operationPO.setType((short) 0);
+			operationPO.setStatus(OperationPO.STATUS_ENABLE_INT);
+			operationPO.setSystem((short) 1);
+
+			operationDao.save(operationPO);
+		}
+
+		int oid = operationPO.getOid();
+
+		// 2. 补 roleoperation:主角色 roleId + userrole 附加角色
+		ensureRoleOperation(roleId, oid, company, userPO);
+
+		List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
+
+		for (UserRolePO userRolePO : userRolePOs) {
+			ensureRoleOperation(userRolePO.getRole().getRid(), oid, company, userPO);
+		}
+	}
+
+	private void ensureRoleOperation(int rid, int oid, int company, UserPO creater) {
+
+		if (roleOperationDao.queryRoleOperation(rid, oid, company) == null) {
+			roleOperationDao.save(new RoleOperationPO(new OperationPO(oid), rid, creater, company));
+		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void addOperation(OperationVO operationVO) {
 
 		OperationPO operationPO = new OperationPO(new ModulePO());

@@ -36,6 +36,8 @@ public interface OperationService {
 
 	public boolean checkOperation(String userId, String operation, short rollcall) throws FLException;
 
+	public void collectOperation(String userId, Integer roleId, Integer company, String operation) throws FLException;
+
 	public void addOperation(OperationVO operationVO) throws FLException;
 
 	public int updateOpperation(OperationVO operationVO) throws FLException;
