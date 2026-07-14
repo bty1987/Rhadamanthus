@@ -93,7 +93,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 					throw new FLException(-2, "无操作权限");
 				}
 
-				operationService.collectOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
+				operationService.fillRoleOperationByOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
 
 				// if (!operationService.checkOperation(authentication.getUserId(), actionName, (short) 0)) {
 				// throw new FLException(-2, "无操作权限");
@@ -158,7 +158,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 						throw new FLException(110005, "登陆超时");
 					}
 
-					operationService.collectOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
+					operationService.fillRoleOperationByOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
 
 					if (operationService.checkOperation(authentication.getUserId(), actionName, authentication.getRollcall())) {
 						invocation.invoke();

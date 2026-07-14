@@ -279,7 +279,7 @@ UPDATE communion.operation SET through = 1 WHERE operation IN ('受影响的接�
 | 分批关闸 | 试关闸无问题后 | 按模块小批关，每批观察 24~48 小时 |
 | 全量关闸 | 全部分批完成 | 所有 operation `through=0` |
 
-> 全量关闸后，`collectOperation` 仍会继续为新接口自动补全——这是**期望行为**：未来新增的 `.do` 接口会被自动登记（through=1），运维定期巡检发现后主动改 0，形成长期机制。
+> 全量关闸后，`fillRoleOperationByOperation` 仍会继续为新接口自动补全——这是**期望行为**：未来新增的 `.do` 接口会被自动登记（through=1），运维定期巡检发现后主动改 0，形成长期机制。
 
 ---
 
@@ -288,7 +288,7 @@ UPDATE communion.operation SET through = 1 WHERE operation IN ('受影响的接�
 | 文件 | 说明 |
 |------|------|
 | `src/com/fanglin/core/interceptor/AccessInterceptor.java` | 拦截器，补全调用点（行 96、行 159） |
-| `src/com/fanglin/system/service/impl/OperationServiceImpl.java` | `collectOperation` 实现（行 276） |
+| `src/com/fanglin/system/service/impl/OperationServiceImpl.java` | `fillRoleOperationByOperation` 实现（行 276） |
 | `src/com/fanglin/system/po/OperationPO.java` | operation 实体，`through`/`type` 常量定义 |
 | `src/com/fanglin/system/po/RoleOperationPO.java` | roleoperation 实体 |
 | `src/com/fanglin/system/dao/impl/RoleOperationDaoImpl.java` | 查询方法 `queryRoleOperation(rid, oid, company)` |
