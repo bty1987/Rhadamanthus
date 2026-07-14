@@ -80,11 +80,11 @@ public class UserPreferServiceImpl implements UserPreferService {
     private void check(UserPreferVO userPreferVO, boolean update) throws FLException {
 
         if (userPreferVO == null) {
-            throw new FLException(110000, "系统处理问题");
+            throw new FLException(110000, "系统繁忙,请稍后重试");
         }
 
         if (empty(userPreferVO.getModule()) || empty(userPreferVO.getPage()) || empty(userPreferVO.getPkey())) {
-            throw new FLException(110000, "系统处理问题");
+            throw new FLException(110000, "系统繁忙,请稍后重试");
         }
 
         if (update && "searcher".equals(userPreferVO.getModule())) {
@@ -92,11 +92,11 @@ public class UserPreferServiceImpl implements UserPreferService {
             String value = userPreferVO.getPvalue();
 
             if ("viewMode".equals(userPreferVO.getPkey()) && !"line".equals(value) && !"card".equals(value) && !"table".equals(value)) {
-                throw new FLException(110000, "系统处理问题");
+                throw new FLException(110000, "系统繁忙,请稍后重试");
             }
 
             if ("viewSwitcher".equals(userPreferVO.getPkey()) && !"0".equals(value) && !"1".equals(value)) {
-                throw new FLException(110000, "系统处理问题");
+                throw new FLException(110000, "系统繁忙,请稍后重试");
             }
         }
     }

@@ -84,7 +84,7 @@ public class A20260109ServiceImpl implements A20260109Service {
 			throw e;
 		} catch (Exception e) {
 			logger.error("ERP事件发布异常: eventType={}, orderId={}, cnid={}, userId={}", eventType, orderId, cnid, userId, e);
-			throw new FLException(110000, "系统处理问题");
+			throw new FLException(110000, "系统繁忙,请稍后重试");
 		}
 	}
 

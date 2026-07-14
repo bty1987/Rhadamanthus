@@ -69,7 +69,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 			return url;
 		} catch (UnsupportedEncodingException e) {
 			logger.error("注册授权码失败", e);
-			throw new FLException(110000, "系统处理问题");
+			throw new FLException(110000, "系统繁忙,请稍后重试");
 		}
 	}
 
@@ -104,7 +104,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 			throw e;
 		} catch (Exception e) {
 			logger.error("交换授权码失败", e);
-			throw new FLException(110000, "系统处理问题");
+			throw new FLException(110000, "系统繁忙,请稍后重试");
 		}
 	}
 
@@ -143,7 +143,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 		System.out.println(response);
 
 		if (response == null) {
-			throw new FLException(110000, "系统处理问题");
+			throw new FLException(110000, "系统繁忙,请稍后重试");
 		}
 
 		JSONObject data = response.getJSONObject("data");
@@ -200,7 +200,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 
 		} catch (Exception e) {
 			logger.error("登出授权码失败", e);
-			throw new FLException(110000, "系统处理问题");
+			throw new FLException(110000, "系统繁忙,请稍后重试");
 		}
 
 		return 0;
