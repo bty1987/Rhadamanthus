@@ -93,6 +93,17 @@ throw new FLException("错误信息");
 LogUtils.log(userId, "操作描述", "操作模块", 对象ID);
 ```
 
+#### 🔴 方法命名规范（强约束）
+骨架：`动词 + 对象 + [By条件] + [For目的/范围]`
+- **CRUD动词**：`query`(单条/列表) / `page`(分页) / `add` / `update` / `delete` / `get` / `count` / `amount`
+- **🔴 page vs query 硬规则**：`page` 必须返回分页结构，`query` 不分页，禁止混用
+- **By条件**：取字段名带Id后缀（`ByOrderId`/`ByAId`/`ByOrderIds`），不要自然语言,不要用And拼接多条件(用VO传参)
+- **For目的**：范围/场景/角色/状态（`ForBalance`/`ForDeposit`/`ForPlatforPm`/`ForEnable`），与By条件区分
+- **业务动词**(CRUD表达不了时用)：`submit`/`confirm`/`cancel`/`sign`/`approve`/`affirm`/`enable`/`disable`/`bind`/`lock`/`reset` 等
+- **三层同名**：Action/Service/DAO 同一操作方法名保持一致
+- 示例：`queryDecorationByOrderId`、`pageSalesForBalanceByCompany`、`cancelMaterialPaymentForDeposit`
+- 详见：`docs/10-指南手册/METHOD_NAMING_CONVENTION.md`（含2963个方法名统计、动词频次表、缩写表）
+
 ### JavaScript前端规范
 
 #### 文件组织
@@ -194,6 +205,8 @@ return query.list();
 - **项目知识库**: `docs/KNOWLEDGE_BASE.md` (AI每次对话自动参考)
 - **前端架构**: `WebContent/CLAUDE.md`
 - **模块文档**: 各模块目录下的 `CLAUDE.md`
+- **方法命名规范**: `docs/10-指南手册/METHOD_NAMING_CONVENTION.md` (新增方法/接口必须遵守)
+- **Operation收集关闸SOP**: `docs/10-指南手册/OPERATION_COLLECT_CUTOVER_SOP.md`
 
 ---
 
