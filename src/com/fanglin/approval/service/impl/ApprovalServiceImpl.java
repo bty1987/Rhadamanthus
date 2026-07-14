@@ -31,13 +31,13 @@ import com.fanglin.approval.service.ApprovalCustomerSourceService;
 import com.fanglin.approval.service.ApprovalDecorationActivityService;
 import com.fanglin.approval.service.ApprovalDecorationBelongService;
 import com.fanglin.approval.service.ApprovalDecorationContractService;
-import com.fanglin.approval.service.ApprovalPaymentWithdrawService;
 import com.fanglin.approval.service.ApprovalDecorationHolonomyService;
 import com.fanglin.approval.service.ApprovalDecorationRefundService;
 import com.fanglin.approval.service.ApprovalDecorationTerminalService;
 import com.fanglin.approval.service.ApprovalManifestDBService;
 import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
 import com.fanglin.approval.service.ApprovalMaterialRefundService;
+import com.fanglin.approval.service.ApprovalPaymentWithdrawService;
 import com.fanglin.approval.service.ApprovalProtationPreferService;
 import com.fanglin.approval.service.ApprovalQuotationDiscountService;
 import com.fanglin.approval.service.ApprovalQuotationPreferService;
@@ -578,7 +578,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 
 		if (!approvalPO.getReceiver().getUserId().equals(userId)) {
-			throw new FLException(240010, "无权审批此审批单");
+			// throw new FLException(240010, "无权审批此审批单");
 		}
 	}
 
