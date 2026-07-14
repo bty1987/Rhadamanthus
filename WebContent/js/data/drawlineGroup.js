@@ -43,6 +43,7 @@ $(function(){
         return {
             status: {
                 type: "switch",
+                clazz: "status-lbl",
                 init: function(v) { return !v.status; },
                 handle: function(v, checked) { updateStatus(v.gid, checked ? 0 : 1, null); }
             },

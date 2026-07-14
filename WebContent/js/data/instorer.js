@@ -83,6 +83,7 @@ $(function() {
             },
             status: {
                 type: "switch",
+                clazz: "status-lbl",
                 init: function(v) { return v.isLogin; },
                 handle: function(v, checked) { updateStatus(v.sid, checked ? 1 : 0, null); }
             }

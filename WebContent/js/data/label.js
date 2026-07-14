@@ -36,6 +36,7 @@ $(function(){
         return {
             status: {
                 type: "switch",
+                clazz: "status-lbl",
                 init: function(v) { return v.status == 0; },
                 handle: function(v, checked) {
                     updatastatus(v.lid, checked ? 0 : 1);

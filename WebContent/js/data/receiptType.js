@@ -158,6 +158,7 @@ $(function($) {
         var btns = {
             status: {
                 type: "switch",
+                clazz: "status-lbl",
                 init: function(v) { return v.status == 1; },
                 handle: function(v, checked) { updateStatus(v.rtId, checked ? 1 : 0, null); }
             },

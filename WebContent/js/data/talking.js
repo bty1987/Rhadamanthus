@@ -71,6 +71,7 @@ $(function() {
             },
             status: {
                 type: "switch",
+                clazz: "status-lbl",
                 init: function(v) { return !v.status; },
                 handle: function(v, checked) { updateTalkingForStatus(v.tid, checked ? 0 : 1); }
             },

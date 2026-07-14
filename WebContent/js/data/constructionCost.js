@@ -91,6 +91,7 @@ jQuery(function($) {
         return {
             status: {
                 type: "switch",
+                clazz: "status-lbl",
                 init: function(v) { return !v.status; },
                 handle: function(v, checked) { updataStatus(v.ccid, checked ? 0 : 1); }
             },
