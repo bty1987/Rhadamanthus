@@ -275,7 +275,7 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void collectOperation(String userId, Integer roleId, Integer company, String operation) throws FLException {
+	public void fillRoleOperationByOperation(String userId, Integer roleId, Integer company, String operation) throws FLException {
 
 		// 四要素不齐,跳过(只对已登录、信息完整的请求收集)
 		if (userId == null || roleId == null || company == null || operation == null) return;
@@ -304,16 +304,16 @@ public class OperationServiceImpl implements OperationService {
 		int oid = operationPO.getOid();
 
 		// 2. 补 roleoperation:主角色 roleId + userrole 附加角色
-		ensureRoleOperation(roleId, oid, company, userPO);
+		addRoleOperation(roleId, oid, company, userPO);
 
 		List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
 
 		for (UserRolePO userRolePO : userRolePOs) {
-			ensureRoleOperation(userRolePO.getRole().getRid(), oid, company, userPO);
+			addRoleOperation(userRolePO.getRole().getRid(), oid, company, userPO);
 		}
 	}
 
-	private void ensureRoleOperation(int rid, int oid, int company, UserPO creater) {
+	private void addRoleOperation(int rid, int oid, int company, UserPO creater) {
 
 		if (roleOperationDao.queryRoleOperation(rid, oid, company) == null) {
 			roleOperationDao.save(new RoleOperationPO(new OperationPO(oid), rid, creater, company));
