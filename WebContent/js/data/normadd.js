@@ -77,6 +77,7 @@ jQuery(function($) {
         return {
             status: {
                 type: "switch",
+                clazz: "status-lbl",
                 init: function(v) { return !v.status; },
                 handle: function(v, checked) {
                     var cvalue = checked ? 0 : 1;
