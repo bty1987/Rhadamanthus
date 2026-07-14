@@ -1148,7 +1148,7 @@ var Searcher = function() {
                             var $switch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
                                 "type": "checkbox"
                             }).appendTo($btn);
-                            var $span = $('<span></span>').addClass('lbl ' + button.clazz).appendTo($btn);
+                            var $span = $('<span></span>').addClass('lbl ' + (button.clazz || "isOrNot")).appendTo($btn);
 
                             var check = $switch.prop("checked");
 
@@ -1280,7 +1280,7 @@ var Searcher = function() {
                             var $switch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
                                 "type": "checkbox"
                             }).appendTo($btn);
-                            var $span = $('<span></span>').addClass('lbl ' + button.clazz).appendTo($btn);
+                            var $span = $('<span></span>').addClass('lbl ' + (button.clazz || "isOrNot")).appendTo($btn);
 
                             var check = $switch.prop("checked");
 
