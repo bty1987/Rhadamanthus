@@ -53,7 +53,7 @@ jQuery(function($) {
             },
             status: {
                 type: "switch",
-                clazz: "status-lbl",
+                clazz: "isOrNot",
                 init: function(v) { return v.status == 0; },
                 handle: function(v, checked) {
                     com.post(api.approval.updateApprovalFlowForStatus, {
