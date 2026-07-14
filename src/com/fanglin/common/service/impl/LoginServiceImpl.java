@@ -92,7 +92,7 @@ public class LoginServiceImpl implements LoginService {
 		} catch (FLException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new FLException(110000, "系统处理问题");
+			throw new FLException(110000, "系统繁忙,请稍后重试");
 		}
 	}
 
@@ -136,7 +136,7 @@ public class LoginServiceImpl implements LoginService {
 		} catch (FLException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new FLException(110000, "系统处理问题");
+			throw new FLException(110000, "系统繁忙,请稍后重试");
 		}
 	}
 
@@ -180,7 +180,7 @@ public class LoginServiceImpl implements LoginService {
 			throw e;
 		} catch (Exception e) {
 			logger.error("切换认证码失败", e);
-			throw new FLException(110000, "系统处理问题");
+			throw new FLException(110000, "系统繁忙,请稍后重试");
 		}
 
 	}
@@ -207,7 +207,7 @@ public class LoginServiceImpl implements LoginService {
 		} catch (FLException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new FLException(110000, "系统处理问题");
+			throw new FLException(110000, "系统繁忙,请稍后重试");
 		}
 	}
 

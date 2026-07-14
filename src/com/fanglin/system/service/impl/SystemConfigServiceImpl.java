@@ -135,7 +135,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 		SystemConfigPO existCompany = systemConfigDao.querySystemConfig(systemConfigVO.getKey(), company);
 
 		if (existGlobal != null || existCompany != null) {
-			throw new FLException(110000, "系统处理问题");
+			throw new FLException(110000, "系统繁忙,请稍后重试");
 		}
 
 		SystemConfigPO systemConfigPO = new SystemConfigPO();

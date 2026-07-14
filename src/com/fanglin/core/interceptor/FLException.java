@@ -29,7 +29,13 @@ public class FLException extends RuntimeException {
 	}
 
 	public FLException(int code, String errorMessage) {
-		super();
+		super(errorMessage);
+		this.code = code;
+		this.errorMessage = errorMessage;
+	}
+
+	public FLException(int code, String errorMessage, Throwable cause) {
+		super(errorMessage, cause);
 		this.code = code;
 		this.errorMessage = errorMessage;
 	}

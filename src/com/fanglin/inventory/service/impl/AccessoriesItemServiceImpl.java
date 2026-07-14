@@ -159,7 +159,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
-		if (accessoriesItemVO.getSchedule() != null && accessoriesPO.getSchedule() != accessoriesItemVO.getSchedule()) throw new FLException(260061, "施工节点不匹配");
+		if (accessoriesItemVO.getSchedule() != null && accessoriesPO.getSchedule() != accessoriesItemVO.getSchedule()) throw new FLException(260072, "施工节点不匹配");
 
 		if (accessoriesItemVO.getNid() != null) {
 			checkAccessoriesItem(accessoriesVO, accessoriesItemVO);
