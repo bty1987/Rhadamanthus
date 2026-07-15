@@ -314,7 +314,6 @@ CityAction.java                          - 城市管理
 CityProperAction.java                    - 城市属性管理
 OssConfigAction.java                     - OSS配置管理
 VersionAction.java                       - 版本管理
-SystemCommonAction.java                  - 公共方法
 ```
 
 ### Service 层
