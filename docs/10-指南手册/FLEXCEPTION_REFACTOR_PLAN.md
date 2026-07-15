@@ -270,7 +270,7 @@
 ```
 - 占位符统一为 `{0}`/`{1}`(MessageFormat 标准,error.md 已统一)
 - 跳过 reserved / deprecated 码
-- 产物放 `WebContent/js/com/error-cn.json`(前端静态资源)
+- 产物放 `WebContent/js/i18n/error-cn.json`(前端静态资源,独立 i18n 目录与 com 平级)
 
 这是后端唯一的产出——一个脚本,不改任何 Java 代码。
 
@@ -313,16 +313,16 @@
 ##### 2.4 国际化扩展(未来,平行加文件)
 
 ```
-WebContent/js/com/
+WebContent/js/i18n/          ← 独立目录,与 com/ 平级
 ├── error-cn.json   ← 简体中文(现在)
 ├── error-en.json   ← 英文(未来,留空骨架)
 └── error-zh-TW.json ← 繁体中文(未来)
 ```
 
-`core.js` 初始化时按用户语言偏好选文件:
+`core.js` 初始化时按 `config.lang` 选文件(已实现):
 ```js
-var lang = com.config.lang || 'cn';
-$.ajax({url: 'js/com/error-' + lang + '.json', async: false, success: function(data){ com.errorMap = data; }});
+var _lang = (config.lang || 'cn').replace('-', '_');
+$.ajax({url: 'js/i18n/error-' + _lang + '.json', ...});
 ```
 
 **加一种语言 = 加一个 json 文件,代码零改动。**
@@ -476,7 +476,7 @@ $.ajax({url: 'js/com/error-' + lang + '.json', async: false, success: function(d
 | 2.1 | 编写 error.md → error-cn.json 生成脚本 | `scripts/generate_error_json.py`(新) | 1h | 零 |
 | 2.2 | core.js else 分支改造(查表+fallback) | `WebContent/js/com/core.js` | 0.5h | 低(改一处) |
 | 2.3 | 映射表加载机制(core.js 初始化拉取 json) | `WebContent/js/com/core.js` | 0.5h | 低 |
-| 2.4 | 生成 error-cn.json 并部署 | `WebContent/js/com/error-cn.json`(新) | 0.5h | 零 |
+| 2.4 | 生成 error-cn.json 并部署 | `WebContent/js/i18n/error-cn.json`(新) | 0.5h | 零 |
 | 2.5 | 废弃旧 error.js(清空或删除) | `WebContent/js/com/error.js` | 0.2h | 低 |
 | 2.6 | 冒烟验证(典型页面错误展示) | — | 1h | — |
 
@@ -517,7 +517,7 @@ $.ajax({url: 'js/com/error-' + lang + '.json', async: false, success: function(d
 
 **验收**:
 - [ ] `scripts/generate_error_json.py` 存在,能从 error.md 生成 error-cn.json。
-- [ ] `WebContent/js/com/error-cn.json` 存在,覆盖全部非 reserved/deprecated 条目。
+- [ ] `WebContent/js/i18n/error-cn.json` 存在,覆盖全部非 reserved/deprecated 条目。
 - [ ] `core.js` else 分支改为查 `com.errorMap` 优先,fallback `res.errorMsg`。
 - [ ] 映射表加载机制就位(core.js 初始化拉取 json)。
 - [ ] 旧 `error.js` 已清空或删除。
@@ -567,7 +567,7 @@ $.ajax({url: 'js/com/error-' + lang + '.json', async: false, success: function(d
 | 角色 | 文件路径 |
 |---|---|
 | error.md→json 生成脚本 | `scripts/generate_error_json.py`(新) |
-| 前端中文错误映射表 | `WebContent/js/com/error-cn.json`(新) |
+| 前端中文错误映射表 | `WebContent/js/i18n/error-cn.json`(新) |
 | 核心通信层(改造一处) | `WebContent/js/com/core.js`(改 else 分支) |
 | 旧死代码(清空或删除) | `WebContent/js/com/error.js` |
 

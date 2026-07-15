@@ -2550,11 +2550,13 @@ var com = {
         return dfd.promise();
     };
 
-    // 加载错误码映射表(error-cn.json),供 post 的 else 分支查表展示
+    // 加载错误码映射表(i18n/error-{lang}.json),供 post 的 else 分支查表展示
     // 同步加载,确保 com.post 调用前就绪;加载失败不影响功能(fallback 后端 errorMsg)
+    // 国际化:按 config.lang 选文件(cn/en/zh-TW...),默认 cn
     try {
+        var _lang = (config.lang || 'cn').replace('-', '_');
         $.ajax({
-            url: 'js/com/error-cn.json',
+            url: 'js/i18n/error-' + _lang + '.json',
             dataType: 'json',
             async: false,
             cache: true,

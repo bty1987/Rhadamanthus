@@ -8,7 +8,8 @@ error.md → error-cn.json 生成脚本
 
 用法:
   python scripts/generate_error_json.py
-  python scripts/generate_error_json.py --output WebContent/js/com/error-cn.json
+  python scripts/generate_error_json.py --output WebContent/js/i18n/error-cn.json
+  python scripts/generate_error_json.py --lang en  (预留:生成英文骨架)
 
 产物格式:
   { "150043": "转换款不存在", "150046": "转换款支付异常,{0}", ... }
@@ -24,7 +25,7 @@ import argparse
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ERROR_MD = os.path.join(PROJECT_ROOT, "docs", "03-API文档", "API", "error.md")
-DEFAULT_OUTPUT = os.path.join(PROJECT_ROOT, "WebContent", "js", "com", "error-cn.json")
+DEFAULT_OUTPUT = os.path.join(PROJECT_ROOT, "WebContent", "js", "i18n", "error-cn.json")
 
 # 特殊语义码:在拦截器里以字符串形式使用,不进映射表
 SPECIAL_CODES = {"0", "-1", "-2", "-3"}
@@ -77,7 +78,7 @@ def parse_error_md():
 def main():
     parser = argparse.ArgumentParser(description="error.md → error-cn.json 生成")
     parser.add_argument("--output", "-o", default=DEFAULT_OUTPUT,
-                        help="输出文件路径(默认 WebContent/js/com/error-cn.json)")
+                        help="输出文件路径(默认 WebContent/js/i18n/error-cn.json)")
     args = parser.parse_args()
 
     if not os.path.exists(ERROR_MD):
