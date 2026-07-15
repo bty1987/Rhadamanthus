@@ -483,7 +483,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		DrawLineGroupPO drawLineGroupPO = drawLineGroupDao.get(drawLineVO.getGroup().getGid());
 
 		if (drawLineGroupPO == null) {
-			throw new FLException(120016, "不存在放线小组");
+			throw new FLException(120016, "放线小组不存在");
 		}
 
 		Timestamp start = drawLineVO.getStartTime();

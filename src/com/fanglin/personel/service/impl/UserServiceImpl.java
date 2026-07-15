@@ -994,7 +994,7 @@ public class UserServiceImpl implements UserService {
 		if (result != null && result.containsKey("authentication")) {
 			authentication = result.get("authentication").toString().replaceAll("[\\r\\n]", "").replaceAll("\\+", "%2B");
 		} else {
-			throw new FLException(110010, "请求失败");
+			throw new FLException(110010, "请求处理失败");
 		}
 
 		String url = String.format("%s/%s?authentication=%s&%s", server, api, authentication, params);
