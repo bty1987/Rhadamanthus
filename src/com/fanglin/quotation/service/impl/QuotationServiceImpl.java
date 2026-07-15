@@ -266,7 +266,7 @@ public class QuotationServiceImpl implements QuotationService {
 		BeanUtil.copyProperties(quotationVO, quotationPO, Arrays.asList("creater", "version"));
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		QuotationVersionPO versionPO = quotationVersionDao.queryQuotationVersionForDefault(company, decorationPO.getType(), QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT);
@@ -652,7 +652,7 @@ public class QuotationServiceImpl implements QuotationService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		quotationPO.setAttstatus(QuotationPO.ATTSTATUS_SUBMIT_INT);
@@ -684,7 +684,7 @@ public class QuotationServiceImpl implements QuotationService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		quotationPO.setAttstatus(QuotationPO.ATTSTATUS_AUDI_INT);
@@ -727,7 +727,7 @@ public class QuotationServiceImpl implements QuotationService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		quotationVO.setOrderId(quotationPO.getOrderId());
@@ -1187,7 +1187,7 @@ public class QuotationServiceImpl implements QuotationService {
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (!status.contains(decorationPO.getStatus())) {

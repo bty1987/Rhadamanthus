@@ -112,7 +112,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		AdvancePaymentPO advancePaymentPO = null;
@@ -141,7 +141,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(paymentVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(paymentVO.getOrderId());

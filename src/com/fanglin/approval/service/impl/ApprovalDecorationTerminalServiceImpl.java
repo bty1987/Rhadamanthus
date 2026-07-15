@@ -82,7 +82,7 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		List<Short> unstatus = Arrays.asList(new Short[] { DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_SIGNED_INT });
@@ -172,7 +172,7 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		DecorationVO decorationVO = new DecorationVO();
@@ -218,7 +218,7 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		decorationPO.setStatus((short) (decorationPO.getStatus() - DecorationPO.STATUS_APPROVAL_INT));

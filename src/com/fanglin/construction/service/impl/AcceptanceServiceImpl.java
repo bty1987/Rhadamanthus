@@ -77,7 +77,7 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		acceptanceVO.setCustomer(decorationPO.getCustomer().getName());
@@ -104,7 +104,7 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(acceptanceVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		SystemConfigPO limit = systemConfigDao.querySystemConfig("CONSTRUCTION_ACCEPTANCE_LIMIT_INT", decorationPO.getCompany());

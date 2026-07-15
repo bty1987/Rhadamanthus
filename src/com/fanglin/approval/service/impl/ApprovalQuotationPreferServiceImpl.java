@@ -82,7 +82,7 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (!Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT }).contains(decorationPO.getStatus())) {
@@ -165,7 +165,7 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (!Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT }).contains(decorationPO.getStatus())) {

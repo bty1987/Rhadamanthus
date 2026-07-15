@@ -971,7 +971,7 @@ public class A20251208ServiceImpl implements A20251208Service {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
@@ -1006,7 +1006,7 @@ public class A20251208ServiceImpl implements A20251208Service {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(acceptanceVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		SystemConfigPO limit = systemConfigDao.querySystemConfig("CONSTRUCTION_ACCEPTANCE_LIMIT_INT", decorationPO.getCompany());

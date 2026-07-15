@@ -193,7 +193,7 @@ public class WalletServiceImpl implements WalletService {
 
 		// 原子扣款(含余额校验): 受影响行数为 0 表示余额不足
 		if (walletDao.decreaseWallet(walletPO.getWid(), wallet.getAmount()) == 0) {
-			throw new FLException(10000, "余额不足");
+			throw new FLException(150056, "余额不足");
 		}
 
 		// 原子加款到收款方
@@ -256,7 +256,7 @@ public class WalletServiceImpl implements WalletService {
 
 		// 原子扣款(含余额校验): 受影响行数为 0 表示余额不足
 		if (walletDao.decreaseWallet(walletPO.getWid(), wallet.getAmount()) == 0) {
-			throw new FLException(10000, "余额不足");
+			throw new FLException(150056, "余额不足");
 		}
 		// TODO 银行卡要加钱
 
@@ -304,7 +304,7 @@ public class WalletServiceImpl implements WalletService {
 
 		// 原子扣款(含余额校验): 受影响行数为 0 表示余额不足
 		if (walletDao.decreaseWallet(walletPO.getWid(), wallet.getAmount()) == 0) {
-			throw new FLException(10000, "余额不足");
+			throw new FLException(150056, "余额不足");
 		}
 
 		// 原子加款到收款方

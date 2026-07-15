@@ -181,7 +181,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 客户认证.", orderId), decorationPO.getCustomer().getAuthurl());
@@ -219,7 +219,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		short type = decorationContractVO.getType();
@@ -503,7 +503,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (!status.contains(decorationPO.getStatus())) {
@@ -671,7 +671,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (DecorationPO.STATUS_SIGNED_INT != (decorationPO.getStatus())) {// 判断装修单状态为3(签约), 其他状态不能重签
@@ -727,7 +727,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT });
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (!status.contains(decorationPO.getStatus())) {

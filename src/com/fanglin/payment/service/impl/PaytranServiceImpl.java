@@ -240,7 +240,7 @@ public class PaytranServiceImpl implements PaytranService {
 			decorationPO = decorationDao.queryDecorationByOrderId(paytranPO.getOrderId());
 
 			if (decorationPO == null) {
-				throw new FLException(140013, "订单不存在");
+				throw new FLException(140013, "装修单不存在");
 			}
 
 			grade = decorationPO.getGrade();
@@ -556,7 +556,7 @@ public class PaytranServiceImpl implements PaytranService {
 			decorationPO = decorationDao.queryDecorationByOrderId(oderId);
 
 			if (decorationPO == null) {
-				throw new FLException(140013, "订单不存在");
+				throw new FLException(140013, "装修单不存在");
 			}
 
 			company = decorationPO.getBompany();
@@ -839,7 +839,7 @@ public class PaytranServiceImpl implements PaytranService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(paytranVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		PaytranPO paytranPO = paytranDao.queryPaytran(paytranVO.getPid(), paytranVO.getType(), paytranVO.getAtttype(), null, paytranVO.getWay(), PaytranPO.STATUS_INIT_INT);
@@ -925,7 +925,7 @@ public class PaytranServiceImpl implements PaytranService {
 			decorationPO = decorationDao.queryDecorationByOrderId(oderId);
 
 			if (decorationPO == null) {
-				throw new FLException(140013, "订单不存在");
+				throw new FLException(140013, "装修单不存在");
 			}
 
 			company = decorationPO.getBompany();

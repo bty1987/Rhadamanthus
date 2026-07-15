@@ -99,7 +99,7 @@ public class DecorationBalanceServiceImpl implements DecorationBalanceService {
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		DecorationBalancePO decirationBalancePO = decorationBalanceDao.queryDecorationBalance(decorationPO.getDoid());

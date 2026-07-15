@@ -234,7 +234,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		UserPO sender = userDao.queryUserByUserId(userId);
@@ -264,7 +264,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(addReduceVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (addReduceVO.getType() == AddReducePO.TYPE_REDUCE_INT && Arrays.asList(DecorationPO.STATUS_FINAL_INT).contains(decorationPO.getStatus())) {
@@ -382,7 +382,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(addReducePO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT).contains(decorationPO.getStatus())) {
@@ -407,7 +407,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		List<AddReducePO> addReducePOs = new ArrayList<AddReducePO>();
@@ -593,7 +593,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (decorationVO.getCustomer() == null) {

@@ -110,7 +110,7 @@ public class DecorationBackVisitServiceImpl implements DecorationBackVisitServic
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);

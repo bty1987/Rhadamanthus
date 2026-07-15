@@ -51,7 +51,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		BankAccountPO bankAccountPO = bankAccountDao.get(bankAccount.getBaid());
 
 		if (bankAccountPO == null) {
-			throw new FLException(000000, "银行账户不存在");
+			throw new FLException(130158, "银行账户不存在");
 		}
 
 		BankAccountVO bankAccountVO = new BankAccountVO();
@@ -82,7 +82,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		BankAccountPO bankAccountPO = bankAccountDao.get(bankAccount.getBaid());
 
 		if (bankAccountPO == null) {
-			throw new FLException(000000, "银行账户不存在");
+			throw new FLException(130158, "银行账户不存在");
 		}
 
 		BeanUtil.copyProperties(bankAccount, bankAccountPO);
@@ -98,7 +98,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		BankAccountPO bankAccountPO = bankAccountDao.get(bankAccount.getBaid());
 
 		if (bankAccountPO == null) {
-			throw new FLException(000000, "银行账户不存在");
+			throw new FLException(130158, "银行账户不存在");
 		}
 
 		bankAccountPO.setStatus(bankAccount.getStatus());

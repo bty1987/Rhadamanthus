@@ -100,7 +100,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		log.info(String.format("pages/decoration/belong/confirm?orderId=%s", orderId));
@@ -123,7 +123,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (decorationVO.getCustomer() == null) {
@@ -175,7 +175,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (Arrays.asList(DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_RESIGNED_INT, DecorationPO.STATUS_COMPLETED_INT).contains(decorationPO.getStatus())) {
@@ -194,7 +194,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
@@ -261,7 +261,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
@@ -347,7 +347,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);

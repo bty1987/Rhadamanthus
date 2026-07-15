@@ -99,7 +99,7 @@ public class ConsultionServiceImpl implements ConsultionService {
 			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(consultionVO.getDecoration().getOrderId());
 
 			if (decorationPO == null) {
-				throw new FLException(140013, "	订单不存在");
+				throw new FLException(140013, "装修单不存在");
 			}
 
 			consultionPO.setDecoration(decorationPO);

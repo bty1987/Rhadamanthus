@@ -89,7 +89,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationVO.getOrderId());
@@ -162,7 +162,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		long payTotal = 0;
@@ -196,7 +196,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		String orderId = decorationPO.getOrderId();

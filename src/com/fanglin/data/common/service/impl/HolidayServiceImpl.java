@@ -69,7 +69,7 @@ public class HolidayServiceImpl implements HolidayService {
 		List<HolidayPO> holidayPOs = holidayDao.queryHoliday(holiday.getPeriod(), holiday.getStartTime(), holiday.getEndTime(), holiday.getAtttype());
 
 		if (holidayPOs.size() > 0) {
-			throw new FLException(000000, "假期已存在");
+			throw new FLException(130159, "假期已存在");
 		}
 
 		HolidayPO holidayPO = new HolidayPO();
@@ -99,7 +99,7 @@ public class HolidayServiceImpl implements HolidayService {
 		HolidayPO holidayPO = holidayDao.get(holiday.getHdid());
 
 		if (holidayPO == null) {
-			throw new FLException(000000, "假期不存在");
+			throw new FLException(130160, "假期不存在");
 		}
 
 		BeanUtil.copyProperties(holiday, holidayPO);
@@ -127,7 +127,7 @@ public class HolidayServiceImpl implements HolidayService {
 		HolidayPO holidayPO = holidayDao.get(holiday.getHdid());
 
 		if (holidayPO == null) {
-			throw new FLException(000000, "假期不存在");
+			throw new FLException(130160, "假期不存在");
 		}
 
 		holidayDao.delete(holidayPO);
