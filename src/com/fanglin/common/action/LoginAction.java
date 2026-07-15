@@ -103,7 +103,7 @@ public class LoginAction extends BaseListAction {
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 			LogUtils.logging(logger, e, "requestLoginChallenge", "common");
 		}
 
@@ -200,7 +200,7 @@ public class LoginAction extends BaseListAction {
 		} catch (Exception e) {
 
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 
 			LogUtils.logging(logger, e, "doLogin", "common", ip);
 		}
@@ -234,7 +234,7 @@ public class LoginAction extends BaseListAction {
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 
 			LogUtils.logging(logger, e, "requestAuthCode", "common");
 		}
@@ -261,7 +261,7 @@ public class LoginAction extends BaseListAction {
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 
 			LogUtils.logging(logger, e, "requestAuthCode", "common");
 		}
@@ -285,7 +285,7 @@ public class LoginAction extends BaseListAction {
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 
 			LogUtils.logging(logger, e, "changeAuthCode", "common");
 		}
@@ -326,7 +326,7 @@ public class LoginAction extends BaseListAction {
 			System.out.println(cmd);
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 		}
 
 		return SUCCESS;

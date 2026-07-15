@@ -42,7 +42,7 @@ public class WMCodeAction extends BaseAction {
 			watermark = WMCodeUtil.createImage(queryUserName(), DateUtil.current("yyyyMMdd"));
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 
 			LogUtils.logging(logger, e, "wmCode", "common");
 		}

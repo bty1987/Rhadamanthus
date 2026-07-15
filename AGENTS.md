@@ -88,10 +88,27 @@ Action层 → 传递VO对象 → Service层 → 提取属性 → 传递基本类
 
 #### 异常处理与日志
 ```java
-throw new FLException("错误信息");
+throw new FLException(140013, "装修单不存在");          // 必须带错误码,码值查 error.md
 @Transactional(rollbackFor = Exception.class)
 LogUtils.log(userId, "操作描述", "操作模块", 对象ID);
 ```
+
+##### 🔴 FLException 使用规范
+- **必须带错误码**:`throw new FLException(码, "消息")`,码值查 `docs/03-API文档/API/error.md`,禁止用 `000000` 等占位码
+- **消息须与 error.md 一致**:同一码在所有 throw 点的消息文本必须相同,禁止同码不同消息(漂移)
+- **包装底层异常时保留 cause**:`throw new FLException(码, "消息", e)`(第一档新增的三参构造)
+- **错误码段约定**:前 2-3 位标识模块(110=系统,140=装修,150=款项,240=审批等),详见 error.md 顶部"模块码段说明"
+- **新增码流程**:① error.md 登记 → ② 用码值 throw,不要直接写裸 magic number
+
+##### 🔴 Action 层异常处理规范
+- **默认风格:Action 方法 `throws FLException`,禁止本地 try-catch**
+  - 业务异常一律上抛,由拦截器(`CommonInterceptor`/`AccessInterceptor`/`LoginInterceptor`)统一捕获并转 JSON
+  - Action 方法体内**禁止 `catch (Exception)`**,异常一律上抛由拦截器接管
+- **豁免:仅登录/认证/第三方回调类 Action 允许本地 catch**
+  - 当前豁免清单:`LoginAction`/`DoginAction`/`VerifyCodeAction`/`WMCodeAction`/`FactoryAction`/`LoginInfoAction`/`SecretAction`/`PhoneCallAction`/`PostarAction`/`SwiftpassAction`/`UploadAction`/`DingTalkCallbackAction`/`OssConfigAction`
+  - 豁免理由:登录接口无 authentication、第三方回调不走标准拦截器栈,需本地精细控制错误响应
+  - 本地 catch 时兜底消息统一用 `setErrorMsg("系统繁忙,请稍后重试")`(码 `110000`),禁止用"系统处理问题"等旧文案
+- **新增普通业务 Action 一律走 `throws FLException` 风格**,如需本地 catch 须在 Code Review 时说明理由
 
 #### 🔴 方法命名规范（强约束）
 骨架：`动词 + 对象 + [By条件] + [For目的/范围]`

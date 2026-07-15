@@ -49,7 +49,7 @@ public class FactoryAction extends BaseListAction {
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 		}
 
 		return SUCCESS;
@@ -65,7 +65,7 @@ public class FactoryAction extends BaseListAction {
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 		}
 
 		return SUCCESS;
@@ -102,7 +102,7 @@ public class FactoryAction extends BaseListAction {
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 		}
 
 		return SUCCESS;

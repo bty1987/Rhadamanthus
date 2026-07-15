@@ -53,7 +53,7 @@ public class VerifyCodeAction extends BaseAction {
 			securityCode = AESHelper.encrypt(tmp, key, iv);
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 
 			LogUtils.logging(logger, e, "queryVode", "common");
 		}
@@ -68,7 +68,7 @@ public class VerifyCodeAction extends BaseAction {
 			imageStream = SecurityImageHelper.getImageAsInputStream(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 
 			LogUtils.logging(logger, e, "verifyCode", "common");
 		}

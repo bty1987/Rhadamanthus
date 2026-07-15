@@ -59,7 +59,7 @@ public class DoginAction extends BaseListAction {
 			configInfo = authDDService.getConfig(url, null, company);
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 
 			LogUtils.logging(logger, e, "requestDDConfig", "common");
 		}
@@ -74,7 +74,7 @@ public class DoginAction extends BaseListAction {
 			user = userDDService.getUserInfo(code, company);
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 
 			LogUtils.logging(logger, e, "queryDDUserInfo", "common");
 		}
