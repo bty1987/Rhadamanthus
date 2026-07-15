@@ -20,10 +20,14 @@
     src/com/fanglin/decoration/Foo.java      .java    Added        10    0
     src/com/fanglin/old/Bar.java             .java    Deleted       0    12
 
-━━━ 方向判定(由列0路径前缀隐式决定) ━━━
+━━━ 方向判定(由列0路径前缀决定,单向避免覆盖) ━━━
     99.Foreground/...            → A→R (merge)
     WebContent/...               → R→A (issue)
-    src/com/fanglin/...          → 双向(两侧字符串相同无法消歧,双向最安全)
+    src/com/fanglin/...          → R→A (issue,后台代码在workspace维护,只回写Athena)
+
+━━━ 清单列数 ━━━
+    状态列自动识别:扫描每行各列,取第一个匹配 Modified/Added/Deleted/Renamed
+    等关键字的列作为状态,路径始终取列0。兼容 4/5/6 列各种 git 日志导出格式。
 
 ━━━ 用法 ━━━
     python scripts/tool_marge_project_code.py                      # 读默认 scripts/changelist.txt
@@ -253,8 +257,29 @@ def parse_changelist(list_path):
 
     action: 'C' (copy, Added/Modified/Renamed) | 'D' (delete)
 
-    跳过空行、表头、列数不足的异常行。路径分隔符统一为正斜杠。
+    状态列自动识别:扫描每行各列,取第一个匹配状态关键字的列作为状态,
+    路径始终取 cols[0]。兼容 4/5/6 列各种来源的 git 日志导出格式。
+
+    跳过空行、表头、无状态列的异常行。路径分隔符统一为正斜杠。
     """
+    # 状态关键字集合(小写匹配)
+    status_keywords = {
+        "deleted": "D",
+        "delete": "D",
+        "removed": "D",
+        "remove": "D",
+        "modified": "C",
+        "modify": "C",
+        "added": "C",
+        "add": "C",
+        "renamed": "C",
+        "rename": "C",
+        "updated": "C",
+        "update": "C",
+        "changed": "C",
+        "change": "C",
+    }
+
     items = []
     lineno = 0
     with open(list_path, encoding="utf-8") as f:
@@ -264,23 +289,25 @@ def parse_changelist(list_path):
             if not line.strip():
                 continue
             cols = line.split("\t")
-            if len(cols) < 3:
-                # 非标准 TSV 行(可能是表头或注释),跳过
+            if len(cols) < 2:
                 continue
             relpath = cols[0].strip().replace("\\", "/")
-            status = cols[2].strip().lower()
-            if not relpath or not status:
+            if not relpath:
                 continue
-            # 状态归一化
-            if status in ("deleted",):
-                action = "D"
-            elif status in ("modified", "added", "renamed", "updated", "changed"):
-                action = "C"
-            else:
-                # 未知状态,按 copy 处理(最常见),给出提示
-                sys.stderr.write("    [!] 未知状态 '%s' 第%d行,按 copy 处理: %s\n"
-                                 % (cols[2], lineno, relpath))
-                action = "C"
+
+            # 扫描 cols[1..] 找第一个状态列
+            action = None
+            for col in cols[1:]:
+                key = col.strip().lower()
+                if key in status_keywords:
+                    action = status_keywords[key]
+                    break
+
+            if action is None:
+                # 该行无任何状态关键字(可能是表头/注释/格式异常),跳过
+                sys.stderr.write("    [!] 第%d行未识别到状态,跳过: %s\n"
+                                 % (lineno, relpath))
+                continue
             items.append((relpath, action))
     return items
 
@@ -314,15 +341,28 @@ def _is_prefix(rel, prefix):
     return rel.startswith(prefix + "/")
 
 
-def _strip_prefix(rel, prefix):
-    """去掉 rel 的 prefix 目录部分,返回剩余相对片段(正斜杠)。"""
-    rel = rel.lstrip("/")
-    prefix = prefix.rstrip("/")
-    if rel.startswith(prefix + "/"):
-        return rel[len(prefix) + 1:]
-    if rel == prefix:
-        return ""
-    return rel
+def _strip_prefix_case(relpath_orig, prefix):
+    """
+    从原始 relpath(保留大小写)剥掉 prefix 目录,返回剩余片段(原始大小写)。
+
+    用 norm 后的字符串判断前缀匹配,但切片基于原始 relpath,
+    保证拼出来的真实文件路径大小写正确。
+
+    relpath_orig: 原始 relpath(正斜杠,保留大小写)
+    prefix:       待剥的目录前缀(infos 里的原始值,可能含反斜杠)
+    """
+    rel = relpath_orig.lstrip("/").replace("\\", "/")
+    pref = norm(prefix).rstrip("/")
+    # 按"/"分段,逐段匹配,保留原始大小写的剩余部分
+    rel_segs = rel.split("/")
+    pref_segs = pref.split("/")
+    if len(rel_segs) < len(pref_segs):
+        return rel
+    # 逐段比较(大小写不敏感)
+    for i, ps in enumerate(pref_segs):
+        if rel_segs[i].lower() != ps:
+            return rel  # 不匹配,原样返回(调用方已先用 _is_prefix 判断过)
+    return "/".join(rel_segs[len(pref_segs):])
 
 
 # ============================================================================
@@ -373,7 +413,7 @@ def resolve_pairs(relpath, direction):
                 # ③ 顶层直连:匹配 source(99.Foreground 聚合路径)
                 if not _is_prefix(rel_n, norm(source)):
                     continue
-                relative = _strip_prefix(rel_n, norm(source))
+                relative = _strip_prefix_case(relpath, source)
                 if relative == "":
                     continue
                 from_abs = os.path.join(path, to_ospath(source), to_ospath(relative))
@@ -382,7 +422,7 @@ def resolve_pairs(relpath, direction):
                 # ①② 普通模块:匹配 target
                 if not _is_prefix(rel_n, norm(target)):
                     continue
-                relative = _strip_prefix(rel_n, norm(target))
+                relative = _strip_prefix_case(relpath, target)
                 if relative == "":
                     continue
                 ath_src = source if source else target
@@ -394,7 +434,7 @@ def resolve_pairs(relpath, direction):
             # 匹配 workspace 侧路径(ws_side)
             if not ws_side or not _is_prefix(rel_n, norm(ws_side)):
                 continue
-            relative = _strip_prefix(rel_n, norm(ws_side))
+            relative = _strip_prefix_case(relpath, ws_side)
             if relative == "":
                 continue
             from_abs = os.path.join(workspace, to_ospath(ws_side), to_ospath(relative))
@@ -435,6 +475,14 @@ def decide_directions(relpath):
     根据清单路径前缀判定该行参与哪些方向的同步。
 
     返回去重保序的 list:['merge'] / ['issue'] / ['merge','issue']。
+
+    方向规则(单向,避免双向同时执行导致覆盖):
+      99.Foreground/...  → merge  (A→R,Athena 聚合层 → workspace)
+      WebContent/...     → issue  (R→A,workspace → Athena)
+      src/com/fanglin/...→ issue  (R→A,workspace 改的源码回写 Athena;
+                                   这类代码实际在 ERP 工作区维护,
+                                   只走 R→A 避免 Athena 旧码覆盖 workspace 新码)
+      其它               → 双向兜底尝试
     """
     rel_n = norm(relpath)
     dirs = []
@@ -443,8 +491,7 @@ def decide_directions(relpath):
     if rel_n.startswith("webcontent/"):
         dirs.append("issue")
     if rel_n.startswith("src/com/fanglin/"):
-        # 两侧字符串相同,双向都试
-        dirs.append("merge")
+        # 后台 Java 代码:只在 workspace 改,只回写 Athena,绝不反向覆盖
         dirs.append("issue")
     if not dirs:
         # 未知前缀,默认双向都尝试(resolve_pairs 匹配不上自然为空)
