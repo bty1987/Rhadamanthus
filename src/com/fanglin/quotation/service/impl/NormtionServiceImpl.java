@@ -671,7 +671,7 @@ public class NormtionServiceImpl implements NormtionService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(normtionPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (decorationPO.getProjectStatus() == DecorationPO.PROJECTSTATUS_FINISH_INT) {

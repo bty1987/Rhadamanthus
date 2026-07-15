@@ -298,7 +298,7 @@ public class SalesServiceImpl implements SalesService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(salesVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (decorationPO.getStatus() == DecorationPO.STATUS_WASTE_INT) {
@@ -693,7 +693,7 @@ public class SalesServiceImpl implements SalesService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(salesPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (salesVO.getCustomer() == null) {

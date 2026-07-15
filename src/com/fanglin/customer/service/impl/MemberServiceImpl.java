@@ -667,7 +667,7 @@ public class MemberServiceImpl implements MemberService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		long amount = Math.abs(pointAccountDao.amountDecorationPoint(orderId));
@@ -762,7 +762,7 @@ public class MemberServiceImpl implements MemberService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		List<DecorationActivityPO> decorationActivityPOs = decorationActivityDao.queryDecorationActivityByOrderId(orderId);
@@ -819,7 +819,7 @@ public class MemberServiceImpl implements MemberService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(orderId);
@@ -867,7 +867,7 @@ public class MemberServiceImpl implements MemberService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItem(orderId, memberOrderVO.getPointOrderId());

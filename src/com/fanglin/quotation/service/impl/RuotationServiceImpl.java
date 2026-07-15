@@ -89,7 +89,7 @@ public class RuotationServiceImpl implements RuotationService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(ruotationVO.getDecoration().getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		QuotationPO quotationPO = quotationDao.get(ruotationVO.getQuotation().getQid());
@@ -127,7 +127,7 @@ public class RuotationServiceImpl implements RuotationService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(ruotationPO.getDecoration().getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		QuotationPO quotationPO = quotationDao.get(ruotationPO.getQuotation().getQid());
@@ -152,7 +152,7 @@ public class RuotationServiceImpl implements RuotationService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(ruotationVO.getDecoration().getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		ruotationDao.delete(ruotationPO);

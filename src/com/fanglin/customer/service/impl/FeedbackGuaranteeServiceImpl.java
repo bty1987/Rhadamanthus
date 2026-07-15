@@ -64,13 +64,13 @@ public class FeedbackGuaranteeServiceImpl implements FeedbackGuaranteeService {
 	public int addFeedbackGuarantee(FeedbackGuaranteeVO feedbackGuaranteeVO, String userId) throws FLException {
 
 		if (feedbackGuaranteeVO.getOrderId() == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(feedbackGuaranteeVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		UserPO creater = userDao.queryUserByUserId(userId);
@@ -98,13 +98,13 @@ public class FeedbackGuaranteeServiceImpl implements FeedbackGuaranteeService {
 	public int updateFeedbackGuarantee(FeedbackGuaranteeVO feedbackGuaranteeVO) throws FLException {
 
 		if (feedbackGuaranteeVO.getOrderId() == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(feedbackGuaranteeVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		FeedbackGuaranteePO feedbackGuaranteePO = feedbackGuaranteeDao.get(feedbackGuaranteeVO.getFgid());

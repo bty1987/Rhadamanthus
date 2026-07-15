@@ -141,7 +141,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(addReducePO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (addReducePO.getStatus() != AddReducePO.STATUS_UNSUBMIT_INT) {

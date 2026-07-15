@@ -124,13 +124,13 @@ public class OalesServiceImpl implements OalesService {
 	public void addOales(OalesVO oalesVO, String userId, int company) throws FLException {
 
 		if (oalesVO.getDecoration() == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(oalesVO.getDecoration().getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		CompanyPO companyPO = companyDao.get(company);
@@ -189,13 +189,13 @@ public class OalesServiceImpl implements OalesService {
 	public void updateOales(OalesVO oalesVO, String userId) throws FLException {
 
 		if (oalesVO.getDecoration() == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(oalesVO.getDecoration().getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
@@ -291,7 +291,7 @@ public class OalesServiceImpl implements OalesService {
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
 		if (oalesPayDao.countOalesPayByOid(oalesVO.getOid()) == 0) {
-			throw new FLException(37002, "外销付款不存在");
+			throw new FLException(370026, "外销付款不存在");
 		}
 
 		if (oalesPO == null) {

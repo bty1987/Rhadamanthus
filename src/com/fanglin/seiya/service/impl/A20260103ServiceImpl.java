@@ -319,7 +319,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		}
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		// PO 转 VO
@@ -415,7 +415,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		// 3. 处理客户电话：不存在创建，存在更新

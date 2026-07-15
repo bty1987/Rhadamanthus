@@ -88,7 +88,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(materialActivityItemVO.getOrderId());
 
 			if (decorationPO == null) {
-				throw new FLException(140013, "订单不存在");
+				throw new FLException(140013, "装修单不存在");
 			}
 
 			MaterialActivityItemPO materialActivityItemPO = new MaterialActivityItemPO();

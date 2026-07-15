@@ -134,15 +134,22 @@
 
 以下是 D3 诊断后发现的、可立即低风险处理的项:
 
-### 4.1 占位码修正(1 处)
-- `000000`(BankAccountServiceImpl、HolidayServiceImpl)→ 改用 data 模块正规码
+### 4.1 占位码修正 ✅ 已完成
+- `000000`(BankAccountServiceImpl 3处)→ `130158` 银行账户不存在
+- `000000`(HolidayServiceImpl 假期已存在 1处)→ `130159`
+- `000000`(HolidayServiceImpl 假期不存在 2处)→ `130160`
 
-### 4.2 笔误码修正(少量)
-- `10000`(WalletServiceImpl 余额不足)→ `150010`
-- `37002`(OalesServiceImpl 外销付款)→ `370026`
+### 4.2 笔误码修正 ✅ 已完成
+- `10000`(WalletServiceImpl 余额不足,3处)→ `150056` 钱包余额不足(reserved 启用)
+- `37002`(OalesServiceImpl 外销付款)→ `370026` 外销付款不存在(文档已有)
 
-### 4.3 脏数据清理(1 处)
-- `140013` 有一个带 Tab 缩进的消息 `"\t订单不存在"`,是字符串脏数据,应清理
+### 4.3 脏数据清理 ✅ 已完成
+- `140013` 4 处带 Tab 缩进的 `"\t订单不存在"` → 清理为 `"订单不存在"`(后随 4.4 一并统一)
+
+### 4.4 140013 消息统一 ✅ 已完成(扩展项)
+- `140013` 全部 160 处消息统一为"装修单不存在"(原 156 处"订单不存在" + 1 处"装修订单不存在" + 3 处已是目标)
+- 涉及 74 个文件,横跨 approval/construction/customer/decoration/finance/inventory/material/payment/quotation/sales/seiya 等模块
+- 此码漂移彻底消除(从 3 种变体 → 1 种)
 
 ### 4.4 文档死码回收(169 个)
 确认无用的死码,消息列改 `deprecated` 或删除(需逐个人工确认)

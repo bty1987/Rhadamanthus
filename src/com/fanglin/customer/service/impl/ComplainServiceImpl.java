@@ -129,7 +129,7 @@ public class ComplainServiceImpl implements ComplainService {
 			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(consultion.getDecoration().getOrderId());
 
 			if (decorationPO == null) {
-				throw new FLException(140013, "	订单不存在");
+				throw new FLException(140013, "装修单不存在");
 			}
 
 			CompanyPO companyPO = companyDao.get(company);
@@ -159,7 +159,7 @@ public class ComplainServiceImpl implements ComplainService {
 			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(consultion.getDecoration().getOrderId());
 
 			if (decorationPO == null) {
-				throw new FLException(140013, "	订单不存在");
+				throw new FLException(140013, "装修单不存在");
 			}
 
 			complainPO.setDecoration(decorationPO);

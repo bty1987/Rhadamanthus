@@ -213,7 +213,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT);
@@ -309,7 +309,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
@@ -350,7 +350,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
@@ -408,7 +408,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
@@ -449,7 +449,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
@@ -500,7 +500,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
@@ -536,7 +536,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (!Arrays.asList(DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_FINAL_INT).contains(decorationPO.getStatus())) {
@@ -565,7 +565,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		return decorationActivityItemDao.pointDecorationActivityItem(orderId);
@@ -597,7 +597,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (decorationVO.getCustomer() == null) {

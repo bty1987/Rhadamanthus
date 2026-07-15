@@ -302,7 +302,7 @@ public class MaterialServiceImpl implements MaterialService {
 		MaterialPO materialPO = materialDao.queryMaterialByNo(no);
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (materialPO == null) {

@@ -78,7 +78,7 @@ public class PointAccountServiceImpl implements PointAccountService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(pointAccountVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(pointAccountVO.getOrderId());
