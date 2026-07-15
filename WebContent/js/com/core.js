@@ -15,6 +15,13 @@ var com = {
         outtime: 5000
     },
     /**
+     * 错误码映射表(errorCode -> 展示文案)
+     * 由 error-cn.json 加载,core.js else 分支查表优先,
+     * 查不到 fallback 后端返回的 errorMsg。
+     * 国际化时平行加 error-{lang}.json,初始化按语言选文件。
+     */
+    errorMap: {},
+    /**
      * checkbox/switch内容对应信息
      */
     genderType: {
@@ -282,7 +289,7 @@ var com = {
                         return res;
                     }
 
-                    com.showAlert(com.error, res.errorMsg);
+                    com.showAlert(com.error, com.errorMap[res.errorCode] || res.errorMsg);
 
                 } else if (res.errorCode == 110005) {
 
@@ -295,7 +302,7 @@ var com = {
                     if (failCallback) {
                         failCallback(res);
                     } else {
-                        com.showAlert(com.error, res.errorMsg);
+                        com.showAlert(com.error, com.errorMap[res.errorCode] || res.errorMsg);
                         return res;
                     }
                 }
@@ -2542,5 +2549,21 @@ var com = {
 
         return dfd.promise();
     };
+
+    // 加载错误码映射表(error-cn.json),供 post 的 else 分支查表展示
+    // 同步加载,确保 com.post 调用前就绪;加载失败不影响功能(fallback 后端 errorMsg)
+    try {
+        $.ajax({
+            url: 'js/com/error-cn.json',
+            dataType: 'json',
+            async: false,
+            cache: true,
+            success: function(data) {
+                com.errorMap = data || {};
+            }
+        });
+    } catch (e) {
+        com.errorMap = {};
+    }
 
 })(jQuery);
