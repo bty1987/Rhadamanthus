@@ -1,8 +1,8 @@
 # FLException 异常架构调整计划
 
 > **版本**:v2.0 (2026-07-14)
-> **范围**:`FLException` 异常类、全局异常拦截器、`error.md` 错误码文档、全台错误目录的协同整改
-> **目标**:消除文档与代码的双轨漂移、补齐异常链与排查能力、建立**以 errorcode 为唯一键的全台错误目录**,让文本与代码彻底解耦,国际化成为目录的自然扩展
+> **范围**:`FLException` 异常类、全局异常拦截器、`error.md` 错误码文档、前端错误码映射表的协同整改
+> **目标**:消除文档与代码的双轨漂移、补齐异常链与排查能力、激活前端 errorCode→文案 映射表,使前端能自主展示错误文案并为国际化留好扩展点
 > **原则**:**新代码先行,老代码渐进迁移**,不做一次性大爆炸式重构(3568 处 throw 点无法一次性安全替换)
 
 ## 修订记录
@@ -11,6 +11,7 @@
 |---|---|---|
 | v1.0 | 2026-07-14 | 初版:三档计划(properties 单一事实源方案) |
 | v2.0 | 2026-07-14 | 第一档已落地提交(`ac3bcff00`);重构二/三档为"全台错误目录"架构(errorcode 为唯一键,JSON 目录全台共享,后端不管理文本只过渡性读取) |
+| v3.0 | 2026-07-15 | 第二档再次重构:废弃后端 ErrorCatalog 方案(后端零改动),改为激活前端已有的 error.js 映射表。依据:前端研究确认错误文案 100% 来自后端 errorMsg,前端已有 error.js 死代码骨架,改造收敛点仅 core.js 一处 |
 
 ## 当前进度
 
@@ -18,7 +19,7 @@
 |---|---|---|
 | 第一档 快速止血 | ✅ **已完成** | 提交 `ac3bcff00`,已打包 6 模块 jar(core/common/inventory/personel/seiya/system,版本 8.3.027) |
 | 1.5 错误信息优化 | ✅ **已完成** | 句式模板化 + 兜底码精确化(文档+代码同步),据实收敛范围(详见 4.6) |
-| 第二档 全台错误目录 | ⏳ 待启动 | errorcode 为唯一键,`error-{lang}.json` 目录,后端不持有文本 |
+| 第二档 前端映射表激活 | ⏳ 待启动 | 后端零改动,激活前端 error.js 骨架,error.md→error-cn.json 构建脚本,core.js 查表+fallback |
 | 第三档 规范整洁 | ⏳ 待启动 | HTTP 状态码映射、迁包、Action 风格约束 |
 
 ---
@@ -147,7 +148,7 @@
 
 > 改动都是加法优先 + 文案统一,老调用路径完全兼容。
 
-以下为待推进档位,按**风险与收益**分档,推荐顺序:**1.5 错误信息优化 → 第二档(全台错误目录)→ 第三档(规范整洁)**。
+以下为待推进档位,按**风险与收益**分档,推荐顺序:**1.5 错误信息优化 → 第二档(前端映射表激活)→ 第三档(规范整洁)**。
 
 ### 1.5 错误信息优化:句式模板化 + 兜底码精确化(本轮新增)
 
@@ -206,218 +207,149 @@
 
 
 
-### 第二档:全台错误目录(errorcode 为唯一键)
+### 第二档:前端错误码映射表激活(后端零改动)
 
-> 目标:让 **errorcode 成为全台唯一的错误标识**,文本目录(`error-{lang}.json`)成为全台唯一的文本来源,代码(后端/前端)只引用码、不持有文本。国际化是目录的自然扩展(平行加文件),不是独立工程。
->
-> **核心原则:errorcode 是唯一键,文本目录是全台共享资源,后端不"管理"文本只"过渡性读取"。**
+> 目标:激活前端已有的(但当前是死代码的)errorCode→文案 映射表,使前端能自主展示错误文案;为国际化留好扩展点(平行加文件即可)。**后端保持现状不变**——继续返回 `errorCode` + `errorMsg`,不做 ErrorCatalog、不改 FLException 构造方法。
 
-#### 架构总览
+#### 设计依据(前端现状研究)
+
+经探查前端 `WebContent/js/` 得出三个关键事实:
+
+1. **错误文案 100% 来自后端 `errorMsg`**
+   `core.js:294-301` 的 else 分支:`com.showAlert(com.error, res.errorMsg)` ——前端没有自己的映射逻辑,直接弹后端文本。
+
+2. **前端已有一份 errorCode 映射表(`error.js`),但是死代码**
+   `WebContent/js/com/error.js` 维护了约 200 个 errorCode→中文文案 映射,6 个 HTML 入口都加载了它,但**全项目零引用**——从未被任何 JS 代码查询。占位符语法还停留在 `[#1#]` 旧格式。
+
+3. **前端零 i18n 基础设施**
+   无 language/locale 机制,所有文案硬编码中文。
+
+#### 架构总览(修正后)
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  error.md  ← 人写的权威文档(source of truth)            │
-│      ↓ 构建期自动生成                                    │
-│  error-cn.json / error-en.json  ← 机器目录(全台共享)    │
-│      ↓ 谁展示谁读                                        │
-│  ┌─────────────┐        ┌──────────────────┐            │
-│  │  后端(阶段1)│        │  前端(阶段2)     │            │
-│  │  读 cn 目录  │        │  按 locale 读目录 │            │
-│  │  填兜底文本  │        │  自主翻译展示     │            │
-│  └─────────────┘        └──────────────────┘            │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  error.md  ← 人写的权威文档(后端维护,已治理干净)         │
+│      ↓ 构建脚本生成                                       │
+│  error-cn.json  ← 前端映射表(从 error.md 派生)          │
+│      ↓ 前端 core.js 查表                                  │
+│  ┌──────────────────────────────────────┐                │
+│  │  core.js:294 改造                     │                │
+│  │  if (errorMap[errorCode])             │                │
+│  │      展示映射表文案(可国际化)         │                │
+│  │  else                                 │                │
+│  │      展示后端 errorMsg(fallback)      │                │
+│  └──────────────────────────────────────┘                │
+│                                                          │
+│  后端:零改动,继续返回 errorCode + errorMsg              │
+│  国际化:平行加 error-en.json,core.js 按 locale 选文件   │
+└──────────────────────────────────────────────────────────┘
 ```
 
-**为什么不用后端 ResourceBundle(.properties)?**
-properties 是 Java 专用格式,前端读不了;且"后端查表填 errorMessage 再吐 JSON"本质是后端在做翻译,文本仍归后端。JSON 目录是全台通用格式,后端、前端、移动端都能直读,谁展示谁翻译,后端彻底解耦。
+**核心原则:errorcode 是唯一键。后端继续返回码+兜底中文;前端拿码查自己的映射表,查不到再 fallback 后端文案。国际化是前端的事,后端无感。**
 
-#### 2.1 两层结构:码层(常量) + 文本层(目录)
+#### 为什么后端不需要改(对比废弃方案)
 
-"常量还是 json 文件"不是二选一,是**互补的两层**:
+| 维度 | 废弃方案(后端 ErrorCatalog) | 修正方案(前端映射表) |
+|---|---|---|
+| 后端 throw | 改成只传码 | **不变**(继续传码+文本) |
+| 后端 JSON | 改成不传 errorMsg | **不变**(继续传 errorCode+errorMsg) |
+| 后端新增类 | ErrorCatalog、FLCode、各模块常量枚举 | **零新增** |
+| 后端迁移量 | payment 模块 throw 点全部改写 | **零** |
+| 错误文本来源 | 后端启动加载 json 填 errorMsg | **前端查映射表,fallback 后端 errorMsg** |
+| 国际化 | 后端读对应语言 json | **前端切 json 文件** |
 
-| 层 | 载体 | 职责 | 示例 |
-|---|---|---|---|
-| **码层**(代码内) | 常量/枚举 | 编译期类型安全,消灭 magic number | `PaymentErrorCode.CONV_NOT_EXIST.code == 150043` |
-| **文本层**(目录) | JSON 文件 | 运行期文本,按语言分文件 | `error-cn.json: {"150043": "转换款不存在"}` |
+后端在前面几档已经把 errorCode→errorMsg 治理干净(消除漂移、回收死码、统一文案),**这张表前端拿来就能用**。后端不需要再做任何适配。
 
-常量保证 throw 点不写错码,JSON 目录保证文本可换语言。**码就是连接两层的 key**——常量里的 `150043` 同时是 JSON 里的 key。两层都从 error.md 派生,谁都不当另一方的源头。
+#### 落地步骤
 
-#### 2.2 目录文件格式(flat,按码字符串做 key)
+##### 2.1 error.md → error-cn.json 构建脚本(后端一次性产出)
 
+写一个构建脚本 `scripts/generate_error_json.py`,解析 error.md 表格,生成 flat JSON:
 ```json
-// src/com/fanglin/core/i18n/error-cn.json
-{
-  "150043": "转换款不存在",
-  "150046": "转换款支付异常,{0}",
-  "150073": "不支持其他支付平台"
-}
-
-// src/com/fanglin/core/i18n/error-en.json(未来,现在留空骨架)
-{
-  "150043": "Conversion payment does not exist",
-  "150046": "Conversion payment error: {0}",
-  "150073": "Unsupported payment platform"
-}
+{ "150043": "转换款不存在", "150046": "转换款支付异常,{0}", ... }
 ```
+- 占位符统一为 `{0}`/`{1}`(MessageFormat 标准,error.md 已统一)
+- 跳过 reserved / deprecated 码
+- 产物放 `WebContent/js/com/error-cn.json`(前端静态资源)
 
-按码 flat 存,不按模块嵌套——码前缀(150xxx)已编码模块,按码查是 O(1)。`{0}` 用 MessageFormat 标准占位符。
+这是后端唯一的产出——一个脚本,不改任何 Java 代码。
 
-#### 2.3 目录读取器(后端过渡用,极简)
+##### 2.2 激活前端映射表(改 core.js 一处)
 
-```java
-// src/com/fanglin/core/i18n/ErrorCatalog.java
-public final class ErrorCatalog {
-
-    private static final Map<String, String> CN = load("error-cn.json");
-
-    private ErrorCatalog() {}
-
-    private static Map<String, String> load(String file) {
-        try (InputStream in = ErrorCatalog.class.getClassLoader()
-                .getResourceAsStream("com/fanglin/core/i18n/" + file)) {
-            // JSON → Map(用项目已有的 json 库)
-            return JSON.parseObject(in, new TypeReference<Map<String,String>>(){});
-        } catch (Exception e) {
-            return Collections.emptyMap();  // 读不到不阻断启动,退化为按码兜底
-        }
-    }
-
-    /** 按码查中文文本,带参数填充。查不到返回兜底。 */
-    public static String message(int code, String... args) {
-        String pattern = CN.get(String.valueOf(code));
-        if (pattern == null) return "错误码:" + code;
-        return MessageFormat.format(pattern, (Object[]) args);
+当前 `core.js:294-301`:
+```js
+} else {
+    if (failCallback) {
+        failCallback(res);
+    } else {
+        com.showAlert(com.error, res.errorMsg);   // 直接弹后端文案
+        return res;
     }
 }
 ```
 
-#### 2.4 FLException 改造(只传码 + 参数,不传文本)
-
-```java
-// 新增:推荐用法,文本来自目录
-public FLException(int code, String... errorArgs) {
-    this.code = code;
-    this.errorArgs = Arrays.asList(errorArgs);
-    this.errorMessage = ErrorCatalog.message(code, errorArgs);  // 查目录
-}
-
-// 保留老的 (int, String) 构造方法:向后兼容,过渡期老代码不变
-// 但新代码一律走上面这个
-```
-
-#### 2.5 错误码常量类体系(码层,每模块一个)
-
-**包结构**:
-```
-src/com/fanglin/{module}/code/
-└── {Module}ErrorCode.java   # 每模块一个
-```
-
-**公共接口**:`src/com/fanglin/core/code/FLCode.java`
-
-```java
-package com.fanglin.core.code;
-
-/**
- * 错误码契约:所有模块错误码枚举实现此接口。
- * 注意:message 仅用于参考,实际展示文本以 error-{lang}.json 目录为准。
- */
-public interface FLCode {
-    int getCode();
-}
-```
-
-**示例 - payment 模块样板**:`src/com/fanglin/payment/code/PaymentErrorCode.java`
-
-```java
-package com.fanglin.payment.code;
-
-import com.fanglin.core.code.FLCode;
-
-/**
- * 款项/支付模块错误码。
- * 码段:150000-150999。码值即 error-{lang}.json 的 key。
- * 新增码:① 先在此定义 → ② error.md 登记 → ③ 构建期自动生成 json。
- */
-public enum PaymentErrorCode implements FLCode {
-
-    CONV_NOT_EXIST        (150043),
-    CONV_PAY_PROCESSING   (150045),
-    CONV_PAY_ERROR        (150046),
-    UNSUPPORTED_PLATFORM  (150073);
-
-    private final int code;
-
-    PaymentErrorCode(int code) {
-        this.code = code;
+改为:
+```js
+} else {
+    if (failCallback) {
+        failCallback(res);
+    } else {
+        // 优先查前端映射表,查不到 fallback 后端 errorMsg
+        var msg = com.errorMap ? com.errorMap[res.errorCode] : null;
+        com.showAlert(com.error, msg || res.errorMsg);
+        return res;
     }
-
-    @Override
-    public int getCode() { return code; }
 }
 ```
 
-> 注意:枚举里**不再存 message**(对比 v1.0 方案)。文本只存在于 JSON 目录,避免码层与文本层双写漂移。枚举只持有码,码是连接两层唯一的桥。
+**改动收敛点:`core.js` 的 else 分支一处。** 散落在各页面的 `com.showAlert` 调用(页面自定义提示)不用动。
 
-**新代码使用方式**:
-```java
-// 无参:文本完全来自目录
-throw new FLException(PaymentErrorCode.CONV_NOT_EXIST);
+##### 2.3 加载映射表(改 HTML 入口或 core.js 初始化)
 
-// 带参:目录里 "150046": "转换款支付异常,{0}",自动用 args 填 {0}
-throw new FLException(PaymentErrorCode.CONV_PAY_ERROR, e.getMessage());
+两种方式:
+- **方式 A(轻量)**:复用现有 `error.js` 加载机制(6 个 HTML 入口已加载),把 `error.js` 内容替换为从 `error-cn.json` 动态加载,挂到 `com.errorMap`
+- **方式 B(推荐)**:`core.js` 初始化时 `$.ajax` 同步拉取 `error-cn.json`,赋值 `com.errorMap`,不依赖 HTML 入口
+
+##### 2.4 国际化扩展(未来,平行加文件)
+
+```
+WebContent/js/com/
+├── error-cn.json   ← 简体中文(现在)
+├── error-en.json   ← 英文(未来,留空骨架)
+└── error-zh-TW.json ← 繁体中文(未来)
 ```
 
-#### 2.6 两阶段落地(与"前端暂不动"调和)
-
-前端现在依赖 JSON 里的 `errorMsg` 字段,过渡期后端必须读目录填 errorMsg——但这是"读",不是"管理"。
-
-**阶段 1(现在做):后端读目录,文本不进代码**
+`core.js` 初始化时按用户语言偏好选文件:
+```js
+var lang = com.config.lang || 'cn';
+$.ajax({url: 'js/com/error-' + lang + '.json', async: false, success: function(data){ com.errorMap = data; }});
 ```
-throw 点: throw new FLException(PaymentErrorCode.CONV_NOT_EXIST)
-                     ↓ 只带码(+可选参数)
-后端启动加载 error-cn.json 到内存 Map
-                     ↓ 拦截器/序列化时按码查表
-JSON 响应: { "errorCode": 150043, "errorMsg": "转换款不存在" }
-                     ↓ 前端照旧
-前端: 无感(仍收 errorCode + errorMsg)
-```
-**关键:后端代码里不再有任何中文消息文本**。文本只在 error-cn.json。后端只是目录的过渡读者。
 
-**阶段 2(未来,前端改时):前端直读目录**
-```
-后端响应: { "errorCode": 150043, "errorArgs": [] }   ← 不再带 errorMsg
-                     ↓
-前端按用户 locale fetch error-cn.json / error-en.json
-                     ↓ 按码查表 + 填参数
-展示: "转换款不存在" / "Conversion payment does not exist"
-```
-**同一份 JSON 目录,阶段 1 后端读、阶段 2 前端读,文件不动,只换消费者。** 这就是全台统一目录的价值——前期投入零浪费。
+**加一种语言 = 加一个 json 文件,代码零改动。**
 
-#### 2.7 error.md → JSON 构建期生成与校验
+##### 2.5 废弃旧 error.js
 
-1. **生成脚本**:构建期解析 error.md 表格,生成 error-cn.json(以及预留的 error-en.json 骨架)。
-2. **双向校验**:
-   - error.md 每个 code 在 JSON 中必须有对应 key;
-   - 常量类枚举的每个 code 必须在 error.md 中登记;
-   - 三者不一致则构建失败。
+现有 `WebContent/js/com/error.js`(死代码,200 个码,`[#1#]` 旧占位符)在 error-cn.json 就位后删除或清空。它的码已被 error-cn.json 覆盖且更全、更准确。
 
-这样 error.md 是唯一源头,JSON 和常量类都是派生物,从机制上消灭双轨漂移。
+#### 与漂移码的关系
 
-#### 2.8 收益与风险
+诊断报告显示 110 个码在代码里有多种消息(一码多义)。这不影响第二档——前端映射表按 errorCode 取**唯一**文案,即使后端各 throw 点消息不一,前端展示始终一致。漂移码的治理(拆码)是独立项,不阻塞第二档。
 
-**收益**:
+#### 收益
+
 | 原问题 | 解决方式 |
 |---|---|
-| 文档/代码双轨漂移 | error.md 唯一源头,JSON/常量派生,代码零文本 |
-| throw 点硬编码 3568 处中文 | 新 throw 点只传码,老点渐进迁移 |
-| 国际化要改 3568 处 | 加 error-en.json 一份文件,代码零改动 |
-| 前端 i18n 要后端配合 | 前端直接读 JSON 目录,后端无感 |
-| 错误码 magic number | 常量枚举消除 |
+| 前端无法自主控制错误文案 | 激活映射表,前端按码查表展示 |
+| 国际化需改后端 3568 处 | 前端平行加 json 文件,后端零改动 |
+| error.js 死代码浪费 | 用 error-cn.json(从 error.md 派生)替代,激活并保持同步 |
+| 文档与前端映射表漂移 | 构建脚本从 error.md 生成 json,单一源头 |
 
-**风险与缓解**:
-- **风险**:3568 处老 throw 第二个参数是硬编码消息,迁移需逐个核对。
-- **缓解**:仅新 throw 点启用目录查表;老 throw 点保留二参构造(不查表,以第二参数为准),向后兼容。日常迭代逐步替换,不立项集中重构。
+#### 风险与缓解
+
+- **风险**:映射表未覆盖的码,fallback 后端 errorMsg(中文),国际化不完整。
+- **缓解**:构建脚本保证 error-cn.json 覆盖全部 error.md 有效码;未翻译的语言文件中缺失的码自动 fallback 到中文 json 或后端文案。
+- **风险**:前端目前无 i18n 基础设施,语言切换需配套。
+- **缓解**:第二档只做"映射表激活 + fallback",语言切换机制作为第三档或独立项,不绑定。
 
 ---
 
@@ -537,20 +469,18 @@ JSON 响应: { "errorCode": 150043, "errorMsg": "转换款不存在" }
 
 ---
 
-### 第二档(全台错误目录)
+### 第二档(前端映射表激活)
 
 | 序号 | 任务 | 涉及文件 | 预估工时 | 风险 |
 |---|---|---|---|---|
-| 2.1 | 编写 error.md → error-cn.json 生成脚本 | 构建脚本 | 1h | 零 |
-| 2.2 | 创建 `ErrorCatalog` 目录读取器 | `core/i18n/ErrorCatalog.java`(新) | 1h | 零 |
-| 2.3 | FLException 新增 `(int, String...)` 查目录构造方法 | `FLException.java` | 0.5h | 零(纯加法) |
-| 2.4 | 定义 `FLCode` 接口 | `core/code/FLCode.java`(新) | 0.5h | 零 |
-| 2.5 | payment 模块常量样板 `PaymentErrorCode` | `payment/code/PaymentErrorCode.java`(新) | 1h | 零 |
-| 2.6 | payment 模块老 throw 点迁移到常量 + 目录 | payment 模块 Service | 2h | 中 |
-| 2.7 | error.md ↔ json ↔ 常量 三向构建期校验 | 构建脚本 | 2h | 低 |
-| 2.8 | 扩展至下一个模块(approval) | approval 模块 | 2h | 中 |
+| 2.1 | 编写 error.md → error-cn.json 生成脚本 | `scripts/generate_error_json.py`(新) | 1h | 零 |
+| 2.2 | core.js else 分支改造(查表+fallback) | `WebContent/js/com/core.js` | 0.5h | 低(改一处) |
+| 2.3 | 映射表加载机制(core.js 初始化拉取 json) | `WebContent/js/com/core.js` | 0.5h | 低 |
+| 2.4 | 生成 error-cn.json 并部署 | `WebContent/js/com/error-cn.json`(新) | 0.5h | 零 |
+| 2.5 | 废弃旧 error.js(清空或删除) | `WebContent/js/com/error.js` | 0.2h | 低 |
+| 2.6 | 冒烟验证(典型页面错误展示) | — | 1h | — |
 
-**第二档交付物**:全台错误目录(error-cn.json);码层常量体系;error.md 为唯一源头;构建期三向校验;国际化只需平行加 error-en.json。
+**第二档交付物**:前端 error-cn.json 映射表(从 error.md 派生);core.js 查表优先+fallback;error.js 死代码清理;后端零改动。
 
 ---
 
@@ -583,29 +513,23 @@ JSON 响应: { "errorCode": 150043, "errorMsg": "转换款不存在" }
 - [ ] 12 处兜底码消息精确化。
 - [ ] 代码 throw 点与文档消息一致(抽样校验)。
 
-### 里程碑 M2:第二档完成(error-cn.json + payment 样板)
+### 里程碑 M2:第二档完成(前端映射表激活)
 
 **验收**:
-- [ ] `ErrorCatalog`、`FLCode`、`PaymentErrorCode` 存在并编译通过。
-- [ ] `error-cn.json` 由构建脚本从 error.md 生成,覆盖全部非 reserved 条目。
-- [ ] payment 模块所有 `throw new FLException(15xxxx, "...")` 替换为 `throw new FLException(PaymentErrorCode.XXX)`。
-- [ ] 构建期三向校验通过(error.md ↔ json ↔ 常量)。
-- [ ] payment 模块接口行为零回归(手工冒烟)。
-- [ ] 后端代码中 payment 模块零中文消息文本。
+- [ ] `scripts/generate_error_json.py` 存在,能从 error.md 生成 error-cn.json。
+- [ ] `WebContent/js/com/error-cn.json` 存在,覆盖全部非 reserved/deprecated 条目。
+- [ ] `core.js` else 分支改为查 `com.errorMap` 优先,fallback `res.errorMsg`。
+- [ ] 映射表加载机制就位(core.js 初始化拉取 json)。
+- [ ] 旧 `error.js` 已清空或删除。
+- [ ] 典型页面错误展示正常(映射表覆盖的码显示映射文案,未覆盖的 fallback 后端文案)。
+- [ ] **后端零改动**(无新增 Java 类,无 FLException 改造)。
 
-### 里程碑 M3:全模块迁移(中长期)
-
-**验收**:
-- [ ] 全部业务模块的错误码常量类就位。
-- [ ] 全项目无裸 magic number throw(脚本扫描)。
-- [ ] error.md / error-cn.json / 常量类 三向一致。
-
-### 里程碑 M4(未来):前端接入目录
+### 里程碑 M3(未来):国际化扩展
 
 **验收**:
-- [ ] `error-en.json` 骨架存在(可暂为空)。
-- [ ] 后端响应可切为 `{errorCode, errorArgs}` 不带 errorMsg(灰度)。
-- [ ] 前端按 locale 读目录展示。
+- [ ] `error-en.json` 骨架存在。
+- [ ] core.js 按 locale 选 json 文件。
+- [ ] 缺失翻译的码 fallback 到中文 json 或后端 errorMsg。
 
 ---
 
@@ -613,11 +537,11 @@ JSON 响应: { "errorCode": 150043, "errorMsg": "转换款不存在" }
 
 | 风险 | 影响范围 | 缓解措施 |
 |---|---|---|
-| 1.5/第二档迁移改写 throw 点,引入行为偏差 | 单模块 | 每模块独立迁移、独立冒烟;不跨模块批量替换 |
-| error-cn.json 与 error.md 不一致导致消息错乱 | 全局 | 构建期校验脚本,不一致则构建失败 |
-| ErrorCatalog 读不到 json 导致启动异常 | 全局 | load 失败退化为空 Map,按码兜底,不阻断启动 |
-| HTTP 状态码映射导致前端异常 | 前端 | 第三档仅在第二档阶段2推进,老接口保持 200 |
-| FLException 迁包导致大量 import 变更 | 全局 | IDE 全局 Move,提交前全量编译 |
+| 1.5 迁移改写 throw 点,引入行为偏差 | 单模块 | 每模块独立迁移、独立冒烟;不跨模块批量替换 |
+| error-cn.json 与 error.md 不一致导致消息错乱 | 全局 | 构建脚本从 error.md 单一源头生成,保证一致 |
+| 映射表未覆盖的码 fallback 后端中文,国际化不完整 | 前端 | 构建脚本覆盖全部有效码;未翻译语言 fallback 中文 |
+| HTTP 状态码映射导致前端异常 | 前端 | 第三档仅在新接口启用,老接口保持 200 |
+| FLException 迁包导致大量 import 变更 | 全局 | C1 已决定保持现状,不做 |
 
 **回滚**:所有改动均以**加法优先**——新增构造方法、新增常量类、新增 json 目录,老代码路径保持可用。任一档出问题,回滚对应提交即可,不影响其它档。
 
@@ -638,15 +562,14 @@ JSON 响应: { "errorCode": 150043, "errorMsg": "转换款不存在" }
 | 110000 文案统一(5 个 Service) | `LoginServiceImpl` / `UserPreferServiceImpl` / `A20251113ServiceImpl` / `A20260109ServiceImpl` / `SystemConfigServiceImpl` |
 | 码迁移(260061→260072) | `inventory/.../AccessoriesItemServiceImpl.java` |
 
-### 待新增(第二档)
+### 待新增(第二档,后端零改动)
 
 | 角色 | 文件路径 |
 |---|---|
-| 错误码契约接口 | `src/com/fanglin/core/code/FLCode.java`(新) |
-| 错误目录读取器 | `src/com/fanglin/core/i18n/ErrorCatalog.java`(新) |
-| 中文错误目录 | `src/com/fanglin/core/i18n/error-cn.json`(新) |
-| 英文错误目录(骨架) | `src/com/fanglin/core/i18n/error-en.json`(新) |
-| payment 错误码常量 | `src/com/fanglin/payment/code/PaymentErrorCode.java`(新) |
+| error.md→json 生成脚本 | `scripts/generate_error_json.py`(新) |
+| 前端中文错误映射表 | `WebContent/js/com/error-cn.json`(新) |
+| 核心通信层(改造一处) | `WebContent/js/com/core.js`(改 else 分支) |
+| 旧死代码(清空或删除) | `WebContent/js/com/error.js` |
 
 ### 参考(未改动,理解现状用)
 
@@ -670,11 +593,12 @@ JSON 响应: { "errorCode": 150043, "errorMsg": "转换款不存在" }
 | 2026-07-14 | HTTP 状态码映射列为可选第三档 | 需前端配合,灰度推进 |
 | 2026-07-14 | **放弃 properties(ResourceBundle)方案,改用 JSON 全台错误目录** | properties 是 Java 专用格式前端读不了;"后端查表填文本"本质仍是后端管翻译。JSON 目录全台通用,谁展示谁读,后端彻底解耦 |
 | 2026-07-14 | **errorcode 为唯一键,目录按语言分文件(error-{lang}.json)** | 国际化只需平行加文件,代码零改动;同一目录阶段1后端读、阶段2前端读,前期投入零浪费 |
-| 2026-07-14 | **常量枚举只持有 code,不持有 message** | 避免"码层常量"与"文本层目录"双写漂移;文本唯一来源是 JSON 目录 |
 | 2026-07-14 | 国际化驱动力定位"前瞻储备",当前只做架构留口 | 暂无明确多语言业务需求,方案深度止于"可扩展"而非"真翻译"。error-en.json 留空骨架 |
-| 2026-07-14 | **前端暂不动**(国际化阶段1) | 后端读目录填 errorMsg,前端无感;未来前端接入时文件不动只换消费者 |
 | 2026-07-14 | **保留半角英文逗号约定**(703 条消息) | 全项目既定约定,与 3568 处 throw 一致;改为全角会引发全面冲突,收益为零 |
 | 2026-07-14 | 错误信息优化走"文档+代码同步改"(路径B) | 仅改文档会加剧双轨漂移;高频模板机械化程度高,可安全迁移 |
+| 2026-07-15 | **废弃后端 ErrorCatalog 方案,改为前端映射表激活(后端零改动)** | 前端研究确认:错误文案 100% 来自后端 errorMsg;前端已有 error.js 死代码骨架;后端前面几档已把 errorCode→errorMsg 治理干净,前端拿来就能用。后端不需要 ErrorCatalog/FLCode/常量枚举 |
+| 2026-07-15 | **改造收敛点定在 core.js else 分支一处** | 全项目错误展示都过 `com.showAlert(com.error, res.errorMsg)`,改 core.js:294 查表+fallback 即可,散落各页面的 showAlert 调用不用动 |
+| 2026-07-15 | **C1 FLException 迁包保持现状不做** | 迁包影响全模块 import,收益纯整洁不抵成本 |
 
 ---
 
