@@ -140,7 +140,7 @@ public class Kandle {
 		try {
 			connection = initUrlConn(sUrl, jParas);
 		} catch (Exception e) {
-			throw new FLException(360001, "金蝶请求异常");
+			throw new FLException(360001, "金蝶请求失败,请稍后重试");
 		}
 
 		// 获取Cookie
@@ -159,7 +159,7 @@ public class Kandle {
 		try {
 			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		} catch (IOException e) {
-			throw new FLException(360001, "金蝶请求异常");
+			throw new FLException(360001, "金蝶请求失败,请稍后重试");
 		}
 
 		String line;
@@ -175,7 +175,7 @@ public class Kandle {
 				bResult = line.contains("\"LoginResultType\":1");
 			}
 		} catch (Exception e) {
-			throw new FLException(360002, "金蝶响应异常");
+			throw new FLException(360002, "金蝶响应失败,请稍后重试");
 		}
 
 		System.out.println(" ============================= ");
@@ -185,7 +185,7 @@ public class Kandle {
 		try {
 			reader.close();
 		} catch (IOException e) {
-			throw new FLException(360003, "金蝶资源异常");
+			throw new FLException(360003, "金蝶资源不可用,请联系管理员");
 		}
 
 		connection.disconnect();
@@ -209,7 +209,7 @@ public class Kandle {
 		try {
 			connectionInvoke = initUrlConn(sUrl, jParas);
 		} catch (Exception e) {
-			throw new FLException(360001, "金蝶请求异常");
+			throw new FLException(360001, "金蝶请求失败,请稍后重试");
 		}
 
 		BufferedReader reader;
@@ -217,7 +217,7 @@ public class Kandle {
 		try {
 			reader = new BufferedReader(new InputStreamReader(connectionInvoke.getInputStream()));
 		} catch (IOException e) {
-			throw new FLException(360001, "金蝶请求异常");
+			throw new FLException(360001, "金蝶请求失败,请稍后重试");
 		}
 
 		String line;
@@ -241,7 +241,7 @@ public class Kandle {
 				System.out.println(sResult);
 			}
 		} catch (Exception e1) {
-			throw new FLException(360002, "金蝶响应异常");
+			throw new FLException(360002, "金蝶响应失败,请稍后重试");
 		}
 
 		System.out.println(" ============================= ");
@@ -251,7 +251,7 @@ public class Kandle {
 		try {
 			reader.close();
 		} catch (IOException e) {
-			throw new FLException(360003, "金蝶资源异常");
+			throw new FLException(360003, "金蝶资源不可用,请联系管理员");
 		}
 
 		connectionInvoke.disconnect();

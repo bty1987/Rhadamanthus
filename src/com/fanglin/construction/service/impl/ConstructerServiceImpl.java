@@ -154,7 +154,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		}
 
 		if (constructerDao.countConstructer(cid, userPO.getUid(), csid) > 0) {
-			throw new FLException(120001, "当前工人已经添加,不能重复添加同一工人");
+			throw new FLException(120001, "工人已添加,不可重复添加");
 		}
 
 		UserPO creater = userDao.queryUserByUserId(createrId);
