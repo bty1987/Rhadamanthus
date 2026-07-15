@@ -36,7 +36,6 @@ sales/
 │   ├── SalesPictureAction.java              # 销售凭证图片管理
 │   ├── SalesProfileAction.java              # 销售档案管理
 │   ├── SalesFunctionAction.java             # 销售功能配置
-│   ├── SalesCommonAction.java               # 公共功能
 │   ├── OalesAction.java                     # 其他销售管理
 │   └── OalesPayAction.java                  # 其他销售支付
 ├── service/         # 业务逻辑层
@@ -61,7 +60,6 @@ sales/
 | `SalesPictureAction` | 销售凭证图片上传与查询 | 未统计 | - |
 | `SalesProfileAction` | 销售档案配置 | 未统计 | - |
 | `SalesFunctionAction` | 销售功能开关配置 | 未统计 | - |
-| `SalesCommonAction` | 公共查询接口 | 未统计 | - |
 | `OalesAction` | 其他销售项管理（非标商品） | 未统计 | - |
 | `OalesPayAction` | 其他销售支付记录 | 未统计 | - |
 

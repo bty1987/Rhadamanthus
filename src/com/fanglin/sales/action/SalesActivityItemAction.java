@@ -34,6 +34,16 @@ public class SalesActivityItemAction extends BaseListAction {
 
 	private SalesActivityVO salesActivity;
 
+	private String orderId;
+
+	private String securityCode;
+
+	private String verifyCode;
+
+	private String phoneCode;
+
+	private String company;
+
 	@Action(value = "addSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSalesActivityItem() throws FLException {
 
@@ -98,6 +108,30 @@ public class SalesActivityItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "querySalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesActivityItem() throws FLException {
+
+		salesActivityItems = salesActivityItemService.querySalesActivityItem(orderId);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "sendSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendSalesActivityItem() throws FLException {
+
+		salesActivityItemService.sendSalesActivityItem(salesActivityItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "affirmSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmSalesActivityItem() throws FLException {
+
+		salesActivityItemService.affirmSalesActivityItem(sales, salesActivityItems, securityCode, verifyCode, phoneCode, company);
+
+		return SUCCESS;
+	}
+
 	public SalesVO getSales() {
 		return sales;
 	}
@@ -128,6 +162,46 @@ public class SalesActivityItemAction extends BaseListAction {
 
 	public void setSalesActivityItems(List<SalesActivityItemVO> salesActivityItems) {
 		this.salesActivityItems = salesActivityItems;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
+	}
+
+	public String getPhoneCode() {
+		return phoneCode;
+	}
+
+	public void setPhoneCode(String phoneCode) {
+		this.phoneCode = phoneCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }
