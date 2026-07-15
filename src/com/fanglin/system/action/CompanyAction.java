@@ -29,6 +29,10 @@ public class CompanyAction extends BaseListAction {
 
 	private List<CompanyVO> companys;
 
+	private String verifyCode;
+
+	private String securityCode;
+
 	@Action(value = "pageCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCompany() throws FLException {
 
@@ -63,6 +67,14 @@ public class CompanyAction extends BaseListAction {
 		}
 
 		companyService.addCompany(company);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "createCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String createCompany() throws FLException {
+
+		companyService.createCompany(company, securityCode, verifyCode);
 
 		return SUCCESS;
 	}
@@ -105,6 +117,22 @@ public class CompanyAction extends BaseListAction {
 
 	public void setCompanys(List<CompanyVO> companys) {
 		this.companys = companys;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
 	}
 
 }
