@@ -14,7 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.VustomerNetService;
 import com.fanglin.customer.vo.VustomerNetVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class VustomerNetAction extends BaseListAction {

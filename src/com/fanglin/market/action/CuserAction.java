@@ -12,7 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.market.service.CuserService;
 import com.fanglin.market.vo.CuserVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class CuserAction extends BaseListAction {

@@ -19,7 +19,7 @@ import com.fanglin.store.vo.MbrandVO;
 import com.fanglin.store.vo.McategoryVO;
 import com.fanglin.store.vo.SlideVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class PublicScopeAction extends BaseListAction {

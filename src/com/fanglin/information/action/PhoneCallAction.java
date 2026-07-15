@@ -12,7 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.information.service.PhoneCallService;
 import com.fanglin.information.vo.PhoneCallVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class PhoneCallAction extends BaseListAction {

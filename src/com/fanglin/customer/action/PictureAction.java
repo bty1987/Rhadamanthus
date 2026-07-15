@@ -11,7 +11,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.customer.service.ConstructionDrawingService;
 import com.fanglin.customer.service.DecorationPictureService;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller("PictureOrderAction")
 public class PictureAction extends BaseListAction {

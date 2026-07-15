@@ -15,7 +15,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.payment.bean.Wxpay;
 import com.fanglin.postar.service.PostarService;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class PostarAction extends BaseListAction {

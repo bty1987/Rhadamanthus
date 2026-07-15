@@ -15,7 +15,7 @@ import com.fanglin.customer.service.CircleService;
 import com.fanglin.customer.vo.CircleDrawingVO;
 import com.fanglin.customer.vo.CircleVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class CircleAction extends BaseListAction {

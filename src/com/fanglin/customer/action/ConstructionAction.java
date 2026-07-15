@@ -17,7 +17,7 @@ import com.fanglin.customer.vo.ConstructerVO;
 import com.fanglin.customer.vo.ConstructionScheduleVO;
 import com.fanglin.customer.vo.ConstructionVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller("ConstructionOrderAction")
 public class ConstructionAction extends BaseListAction {

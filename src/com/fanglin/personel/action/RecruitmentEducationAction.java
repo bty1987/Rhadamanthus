@@ -24,7 +24,7 @@ import com.fanglin.personel.service.RecruitmentEducationService;
 import com.fanglin.personel.vo.RecruitmentEducationVO;
 import com.fanglin.utils.SystemConfig;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class RecruitmentEducationAction extends BaseListAction {

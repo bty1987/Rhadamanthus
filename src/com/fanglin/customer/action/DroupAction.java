@@ -14,7 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.DroupService;
 import com.fanglin.customer.vo.DroupVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class DroupAction extends BaseListAction {

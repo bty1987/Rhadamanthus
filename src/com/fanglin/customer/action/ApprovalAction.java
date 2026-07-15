@@ -12,7 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.ApprovalService;
 import com.fanglin.customer.vo.ApprovalVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller("ApprovalOrderAction")
 public class ApprovalAction extends BaseListAction {

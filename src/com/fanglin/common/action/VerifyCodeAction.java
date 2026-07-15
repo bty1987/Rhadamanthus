@@ -29,7 +29,7 @@ import com.fanglin.core.security.SecurityImageHelper;
 import com.fanglin.utils.LogUtils;
 import com.fanglin.utils.SystemConfig;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class VerifyCodeAction extends BaseAction {

@@ -14,7 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.kingdee.service.KingdeeRecordService;
 import com.fanglin.kingdee.vo.KingdeeRecordVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class KingdeeRecordAction extends BaseListAction{

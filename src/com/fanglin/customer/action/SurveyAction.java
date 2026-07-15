@@ -14,7 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.SurveyService;
 import com.fanglin.customer.vo.SurveyVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class SurveyAction extends BaseListAction {
