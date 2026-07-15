@@ -142,12 +142,12 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			}
 
 			if (au == null) {
-				throw new FLException(110005, "系统处理问题");
+				throw new FLException(110005, "登陆超时");
 			}
 
 			authentication = new Authentication(AESHelper.decrypt(au, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 		} catch (Exception e) {
-			throw new FLException(110005, "系统处理问题");
+			throw new FLException(110005, "登陆超时");
 		}
 
 		return authentication;
@@ -166,7 +166,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 
 			return authentication;
 		} catch (UnsupportedEncodingException e) {
-			throw new FLException(110005, "系统处理问题");
+			throw new FLException(110005, "登陆超时");
 		}
 	}
 
