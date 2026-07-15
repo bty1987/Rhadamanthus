@@ -45,6 +45,9 @@ dependency-reduced-pom.xml
 # Logs
 *.log
 
+# 增量同步清单(本地生成,不入库)
+scripts/changelist.txt
+
 # OS
 .DS_Store
 Thumbs.db
