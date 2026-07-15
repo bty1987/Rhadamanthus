@@ -119,7 +119,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// ========== 参数校验 ==========
 		String orderId = quotationAssignVO.getOrderId();
 		if (orderId == null || orderId.trim().isEmpty()) {
-			throw new FLException(-1, "装修单号不能为空");
+			throw new FLException(140093, "装修单号不能为空");
 		}
 
 		// ========== 业务逻辑开始 ==========
@@ -127,7 +127,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 1. 查询装修单
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
-			throw new FLException(-1, "装修单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
@@ -137,7 +137,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 2. 检查是否已分配报价员
 		String quoterUid = getQuoteterUid(decoration);
 		if (quoterUid != null) {
-			throw new FLException(-1, "该装修单已分配报价员，无需重复分配");
+			throw new FLException(200097, "该装修单已分配报价员，无需重复分配");
 		}
 
 		// 3. 获取装修单类型和公司部门信息
@@ -146,17 +146,17 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		Integer department = getDesignDeptId(decoration);
 
 		if (decorationType == null) {
-			throw new FLException(-1, "装修单类型不能为空");
+			throw new FLException(200092, "装修单类型不能为空");
 		}
 
 		if (company == null) {
-			throw new FLException(-1, "装修单公司信息不能为空");
+			throw new FLException(200093, "装修单公司信息不能为空");
 		}
 
 		// 4. 检查预算配置是否启用
 		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfig(company, department);
 		if (config == null || config.getEnabled() != QuotationAssignConfigPO.ENABLED_ENABLED_INT) {
-			throw new FLException(-1, "该公司/部门未启用预算员自动分配功能");
+			throw new FLException(200101, "该公司/部门未启用预算员自动分配功能");
 		}
 
 		// 5. 如果是手动模式，直接进入待分配队列
@@ -190,16 +190,16 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// ========== 参数校验 ==========
 		String orderId = quotationAssignVO.getOrderId();
 		if (orderId == null || orderId.trim().isEmpty()) {
-			throw new FLException(-1, "装修单号不能为空");
+			throw new FLException(140093, "装修单号不能为空");
 		}
 
 		if (quotationAssignVO.getQuoter() == null || quotationAssignVO.getQuoter().getUserId() == null) {
-			throw new FLException(-1, "预算员ID不能为空");
+			throw new FLException(200091, "预算员ID不能为空");
 		}
 
 		UserPO assigner = userDao.queryUserByUserId(userId);
 		if (assigner == null) {
-			throw new FLException(-1, "分配人不存在");
+			throw new FLException(200095, "分配人不存在");
 		}
 
 		// ========== 业务逻辑开始 ==========
@@ -207,7 +207,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 1. 查询装修单
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
-			throw new FLException(-1, "装修单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
@@ -217,12 +217,12 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 2. 查询预算员规则（新模型：按 userId 查询唯一规则）
 		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(quotationAssignVO.getQuoter().getUserId());
 		if (userRule == null) {
-			throw new FLException(-1, "预算员规则不存在");
+			throw new FLException(200099, "预算员规则不存在");
 		}
 
 		// 3. 验证公司是否匹配（通过 items 检查该预算员是否覆盖此公司）
 		if (!hasMatchingItem(userRule, decoration.getCompany())) {
-			throw new FLException(-1, "预算员不支持该公司");
+			throw new FLException(200100, "预算员不支持该公司");
 		}
 
 		// 4. 执行分配
@@ -238,16 +238,16 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// ========== 参数校验 ==========
 		String orderId = quotationAssignVO.getOrderId();
 		if (orderId == null || orderId.trim().isEmpty()) {
-			throw new FLException(-1, "装修单号不能为空");
+			throw new FLException(140093, "装修单号不能为空");
 		}
 
 		if (quotationAssignVO.getQuoter() == null || quotationAssignVO.getQuoter().getUserId() == null) {
-			throw new FLException(-1, "预算员ID不能为空");
+			throw new FLException(200091, "预算员ID不能为空");
 		}
 
 		UserPO assigner = userDao.queryUserByUserId(userId);
 		if (assigner == null) {
-			throw new FLException(-1, "分配人不存在");
+			throw new FLException(200095, "分配人不存在");
 		}
 
 		// ========== 业务逻辑开始 ==========
@@ -255,29 +255,29 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 1. 查询装修单
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
-			throw new FLException(-1, "装修单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		// 2. 检查是否已分配报价员
 		String oldBudgetUid = getQuoteterUid(decoration);
 		if (oldBudgetUid == null) {
-			throw new FLException(-1, "该装修单尚未分配报价员，请使用手动分配功能");
+			throw new FLException(200102, "该装修单尚未分配报价员，请使用手动分配功能");
 		}
 
 		// 3. 如果新旧预算员相同，无需重新分配
 		if (oldBudgetUid.equals(quotationAssignVO.getQuoter().getUserId())) {
-			throw new FLException(-1, "新旧预算员相同，无需重新分配");
+			throw new FLException(200103, "新旧预算员相同，无需重新分配");
 		}
 
 		// 4. 查询新预算员规则（新模型：按 userId 查询唯一规则）
 		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(quotationAssignVO.getQuoter().getUserId());
 		if (userRule == null) {
-			throw new FLException(-1, "新预算员规则不存在");
+			throw new FLException(200104, "新预算员规则不存在");
 		}
 
 		// 5. 验证公司是否匹配（通过 items 检查）
 		if (!hasMatchingItem(userRule, decoration.getCompany())) {
-			throw new FLException(-1, "新预算员不支持该公司");
+			throw new FLException(200105, "新预算员不支持该公司");
 		}
 
 		// 6. 释放旧预算员状态（新模型：按 userId 查询唯一规则）
@@ -308,7 +308,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// ========== 参数校验 ==========
 		String orderId = quotationAssignVO.getOrderId();
 		if (orderId == null || orderId.trim().isEmpty()) {
-			throw new FLException(-1, "装修单号不能为空");
+			throw new FLException(140093, "装修单号不能为空");
 		}
 
 		// ========== 业务逻辑开始 ==========
@@ -316,7 +316,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 1. 查询装修单，获取释放的预算员信息
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
-			throw new FLException(-1, "装修单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		QuotationAssignRequestPO currentRequest = quotationAssignRequestDao.queryQuotationAssignRequestForAssigned(orderId);
@@ -326,7 +326,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		if (currentRequest.getUser() == null) {
-			throw new FLException(-1, "该装修单未分配报价员");
+			throw new FLException(200098, "该装修单未分配报价员");
 		}
 
 		String budgetUid = currentRequest.getUser().getUserId();
@@ -424,9 +424,9 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		QuotationAssignRequestPO existRequest = quotationAssignRequestDao.queryQuotationAssignRequestForActive(orderId);
 		if (existRequest != null) {
 			if (existRequest.getStatus() == QuotationAssignRequestPO.STATUS_ASSIGNED_INT) {
-				throw new FLException(-1, "该装修单已分配报价员，无需重复分配");
+				throw new FLException(200097, "该装修单已分配报价员，无需重复分配");
 			}
-			throw new FLException(-1, "已加入待分配队列，请等待分配");
+			throw new FLException(200106, "已加入待分配队列，请等待分配");
 		}
 
 		QuotationAssignRequestPO request = new QuotationAssignRequestPO();
@@ -533,11 +533,11 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// ========== 参数校验 ==========
 		String orderId = quotationAssignVO.getOrderId();
 		if (orderId == null || orderId.trim().isEmpty()) {
-			throw new FLException(-1, "装修单号不能为空");
+			throw new FLException(140093, "装修单号不能为空");
 		}
 
 		if (quotationAssignVO.getQuoter() == null || quotationAssignVO.getQuoter().getUserId() == null) {
-			throw new FLException(-1, "目标预算员不能为空");
+			throw new FLException(200094, "目标预算员不能为空");
 		}
 
 		// ========== 业务逻辑开始 ==========
@@ -545,35 +545,35 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		// 1. 查询装修单
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
 		if (decoration == null) {
-			throw new FLException(-1, "装修单不存在");
+			throw new FLException(140013, "装修单不存在");
 		}
 
 		// 2. 查询分配队列中已分配的请求（status=2）
 		QuotationAssignRequestPO request = quotationAssignRequestDao.queryQuotationAssignRequestForAssigned(orderId);
 		if (request == null) {
-			throw new FLException(-1, "该装修单未分配报价员，无法转交");
+			throw new FLException(200107, "该装修单未分配报价员，无法转交");
 		}
 
 		// 3. 验证转出人是否为当前预算员（可选，根据业务需要决定是否强制）
 		UserPO transferUser = userDao.queryUserByUserId(userId);
 		if (transferUser == null) {
-			throw new FLException(-1, "操作人不存在");
+			throw new FLException(200096, "操作人不存在");
 		}
 
 		// 4. 不能转交给自己
 		if (request.getUser() != null && transferUser.getUid() == request.getUser().getUid()) {
-			throw new FLException(-1, "不能转交给自己");
+			throw new FLException(200108, "不能转交给自己");
 		}
 
 		// 5. 查询目标预算员规则
 		QuotationAssignUserRulePO targetUserRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(quotationAssignVO.getQuoter().getUserId());
 		if (targetUserRule == null) {
-			throw new FLException(-1, "目标预算员规则不存在");
+			throw new FLException(200109, "目标预算员规则不存在");
 		}
 
 		// 6. 验证目标预算员是否支持该公司（通过 items 检查）
 		if (!hasMatchingItem(targetUserRule, decoration.getCompany())) {
-			throw new FLException(-1, "目标预算员不支持该公司");
+			throw new FLException(200110, "目标预算员不支持该公司");
 		}
 
 		// 7. 查询原预算员规则，更新任务数
