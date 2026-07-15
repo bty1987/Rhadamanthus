@@ -1,5 +1,6 @@
 package com.fanglin.core.interceptor;
 
+import org.hibernate.exception.LockAcquisitionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,10 +22,17 @@ public class LoginInterceptor extends AbstractInterceptor {
 
 		try {
 			invocation.invoke();
+		} catch (LockAcquisitionException e) {
+			invocation.getStack().setValue("errorCode", "-2");
+			invocation.getStack().setValue("errorMsg", "数据冲突,请重新再试!");
+		} catch (FLException e) {
+			invocation.getStack().setValue("errorCode", e.getCode());
+			invocation.getStack().setValue("errorMsg", e.getErrorMessage());
 		} catch (Exception e) {
-			if (FLExceptionResolver.resolve(invocation, e)) {
-				LogUtils.logging(logger, e, actionName, "common");
-			}
+			invocation.getStack().setValue("errorCode", "110000");
+			invocation.getStack().setValue("errorMsg", "系统繁忙,请稍后重试");
+
+			LogUtils.logging(logger, e, actionName, "common");
 		}
 
 		return Action.SUCCESS;

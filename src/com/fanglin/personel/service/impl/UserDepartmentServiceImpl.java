@@ -78,7 +78,7 @@ public class UserDepartmentServiceImpl implements UserDepartmentService {
 			DepartmentPO departmentPO = departmentDao.get(did);
 
 			if (departmentPO == null) {
-				throw new FLException(-1, "部门不存在");
+				throw new FLException(310001, "部门不存在");
 			}
 
 			userDepartmentDao.save(new UserDepartmentPO(uid, departmentPO, operater));

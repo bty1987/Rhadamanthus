@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsStatics;
+import org.hibernate.exception.LockAcquisitionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -179,10 +180,17 @@ public class AccessInterceptor extends AbstractInterceptor {
 					}
 				}
 			}
+		} catch (LockAcquisitionException e) {
+			stack.setValue("errorCode", "-2");
+			stack.setValue("errorMsg", "数据冲突,请重新再试!");
+		} catch (FLException e) {
+			stack.setValue("errorCode", e.getCode());
+			stack.setValue("errorMsg", e.getErrorMessage());
 		} catch (Exception e) {
-			if (FLExceptionResolver.resolve(invocation, e)) {
-				LogUtils.logging(logger, e, actionName, userId, ip);
-			}
+			stack.setValue("errorCode", "110000");
+			stack.setValue("errorMsg", "系统繁忙,请稍后重试");
+
+			LogUtils.logging(logger, e, actionName, userId, ip);
 		}
 
 		return Action.SUCCESS;
