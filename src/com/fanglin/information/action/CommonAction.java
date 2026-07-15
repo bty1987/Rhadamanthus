@@ -22,7 +22,7 @@ import com.fanglin.information.vo.VpaymentVO;
 import com.fanglin.information.vo.VprizeVO;
 import com.fanglin.information.vo.VticketVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class CommonAction extends BaseListAction {

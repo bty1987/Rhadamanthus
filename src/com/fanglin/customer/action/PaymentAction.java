@@ -26,7 +26,7 @@ import com.fanglin.customer.vo.ProxyPaymentVO;
 import com.fanglin.customer.vo.SalesPaymentVO;
 import com.fanglin.customer.vo.ServicePaymentVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller("PaymentOrderAction")
 public class PaymentAction extends BaseListAction {

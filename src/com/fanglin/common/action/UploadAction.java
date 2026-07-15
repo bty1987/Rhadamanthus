@@ -30,7 +30,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.utils.UUIDUtil;
 import com.opensymphony.xwork2.ActionSupport;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class UploadAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {

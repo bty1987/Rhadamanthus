@@ -16,7 +16,7 @@ import com.fanglin.store.vo.EvaluateVO;
 import com.fanglin.store.vo.MorderVO;
 import com.fanglin.store.vo.MuserVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class EvaluateAction extends BaseListAction {

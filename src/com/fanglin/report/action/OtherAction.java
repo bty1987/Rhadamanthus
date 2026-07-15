@@ -15,7 +15,7 @@ import com.fanglin.information.service.VawardService;
 import com.fanglin.information.service.VpaymentService;
 import com.fanglin.information.service.VticketService;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class OtherAction extends BaseListAction {

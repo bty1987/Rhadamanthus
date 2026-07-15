@@ -12,7 +12,7 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class ApprovalCommonAction extends BaseListAction {

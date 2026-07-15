@@ -14,7 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.MuserCouponService;
 import com.fanglin.store.vo.MuserCouponVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class MuserCouponAction extends BaseListAction {

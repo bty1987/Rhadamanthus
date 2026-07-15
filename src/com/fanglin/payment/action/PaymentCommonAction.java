@@ -27,7 +27,7 @@ import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.payment.vo.PaytranVO;
 import com.fanglin.payment.vo.SalesPaymentVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class PaymentCommonAction extends BaseListAction {

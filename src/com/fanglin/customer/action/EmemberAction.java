@@ -12,7 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.EmemberService;
 import com.fanglin.customer.vo.EmemberVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class EmemberAction extends BaseListAction {

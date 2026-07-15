@@ -14,7 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.ConversationService;
 import com.fanglin.customer.vo.ConversationVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class ConversationAction extends BaseListAction {

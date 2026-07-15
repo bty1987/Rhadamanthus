@@ -292,3 +292,57 @@ UPDATE communion.operation SET through = 1 WHERE operation IN ('受影响的接�
 | `src/com/fanglin/system/po/OperationPO.java` | operation 实体，`through`/`type` 常量定义 |
 | `src/com/fanglin/system/po/RoleOperationPO.java` | roleoperation 实体 |
 | `src/com/fanglin/system/dao/impl/RoleOperationDaoImpl.java` | 查询方法 `queryRoleOperation(rid, oid, company)` |
+
+---
+
+## 八、拦截器合并迁移运维指南（login/common → base）
+
+### 背景
+
+原 49 个 Action（9 个 login 包 + 40 个 common 包）各自走 LoginInterceptor / CommonInterceptor 专属拦截器。本次迁移将其全部改为 `@ParentPackage("base")`，统一走 AccessInterceptor，通过 operation 表 `through=1`(PASS) 维持原放行行为。
+
+- LoginInterceptor / CommonInterceptor 类和 struts.xml 的 login/common package 定义**保留不删**，作为回滚兜底。
+- BaseAction.java 的 `@ParentPackage("common")` **不动**（基类，不被直接路由）。
+
+### 上线前必须执行的 SQL
+
+```sql
+-- 登记原 login/common 包的 186 个接口到 operation 表, through=1 放行
+-- 脚本路径: dbs/operation_register_migrated_actions.sql
+-- 幂等设计, 可重复执行
+source dbs/operation_register_migrated_actions.sql;
+```
+
+> ⚠️ **此 SQL 必须在部署新 jar 之前执行**。否则这 49 个 Action 改走 AccessInterceptor 后，因 operation 表无记录（through=null）落入默认强校验分支，全部报"登陆超时"。
+
+### 验证
+
+部署后逐类验证：
+1. **登录页**：`doLogin.do` 能否正常登录
+2. **验证码**：`queryVode.do` 能否取到验证码图片
+3. **C 端商城**：`pageCart.do` / `addCart.do` 等能否正常使用
+4. **支付回调**：`yspayCallback.do` / `fadadaCallback.do` 能否被正常回调
+5. **钉钉配置**：`requestDDConfig.do` / `queryDDUserInfo.do`
+
+### 后续收紧策略
+
+这 186 个接口登记时 `through=1`（放行），后续运维可逐个收紧：
+
+| through 值 | 行为 | 适用接口 |
+|------------|------|---------|
+| 1 (PASS) | 完全放行，不校验 | 当前状态（登录入口、回调、C端无登录态接口） |
+| 2 (COMMON) | 校验 authentication 能解密 + userId 存在 | 需登录但免细粒度权限的内部接口 |
+| 0 (验证) | 完整校验：authentication + roleoperation | 已配好 roleoperation 的接口 |
+
+> ⚠️ **C 端接口（store/customer 包）不能直接改 through=2**：through=2 会调 `queryUserByUserId`，C 端顾客的 userId 不在员工表会抛 220005"员工不存在"。C 端接口如需收紧，应通过 through=0 + 专用服务账号 roleoperation 控制，或保持 through=1。
+
+### 回滚
+
+若迁移后某接口异常，单独回滚该 Action：
+
+```java
+// 把对应 Action 的 @ParentPackage 改回原值
+@ParentPackage("login")   // 或 "common"
+```
+
+回滚即时生效，operation 表登记的数据无害，无需清理。旧 package 定义和拦截器类均保留。

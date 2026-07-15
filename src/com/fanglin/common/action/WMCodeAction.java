@@ -24,7 +24,7 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.LogUtils;
 import com.fanglin.utils.WMCodeUtil;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class WMCodeAction extends BaseAction {

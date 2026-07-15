@@ -15,7 +15,7 @@ import com.fanglin.store.service.CartService;
 import com.fanglin.store.vo.CartVO;
 import com.fanglin.store.vo.MuserVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class CartAction extends BaseListAction {

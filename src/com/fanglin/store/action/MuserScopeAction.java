@@ -19,7 +19,7 @@ import com.fanglin.store.vo.MorderItemVO;
 import com.fanglin.store.vo.MorderVO;
 import com.fanglin.store.vo.MuserVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class MuserScopeAction extends BaseListAction {

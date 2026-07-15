@@ -12,7 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.CouponService;
 import com.fanglin.store.vo.CouponVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class CouponAction extends BaseListAction {

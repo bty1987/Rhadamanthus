@@ -23,7 +23,7 @@ import com.fanglin.store.vo.MgoodsVO;
 import com.fanglin.store.vo.MpriceVO;
 import com.fanglin.store.vo.PictureVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class MgoodScopeAction extends BaseListAction {

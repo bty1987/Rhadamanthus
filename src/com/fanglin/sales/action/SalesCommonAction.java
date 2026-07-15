@@ -15,7 +15,7 @@ import com.fanglin.sales.service.SalesActivityItemService;
 import com.fanglin.sales.vo.SalesActivityItemVO;
 import com.fanglin.sales.vo.SalesVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class SalesCommonAction extends BaseListAction {

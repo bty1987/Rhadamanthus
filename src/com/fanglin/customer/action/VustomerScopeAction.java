@@ -18,7 +18,7 @@ import com.fanglin.customer.vo.VscoreVO;
 import com.fanglin.customer.vo.VustomerNetVO;
 import com.fanglin.customer.vo.VustomerVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class VustomerScopeAction extends BaseListAction {

@@ -24,7 +24,7 @@ import com.fanglin.core.action.BaseAction;
 import com.fanglin.factory.service.MonitorService;
 import com.fanglin.factory.vo.MonitorVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class MonitorAction extends BaseAction {

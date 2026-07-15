@@ -25,7 +25,7 @@ import com.fanglin.factory.service.LoginInfoService;
 import com.fanglin.utils.QRCodeUtil;
 import com.fanglin.utils.SystemConfig;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class LoginInfoAction extends BaseListAction {

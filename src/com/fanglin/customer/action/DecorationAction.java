@@ -19,7 +19,7 @@ import com.fanglin.customer.vo.DecorationHolonomyVO;
 import com.fanglin.customer.vo.DecorationVO;
 import com.fanglin.data.common.vo.TalkingVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller("CusDecorationAction")
 public class DecorationAction extends BaseListAction {

@@ -12,7 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.GroupService;
 import com.fanglin.customer.vo.GroupVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class GroupAction extends BaseListAction {

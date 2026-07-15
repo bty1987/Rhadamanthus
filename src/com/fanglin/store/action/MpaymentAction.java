@@ -13,7 +13,7 @@ import com.fanglin.store.service.MpaymentService;
 import com.fanglin.store.vo.MpaymentVO;
 import com.fanglin.store.vo.MuserVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class MpaymentAction extends BaseListAction {

@@ -20,7 +20,7 @@ import com.fanglin.personel.vo.MacontrolVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.SystemConfig;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class FactoryAction extends BaseListAction {

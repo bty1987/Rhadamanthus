@@ -12,7 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.BackgroundService;
 import com.fanglin.customer.vo.BackgroundVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class BackgroundAction extends BaseListAction {
