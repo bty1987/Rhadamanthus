@@ -67,7 +67,7 @@ public class SecretAction extends BaseListAction {
 			run.exec(cmd);
 		} catch (Exception e) {
 			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
+			setErrorMsg("系统繁忙,请稍后重试");
 		}
 
 		return SUCCESS;
