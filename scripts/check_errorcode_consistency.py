@@ -70,10 +70,12 @@ def parse_error_md():
             if not m:
                 continue
             code, msg = m.group(1), m.group(2).strip()
-            # 跳过表头行、模块分隔行(如 | Construction |  |)、reserved 空位
+            # 跳过表头行、模块分隔行(如 | Construction |  |)、reserved/deprecated 空位
             if not re.match(r"^-?\d+$", code):
                 continue
             if msg == "reserved" or msg == "":
+                continue
+            if msg.startswith("deprecated:"):
                 continue
             # 跳过模块名分隔行(码列是英文单词)
             if re.match(r"^[A-Za-z]+$", code):
