@@ -107,7 +107,7 @@ public class MaterialBalanceServiceImpl implements MaterialBalanceService {
 		}
 
 		if (materialBalancePO.getStatus() != MaterialBalancePO.STATUS_PRE_BALANCE_INT) {
-			throw new FLException(180019, "主材结算信息状态错误 ");
+			throw new FLException(180019, "主材结算信息状态错误");
 		}
 
 		materialBalancePO.setVbalance(materialBalanceVO.getVbalance());
@@ -126,7 +126,7 @@ public class MaterialBalanceServiceImpl implements MaterialBalanceService {
 		}
 
 		if (materialBalancePO.getStatus() != MaterialBalancePO.STATUS_PRE_BALANCE_INT) {
-			throw new FLException(180019, "主材结算信息状态错误 ");
+			throw new FLException(180019, "主材结算信息状态错误");
 		}
 
 		materialBalancePO.setVbalanceTime(DateUtil.getDateToTimestamp(new Date()));
@@ -146,7 +146,7 @@ public class MaterialBalanceServiceImpl implements MaterialBalanceService {
 		}
 
 		if (materialBalancePO.getStatus() == MaterialBalancePO.STATUS_FINISH_INT) {
-			throw new FLException(180019, "主材结算信息状态错误 ");
+			throw new FLException(180019, "主材结算信息状态错误");
 		}
 		materialBalancePO.setPost(materialBalanceVO.getBalance());
 		materialBalanceDao.update(materialBalancePO);
@@ -164,7 +164,7 @@ public class MaterialBalanceServiceImpl implements MaterialBalanceService {
 		}
 
 		if (materialBalancePO.getStatus() != MaterialBalancePO.STATUS_VENDER_BALANCE_INT) {
-			throw new FLException(180019, "主材结算信息状态错误 ");
+			throw new FLException(180019, "主材结算信息状态错误");
 		}
 
 		materialBalancePO.setPoster(userDao.queryUserByUserId(userId));
