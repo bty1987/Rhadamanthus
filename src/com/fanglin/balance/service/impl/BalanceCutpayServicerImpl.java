@@ -167,7 +167,7 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 		BalanceCutpayPO balanceCutpayPO = balanceCutpayDao.get(balanceCutpayVO.getBcid());
 
 		if (balanceCutpayPO == null) {
-			throw new FLException(350023, "结算扣款不存在");
+			throw new FLException(350033, "结算扣款不存在");
 		}
 
 		if (balanceCutpayVO.getBalance() == null) {
@@ -203,7 +203,7 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 		BalanceCutpayPO balanceCutpayPO = balanceCutpayDao.get(balanceCutpayVO.getBcid());
 
 		if (balanceCutpayPO == null) {
-			throw new FLException(350023, "结算扣款不存在");
+			throw new FLException(350033, "结算扣款不存在");
 		}
 
 		if (balanceCutpayVO.getBalance() == null) {
@@ -244,7 +244,7 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 		BalanceCutpayPO balanceCutpayPO = balanceCutpayDao.get(balanceCutpayVO.getBcid());
 
 		if (balanceCutpayPO == null) {
-			throw new FLException(350023, "结算扣款不存在");
+			throw new FLException(350033, "结算扣款不存在");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);

@@ -84,7 +84,7 @@ public class BalanceSelectionItemServiceImpl implements BalanceSelectionItemServ
 		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(bsid);
 
 		if (balanceSelectionPO == null) {
-			throw new FLException(350027, "结算选材单不存在");
+			throw new FLException(350031, "结算选材单不存在");
 		}
 
 		// 转换为 VO

@@ -184,7 +184,7 @@ public class PaymentServiceImpl implements PaymentService {
 		List<Short> approvalStatus = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
 		ApprovalPO existApproval = approvalDao.queryApprovalByChange(approvalStatus, ApprovalPO.APPROVAL_TYPE_PAYMENT_WITHDRAW_INT, paymentVO.getOrderId());
 		if (existApproval != null) {
-			throw new FLException(240004, "存在审批中的预付款提现,不可操作");
+			throw new FLException(240076, "存在审批中的预付款提现,不可操作");
 		}
 
 		long customerId = paymentVO.getCustomer().getCid();
@@ -360,7 +360,7 @@ public class PaymentServiceImpl implements PaymentService {
 		List<Short> approvalStatus = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
 		ApprovalPO existApproval = approvalDao.queryApprovalByChange(approvalStatus, ApprovalPO.APPROVAL_TYPE_PAYMENT_WITHDRAW_INT, paymentVO.getOrderId());
 		if (existApproval != null) {
-			throw new FLException(240004, "存在审批中的预付款提现,不可操作");
+			throw new FLException(240076, "存在审批中的预付款提现,不可操作");
 		}
 
 		long customerId = paymentVO.getCustomer().getCid();

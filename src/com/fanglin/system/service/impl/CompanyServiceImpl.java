@@ -100,11 +100,11 @@ public class CompanyServiceImpl implements CompanyService {
 		CompanyPO companyPO = companyDao.get(decode(companyVO.getCid()));
 
 		if (companyPO == null) {
-			throw new FLException(110020, "系统正在维护");
+			throw new FLException(110034, "系统正在维护");
 		}
 
 		if (companyPO.getStatus() != CompanyPO.STATUS_ENABLE_INT) {
-			throw new FLException(110020, "系统正在维护");
+			throw new FLException(110034, "系统正在维护");
 		}
 
 		BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid", "drganization", "srganization"));

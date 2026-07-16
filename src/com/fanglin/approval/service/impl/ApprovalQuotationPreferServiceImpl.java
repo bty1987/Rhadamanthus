@@ -180,7 +180,7 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 
 			// 校验: 活动优惠额 不能大于 活动类型总额
 			if (approvalQuotationPreferPO.getActivityProfit() > extensionActivityTotal) {
-				throw new FLException(240005, "活动优惠额不能大于活动类型总额");
+				throw new FLException(240072, "活动优惠额不能大于活动类型总额");
 			}
 
 			quotationPreferPO.setActivityProfit(approvalQuotationPreferPO.getActivityProfit());

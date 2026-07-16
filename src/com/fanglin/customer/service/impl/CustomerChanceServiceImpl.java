@@ -836,7 +836,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		CustomerSourcePO customerSourcePO = customerChancePO.getSource();
 
 		if (customerSourcePO == null) {
-			throw new FLException(330074, "客户资源不存在");
+			throw new FLException(330094, "客户资源不存在");
 		}
 
 		if (customerSourcePO.getStatus() != CustomerSourcePO.STATUS_CONFIRM_INT) {
@@ -920,7 +920,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		CustomerSourcePO customerSourcePO = customerChancePO.getSource();
 
 		if (customerSourcePO == null) {
-			throw new FLException(330074, "客户资源不存在");
+			throw new FLException(330094, "客户资源不存在");
 		}
 
 		// 如果前端传了 house.hid，优先使用前端传入的（支持直接初审时修改楼盘/楼号）

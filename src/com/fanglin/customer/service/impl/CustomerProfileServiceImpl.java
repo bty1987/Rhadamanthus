@@ -115,7 +115,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 		CustomerProfilePO customerProfilePO = customerProfileDao.get(customerProfileVO.getCpid());
 
 		if (customerProfilePO == null) {
-			throw new FLException(330087, "客户画像不存在");
+			throw new FLException(330112, "客户画像不存在");
 		}
 
 		customerProfileVO = customerProfilePO.ptv(new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO()));
@@ -134,7 +134,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 		}
 
 		if (customerProfileVO.getItems() == null) {
-			throw new FLException(330087, "客户画像不存在");
+			throw new FLException(330112, "客户画像不存在");
 		}
 
 		CustomerProfilePO customerProfilePO = new CustomerProfilePO();
@@ -280,7 +280,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 	public void handleCustomerProfile(CustomerProfileVO customerProfileVO) throws FLException {
 
 		if (customerProfileVO.getItems() == null) {
-			throw new FLException(330087, "客户画像不存在");
+			throw new FLException(330112, "客户画像不存在");
 		}
 
 		List<CustomerProfileItemVO> customerProfileItems = customerProfileVO.getItems();

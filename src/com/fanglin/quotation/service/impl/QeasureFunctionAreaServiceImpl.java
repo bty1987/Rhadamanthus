@@ -93,7 +93,7 @@ public class QeasureFunctionAreaServiceImpl implements QeasureFunctionAreaServic
 		FunctionAreaPO functionAreaPO = functionAreaDao.get(qeasureFunctionAreaVO.getFaid());
 
 		if (functionAreaPO == null) {
-			throw new FLException(130096, "功能区不存在");
+			throw new FLException(130187, "功能区不存在");
 		}
 
 		List<FunctionAreaOtemPO> functionAreaOtemPOs = functionAreaOtemDao.queryFunctionAreaOtemByFaid(qeasureFunctionAreaVO.getFaid());

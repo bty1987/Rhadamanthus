@@ -55,7 +55,7 @@ public class ApprovalCommonServiceImpl implements ApprovalCommonService {
 		}
 
 		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
-			throw new FLException(240009, "审批状态不可操作");
+			throw new FLException(240077, "审批状态不可操作");
 		}
 
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_CONFIRM_INT);
@@ -76,7 +76,7 @@ public class ApprovalCommonServiceImpl implements ApprovalCommonService {
 		}
 
 		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
-			throw new FLException(240009, "审批状态不可操作");
+			throw new FLException(240077, "审批状态不可操作");
 		}
 
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REJECT_INT);

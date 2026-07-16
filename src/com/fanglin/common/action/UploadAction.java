@@ -98,7 +98,7 @@ public class UploadAction extends ActionSupport implements ServletRequestAware, 
 			errorCode = 0;
 		} catch (Exception e) {
 			logger.error("OSS 上传失败 [bucket={}, fileName={}]", ossProperties.getBucket(), fileName, e);
-			throw new FLException(110017, "文件上传失败");
+			throw new FLException(110039, "文件上传失败");
 		} finally {
 			if (inputStream != null) {
 				try {

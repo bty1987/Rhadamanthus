@@ -52,7 +52,7 @@ public class DecorationActivityRecordServiceImpl implements DecorationActivityRe
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityRecordVO.getDecorationActivityItem().getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "装修活动物品不存在");
+			throw new FLException(140101, "装修活动物品不存在");
 		}
 
 		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO();

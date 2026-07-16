@@ -74,7 +74,7 @@ public class ApprovalDecorationCustomerServiceImpl implements ApprovalDecoration
 		CustomerPO customerPO = customerDao.get(customerId);
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
@@ -111,7 +111,7 @@ public class ApprovalDecorationCustomerServiceImpl implements ApprovalDecoration
 		CustomerPO customerPO = customerDao.get(approvalDecorationCustomerPO.getCustomerId());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		String customerName = approvalDecorationCustomerPO.getNewCustomerName();

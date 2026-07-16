@@ -105,7 +105,7 @@ public class StorehouseServiceImpl implements StorehouseService {
 		StorehousePO storehousePO = storehouseDao.queryStroehouseByCode(storehouseVO.getCode());
 
 		if (storehousePO != null) {
-			throw new FLException(260012, "仓库编号已存在");
+			throw new FLException(260073, "仓库编号已存在");
 		}
 
 		storehousePO = new StorehousePO();

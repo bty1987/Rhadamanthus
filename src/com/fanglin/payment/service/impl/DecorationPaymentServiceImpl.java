@@ -275,7 +275,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 						throw new FLException(150040, String.format("设计费金额不能超过%s元", designFeeLimitConfig.getValue()));
 					}
 				} catch (NumberFormatException e) {
-					throw new FLException(150041, "设计费金额配置格式错误");
+					throw new FLException(150091, "设计费金额配置格式错误");
 				}
 			}
 		}
@@ -319,7 +319,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		List<PaymentScaleItemPO> paymentScaleItems = paymentScaleitemDao.queryPaymentScaleItemByPsid(psid);
 
 		if (paymentScaleItems.size() <= 0) {
-			throw new FLException(150037, "款项比例不正确");
+			throw new FLException(150093, "款项比例不正确");
 		}
 
 		// 获取当前订单的活动项的总额
@@ -553,7 +553,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		// int count2 = decorationPaymentDao.countDecorationPayment(orderId, new ArrayList<Short>(), Arrays.asList(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT), Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT));
 		//
 		// if (decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_DEAL_INT && count1 == 1 && count2 > 0) {
-		// throw new FLException(140035, "增减款状态不可操作");
+		// throw new FLException(140098, "增减款状态不可操作");
 		// } 验证尾款交款过程以及增项款是否已交款
 
 		if (decorationPO.getStatus() == DecorationPO.STATUS_INIT_INT) {

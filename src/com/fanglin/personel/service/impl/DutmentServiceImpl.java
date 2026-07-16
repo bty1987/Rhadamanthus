@@ -112,7 +112,7 @@ public class DutmentServiceImpl implements DutmentService {
 		DutmentPO dutmentPO = dutmentDao.get(dutmentVO.getDid());
 
 		if (dutmentPO == null) {
-			throw new FLException(130051, "定岗信息不存在");
+			throw new FLException(130169, "定岗信息不存在");
 		}
 
 		dutmentPO.setLimit(dutmentVO.getLimit());

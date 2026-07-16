@@ -98,7 +98,7 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		OccessoriesItemPO occessoriesItemPO = occessoriesItemDao.get(occessoriesItemVO.getOiid());
 
 		if (occessoriesItemPO == null) {
-			throw new FLException(260025, "辅料单不存在");
+			throw new FLException(260080, "辅料单不存在");
 		}
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesItemPO.getOid());
@@ -127,7 +127,7 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		OccessoriesItemPO occessoriesItemPO = occessoriesItemDao.get(occessoriesItemVO.getOiid());
 
 		if (occessoriesItemPO == null) {
-			throw new FLException(260025, " 辅料项不存在");
+			throw new FLException(260081, "辅料项不存在");
 		}
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesItemPO.getOid());

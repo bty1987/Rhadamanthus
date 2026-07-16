@@ -82,7 +82,7 @@ public class HardwareItemServiceImpl implements HardwareItemService {
 		HardwareItemPO hardwareItemPO = hardwareItemDao.get(hardwareItemVO.getHiid());
 
 		if (hardwareItemPO == null) {
-			throw new FLException(220005, "五金项不存在");
+			throw new FLException(220031, "五金项不存在");
 		}
 
 		hardwareItemDao.delete(hardwareItemPO);

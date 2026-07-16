@@ -84,13 +84,13 @@ public class A20260303Action extends BaseListAction {
 
 		// 参数必填验证
 		if (name == null || name.trim().isEmpty()) {
-			throw new FLException(400001, "楼盘名称不能为空");
+			throw new FLException(400009, "楼盘名称不能为空");
 		}
 		if (city == null || city.trim().isEmpty()) {
-			throw new FLException(400002, "城市名称不能为空");
+			throw new FLException(400015, "城市名称不能为空");
 		}
 		if (proper == null || proper.trim().isEmpty()) {
-			throw new FLException(400003, "区域名称不能为空");
+			throw new FLException(400018, "区域名称不能为空");
 		}
 
 		// 解析 rule 参数（JSON 字符串）
@@ -99,7 +99,7 @@ public class A20260303Action extends BaseListAction {
 			try {
 				ruleArray = JSONArray.parseArray(rule);
 			} catch (Exception e) {
-				throw new FLException(400004, "规则格式不正确，必须是JSON数组格式");
+				throw new FLException(400023, "规则格式不正确，必须是JSON数组格式");
 			}
 		}
 

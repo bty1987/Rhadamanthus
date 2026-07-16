@@ -115,7 +115,7 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationAccountVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(130014, "订单不存在");
+			throw new FLException(130180, "订单不存在");
 		}
 
 		if (decorationPO.getStatus() != DecorationPO.STATUS_SIGNED_INT) {
@@ -150,7 +150,7 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationAccountVO.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(130014, "订单不存在");
+			throw new FLException(130180, "订单不存在");
 		}
 
 		if (decorationPO.getStatus() != DecorationPO.STATUS_SIGNED_INT) {
@@ -251,7 +251,7 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 		cecorationVO.setUnionId(decorationVO.getCustomer().getNo());
 
 		if (decorationVO.getCustomer().getNo() != null && decorationService.queryDecoration(cecorationVO) == null) {
-			throw new FLException(130115, "装修单未绑定");
+			throw new FLException(130172, "装修单未绑定");
 		}
 
 		if (decorationAccountVO.getDaid() == null) {

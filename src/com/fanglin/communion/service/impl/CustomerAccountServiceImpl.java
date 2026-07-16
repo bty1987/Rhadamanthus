@@ -101,7 +101,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 		CustomerAccountPO customerAccountPO = customerAccountDao.get(customerAccountVO.getCaid());
 
 		if (customerAccountPO == null) {
-			throw new FLException(230001, "客户银行账户不存在");
+			throw new FLException(230030, "客户银行账户不存在");
 		}
 
 		BeanUtil.copyPropertie(customerAccountVO, customerAccountPO, "cid", "defaults", "status", "createTime");
@@ -121,7 +121,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 		CustomerAccountPO customerAccountPO = customerAccountDao.get(customerAccountVO.getCaid());
 
 		if (customerAccountPO == null) {
-			throw new FLException(230001, "客户银行账户不存在");
+			throw new FLException(230030, "客户银行账户不存在");
 		}
 
 		short wasDefault = customerAccountPO.getDefaults();
@@ -151,7 +151,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 		CustomerAccountPO customerAccountPO = customerAccountDao.get(customerAccountVO.getCaid());
 
 		if (customerAccountPO == null) {
-			throw new FLException(230001, "客户银行账户不存在");
+			throw new FLException(230030, "客户银行账户不存在");
 		}
 
 		if (customerAccountPO.getStatus() == CustomerAccountPO.STATUS_DISABLE) {

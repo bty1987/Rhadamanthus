@@ -111,13 +111,13 @@ public class A20260404ServiceImpl implements A20260404Service {
 				// 2. 检查供应商数量限制
 				SystemConfigPO userlimit = systemConfigDao.querySystemConfig("supplierlimit", company);
 				if (supplierDao.countSupplierByCompany(company) >= (userlimit == null ? 100 : Integer.valueOf(userlimit.getValue()))) {
-					throw new FLException(190008, "供应商数已达上限");
+					throw new FLException(190036, "供应商数已达上限");
 				}
 
 				// 3. 获取默认部门（从 systemConfig 获取 supplierDept 配置）
 				SystemConfigPO deptConfig = systemConfigDao.querySystemConfig("supplierDept", company);
 				if (deptConfig == null) {
-					throw new FLException(310002, "供应商部门配置不存在(supplierDept)");
+					throw new FLException(310004, "供应商部门配置不存在(supplierDept)");
 				}
 				DepartmentPO departmentPO = departmentDao.get(Integer.valueOf(deptConfig.getValue()));
 				if (departmentPO == null) {
@@ -127,14 +127,14 @@ public class A20260404ServiceImpl implements A20260404Service {
 				// 4. 获取默认角色（从 systemConfig 获取 supplier 角色ID）
 				SystemConfigPO roleConfig = systemConfigDao.querySystemConfig("supplier");
 				if (roleConfig == null) {
-					throw new FLException(230010, "供应商角色配置不存在(supplier)");
+					throw new FLException(230029, "供应商角色配置不存在(supplier)");
 				}
 				RolePO rolePO = new RolePO(Integer.valueOf(roleConfig.getValue()));
 
 				// 5. 获取默认职位（从 systemConfig 获取 supplierDuty 配置）
 				SystemConfigPO dutyConfig = systemConfigDao.querySystemConfig("supplierDuty");
 				if (dutyConfig == null) {
-					throw new FLException(230011, "供应商职位配置不存在(supplierDuty)");
+					throw new FLException(230027, "供应商职位配置不存在(supplierDuty)");
 				}
 				DutyPO dutyPO = dutyDao.get(Integer.valueOf(dutyConfig.getValue()));
 				if (dutyPO == null) {

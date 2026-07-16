@@ -175,7 +175,7 @@ public class ApprovalFlowEngineServiceImpl implements ApprovalFlowEngineService 
 
 		ApprovalTaskPO task = approvalTaskDao.get(taskId);
 		if (task == null) {
-			throw new FLException(240009, "审批任务不存在");
+			throw new FLException(240078, "审批任务不存在");
 		}
 
 		checkAssignee(task, userId);
@@ -228,7 +228,7 @@ public class ApprovalFlowEngineServiceImpl implements ApprovalFlowEngineService 
 
 		ApprovalTaskPO task = approvalTaskDao.get(taskId);
 		if (task == null) {
-			throw new FLException(240009, "审批任务不存在");
+			throw new FLException(240078, "审批任务不存在");
 		}
 
 		checkAssignee(task, userId);
@@ -264,7 +264,7 @@ public class ApprovalFlowEngineServiceImpl implements ApprovalFlowEngineService 
 
 		ApprovalTaskPO task = approvalTaskDao.get(taskId);
 		if (task == null) {
-			throw new FLException(240009, "审批任务不存在");
+			throw new FLException(240078, "审批任务不存在");
 		}
 
 		checkAssignee(task, userId);
@@ -468,10 +468,10 @@ public class ApprovalFlowEngineServiceImpl implements ApprovalFlowEngineService 
 
 	private void checkAssignee(ApprovalTaskPO task, String userId) throws FLException {
 		if (task.getAssigneeId() == null || !task.getAssigneeId().equals(userId)) {
-			throw new FLException(240010, "无权操作此审批任务");
+			throw new FLException(240079, "无权操作此审批任务");
 		}
 		if (task.getStatus() != ApprovalTaskPO.STATUS_PENDING_INT) {
-			throw new FLException(240010, "审批任务已处理,不可重复操作");
+			throw new FLException(240080, "审批任务已处理,不可重复操作");
 		}
 	}
 

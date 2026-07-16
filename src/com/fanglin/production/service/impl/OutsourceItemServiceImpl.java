@@ -54,7 +54,7 @@ public class OutsourceItemServiceImpl implements OutsourceItemService {
 		OutsourcePO outsourcePO = (OutsourcePO) outsourceDao.get(outsource.getOid());
 
 		if (outsourcePO == null) {
-			throw new FLException(220004, "外协单不存在");
+			throw new FLException(220030, "外协单不存在");
 		}
 		
 		for (OutsourceItemVO outsourceItemVO : outsourceItems) {

@@ -153,7 +153,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 		SurveyTemplatePO surveyTemplatePO = surveyTemplateDao.get(stid);
 
 		if (surveyTemplatePO == null) {
-			throw new FLException(130096, "调研模版不存在");
+			throw new FLException(130186, "调研模版不存在");
 		}
 
 		surveyTemplatePO.setName(surveyTemplateVO.getName());
@@ -202,7 +202,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 		SurveyTemplatePO surveyTemplatePO = surveyTemplateDao.get(surveyTemplateVO.getStid());
 
 		if (surveyTemplatePO == null) {
-			throw new FLException(130096, "调研模版不存在");
+			throw new FLException(130186, "调研模版不存在");
 		}
 
 		if (surveyTemplateVO.getStatus() != null) {
@@ -224,7 +224,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 		SurveyTemplatePO surveyTemplatePO = surveyTemplateDao.get(surveyTemplateVO.getStid());
 
 		if (surveyTemplatePO == null) {
-			throw new FLException(130096, "调研模版不存在");
+			throw new FLException(130186, "调研模版不存在");
 		}
 
 		surveyTemplateDao.delete(surveyTemplatePO);
@@ -241,7 +241,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 		SurveyTemplatePO surveyTemplatePO = surveyTemplateDao.get(surveyTemplate.getStid());
 
 		if (surveyTemplatePO == null) {
-			throw new FLException(130096, "调研模版不存在");
+			throw new FLException(130186, "调研模版不存在");
 		}
 		SurveyTemplatePO surveyTemplateNO = new SurveyTemplatePO();
 

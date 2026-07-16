@@ -186,7 +186,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(workerSalaryVO.getCsid());
 
 			if (constructionSchedulePO.getPlanStatus() == 2) {
-				throw new FLException(280008, "预估工费已锁定,不可创建工费");
+				throw new FLException(280015, "预估工费已锁定,不可创建工费");
 			}
 
 			if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_FINISH_INT) {
@@ -212,7 +212,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			List<Short> twotypes = Arrays.asList(WorkerSalaryPO.TWOTYPE_SALARY_INT, WorkerSalaryPO.TWOTYPE_ADDITME_INT, WorkerSalaryPO.TWOTYPE_PROPER_INT);
 
 			if (twotypes.contains(workerSalaryVO.getTwotype()) && Arith.add(workerSalaryDao.amountWorkerSalary(cid, constructionSchedulePO.getNode().getCnid(), twotypes), workerSalaryVO.getMoney()) > Arith.add(normriceItemDao.amountNormriceItemForSalary(quotationPO.getQid(), constructionSchedulePO.getNode().getCnid()), constructionSchedulePO.getSalaryLimit())) {
-				throw new FLException(280007, "工程节点工费已达上限");
+				throw new FLException(280014, "工程节点工费已达上限");
 			}
 
 			constructionPO.setSalaryTotal(salaryTotal);

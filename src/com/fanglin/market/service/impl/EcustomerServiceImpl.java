@@ -62,10 +62,10 @@ public class EcustomerServiceImpl implements EcustomerService {
 		if ((securityCode != null || "".equals(securityCode)) && (verifyCode != null || "".equals(verifyCode))) {
 			try {
 				if (!verifyCode.equals(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
-					throw new FLException(330010, "报名失败,验证码错误");
+					throw new FLException(330100, "报名失败,验证码错误");
 				}
 			} catch (Exception e) {
-				throw new FLException(330010, "报名失败,验证码错误");
+				throw new FLException(330100, "报名失败,验证码错误");
 			}
 		}
 

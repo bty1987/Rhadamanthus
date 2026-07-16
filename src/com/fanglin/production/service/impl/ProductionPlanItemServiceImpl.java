@@ -57,7 +57,7 @@ public class ProductionPlanItemServiceImpl implements ProductionPlanItemService 
 		ProductionPlanPO productionPlanPO = productionPlanDao.get(productionPlanItemVO.getProductionPlan().getPpid());
 
 		if (productionPlanPO == null) {
-			throw new FLException(220008, "该生产计划单不存在");
+			throw new FLException(220035, "该生产计划单不存在");
 		}
 
 		ProductionPlanItemPO productionPlanItemPO = new ProductionPlanItemPO(new ProductionPlanPO());
@@ -76,7 +76,7 @@ public class ProductionPlanItemServiceImpl implements ProductionPlanItemService 
 		ProductionPlanItemPO productionPlanItemPO = productionPlanItemDao.get(productionPlanItemVO.getPpiid());
 
 		if (productionPlanItemPO == null) {
-			throw new FLException(220008, "该生产计划项不存在");
+			throw new FLException(220036, "该生产计划项不存在");
 		}
 
 		productionPlanItemDao.delete(productionPlanItemPO);

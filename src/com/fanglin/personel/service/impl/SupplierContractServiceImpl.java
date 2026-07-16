@@ -214,11 +214,11 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 		SupplierContractPO supplierContractPO = supplierContractDao.get(supplierContractVO.getScid());
 
 		if (supplierContractPO == null) {
-			throw new FLException(130002, "合同不存在");
+			throw new FLException(130179, "合同不存在");
 		}
 
 		if (supplierContractPO.getStatus() != UserContractPO.STATUS_SIGN_INT) {
-			throw new FLException(130028, "合同不可操作");
+			throw new FLException(130185, "合同不可操作");
 		}
 
 		supplierContractPO.setStatus(DecorationContractPO.STATUS_FILE_INT);

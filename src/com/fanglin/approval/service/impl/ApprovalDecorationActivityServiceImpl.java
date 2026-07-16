@@ -156,7 +156,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			AwardStockPO awardStockPO = awardStockDao.get(approvalDecorationActivityItemPO.getAsid());
 
 			if (awardStockPO == null) {
-				throw new FLException(240003, "奖品不存在");
+				throw new FLException(240075, "奖品不存在");
 			}
 
 			DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();

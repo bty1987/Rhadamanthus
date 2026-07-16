@@ -518,7 +518,7 @@ public class Signature {
 			}
 		} catch (Exception e) {
 			logger.error("签章处理失败, path=" + path + ", error=" + e.getMessage(), e);
-			throw new FLException(130027, "客户认证失败,获取签章失败");
+			throw new FLException(130167, "客户认证失败,获取签章失败");
 		}
 
 		// JSONObject data = response.getJSONObject("data");

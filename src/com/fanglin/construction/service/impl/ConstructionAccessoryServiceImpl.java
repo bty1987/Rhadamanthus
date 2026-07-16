@@ -66,7 +66,7 @@ public class ConstructionAccessoryServiceImpl implements ConstructionAccessorySe
 		ConstructionPO constructionPO = constructionDao.get(constructionAccessoryVO.getCid());
 		
 		if(constructionPO == null){
-			throw new FLException(120020, "工程单不存在");
+			throw new FLException(120038, "工程单不存在");
 		}
 		
 		ConstructionAccessoryPO constructionAccessoryPO = new ConstructionAccessoryPO(new AoodsPO());

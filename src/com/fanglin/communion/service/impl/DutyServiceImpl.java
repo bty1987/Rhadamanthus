@@ -148,7 +148,7 @@ public class DutyServiceImpl implements DutyService {
 			// 手动指定编号，检查唯一性
 			DutyPO existingCode = dutyDao.queryDutyByCode(dutyVO.getCode());
 			if (existingCode != null) {
-				throw new FLException(130017, "编号已存在");
+				throw new FLException(130175, "编号已存在");
 			}
 			dutyPO.setCode(dutyVO.getCode().trim());
 		}
@@ -174,7 +174,7 @@ public class DutyServiceImpl implements DutyService {
 			if (!newCode.equals(dutyPO.getCode())) {
 				DutyPO existingCode = dutyDao.queryDutyByCode(newCode);
 				if (existingCode != null && existingCode.getDid() != dutyPO.getDid()) {
-					throw new FLException(130017, "编号已存在");
+					throw new FLException(130175, "编号已存在");
 				}
 			}
 		}

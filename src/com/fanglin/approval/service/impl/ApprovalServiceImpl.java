@@ -424,15 +424,15 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 
 		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_APPROVAL_INT) {
-			throw new FLException(240009, "审批状态不可操作");
+			throw new FLException(240077, "审批状态不可操作");
 		}
 
 		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_REFUSE_INT) {
-			throw new FLException(240009, "审批状态不可操作");
+			throw new FLException(240077, "审批状态不可操作");
 		}
 
 		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
-			throw new FLException(240009, "审批状态不可操作");
+			throw new FLException(240077, "审批状态不可操作");
 		}
 		approvalPO.setAnnotate(approvalVO.getAnnotate());
 
@@ -454,15 +454,15 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 
 		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_APPROVAL_INT) {
-			throw new FLException(240009, "审批状态不可操作");
+			throw new FLException(240077, "审批状态不可操作");
 		}
 
 		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_REFUSE_INT) {
-			throw new FLException(240009, "审批状态不可操作");
+			throw new FLException(240077, "审批状态不可操作");
 		}
 
 		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
-			throw new FLException(240009, "审批状态不可操作");
+			throw new FLException(240077, "审批状态不可操作");
 		}
 
 		approvalPO.setAnnotate(approvalVO.getAnnotate());
@@ -479,7 +479,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
 
 		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT) {
-			throw new FLException(240001, "审批状态不可操作");
+			throw new FLException(240071, "审批状态不可操作");
 		}
 
 		short type = approvalPO.getType();
@@ -574,11 +574,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 	private void checkReceiver(ApprovalPO approvalPO, String userId) throws FLException {
 
 		if (approvalPO.getReceiver() == null) {
-			throw new FLException(240010, "审批单未指派审批人");
+			throw new FLException(240081, "审批单未指派审批人");
 		}
 
 		if (!approvalPO.getReceiver().getUserId().equals(userId)) {
-			// throw new FLException(240010, "无权审批此审批单");
+			// throw new FLException(240082, "无权审批此审批单");
 		}
 	}
 

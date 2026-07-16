@@ -101,7 +101,7 @@ public class DrawlineProfileServiceImpl implements DrawlineProfileService {
 		DrawlineProfilePO drawlineProfilePO = drawlineProfileDao.get(drawlineProfileVO.getDpid());
 
 		if (drawlineProfilePO == null) {
-			throw new FLException(330087, "放线配置不存在");
+			throw new FLException(330111, "放线配置不存在");
 		}
 
 		drawlineProfileVO = drawlineProfilePO.ptv(new DrawlineProfileVO(new ArrayList<DrawlineProfileItemVO>(), new UserBaseVO()));
@@ -120,7 +120,7 @@ public class DrawlineProfileServiceImpl implements DrawlineProfileService {
 		}
 
 		if (drawlineProfileVO.getItems() == null) {
-			throw new FLException(330087, "放线配置不存在");
+			throw new FLException(330111, "放线配置不存在");
 		}
 
 		DrawlineProfilePO drawlineProfilePO = new DrawlineProfilePO();
@@ -275,7 +275,7 @@ public class DrawlineProfileServiceImpl implements DrawlineProfileService {
 	@Transactional(rollbackFor = Exception.class)
 	public void handleDrawlineProfile(DrawlineProfileVO drawlineProfileVO) throws FLException {
 		if (drawlineProfileVO == null || drawlineProfileVO.getItems() == null) {
-			throw new FLException(330087, "放线配置不存在");
+			throw new FLException(330111, "放线配置不存在");
 		}
 
 		List<DrawlineProfileItemVO> drawlineProfileItems = drawlineProfileVO.getItems();

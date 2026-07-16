@@ -1136,15 +1136,15 @@ public class PaytranServiceImpl implements PaytranService {
 	public void updateKey(String mchNo, String bsCheckoutPublickey, String bsPrivateKey) throws FLException {
 
 		if (mchNo == null || "".equals(mchNo.trim())) {
-			throw new FLException(150001, "商户号不能为空");
+			throw new FLException(150089, "商户号不能为空");
 		}
 
 		if (bsCheckoutPublickey == null || "".equals(bsCheckoutPublickey.trim())) {
-			throw new FLException(150002, "收银台秘钥不能为空");
+			throw new FLException(150096, "收银台秘钥不能为空");
 		}
 
 		if (bsPrivateKey == null || "".equals(bsPrivateKey.trim())) {
-			throw new FLException(150003, "商户私钥不能为空");
+			throw new FLException(150090, "商户私钥不能为空");
 		}
 
 		try {

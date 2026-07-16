@@ -79,7 +79,7 @@ public class SalesProfileServiceImpl implements SalesProfileService {
 		SalesProfilePO salesProfilePO = salesProfileDao.querySalesProfileByOrderId(salesProfileVO.getOrderId());
 
 		if (salesProfilePO != null) {
-			throw new FLException(370031, "销售满意度信息已存在");
+			throw new FLException(370032, "销售满意度信息已存在");
 		}
 
 		SurveyTemplatePO surveyTemplatePO = surveyTemplateDao.get(salesProfileVO.getTid());

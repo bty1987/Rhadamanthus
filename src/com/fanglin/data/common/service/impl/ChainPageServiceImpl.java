@@ -91,7 +91,7 @@ public class ChainPageServiceImpl implements ChainPageService {
 		List<RoleChainPagePO> RoleChainPagePOs = roleChainPageDao.queryRoleChainPageByCpid(chainPageVO.getCpid());
 		for (RoleChainPagePO roleChainPagePO : RoleChainPagePOs) {
 			if (roleChainPagePO.getChainPage() != null) {
-				throw new FLException(130013, "外链已使用");
+				throw new FLException(130163, "外链已使用");
 			}
 		}
 

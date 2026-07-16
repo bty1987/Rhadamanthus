@@ -140,7 +140,7 @@ public class TranpackServiceImpl implements TranpackService {
 		ProductionPlanPO productionPlanPO = productionPlanDao.get(tranpackVO.getRid());
 
 		if (productionPlanPO == null) {
-			throw new FLException(220008, "计划不存在");
+			throw new FLException(220037, "计划不存在");
 		}
 
 		Integer count = tranpackDao.countTranpackByRid(tranpackVO.getRid());
@@ -156,7 +156,7 @@ public class TranpackServiceImpl implements TranpackService {
 		TranpackPO tranpackPO = tranpackDao.get(tranpackVO.getTid());
 
 		if (tranpackPO == null) {
-			throw new FLException(220023, " 物流包不存在");
+			throw new FLException(220023, "物流包不存在");
 		}
 
 		if (tranpackPO.getStatus() != TranpackPO.STATUS_INIT_SHORT) {
@@ -188,7 +188,7 @@ public class TranpackServiceImpl implements TranpackService {
 		TranpackPO tranpackPO = tranpackDao.get(tranpackVO.getTid());
 
 		if (tranpackPO == null) {
-			throw new FLException(220023, " 物流包不存在");
+			throw new FLException(220023, "物流包不存在");
 		}
 
 		if (tranpackPO.getStatus() != TranpackPO.STATUS_INSTORE_SHORT) {
@@ -218,7 +218,7 @@ public class TranpackServiceImpl implements TranpackService {
 		TranpackPO tranpackPO = tranpackDao.get(tranpackVO.getTid());
 
 		if (tranpackPO == null) {
-			throw new FLException(220023, " 物流包不存在");
+			throw new FLException(220023, "物流包不存在");
 		}
 
 		if (tranpackPO.getStatus() != TranpackPO.STATUS_LOGISTICS_SHORT) {
@@ -251,7 +251,7 @@ public class TranpackServiceImpl implements TranpackService {
 		TranpackPO tranpackPO = tranpackDao.get(tranpackVO.getTid());
 
 		if (tranpackPO == null) {
-			throw new FLException(220023, " 物流包不存在");
+			throw new FLException(220023, "物流包不存在");
 		}
 
 		if (tranpackPO.getStatus() != TranpackPO.STATUS_TRANSPORT_SHORT) {
@@ -284,7 +284,7 @@ public class TranpackServiceImpl implements TranpackService {
 		TranpackPO tranpackPO = tranpackDao.get(tranpackVO.getTid());
 
 		if (tranpackPO == null) {
-			throw new FLException(220023, " 物流包不存在");
+			throw new FLException(220023, "物流包不存在");
 		}
 
 		if (tranpackPO.getStatus() != TranpackPO.STATUS_INSTALLATION_SHORT) {
@@ -312,7 +312,7 @@ public class TranpackServiceImpl implements TranpackService {
 		TranpackPO tranpackPO = tranpackDao.get(tranpackVO.getTid());
 
 		if (tranpackPO == null) {
-			throw new FLException(220023, " 物流包不存在");
+			throw new FLException(220023, "物流包不存在");
 		}
 
 		tranpackPO.setStatus(tranpackVO.getStatus());

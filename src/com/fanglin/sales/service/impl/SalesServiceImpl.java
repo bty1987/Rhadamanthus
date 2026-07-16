@@ -434,7 +434,7 @@ public class SalesServiceImpl implements SalesService {
 		}
 
 		if (total != salesPO.getTotal()) {
-			throw new FLException(260059, "销售单总额不匹配");
+			throw new FLException(260085, "销售单总额不匹配");
 		}
 
 		return 0;
@@ -606,7 +606,7 @@ public class SalesServiceImpl implements SalesService {
 		}
 
 		if (salesPaymentDao.countSalesPayment(salesPO.getSid(), null) > 0) {
-			throw new FLException(150002, "款项已存在");
+			throw new FLException(150095, "款项已存在");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);

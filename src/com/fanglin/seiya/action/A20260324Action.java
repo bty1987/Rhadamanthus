@@ -105,10 +105,10 @@ public class A20260324Action extends BaseListAction {
 
 		// 参数必填验证
 		if (name == null || name.trim().isEmpty()) {
-			throw new FLException(400001, "职位名称不能为空");
+			throw new FLException(400010, "职位名称不能为空");
 		}
 		if (type == null) {
-			throw new FLException(400003, "部门类型不能为空");
+			throw new FLException(400019, "部门类型不能为空");
 		}
 
 		// 调用服务层处理

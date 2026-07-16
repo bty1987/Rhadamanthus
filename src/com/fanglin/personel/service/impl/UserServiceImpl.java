@@ -460,7 +460,7 @@ public class UserServiceImpl implements UserService {
 		SystemConfigPO userlimit = systemConfigDao.querySystemConfig("userlimit", company);
 
 		if (userDao.countUserByCompany(company) >= (userlimit == null ? 100 : Integer.valueOf(userlimit.getValue()))) {
-			throw new FLException(190008, "人员数已达上限, 公司上限");
+			throw new FLException(190035, "人员数已达上限, 公司上限");
 		}
 
 		UserVO userVO = userInfoVO.getUser();
@@ -487,7 +487,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (departmentPO.getIsdet() == DepartmentPO.ISDET_DETMENT_INT && departmentPO.getLimit() < userDao.countUserByDeptId(departmentPO.getDid())) {
-			throw new FLException(190011, "人员数量已达上限, 部门上限");
+			throw new FLException(190037, "人员数量已达上限, 部门上限");
 		}
 
 		DutmentPO dutmentPO = dutmentDao.queryDutmentByDids(userInfoVO.getUser().getDept().getDid(), userInfoVO.getUser().getDuty().getDid());
@@ -495,7 +495,7 @@ public class UserServiceImpl implements UserService {
 		if (departmentPO.getIsdet() == DepartmentPO.ISDET_DETMENT_INT && dutmentPO != null) {
 
 			if (dutmentPO.getNum() >= dutmentPO.getLimit()) {
-				throw new FLException(190011, "人员数量已达上限, 定岗上限");
+				throw new FLException(190038, "人员数量已达上限, 定岗上限");
 			}
 
 			dutmentPO.setNum(dutmentPO.getNum() + 1);
@@ -855,7 +855,7 @@ public class UserServiceImpl implements UserService {
 			newRolePO = roleDao.get(userVO.getRole().getRid());
 
 			if (newRolePO == null) {
-				throw new FLException(230010, "目标角色不存在");
+				throw new FLException(230028, "目标角色不存在");
 			}
 
 			if (roleCO.getRid() == newRolePO.getRid()) {

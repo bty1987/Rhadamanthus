@@ -87,7 +87,7 @@ public class KeyManager {
         try {
             return SystemConfig.getString("encryptIv");
         } catch (Exception e) {
-            throw new FLException(110023, "旧版密钥配置缺失: sysconfig.properties 中缺少 encryptIv");
+            throw new FLException(110031, "旧版密钥配置缺失: sysconfig.properties 中缺少 encryptIv");
         }
     }
 

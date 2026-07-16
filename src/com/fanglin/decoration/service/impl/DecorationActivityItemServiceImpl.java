@@ -115,7 +115,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemVO.getAsid());
 
 		if (awardStockPO == null) {
-			throw new FLException(240003, "奖品不存在");
+			throw new FLException(240075, "奖品不存在");
 		}
 
 		UserPO creater = userDao.queryUserByUserId(userId);
@@ -152,11 +152,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "装修活动物品不存在");
+			throw new FLException(140101, "装修活动物品不存在");
 		}
 
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
-			throw new FLException(140057, "装修活动奖品不可操作");
+			throw new FLException(140102, "装修活动奖品不可操作");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
@@ -203,11 +203,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "装修活动物品不存在");
+			throw new FLException(140101, "装修活动物品不存在");
 		}
 
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
-			throw new FLException(140057, "装修活动奖品不可操作");
+			throw new FLException(140102, "装修活动奖品不可操作");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
@@ -219,7 +219,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT);
 
 		if (!statuses.contains(decorationPO.getStatus())) {
-			throw new FLException(140004, "装修单已签约");
+			throw new FLException(140096, "装修单已签约");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
@@ -248,11 +248,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "装修活动物品不存在");
+			throw new FLException(140101, "装修活动物品不存在");
 		}
 
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
-			throw new FLException(140057, "装修活动奖品不可操作");
+			throw new FLException(140102, "装修活动奖品不可操作");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
@@ -299,11 +299,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "装修活动物品不存在");
+			throw new FLException(140101, "装修活动物品不存在");
 		}
 
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_RECEIVE_INT) {
-			throw new FLException(140057, "装修活动奖品不可操作");
+			throw new FLException(140102, "装修活动奖品不可操作");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
@@ -338,13 +338,13 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "装修活动物品不存在");
+			throw new FLException(140101, "装修活动物品不存在");
 		}
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT });
 
 		if (!status.contains(decorationActivityItemPO.getState())) {
-			throw new FLException(140057, "装修活动奖品不可操作");
+			throw new FLException(140102, "装修活动奖品不可操作");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
@@ -396,13 +396,13 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "装修活动物品不存在");
+			throw new FLException(140101, "装修活动物品不存在");
 		}
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_DISCOUNT_INT });
 
 		if (!status.contains(decorationActivityItemPO.getState())) {
-			throw new FLException(140057, "装修活动奖品不可操作");
+			throw new FLException(140102, "装修活动奖品不可操作");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
@@ -439,11 +439,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "装修活动物品不存在");
+			throw new FLException(140101, "装修活动物品不存在");
 		}
 
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
-			throw new FLException(140057, "装修活动奖品不可操作");
+			throw new FLException(140102, "装修活动奖品不可操作");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
@@ -480,11 +480,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "装修活动物品不存在");
+			throw new FLException(140101, "装修活动物品不存在");
 		}
 
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
-			throw new FLException(140057, "装修活动奖品不可操作");
+			throw new FLException(140102, "装修活动奖品不可操作");
 		}
 
 		// 校验有效期：如果已过有效期则不允许核销
@@ -494,7 +494,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		// 校验是否重复核销：同一装修单orderId下不允许重复核销
 		if (decorationActivityItemDao.countDecorationActivityItem(decorationActivityItemPO.getOrderId(), null, Arrays.asList(DecorationActivityItemPO.STATUS_VERIFY_INT), null, null) > 0) {
-			throw new FLException(140059, "当前装修单已核销过活动奖品，不可重复核销");
+			throw new FLException(140094, "当前装修单已核销过活动奖品，不可重复核销");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());

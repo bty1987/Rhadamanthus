@@ -494,7 +494,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		}
 
 		if (constructionSchedulePO.getPlanStatus() != 0) {
-			throw new FLException(120025, "预估工费已确认,不可重复操作");
+			throw new FLException(120039, "预估工费已确认,不可重复操作");
 		}
 
 		constructionSchedulePO.setPlanSalary(constructionScheduleVO.getPlanSalary());

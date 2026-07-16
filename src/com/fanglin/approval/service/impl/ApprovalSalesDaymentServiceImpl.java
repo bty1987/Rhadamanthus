@@ -65,7 +65,7 @@ public class ApprovalSalesDaymentServiceImpl implements ApprovalSalesDaymentServ
 		SalesPO salesPO = salesDao.get(sid);
 
 		if (salesPO == null) {
-			throw new FLException(330001, "销售单不存在");
+			throw new FLException(330095, "销售单不存在");
 		}
 
 		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_SALESDAYMENT_INT, String.valueOf(sid));
@@ -77,7 +77,7 @@ public class ApprovalSalesDaymentServiceImpl implements ApprovalSalesDaymentServ
 		SalesPaymentPO depositpay = salesPaymentDao.querySalesPayment(sid, Arrays.asList(SalesPaymentPO.TYPE_DEPOSITREFUND_INT));
 
 		if (depositpay != null) {
-			throw new FLException(150037, "定金已存在");
+			throw new FLException(150092, "定金已存在");
 		}
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
@@ -115,7 +115,7 @@ public class ApprovalSalesDaymentServiceImpl implements ApprovalSalesDaymentServ
 		SalesPO salesPO = salesDao.get(sid);
 
 		if (salesPO == null) {
-			throw new FLException(330001, "销售单不存在");
+			throw new FLException(330095, "销售单不存在");
 		}
 
 		SalesPaymentPO depositpay = salesPaymentDao.querySalesPayment(sid, Arrays.asList(SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT));

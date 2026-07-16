@@ -66,7 +66,7 @@ public class SupplierContractProductServiceImpl implements SupplierContractProdu
 		SupplierContractProductPO supplierContractProductPO = supplierContractProductDao.get(supplierContractProduct.getScpid());
 
 		if (supplierContractProductPO == null) {
-			throw new FLException(130077, "产品不存在");
+			throw new FLException(130171, "产品不存在");
 		}
 
 		supplierContractProductDao.delete(supplierContractProductPO);

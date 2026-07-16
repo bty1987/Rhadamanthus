@@ -96,7 +96,7 @@ public class QuotationProfileServiceImpl implements QuotationProfileService {
 		QuotationProfilePO quotationProfilePO = quotationProfileDao.get(quotationProfileVO.getQpid());
 
 		if (quotationProfilePO == null) {
-			throw new FLException(330087, "报价配置不存在");
+			throw new FLException(330113, "报价配置不存在");
 		}
 
 		quotationProfileVO = quotationProfilePO.ptv(new QuotationProfileVO(new ArrayList<QuotationProfileItemVO>(), new UserBaseVO()));
@@ -115,7 +115,7 @@ public class QuotationProfileServiceImpl implements QuotationProfileService {
 		}
 
 		if (quotationProfileVO.getItems() == null) {
-			throw new FLException(330087, "报价配置不存在");
+			throw new FLException(330113, "报价配置不存在");
 		}
 
 		QuotationProfilePO quotationProfilePO = new QuotationProfilePO();
@@ -260,7 +260,7 @@ public class QuotationProfileServiceImpl implements QuotationProfileService {
 	@Transactional(rollbackFor = Exception.class)
 	public void handleQuotationProfile(QuotationProfileVO quotationProfileVO) throws FLException {
 		if (quotationProfileVO == null || quotationProfileVO.getItems() == null) {
-			throw new FLException(330087, "报价配置不存在");
+			throw new FLException(330113, "报价配置不存在");
 		}
 
 		List<QuotationProfileItemVO> quotationProfileItems = quotationProfileVO.getItems();

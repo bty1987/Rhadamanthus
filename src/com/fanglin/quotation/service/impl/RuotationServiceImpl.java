@@ -83,7 +83,7 @@ public class RuotationServiceImpl implements RuotationService {
 		RuotationPO ruotation = ruotationDao.queryRuotationByQid(ruotationVO.getQuotation().getQid());
 
 		if (ruotation != null) {
-			throw new FLException(200099, "退报单已存在");
+			throw new FLException(200112, "退报单已存在");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(ruotationVO.getDecoration().getOrderId());

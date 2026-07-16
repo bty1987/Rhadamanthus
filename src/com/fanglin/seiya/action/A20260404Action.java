@@ -67,16 +67,16 @@ public class A20260404Action extends BaseListAction {
 
 		// 参数必填验证
 		if (userId == null || userId.trim().isEmpty()) {
-			throw new FLException(400001, "供应商编号不能为空");
+			throw new FLException(400011, "供应商编号不能为空");
 		}
 		if (userName == null || userName.trim().isEmpty()) {
-			throw new FLException(400002, "供应商名称不能为空");
+			throw new FLException(400016, "供应商名称不能为空");
 		}
 		if (phone == null || phone.trim().isEmpty()) {
-			throw new FLException(400003, "联系电话不能为空");
+			throw new FLException(400020, "联系电话不能为空");
 		}
 		if (company == null) {
-			throw new FLException(400004, "公司ID不能为空");
+			throw new FLException(400024, "公司ID不能为空");
 		}
 
 		// 调用服务层处理
