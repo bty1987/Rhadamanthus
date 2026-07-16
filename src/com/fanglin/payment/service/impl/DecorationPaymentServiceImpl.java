@@ -636,7 +636,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 			paymentVO = PaymentServiceImpl.advancePaymentBalance(PaymentPO.PAYMENT_DECORETION_PAYMENTNAME_STR, advance, _paymentType, customerAdvance, userId, decorationPaymentPO.getDecoration().getCustomer().getCid(), advancePaymentPO, decorationPO.getOrderId());
 
-			paymentVO.setUniqueid("D" + decorationReceiptPO.getDrId());
+			paymentVO.setUniqueid("D" + decorationPaymentPO.getDpid());
 
 			advancePaymentService.updateAdvancePayment(paymentVO, decorationPO.getCompany());
 		}
@@ -739,7 +739,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		// 生成预付款数据
 		if (advance != null && advance != 0) {
-			paymentService.returnPayment(new PaymentVO().trans(decorationPaymentPO.getDecoration().getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, decorationReceiptPO.getAdvance(), String.format("D%s", decorationReceiptPO.getDrId()), String.format("装修单号:%s,装修预付款", decorationPaymentPO.getDecoration().getOrderId())), userId);
+			paymentService.returnPayment(new PaymentVO().trans(decorationPaymentPO.getDecoration().getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, decorationReceiptPO.getAdvance(), String.format("D%sR", decorationPaymentPO.getDpid()), String.format("装修单号:%s,装修预付款", decorationPaymentPO.getDecoration().getOrderId())), userId);
 		}
 
 		if (DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR.equals(decorationPaymentPO.getPaymentType())) {

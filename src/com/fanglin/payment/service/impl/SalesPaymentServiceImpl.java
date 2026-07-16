@@ -510,6 +510,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 				throw new FLException(150010, "预付款余额不足");
 			}
 
+			paymentService.payPayment(new PaymentVO().trans(sales.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, salesReceiptVO.getAdvance(), String.format("SA%s", salesPayment.getSpid()), String.format("装修单号:%s,销售单:%s,主材预付款", sales.getOrderId(), sales.getNo())), userId);
+
 			salesReceiptPO.setAdvance(salesReceiptVO.getAdvance());
 			salesReceiptPO.setAdvanceType(salesReceiptVO.getAdvanceType());
 		} else {
@@ -554,10 +556,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
 			sales.setFullpayTime(new Timestamp(System.currentTimeMillis()));
 			salesDao.update(sales);
-		}
-
-		if (salesReceiptVO.getAdvanceType() != null) { // 预付款付款
-			paymentService.payPayment(new PaymentVO().trans(sales.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, salesReceiptVO.getAdvance(), String.format("SA%s", salesReceiptPO.getSrId()), String.format("装修单号:%s,销售单:%s,主材预付款", sales.getOrderId(), sales.getNo())), userId);
 		}
 
 		// 更新pos使用的销售点信息的状态
@@ -800,23 +798,23 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150025, "款项金额不正确");
 		}
 
+		SalesPO sales = salesPayment.getSales();
+
+		// 生成预付款相关数据
+		if (salesReceiptVO.getAdvance() != null && salesReceiptVO.getAdvance() > 0) {
+			paymentService.returnPayment(new PaymentVO().trans(sales.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, salesReceiptVO.getAdvance(), String.format("SA%sR", salesPayment.getSpid()), String.format("装修单号:%s,销售单:%s,主材预付款", sales.getOrderId(), sales.getNo())), userId);
+		}
+
 		// type作为保留字段 目前没有什么用处 原本的意思为: 0 收款 1 退款
 		salesReceiptPO.setType(SalesReceiptPO.TYPE_REFUND_INT);
 		salesReceiptPO.setRealMoney(salesReceiptVO.getRealMoney());
 
 		salesReceiptDao.save(salesReceiptPO);
 
-		SalesPO sales = salesPayment.getSales();
-
 		salesPayment.setSalesReceipt(salesReceiptPO);
 		salesPayment.setStatus(SalesPaymentPO.STATUS_PAIDFOR_INT);
 		salesPayment.setCompany(sales.getPompany());
 		salesPaymentDao.update(salesPayment);
-
-		// 生成预付款相关数据
-		if (salesReceiptVO.getAdvance() != null && salesReceiptVO.getAdvance() > 0) {
-			paymentService.returnPayment(new PaymentVO().trans(sales.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, salesReceiptVO.getAdvance(), String.format("SA%s", salesReceiptPO.getSrId()), String.format("装修单号:%s,销售单:%s,主材预付款", sales.getOrderId(), sales.getNo())), userId);
-		}
 
 		if (salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSITREFUND_INT || salesPayment.getType() == SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT) {
 			sales.setDepositpay(0);
