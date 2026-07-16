@@ -37,6 +37,7 @@ import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.utils.BeanUtil;
@@ -390,6 +391,9 @@ public class CustomerServiceImpl implements CustomerService {
 		// 生成客户更新事件
 		messageQueuingDao.save(new MessageQueuingPO().init(null, "updateCustomer", "{\"cid\":" + customerPO.getCid() + ",\"no\":\"" + customerPO.getNo() + "\",\"event\":\"CUSTOMER_UPDATED\"}"));
 
+		// 生成客户更新消息提示
+		messageQueuingDao.save(new MessageCueuingPO().init(null, "updateCustomer", "{\"cid\":" + customerPO.getCid() + ",\"no\":\"" + customerPO.getNo() + "\",\"event\":\"CUSTOMER_UPDATED\"}"));
+
 		// 比对该客户所有 account, 无完全匹配则新建
 		matchCustomerAccount(customerPO);
 
@@ -417,6 +421,9 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.setCompanyBankno(customerVO.getCompanyBankno());
 
 		customerDao.update(customerPO);
+
+		// 生成客户更新消息提示
+		messageQueuingDao.save(new MessageCueuingPO().init(null, "updateCustomerForBase", "{\"cid\":" + customerPO.getCid() + ",\"no\":\"" + customerPO.getNo() + "\",\"event\":\"CUSTOMER_UPDATED\"}"));
 
 		// 比对该客户所有 account, 无完全匹配则新建
 		matchCustomerAccount(customerPO);
@@ -612,6 +619,9 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.setStatus(CustomerPO.STATUS_AUTH_INT);
 
 		customerDao.update(customerPO);
+
+		// 生成客户更新消息提示
+		messageQueuingDao.save(new MessageCueuingPO().init(null, "confirmCustomer", "{\"cid\":" + customerPO.getCid() + ",\"no\":\"" + customerPO.getNo() + "\",\"event\":\"CUSTOMER_UPDATED\"}"));
 
 		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhone(customerPO.getCid(), customerPO.getPhone());
 
