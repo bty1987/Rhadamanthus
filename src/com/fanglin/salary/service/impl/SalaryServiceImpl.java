@@ -107,7 +107,7 @@ public class SalaryServiceImpl implements SalaryService {
 
 		if (salaryPO.getStatus() != SalaryPO.STATUS_BEGIN_INT) {
 
-			throw new FLException(280002, "薪资状态不可操作");
+			throw new FLException(280016, "薪资状态不可操作");
 		}
 
 		salaryPO.setOperateTime(new Timestamp(System.currentTimeMillis()));
@@ -129,7 +129,7 @@ public class SalaryServiceImpl implements SalaryService {
 
 		if (salaryPO.getStatus() != SalaryPO.STATUS_BEGIN_INT) {
 
-			throw new FLException(280002, "薪资状态不可操作");
+			throw new FLException(280016, "薪资状态不可操作");
 		}
 
 		salaryPO.setOperateTime(new Timestamp(System.currentTimeMillis()));
@@ -151,7 +151,7 @@ public class SalaryServiceImpl implements SalaryService {
 
 		if (salaryPO.getStatus() != SalaryPO.STATUS_BEGIN_INT) {
 
-			throw new FLException(280002, "薪资状态不可操作");
+			throw new FLException(280016, "薪资状态不可操作");
 		}
 
 		salaryPO.setOperateTime(new Timestamp(System.currentTimeMillis()));

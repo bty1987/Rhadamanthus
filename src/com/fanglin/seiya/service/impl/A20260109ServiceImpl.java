@@ -69,7 +69,7 @@ public class A20260109ServiceImpl implements A20260109Service {
 			logger.info("ERP事件响应: {}", response);
 
 			if (response == null) {
-				throw new FLException(110000, "ERP事件发布失败: 响应为空");
+				throw new FLException(110033, "ERP事件发布失败: 响应为空");
 			}
 
 			Integer code = response.getInteger("code");

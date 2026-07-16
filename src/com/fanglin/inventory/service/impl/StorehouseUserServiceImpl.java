@@ -74,7 +74,7 @@ public class StorehouseUserServiceImpl implements StorehouseUserService {
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
-			throw new FLException(190005, "员工不存在");
+			throw new FLException(190032, "员工不存在");
 		}
 		
 		int uid = userPO.getUid();

@@ -65,7 +65,7 @@ public class FeedbackComplaintServiceImpl implements FeedbackComplaintService {
 		List<FeedbackComplaintPO> feedbackComplaintPOs = feedbackComplaintDao.queryFeedbackComplaint(feedbackComplaint.getFid());
 
 		if (feedbackComplaintPOs.size() == 1) {
-			throw new FLException(330053, "反馈信息已存在");
+			throw new FLException(330088, "反馈信息已存在");
 		}
 
 		String userId = authentication.getUserId();
@@ -106,11 +106,11 @@ public class FeedbackComplaintServiceImpl implements FeedbackComplaintService {
 		FeedbackComplaintPO feedbackComplaintPO = feedbackComplaintDao.get(feedbackComplaint.getFcid());
 
 		if (feedbackComplaintPO == null) {
-			throw new FLException(330013, "投诉记录不存在");
+			throw new FLException(330092, "投诉记录不存在");
 		}
 
 		if (feedbackComplaintPO.getResults() != FeedbackComplaintPO.RESULTS_COMPLETE) {
-			throw new FLException(330054, "该投诉已完成");
+			throw new FLException(330089, "该投诉已完成");
 		}
 
 		feedbackComplaintPO.setResults(FeedbackComplaintPO.RESULTS_COMPLETE);

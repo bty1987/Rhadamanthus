@@ -385,7 +385,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		if (decorationPaymentPO == null) return 0;
 
 		if (decorationPaymentPO.getPaymentStatus() != DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT) {
-			throw new FLException(140035, "当前增减项款项状态不可操作");
+			throw new FLException(140099, "当前增减项款项状态不可操作");
 		}
 
 		decorationPaymentPO.setReferMoney(Arith.mul(Arith.div(addReducePO.getTotal(), 1000000), 1000000));

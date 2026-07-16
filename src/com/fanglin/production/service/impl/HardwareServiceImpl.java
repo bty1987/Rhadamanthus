@@ -184,7 +184,7 @@ public class HardwareServiceImpl implements HardwareService {
 		}
 
 		if (hardwarePO.getStatus() != HardwarePO.STATUS_INSTORE_SHORT) {
-			throw new FLException(220021, "五金单状态不可操作");
+			throw new FLException(220032, "五金单状态不可操作");
 		}
 
 		UserPO create = userDao.queryUserByUserId(userId);

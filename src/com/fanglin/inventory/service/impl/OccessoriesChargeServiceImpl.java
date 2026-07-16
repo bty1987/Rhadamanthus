@@ -76,14 +76,14 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 		if (occessoriesChargeVO.getOccessories() != null && occessoriesChargeVO.getOccessories().getOid() != null) {
 			OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesChargeVO.getOccessories().getOid());
 			if (occessoriesPO == null) {
-				throw new FLException(260023, "外辅单不存在");
+				throw new FLException(260088, "外辅单不存在");
 			}
 		}
 
 		if (occessoriesChargeVO.getOccessoriesItem() != null && occessoriesChargeVO.getOccessoriesItem().getOiid() != null) {
 			OccessoriesItemPO occessoriesItemPO = occessoriesItemDao.get(occessoriesChargeVO.getOccessoriesItem().getOiid());
 			if (occessoriesItemPO == null) {
-				throw new FLException(260024, "外辅项不存在");
+				throw new FLException(260075, "外辅项不存在");
 			}
 		}
 
@@ -150,7 +150,7 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 		// 获取外辅单ID
 		if (occessoriesChargeVO == null || occessoriesChargeVO.getOccessories() == null
 				|| occessoriesChargeVO.getOccessories().getOid() == null) {
-			throw new FLException(260070, "外辅单ID不能为空");
+			throw new FLException(260077, "外辅单ID不能为空");
 		}
 
 		Long oid = occessoriesChargeVO.getOccessories().getOid();
@@ -158,7 +158,7 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 		// 验证外辅单存在
 		OccessoriesPO occessoriesPO = occessoriesDao.get(oid);
 		if (occessoriesPO == null) {
-			throw new FLException(260023, "外辅单不存在");
+			throw new FLException(260088, "外辅单不存在");
 		}
 
 		// 删除该外辅单的所有旧费用

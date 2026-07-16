@@ -156,7 +156,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 		}
 
 		if (productionPlanPO.getStatus() != ProductionPlanPO.STATUS_CREATE_INT) {
-			throw new FLException(220021, "计划单状态不可操作");
+			throw new FLException(220033, "计划单状态不可操作");
 		}
 
 		UserPO creater = userDao.queryUserByUserId(userId);

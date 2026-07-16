@@ -120,7 +120,7 @@ public class QuotationAssignRequestServiceImpl implements QuotationAssignRequest
 		}
 
 		if (decorationPictureDao.countDecorationPictureForValid(quotationAssignRequestVO.getOrderId(), DecorationPicturePO.TYPE_CAD_INT) == 0) {
-			throw new FLException(110017, "工程文件CAD不能为空");
+			throw new FLException(110038, "工程文件CAD不能为空");
 		}
 
 		// 从 VO 的关联对象中提取 ID

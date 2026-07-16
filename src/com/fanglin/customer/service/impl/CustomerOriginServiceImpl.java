@@ -475,7 +475,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 	public void approveCustomerOrigin(CustomerOriginVO customerOriginVO, int company) throws FLException {
 
 		if (customerOriginVO == null || customerOriginVO.getCsid() <= 0) {
-			throw new FLException(330001, "客源数据不能为空");
+			throw new FLException(330096, "客源数据不能为空");
 		}
 
 		// 查询客源
@@ -514,7 +514,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 	public void tranCustomerOrigin(CustomerOriginVO customerOriginVO, int company) throws FLException {
 
 		if (customerOriginVO == null || customerOriginVO.getCsid() <= 0) {
-			throw new FLException(330001, "客源数据不能为空");
+			throw new FLException(330096, "客源数据不能为空");
 		}
 
 		// 查询客源

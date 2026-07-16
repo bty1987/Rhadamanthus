@@ -225,7 +225,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		CustomerSourcePO customerSourcePP = customerSourceDao.queryCustomerSource(creater.getUid(), phone, company);
 
 		if (customerSourcePP != null) {
-			// throw new FLException(330071, "客户手机号存在,发生撞尺");
+			// throw new FLException(330103, "客户手机号存在,发生撞尺");
 			customerSourceVO.setCsid(customerSourcePP.getCsid());
 			return;
 		}
@@ -272,7 +272,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		CustomerSourcePO customerSourceOO = customerSourceDao.queryCustomerSource(creater.getUid(), housePO.getHouseNumber(), housePO.getVillage().getVid(), company);
 
 		if (housePO != null && customerSourceOO != null) {
-			// throw new FLException(330071, "客户楼盘楼号存在");
+			// throw new FLException(330102, "客户楼盘楼号存在");
 			customerSourceVO.setCsid(customerSourceOO.getCsid());
 			return;
 		}
@@ -355,7 +355,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		}
 
 		if (housePO != null && customerSourceDao.queryCustomerSource(customerSourcePO.getCreater().getUid(), housePO.getHouseNumber(), housePO.getVillage().getVid(), customerSourcePO.getCompany()) != null) {
-			throw new FLException(330071, "客户楼盘楼号存在");
+			throw new FLException(330102, "客户楼盘楼号存在");
 		}
 
 		if (housePO != null) {
@@ -573,7 +573,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			if (customerUserRuleDao.existCustomerUserRule(company, area) == 0) {
-				throw new FLException(330081, "设计公司无设计师接单");
+				throw new FLException(330104, "设计公司无设计师接单");
 			}
 
 			CustomerConfigRulePO customerConfigRulePO = customerConfigRuleDao.queryCustomerConfigRule(company);
@@ -597,29 +597,29 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_CITY_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, 0, cpid);
 
 				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_COM_INT) {
-					throw new FLException(330081, "无设计师接单"); // 无匹配规则
+					throw new FLException(330105, "无设计师接单"); // 无匹配规则
 				}
 
 				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_AREA_INT) {
-					throw new FLException(330081, "面积段无设计师接单");
+					throw new FLException(330106, "面积段无设计师接单");
 				}
 
 				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_TYPE_INT) {
-					throw new FLException(330081, "部门类型无设计师接单");
+					throw new FLException(330107, "部门类型无设计师接单");
 				}
 
 				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_INT) {
-					throw new FLException(330081, "部门无设计师接单");
+					throw new FLException(330108, "部门无设计师接单");
 				}
 
 				if (customerUserRuleItemPO == null && customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_CITY_INT) {
-					throw new FLException(330081, "城区无设计师接单");
+					throw new FLException(330109, "城区无设计师接单");
 				}
 
 				customerUserRulePO = customerUserRuleDao.get(customerUserRuleItemPO.getCurid());
 
 				if (customerUserRulePO == null) {
-					throw new FLException(330081, "设计师匹配规则不存在");
+					throw new FLException(330110, "设计师匹配规则不存在");
 				}
 
 				if (customerSourceDao.countCustomerSource(customerUserRulePO.getUser().getUid(), customerSourcePO.getPhone(), company) == 0) break;

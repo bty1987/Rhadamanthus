@@ -118,7 +118,7 @@ public class WorksheetServiceImpl implements WorksheetService {
 		}
 
 		if (worksheetPO.getStatus() != WorksheetPO.STATUS_INIT_INT) {
-			throw new FLException(160051, "工单不可操作");
+			throw new FLException(160061, "工单不可操作");
 		}
 
 		UserPO handler = userDao.queryUserByUserId(userId);
@@ -141,7 +141,7 @@ public class WorksheetServiceImpl implements WorksheetService {
 		}
 
 		if (worksheetPO.getStatus() != WorksheetPO.STATUS_INIT_INT) {
-			throw new FLException(160051, "工单不可操作");
+			throw new FLException(160061, "工单不可操作");
 		}
 
 		UserPO handler = userDao.queryUserByUserId(userId);
@@ -165,7 +165,7 @@ public class WorksheetServiceImpl implements WorksheetService {
 		}
 
 		if (worksheetPO.getStatus() != WorksheetPO.STATUS_HANDL_INT) {
-			throw new FLException(160051, "工单不可操作");
+			throw new FLException(160061, "工单不可操作");
 		}
 
 		worksheetPO.setStatus(WorksheetPO.STATUS_FINISH_INT);

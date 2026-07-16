@@ -553,7 +553,7 @@ public class ManifestServiceImpl implements ManifestService {
 			int num = purchaseItemVO.getNum();
 
 			if (purchaseItemPO.getSurplus() < num) {
-				throw new FLException(260026, "采购项项数量不符");
+				throw new FLException(260076, "采购项项数量不符");
 			} else {
 				purchaseItemPO.setSurplus(Arith.sub(purchaseItemPO.getSurplus(), num));
 			}

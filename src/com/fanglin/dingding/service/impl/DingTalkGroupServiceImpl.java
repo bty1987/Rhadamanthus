@@ -155,7 +155,7 @@ public class DingTalkGroupServiceImpl implements DingTalkGroupService {
 		JSONObject json = HttpHelper.httpPost(url, group.template("72b64a73-bf35-42a8-bcaa-5931def6066d"));
 
 		if (json == null) {
-			throw new FLException(270020, "群模版化失败");
+			throw new FLException(270023, "群模版化失败");
 		}
 
 		int errcode = json.getInteger("errcode");

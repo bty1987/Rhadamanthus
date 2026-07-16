@@ -107,7 +107,7 @@ public class WalletardServiceImpl implements WalletardService {
 		}
 		
 		if (walletardPO.getStatus() != WalletardPO.STATUS_ABLE_INT) {
-			throw new FLException(150058, "银行卡状态不可操作");
+			throw new FLException(150094, "银行卡状态不可操作");
 		}
 		
 		walletardPO.setStatus(WalletardPO.STATUS_UNBIND_INT);
@@ -129,7 +129,7 @@ public class WalletardServiceImpl implements WalletardService {
 		List<Short> status = Arrays.asList(WalletardPO.STATUS_INIT_INT, WalletardPO.STATUS_UNBIND_INT);
 		
 		if (!status.contains(walletardPO.getStatus())) {
-			throw new FLException(150058, "银行卡状态不可操作");
+			throw new FLException(150094, "银行卡状态不可操作");
 		}
 		
 		walletardDao.delete(walletardPO);

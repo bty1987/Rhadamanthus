@@ -271,7 +271,7 @@ public class VillageServiceImpl implements VillageService {
 		JSONObject result = HttpUtil.httpGet(apiUrl);
 
 		if (result == null) {
-			throw new FLException(130021, "调用地图API失败");
+			throw new FLException(130181, "调用地图API失败");
 		}
 
 		// 4. 解析返回的经纬度
@@ -282,21 +282,21 @@ public class VillageServiceImpl implements VillageService {
 
 		JSONArray dataArray = result.getJSONArray("data");
 		if (dataArray == null || dataArray.isEmpty()) {
-			throw new FLException(130023, "未找到楼盘位置信息");
+			throw new FLException(130165, "未找到楼盘位置信息");
 		}
 
 		JSONObject firstResult = dataArray.getJSONObject(0);
 		JSONObject location = firstResult.getJSONObject("location");
 
 		if (location == null) {
-			throw new FLException(130024, "地图API返回数据格式错误");
+			throw new FLException(130177, "地图API返回数据格式错误");
 		}
 
 		Double lng = location.getDouble("lng");
 		Double lat = location.getDouble("lat");
 
 		if (lng == null || lat == null) {
-			throw new FLException(130025, "无法获取经纬度坐标");
+			throw new FLException(130166, "无法获取经纬度坐标");
 		}
 
 		// 5. 更新楼盘的x和y字段 (乘以1000000存储为整数)

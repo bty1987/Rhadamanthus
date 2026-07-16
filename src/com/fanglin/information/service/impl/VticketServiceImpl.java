@@ -161,7 +161,7 @@ public class VticketServiceImpl implements VticketService {
 		}
 
 		if (vticketPO.getIscome() == VticketPO.ISCOME_YES_INT) {
-			throw new FLException(160027, "活动票已到场");
+			throw new FLException(160060, "活动票已到场");
 		}
 
 		vticketPO.setIscome(VticketPO.ISCOME_YES_INT);

@@ -92,7 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		customerPO.ptv(customerVO);
@@ -134,7 +134,7 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPO customerPO = customerDao.get(customerPhoneVO.getCid());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		CustomerVO customerVO = customerPO.ptv(new CustomerVO(), CustomerPO.PRIVACY_OPENESS_INT);
@@ -160,7 +160,7 @@ public class CustomerServiceImpl implements CustomerService {
 		List<CustomerPhoneVO> customerPhoneVOs = new ArrayList<CustomerPhoneVO>();
 
 		if (customerPhonePOs.size() == 0) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		for (CustomerPhonePO customerPhonePO : customerPhonePOs) {
@@ -310,7 +310,7 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPO customerPO = customerDao.get(customerPhoneVO.getCid());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		String phone = SensitiveDataHelper.encrypt(customerPhoneVO.getPhone());
@@ -341,11 +341,11 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
-			throw new FLException(130028, "客户状态不可操作");
+			throw new FLException(130184, "客户状态不可操作");
 		}
 
 		BeanUtil.copyProperties(customerVO, customerPO, "phone", "identity");
@@ -405,7 +405,7 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		customerPO.setType(customerVO.getType());
@@ -435,7 +435,7 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		if (customerPhonePO.getDefaults() == CustomerPhonePO.DEFAULTS_ENABLE_INT && customerPhoneVO.getStatus() == CustomerPhonePO.STATUS_DISABLE_INT) {
-			throw new FLException(130024, "默认电话不能禁用，请先设置其他电话为默认");
+			throw new FLException(130176, "默认电话不能禁用，请先设置其他电话为默认");
 		}
 
 		customerPhonePO.setStatus(customerPhoneVO.getStatus());
@@ -468,11 +468,11 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPO customerPO = customerDao.get(customerPhonePO.getCid());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		if (!Arrays.asList(CustomerPO.STATUS_INIT_INT, CustomerPO.STATUS_AUTH_INT, CustomerPO.STATUS_AUTHED_INT).contains(customerPO.getStatus())) {
-			throw new FLException(130028, "客户状态不可操作");
+			throw new FLException(130184, "客户状态不可操作");
 		}
 
 		if (customerPhonePO.getDefaults() == CustomerPhonePO.DEFAULTS_DISABLE_INT) {
@@ -499,11 +499,11 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
-			throw new FLException(130028, "客户状态不可操作");
+			throw new FLException(130184, "客户状态不可操作");
 		}
 
 		if (customerPO.getSignno() == null || "".equals(customerPO.getSignno())) {
@@ -522,7 +522,7 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
@@ -547,11 +547,11 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
-			throw new FLException(130028, "客户状态不可操作");
+			throw new FLException(130184, "客户状态不可操作");
 		}
 
 		if (customerPO.getSignno() == null || "".equals(customerPO.getSignno())) {
@@ -588,11 +588,11 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
-			throw new FLException(130028, "客户状态不可操作");
+			throw new FLException(130184, "客户状态不可操作");
 		}
 
 		JSONObject info = Signature.person(customerPO.getToken());
@@ -654,7 +654,7 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
 		if (customerPO == null) {
-			throw new FLException(130002, "客户信息不存在");
+			throw new FLException(130178, "客户信息不存在");
 		}
 
 		Signature.signature(customerPO.getSignno(), imgbase);

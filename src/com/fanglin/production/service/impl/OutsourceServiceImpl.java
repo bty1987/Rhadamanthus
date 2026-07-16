@@ -115,7 +115,7 @@ public class OutsourceServiceImpl implements OutsourceService {
 		UserPO supplier = userDao.queryUserByUserId(outsourceVO.getSupplier().getUserId());
 
 		if (supplier == null) {
-			throw new FLException(190005, "厂商信息不存在");
+			throw new FLException(190033, "厂商信息不存在");
 		}
 
 		BeanUtil.copyProperties(outsourceVO, outsourcePO, Arrays.asList("production", "creater", "supplier"));

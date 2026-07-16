@@ -129,7 +129,7 @@ public class CustomerCompanyRuleServiceImpl implements CustomerCompanyRuleServic
 			CompanyPO companyPO = companyDao.get(CompanyServiceImpl.decode(customerCompanyRuleVO.getCompany().getCid()));
 
 			if (companyPO == null) {
-				throw new FLException(310001, "公司不存在");
+				throw new FLException(310005, "公司不存在");
 			}
 
 			customerCompanyRulePO.setCompany(companyPO);

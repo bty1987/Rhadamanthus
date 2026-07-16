@@ -121,7 +121,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 		salesItemDao.flush();
 
 		if (salesVO.getTotal() != Arith.add(salesPO.getTotal(), salesItemVO.getTotal())) {
-			throw new FLException(260059, "销售单总额不必配");
+			throw new FLException(260084, "销售单总额不必配");
 		}
 
 		salesPO.setTotal(salesItemDao.amountSalesItem(salesPO.getSid()));
@@ -177,7 +177,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 		SalesItemPO salesItemPO = salesItemDao.get(salesItemVO.getSiid());
 
 		if (salesItemPO == null) {
-			throw new FLException(260023, "销售项不存在");
+			throw new FLException(260087, "销售项不存在");
 		}
 
 		SalesPO salesPO = salesDao.get(salesItemPO.getSid());
@@ -236,7 +236,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 		SalesItemPO salesItemPO = salesItemDao.get(salesItemVO.getSiid());
 
 		if (salesItemPO == null) {
-			throw new FLException(260023, "销售项不存在");
+			throw new FLException(260087, "销售项不存在");
 		}
 
 		SalesPO salesPO = salesDao.get(salesItemPO.getSid());
@@ -264,7 +264,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 		SalesItemPO salesItemPO = salesItemDao.get(salesItemVO.getSiid());
 
 		if (salesItemPO == null) {
-			throw new FLException(260023, "销售项不存在");
+			throw new FLException(260087, "销售项不存在");
 		}
 
 		SalesPO salesPO = salesDao.get(salesItemPO.getSid());

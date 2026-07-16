@@ -93,7 +93,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChanceByCno(cno);
 
 		if (customerChancePO == null) {
-			throw new FLException(330075, "客户线索不存在");
+			throw new FLException(330090, "客户线索不存在");
 		}
 
 		CustomerChanceVO customerChanceVO = new CustomerChanceVO(new CustomerVO(), new HouseVO(new VillageVO()), new CustomerSourceVO(new VillageVO(), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationBusitypeVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
@@ -113,13 +113,13 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 		// 参数必填验证 - 线索编号必填
 		if (leadCode == null || leadCode.trim().isEmpty()) {
-			throw new FLException(400001, "线索编号不能为空");
+			throw new FLException(400012, "线索编号不能为空");
 		}
 
 		// 验证楼盘+楼号必须同时存在
 		if ((village != null && !village.trim().isEmpty()) || (houseNumber != null && !houseNumber.trim().isEmpty())) {
 			if (village == null || village.trim().isEmpty() || houseNumber == null || houseNumber.trim().isEmpty()) {
-				throw new FLException(400002, "楼盘和楼号必须同时提供");
+				throw new FLException(400017, "楼盘和楼号必须同时提供");
 			}
 		}
 
@@ -255,7 +255,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		if (salesmanId != null && !salesmanId.trim().isEmpty()) {
 			UserPO salesmanPO = userDao.queryUserByUserId(salesmanId);
 			if (salesmanPO == null) {
-				throw new FLException(190005, "业务员不存在");
+				throw new FLException(190034, "业务员不存在");
 			}
 
 			// 记录旧业务员信息
@@ -315,7 +315,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 				}
 			}
 		} else {
-			throw new FLException(400003, "请提供查询条件：orderId 或 楼盘+楼号 或 电话");
+			throw new FLException(400021, "请提供查询条件：orderId 或 楼盘+楼号 或 电话");
 		}
 
 		if (decorationPO == null) {
@@ -369,7 +369,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 		if (leadCode != null && !leadCode.trim().isEmpty()) {
 			CustomerChancePO chancePO = customerChanceDao.queryCustomerChanceByCno(leadCode);
 			if (chancePO == null) {
-				throw new FLException(330077, "客户机会不存在");
+				throw new FLException(330091, "客户机会不存在");
 			}
 			if (Arrays.asList(CustomerChancePO.STATUS_DISABLE_INT, CustomerChancePO.STATUS_COMPLETE_INT, CustomerChancePO.STATUS_FINISH_INT).contains(chancePO.getStatus())) {
 				throw new FLException(330077, "客户机会不可操作");
@@ -404,7 +404,7 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 		// 1. 参数校验
 		if (orderId == null || orderId.trim().isEmpty()) {
-			throw new FLException(400001, "装修单号不能为空");
+			throw new FLException(400013, "装修单号不能为空");
 		}
 
 		if (orgId == null) {

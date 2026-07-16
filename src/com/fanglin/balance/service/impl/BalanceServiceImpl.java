@@ -143,7 +143,7 @@ public class BalanceServiceImpl implements BalanceService {
 			}
 
 			if (balancePO.getType() == 0 && accountPO.getSurplus() < accountVO.getMoney()) {
-				throw new FLException(350003, "帐户余额不足");
+				throw new FLException(350030, "帐户余额不足");
 			}
 
 			if (balancePO.getBelonger().getUid() != accountPO.getBelonger().getUid()) {

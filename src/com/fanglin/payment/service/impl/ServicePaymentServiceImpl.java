@@ -165,7 +165,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		DecorationHolonomyPO decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePayment.getDecoration().getOrderId());
 
 		if (decorationHolonomy == null) {
-			throw new FLException(260021, "半价信息不存在");
+			throw new FLException(260086, "半价信息不存在");
 		}
 
 		DecorationPO decoration = decorationHolonomy.getDecoration();
@@ -201,7 +201,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		DecorationHolonomyPO decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
 		if (decorationHolonomy == null) {
-			throw new FLException(260021, "半价信息不存在");
+			throw new FLException(260086, "半价信息不存在");
 		}
 
 		DecorationPO decoration = decorationHolonomy.getDecoration();
@@ -311,7 +311,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		DecorationHolonomyPO decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
 		if (decorationHolonomy == null) {
-			throw new FLException(260021, "半价信息不存在");
+			throw new FLException(260086, "半价信息不存在");
 		}
 
 		long servicePrice = decorationHolonomy.getServicePrice();
@@ -374,7 +374,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		DecorationHolonomyPO decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
 		if (decorationHolonomy == null) {
-			throw new FLException(260021, "半价信息不存在");
+			throw new FLException(260086, "半价信息不存在");
 		}
 
 		if (decorationHolonomy.getServicePaidup() <= 0) {

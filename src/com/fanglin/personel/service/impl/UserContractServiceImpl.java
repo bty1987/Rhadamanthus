@@ -268,11 +268,11 @@ public class UserContractServiceImpl implements UserContractService {
 		UserContractPO userContractPO = userContractDao.get(userContractVO.getUcid());
 
 		if (userContractPO == null) {
-			throw new FLException(130002, "合同不存在");
+			throw new FLException(130179, "合同不存在");
 		}
 
 		if (userContractPO.getStatus() != UserContractPO.STATUS_SIGN_INT) {
-			throw new FLException(130028, "合同不可操作");
+			throw new FLException(130185, "合同不可操作");
 		}
 
 		userContractPO.setStatus(DecorationContractPO.STATUS_FILE_INT);

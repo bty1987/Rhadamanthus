@@ -82,7 +82,7 @@ public class FactoryAction extends BaseListAction {
 			String encrypt = AESHelper.decrypt(licenseSN, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 
 			if (encrypt.split("-").length != 3) {
-				throw new FLException(110008, "验证信息错误1");
+				throw new FLException(110035, "验证信息错误1");
 			}
 
 			String no = encrypt.split("-")[0];
@@ -90,11 +90,11 @@ public class FactoryAction extends BaseListAction {
 			Long timerange = Long.parseLong(encrypt.split("-")[2]);
 
 			if (!licenseNO.equals(no)) {
-				throw new FLException(110008, "验证信息错误2");
+				throw new FLException(110036, "验证信息错误2");
 			}
 
 			if (new Date().getTime() - timestamp > timerange) {
-				throw new FLException(110008, "验证信息错误3");
+				throw new FLException(110037, "验证信息错误3");
 			}
 
 		} catch (FLException e) {

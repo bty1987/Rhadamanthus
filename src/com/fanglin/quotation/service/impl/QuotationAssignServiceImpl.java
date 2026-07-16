@@ -131,7 +131,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
-			throw new FLException(110017, "工程文件CAD不能为空");
+			throw new FLException(110038, "工程文件CAD不能为空");
 		}
 
 		// 2. 检查是否已分配报价员
@@ -211,13 +211,13 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 
 		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
-			throw new FLException(110017, "工程文件CAD不能为空");
+			throw new FLException(110038, "工程文件CAD不能为空");
 		}
 
 		// 2. 查询预算员规则（新模型：按 userId 查询唯一规则）
 		QuotationAssignUserRulePO userRule = quotationAssignUserRuleDao.queryQuotationAssignUserRuleByUserId(quotationAssignVO.getQuoter().getUserId());
 		if (userRule == null) {
-			throw new FLException(200099, "预算员规则不存在");
+			throw new FLException(200111, "预算员规则不存在");
 		}
 
 		// 3. 验证公司是否匹配（通过 items 检查该预算员是否覆盖此公司）

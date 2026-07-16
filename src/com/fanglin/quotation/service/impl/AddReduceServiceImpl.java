@@ -431,7 +431,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 			}
 
 			if (addReducePO.getDpId() != 0) {
-				throw new FLException(150002, "款项已存在");
+				throw new FLException(150095, "款项已存在");
 			}
 
 			if (!addReducePO.getOrderId().equals(orderId)) {

@@ -359,7 +359,7 @@ public class MemberServiceImpl implements MemberService {
 				encodedPhoneList.addAll(SensitiveDataHelper.getAllEncryptedForms(member.getPhone()));
 				resultMap.put(member.getPhone(), new ArrayList<MemberVO>());
 			} else {
-				throw new FLException(130021, "客户电话或装修单号不存在");
+				throw new FLException(130182, "客户电话或装修单号不存在");
 			}
 		}
 
@@ -591,7 +591,7 @@ public class MemberServiceImpl implements MemberService {
 	public int addMemberActivity(MemberActivityVO memberActivityVO, List<String> companys, String userId) throws FLException {
 
 		if (memberActivityVO.getType() == null || memberActivityVO.getType() < 0 || memberActivityVO.getType() > 2) {
-			throw new FLException(130021, "活动类型参数错误");
+			throw new FLException(130183, "活动类型参数错误");
 		}
 
 		UserPO creater = userDao.queryUserByUserId(userId);
@@ -875,7 +875,7 @@ public class MemberServiceImpl implements MemberService {
 		for (DecorationActivityItemPO decorationActivityItemPO : decorationActivityItemPOs) {
 
 			if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
-				throw new FLException(140057, "装修活动奖品不可操作");
+				throw new FLException(140102, "装修活动奖品不可操作");
 			}
 
 			decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
@@ -937,7 +937,7 @@ public class MemberServiceImpl implements MemberService {
 		List<BasePaymentVO> allPayments = getAllPaymentsByOrderId(memberOrderVO.getOrderId());
 
 		if (allPayments == null || allPayments.isEmpty()) {
-			throw new FLException(130006, "客户支付记录不存在");
+			throw new FLException(130174, "客户支付记录不存在");
 		}
 
 		Map<Long, Long> paymentUsedMap = new HashMap<Long, Long>();

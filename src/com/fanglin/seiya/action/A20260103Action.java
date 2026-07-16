@@ -355,10 +355,10 @@ public class A20260103Action extends BaseListAction {
 
 		// 参数必填验证
 		if (name == null || name.trim().isEmpty()) {
-			throw new FLException(400001, "客户名称不能为空");
+			throw new FLException(400007, "客户名称不能为空");
 		}
 		if (phone == null || phone.trim().isEmpty()) {
-			throw new FLException(400002, "客户电话不能为空");
+			throw new FLException(400014, "客户电话不能为空");
 		}
 		if (orgId == null) {
 			throw new FLException(400004, "公司标识不能为空");
@@ -474,7 +474,7 @@ public class A20260103Action extends BaseListAction {
 
 		// 校验分配结果
 		if (result == null || result.getOrderId() == null) {
-			throw new FLException(400001, "分配失败,请检查分配规则");
+			throw new FLException(400008, "分配失败,请检查分配规则");
 		}
 
 		// 封装 data 对象（包含请求参数和返回结果）
@@ -641,7 +641,7 @@ public class A20260103Action extends BaseListAction {
 			throw new FLException(400004, "公司标识不能为空");
 		}
 		if (userId == null || userId.trim().isEmpty()) {
-			throw new FLException(190005, "用户工号不能为空");
+			throw new FLException(190030, "用户工号不能为空");
 		}
 
 		// 使用默认业务类型：电商信息流客源
@@ -672,7 +672,7 @@ public class A20260103Action extends BaseListAction {
 		DepartmentVO departmentVO = new DepartmentVO();
 
 		if (creater.getDept() == null) {
-			throw new FLException(190005, "用户未关联部门");
+			throw new FLException(190031, "用户未关联部门");
 		}
 
 		departmentVO.setDid(creater.getDept().getDid());
@@ -684,7 +684,7 @@ public class A20260103Action extends BaseListAction {
 
 		// 检查规则是否存在
 		if (this.customerDeptRuleVO == null) {
-			throw new FLException(130062, "部门规则不存在");
+			throw new FLException(130170, "部门规则不存在");
 		}
 
 		// 设置规则类型（0:派到公司 1:派到设计分区 2:派到设计部门 3:派到设计师）并放入 data
@@ -716,7 +716,7 @@ public class A20260103Action extends BaseListAction {
 			throw new FLException(400004, "公司标识不能为空");
 		}
 		if (userId == null || userId.trim().isEmpty()) {
-			throw new FLException(190005, "用户工号不能为空");
+			throw new FLException(190030, "用户工号不能为空");
 		}
 
 		// 根据工号查询用户
@@ -738,7 +738,7 @@ public class A20260103Action extends BaseListAction {
 		CustomerCompanyRuleVO queryCompany = new CustomerCompanyRuleVO();
 
 		if (creater.getDept() == null) {
-			throw new FLException(190005, "用户未关联部门");
+			throw new FLException(190031, "用户未关联部门");
 		}
 
 		queryCompany.setDept(creater.getDept());

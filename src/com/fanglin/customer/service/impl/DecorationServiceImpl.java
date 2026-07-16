@@ -238,7 +238,7 @@ public class DecorationServiceImpl implements DecorationService {
 		System.out.println(String.format("Binding Decoration UnionId: %s, OrderId: %s.", unionId, decorationVO.getOrderId()));
 
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
-			throw new FLException(330010, "绑定订单失败,验证码错误");
+			throw new FLException(330101, "绑定订单失败,验证码错误");
 		}
 
 		String phone = null;
@@ -266,7 +266,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<CustomerPO> customerPOs = customerDao.queryCustomer(phoneForms);
 
 		if (customerPOs == null || customerPOs.isEmpty()) {
-			throw new FLException(330009, "无可绑定订单-客户不存在");
+			throw new FLException(330097, "无可绑定订单-客户不存在");
 		}
 
 		CustomerPO customerPO = customerPOs.get(0);
@@ -278,11 +278,11 @@ public class DecorationServiceImpl implements DecorationService {
 		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecoration(decorationVO.getOrderId(), phoneForms);
 
 		if (decorationPO == null) {
-			throw new FLException(330009, "无可绑定订单-订单与客户不匹配");
+			throw new FLException(330098, "无可绑定订单-订单与客户不匹配");
 		}
 
 		if (cecorationDao.queryCusDecorationByOrderId(decorationVO.getOrderId(), unionId) != null) {
-			throw new FLException(330009, "订单已绑定");
+			throw new FLException(330099, "订单已绑定");
 		}
 
 		DecorationPO cecorationPO = new DecorationPO();

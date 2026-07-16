@@ -285,7 +285,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 	public int batchAddFromPool(List<GoodsPoolVO> goodsPools, int company) throws FLException {
 
 		if (goodsPools == null) {
-			throw new FLException(260004, "没有选择商品");
+			throw new FLException(260078, "没有选择商品");
 		}
 
 		for (GoodsPoolVO goodsPoolVO : goodsPools) {
@@ -293,7 +293,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 			List<GoodsPO> Goodes = goodsDao.queryGoodsByGpid(goodsPoolVO.getGpid());
 
 			if (Goodes != null && Goodes.size() > 0) {
-				throw new FLException(260004, "申领的商品已存在");
+				throw new FLException(260079, "申领的商品已存在");
 			}
 
 			GoodsPoolPO goodsPoolPO = goodsPoolDao.get(goodsPoolVO.getGpid());

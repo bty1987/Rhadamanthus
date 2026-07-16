@@ -62,7 +62,7 @@ public class DingTalkDepartmentServiceImpl implements DingTalkDepartmentService 
 		JSONObject json = HttpHelper.httpGet(url);
 
 		if (json == null) {
-			throw new FLException(270007, "获取部门信息失败");
+			throw new FLException(270022, "获取部门信息失败");
 		} else if (json.getInteger("errcode") != 0) {
 			System.out.println(url);
 			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));

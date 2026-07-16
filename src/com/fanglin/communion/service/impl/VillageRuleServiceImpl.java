@@ -67,7 +67,7 @@ public class VillageRuleServiceImpl implements VillageRuleService {
 		if (villageRuleVO.getRule() != null && villageRuleVO.getRule().getId() != 0) {
 			buildingNameRulePO = buildingNameRuleDao.get(villageRuleVO.getRule().getId());
 			if (buildingNameRulePO == null) {
-				throw new FLException(130004, "楼盘命名规则不存在");
+				throw new FLException(130161, "楼盘命名规则不存在");
 			}
 		}
 		// 分支2: 如果未传入规则ID，但传入了rule内容，则根据rule查询或创建
@@ -87,7 +87,7 @@ public class VillageRuleServiceImpl implements VillageRuleService {
 						&& !villageRuleVO.getRule().getBuildingNameRuleId().trim().isEmpty()) {
 					buildingNameRulePO.setBuildingNameRuleId(villageRuleVO.getRule().getBuildingNameRuleId().trim());
 				} else {
-					throw new FLException(130006, "规则编号不能为空");
+					throw new FLException(130173, "规则编号不能为空");
 				}
 
 				buildingNameRulePO.setRule(ruleContent);
@@ -103,7 +103,7 @@ public class VillageRuleServiceImpl implements VillageRuleService {
 				buildingNameRuleDao.save(buildingNameRulePO);
 			}
 		} else {
-			throw new FLException(130005, "请传入规则ID或规则内容");
+			throw new FLException(130162, "请传入规则ID或规则内容");
 		}
 
 		VillageRulePO villageRulePO = new VillageRulePO();

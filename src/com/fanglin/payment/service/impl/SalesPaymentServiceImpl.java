@@ -590,7 +590,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		}
 
 		if (salesPO.getIsAffirm() != SalesPO.ISAFFIRM_AFFIRM_INT || salesPO.getAffirmTime() == null) {
-			throw new FLException(260022, "销售单未客户确认,不可落款");
+			throw new FLException(260074, "销售单未客户确认,不可落款");
 		}
 
 		SalesReceiptVO salesReceiptVO = new SalesReceiptVO();

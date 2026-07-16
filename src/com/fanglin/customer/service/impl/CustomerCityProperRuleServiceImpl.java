@@ -99,7 +99,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 
 			CompanyPO companyPO = companyDao.get(CompanyServiceImpl.decode(customerCityProperRuleVO.getCompany().getCid()));
 			if (companyPO == null) {
-				throw new FLException(310001, "公司不存在");
+				throw new FLException(310005, "公司不存在");
 			}
 			customerCityProperRulePO.setCompany(companyPO);
 		}
@@ -109,7 +109,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 
 			CompanyPO targetCompanyPO = companyDao.get(CompanyServiceImpl.decode(customerCityProperRuleVO.getTargetCompany().getCid()));
 			if (targetCompanyPO == null) {
-				throw new FLException(310001, "目标公司不存在");
+				throw new FLException(310006, "目标公司不存在");
 			}
 			customerCityProperRulePO.setTargetCompany(targetCompanyPO);
 		}
@@ -127,7 +127,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 		if (customerCityProperRuleVO.getUser() != null && customerCityProperRuleVO.getUser().getUid() != null) {
 			UserPO userPO = userDao.get(customerCityProperRuleVO.getUser().getUid());
 			if (userPO == null) {
-				throw new FLException(310001, "用户不存在");
+				throw new FLException(310007, "用户不存在");
 			}
 			customerCityProperRulePO.setUser(userPO);
 		}
@@ -136,7 +136,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 		if (customerCityProperRuleVO.getBusitype() != null && customerCityProperRuleVO.getBusitype().getDbid() != null) {
 			DecorationBusitypePO decorationBusitypePO = decorationBusitypeDao.get(customerCityProperRuleVO.getBusitype().getDbid());
 			if (decorationBusitypePO == null) {
-				throw new FLException(310001, "业务类型不存在");
+				throw new FLException(310008, "业务类型不存在");
 			}
 			customerCityProperRulePO.setBusitype(decorationBusitypePO);
 		}
@@ -181,7 +181,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 
 			CompanyPO targetCompanyPO = companyDao.get(CompanyServiceImpl.decode(customerCityProperRuleVO.getTargetCompany().getCid()));
 			if (targetCompanyPO == null) {
-				throw new FLException(310001, "目标公司不存在");
+				throw new FLException(310006, "目标公司不存在");
 			}
 			customerCityProperRulePO.setTargetCompany(targetCompanyPO);
 		}
@@ -200,7 +200,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 		if (customerCityProperRuleVO.getUser() != null && customerCityProperRuleVO.getUser().getUid() != null) {
 			UserPO userPO = userDao.get(customerCityProperRuleVO.getUser().getUid());
 			if (userPO == null) {
-				throw new FLException(310001, "用户不存在");
+				throw new FLException(310007, "用户不存在");
 			}
 			customerCityProperRulePO.setUser(userPO);
 		}
@@ -209,7 +209,7 @@ public class CustomerCityProperRuleServiceImpl implements CustomerCityProperRule
 		if (customerCityProperRuleVO.getBusitype() != null && customerCityProperRuleVO.getBusitype().getDbid() != null) {
 			DecorationBusitypePO decorationBusitypePO = decorationBusitypeDao.get(customerCityProperRuleVO.getBusitype().getDbid());
 			if (decorationBusitypePO == null) {
-				throw new FLException(310001, "业务类型不存在");
+				throw new FLException(310008, "业务类型不存在");
 			}
 			customerCityProperRulePO.setBusitype(decorationBusitypePO);
 		}

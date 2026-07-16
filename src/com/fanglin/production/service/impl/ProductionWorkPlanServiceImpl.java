@@ -87,7 +87,7 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 		ProductionPlanPO productionPlanPO = productionplanDao.get(productionWorkPlanVO.getPpid());
 
 		if (productionPlanPO == null) {
-			throw new FLException(220008, "生产计划单不存在");
+			throw new FLException(220034, "生产计划单不存在");
 		}
 
 		Integer queryProductionWorkPlanByPpidAWpid = productionWorkPlanDao.queryProductionWorkPlanByPpidAWpid(productionWorkPlanVO.getPpid(), productionWorkPlanVO.getWorkplan().getWpid());
@@ -133,7 +133,7 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 		ProductionPlanPO productionPlanPO = productionplanDao.get(productionWorkPlanVO.getPpid());
 
 		if (productionPlanPO == null) {
-			throw new FLException(220008, "生产计划单不存在");
+			throw new FLException(220034, "生产计划单不存在");
 		}
 
 		ProductionWorkPlanPO productionworkplanPO = productionWorkPlanDao.get(productionWorkPlanVO.getPwpid());

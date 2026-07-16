@@ -82,7 +82,7 @@ public class OalesItemServiceImpl implements OalesItemService {
 
 		// 验证价格
 		if (oalesItemVO.getPrice() == null || oalesItemVO.getPrice() < 0) {
-			throw new FLException(400004, "价格不能为空且不能小于0");
+			throw new FLException(400022, "价格不能为空且不能小于0");
 		}
 
 		// 验证数量

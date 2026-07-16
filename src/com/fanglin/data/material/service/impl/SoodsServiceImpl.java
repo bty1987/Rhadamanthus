@@ -91,7 +91,7 @@ public class SoodsServiceImpl implements SoodsService {
 		BrandPO brandPO = brandDao.queryBrandByBid(goodsPO.getBid());
 
 		if (brandPO == null || brandPO.getSupplier() == null) {
-			throw new FLException(130036, "商品无关联厂商");
+			throw new FLException(130168, "商品无关联厂商");
 		}
 
 		SoodsPO soodsPO = new SoodsPO();

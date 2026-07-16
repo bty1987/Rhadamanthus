@@ -101,7 +101,7 @@ public class DefaultApproverResolver implements ApproverResolver {
 		// 此处返回发起人自身所在部门标识,实际负责人解析需配合 DepartmentPO 扩展
 		Integer deptId = sender.getDept().getDid();
 		if (deptId == null) {
-			throw new FLException(240021, "无法解析部门负责人:部门标识缺失");
+			throw new FLException(240073, "无法解析部门负责人:部门标识缺失");
 		}
 
 		// TODO: 待 DepartmentPO 增加 leader 字段后,改为查询部门负责人
@@ -122,7 +122,7 @@ public class DefaultApproverResolver implements ApproverResolver {
 		Integer roleId = obj.getInteger("roleId");
 
 		if (roleId == null) {
-			throw new FLException(240023, "角色规则缺少 roleId");
+			throw new FLException(240074, "角色规则缺少 roleId");
 		}
 
 		// UserDao 暂无"按角色查用户列表"方法(只有 countUserByRoleId),

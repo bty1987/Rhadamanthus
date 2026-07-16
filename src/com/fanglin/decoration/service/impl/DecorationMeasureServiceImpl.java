@@ -118,7 +118,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 		DecorationMeasurePO decorationMeasure = decorationMeasureDao.queryDecorationMeasure(orderId);
 
 		if (decorationMeasure == null) {
-			throw new FLException(140081, "装修量尺信息不存在");
+			throw new FLException(140095, "装修量尺信息不存在");
 		}
 
 		log.info(String.format("pages/decoration/measure/measure?orderId=%s", orderId));
@@ -152,11 +152,11 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 		}
 
 		if (decorationPO.getSourceStatus() >= decorationMeasureVO.getStatus()) {
-			throw new FLException(140074, "装修量尺不可操作");
+			throw new FLException(140100, "装修量尺不可操作");
 		}
 
 		if (decorationPO.getSourceStatus() == DecorationPO.STATUS_INITIA_INT && decorationMeasureVO.getStatus() == DecorationPO.STATUS_SETTING_OUT_CONFIRMATION_INT) {
-			throw new FLException(140074, "装修量尺不可操作");
+			throw new FLException(140100, "装修量尺不可操作");
 		}
 
 		UserPO designer = decorationPO.getDesigner();
@@ -192,7 +192,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 		DecorationMeasurePO decorationMeasurePO = decorationMeasureDao.get(decorationMeasureVO.getDmid());
 
 		if (decorationMeasurePO == null) {
-			throw new FLException(120014, "不存在该量尺信息");
+			throw new FLException(120040, "不存在该量尺信息");
 		}
 
 		if (decorationMeasurePO.getStatus() != DecorationMeasurePO.STATUS_APPLICATION_INT) {
@@ -257,7 +257,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 		DecorationMeasurePO decorationMeasurePO = decorationMeasureDao.get(decorationMeasureVO.getDmid());
 
 		if (decorationMeasurePO == null) {
-			throw new FLException(120014, "不存在该量尺信息");
+			throw new FLException(120040, "不存在该量尺信息");
 		}
 
 		messageService.sendMessage(decorationMeasurePO.getDecoration().getDesigner().getUserId(), userId, (String.format("订单:%s,量尺失败!请重新申请量尺.", decorationMeasurePO.getDecoration().getOrderId())), MessagePO.TYPE_SEND_CONSTRUCTION_INT, decorationMeasurePO.getCompany());
@@ -276,7 +276,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 		DecorationMeasurePO decorationMeasurePO = decorationMeasureDao.get(decorationMeasureVO.getDmid());
 
 		if (decorationMeasurePO == null) {
-			throw new FLException(120014, "不存在该量尺信息");
+			throw new FLException(120040, "不存在该量尺信息");
 		}
 
 		decorationMeasurePO.setApplayTime(decorationMeasureVO.getApplayTime());
@@ -292,7 +292,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 		DecorationMeasurePO decorationMeasurePO = decorationMeasureDao.get(decorationMeasureVO.getDmid());
 
 		if (decorationMeasurePO == null) {
-			throw new FLException(120014, "不存在该量尺信息");
+			throw new FLException(120040, "不存在该量尺信息");
 		}
 
 		Timestamp start = decorationMeasureVO.getStartTime();

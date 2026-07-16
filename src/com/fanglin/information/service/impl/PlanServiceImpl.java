@@ -207,7 +207,7 @@ public class PlanServiceImpl implements PlanService {
 		PlanPO planPO = planDao.get(planVO.getPid());
 
 		if (planPO == null) {
-			throw new FLException(130015, "计划不存在");
+			throw new FLException(130164, "计划不存在");
 		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);

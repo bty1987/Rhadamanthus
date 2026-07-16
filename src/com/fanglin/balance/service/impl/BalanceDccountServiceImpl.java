@@ -103,7 +103,7 @@ public class BalanceDccountServiceImpl implements BalanceDccountService {
 		BalanceDccountPO balanceDccountPO = balanceDccountDao.get(balanceDccountVO.getBdid());
 
 		if (balanceDccountPO == null) {
-			throw new FLException(350001, "扣款不存在");
+			throw new FLException(350032, "扣款不存在");
 		}
 
 		balanceDccountPO.setStatus(balanceDccountVO.getStatus());
@@ -118,7 +118,7 @@ public class BalanceDccountServiceImpl implements BalanceDccountService {
 		BalanceDccountPO balanceDccountPO = balanceDccountDao.get(balanceDccountVO.getBdid());
 
 		if (balanceDccountPO == null) {
-			throw new FLException(350001, "扣款不存在");
+			throw new FLException(350032, "扣款不存在");
 		}
 
 		balanceDccountPO.setName(balanceDccountVO.getName());

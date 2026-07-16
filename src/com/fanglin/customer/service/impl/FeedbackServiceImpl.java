@@ -138,7 +138,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		FeedbackPO feedback = feedbackDao.get(feedbackVO.getFid());
 
 		if (feedback == null) {
-			throw new FLException(330013, "反馈记录不存在");
+			throw new FLException(330093, "反馈记录不存在");
 		}
 
 		if (feedback.getStatus() != FeedbackPO.STATUS_HANDLE_INT) {

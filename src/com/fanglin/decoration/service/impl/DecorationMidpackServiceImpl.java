@@ -95,7 +95,7 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
 
 		if (!status.contains(decorationPO.getStatus())) {
-			throw new FLException(140004, "装修单状态不可操作 ");
+			throw new FLException(140097, "装修单状态不可操作");
 		}
 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);

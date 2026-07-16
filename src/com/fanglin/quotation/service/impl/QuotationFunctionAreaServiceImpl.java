@@ -303,7 +303,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotation.getOrderId());
 
 		if (decorationPO == null) {
-			throw new FLException(130014, "订单不存在");
+			throw new FLException(130180, "订单不存在");
 		}
 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationPO.getOrderId());
