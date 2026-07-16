@@ -107,7 +107,7 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 		List<WorkflowPlanPO> workflowplans = workflowplanDao.queryWorkflowPlanByWpid(productionWorkPlanVO.getWorkplan().getWpid());
 
 		if (workflowplans.size() == 0) {
-			throw new FLException(2200020, "工序组中暂无工序，请在该工序组中添加工序。");
+			throw new FLException(220029, "工序组中暂无工序,请在该工序组中添加工序");
 		}
 
 		ProductionWorkFlowPO productionWorkFlowPO;
