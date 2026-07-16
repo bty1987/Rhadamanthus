@@ -88,7 +88,7 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 		List<Short> unstatus = Arrays.asList(new Short[] { DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_SIGNED_INT });
 
 		if (!unstatus.contains(decorationPO.getStatus())) {
-			throw new FLException(140049, "装修单状态, 不可操作");
+			throw new FLException(140049, "装修单状态,不可操作");
 		}
 
 		StringBuffer content = new StringBuffer(String.format("装修单号:%s", orderId));

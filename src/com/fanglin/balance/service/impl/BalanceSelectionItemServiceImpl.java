@@ -72,7 +72,7 @@ public class BalanceSelectionItemServiceImpl implements BalanceSelectionItemServ
 		BalanceSelectionItemPO balanceSelectionItemPO = balanceSelectionItemDao.queryBalanceSelectionItemBySiid(balanceSelectionItemVO.getSelectionItem().getSiid());
 
 		if (balanceSelectionItemPO == null) {
-			throw new FLException(200038, "结算选材项不存在");
+			throw new FLException(200038, "选材项不存在");
 		}
 
 		balanceSelectionItemPO.ptv(balanceSelectionItemVO);

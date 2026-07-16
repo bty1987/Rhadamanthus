@@ -288,7 +288,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		MaterialPO materialPO = materialDao.get(msoId);
 
 		if (materialPO == null) {
-			throw new FLException(180001, "主材订单不存在");
+			throw new FLException(180001, "主材单不存在");
 		}
 
 		if (materialPaymentVO.getReferMoney() < 0) {
@@ -745,7 +745,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			MaterialPO materialPO = materialPaymentPO.getMaterial();
 
 			if (materialPO == null) {
-				throw new FLException(180001, "主材订单不存在");
+				throw new FLException(180001, "主材单不存在");
 			}
 
 			if (materialPaymentPO.getPaymentStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT) {
@@ -810,7 +810,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		MaterialPO materialPO = materialPaymentPO.getMaterial();
 
 		if (materialPO == null) {
-			throw new FLException(180001, "主材订单不存在");
+			throw new FLException(180001, "主材单不存在");
 		}
 
 		Long cash = materialPaymentVO.getCash();
@@ -988,7 +988,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			MaterialPO materialPO = materialPaymentPO.getMaterial();
 
 			if (materialPO == null) {
-				throw new FLException(180001, "主材订单不存在");
+				throw new FLException(180001, "主材单不存在");
 			}
 
 			if (materialPaymentPO.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT) {

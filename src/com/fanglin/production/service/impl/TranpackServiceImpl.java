@@ -134,7 +134,7 @@ public class TranpackServiceImpl implements TranpackService {
 		ProductionPO productionPO = productionDao.get(tranpackVO.getProduction().getPid());
 
 		if (productionPO == null) {
-			throw new FLException(220001, "生产不存在");
+			throw new FLException(220001, "生产单不存在");
 		}
 
 		ProductionPlanPO productionPlanPO = productionPlanDao.get(tranpackVO.getRid());
@@ -156,7 +156,7 @@ public class TranpackServiceImpl implements TranpackService {
 		TranpackPO tranpackPO = tranpackDao.get(tranpackVO.getTid());
 
 		if (tranpackPO == null) {
-			throw new FLException(220023, "物流包不存在");
+			throw new FLException(220023, " 物流包不存在");
 		}
 
 		if (tranpackPO.getStatus() != TranpackPO.STATUS_INIT_SHORT) {

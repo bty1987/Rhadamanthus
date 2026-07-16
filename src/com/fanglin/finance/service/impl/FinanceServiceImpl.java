@@ -435,7 +435,7 @@ public class FinanceServiceImpl implements FinanceService {
 		Map<String, List<Long>> subjectBalances = new HashMap<String, List<Long>>();
 
 		if (materialPO == null) {
-			throw new FLException(180001, "主材订单不存在");
+			throw new FLException(180001, "主材单不存在");
 		}
 
 		int company = materialPO.getCompany();

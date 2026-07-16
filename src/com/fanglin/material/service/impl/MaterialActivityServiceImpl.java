@@ -121,7 +121,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 		MaterialPO materialPO = materialDao.get(materialVO.getMid());
 
 		if (materialPO == null) {
-			throw new FLException(180001, "主材订单不存在");
+			throw new FLException(180001, "主材单不存在");
 		}
 
 		materialPO.setActivityId(materialVO.getActivityId());
@@ -183,7 +183,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			int num = Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum());
 
 			if (num < 0) {
-				throw new FLException(160038, "库存不足!");
+				throw new FLException(160038, "库存不足");
 			}
 
 			awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum()));
@@ -227,7 +227,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			int num = Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum());
 
 			if (num < 0) {
-				throw new FLException(160038, "库存不足!");
+				throw new FLException(160038, "库存不足");
 			}
 
 			awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum()));
@@ -291,7 +291,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			int num = Arith.add(awardStockPO.getNum(), materialActivityItemPO.getNum());
 
 			if (num < 0) {
-				throw new FLException(160038, "库存不足!");
+				throw new FLException(160038, "库存不足");
 			}
 
 			awardStockPO.setNum(Arith.add(awardStockPO.getNum(), materialActivityItemPO.getNum()));
