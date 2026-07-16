@@ -5,8 +5,13 @@
 -- MySQL 5.6  (列名大小写不敏感，本 SQL 统一按生产库小写写法)
 --
 -- 主表驱动说明:
---   主表为 customer.customerchance (客户商机),业务类型及之前的字段优先从 cc 表取值;
---   cc 表无的字段(订单类型/状态/派尺时间/房屋类别类型/设计师/业务员/业务部/各时间节点等)仍 JOIN decoration.decoration 获取。
+--   主表为 decoration.decoration (装修单), 公司/楼盘/楼号/设计师/业务员/设计部/
+--   设计分区/业务部/业务分区等核心归属字段全部直接以 d 表列驱动:
+--     公司 d.company / 楼盘楼号 d.hid→house→village / 设计师 d.dsuid / 业务员 d.smuid /
+--     设计部 d.ddid→父=设计分区(dd.fdid) / 业务部 d.sdid→父=业务分区(sd.fdid) / 业务类型 d.busitype。
+--   "区域" decoration 无 rdid, 改取设计部父部门(dd.fdid)即分区部门。
+--   仅 cc.readTime(已读时间) 和 cc.cid→开户行/账号 仍 LEFT JOIN customer.customerchance cc 获取,
+--   无客户商机匹配行时这两组字段为 NULL。
 --
 -- 字段值单位说明 (重要):
 --   * 面积类字段 (buildArea/quoteArea)        : 放大 1000 倍的整数, 130000 = 130 ㎡
@@ -16,13 +21,13 @@
 --   * 比例类字段 (paySacle)                   : 整数, 含义见业务定义
 -- =============================================================================
 SELECT
-    -- ==================== 基础信息 (主表 customerchance 驱动) ====================
-    c.name                         AS `公司`,              -- communion.company.name (cc.company=c.cid, 实测为明文cid无需decode)
-    cc.orderId                     AS `装修单号`,
+    -- ==================== 基础信息 (主表 decoration 驱动) ====================
+    c.name                         AS `公司`,              -- communion.company.name (d.company=c.cid, 实测为明文cid无需decode)
+    d.orderId                      AS `装修单号`,
     communion.kv('decoration', 'decoration', 'typeness', d.typeness) AS `订单类型`,          -- 区别于 d.type(0中包/1包料/2大包), typeness 是业务订单类型 [cc表无此字段,仍取d]
-    cc_region.name                 AS `区域`,              -- communion.department.name (cc.rdid=region.did) 客户商机关联的区域部门
-    v.name                         AS `楼盘`,              -- communion.village.name
-    h.houseNumber                  AS `楼号`,              -- communion.house.houseNumber (门牌/楼号)
+    cc_region.name                 AS `区域`,              -- communion.department.name 设计部的父部门(dd.fdid)=分区(如"沈阳方林设计二分区") [decoration无rdid,改取设计分区]
+    v.name                         AS `楼盘`,              -- communion.village.name (d.hid→house→village)
+    h.houseNumber                  AS `楼号`,              -- communion.house.houseNumber (d.hid→house.houseNumber)
     communion.kv('decoration', 'decoration', 'status', d.status) AS `订单状态`,          -- 0初始/1定金/2预签/3签约/4重签/5废单/6终止/7决算/8完工/20待审/30可终止... [cc表无此字段,仍取d]
     d.measureTime                  AS `派尺时间`,          -- decoration.measureTime [cc表无此字段,仍取d]
     cc.readTime                    AS `已读时间`,          -- customer.customerchance.readTime
@@ -32,13 +37,13 @@ SELECT
     d.houseType                    AS `房屋类型`,          -- [cc表无此字段,仍取d]
 
     -- ==================== 设计/业务归属 ====================
-    dd_parent.name                 AS `设计中心`,          -- 设计部(dd)的父部门(fatherDept) = 设计中心/大区
-    dd.name                        AS `设计部`,            -- communion.department.name (cc.ddid=dd.did)
-    designer.currentName           AS `设计师`,            -- communion.user.currentName (d.dsuid=designer.uid) [cc表无此字段,仍取d]
-    sd_parent.name                 AS `业务中心`,          -- 业务部(sd)的父部门(fatherDept) = 业务中心/大区
-    sd.name                        AS `业务部`,            -- communion.department.name (d.sdid=sd.did) [cc表无此字段,仍取d]
-    salesman.currentName           AS `业务员`,            -- communion.user.currentName (d.smuid=salesman.uid) [cc表无此字段,仍取d]
-    bt.name                        AS `业务类型`,          -- data.decorationbusitype.name (cc.dbid=bt.dbid)
+    dd_parent.name                 AS `设计分区`,          -- 设计部(dd)的父部门(dd.fdid) = 设计分区(如"方林设计一分区")
+    dd.name                        AS `设计部`,            -- communion.department.name (d.ddid=dd.did)
+    designer.currentName           AS `设计师`,            -- communion.user.currentName (d.dsuid=designer.uid)
+    sd_parent.name                 AS `业务分区`,          -- 业务部(sd)的父部门(sd.fdid) = 业务分区(如"宜家市场二分区")
+    sd.name                        AS `业务部`,            -- communion.department.name (d.sdid=sd.did)
+    salesman.currentName           AS `业务员`,            -- communion.user.currentName (d.smuid=salesman.uid)
+    bt.name                        AS `业务类型`,          -- data.decorationbusitype.name (d.busitype=bt.dbid)
 
     -- ==================== 关键时间节点 ====================
     d.createTime                   AS `创建时间`,
@@ -118,42 +123,43 @@ SELECT
     communion.kv('decoration', 'decoration', 'balancestatus', d.balancestatus) AS `内决状态`,          -- decorationaccount.isAffirm (0未确认/1已确认)
     communion.kv('decoration', 'decoration', 'repairStatus', d.repairStatus) AS `保修状态`           -- decoration.repairStatus
 
-FROM customer.customerchance cc
+FROM decoration.decoration d
 
--- 客户商机 (主表)
-LEFT JOIN decoration.decoration d      ON cc.orderId = d.orderId
+-- 客户商机 (LEFT JOIN, 仅 cc.readTime 等少数字段仍取自 cc; cc 无匹配行时为 NULL)
+LEFT JOIN customer.customerchance cc   ON cc.orderId = d.orderId
 
--- 客户 (开户行/账号, cc.cid)
+-- 客户 (开户行/账号, cc.cid → communion.customer)
 LEFT JOIN communion.customer cust    ON cust.cid = cc.cid
 
--- 公司 (cc.company 明文 cid)
-LEFT JOIN communion.company c        ON c.cid   = cc.company
+-- 公司 (d.company 明文 cid, decoration 有此列 NOT NULL)
+LEFT JOIN communion.company c        ON c.cid   = d.company
 
 -- 装修附加信息 (到店时间/区域快照)
-LEFT JOIN decoration.decorationaddition da ON da.orderId = cc.orderId
+LEFT JOIN decoration.decorationaddition da ON da.orderId = d.orderId
 
 
 
--- 房屋/楼盘 (cc.hid)
-LEFT JOIN communion.house h              ON h.hid  = cc.hid
+-- 房屋/楼盘 (d.hid → house → village; decoration.hid NOT NULL)
+LEFT JOIN communion.house h              ON h.hid  = d.hid
 LEFT JOIN communion.village v            ON v.vid  = h.vid
 
--- 人员: 设计师/业务员/监理 [cc表无对应字段,仍取d]
+-- 人员: 设计师/业务员/监理 (d.dsuid/d.smuid/d.svuid)
 LEFT JOIN communion.user designer        ON designer.uid = d.dsuid
 LEFT JOIN communion.user salesman        ON salesman.uid = d.smuid
 LEFT JOIN communion.user supervisor      ON supervisor.uid = d.svuid
 
--- 区域部门 (cc.rdid 客户商机关联的区域部门)
-LEFT JOIN communion.department cc_region ON cc_region.did = cc.rdid
-
--- 部门: 设计部(cc.ddid)+父部门(设计中心) / 业务部(取d.sdid)+父部门(业务中心)
-LEFT JOIN communion.department dd        ON dd.did  = cc.ddid
+-- 部门: 设计部(d.ddid)+父部门(设计分区) / 业务部(d.sdid)+父部门(业务分区)
+LEFT JOIN communion.department dd        ON dd.did  = d.ddid
 LEFT JOIN communion.department dd_parent ON dd_parent.did = dd.fdid
 LEFT JOIN communion.department sd        ON sd.did  = d.sdid
 LEFT JOIN communion.department sd_parent ON sd_parent.did = sd.fdid
 
--- 业务类型 (cc.dbid)
-LEFT JOIN data.decorationbusitype bt     ON bt.dbid = cc.dbid
+-- 区域: decoration 无 rdid, 改取设计部的父部门(dd.fdid)=分区部门(如"沈阳方林设计二分区")
+--   (须在 dd 之后声明, 才能引用 dd.fdid)
+LEFT JOIN communion.department cc_region ON cc_region.did = dd.fdid
+
+-- 业务类型 (d.busitype → data.decorationbusitype)
+LEFT JOIN data.decorationbusitype bt     ON bt.dbid = d.busitype
 
 -- 施工信息 (设计天数/工期/放线/交钥匙/超期)
 LEFT JOIN construction.constructioninfo ci ON ci.orderId = d.orderId
@@ -202,16 +208,24 @@ LEFT JOIN decoration.decorationmidpack mid  ON mid.orderId = d.orderId   -- type
 LEFT JOIN decoration.decorationinclusive inc ON inc.orderId = d.orderId  -- type=1 包料
 LEFT JOIN decoration.decorationholonomy hol ON hol.orderId = d.orderId   -- type=2 大包
 
-order by cc.ccid desc
+WHERE d.createTime > ''
+  AND d.createTime < ''
+
+-- 按 d 表主键排序 (d 为主表, cc 为 LEFT JOIN, 不再用 cc.ccid 排序)
+ORDER BY d.orderId DESC
 
 -- =============================================================================
 -- 使用说明:
---   1. 本查询无 WHERE 限制, 默认查全量(73万+订单). 生产执行务必加 WHERE 条件!
---      常用过滤: WHERE d.orderId = 'xxxx'  或  WHERE d.createTime > '2026-01-01'
---   2. 面积/金额/工期/比例类字段为放大1000倍的整数, 展示时需 / 1000
---   3. company 关联为明文 cid, 实测可直接 JOIN, 无需 decode
---   4. 工种节点匹配用 constructionnode.name (而非硬编码 schedule/sort), 兼容各公司不同节点配置
---   5. 微改/大改统计依赖 comment 字段 LIKE 匹配, 若历史数据格式不一致需调整
---   6. quoteArea(计价面积) 生产数据多为0, 如需准确计价面积需确认其它来源
+--   1. 本查询已内置 WHERE d.createTime 时间区间过滤, 执行前填入起止时间字符串
+--      (如 d.createTime > '2026-01-01 00:00:00' AND d.createTime < '2026-07-01 00:00:00')。
+--      createTime 为字符串类型日期, MySQL 5.6 字符串比较可直接用于区间过滤。
+--   2. 如需单查某单, 改用 WHERE d.orderId = 'xxxx'。
+--   3. 面积/金额/工期/比例类字段为放大1000倍的整数, 展示时需 / 1000
+--   4. company 关联为明文 cid, 实测可直接 JOIN, 无需 decode
+--   5. 工种节点匹配用 constructionnode.name (而非硬编码 schedule/sort), 兼容各公司不同节点配置
+--   6. 微改/大改统计依赖 comment 字段 LIKE 匹配, 若历史数据格式不一致需调整
+--   7. quoteArea(计价面积) 生产数据多为0, 如需准确计价面积需确认其它来源
+--   8. 主表切换为 decoration.decoration 后, 无客户商机(cc)的装修单也会被查出,
+--      cc 相关字段(公司/区域/楼盘/已读时间/开户行账号/业务类型)将为 NULL。
 -- =============================================================================
 ;
