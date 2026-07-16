@@ -749,7 +749,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		if (protationPO.getStatus() != ProtationPO.STATUS_LOCK_INT) {
-			throw new FLException(200047, "预签不可操作");
+			throw new FLException(200047, "预签状态不可操作");
 		}
 
 		List<DecorationBelongPO> designers = decorationBelongDao.queryDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_INVALID_INT);

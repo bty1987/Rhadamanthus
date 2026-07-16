@@ -619,7 +619,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		if (quotationPO.getStatus() != QuotationPO.STATUS_LOCK_INT) {
-			throw new FLException(200030, "报价状态不可操作");
+			throw new FLException(200030, "报价不可操作");
 		}
 
 		checkQuotationForDefaultByOrderId(quotationPO.getOrderId());
@@ -1206,7 +1206,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		if (quotationPO.getStatus() != QuotationPO.STATUS_INIT_INT) {
-			throw new FLException(200030, "报价状态不可操作");
+			throw new FLException(200030, "报价不可操作");
 		}
 
 		return quotationPO;

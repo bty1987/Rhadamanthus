@@ -104,13 +104,13 @@ public class BalanceSalesBalanceServiceImpl implements BalanceSalesBalanceServic
 		}
 
 		if (balanceSalesBalanceVO.getSalesBalance() == null) {
-			throw new FLException(260037, "销售结算不存在");
+			throw new FLException(260037, "销售结算信息不存在");
 		}
 
 		SalesBalancePO salesBalancePO = salesBalanceDao.get(balanceSalesBalanceVO.getSalesBalance().getSbid());
 
 		if (salesBalancePO == null) {
-			throw new FLException(260037, "销售结算不存在");
+			throw new FLException(260037, "销售结算信息不存在");
 		}
 
 		int pompany = salesBalancePO.getSales().getPompany();
