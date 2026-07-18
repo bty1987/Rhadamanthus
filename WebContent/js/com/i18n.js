@@ -21,10 +21,11 @@
 var i18n = (function($) {
 
     // ============== 内部状态 ==============
-    var messageMap = {};   // msg.* 公共提示(当前语言)
-    var messageCn = {};    // msg.* 简体中文基准(恒定,用于 tAuto 反查中文→key)
-    var pageMap = {};      // page.* 静态文本(所有模块合并)
-    var reverseMap = {};   // 中文文案 → key 的反查表(tAuto 用),基于 messageCn 构建
+    var messageMap = {};   // msg.* + field.* 公共提示(当前语言)
+    var messageCn = {};    // msg.* + field.* 简体中文基准(恒定,用于 tAuto 反查中文→key)
+    var pageMap = {};      // page.* 静态文本(所有模块合并,当前语言)
+    var pageCn = {};       // page.* 简体中文基准(恒定,用于 tAuto 反查中文→key)
+    var reverseMap = {};   // 中文文案 → key 的反查表(tAuto 用),基于 messageCn + pageCn 构建
 
     var LANG_KEY = 'rhada.lang';
 
@@ -70,13 +71,16 @@ var i18n = (function($) {
 
     /**
      * 构建/重建反查表:中文文案 → key
-     * 基于简体中文基准(messageCn)构建,不随当前语言变化。
-     * 这样切到 en 后,tAuto('操作成功') 仍能命中:从 messageCn 反查到 key 'msg.opSuccess',
-     * 再查当前语言的 messageMap 返回 'Operation successful'。
+     * 基于 messageCn(msg+field) + pageCn(common+各模块) 构建,不随当前语言变化。
+     * 这样切到 en 后,tAuto('操作成功'/'设计师'/'装修单号') 都能命中:
+     *   反查到 key,再查当前语言的 messageMap/pageMap 返回译文。
      */
     function rebuildReverse() {
         reverseMap = {};
         $.each(messageCn, function(key, val) {
+            if (val && typeof val === 'string') reverseMap[val] = key;
+        });
+        $.each(pageCn, function(key, val) {
             if (val && typeof val === 'string') reverseMap[val] = key;
         });
     }
@@ -118,7 +122,8 @@ var i18n = (function($) {
             if (currentLang() === 'cn') return text;
             var key = reverseMap[text];
             if (!key) return text;                  // 反查不到,原样返回(可能是业务特定文案)
-            return messageMap[key] || text;         // 当前语言译文,理论上一定有
+            // 当前语言译文:msg.*/field.* 在 messageMap,page.* 在 pageMap
+            return messageMap[key] || pageMap[key] || text;
         },
 
         /**
@@ -210,16 +215,27 @@ var i18n = (function($) {
          */
         _reload: function() {
             var lang = currentLang();
-            // 简体中文基准只加载一次(tAuto 反查表基础)
+            // 简体中文基准只加载一次(tAuto 反查表基础):message + field + menu
             if (Object.keys(messageCn).length === 0) {
                 messageCn = loadPack('js/i18n/message-cn.json');
+                $.extend(messageCn, loadPack('js/i18n/field-cn.json'));
+                $.extend(messageCn, loadPack('js/i18n/menu-cn.json'));
             }
             messageMap = loadPack('js/i18n/message-' + lang + '.json');
+            // field 包(跨模块字段/列头/查询条件 label)与 message 同层加载,供 tAuto 反查
+            $.extend(messageMap, loadPack('js/i18n/field-' + lang + '.json'));
+            // menu 包(导航菜单翻译)
+            $.extend(messageMap, loadPack('js/i18n/menu-' + lang + '.json'));
 
             // page 包:合并所有 page/*.json(初始化时只加载 common,业务模块按需 i18n.loadPage)
             // 这里只重载已注册的模块列表
             if (!i18n._loadedPages) i18n._loadedPages = { common: true };
             pageMap = {};
+            // pageCn 基准(用于 tAuto 反查):首次加载,之后 loadPage 时增量补
+            if (Object.keys(pageCn).length === 0) {
+                pageCn = {};
+                $.extend(pageCn, loadPack('js/i18n/page/common-cn.json'));
+            }
             // common 包始终加载
             $.extend(pageMap, loadPack('js/i18n/page/common-' + lang + '.json'));
             // 其他已注册模块
@@ -241,6 +257,8 @@ var i18n = (function($) {
             if (i18n._loadedPages[module]) return;  // 已加载
             i18n._loadedPages[module] = true;
             $.extend(pageMap, loadPack('js/i18n/page/' + module + '-' + currentLang() + '.json'));
+            // 同步补 pageCn 基准(用于 tAuto 反查):任何语言下都需要,因为 tAuto 反查表基于 cn
+            $.extend(pageCn, loadPack('js/i18n/page/' + module + '-cn.json'));
             rebuildReverse();
         },
 
