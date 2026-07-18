@@ -20,14 +20,14 @@
 					<form class="form-horizontal">
 						<input type="text" id="sdiid" class="hide" />
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="no">编号</label>
+							<label class="col-sm-3 control-label no-padding-right" for="no" data-i18n="page.quotation.label.number">编号</label>
 							<div class="col-sm-9">
 								<input type="text" id="no" class="col-xs-10 col-sm-5 v_systemDefaineItemId" data-toggle="popover" data-trigger='manual' maxlength="8"/>
 							</div>
 						</div>
 						<div class="space-4"></div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
+							<label class="col-sm-3 control-label no-padding-right" for="name" data-i18n="page.quotation.label.name">名称</label>
 							<div class="col-sm-9">
 								<input type="text" id="name" class="col-xs-10 col-sm-5 v_required"  data-toggle="popover" data-trigger='manual' maxlength="32"/>
 							</div>
@@ -43,7 +43,7 @@
 						<div class="space-4"></div>
 						
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="measurementUnit">单位</label>
+							<label class="col-sm-3 control-label no-padding-right" for="measurementUnit" data-i18n="page.quotation.label.unit">单位</label>
 							<div class="col-sm-9">
 								<select class="col-xs-10 col-sm-5 v_required" id="measurementUnit" data-toggle="popover" data-trigger='manual'></select>
 							</div>
@@ -51,7 +51,7 @@
 						<div class="space-4"></div>
 						
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="workType">工种</label>
+							<label class="col-sm-3 control-label no-padding-right" for="workType" data-i18n="page.quotation.label.workType">工种</label>
 							<div class="col-sm-9">
 								<select class="col-xs-10 col-sm-5 v_required" id="workType" data-toggle="popover" data-trigger='manual'></select>
 							</div>
@@ -59,7 +59,7 @@
 						<div class="space-4"></div>
 						
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="comment">信息</label>
+							<label class="col-sm-3 control-label no-padding-right" for="comment" data-i18n="page.quotation.label.info">信息</label>
 							<div class="col-sm-9">
 								<textarea id="comment" class="col-xs-10 col-sm-5 v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="500"></textarea>
 							</div>
@@ -67,7 +67,7 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="addPrice">增补价</label>
+							<label class="col-sm-3 control-label no-padding-right" for="addPrice" data-i18n="page.quotation.label.addPrice">增补价</label>
 							<div class="col-sm-9">
 								<input type="text" id="addPrice" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="5"/>
 							</div>
@@ -83,7 +83,7 @@
                         <div class="space-4"></div>
                         
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="subPrice">退减价</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="subPrice" data-i18n="page.quotation.label.reducePrice">退减价</label>
                             <div class="col-sm-9">
                                 <input type="text" id="subPrice" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="5"/>
                             </div>
@@ -91,8 +91,8 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelAddItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" id="cancelAddItemBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>

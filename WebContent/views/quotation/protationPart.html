@@ -12,15 +12,15 @@
                             <div class="row">
 								<div class="col-md-12">
 								    <div class="form-group">
-								        <label class=" col-md-4 no-padding-right">装修单号</label>
+								        <label class=" col-md-4 no-padding-right" data-i18n="page.quotation.label.orderNo">装修单号</label>
 								        <label id=orderId class="col-md-8 no-padding-left">0.00</label>
 								    </div>
 								    <div class="form-group">
-								        <label class=" col-md-4 no-padding-right">楼盘地址</label>
+								        <label class=" col-md-4 no-padding-right" data-i18n="page.quotation.label.buildingAddress">楼盘地址</label>
 								        <label id="address" class="col-md-8 no-padding-left">0.00</label>
 								    </div>
 								    <div class="form-group">
-								        <label class=" col-md-4 no-padding-right">报价版本</label>
+								        <label class=" col-md-4 no-padding-right" data-i18n="page.quotation.label.quotationVersion">报价版本</label>
 								        <label id="version" class="col-md-8 no-padding-left">0.00</label>
 								    </div>
 								    <div class="form-group">
@@ -48,7 +48,7 @@
                                         </a>
                                     </div>
                                     <div class="form-group hide">
-                                        <label class="col-md-6 no-padding-right">折扣:</label>
+                                        <label class="col-md-6 no-padding-right" data-i18n="page.quotation.label.discountLabel">折扣:</label>
                                         <label id="discount" class="col-md-4 no-padding-left">0.00</label>
                                     </div>
                                     <div class="form-group">
@@ -76,7 +76,7 @@
                                         <label id="quoteArea" class="col-md-4 no-padding-left">0.00</label>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-md-6 no-padding-right">总价:</label>
+                                        <label class="col-md-6 no-padding-right" data-i18n="page.quotation.label.totalPriceLabel">总价:</label>
                                         <label id="sumquoSumMoney" class="col-md-4 no-padding-left">0.00</label>
                                     </div>
                                 </div>
@@ -174,7 +174,7 @@
 								</div>
 								<div class="space-4"></div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="preferManage">管理优惠</label>
+									<label class="col-sm-3 control-label no-padding-right" for="preferManage" data-i18n="page.quotation.label.manageDiscount">管理优惠</label>
 									<div class="col-sm-9">
 										<input type="text" id="preferManage" class="col-xs-10 col-sm-5 v_float_3"  maxlength='15'/>
 									</div>
@@ -182,10 +182,10 @@
 								<div class="space-4"></div>
 								<div id="preferAdvanceShow">
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="preferAdvance">特殊优惠</label>
+										<label class="col-sm-3 control-label no-padding-right" for="preferAdvance" data-i18n="page.quotation.label.specialDiscount">特殊优惠</label>
 										<div class="col-sm-9">
 											<input type="text" id="preferAdvance" class="col-xs-10 col-sm-5 v_float_3"  maxlength='15'/>
-											<button type="button" id="submitFunctionAreaBtn" class="btn btn-primary btn-sm" style="margin-left: 10px;">提交</button>
+											<button type="button" id="submitFunctionAreaBtn" class="btn btn-primary btn-sm" style="margin-left: 10px;" data-i18n="msg.submit">提交</button>
 										</div>
 									</div>
 									<div class="space-4"></div>
@@ -195,14 +195,14 @@
 									<label class="col-sm-3 control-label no-padding-right" for="activityProfit">活动优惠</label>
 									<div class="col-sm-9">
 										<input type="text" id="activityProfit" class="col-xs-10 col-sm-5 v_float_3"  maxlength='15'/>
-										<button type="button" id="submitFunctionAreaBtn2" class="btn btn-primary btn-sm" style="margin-left: 10px;">提交</button>
+										<button type="button" id="submitFunctionAreaBtn2" class="btn btn-primary btn-sm" style="margin-left: 10px;" data-i18n="msg.submit">提交</button>
 									</div>
 								</div>
                             </form>
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" id="closeBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" id="closeBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                         </div>
                     </div>
                 </div>
@@ -215,7 +215,7 @@
                             <button type="button" class="close" data-dismiss="modal">
                                 <span>&times;</span><span class="sr-only">Close</span>
                             </button>
-                            <h4 class="modal-title" id="quotationItemDialog">报价项</h4>
+                            <h4 class="modal-title" id="quotationItemDialog" data-i18n="page.quotation.label.quotationItem">报价项</h4>
                         </div>
                         <div class="modal-body">
                             <input type="text" id="addItemFunctionAreaIndex" class="hide" />
@@ -227,9 +227,9 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="addFunctionAreaItemsBtn" class="btn btn-primary">保存</button>
-                            <button type="button" id="addCustomFunctionAreaItemsBtn" class="btn btn-primary icon-add" style="display: none;">自定义</button>
-                            <button type="button" id="cancelAddFunctionAreaItemsBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" id="addFunctionAreaItemsBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                            <button type="button" id="addCustomFunctionAreaItemsBtn" class="btn btn-primary icon-add" style="display: none;" data-i18n="page.quotation.label.custom">自定义</button>
+                            <button type="button" id="cancelAddFunctionAreaItemsBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                         </div>
                     </div>
                 </div>
@@ -292,7 +292,7 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" id="submitApproveBtn" class="btn btn-primary">修改申请</button>
-							<button type="button" id="closeApproveBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+							<button type="button" id="closeApproveBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 						</div>
 					</div>
 				</div>

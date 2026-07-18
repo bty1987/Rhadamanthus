@@ -17,7 +17,7 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="name">名称</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="name" data-i18n="page.quotation.label.name">名称</label>
                             <div class="col-sm-9">
                                 <input type="text" id="name" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
                             </div>
@@ -31,28 +31,28 @@
                         </div>
                         
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="cost">成本</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="cost" data-i18n="page.quotation.label.cost">成本</label>
                             <div class="col-sm-9">
                                 <input type="text" id="cost" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="price">价格</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="price" data-i18n="page.quotation.label.price">价格</label>
                             <div class="col-sm-9">
                                 <input type="text" id="price" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="addPrice">增补价</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="addPrice" data-i18n="page.quotation.label.addPrice">增补价</label>
                             <div class="col-sm-9">
                                 <input type="text" id="addPrice" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="subPrice">退减价</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="subPrice" data-i18n="page.quotation.label.reducePrice">退减价</label>
                             <div class="col-sm-9">
                                 <input type="text" id="subPrice" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
                             </div>
@@ -63,16 +63,16 @@
                             <div class="col-sm-9">
                                 <input type="radio" id="number" name="areaCale" class="ace"/>
                                 <span class="lbl"></span>
-                                <label>数量</label>
+                                <label data-i18n="page.quotation.label.num">数量</label>
                             
                                 <input type="radio" id="area" name="areaCale" class="ace"/>
                                 <span class="lbl"></span>
-                                <label>面积</label>
+                                <label data-i18n="page.quotation.label.area">面积</label>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="type">类型</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="type" data-i18n="page.quotation.label.type">类型</label>
                             <div class="col-sm-9">
                                 <select id="type" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
                             </div>
@@ -93,7 +93,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="content">说明</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="content" data-i18n="page.quotation.label.explain">说明</label>
                             <div class="col-sm-9">
                                 <input type="text" id="content" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="512"/>
                             </div>
@@ -101,8 +101,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="savePresignItemBtn" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="savePresignItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

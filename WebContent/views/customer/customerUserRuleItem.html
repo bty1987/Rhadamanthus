@@ -43,7 +43,7 @@
                         <div class="space-4"></div>
 
                         <div class="form-group deptype">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="deptype">部门类型</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="deptype" data-i18n="page.customer.label.deptType">部门类型</label>
                             <div class="col-sm-9">
                                 <select id="deptype" class="col-xs-10 col-sm-7" data-toggle="popover" data-trigger='manual'></select>
                             </div>
@@ -59,27 +59,27 @@
                         <div class="space-4"></div>
 
                         <div class="form-group citySel">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="citySel">城市</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="citySel" data-i18n="page.customer.label.city">城市</label>
                             <div class="col-sm-9">
                                 <select class="col-sm-7 col-xs-10" id="citySel" data-toggle="popover" data-trigger='manual'>
-                                    <option value="">请选择城市</option>
+                                    <option value="" data-i18n="page.customer.ph.city">请选择城市</option>
                                 </select>
                             </div>
                         </div>
                         <div class="space-4"></div>
 
                         <div class="form-group cityProperSel">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="cityProperSel">城区</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="cityProperSel" data-i18n="page.customer.label.district">城区</label>
                             <div class="col-sm-9">
                                 <select class="col-sm-7 col-xs-10" id="cityProperSel" data-toggle="popover" data-trigger='manual'>
-                                    <option value="">请先选择城市</option>
+                                    <option value="" data-i18n="page.customer.hint.selectCityFirst">请先选择城市</option>
                                 </select>
                             </div>
                         </div>
                         <div class="space-4"></div>
 
                         <div class="form-group uppval">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="uppval">起始值</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uppval" data-i18n="page.customer.label.startValue">起始值</label>
                             <div class="col-sm-9">
                                 <input type="text" id="uppval" class="col-xs-10 col-sm-7 v_number" data-toggle="popover" data-trigger='manual' />
                             </div>
@@ -87,7 +87,7 @@
                         <div class="space-4"></div>
 
                         <div class="form-group lowval">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="lowval">终止值</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="lowval" data-i18n="page.customer.label.endValue">终止值</label>
                             <div class="col-sm-9">
                                 <input type="text" id="lowval" class="col-xs-10 col-sm-7 v_number" data-toggle="popover" data-trigger='manual' />
                             </div>
@@ -103,7 +103,7 @@
                         <div class="space-4"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="priority">优先级</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="priority" data-i18n="page.customer.label.priority">优先级</label>
                             <div class="col-sm-9">
                                 <select id="priority" class="col-xs-10 col-sm-7 v_required"></select>
                             </div>
@@ -142,8 +142,8 @@
                         <div class="space-4"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="saveItemBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="saveItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelItemBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

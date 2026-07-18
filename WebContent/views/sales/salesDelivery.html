@@ -38,8 +38,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="saveEditBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelEditBtn" class="btn btn-default" data-dismiss="modal">取消
+                    <button type="button" id="saveEditBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelEditBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消
                     </button>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title">配送图片</h4>
+                    <h4 class="modal-title" data-i18n="page.sales.label.deliveryImg">配送图片</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -80,7 +80,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="decorationInfoDialog">装修单信息</h4>
+                    <h4 class="modal-title" id="decorationInfoDialog" data-i18n="page.sales.label.decorationInfo">装修单信息</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
@@ -127,7 +127,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-4 control-label no-padding-right">工程状态</label>
+                            <label class="col-sm-4 control-label no-padding-right" data-i18n="page.sales.label.engineeringStatus">工程状态</label>
                             <div class="col-sm-8">
                                 <span id="projectStatus" style="line-height: 30px"></span>
                             </div>
@@ -135,7 +135,7 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="cancelDecorationInfoBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="cancelDecorationInfoBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -154,7 +154,7 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">商品名称</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.sales.label.goodsName">商品名称</label>
                             <div class="col-sm-9">
                                 <span id="tranGoodsName" style="line-height: 34px; font-weight: bold; color: #428bca;"></span>
                             </div>
@@ -189,7 +189,7 @@
                     <button type="button" id="confirmTranBtn" class="btn btn-success">
                         <i class="icon-ok"></i> 确认配送
                     </button>
-                    <button type="button" id="cancelTranBtn" class="btn btn-default" data-dismiss="modal">
+                    <button type="button" id="cancelTranBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">
                         取消
                     </button>
                 </div>

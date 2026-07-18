@@ -1,4 +1,8 @@
 jQuery(function($) {
+
+    // i18n:应用当前语言到登录页所有 [data-i18n] / [data-i18n-ph] 元素
+    if (window.i18n) i18n.apply($('body'));
+
     var loginurl = "login.do";
     var count = 0;
     var QRCode = '/QRCode.do';

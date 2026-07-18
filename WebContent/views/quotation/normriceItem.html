@@ -7,7 +7,7 @@
                         <div class="widget-header">
                             <h4 class="lighter smaller">
                                 <i class="icon-reorder"></i>
-                                <span id="normriceItemOrderId">装修单号</span>
+                                <span id="normriceItemOrderId" data-i18n="page.quotation.label.orderNo">装修单号</span>
                             </h4>
                         </div>
                         <div class="widget-body">
@@ -41,14 +41,14 @@
             <div class="modal-body">
                 <form class="form-horizontal" id="addNormriceItemForm">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="niNormadd">名称</label>
+                        <label class="col-sm-3 control-label no-padding-right orange" for="niNormadd" data-i18n="page.quotation.label.name">名称</label>
                         <div class="col-sm-9">
                             <select id="niNormadd" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
                         </div>
                     </div>
                     <div class="space-4"></div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="niNum">数量</label>
+                        <label class="col-sm-3 control-label no-padding-right orange" for="niNum" data-i18n="page.quotation.label.num">数量</label>
                         <div class="col-sm-9">
                             <input type="text" id="niNum" class="col-xs-10 col-sm-5 v_required v_float_3" value="1" maxlength="12" data-toggle="popover" data-trigger='manual'/>
                         </div>
@@ -57,8 +57,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="btnSaveNormriceItem" class="btn btn-primary">保存</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="btnSaveNormriceItem" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>

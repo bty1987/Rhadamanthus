@@ -37,6 +37,14 @@ $.extend($,{
             zquery.getScript(filename, function () {
                 console.log('[diag] getScript success:', filename);
                 $.loadScript(filenames, relative, frame, zquery);
+
+                // i18n:页面所有脚本加载完毕后,按 URL 自动加载模块语言包 + apply 翻译
+                // 约定:页面 URL 形如 views/{module}/xxx.html,自动识别 {module}
+                if (filenames.length === 0 && window.i18n) {
+                    try {
+                        i18n._autoInitForPage();
+                    } catch (e) { /* i18n 失败不影响业务功能 */ }
+                }
             }).fail(function(jqxhr, settings, exception) {
                 console.error('[diag] getScript FAIL:', filename, 'status:', jqxhr.status, 'exception:', exception);
             })

@@ -11,15 +11,15 @@
                 <div class="widget-body">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label class=" col-md-4 no-padding-right">装修单号</label>
+                            <label class=" col-md-4 no-padding-right" data-i18n="page.quotation.label.orderNo">装修单号</label>
                             <label id=orderId class="col-md-8 no-padding-left">0.00</label>
                         </div>
                         <div class="form-group">
-                            <label class=" col-md-4 no-padding-right">楼盘地址</label>
+                            <label class=" col-md-4 no-padding-right" data-i18n="page.quotation.label.buildingAddress">楼盘地址</label>
                             <label id="address" class="col-md-8 no-padding-left">0.00</label>
                         </div>
                         <div class="form-group">
-                            <label class=" col-md-4 no-padding-right">报价版本</label>
+                            <label class=" col-md-4 no-padding-right" data-i18n="page.quotation.label.quotationVersion">报价版本</label>
                             <label id="version" class="col-md-8 no-padding-left">0.00</label>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class=" col-md-6  no-padding-right">总价</label>
+                                    <label class=" col-md-6  no-padding-right" data-i18n="page.quotation.label.totalPrice">总价</label>
                                     <label id="total" class=" col-md-4  no-padding-left">0.00</label>
                                 </div>
                                 <div class="form-group">
@@ -86,7 +86,7 @@
              </div>
              <div class="col-md-12 space-6"></div>
              <div class="ui-pg-div">
-                 <button id="resetBtn" class="btn btn-minier btn-warning col-md-3">重置</button>
+                 <button id="resetBtn" class="btn btn-minier btn-warning col-md-3" data-i18n="msg.reset">重置</button>
                  <button id="lockBtn" class="btn btn-minier btn-pink col-md-3" style="margin-left: 2px; display: none;">锁定</button>
                  <button id="unlockBtn" class="btn btn-minier btn-info col-md-3" style="margin-left: 2px; display: none;">解锁</button>
                  <button id="sendSelectionBtn" class="btn btn-minier col-md-2" style="margin-left: 2px; display: none;">推送</button>
@@ -183,8 +183,8 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" id="saveFunctionAreaBtn" class="btn btn-primary">保存</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" id="saveFunctionAreaBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                         </div>
                     </div>
                 </div>
@@ -204,7 +204,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                     </div>
                 </div>
             </div>
@@ -222,14 +222,14 @@
                     <div class="modal-body">
                         <form class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right orange" for="num">数量</label>
+                                <label class="col-sm-3 control-label no-padding-right orange" for="num" data-i18n="page.quotation.label.num">数量</label>
                                 <div class="col-sm-9">
                                     <input type="text" id="num" maxlength="12" class="col-xs-10 col-sm-7 v_required v_afloat_3" data-toggle="popover" data-trigger='manual'/>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right" for="comment">备注</label>
+                                <label class="col-sm-3 control-label no-padding-right" for="comment" data-i18n="page.quotation.label.comment">备注</label>
                                 <div class="col-sm-9">
                                     <textarea id="comment" maxlength="256" class="col-xs-10 col-sm-7" data-toggle="popover" data-trigger='manual' rows="3" cols="3"></textarea>
                                 </div>
@@ -237,8 +237,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="updateSelectionItemBtn" class="btn btn-primary">保存</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" id="updateSelectionItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                     </div>
                 </div>
             </div>

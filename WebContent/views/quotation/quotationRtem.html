@@ -33,7 +33,7 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right orange" for="type">类型</label>
+							<label class="col-sm-3 control-label no-padding-right orange" for="type" data-i18n="page.quotation.label.type">类型</label>
 							<div class="col-sm-9">
 								<select id="type" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
 							</div>
@@ -41,7 +41,7 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right orange" for="formula">公式</label>
+							<label class="col-sm-3 control-label no-padding-right orange" for="formula" data-i18n="page.quotation.label.formula">公式</label>
 							<div class="col-sm-9">
 								<textarea rows="5" maxlength="64" id="formula" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></textarea>
 							</div>
@@ -55,10 +55,10 @@
 										<span>支持参数包括: 周长 , 面积 , 举架 , 洞面 , 窗面 , 梁长 , 梁高, 参数 , 变量, 车运费, 税金, 管理费, 不打折总额, 打折总额, 工程量</span>
 									</li>
 									<li class="text-warning orange">
-										<span>支持运算符号包括: + , - , * , / , ( , )</span>
+										<span data-i18n="page.quotation.hint.formulaSupport">支持运算符号包括: + , - , * , / , ( , )</span>
 									</li>
 									<li class="text-warning orange">
-										<span>同时支持数字作为运算元素</span>
+										<span data-i18n="page.quotation.hint.formulaNumSupport">同时支持数字作为运算元素</span>
 									</li>
 								</ul>
 							</div>
@@ -66,7 +66,7 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right orange" for="comment">说明</label>
+							<label class="col-sm-3 control-label no-padding-right orange" for="comment" data-i18n="page.quotation.label.explain">说明</label>
 							<div class="col-sm-9">
 								<textarea rows="5" maxlength="64" id="comment" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></textarea>
 							</div>
@@ -75,8 +75,8 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="saveQuotationRtemBtn" class="btn btn-primary">保存</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="saveQuotationRtemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>
@@ -89,7 +89,7 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span>&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="selectItemDialog">选择报价项目</h4>
+					<h4 class="modal-title" id="selectItemDialog" data-i18n="page.quotation.title.selectQuotationItem">选择报价项目</h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">

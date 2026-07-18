@@ -14,7 +14,7 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span>&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="measureApplyDialog">部署信息</h4>
+					<h4 class="modal-title" id="measureApplyDialog" data-i18n="page.decoration.title.deploy">部署信息</h4>
 				</div>
 				<div class="modal-body">
 					<div id="calendar"></div>
@@ -30,13 +30,13 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="measureDialog">量尺确认信息</h4>
+                    <h4 class="modal-title" id="measureDialog" data-i18n="page.decoration.title.measureConfirm">量尺确认信息</h4>
                 </div>
                 
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="applayTime">量尺日期</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="applayTime" data-i18n="page.decoration.label.measureDate">量尺日期</label>
                             <div class="col-sm-9">
                                 <input class=" date-picker-date col-xs-10 col-sm-5 v_required" id="applayTime" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
                             </div>
@@ -45,8 +45,8 @@
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="button" id="updateBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="updateBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -59,13 +59,13 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span>&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="measureDialog">量尺确认信息</h4>
+					<h4 class="modal-title" id="measureDialog" data-i18n="page.decoration.title.measureConfirm">量尺确认信息</h4>
 				</div>
 				
 				<div class="modal-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="actualDate">量尺日期</label>
+							<label class="col-sm-3 control-label no-padding-right" for="actualDate" data-i18n="page.decoration.label.measureDate">量尺日期</label>
 							<div class="col-sm-9">
 								<input type="text" class="hide" id=dlid />
 								<input class=" date-picker-date col-xs-10 col-sm-5 v_required" id="actualDate" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
@@ -73,7 +73,7 @@
 						</div>
 					
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="startTime">开始时间</label>
+							<label class="col-sm-3 control-label no-padding-right" for="startTime" data-i18n="page.decoration.label.startTime">开始时间</label>
 							<div class="col-sm-9">
 								<div class="bootstrap-timepicker">
 									<input id="startTime" type="text" class="timepicker v_required col-xs-10 col-sm-5"/>
@@ -82,7 +82,7 @@
 						</div>
 					
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="endTime">结束时间</label>
+							<label class="col-sm-3 control-label no-padding-right" for="endTime" data-i18n="page.decoration.label.endTime">结束时间</label>
 							<div class="col-sm-9">
 								<div class="bootstrap-timepicker">
 									<input id="endTime" type="text" class="timepicker v_required col-xs-10 col-sm-5"/>
@@ -94,8 +94,8 @@
 				</div>
 				
 				<div class="modal-footer">
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>
@@ -106,13 +106,13 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title" id="myModalLabel">工程信息</h4>
+					<h4 class="modal-title" id="myModalLabel" data-i18n="page.decoration.title.engineering">工程信息</h4>
 				</div>
 				<div class="modal-body" >
 					<form class="form-horizontal">
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right">工期</label>
+							<label class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.timeLimit">工期</label>
 							<div class="col-sm-9">
 								<input type="text" id='timeLimit' class='col-xs-10 col-sm-6 v_number' />
 							</div>
@@ -120,20 +120,20 @@
 						<div class="form-group">
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right ">铲大白</label>
+								<label class="col-sm-3 control-label no-padding-right " data-i18n="page.decoration.label.shovel">铲大白</label>
 								<div class="col-md-9">
 									<select id='ishovel' class='col-xs-10 col-sm-6'></select>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right ">钥匙</label>
+								<label class="col-sm-3 control-label no-padding-right " data-i18n="page.decoration.label.key">钥匙</label>
 								<div class="col-sm-9">
 									<select id='iskey' class='col-xs-10 col-sm-6'></select>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right ">开工仪式</label>
+								<label class="col-sm-3 control-label no-padding-right " data-i18n="page.decoration.label.ceremony">开工仪式</label>
 								<div class="col-sm-9">
 									<select id='isCeremony' class='col-xs-10 col-sm-6'></select>
 								</div>
@@ -146,25 +146,25 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right">预计完工时间</label>
+								<label class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.expectFinish">预计完工时间</label>
 								<div class="col-sm-9">
 									<input type="text" id='finishTime' class='col-xs-10 col-sm-6' />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right">预计领钥匙时间</label>
+								<label class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.expectKey">预计领钥匙时间</label>
 								<div class="col-sm-9">
 									<input type="text" id='keyTime' class='col-xs-10 col-sm-6' />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right">预计设计完成时间</label>
+								<label class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.expectDesign">预计设计完成时间</label>
 								<div class="col-sm-9">
 									<input type="text" id='designTime' class='col-xs-10 col-sm-6' />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right">备注说明</label>
+								<label class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.comment">备注说明</label>
 								<div class="col-md-9">
 									<textarea id="comment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
 								</div>
@@ -174,8 +174,8 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="saveInfoBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="canceInfoBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="saveInfoBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" id="canceInfoBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>

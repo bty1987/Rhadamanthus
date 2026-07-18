@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "lang": "en",
+    "type": "page",
+    "module": "common",
+    "desc": "Common page texts: login/home/nav/topbar. Module-specific texts in page/{module}-en.json"
+  },
+
+  "page.common.login.title": "Login",
+  "page.common.login.userId": "Employee ID / Phone / Email",
+  "page.common.login.password": "Enter password",
+  "page.common.login.passwordLabel": "Password",
+  "page.common.login.submit": "Log In",
+  "page.common.login.btnLogin": "Sign In",
+  "page.common.login.btnExperience": "Try Now",
+  "page.common.login.verifyCode": "Enter verification code",
+  "page.common.login.remember": "Remember me",
+  "page.common.login.forget": "Forgot password?",
+  "page.common.login.invalidCred": "Invalid username or password",
+  "page.common.login.qrcodeDing": "DingTalk QR",
+  "page.common.login.qrcodeWechat": "WeChat QR",
+  "page.common.login.passwordTab": "Password",
+  "page.common.login.welcome": "Welcome",
+  "page.common.login.subtitle": "Sign in with your Fanglin account to start smart management.",
+  "page.common.login.qrTipDing": "Scan with DingTalk to sign in",
+  "page.common.login.qrTipWechat": "Scan with WeChat to sign in",
+  "page.common.login.qrExpired": "QR code expired",
+  "page.common.login.qrRefresh": "Click to refresh",
+  "page.common.login.footer": "Liaoning Fanglin Information Service Co., Ltd. © 2014-2025 | ICP No. 15003048-4",
+
+  "page.common.brand.name": "Fanglin Group",
+  "page.common.brand.slogan": "Stand on one side, master the eight directions",
+  "page.common.brand.sloganSub": "Pioneer guarantee: compensation for unmet industry-benchmark craftsmanship",
+
+  "page.common.home.welcome": "Welcome",
+  "page.common.home.hello": "Hi, ",
+  "page.common.home.logout": "Logout",
+  "page.common.home.profile": "Profile",
+  "page.common.home.changePwd": "Change Password",
+  "page.common.home.lock": "Lock",
+  "page.common.home.help": "Help",
+  "page.common.home.version": "Version",
+  "page.common.home.currentCompany": "Current Company",
+  "page.common.home.langSwitch": "Language",
+  "page.common.home.brandTitle": "Fanglin IF Admin (Beta)",
+
+  "page.common.lang.cn": "简体中文",
+  "page.common.lang.tw": "繁體中文",
+  "page.common.lang.en": "English"
+}

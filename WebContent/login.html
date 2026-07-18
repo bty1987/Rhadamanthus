@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>FIP - 方林信息平台</title>
+    <title data-i18n="page.common.login.title">FIP - 方林信息平台</title>
     <meta name="keywords" content="方林,装饰,ERP" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -24,14 +24,14 @@
             <div class="brand-area">
                 <div class="brand-logo">
                     <img src="./images/icon.png" alt="方林集团">
-                    <div class="brand-text">方林集团</div>
+                    <div class="brand-text" data-i18n="page.common.brand.name">方林集团</div>
                 </div>
             </div>
 
             <!-- 标语区域 -->
             <div class="slogan-area">
-                <div class="slogan-title">立于一面极于九，专一域而驭八方</div>
-                <div class="slogan-subtitle">业内首推"行业标杆工艺不达标赔无条"的重锤承诺</div>
+                <div class="slogan-title" data-i18n="page.common.brand.slogan">立于一面极于九，专一域而驭八方</div>
+                <div class="slogan-subtitle" data-i18n="page.common.brand.sloganSub">业内首推"行业标杆工艺不达标赔无条"的重锤承诺</div>
             </div>
 
             <!-- 展示图片 -->
@@ -44,15 +44,15 @@
         <div class="login-right">
             <!-- 登录标题 -->
             <div class="login-header">
-                <div class="login-title">欢迎登录</div>
-                <div class="login-subtitle">使用方林账号，开启管理化工作时代。</div>
+                <div class="login-title" data-i18n="page.common.login.welcome">欢迎登录</div>
+                <div class="login-subtitle" data-i18n="page.common.login.subtitle">使用方林账号，开启管理化工作时代。</div>
             </div>
 
             <!-- Tab 切换 -->
             <div class="login-tabs">
-                <div class="login-tab" data-tab="qrcode">钉钉扫码</div>
-                <div class="login-tab" data-tab="wechat">微信扫码</div>
-                <div class="login-tab active" data-tab="password">密码登录</div>
+                <div class="login-tab" data-tab="qrcode" data-i18n="page.common.login.qrcodeDing">钉钉扫码</div>
+                <div class="login-tab" data-tab="wechat" data-i18n="page.common.login.qrcodeWechat">微信扫码</div>
+                <div class="login-tab active" data-tab="password" data-i18n="page.common.login.passwordTab">密码登录</div>
             </div>
 
             <!-- 登录表单区域 -->
@@ -63,12 +63,12 @@
                         <div class="qrcode-box" id="qrcode">
                             <img src="./images/verifyCode.jpg" alt="钉钉二维码" class="hide">
                         </div>
-                        <div class="qrcode-tip">
+                        <div class="qrcode-tip" data-i18n="page.common.login.qrTipDing">
                             请使用<strong>钉钉</strong>扫码登录
                         </div>
                         <div class="qrcode-refresh hide" id="qrcodeRefresh">
-                            二维码已失效<br>
-                            <span style="cursor:pointer; color:#667eea;">点击刷新</span>
+                            <span data-i18n="page.common.login.qrExpired">二维码已失效</span><br>
+                            <span style="cursor:pointer; color:#667eea;" data-i18n="page.common.login.qrRefresh">点击刷新</span>
                         </div>
                     </div>
                 </div>
@@ -79,12 +79,12 @@
                         <div class="qrcode-box" id="wxcode">
                             <img src="./images/verifyCode.jpg" alt="微信二维码" class="hide">
                         </div>
-                        <div class="qrcode-tip">
+                        <div class="qrcode-tip" data-i18n="page.common.login.qrTipWechat">
                             请使用<strong>微信</strong>扫码登录
                         </div>
                         <div class="qrcode-refresh hide" id="wechatRefresh">
-                            二维码已失效<br>
-                            <span style="cursor:pointer; color:#667eea;">点击刷新</span>
+                            <span data-i18n="page.common.login.qrExpired">二维码已失效</span><br>
+                            <span style="cursor:pointer; color:#667eea;" data-i18n="page.common.login.qrRefresh">点击刷新</span>
                         </div>
                     </div>
                 </div>
@@ -100,6 +100,7 @@
                                        id="userId"
                                        name="userId"
                                        placeholder="请输入工号/手机号/邮箱"
+                                       data-i18n-ph="page.common.login.userId"
                                        autocomplete="off">
                             </div>
                         </div>
@@ -112,6 +113,7 @@
                                        id="password"
                                        name="password"
                                        placeholder="请输入登录密码"
+                                       data-i18n-ph="page.common.login.password"
                                        autocomplete="off">
                                 <i class="icon-eye-slash password-switch" id="passwordToggle"></i>
                             </div>
@@ -125,6 +127,7 @@
                                            id="nowCode"
                                            name="nowCode"
                                            placeholder="请输入验证码"
+                                           data-i18n-ph="page.common.login.verifyCode"
                                            autocomplete="off">
                                 </div>
                                 <img class="verify-code"
@@ -137,18 +140,18 @@
                         <div class="error-msg" id="errorMsg"></div>
 
                         <button type="button" class="btn-login" id="loginBtn">
-                            <i class="icon-key"></i> 登录账号
+                            <i class="icon-key"></i> <span data-i18n="page.common.login.btnLogin">登录账号</span>
                         </button>
 
                         <button type="button" class="btn-experience" id="experienceBtn">
-                            <i class="icon-rocket"></i> 立即体验
+                            <i class="icon-rocket"></i> <span data-i18n="page.common.login.btnExperience">立即体验</span>
                         </button>
                     </form>
                 </div>
             </div>
 
             <!-- 底部信息 -->
-            <div class="login-footer">
+            <div class="login-footer" data-i18n="page.common.login.footer">
                 辽宁方林信息化服务有限公司©2014-2025 | 辽ICP备15003048号-4
             </div>
         </div>
@@ -165,6 +168,7 @@
         jses += '<script src="js/com/config.js"><\/script>';
         jses += '<script src="js/com/server.js"><\/script>';
         jses += '<script src="js/com/api.js"><\/script>';
+        jses += '<script src="js/com/i18n.js"><\/script>';   // i18n 国际化核心(登录页用:apply 替换静态文本)
         jses += '<script src="js/login.js"><\/script>';
 
         document.write(jses);

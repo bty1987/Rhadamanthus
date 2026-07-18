@@ -13,13 +13,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabe2">更新工程辅料信息</h4>
+                    <h4 class="modal-title" id="myModalLabe2" data-i18n="page.construction.btn.updateAuxMaterial">更新工程辅料信息</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right ">验证标识</label>
+                            <label class="col-sm-3 control-label no-padding-right " data-i18n="page.construction.label.verifyFlag">验证标识</label>
                             <div class="col-md-9">
                                 <select id='checkup' class='col-xs-10 col-sm-6'></select>
                             </div>
@@ -27,7 +27,7 @@
 
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="numLimit">数量上限</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="numLimit" data-i18n="page.construction.label.numLimit">数量上限</label>
                             <div class="col-sm-9">
                                 <input type="text" maxlength="64" id="numLimit" class="col-xs-10 col-sm-6  v_number" data-toggle="popover" data-trigger='manual'/>
                             </div>
@@ -37,8 +37,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="updateBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="updateBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
                             <label for="goodsName" class="col-sm-3 control-label no-padding-right orange" >商品名</label>
                             <div class="col-sm-9">
                                 <input type="text" class="col-xs-10 col-sm-6 v_required" data-toggle="popover"
-                                       data-placement="bottom" data-trigger="manual" id="goodsName" placeholder="请输入商品名">
+                                       data-placement="bottom" data-trigger="manual" id="goodsName" placeholder="请输入商品名" data-i18n-ph="page.construction.ph.goodsName">
                             </div>
                         </div>
 
@@ -95,14 +95,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right ">验证标识</label>
+                            <label class="col-sm-3 control-label no-padding-right " data-i18n="page.construction.label.verifyFlag">验证标识</label>
                             <div class="col-md-9">
                                 <select id='addCheckup' class='col-xs-10 col-sm-6'></select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="addNumLimit">数量上限</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="addNumLimit" data-i18n="page.construction.label.numLimit">数量上限</label>
                             <div class="col-sm-9">
                                 <input type="text" maxlength="64" id="addNumLimit" class="col-xs-10 col-sm-6  v_number" data-toggle="popover" data-trigger='manual'/>
                             </div>
@@ -111,8 +111,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="addConfirmBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="addCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="addConfirmBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="addCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

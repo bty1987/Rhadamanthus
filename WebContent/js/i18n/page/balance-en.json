@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "lang": "en",
+    "type": "page",
+    "module": "balance",
+    "desc": "Balance module page texts. Covers modal titles, form labels, buttons in balance views. Terms like settlement, deduction, account."
+  },
+
+  "page.balance.label.balance": "Settlement",
+  "page.balance.label.belongUser": "Owner",
+  "page.balance.label.cashier": "Cashier",
+  "page.balance.label.operateAmount": "Operation Amount",
+  "page.balance.label.account": "Account",
+  "page.balance.label.balanceDeduct": "Settlement Deduction",
+  "page.balance.label.deduct": "Deduction",
+  "page.balance.label.level": "Level",
+  "page.balance.label.creator": "Creator",
+  "page.balance.label.createTime": "Create Time",
+  "page.balance.label.payable": "Payable",
+  "page.balance.label.paid": "Paid",
+  "page.balance.label.remain": "Balance",
+  "page.balance.label.address": "Address",
+  "page.balance.label.phone": "Phone",
+  "page.balance.label.bank": "Bank",
+  "page.balance.label.cardNo": "Card No.",
+  "page.balance.label.shareDetail": "Share Detail",
+  "page.balance.label.deductAccount": "Deduction Account",
+  "page.balance.label.imgPath": "Image Path",
+  "page.balance.label.balanceImg": "Settlement Image",
+  "page.balance.label.accountTotal": "Account Total",
+  "page.balance.label.accountBalance": "Account Balance",
+  "page.balance.label.balanceDeductImg": "Settlement Deduction Image",
+  "page.balance.label.deductDetail": "Deduction Detail",
+  "page.balance.label.balanceDetail": "Settlement Detail",
+  "page.balance.label.balanceExternal": "Settlement External",
+  "page.balance.label.balanceSales": "Settlement Sales",
+  "page.balance.label.balanceSelection": "Settlement Selection",
+
+  "page.balance.btn.addFinishOrder": "Add Finish Order",
+  "page.balance.btn.bind": "Bind",
+  "page.balance.btn.offset": "Offset",
+  "page.balance.btn.addDeduct": "Add Deduction"
+}

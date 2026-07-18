@@ -14,15 +14,15 @@
 						<div class="row">
 							<div class="col-md-12">
 							    <div class="form-group">
-							        <label class=" col-md-4 no-padding-right">装修单号</label>
+							        <label class=" col-md-4 no-padding-right" data-i18n="page.quotation.label.orderNo">装修单号</label>
 							        <label id=orderId class="col-md-8 no-padding-left">0.00</label>
 							    </div>
 							    <div class="form-group">
-							        <label class=" col-md-4 no-padding-right">楼盘地址</label>
+							        <label class=" col-md-4 no-padding-right" data-i18n="page.quotation.label.buildingAddress">楼盘地址</label>
 							        <label id="address" class="col-md-8 no-padding-left">0.00</label>
 							    </div>
 							    <div class="form-group">
-							        <label class=" col-md-4 no-padding-right">报价版本</label>
+							        <label class=" col-md-4 no-padding-right" data-i18n="page.quotation.label.quotationVersion">报价版本</label>
 							        <label id="version" class="col-md-8 no-padding-left">0.00</label>
 							    </div>
 							</div>
@@ -31,14 +31,14 @@
 							
 							<div class="col-md-12">
 								<div class="form-group">
-									<label class=" col-md-5 no-padding-right">类型</label>
+									<label class=" col-md-5 no-padding-right" data-i18n="page.quotation.label.type">类型</label>
 									<label id="sumLabType" class=" col-md-4 no-padding-left"></label>
 								</div>
 							</div>
                             
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class=" col-md-5 no-padding-right">类型</label>
+                                    <label class=" col-md-5 no-padding-right" data-i18n="page.quotation.label.type">类型</label>
                                     <label id="atttypeR" class=" col-md-4 no-padding-left"></label>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
 
 							<div class="col-md-12">
 								<div class="form-group">
-									<label class=" col-md-5 no-padding-right">总价</label>
+									<label class=" col-md-5 no-padding-right" data-i18n="page.quotation.label.totalPrice">总价</label>
 									<label id="sumLabSumMoney" class=" col-md-4 no-padding-left"></label>
 								</div>
 							</div>
@@ -116,7 +116,7 @@
 
 							<div class="col-md-12">
 								<div class="form-group">
-									<label class=" col-md-5 no-padding-right">管理费比例</label>
+									<label class=" col-md-5 no-padding-right" data-i18n="page.quotation.label.manageFeeRate">管理费比例</label>
 									<label id="manageRate" class=" col-md-6  no-padding-left"></label>
 								</div>
 							</div>
@@ -135,7 +135,7 @@
 							</div>
 							<div class="col-md-12">
 								<div class="form-group">
-									<label class=" col-md-5 no-padding-right">管理费折扣</label>
+									<label class=" col-md-5 no-padding-right" data-i18n="page.quotation.label.discountRate">管理费折扣</label>
 									<input type="checkbox" id="isCountManageDiscount" class="ace"/>
 									<span class="lbl"></span>
 								</div>
@@ -144,7 +144,7 @@
 
 							<div class="col-md-12">
 								<div class="form-group">
-									<label class=" col-md-5 no-padding-right">税金比例</label>
+									<label class=" col-md-5 no-padding-right" data-i18n="page.quotation.label.taxRate">税金比例</label>
 									<label id="taxRate" class=" col-md-6  no-padding-left"></label>
 								</div>
 							</div>
@@ -170,7 +170,7 @@
 									<!--增项的的2个按钮-->
 									<button id="addNormalItemBtn" class="btn btn-minier btn-yellow col-md-5 hide" style="margin-right: 2px;" >
 										<i class="icon-pencil"></i>
-                                        <span>报价项</span>
+                                        <span data-i18n="page.quotation.label.quotationItem">报价项</span>
 									</button>
 
 									<button id="addNewItemBtn" class="btn btn-minier btn-pink col-md-5 hide">
@@ -182,7 +182,7 @@
 
 									<button id="addQuotaionItemBtn" class="btn btn-minier btn-yellow col-md-5 hide" style="margin-right: 2px;" >
 										<i class="icon-pencil"></i>
-                                        <span>报价项</span>
+                                        <span data-i18n="page.quotation.label.quotationItem">报价项</span>
 									</button>
 
 									<button id="addSystemDefineItemBtn" class="btn btn-minier btn-pink col-md-5 hide">
@@ -197,7 +197,7 @@
 
 									<button id="extensionItemBtn" class="btn btn-minier btn-default col-md-5 hide">
 										<i class="icon-pencil"></i>
-                                        <span>扩展项</span>
+                                        <span data-i18n="page.quotation.label.extensionItem">扩展项</span>
 									</button>
 								</div>
 							</div>
@@ -206,7 +206,7 @@
 								<div class="ui-pg-div">
 								   	<button id="submitAddReduceBtn" class="btn btn-minier btn-success col-md-5" style="display: none; margin-right: 2px;">
                                         <i class="icon-ok"></i>
-                                        <span>提交</span>
+                                        <span data-i18n="msg.submit">提交</span>
                                     </button>
                                         <button id="cancelAddReduceBtn" class="btn btn-minier btn-blue col-md-5" style="display: none; margin-right: 2px;">
                                         <i class="icon-ok"></i>
@@ -214,7 +214,7 @@
                                     </button>
                                     <button id="updateAddReduceBtn" class="btn btn-minier btn-yellow col-md-5">
                                         <i class="icon-mail-forward"></i>
-                                        <span>更新</span>
+                                        <span data-i18n="page.quotation.label.update">更新</span>
                                     </button>
 								</div>
 							</div>
@@ -232,7 +232,7 @@
                                 <div class="ui-pg-div">
                                     <button id="detailBckBtn" class="btn btn-minier btn-info col-md-5" style="margin-left: 2px;" >
                                         <i class="icon-mail-forward"></i>
-                                        <span>返回</span>
+                                        <span data-i18n="msg.back">返回</span>
                                     </button>
                                 </div>
                             </div>
@@ -253,37 +253,37 @@
 							<div class="cell-wrap">工程预算量</div>
 						</div>
 						<div class="cell name">
-							<div class="cell-wrap">名称</div>
+							<div class="cell-wrap" data-i18n="page.quotation.label.name">名称</div>
 						</div>
 						<div class="cell type">
-							<div class="cell-wrap">类型</div>
+							<div class="cell-wrap" data-i18n="page.quotation.label.type">类型</div>
 						</div>
 						<div class="cell worktype">
-							<div class="cell-wrap">工种</div>
+							<div class="cell-wrap" data-i18n="page.quotation.label.workType">工种</div>
 						</div>
 						<div class="cell type">
-							<div class="cell-wrap">功能区</div>
+							<div class="cell-wrap" data-i18n="page.quotation.label.functionArea">功能区</div>
 						</div>
 						<div class="cell unit">
-							<div class="cell-wrap">单位</div>
+							<div class="cell-wrap" data-i18n="page.quotation.label.unit">单位</div>
 						</div>
 						<div class="cell price unitprice">
-							<div class="cell-wrap">单价</div>
+							<div class="cell-wrap" data-i18n="page.quotation.label.unitPrice">单价</div>
 						</div>
 						<div class="cell price discountprice">
 							<div class="cell-wrap">折后</div>
 						</div>
 						<div class="cell price totalprice-discount">
-							<div class="cell-wrap">总价</div>
+							<div class="cell-wrap" data-i18n="page.quotation.label.totalPrice">总价</div>
 						</div>
 						<div class="cell btns">
-                            <div class="cell-wrap">打折</div>
+                            <div class="cell-wrap" data-i18n="page.quotation.label.discount">打折</div>
                         </div>
 						<div class="cell btns">
                             <div class="cell-wrap">非配比</div>
                         </div>
 						<div class="cell btns" style="width: 90px;">
-							<div class="cell-wrap">操作</div>
+							<div class="cell-wrap" data-i18n="page.quotation.label.operate">操作</div>
 						</div>
 					</li>
 				</ul>
@@ -300,7 +300,7 @@
 						<button type="button" class="close" data-dismiss="modal">
 							<span>&times;</span><span class="sr-only">Close</span>
 						</button>
-						<h4 class="modal-title" id="quotationItemDialog">报价项</h4>
+						<h4 class="modal-title" id="quotationItemDialog" data-i18n="page.quotation.label.quotationItem">报价项</h4>
 					</div>
 					<div class="modal-body">
 						<div class="row">
@@ -310,8 +310,8 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="addItemsBtn" class="btn btn-primary">保存</button>
-						<button type="button" id="cancelAddItemsBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="button" id="addItemsBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+						<button type="button" id="cancelAddItemsBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 					</div>
 				</div>
 			</div>
@@ -336,8 +336,8 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="customItemBtn" class="btn btn-primary">保存</button>
-						<button type="button" id="cancelCustomItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="button" id="customItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+						<button type="button" id="cancelCustomItemBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 					</div>
 				</div>
 			</div>
@@ -351,7 +351,7 @@
 						<button type="button" class="close" data-dismiss="modal">
 							<span>&times;</span><span class="sr-only">Close</span>
 						</button>
-						<h4 class="modal-title" id="addNormalItemDialog">标准报价项</h4>
+						<h4 class="modal-title" id="addNormalItemDialog" data-i18n="page.quotation.label.standardItem">标准报价项</h4>
 					</div>
 					<div class="modal-body">
 						<div class="row">
@@ -366,8 +366,8 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="saveaddNormalItemBtn" class="btn btn-primary">保存</button>
-						<button type="button" id="canceladdNormalItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="button" id="saveaddNormalItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+						<button type="button" id="canceladdNormalItemBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 					</div>
 				</div>
 			</div>
@@ -390,8 +390,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="addAddItemBtn" class="btn btn-primary">保存</button>
-                        <button type="button" id="cancelAddItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" id="addAddItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                        <button type="button" id="cancelAddItemBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                     </div>
                 </div>
             </div>
@@ -404,7 +404,7 @@
 						<button type="button" class="close" data-dismiss="modal">
 							<span>&times;</span><span class="sr-only">Close</span>
 						</button>
-						<h4 class="modal-title" id="extensionItemDialog">扩展项</h4>
+						<h4 class="modal-title" id="extensionItemDialog" data-i18n="page.quotation.label.extensionItem">扩展项</h4>
 					</div>
 					<div class="modal-body">
 						<div class="row">
@@ -414,8 +414,8 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="exItemBtn" class="btn btn-primary">保存</button>
-						<button type="button" id="cancelEXItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="button" id="exItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+						<button type="button" id="cancelEXItemBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 					</div>
 				</div>
 			</div>
@@ -444,8 +444,8 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="systemDefineItemBtn" class="btn btn-primary">保存</button>
-						<button type="button" id="cancelSystemDefineItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="button" id="systemDefineItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+						<button type="button" id="cancelSystemDefineItemBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 					</div>
 				</div>
 			</div>
@@ -462,7 +462,7 @@
 					</div> 
 					<div class="modal-body">
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="quotationFunctionAreaId">功能区</label>
+							<label class="col-sm-3 control-label no-padding-right" for="quotationFunctionAreaId" data-i18n="page.quotation.label.functionArea">功能区</label>
 							<div class="col-sm-9">
 								<select class="col-xs-10 col-sm-5 v_required" id="quotationFunctionAreaId" data-toggle="popover" data-trigger='manual'></select>
 							</div>
@@ -471,8 +471,8 @@
 					
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="confirmItemBtn" class="btn btn-primary">确定</button>
-						<button type="button" id="cancelItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="button" id="confirmItemBtn" class="btn btn-primary" data-i18n="msg.ok">确定</button>
+						<button type="button" id="cancelItemBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 					</div>
 				</div>
 			</div>
@@ -491,7 +491,7 @@
 						<form class="form-horizontal">
 							
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="itemName">名称</label>
+								<label class="col-sm-3 control-label no-padding-right" for="itemName" data-i18n="page.quotation.label.name">名称</label>
 								<div class="col-sm-9">
 									<input type="text" id="itemName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
 								</div>
@@ -499,7 +499,7 @@
 							<div class="space-4"></div>
 	
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="addQuotationFunctionAreaId">功能区</label>
+								<label class="col-sm-3 control-label no-padding-right" for="addQuotationFunctionAreaId" data-i18n="page.quotation.label.functionArea">功能区</label>
 								<div class="col-sm-9">
 									<select class="col-xs-10 col-sm-5 v_required" id="addQuotationFunctionAreaId" data-toggle="popover" data-trigger='manual'></select>
 								</div>
@@ -507,7 +507,7 @@
 							<div class="space-4"></div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="quotationType">类型</label>
+								<label class="col-sm-3 control-label no-padding-right" for="quotationType" data-i18n="page.quotation.label.type">类型</label>
 								<div class="col-sm-3">
 									<select class="form-control v_required" id="quotationType" data-toggle="popover" data-trigger='manual'></select>
 								</div>
@@ -515,7 +515,7 @@
 							<div class="space-4"></div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="measurementUnit">单位</label>
+								<label class="col-sm-3 control-label no-padding-right" for="measurementUnit" data-i18n="page.quotation.label.unit">单位</label>
 								<div class="col-sm-3">
 									<select class="form-control v_required" id="measurementUnit" data-toggle="popover" data-trigger='manual'></select>
 								</div>
@@ -523,7 +523,7 @@
 							<div class="space-4"></div>
 							
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="workType">工种</label>
+								<label class="col-sm-3 control-label no-padding-right" for="workType" data-i18n="page.quotation.label.workType">工种</label>
 								<div class="col-sm-3">
 									<select class="form-control v_required" id="workType" data-toggle="popover" data-trigger='manual'></select>
 								</div>
@@ -531,7 +531,7 @@
 							<div class="space-4"></div>
 							
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="quotationItemDes">信息</label>
+								<label class="col-sm-3 control-label no-padding-right" for="quotationItemDes" data-i18n="page.quotation.label.info">信息</label>
 								<div class="col-sm-9">
 									<textarea id="quotationItemDes" class="col-xs-10 col-sm-5 v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="500"></textarea>
 								</div>
@@ -539,7 +539,7 @@
 							<div class="space-4"></div>
 	
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="unitPrice">单价</label>
+								<label class="col-sm-3 control-label no-padding-right" for="unitPrice" data-i18n="page.quotation.label.unitPrice">单价</label>
 								<div class="col-sm-9">
 									<input type="text" id="unitPrice" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="5"/>
 								</div>
@@ -547,7 +547,7 @@
 							<div class="space-4"></div>
 							
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="num">数量</label>
+								<label class="col-sm-3 control-label no-padding-right" for="num" data-i18n="page.quotation.label.num">数量</label>
 								<div class="col-sm-9">
 									<input type="text" id="num" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="9"/>
 								</div>
@@ -556,8 +556,8 @@
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="saveAddItemBtn" class="btn btn-primary">保存</button>
-						<button type="button" id="cancelAddItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="button" id="saveAddItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+						<button type="button" id="cancelAddItemBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 					</div>
 				</div>
 			</div>
@@ -625,8 +625,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="changeDiscountBtn" class="btn btn-primary">保存</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" id="changeDiscountBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                     </div>
                 </div>
             </div>

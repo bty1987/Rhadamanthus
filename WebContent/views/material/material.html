@@ -15,7 +15,7 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span>&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="materialSubOrderMoneyDialog">款项</h4>
+					<h4 class="modal-title" id="materialSubOrderMoneyDialog" data-i18n="page.material.label.payment">款项</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -71,13 +71,13 @@
 							<label class="col-sm-3 control-label no-padding-right" for="maling">券信息</label>
 							<div class="col-sm-9">
 								<input type="text" id="coupon" readonly="readonly" class="col-xs-10 col-sm-4 " />
-								<button id="couponBtn" key="coupon" class="btn btn-minier btn-yellow">券修改</button>
+								<button id="couponBtn" key="coupon" class="btn btn-minier btn-yellow" data-i18n="page.material.label.couponModify">券修改</button>
 								<button id="couponRefundBtn" key="coupon" class="btn btn-minier btn-danger">退券</button>
 								<div id="couponInfo" style="display: none;">
 									<select id="couponType" class="col-sm-3" data-toggle="popover" data-trigger='manual'></select>
 									<input id="couponValue" type="text" class="col-sm-2" value="0" data-toggle="popover" data-trigger='manual'/>
-									<button id="couponCommitBtn" key="coupon" class="btn btn-minier btn-yellow" data-loading-text="提交中...">提交</button>
-									<button id="couponCancelBtn" key="coupon" class="btn btn-minier btn-danger">取消</button>
+									<button id="couponCommitBtn" key="coupon" class="btn btn-minier btn-yellow" data-loading-text="提交中..." data-i18n="msg.submit">提交</button>
+									<button id="couponCancelBtn" key="coupon" class="btn btn-minier btn-danger" data-i18n="msg.cancel">取消</button>
 								</div>
 							</div>
 						</div>
@@ -87,11 +87,11 @@
 							<label class="col-sm-3 control-label no-padding-right" for="maling">抹零</label>
 							<div class="col-sm-9">
 								<input type="text" id="maling" readonly="readonly" class="col-xs-10 col-sm-4 " />
-								<button id="malingBtn" key="coupon" class="btn btn-minier btn-yellow">抹零修改</button>
+								<button id="malingBtn" key="coupon" class="btn btn-minier btn-yellow" data-i18n="page.material.label.wipeModify">抹零修改</button>
 								<div id="malingInfo" style="display: none;">
 									<input id="malingValue" type="text" class="col-sm-2" value="0" data-toggle="popover" data-trigger='manual'/>
-									<button id="malingCommitBtn" key="coupon" class="btn btn-minier btn-yellow" data-loading-text="提交中...">提交</button>
-									<button id="malingCancelBtn" key="coupon" class="btn btn-minier btn-danger">取消</button>
+									<button id="malingCommitBtn" key="coupon" class="btn btn-minier btn-yellow" data-loading-text="提交中..." data-i18n="msg.submit">提交</button>
+									<button id="malingCancelBtn" key="coupon" class="btn btn-minier btn-danger" data-i18n="msg.cancel">取消</button>
 								</div>
 							</div>
 						</div>
@@ -101,7 +101,7 @@
 				</div>
 				<div class="modal-footer">
 					<span id="paymentInfo" class="alert-danger pull-left inline"></span>
-					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>
@@ -113,7 +113,7 @@
 		<div class="modal-content">
      		<div class="modal-header">
        			<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-       			<h4 class="modal-title">主材补款提交审批</h4>
+       			<h4 class="modal-title" data-i18n="page.material.btn.materialSupplementApprove">主材补款提交审批</h4>
      		</div>
      		<div class="modal-body">
 	      		<form class="form-horizontal">
@@ -135,7 +135,7 @@
      		</div>
 			<div class="modal-footer">
 				<button type="button" id="approveSaveBtn" class="btn btn-primary">修改申请</button>
-	        	<button type="button" id="vApproveCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+	        	<button type="button" id="vApproveCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 	      	</div>
    		</div>
 	</div>

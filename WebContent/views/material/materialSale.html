@@ -16,7 +16,7 @@
 								<div class="col-sm-3">
 									<input id="salesmanName" type="text" class="order_inputinfo col-xs-10 col-sm-10 v_required"/>
 								</div>
-								<label class="col-sm-1 control-label no-padding-right" for="materialerName">主材导购</label>
+								<label class="col-sm-1 control-label no-padding-right" for="materialerName" data-i18n="page.material.label.materialGuide">主材导购</label>
 								<div class="col-sm-3">
 									<input id="materialerName" type="text" class="order_inputinfo col-xs-10 col-sm-10 v_required"/>
 								</div>
@@ -32,7 +32,7 @@
 									<input id="customerName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
 								</div>
 
-								<label class="col-sm-1 control-label no-padding-right" for="instoreName">主材驻店</label>
+								<label class="col-sm-1 control-label no-padding-right" for="instoreName" data-i18n="page.material.label.materialInStore">主材驻店</label>
 								<div class="col-sm-3">
 									<input id="instoreName" type="text" class="order_inputinfo col-xs-10 col-sm-10 v_required"/>
 								</div>
@@ -78,7 +78,7 @@
 						<div class="cell money">售价</div>
 						<div class="cell num">数量</div>
 						<div class="cell money">总价</div>
-						<div class="cell package">套餐</div>
+						<div class="cell package" data-i18n="page.material.label.package">套餐</div>
 						<div class="cell remark">备注</div>
 					</div>
 					<div class="line-wrap action">
@@ -91,8 +91,8 @@
 
 			<div style="margin-top: 15px;">
 				<button id="addSaleOrder" class="btn btn-success inline col-xs-1">添加</button>
-				<button id="submitSaleOrder" class="btn btn-default inline col-xs-1" data-loading-text="提交中...">提交</button>
-				<button id="backBtn" class="btn btn-danger inline col-xs-1 pull-right inline">返回</button>
+				<button id="submitSaleOrder" class="btn btn-default inline col-xs-1" data-loading-text="提交中..." data-i18n="msg.submit">提交</button>
+				<button id="backBtn" class="btn btn-danger inline col-xs-1 pull-right inline" data-i18n="msg.back">返回</button>
 				<div class="col-sm-1 pull-right inline" style="margin-top: 10px">
 					<span>总价:</span><span id="totalSpan">0</span>
 				</div>

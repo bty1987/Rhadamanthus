@@ -15,12 +15,12 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span>&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="functionAreaDialog">功能区</h4>
+					<h4 class="modal-title" id="functionAreaDialog" data-i18n="page.quotation.label.functionArea">功能区</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="functionAreaId">编号</label>
+							<label class="col-sm-3 control-label no-padding-right" for="functionAreaId" data-i18n="page.quotation.label.number">编号</label>
 							<div class="col-sm-9">
 								<input type="text" id="faid" class="col-xs-10 col-sm-5 hide" />
 								<input type="text" id="no" class="col-xs-10 col-sm-5 v_required v_functionArea_no" data-toggle="popover" data-trigger='manual' maxlength='5'/>
@@ -28,14 +28,14 @@
 						</div>
 						<div class="space-4"></div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="versionId">报价版本</label>
+							<label class="col-sm-3 control-label no-padding-right" for="versionId" data-i18n="page.quotation.label.quotationVersion">报价版本</label>
 							<div class="col-sm-9">
 								<select class="col-xs-10 col-sm-5 v_required" id="versionId" data-toggle="popover" data-trigger='manual'></select>
 							</div>
 						</div>
 						<div class="space-4"></div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="functionAreaName">名称</label>
+							<label class="col-sm-3 control-label no-padding-right" for="functionAreaName" data-i18n="page.quotation.label.name">名称</label>
 							<div class="col-sm-9">
 								<input type="text" id="name" class="col-xs-10 col-sm-5 v_required v_name" data-toggle="popover" data-trigger='manual' maxlength='10'/>
 							</div>
@@ -43,7 +43,7 @@
 						<div class="space-4"></div>
 						
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="functionAreaType">类型</label>
+							<label class="col-sm-3 control-label no-padding-right" for="functionAreaType" data-i18n="page.quotation.label.type">类型</label>
 							<div class="col-sm-9">
 								<select class="col-xs-10 col-sm-5 v_required" id="functionAreaType" data-toggle="popover" data-trigger='manual'>
 								<option value="标准" selected="selected">标准</option>
@@ -56,7 +56,7 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="functionAreaOrder">排序</label>
+							<label class="col-sm-3 control-label no-padding-right" for="functionAreaOrder" data-i18n="page.quotation.label.sort">排序</label>
 							<div class="col-sm-9">
 								<input type="text" id="functionAreaOrder" class="col-xs-10 col-sm-5 v_required v_number"  data-toggle="popover" data-trigger='manual' maxlength='5'/>
 							</div>
@@ -64,7 +64,7 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="type">类型</label>
+							<label class="col-sm-3 control-label no-padding-right" for="type" data-i18n="page.quotation.label.type">类型</label>
 							<div class="col-sm-9">
 								<select class="col-xs-10 col-sm-5 v_required" id="type" data-toggle="popover" data-trigger='manual'></select>
 							</div>
@@ -72,7 +72,7 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="total">总价</label>
+							<label class="col-sm-3 control-label no-padding-right" for="total" data-i18n="page.quotation.label.totalPrice">总价</label>
 							<div class="col-sm-9">
 								<input type="text" id="total" class="col-xs-10 col-sm-5 v_number" data-toggle="popover" data-trigger='manual' maxlength='5' value='0'/>
 							</div>
@@ -82,8 +82,8 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>
@@ -108,7 +108,7 @@
 					<button type="button" id="radioBtn" class="btn btn-primary btn-warning">单选</button>
 					<button type="button" id="checkBtn" class="btn btn-primary btn-inverse">多选</button>
 					<button type="button" id="inputBtn" class="btn btn-primary btn-pink">输入框</button>
-					<button type="button" id="saveOtemBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="saveOtemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
 				</div>
 			</div>
 		</div>

@@ -122,7 +122,7 @@
         <div class="navbar-container" id="navbar-container">
             <div class="navbar-header pull-left">
                 <a href="#" class="navbar-brand">
-                    <small>
+                    <small data-i18n="page.common.home.brandTitle">
                         Fanglin IF Admin(测试版)
                     </small>
                 </a>
@@ -134,36 +134,48 @@
                     <li class="dark">
                         <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                             <i class="icon-globe icon-animated-bell"></i>
-                            <span class="user-info companyinfo"><small>当前公司</small><span class="user-name companyName"></span></span>
+                            <span class="user-info companyinfo"><small data-i18n="page.common.home.currentCompany">当前公司</small><span class="user-name companyName"></span></span>
                             <i class="icon-caret-down"></i>
                         </a>
                         <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" id="companysel"></ul>
                     </li>
+                    <li class="purple">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <i class="icon-globe"></i>
+                            <span class="user-info"><small data-i18n="page.common.home.langSwitch">语言</small><span class="user-name" id="currentLangName">简体中文</span></span>
+                            <i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" id="langsel">
+                            <li><a href="#" data-lang="cn"><i class="icon-ok lang-check" style="visibility:hidden;"></i> <span data-i18n="page.common.lang.cn">简体中文</span></a></li>
+                            <li><a href="#" data-lang="tw"><i class="icon-ok lang-check" style="visibility:hidden;"></i> <span data-i18n="page.common.lang.tw">繁體中文</span></a></li>
+                            <li><a href="#" data-lang="en"><i class="icon-ok lang-check" style="visibility:hidden;"></i> <span data-i18n="page.common.lang.en">English</span></a></li>
+                        </ul>
+                    </li>
                     <li class="red">
                         <a href="#" id="faqInfo">
                             <i class="icon-key icon-animated-bell"></i>
-                            <span class="dropdown-toggle">帮助</span>
+                            <span class="dropdown-toggle" data-i18n="page.common.home.help">帮助</span>
                         </a>
                     </li>
                     <li class="green">
                         <a href="#" id="versionInfo">
                             <i class="icon-bookmark"></i>
-                            <span class="user-info"><small>版本<span id="versionName"></span></small><small><span id="versionCode"></span></small></span>
+                            <span class="user-info"><small><span data-i18n="page.common.home.version">版本</span><span id="versionName"></span></small><small><span id="versionCode"></span></small></span>
                         </a>
                     </li>
                     <li class="light-blue">
                         <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                             <img class="nav-user-photo" alt="" src="assets/altogether/images/avatar2.png" id="userImg">
-                            <span class="user-info"><small>您好,</small><span class="user-name"></span></span>
+                            <span class="user-info"><small data-i18n="page.common.home.hello">您好,</small><span class="user-name"></span></span>
                             <i class="icon-caret-down"></i>
                         </a>
                         <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 							<li><div id="qrcode" class="qrcode"></div></li>
-                            <li><a id="changePassword" class='changePassword' href="#"><i class="icon-cog"></i>修改密码</a></li>
-                            <li><a id="userProfile" class='userProfile' href="#"><i class="icon-user"></i>个人资料</a></li>
-                            <li><a id="userLock" class='userLock' href="#"><i class="icon-lock"></i>锁屏</a></li>
+                            <li><a id="changePassword" class='changePassword' href="#"><i class="icon-cog"></i><span data-i18n="page.common.home.changePwd">修改密码</span></a></li>
+                            <li><a id="userProfile" class='userProfile' href="#"><i class="icon-user"></i><span data-i18n="page.common.home.profile">个人资料</span></a></li>
+                            <li><a id="userLock" class='userLock' href="#"><i class="icon-lock"></i><span data-i18n="page.common.home.lock">锁屏</span></a></li>
                             <li class="divider"></li>
-                            <li><a id="logout" class='logout' href="#"><i class="icon-off"></i>退出</a></li>
+                            <li><a id="logout" class='logout' href="#"><i class="icon-off"></i><span data-i18n="page.common.home.logout">退出</span></a></li>
                         </ul>
                     </li>
                 </ul>
@@ -307,7 +319,9 @@
         jses += '<script src="js/com/params.js"><\/script>';
         jses += '<script src="js/com/utils.js"><\/script>';
         jses += '<script src="js/com/core.js"><\/script>';
-        
+
+        jses += '<script src="js/com/i18n.js"><\/script>';   // i18n 国际化核心(message/page 语言包加载 + t/apply/setLang)
+
         jses += '<script src="js/com/validator.js"><\/script>';
         jses += '<script src="js/com/condition.js"><\/script>';
         jses += '<script src="js/com/searcher.js"><\/script>';

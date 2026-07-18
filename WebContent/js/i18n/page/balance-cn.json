@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "lang": "cn",
+    "type": "page",
+    "module": "balance",
+    "desc": "结算模块页面文本。覆盖 balance 视图下的 modal 标题、表单 label、按钮。结算/扣款/账户等术语。"
+  },
+
+  "page.balance.label.balance": "结算",
+  "page.balance.label.belongUser": "归属人",
+  "page.balance.label.cashier": "出纳",
+  "page.balance.label.operateAmount": "操作额",
+  "page.balance.label.account": "账户",
+  "page.balance.label.balanceDeduct": "结算扣款",
+  "page.balance.label.deduct": "扣款",
+  "page.balance.label.level": "等级",
+  "page.balance.label.creator": "创建人",
+  "page.balance.label.createTime": "创建时间",
+  "page.balance.label.payable": "应付额",
+  "page.balance.label.paid": "实付额",
+  "page.balance.label.remain": "余额",
+  "page.balance.label.address": "地址",
+  "page.balance.label.phone": "电话",
+  "page.balance.label.bank": "银行",
+  "page.balance.label.cardNo": "卡号",
+  "page.balance.label.shareDetail": "分摊明细",
+  "page.balance.label.deductAccount": "扣款账户",
+  "page.balance.label.imgPath": "图片路径",
+  "page.balance.label.balanceImg": "结算图片",
+  "page.balance.label.accountTotal": "账户总额",
+  "page.balance.label.accountBalance": "账户余额",
+  "page.balance.label.balanceDeductImg": "结算扣款图片",
+  "page.balance.label.deductDetail": "扣款明细",
+  "page.balance.label.balanceDetail": "结算明细",
+  "page.balance.label.balanceExternal": "结算外销",
+  "page.balance.label.balanceSales": "结算销售",
+  "page.balance.label.balanceSelection": "结算选材",
+
+  "page.balance.btn.addFinishOrder": "添加完结单",
+  "page.balance.btn.bind": "绑定",
+  "page.balance.btn.offset": "抵扣",
+  "page.balance.btn.addDeduct": "添加扣款"
+}

@@ -9,11 +9,11 @@
             <div id="serviceInfo" class="clearfix tab-pane active"></div> <!--查询结果-->
 
             <div class="row" style="margin-left: 0px;margin-right: 0px;margin-top: 14px;" id="select1">
-                <!--<button class="btn  pull-left btn-sm" id="addService">添加</button>-->
+                <!--<button class="btn  pull-left btn-sm" id="addService" data-i18n="page.decoration.btn.add">添加</button>-->
 
                 <button class="btn btn-minier pull-right btn-info" type="button" id="btnBack">
                     <i class="icon-mail-forward bigger-110"></i>
-                    <span>返回</span>
+                    <span data-i18n="msg.back">返回</span>
                 </button>
             </div>
         </div>
@@ -29,7 +29,7 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group" >
-                            <label class="col-md-3 control-label no-padding-right" for="comment" >备注信息</label>
+                            <label class="col-md-3 control-label no-padding-right" for="comment"  data-i18n="page.decoration.label.commentInfo">备注信息</label>
                             <div class="col-md-9">
                                 <textarea id="comment" class="col-md-6 v_name v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="40"></textarea>
                             </div>
@@ -40,7 +40,7 @@
                             <label class="col-md-3 control-label no-padding-right" for="planTime" >计划时间</label>
                             <div class="col-md-9">
                                 <input type="text" id="planTime" class="form-control date-picker"
-                                       data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="请选择计划时间">
+                                       data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="请选择计划时间" data-i18n-ph="page.decoration.ph.planTime">
                             </div>
                         </div>
                         <div class="space-4"></div>
@@ -48,8 +48,8 @@
                         <div class="form-group" >
                             <label class="col-md-3 control-label no-padding-right" for="finisher" >完成人</label>
                             <div class="col-md-9">
-                                <select id="finisher" class="form-control" placeholder="请选择完成人">
-                                    <option value="">请选择完成人</option>
+                                <select id="finisher" class="form-control" placeholder="请选择完成人" data-i18n-ph="page.decoration.ph.completer">
+                                    <option value="" data-i18n="page.decoration.ph.completer">请选择完成人</option>
                                 </select>
                             </div>
                         </div>
@@ -58,8 +58,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="serviceSaveBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="serviceSaveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

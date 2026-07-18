@@ -7,22 +7,22 @@
 		<div class="col-xs-6">
 			<a href="#" id="createQuotation" class="btn btn-default btn-app btn-sm radius-4" style="padding: 5px 0;">
 				<i class="icon-plus-sign bigger-230"></i>
-				<span>创建</span>
+				<span data-i18n="page.quotation.btn.create">创建</span>
 			</a>
 
 			<a href="#" id="replicaQuotation" class="btn btn-success btn-app btn-sm radius-4" style="padding: 5px 0;">
 				<i class="icon-hdd bigger-230"></i>
-				<span>拷贝报价</span>
+				<span data-i18n="page.quotation.title.copyQuotation">拷贝报价</span>
 			</a>
 
 			<a href="#" id="compareQuotation" class="btn btn-yellow btn-app btn-sm radius-4 hide" style="padding: 5px 0;">
 				<i class="icon-binoculars bigger-230"></i>
-				<span>对比</span>
+				<span data-i18n="page.quotation.title.compare">对比</span>
 			</a>
 
 			<a href="#" id="btnBack" class="btn btn-info btn-app btn-sm radius-4" style="padding: 5px 0;">
 				<i class="icon-mail-forward bigger-230"></i>
-				<span>返回</span>
+				<span data-i18n="msg.back">返回</span>
 			</a>
 		</div>
         
@@ -58,7 +58,7 @@
 							<div class="space-4"></div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
+							<label class="col-sm-3 control-label no-padding-right" for="name" data-i18n="page.quotation.label.name">名称</label>
 							<div class="col-sm-9">
 								<input type="text" id="name" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='15'/>
 								<input type="text" id="qid" class="col-xs-10 col-sm-5 hide"/>
@@ -86,7 +86,7 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="content">备注</label>
+							<label class="col-sm-3 control-label no-padding-right" for="content" data-i18n="page.quotation.label.comment">备注</label>
 							<div class="col-sm-9">
 								<textarea id="content" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual'  maxlength='25'></textarea>
 							</div>
@@ -95,7 +95,7 @@
 
 						<div id="keepriceGroup">
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="quotationTime">保价时间</label>
+								<label class="col-sm-3 control-label no-padding-right" for="quotationTime" data-i18n="page.quotation.label.prepriceTime">保价时间</label>
 								<div class="col-sm-9">
 									<input type="checkbox" id="quotationTime" class="ace"/>
 									<span class="lbl status-lbl"></span>
@@ -104,7 +104,7 @@
 							<div class="space-4"></div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="quotationPrice">保价价格</label>
+								<label class="col-sm-3 control-label no-padding-right" for="quotationPrice" data-i18n="page.quotation.label.preprice">保价价格</label>
 								<div class="col-sm-9">
 									<input type="checkbox" id="quotationPrice" class="ace" disabled="disabled"/>
 									<span class="lbl status-lbl"></span>
@@ -116,8 +116,8 @@
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>
@@ -130,7 +130,7 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span>&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="replicaQuotationDialog">拷贝报价</h4>
+					<h4 class="modal-title" id="replicaQuotationDialog" data-i18n="page.quotation.title.copyQuotation">拷贝报价</h4>
 				</div>
 
 				<div class="modal-body">
@@ -153,7 +153,7 @@
 
 						<div id ="Bquoteno" class="hide">
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="quotetionNo">报价编号</label>
+								<label class="col-sm-3 control-label no-padding-right" for="quotetionNo" data-i18n="page.quotation.label.quotationNo">报价编号</label>
 								<div class="col-sm-9">
 									<input type="text" id="quotetionNo" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='50'/>
 								</div>
@@ -162,14 +162,14 @@
 
 						<div id="bOrderId" class="hide">
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="replicaOrderId">装修单号</label>
+								<label class="col-sm-3 control-label no-padding-right" for="replicaOrderId" data-i18n="page.quotation.label.orderNo">装修单号</label>
 								<div class="col-sm-9">
 									<input type="text" id="replicaOrderId" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='15'/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="quotations">报价名称</label>
+								<label class="col-sm-3 control-label no-padding-right" for="quotations" data-i18n="page.quotation.label.quotationName">报价名称</label>
 								<div class="col-sm-9">
 									<select class="col-xs-10 col-sm-5 v_required" id="quotations" data-toggle="popover" data-trigger='manual'>
 									</select>
@@ -178,7 +178,7 @@
 						</div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="quotationTime">保价时间</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="quotationTime" data-i18n="page.quotation.label.prepriceTime">保价时间</label>
                             <div class="col-sm-9">
                                 <input type="checkbox" id="quotationTime" class="ace"/>
                                 <span class="lbl status-lbl"></span>
@@ -186,7 +186,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="quotationPrice">保价价格</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="quotationPrice" data-i18n="page.quotation.label.preprice">保价价格</label>
                             <div class="col-sm-9">
                                 <input type="checkbox" id="quotationPrice" class="ace" disabled="disabled"/>
                                 <span class="lbl status-lbl"></span>
@@ -196,8 +196,8 @@
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" id="replicaBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="rcancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="replicaBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" id="rcancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 
 			</div>
@@ -219,7 +219,7 @@
 							<div class="col-md-12">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="leftType">对比类型</label>
+										<label class="col-sm-3 control-label no-padding-right" for="leftType" data-i18n="page.quotation.label.compareType">对比类型</label>
 										<div class="col-sm-9">
 											<select class="col-xs-10 col-sm-5 v_required" id="leftType" data-toggle="popover" data-trigger='manual'>
 											</select>
@@ -228,7 +228,7 @@
 
 									<div id ="leftquono" class="hide">
 										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="leftQuotationNo">报价编号</label>
+											<label class="col-sm-3 control-label no-padding-right" for="leftQuotationNo" data-i18n="page.quotation.label.quotationNo">报价编号</label>
 											<div class="col-sm-9">
 												<input type="text" id="leftQuotationNo" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='15'/>
 											</div>
@@ -237,14 +237,14 @@
 
 									<div id="leftOrd" class="hide">
 										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="leftOrderId">装修单号</label>
+											<label class="col-sm-3 control-label no-padding-right" for="leftOrderId" data-i18n="page.quotation.label.orderNo">装修单号</label>
 											<div class="col-sm-9">
 												<input type="text" id="leftOrderId" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='15'/>
 											</div>
 										</div>
 
 										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="leftQuotationNames">报价名称</label>
+											<label class="col-sm-3 control-label no-padding-right" for="leftQuotationNames" data-i18n="page.quotation.label.quotationName">报价名称</label>
 											<div class="col-sm-9">
 												<select class="col-xs-10 col-sm-5 v_required" id="leftQuotationNames" data-toggle="popover" data-trigger='manual'>
 												</select>
@@ -254,7 +254,7 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="rightType">对比类型</label>
+										<label class="col-sm-3 control-label no-padding-right" for="rightType" data-i18n="page.quotation.label.compareType">对比类型</label>
 										<div class="col-sm-9">
 											<select class="col-xs-10 col-sm-5 v_required" id="rightType" data-toggle="popover" data-trigger='manual'>
 											</select>
@@ -263,7 +263,7 @@
 
 									<div id ="rightquono" class="hide">
 										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="rightQuotationNo">报价编号</label>
+											<label class="col-sm-3 control-label no-padding-right" for="rightQuotationNo" data-i18n="page.quotation.label.quotationNo">报价编号</label>
 											<div class="col-sm-9">
 												<input type="text" id="rightQuotationNo" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='15'/>
 											</div>
@@ -272,14 +272,14 @@
 
 									<div id="rightOrd" class="hide">
 										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="rightOrderId">装修单号</label>
+											<label class="col-sm-3 control-label no-padding-right" for="rightOrderId" data-i18n="page.quotation.label.orderNo">装修单号</label>
 											<div class="col-sm-9">
 												<input type="text" id="rightOrderId" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='15'/>
 											</div>
 										</div>
 
 										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="rightQuotationNames">报价名称</label>
+											<label class="col-sm-3 control-label no-padding-right" for="rightQuotationNames" data-i18n="page.quotation.label.quotationName">报价名称</label>
 											<div class="col-sm-9">
 												<select class="col-xs-10 col-sm-5 v_required" id="rightQuotationNames" data-toggle="popover" data-trigger='manual'>
 												</select>
@@ -295,8 +295,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" id="compareQuotationBtn" class="btn btn-primary">对比</button>
-				<button type="button" id="compareQuotationCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="compareQuotationBtn" class="btn btn-primary" data-i18n="page.quotation.title.compare">对比</button>
+				<button type="button" id="compareQuotationCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>
@@ -310,13 +310,13 @@
 				<button type="button" class="close" data-dismiss="modal">
 					<span>&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title">优惠</h4>
+				<h4 class="modal-title" data-i18n="page.quotation.label.discountInfo">优惠</h4>
 			</div>
 			<div class="modal-body">
 				<form class="form-horizontal">
 					<div id="produceShow">
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="produce">产品</label>
+							<label class="col-sm-3 control-label no-padding-right" for="produce" data-i18n="page.quotation.label.product">产品</label>
 							<div class="col-sm-9">
 								<select class="col-xs-10 col-sm-5 v_required" id="produce" data-toggle="popover" data-trigger='manual'></select>
 							</div>
@@ -333,7 +333,7 @@
 					<div class="space-4"></div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="managePrefer">管理优惠</label>
+						<label class="col-sm-3 control-label no-padding-right" for="managePrefer" data-i18n="page.quotation.label.manageDiscount">管理优惠</label>
 						<div class="col-sm-9">
 							<input type="text" id="managePrefer" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
 						</div>
@@ -341,7 +341,7 @@
 					<div class="space-4"></div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="advancePrefer">特殊优惠</label>
+						<label class="col-sm-3 control-label no-padding-right" for="advancePrefer" data-i18n="page.quotation.label.specialDiscount">特殊优惠</label>
 						<div class="col-sm-9">
 							<input type="text" id="advancePrefer" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
 						</div>
@@ -350,8 +350,8 @@
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" id="savePreferBtn" class="btn btn-primary">保存</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="savePreferBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>
@@ -414,7 +414,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" id="submitApproveBtn" class="btn btn-primary">修改申请</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>
@@ -452,7 +452,7 @@
 
 							<label class="inline">
 								<input type="radio" class="ace" value="4" name="layout">
-								<span class="lbl">工种</span>
+								<span class="lbl" data-i18n="page.quotation.label.workType">工种</span>
 							</label>
 						</div>
 					</div>
@@ -477,7 +477,7 @@
 
 							<label class="inline">
 								<input type="checkbox" class="ace" value="8" name="type">
-								<span class="lbl">成本</span>
+								<span class="lbl" data-i18n="page.quotation.label.cost">成本</span>
 							</label>
 
 							<label class="inline">
@@ -487,7 +487,7 @@
 
 							<label class="inline">
 								<input type="checkbox" class="ace" value="32" name="type">
-								<span class="lbl">优惠</span>
+								<span class="lbl" data-i18n="page.quotation.label.discountInfo">优惠</span>
 							</label>
 						</div>
 					</div>
@@ -549,7 +549,7 @@
 
 							<label class="inline">
 								<input type="radio" class="ace" value="1" name="calType" >
-								<span class="lbl">计算</span>
+								<span class="lbl" data-i18n="page.quotation.label.calculate">计算</span>
 							</label>
 						</div>
 					</div>
@@ -558,7 +558,7 @@
 
 			<div class="modal-footer">
 				<button type="button" id="prinBtn" class="btn btn-primary">打印</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>
@@ -577,9 +577,9 @@
 			<div class="modal-body">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right orange" for="auditRemark">备注</label>
+						<label class="col-sm-3 control-label no-padding-right orange" for="auditRemark" data-i18n="page.quotation.label.comment">备注</label>
 						<div class="col-sm-9">
-							<textarea id="auditRemark" class="col-xs-10 col-sm-6" rows="4" placeholder="请输入审核备注..."></textarea>
+							<textarea id="auditRemark" class="col-xs-10 col-sm-6" rows="4" placeholder="请输入审核备注..." data-i18n-ph="page.quotation.ph.auditComment"></textarea>
 						</div>
 					</div>
 					<div class="space-4"></div>
@@ -587,7 +587,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" id="confirmAuditBtn" class="btn btn-primary">确认审核</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>
@@ -601,7 +601,7 @@
 				<button type="button" class="close" data-dismiss="modal">
 					<span>&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title">信息</h4>
+				<h4 class="modal-title" data-i18n="page.quotation.label.info">信息</h4>
 			</div>
 			<div class="modal-body">
 				<form class="form-horizontal">
@@ -631,8 +631,8 @@
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" id="saveForInfoBtn" class="btn btn-primary">保存</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="saveForInfoBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>

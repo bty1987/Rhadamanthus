@@ -1,4 +1,34 @@
-﻿var config = {
+﻿// ========== 国际化(i18n)配置 ==========
+// config.js 是最早加载的脚本,负责在 core.js 加载 error 包前确定 config.lang。
+// 语言来源优先级:localStorage('rhada.lang') > 浏览器 navigator.language > defaultLang
+// 已登录用户的持久化偏好(userprefer)在 index.js loadUserPrefers 后覆盖此值。
+// 详见 docs/10-指南手册/I18N_PLAN.md §五"语言来源链"。
+(function() {
+    var DEFAULT_LANG = 'cn';
+    var SUPPORTED_LANGS = ['cn', 'tw', 'en']; // 短语言码,与 js/i18n/*-{lang}.json 一致
+
+    function pickLang() {
+        // ① localStorage(运行时切换即时写回,离线可用)
+        try {
+            var saved = localStorage.getItem('rhada.lang');
+            if (saved && SUPPORTED_LANGS.indexOf(saved) >= 0) return saved;
+        } catch (e) {} // localStorage 不可用(隐私模式)则跳过
+
+        // ② 浏览器语言映射(zh-*→cn, zh-TW/zh-HK→tw, en-*→en, 其余→默认)
+        var nav = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        if (nav.indexOf('zh') === 0) {
+            return (nav.indexOf('tw') >= 0 || nav.indexOf('hk') >= 0 || nav.indexOf('hant') >= 0) ? 'tw' : 'cn';
+        }
+        if (nav.indexOf('en') === 0) return 'en';
+
+        // ③ 默认简体中文
+        return DEFAULT_LANG;
+    }
+
+    window.__i18nLang = pickLang();
+})();
+
+var config = {
 
     intranet: false,
 
@@ -53,7 +83,12 @@
     media: '',
     dmedia: '',
     library: '',
-    store: ''
+    store: '',
+
+    // 国际化配置
+    defaultLang: 'cn',                       // 默认语言(短码),未匹配任何来源时使用
+    supportedLangs: ['cn', 'tw', 'en'],      // 支持的语言列表(对应 js/i18n/*-{lang}.json)
+    lang: window.__i18nLang || 'cn'          // 当前语言:config.js 启动时按来源链确定,登录后被 userprefer 覆盖
 };
 
 window.console && window.console.log && console.log("%c有时候，正是那些人们认为的无用之人成就了无人能成之事。\nSometimes it's the very people who no one imagines anything of who do the things no one can imagine.\n--Alan·Mathison·Turing'sayings\n", "color:#428bca; font-size:1em");

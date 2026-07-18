@@ -12,6 +12,7 @@
 - [路由与导航](#路由与导航)
 - [API 调用规范](#api-调用规范)
 - [开发指南](#开发指南)
+- [国际化（i18n）开发规范](#国际化i18n开发规范)
 
 ---
 
@@ -1849,6 +1850,124 @@ function checkDirectSelectorUsage() {
     return violations;
 }
 ```
+
+---
+
+## 国际化（i18n）开发规范
+
+> 完整方案见 [docs/10-指南手册/I18N_PLAN.md](../docs/10-指南手册/I18N_PLAN.md)。
+> 本节只列业务开发必须遵守的接入规范。
+
+### 1. 架构概览
+
+- **后端零改动**：错误文案国际化由 `error-cn.json` 负责（FLException 计划），用户语言偏好存 `communion.userprefer`（`module=index,page=global,pkey=lang`），复用现有 `updateUserPrefer.do`。
+- **前端核心**：`js/com/i18n.js` 提供翻译 API，`js/i18n/` 下分三类语言包。
+- **语言来源链**：`userprefer`（登录后）> `localStorage['rhada.lang']` > 浏览器语言 > 默认 `cn`。
+
+### 2. 语言包结构
+
+```
+WebContent/js/i18n/
+├── error-cn.json        # 错误码表（FLException 计划负责，勿手改）
+├── message-cn.json      # 公共高频提示（msg.* 前缀）
+├── page/
+│   ├── common-cn.json   # 登录/首页/导航/公共组件
+│   └── {module}-cn.json # 各业务模块静态文本
+└── ...-{tw,en,...}.json # 平行新增其他语言
+```
+
+**键名三段式规范**：
+- `msg.{语义}` — 公共提示（如 `msg.opSuccess`、`msg.confirm`、`msg.loading`）
+- `page.{模块}.{语义}` — 页面文本（如 `page.customer.name`、`page.decoration.orderNo`）
+- 错误码 key 直接用数字码（`110000`），不加前缀
+
+### 3. 翻译 API（`js/com/i18n.js`）
+
+```javascript
+i18n.lang                    // 当前语言码 'cn'/'tw'/'en'
+i18n.t('msg.opSuccess')      // → "操作成功" / "Success" / ...
+i18n.t('msg.retry', ['3'])   // 占位符填充：'还可以尝试{0}次' → '还可以尝试3次'
+i18n.tAuto('操作成功')        // 反查：中文文案→译文（供 com.show* 透明拦截）
+i18n.apply($('body'))        // DOM 批量替换 [data-i18n] / [data-i18n-ph] / [data-i18n-title]
+i18n.setLang('en')           // 切换语言（重载包 + apply 全局 + 落库）
+i18n.loadPage('decoration')  // 按需加载业务模块 page 包
+```
+
+### 4. 开发接入指南（必读）
+
+#### 4.1 动态提示（JS）—— 默认自动翻译，无需手改
+
+`com.showAlert` / `showConfirm` / `showWhether` 已内置 `i18n.tAuto` 透明拦截。**`message-cn.json` 中已注册的中文短语（`msg.*`）会自动翻译，业务代码无需改动**。
+
+```javascript
+// ✅ 无需改写：showAlert 内部自动查 messageMap
+com.showAlert(com.info, "操作成功");        // 切到英文自动显示 "Success"
+com.showConfirm("是否确认删除?");           // 自动翻译
+
+// ✅ 业务特定短语（非通用）：改用 i18n.t() 显式指定 key
+com.showAlert(com.info, i18n.t('page.decoration.decorationNotExist'));
+```
+
+新增通用提示词时，**先加到 `message-{lang}.json`，再在代码里直接写中文**——透明拦截会自动处理。
+
+#### 4.2 HTML 静态文本 —— 用 `data-i18n` 标记
+
+```html
+<!-- 改造前 -->
+<label>客户名称：</label>
+<input placeholder="请输入客户名称" />
+<button>查询</button>
+
+<!-- 改造后（保留原文作 fallback） -->
+<label data-i18n="page.customer.name">客户名称：</label>
+<input placeholder="请输入客户名称" data-i18n-ph="msg.inputPlease" />
+<button data-i18n="msg.query">查询</button>
+```
+
+页面 ready 时调一次 `i18n.apply($('body'))`。**可用 `scripts/extract_i18n.py` 半自动打标**：
+
+```bash
+# dry-run 扫描模块，看草案 key
+python scripts/extract_i18n.py WebContent/views/decoration/ --module decoration --page
+
+# 把草案 page 包写入文件（人工校对 key 语义后定稿）
+python scripts/extract_i18n.py WebContent/views/decoration/ --module decoration \
+    --page --page-out WebContent/js/i18n/page/decoration-cn.json
+```
+
+#### 4.3 业务页面 ready 模板
+
+业务页面除了全局 `apply`，还需按需加载自己的 page 包：
+
+```javascript
+$(function() {
+    i18n.loadPage('decoration');   // 加载本模块 page 包（幂等）
+    i18n.apply($('body'));         // 替换 [data-i18n] 元素
+    // ... 业务逻辑
+});
+```
+
+### 5. 语言切换 UI（阶段 1 落地）
+
+顶栏语言下拉调用 `i18n.setLang(lang)` 即可，持久化/落库/apply 都已内置：
+
+```javascript
+$('.lang-switch').on('click', function() {
+    i18n.setLang($(this).data('lang'), {
+        onDone: function(lang, changed) {
+            if (changed) com.showAlert(com.info, i18n.t('msg.opSuccess'));
+        }
+    });
+});
+```
+
+### 6. 约束与禁忌
+
+- 🔴 **禁止裸写 `alert()` / `confirm()`**：必须走 `com.show*`，否则绕开 i18n。
+- 🔴 **禁止在 JS 里硬编码非通用中文文案直接展示**：业务特定提示用 `i18n.t('page.xxx.key')`。
+- 🔴 **新增通用提示词时同步加所有语言包**：`message-cn.json` 加了 `msg.xxx`，对应 `message-tw.json` / `message-en.json` 也要加，否则切到该语言时会显示 key 原值。
+- 🔴 **HTML 改造保留原文作 fallback**：`<label data-i18n="key">原文</label>`，不要写成空的 `<label data-i18n="key"></label>`——语言包未命中时不致空白。
+- 🔴 **error-cn.json 不要手改**：由 `scripts/generate_error_json.py` 从 `error.md` 生成。
 
 ---
 

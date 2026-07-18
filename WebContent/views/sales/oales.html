@@ -18,7 +18,7 @@
                         <span>&times;</span>
                         <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title">外销单</h4>
+                    <h4 class="modal-title" data-i18n="page.sales.label.externalOrder">外销单</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
@@ -29,13 +29,13 @@
                             </div>
                         </div>
                         <div class="form-group serve">
-                            <label class="col-md-3 control-label no-padding-right orange" for="brandName">品牌</label>
+                            <label class="col-md-3 control-label no-padding-right orange" for="brandName" data-i18n="page.sales.label.brand">品牌</label>
                             <div class="col-sm-8">
                                 <input type="text" class="col-xs-8 m-wrap v_typeahead v_required" id="brandName">
                             </div>
                         </div>
                         <div class="form-group serve">
-                            <label class="col-md-3 control-label no-padding-right orange" for="supplier">厂商</label>
+                            <label class="col-md-3 control-label no-padding-right orange" for="supplier" data-i18n="page.sales.label.manufacturer">厂商</label>
                             <div class="col-sm-8">
                                 <select class="col-xs-8 m-wrap v_required" id="supplier"></select>
                             </div>
@@ -47,19 +47,19 @@
                             </div>
                         </div>
                         <div class="form-group serve">
-                            <label class="col-md-3 control-label no-padding-right orange" for="service">服务管家</label>
+                            <label class="col-md-3 control-label no-padding-right orange" for="service" data-i18n="page.sales.label.serviceManager">服务管家</label>
                             <div class="col-sm-8">
                                 <input type="text" class="col-xs-8 m-wrap v_typeahead v_required" id="service">
                             </div>
                         </div>
                         <div class="form-group serve">
-                            <label class="col-md-3 control-label no-padding-right orange" for="channer">渠道</label>
+                            <label class="col-md-3 control-label no-padding-right orange" for="channer" data-i18n="page.sales.label.channel">渠道</label>
                             <div class="col-sm-8">
                                 <input type="text" class="col-xs-8 m-wrap v_typeahead v_required" id="channer">
                             </div>
                         </div>
                         <div class="form-group material refund">
-                            <label for="total" class="col-md-3 control-label no-padding-right orange">总额</label>
+                            <label for="total" class="col-md-3 control-label no-padding-right orange" data-i18n="page.sales.label.totalAmount">总额</label>
                             <div class="col-sm-8">
                                 <input type="text" class="col-xs-8 m-wrap v_float_3 v_required" id="total">
                             </div>
@@ -77,25 +77,25 @@
                             </div>
                         </div>
                         <div class="form-group material">
-                            <label for="threshold" class="col-md-3 control-label no-padding-right orange">系数</label>
+                            <label for="threshold" class="col-md-3 control-label no-padding-right orange" data-i18n="page.sales.label.coefficient">系数</label>
                             <div class="col-sm-8">
                                 <input type="text" class="col-xs-8 m-wrap v_float_3 v_required" id="threshold">
                             </div>
                         </div>
                         <div class="form-group material refund hide">
-                            <label for="profit" class="col-md-3 control-label no-padding-right orange">利润</label>
+                            <label for="profit" class="col-md-3 control-label no-padding-right orange" data-i18n="page.sales.label.profit">利润</label>
                             <div class="col-sm-8">
                                 <input type="text" class="col-xs-8 m-wrap v_float_3 v_required" id="profit">
                             </div>
                         </div>
                         <div class="form-group material">
-                            <label for="awardType" class="col-md-3 control-label no-padding-right orange">奖励类型</label>
+                            <label for="awardType" class="col-md-3 control-label no-padding-right orange" data-i18n="page.sales.label.rewardType">奖励类型</label>
                             <div class="col-sm-8">
                                 <select class="col-xs-8 m-wrap v_required" id="awardType"></select>
                             </div>
                         </div>
                         <div class="form-group material finance refund">
-                            <label for="award" class="col-md-3 control-label no-padding-right orange">奖励</label>
+                            <label for="award" class="col-md-3 control-label no-padding-right orange" data-i18n="page.sales.label.reward">奖励</label>
                             <div class="col-sm-8">
                                 <input type="text" class="col-xs-8 m-wrap v_float_3 v_required" id="award">
                             </div>
@@ -103,7 +103,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
                 </div>
             </div>
         </div>
@@ -116,7 +116,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title">配送图片</h4>
+                    <h4 class="modal-title" data-i18n="page.sales.label.deliveryImg">配送图片</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -143,12 +143,12 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="decorationInfoDialog">结算单</h4>
+                    <h4 class="modal-title" id="decorationInfoDialog" data-i18n="page.sales.label.balanceOrder">结算单</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="balanceOales">结算名</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="balanceOales" data-i18n="page.sales.label.balanceName">结算名</label>
                             <div class="col-sm-9">
                                 <input id="balanceOales" type="text" class="col-xs-10 col-sm-5 v_required v_typeahead" data-toggle="popover" data-trigger='manual' maxlength="32"/>
                             </div>
@@ -156,8 +156,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="balanceOalesBtn" class="btn btn-primary">提交</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="balanceOalesBtn" class="btn btn-primary" data-i18n="msg.submit">提交</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

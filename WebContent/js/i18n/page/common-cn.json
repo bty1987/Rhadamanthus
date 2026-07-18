@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "lang": "cn",
+    "type": "page",
+    "module": "common",
+    "desc": "公共页面文本:登录/首页/导航/顶栏等。各业务模块文本放 page/{module}-cn.json"
+  },
+
+  "page.common.login.title": "登录",
+  "page.common.login.userId": "请输入工号/手机号/邮箱",
+  "page.common.login.password": "请输入登录密码",
+  "page.common.login.passwordLabel": "密码",
+  "page.common.login.submit": "登录",
+  "page.common.login.btnLogin": "登录账号",
+  "page.common.login.btnExperience": "立即体验",
+  "page.common.login.verifyCode": "请输入验证码",
+  "page.common.login.remember": "记住我",
+  "page.common.login.forget": "忘记密码?",
+  "page.common.login.invalidCred": "用户名或者密码错误",
+  "page.common.login.qrcodeDing": "钉钉扫码",
+  "page.common.login.qrcodeWechat": "微信扫码",
+  "page.common.login.passwordTab": "密码登录",
+  "page.common.login.welcome": "欢迎登录",
+  "page.common.login.subtitle": "使用方林账号，开启管理化工作时代。",
+  "page.common.login.qrTipDing": "请使用钉钉扫码登录",
+  "page.common.login.qrTipWechat": "请使用微信扫码登录",
+  "page.common.login.qrExpired": "二维码已失效",
+  "page.common.login.qrRefresh": "点击刷新",
+  "page.common.login.footer": "辽宁方林信息化服务有限公司©2014-2025 | 辽ICP备15003048号-4",
+
+  "page.common.brand.name": "方林集团",
+  "page.common.brand.slogan": "立于一面极于九，专一域而驭八方",
+  "page.common.brand.sloganSub": "业内首推\"行业标杆工艺不达标赔无条\"的重锤承诺",
+
+  "page.common.home.welcome": "欢迎",
+  "page.common.home.hello": "您好,",
+  "page.common.home.logout": "退出",
+  "page.common.home.profile": "个人资料",
+  "page.common.home.changePwd": "修改密码",
+  "page.common.home.lock": "锁屏",
+  "page.common.home.help": "帮助",
+  "page.common.home.version": "版本",
+  "page.common.home.currentCompany": "当前公司",
+  "page.common.home.langSwitch": "语言",
+  "page.common.home.brandTitle": "Fanglin IF Admin(测试版)",
+
+  "page.common.lang.cn": "简体中文",
+  "page.common.lang.tw": "繁體中文",
+  "page.common.lang.en": "English"
+}
