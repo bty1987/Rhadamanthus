@@ -47,6 +47,17 @@ jQuery(function($) {
         com.focusPage('#templateStyle button[data-template="' + template + '"]').removeClass("btn-white").addClass("btn-primary");
     };
 
+    // i18n:语言设置按钮高亮。当前语言取 config.lang(已由 index.js loadUserPrefers 从 userprefer 应用)
+    var setLangStyle = function(lang) {
+
+        lang = lang || (window.config && config.lang) || 'cn';
+        var support = (window.config && config.supportedLangs) || ['cn', 'tw', 'en'];
+        if (support.indexOf(lang) < 0) lang = (window.config && config.defaultLang) || 'cn';
+
+        com.focusPage("#langStyle button").removeClass("btn-primary").addClass("btn-white");
+        com.focusPage('#langStyle button[data-lang="' + lang + '"]').removeClass("btn-white").addClass("btn-primary");
+    };
+
     var getTemplateUrl = function(template) {
 
         var templates = config.templates || {};
@@ -106,6 +117,7 @@ jQuery(function($) {
         com.focusPage("#infoPicture").attr("href", com.showImg(com.focusPage("#showImg"), userProfile.userPhoto, 150, 150, ''));
         setSearcherViewMode(getUserPrefer("searcher", "global", "viewMode") || "line");
         setTemplateStyle(getUserPrefer("index", "global", "templateStyle") || window.templateStyle || config.defaultTemplate || "ace");
+        setLangStyle(getUserPrefer("index", "global", "lang"));
     }
 
     com.focusPage("#searcherViewMode button").on("click", function() {
@@ -139,6 +151,33 @@ jQuery(function($) {
 
             switchTemplate(template);
         });
+    });
+
+    // i18n:语言切换。点击立即落库 userprefer + 当前页面 apply 翻译。
+    // 不跳转刷新(语言切换不应破坏用户当前编辑/操作);主框架顶栏需用户刷新后翻译。
+    com.focusPage("#langStyle button").on("click", function() {
+
+        var lang = $(this).attr("data-lang");
+        if (lang === config.lang) return;  // 未变化直接返回
+
+        setLangStyle(lang);
+        setUserPrefer("index", "global", "lang", lang);
+
+        if (window.i18n) {
+            // setLang 内部已实现:重载语言包 + 全局 apply + 写 localStorage + 落库 userprefer
+            i18n.setLang(lang, {
+                applyRoot: $('body')
+            });
+        } else {
+            // 兜容:i18n 未加载时直接落库 + 写 localStorage
+            try { window.localStorage && window.localStorage.setItem('rhada.lang', lang); } catch (e) {}
+            com.post(api.personel.updateUserPrefer, {
+                "userPrefer.module": "index",
+                "userPrefer.page": "global",
+                "userPrefer.pkey": "lang",
+                "userPrefer.pvalue": lang
+            });
+        }
     });
 
     com.focusPage("#reset").on("click", function() {
