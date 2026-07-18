@@ -1,0 +1,23 @@
+{
+  "_meta": { "lang": "en", "type": "page", "module": "salary", "desc": "Salary module page texts." },
+  "page.salary.label.laborFee": "Labor Fee",
+  "page.salary.label.workerWarranty": "Worker Warranty",
+  "page.salary.label.designerFeeInfo": "Designer Fee Info",
+  "page.salary.label.workerFee": "Worker Fee",
+  "page.salary.label.empName": "Employee Name",
+  "page.salary.btn.clear": "Clear",
+  "page.salary.btn.addSalary": "Add Salary",
+  "page.salary.label.type1": "Type 1",
+  "page.salary.label.type2": "Type 2",
+  "page.salary.label.type3": "Type 3",
+  "page.salary.label.basic": "Basic",
+  "page.salary.label.deduct": "Deduction",
+  "page.salary.label.design": "Design",
+  "page.salary.label.warrantyLimit": "Warranty Limit",
+  "page.salary.label.transferFee": "Transfer Worker Fee",
+  "page.salary.label.transferPerson": "Transfer Person",
+  "page.salary.label.receiver": "Receiver",
+  "page.salary.label.transferAmount": "Transfer Amount",
+  "page.salary.btn.addWorkerAccount": "Add Worker Account",
+  "page.salary.label.workerName": "Worker Name"
+}

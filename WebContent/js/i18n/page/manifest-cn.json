@@ -1,0 +1,16 @@
+{
+  "_meta": { "lang": "cn", "type": "page", "module": "manifest", "desc": "货单模块页面文本。" },
+  "page.manifest.label.warehouse": "仓库",
+  "page.manifest.label.outPrice": "出库价",
+  "page.manifest.label.outWarehouse": "出货仓库",
+  "page.manifest.label.currentWarehouse": "所在仓库",
+  "page.manifest.label.docDate": "单据日期",
+  "page.manifest.label.docDateLabel": "单据日期 :",
+  "page.manifest.label.supervisorName": "监理姓名",
+  "page.manifest.label.feeName": "费用名称",
+  "page.manifest.label.fee": "费用",
+  "page.manifest.label.goodsCategory": "商品类别",
+  "page.manifest.label.totalNum": "总数量",
+  "page.manifest.hint.packageBindGoods": "套餐绑定商品如下所示:",
+  "page.manifest.btn.addGoodsItem": "添加货单项"
+}

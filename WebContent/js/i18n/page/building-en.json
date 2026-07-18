@@ -1,0 +1,21 @@
+{
+  "_meta": { "lang": "en", "type": "page", "module": "building", "desc": "Building module page texts." },
+  "page.building.label.houseSourceNo": "House Source No.",
+  "page.building.label.customerSourceNo": "Customer Source No.",
+  "page.building.label.payMethod": "Payment Method",
+  "page.building.label.estateOrder": "Estate Order",
+  "page.building.label.houseAgent": "House Agent",
+  "page.building.label.customerAgent": "Customer Agent",
+  "page.building.label.signTime": "Sign Time",
+  "page.building.label.dealPrice": "Deal Price",
+  "page.building.label.firstPay": "First Payment",
+  "page.building.label.loanAmount": "Loan Amount",
+  "page.building.label.balanceStatus": "Settlement Status",
+  "page.building.label.credentialType": "Credential Type",
+  "page.building.label.credentialNo": "Credential No.",
+  "page.building.label.houseSourceImg": "House Source Image Info",
+  "page.building.label.follower": "Follower",
+  "page.building.label.houseType": "House Type",
+  "page.building.btn.createCustomer": "Create Customer",
+  "page.building.label.keyReceiver": "Key Receiver"
+}

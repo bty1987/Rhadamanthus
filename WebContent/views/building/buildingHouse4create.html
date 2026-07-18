@@ -15,7 +15,7 @@
 						<label for="customerId" class="col-sm-2 control-label no-padding-right orange">客户姓名</label>
 						<div class="col-sm-10">
 							<input type="text" class="col-xs-10 col-sm-7 v_required" id="customerId" data-placeholder="请输入客户" data-toggle="popover" />
-							<button type="button" id="createCustomer" class="btn btn-xs btn-info" style="margin-left: 2px">创建客户</button>
+							<button type="button" id="createCustomer" class="btn btn-xs btn-info" style="margin-left: 2px" data-i18n="page.building.btn.createCustomer">创建客户</button>
 						</div>
 					</div>
 
@@ -51,7 +51,7 @@
 					</div>
 
 					<div class="form-group" id = "nhousetype">
-						<label class="col-sm-2 control-label no-padding-right">户型</label>
+						<label class="col-sm-2 control-label no-padding-right" data-i18n="page.building.label.houseType">户型</label>
 						<div class="col-sm-10">
 							<input type="text" class="v_required v_number" style="width:9%" maxlength="2" data-toggle="popover"  id="houseTypeOne" /> 室
 							<input type="text" class="v_required v_number" style="width:9%" maxlength="2" data-toggle="popover"  id="houseTypeTwo" /> 厅
@@ -61,7 +61,7 @@
 					</div>
 
 					<div class="form-group" id = "ohousetype" style = "display: none">
-						<label class="col-sm-2 control-label no-padding-right orange" for="oldhousetype">户型</label>
+						<label class="col-sm-2 control-label no-padding-right orange" for="oldhousetype" data-i18n="page.building.label.houseType">户型</label>
 						<div class="col-sm-10">
 							<input type="text" id="oldhousetype" maxlength="3" class="col-xs-10 col-sm-7" readonly="readonly"/>
 						</div>
@@ -151,14 +151,14 @@
 					</div>
 
 					<div class="form-group">
-						<label for="followId" class="col-sm-2 control-label no-padding-right orange">跟进人</label>
+						<label for="followId" class="col-sm-2 control-label no-padding-right orange" data-i18n="page.building.label.follower">跟进人</label>
 						<div class="col-sm-10">
 							<input type="text" class="col-xs-10 col-sm-7 v_required" id="followId" data-placeholder="请输入跟进人" data-toggle="popover" />
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="keyerId" class="col-sm-2 control-label no-padding-right orange">收钥匙人</label>
+						<label for="keyerId" class="col-sm-2 control-label no-padding-right orange" data-i18n="page.building.label.keyReceiver">收钥匙人</label>
 						<div class="col-sm-10">
 							<input type="text" class="col-xs-10 col-sm-7 v_required" id="keyerId" data-placeholder="请输入收钥匙人" data-toggle="popover" />
 						</div>
@@ -267,8 +267,8 @@
 			</div>
 		</div>
 		<div class="modal-footer" style="text-align: center">
-			<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-			<button type="button" id="cancelBtn" class="btn btn-default" >重置</button>
+			<button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+			<button type="button" id="cancelBtn" class="btn btn-default"  data-i18n="msg.reset">重置</button>
 		</div>
 	</form>
 </div>
@@ -310,7 +310,7 @@
 					<div class="space-4"></div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="cardType">证件类型</label>
+						<label class="col-sm-3 control-label no-padding-right" for="cardType" data-i18n="page.building.label.credentialType">证件类型</label>
 						<div class="col-sm-9">
 							<select class="col-xs-10 col-sm-6 v_required" id="cardType"></select>
 						</div>
@@ -318,7 +318,7 @@
 					<div class="space-4"></div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="cardNum">证件号</label>
+						<label class="col-sm-3 control-label no-padding-right" for="cardNum" data-i18n="page.building.label.credentialNo">证件号</label>
 						<div class="col-sm-9">
 							<input type="text" id="cardNum" maxlength="18" class="col-xs-10 col-sm-6 v_card" data-toggle="popover" />
 						</div>
@@ -367,8 +367,8 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" id="createCustomerSaveBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
-				<button type="button" id="createCustomerCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="createCustomerSaveBtn" class="btn btn-primary" data-loading-text="提交中..." data-i18n="msg.save">保存</button>
+				<button type="button" id="createCustomerCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>

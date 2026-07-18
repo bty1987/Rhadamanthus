@@ -1,4 +1,4 @@
-<div id="fl-statement"><div class="page-header"><h1>生产单<small><i class="icon-double-angle-right"></i>五金单</small></h1></div></div>
+<div id="fl-statement"><div class="page-header"><h1 data-i18n="page.production.label.productionOrder">生产单<small><i class="icon-double-angle-right"></i>五金单</small></h1></div></div>
 
 <div class="row">
     <div class="col-xs-12">
@@ -53,8 +53,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="saveBtn" class="btn btn-primary">确认</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.confirm">确认</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -66,13 +66,13 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="finishModelLabel">完结五金单</h4>
+                <h4 class="modal-title" id="finishModelLabel" data-i18n="page.production.btn.finishHardwareOrder">完结五金单</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="num">生成物流包数量</label>
+                        <label class="col-sm-3 control-label no-padding-right" for="num" data-i18n="page.production.label.genLogisticsNum">生成物流包数量</label>
                         <div class="col-sm-9">
                             <input type="text" id="num" maxlength="12" class="col-xs-10 col-sm-7 v_required v_number" data-toggle="popover" data-trigger='manual'/>
                         </div>
@@ -80,8 +80,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="saveFinishBtn" class="btn btn-primary">确定</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="saveFinishBtn" class="btn btn-primary" data-i18n="msg.ok">确定</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -92,7 +92,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel-1">图表</h4>
+                <h4 class="modal-title" id="myModalLabel-1" data-i18n="page.production.label.chart">图表</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -110,7 +110,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">确定</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.ok">确定</button>
             </div>
         </div>
     </div>

@@ -1,0 +1,19 @@
+{
+  "_meta": { "lang": "en", "type": "page", "module": "production", "desc": "Production module page texts." },
+  "page.production.label.productionOrder": "Production Order",
+  "page.production.label.totalPrice": "Total Price",
+  "page.production.label.logisticsNum": "Logistics Package Quantity",
+  "page.production.label.width": "Width",
+  "page.production.label.thickness": "Thickness",
+  "page.production.label.height": "Height",
+  "page.production.label.importExcel": "Import Excel",
+  "page.production.label.chart": "Chart",
+  "page.production.label.splitter": "Splitter",
+  "page.production.label.allowance": "Allowance",
+  "page.production.btn.finishHardwareOrder": "Finish Hardware Order",
+  "page.production.label.genLogisticsNum": "Generated Logistics Quantity",
+  "page.production.label.hardwareOrder": "Hardware Order",
+  "page.production.label.externalOrder": "External Order",
+  "page.production.btn.finishPlanOrder": "Finish Plan Order",
+  "page.production.label.planOrder": "Plan Order"
+}

@@ -16,33 +16,33 @@
                 <div class="modal-body">
                     <form class="form-horizontal" id="form">
                         <div class="block clearfix">
-                            <label class="col-md-3 control-label" style="margin-top: -5px">付款方式</label>
+                            <label class="col-md-3 control-label" style="margin-top: -5px" data-i18n="page.payment.label.payMethod">付款方式</label>
                             <label class="hide cashCheckbox">
                                 <input type="checkbox" class="ace" id="cashCheckbox" key="cash" select="0">
-                                <span class="lbl"> 现金</span>
+                                <span class="lbl" data-i18n="page.payment.label.cash"> 现金</span>
                             </label>
                             <label class="hide bankCheckbox">
                                 <input type="checkbox" class="ace" id="bankCheckbox" key="bank" select="0">
-                                <span class="lbl"> 刷卡</span>
+                                <span class="lbl" data-i18n="page.payment.label.card"> 刷卡</span>
                             </label>
                             <label class="hide checkvCheckbox">
                                 <input type="checkbox" class="ace" id="checkvCheckbox" key="checkv" select="0">
-                                <span class="lbl"> 银行</span>
+                                <span class="lbl" data-i18n="page.payment.label.bank"> 银行</span>
                             </label>
                             <label class="hide advanceCheckbox">
                                 <input type="checkbox" class="ace" id="advanceCheckbox" key="advance" select="1">
-                                <span class="lbl"> 预付款</span>
+                                <span class="lbl" data-i18n="page.payment.label.prepay"> 预付款</span>
                             </label>
                             <label class="hide couponCheckbox">
                                 <input type="checkbox" class="ace" id="couponCheckbox" key="coupon" select="0">
-                                <span class="lbl"> 优惠券</span>
+                                <span class="lbl" data-i18n="page.payment.label.coupon"> 优惠券</span>
                             </label>
                         </div>
 
                         <div id="infoDiv">
-                            <h4 class="header blue bolder smaller">基本信息</h4>
+                            <h4 class="header blue bolder smaller" data-i18n="page.payment.label.baseInfo">基本信息</h4>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right" for="referMoney">应收金额</label>
+                                <label class="col-sm-3 control-label no-padding-right" for="referMoney" data-i18n="page.payment.label.receivable">应收金额</label>
                                 <div class="col-md-9">
                                     <input type="text" id="referMoney" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' readonly/>
                                 </div>
@@ -57,13 +57,13 @@
                             <div class="space-4 "></div>
 
                             <div class="space-1" id="historyDiv">
-                                <h4 class="header blue bolder smaller">历史收款</h4>
+                                <h4 class="header blue bolder smaller" data-i18n="page.payment.label.historyCollect">历史收款</h4>
                                 <ul id="historyData"></ul>
                             </div>
                         </div>
 
                         <div id="cashDiv" referCheckbox="cashCheckbox" style="display: none;">
-                            <h4 class="header blue bolder smaller">现金</h4>
+                            <h4 class="header blue bolder smaller" data-i18n="page.payment.label.cash">现金</h4>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="cashInfo">类型</label>
                                 <div class="col-sm-9">
@@ -73,7 +73,7 @@
                             <div class="space-4"></div>
 
                             <div class="form-group">
-                                <label for="cash" class="col-sm-3 control-label no-padding-right">现金金额</label>
+                                <label for="cash" class="col-sm-3 control-label no-padding-right" data-i18n="page.payment.label.cashAmount">现金金额</label>
                                 <div class="col-md-9 block no-padding-right  ">
                                     <input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual'/>
                                 </div>
@@ -93,17 +93,17 @@
                                     <label class="col-sm-3 control-label no-padding-right">开户行</label>
                                     <div class="col-sm-8">
                                         <input class="col-xs-10 col-sm-6" type="text" id="bankName" data-toggle="popover" data-trigger="manual" data-placement="bottom" autocomplete="off">
-                                        <button class="btn btn-minier btn-orange pull-right inline" id="createPaytran">在线支付</button>
+                                        <button class="btn btn-minier btn-orange pull-right inline" id="createPaytran" data-i18n="page.payment.label.onlinePay">在线支付</button>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right">刷卡金额</label>
+                                    <label class="col-sm-3 control-label no-padding-right" data-i18n="page.payment.label.cardAmount">刷卡金额</label>
                                     <div class="col-sm-8">
                                         <input class="col-sm-6" data-toggle="popover" data-trigger="manual" type="text" id="bank">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right">方式</label>
+                                    <label class="col-sm-3 control-label no-padding-right" data-i18n="page.payment.label.method">方式</label>
                                     <div class="col-sm-8">
                                         <select class="col-sm-6 inline" data-toggle="popover" data-trigger="manual" id="posway"></select>
                                     </div>
@@ -112,7 +112,7 @@
                         </div>
 
                         <div id="checkvDiv" referCheckbox="checkvCheckbox" style="display: none;">
-                            <h4 class="header blue bolder smaller">
+                            <h4 class="header blue bolder smaller" data-i18n="page.payment.label.bank">
                                 银行
                                 <button id="checkvAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
                             </h4>
@@ -120,7 +120,7 @@
                         </div>
 
                         <div id="advanceDiv" referCheckbox="advanceCheckbox" style="display: none;">
-                            <h4 class="header blue bolder smaller">预付款</h4>
+                            <h4 class="header blue bolder smaller" data-i18n="page.payment.label.prepay">预付款</h4>
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="advanceType">预付款类型</label>
@@ -150,7 +150,7 @@
                         </div>
 
                         <div id="couponDiv" referCheckbox="couponCheckbox" style="display: none;">
-                            <h4 class="header blue bolder smaller">优惠券</h4>
+                            <h4 class="header blue bolder smaller" data-i18n="page.payment.label.coupon">优惠券</h4>
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <div class="col-sm-12">
@@ -170,9 +170,9 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" id="collectBtn" class="btn btn-primary">收款</button>
-                    <button type="button" id="refundBtn" class="btn btn-danger">退款</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="collectBtn" class="btn btn-primary" data-i18n="page.payment.label.collect">收款</button>
+                    <button type="button" id="refundBtn" class="btn btn-danger" data-i18n="page.payment.label.refund">退款</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

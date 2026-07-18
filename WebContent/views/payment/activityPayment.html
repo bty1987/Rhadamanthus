@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="modal-footer" style="text-align: center">
-                        <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                        <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
                     </div>
                 </div>
             </div>
@@ -81,30 +81,30 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabels">付款信息</h4>
+                        <h4 class="modal-title" id="myModalLabels" data-i18n="page.payment.label.payInfo">付款信息</h4>
                     </div>
                     <div class="modal-body">
                         <form class="form-horizontal" id="form">
                             <div class="block clearfix">
-                                <label class="col-md-3 control-label" style="margin-top: -5px">付款方式</label>
+                                <label class="col-md-3 control-label" style="margin-top: -5px" data-i18n="page.payment.label.payMethod">付款方式</label>
                                 <label class="hide cashCheckbox">
                                     <input type="checkbox" class="ace" id="cashCheckbox" key="cash" select="0">
-                                    <span class="lbl"> 现金</span>
+                                    <span class="lbl" data-i18n="page.payment.label.cash"> 现金</span>
                                 </label>
                                 <label class="hide bankCheckbox">
                                     <input type="checkbox" class="ace" id="bankCheckbox" key="bank" select="0">
-                                    <span class="lbl"> 刷卡</span>
+                                    <span class="lbl" data-i18n="page.payment.label.card"> 刷卡</span>
                                 </label>
                                 <label class="hide couponCheckbox">
                                     <input type="checkbox" class="ace" id="couponCheckbox" key="coupon" select="0">
-                                    <span class="lbl"> 优惠券</span>
+                                    <span class="lbl" data-i18n="page.payment.label.coupon"> 优惠券</span>
                                 </label>
                             </div>
 
                             <div id="infoDiv">
-                                <h4 class="header blue bolder smaller">基本信息</h4>
+                                <h4 class="header blue bolder smaller" data-i18n="page.payment.label.baseInfo">基本信息</h4>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right" for="referMoney">应收金额</label>
+                                    <label class="col-sm-3 control-label no-padding-right" for="referMoney" data-i18n="page.payment.label.receivable">应收金额</label>
                                     <div class="col-md-9">
                                         <input type="text" id="referMoney" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' readonly/>
                                     </div>
@@ -120,7 +120,7 @@
                             </div>
 
                             <div id="cashDiv" name="top" referCheckbox="cashCheckbox"  style="display: none;">
-                                <h4 class="header blue bolder smaller">现金</h4>
+                                <h4 class="header blue bolder smaller" data-i18n="page.payment.label.cash">现金</h4>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label no-padding-right" for="cashInfo">类型</label>
                                     <div class="col-sm-9">
@@ -130,7 +130,7 @@
                                 <div class="space-4"></div>
 
                                 <div class="form-group">
-                                    <label for="cash" class="col-sm-3 control-label no-padding-right">现金金额</label>
+                                    <label for="cash" class="col-sm-3 control-label no-padding-right" data-i18n="page.payment.label.cashAmount">现金金额</label>
                                     <span class="col-md-9 block no-padding-right">
                                         <input type="text" id="cash" class="col-xs-10 col-sm-6 v_float_3" data-toggle="popover" data-trigger='manual'/>
                                     </span>
@@ -150,17 +150,17 @@
                                         <label class="col-sm-3 control-label no-padding-right">开户行</label>
                                         <div class="col-sm-8">
                                             <input class="col-xs-10 col-sm-6" type="text" id="bankName" data-toggle="popover" data-trigger="manual" data-placement="bottom" autocomplete="off">
-                                            <button class="btn btn-minier btn-orange pull-right inline" id="createPaytran">在线支付</button>
+                                            <button class="btn btn-minier btn-orange pull-right inline" id="createPaytran" data-i18n="page.payment.label.onlinePay">在线支付</button>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right">刷卡金额</label>
+                                        <label class="col-sm-3 control-label no-padding-right" data-i18n="page.payment.label.cardAmount">刷卡金额</label>
                                         <div class="col-sm-8">
                                             <input class="col-sm-6" data-toggle="popover" data-trigger="manual" type="text" id="bank">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right">方式</label>
+                                        <label class="col-sm-3 control-label no-padding-right" data-i18n="page.payment.label.method">方式</label>
                                         <div class="col-sm-8">
                                             <select class="col-sm-6 inline" data-toggle="popover" data-trigger="manual" id="posway"></select>
                                         </div>
@@ -171,7 +171,7 @@
                             <div class="space-4"></div>
 
                             <div id="couponDiv" name="top" referCheckbox="couponCheckbox" style="display: none;">
-                                <h4 class="header blue bolder smaller">优惠券</h4>
+                                <h4 class="header blue bolder smaller" data-i18n="page.payment.label.coupon">优惠券</h4>
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <ul id="couponGroup" class="item-list list-inline"></ul>
@@ -187,8 +187,8 @@
                         </form>
                     </div>
                     <div class="modal-footer ">
-                        <button type="button" id="collectBtn" class="btn btn-primary">确定</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" id="collectBtn" class="btn btn-primary" data-i18n="msg.ok">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                     </div>
                 </div>
             </div>

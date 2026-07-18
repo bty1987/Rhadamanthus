@@ -13,7 +13,7 @@
                         </a>
                         <a class="btn btn-minier" id="cormriceBackBtn">
                             <i class="icon-mail-forward bigger-110"></i>
-                            <span>返回</span>
+                            <span data-i18n="msg.back">返回</span>
                         </a>
                     </div>
                 </div>
@@ -33,21 +33,21 @@
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="constructionNode">工程节点</label>
+                        <label class="col-sm-3 control-label no-padding-right orange" for="constructionNode" data-i18n="page.data.label.projectNode">工程节点</label>
                         <div class="col-sm-9">
                             <select id="constructionNode" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="unit">定额单位</label>
+                        <label class="col-sm-3 control-label no-padding-right orange" for="unit" data-i18n="page.data.label.quotaUnit">定额单位</label>
                         <div class="col-sm-9">
                             <select  id="unit" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="trannum">转换量</label>
+                        <label class="col-sm-3 control-label no-padding-right orange" for="trannum" data-i18n="page.data.label.transNum">转换量</label>
                         <div class="col-sm-9">
                             <input type="text" id="trannum" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
                         </div>
@@ -63,8 +63,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" id="addCormriceItemBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="CancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="addCormriceItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="CancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>

@@ -1,0 +1,16 @@
+{
+  "_meta": { "lang": "en", "type": "page", "module": "manifest", "desc": "Manifest module page texts." },
+  "page.manifest.label.warehouse": "Warehouse",
+  "page.manifest.label.outPrice": "Out Price",
+  "page.manifest.label.outWarehouse": "Out Warehouse",
+  "page.manifest.label.currentWarehouse": "Current Warehouse",
+  "page.manifest.label.docDate": "Document Date",
+  "page.manifest.label.docDateLabel": "Document Date:",
+  "page.manifest.label.supervisorName": "Supervisor Name",
+  "page.manifest.label.feeName": "Fee Name",
+  "page.manifest.label.fee": "Fee",
+  "page.manifest.label.goodsCategory": "Goods Category",
+  "page.manifest.label.totalNum": "Total Quantity",
+  "page.manifest.hint.packageBindGoods": "Package bound goods as below:",
+  "page.manifest.btn.addGoodsItem": "Add Goods Item"
+}

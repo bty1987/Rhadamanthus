@@ -16,7 +16,7 @@
                  </a>
                  <a class="btn btn-minier" id="returnBtn">
                      <i class="icon-mail-forward bigger-110"></i>
-                     <span>返回</span>
+                     <span data-i18n="msg.back">返回</span>
                  </a>
             </div>
        </div>
@@ -42,8 +42,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="saveBindBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="cancelBindBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="saveBindBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="cancelBindBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -64,7 +64,7 @@
                     <div class="form-group default">
                         <label class="col-sm-3 control-label no-padding-right" for="buildingNameRuleId">规则编号<span class="required">*</span></label>
                         <div class="col-sm-9">
-                            <input type="text" id="buildingNameRuleId" class="col-xs-10 col-sm-5 v_required" maxlength="50" data-toggle="popover" data-trigger='manual' placeholder="请输入规则编号"/>
+                            <input type="text" id="buildingNameRuleId" class="col-xs-10 col-sm-5 v_required" maxlength="50" data-toggle="popover" data-trigger='manual' placeholder="请输入规则编号" data-i18n-ph="page.data.ph.ruleNo"/>
                         </div>
                     </div>
                     <div class="space-4"></div>
@@ -73,7 +73,7 @@
                     <div class="form-group default">
                         <label class="col-sm-3 control-label no-padding-right" for="ruleContent">规则说明<span class="required">*</span></label>
                         <div class="col-sm-9">
-                            <input type="text" id="ruleContent" class="col-xs-10 col-sm-8 v_required" maxlength="200" data-toggle="popover" data-trigger='manual' placeholder="请输入规则说明"/>
+                            <input type="text" id="ruleContent" class="col-xs-10 col-sm-8 v_required" maxlength="200" data-toggle="popover" data-trigger='manual' placeholder="请输入规则说明" data-i18n-ph="page.data.ph.ruleExplain"/>
                         </div>
                     </div>
                     <div class="space-4"></div>
@@ -126,7 +126,7 @@
                     <div class="form-group default">
                         <label class="col-sm-3 control-label no-padding-right" for="ruleRegex">正则表达式</label>
                         <div class="col-sm-9">
-                            <input type="text" id="ruleRegex" class="col-xs-10 col-sm-8" maxlength="500" data-toggle="popover" data-trigger='manual' placeholder="正则表达式自动生成" readonly style="background-color: #f5f5f5; font-family: monospace;"/>
+                            <input type="text" id="ruleRegex" class="col-xs-10 col-sm-8" maxlength="500" data-toggle="popover" data-trigger='manual' placeholder="正则表达式自动生成" data-i18n-ph="page.data.ph.regexAuto" readonly style="background-color: #f5f5f5; font-family: monospace;"/>
                             <span class="help-inline col-sm-3" style="margin-left: 10px; color: #999;">自动生成</span>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
                     <div class="form-group default">
                         <label class="col-sm-3 control-label no-padding-right" for="ruleExample">示例说明</label>
                         <div class="col-sm-9">
-                            <input type="text" id="ruleExample" class="col-xs-10 col-sm-8" maxlength="200" data-toggle="popover" data-trigger='manual' placeholder="例如：1A-门2座-3甲" readonly style="background-color: #f5f5f5;"/>
+                            <input type="text" id="ruleExample" class="col-xs-10 col-sm-8" maxlength="200" data-toggle="popover" data-trigger='manual' placeholder="例如：1A-门2座-3甲" data-i18n-ph="page.data.ph.exampleAddr" readonly style="background-color: #f5f5f5;"/>
                         </div>
                     </div>
                     <div class="space-4"></div>
@@ -145,7 +145,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="saveCreateBtn" class="btn btn-primary">保存并绑定</button>
-                <button type="button" id="cancelCreateBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="cancelCreateBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>

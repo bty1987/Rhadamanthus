@@ -2,14 +2,14 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="widget-box">
-                <div class="widget-header header-color-blue"><div class="orange">*橙色名称标签为必填信息</div></div>
+                <div class="widget-header header-color-blue"><div class="orange" data-i18n="page.contract.hint.requiredOrangeLabel">*橙色名称标签为必填信息</div></div>
                 <div class="widget-body">
                     <div class="widget-main">
                         <div class="row">
 
                             <div class="col-md-12">
                                 <div class="form-group col-sm-6 customer">
-                                    <label for="key1" class="col-sm-3 control-label no-padding-right orange">甲方</label>
+                                    <label for="key1" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.contract.label.partyA">甲方</label>
                                     <div class="col-sm-9">
                                         <input id="con-customer-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" maxlength="32" data-toggle="popover" data-trigger='manual' value="0" readonly="readonly">
                                     </div>
@@ -35,7 +35,7 @@
                                 <hr>
 
                                 <div class="form-group col-sm-6">
-                                    <label for="agentName" class="col-sm-3 control-label no-padding-right orange">甲方代理人</label>
+                                    <label for="agentName" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.contract.label.partyAAgent">甲方代理人</label>
                                     <div class="col-sm-9">
                                         <input id="sin-agent-name" type="text" maxlength="32" class="col-sm-7 col-xs-10 conitem v_required" value="/" data-toggle="popover" data-trigger='manual'>
                                     </div>
@@ -61,14 +61,14 @@
                                 <hr>
 
                                 <div class="form-group col-sm-6">
-                                    <label for="companyName" class="col-sm-3 control-label no-padding-right orange">公司名称</label>
+                                    <label for="companyName" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.contract.label.companyName">公司名称</label>
                                     <div class="col-sm-9">
                                         <input id="con-company-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <label for="companyPhone" class="col-sm-3 control-label no-padding-right orange">公司电话</label>
+                                    <label for="companyPhone" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.contract.label.companyPhone">公司电话</label>
                                     <div class="col-sm-9">
                                         <input id="con-company-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
                                     </div>
@@ -101,7 +101,7 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">话术</h4>
+                <h4 class="modal-title" data-i18n="page.contract.label.script">话术</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -109,7 +109,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>

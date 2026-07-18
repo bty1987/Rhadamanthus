@@ -1,0 +1,23 @@
+{
+  "_meta": { "lang": "tw", "type": "page", "module": "salary", "desc": "薪資模組頁面文字。" },
+  "page.salary.label.laborFee": "工費",
+  "page.salary.label.workerWarranty": "工人質保金",
+  "page.salary.label.designerFeeInfo": "設計師工費資訊",
+  "page.salary.label.workerFee": "工人工費",
+  "page.salary.label.empName": "員工姓名",
+  "page.salary.btn.clear": "清空",
+  "page.salary.btn.addSalary": "新增薪資",
+  "page.salary.label.type1": "一類",
+  "page.salary.label.type2": "二類",
+  "page.salary.label.type3": "三類",
+  "page.salary.label.basic": "基本",
+  "page.salary.label.deduct": "扣款",
+  "page.salary.label.design": "設計",
+  "page.salary.label.warrantyLimit": "質保金上限",
+  "page.salary.label.transferFee": "轉款工人工費",
+  "page.salary.label.transferPerson": "轉款人",
+  "page.salary.label.receiver": "收款人",
+  "page.salary.label.transferAmount": "轉款金額",
+  "page.salary.btn.addWorkerAccount": "新增工人帳戶",
+  "page.salary.label.workerName": "工人姓名"
+}

@@ -1,0 +1,22 @@
+{
+  "_meta": { "lang": "tw", "type": "page", "module": "system", "desc": "系統模組頁面文字。" },
+  "page.system.label.cityName": "城市名稱",
+  "page.system.label.districtName": "城區名稱",
+  "page.system.label.cityNo": "城市編號",
+  "page.system.label.districtNo": "城區編號",
+  "page.system.label.bigRegion": "所屬大區",
+  "page.system.label.confirmPos": "確定位置",
+  "page.system.label.reselectPos": "重選位置",
+  "page.system.label.reloadMap": "重新載入地圖",
+  "page.system.label.module": "模組",
+  "page.system.label.roleInfo": "角色資訊",
+  "page.system.label.roleNo": "角色編號",
+  "page.system.label.roleName": "角色名稱",
+  "page.system.label.roleDesc": "角色描述",
+  "page.system.label.operateConfig": "操作設定",
+  "page.system.label.moduleConfig": "模組設定",
+  "page.system.label.sourceRole": "源角色",
+  "page.system.label.confirmCopy": "確認複製",
+  "page.system.label.task": "任務",
+  "page.system.btn.addVersion": "新增版本"
+}

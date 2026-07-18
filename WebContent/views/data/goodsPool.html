@@ -12,7 +12,7 @@
 
             <div class="widget-main">
                 <div class="form-group">
-                    <label class="col-md-3 control-label no-padding-right orange">商品编号</label>
+                    <label class="col-md-3 control-label no-padding-right orange" data-i18n="page.data.label.goodsNo">商品编号</label>
                     <div class="col-md-9">
                         <input type="text" class="col-xs-10 col-sm-7 v_required" id="no" name="no" >
                     </div>
@@ -33,14 +33,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-3 control-label no-padding-right">别名</label>
+                    <label class="col-md-3 control-label no-padding-right" data-i18n="page.data.label.alias">别名</label>
                     <div class="col-md-9">
                         <input type="text" class="col-xs-10 col-sm-7" id="alias" name="alias" data-required="1" data-toggle="popover" data-trigger='manual' >
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-3 control-label no-padding-right">条形码</label>
+                    <label class="col-md-3 control-label no-padding-right" data-i18n="page.data.label.barcode">条形码</label>
                     <div class="col-md-9">
                         <input type="text" class="col-xs-10 col-sm-7" id="barcode" name="barcode" data-required="1" data-toggle="popover" data-trigger='manual'>
                     </div>
@@ -68,35 +68,35 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-3 control-label no-padding-right orange">控价</label>
+                    <label class="col-md-3 control-label no-padding-right orange" data-i18n="page.data.label.controlPrice">控价</label>
                     <div class="col-md-9">
                         <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="purchase" name="purchase" data-required="1" data-toggle="popover" data-trigger='manual'>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-3 control-label no-padding-right orange">售价</label>
+                    <label class="col-md-3 control-label no-padding-right orange" data-i18n="page.data.label.sellPrice">售价</label>
                     <div class="col-md-9">
                         <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="selling" name="selling" data-required="1" data-toggle="popover" data-trigger='manual'>
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-md-3 control-label no-padding-right orange">限价</label>
+                    <label class="col-md-3 control-label no-padding-right orange" data-i18n="page.data.label.limitPrice">限价</label>
                     <div class="col-md-9">
                         <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="confine" name="confine" data-required="1" data-toggle="popover" data-trigger='manual'>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-3 control-label no-padding-right orange">件数</label>
+                    <label class="col-md-3 control-label no-padding-right orange" data-i18n="page.data.label.count">件数</label>
                     <div class="col-md-9">
                         <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="pieceNum" name="pieceNum" data-required="1" data-toggle="popover" data-trigger='manual'>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-3 control-label no-padding-right">辅类</label>
+                    <label class="col-md-3 control-label no-padding-right" data-i18n="page.data.label.subCategory">辅类</label>
                     <div class="col-md-9">
                         <select class="col-xs-10 col-sm-7" id="accessoriesType" name="accessoriesType" data-required="1" data-toggle="popover" data-trigger='manual'></select>
                     </div>
@@ -207,7 +207,7 @@
                 
                 <div class="form-group">
                     <div class="col-md-offset-3 col-md-9">
-                        <a class="btn btn-success btn-sm" id="submitBtn">提交</a>
+                        <a class="btn btn-success btn-sm" id="submitBtn" data-i18n="msg.submit">提交</a>
                     </div>
                 </div>
 
@@ -225,24 +225,24 @@
         <form class="form-horizontal" id="importGoodsPoolForm">
         
             <div class="form-group alert alert-danger">
-                <p>上传字段均为文本类型</p>
+                <p data-i18n="page.data.hint.uploadTextField">上传字段均为文本类型</p>
                 <p>上传格式: 商品编号 商品名 条形码 品类 品牌 单位 件数 辅类</p>
-                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+                <p data-i18n="page.data.hint.uploadFormat">注意: 上传文件中请填写具体内容, 不显示表头</p>
             </div>
             
             <div class="form-group">
                 <ul class="flex-table center">
                     <li>
                         <div class="line-wrap content col9">
-                            <div class="cell">商品编号</div>
-                            <div class="cell">商品名</div>
-                            <div class="cell">条形码</div>
+                            <div class="cell" data-i18n="page.data.label.goodsNo">商品编号</div>
+                            <div class="cell" data-i18n="page.data.label.goodsName">商品名</div>
+                            <div class="cell" data-i18n="page.data.label.barcode">条形码</div>
                             <div class="cell">品类</div>
                             <div class="cell">品牌ID</div>
                             <div class="cell">品牌</div>
                             <div class="cell">单位</div>
-                            <div class="cell">件数</div>
-                            <div class="cell">辅类</div>
+                            <div class="cell" data-i18n="page.data.label.count">件数</div>
+                            <div class="cell" data-i18n="page.data.label.subCategory">辅类</div>
                         </div>
                     </li>
                     <li>
@@ -250,7 +250,7 @@
                             <div class="cell">JF-ZSH-A013</div>
                             <div class="cell">森盛-装饰画-A013</div>
                             <div class="cell">134679852</div>
-                            <div class="cell">饰品</div>
+                            <div class="cell" data-i18n="page.data.label.accessory">饰品</div>
                             <div class="cell">101</div>
                             <div class="cell">森盛</div>
                             <div class="cell">幅</div>
@@ -269,17 +269,17 @@
         <form class="form-horizontal" id="importColorGoodsPoolForm">
         
             <div class="form-group alert alert-danger">
-                <p>上传字段均为文本类型</p>
+                <p data-i18n="page.data.hint.uploadTextField">上传字段均为文本类型</p>
                 <p>上传格式: 商品ID 商品名 颜色</p>
-                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+                <p data-i18n="page.data.hint.uploadFormat">注意: 上传文件中请填写具体内容, 不显示表头</p>
             </div>
 
             <div class="form-group">
                 <ul class="flex-table center">
                     <li>
                         <div class="line-wrap content col3">
-                            <div class="cell">商品ID</div>
-                            <div class="cell">商品名</div>
+                            <div class="cell" data-i18n="page.data.label.goodsId">商品ID</div>
+                            <div class="cell" data-i18n="page.data.label.goodsName">商品名</div>
                             <div class="cell">颜色</div>
                         </div>
                     </li>
@@ -301,17 +301,17 @@
         <form class="form-horizontal" id="importFormatGoodsPoolForm">
         
             <div class="form-group alert alert-danger">
-                <p>上传字段均为文本类型</p>
+                <p data-i18n="page.data.hint.uploadTextField">上传字段均为文本类型</p>
                 <p>上传格式: 商品ID 商品名 规格</p>
-                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+                <p data-i18n="page.data.hint.uploadFormat">注意: 上传文件中请填写具体内容, 不显示表头</p>
             </div>
 
             <div class="form-group">
                 <ul class="flex-table center">
                     <li>
                         <div class="line-wrap content col3">
-                            <div class="cell">商品ID</div>
-                            <div class="cell">商品名</div>
+                            <div class="cell" data-i18n="page.data.label.goodsId">商品ID</div>
+                            <div class="cell" data-i18n="page.data.label.goodsName">商品名</div>
                             <div class="cell">规格</div>
                         </div>
                     </li>
@@ -334,9 +334,9 @@
         <form class="form-horizontal" id="importPriceGoodsPoolForm">
         
             <div class="form-group alert alert-danger">
-                <p>上传字段均为文本类型</p>
+                <p data-i18n="page.data.hint.uploadTextField">上传字段均为文本类型</p>
                 <p>上传格式: 商品ID 商品名 控价 售价 结算类型 结算值</p>
-                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+                <p data-i18n="page.data.hint.uploadFormat">注意: 上传文件中请填写具体内容, 不显示表头</p>
                 <p>价格类型请填写0或1, 0: 正价, 1: 特价</p>
                 <p>结算类型请填写0或1, 0: 底价, 1: 点位</p>
             </div>
@@ -345,13 +345,13 @@
                 <ul class="flex-table center">
                     <li>
                         <div class="line-wrap content col7">
-                            <div class="cell">商品ID</div>
+                            <div class="cell" data-i18n="page.data.label.goodsId">商品ID</div>
                             <div class="cell">价格说明</div>
                             <div class="cell">类型</div>
-                            <div class="cell">控价</div>
-                            <div class="cell">售价</div>
-                            <div class="cell">结算类型</div>
-                            <div class="cell">结算值</div>
+                            <div class="cell" data-i18n="page.data.label.controlPrice">控价</div>
+                            <div class="cell" data-i18n="page.data.label.sellPrice">售价</div>
+                            <div class="cell" data-i18n="page.data.label.balanceType">结算类型</div>
+                            <div class="cell" data-i18n="page.data.label.balanceValue">结算值</div>
                         </div>
                     </li>
                     <li>
@@ -377,17 +377,17 @@
         <form class="form-horizontal" id="deletePriceGoodsPoolForm">
 
             <div class="form-group alert alert-danger">
-                <p>上传字段均为文本类型</p>
+                <p data-i18n="page.data.hint.uploadTextField">上传字段均为文本类型</p>
                 <p>上传格式: 商品ID 商品名</p>
-                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+                <p data-i18n="page.data.hint.uploadFormat">注意: 上传文件中请填写具体内容, 不显示表头</p>
             </div>
             
             <div class="form-group">
                 <ul class="flex-table center">
                     <li>
                         <div class="line-wrap content col2">
-                            <div class="cell">商品ID</div>
-                            <div class="cell">商品名称</div>
+                            <div class="cell" data-i18n="page.data.label.goodsId">商品ID</div>
+                            <div class="cell" data-i18n="page.data.label.goodsNameAlt">商品名称</div>
                         </div>
                     </li>
                     <li>
@@ -407,17 +407,17 @@
         <form class="form-horizontal" id="statusGoodsPoolForm">
 
             <div class="form-group alert alert-danger">
-                <p>上传字段均为文本类型</p>
+                <p data-i18n="page.data.hint.uploadTextField">上传字段均为文本类型</p>
                 <p>上传格式: 商品ID 商品名 状态(0:启用, 1:禁用)</p>
-                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+                <p data-i18n="page.data.hint.uploadFormat">注意: 上传文件中请填写具体内容, 不显示表头</p>
             </div>
             
             <div class="form-group">
                 <ul class="flex-table center">
                     <li>
                         <div class="line-wrap content col2">
-                            <div class="cell">商品ID</div>
-                            <div class="cell">商品名称</div>
+                            <div class="cell" data-i18n="page.data.label.goodsId">商品ID</div>
+                            <div class="cell" data-i18n="page.data.label.goodsNameAlt">商品名称</div>
                             <div class="cell">状态</div>
                         </div>
                     </li>
@@ -446,15 +446,15 @@
                 <ul class="flex-table center">
                     <li>
                         <div class="line-wrap content col9">
-                            <div class="cell">商品编号</div>
-                            <div class="cell">商品名</div>
-                            <div class="cell">条形码</div>
+                            <div class="cell" data-i18n="page.data.label.goodsNo">商品编号</div>
+                            <div class="cell" data-i18n="page.data.label.goodsName">商品名</div>
+                            <div class="cell" data-i18n="page.data.label.barcode">条形码</div>
                             <div class="cell">品类</div>
                             <div class="cell">品牌ID</div>
                             <div class="cell">品牌</div>
                             <div class="cell">单位</div>
-                            <div class="cell">件数</div>
-                            <div class="cell">辅类</div>
+                            <div class="cell" data-i18n="page.data.label.count">件数</div>
+                            <div class="cell" data-i18n="page.data.label.subCategory">辅类</div>
                         </div>
                     </li>
                     <li>
@@ -462,7 +462,7 @@
                             <div class="cell">JF-ZSH-A013</div>
                             <div class="cell">森盛-装饰画-A013</div>
                             <div class="cell">134679852</div>
-                            <div class="cell">饰品</div>
+                            <div class="cell" data-i18n="page.data.label.accessory">饰品</div>
                             <div class="cell">101</div>
                             <div class="cell">森盛</div>
                             <div class="cell">幅</div>
@@ -505,13 +505,13 @@
 	    </div>
 	</div>
 	
-	<label class="col-sm-3 control-label no-padding-right" for="executeDates"><strong>执行日期</strong></label>
+	<label class="col-sm-3 control-label no-padding-right" for="executeDates"><strong data-i18n="page.data.label.executeDate">执行日期</strong></label>
 	<div class="col-sm-9">
 	    <input class="date-picker v_required " id="executeDates" type="text" readonly="readonly"
 	           data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
 	</div>
 	
-	<label class="col-sm-3 control-label no-padding-right" for="executeTimes"><strong>执行时间</strong></label>
+	<label class="col-sm-3 control-label no-padding-right" for="executeTimes"><strong data-i18n="page.data.label.executeTime">执行时间</strong></label>
 	<div class="col-sm-9">
 	    <div class="bootstrap-timepicker">
 	        <input id="executeTimes" type="text" class="v_required"/>
@@ -520,8 +520,8 @@
 	
 	<label class="col-sm-3 control-label no-padding-right"></label>
 	<div class="col-sm-9">
-		<a class="btn btn-success btn-sm" id="importBtn">导入</a>
-		<a class="btn btn-sm" id="exportBtn">导出</a>
+		<a class="btn btn-success btn-sm" id="importBtn" data-i18n="msg.import">导入</a>
+		<a class="btn btn-sm" id="exportBtn" data-i18n="msg.export">导出</a>
 	</div>
 </div>
 

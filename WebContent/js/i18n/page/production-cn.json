@@ -1,0 +1,19 @@
+{
+  "_meta": { "lang": "cn", "type": "page", "module": "production", "desc": "生产模块页面文本。" },
+  "page.production.label.productionOrder": "生产单",
+  "page.production.label.totalPrice": "总价",
+  "page.production.label.logisticsNum": "物流包数量",
+  "page.production.label.width": "宽度",
+  "page.production.label.thickness": "厚度",
+  "page.production.label.height": "高度",
+  "page.production.label.importExcel": "导入excel",
+  "page.production.label.chart": "图表",
+  "page.production.label.splitter": "拆单员",
+  "page.production.label.allowance": "折让",
+  "page.production.btn.finishHardwareOrder": "完结五金单",
+  "page.production.label.genLogisticsNum": "生成物流包数量",
+  "page.production.label.hardwareOrder": "五金单",
+  "page.production.label.externalOrder": "外协单",
+  "page.production.btn.finishPlanOrder": "完结生产计划单",
+  "page.production.label.planOrder": "计划单"
+}

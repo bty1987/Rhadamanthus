@@ -1,0 +1,22 @@
+{
+  "_meta": { "lang": "cn", "type": "page", "module": "system", "desc": "系统模块页面文本。" },
+  "page.system.label.cityName": "城市名称",
+  "page.system.label.districtName": "城区名称",
+  "page.system.label.cityNo": "城市编号",
+  "page.system.label.districtNo": "城区编号",
+  "page.system.label.bigRegion": "所属大区",
+  "page.system.label.confirmPos": "确定位置",
+  "page.system.label.reselectPos": "重选位置",
+  "page.system.label.reloadMap": "重新加载地图",
+  "page.system.label.module": "模块",
+  "page.system.label.roleInfo": "角色信息",
+  "page.system.label.roleNo": "角色编号",
+  "page.system.label.roleName": "角色名称",
+  "page.system.label.roleDesc": "角色描述",
+  "page.system.label.operateConfig": "操作配置",
+  "page.system.label.moduleConfig": "模块配置",
+  "page.system.label.sourceRole": "源角色",
+  "page.system.label.confirmCopy": "确认复制",
+  "page.system.label.task": "任务",
+  "page.system.btn.addVersion": "添加版本"
+}

@@ -21,7 +21,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button"  class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button"  class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>
@@ -33,7 +33,7 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
 						<span>&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title">导入</h4>
+					<h4 class="modal-title" data-i18n="msg.import">导入</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -43,7 +43,7 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>
@@ -64,8 +64,8 @@
 				<div id="tree3" class="tree"></div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" id="savebtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="savebtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+				<button type="button" id="cancel" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>
@@ -88,7 +88,7 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" id="cancelExp" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="cancelExp" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>
@@ -108,7 +108,7 @@
 					<div class="timeline-item clearfix">
 						<div class="widget-box transparent" style="margin:0px;border-left:0px ">
 							<div class="widget-header widget-header-small" style="background-color: white">
-								<h5 class="smaller" Style="font-size: 15px; ">个人基本信息</h5>
+								<h5 class="smaller" Style="font-size: 15px; " data-i18n="page.personnel.label.baseInfo">个人基本信息</h5>
 								<span class="widget-toolbar " style="float:initial ;position: initial">
 									 <a href="#" data-action="collapse">
 										 <i class="icon-chevron-up"></i>
@@ -128,7 +128,7 @@
 											</div>
 
 											<div class="form-group" >
-												<label class="col-sm-3 control-label no-padding-right orange" for="currentName">现用名</label>
+												<label class="col-sm-3 control-label no-padding-right orange" for="currentName" data-i18n="page.personnel.label.nowName">现用名</label>
 												<div class="col-sm-9">
 													<input type="text" maxlength="32" id="currentName" class="col-sm-7 col-xs-10 v_required" />
 												</div>
@@ -143,7 +143,7 @@
 											</div >
 
 											<div class="form-group" >
-												<label class="col-sm-3 control-label no-padding-right orange" for="birthday">出生日期</label>
+												<label class="col-sm-3 control-label no-padding-right orange" for="birthday" data-i18n="page.personnel.label.birthDate">出生日期</label>
 												<div class="col-sm-9">
 													<input class="col-sm-7 col-xs-10  date-picker-date  v_required " id="birthday" type="text" data-date-format="yyyy-mm-dd">
 												</div>
@@ -157,7 +157,7 @@
 											</div>
 
 											<div class="form-group" >
-												<label class="col-sm-3 control-label no-padding-right orange" for="phone">手机号</label>
+												<label class="col-sm-3 control-label no-padding-right orange" for="phone" data-i18n="page.personnel.label.phoneNo">手机号</label>
 												<div class="col-sm-9">
 													<input type="text" id="phone" class="col-sm-7 col-xs-10 v_required v_phones" data-toggle="popover" data-trigger='manual'/>
 												</div>
@@ -172,7 +172,7 @@
 					<div class="timeline-item clearfix">
 						<div class="widget-box transparent" style="margin:0px ;border-left:0px ">
 							<div class="widget-header widget-header-small" style="background-color: white !important">
-								<h5 class="smaller" Style="font-size: 15px; ">入职基本信息</h5>
+								<h5 class="smaller" Style="font-size: 15px; " data-i18n="page.personnel.label.entryBaseInfo">入职基本信息</h5>
 								<span class="widget-toolbar " style="float:initial ;position: initial">
 									 <a href="#" data-action="collapse">
 										 <i class="icon-chevron-up"></i>
@@ -185,7 +185,7 @@
 									<div class="widget-main">
 										<form class="form-horizontal">
 											<div class="form-group">
-												<label class="col-sm-3 control-label no-padding-right orange" for="loginId">用户名</label>
+												<label class="col-sm-3 control-label no-padding-right orange" for="loginId" data-i18n="page.personnel.label.userName">用户名</label>
 												<div class="col-sm-9">
 													<input type="text" maxlength="32" id="loginId" class="col-sm-7 col-xs-10 " data-toggle="popover" data-trigger='manual'/>
 												</div>
@@ -206,7 +206,7 @@
 											</div>
 
 											<div class="form-group">
-												<label class="col-sm-3 control-label no-padding-right orange" for="dutySel">职位</label>
+												<label class="col-sm-3 control-label no-padding-right orange" for="dutySel" data-i18n="page.personnel.label.position">职位</label>
 												<div class="col-sm-9">
 													<select class="col-sm-7 col-xs-10 v_required" id="dutySel" data-toggle="popover" data-trigger='manual'></select>
 												</div>
@@ -227,8 +227,8 @@
 				</div>
 			</div>
 			<div class="modal-footer" style="align-content: center;">
-				<button type="button" id="saveUserBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelUserBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="saveUserBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+				<button type="button" id="cancelUserBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>
@@ -242,14 +242,14 @@
 				<button type="button" class="close" data-dismiss="modal">
 					<span>&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title" id="checkUserInfoDialog">人员信息</h4>
+				<h4 class="modal-title" id="checkUserInfoDialog" data-i18n="page.personnel.label.personInfo">人员信息</h4>
 			</div>
 			<div class="modal-body">
 				<div class="timeline-items">
 					<div class="timeline-item clearfix">
 						<div class="widget-box transparent" style="margin:0px;border-left:0px ">
 							<div class="widget-header widget-header-small" style="background-color: white">
-								<h5 class="smaller" Style="font-size: 15px; ">个人基本信息</h5>
+								<h5 class="smaller" Style="font-size: 15px; " data-i18n="page.personnel.label.baseInfo">个人基本信息</h5>
 								<span class="widget-toolbar " style="float:initial ;position: initial">
 									 <a href="#" data-action="collapse">
 										 <i class="icon-chevron-up"></i>
@@ -269,7 +269,7 @@
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right orange">现用名</label>
+												<label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.personnel.label.nowName">现用名</label>
 												<div class="col-sm-8">
 													<span type="text" maxlength="32" id="currentNameCheck"></span>
 												</div>
@@ -290,14 +290,14 @@
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right orange">出生日期</label>
+												<label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.personnel.label.birthDate">出生日期</label>
 												<div class="col-sm-8">
 													<span id="birthdayCheck" type="text"></span>
 												</div>
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right">政治面貌</label>
+												<label class="col-sm-4 control-label no-padding-right" data-i18n="page.personnel.label.politicalStatus">政治面貌</label>
 												<div class="col-sm-8">
 													<span id="politicalSelCheck"></span>
 												</div>
@@ -318,21 +318,21 @@
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right orange">手机号</label>
+												<label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.personnel.label.phoneNo">手机号</label>
 												<div class="col-sm-8">
 													<span type="text" id="phoneCheck"></span>
 												</div>
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right orange">现住地址</label>
+												<label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.personnel.label.currentAddr">现住地址</label>
 												<div class="col-sm-8">
 													<span type="text" maxlength="128" id="addressCheck"></span>
 												</div>
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right orange">户籍地址</label>
+												<label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.personnel.label.hukouAddr">户籍地址</label>
 												<div class="col-sm-8">
 													<span type="text" maxlength="128" id="hometownAddressCheck"></span>
 												</div>
@@ -346,14 +346,14 @@
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right orange">紧急联系人</label>
+												<label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.personnel.label.emergencyContact">紧急联系人</label>
 												<div class="col-sm-8">
 													<span type="text" maxlength="32" id="emergencyManCheck"></span>
 												</div>
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right orange">紧急联系人电话</label>
+												<label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.personnel.label.emergencyPhone">紧急联系人电话</label>
 												<div class="col-sm-8">
 													<span type="text" id="emergencyPhoneCheck"></span>
 												</div>
@@ -367,7 +367,7 @@
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right">毕业时间</label>
+												<label class="col-sm-4 control-label no-padding-right" data-i18n="page.personnel.label.graduateTime">毕业时间</label>
 												<div class="col-sm-8">
 													<div class="input-group col-sm-7 col-xs-10 no-padding">
 														<span id="graduateTimeCheck" type="text"></span>
@@ -376,21 +376,21 @@
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right">毕业学校</label>
+												<label class="col-sm-4 control-label no-padding-right" data-i18n="page.personnel.label.graduateSchool">毕业学校</label>
 												<div class="col-sm-8">
 													<span type="text" maxlength="32" id="schoolCheck"></span>
 												</div>
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right">学历</label>
+												<label class="col-sm-4 control-label no-padding-right" data-i18n="page.personnel.label.education">学历</label>
 												<div class="col-sm-8">
 													<span id="educationSelCheck"></span>
 												</div>
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right">专业</label>
+												<label class="col-sm-4 control-label no-padding-right" data-i18n="page.personnel.label.major">专业</label>
 												<div class="col-sm-8">
 													<span type="text" maxlength='32' id="specialtyCheck"></span>
 												</div>
@@ -404,14 +404,14 @@
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right">婚姻状况</label>
+												<label class="col-sm-4 control-label no-padding-right" data-i18n="page.personnel.label.marriage">婚姻状况</label>
 												<div class="col-sm-8">
 													<span type="checkbox" id="isMarriedCheck"></span>
 												</div>
 											</div>
 
 											<div class="form-group col-sm-6" >
-												<label class="col-sm-4 control-label no-padding-right">生育状况</label>
+												<label class="col-sm-4 control-label no-padding-right" data-i18n="page.personnel.label.birthStatus">生育状况</label>
 												<div class="col-sm-8">
 													<span type="checkbox" id="isBirthCheck"></span>
 												</div>
@@ -447,7 +447,7 @@
 					<div class="timeline-item clearfix">
 						<div class="widget-box transparent" style="margin:0px ;border-left:0px ">
 							<div class="widget-header widget-header-small" style="background-color: white !important">
-								<h5 class="smaller" Style="font-size: 15px; ">入职基本信息</h5>
+								<h5 class="smaller" Style="font-size: 15px; " data-i18n="page.personnel.label.entryBaseInfo">入职基本信息</h5>
 								<span class="widget-toolbar " style="float:initial ;position: initial">
 									 <a href="#" data-action="collapse">
 										 <i class="icon-chevron-up"></i>
@@ -460,7 +460,7 @@
 									<div class="widget-main">
 										<form class="form-horizontal">
 											<div class="form-group col-sm-6">
-												<label class="col-sm-4 control-label no-padding-right">工号</label>
+												<label class="col-sm-4 control-label no-padding-right" data-i18n="page.personnel.label.empNo">工号</label>
 												<div class="col-sm-8">
 													<span type="text" maxlength="15" id="userIdCheck"></span>
 												</div>
@@ -474,7 +474,7 @@
 											</div>
 
 											<div class="form-group col-sm-6">
-												<label class="col-sm-4 control-label no-padding-right orange">用户名</label>
+												<label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.personnel.label.userName">用户名</label>
 												<div class="col-sm-8">
 													<span type="text" maxlength="32" id="loginIdCheck"></span>
 												</div>
@@ -502,7 +502,7 @@
 											</div>
 
 											<div class="form-group col-sm-6">
-												<label class="col-sm-4 control-label no-padding-right orange">职位</label>
+												<label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.personnel.label.position">职位</label>
 												<div class="col-sm-8">
 													<span id="dutySelCheck"></span>
 												</div>
@@ -530,14 +530,14 @@
 											</div>
 
 											<div class="form-group col-sm-6">
-												<label class="col-sm-4 control-label no-padding-right">推荐人</label>
+												<label class="col-sm-4 control-label no-padding-right" data-i18n="page.personnel.label.referee">推荐人</label>
 												<div class="col-sm-8">
 													<span type="text" maxlength="32" id="recommendManCheck"></span>
 												</div>
 											</div>
 
 											<div class="form-group col-sm-6">
-												<label class="col-sm-4 control-label no-padding-right orange">入职时间</label>
+												<label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.personnel.label.entryTime">入职时间</label>
 												<div class="col-sm-8">
 													<span id="entryTimeCheck" type="text"></span>
 												</div>
@@ -583,14 +583,14 @@
 											</div>
 
 											<div class="form-group col-sm-6">
-												<label class="col-sm-4 control-label no-padding-right">养老编号</label>
+												<label class="col-sm-4 control-label no-padding-right" data-i18n="page.personnel.label.pensionNo">养老编号</label>
 												<div class="col-sm-8">
 													<span type="text" maxlength="32" id="pensionNumCheck"></span>
 												</div>
 											</div>
 
 											<div class="form-group col-sm-6">
-												<label class="col-sm-4 control-label no-padding-right">医疗编号</label>
+												<label class="col-sm-4 control-label no-padding-right" data-i18n="page.personnel.label.medicalNo">医疗编号</label>
 												<div class="col-sm-8">
 													<span type="text" maxlength="32" id="medicalNumCheck"></span>
 												</div>
@@ -625,7 +625,7 @@
 				</div>
 			</div>
 			<div class="modal-footer" style="text-align: center">
-				<button type="button" id="checkUserInfoCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="checkUserInfoCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>

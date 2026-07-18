@@ -1,0 +1,19 @@
+{
+  "_meta": { "lang": "tw", "type": "page", "module": "production", "desc": "生產模組頁面文字。" },
+  "page.production.label.productionOrder": "生產單",
+  "page.production.label.totalPrice": "總價",
+  "page.production.label.logisticsNum": "物流包數量",
+  "page.production.label.width": "寬度",
+  "page.production.label.thickness": "厚度",
+  "page.production.label.height": "高度",
+  "page.production.label.importExcel": "匯入excel",
+  "page.production.label.chart": "圖表",
+  "page.production.label.splitter": "拆單員",
+  "page.production.label.allowance": "折讓",
+  "page.production.btn.finishHardwareOrder": "完結五金單",
+  "page.production.label.genLogisticsNum": "生成物流包數量",
+  "page.production.label.hardwareOrder": "五金單",
+  "page.production.label.externalOrder": "外協單",
+  "page.production.btn.finishPlanOrder": "完結生產計畫單",
+  "page.production.label.planOrder": "計畫單"
+}

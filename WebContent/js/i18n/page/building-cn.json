@@ -1,0 +1,21 @@
+{
+  "_meta": { "lang": "cn", "type": "page", "module": "building", "desc": "楼盘模块页面文本。" },
+  "page.building.label.houseSourceNo": "房源编号",
+  "page.building.label.customerSourceNo": "客源编号",
+  "page.building.label.payMethod": "支付方式",
+  "page.building.label.estateOrder": "房产单",
+  "page.building.label.houseAgent": "房源代理人",
+  "page.building.label.customerAgent": "客源代理人",
+  "page.building.label.signTime": "签约时间",
+  "page.building.label.dealPrice": "成交价格",
+  "page.building.label.firstPay": "首付款",
+  "page.building.label.loanAmount": "贷款金额",
+  "page.building.label.balanceStatus": "结算状态",
+  "page.building.label.credentialType": "证件类型",
+  "page.building.label.credentialNo": "证件号",
+  "page.building.label.houseSourceImg": "房源图片信息",
+  "page.building.label.follower": "跟进人",
+  "page.building.label.houseType": "户型",
+  "page.building.btn.createCustomer": "创建客户",
+  "page.building.label.keyReceiver": "收钥匙人"
+}

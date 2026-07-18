@@ -18,7 +18,7 @@
       			<div class="modal-body">
 		      		<form class="form-horizontal">
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="cityProperId">城区编号</label>
+							<label class="col-sm-3 control-label no-padding-right" for="cityProperId" data-i18n="page.system.label.districtNo">城区编号</label>
 							<div class="col-sm-9">
 								<input type="text" id="cityProperId" maxlength="32" class="col-xs-10 col-sm-6 v_required v_cityProper" data-toggle="popover" data-trigger='manual'/>
 							</div>
@@ -26,7 +26,7 @@
 						<div class="space-4"></div>
 						
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right orange" for="cityProperName">城区名称</label>
+							<label class="col-sm-3 control-label no-padding-right orange" for="cityProperName" data-i18n="page.system.label.districtName">城区名称</label>
 							<div class="col-sm-9">
 								<input type="text" maxlength="64" id="cityProperName" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/>
 							</div>
@@ -34,7 +34,7 @@
 						<div class="space-4"></div>
 						
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="regionSel">所属大区</label>
+							<label class="col-sm-3 control-label no-padding-right" for="regionSel" data-i18n="page.system.label.bigRegion">所属大区</label>
 							<div class="col-sm-9">
 								<select id="regionSel" class="region col-xs-10 col-sm-6 v_required"></select>
 							</div>
@@ -50,8 +50,8 @@
 					</form>
       			</div>
 				<div class="modal-footer">
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 		      	</div>
     		</div>
   		</div>
@@ -69,7 +69,7 @@
 				<div class="modal-body">
 					<form class="form-horizontal" id="mapForm">
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="no">城区编号</label>
+							<label class="col-sm-3 control-label no-padding-right" for="no" data-i18n="page.system.label.districtNo">城区编号</label>
 							<div class="col-sm-9">
 								<input disabled type="text" name="no" maxlength="10" class="col-xs-10 col-sm-6 v_required v_no" />
 							</div>
@@ -77,16 +77,16 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right orange" for="name">城区名称</label>
+							<label class="col-sm-3 control-label no-padding-right orange" for="name" data-i18n="page.system.label.districtName">城区名称</label>
 							<div class="col-sm-9">
 								<input disabled class="col-xs-10 col-sm-6 v_required v_name" maxlength="20" type="text" name="name" id="name" data-toggle="popover" data-trigger='manual'/>
-								<button type="button" id="placeBtn" class="btn btn-success" style="padding: 2px 12px;">确定位置</button>
+								<button type="button" id="placeBtn" class="btn btn-success" style="padding: 2px 12px;" data-i18n="page.system.label.confirmPos">确定位置</button>
 							</div>
 						</div>
 						<div class="space-4"></div>
 
 						<div class="form-group" style="display: none">
-							<label class="col-sm-3 control-label no-padding-right" for="city">城区名称</label>
+							<label class="col-sm-3 control-label no-padding-right" for="city" data-i18n="page.system.label.districtName">城区名称</label>
 							<div class="col-sm-9">
 								<input disabled class="col-xs-10 col-sm-6 v_required v_name" id="city" data-toggle="popover" data-trigger='manual'/>
 							</div>
@@ -97,10 +97,10 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-				    <button type="button" name="resetPositionBtn" class="btn btn-warning">重选位置</button>
-				    <button type="button" name="resetMapBtn" class="btn btn-success">重新加载地图</button>
-					<button type="button" id="saveMapBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelMapBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				    <button type="button" name="resetPositionBtn" class="btn btn-warning" data-i18n="page.system.label.reselectPos">重选位置</button>
+				    <button type="button" name="resetMapBtn" class="btn btn-success" data-i18n="page.system.label.reloadMap">重新加载地图</button>
+					<button type="button" id="saveMapBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" id="cancelMapBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>

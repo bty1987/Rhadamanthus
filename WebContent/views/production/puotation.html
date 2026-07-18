@@ -1,6 +1,6 @@
 
 <div >
-    <div id="fl-statement"><div class="page-header"><h1>生产单<small><i class="icon-double-angle-right"></i>报价单</small></h1></div></div>
+    <div id="fl-statement"><div class="page-header"><h1 data-i18n="page.production.label.productionOrder">生产单<small><i class="icon-double-angle-right"></i>报价单</small></h1></div></div>
 
     <div class="row">
         <div class="col-xs-12">
@@ -9,7 +9,7 @@
                 <div>
                     <h3 class="clearfix" >
                         <a  class="btn btn-minier btn-primary pull-left icon-plus bigger-110" id="addpuotationBtn" style="margin:0px 3px">创建</a>
-                        <a  class="btn btn-minier pull-left icon-mail-forward bigger-110" id="backBtn" style="margin:0px 3px">返回</a>
+                        <a  class="btn btn-minier pull-left icon-mail-forward bigger-110" id="backBtn" style="margin:0px 3px" data-i18n="msg.back">返回</a>
                     </h3>
                 </div>
             </div>
@@ -29,7 +29,7 @@
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="discount">折让</label>
+                        <label class="col-sm-3 control-label no-padding-right" for="discount" data-i18n="page.production.label.allowance">折让</label>
                         <div class="col-sm-9">
                             <input type="text" id="discount" maxlength="12" class="col-xs-10 col-sm-7 v_required"
                                    data-toggle="popover" data-trigger='manual'/>
@@ -37,7 +37,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="total">总价</label>
+                        <label class="col-sm-3 control-label no-padding-right" for="total" data-i18n="page.production.label.totalPrice">总价</label>
                         <div class="col-sm-9">
                             <input type="text" id="total" maxlength="12" class="col-xs-10 col-sm-7 v_required"
                                    data-toggle="popover" data-trigger='manual' readonly />
@@ -47,8 +47,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="distConfirmBtn" class="btn btn-primary">确认</button>
-                <button type="button" id="disCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="distConfirmBtn" class="btn btn-primary" data-i18n="msg.confirm">确认</button>
+                <button type="button" id="disCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -84,8 +84,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="editConfirmBtn" class="btn btn-primary">确认</button>
-                <button type="button" id="editCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="editConfirmBtn" class="btn btn-primary" data-i18n="msg.confirm">确认</button>
+                <button type="button" id="editCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>

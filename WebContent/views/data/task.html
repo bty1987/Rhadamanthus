@@ -56,7 +56,7 @@
                             <label class="col-sm-3 control-label no-padding-right orange" for="handle">操作</label>
                             <div class="col-sm-9">
                                 <select id="handle" class="col-xs-10 col-sm-5 v_required" data-toggle="popover"data-trigger='manual'>
-                                    <option value="">全部</option>
+                                    <option value="" data-i18n="msg.all">全部</option>
                                     <option value="0">读</option>
                                     <option value="1">写</option>
                                 </select>
@@ -104,8 +104,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="addTaskBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelTaskBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="addTaskBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelTaskBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -157,7 +157,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">别名</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName" data-i18n="page.data.label.alias">别名</label>
                             <div class="col-sm-9">
                                 <input type="text" id="taskParamalias" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
                             </div>
@@ -202,8 +202,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-<!--                    <button type="button" id="addTaskBtn" class="btn btn-default">保存</button>
-                    <button type="button" id="cancelTaskBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+<!--                    <button type="button" id="addTaskBtn" class="btn btn-default" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelTaskBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 -->
                 </div>
             </div>

@@ -1,0 +1,16 @@
+{
+  "_meta": { "lang": "tw", "type": "page", "module": "manifest", "desc": "貨單模組頁面文字。" },
+  "page.manifest.label.warehouse": "倉庫",
+  "page.manifest.label.outPrice": "出庫價",
+  "page.manifest.label.outWarehouse": "出貨倉庫",
+  "page.manifest.label.currentWarehouse": "所在倉庫",
+  "page.manifest.label.docDate": "單據日期",
+  "page.manifest.label.docDateLabel": "單據日期 :",
+  "page.manifest.label.supervisorName": "監理姓名",
+  "page.manifest.label.feeName": "費用名稱",
+  "page.manifest.label.fee": "費用",
+  "page.manifest.label.goodsCategory": "商品類別",
+  "page.manifest.label.totalNum": "總數量",
+  "page.manifest.hint.packageBindGoods": "套餐綁定商品如下所示:",
+  "page.manifest.btn.addGoodsItem": "新增貨單項"
+}
