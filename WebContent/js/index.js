@@ -62,50 +62,16 @@ $(function() {
     }
 
     /**
-     * i18n 语言切换初始化:绑定顶栏下拉菜单选项点击,设置当前选中语言高亮
+     * i18n 主框架初始化:apply 当前语言到全局顶栏/导航静态文本
+     * 语言切换 UI 已移至个人资料页(userProfile),此处仅负责应用偏好语言
      * 由 queryUserForSelfByUserId 回调中(用户偏好拉完后)调用一次
      */
-    function initLangSwitch() {
+    function initI18n() {
 
         if (!window.i18n) return;
 
         // 应用当前语言到全局(顶栏/导航/页面静态文本)
         i18n.apply($('body'));
-
-        // 高亮当前选中项:显示对勾,设置触发器显示文案
-        function refreshCheck() {
-            $('#langsel li').each(function() {
-                var $a = $(this).find('a');
-                var isCurrent = ($a.data('lang') === i18n.lang);
-                $(this).find('.lang-check').css('visibility', isCurrent ? 'visible' : 'hidden');
-            });
-            // 触发器显示当前语言名
-            var langNameKey = 'page.common.lang.' + i18n.lang;
-            $('#currentLangName').text(i18n.t(langNameKey));
-        }
-        refreshCheck();
-
-        // 选项点击 → 切换语言
-        $('#langsel a[data-lang]').on('click', function(e) {
-            e.preventDefault();
-            var lang = $(this).data('lang');
-            if (lang === i18n.lang) {
-                $(this).parents('.open').removeClass('open');
-                return;
-            }
-            i18n.setLang(lang, {
-                applyRoot: $('body'),   // 全局 apply
-                onDone: function(_, changed) {
-                    if (changed) {
-                        refreshCheck();
-                        // 关闭下拉
-                        $('#langsel').parents('.open').removeClass('open');
-                        // 提示一下
-                        com.showAlert(com.info, i18n.t('msg.opSuccess'));
-                    }
-                }
-            });
-        });
     }
 
     com.post(api.personel.queryUserForSelfByUserId, {}, function(res) {
@@ -116,8 +82,8 @@ $(function() {
 
         loadUserPrefers();
 
-        // i18n:用户偏好(含 lang)拉完后,初始化顶栏语言切换 UI + apply 全局
-        initLangSwitch();
+        // i18n:用户偏好(含 lang)拉完后,apply 全局
+        initI18n();
 
         if (parent.window.isPC && (res.userInfo.user.extranet & 16) != 16) {
             alert(i18n.t('msg.noPermission'));
