@@ -162,6 +162,56 @@ var i18n = (function($) {
         },
 
         /**
+         * 事后 DOM 扫描翻译:针对"动态生成但结构统一"的 DOM 模式
+         * 用 tAuto 反查中文 → 译文,命中则替换,未命中保留原文
+         *
+         * 覆盖模式(基于生产代码 100% 同构调研):
+         *  ① propertyArr canonical: ul.fl-inline-list > li > strong(label) + b(value)
+         *     覆盖 104 个业务 JS 自己渲染的详情列表(非走 searcher 的)
+         *  ② quotation 表头: .fl-quo-item .cell-wrap(label)
+         *  ③ 通用: .fl-inline-list 内任意 strong 的纯中文文本
+         *
+         * 由 load.js 在页面脚本加载完成后调用,与 _autoInitForPage 同时机
+         * 业务 JS 零改动,DOM 结构不变,仅文本翻译
+         */
+        scan: function($root) {
+            $root = $root || $('body');
+            if (currentLang() === 'cn') return 0;  // cn 模式无需扫描
+            var scanned = 0;
+
+            // ① propertyArr canonical 模式:ul.fl-inline-list > li > strong(label)
+            // strong 文本形如 "创建时间:" 或 "创建时间",去尾冒号后反查
+            $root.find('ul.fl-inline-list > li > strong').each(function() {
+                var $el = $(this);
+                var html = $el.html();
+                if (!html || !/[一-鿿]/.test(html)) return;  // 无中文跳过
+                // 拆解:label (可能带尾 ":") → 反查 → 还原带 ":"
+                var hasColon = /[:：]\s*$/.test(html);
+                var label = html.replace(/[:：]\s*$/, '').trim();
+                var translated = i18n.tAuto(label);
+                if (translated !== label) {
+                    $el.html(translated + (hasColon ? ':' : ''));
+                    scanned++;
+                }
+            });
+
+            // ② quotation 表头模式:.fl-quo-item .cell-wrap
+            $root.find('.fl-quo-item .cell-wrap').each(function() {
+                var $el = $(this);
+                var html = $el.html();
+                if (!html || !/[一-鿿]/.test(html)) return;
+                var label = html.trim();
+                var translated = i18n.tAuto(label);
+                if (translated !== label) {
+                    $el.html(translated);
+                    scanned++;
+                }
+            });
+
+            return scanned;
+        },
+
+        /**
          * 切换语言
          * @param lang  目标语言码(cn/tw/en)
          * @param opts  { persist:true   是否同步落库到 userprefer(默认 true,需登录态)
@@ -268,7 +318,8 @@ var i18n = (function($) {
          * 页面级自动初始化(由 load.js 在页面脚本加载完毕后调用)
          * ① 从当前页面 URL 推断业务模块(views/{module}/xxx.html)
          * ② loadPage 加载该模块语言包
-         * ③ apply 翻译整个 body
+         * ③ apply 翻译整个 body(data-i18n 标记)
+         * ④ scan 扫描 propertyArr 等"结构统一但 JS 动态生成"的 DOM
          * 业务页面无需任何改动,只要 URL 符合 views/{module}/ 约定
          */
         _autoInitForPage: function() {
@@ -278,6 +329,12 @@ var i18n = (function($) {
             if (m && m[1]) {
                 i18n.loadPage(m[1]);
             }
+            i18n.apply($('body'));
+            // 延迟 scan:propertyArr 通常在 searcher.doSearch 异步回调里渲染,
+            // 同步时机可能 DOM 还没出来。用 setTimeout 让出主线程,等业务渲染完。
+            setTimeout(function() {
+                if (window.i18n) i18n.scan($('body'));
+            }, 300);
             i18n.apply($('body'));
         },
 

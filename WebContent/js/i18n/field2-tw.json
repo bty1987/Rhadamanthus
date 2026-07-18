@@ -130,5 +130,12 @@
   "field2.ph.belongUser": "請輸入歸屬人",
   "field2.ph.couponType": "請選擇優惠券種類",
   "field2.ph.couponAmount": "請輸入優惠券金額",
-  "field2.ph.orderNo": "請輸入裝修單號"
+  "field2.ph.orderNo": "請輸入裝修單號",
+
+  "field2.amount": "金額",
+  "field2.fee": "費用",
+  "field2.rate": "比例",
+  "field2.balanceAmount": "餘額",
+  "field2.total": "合計",
+  "field2.subtotal": "小計"
 }
