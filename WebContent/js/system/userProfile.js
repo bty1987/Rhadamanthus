@@ -159,31 +159,50 @@ jQuery(function($) {
     com.focusPage("#langStyle button").on("click", function() {
 
         var lang = $(this).attr("data-lang");
-        if (lang === config.lang) return;  // 未变化直接返回
+        console.log('[i18n-diag] 点击语言切换, target=', lang, 'current config.lang=', config.lang);
+        if (lang === config.lang) {
+            console.log('[i18n-diag] 语言未变化,直接返回');
+            return;
+        }
 
         setLangStyle(lang);
         setUserPrefer("index", "global", "lang", lang);
 
         // 写 localStorage + 落库 userprefer
-        try { window.localStorage && window.localStorage.setItem('rhada.lang', lang); } catch (e) {}
+        try {
+            window.localStorage && window.localStorage.setItem('rhada.lang', lang);
+            console.log('[i18n-diag] localStorage rhada.lang 已写入:', localStorage.getItem('rhada.lang'));
+        } catch (e) {
+            console.log('[i18n-diag] localStorage 写入失败:', e.message);
+        }
+        // 落库 userprefer:必须同步完成(async:false),否则 reload 时主框架读 userprefer
+        // 还是旧 lang,会覆盖 localStorage 的新值,导致切换失效
         if (window.com && com.post && window.api && api.personel && api.personel.updateUserPrefer) {
             com.post(api.personel.updateUserPrefer, {
                 "userPrefer.module": "index",
                 "userPrefer.page": "global",
                 "userPrefer.pkey": "lang",
                 "userPrefer.pvalue": lang
-            });
+            }, function() {
+                console.log('[i18n-diag] userprefer 落库成功 lang=', lang);
+            }, null, false);   // 第 5 参数 false = 同步请求,确保 reload 前落库完成
         }
 
         // 提示并刷新主框架。iframe 内页用 parent.location.reload()。
         // 先切换 i18n 到新语言,拿新语言的提示文案
         if (window.i18n) {
+            console.log('[i18n-diag] 切换前 i18n.lang=', i18n.lang, 'messageMap keys=', Object.keys(i18n._maps().message).length);
             i18n.setLang(lang, { persist:false, applyRoot:null });
+            console.log('[i18n-diag] 切换后 i18n.lang=', i18n.lang, 'messageMap keys=', Object.keys(i18n._maps().message).length);
+            console.log('[i18n-diag] t(msg.save)=', i18n.t('msg.save'), 'tAuto(操作成功)=', i18n.tAuto('操作成功'));
+        } else {
+            console.log('[i18n-diag] window.i18n 不存在!');
         }
         var tipSuccess = (window.i18n) ? i18n.t('msg.opSuccess') : '操作成功';
         var tipRefresh = (window.i18n) ? i18n.t('msg.langChanged') : '语言已切换,即将刷新页面以完全生效';
 
         layer.msg(tipSuccess + ', ' + tipRefresh, { icon: 1, time: 1500 }, function() {
+            console.log('[i18n-diag] 触发主框架 reload');
             try {
                 // 优先刷新主框架(让顶栏/菜单/iframe 全部重载)
                 if (window.parent && window.parent !== window) {
@@ -192,7 +211,7 @@ jQuery(function($) {
                     window.location.reload();
                 }
             } catch (e) {
-                // 跨域无法访问 parent 时,刷新当前页
+                console.log('[i18n-diag] parent reload 失败,改刷新当前页:', e.message);
                 window.location.reload();
             }
         });
