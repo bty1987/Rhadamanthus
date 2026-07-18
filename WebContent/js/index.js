@@ -41,22 +41,32 @@ $(function() {
         }, null, false);
 
         // i18n:拉取 module=index 的偏好(含 lang / templateStyle),与 searcher 偏好并存
-        // lang 用服务端值覆盖本地(silent+不持久化),保证跨设备一致
+        // lang 优先级:localStorage(运行时切换同步写入) > userprefer(跨设备同步)
+        // 注意:userprefer 落库是异步的,刚切换后可能滞后,所以 localStorage 优先
         com.post(api.personel.queryUserPrefers, {
             "userPrefer.module": "index"
         }, function(res) {
 
             initUserPrefer(res.userPrefers);
 
-            if (window.i18n && params.user.prefer.index
-                && params.user.prefer.index.global
-                && params.user.prefer.index.global.lang) {
+            if (window.i18n) {
+                // ① localStorage 的 lang(运行时切换同步写入,最权威)
+                var localLang = null;
+                try { localLang = localStorage.getItem('rhada.lang'); } catch (e) {}
+                // ② userprefer 的 lang(跨设备同步源)
+                var serverLang = (params.user.prefer.index
+                    && params.user.prefer.index.global
+                    && params.user.prefer.index.global.lang) ? params.user.prefer.index.global.lang : null;
 
-                i18n.setLang(params.user.prefer.index.global.lang, {
-                    silent: true,        // 不回写 localStorage(服务端已是权威源)
-                    persist: false,      // 不再回写 userprefer(就是从那儿读的)
-                    applyRoot: $('body') // 全局 apply
-                });
+                // 优先用 localStorage,其次 userprefer
+                var finalLang = localLang || serverLang;
+                if (finalLang && finalLang !== i18n.lang) {
+                    i18n.setLang(finalLang, {
+                        silent: true,        // 不回写 localStorage(避免循环)
+                        persist: false,      // 不再回写 userprefer
+                        applyRoot: $('body') // 全局 apply
+                    });
+                }
             }
         }, null, false);
     }
@@ -788,29 +798,28 @@ $(function() {
         // i18n:菜单名翻译。优先级:mid 专表 > 一级菜单的 code > tAuto 反查高频词
         // mid 是后端 communion.module 主键,稳定唯一;一级菜单有英文 code(如 "approval")
         // cn 模式直接返回原 name,确保中文环境下菜单与改造前 100% 一致
-        // ⚠️ 注意:tw/en 模式暂时也返回原 name,排查菜单错乱问题期间禁用翻译
         var translateMenuName = function(v) {
             // 兜底:v 或 v.name 不存在时返回空串,绝不返回 undefined(防止 .text(undefined) 误伤 DOM)
             if (!v || v.name == null) return '';
-            return v.name;   // 暂时所有语言都返回原 name,排查菜单错乱问题
-            /* 排查期禁用以下翻译逻辑
             if (!window.i18n) return v.name;
-            if (i18n.lang === 'cn') return v.name;
+            if (i18n.lang === 'cn') return v.name;   // cn 模式保持原文
             try {
+                // ① 按 mid 查专表(同名菜单可差异化翻译)
                 var midKey = 'menu.mid.' + v.mid;
                 var t = i18n.t(midKey);
                 if (t && t !== midKey) return t;
+                // ② 一级菜单按英文 code 查(menu.code.approval 等)
                 if (v.module) {
                     var codeKey = 'menu.code.' + v.module;
                     var tc = i18n.t(codeKey);
                     if (tc && tc !== codeKey) return tc;
                 }
+                // ③ 兜底:反查 message/page/field 包的高频词,反查不到用原 name
                 var auto = i18n.tAuto(v.name);
                 return auto || v.name;
             } catch (e) {
-                return v.name;
+                return v.name;   // 任何异常都返回原 name,保证菜单可用
             }
-            */
         };
 
         if (menuArr.level1.length) {
