@@ -1,0 +1,17 @@
+{
+  "_meta": { "lang": "cn", "type": "page", "module": "information", "desc": "信息模块页面文本。" },
+  "page.information.label.awardPurchase": "奖品采购",
+  "page.information.label.subCategory": "子类",
+  "page.information.label.taskSelect": "任务选择",
+  "page.information.label.condition": "条件",
+  "page.information.label.activityStats": "活动款统计",
+  "page.information.label.serial": "序号",
+  "page.information.label.activityInfo": "活动信息",
+  "page.information.label.paymentType": "款项类型",
+  "page.information.label.combinedPrepay": "合预款",
+  "page.information.label.mainPrepay": "主预款",
+  "page.information.label.decorationPay": "装修款",
+  "page.information.label.materialPay": "主材款",
+  "page.information.label.salesPay": "销售款",
+  "page.information.label.servicePay": "服务款"
+}

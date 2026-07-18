@@ -1,0 +1,17 @@
+{
+  "_meta": { "lang": "en", "type": "page", "module": "information", "desc": "Information module page texts." },
+  "page.information.label.awardPurchase": "Award Purchase",
+  "page.information.label.subCategory": "Sub-category",
+  "page.information.label.taskSelect": "Task Select",
+  "page.information.label.condition": "Condition",
+  "page.information.label.activityStats": "Activity Payment Stats",
+  "page.information.label.serial": "Serial",
+  "page.information.label.activityInfo": "Activity Info",
+  "page.information.label.paymentType": "Payment Type",
+  "page.information.label.combinedPrepay": "Combined Prepay",
+  "page.information.label.mainPrepay": "Main Prepay",
+  "page.information.label.decorationPay": "Decoration Pay",
+  "page.information.label.materialPay": "Material Pay",
+  "page.information.label.salesPay": "Sales Pay",
+  "page.information.label.servicePay": "Service Pay"
+}

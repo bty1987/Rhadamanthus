@@ -3,11 +3,11 @@
 
         <form class="form-horizontal" id="flowForm">
             <div class="form-group">
-                <label class="col-sm-2 control-label no-padding-right orange" for="code">流程编码</label>
+                <label class="col-sm-2 control-label no-padding-right orange" for="code" data-i18n="page.approval.label.flowCode">流程编码</label>
                 <div class="col-sm-4">
                     <input type="text" id="code" class="col-xs-12 v_required" maxlength="64" placeholder="如 DECORATION_CONTRACT" />
                 </div>
-                <label class="col-sm-2 control-label no-padding-right orange" for="name">流程名称</label>
+                <label class="col-sm-2 control-label no-padding-right orange" for="name" data-i18n="page.approval.label.flowName">流程名称</label>
                 <div class="col-sm-4">
                     <input type="text" id="name" class="col-xs-12 v_required" maxlength="100" />
                 </div>
@@ -18,16 +18,16 @@
                 <label class="col-sm-2 control-label no-padding-right orange" for="businessType">业务类型</label>
                 <div class="col-sm-4">
                                 <select id="businessType" class="col-xs-12 v_required">
-                                    <option value="100">通用审批</option>
-                                    <option value="24">装饰合同</option>
-                                    <option value="5">装修退款</option>
-                                    <option value="6">主材退款</option>
-                                    <option value="10">销售退款</option>
-                                    <option value="3">装修归属</option>
-                                    <option value="22">报价优惠</option>
-                                    <option value="4">报价折扣</option>
-                                    <option value="19">装修终审</option>
-                                    <option value="26">预付款提现</option>
+                                    <option value="100" data-i18n="page.approval.label.generalApproval">通用审批</option>
+                                    <option value="24" data-i18n="page.approval.label.decorContract">装饰合同</option>
+                                    <option value="5" data-i18n="page.approval.label.decorRefund">装修退款</option>
+                                    <option value="6" data-i18n="page.approval.label.materialRefund">主材退款</option>
+                                    <option value="10" data-i18n="page.approval.label.salesRefund">销售退款</option>
+                                    <option value="3" data-i18n="page.approval.label.decorBelong">装修归属</option>
+                                    <option value="22" data-i18n="page.approval.label.quotationDiscount">报价优惠</option>
+                                    <option value="4" data-i18n="page.approval.label.quotationDiscountRate">报价折扣</option>
+                                    <option value="19" data-i18n="page.approval.label.decorFinal">装修终审</option>
+                                    <option value="26" data-i18n="page.approval.label.prepayWithdraw">预付款提现</option>
                                 </select>
                 </div>
                 <label class="col-sm-2 control-label no-padding-right" for="version">版本</label>
@@ -99,7 +99,7 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange">节点类型</label>
+                        <label class="col-sm-3 control-label no-padding-right orange" data-i18n="page.approval.label.nodeType">节点类型</label>
                         <div class="col-sm-3">
                             <select id="nodeType" class="col-xs-12">
                                 <option value="1">串行</option>
@@ -163,8 +163,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="saveNodeBtn" class="btn btn-primary">确定</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="saveNodeBtn" class="btn btn-primary" data-i18n="msg.ok">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>

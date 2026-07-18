@@ -1,0 +1,21 @@
+{
+  "_meta": { "lang": "tw", "type": "page", "module": "building", "desc": "樓盤模組頁面文字。" },
+  "page.building.label.houseSourceNo": "房源編號",
+  "page.building.label.customerSourceNo": "客源編號",
+  "page.building.label.payMethod": "支付方式",
+  "page.building.label.estateOrder": "房產單",
+  "page.building.label.houseAgent": "房源代理人",
+  "page.building.label.customerAgent": "客源代理人",
+  "page.building.label.signTime": "簽約時間",
+  "page.building.label.dealPrice": "成交價格",
+  "page.building.label.firstPay": "首付款",
+  "page.building.label.loanAmount": "貸款金額",
+  "page.building.label.balanceStatus": "結算狀態",
+  "page.building.label.credentialType": "證件類型",
+  "page.building.label.credentialNo": "證件號",
+  "page.building.label.houseSourceImg": "房源圖片資訊",
+  "page.building.label.follower": "跟進人",
+  "page.building.label.houseType": "戶型",
+  "page.building.btn.createCustomer": "建立客戶",
+  "page.building.label.keyReceiver": "收鑰匙人"
+}

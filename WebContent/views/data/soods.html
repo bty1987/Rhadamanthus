@@ -38,7 +38,7 @@
 
                         <div class="form-group">
                             <div class="col-md-offset-3 col-md-9">
-                                <a class="btn btn-success btn-sm" id="submitBtn">提交</a>
+                                <a class="btn btn-success btn-sm" id="submitBtn" data-i18n="msg.submit">提交</a>
                             </div>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="goodsName">商品</label>
+                        <label class="col-sm-3 control-label no-padding-right" for="goodsName" data-i18n="page.data.label.goods">商品</label>
                         <div class="col-sm-9">
                             <input type="text" id="goodsName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'/>
                         </div>
@@ -87,7 +87,7 @@
                     </div>
 
                     <div class="form-group advance">
-                        <label class="col-sm-3 control-label no-padding-right" for="selling">售价</label>
+                        <label class="col-sm-3 control-label no-padding-right" for="selling" data-i18n="page.data.label.sellPrice">售价</label>
                         <div class="col-sm-9">
                             <input type="text" id="selling" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
                         </div>
@@ -101,7 +101,7 @@
                     </div>
 
                     <div class="form-group advance">
-                        <label class="col-sm-3 control-label no-padding-right" for="balance">结算价</label>
+                        <label class="col-sm-3 control-label no-padding-right" for="balance" data-i18n="page.data.label.balancePrice">结算价</label>
                         <div class="col-sm-9">
                             <input type="text" id="balance" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
                         </div>
@@ -117,8 +117,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" id="withdrawBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="addCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="withdrawBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="addCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -149,7 +149,7 @@
                     </div>
 
                     <div class="form-group advance">
-                        <label class="col-sm-3 control-label no-padding-right" for="uSelling">售价</label>
+                        <label class="col-sm-3 control-label no-padding-right" for="uSelling" data-i18n="page.data.label.sellPrice">售价</label>
                         <div class="col-sm-9">
                             <input type="text" id="uSelling" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="5"/>
                         </div>
@@ -163,7 +163,7 @@
                     </div>
 
                     <div class="form-group advance">
-                        <label class="col-sm-3 control-label no-padding-right" for="uBalance">结算价</label>
+                        <label class="col-sm-3 control-label no-padding-right" for="uBalance" data-i18n="page.data.label.balancePrice">结算价</label>
                         <div class="col-sm-9">
                             <input type="text" id="uBalance" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="5"/>
                         </div>
@@ -179,8 +179,8 @@
             </div>
             
             <div class="modal-footer">
-                <button type="button" id="updateSoodsItemBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="updateCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="updateSoodsItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="updateCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -218,9 +218,9 @@
         <form class="form-horizontal" novalidate="novalidate" id="updateForm">
 
             <div class="form-group alert alert-danger">
-                <p>上传字段均为文本类型</p>
+                <p data-i18n="page.data.hint.uploadTextField">上传字段均为文本类型</p>
                 <p>上传格式: 结算价 数量 状态</p>
-                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+                <p data-i18n="page.data.hint.uploadFormat">注意: 上传文件中请填写具体内容, 不显示表头</p>
             </div>
 
             <div class="form-group">
@@ -228,8 +228,8 @@
                     <li>
                         <div class="line-wrap content col6">
                             <div class="cell">选材ID</div>
-                            <div class="cell">售价</div>
-                            <div class="cell">结算价</div>
+                            <div class="cell" data-i18n="page.data.label.sellPrice">售价</div>
+                            <div class="cell" data-i18n="page.data.label.balancePrice">结算价</div>
                             <div class="cell">成本价</div>
                             <div class="cell">数量</div>
                             <div class="cell">状态</div>
@@ -261,13 +261,13 @@
         </div>
     </div>
 
-    <label class="col-sm-3 control-label no-padding-right" for="executeDates"><strong>执行日期</strong></label>
+    <label class="col-sm-3 control-label no-padding-right" for="executeDates"><strong data-i18n="page.data.label.executeDate">执行日期</strong></label>
     <div class="col-sm-9">
         <input class="date-picker v_required " id="executeDates" type="text" readonly="readonly"
                data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
     </div>
 
-    <label class="col-sm-3 control-label no-padding-right" for="executeTimes"><strong>执行时间</strong></label>
+    <label class="col-sm-3 control-label no-padding-right" for="executeTimes"><strong data-i18n="page.data.label.executeTime">执行时间</strong></label>
     <div class="col-sm-9">
         <div class="bootstrap-timepicker">
             <input id="executeTimes" type="text" class="v_required"/>
@@ -276,8 +276,8 @@
 
     <label class="col-sm-3 control-label no-padding-right"></label>
     <div class="col-sm-9">
-        <a class="btn btn-success btn-sm" id="importBtn">导入</a>
-        <a class="btn btn-sm" id="exportBtn">导出</a>
+        <a class="btn btn-success btn-sm" id="importBtn" data-i18n="msg.import">导入</a>
+        <a class="btn btn-sm" id="exportBtn" data-i18n="msg.export">导出</a>
     </div>
 </div>
 

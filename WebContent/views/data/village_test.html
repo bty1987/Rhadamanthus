@@ -322,7 +322,7 @@
                         html += '<td>' + (village.cityProper && village.cityProper.city ? village.cityProper.city.name : '-') + '</td>';
                         html += '<td>' + (village.cityProper ? village.cityProper.name : '-') + '</td>';
                         html += '<td>' + (village.deliveryTime || '-') + '</td>';
-                        html += '<td>' + (village.status == 0 ? '<span class="label label-success">启用</span>' : '<span class="label label-default">禁用</span>') + '</td>';
+                        html += '<td>' + (village.status == 0 ? '<span class="label label-success" data-i18n="msg.enable">启用</span>' : '<span class="label label-default" data-i18n="msg.disable">禁用</span>') + '</td>';
                         html += '</tr>';
                     });
 

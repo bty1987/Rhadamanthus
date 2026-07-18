@@ -5,13 +5,13 @@
                 <button id="addManifestItem" class="btn btn-yellow">添加商品</button>
                 <button id="submitManifest" class="btn btn-info" data-loading-text="提交中..." type="submit">
                     <i class="icon-ok"></i>
-                    <span>提交</span>
+                    <span data-i18n="msg.submit">提交</span>
                 </button>
             </div>
 
             <div class="pull-right" id="timelement">
                 <div class="inline">
-                    <label>单据日期</label>
+                    <label data-i18n="page.manifest.label.docDate">单据日期</label>
                     <div class="inline">
                         <input id="manifestTime" class="m-wrap m-ctrl-medium v_required" placement="top"
                                readonly size="16" type="text" value=""/>
@@ -32,7 +32,7 @@
                     <div class="cell">规格</div>
                     <div class="cell">单位</div>
                     <div class="cell">进货仓库</div>
-                    <div class="cell">出货仓库</div>
+                    <div class="cell" data-i18n="page.manifest.label.outWarehouse">出货仓库</div>
                     <div class="cell">数量</div>
                     <div class="cell">件数</div>
                     <div class="cell">备注</div>
@@ -64,7 +64,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-offset-3 col-md-9">
-                            <a class="btn btn-success btn-sm" id="submitBtn">提交</a>
+                            <a class="btn btn-success btn-sm" id="submitBtn" data-i18n="msg.submit">提交</a>
                         </div>
                     </div>
                 </form>

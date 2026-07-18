@@ -1,0 +1,23 @@
+{
+  "_meta": { "lang": "cn", "type": "page", "module": "salary", "desc": "薪资模块页面文本。" },
+  "page.salary.label.laborFee": "工费",
+  "page.salary.label.workerWarranty": "工人质保金",
+  "page.salary.label.designerFeeInfo": "设计师工费信息",
+  "page.salary.label.workerFee": "工人工费",
+  "page.salary.label.empName": "员工姓名",
+  "page.salary.btn.clear": "清空",
+  "page.salary.btn.addSalary": "添加薪资",
+  "page.salary.label.type1": "一类",
+  "page.salary.label.type2": "二类",
+  "page.salary.label.type3": "三类",
+  "page.salary.label.basic": "基本",
+  "page.salary.label.deduct": "扣款",
+  "page.salary.label.design": "设计",
+  "page.salary.label.warrantyLimit": "质保金上限",
+  "page.salary.label.transferFee": "转款工人工费",
+  "page.salary.label.transferPerson": "转款人",
+  "page.salary.label.receiver": "收款人",
+  "page.salary.label.transferAmount": "转款金额",
+  "page.salary.btn.addWorkerAccount": "添加工人账户",
+  "page.salary.label.workerName": "工人姓名"
+}

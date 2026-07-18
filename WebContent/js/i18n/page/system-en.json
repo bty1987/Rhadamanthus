@@ -1,0 +1,22 @@
+{
+  "_meta": { "lang": "en", "type": "page", "module": "system", "desc": "System module page texts." },
+  "page.system.label.cityName": "City Name",
+  "page.system.label.districtName": "District Name",
+  "page.system.label.cityNo": "City No.",
+  "page.system.label.districtNo": "District No.",
+  "page.system.label.bigRegion": "Big Region",
+  "page.system.label.confirmPos": "Confirm Position",
+  "page.system.label.reselectPos": "Reselect Position",
+  "page.system.label.reloadMap": "Reload Map",
+  "page.system.label.module": "Module",
+  "page.system.label.roleInfo": "Role Info",
+  "page.system.label.roleNo": "Role No.",
+  "page.system.label.roleName": "Role Name",
+  "page.system.label.roleDesc": "Role Description",
+  "page.system.label.operateConfig": "Operation Config",
+  "page.system.label.moduleConfig": "Module Config",
+  "page.system.label.sourceRole": "Source Role",
+  "page.system.label.confirmCopy": "Confirm Copy",
+  "page.system.label.task": "Task",
+  "page.system.btn.addVersion": "Add Version"
+}

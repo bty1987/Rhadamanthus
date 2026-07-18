@@ -1,0 +1,17 @@
+{
+  "_meta": { "lang": "tw", "type": "page", "module": "information", "desc": "資訊模組頁面文字。" },
+  "page.information.label.awardPurchase": "獎品採購",
+  "page.information.label.subCategory": "子類",
+  "page.information.label.taskSelect": "任務選擇",
+  "page.information.label.condition": "條件",
+  "page.information.label.activityStats": "活動款統計",
+  "page.information.label.serial": "序號",
+  "page.information.label.activityInfo": "活動資訊",
+  "page.information.label.paymentType": "款項類型",
+  "page.information.label.combinedPrepay": "合預款",
+  "page.information.label.mainPrepay": "主預款",
+  "page.information.label.decorationPay": "裝修款",
+  "page.information.label.materialPay": "主材款",
+  "page.information.label.salesPay": "銷售款",
+  "page.information.label.servicePay": "服務款"
+}

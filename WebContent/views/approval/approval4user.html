@@ -11,20 +11,20 @@
 			<div class="modal-content">
       			<div class="modal-header">
         			<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-        			<h4 class="modal-title" id="myModalLabel">审批人员</h4>
+        			<h4 class="modal-title" id="myModalLabel" data-i18n="page.approval.label.approver">审批人员</h4>
       			</div>
       			<div class="modal-body">
 		      		<form class="form-horizontal" id="form">
 		      		
 						<div class="form-group">
-							<label for="userSel" class="col-sm-3 control-label no-padding-right orange">审批人员</label>
+							<label for="userSel" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.approval.label.approver">审批人员</label>
 							<div class="col-md-9">
 								<input type="text" class="col-xs-10 col-sm-6 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="approver" placeholder="审批人">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right orange" for="type">审批类型</label>
+							<label class="col-sm-3 control-label no-padding-right orange" for="type" data-i18n="page.approval.label.approveType">审批类型</label>
 							<div class="col-sm-9">
 								<select id='type' class='col-xs-10 col-sm-6'></select>
 							</div>
@@ -40,8 +40,8 @@
 					</form>
       			</div>
 				<div class="modal-footer">
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 		      	</div>
     		</div>
   		</div>

@@ -12,11 +12,11 @@
     </a>
     <a class="btn btn-minier btn-warning pull-left" id="importChargeBtn" style="margin-top: -2px; margin-left: 4px;">
         <i class="icon-cloud-upload bigger-110"></i>
-        <span>导入</span>
+        <span data-i18n="msg.import">导入</span>
     </a>
     <a class="btn btn-minier btn-primary pull-left" id="backBtn" style="margin-top: -2px; margin-left: 4px;">
         <i class="icon-mail-forward "></i>
-        <span>返回</span>
+        <span data-i18n="msg.back">返回</span>
     </a>
 </div>
 
@@ -27,7 +27,7 @@
             <label class="col-md-3 control-label no-padding-right orange">费用名称</label>
             <div class="col-md-9">
                 <input type="text" class="col-xs-10 col-sm-7 v_required" id="name" name="name" maxlength="100"
-                       data-required="1" data-toggle="popover" data-trigger='manual' placeholder="请输入费用名称"/>
+                       data-required="1" data-toggle="popover" data-trigger='manual' placeholder="请输入费用名称" data-i18n-ph="page.data.ph.feeName"/>
             </div>
         </div>
 
@@ -35,7 +35,7 @@
             <label class="col-md-3 control-label no-padding-right orange">价格</label>
             <div class="col-md-9">
                 <input type="text" class="col-xs-10 col-sm-7 v_float_3 v_required" id="price" name="price" data-required="1"
-                       data-toggle="popover" data-trigger='manual' placeholder="请输入价格（元）"/>
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入价格（元）" data-i18n-ph="page.data.ph.priceYuan"/>
             </div>
         </div>
 
@@ -43,7 +43,7 @@
             <label class="col-md-3 control-label no-padding-right">浮动额</label>
             <div class="col-md-9">
                 <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="surplus" name="surplus"
-                       data-toggle="popover" data-trigger='manual' placeholder="请输入浮动额（元）"/>
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入浮动额（元）" data-i18n-ph="page.data.ph.floatYuan"/>
             </div>
         </div>
 
@@ -69,13 +69,13 @@
             <label class="col-md-3 control-label no-padding-right">排序</label>
             <div class="col-md-9">
                 <input type="text" class="col-xs-10 col-sm-7 v_int" id="sort" name="sort"
-                       data-toggle="popover" data-trigger='manual' placeholder="请输入排序号"/>
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入排序号" data-i18n-ph="page.data.ph.sortNum"/>
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-3 col-md-9">
-                <a class="btn btn-success btn-sm" id="confirmBtn">确定</a>
+                <a class="btn btn-success btn-sm" id="confirmBtn" data-i18n="msg.ok">确定</a>
             </div>
         </div>
 
@@ -89,7 +89,7 @@
             <label class="col-md-3 control-label no-padding-right orange">费用名称</label>
             <div class="col-md-9">
                 <input type="text" class="col-xs-10 col-sm-7 v_required" id="editName" name="editName" maxlength="100"
-                       data-required="1" data-toggle="popover" data-trigger='manual' placeholder="请输入费用名称"/>
+                       data-required="1" data-toggle="popover" data-trigger='manual' placeholder="请输入费用名称" data-i18n-ph="page.data.ph.feeName"/>
             </div>
         </div>
 
@@ -97,7 +97,7 @@
             <label class="col-md-3 control-label no-padding-right orange">价格</label>
             <div class="col-md-9">
                 <input type="text" class="col-xs-10 col-sm-7 v_float_3 v_required" id="editPrice" name="editPrice" data-required="1"
-                       data-toggle="popover" data-trigger='manual' placeholder="请输入价格（元）"/>
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入价格（元）" data-i18n-ph="page.data.ph.priceYuan"/>
             </div>
         </div>
 
@@ -105,7 +105,7 @@
             <label class="col-md-3 control-label no-padding-right">浮动额</label>
             <div class="col-md-9">
                 <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="editSurplus" name="editSurplus"
-                       data-toggle="popover" data-trigger='manual' placeholder="请输入浮动额（元）"/>
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入浮动额（元）" data-i18n-ph="page.data.ph.floatYuan"/>
             </div>
         </div>
 
@@ -131,13 +131,13 @@
             <label class="col-md-3 control-label no-padding-right">排序</label>
             <div class="col-md-9">
                 <input type="text" class="col-xs-10 col-sm-7 v_int" id="editSort" name="editSort"
-                       data-toggle="popover" data-trigger='manual' placeholder="请输入排序号"/>
+                       data-toggle="popover" data-trigger='manual' placeholder="请输入排序号" data-i18n-ph="page.data.ph.sortNum"/>
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-3 col-md-9">
-                <a class="btn btn-success btn-sm" id="editConfirmBtn">确定</a>
+                <a class="btn btn-success btn-sm" id="editConfirmBtn" data-i18n="msg.ok">确定</a>
             </div>
         </div>
 
@@ -151,13 +151,13 @@
             <p>第一行为表头, 将被跳过</p>
         </div>
         <div class="form-group">
-            <label class="col-md-3 control-label no-padding-right orange">执行日期</label>
+            <label class="col-md-3 control-label no-padding-right orange" data-i18n="page.data.label.executeDate">执行日期</label>
             <div class="col-md-9">
                 <input type="text" class="col-xs-10 col-sm-7" id="executeDateCharge" name="executeDateCharge" readonly="readonly" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-3 control-label no-padding-right orange">执行时间</label>
+            <label class="col-md-3 control-label no-padding-right orange" data-i18n="page.data.label.executeTime">执行时间</label>
             <div class="col-md-9">
                 <input type="text" class="col-xs-10 col-sm-7" id="executeTimeCharge" name="executeTimeCharge" readonly="readonly" />
             </div>

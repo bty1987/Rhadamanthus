@@ -24,8 +24,8 @@
             </div>
             <div class="col-xs-12 space-5 form-group"></div>
             <div class="col-xs-12">
-                <button type="button" id="saveRoleRightBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="cancelRoleRightBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="saveRoleRightBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="cancelRoleRightBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -38,20 +38,20 @@
                         <span>&times;</span>
                         <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">角色信息</h4>
+                    <h4 class="modal-title" id="myModalLabel" data-i18n="page.system.label.roleInfo">角色信息</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
                             <div class="block clearfix">
-                                <label for="roleId" class="col-sm-3 control-label no-padding-right">角色编号</label>
+                                <label for="roleId" class="col-sm-3 control-label no-padding-right" data-i18n="page.system.label.roleNo">角色编号</label>
                                 <span class="col-md-9 block   ">
                                     <input type="text" id="roleId" class="col-xs-10 col-sm-5 v_required v_roleId" data-toggle="popover" data-trigger='manual' maxlength="4" />
                                 </span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="roleName">角色名称</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="roleName" data-i18n="page.system.label.roleName">角色名称</label>
                             <div class="col-sm-9">
                                 <input type="text" id="roleName" class="col-xs-10 col-sm-5 v_required v_name" data-toggle="popover" data-trigger='manual' maxlength="8" />
                             </div>
@@ -59,7 +59,7 @@
                         <div class="space-4"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="content">角色描述</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="content" data-i18n="page.system.label.roleDesc">角色描述</label>
                             <div class="col-sm-9">
                                 <textarea id="content" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="20"></textarea>
                             </div>
@@ -69,8 +69,8 @@
                 </div>
 
                 <div class="modal-footer ">
-                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -108,8 +108,8 @@
                 </div>
 
                 <div class="modal-footer ">
-                    <button type="button" id="saveChainPageBtn" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="saveChainPageBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
 
             </div>
@@ -125,7 +125,7 @@
                         <span>&times;</span>
                         <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title">操作配置</h4>
+                    <h4 class="modal-title" data-i18n="page.system.label.operateConfig">操作配置</h4>
                 </div>
 
                 <div class="modal-body">
@@ -145,8 +145,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" name="saveBtn" class="btn btn-primary hide">保存</button>
-                    <button type="button" name="cancelBtn" class="btn btn-default hide" data-dismiss="modal">取消</button>
+                    <button type="button" name="saveBtn" class="btn btn-primary hide" data-i18n="msg.save">保存</button>
+                    <button type="button" name="cancelBtn" class="btn btn-default hide" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -161,13 +161,13 @@
                         <span>&times;</span>
                         <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title">模块配置</h4>
+                    <h4 class="modal-title" data-i18n="page.system.label.moduleConfig">模块配置</h4>
                 </div>
                 <div class="modal-body"></div>
 
                 <div class="modal-footer">
-                    <button type="button" name="saveBtn" class="btn btn-primary">保存</button>
-                    <button type="button" name="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" name="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" name="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -195,8 +195,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" id="saveModuleNewBtn" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="saveModuleNewBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -217,7 +217,7 @@
                 <div class="modal-body">
                     <div class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">源角色</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.system.label.sourceRole">源角色</label>
                             <div class="col-sm-9">
                                 <span class="form-control-static" id="sourceRoleName"></span>
                             </div>
@@ -234,8 +234,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" id="confirmCopyBtn" class="btn btn-primary">确认复制</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="confirmCopyBtn" class="btn btn-primary" data-i18n="page.system.label.confirmCopy">确认复制</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -273,8 +273,8 @@
                 </div>
 
                 <div class="modal-footer ">
-                    <button type="button" id="saveChartPageBtn" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="saveChartPageBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
 
             </div>
@@ -303,23 +303,23 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="addRoleModule">任务</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="addRoleModule" data-i18n="page.system.label.task">任务</label>
                             <div class="col-sm-9">
                                 <input type="text" id="task" class="col-sm-8 v_required v_typeahead" data-toggle="popover" data-trigger='manual'/>
-                                <button type="button" id="addRoleModuleBtn" class="btn btn-xs btn-primary" style="margin: 3px 5px;">保存</button>
+                                <button type="button" id="addRoleModuleBtn" class="btn btn-xs btn-primary" style="margin: 3px 5px;" data-i18n="msg.save">保存</button>
                             </div>
                         </div>
                         <div class="space-4"></div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">任务</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.system.label.task">任务</label>
                             <div id="taskList" class="tags" style="border: 0px"></div>
                         </div>
                     </form>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" name="saveTaskBtn" class="btn btn-primary hide">保存</button>
-                    <button type="button" name="cancelTaskBtn" class="btn btn-default hide" data-dismiss="modal">取消</button>
+                    <button type="button" name="saveTaskBtn" class="btn btn-primary hide" data-i18n="msg.save">保存</button>
+                    <button type="button" name="cancelTaskBtn" class="btn btn-default hide" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
 
             </div>
@@ -341,7 +341,7 @@
                 <div class="modal-body">
                     <div class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">源角色</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.system.label.sourceRole">源角色</label>
                             <div class="col-sm-9">
                                 <span class="form-control-static" id="sourceTaskRoleName"></span>
                             </div>
@@ -358,8 +358,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" id="confirmTaskCopyBtn" class="btn btn-primary">确认复制</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="confirmTaskCopyBtn" class="btn btn-primary" data-i18n="page.system.label.confirmCopy">确认复制</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

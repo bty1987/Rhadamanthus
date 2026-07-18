@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="widget-box">
-                <div class="widget-header header-color-blue"><div class="orange">*橙色名称标签为必填信息</div></div>
+                <div class="widget-header header-color-blue"><div class="orange" data-i18n="page.contract.hint.requiredOrangeLabel">*橙色名称标签为必填信息</div></div>
                 <div class="widget-body">
                     <div class="widget-main">
                         <div class="row">
@@ -22,7 +22,7 @@
                                 <hr>
 
                                 <div class="form-group col-sm-6 user">
-                                    <label for="user_name" class="col-sm-3 control-label no-padding-right orange">乙方</label>
+                                    <label for="user_name" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.contract.label.partyB">乙方</label>
                                     <div class="col-sm-9">
                                         <input id="con-user-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" maxlength="32" data-toggle="popover" data-trigger='manual'>
                                     </div>
@@ -136,8 +136,8 @@
                                     <label class="col-sm-3 control-label no-padding-right orange" for="con-probation">是否有试用期</label>
                                     <div class="col-sm-9">
                                         <select id="con-probation" class="col-xs-12 col-sm-7">
-                                            <option value="0">否</option>
-                                            <option value="1">是</option>
+                                            <option value="0" data-i18n="msg.no">否</option>
+                                            <option value="1" data-i18n="msg.yes">是</option>
                                         </select>
                                     </div>
                                 </div>
@@ -247,7 +247,7 @@
                     <span>&times;</span>
                     <span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">话术</h4>
+                <h4 class="modal-title" data-i18n="page.contract.label.script">话术</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -257,7 +257,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>

@@ -13,7 +13,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title" id="myModalLabel">工程节点</h4>
+					<h4 class="modal-title" id="myModalLabel" data-i18n="page.data.label.projectNode">工程节点</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -26,8 +26,8 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>
@@ -146,7 +146,7 @@
 						<div class="space-4"></div>
 						
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right orange" for="timeLimit">工期</label>
+							<label class="col-sm-3 control-label no-padding-right orange" for="timeLimit" data-i18n="page.data.label.workDay">工期</label>
 							<div class="col-sm-9">
 								<input type="text" maxlength="64" id="timeLimit" class="col-xs-10 col-sm-6 v_float_3" data-toggle="popover" data-trigger='manual'/>
 							</div>
@@ -154,7 +154,7 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="kino">金蝶编号</label>
+							<label class="col-sm-3 control-label no-padding-right" for="kino" data-i18n="page.data.label.kingdeeNo">金蝶编号</label>
 							<div class="col-sm-9">
 								<input type="text" id="kino" maxlength="32" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual' />
 							</div>
@@ -162,7 +162,7 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="kiname">金蝶名称</label>
+							<label class="col-sm-3 control-label no-padding-right" for="kiname" data-i18n="page.data.label.kingdeeName">金蝶名称</label>
 							<div class="col-sm-9">
 								<input type="text" id="kiname" maxlength="32" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual' />
 							</div>
@@ -177,8 +177,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="updateBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="updateBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
