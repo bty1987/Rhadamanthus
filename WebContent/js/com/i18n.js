@@ -215,15 +215,17 @@ var i18n = (function($) {
          */
         _reload: function() {
             var lang = currentLang();
-            // 简体中文基准只加载一次(tAuto 反查表基础):message + field + menu
+            // 简体中文基准只加载一次(tAuto 反查表基础):message + field + field2 + menu
             if (Object.keys(messageCn).length === 0) {
                 messageCn = loadPack('js/i18n/message-cn.json');
                 $.extend(messageCn, loadPack('js/i18n/field-cn.json'));
+                $.extend(messageCn, loadPack('js/i18n/field2-cn.json'));
                 $.extend(messageCn, loadPack('js/i18n/menu-cn.json'));
             }
             messageMap = loadPack('js/i18n/message-' + lang + '.json');
             // field 包(跨模块字段/列头/查询条件 label)与 message 同层加载,供 tAuto 反查
             $.extend(messageMap, loadPack('js/i18n/field-' + lang + '.json'));
+            $.extend(messageMap, loadPack('js/i18n/field2-' + lang + '.json'));
             // menu 包(导航菜单翻译)
             $.extend(messageMap, loadPack('js/i18n/menu-' + lang + '.json'));
 

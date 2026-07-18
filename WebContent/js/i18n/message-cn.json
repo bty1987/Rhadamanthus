@@ -86,5 +86,7 @@
   "msg.status.normal": "正常",
   "msg.status.abnormal": "异常",
   "msg.status.yes": "是",
-  "msg.status.no": "否"
+  "msg.status.no": "否",
+
+  "msg.langChanged": "语言已切换,即将刷新页面以完全生效"
 }

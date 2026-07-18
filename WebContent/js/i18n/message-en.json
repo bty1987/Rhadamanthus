@@ -86,5 +86,7 @@
   "msg.status.normal": "Normal",
   "msg.status.abnormal": "Abnormal",
   "msg.status.yes": "Yes",
-  "msg.status.no": "No"
+  "msg.status.no": "No",
+
+  "msg.langChanged": "Language changed, page will refresh to take full effect"
 }
