@@ -18,47 +18,30 @@ public class CustomerAccountDaoImpl extends DaoImpl<CustomerAccountPO> implement
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CustomerAccountPO> queryCustomerAccountByCid(long cid) {
-		return session().createCriteria(CustomerAccountPO.class)
-			.add(Restrictions.eq(CustomerAccountPO.COLUMN_CID_STR, cid))
-			.add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE))
-			.list();
+	public List<CustomerAccountPO> queryCustomerAccount(long cid) {
+		return session().createCriteria(CustomerAccountPO.class).add(Restrictions.eq(CustomerAccountPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE)).list();
 	}
 
 	@Override
-	public CustomerAccountPO queryDefaultCustomerAccount(long cid) {
-		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class)
-			.add(Restrictions.eq(CustomerAccountPO.COLUMN_CID_STR, cid))
-			.add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE))
-			.add(Restrictions.eq(CustomerAccountPO.COLUMN_DEFAULTS_STR, CustomerAccountPO.DEFAULTS_YES))
-			.uniqueResult();
+	public CustomerAccountPO queryCustomerAccount(long cid, String contentHash) {
+		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class).add(Restrictions.eq(CustomerAccountPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE)).add(Restrictions.eq(CustomerAccountPO.COLUMN_CONTENTHASH_STR, contentHash)).uniqueResult();
+	}
+
+	@Override
+	public CustomerAccountPO queryCustomerAccountForDefault(long cid) {
+		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class).add(Restrictions.eq(CustomerAccountPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE)).add(Restrictions.eq(CustomerAccountPO.COLUMN_DEFAULTS_STR, CustomerAccountPO.DEFAULTS_YES)).uniqueResult();
 	}
 
 	@Override
 	public CustomerAccountPO queryCustomerAccountByBankno(String bankno) {
-		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class)
-			.add(Restrictions.eq(CustomerAccountPO.COLUMN_BANKNO_STR, bankno))
-			.add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE))
-			.uniqueResult();
+		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class).add(Restrictions.eq(CustomerAccountPO.COLUMN_BANKNO_STR, bankno)).add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE)).uniqueResult();
 	}
 
 	@Override
 	public int countCustomerAccountByCid(long cid) {
 		String hql = "select count(*) from CustomerAccountPO where cid = :cid and status = :status";
-		Long count = (Long) session().createQuery(hql)
-			.setLong("cid", cid)
-			.setShort("status", CustomerAccountPO.STATUS_ENABLE)
-			.uniqueResult();
+		Long count = (Long) session().createQuery(hql).setLong("cid", cid).setShort("status", CustomerAccountPO.STATUS_ENABLE).uniqueResult();
 		return count != null ? count.intValue() : 0;
-	}
-
-	@Override
-	public CustomerAccountPO queryCustomerAccountByCidAndContentHash(long cid, String contentHash) {
-		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class)
-			.add(Restrictions.eq(CustomerAccountPO.COLUMN_CID_STR, cid))
-			.add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE))
-			.add(Restrictions.eq(CustomerAccountPO.COLUMN_CONTENTHASH_STR, contentHash))
-			.uniqueResult();
 	}
 
 }
