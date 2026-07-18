@@ -649,39 +649,47 @@ def main():
     en_out = {}
     tw_out = {}
     miss_examples = []
+    seen_names = set()  # 同名菜单只导出一次
 
     for d in data:
         mid = d['mid']; name = d['name']
+        if name in seen_names:
+            continue  # 同名去重(用 name 做 key,同名只存一次)
+        seen_names.add(name)
         en, tw = translate(name)
         if name in DICT:
             hit += 1
         else:
             miss.add(name)
             if len(miss_examples) < 30:
-                miss_examples.append('  mid=%d %s → %s' % (mid, name, en))
-        # key = menu.mid.{mid}
-        k = 'menu.mid.' + str(mid)
+                miss_examples.append('  %s → %s' % (name, en))
+        # key = menu.name.{中文} —— 用 name 而非 mid,跨环境稳定
+        # 注意:JSON 的 key 可以是中文,i18n.t('menu.name.审批-人员') 能查到
+        k = 'menu.name.' + name
         cn_out[k] = name
         en_out[k] = en
         tw_out[k] = tw
 
-    print('翻译命中: %d/%d = %.1f%%' % (hit, len(data), hit*100/len(data)))
+    total_unique = len(seen_names)
+    print('翻译命中: %d/%d = %.1f%%' % (hit, total_unique, hit*100/max(total_unique,1)))
     print('未命中 name: %d 种' % len(miss))
     if miss_examples:
         print('未命中示例:')
         for s in miss_examples: print(s)
 
-    # 写入 menu-{cn,en,tw}.json,保留 menu.code.* 部分
+    # 写入 menu-{cn,en,tw}.json,保留 menu.code.* 部分,清除旧 menu.mid.* 和 menu.name.*
     for lang, out in [('cn', cn_out), ('en', en_out), ('tw', tw_out)]:
         path = os.path.join(WC, 'js', 'i18n', 'menu-%s.json' % lang)
-        # 读取现有 menu.code.*
+        # 读取现有,只保留 menu.code.*
         existing = {}
         if os.path.exists(path):
             with open(path, 'r', encoding='utf-8') as f:
-                existing = json.load(f)
-        # 移除旧 menu.mid.*
-        existing = {k: v for k, v in existing.items() if not k.startswith('menu.mid.')}
-        # 合并新 mid 映射
+                old = json.load(f)
+            for k, v in old.items():
+                if k.startswith('menu.code.') or k.startswith('_') or k.startswith('menu.name.'):
+                    existing[k] = v
+        # 清除旧 menu.name.* 再合并新的
+        existing = {k: v for k, v in existing.items() if not k.startswith('menu.name.')}
         existing.update(out)
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(existing, f, ensure_ascii=False, indent=2)

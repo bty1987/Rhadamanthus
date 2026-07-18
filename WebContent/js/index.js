@@ -795,26 +795,26 @@ $(function() {
             });
         });
 
-        // i18n:菜单名翻译。优先级:mid 专表 > 一级菜单的 code > tAuto 反查高频词
-        // mid 是后端 communion.module 主键,稳定唯一;一级菜单有英文 code(如 "approval")
-        // cn 模式直接返回原 name,确保中文环境下菜单与改造前 100% 一致
+        // i18n:菜单名翻译。
+        // ⚠️ 注意:不用 mid 做 key! mid 在不同环境(生产/测试)或不同公司间可能映射到不同菜单,
+        //    用 mid 会导致翻译串项(如 mid=164 在生产是"销售款"在测试是"公司")。
+        // 翻译策略(安全,基于后端返回的真实 v.name):
+        //   ① 一级菜单按英文 code 查(menu.code.approval 等),code 跨环境稳定
+        //   ② 所有菜单按 v.name 走 tAuto 反查(message/page/field 包)
+        //   ③ 反查不到用原 v.name(保持中文兜底)
+        // cn 模式直接返回原 name,确保中文环境与改造前 100% 一致
         var translateMenuName = function(v) {
-            // 兜底:v 或 v.name 不存在时返回空串,绝不返回 undefined(防止 .text(undefined) 误伤 DOM)
             if (!v || v.name == null) return '';
             if (!window.i18n) return v.name;
             if (i18n.lang === 'cn') return v.name;   // cn 模式保持原文
             try {
-                // ① 按 mid 查专表(同名菜单可差异化翻译)
-                var midKey = 'menu.mid.' + v.mid;
-                var t = i18n.t(midKey);
-                if (t && t !== midKey) return t;
-                // ② 一级菜单按英文 code 查(menu.code.approval 等)
+                // ① 一级菜单按英文 code 查(code 跨环境稳定)
                 if (v.module) {
                     var codeKey = 'menu.code.' + v.module;
                     var tc = i18n.t(codeKey);
                     if (tc && tc !== codeKey) return tc;
                 }
-                // ③ 兜底:反查 message/page/field 包的高频词,反查不到用原 name
+                // ② 按 v.name 走 tAuto 反查(基于后端真实 name,不会串)
                 var auto = i18n.tAuto(v.name);
                 return auto || v.name;
             } catch (e) {
