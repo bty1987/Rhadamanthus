@@ -21,7 +21,7 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span>&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="selectItemDialog">选择报价项目</h4>
+					<h4 class="modal-title" id="selectItemDialog" data-i18n="page.quotation.title.selectQuotationItem">选择报价项目</h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -31,8 +31,8 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="saveSelectItemBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelSelectItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="saveSelectItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" id="cancelSelectItemBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>
@@ -43,12 +43,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="functionAreaDialog">更新</h4>
+                    <h4 class="modal-title" id="functionAreaDialog" data-i18n="page.quotation.label.update">更新</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right orange" for="formula">公式</label>
+							<label class="col-sm-3 control-label no-padding-right orange" for="formula" data-i18n="page.quotation.label.formula">公式</label>
 							<div class="col-sm-9">
 								<textarea rows="10" maxlength="64" id="formula" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'></textarea>
 							</div>
@@ -56,17 +56,17 @@
 						<div class="space-4"></div>
                         
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="comment">说明</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="comment" data-i18n="page.quotation.label.explain">说明</label>
                             <div class="col-sm-9">
                                 <ul class="list-unstyled spaced col-xs-12 col-sm-9">
                                     <li class="text-warning orange">
                                         <span>支持参数包括: 周长 , 面积 , 举架 , 洞面 , 窗面 , 梁长 , 粱高 , 参数 , 变量</span>
                                     </li>
                                     <li class="text-warning orange">
-                                        <span>支持运算符号包括: + , - , * , / , ( , )</span>
+                                        <span data-i18n="page.quotation.hint.formulaSupport">支持运算符号包括: + , - , * , / , ( , )</span>
                                     </li>
                                     <li class="text-warning orange">
-                                        <span>同时支持数字作为运算元素</span>
+                                        <span data-i18n="page.quotation.hint.formulaNumSupport">同时支持数字作为运算元素</span>
                                     </li>
                                 </ul>
                             </div>
@@ -76,8 +76,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnUpdate" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="btnUpdate" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

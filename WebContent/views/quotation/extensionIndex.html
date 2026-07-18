@@ -6,12 +6,12 @@
         <div class="col-xs-6">
             <a href="#" id="add" class="btn btn-success btn-app btn-sm radius-4" style="padding: 5px 0;">
                 <i class="icon-plus-sign bigger-230"></i>
-                <span>创建</span>
+                <span data-i18n="page.quotation.btn.create">创建</span>
             </a>
 
             <a href="#" id="btnBack" class="btn btn-primary btn-app btn-sm radius-4" style="padding: 5px 0;">
                 <i class="icon-mail-forward bigger-230"></i>
-                <span>返回</span>
+                <span data-i18n="msg.back">返回</span>
             </a>
         </div>
     </div>
@@ -31,7 +31,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="extensionDialog">扩展项</h4>
+                    <h4 class="modal-title" id="extensionDialog" data-i18n="page.quotation.label.extensionItem">扩展项</h4>
                 </div>
 
                 <div class="modal-body">
@@ -45,7 +45,7 @@
                         <div class="space-4"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="extensionType">类别</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="extensionType" data-i18n="page.quotation.label.category">类别</label>
                             <div class="col-sm-9">
                                 <select id="extensionType" class="col-xs-10 col-sm-5 v_required"></select>
                             </div>
@@ -63,8 +63,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelAddBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelAddBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

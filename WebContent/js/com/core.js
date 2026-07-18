@@ -285,7 +285,8 @@ var com = {
                     params.errorTime = currentTime;
 
                     if (params.errorCount >= 5) {
-                        com.showAlert(com.error, res.errorMsg + "<br>请重新登录或联系管理员");
+                        var reloginMsg = (window.i18n) ? i18n.t('msg.relogin') : "请重新登录或联系管理员";
+                        com.showAlert(com.error, res.errorMsg + "<br>" + reloginMsg);
                         return res;
                     }
 
@@ -315,7 +316,9 @@ var com = {
 
                 console.error(msg);
 
-                com.showAlert(com.error, "功能问题,请稍后再试");
+                // i18n:网络异常兜底文案
+                var netErr = (window.i18n) ? i18n.t('msg.networkError') : "功能问题,请稍后再试";
+                com.showAlert(com.error, netErr);
 
                 if (failCallback) {
                     failCallback(msg);
@@ -536,6 +539,8 @@ var com = {
 
         if (!type)
             type = com.info;
+        // i18n 透明拦截:命中 messageMap 的中文短语自动翻译,无需逐处改写
+        if (window.i18n) contents = i18n.tAuto(contents);
         layer.msg(contents, {
             skin: type.typeclass,
             time: type.outtime
@@ -543,13 +548,15 @@ var com = {
     },
     /**
      * 确认窗口
-     * 
+     *
      * @param content 确认提示内容
      * @param success 确认按钮回调方法
      * @param cancel 取消按钮回调方法
      */
     showConfirm: function(content, success, cancel) {
 
+        // i18n 透明拦截
+        if (window.i18n) content = i18n.tAuto(content);
         layer.confirm(content, {
             title: false,
             resize: false,
@@ -573,7 +580,9 @@ var com = {
      */
     showLoading: function(content, options) {
         options = options || {};
-        var loadIndex = layer.msg(content || '加载中...', {
+        // i18n:默认"加载中..."走翻译(未传 content 时)
+        var defaultLoading = (window.i18n) ? i18n.t('msg.loading') : '加载中...';
+        var loadIndex = layer.msg(content || defaultLoading, {
             shade: options.shade || 0.3,
             time: options.time || 0, // 默认不自动关闭
             icon: options.icon || 16
@@ -602,8 +611,12 @@ var com = {
      * @param no 否按钮回调方法
      */
     showWhether: function(content, yes, no){
+        // i18n 透明拦截:内容 + 按钮文本(是/否)
+        if (window.i18n) content = i18n.tAuto(content);
+        var btnYes = (window.i18n) ? i18n.t('msg.yes') : '是';
+        var btnNo = (window.i18n) ? i18n.t('msg.no') : '否';
         layer.alert(content, {
-          btn: ['是', '否'],
+          btn: [btnYes, btnNo],
           btnAlign: 'c',
           btn1: function(){
             yes && yes();

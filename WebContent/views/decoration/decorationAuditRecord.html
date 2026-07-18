@@ -11,7 +11,7 @@
                 <div class="widget-body" style="border: 0 solid">
                     <div class="hr"></div>
                     <div class="row" style="margin-left: 0px;margin-right: 0px;" id="select1">
-                        <button class="btn  pull-left btn-sm" id="addR">添加</button>
+                        <button class="btn  pull-left btn-sm" id="addR" data-i18n="page.decoration.btn.add">添加</button>
                     </div>
                     <div class="widget-body" id="auditR"></div>
                 </div>
@@ -28,7 +28,7 @@
                 <div class="widget-body" style="border: 0 solid">
                     <div class="hr"></div>
                     <div class="row" style="margin-left: 0px;margin-right: 0px;" id="select2">
-                        <button class="btn  pull-right btn-sm" style="visibility:hidden;" id="addS">添加</button>
+                        <button class="btn  pull-right btn-sm" style="visibility:hidden;" id="addS" data-i18n="page.decoration.btn.add">添加</button>
                     </div>
                     <div class="widget-body-inner" id="auditS"></div>
                 </div>
@@ -77,7 +77,7 @@
                         </div>
                         <div class="space-4"></div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="discount">折扣</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="discount" data-i18n="page.decoration.label.discount">折扣</label>
                             <div class="col-md-8">
                                 <input type='text' class="col-md-6 v_required v_number" id="discount" maxlength='15' />
                             </div>
@@ -86,8 +86,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -108,19 +108,19 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange" for="userId">被扣款人</label>
                             <div class="col-md-8">
-                                <input type="text" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="userId" placeholder="请输入被扣款人">
+                                <input type="text" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="userId" placeholder="请输入被扣款人" data-i18n-ph="page.decoration.ph.deductPerson">
                             </div>
                         </div>
                         <div class="space-4"></div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="deptId">部门</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="deptId" data-i18n="page.decoration.label.dept">部门</label>
                             <div class="col-md-8">
                                 <input type='text' class="col-md-6" id="deptId" readonly="readonly" maxlength='15' />
                             </div>
                         </div>
                         <div class="space-4"></div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="money">金额</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="money" data-i18n="page.decoration.label.amount">金额</label>
                             <div class="col-md-8">
                                 <input type='text' class="col-md-6 v_required v_number" id="money" maxlength='15' />
                             </div>
@@ -129,8 +129,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="saveBtnS" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtnS" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="saveBtnS" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtnS" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

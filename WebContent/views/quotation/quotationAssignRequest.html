@@ -23,14 +23,14 @@
                         <input type="hidden" id="qarid">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="orderId">装修单号</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="orderId" data-i18n="page.quotation.label.orderNo">装修单号</label>
                             <div class="col-sm-9">
                                 <input type="text" id="orderId" class="col-xs-10 col-sm-8 v_required">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="company">公司</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="company" data-i18n="page.quotation.label.company">公司</label>
                             <div class="col-sm-9">
                                 <select id="company" class="col-xs-10 col-sm-8 v_required"></select>
                             </div>
@@ -45,7 +45,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="decorationType">装修类型</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="decorationType" data-i18n="page.quotation.label.decorationType">装修类型</label>
                             <div class="col-sm-9">
                                 <select id="decorationType" class="col-xs-10 col-sm-8 v_required"></select>
                             </div>
@@ -61,12 +61,12 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="requestUser">请求人</label>
                             <div class="col-sm-9">
-                                <input type="text" id="requestUser" class="col-xs-10 col-sm-8" placeholder="输入拼音或姓名搜索">
+                                <input type="text" id="requestUser" class="col-xs-10 col-sm-8" placeholder="输入拼音或姓名搜索" data-i18n-ph="page.quotation.ph.searchByNameAlt">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="remark">备注</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="remark" data-i18n="page.quotation.label.comment">备注</label>
                             <div class="col-sm-9">
                                 <textarea id="remark" class="col-xs-10 col-sm-8" rows="3"></textarea>
                             </div>
@@ -75,8 +75,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -98,30 +98,30 @@
                         <input type="hidden" id="manualAssignOrderId">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">装修单号</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.quotation.label.orderNo">装修单号</label>
                             <div class="col-sm-9">
                                 <span id="manualAssignOrderIdDisplay" class="form-control-static"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">公司</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.quotation.label.company">公司</label>
                             <div class="col-sm-9">
                                 <span id="manualAssignCompanyDisplay" class="form-control-static"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">装修类型</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.quotation.label.decorationType">装修类型</label>
                             <div class="col-sm-9">
                                 <span id="manualAssignDecorationTypeDisplay" class="form-control-static"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="manualAssignBudgeter">预算员 <span class="required">*</span></label>
+                            <label class="col-sm-3 control-label no-padding-right" for="manualAssignBudgeter" data-i18n="page.quotation.label.budgeter">预算员 <span class="required">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" id="manualAssignBudgeter" class="col-xs-10 col-sm-8 v_required" placeholder="输入拼音或姓名搜索">
+                                <input type="text" id="manualAssignBudgeter" class="col-xs-10 col-sm-8 v_required" placeholder="输入拼音或姓名搜索" data-i18n-ph="page.quotation.ph.searchByNameAlt">
                                 <span class="help-block" style="margin-bottom: 0;">请输入预算员姓名或拼音进行搜索</span>
                             </div>
                         </div>
@@ -132,7 +132,7 @@
                     <button type="button" id="confirmManualAssignBtn" class="btn btn-purple">
                         <i class="icon-hand-right"></i> 确认分配
                     </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -154,21 +154,21 @@
                         <input type="hidden" id="replaceOrderId">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">装修单号</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.quotation.label.orderNo">装修单号</label>
                             <div class="col-sm-9">
                                 <span id="replaceOrderIdDisplay" class="form-control-static"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">公司</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.quotation.label.company">公司</label>
                             <div class="col-sm-9">
                                 <span id="replaceCompanyDisplay" class="form-control-static"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">装修类型</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.quotation.label.decorationType">装修类型</label>
                             <div class="col-sm-9">
                                 <span id="replaceDecorationTypeDisplay" class="form-control-static"></span>
                             </div>
@@ -184,7 +184,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="replaceBudgeter">新预算员 <span class="required">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" id="replaceBudgeter" class="col-xs-10 col-sm-8 v_required" placeholder="输入拼音或姓名搜索">
+                                <input type="text" id="replaceBudgeter" class="col-xs-10 col-sm-8 v_required" placeholder="输入拼音或姓名搜索" data-i18n-ph="page.quotation.ph.searchByNameAlt">
                                 <span class="help-block" style="margin-bottom: 0;">请输入新预算员姓名或拼音进行搜索</span>
                             </div>
                         </div>
@@ -195,7 +195,7 @@
                     <button type="button" id="confirmReplaceBtn" class="btn btn-danger">
                         <i class="icon-exchange"></i> 确认替换
                     </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -217,9 +217,9 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="autoAssignOrderId">装修单号 <span class="required">*</span></label>
+                            <label class="col-sm-3 control-label no-padding-right" for="autoAssignOrderId" data-i18n="page.quotation.label.orderNo">装修单号 <span class="required">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" id="autoAssignOrderId" class="col-xs-10 col-sm-8 v_required" placeholder="输入装修单号，如：2024030001">
+                                <input type="text" id="autoAssignOrderId" class="col-xs-10 col-sm-8 v_required" placeholder="输入装修单号，如：2024030001" data-i18n-ph="page.quotation.ph.orderNoExample">
                                 <span class="help-block" style="margin-bottom: 0;">输入需要分配报价员的装修单号</span>
                             </div>
                         </div>
@@ -251,7 +251,7 @@
                     <button type="button" id="confirmAutoAssignBtn" class="btn btn-info">
                         <i class="icon-magic"></i> 自动分配
                     </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

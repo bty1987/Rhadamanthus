@@ -19,7 +19,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="customerChanceIssue">分配</h4>
+                    <h4 class="modal-title" id="customerChanceIssue" data-i18n="page.customer.label.distribute">分配</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -42,7 +42,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="belonger" class="col-sm-3 control-label no-padding-right orange">人员</label>
+                                        <label for="belonger" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.customer.label.person">人员</label>
                                         <div class="col-sm-9">
                                             <input type="text" class="col-xs-10 col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger='manual' id="belonger" placeholder="请输入人员" />
                                         </div>
@@ -62,8 +62,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -76,7 +76,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="changeDialog">提交审批</h4>
+                    <h4 class="modal-title" id="changeDialog" data-i18n="page.customer.btn.submitApprove">提交审批</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
@@ -89,21 +89,21 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="houseClass" class="col-sm-3 control-label no-padding-right">房屋类型</label>
+                            <label for="houseClass" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.houseType">房屋类型</label>
                             <div class="col-sm-9">
                                 <select class='col-sm-6 m-wrap' id='houseClass'></select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="orderType" class="col-sm-3 control-label no-padding-right">订单类型</label>
+                            <label for="orderType" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.orderType">订单类型</label>
                             <div class="col-sm-9">
                                 <select class='col-xs-6 m-wrap' id='orderType'></select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="resourceType" class="col-sm-3 control-label no-padding-right">订单状态</label>
+                            <label for="resourceType" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.orderStatus">订单状态</label>
                             <div class="col-sm-9">
                                 <select class='col-xs-6 m-wrap' id='resourceType'></select>
                             </div>
@@ -112,8 +112,8 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="changeBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="changeBtn" class="btn btn-primary" data-loading-text="提交中..." data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -126,12 +126,12 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="approveDialog">提交审批</h4>
+                    <h4 class="modal-title" id="approveDialog" data-i18n="page.customer.btn.submitApprove">提交审批</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label for="villageNoDesigerApprove" class="col-sm-3 control-label no-padding-right">楼盘信息</label>
+                            <label for="villageNoDesigerApprove" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.buildingInfo">楼盘信息</label>
                             <div class="col-sm-9">
                                 <input id="villageNoDesigerApprove" type="text" class="col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" style="margin-right: 35px;" />
                             </div>
@@ -173,21 +173,21 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="houseClassApprove" class="col-sm-3 control-label no-padding-right">房屋类型</label>
+                            <label for="houseClassApprove" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.houseType">房屋类型</label>
                             <div class="col-sm-9">
                                 <select id='houseClassApprove' class='col-sm-6 m-wrap'></select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="orderTypeApprove" class="col-sm-3 control-label no-padding-right">订单类型</label>
+                            <label for="orderTypeApprove" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.orderType">订单类型</label>
                             <div class="col-sm-9">
                                 <select id='orderTypeApprove' class='col-xs-6 m-wrap'></select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="resourceTypeApprove" class="col-sm-3 control-label no-padding-right">订单状态</label>
+                            <label for="resourceTypeApprove" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.orderStatus">订单状态</label>
                             <div class="col-sm-9">
                                 <select id='resourceTypeApprove' class='col-xs-6 m-wrap'></select>
                             </div>
@@ -201,7 +201,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">审批备注</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.approveComment">审批备注</label>
                             <div class="col-sm-9">
                                 <textarea id="approveComment" class=" m-wrap col-xs-6" maxlength="128" rows="3"></textarea>
                             </div>
@@ -209,9 +209,9 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="directApproveBtn" class="btn btn-success" data-loading-text="处理中...">直接转装修单</button>
-                    <button type="button" id="approvalBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="directApproveBtn" class="btn btn-success" data-loading-text="处理中..." data-i18n="page.customer.btn.directToDecoration">直接转装修单</button>
+                    <button type="button" id="approvalBtn" class="btn btn-primary" data-loading-text="提交中..." data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -224,12 +224,12 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title">直接转装修单</h4>
+                    <h4 class="modal-title" data-i18n="page.customer.btn.directToDecoration">直接转装修单</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label for="directVillageNo" class="col-sm-3 control-label no-padding-right">楼盘信息</label>
+                            <label for="directVillageNo" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.buildingInfo">楼盘信息</label>
                             <div class="col-sm-9">
                                 <input id="directVillageNo" type="text" class="col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" style="margin-right: 35px;" disabled />
                             </div>
@@ -271,21 +271,21 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="directHouseClass" class="col-sm-3 control-label no-padding-right">房屋类型</label>
+                            <label for="directHouseClass" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.houseType">房屋类型</label>
                             <div class="col-sm-9">
                                 <select id='directHouseClass' class='col-sm-6 m-wrap'></select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="directOrderType" class="col-sm-3 control-label no-padding-right">订单类型</label>
+                            <label for="directOrderType" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.orderType">订单类型</label>
                             <div class="col-sm-9">
                                 <select id='directOrderType' class='col-xs-6 m-wrap'></select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="directResourceType" class="col-sm-3 control-label no-padding-right">订单状态</label>
+                            <label for="directResourceType" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.orderStatus">订单状态</label>
                             <div class="col-sm-9">
                                 <select id='directResourceType' class='col-xs-6 m-wrap'></select>
                             </div>
@@ -293,8 +293,8 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="directApproveConfirmBtn" class="btn btn-success" data-loading-text="处理中...">确定</button>
-                    <button type="button" id="directApproveCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="directApproveConfirmBtn" class="btn btn-success" data-loading-text="处理中..." data-i18n="msg.ok">确定</button>
+                    <button type="button" id="directApproveCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -307,7 +307,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="commitFirstApproveDialog">提交审批</h4>
+                    <h4 class="modal-title" id="commitFirstApproveDialog" data-i18n="page.customer.btn.submitApprove">提交审批</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
@@ -319,7 +319,7 @@
                         </div>
 
                         <div class="form-group villageRule">
-                            <label class="col-sm-3 control-label no-padding-right">楼盘规则</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.buildingRule">楼盘规则</label>
                             <div class="col-sm-9">
                                 <select class="col-xs-10 col-sm-6 v_required" id="villageRule" ></select>
                             </div>
@@ -351,7 +351,7 @@
                         </div>
 
                         <div class="form-group hide">
-                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange">比例</label>
+                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.customer.label.rate">比例</label>
                             <div class="col-sm-9">
                                 <input type="text" class="col-xs-10 col-sm-6 v_required v_float_3  " id="rate" value="0" />
                             </div>
@@ -365,7 +365,7 @@
                         </div>
 
                         <div class="form-group" id="firstApproveCommentGroup">
-                            <label class="col-sm-3 control-label no-padding-right">审批备注</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.approveComment">审批备注</label>
                             <div class="col-sm-9">
                                 <textarea id="firstApproveComment" class=" m-wrap col-xs-6" maxlength="128" rows="3"></textarea>
                             </div>
@@ -380,8 +380,8 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="firstApprovalBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
-                    <button type="button" id="firstCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="firstApprovalBtn" class="btn btn-primary" data-loading-text="提交中..." data-i18n="msg.save">保存</button>
+                    <button type="button" id="firstCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -394,7 +394,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title">直接初审</h4>
+                    <h4 class="modal-title" data-i18n="page.customer.btn.directFirstApprove">直接初审</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
@@ -406,7 +406,7 @@
                         </div>
 
                         <div class="form-group directFirstVillageRule">
-                            <label class="col-sm-3 control-label no-padding-right">楼盘规则</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.buildingRule">楼盘规则</label>
                             <div class="col-sm-9">
                                 <select class="col-xs-10 col-sm-6 v_required" id="directFirstVillageRule"></select>
                             </div>
@@ -438,7 +438,7 @@
                         </div>
 
                         <div class="form-group hide">
-                            <label for="directFirstRate" class="col-sm-3 control-label no-padding-right orange">比例</label>
+                            <label for="directFirstRate" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.customer.label.rate">比例</label>
                             <div class="col-sm-9">
                                 <input type="text" class="col-xs-10 col-sm-6 v_required v_float_3" id="directFirstRate" value="0" />
                             </div>
@@ -453,8 +453,8 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="directFirstApproveConfirmBtn" class="btn btn-info" data-loading-text="处理中...">确定</button>
-                    <button type="button" id="directFirstApproveCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="directFirstApproveConfirmBtn" class="btn btn-info" data-loading-text="处理中..." data-i18n="msg.ok">确定</button>
+                    <button type="button" id="directFirstApproveCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -467,7 +467,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="commitFirstApproveDialog">提交审批</h4>
+                    <h4 class="modal-title" id="commitFirstApproveDialog" data-i18n="page.customer.btn.submitApprove">提交审批</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
@@ -479,7 +479,7 @@
                         </div>
 
                         <div class="form-group villageRule">
-                            <label class="col-sm-3 control-label no-padding-right">楼盘规则</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.buildingRule">楼盘规则</label>
                             <div class="col-sm-9">
                                 <select class="col-xs-10 col-sm-6 v_required" id="villageRule" ></select>
                             </div>
@@ -511,7 +511,7 @@
                         </div>
 
                         <div class="form-group hide">
-                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange">比例</label>
+                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.customer.label.rate">比例</label>
                             <div class="col-sm-9">
                                 <input type="text" class="col-xs-10 col-sm-6 v_required v_float_3" id="rate" value="0" />
                             </div>
@@ -526,8 +526,8 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="updateBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
-                    <button type="button" id="firstCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="updateBtn" class="btn btn-primary" data-loading-text="提交中..." data-i18n="msg.save">保存</button>
+                    <button type="button" id="firstCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -540,13 +540,13 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="commitBelongApproveDialog">提交审批</h4>
+                    <h4 class="modal-title" id="commitBelongApproveDialog" data-i18n="page.customer.btn.submitApprove">提交审批</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
 
                         <div class="form-group" id="belongApproveCommentGroup">
-                            <label class="col-sm-3 control-label no-padding-right">审批备注</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.approveComment">审批备注</label>
                             <div class="col-sm-9">
                                 <textarea id="belongApproveComment" class=" m-wrap col-xs-6" maxlength="128" rows="3"></textarea>
                             </div>
@@ -561,8 +561,8 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="belongApprovalBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="belongApprovalBtn" class="btn btn-primary" data-loading-text="提交中..." data-i18n="msg.save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -582,7 +582,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -619,8 +619,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" id="configBtn" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="configBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
 
             </div>
@@ -656,8 +656,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" id="disableBtn" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="disableBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -676,7 +676,7 @@
                     <form class="form-horizontal">
 
                         <div class="form-group hide">
-                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange">比例</label>
+                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.customer.label.rate">比例</label>
                             <div class="col-sm-9">
                                 <input type="text" class="col-xs-10 col-sm-6 v_required v_float_3" id="disoucnt" value="0" />
                             </div>
@@ -685,8 +685,8 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="discountBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="discountBtn" class="btn btn-primary" data-loading-text="提交中..." data-i18n="msg.save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

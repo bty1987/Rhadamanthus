@@ -29,7 +29,7 @@
                 <button type="button" class="close" data-dismiss="modal">
                 <span>&times;</span>
                 <span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="addModalLabel">结算扣款</h4>
+                <h4 class="modal-title" id="addModalLabel" data-i18n="page.balance.label.balanceDeduct">结算扣款</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -43,8 +43,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="saveBtn" class="btn btn-primary">确认</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.confirm">确认</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -57,7 +57,7 @@
                 <button type="button" class="close" data-dismiss="modal">
                 <span>&times;</span>
                 <span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="addModalLabel">结算扣款</h4>
+                <h4 class="modal-title" id="addModalLabel" data-i18n="page.balance.label.balanceDeduct">结算扣款</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="belonger" class="col-sm-3 control-label no-padding-right">归属人</label>
+                        <label for="belonger" class="col-sm-3 control-label no-padding-right" data-i18n="page.balance.label.belongUser">归属人</label>
                         <div class="col-sm-9">
                             <input type="text" id="belonger" class="col-xs-10 col-sm-6 v_required v_typeahead" data-placeholder="请输入归属人" data-toggle="popover" data-trigger='manual' data-placement="bottom"/>
                         </div>
@@ -92,7 +92,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-		                <label class="col-sm-3 control-label no-padding-right orange" for="path">图片路径</label>
+		                <label class="col-sm-3 control-label no-padding-right orange" for="path" data-i18n="page.balance.label.imgPath">图片路径</label>
 		                <div class="col-sm-9">
 		                    <input type="text" id="path" class="col-xs-10 col-sm-6 " data-toggle="popover" data-trigger='manual' readonly/>
 		                </div>
@@ -114,8 +114,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="createBtn" class="btn btn-primary">确认</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="createBtn" class="btn btn-primary" data-i18n="msg.confirm">确认</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -127,7 +127,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="addModalLabel">抵扣</h4>
+                <h4 class="modal-title" id="addModalLabel" data-i18n="page.balance.btn.offset">抵扣</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -146,8 +146,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="saveDeductBtn" class="btn btn-primary">确认</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="saveDeductBtn" class="btn btn-primary" data-i18n="msg.confirm">确认</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -159,7 +159,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="addModalLabel">扣款</h4>
+                <h4 class="modal-title" id="addModalLabel" data-i18n="page.balance.label.deduct">扣款</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -170,19 +170,19 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right ">扣款账户</label>
+                        <label class="col-sm-3 control-label no-padding-right " data-i18n="page.balance.label.deductAccount">扣款账户</label>
                         <div class="col-md-9">
                             <select id='balanceDccountName' class='col-xs-10 col-sm-6'></select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-3 control-label no-padding-right">账户总额</label>
+                        <label class="col-md-3 control-label no-padding-right" data-i18n="page.balance.label.accountTotal">账户总额</label>
                         <div class="col-md-9">
                             <input type="text" class="col-xs-10 col-sm-6 v_float_3" id="balanceDccountCutpay" data-required="1" data-toggle="popover" data-trigger='manual' readonly>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-3 control-label no-padding-right">账户余额</label>
+                        <label class="col-md-3 control-label no-padding-right" data-i18n="page.balance.label.accountBalance">账户余额</label>
                         <div class="col-md-9">
                             <input type="text" class="col-xs-10 col-sm-6 v_float_3" id="balanceDccountSurplus" data-required="1" data-toggle="popover" data-trigger='manual' readonly>
                         </div>
@@ -200,7 +200,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-		                <label class="col-sm-3 control-label no-padding-right orange" for="path">图片路径</label>
+		                <label class="col-sm-3 control-label no-padding-right orange" for="path" data-i18n="page.balance.label.imgPath">图片路径</label>
 		                <div class="col-sm-9">
 		                    <input type="text" id="path" class="col-xs-10 col-sm-7 " data-toggle="popover" data-trigger='manual' readonly/>
 		                </div>
@@ -222,8 +222,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="saveAddBtn" class="btn btn-primary">确认</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="saveAddBtn" class="btn btn-primary" data-i18n="msg.confirm">确认</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
 
@@ -237,7 +237,7 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">结算扣款图片</h4>
+                <h4 class="modal-title" data-i18n="page.balance.label.balanceDeductImg">结算扣款图片</h4>
             </div>
             <div class="modal-body">
                 <div class="row">

@@ -55,14 +55,14 @@
                                     </div>
 
                                     <div class="form-group source">
-                                        <label for="source" class="col-sm-4 control-label no-padding-right orange">来源方</label>
+                                        <label for="source" class="col-sm-4 control-label no-padding-right orange" data-i18n="page.customer.label.sourceParty">来源方</label>
                                         <div class="col-sm-7">
                                             <input type="text" class="m-wrap col-sm-7" maxlength="32" id="source" />
                                         </div>
                                     </div>
 
                                     <div class="form-group contact">
-                                        <label for="contact" class="col-sm-4 control-label no-padding-right orange">对接人</label>
+                                        <label for="contact" class="col-sm-4 control-label no-padding-right orange" data-i18n="page.customer.label.connector">对接人</label>
                                         <div class="col-sm-7">
                                             <input type="text" class="m-wrap col-sm-7" maxlength="32" id="contact" />
                                         </div>
@@ -71,7 +71,7 @@
                                     <hr />
 
                                     <div class="form-group hide">
-                                        <label class="col-sm-4 control-label no-padding-right orange" for="referCustomer">推荐客户</label>
+                                        <label class="col-sm-4 control-label no-padding-right orange" for="referCustomer" data-i18n="page.customer.label.recommendCustomer">推荐客户</label>
                                         <div class="col-sm-7">
                                             <input type="checkbox" id="referCustomer" class="ace ace-switch ace-switch-5"/>
                                             <span class="lbl isOrNot"></span>
@@ -79,21 +79,21 @@
                                     </div>
 
                                     <div class="form-group referCustomerInfo">
-                                        <label class="col-sm-4 control-label no-padding-right orange">推荐装修单号</label>
+                                        <label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.customer.label.recommendOrderNo">推荐装修单号</label>
                                         <div class="col-sm-7">
                                             <input type="text" class="m-wrap col-sm-7" id="referOrderId">
                                         </div>
                                     </div>
 
                                     <div class="form-group referCustomerInfo">
-                                        <label class="col-sm-4 control-label no-padding-right orange">推荐手机号</label>
+                                        <label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.customer.label.recommendPhone">推荐手机号</label>
                                         <div class="col-sm-7">
                                             <input type="text" class="m-wrap col-sm-7" maxlength="11" id="referPhone">
                                         </div>
                                     </div>
 
                                     <div class="form-group referCustomerInfo">
-                                        <label class="col-sm-4 control-label no-padding-right orange">推荐楼盘</label>
+                                        <label class="col-sm-4 control-label no-padding-right orange" data-i18n="page.customer.label.recommendBuilding">推荐楼盘</label>
                                         <div class="col-sm-7">
                                             <input type="text" class="m-wrap col-sm-7" id="referVillage">
                                         </div>
@@ -116,28 +116,28 @@
                                     <hr />
 
                                     <div class="form-group hide">
-                                        <label for="purpose" class="col-sm-4 control-label no-padding-right">目的</label>
+                                        <label for="purpose" class="col-sm-4 control-label no-padding-right" data-i18n="page.customer.label.purpose">目的</label>
                                         <div class="col-sm-7">
                                             <input type="text" class="col-xs-10 col-sm-7" maxlength="32" id="purpose" />
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="intention" class="col-sm-4 control-label no-padding-right">风格意向</label>
+                                        <label for="intention" class="col-sm-4 control-label no-padding-right" data-i18n="page.customer.label.styleIntention">风格意向</label>
                                         <div class="col-sm-7">
                                             <input type="text" class="col-xs-10 col-sm-7" maxlength="32" id="intention" />
                                         </div>
                                     </div>
 
                                     <div class="form-group hide">
-                                        <label for="price" class="col-sm-4 control-label no-padding-right orange">预计装修价格</label>
+                                        <label for="price" class="col-sm-4 control-label no-padding-right orange" data-i18n="page.customer.label.expectDecorationPrice">预计装修价格</label>
                                         <div class="col-sm-7">
                                             <input type="text" class="col-xs-10 col-sm-7 v_float_3 v_required" maxlength="12" id="price"/>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="grade" class="col-sm-4 control-label no-padding-right">客户等级</label>
+                                        <label for="grade" class="col-sm-4 control-label no-padding-right" data-i18n="page.customer.label.customerLevel">客户等级</label>
                                         <div class="col-sm-7">
                                             <select class='col-xs-10 col-sm-7' id='grade' ></select>
                                         </div>
@@ -161,7 +161,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-sm-4 control-label no-padding-right" for="buildArea">派尺面积</label>
+                                        <label class="col-sm-4 control-label no-padding-right" for="buildArea" data-i18n="page.customer.label.measureArea">派尺面积</label>
                                         <div class="col-sm-8">
                                             <input type="text" id="buildArea" maxlength="7" class="col-xs-10 col-sm-2 v_float" />
                                             <span style = "margin-left: 10px; line-height: 34px">平</span>
@@ -201,8 +201,8 @@
                                 </div>
                             </div>
                             <div class="no-border widget-toolbox padding-8 clearfix span7 text-center" style="margin-top: 20px;">
-                                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                                <button type="button" id="cancelBtn" class="btn btn-default" >重置</button>
+                                <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                                <button type="button" id="cancelBtn" class="btn btn-default"  data-i18n="msg.reset">重置</button>
                             </div>
                         </div>
                     </div>

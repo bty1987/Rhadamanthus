@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "lang": "tw",
+    "type": "page",
+    "module": "balance",
+    "desc": "結算模組頁面文字。覆蓋 balance 視圖下的 modal 標題、表單 label、按鈕。結算/扣款/帳戶等術語。"
+  },
+
+  "page.balance.label.balance": "結算",
+  "page.balance.label.belongUser": "歸屬人",
+  "page.balance.label.cashier": "出納",
+  "page.balance.label.operateAmount": "操作額",
+  "page.balance.label.account": "帳戶",
+  "page.balance.label.balanceDeduct": "結算扣款",
+  "page.balance.label.deduct": "扣款",
+  "page.balance.label.level": "等級",
+  "page.balance.label.creator": "建立人",
+  "page.balance.label.createTime": "建立時間",
+  "page.balance.label.payable": "應付額",
+  "page.balance.label.paid": "實付額",
+  "page.balance.label.remain": "餘額",
+  "page.balance.label.address": "地址",
+  "page.balance.label.phone": "電話",
+  "page.balance.label.bank": "銀行",
+  "page.balance.label.cardNo": "卡號",
+  "page.balance.label.shareDetail": "分攤明細",
+  "page.balance.label.deductAccount": "扣款帳戶",
+  "page.balance.label.imgPath": "圖片路徑",
+  "page.balance.label.balanceImg": "結算圖片",
+  "page.balance.label.accountTotal": "帳戶總額",
+  "page.balance.label.accountBalance": "帳戶餘額",
+  "page.balance.label.balanceDeductImg": "結算扣款圖片",
+  "page.balance.label.deductDetail": "扣款明細",
+  "page.balance.label.balanceDetail": "結算明細",
+  "page.balance.label.balanceExternal": "結算外銷",
+  "page.balance.label.balanceSales": "結算銷售",
+  "page.balance.label.balanceSelection": "結算選材",
+
+  "page.balance.btn.addFinishOrder": "新增完結單",
+  "page.balance.btn.bind": "綁定",
+  "page.balance.btn.offset": "抵扣",
+  "page.balance.btn.addDeduct": "新增扣款"
+}

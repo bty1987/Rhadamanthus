@@ -24,20 +24,20 @@
                 <div class="space5"></div>
 
                 <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="depositPayment">定金</label>
+                    <label class="col-xs-3 control-label " for="depositPayment" data-i18n="page.sales.label.deposit">定金</label>
                     <div class="col-xs-9">
                         <input type="text" id="depositPayment" class="v_float_3" readonly="readonly"/>
-                        <button id="depositPaymentBtn" class="btn btn-minier btn-info">交款</button>
-                        <button id="repositPaymentBtn" class="btn btn-minier btn-danger">不退</button>
-                        <button id="depositCancelBtn" class="btn btn-minier btn-danger">撤消</button>
-                        <button id="depositRefundBtn" class="btn btn-minier btn-danger" >退款</button>
+                        <button id="depositPaymentBtn" class="btn btn-minier btn-info" data-i18n="page.sales.label.payment">交款</button>
+                        <button id="repositPaymentBtn" class="btn btn-minier btn-danger" data-i18n="page.sales.label.notRefund">不退</button>
+                        <button id="depositCancelBtn" class="btn btn-minier btn-danger" data-i18n="page.sales.label.cancel">撤消</button>
+                        <button id="depositRefundBtn" class="btn btn-minier btn-danger"  data-i18n="page.sales.label.refund">退款</button>
                         <button id="depositPrintBtn" class="btn btn-minier btn-grey">打印</button>
                     </div>
                 </div>
                 <div class="space5"></div>
 
                 <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="realDepositPayment">实收定金</label>
+                    <label class="col-xs-3 control-label " for="realDepositPayment" data-i18n="page.sales.label.actualDeposit">实收定金</label>
                     <div class="col-xs-9">
                         <input type="text" id="realDepositPayment" readonly="readonly"/>
                         <span id="depositPaymentInfo" class="label label-warning"></span>
@@ -46,18 +46,18 @@
                 <div class="space5"></div>
 
                 <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="fullPayment">补款</label>
+                    <label class="col-xs-3 control-label " for="fullPayment" data-i18n="page.sales.label.supplement">补款</label>
                     <div class="col-xs-9">
                         <input type="text" id="fullPayment" readonly="readonly"/>
-                        <button id="fullPaymentBtn" class="btn btn-minier btn-info">交款</button>
-                        <button id="fullPaymentRefundBtn" class="btn btn-minier btn-danger">退款</button>
-                        <button id="fullCancelBtn" class="btn btn-minier btn-danger">撤消</button>
+                        <button id="fullPaymentBtn" class="btn btn-minier btn-info" data-i18n="page.sales.label.payment">交款</button>
+                        <button id="fullPaymentRefundBtn" class="btn btn-minier btn-danger" data-i18n="page.sales.label.refund">退款</button>
+                        <button id="fullCancelBtn" class="btn btn-minier btn-danger" data-i18n="page.sales.label.cancel">撤消</button>
                     </div>
                 </div>
                 <div class="space5"></div>
 
                 <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="realFullPayment">实收补款</label>
+                    <label class="col-xs-3 control-label " for="realFullPayment" data-i18n="page.sales.label.actualSupplement">实收补款</label>
                     <div class="col-xs-9">
                         <input type="text" id="realFullPayment" readonly="readonly"/>
                         <span id="fullPaymentInfo" class="label label-warning"></span>
@@ -66,24 +66,24 @@
                 <div class="space5"></div>
 
                 <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label" for="coupon">券信息</label>
+                    <label class="col-xs-3 control-label" for="coupon" data-i18n="page.sales.label.couponInfo">券信息</label>
                     <div class="col-xs-9">
                         <input type="text" id="couponInf" readonly="readonly"/>
-                        <button id="couponBtn" class="btn btn-minier btn-yellow">修改</button>
-                        <button id="couponRefundBtn" class="btn btn-minier btn-danger">退券</button>
+                        <button id="couponBtn" class="btn btn-minier btn-yellow" data-i18n="msg.modify">修改</button>
+                        <button id="couponRefundBtn" class="btn btn-minier btn-danger" data-i18n="page.sales.label.refundCoupon">退券</button>
                     </div>
                     <label class="col-xs-3"></label>
                     <div class="col-xs-9" id="couponInfo" style="display: none; margin-top: 5px;">
                         <select id="couponType" class="col-xs-4" data-toggle="popover" data-trigger='manual'></select>
                         <input id="couponValue" type="text" class="col-xs-2 v_float_3" value="0" data-toggle="popover" data-trigger='manual'/>
-                        <button id="couponCommitBtn" class="btn btn-minier btn-success">提交</button>
-                        <button id="couponCancelBtn" class="btn btn-minier btn-danger">取消</button>
+                        <button id="couponCommitBtn" class="btn btn-minier btn-success" data-i18n="msg.submit">提交</button>
+                        <button id="couponCancelBtn" class="btn btn-minier btn-danger" data-i18n="msg.cancel">取消</button>
                     </div>
                 </div>
                 <div class="space5"></div>
 
                 <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label  " for="coupon">券值</label>
+                    <label class="col-xs-3 control-label  " for="coupon" data-i18n="page.sales.label.couponValue">券值</label>
                     <div class="col-xs-9">
                         <input type="text" id="coupon" readonly="readonly"/>
                     </div>
@@ -91,21 +91,21 @@
                 <div class="space5"></div>
 
                 <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="maling">抹零</label>
+                    <label class="col-xs-3 control-label " for="maling" data-i18n="page.sales.label.wipeChange">抹零</label>
                     <div class="col-xs-9">
                         <input type="text" id="maling" readonly="readonly"/>
-                        <button id="malingBtn" class="btn btn-minier">修改</button>
+                        <button id="malingBtn" class="btn btn-minier" data-i18n="msg.modify">修改</button>
                     </div>
                     <label class="col-xs-3"></label>
                     <div id="malingInfo" class="col-xs-9" style="display: none; margin-top: 5px;">
                         <input id="malingValue" type="text" class="v_float_3" value="0" data-toggle="popover" data-trigger='manual'/>
-                        <button id="malingCommitBtn" class="btn btn-minier btn-success">提交</button>
-                        <button id="malingCancelBtn" class="btn btn-minier btn-danger">取消</button>
+                        <button id="malingCommitBtn" class="btn btn-minier btn-success" data-i18n="msg.submit">提交</button>
+                        <button id="malingCancelBtn" class="btn btn-minier btn-danger" data-i18n="msg.cancel">取消</button>
                     </div>
                 </div>
 
                 <div class="form-group col-xs-12">
-                    <button type="button" id="saveBtn" class="btn btn-primary pull-right">确定</button>
+                    <button type="button" id="saveBtn" class="btn btn-primary pull-right" data-i18n="msg.ok">确定</button>
                 </div>
 
             </form>
@@ -121,7 +121,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
-                    <h4 class="modal-title">品牌结算</h4>
+                    <h4 class="modal-title" data-i18n="page.sales.label.brandBalance">品牌结算</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -129,8 +129,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="repositBtns" class="btn btn-primary">确认</button>
-                    <button type="button" id="cancelReposits" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="repositBtns" class="btn btn-primary" data-i18n="msg.confirm">确认</button>
+                    <button type="button" id="cancelReposits" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -142,7 +142,7 @@
             <form class="form-horizontal">
 
                 <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="fullPaymentTotal">补款总额</label>
+                    <label class="col-xs-3 control-label " for="fullPaymentTotal" data-i18n="page.sales.label.supplementTotal">补款总额</label>
                     <div class="col-xs-9">
                         <input type="text" id="fullPaymentTotal" readonly/>
                     </div>
@@ -162,8 +162,8 @@
                 </div>
 
                 <div class="form-group pull-right" style="margin-right: 0">
-                    <button type="button" id="fullPaymentCancelBtn" class="btn btn-primary">取消</button>
-                    <button type="button" id="fullPaymentSaveBtn" class="btn btn-success">提交</button>
+                    <button type="button" id="fullPaymentCancelBtn" class="btn btn-primary" data-i18n="msg.cancel">取消</button>
+                    <button type="button" id="fullPaymentSaveBtn" class="btn btn-success" data-i18n="msg.submit">提交</button>
                 </div>
 
             </form>
@@ -178,7 +178,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="decorationInfoDialog">装修单信息</h4>
+                    <h4 class="modal-title" id="decorationInfoDialog" data-i18n="page.sales.label.decorationInfo">装修单信息</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
@@ -218,7 +218,7 @@
                         </div>
                                                 
                         <div class="form-group">
-                            <label class="col-sm-4 control-label no-padding-right">工程状态</label>
+                            <label class="col-sm-4 control-label no-padding-right" data-i18n="page.sales.label.engineeringStatus">工程状态</label>
                             <div class="col-sm-8">
                                 <span id="projectStatus" style="line-height: 30px"></span>
                             </div>
@@ -233,7 +233,7 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="cancelDecorationInfoBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="cancelDecorationInfoBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -250,14 +250,14 @@
                     <form class="form-horizontal" id="form">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="uSalesman">渠道</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uSalesman" data-i18n="page.sales.label.channel">渠道</label>
                             <div class="col-sm-9">
                                 <input type="text" id="uSalesman" maxlength="64" class="col-xs-10 col-sm-7 v_required v_typeahead" data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="uInstorer">驻店</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uInstorer" data-i18n="page.sales.label.inStore">驻店</label>
                             <div class="col-sm-9">
                                 <input type="text" id="uInstorer" maxlength="64" class="col-xs-10 col-sm-7 v_required v_typeahead" data-toggle="popover" data-trigger='manual'/>
                             </div>
@@ -265,14 +265,14 @@
 
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="uGuider">导购</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uGuider" data-i18n="page.sales.label.guide">导购</label>
                             <div class="col-sm-9">
                                 <input type="text" id="uGuider" maxlength="64" class="col-xs-10 col-sm-7 v_required v_typeahead" data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="uSupplier">厂商</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uSupplier" data-i18n="page.sales.label.manufacturer">厂商</label>
                             <div class="col-sm-9">
                                 <input type="text" id="uSupplier" maxlength="64" class="col-xs-10 col-sm-7 v_required v_typeahead" data-toggle="popover" data-trigger='manual'/>
                             </div>
@@ -281,8 +281,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="ascriptionBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelAscription" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="ascriptionBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelAscription" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -297,14 +297,14 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="activityDialog">活动归属</h4>
+                    <h4 class="modal-title" id="activityDialog" data-i18n="page.sales.label.activityBelong">活动归属</h4>
                 </div>
 
                 <div class="modal-body">
                     <form class="form-horizontal">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="activitys_">当前活动: </label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="activitys_" data-i18n="page.sales.label.currentActivity">当前活动: </label>
                             <div class="col-sm-9">
                                 <input type="text" id="activitys_" maxlength="64" class="col-sm-5" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
                             </div>
@@ -313,7 +313,7 @@
                         <div class="space-4"></div>
 
                         <div class="form-group">
-                            <label for="activityInfo" class="col-sm-3 control-label no-padding-right">修改活动</label>
+                            <label for="activityInfo" class="col-sm-3 control-label no-padding-right" data-i18n="page.sales.label.modifyActivity">修改活动</label>
                             <div class="col-sm-9">
                                 <select class='col-sm-5 v_required' id='activityInfo' data-toggle="popover" data-trigger='manual'></select>
                             </div>
@@ -322,8 +322,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" id="submitSalesActivityBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="submitSalesActivityBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -336,7 +336,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title">销售图片</h4>
+                    <h4 class="modal-title" data-i18n="page.sales.label.salesImg">销售图片</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -364,12 +364,12 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
-                    <h4 class="modal-title">预配送</h4>
+                    <h4 class="modal-title" data-i18n="page.sales.label.preDelivery">预配送</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="orderId">时间范围</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="orderId" data-i18n="page.sales.label.timeRange">时间范围</label>
                             <div class="col-sm-9">
                                 <input id="peliveryTime" class="col-sm-6 v_required" type="text" name="date-range-picker" data-toggle="popover" data-trigger='manual'/>
                             </div>
@@ -377,8 +377,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="peliveryBtn" class="btn btn-primary">确认</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="peliveryBtn" class="btn btn-primary" data-i18n="msg.confirm">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>

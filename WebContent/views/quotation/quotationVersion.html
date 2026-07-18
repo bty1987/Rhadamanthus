@@ -14,13 +14,13 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span>&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="quotationVersionDialog">报价版本</h4>
+					<h4 class="modal-title" id="quotationVersionDialog" data-i18n="page.quotation.label.quotationVersion">报价版本</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right " for="name">名称</label>
+							<label class="col-sm-3 control-label no-padding-right " for="name" data-i18n="page.quotation.label.name">名称</label>
 							<div class="col-sm-9">
 								<input type="text" id="name" class="col-xs-10 col-sm-5 v_name v_required" data-toggle="popover" data-trigger='manual' maxlength="30"/>
 							</div>
@@ -45,7 +45,7 @@
                         <div class="space-4"></div>
                         
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right " for="manageRate">管理费比例</label>
+                            <label class="col-sm-3 control-label no-padding-right " for="manageRate" data-i18n="page.quotation.label.manageFeeRate">管理费比例</label>
                             <div class="col-sm-9">
                                 <input type="text" id="manageRate" class="col-xs-10 col-sm-5 v_float v_required" data-toggle="popover" data-trigger='manual'/>
                             </div>
@@ -53,7 +53,7 @@
                         <div class="space-4"></div>
                         
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="manageDiscount">管理费折扣</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="manageDiscount" data-i18n="page.quotation.label.discountRate">管理费折扣</label>
                             <div class="col-sm-9">
                                 <input type="checkbox" id="manageDiscount" class="ace"/>
                                 <span class="lbl discount-lbl"></span>
@@ -62,7 +62,7 @@
                         <div class="space-4"></div>
                         
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right " for="taxRate">税金比例</label>
+                            <label class="col-sm-3 control-label no-padding-right " for="taxRate" data-i18n="page.quotation.label.taxRate">税金比例</label>
                             <div class="col-sm-9">
                                 <input type="text" id="taxRate" class="col-xs-10 col-sm-5 v_float v_required" data-toggle="popover" data-trigger='manual'/>
                             </div>
@@ -88,7 +88,7 @@
                         <div class="space-4"></div>
                         
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="type">类型</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="type" data-i18n="page.quotation.label.type">类型</label>
                             <div class="col-sm-9">
                                 <select id="type" class="col-xs-10 col-sm-5 v_required ace"></select>
                             </div>
@@ -104,7 +104,7 @@
 						<div class="space-4"></div>	
                         
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right " for="comment">备注</label>
+                            <label class="col-sm-3 control-label no-padding-right " for="comment" data-i18n="page.quotation.label.comment">备注</label>
                             <div class="col-sm-9">
                                 <textarea id="comment" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50"></textarea>
                             </div>
@@ -113,8 +113,8 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 				</div>
 			</div>
 		</div>

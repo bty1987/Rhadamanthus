@@ -12,45 +12,45 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title" id="prosignDialog">配置</h4>
+                <h4 class="modal-title" id="prosignDialog" data-i18n="page.decoration.title.config">配置</h4>
             </div>
 
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;">api配置</div>
+                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;" data-i18n="page.decoration.config.api">api配置</div>
                         <div class="col-sm-12" id="apiData"></div>
                     </div>
                     <div class="form-group">
-                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;">条件配置</div>
+                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;" data-i18n="page.decoration.config.condition">条件配置</div>
                         <div class="col-sm-12" id="condArrData"></div>
                     </div>
                     <div class="form-group">
-                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;">字段配置</div>
+                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;" data-i18n="page.decoration.config.field">字段配置</div>
                         <div class="col-sm-12" id="fieldData"></div>
                     </div>
                     <div class="form-group">
-                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;">功能配置</div>
+                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;" data-i18n="page.decoration.config.function">功能配置</div>
                         <div class="col-sm-12" id="functionData"></div>
                     </div>
                     <div class="form-group">
-                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;">节点配置</div>
+                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;" data-i18n="page.decoration.config.node">节点配置</div>
                         <div class="col-sm-12" id="nodeData"></div>
                     </div>
                     <div class="form-group">
-                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;">状态功能配置</div>
+                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;" data-i18n="page.decoration.config.statusFunction">状态功能配置</div>
                         <div class="col-sm-12" id="statusData"></div>
                     </div>
                     <div class="form-group">
-                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;">公司范围配置</div>
+                        <div style="font-size: 20px; padding: 0px 0px 15px 15px;" data-i18n="page.decoration.config.companyScope">公司范围配置</div>
                         <div class="col-sm-12" id="companyData"></div>
                     </div>
                 </form>
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="apiBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="apiBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -64,24 +64,24 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title" id="syncDialog">同步装饰功能配置</h4>
+                <h4 class="modal-title" id="syncDialog" data-i18n="page.decoration.title.syncConfig">同步装饰功能配置</h4>
             </div>
 
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">功能名称:</label>
+                        <label class="col-sm-3 control-label" data-i18n="page.decoration.config.functionName">功能名称:</label>
                         <div class="col-sm-9">
                             <p class="form-control-static" id="syncFunctionName"></p>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right">目标公司</label>
+                        <label class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.config.targetCompany">目标公司</label>
                         <div class="col-sm-9">
                             <div id="companyList" style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
                                 <div class="text-center">
                                     <i class="ace-icon fa fa-spinner fa-spin fa-2x"></i>
-                                    <p>正在加载公司列表...</p>
+                                    <p data-i18n="page.decoration.config.loadingCompany">正在加载公司列表...</p>
                                 </div>
                             </div>
                         </div>
@@ -90,8 +90,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="syncConfirmBtn" class="btn btn-primary">确认同步</button>
-                <button type="button" id="syncCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="syncConfirmBtn" class="btn btn-primary" data-i18n="page.decoration.btn.confirmSync">确认同步</button>
+                <button type="button" id="syncCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>

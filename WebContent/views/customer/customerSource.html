@@ -43,7 +43,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange">电话</label>
                             <div class="col-sm-9">
-                                <input type="text" class="m-wrap col-xs-6 v_required v_phone" id="phone" maxlength="11" placeholder="请输入11位手机号码">
+                                <input type="text" class="m-wrap col-xs-6 v_required v_phone" id="phone" maxlength="11" placeholder="请输入11位手机号码" data-i18n-ph="page.customer.ph.phone11">
                             </div>
                         </div>
                         
@@ -75,14 +75,14 @@
                         </div>
                        
                         <div class="form-group source">
-                            <label for="source" class="col-sm-3 control-label no-padding-right orange">来源方</label>
+                            <label for="source" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.customer.label.sourceParty">来源方</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6" maxlength="32" id="source" />
                             </div>
                         </div>
 
                         <div class="form-group contact">
-                            <label for="contact" class="col-sm-3 control-label no-padding-right orange">对接人</label>
+                            <label for="contact" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.customer.label.connector">对接人</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6" maxlength="32" id="contact" />
                             </div>
@@ -90,7 +90,7 @@
 
                         
                         <div class="form-group hide">
-                            <label for="purpose" class="col-sm-3 control-label no-padding-right">目的</label>
+                            <label for="purpose" class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.purpose">目的</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6" maxlength="32" id="purpose" />
                             </div>
@@ -111,7 +111,7 @@
                         </div>
 
                         <div class="form-group hide">
-                            <label class="col-sm-3 control-label no-padding-right">客户等级</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.customerLevel">客户等级</label>
                             <div class="col-sm-9">
                                 <select class="col-xs-6 m-wrap v_required" id="grade"></select>
                             </div>
@@ -125,7 +125,7 @@
                         </div>
 
                         <div class="form-group villageRule">
-                            <label class="col-sm-3 control-label no-padding-right">楼盘规则</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.buildingRule">楼盘规则</label>
                             <div class="col-sm-9">
                                 <select class="col-xs-10 col-sm-6 v_required" id="villageRule" ></select>
                             </div>
@@ -185,7 +185,7 @@
                         <hr/>
                         
                         <div class="form-group hide">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="referCustomer">推荐客户</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="referCustomer" data-i18n="page.customer.label.recommendCustomer">推荐客户</label>
                             <div class="col-sm-9">
                                 <input type="checkbox" id="referCustomer" class="ace ace-switch ace-switch-5"/>
                                 <span class="lbl isOrNot"></span>
@@ -193,21 +193,21 @@
                         </div>
 
                         <div class="form-group referCustomerInfo">
-                            <label class="col-sm-3 control-label no-padding-right">推荐装修单号</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.recommendOrderNo">推荐装修单号</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6" id="referOrderId">
                             </div>
                         </div>
 
                         <div class="form-group referCustomerInfo">
-                            <label class="col-sm-3 control-label no-padding-right">推荐手机号</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.recommendPhone">推荐手机号</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6" id="referPhone">
                             </div>
                         </div>
                         
                         <div class="form-group referCustomerInfo">
-                            <label class="col-sm-3 control-label no-padding-right">推荐楼盘</label>
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.customer.label.recommendBuilding">推荐楼盘</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6" id="referVillage">
                             </div>
@@ -239,7 +239,7 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
                 </div>
             </div>
         </div>
@@ -250,7 +250,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="issueCustomer">分配</h4>
+                    <h4 class="modal-title" id="issueCustomer" data-i18n="page.customer.label.distribute">分配</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
@@ -299,7 +299,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="issueBtn" class="btn btn-primary pull-right">确定</button>
+                    <button type="button" id="issueBtn" class="btn btn-primary pull-right" data-i18n="msg.ok">确定</button>
                 </div>
             </div>
         </div>
@@ -313,7 +313,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="commitFirstApproveDialog">提交</h4>
+                    <h4 class="modal-title" id="commitFirstApproveDialog" data-i18n="msg.submit">提交</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
@@ -358,7 +358,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange">比例</label>
+                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange" data-i18n="page.customer.label.rate">比例</label>
                             <div class="col-sm-9">
                                 <input type="text" class="col-xs-10 col-sm-6 v_required v_float_3" id="rate" value="0"/>
                             </div>
@@ -381,8 +381,8 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="firstApprovalBtn" class="btn btn-primary" data-loading-text="提交中...">提交</button>
-                    <button type="button" id="firstCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="firstApprovalBtn" class="btn btn-primary" data-loading-text="提交中..." data-i18n="msg.submit">提交</button>
+                    <button type="button" id="firstCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>
         </div>
@@ -429,7 +429,7 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="updateHouseBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="updateHouseBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
                 </div>
             </div>
         </div>

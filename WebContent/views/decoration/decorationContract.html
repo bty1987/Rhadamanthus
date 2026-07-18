@@ -25,12 +25,12 @@
 
         <a href="#" id="confirm" class="btn btn-yellow btn-app btn-sm radius-4 hide" style="padding: 5px 0;">
             <i class="icon-exclamation-sign bigger-230"></i>
-            <span>确认</span>
+            <span data-i18n="msg.confirm">确认</span>
         </a>
 
         <a href="#" id="reset" class="btn btn-yellow btn-app btn-sm radius-4" style="padding: 5px 0;">
             <i class="icon-circle-blank bigger-230"></i>
-            <span>重置</span>
+            <span data-i18n="msg.reset">重置</span>
         </a>
 
         <a href="#" id="saveBtn" class="btn btn-default btn-app btn-sm radius-4 hide" style="padding: 5px 0;">
@@ -45,7 +45,7 @@
 
         <a href="#" id="backBtn" class="btn btn-info btn-app btn-sm radius-4" style="padding: 5px 0;">
             <i class="icon-mail-forward bigger-230"></i>
-            <span>返回</span>
+            <span data-i18n="msg.back">返回</span>
         </a>
 
     </div>
@@ -66,7 +66,7 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title" id="customerDialog">客户信息</h4>
+                <h4 class="modal-title" id="customerDialog" data-i18n="page.decoration.label.customerInfo">客户信息</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -75,7 +75,7 @@
                             <div class="col-md-12">
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right" for="identity">身份证号</label>
+                                <label class="col-sm-3 control-label no-padding-right" for="identity" data-i18n="page.decoration.label.idCard">身份证号</label>
                                 <div class="col-sm-9">
                                     <input type="text" maxlength="21" id="identity" class="col-xs-10 col-sm-6" disabled data-toggle="popover" data-trigger='manual'/>
                                     <button id="identityBtn" class="btn btn-xs btn-info" type="button" style="margin: 2px 5px;">身份证认证</button>
@@ -83,7 +83,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right" for="passport">护照</label>
+                                <label class="col-sm-3 control-label no-padding-right" for="passport" data-i18n="page.decoration.label.passport">护照</label>
                                 <div class="col-sm-9">
                                     <input type="text" maxlength="21" id="passport" class="col-xs-10 col-sm-6" disabled data-toggle="popover" data-trigger='manual'/>
                                     <button id="passportBtn" class="btn btn-xs btn-info" type="button" style="margin: 2px 5px;">护照认证</button>
@@ -107,7 +107,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
 
         </div>
@@ -140,8 +140,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="signBtn" class="btn btn-primary">提交</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="signBtn" class="btn btn-primary" data-i18n="msg.submit">提交</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -154,7 +154,7 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title" id="approveDialog">提交</h4>
+                <h4 class="modal-title" id="approveDialog" data-i18n="msg.submit">提交</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -174,7 +174,7 @@
 					</div>
 					
 					<div class="form-group" id="approveManGroup">
-                        <label for="approveMan" class="col-sm-3 control-label no-padding-right">审批人</label>
+                        <label for="approveMan" class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.approver">审批人</label>
                         <div class="col-sm-9">
                             <div id="approveMan" class="col-xs-6 m-wrap"></div>
                         </div>
@@ -183,8 +183,8 @@
                 </form>
             </div>
             <div class="modal-footer" style="text-align: center">
-                <button type="button" id="approvalSubmitBtn" class="btn btn-primary" data-loading-text="提交中...">提交</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="approvalSubmitBtn" class="btn btn-primary" data-loading-text="提交中..." data-i18n="msg.submit">提交</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -208,13 +208,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right">开始时间</label>
+                        <label class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.startTime">开始时间</label>
                         <div class="col-sm-9">
                             <input type="text" id="recordStartTime" class="col-xs-10 col-sm-6">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right">结束时间</label>
+                        <label class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.endTime">结束时间</label>
                         <div class="col-sm-9">
                             <input type="text" id="recordEndTime" class="col-xs-10 col-sm-6">
                         </div>
@@ -228,8 +228,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="saveRecordBtn" class="btn btn-primary">保存</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="saveRecordBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>

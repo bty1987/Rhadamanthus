@@ -15,7 +15,7 @@
 				<button type="button" class="close" data-dismiss="modal">
 					<span>&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title" id="complaintDialog">投诉</h4>
+				<h4 class="modal-title" id="complaintDialog" data-i18n="page.construction.label.complaint">投诉</h4>
 			</div>
 
 			<div class="modal-body">
@@ -28,14 +28,14 @@
 					</div>
 				
 					<div class="form-group">
-						<label for="form-field-1" class="col-sm-3 control-label no-padding-right" for="customerName">客户名称</label>
+						<label for="form-field-1" class="col-sm-3 control-label no-padding-right" for="customerName" data-i18n="page.construction.label.customerName">客户名称</label>
 						<div class="col-sm-9">
 							<input id="customerName" type="text" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'/>
 						</div>
 					</div>
 					
 					<div class="form-group">
-						<label for="form-field-1" class="col-sm-3 control-label no-padding-right" for="complaintTime">时间</label>
+						<label for="form-field-1" class="col-sm-3 control-label no-padding-right" for="complaintTime" data-i18n="page.construction.label.time">时间</label>
 						<div class="col-sm-9">
 							<input id="complaintTime" class="date-picker-date col-xs-10 col-sm-5 v_required" readonly="readonly" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
 						</div>
@@ -45,8 +45,8 @@
 						<label class="col-sm-3 control-label no-padding-right" for="complaintLevel">等级</label>
 						<div class="col-sm-9">
 							<select id="complaintLevel" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'>
-								<option value="0">标准</option>
-								<option value="1">重要</option>
+								<option value="0" data-i18n="page.construction.label.standard">标准</option>
+								<option value="1" data-i18n="page.construction.label.important">重要</option>
 							</select>
 						</div>
 					</div>
@@ -56,8 +56,8 @@
 						<label class="col-sm-3 control-label no-padding-right" for="complaintType">类型</label>
 						<div class="col-sm-9">
 							<select id="complaintType" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'>
-								<option value="0">装修</option>
-								<option value="1">主材</option>
+								<option value="0" data-i18n="page.construction.label.decoration">装修</option>
+								<option value="1" data-i18n="page.construction.label.material">主材</option>
 							</select>
 						</div>
 					</div>
@@ -75,8 +75,8 @@
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>
@@ -89,7 +89,7 @@
 				<button type="button" class="close" data-dismiss="modal">
 					<span>&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title" id="complaintHandleDialog">投诉</h4>
+				<h4 class="modal-title" id="complaintHandleDialog" data-i18n="page.construction.label.complaint">投诉</h4>
 			</div>
 
 			<div class="modal-body">
@@ -102,7 +102,7 @@
 					</div>
 				
 					<div class="form-group">
-						<label for="form-field-1" class="col-sm-3 control-label no-padding-right" for="handleCustomerName">客户名称</label>
+						<label for="form-field-1" class="col-sm-3 control-label no-padding-right" for="handleCustomerName" data-i18n="page.construction.label.customerName">客户名称</label>
 						<div class="col-sm-9">
 							<input id="handleCustomerName" type="text" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'/>
 						</div>
@@ -112,8 +112,8 @@
 						<label class="col-sm-3 control-label no-padding-right" for="handleComplaintLevel">等级</label>
 						<div class="col-sm-9">
 							<select id="handleComplaintLevel" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'>
-								<option value="0">标准</option>
-								<option value="1">重要</option>
+								<option value="0" data-i18n="page.construction.label.standard">标准</option>
+								<option value="1" data-i18n="page.construction.label.important">重要</option>
 							</select>
 						</div>
 					</div>
@@ -123,8 +123,8 @@
 						<label class="col-sm-3 control-label no-padding-right" for="handleComplaintType">类型</label>
 						<div class="col-sm-9">
 							<select id="handleComplaintType" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'>
-								<option value="0">装修</option>
-								<option value="1">主材</option>
+								<option value="0" data-i18n="page.construction.label.decoration">装修</option>
+								<option value="1" data-i18n="page.construction.label.material">主材</option>
 							</select>
 						</div>
 					</div>
@@ -142,8 +142,8 @@
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" id="saveHandleBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelHandleBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="saveHandleBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+				<button type="button" id="cancelHandleBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 			</div>
 		</div>
 	</div>

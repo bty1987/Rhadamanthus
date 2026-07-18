@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "lang": "tw",
+    "type": "page",
+    "module": "common",
+    "desc": "公共頁面文字:登入/首頁/導航/頂欄等。各業務模組文字放 page/{module}-tw.json"
+  },
+
+  "page.common.login.title": "登入",
+  "page.common.login.userId": "請輸入工號/手機號/信箱",
+  "page.common.login.password": "請輸入登入密碼",
+  "page.common.login.passwordLabel": "密碼",
+  "page.common.login.submit": "登入",
+  "page.common.login.btnLogin": "登入帳號",
+  "page.common.login.btnExperience": "立即體驗",
+  "page.common.login.verifyCode": "請輸入驗證碼",
+  "page.common.login.remember": "記住我",
+  "page.common.login.forget": "忘記密碼?",
+  "page.common.login.invalidCred": "使用者名稱或密碼錯誤",
+  "page.common.login.qrcodeDing": "釘釘掃碼",
+  "page.common.login.qrcodeWechat": "微信掃碼",
+  "page.common.login.passwordTab": "密碼登入",
+  "page.common.login.welcome": "歡迎登入",
+  "page.common.login.subtitle": "使用方林帳號，開啟管理化工作時代。",
+  "page.common.login.qrTipDing": "請使用釘釘掃碼登入",
+  "page.common.login.qrTipWechat": "請使用微信掃碼登入",
+  "page.common.login.qrExpired": "二維碼已失效",
+  "page.common.login.qrRefresh": "點擊刷新",
+  "page.common.login.footer": "遼寧方林資訊化服務有限公司©2014-2025 | 遼ICP備15003048號-4",
+
+  "page.common.brand.name": "方林集團",
+  "page.common.brand.slogan": "立於一面極於九，專一域而馭八方",
+  "page.common.brand.sloganSub": "業內首推\"行業標桿工藝不達標賠無條\"的重錘承諾",
+
+  "page.common.home.welcome": "歡迎",
+  "page.common.home.hello": "您好,",
+  "page.common.home.logout": "登出",
+  "page.common.home.profile": "個人資料",
+  "page.common.home.changePwd": "修改密碼",
+  "page.common.home.lock": "鎖屏",
+  "page.common.home.help": "幫助",
+  "page.common.home.version": "版本",
+  "page.common.home.currentCompany": "當前公司",
+  "page.common.home.langSwitch": "語言",
+  "page.common.home.brandTitle": "Fanglin IF Admin(測試版)",
+
+  "page.common.lang.cn": "简体中文",
+  "page.common.lang.tw": "繁體中文",
+  "page.common.lang.en": "English"
+}

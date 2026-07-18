@@ -6,7 +6,7 @@
 		<div class="col-xs-12 col-md-4">
 			<div class="widget-box transparent">
 				<div class="widget-header">
-					<h4><strong>归属信息</strong></h4>
+					<h4><strong data-i18n="page.decoration.title.belong">归属信息</strong></h4>
 				</div>
 
 				<div class="widget-body">
@@ -21,39 +21,39 @@
 									<input type="text" id="belongUser" class="hide">
 										
 									<div class="form-group">
-										<label for="belongUserId" class="col-sm-3 control-label no-padding-right">人员姓名</label>
+										<label for="belongUserId" class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.userName">人员姓名</label>
 										<div class="col-md-9">
-											<input type="text" class="col-xs-10 col-sm-7 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="belongUserId" placeholder="请输入人员">
+											<input type="text" class="col-xs-10 col-sm-7 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="belongUserId" placeholder="请输入人员" data-i18n-ph="page.decoration.ph.person">
 										</div>
 									</div>
 									<div class="space-4"></div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="belongRate">分配比例</label>
+										<label class="col-sm-3 control-label no-padding-right" for="belongRate" data-i18n="page.decoration.label.allocRate">分配比例</label>
 										<div class="col-sm-9">
 											<input type="text" class="col-xs-10 col-sm-7 v_required v_float_3" data-toggle="popover" data-trigger='manual' id="belongRate" maxlength="5"/>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label for="deptId" class="col-sm-3 control-label no-padding-right">部门</label>
+										<label for="deptId" class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.dept">部门</label>
 										<div class="col-md-9">
-											<input type="text" class="col-xs-10 col-sm-7 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="deptId" placeholder="请输入部门">
+											<input type="text" class="col-xs-10 col-sm-7 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="deptId" placeholder="请输入部门" data-i18n-ph="page.decoration.ph.dept">
 										</div>
 									</div>
 									<div class="space-4"></div>
 
 									<div class="form-group">
-										<label for="regionId" class="col-sm-3 control-label no-padding-right">分区</label>
+										<label for="regionId" class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.region">分区</label>
 										<div class="col-md-9">
-											<input type="text" class="col-xs-10 col-sm-7 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="regionId" placeholder="请输入分区">
+											<input type="text" class="col-xs-10 col-sm-7 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="regionId" placeholder="请输入分区" data-i18n-ph="page.decoration.ph.region">
 										</div>
 									</div>
 									<div class="space-4"></div>
 
 									<div class="space-4"></div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="isPresentGraduate">是否默认</label>
+										<label class="col-sm-3 control-label no-padding-right" for="isPresentGraduate" data-i18n="page.decoration.label.isDefault">是否默认</label>
 										<div class="col-sm-9">
 											<input type="checkbox" id="defaultFlag"  class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
 											<span class="lbl isOrNot"></span>
@@ -69,11 +69,11 @@
 									<div class="ui-pg-div">
 										<button id="appendUserBtn" class="btn btn-minier btn-pink">
 											<i class="icon-pencil"></i>
-                                            <span>添加</span>
+                                            <span data-i18n="page.decoration.btn.add">添加</span>
 										</button>
 										<button id="applyApprovalBtn" class="btn btn-minier btn-primary">
 											<i class="icon-save"></i>
-                                            <span>提交申请</span>
+                                            <span data-i18n="page.decoration.btn.submitApply">提交申请</span>
 										</button>
 									</div>
 								</div>
@@ -86,7 +86,7 @@
 		
 		<div class="col-xs-12 col-md-8">
 			<div class="well">
-				<h4 class="green smaller lighter">描述</h4>
+				<h4 class="green smaller lighter" data-i18n="page.decoration.label.changeReason">描述</h4>
 				<div>
 					<p>分配归属信息时,所有分配人的分配比率的和必须是1,否则无法保存。</p>
 					<p>分配归属信息时,必须有一个默认归属用户,否则无法保存。</p>
@@ -97,7 +97,7 @@
 				<div class="widget-box transparent">
 					<div class="widget-header">
 						<h3>
-							<strong>归属信息</strong>
+							<strong data-i18n="page.decoration.title.belong">归属信息</strong>
 						</h3>
 					</div>
 					<div class="widget-body">
@@ -116,12 +116,12 @@
 		<div class="modal-content">
      			<div class="modal-header">
        			<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-       			<h4 class="modal-title" id="myModalLabel">修改申请</h4>
+       			<h4 class="modal-title" id="myModalLabel" data-i18n="page.decoration.title.modifyApply">修改申请</h4>
      			</div>
      			<div class="modal-body">
 	      		<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right orange" for="changeReason">描述</label>
+						<label class="col-sm-3 control-label no-padding-right orange" for="changeReason" data-i18n="page.decoration.label.changeReason">描述</label>
 						<div class="col-sm-9">
 							<textarea id="changeReason" maxlength="128" class="col-xs-10 col-sm-6 v_required" rows="3" data-toggle="popover" data-trigger='manual'></textarea>
 						</div>
@@ -129,7 +129,7 @@
 					<div class="space-4"></div>
 					
 					<div class="form-group" id="approveGroup">
-						<label for="approveManSel" class="col-sm-3 control-label no-padding-right">审批人</label>
+						<label for="approveManSel" class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.approver">审批人</label>
 						<div class="col-sm-9">
 							<div id="approveManSel" class="col-xs-10 col-sm-6 ">
 							</div>
@@ -138,28 +138,28 @@
 					<div class="space-4"></div>
                     
                     <div class="form-group">
-                        <label for="dingApprove" class="col-sm-3 control-label no-padding-right">钉钉同步</label>
+                        <label for="dingApprove" class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.dingSync">钉钉同步</label>
                         <div class="col-sm-9"><input class="ace ace-switch ace-switch-5" type="checkbox" id="dingApprove">
                             <span class="lbl status-lbl"></span>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="wechatApprove" class="col-sm-3 control-label no-padding-right">企业微信同步</label>
+                        <label for="wechatApprove" class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.wechatSync">企业微信同步</label>
                         <div class="col-sm-9"><input class="ace ace-switch ace-switch-5" type="checkbox" id="wechatApprove" disabled="disabled">
                             <span class="lbl status-lbl"></span>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="larkApprove" class="col-sm-3 control-label no-padding-right">飞书同步</label>
+                        <label for="larkApprove" class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.larkSync">飞书同步</label>
                         <div class="col-sm-9"><input class="ace ace-switch ace-switch-5" type="checkbox" id="larkApprove" disabled="disabled">
                             <span class="lbl status-lbl"></span>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="fenxApprove" class="col-sm-3 control-label no-padding-right">纷享同步</label>
+                        <label for="fenxApprove" class="col-sm-3 control-label no-padding-right" data-i18n="page.decoration.label.fenxSync">纷享同步</label>
                         <div class="col-sm-9"><input class="ace ace-switch ace-switch-5" type="checkbox" id="fenxApprove" disabled="disabled">
                             <span class="lbl status-lbl"></span>
                         </div>
@@ -168,8 +168,8 @@
 				</form>
      			</div>
 			<div class="modal-footer">
-				<button type="button" id="submitApproveBtn" class="btn btn-primary">修改申请</button>
-	        	<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="submitApproveBtn" class="btn btn-primary" data-i18n="page.decoration.title.modifyApply">修改申请</button>
+	        	<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
 	      	</div>
    		</div>
  		</div>
@@ -180,19 +180,19 @@
            <div class="modal-content">
                <div class="modal-header">
                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                   <h4 class="modal-title" id="myModalLabel">修改</h4>
+                   <h4 class="modal-title" id="myModalLabel" data-i18n="msg.modify">修改</h4>
                </div>
                <div class="modal-body">
                    <form class="form-horizontal">
                        <div class="form-group">
-	                    <label class="col-sm-3 control-label no-padding-right" for="updateBelongRate">分配比例</label>
+	                    <label class="col-sm-3 control-label no-padding-right" for="updateBelongRate" data-i18n="page.decoration.label.allocRate">分配比例</label>
 	                    <div class="col-sm-9">
 	                        <input type="text" id="updateBelongRate" class="col-xs-10 col-sm-6 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="5"/>
 	                    </div>
 	                </div>
 	                <div class="space-4"></div>
 	                <div class="form-group">
-	                    <label class="col-sm-3 control-label no-padding-right" for="updateDefaultFlag">是否默认</label>
+	                    <label class="col-sm-3 control-label no-padding-right" for="updateDefaultFlag" data-i18n="page.decoration.label.isDefault">是否默认</label>
 	                    <div class="col-sm-9">
 	                        <input type="checkbox" id="updateDefaultFlag" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
 							<span class="lbl isOrNot"></span>
@@ -202,8 +202,8 @@
                    </form>
                </div>
                <div class="modal-footer">
-                   <button type="button" id="updateBelongBtn" class="btn btn-primary">修改</button>
-                   <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                   <button type="button" id="updateBelongBtn" class="btn btn-primary" data-i18n="msg.modify">修改</button>
+                   <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                </div>
            </div>
        </div>

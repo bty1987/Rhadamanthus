@@ -39,6 +39,73 @@ $(function() {
 
             initUserPrefer(res.userPrefers);
         }, null, false);
+
+        // i18n:拉取 module=index 的偏好(含 lang / templateStyle),与 searcher 偏好并存
+        // lang 用服务端值覆盖本地(silent+不持久化),保证跨设备一致
+        com.post(api.personel.queryUserPrefers, {
+            "userPrefer.module": "index"
+        }, function(res) {
+
+            initUserPrefer(res.userPrefers);
+
+            if (window.i18n && params.user.prefer.index
+                && params.user.prefer.index.global
+                && params.user.prefer.index.global.lang) {
+
+                i18n.setLang(params.user.prefer.index.global.lang, {
+                    silent: true,        // 不回写 localStorage(服务端已是权威源)
+                    persist: false,      // 不再回写 userprefer(就是从那儿读的)
+                    applyRoot: $('body') // 全局 apply
+                });
+            }
+        }, null, false);
+    }
+
+    /**
+     * i18n 语言切换初始化:绑定顶栏下拉菜单选项点击,设置当前选中语言高亮
+     * 由 queryUserForSelfByUserId 回调中(用户偏好拉完后)调用一次
+     */
+    function initLangSwitch() {
+
+        if (!window.i18n) return;
+
+        // 应用当前语言到全局(顶栏/导航/页面静态文本)
+        i18n.apply($('body'));
+
+        // 高亮当前选中项:显示对勾,设置触发器显示文案
+        function refreshCheck() {
+            $('#langsel li').each(function() {
+                var $a = $(this).find('a');
+                var isCurrent = ($a.data('lang') === i18n.lang);
+                $(this).find('.lang-check').css('visibility', isCurrent ? 'visible' : 'hidden');
+            });
+            // 触发器显示当前语言名
+            var langNameKey = 'page.common.lang.' + i18n.lang;
+            $('#currentLangName').text(i18n.t(langNameKey));
+        }
+        refreshCheck();
+
+        // 选项点击 → 切换语言
+        $('#langsel a[data-lang]').on('click', function(e) {
+            e.preventDefault();
+            var lang = $(this).data('lang');
+            if (lang === i18n.lang) {
+                $(this).parents('.open').removeClass('open');
+                return;
+            }
+            i18n.setLang(lang, {
+                applyRoot: $('body'),   // 全局 apply
+                onDone: function(_, changed) {
+                    if (changed) {
+                        refreshCheck();
+                        // 关闭下拉
+                        $('#langsel').parents('.open').removeClass('open');
+                        // 提示一下
+                        com.showAlert(com.info, i18n.t('msg.opSuccess'));
+                    }
+                }
+            });
+        });
     }
 
     com.post(api.personel.queryUserForSelfByUserId, {}, function(res) {
@@ -49,13 +116,16 @@ $(function() {
 
         loadUserPrefers();
 
+        // i18n:用户偏好(含 lang)拉完后,初始化顶栏语言切换 UI + apply 全局
+        initLangSwitch();
+
         if (parent.window.isPC && (res.userInfo.user.extranet & 16) != 16) {
-            alert('无使用该平台权限');
+            alert(i18n.t('msg.noPermission'));
             nwRestart();
         }
 
         if (!parent.window.isPC && (res.userInfo.user.extranet & 8) != 8) {
-            alert('无使用该平台权限');
+            alert(i18n.t('msg.noPermission'));
             window.location.href = '/';
         }
 

@@ -2,7 +2,7 @@
     <div class="col-sm-4 widget-container-span">
         <div class="widget-box transparent">
             <div class="widget-header">
-                <h2 class="lighter">活动信息</h2>
+                <h2 class="lighter" data-i18n="page.material.label.activityInfo">活动信息</h2>
             </div>
             <div class="widget-header">
                 <div id="paramsNo"></div>
@@ -20,7 +20,7 @@
     <div class="col-sm-8 widget-container-span">
         <div class="widget-box transparent">
             <div class="widget-header">
-                <h2 class="lighter">活动物品</h2>
+                <h2 class="lighter" data-i18n="page.material.label.activityGoods">活动物品</h2>
             </div>
 
             <div class="widget-header">
@@ -60,8 +60,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="commentBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="commentBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -84,7 +84,7 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title" id="activityDialog">活动名称</h4>
+                <h4 class="modal-title" id="activityDialog" data-i18n="page.material.label.activityName">活动名称</h4>
             </div>
 
             <div class="modal-body">
@@ -100,8 +100,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="submitMaterialActivityBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="submitMaterialActivityBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>
@@ -116,7 +116,7 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title" id="agreementDialog">领取活动物品</h4>
+                <h4 class="modal-title" id="agreementDialog" data-i18n="page.material.btn.receiveActivityGoods">领取活动物品</h4>
             </div>
 
             <div class="modal-body">
@@ -139,7 +139,7 @@
                                 <div id="thingsDiv">
                                     <input type="text" id="thingsName" class="col-xs-10 col-sm-3 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择物品"/>
                                 </div>
-                                <input type="text" id="thingsNum" class="col-xs-10 col-sm-3 v_float_3 v_required" placeholder="请输入数量" style="margin: 0 10px">
+                                <input type="text" id="thingsNum" class="col-xs-10 col-sm-3 v_float_3 v_required" placeholder="请输入数量" data-i18n-ph="page.material.ph.num" style="margin: 0 10px">
                                 <button type="button" id="thingsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                             </div>
                         </div>
@@ -153,9 +153,9 @@
                             <label for="things" class="col-sm-3 control-label no-padding-right">券</label>
                             <div class="col-sm-9" style="padding-left: 6px;">
                                 <div id="couponsDiv">
-                                    <input type="text" id="couponsName" class="col-xs-10 col-sm-3 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择券"/>
+                                    <input type="text" id="couponsName" class="col-xs-10 col-sm-3 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择券" data-i18n-ph="page.material.ph.coupon"/>
                                 </div>
-                                <input type="text" id="couponsNum" class="col-xs-10 col-sm-3 v_float_3 v_required" placeholder="请输入数量" style="margin: 0 10px">
+                                <input type="text" id="couponsNum" class="col-xs-10 col-sm-3 v_float_3 v_required" placeholder="请输入数量" data-i18n-ph="page.material.ph.num" style="margin: 0 10px">
                                 <button type="button" id="couponsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                             </div>
                         </div>
@@ -173,8 +173,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="submitMaterialActivityItemBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="submitMaterialActivityItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
             </div>
         </div>
     </div>

@@ -4,7 +4,7 @@
 		<div class="col-xs-12">
 			<div class="widget-box transparent">
 				<div class="widget-header">
-					<h4>主材单</h4>
+					<h4 data-i18n="page.material.label.materialOrder">主材单</h4>
 					<div class="widget-toolbar">
 						<a href="#" data-action="collapse"> <i class="icon-chevron-up"></i> </a> 
 					</div>
@@ -23,14 +23,14 @@
 								<div class="col-sm-3">
 									<input id="salesmanName" type="text" class="col-sm-8"  readonly="readonly"></input>
 								</div>
-								<label class="col-sm-1 control-label no-padding-right" for="materialerName">主材导购</label>
+								<label class="col-sm-1 control-label no-padding-right" for="materialerName" data-i18n="page.material.label.materialGuide">主材导购</label>
 								<div class="col-sm-3">
 									<input id="materialerName" type="text" class="col-sm-8"  readonly="readonly"></input>
 								</div>
 							</div>
 							
 							<div class="form-group">
-								<label class="col-sm-1 control-label no-padding-right" for="msoNo">主材单号</label>
+								<label class="col-sm-1 control-label no-padding-right" for="msoNo" data-i18n="page.material.label.materialOrderNo">主材单号</label>
 								<div class="col-sm-2">
 									<input id="msoNo" type="text" class="col-sm-12"  readonly="readonly"></input>
 								</div>
@@ -39,7 +39,7 @@
 									<input id="customerName" type="text" class="col-sm-8"  readonly="readonly"></input>
 								</div>
 								
-								<label class="col-sm-1 control-label no-padding-right" for="instoreName">主材驻店</label>
+								<label class="col-sm-1 control-label no-padding-right" for="instoreName" data-i18n="page.material.label.materialInStore">主材驻店</label>
 								<div class="col-sm-3">
 									<input id="instoreName" type="text" class="col-sm-8"  readonly="readonly"></input>
 								</div>
@@ -78,7 +78,7 @@
 						<div class="cell money">售价</div>
 						<div class="cell num">数量</div>
 						<div class="cell money">总价</div>
-						<div class="cell package">套餐</div>
+						<div class="cell package" data-i18n="page.material.label.package">套餐</div>
 						<div class="cell remark">备注</div>
 					</div>
 					<div class="line-wrap action">
@@ -91,13 +91,13 @@
 			
 			<div style="margin-top: 10px;">
 				<button id="addSubOrderItem" class="btn btn-success inline col-xs-1">添加</button>
-				<button id="submitSubOrderItem" class="btn btn-default inline col-xs-1" data-loading-text="提交中...">提交</button>
-				<button id="backBtn" class="btn btn-danger inline col-xs-1 pull-right inline">返回</button>
+				<button id="submitSubOrderItem" class="btn btn-default inline col-xs-1" data-loading-text="提交中..." data-i18n="msg.submit">提交</button>
+				<button id="backBtn" class="btn btn-danger inline col-xs-1 pull-right inline" data-i18n="msg.back">返回</button>
 				<div class="col-sm-2 pull-right inline" style="margin-top: 10px">
 					<form class="form-horizontal">
 						<div class="form-group">
 							<div class="col-sm-12">
-								<span>原总价:</span><span id="originalTotalSpan">0</span>
+								<span data-i18n="page.material.label.originalTotalLabel">原总价:</span><span id="originalTotalSpan">0</span>
 							</div>
 						</div>
 						<div class="form-group">
@@ -107,7 +107,7 @@
 						</div>
 						<div class="form-group">
 							<div class="col-sm-12">
-								<span>品牌:</span><span id="materialOrderBrand"></span>
+								<span data-i18n="page.material.label.brandLabel">品牌:</span><span id="materialOrderBrand"></span>
 							</div>
 						</div>
 					</form>
