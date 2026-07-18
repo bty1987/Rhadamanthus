@@ -787,8 +787,10 @@ $(function() {
 
         // i18n:菜单名翻译。优先级:mid 专表 > 一级菜单的 code > tAuto 反查高频词
         // mid 是后端 communion.module 主键,稳定唯一;一级菜单有英文 code(如 "approval")
+        // cn 模式直接返回原 name,确保中文环境下菜单与改造前 100% 一致
         var translateMenuName = function(v) {
             if (!window.i18n) return v.name;
+            if (i18n.lang === 'cn') return v.name;   // cn 模式保持原文,排除 i18n 对中文环境的影响
             // ① 按 mid 查专表(同名菜单可差异化翻译)
             var midKey = 'menu.mid.' + v.mid;
             var t = i18n.t(midKey);
