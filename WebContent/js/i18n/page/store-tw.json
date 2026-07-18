@@ -1,0 +1,16 @@
+{
+  "_meta": { "lang": "tw", "type": "page", "module": "store", "desc": "門市模組頁面文字。" },
+  "page.store.label.couponValue": "券值",
+  "page.store.label.couponTitle": "券標題",
+  "page.store.label.couponType": "券類型",
+  "page.store.label.icon": "圖示",
+  "page.store.label.specInfo": "規格資訊",
+  "page.store.label.goodsBrand": "商品品牌",
+  "page.store.label.goodsBarcode": "商品條碼",
+  "page.store.label.goodsTitle": "商品標題",
+  "page.store.label.priceExplain": "價格說明",
+  "page.store.label.image": "圖片",
+  "page.store.label.birthday": "生日",
+  "page.store.label.male": "男",
+  "page.store.label.female": "女"
+}

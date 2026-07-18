@@ -1,0 +1,17 @@
+{
+  "_meta": { "lang": "tw", "type": "page", "module": "market", "desc": "市場模組頁面文字。" },
+  "page.market.label.envCheck": "環保檢測",
+  "page.market.label.housekeeping": "家政服務",
+  "page.market.label.imgInfo": "圖片資訊",
+  "page.market.label.businessCard": "名片",
+  "page.market.label.wechatId": "微信號",
+  "page.market.label.industry": "所在行業",
+  "page.market.label.designCompany": "設計公司",
+  "page.market.label.decorationCompany": "家裝公司",
+  "page.market.label.proConstruct": "專業施工",
+  "page.market.label.softDeco": "軟裝家紡",
+  "page.market.label.constructionEng": "建築工程",
+  "page.market.label.materialFactory": "建材廠家",
+  "page.market.label.eCommerce": "電子商務",
+  "page.market.label.equipmentHardware": "設備五金"
+}

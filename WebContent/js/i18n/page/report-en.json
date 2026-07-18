@@ -1,0 +1,20 @@
+{
+  "_meta": { "lang": "en", "type": "page", "module": "report", "desc": "Report module page texts." },
+  "page.report.label.totalRequest": "Total Requests",
+  "page.report.label.request24h": "24h Request Total",
+  "page.report.label.tempTrend8h": "8h Server Temperature Trend",
+  "page.report.btn.updatePerformance": "Update Performance",
+  "page.report.label.measureTrend": "Daily Measure Count Trend",
+  "page.report.label.signTrend": "Daily Sign Count Trend",
+  "page.report.label.measureTotal": "Measure Total",
+  "page.report.label.companyMeasureTotal": "Company Measure Total",
+  "page.report.label.signTotal": "Sign Total",
+  "page.report.label.companySignTotal": "Company Sign Total",
+  "page.report.label.designerSignTop10": "Designer Sign TOP10",
+  "page.report.label.salesmanSignTop10": "Salesperson Sign TOP10",
+  "page.report.label.buildingSignAmountTop10": "Building Sign Amount TOP10",
+  "page.report.label.requestTrendChart": "Daily Request Trend Chart",
+  "page.report.label.serverRequestTotal": "Server Daily Request Total",
+  "page.report.label.personRequestTop10": "Person Daily Request (TOP10)",
+  "page.report.label.apiRequestTop10": "Daily API Request (TOP10)"
+}

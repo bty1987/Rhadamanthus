@@ -1,0 +1,15 @@
+{
+  "_meta": { "lang": "cn", "type": "page", "module": "management", "desc": "管理模块页面文本。" },
+  "page.management.label.decorUpdate": "装修满减信息更新",
+  "page.management.label.decorLevelModify": "装修单等级修改",
+  "page.management.label.resetDesignStatus": "重置设计状态",
+  "page.management.label.quotationStatusModify": "报价状态修改",
+  "page.management.label.quotationAddFunctionArea": "报价添加功能区",
+  "page.management.label.salesLevelModify": "销售单等级修改",
+  "page.management.label.salesStatusModify": "销售单状态修改",
+  "page.management.label.materialPayTimeModify": "主材款收款时间修改",
+  "page.management.label.engineeringPaymentVerify": "工程款项验证",
+  "page.management.label.materialQuota": "主材配额",
+  "page.management.label.salesOrderNo": "销售单号",
+  "page.management.label.level": "等级"
+}

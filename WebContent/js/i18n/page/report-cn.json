@@ -1,0 +1,20 @@
+{
+  "_meta": { "lang": "cn", "type": "page", "module": "report", "desc": "报表模块页面文本。" },
+  "page.report.label.totalRequest": "总请求数",
+  "page.report.label.request24h": "24小时请求总数",
+  "page.report.label.tempTrend8h": "8小时服务器温度走势",
+  "page.report.btn.updatePerformance": "更新业绩",
+  "page.report.label.measureTrend": "公司天级量尺数走势",
+  "page.report.label.signTrend": "公司天级签单数走势",
+  "page.report.label.measureTotal": "量尺总数",
+  "page.report.label.companyMeasureTotal": "公司量尺总数",
+  "page.report.label.signTotal": "签单总数",
+  "page.report.label.companySignTotal": "公司签单总数",
+  "page.report.label.designerSignTop10": "设计师签单数TOP10",
+  "page.report.label.salesmanSignTop10": "业务员签单数TOP10",
+  "page.report.label.buildingSignAmountTop10": "楼盘签单额TOP10",
+  "page.report.label.requestTrendChart": "天级请求数走势图",
+  "page.report.label.serverRequestTotal": "服务器天级请求总数",
+  "page.report.label.personRequestTop10": "人员天级请求(TOP10)",
+  "page.report.label.apiRequestTop10": "天级API请求数(TOP10)"
+}

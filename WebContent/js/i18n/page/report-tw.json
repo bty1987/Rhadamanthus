@@ -1,0 +1,20 @@
+{
+  "_meta": { "lang": "tw", "type": "page", "module": "report", "desc": "報表模組頁面文字。" },
+  "page.report.label.totalRequest": "總請求數",
+  "page.report.label.request24h": "24小時請求總數",
+  "page.report.label.tempTrend8h": "8小時伺服器溫度走勢",
+  "page.report.btn.updatePerformance": "更新業績",
+  "page.report.label.measureTrend": "公司天級量尺數走勢",
+  "page.report.label.signTrend": "公司天級簽單數走勢",
+  "page.report.label.measureTotal": "量尺總數",
+  "page.report.label.companyMeasureTotal": "公司量尺總數",
+  "page.report.label.signTotal": "簽單總數",
+  "page.report.label.companySignTotal": "公司簽單總數",
+  "page.report.label.designerSignTop10": "設計師簽單數TOP10",
+  "page.report.label.salesmanSignTop10": "業務員簽單數TOP10",
+  "page.report.label.buildingSignAmountTop10": "樓盤簽單額TOP10",
+  "page.report.label.requestTrendChart": "天級請求數走勢圖",
+  "page.report.label.serverRequestTotal": "伺服器天級請求總數",
+  "page.report.label.personRequestTop10": "人員天級請求(TOP10)",
+  "page.report.label.apiRequestTop10": "天級API請求數(TOP10)"
+}
