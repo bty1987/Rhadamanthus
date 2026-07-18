@@ -128,6 +128,21 @@ jQuery(function($) {
         });
     });
 
+    // 删除附加项 (事件委托, 仅"待确认"状态显示按钮)
+    normriceItem.items.normriceItemResultList.on('click', '.btn-delete-normriceitem', function() {
+
+        var npiid = $(this).data('npiid');
+
+        com.showConfirm("确认要删除该附加项吗?删除后不可恢复。", function() {
+            com.post(api.quotation.deleteNormriceItem, {
+                "normriceItem.npiid": npiid
+            }, function(res) {
+                com.showAlert(com.info, "删除成功");
+                queryData(normriceItem.orderId);
+            });
+        });
+    });
+
     // 保存附加项
     function saveNormriceItem() {
 
@@ -264,7 +279,8 @@ jQuery(function($) {
         }
 
         return '<button type="button" class="btn btn-minier btn-primary btn-confirm-normriceitem" data-npiid="' + v.npiid + '">确认</button> ' +
-            '<button type="button" class="btn btn-minier btn-danger btn-reject-normriceitem" data-npiid="' + v.npiid + '">驳回</button>';
+            '<button type="button" class="btn btn-minier btn-danger btn-reject-normriceitem" data-npiid="' + v.npiid + '">驳回</button> ' +
+            '<button type="button" class="btn btn-minier btn-yellow btn-delete-normriceitem" data-npiid="' + v.npiid + '">删除</button>';
     }
 
 });

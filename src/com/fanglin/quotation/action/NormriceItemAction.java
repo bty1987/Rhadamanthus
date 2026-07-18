@@ -55,7 +55,7 @@ public class NormriceItemAction extends BaseListAction {
 	}
 
 	@Action(value = "deleteNormriceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String normriceItems() throws FLException {
+	public String deleteNormriceItem() throws FLException {
 
 		normriceItemService.deleteNormriceItem(normtion, normriceItem);
 
